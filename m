@@ -1,95 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 03/14] bus: mvebu-mbus: Introduce device tree binding
-Date: Fri, 7 Jun 2013 23:15:50 +0200
-Message-ID: <201306072315.50390.arnd@arndb.de>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306072153.03855.arnd@arndb.de>
- <20130607200956.GB9010@obsidianresearch.com>
+From: "luke.leighton" <luke.leighton@gmail.com>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Fri, 7 Jun 2013 22:29:34 +0100
+Message-ID: <CAPweEDxtC+OamcpVEQ3BULbN88hSJzKoi0fkNLBAdZD04LQCNQ@mail.gmail.com>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+	<1370475609.20454.44.camel@localhost>
+	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+	<1733666.lHUBcfUXq9@flatron>
+	<20130606112723.71ddd70c@skate>
+	<CAPweEDzW60poOYahm31aW3_A=NvZmyBPPPgM9PzdvuPJnju69A@mail.gmail.com>
+	<20130607205940.4816fed5@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130607200956.GB9010@obsidianresearch.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130607205940.4816fed5@skate>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 June 2013, Jason Gunthorpe wrote:
-> 
-> On Fri, Jun 07, 2013 at 09:53:03PM +0200, Arnd Bergmann wrote:
->  
-> > Can you explain to me why it is an invalid target ID value? Is it
-> > treated very differently by the mbus register setup than all the
-> > others? I guess we can define it as something else to make a valid
-> > target ID, by using one or more of the remaining bits in the first
-> > address cell.
-> 
-> There is a special dedicated window register for the internal regs
-> base. Marvell did not define it a target ID or window attributes, and
-> only that window register can be used to configure it.
+On Fri, Jun 7, 2013 at 7:59 PM, Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com> wrote:
 
-Ok.
+> Maxime will reply to this in more details, but I believe the status is:
+>
+>  * Interrupt controller is working.
+>  * Clock drivers are working.
+>  * Pinctrl is working.
+>  * GPIO is working.
+>  * Timer is working.
+>  * UART is working
+>  * Watchdog is on its way (patches posted)
+>  * Ethernet is on its way (patches posted)
+>  * I2C is on its way (patches posted)
 
-> The mbus driver should never read or write this register.
+ ok so i've got this now in
+http://hands.com/~lkcl/allwinner_linux_proposal.txt - that leaves...
+well there's quite a bit: usb, sd/mmc (both variants: they changed the
+data structures around sun5i), nand (probably both - the allwinner one
+and the mtd one being done, reminds me: we need full documentation on
+the NAND chip), scsi, g2d - cedarx and more.
 
-That is not a hard requirement, right? I guess based on the
-recent discussion about the 0xd0 or 0xf1 window, there may
-actually be good reasons to reassign it, although I agree
-that we shouldn't bother with implementing that for now, as
-it's not a simple or urgent problem.
-
-> So we have a 2 cell address encoding of the form:
-> 
->  IIAA0000 00oooooo
-> 
-> Where:
->  -- I = Marvell defined target ID for programmable windows
->  -- A = Marvell defined target attributes for programmable windows
->  -- o = offset within the window
-> 
-> Now, we need 2 cell format that tells the driver that this is the
-> internal regs block. Assuming that marvell defines all I/A values we
-> need another value (I called it an invalid valid) to indicate internal
-> regs, several choices:
-> 
->   FFFFFFFF 00oooooo
->   0000FFFF 00oooooo
->   00000001 00oooooo
-> 
-> Doesn't really matter which is picked, as far as I can tell, though
-> maybe the 01 option is best, leading to:
-> 
->   IIAAssss 00oooooo
-> 
-> Where:
->  -- s = target space
->    == 0 means I/A are:
->     -- I = Marvell defined target ID for programmable windows
->     -- A = Marvell defined target attributes for programmable windows
->    == 1 means internal regs block
->  -- o = offset within the target
-> 
-> Which is pretty tidy..
-
-Ok, thanks for the explanation. I think this is a good representation.
-The other idea I raised in my previous mail would end up with something
-like
-
- SIIAA000 00oooooo
-
-with 'S' having the inverted meaning of your 's', so '0' actually
-refers to the internal regs as in Ezequiel's current code.
-
-I'm fine with either representation though.
-
-
-	Arnd
+ what else should be raised, and to what benefit?
