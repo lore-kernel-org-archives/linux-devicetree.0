@@ -1,44 +1,59 @@
-From: "luke.leighton" <luke.leighton@gmail.com>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
- Uploading linux (3.9.4-1))
-Date: Fri, 7 Jun 2013 22:29:34 +0100
-Message-ID: <CAPweEDxtC+OamcpVEQ3BULbN88hSJzKoi0fkNLBAdZD04LQCNQ@mail.gmail.com>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<1370475609.20454.44.camel@localhost>
-	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
-	<1733666.lHUBcfUXq9@flatron>
-	<20130606112723.71ddd70c@skate>
-	<CAPweEDzW60poOYahm31aW3_A=NvZmyBPPPgM9PzdvuPJnju69A@mail.gmail.com>
-	<20130607205940.4816fed5@skate>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
+ tree driver
+Date: Fri, 7 Jun 2013 23:32:42 +0200
+Message-ID: <20130607213241.GB3047@katana>
+References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130607205940.4816fed5@skate>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XF85m9dhOBO43t/C"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1368476301-10495-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 7, 2013 at 7:59 PM, Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com> wrote:
 
-> Maxime will reply to this in more details, but I believe the status is:
->
->  * Interrupt controller is working.
->  * Clock drivers are working.
->  * Pinctrl is working.
->  * GPIO is working.
->  * Timer is working.
->  * UART is working
->  * Watchdog is on its way (patches posted)
->  * Ethernet is on its way (patches posted)
->  * I2C is on its way (patches posted)
+--XF85m9dhOBO43t/C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- ok so i've got this now in
-http://hands.com/~lkcl/allwinner_linux_proposal.txt - that leaves...
-well there's quite a bit: usb, sd/mmc (both variants: they changed the
-data structures around sun5i), nand (probably both - the allwinner one
-and the mtd one being done, reminds me: we need full documentation on
-the NAND chip), scsi, g2d - cedarx and more.
+...
+> I2C devices probed from device tree should subsequently be
+> fixed to handle the case where of_match_table() is
+> used (I think none of them do that today), and platforms should
+> fix their device trees to use compatible strings for I2C devices
+> instead of setting the name to Linux device driver names as is
+> done in multiple cases today.
 
- what else should be raised, and to what benefit?
+I guess your solution is the least intrusive one. Still, it could happen
+that of_match_table is scanned three times (by driver core, i2c layer,
+and i2c driver) which is IMO an indication to look for a more elegant
+solution tp find out what really matched?
+
+
+--XF85m9dhOBO43t/C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRslF5AAoJEBQN5MwUoCm2xCwP/304DMmpz8mhczpruALsrPDO
+LH799vE0eiZPeH8Zj6gj+6lzYiFedbZZqm1MwQBUzdrQGFO8+XouIXxPFJKAqOPC
+vVt2VOxp3IVtGQDB4Ceh0/ZP8Dh11J+/Fs86k/gwo6mQo1nAzw2I6aUbZ6E7d77X
+qGtY6ESfCFJGib55FJTQZH/dQ4XgoBgXMEPhgPhU0KxyTI4ktHsV91lHJRj6ln/r
+2SC1wVG+/ad+eofPD5aTSli+4JNs6VQyHSXIm6mhkvHaHIygA6JNe7+EmGyjhEiA
++4z1zvbebuuchOSRl+b1sEzpUo2BqEXuY9SU1/UXxi6saY+g2/BXaLUlvmuYo5zf
+Lhi0oLd4mqAc+9+ENDZ3I+/OjggHZG/CPwaBwq7tpsmowx2qNZVO0ST75GGb/w2Z
+7k1E02TyInhN0mnFNCHaZ1t4wOL4JzvaOlJF5I0ZaP38u2CjzWVu3I856d+Cem34
+1ZSUQYjWd6V26w1BTM5yhjv64Cugd2sg4pOjyMWnEWzcjwuF3UcusETZt63Dk6vr
+xMcvRru1gN+PqUuVJVotSGwCHP5SVatO+mbyDx6fz+qd3WxspH7JxSHplofX5841
+K1ZK+GAfVixD88tliZhFNRZhhsJ1S9Rq/xIDzaG8Odl+TlI8JQAUMNDoXgCuEp5O
+c5G5u2BHVTRucH+xiSnH
+=VNEL
+-----END PGP SIGNATURE-----
+
+--XF85m9dhOBO43t/C--
