@@ -1,77 +1,70 @@
-From: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
-Subject: Re: [RFC] [PATCH 3/3] IRQ: irq domain: defer of irq ressoure resolve
- at platform_drv_probe
-Date: Fri, 07 Jun 2013 15:41:15 +0200
-Message-ID: <51B1E2FB.3070708@nsn.com>
-References: <20130528145219.GA30411@game.jcrosoft.org>
- <1369753729-12997-1-git-send-email-plagnioj@jcrosoft.com>
- <1369753729-12997-3-git-send-email-plagnioj@jcrosoft.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] arm/dt: Don't add disabled CPUs to system topology
+Date: Fri, 07 Jun 2013 09:20:20 -0500
+Message-ID: <51B1EC24.3010909@gmail.com>
+References: <1370538685-22386-1-git-send-email-james.king@linaro.org> <20130607102326.GA3111@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369753729-12997-3-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130607102326.GA3111@e102568-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: James King <james.king@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>, "nico@linaro.org" <nico@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "patches@linaro.org" <patches@linaro.org>, "namhyung@kernel.org" <namhyung@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On 06/07/2013 05:23 AM, Lorenzo Pieralisi wrote:
+> Hi James,
+> 
+> On Thu, Jun 06, 2013 at 06:11:25PM +0100, James King wrote:
+>> If CPUs are marked as disabled in the devicetree, make sure they do
+>> not exist in the system CPU information and CPU topology information.
+>> In this case these CPUs will not be able to be added to the system later
+>> using hot-plug. This allows a single chip with many CPUs to be easily
+>> used in a variety of hardware devices where they may have different
+>> actual processing requirements (eg for thermal/cost reasons).
+>>
+>> - Change devicetree.c to ignore any cpu nodes marked as disabled,
+>>   this effectively limits the number of active cpu cores so no need
+>>   for the max_cpus=x in the chosen node.
+>> - Change topology.c to ignore any cpu nodes marked as disabled, this
+>>   is where the scheduler would learn about big/LITTLE cores so this
+>>   effectively keeps the scheduler in sync.
+>>
+> 
+> I have two questions:
+> 
+> 1) Since with this approach the DT should change anyway if on different
+>    hardware devices based on the same chip you want to allow booting a
+>    different number of CPUs, why do not we remove the cpu nodes instead of
+>    disabling them ? Put it another way: cpu nodes define a cpu as
+>    possible (currently), we can simply remove the node if we do not want
+>    that cpu to be seen by the kernel.
+> 2) If we go for the "status" property, why do not we use it to set present
+>    mask ? That way the cpu is possible but not present, you cannot
+>    hotplug it in. It is a bit of a stretch, granted, the cpu _is_ present,
+>    we just want to disable it, do not know how this is handled in x86
+>    and other archs though.
 
-On 05/28/2013 05:08 PM, ext Jean-Christophe PLAGNIOL-VILLARD wrote:
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -131,6 +131,32 @@ void of_device_make_bus_id(struct device *dev)
->  }
->  
->  /**
-> + * of_device_alloc_irq - initialize irq of an platfrom_device
-      ^^^^^^^^^^^^^^^^^^^
-> + * @dev: plaform_device to work on
-> + */
-> +int of_device_init_irq(struct platform_device *dev)
-       ^^^^^^^^^^^^^^^^^^
+The meaning of disabled for cpus in ePAPR is that the cpu is offline
+(i.e. in a spinloop or wfi), not that the cpu is unavailable. This is a
+bit of a departure and inconsistency from how status for devices are
+used. That would imply that we should be setting status to disabled for
+all secondary cores and that possibly the status value should get
+updated to reflect the state of the cpu.
 
-I think, mismatch in function names in the comment and function itself wasn't yet reported...
+Rob
 
-> +{
-> +	struct device_node *np = dev->dev.of_node;
-> +	int num_irq;
-> +	int ret;
-> +	struct resource *res = dev->resource;
-> +
-> +	if (!np)
-> +		return 0;
-> +
-> +	num_irq = of_irq_count(np);
-> +	if (!num_irq)
-> +		return 0;
-> +
-> +	res += dev->num_resources - num_irq;
-> +	ret = of_irq_to_resource_table(np, res, num_irq);
-> +	if (ret != num_irq)
-> +		return -EPROBE_DEFER;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
->   * of_device_alloc - Allocate and initialize an of_device
->   * @np: device node to assign to device
->   * @bus_id: Name to assign to the device.  May be null to use default name.
-
-I was trying to get attention to this problem already on the list in January-February time frame, but
-without success... I will give your code a try... We have exactly these chained interrupt controllers dependencies
-and irq_create_of_mapping() was failing... I'll inform you on the test results...
-
--- 
-Best regards,
-Alexander Sverdlin.
+> I am just asking, since it is something I thought about while writing
+> code that parses the DT cpu map, basically we do not have a way to
+> "disable" a cpu in the DT and that's what you are doing, I just would like
+> to understand the best way to put it into DT bindings.
+> 
+> Thanks,
+> Lorenzo
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
