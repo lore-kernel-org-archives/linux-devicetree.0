@@ -1,275 +1,161 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [RFC 11/50] ARM: at91: add PMC clk device tree binding doc.
-Date: Fri,  7 Jun 2013 10:34:22 +0200
-Message-ID: <1370594119-5342-12-git-send-email-b.brezillon@overkiz.com>
-References: <1370594119-5342-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1370594119-5342-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ethernet/arc/arc_emac - Add new driver
+Date: Fri, 07 Jun 2013 10:47:37 +0200
+Message-ID: <1505761.5DsauZd6eq@wuerfel>
+References: <1370348510-23754-1-git-send-email-abrodkin@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370348510-23754-1-git-send-email-abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: "Steven J. Hill" <sjhill-8NJIiSa5LzA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mischa Jonker <Mischa.Jonker-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 04 June 2013 16:21:50 Alexey Brodkin wrote:
 
-This is the documentation of the dt bindings used by at91 clks.
+>  drivers/net/ethernet/Kconfig             |    1 +
+>  drivers/net/ethernet/Makefile            |    1 +
+>  drivers/net/ethernet/arc/Kconfig         |   29 +
+>  drivers/net/ethernet/arc/Makefile        |    6 +
+>  drivers/net/ethernet/arc/arc_emac_main.c |  905 ++++++++++++++++++++++++++++++
+>  drivers/net/ethernet/arc/arc_emac_main.h |   82 +++
+>  drivers/net/ethernet/arc/arc_emac_mdio.c |  181 ++++++
+>  drivers/net/ethernet/arc/arc_emac_mdio.h |   22 +
+>  drivers/net/ethernet/arc/arc_emac_regs.h |   73 +++
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
----
- .../devicetree/bindings/clock/at91-clock.txt       |  247 ++++++++++++++++++++
- 1 file changed, 247 insertions(+)
+I wonder if it would be better to name the directory "synopsys" or
+"designware" rather than "arc" now. Is there a chance that the same
+controller is used on non-arc CPUs?
 
-diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
-new file mode 100644
-index 0000000..63c5d16
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
-@@ -0,0 +1,247 @@
-+Device Tree Clock bindings for arch-at91
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be one of the following:
-+	"atmel,at91rm9200-clk-main":
-+		at91 main oscillator
-+
-+	"atmel,at91rm9200-clk-master" or
-+	"atmel,at91sam9x5-clk-master":
-+		at91 master clock
-+
-+	"atmel,at91sam9x5-clk-peripheral" or
-+	"atmel,at91rm9200-clk-peripheral":
-+		at91 peripheral clocks
-+
-+	"atmel,at91rm9200-clk-pll" or
-+	"atmel,at91sam9g45-clk-pll" or
-+	"atmel,at91sam9g20-clk-pllb" or
-+	"atmel,sama5d3-clk-pll":
-+		at91 pll clocks
-+
-+	"atmel,at91sam9x5-clk-plldiv":
-+		at91 plla divisor
-+
-+	"atmel,at91rm9200-clk-programmable" or
-+	"atmel,at91sam9g45-clk-programmable" or
-+	"atmel,at91sam9x5-clk-programmable":
-+		at91 programmable clocks
-+
-+	"atmel,at91sam9x5-clk-smd":
-+		at91 SMD (Soft Modem) clock
-+
-+	"atmel,at91rm9200-clk-system":
-+		at91 system clocks
-+
-+	"atmel,at91rm9200-clk-usb" or
-+	"atmel,at91sam9x5-clk-usb":
-+		at91 usb clock
-+
-+	"atmel,at91sam9x5-clk-utmi":
-+		at91 utmi clock
-+
-+
-+Required properties for main clock:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks (optional if clock-frequency is provided) : shall be the slow clock
-+	phandle. This clock is used to compute the main clock rate if
-+	"clock-frequency" is not provided.
-+- clock-frequency: the main oscillator frequency.Prefer the use of
-+	"clock-frequency" over automatic clock rate computation.
-+
-+For example:
-+	main: mainck {
-+		compatible = "atmel,at91rm9200-clk-main";
-+		#clock-cells = <0>;
-+		clocks = <&ck32k>;
-+		clock-frequency = <18432000>;
-+	};
-+
-+Required properties for master clock:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the master clock sources (see atmel datasheet) phandles.
-+	e.g. "<&ck32k>, <&main>, <&plla>, <&pllb>".
-+- characteristics : device tree node describing master clock characteristics.
-+	You can find these characteristics in atmel's SoC datasheets.
-+	* output : minimum and maximum clock frequency (two u32 fields).
-+		e.g. output = <0 133000000>; <=> 0 to 133MHz.
-+	* divisors : master clock divisors table (four u32 fields).
-+		0 <=> reserved value.
-+		e.g. divisors = <1 2 4 6>;
-+	* have-div3-pres : some SoC use the reserved value 7 in the PRES field
-+		as CLOCK_DIV3 (e.g sam9x5).
-+
-+For example:
-+	mck: mck {
-+		compatible = "atmel,at91rm9200-clk-master";
-+		#clock-cells = <0>;
-+		characteristics = {
-+			output = <0 133000000>;
-+			divisors = <1 2 4 0>;
-+		};
-+	};
-+
-+Required properties for peripheral clocks:
-+- #clock-cells : from common clock binding; shall be set to 1. The second cell
-+	is used to encode the peripheral id. Peripheral ids are defined in
-+	atmel's SoC datasheets.
-+- clocks : shall be the master clock phandle.
-+	e.g. clocks = <&mck>;
-+- ids : peripheral ids (u32 array).
-+- clock-output-names : name of clocks. These are the name used during clock
-+	registration.
-+- "default-divisors" (optional, only available for
-+	"atmel,at91sam9x5-clk-peripheral") : sam9x5 and sama5d3 SoC provides
-+	configurable peripheral clock divisors. If you define this property
-+	(u32 array), the default divisor will be applied when enabling
-+	peripheral clock. If not provided the peripheral clock is not divided.
-+
-+For example:
-+	periph: periphck {
-+		compatible = "atmel,at91sam9x5-clk-peripheral";
-+		#clock-cells = <1>;
-+		clocks = <&mck>;
-+		ids = <2 6 7>;
-+		clock-output-names = "pioA_clk", "pioB_clk", "pioB_clk";
-+		default-divisors = <1 2 2>;
-+	};
-+
-+
-+Required properties for pll clocks:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the main clock phandle.
-+- id : pll id
-+	* 0 <=> plla
-+	* 1 <=> pllb
-+- characteristics : device tree node describing pll clock characteristics.
-+	You can find these characteristics in atmel's SoC datasheets.
-+	* input : minimum and maximum source clock frequency (two u32 fields).
-+		e.g. input = <1 32000000>; <=> 1 to 32MHz.
-+	* output : output frequency ranges.
-+	* out: out field value for output frequency ranges.
-+	* icpll (not available on some SoC): icpll field value for output
-+		frequency ranges.
-+
-+For example:
-+	plla: pllack {
-+		compatible = "atmel,at91sam9g45-clk-pll";
-+		#clock-cells = <0>;
-+		clocks = <&main>;
-+		id = <0>;
-+		input = <2000000 32000000>;
-+		output = <74500000 800000000
-+			  69500000 750000000
-+			  64500000 700000000
-+			  59500000 650000000
-+			  54500000 600000000
-+			  49500000 550000000
-+			  44500000 500000000
-+			  40000000 450000000>;
-+		out = <0 1 2 3 0 1 2 3>;
-+		icpll = <0 0 0 0 1 1 1 1>;
-+	};
-+
-+Required properties for plldiv clocks:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the plla clock phandle.
-+
-+For example:
-+	plladiv: plladivck {
-+		compatible = "atmel,at91sam9x5-clk-plldiv";
-+		#clock-cells = <0>;
-+		clocks = <&plla>;
-+	};
-+
-+Required properties for programmable clocks:
-+- #clock-cells : from common clock binding; shall be set to 1. The second cell
-+	is used to encode the programmable clock id.
-+	Peripheral ids are in atmel's SoC
-+	datasheets.
-+- clocks : shall be the programmable clock source phandles.
-+	e.g. clocks = <&clk32k>, <&main>, <&plla>, <&pllb>;
-+- ids : programmable clock ids (u32 array).
-+- clock-output-names : name of clocks. These names are used during clock
-+	registration.
-+
-+For example:
-+	prog: progck {
-+		compatible = "atmel,at91sam9g45-clk-programmable";
-+		#clock-cells = <1>;
-+		ids = <0 1>;
-+		clocks = <&clk32k>, <&main>, <&plladiv>, <&utmi>, <&mck>;
-+		clock-output-names = "prog0", "prog1";
-+	};
-+
-+
-+Required properties for smd clock:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the smd clock source phandles.
-+	e.g. clocks = <&plladiv>, <&utmi>;
-+
-+For example:
-+	smd: smdck {
-+		compatible = "atmel,at91sam9x5-clk-smd";
-+		#clock-cells = <0>;
-+		clocks = <&plladiv>, <&utmi>;
-+	};
-+
-+Required properties for system clocks:
-+- #clock-cells : from common clock binding; shall be set to 1. The second cell
-+	is used to encode the system clock id (bit used in SCER/SCDR register).
-+- clocks : shall be the system clock source phandle.
-+	e.g. clocks = <&usb>;
-+- ids : peripheral ids (u32 array).
-+- clock-output-names : name of clocks. These names are used during clock
-+	registration.
-+
-+For example:
-+	system: systemck {
-+		compatible = "atmel,at91rm9200-clk-system";
-+		#clock-cells = <1>;
-+		ids = <2 4 6 7 8 9 10>;
-+		clocks = <&mck>, <&smd>, <&usb>, <&usb>,
-+			 <&prog 0>, <&prog 1>, <&prog 2>;
-+		clock-output-names = "ddrck", "smdck", "uhpck", "udpck",
-+				     "pck0", "pck1", "pck2";
-+	};
-+
-+
-+Required properties for usb clock:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the smd clock source phandles.
-+	e.g. clocks = <&pllb>;
-+- divisors (only available for "atmel,at91rm9200-clk-usb"):
-+	usb clock divisor table.
-+	e.g. divisors = <1 2 4 0>;
-+- usbs0-unused (only available for "atmel,at91sam9x5-clk-usb"):
-+	Some SoC (sam9n12) use usb source 0 to disable the usb clock.
-+
-+For example:
-+	usb: usbck {
-+		compatible = "atmel,at91sam9x5-clk-usb";
-+		#clock-cells = <0>;
-+		clocks = <&plladiv>, <&utmi>;
-+	};
-+
-+	usb: usbck {
-+		compatible = "atmel,at91rm9200-clk-usb";
-+		#clock-cells = <0>;
-+		clocks = <&pllb>;
-+		divisors = <1 2 4 0>;
-+	};
-+
-+
-+Required properties for utmi clock:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the main clock source phandle.
-+
-+For example:
-+	utmi: utmick {
-+		compatible = "atmel,at91sam9x5-clk-utmi";
-+		#clock-cells = <0>;
-+		clocks = <&main>;
-+	};
--- 
-1.7.9.5
+> +static int arc_emac_probe(struct platform_device *pdev)
+> +{
+> +	struct net_device *net_dev;
+> +	struct arc_emac_priv *priv;
+> +	int err;
+> +	unsigned int clock_frequency;
+> +	unsigned int id;
+> +	struct resource res_regs;
+> +#ifdef CONFIG_OF_IRQ
+> +	struct resource res_irq;
+> +#endif
+> +	const char *mac_addr = NULL;
+
+Please remove the #ifdef here. The driver does not work without this
+anyway, so better make it 'depend on OF_IRQ' in Kconfig.
+
+> +	/* Get phy from device tree */
+> +	priv->phy_node = of_parse_phandle(pdev->dev.of_node, "phy", 0);
+> +	if (!priv->phy_node) {
+> +		dev_err(&pdev->dev,
+> +			"failed to retrieve phy description from device tree\n");
+> +		err = -ENODEV;
+> +		goto out;
+> +	}
+
+You should add a binding document in Documentation/devicetree/bindings that
+describes what properties are required.
+
+> +	/* Get EMAC registers base address from device tree */
+> +	err = of_address_to_resource(pdev->dev.of_node, 0, &res_regs);
+> +	if (err) {
+> +		dev_err(&pdev->dev,
+> +			"failed to retrieve base register from device tree\n");
+> +		err = -ENODEV;
+> +		goto out;
+> +	}
+> +
+> +	if (!devm_request_mem_region(&pdev->dev, res_regs.start,
+> +			resource_size(&res_regs), pdev->name)) {
+> +		dev_err(&pdev->dev,
+> +			"failed to request memory region for base registers\n");
+> +		err = -ENXIO;
+> +		goto out;
+> +	}
+> +
+> +	priv->reg_base_addr = (void *) devm_ioremap_nocache(&pdev->dev,
+> +			res_regs.start, resource_size(&res_regs));
+> +	if (!priv->reg_base_addr) {
+> +		dev_err(&pdev->dev, "failed to ioremap MAC registers\n");
+> +		err = -ENXIO;
+> +		goto out;
+> +	}
+
+This block can be simplified to a single devm_ioremap_resource() now.
+
+The cast to 'void *' is wrong: please make sure that you always use '__iomem'
+pointers for MMIO mappings. You can use 'sparse' with 'make C=1' to check this
+at build time.
+
+> +	/* Get MAC address from device tree */
+> +#ifdef CONFIG_OF_NET
+> +	mac_addr = of_get_mac_address(pdev->dev.of_node);
+> +#endif
+
+Same as above, remove the #ifdef.
+
+> diff --git a/drivers/net/ethernet/arc/arc_emac_main.h b/drivers/net/ethernet/arc/arc_emac_main.h
+> new file mode 100644
+> index 0000000..6f03d26
+> --- /dev/null
+> +++ b/drivers/net/ethernet/arc/arc_emac_main.h
+
+This header seems to be included only in the main .c file, just
+move the contents there and remove this file.
+
+> +/**
+> + * arc_mdio_probe - MDIO probe function.
+> + * @dev_node:	Pointer to device node.
+> + * @priv:		Pointer to ARC MDIO private data structure.
+> + *
+> + * returns:	0 on success, -ENOMEM when mdiobus_alloc
+> + * (to allocate memory for MII bus structure) fails.
+> + *
+> + * Sets up and registers the MDIO interface.
+> + */
+> +int arc_mdio_probe(struct device_node *dev_node, struct arc_mdio_priv *priv)
+> +{
+> +	struct device_node *mdio_np;
+> +	struct mii_bus *bus;
+> +	int error;
+> +
+> +	bus = mdiobus_alloc();
+> +	if (!bus) {
+> +		error = -ENOMEM;
+> +		goto cleanup;
+> +	}
+> +
+> +	priv->bus = bus;
+> +	bus->priv = priv;
+> +	bus->name = "Synopsys MII Bus",
+> +	bus->read = &arc_mdio_read;
+> +	bus->write = &arc_mdio_write;
+> +
+> +	snprintf(bus->id, MII_BUS_ID_SIZE, "%.8x",
+> +			(unsigned int)priv->reg_base_addr);
+> +
+> +	bus->parent = priv->dev;
+> +
+> +	mdio_np = of_find_node_by_name(NULL, "mdio");
+> +	if (!mdio_np) {
+> +		dev_err(priv->dev, "cannot find <mdio> in device tree\n");
+> +		error = -ENODEV;
+> +		goto cleanup;
+> +	}
+
+of_find_node_by_name() is probably not what you want here, the name should
+not be used as a primary key. Maybe it's better to use a standalone driver
+for the phy and put it into drivers/net/phy/. I don't know what the official
+policy is here though, since the phy is only used in this one driver.
+
+	Arnd
