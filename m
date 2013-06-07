@@ -1,72 +1,58 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] arm/dt: Don't add disabled CPUs to system topology
-Date: Fri, 7 Jun 2013 17:13:59 +0100
-Message-ID: <20130607161359.GE3111@e102568-lin.cambridge.arm.com>
-References: <1370538685-22386-1-git-send-email-james.king@linaro.org>
- <20130607102326.GA3111@e102568-lin.cambridge.arm.com>
- <51B1EC24.3010909@gmail.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH 6/6] ARM: dts: Add pcie controller node for Samsung
+ EXYNOS5440 SoC
+Date: Fri, 7 Jun 2013 10:20:50 -0600
+Message-ID: <20130607162050.GA31895@obsidianresearch.com>
+References: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com>
+ <20130408165626.GA30824@obsidianresearch.com>
+ <000c01ce6360$237a7040$6a6f50c0$@samsung.com>
+ <1880458.2ksb8qtzHh@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51B1EC24.3010909@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: James King <james.king@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>, "nico@linaro.org" <nico@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "patches@linaro.org" <patches@linaro.org>, "namhyung@kernel.org" <namhyung@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1880458.2ksb8qtzHh@wuerfel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Jingoo Han <jg1.han@samsung.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 07, 2013 at 03:20:20PM +0100, Rob Herring wrote:
-> On 06/07/2013 05:23 AM, Lorenzo Pieralisi wrote:
-> > Hi James,
+On Fri, Jun 07, 2013 at 01:59:43PM +0200, Arnd Bergmann wrote:
+> On Friday 07 June 2013 18:19:40 Jingoo Han wrote:
+> > Hi Jason Gunthorpe,
 > > 
-> > On Thu, Jun 06, 2013 at 06:11:25PM +0100, James King wrote:
-> >> If CPUs are marked as disabled in the devicetree, make sure they do
-> >> not exist in the system CPU information and CPU topology information.
-> >> In this case these CPUs will not be able to be added to the system later
-> >> using hot-plug. This allows a single chip with many CPUs to be easily
-> >> used in a variety of hardware devices where they may have different
-> >> actual processing requirements (eg for thermal/cost reasons).
-> >>
-> >> - Change devicetree.c to ignore any cpu nodes marked as disabled,
-> >>   this effectively limits the number of active cpu cores so no need
-> >>   for the max_cpus=x in the chosen node.
-> >> - Change topology.c to ignore any cpu nodes marked as disabled, this
-> >>   is where the scheduler would learn about big/LITTLE cores so this
-> >>   effectively keeps the scheduler in sync.
-> >>
+> > I implemented 'Single domain' with Exynos PCIe for last two months;
+> > however, it cannot work properly due to the hardware restriction.
+> > Each MEM region is hard-wired.
 > > 
-> > I have two questions:
-> > 
-> > 1) Since with this approach the DT should change anyway if on different
-> >    hardware devices based on the same chip you want to allow booting a
-> >    different number of CPUs, why do not we remove the cpu nodes instead of
-> >    disabling them ? Put it another way: cpu nodes define a cpu as
-> >    possible (currently), we can simply remove the node if we do not want
-> >    that cpu to be seen by the kernel.
-> > 2) If we go for the "status" property, why do not we use it to set present
-> >    mask ? That way the cpu is possible but not present, you cannot
-> >    hotplug it in. It is a bit of a stretch, granted, the cpu _is_ present,
-> >    we just want to disable it, do not know how this is handled in x86
-> >    and other archs though.
+> > Thus, I will send Exynos PCIe V3 patch as 'Separate domains'.
 > 
-> The meaning of disabled for cpus in ePAPR is that the cpu is offline
-> (i.e. in a spinloop or wfi), not that the cpu is unavailable. This is a
-> bit of a departure and inconsistency from how status for devices are
-> used. That would imply that we should be setting status to disabled for
-> all secondary cores and that possibly the status value should get
-> updated to reflect the state of the cpu.
+> Yes, I think that is best, if the hardware is clearly designed as
+> separate domains, this is what we should do by default in the
+> driver. For the Marvell case with its 10 separate ports, much
+> more address space would be wasted by having one domain per
+> port and that hardware let us work around it by remapping the
+> physical address space windows. For Exynos there is much less to
+> lose and I too cannot see how it would be done in the first
+> place.
 
-Yes, that's what I understood from the ePAPR as well. According to
-the ePAPR, as you say, a cpu with its status property == "disabled" is a
-possible CPU, since it can be enabled (through a specific enable-method).
+Sounds fair to me.
 
-I am not sure "status" can be reused for the purpose this patch was developed
-for without changing the bindings in the ePAPR (ie if DT parsing skips
-cpu nodes with status == "disabled", this is a significant departure
-from what ePAPR defines, and it would force us to define an enable-method
-to enable/online those CPUs which is not what this patch was developed for).
+But when we talk about multiple domains we don't mean a disjoint range
+bus bus numbers, as your other email shows:
 
-How was PowerPC tackling the problem James set about solving ?
+00:00.0 PCI bridge: Samsung Electronics Co Ltd Device a549 (rev 01) (prog-if 00 [Normal decode])
+10:00.0 PCI bridge: Samsung Electronics Co Ltd Device a549 (rev 01) (prog-if 00 [Normal decode])
 
-Lorenzo
+We mean multiple domains, it should look like this:
+
+0000:00:00.0 PCI bridge: Samsung Electronics Co Ltd Device a549 (rev 01) (prog-if 00 [Normal decode])
+0001:00:00.0 PCI bridge: Samsung Electronics Co Ltd Device a549 (rev 01) (prog-if 00 [Normal decode])
+
+ie lspci -D.
+
+Each domain gets a unique bus number range, config space, io range,
+etc. This is much clearer to everyone than trying to pretend there is
+only one domain when the HW is actually multi-domain.
+
+Jason
