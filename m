@@ -1,62 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 03/14] bus: mvebu-mbus: Introduce device tree binding
-Date: Fri, 7 Jun 2013 21:53:03 +0200
-Message-ID: <201306072153.03855.arnd@arndb.de>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306072110.35856.arnd@arndb.de>
- <20130607194430.GA7854@obsidianresearch.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] ARM: dts: add dtsi for palmas
+Date: Fri, 07 Jun 2013 13:56:05 -0600
+Message-ID: <51B23AD5.8060006@wwwdotorg.org>
+References: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130607194430.GA7854-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: J Keerthy <j-keerthy@ti.com>
+Cc: b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, grant.likely@secretlab.ca, swarren@nvidia.com, sameo@linux.intel.com, gg@slimlogic.co.uk, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 June 2013, Jason Gunthorpe wrote:
-> We have a minimum requirement that the bootloader setup internal regs,
-> so the minimum required DT bindings is going to be this:
+On 06/07/2013 05:28 AM, J Keerthy wrote:
+> Adds palmas mfd and palmas regulator nodes. This is
+> based on the patch series:
 > 
-> mbus {
->   compatible = ...
->   ranges = <INTERNAL_REGS_MAP_ID 0xf1000000 0x100000>;
->   reg = <0xf1000xxx ...>; // MBUS regs block
->   #address/size-cells...
+> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg89957.html
 > 
->   internal-regs  {
->       ranges = <0 INTERNAL_REGS_MAP_ID 0x100000>;
->   }
-> }
-> 
-> ie the ranges should never be empty.
+> The device tree nodes are based on:
+> https://lkml.org/lkml/2013/6/6/25
 
-Right, that's what I thought.
+> diff --git a/arch/arm/boot/dts/palmas.dtsi b/arch/arm/boot/dts/palmas.dtsi
 
-> Discovery of the address of the mbus control registers is via the reg
-> property on its own node (which is untranslated), and all other
-> internal regs blocks will automatically translate as they are supposed
-> to (Thomas's work to make internal regs 0xd/0xf1 relies on this, AFAIK)
-> 
-> INTERNAL_REGS_MAP_ID is an invalid target ID value, defined to mean
-> the internal registers target. 0xFFFFFFFF is a better choice for this
-> than 0, because 0xFFFFFFFF is never going to be a valid target id, it
-> is too large.
+> +&palmas {
 
-Can you explain to me why it is an invalid target ID value? Is it
-treated very differently by the mbus register setup than all the
-others? I guess we can define it as something else to make a valid
-target ID, by using one or more of the remaining bits in the first
-address cell.
+Hmmm. That (i.e. requiring the board file to declare the node, then
+setting up all the content by later including this file) is an
+interesting approach. I guess it's reasonable. The one issue is that it
+makes it a little harder for the board file to override any of the
+properties in this file., although it certainly is possible by including
+those overrides after the include.
 
-	Arnd
+Irrespective of that, some comments on this:
+
+> +	palmas_pmic {
+
+> +		ti,ldo6-vibrator;
+
+For example, what if the board doesn't want to have the property set?
+
+> +
+> +		regulators {
+> +			smps123_reg: smps123 {
+> +				regulator-name = "smps123";
+> +				regulator-min-microvolt = < 600000>;
+> +				regulator-max-microvolt = <1500000>;
+
+Or what if the board wants to limit the voltage range of this regulator
+due to what it's used for on the board.
+
+> +				regulator-always-on;
+> +				regulator-boot-on;
+
+And those two properties are almost certainly board-specific policy.
