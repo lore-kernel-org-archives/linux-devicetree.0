@@ -1,8 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 08/14] memory: mvebu-devbus: Remove address decoding window
- workaround
-Date: Fri,  7 Jun 2013 13:47:45 -0300
-Message-ID: <1370623671-7748-9-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH 09/14] ARM: mvebu: Add MBus to Armada 370/XP device tree
+Date: Fri,  7 Jun 2013 13:47:46 -0300
+Message-ID: <1370623671-7748-10-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,107 +22,112 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that mbus device tree binding has been introduced, remove the address
-decoding window management from this driver.
-A suitable 'ranges' entry should be added to the devbus-compatible node in
-the device tree, as described by the mbus binding documentation.
+The Armada 370/XP SoC family has a completely configurable address
+space handled by the MBus controller.
+
+This patch introduces the device tree layout of MBus, making the
+'soc' node as mbus-compatible.
+Since every peripheral/controller is a child of this 'soc' node,
+this makes all of them sit behind the mbus, thus describing the
+hardware accurately.
+
+A translation entry has been added for the internal-regs mapping.
+This can't be done in the common armada-370-xp.dtsi because A370
+and AXP have different addressing width.
 
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/memory/mvebu-devbus.c | 64 ++-----------------------------------------
- 1 file changed, 2 insertions(+), 62 deletions(-)
+ arch/arm/boot/dts/armada-370-xp.dtsi             | 6 ++----
+ arch/arm/boot/dts/armada-370.dtsi                | 6 ++++--
+ arch/arm/boot/dts/armada-xp-gp.dts               | 3 ---
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 3 ---
+ arch/arm/boot/dts/armada-xp.dtsi                 | 4 ++++
+ 5 files changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/memory/mvebu-devbus.c b/drivers/memory/mvebu-devbus.c
-index 978e8e3..94c9248 100644
---- a/drivers/memory/mvebu-devbus.c
-+++ b/drivers/memory/mvebu-devbus.c
-@@ -208,16 +208,11 @@ static int mvebu_devbus_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = pdev->dev.of_node;
--	struct device_node *parent;
- 	struct devbus *devbus;
- 	struct resource *res;
- 	struct clk *clk;
- 	unsigned long rate;
--	const __be32 *ranges;
--	int err, cs;
--	int addr_cells, p_addr_cells, size_cells;
--	int ranges_len, tuple_len;
--	u32 base, size;
-+	int err;
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index 52a1f5e..68d9fa1 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -29,18 +29,16 @@
+ 	};
  
- 	devbus = devm_kzalloc(&pdev->dev, sizeof(struct devbus), GFP_KERNEL);
- 	if (!devbus)
-@@ -248,68 +243,13 @@ static int mvebu_devbus_probe(struct platform_device *pdev)
- 		return err;
+ 	soc {
+-		#address-cells = <1>;
++		#address-cells = <2>;
+ 		#size-cells = <1>;
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&mpic>;
+-		ranges = <0          0 0xd0000000 0x0100000 /* internal registers */
+-			  0xe0000000 0 0xe0000000 0x8100000 /* PCIe */>;
  
- 	/*
--	 * Allocate an address window for this device.
--	 * If the device probing fails, then we won't be able to
--	 * remove the allocated address decoding window.
--	 *
--	 * FIXME: This is only a temporary hack! We need to do this here
--	 * because we still don't have device tree bindings for mbus.
--	 * Once that support is added, we will declare these address windows
--	 * statically in the device tree, and remove the window configuration
--	 * from here.
--	 */
--
--	/*
--	 * Get the CS to choose the window string.
--	 * This is a bit hacky, but it will be removed once the
--	 * address windows are declared in the device tree.
--	 */
--	cs = (((unsigned long)devbus->base) % 0x400) / 8;
--
--	/*
--	 * Parse 'ranges' property to obtain a (base,size) window tuple.
--	 * This will be removed once the address windows
--	 * are declared in the device tree.
--	 */
--	parent = of_get_parent(node);
--	if (!parent)
--		return -EINVAL;
--
--	p_addr_cells = of_n_addr_cells(parent);
--	of_node_put(parent);
--
--	addr_cells = of_n_addr_cells(node);
--	size_cells = of_n_size_cells(node);
--	tuple_len = (p_addr_cells + addr_cells + size_cells) * sizeof(__be32);
--
--	ranges = of_get_property(node, "ranges", &ranges_len);
--	if (ranges == NULL || ranges_len != tuple_len)
--		return -EINVAL;
--
--	base = of_translate_address(node, ranges + addr_cells);
--	if (base == OF_BAD_ADDR)
--		return -EINVAL;
--	size = of_read_number(ranges + addr_cells + p_addr_cells, size_cells);
--
--	/*
--	 * Create an mbus address windows.
--	 * FIXME: Remove this, together with the above code, once the
--	 * address windows are declared in the device tree.
--	 */
--	err = mvebu_mbus_add_window(devbus_wins[cs], base, size);
--	if (err < 0)
--		return err;
--
--	/*
- 	 * We need to create a child device explicitly from here to
- 	 * guarantee that the child will be probed after the timing
- 	 * parameters for the bus are written.
- 	 */
- 	err = of_platform_populate(node, NULL, NULL, dev);
--	if (err < 0) {
--		mvebu_mbus_del_window(base, size);
-+	if (err < 0)
- 		return err;
--	}
+ 		internal-regs {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges;
++			ranges = <0 0 0 0x100000>;
  
- 	return 0;
- }
+ 			mpic: interrupt-controller@20000 {
+ 				compatible = "marvell,mpic";
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index aee2b18..54cd3ef 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -29,8 +29,10 @@
+ 	};
+ 
+ 	soc {
+-		ranges = <0          0xd0000000 0x0100000 /* internal registers */
+-			  0xe0000000 0xe0000000 0x8100000 /* PCIe */>;
++		compatible = "marvell,armada370-mbus", "simple-bus";
++		reg = <0xd0020000 0x100>, <0xd0020180 0x20>;
++		ranges = <0 0 0xd0000000 0x100000>;
++
+ 		internal-regs {
+ 			system-controller@18200 {
+ 				compatible = "marvell,armada-370-xp-system-controller";
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index 3ee63d1..26ad06f 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -39,9 +39,6 @@
+ 	};
+ 
+ 	soc {
+-		ranges = <0          0 0xd0000000 0x100000
+-			  0xf0000000 0 0xf0000000 0x1000000>;
+-
+ 		internal-regs {
+ 			serial@12000 {
+ 				clock-frequency = <250000000>;
+diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+index 46b7850..f14d36c 100644
+--- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
++++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+@@ -27,9 +27,6 @@
+ 	};
+ 
+ 	soc {
+-		ranges = <0          0 0xd0000000 0x100000
+-			  0xf0000000 0 0xf0000000 0x8000000>;
+-
+ 		internal-regs {
+ 			serial@12000 {
+ 				clock-frequency = <250000000>;
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index 1ee8540..a3865f7 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -23,6 +23,10 @@
+ 	compatible = "marvell,armadaxp", "marvell,armada-370-xp";
+ 
+ 	soc {
++		compatible = "marvell,armadaxp-mbus", "simple-bus";
++		reg = <0 0xd0020000 0 0x100>, <0 0xd0020180 0 0x20>;
++		ranges = <0 0 0 0xd0000000 0x100000>;
++
+ 		internal-regs {
+ 			L2: l2-cache {
+ 				compatible = "marvell,aurora-system-cache";
 -- 
 1.8.1.5
