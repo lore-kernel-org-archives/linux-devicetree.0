@@ -1,104 +1,56 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
-Date: Fri, 7 Jun 2013 18:47:36 +0100
-Message-ID: <20130607174736.GB29344@localhost.localdomain>
-References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com>
- <51B0BC80.9040007@wwwdotorg.org>
- <20130606180824.GC3320@localhost.localdomain>
- <51B0D4FA.5070500@wwwdotorg.org>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 0/3] clk: dt: bindings for mux & divider clocks
+Date: Fri, 07 Jun 2013 10:52:54 -0700
+Message-ID: <20130607175254.10233.7661@quantum>
+References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
+ <20130607055128.GA20780@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51B0D4FA.5070500-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130607055128.GA20780-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 06, 2013 at 12:29:14PM -0600, Stephen Warren wrote:
-> On 06/06/2013 12:08 PM, Dave Martin wrote:
-> > On Thu, Jun 06, 2013 at 10:44:48AM -0600, Stephen Warren wrote:
-> >> On 06/06/2013 01:28 AM, Alexandre Courbot wrote:
-> >>> Boot loaders on some Tegra devices can be unlocked but do not let the
-> >>> system operate without SecureOS. SecureOS prevents access to some
-> >>> registers and requires the operating system to perform certain
-> >>> operations through Secure Monitor Calls instead of directly accessing
-> >>> the hardware.
-> >>>
-> >>> This patch introduces basic SecureOS support for Tegra. SecureOS support
-> >>> can be enabled by adding a "nvidia,secure-os" property to the "chosen"
-> >>> node of the device tree.
-> ...
-> > So, something like
-> > 
-> > 	foo-firmware {
-> > 		compatible = "vendor1,foo-firmware-1.0", "vendor1,foo-firmware";
-> > 		method = "smc";
-> > 
-> > 		// ...
-> > 	};
-> > 
-> > 	bar-firmware {
-> > 		compatible = "vendor2,bar-firmware-1.6", "vendor2,bar-firmware";
-> > 		method = "smc";
-> > 
-> > 		// ...
-> > 	};
-> > 
-> > Could make sense.
+Quoting Shawn Guo (2013-06-06 22:51:31)
+> Mike,
 > 
-> I'm not sure if the method property is useful in most cases. For generic
-
-I was mostly illustrating.  It's not useful in most cases, unless we
-have standard code parsing these bindings (probably overkill).
-
-> ABIs such as PSCI that actually support multiple communication paths,
-> yes, it makes sense. However, it seems like for most custom ABIs, such
-> as is presumably implemented by whatever "SecureOS" is on Tegra, the
-> firmware type (or compatible value) directly implies that it operates
-> over SMC not HVC. After all, presumably if the kernel was virtualized,
-> it wouldn't have access to the raw secure monitor? I suppose you could
-> argue that the hypervisor might end up emulating the same ABI over HVC
-> instead? I'm not sure how likely that is. A compromise might be to
-> assume SMC if no property was present, which would allow it to be
-> optionally added later if it turned out to be useful.
-
-Sure.
-
-For most firmware interface bindings, the backend could be implied.
-The binding could be extended later if an alternative backend were needed.
-
-If an SMC-called firmware interface is visible to a guest running under
-a hypervisor at all, it is probably still callable using SMC, since
-hypervisors can trap and proxy/emulate it instead of the call bypassing
-the hypervisor and going straight to the Secure World.
-
-If the interface is not visible, the hypervisor shouldn't put the relevant
-node in the DT supplied to the guest (just as any physical hardware not
-accessible to the guest shouldn't be described in the DT).
-
-
-Firmware interfaces which don't specifically depend on the Security
-Extensions need multiple backends, because hypervisors can't trap SMC on
-ARMv8 platforms which don't implement the Security Extensions  -- this
-was an issue for PSCI, and it's why HVC is used instead by KVM etc.
-
-For "Secure OS" interfaces this won't be an issue since those interfaces
-don't make sense if the Security Extensions aren't there.
-
-> > ...where we would require all new firmware interface bindings to
-> > include the "-firmware" in their node names and compatible strings
-> > (with a version suffix encouraged for the compatible strings, where
-> > relevant).
+> On Mon, Jun 03, 2013 at 10:53:07AM -0700, Mike Turquette wrote:
+> > I am using this code while converting the OMAP4 clock data over to DT
 > 
-> That's probably a good convention, but I'm not sure it should be
-> required (or at least validated by code). Requiring this by code review
-> might be OK. Node names aren't meant to be interpreted semantically.
+> I see these basic clk bindings can be useful for platforms that have
+> a relatively simple clock tree, but I'm a little surprised that you plan
+> to move OMAP4 to it.  I'm wondering how many nodes you will have to add
+> to OMAP4 device tree.  For imx6q example, it means ~200 nodes addition
+> to device tree, which is obviously a bloating of device tree.
+> 
 
-Agreed: I don't think this makes sense as a formal binding, but rather
-it's a convention we can follow which avoids DTs being unnecessarily
-cryptic.
+Yes, there was a time when I was firmly against doing such a thing.
+However I'm not sure it is so bad now.  More and more SoCs are going to
+keep getting merged into the kernel and that just means more and more
+clock data.  Perhaps DT is best suited to handle this bloat.  I broke
+the clock data out into a separate file so that it didn't overwhelm the
+existing omap4.dtsi.
 
-Cheers
----Dave
+Either way I marked this series as RFC precisely due to your point.  I
+want feedback on how the OMAP folks feel about this.  So far no has has
+NACKed it ;-)
+
+Regards,
+Mike
+
+> Shawn
+> 
+> > and some common boilerplate code can be factored out of several clock
+> > drivers if this is merged.
