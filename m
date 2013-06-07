@@ -1,136 +1,164 @@
-From: "luke.leighton" <luke.leighton@gmail.com>
+From: "Dennis Lan (dlan)" <dennis.yxun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Sat, 8 Jun 2013 00:07:28 +0100
-Message-ID: <CAPweEDwFHY_AbBxjspm7BvfdFHsxL5H594cFN4ZVC6QFpu4QGA@mail.gmail.com>
+Date: Sat, 8 Jun 2013 07:09:38 +0800
+Message-ID: <CAF1ZMEets=ea+zpUTUn9Xr-+C+JaKxajK45vK+_mnDJJeoYQpA@mail.gmail.com>
 References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<1370475609.20454.44.camel@localhost>
-	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
-	<1733666.lHUBcfUXq9@flatron>
-	<20130606112723.71ddd70c@skate>
-	<CAPweEDzW60poOYahm31aW3_A=NvZmyBPPPgM9PzdvuPJnju69A@mail.gmail.com>
-	<20130607220853.GR14209@lukather>
+ <1370475609.20454.44.camel@localhost>
+ <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+ <1733666.lHUBcfUXq9@flatron> <20130606112723.71ddd70c@skate>
+ <CAPweEDzW60poOYahm31aW3_A=NvZmyBPPPgM9PzdvuPJnju69A@mail.gmail.com>
+ <20130607220853.GR14209@lukather>
+ <CAPweEDwFHY_AbBxjspm7BvfdFHsxL5H594cFN4ZVC6QFpu4QGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130607220853.GR14209@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org
+Content-Type: multipart/mixed; boundary="===============1647208947423473511=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPweEDwFHY_AbBxjspm7BvfdFHsxL5H594cFN4ZVC6QFpu4QGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "luke.leighton" <luke.leighton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, debian-arm <debian-arm-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org>, "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux on small ARM machines <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, debian-kernel <debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 7, 2013 at 11:08 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Fri, Jun 07, 2013 at 07:26:49PM +0100, luke.leighton wrote:
->>  maxime: we need to talk :)
->>
->>  please tell me in 4 or 5 sentences what you've managed to do so far,
->> expanding a little on what thomas says below, more specifically what
->> it achieves and/or allows rather than technically what it does
->> (suitable for managers and directors in other words), and what plans
->> you'd like to see happen.
+--===============1647208947423473511==
+Content-Type: multipart/alternative; boundary=047d7b67610474308a04de988609
+
+--047d7b67610474308a04de988609
+Content-Type: text/plain; charset=UTF-8
+
+On Saturday, June 8, 2013, luke.leighton wrote:
+
+> right - too many people contributed to this, input from jon smirl,
+> wookie, maxime, tomasz, henrik, i've made a start here and will
+> continue editing: this is notes for me to put forward an agenda for
+> discussion:
 >
-> You mean something like http://linux-sunxi.org/Linux_mainlining_effort ?
-
- ahh, fantastic.  with references too.  magic.  exactly what i need.
-thank you.  listed now at
-http://hands.com/~lkcl/allwinner_linux_proposal.txt
-
-> You should really do a bit of research before starting a thread like
-> this one.
-
- then that gives you some idea of how busy i've been and still am, to
-not be aware even of things like this, to have kicked a project off
-some 18-24 months ago and not be able to keep up with one of the many
-branches and initiatives that it's spawned.
-
- when i said i've been caught off-guard by this opportunity i meant
-exactly what i said.
-
-> This webpage has been around for like 9 monthes now on the wiki
-> of a community you pretend to represent
-
- i pretend no such thing and apologise for giving any impression of such.
-
-> (even though I fail to get how
-> you can pretend such thing, but that's another topic).
-
- i have a different focus: a meta-project of sorts, where allwinner
-happened to be the first.  look up rhombus-tech and EOMA68 and it'll
-become a bit clearer.
-
->> > is the maintainer of the mainline Allwinner sunxi
->> > effort. It already supports a number of boards, has a pinctrl driver, a
->> > GPIO driver, serial port is working, network is working, I2C is
->> > working.
->> >
->> > All in mainline, completely Device Tree based.
->>
->>  great.  which version did it first hit, i.e. what will the first
->> signs of this be when allwinner begin doing "git pulls"?
+> http://hands.com/~lkcl/allwinner_linux_proposal.txt
 >
-> 3.8, as shown in the wiki page
-
- got that.
-
->>  and which boards.  bear in mind that one of those "boards" should
->> really be "the total range of products available across hundreds of
->> chinese tablet clone manufacturers".
->>
->>  specific question: is one of the "boards" the one that tom cubie
->> submitted, which covers virtually every android tablet product
->> manufactured in the millions by chinese tablet clone manufacturers?
+> i'm setting a rule that each section *has* to have a list of clear
+> benefits, otherwise it'll have to be removed before it goes on to
+> their Directors.
 >
-> Again, wiki.
-
- yep, am there now.
-
->> > So isn't this entire discussion completely moot?
->>
->>  no because it's totally in isolation from allwinner.  i need to give
->> them a heads-up, and get them involved, giving them specific
->> incentives [which nobody's yet given!!] for following a particular
->> path [or paths] yet to be recommended.
->>
->> > The mainline support
->> > for sunxi has already started since 6 months or so, and has been Device
->> > Tree based from day one.
->>
->> to clarify: the *community-driven* mainline support for sunxi.  ok -
->> which chips?  sun3i (ARM9), sun4i (Cortex A8), sun5i, sun6i and sun7i
->> (Dual-Core Cortex A7)?  which ones are in?
+> so - even if there are any allwinner engineers reading this who would
+> like something put forward please also speak up! :)
 >
-> A10, A13 for the moment. I just received hardware with A10s, A20 and A31
-> that I need to work on, but support should come quite soon.
+> l.
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
 
- superb.  question: what help or other resources could you do with?
-what additional information?
+
+Hi luke
+     I'm not a allwinner employer :-)$. but pretty much in the same
+position as they are.
+
+     I'd like to add a few comments about the risk of adopting the device
+tree(from allwinner side)
+1) current using fdt in bootloader(uboot) is not mature, I'm not saying
+about passing the fdt data to kernel.
+  But the bootloader itself need information from device tree, say boot0/1
+phase (boot device type, DDR initialization...)
+  since fdt is not ready, and SRAM space is very limited ... I'm afraid
+'fex' may co-exist with device tree.
+  still, they receive benefits if they can adopt device tree, at
+least minimal the kernel side migration effort
+  Generally this info already been pointed out by steppen warren in
+previous email...
+
+2) device tree may not been understood by third vendors (who previus
+produce shoes or ? :-$),
+  they are real old 'Fex' scheme user, they like edit the data in windows
+with dos format
+  So, how to fill this gaps, make them happy? Creat another tool to handle
+device tree modification?
+  Then it's another price they have to pay...
 
 
-> I already
-> have some patches pending to be tested on an A31 board, but didn't have
-> as much time as I wanted lately to actually set a proper environment to
-> test them.
+Dennis Lan
 
- ok - good to know.  btw when you get to it please note a bug found in
-the "vanilla" [allwinner-released] A20 3.3 tree where they reduced a
-128 byte buffer to 78 bytes for spurious reasons; the critical fix is
-at line 989, of the following patch:
+--047d7b67610474308a04de988609
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
- http://git.rhombus-tech.net/?p=linux.git;a=commitdiff;h=refs/heads/lkcl-3.3-a20;hp=6c5753e5dc1fafff288d522c94b40a7dd2a81adc
+<br><br>On Saturday, June 8, 2013, luke.leighton  wrote:<br><blockquote cla=
+ss=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;pa=
+dding-left:1ex">right - too many people contributed to this, input from jon=
+ smirl,<br>
 
- i found this by running a diff -u of sun4i_usb from the 3.4 sunxi
-community tree against the sun7i_usb tree from the allwinner 3.3
-release.  amongst the desperate attempts to disable DMA (probably due
-to stack corruption of the above bug) and various renaming attempts of
-*SUN4I* to *SUN7I*, that one stuck out like a sore thumb.  the other
-bits - which may or may not be relevant - are the spinlock protection
-and the call to sw_udc_enable which is present in the sun4i_usb 3.4
-code but not the A20 3.3 code.
 
-mileage may vary, and the buffer overrun only happens if you enable
-the OTG interface as "dual" (auto-detect) because that's enough
-features in the bitfield to cause there to be enough strcpy's... oops
-:)
+wookie, maxime, tomasz, henrik, i&#39;ve made a start here and will<br>
+continue editing: this is notes for me to put forward an agenda for<br>
+discussion:<br>
+<br>
+<a href=3D"http://hands.com/~lkcl/allwinner_linux_proposal.txt" target=3D"_=
+blank">http://hands.com/~lkcl/allwinner_linux_proposal.txt</a><br>
+<br>
+i&#39;m setting a rule that each section *has* to have a list of clear<br>
+benefits, otherwise it&#39;ll have to be removed before it goes on to<br>
+their Directors.<br>
+<br>
+so - even if there are any allwinner engineers reading this who would<br>
+like something put forward please also speak up! :)<br>
+<br>
+l.<br>
+<br>
+_______________________________________________<br>
+linux-arm-kernel mailing list<br>
+<a>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org</a><br>
+<a href=3D"http://lists.infradead.org/mailman/listinfo/linux-arm-kernel" ta=
+rget=3D"_blank">http://lists.infradead.org/mailman/listinfo/linux-arm-kerne=
+l</a><br>
+</blockquote><div><br></div><div><br></div><div>Hi luke</div><div>=C2=A0 =
+=C2=A0 =C2=A0I&#39;m not a allwinner employer :-)$.=C2=A0but pretty much in=
+ the same position as they are.</div><div><br></div><div>=C2=A0 =C2=A0 =C2=
+=A0I&#39;d like to add a few comments about the risk of adopting the device=
+ tree(from allwinner side)</div>
 
-l.
+<div>1) current using fdt in bootloader(uboot) is not mature, I&#39;m not=
+=C2=A0saying about passing the fdt data to kernel.</div><div>=C2=A0 But the=
+ bootloader itself need information from device tree, say boot0/1 phase (bo=
+ot device type, DDR initialization...)</div>
+
+<div>=C2=A0 since=C2=A0fdt is not ready, and=C2=A0SRAM space is very limite=
+d ... I&#39;m afraid &#39;fex&#39; may co-exist with device tree.</div><div=
+>=C2=A0 still, they=C2=A0receive=C2=A0benefits=C2=A0if they can adopt devic=
+e tree, at least=C2=A0minimal the=C2=A0kernel side migration effort</div>
+
+<div>=C2=A0 Generally this info=C2=A0already been=C2=A0pointed<span></span>=
+ out by steppen warren in previous email...</div><div><br></div><div>2) dev=
+ice tree may not been understood by third vendors=C2=A0(who previus produce=
+=C2=A0shoes or ? :-$),=C2=A0</div>
+
+<div>=C2=A0=C2=A0they are real old=C2=A0&#39;Fex&#39; scheme user, they lik=
+e edit the data=C2=A0in windows with dos format</div><div>=C2=A0 So, how=C2=
+=A0to fill this gaps, make them happy? Creat another tool to handle device =
+tree modification?</div><div>
+
+=C2=A0 Then it&#39;s another=C2=A0price they=C2=A0have to pay...</div><div>=
+<br></div><div><br></div><div>Dennis Lan</div>
+
+--047d7b67610474308a04de988609--
+
+--===============1647208947423473511==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============1647208947423473511==--
