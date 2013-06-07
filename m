@@ -1,64 +1,72 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: Re: [PATCH V3 0/4] ARM: dts: omap5: Cleanup and updates for DT files
-Date: Fri, 7 Jun 2013 21:16:10 +0530
-Message-ID: <51B20042.3070804@ti.com>
-References: <1370611370-14715-1-git-send-email-r.sricharan@ti.com> <51B1F389.30002@ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] arm/dt: Don't add disabled CPUs to system topology
+Date: Fri, 7 Jun 2013 17:13:59 +0100
+Message-ID: <20130607161359.GE3111@e102568-lin.cambridge.arm.com>
+References: <1370538685-22386-1-git-send-email-james.king@linaro.org>
+ <20130607102326.GA3111@e102568-lin.cambridge.arm.com>
+ <51B1EC24.3010909@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51B1F389.30002@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51B1EC24.3010909@gmail.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: James King <james.king@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>, "nico@linaro.org" <nico@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "patches@linaro.org" <patches@linaro.org>, "namhyung@kernel.org" <namhyung@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 June 2013 08:21 PM, Benoit Cousson wrote:
-> Thanks for the quick update.
->
-> I've just applied the series in my for_3.11/dts branch.
- Thanks..
+On Fri, Jun 07, 2013 at 03:20:20PM +0100, Rob Herring wrote:
+> On 06/07/2013 05:23 AM, Lorenzo Pieralisi wrote:
+> > Hi James,
+> > 
+> > On Thu, Jun 06, 2013 at 06:11:25PM +0100, James King wrote:
+> >> If CPUs are marked as disabled in the devicetree, make sure they do
+> >> not exist in the system CPU information and CPU topology information.
+> >> In this case these CPUs will not be able to be added to the system later
+> >> using hot-plug. This allows a single chip with many CPUs to be easily
+> >> used in a variety of hardware devices where they may have different
+> >> actual processing requirements (eg for thermal/cost reasons).
+> >>
+> >> - Change devicetree.c to ignore any cpu nodes marked as disabled,
+> >>   this effectively limits the number of active cpu cores so no need
+> >>   for the max_cpus=x in the chosen node.
+> >> - Change topology.c to ignore any cpu nodes marked as disabled, this
+> >>   is where the scheduler would learn about big/LITTLE cores so this
+> >>   effectively keeps the scheduler in sync.
+> >>
+> > 
+> > I have two questions:
+> > 
+> > 1) Since with this approach the DT should change anyway if on different
+> >    hardware devices based on the same chip you want to allow booting a
+> >    different number of CPUs, why do not we remove the cpu nodes instead of
+> >    disabling them ? Put it another way: cpu nodes define a cpu as
+> >    possible (currently), we can simply remove the node if we do not want
+> >    that cpu to be seen by the kernel.
+> > 2) If we go for the "status" property, why do not we use it to set present
+> >    mask ? That way the cpu is possible but not present, you cannot
+> >    hotplug it in. It is a bit of a stretch, granted, the cpu _is_ present,
+> >    we just want to disable it, do not know how this is handled in x86
+> >    and other archs though.
+> 
+> The meaning of disabled for cpus in ePAPR is that the cpu is offline
+> (i.e. in a spinloop or wfi), not that the cpu is unavailable. This is a
+> bit of a departure and inconsistency from how status for devices are
+> used. That would imply that we should be setting status to disabled for
+> all secondary cores and that possibly the status value should get
+> updated to reflect the state of the cpu.
 
-Regards,
- Sricharan
-> Regards,
-> Benoit
->
->
-> On 06/07/2013 03:22 PM, Sricharan R wrote:
->> uevm is the only official board supported for OMAP5 soc in the mainline.
->> This series deprecates the support for existent sevm which will no more
->> be supported in mainline and renames the board dts file accordingly.
->> Also a few additional device DT entry updates are done.
->>
->> This is on top of the below branch
->>     git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git
->>     for_3.11/dts
->>
->> Boot tested on omap5-uevm after pulling in the data from below place
->>     git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux.git
->>     HWMOD DATA: for_3.11/omap5_data_files
->>     CLOCK DATA: out_of_tree/omap5_clk_data
->>
->> Dan Murphy (1):
->>   ARM: dts: omap5-uevm: Add LED support for uEVM blue LED
->>
->> Roger Quadros (1):
->>   ARM: dts: omap5-uevm: Add USB Host support
->>
->> Sourav Poddar (1):
->>   ARM: dts: omap5-uevm: Add uart pinctrl data
->>
->> Sricharan R (1):
->>   ARM: dts: omap5: Make uevm as the official board and deprecate sevm
->>     support
->>
->>  arch/arm/boot/dts/Makefile       |    2 +-
->>  arch/arm/boot/dts/omap5-evm.dts  |  261 --------------------------------
->>  arch/arm/boot/dts/omap5-uevm.dts |  311 ++++++++++++++++++++++++++++++++++++++
->>  arch/arm/boot/dts/omap5.dtsi     |   30 ++++
->>  4 files changed, 342 insertions(+), 262 deletions(-)
->>  delete mode 100644 arch/arm/boot/dts/omap5-evm.dts
->>  create mode 100644 arch/arm/boot/dts/omap5-uevm.dts
->>
+Yes, that's what I understood from the ePAPR as well. According to
+the ePAPR, as you say, a cpu with its status property == "disabled" is a
+possible CPU, since it can be enabled (through a specific enable-method).
 
+I am not sure "status" can be reused for the purpose this patch was developed
+for without changing the bindings in the ePAPR (ie if DT parsing skips
+cpu nodes with status == "disabled", this is a significant departure
+from what ePAPR defines, and it would force us to define an enable-method
+to enable/online those CPUs which is not what this patch was developed for).
+
+How was PowerPC tackling the problem James set about solving ?
+
+Lorenzo
