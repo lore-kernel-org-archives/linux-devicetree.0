@@ -1,58 +1,67 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH 6/6] ARM: dts: Add pcie controller node for Samsung
- EXYNOS5440 SoC
-Date: Fri, 7 Jun 2013 10:20:50 -0600
-Message-ID: <20130607162050.GA31895@obsidianresearch.com>
-References: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com>
- <20130408165626.GA30824@obsidianresearch.com>
- <000c01ce6360$237a7040$6a6f50c0$@samsung.com>
- <1880458.2ksb8qtzHh@wuerfel>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
+Date: Fri, 07 Jun 2013 10:33:10 -0600
+Message-ID: <51B20B46.4030501@wwwdotorg.org>
+References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com> <51B0BC80.9040007@wwwdotorg.org> <CAAVeFu+by44HnOzv_85kwgeCx5b9TxiMhr27x69QcUj9GRbk8A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1880458.2ksb8qtzHh@wuerfel>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Jingoo Han <jg1.han@samsung.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAVeFu+by44HnOzv_85kwgeCx5b9TxiMhr27x69QcUj9GRbk8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 07, 2013 at 01:59:43PM +0200, Arnd Bergmann wrote:
-> On Friday 07 June 2013 18:19:40 Jingoo Han wrote:
-> > Hi Jason Gunthorpe,
-> > 
-> > I implemented 'Single domain' with Exynos PCIe for last two months;
-> > however, it cannot work properly due to the hardware restriction.
-> > Each MEM region is hard-wired.
-> > 
-> > Thus, I will send Exynos PCIe V3 patch as 'Separate domains'.
+On 06/07/2013 02:11 AM, Alexandre Courbot wrote:
+> On Fri, Jun 7, 2013 at 1:44 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 06/06/2013 01:28 AM, Alexandre Courbot wrote:
+>>> Boot loaders on some Tegra devices can be unlocked but do not let the
+>>> system operate without SecureOS. SecureOS prevents access to some
+>>> registers and requires the operating system to perform certain
+>>> operations through Secure Monitor Calls instead of directly accessing
+>>> the hardware.
+>>>
+>>> This patch introduces basic SecureOS support for Tegra. SecureOS support
+>>> can be enabled by adding a "nvidia,secure-os" property to the "chosen"
+>>> node of the device tree.
+>>
+>> I suspect "SecureOS" here is the name of a specific implementation of a
+>> secure monitor, right? It's certainly a very unfortunate name, since it
+>> sounds like a generic concept rather than a specific implementation:-(
 > 
-> Yes, I think that is best, if the hardware is clearly designed as
-> separate domains, this is what we should do by default in the
-> driver. For the Marvell case with its 10 separate ports, much
-> more address space would be wasted by having one domain per
-> port and that hardware let us work around it by remapping the
-> physical address space windows. For Exynos there is much less to
-> lose and I too cannot see how it would be done in the first
-> place.
+> Right. Using the actual name (Trusted Foundations) is probably better.
+> I don't think the SecureOS denomination is used by anyone else but
+> NVIDIA.
+> 
+>> There certainly could be (and I believe are in practice?) multiple
+>> implementation of a secure monitor for Tegra. Presumably, each of those
+>> implementations has (or could have) a different definition for what SVC
+>> calls it supports, their parameters, etc.
+>>
+>> I think we need to separate the concept of support for *a* secure
+>> monitor, from support for a *particular* secure monitor.
+> 
+> Agreed. In this case, can we assume that support for a specific secure
+> monitor is not arch-specific, and that this patch should be moved
+> outside of arch-tegra and down to arch/arm? In other words, the ABI of
+> a particular secure monitor should be the same no matter the chip,
+> shouldn't it?
 
-Sounds fair to me.
+I would like to believe that the Trusted Foundations monitor had the
+same ABI irrespective of which Soc it was running on. However, I have
+absolutely no idea at all if that's true. Even if there's some common
+subset of the ABI that is identical across all SoCs, I wouldn't be too
+surprised if there were custom extensions for each different SoC, or
+just perhaps even each product.
 
-But when we talk about multiple domains we don't mean a disjoint range
-bus bus numbers, as your other email shows:
+Can you research this and find out the answer?
 
-00:00.0 PCI bridge: Samsung Electronics Co Ltd Device a549 (rev 01) (prog-if 00 [Normal decode])
-10:00.0 PCI bridge: Samsung Electronics Co Ltd Device a549 (rev 01) (prog-if 00 [Normal decode])
+What we can always do is make a compatible property that lists
+everything[1], and have the driver match on the most specific value for
+now, but relax the driver's matching later if it turns out that the ABI
+is indeed common.
 
-We mean multiple domains, it should look like this:
-
-0000:00:00.0 PCI bridge: Samsung Electronics Co Ltd Device a549 (rev 01) (prog-if 00 [Normal decode])
-0001:00:00.0 PCI bridge: Samsung Electronics Co Ltd Device a549 (rev 01) (prog-if 00 [Normal decode])
-
-ie lspci -D.
-
-Each domain gets a unique bus number range, config space, io range,
-etc. This is much clearer to everyone than trying to pretend there is
-only one domain when the HW is actually multi-domain.
-
-Jason
+[1] That'd need to be at least secure OS name, and secure OS version.
+Perhaps the SoC and board data can be deduced from the DT's top-level
+compatible properties; nvidia,tegra114-shield, nvidia,tegra114?
