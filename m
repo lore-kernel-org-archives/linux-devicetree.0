@@ -1,244 +1,202 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [RFC 05/50] ARM: at91: add PMC system clocks support using common clk framework.
-Date: Fri,  7 Jun 2013 10:34:16 +0200
-Message-ID: <1370594119-5342-6-git-send-email-b.brezillon@overkiz.com>
-References: <1370594119-5342-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1370594119-5342-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree-discuss@lists.ozlabs.org
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Fri, 07 Jun 2013 10:57:57 +0200
+Message-ID: <4466665.6pIGCIdISn@flatron>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+ <1622862.fXQWv0YWGV@flatron>
+ <CAPweEDx_1fvAv9sROtPreoyyj_yDAuYb040fM2zPc+tf22d=YA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPweEDx_1fvAv9sROtPreoyyj_yDAuYb040fM2zPc+tf22d=YA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "luke.leighton" <luke.leighton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, debian-arm-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org, "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux on small ARM machines <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Friday 07 of June 2013 08:52:43 luke.leighton wrote:
+> On Thu, Jun 6, 2013 at 2:02 PM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> 
+wrote:
+> > On Thursday 06 of June 2013 13:49:38 luke.leighton wrote:
+> >> On Thu, Jun 6, 2013 at 1:43 PM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > 
+> > wrote:
+> >> > Luke,
+> >> > 
+> >> > On Thursday 06 of June 2013 13:24:57 luke.leighton wrote:
+> >> >> On Thu, Jun 6, 2013 at 1:01 AM, Tomasz Figa
+> >> >> <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> > 
+> >> > wrote:
+> >> >> > I don't see any other solution here than moving all the
+> >> >> > Allwinner
+> >> >> > code
+> >> >> > to DT (as it has been suggested in this thread several times
+> >> >> > already), as this is the only hardware description method
+> >> >> > supported
+> >> >> > by ARM Linux.
+> >> >>  
+> >> >>  i repeat again: please state, explicitly and unequivocably that
+> >> >>  you
+> >> >>  -
+> >> >> 
+> >> >> linux kernel developers - are happy that the reach of linux and
+> >> >> gnu/linux OSes is dramatically reduced due to this intransigent
+> >> >> position.
+> >> >> 
+> >> >>  or, tomasz, please state that you, tomasz, represent each and
+> >> >>  every
+> >> >> 
+> >> >> one of the linux kernel developers so that i do not need to keep
+> >> >> asking.
+> >> > 
+> >> > I do not represent all linux kernel developers by any means. I am
+> >> > just
+> >> > stating current policy of SoC/board support maintained by ARM
+> >> > Linux,
+> >> > which is common for all Linux kernel devlopers, or at least ARM
+> >> > Linux
+> >> > kernel developers.
+> >> > 
+> >> > Personally I am happy with numerous companies backing this policy
+> >> > and
+> >> > not making problems like this with Allwinner and I am really
+> >> > surprised that you are supporting a troublesome company like this.
+> >>  
+> >>  you've not read what i've written tomasz.
+> > 
+> > I have.
+> > 
+> >> > There are many other SoC vendors making low cost SoCs, like
+> >> > Rockchip,
+> >> > Boxchip,
+> >>  
+> >>  boxchip *is* allwinner.
+> > 
+> > Right, sorry. I am not really into this low cost hardware.
+> 
+>  i've been tracking it for several years.
+> 
+> > There is also AMLogic, though.
+> 
+>  they're *definitely* GPL-violators.
+> 
+> >> > Telechips. Maybe they would be better candidates for being
+> >> > promoted as vendors of choice for hardware running free software?
+> >>  
+> >>  no, because they're not selling at a low-enough price with
+> >> 
+> >> high-enough integration.  telechips and rockchip don't have the
+> >> market
+> >> penetration.
+> > 
+> > I do not have access to any numbers, so I am left to believe in what
+> > you say.
+> 
+>  well... none of us do :)  that report (was it from IDC? it was in
+> earlier messages) is a good analysis.
+> 
+> > (Although here in Poland the cheap tablet market is almost evenly
+> > divided between all those companies, you can find almost same amount
+> > of
+> > tablets based on SoCs from each vendor.)
+> 
+>  most likely.
+> 
+>  allwinner is the one that's actually expressed an interest, at
+> Director (Board) Level, of being GPL-compliant.  the software
+> engineers understand that; their immediate Manager does not [and is
+> causing considerable disruption].
+> 
+>  AMLogic stone-walled and cost us money and a large client due to
+> their GPL violations. which they till have not resolved [in over 2
+> years].  i will not work with them, ever again.
+> 
+>  Telechips are korean-based: they haven't responded to communications.
+> 
+>  Nufront got themselves in a muddle [late on silicon] so we ruled them
+> out - we'll come back to them later.
+> 
+>  there's a number of others, but allwinner's the only one that is
+> actively communicating.
+> 
+>  so.
+> 
+>  coming back to what you said earlier: i'm formulating what to say to
+> allwinner [and need to pre-send something by monday so that they can
+> consider it before the meeting].  so far, it consists of:
+> 
+> * device-tree is what the linux kernel community has come up with, it
+> is equivalent to FEX.
 
-This is the at91 system clock implementation using common clk framework.
+...before FEX ever existed...
 
-Some peripheral needs to enable a "system" clock in order to work properly.
-Each system clock is given an id which is the bit offset used in SCER/SCDR
-registers.
+> * the linux kernel community would like to apologise for not
+> consulting with you (allwinner) on the decision to only accept device
+> tree
+> 
+> [bear in mind that if this kind of thing isn't said, they risk just
+> continuing to make the sunxi community's life absolute hell by
+> continuing to work in isolation and continuing to duplicate drivers
+> etc. etc. ]
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
----
- drivers/clk/at91/Makefile     |    1 +
- drivers/clk/at91/clk-system.c |  189 +++++++++++++++++++++++++++++++++++++++++
- include/linux/clk/at91.h      |    3 +
- 3 files changed, 193 insertions(+)
+So basically you are making sure that they think they decision to reinvent 
+the wheel by using proprietary FEX was correct and our decision to use 
+generic, extensive and standard-based DeviceTree was self-oriented.
 
-diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-index d41f616..13e5714 100644
---- a/drivers/clk/at91/Makefile
-+++ b/drivers/clk/at91/Makefile
-@@ -3,3 +3,4 @@
- #
- 
- obj-y += clk-main.o clk-pll.o clk-plldiv.o clk-master.o
-+obj-y += clk-system.o
-diff --git a/drivers/clk/at91/clk-system.c b/drivers/clk/at91/clk-system.c
-new file mode 100644
-index 0000000..21af468
---- /dev/null
-+++ b/drivers/clk/at91/clk-system.c
-@@ -0,0 +1,189 @@
-+/*
-+ * drivers/clk/at91/clk-system.c
-+ *
-+ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk/at91.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/io.h>
-+
-+#define SYSTEM_MAX		32
-+
-+#define to_clk_system(hw) container_of(hw, struct clk_system, hw)
-+struct clk_system {
-+	struct clk_hw hw;
-+	u8 id;
-+};
-+
-+static int clk_system_enable(struct clk_hw *hw)
-+{
-+	struct clk_system *sys = to_clk_system(hw);
-+	at91_pmc_write(AT91_PMC_SCER, sys->id);
-+	return 0;
-+}
-+
-+static void clk_system_disable(struct clk_hw *hw)
-+{
-+	struct clk_system *sys = to_clk_system(hw);
-+	at91_pmc_write(AT91_PMC_SCDR, 1 << sys->id);
-+}
-+
-+static int clk_system_is_enabled(struct clk_hw *hw)
-+{
-+	struct clk_system *sys = to_clk_system(hw);
-+	return !!(at91_pmc_read(AT91_PMC_SCSR) & (sys->id));
-+}
-+
-+static const struct clk_ops system_ops = {
-+	.enable = clk_system_enable,
-+	.disable = clk_system_disable,
-+	.is_enabled = clk_system_is_enabled,
-+};
-+
-+struct clk * __init
-+at91_clk_register_system(const char *name, const char *parent_name, u8 id)
-+{
-+	struct clk_system *sys;
-+	struct clk *clk = NULL;
-+	struct clk_init_data init;
-+
-+	id &= 31;
-+
-+	sys = kzalloc(sizeof(*sys), GFP_KERNEL);
-+	if (!sys)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &system_ops;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+	init.flags = 0;
-+
-+	sys->id = id;
-+	sys->hw.init = &init;
-+
-+	clk = clk_register(NULL, &sys->hw);
-+
-+	if (IS_ERR(clk))
-+		kfree(sys);
-+
-+	return clk;
-+}
-+
-+#if defined(CONFIG_OF)
-+struct clk_system_data {
-+	struct clk **clks;
-+	u8 *ids;
-+	unsigned int clk_num;
-+};
-+
-+static struct clk * __init
-+of_clk_src_system_get(struct of_phandle_args *clkspec, void *data)
-+{
-+	struct clk_system_data *clk_data = data;
-+	unsigned int id = clkspec->args[0];
-+	int i;
-+
-+	if (id >= SYSTEM_MAX)
-+		goto err;
-+
-+	for (i = 0; i < clk_data->clk_num; i++) {
-+		if (clk_data->ids[i] == id)
-+			return clk_data->clks[i];
-+	}
-+
-+err:
-+	pr_err("%s: invalid clock id %d\n", __func__, id);
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+static void __init
-+of_at91_clk_sys_setup(struct device_node *np)
-+{
-+	int i;
-+	int num;
-+	u32 id;
-+	struct clk *clk;
-+	u8 *ids;
-+	struct clk **clks;
-+	struct clk_system_data *clktab;
-+	const char *parent_name;
-+	const char *name = np->name;
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	if (!parent_name)
-+		return;
-+
-+	if (!of_get_property(np, "ids", &num))
-+		return;
-+	num /= 4;
-+	if (num > SYSTEM_MAX)
-+		return;
-+
-+	if (of_count_phandle_with_args(np, "clocks", "#clock-cells") != num)
-+		return;
-+
-+	if (of_property_count_strings(np, "clock-output-names") != num)
-+		return;
-+
-+	clktab = kzalloc(sizeof(*clktab), GFP_KERNEL);
-+	if (!clktab)
-+		return;
-+
-+	ids = kzalloc(num * sizeof(*ids), GFP_KERNEL);
-+	if (!ids)
-+		goto out_free_clktab;
-+
-+	clks = kzalloc(num * sizeof(*clks), GFP_KERNEL);
-+	if (!clks)
-+		goto out_free_ids;
-+
-+	for (i = 0; i < num; i++) {
-+		of_property_read_u32_index(np, "ids", i, &id);
-+		if (id >= SYSTEM_MAX)
-+			goto out_free_clks;
-+		of_property_read_string_index(np, "clock-output-names",
-+					      i, &name);
-+		parent_name = of_clk_get_parent_name(np, i);
-+		if (!parent_name)
-+			goto out_free_clks;
-+
-+		clk = at91_clk_register_system(name, parent_name, id);
-+		if (IS_ERR(clk))
-+			goto out_free_clks;
-+
-+		clks[i] = clk;
-+		ids[i] = id;
-+	}
-+
-+	clktab->clk_num = num;
-+	clktab->clks = clks;
-+	clktab->ids = ids;
-+	of_clk_add_provider(np, of_clk_src_system_get, clktab);
-+	return;
-+
-+out_free_clks:
-+	kfree(clks);
-+out_free_ids:
-+	kfree(ids);
-+out_free_clktab:
-+	kfree(clktab);
-+}
-+
-+static void __init of_at91rm9200_clk_sys_setup(struct device_node *np)
-+{
-+	of_at91_clk_sys_setup(np);
-+}
-+CLK_OF_DECLARE(at91rm9200_clk_sys, "atmel,at91rm9200-clk-system",
-+	       of_at91rm9200_clk_sys_setup);
-+#endif
-diff --git a/include/linux/clk/at91.h b/include/linux/clk/at91.h
-index a960e2f..c886226 100644
---- a/include/linux/clk/at91.h
-+++ b/include/linux/clk/at91.h
-@@ -256,4 +256,7 @@ at91_clk_register_master(const char *name, int num_parents,
- 			 struct clk_master_characteristics *characteristics);
- 
- 
-+struct clk * __init
-+at91_clk_register_system(const char *name, const char *parent_name, u8 id);
-+
- #endif
--- 
-1.7.9.5
+In addition you are telling them something completely opposite from how 
+the Linux kernel community (and probably any other open source community 
+works). This is _THEIR_ responsibility to consult things they do with us, 
+_NOT_ the other way around, if they want to work with upstream.
+
+> * work is being done by the free software community, they are
+> beginning to integrate allwinner's work into the upstream kernel, and
+> you (allwinner) will begin to see this when you get round to doing
+> linux kernel 3.9
+
+>From what I could read from other posts in this thread they already know 
+this.
+
+> * allwinner and the linux and sunxi community therefore need to work
+> closer together, we propose:
+
+ - joining the mailing lists by Allwinner people to remove any messengers 
+from the way (don't say here that they don't speak English, as several 
+people clearly confirmed that they do...)
+
+ - adjusting their workflow to comply with rules of Linux kernel open 
+source community (i.e. sending RFCs, getting code reviewed, addressing 
+comments)
+
+ - reworking existing code to use widely-accepted, standard solutions 
+available in upstream Linux kernel (although this is already mostly done 
+by sunxi community)
+
+> 3 days left on the clock.
+
+By the way, I haven't seen any explanation from you who (and by what 
+means) gave you any authorization to speak on behalf of Allwinner or to 
+represent Linux kernel community for them.
+
+Seeing from your posts you don't have any knowledge on how Linux kernel 
+development works and even on how Allwinner's cooperation with our 
+community looks (and seem to be completely closed to our effort of showing 
+you the reality), so I'm not sure if you are the right person to take any 
+of those roles...
+
+I'd suggest Maxime Ripard or someone else from Free Electrons to be 
+responsible for communication with Allwinner instead.
+
+Best regards,
+Tomasz
