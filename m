@@ -1,57 +1,81 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH V2 0/4] ARM: dts: omap5: Cleanup and updates for DT files
-Date: Fri, 7 Jun 2013 14:06:21 +0200
-Message-ID: <51B1CCBD.5080904@ti.com>
-References: <1370540919-4339-1-git-send-email-r.sricharan@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] ethernet/arc/arc_emac - Add new driver
+Date: Fri, 07 Jun 2013 14:13:14 +0200
+Message-ID: <2468036.im0srnzmHT@wuerfel>
+References: <1370348510-23754-1-git-send-email-abrodkin@synopsys.com> <1505761.5DsauZd6eq@wuerfel> <4881796E12491D4BB15146FE0209CE643F5C77EC@DE02WEMBXB.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1370540919-4339-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, rnayak@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4881796E12491D4BB15146FE0209CE643F5C77EC@DE02WEMBXB.internal.synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2013 07:48 PM, Sricharan R wrote:
-> uevm is the official board supported for OMAP5 soc in the mainline.
-> This series renames the board dts file for OMAP5 accordingly and cleans
-> up the same. Also a few additional device DT entry updates are done.
-> 
-> This is on top of the below branch
->     git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git
->     for_3.11/dts
+On Friday 07 June 2013 10:42:28 Alexey Brodkin wrote:
+> On 06/07/2013 12:47 PM, Arnd Bergmann wrote:
 
-Could you update your branch before reposting, I pulled a Makefile fix
-for AM5xx that prevents your patches to be applied properly.
+> > I wonder if it would be better to name the directory "synopsys" or
+> > "designware" rather than "arc" now. Is there a chance that the same
+> > controller is used on non-arc CPUs?
+> 
+> The thing is - "arc_emac" is a custom ARC's (that was implemented before 
+> acquisition of ARC by Synopsys) IP (it's not an IC - just a part of CPU) 
+> Ethernet controller that only exists in some legacy FPGA boards we 
+> (ex-ARC and our customers) still use a lot in development process.
+> 
+> Synopsys itself doesn't actively sell this device so there's no point in 
+> putting ARC EMAC into Synopsys folder.
+> 
+> And indeed we don't expect this device to be used with non-ARC CPU's.
+> 
+> I didn't add dependency on ARC in Kconfig just because I wanted to leave 
+> an ability to build this driver on x86 machine. I thought this is 
+> important requirement - allow anybody to at least build this driver to 
+> make sure it builds and doesn't cause tons of warnings to appear.
+> 
+> If it's totally fine to add dependency on ARC - then it would be even 
+> easier for me - refer to the next block of comments.
 
-Thanks,
-Benoit
+No, I think making it generally available for all architectures is better.
 
+> >> +static int arc_emac_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct net_device *net_dev;
+> >> +	struct arc_emac_priv *priv;
+> >> +	int err;
+> >> +	unsigned int clock_frequency;
+> >> +	unsigned int id;
+> >> +	struct resource res_regs;
+> >> +#ifdef CONFIG_OF_IRQ
+> >> +	struct resource res_irq;
+> >> +#endif
+> >> +	const char *mac_addr = NULL;
+> >
+> > Please remove the #ifdef here. The driver does not work without this
+> > anyway, so better make it 'depend on OF_IRQ' in Kconfig.
 > 
-> Boot tested on omap5-uevm after pulling in the data from below place
->     git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux.git
->     HWMOD DATA: for_3.11/omap5_data_files
->     CLOCK DATA: out_of_tree/omap5_clk_data
-> 
-> Dan Murphy (1):
->   ARM: dts: omap5-uevm: Add LED support for uEVM blue LED
-> 
-> Roger Quadros (1):
->   ARM: dts: omap5-uevm: Add USB Host support
-> 
-> Sourav Poddar (1):
->   ARM: dts: omap5-uevm: Add uart pinctrl data
-> 
-> Sricharan R (1):
->   ARM: dts: omap5: Rename omap5-evm to omap5-uevm
-> 
->  arch/arm/boot/dts/Makefile       |    2 +-
->  arch/arm/boot/dts/omap5-evm.dts  |  261 --------------------------------
->  arch/arm/boot/dts/omap5-uevm.dts |  311 ++++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap5.dtsi     |   30 ++++
->  4 files changed, 342 insertions(+), 262 deletions(-)
->  delete mode 100644 arch/arm/boot/dts/omap5-evm.dts
->  create mode 100644 arch/arm/boot/dts/omap5-uevm.dts
-> 
+> As stated above I wanted to make it possible to compile on x86.
+> And for this I needed to:
+> 1. Add explicit mentions of "linux/platform_device.h" because with 
+> existence of OF "linux/of_platform.h" has "linux/platform_device.h" 
+> included internally.
+> 2. Enclose "of_irq_to_resource" and "of_get_mac_address" in ifdefs 
+> because neither of them has a stub for non-OF situation.
 
+But you can enable CONFIG_OF on x86. An allmodconfig build should
+still enable this driver. The #ifdefs are generally considered ugly,
+and there is no point adding them when the driver clearly wouldn't
+work on any architecture without them even if that hardware was
+available.
+
+> So if I may depend on ARC then I'm sure OF is selected and no need to worry.
+> Otherwise do I need to add stubs for "of_irq_to_resource" and 
+> "of_get_mac_address" somewhere in "of/of_xxx.h"?
+
+We are currently discussing those changes to the header files elsewhere.
+I think with a dependency on CONFIG_OF_IRQ and other symbols you need,
+you get the best compromise of the various requirements.
+
+	Arnd
