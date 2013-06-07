@@ -1,103 +1,45 @@
 From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: [PATCHv3 1/6] thermal: ti-soc-thermal: use standard GPIO DT bindings
-Date: Fri, 7 Jun 2013 16:46:03 -0400
-Message-ID: <1370637968-23299-2-git-send-email-eduardo.valentin@ti.com>
+Subject: [PATCHv3 3/6] arm: dts: add bandgap entry for OMAP443x devices
+Date: Fri, 7 Jun 2013 16:46:05 -0400
+Message-ID: <1370637968-23299-4-git-send-email-eduardo.valentin@ti.com>
 References: <1370637968-23299-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1370637968-23299-1-git-send-email-eduardo.valentin@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: tony@atomide.com, grant.likely@linaro.org
-Cc: linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk, Eduardo Valentin <eduardo.valentin@ti.com>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk, Eduardo Valentin <eduardo.valentin@ti.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This change updates the ti-soc-thermal driver to use
-standard GPIO DT bindings to read the GPIO number associated
-to thermal shutdown IRQ, in case the device features it.
+This patch add the bandgap entry for OMAP4430 devices.
 
-Previously, the code was using a specific DT bindings.
-As now OMAP supports the standard way to model GPIOs,
-there is no point in having a ti specific binding.
-
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Cc: "Beno=C3=AEt Cousson" <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: linux-omap@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
 ---
- drivers/staging/ti-soc-thermal/ti-bandgap.c       | 8 ++------
- drivers/staging/ti-soc-thermal/ti_soc_thermal.txt | 9 +++++----
- 2 files changed, 7 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/omap443x.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/staging/ti-soc-thermal/ti-bandgap.c b/drivers/staging/ti-soc-thermal/ti-bandgap.c
-index f20c1cf..c7fc0d0 100644
---- a/drivers/staging/ti-soc-thermal/ti-bandgap.c
-+++ b/drivers/staging/ti-soc-thermal/ti-bandgap.c
-@@ -38,6 +38,7 @@
- #include <linux/of_device.h>
- #include <linux/of_platform.h>
- #include <linux/of_irq.h>
-+#include <linux/of_gpio.h>
- #include <linux/io.h>
- 
- #include "ti-bandgap.h"
-@@ -1123,7 +1124,6 @@ static struct ti_bandgap *ti_bandgap_build(struct platform_device *pdev)
- 	const struct of_device_id *of_id;
- 	struct ti_bandgap *bgp;
- 	struct resource *res;
--	u32 prop;
- 	int i;
- 
- 	/* just for the sake */
-@@ -1167,11 +1167,7 @@ static struct ti_bandgap *ti_bandgap_build(struct platform_device *pdev)
- 	} while (res);
- 
- 	if (TI_BANDGAP_HAS(bgp, TSHUT)) {
--		if (of_property_read_u32(node, "ti,tshut-gpio", &prop) < 0) {
--			dev_err(&pdev->dev, "missing tshut gpio in device tree\n");
--			return ERR_PTR(-EINVAL);
--		}
--		bgp->tshut_gpio = prop;
-+		bgp->tshut_gpio = of_get_gpio(node, 0);
- 		if (!gpio_is_valid(bgp->tshut_gpio)) {
- 			dev_err(&pdev->dev, "invalid gpio for tshut (%d)\n",
- 				bgp->tshut_gpio);
-diff --git a/drivers/staging/ti-soc-thermal/ti_soc_thermal.txt b/drivers/staging/ti-soc-thermal/ti_soc_thermal.txt
-index a4a33d1..382bd98 100644
---- a/drivers/staging/ti-soc-thermal/ti_soc_thermal.txt
-+++ b/drivers/staging/ti-soc-thermal/ti_soc_thermal.txt
-@@ -17,8 +17,9 @@ Required properties:
- - interrupts : this entry should indicate which interrupt line
- the talert signal is routed to;
- Specific:
--- ti,tshut-gpio : this entry should be used to inform which GPIO
--line the tshut signal is routed to;
-+- gpios : this entry should be used to inform which GPIO
-+line the tshut signal is routed to. The informed GPIO will
-+be treated as an IRQ;
- - regs : this entry must also be specified and it is specific
- to each bandgap version, because the mapping may change from
- soc to soc, apart of depending on available features.
-@@ -37,7 +38,7 @@ bandgap {
- 		0x4a002378 0x18>;
- 	compatible = "ti,omap4460-bandgap";
- 	interrupts = <0 126 4>; /* talert */
--	ti,tshut-gpio = <86>;
-+	gpios = <&gpio3 22 0>; /* tshut */
+diff --git a/arch/arm/boot/dts/omap443x.dtsi b/arch/arm/boot/dts/omap44=
+3x.dtsi
+index cccf39a..8d6c968 100644
+--- a/arch/arm/boot/dts/omap443x.dtsi
++++ b/arch/arm/boot/dts/omap443x.dtsi
+@@ -24,4 +24,8 @@
+ 			clock-latency =3D <300000>; /* From legacy driver */
+ 		};
+ 	};
++	bandgap {
++		reg =3D <0x4a002260 0x4 0x4a00232C 0x4>;
++		compatible =3D "ti,omap4430-bandgap";
++	};
  };
- 
- OMAP4470:
-@@ -47,7 +48,7 @@ bandgap {
- 		0x4a002378 0x18>;
- 	compatible = "ti,omap4470-bandgap";
- 	interrupts = <0 126 4>; /* talert */
--	ti,tshut-gpio = <86>;
-+	gpios = <&gpio3 22 0>; /* tshut */
- };
- 
- OMAP5430:
--- 
+--=20
 1.8.2.1.342.gfa7285d
