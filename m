@@ -1,15 +1,14 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 11/14] ARM: mvebu: Relocate Armada 370/XP DeviceBus device
- tree nodes
-Date: Fri, 7 Jun 2013 21:18:16 +0200
-Message-ID: <201306072118.16730.arnd@arndb.de>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1370623671-7748-12-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: add dtsi for palmas
+Date: Fri, 07 Jun 2013 13:22:58 -0600
+Message-ID: <51B23312.8000402@wwwdotorg.org>
+References: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>
+ <51B1D1A9.40702@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370623671-7748-12-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <51B1D1A9.40702-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,44 +19,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 June 2013, Ezequiel Garcia wrote:
-> --- a/arch/arm/boot/dts/armada-370-xp.dtsi
-> +++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-> @@ -34,6 +34,51 @@
->                 compatible = "simple-bus";
->                 interrupt-parent = <&mpic>;
->  
-> +               devbus-bootcs {
-> +                       compatible = "marvell,mvebu-devbus";
-> +                       reg = <0 0x10400 0x8>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       clocks = <&coreclk 0>;
-> +                       status = "disabled";
-> +               };
-> +
+On 06/07/2013 06:27 AM, Benoit Cousson wrote:
+> Hi Keerthy,
+> 
+> On 06/07/2013 01:28 PM, J Keerthy wrote:
+>> Adds palmas mfd and palmas regulator nodes. This is
+>> based on the patch series:
+>>
+>> http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg89957.html
+>>
+>> The device tree nodes are based on:
+>> https://lkml.org/lkml/2013/6/6/25
 ...
->                internal-regs {
->                        compatible = "simple-bus";
->                        #address-cells = <1>;
+>> diff --git a/arch/arm/boot/dts/palmas.dtsi b/arch/arm/boot/dts/palmas.dtsi
+...
+>> +&palmas {
+>> +	compatible = "ti,palmas";
+>> +	interrupt-controller;
+>> +	#interrupt-cells = <2>;
+> 
+> The I2C address should be there as well. We used to put it in the board
+> file, but this is really an I2C device specific information and not
+> board specific in that case.
 
-
-I think you are missing a couple of things here:
-
-* The mbus node needs #address-cells and #size-cells, and is no longer
-  compatible="simple-bus"m since it's actually complex.
-
-* The devbus-bootcs node and all other ones need "ranges" properties.
-
-* The "reg" property of the devbus-bootcs device needs to be in
-  mbus translated address space, so I assume the first cell would
-  be something other than '0'.
-
-* With the proposal I made for patch 3, you would actually
-  need a ranges property for the mbus node as well.
-
-	Arnd
+I thought the I2C address was variable depending on OTP settings, and
+hence the I2C address is board-specific; depending on which variant of
+the PMIC was stuffed onto the board?
