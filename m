@@ -1,70 +1,267 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] arm/dt: Don't add disabled CPUs to system topology
-Date: Fri, 07 Jun 2013 09:20:20 -0500
-Message-ID: <51B1EC24.3010909@gmail.com>
-References: <1370538685-22386-1-git-send-email-james.king@linaro.org> <20130607102326.GA3111@e102568-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130607102326.GA3111@e102568-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: James King <james.king@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>, "nico@linaro.org" <nico@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "patches@linaro.org" <patches@linaro.org>, "namhyung@kernel.org" <namhyung@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [RESEND RFC PATCH 00/50] ARM: at91: move to common clk framework
+Date: Fri,  7 Jun 2013 16:24:08 +0200
+Message-ID: <1370615115-16979-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2013 05:23 AM, Lorenzo Pieralisi wrote:
-> Hi James,
-> 
-> On Thu, Jun 06, 2013 at 06:11:25PM +0100, James King wrote:
->> If CPUs are marked as disabled in the devicetree, make sure they do
->> not exist in the system CPU information and CPU topology information.
->> In this case these CPUs will not be able to be added to the system later
->> using hot-plug. This allows a single chip with many CPUs to be easily
->> used in a variety of hardware devices where they may have different
->> actual processing requirements (eg for thermal/cost reasons).
->>
->> - Change devicetree.c to ignore any cpu nodes marked as disabled,
->>   this effectively limits the number of active cpu cores so no need
->>   for the max_cpus=x in the chosen node.
->> - Change topology.c to ignore any cpu nodes marked as disabled, this
->>   is where the scheduler would learn about big/LITTLE cores so this
->>   effectively keeps the scheduler in sync.
->>
-> 
-> I have two questions:
-> 
-> 1) Since with this approach the DT should change anyway if on different
->    hardware devices based on the same chip you want to allow booting a
->    different number of CPUs, why do not we remove the cpu nodes instead of
->    disabling them ? Put it another way: cpu nodes define a cpu as
->    possible (currently), we can simply remove the node if we do not want
->    that cpu to be seen by the kernel.
-> 2) If we go for the "status" property, why do not we use it to set present
->    mask ? That way the cpu is possible but not present, you cannot
->    hotplug it in. It is a bit of a stretch, granted, the cpu _is_ present,
->    we just want to disable it, do not know how this is handled in x86
->    and other archs though.
+Hello,
 
-The meaning of disabled for cpus in ePAPR is that the cpu is offline
-(i.e. in a spinloop or wfi), not that the cpu is unavailable. This is a
-bit of a departure and inconsistency from how status for devices are
-used. That would imply that we should be setting status to disabled for
-all secondary cores and that possibly the status value should get
-updated to reflect the state of the cpu.
+Sorry for the noise, the first submission has been filtered.
 
-Rob
+This patch series is a proposal to move at91 clock implementation
+to common clk framework.
 
-> I am just asking, since it is something I thought about while writing
-> code that parses the DT cpu map, basically we do not have a way to
-> "disable" a cpu in the DT and that's what you are doing, I just would like
-> to understand the best way to put it into DT bindings.
-> 
-> Thanks,
-> Lorenzo
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+Most of the clock provided by the PMC (Power Management Controller) are
+implemented :
+- main clock (main oscillator)
+- pll clocks
+- master clock
+- programmable clocks
+- utmi clock
+- peripheral clocks
+- system clocks
+
+This implementation is compatible with device tree: the goal is
+to define the whole clock tree in the device tree (all currently
+available dt SoCs and boards are patched to support dt clocks).
+Please feel free to comment the dt bindinds (I'm not sure about the
+name I choose or the position of clock nodes: children of pmc node).
+
+I removed the register_clocks function in SoC supporting dt boards only:
+- at91sam9x5 SoCs
+- at91sam9n12 SoC
+- sama5d3 SoCs
+
+This patch series also update at91 drivers calling clk_enable/disable
+instead of the preferred clk_prepare_enable/disable_unprepare functions.
+
+
+I know there are a lot of cleanup in progress for at91 arch, so please tell
+me if you think this transition to common clk framework should wait.
+
+This patch series has been tested on Kizbox (sam9g20 SoC) board using device
+tree. It compiles for other SoCs and both with and without dt support, but it
+has not been tested.
+
+The clocks rate/parent change has not been tested.
+
+Best Regards,
+Boris
+
+Boris BREZILLON (50):
+  ARM: at91: move at91_pmc.h to include/linux/clk/at91.h
+  ARM: at91: add PMC main clock
+  ARM: at91: add PMC pll clocks
+  ARM: at91: add PMC master clock
+  ARM: at91: add PMC system clocks
+  ARM: at91: add PMC peripheral clocks
+  ARM: at91: add PMC programmable clocks
+  ARM: at91: add PMC utmi clock support
+  ARM: at91: add PMC usb clock support
+  ARM: at91: add PMC smd clock support
+  ARM: at91: add PMC clk device tree binding doc
+  ARM: at91: move to common clk framework
+  ARM: at91: move at91rm9200 SoC to new at91 clk implem
+  ARM: at91: move at91sam9260 SoC to new at91 clk implem
+  ARM: at91: move at91sam9263 SoC to new at91 clk implem
+  ARM: at91: move at91sam9263 SoC to new at91 clk implem
+  ARM: at91: move at91sam9g45 SoC to new at91 clk implem
+  ARM: at91: move at91sam9n12 SoC to new at91 clk implem
+  ARM: at91: move at91sam9rl SoC to new at91 clk implem
+  ARM: at91: move at91sam9x5 SoCs to new at91 clk implem
+  ARM: at91: move at91sam9 SoCs to new at91 clk implem
+  ARM: at91: move sama5d3 SoCs to new at91 clk implem
+  ARM: at91: move at91rm9200 boards to new at91 clk implem
+  ARM: at91: move at91sam9 boards to new at91 clk implem
+  ARM: at91: move pit timer to common clk framework
+  ARM: at91/tc/clocksource: prepare clk before calling enable
+  at_hdmac: prepare clk before calling enable
+  ASoC: atmel-ssc: prepare clk before calling enable
+  mmc: atmel-mci: prepare clk before calling enable
+  pwm: atmel-tcb: prepare clk before calling enable
+  tty: atmel_serial: prepare clk before calling enable
+  usb: gadget: at91_udc: prepare clk before calling enable
+  ehci-atmel.c: prepare clk before calling enable
+  USB: ohci-at91: prepare clk before calling enable
+  at91/avr32/atmel_lcdfb: prepare clk before calling enable
+  ARM: at91/dt: move at91rm9200 SoC to new at91 clk implem
+  ARM: at91/dt: move at91sam9260 SoC to new at91 clk implem
+  ARM: at91/dt: move at91sam9263 SoC to new at91 clk implem
+  ARM: at91/dt: move at91sam9g45 SoC to new at91 clk implem
+  ARM: at91/dt: move at91sam9n12 SoC to new at91 clk implem
+  ARM: at91/dt: move at91sam9x5 SoCs to new at91 clk implem
+  ARM: at91/dt: move at91sam9g20 SoC to new at91 clk implem
+  ARM: at91/dt: move sama5d3 SoCs to to new at91 clk implem
+  ARM: at91/dt: move sam9260/sam9g20 boards to new at91 clk implem
+  ARM: at91/dt: move rm9200 boards to new at91 clk implem
+  ARM: at91/dt: move sam9263 boards to new at91 clk implem
+  ARM: at91/dt: move sam9g45 boards to new at91 clk implem
+  ARM: at91/dt: move sam9n12 boards to new at91 clk implem
+  ARM: at91/dt: move sam9x5 boards to new at91 clk implem
+  ARM: at91/dt: move sama5d3 boards to new at91 clk implem
+
+ .../devicetree/bindings/clock/at91-clock.txt       |  247 +++++
+ arch/arm/boot/dts/animeo_ip.dts                    |   17 +-
+ arch/arm/boot/dts/at91-ariag25.dts                 |   17 +-
+ arch/arm/boot/dts/at91rm9200.dtsi                  |  133 +++
+ arch/arm/boot/dts/at91rm9200ek.dts                 |   17 +-
+ arch/arm/boot/dts/at91sam9260.dtsi                 |  144 ++-
+ arch/arm/boot/dts/at91sam9263.dtsi                 |  135 +++
+ arch/arm/boot/dts/at91sam9263ek.dts                |   17 +-
+ arch/arm/boot/dts/at91sam9g15.dtsi                 |   11 +
+ arch/arm/boot/dts/at91sam9g20.dtsi                 |   37 +
+ arch/arm/boot/dts/at91sam9g20ek_common.dtsi        |   17 +-
+ arch/arm/boot/dts/at91sam9g25.dtsi                 |    3 +
+ arch/arm/boot/dts/at91sam9g35.dtsi                 |   23 +
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |  157 ++++
+ arch/arm/boot/dts/at91sam9m10g45ek.dts             |   17 +-
+ arch/arm/boot/dts/at91sam9n12.dtsi                 |  153 ++++
+ arch/arm/boot/dts/at91sam9n12ek.dts                |   17 +-
+ arch/arm/boot/dts/at91sam9x25.dtsi                 |   25 +-
+ arch/arm/boot/dts/at91sam9x35.dtsi                 |    3 +
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |  226 +++--
+ arch/arm/boot/dts/at91sam9x5_can.dtsi              |   24 +
+ arch/arm/boot/dts/at91sam9x5_isi.dtsi              |   24 +
+ arch/arm/boot/dts/at91sam9x5_lcdc.dtsi             |   32 +
+ arch/arm/boot/dts/at91sam9x5_macb0.dtsi            |   68 ++
+ arch/arm/boot/dts/at91sam9x5_macb1.dtsi            |   56 ++
+ arch/arm/boot/dts/at91sam9x5_usart3.dtsi           |   60 ++
+ arch/arm/boot/dts/ge863-pro3.dtsi                  |   16 +-
+ arch/arm/boot/dts/kizbox.dts                       |    5 +
+ arch/arm/boot/dts/mpa1600.dts                      |   16 +-
+ arch/arm/boot/dts/pm9g45.dts                       |   16 +-
+ arch/arm/boot/dts/sama5d3.dtsi                     |  358 ++++----
+ arch/arm/boot/dts/sama5d31ek.dts                   |    4 +
+ arch/arm/boot/dts/sama5d33ek.dts                   |    2 +
+ arch/arm/boot/dts/sama5d34ek.dts                   |    4 +
+ arch/arm/boot/dts/sama5d35ek.dts                   |    6 +
+ arch/arm/boot/dts/sama5d3_can.dtsi                 |   67 ++
+ arch/arm/boot/dts/sama5d3_emac.dtsi                |   56 ++
+ arch/arm/boot/dts/sama5d3_gmac.dtsi                |   89 ++
+ arch/arm/boot/dts/sama5d3_lcd.dtsi                 |   73 ++
+ arch/arm/boot/dts/sama5d3_mci2.dtsi                |   59 ++
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi                |   39 +
+ arch/arm/boot/dts/sama5d3_uart.dtsi                |   42 +
+ arch/arm/boot/dts/sama5d3xcm.dtsi                  |   17 +-
+ arch/arm/boot/dts/tny_a9260_common.dtsi            |   17 +-
+ arch/arm/boot/dts/tny_a9263.dts                    |   17 +-
+ arch/arm/boot/dts/usb_a9260_common.dtsi            |   17 +-
+ arch/arm/boot/dts/usb_a9263.dts                    |   17 +-
+ arch/arm/mach-at91/Kconfig                         |   26 +
+ arch/arm/mach-at91/Makefile                        |    2 +-
+ arch/arm/mach-at91/at91rm9200.c                    |  578 +++++++-----
+ arch/arm/mach-at91/at91sam9260.c                   |  694 +++++++++-----
+ arch/arm/mach-at91/at91sam9261.c                   |  581 ++++++++----
+ arch/arm/mach-at91/at91sam9263.c                   |  599 +++++++-----
+ arch/arm/mach-at91/at91sam926x_time.c              |   21 +-
+ arch/arm/mach-at91/at91sam9g45.c                   |  705 ++++++++------
+ arch/arm/mach-at91/at91sam9g45_devices.c           |    1 -
+ arch/arm/mach-at91/at91sam9n12.c                   |  196 +---
+ arch/arm/mach-at91/at91sam9rl.c                    |  514 +++++++----
+ arch/arm/mach-at91/at91sam9x5.c                    |  291 +-----
+ arch/arm/mach-at91/board-1arm.c                    |   12 +-
+ arch/arm/mach-at91/board-afeb-9260v1.c             |   11 +-
+ arch/arm/mach-at91/board-cam60.c                   |   13 +-
+ arch/arm/mach-at91/board-carmeva.c                 |   13 +-
+ arch/arm/mach-at91/board-cpu9krea.c                |   12 +-
+ arch/arm/mach-at91/board-cpuat91.c                 |   12 +-
+ arch/arm/mach-at91/board-csb337.c                  |   11 +-
+ arch/arm/mach-at91/board-csb637.c                  |   11 +-
+ arch/arm/mach-at91/board-dt-rm9200.c               |    9 +-
+ arch/arm/mach-at91/board-dt-sam9.c                 |    9 +-
+ arch/arm/mach-at91/board-dt-sama5.c                |    9 +-
+ arch/arm/mach-at91/board-eb9200.c                  |   11 +-
+ arch/arm/mach-at91/board-ecbat91.c                 |   12 +-
+ arch/arm/mach-at91/board-eco920.c                  |   13 +-
+ arch/arm/mach-at91/board-flexibity.c               |   12 +-
+ arch/arm/mach-at91/board-foxg20.c                  |   12 +-
+ arch/arm/mach-at91/board-gsia18s.c                 |    8 +-
+ arch/arm/mach-at91/board-kafa.c                    |   12 +-
+ arch/arm/mach-at91/board-kb9202.c                  |   12 +-
+ arch/arm/mach-at91/board-pcontrol-g20.c            |    9 +-
+ arch/arm/mach-at91/board-picotux200.c              |   11 +-
+ arch/arm/mach-at91/board-qil-a9260.c               |   11 +-
+ arch/arm/mach-at91/board-rm9200dk.c                |   11 +-
+ arch/arm/mach-at91/board-rm9200ek.c                |   11 +-
+ arch/arm/mach-at91/board-rsi-ews.c                 |   12 +-
+ arch/arm/mach-at91/board-sam9-l9260.c              |   11 +-
+ arch/arm/mach-at91/board-sam9260ek.c               |   11 +-
+ arch/arm/mach-at91/board-sam9261ek.c               |   15 +-
+ arch/arm/mach-at91/board-sam9263ek.c               |   11 +-
+ arch/arm/mach-at91/board-sam9g20ek.c               |   15 +-
+ arch/arm/mach-at91/board-sam9m10g45ek.c            |   11 +-
+ arch/arm/mach-at91/board-sam9rlek.c                |   11 +-
+ arch/arm/mach-at91/board-snapper9260.c             |   12 +-
+ arch/arm/mach-at91/board-stamp9g20.c               |   15 +-
+ arch/arm/mach-at91/board-yl-9200.c                 |   12 +-
+ arch/arm/mach-at91/clock.c                         |  961 --------------------
+ arch/arm/mach-at91/clock.h                         |   49 -
+ arch/arm/mach-at91/generic.h                       |   10 +-
+ arch/arm/mach-at91/pm.c                            |    2 +-
+ arch/arm/mach-at91/pm_slowclock.S                  |    2 +-
+ arch/arm/mach-at91/pmc.c                           |   58 ++
+ arch/arm/mach-at91/sama5d3.c                       |  344 +------
+ arch/arm/mach-at91/setup.c                         |   38 +-
+ arch/arm/mach-at91/stamp9g20.h                     |    2 +-
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/at91/Makefile                          |   11 +
+ drivers/clk/at91/clk-main.c                        |  106 +++
+ drivers/clk/at91/clk-master.c                      |  317 +++++++
+ drivers/clk/at91/clk-peripheral.c                  |  376 ++++++++
+ drivers/clk/at91/clk-pll.c                         |  438 +++++++++
+ drivers/clk/at91/clk-plldiv.c                      |  125 +++
+ drivers/clk/at91/clk-programmable.c                |  370 ++++++++
+ drivers/clk/at91/clk-smd.c                         |  157 ++++
+ drivers/clk/at91/clk-system.c                      |  189 ++++
+ drivers/clk/at91/clk-usb.c                         |  303 ++++++
+ drivers/clk/at91/clk-utmi.c                        |  114 +++
+ drivers/clocksource/tcb_clksrc.c                   |   10 +-
+ drivers/dma/at_hdmac.c                             |   12 +-
+ drivers/misc/atmel-ssc.c                           |    8 +-
+ drivers/mmc/host/atmel-mci.c                       |   16 +-
+ drivers/pwm/pwm-atmel-tcb.c                        |    4 +-
+ drivers/tty/serial/atmel_serial.c                  |   35 +-
+ drivers/usb/gadget/at91_udc.c                      |   12 +-
+ drivers/usb/gadget/atmel_usba_udc.c                |    2 +-
+ drivers/usb/host/ehci-atmel.c                      |    8 +-
+ drivers/usb/host/ohci-at91.c                       |   12 +-
+ drivers/video/atmel_lcdfb.c                        |    8 +-
+ .../mach/at91_pmc.h => include/linux/clk/at91.h    |  122 ++-
+ 127 files changed, 7588 insertions(+), 3862 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/at91-clock.txt
+ create mode 100644 arch/arm/boot/dts/at91sam9x5_can.dtsi
+ create mode 100644 arch/arm/boot/dts/at91sam9x5_isi.dtsi
+ create mode 100644 arch/arm/boot/dts/at91sam9x5_lcdc.dtsi
+ create mode 100644 arch/arm/boot/dts/at91sam9x5_macb0.dtsi
+ create mode 100644 arch/arm/boot/dts/at91sam9x5_macb1.dtsi
+ create mode 100644 arch/arm/boot/dts/at91sam9x5_usart3.dtsi
+ create mode 100644 arch/arm/boot/dts/sama5d3_can.dtsi
+ create mode 100644 arch/arm/boot/dts/sama5d3_emac.dtsi
+ create mode 100644 arch/arm/boot/dts/sama5d3_gmac.dtsi
+ create mode 100644 arch/arm/boot/dts/sama5d3_lcd.dtsi
+ create mode 100644 arch/arm/boot/dts/sama5d3_mci2.dtsi
+ create mode 100644 arch/arm/boot/dts/sama5d3_tcb1.dtsi
+ create mode 100644 arch/arm/boot/dts/sama5d3_uart.dtsi
+ delete mode 100644 arch/arm/mach-at91/clock.c
+ delete mode 100644 arch/arm/mach-at91/clock.h
+ create mode 100644 arch/arm/mach-at91/pmc.c
+ create mode 100644 drivers/clk/at91/Makefile
+ create mode 100644 drivers/clk/at91/clk-main.c
+ create mode 100644 drivers/clk/at91/clk-master.c
+ create mode 100644 drivers/clk/at91/clk-peripheral.c
+ create mode 100644 drivers/clk/at91/clk-pll.c
+ create mode 100644 drivers/clk/at91/clk-plldiv.c
+ create mode 100644 drivers/clk/at91/clk-programmable.c
+ create mode 100644 drivers/clk/at91/clk-smd.c
+ create mode 100644 drivers/clk/at91/clk-system.c
+ create mode 100644 drivers/clk/at91/clk-usb.c
+ create mode 100644 drivers/clk/at91/clk-utmi.c
+ rename arch/arm/mach-at91/include/mach/at91_pmc.h => include/linux/clk/at91.h (76%)
+
+-- 
+1.7.9.5
+
