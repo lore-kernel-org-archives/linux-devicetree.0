@@ -1,118 +1,72 @@
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: pxa27x and pinctrl-single
-Date: Fri, 7 Jun 2013 09:21:00 +0800
-Message-ID: <CAN1soZyOzrRewwx0up2s+4igUf77h+UbFpCsm324O-nkBWcsTQ@mail.gmail.com>
-References: <51AF7404.3090003@newsguy.com>
- <CAD6h2NTu9-E=Xy8zz5cgDdk5W4ShM9-B+p+gQtiA_HASQ7AEuQ@mail.gmail.com>
- <51B0C7E8.5090308@newsguy.com>
- <CAD6h2NSRCti57NZtw0wzE8Th65_3Y8Dkz5zGsbnA2SUPYS263Q@mail.gmail.com>
- <51B12DE9.9040908@newsguy.com>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH v3] mfd: DT bindings for the palmas family MFD
+Date: Fri, 7 Jun 2013 02:02:38 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229EA3F3@DBDE04.ent.ti.com>
+References: <1370496441-24620-1-git-send-email-j-keerthy@ti.com>
+ <20130606070210.GR3370@gmail.com>,<20130606070610.GS3370@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51B12DE9.9040908-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Manjunathappa,
- Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=koi8-r
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130606070610.GS3370@gmail.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "swarren@nvidia.com" <swarren@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "wim@iguana.be" <wim@iguana.be>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "Kristo, Tero" <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 7, 2013 at 8:48 AM, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 06/06/2013 04:58 PM, Haojian Zhuang wrote:
->> On 7 June 2013 01:33, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org> wrote:
->>>
->
->
-> [...]
->
->
->>>
->>> Yes, but currently pinctrl-single only supports writing one register fo=
-r a given
->>> pin (with multiple pins sharing a register if bit-per-mux=3D=3Dtrue).  =
-On pxa27x, a
->>> pin's alt function is determined by the values written to both the GAFR=
-x and the
->>> GPDRx registers, so I think that pinctrl-single may need to allow a dev=
-ice tree
->>> to specify multiple reg/value/mask sets for any one pin.  I don't have a
->>> pxa3xx/mmp developer's manual handy, but from the code it appears that =
-on these
->>> arches the direction register is irrelevant to the mux setting.
->>>
->>
->> No, it's not need to access both GAFRx & GPDRx. Let's focus on PXA27x fi=
-rst.
->>
->> GPIO =91x=92 Alternate Function Select Bits (where x =3D 112 through 120)
->> A bit-pair in this register determines the corresponding GPIO pin=92s
->> functionality as one of the alternate functions that is mapped to it or =
-as a
->> generic GPIO pin.
->>
->> 0b00 =3D The corresponding GPIO pin (GPIO<x>) is used as a general-
->> purpose I/O.
->> 0b01 =3D The corresponding GPIO pin (GPIO<x>) is used for its alternate
->> function 1.
->> 0b10 =3D The corresponding GPIO pin (GPIO<x>) is used for its alternate
->> function 2.
->> 0b11 =3D The corresponding GPIO pin (GPIO<x>) is used for its alternate
->> function 3.
->>
->> We can see that GAFRx configures the pinmux. That's all. We can use
->> pinctrl-single
->> driver to cover this.
->
->
-> But on the pxa27x there are usually *two* meanings for any one of the 3 a=
-lt
-> functions, depending on the direction.  As a random example... gpio28 alt=
- fn
-> 0b01 is AC97_BITCLK if the direction is input, but is I2S_BITCLK if the
-> direction is output (from PXA27x Developer's Manual, Table 24-2).
->
 
-You didn't understand the alternate function. GPIO mode is only one mode
-of alternate functions. Because GPIO means that user can program the
-pin, you also need to configure the direction for GPIO usage.
+________________________________________
+=46rom: Lee Jones [lee.jones@linaro.org]
+Sent: Thursday, June 06, 2013 12:36 PM
+To: J, KEERTHY
+Cc: linux-kernel@vger.kernel.org; grant.likely@secretlab.ca; linux-doc@=
+vger.kernel.org; devicetree-discuss@lists.ozlabs.org; swarren@wwwdotorg=
+=2Eorg; swarren@nvidia.com; rob.herring@calxeda.com; rob@landley.net; s=
+ameo@linux.intel.com; wim@iguana.be; lgirdwood@gmail.com; gg@slimlogic.=
+co.uk; Kristo, Tero; Ian Lartey
+Subject: Re: [PATCH v3] mfd: DT bindings for the palmas family MFD
 
-Most of pins are either input or output. If the alternate function is
-AC97_BITCLK,
-input mode is configured by hardware automatically. You shouldn't configure
-it in GPDR register. Since it's working in AC97 mode, not GPIO mode. Config=
-uring
-in GPDR register can't work.
+On Thu, 06 Jun 2013, Lee Jones wrote:
 
+> On Thu, 06 Jun 2013, J Keerthy wrote:
 >
->>
->> I know that you're also talking the implementation in gpio-pxa driver.
->> __gpio_is_occupied() checks both GAFRx & GPDRx. Because this GPIO
->> pin should be configured as GPIO input. Actually we could also discard t=
-he
->> checking.
->>
->> So there's no relationship between GAFRx and GPDRx.
+> > Add the various binding files for the palmas family of chips. There=
+ is a
+> > top level MFD binding then a seperate binding for regulators IP blo=
+cks on chips.
+> >
+> > Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
+> > Signed-off-by: J Keerthy <j-keerthy@ti.com>
+> > Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
+> > Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/palmas.txt   |   49 ++++++++=
++++++
+> >  .../devicetree/bindings/regulator/palmas-pmic.txt  |   72 ++++++++=
+++++++++++++
+> >  2 files changed, 121 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/palmas.tx=
+t
+> >  create mode 100644
+> > Documentation/devicetree/bindings/regulator/palmas-pmic.tx
 >
->
-> But I am thinking on pxa27x there is... see my example above.  Perhaps th=
-is is
-> not true for the later Marvell arches and you are missing this point?  Or=
- else I
-> am stating the obvious to you and I am missing your point.  In either cas=
-e,
-> thanks for your patience.
->
-I explained this above.
+> Applied, thanks.
 
-Regards
-Haojian
+Grant,
+
+Could you pull this and drop the v2 of this patch please?
+
+Regards,
+Keerthy
+
+
+Ah wait. It appears Grant wants to take this.
+
+Unapplied, thanks. :)
+
+--
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =81 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
