@@ -1,36 +1,34 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH V4] ASoC: fsl: add imx-wm8962 machine driver
-Date: Fri, 7 Jun 2013 08:59:30 -0300
-Message-ID: <CAOMZO5AmNd_ifF7=F2vCyCRVDC9K5w9sJoiRF-j7eskhQ0Q46g@mail.gmail.com>
-References: <1370600053-14808-1-git-send-email-b42378@freescale.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 6/6] ARM: dts: Add pcie controller node for Samsung EXYNOS5440 SoC
+Date: Fri, 07 Jun 2013 13:59:43 +0200
+Message-ID: <1880458.2ksb8qtzHh@wuerfel>
+References: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com> <20130408165626.GA30824@obsidianresearch.com> <000c01ce6360$237a7040$6a6f50c0$@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370600053-14808-1-git-send-email-b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <000c01ce6360$237a7040$6a6f50c0$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Jingoo Han <jg1.han@samsung.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolin,
+On Friday 07 June 2013 18:19:40 Jingoo Han wrote:
+> Hi Jason Gunthorpe,
+> 
+> I implemented 'Single domain' with Exynos PCIe for last two months;
+> however, it cannot work properly due to the hardware restriction.
+> Each MEM region is hard-wired.
+> 
+> Thus, I will send Exynos PCIe V3 patch as 'Separate domains'.
 
-On Fri, Jun 7, 2013 at 7:14 AM, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+Yes, I think that is best, if the hardware is clearly designed as
+separate domains, this is what we should do by default in the
+driver. For the Marvell case with its 10 separate ports, much
+more address space would be wasted by having one domain per
+port and that hardware let us work around it by remapping the
+physical address space windows. For Exynos there is much less to
+lose and I too cannot see how it would be done in the first
+place.
 
-> +       data->clk_frequency = clk_get_rate(data->codec_clk);
-> +       clk_prepare_enable(data->codec_clk);
-
-Please check the return value from 'clk_prepare_enable()'
-
-Regards,
-
-Fabio Estevam
+	Arnd
