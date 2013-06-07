@@ -1,57 +1,152 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] ARM: dts: add dtsi for palmas
-Date: Fri, 07 Jun 2013 13:56:05 -0600
-Message-ID: <51B23AD5.8060006@wwwdotorg.org>
-References: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Fri, 7 Jun 2013 14:00:54 -0600
+Message-ID: <20130607200054.GA9010@obsidianresearch.com>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1370623671-7748-5-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306072101.44694.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: J Keerthy <j-keerthy@ti.com>
-Cc: b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, grant.likely@secretlab.ca, swarren@nvidia.com, sameo@linux.intel.com, gg@slimlogic.co.uk, lee.jones@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201306072101.44694.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2013 05:28 AM, J Keerthy wrote:
-> Adds palmas mfd and palmas regulator nodes. This is
-> based on the patch series:
+On Fri, Jun 07, 2013 at 09:01:44PM +0200, Arnd Bergmann wrote:
+
+> > +- compatible:	Should be set to one of the following:
+> > +		marvell,armada370-mbus
+> > +		marvell,armadaxp-mbus
 > 
-> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg89957.html
+> I thought they are compatible with all older ones at the register level,
+> as long as we describe all the differences in the ranges property
+> and other properties.
+
+Agree, maybe this can come later?
+ 
+> > +- reg:		Device's register space.
+> > +		Two entries are expected, see the examples below.
+> > +		The first one controls the devices decoding window and
+> > +		the second one controls the SDRAM decoding window.
 > 
-> The device tree nodes are based on:
-> https://lkml.org/lkml/2013/6/6/25
+> I think you should also list #address-cells=<2> and #size-cells=<1>
+> as required here, as long as an optional "ranges" property.
 
-> diff --git a/arch/arm/boot/dts/palmas.dtsi b/arch/arm/boot/dts/palmas.dtsi
+Yes
+ 
+> I think it makes sense to describe the "ranges" format here,
+> even if we expect the property to be empty at boot time and
+> only filled at run-time.
 
-> +&palmas {
+Yes, specifically describe how the 2 cell address format is mapped
+into the marvell target ID form.
 
-Hmmm. That (i.e. requiring the board file to declare the node, then
-setting up all the content by later including this file) is an
-interesting approach. I guess it's reasonable. The one issue is that it
-makes it a little harder for the board file to override any of the
-properties in this file., although it certainly is possible by including
-those overrides after the include.
+> > +	soc {
+> > +		bootrom {
+> > +			ranges = <0 0x01e00000 0xfff00000 0x100000>;
+> > +		};
+> > +	};
+> 
+> I think I'm a bit lost here. Is the "soc" node in this example the node
+> that is described as compatible="marvell,armada370-mbus"? Maybe expand
+> the example a little here to clarify this.
 
-Irrespective of that, some comments on this:
+Agree, it should be the mbus node..
+ 
+> If you use the new preprocessor feature we have in DT now, you can
+> actually list a macro that is used to assembly the cell from target
+> and attribute ID.
 
-> +	palmas_pmic {
+Yes, that would be great:
 
-> +		ti,ldo6-vibrator;
+#define MAP_ID(target_id,attributes) (((target_id) << 24) | ((attributes) << 16)) 0
+#define MAP_BOOTROM MAP_ID(0xXXXX,0xXXXX)
 
-For example, what if the board doesn't want to have the property set?
+Such that MAP_BOOTROM expands to two cells
 
-> +
-> +		regulators {
-> +			smps123_reg: smps123 {
-> +				regulator-name = "smps123";
-> +				regulator-min-microvolt = < 600000>;
-> +				regulator-max-microvolt = <1500000>;
+> > +	soc {
+> > +		devbus-bootcs {
+> > +			status = "okay";
+> > +			ranges = <0 0x012f0000 0xe8000000 0x8000000>;
+> 
+> The example should also contain an #address-cells and #size-cells
+> property in the devbus-bootcs, as those are required for interpreting the
+> ranges property.
 
-Or what if the board wants to limit the voltage range of this regulator
-due to what it's used for on the board.
+Right,
 
-> +				regulator-always-on;
-> +				regulator-boot-on;
+Is the ranges right though? I was expecting this:
 
-And those two properties are almost certainly board-specific policy.
+ ranges = <0  0x012f0000 0  0x8000000>
+
+The 2nd address cell in the 2dword space should almost always be 0.
+
+The 2nd address cell should be interprited as the offset within the
+target's window, not as some kind of physical base address.
+
+>>+ (Note that the windowid cell is encoding the target ID = 0x01 and attribute
+>>+ ID = 0x2f, and the selected base address for the window is 0xe8000000).
+
+... The proper place to indicate the base address for the window is in
+the mbus ranges:
+
+mbus {
+   ranges = <0x012f0000 0  0xe8000000  0x8000000>
+   devbus-bootcs {
+       ranges = <0  0x012f0000 0  0x8000000>
+   }
+}
+
+We shouldn't mangle the DT format just to make it convenient for
+humans to write - if this is a major problem then I'd try to use the
+preprocessor first.. There are several reasonable solutions down that
+path, IMHO.
+
+> I don't understand the part about zeroing a windowid. Is "target = 0x0,
+> attribute = 0x0" the actual setting for the internal registers? If so,
+> don't call it a dummy translation or a special case.
+> If not, why not use the actual setting here?
+
+Internal regs has a special window register that doesn't have a target
+id. We need to define an address cell for it, I suggest something like
+<0xFFFFFFFF 0>, or <0x0000FFFF 0>...
+
+> > +
+> > +	soc {
+> > +		pcie-controller {
+> > +			ranges =
+> > +			       <0x82000000 0 0x40000    0          0x40000    0 0x00002000
+> > +				0x82000000 0 0x80000    0          0x80000    0 0x00002000
+> > +				0x82000000 0 0xe0000000 0xffff0000 0xe0000000 0 0x08000000
+> > +				0x81000000 0 0          0xffff0000 0xe8000000 0 0x00100000>;
+> > +
+> > +			pcie@1,0 {
+> > +				/* ... */
+> > +			};
+> > +		};
+> > +	};
+
+> Again, I don't understand this part. For the purpose of specification, I
+> would not make a special case here. It is not a hardware property that makes
+> these special but the way we use it from Linux. Consequently I would suggest
+> we skip the PCI ranges in the initial boot time setup by identifying the
+> pcie-controller node by its "compatible" property.
+
+This is tricky :| The PCIE controller needs both target IDs and the
+aperture range to allocate them in.
+
+Jason
