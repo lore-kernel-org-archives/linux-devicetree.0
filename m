@@ -1,54 +1,59 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [net-next PATCH v4 1/5] net: cpsw: enhance pinctrl support
-Date: Fri, 7 Jun 2013 20:19:15 +0530
-Message-ID: <51B1F2EB.80109@ti.com>
-References: <51B0254B.4090304@ti.com> <20130606085049.GL31367@sirena.org.uk> <CACRpkdYxsXZBo1p6EefbE7n6XxYZCGokz-yCq03TTbGavaKEvg@mail.gmail.com> <20130607.004234.2007576325541054686.davem@davemloft.net>
+From: joem <joem@martindale-electric.co.uk>
+Subject: Re: getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Fri, 7 Jun 2013 14:49:28 +0000
+Message-ID: <1370616567.2433.20.camel@jm-desktop>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+	<51AFA6DD.3000202@wwwdotorg.org>
+	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+	<1370469574.18839.33.camel@localhost>
+	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+	<CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
+	<1370475609.20454.44.camel@localhost>
+	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+	<1370477958.20454.68.camel@localhost>
+	<CAPweEDyPffcN9cNJ10ZHt+AZJHTRdU0LMfCGM_756uAbf+NEBQ@mail.gmail.com>
+	<51B085C6.3000605@gmail.com>
+	<CAPweEDwR_NWUSi-j53m8MuoaV1RxM4wNNXtRioa2CjNdYqEtzQ@mail.gmail.com>
+	<51B19046.5040401@gmail.com>
+	<CAPweEDxfWcv7HSDuO6Uc751iiPg9ngDQc5UB7mbxwBespwF_7Q@mail.gmail.com>
+Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130607.004234.2007576325541054686.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: linus.walleij@linaro.org, broonie@kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gururaja.hebbar@ti.com, benoit.cousson@linaro.org, linux-omap@vger.kernel.org
+Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
+In-Reply-To: <CAPweEDxfWcv7HSDuO6Uc751iiPg9ngDQc5UB7mbxwBespwF_7Q@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <B81113C12F66F242BDFE34395B1D63AC@swifthost.local>
+List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
+	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
+List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
+List-Post: <mailto:arm-netbook@lists.phcomp.co.uk>
+List-Help: <mailto:arm-netbook-request@lists.phcomp.co.uk?subject=help>
+List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
+	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
+Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
+Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
+To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+Cc: "debian-arm@lists.debian.org" <debian-arm@lists.debian.org>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, "debian-kernel@lists.debian.org" <debian-kernel@lists.debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/7/2013 1:12 PM, David Miller wrote:
-> From: Linus Walleij <linus.walleij@linaro.org>
-> Date: Fri, 7 Jun 2013 09:31:58 +0200
->
->> On Thu, Jun 6, 2013 at 10:50 AM, Mark Brown <broonie@kernel.org> wrote:
->>> On Thu, Jun 06, 2013 at 11:29:39AM +0530, Mugunthan V N wrote:
->>>> On 6/6/2013 12:53 AM, Mark Brown wrote:
->>>>> Linus Walleij posted some patches which factor the state setting code
->>>>> out into generic functions earlier on today - it probably makes sense to
->>>>> pick those up rather than open coding
->>>> But this can go in as Linus Walleij's patch is not accepted yet.
->>>> Once that is
->>>> accepted and present in net git repo I will submit a separate patch to use
->>>> those APIs from pin ctrl core.
->>> Linus' change has pretty much gone in already but in any case what would
->>> be sensible here would be to write this in turns of Linus' changes and
->>> then send the patch to him to add to his series so it can go in via the
->>> same route.  One of the major reasons for the patch was that lots of
->>> people were querying the amount of noise caused by this sort of change.
->> I agree. We should be able to settle on the new core API quite soon,
->> then I can carry the patch to this driver if you obtain David's ACK.
-> If you want to merge the direct networking parts of this series into
-> another tree, I'm fine with that:
->
-> Acked-by: David S. Miller <davem@davemloft.net>
-David
 
-Can you the below patch series as i have adopted pinctrl PM api in 
-another series,
-this patch has direct usage of pinctrl_select_state apis
-http://marc.info/?l=linux-netdev&m=137054250018667&w=2
+> > SoC vendors are free to join the discussion, and many SoC vendors are part
+> > of the kernel community, so calling this unilateral is plain wrong.
+> 
+>  you're free to believe that, vladimir.  i've explained why that
+> hasn't happened, in prior messages.  can we move forward, please?
 
-Linus Walleij
+I prefer it if the "vladimir" troll (and fellow trolls)
+make requests for one of us to make or do something instead of
+constantly whining and wasting time.
 
-Please drop this patch series and take my other [atch set mentioned above
-with David's Ack.
+After all we are attached to funds and resources ready to
+deploy if something sounds a good idea and gets a vote.
 
-Regards
-Mugunthan V N
+To vladimir - please put your thoughts in a blog where it belongs.
+If its important, I'm sure others would offer comment
+and take you up on your thoughts.
