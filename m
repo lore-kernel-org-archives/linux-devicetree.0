@@ -1,184 +1,168 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2] ethernet/arc/arc_emac - Add new driver
-Date: Fri, 07 Jun 2013 11:13:03 -0700
-Message-ID: <1370628783.2209.123.camel@joe-AO722>
-References: <1370617656-18349-1-git-send-email-abrodkin@synopsys.com>
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
+Date: Fri, 7 Jun 2013 19:13:18 +0100
+Message-ID: <20130607181318.GC29344@localhost.localdomain>
+References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com>
+ <51B0BC80.9040007@wwwdotorg.org>
+ <20130606180824.GC3320@localhost.localdomain>
+ <CAAVeFuJkV3VVfeinLrjCCef9ZqJNvKurQwVWnJsW-bZqniTQ1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1370617656-18349-1-git-send-email-abrodkin@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: netdev@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFuJkV3VVfeinLrjCCef9ZqJNvKurQwVWnJsW-bZqniTQ1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-06-07 at 19:07 +0400, Alexey Brodkin wrote:
-> Driver for non-standard on-chip ethernet device ARC EMAC 10/100,
-> instantiated in some legacy ARC (Synopsys) FPGA Boards such as
-> ARCAngel4/ML50x.
+On Fri, Jun 07, 2013 at 06:03:54PM +0900, Alexandre Courbot wrote:
+> On Fri, Jun 7, 2013 at 3:08 AM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
+> >> I think we need to separate the concept of support for *a* secure
+> >> monitor, from support for a *particular* secure monitor.
+> >
+> > There is no fixed set of functionality implemented by these interfaces,
+> > so it might be better to think in terms of a generic "firmware" concept.
+> >
+> >
+> > Come to think of it...
+> >
+> > One option could be to have some standard baseline firmware calling
+> > conventions, so that we could have a few specific backends -- perhaps
+> > this could be built on the "method" notion used by PSCI
+> >
+> > (see Documentation/devicetree/bindings/arm/psci.tst; this is probably
+> > the most developed firmware interface binding we have today)
+> >
+> > There, method = "smc" means:
+> >
+> >         populate registers in a certain way
+> >         SMC #0
+> >         return results from register to caller in a certain way
+> >
+> > and method = "hvc" means:
+> >
+> >         populate registers in a certain way
+> >         HVC #0
+> >         return results from register to caller in a certain way
+> >
+> >
+> > The backend method arch/arm/kernel/psci.c:__invoke_psci_fn_smc()
+> > is probably close to what's needed for the tegra secureos case,
+> > so in theory it could be common, along with some of the DT binding
+> > conventions.
+> >
+> > The backends, and the convention for binding a firmware interface
+> > to the appropriate backend, could then theoretically be handled
+> > by a common framework.
+> 
+> I'm not sure whether we could use the same backend for many different
+> firmwares. If I understand you correctly, you propose to have a
+> backend to the "smc" call that would cover the needs of all firmwares
+> that rely on the smc instruction to invoke the firmware/secure
+> monitor.
+> 
+> I can understand the logic, but I'm not sure this is needed or even
+> possible. For instance, the implementation you have in
+> __invoke_psci_fn_smc assumes 4 arguments, while Tegra's only needs 3.
+> Also (and although I have to confess I am not very knowledgeable about
+> the "SecureOS" covered by this patch and need to double-check what
+> follows), in Tegra's case registers r3-r11 can be altered by the
+> secure monitor and need to be preserved - something you don't need to
+> do with PSCI.
 
-trivial comments only:
+One way to make the backend generic would be to have something like
+one of the following (some syntax omitted due to laziness):
 
-> diff --git a/drivers/net/ethernet/arc/arc_emac_main.c b/drivers/net/ethernet/arc/arc_emac_main.c
-[]
-> @@ -0,0 +1,956 @@
-> +/*
-> + * Copyright (C) 2004, 2007-2010, 2011-2013 Synopsys, Inc. (www.synopsys.com)
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * Driver for the ARC EMAC 10100 (Rev 5)
-> + *
-> + * Alexey Brodkin: June 2013
-> + *  -Upsteaming
-[]
-> + * Vineet Gupta: June 2011
-> + *  -Issues when working with 64b cache line size
-[]
-> + * Vineet Gupta: May 2010
-> + *  -Reduced foot-print of the main ISR (handling for error cases moved out
-[]
-> + * Vineet Gupta: Nov 2009
-> + *  -Unified NAPI and Non-NAPI Code.
-[]
-> + * Vineet Gupta: Nov 2009
-[]
-> + * Amit Bhor, Sameer Dhavale: 2004
+	u32 __naked __call_smc(u32 r0, ...) 
+	{
+		asm volatile (
+			stmfd	sp!, {r4-r11,lr}
+			smc	#0
+			ldmfd	sp!, {r4-r11,pc}
+			::: "memory"
+		);
+	}
 
-Does the internal changelog add anything useful?
+	/* The above works for up to 4 u32 arguments */
 
-> +static int arc_emac_poll(struct napi_struct *napi, int budget)
-> +{
-> +	struct net_device *net_dev = napi->dev;
-> +	struct arc_emac_priv *priv = netdev_priv(net_dev);
-> +	struct sk_buff *skb, *skbnew;
-> +	unsigned int i, loop, len, info, work_done = 0;
-> +
-> +	/* Loop thru the BD chain, but not always from 0.
-> +	 * Start from right after where we last saw a packet.
-> +	 */
-> +	i = priv->last_rx_bd;
-> +
-> +	for (loop = 0; loop < RX_BD_NUM; loop++) {
-> +		i = (i + 1) & (RX_BD_NUM - 1);
-> +
-> +		info = priv->rxbd[i].info;
-> +
-> +		/* BD contains a packet for CPU to grab */
-> +		if (likely((info & OWN_MASK) == FOR_CPU)) {
+	u32 __naked __call_smc(u32 r0, ...) 
+	{
+		asm volatile (
+			mov	ip, sp
+			stmfd	sp!, {r4-r11,lr}
+			ldmia	ip, {r4-r11}
+			smc	#0
+			ldmfd	sp!, {r4-r11,pc}
+			::: "memory"
+		);
+	}
 
-You could reduce indentation a level for all
-the lines that follow by using
-		if (unlikely(!(...)
-			continue;
+	/*
+	 * Works for up to 13 u32 arguments, provided the stack is deep
+	 * enough to provide suitable garbage data to fill the registers
+	 * if the caller supplied fewer arguments (a bit of a hack)
+	 */
 
+	u32 __naked __call_smc(struct pt_regs *regs) {
 
-> +				/* Get a new SKB from stack */
-> +				skbnew = netdev_alloc_skb(net_dev,
-> +							  net_dev->mtu +
-> +							  EMAC_BUFFER_PAD);
-> +
-> +				if (!skbnew) {
-> +					netdev_err(net_dev, "Out of memory, "
-> +						   "dropping packet\n");
+		asm(
+			stmfd	sp!, {r4-r11,lr}
+			/* load regs from <regs> */
+			smc #0
+			/* save regs back to <regs> */
+			ldmfd	sp!, {r4-r11,pc}
+		);
+	}
 
-OOM messages aren't particularly useful,
-and coalesce format please...
-
-[]
-> +				netdev_warn(net_dev,
-> +					    "Rx chained, packet is larger than "
-> +					    "device MTU (%d bytes)\n",
-> +					    net_dev->mtu);
-
-Same here.
-
-> +static irqreturn_t arc_emac_intr(int irq, void *dev_instance)
-> +{
-> +	struct net_device *net_dev = (struct net_device *)dev_instance;
-
-Don't need to cast void *
-netdev is a more common variable name
-
-> +		if (status & TXINT_MASK) {
-> +			unsigned int i, info;
-> +			struct sk_buff *skb;
-[]
-> +			if (status & TXCH_MASK) {
-> +				priv->stats.tx_errors++;
-> +				priv->stats.tx_aborted_errors++;
-> +				netdev_err(priv->net_dev,
-> +					   "Tx chaining err! txbd_dirty = %u\n",
-> +					   priv->txbd_dirty);
-
-You already have a local net_dev.
-why not use that?
-
-> +			} else {
-> +				netdev_err(priv->net_dev,
-> +					   "unknown err. Status reg is 0x%x\n",
-> +					   status);
-
-here too.
-
-> +int arc_emac_open(struct net_device *net_dev)
-> +{
-> +	struct arc_emac_priv *priv = netdev_priv(net_dev);
-> +	struct arc_emac_bd_t *bd;
-> +	struct sk_buff *skb;
-> +	int i;
-> +
-> +	if (!priv->phy_node) {
-> +		netdev_err(net_dev, "arc_emac_open: phy device is absent\n");
-
-If you really need the function name,
-it's better to use "%s: ", __func__
-
-> +int arc_emac_tx(struct sk_buff *skb, struct net_device *net_dev)
-> +{
-[]
-> +tx_next_chunk:
-> +
-> +	info = priv->txbd[priv->txbd_curr].info;
-> +	if (likely((info & OWN_MASK) == FOR_CPU)) {
-
-	if (unlikely(!(etc...)
-		return NETDEV_TX_BUSY;
-
-and save an indent level
-
-> +/**
-
-> +int arc_emac_set_address(struct net_device *net_dev, void *p)
-[]
-> +	EMAC_REG_SET(priv->reg_base_addr, R_ADDRH,
-> +		     *(unsigned int *)&net_dev->dev_addr[4] & 0x0000ffff);
-
-That doesn't seem endian friendly.
+	/*
+	 * Most generic,  least-efficient version.
+	 * Can return up to 13 u32 results instead of just one.
+	 * For convenience, the r0 value returned by the SMC could be
+	 * left in r0 so that it also determines the return value of the
+	 * function.
+	 *
+	 * Most of the time, SMC shouldn't be called on any hot path,
+	 * otherwise the performance battle is already lost -- so it may
+	 * not be crucial to reach the maximum possible efficiency for
+	 * these calls.
+	 */
 
 
-> +static int arc_emac_probe(struct platform_device *pdev)
-> +{
-[]
-> +	/* Get phy from device tree */
-> +	priv->phy_node = of_parse_phandle(pdev->dev.of_node, "phy", 0);
-> +	if (!priv->phy_node) {
-> +		dev_err(&pdev->dev, "failed to retrieve phy description "
-> +			"from device tree\n");
+A particular firmware's Linux glue code might have to put extra stuff
+around calls to generic_smc, but at least generic_smc itself wouldn't
+need to be reinvented, and the firmware-specific glue code could usually
+avoid asm.
 
-Coalesce formats please
+> Another example is the function that Tomasz shown
+> (https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/arch/arm/mach-exynos/exynos-smc.S?id=refs/tags/next-20130606
+> ), which preserves r4-r11 but also assumes r3 is an argument - that's
+> again another slightly different convention.
 
-> +	err = of_address_to_resource(pdev->dev.of_node, 0, &res_regs);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "failed to retrieve registers base "
-> +			"from device tree\n");
-[]
-> +	/* Get IRQ from device tree */
-> +	err = of_irq_to_resource(pdev->dev.of_node, 0, &res_irq);
-> +	if (!err) {
-> +		dev_err(&pdev->dev, "failed to retrieve <irq> value "
-> +			"from device tree\n");
-[]
+... for which the above implementations of __call_smc() should work too.
+
+> All in all the needs of the various firmwares might end up being just
+> different enough that we need to have a different backend for each of
+> them. The firmware_ops defined in arch/arm/include/asm/firmware.h
+> perform the abstraction at a higher level, which seems more fit here
+> IMHO.
+> 
+> Alex.
+
+Indeed.  If you think you could work with one of the above generics, we
+could try it and see what it looks like though.
+
+If it's an awkward fit, I might be being too optimistic.
+
+Cheers
+---Dave
