@@ -1,83 +1,124 @@
 From: "luke.leighton" <luke.leighton@gmail.com>
 Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Fri, 7 Jun 2013 19:26:49 +0100
-Message-ID: <CAPweEDzW60poOYahm31aW3_A=NvZmyBPPPgM9PzdvuPJnju69A@mail.gmail.com>
+Date: Fri, 7 Jun 2013 19:45:07 +0100
+Message-ID: <CAPweEDwU+RzTCGb20uh7jxAzjbrX_yHVa4sy_ATr7MWpBb4WcQ@mail.gmail.com>
 References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+	<51AFA6DD.3000202@wwwdotorg.org>
+	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+	<1370469574.18839.33.camel@localhost>
+	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+	<CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
 	<1370475609.20454.44.camel@localhost>
 	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
-	<1733666.lHUBcfUXq9@flatron>
-	<20130606112723.71ddd70c@skate>
+	<CAKON4OxPDpN3BTc9GWP44exDSkAZGJ5OeCpUP37vRnnvxwUnmw@mail.gmail.com>
+	<CAOesGMgqxhG45NyCfpHc_0uHS+_Gn-hGZm-+CRvK2EEf1AGTow@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130606112723.71ddd70c@skate>
+In-Reply-To: <CAOesGMgqxhG45NyCfpHc_0uHS+_Gn-hGZm-+CRvK2EEf1AGTow@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+To: Olof Johansson <olof@lixom.net>
+Cc: "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm <debian-arm@lists.debian.org>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel <debian-kernel@lists.debian.org>
 List-Id: devicetree@vger.kernel.org
 
-thomas i _very_ briefly spotted this when i was extremely busy
-yesterday, and i'm grateful to the 2 or 3 people who've given me the
-keywords and/or links to catch up.
-
-On Thu, Jun 6, 2013 at 10:27 AM, Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com> wrote:
-> Dear Tomasz Figa,
+On Thu, Jun 6, 2013 at 5:00 PM, Olof Johansson <olof@lixom.net> wrote:
+> On Thu, Jun 6, 2013 at 8:13 AM, jonsmirl@gmail.com <jonsmirl@gmail.com> wrote:
+>> On Wed, Jun 5, 2013 at 7:54 PM, luke.leighton <luke.leighton@gmail.com> wrote:
+>>>  augh.  ok.  solutions.  what are the solutions here?
+>>
+>> Luke if you really want to fix this a good solution is to have
+>> Allwinner join Linaro and provide an engineer to the Linaro effort.
+>> That engineer will get educated on the right way to do kernel
+>> development and he can pass that knowledge back to Allwinner each day
+>> as he learns it.
 >
-> On Thu, 06 Jun 2013 02:01:14 +0200, Tomasz Figa wrote:
->
->> I don't see any other solution here than moving all the Allwinner
->> code to DT (as it has been suggested in this thread several times
->> already), as this is the only hardware description method supported
->> by ARM Linux.
->
-> Have you noticed that it is already the case in mainline?
+> There's no need for anybody to join Linaro to contribute upstream.
+> That's a crazy notion.
 
- i knew there was a little bit, but not the extent of the commits.
+ indeed.  this is a company that produced a 70-page "datasheet" when
+freescale produced 4,500 for the iMX6.  i passed on that link and i
+believe it'll be an eye-opener to their engineers: education is what's
+key here, and you don't need to pay vast sums to do it.
 
-> My colleague Maxime Ripard (Cc'ed)
+ although the quantities they're selling are just ennorrrmous,
+allowing them to undercut absolutely everybody because they can pay
+absolute best rates to the Fab Houses (TSMC etc.) their profit margins
+are going to be exceptionally slim.
 
- maxime: we need to talk :)
+ so we cannot count on them having a spare $1m per year to give to
+linaro, so yes, i tend to agree with what you're implying, olof, that
+allwinner should be encouraged to participate more in upstream
+contribution.
 
- please tell me in 4 or 5 sentences what you've managed to do so far,
-expanding a little on what thomas says below, more specifically what
-it achieves and/or allows rather than technically what it does
-(suitable for managers and directors in other words), and what plans
-you'd like to see happen.
+ so.
 
-> is the maintainer of the mainline Allwinner sunxi
-> effort. It already supports a number of boards, has a pinctrl driver, a
-> GPIO driver, serial port is working, network is working, I2C is
-> working.
->
-> All in mainline, completely Device Tree based.
+ could someone please describe to me what they should do, here?  whom
+should they best contact, what lists, what's the procedures, where's
+the best-working-practices, where are the foundations with which they
+can participate that have the formal procedures for proposals [similar
+to python's PEP and debian's DEP].  that last was a not-very-subtle
+hint, btw.
 
- great.  which version did it first hit, i.e. what will the first
-signs of this be when allwinner begin doing "git pulls"?
+ and... please... i've yet to receive *any* answers to the question
+"and what are the benefits that they would get by doing so"!!
 
- and which boards.  bear in mind that one of those "boards" should
-really be "the total range of products available across hundreds of
-chinese tablet clone manufacturers".
+> Listen, Allwinner isn't working in a vacuum, believe it or not. I've
+> talked to them, so has Arnd and other people working on ARM, including
+> Maxime Ripard, who's been reimplementing upstream support for their
+> platform.
 
- specific question: is one of the "boards" the one that tom cubie
-submitted, which covers virtually every android tablet product
-manufactured in the millions by chinese tablet clone manufacturers?
+ great.
 
+> Everybody is interested in the right things happening, it's
+> just a matter of figuring out how to do it. The right people are
+> already talking.
 
-> So isn't this entire discussion completely moot?
+ .... but the Directors of Allwinner aren't been kept in the loop,
+here: that's my job, to get them up-to-speed.
 
- no because it's totally in isolation from allwinner.  i need to give
-them a heads-up, and get them involved, giving them specific
-incentives [which nobody's yet given!!] for following a particular
-path [or paths] yet to be recommended.
+>> the cost of joining. The net result will likely be a reduction in the
+>> amount they need to spend on in-house development since they will
+>> learn how to better leverage other developer's work.
 
-> The mainline support
-> for sunxi has already started since 6 months or so, and has been Device
-> Tree based from day one.
+ but you forget one thing: they only need *ever* produce *one*
+board/kernel.  they have a registered board type, it covers *all*
+products and i mean *all* products.  i don't mean that in the "usual"
+way where most companies re-use a single machine type for multiple
+devices and irritate the crap out of linux kernel developers when the
+GPL source finally "leaks", i mean "thanks to script.fex they
+LITERALLY only ever compile one binary and then customise script.fex
+on a per-customer basis".
 
-to clarify: the *community-driven* mainline support for sunxi.  ok -
-which chips?  sun3i (ARM9), sun4i (Cortex A8), sun5i, sun6i and sun7i
-(Dual-Core Cortex A7)?  which ones are in?
+ so the usual lessons really do not apply, here.
+
+ the only one i spotted was that they rather foolishly made duplicates
+of sun5i_usb and renamed all the files (s/SUN5I/SUN7I/g) to make
+sun7i_usb, then started editing.  one of the developers created a
+buffer overflow, which corrupted internal memory, and there are signs
+that he then started experimenting switching off DMA trying to fix
+various problems.
+
+ if he'd done a proper job #ifdef CONFIG_SUN7I_USB #ifdef
+CONFIG_SUN5I_USB in the same source code etc etc. and tested on
+known-good [older] hardware he would have noticed that the
+modifications failed on previously-known-good hardware and would have
+spotted the buffer overflow error much sooner.
+
+ that _is_ something i will be bringing to the Director's attention,
+that the "strategy" of cut-paste-itis has detrimental effects.
+
+ok.  so.  apologies, bit of a digression there.
+
+ question for you olof [and others of course]: you've clearly listed
+some benefits, which i'm very very grateful for.  in light of what i
+describe above [the "we only need ever write one kernel" strategy
+which is serving Allwinner really really well apart from the
+code-duplication mistake], do the benefits you list *still* apply, and
+if so, could you please elaborate for me, assume i'm thick or
+something [or at least not a programmer, which i am unfortunately so
+might miss something]
 
 l.
