@@ -1,40 +1,236 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 12/14] ARM: mvebu: Remove device tree unused properties
- on A370
-Date: Sat, 8 Jun 2013 10:18:51 -0400
-Message-ID: <20130608141851.GY23859@titan.lakedaemon.net>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1370623671-7748-13-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/4] pinctrl: single: Prepare for supporting SoC
+ specific features
+Date: Sat, 8 Jun 2013 08:27:32 -0700
+Message-ID: <20130608152732.GR3331@atomide.com>
+References: <20130607203936.16513.57494.stgit@localhost>
+ <20130607205037.16513.84242.stgit@localhost>
+ <CAN1soZzLYpiakcgPR7mBOC7_mLFW=mZwOG98Dq6JpO+JHUW=cw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1370623671-7748-13-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAN1soZzLYpiakcgPR7mBOC7_mLFW=mZwOG98Dq6JpO+JHUW=cw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@gmail.com>
+Cc: Walleij Linus <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 07, 2013 at 01:47:49PM -0300, Ezequiel Garcia wrote:
-> These properties are not needed so it's safe to remove them.
+* Haojian Zhuang <haojian.zhuang@gmail.com> [130608 02:43]:
 > 
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-370.dtsi | 4 ----
->  1 file changed, 4 deletions(-)
+> Manjunathappa's pinctrl-single patch on enhancing bits is already merged.
+> This patch conflicts with his patch.
+> 
+> Could you rebase your patches?
 
-Also as mentioned by Thomas, applied to mvebu/dt with his Ack.
+Sure. Looks like Linus W forgot to push out the branch as I don't see
+it yet in the pinctrl tree. Here's a version of this one against current
+Linux next + Manjunathappa's patches.
 
-thx,
+Regards,
 
-Jason.
+Tony
+
+From: Tony Lindgren <tony@atomide.com>
+Date: Sat, 8 Jun 2013 08:03:07 -0700
+Subject: [PATCH] pinctrl: single: Prepare for supporting SoC specific features
+
+Let's replace is_pinconf with flags and add struct pcs_soc so we
+can support also other features like pin wake-up events. Let's
+export the probe so the SoC specific modules can pass their
+SoC specific data to pinctrl-single if needed.
+
+Done in collaboration with Roger Quadros <rogerq@ti.com>.
+
+Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 2899c86..e3b1f76 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -26,6 +26,7 @@
+ 
+ #include "core.h"
+ #include "pinconf.h"
++#include "pinctrl-single.h"
+ 
+ #define DRIVER_NAME			"pinctrl-single"
+ #define PCS_MUX_PINS_NAME		"pinctrl-single,pins"
+@@ -162,7 +163,6 @@ struct pcs_name {
+  * @fshift:	function register shift
+  * @foff:	value to turn mux off
+  * @fmax:	max number of functions in fmask
+- * @is_pinconf:	whether supports pinconf
+  * @bits_per_pin:number of bits per pin
+  * @names:	array of register names for pins
+  * @pins:	physical pins on the SoC
+@@ -176,6 +176,7 @@ struct pcs_name {
+  * @desc:	pin controller descriptor
+  * @read:	register read function to use
+  * @write:	register write function to use
++ * @soc:	SoC glue
+  */
+ struct pcs_device {
+ 	struct resource *res;
+@@ -190,8 +191,8 @@ struct pcs_device {
+ 	unsigned foff;
+ 	unsigned fmax;
+ 	bool bits_per_mux;
+-	bool is_pinconf;
+ 	unsigned bits_per_pin;
++	unsigned flags;
+ 	struct pcs_name *names;
+ 	struct pcs_data pins;
+ 	struct radix_tree_root pgtree;
+@@ -204,6 +205,7 @@ struct pcs_device {
+ 	struct pinctrl_desc desc;
+ 	unsigned (*read)(void __iomem *reg);
+ 	void (*write)(unsigned val, void __iomem *reg);
++	const struct pcs_soc *soc;
+ };
+ 
+ static int pcs_pinconf_get(struct pinctrl_dev *pctldev, unsigned pin,
+@@ -1049,7 +1051,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 	};
+ 
+ 	/* If pinconf isn't supported, don't parse properties in below. */
+-	if (!pcs->is_pinconf)
++	if (!(pcs->flags & PCS_HAS_PINCONF))
+ 		return 0;
+ 
+ 	/* cacluate how much properties are supported in current node */
+@@ -1173,7 +1175,7 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 	(*map)->data.mux.group = np->name;
+ 	(*map)->data.mux.function = np->name;
+ 
+-	if (pcs->is_pinconf) {
++	if (pcs->flags & PCS_HAS_PINCONF) {
+ 		res = pcs_parse_pinconf(pcs, np, function, map);
+ 		if (res)
+ 			goto free_pingroups;
+@@ -1294,7 +1296,7 @@ static int pcs_parse_bits_in_pinctrl_entry(struct pcs_device *pcs,
+ 	(*map)->data.mux.group = np->name;
+ 	(*map)->data.mux.function = np->name;
+ 
+-	if (pcs->is_pinconf) {
++	if (pcs->flags & PCS_HAS_PINCONF) {
+ 		dev_err(pcs->dev, "pinconf not supported\n");
+ 		goto free_pingroups;
+ 	}
+@@ -1483,18 +1485,14 @@ static int pcs_add_gpio_func(struct device_node *node, struct pcs_device *pcs)
+ 	return ret;
+ }
+ 
+-static int pcs_probe(struct platform_device *pdev)
++int pinctrl_single_probe(struct platform_device *pdev,
++			 const struct pcs_soc *soc)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+-	const struct of_device_id *match;
+ 	struct resource *res;
+ 	struct pcs_device *pcs;
+ 	int ret;
+ 
+-	match = of_match_device(pcs_of_match, &pdev->dev);
+-	if (!match)
+-		return -EINVAL;
+-
+ 	pcs = devm_kzalloc(&pdev->dev, sizeof(*pcs), GFP_KERNEL);
+ 	if (!pcs) {
+ 		dev_err(&pdev->dev, "could not allocate\n");
+@@ -1505,7 +1503,8 @@ static int pcs_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&pcs->pingroups);
+ 	INIT_LIST_HEAD(&pcs->functions);
+ 	INIT_LIST_HEAD(&pcs->gpiofuncs);
+-	pcs->is_pinconf = match->data;
++	pcs->flags = soc->flags;
++	pcs->soc = soc;
+ 
+ 	PCS_GET_PROP_U32("pinctrl-single,register-width", &pcs->width,
+ 			 "register width not specified\n");
+@@ -1574,7 +1573,7 @@ static int pcs_probe(struct platform_device *pdev)
+ 	pcs->desc.name = DRIVER_NAME;
+ 	pcs->desc.pctlops = &pcs_pinctrl_ops;
+ 	pcs->desc.pmxops = &pcs_pinmux_ops;
+-	if (pcs->is_pinconf)
++	if (pcs->flags & PCS_HAS_PINCONF)
+ 		pcs->desc.confops = &pcs_pinconf_ops;
+ 	pcs->desc.owner = THIS_MODULE;
+ 
+@@ -1603,8 +1602,20 @@ free:
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(pinctrl_single_probe);
++
++static int pcs_probe(struct platform_device *pdev)
++{
++	const struct of_device_id *match;
++
++	match = of_match_device(pcs_of_match, &pdev->dev);
++	if (!match)
++		return -EINVAL;
++
++	return pinctrl_single_probe(pdev, (struct pcs_soc *)match->data);
++}
+ 
+-static int pcs_remove(struct platform_device *pdev)
++int pinctrl_single_remove(struct platform_device *pdev)
+ {
+ 	struct pcs_device *pcs = platform_get_drvdata(pdev);
+ 
+@@ -1615,17 +1626,26 @@ static int pcs_remove(struct platform_device *pdev)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(pinctrl_single_remove);
++
++static struct pcs_soc pinctrl_single = {
++	.flags = 0,
++};
++
++static struct pcs_soc pinconf_single = {
++	.flags = PCS_HAS_PINCONF,
++};
+ 
+ static struct of_device_id pcs_of_match[] = {
+-	{ .compatible = "pinctrl-single", .data = (void *)false },
+-	{ .compatible = "pinconf-single", .data = (void *)true },
++	{ .compatible = "pinctrl-single", .data = &pinctrl_single },
++	{ .compatible = "pinconf-single", .data = &pinconf_single },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, pcs_of_match);
+ 
+ static struct platform_driver pcs_driver = {
+ 	.probe		= pcs_probe,
+-	.remove		= pcs_remove,
++	.remove		= pinctrl_single_remove,
+ 	.driver = {
+ 		.owner		= THIS_MODULE,
+ 		.name		= DRIVER_NAME,
+diff --git a/drivers/pinctrl/pinctrl-single.h b/drivers/pinctrl/pinctrl-single.h
+new file mode 100644
+index 0000000..18f3205
+--- /dev/null
++++ b/drivers/pinctrl/pinctrl-single.h
+@@ -0,0 +1,15 @@
++#define PCS_HAS_PINCONF         (1 << 0)
++
++/**
++ * struct pcs_soc - SoC specific interface to pinctrl-single
++ * @data:	SoC specific data pointer
++ * @flags:	mask of PCS_HAS_xxx values
++ */
++struct pcs_soc {
++	void *data;
++	unsigned flags;
++};
++
++extern int pinctrl_single_probe(struct platform_device *pdev,
++				const struct pcs_soc *soc);
++extern int pinctrl_single_remove(struct platform_device *pdev);
