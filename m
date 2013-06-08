@@ -1,100 +1,160 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re: Uploading linux (3.9.4-1))
-Date: Sat, 08 Jun 2013 10:28:38 +0200
-Message-ID: <4247099.i8S79t0Pua@flatron>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com> <20130607205940.4816fed5@skate> <CAPweEDxtC+OamcpVEQ3BULbN88hSJzKoi0fkNLBAdZD04LQCNQ@mail.gmail.com>
+From: Haojian Zhuang <haojian.zhuang@linaro.org>
+Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
+Date: Sat, 8 Jun 2013 16:31:02 +0800
+Message-ID: <CAD6h2NR=3uhc0dnkoa_8rXz1QerSXaS0bY0ny0a8Lk0TaSPhUg@mail.gmail.com>
+References: <51942472.9010402@wwwdotorg.org>
+	<CACRpkdYtKr5w2=1sONG4Qn2TQue38nV7epWfzxNQz5rjSs0DZQ@mail.gmail.com>
+	<20130522142824.GC4789@ab42.lan>
+	<CAD6h2NT4FqmEsLvtTDwwDL2YVzXYNpw72hTOcSxSMvHLhWvFPQ@mail.gmail.com>
+	<20130524115053.GB5203@ab42.lan>
+	<CAD6h2NSh_4TNAGeFhg+va5QX2hGia+gkw-mPaeMezghsa=Zc6Q@mail.gmail.com>
+	<20130603123001.GD31808@ab42.lan>
+	<CAD6h2NQVKKvcoPdD4sm5rUM5G-FpF3abL=k+WfQsnKnm7qhREA@mail.gmail.com>
+	<20130606141115.GA10345@ab42.lan>
+	<CAD6h2NRNMQP-ZQ0Cc613tGThVEo7AzRExBmWsbtr1DXgiPwz7w@mail.gmail.com>
+	<20130606153030.GA19876@ab42.lan>
+	<51B2320B.6060101@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPweEDxtC+OamcpVEQ3BULbN88hSJzKoi0fkNLBAdZD04LQCNQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "luke.leighton" <luke.leighton@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51B2320B.6060101@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Christian Ruppert <christian.ruppert@abilis.com>, Linus Walleij <linus.walleij@linaro.org>, Shiraz HASHIM <shiraz.hashim@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Luke,
+On 8 June 2013 03:18, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 06/06/2013 09:30 AM, Christian Ruppert wrote:
+>> On Thu, Jun 06, 2013 at 10:32:21PM +0800, Haojian Zhuang wrote:
+>>> On 6 June 2013 22:11, Christian Ruppert <christian.ruppert@abilis.com> wrote:
+>>>> On Wed, Jun 05, 2013 at 09:44:27AM +0800, Haojian Zhuang wrote:
+>>>>> On 3 June 2013 20:30, Christian Ruppert <christian.ruppert@abilis.com> wrote:
+>>>>>> OK, here's a simplified example of what we would like to do (this seems
+>>>>>> pretty common so I suppose there is a way I haven't understood). Our
+>>>>>> situation is slightly more complex but for the purpose of discussion
+>>>>>> let's assume a chip with 8 pins which can be configured for the
+>>>>>> following functions:
+>>>>>>
+>>>>>> Pin   GPIO-A    I2C    SPI0     SPI1
+>>>>>> ------------------------------------
+>>>>>>  1    GPIOA0    SDA             MISO1
+>>>>>>  2    GPIOA1    SCL             MOSI1
+>>>>>>  3    GPIOA2                    SS1_B
+>>>>>>  4    GPIOA3                    SCLK1
+>>>>>>  5    GPIOA4           MISO0
+>>>>>>  6    GPIOA5           MOSI0
+>>>>>>  7    GPIOA6           SS0_B
+>>>>>>  8    GPIOA7           SCLK0
+>>>>>>
+>>>>>> We can now define the following pinctrl-single:
+>>>>>>
+>>>>>> pinmux: pinmux@0xFFEE0000 {
+>>>>>>         compatible = "pinctrl-single";
+>>>>>>         reg = <0xFFEE0000 0x8>;
+>>>>>>         #address-cells = <1>;
+>>>>>>         #size-cells = <0>;
+>>>>>>         #gpio-range-cells = <3>;
+>>>>>>         pinctrl-single,register-width = <32>;
+>>>>>>         pinctrl-single,function-mask = <0xffffffff>;
+>>>>>>         pinctrl-single,gpio-range = <&range 1 8 0>;
+>>>>>>         gpioa_pins: pinmux_gpioa_pins {
+>>>>>>                 pinctrl-single,pins = <0x0 0 0x4 0>
+>>>>>>         };
+>>>>>>         i2c_pins: pinmux_i2c_pins {
+>>>>>>                 pinctrl-single,pins = <0x0 1>
+>>>>>>         };
+>>>>>>         spi0_pins: pinmux_spi0_pins {
+>>>>>>                 pinctrl-single,pins = <0x1 1>
+>>>>> <0x1 1>?
+>>>>>
+>>>>> If each pinmux register is only for one pin in your SoC.
+>>>>> I think that your definitions are wrong above. We use
+>>>>> register offset as the first argument, not pin number.
+>>>>> And the second argument should be pin function number.
+>>>>
+>>>> In our case each pinmux register (bit field) actually controls an entire
+>>>> group of pins.
+>>>>
+>>>>> If multiple pins are sharing one register with different bits,
+>>>>> you need to enable "pinctrl-single,bit-per-mux".
+>>>>
+>>>> Multiple pins are sharing the same bits in the same register. Do you
+>>>> think this prevents us from using pinctrl-single?
+>>>>
+>>> Could you give me your register definition? Then I can understand you
+>>> better.
+>>
+>> In our example, the register map would look a bit like the following.
+>> Note that every register configures four pins at a time.
+>>
+>> Register 0x0:
+>>  Mode  GPIO-A    I2C    SPI1
+>>  Value 0x0       0x1    0x2
+>>  ---------------------------
+>>  Pin1  GPIOA0    SDA    MISO1
+>>  Pin2  GPIOA1    SCL    MOSI1
+>>  Pin3  GPIOA2           SS1_B
+>>  Pin4  GPIOA3           SCLK1
+>>
+>> Register 0x4:
+>>  Mode  GPIO-A    SPI0
+>>  Value 0x0       0x1
+>>  ---------------------
+>>  Pin5  GPIOA4    MISO0
+>>  Pin6  GPIOA5    MOSI0
+>>  Pin7  GPIOA6    SS0_B
+>>  Pin8  GPIOA7    SCLK0
+>
+> My suggestion here is that pinctrl-single isn't appropriate. The only
+> way it could work is if you pretend that each group-of-pins is actually
+> a single pin.
+>
+> However, then the correlation between these pretend pins (i.e. really
+> the groups) and GPIOs won't work, because each "pin" is really 4 pins,
+> and hence 4 GPIOs, and hence you won't be able to gpio_get() more than 1
+> GPIO per pin group, I think.
 
-On Friday 07 of June 2013 22:29:34 luke.leighton wrote:
-> On Fri, Jun 7, 2013 at 7:59 PM, Thomas Petazzoni
-> 
-> <thomas.petazzoni@free-electrons.com> wrote:
-> > Maxime will reply to this in more details, but I believe the status 
-is:
-> >  * Interrupt controller is working.
-> >  * Clock drivers are working.
-> >  * Pinctrl is working.
-> >  * GPIO is working.
-> >  * Timer is working.
-> >  * UART is working
-> >  * Watchdog is on its way (patches posted)
-> >  * Ethernet is on its way (patches posted)
-> >  * I2C is on its way (patches posted)
-> 
->  ok so i've got this now in
-> http://hands.com/~lkcl/allwinner_linux_proposal.txt - that leaves...
-> well there's quite a bit: usb, sd/mmc (both variants: they changed the
-> data structures around sun5i), nand (probably both - the allwinner one
-> and the mtd one being done, reminds me: we need full documentation on
-> the NAND chip), scsi, g2d - cedarx and more.
-> 
->  what else should be raised, and to what benefit?
+Actually we can get each GPIO in the SoC. But we need to do some workaround.
 
-Now that the discussion went off from "you stupid kernel developers 
-adopted DeviceTree without even asking a closed company about their 
-proprietary solution, which does the same" to something a bit more 
-constructive, let me point some of the benefits.
+1. As we discussed, we need to pretend a pin group as a single pin.
 
-First let me remind you the proposals from one of my previous posts:
+2. In DTS, we need to define "gpio-ranges" in gpio node and
+"pinctrl-single,gpio-range"
+in pinmux node as below.
 
- - let Allwinner engineers join the relevant mailing lists - mostly linux-
-arm-kernel, but also all the topic-specific ones, like linux-mmc, linux-
-usb, linux-pm, devicetree-discuss, etc.
+    gpio {
+             /* gpio offset, pin offset, nr pins */
+             /* skip GPIOA1 & GPIOA3, PIN0 means pin1/pin2, PIN1 means
+pin3/pin4 */
+            gpio-ranges = <&pmx 0 0 1 &pmx 2 1 1>;
+    };
 
- - adjust their workflow to comply with rules of Linux kernel open 
-source community (i.e. sending RFCs of things in development, getting code 
-reviewed, addressing comments)
+    pmx {
+              /* pin offset, nr pins, gpio function */
+             pinctrl-single,gpio-range = <&range 0 1 0 &range 1 1 0>
+    };
+    range {
+             #pinctrl-single,gpio-range-cells = <3>;
+    };
 
- - rework existing code to use widely-accepted, standard solutions 
-available in upstream Linux kernel (although this is already mostly done 
-by sunxi community) to avoid reinventing wheels - this is not only about 
-DeviceTree, which you mentioned already in your proposal list, but also 
-all the generic frameworks present in the kernel
+Because we pretend pin1/pin2 as one single pin (PIN1), we skip to define it
+in gpio-ranges. This range is only help you to find right pinmux controller.
 
-Now the benefits of cooperation with Linux kernel community:
+Yes, I agree that pinctrl-single driver isn't 100% appropriate. But it
+could work.
+I verified it.
 
- - access to big knowledge base of all the Linux kernel developers 
-participating in discussions on the mailing lists; any technical (and 
-maybe non-technical?) problems related to the kernel can be discussed on 
-the lists at any time; also this would be a good form of communication 
-between Allwinner engineers and sunxi community
+Regards
+Haojian
 
- - in-depth code review by experienced kernel developers that allows early 
-spotting of issues and finding possible improvements of design and 
-implementation; having this would avoid things like you mentioned with 
-their usb driver
-
- - extended testing coverage - anyone can access the patches in 
-development (through the ML or linux-next integration tree), test them on 
-their board with Allwinner SoC and report any issues on respective mailing 
-lists
-
- - ability to participate in development of the whole Linux kernel, 
-including any existing and new generic frameworks, drivers, etc., in terms 
-of discussion, sending patches, reviewing patches of other developers;
-
-	this is very important to make sure that the part being developed
-	suits the needs of everyone (or at least most of the parties)
-	- you can't know that without enough discussion;
-
-	this is also important to avoid reinventing wheels - there might
-	be a useful part of code available in some internal tree of some
-	company or developer, which could be just extended (or even used
-	as is), without the need to reinvent it, but people must know
-	about it first
-
-That's all I can think of at the moment (+ all the proposals and benefits 
-you have in your file already).
-
-Best regards,
-Tomasz
+>
+> It's not hard (although possibly data intensive depending on your SoC)
+> to represent your HW just fine with a native pinctrl driver; pinctrl
+> itself has the ability to separate the concepts of pins, groups-of-pins,
+> and the mux-functions-that-are-assigned-to-groups. If any of your HW
+> registers actually do control only a single pin, you can simply create
+> both a pin and a group that contains only that one pin. This is all very
+> similar to how Tegra works, although it sounds like your registers may
+> be a bit more regular than Tegras - Tegra has a very variable number of
+> pins in each grop, and even some overlap between groups (mux function
+> groups and pin configuration groups aren't aligned).
