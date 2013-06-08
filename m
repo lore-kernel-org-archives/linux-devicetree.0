@@ -1,16 +1,18 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC 0/3] clk: dt: bindings for mux & divider clocks
-Date: Sat, 08 Jun 2013 11:25:03 -0700
-Message-ID: <20130608182503.10233.30556@quantum>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
- <20130607055128.GA20780@S2101-09.ap.freescale.net>
- <20130607175254.10233.7661@quantum>
- <20130608030240.GB22134@S2101-09.ap.freescale.net>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Sat, 8 Jun 2013 15:38:52 -0300
+Message-ID: <20130608183851.GB2354@localhost>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1370623671-7748-5-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306072101.44694.arnd@arndb.de>
+ <20130607200054.GA9010@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130608030240.GB22134-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130607200054.GA9010-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,38 +23,86 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Shawn Guo (2013-06-07 20:02:41)
-> On Fri, Jun 07, 2013 at 10:52:54AM -0700, Mike Turquette wrote:
-> > Yes, there was a time when I was firmly against doing such a thing.
-> > However I'm not sure it is so bad now.  More and more SoCs are going to
-> > keep getting merged into the kernel and that just means more and more
-> > clock data.  Perhaps DT is best suited to handle this bloat.  I broke
-> > the clock data out into a separate file so that it didn't overwhelm the
-> > existing omap4.dtsi.
-> 
-> I'm actually more concerned by run-time impact.  Any of_find_node_*()
-> call will possibly have to scan all those hundreds of nodes to find the
-> desired one.  Anyway, it's an OMAP folks decision, and the impact might
-> not be that much on those fast CPUs.
-> 
-
-Agreed.  Once the conversion is complete we'll have to measure and see
-if any negligible boot-time latency is present.  Alternatively we could
-avoid registering the whole clock framework at boot time and instead
-register clocks as needed (either by loading the omap4 clock driver
-module or even on a per-device basis).  Tony has hinted at this a few
-times.
-
-Regards,
-Mike
-
-> Shawn
-> 
-> > 
-> > Either way I marked this series as RFC precisely due to your point.  I
-> > want feedback on how the OMAP folks feel about this.  So far no has has
-> > NACKed it ;-)
+SGkgSmFzb24sIEFybmQ6CgpUaGFua3MgZm9yIHlvdXIgcmV2aWV3cyEKCkkgYWdyZWUgd2l0aCBt
+b3N0IG9mIHlvdXIgc3VnZ2VzdGlvbnMgc28gZmFyLiBIb3dldmVyLCBJJ2QgbGlrZSB0byBkaXNj
+dXNzCm9uZSBwb2ludCBiZWZvcmUgd2UgbW92ZSBmb3J3YXJkIHdpdGggdGhlIG90aGVyIChpbW8s
+IGxlc3MgaW1wb3J0YW50cykKaXNzdWVzLiBTZWUgYmVsb3cuCgpPbiBGcmksIEp1biAwNywgMjAx
+MyBhdCAwMjowMDo1NFBNIC0wNjAwLCBKYXNvbiBHdW50aG9ycGUgd3JvdGU6ClsuLi5dCj4gCj4g
+Cj4gSXMgdGhlIHJhbmdlcyByaWdodCB0aG91Z2g/IEkgd2FzIGV4cGVjdGluZyB0aGlzOgo+IAo+
+ICByYW5nZXMgPSA8MCAgMHgwMTJmMDAwMCAwICAweDgwMDAwMDA+Cj4gCj4gVGhlIDJuZCBhZGRy
+ZXNzIGNlbGwgaW4gdGhlIDJkd29yZCBzcGFjZSBzaG91bGQgYWxtb3N0IGFsd2F5cyBiZSAwLgo+
+IAo+IFRoZSAybmQgYWRkcmVzcyBjZWxsIHNob3VsZCBiZSBpbnRlcnByaXRlZCBhcyB0aGUgb2Zm
+c2V0IHdpdGhpbiB0aGUKPiB0YXJnZXQncyB3aW5kb3csIG5vdCBhcyBzb21lIGtpbmQgb2YgcGh5
+c2ljYWwgYmFzZSBhZGRyZXNzLgo+IAo+ID4+KyAoTm90ZSB0aGF0IHRoZSB3aW5kb3dpZCBjZWxs
+IGlzIGVuY29kaW5nIHRoZSB0YXJnZXQgSUQgPSAweDAxIGFuZCBhdHRyaWJ1dGUKPiA+PisgSUQg
+PSAweDJmLCBhbmQgdGhlIHNlbGVjdGVkIGJhc2UgYWRkcmVzcyBmb3IgdGhlIHdpbmRvdyBpcyAw
+eGU4MDAwMDAwKS4KPiAKPiAuLi4gVGhlIHByb3BlciBwbGFjZSB0byBpbmRpY2F0ZSB0aGUgYmFz
+ZSBhZGRyZXNzIGZvciB0aGUgd2luZG93IGlzIGluCj4gdGhlIG1idXMgcmFuZ2VzOgo+IAo+IG1i
+dXMgewo+ICAgIHJhbmdlcyA9IDwweDAxMmYwMDAwIDAgIDB4ZTgwMDAwMDAgIDB4ODAwMDAwMD4K
+PiAgICBkZXZidXMtYm9vdGNzIHsKPiAgICAgICAgcmFuZ2VzID0gPDAgIDB4MDEyZjAwMDAgMCAg
+MHg4MDAwMDAwPgo+ICAgIH0KPiB9Cj4gCj4gV2Ugc2hvdWxkbid0IG1hbmdsZSB0aGUgRFQgZm9y
+bWF0IGp1c3QgdG8gbWFrZSBpdCBjb252ZW5pZW50IGZvcgo+IGh1bWFucyB0byB3cml0ZSAtIGlm
+IHRoaXMgaXMgYSBtYWpvciBwcm9ibGVtIHRoZW4gSSdkIHRyeSB0byB1c2UgdGhlCj4gcHJlcHJv
+Y2Vzc29yIGZpcnN0Li4gVGhlcmUgYXJlIHNldmVyYWwgcmVhc29uYWJsZSBzb2x1dGlvbnMgZG93
+biB0aGF0Cj4gcGF0aCwgSU1ITy4KPiAKClJpZ2h0LiBJIHRoaW5rIHdlIGhhdmUgdHdvIG9wdGlv
+bnMgaGVyZSBmb3IgbGF5aW5nIHRoZSBEVCByYW5nZXMuCgoxKSBUaGlzIGlzIHRoZSBwcm9wb3Nh
+bCBpbXBsaWVkIGluIHRoZSBwYXRjaHNldCBJIHNlbnQ6CgptYnVzIHsKCXJhbmdlcyA9IDwgd2Ug
+b25seSBwdXQgdGhlIGludGVybmFsLXJlZyB0cmFuc2xhdGlvbiBoZXJlPgoJZGV2YnVzLWJvb3Rj
+cyB7CgkJcmFuZ2VzID0gPDAge3RhcmdldF9pZC9hdHRyaWJ1dGV9IHt3aW5kb3dfcGh5c2ljYWxf
+YmFzZX0ge3NpemV9PgoJfQp9CgpPZiBjb3Vyc2UgdGhlIGFib3ZlIERUIHdpbGwgYmUgYWN0dWFs
+bHkgaW5jb21wbGV0ZSwgZm9yIGl0J2xsIGxhY2sgYSBwcm9wZXIgcmFuZ2VzCmVudHJ5IHRvIHRy
+YW5zbGF0ZSB0aGUgZGV2YnVzLWJvb3RjcyBhZGRyZXNzLiBTbyB3ZSBjaG9zZWQgdG8gZG8gaXQg
+ZHluYW1pY2FsbHkKaW4gdGhlIG1idXMgZHJpdmVyIChzZWUgcGF0Y2ggMDUvMTQpLCBhbmQgYWRk
+IHRoZSBtaXNzaW5nIGVudHJ5LgoKVGhlIGluZm9ybWF0aW9uIG9mIHRoZSBwaHlzaWNhbCB3aW5k
+b3cgYmFzZSBhZGRyZXNzIGlzIGluIHRoaXMgY2FzZSBpbgplYWNoIGNoaWxkIChkZXZidXMtYm9v
+dGNzLCBib290cm9tLCBhbmQgc28gb24pLiBUaGUgTUJ1cyBkcml2ZXIgd2Fsa3MKZWFjaCBvZiBp
+dHMgZmlyc3QtbGV2ZWwgY2hpbGRyZW4gYW5kIGFsbG9jYXRlcyB0aGUgd2luZG93IGJhc2VkIG9u
+IHRoZQphZGRyZXNzIGRlY2xhcmVkIGluIHRoZSByYW5nZXMgcHJvcGVydHkgb2YgZWFjaCBjaGls
+ZCwgYXMgc2hvd24gYWJvdmUuCgpUaGlzIGlzIGRvbmUgbW9zdGx5IHRvIGF2b2lkIGhhdmluZyB0
+aGF0IGluIHRoZSBtYnVzIG5vZGUsIGFuZCB0aGUgbmlnaHRtYXJlCnRvIG1haW50YWluIGl0IHBy
+b2R1Y2VzLiBTZWUgYmVsb3cuCgoyKSBUaGlzIGlzIHdoYXQgSmFzb24gaXMgcHJvcG9zaW5nIGlu
+IGhpcyBtYWlsOgoKbWJ1cyB7CglyYW5nZXMgPSA8e3RhcmdldF9pZC9hdHRyaWJ1dGV9IDAge3dp
+bmRvd19waHlzaWNhbF9iYXNlfSB7c2l6ZX0+CglkZXZidXMtYm9vdGNzIHsKCQlyYW5nZXMgPSA8
+MCB7dGFyZ2V0X2lkL2F0dHJpYnV0ZX0gMCB7c2l6ZX0+Cgl9Cn0KCk9mIGNvdXJzZSB0aGlzIGxv
+b2tzIG11Y2ggY2xlYW5lciwgYnV0IGl0IGZvcmNlcyBhIGxvdCBvZiBkdXBsaWNhdGlvbgppbiB0
+aGUgRFQgZmlsZXMuIE5vdywgaWYgeW91IHNlZSBzb21lIG9mIHRoZSByZWNlbnQgcGF0Y2hlcyB3
+ZSd2ZSBiZWVuCnNlbmRpbmcsIEkgdGhpbmsgdGhpcyBkdXBsaWNhdGlvbiBpcyB2ZXJ5IGVycm9y
+LXByb25lLCBhbmQgaXQnbGwgYmUgYQpuaWdodG1hcmUgdG8gbWFpbnRhaW4uIExldCBtZSBwcm9w
+b3NlIGFuIGV4YW1wbGUgdG8gc2hvdyB0aGlzCmR1cGxpY2F0aW9uOgoKTGV0J3Mgc3VwcG9zZSB3
+ZSBoYXZlIGEgYm9hcmQgIkEiIHdpdGggaXRzIGFybWFkYS1BLmR0cywKYW5kIGEgY29tbW9uIG9u
+ZSBhcm1hZGEuZHRzaS4KClRoZSBjb21tb24gZHRzaSBmaWxlIHdvdWxkIGhhdmUgdGhpcyByYW5n
+ZXMgcHJvcGVydHk6CgovKiBhcm1hZGEuZHRzaSAqLwptYnVzIHsKCXJhbmdlcyA9IDwgaW50ZXJu
+YWxfcmVnc19pZCAwIGludGVybmFsX3JlZ3NfYmFzZSBpbnRlcm5hbF9yZWdzX3NpemUKCQkgICAg
+ICAgICBib290cm9tX2lkIDAgICAgICAgYm9vdHJvbV9iYXNlICAgICAgIGJvb3Ryb21fc2l6ZSA+
+Cn0KClRoZSBBIGJvYXJkIGhhcyBhIE5PUiBjb25uZWN0ZWQgdG8gc29tZSBkZXZidXMsIHNvIHdl
+IG5lZWQgdG8gYWRkIGl0CnRvIHRoZSByYW5nZXMsIGJ1dCBhbHNvIG5lZWQgdG8gZHVwbGljYXRl
+IHRoZSBvbmVzIGluIHRoZSBjb21tb24gZHRzaToKCi8qIGFybWFkYS1BLmR0cyAqLwptYnVzIHsK
+CXJhbmdlcyA9IDwgaW50ZXJuYWxfcmVnc19pZCAwIGludGVybmFsX3JlZ3NfYmFzZSBpbnRlcm5h
+bF9yZWdzX3NpemUKCQkgICAgICAgICBib290cm9tX2lkIDAgICAgICAgYm9vdHJvbV9iYXNlICAg
+ICAgIGJvb3Ryb21fc2l6ZQoJCSAgICAgICAgIGRldmJ1czBfaWQgMCAgICAgICBkZXZidXMwX2Jh
+c2UgICAgICAgZGV2YnVzMF9zaXplID4KfQoKTm93LCBpZiB3ZSBhZGQgc29tZXRoaW5nIGF0IHRo
+ZSBjb21tb24gbGV2ZWwsIGFuZCBleHRlbmQgdGhlIHJhbmdlcwpwcm9wZXJ0eSBpbiB0aGUgY29t
+bW9uIGFybWFkYS5kdHNpLCB3ZSBhbHNvIGhhdmUgdG8gZ28gdGhyb3VnaCAqZWFjaCogb2YKdGhl
+IHBlci1ib2FyZCBkdHMgZmlsZXMgKGZvciAqZWFjaCogYm9hcmQpIGFkZGluZyB0aGF0IGVudHJ5
+LCBiZWNhdXNlCmVudHJpZXMgKm5lZWQqIHRvIGJlIGR1cGxpY2F0ZWQuIE90aGVyd2lzZSB5b3Un
+cmUgZWZmZWN0aXZlbHkKInNoYWRvd2luZyIgdGhlIGVudHJpZXMuCgpJdCBpcyBwcmVjaXNlbHkg
+Zm9yIHRoaXMgcmVhc29uIHRoYXQgSSd2ZSBkZWNpZGVkIHRvIGFkb3B0IG9wdGlvbiAjMQppbnN0
+ZWFkISBOb3csIEknbSBub3Qgc2F5aW5nIEkgbGlrZSB0aGF0IG9wdGlvbiBwYXJ0aWN1bGFybHku
+CkluIGZhY3QgaXQgaGFzIGEgY291cGxlIGlzc3VlcyBhcyB3ZWxsOgoKICAxLiBUaGUgRFQgaXMg
+KmluY29tcGxldGUqIGFuZCBuZWVkcyB0byBiZSBjb21wbGV0ZWQgYnkgdGhlIE1CdXMKICAgICBk
+cml2ZXIgd2hpY2gsIElNSE8sIHN1Y2tzLgoKICAyLiBDaGFuZ2luZyB0aGUgRFQgZHluYW1pY2Fs
+bHkgaW4gdGhlIGtlcm5lbCwgbWVhbnMgdGhhdCBuZXcKICAgICBwcm9wZXJ0aWVzIGFyZSBhbGxv
+Y2F0ZWQgdG8gcmVwbGFjZSBvbGQgb25lcywgYnV0IHRoZSBvbGQgb25lcwogICAgIGFyZSAqbmV2
+ZXIqIHJlbGVhc2VkLiBTbyBpZiBmb3IgYW55IHJlYXNvbiB3ZSBkbyB0aGlzIG9mdGVuLAogICAg
+IHdlJ3JlIGVmZmVjdGl2ZWx5ICJsZWFraW5nIiBtZW1vcnkuCgpTbywgSSdtIG5vdCBzYXlpbmcg
+b3B0aW9uICMxIGlzIG5pY2UsIGJ1dCByYXRoZXIgdGhhdCBpdCBzZWVtcyBpdCdsbApiZSBsZXNz
+IHRyb3VibGUgdG8gbWFpbnRhaW4uCgpXaGF0IGRvIHlvdSB0aGluaz8KLS0gCkV6ZXF1aWVsIEdh
+cmPDrWEsIEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQg
+RW5naW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBs
+aXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3ps
+YWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
