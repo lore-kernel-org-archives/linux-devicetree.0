@@ -1,351 +1,77 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] pinctrl: single: omap: Add SoC specific module for
- wake-up events
-Date: Sat, 8 Jun 2013 08:29:52 -0700
-Message-ID: <20130608152951.GS3331@atomide.com>
-References: <20130607203936.16513.57494.stgit@localhost>
- <20130607205044.16513.27675.stgit@localhost>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 03/14] bus: mvebu-mbus: Introduce device tree binding
+Date: Sat, 8 Jun 2013 14:29:21 -0300
+Message-ID: <20130608172920.GA2354@localhost>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1370623671-7748-4-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306072110.35856.arnd@arndb.de>
+ <20130607194430.GA7854@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130607205044.16513.27675.stgit@localhost>
-Sender: linux-omap-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: devicetree-discuss@lists.ozlabs.org, Haojian Zhuang <haojian.zhuang@gmail.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+In-Reply-To: <20130607194430.GA7854-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For wake-up events from deeper idle modes we need to check the
-configured padconf registers for the wake-up bit and then call
-the related interrupt handler.
-
-Done in collaboration with Roger Quadros <rogerq@ti.com>.
-
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-
----
-
-Here's a version of against current Linux next to as also the
-Makefile entry for sirf had changed.
-
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index 3b26e3c..d4c2214 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -31,7 +31,8 @@ obj-$(CONFIG_PINCTRL_NOMADIK)	+= pinctrl-nomadik.o
- obj-$(CONFIG_PINCTRL_STN8815)	+= pinctrl-nomadik-stn8815.o
- obj-$(CONFIG_PINCTRL_DB8500)	+= pinctrl-nomadik-db8500.o
- obj-$(CONFIG_PINCTRL_DB8540)	+= pinctrl-nomadik-db8540.o
--obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
-+pcs-$(CONFIG_ARCH_OMAP2PLUS)	+= pinctrl-single-omap.o
-+obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o $(pcs-y)
- obj-$(CONFIG_PINCTRL_SIRF)	+= sirf/
- obj-$(CONFIG_PINCTRL_SUNXI)	+= pinctrl-sunxi.o
- obj-$(CONFIG_PINCTRL_TEGRA)	+= pinctrl-tegra.o
-diff --git a/drivers/pinctrl/pinctrl-single-omap.c b/drivers/pinctrl/pinctrl-single-omap.c
-new file mode 100644
-index 0000000..680cf81
---- /dev/null
-+++ b/drivers/pinctrl/pinctrl-single-omap.c
-@@ -0,0 +1,287 @@
-+/*
-+ * pinctrl-single-omap - omap specific wake-up irq handler
-+ *
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/platform_data/pinctrl-single-omap.h>
-+#include <linux/pm_runtime.h>
-+
-+#include "pinctrl-single.h"
-+
-+#define OMAP_WAKEUP_EN		(1 << 14)
-+#define OMAP_WAKEUP_EVENT	(1 << 15)
-+#define OMAP_WAKEUP_EVENT_MASK	(OMAP_WAKEUP_EN | OMAP_WAKEUP_EVENT)
-+
-+struct pcs_omap {
-+	unsigned int irq;
-+	struct device *dev;
-+	struct list_head wakeirqs;
-+	struct pcs_soc soc;
-+	void (*reconfigure_io_chain)(void);
-+	struct mutex mutex;
-+};
-+
-+static int pcs_omap_reg_init(const struct pcs_soc *soc, struct pcs_reg *r)
-+{
-+	struct pcs_omap *pcso = container_of(soc, struct pcs_omap, soc);
-+	struct list_head *pos;
-+	struct pcs_reg *pcsoi;
-+	int res = 0;
-+
-+	if (!(r->val & OMAP_WAKEUP_EN))
-+		return 0;
-+
-+	if (r->irq <= 0)
-+		return 0;
-+
-+	mutex_lock(&pcso->mutex);
-+	list_for_each(pos, &pcso->wakeirqs) {
-+		pcsoi = list_entry(pos, struct pcs_reg, node);
-+		if (r->reg == pcsoi->reg) {
-+			pcsoi->read = r->read;
-+			pcsoi->write = r->write;
-+			pcsoi->reg = r->reg;
-+			pcsoi->val = r->val;
-+			pcsoi->irq = r->irq;
-+			pcsoi->gpio = r->gpio;
-+			res++;
-+			goto out;
-+		}
-+	}
-+	pcsoi = devm_kzalloc(pcso->dev, sizeof(*r), GFP_KERNEL);
-+	if (!pcsoi) {
-+		mutex_unlock(&pcso->mutex);
-+		res = -ENOMEM;
-+		goto out;
-+	}
-+	*pcsoi = *r;
-+	list_add_tail(&pcsoi->node, &pcso->wakeirqs);
-+
-+out:
-+	mutex_unlock(&pcso->mutex);
-+
-+	if (res && pcso->reconfigure_io_chain)
-+		pcso->reconfigure_io_chain();
-+
-+	return res > 0 ? 0 : res;
-+}
-+
-+static int pcs_update_list(const struct pcs_soc *soc, struct pcs_reg *r)
-+{
-+	struct pcs_omap *pcso = container_of(soc, struct pcs_omap, soc);
-+	struct list_head *pos;
-+	int changed = 0;
-+
-+	if (!r->irq)
-+		return 0;
-+
-+	mutex_lock(&pcso->mutex);
-+	list_for_each(pos, &pcso->wakeirqs) {
-+		struct pcs_reg *pcsoi;
-+
-+		pcsoi = list_entry(pos, struct pcs_reg, node);
-+		if ((r->reg == pcsoi->reg) &&
-+		    (r->val != pcsoi->val)) {
-+			pcsoi->val = r->val;
-+			changed++;
-+		}
-+	}
-+	mutex_unlock(&pcso->mutex);
-+
-+	if (pcso->reconfigure_io_chain && changed)
-+		pcso->reconfigure_io_chain();
-+
-+	return 0;
-+}
-+
-+static int pcs_omap_enable(const struct pcs_soc *soc, struct pcs_reg *r)
-+{
-+	return pcs_update_list(soc, r);
-+}
-+
-+static void pcs_omap_disable(const struct pcs_soc *soc, struct pcs_reg *r)
-+{
-+	pcs_update_list(soc, r);
-+}
-+
-+static irqreturn_t pcs_omap_handle_irq(int irq, void *data)
-+{
-+	struct pcs_omap *pcso = data;
-+	struct list_head *pos;
-+	unsigned int wakeirq;
-+
-+	list_for_each(pos, &pcso->wakeirqs) {
-+		struct pcs_reg *pcsoi;
-+		u16 val;
-+
-+		pcsoi = list_entry(pos, struct pcs_reg, node);
-+		wakeirq = pcsoi->irq;
-+		val = pcsoi->read(pcsoi->reg);
-+		if ((val & OMAP_WAKEUP_EVENT_MASK) == OMAP_WAKEUP_EVENT_MASK)
-+			generic_handle_irq(wakeirq);
-+	}
-+
-+	if (pcso->reconfigure_io_chain)
-+		pcso->reconfigure_io_chain();
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/*
-+ * Note that omap2430 has 8-bit padconf registers and uses
-+ * the plain pinctrl-single binding.
-+ */
-+static const struct of_device_id pcs_omap_of_match[] = {
-+	{ .compatible = "ti,omap3-padconf", },
-+	{ .compatible = "ti,omap4-padconf", },
-+	{ .compatible = "ti,omap5-padconf", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, pcs_omap_of_match);
-+
-+/* SoC glue */
-+static bool soc_found;
-+static unsigned int soc_irq;
-+static void (*soc_reconfigure_io_chain)(void);
-+
-+/* Fill in the SoC glue */
-+static int pcs_omap_soc_probe(struct platform_device *pdev)
-+{
-+	struct pcs_omap_pdata *pdata = pdev->dev.platform_data;
-+
-+	if (pdata) {
-+		soc_irq = pdata->irq;
-+		soc_reconfigure_io_chain = pdata->reconfigure_io_chain;
-+		soc_found = true;
-+	}
-+
-+	return 0;
-+}
-+
-+static int pcs_omap_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *match;
-+	struct pcs_omap *pcso;
-+	struct pcs_soc *soc;
-+	int ret;
-+
-+	match = of_match_device(pcs_omap_of_match, &pdev->dev);
-+	if (!match) {
-+		dev_err(&pdev->dev, "no match found\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!soc_found) {
-+		dev_dbg(&pdev->dev,
-+			"%s deferring as SoC glue not yet registered\n",
-+			 __func__);
-+		return -EPROBE_DEFER;
-+	}
-+
-+	pcso = devm_kzalloc(&pdev->dev, sizeof(*pcso), GFP_KERNEL);
-+	if (!pcso)
-+		return -ENOMEM;
-+
-+	pcso->dev = &pdev->dev;
-+	mutex_init(&pcso->mutex);
-+	INIT_LIST_HEAD(&pcso->wakeirqs);
-+	pcso->irq = soc_irq;
-+	pcso->reconfigure_io_chain = soc_reconfigure_io_chain;
-+	soc = &pcso->soc;
-+	soc->reg_init = pcs_omap_reg_init;
-+	soc->enable = pcs_omap_enable;
-+	soc->disable = pcs_omap_disable;
-+	soc->flags = PCS_HAS_FUNCTION_GPIO | PCS_HAS_FUNCTION_IRQ;
-+
-+	ret = pinctrl_single_probe(pdev, soc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "could not probe pictrl_single driver: %i\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	ret = request_irq(soc_irq, pcs_omap_handle_irq,
-+			  IRQF_SHARED | IRQF_NO_SUSPEND,
-+			  "pinctrl-single-omap", pcso);
-+	if (ret) {
-+		dev_err(&pdev->dev, "could not get irq%i: %i\n",
-+			soc_irq, ret);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, pcso);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static int pcs_omap_remove(struct platform_device *pdev)
-+{
-+	struct pcs_omap *pcso = platform_get_drvdata(pdev);
-+
-+	pinctrl_single_remove(pdev);
-+	free_irq(pcso->irq, NULL);
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver pcs_omap_driver = {
-+	.probe		= pcs_omap_probe,
-+	.remove		= pcs_omap_remove,
-+	.driver		= {
-+		.name	= "pinctrl-single-omap",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(pcs_omap_of_match),
-+	},
-+};
-+
-+/* Dummy driver for registering SoC glue */
-+static struct platform_driver pcs_omap_soc_driver = {
-+	.probe = pcs_omap_soc_probe,
-+	.driver	= {
-+		.name = "pinctrl-single-omap-soc",
-+		.owner = THIS_MODULE,
-+	},
-+};
-+
-+static int __init pcs_omap_init(void)
-+{
-+	platform_driver_register(&pcs_omap_soc_driver);
-+	platform_driver_register(&pcs_omap_driver);
-+
-+	return 0;
-+}
-+module_init(pcs_omap_init);
-+
-+static void __exit pcs_omap_exit(void)
-+{
-+	platform_driver_unregister(&pcs_omap_driver);
-+	platform_driver_unregister(&pcs_omap_soc_driver);
-+}
-+module_exit(pcs_omap_exit);
-+
-+MODULE_ALIAS("platform: pinctrl-single-omap");
-+MODULE_AUTHOR("Texas Instruments Inc.");
-+MODULE_DESCRIPTION("pinctrl-single-omap driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/platform_data/pinctrl-single-omap.h b/include/linux/platform_data/pinctrl-single-omap.h
-new file mode 100644
-index 0000000..bd92efc
---- /dev/null
-+++ b/include/linux/platform_data/pinctrl-single-omap.h
-@@ -0,0 +1,4 @@
-+struct pcs_omap_pdata {
-+	int irq;
-+	void (*reconfigure_io_chain)(void);
-+};
+T24gRnJpLCBKdW4gMDcsIDIwMTMgYXQgMDE6NDQ6MzBQTSAtMDYwMCwgSmFzb24gR3VudGhvcnBl
+IHdyb3RlOgo+IE9uIEZyaSwgSnVuIDA3LCAyMDEzIGF0IDA5OjEwOjM1UE0gKzAyMDAsIEFybmQg
+QmVyZ21hbm4gd3JvdGU6Cj4gPiBPbiBGcmlkYXkgMDcgSnVuZSAyMDEzLCBFemVxdWllbCBHYXJj
+aWEgd3JvdGU6Cj4gPiA+ICsgICAgICAgbnAgPSBvZl9maW5kX21hdGNoaW5nX25vZGUoTlVMTCwg
+b2ZfbXZlYnVfbWJ1c19pZHMpOwo+ID4gPiArICAgICAgIGlmICghbnApIHsKPiA+ID4gKyAgICAg
+ICAgICAgICAgIHByX2VycigiY291bGQgbm90IGZpbmQgYSBtYXRjaGluZyBTb0MgZmFtaWx5XG4i
+KTsKPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5PREVWOwo+ID4gPiArICAgICAgIH0K
+PiA+ID4gKwo+ID4gPiArICAgICAgIG9mX2lkID0gb2ZfbWF0Y2hfbm9kZShvZl9tdmVidV9tYnVz
+X2lkcywgbnApOwo+ID4gPiArICAgICAgIG1idXNfc3RhdGUuc29jID0gb2ZfaWQtPmRhdGE7Cj4g
+PiA+ICsKPiA+ID4gKyAgICAgICBpZiAob2ZfYWRkcmVzc190b19yZXNvdXJjZShucCwgMCwgJm1i
+dXN3aW5zX3JlcykpIHsKPiA+ID4gKyAgICAgICAgICAgICAgIHByX2VycigiY2Fubm90IGdldCBN
+QlVTIHJlZ2lzdGVyIGFkZHJlc3NcbiIpOwo+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1F
+SU5WQUw7Cj4gPiA+ICsgICAgICAgfQo+ID4gPiArCj4gPiA+ICsgICAgICAgaWYgKG9mX2FkZHJl
+c3NfdG9fcmVzb3VyY2UobnAsIDEsICZzZHJhbXdpbnNfcmVzKSkgewo+ID4gPiArICAgICAgICAg
+ICAgICAgcHJfZXJyKCJjYW5ub3QgZ2V0IFNEUkFNIHJlZ2lzdGVyIGFkZHJlc3NcbiIpOwo+ID4g
+PiArICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7Cj4gPiA+ICsgICAgICAgfQo+ID4gCj4g
+PiBKdXN0IGFuIGlkZWEgdG8gbWFrZSB0aGlzIG1vcmUgcmVndWxhcjogU2luY2UgdGhlIGludGVy
+bmFsLXJlZ3MgY2FuIG5vIGxvbmdlcgo+ID4gYmUgcmVnYXJkZWQgYXMgYSBmaXhlZCBsb2NhdGlv
+biwgd2UgbWlnaHQgd2FudCB0byB1c2UgdGhlIHNhbWUgInJhbmdlcyIgcHJvcGVydHkKPiA+IG1l
+Y2hhbmlzbSBmb3IgcmVzb2x2aW5nIHRoZSBpbnRlcm5hbCByZWdzIGFzIHdlIHVzZSBmb3IgZXZl
+cnl0aGluZyBlbHNlLgo+ID4gCj4gPiBUaGlzIHdvdWxkIGltcGx5IHRoYXQgdGhlIGRldmljZSBu
+b2RlIHRoaXMgZHJpdmVyIGJpbmRzIHRvIHdvdWxkIGFjdHVhbGx5Cj4gPiBlbmQgdXAgYmVpbmcg
+YSBjaGlsZCBvZiB0aGUgYnVzIGl0c2VsZiwgd2hpY2ggdGhlbiBnb2VzIG9uIHRvIG1vZGlmeSB0
+aGUKPiA+IHJhbmdlcyBwcm9wZXJ0eSBvZiBpdHMgcGFyZW50IG5vZGUuIERvZXMgdGhhdCBtYWtl
+IHNlbnNlPwo+IAo+IFdlIGhhdmUgYSBtaW5pbXVtIHJlcXVpcmVtZW50IHRoYXQgdGhlIGJvb3Rs
+b2FkZXIgc2V0dXAgaW50ZXJuYWwgcmVncywKPiBzbyB0aGUgbWluaW11bSByZXF1aXJlZCBEVCBi
+aW5kaW5ncyBpcyBnb2luZyB0byBiZSB0aGlzOgo+IAo+IG1idXMgewo+ICAgY29tcGF0aWJsZSA9
+IC4uLgo+ICAgcmFuZ2VzID0gPElOVEVSTkFMX1JFR1NfTUFQX0lEIDB4ZjEwMDAwMDAgMHgxMDAw
+MDA+Owo+ICAgcmVnID0gPDB4ZjEwMDB4eHggLi4uPjsgLy8gTUJVUyByZWdzIGJsb2NrCj4gICAj
+YWRkcmVzcy9zaXplLWNlbGxzLi4uCj4gCj4gICBpbnRlcm5hbC1yZWdzICB7Cj4gICAgICAgcmFu
+Z2VzID0gPDAgSU5URVJOQUxfUkVHU19NQVBfSUQgMHgxMDAwMDA+Owo+ICAgfQo+IH0KPiAKCi4u
+LiBhbmQgdGhlIGFib3ZlIGlzIHRoZSB3YXkgaXRzIGRvbmUgaW4gbXkgcHJvcG9zYWwsCndpdGgg
+SU5URVJOQUxfUkVHU19NQVBfSUQgPSAweDAuCgo+IGllIHRoZSByYW5nZXMgc2hvdWxkIG5ldmVy
+IGJlIGVtcHR5Lgo+IAo+IERpc2NvdmVyeSBvZiB0aGUgYWRkcmVzcyBvZiB0aGUgbWJ1cyBjb250
+cm9sIHJlZ2lzdGVycyBpcyB2aWEgdGhlIHJlZwo+IHByb3BlcnR5IG9uIGl0cyBvd24gbm9kZSAo
+d2hpY2ggaXMgdW50cmFuc2xhdGVkKSwgYW5kIGFsbCBvdGhlcgo+IGludGVybmFsIHJlZ3MgYmxv
+Y2tzIHdpbGwgYXV0b21hdGljYWxseSB0cmFuc2xhdGUgYXMgdGhleSBhcmUgc3VwcG9zZWQKPiB0
+byAoVGhvbWFzJ3Mgd29yayB0byBtYWtlIGludGVybmFsIHJlZ3MgMHhkLzB4ZjEgcmVsaWVzIG9u
+IHRoaXMsIEFGQUlLKQo+IAo+IElOVEVSTkFMX1JFR1NfTUFQX0lEIGlzIGFuIGludmFsaWQgdGFy
+Z2V0IElEIHZhbHVlLCBkZWZpbmVkIHRvIG1lYW4KPiB0aGUgaW50ZXJuYWwgcmVnaXN0ZXJzIHRh
+cmdldC4gMHhGRkZGRkZGRiBpcyBhIGJldHRlciBjaG9pY2UgZm9yIHRoaXMKPiB0aGFuIDAsIGJl
+Y2F1c2UgMHhGRkZGRkZGRiBpcyBuZXZlciBnb2luZyB0byBiZSBhIHZhbGlkIHRhcmdldCBpZCwg
+aXQKPiBpcyB0b28gbGFyZ2UuCj4gCgpJIGFncmVlLCB1c2luZyAweDAgd2FzIG5vdCBhIGdvb2Qg
+Y2hvaWNlLiBJJ2xsIGNoYW5nZSB0aGF0LgoKVGhhbmtzIGJvdGggZm9yIHRoZSBmZWVkYmFjayEK
+LS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJu
+ZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
+c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
+dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
