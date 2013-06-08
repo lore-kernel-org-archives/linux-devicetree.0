@@ -1,50 +1,42 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH] ARM: dts: Update vdd_arm regulator
-Date: Sat, 08 Jun 2013 13:52:04 +0200
-Message-ID: <1975506.ECnduUFuut@flatron>
-References: <1370516572-313-1-git-send-email-tushar.behera@linaro.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 01/14] bus: mvebu-mbus: Use pr_fmt
+Date: Sat, 8 Jun 2013 10:15:01 -0400
+Message-ID: <20130608141501.GX23859@titan.lakedaemon.net>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1370623671-7748-2-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1370516572-313-1-git-send-email-tushar.behera@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tushar Behera <tushar.behera@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org, broonie@kernel.org, swarren@wwwdotorg.org, grant.likely@linaro.org, rob.herring@calxeda.com, l.majewski@samsung.com, s.nawrocki@samsung.com, devicetree-discuss@lists.ozlabs.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1370623671-7748-2-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tushar,
-
-On Thursday 06 of June 2013 16:32:52 Tushar Behera wrote:
-> Cpufreq driver for EXYNOS4210 is not a platform driver, hence it is not
-> possible to provide the regulator supply name through DT bindings.
-> Since the cpufreq driver requires the regulator to be named as
-> 'vdd_arm', the related regulator name should be kept same.
+On Fri, Jun 07, 2013 at 01:47:38PM -0300, Ezequiel Garcia wrote:
+> In order to clean message printing, we replace pr_info with pr_fmt.
+> This is purely cosmetic change, with the sole purpose of making
+> the code a bit more readable.
 > 
-> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  arch/arm/boot/dts/exynos4210-origen.dts |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4210-origen.dts
-> b/arch/arm/boot/dts/exynos4210-origen.dts index bcf8079..bd5f589 100644
-> --- a/arch/arm/boot/dts/exynos4210-origen.dts
-> +++ b/arch/arm/boot/dts/exynos4210-origen.dts
-> @@ -192,7 +192,7 @@
->  				};
-> 
->  				buck1_reg: BUCK1 {
-> -					regulator-name = "VDD_ARM_1.2V";
-> +					regulator-name = "vdd_arm";
+>  drivers/bus/mvebu-mbus.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 
-Yes, this is the hack I mentioned in my review of
-[PATCH 0/2] Clock update for EXYNOS4210-CPUFREQ driver
+As Thomas mentioned, this patch has been applied to mvebu/cleanup with
+his Ack.
 
-Best regards,
-Tomasz
+thx,
 
->  					regulator-min-microvolt = 
-<950000>;
->  					regulator-max-microvolt	= 
-<1350000>;
->  					regulator-always-on;
+Jason.
