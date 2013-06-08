@@ -1,17 +1,16 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 03/14] bus: mvebu-mbus: Introduce device tree binding
-Date: Sat, 8 Jun 2013 14:29:21 -0300
-Message-ID: <20130608172920.GA2354@localhost>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1370623671-7748-4-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306072110.35856.arnd@arndb.de>
- <20130607194430.GA7854@obsidianresearch.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 0/3] clk: dt: bindings for mux & divider clocks
+Date: Sat, 08 Jun 2013 11:25:03 -0700
+Message-ID: <20130608182503.10233.30556@quantum>
+References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
+ <20130607055128.GA20780@S2101-09.ap.freescale.net>
+ <20130607175254.10233.7661@quantum>
+ <20130608030240.GB22134@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130607194430.GA7854-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20130608030240.GB22134-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,56 +21,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMDcsIDIwMTMgYXQgMDE6NDQ6MzBQTSAtMDYwMCwgSmFzb24gR3VudGhvcnBl
-IHdyb3RlOgo+IE9uIEZyaSwgSnVuIDA3LCAyMDEzIGF0IDA5OjEwOjM1UE0gKzAyMDAsIEFybmQg
-QmVyZ21hbm4gd3JvdGU6Cj4gPiBPbiBGcmlkYXkgMDcgSnVuZSAyMDEzLCBFemVxdWllbCBHYXJj
-aWEgd3JvdGU6Cj4gPiA+ICsgICAgICAgbnAgPSBvZl9maW5kX21hdGNoaW5nX25vZGUoTlVMTCwg
-b2ZfbXZlYnVfbWJ1c19pZHMpOwo+ID4gPiArICAgICAgIGlmICghbnApIHsKPiA+ID4gKyAgICAg
-ICAgICAgICAgIHByX2VycigiY291bGQgbm90IGZpbmQgYSBtYXRjaGluZyBTb0MgZmFtaWx5XG4i
-KTsKPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5PREVWOwo+ID4gPiArICAgICAgIH0K
-PiA+ID4gKwo+ID4gPiArICAgICAgIG9mX2lkID0gb2ZfbWF0Y2hfbm9kZShvZl9tdmVidV9tYnVz
-X2lkcywgbnApOwo+ID4gPiArICAgICAgIG1idXNfc3RhdGUuc29jID0gb2ZfaWQtPmRhdGE7Cj4g
-PiA+ICsKPiA+ID4gKyAgICAgICBpZiAob2ZfYWRkcmVzc190b19yZXNvdXJjZShucCwgMCwgJm1i
-dXN3aW5zX3JlcykpIHsKPiA+ID4gKyAgICAgICAgICAgICAgIHByX2VycigiY2Fubm90IGdldCBN
-QlVTIHJlZ2lzdGVyIGFkZHJlc3NcbiIpOwo+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1F
-SU5WQUw7Cj4gPiA+ICsgICAgICAgfQo+ID4gPiArCj4gPiA+ICsgICAgICAgaWYgKG9mX2FkZHJl
-c3NfdG9fcmVzb3VyY2UobnAsIDEsICZzZHJhbXdpbnNfcmVzKSkgewo+ID4gPiArICAgICAgICAg
-ICAgICAgcHJfZXJyKCJjYW5ub3QgZ2V0IFNEUkFNIHJlZ2lzdGVyIGFkZHJlc3NcbiIpOwo+ID4g
-PiArICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7Cj4gPiA+ICsgICAgICAgfQo+ID4gCj4g
-PiBKdXN0IGFuIGlkZWEgdG8gbWFrZSB0aGlzIG1vcmUgcmVndWxhcjogU2luY2UgdGhlIGludGVy
-bmFsLXJlZ3MgY2FuIG5vIGxvbmdlcgo+ID4gYmUgcmVnYXJkZWQgYXMgYSBmaXhlZCBsb2NhdGlv
-biwgd2UgbWlnaHQgd2FudCB0byB1c2UgdGhlIHNhbWUgInJhbmdlcyIgcHJvcGVydHkKPiA+IG1l
-Y2hhbmlzbSBmb3IgcmVzb2x2aW5nIHRoZSBpbnRlcm5hbCByZWdzIGFzIHdlIHVzZSBmb3IgZXZl
-cnl0aGluZyBlbHNlLgo+ID4gCj4gPiBUaGlzIHdvdWxkIGltcGx5IHRoYXQgdGhlIGRldmljZSBu
-b2RlIHRoaXMgZHJpdmVyIGJpbmRzIHRvIHdvdWxkIGFjdHVhbGx5Cj4gPiBlbmQgdXAgYmVpbmcg
-YSBjaGlsZCBvZiB0aGUgYnVzIGl0c2VsZiwgd2hpY2ggdGhlbiBnb2VzIG9uIHRvIG1vZGlmeSB0
-aGUKPiA+IHJhbmdlcyBwcm9wZXJ0eSBvZiBpdHMgcGFyZW50IG5vZGUuIERvZXMgdGhhdCBtYWtl
-IHNlbnNlPwo+IAo+IFdlIGhhdmUgYSBtaW5pbXVtIHJlcXVpcmVtZW50IHRoYXQgdGhlIGJvb3Rs
-b2FkZXIgc2V0dXAgaW50ZXJuYWwgcmVncywKPiBzbyB0aGUgbWluaW11bSByZXF1aXJlZCBEVCBi
-aW5kaW5ncyBpcyBnb2luZyB0byBiZSB0aGlzOgo+IAo+IG1idXMgewo+ICAgY29tcGF0aWJsZSA9
-IC4uLgo+ICAgcmFuZ2VzID0gPElOVEVSTkFMX1JFR1NfTUFQX0lEIDB4ZjEwMDAwMDAgMHgxMDAw
-MDA+Owo+ICAgcmVnID0gPDB4ZjEwMDB4eHggLi4uPjsgLy8gTUJVUyByZWdzIGJsb2NrCj4gICAj
-YWRkcmVzcy9zaXplLWNlbGxzLi4uCj4gCj4gICBpbnRlcm5hbC1yZWdzICB7Cj4gICAgICAgcmFu
-Z2VzID0gPDAgSU5URVJOQUxfUkVHU19NQVBfSUQgMHgxMDAwMDA+Owo+ICAgfQo+IH0KPiAKCi4u
-LiBhbmQgdGhlIGFib3ZlIGlzIHRoZSB3YXkgaXRzIGRvbmUgaW4gbXkgcHJvcG9zYWwsCndpdGgg
-SU5URVJOQUxfUkVHU19NQVBfSUQgPSAweDAuCgo+IGllIHRoZSByYW5nZXMgc2hvdWxkIG5ldmVy
-IGJlIGVtcHR5Lgo+IAo+IERpc2NvdmVyeSBvZiB0aGUgYWRkcmVzcyBvZiB0aGUgbWJ1cyBjb250
-cm9sIHJlZ2lzdGVycyBpcyB2aWEgdGhlIHJlZwo+IHByb3BlcnR5IG9uIGl0cyBvd24gbm9kZSAo
-d2hpY2ggaXMgdW50cmFuc2xhdGVkKSwgYW5kIGFsbCBvdGhlcgo+IGludGVybmFsIHJlZ3MgYmxv
-Y2tzIHdpbGwgYXV0b21hdGljYWxseSB0cmFuc2xhdGUgYXMgdGhleSBhcmUgc3VwcG9zZWQKPiB0
-byAoVGhvbWFzJ3Mgd29yayB0byBtYWtlIGludGVybmFsIHJlZ3MgMHhkLzB4ZjEgcmVsaWVzIG9u
-IHRoaXMsIEFGQUlLKQo+IAo+IElOVEVSTkFMX1JFR1NfTUFQX0lEIGlzIGFuIGludmFsaWQgdGFy
-Z2V0IElEIHZhbHVlLCBkZWZpbmVkIHRvIG1lYW4KPiB0aGUgaW50ZXJuYWwgcmVnaXN0ZXJzIHRh
-cmdldC4gMHhGRkZGRkZGRiBpcyBhIGJldHRlciBjaG9pY2UgZm9yIHRoaXMKPiB0aGFuIDAsIGJl
-Y2F1c2UgMHhGRkZGRkZGRiBpcyBuZXZlciBnb2luZyB0byBiZSBhIHZhbGlkIHRhcmdldCBpZCwg
-aXQKPiBpcyB0b28gbGFyZ2UuCj4gCgpJIGFncmVlLCB1c2luZyAweDAgd2FzIG5vdCBhIGdvb2Qg
-Y2hvaWNlLiBJJ2xsIGNoYW5nZSB0aGF0LgoKVGhhbmtzIGJvdGggZm9yIHRoZSBmZWVkYmFjayEK
-LS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJu
-ZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
-c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
-dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Quoting Shawn Guo (2013-06-07 20:02:41)
+> On Fri, Jun 07, 2013 at 10:52:54AM -0700, Mike Turquette wrote:
+> > Yes, there was a time when I was firmly against doing such a thing.
+> > However I'm not sure it is so bad now.  More and more SoCs are going to
+> > keep getting merged into the kernel and that just means more and more
+> > clock data.  Perhaps DT is best suited to handle this bloat.  I broke
+> > the clock data out into a separate file so that it didn't overwhelm the
+> > existing omap4.dtsi.
+> 
+> I'm actually more concerned by run-time impact.  Any of_find_node_*()
+> call will possibly have to scan all those hundreds of nodes to find the
+> desired one.  Anyway, it's an OMAP folks decision, and the impact might
+> not be that much on those fast CPUs.
+> 
+
+Agreed.  Once the conversion is complete we'll have to measure and see
+if any negligible boot-time latency is present.  Alternatively we could
+avoid registering the whole clock framework at boot time and instead
+register clocks as needed (either by loading the omap4 clock driver
+module or even on a per-device basis).  Tony has hinted at this a few
+times.
+
+Regards,
+Mike
+
+> Shawn
+> 
+> > 
+> > Either way I marked this series as RFC precisely due to your point.  I
+> > want feedback on how the OMAP folks feel about this.  So far no has has
+> > NACKed it ;-)
