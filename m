@@ -1,84 +1,36 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: pxa27x and pinctrl-single
-Date: Sat, 8 Jun 2013 09:20:44 +0800
-Message-ID: <CAD6h2NSewh=uodiRGNOVHTiJqMrYg25hMW56rUSPPviTTb_9Ng@mail.gmail.com>
-References: <51AF7404.3090003@newsguy.com>
- <CAD6h2NTu9-E=Xy8zz5cgDdk5W4ShM9-B+p+gQtiA_HASQ7AEuQ@mail.gmail.com>
- <51B0C7E8.5090308@newsguy.com>
- <CAD6h2NSRCti57NZtw0wzE8Th65_3Y8Dkz5zGsbnA2SUPYS263Q@mail.gmail.com>
- <51B12DE9.9040908@newsguy.com>
- <CAN1soZyOzrRewwx0up2s+4igUf77h+UbFpCsm324O-nkBWcsTQ@mail.gmail.com>
- <51B1F330.9080007@newsguy.com>
- <CAD6h2NStRcXm_X=0ib=RtKqVhmsfGo4z=_jzL1hUo_MLcfyBZw@mail.gmail.com>
- <51B21B3B.8050604@newsguy.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH RFC 0/3] clk: dt: bindings for mux & divider clocks
+Date: Sat, 8 Jun 2013 11:02:41 +0800
+Message-ID: <20130608030240.GB22134@S2101-09.ap.freescale.net>
+References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
+ <20130607055128.GA20780@S2101-09.ap.freescale.net>
+ <20130607175254.10233.7661@quantum>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51B21B3B.8050604-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Manjunathappa,
- Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130607175254.10233.7661@quantum>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 8 June 2013 01:41, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 06/07/2013 08:16 AM, Haojian Zhuang wrote:
->>
->
-> [...]
->
->
->> Since you need to configure both GPDRx and GAFRx. If we are talking
->> pinctrl-single
->> as reference, we can make it work by this way.
->>
->> We need to define two pinmux controllers. One is for GPDRx, and the
->> other is for GAFRx.
->> Both of them need to support pinctrl-single,bits property. For any
->> alternate pins in DTS,
->> we could include these two pins from two pinmux controllers. What's
->> your opinion?
->
->
-> Are you are suggesting that the dts file can be defined such that the desired
-> values are written to GAFR and GPDR, without having to make any changes to the
-> pinctrl-single driver code?  If I understand correctly, we would be defining two
-> "pins" in the device tree for each actual pin.  That seems very ugly.
->
-> I was thinking that pinctrl-single could be modified to support multiple
-> reg/value/mask pairs for each pin listed in the pinctrl-single,bits property.
-> There is a comment at the top of pcs_parse_one_pinctrl_entry() that seems to
-> suggest the possibility...
+On Fri, Jun 07, 2013 at 10:52:54AM -0700, Mike Turquette wrote:
+> Yes, there was a time when I was firmly against doing such a thing.
+> However I'm not sure it is so bad now.  More and more SoCs are going to
+> keep getting merged into the kernel and that just means more and more
+> clock data.  Perhaps DT is best suited to handle this bloat.  I broke
+> the clock data out into a separate file so that it didn't overwhelm the
+> existing omap4.dtsi.
 
-We only support continuous register offset in pinctrl-single driver.
-GPDRx is in range of 0x40e0000c~0x40e0010c, GAFRx is in range of
-0x40e00054~0x40e00070.
+I'm actually more concerned by run-time impact.  Any of_find_node_*()
+call will possibly have to scan all those hundreds of nodes to find the
+desired one.  Anyway, it's an OMAP folks decision, and the impact might
+not be that much on those fast CPUs.
 
-So I suggest you to split them as two pinmux controller. If you define them into
-one pinmux controler, it's also OK. But they are still two pins in the on pinmux
-controller. And you should avoid to access those spare pins in the middle.
+Shawn
 
-I don't suggest you to support multiple reg/value/mask pairs for each pin in
-pinctrl-single driver. It's too complex. It already exceeds the design scope
-of the pinctrl-single driver.
-
-Regards
-Haojian
->
->  * Note that this binding currently supports only sets of one register + value.
->
-> I am still learning pinctrl and devicetree and studying the driver, so I am not
-> adament about anything at this point.  Guidance appreciated!
->
-> Thanks,
-> Mike
+> 
+> Either way I marked this series as RFC precisely due to your point.  I
+> want feedback on how the OMAP folks feel about this.  So far no has has
+> NACKed it ;-)
