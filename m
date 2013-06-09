@@ -1,17 +1,22 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 2/2] i2c: designware: Add i2c-designware-hs
-Date: Mon, 10 Jun 2013 00:03:25 +0800
-Message-ID: <51B4A74D.3040908@linaro.org>
-References: <1370745402-11844-1-git-send-email-zhangfei.gao@linaro.org>
- <1370745402-11844-3-git-send-email-zhangfei.gao@linaro.org>
- <20130609032300.GB4312@tarshish>
- <CAMj5BkhPp_-b19WFM-XitJ5-qDd9-dETp7UdNRLkRbdcq_h-Vg@mail.gmail.com>
- <20130609095026.GF4312@tarshish>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: Re: pxa27x and pinctrl-single
+Date: Sun, 09 Jun 2013 11:05:14 -0700
+Message-ID: <51B4C3DA.2000403@newsguy.com>
+References: <51AF7404.3090003@newsguy.com>
+ <CAD6h2NTu9-E=Xy8zz5cgDdk5W4ShM9-B+p+gQtiA_HASQ7AEuQ@mail.gmail.com>
+ <51B0C7E8.5090308@newsguy.com>
+ <CAD6h2NSRCti57NZtw0wzE8Th65_3Y8Dkz5zGsbnA2SUPYS263Q@mail.gmail.com>
+ <51B12DE9.9040908@newsguy.com>
+ <CAN1soZyOzrRewwx0up2s+4igUf77h+UbFpCsm324O-nkBWcsTQ@mail.gmail.com>
+ <51B1F330.9080007@newsguy.com>
+ <CAD6h2NStRcXm_X=0ib=RtKqVhmsfGo4z=_jzL1hUo_MLcfyBZw@mail.gmail.com>
+ <51B21B3B.8050604@newsguy.com>
+ <CAD6h2NSewh=uodiRGNOVHTiJqMrYg25hMW56rUSPPviTTb_9Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130609095026.GF4312@tarshish>
+In-Reply-To: <CAD6h2NSewh=uodiRGNOVHTiJqMrYg25hMW56rUSPPviTTb_9Ng@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,53 +26,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Dirk Brandewie <dirk.brandewie@gmail.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, zhangfei gao <zhangfei.gao@gmail.com>, Wolfram Sang <wsa@the-dreams.de>
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Manjunathappa,
+ Prakash" <prakash.pm@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
->> What in case private register have to be accessed?
->
-> Good question. I don't know what is the common convention in this case. Do you
-> have such a need here?
-
-Originally, there is private register for tuning timing of clk and data.
-Suppose there may some issue of catching data in clk trigger stage.
-However, in the test, still not need to set timing yet.
-
->
->> struct dw_i2c_data {
->>          u32 accessor_flags;
->>          unsigned int tx_fifo_depth;
->>          unsigned int rx_fifo_depth;
->> };
+On 06/07/2013 06:20 PM, Haojian Zhuang wrote:
+> On 8 June 2013 01:41, Mike Dunn <mikedunn@newsguy.com> wrote:
+>> On 06/07/2013 08:16 AM, Haojian Zhuang wrote:
+>>>
 >>
->> static struct dw_i2c_data hisilicon_data = {
->>          .accessor_flags = ACCESS_32BIT,
->
-> This should be detected automatically in i2c_dw_init(). When ACCESS_16BIT is
-> not set, access is 32bit wide. Doesn't it work for you?
+>> [...]
+>>
+>>
+>>> Since you need to configure both GPDRx and GAFRx. If we are talking
+>>> pinctrl-single
+>>> as reference, we can make it work by this way.
+>>>
+>>> We need to define two pinmux controllers. One is for GPDRx, and the
+>>> other is for GAFRx.
+>>> Both of them need to support pinctrl-single,bits property. For any
+>>> alternate pins in DTS,
+>>> we could include these two pins from two pinmux controllers. What's
+>>> your opinion?
+>>
+>>
+>> Are you are suggesting that the dts file can be defined such that the desired
+>> values are written to GAFR and GPDR, without having to make any changes to the
+>> pinctrl-single driver code?  If I understand correctly, we would be defining two
+>> "pins" in the device tree for each actual pin.  That seems very ugly.
+>>
+>> I was thinking that pinctrl-single could be modified to support multiple
+>> reg/value/mask pairs for each pin listed in the pinctrl-single,bits property.
+>> There is a comment at the top of pcs_parse_one_pinctrl_entry() that seems to
+>> suggest the possibility...
+> 
+> We only support continuous register offset in pinctrl-single driver.
+> GPDRx is in range of 0x40e0000c~0x40e0010c, GAFRx is in range of
+> 0x40e00054~0x40e00070.
 
-Cool, this works, then the first patch can be ignored at all.
-My bad, not check when no value of DW_IC_COMP_TYPE.
 
->
->>          .tx_fifo_depth = 16,
->>          .rx_fifo_depth = 16,
->
-> These should be encoded in new device-tree properties named "tx-fifo-size",
-> and "rx-fifo-size". For example, see
-> Documentation/devicetree/bindings/powerpc/4xx/emac.txt.
+Ah, I see...
 
-OK, will add these two property to
-Documentation/devicetree/bindings/i2c/i2c-designware.txt
 
-Besides, would you mind change
-subsys_initcall(dw_i2c_init_driver);
-to
-module_platform_driver(dw_i2c_driver);
-Otherwise default pinctrl can not be auto-set, since subsys_initcall is 
-too early.
+> 
+> So I suggest you to split them as two pinmux controller. If you define them into
+> one pinmux controler, it's also OK. But they are still two pins in the on pinmux
+> controller. And you should avoid to access those spare pins in the middle.
 
-Thanks
+
+I'm still not smart enough to parse this.  Do you mean create a separate driver,
+or two instances of pinctrl-single?
+
+
+> 
+> I don't suggest you to support multiple reg/value/mask pairs for each pin in
+> pinctrl-single driver. It's too complex. It already exceeds the design scope
+> of the pinctrl-single driver.
+
+
+Yes, this I understand.  BTW, I see there are more patches for pinctrl-single
+coming in.
+
+Thanks for the advice Haojian.
+
+Mike
