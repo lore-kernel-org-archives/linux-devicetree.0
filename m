@@ -1,15 +1,17 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
- the DT binding
-Date: Sun, 09 Jun 2013 17:37:22 +0200
-Message-ID: <2027719.ak85gut3pg@wuerfel>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1695243.lt6nZouziV@wuerfel> <20130609143422.GA2353@localhost>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 2/2] i2c: designware: Add i2c-designware-hs
+Date: Mon, 10 Jun 2013 00:03:25 +0800
+Message-ID: <51B4A74D.3040908@linaro.org>
+References: <1370745402-11844-1-git-send-email-zhangfei.gao@linaro.org>
+ <1370745402-11844-3-git-send-email-zhangfei.gao@linaro.org>
+ <20130609032300.GB4312@tarshish>
+ <CAMj5BkhPp_-b19WFM-XitJ5-qDd9-dETp7UdNRLkRbdcq_h-Vg@mail.gmail.com>
+ <20130609095026.GF4312@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130609143422.GA2353@localhost>
+In-Reply-To: <20130609095026.GF4312@tarshish>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,37 +21,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Dirk Brandewie <dirk.brandewie@gmail.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, zhangfei gao <zhangfei.gao@gmail.com>, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 09 June 2013 11:34:24 Ezequiel Garcia wrote:
-> On Sun, Jun 09, 2013 at 03:42:24PM +0200, Arnd Bergmann wrote:
-> > On Saturday 08 June 2013 15:38:52 Ezequiel Garcia wrote:
-> > > On Fri, Jun 07, 2013 at 02:00:54PM -0600, Jason Gunthorpe wrote:
-> > 
-> > > Right. I think we have two options here for laying the DT ranges.
-> > > 
-> > > 1) This is the proposal implied in the patchset I sent:
-> > > 
-> > > mbus {
-> > >     ranges = < we only put the internal-reg translation here>
-> > >     devbus-bootcs {
-> > >             ranges = <0 {target_id/attribute} {window_physical_base} {size}>
-> > >     }
-> > > }
-> > 
-> > As Jason explained, you cannot have the window_physical_base in the child
-> > device, that just wouldn't work. I don't know if that's a typo or a thinko 
-> > 
-> 
-> I'm not sure what you mean by "that just wouldn't work". I understand it
-> may be a crappy DT layout, but it definitely works.
 
-I didn't mean to imply that you hadn't tested it. I guess it works fine
-if you put the same window_physical_base address into both the source
-and destination side mbus ranges property, but then you have to pass
-it three times in total and it gets really messy when you reassign it
-to a different physical address.
 
-	Arnd
+>> What in case private register have to be accessed?
+>
+> Good question. I don't know what is the common convention in this case. Do you
+> have such a need here?
+
+Originally, there is private register for tuning timing of clk and data.
+Suppose there may some issue of catching data in clk trigger stage.
+However, in the test, still not need to set timing yet.
+
+>
+>> struct dw_i2c_data {
+>>          u32 accessor_flags;
+>>          unsigned int tx_fifo_depth;
+>>          unsigned int rx_fifo_depth;
+>> };
+>>
+>> static struct dw_i2c_data hisilicon_data = {
+>>          .accessor_flags = ACCESS_32BIT,
+>
+> This should be detected automatically in i2c_dw_init(). When ACCESS_16BIT is
+> not set, access is 32bit wide. Doesn't it work for you?
+
+Cool, this works, then the first patch can be ignored at all.
+My bad, not check when no value of DW_IC_COMP_TYPE.
+
+>
+>>          .tx_fifo_depth = 16,
+>>          .rx_fifo_depth = 16,
+>
+> These should be encoded in new device-tree properties named "tx-fifo-size",
+> and "rx-fifo-size". For example, see
+> Documentation/devicetree/bindings/powerpc/4xx/emac.txt.
+
+OK, will add these two property to
+Documentation/devicetree/bindings/i2c/i2c-designware.txt
+
+Besides, would you mind change
+subsys_initcall(dw_i2c_init_driver);
+to
+module_platform_driver(dw_i2c_driver);
+Otherwise default pinctrl can not be auto-set, since subsys_initcall is 
+too early.
+
+Thanks
