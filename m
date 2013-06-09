@@ -1,7 +1,7 @@
 From: Simon Baatz <gmbnomis@gmail.com>
-Subject: [RESEND PATCH V3 2/8] mmc: sh_mmcif: handle mmc_of_parse() errors during probe
-Date: Sun,  9 Jun 2013 22:14:12 +0200
-Message-ID: <1370808858-32241-3-git-send-email-gmbnomis@gmail.com>
+Subject: [RESEND PATCH V3 3/8] mmc: tmio-mmc: handle mmc_of_parse() errors during probe
+Date: Sun,  9 Jun 2013 22:14:13 +0200
+Message-ID: <1370808858-32241-4-git-send-email-gmbnomis@gmail.com>
 References: <1370808858-32241-1-git-send-email-gmbnomis@gmail.com>
 Return-path: <linux-mmc-owner@vger.kernel.org>
 In-Reply-To: <1370808858-32241-1-git-send-email-gmbnomis@gmail.com>
@@ -13,34 +13,24 @@ List-Id: devicetree@vger.kernel.org
 Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
 Acked-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 ---
- drivers/mmc/host/sh_mmcif.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/mmc/host/tmio_mmc_pio.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sh_mmcif.c b/drivers/mmc/host/sh_mmcif.c
-index ba76a53..6ded7fb 100644
---- a/drivers/mmc/host/sh_mmcif.c
-+++ b/drivers/mmc/host/sh_mmcif.c
-@@ -1369,7 +1369,11 @@ static int sh_mmcif_probe(struct platform_device *pdev)
- 		ret = -ENOMEM;
- 		goto ealloch;
- 	}
+diff --git a/drivers/mmc/host/tmio_mmc_pio.c b/drivers/mmc/host/tmio_mmc_pio.c
+index f508ecb..f1a9d4a 100644
+--- a/drivers/mmc/host/tmio_mmc_pio.c
++++ b/drivers/mmc/host/tmio_mmc_pio.c
+@@ -988,7 +988,9 @@ int tmio_mmc_host_probe(struct tmio_mmc_host **host,
+ 	if (!mmc)
+ 		return -ENOMEM;
+ 
 -	mmc_of_parse(mmc);
-+
 +	ret = mmc_of_parse(mmc);
 +	if (ret < 0)
-+		goto eofparse;
-+
- 	host		= mmc_priv(mmc);
- 	host->mmc	= mmc;
- 	host->addr	= reg;
-@@ -1464,6 +1468,7 @@ eclkupdate:
- 	clk_put(host->hclk);
- eclkget:
- 	pm_runtime_disable(&pdev->dev);
-+eofparse:
- 	mmc_free_host(mmc);
- ealloch:
- 	iounmap(reg);
++		goto host_free;
+ 
+ 	pdata->dev = &pdev->dev;
+ 	_host = mmc_priv(mmc);
 -- 
 1.7.9.5
 
