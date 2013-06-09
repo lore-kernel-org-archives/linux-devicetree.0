@@ -1,153 +1,90 @@
-From: Simon Baatz <gmbnomis@gmail.com>
-Subject: [RESEND PATCH V3 8/8] mmc: mvsdio: use standard MMC device-tree binding parser mmc_of_parse()
-Date: Sun,  9 Jun 2013 22:14:18 +0200
-Message-ID: <1370808858-32241-9-git-send-email-gmbnomis@gmail.com>
-References: <1370808858-32241-1-git-send-email-gmbnomis@gmail.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1370808858-32241-1-git-send-email-gmbnomis@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Chris Ball <cjb@laptop.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
+From: "luke.leighton" <luke.leighton@gmail.com>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Sun, 9 Jun 2013 23:09:59 +0100
+Message-ID: <CAPweEDw0U-djVaVzWoNnvhWvwOP=LXc=Ac97ZzTYb6AKF+j8hg@mail.gmail.com>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+	<20130607205940.4816fed5@skate>
+	<CAPweEDxtC+OamcpVEQ3BULbN88hSJzKoi0fkNLBAdZD04LQCNQ@mail.gmail.com>
+	<4247099.i8S79t0Pua@flatron>
+	<CAPweEDwON7x-FrqUrvKDNXu3nCYOgrEzY9V5q8zxvoe6kWKCtA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPweEDwON7x-FrqUrvKDNXu3nCYOgrEzY9V5q8zxvoe6kWKCtA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Instead of parsing the DT binding on our own, use the standard parser
-mmc_of_parse(), introduced by commit 6c56e7a.
+ok, so the deadline's almost up but the discussions of the past two or
+so days have basically i think everything that needs to be said, and
+i'm extremely grateful to everyone who's contributed, privately and
+publicly, especially on such short notice.  i've passed it over to my
+associates who will turn it into executive-level-speak: they
+understand that the situation is sensitive and have far more sense
+than i, which is good.
 
-Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
----
- drivers/mmc/host/mvsdio.c |   73 +++++++++++++++++++++++++--------------------
- 1 file changed, 40 insertions(+), 33 deletions(-)
+i'm not sure if i should admit this, but there's some irony here that
+needs to be shared.  i passed the collation of input from people -
+most of it verbatim - over to my associate who is used to dealing with
+executive-level people, and he said it couldn't possibly go as-is to
+them, not even to their assistant.  when i asked why he said it was
+because it sounded too much like ordering them what decisions to make.
+ if you've been following the shit-storm criticism that's been
+directed at me, and you've also noticed the bit about "most of it
+being verbatim" you have to appreciate the irony, really.
 
-diff --git a/drivers/mmc/host/mvsdio.c b/drivers/mmc/host/mvsdio.c
-index 8960fc8..edfc481 100644
---- a/drivers/mmc/host/mvsdio.c
-+++ b/drivers/mmc/host/mvsdio.c
-@@ -35,7 +35,7 @@
- 
- #define DRIVER_NAME	"mvsdio"
- 
--static int maxfreq = MVSD_CLOCKRATE_MAX;
-+static int maxfreq;
- static int nodma;
- 
- struct mvsd_host {
-@@ -685,7 +685,6 @@ static int __init mvsd_probe(struct platform_device *pdev)
- 	const struct mbus_dram_target_info *dram;
- 	struct resource *r;
- 	int ret, irq;
--	int gpio_card_detect, gpio_write_protect;
- 	struct pinctrl *pinctrl;
- 
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -718,6 +717,20 @@ static int __init mvsd_probe(struct platform_device *pdev)
- 	if (!IS_ERR(host->clk))
- 		clk_prepare_enable(host->clk);
- 
-+	mmc->ops = &mvsd_ops;
-+
-+	mmc->ocr_avail = MMC_VDD_32_33 | MMC_VDD_33_34;
-+
-+	mmc->f_min = DIV_ROUND_UP(host->base_clock, MVSD_BASE_DIV_MAX);
-+	mmc->f_max = MVSD_CLOCKRATE_MAX;
-+
-+	mmc->max_blk_size = 2048;
-+	mmc->max_blk_count = 65535;
-+
-+	mmc->max_segs = 1;
-+	mmc->max_seg_size = mmc->max_blk_size * mmc->max_blk_count;
-+	mmc->max_req_size = mmc->max_blk_size * mmc->max_blk_count;
-+
- 	if (np) {
- 		if (IS_ERR(host->clk)) {
- 			dev_err(&pdev->dev, "DT platforms must have a clock associated\n");
-@@ -726,35 +739,38 @@ static int __init mvsd_probe(struct platform_device *pdev)
- 		}
- 
- 		host->base_clock = clk_get_rate(host->clk) / 2;
--		gpio_card_detect = of_get_named_gpio(np, "cd-gpios", 0);
--		gpio_write_protect = of_get_named_gpio(np, "wp-gpios", 0);
-+		ret = mmc_of_parse(mmc);
-+		if (ret < 0)
-+			goto out;
- 	} else {
- 		const struct mvsdio_platform_data *mvsd_data;
-+
- 		mvsd_data = pdev->dev.platform_data;
- 		if (!mvsd_data) {
- 			ret = -ENXIO;
- 			goto out;
- 		}
-+		mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ |
-+			    MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED;
- 		host->base_clock = mvsd_data->clock / 2;
--		gpio_card_detect = mvsd_data->gpio_card_detect ? : -EINVAL;
--		gpio_write_protect = mvsd_data->gpio_write_protect ? : -EINVAL;
--	}
--
--	mmc->ops = &mvsd_ops;
--
--	mmc->ocr_avail = MMC_VDD_32_33 | MMC_VDD_33_34;
--	mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ |
--		    MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED;
--
--	mmc->f_min = DIV_ROUND_UP(host->base_clock, MVSD_BASE_DIV_MAX);
--	mmc->f_max = maxfreq;
-+		/* GPIO 0 regarded as invalid for backward compatibility */
-+		if (mvsd_data->gpio_card_detect &&
-+		    gpio_is_valid(mvsd_data->gpio_card_detect)) {
-+			ret = mmc_gpio_request_cd(mmc,
-+						  mvsd_data->gpio_card_detect);
-+			if (ret)
-+				goto out;
-+		} else {
-+			mmc->caps |= MMC_CAP_NEEDS_POLL;
-+		}
- 
--	mmc->max_blk_size = 2048;
--	mmc->max_blk_count = 65535;
-+		if (mvsd_data->gpio_write_protect &&
-+		    gpio_is_valid(mvsd_data->gpio_write_protect))
-+			mmc_gpio_request_ro(mmc, mvsd_data->gpio_write_protect);
-+	}
- 
--	mmc->max_segs = 1;
--	mmc->max_seg_size = mmc->max_blk_size * mmc->max_blk_count;
--	mmc->max_req_size = mmc->max_blk_size * mmc->max_blk_count;
-+	if (maxfreq)
-+		mmc->f_max = maxfreq;
- 
- 	spin_lock_init(&host->lock);
- 
-@@ -777,15 +793,6 @@ static int __init mvsd_probe(struct platform_device *pdev)
- 		goto out;
- 	}
- 
--	if (gpio_is_valid(gpio_card_detect)) {
--		ret = mmc_gpio_request_cd(mmc, gpio_card_detect);
--		if (ret)
--			goto out;
--	} else
--		mmc->caps |= MMC_CAP_NEEDS_POLL;
--
--	mmc_gpio_request_ro(mmc, gpio_write_protect);
--
- 	setup_timer(&host->timer, mvsd_timeout_timer, (unsigned long)host);
- 	platform_set_drvdata(pdev, mmc);
- 	ret = mmc_add_host(mmc);
-@@ -793,10 +800,10 @@ static int __init mvsd_probe(struct platform_device *pdev)
- 		goto out;
- 
- 	if (!(mmc->caps & MMC_CAP_NEEDS_POLL))
--		dev_notice(&pdev->dev, "using GPIO %d for card detection\n",
--			   gpio_card_detect);
-+		dev_notice(&pdev->dev, "using GPIO for card detection\n");
- 	else
--		dev_notice(&pdev->dev, "lacking card detect (fall back to polling)\n");
-+		dev_notice(&pdev->dev,
-+			   "lacking card detect (fall back to polling)\n");
- 	return 0;
- 
- out:
--- 
-1.7.9.5
+so *sigh* we have to trust my associates and their experience in
+dealing with executives to work out a way to get the message across: i
+understand the things about public communication on-list(s) being
+important and so on and will fight to make sure those are got across
+in some clear form.  the good news is that they *have* asked for
+advice and for a report, so there *is* an opening, it's not an
+unwelcome cold-call that we're engaging in, here.
 
+the last thing i'd like to say is this: free (libre) software
+developers and advocates are in an extremely... odd position of not
+really being fully or adequately monetarily compensated for the true
+level of service that they truly provide.  i mention "service" because
+regardless of whether it's business or whether it's spare-time work
+just for the heck of it, we *are* acting as servants to a great many
+people, and in many cases those people who directly receive the
+benefit of our work - millions if not hundreds of people now that the
+linux kernel has made its way into android - have absolutely no way of
+being able to identify us and pay us for that service.
+
+i've never thought about giving up, but i *have* been thinking "what
+the hell am i doing wrong i.e. why have i only received direct
+donations of about $300 in *total* for all work done for the free
+software community since 1995 including samba and exchange 5.5
+reverse-engineering and much more", up until recently when i learned
+some new insights that i thought it important to share, here.
+
+the insight is this: that there is a separate tally which is inviolate
+that keeps a *true* account of the level of service that we *truly*
+provide to others, of which monetary compensation is only a partial
+reflection [subtracted from that inviolate account, in some cases
+resulting in a DEBT in the inviolate and true account - which will
+need to be repaid - if the monetary compensation was too high or the
+service provided too poor].
+
+so, for anyone reading this who has seen the shit-storm of the past
+few days and felt either embarrassed, or for any other reason has felt
+that they should quit working with free software, please don't:
+remember that the work itself is not necessarily the reward (although
+that's important too), nor that you're providing service to others and
+that that itself should be the reward, but that you *will* or *are*
+receiving true and accurate compensation: believe it, because it's
+true.
+
+this is all a rather round-about way to say that for those people who
+heard and are thinking of heeding russell's call to "be silent and to
+ignore me", to do so would be a significant dis-service both to
+yourself and to the hundreds of millions of end-users whom you are
+serving, if the long-term and immediate-term projects that i have
+embarked on are the success that i envision them to be.  even with
+that having been said, it is, indeed, entirely your choice, that
+nobody but you should make.
+
+l.
