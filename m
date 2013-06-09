@@ -1,18 +1,19 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
  the DT binding
-Date: Sat, 8 Jun 2013 15:38:52 -0300
-Message-ID: <20130608183851.GB2354@localhost>
+Date: Sat, 8 Jun 2013 19:45:06 -0600
+Message-ID: <20130609014506.GB10027@obsidianresearch.com>
 References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
  <1370623671-7748-5-git-send-email-ezequiel.garcia@free-electrons.com>
  <201306072101.44694.arnd@arndb.de>
  <20130607200054.GA9010@obsidianresearch.com>
+ <20130608183851.GB2354@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130607200054.GA9010-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20130608183851.GB2354@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,86 +24,102 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFzb24sIEFybmQ6CgpUaGFua3MgZm9yIHlvdXIgcmV2aWV3cyEKCkkgYWdyZWUgd2l0aCBt
-b3N0IG9mIHlvdXIgc3VnZ2VzdGlvbnMgc28gZmFyLiBIb3dldmVyLCBJJ2QgbGlrZSB0byBkaXNj
-dXNzCm9uZSBwb2ludCBiZWZvcmUgd2UgbW92ZSBmb3J3YXJkIHdpdGggdGhlIG90aGVyIChpbW8s
-IGxlc3MgaW1wb3J0YW50cykKaXNzdWVzLiBTZWUgYmVsb3cuCgpPbiBGcmksIEp1biAwNywgMjAx
-MyBhdCAwMjowMDo1NFBNIC0wNjAwLCBKYXNvbiBHdW50aG9ycGUgd3JvdGU6ClsuLi5dCj4gCj4g
-Cj4gSXMgdGhlIHJhbmdlcyByaWdodCB0aG91Z2g/IEkgd2FzIGV4cGVjdGluZyB0aGlzOgo+IAo+
-ICByYW5nZXMgPSA8MCAgMHgwMTJmMDAwMCAwICAweDgwMDAwMDA+Cj4gCj4gVGhlIDJuZCBhZGRy
-ZXNzIGNlbGwgaW4gdGhlIDJkd29yZCBzcGFjZSBzaG91bGQgYWxtb3N0IGFsd2F5cyBiZSAwLgo+
-IAo+IFRoZSAybmQgYWRkcmVzcyBjZWxsIHNob3VsZCBiZSBpbnRlcnByaXRlZCBhcyB0aGUgb2Zm
-c2V0IHdpdGhpbiB0aGUKPiB0YXJnZXQncyB3aW5kb3csIG5vdCBhcyBzb21lIGtpbmQgb2YgcGh5
-c2ljYWwgYmFzZSBhZGRyZXNzLgo+IAo+ID4+KyAoTm90ZSB0aGF0IHRoZSB3aW5kb3dpZCBjZWxs
-IGlzIGVuY29kaW5nIHRoZSB0YXJnZXQgSUQgPSAweDAxIGFuZCBhdHRyaWJ1dGUKPiA+PisgSUQg
-PSAweDJmLCBhbmQgdGhlIHNlbGVjdGVkIGJhc2UgYWRkcmVzcyBmb3IgdGhlIHdpbmRvdyBpcyAw
-eGU4MDAwMDAwKS4KPiAKPiAuLi4gVGhlIHByb3BlciBwbGFjZSB0byBpbmRpY2F0ZSB0aGUgYmFz
-ZSBhZGRyZXNzIGZvciB0aGUgd2luZG93IGlzIGluCj4gdGhlIG1idXMgcmFuZ2VzOgo+IAo+IG1i
-dXMgewo+ICAgIHJhbmdlcyA9IDwweDAxMmYwMDAwIDAgIDB4ZTgwMDAwMDAgIDB4ODAwMDAwMD4K
-PiAgICBkZXZidXMtYm9vdGNzIHsKPiAgICAgICAgcmFuZ2VzID0gPDAgIDB4MDEyZjAwMDAgMCAg
-MHg4MDAwMDAwPgo+ICAgIH0KPiB9Cj4gCj4gV2Ugc2hvdWxkbid0IG1hbmdsZSB0aGUgRFQgZm9y
-bWF0IGp1c3QgdG8gbWFrZSBpdCBjb252ZW5pZW50IGZvcgo+IGh1bWFucyB0byB3cml0ZSAtIGlm
-IHRoaXMgaXMgYSBtYWpvciBwcm9ibGVtIHRoZW4gSSdkIHRyeSB0byB1c2UgdGhlCj4gcHJlcHJv
-Y2Vzc29yIGZpcnN0Li4gVGhlcmUgYXJlIHNldmVyYWwgcmVhc29uYWJsZSBzb2x1dGlvbnMgZG93
-biB0aGF0Cj4gcGF0aCwgSU1ITy4KPiAKClJpZ2h0LiBJIHRoaW5rIHdlIGhhdmUgdHdvIG9wdGlv
-bnMgaGVyZSBmb3IgbGF5aW5nIHRoZSBEVCByYW5nZXMuCgoxKSBUaGlzIGlzIHRoZSBwcm9wb3Nh
-bCBpbXBsaWVkIGluIHRoZSBwYXRjaHNldCBJIHNlbnQ6CgptYnVzIHsKCXJhbmdlcyA9IDwgd2Ug
-b25seSBwdXQgdGhlIGludGVybmFsLXJlZyB0cmFuc2xhdGlvbiBoZXJlPgoJZGV2YnVzLWJvb3Rj
-cyB7CgkJcmFuZ2VzID0gPDAge3RhcmdldF9pZC9hdHRyaWJ1dGV9IHt3aW5kb3dfcGh5c2ljYWxf
-YmFzZX0ge3NpemV9PgoJfQp9CgpPZiBjb3Vyc2UgdGhlIGFib3ZlIERUIHdpbGwgYmUgYWN0dWFs
-bHkgaW5jb21wbGV0ZSwgZm9yIGl0J2xsIGxhY2sgYSBwcm9wZXIgcmFuZ2VzCmVudHJ5IHRvIHRy
-YW5zbGF0ZSB0aGUgZGV2YnVzLWJvb3RjcyBhZGRyZXNzLiBTbyB3ZSBjaG9zZWQgdG8gZG8gaXQg
-ZHluYW1pY2FsbHkKaW4gdGhlIG1idXMgZHJpdmVyIChzZWUgcGF0Y2ggMDUvMTQpLCBhbmQgYWRk
-IHRoZSBtaXNzaW5nIGVudHJ5LgoKVGhlIGluZm9ybWF0aW9uIG9mIHRoZSBwaHlzaWNhbCB3aW5k
-b3cgYmFzZSBhZGRyZXNzIGlzIGluIHRoaXMgY2FzZSBpbgplYWNoIGNoaWxkIChkZXZidXMtYm9v
-dGNzLCBib290cm9tLCBhbmQgc28gb24pLiBUaGUgTUJ1cyBkcml2ZXIgd2Fsa3MKZWFjaCBvZiBp
-dHMgZmlyc3QtbGV2ZWwgY2hpbGRyZW4gYW5kIGFsbG9jYXRlcyB0aGUgd2luZG93IGJhc2VkIG9u
-IHRoZQphZGRyZXNzIGRlY2xhcmVkIGluIHRoZSByYW5nZXMgcHJvcGVydHkgb2YgZWFjaCBjaGls
-ZCwgYXMgc2hvd24gYWJvdmUuCgpUaGlzIGlzIGRvbmUgbW9zdGx5IHRvIGF2b2lkIGhhdmluZyB0
-aGF0IGluIHRoZSBtYnVzIG5vZGUsIGFuZCB0aGUgbmlnaHRtYXJlCnRvIG1haW50YWluIGl0IHBy
-b2R1Y2VzLiBTZWUgYmVsb3cuCgoyKSBUaGlzIGlzIHdoYXQgSmFzb24gaXMgcHJvcG9zaW5nIGlu
-IGhpcyBtYWlsOgoKbWJ1cyB7CglyYW5nZXMgPSA8e3RhcmdldF9pZC9hdHRyaWJ1dGV9IDAge3dp
-bmRvd19waHlzaWNhbF9iYXNlfSB7c2l6ZX0+CglkZXZidXMtYm9vdGNzIHsKCQlyYW5nZXMgPSA8
-MCB7dGFyZ2V0X2lkL2F0dHJpYnV0ZX0gMCB7c2l6ZX0+Cgl9Cn0KCk9mIGNvdXJzZSB0aGlzIGxv
-b2tzIG11Y2ggY2xlYW5lciwgYnV0IGl0IGZvcmNlcyBhIGxvdCBvZiBkdXBsaWNhdGlvbgppbiB0
-aGUgRFQgZmlsZXMuIE5vdywgaWYgeW91IHNlZSBzb21lIG9mIHRoZSByZWNlbnQgcGF0Y2hlcyB3
-ZSd2ZSBiZWVuCnNlbmRpbmcsIEkgdGhpbmsgdGhpcyBkdXBsaWNhdGlvbiBpcyB2ZXJ5IGVycm9y
-LXByb25lLCBhbmQgaXQnbGwgYmUgYQpuaWdodG1hcmUgdG8gbWFpbnRhaW4uIExldCBtZSBwcm9w
-b3NlIGFuIGV4YW1wbGUgdG8gc2hvdyB0aGlzCmR1cGxpY2F0aW9uOgoKTGV0J3Mgc3VwcG9zZSB3
-ZSBoYXZlIGEgYm9hcmQgIkEiIHdpdGggaXRzIGFybWFkYS1BLmR0cywKYW5kIGEgY29tbW9uIG9u
-ZSBhcm1hZGEuZHRzaS4KClRoZSBjb21tb24gZHRzaSBmaWxlIHdvdWxkIGhhdmUgdGhpcyByYW5n
-ZXMgcHJvcGVydHk6CgovKiBhcm1hZGEuZHRzaSAqLwptYnVzIHsKCXJhbmdlcyA9IDwgaW50ZXJu
-YWxfcmVnc19pZCAwIGludGVybmFsX3JlZ3NfYmFzZSBpbnRlcm5hbF9yZWdzX3NpemUKCQkgICAg
-ICAgICBib290cm9tX2lkIDAgICAgICAgYm9vdHJvbV9iYXNlICAgICAgIGJvb3Ryb21fc2l6ZSA+
-Cn0KClRoZSBBIGJvYXJkIGhhcyBhIE5PUiBjb25uZWN0ZWQgdG8gc29tZSBkZXZidXMsIHNvIHdl
-IG5lZWQgdG8gYWRkIGl0CnRvIHRoZSByYW5nZXMsIGJ1dCBhbHNvIG5lZWQgdG8gZHVwbGljYXRl
-IHRoZSBvbmVzIGluIHRoZSBjb21tb24gZHRzaToKCi8qIGFybWFkYS1BLmR0cyAqLwptYnVzIHsK
-CXJhbmdlcyA9IDwgaW50ZXJuYWxfcmVnc19pZCAwIGludGVybmFsX3JlZ3NfYmFzZSBpbnRlcm5h
-bF9yZWdzX3NpemUKCQkgICAgICAgICBib290cm9tX2lkIDAgICAgICAgYm9vdHJvbV9iYXNlICAg
-ICAgIGJvb3Ryb21fc2l6ZQoJCSAgICAgICAgIGRldmJ1czBfaWQgMCAgICAgICBkZXZidXMwX2Jh
-c2UgICAgICAgZGV2YnVzMF9zaXplID4KfQoKTm93LCBpZiB3ZSBhZGQgc29tZXRoaW5nIGF0IHRo
-ZSBjb21tb24gbGV2ZWwsIGFuZCBleHRlbmQgdGhlIHJhbmdlcwpwcm9wZXJ0eSBpbiB0aGUgY29t
-bW9uIGFybWFkYS5kdHNpLCB3ZSBhbHNvIGhhdmUgdG8gZ28gdGhyb3VnaCAqZWFjaCogb2YKdGhl
-IHBlci1ib2FyZCBkdHMgZmlsZXMgKGZvciAqZWFjaCogYm9hcmQpIGFkZGluZyB0aGF0IGVudHJ5
-LCBiZWNhdXNlCmVudHJpZXMgKm5lZWQqIHRvIGJlIGR1cGxpY2F0ZWQuIE90aGVyd2lzZSB5b3Un
-cmUgZWZmZWN0aXZlbHkKInNoYWRvd2luZyIgdGhlIGVudHJpZXMuCgpJdCBpcyBwcmVjaXNlbHkg
-Zm9yIHRoaXMgcmVhc29uIHRoYXQgSSd2ZSBkZWNpZGVkIHRvIGFkb3B0IG9wdGlvbiAjMQppbnN0
-ZWFkISBOb3csIEknbSBub3Qgc2F5aW5nIEkgbGlrZSB0aGF0IG9wdGlvbiBwYXJ0aWN1bGFybHku
-CkluIGZhY3QgaXQgaGFzIGEgY291cGxlIGlzc3VlcyBhcyB3ZWxsOgoKICAxLiBUaGUgRFQgaXMg
-KmluY29tcGxldGUqIGFuZCBuZWVkcyB0byBiZSBjb21wbGV0ZWQgYnkgdGhlIE1CdXMKICAgICBk
-cml2ZXIgd2hpY2gsIElNSE8sIHN1Y2tzLgoKICAyLiBDaGFuZ2luZyB0aGUgRFQgZHluYW1pY2Fs
-bHkgaW4gdGhlIGtlcm5lbCwgbWVhbnMgdGhhdCBuZXcKICAgICBwcm9wZXJ0aWVzIGFyZSBhbGxv
-Y2F0ZWQgdG8gcmVwbGFjZSBvbGQgb25lcywgYnV0IHRoZSBvbGQgb25lcwogICAgIGFyZSAqbmV2
-ZXIqIHJlbGVhc2VkLiBTbyBpZiBmb3IgYW55IHJlYXNvbiB3ZSBkbyB0aGlzIG9mdGVuLAogICAg
-IHdlJ3JlIGVmZmVjdGl2ZWx5ICJsZWFraW5nIiBtZW1vcnkuCgpTbywgSSdtIG5vdCBzYXlpbmcg
-b3B0aW9uICMxIGlzIG5pY2UsIGJ1dCByYXRoZXIgdGhhdCBpdCBzZWVtcyBpdCdsbApiZSBsZXNz
-IHRyb3VibGUgdG8gbWFpbnRhaW4uCgpXaGF0IGRvIHlvdSB0aGluaz8KLS0gCkV6ZXF1aWVsIEdh
-cmPDrWEsIEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQg
-RW5naW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBs
-aXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3ps
-YWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Sat, Jun 08, 2013 at 03:38:52PM -0300, Ezequiel Garcia wrote:
+
+> > mbus {
+> >    ranges = <0x012f0000 0  0xe8000000  0x8000000>
+> >    devbus-bootcs {
+> >        ranges = <0  0x012f0000 0  0x8000000>
+> >    }
+> > }
+> > 
+> > We shouldn't mangle the DT format just to make it convenient for
+> > humans to write - if this is a major problem then I'd try to use the
+> > preprocessor first.. There are several reasonable solutions down that
+> > path, IMHO.
+> > 
+> 
+> Right. I think we have two options here for laying the DT ranges.
+> 
+> 1) This is the proposal implied in the patchset I sent:
+> 
+> mbus {
+> 	ranges = < we only put the internal-reg translation here>
+> 	devbus-bootcs {
+> 		ranges = <0 {target_id/attribute}
+> 	{window_physical_base} {size}>
+        ^^^^^^^^^^^^^^^^^^^^^^
+
+This is the mangling I was referring to. It needs to be the offset
+into the target, it can't be something else.
+
+I understand your motivation, but this is not a good method of
+encoding this in DT.
+
+There is nothing especially wrong with updating the ranges at runtime,
+but don't use the 2nd cell in the 2dw address to encode the desired
+base address.
+
+> Of course this looks much cleaner, but it forces a lot of duplication
+> in the DT files. Now, if you see some of the recent patches we've been
+> sending, I think this duplication is very error-prone, and it'll be a
+> nightmare to maintain. Let me propose an example to show this
+> duplication:
+
+IMHO, dtc was not designed to do the sorts of include things that we
+see in the boot/dt directory (eg a complex inheritance system) it is
+not surprising we hit limitations in dtc.
+
+It would be better to try and address them either by modding dtc (an
+append directive of some kind), or using the preprocessor...
+
+The preprocessor is already setup, here is a way to use it to solve
+this problem:
+
+ /* armada.dtsi */
+ mbus {
+ 	ranges = < internal_regs_id 0 internal_regs_base internal_regs_size
+ 		         bootrom_id 0       bootrom_base  bootrom_size 
+                   MBUS_BOARD_SPECIFIC_INFO>
+
+ }
+ 
+ /* armada-A.dts */
+ define MBUS_BOARD_SPECIFIC_INFO devbus0_id 0       devbus0_base devbus0_size
+ #include "armada.dtsi"
+
+There are lots and lots of solutions using the pre-processor, please
+take a look and find one that you feel works for you...
+
+> It is precisely for this reason that I've decided to adopt option #1
+> instead! Now, I'm not saying I like that option particularly.
+> In fact it has a couple issues as well:
+
+The main issue for me is that you can no longer refer to an offset in
+a target, and that badly breaks several desirable DT layouts, eg on
+Kirkwood the NAND case could be expressed like:
+
+devbus {
+  reg = <INTERNAL_REGS + 0x1234 0xABCD>;
+  ranges = <0 DEVBUS_TARGET 0x1000>;
+}
+
+The NAND driver needs both internal regs and a target id in one
+binding.
+
+Which is why the last DW in the address must be the offset into the
+target, not something else.
+
+> What do you think?
+
+IMHO, creating a correct FDT is of primary importance, the
+maintainability of the text DT is secondary.
+
+We can always improve the dtc envorionment (as was done recently by
+adding the preprocessor), we cannot change 'DT ABI' once it it set.
+
+Jason
