@@ -1,145 +1,298 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH 2/2] i2c: designware: Add i2c-designware-hs
-Date: Sun, 9 Jun 2013 06:23:00 +0300
-Message-ID: <20130609032300.GB4312@tarshish>
-References: <1370745402-11844-1-git-send-email-zhangfei.gao@linaro.org>
- <1370745402-11844-3-git-send-email-zhangfei.gao@linaro.org>
+From: Haojian Zhuang <haojian.zhuang@gmail.com>
+Subject: Re: [PATCH 2/4] pinctrl: single: Add hardware specific hooks for IRQ
+ and GPIO wake-up events
+Date: Sun, 9 Jun 2013 12:46:02 +0800
+Message-ID: <CAN1soZznJ1YxWhaFZ4rhQx+uk3aCigAcVeuLpOU+3oPzmfXF6w@mail.gmail.com>
+References: <20130607203936.16513.57494.stgit@localhost>
+	<20130607205040.16513.36794.stgit@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1370745402-11844-3-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130607205040.16513.36794.stgit@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Walleij Linus <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhangfei Gao,
-
-On Sun, Jun 09, 2013 at 10:36:42AM +0800, Zhangfei Gao wrote:
-> Add support hisilicon i2c driver, which reuse designware i2c ip
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Sat, Jun 8, 2013 at 4:50 AM, Tony Lindgren <tony@atomide.com> wrote:
+> At least on omaps, each board typically has at least one device
+> configured as wake-up capable from deeper idle modes. In the
+> deeper idle modes the normal interrupt wake-up path won't work
+> as the logic is powered off and separate wake-up hardware is
+> available either via IO ring or GPIO hardware. The wake-up
+> event can be device specific, or may need to be dynamically
+> remuxed to GPIO input for wake-up events. When the wake-up
+> event happens, it's IRQ need to be called so the device won't
+> lose interrupts.
+>
+> Allow supporting IRQ and GPIO wake-up events if a hardware
+> spefific module is registered for the enable and disable
+> calls.
+>
+> Done in collaboration with Roger Quadros <rogerq@ti.com>.
+>
+> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
+> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 > ---
->  .../devicetree/bindings/i2c/i2c-designware-hs.txt  |   30 +++
->  drivers/i2c/busses/Kconfig                         |   10 +
->  drivers/i2c/busses/Makefile                        |    1 +
->  drivers/i2c/busses/i2c-designware-hs.c             |  194 ++++++++++++++++++++
->  4 files changed, 235 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-designware-hs.txt
->  create mode 100644 drivers/i2c/busses/i2c-designware-hs.c
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware-hs.txt b/Documentation/devicetree/bindings/i2c/i2c-designware-hs.txt
-> new file mode 100644
-> index 0000000..08908fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware-hs.txt
-> @@ -0,0 +1,30 @@
-> +* Hisilicon I2C Controller
+>  .../devicetree/bindings/pinctrl/pinctrl-single.txt |    5 +
+>  drivers/pinctrl/pinctrl-single.c                   |  104 +++++++++++++++++---
+>  drivers/pinctrl/pinctrl-single.h                   |   28 +++++
+>  3 files changed, 123 insertions(+), 14 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> index 08f0c3d..5dfd74b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> @@ -68,6 +68,10 @@ Optional properties:
+>    The number of parameters is depend on #pinctrl-single,gpio-range-cells
+>    property.
+>
+> +- interrrupts : the interrupt that a function may have for a wake-up event
 > +
-> +Required properties :
+> +- gpios: the gpio that a function may have for a wake-up event
 > +
-> + - compatible : should be "hisilicon,designware-i2c"
-> + - reg : Offset and length of the register set for the device
-> + - interrupts : <IRQ> where IRQ is the interrupt number.
-> +
-> +Example :
-> +
-> +	i2c0: i2c@fcb08000 {
-> +		compatible = "hs,designware-i2c";
-
-A few comments on this one:
-
-1. You should Cc devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org on patches touching ftd 
-   bindings (added to Cc)
-
-2. The convention is to use the IC block designer in the "compatible" property 
-   prefix, in this case Symopsys (snps)
-
-3. This does not match the compatible property in hs_dw_i2c_of_match[] below 
-   where you use "hisilicon,designware-i2c"
-
-4. Please update Documentation/devicetree/bindings/vendor-prefixes.txt when 
-   adding new vendor prefixes
-
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0xfcb08000 0x1000>;
-> +		interrupts = <0 28 4>;
-> +		clocks = <&pclk>;
-> +		status = "disabled";
-> +	};
-> +
-> +	Client in i2c0 bus with add 0x58 could be added as example
-> +	i2c0: i2c@fcb08000 {
-> +		status = "ok";
-
-The convention is to use "okay".
-
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
-> +		i2c_client1: i2c_client@58 {
-> +			compatible = "hisilicon,i2c_client_tpa2028";
-> +			reg = <0x58>;
-> +		};
-> +	};
-
-[...]
-
-The code below looks like a direct copy of i2c-designware-platdrv.c. Is there 
-any reason you can't use that code instead?
-
-> +static struct i2c_algorithm hs_i2c_dw_algo = {
-> +	.master_xfer	= i2c_dw_xfer,
-> +	.functionality	= i2c_dw_func,
-> +};
-> +static u32 hs_i2c_dw_get_clk_rate_khz(struct dw_i2c_dev *dev)
+>                 /* pin base, nr pins & gpio function */
+>                 pinctrl-single,gpio-range = <&range 0 3 0 &range 3 9 1>;
+>
+> @@ -204,6 +208,7 @@ pmx_gpio: pinmux@d401e000 {
+>                         0xdc 0x118
+>                         0xde 0
+>                 >;
+> +               interrupts = <74>;
+>         };
+>  };
+>
+> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+> index 0f178d1..7cb7940 100644
+> --- a/drivers/pinctrl/pinctrl-single.c
+> +++ b/drivers/pinctrl/pinctrl-single.c
+> @@ -19,6 +19,8 @@
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_irq.h>
+>
+>  #include <linux/pinctrl/pinctrl.h>
+>  #include <linux/pinctrl/pinmux.h>
+> @@ -95,6 +97,8 @@ struct pcs_conf_type {
+>   * @nvals:     number of entries in vals array
+>   * @pgnames:   array of pingroup names the function uses
+>   * @npgnames:  number of pingroup names the function uses
+> + * @irq:       optional irq associated with the function
+> + * @gpio:      optional gpio associated with the function
+>   * @node:      list node
+>   */
+>  struct pcs_function {
+> @@ -105,6 +109,8 @@ struct pcs_function {
+>         int npgnames;
+>         struct pcs_conf_vals *conf;
+>         int nconfs;
+> +       int irq;
+> +       int gpio;
+>         struct list_head node;
+>  };
+>
+> @@ -410,6 +416,18 @@ static int pcs_get_function(struct pinctrl_dev *pctldev, unsigned pin,
+>         return 0;
+>  }
+>
+> +static void pcs_reg_init(struct pcs_reg *p, struct pcs_device *pcs,
+> +                        struct pcs_function *func,
+> +                        void __iomem *reg, unsigned val)
 > +{
-> +	return clk_get_rate(dev->clk)/1000;
+> +       p->read = pcs->read;
+> +       p->write = pcs->write;
+> +       p->irq = func->irq;
+> +       p->gpio = func->gpio;
+> +       p->reg = reg;
+> +       p->val = val;
 > +}
 > +
-> +static int hs_dw_i2c_probe(struct platform_device *pdev)
+>  static int pcs_enable(struct pinctrl_dev *pctldev, unsigned fselector,
+>         unsigned group)
+>  {
+> @@ -442,6 +460,12 @@ static int pcs_enable(struct pinctrl_dev *pctldev, unsigned fselector,
+>                 val &= ~mask;
+>                 val |= (vals->val & mask);
+>                 pcs->write(val, vals->reg);
+> +               if ((func->irq || func->gpio) && pcs->soc && pcs->soc->enable) {
+> +                       struct pcs_reg pcsr;
+> +
+> +                       pcs_reg_init(&pcsr, pcs, func, vals->reg, val);
+> +                       pcs->soc->enable(pcs->soc, &pcsr);
+> +               }
+>         }
+>
+>         return 0;
+> @@ -466,18 +490,6 @@ static void pcs_disable(struct pinctrl_dev *pctldev, unsigned fselector,
+>                 return;
+>         }
+>
+> -       /*
+> -        * Ignore disable if function-off is not specified. Some hardware
+> -        * does not have clearly defined disable function. For pin specific
+> -        * off modes, you can use alternate named states as described in
+> -        * pinctrl-bindings.txt.
+> -        */
+> -       if (pcs->foff == PCS_OFF_DISABLED) {
+> -               dev_dbg(pcs->dev, "ignoring disable for %s function%i\n",
+> -                       func->name, fselector);
+> -               return;
+> -       }
+> -
+>         dev_dbg(pcs->dev, "disabling function%i %s\n",
+>                 fselector, func->name);
+>
+> @@ -488,8 +500,28 @@ static void pcs_disable(struct pinctrl_dev *pctldev, unsigned fselector,
+>                 vals = &func->vals[i];
+>                 val = pcs->read(vals->reg);
+>                 val &= ~pcs->fmask;
+> -               val |= pcs->foff << pcs->fshift;
+> -               pcs->write(val, vals->reg);
+> +
+> +               /*
+> +                * Ignore disable if function-off is not specified. Some
+> +                * hardware does not have clearly defined disable function.
+> +                * For pin specific off modes, you can use alternate named
+> +                * states as described in pinctrl-bindings.txt.
+> +                */
+> +               if (pcs->foff == PCS_OFF_DISABLED) {
+> +                       dev_dbg(pcs->dev, "ignoring disable for %s function%i\n",
+> +                               func->name, fselector);
+> +               } else {
+> +                       val |= pcs->foff << pcs->fshift;
+> +                       pcs->write(val, vals->reg);
+> +               }
+> +
+> +               if ((func->irq || func->gpio) &&
+> +                   pcs->soc && pcs->soc->disable) {
+> +                       struct pcs_reg pcsr;
+> +
+> +                       pcs_reg_init(&pcsr, pcs, func, vals->reg, val);
+> +                       pcs->soc->disable(pcs->soc, &pcsr);
+> +               }
+>         }
+>  }
+>
+> @@ -1007,6 +1039,32 @@ static void pcs_add_conf4(struct pcs_device *pcs, struct device_node *np,
+>         add_setting(settings, param, ret);
+>  }
+>
+> +static int pcs_parse_wakeup(struct pcs_device *pcs, struct device_node *np,
+> +                            struct pcs_function *function)
 > +{
-> +	struct dw_i2c_dev *d;
-> +	struct i2c_adapter *adap;
-> +	struct resource *iores;
-> +	struct pinctrl *pinctrl;
-> +	int r;
+> +       struct pcs_reg pcsr;
+> +       int i, ret = 0;
 > +
-> +	d = devm_kzalloc(&pdev->dev, sizeof(struct dw_i2c_dev), GFP_KERNEL);
-> +	if (!d)
-> +		return -ENOMEM;
+> +       for (i = 0; i < function->nvals; i++) {
+> +               struct pcs_func_vals *vals;
+> +               unsigned mask;
 > +
-> +	/* NOTE: driver uses the static register mapping */
-> +	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!iores)
-> +		return -EINVAL;
-> +
-> +	d->base = devm_request_and_ioremap(&pdev->dev, iores);
-> +	if (!d->base)
-> +		return -EADDRNOTAVAIL;
-> +
-> +	d->irq = platform_get_irq(pdev, 0);
-> +	if (d->irq < 0) {
-> +		dev_err(&pdev->dev, "no irq resource?\n");
-> +		return d->irq; /* -ENXIO */
-> +	}
+> +               vals = &function->vals[i];
+> +               if (!vals->mask)
+> +                       mask = pcs->fmask;
+> +               else
+> +                       mask = pcs->fmask & vals->mask;
 
-[...]
+I assume that this patch is used in both v1 & v2 version. Since Manjunathappa
+changed the logic of distinguishing bits and pins in blew.
 
-baruch
+if (pcs->bits_per_mux)
+      mask = vals->mask;
+else
+     mask = pcs->fmask
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+Would you like to sync with his style?
+
+> +
+> +               pcs_reg_init(&pcsr, pcs, function, vals->reg,
+> +                            vals->val & mask);
+> +               ret = pcs->soc->reg_init(pcs->soc, &pcsr);
+> +               if (ret)
+> +                       break;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+>                              struct pcs_function *func,
+>                              struct pinctrl_map **map)
+> @@ -1176,6 +1234,24 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+>         } else {
+>                 *num_maps = 1;
+>         }
+> +
+> +       if (pcs->flags & PCS_HAS_FUNCTION_IRQ)
+> +               function->irq = irq_of_parse_and_map(np, 0);
+> +
+> +       if (pcs->flags & PCS_HAS_FUNCTION_GPIO) {
+> +               function->gpio = of_get_gpio(np, 0);
+> +               if (function->gpio > 0 && !function->irq) {
+> +                       if (gpio_is_valid(function->gpio))
+> +                               function->irq = gpio_to_irq(function->gpio);
+> +               }
+> +       }
+> +
+> +       if (function->irq > 0 && pcs->soc && pcs->soc->reg_init) {
+> +               res = pcs_parse_wakeup(pcs, np, function);
+> +               if (res)
+> +                       goto free_pingroups;
+> +       }
+> +
+>         return 0;
+>
+>  free_pingroups:
+> diff --git a/drivers/pinctrl/pinctrl-single.h b/drivers/pinctrl/pinctrl-single.h
+> index 18f3205..c2dcc7a 100644
+> --- a/drivers/pinctrl/pinctrl-single.h
+> +++ b/drivers/pinctrl/pinctrl-single.h
+> @@ -1,13 +1,41 @@
+> +/**
+> + * struct pcs_reg - pinctrl register
+> + * @read:      pinctrl-single provided register read function
+> + * @write:     pinctrl-single provided register write function
+> + * @reg:       virtual address of a register
+> + * @val:       pinctrl configured value of the register
+> + * @irq:       optional irq specified for wake-up for example
+> + * @gpio:      optional gpio specified for wake-up for example
+> + * @node:      optional list
+> + */
+> +struct pcs_reg {
+> +       unsigned (*read)(void __iomem *reg);
+> +       void (*write)(unsigned val, void __iomem *reg);
+> +       void __iomem *reg;
+> +       unsigned val;
+> +       int irq;
+> +       int gpio;
+> +       struct list_head node;
+> +};
+> +
+> +#define PCS_HAS_FUNCTION_GPIO   (1 << 2)
+> +#define PCS_HAS_FUNCTION_IRQ    (1 << 1)
+>  #define PCS_HAS_PINCONF         (1 << 0)
+>
+>  /**
+>   * struct pcs_soc - SoC specific interface to pinctrl-single
+>   * @data:      SoC specific data pointer
+>   * @flags:     mask of PCS_HAS_xxx values
+> + * @reg_init:  SoC specific register init function
+> + * @enable:    SoC specific enable function
+> + * @disable:   SoC specific disable function
+>   */
+>  struct pcs_soc {
+>         void *data;
+>         unsigned flags;
+> +       int (*reg_init)(const struct pcs_soc *soc, struct pcs_reg *r);
+> +       int (*enable)(const struct pcs_soc *soc, struct pcs_reg *r);
+> +       void (*disable)(const struct pcs_soc *soc, struct pcs_reg *r);
+>  };
+>
+>  extern int pinctrl_single_probe(struct platform_device *pdev,
+>
+
+For others: Acked-by: Haojian Zhuang <haojian.zhuang@gmail.com>
