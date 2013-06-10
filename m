@@ -1,12 +1,18 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5] ASoC: fsl: add imx-wm8962 machine driver
-Date: Mon, 10 Jun 2013 18:08:38 +0100
-Message-ID: <20130610170838.GP1403@sirena.org.uk>
-References: <1370607974-6895-1-git-send-email-b42378@freescale.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v4 2/6] clocksource: add Marvell Orion SoC timer
+Date: Mon, 10 Jun 2013 13:09:21 -0400
+Message-ID: <20130610170921.GM23859@titan.lakedaemon.net>
+References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1370856955-10514-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <51B5F8FE.5090508@linaro.org> <51B5FF51.6090708@gmail.com>
+ <51B60267.9000600@linaro.org> <51B6031B.4030204@gmail.com>
+ <51B6079E.5090602@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7771442502429973862=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370607974-6895-1-git-send-email-b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51B6079E.5090602-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,74 +23,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 10, 2013 at 07:06:38PM +0200, Daniel Lezcano wrote:
+> On 06/10/2013 06:47 PM, Sebastian Hesselbarth wrote:
+> > On 06/10/13 18:44, Daniel Lezcano wrote:
+> >> On 06/10/2013 06:31 PM, Sebastian Hesselbarth wrote:
+> >>> On 06/10/13 18:04, Daniel Lezcano wrote:
+> >>>> On 06/10/2013 11:35 AM, Sebastian Hesselbarth wrote:
+> >>>>> This patch add a DT enabled driver for timers found on Marvell Orion
+> >>>>> SoCs
+> >>>>> (Kirkwood, Dove, Orion5x, and Discovery Innovation). It installs a
+> >>>>> free-
+> >>>>> running clocksource on timer0 and a clockevent source on timer1.
+> >>>>> Corresponding device tree documentation is also added.
+> >>>>>
+> >>>>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>>>
+> >>>> It looks good for me.
+> >>>>
+> >>>> Sebastian,
+> >>>>
+> >>>> shall I take it through my tree (it will go to Thomas's tree) ?
+> >>>
+> >>> Daniel,
+> >>>
+> >>> I checked MAINTAINERS and thought clocksource, i.e. patch 2/6, would go
+> >>> through Thomas' or John's tree? If you want to take it, I am fine with
+> >>> it but guess I am not the one to choose here ;)
+> >>
+> >> Actually, I am giving a hand to John and Thomas. I take the patches for
+> >> clockevents (and also for clocksource if both are mixed and John did not
+> >> pick it yet) and Thomas pulls from my tree [1].
+> >>
+> >> If there is no dependency with any other patches of your patchset, which
+> >> seems to be the case, I will queue it for 3.11.
+> > 
+> > Ok, thanks!
+> 
+> I have a lot of ^M in the patch ... dos2unix removed them but I am
+> wondering how they get there ?
 
---===============7771442502429973862==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="aC33ObtQAkNdOZ6b"
-Content-Disposition: inline
+He sent it with git-send-mail, how are you extracting it from
+Thunderbird?
 
+thx,
 
---aC33ObtQAkNdOZ6b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jun 07, 2013 at 08:26:14PM +0800, Nicolin Chen wrote:
-
-> +
-> +struct imx_priv {
-> +	int hp_gpio;
-> +	int hp_active_low;
-> +	int hp_status;
-> +	int amic_gpio;
-> +	int amic_active_low;
-> +	int amic_status;
-
-These are just recorded in the struct but never actually seem to be
-used?
-
-> +	struct platform_device *pdev;
-> +	struct snd_pcm_substream *first_stream;
-> +	struct snd_pcm_substream *second_stream;
-
-These aren't used any more.
-
---aC33ObtQAkNdOZ6b
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRtggTAAoJELSic+t+oim9Bt4P/0covOO1GK9wFGRpgDOlFGSW
-NbbodlteBWgPu5Pdy7tjbCoS53lSc53KonsqW0CFrgC4vGeGkfgnwdjIbN/TK+6i
-g+62sZYF7Dplmt6FMO1du9xsQdSk3QUb8Zoi90btdI3AVUEU8ar/10tm4S0lPzIl
-foUJghRisH9WhQlbL4tZtF8Xub5FV9M92F7Vox+sarPifKhFgRJFPIJyz4xCn4SI
-xKQhXEzVLUBOKmO+QC8z9EdXyB4PB5dT2V9CFfu7mY2ji37ddGiRapneMW84/grp
-T+wSju/1+3hhT0kDdOEP9UfUey6xteDYDSHvm7GgnouHGl0KQnM9H91t9iLAuFrM
-IetFM8ibQbaIqyK0fsWNLsp74vYE9dlTlTy8lKKR71flvRd/Yk2+F4lifsO+A7ZN
-877/AZfcyGBup3GUTrNj9GiBKIy7iXqirF5i2b2ZyihuxNrk2N0i1LzXIcUv5MlS
-DkDsgOMyR84gjlu+fkZFgJeuCznJonskBhytvxD6YtEOoloV9xRDjUpiVYt8F3pc
-hYyZqfAc9qaBtTmJzBnrUkvxN0PzoqAE5UXFZ3BM1cswxZmlgXS2jHEIBIbmlAjn
-BHFo/SoXvqmnLOaAROqceYoRsO4H2xE0XlwAy/FGVpZQXRZcmiPVOuVKc5j0JuVG
-yZ+LLN4uMGXNP2n1ByMx
-=49wv
------END PGP SIGNATURE-----
-
---aC33ObtQAkNdOZ6b--
-
---===============7771442502429973862==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============7771442502429973862==--
+Jason.
