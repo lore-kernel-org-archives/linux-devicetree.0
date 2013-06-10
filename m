@@ -1,68 +1,310 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v2 04/11] mfd:stixxxx-syscfg: Add ST System Configuration
- support.
-Date: Mon, 10 Jun 2013 16:51:41 +0100
-Message-ID: <51B5F60D.6050205@st.com>
-References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com> <CACRpkdaW2ALTWCB7Rd8m=aAGQwh3T_dJVncxJn_eXer4X3J6_g@mail.gmail.com> <51B5DA26.6070707@st.com> <2757224.FBxg98dX57@wuerfel>
-Reply-To: srinivas.kandagatla@st.com
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 2/6] clocksource: add Marvell Orion SoC timer
+Date: Mon, 10 Jun 2013 18:04:14 +0200
+Message-ID: <51B5F8FE.5090508@linaro.org>
+References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com> <1370856955-10514-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <2757224.FBxg98dX57@wuerfel>
+In-Reply-To: <1370856955-10514-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, "David S. Miller" <davem@davemloft.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Gallimore <stephen.gallimore@st.com>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Menefy <stuart.menefy@st.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@redhat.com>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the comments.
-On 10/06/13 15:02, Arnd Bergmann wrote:
-> On Monday 10 June 2013 14:52:38 Srinivas KANDAGATLA wrote:
->> On 10/06/13 14:16, Linus Walleij wrote:
->>> On Mon, Jun 10, 2013 at 11:22 AM, Srinivas KANDAGATLA
->>> <srinivas.kandagatla@st.com> wrote:
->>>
->>>> This mfd driver provides higher level inialization routines for various
->>>> IPs like Ethernet, USB, PCIE, SATA and so on. Also it provides way to
->>>> get to syscfg registers via standard regmap api which is usefull for
->>>> drivers like pinctrl.
->>>>
->>>> This patch adds support to ST System Configuration registers, which can
->>>> be configured by the drivers.
->>>>
->>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
->>>> CC: Stuart Menefy <stuart.menefy@st.com>
->>>> CC: Stephen Gallimore <stephen.gallimore@st.com>
->>>> CC: Linus Walleij <linus.walleij@linaro.org>
->>>> CC: Mark Brown <broonie@kernel.org>
->>>
->>> What is this driver doing that drivers/mfd/syscon.c is not already
->>> doing?
->>
->> As of now, the driver is very much similar to syscon + some additional
->> functionality, but we are planning to use this file to add higher level
->> functions to configure different IPs like ethernet, usb, power, reset
->> and so on which are very much specific to ST System Configuration Registers.
-> 
-> I was expecting that you'd actually interface with the syscon code and
-> build on top, rather than copy it.
-> 
-I did not like the copying either, on the other hand I don't want to
-pollute the syscon code.
+On 06/10/2013 11:35 AM, Sebastian Hesselbarth wrote:
+> This patch add a DT enabled driver for timers found on Marvell Orion =
+SoCs
+> (Kirkwood, Dove, Orion5x, and Discovery Innovation). It installs a fr=
+ee-
+> running clocksource on timer0 and a clockevent source on timer1.
+> Corresponding device tree documentation is also added.
+>=20
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com=
+>
 
-As you said, I will make use of existing syscon and build "System
-configuration interface" on top of it and see how it look like. It will
-definitely get rid of lot of code duplication.
+It looks good for me.
 
-Thanks,
-srini
+Sebastian,
 
-> There are multiple ways of doing that, e.g. you could export a function
-> from syscon.c that you call to register the device node and then import
-> the regmap from syscon into your high-level driver again.
+shall I take it through my tree (it will go to Thomas's tree) ?
 
-> 
-> 	Arnd
-> 
-> 
+Thanks
+  -- Daniel
+
+> ---
+> Changelog:
+> v3->v4:
+> - export thread-safe access to TIMER_CTRL register to use with watchd=
+og
+> - remove IRQF_DISABLED and add .irq to clock event (Suggested by Dani=
+el Lezcano)
+>=20
+> Notes:
+> - This is only an update to clocksource driver, the remaining patches=
+ are
+>   not resent as they have not been changed.
+> - I will not rework orion watchdog driver for this patch set. It is w=
+ritten
+>   Kirkwood/Orion5x specific although it will also work on Dove and it=
+ is messing
+>   with shared registers. It has done it before, so I consider it brok=
+en anyway.
+>   I (or somebody else) will take care of proper watchdog later.
+> - An updated branch can be found on
+>   git://github.com/shesselba/linux-dove.git orion-irqchip-for-v3.11_v=
+4
+>=20
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Cc: Gregory Clement <gregory.clement@free-electrons.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  .../bindings/timer/marvell,orion-timer.txt         |   17 +++
+>  drivers/clocksource/Kconfig                        |    5 +
+>  drivers/clocksource/Makefile                       |    1 +
+>  drivers/clocksource/time-orion.c                   |  150 ++++++++++=
+++++++++++
+>  4 files changed, 173 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/timer/marvell,o=
+rion-timer.txt
+>  create mode 100644 drivers/clocksource/time-orion.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/timer/marvell,orion-ti=
+mer.txt b/Documentation/devicetree/bindings/timer/marvell,orion-timer.t=
+xt
+> new file mode 100644
+> index 0000000..62bb826
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/marvell,orion-timer.txt
+> @@ -0,0 +1,17 @@
+> +Marvell Orion SoC timer
+> +
+> +Required properties:
+> +- compatible: shall be "marvell,orion-timer"
+> +- reg: base address of the timer register starting with TIMERS CONTR=
+OL register
+> +- interrupt-parent: phandle of the bridge interrupt controller
+> +- interrupts: should contain the interrupts for Timer0 and Timer1
+> +- clocks: phandle of timer reference clock (tclk)
+> +
+> +Example:
+> +	timer: timer {
+> +		compatible =3D "marvell,orion-timer";
+> +		reg =3D <0x20300 0x20>;
+> +		interrupt-parent =3D <&bridge_intc>;
+> +		interrupts =3D <1>, <2>;
+> +		clocks =3D <&core_clk 0>;
+> +	};
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfi=
+g
+> index f151c6c..2404869 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -25,6 +25,11 @@ config DW_APB_TIMER_OF
+>  config ARMADA_370_XP_TIMER
+>  	bool
+> =20
+> +config ORION_TIMER
+> +	select CLKSRC_OF
+> +	select CLKSRC_MMIO
+> +	bool
+> +
+>  config SUN4I_TIMER
+>  	bool
+> =20
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makef=
+ile
+> index 8d979c7..d1e8d68 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_DW_APB_TIMER_OF)	+=3D dw_apb_timer_of.=
+o
+>  obj-$(CONFIG_CLKSRC_NOMADIK_MTU)	+=3D nomadik-mtu.o
+>  obj-$(CONFIG_CLKSRC_DBX500_PRCMU)	+=3D clksrc-dbx500-prcmu.o
+>  obj-$(CONFIG_ARMADA_370_XP_TIMER)	+=3D time-armada-370-xp.o
+> +obj-$(CONFIG_ORION_TIMER)	+=3D time-orion.o
+>  obj-$(CONFIG_ARCH_BCM2835)	+=3D bcm2835_timer.o
+>  obj-$(CONFIG_ARCH_MARCO)	+=3D timer-marco.o
+>  obj-$(CONFIG_ARCH_MXS)		+=3D mxs_timer.o
+> diff --git a/drivers/clocksource/time-orion.c b/drivers/clocksource/t=
+ime-orion.c
+> new file mode 100644
+> index 0000000..ad7df17
+> --- /dev/null
+> +++ b/drivers/clocksource/time-orion.c
+> @@ -0,0 +1,150 @@
+> +/*
+> + * Marvell Orion SoC timer handling.
+> + *
+> + * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + *
+> + * Timer 0 is used as free-running clocksource, while timer 1 is
+> + * used as clock_event_device.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/spinlock.h>
+> +#include <asm/sched_clock.h>
+> +
+> +#define TIMER_CTRL		0x00
+> +#define  TIMER0_EN		BIT(0)
+> +#define  TIMER0_RELOAD_EN	BIT(1)
+> +#define  TIMER1_EN		BIT(2)
+> +#define  TIMER1_RELOAD_EN	BIT(3)
+> +#define TIMER0_RELOAD		0x10
+> +#define TIMER0_VAL		0x14
+> +#define TIMER1_RELOAD		0x18
+> +#define TIMER1_VAL		0x1c
+> +
+> +#define ORION_ONESHOT_MIN	1
+> +#define ORION_ONESHOT_MAX	0xfffffffe
+> +
+> +static void __iomem *timer_base;
+> +static DEFINE_SPINLOCK(timer_ctrl_lock);
+> +
+> +/*
+> + * Thread-safe access to TIMER_CTRL register
+> + * (shared with watchdog timer)
+> + */
+> +void orion_timer_ctrl_clrset(u32 clr, u32 set)
+> +{
+> +	spin_lock(&timer_ctrl_lock);
+> +	writel((readl(timer_base + TIMER_CTRL) & ~clr) | set,
+> +		timer_base + TIMER_CTRL);
+> +	spin_unlock(&timer_ctrl_lock);
+> +}=20
+> +EXPORT_SYMBOL(orion_timer_ctrl_clrset);
+> +
+> +/*
+> + * Free-running clocksource handling.
+> + */
+> +static u32 notrace orion_read_sched_clock(void)
+> +{
+> +	return ~readl(timer_base + TIMER0_VAL);
+> +}
+> +
+> +/*
+> + * Clockevent handling.
+> + */
+> +static u32 ticks_per_jiffy;
+> +
+> +static int orion_clkevt_next_event(unsigned long delta,
+> +				   struct clock_event_device *dev)
+> +{
+> +	/* setup and enable one-shot timer */
+> +	writel(delta, timer_base + TIMER1_VAL);
+> +	orion_timer_ctrl_clrset(TIMER1_RELOAD_EN, TIMER1_EN);
+> +
+> +	return 0;
+> +}
+> +
+> +static void orion_clkevt_mode(enum clock_event_mode mode,
+> +			      struct clock_event_device *dev)
+> +{
+> +	if (mode =3D=3D CLOCK_EVT_MODE_PERIODIC) {
+> +		/* setup and enable periodic timer at 1/HZ intervals */
+> +		writel(ticks_per_jiffy - 1, timer_base + TIMER1_RELOAD);
+> +		writel(ticks_per_jiffy - 1, timer_base + TIMER1_VAL);
+> +		orion_timer_ctrl_clrset(0, TIMER1_RELOAD_EN | TIMER1_EN);
+> +	} else {
+> +		/* disable timer */
+> +		orion_timer_ctrl_clrset(TIMER1_RELOAD_EN | TIMER1_EN, 0);
+> +	}
+> +}
+> +
+> +static struct clock_event_device orion_clkevt =3D {
+> +	.name		=3D "orion_event",
+> +	.features	=3D CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_PERIODIC,
+> +	.shift		=3D 32,
+> +	.rating		=3D 300,
+> +	.set_next_event	=3D orion_clkevt_next_event,
+> +	.set_mode	=3D orion_clkevt_mode,
+> +};
+> +
+> +static irqreturn_t orion_clkevt_irq_handler(int irq, void *dev_id)
+> +{
+> +	orion_clkevt.event_handler(&orion_clkevt);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static struct irqaction orion_clkevt_irq =3D {
+> +	.name		=3D "orion_event",
+> +	.flags		=3D IRQF_TIMER,
+> +	.handler	=3D orion_clkevt_irq_handler,
+> +};
+> +
+> +static void __init orion_timer_init(struct device_node *np)
+> +{
+> +	struct clk *clk;
+> +	int irq;
+> +
+> +	/* timer registers are shared with watchdog timer */
+> +	timer_base =3D of_iomap(np, 0);
+> +	if (!timer_base)
+> +		panic("%s: unable to map resource\n", np->name);
+> +
+> +	clk =3D of_clk_get(np, 0);
+> +	if (IS_ERR(clk))
+> +		panic("%s: unable to get clk\n", np->name);
+> +	clk_prepare_enable(clk);
+> +
+> +	/* we are only interested in timer1 irq */
+> +	irq =3D irq_of_parse_and_map(np, 1);
+> +	if (irq <=3D 0)
+> +		panic("%s: unable to parse timer1 irq\n", np->name);
+> +
+> +	/* setup timer0 as free-running clocksource */
+> +	writel(~0, timer_base + TIMER0_VAL);
+> +	writel(~0, timer_base + TIMER0_RELOAD);
+> +	orion_timer_ctrl_clrset(0, TIMER0_RELOAD_EN | TIMER0_EN);
+> +	clocksource_mmio_init(timer_base + TIMER0_VAL, "orion_clocksource",
+> +			      clk_get_rate(clk), 300, 32,
+> +			      clocksource_mmio_readl_down);
+> +	setup_sched_clock(orion_read_sched_clock, 32, clk_get_rate(clk));
+> +
+> +	/* setup timer1 as clockevent timer */
+> +	if (setup_irq(irq, &orion_clkevt_irq))
+> +		panic("%s: unable to setup irq\n", np->name);
+> +
+> +	ticks_per_jiffy =3D (clk_get_rate(clk) + HZ/2) / HZ;
+> +	orion_clkevt.cpumask =3D cpumask_of(0);
+> +	orion_clkevt.irq =3D irq;
+> +	clockevents_config_and_register(&orion_clkevt, clk_get_rate(clk),
+> +					ORION_ONESHOT_MIN, ORION_ONESHOT_MAX);
+> +}
+> +CLOCKSOURCE_OF_DECLARE(orion_timer, "marvell,orion-timer", orion_tim=
+er_init);
+>=20
+
+
+--=20
+ <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for=
+ ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
