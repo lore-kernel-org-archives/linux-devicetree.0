@@ -1,141 +1,59 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 2/2] clk: exynos4: Add alias for cpufreq related clocks
-Date: Mon, 10 Jun 2013 20:53:09 +0200
-Message-ID: <3226068.I7g6oVyl1p@flatron>
-References: <1370517749-29892-1-git-send-email-tushar.behera@linaro.org> <2070978.AjQD2isvSl@flatron> <51B54B4F.3000503@linaro.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [RESEND PATCH V3 0/8] mmc_of_parse() adaptations, switch mvsdio
+ to mmc_of_parse()
+Date: Mon, 10 Jun 2013 21:05:23 +0200
+Message-ID: <20130610190523.GT2824@lunn.ch>
+References: <1370808858-32241-1-git-send-email-gmbnomis@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51B54B4F.3000503@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tushar Behera <tushar.behera@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, kgene.kim@samsung.com, patches@linaro.org, swarren@wwwdotorg.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, broonie@kernel.org, l.majewski@samsung.com, s.nawrocki@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1370808858-32241-1-git-send-email-gmbnomis@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Simon Baatz <gmbnomis@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Chris Ball <cjb@laptop.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 10 of June 2013 09:13:11 Tushar Behera wrote:
-> On 06/08/2013 05:20 PM, Tomasz Figa wrote:
-> > On Thursday 06 of June 2013 16:52:28 Tushar Behera wrote:
-> >> cpufreq driver for EXYNOS4 based SoCs are not platform drivers, hence
-> >> we cannot currently pass the clock names through a device tree node.
-> >> Instead, we need to make them available through a global alias.
-> >> 
-> >> 'armclk', 'moutcore', 'mout_mpll' and 'mout_apll' clock aliases are
-> >> defined.
-> >> 
-> >> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
-> >> ---
-> >> 
-> >>  drivers/clk/samsung/clk-exynos4.c |   10 +++++-----
-> >>  1 file changed, 5 insertions(+), 5 deletions(-)
-> >> 
-> >> diff --git a/drivers/clk/samsung/clk-exynos4.c
-> >> b/drivers/clk/samsung/clk-exynos4.c index 3c1f888..1e4258a 100644
-> >> --- a/drivers/clk/samsung/clk-exynos4.c
-> >> +++ b/drivers/clk/samsung/clk-exynos4.c
-> >> @@ -356,8 +356,8 @@ struct samsung_fixed_rate_clock
-> >> exynos4210_fixed_rate_clks[] __initdata = {
-> >> 
-> >>  /* list of mux clocks supported in all exynos4 soc's */
-> >>  struct samsung_mux_clock exynos4_mux_clks[] __initdata = {
-> >> 
-> >> -	MUX_F(mout_apll, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
-> >> -			CLK_SET_RATE_PARENT, 0),
-> >> +	MUX_FA(mout_apll, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
-> >> +			CLK_SET_RATE_PARENT, 0, "mout_apll"),
-> >> 
-> >>  	MUX(none, "mout_hdmi", mout_hdmi_p, SRC_TV, 0, 1),
-> >>  	MUX(none, "mout_mfc1", sclk_evpll_p, SRC_MFC, 4, 1),
-> >>  	MUX(none, "mout_mfc", mout_mfc_p, SRC_MFC, 8, 1),
-> >> 
-> >> @@ -385,9 +385,9 @@ struct samsung_mux_clock exynos4210_mux_clks[]
-> >> __initdata = { MUX(none, "mout_g2d", mout_g2d_p, E4210_SRC_IMAGE, 8,
-> >> 1),
-> >> 
-> >>  	MUX(none, "mout_fimd1", group1_p4210, E4210_SRC_LCD1, 0, 4),
-> >>  	MUX(none, "mout_mipi1", group1_p4210, E4210_SRC_LCD1, 12, 4),
-> >> 
-> >> -	MUX_A(sclk_mpll, "sclk_mpll", mout_mpll_p, SRC_CPU, 8, 1,
-> > 
-> > "sclk_mpll"),
-> > 
-> >> +	MUX_A(sclk_mpll, "sclk_mpll", mout_mpll_p, SRC_CPU, 8, 1,
-> > 
-> > "mout_mpll"),
-> > 
-> > This is not fully compliant with patch description. I'm not sure if
-> > there weren't any users of the sclk_mpll alias.
+On Sun, Jun 09, 2013 at 10:14:10PM +0200, Simon Baatz wrote:
+> Hi,
 > 
-> As of now, there are no other users of sclk_mpll other than a debug
-> print within the same file.
-
-OK.
-
-> >>  	MUX_A(mout_core, "mout_core", mout_core_p4210,
-> >> 
-> >> -			SRC_CPU, 16, 1, "mout_core"),
-> >> +			SRC_CPU, 16, 1, "moutcore"),
-> > 
-> > IMHO those typo corrections are not part of this patch.
+> 	RESEND V3:
+> 	- Dropped patches 9 and 10, they are part of linux-next already
+> 	NB: patch 7 as well, but I did not want to change the numbering
 > 
-> But the older drivers (before migration to CCF) were using the clock
-> "moutcore" (not "mout_core").
-
-I mean, this should be placed in a separate patch, as this change is not 
-"adding alias for cpufreq related clocks", but rather fixing a typo.
-
-> >>  	MUX_A(sclk_vpll, "sclk_vpll", sclk_vpll_p4210,
-> >>  	
-> >>  			SRC_TOP0, 8, 1, "sclk_vpll"),
-> >>  	
-> >>  	MUX(mout_fimc0, "mout_fimc0", group1_p4210, SRC_CAM, 0, 4),
-> >> 
-> >> @@ -534,7 +534,7 @@ struct samsung_div_clock exynos4_div_clks[]
-> >> __initdata = { DIV(none, "div_spi_pre2", "div_spi2", DIV_PERIL2, 8,
-> >> 8),
-> >> 
-> >>  	DIV(none, "div_audio1", "mout_audio1", DIV_PERIL4, 0, 4),
-> >>  	DIV(none, "div_audio2", "mout_audio2", DIV_PERIL4, 16, 4),
-> >> 
-> >> -	DIV_A(arm_clk, "arm_clk", "div_core2", DIV_CPU0, 28, 3,
-> > 
-> > "arm_clk"),
-> > 
-> >> +	DIV_A(arm_clk, "arm_clk", "div_core2", DIV_CPU0, 28, 3, "armclk"),
-> > 
-> > Same here.
+> 	V3 changes:
+> 	- Patch 01/10: Added EPROBE_DEFER case to mmc_of_parse()
+> 	- Added Acked-By to (unmodified) patches 02 and 03.
 > 
-> Same as above, "armclk" is used elsewhere, not "arm_clk".
+> 	V2 changes:
+> 	- Converted mvsdio to use mmc_of_parse()
+> 	- Adapted DTS files using mvsdio accordingly
+> 	- Changed mmc_of_parse() to return errors to the caller
 > 
-> >>  	DIV_A(sclk_apll, "sclk_apll", "mout_apll",
-> >>  	
-> >>  			DIV_CPU0, 24, 3, "sclk_apll"),
-> >>  	
-> >>  	DIV_F(none, "div_mipi_pre0", "div_mipi0", DIV_LCD0, 20, 4,
-> > 
-> > Basically I don't like the idea of those global aliases, which IMHO
-> > should be completely dropped. Someone might not like it, but I'd go
-> > with the conversion of our cpufreq drivers to platform drivers
-> > instead, which could receive things like clocks and regulators using
-> > DT-based lookups.
-> I agree. Migration of exynos-cpufreq driver as a platform driver is the
-> best solution. But unless someone picks up that work, cpufreq support
-> for EXYNOS4 based systems is broken because of the incorrect clock
-> aliases.
-
-We have patches for this in our internal tree. I will clean them up a bit 
-and submit soon.
-
-Thanks,
-Tomasz
-
-> > This is especially important in case of regulators, which currently
-> > have to be hacked by using vdd_arm as regulator name in device tree.
-> Agree.
+> While adding DT support for the Sheevaplugs by Globalscale Technologies
+> (Kirkwood), it turned out that the DT binding of mvsdio lacked features to
+> properly support the hardware (active high/low of CD and WP pins could not
+> be described in DT).
 > 
-> > CCing people that might be interested in this topic.
-> > 
-> > Best regards,
-> > Tomasz
+> This is standard functionality provided by the mmc_of_parse() helper
+> function.  However, mmc_of_parse() may allocate GPIO lines.  If the
+> allocation fails, it outputs an error, but does not return an error to its
+> caller.  Therefore, a proposal to handle errors in mmc_of_parse() is made.
+> This also allows to handle the EPROBE_DEFER case when GPIO is not loaded
+> yet.
 > 
-> Thanks.
+> The patch set is structured as follows:
+> 
+> 1   Adapt mmc_of_parse() to return errors
+> 2-6 Handle errors in current drivers using mmc_of_parse() (compile tested
+>     only)
+> 7-8 Convert mvsdio and respective dts files to mmc_of_parse() (tested on
+>     kirkwood)
+
+Hi Simon
+
+Tested-by: Andrew Lunn <andrew@lunn.ch>
+
+I tested on kirkwood topkick with DT. SDIO wifi device is found.
+
+  Andrew
