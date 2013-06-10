@@ -1,39 +1,64 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v4 2/6] clocksource: add Marvell Orion SoC timer
-Date: Mon, 10 Jun 2013 18:31:13 +0200
-Message-ID: <51B5FF51.6090708@gmail.com>
-References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com> <1370856955-10514-1-git-send-email-sebastian.hesselbarth@gmail.com> <51B5F8FE.5090508@linaro.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: add dtsi for palmas
+Date: Mon, 10 Jun 2013 10:29:18 -0600
+Message-ID: <51B5FEDE.5070900@wwwdotorg.org>
+References: <1370855059-5342-1-git-send-email-j-keerthy@ti.com>
+ <1370855059-5342-2-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51B5F8FE.5090508@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370855059-5342-2-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/13 18:04, Daniel Lezcano wrote:
-> On 06/10/2013 11:35 AM, Sebastian Hesselbarth wrote:
->> This patch add a DT enabled driver for timers found on Marvell Orion SoCs
->> (Kirkwood, Dove, Orion5x, and Discovery Innovation). It installs a free-
->> running clocksource on timer0 and a clockevent source on timer1.
->> Corresponding device tree documentation is also added.
->>
->> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->
-> It looks good for me.
->
-> Sebastian,
->
-> shall I take it through my tree (it will go to Thomas's tree) ?
+On 06/10/2013 03:04 AM, J Keerthy wrote:
+> Adds palmas mfd and palmas regulator nodes.
 
-Daniel,
+Nits:
 
-I checked MAINTAINERS and thought clocksource, i.e. patch 2/6, would go
-through Thomas' or John's tree? If you want to take it, I am fine with
-it but guess I am not the one to choose here ;)
+Well, you're really adding files that provide the nodes, not the nodes
+themselves.
 
-Sebastian
+Palmas and MFD should be correctly capitalized.
 
+> diff --git a/arch/arm/boot/dts/palmas.dtsi b/arch/arm/boot/dts/palmas.dtsi
 
+> +&palmas {
+...
+> +	palmas_pmic {
+...
+> +		ti,ldo6-vibrator;
+
+Isn't that board-specific? I don't know the HW well enough to say, but I
+assume that since there's a property, the whole point must be that some
+boards want it set and some don't.
+
+> +		regulators {
+> +			smps123_reg: smps123 {
+> +				regulator-name = "smps123";
+> +			};
+
+So the node labels here duplicate those in omap5-uevm.dts in patch 2/2.
+While dtc allows this, I don't think there's much point duplicating the
+labels. I'd tend to only put the labels in omap5-uevm.dts and not put
+them here. That will completely avoid the possibility of the labels in
+this file from conflicting with any other labels in any top-level
+board.dts file.
+
+I also wonder if this file is actually terribly useful. The only thing
+that this file provides is the regulator-name property. It seems simpler
+just to put that into each board.dts file. The added advantage of doing
+that, is that if a board doesn't use a particular regulator, the node
+won't appear, and the regulator won't get registered.
