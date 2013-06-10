@@ -1,47 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 6/6] ARM: dts: Add pcie controller node for Samsung EXYNOS5440 SoC
-Date: Mon, 10 Jun 2013 17:22:09 +0200
-Message-ID: <201306101722.10146.arnd@arndb.de>
-References: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com> <201306071943.18407.arnd@arndb.de> <000001ce65b5$e45477f0$acfd67d0$@samsung.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH REBASE] i2c-designware: make SDA hold time configurable
+Date: Mon, 10 Jun 2013 17:29:55 +0200
+Message-ID: <20130610152954.GE2987@katana>
+References: <20130514110745.GA10906@intel.com>
+ <1368536642-7158-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <000001ce65b5$e45477f0$acfd67d0$@samsung.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-arm-kernel@lists.infradead.org, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IU5/I01NYhRvwH70"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1368536642-7158-1-git-send-email-christian.ruppert@abilis.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 10 June 2013, Jingoo Han wrote:
-> On Saturday, June 08, 2013 2:43 AM, Arnd Bergmann wrote:
-> For multiple domains, how can I fix the DT properties?
 
-Domains are a Linux concept, you have to pick a new domain number for each
-struct hw_pci you register.
- 
-> Current DT properties are as below:
-> 
-> +	pcie0@40000000 {
-> +		compatible = "samsung,exynos5440-pcie";
-> +		reg = <0x40000000 0x4000
-> +			0x290000 0x1000
-> +			0x270000 0x1000
-> +			0x271000 0x40>;
-> +		interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		device_type = "pci";
-> +		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00200000   /* configuration space */
-> +			  0x81000000 0 0	  0x40200000 0 0x00004000   /* downstream I/O */
-> +			  0x82000000 0 0	  0x40204000 0 0x10000000>; /* non-prefetchable memory */
-> +	};
+--IU5/I01NYhRvwH70
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-An unrelated comment: your first "reg" field seems to overlap with part
-of your configuration space. Is that intentional?
+On Tue, May 14, 2013 at 03:04:02PM +0200, Christian Ruppert wrote:
+> This patch makes the SDA hold time configurable through device tree.
+>=20
+> [rebased to i2c-current/i2c-next/mainline-3.10-rc1]
+>=20
+> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+> Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
 
-Also, shouldn't your memory space end on a 256MB boundary, rather than
-extend up to 0x50203fff?
+Hmm, I really have problems adding a generic property. I need to better
+understand why this is needed? What is the usecase? Can't a safe value
+be calculated depending on the bus-speed? Is there a public datasheet
+available somewhere?
 
-	Arnd
+Thanks,
+
+   Wolfram
+
+
+--IU5/I01NYhRvwH70
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRtfDyAAoJEBQN5MwUoCm224EP/Rf3V7bWv+RErWc9/UrPKlvS
+fkwU6fckWq2DVPn7L85VcqBIshBoNa37KlXX/R8ldTXe5w17LdrJB9RGyitDRUGn
+d7TfRO4f9pUrn+eNbTxMoFMh0nh6nVzI2LARyWTDcI4qfP3DN4JvFpI/CaXRQBpW
+lud+Mt9xB/fNvTP19pjFWHqslRoIFTk4NUOqWFaOJ3n6mzh9t8udsTZ8Yqk19bWC
+CEWTuR2MQkWK1DGjYhSaBcQcIankCDv40m5700DQ1AdG7OfILSDrD9eO+P2BmS52
+i80TvqcFpADIo1ccZKI3AmqjrbjRU8Dew/9Z6qsPX1D86Ee30Ou/FhuiUAE6uY1T
+6sDLUOr7BJueEeRNoBv29kY6NHB3kVw9ghNynr+xrC3fVhgFnyE/TIfP/eX8bF6P
+Y8eyakaOocbScfm/WePz2yLGzTVrkyPYHIagPMiEtY0CsuWkq51VfUGm3Qf1M5rT
+DeAFfdZghKpWzTTmCZvH+HwTSMym07AJK3khrvs+IKtptSH0MwefOcu7XKyLDkTH
+pSoJfSSGMjGUP1LbsDY0xAHcOjQ2fod3dhghJdE0khGdBt8lvDohLnnZ6NUWa28H
+3FFsOkDS+3iJsrbNADinPn8WIa6W3A+080CSpWsoubE1Z6OJAw/vmV5q+jtnpQ66
+/fOtoxe6eXcSTm5cfjFK
+=3Uig
+-----END PGP SIGNATURE-----
+
+--IU5/I01NYhRvwH70--
