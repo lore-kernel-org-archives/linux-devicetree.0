@@ -1,25 +1,39 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] ARM: dts: add dtsi for palmas
-Date: Mon, 10 Jun 2013 10:22:22 -0600
-Message-ID: <51B5FD3E.9050401@wwwdotorg.org>
-References: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>,<51B23AD5.8060006@wwwdotorg.org> <DC88CAD03C0052499C1907B327FC63229EAA39@DBDE04.ent.ti.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v4 2/6] clocksource: add Marvell Orion SoC timer
+Date: Mon, 10 Jun 2013 18:31:13 +0200
+Message-ID: <51B5FF51.6090708@gmail.com>
+References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com> <1370856955-10514-1-git-send-email-sebastian.hesselbarth@gmail.com> <51B5F8FE.5090508@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DC88CAD03C0052499C1907B327FC63229EAA39@DBDE04.ent.ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "J, KEERTHY" <j-keerthy@ti.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "lee.jones@linaro.org" <lee.jones@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51B5F8FE.5090508@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/2013 10:03 PM, J, KEERTHY wrote:
-> Hi Stephen,
-> 
-> Thanks for the review comments.
+On 06/10/13 18:04, Daniel Lezcano wrote:
+> On 06/10/2013 11:35 AM, Sebastian Hesselbarth wrote:
+>> This patch add a DT enabled driver for timers found on Marvell Orion SoCs
+>> (Kirkwood, Dove, Orion5x, and Discovery Innovation). It installs a free-
+>> running clocksource on timer0 and a clockevent source on timer1.
+>> Corresponding device tree documentation is also added.
+>>
+>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>
+> It looks good for me.
+>
+> Sebastian,
+>
+> shall I take it through my tree (it will go to Thomas's tree) ?
 
-Cam you please fix your email client to quote the messages you're
-replyiing to correctly? In the message you sent, there's no
-differentiation between what I originally wrote and you quoted, vs. the
-new text you wrote as a response. That makes the message very confusing
-to read...
+Daniel,
+
+I checked MAINTAINERS and thought clocksource, i.e. patch 2/6, would go
+through Thomas' or John's tree? If you want to take it, I am fine with
+it but guess I am not the one to choose here ;)
+
+Sebastian
+
+
