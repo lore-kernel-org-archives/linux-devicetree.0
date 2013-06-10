@@ -1,65 +1,35 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 2/6] clocksource: add Marvell Orion SoC timer
-Date: Mon, 10 Jun 2013 19:25:41 +0200
-Message-ID: <20130610172541.GA21290@lunn.ch>
-References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1370856955-10514-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Chen Guangyu-B42378 <B42378@freescale.com>
+Subject: Re: [PATCH V5] ASoC: fsl: add imx-wm8962 machine driver
+Date: Mon, 10 Jun 2013 17:44:18 +0000
+Message-ID: <E31481825E4C03459FC878EE97CB2EFD02FE6AC0@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <1370607974-6895-1-git-send-email-b42378@freescale.com>,
+ <20130610170838.GP1403@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1370856955-10514-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130610170838.GP1403@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "festevam@gmail.com" <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2013 at 11:35:55AM +0200, Sebastian Hesselbarth wrote:
-> This patch add a DT enabled driver for timers found on Marvell Orion SoCs
-> (Kirkwood, Dove, Orion5x, and Discovery Innovation). It installs a free-
-> running clocksource on timer0 and a clockevent source on timer1.
-> Corresponding device tree documentation is also added.
-> 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> ---
-> Changelog:
-> v3->v4:
-> - export thread-safe access to TIMER_CTRL register to use with watchdog
-> - remove IRQF_DISABLED and add .irq to clock event (Suggested by Daniel Lezcano)
-> 
-> Notes:
-> - This is only an update to clocksource driver, the remaining patches are
->   not resent as they have not been changed.
-> - I will not rework orion watchdog driver for this patch set. It is written
->   Kirkwood/Orion5x specific although it will also work on Dove and it is messing
->   with shared registers. It has done it before, so I consider it broken anyway.
->   I (or somebody else) will take care of proper watchdog later.
-> - An updated branch can be found on
->   git://github.com/shesselba/linux-dove.git orion-irqchip-for-v3.11_v4
 
-Hi Sebastian
+On Tue, Jun 11, Mark Brown wrote:
+> These are just recorded in the struct but never actually seem to be
+> used?
 
-You can add a
+hmm..I was thinking if I should put the jack detection code into this patch.
+After the drop decision, I forgot to remove them from the struct. 
+Okay...I will remove them in v6 to make patch be more clear.
 
-Tested-by: Andrew Lunn <andrew@lunn.ch>
-
-I tested on my kirkwood QNAP.
-
-           CPU0
-  2:       6062  bridge-interrupt-ctrl  orion_event
-  9:          0  f1010140.gpio  Reset
- 15:          0  f1010140.gpio  USB Copy
- 24:        106  main-interrupt-ctrl  ehci_hcd:usb1
- 25:       2463  main-interrupt-ctrl  sata_mv
- 26:          0  main-interrupt-ctrl  f1030000.crypto
- 27:          2  main-interrupt-ctrl  f1060800.xor
- 28:          2  main-interrupt-ctrl  f1060800.xor
- 29:         71  main-interrupt-ctrl  mv64xxx_i2c
- 30:          2  main-interrupt-ctrl  f1060900.xor
- 31:          2  main-interrupt-ctrl  f1060900.xor
- 32:         41  main-interrupt-ctrl  eth0
- 33:       1317  main-interrupt-ctrl  serial
- 75:        745  main-interrupt-ctrl  f1072004.mdio-bus
-Err:          0                                              
-
-      Andrew
+Thank you.
