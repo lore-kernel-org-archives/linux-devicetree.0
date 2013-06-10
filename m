@@ -1,39 +1,73 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 06/11] ARM:stixxxx: Add STiH415 SOC support
-Date: Mon, 10 Jun 2013 13:08:35 +0200
-Message-ID: <51B5B3B3.3040408@monstr.eu>
-References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com> <1370856381-6644-1-git-send-email-srinivas.kandagatla@st.com>
-Reply-To: monstr@monstr.eu
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
+Date: Mon, 10 Jun 2013 12:16:07 +0100
+Message-ID: <20130610111601.GA3674@localhost.localdomain>
+References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com>
+ <51B0BC80.9040007@wwwdotorg.org>
+ <CAAVeFu+by44HnOzv_85kwgeCx5b9TxiMhr27x69QcUj9GRbk8A@mail.gmail.com>
+ <51B20B46.4030501@wwwdotorg.org>
+ <CAAVeFu+UMZikdWO20c9chvBcieOAUgOhz-nTEUpevFWnPNC_ZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2RIBGMVDHRMKBWPVGMWTS"
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1370856381-6644-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Cc: linux-arm-kernel@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Thomas Gleixner <tglx@linutronix.de>, Tony Prisk <linux@prisktech.co.nz>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFu+UMZikdWO20c9chvBcieOAUgOhz-nTEUpevFWnPNC_ZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2RIBGMVDHRMKBWPVGMWTS
-Content-Type: text/plain; charset=yes
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jun 10, 2013 at 05:11:15PM +0900, Alexandre Courbot wrote:
+> On Sat, Jun 8, 2013 at 1:33 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> >>> I think we need to separate the concept of support for *a* secure
+> >>> monitor, from support for a *particular* secure monitor.
+> >>
+> >> Agreed. In this case, can we assume that support for a specific secure
+> >> monitor is not arch-specific, and that this patch should be moved
+> >> outside of arch-tegra and down to arch/arm? In other words, the ABI of
+> >> a particular secure monitor should be the same no matter the chip,
+> >> shouldn't it?
+> >
+> > I would like to believe that the Trusted Foundations monitor had the
+> > same ABI irrespective of which Soc it was running on. However, I have
+> > absolutely no idea at all if that's true. Even if there's some common
+> > subset of the ABI that is identical across all SoCs, I wouldn't be too
+> > surprised if there were custom extensions for each different SoC, or
+> > just perhaps even each product.
+> >
+> > Can you research this and find out the answer?
+> 
+> Will do. Information about TF is scarce unfortunately.
 
+I don't have full information on this topic, but there is certainly no
+common standard ABI.  Every example I've seen is different so far,
+though some will be less different than others.
 
+ARM are baking some proposabls for that, but that doesn't change the
+existing software, and it's impossible to predict how rapidly a new
+standards proposal would be adopted.  So unfortunately, diversity is
+something we will have to cope with for the foreseeable future.
 
-------enig2RIBGMVDHRMKBWPVGMWTS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+> > What we can always do is make a compatible property that lists
+> > everything[1], and have the driver match on the most specific value for
+> > now, but relax the driver's matching later if it turns out that the ABI
+> > is indeed common.
+> >
+> > [1] That'd need to be at least secure OS name, and secure OS version.
+> > Perhaps the SoC and board data can be deduced from the DT's top-level
+> > compatible properties; nvidia,tegra114-shield, nvidia,tegra114?
+> 
+> They can probably, but in theory nothing prevents a board from coming
+> with different secure monitors (or none at all). In this case, just
+> having the board name might not be enough.
+> 
+> Having a proper node for the firmware like David and Tomasz suggested
+> seems to be the best way to make sure we cover all cases - I think I
+> will try to do it this way for the next version, and hopefully come
+> with a binding that is useful for everyone.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Since existing SMC based firmwares are not safely probeable, describing
+what's there using DT feels like the best bet for now.
 
-iEYEARECAAYFAlG1s7MACgkQykllyylKDCFrTQCfSXUMnW3J/Ur1vRX6a/i+gFpP
-06AAn2Nw2WRnXCC8iQbDSYce0R61uJoQ
-=fh70
------END PGP SIGNATURE-----
-
-------enig2RIBGMVDHRMKBWPVGMWTS--
+Cheers
+---Dave
