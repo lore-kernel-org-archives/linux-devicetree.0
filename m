@@ -1,48 +1,66 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
- tree driver
-Date: Mon, 10 Jun 2013 14:18:17 +0200
-Message-ID: <CACRpkdbBsXB+9wN0oshfZB8Xady9G_wu9d8UkgA-bYqQe=8Mpw@mail.gmail.com>
-References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org>
-	<20130607213241.GB3047@katana>
+Subject: Re: [PATCH 2/2] ARM: nomadik: add the new clocks to the device tree
+Date: Mon, 10 Jun 2013 14:29:17 +0200
+Message-ID: <CACRpkdYwRuvY5DLuG6aBbNsf8S7jDN4BqQfmeZsQk_aCa33ZbA@mail.gmail.com>
+References: <1370775348-7440-1-git-send-email-linus.walleij@linaro.org>
+ <1370775348-7440-2-git-send-email-linus.walleij@linaro.org>
+ <201306091621.02506.arnd@arndb.de>
+ <CAJAp7OiYZx46aWRsXc+CmS+5F0STz5P+rdYnJEoaRRMUnkD1Cg@mail.gmail.com>
+ <CAJAp7Oji=+9PqwGkF84BRaxkFeeO_kWoY378Ur-A5z6G9Z5xSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130607213241.GB3047@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAJAp7Oji=+9PqwGkF84BRaxkFeeO_kWoY378Ur-A5z6G9Z5xSQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 7, 2013 at 11:32 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> ...
->> I2C devices probed from device tree should subsequently be
->> fixed to handle the case where of_match_table() is
->> used (I think none of them do that today), and platforms should
->> fix their device trees to use compatible strings for I2C devices
->> instead of setting the name to Linux device driver names as is
->> done in multiple cases today.
+On Mon, Jun 10, 2013 at 7:12 AM, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org> wrote:
+
+> While hacking on clock support for msm8960 the other day I did the
+> same thing; I figured that providing clocks with descriptive names
+> would be of great benefit while reading the dts.
 >
-> I guess your solution is the least intrusive one. Still, it could happen
-> that of_match_table is scanned three times (by driver core, i2c layer,
-> and i2c driver) which is IMO an indication to look for a more elegant
-> solution tp find out what really matched?
+> I had my uart device setup with:
+> clocks = <&gsbi8_uart_clk>, <&gsbi8_p_clk>;
+>
+> However, all currently present clock bindings follow the pattern
+> described by Arnd.
+> Following this pattern my uart would be setup as:
+> clocks = <&clks 42>, <&clks 44>;
+>
+> Needless to say there is no way to make sense of this without
+> consulting the specific binding documentation. So, although your way
+> of setting up the clock binding is not the standard way I do prefer
+> it, but it comes with plenty extra nodes in the tree.
 
-I think that is a generic problem with the device tree
-being completely stateless, and rather a comment on the
-of_match_device() intrinsics being inelegant than on this
-patch?
+I agree. In my case this was just a side-effect of the different
+bits in the register having different parents, so the common pattern
+could not be used, but when looking at the end result it's strikingly
+more readable than the cryptic numbers.
 
-Do you see it as a blocker for the patch?
+However it is possible to mitigate the latter by using the new DTS
+preprocessor support like so:
 
-What happens before this patch is that instead of looping
-over the of_match_table, the id_table is always iterated
-to the end also in the DT case, yielding NULL as the last
-argument to driver->probe() anyway.
+#include <dt-bindings/clk/my-clocks.h>:
 
-Maybe the OF people have some comments on this...
-I cannot really see how it could be any different given
-the way the FDT works :-/
+/* Clock IDs */
+#define GSBI8_UART_CLK 42
+#define GSBI8_P_CLK 44
+
+(...)
+clocks = <&clks GSBI8_UART_CLK>, <&clks GSBI8_P_CLK>;
 
 Yours,
 Linus Walleij
