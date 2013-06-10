@@ -1,50 +1,105 @@
-From: Oded Gabbay <ogabbay@advaoptical.com>
-Subject: Re: [PATCH 3/3] MMC: FSL SDHC: Add support for hard-wired (permanent)
- card. Kernel version 3.4.47
-Date: Mon, 10 Jun 2013 16:43:12 +0300
-Message-ID: <51B5D7F0.4050708@advaoptical.com>
-References: <1370155128-680-1-git-send-email-ogabbay@advaoptical.com> <51B57266.9050107@de.bosch.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v2 02/11] clocksource:global_timer: Add ARM global timer
+ support.
+Date: Mon, 10 Jun 2013 14:41:58 +0100
+Message-ID: <51B5D7A6.1020101@st.com>
+References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com>
+ <1370856087-6452-1-git-send-email-srinivas.kandagatla@st.com>
+ <CACRpkdbQCRKBzRF4HzNsXHwXCLJJcFZ9T36GPmmYsnX1OfgGRg@mail.gmail.com>
+Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51B57266.9050107@de.bosch.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dirk Behme <dirk.behme@de.bosch.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "cjb@laptop.org" <cjb@laptop.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob@landley.net" <rob@landley.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdbQCRKBzRF4HzNsXHwXCLJJcFZ9T36GPmmYsnX1OfgGRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Stephen Gallimore <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew
 List-Id: devicetree@vger.kernel.org
 
-Hi Dirk,
+On 10/06/13 14:13, Linus Walleij wrote:
+> On Mon, Jun 10, 2013 at 11:21 AM, Srinivas KANDAGATLA
+> <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org> wrote:
 
-You are absolutely right.
-I will revise my patch series to reflect the change.
-Basically, I will call the generic mmc_of_parse from the probe function 
-of Freescale's driver.
-That will handle all the additional capabilities.
+>>
+>> Signed-off-by: Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+>> CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> CC: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> CC: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> CC: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+>> CC: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> 
+> This is starting to look very good!
+> 
+> (...)
+Thankyou.
+>> +static int __cpuinit gt_clockevents_init(struct clock_event_device *clk)
+>> +{
+>> +       struct clock_event_device **this_cpu_clk;
+>> +       int cpu = smp_processor_id();
+>> +
+>> +       clk->name = "ARM global timer clock event";
+>> +       clk->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
+>> +       clk->set_mode = gt_clockevent_set_mode;
+>> +       clk->set_next_event = gt_clockevent_set_next_event;
+>> +       this_cpu_clk = __this_cpu_ptr(gt_evt);
+>> +       *this_cpu_clk = clk;
+>> +       clk->cpumask = cpumask_of(cpu);
+>> +       clk->irq = gt_ppi;
+>> +       clockevents_config_and_register(clk, gt_clk_rate,
+>> +                                       0, 0xffffffff);
+> 
+> What do you mean with being able to set event on
+> 0?
+Its a bit of over do from me.. I will change it to what you suggested...
 
-Thanks
-Oded
+> 
+> This should most probably be:
+> 
+> 
+> clockevents_config_and_register(clk, gt_clk_rate,
+>                                       1, 0xffffffff);
+> 
+> (...)
+>> +static struct clk *gt_get_clock(void)
+>> +{
+>> +       struct clk *clk;
+>> +       int err;
+>> +
+>> +       clk = clk_get_sys("gt", NULL);
+>> +       if (IS_ERR(clk)) {
+>> +               pr_err("global-timer: clock not found: %ld\n", PTR_ERR(clk));
+>> +               return clk;
+>> +       }
+> (...)
+>> +       clk = of_clk_get(np, 0);
+>> +       if (!IS_ERR(clk))
+>> +               clk_register_clkdev(clk, NULL, "gt");
+> 
+> Well that was clever.
+> 
+> Isn't it better to pass a struct device_node *np around and have that as
+> NULL in the non-DT boot path?
+I will try it and see how it will look.
 
-On 06/10/2013 09:29 AM, Dirk Behme wrote:
-> On 02.06.2013 08:38, Oded Gabbay wrote:
->> This patch adds support of recognizing hard-wired (permanent) cards
->> to Freescale's SDHC host driver. This is done by adding the option
->> "fsl,card-wired" to the SDHC device-tree entry. Detection of this
->> option is done in the probe function. Update documentation in file
->> fsl-esdhc.txt
->
-> Why don't you want to introduce "fsl,card-wired"? Why don't you use 
-> "non-removable"?
->
-> To my understanding the patch
->
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=7f217794ffa72f208a250b79ab0b7ea3de19677f 
->
->
-> explicitly removed "fsl,card-wired". So I don't think re-introducing 
-> it is a good idea?
->
-> Best regards
->
-> Dirk
+Thanks,
+srini
+> 
+> (Maybe somebody in the community asked you to do this, then I
+> will live with it.)
 
+> 
+> Yours,
+> Linus Walleij
+> 
+> 
