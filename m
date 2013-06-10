@@ -1,112 +1,35 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 1/6] GPIO: xilinx: Simplify driver probe function
-Date: Mon, 10 Jun 2013 11:02:24 +0200
-Message-ID: <51B59620.5030506@monstr.eu>
-References: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
-Reply-To: monstr@monstr.eu
+From: J Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v2 0/2]  ARM: dts: Add palmas dtsi
+Date: Mon, 10 Jun 2013 14:34:17 +0530
+Message-ID: <1370855059-5342-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2ASFIGIGJITCVUTELBTEF"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, grant.likely@secretlab.ca, swarren@wwwdotorg.org, swarren@nvidia.com, sameo@linux.intel.com, gg@slimlogic.co.uk, lee.jones@linaro.org, J Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2ASFIGIGJITCVUTELBTEF
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+This patch series adds palmas.dtsi and adds the omap5 specific palmas
+entries in the omap5-uevm board file.
 
-Hi Linus,
+This patch series is based on:
 
-can you please look at this patchset?
+git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git
+for_3.11/dts
 
-Thanks,
-Michal
+Boot tested on omap5-uevm board.
 
-On 06/03/2013 02:31 PM, Michal Simek wrote:
-> Simplification is done by using OF helper function
-> which increase readability of code and remove
-> (if (var) var =3D be32_to_cpup;) assignment.
->=20
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> Changes in v2:
-> - New patch in this series
->=20
->  drivers/gpio/gpio-xilinx.c | 24 ++++++++++--------------
->  1 file changed, 10 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 9ae7aa8..2aad534 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -170,24 +170,20 @@ static int xgpio_of_probe(struct device_node *np)=
+J Keerthy (2):
+  ARM: dts: add dtsi for palmas
+  ARM: dts: OMAP5: add palmas node and omap specific palmas regulator
+    properties
 
->  		return -ENOMEM;
->=20
->  	/* Update GPIO state shadow register with default value */
-> -	tree_info =3D of_get_property(np, "xlnx,dout-default", NULL);
-> -	if (tree_info)
-> -		chip->gpio_state =3D be32_to_cpup(tree_info);
-> +	of_property_read_u32(np, "xlnx,dout-default", &chip->gpio_state);
-> +
-> +	/* By default, all pins are inputs */
-> +	chip->gpio_dir =3D 0xFFFFFFFF;
->=20
->  	/* Update GPIO direction shadow register with default value */
-> -	chip->gpio_dir =3D 0xFFFFFFFF; /* By default, all pins are inputs */
-> -	tree_info =3D of_get_property(np, "xlnx,tri-default", NULL);
-> -	if (tree_info)
-> -		chip->gpio_dir =3D be32_to_cpup(tree_info);
-> +	of_property_read_u32(np, "xlnx,tri-default", &chip->gpio_dir);
-> +
-> +	/* By default assume full GPIO controller */
-> +	chip->mmchip.gc.ngpio =3D 32;
->=20
->  	/* Check device node and parent device node for device width */
-> -	chip->mmchip.gc.ngpio =3D 32; /* By default assume full GPIO controll=
-er */
-> -	tree_info =3D of_get_property(np, "xlnx,gpio-width", NULL);
-> -	if (!tree_info)
-> -		tree_info =3D of_get_property(np->parent,
-> -					    "xlnx,gpio-width", NULL);
-> -	if (tree_info)
-> -		chip->mmchip.gc.ngpio =3D be32_to_cpup(tree_info);
-> +	of_property_read_u32(np, "xlnx,gpio-width",
-> +			      (u32 *)&chip->mmchip.gc.ngpio);
->=20
->  	spin_lock_init(&chip->gpio_lock);
->=20
-> --
-> 1.8.2.3
->=20
+ arch/arm/boot/dts/omap5-uevm.dts |  147 ++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/palmas.dtsi    |   98 +++++++++++++++++++++++++
+ 2 files changed, 245 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/palmas.dtsi
 
+-- 
+1.7.5.4
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
-------enig2ASFIGIGJITCVUTELBTEF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlG1liAACgkQykllyylKDCGgZQCdFBD1i2iimT1uxzisouN5uz8u
-OrkAnjJWa4ygtlDzS4zdv4HFuDKheZek
-=+2ca
------END PGP SIGNATURE-----
-
-------enig2ASFIGIGJITCVUTELBTEF--
