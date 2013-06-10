@@ -1,98 +1,141 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] i2c: designware: add two optional property
- tx/rx-fifo-size
-Date: Mon, 10 Jun 2013 21:49:55 +0300
-Message-ID: <20130610184954.GK4312@tarshish>
-References: <1370840576-15651-1-git-send-email-zhangfei.gao@linaro.org>
- <1370840576-15651-3-git-send-email-zhangfei.gao@linaro.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 2/2] clk: exynos4: Add alias for cpufreq related clocks
+Date: Mon, 10 Jun 2013 20:53:09 +0200
+Message-ID: <3226068.I7g6oVyl1p@flatron>
+References: <1370517749-29892-1-git-send-email-tushar.behera@linaro.org> <2070978.AjQD2isvSl@flatron> <51B54B4F.3000503@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1370840576-15651-3-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Dirk Brandewie <dirk.brandewie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51B54B4F.3000503@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, kgene.kim@samsung.com, patches@linaro.org, swarren@wwwdotorg.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, broonie@kernel.org, l.majewski@samsung.com, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhangfei Gao,
-
-On Mon, Jun 10, 2013 at 01:02:55PM +0800, Zhangfei Gao wrote:
-> rx-fifo-size and tx-fifo-size will be updated if provided from dts
+On Monday 10 of June 2013 09:13:11 Tushar Behera wrote:
+> On 06/08/2013 05:20 PM, Tomasz Figa wrote:
+> > On Thursday 06 of June 2013 16:52:28 Tushar Behera wrote:
+> >> cpufreq driver for EXYNOS4 based SoCs are not platform drivers, hence
+> >> we cannot currently pass the clock names through a device tree node.
+> >> Instead, we need to make them available through a global alias.
+> >> 
+> >> 'armclk', 'moutcore', 'mout_mpll' and 'mout_apll' clock aliases are
+> >> defined.
+> >> 
+> >> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+> >> ---
+> >> 
+> >>  drivers/clk/samsung/clk-exynos4.c |   10 +++++-----
+> >>  1 file changed, 5 insertions(+), 5 deletions(-)
+> >> 
+> >> diff --git a/drivers/clk/samsung/clk-exynos4.c
+> >> b/drivers/clk/samsung/clk-exynos4.c index 3c1f888..1e4258a 100644
+> >> --- a/drivers/clk/samsung/clk-exynos4.c
+> >> +++ b/drivers/clk/samsung/clk-exynos4.c
+> >> @@ -356,8 +356,8 @@ struct samsung_fixed_rate_clock
+> >> exynos4210_fixed_rate_clks[] __initdata = {
+> >> 
+> >>  /* list of mux clocks supported in all exynos4 soc's */
+> >>  struct samsung_mux_clock exynos4_mux_clks[] __initdata = {
+> >> 
+> >> -	MUX_F(mout_apll, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
+> >> -			CLK_SET_RATE_PARENT, 0),
+> >> +	MUX_FA(mout_apll, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
+> >> +			CLK_SET_RATE_PARENT, 0, "mout_apll"),
+> >> 
+> >>  	MUX(none, "mout_hdmi", mout_hdmi_p, SRC_TV, 0, 1),
+> >>  	MUX(none, "mout_mfc1", sclk_evpll_p, SRC_MFC, 4, 1),
+> >>  	MUX(none, "mout_mfc", mout_mfc_p, SRC_MFC, 8, 1),
+> >> 
+> >> @@ -385,9 +385,9 @@ struct samsung_mux_clock exynos4210_mux_clks[]
+> >> __initdata = { MUX(none, "mout_g2d", mout_g2d_p, E4210_SRC_IMAGE, 8,
+> >> 1),
+> >> 
+> >>  	MUX(none, "mout_fimd1", group1_p4210, E4210_SRC_LCD1, 0, 4),
+> >>  	MUX(none, "mout_mipi1", group1_p4210, E4210_SRC_LCD1, 12, 4),
+> >> 
+> >> -	MUX_A(sclk_mpll, "sclk_mpll", mout_mpll_p, SRC_CPU, 8, 1,
+> > 
+> > "sclk_mpll"),
+> > 
+> >> +	MUX_A(sclk_mpll, "sclk_mpll", mout_mpll_p, SRC_CPU, 8, 1,
+> > 
+> > "mout_mpll"),
+> > 
+> > This is not fully compliant with patch description. I'm not sure if
+> > there weren't any users of the sclk_mpll alias.
 > 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> CC: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> ---
->  .../devicetree/bindings/i2c/i2c-designware.txt     |    7 +++++++
->  drivers/i2c/busses/i2c-designware-platdrv.c        |    3 +++
->  2 files changed, 10 insertions(+)
+> As of now, there are no other users of sclk_mpll other than a debug
+> print within the same file.
+
+OK.
+
+> >>  	MUX_A(mout_core, "mout_core", mout_core_p4210,
+> >> 
+> >> -			SRC_CPU, 16, 1, "mout_core"),
+> >> +			SRC_CPU, 16, 1, "moutcore"),
+> > 
+> > IMHO those typo corrections are not part of this patch.
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> index e42a2ee..61fdb44 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> @@ -6,6 +6,11 @@ Required properties :
->   - reg : Offset and length of the register set for the device
->   - interrupts : <IRQ> where IRQ is the interrupt number.
->  
-> +Optional properties:
-> +
-> + - rx-fifo-size : 1 cell, Rx fifo threshold
+> But the older drivers (before migration to CCF) were using the clock
+> "moutcore" (not "mout_core").
 
-I'd use the word 'size' instead of 'threshold' here. The term 'threshold' is 
-used for something else in the datasheet.
+I mean, this should be placed in a separate patch, as this change is not 
+"adding alias for cpufreq related clocks", but rather fixing a typo.
 
-baruch
-
-> + - tx-fifo-size : 1 cell, Tx fifo threshold
-> +
->  Recommended properties :
->  
->   - clock-frequency : desired I2C bus clock frequency in Hz.
-> @@ -18,5 +23,7 @@ Example :
->  		compatible = "snps,designware-i2c";
->  		reg = <0xf0000 0x1000>;
->  		interrupts = <11>;
-> +		rx-fifo-size = <16>;
-> +		tx-fifo-size = <16>;
->  		clock-frequency = <400000>;
->  	};
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index 41659c0..6760cea 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -85,6 +85,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
->  	struct dw_i2c_dev *dev;
->  	struct i2c_adapter *adap;
->  	struct resource *mem;
-> +	struct device_node *np = pdev->dev.of_node;
->  	int irq, r;
->  
->  	/* NOTE: driver uses the static register mapping */
-> @@ -140,6 +141,8 @@ static int dw_i2c_probe(struct platform_device *pdev)
->  		dev->rx_fifo_depth = ((param1 >> 8)  & 0xff) + 1;
->  		dev->adapter.nr = pdev->id;
->  	}
-> +	of_property_read_u32(np, "rx-fifo-size", &dev->rx_fifo_depth);
-> +	of_property_read_u32(np, "tx-fifo-size", &dev->tx_fifo_depth);
->  	r = i2c_dw_init(dev);
->  	if (r)
->  		return r;
-> -- 
-> 1.7.9.5
+> >>  	MUX_A(sclk_vpll, "sclk_vpll", sclk_vpll_p4210,
+> >>  	
+> >>  			SRC_TOP0, 8, 1, "sclk_vpll"),
+> >>  	
+> >>  	MUX(mout_fimc0, "mout_fimc0", group1_p4210, SRC_CAM, 0, 4),
+> >> 
+> >> @@ -534,7 +534,7 @@ struct samsung_div_clock exynos4_div_clks[]
+> >> __initdata = { DIV(none, "div_spi_pre2", "div_spi2", DIV_PERIL2, 8,
+> >> 8),
+> >> 
+> >>  	DIV(none, "div_audio1", "mout_audio1", DIV_PERIL4, 0, 4),
+> >>  	DIV(none, "div_audio2", "mout_audio2", DIV_PERIL4, 16, 4),
+> >> 
+> >> -	DIV_A(arm_clk, "arm_clk", "div_core2", DIV_CPU0, 28, 3,
+> > 
+> > "arm_clk"),
+> > 
+> >> +	DIV_A(arm_clk, "arm_clk", "div_core2", DIV_CPU0, 28, 3, "armclk"),
+> > 
+> > Same here.
 > 
+> Same as above, "armclk" is used elsewhere, not "arm_clk".
+> 
+> >>  	DIV_A(sclk_apll, "sclk_apll", "mout_apll",
+> >>  	
+> >>  			DIV_CPU0, 24, 3, "sclk_apll"),
+> >>  	
+> >>  	DIV_F(none, "div_mipi_pre0", "div_mipi0", DIV_LCD0, 20, 4,
+> > 
+> > Basically I don't like the idea of those global aliases, which IMHO
+> > should be completely dropped. Someone might not like it, but I'd go
+> > with the conversion of our cpufreq drivers to platform drivers
+> > instead, which could receive things like clocks and regulators using
+> > DT-based lookups.
+> I agree. Migration of exynos-cpufreq driver as a platform driver is the
+> best solution. But unless someone picks up that work, cpufreq support
+> for EXYNOS4 based systems is broken because of the incorrect clock
+> aliases.
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+We have patches for this in our internal tree. I will clean them up a bit 
+and submit soon.
+
+Thanks,
+Tomasz
+
+> > This is especially important in case of regulators, which currently
+> > have to be hacked by using vdd_arm as regulator name in device tree.
+> Agree.
+> 
+> > CCing people that might be interested in this topic.
+> > 
+> > Best regards,
+> > Tomasz
+> 
+> Thanks.
