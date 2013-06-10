@@ -1,121 +1,48 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v2 01/11] serial:st-asc: Add ST ASC driver.
-Date: Mon, 10 Jun 2013 12:53:55 +0100
-Message-ID: <51B5BE53.2000105@st.com>
-References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com> <1370856060-6403-1-git-send-email-srinivas.kandagatla@st.com> <20130610093511.GT18614@n2100.arm.linux.org.uk>
-Reply-To: srinivas.kandagatla@st.com
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
+ tree driver
+Date: Mon, 10 Jun 2013 14:18:17 +0200
+Message-ID: <CACRpkdbBsXB+9wN0oshfZB8Xady9G_wu9d8UkgA-bYqQe=8Mpw@mail.gmail.com>
+References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org>
+	<20130607213241.GB3047@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20130610093511.GT18614@n2100.arm.linux.org.uk>
-Sender: linux-serial-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Thomas Gleixner <tglx@linutronix.de>, Tony Prisk <linux@prisktech.co.nz>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130607213241.GB3047@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thankyou for your comment and suggestion,
-I will fix the POSIX compliant issue.
+On Fri, Jun 7, 2013 at 11:32 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+> ...
+>> I2C devices probed from device tree should subsequently be
+>> fixed to handle the case where of_match_table() is
+>> used (I think none of them do that today), and platforms should
+>> fix their device trees to use compatible strings for I2C devices
+>> instead of setting the name to Linux device driver names as is
+>> done in multiple cases today.
+>
+> I guess your solution is the least intrusive one. Still, it could happen
+> that of_match_table is scanned three times (by driver core, i2c layer,
+> and i2c driver) which is IMO an indication to look for a more elegant
+> solution tp find out what really matched?
 
-On 10/06/13 10:35, Russell King - ARM Linux wrote:
-> On Mon, Jun 10, 2013 at 10:21:00AM +0100, Srinivas KANDAGATLA wrote:
->> This patch adds support to ASC (asynchronous serial controller)
->> driver, which is basically a standard serial driver. This IP is common
->> across all the ST parts for settop box platforms.
->>
->> ASC is embedded in ST COMMS IP block. It supports Rx & Tx functionality.
->> It support all industry standard baud rates.
-> 
-> Your driver is not POSIX compliant.
-> 
->> +		for (; count != 0; count--) {
->> +			c = asc_in(port, ASC_RXBUF);
->> +			flag = TTY_NORMAL;
->> +			port->icount.rx++;
->> +
->> +			if (unlikely(c & ASC_RXBUF_FE)) {
->> +				if (c == ASC_RXBUF_FE) {
->> +					port->icount.brk++;
->> +					if (uart_handle_break(port))
->> +						continue;
->> +					flag = TTY_BREAK;
->> +				} else {
->> +					port->icount.frame++;
->> +					flag = TTY_FRAME;
->> +				}
->> +			} else if (ascport->check_parity &&
->> +				   unlikely(c & ASC_RXBUF_PE)) {
->> +				port->icount.parity++;
->> +				flag = TTY_PARITY;
->> +			}
->> +
->> +			if (uart_handle_sysrq_char(port, c))
->> +				continue;
->> +			tty_insert_flip_char(tport, c & 0xff, flag);
->> +		}
->> +		if (overrun) {
->> +			port->icount.overrun++;
->> +			tty_insert_flip_char(tport, 0, TTY_OVERRUN);
->> +		}
-> 
-> No support for ignoring error conditions.  No support for ignoring all
-> input... and:
-> 
->> +static void asc_set_termios(struct uart_port *port, struct ktermios *termios,
->> +			    struct ktermios *old)
->> +{
->> +	struct asc_port *ascport = to_asc_port(port);
->> +	unsigned int baud;
->> +	u32 ctrl_val;
->> +	tcflag_t cflag;
->> +	unsigned long flags;
->> +
->> +	port->uartclk = clk_get_rate(ascport->clk);
->> +
->> +	baud = uart_get_baud_rate(port, termios, old, 0, port->uartclk/16);
->> +	cflag = termios->c_cflag;
->> +
->> +	spin_lock_irqsave(&port->lock, flags);
->> +
->> +	/* read control register */
->> +	ctrl_val = asc_in(port, ASC_CTL);
->> +
->> +	/* stop serial port and reset value */
->> +	asc_out(port, ASC_CTL, (ctrl_val & ~ASC_CTL_RUN));
->> +	ctrl_val = ASC_CTL_RXENABLE | ASC_CTL_FIFOENABLE;
->> +
->> +	/* reset fifo rx & tx */
->> +	asc_out(port, ASC_TXRESET, 1);
->> +	asc_out(port, ASC_RXRESET, 1);
->> +
->> +	/* set character length */
->> +	if ((cflag & CSIZE) == CS7) {
->> +		ctrl_val |= ASC_CTL_MODE_7BIT_PAR;
->> +	} else {
->> +		ctrl_val |= (cflag & PARENB) ?  ASC_CTL_MODE_8BIT_PAR :
->> +						ASC_CTL_MODE_8BIT;
->> +	}
->> +
->> +	ascport->check_parity = (cflag & PARENB) ? 1 : 0;
->> +
->> +	/* set stop bit */
->> +	ctrl_val |= (cflag & CSTOPB) ? ASC_CTL_STOP_2BIT : ASC_CTL_STOP_1BIT;
->> +
->> +	/* odd parity */
->> +	if (cflag & PARODD)
->> +		ctrl_val |= ASC_CTL_PARITYODD;
->> +
->> +	/* hardware flow control */
->> +	if ((cflag & CRTSCTS) && ascport->hw_flow_control)
->> +		ctrl_val |= ASC_CTL_CTSENABLE;
-> 
-> This doesn't reflect those facts back into the termios structure to
-> indicate that they aren't supported.
-> 
-> Consider using uart_port's ignore and read status masks to implement
-> the break, framing, parity and overrun checking in your interrupt
-> handler using the same methodology as drivers like 8250, amba-pl011
-> etc.  That will help you get these code sequences correct.
-> 
-> 
+I think that is a generic problem with the device tree
+being completely stateless, and rather a comment on the
+of_match_device() intrinsics being inelegant than on this
+patch?
 
+Do you see it as a blocker for the patch?
+
+What happens before this patch is that instead of looping
+over the of_match_table, the id_table is always iterated
+to the end also in the DT case, yielding NULL as the last
+argument to driver->probe() anyway.
+
+Maybe the OF people have some comments on this...
+I cannot really see how it could be any different given
+the way the FDT works :-/
+
+Yours,
+Linus Walleij
