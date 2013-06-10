@@ -1,48 +1,49 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH V3 1/2] tps6507x-ts: Add DT support
-Date: Mon, 10 Jun 2013 11:03:11 -0700
-Message-ID: <20130610180311.GA4649@core.coreip.homeip.net>
-References: <1369126458-24872-1-git-send-email-manishv.b@ti.com>
- <1369126458-24872-2-git-send-email-manishv.b@ti.com>
- <20130610060442.GA30158@core.coreip.homeip.net>
- <A4887BF146CD57468F700B415D2F47015A0DFD@DBDE04.ent.ti.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 9/9] MAINTAINERS: add entry for ARM system MMU driver
+Date: Mon, 10 Jun 2013 19:34:45 +0100
+Message-ID: <1370889285-22799-10-git-send-email-will.deacon@arm.com>
+References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <A4887BF146CD57468F700B415D2F47015A0DFD@DBDE04.ent.ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1370889285-22799-1-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Manish,
+Add myself as maintainer for the ARM system MMU driver.
 
-On Mon, Jun 10, 2013 at 10:23:16AM +0000, Vishwanathrao Badarkhe, Manish wrote:
-> Hi Dmitry,
-> 
-> On Mon, Jun 10, 2013 at 11:34:42, Dmitry Torokhov wrote:
-> > Hi Manish,
-> > 
-> > On Tue, May 21, 2013 at 02:24:17PM +0530, Vishwanathrao Badarkhe, Manish wrote:
-> > 
-> > > +	struct touchscreen_init_data *init_data = NULL;
-> > > +	int err;
-> > > +
-> > > +	if (node)
-> > > +		node = of_find_node_by_name(node, "tsc");
-> > 
-> > Why do you have to locate OF node manually instead of already having it attached to the device stucture?
-> 
-> As TPS6507x is mfd device containing two nodes, regulator and touchscreen.
-> It is necessary to use "of_find_node_by_name" to find child "tsc" node of 
-> TPS6507x MFD device.
+Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I understand that TPS6507x is a MFD device, However, I still do not
-understand why you do not attach OF data to the child platform device
-representing touchscreen when you create it.
-
-Thanks.
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 250dc97..84df4bd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1310,6 +1310,12 @@ T:	git git://git.xilinx.com/linux-xlnx.git
+ S:	Supported
+ F:	arch/arm/mach-zynq/
+ 
++ARM SMMU DRIVER
++M:	Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
++L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
++S:	Maintained
++F:	drivers/iommu/arm-smmu.c
++
+ ARM64 PORT (AARCH64 ARCHITECTURE)
+ M:	Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+ M:	Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 -- 
-Dmitry
+1.8.2.2
