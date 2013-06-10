@@ -1,120 +1,71 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
-Date: Mon, 10 Jun 2013 12:20:50 +0100
-Message-ID: <20130610112050.GB3674@localhost.localdomain>
-References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com>
- <51B0BC80.9040007@wwwdotorg.org>
- <20130606180824.GC3320@localhost.localdomain>
- <CAAVeFuJkV3VVfeinLrjCCef9ZqJNvKurQwVWnJsW-bZqniTQ1w@mail.gmail.com>
- <20130607181318.GC29344@localhost.localdomain>
- <CAAVeFuKsa=GsxexQOSOYPYvkAXaEZXfW1+zRmv25CtFEY=T_GQ@mail.gmail.com>
+From: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH 2/2] rtc: omap: add rtc wakeup support to alarm events
+Date: Mon, 10 Jun 2013 11:25:17 +0000
+Message-ID: <1BAFE6F6C881BF42822005164F1491C33EC2E907@DBDE04.ent.ti.com>
+References: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com>
+	<1369982005-8572-3-git-send-email-gururaja.hebbar@ti.com>
+	<87a9nb2gjh.fsf@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAAVeFuKsa=GsxexQOSOYPYvkAXaEZXfW1+zRmv25CtFEY=T_GQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <87a9nb2gjh.fsf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2013 at 05:05:04PM +0900, Alexandre Courbot wrote:
-> On Sat, Jun 8, 2013 at 3:13 AM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
-> > One way to make the backend generic would be to have something like
-> > one of the following (some syntax omitted due to laziness):
-> >
-> >         u32 __naked __call_smc(u32 r0, ...)
-> >         {
-> >                 asm volatile (
-> >                         stmfd   sp!, {r4-r11,lr}
-> >                         smc     #0
-> >                         ldmfd   sp!, {r4-r11,pc}
-> >                         ::: "memory"
-> >                 );
-> >         }
-> >
-> >         /* The above works for up to 4 u32 arguments */
-> >
-> >         u32 __naked __call_smc(u32 r0, ...)
-> >         {
-> >                 asm volatile (
-> >                         mov     ip, sp
-> >                         stmfd   sp!, {r4-r11,lr}
-> >                         ldmia   ip, {r4-r11}
-> >                         smc     #0
-> >                         ldmfd   sp!, {r4-r11,pc}
-> >                         ::: "memory"
-> >                 );
-> >         }
-> >
-> >         /*
-> >          * Works for up to 13 u32 arguments, provided the stack is deep
-> >          * enough to provide suitable garbage data to fill the registers
-> >          * if the caller supplied fewer arguments (a bit of a hack)
-> >          */
-> >
-> >         u32 __naked __call_smc(struct pt_regs *regs) {
-> >
-> >                 asm(
-> >                         stmfd   sp!, {r4-r11,lr}
-> >                         /* load regs from <regs> */
-> >                         smc #0
-> >                         /* save regs back to <regs> */
-> >                         ldmfd   sp!, {r4-r11,pc}
-> >                 );
-> >         }
-> >
-> >         /*
-> >          * Most generic,  least-efficient version.
-> >          * Can return up to 13 u32 results instead of just one.
-> >          * For convenience, the r0 value returned by the SMC could be
-> >          * left in r0 so that it also determines the return value of the
-> >          * function.
-> >          *
-> >          * Most of the time, SMC shouldn't be called on any hot path,
-> >          * otherwise the performance battle is already lost -- so it may
-> >          * not be crucial to reach the maximum possible efficiency for
-> >          * these calls.
-> >          */
-> >
-> >
-> > A particular firmware's Linux glue code might have to put extra stuff
-> > around calls to generic_smc, but at least generic_smc itself wouldn't
-> > need to be reinvented, and the firmware-specific glue code could usually
-> > avoid asm.
-> >
-> >> Another example is the function that Tomasz shown
-> >> (https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/arch/arm/mach-exynos/exynos-smc.S?id=refs/tags/next-20130606
-> >> ), which preserves r4-r11 but also assumes r3 is an argument - that's
-> >> again another slightly different convention.
-> >
-> > ... for which the above implementations of __call_smc() should work too.
-> >
-> >> All in all the needs of the various firmwares might end up being just
-> >> different enough that we need to have a different backend for each of
-> >> them. The firmware_ops defined in arch/arm/include/asm/firmware.h
-> >> perform the abstraction at a higher level, which seems more fit here
-> >> IMHO.
-> >>
-> >> Alex.
-> >
-> > Indeed.  If you think you could work with one of the above generics, we
-> > could try it and see what it looks like though.
-> >
-> > If it's an awkward fit, I might be being too optimistic.
+On Fri, May 31, 2013 at 23:11:22, Kevin Hilman wrote:
+> Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org> writes:
 > 
-> I agree that your versions would most likely work in our (and probably
-> many others) case. But I wonder if individual platforms will not
-> prefer to sacrifice the ease of use of a generic version for the
-> ability to write faster code that will just preserve what is needed
-> (whether that performance gain is justified or not is of course
-> subject to debate). I don't have enough hindsight to decide which
-> approach is the best, but until we have more examples of firmwares
-> that would justify such a factorization, I think I'd like to go with
-> our own version first - for there is already more than enough to fix
-> in this patch. :)
+> > On some platforms (like AM33xx), a special register (RTC_IRQWAKEEN)
+> > is available to enable Wakeup feature for Alarm Events.
+> >
+> > Since new platforms/Boards are now added through DT only, this feature
+> > is supported via DT property only.
+> 
+> > Platforms using such IP should add the property "ti,has_irq_wake_enb"
+> > in rtc DT node.
+> 
+> This is a property of the IP, not the board.  Can't you detect this
+> based on the revision of the IP?
 
-Sure, I'll have another think based on your repost.
+Here is what I found out till now.
 
-Cheers
----Dave
+1. rtc-omap driver is used by Davinci, OMAP-1/2 & AM33xx SoC.
+
+2. Only AM33xx soc rtc ip has revision register (& populated). Older OMAP
+   Or davinci doesn't have this register.
+
+3. AFAIK, this was the reason why Afzal used platform_device_id & 
+   of_device_id->data method to detect new versions (commit
+   9e0344dcc225fe1a0e8b8af9ff7df44ec4613580)
+
+
+So now either 
+a. I can follow the same method and add new member to omap_rtc_devtype & add a new compatible in 
+ omap_rtc_of_match in rtc-omap.c
+
+or
+
+b. use dt property to indicate existence of above property.
+
+
+Kindly let me know your opinion about the same.
+
+> 
+> Kevin
+> 
+
+
+Regards, 
+Gururaja
