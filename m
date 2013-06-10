@@ -1,39 +1,133 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 5/5] clk/exynos5250: change parent to aclk200_disp1 for hdmi
- subsystem
-Date: Mon, 10 Jun 2013 16:31:02 +0530
-Message-ID: <1370862062-16680-6-git-send-email-rahul.sharma@samsung.com>
-References: <1370862062-16680-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1370862062-16680-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, arun.kk@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Pranavkumar Sawargaonkar <pranavkumar@linaro.org>
+Subject: Re: [PATCH] arm64: Add support to pass earlyprintk argument via
+ device tree
+Date: Mon, 10 Jun 2013 16:13:27 +0530
+Message-ID: <CAAHg+HiWNumV52BmiGmWyGTq7a=JH5O2ptQuHt7ywjnWzUYcvg@mail.gmail.com>
+References: <1370274671-23812-1-git-send-email-pranavkumar@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1370274671-23812-1-git-send-email-pranavkumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Patch Tracking <patches@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pranavkumar Sawargaonkar <pranavkumar@linaro.org>, Anup Patel <anup.patel@linaro.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-parent of hdmi and mixer block is mentioned as aclk200 which is
-not correct. It is clocked by the ouput of aclk200_disp1. Hence
-parent for mixer and hdmi clocks is changed to aclk200_disp1.
+Hi,
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- drivers/clk/samsung/clk-exynos5250.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 3 June 2013 21:21, Pranavkumar Sawargaonkar <pranavkumar@linaro.org> wrote:
+> This patch adds support for defining and passing earlyprintk
+> related information i.e. device and address information via
+> device tree by adding it inside "chosen" node.
+>
+> This will help user to just specify "earlyprintk" from bootargs
+> without actually knowing the address and device to enable
+> earlyprintk.
+>
+> Mechanism:
+>
+> One can just append earlyprintk=device-type,address (same as we pass
+> through command line) in "/chosen" node to notify kernel which is the
+> earlyprintk device and what is its address.
+>
+> Backward Compatibility:
+>
+> This patch also allows existing method of specifying earlyprintk
+> parameter via bootargs.
+>
+> Existing method i.e. passing via bootargs will still have precedence
+> over device tree i.e. if one specifies earlyprintk=device-type,address
+> in bootargs then kernel will use information from bootargs instead of
+> device tree.
+>
+> If user just specifies earlyprintk (without =...) then kernel will
+> look for device tree earlyprintk parameter.
+>
+> Signed-off-by: Pranavkumar Sawargaonkar <pranavkumar@linaro.org>
+> Signed-off-by: Anup Patel <anup.patel@linaro.org>
+> ---
+>  arch/arm64/kernel/early_printk.c |    7 +++++++
+>  arch/arm64/kernel/setup.c        |   21 ++++++++++++++++++++-
+>  2 files changed, 27 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/kernel/early_printk.c b/arch/arm64/kernel/early_printk.c
+> index fbb6e18..4e6f845 100644
+> --- a/arch/arm64/kernel/early_printk.c
+> +++ b/arch/arm64/kernel/early_printk.c
+> @@ -29,6 +29,8 @@
+>  static void __iomem *early_base;
+>  static void (*printch)(char ch);
+>
+> +extern char *earlyprintk_dt_args;
+> +
+>  /*
+>   * PL011 single character TX.
+>   */
+> @@ -116,6 +118,11 @@ static int __init setup_early_printk(char *buf)
+>         phys_addr_t paddr = 0;
+>
+>         if (!buf) {
+> +               /* Try to check if Device Tree has this argument or not ? */
+> +               buf = earlyprintk_dt_args;
+> +       }
+> +
+> +       if (!buf) {
+>                 pr_warning("No earlyprintk arguments passed.\n");
+>                 return 0;
+>         }
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index 6a9a532..fb2d56f 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -60,6 +60,8 @@ EXPORT_SYMBOL(processor_id);
+>  unsigned int elf_hwcap __read_mostly;
+>  EXPORT_SYMBOL_GPL(elf_hwcap);
+>
+> +char *earlyprintk_dt_args;
+> +
+>  static const char *cpu_name;
+>  static const char *machine_name;
+>  phys_addr_t __fdt_pointer __initdata;
+> @@ -122,6 +124,23 @@ static void __init setup_processor(void)
+>         elf_hwcap = 0;
+>  }
+>
+> +int __init early_init_dt_scan_chosen_arm64(unsigned long node,
+> +                                          const char *uname,
+> +                                          int depth, void *data)
+> +{
+> +       char *prop;
+> +
+> +       /* Check if this is chosen node */
+> +       if (early_init_dt_scan_chosen(node, uname, depth, data) == 0)
+> +               return 0;
+> +
+> +       prop = of_get_flat_dt_prop(node, "earlyprintk", NULL);
+> +       if (prop)
+> +               earlyprintk_dt_args = prop;
+> +
+> +       return 1;
+> +}
+> +
+>  static void __init setup_machine_fdt(phys_addr_t dt_phys)
+>  {
+>         struct boot_param_header *devtree;
+> @@ -165,7 +184,7 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+>         pr_info("Machine: %s\n", machine_name);
+>
+>         /* Retrieve various information from the /chosen node */
+> -       of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+> +       of_scan_flat_dt(early_init_dt_scan_chosen_arm64, boot_command_line);
+>         /* Initialize {size,address}-cells info */
+>         of_scan_flat_dt(early_init_dt_scan_root, NULL);
+>         /* Setup memory, calling early_init_dt_add_memory_arch */
+> --
+> 1.7.9.5
+>
 
-diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
-index bb93d61..2075f5f 100644
---- a/drivers/clk/samsung/clk-exynos5250.c
-+++ b/drivers/clk/samsung/clk-exynos5250.c
-@@ -468,8 +468,8 @@ struct samsung_gate_clock exynos5250_gate_clks[] __initdata = {
- 	GATE(mie1, "mie1", "aclk200", GATE_IP_DISP1, 1, 0, 0),
- 	GATE(dsim0, "dsim0", "aclk200", GATE_IP_DISP1, 3, 0, 0),
- 	GATE(dp, "dp", "aclk200", GATE_IP_DISP1, 4, 0, 0),
--	GATE(mixer, "mixer", "aclk200", GATE_IP_DISP1, 5, 0, 0),
--	GATE(hdmi, "hdmi", "aclk200", GATE_IP_DISP1, 6, 0, 0),
-+	GATE(mixer, "mixer", "aclk200_disp1", GATE_IP_DISP1, 5, 0, 0),
-+	GATE(hdmi, "hdmi", "aclk200_disp1", GATE_IP_DISP1, 6, 0, 0),
- };
- 
- static __initdata struct of_device_id ext_clk_match[] = {
--- 
-1.7.10.4
+Ccing to devicetree-discuss@lists.ozlabs.org for comments.
+Original RFC posted for this patch is:
+https://patchwork.kernel.org/patch/2601411/
+
+Thanks,
+Pranav
