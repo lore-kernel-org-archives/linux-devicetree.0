@@ -1,82 +1,82 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: nomadik: add the new clocks to the device tree
-Date: Mon, 10 Jun 2013 09:43:30 +0200
-Message-ID: <CACRpkdZNZ4_FzjEsstUm0bn8hE7FPTN1y_QnXtWUvGUzCNynBg@mail.gmail.com>
-References: <1370775348-7440-1-git-send-email-linus.walleij@linaro.org>
- <1370775348-7440-2-git-send-email-linus.walleij@linaro.org>
- <201306091621.02506.arnd@arndb.de>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
+Date: Mon, 10 Jun 2013 16:47:22 +0900
+Message-ID: <CAAVeFuJuf2hrMaM5keoai65vAAg6JLrjDUvYm4e2zQvsw64_8A@mail.gmail.com>
+References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com>
+ <20130606110240.GA3320@localhost.localdomain> <CAAVeFu+o7oc4Rrn67xxzsgeZ9xrTBkaLd_E4amaVgcNBRsKC_g@mail.gmail.com>
+ <20130607173004.GA29344@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201306091621.02506.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130607173004.GA29344@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dave Martin <Dave.Martin@arm.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Chris Johnson <CJohnson@nvidia.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Karan Jhavar <kjhavar@nvidia.com>, Matthew Longnecker <MLongnecker@nvidia.com>, Alexandre Courbot <acourbot@nvidia.com>, Joseph Lo <josephl@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 9, 2013 at 4:21 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Sunday 09 June 2013, Linus Walleij wrote:
->> +               /*
->> +                * IP AMBA bus clocks, driving the bus side of the
->> +                * peripheral clocking, clock gates.
->> +                */
->> +
->> +               hclkdma0: hclkdma0@48M {
->> +                       #clock-cells = <0>;
->> +                       compatible = "st,nomadik-src-clock";
->> +                       clock-id = <0>;
->> +                       clocks = <&hclk>;
->> +               };
->> +               hclksmc: hclksmc@48M {
->> +                       #clock-cells = <0>;
->> +                       compatible = "st,nomadik-src-clock";
->> +                       clock-id = <1>;
->> +                       clocks = <&hclk>;
->> +               };
->> +               hclksdram: hclksdram@48M {
->> +                       #clock-cells = <0>;
->> +                       compatible = "st,nomadik-src-clock";
->> +                       clock-id = <2>;
->> +                       clocks = <&hclk>;
->> +               };
->> +               hclkdma1: hclkdma1@48M {
->> +                       #clock-cells = <0>;
->> +                       compatible = "st,nomadik-src-clock";
->> +                       clock-id = <3>;
->> +                       clocks = <&hclk>;
->> +               };
+On Sat, Jun 8, 2013 at 2:30 AM, Dave Martin <Dave.Martin@arm.com> wrote:
+> Most likely it's either unnecessary, or insufficient.
 >
-> Sorry if I'm being slow to understand how the clock bindings work, but if
-> you have 63 identical clocks that only differ in ther clock-id, can't you
-> just have a single DT node for them instead with #clock-cells=1 to pass the
-> number from the device using it?
+> Just for entering call SMC properly, it's not needed.  If the Secure
+> World has its MMU on and maps Normal World memory using the same memory
+> types as Linux, then the Normal World and Secure World access the memory
+> coherently with no extra barrier needed.
+>
+> It the Secure World's MMU is off, or if it maps Normal World memory
+> as Secure (pagetable NS bit = 0), or if it maps Normal World memory with
+> memory types incompatible with the ones Linux is using then you will get
+> coherency problems: the Secure and Normal Worlds won't necessarily see
+> the same data.
+>
+> In the latter case, you must do explicit cache maintenance around SMC
+> for the data you want to exchange.  This might also be needed in the
+> Secure World if caches are enabled over there.  DSB isn't enough by
+> itself.
+>
+>
+> If the Secure World doesn't access Normal World memory at all, you
+> don't need to do anything special and can remove the DSB.
+>
+> Otherwise, for performance reasons, it is definitely preferable to have
+> the Secure World MMU on if possible, though it's a bit more complex to
+> set up.
 
-I first had exactly that implementation but it didn't work. This is explained
-in the commit message on patch 1/1:
+Thanks for the information. I will try to understand why we put it
+here in the first place.
 
-  The gated clocks are implemented with zero cells and
-  given the clock ID as a property of each node, so every
-  gate need to have its own node in the device tree.
-  This is because the gate registers contain both HCLK
-  gates and PCLK gates, where the latter has HCLK as
-  parent. As can be seen from the register layout, this
-  is a complete mixup, which means all these gates need
-  their own node to properly model parent/child relations
-  for PCLKs apart from the HCLKs.
+>> >> +             "smc    #0\n\t"
+>> >> +             "ldr    r3, =__tegra_smc_stack\n\t"
+>> >> +             "ldmia  r3, {r4-r12, lr}"
+>> >> +                     :
+>> >> +                     : [type]    "r" (type),
+>> >> +                       [subtype] "r" (subtype),
+>> >> +                       [arg]     "r" (arg)
+>> >> +                     : "r0", "r1", "r2", "r3", "r4", "memory");
+>> >
+>> > If r5-r12 are not clobbered, why do you save and restore them?
+>>
+>> The secure monitor might change them.
+>
+> Sure, but you could just add all the registers to the clobber list,
+> and then the compiler would save and restore them for you in the
+> function entry/exit sequences, which may be a bit more efficient.
+>
+> Since you are going to replace this code anyway, it's academic
+> though.
 
-Basically the "shortcoming" in device tree is that modelling this with
-clock-cells = 1 requires them all to have one and the same parent,
-but they don't.
+Right. I suppose you mentioned this in the context of my initial code
+- however if I understand how inline asm works (in case it wasn't
+clear already, I probably don't), turning this function into a naked
+function will make it impossible for the compiler to generate the
+entry/exit sequences since the assembler code will be responsible for
+returning from the function.
 
-Yours,
-Linus Walleij
+One could remove the naked attribute and put there registers into the
+clobber list, but then the function will be inlined and we will have
+to ensure the parameters end up in the right register (and having a
+function that cannot be inlined is convenient in that respect). So as
+far as I can tell, having the function naked and saving the registers
+ourselves seems to be the most convenient way around this.
+
+Thanks,
+Alex.
