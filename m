@@ -1,50 +1,44 @@
-From: Simon Baatz <gmbnomis@gmail.com>
-Subject: Re: [RESEND PATCH V3 6/8] mmc: tegra: handle mmc_of_parse() errors
- during probe
-Date: Tue, 11 Jun 2013 00:02:30 +0200
-Message-ID: <20130610220230.GB30680@schnuecks.de>
-References: <1370808858-32241-1-git-send-email-gmbnomis@gmail.com>
- <1370808858-32241-7-git-send-email-gmbnomis@gmail.com>
- <51B640F2.8030107@wwwdotorg.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2 06/11] ARM:stixxxx: Add STiH415 SOC support
+Date: Tue, 11 Jun 2013 00:19:34 +0100
+Message-ID: <20130610231934.GG18614@n2100.arm.linux.org.uk>
+References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com>
+ <1370856381-6644-1-git-send-email-srinivas.kandagatla@st.com>
+ <CAHTX3d+dk3W_9b7SVUokWq4KYXnj=Z1=WPj5zJ-gUvJqqwE=+Q@mail.gmail.com>
+ <51B5BCB3.3060405@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <51B640F2.8030107@wwwdotorg.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Chris Ball <cjb@laptop.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+In-Reply-To: <51B5BCB3.3060405@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, linux-doc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Stephen Gallimore <stephen.gallimore@st.com>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Stuart Menefy <stuart.menefy@st.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm <linux-arm-kernel@lists.infradead.org>, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, Rob Landley <rob@landley.net>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Mon, Jun 10, 2013 at 03:11:14PM -0600, Stephen Warren wrote:
-> On 06/09/2013 02:14 PM, Simon Baatz wrote:
-> > Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
+On Mon, Jun 10, 2013 at 12:46:59PM +0100, Srinivas KANDAGATLA wrote:
+> >     +       aux_ctrl = (0x1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT) |
+> >     +               (0x1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT) |
+> >     +               (0x1 << L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT) |
+> >     +               (way_size << L2X0_AUX_CTRL_WAY_SIZE_SHIFT);
+> > 
+> > 
+> > 
+> > #include <linux/bitops.h>
+> > Linus Walleij would write use  BIT() here
 > 
-> Tested-by: Stephen Warren <swarren@nvidia.com>
+> I will use BIT() macro.
 
-Thanks!
- 
-> (On Seaboard/Springbank board, i.e. Tegra20)
-> 
-> > diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> 
-> > +err_parse_dt:
-> >  err_power_req:
-> >  err_alloc_tegra_host:
-> 
-> Nit: It'd be nice if that new label got inserted into the middle of the
-> list, so err_power_req, err_parse_dt, err_alloc_tegra_host. That way if
-> we ever needed to add separate code there, they'd be in the right order
-> already. Still, this isn't worth fixing unless you have to repost for
-> some other reason I guess.
-
-Yes, you are right. I updated the patch locally, so the update will
-be in if I need to repost (or if the nicer version is explicitly
-requested).
-
-Since this change is only syntactical, I simply assume that your
-Tested-by is still valid even with the change ;-)
-
-- Simon
+Without checking those fields... BIT() is only appropriate if you're
+really talking about single bits.  If you have a field of more than a
+single bit which you happen to be setting to '1' then it's not
+appropriate to use BIT().
