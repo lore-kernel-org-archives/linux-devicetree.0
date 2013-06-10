@@ -1,57 +1,118 @@
-From: "luke.leighton" <luke.leighton@gmail.com>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
- Uploading linux (3.9.4-1))
-Date: Mon, 10 Jun 2013 00:30:26 +0100
-Message-ID: <CAPweEDx2m800s+PTMd3vmmKv1ODz0soJp-YdvJnRNY5j7oCfVg@mail.gmail.com>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<20130607205940.4816fed5@skate>
-	<CAPweEDxtC+OamcpVEQ3BULbN88hSJzKoi0fkNLBAdZD04LQCNQ@mail.gmail.com>
-	<4247099.i8S79t0Pua@flatron>
-	<CAPweEDwON7x-FrqUrvKDNXu3nCYOgrEzY9V5q8zxvoe6kWKCtA@mail.gmail.com>
-	<CAPweEDw0U-djVaVzWoNnvhWvwOP=LXc=Ac97ZzTYb6AKF+j8hg@mail.gmail.com>
-	<20130609223149.GO18614@n2100.arm.linux.org.uk>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: Re: [PATCH 2/2] clk: exynos4: Add alias for cpufreq related clocks
+Date: Mon, 10 Jun 2013 09:13:11 +0530
+Message-ID: <51B54B4F.3000503@linaro.org>
+References: <1370517749-29892-1-git-send-email-tushar.behera@linaro.org> <1370517749-29892-3-git-send-email-tushar.behera@linaro.org> <2070978.AjQD2isvSl@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130609223149.GO18614@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, linux-arm-kernel@lists.infradead.org, debian-kernel@lists.debian.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2070978.AjQD2isvSl@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, kgene.kim@samsung.com, patches@linaro.org, swarren@wwwdotorg.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, broonie@kernel.org, l.majewski@samsung.com, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 9, 2013 at 11:31 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Sun, Jun 09, 2013 at 11:09:59PM +0100, luke.leighton wrote:
->> this is all a rather round-about way to say that for those people who
->> heard and are thinking of heeding russell's call to "be silent and to
->> ignore me"
->
-> Okay, so you've just misrepresented me in the above comment.  I never
-> said anything of the sort.  The closest that I've come to a comment like
-> that is asking you to stop wasting people's time.
+On 06/08/2013 05:20 PM, Tomasz Figa wrote:
+> On Thursday 06 of June 2013 16:52:28 Tushar Behera wrote:
+>> cpufreq driver for EXYNOS4 based SoCs are not platform drivers, hence
+>> we cannot currently pass the clock names through a device tree node.
+>> Instead, we need to make them available through a global alias.
+>>
+>> 'armclk', 'moutcore', 'mout_mpll' and 'mout_apll' clock aliases are
+>> defined.
+>>
+>> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+>> ---
+>>  drivers/clk/samsung/clk-exynos4.c |   10 +++++-----
+>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/clk/samsung/clk-exynos4.c
+>> b/drivers/clk/samsung/clk-exynos4.c index 3c1f888..1e4258a 100644
+>> --- a/drivers/clk/samsung/clk-exynos4.c
+>> +++ b/drivers/clk/samsung/clk-exynos4.c
+>> @@ -356,8 +356,8 @@ struct samsung_fixed_rate_clock
+>> exynos4210_fixed_rate_clks[] __initdata = {
+>>
+>>  /* list of mux clocks supported in all exynos4 soc's */
+>>  struct samsung_mux_clock exynos4_mux_clks[] __initdata = {
+>> -	MUX_F(mout_apll, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
+>> -			CLK_SET_RATE_PARENT, 0),
+>> +	MUX_FA(mout_apll, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
+>> +			CLK_SET_RATE_PARENT, 0, "mout_apll"),
+>>  	MUX(none, "mout_hdmi", mout_hdmi_p, SRC_TV, 0, 1),
+>>  	MUX(none, "mout_mfc1", sclk_evpll_p, SRC_MFC, 4, 1),
+>>  	MUX(none, "mout_mfc", mout_mfc_p, SRC_MFC, 8, 1),
+>> @@ -385,9 +385,9 @@ struct samsung_mux_clock exynos4210_mux_clks[]
+>> __initdata = { MUX(none, "mout_g2d", mout_g2d_p, E4210_SRC_IMAGE, 8,
+>> 1),
+>>  	MUX(none, "mout_fimd1", group1_p4210, E4210_SRC_LCD1, 0, 4),
+>>  	MUX(none, "mout_mipi1", group1_p4210, E4210_SRC_LCD1, 12, 4),
+>> -	MUX_A(sclk_mpll, "sclk_mpll", mout_mpll_p, SRC_CPU, 8, 1, 
+> "sclk_mpll"),
+>> +	MUX_A(sclk_mpll, "sclk_mpll", mout_mpll_p, SRC_CPU, 8, 1, 
+> "mout_mpll"),
+> 
+> This is not fully compliant with patch description. I'm not sure if there 
+> weren't any users of the sclk_mpll alias.
+> 
 
- close enough.
+As of now, there are no other users of sclk_mpll other than a debug
+print within the same file.
 
-> So, given your displayed inability to properly convey what people have
-> said to you in a discussion in your own replies, is there *any* reason
-> that anyone should trust you to communicate their position to any other
-> third party?
+>>  	MUX_A(mout_core, "mout_core", mout_core_p4210,
+>> -			SRC_CPU, 16, 1, "mout_core"),
+>> +			SRC_CPU, 16, 1, "moutcore"),
+> 
+> IMHO those typo corrections are not part of this patch.
+> 
 
- trust is always something that has to be given, russell.  respect is
-earned, but trust is given.  many make the mistake of believing that
-trust is earned [people who seek to defeat others as "enemies" know
-this and exploit it to devastating effect].
+But the older drivers (before migration to CCF) were using the clock
+"moutcore" (not "mout_core").
 
- so i can't answer your question directly, but consider this: the
-people that i work with have known me for a long time.  they know i'm
-a bit of a live wire (you saw that wookey called me "crazy luke") and
-they often go as completely spare at some of the spanners i throw in
-the works just as everyone else does.  it's *they* who will be doing
-all the talking, and i will be advising them in the background over
-the next week so that *technically* they're prepped.
+>>  	MUX_A(sclk_vpll, "sclk_vpll", sclk_vpll_p4210,
+>>  			SRC_TOP0, 8, 1, "sclk_vpll"),
+>>  	MUX(mout_fimc0, "mout_fimc0", group1_p4210, SRC_CAM, 0, 4),
+>> @@ -534,7 +534,7 @@ struct samsung_div_clock exynos4_div_clks[]
+>> __initdata = { DIV(none, "div_spi_pre2", "div_spi2", DIV_PERIL2, 8, 8),
+>>  	DIV(none, "div_audio1", "mout_audio1", DIV_PERIL4, 0, 4),
+>>  	DIV(none, "div_audio2", "mout_audio2", DIV_PERIL4, 16, 4),
+>> -	DIV_A(arm_clk, "arm_clk", "div_core2", DIV_CPU0, 28, 3, 
+> "arm_clk"),
+>> +	DIV_A(arm_clk, "arm_clk", "div_core2", DIV_CPU0, 28, 3, "armclk"),
+> 
+> Same here.
+> 
 
- everyone has a different role to play here.
+Same as above, "armclk" is used elsewhere, not "arm_clk".
 
-/peace
+>>  	DIV_A(sclk_apll, "sclk_apll", "mout_apll",
+>>  			DIV_CPU0, 24, 3, "sclk_apll"),
+>>  	DIV_F(none, "div_mipi_pre0", "div_mipi0", DIV_LCD0, 20, 4,
+> 
+> Basically I don't like the idea of those global aliases, which IMHO should 
+> be completely dropped. Someone might not like it, but I'd go with the 
+> conversion of our cpufreq drivers to platform drivers instead, which could 
+> receive things like clocks and regulators using DT-based lookups.
+> 
 
-l.
+I agree. Migration of exynos-cpufreq driver as a platform driver is the
+best solution. But unless someone picks up that work, cpufreq support
+for EXYNOS4 based systems is broken because of the incorrect clock aliases.
+
+> This is especially important in case of regulators, which currently have 
+> to be hacked by using vdd_arm as regulator name in device tree.
+> 
+
+Agree.
+
+> CCing people that might be interested in this topic.
+> 
+> Best regards,
+> Tomasz
+> 
+
+Thanks.
+
+-- 
+Tushar Behera
