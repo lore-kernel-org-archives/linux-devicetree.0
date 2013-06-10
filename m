@@ -1,45 +1,82 @@
-From: "luke.leighton" <luke.leighton@gmail.com>
-Subject: Re: [#TCI-363-37182]: Re: [Arm-netbook] getting allwinner SoC support
- upstream (was Re: Uploading linux (3.9.4-1))
-Date: Mon, 10 Jun 2013 08:41:02 +0100
-Message-ID: <CAPweEDyYoJgbSyZ4nuN2TbWxEVw4U9Q2awSskTmV1OFvW0OVBw@mail.gmail.com>
-References: <1370838666.51b5568a8e82c@mobinnet.kayako.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: nomadik: add the new clocks to the device tree
+Date: Mon, 10 Jun 2013 09:43:30 +0200
+Message-ID: <CACRpkdZNZ4_FzjEsstUm0bn8hE7FPTN1y_QnXtWUvGUzCNynBg@mail.gmail.com>
+References: <1370775348-7440-1-git-send-email-linus.walleij@linaro.org>
+ <1370775348-7440-2-git-send-email-linus.walleij@linaro.org>
+ <201306091621.02506.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1370838666.51b5568a8e82c@mobinnet.kayako.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sasupport@mobinnet.net
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, devicetree-discuss@ozlabs.org, swarren@wwwdotorg.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201306091621.02506.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2013 at 5:31 AM, MobinNet <sasupport@mobinnet.net> wrote:
-> luke.leighton,
-
- yes, automated service that i was subscribed to without my
-authorisation or permission: what can i do you for?
-
-> This email concerns your recent ticket: Re: [Arm-netbook] getting allwinner
-> SoC support upstream (was Re: Uploading linux (3.9.4-1)) (TCI-363-37182)
+On Sun, Jun 9, 2013 at 4:21 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Sunday 09 June 2013, Linus Walleij wrote:
+>> +               /*
+>> +                * IP AMBA bus clocks, driving the bus side of the
+>> +                * peripheral clocking, clock gates.
+>> +                */
+>> +
+>> +               hclkdma0: hclkdma0@48M {
+>> +                       #clock-cells = <0>;
+>> +                       compatible = "st,nomadik-src-clock";
+>> +                       clock-id = <0>;
+>> +                       clocks = <&hclk>;
+>> +               };
+>> +               hclksmc: hclksmc@48M {
+>> +                       #clock-cells = <0>;
+>> +                       compatible = "st,nomadik-src-clock";
+>> +                       clock-id = <1>;
+>> +                       clocks = <&hclk>;
+>> +               };
+>> +               hclksdram: hclksdram@48M {
+>> +                       #clock-cells = <0>;
+>> +                       compatible = "st,nomadik-src-clock";
+>> +                       clock-id = <2>;
+>> +                       clocks = <&hclk>;
+>> +               };
+>> +               hclkdma1: hclkdma1@48M {
+>> +                       #clock-cells = <0>;
+>> +                       compatible = "st,nomadik-src-clock";
+>> +                       clock-id = <3>;
+>> +                       clocks = <&hclk>;
+>> +               };
 >
-> As part of our commitment to improving your customer support experience, we
-> would like to know how you think we are doing.
+> Sorry if I'm being slow to understand how the clock bindings work, but if
+> you have 63 identical clocks that only differ in ther clock-id, can't you
+> just have a single DT node for them instead with #clock-cells=1 to pass the
+> number from the device using it?
 
- sure. you're sending unsolicited messages to a number of technical
-lists, using an automated service.  generally this is considered to be
-Bad.  these technical lists are archived forever so the mistake that
-has been made is one which is irreversible, leaving a permanent and
-uneraseable public record.
+I first had exactly that implementation but it didn't work. This is explained
+in the commit message on patch 1/1:
 
-> You are invited to complete a short satisfaction survey consisting of just a
-> few multiple-choice questions.
+  The gated clocks are implemented with zero cells and
+  given the clock ID as a property of each node, so every
+  gate need to have its own node in the device tree.
+  This is because the gate registers contain both HCLK
+  gates and PCLK gates, where the latter has HCLK as
+  parent. As can be seen from the register layout, this
+  is a complete mixup, which means all these gates need
+  their own node to properly model parent/child relations
+  for PCLKs apart from the HCLKs.
 
- i'm pleased to observe that it's an invitation not an order: i
-decline.  please don't ever send out such "invitations" ever again.
+Basically the "shortcoming" in device tree is that modelling this with
+clock-cells = 1 requires them all to have one and the same parent,
+but they don't.
 
- much obliged.
-
-l.
-
-[btw if someone subscribed my email address without my authorisation,
-the joke appears to have backfired]
+Yours,
+Linus Walleij
