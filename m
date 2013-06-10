@@ -1,64 +1,46 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: add dtsi for palmas
-Date: Mon, 10 Jun 2013 10:29:18 -0600
-Message-ID: <51B5FEDE.5070900@wwwdotorg.org>
-References: <1370855059-5342-1-git-send-email-j-keerthy@ti.com>
- <1370855059-5342-2-git-send-email-j-keerthy@ti.com>
+Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
+Date: Mon, 10 Jun 2013 10:35:57 -0600
+Message-ID: <51B6006D.7010409@wwwdotorg.org>
+References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com> <51B0BC80.9040007@wwwdotorg.org> <CAAVeFu+by44HnOzv_85kwgeCx5b9TxiMhr27x69QcUj9GRbk8A@mail.gmail.com> <51B20B46.4030501@wwwdotorg.org> <CAAVeFu+UMZikdWO20c9chvBcieOAUgOhz-nTEUpevFWnPNC_ZA@mail.gmail.com> <20130610091415.GS18614@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370855059-5342-2-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130610091415.GS18614-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/2013 03:04 AM, J Keerthy wrote:
-> Adds palmas mfd and palmas regulator nodes.
+On 06/10/2013 03:14 AM, Russell King - ARM Linux wrote:
+> On Mon, Jun 10, 2013 at 05:11:15PM +0900, Alexandre Courbot wrote:
+>> On Sat, Jun 8, 2013 at 1:33 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>>>> I think we need to separate the concept of support for *a* secure
+>>>>> monitor, from support for a *particular* secure monitor.
+>>>>
+>>>> Agreed. In this case, can we assume that support for a specific secure
+>>>> monitor is not arch-specific, and that this patch should be moved
+>>>> outside of arch-tegra and down to arch/arm? In other words, the ABI of
+>>>> a particular secure monitor should be the same no matter the chip,
+>>>> shouldn't it?
+>>>
+>>> I would like to believe that the Trusted Foundations monitor had the
+>>> same ABI irrespective of which Soc it was running on. However, I have
+>>> absolutely no idea at all if that's true. Even if there's some common
+>>> subset of the ABI that is identical across all SoCs, I wouldn't be too
+>>> surprised if there were custom extensions for each different SoC, or
+>>> just perhaps even each product.
+>>>
+>>> Can you research this and find out the answer?
+>>
+>> Will do. Information about TF is scarce unfortunately.
+> 
+> The answer is... there isn't a common ABI.  That is something I pressed
+> ARM Ltd for when this stuff first appeared and they were adamant that
+> they were not going to specify any kind of ABI for this interface.
 
-Nits:
-
-Well, you're really adding files that provide the nodes, not the nodes
-themselves.
-
-Palmas and MFD should be correctly capitalized.
-
-> diff --git a/arch/arm/boot/dts/palmas.dtsi b/arch/arm/boot/dts/palmas.dtsi
-
-> +&palmas {
-...
-> +	palmas_pmic {
-...
-> +		ti,ldo6-vibrator;
-
-Isn't that board-specific? I don't know the HW well enough to say, but I
-assume that since there's a property, the whole point must be that some
-boards want it set and some don't.
-
-> +		regulators {
-> +			smps123_reg: smps123 {
-> +				regulator-name = "smps123";
-> +			};
-
-So the node labels here duplicate those in omap5-uevm.dts in patch 2/2.
-While dtc allows this, I don't think there's much point duplicating the
-labels. I'd tend to only put the labels in omap5-uevm.dts and not put
-them here. That will completely avoid the possibility of the labels in
-this file from conflicting with any other labels in any top-level
-board.dts file.
-
-I also wonder if this file is actually terribly useful. The only thing
-that this file provides is the regulator-name property. It seems simpler
-just to put that into each board.dts file. The added advantage of doing
-that, is that if a board doesn't use a particular regulator, the node
-won't appear, and the regulator won't get registered.
+Right, there certainly isn't a common ABI across all secure monitors,
+but in this case I was wondering something more specific: whether for
+this specific implementation/provider of a secure monitor, if they had a
+consistent ABI across all SoCs (or even boards) that they implemented it on.
