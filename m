@@ -1,60 +1,76 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: Re: [PATCH] ARM: dts: Update vdd_arm regulator
-Date: Mon, 10 Jun 2013 09:14:40 +0530
-Message-ID: <51B54BA8.9020104@linaro.org>
-References: <1370516572-313-1-git-send-email-tushar.behera@linaro.org> <1975506.ECnduUFuut@flatron>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH] ARM: dts: add dtsi for palmas
+Date: Mon, 10 Jun 2013 04:03:37 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229EAA39@DBDE04.ent.ti.com>
+References: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>,<51B23AD5.8060006@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1975506.ECnduUFuut@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org, broonie@kernel.org, swarren@wwwdotorg.org, grant.likely@linaro.org, rob.herring@calxeda.com, l.majewski@samsung.com, s.nawrocki@samsung.com, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51B23AD5.8060006@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "lee.jones@linaro.org" <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2013 05:22 PM, Tomasz Figa wrote:
-> Hi Tushar,
-> 
-> On Thursday 06 of June 2013 16:32:52 Tushar Behera wrote:
->> Cpufreq driver for EXYNOS4210 is not a platform driver, hence it is not
->> possible to provide the regulator supply name through DT bindings.
->> Since the cpufreq driver requires the regulator to be named as
->> 'vdd_arm', the related regulator name should be kept same.
->>
->> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
->> ---
->>  arch/arm/boot/dts/exynos4210-origen.dts |    2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos4210-origen.dts
->> b/arch/arm/boot/dts/exynos4210-origen.dts index bcf8079..bd5f589 100644
->> --- a/arch/arm/boot/dts/exynos4210-origen.dts
->> +++ b/arch/arm/boot/dts/exynos4210-origen.dts
->> @@ -192,7 +192,7 @@
->>  				};
->>
->>  				buck1_reg: BUCK1 {
->> -					regulator-name = "VDD_ARM_1.2V";
->> +					regulator-name = "vdd_arm";
-> 
-> Yes, this is the hack I mentioned in my review of
-> [PATCH 0/2] Clock update for EXYNOS4210-CPUFREQ driver
-> 
+Hi Stephen,
 
-We can hold this patch till we get to a conclusion for the above
-mentioned patch set.
+Thanks for the review comments.
 
+________________________________________
+From: Stephen Warren [swarren@wwwdotorg.org]
+Sent: Saturday, June 08, 2013 1:26 AM
+To: J, KEERTHY
+Cc: Cousson, Benoit; devicetree-discuss@lists.ozlabs.org; linux-omap@vger.kernel.org; linux-kernel@vger.kernel.org; ldewangan@nvidia.com; grant.likely@secretlab.ca; swarren@nvidia.com; sameo@linux.intel.com; gg@slimlogic.co.uk; lee.jones@linaro.org
+Subject: Re: [PATCH] ARM: dts: add dtsi for palmas
 
-> Best regards,
-> Tomasz
-> 
->>  					regulator-min-microvolt = 
-> <950000>;
->>  					regulator-max-microvolt	= 
-> <1350000>;
->>  					regulator-always-on;
+On 06/07/2013 05:28 AM, J Keerthy wrote:
+> Adds palmas mfd and palmas regulator nodes. This is
+> based on the patch series:
+>
+> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg89957.html
+>
+> The device tree nodes are based on:
+> https://lkml.org/lkml/2013/6/6/25
 
+> diff --git a/arch/arm/boot/dts/palmas.dtsi b/arch/arm/boot/dts/palmas.dtsi
 
--- 
-Tushar Behera
+> +&palmas {
+
+Hmmm. That (i.e. requiring the board file to declare the node, then
+setting up all the content by later including this file) is an
+interesting approach. I guess it's reasonable. The one issue is that it
+makes it a little harder for the board file to override any of the
+properties in this file., although it certainly is possible by including
+those overrides after the include.
+
+Irrespective of that, some comments on this:
+
+> +     palmas_pmic {
+
+> +             ti,ldo6-vibrator;
+
+For example, what if the board doesn't want to have the property set?
+
+> +
+> +             regulators {
+> +                     smps123_reg: smps123 {
+> +                             regulator-name = "smps123";
+> +                             regulator-min-microvolt = < 600000>;
+> +                             regulator-max-microvolt = <1500000>;
+
+Or what if the board wants to limit the voltage range of this regulator
+due to what it's used for on the board.
+
+> +                             regulator-always-on;
+> +                             regulator-boot-on;
+
+And those two properties are almost certainly board-specific policy.
+
+Totally agree to all the above concerns. So can we have a custom .dtsi file
+for a board+pmic combination? Or have only the required properties over ridden
+in the board file?
+
+Regards,
+Keerthy 
