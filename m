@@ -1,76 +1,35 @@
-From: "J, KEERTHY" <j-keerthy@ti.com>
-Subject: RE: [PATCH] ARM: dts: add dtsi for palmas
-Date: Mon, 10 Jun 2013 04:03:37 +0000
-Message-ID: <DC88CAD03C0052499C1907B327FC63229EAA39@DBDE04.ent.ti.com>
-References: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>,<51B23AD5.8060006@wwwdotorg.org>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v2 0/2] support hisilicon i2c
+Date: Mon, 10 Jun 2013 13:02:53 +0800
+Message-ID: <1370840576-15651-1-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51B23AD5.8060006@wwwdotorg.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "lee.jones@linaro.org" <lee.jones@linaro.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wolfram Sang <wsa@the-dreams.de>, Dirk Brandewie <dirk.brandewie@gmail.com>, baruch@tkos.co.il
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+v2:
+Suggested by Baruch
+Support hisilicon i2c in i2c-designware-platdrv.c, and adding two optional properties
 
-Thanks for the review comments.
+Zhangfei Gao (2):
+  i2c: designware: use module_platform_driver
+  i2c: designware: add two optional property tx/rx-fifo-size
 
-________________________________________
-From: Stephen Warren [swarren@wwwdotorg.org]
-Sent: Saturday, June 08, 2013 1:26 AM
-To: J, KEERTHY
-Cc: Cousson, Benoit; devicetree-discuss@lists.ozlabs.org; linux-omap@vger.kernel.org; linux-kernel@vger.kernel.org; ldewangan@nvidia.com; grant.likely@secretlab.ca; swarren@nvidia.com; sameo@linux.intel.com; gg@slimlogic.co.uk; lee.jones@linaro.org
-Subject: Re: [PATCH] ARM: dts: add dtsi for palmas
+ .../devicetree/bindings/i2c/i2c-designware.txt     |    7 +++++++
+ drivers/i2c/busses/i2c-designware-platdrv.c        |   17 +++++------------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-On 06/07/2013 05:28 AM, J Keerthy wrote:
-> Adds palmas mfd and palmas regulator nodes. This is
-> based on the patch series:
->
-> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg89957.html
->
-> The device tree nodes are based on:
-> https://lkml.org/lkml/2013/6/6/25
-
-> diff --git a/arch/arm/boot/dts/palmas.dtsi b/arch/arm/boot/dts/palmas.dtsi
-
-> +&palmas {
-
-Hmmm. That (i.e. requiring the board file to declare the node, then
-setting up all the content by later including this file) is an
-interesting approach. I guess it's reasonable. The one issue is that it
-makes it a little harder for the board file to override any of the
-properties in this file., although it certainly is possible by including
-those overrides after the include.
-
-Irrespective of that, some comments on this:
-
-> +     palmas_pmic {
-
-> +             ti,ldo6-vibrator;
-
-For example, what if the board doesn't want to have the property set?
-
-> +
-> +             regulators {
-> +                     smps123_reg: smps123 {
-> +                             regulator-name = "smps123";
-> +                             regulator-min-microvolt = < 600000>;
-> +                             regulator-max-microvolt = <1500000>;
-
-Or what if the board wants to limit the voltage range of this regulator
-due to what it's used for on the board.
-
-> +                             regulator-always-on;
-> +                             regulator-boot-on;
-
-And those two properties are almost certainly board-specific policy.
-
-Totally agree to all the above concerns. So can we have a custom .dtsi file
-for a board+pmic combination? Or have only the required properties over ridden
-in the board file?
-
-Regards,
-Keerthy 
+-- 
+1.7.9.5
