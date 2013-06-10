@@ -1,81 +1,148 @@
-From: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 09/11] gpio: davinci: DT changes for driver
-Date: Mon, 10 Jun 2013 11:45:59 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3EAD9928@DBDE04.ent.ti.com>
-References: <1369206634-6778-1-git-send-email-avinashphilip@ti.com>
-	<1369206634-6778-10-git-send-email-avinashphilip@ti.com>
-	<CACRpkdZH4w_-K617QNCo0Z9jH7LKQyjzoG9K-dj4UbN3h5Bcxw@mail.gmail.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v2 06/11] ARM:stixxxx: Add STiH415 SOC support
+Date: Mon, 10 Jun 2013 12:46:59 +0100
+Message-ID: <51B5BCB3.3060405@st.com>
+References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com> <1370856381-6644-1-git-send-email-srinivas.kandagatla@st.com> <CAHTX3d+dk3W_9b7SVUokWq4KYXnj=Z1=WPj5zJ-gUvJqqwE=+Q@mail.gmail.com>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <CACRpkdZH4w_-K617QNCo0Z9jH7LKQyjzoG9K-dj4UbN3h5Bcxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ext Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "KV,
-  Sujith" <sujithkv-l0cyMroinI0@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHTX3d+dk3W_9b7SVUokWq4KYXnj=Z1=WPj5zJ-gUvJqqwE=+Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: linux-arm <linux-arm-kernel@lists.infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Thomas Gleixner <tglx@linutronix.de>, Tony
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 30, 2013 at 23:55:22, Linus Walleij wrote:
-> On Wed, May 22, 2013 at 9:10 AM, Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org> wrote:
-> 
-> (...)
-> > +- interrupts: The Starting IRQ number for GPIO
-> > +- intc_irq_num: The number of IRQs supported by the Interrupt Controller
-> (...)
-> 
-> No this is not how you pass a number of IRQs in the device tree.
-> 
-> "interrupts" is an array. Pass every interrupt here for a full
-> resolution of the IRQs.
+On 10/06/13 12:15, Michal Simek wrote:
 
-Correct. I will change.
+Thankyou for your comments,
+> Hi,
+> 
+> hmm - that's a nice bug that thunderbird is not able to send this email. :-(
+> Let's comment it again via gmail.
+>     diff --git a/arch/arm/boot/dts/stih415.dtsi
+>     b/arch/arm/boot/dts/stih415.dtsi
+>     new file mode 100644
+>     index 0000000..6dcf5b4
+>     --- /dev/null
+>     +++ b/arch/arm/boot/dts/stih415.dtsi
+...
+>     +
+>     +       soc {
+>     +               #address-cells = <1>;
+>     +               #size-cells = <1>;
+>     +               interrupt-parent = <&intc>;
+>     +               ranges;
+>     +               compatible      = "simple-bus";
+> 
+> 
+> 
+> Rob and Grant: what's the purpose of SoC node.
+> It seems to me odd that SoC is compatible with simple-bus.
 
-> 
-> Further this looks fishy:
-> 
-> + interrupts = <42>;
-> 
-> Usually you pass flags with the IRQs, I would rather have expected
-> an array like this:
-> 
-> interrupts = < 90 0x4 96 0x4 14 0x4 15 0x4 79 0x4>;
-> 
-> 0x4 is IRQ_TYPE_LEVEL_HIGH, you can use the dts
-> #include <dt-bindings/interrupt-controller/irq.h> and
-> define that symbolically.
-> 
-> Doesn't the DaVinci IRQ controller support *any* IRQ flags?
+All the drivers on this SOC are based on platform bus, so we use
+simple-bus, here.
 
-I wasn't sure about it.
-But from davinci GPIO driver perspective, GPIO pins are
-configured as edge sensitive. So IRQ_TYPE_EDGE_BOTH can be used.
-
-So I will correct Documentation and update DT nodes in next version.
-
+>     diff --git a/arch/arm/boot/dts/stih41x.dtsi
+>     b/arch/arm/boot/dts/stih41x.dtsi
+>     new file mode 100644
+>     index 0000000..7321403
+>     --- /dev/null
+>     +++ b/arch/arm/boot/dts/stih41x.dtsi
+>     @@ -0,0 +1,38 @@
+>     +/ {
+>     +       #address-cells = <1>;
+>     +       #size-cells = <1>;
+>     +
+>     +       cpus {
+>     +               #address-cells = <1>;
+>     +               #size-cells = <0>;
+>     +               cpu@0 {
+>     +                       compatible = "arm,cortex-a9";
+>     +                       reg = <0>;
+>     +               };
+>     +               cpu@1 {
+>     +                       compatible = "arm,cortex-a9";
+>     +                       reg = <1>;
+>     +               };
+>     +       };
+>     +
 > 
-> Since the driver code is not reading out the interrupts but
-> (I guess?) falling back to platform data IRQ assignment,
-> this seems wrong.
-
-Driver code reads "Starting IRQ number for GPIO" from platform resource
-See [PATCH 03/11] gpio: davinci: Modify to platform driver.
-Driver requires only starting offset of gpio irq number. GPIO interrupt
-Number expected in sequential order for davinci GPIO.
-
-Thanks
-Avinash
-
- 
-> Yours,
-> Linus Walleij
 > 
+> I believe your SoC also has a bus here.
+
+It does but there is no active driver to manage it.
+
+>     --- /dev/null
+>     +++ b/arch/arm/mach-stixxxx/board-dt.c
+>     @@ -0,0 +1,47 @@
+
+>     +
+>     +void __init stih41x_l2x0_init(void)
+>     +{
+>     +       u32 way_size = 0x4;
+>     +       u32 aux_ctrl;
+>     +
+>     +       aux_ctrl = (0x1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT) |
+>     +               (0x1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT) |
+>     +               (0x1 << L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT) |
+>     +               (way_size << L2X0_AUX_CTRL_WAY_SIZE_SHIFT);
+> 
+> 
+> 
+> #include <linux/bitops.h>
+> Linus Walleij would write use  BIT() here
+
+I will use BIT() macro.
+
+>     diff --git a/arch/arm/mach-stixxxx/headsmp.S
+>     b/arch/arm/mach-stixxxx/headsmp.S
+>     new file mode 100644
+>     index 0000000..3dd5c04
+>     --- /dev/null
+>     +++ b/arch/arm/mach-stixxxx/headsmp.S
+>     @@ -0,0 +1,44 @@
+>     +/*
+>     + *  arch/arm/plat-stixxxx/headsmp.S
+> 
+
+>     +       .long   pen_release
+> 
+> 
+> check that your SoC has no option to start/reset cpus separately.
+> If yes, then you shouldn't use pen_release.
+> We discussed this with Russel some days ago.
+No, stih41x series can't reset the cores separately.
+>  
+> 
+>     diff --git a/arch/arm/mach-stixxxx/platsmp.c
+>     b/arch/arm/mach-stixxxx/platsmp.c
+>     new file mode 100644
+>     index 0000000..ffc40c0
+>     --- /dev/null
+>     +++ b/arch/arm/mach-stixxxx/platsmp.c
+>     @@ -0,0 +1,117 @@
+>     +/*
+>     + *  arch/arm/plat-stixxxx/platsmp.c
+> 
+> 
+> wrong.
+
+Left over, will clean it up in next version.
+
+>     + *  arch/arm/plat-stixxxx/platsmp.c
+> 
+> 
+> incorrect.
+Left over, will clean it up in next version.
+>  
+>     +extern struct smp_operations   stixxxx_smp_ops;
+>     +extern void __iomem *stixxxx_scu_base_addr;
+> 
+> 
+> Unused variable in this patch.
+yes, I will remove stixxxx_scu_base_addr.
+
+thanks,
+srini
