@@ -1,104 +1,76 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v5 19/22] ARM: shmobile: kzm9g-reference: Move SDHI regulators to DT
-Date: Wed, 12 Jun 2013 00:22:48 +0200
-Message-ID: <1370989371-30846-20-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1370989371-30846-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1370989371-30846-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, James Hogan <james.hogan@imgtec.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH 2/4] watchdog: at91sam9_wdt: update device tree doc
+Date: Tue, 11 Jun 2013 23:29:36 +0100
+Message-ID: <20130611222936.C23523E0D8D@localhost>
+References: <1370947890-954-1-git-send-email-b.brezillon@overkiz.com> <1370947890-954-3-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1370947890-954-3-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Create two GPIO-controlled fixed-voltage regulators in the
-kzm9g-reference DT and remove manual configuration of the corresponding
-GPIOs from board code.
+On Tue, 11 Jun 2013 12:51:27 +0200, Boris BREZILLON <b.brezillon@overkiz.com> wrote:
+> Add new at91sam9 watchdog properties to the documentation.
+> 
+> Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- arch/arm/boot/dts/sh73a0-kzm9g-reference.dts   | 23 +++++++++++++++++++++--
- arch/arm/mach-shmobile/board-kzm9g-reference.c |  6 ------
- 2 files changed, 21 insertions(+), 8 deletions(-)
+Looks reasonable,
 
-diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-index 24f7b04..6374965 100644
---- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-+++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-@@ -13,6 +13,7 @@
- 
- /dts-v1/;
- /include/ "sh73a0.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "KZM-A9-GT";
-@@ -58,6 +59,24 @@
- 		regulator-boot-on;
- 	};
- 
-+	vmmc_sdhi0: regulator@2 {
-+	        compatible = "regulator-fixed";
-+		regulator-name = "SDHI0 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pfc 15 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vmmc_sdhi2: regulator@3 {
-+	        compatible = "regulator-fixed";
-+		regulator-name = "SDHI2 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pfc 14 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
- 	lan9220@10000000 {
- 		compatible = "smsc,lan9220", "smsc,lan9115";
- 		reg = <0x10000000 0x100>;
-@@ -200,7 +219,7 @@
- 	pinctrl-0 = <&sdhi0_pins>;
- 	pinctrl-names = "default";
- 
--	vmmc-supply = <&reg_3p3v>;
-+	vmmc-supply = <&vmmc_sdhi0>;
- 	bus-width = <4>;
- 	status = "okay";
- };
-@@ -209,7 +228,7 @@
- 	pinctrl-0 = <&sdhi2_pins>;
- 	pinctrl-names = "default";
- 
--	vmmc-supply = <&reg_3p3v>;
-+	vmmc-supply = <&vmmc_sdhi2>;
- 	bus-width = <4>;
- 	broken-cd;
- 	status = "okay";
-diff --git a/arch/arm/mach-shmobile/board-kzm9g-reference.c b/arch/arm/mach-shmobile/board-kzm9g-reference.c
-index fc2bb37..1847b4d 100644
---- a/arch/arm/mach-shmobile/board-kzm9g-reference.c
-+++ b/arch/arm/mach-shmobile/board-kzm9g-reference.c
-@@ -21,7 +21,6 @@
-  */
- 
- #include <linux/delay.h>
--#include <linux/gpio.h>
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/irqchip.h>
-@@ -37,11 +36,6 @@ static void __init kzm_init(void)
- {
- 	sh73a0_add_standard_devices_dt();
- 
--	/* enable SD */
--	gpio_request_one(15, GPIOF_OUT_INIT_HIGH, NULL); /* power */
--
--	gpio_request_one(14, GPIOF_OUT_INIT_HIGH, NULL); /* power */
--
- #ifdef CONFIG_CACHE_L2X0
- 	/* Early BRESP enable, Shared attribute override enable, 64K*8way */
- 	l2x0_init(IOMEM(0xf0100000), 0x40460000, 0x82000fff);
+Acked-by: Grant Likely <grant.likely@linaro.org>
+
+> ---
+>  .../devicetree/bindings/watchdog/atmel-wdt.txt     |   30 ++++++++++++++++++--
+>  1 file changed, 28 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> index fcdd48f..e043106 100644
+> --- a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> @@ -9,11 +9,37 @@ Required properties:
+>  
+>  Optional properties:
+>  - timeout-sec: contains the watchdog timeout in seconds.
+> +- interrupts : Should contain WDT interrupt.
+> +- atmel,max-heartbeat-sec : Should contain the maximum heartbeat value in
+> +	seconds. This value should be less than 16. It is used to compute the
+> +	WDV field.
+> +- atmel,max-heartbeat-sec : Should contain the minimum heartbeat value in
+> +	seconds. This value should be less than 4 times the max-heartbeat-sec
+> +	value. It is used to compute the WDD field.
+> +- atmel,watchdog-type : Should be "hardware" or "software". Hardware watchdog
+> +	use the at91 watchdog reset. Software watchdog use the watcdog interrup
+> +	to trigger a software reset.
+> +- atmel,reset-type : Should be "proc" or "all".
+> +	"all" : assert peripherals and processor reset signals
+> +	"proc" : assert the processor reset signal
+> +	This is valid only when using "hardware" watchdog.
+> +- atmel,disable : Should be present if you want to disable the watchdog.
+> +- atmel,idle-halt : Should be present if you want to stop the watchdog when
+> +	entering idle state.
+> +- atmel,dbg-halt : Should be present if you want to stop the watchdog when
+> +	entering debug state.
+>  
+>  Example:
+> -
+>  	watchdog@fffffd40 {
+>  		compatible = "atmel,at91sam9260-wdt";
+>  		reg = <0xfffffd40 0x10>;
+> -		timeout-sec = <10>;
+> +		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+> +		timeout-sec = <15>;
+> +		atmel,watchdog-type = "hardware";
+> +		atmel,reset-type = "all";
+> +		atmel,dbg-halt;
+> +		atmel,idle-halt;
+> +		atmel,max-heartbeat-sec = <16>;
+> +		atmel,min-heartbeat-sec = <0>;
+> +		status = "okay";
+>  	};
+> -- 
+> 1.7.9.5
+> 
+
 -- 
-1.8.1.5
-
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
