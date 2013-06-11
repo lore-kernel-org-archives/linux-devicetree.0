@@ -1,24 +1,47 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/3] ARM: dts: OMAP3: Use MTD constants for OMAP3 boards
-Date: Tue, 11 Jun 2013 10:27:26 -0600
-Message-ID: <51B74FEE.1010301@wwwdotorg.org>
-References: <1370962138-9631-1-git-send-email-florian.vaussard@epfl.ch> <1370962138-9631-4-git-send-email-florian.vaussard@epfl.ch>
+From: Illia Smyrnov <illia.smyrnov@ti.com>
+Subject: [PATCH v2 0/2] spi: omap2-mcspi: add FIFO buffer support
+Date: Tue, 11 Jun 2013 20:09:13 +0300
+Message-ID: <1370970556-11713-1-git-send-email-illia.smyrnov@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1370962138-9631-4-git-send-email-florian.vaussard@epfl.ch>
 Sender: linux-omap-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Anil Kumar <anilk4.v@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mark Brown <broonie@kernel.org>
+Cc: Illia Smyrnov <illia.smyrnov@ti.com>, Daniel Mack <zonque@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2013 08:48 AM, Florian Vaussard wrote:
-> Use the MTD constants for NAND and OneNAND nodes used in OMAP3
-> DTS.
+These patches introduce FIFO support for TI OMAP4/OMAP5 MCSPI controller.
+Using FIFO unload the DMA and improve data throughput. On Blaze (OMAP 4460) 
+ethernet throughput with MTU 1500 was increased:
+* for TX from 6.9476 Mbps (FIFO disabled) to 7.7982 Mbps (FIFO enabled),
+* for RX from 6.5120 Mbps (FIFO disabled) to 7.5461 Mbps (FIFO enabled).
 
-I don't quite understand the split between patches 2/3 and 3/3; isn't
-the edit to omap3-overo.dtsi (part of) a board file, and hence logically
-part of this patch? I'd be tempted just to squash the two together.
+The FIFO sanity test on OMAP5 Panda board also has been done. 
 
-But, this is a nit; not a big deal.
+The FIFO could be enabled for MCSPI by "ti,spi-fifo-enabled" in DT. If enabled,
+driver will calculate the largest possible FIFO buffer size taking into account
+MCSPI FIFO constraints for each SPI transfer.
+
+The MCSPI FIFO constraints are:
+* FIFO depth size defined as a multiple of the SPI word length;
+* transfer's data size is a multiple of FIFO depth;
+* transfer's words count less or equal 65535.
+
+Also FIFO buffer with 1 byte size is insignificant, so driver will setup FIFO if
+calculated size is within the 2 to 64 bytes range.
+
+--------------------
+v2:
+* driver calculate and setup optimal FIFO size for each SPI transfer;
+* "ti,spi-fifo-enabled" parameter in MCSPI DT node to enable FIFO;
+* no FIFO settings in SPI slaves nodes in DT;
+* Matthias Brugger patch was excluded from patch set.
+
+Illia Smyrnov (2):
+  spi: omap2-mcspi: Move bytes per word calculation to the function
+  spi: omap2-mcspi: Add FIFO buffer support
+
+ Documentation/devicetree/bindings/spi/omap-spi.txt |    8 +
+ drivers/spi/spi-omap2-mcspi.c                      |  173 +++++++++++++++++---
+ 2 files changed, 158 insertions(+), 23 deletions(-)
+
