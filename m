@@ -1,63 +1,64 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v3 1/6] irqchip: add support for Marvell Orion SoCs
-Date: Tue, 11 Jun 2013 16:08:28 +0200
-Message-ID: <51B72F5C.5020806@gmail.com>
-References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com> <1370536034-23956-2-git-send-email-sebastian.hesselbarth@gmail.com> <alpine.LFD.2.02.1306111045520.22970@ionos> <alpine.LFD.2.02.1306111525180.22970@ionos> <51B7280B.7080604@gmail.com> <alpine.LFD.2.02.1306111539310.22970@ionos>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v2 02/11] clocksource:global_timer: Add ARM global timer
+ support.
+Date: Tue, 11 Jun 2013 15:05:14 +0100
+Message-ID: <51B72E9A.6070006@st.com>
+References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com>
+ <1370856087-6452-1-git-send-email-srinivas.kandagatla@st.com>
+ <CACRpkdbQCRKBzRF4HzNsXHwXCLJJcFZ9T36GPmmYsnX1OfgGRg@mail.gmail.com>
+ <51B5D7A6.1020101@st.com>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.02.1306111539310.22970@ionos>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51B5D7A6.1020101@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, srinivas.kandagatla@st.com, Will Deacon <will.deacon@arm.com>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Stephen Gallimore <stephen.gallimore@st.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Stuart Menefy <stuart.menefy@st.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/13 15:45, Thomas Gleixner wrote:
-> On Tue, 11 Jun 2013, Sebastian Hesselbarth wrote:
->> On 06/11/13 15:30, Thomas Gleixner wrote:
->>> On Tue, 11 Jun 2013, Thomas Gleixner wrote:
->>>> On Thu, 6 Jun 2013, Sebastian Hesselbarth wrote:
->>>>> This patch adds an irqchip driver for the main interrupt controller
->>>>> found
->>>>> on Marvell Orion SoCs (Kirkwood, Dove, Orion5x, Discovery Innovation).
->>>>> Corresponding device tree documentation is also added.
->>>>>
->>>>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->>>>
->>>> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
->>>
->>> Second thoughts:
->>>
->>>> +static void orion_bridge_irq_handler(unsigned int irq, struct irq_desc
->>>> *desc)
->>>> +{
->>>> +	struct irq_domain *d = irq_get_handler_data(irq);
->>>> +	struct irq_chip_generic *gc = irq_get_domain_generic_chip(d, irq);
->>>> +	u32 stat = readl_relaxed(gc->reg_base + ORION_BRIDGE_IRQ_CAUSE) &
->>>> +		gc->mask_cache;
->>>
->>> In init you map the first irq of that chip and install the chain
->>> handler for it. Now if that first irq fires, isn't that set in the
->>> cause register as well? And what acks that first irq?
+On 10/06/13 14:41, Srinivas Kandagatla wrote:
+> On 10/06/13 14:13, Linus Walleij wrote:
+>> On Mon, Jun 10, 2013 at 11:21 AM, Srinivas KANDAGATLA
+>> Isn't it better to pass a struct device_node *np around and have that as
+>> NULL in the non-DT boot path?
+> I will try it and see how it will look.
+
+I did try the change you suggested regarding passing struct device_node
+*np around for both DT and non-DT boot paths.
+
+Doing this is not adding any value to the driver, because
+ 1. Currently the driver only support DT boot paths, in my previous RFC
+patches, Arnd suggested to get rid of the header as all platforms are DT
+now.
+ 2. Passing device_node around is not adding any value w.r.t reducing
+code or any thing.
+
+So, I think I will stay with what is there originally, unless you have a
+strong reason.
+
+Thanks,
+srini
+
+> 
+> Thanks,
+> srini
 >>
->> It is "acked" by acking all unmasked bridge irqs.
->
-> Ok. A comment would be nice.
->
-> But what about the bit in of that first irq in the cause register? If
-> it's set on entry you call generic_handle_irq() for that as well. So
-> if it's set you need to mask it in stat. If not, then it wants a
-> comment.
-
-I am not sure I can follow. orion_bridge_irq_init() maps the first
-parent irq, i.e. hwirq 0 of orion_irq. The parent irq controller
-clears that irq cause when all corresponding chained irqs are
-cleared. The chained (bridge) irqs are cleared by
-orion_bridge_irq_handler above.
-
-I can put a note to the parent irqchip in orion_irq_init() that we
-don't need to clear its cause register, if it is that what you mean?
-
-Sebastian
-
+>> (Maybe somebody in the community asked you to do this, then I
+>> will live with it.)
+> 
+>>
+>> Yours,
+>> Linus Walleij
+>>
+>>
+> 
