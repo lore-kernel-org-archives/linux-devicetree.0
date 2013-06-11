@@ -1,14 +1,17 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: microblaze device-tree description - pair intc/buses and timers
-Date: Tue, 11 Jun 2013 23:22:25 +0100
-Message-ID: <20130611222225.9753A3E0D8D@localhost>
-References: <51A35E6D.5040706@monstr.eu>
- <20130611130236.D2ACA3E0A90@localhost> <51B72F4B.9030700@monstr.eu>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Wed, 12 Jun 2013 00:22:29 +0200
+Message-ID: <51B7A325.8070108@gmail.com>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130609014506.GB10027@obsidianresearch.com>
+ <20130611135737.GC3996@localhost> <20835253.Agl4DfuI3k@wuerfel>
+ <20130611215023.GA12649@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51B72F4B.9030700-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+In-Reply-To: <20130611215023.GA12649-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,98 +22,142 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Edgar Iglesias <edgari-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Peter Crosthwaite <pcrost-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Jun 2013 16:08:11 +0200, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
-> Hi Grant,
-> 
-> nice that you have found a time to look at this.
-> 
-> On 06/11/2013 03:02 PM, Grant Likely wrote:
-> > On Mon, 27 May 2013 15:23:57 +0200, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
-> >> Hi guys,
-> >>
-> >> we have got a new configurations with iomodule which can be connected to the microblaze
-> >> cpu and I would like to have proper description for this system
-> >> + more advance configuration below.
-> >>
-> >> Buses:
-> >> Microblaze systems have in standard configuration two buses LMB and AXI(in past PLB).
-> >> We didn't generate LMB even there is placed BRAM (block ram)
-> >> but Linux expects that there is any writeable memory at 0x0.
-> >> Currently because we can use iomodule which is connected to LMB and we need to generate
-> >> this bus. I don't expect that there is any problem to have this configuration.
-> >>
-> >> cpus {
-> >> 	...
-> >> 	cpu@0 {
-> >> 		...
-> >> 	}
-> >> }
-> >> lmb@0 {
-> >> 	...
-> >> 	iomodule@X {
-> >> 		...
-> >> 	}
-> >> }
-> >> axi@X {
-> >> 	...
-> >> 	nodes
-> >> 	...
-> >> }
-> >>
-> >> Block ram:
-> >> When we generate lmb make sense to also add there this small bram memory
-> >> but I expect that is it ok just to added to bus and do not add it to the root.
-> >> Currently we have an option to use "mmio-sram" compatibility string for it.
-> >>
-> >> Interrupt controller:
-> >> Till now Microblaze uses only one interrupt controller on main bus (AXI or PLB)
-> >> and we just find compatible string and we said that this is primary interrupt controller.
-> >>
-> >> Based on DTS in the kernel I see that "interrupt-parent" property
-> >> reflects which interrupt controller is master and which one is in cascade.
-> > 
-> > Mostly correct; it is also possible for an interrupt controller to
-> > cascade to two different parent controllers, and in that case there
-> > would need to be an interrupt-map somewhere. That case is rare however.
-> 
-> Any dts in the kernel which uses this?
+On 06/11/2013 11:50 PM, Jason Gunthorpe wrote:
+> On Tue, Jun 11, 2013 at 05:26:47PM +0200, Arnd Bergmann wrote:
+>> That looks ok to me, yes. If you have just one device under some of the nodes
+>> however, I think it's easier use an empty ranges property and do
+>>
+>>   	devbus-bootcs {
+>>   		ranges;
+>>   		nor {
+>>   			reg =<0x012f0000 0 0x1000000>;
+>>   		};
+>>
+>> The 'ranges' here is most useful if you have multiple devices
+>> add different offsets. I would also predefine those ranges to
+>> be as large as possible so you don't have to adapt them when
+>> the child device grows beyond it.
+>
+> It isn't super critical, but the ranges does keep the 0x012f0000 value
+> in the SOC .dtsi and the board level doesn't have to be exposed to the
+> value, it just uses 0 to setup the NOR.
 
-You can find lots of examples of the interrupt-map property by doing
-git grep. Most of them are PCI interrupt controllers which is similar to
-what you're asking, but not entirely the same. I have seen examples in
-the past, but I cannot remember off the top of my head.
+Jason, Ezequiel, Arnd,
 
-> >> Timer:
-> >> System timer was also detected in this way that the first suitable timer was
-> >> taken and used. Others were just ignored.
-> >>
-> >>
-> >> Extend system configuration
-> >> We have also got an option to add one more CPU and I would like to have
-> >> an option to describe it correctly.
-> > 
-> > Are you doing SMP in this case? I assume that you are not because we're
-> > talking about microblaze here. Separate OSes on each CPU?
-> 
-> As you know on fpga we can do a lot of things. I am not talking about SMP
-> case here because it should also cover non SMP cases.
-> But yeah, Microblaze can also do SMP.
+sorry to kick into this thread that late but Ezequiel made me think of
+address windows when asking on IRC. From what I can see from your and
+Arnd's proposal the only real difference is that having it Arnd's way
+allows you to have two or more windows mapped to e.g. devbus with
+totally independent address ranges - while yours requires one large
+window for all child devices?
 
-Nice! I didn't expect that. I assumed that cache coherency would have
-been too expensive to be worth it on an FPGA soft core.
+> Also, it makes it much simpler for the mbus driver to detect which
+> target id's are required so they can be allocated/setup - the rule
+> would be every child stanza should have a ranges with the target(s) it
+> needs.
+>
+> The full version probably looks like this:
+>
+> mbus {
+>      ranges ....
+>
+>                          devbus-bootcs@10400 {
+>                                  compatible = "marvell,mvebu-devbus";
+>                                  reg =<INTERNAL_REGS + 0x10400 0x8>;
+>                                  ranges =<0 DEVBUS_BOOTCS 0x1000000>;
+>                                  #address-cells =<1>;
+>                                  #size-cells =<1>;
+>                                  clocks =<&coreclk 0>;
+>
+> 				// In board .dts:
+>                                  nor@0 {
+>                                          compatible = "cfi-flash";
+>                                          reg =<0 0x1000000>;
+>                                          bank-width =<2>;
+>                                  };
+>                          };
+> };
+>
+> And notice here that we need to offset INTERNAL_REGS to make this
+> work. To me, this is the primary reason why the 2nd cell of the mbus
+> address format *must* be the address offset within the target, and not
+> anything else.
 
-> btw: is there any problem if there is no interrupt controller in the system at all?
-> I think we can setup system just with one timer which should be possible
-> to describe and run Linux on it.
-> Is this any requirement from Linux point of view?
+Given the limited number of windows, I personally prefer your proposal
+above - but nevertheless I can also think of separating target id from
+ranges completely. (I know this discussion has been here for a while,
+and I apologize if below was already NACKed before)
 
-It would mean every device driver needs to be polled. As long as the
-polling frequency is high enough for the work load then it should be
-okay. I don't see a problem with there being no interrupt controller,
-unless there needs to be a dummy one just to keep the kernel happy.
+Although, not thought to the bare end this could also work and maybe
+reflects the actual hardware more accuate:
 
-g.
+mbus {
+	compatible = "marvell,kirkwood-mbus";
+	ranges; /* 1:1 mapping */
+
+	internal-regs {
+		ranges = <0 0xf1000000 0x800000>;
+		/* target-id target-attr size */
+		marvell,mbus-target = <0xff 0x12 0x800000>;
+
+		nand {
+			compatible = "marvell,orion-nand";
+			reg = <0x10400 0x80>;
+			marvell,mbus-target = <0x01 0x2f 0x100000>;
+
+			/* in board dts */
+			spansion-flash {
+				...
+			};
+		};
+	};
+
+	sram {
+		marvell,mbus-target = <...>;
+	};
+};
+
+>>> 2. There's no need to use an algorithm to 'find' a base address for decoding
+>>>     windows (such as first-fit as Arnd suggested in another mail).
+>>>     The base address is already there in the ranges property, so the mbus can
+>>>     simply allocate the window on that base address.
+>>>
+>>> So, am I right or completely lost?
+>>
+>> Since you already need code to update the ranges property, I think
+>> it's best to discard the ranges at boot time and create a new mapping
+>> that just maps the devices you actually want to use. That would make
+>> it much easier to cope with boot loaders that don't set up the
+>> mappings in the same way that is listed in the device tree. Just
+>> put the one entry for the internal-regs in the ranges, since that
+>> is needed to map do the mbus setup.
+>
+> So, I think we can/have agree that the ranges in the FDT should
+> reflect the bootloader's settings, and if the ranges is missing an
+> element it means the bootloader didn't set it up.
+>
+> A compatible bootloader should dump the entire mbus register table
+> into the ranges. The address encoding is such that we can represent
+> every mbus window entry in ranges. If no bootloader support is present
+> then the ranges value is forced into the mbus windows anyhow.
+>
+> If there isn't a ranges entry, but there is a child that requires it
+> (how do we figure this out?) then dynamic assignment of that window
+> makes sense to me. (however, this also looks a bit tricky, how do you
+> avoid hitting the PCI-E window reservations, for instance?)
+>
+> Unconditional dynamic assignment is a bit more tricky, for instance
+> the boot rom has to be located at a specific address since it is used
+> as the SMP secondary startup trampoline. (Ezequiel: IMHO, you should
+> check for this and bail secondary startup if it is not setup)
+
+When removing size from marvell,mbus-target above, mbus driver could
+also probe for required max size from the reg properties of the child
+nodes. Arnd already said that mbus isn't "simple-bus" anymore, why
+can't it just walk through the nodes and collect required windows?
+
+Sebastian
