@@ -1,49 +1,53 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: OMAP5: Add palmas MFD node and regulator
- nodes
-Date: Tue, 11 Jun 2013 10:01:43 -0600
-Message-ID: <51B749E7.6070808@wwwdotorg.org>
-References: <1370928651-6278-1-git-send-email-j-keerthy@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/3] ARM: dts: Add headers with constants for MTD partitions
+Date: Tue, 11 Jun 2013 10:24:13 -0600
+Message-ID: <51B74F2D.2080804@wwwdotorg.org>
+References: <1370962138-9631-1-git-send-email-florian.vaussard@epfl.ch> <1370962138-9631-2-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370928651-6278-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1370962138-9631-2-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-omap-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@epfl.ch>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Anil Kumar <anilk4.v@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/2013 11:30 PM, J Keerthy wrote:
-> This patch adds Palmas MFD node and the regulator nodes for OMAP5.
+On 06/11/2013 08:48 AM, Florian Vaussard wrote:
+> These constants can be used to easily declare MTD partitions inside
+> DTS.
 > 
-> The node definitions are based on: https://lkml.org/lkml/2013/6/6/25
-> 
-> Boot tested on omap5-uevm board.
+> The constants MTDPART_OFS_* are purposely not included. Indeed,
+> parse_ofpart_partitions() is expecting u64, but a DT cell is u32.
+> Negative constants, as defined by MTDPART_OFS_*, would be wrongly
+> interpreted by parse_ofpart_partitions(). Two cells should be
+> used to correctly encode the negative constants, but this breaks
+> current usage.
 
-> diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+I think addition of common headers like this needs an ack from
+Grant/Rob. I CC'd them here.
 
-> +	palmas: palmas@48 {
-> +		reg = <0x48>;
-> +		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /* IRQ_SYS_1N */
-> +		interrupt-parent = <&gic>;
-> +	};
-> +};
+> diff --git a/include/dt-bindings/mtd/partitions.h b/include/dt-bindings/mtd/partitions.h
+
+> + * This header provides constants used with MTD partitions.
+...
+> +/* Partition size */
+> +#define MTDPART_SIZ_FULL	0
+
+Which binding document in Documentation/devicetree/bindings is this
+definition associated with? The comment above should really mention
+this. Documentation/devicetree/bindings/mtd/partition.txt doesn't seem
+to mention this value.
+
+> diff --git a/include/dt-bindings/sizes.h b/include/dt-bindings/sizes.h
+
+...
+> +#define SZ_1G				0x40000000
+> +#define SZ_2G				0x80000000
 > +
-> +&palmas {
-> +	compatible = "ti,palmas";
-> +	interrupt-controller;
-> +	#interrupt-cells = <2>;
+> +#endif
 
-I don't really see the point of splitting the node into two parts if
-it's all going into a single file. It made sense if part of the node
-came from a common .dtsi file, but not so much when it doesn't.
+For MTD partitions specifically, SZ_4G and onwards would be useful in
+theory, although that would end up putting two cell values into a single
+macro. and then the values couldn't be added/or'd together. So, I'm not
+really sure if we want to add those larger values, but food for thought...
