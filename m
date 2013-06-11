@@ -1,210 +1,293 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [RFC] pinctrl: generic: Add DT bindings
-Date: Wed, 12 Jun 2013 00:03:57 +0200
-Message-ID: <1370988237-30593-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, James Hogan <james.hogan@imgtec.com>, linux-sh@vger.kernel.org
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH V5 2/5] clk: samsung: register audio subsystem clocks using
+ common clock framework
+Date: Tue, 11 Jun 2013 15:13:02 -0700
+Message-ID: <20130611221302.8816.73360@quantum>
+References: <1370348890-6645-1-git-send-email-padma.v@samsung.com>
+ <1370348890-6645-3-git-send-email-padma.v@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1370348890-6645-3-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.orgpadma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Document DT properties for the generic pinctrl parameters and add a
-parser function.
+Quoting Padmavathi Venna (2013-06-04 05:28:07)
+> Audio subsystem is introduced in s5pv210 and exynos platforms.
+> This has seperate clock controller which can control i2s0 and
+> pcm0 clocks. This patch registers the audio subsystem clocks
+> with the common clock framework on Exynos family.
+> 
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../bindings/pinctrl/pinctrl-bindings.txt          | 29 +++++++
- drivers/pinctrl/pinconf-generic.c                  | 94 ++++++++++++++++++++++
- drivers/pinctrl/pinconf.h                          | 17 ++++
- 3 files changed, 140 insertions(+)
+This looks good to me.  You have my Ack, or I can take this patch
+through clk-next.  Let me know what works for you.
 
-I've successfully tested this patch (or more accurately only the pull-up and
-pull-down properties) with the Renesas sh-pfc pinctrl device driver. I will
-resent the sh-pfc DT bindings patch series rebased on the generic pinconf
-bindings.
-
-Not all generic pinconf properties are currently implemented, but I don't
-think that should be a showstopper. We can add them later as needed.
-
-The code is based on both the sh-pfc pinconf DT parser and James Hogan's
-tz1090 DT parser ("[PATCH v2 6/9] pinctrl-tz1090: add TZ1090 pinctrl driver").
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-index c95ea82..e499ff0 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -126,3 +126,32 @@ device; they may be grandchildren, for example. Whether this is legal, and
- whether there is any interaction between the child and intermediate parent
- nodes, is again defined entirely by the binding for the individual pin
- controller device.
-+
-+== Generic pinconf parameters ==
-+
-+Pin configuration parameters are expressed by DT properties in the pin
-+controller device state nodes and child nodes. For devices that use the generic
-+pinconf parameters the following properties are defined.
-+
-+- tristate: A boolean, put the pin into high impedance state when set.
-+
-+- pull-up: An integer representing the pull-up strength. 0 disables the pull-up,
-+  non-zero values enable it.
-+
-+- pull-down: An integer representing the pull-down strength. 0 disables the
-+  pull-down, non-zero values enables it.
-+
-+- schmitt: An integer, enable or disable Schmitt trigger mode for the pins.
-+  Valid values are
-+    0: Schmitt trigger disabled (no hysteresis)
-+    1: Schmitt trigger enabled
-+
-+- slew-rate: An integer controlling the pin slew rate. Values are device-
-+  dependent.
-+
-+- drive-strength: An integer representing the drive strength of pins in mA.
-+  Valid values are device-dependent.
-+
-+The pinctrl device DT bindings documentation must list the properties that
-+apply to the device, and define the valid range for all device-dependent
-+values.
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index 2ad5a8d..bd0e41d 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -15,6 +15,7 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/device.h>
-+#include <linux/of.h>
- #include <linux/slab.h>
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
-@@ -135,3 +136,96 @@ void pinconf_generic_dump_config(struct pinctrl_dev *pctldev,
- }
- EXPORT_SYMBOL_GPL(pinconf_generic_dump_config);
- #endif
-+
-+struct pinconf_generic_param {
-+	const char *property;
-+	enum pin_config_param param;
-+	bool flag;
-+};
-+
-+static const struct pinconf_generic_param pinconf_generic_params[] = {
-+	{ "tristate",		PIN_CONFIG_BIAS_HIGH_IMPEDANCE,		true },
-+	{ "pull-up",		PIN_CONFIG_BIAS_PULL_UP,		false },
-+	{ "pull-down",		PIN_CONFIG_BIAS_PULL_DOWN,		false },
-+	{ "schmitt",		PIN_CONFIG_INPUT_SCHMITT_ENABLE,	true },
-+	{ "slew-rate",		PIN_CONFIG_SLEW_RATE,			false },
-+	{ "drive-strength",	PIN_CONFIG_DRIVE_STRENGTH,		false },
-+};
-+
-+static int pinconf_generic_add_config(unsigned long **configs,
-+				      unsigned int *num_configs,
-+				      unsigned long config)
-+{
-+	unsigned int count = *num_configs + 1;
-+	unsigned long *cfgs;
-+
-+	cfgs = krealloc(*configs, sizeof(*cfgs) * count, GFP_KERNEL);
-+	if (cfgs == NULL)
-+		return -ENOMEM;
-+
-+	cfgs[count - 1] = config;
-+
-+	*configs = cfgs;
-+	*num_configs = count;
-+
-+	return 0;
-+}
-+
-+/**
-+ * pinconf_generic_parse_params - Parse generic pinconf parameters from DT
-+ * @dev: the device, used to print error messages
-+ * @np: the DT node that contains generic pinconf parameters
-+ * @cfgs: the returned array of pinconf parameters
-+ *
-+ * The parameters array is allocated dynamically and returned through the cfgs
-+ * argument. The caller is responsible for freeing the array with kfree(). If no
-+ * configuration parameter is found, or if an error occurs, no parameters array
-+ * will be allocated and the cfgs argument will be set to NULL.
-+ *
-+ * Return the number of configuration parameters successfully parsed, or a
-+ * negative value if an error occurred. Used error codes are
-+ *
-+ * -ENOMEM if memory can't be allocated for the parameters array
-+ */
-+int pinconf_generic_parse_params(struct device *dev, struct device_node *np,
-+				 unsigned long **cfgs)
-+{
-+	unsigned long *configs = NULL;
-+	unsigned int num_configs = 0;
-+	unsigned int i;
-+	int ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(pinconf_generic_params); ++i) {
-+		const struct pinconf_generic_param *param =
-+			&pinconf_generic_params[i];
-+		unsigned long config;
-+		u32 val;
-+
-+		if (param->flag) {
-+			ret = of_property_read_bool(np, param->property)
-+			    ? 0 : -EINVAL;
-+			val = 1;
-+		} else {
-+			ret = of_property_read_u32(np, param->property, &val);
-+		}
-+
-+		if (ret) {
-+			if (ret != -EINVAL)
-+				dev_err(dev, "failed to parse property %s\n",
-+					param->property);
-+			continue;
-+		}
-+
-+		config = pinconf_to_config_packed(param->param, val);
-+		ret = pinconf_generic_add_config(&configs, &num_configs, config);
-+		if (ret < 0) {
-+			kfree(configs);
-+			*cfgs = NULL;
-+			return ret;
-+		}
-+	}
-+
-+	*cfgs = configs;
-+	return num_configs;
-+}
-+EXPORT_SYMBOL_GPL(pinconf_generic_parse_params);
-diff --git a/drivers/pinctrl/pinconf.h b/drivers/pinctrl/pinconf.h
-index 92c7267..eb8550b 100644
---- a/drivers/pinctrl/pinconf.h
-+++ b/drivers/pinctrl/pinconf.h
-@@ -90,6 +90,23 @@ static inline void pinconf_init_device_debugfs(struct dentry *devroot,
-  * pin config.
-  */
- 
-+#if defined(CONFIG_GENERIC_PINCONF)
-+
-+int pinconf_generic_parse_params(struct device *dev, struct device_node *np,
-+				 unsigned long **cfgs);
-+
-+#else
-+
-+static inline int pinconf_generic_parse_params(struct device *dev,
-+					       struct device_node *np,
-+					       unsigned long **cfgs)
-+{
-+	*cfgs = NULL;
-+	return 0;
-+}
-+
-+#endif
-+
- #if defined(CONFIG_GENERIC_PINCONF) && defined(CONFIG_DEBUG_FS)
- 
- void pinconf_generic_dump_pin(struct pinctrl_dev *pctldev,
--- 
 Regards,
+Mike
 
-Laurent Pinchart
-
+> ---
+>  .../devicetree/bindings/clock/clk-exynos-audss.txt |   64 ++++++++++
+>  drivers/clk/samsung/Makefile                       |    1 +
+>  drivers/clk/samsung/clk-exynos-audss.c             |  133 ++++++++++++++++++++
+>  include/dt-bindings/clk/exynos-audss-clk.h         |   25 ++++
+>  4 files changed, 223 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/clk-exynos-audss.txt
+>  create mode 100644 drivers/clk/samsung/clk-exynos-audss.c
+>  create mode 100644 include/dt-bindings/clk/exynos-audss-clk.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/clk-exynos-audss.txt b/Documentation/devicetree/bindings/clock/clk-exynos-audss.txt
+> new file mode 100644
+> index 0000000..a120180
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/clk-exynos-audss.txt
+> @@ -0,0 +1,64 @@
+> +* Samsung Audio Subsystem Clock Controller
+> +
+> +The Samsung Audio Subsystem clock controller generates and supplies clocks
+> +to Audio Subsystem block available in the S5PV210 and Exynos SoCs. The clock
+> +binding described here is applicable to all SoC's in Exynos family.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be one of the following:
+> +  - "samsung,exynos4210-audss-clock" - controller compatible with all Exynos4 SoCs.
+> +  - "samsung,exynos5250-audss-clock" - controller compatible with all Exynos5 SoCs.
+> +
+> +- reg: physical base address and length of the controller's register set.
+> +
+> +- #clock-cells: should be 1.
+> +
+> +The following is the list of clocks generated by the controller. Each clock is
+> +assigned an identifier and client nodes use this identifier to specify the
+> +clock which they consume. Some of the clocks are available only on a particular
+> +Exynos4 SoC and this is specified where applicable.
+> +
+> +Provided clocks:
+> +
+> +Clock           ID      SoC (if specific)
+> +-----------------------------------------------
+> +
+> +mout_audss      0
+> +mout_i2s        1
+> +dout_srp        2
+> +dout_aud_bus    3
+> +dout_i2s        4
+> +srp_clk         5
+> +i2s_bus         6
+> +sclk_i2s        7
+> +pcm_bus         8
+> +sclk_pcm        9
+> +
+> +Example 1: An example of a clock controller node is listed below.
+> +
+> +clock_audss: audss-clock-controller@3810000 {
+> +       compatible = "samsung,exynos5250-audss-clock";
+> +       reg = <0x03810000 0x0C>;
+> +       #clock-cells = <1>;
+> +};
+> +
+> +Example 2: I2S controller node that consumes the clock generated by the clock
+> +           controller. Refer to the standard clock bindings for information
+> +           about 'clocks' and 'clock-names' property.
+> +
+> +i2s0: i2s@03830000 {
+> +       compatible = "samsung,i2s-v5";
+> +       reg = <0x03830000 0x100>;
+> +       dmas = <&pdma0 10
+> +               &pdma0 9
+> +               &pdma0 8>;
+> +       dma-names = "tx", "rx", "tx-sec";
+> +       clocks = <&clock_audss EXYNOS_I2S_BUS>,
+> +               <&clock_audss EXYNOS_I2S_BUS>,
+> +               <&clock_audss EXYNOS_SCLK_I2S>,
+> +               <&clock_audss EXYNOS_MOUT_AUDSS>,
+> +               <&clock_audss EXYNOS_MOUT_I2S>;
+> +       clock-names = "iis", "i2s_opclk0", "i2s_opclk1",
+> +       "mout_audss", "mout_i2s";
+> +};
+> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
+> index b7c232e..1876810 100644
+> --- a/drivers/clk/samsung/Makefile
+> +++ b/drivers/clk/samsung/Makefile
+> @@ -6,3 +6,4 @@ obj-$(CONFIG_COMMON_CLK)        += clk.o clk-pll.o
+>  obj-$(CONFIG_ARCH_EXYNOS4)     += clk-exynos4.o
+>  obj-$(CONFIG_SOC_EXYNOS5250)   += clk-exynos5250.o
+>  obj-$(CONFIG_SOC_EXYNOS5440)   += clk-exynos5440.o
+> +obj-$(CONFIG_ARCH_EXYNOS)      += clk-exynos-audss.o
+> diff --git a/drivers/clk/samsung/clk-exynos-audss.c b/drivers/clk/samsung/clk-exynos-audss.c
+> new file mode 100644
+> index 0000000..9b1bbd5
+> --- /dev/null
+> +++ b/drivers/clk/samsung/clk-exynos-audss.c
+> @@ -0,0 +1,133 @@
+> +/*
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+> + * Author: Padmavathi Venna <padma.v@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * Common Clock Framework support for Audio Subsystem Clock Controller.
+> +*/
+> +
+> +#include <linux/clkdev.h>
+> +#include <linux/io.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/of_address.h>
+> +#include <linux/syscore_ops.h>
+> +
+> +#include <dt-bindings/clk/exynos-audss-clk.h>
+> +
+> +static DEFINE_SPINLOCK(lock);
+> +static struct clk **clk_table;
+> +static void __iomem *reg_base;
+> +static struct clk_onecell_data clk_data;
+> +
+> +#define ASS_CLK_SRC 0x0
+> +#define ASS_CLK_DIV 0x4
+> +#define ASS_CLK_GATE 0x8
+> +
+> +static unsigned long reg_save[][2] = {
+> +       {ASS_CLK_SRC,  0},
+> +       {ASS_CLK_DIV,  0},
+> +       {ASS_CLK_GATE, 0},
+> +};
+> +
+> +/* list of all parent clock list */
+> +static const char *mout_audss_p[] = { "fin_pll", "fout_epll" };
+> +static const char *mout_i2s_p[] = { "mout_audss", "cdclk0", "sclk_audio0" };
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int exynos_audss_clk_suspend(void)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(reg_save); i++)
+> +               reg_save[i][1] = readl(reg_base + reg_save[i][0]);
+> +
+> +       return 0;
+> +}
+> +
+> +static void exynos_audss_clk_resume(void)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(reg_save); i++)
+> +               writel(reg_save[i][1], reg_base + reg_save[i][0]);
+> +}
+> +
+> +static struct syscore_ops exynos_audss_clk_syscore_ops = {
+> +       .suspend        = exynos_audss_clk_suspend,
+> +       .resume         = exynos_audss_clk_resume,
+> +};
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +/* register exynos_audss clocks */
+> +void __init exynos_audss_clk_init(struct device_node *np)
+> +{
+> +       reg_base = of_iomap(np, 0);
+> +       if (!reg_base) {
+> +               pr_err("%s: failed to map audss registers\n", __func__);
+> +               return;
+> +       }
+> +
+> +       clk_table = kzalloc(sizeof(struct clk *) * EXYNOS_AUDSS_MAX_CLKS,
+> +                               GFP_KERNEL);
+> +       if (!clk_table) {
+> +               pr_err("%s: could not allocate clk lookup table\n", __func__);
+> +               return;
+> +       }
+> +
+> +       clk_data.clks = clk_table;
+> +       clk_data.clk_num = EXYNOS_AUDSS_MAX_CLKS;
+> +       of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
+> +
+> +       clk_table[EXYNOS_MOUT_AUDSS] = clk_register_mux(NULL, "mout_audss",
+> +                               mout_audss_p, ARRAY_SIZE(mout_audss_p), 0,
+> +                               reg_base + ASS_CLK_SRC, 0, 1, 0, &lock);
+> +
+> +       clk_table[EXYNOS_MOUT_I2S] = clk_register_mux(NULL, "mout_i2s",
+> +                               mout_i2s_p, ARRAY_SIZE(mout_i2s_p), 0,
+> +                               reg_base + ASS_CLK_SRC, 2, 2, 0, &lock);
+> +
+> +       clk_table[EXYNOS_DOUT_SRP] = clk_register_divider(NULL, "dout_srp",
+> +                               "mout_audss", 0, reg_base + ASS_CLK_DIV, 0, 4,
+> +                               0, &lock);
+> +
+> +       clk_table[EXYNOS_DOUT_AUD_BUS] = clk_register_divider(NULL,
+> +                               "dout_aud_bus", "dout_srp", 0,
+> +                               reg_base + ASS_CLK_DIV, 4, 4, 0, &lock);
+> +
+> +       clk_table[EXYNOS_DOUT_I2S] = clk_register_divider(NULL, "dout_i2s",
+> +                               "mout_i2s", 0, reg_base + ASS_CLK_DIV, 8, 4, 0,
+> +                               &lock);
+> +
+> +       clk_table[EXYNOS_SRP_CLK] = clk_register_gate(NULL, "srp_clk",
+> +                               "dout_srp", CLK_SET_RATE_PARENT,
+> +                               reg_base + ASS_CLK_GATE, 0, 0, &lock);
+> +
+> +       clk_table[EXYNOS_I2S_BUS] = clk_register_gate(NULL, "i2s_bus",
+> +                               "dout_aud_bus", CLK_SET_RATE_PARENT,
+> +                               reg_base + ASS_CLK_GATE, 2, 0, &lock);
+> +
+> +       clk_table[EXYNOS_SCLK_I2S] = clk_register_gate(NULL, "sclk_i2s",
+> +                               "dout_i2s", CLK_SET_RATE_PARENT,
+> +                               reg_base + ASS_CLK_GATE, 3, 0, &lock);
+> +
+> +       clk_table[EXYNOS_PCM_BUS] = clk_register_gate(NULL, "pcm_bus",
+> +                                "sclk_pcm", CLK_SET_RATE_PARENT,
+> +                               reg_base + ASS_CLK_GATE, 4, 0, &lock);
+> +
+> +       clk_table[EXYNOS_SCLK_PCM] = clk_register_gate(NULL, "sclk_pcm",
+> +                               "div_pcm0", CLK_SET_RATE_PARENT,
+> +                               reg_base + ASS_CLK_GATE, 5, 0, &lock);
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +       register_syscore_ops(&exynos_audss_clk_syscore_ops);
+> +#endif
+> +
+> +       pr_info("Exynos: Audss: clock setup completed\n");
+> +}
+> +CLK_OF_DECLARE(exynos4210_audss_clk, "samsung,exynos4210-audss-clock",
+> +               exynos_audss_clk_init);
+> +CLK_OF_DECLARE(exynos5250_audss_clk, "samsung,exynos5250-audss-clock",
+> +               exynos_audss_clk_init);
+> diff --git a/include/dt-bindings/clk/exynos-audss-clk.h b/include/dt-bindings/clk/exynos-audss-clk.h
+> new file mode 100644
+> index 0000000..8279f42
+> --- /dev/null
+> +++ b/include/dt-bindings/clk/exynos-audss-clk.h
+> @@ -0,0 +1,25 @@
+> +/*
+> + * This header provides constants for Samsung audio subsystem
+> + * clock controller.
+> + *
+> + * The constants defined in this header are being used in dts
+> + * and exynos audss driver.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_EXYNOS_AUDSS_H
+> +#define _DT_BINDINGS_CLK_EXYNOS_AUDSS_H
+> +
+> +#define EXYNOS_MOUT_AUDSS      0
+> +#define EXYNOS_MOUT_I2S        1
+> +#define EXYNOS_DOUT_SRP        2
+> +#define EXYNOS_DOUT_AUD_BUS    3
+> +#define EXYNOS_DOUT_I2S        4
+> +#define EXYNOS_SRP_CLK         5
+> +#define EXYNOS_I2S_BUS         6
+> +#define EXYNOS_SCLK_I2S        7
+> +#define EXYNOS_PCM_BUS         8
+> +#define EXYNOS_SCLK_PCM        9
+> +
+> +#define EXYNOS_AUDSS_MAX_CLKS  10
+> +
+> +#endif
+> -- 
+> 1.7.4.4
