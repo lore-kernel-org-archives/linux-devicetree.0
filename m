@@ -1,66 +1,43 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 0/6] Marvell Orion SoC irqchip and clocksource
-Date: Tue, 11 Jun 2013 14:41:26 +0200
-Message-ID: <51B71AF6.1090108@gmail.com>
-References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130611123521.GA3996@localhost>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 3/4] pinctrl: single: omap: Add SoC specific module for
+ wake-up events
+Date: Tue, 11 Jun 2013 15:51:05 +0300
+Message-ID: <51B71D39.6080202@ti.com>
+References: <20130607203936.16513.57494.stgit@localhost> <20130607205044.16513.27675.stgit@localhost> <688FBEF7C8277944BE5AED9A41FB1EBC1AB12D0F@DNCE05.ent.ti.com> <20130610152109.GI8164@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130611123521.GA3996@localhost>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130610152109.GI8164@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/13 14:35, Ezequiel Garcia wrote:
-> On Thu, Jun 06, 2013 at 06:27:08PM +0200, Sebastian Hesselbarth wrote:
->> This patch set introduces DT-aware irqchip and clocksource drivers for
->> Marvell Orion SoCs (Kirkwood, Dove, Orion5x, MV78x00) and corresponding
->> patches for Dove and Kirkwood to enable them for DT-boards.
+On 06/10/2013 06:21 PM, Tony Lindgren wrote:
+> * Quadros, Roger <rogerq@ti.com> [130610 03:09]:
+>> +
+>> +static int __init pcs_omap_init(void)
+>> +{
+>> +       platform_driver_register(&pcs_omap_soc_driver);
+>> +       platform_driver_register(&pcs_omap_driver);
+>> +
+>> +       return 0;
+>> +}
+>> +module_init(pcs_omap_init);
 >>
->> The irqchip driver, of course, depends on Thomas Gleixner's work on
->> irqdomain support for generic chip (tip irq/core).
->>
->> The ARM part of this patch set has a quite ridiculuous dependency havoc
->> of mv643xx_eth DT support (current net-next) that will add to both irqchip
->> and clocksource branches respectively. Therefore, I suggest that irq
->> and clocksource maintainers take in the mere drivers (Patches 1+2) and
->> Jason Cooper handles the remaining patches when all three drivers have
->> surfaced on mainline linux.
->>
-[...]
->> Sebastian Hesselbarth (6):
->>    irqchip: add support for Marvell Orion SoCs
->>    clocksource: add Marvell Orion SoC timer
->>    ARM: dove: move device tree nodes to DT irqchip and clocksource
->>    ARM: kirkwood: move device tree nodes to DT irqchip and clocksource
->>    ARM: dove: convert to DT irqchip and clocksource
->>    ARM: kirkwood: convert to DT irqchip and clocksource
->>
->
-> I've done some tests on my Kirkwood Openblocks A6 using the latest
-> branch orion-irqchip-for-v3.11-v4. Everything works fine so:
->
-> Tested-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+>> It seems this has to be moved to an earlier place (e.g. subsys_initcall)
+>> else the pinctrl core fails to find the pinctrl device at the device creation
+>> time and bails out with -EPROBE_DEFER. Also, that device is never
+>> created again, so -EPROBE_DEFER doesn't seem to work there.
+> 
+> Ah here, found your other comment :)
+> 
+> That's not needed, the real fix is to make twl-core.c and friends to
+> be regular module_init. There are already patches queued for that.
 
-Ezequiel, thanks for testing!
+OK. I was testing with USB host driver and it seems to be loaded as fs_initcall() which
+is the root of the problem. I will fix up the usb host driver to be loaded as module_init()
 
-> For patches 3 to 6 I'm wondering if there's any reason why the irqchip and
-> clocksource changes are not separated. I'm probably being too picky but,
-> unless you have a good reason for having them together,
-> I think they should go separated, i.e. patches for irqchip on one side,
-> and patches for clocksource on the other.
-
-The only reason is that when switching from current non-irqdomain irq
-controller to irqdomain-based above, there is no 1:1 mapping between
-irq numbers and hwirqs anymore. But you are right, for the ARM part
-patches that will be merged first thing when v3.11-rc1 is out, the
-correct order is mv643xx_eth, clocksource, irqchip.
-
-I will prepare new, rebased patches for Jason Cooper then anyway.
-
-With Thomas Gleixner's Review now only somebody has to take the irqchip
-patch then all three drivers are queued for next release.
-
-Sebastian
+cheers,
+-roger
