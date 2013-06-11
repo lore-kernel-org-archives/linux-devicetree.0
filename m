@@ -1,132 +1,210 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 9/9] ARM/dts: update device tree binding documentation for hdmi susbsystem
-Date: Tue, 11 Jun 2013 23:00:10 +0100
-Message-ID: <20130611220010.25DC93E0D8D@localhost>
-References: <1370959891-8923-1-git-send-email-rahul.sharma@samsung.com> <1370959891-8923-10-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1370959891-8923-10-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
-Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, joshi@samsung.com, inki.dae@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [RFC] pinctrl: generic: Add DT bindings
+Date: Wed, 12 Jun 2013 00:03:57 +0200
+Message-ID: <1370988237-30593-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, James Hogan <james.hogan@imgtec.com>, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Jun 2013 19:41:31 +0530, Rahul Sharma <rahul.sharma@samsung.com> wrote:
-> Update device tree binding documentation for hdmi subsystem with the
-> clock information, phy property information and compatible strings for
-> exynos5420.
-> 
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+Document DT properties for the generic pinctrl parameters and add a
+parser function.
 
-Binding looks reasonable to me. I'll leave it to the video maintainers
-to say whether or not it is covers the right amount of configuration
-data.
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../bindings/pinctrl/pinctrl-bindings.txt          | 29 +++++++
+ drivers/pinctrl/pinconf-generic.c                  | 94 ++++++++++++++++++++++
+ drivers/pinctrl/pinconf.h                          | 17 ++++
+ 3 files changed, 140 insertions(+)
 
-g.
+I've successfully tested this patch (or more accurately only the pull-up and
+pull-down properties) with the Renesas sh-pfc pinctrl device driver. I will
+resent the sh-pfc DT bindings patch series rebased on the generic pinconf
+bindings.
 
-> ---
->  .../devicetree/bindings/video/exynos_hdmi.txt       |   19 +++++++++++++++++++
->  .../devicetree/bindings/video/exynos_hdmiphy.txt    |   10 ++++++++--
->  .../devicetree/bindings/video/exynos_mixer.txt      |    7 +++++++
->  3 files changed, 34 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> index 2ac01ca..e3c5853 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  - compatible: value should be one among the following:
->  	1) "samsung,exynos4210-hdmi"
->  	2) "samsung,exynos4212-hdmi"
-> +	3) "samsung,exynos5420-hdmi"
->  - reg: physical base address of the hdmi and length of memory mapped
->  	region.
->  - interrupts: interrupt number to the cpu.
-> @@ -13,6 +14,20 @@ Required properties:
->  	c) pin function mode.
->  	d) optional flags and pull up/down.
->  	e) drive strength.
-> +- clocks: list of clock IDs from SoC clock driver.
-> +	a) hdmi: It is required for gate operation on aclk_200_disp1 clock
-> +		which clocks the display1 block.
-> +	b) sclk_hdmi: It is required for gate operation on sclk_hdmi clock
-> +		which clocks hdmi IP.
-> +	c) sclk_pixel: Parent for mux mout_hdmi.
-> +	d) sclk_hdmiphy: Parent for mux mout_hdmi.
-> +	e) mout_hdmi: It is required by the driver to switch between the 2
-> +		parents i.e. sclk_pixel and sclk_hdmiphy. If hdmiphy is stable
-> +		after configuration, parent is set to sclk_hdmiphy else
-> +		sclk_pixel.
-> +- clock-names: aliases as per driver requirements for above clock IDs:
-> +	"hdmi", "sclk_hdmi", "sclk_pixel", "sclk_hdmiphy" and "mout_hdmi".
-> +- phy: this property holds the phandle for hdmiphy node.
->  
->  Example:
->  
-> @@ -21,4 +36,8 @@ Example:
->  		reg = <0x14530000 0x100000>;
->  		interrupts = <0 95 0>;
->  		hpd-gpio = <&gpx3 7 0xf 1 3>;
-> +		clocks = <&clock 344>, <&clock 136>, <&clock 137>,
-> +				<&clock 157>, <&clock 1024>;
-> +		clock-names = "hdmi", "sclk_hdmi", "sclk_pixel",
-> +				"sclk_hdmiphy", "mout_hdmi";
->  	};
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
-> index fb688a6..e2b12ed 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
-> @@ -1,8 +1,14 @@
->  Device-Tree bindings for hdmiphy driver
->  
->  Required properties:
-> -- compatible: value should be "samsung,exynos4210-hdmiphy".
-> -- reg: I2C address of the hdmiphy device.
-> +- compatible: value should be one among the following
-> +	1) Samsung,exynos4210-hdmiphy".
-> +	2) Samsung,exynos5420-hdmiphy".
-> +
-> +- reg: it holds the physical address infomration for the hdmiphy device.
-> +	If it is a i2c device, reg holds the I2C address of the phy. For
-> +	platform bus mapped phy, reg property holds physical address as
-> +	well as size of the register region.
->  
->  Example:
->  
-> diff --git a/Documentation/devicetree/bindings/video/exynos_mixer.txt b/Documentation/devicetree/bindings/video/exynos_mixer.txt
-> index a8b063f..38e4e5c 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_mixer.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
-> @@ -4,10 +4,15 @@ Required properties:
->  - compatible: value should be:
->  	1) "samsung,exynos4210-mixer"
->  	2) "samsung,exynos5250-mixer"
-> +	3) "samsung,exynos5420-mixer"
->  
->  - reg: physical base address of the mixer and length of memory mapped
->  	region.
->  - interrupts: interrupt number to the cpu.
-> +- clocks: list of clock IDs from SoC clock driver.
-> +	a) mixer: It is required for gate operation on aclk_200_disp1 clock
-> +		which clocks the display1 block.
-> +	b) sclk_hdmi: Parent for mux mout_mixer.
->  
->  Example:
->  
-> @@ -15,4 +20,6 @@ Example:
->  		compatible = "samsung,exynos5250-mixer";
->  		reg = <0x14450000 0x10000>;
->  		interrupts = <0 94 0>;
-> +		clocks = <&clock 343>, <&clock 136>;
-> +		clock-names = "mixer", "sclk_hdmi";
->  	};
-> -- 
-> 1.7.10.4
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+Not all generic pinconf properties are currently implemented, but I don't
+think that should be a showstopper. We can add them later as needed.
 
+The code is based on both the sh-pfc pinconf DT parser and James Hogan's
+tz1090 DT parser ("[PATCH v2 6/9] pinctrl-tz1090: add TZ1090 pinctrl driver").
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index c95ea82..e499ff0 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -126,3 +126,32 @@ device; they may be grandchildren, for example. Whether this is legal, and
+ whether there is any interaction between the child and intermediate parent
+ nodes, is again defined entirely by the binding for the individual pin
+ controller device.
++
++== Generic pinconf parameters ==
++
++Pin configuration parameters are expressed by DT properties in the pin
++controller device state nodes and child nodes. For devices that use the generic
++pinconf parameters the following properties are defined.
++
++- tristate: A boolean, put the pin into high impedance state when set.
++
++- pull-up: An integer representing the pull-up strength. 0 disables the pull-up,
++  non-zero values enable it.
++
++- pull-down: An integer representing the pull-down strength. 0 disables the
++  pull-down, non-zero values enables it.
++
++- schmitt: An integer, enable or disable Schmitt trigger mode for the pins.
++  Valid values are
++    0: Schmitt trigger disabled (no hysteresis)
++    1: Schmitt trigger enabled
++
++- slew-rate: An integer controlling the pin slew rate. Values are device-
++  dependent.
++
++- drive-strength: An integer representing the drive strength of pins in mA.
++  Valid values are device-dependent.
++
++The pinctrl device DT bindings documentation must list the properties that
++apply to the device, and define the valid range for all device-dependent
++values.
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index 2ad5a8d..bd0e41d 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -15,6 +15,7 @@
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/device.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
+@@ -135,3 +136,96 @@ void pinconf_generic_dump_config(struct pinctrl_dev *pctldev,
+ }
+ EXPORT_SYMBOL_GPL(pinconf_generic_dump_config);
+ #endif
++
++struct pinconf_generic_param {
++	const char *property;
++	enum pin_config_param param;
++	bool flag;
++};
++
++static const struct pinconf_generic_param pinconf_generic_params[] = {
++	{ "tristate",		PIN_CONFIG_BIAS_HIGH_IMPEDANCE,		true },
++	{ "pull-up",		PIN_CONFIG_BIAS_PULL_UP,		false },
++	{ "pull-down",		PIN_CONFIG_BIAS_PULL_DOWN,		false },
++	{ "schmitt",		PIN_CONFIG_INPUT_SCHMITT_ENABLE,	true },
++	{ "slew-rate",		PIN_CONFIG_SLEW_RATE,			false },
++	{ "drive-strength",	PIN_CONFIG_DRIVE_STRENGTH,		false },
++};
++
++static int pinconf_generic_add_config(unsigned long **configs,
++				      unsigned int *num_configs,
++				      unsigned long config)
++{
++	unsigned int count = *num_configs + 1;
++	unsigned long *cfgs;
++
++	cfgs = krealloc(*configs, sizeof(*cfgs) * count, GFP_KERNEL);
++	if (cfgs == NULL)
++		return -ENOMEM;
++
++	cfgs[count - 1] = config;
++
++	*configs = cfgs;
++	*num_configs = count;
++
++	return 0;
++}
++
++/**
++ * pinconf_generic_parse_params - Parse generic pinconf parameters from DT
++ * @dev: the device, used to print error messages
++ * @np: the DT node that contains generic pinconf parameters
++ * @cfgs: the returned array of pinconf parameters
++ *
++ * The parameters array is allocated dynamically and returned through the cfgs
++ * argument. The caller is responsible for freeing the array with kfree(). If no
++ * configuration parameter is found, or if an error occurs, no parameters array
++ * will be allocated and the cfgs argument will be set to NULL.
++ *
++ * Return the number of configuration parameters successfully parsed, or a
++ * negative value if an error occurred. Used error codes are
++ *
++ * -ENOMEM if memory can't be allocated for the parameters array
++ */
++int pinconf_generic_parse_params(struct device *dev, struct device_node *np,
++				 unsigned long **cfgs)
++{
++	unsigned long *configs = NULL;
++	unsigned int num_configs = 0;
++	unsigned int i;
++	int ret;
++
++	for (i = 0; i < ARRAY_SIZE(pinconf_generic_params); ++i) {
++		const struct pinconf_generic_param *param =
++			&pinconf_generic_params[i];
++		unsigned long config;
++		u32 val;
++
++		if (param->flag) {
++			ret = of_property_read_bool(np, param->property)
++			    ? 0 : -EINVAL;
++			val = 1;
++		} else {
++			ret = of_property_read_u32(np, param->property, &val);
++		}
++
++		if (ret) {
++			if (ret != -EINVAL)
++				dev_err(dev, "failed to parse property %s\n",
++					param->property);
++			continue;
++		}
++
++		config = pinconf_to_config_packed(param->param, val);
++		ret = pinconf_generic_add_config(&configs, &num_configs, config);
++		if (ret < 0) {
++			kfree(configs);
++			*cfgs = NULL;
++			return ret;
++		}
++	}
++
++	*cfgs = configs;
++	return num_configs;
++}
++EXPORT_SYMBOL_GPL(pinconf_generic_parse_params);
+diff --git a/drivers/pinctrl/pinconf.h b/drivers/pinctrl/pinconf.h
+index 92c7267..eb8550b 100644
+--- a/drivers/pinctrl/pinconf.h
++++ b/drivers/pinctrl/pinconf.h
+@@ -90,6 +90,23 @@ static inline void pinconf_init_device_debugfs(struct dentry *devroot,
+  * pin config.
+  */
+ 
++#if defined(CONFIG_GENERIC_PINCONF)
++
++int pinconf_generic_parse_params(struct device *dev, struct device_node *np,
++				 unsigned long **cfgs);
++
++#else
++
++static inline int pinconf_generic_parse_params(struct device *dev,
++					       struct device_node *np,
++					       unsigned long **cfgs)
++{
++	*cfgs = NULL;
++	return 0;
++}
++
++#endif
++
+ #if defined(CONFIG_GENERIC_PINCONF) && defined(CONFIG_DEBUG_FS)
+ 
+ void pinconf_generic_dump_pin(struct pinctrl_dev *pctldev,
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+Regards,
+
+Laurent Pinchart
+
