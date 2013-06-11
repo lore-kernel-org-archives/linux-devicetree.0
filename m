@@ -1,66 +1,149 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/9] dma: pl330: use dma_addr_t for describing bus
-	addresses
-Date: Tue, 11 Jun 2013 23:32:02 +0100
-Message-ID: <20130611223202.CDCEB3E0D8D@localhost>
-References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
-	<1370889285-22799-3-git-send-email-will.deacon@arm.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Wed, 12 Jun 2013 00:34:14 +0200
+Message-ID: <4160363.LWJuHATm2F@wuerfel>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20835253.Agl4DfuI3k@wuerfel> <20130611215023.GA12649@obsidianresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1370889285-22799-3-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130611215023.GA12649-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Jun 2013 19:34:38 +0100, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> The microcode bus address (pl330_dmac.mcode_bus) is currently a u32,
-> which fails to compile when building on a system with 64-bit bus
-> addresses.
+On Tuesday 11 June 2013 15:50:23 Jason Gunthorpe wrote:
+> On Tue, Jun 11, 2013 at 05:26:47PM +0200, Arnd Bergmann wrote:
 > 
-> This patch uses dma_addr_t to represent the address instead.
+> > That looks ok to me, yes. If you have just one device under some of the nodes
+> > however, I think it's easier use an empty ranges property and do
+> > 
+> >  	devbus-bootcs {
+> >  		ranges;
+> >  		nor {
+> >  			reg = <0x012f0000 0 0x1000000>;
+> >  		};
+> > 
+> > The 'ranges' here is most useful if you have multiple devices
+> > add different offsets. I would also predefine those ranges to
+> > be as large as possible so you don't have to adapt them when
+> > the child device grows beyond it.
 > 
-> Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> It isn't super critical, but the ranges does keep the 0x012f0000 value
+> in the SOC .dtsi and the board level doesn't have to be exposed to the
+> value, it just uses 0 to setup the NOR.
 
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Yes, good point.
 
-> ---
->  drivers/dma/pl330.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-> index 22e2a8f..f1bc593 100644
-> --- a/drivers/dma/pl330.c
-> +++ b/drivers/dma/pl330.c
-> @@ -501,7 +501,7 @@ struct pl330_dmac {
->  	/* Maximum possible events/irqs */
->  	int			events[32];
->  	/* BUS address of MicroCode buffer */
-> -	u32			mcode_bus;
-> +	dma_addr_t		mcode_bus;
->  	/* CPU address of MicroCode buffer */
->  	void			*mcode_cpu;
->  	/* List of all Channel threads */
-> -- 
-> 1.8.2.2
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> Also, it makes it much simpler for the mbus driver to detect which
+> target id's are required so they can be allocated/setup - the rule
+> would be every child stanza should have a ranges with the target(s) it
+> needs.
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+Not sure if this is a good rule: As you said, it makes sense to
+put the 'ranges' for the devbus-bootcs node into the per-soc .dtsi
+file so the board file doesn't have to care. However the mbus code
+needs both the 0x012f0000 and the start/length of the child. Mapping
+the entire window would work in theory but is likely going to cause
+a significant waste of physical address space, because the (per-soc)
+ranges property has to be set up for the largest possible external
+device connected to the bus, but the mbus window only needs to cover the
+device that is actually connected.
+
+> The full version probably looks like this:
+> 
+> mbus {
+>     ranges ....
+> 
+>                         devbus-bootcs@10400 {
+>                                 compatible = "marvell,mvebu-devbus";
+>                                 reg = <INTERNAL_REGS + 0x10400 0x8>;
+>                                 ranges = <0 DEVBUS_BOOTCS 0x1000000>;
+>                                 #address-cells = <1>;
+>                                 #size-cells = <1>;
+>                                 clocks = <&coreclk 0>;
+> 
+> 				// In board .dts:
+>                                 nor@0 {
+>                                         compatible = "cfi-flash";
+>                                         reg = <0 0x1000000>;
+>                                         bank-width = <2>;
+>                                 };
+>                         };
+> };
+> 
+> And notice here that we need to offset INTERNAL_REGS to make this
+> work. To me, this is the primary reason why the 2nd cell of the mbus
+> address format *must* be the address offset within the target, and not
+> anything else.
+
+Right.
+
+> > > 2. There's no need to use an algorithm to 'find' a base address for decoding
+> > >    windows (such as first-fit as Arnd suggested in another mail).
+> > >    The base address is already there in the ranges property, so the mbus can
+> > >    simply allocate the window on that base address.
+> > > 
+> > > So, am I right or completely lost?
+> > 
+> > Since you already need code to update the ranges property, I think
+> > it's best to discard the ranges at boot time and create a new mapping
+> > that just maps the devices you actually want to use. That would make
+> > it much easier to cope with boot loaders that don't set up the
+> > mappings in the same way that is listed in the device tree. Just
+> > put the one entry for the internal-regs in the ranges, since that
+> > is needed to map do the mbus setup.
+> 
+> So, I think we can/have agree that the ranges in the FDT should
+> reflect the bootloader's settings, and if the ranges is missing an
+> element it means the bootloader didn't set it up.
+> 
+> A compatible bootloader should dump the entire mbus register table
+> into the ranges. The address encoding is such that we can represent
+> every mbus window entry in ranges. If no bootloader support is present
+> then the ranges value is forced into the mbus windows anyhow.
+> 
+> If there isn't a ranges entry, but there is a child that requires it
+> (how do we figure this out?)
+
+I think we have to walk the entire tree of devices underneath mbus,
+at least any device node that has a 'reg' property, following children
+of any device node with a 'ranges' property. We might need to
+add a variant of of_get_address() that does a partial translation
+up to a given node (the mbus) instead of all the way to the root.
+
+> then dynamic assignment of that window
+> makes sense to me. (however, this also looks a bit tricky, how do you
+> avoid hitting the PCI-E window reservations, for instance?)
+
+The PCI-E window would have 'ranges' but no 'regs', so we automatically
+skip it.
+
+> Unconditional dynamic assignment is a bit more tricky, for instance
+> the boot rom has to be located at a specific address since it is used
+> as the SMP secondary startup trampoline. (Ezequiel: IMHO, you should
+> check for this and bail secondary startup if it is not setup)
+
+I suppose we can identify the devices we don't want to reassign by
+their compatible values.
+
+> I'm not sure there is a good reason to reject the address map in the
+> DT?
+
+You mean keep all windows that are listed by the boot loader but
+reassign the others? I guess it would be simpler but may result in
+a less optimal address map.
+
+	Arnd
