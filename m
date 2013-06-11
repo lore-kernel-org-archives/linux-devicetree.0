@@ -1,58 +1,45 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
- the DT binding
-Date: Tue, 11 Jun 2013 10:31:45 -0300
-Message-ID: <20130611133143.GB3996@localhost>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1370623671-7748-5-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306072101.44694.arnd@arndb.de>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v3 1/6] irqchip: add support for Marvell Orion SoCs
+Date: Tue, 11 Jun 2013 15:37:15 +0200
+Message-ID: <51B7280B.7080604@gmail.com>
+References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com> <1370536034-23956-2-git-send-email-sebastian.hesselbarth@gmail.com> <alpine.LFD.2.02.1306111045520.22970@ionos> <alpine.LFD.2.02.1306111525180.22970@ionos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201306072101.44694.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.02.1306111525180.22970@ionos>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJuZCwKCkkgaGF2ZSBhbm90aGVyIHF1ZXN0aW9uIQoKT24gRnJpLCBKdW4gMDcsIDIwMTMg
-YXQgMDk6MDE6NDRQTSArMDIwMCwgQXJuZCBCZXJnbWFubiB3cm90ZToKWy4uLl0KPiA+ICtFeGFt
-cGxlOgo+ID4gKwo+ID4gKwlzb2Mgewo+ID4gKwkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGFybWFk
-YTM3MC1tYnVzIiwgInNpbXBsZS1idXMiOwo+ID4gKwkJcmVnID0gPDB4ZDAwMjAwMDAgMHgxMDA+
-LCA8MHhkMDAyMDE4MCAweDIwPjsKPiA+ICsJfTsKPiA+ICsKPiA+ICsqKiBIb3cgZG9lcyBpdCB3
-b3JrPwo+ID4gKwo+ID4gK1RoZSBNQnVzIGRyaXZlciBjb250cm9scyB0aGUgYWxsb2NhdGlvbiBh
-bmQgcmVsZWFzZSBvZiB0aGUgYWRkcmVzc2VzCj4gPiArZGVjb2Rpbmcgd2luZG93cyBuZWVkZWQg
-dG8gYWNjZXNzIGRldmljZXMuCj4gPiArCj4gPiArRWFjaCB3aW5kb3csIGlzIGlkZW50aWZpZWQg
-YnkgaXRzIHRhcmdldCBJRCBhbmQgYXR0cmlidXRlIElELiBJbiBvcmRlcgo+ID4gK3RvIHJlcHJl
-c2VudCB0aGlzLCBlYWNoIG9mIG1idXMtbm9kZSBmaXJzdC1sZXZlbCBjaGlsZCBoYXMgdG8gZGVj
-bGFyZQo+ID4gK2Egc3VpdGFibGUgJ3JhbmdlcycgdHJhbnNsYXRpb24gZW50cnkgZm9yIHRoZSBN
-QnVzIHRvIGFsbG9jYXRlIGEgd2luZG93Cj4gPiArZm9yIGl0LiBUaGlzIGVudHJ5IHdpbGwgZW5j
-b2RlIHRoZSB0YXJnZXQgYW5kIGF0dHJpYnV0ZSBpbiBhICd3aW5kb3dpZCcKPiA+ICthZC1ob2Mg
-Y2VsbCwgbGlrZSB0aGlzOgo+ID4gKwo+ID4gKwlzb2Mgewo+ID4gKwkJYm9vdHJvbSB7Cj4gPiAr
-CQkJcmFuZ2VzID0gPDAgMHgwMWUwMDAwMCAweGZmZjAwMDAwIDB4MTAwMDAwPjsKPiA+ICsJCX07
-Cj4gPiArCX07Cj4gCj4gSSB0aGluayBJJ20gYSBiaXQgbG9zdCBoZXJlLiBJcyB0aGUgInNvYyIg
-bm9kZSBpbiB0aGlzIGV4YW1wbGUgdGhlIG5vZGUKPiB0aGF0IGlzIGRlc2NyaWJlZCBhcyBjb21w
-YXRpYmxlPSJtYXJ2ZWxsLGFybWFkYTM3MC1tYnVzIj8gTWF5YmUgZXhwYW5kCj4gdGhlIGV4YW1w
-bGUgYSBsaXR0bGUgaGVyZSB0byBjbGFyaWZ5IHRoaXMuCj4gCgpFeGFjdGx5OiB0aGF0J3MgdGhl
-IG1idXMtY29tcGF0aWJsZSBub2RlLiBJJ2xsIGNsYXJpZnkgYSBiaXQgdGhlIGRvY3VtZW50YXRp
-b24Kc28gdGhpcyBpcyBjbGVhcmVyLgoKSSBrZXB0IHRoZSAnc29jJyBuYW1lIGluIHRoZSBleGFt
-cGxlcyBhcyB0aGF0J3MgdGhlIG5hbWUgaW4gdGhlIGR0cyBmaWxlcy4gCkRvIHlvdSB0aGluayBJ
-IHNob3VsZCByZW5hbWUgdG8gJ21idXMnIGluIHRoZSBkdHMgZmlsZXM/CgpJIGhhdmVuJ3QgZG9u
-ZSB0aGF0IHNpbmNlIHRoYXQgd291bGQgaW1wbHkgdG8gY2hhbmdlIGFsbCB0aGUgZHRzCmZpbGVz
-LgoKVGhhbmtzIGZvciB0aGUgaGVscCwKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxlY3Ry
-b25zCkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0cDov
-L2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlz
-Y3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9k
-ZXZpY2V0cmVlLWRpc2N1c3MK
+On 06/11/13 15:30, Thomas Gleixner wrote:
+> On Tue, 11 Jun 2013, Thomas Gleixner wrote:
+>
+>> On Thu, 6 Jun 2013, Sebastian Hesselbarth wrote:
+>>
+>>> This patch adds an irqchip driver for the main interrupt controller found
+>>> on Marvell Orion SoCs (Kirkwood, Dove, Orion5x, Discovery Innovation).
+>>> Corresponding device tree documentation is also added.
+>>>
+>>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>>
+>> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+>
+> Second thoughts:
+>
+>> +static void orion_bridge_irq_handler(unsigned int irq, struct irq_desc *desc)
+>> +{
+>> +	struct irq_domain *d = irq_get_handler_data(irq);
+>> +	struct irq_chip_generic *gc = irq_get_domain_generic_chip(d, irq);
+>> +	u32 stat = readl_relaxed(gc->reg_base + ORION_BRIDGE_IRQ_CAUSE) &
+>> +		gc->mask_cache;
+>
+> In init you map the first irq of that chip and install the chain
+> handler for it. Now if that first irq fires, isn't that set in the
+> cause register as well? And what acks that first irq?
+
+It is "acked" by acking all unmasked bridge irqs.
+
+Sebastian
+
