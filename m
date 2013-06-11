@@ -1,47 +1,59 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 02/11] clocksource:global_timer: Add ARM global timer
- support.
-Date: Tue, 11 Jun 2013 22:13:04 +0200
-Message-ID: <CACRpkdbppRqnMYknbBy8JpAVtujMOEQvyczXTmpvkQuxgikFog@mail.gmail.com>
-References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com>
- <1370856087-6452-1-git-send-email-srinivas.kandagatla@st.com>
- <CACRpkdbQCRKBzRF4HzNsXHwXCLJJcFZ9T36GPmmYsnX1OfgGRg@mail.gmail.com>
- <51B5D7A6.1020101@st.com> <51B72E9A.6070006@st.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 21/21] clk: ux500: Supply provider look-up functionality to
+ support Device Tree
+Date: Tue, 11 Jun 2013 13:28:21 -0700
+Message-ID: <20130611202821.8816.86653@quantum>
+References: <1370266965-7901-1-git-send-email-lee.jones@linaro.org>
+ <1370266965-7901-22-git-send-email-lee.jones@linaro.org>
+ <CACRpkdaNMR=6JT+pi+9aqOJXW3gK9Yb4hztx3rOiY3c+f3UTRA@mail.gmail.com>
+ <201306042252.03340.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51B72E9A.6070006-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Stephen Gallimore <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201306042252.03340.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus WALLEIJ <linus.walleij@stericsson.com>, Srinidhi KASAGAR <srinidhi.kasagar@stericsson.com>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 11, 2013 at 4:05 PM, Srinivas KANDAGATLA
-<srinivas.kandagatla-qxv4g6HH51o@public.gmane.org> wrote:
+Quoting Arnd Bergmann (2013-06-04 13:52:03)
+> On Tuesday 04 June 2013, Linus Walleij wrote:
+> > The whole thing is very different from other DT clock things
+> > I've seen, usually you add a compatible node for each
+> > clock type, and a node for each physical gate. But there
+> > may be several ways to skin this cat...
+> > 
+> 
+> Based on the IRC discussion we had, I would think that the "prcc" clocks
+> would best be represented using multiple clock-cells since you can describe
+> them easily a tuple of register index, bit number some way to distinguish
+> the two types.
+> 
+> The "prcmu" clocks are harder, and we probably need either a more verbose
+> representation using one node per clock there, or have a single node
+> for the entire prcmu and not bother to describe them in DT but hardcode
+> everything in the source. The current patch does the latter, which is
+> easier now but means we cannot simplify the code much in the future
+> when we remove ATAGS boot support.
+> 
+> I hope Mike can give some better insight to what his preferences are.
 
-> Doing this is not adding any value to the driver, because
->  1. Currently the driver only support DT boot paths, in my previous RFC
-> patches, Arnd suggested to get rid of the header as all platforms are DT
-> now.
+I'm still learning about DT so my inputs should be weighed, measured and
+then promptly thrown out. With that said I recently published an RFC to
+convert the OMAP4 PRCM clocks to DT and my approach was a single node
+per clock.
 
-In that case why do you have the separate global_timer_init()
-at all? Just move that code into global_timer_of_register() and
-also remove the #ifdef around CONFIG_OF and make the driver
-depend on CONFIG_OF in Kconfig.
+The register mapping for those clocks is mostly orderly, but not so
+orderly that a neat and tidy tuple would suffice.  Also the recent MMP
+clock series represents many of the clocks as single nodes.
 
-After this you realize that all that business with
-clk_register_clkdev() / clk_get_sys() is just pure surplus
-baggade, you just use of_clk_get() and that's it.
+I am not opposed to this design choice and it removes more data from C
+files.  Some concerns were brought up about impacts to boot time but no
+one has quantified that yet.
 
-Yours,
-Linus Walleij
+Regards,
+Mike
+
+> 
+>         Arnd
