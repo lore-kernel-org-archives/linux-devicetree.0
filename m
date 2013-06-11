@@ -1,36 +1,108 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH 3/3] ARM: dts: OMAP3: Use MTD constants for OMAP3 boards
-Date: Tue, 11 Jun 2013 19:31:21 +0200
-Message-ID: <51B75EE9.9050901@epfl.ch>
-References: <1370962138-9631-1-git-send-email-florian.vaussard@epfl.ch> <1370962138-9631-4-git-send-email-florian.vaussard@epfl.ch> <51B74FEE.1010301@wwwdotorg.org>
-Reply-To: florian.vaussard@epfl.ch
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v3 1/7] clk: divider: add flag to limit possible dividers to even
+ numbers
+Date: Tue, 11 Jun 2013 11:57:50 -0700
+Message-ID: <20130611185750.8816.82691@quantum>
+References: <201306111328.52679.heiko@sntech.de> <201306111329.32749.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51B74FEE.1010301@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Anil Kumar <anilk4.v@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201306111329.32749.heiko@sntech.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Quoting Heiko St=C3=BCbner (2013-06-11 04:29:32)
+> SoCs like the Rockchip Cortex-A9 ones contain divider some clocks
+> that use the regular mechanisms for storage but allow only even
+> dividers and 1 to be used.
+>=20
+> Therefore add a flag that lets _is_valid_div limit the valid dividers
+> to these values. _get_maxdiv is also adapted to return even values
+> for the CLK_DIVIDER_ONE_BASED case.
+>=20
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>  drivers/clk/clk-divider.c    |   14 ++++++++++++--
+>  include/linux/clk-provider.h |    2 ++
+>  2 files changed, 14 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
+> index ce5cfe9..bdee7cf 100644
+> --- a/drivers/clk/clk-divider.c
+> +++ b/drivers/clk/clk-divider.c
+> @@ -45,8 +45,16 @@ static unsigned int _get_table_maxdiv(const struct=
+ clk_div_table *table)
+> =20
+>  static unsigned int _get_maxdiv(struct clk_divider *divider)
+>  {
+> -       if (divider->flags & CLK_DIVIDER_ONE_BASED)
+> -               return div_mask(divider);
+> +       if (divider->flags & CLK_DIVIDER_ONE_BASED) {
+> +               unsigned int div =3D div_mask(divider);
+> +
+> +               /* decrease to even number */
+> +               if (divider->flags & CLK_DIVIDER_EVEN)
+> +                       div--;
+> +
+> +               return div;
+> +       }
+> +
+>         if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
+>                 return 1 << div_mask(divider);
+>         if (divider->table)
+> @@ -141,6 +149,8 @@ static bool _is_valid_div(struct clk_divider *div=
+ider, unsigned int div)
+>                 return is_power_of_2(div);
+>         if (divider->table)
+>                 return _is_valid_table_div(divider->table, div);
+> +       if (divider->flags & CLK_DIVIDER_EVEN && div !=3D 1 && (div %=
+ 2) !=3D 0)
 
-On 06/11/2013 06:27 PM, Stephen Warren wrote:
-> On 06/11/2013 08:48 AM, Florian Vaussard wrote:
->> Use the MTD constants for NAND and OneNAND nodes used in OMAP3
->> DTS.
->
-> I don't quite understand the split between patches 2/3 and 3/3; isn't
-> the edit to omap3-overo.dtsi (part of) a board file, and hence logically
-> part of this patch? I'd be tempted just to squash the two together.
->
-> But, this is a nit; not a big deal.
->
+Is it correct to check for 'div !=3D 1' here?  Wouldn't that check only=
+ be
+valid in the presence of CLK_DIVIDER_ONE_BASED?
 
-Patch 2/3 was adding a new node, whereas patch 3/3 was converting existing
-nodes. But your point is perfectly valid.
+Maybe something like this would be more correct:
+
+	if (divider->flags & CLK_DIVIDER_EVEN && (div % 2) !=3D 0) {
+		if (divider->flags & CLK_DIVIDER_ONE_BASED && div =3D=3D 1)
+			return true;
+		return false;
+	}
 
 Regards,
+Mike
 
-Florian
+> +               return false;
+>         return true;
+>  }
+> =20
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provide=
+r.h
+> index 1ec14a7..bd52e52 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -266,6 +266,7 @@ struct clk_div_table {
+>   *   of this register, and mask of divider bits are in higher 16-bit=
+ of this
+>   *   register.  While setting the divider bits, higher 16-bit should=
+ also be
+>   *   updated to indicate changing divider bits.
+> + * CLK_DIVIDER_EVEN - only allow even divider values
+>   */
+>  struct clk_divider {
+>         struct clk_hw   hw;
+> @@ -281,6 +282,7 @@ struct clk_divider {
+>  #define CLK_DIVIDER_POWER_OF_TWO       BIT(1)
+>  #define CLK_DIVIDER_ALLOW_ZERO         BIT(2)
+>  #define CLK_DIVIDER_HIWORD_MASK                BIT(3)
+> +#define CLK_DIVIDER_EVEN               BIT(4)
+> =20
+>  extern const struct clk_ops clk_divider_ops;
+>  struct clk *clk_register_divider(struct device *dev, const char *nam=
+e,
+> --=20
+> 1.7.2.3
