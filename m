@@ -1,103 +1,160 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCHv4 2/3] Add documentation for g762 driver
-Date: Tue, 11 Jun 2013 08:11:57 -0700
-Message-ID: <20130611151157.GB10221@roeck-us.net>
-References: <cover.1370327864.git.arno@natisbad.org>
- <424fad46a59b886551c905024f8707ad83b80762.1370327864.git.arno@natisbad.org>
+Subject: Re: [PATCHv2 1/3] Add support for GMT G762/G763 PWM fan controller
+Date: Tue, 11 Jun 2013 08:15:09 -0700
+Message-ID: <20130611151509.GC10221@roeck-us.net>
+References: <cover.1369687670.git.arno@natisbad.org>
+ <b44f55c4194f6cd8c94f8a3d63ad5c8bd1d1cfe0.1369687670.git.arno@natisbad.org>
+ <20130531221616.GG7626@kw.sim.vm.gnt>
+ <87fvx1pwrl.fsf@natisbad.org>
+ <20130602215904.GH7626@kw.sim.vm.gnt>
+ <87sj0yz7tv.fsf@natisbad.org>
+ <20130604212306.GL7626@kw.sim.vm.gnt>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <424fad46a59b886551c905024f8707ad83b80762.1370327864.git.arno@natisbad.org>
+In-Reply-To: <20130604212306.GL7626@kw.sim.vm.gnt>
 Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Jean Delvare <khali@linux-fr.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Simon Guinot <simon.guinot@sequanux.org>, Olivier Mouchet <olivier.mouchet@gmail.com>
+To: Simon Guinot <simon.guinot@sequanux.org>
+Cc: Arnaud Ebalard <arno@natisbad.org>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Nicolas Perrin <nperrin@lacie.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2013 at 09:14:47AM +0200, Arnaud Ebalard wrote:
+On Tue, Jun 04, 2013 at 11:23:07PM +0200, Simon Guinot wrote:
+> On Tue, Jun 04, 2013 at 08:52:12AM +0200, Arnaud Ebalard wrote:
+> > Hi Simon,
+> > 
+> > Simon Guinot <simon.guinot@sequanux.org> writes:
+> > 
+> > > On Sat, Jun 01, 2013 at 07:26:54PM +0200, Arnaud Ebalard wrote:
+> > >> Hi Simon and Guenter,
+> > >> 
+> > >> Simon Guinot <simon.guinot@sequanux.org> writes:
+> > >> 
+> > >> > On Tue, May 28, 2013 at 12:03:14AM +0200, Arnaud Ebalard wrote:
+> > >> >> 
+> > >> >> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+> > >> >> ---
+> > >> >>  drivers/hwmon/Kconfig              |   10 +
+> > >> >>  drivers/hwmon/Makefile             |    1 +
+> > >> >>  drivers/hwmon/g762.c               | 1012 ++++++++++++++++++++++++++++++++++++
+> > >> >>  include/linux/platform_data/g762.h |   54 ++
+> > >> >>  4 files changed, 1077 insertions(+)
+> > >> >>  create mode 100644 drivers/hwmon/g762.c
+> > >> >>  create mode 100644 include/linux/platform_data/g762.h
+> > >> >
+> > >> > Hi Arnaud,
+> > >> >
+> > >> > After more tests on my 2Big Network v2 board, it appears that the fan
+> > >> > doesn't rotate when PWM mode (the preferred operating mode for this
+> > >> > board) is selected. Nevertheless, DC mode is usable (even if not ideal
+> > >> > given the hardware). After some investigations I noticed that an extra
+> > >> > initialization is needed to enable PWM mode on my board: the set_cnt
+> > >> > register must be set to 0 while the default value is 0xff. Is that
+> > >> > specific to my hardware ? Is PWM mode working on your ReadyNAS with
+> > >> > the default set_cnt value ?
+> > >> 
+> > >> First, thanks for testing this!
+> > >> 
+> > >> Regarding your problem, I first started by booting current version of my
+> > >> driver on the Duo v2 w/o touching chip registers (only clock reference
+> > >> value). This way, I inherit the values installed by (NETGEAR's) u-boot:
+> > >> 
+> > >> $ for k in fan* pwm* ; do echo -n "$k:" ; echo `cat $k `; done
+> > >> fan1_alarm:0
+> > >> fan1_div:2
+> > >> fan1_fault:0
+> > >> fan1_input:1807
+> > >> fan1_target:1807
+> > >> pwm1:221
+> > >> pwm1_enable:2        /* closed-loop, i.e. config is done via set_cnt */
+> > >> pwm1_mode:1          /* PWM mode */ 
+> > >
+> > > Sorry, I realize that I have not been very accurate in my description of
+> > > the problem: The fan doesn't rotate when PWM _and_ open-loop control are
+> > > selected. On the 2Big2 board, 2 wires are used to drive the fan.
+> > >
+> > > Then with pwm1_mode=1, pwm1_enable=1 and set_cnt=0xff (default value),
+> > > nothing happen whatever the value I write in pwm1.
+> > 
+> > After boot, with set_cnt and set_out untouched by me (set_cnt set to
+> > 0x5a by u-boot, i.e. 255-0x5a read on pwm1):
+> > 
+> > fan1_alarm:0
+> > fan1_div:1
+> > fan1_fault:0
+> > fan1_input:1365
+> > fan1_target:1365
+> > pwm1:0                  /* set_out is 0 (considering fan1_target,
+> >                            set_cnt is 0x5a)*/
+> > pwm1_enable:2           /* closed-loop */
+> > pwm1_mode:0             /* DC mode */
+> > 
+> > # echo 1 > pwm1_mode    /* PWM mode */       # fan rotates 
+> > # echo 1 > pwm1_enable  /* open-loop */      # fan stops rotating
+> > 
+> > At that point we have:
+> > 
+> > fan1_alarm:0
+> > fan1_div:1
+> > fan1_fault:0
+> > fan1_input:0
+> > fan1_target:1365
+> > pwm1:0                  /* set_out is 0, set_cnt is still 0x5a */
+> > pwm1_enable:1
+> > pwm1_mode:1
+> > 
+> > Then:
+> > 
+> > # echo 100 > pwm1                            # fan rotates
 > 
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-
-Please merge the patches into one. I don't see the benefit of having three
-patches as it is all part of one driver.
+> OK you are lucky. Your bootloader initialize set_cnt with 0x5a. Mine
+> don't and it is precisely the issue: set_cnt is still 0xff (the default
+> value) when the driver controls the fan.
+> 
+> Please, could you try open-loop mode with set_cnt set to 0xff ?  Maybe
+> you can enforce this value for the test purpose ?
+> 
+> If you observe the same behaviour than me, then could modify the driver
+> to ensure that set_cnt is not 0xff when open-loop mode is selected ?
+> Maybe by systematically setting a different value (as 0) ?
+> 
+I think it would make sense to set it to 0 when open-loop mode is selected, or
+at least to set it to a value != 0xff. Question would be if the value has any
+meaning in open loop mode, other than to enable/disable fan control entirely.
 
 Thanks,
 Guenter
 
-> ---
->  Documentation/hwmon/g762 |   62 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/hwmon/g762
+> > 
+> > 
+> > > By testing, I have discovered that writing 0 into set_cnt allows to work
+> > > around the issue. I can do this by using the closed-loop control:
+> > > pwm1_mode=1, pwm1_enable=2 and pwm=255. Now, set_cnt worths 0 and if I
+> > > switch back to open-loop control, all works as expected.
+> > >
+> > > Can you try open-loop control and PWM mode with your board ? I wonder if
+> > > this issue is specific to the 2Big2 hardware.
+> > 
+> > AFAICT, set_cnt has never been set to 0 in my test and PWM+open-loop
+> > works as expected, i.e. just by setting a non-zero value in set_out.
+> > Tell me if I missed something or if you want me to perform another
+> > test.
 > 
-> diff --git a/Documentation/hwmon/g762 b/Documentation/hwmon/g762
-> new file mode 100644
-> index 0000000..8cdb0dc
-> --- /dev/null
-> +++ b/Documentation/hwmon/g762
-> @@ -0,0 +1,62 @@
-> +Kernel driver g762
-> +==================
-> +
-> +The GMT G762 Fan Speed PWM Controller is connected directly to a fan
-> +and performs closed-loop or open-loop control of the fan speed. Two
-> +modes - PWM or DC - are supported by the device.
-> +
-> +For additional information, a detailed datasheet is available at
-> +http://natisbad.org/NAS/ref/GMT_EDS-762_763-080710-0.2.pdf. sysfs
-> +bindings are described in Documentation/hwmon/sysfs-interface.
-> +
-> +The following entries are available to the user in a subdirectory of
-> +/sys/bus/i2c/drivers/g762/ to control the operation of the device.
-> +This can be done manually using the following entries but is usually
-> +done via a userland daemon like fancontrol.
-> +
-> +Note that those entries do not provide ways to setup the specific
-> +hardware characteristics of the system (reference clock, pulses per
-> +fan revolution, ...); Those can be modified via devicetree bindings
-> +documented in Documentation/devicetree/bindings/hwmon/g762.txt or
-> +using a specific platform_data structure in board initialization
-> +file (see include/linux/platform_data/g762.h).
-> +
-> +  fan1_target: set desired fan speed. This only makes sense in closed-loop
-> +            fan speed control (i.e. when pwm1_enable is set to 2).
-> +
-> +  fan1_input: provide current fan rotation value in RPM as reported by
-> +            the fan to the device.
-> +
-> +  fan1_div: fan clock divisor. Supported value are 1, 2, 4 and 8.
-> +
-> +  fan1_fault: reports fan failure, i.e. no transition on fan gear pin for
-> +            about 0.7s (if the fan is not voluntarily set off).
-> +
-> +  fan1_alarm: in closed-loop control mode, if fan RPM value is 25% out
-> +            of the programmed value for over 6 seconds 'fan1_alarm' is
-> +            set to 1.
-> +
-> +  pwm1_enable: set current fan speed control mode i.e. 1 for manual fan
-> +            speed control (open-loop) via pwm1 described below, 2 for
-> +            automatic fan speed control (closed-loop) via fan1_target
-> +            above (pwm1 is also usable).
-> +
-> +  pwm1_mode: set or get fan driving mode: 1 for PWM mode, 0 for DC mode.
-> +
-> +  pwm1: get or set PWM fan control value in open-loop mode. This is an
-> +            integer value between 0 and 255. 0 stops the fan, 255 makes
-> +            it run at full speed.
-> +
-> +Both in PWM mode ('pwm1_mode' set to 1) and DC mode ('pwm1_mode' set to 0),
-> +when current fan speed control mode is open-loop ('pwm1_enable' set to 1),
-> +the fan speed is programmed by setting a value between 0 and 255 via 'pwm1'
-> +entry (0 stops the fan, 255 makes it run at full speed). In closed-loop mode
-> +('pwm1_enable' set to 2), the expected rotation speed in RPM can be passed to
-> +the chip via 'fan1_target'. In closed-loop mode, the target speed is compared
-> +with current speed (available via 'fan1_input') by the device and a feedback
-> +is performed to match that target value. The fan speed value is computed
-> +based on the parameters associated with the physical characteristics of the
-> +system: a reference clock source frequency, a number of pulses per fan
-> +revolution, etc.
-> +
-> +Note that the driver will update its values at most once per second.
-> -- 
-> 1.7.10.4
+> Actually, I have only problems when set_cnt worths 0xff. Please, could
+> you try the tests mentioned above ?
 > 
+> Thanks in advance,
 > 
+> Simon
+> 
+> > 
+> > Cheers,
+> > 
+> > a+
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
