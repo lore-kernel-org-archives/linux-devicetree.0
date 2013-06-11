@@ -1,69 +1,83 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] of/documentation: Update document related to
- exynos_hdmi
-Date: Tue, 11 Jun 2013 09:39:12 +0530
-Message-ID: <CAK9yfHxU6Ez8R1tEBBoJzCP=RQ20QtKJ7SQ5zAag4pm2PpFxxA@mail.gmail.com>
-References: <1369025464-8810-1-git-send-email-sachin.kamat@linaro.org>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH v2 1/2] ARM: dts: add dtsi for palmas
+Date: Tue, 11 Jun 2013 04:10:50 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229EAD1B@DBDE04.ent.ti.com>
+References: <1370855059-5342-1-git-send-email-j-keerthy@ti.com>
+ <1370855059-5342-2-git-send-email-j-keerthy@ti.com>
+ <51B5FEDE.5070900@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369025464-8810-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51B5FEDE.5070900@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "lee.jones@linaro.org" <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 May 2013 10:21, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Exynos SoCs use pinctrl to configure GPIOs. Update the document
-> to reflect this change.
->
-> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/video/exynos_hdmi.txt      |    6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> index 589edee..584385a 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> @@ -8,9 +8,7 @@ Required properties:
->  - hpd-gpio: following information about the hotplug gpio pin.
->         a) phandle of the gpio controller node.
->         b) pin number within the gpio controller.
-> -       c) pin function mode.
-> -       d) optional flags and pull up/down.
-> -       e) drive strength.
-> +       c) optional flags and pull up/down.
->
->  Example:
->
-> @@ -18,5 +16,5 @@ Example:
->                 compatible = "samsung,exynos5-hdmi";
->                 reg = <0x14530000 0x100000>;
->                 interrupts = <0 95 0>;
-> -               hpd-gpio = <&gpx3 7 0xf 1 3>;
-> +               hpd-gpio = <&gpx3 7 1>;
->         };
-> --
-> 1.7.9.5
->
+Hi Stephen,
 
-Ping..
+> -----Original Message-----
+> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
+> Sent: Monday, June 10, 2013 9:59 PM
+> To: J, KEERTHY
+> Cc: Cousson, Benoit; devicetree-discuss@lists.ozlabs.org; linux-
+> omap@vger.kernel.org; linux-kernel@vger.kernel.org;
+> ldewangan@nvidia.com; grant.likely@secretlab.ca; swarren@nvidia.com;
+> sameo@linux.intel.com; gg@slimlogic.co.uk; lee.jones@linaro.org
+> Subject: Re: [PATCH v2 1/2] ARM: dts: add dtsi for palmas
+> 
+> On 06/10/2013 03:04 AM, J Keerthy wrote:
+> > Adds palmas mfd and palmas regulator nodes.
+> 
+> Nits:
+> 
+> Well, you're really adding files that provide the nodes, not the nodes
+> themselves.
+> 
+> Palmas and MFD should be correctly capitalized.
 
-Inki,
-Would you like to take this through your tree?
+Ok.
 
--- 
-With warm regards,
-Sachin
+> 
+> > diff --git a/arch/arm/boot/dts/palmas.dtsi
+> > b/arch/arm/boot/dts/palmas.dtsi
+> 
+> > +&palmas {
+> ...
+> > +	palmas_pmic {
+> ...
+> > +		ti,ldo6-vibrator;
+> 
+> Isn't that board-specific? I don't know the HW well enough to say, but
+> I assume that since there's a property, the whole point must be that
+> some boards want it set and some don't.
+> 
+
+Yes. I will make this part of board file.
+
+> > +		regulators {
+> > +			smps123_reg: smps123 {
+> > +				regulator-name = "smps123";
+> > +			};
+> 
+> So the node labels here duplicate those in omap5-uevm.dts in patch 2/2.
+> While dtc allows this, I don't think there's much point duplicating the
+> labels. I'd tend to only put the labels in omap5-uevm.dts and not put
+> them here. That will completely avoid the possibility of the labels in
+> this file from conflicting with any other labels in any top-level
+> board.dts file.
+> 
+> I also wonder if this file is actually terribly useful. The only thing
+> that this file provides is the regulator-name property. It seems
+> simpler just to put that into each board.dts file. The added advantage
+> of doing that, is that if a board doesn't use a particular regulator,
+> the node won't appear, and the regulator won't get registered.
+
+Ok. I will transfer the entire code to omap5-uevm.dts.
+
+Thanks for the review comments.
+
+Regards,
+Keerthy
