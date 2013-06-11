@@ -1,68 +1,63 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
- the DT binding
-Date: Tue, 11 Jun 2013 10:57:38 -0300
-Message-ID: <20130611135737.GC3996@localhost>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1370623671-7748-5-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306072101.44694.arnd@arndb.de>
- <20130607200054.GA9010@obsidianresearch.com>
- <20130608183851.GB2354@localhost>
- <20130609014506.GB10027@obsidianresearch.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v3 1/6] irqchip: add support for Marvell Orion SoCs
+Date: Tue, 11 Jun 2013 16:08:28 +0200
+Message-ID: <51B72F5C.5020806@gmail.com>
+References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com> <1370536034-23956-2-git-send-email-sebastian.hesselbarth@gmail.com> <alpine.LFD.2.02.1306111045520.22970@ionos> <alpine.LFD.2.02.1306111525180.22970@ionos> <51B7280B.7080604@gmail.com> <alpine.LFD.2.02.1306111539310.22970@ionos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130609014506.GB10027-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.02.1306111539310.22970@ionos>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SmFzb24sIEFybmQ6CgpPbiBTYXQsIEp1biAwOCwgMjAxMyBhdCAwNzo0NTowNlBNIC0wNjAwLCBK
-YXNvbiBHdW50aG9ycGUgd3JvdGU6ClsuLi5dCj4gCj4gVGhpcyBpcyB0aGUgbWFuZ2xpbmcgSSB3
-YXMgcmVmZXJyaW5nIHRvLiBJdCBuZWVkcyB0byBiZSB0aGUgb2Zmc2V0Cj4gaW50byB0aGUgdGFy
-Z2V0LCBpdCBjYW4ndCBiZSBzb21ldGhpbmcgZWxzZS4KPiAKCkkgc2VlIGJvdGggb2YgeW91IGhh
-dmUgZXhwbGFpbmVkIHRoaXMgYWxyZWFkeSwgYnV0IEkgY2FuJ3Qgc2VlbQp0byBjYXRjaCBpdCB5
-ZXQuCgpNaW5kIGV4cGxhaW5pbmcgbWUgZXhhY2x0eSAqd2h5KiAiaXQgY2FuJ3QgYmUgc29tZXRo
-aW5nIGVsc2UiPwpJT1csIHdoeSB0aGUgd2luZG93IGJhc2UgYWRkcmVzcyBjYW5ub3QgYmUgaW4g
-dGhlIDJuZCBjZWxsLAphbmQvb3Igd2hhdCB1c2UgY2FzZXMgd291bGQgdGhpcyBlbmNvZGluZyBi
-cmFrZT8KCj4gSSB1bmRlcnN0YW5kIHlvdXIgbW90aXZhdGlvbiwgYnV0IHRoaXMgaXMgbm90IGEg
-Z29vZCBtZXRob2Qgb2YKPiBlbmNvZGluZyB0aGlzIGluIERULgo+IAo+IFRoZXJlIGlzIG5vdGhp
-bmcgZXNwZWNpYWxseSB3cm9uZyB3aXRoIHVwZGF0aW5nIHRoZSByYW5nZXMgYXQgcnVudGltZSwK
-PiBidXQgZG9uJ3QgdXNlIHRoZSAybmQgY2VsbCBpbiB0aGUgMmR3IGFkZHJlc3MgdG8gZW5jb2Rl
-IHRoZSBkZXNpcmVkCj4gYmFzZSBhZGRyZXNzLgo+IAoKUmVnYXJkaW5nIHRoaXMsIGxldCBtZSBj
-b25maXJtIHlvdXIgcHJvcG9zZWQgbGF5b3V0IHVzaW5nIGFuIGV4YW1wbGUuCihsYXRlciBvbiwg
-aSdsbCB0cnkgdGhlIHByZXByb2Nlc3NvciBvbiB0aGlzIHRvIG1ha2UgaXQgbG9vayBiZXR0ZXIp
-LgoKbWJ1cyB7Cgljb21wYXRpYmxlID0gImZvby1tYnVzIjsKCXJhbmdlcyA9IDwgMHhmZmZmMDAw
-MSAwIDB4ZjEwMDAwMDAgMHgxMDAwMDAwIC8qIEludGVybmFsIHJlZ2lzdGVyIGVudHJ5ICovCgkJ
-ICAgMHgwMTFkMDAwMCAwIDB4ZmZmMDAwMDAgMHgwMTAwMDAwIC8qIEJvb3RST00gZW50cnkgd2l0
-aCBiYXNlIGFkZHJlc3MgKi8KCQkgICAweDAxMmYwMDAwIDAgMHhlODAwMDAwMCAweDEwMDAwMDAg
-LyogRGV2QnVzLE5PUiBlbnRyeSB3aXRoIGJhc2UgYWRkcmVzcyAqLwoJPjsKCglib290cm9tIHsK
-CQlyYW5nZXMgPSA8MCAweDAxMWQwMDAwIDAgMHgxMDAwMDA+OwoJfTsKCglkZXZidXMtYm9vdGNz
-IHsKCQlyYW5nZXMgPSA8MCAweDAxMmYwMDAwIDAgMHgxMDAwMDAwPjsKCQlub3IgewoJCQlyZWcg
-PSA8MCAweDEwMDAwMDA+OwoJCX07Cgl9Owp9OwoKSXMgdGhlIGFib3ZlIGNvcnJlY3Q/CgpOb3cs
-IGlmIHRoZSBhYm92ZSBpcyBPSywgdGhlbiB0aGUgRFQgbG9va3MgY29tcGxldGUgdG8gbWUuIE1l
-YW5pbmc6CgoxLiBUaGVyZSdzIG5vIG5lZWQgdG8gdXBkYXRlIGFueSByYW5nZXMgcHJvcGVydHkg
-YXQgcnVudGltZS4KCjIuIFRoZXJlJ3Mgbm8gbmVlZCB0byB1c2UgYW4gYWxnb3JpdGhtIHRvICdm
-aW5kJyBhIGJhc2UgYWRkcmVzcyBmb3IgZGVjb2RpbmcKICAgd2luZG93cyAoc3VjaCBhcyBmaXJz
-dC1maXQgYXMgQXJuZCBzdWdnZXN0ZWQgaW4gYW5vdGhlciBtYWlsKS4KICAgVGhlIGJhc2UgYWRk
-cmVzcyBpcyBhbHJlYWR5IHRoZXJlIGluIHRoZSByYW5nZXMgcHJvcGVydHksIHNvIHRoZSBtYnVz
-IGNhbgogICBzaW1wbHkgYWxsb2NhdGUgdGhlIHdpbmRvdyBvbiB0aGF0IGJhc2UgYWRkcmVzcy4K
-ClNvLCBhbSBJIHJpZ2h0IG9yIGNvbXBsZXRlbHkgbG9zdD8KClRoYW5rcyBhIGxvdCBmb3IgdGhl
-IGhlbHAsCi0tIApFemVxdWllbCBHYXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51
-eCwgS2VybmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5j
-b20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNl
-dHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJz
-Lm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNz
-Cg==
+On 06/11/13 15:45, Thomas Gleixner wrote:
+> On Tue, 11 Jun 2013, Sebastian Hesselbarth wrote:
+>> On 06/11/13 15:30, Thomas Gleixner wrote:
+>>> On Tue, 11 Jun 2013, Thomas Gleixner wrote:
+>>>> On Thu, 6 Jun 2013, Sebastian Hesselbarth wrote:
+>>>>> This patch adds an irqchip driver for the main interrupt controller
+>>>>> found
+>>>>> on Marvell Orion SoCs (Kirkwood, Dove, Orion5x, Discovery Innovation).
+>>>>> Corresponding device tree documentation is also added.
+>>>>>
+>>>>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>>>>
+>>>> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+>>>
+>>> Second thoughts:
+>>>
+>>>> +static void orion_bridge_irq_handler(unsigned int irq, struct irq_desc
+>>>> *desc)
+>>>> +{
+>>>> +	struct irq_domain *d = irq_get_handler_data(irq);
+>>>> +	struct irq_chip_generic *gc = irq_get_domain_generic_chip(d, irq);
+>>>> +	u32 stat = readl_relaxed(gc->reg_base + ORION_BRIDGE_IRQ_CAUSE) &
+>>>> +		gc->mask_cache;
+>>>
+>>> In init you map the first irq of that chip and install the chain
+>>> handler for it. Now if that first irq fires, isn't that set in the
+>>> cause register as well? And what acks that first irq?
+>>
+>> It is "acked" by acking all unmasked bridge irqs.
+>
+> Ok. A comment would be nice.
+>
+> But what about the bit in of that first irq in the cause register? If
+> it's set on entry you call generic_handle_irq() for that as well. So
+> if it's set you need to mask it in stat. If not, then it wants a
+> comment.
+
+I am not sure I can follow. orion_bridge_irq_init() maps the first
+parent irq, i.e. hwirq 0 of orion_irq. The parent irq controller
+clears that irq cause when all corresponding chained irqs are
+cleared. The chained (bridge) irqs are cleared by
+orion_bridge_irq_handler above.
+
+I can put a note to the parent irqchip in orion_irq_init() that we
+don't need to clear its cause register, if it is that what you mean?
+
+Sebastian
+
