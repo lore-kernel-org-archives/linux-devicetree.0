@@ -1,155 +1,51 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH] ASoC: rt5640: add device tree support
-Date: Tue, 11 Jun 2013 14:40:40 -0600
-Message-ID: <1370983240-4976-1-git-send-email-swarren@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, flove-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Tue, 11 Jun 2013 22:25:49 +0100
+Message-ID: <20130611212550.03A823E0D8D@localhost>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <515319D5.20105@wwwdotorg.org> <CACRpkdYXVLgCz1Tyu-Ls2V2OTc4R3cGNJhfQJB6Hiz_K9dkZYQ@mail.gmail.com> <5155C902.7080207@wwwdotorg.org> <CACRpkdYbs4-uudpRUY8e+7icYYkZrfM0kReP3pLL5DMiURJ4dg@mail.gmail.com> <5165CB9D.1090202@wwwdotorg.org> <CACRpkdYirFNqmGhA4K9CL4ve4NYhs8Rd3SFt1iwW9vHBkrcz8g@mail.gmail.com> <51671D7B.5060303@wwwdotorg.org> <CACRpkdbf32Ef77GmXk9id9+RRjcDRTr7S+F4nznoeZU8y=BT_Q@mail.gmail.com> <51673D70.3010503@wwwdotorg.org> <CAAwP0s0e2x33jZQhFRY+Hoo61SFqYKRgWk=1mL2+DNxSDJHz+A@mail.gmail.com> <CACRpkda4h+qXTvsirPAS7E7sjXhMLE62q=VDy53W8UchsYjbNg@mail.gmail.com> <516C31C3.9040505@wwwdotorg.org> <516C7C43.3040105@wwwdotorg.org> <516C8760.2050500@ti.com> <516D9B05.1000501@wwwdotorg.org> <516DA60A.5070000@ti.com> <516DCC
+ A8.3070108@wwwdotorg.org> <516DDB4D.9020500@ti.com> <CAAwP0s0-VNUoeSKaGbvoDeD7m7kZRdp5rCJ7iVpFoFAaQtXcmQ@mail.gmail.com> <CACRpkdaA_7Feuui-S65m--2FfvpoUkfn6b9SoWavAstZUS23ag@mail.gmail.com> <517AF22
+ C.9090901@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <517AF22C.9090901@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Javier Martinez Canillas <martinez.javier@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Fri, 26 Apr 2013 16:31:24 -0500, Jon Hunter <jon-hunter@ti.com> wrote:
+> 
+> On 04/26/2013 02:31 AM, Linus Walleij wrote:
+> > On Wed, Apr 17, 2013 at 2:41 AM, Javier Martinez Canillas
+> > <martinez.javier@gmail.com> wrote:
+> > 
+> > So:
+> > 
+> >> +static int omap_gpio_irq_domain_xlate(struct irq_domain *d,
+> >> +                                     struct device_node *ctrlr,
+> >> +                                     const u32 *intspec, unsigned int intsize,
+> >> +                                     irq_hw_number_t *out_hwirq,
+> >> +                                     unsigned int *out_type)
+> >> +{
+> >> +       int ret;
+> >> +       struct gpio_bank *bank = d->host_data;
+> >> +       int gpio = bank->chip.base + intspec[0];
+> >> +
+> >> +       if (WARN_ON(intsize < 2))
+> >> +               return -EINVAL;
+> >> +
+> >> +       ret = gpio_request_one(gpio, GPIOF_IN, ctrlr->full_name);
+> >> +       if (ret)
+> >> +               return ret;
+> > 
+> > So how to figure out if a device is already requesting this GPIO
+> > on some orthogonal axis?
+> 
+> I really don't think that is necessary. Hopefully, my other email [1]
+> elaborates on why. Let me know if this makes sense.
 
-Modify the RT5640 driver to parse platform data from device tree. Write
-a DT binding document to describe those properties.
+I would agree here. If the irq specified happens to be a GPIO; then the
+onus is on the GPIO/IRQ controller driver to make sure that GPIO is
+actually set up to work as an IRQ.
 
-Slight re-ordering of rt5640_i2c_probe() to better fit the DT parsing.
+g.
 
-Since ldo1_en is optional, guard usage of it with gpio_is_valid(), rather
-than open-coding an if (gpio) check.
-
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Mark, If the underlying rt5640 driver is reposted, this might need a new
-version to rebase it, but otherwise I believe should be complete.
-
-Bard, FYI you can find this patch and the DT changes for Dalmore at:
-git://nv-tegra.nvidia.com/user/swarren/linux-2.6 linux-next_common
-
- Documentation/devicetree/bindings/sound/rt5640.txt | 30 ++++++++++++++++
- sound/soc/codecs/rt5640.c                          | 40 ++++++++++++++++++----
- 2 files changed, 64 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/rt5640.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/rt5640.txt b/Documentation/devicetree/bindings/sound/rt5640.txt
-new file mode 100644
-index 0000000..005bcb2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rt5640.txt
-@@ -0,0 +1,30 @@
-+RT5640 audio CODEC
-+
-+This device supports I2C only.
-+
-+Required properties:
-+
-+- compatible : "realtek,rt5640".
-+
-+- reg : The I2C address of the device.
-+
-+- interrupts : The CODEC's interrupt output.
-+
-+Optional properties:
-+
-+- realtek,in1-differential
-+- realtek,in2-differential
-+  Boolean. Indicate MIC1/2 input are differential, rather than single-ended.
-+
-+- realtek,ldo1-en-gpios : The GPIO that controls the CODEC's LDO1_EN pin.
-+
-+Example:
-+
-+rt5640 {
-+	compatible = "realtek,rt5640";
-+	reg = <0x1c>;
-+	interrupt-parent = <&gpio>;
-+	interrupts = <TEGRA_GPIO(W, 3) GPIO_ACTIVE_HIGH>;
-+	realtek,ldo1-en-gpios =
-+		<&gpio TEGRA_GPIO(V, 3) GPIO_ACTIVE_HIGH>;
-+};
-diff --git a/sound/soc/codecs/rt5640.c b/sound/soc/codecs/rt5640.c
-index 288c17c..f7e73d2 100644
---- a/sound/soc/codecs/rt5640.c
-+++ b/sound/soc/codecs/rt5640.c
-@@ -18,6 +18,7 @@
- #include <linux/gpio.h>
- #include <linux/i2c.h>
- #include <linux/regmap.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/spi/spi.h>
- #include <sound/core.h>
-@@ -1998,6 +1999,28 @@ static const struct i2c_device_id rt5640_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, rt5640_i2c_id);
- 
-+static int rt5640_parse_dt(struct rt5640_priv *rt5640, struct device_node *np)
-+{
-+	rt5640->pdata.in1_diff = of_property_read_bool(np,
-+					"realtek,in1-differential");
-+	rt5640->pdata.in2_diff = of_property_read_bool(np,
-+					"realtek,in2-differential");
-+
-+	rt5640->pdata.ldo1_en = of_get_named_gpio(np,
-+					"realtek,ldo1-en-gpios", 0);
-+	/*
-+	 * LDO1_EN is optional (it may be statically tied on the board).
-+	 * -ENOENT means that the property doesn't exist, i.e. there is no
-+	 * GPIO, so is not an error. Any other error code means the property
-+	 * exists, but could not be parsed.
-+	 */
-+	if (!gpio_is_valid(rt5640->pdata.ldo1_en) &&
-+			(rt5640->pdata.ldo1_en != -ENOENT))
-+		return rt5640->pdata.ldo1_en;
-+
-+	return 0;
-+}
-+
- static int rt5640_i2c_probe(struct i2c_client *i2c,
- 		    const struct i2c_device_id *id)
- {
-@@ -2011,6 +2034,16 @@ static int rt5640_i2c_probe(struct i2c_client *i2c,
- 				GFP_KERNEL);
- 	if (NULL == rt5640)
- 		return -ENOMEM;
-+	i2c_set_clientdata(i2c, rt5640);
-+
-+	if (pdata)
-+		rt5640->pdata = *pdata;
-+	else if (i2c->dev.of_node) {
-+		ret = rt5640_parse_dt(rt5640, i2c->dev.of_node);
-+		if (ret)
-+			return ret;
-+	} else
-+		rt5640->pdata.ldo1_en = -1;
- 
- 	rt5640->regmap = devm_regmap_init_i2c(i2c, &rt5640_regmap);
- 	if (IS_ERR(rt5640->regmap)) {
-@@ -2020,12 +2053,7 @@ static int rt5640_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
--	if (pdata)
--		rt5640->pdata = *pdata;
--
--	i2c_set_clientdata(i2c, rt5640);
--
--	if (rt5640->pdata.ldo1_en) {
-+	if (gpio_is_valid(rt5640->pdata.ldo1_en)) {
- 		ret = devm_gpio_request_one(&i2c->dev, rt5640->pdata.ldo1_en,
- 					    GPIOF_OUT_INIT_HIGH,
- 					    "RT5640 LDO1_EN");
--- 
-1.8.1.5
