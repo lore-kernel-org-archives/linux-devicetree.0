@@ -1,60 +1,38 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v2 04/11] mfd:stixxxx-syscfg: Add ST System Configuration
- support.
-Date: Tue, 11 Jun 2013 08:41:19 +0100
-Message-ID: <51B6D49F.3030203@st.com>
-References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com> <CACRpkdaW2ALTWCB7Rd8m=aAGQwh3T_dJVncxJn_eXer4X3J6_g@mail.gmail.com> <51B5DA26.6070707@st.com> <2757224.FBxg98dX57@wuerfel>
-Reply-To: srinivas.kandagatla@st.com
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 0/6] Marvell Orion SoC irqchip and clocksource
+Date: Tue, 11 Jun 2013 10:45:40 +0200 (CEST)
+Message-ID: <alpine.LFD.2.02.1306111043200.22970@ionos>
+References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <2757224.FBxg98dX57@wuerfel>
+In-Reply-To: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, "David S. Miller" <davem@davemloft.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Gallimore <stephen.gallimore@st.com>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Menefy <stuart.menefy@st.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, Mauro Carvalho Chehab <mchehab@redhat.com>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/06/13 15:02, Arnd Bergmann wrote:
-> There are multiple ways of doing that, e.g. you could export a function
-> from syscon.c that you call to register the device node and then import
-> the regmap from syscon into your high-level driver again.
+On Thu, 6 Jun 2013, Sebastian Hesselbarth wrote:
+
+> This patch set introduces DT-aware irqchip and clocksource drivers for
+> Marvell Orion SoCs (Kirkwood, Dove, Orion5x, MV78x00) and corresponding
+> patches for Dove and Kirkwood to enable them for DT-boards.
 > 
+> The irqchip driver, of course, depends on Thomas Gleixner's work on
+> irqdomain support for generic chip (tip irq/core).
+> 
+> The ARM part of this patch set has a quite ridiculuous dependency havoc
+> of mv643xx_eth DT support (current net-next) that will add to both irqchip
+> and clocksource branches respectively. Therefore, I suggest that irq
+> and clocksource maintainers take in the mere drivers (Patches 1+2) and
+> Jason Cooper handles the remaining patches when all three drivers have
+> surfaced on mainline linux.
 
-Hi Arnd/Linus,
-
-Thankyou for your comments,
-I did try using the full sysconf names in compatible and make use of
-syscon driver, with this change the nodes look much neater.
-
-The nodes changes to:
-
-syscfg_sbc:syscfg@fe600000{
-    compatible      = "st,stih416-sbc-syscfg", "syscon";
-    reg             = <0xfe600000 0x1000>;
-};
-
-From:
-syscfg_sbc:syscfg@fe600000{
-         compatible      = "st,stih416-syscfg";
-         reg             = <0xfe600000 0x1000>;
-         syscfg-range    = <0 999>;
-         syscfg-name     = "SYSCFG_SBC";
-};
-
-
-Also I got rid of the drivers/mfd/stixxxx-syscfg.c driver all together
-for this basic support patch series, I will add this once there are new
-high level functions.
-Additional compatible string will allow code to get to regmap via syscon
-apis.
-
-I will get rid of this driver in next version for this series.
-
+I provided a tip branch irq/for-arm, which contains only these changes
+and can be pulled by SoC/subarch maintainers so we don't end up with a
+dependency nightmare. Just mention that you pulled it from me when
+sending the pull request to Linus.
+ 
 Thanks,
-srini
 
-> 	Arnd
-> 
-> 
-
+	tglx
