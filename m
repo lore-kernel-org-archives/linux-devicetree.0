@@ -1,87 +1,49 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 2/4] ARM: dts: omap3-tobi: Add SMSC911X node
-Date: Tue, 11 Jun 2013 17:35:21 +0200
-Message-ID: <51B743B9.3070809@collabora.co.uk>
-References: <1370962189-9689-1-git-send-email-florian.vaussard@epfl.ch> <1370962189-9689-3-git-send-email-florian.vaussard@epfl.ch>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: OMAP5: Add palmas MFD node and regulator
+ nodes
+Date: Tue, 11 Jun 2013 10:01:43 -0600
+Message-ID: <51B749E7.6070808@wwwdotorg.org>
+References: <1370928651-6278-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1370962189-9689-3-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370928651-6278-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2013 04:49 PM, Florian Vaussard wrote:
-> The Tobi expansion boards embeds a SMSC LAN8700 PHY. Add the
-> corresponding node into the DT. The regulators are not designed
-> to be turned off.
+On 06/10/2013 11:30 PM, J Keerthy wrote:
+> This patch adds Palmas MFD node and the regulator nodes for OMAP5.
 > 
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> ---
->  arch/arm/boot/dts/omap3-tobi.dts |   48 ++++++++++++++++++++++++++++++++++++++
->  1 files changed, 48 insertions(+), 0 deletions(-)
+> The node definitions are based on: https://lkml.org/lkml/2013/6/6/25
 > 
-> diff --git a/arch/arm/boot/dts/omap3-tobi.dts b/arch/arm/boot/dts/omap3-tobi.dts
-> index c7eebbf..dea726f 100644
-> --- a/arch/arm/boot/dts/omap3-tobi.dts
-> +++ b/arch/arm/boot/dts/omap3-tobi.dts
-> @@ -24,6 +24,54 @@
->  			linux,default-trigger = "heartbeat";
->  		};
->  	};
-> +
-> +	vddvario: regulator-vddvario {
-> +		  compatible = "regulator-fixed";
-> +		  regulator-name = "vddvario";
-> +		  regulator-always-on;
-> +	};
-> +
-> +	vdd33a: regulator-vdd33a {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vdd33a";
-> +		regulator-always-on;
+> Boot tested on omap5-uevm board.
+
+> diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+
+> +	palmas: palmas@48 {
+> +		reg = <0x48>;
+> +		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /* IRQ_SYS_1N */
+> +		interrupt-parent = <&gic>;
 > +	};
 > +};
 > +
-> +&gpmc {
-> +	ranges = <5 0 0x2c000000 0x1000000>;	/* CS5 */
-> +
-> +	ethernet@5,0 {
-> +		compatible = "smsc,lan9221", "smsc,lan9115";
-> +		reg = <5 0 0xff>;
-> +		bank-width = <2>;
-> +
-> +		gpmc,mux-add-data;
-> +		gpmc,cs-on-ns = <0>;
-> +		gpmc,cs-rd-off-ns = <42>;
-> +		gpmc,cs-wr-off-ns = <36>;
-> +		gpmc,adv-on-ns = <6>;
-> +		gpmc,adv-rd-off-ns = <12>;
-> +		gpmc,adv-wr-off-ns = <12>;
-> +		gpmc,oe-on-ns = <0>;
-> +		gpmc,oe-off-ns = <42>;
-> +		gpmc,we-on-ns = <0>;
-> +		gpmc,we-off-ns = <36>;
-> +		gpmc,rd-cycle-ns = <60>;
-> +		gpmc,wr-cycle-ns = <54>;
-> +		gpmc,access-ns = <36>;
-> +		gpmc,page-burst-access-ns = <0>;
-> +		gpmc,bus-turnaround-ns = <0>;
-> +		gpmc,cycle2cycle-delay-ns = <0>;
-> +		gpmc,wr-data-mux-bus-ns = <18>;
-> +		gpmc,wr-access-ns = <42>;
-> +		gpmc,cycle2cycle-samecsen;
-> +		gpmc,cycle2cycle-diffcsen;
-> +
-> +		interrupt-parent = <&gpio6>;
-> +		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;	/* GPIO 176*/
-> +		reg-io-width = <4>;
-> +	};
->  };
->  
->  &i2c3 {
-> 
+> +&palmas {
+> +	compatible = "ti,palmas";
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
 
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+I don't really see the point of splitting the node into two parts if
+it's all going into a single file. It made sense if part of the node
+came from a common .dtsi file, but not so much when it doesn't.
