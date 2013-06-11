@@ -1,32 +1,43 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: shmobile: irqpin: add a DT property to enable
- masking on parent
-Date: Tue, 11 Jun 2013 18:37:24 +0900
-Message-ID: <CANqRtoTqHiRixV571CrMkc=ijWcrfZFzaSrfjN1SKRNTgTTcZA@mail.gmail.com>
-References: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/9] ARM: dma-mapping: NULLify dev->archdata.mapping
+	pointer on detach
+Date: Tue, 11 Jun 2013 12:39:33 +0300
+Message-ID: <20130611123933.4d278ff4e056f395788ad060@nvidia.com>
+References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
+	<1370889285-22799-5-git-send-email-will.deacon@arm.com>
+	<20130611.083455.1500863288897785600.hdoyu@nvidia.com>
+	<20130611085015.GC24729@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20130611085015.GC24729-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2013 at 6:13 PM, Guennadi Liakhovetski
-<g.liakhovetski@gmx.de> wrote:
-> To disable spurious interrupts, that get triggered on certain hardware, the
-> irqpin driver masks them on the parent interrupt controller. To specify
-> such broken devices a .control_parent parameter can be provided in the
-> platform data. In the DT case we need a property, to do the same.
->
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> ---
->
-> These two patches simply split the earlier "ARM: shmobile: irqpin: fix
-> handling of spurious interrupts in DT case" patch into two parts.
-> Otherwise no change.
+On Tue, 11 Jun 2013 10:50:15 +0200
+Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
 
-I'm fine with this portion of the patch series. Thanks for your help!
+> On Tue, Jun 11, 2013 at 06:34:55AM +0100, Hiroshi Doyu wrote:
+> > Hi Will,
+> > 
+> > Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote @ Mon, 10 Jun 2013 20:34:40 +0200:
+> > 
+> > > The current code only clobbers a local variable, so the device is left
+> > > with a stale mapping pointer.
+> > 
+> > True. This's my bad. Thanks.
+> 
+> That's alright, it's easy to fix. Mind if I add your ack please?
 
-Acked-by: Magnus Damm <damm@opensource.se>
+Feel free to add: Acked-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
