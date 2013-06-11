@@ -1,72 +1,126 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] ARM: dts: Protect pinctrl headers against multiple inclusions
-Date: Tue, 11 Jun 2013 22:57:56 +0100
-Message-ID: <20130611215756.9B0CA3E0D8D@localhost>
-References: <1370962250-9745-1-git-send-email-florian.vaussard@epfl.ch>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1370962250-9745-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>, Benoit Cousson <b-cousson@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 9/9] ARM/dts: update device tree binding documentation for hdmi susbsystem
+Date: Tue, 11 Jun 2013 23:00:10 +0100
+Message-ID: <20130611220010.25DC93E0D8D@localhost>
+References: <1370959891-8923-1-git-send-email-rahul.sharma@samsung.com> <1370959891-8923-10-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1370959891-8923-10-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
+Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, joshi@samsung.com, inki.dae@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Jun 2013 16:50:50 +0200, Florian Vaussard <florian.vaussard@epfl.ch> wrote:
-> Pinctrl headers were not protected with #ifndef.
+On Tue, 11 Jun 2013 19:41:31 +0530, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+> Update device tree binding documentation for hdmi subsystem with the
+> clock information, phy property information and compatible strings for
+> exynos5420.
 > 
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 
-Obviously this needs to go in via whatever tree added the modified
-header files.
+Binding looks reasonable to me. I'll leave it to the video maintainers
+to say whether or not it is covers the right amount of configuration
+data.
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+g.
 
 > ---
->  include/dt-bindings/pinctrl/am33xx.h |    5 +++++
->  include/dt-bindings/pinctrl/omap.h   |    5 +++++
->  2 files changed, 10 insertions(+), 0 deletions(-)
+>  .../devicetree/bindings/video/exynos_hdmi.txt       |   19 +++++++++++++++++++
+>  .../devicetree/bindings/video/exynos_hdmiphy.txt    |   10 ++++++++--
+>  .../devicetree/bindings/video/exynos_mixer.txt      |    7 +++++++
+>  3 files changed, 34 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/dt-bindings/pinctrl/am33xx.h b/include/dt-bindings/pinctrl/am33xx.h
-> index a3fddd4..469e032 100644
-> --- a/include/dt-bindings/pinctrl/am33xx.h
-> +++ b/include/dt-bindings/pinctrl/am33xx.h
-> @@ -2,6 +2,9 @@
->   * This header provides constants specific to AM33XX pinctrl bindings.
->   */
+> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> index 2ac01ca..e3c5853 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>  - compatible: value should be one among the following:
+>  	1) "samsung,exynos4210-hdmi"
+>  	2) "samsung,exynos4212-hdmi"
+> +	3) "samsung,exynos5420-hdmi"
+>  - reg: physical base address of the hdmi and length of memory mapped
+>  	region.
+>  - interrupts: interrupt number to the cpu.
+> @@ -13,6 +14,20 @@ Required properties:
+>  	c) pin function mode.
+>  	d) optional flags and pull up/down.
+>  	e) drive strength.
+> +- clocks: list of clock IDs from SoC clock driver.
+> +	a) hdmi: It is required for gate operation on aclk_200_disp1 clock
+> +		which clocks the display1 block.
+> +	b) sclk_hdmi: It is required for gate operation on sclk_hdmi clock
+> +		which clocks hdmi IP.
+> +	c) sclk_pixel: Parent for mux mout_hdmi.
+> +	d) sclk_hdmiphy: Parent for mux mout_hdmi.
+> +	e) mout_hdmi: It is required by the driver to switch between the 2
+> +		parents i.e. sclk_pixel and sclk_hdmiphy. If hdmiphy is stable
+> +		after configuration, parent is set to sclk_hdmiphy else
+> +		sclk_pixel.
+> +- clock-names: aliases as per driver requirements for above clock IDs:
+> +	"hdmi", "sclk_hdmi", "sclk_pixel", "sclk_hdmiphy" and "mout_hdmi".
+> +- phy: this property holds the phandle for hdmiphy node.
 >  
-> +#ifndef _DT_BINDINGS_PINCTRL_AM33XX_H
-> +#define _DT_BINDINGS_PINCTRL_AM33XX_H
+>  Example:
+>  
+> @@ -21,4 +36,8 @@ Example:
+>  		reg = <0x14530000 0x100000>;
+>  		interrupts = <0 95 0>;
+>  		hpd-gpio = <&gpx3 7 0xf 1 3>;
+> +		clocks = <&clock 344>, <&clock 136>, <&clock 137>,
+> +				<&clock 157>, <&clock 1024>;
+> +		clock-names = "hdmi", "sclk_hdmi", "sclk_pixel",
+> +				"sclk_hdmiphy", "mout_hdmi";
+>  	};
+> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
+> index fb688a6..e2b12ed 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
+> @@ -1,8 +1,14 @@
+>  Device-Tree bindings for hdmiphy driver
+>  
+>  Required properties:
+> -- compatible: value should be "samsung,exynos4210-hdmiphy".
+> -- reg: I2C address of the hdmiphy device.
+> +- compatible: value should be one among the following
+> +	1) Samsung,exynos4210-hdmiphy".
+> +	2) Samsung,exynos5420-hdmiphy".
 > +
->  #include <include/dt-bindings/pinctrl/omap.h>
+> +- reg: it holds the physical address infomration for the hdmiphy device.
+> +	If it is a i2c device, reg holds the I2C address of the phy. For
+> +	platform bus mapped phy, reg property holds physical address as
+> +	well as size of the register region.
 >  
->  /* am33xx specific mux bit defines */
-> @@ -35,3 +38,5 @@
->  #undef PIN_OFF_INPUT_PULLDOWN
->  #undef PIN_OFF_WAKEUPENABLE
+>  Example:
 >  
-> +#endif
-> +
-> diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
-> index 370df3f..edbd250 100644
-> --- a/include/dt-bindings/pinctrl/omap.h
-> +++ b/include/dt-bindings/pinctrl/omap.h
-> @@ -5,6 +5,9 @@
->   * Copyright (C) 2009-2010 Texas Instruments
->   */
+> diff --git a/Documentation/devicetree/bindings/video/exynos_mixer.txt b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+> index a8b063f..38e4e5c 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_mixer.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+> @@ -4,10 +4,15 @@ Required properties:
+>  - compatible: value should be:
+>  	1) "samsung,exynos4210-mixer"
+>  	2) "samsung,exynos5250-mixer"
+> +	3) "samsung,exynos5420-mixer"
 >  
-> +#ifndef _DT_BINDINGS_PINCTRL_OMAP_H
-> +#define _DT_BINDINGS_PINCTRL_OMAP_H
-> +
->  /* 34xx mux mode options for each pin. See TRM for options */
->  #define MUX_MODE0	0
->  #define MUX_MODE1	1
-> @@ -48,3 +51,5 @@
->  #define PIN_OFF_INPUT_PULLDOWN	(OFF_EN | OFF_PULL_EN)
->  #define PIN_OFF_WAKEUPENABLE	WAKEUP_EN
+>  - reg: physical base address of the mixer and length of memory mapped
+>  	region.
+>  - interrupts: interrupt number to the cpu.
+> +- clocks: list of clock IDs from SoC clock driver.
+> +	a) mixer: It is required for gate operation on aclk_200_disp1 clock
+> +		which clocks the display1 block.
+> +	b) sclk_hdmi: Parent for mux mout_mixer.
 >  
-> +#endif
-> +
+>  Example:
+>  
+> @@ -15,4 +20,6 @@ Example:
+>  		compatible = "samsung,exynos5250-mixer";
+>  		reg = <0x14450000 0x10000>;
+>  		interrupts = <0 94 0>;
+> +		clocks = <&clock 343>, <&clock 136>;
+> +		clock-names = "mixer", "sclk_hdmi";
+>  	};
 > -- 
-> 1.7.5.4
+> 1.7.10.4
 > 
 > _______________________________________________
 > devicetree-discuss mailing list
