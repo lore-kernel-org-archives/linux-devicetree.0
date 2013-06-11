@@ -1,17 +1,16 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2 06/11] ARM:stixxxx: Add STiH415 SOC support
-Date: Tue, 11 Jun 2013 00:19:34 +0100
-Message-ID: <20130610231934.GG18614@n2100.arm.linux.org.uk>
-References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com>
- <1370856381-6644-1-git-send-email-srinivas.kandagatla@st.com>
- <CAHTX3d+dk3W_9b7SVUokWq4KYXnj=Z1=WPj5zJ-gUvJqqwE=+Q@mail.gmail.com>
- <51B5BCB3.3060405@st.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v2 2/2] i2c: designware: add two optional property
+ tx/rx-fifo-size
+Date: Tue, 11 Jun 2013 10:13:57 +0800
+Message-ID: <51B687E5.307@linaro.org>
+References: <1370840576-15651-1-git-send-email-zhangfei.gao@linaro.org>
+ <1370840576-15651-3-git-send-email-zhangfei.gao@linaro.org>
+ <20130610184954.GK4312@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <51B5BCB3.3060405@st.com>
+In-Reply-To: <20130610184954.GK4312@tarshish>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,24 +20,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, linux-doc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Stephen Gallimore <stephen.gallimore@st.com>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Stuart Menefy <stuart.menefy@st.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm <linux-arm-kernel@lists.infradead.org>, Michal Simek <monstr@monstr.eu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, Rob Landley <rob@landley.net>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Dirk Brandewie <dirk.brandewie@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2013 at 12:46:59PM +0100, Srinivas KANDAGATLA wrote:
-> >     +       aux_ctrl = (0x1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT) |
-> >     +               (0x1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT) |
-> >     +               (0x1 << L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT) |
-> >     +               (way_size << L2X0_AUX_CTRL_WAY_SIZE_SHIFT);
-> > 
-> > 
-> > 
-> > #include <linux/bitops.h>
-> > Linus Walleij would write use  BIT() here
-> 
-> I will use BIT() macro.
-
-Without checking those fields... BIT() is only appropriate if you're
-really talking about single bits.  If you have a field of more than a
-single bit which you happen to be setting to '1' then it's not
-appropriate to use BIT().
+On 13-06-11 02:49 AM, Baruch Siach wrote:
+> Hi Zhangfei Gao,
+>
+> On Mon, Jun 10, 2013 at 01:02:55PM +0800, Zhangfei Gao wrote:
+>> rx-fifo-size and tx-fifo-size will be updated if provided from dts
+>>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> CC: Baruch Siach <baruch@tkos.co.il>
+>> ---
+>>   .../devicetree/bindings/i2c/i2c-designware.txt     |    7 +++++++
+>>   drivers/i2c/busses/i2c-designware-platdrv.c        |    3 +++
+>>   2 files changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>> index e42a2ee..61fdb44 100644
+>> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>> @@ -6,6 +6,11 @@ Required properties :
+>>    - reg : Offset and length of the register set for the device
+>>    - interrupts : <IRQ> where IRQ is the interrupt number.
+>>
+>> +Optional properties:
+>> +
+>> + - rx-fifo-size : 1 cell, Rx fifo threshold
+>
+> I'd use the word 'size' instead of 'threshold' here. The term 'threshold' is
+> used for something else in the datasheet.
+>
+> baruch
+>
+OK, will update and resend the patch.
