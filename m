@@ -1,43 +1,109 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v3 1/6] irqchip: add support for Marvell Orion SoCs
-Date: Tue, 11 Jun 2013 16:17:40 +0200
-Message-ID: <51B73184.10607@gmail.com>
-References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com> <1370536034-23956-2-git-send-email-sebastian.hesselbarth@gmail.com> <alpine.LFD.2.02.1306111045520.22970@ionos> <alpine.LFD.2.02.1306111525180.22970@ionos> <51B7280B.7080604@gmail.com> <alpine.LFD.2.02.1306111539310.22970@ionos> <51B72F5C.5020806@gmail.com> <alpine.LFD.2.02.1306111609110.22970@ionos>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.02.1306111609110.22970@ionos>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: [PATCH 1/3] ARM: dts: Add headers with constants for MTD partitions
+Date: Tue, 11 Jun 2013 16:48:56 +0200
+Message-ID: <1370962138-9631-2-git-send-email-florian.vaussard@epfl.ch>
+References: <1370962138-9631-1-git-send-email-florian.vaussard@epfl.ch>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1370962138-9631-1-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Anil Kumar <anilk4.v@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Florian Vaussard <florian.vaussard@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/13 16:13, Thomas Gleixner wrote:
-> On Tue, 11 Jun 2013, Sebastian Hesselbarth wrote:
->> On 06/11/13 15:45, Thomas Gleixner wrote:
->>> But what about the bit in of that first irq in the cause register? If
->>> it's set on entry you call generic_handle_irq() for that as well. So
->>> if it's set you need to mask it in stat. If not, then it wants a
->>> comment.
->>
->> I am not sure I can follow. orion_bridge_irq_init() maps the first
->> parent irq, i.e. hwirq 0 of orion_irq. The parent irq controller
->> clears that irq cause when all corresponding chained irqs are
->> cleared. The chained (bridge) irqs are cleared by
->> orion_bridge_irq_handler above.
->
-> That makes sense. I got confused by:
->
->          irq = irq_of_parse_and_map(np, 0);
->
-> but now I see that it's mapping irq 0 of the parent interrupt
-> controller. I'll add a comment before merging it.
+These constants can be used to easily declare MTD partitions inside
+DTS.
 
-Great! Just to be sure: Please make that comment refer to just
-"parent interrupt" but not specifically "parent interrupt 0".
-It is 0 only for Dove, and irq_of_parse_and_map(np, 0) maps the
-first passed irq.
+The constants MTDPART_OFS_* are purposely not included. Indeed,
+parse_ofpart_partitions() is expecting u64, but a DT cell is u32.
+Negative constants, as defined by MTDPART_OFS_*, would be wrongly
+interpreted by parse_ofpart_partitions(). Two cells should be
+used to correctly encode the negative constants, but this breaks
+current usage.
 
-Sebastian
+Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+---
+ include/dt-bindings/mtd/partitions.h |   12 ++++++++
+ include/dt-bindings/sizes.h          |   52 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+), 0 deletions(-)
+ create mode 100644 include/dt-bindings/mtd/partitions.h
+ create mode 100644 include/dt-bindings/sizes.h
+
+diff --git a/include/dt-bindings/mtd/partitions.h b/include/dt-bindings/mtd/partitions.h
+new file mode 100644
+index 0000000..7dfa676
+--- /dev/null
++++ b/include/dt-bindings/mtd/partitions.h
+@@ -0,0 +1,12 @@
++/*
++ * This header provides constants used with MTD partitions.
++ */
++
++#ifndef _DT_BINDINGS_MTD_PARTITIONS_H
++#define _DT_BINDINGS_MTD_PARTITIONS_H
++
++/* Partition size */
++#define MTDPART_SIZ_FULL	0
++
++#endif
++
+diff --git a/include/dt-bindings/sizes.h b/include/dt-bindings/sizes.h
+new file mode 100644
+index 0000000..995f2de
+--- /dev/null
++++ b/include/dt-bindings/sizes.h
+@@ -0,0 +1,52 @@
++/*
++ * This header provides size constants.
++ *
++ * Original version:
++ *   include/linux/sizes.h
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef _DT_BINDINGS_SIZES_H
++#define _DT_BINDINGS_SIZES_H
++
++#define SZ_1				0x00000001
++#define SZ_2				0x00000002
++#define SZ_4				0x00000004
++#define SZ_8				0x00000008
++#define SZ_16				0x00000010
++#define SZ_32				0x00000020
++#define SZ_64				0x00000040
++#define SZ_128				0x00000080
++#define SZ_256				0x00000100
++#define SZ_512				0x00000200
++
++#define SZ_1K				0x00000400
++#define SZ_2K				0x00000800
++#define SZ_4K				0x00001000
++#define SZ_8K				0x00002000
++#define SZ_16K				0x00004000
++#define SZ_32K				0x00008000
++#define SZ_64K				0x00010000
++#define SZ_128K				0x00020000
++#define SZ_256K				0x00040000
++#define SZ_512K				0x00080000
++
++#define SZ_1M				0x00100000
++#define SZ_2M				0x00200000
++#define SZ_4M				0x00400000
++#define SZ_8M				0x00800000
++#define SZ_16M				0x01000000
++#define SZ_32M				0x02000000
++#define SZ_64M				0x04000000
++#define SZ_128M				0x08000000
++#define SZ_256M				0x10000000
++#define SZ_512M				0x20000000
++
++#define SZ_1G				0x40000000
++#define SZ_2G				0x80000000
++
++#endif
++
+-- 
+1.7.5.4
 
