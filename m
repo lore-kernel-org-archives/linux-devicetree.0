@@ -1,85 +1,73 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH 0/6] Marvell Orion SoC irqchip and clocksource
-Date: Tue, 11 Jun 2013 09:35:23 -0300
-Message-ID: <20130611123521.GA3996@localhost>
-References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 1/7] clk: divider: add flag to limit possible dividers
+ to even numbers
+Date: Tue, 11 Jun 2013 15:37:27 +0300
+Message-ID: <CAHp75VeQOSns1nL7p+rU1TS2stPuWibFtN_K9mFvzuGW+3WqOA@mail.gmail.com>
+References: <201306111328.52679.heiko@sntech.de>
+	<201306111329.32749.heiko@sntech.de>
+	<CAHp75VcaNkPeUQ=OPY5F7Mqb_cM87xh8A8wUxdCgnRtfjoqoHw@mail.gmail.com>
+	<201306111406.14850.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201306111406.14850.heiko@sntech.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On Tue, Jun 11, 2013 at 3:06 PM, Heiko St=C3=BCbner <heiko@sntech.de> w=
+rote:
+> Am Dienstag, 11. Juni 2013, 13:51:56 schrieb Andy Shevchenko:
+>> On Tue, Jun 11, 2013 at 2:29 PM, Heiko St=C3=BCbner <heiko@sntech.de=
+> wrote:
 
-On Thu, Jun 06, 2013 at 06:27:08PM +0200, Sebastian Hesselbarth wrote:
-> This patch set introduces DT-aware irqchip and clocksource drivers fo=
-r
-> Marvell Orion SoCs (Kirkwood, Dove, Orion5x, MV78x00) and correspondi=
-ng
-> patches for Dove and Kirkwood to enable them for DT-boards.
->=20
-> The irqchip driver, of course, depends on Thomas Gleixner's work on
-> irqdomain support for generic chip (tip irq/core).
->=20
-> The ARM part of this patch set has a quite ridiculuous dependency hav=
-oc
-> of mv643xx_eth DT support (current net-next) that will add to both ir=
-qchip
-> and clocksource branches respectively. Therefore, I suggest that irq
-> and clocksource maintainers take in the mere drivers (Patches 1+2) an=
-d
-> Jason Cooper handles the remaining patches when all three drivers hav=
-e
-> surfaced on mainline linux.
->=20
-> I prepared a branch for anyone to test on Kirkwood and Dove which tak=
-es
-> care of the above dependencies based on v3.10-rc4 plus tip irq/core,
-> net-next, and arm-soc for-next (I know it is unstable but contains la=
-test
-> mvebu related patches already). When Thomas, John, and Jason agree th=
-e
-> dependencies will vanish and only Jason has to take care of ARM patch=
-es
-> for enabling DT-based mv643xx_eth, irqchip, and clocksource.
->=20
-> The branch can be found at
->=20
-> git://github.com/shesselba/linux-dove.git orion-irqchip-for-v3.11
->=20
-> and has been tested on Dove/CuBox and compile tested for Kirkwood.
->=20
-> Sebastian Hesselbarth (6):
->   irqchip: add support for Marvell Orion SoCs
->   clocksource: add Marvell Orion SoC timer
->   ARM: dove: move device tree nodes to DT irqchip and clocksource
->   ARM: kirkwood: move device tree nodes to DT irqchip and clocksource
->   ARM: dove: convert to DT irqchip and clocksource
->   ARM: kirkwood: convert to DT irqchip and clocksource
->=20
+[]
 
-I've done some tests on my Kirkwood Openblocks A6 using the latest
-branch orion-irqchip-for-v3.11-v4. Everything works fine so:
+>> > @@ -141,6 +149,8 @@ static bool _is_valid_div(struct clk_divider
+>> > *divider, unsigned int div)
+>> >
+>> >                 return is_power_of_2(div);
+>> >
+>> >         if (divider->table)
+>> >
+>> >                 return _is_valid_table_div(divider->table, div);
+>> >
+>> > +       if (divider->flags & CLK_DIVIDER_EVEN && div !=3D 1 && (di=
+v % 2) !=3D
+>> > 0) +               return false;
+>> >
+>> >         return true;
+>> >
+>> >  }
+>>
+>> What if rewrite like
+>>
+>>  if (divider->flags & CLK_DIVIDER_EVEN =3D=3D 0)
+>>  return true;
+>>
+>> return div < 2 || div % 2 =3D=3D 0;
+>
+> hmm, the current structure is of the form of testing for each feature=
+ and
+> doing a applicable action if the flag is set. So it also is extensibl=
+e for
+> future flags and checking for the absence of an attribute while the r=
+est of
+> the conditionals check for the presence also might make the code hard=
+er to
+> read.
+>
+> So for me the current variant somehow looks more intuitive.
 
-Tested-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+This variant I think fits:
 
-=46or patches 3 to 6 I'm wondering if there's any reason why the irqchi=
-p and
-clocksource changes are not separated. I'm probably being too picky but=
-,
-unless you have a good reason for having them together,
-I think they should go separated, i.e. patches for irqchip on one side,
-and patches for clocksource on the other.
+if (!(divider->flags & CLK_DIVIDER_EVEN))
+  return div < 2 || div % 2 =3D=3D 0;
 
-Aside from that, the series looks good. Nice job!
+You check for feature and do accordingly.
 
-Thanks,
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+--
+With Best Regards,
+Andy Shevchenko
