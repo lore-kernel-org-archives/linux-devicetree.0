@@ -1,160 +1,151 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCHv2 1/3] Add support for GMT G762/G763 PWM fan controller
-Date: Tue, 11 Jun 2013 08:15:09 -0700
-Message-ID: <20130611151509.GC10221@roeck-us.net>
-References: <cover.1369687670.git.arno@natisbad.org>
- <b44f55c4194f6cd8c94f8a3d63ad5c8bd1d1cfe0.1369687670.git.arno@natisbad.org>
- <20130531221616.GG7626@kw.sim.vm.gnt>
- <87fvx1pwrl.fsf@natisbad.org>
- <20130602215904.GH7626@kw.sim.vm.gnt>
- <87sj0yz7tv.fsf@natisbad.org>
- <20130604212306.GL7626@kw.sim.vm.gnt>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Tue, 11 Jun 2013 17:26:47 +0200
+Message-ID: <20835253.Agl4DfuI3k@wuerfel>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130609014506.GB10027@obsidianresearch.com>
+ <20130611135737.GC3996@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130604212306.GL7626@kw.sim.vm.gnt>
-Sender: linux-doc-owner@vger.kernel.org
-To: Simon Guinot <simon.guinot@sequanux.org>
-Cc: Arnaud Ebalard <arno@natisbad.org>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Nicolas Perrin <nperrin@lacie.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130611135737.GC3996@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2013 at 11:23:07PM +0200, Simon Guinot wrote:
-> On Tue, Jun 04, 2013 at 08:52:12AM +0200, Arnaud Ebalard wrote:
-> > Hi Simon,
-> > 
-> > Simon Guinot <simon.guinot@sequanux.org> writes:
-> > 
-> > > On Sat, Jun 01, 2013 at 07:26:54PM +0200, Arnaud Ebalard wrote:
-> > >> Hi Simon and Guenter,
-> > >> 
-> > >> Simon Guinot <simon.guinot@sequanux.org> writes:
-> > >> 
-> > >> > On Tue, May 28, 2013 at 12:03:14AM +0200, Arnaud Ebalard wrote:
-> > >> >> 
-> > >> >> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> > >> >> ---
-> > >> >>  drivers/hwmon/Kconfig              |   10 +
-> > >> >>  drivers/hwmon/Makefile             |    1 +
-> > >> >>  drivers/hwmon/g762.c               | 1012 ++++++++++++++++++++++++++++++++++++
-> > >> >>  include/linux/platform_data/g762.h |   54 ++
-> > >> >>  4 files changed, 1077 insertions(+)
-> > >> >>  create mode 100644 drivers/hwmon/g762.c
-> > >> >>  create mode 100644 include/linux/platform_data/g762.h
-> > >> >
-> > >> > Hi Arnaud,
-> > >> >
-> > >> > After more tests on my 2Big Network v2 board, it appears that the fan
-> > >> > doesn't rotate when PWM mode (the preferred operating mode for this
-> > >> > board) is selected. Nevertheless, DC mode is usable (even if not ideal
-> > >> > given the hardware). After some investigations I noticed that an extra
-> > >> > initialization is needed to enable PWM mode on my board: the set_cnt
-> > >> > register must be set to 0 while the default value is 0xff. Is that
-> > >> > specific to my hardware ? Is PWM mode working on your ReadyNAS with
-> > >> > the default set_cnt value ?
-> > >> 
-> > >> First, thanks for testing this!
-> > >> 
-> > >> Regarding your problem, I first started by booting current version of my
-> > >> driver on the Duo v2 w/o touching chip registers (only clock reference
-> > >> value). This way, I inherit the values installed by (NETGEAR's) u-boot:
-> > >> 
-> > >> $ for k in fan* pwm* ; do echo -n "$k:" ; echo `cat $k `; done
-> > >> fan1_alarm:0
-> > >> fan1_div:2
-> > >> fan1_fault:0
-> > >> fan1_input:1807
-> > >> fan1_target:1807
-> > >> pwm1:221
-> > >> pwm1_enable:2        /* closed-loop, i.e. config is done via set_cnt */
-> > >> pwm1_mode:1          /* PWM mode */ 
-> > >
-> > > Sorry, I realize that I have not been very accurate in my description of
-> > > the problem: The fan doesn't rotate when PWM _and_ open-loop control are
-> > > selected. On the 2Big2 board, 2 wires are used to drive the fan.
-> > >
-> > > Then with pwm1_mode=1, pwm1_enable=1 and set_cnt=0xff (default value),
-> > > nothing happen whatever the value I write in pwm1.
-> > 
-> > After boot, with set_cnt and set_out untouched by me (set_cnt set to
-> > 0x5a by u-boot, i.e. 255-0x5a read on pwm1):
-> > 
-> > fan1_alarm:0
-> > fan1_div:1
-> > fan1_fault:0
-> > fan1_input:1365
-> > fan1_target:1365
-> > pwm1:0                  /* set_out is 0 (considering fan1_target,
-> >                            set_cnt is 0x5a)*/
-> > pwm1_enable:2           /* closed-loop */
-> > pwm1_mode:0             /* DC mode */
-> > 
-> > # echo 1 > pwm1_mode    /* PWM mode */       # fan rotates 
-> > # echo 1 > pwm1_enable  /* open-loop */      # fan stops rotating
-> > 
-> > At that point we have:
-> > 
-> > fan1_alarm:0
-> > fan1_div:1
-> > fan1_fault:0
-> > fan1_input:0
-> > fan1_target:1365
-> > pwm1:0                  /* set_out is 0, set_cnt is still 0x5a */
-> > pwm1_enable:1
-> > pwm1_mode:1
-> > 
-> > Then:
-> > 
-> > # echo 100 > pwm1                            # fan rotates
+On Tuesday 11 June 2013 10:57:38 Ezequiel Garcia wrote:
+> Jason, Arnd:
 > 
-> OK you are lucky. Your bootloader initialize set_cnt with 0x5a. Mine
-> don't and it is precisely the issue: set_cnt is still 0xff (the default
-> value) when the driver controls the fan.
+> On Sat, Jun 08, 2013 at 07:45:06PM -0600, Jason Gunthorpe wrote:
+> [...]
+> > 
+> > This is the mangling I was referring to. It needs to be the offset
+> > into the target, it can't be something else.
+> > 
 > 
-> Please, could you try open-loop mode with set_cnt set to 0xff ?  Maybe
-> you can enforce this value for the test purpose ?
+> I see both of you have explained this already, but I can't seem
+> to catch it yet.
 > 
-> If you observe the same behaviour than me, then could modify the driver
-> to ensure that set_cnt is not 0xff when open-loop mode is selected ?
-> Maybe by systematically setting a different value (as 0) ?
-> 
-I think it would make sense to set it to 0 when open-loop mode is selected, or
-at least to set it to a value != 0xff. Question would be if the value has any
-meaning in open loop mode, other than to enable/disable fan control entirely.
+> Mind explaining me exaclty *why* "it can't be something else"?
+> IOW, why the window base address cannot be in the 2nd cell,
+> and/or what use cases would this encoding brake?
 
-Thanks,
-Guenter
+Most importantly that would meant that the 'ranges' property
+does not actually reflect the setting in the hardware mbus window,
+which in fact remaps a base address of the upstream bus to address
+zero of the downstream bus, and that address has to be offsettable.
 
-> > 
-> > 
-> > > By testing, I have discovered that writing 0 into set_cnt allows to work
-> > > around the issue. I can do this by using the closed-loop control:
-> > > pwm1_mode=1, pwm1_enable=2 and pwm=255. Now, set_cnt worths 0 and if I
-> > > switch back to open-loop control, all works as expected.
-> > >
-> > > Can you try open-loop control and PWM mode with your board ? I wonder if
-> > > this issue is specific to the 2Big2 hardware.
-> > 
-> > AFAICT, set_cnt has never been set to 0 in my test and PWM+open-loop
-> > works as expected, i.e. just by setting a non-zero value in set_out.
-> > Tell me if I missed something or if you want me to perform another
-> > test.
-> 
-> Actually, I have only problems when set_cnt worths 0xff. Please, could
-> you try the tests mentioned above ?
-> 
-> Thanks in advance,
-> 
-> Simon
-> 
-> > 
-> > Cheers,
-> > 
-> > a+
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Taking your example from below:
 
+ranges = <0x011d0000 0 0xfff00000 0x0100000>; /* BootROM */
 
+You map the start '0' of the boot rom to 0xfff0000. Your proposal
+would mean setting up the intermediate address space to use the
+same offset that is used on the host side, like 
+
+ranges = <0x011d0000 0xfff00000 0xfff00000 0x0100000>;
+
+This essentially you would have to set up the mbus window so the
+bus address subtracts the second cell from the third cell to
+get the child bus address, right?
+
+One clear example where it would break down is when you have a
+PCI bus window and e.g. map the PCI bus address 0xd0000000 to
+host physical address 0xd0000000. Doing the same calculation
+would mean you need a ranges property like
+
+ranges = <0x0abc0000 0xa0000000 0xd0000000 0x01000000>;
+
+so that when setting up the mbus you can subtract 0xd0000000
+from 0xa0000000 and get back (wrapping around through 0) to
+the address 0xd0000000 that you actually want. That would be
+really stupid and illogical.
+
+Finally, it makes setting up the ranges at boot time extremely
+hard, unless you always want to map each device to the same
+physical address (which is not always possible), because you
+would have to not only change the ranges property of the mbus
+node when you change the window, but also every single 'reg'
+or 'ranges' property in the children referring to it.
+
+> > I understand your motivation, but this is not a good method of
+> > encoding this in DT.
+> > 
+> > There is nothing especially wrong with updating the ranges at runtime,
+> > but don't use the 2nd cell in the 2dw address to encode the desired
+> > base address.
+> > 
+> 
+> Regarding this, let me confirm your proposed layout using an example.
+> (later on, i'll try the preprocessor on this to make it look better).
+> 
+> mbus {
+> 	compatible = "foo-mbus";
+> 	ranges = < 0xffff0001 0 0xf1000000 0x1000000 /* Internal register entry */
+> 		   0x011d0000 0 0xfff00000 0x0100000 /* BootROM entry with base address */
+> 		   0x012f0000 0 0xe8000000 0x1000000 /* DevBus,NOR entry with base address */
+> 	>;
+> 
+> 	bootrom {
+> 		ranges = <0 0x011d0000 0 0x100000>;
+> 	};
+> 
+> 	devbus-bootcs {
+> 		ranges = <0 0x012f0000 0 0x1000000>;
+> 		nor {
+> 			reg = <0 0x1000000>;
+> 		};
+> 	};
+> };
+> 
+> Is the above correct?
+
+That looks ok to me, yes. If you have just one device under some of the nodes
+however, I think it's easier use an empty ranges property and do
+
+ 	devbus-bootcs {
+ 		ranges;
+ 		nor {
+ 			reg = <0x012f0000 0 0x1000000>;
+ 		};
+
+The 'ranges' here is most useful if you have multiple devices
+add different offsets. I would also predefine those ranges to
+be as large as possible so you don't have to adapt them when
+the child device grows beyond it.
+
+> Now, if the above is OK, then the DT looks complete to me. Meaning:
+> 
+> 1. There's no need to update any ranges property at runtime.
+
+You still have to update the ranges every time you add, remove
+or update a mapping window.
+
+> 2. There's no need to use an algorithm to 'find' a base address for decoding
+>    windows (such as first-fit as Arnd suggested in another mail).
+>    The base address is already there in the ranges property, so the mbus can
+>    simply allocate the window on that base address.
+> 
+> So, am I right or completely lost?
+
+Since you already need code to update the ranges property, I think
+it's best to discard the ranges at boot time and create a new mapping
+that just maps the devices you actually want to use. That would make
+it much easier to cope with boot loaders that don't set up the
+mappings in the same way that is listed in the device tree. Just
+put the one entry for the internal-regs in the ranges, since that
+is needed to map do the mbus setup.
+
+	Arnd
