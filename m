@@ -1,38 +1,42 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 0/6] Marvell Orion SoC irqchip and clocksource
-Date: Tue, 11 Jun 2013 10:45:40 +0200 (CEST)
-Message-ID: <alpine.LFD.2.02.1306111043200.22970@ionos>
-References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/9] dma: pl330: rip out broken, redundant ID probing
+Date: Tue, 11 Jun 2013 09:45:14 +0100
+Message-ID: <20130611084514.GA24729@mudshark.cambridge.arm.com>
+References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
+	<1370889285-22799-2-git-send-email-will.deacon@arm.com>
+	<CAJe_Zhc1UoTC4q4oaW=dzyi_10Q7EoezoT=G8_v+yCmBxV75+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJe_Zhc1UoTC4q4oaW=dzyi_10Q7EoezoT=G8_v+yCmBxV75+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Jun 2013, Sebastian Hesselbarth wrote:
+On Tue, Jun 11, 2013 at 05:40:36AM +0100, Jassi Brar wrote:
+> On 11 June 2013 00:04, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> > The PL330 driver probes the peripheral and primecell IDs of the device to
+> > make sure that it is indeed an AMBA PL330. However, it does this by
+> > making byte accesses to a device mapping of the word-aligned ID
+> > registers, which is either UNPREDICTABLE or generates an alignment fault
+> > (depending on the presence of the virtualisation extensions).
+> >
+> > Rather than fix this code, we can actually rip most of it out and let
+> > the AMBA bus driver correctly do the probing for us.
+> >
+> Acked-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> This patch set introduces DT-aware irqchip and clocksource drivers for
-> Marvell Orion SoCs (Kirkwood, Dove, Orion5x, MV78x00) and corresponding
-> patches for Dove and Kirkwood to enable them for DT-boards.
-> 
-> The irqchip driver, of course, depends on Thomas Gleixner's work on
-> irqdomain support for generic chip (tip irq/core).
-> 
-> The ARM part of this patch set has a quite ridiculuous dependency havoc
-> of mv643xx_eth DT support (current net-next) that will add to both irqchip
-> and clocksource branches respectively. Therefore, I suggest that irq
-> and clocksource maintainers take in the mere drivers (Patches 1+2) and
-> Jason Cooper handles the remaining patches when all three drivers have
-> surfaced on mainline linux.
+Thanks for the acks Jassi!
 
-I provided a tip branch irq/for-arm, which contains only these changes
-and can be pulled by SoC/subarch maintainers so we don't end up with a
-dependency nightmare. Just mention that you pulled it from me when
-sending the pull request to Linus.
- 
-Thanks,
-
-	tglx
+Will
