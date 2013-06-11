@@ -1,76 +1,75 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] dma: pl330: rip out broken, redundant ID probing
-Date: Tue, 11 Jun 2013 10:07:37 +0530
-Message-ID: <CAJe_Zhcmn7UuZbP+OzSp+nHqm9h9f93cmBXQX5B7m54kfvuerQ@mail.gmail.com>
-References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
-	<1370889285-22799-2-git-send-email-will.deacon@arm.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 6/6] ARM: dts: Add pcie controller node for Samsung
+ EXYNOS5440 SoC
+Date: Tue, 11 Jun 2013 15:00:25 +0900
+Message-ID: <002e01ce6668$f785dc20$e6919460$@samsung.com>
+References: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com>
+ <201306071943.18407.arnd@arndb.de>
+ <000001ce65b5$e45477f0$acfd67d0$@samsung.com>
+ <201306101722.10146.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2318958693378767084=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1370889285-22799-2-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <201306101722.10146.arnd@arndb.de>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Arnd Bergmann' <arnd@arndb.de>
+Cc: 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-arm-kernel@lists.infradead.org, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---===============2318958693378767084==
-Content-Type: multipart/alternative; boundary=047d7b4724f4e1d02804ded97417
+On Tuesday, June 11, 2013 12:22 AM, Arnd Bergmann wrote:
+> On Monday 10 June 2013, Jingoo Han wrote:
+> > On Saturday, June 08, 2013 2:43 AM, Arnd Bergmann wrote:
+> > For multiple domains, how can I fix the DT properties?
+> 
+> Domains are a Linux concept, you have to pick a new domain number for each
+> struct hw_pci you register.
 
---047d7b4724f4e1d02804ded97417
-Content-Type: text/plain; charset=ISO-8859-1
+Hi Arnd,
 
-On 11 June 2013 00:04, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+Thank you for your reply.
+It is very helpful. :)
 
-> The PL330 driver probes the peripheral and primecell IDs of the device to
-> make sure that it is indeed an AMBA PL330. However, it does this by
-> making byte accesses to a device mapping of the word-aligned ID
-> registers, which is either UNPREDICTABLE or generates an alignment fault
-> (depending on the presence of the virtualisation extensions).
->
-> Rather than fix this code, we can actually rip most of it out and let
-> the AMBA bus driver correctly do the probing for us.
->
-> Acked-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+I will set domain numbers for each struct hw_pci.
 
---047d7b4724f4e1d02804ded97417
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+> 
+> > Current DT properties are as below:
+> >
+> > +	pcie0@40000000 {
+> > +		compatible = "samsung,exynos5440-pcie";
+> > +		reg = <0x40000000 0x4000
+> > +			0x290000 0x1000
+> > +			0x270000 0x1000
+> > +			0x271000 0x40>;
+> > +		interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
+> > +		#address-cells = <3>;
+> > +		#size-cells = <2>;
+> > +		device_type = "pci";
+> > +		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00200000   /* configuration space */
+> > +			  0x81000000 0 0	  0x40200000 0 0x00004000   /* downstream I/O */
+> > +			  0x82000000 0 0	  0x40204000 0 0x10000000>; /* non-prefetchable memory */
+> > +	};
+> 
+> An unrelated comment: your first "reg" field seems to overlap with part
+> of your configuration space. Is that intentional?
 
-<div dir=3D"ltr">On 11 June 2013 00:04, Will Deacon <span dir=3D"ltr">&lt;<=
-a href=3D"mailto:will.deacon-5wv7dgnIgG8@public.gmane.org" target=3D"_blank">will.deacon-5wv7dgnIgG8@public.gmane.org=
-</a>&gt;</span> wrote:<br><div class=3D"gmail_extra"><div class=3D"gmail_qu=
-ote"><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;bo=
-rder-left-width:1px;border-left-color:rgb(204,204,204);border-left-style:so=
-lid;padding-left:1ex">
-The PL330 driver probes the peripheral and primecell IDs of the device to<b=
-r>
-make sure that it is indeed an AMBA PL330. However, it does this by<br>
-making byte accesses to a device mapping of the word-aligned ID<br>
-registers, which is either UNPREDICTABLE or generates an alignment fault<br=
->
-(depending on the presence of the virtualisation extensions).<br>
-<br>
-Rather than fix this code, we can actually rip most of it out and let<br>
-the AMBA bus driver correctly do the probing for us.<br>
-<br></blockquote><div>Acked-by: Jassi Brar &lt;<a href=3D"mailto:jaswinder.=
-singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt;</div></div></div></div=
->
+Yes, intentional.
+But, I will try to remove it.
 
---047d7b4724f4e1d02804ded97417--
+> 
+> Also, shouldn't your memory space end on a 256MB boundary, rather than
+> extend up to 0x50203fff?
 
---===============2318958693378767084==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+According to the manual of Exynos PCIe, each memory space for Exynos PCIe
+can support 512MB, including I/O, CFG regions.
+
+Is there any problem when over 256MB boundary is used?
+Please let me know. :)
 
 
---===============2318958693378767084==--
+Best regards,
+Jingoo Han
+
+> 
+> 	Arnd
