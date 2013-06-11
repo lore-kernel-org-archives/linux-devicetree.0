@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v5 13/22] ARM: shmobile: sh73a0: Add pin control device to device tree
-Date: Wed, 12 Jun 2013 00:22:42 +0200
-Message-ID: <1370989371-30846-14-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v5 04/22] ARM: shmobile: r8a73a4: Add pin control device to device tree
+Date: Wed, 12 Jun 2013 00:22:33 +0200
+Message-ID: <1370989371-30846-5-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1370989371-30846-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1370989371-30846-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,93 +10,29 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a pfc node to the sh73a0 device tree and remove manual pinmux
-initialization from the corresponding board files.
+Add a pfc node to the r8a73a4 device tree.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/sh73a0.dtsi                  |  8 ++++++++
- arch/arm/mach-shmobile/board-kzm9g-reference.c | 27 +++++++++++++-------------
- 2 files changed, 21 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/r8a73a4.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-index ec40bf7..abe02d6 100644
---- a/arch/arm/boot/dts/sh73a0.dtsi
-+++ b/arch/arm/boot/dts/sh73a0.dtsi
-@@ -222,4 +222,12 @@
- 		cap-sd-highspeed;
- 		status = "disabled";
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index 4ff2019..5aa1180 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -85,4 +85,11 @@
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <0 69 4>;
  	};
 +
 +	pfc: pfc@e6050000 {
-+		compatible = "renesas,pfc-sh73a0";
-+		reg = <0xe6050000 0x8000>,
-+		      <0xe605801c 0x1c>;
++		compatible = "renesas,pfc-r8a73a4";
++		reg = <0xe6050000 0x9000>;
 +		gpio-controller;
 +		#gpio-cells = <2>;
 +	};
  };
-diff --git a/arch/arm/mach-shmobile/board-kzm9g-reference.c b/arch/arm/mach-shmobile/board-kzm9g-reference.c
-index 44055fe..6ff6ca2 100644
---- a/arch/arm/mach-shmobile/board-kzm9g-reference.c
-+++ b/arch/arm/mach-shmobile/board-kzm9g-reference.c
-@@ -40,35 +40,35 @@ static unsigned long pin_pullup_conf[] = {
- };
- 
- static const struct pinctrl_map kzm_pinctrl_map[] = {
--	PIN_MAP_MUX_GROUP_DEFAULT("e6826000.i2c", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("e6826000.i2c", "e6050000.pfc",
- 				  "i2c3_1", "i2c3"),
- 	/* MMCIF */
--	PIN_MAP_MUX_GROUP_DEFAULT("e6bd0000.mmcif", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("e6bd0000.mmcif", "e6050000.pfc",
- 				  "mmc0_data8_0", "mmc0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("e6bd0000.mmcif", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("e6bd0000.mmcif", "e6050000.pfc",
- 				  "mmc0_ctrl_0", "mmc0"),
--	PIN_MAP_CONFIGS_PIN_DEFAULT("e6bd0000.mmcif", "pfc-sh73a0",
-+	PIN_MAP_CONFIGS_PIN_DEFAULT("e6bd0000.mmcif", "e6050000.pfc",
- 				    "PORT279", pin_pullup_conf),
--	PIN_MAP_CONFIGS_GROUP_DEFAULT("e6bd0000.mmcif", "pfc-sh73a0",
-+	PIN_MAP_CONFIGS_GROUP_DEFAULT("e6bd0000.mmcif", "e6050000.pfc",
- 				      "mmc0_data8_0", pin_pullup_conf),
- 	/* SCIFA4 */
--	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "e6050000.pfc",
- 				  "scifa4_data", "scifa4"),
--	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "e6050000.pfc",
- 				  "scifa4_ctrl", "scifa4"),
- 	/* SDHI0 */
--	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "e6050000.pfc",
- 				  "sdhi0_data4", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "e6050000.pfc",
- 				  "sdhi0_ctrl", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "e6050000.pfc",
- 				  "sdhi0_cd", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "e6050000.pfc",
- 				  "sdhi0_wp", "sdhi0"),
- 	/* SDHI2 */
--	PIN_MAP_MUX_GROUP_DEFAULT("ee140000.sdhi", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("ee140000.sdhi", "e6050000.pfc",
- 				  "sdhi2_data4", "sdhi2"),
--	PIN_MAP_MUX_GROUP_DEFAULT("ee140000.sdhi", "pfc-sh73a0",
-+	PIN_MAP_MUX_GROUP_DEFAULT("ee140000.sdhi", "e6050000.pfc",
- 				  "sdhi2_ctrl", "sdhi2"),
- };
- 
-@@ -76,7 +76,6 @@ static void __init kzm_init(void)
- {
- 	sh73a0_add_standard_devices_dt();
- 	pinctrl_register_mappings(kzm_pinctrl_map, ARRAY_SIZE(kzm_pinctrl_map));
--	sh73a0_pinmux_init();
- 
- 	/* enable SD */
- 	gpio_request_one(15, GPIOF_OUT_INIT_HIGH, NULL); /* power */
 -- 
 1.8.1.5
 
