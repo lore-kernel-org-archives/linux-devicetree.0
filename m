@@ -1,84 +1,27 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3] pwm: add pca9685 driver
-Date: Wed, 12 Jun 2013 13:30:30 +0200
-Message-ID: <20130612113029.GC1940@manwe>
-References: <1369900212-14368-1-git-send-email-s.trumtrar@pengutronix.de>
- <20130606080300.GG21522@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GID0FwUMdk1T2AWN"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130606080300.GG21522@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 1/5] ibmebus: convert of_platform_driver to platform_driver
+Date: Wed, 12 Jun 2013 12:40:43 +0100
+Message-ID: <20130612114043.9E69A3E0A56@localhost>
+References: <1366596798-9457-1-git-send-email-robherring2@gmail.com> <1366596798-9457-2-git-send-email-robherring2@gmail.com> <CAL_JsqKDF=hPEM0Jz-zZSXBCXBZ=gBjLWL6QDvq+nFWkqY3DMw@mail.gmail.com> <1366911329.2869.31.camel@pasglop> <517980B0.3000401@gmail.com> <1366920741.2869.32.camel@pasglop> <517995D0.8020307@gmail.com> <CAL_JsqKXt-gFL4y_k-_dFktpk1JD_S2G+hUsoOavw8QugFMOKA@mail.gmail.com> <1371014978.8250.175.camel@pasglop>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1371014978.8250.175.camel@pasglop>
+Sender: netdev-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Arnd Bergmann <arnd@arndb.de>, Paul Mackerras <paulus@samba.org>, Hoang-Nam Nguyen <hnguyen@de.ibm.com>, Christoph Raisch <raisch@de.ibm.com>, Roland Dreier <roland@kernel.org>, Sean Hefty <sean.hefty@intel.com>, Hal Rosenstock <hal.rosenstock@gmail.com>, Thadeu Lima de Souza Cascardo <cascardo@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 12 Jun 2013 15:29:38 +1000, Benjamin Herrenschmidt <benh@kernel.crashing.org> wrote:
+> On Wed, 2013-05-22 at 07:26 -0500, Rob Herring wrote:
+> > > git://sources.calxeda.com/kernel/linux.git of-platform-removal
+> > 
+> > Ben,
+> > 
+> > Did you have a chance to test this? I want to get this into -next.
+> 
+> I tested the one in for-next (sorry for the high latency). Works fine.
+> 
+> Ack.
 
---GID0FwUMdk1T2AWN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Added acks and applied to my for-next branch. Thanks!
 
-On Thu, Jun 06, 2013 at 10:03:00AM +0200, Steffen Trumtrar wrote:
-> On Thu, May 30, 2013 at 09:50:12AM +0200, Steffen Trumtrar wrote:
-> > Add pwm driver for the NXP pca9685 16 channel pwm-led controller.
-> >=20
-> > The driver is really barebones at this stage. E.g. the OE' pin and
-> > therefore the corresponding registers are not supported.
-> > The driver was tested on a HW where this pin is tied to GND.
-> >=20
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > ---
-> > Changes since v2:
-> > 	- s/pwm-pca9685-led/pwm-pca9685/g
-> > 	- replace DT properties with booleans
-> > 	- whitespace/blank line cleanup
-> > 	- add "depends on REGMAP_I2C" in Kconfig
-> > 	- rework code readability
-> > 	- add pwm_ops.free function
-> > 	- set SLEEP bit on request/free/remove
-> >=20
-> > Changes since v1:
-> > 	- fix typo in documentation example
-> >=20
-> >  .../devicetree/bindings/pwm/nxp,pca9685-pwm.txt    |  27 ++
-> >  drivers/pwm/Kconfig                                |   9 +
-> >  drivers/pwm/Makefile                               |   1 +
-> >  drivers/pwm/pwm-pca9685.c                          | 291 +++++++++++++=
-++++++++
-> >  4 files changed, 328 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/nxp,pca9685-p=
-wm.txt
-> >  create mode 100644 drivers/pwm/pwm-pca9685.c
-> >=20
->=20
-> Ping ?!
-
-Applied with some small fixups, thanks.
-
-Thierry
-
---GID0FwUMdk1T2AWN
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRuFvVAAoJEN0jrNd/PrOhyYoP/0Lk5JcEetVEhP5iNDqJAw4x
-ueKtcVRcrThE5U6mDm1Azi6VNKVcJy2Bwms2GTrdX8sCg3kuGEer8Xr3z5yiD1zH
-vkkOBwOY5h/yke158PFsWEstugLnGazP3y9hz+ljHd5rtxiQHMGiU/wSKHFYTbk3
-4hd6beDnAPYuucn5DEeNzZP0rehIp9mO7GWRVpZPZ6hFeDR1C3Cunwpyur3hNMc/
-ejebJGWrZ0yNawm2Tdu1lvkDRO2Ka3JHat8G03x+7l817G5aZP3/6d/7DmBgQB6N
-W0hRW6lR5eHqvD7CTCXWNwFmVCBcO6hTuldKVIE+MWbkY0m6QezpsKJacZBYmKi5
-ctSRgkUg3xYshV0Tp++q8XV8hPdw2KwJzCv7gDIs0sVsKpTnc+LytyvEd16yvYaY
-f050dwrUh77VLWnhSdqBakwlb3bSQG357/sErtO0rlE6bq8cu3m2FXE7P24zcCa5
-SEL8i7fReXWUSv8HWHyq7uk3t8eWQuZUtnX4hF3DXF9+sn4H585N5zBS/+ZPk4ij
-dts1JZh1qHGWRj98S5dkQZaMbiw8eQXIeZcJGNuV0v/+urPPCKDYlPdYTx0MqtPO
-/JvtCjTi6l1+Gw6gh/RbeQCzkX6N5Av5qxPG1BXFkH7yU6zfS2Syq4/mG0cNqrd6
-BPToQjg5+AD7ikzM0ZRm
-=vlOx
------END PGP SIGNATURE-----
-
---GID0FwUMdk1T2AWN--
+g.
