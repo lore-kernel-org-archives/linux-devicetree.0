@@ -1,15 +1,17 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
  the DT binding
-Date: Wed, 12 Jun 2013 22:45:55 +0200
-Message-ID: <201306122245.55960.arnd@arndb.de>
+Date: Wed, 12 Jun 2013 18:12:22 -0300
+Message-ID: <20130612211221.GB23012@localhost>
 References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
  <4160363.LWJuHATm2F@wuerfel> <20130612111441.E6D603E0A56@localhost>
+ <201306122245.55960.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130612111441.E6D603E0A56@localhost>
+Content-Disposition: inline
+In-Reply-To: <201306122245.55960.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,25 +22,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 12 June 2013, Grant Likely wrote:
-> I think we should have almost everything needed already to do this.
-> of_bus allows arbitrary mapping code to be used at any stage in the
-> translation. We might need to add some glue so that of_busses[] can
-> be assembled by the linker to allow an mbus of_bus stanza to live
-> outside of drivers/of/address.c
-> 
-
-Actually, the best thing about this solution is that we don't even
-have to bother setting up the mappings when loading the mbus driver:
-We don't need any ranges (other than internal-regs) in DT, and we
-don't need complex logic to search through the child devices to
-figure out what the mappings should be. The only thing one needs
-to do here is check if a mapping already exists when we get into the
-of_bus handler and create one for the device being translated if
-there isn't one!
-
-	Arnd
+T24gV2VkLCBKdW4gMTIsIDIwMTMgYXQgMTA6NDU6NTVQTSArMDIwMCwgQXJuZCBCZXJnbWFubiB3
+cm90ZToKPiBPbiBXZWRuZXNkYXkgMTIgSnVuZSAyMDEzLCBHcmFudCBMaWtlbHkgd3JvdGU6Cj4g
+PiBJIHRoaW5rIHdlIHNob3VsZCBoYXZlIGFsbW9zdCBldmVyeXRoaW5nIG5lZWRlZCBhbHJlYWR5
+IHRvIGRvIHRoaXMuCj4gPiBvZl9idXMgYWxsb3dzIGFyYml0cmFyeSBtYXBwaW5nIGNvZGUgdG8g
+YmUgdXNlZCBhdCBhbnkgc3RhZ2UgaW4gdGhlCj4gPiB0cmFuc2xhdGlvbi4gV2UgbWlnaHQgbmVl
+ZCB0byBhZGQgc29tZSBnbHVlIHNvIHRoYXQgb2ZfYnVzc2VzW10gY2FuCj4gPiBiZSBhc3NlbWJs
+ZWQgYnkgdGhlIGxpbmtlciB0byBhbGxvdyBhbiBtYnVzIG9mX2J1cyBzdGFuemEgdG8gbGl2ZQo+
+ID4gb3V0c2lkZSBvZiBkcml2ZXJzL29mL2FkZHJlc3MuYwo+ID4gCj4gCj4gQWN0dWFsbHksIHRo
+ZSBiZXN0IHRoaW5nIGFib3V0IHRoaXMgc29sdXRpb24gaXMgdGhhdCB3ZSBkb24ndCBldmVuCj4g
+aGF2ZSB0byBib3RoZXIgc2V0dGluZyB1cCB0aGUgbWFwcGluZ3Mgd2hlbiBsb2FkaW5nIHRoZSBt
+YnVzIGRyaXZlcjoKPiBXZSBkb24ndCBuZWVkIGFueSByYW5nZXMgKG90aGVyIHRoYW4gaW50ZXJu
+YWwtcmVncykgaW4gRFQsIGFuZCB3ZQo+IGRvbid0IG5lZWQgY29tcGxleCBsb2dpYyB0byBzZWFy
+Y2ggdGhyb3VnaCB0aGUgY2hpbGQgZGV2aWNlcyB0bwo+IGZpZ3VyZSBvdXQgd2hhdCB0aGUgbWFw
+cGluZ3Mgc2hvdWxkIGJlLiBUaGUgb25seSB0aGluZyBvbmUgbmVlZHMKPiB0byBkbyBoZXJlIGlz
+IGNoZWNrIGlmIGEgbWFwcGluZyBhbHJlYWR5IGV4aXN0cyB3aGVuIHdlIGdldCBpbnRvIHRoZQo+
+IG9mX2J1cyBoYW5kbGVyIGFuZCBjcmVhdGUgb25lIGZvciB0aGUgZGV2aWNlIGJlaW5nIHRyYW5z
+bGF0ZWQgaWYKPiB0aGVyZSBpc24ndCBvbmUhCj4gCgpUaGlzIGRlcGFydHMgY29uc2lkZXJhYmx5
+IGZyb20gd2hhdCBJJ20gYWltaW5nIHJpZ2h0IG5vdy4KCkFyZSB5b3Ugc3VnZ2VzdGluZyB0byBu
+b3QgcHV0ICphbnkqIG1hcHBpbmcgaW4gdGhlIG1idXMgJ3Jhbmdlcycgbm9kZSBpbgp0aGUgRFQg
+KG90aGVyIHRoYW4gaW50ZXJuYWwtcmVncyk/CgpJbiB0aGF0IGNhc2UsIGNhbiB5b3UgZXhwbGFp
+biBhIGJpdCBmdXJ0aGVyIGhvdyB0aGUgbWJ1cyB3b3VsZApkZWNpZGUgYSBiYXNlIGFkZHJlc3Mg
+Zm9yIGVhY2ggd2luZG93PyBJIGd1ZXNzIHlvdSdyZSB0aGlua2luZwppbiBhIGZpcnN0LWZpdCBh
+bGdvcml0aG0sIHJpZ2h0PwoKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxlY3Ryb25zCkVt
+YmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0cDovL2ZyZWUt
+ZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0Bs
+aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0
+cmVlLWRpc2N1c3MK
