@@ -1,186 +1,118 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 06/10] mmc: omap_hsmmc: add support for pbias
- configuration in dt
-Date: Wed, 12 Jun 2013 07:37:18 -0700
-Message-ID: <20130612143718.GB8164@atomide.com>
-References: <20130523184045.GD13507@atomide.com>
- <1370546059-24181-1-git-send-email-balajitk@ti.com>
- <1370546059-24181-7-git-send-email-balajitk@ti.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [RFC] pinctrl: generic: Add DT bindings
+Date: Wed, 12 Jun 2013 15:36:59 +0100
+Message-ID: <51B8878B.5090705@imgtec.com>
+References: <1370988237-30593-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1370546059-24181-7-git-send-email-balajitk@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1370988237-30593-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Balaji T K <balajitk@ti.com> [130606 12:20]:
-> PBIAS register configuration is based on the regulator voltage
-> which supplies these pbias cells, sd i/o pads.
-> With PBIAS register address and bit definitions different across
-> omap[3,4,5], Simplify PBIAS configuration under three different
-> regulator voltage levels - O V, 1.8 V, 3 V. Corresponding pinctrl states
-> are defined as pbias_off, pbias_1v8, pbias_3v.
+On 11/06/13 23:03, Laurent Pinchart wrote:
+> Document DT properties for the generic pinctrl parameters and add a
+> parser function.
 > 
-> pinctrl state mmc_init is used for configuring speed mode, loopback clock
-> (in devconf0/devconf1/prog_io1 register for omap3) and pull strength
-> configuration (in control_mmc1 for omap4)
-> 
-> Signed-off-by: Balaji T K <balajitk@ti.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 > ---
->  drivers/mmc/host/omap_hsmmc.c |   83 ++++++++++++++++++++++++++++++++++++++--
->  1 files changed, 78 insertions(+), 5 deletions(-)
+>  .../bindings/pinctrl/pinctrl-bindings.txt          | 29 +++++++
+>  drivers/pinctrl/pinconf-generic.c                  | 94 ++++++++++++++++++++++
+>  drivers/pinctrl/pinconf.h                          | 17 ++++
+>  3 files changed, 140 insertions(+)
 > 
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index 533ced2..8dd1cd3 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -182,6 +182,9 @@ struct omap_hsmmc_host {
->  	int			req_in_progress;
->  	struct omap_hsmmc_next	next_data;
->  
-> +	struct pinctrl		*pinctrl;
-> +	struct pinctrl_state	*pbias_off, *pbias_1v8, *pbias_3v, *mmc_init;
+> I've successfully tested this patch (or more accurately only the pull-up and
+> pull-down properties) with the Renesas sh-pfc pinctrl device driver. I will
+> resent the sh-pfc DT bindings patch series rebased on the generic pinconf
+> bindings.
+> 
+> Not all generic pinconf properties are currently implemented, but I don't
+> think that should be a showstopper. We can add them later as needed.
+> 
+> The code is based on both the sh-pfc pinconf DT parser and James Hogan's
+> tz1090 DT parser ("[PATCH v2 6/9] pinctrl-tz1090: add TZ1090 pinctrl driver").
+
+Thanks for this patch. I haven't tested it (yet), but have a few
+comments below.
+
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> index c95ea82..e499ff0 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> @@ -126,3 +126,32 @@ device; they may be grandchildren, for example. Whether this is legal, and
+>  whether there is any interaction between the child and intermediate parent
+>  nodes, is again defined entirely by the binding for the individual pin
+>  controller device.
 > +
->  	struct	omap_mmc_platform_data	*pdata;
->  	int needs_vmmc:1;
->  	int needs_vmmc_aux:1;
-> @@ -267,6 +270,12 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
->  	if (mmc_slot(host).before_set_reg)
->  		mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
->  
-> +	if (host->pinctrl && host->pbias_off) {
-> +		ret = pinctrl_select_state(host->pinctrl, host->pbias_off);
-> +		if (ret < 0)
-> +			dev_err(host->dev, "pinctrl pbias_off select error\n");
-> +	}
+> +== Generic pinconf parameters ==
 > +
->  	/*
->  	 * Assume Vcc regulator is used only to power the card ... OMAP
->  	 * VDDS is used to power the pins, optionally with a transceiver to
-> @@ -304,6 +313,25 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
->  	if (mmc_slot(host).after_set_reg)
->  		mmc_slot(host).after_set_reg(dev, slot, power_on, vdd);
->  
-> +	/* 100ms delay required for PBIAS configuration */
-> +	msleep(100);
-
-Hmm, why is the delay needed before the configuration? Is this something
-you could avoid by reading the pinconf state maybe?
-
-> +	if (!vdd && host->pinctrl && host->pbias_off) {
-> +		ret = pinctrl_select_state(host->pinctrl, host->pbias_off);
-> +		if (ret < 0)
-> +			dev_err(host->dev, "pinctrl pbias_off select error\n");
-> +	} else if (((1 << vdd) <= MMC_VDD_165_195) && host->pinctrl &&
-> +			host->pbias_1v8) {
-> +		ret = pinctrl_select_state(host->pinctrl, host->pbias_1v8);
-> +		if (ret < 0)
-> +			dev_err(host->dev, "pinctrl pbias_1v8 select error\n");
-> +	} else if (((1 << vdd) > MMC_VDD_165_195) && host->pinctrl &&
-> +			host->pbias_3v) {
-> +		ret = pinctrl_select_state(host->pinctrl, host->pbias_3v);
-> +		if (ret < 0)
-> +			dev_err(host->dev, "pinctrl pbias_3v select error\n");
-> +	}
-> +	usleep_range(350, 400);
+> +Pin configuration parameters are expressed by DT properties in the pin
+> +controller device state nodes and child nodes. For devices that use the generic
+> +pinconf parameters the following properties are defined.
 > +
->  	return ret;
->  }
+> +- tristate: A boolean, put the pin into high impedance state when set.
+> +
+> +- pull-up: An integer representing the pull-up strength. 0 disables the pull-up,
+> +  non-zero values enable it.
+> +
+> +- pull-down: An integer representing the pull-down strength. 0 disables the
+> +  pull-down, non-zero values enables it.
+> +
+> +- schmitt: An integer, enable or disable Schmitt trigger mode for the pins.
+> +  Valid values are
+> +    0: Schmitt trigger disabled (no hysteresis)
+> +    1: Schmitt trigger enabled
 
-Maybe add some macro for doing the if (((1 << vdd) <= MMC_VDD_165_195)... tests?
+this is set as a flag, so I think it should be described like tristate,
+"A boolean, ... when set."? Same for pull-up and pull-down (see comment
+below).
 
-> @@ -1775,6 +1803,52 @@ static inline struct omap_mmc_platform_data
->  }
->  #endif
+<snip>
+
+> +	{ "pull-up",		PIN_CONFIG_BIAS_PULL_UP,		false },
+> +	{ "pull-down",		PIN_CONFIG_BIAS_PULL_DOWN,		false },
+
+pinconf-generic.h says "If the argument is != 0 pull-up is enabled, if
+it is 0, pull-up is disabled", so I think these should be flags unless
+it's changed there first.
+
+Any chance of adding the new "bus-hold" entry too
+(PIN_CONFIG_BIAS_BUS_HOLD, and flag=true I suppose)? see
+aa69352252a7a952e6e77734cb87135143a377d2 in LinuxW's pinctrl for-next
+branch.
+
+<snip>
+
+> +EXPORT_SYMBOL_GPL(pinconf_generic_parse_params);
+> diff --git a/drivers/pinctrl/pinconf.h b/drivers/pinctrl/pinconf.h
+> index 92c7267..eb8550b 100644
+> --- a/drivers/pinctrl/pinconf.h
+> +++ b/drivers/pinctrl/pinconf.h
+> @@ -90,6 +90,23 @@ static inline void pinconf_init_device_debugfs(struct dentry *devroot,
+>   * pin config.
+>   */
 >  
-> +static int omap_hsmmc_pinctrl_init(struct omap_hsmmc_host *host)
+> +#if defined(CONFIG_GENERIC_PINCONF)
+> +
+> +int pinconf_generic_parse_params(struct device *dev, struct device_node *np,
+> +				 unsigned long **cfgs);
+> +
+> +#else
+> +
+> +static inline int pinconf_generic_parse_params(struct device *dev,
+> +					       struct device_node *np,
+> +					       unsigned long **cfgs)
 > +{
-> +	int ret = 0;
-> +
-> +	host->pinctrl = devm_pinctrl_get(host->dev);
-> +	if (IS_ERR(host->pinctrl)) {
-> +		host->pinctrl = NULL;
-> +		dev_warn(host->dev,
-> +			 "pins are not configured from the driver\n");
-> +		return 0;
-> +	}
-> +
-> +	host->mmc_init = pinctrl_lookup_state(host->pinctrl, "mmc_init");
-> +	if (IS_ERR(host->mmc_init)) {
-> +		dev_vdbg(host->dev, "optional: mmc_init lookup error");
-> +		host->mmc_init = NULL;
-> +	} else {
-> +		ret = pinctrl_select_state(host->pinctrl, host->mmc_init);
-> +		if (ret < 0) {
-> +			dev_err(host->dev, "pinctrl mmc_init select error\n");
-> +			goto err_pinctrl;
-> +		}
-> +	}
-> +
-> +	host->pbias_off = pinctrl_lookup_state(host->pinctrl, "pbias_off");
-> +	if (IS_ERR(host->pbias_off)) {
-> +		dev_vdbg(host->dev, "optional: pbias_off lookup error");
-> +		host->pbias_off = NULL;
-> +	}
-> +
-> +	host->pbias_1v8 = pinctrl_lookup_state(host->pinctrl, "pbias_1v8");
-> +	if (IS_ERR(host->pbias_1v8)) {
-> +		dev_vdbg(host->dev, "optional: pbias_1v8 lookup error");
-> +		host->pbias_1v8 = NULL;
-> +	}
-> +
-> +	host->pbias_3v = pinctrl_lookup_state(host->pinctrl, "pbias_3v");
-> +	if (IS_ERR(host->pbias_3v)) {
-> +		dev_vdbg(host->dev, "optional: pbias_3v lookup error");
-> +		host->pbias_3v = NULL;
-> +	}
-> +
-> +err_pinctrl:
-> +	return ret;
+> +	*cfgs = NULL;
+> +	return 0;
 > +}
 
-Linus W may have some comments on this, although this is not the standard
-muxing stuff. The "mmc_init" state pins should be added to just the regular
-default state? Note that you can have phandles to however many sets of
-pins there.
+Should this ever be necessary? Sounds like if the driver wanted to use
+this it should already have selected GENERIC_PINCONF anyway.
 
->  static int omap_hsmmc_probe(struct platform_device *pdev)
->  {
->  	struct omap_mmc_platform_data *pdata = pdev->dev.platform_data;
-> @@ -1785,7 +1859,6 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->  	const struct of_device_id *match;
->  	dma_cap_mask_t mask;
->  	unsigned tx_req, rx_req;
-> -	struct pinctrl *pinctrl;
->  
->  	match = of_match_device(of_match_ptr(omap_mmc_of_match), &pdev->dev);
->  	if (match) {
-> @@ -2005,10 +2078,9 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->  
->  	omap_hsmmc_disable_irq(host);
->  
-> -	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
-> -	if (IS_ERR(pinctrl))
-> -		dev_warn(&pdev->dev,
-> -			"pins are not configured from the driver\n");
-> +	ret = omap_hsmmc_pinctrl_init(host);
-> +	if (ret)
-> +		goto err_pinctrl_state;
->  
->  	omap_hsmmc_protect_card(host);
->  
-> @@ -2034,6 +2106,7 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
->  
->  err_slot_name:
->  	mmc_remove_host(mmc);
-> +err_pinctrl_state:
->  	free_irq(mmc_slot(host).card_detect_irq, host);
->  err_irq_cd:
->  	omap_hsmmc_reg_put(host);
-
-Regards,
-
-Tony
+Cheers
+James
