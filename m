@@ -1,74 +1,220 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
- the DT binding
-Date: Wed, 12 Jun 2013 11:52:26 +0100
-Message-ID: <20130612105226.3F2723E0A56@localhost>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1370623671-7748-5-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306072101.44694.arnd@arndb.de>
- <20130607200054.GA9010@obsidianresearch.com>
- <20130608183851.GB2354@localhost>
- <20130609014506.GB10027@obsidianresearch.com>
+From: J Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v5] ARM: dts: OMAP5: Add Palmas MFD node and regulator nodes
+Date: Wed, 12 Jun 2013 16:10:23 +0530
+Message-ID: <1371033624-32417-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130609014506.GB10027-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, grant.likely@secretlab.ca, swarren@wwwdotorg.org, swarren@nvidia.com, sameo@linux.intel.com, gg@slimlogic.co.uk, lee.jones@linaro.org, J Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 8 Jun 2013 19:45:06 -0600, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
-> On Sat, Jun 08, 2013 at 03:38:52PM -0300, Ezequiel Garcia wrote:
-> 
-> > > mbus {
-> > >    ranges = <0x012f0000 0  0xe8000000  0x8000000>
-> > >    devbus-bootcs {
-> > >        ranges = <0  0x012f0000 0  0x8000000>
-> > >    }
-> > > }
-> > > 
-> > > We shouldn't mangle the DT format just to make it convenient for
-> > > humans to write - if this is a major problem then I'd try to use the
-> > > preprocessor first.. There are several reasonable solutions down that
-> > > path, IMHO.
-> > > 
-> > 
-> > Right. I think we have two options here for laying the DT ranges.
-> > 
-> > 1) This is the proposal implied in the patchset I sent:
-> > 
-> > mbus {
-> > 	ranges = < we only put the internal-reg translation here>
-> > 	devbus-bootcs {
-> > 		ranges = <0 {target_id/attribute}
-> > 	{window_physical_base} {size}>
->         ^^^^^^^^^^^^^^^^^^^^^^
-> 
-> This is the mangling I was referring to. It needs to be the offset
-> into the target, it can't be something else.
-> 
-> I understand your motivation, but this is not a good method of
-> encoding this in DT.
-> 
-> There is nothing especially wrong with updating the ranges at runtime,
-> but don't use the 2nd cell in the 2dw address to encode the desired
-> base address.
+This patch adds Palmas MFD node and the regulator nodes for OMAP5.
 
-+1 The design intent of the ranges property is it isolates the parent
-address space from the child address space. Encoding the physical
-address into the second cell breaks that isolation. Sure, you can do it
-and it will work, but then it forces a change to the parent ranges to
-propagate down to all the child reg and ranges properties.
+The node definitions are based on: https://lkml.org/lkml/2013/6/6/25
 
-g.
+Boot tested on omap5-uevm board.
+
+Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
+Signed-off-by: J Keerthy <j-keerthy@ti.com>
+---
+V5:
+Corrected the IRQ_TYPE flag for OMAP5 board.
+
+V4:
+Removed splitting Palmas node.
+
+V3:
+Moved the entire Palmas device tree node to board file.
+
+ arch/arm/boot/dts/omap5-uevm.dts |  167 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 167 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+index 927db1e..3d0b7b6 100644
+--- a/arch/arm/boot/dts/omap5-uevm.dts
++++ b/arch/arm/boot/dts/omap5-uevm.dts
+@@ -8,6 +8,8 @@
+ /dts-v1/;
+ 
+ #include "omap5.dtsi"
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+ / {
+ 	model = "TI OMAP5 uEVM board";
+@@ -254,6 +256,171 @@
+ 	pinctrl-0 = <&i2c1_pins>;
+ 
+ 	clock-frequency = <400000>;
++
++	palmas: palmas@48 {
++		reg = <0x48>;
++		interrupts = <GIC_SPI 7 IRQ_TYPE_NONE>; /* IRQ_SYS_1N */
++		interrupt-parent = <&gic>;
++		compatible = "ti,palmas";
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		palmas_pmic {
++			compatible = "ti,palmas-pmic";
++			interrupt-parent = <&palmas>;
++			interrupts = <14 IRQ_TYPE_NONE>;
++			interrupt-name = "short-irq";
++
++			ti,ldo6-vibrator;
++
++			regulators {
++				smps123_reg: smps123 {
++					regulator-name = "smps123";
++					regulator-min-microvolt = < 600000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				smps45_reg: smps45 {
++					regulator-name = "smps45";
++					regulator-min-microvolt = < 600000>;
++					regulator-max-microvolt = <1310000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				smps6_reg: smps6 {
++					regulator-name = "smps6";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				smps7_reg: smps7 {
++					regulator-name = "smps7";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				smps8_reg: smps8 {
++					regulator-name = "smps8";
++					regulator-min-microvolt = < 600000>;
++					regulator-max-microvolt = <1310000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				smps9_reg: smps9 {
++					regulator-name = "smps9";
++					regulator-min-microvolt = <2100000>;
++					regulator-max-microvolt = <2100000>;
++					regulator-always-on;
++					regulator-boot-on;
++					ti,smps-range = <0x80>;
++				};
++
++				smps10_reg: smps10 {
++					regulator-name = "smps10";
++					regulator-min-microvolt = <5000000>;
++					regulator-max-microvolt = <5000000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo1_reg: ldo1 {
++					regulator-name = "ldo1";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo2_reg: ldo2 {
++					regulator-name = "ldo2";
++					regulator-min-microvolt = <2900000>;
++					regulator-max-microvolt = <2900000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo3_reg: ldo3 {
++					regulator-name = "ldo3";
++					regulator-min-microvolt = <3000000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo4_reg: ldo4 {
++					regulator-name = "ldo4";
++					regulator-min-microvolt = <2200000>;
++					regulator-max-microvolt = <2200000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo5_reg: ldo5 {
++					regulator-name = "ldo5";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo6_reg: ldo6 {
++					regulator-name = "ldo6";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo7_reg: ldo7 {
++					regulator-name = "ldo7";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo8_reg: ldo8 {
++					regulator-name = "ldo8";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo9_reg: ldo9 {
++					regulator-name = "ldo9";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldoln_reg: ldoln {
++					regulator-name = "ldoln";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldousb_reg: ldousb {
++					regulator-name = "ldousb";
++					regulator-min-microvolt = <3250000>;
++					regulator-max-microvolt = <3250000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++			};
++		};
++	};
+ };
+ 
+ &i2c5 {
+-- 
+1.7.5.4
