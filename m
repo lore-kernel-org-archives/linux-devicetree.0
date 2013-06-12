@@ -1,100 +1,57 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: tegra: add tegra+RT5640 machine driver
-Date: Wed, 12 Jun 2013 19:28:04 +0100
-Message-ID: <20130612182804.GT1403@sirena.org.uk>
-References: <1371058534-25158-1-git-send-email-swarren@wwwdotorg.org>
+From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
+Subject: Re: Device tree flattening code not copying properties
+	from blob
+Date: Wed, 12 Jun 2013 21:12:39 +0200
+Message-ID: <51B8C827.7060704@home.nl>
+References: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696@corpatsmail4.corp.sensis.com>
+	<CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg@mail.gmail.com>
+	<8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF722@corpatsmail4.corp.sensis.com>
+	<CACxGe6urthkotuwU2OtqEMn8WmBxU=hSmrKyffHR=Pbayo_HKg@mail.gmail.com>
+Reply-To: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3358797847564771288=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371058534-25158-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
+In-Reply-To: <CACxGe6urthkotuwU2OtqEMn8WmBxU=hSmrKyffHR=Pbayo_HKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://sopc.et.ntust.edu.tw/cgi-bin/mailman/options/nios2-dev>,
+	<mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sopc.et.ntust.edu.tw/pipermail/nios2-dev>
+List-Post: <mailto:nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
+List-Help: <mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=help>
+List-Subscribe: <http://sopc.et.ntust.edu.tw/cgi-bin/mailman/listinfo/nios2-dev>,
+	<mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=subscribe>
+Sender: nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+Errors-To: nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: nios2-dev <nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/12/13 20:23, Grant Likely wrote:
+> On Wed, Jun 12, 2013 at 6:33 PM, Collins, Rod
+> <Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org> wrote:
+>> The blob is built into the zImage.initramfs.gz image which is put into
+>> flash. The zImage.initramfs.gz is self copied from flash to RAM, then
+>> uncompressed to the running area. I will dig into the location of the
+>> blob in the image and report back.
+> Thanks. If it is appended to the zImage wrapper, then things should be
+> fine (this is the expected way to do when not passed in from the
+> bootloader). If a *.dtb.o target has been used to embedded it into the
+> kernel-proper (vmlinux) then you will have a problem. The *.dtb.S
+> target puts the dtb data into the dtb.init.rodata section which gets
+> discarded.
+>
+> g.
 
---===============3358797847564771288==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rePSHXHJe0GetUdz"
-Content-Disposition: inline
+Hi Grant,
 
+you're right that's exactly what nios2 is doing...
+I guess we could modify the section where it gets loaded but that sounds
+to me a bit like a hack... What is the best target to look at for a
+clean, similar solution? Arm with CONFIG_ARM_APPENDED_DTB?
 
---rePSHXHJe0GetUdz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Jun 12, 2013 at 11:35:34AM -0600, Stephen Warren wrote:
-
-> +  RT5640 pins:
-> +
-> +  * DMIC1
-> +  * DMIC2
-> +  * MICBIAS1
-> +  * IN1P
-> +  * IN1R
-> +  * IN2P
-> +  * IN2R
-> +  * HPOL
-> +  * HPOR
-> +  * LOUTL
-> +  * LOUTR
-> +  * MONOP
-> +  * MONON
-> +  * SPOLP
-> +  * SPOLN
-> +  * SPORP
-> +  * SPORN
-
-These should really go in the binding document for the CODEC and be
-referenced there in case new packaging variants turn up or something.  I
-know we've not done that for some older drivers but would still be a
-good idea to start, if nothing else it saves typing for anyone making
-any other machine drivers with the same CODEC.
-
-Anyway I'll apply, this can be changed later.
-
---rePSHXHJe0GetUdz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRuL2xAAoJELSic+t+oim98R8P/jZNL3Y1Fm75248UKY+kj47o
-dI46n+0h65iM+BBEeSoT2q0E0Q6n1tMrSCZLvAG1Q+gVeRMhD55HpIG2RcpISzfq
-N7aZSey2ncxFjF3rMypk4KRmVF/efqSqbndbIMMIj9aLIUvNQMU1MyMryMphoeKf
-fs0CutqBQUSZeYSc/Ai5P/irC8nCWv0GeYkLvdaJXLNgQrTq9a9lQ8cO7tjPTGvq
-Tn0vXqasMLyOVO/qevObPv1MOhFTiw3g0N1StbM5oo0Vh5ZMO0KKHB8S0HDnWxP2
-NQzx0YfvFn1gjCdv02Ea4NQQp2bC5H9ZdRR6kQr7I0jgmf+o2Vu/bsKk13HI+TM5
-u7p9lObG31HxdPT9DmxKtb/nWeut2WKUgTkrSBsliseohDILTCKDrzMe3VKZ2lfs
-aENYqoguypO5/B6qWWm9btEIhcSs219/NKOWDqKH8BZqfSd7dtZOELidteoJuEWU
-mNhOGqeLPcCLVQuZgpNVjMThnGcphfm7KYexDCZtVvPlvuGyjl/b73CKa75ZeMKI
-GlqccdMPqi3cFNO+uJisr//pwYJ0Fv+HETaLOi7wLe/CWqk+n9b4x7Bx2GNnJF+M
-dadVtLO7aRaeV3lTbqf9t0VVPX4w8NlJ6oKwhh/G6UQzP4JI6Gk3VBON3fpFhZbu
-40k606iUNoa094b0D1qn
-=dxWB
------END PGP SIGNATURE-----
-
---rePSHXHJe0GetUdz--
-
---===============3358797847564771288==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3358797847564771288==--
+Walter
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
