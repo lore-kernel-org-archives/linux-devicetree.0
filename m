@@ -1,14 +1,14 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] dw_apb_timer: osc as sched_clock,
- clocks and clocksource_of support
-Date: Wed, 12 Jun 2013 10:55:52 +0200
-Message-ID: <201306121055.53685.heiko@sntech.de>
-References: <201306041136.09566.heiko@sntech.de>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] of: Fix locking vs. interrupts
+Date: Wed, 12 Jun 2013 18:56:27 +1000
+Message-ID: <1371027387.8250.199.camel@pasglop>
+References: <1371015544.8250.182.camel@pasglop>
+ <alpine.LFD.2.02.1306121023150.22970@ionos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201306041136.09566.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.02.1306121023150.22970@ionos>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,36 +19,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIDQuIEp1bmkgMjAxMywgMTE6MzY6MDkgc2NocmllYiBIZWlrbyBTdMO8Ym5l
-cjoKPiBUaGlzIGlzIHNwbGl0IG9mZiBvZiBteSBSb2NrY2hpcCBzdXBwb3J0IHNlcmllcyBmcm9t
-IHllc3RlcmRheS4gSXQncyBub3cKPiBhIHBhdGNoIG1vcmUgdGhhbiBiZWZvcmUsIGFzIHRoZSB0
-aGlyZCBwYXRjaCBlbmFibGVzIHRoZSB0aW1lciB0byBiZSB1c2VkCj4gdGhydSBjbG9ja3NvdXJj
-ZV9vZl9pbml0IGFuZCBtb3ZlcyBwaWNveGNlbGwgYW5kIHNvY2ZwZ2EgdG8gaXQuCj4gCj4gY2hh
-bmdlcyBzaW5jZSB2MToKPiAtIGhvcGVmdWxseSBpbXByb3ZlIHRoZSBwYXRjaCBkZXNjcmlwdGlv
-biBvZiBwYXRjaCAxCj4gICBhZnRlciBhIHN1Z2dlc3Rpb24gYnkgTGludXMgV2FsbGVpago+IC0g
-bW92ZSB0aGUgc2VsZWN0aW9uIG9mIERXX0FQQl9USU1FUiBhbmQgQ0xLU1JDX09GIGludG8gRFdf
-QVBCX1RJTUVSX09GCj4gICBhZnRlciBhIHN1Z2dlc3Rpb24gYnkgQmFydWNoIFNpYWNoCj4gCj4g
-SGVpa28gU3R1ZWJuZXIgKDQpOgo+ICAgY2xvY2tzb3VyY2U6IGR3X2FwYl90aW1lcl9vZjogZW5h
-YmxlIHRoZSB1c2UgdGhlIGNsb2Nrc291cmNlIGFzIHNjaGVkCj4gY2xvY2sgY2xvY2tzb3VyY2U6
-IGR3X2FwYl90aW1lcl9vZjogYWRkIGNsb2NrLWhhbmRsaW5nCj4gICBjbG9ja3NvdXJjZTogZHdf
-YXBiX3RpbWVyX29mOiBzZWxlY3QgRFdfQVBCX1RJTUVSCj4gICBjbG9ja3NvdXJjZTogZHdfYXBi
-X3RpbWVyX29mOiB1c2UgY2xvY2tzb3VyY2Vfb2ZfaW5pdAo+IAo+ICBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcnRjL2R3LWFwYi50eHQgfCAgIDE5ICsrKysrCj4gIGFyY2gvYXJt
-L21hY2gtcGljb3hjZWxsL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICAgIDEgLQo+ICBhcmNo
-L2FybS9tYWNoLXBpY294Y2VsbC9jb21tb24uYyAgICAgICAgICAgICAgICAgfCAgICAyIC0KPiAg
-YXJjaC9hcm0vbWFjaC1zb2NmcGdhL0tjb25maWcgICAgICAgICAgICAgICAgICAgIHwgICAgMSAt
-Cj4gIGFyY2gvYXJtL21hY2gtc29jZnBnYS9zb2NmcGdhLmMgICAgICAgICAgICAgICAgICB8ICAg
-IDIgLQo+ICBkcml2ZXJzL2Nsb2Nrc291cmNlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAg
-fCAgICAyICsKPiAgZHJpdmVycy9jbG9ja3NvdXJjZS9kd19hcGJfdGltZXJfb2YuYyAgICAgICAg
-ICAgIHwgICA5NQo+ICsrKysrKysrKysrKysrLS0tLS0tLSBpbmNsdWRlL2xpbnV4L2R3X2FwYl90
-aW1lci5oICAgICAgICAgICAgICAgICAgICAgfCAgCj4gIDEgLQo+ICA4IGZpbGVzIGNoYW5nZWQs
-IDg0IGluc2VydGlvbnMoKyksIDM5IGRlbGV0aW9ucygtKQoKd2l0aCBjbG9ja3NvdXJjZV9vZiBj
-b252ZXJzaW9uIG9mIHBpY294Y2VsbCBhbmQgc29jZnBnYSwgdGhpcyBzZXJpZXMgc3RhbmRzIG9u
-IAppdHMgb3duLiBJcyBhbnlib2R5IGdvaW5nIHRvIHBpY2sgaXQgdXA/CgoKVGhhbmtzCkhlaWtv
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRy
-ZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5v
-cmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Wed, 2013-06-12 at 10:25 +0200, Thomas Gleixner wrote:
+> On Wed, 12 Jun 2013, Benjamin Herrenschmidt wrote:
+> 
+> > The OF code uses irqsafe locks everywhere except in a handful of functions
+> > for no obvious reasons. Since the conversion from the old rwlocks, this
+> > now triggers lockdep warnings when used at interrupt time. At least one
+> > driver (ibmvscsi) seems to be doing that from softirq context.
+> > 
+> > This converts the few non-irqsafe locks into irqsafe ones, making them
+> > consistent with the rest of the code.
+> 
+> Fun. https://lkml.org/lkml/2013/2/4/416 seems to have got lost 
+>  
+> > Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> > CC: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> [v3.9+]
+> 
+> Acked-by: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> 
+> > ---
+> > 
+> > Note: It's silly to access the device-tree at interrupt time in most cases,
+> > and we should probably fix ibmvscsi, but for the time being, let's fix the
+> 
+> Right.
+> 
+> > obvious bug. Thomas, this can probably still go into 3.10... If not, I've
+> > CCed stable.
+> 
+> Should go through Grant I think.
+
+Right, thinko. Sent to you due to the bug being exposed by your
+conversion to spinlocks. Anyway, Grant got it now.
+
+Cheers,
+Ben.
