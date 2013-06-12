@@ -1,106 +1,123 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
- tree driver
-Date: Wed, 12 Jun 2013 19:09:16 +0200
-Message-ID: <20130612170915.GA3018@katana>
-References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH v2 08/10] ARM: dts: omap3: split omap3_pmx_core
+Date: Wed, 12 Jun 2013 22:38:31 +0530
+Message-ID: <51B8AB0F.9060701@ti.com>
+References: <20130523184045.GD13507@atomide.com> <1370546059-24181-1-git-send-email-balajitk@ti.com> <1370546059-24181-9-git-send-email-balajitk@ti.com> <20130612143459.GY8164@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1368476301-10495-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20130612143459.GY8164@atomide.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 12 June 2013 08:05 PM, Tony Lindgren wrote:
+> * Balaji T K <balajitk@ti.com> [130606 12:20]:
+>> omap3_pmx_core: padconf register are in two banks 0x48003000 to 0x48002268
+>> and 0x480025c0 to 0x480025f8.
+>>
+>> split omap3_pmx_core into 2 banks as register between 0x48002270 and 0x48002564
+>> belongs to type pinctrl-single,bit-per-mux with access to certain bit
+>> fields with bit field mask.
+>
+> Is this the right patch for the description? THe patch seems to deal with
+> USB pins.
+>
+> Also, let's not hog any pins under the pinmux controllers, those make
+> unloading pinctrl-single impossible which is not nice for distros and
+> development.
 
---IS0zKkzwUGydFO0o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+omap3_pmx_core is not continuous, so had to split into two and
+updated the only user in second bank (omap3_pmx_core2) which happened to be usb,
+CC Roger for USB dynamic pin mux selection.
 
-On Mon, May 13, 2013 at 10:18:21PM +0200, Linus Walleij wrote:
-> This tries to address an issue found when writing an MFD driver
-> for the Nomadik STw481x PMICs: as the platform is using device
-> tree exclusively I want to specify the driver matching like
-> this:
->=20
-> static const struct of_device_id stw481x_match[] =3D {
-> 	{ .compatible =3D "st,stw4810", },
-> 	{ .compatible =3D "st,stw4811", },
-> 	{},
-> };
->=20
-> static struct i2c_driver stw481x_driver =3D {
-> 	.driver =3D {
-> 		.name	=3D "stw481x",
-> 		.of_match_table =3D stw481x_match,
-> 	},
-> 	.probe		=3D stw481x_probe,
-> 	.remove		=3D stw481x_remove,
-> };
->=20
-> However that turns out not to be possible: the I2C probe code
-> is written so that the probe() call is always passed a match
-> from i2c_match_id() using non-devicetree matches.
->=20
-> This is probably why most devices using device tree for I2C
-> clients currently will pass no .of_match_table *at all* but
-> instead just use .id_table from struct i2c_driver to match
-> the device. As you realize that means that the whole idea with
-> compatible strings is discarded, and that is why we find strange
-> device tree I2C device compatible strings like "product" instead
-> of "vendor,product" as you could expect.
->=20
-> Let's figure out how to fix this before the mess spreads. This
-> patch will allow probeing devices with only an of_match_table
-> as per above, and will pass NULL as the second argument to the
-> probe() function. If the driver wants to deduce secondary info
-> from the struct of_device_id .data field, it has to call
-> of_match_device() on its own match table in the probe function
-> device tree probe path.
->=20
-> If drivers define both an .of_match_table *AND* a i2c_driver
-> .id_table, the .of_match_table will take precedence, just
-> as is done in the i2c_device_match() function in i2c-core.c.
->=20
-> I2C devices probed from device tree should subsequently be
-> fixed to handle the case where of_match_table() is
-> used (I think none of them do that today), and platforms should
-> fix their device trees to use compatible strings for I2C devices
-> instead of setting the name to Linux device driver names as is
-> done in multiple cases today.
->=20
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Instead, the pins should be under mmc1 in omap[345].dtsi files.
+>
+> Regards,
+>
+> Tony
+>
+>> Signed-off-by: Balaji T K <balajitk@ti.com>
+>> ---
+>>   arch/arm/boot/dts/omap3-beagle.dts |   28 ++++++++++++++++++++--------
+>>   arch/arm/boot/dts/omap3.dtsi       |   11 ++++++++++-
+>>   2 files changed, 30 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+>> index 6eec699..7da9979 100644
+>> --- a/arch/arm/boot/dts/omap3-beagle.dts
+>> +++ b/arch/arm/boot/dts/omap3-beagle.dts
+>> @@ -76,17 +76,11 @@
+>>   &omap3_pmx_core {
+>>   	pinctrl-names = "default";
+>>   	pinctrl-0 = <
+>> -			&hsusbb2_pins
+>> +			&hsusbb2_pins1
+>>   	>;
+>>
+>> -	hsusbb2_pins: pinmux_hsusbb2_pins {
+>> +	hsusbb2_pins1: pinmux_hsusbb2_pins1 {
+>>   		pinctrl-single,pins = <
+>> -			0x5c0 0x3  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_clk OUTPUT */
+>> -			0x5c2 0x3  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_stp OUTPUT */
+>> -			0x5c4 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dir INPUT | PULLDOWN */
+>> -			0x5c6 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_nxt INPUT | PULLDOWN */
+>> -			0x5c8 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat0 INPUT | PULLDOWN */
+>> -			0x5cA 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat1 INPUT | PULLDOWN */
+>>   			0x1a4 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat2 INPUT | PULLDOWN */
+>>   			0x1a6 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat3 INPUT | PULLDOWN */
+>>   			0x1a8 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat4 INPUT | PULLDOWN */
+>> @@ -97,6 +91,24 @@
+>>   	};
+>>   };
+>>
+>> +&omap3_pmx_core2 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <
+>> +			&hsusbb2_pins2
+>> +	>;
+>> +
+>> +	hsusbb2_pins2: pinmux_hsusbb2_pins2 {
+>> +		pinctrl-single,pins = <
+>> +			0x50 0x3  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_clk OUTPUT */
+>> +			0x52 0x3  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_stp OUTPUT */
+>> +			0x54 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dir INPUT | PULLDOWN */
+>> +			0x56 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_nxt INPUT | PULLDOWN */
+>> +			0x58 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat0 INPUT | PULLDOWN */
+>> +			0x5A 0x10b  /* USBB2_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat1 INPUT | PULLDOWN */
+>> +		>;
+>> +	};
+>> +};
+>> +
+>>   &i2c1 {
+>>   	clock-frequency = <2600000>;
+>>
+>> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+>> index 82a404d..caaa708 100644
+>> --- a/arch/arm/boot/dts/omap3.dtsi
+>> +++ b/arch/arm/boot/dts/omap3.dtsi
+>> @@ -95,7 +95,16 @@
+>>
+>>   		omap3_pmx_core: pinmux@48002030 {
+>>   			compatible = "ti,omap3-padconf", "pinctrl-single";
+>> -			reg = <0x48002030 0x05cc>;
+>> +			reg = <0x48002030 0x238>;
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			pinctrl-single,register-width = <16>;
+>> +			pinctrl-single,function-mask = <0x7f1f>;
+>> +		};
+>> +
+>> +		omap3_pmx_core2: pinmux@480025a0 {
+>> +			compatible = "ti,omap3-padconf", "pinctrl-single";
+>> +			reg = <0x480025a0 0x5c>;
+>>   			#address-cells = <1>;
+>>   			#size-cells = <0>;
+>>   			pinctrl-single,register-width = <16>;
+>> --
+>> 1.7.5.4
+>>
 
-Applied to for-next, thanks!
-
-Thanks also to Grant for the insight.
-
---IS0zKkzwUGydFO0o
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRuKs7AAoJEBQN5MwUoCm2ty8QAJ+oxf1rM+SJSwZi6bzgJ0qj
-gP2EGuQFU7SszM6/RSQPHpOckSlOTVcEqqJyVk2i/y71l16XraSwoUiKeuWyAvzH
-xtAl1XRBplJfEpklpe0oBCZLX5NRNpW0OFeJCFasFryAvf/QNKD/qWW6BTV0DW4F
-TfSSWieyHmYTAxCbiLdST7Ym+qJFKXvatJ+58Pr7EC90ocA0a/saNJct7uPovY4w
-DeGXM0B+wSlncTr6/puhUr4BE7kCR+W9t+6agKA4amK700ke4Lh+cgmolJkoh12X
-SR2oVWd5EJ3+2RnxIyJA1P3sWCYWeTisqxx7P6Zz1efxPFlu7p2d2hE/OtxefeM7
-IPEj0ob7Gp+PEUbomQF8SRJdUPk84xAOwufvYkKu+gmjMDdteNUa/baMHHoKYh2r
-GVjMZrlulU4VFfHgdy36yssOim7wqR5cxJ2WILXKdy0g9JtXbFku6xT34CKnZhIq
-ko7pNzzDVwZuPSpm68tgSAFgLxip984PuduxILxI/CbaWJB1hh8XrC6FRMzMB26H
-iRgg3qeMNAt2oLbIkrWwD++A4mYYh99V4esO/7hRajgYsbmvZeHHDsn/Eqgp8Pfn
-cKOWW7ZOkQMpEAENbhTy7VzNH0Bo6I/QMVbZat4Ld+/xyRX8SQcSKaYTHO/mhEqK
-Io5aLbGxYzscai3AwxdA
-=i50L
------END PGP SIGNATURE-----
-
---IS0zKkzwUGydFO0o--
