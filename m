@@ -1,50 +1,74 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v2 02/11] clocksource:global_timer: Add ARM global timer
- support.
-Date: Wed, 12 Jun 2013 11:45:37 +0100
-Message-ID: <51B85151.2060409@st.com>
-References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com> <1370856087-6452-1-git-send-email-srinivas.kandagatla@st.com> <CACRpkdbQCRKBzRF4HzNsXHwXCLJJcFZ9T36GPmmYsnX1OfgGRg@mail.gmail.com> <51B5D7A6.1020101@st.com> <51B72E9A.6070006@st.com> <CACRpkdbppRqnMYknbBy8JpAVtujMOEQvyczXTmpvkQuxgikFog@mail.gmail.com>
-Reply-To: srinivas.kandagatla@st.com
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Wed, 12 Jun 2013 11:52:26 +0100
+Message-ID: <20130612105226.3F2723E0A56@localhost>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1370623671-7748-5-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306072101.44694.arnd@arndb.de>
+ <20130607200054.GA9010@obsidianresearch.com>
+ <20130608183851.GB2354@localhost>
+ <20130609014506.GB10027@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbppRqnMYknbBy8JpAVtujMOEQvyczXTmpvkQuxgikFog@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Stephen Gallimore <stephen.gallimore@st.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Stuart Menefy <stuart.menefy@st.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130609014506.GB10027-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/13 21:13, Linus Walleij wrote:
-> On Tue, Jun 11, 2013 at 4:05 PM, Srinivas KANDAGATLA
-> <srinivas.kandagatla@st.com> wrote:
+On Sat, 8 Jun 2013 19:45:06 -0600, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
+> On Sat, Jun 08, 2013 at 03:38:52PM -0300, Ezequiel Garcia wrote:
 > 
->> Doing this is not adding any value to the driver, because
->>  1. Currently the driver only support DT boot paths, in my previous RFC
->> patches, Arnd suggested to get rid of the header as all platforms are DT
->> now.
+> > > mbus {
+> > >    ranges = <0x012f0000 0  0xe8000000  0x8000000>
+> > >    devbus-bootcs {
+> > >        ranges = <0  0x012f0000 0  0x8000000>
+> > >    }
+> > > }
+> > > 
+> > > We shouldn't mangle the DT format just to make it convenient for
+> > > humans to write - if this is a major problem then I'd try to use the
+> > > preprocessor first.. There are several reasonable solutions down that
+> > > path, IMHO.
+> > > 
+> > 
+> > Right. I think we have two options here for laying the DT ranges.
+> > 
+> > 1) This is the proposal implied in the patchset I sent:
+> > 
+> > mbus {
+> > 	ranges = < we only put the internal-reg translation here>
+> > 	devbus-bootcs {
+> > 		ranges = <0 {target_id/attribute}
+> > 	{window_physical_base} {size}>
+>         ^^^^^^^^^^^^^^^^^^^^^^
 > 
-> In that case why do you have the separate global_timer_init()
-> at all? Just move that code into global_timer_of_register() and
-> also remove the #ifdef around CONFIG_OF and make the driver
-> depend on CONFIG_OF in Kconfig.
+> This is the mangling I was referring to. It needs to be the offset
+> into the target, it can't be something else.
 > 
-> After this you realize that all that business with
-> clk_register_clkdev() / clk_get_sys() is just pure surplus
-> baggade, you just use of_clk_get() and that's it.
+> I understand your motivation, but this is not a good method of
+> encoding this in DT.
+> 
+> There is nothing especially wrong with updating the ranges at runtime,
+> but don't use the 2nd cell in the 2dw address to encode the desired
+> base address.
 
-It makes sense to move all the code into global_timer_of_register().
-This will also get rid of un-used code. I will do this in the next spin.
++1 The design intent of the ranges property is it isolates the parent
+address space from the child address space. Encoding the physical
+address into the second cell breaks that isolation. Sure, you can do it
+and it will work, but then it forces a change to the parent ranges to
+propagate down to all the child reg and ranges properties.
 
-Thanks,
-srini
-
-> 
-> Yours,
-> Linus Walleij
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
-
+g.
