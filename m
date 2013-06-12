@@ -1,79 +1,150 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH 0/3] dma: add support for DMA multiplexer DT nodes
-Date: Wed, 12 Jun 2013 12:38:44 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1306121235460.23454@axis700.grange>
-References: <1370533645-23690-1-git-send-email-g.liakhovetski@gmx.de>
- <20130612092349.GR4107@intel.com> <20130612092500.GS4107@intel.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Wed, 12 Jun 2013 11:48:32 +0100
+Message-ID: <20130612104832.DE33A3E0A56@localhost>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1370623671-7748-5-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306072101.44694.arnd@arndb.de>
+ <20130607200054.GA9010@obsidianresearch.com>
+ <20130608183851.GB2354@localhost>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130612092500.GS4107@intel.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130608183851.GB2354@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Jun 2013, Vinod Koul wrote:
-
-> On Wed, Jun 12, 2013 at 02:53:49PM +0530, Vinod Koul wrote:
-> > On Thu, Jun 06, 2013 at 05:47:22PM +0200, Guennadi Liakhovetski wrote:
-> > > Next re-send of an earlier work. This series adds support for multiple 
-> > > compatible DMAC instances, capable of serving the same DMA slaves. 
-> > > Currently to specify such a configuration in DT, slaves would have to add 
-> > > DMA tuples for each requested channel for each suitable DMAC. This 
-> > > needlessly clutters the Device Tree. Instead we group such DMAC DT nodes 
-> > > together under a common parent. Then slaves can just reference that parent 
-> > > in their DMA bindings.
-> > > 
-> > > Cc: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-> + arnd now..
+On Sat, 8 Jun 2013 15:38:52 -0300, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Jason, Arnd:
 > 
-> > wasnt this series Acked by Anrd previosuly.
-
-Well, he requested documentation, which I first posted as a separate 
-patch, but integrated in the actual DT-adding patch in this version. Back 
-then Arnd wrote "With a binding document added, the patch seems ok." which 
-kinda is an Ack... :)
-
-Thanks
-Guennadi
-
-> > 
-> > Neverthless, Anrd do you mind reviwing this
-> > 
-> > --
-> > ~Vinod
-> > > 
-> > > Guennadi Liakhovetski (3):
-> > >   OF: add a new phandle parsing function for grouped nodes
-> > >   dmaengine: add support for DMA multiplexer DT nodes
-> > >   DMA: shdma: add DT support
-> > > 
-> > >  Documentation/devicetree/bindings/dma/dma.txt |   44 +++++++++++++++++++++
-> > >  drivers/dma/of-dma.c                          |   31 +++++++++++----
-> > >  drivers/dma/sh/shdma-base.c                   |   51 ++++++++++++++++++++++---
-> > >  drivers/dma/sh/shdma.c                        |   44 ++++++++++++++++++---
-> > >  drivers/of/base.c                             |   28 ++++++++++++-
-> > >  include/linux/of.h                            |   16 ++++++++
-> > >  include/linux/shdma-base.h                    |    5 ++
-> > >  7 files changed, 196 insertions(+), 23 deletions(-)
-> > > 
-> > > -- 
-> > > 1.7.2.5
-> > > 
-> > > Thanks
-> > > Guennadi
-> > > ---
-> > > Guennadi Liakhovetski, Ph.D.
-> > > Freelance Open-Source Software Developer
-> > > http://www.open-technology.de/
-> > 
-> > -- 
+> Thanks for your reviews!
 > 
-> -- 
+> I agree with most of your suggestions so far. However, I'd like to discuss
+> one point before we move forward with the other (imo, less importants)
+> issues. See below.
 > 
+> On Fri, Jun 07, 2013 at 02:00:54PM -0600, Jason Gunthorpe wrote:
+> [...]
+> > 
+> > 
+> > Is the ranges right though? I was expecting this:
+> > 
+> >  ranges = <0  0x012f0000 0  0x8000000>
+> > 
+> > The 2nd address cell in the 2dword space should almost always be 0.
+> > 
+> > The 2nd address cell should be interprited as the offset within the
+> > target's window, not as some kind of physical base address.
+> > 
+> > >>+ (Note that the windowid cell is encoding the target ID = 0x01 and attribute
+> > >>+ ID = 0x2f, and the selected base address for the window is 0xe8000000).
+> > 
+> > ... The proper place to indicate the base address for the window is in
+> > the mbus ranges:
+> > 
+> > mbus {
+> >    ranges = <0x012f0000 0  0xe8000000  0x8000000>
+> >    devbus-bootcs {
+> >        ranges = <0  0x012f0000 0  0x8000000>
+> >    }
+> > }
+> > 
+> > We shouldn't mangle the DT format just to make it convenient for
+> > humans to write - if this is a major problem then I'd try to use the
+> > preprocessor first.. There are several reasonable solutions down that
+> > path, IMHO.
+> > 
+> 
+> Right. I think we have two options here for laying the DT ranges.
+> 
+> 1) This is the proposal implied in the patchset I sent:
+> 
+> mbus {
+> 	ranges = < we only put the internal-reg translation here>
+> 	devbus-bootcs {
+> 		ranges = <0 {target_id/attribute} {window_physical_base} {size}>
+> 	}
+> }
+> 
+> Of course the above DT will be actually incomplete, for it'll lack a proper ranges
+> entry to translate the devbus-bootcs address. So we chosed to do it dynamically
+> in the mbus driver (see patch 05/14), and add the missing entry.
+> 
+> The information of the physical window base address is in this case in
+> each child (devbus-bootcs, bootrom, and so on). The MBus driver walks
+> each of its first-level children and allocates the window based on the
+> address declared in the ranges property of each child, as shown above.
+> 
+> This is done mostly to avoid having that in the mbus node, and the nightmare
+> to maintain it produces. See below.
+> 
+> 2) This is what Jason is proposing in his mail:
+> 
+> mbus {
+> 	ranges = <{target_id/attribute} 0 {window_physical_base} {size}>
+> 	devbus-bootcs {
+> 		ranges = <0 {target_id/attribute} 0 {size}>
+> 	}
+> }
+> 
+> Of course this looks much cleaner, but it forces a lot of duplication
+> in the DT files. Now, if you see some of the recent patches we've been
+> sending, I think this duplication is very error-prone, and it'll be a
+> nightmare to maintain. Let me propose an example to show this
+> duplication:
+> 
+> Let's suppose we have a board "A" with its armada-A.dts,
+> and a common one armada.dtsi.
+> 
+> The common dtsi file would have this ranges property:
+> 
+> /* armada.dtsi */
+> mbus {
+> 	ranges = < internal_regs_id 0 internal_regs_base internal_regs_size
+> 		         bootrom_id 0       bootrom_base       bootrom_size >
+> }
+> 
+> The A board has a NOR connected to some devbus, so we need to add it
+> to the ranges, but also need to duplicate the ones in the common dtsi:
+> 
+> /* armada-A.dts */
+> mbus {
+> 	ranges = < internal_regs_id 0 internal_regs_base internal_regs_size
+> 		         bootrom_id 0       bootrom_base       bootrom_size
+> 		         devbus0_id 0       devbus0_base       devbus0_size >
+> }
+> 
+> Now, if we add something at the common level, and extend the ranges
+> property in the common armada.dtsi, we also have to go through *each* of
+> the per-board dts files (for *each* board) adding that entry, because
+> entries *need* to be duplicated. Otherwise you're effectively
+> "shadowing" the entries.
+> 
+> It is precisely for this reason that I've decided to adopt option #1
+> instead! Now, I'm not saying I like that option particularly.
+> In fact it has a couple issues as well:
+> 
+>   1. The DT is *incomplete* and needs to be completed by the MBus
+>      driver which, IMHO, sucks.
+> 
+>   2. Changing the DT dynamically in the kernel, means that new
+>      properties are allocated to replace old ones, but the old ones
+>      are *never* released. So if for any reason we do this often,
+>      we're effectively "leaking" memory.
 
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+3. Modify DTC to support appending to properties.
+
+g.
