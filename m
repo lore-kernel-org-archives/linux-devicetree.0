@@ -1,16 +1,14 @@
-From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 01/10] ARM: OMAP2+: add needs_vmmc to hsmmc_info
-Date: Wed, 12 Jun 2013 22:30:08 +0530
-Message-ID: <51B8A918.5030605@ti.com>
-References: <20130523184045.GD13507@atomide.com>
- <1370546059-24181-1-git-send-email-balajitk@ti.com>
- <1370546059-24181-2-git-send-email-balajitk@ti.com>
- <20130612142409.GW8164@atomide.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: rt5640: add device tree support
+Date: Wed, 12 Jun 2013 18:06:06 +0100
+Message-ID: <20130612170606.GO1403@sirena.org.uk>
+References: <1370983240-4976-1-git-send-email-swarren@wwwdotorg.org>
+ <20130612164628.GN1403@sirena.org.uk>
+ <51B8A84E.9010106@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2575776132801053926=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130612142409.GW8164-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <51B8A84E.9010106-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,50 +19,75 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, flove-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 12 June 2013 07:54 PM, Tony Lindgren wrote:
-> * Balaji T K <balajitk-l0cyMroinI0@public.gmane.org> [130606 12:20]:
->> Add needs_vmmc and needs_vmmc_aux to indicate whether regulator is
->> applicable so that omap_hsmmc can handle deferred probe error
->> properly for regulators.
->> Remove the assumption that vmmc_aux regulator to be available only if vmmc is
->> present. Platforms can have fixed-always-ON regulator for vmmc and/or vmmc_aux
->> in such cases regulator needed not be specified in board file.
->
-> Looks good to me, I suggest you resend this again a bit later once the
-> other changes are merged so we can avoid a dependency between arch/arm/mach-omap2
-> and MMC changes.
->
 
-Ok, will separate the board changes and send the rest via mmc tree
+--===============2575776132801053926==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="V/YKEhZ4Pe4jxeTU"
+Content-Disposition: inline
 
-> Regards,
->
-> Tony
->
->> Signed-off-by: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
->> ---
->>   arch/arm/mach-omap2/board-2430sdp.c          |    1 +
->>   arch/arm/mach-omap2/board-3430sdp.c          |    3 +++
->>   arch/arm/mach-omap2/board-cm-t35.c           |    2 ++
->>   arch/arm/mach-omap2/board-devkit8000.c       |    1 +
->>   arch/arm/mach-omap2/board-igep0020.c         |    3 +++
->>   arch/arm/mach-omap2/board-ldp.c              |    1 +
->>   arch/arm/mach-omap2/board-omap3beagle.c      |    2 ++
->>   arch/arm/mach-omap2/board-omap3evm.c         |    3 +++
->>   arch/arm/mach-omap2/board-omap3logic.c       |    1 +
->>   arch/arm/mach-omap2/board-omap3pandora.c     |    3 +++
->>   arch/arm/mach-omap2/board-omap3stalker.c     |    2 ++
->>   arch/arm/mach-omap2/board-omap3touchbook.c   |    2 ++
->>   arch/arm/mach-omap2/board-overo.c            |    1 +
->>   arch/arm/mach-omap2/board-rm680.c            |    1 +
->>   arch/arm/mach-omap2/board-rx51-peripherals.c |    3 +++
->>   arch/arm/mach-omap2/board-zoom-peripherals.c |    4 ++++
->>   arch/arm/mach-omap2/hsmmc.c                  |    2 ++
->>   arch/arm/mach-omap2/hsmmc.h                  |    2 ++
->>   include/linux/platform_data/mmc-omap.h       |    2 ++
->>   19 files changed, 39 insertions(+), 0 deletions(-)
->>
+
+--V/YKEhZ4Pe4jxeTU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jun 12, 2013 at 10:56:46AM -0600, Stephen Warren wrote:
+> On 06/12/2013 10:46 AM, Mark Brown wrote:
+
+> > Unfortunately gpio_is_valid() is unhelpful for platform data since
+> > often zero is a valid GPIO but it's also the default "do nothing"
+> > platform data.  It's therefore better to either include a check for
+> > non-zero as well or have code that takes a zero in the platform
+> > data and sets it to a negative value instead.
+
+> I think people filling in platform data should simply be required to
+> put a valid/correct value in that field. There aren't any users of
+> this, so it's not like adding a new field where
+> backwards-compatibility might be a concern (and even then, updating
+> all users of this platform data type wouldn't be hard), and it should
+> be obvious if you get it wrong.
+
+It's not idiomatic to do it this way, it'll catch people out - sadly the
+effects are often non-obvious, depending on what actually happens with
+the GPIO.  Were it not for renumbering pain it'd probably be most
+sensible to just make 0 never a valid GPIO :/
+
+--V/YKEhZ4Pe4jxeTU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRuKp7AAoJELSic+t+oim9+jMP/iP7J7Wi5R70QpZbqSDiQE6p
+5UkMqim3EMYlW0dRsiqJsXm4n8OWuLn8o0bMw+m9zgIVr6y3yfYBADCpdPyisTZW
+7W3L7ZI9kpSNpA2bc9rXtmwC7Al79DJqGTFOtuT1YvLoBOCIDrDEpTEhMBNT/A8W
+y2lMICXLWTA6KHl1pSGmgZOVHkMawN0YTIVf0jOyjdxSS/9E41ul4fh2VeU2QJ3J
+2HuLlyCTPFSKY2fWGs5PUw6PcZGfYkB/M+5uYFDA2KsKoD41ljcPcVE/8Kc+549K
+N59bfOUQP2tdv6KqG9DtRJal7WKJmazWyMEi+anMhdJHMaaxwtSzy+N707nJxOoW
+I2QvV9ZEkQJ1hlB1CCxL9b1PLHROA/jo3WyTzagRLSqB2A2/YP/aKzaSpSPL+YfF
+yiRTHklP3hVUXSsihvvJ9iuRBA7E/YOuj9+GX25d4Fswr4BgIsxBFs41fAE5Aw5W
+cKk6K2DJbceSK3wBlcLB9FRHAFaU20feLmel/XYO5MuyNeFoXSM54xa71w+ZnHrW
+VVv3QPmVDsDAD0YiQvX5rvlRLz6RpQkxy0SnGiTYWnyacTYae9TARPtS0VKCMReW
+UNbYjALyoOEllMFJBpIFh/b+zUBm3MHbsoJmhPpG9M9JBKM80Fb7pygKHSsCLTsj
+KhPbVEvl7VEWtpNFlKLv
+=nQc2
+-----END PGP SIGNATURE-----
+
+--V/YKEhZ4Pe4jxeTU--
+
+--===============2575776132801053926==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2575776132801053926==--
