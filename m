@@ -1,64 +1,54 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 9/9] MAINTAINERS: add entry for ARM system MMU driver
-Date: Wed, 12 Jun 2013 09:45:15 +0100
-Message-ID: <20130612084515.C23AB3E0A56@localhost>
-References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
-	<1370889285-22799-10-git-send-email-will.deacon@arm.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] dw_apb_timer: osc as sched_clock,
+ clocks and clocksource_of support
+Date: Wed, 12 Jun 2013 10:55:52 +0200
+Message-ID: <201306121055.53685.heiko@sntech.de>
+References: <201306041136.09566.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1370889285-22799-10-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201306041136.09566.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Jun 2013 19:34:45 +0100, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> Add myself as maintainer for the ARM system MMU driver.
-> 
-> Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-
-> ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 250dc97..84df4bd 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1310,6 +1310,12 @@ T:	git git://git.xilinx.com/linux-xlnx.git
->  S:	Supported
->  F:	arch/arm/mach-zynq/
->  
-> +ARM SMMU DRIVER
-> +M:	Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> +L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
-> +S:	Maintained
-> +F:	drivers/iommu/arm-smmu.c
-> +
->  ARM64 PORT (AARCH64 ARCHITECTURE)
->  M:	Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
->  M:	Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> -- 
-> 1.8.2.2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+QW0gRGllbnN0YWcsIDQuIEp1bmkgMjAxMywgMTE6MzY6MDkgc2NocmllYiBIZWlrbyBTdMO8Ym5l
+cjoKPiBUaGlzIGlzIHNwbGl0IG9mZiBvZiBteSBSb2NrY2hpcCBzdXBwb3J0IHNlcmllcyBmcm9t
+IHllc3RlcmRheS4gSXQncyBub3cKPiBhIHBhdGNoIG1vcmUgdGhhbiBiZWZvcmUsIGFzIHRoZSB0
+aGlyZCBwYXRjaCBlbmFibGVzIHRoZSB0aW1lciB0byBiZSB1c2VkCj4gdGhydSBjbG9ja3NvdXJj
+ZV9vZl9pbml0IGFuZCBtb3ZlcyBwaWNveGNlbGwgYW5kIHNvY2ZwZ2EgdG8gaXQuCj4gCj4gY2hh
+bmdlcyBzaW5jZSB2MToKPiAtIGhvcGVmdWxseSBpbXByb3ZlIHRoZSBwYXRjaCBkZXNjcmlwdGlv
+biBvZiBwYXRjaCAxCj4gICBhZnRlciBhIHN1Z2dlc3Rpb24gYnkgTGludXMgV2FsbGVpago+IC0g
+bW92ZSB0aGUgc2VsZWN0aW9uIG9mIERXX0FQQl9USU1FUiBhbmQgQ0xLU1JDX09GIGludG8gRFdf
+QVBCX1RJTUVSX09GCj4gICBhZnRlciBhIHN1Z2dlc3Rpb24gYnkgQmFydWNoIFNpYWNoCj4gCj4g
+SGVpa28gU3R1ZWJuZXIgKDQpOgo+ICAgY2xvY2tzb3VyY2U6IGR3X2FwYl90aW1lcl9vZjogZW5h
+YmxlIHRoZSB1c2UgdGhlIGNsb2Nrc291cmNlIGFzIHNjaGVkCj4gY2xvY2sgY2xvY2tzb3VyY2U6
+IGR3X2FwYl90aW1lcl9vZjogYWRkIGNsb2NrLWhhbmRsaW5nCj4gICBjbG9ja3NvdXJjZTogZHdf
+YXBiX3RpbWVyX29mOiBzZWxlY3QgRFdfQVBCX1RJTUVSCj4gICBjbG9ja3NvdXJjZTogZHdfYXBi
+X3RpbWVyX29mOiB1c2UgY2xvY2tzb3VyY2Vfb2ZfaW5pdAo+IAo+ICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcnRjL2R3LWFwYi50eHQgfCAgIDE5ICsrKysrCj4gIGFyY2gvYXJt
+L21hY2gtcGljb3hjZWxsL0tjb25maWcgICAgICAgICAgICAgICAgICB8ICAgIDEgLQo+ICBhcmNo
+L2FybS9tYWNoLXBpY294Y2VsbC9jb21tb24uYyAgICAgICAgICAgICAgICAgfCAgICAyIC0KPiAg
+YXJjaC9hcm0vbWFjaC1zb2NmcGdhL0tjb25maWcgICAgICAgICAgICAgICAgICAgIHwgICAgMSAt
+Cj4gIGFyY2gvYXJtL21hY2gtc29jZnBnYS9zb2NmcGdhLmMgICAgICAgICAgICAgICAgICB8ICAg
+IDIgLQo+ICBkcml2ZXJzL2Nsb2Nrc291cmNlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAg
+fCAgICAyICsKPiAgZHJpdmVycy9jbG9ja3NvdXJjZS9kd19hcGJfdGltZXJfb2YuYyAgICAgICAg
+ICAgIHwgICA5NQo+ICsrKysrKysrKysrKysrLS0tLS0tLSBpbmNsdWRlL2xpbnV4L2R3X2FwYl90
+aW1lci5oICAgICAgICAgICAgICAgICAgICAgfCAgCj4gIDEgLQo+ICA4IGZpbGVzIGNoYW5nZWQs
+IDg0IGluc2VydGlvbnMoKyksIDM5IGRlbGV0aW9ucygtKQoKd2l0aCBjbG9ja3NvdXJjZV9vZiBj
+b252ZXJzaW9uIG9mIHBpY294Y2VsbCBhbmQgc29jZnBnYSwgdGhpcyBzZXJpZXMgc3RhbmRzIG9u
+IAppdHMgb3duLiBJcyBhbnlib2R5IGdvaW5nIHRvIHBpY2sgaXQgdXA/CgoKVGhhbmtzCkhlaWtv
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRy
+ZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5v
+cmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
