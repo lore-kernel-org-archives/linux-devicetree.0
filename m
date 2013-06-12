@@ -1,70 +1,46 @@
-From: "J, KEERTHY" <j-keerthy@ti.com>
-Subject: RE: [PATCH v3] mfd: DT bindings for the palmas family MFD
-Date: Wed, 12 Jun 2013 08:24:26 +0000
-Message-ID: <DC88CAD03C0052499C1907B327FC63229EB107@DBDE04.ent.ti.com>
-References: <1370496441-24620-1-git-send-email-j-keerthy@ti.com>
- <20130606070210.GR3370@gmail.com> <20130606070610.GS3370@gmail.com>
- <DC88CAD03C0052499C1907B327FC63229EAB5B@DBDE04.ent.ti.com>
- <20130610095528.GH20297@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] of: Fix locking vs. interrupts
+Date: Wed, 12 Jun 2013 10:25:56 +0200 (CEST)
+Message-ID: <alpine.LFD.2.02.1306121023150.22970@ionos>
+References: <1371015544.8250.182.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130610095528.GH20297@gmail.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "swarren@nvidia.com" <swarren@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "wim@iguana.be" <wim@iguana.be>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "Kristo, Tero" <t-kristo@ti.com>, Ian Lartey <ian@slimlogic.co.uk>, Lee Jones <lee.jones@linaro.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1371015544.8250.182.camel@pasglop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: David Miller <davem@davemloft.net>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gR3JhbnQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVl
-IEpvbmVzIFttYWlsdG86bGVlLmpvbmVzQGxpbmFyby5vcmddDQo+IFNlbnQ6IE1vbmRheSwgSnVu
-ZSAxMCwgMjAxMyAzOjI1IFBNDQo+IFRvOiBKLCBLRUVSVEhZDQo+IENjOiBncmFudC5saWtlbHlA
-c2VjcmV0bGFiLmNhOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gZG9j
-QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmc7DQo+
-IHN3YXJyZW5Ad3d3ZG90b3JnLm9yZzsgc3dhcnJlbkBudmlkaWEuY29tOyByb2IuaGVycmluZ0Bj
-YWx4ZWRhLmNvbTsNCj4gcm9iQGxhbmRsZXkubmV0OyBzYW1lb0BsaW51eC5pbnRlbC5jb207IHdp
-bUBpZ3VhbmEuYmU7DQo+IGxnaXJkd29vZEBnbWFpbC5jb207IGdnQHNsaW1sb2dpYy5jby51azsg
-S3Jpc3RvLCBUZXJvOyBJYW4gTGFydGV5DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjNdIG1mZDog
-RFQgYmluZGluZ3MgZm9yIHRoZSBwYWxtYXMgZmFtaWx5IE1GRA0KPiANCj4gT24gTW9uLCAxMCBK
-dW4gMjAxMywgSiwgS0VFUlRIWSB3cm90ZToNCj4gDQo+ID4gSGVsbG8gR3JhbnQvTGVlIEpvbmVz
-LA0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogTGVl
-IEpvbmVzIFttYWlsdG86bGVlLmpvbmVzQGxpbmFyby5vcmddDQo+ID4gPiBTZW50OiBUaHVyc2Rh
-eSwgSnVuZSAwNiwgMjAxMyAxMjozNiBQTQ0KPiA+ID4gVG86IEosIEtFRVJUSFkNCj4gPiA+IENj
-OiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBncmFudC5saWtlbHlAc2VjcmV0bGFiLmNh
-OyBsaW51eC0NCj4gPiA+IGRvY0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWUtZGlzY3Vzc0Bs
-aXN0cy5vemxhYnMub3JnOw0KPiA+ID4gc3dhcnJlbkB3d3dkb3Rvcmcub3JnOyBzd2FycmVuQG52
-aWRpYS5jb207IHJvYi5oZXJyaW5nQGNhbHhlZGEuY29tOw0KPiA+ID4gcm9iQGxhbmRsZXkubmV0
-OyBzYW1lb0BsaW51eC5pbnRlbC5jb207IHdpbUBpZ3VhbmEuYmU7DQo+ID4gPiBsZ2lyZHdvb2RA
-Z21haWwuY29tOyBnZ0BzbGltbG9naWMuY28udWs7IEtyaXN0bywgVGVybzsgSWFuIExhcnRleQ0K
-PiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2M10gbWZkOiBEVCBiaW5kaW5ncyBmb3IgdGhlIHBh
-bG1hcyBmYW1pbHkgTUZEDQo+ID4gPg0KPiA+ID4gT24gVGh1LCAwNiBKdW4gMjAxMywgTGVlIEpv
-bmVzIHdyb3RlOg0KPiA+ID4NCj4gPiA+ID4gT24gVGh1LCAwNiBKdW4gMjAxMywgSiBLZWVydGh5
-IHdyb3RlOg0KPiA+ID4gPg0KPiA+ID4gPiA+IEFkZCB0aGUgdmFyaW91cyBiaW5kaW5nIGZpbGVz
-IGZvciB0aGUgcGFsbWFzIGZhbWlseSBvZiBjaGlwcy4NCj4gPiA+ID4gPiBUaGVyZSBpcyBhIHRv
-cCBsZXZlbCBNRkQgYmluZGluZyB0aGVuIGEgc2VwZXJhdGUgYmluZGluZyBmb3INCj4gPiA+ID4g
-PiByZWd1bGF0b3JzDQo+ID4gPiBJUCBibG9ja3Mgb24gY2hpcHMuDQo+ID4gPiA+ID4NCj4gPiA+
-ID4gPiBTaWduZWQtb2ZmLWJ5OiBHcmFlbWUgR3JlZ29yeSA8Z2dAc2xpbWxvZ2ljLmNvLnVrPg0K
-PiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEogS2VlcnRoeSA8ai1rZWVydGh5QHRpLmNvbT4NCj4g
-PiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBJYW4gTGFydGV5IDxpYW5Ac2xpbWxvZ2ljLmNvLnVrPg0K
-PiA+ID4gPiA+IFJldmlld2VkLWJ5OiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkBudmlkaWEuY29t
-Pg0KPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbWZkL3BhbG1hcy50eHQgICB8ICAgNDkNCj4gPiA+ICsrKysrKysrKysrKysNCj4gPiA+
-ID4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL3BhbG1hcy1wbWljLnR4dCAg
-fCAgIDcyDQo+ID4gPiArKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gPiA+ICAyIGZpbGVzIGNo
-YW5nZWQsIDEyMSBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKSAgY3JlYXRlDQo+IG1vZGUN
-Cj4gPiA+ID4gPiAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9w
-YWxtYXMudHh0DQo+ID4gPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+ID4gPiA+IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcGFsbWFzLXBtaWMudHgNCj4g
-PiA+ID4NCj4gPiA+ID4gQXBwbGllZCwgdGhhbmtzLg0KPiA+ID4NCj4gPiA+IEFoIHdhaXQuIEl0
-IGFwcGVhcnMgR3JhbnQgd2FudHMgdG8gdGFrZSB0aGlzLg0KPiA+ID4NCj4gPiA+IFVuYXBwbGll
-ZCwgdGhhbmtzLiA6KQ0KPiA+ID4NCj4gPg0KPiA+IElzIGl0IGFwcGxpZWQ/DQo+IA0KPiBOb3Qg
-YnkgbWUuIEkgdW5hcHBsaWVkIGl0IHdoZW4gSSBzYXcgdGhhdCBHcmFudCB0b29rIGFuIGVhcmxp
-ZXINCj4gcmV2aXNpb24uDQo+IA0KPiBJIHdvbid0IGFwcGx5IGFnYWluIHVubGVzcyBHcmFudCBn
-aXZlcyB0aGUgbm9kLiBGYWlsaW5nIHRoYXQsIEknbSBzdXJlDQo+IGhlJ2xsIHRha2UgaXQuDQoN
-ClRoZXJlIHdlcmUgb3V0c3RhbmRpbmcgY29tbWVudHMgZm9yIHYyIG9mIHRoaXMgcGF0Y2guDQpJ
-IHRoaW5rIHlvdSBhcHBsaWVkIHYyIG9mIHRoaXMgcGF0Y2guDQpDb3VsZCB5b3UgYW5udWwgdjIg
-YW5kIHBsZWFzZSBhcHBseSB2MyBvZiB0aGUgcGF0Y2g/DQoNCj4gDQo+IC0tDQo+IExlZSBKb25l
-cw0KPiBMaW5hcm8gU1QtRXJpY3Nzb24gTGFuZGluZyBUZWFtIExlYWQNCj4gTGluYXJvLm9yZyDi
-lIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzIEZvbGxvdyBMaW5hcm86IEZhY2Vi
-b29rDQo+IHwgVHdpdHRlciB8IEJsb2cNCg0KS2luZCBSZWdhcmRzLA0KS2VlcnRoeQ0K
+On Wed, 12 Jun 2013, Benjamin Herrenschmidt wrote:
+
+> The OF code uses irqsafe locks everywhere except in a handful of functions
+> for no obvious reasons. Since the conversion from the old rwlocks, this
+> now triggers lockdep warnings when used at interrupt time. At least one
+> driver (ibmvscsi) seems to be doing that from softirq context.
+> 
+> This converts the few non-irqsafe locks into irqsafe ones, making them
+> consistent with the rest of the code.
+
+Fun. https://lkml.org/lkml/2013/2/4/416 seems to have got lost 
+ 
+> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> CC: <stable@vger.kernel.org> [v3.9+]
+
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+
+> ---
+> 
+> Note: It's silly to access the device-tree at interrupt time in most cases,
+> and we should probably fix ibmvscsi, but for the time being, let's fix the
+
+Right.
+
+> obvious bug. Thomas, this can probably still go into 3.10... If not, I've
+> CCed stable.
+
+Should go through Grant I think.
+
+Thanks,
+
+	tglx
