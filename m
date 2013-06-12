@@ -1,57 +1,91 @@
-From: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>
-Subject: Re: Device tree flattening code not copying properties
-	from blob
-Date: Wed, 12 Jun 2013 21:12:39 +0200
-Message-ID: <51B8C827.7060704@home.nl>
-References: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696@corpatsmail4.corp.sensis.com>
-	<CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg@mail.gmail.com>
-	<8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF722@corpatsmail4.corp.sensis.com>
-	<CACxGe6urthkotuwU2OtqEMn8WmBxU=hSmrKyffHR=Pbayo_HKg@mail.gmail.com>
-Reply-To: nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Wed, 12 Jun 2013 17:02:50 -0300
+Message-ID: <20130612200248.GA23012@localhost>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130609014506.GB10027@obsidianresearch.com>
+ <20130611135737.GC3996@localhost> <20835253.Agl4DfuI3k@wuerfel>
+ <20130611215023.GA12649@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
-In-Reply-To: <CACxGe6urthkotuwU2OtqEMn8WmBxU=hSmrKyffHR=Pbayo_HKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://sopc.et.ntust.edu.tw/cgi-bin/mailman/options/nios2-dev>,
-	<mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sopc.et.ntust.edu.tw/pipermail/nios2-dev>
-List-Post: <mailto:nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
-List-Help: <mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=help>
-List-Subscribe: <http://sopc.et.ntust.edu.tw/cgi-bin/mailman/listinfo/nios2-dev>,
-	<mailto:nios2-dev-request-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org?subject=subscribe>
-Sender: nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
-Errors-To: nios2-dev-bounces-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: nios2-dev <nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130611215023.GA12649-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/13 20:23, Grant Likely wrote:
-> On Wed, Jun 12, 2013 at 6:33 PM, Collins, Rod
-> <Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org> wrote:
->> The blob is built into the zImage.initramfs.gz image which is put into
->> flash. The zImage.initramfs.gz is self copied from flash to RAM, then
->> uncompressed to the running area. I will dig into the location of the
->> blob in the image and report back.
-> Thanks. If it is appended to the zImage wrapper, then things should be
-> fine (this is the expected way to do when not passed in from the
-> bootloader). If a *.dtb.o target has been used to embedded it into the
-> kernel-proper (vmlinux) then you will have a problem. The *.dtb.S
-> target puts the dtb data into the dtb.init.rodata section which gets
-> discarded.
->
-> g.
-
-Hi Grant,
-
-you're right that's exactly what nios2 is doing...
-I guess we could modify the section where it gets loaded but that sounds
-to me a bit like a hack... What is the best target to look at for a
-clean, similar solution? Arm with CONFIG_ARM_APPENDED_DTB?
-
-Walter
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
+SmFzb24sCgpPbiBUdWUsIEp1biAxMSwgMjAxMyBhdCAwMzo1MDoyM1BNIC0wNjAwLCBKYXNvbiBH
+dW50aG9ycGUgd3JvdGU6Cj4gT24gVHVlLCBKdW4gMTEsIDIwMTMgYXQgMDU6MjY6NDdQTSArMDIw
+MCwgQXJuZCBCZXJnbWFubiB3cm90ZToKPiAKPiA+IFRoYXQgbG9va3Mgb2sgdG8gbWUsIHllcy4g
+SWYgeW91IGhhdmUganVzdCBvbmUgZGV2aWNlIHVuZGVyIHNvbWUgb2YgdGhlIG5vZGVzCj4gPiBo
+b3dldmVyLCBJIHRoaW5rIGl0J3MgZWFzaWVyIHVzZSBhbiBlbXB0eSByYW5nZXMgcHJvcGVydHkg
+YW5kIGRvCj4gPiAKPiA+ICAJZGV2YnVzLWJvb3RjcyB7Cj4gPiAgCQlyYW5nZXM7Cj4gPiAgCQlu
+b3Igewo+ID4gIAkJCXJlZyA9IDwweDAxMmYwMDAwIDAgMHgxMDAwMDAwPjsKPiA+ICAJCX07Cj4g
+PiAKPiA+IFRoZSAncmFuZ2VzJyBoZXJlIGlzIG1vc3QgdXNlZnVsIGlmIHlvdSBoYXZlIG11bHRp
+cGxlIGRldmljZXMKPiA+IGFkZCBkaWZmZXJlbnQgb2Zmc2V0cy4gSSB3b3VsZCBhbHNvIHByZWRl
+ZmluZSB0aG9zZSByYW5nZXMgdG8KPiA+IGJlIGFzIGxhcmdlIGFzIHBvc3NpYmxlIHNvIHlvdSBk
+b24ndCBoYXZlIHRvIGFkYXB0IHRoZW0gd2hlbgo+ID4gdGhlIGNoaWxkIGRldmljZSBncm93cyBi
+ZXlvbmQgaXQuCj4gCj4gSXQgaXNuJ3Qgc3VwZXIgY3JpdGljYWwsIGJ1dCB0aGUgcmFuZ2VzIGRv
+ZXMga2VlcCB0aGUgMHgwMTJmMDAwMCB2YWx1ZQo+IGluIHRoZSBTT0MgLmR0c2kgYW5kIHRoZSBi
+b2FyZCBsZXZlbCBkb2Vzbid0IGhhdmUgdG8gYmUgZXhwb3NlZCB0byB0aGUKPiB2YWx1ZSwgaXQg
+anVzdCB1c2VzIDAgdG8gc2V0dXAgdGhlIE5PUi4KPiAKPiBBbHNvLCBpdCBtYWtlcyBpdCBtdWNo
+IHNpbXBsZXIgZm9yIHRoZSBtYnVzIGRyaXZlciB0byBkZXRlY3Qgd2hpY2gKPiB0YXJnZXQgaWQn
+cyBhcmUgcmVxdWlyZWQgc28gdGhleSBjYW4gYmUgYWxsb2NhdGVkL3NldHVwIC0gdGhlIHJ1bGUK
+PiB3b3VsZCBiZSBldmVyeSBjaGlsZCBzdGFuemEgc2hvdWxkIGhhdmUgYSByYW5nZXMgd2l0aCB0
+aGUgdGFyZ2V0KHMpIGl0Cj4gbmVlZHMuCj4gCj4gVGhlIGZ1bGwgdmVyc2lvbiBwcm9iYWJseSBs
+b29rcyBsaWtlIHRoaXM6Cj4gCj4gbWJ1cyB7Cj4gICAgIHJhbmdlcyAuLi4uCj4gCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgZGV2YnVzLWJvb3Rjc0AxMDQwMCB7Cj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm1hcnZlbGwsbXZlYnUtZGV2YnVzIjsKPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDxJTlRFUk5BTF9SRUdTICsgMHgx
+MDQwMCAweDg+Owo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmFuZ2VzID0gPDAg
+REVWQlVTX0JPT1RDUyAweDEwMDAwMDA+Owo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAjc2l6ZS1jZWxscyA9IDwxPjsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNs
+b2NrcyA9IDwmY29yZWNsayAwPjsKPiAKPiAJCQkJLy8gSW4gYm9hcmQgLmR0czoKPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIG5vckAwIHsKPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJjZmktZmxhc2giOwo+ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MCAweDEwMDAwMDA+Owo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBiYW5rLXdpZHRoID0gPDI+Owo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAgICAgICAgICAgICAgICAg
+ICB9Owo+IH07Cj4gCj4gQW5kIG5vdGljZSBoZXJlIHRoYXQgd2UgbmVlZCB0byBvZmZzZXQgSU5U
+RVJOQUxfUkVHUyB0byBtYWtlIHRoaXMKPiB3b3JrLiBUbyBtZSwgdGhpcyBpcyB0aGUgcHJpbWFy
+eSByZWFzb24gd2h5IHRoZSAybmQgY2VsbCBvZiB0aGUgbWJ1cwo+IGFkZHJlc3MgZm9ybWF0ICpt
+dXN0KiBiZSB0aGUgYWRkcmVzcyBvZmZzZXQgd2l0aGluIHRoZSB0YXJnZXQsIGFuZCBub3QKPiBh
+bnl0aGluZyBlbHNlLgo+IAoKSSB0cmllZCB0byBpbXBsZW1lbnQgc29tZXRoaW5nIGxpa2UgdGhl
+IGFib3ZlLCBidXQgYWRkaW5nIG51bWJlcnMKZG9lcyBub3Qgc2VlbSB0byB3b3JrIHVzaW5nIHRo
+ZSBwcmVwcm9jZXNzb3Igb24gdGhlIERULgoKSSdtIHByb2JhYmx5IG1pc3Npbmcgc29tZXRoaW5n
+LCBidXQuLi4gYXJlIHlvdSBzdXJlIHRoYXQncyBzdXBwb3NlZCB0byB3b3JrPwoKSSBlbmRlZCB1
+cCBpbXBsZW1lbnRpbmcgc29tZXRoaW5nIHNpbWlsYXIsIHNlZSBiZWxvdy4KVGhlIGRlZmluZXMg
+c2hvd24gYXJlIHZlcnkgZWFybHkvaGFja3ksIGp1c3QgdG8gZ2V0IGl0IHdvcmtpbmcuCkknbGwg
+aW1wbGVtZW50IHRoZW0gYmV0dGVyLCBzbyBvbWl0IHRoZW0gZm9yIG5vdy4KCiNkZWZpbmUgSU5U
+RVJOQUxfUkVHU19JRCAweGZmZmYwMDAxCgojZGVmaW5lIElOVEVSTkFMX1JFR1MgSU5URVJOQUxf
+UkVHU19JRCAwCiNkZWZpbmUgREVWQlVTX0JPT1RDUyAweDAxMmYwMDAwIDAKI2RlZmluZSBCT09U
+Uk9NICAgICAgIDB4MDFlMDAwMDAgMAoKI2RlZmluZSBJTlRFUk5BTF9SRUdTX0JBU0UgMCAweGQw
+MDAwMDAwCiNkZWZpbmUgREVWQlVTX0JPT1RDU19CQVNFIDAgMHhmMDAwMDAwMAojZGVmaW5lIEJP
+T1RST01fQkFTRSAgICAgICAwIDB4ZmZmMDAwMDAKLi4uCiAKc29jIHsKCXJhbmdlcyA9IDxJTlRF
+Uk5BTF9SRUdTIElOVEVSTkFMX1JFR1NfQkFTRSAweDEwMDAwMAoJCSAgQk9PVFJPTSAgICAgICBC
+T09UUk9NX0JBU0UgICAgICAgMHgxMDAwMDAKCQkgIERFVkJVU19CT09UQ1MgREVWQlVTX0JPT1RD
+U19CQVNFIDB4MTAwMDAwMD47CgoJZGV2YnVzLWJvb3RjcyB7CgkJY29tcGF0aWJsZSA9ICJtYXJ2
+ZWxsLG12ZWJ1LWRldmJ1cyI7CgkJcmVnID0gPElOVEVSTkFMX1JFR1NfSUQgMHgxMDQwMCAweDg+
+OwoJCXJhbmdlcyA9IDwwIERFVkJVU19CT09UQ1MgMHgxMDAwMDAwPjsKCQkjYWRkcmVzcy1jZWxs
+cyA9IDwxPjsKCQkjc2l6ZS1jZWxscyA9IDwxPjsKCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwoJCQoJ
+CW5vckAwIHsKCQkJY29tcGF0aWJsZSA9ICJjZmktZmxhc2giOwoJCQlyZWcgPSA8MCAweDEwMDAw
+MDA+OwoJCQliYW5rLXdpZHRoID0gPDI+OwoJCX07Cgl9Owp9OwoKLS0gCkV6ZXF1aWVsIEdhcmPD
+rWEsIEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5n
+aW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0
+CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJz
+Lm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
