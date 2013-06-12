@@ -1,47 +1,91 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: lockdep dump on devtree_lock (involving esdhc)
-Date: Wed, 12 Jun 2013 09:49:46 +0200 (CEST)
-Message-ID: <alpine.LFD.2.02.1306120948430.22970@ionos>
-References: <20130611233330.GA15342@home.buserror.net>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20130611233330.GA15342@home.buserror.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@wwwdotorg.org>, Jerry Huang <Chang-Ming.Huang@freescale.com>, linux-mmc@vger.kernel.org
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH V6 0/6] clk: Samsung: audss: Register audio subsytem clocks
+ using common clk framework
+Date: Wed, 12 Jun 2013 13:37:37 +0530
+Message-ID: <1371024463-303-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com, mturquette@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Jun 2013, Scott Wood wrote:
+Samsung S5PV210 and Exynos SoC has a separate subsystem for audio. This subsystem
+has a internal clock controller which controls i2s0 and pcm0 clocks. This patch
+series adds the Samsung audio subsytem clock to the common clock framework and
+provides the I2S controllers clock information in the dtsi file.
 
-> I get the following lockdump output on p2020rdb using
-> v3.10-rc5-43-g34376a5.  While it's not particularly polite for the
-> esdhc driver to be calling OF functions while holding another lock which
-> can be acquired from interrupt context, why is devtree_lock usually
-> acquired in an irqsafe manner but sometimes not?
-> 
-> Both types of usage were added by the same commit:
-> 
-> commit d6d3c4e656513dcea61ce900f0ecb9ca820ee7cd
-> Author: Thomas Gleixner <tglx@linutronix.de>
-> Date:   Wed Feb 6 15:30:56 2013 -0500
-> 
->     OF: convert devtree lock from rw_lock to raw spinlock
-> 
-> Stephen, you asked about this here:
-> http://lkml.indiana.edu/hypermail/linux/kernel/1302.1/01383.html
-> 
-> Did you ever get an answer?
+This patch series is made based on Kukjin Kim for-next branch
 
-https://patchwork.kernel.org/patch/2470731/
- 
-> I'm also curious why devtree_lock was made raw to begin with... 
-> Iterating over a device tree doesn't seem like something you'd want to
-> trust to be low-latency.
+Changes since V5:
+	- Added i2s_opclk0 entry for i2s1 and i2s2 nodes
+	- Added Acked-by: Mike Turquette <mturquette@linaro.org>
+	- Added Reviewed-by: Doug Anderson <dianders@chromium.org>
 
-The reason is that it's taken in low level cpu bringup code and I did
-not find a different solution. :(
+Changes since V4:
+        - Reworked on the nits given by Doug.
+        - Removed mout_audss and mout_i2s from i2s nodes as we are not
+          getting these clocks in the i2s driver.
+        - Modified the I2S binding documentation for clocks and pinmux.
 
-Thanks,
+Changes since V3:
+        - Replaced samsung with exynos in the macro prefixes and function names
+          as this driver supports mainly exynos and s5p family.
+        - Added Reviewed-by:Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-	tglx
+Changes since V2:
+        - Removed s5pv210 compatible name from driver as it is
+          not yet supported which is different from Exynos series
+          audio subsystem clock conroller.
+        - Removed clkdev lookup support and added alias names in
+          the i2s0 controller node.
+Changes since V1:
+        - Reworked on all review comments by Sylwester Nawrocki
+        - Added a header file for all clock indexes as requested by Sylwester
+        - Added different compatible names for s5pv210, exynos4 and exynos5
+        - Registered the pcm clocks with common clock framework
+
+Padmavathi Venna (6):
+  ARM: samsung: use #include for all device trees
+  clk: samsung: register audio subsystem clocks using common clock
+    framework
+  ARM: dts: add Exynos audio subsystem clock controller node
+  ARM: dts: add clock provider information for i2s controllers in
+    Exynos5250
+  ARM: dts: Update Samsung I2S documentation
+  clk: exynos5250: Add enum entries for divider clock of i2s1 and i2s2
+
+ .../devicetree/bindings/clock/clk-exynos-audss.txt |   64 ++++++++++
+ .../devicetree/bindings/sound/samsung-i2s.txt      |   46 +++----
+ arch/arm/boot/dts/exynos4.dtsi                     |    2 +-
+ arch/arm/boot/dts/exynos4210-origen.dts            |    2 +-
+ arch/arm/boot/dts/exynos4210-smdkv310.dts          |    2 +-
+ arch/arm/boot/dts/exynos4210-trats.dts             |    2 +-
+ arch/arm/boot/dts/exynos4210-universal_c210.dts    |    2 +-
+ arch/arm/boot/dts/exynos4210.dtsi                  |    4 +-
+ arch/arm/boot/dts/exynos4212.dtsi                  |    2 +-
+ arch/arm/boot/dts/exynos4412-odroidx.dts           |    2 +-
+ arch/arm/boot/dts/exynos4412-origen.dts            |    2 +-
+ arch/arm/boot/dts/exynos4412-smdk4412.dts          |    2 +-
+ arch/arm/boot/dts/exynos4412.dtsi                  |    2 +-
+ arch/arm/boot/dts/exynos4x12.dtsi                  |    4 +-
+ arch/arm/boot/dts/exynos5250-arndale.dts           |    2 +-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    2 +-
+ arch/arm/boot/dts/exynos5250-snow.dts              |    4 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |   20 +++-
+ arch/arm/boot/dts/exynos5440-sd5v1.dts             |    2 +-
+ arch/arm/boot/dts/exynos5440-ssdk5440.dts          |    2 +-
+ arch/arm/boot/dts/exynos5440.dtsi                  |    2 +-
+ arch/arm/boot/dts/s3c2416-smdk2416.dts             |    2 +-
+ arch/arm/boot/dts/s3c2416.dtsi                     |    4 +-
+ arch/arm/boot/dts/s3c24xx.dtsi                     |    2 +-
+ drivers/clk/samsung/Makefile                       |    1 +
+ drivers/clk/samsung/clk-exynos-audss.c             |  133 ++++++++++++++++++++
+ drivers/clk/samsung/clk-exynos5250.c               |    5 +-
+ include/dt-bindings/clk/exynos-audss-clk.h         |   25 ++++
+ 28 files changed, 288 insertions(+), 56 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/clk-exynos-audss.txt
+ create mode 100644 drivers/clk/samsung/clk-exynos-audss.c
+ create mode 100644 include/dt-bindings/clk/exynos-audss-clk.h
+
+-- 
+1.7.4.4
