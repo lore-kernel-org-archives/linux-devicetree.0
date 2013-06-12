@@ -1,63 +1,54 @@
-From: "J, KEERTHY" <j-keerthy@ti.com>
-Subject: RE: [PATCH v3] ARM: dts: OMAP5: Add palmas MFD node and regulator
- nodes
-Date: Wed, 12 Jun 2013 08:12:37 +0000
-Message-ID: <DC88CAD03C0052499C1907B327FC63229EB0EB@DBDE04.ent.ti.com>
-References: <1370928651-6278-1-git-send-email-j-keerthy@ti.com>
- <51B749E7.6070808@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51B749E7.6070808@wwwdotorg.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "lee.jones@linaro.org" <lee.jones@linaro.org>
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH RESEND V2] ARM: dts: Correct the base address of pinctrl_3 on
+ Exynos5250
+Date: Wed, 12 Jun 2013 13:53:44 +0530
+Message-ID: <1371025425-480-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+This patch corrects the base address of pinctrl_3 on Exynos5250
+platform.
 
+Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+---
+Changes since V1:
+	- Added platform name in the subject line.
 
-> -----Original Message-----
-> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
-> Sent: Tuesday, June 11, 2013 9:32 PM
-> To: J, KEERTHY
-> Cc: Cousson, Benoit; devicetree-discuss@lists.ozlabs.org; linux-
-> omap@vger.kernel.org; linux-kernel@vger.kernel.org;
-> ldewangan@nvidia.com; grant.likely@secretlab.ca; swarren@nvidia.com;
-> sameo@linux.intel.com; gg@slimlogic.co.uk; lee.jones@linaro.org
-> Subject: Re: [PATCH v3] ARM: dts: OMAP5: Add palmas MFD node and
-> regulator nodes
-> 
-> On 06/10/2013 11:30 PM, J Keerthy wrote:
-> > This patch adds Palmas MFD node and the regulator nodes for OMAP5.
-> >
-> > The node definitions are based on: https://lkml.org/lkml/2013/6/6/25
-> >
-> > Boot tested on omap5-uevm board.
-> 
-> > diff --git a/arch/arm/boot/dts/omap5-uevm.dts
-> > b/arch/arm/boot/dts/omap5-uevm.dts
-> 
-> > +	palmas: palmas@48 {
-> > +		reg = <0x48>;
-> > +		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /* IRQ_SYS_1N
-> */
-> > +		interrupt-parent = <&gic>;
-> > +	};
-> > +};
-> > +
-> > +&palmas {
-> > +	compatible = "ti,palmas";
-> > +	interrupt-controller;
-> > +	#interrupt-cells = <2>;
-> 
-> I don't really see the point of splitting the node into two parts if
-> it's all going into a single file. It made sense if part of the node
-> came from a common .dtsi file, but not so much when it doesn't.
+ arch/arm/boot/dts/exynos5250-pinctrl.dtsi |    2 +-
+ arch/arm/boot/dts/exynos5250.dtsi         |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-The intent was to reduce indentation and to declare its sub-nodes outside
-of i2c1. I will club it and resend.
-
-Regards,
-Keerthy
+diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
+index d1650fb..ded558b 100644
+--- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
++++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
+@@ -763,7 +763,7 @@
+ 		};
+ 	};
+ 
+-	pinctrl@03680000 {
++	pinctrl@03860000 {
+ 		gpz: gpz {
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 7154e3d..e9bfd13 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -169,9 +169,9 @@
+ 		interrupts = <0 50 0>;
+ 	};
+ 
+-	pinctrl_3: pinctrl@03680000 {
++	pinctrl_3: pinctrl@03860000 {
+ 		compatible = "samsung,exynos5250-pinctrl";
+-		reg = <0x0368000 0x1000>;
++		reg = <0x03860000 0x1000>;
+ 		interrupts = <0 47 0>;
+ 	};
+ 
+-- 
+1.7.4.4
