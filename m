@@ -1,55 +1,70 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] ASoC: rt5640: add device tree support
-Date: Wed, 12 Jun 2013 10:56:46 -0600
-Message-ID: <51B8A84E.9010106@wwwdotorg.org>
-References: <1370983240-4976-1-git-send-email-swarren@wwwdotorg.org>
- <20130612164628.GN1403@sirena.org.uk>
+From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 01/10] ARM: OMAP2+: add needs_vmmc to hsmmc_info
+Date: Wed, 12 Jun 2013 22:30:08 +0530
+Message-ID: <51B8A918.5030605@ti.com>
+References: <20130523184045.GD13507@atomide.com>
+ <1370546059-24181-1-git-send-email-balajitk@ti.com>
+ <1370546059-24181-2-git-send-email-balajitk@ti.com>
+ <20130612142409.GW8164@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20130612164628.GN1403@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: oder_chiou@realtek.com, alsa-devel@alsa-project.org, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Bard Liao <bardliao@realtek.com>, flove@realtek.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130612142409.GW8164-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2013 10:46 AM, Mark Brown wrote:
-> On Tue, Jun 11, 2013 at 02:40:40PM -0600, Stephen Warren wrote:
-> 
->> +- realtek,ldo1-en-gpios : The GPIO that controls the CODEC's
->> LDO1_EN pin.
-> 
-> Why gpios and not gpio?
+On Wednesday 12 June 2013 07:54 PM, Tony Lindgren wrote:
+> * Balaji T K <balajitk-l0cyMroinI0@public.gmane.org> [130606 12:20]:
+>> Add needs_vmmc and needs_vmmc_aux to indicate whether regulator is
+>> applicable so that omap_hsmmc can handle deferred probe error
+>> properly for regulators.
+>> Remove the assumption that vmmc_aux regulator to be available only if vmmc is
+>> present. Platforms can have fixed-always-ON regulator for vmmc and/or vmmc_aux
+>> in such cases regulator needed not be specified in board file.
+>
+> Looks good to me, I suggest you resend this again a bit later once the
+> other changes are merged so we can avoid a dependency between arch/arm/mach-omap2
+> and MMC changes.
+>
 
-For some reason, GPIO properties have always been named "gpios" rather
-than "gpio", even when only a single entry is expected. I don't really
-understand why, but I've been asked (or seen others asked) to
-s/gpio/gpios/ in DT bindings before. I explicitly CC'd Grant and Rob
-here in case they can shed any light.
+Ok, will separate the board changes and send the rest via mmc tree
 
->> -	if (rt5640->pdata.ldo1_en) { +	if
->> (gpio_is_valid(rt5640->pdata.ldo1_en)) { ret =
->> devm_gpio_request_one(&i2c->dev, rt5640->pdata.ldo1_en, 
->> GPIOF_OUT_INIT_HIGH,
-> 
-> Unfortunately gpio_is_valid() is unhelpful for platform data since
-> often zero is a valid GPIO but it's also the default "do nothing"
-> platform data.  It's therefore better to either include a check for
-> non-zero as well or have code that takes a zero in the platform
-> data and sets it to a negative value instead.
-
-I think people filling in platform data should simply be required to
-put a valid/correct value in that field. There aren't any users of
-this, so it's not like adding a new field where
-backwards-compatibility might be a concern (and even then, updating
-all users of this platform data type wouldn't be hard), and it should
-be obvious if you get it wrong.
+> Regards,
+>
+> Tony
+>
+>> Signed-off-by: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   arch/arm/mach-omap2/board-2430sdp.c          |    1 +
+>>   arch/arm/mach-omap2/board-3430sdp.c          |    3 +++
+>>   arch/arm/mach-omap2/board-cm-t35.c           |    2 ++
+>>   arch/arm/mach-omap2/board-devkit8000.c       |    1 +
+>>   arch/arm/mach-omap2/board-igep0020.c         |    3 +++
+>>   arch/arm/mach-omap2/board-ldp.c              |    1 +
+>>   arch/arm/mach-omap2/board-omap3beagle.c      |    2 ++
+>>   arch/arm/mach-omap2/board-omap3evm.c         |    3 +++
+>>   arch/arm/mach-omap2/board-omap3logic.c       |    1 +
+>>   arch/arm/mach-omap2/board-omap3pandora.c     |    3 +++
+>>   arch/arm/mach-omap2/board-omap3stalker.c     |    2 ++
+>>   arch/arm/mach-omap2/board-omap3touchbook.c   |    2 ++
+>>   arch/arm/mach-omap2/board-overo.c            |    1 +
+>>   arch/arm/mach-omap2/board-rm680.c            |    1 +
+>>   arch/arm/mach-omap2/board-rx51-peripherals.c |    3 +++
+>>   arch/arm/mach-omap2/board-zoom-peripherals.c |    4 ++++
+>>   arch/arm/mach-omap2/hsmmc.c                  |    2 ++
+>>   arch/arm/mach-omap2/hsmmc.h                  |    2 ++
+>>   include/linux/platform_data/mmc-omap.h       |    2 ++
+>>   19 files changed, 39 insertions(+), 0 deletions(-)
+>>
