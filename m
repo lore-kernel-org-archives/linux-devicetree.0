@@ -1,61 +1,40 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 01/22] pinctrl: generic: Add DT bindings
-Date: Wed, 12 Jun 2013 11:24:38 +0200
-Message-ID: <CACRpkdYev+hapkM075Sw7Yi0u+XpRvL74SwT39DV1aV1RtHC+Q@mail.gmail.com>
-References: <1370989371-30846-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1370989371-30846-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370989371-30846-2-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: RE: [PATCH v3] mfd: DT bindings for the palmas family MFD
+Date: Wed, 12 Jun 2013 10:29:24 +0100
+Message-ID: <20130612092924.C02023E0A76@localhost>
+References: <1370496441-24620-1-git-send-email-j-keerthy@ti.com> <20130606070210.GR3370@gmail.com> <20130606070610.GS3370@gmail.com> <DC88CAD03C0052499C1907B327FC63229EAB5B@DBDE04.ent.ti.com> <20130610095528.GH20297@gmail.com> <DC88CAD03C0052499C1907B327FC63229EB107@DBDE04.ent.ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DC88CAD03C0052499C1907B327FC63229EB107@DBDE04.ent.ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "J, KEERTHY" <j-keerthy@ti.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "swarren@nvidia.com" <swarren@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "wim@iguana.be" <wim@iguana.be>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "Kristo, Tero" <t-kristo@ti.com>, Ian Lartey <ian@slimlogic.co.uk>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2013 at 12:22 AM, Laurent Pinchart
-<laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+On Wed, 12 Jun 2013 08:24:26 +0000, "J, KEERTHY" <j-keerthy@ti.com> wrote:
+> Hello Grant,
+> 
+> > -----Original Message-----
+> > From: Lee Jones [mailto:lee.jones@linaro.org]
+> > > > >
+> > > > > Applied, thanks.
+> > > >
+> > > > Ah wait. It appears Grant wants to take this.
+> > > >
+> > > > Unapplied, thanks. :)
+> > > >
+> > >
+> > > Is it applied?
+> > 
+> > Not by me. I unapplied it when I saw that Grant took an earlier
+> > revision.
+> > 
+> > I won't apply again unless Grant gives the nod. Failing that, I'm sure
+> > he'll take it.
+> 
+> There were outstanding comments for v2 of this patch.
+> I think you applied v2 of this patch.
+> Could you annul v2 and please apply v3 of the patch?
 
-> Document DT properties for the generic pinctrl parameters and add a
-> parser function.
->
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnhk3lzF8UVTdg@public.gmane.org=
-m>
+Done
 
-It appears we have a race here, as something like three people,
-or four, happened to do generic pinconf bindings at the same time.
-
-Yesterday I applied Heiko St=FCbners patch
-"pinctrl: add function to parse generic pinconfig properties from a dt node"
-doing basically the same thing. With subtle differences...
-but it already supports schmittrigging and some more.
-
-It appears to be close to your idea though!
-
-Would it be possible for you to look at what I have on my "devel" branch
-now (same as submitted for -next), rebase on that and patch any problems?
-
-> +               if (param->flag) {
-> +                       ret =3D of_property_read_bool(np, param->property)
-> +                           ? 0 : -EINVAL;
-> +                       val =3D 1;
-> +               } else {
-> +                       ret =3D of_property_read_u32(np, param->property,=
- &val);
-> +               }
-
-This construct is done differently in Heiko's code, please
-review it so we know we have a nice, efficient parser.
-
-Yours,
-Linus Walleij
+g.
