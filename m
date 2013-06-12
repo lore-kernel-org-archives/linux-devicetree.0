@@ -1,56 +1,103 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
- the DT binding
-Date: Wed, 12 Jun 2013 18:12:22 -0300
-Message-ID: <20130612211221.GB23012@localhost>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <4160363.LWJuHATm2F@wuerfel> <20130612111441.E6D603E0A56@localhost>
- <201306122245.55960.arnd@arndb.de>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 07/12] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Wed, 12 Jun 2013 23:23:10 +0200
+Message-ID: <20130612212308.GA27681@manwe>
+References: <1365000318-28256-1-git-send-email-thierry.reding@avionic-design.de>
+ <1365000318-28256-8-git-send-email-thierry.reding@avionic-design.de>
+ <516C46BC.2040707@wwwdotorg.org>
+ <20130612122959.GA32444@manwe>
+ <51B89D26.9070605@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201306122245.55960.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <51B89D26.9070605@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Andrew Murray <andrew.murray@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTIsIDIwMTMgYXQgMTA6NDU6NTVQTSArMDIwMCwgQXJuZCBCZXJnbWFubiB3
-cm90ZToKPiBPbiBXZWRuZXNkYXkgMTIgSnVuZSAyMDEzLCBHcmFudCBMaWtlbHkgd3JvdGU6Cj4g
-PiBJIHRoaW5rIHdlIHNob3VsZCBoYXZlIGFsbW9zdCBldmVyeXRoaW5nIG5lZWRlZCBhbHJlYWR5
-IHRvIGRvIHRoaXMuCj4gPiBvZl9idXMgYWxsb3dzIGFyYml0cmFyeSBtYXBwaW5nIGNvZGUgdG8g
-YmUgdXNlZCBhdCBhbnkgc3RhZ2UgaW4gdGhlCj4gPiB0cmFuc2xhdGlvbi4gV2UgbWlnaHQgbmVl
-ZCB0byBhZGQgc29tZSBnbHVlIHNvIHRoYXQgb2ZfYnVzc2VzW10gY2FuCj4gPiBiZSBhc3NlbWJs
-ZWQgYnkgdGhlIGxpbmtlciB0byBhbGxvdyBhbiBtYnVzIG9mX2J1cyBzdGFuemEgdG8gbGl2ZQo+
-ID4gb3V0c2lkZSBvZiBkcml2ZXJzL29mL2FkZHJlc3MuYwo+ID4gCj4gCj4gQWN0dWFsbHksIHRo
-ZSBiZXN0IHRoaW5nIGFib3V0IHRoaXMgc29sdXRpb24gaXMgdGhhdCB3ZSBkb24ndCBldmVuCj4g
-aGF2ZSB0byBib3RoZXIgc2V0dGluZyB1cCB0aGUgbWFwcGluZ3Mgd2hlbiBsb2FkaW5nIHRoZSBt
-YnVzIGRyaXZlcjoKPiBXZSBkb24ndCBuZWVkIGFueSByYW5nZXMgKG90aGVyIHRoYW4gaW50ZXJu
-YWwtcmVncykgaW4gRFQsIGFuZCB3ZQo+IGRvbid0IG5lZWQgY29tcGxleCBsb2dpYyB0byBzZWFy
-Y2ggdGhyb3VnaCB0aGUgY2hpbGQgZGV2aWNlcyB0bwo+IGZpZ3VyZSBvdXQgd2hhdCB0aGUgbWFw
-cGluZ3Mgc2hvdWxkIGJlLiBUaGUgb25seSB0aGluZyBvbmUgbmVlZHMKPiB0byBkbyBoZXJlIGlz
-IGNoZWNrIGlmIGEgbWFwcGluZyBhbHJlYWR5IGV4aXN0cyB3aGVuIHdlIGdldCBpbnRvIHRoZQo+
-IG9mX2J1cyBoYW5kbGVyIGFuZCBjcmVhdGUgb25lIGZvciB0aGUgZGV2aWNlIGJlaW5nIHRyYW5z
-bGF0ZWQgaWYKPiB0aGVyZSBpc24ndCBvbmUhCj4gCgpUaGlzIGRlcGFydHMgY29uc2lkZXJhYmx5
-IGZyb20gd2hhdCBJJ20gYWltaW5nIHJpZ2h0IG5vdy4KCkFyZSB5b3Ugc3VnZ2VzdGluZyB0byBu
-b3QgcHV0ICphbnkqIG1hcHBpbmcgaW4gdGhlIG1idXMgJ3Jhbmdlcycgbm9kZSBpbgp0aGUgRFQg
-KG90aGVyIHRoYW4gaW50ZXJuYWwtcmVncyk/CgpJbiB0aGF0IGNhc2UsIGNhbiB5b3UgZXhwbGFp
-biBhIGJpdCBmdXJ0aGVyIGhvdyB0aGUgbWJ1cyB3b3VsZApkZWNpZGUgYSBiYXNlIGFkZHJlc3Mg
-Zm9yIGVhY2ggd2luZG93PyBJIGd1ZXNzIHlvdSdyZSB0aGlua2luZwppbiBhIGZpcnN0LWZpdCBh
-bGdvcml0aG0sIHJpZ2h0PwoKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxlY3Ryb25zCkVt
-YmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0cDovL2ZyZWUt
-ZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0Bs
-aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0
-cmVlLWRpc2N1c3MK
+
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 12, 2013 at 10:09:10AM -0600, Stephen Warren wrote:
+> On 06/12/2013 06:30 AM, Thierry Reding wrote:
+> > On Mon, Apr 15, 2013 at 12:28:12PM -0600, Stephen Warren wrote:
+> >> On 04/03/2013 08:45 AM, Thierry Reding wrote:
+> >>> Move the PCIe driver from arch/arm/mach-tegra into the
+> >>> drivers/pci/host directory. The motivation is to collect
+> >>> various host controller drivers in the same location in order
+> >>> to facilitate refactoring.
+> >>>=20
+> >>> The Tegra PCIe driver has been largely rewritten, both in order
+> >>> to turn it into a proper platform driver and to add MSI (based
+> >>> on code by Krishna Kishore <kthota@nvidia.com>) as well as
+> >>> device tree support.
+> ...
+> >>> +static irqreturn_t tegra_pcie_msi_irq(int irq, void *data)
+> >> ...
+> >>> +	return IRQ_HANDLED;
+> >>=20
+> >> Shouldn't this function return IRQ_NONE if no MSI status bits
+> >> were found set?
+> >=20
+> > The IRQ isn't marked IRQF_SHARED, so I don't think this is needed.
+>=20
+> Isn't it still useful to detect unexpected/stuck interrupts?
+
+Yes, you're right. I can't think of a nicer way to do it, though, so
+I'll go with a processed IRQ counter or a flag.
+
+> >>> +static int tegra_pcie_probe(struct platform_device *pdev)
+> >> ...
+> >>> +	pcibios_min_mem =3D 0;
+> >>=20
+> >> What does that mean/do? I wonder if that should be set to
+> >> 0x80000000 by the Tegra30 patches?
+> >=20
+> > ARM defines PCIBIOS_MIN_MEM to that variable. That macro in turn is
+> > only used by pci_bus_alloc_resource() AFAICT, which uses it to
+> > override the start of a resource when allocating if res->start =3D=3D
+> > 0. As such it designates a lower-bound of valid PCI memory
+> > addresses, so 0 on Tegra20 and 0x80000000 on Tegra30 don't seem
+> > like good values. Maybe we need to set them to the lowest of the
+> > prefetchable and non-prefetchable memory areas as defined in the
+> > DT?
+> >=20
+> > It doesn't currently seem to matter at all, though, since we never
+> > pass in a range that's 0, so the start address of resources can
+> > never be 0 and therefore PCIBIOS_MIN_MEM is never used.
+>=20
+> Hmmm. I guess ignore it then. If the value won't ever be used, 0 is as
+> good a value as any?
+
+Alright, I'll do that then.
+
+Thierry
+
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRuOa8AAoJEN0jrNd/PrOh+bkP/jn3lGBiGbjNi027XeevREsp
+DkwcxH4QnBbAUP+pGCm319oquZuLiptR865uEx60r02QC2N+HpWBVtd/zcjfGs+x
+drQZ4SrEO53ZqSuWHxu1hZvWE2U1cmr6FfchKOD6KXhaURr8g4rlMQClu7fuGsgL
+22TD9m40R/0LasWk54/oYuFH+H1A/06dTiHYABgQGCK2YpXK/iyo4gAWqPgmuufU
+4VdTZLnmi50lGQqjOrMG4rdwI0FbKqut0c2eejXm5PgPEkUfG/OkryvIjmfR7IKw
+EKBolfOC1g6Uk0kRKSF4bOGhrHKN7sPyZRVzaMisAXpddlhb/ehsprrfM+J9BDfk
+sluOcOJsrCXinuSudHsTHlKbc5hP+cjkgOKqI1mmkGIKl34BBSvycThoi+kVj8rw
+LK3MyWK3xo3nG9Jinmdc3UaWLnZ+gCSbOOh1mSNtx9kx+u3ALAENJS0XwN71njoK
+BZB6JuM/jBn4nQ7+avMMB1D3BFx4KPy4vQvs0Usd1v+eqNjMkSOvXzCCMso8Idv3
+mheOhkI1PFhhZvHSfZ2SkG+pClA84vBqd+CJ5nXMfz4z5EYslV6//BgoWCKyXklN
+4cOI+1Ef05egOfYAAcNy4MvOmtedtuQih1I7NnqttTwYcxSePh4P/gXBrlEtBLcj
+mpF1VcqVjw32JldQNaCt
+=lrtv
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
