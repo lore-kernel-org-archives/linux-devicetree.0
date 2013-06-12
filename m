@@ -1,100 +1,81 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH] ARM: dts: Protect pinctrl headers against multiple inclusions
-Date: Wed, 12 Jun 2013 08:42:43 +0200
-Message-ID: <51B81863.10403@epfl.ch>
-References: <1370962250-9745-1-git-send-email-florian.vaussard@epfl.ch> <20130611215756.9B0CA3E0D8D@localhost>
-Reply-To: florian.vaussard@epfl.ch
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Subject: RE: [PATCH V3 1/2] tps6507x-ts: Add DT support
+Date: Wed, 12 Jun 2013 06:53:21 +0000
+Message-ID: <A4887BF146CD57468F700B415D2F47015A1315@DBDE04.ent.ti.com>
+References: <1369126458-24872-1-git-send-email-manishv.b@ti.com>
+ <1369126458-24872-2-git-send-email-manishv.b@ti.com>
+ <20130610060442.GA30158@core.coreip.homeip.net>
+ <A4887BF146CD57468F700B415D2F47015A0DFD@DBDE04.ent.ti.com>
+ <20130610180311.GA4649@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130611215756.9B0CA3E0D8D@localhost>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20130610180311.GA4649@core.coreip.homeip.net>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-Hello Grant,
+Hi Dmitry,
 
-On 06/11/2013 11:57 PM, Grant Likely wrote:
-> On Tue, 11 Jun 2013 16:50:50 +0200, Florian Vaussard <florian.vaussard@epfl.ch> wrote:
->> Pinctrl headers were not protected with #ifndef.
->>
->> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
->
-> Obviously this needs to go in via whatever tree added the modified
-> header files.
->
+On Mon, Jun 10, 2013 at 23:33:11, Dmitry Torokhov wrote:
+> Manish,
+> 
+> On Mon, Jun 10, 2013 at 10:23:16AM +0000, Vishwanathrao Badarkhe, Manish wrote:
+> > Hi Dmitry,
+> > 
+> > On Mon, Jun 10, 2013 at 11:34:42, Dmitry Torokhov wrote:
+> > > Hi Manish,
+> > > 
+> > > On Tue, May 21, 2013 at 02:24:17PM +0530, Vishwanathrao Badarkhe, Manish wrote:
+> > > 
+> > > > +	struct touchscreen_init_data *init_data = NULL;
+> > > > +	int err;
+> > > > +
+> > > > +	if (node)
+> > > > +		node = of_find_node_by_name(node, "tsc");
+> > > 
+> > > Why do you have to locate OF node manually instead of already having it attached to the device stucture?
+> > 
+> > As TPS6507x is mfd device containing two nodes, regulator and touchscreen.
+> > It is necessary to use "of_find_node_by_name" to find child "tsc" node 
+> > of TPS6507x MFD device.
+> 
+> I understand that TPS6507x is a MFD device, However, I still do not understand why you do not attach OF data to the child platform device representing touch screen when you create it.
 
-I authored these files, sorry for this stupid omission. Benoit, can you
-take this patch?
+I gone through most of MFD devices in mainline kernel where "of_find_node_by_name" 
+function is used in order to populate child node properties. 
+See below example of max8925 MFD device. 
 
-Regards,
+Max8025 MFD device has following modules
+1. Touch screen
+2. Charger
+3. Backlight
+4. regulator
 
-Florian
+In DT case, device node for max8925 MFD device is in "arch/arm/boot/dts/mmp2-brownstone.dts" 
+file having child nodes as regulator, backlight and charger.
+Respective drivers (regulator, backlight and charger) of max8925 MFD device used 
+"of_find_node_by_name" function in order to populate child node properties.
 
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
->
->> ---
->>   include/dt-bindings/pinctrl/am33xx.h |    5 +++++
->>   include/dt-bindings/pinctrl/omap.h   |    5 +++++
->>   2 files changed, 10 insertions(+), 0 deletions(-)
->>
->> diff --git a/include/dt-bindings/pinctrl/am33xx.h b/include/dt-bindings/pinctrl/am33xx.h
->> index a3fddd4..469e032 100644
->> --- a/include/dt-bindings/pinctrl/am33xx.h
->> +++ b/include/dt-bindings/pinctrl/am33xx.h
->> @@ -2,6 +2,9 @@
->>    * This header provides constants specific to AM33XX pinctrl bindings.
->>    */
->>
->> +#ifndef _DT_BINDINGS_PINCTRL_AM33XX_H
->> +#define _DT_BINDINGS_PINCTRL_AM33XX_H
->> +
->>   #include <include/dt-bindings/pinctrl/omap.h>
->>
->>   /* am33xx specific mux bit defines */
->> @@ -35,3 +38,5 @@
->>   #undef PIN_OFF_INPUT_PULLDOWN
->>   #undef PIN_OFF_WAKEUPENABLE
->>
->> +#endif
->> +
->> diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
->> index 370df3f..edbd250 100644
->> --- a/include/dt-bindings/pinctrl/omap.h
->> +++ b/include/dt-bindings/pinctrl/omap.h
->> @@ -5,6 +5,9 @@
->>    * Copyright (C) 2009-2010 Texas Instruments
->>    */
->>
->> +#ifndef _DT_BINDINGS_PINCTRL_OMAP_H
->> +#define _DT_BINDINGS_PINCTRL_OMAP_H
->> +
->>   /* 34xx mux mode options for each pin. See TRM for options */
->>   #define MUX_MODE0	0
->>   #define MUX_MODE1	1
->> @@ -48,3 +51,5 @@
->>   #define PIN_OFF_INPUT_PULLDOWN	(OFF_EN | OFF_PULL_EN)
->>   #define PIN_OFF_WAKEUPENABLE	WAKEUP_EN
->>
->> +#endif
->> +
->> --
->> 1.7.5.4
->>
->> _______________________________________________
->> devicetree-discuss mailing list
->> devicetree-discuss@lists.ozlabs.org
->> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
+Here, also same case for TPS6507x MFD device
 
--- 
-Florian Vaussard
-EPFL - STI - IMT - LSRO1
-MEB330 - Station 9
-1015 Lausanne / Switzerland
+TPS6507x MFD device has two childs:
+1. regulator
+2. touch screen.
 
-tel: +41 21 693 78 39
-fax: +41 21 693 78 07
-http://lsro.epfl.ch
+Regulator driver for TPS6507x is already in mainline and using function 
+"of_find_node_by_name" to populate device tree properties for regulators.
+On similar lines I used "of_find_node_by_name" to populate device
+tree properties for touch screen.
+
+Still, I agreed that it is possible to attach OF data to child platform device
+but it requires changes in MFD driver of TPS6507x.
+
+Please let me know your opinion about this.
+
+
+Thanks, 
+Manish
