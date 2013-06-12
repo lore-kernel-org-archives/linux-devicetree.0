@@ -1,43 +1,47 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v2 0/4] dw_apb_timer: osc as sched_clock, clocks and
- clocksource_of support
-Date: Wed, 12 Jun 2013 10:53:06 -0700
-Message-ID: <CAOesGMjogjjFcvKbQtyY+DpW5WOcoo7mSxfqeyre22vP5-OUjA@mail.gmail.com>
-References: <201306041136.09566.heiko@sntech.de>
-	<201306121055.53685.heiko@sntech.de>
-	<CACRpkdZmDWTy=U_rhU9uVXy9N5jEOk6qQingiO5kb+Kc2WkL3w@mail.gmail.com>
-	<20130612175142.GB2760@quad.lixom.net>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 08/10] ARM: dts: omap3: split omap3_pmx_core
+Date: Wed, 12 Jun 2013 10:54:44 -0700
+Message-ID: <20130612175444.GS8164@atomide.com>
+References: <20130523184045.GD13507@atomide.com>
+ <1370546059-24181-1-git-send-email-balajitk@ti.com>
+ <1370546059-24181-9-git-send-email-balajitk@ti.com>
+ <20130612143459.GY8164@atomide.com>
+ <51B8AB0F.9060701@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130612175142.GB2760@quad.lixom.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jamie Iles <jamie@jamieiles.com>, Dinh Nguyen <dinguyen@altera.com>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Baruch Siach <baruch@tkos.co.il>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51B8AB0F.9060701@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2013 at 10:51 AM, Olof Johansson <olof@lixom.net> wrote=
-:
-> On Wed, Jun 12, 2013 at 11:46:37AM +0200, Linus Walleij wrote:
->> On Wed, Jun 12, 2013 at 10:55 AM, Heiko St=FCbner <heiko@sntech.de> =
-wrote:
->>
->> > with clocksource_of conversion of picoxcell and socfpga, this seri=
-es stands on
->> > its own. Is anybody going to pick it up?
->>
->> I would suggest you send a pull request to the ARM SoC maintainers.
->> This is where most clocksource code and refactorings related to
->> ARM things come in.
->
-> Yeah, or we can pick them up and apply from the list too. Have you co=
-llected
-> all Acked-bys and reposted a final version? If not, cc arm@kenrel.org=
- on the
-> final posting.
+* Balaji T K <balajitk@ti.com> [130612 10:14]:
+> On Wednesday 12 June 2013 08:05 PM, Tony Lindgren wrote:
+> >* Balaji T K <balajitk@ti.com> [130606 12:20]:
+> >>omap3_pmx_core: padconf register are in two banks 0x48003000 to 0x48002268
+> >>and 0x480025c0 to 0x480025f8.
+> >>
+> >>split omap3_pmx_core into 2 banks as register between 0x48002270 and 0x48002564
+> >>belongs to type pinctrl-single,bit-per-mux with access to certain bit
+> >>fields with bit field mask.
+> >
+> >Is this the right patch for the description? THe patch seems to deal with
+> >USB pins.
+> >
+> >Also, let's not hog any pins under the pinmux controllers, those make
+> >unloading pinctrl-single impossible which is not nice for distros and
+> >development.
+> 
+> omap3_pmx_core is not continuous, so had to split into two and
+> updated the only user in second bank (omap3_pmx_core2) which happened to be usb,
+> CC Roger for USB dynamic pin mux selection.
 
-Nevermind, I just came across the pull request. :-)
+I see. OK yes we can split it as that saves memory too for the unused
+registers. While at it, please move remove the hogs from the pmx
+entries and move the pins to the drivers claiming them.
 
+Regards,
 
--Olof
+TOny
