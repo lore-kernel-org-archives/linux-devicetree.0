@@ -1,120 +1,45 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] extcon: Add an API to get extcon device from dt node
-Date: Wed, 12 Jun 2013 12:25:12 +0530
-Message-ID: <51B81B50.10508@ti.com>
-References: <1370276020-17446-2-git-send-email-kishon@ti.com> <1371001149-16906-1-git-send-email-cw00.choi@samsung.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Wed, 12 Jun 2013 09:37:06 +0200
+Message-ID: <51B82522.5010903@gmail.com>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130609014506.GB10027@obsidianresearch.com>
+ <20130611135737.GC3996@localhost> <20835253.Agl4DfuI3k@wuerfel>
+ <20130611215023.GA12649@obsidianresearch.com> <51B7A325.8070108@gmail.com>
+ <20130611230845.GB13892@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1371001149-16906-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: myungjoo.ham@samsung.com, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, gregkh@linuxfoundation.org, benoit.cousson@linaro.org, anish198519851985@gmail.com, pmeerw@pmeerw.net
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130611230845.GB13892-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo Choi,
-
-On Wednesday 12 June 2013 07:09 AM, Chanwoo Choi wrote:
-> From: Kishon Vijay Abraham I <kishon@ti.com>
+On 06/12/2013 01:08 AM, Jason Gunthorpe wrote:
+> On Wed, Jun 12, 2013 at 12:22:29AM +0200, Sebastian Hesselbarth wrote:
+>> sorry to kick into this thread that late but Ezequiel made me think of
+>> address windows when asking on IRC. From what I can see from your and
+>> Arnd's proposal the only real difference is that having it Arnd's way
+>> allows you to have two or more windows mapped to e.g. devbus with
+>> totally independent address ranges - while yours requires one large
+>> window for all child devices?
 >
-> Added an API of_extcon_get_extcon_dev() to be used by drivers to get
-> extcon device in the case of dt boot (this can be used instead of
-> extcon_get_extcon_dev()).
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Myungjoo Ham <myungjoo.ham@samsung.com>
-> ---
->   drivers/extcon/Makefile          |  3 +++
->   drivers/extcon/of-extcon.c       | 56 ++++++++++++++++++++++++++++++++++++++++
->   include/linux/extcon/of-extcon.h | 30 +++++++++++++++++++++
->   3 files changed, 89 insertions(+)
->   create mode 100644 drivers/extcon/of-extcon.c
->   create mode 100644 include/linux/extcon/of-extcon.h
->
-> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-> index 540e2c3..39cdf95 100644
-> --- a/drivers/extcon/Makefile
-> +++ b/drivers/extcon/Makefile
-> @@ -2,9 +2,12 @@
->   # Makefile for external connector class (extcon) devices
->   #
->
-> +obj-$(CONFIG_OF)		+= of-extcon.o
-> +
->   obj-$(CONFIG_EXTCON)		+= extcon-class.o
->   obj-$(CONFIG_EXTCON_GPIO)	+= extcon-gpio.o
->   obj-$(CONFIG_EXTCON_ADC_JACK)	+= extcon-adc-jack.o
-> +
->   obj-$(CONFIG_EXTCON_MAX77693)	+= extcon-max77693.o
->   obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
->   obj-$(CONFIG_EXTCON_ARIZONA)	+= extcon-arizona.o
-> diff --git a/drivers/extcon/of-extcon.c b/drivers/extcon/of-extcon.c
-> new file mode 100644
-> index 0000000..29f82b4
-> --- /dev/null
-> +++ b/drivers/extcon/of-extcon.c
-> @@ -0,0 +1,56 @@
-> +/*
-> + * OF helpers for External connector (extcon) framework
-> + *
-> + * Copyright (C) 2013 Texas Instruments, Inc.
-> + * Kishon Vijay Abraham I <kishon@ti.com>
-> + *
-> + * Copyright (C) 2013 Samsung Electronics
-> + * Chanwoo Choi <cw00.choi@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/extcon.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/extcon/of-extcon.h>
-> +
-> +struct extcon_dev *of_extcon_get_extcon_dev(struct device *dev, int index)
-> +{
-> +	struct device_node *node;
-> +	struct extcon_dev *edev;
-> +	struct platform_device *extcon_parent_dev;
-> +
-> +	if (!dev->of_node) {
-> +		dev_dbg(dev, "device does not have a device node entry\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	node = of_parse_phandle(dev->of_node, "extcon", index);
-> +	if (!node) {
-> +		dev_dbg(dev, "failed to get phandle in %s node\n",
-> +			dev->of_node->full_name);
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	extcon_parent_dev = of_find_device_by_node(node);
-> +	if (!extcon_parent_dev) {
-> +		dev_dbg(dev, "unable to find device by node\n");
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +	}
-> +
-> +	edev = extcon_get_extcon_dev(dev_name(&extcon_parent_dev->dev));
+> Sorry, I'm having problems following the possessives in your paragraph
+> - which things are you comparing?
 
-In order to get this working, I needed a small fix in extcon_dev_register
+Ahh, just forget what I said. I see you two wrapped you mind a dozen
+times more around it. I am starting to get the idea and its "beauty" ;)
 
--       dev_set_name(edev->dev, edev->name ? edev->name : dev_name(dev));
-+       edev->name = edev->name ? edev->name : dev_name(dev);
-+       dev_set_name(edev->dev, edev->name);
-
-Also using extcon_get_extcon_dev here requires the extcon driver not to 
-set edev.name since we use *dev_name* here. Hence I recommend using my 
-initial class iterative approach. Anyway its your call. Let me know if 
-have to float a new version of the patch (either the iterative approach 
-or having the fix I mentioned in extcon_dev_register).
-
-Thanks
-Kishon
+Sebastian
