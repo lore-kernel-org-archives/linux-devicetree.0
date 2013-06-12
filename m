@@ -1,94 +1,70 @@
-From: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH RESEND V2] ARM: dts: wm8994: Add wm8994 regulator support on
- smdk5250.
-Date: Wed, 12 Jun 2013 13:53:45 +0530
-Message-ID: <1371025425-480-2-git-send-email-padma.v@samsung.com>
-References: <1371025425-480-1-git-send-email-padma.v@samsung.com>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH v3] mfd: DT bindings for the palmas family MFD
+Date: Wed, 12 Jun 2013 08:24:26 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229EB107@DBDE04.ent.ti.com>
+References: <1370496441-24620-1-git-send-email-j-keerthy@ti.com>
+ <20130606070210.GR3370@gmail.com> <20130606070610.GS3370@gmail.com>
+ <DC88CAD03C0052499C1907B327FC63229EAB5B@DBDE04.ent.ti.com>
+ <20130610095528.GH20297@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1371025425-480-1-git-send-email-padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130610095528.GH20297@gmail.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "swarren@nvidia.com" <swarren@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "wim@iguana.be" <wim@iguana.be>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "Kristo, Tero" <t-kristo@ti.com>, Ian Lartey <ian@slimlogic.co.uk>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the required regulator supplies and properties
-for wm8994 codec on smdk5250 board.
-
-Signed-off-by: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
-
-Changes since V1:
-	- Clubbed the same supply regulators as suggested by Mark.
-
- arch/arm/boot/dts/exynos5250-smdk5250.dts |   37 +++++++++++++++++++++++++++-
- 1 files changed, 35 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index f2a025e..dc2ec25 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -37,6 +37,30 @@
- 		};
- 	};
- 
-+	vdd:fixed-regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd-supply";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	dbvdd:fixed-regulator@1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "dbvdd-supply";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	spkvdd:fixed-regulator@2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "spkvdd-supply";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
- 	i2c@12C70000 {
- 		samsung,i2c-sda-delay = <100>;
- 		samsung,i2c-max-bus-freq = <20000>;
-@@ -47,8 +71,17 @@
- 		};
- 
- 		wm8994: wm8994@1a {
--			 compatible = "wlf,wm8994";
--			 reg = <0x1a>;
-+			compatible = "wlf,wm8994";
-+			reg = <0x1a>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			AVDD2-supply = <&vdd>;
-+			CPVDD-supply = <&vdd>;
-+			DBVDD-supply = <&dbvdd>;
-+			SPKVDD1-supply = <&spkvdd>;
-+			SPKVDD2-supply = <&spkvdd>;
- 		};
- 	};
- 
--- 
-1.7.4.4
+SGVsbG8gR3JhbnQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGVl
+IEpvbmVzIFttYWlsdG86bGVlLmpvbmVzQGxpbmFyby5vcmddDQo+IFNlbnQ6IE1vbmRheSwgSnVu
+ZSAxMCwgMjAxMyAzOjI1IFBNDQo+IFRvOiBKLCBLRUVSVEhZDQo+IENjOiBncmFudC5saWtlbHlA
+c2VjcmV0bGFiLmNhOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gZG9j
+QHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmc7DQo+
+IHN3YXJyZW5Ad3d3ZG90b3JnLm9yZzsgc3dhcnJlbkBudmlkaWEuY29tOyByb2IuaGVycmluZ0Bj
+YWx4ZWRhLmNvbTsNCj4gcm9iQGxhbmRsZXkubmV0OyBzYW1lb0BsaW51eC5pbnRlbC5jb207IHdp
+bUBpZ3VhbmEuYmU7DQo+IGxnaXJkd29vZEBnbWFpbC5jb207IGdnQHNsaW1sb2dpYy5jby51azsg
+S3Jpc3RvLCBUZXJvOyBJYW4gTGFydGV5DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjNdIG1mZDog
+RFQgYmluZGluZ3MgZm9yIHRoZSBwYWxtYXMgZmFtaWx5IE1GRA0KPiANCj4gT24gTW9uLCAxMCBK
+dW4gMjAxMywgSiwgS0VFUlRIWSB3cm90ZToNCj4gDQo+ID4gSGVsbG8gR3JhbnQvTGVlIEpvbmVz
+LA0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogTGVl
+IEpvbmVzIFttYWlsdG86bGVlLmpvbmVzQGxpbmFyby5vcmddDQo+ID4gPiBTZW50OiBUaHVyc2Rh
+eSwgSnVuZSAwNiwgMjAxMyAxMjozNiBQTQ0KPiA+ID4gVG86IEosIEtFRVJUSFkNCj4gPiA+IENj
+OiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBncmFudC5saWtlbHlAc2VjcmV0bGFiLmNh
+OyBsaW51eC0NCj4gPiA+IGRvY0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWUtZGlzY3Vzc0Bs
+aXN0cy5vemxhYnMub3JnOw0KPiA+ID4gc3dhcnJlbkB3d3dkb3Rvcmcub3JnOyBzd2FycmVuQG52
+aWRpYS5jb207IHJvYi5oZXJyaW5nQGNhbHhlZGEuY29tOw0KPiA+ID4gcm9iQGxhbmRsZXkubmV0
+OyBzYW1lb0BsaW51eC5pbnRlbC5jb207IHdpbUBpZ3VhbmEuYmU7DQo+ID4gPiBsZ2lyZHdvb2RA
+Z21haWwuY29tOyBnZ0BzbGltbG9naWMuY28udWs7IEtyaXN0bywgVGVybzsgSWFuIExhcnRleQ0K
+PiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSCB2M10gbWZkOiBEVCBiaW5kaW5ncyBmb3IgdGhlIHBh
+bG1hcyBmYW1pbHkgTUZEDQo+ID4gPg0KPiA+ID4gT24gVGh1LCAwNiBKdW4gMjAxMywgTGVlIEpv
+bmVzIHdyb3RlOg0KPiA+ID4NCj4gPiA+ID4gT24gVGh1LCAwNiBKdW4gMjAxMywgSiBLZWVydGh5
+IHdyb3RlOg0KPiA+ID4gPg0KPiA+ID4gPiA+IEFkZCB0aGUgdmFyaW91cyBiaW5kaW5nIGZpbGVz
+IGZvciB0aGUgcGFsbWFzIGZhbWlseSBvZiBjaGlwcy4NCj4gPiA+ID4gPiBUaGVyZSBpcyBhIHRv
+cCBsZXZlbCBNRkQgYmluZGluZyB0aGVuIGEgc2VwZXJhdGUgYmluZGluZyBmb3INCj4gPiA+ID4g
+PiByZWd1bGF0b3JzDQo+ID4gPiBJUCBibG9ja3Mgb24gY2hpcHMuDQo+ID4gPiA+ID4NCj4gPiA+
+ID4gPiBTaWduZWQtb2ZmLWJ5OiBHcmFlbWUgR3JlZ29yeSA8Z2dAc2xpbWxvZ2ljLmNvLnVrPg0K
+PiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEogS2VlcnRoeSA8ai1rZWVydGh5QHRpLmNvbT4NCj4g
+PiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBJYW4gTGFydGV5IDxpYW5Ac2xpbWxvZ2ljLmNvLnVrPg0K
+PiA+ID4gPiA+IFJldmlld2VkLWJ5OiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkBudmlkaWEuY29t
+Pg0KPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbWZkL3BhbG1hcy50eHQgICB8ICAgNDkNCj4gPiA+ICsrKysrKysrKysrKysNCj4gPiA+
+ID4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL3BhbG1hcy1wbWljLnR4dCAg
+fCAgIDcyDQo+ID4gPiArKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gPiA+ICAyIGZpbGVzIGNo
+YW5nZWQsIDEyMSBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKSAgY3JlYXRlDQo+IG1vZGUN
+Cj4gPiA+ID4gPiAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9w
+YWxtYXMudHh0DQo+ID4gPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+ID4gPiA+IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvcGFsbWFzLXBtaWMudHgNCj4g
+PiA+ID4NCj4gPiA+ID4gQXBwbGllZCwgdGhhbmtzLg0KPiA+ID4NCj4gPiA+IEFoIHdhaXQuIEl0
+IGFwcGVhcnMgR3JhbnQgd2FudHMgdG8gdGFrZSB0aGlzLg0KPiA+ID4NCj4gPiA+IFVuYXBwbGll
+ZCwgdGhhbmtzLiA6KQ0KPiA+ID4NCj4gPg0KPiA+IElzIGl0IGFwcGxpZWQ/DQo+IA0KPiBOb3Qg
+YnkgbWUuIEkgdW5hcHBsaWVkIGl0IHdoZW4gSSBzYXcgdGhhdCBHcmFudCB0b29rIGFuIGVhcmxp
+ZXINCj4gcmV2aXNpb24uDQo+IA0KPiBJIHdvbid0IGFwcGx5IGFnYWluIHVubGVzcyBHcmFudCBn
+aXZlcyB0aGUgbm9kLiBGYWlsaW5nIHRoYXQsIEknbSBzdXJlDQo+IGhlJ2xsIHRha2UgaXQuDQoN
+ClRoZXJlIHdlcmUgb3V0c3RhbmRpbmcgY29tbWVudHMgZm9yIHYyIG9mIHRoaXMgcGF0Y2guDQpJ
+IHRoaW5rIHlvdSBhcHBsaWVkIHYyIG9mIHRoaXMgcGF0Y2guDQpDb3VsZCB5b3UgYW5udWwgdjIg
+YW5kIHBsZWFzZSBhcHBseSB2MyBvZiB0aGUgcGF0Y2g/DQoNCj4gDQo+IC0tDQo+IExlZSBKb25l
+cw0KPiBMaW5hcm8gU1QtRXJpY3Nzb24gTGFuZGluZyBUZWFtIExlYWQNCj4gTGluYXJvLm9yZyDi
+lIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzIEZvbGxvdyBMaW5hcm86IEZhY2Vi
+b29rDQo+IHwgVHdpdHRlciB8IEJsb2cNCg0KS2luZCBSZWdhcmRzLA0KS2VlcnRoeQ0K
