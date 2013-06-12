@@ -1,65 +1,28 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 0/5] dwc3: omap: adapt dwc3 to use extcon framework
-Date: Wed, 12 Jun 2013 09:59:15 +0900
-Message-ID: <51B7C7E3.9050706@samsung.com>
-References: <1370276020-17446-1-git-send-email-kishon@ti.com>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCH v3 3/7] mmc: dw_mmc-pltfm: move probe and remove below dt
+ match table
+Date: Wed, 12 Jun 2013 10:16:15 +0900
+Message-ID: <000901ce670a$6f96a2c0$4ec3e840$%jun@samsung.com>
+References: <201306111328.52679.heiko@sntech.de>
+ <201306111330.28759.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1370276020-17446-1-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: myungjoo.ham@samsung.com, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, gregkh@linuxfoundation.org, benoit.cousson@linaro.org, anish198519851985@gmail.com, pmeerw@pmeerw.net
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <201306111330.28759.heiko@sntech.de>
+Content-language: ko
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?UTF-8?Q?'Heiko_St=C3=BCbner'?= <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, 'Mike Turquette' <mturquette@linaro.org>, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Chris Ball' <cjb@laptop.org>, linux-mmc@vger.kernel.org, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <rob.herring@calxeda.com>, 'Linus Walleij' <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, 'Russell King' <linux@arm.linux.org.uk>, 'Arnd Bergmann' <arnd@arndb.de>, 'Olof Johansson' <olof@lixom.net>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Andy Shevchenko' <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+On 06/11/13 2013 8:30 PM Heiko St=C3=BCbner wrote:
+> In a subsquent patch probe will need to do some handling of data from
+> the dt match table. So to prevent the need for forward declarations,
+> move probe and remove below the match table.
+>=20
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
-I confused patch number. I applied patch2,3 on extcon-linus branch.
+Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
 
-  extcon: Kconfig: Make extcon config type as bool
-  extcon: add EXPORT_SYMBOL_GPL for exported functions
-
-
-And I will reply comment about patch1 soon.
-
-  extcon: Add an API to get extcon device from dt node
-
-
-Thanks,
-Chanwoo Choi
-
-On 06/04/2013 01:13 AM, Kishon Vijay Abraham I wrote:
-> The first three patches deals with cleanup of extcon inorder to get
-> through compilation without any issues. It also adds an API to get
-> extcon device from dt node which I felt was missing.
->
-> The next two patches deals with adapt dwc3 to use extcon framework.
-> The 4th patch (usb: dwc3: omap: improve error handling of dwc3_omap_probe)
-> should have ideally been sent to Felipe, however since
-> there will be merge conflicts with the 5th patch
-> (usb: dwc3: use extcon fwrk to receive connect/disconnect)
-> in this series, I've sent in the same series.
->
-> Once this patch series get merged, dwc3 in omap would be functional
-> in device mode. However there is still some discussion on modelling
-> SMPS10 regulator. Once that gets finalized, dwc3 should be functional
-> in host mode as well.
->
-> Kishon Vijay Abraham I (5):
->   extcon: Add an API to get extcon device from dt node
->   extcon: Kconfig: Make extcon config type as bool
->   extcon: add EXPORT_SYMBOL_GPL for exported functions
->   usb: dwc3: omap: improve error handling of dwc3_omap_probe
->   usb: dwc3: use extcon fwrk to receive connect/disconnect
->
->  Documentation/devicetree/bindings/usb/omap-usb.txt |    5 +
->  drivers/extcon/Kconfig                             |    2 +-
->  drivers/extcon/extcon-class.c                      |   42 +++++++
->  drivers/usb/dwc3/dwc3-omap.c                       |  133 ++++++++++++++++----
->  include/linux/extcon.h                             |    8 ++
->  include/linux/usb/dwc3-omap.h                      |   30 -----
->  6 files changed, 168 insertions(+), 52 deletions(-)
->  delete mode 100644 include/linux/usb/dwc3-omap.h
->
 
