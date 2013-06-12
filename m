@@ -1,30 +1,57 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 0/4] dw_apb_timer: osc as sched_clock, clocks and
- clocksource_of support
-Date: Wed, 12 Jun 2013 11:46:37 +0200
-Message-ID: <CACRpkdZmDWTy=U_rhU9uVXy9N5jEOk6qQingiO5kb+Kc2WkL3w@mail.gmail.com>
-References: <201306041136.09566.heiko@sntech.de>
-	<201306121055.53685.heiko@sntech.de>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 0/3] dma: add support for DMA multiplexer DT nodes
+Date: Wed, 12 Jun 2013 14:53:49 +0530
+Message-ID: <20130612092349.GR4107@intel.com>
+References: <1370533645-23690-1-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306121055.53685.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
-Cc: John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jamie Iles <jamie@jamieiles.com>, Dinh Nguyen <dinguyen@altera.com>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Baruch Siach <baruch@tkos.co.il>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1370533645-23690-1-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2013 at 10:55 AM, Heiko St=FCbner <heiko@sntech.de> wro=
-te:
+On Thu, Jun 06, 2013 at 05:47:22PM +0200, Guennadi Liakhovetski wrote:
+> Next re-send of an earlier work. This series adds support for multiple 
+> compatible DMAC instances, capable of serving the same DMA slaves. 
+> Currently to specify such a configuration in DT, slaves would have to add 
+> DMA tuples for each requested channel for each suitable DMAC. This 
+> needlessly clutters the Device Tree. Instead we group such DMAC DT nodes 
+> together under a common parent. Then slaves can just reference that parent 
+> in their DMA bindings.
+> 
+> Cc: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+wasnt this series Acked by Anrd previosuly.
 
-> with clocksource_of conversion of picoxcell and socfpga, this series =
-stands on
-> its own. Is anybody going to pick it up?
+Neverthless, Anrd do you mind reviwing this
 
-I would suggest you send a pull request to the ARM SoC maintainers.
-This is where most clocksource code and refactorings related to
-ARM things come in.
+--
+~Vinod
+> 
+> Guennadi Liakhovetski (3):
+>   OF: add a new phandle parsing function for grouped nodes
+>   dmaengine: add support for DMA multiplexer DT nodes
+>   DMA: shdma: add DT support
+> 
+>  Documentation/devicetree/bindings/dma/dma.txt |   44 +++++++++++++++++++++
+>  drivers/dma/of-dma.c                          |   31 +++++++++++----
+>  drivers/dma/sh/shdma-base.c                   |   51 ++++++++++++++++++++++---
+>  drivers/dma/sh/shdma.c                        |   44 ++++++++++++++++++---
+>  drivers/of/base.c                             |   28 ++++++++++++-
+>  include/linux/of.h                            |   16 ++++++++
+>  include/linux/shdma-base.h                    |    5 ++
+>  7 files changed, 196 insertions(+), 23 deletions(-)
+> 
+> -- 
+> 1.7.2.5
+> 
+> Thanks
+> Guennadi
+> ---
+> Guennadi Liakhovetski, Ph.D.
+> Freelance Open-Source Software Developer
+> http://www.open-technology.de/
 
-Yours,
-Linus Walleij
+-- 
