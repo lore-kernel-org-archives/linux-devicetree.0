@@ -1,119 +1,132 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: [PATCH] of: Fix locking vs. interrupts
-Date: Wed, 12 Jun 2013 15:39:04 +1000
-Message-ID: <1371015544.8250.182.camel@pasglop>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/9] dma: pl330: rip out broken, redundant ID probing
+Date: Wed, 12 Jun 2013 11:01:30 +0530
+Message-ID: <20130612053130.GD4107@intel.com>
+References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
+ <1370889285-22799-2-git-send-email-will.deacon@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: David Miller <davem@davemloft.net>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1370889285-22799-2-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The OF code uses irqsafe locks everywhere except in a handful of functions
-for no obvious reasons. Since the conversion from the old rwlocks, this
-now triggers lockdep warnings when used at interrupt time. At least one
-driver (ibmvscsi) seems to be doing that from softirq context.
+On Mon, Jun 10, 2013 at 07:34:37PM +0100, Will Deacon wrote:
+> The PL330 driver probes the peripheral and primecell IDs of the device to
+> make sure that it is indeed an AMBA PL330. However, it does this by
+> making byte accesses to a device mapping of the word-aligned ID
+> registers, which is either UNPREDICTABLE or generates an alignment fault
+> (depending on the presence of the virtualisation extensions).
+> 
+> Rather than fix this code, we can actually rip most of it out and let
+> the AMBA bus driver correctly do the probing for us.
+> 
+> Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Applied, thanks
 
-This converts the few non-irqsafe locks into irqsafe ones, making them
-consistent with the rest of the code.
+--
+~Vinod
+> ---
+>  drivers/dma/pl330.c | 27 +++------------------------
+>  1 file changed, 3 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> index 24e0754..22e2a8f 100644
+> --- a/drivers/dma/pl330.c
+> +++ b/drivers/dma/pl330.c
+> @@ -157,7 +157,6 @@ enum pl330_reqtype {
+>  #define PERIPH_REV_R0P0		0
+>  #define PERIPH_REV_R1P0		1
+>  #define PERIPH_REV_R1P1		2
+> -#define PCELL_ID		0xff0
+>  
+>  #define CR0_PERIPH_REQ_SET	(1 << 0)
+>  #define CR0_BOOT_EN_SET		(1 << 1)
+> @@ -193,8 +192,6 @@ enum pl330_reqtype {
+>  #define INTEG_CFG		0x0
+>  #define PERIPH_ID_VAL		((PART << 0) | (DESIGNER << 12))
+>  
+> -#define PCELL_ID_VAL		0xb105f00d
+> -
+>  #define PL330_STATE_STOPPED		(1 << 0)
+>  #define PL330_STATE_EXECUTING		(1 << 1)
+>  #define PL330_STATE_WFE			(1 << 2)
+> @@ -292,7 +289,6 @@ static unsigned cmd_line;
+>  /* Populated by the PL330 core driver for DMA API driver's info */
+>  struct pl330_config {
+>  	u32	periph_id;
+> -	u32	pcell_id;
+>  #define DMAC_MODE_NS	(1 << 0)
+>  	unsigned int	mode;
+>  	unsigned int	data_bus_width:10; /* In number of bits */
+> @@ -650,19 +646,6 @@ static inline bool _manager_ns(struct pl330_thread *thrd)
+>  	return (pl330->pinfo->pcfg.mode & DMAC_MODE_NS) ? true : false;
+>  }
+>  
+> -static inline u32 get_id(struct pl330_info *pi, u32 off)
+> -{
+> -	void __iomem *regs = pi->base;
+> -	u32 id = 0;
+> -
+> -	id |= (readb(regs + off + 0x0) << 0);
+> -	id |= (readb(regs + off + 0x4) << 8);
+> -	id |= (readb(regs + off + 0x8) << 16);
+> -	id |= (readb(regs + off + 0xc) << 24);
+> -
+> -	return id;
+> -}
+> -
+>  static inline u32 get_revision(u32 periph_id)
+>  {
+>  	return (periph_id >> PERIPH_REV_SHIFT) & PERIPH_REV_MASK;
+> @@ -1986,9 +1969,6 @@ static void read_dmac_config(struct pl330_info *pi)
+>  	pi->pcfg.num_events = val;
+>  
+>  	pi->pcfg.irq_ns = readl(regs + CR3);
+> -
+> -	pi->pcfg.periph_id = get_id(pi, PERIPH_ID);
+> -	pi->pcfg.pcell_id = get_id(pi, PCELL_ID);
+>  }
+>  
+>  static inline void _reset_thread(struct pl330_thread *thrd)
+> @@ -2098,10 +2078,8 @@ static int pl330_add(struct pl330_info *pi)
+>  	regs = pi->base;
+>  
+>  	/* Check if we can handle this DMAC */
+> -	if ((get_id(pi, PERIPH_ID) & 0xfffff) != PERIPH_ID_VAL
+> -	   || get_id(pi, PCELL_ID) != PCELL_ID_VAL) {
+> -		dev_err(pi->dev, "PERIPH_ID 0x%x, PCELL_ID 0x%x !\n",
+> -			get_id(pi, PERIPH_ID), get_id(pi, PCELL_ID));
+> +	if ((pi->pcfg.periph_id & 0xfffff) != PERIPH_ID_VAL) {
+> +		dev_err(pi->dev, "PERIPH_ID 0x%x !\n", pi->pcfg.periph_id);
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -2922,6 +2900,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>  	if (ret)
+>  		return ret;
+>  
+> +	pi->pcfg.periph_id = adev->periphid;
+>  	ret = pl330_add(pi);
+>  	if (ret)
+>  		goto probe_err1;
+> -- 
+> 1.8.2.2
+> 
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-CC: <stable@vger.kernel.org> [v3.9+]
----
-
-Note: It's silly to access the device-tree at interrupt time in most cases,
-and we should probably fix ibmvscsi, but for the time being, let's fix the
-obvious bug. Thomas, this can probably still go into 3.10... If not, I've
-CCed stable.
-
-diff --git a/arch/sparc/kernel/prom_common.c b/arch/sparc/kernel/prom_common.c
-index 9f20566..79cc0d1 100644
---- a/arch/sparc/kernel/prom_common.c
-+++ b/arch/sparc/kernel/prom_common.c
-@@ -54,6 +54,7 @@ EXPORT_SYMBOL(of_set_property_mutex);
- int of_set_property(struct device_node *dp, const char *name, void *val, int len)
- {
- 	struct property **prevp;
-+	unsigned long flags;
- 	void *new_val;
- 	int err;
- 
-@@ -64,7 +65,7 @@ int of_set_property(struct device_node *dp, const char *name, void *val, int len
- 	err = -ENODEV;
- 
- 	mutex_lock(&of_set_property_mutex);
--	raw_spin_lock(&devtree_lock);
-+	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	prevp = &dp->properties;
- 	while (*prevp) {
- 		struct property *prop = *prevp;
-@@ -91,7 +92,7 @@ int of_set_property(struct device_node *dp, const char *name, void *val, int len
- 		}
- 		prevp = &(*prevp)->next;
- 	}
--	raw_spin_unlock(&devtree_lock);
-+	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 	mutex_unlock(&of_set_property_mutex);
- 
- 	/* XXX Upate procfs if necessary... */
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index f53b992..951452c 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -192,14 +192,15 @@ EXPORT_SYMBOL(of_find_property);
- struct device_node *of_find_all_nodes(struct device_node *prev)
- {
- 	struct device_node *np;
-+	unsigned long flags;
- 
--	raw_spin_lock(&devtree_lock);
-+	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	np = prev ? prev->allnext : of_allnodes;
- 	for (; np != NULL; np = np->allnext)
- 		if (of_node_get(np))
- 			break;
- 	of_node_put(prev);
--	raw_spin_unlock(&devtree_lock);
-+	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 	return np;
- }
- EXPORT_SYMBOL(of_find_all_nodes);
-@@ -421,8 +422,9 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
- 	struct device_node *prev)
- {
- 	struct device_node *next;
-+	unsigned long flags;
- 
--	raw_spin_lock(&devtree_lock);
-+	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	next = prev ? prev->sibling : node->child;
- 	for (; next; next = next->sibling) {
- 		if (!__of_device_is_available(next))
-@@ -431,7 +433,7 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
- 			break;
- 	}
- 	of_node_put(prev);
--	raw_spin_unlock(&devtree_lock);
-+	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 	return next;
- }
- EXPORT_SYMBOL(of_get_next_available_child);
-@@ -735,13 +737,14 @@ EXPORT_SYMBOL_GPL(of_modalias_node);
- struct device_node *of_find_node_by_phandle(phandle handle)
- {
- 	struct device_node *np;
-+	unsigned long flags;
- 
--	raw_spin_lock(&devtree_lock);
-+	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	for (np = of_allnodes; np; np = np->allnext)
- 		if (np->phandle == handle)
- 			break;
- 	of_node_get(np);
--	raw_spin_unlock(&devtree_lock);
-+	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 	return np;
- }
- EXPORT_SYMBOL(of_find_node_by_phandle);
+-- 
