@@ -1,152 +1,40 @@
-From: anish singh <anish198519851985@gmail.com>
-Subject: Re: [PATCH] extcon: Add an API to get extcon device from dt node
-Date: Wed, 12 Jun 2013 10:46:51 +0530
-Message-ID: <CAK7N6voG_Fnt2yZ6xohNVSc_-ij0fP1f+DVuFu30JinScas7Ww@mail.gmail.com>
-References: <1370276020-17446-2-git-send-email-kishon@ti.com>
-	<1371001149-16906-1-git-send-email-cw00.choi@samsung.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 1/5] ibmebus: convert of_platform_driver to
+ platform_driver
+Date: Wed, 12 Jun 2013 15:29:38 +1000
+Message-ID: <1371014978.8250.175.camel@pasglop>
+References: <1366596798-9457-1-git-send-email-robherring2@gmail.com>
+	 <1366596798-9457-2-git-send-email-robherring2@gmail.com>
+	 <CAL_JsqKDF=hPEM0Jz-zZSXBCXBZ=gBjLWL6QDvq+nFWkqY3DMw@mail.gmail.com>
+	 <1366911329.2869.31.camel@pasglop> <517980B0.3000401@gmail.com>
+	 <1366920741.2869.32.camel@pasglop> <517995D0.8020307@gmail.com>
+	 <CAL_JsqKXt-gFL4y_k-_dFktpk1JD_S2G+hUsoOavw8QugFMOKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1371001149-16906-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: kishon@ti.com, MyungJoo Ham <myungjoo.ham@samsung.com>, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel-mail <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, Greg KH <gregkh@linuxfoundation.org>, benoit.cousson@linaro.org, pmeerw@pmeerw.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rdma-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKXt-gFL4y_k-_dFktpk1JD_S2G+hUsoOavw8QugFMOKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-rdma-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Hoang-Nam Nguyen <hnguyen-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, Christoph Raisch <raisch-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, Roland Dreier <roland-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Hefty <sean.hefty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hal Rosenstock <hal.rosenstock-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thadeu Lima de Souza Cascardo <cascardo-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-rdma-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2013 at 7:09 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> From: Kishon Vijay Abraham I <kishon@ti.com>
->
-> Added an API of_extcon_get_extcon_dev() to be used by drivers to get
-> extcon device in the case of dt boot (this can be used instead of
-> extcon_get_extcon_dev()).
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Myungjoo Ham <myungjoo.ham@samsung.com>
-> ---
->  drivers/extcon/Makefile          |  3 +++
->  drivers/extcon/of-extcon.c       | 56 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/extcon/of-extcon.h | 30 +++++++++++++++++++++
->  3 files changed, 89 insertions(+)
->  create mode 100644 drivers/extcon/of-extcon.c
->  create mode 100644 include/linux/extcon/of-extcon.h
->
-> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-> index 540e2c3..39cdf95 100644
-> --- a/drivers/extcon/Makefile
-> +++ b/drivers/extcon/Makefile
-> @@ -2,9 +2,12 @@
->  # Makefile for external connector class (extcon) devices
->  #
->
-> +obj-$(CONFIG_OF)               += of-extcon.o
-> +
->  obj-$(CONFIG_EXTCON)           += extcon-class.o
->  obj-$(CONFIG_EXTCON_GPIO)      += extcon-gpio.o
->  obj-$(CONFIG_EXTCON_ADC_JACK)  += extcon-adc-jack.o
-> +
->  obj-$(CONFIG_EXTCON_MAX77693)  += extcon-max77693.o
->  obj-$(CONFIG_EXTCON_MAX8997)   += extcon-max8997.o
->  obj-$(CONFIG_EXTCON_ARIZONA)   += extcon-arizona.o
-> diff --git a/drivers/extcon/of-extcon.c b/drivers/extcon/of-extcon.c
-> new file mode 100644
-> index 0000000..29f82b4
-> --- /dev/null
-> +++ b/drivers/extcon/of-extcon.c
-> @@ -0,0 +1,56 @@
-> +/*
-> + * OF helpers for External connector (extcon) framework
-> + *
-> + * Copyright (C) 2013 Texas Instruments, Inc.
-> + * Kishon Vijay Abraham I <kishon@ti.com>
-> + *
-> + * Copyright (C) 2013 Samsung Electronics
-> + * Chanwoo Choi <cw00.choi@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/extcon.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/extcon/of-extcon.h>
-> +
-> +struct extcon_dev *of_extcon_get_extcon_dev(struct device *dev, int index)
-Can this be simpler name? of_extcon_get_dev or something like that?
-> +{
-> +       struct device_node *node;
-> +       struct extcon_dev *edev;
-> +       struct platform_device *extcon_parent_dev;
-> +
-> +       if (!dev->of_node) {
-> +               dev_dbg(dev, "device does not have a device node entry\n");
-> +               return ERR_PTR(-EINVAL);
-> +       }
-> +
-> +       node = of_parse_phandle(dev->of_node, "extcon", index);
-> +       if (!node) {
-> +               dev_dbg(dev, "failed to get phandle in %s node\n",
-> +                       dev->of_node->full_name);
-> +               return ERR_PTR(-ENODEV);
-> +       }
-> +
-> +       extcon_parent_dev = of_find_device_by_node(node);
-> +       if (!extcon_parent_dev) {
-> +               dev_dbg(dev, "unable to find device by node\n");
-> +               return ERR_PTR(-EPROBE_DEFER);
-> +       }
-> +
-> +       edev = extcon_get_extcon_dev(dev_name(&extcon_parent_dev->dev));
-> +       if (!edev) {
-> +               dev_dbg(dev, "unable to get extcon device : %s\n",
-> +                               dev_name(&extcon_parent_dev->dev));
-> +               return ERR_PTR(-ENODEV);
-> +       }
-> +
-> +       return edev;
-> +}
-> +EXPORT_SYMBOL_GPL(of_extcon_get_extcon_dev);
-> diff --git a/include/linux/extcon/of-extcon.h b/include/linux/extcon/of-extcon.h
-> new file mode 100644
-> index 0000000..77d01ba
-> --- /dev/null
-> +++ b/include/linux/extcon/of-extcon.h
-> @@ -0,0 +1,30 @@
-> +/*
-> + * OF helpers for External connector (extcon) framework
-> + *
-> + * Copyright (C) 2013 Texas Instruments, Inc.
-> + * Kishon Vijay Abraham I <kishon@ti.com>
-> + *
-> + * Copyright (C) 2013 Samsung Electronics
-> + * Chanwoo Choi <cw00.choi@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#ifndef __LINUX_OF_EXTCON_H
-> +#define __LINUX_OF_EXTCON_H
-> +
-> +#if defined(CONFIG_OF)
-> +extern struct extcon_dev
-> +       *of_extcon_get_extcon_dev(struct device *dev, int index);
-> +#else
-> +static inline struct extcon_dev
-> +       *of_extcon_get_extcon_dev(struct device *dev, int index);
-> +{
-> +       return NULL;
-> +}
-> +#endif /* CONFIG_OF */
-> +
-> +#endif /* __LINUX_OF_EXTCON_H */
-> --
-> 1.8.0
->
+On Wed, 2013-05-22 at 07:26 -0500, Rob Herring wrote:
+> > git://sources.calxeda.com/kernel/linux.git of-platform-removal
+> 
+> Ben,
+> 
+> Did you have a chance to test this? I want to get this into -next.
+
+I tested the one in for-next (sorry for the high latency). Works fine.
+
+Ack.
+
+Cheers,
+Ben.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-rdma" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
