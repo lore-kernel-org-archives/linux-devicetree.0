@@ -1,220 +1,88 @@
-From: J Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v5] ARM: dts: OMAP5: Add Palmas MFD node and regulator nodes
-Date: Wed, 12 Jun 2013 16:10:23 +0530
-Message-ID: <1371033624-32417-1-git-send-email-j-keerthy@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V4 3/3] ARM: dts: Add pcie controller node for Samsung
+ EXYNOS5440 SoC
+Date: Wed, 12 Jun 2013 12:55:36 +0200
+Message-ID: <3532163.SqzZzxO4BR@wuerfel>
+References: <003801ce6756$6578ff80$306afe80$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, grant.likely@secretlab.ca, swarren@wwwdotorg.org, swarren@nvidia.com, sameo@linux.intel.com, gg@slimlogic.co.uk, lee.jones@linaro.org, J Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <003801ce6756$6578ff80$306afe80$@samsung.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Siva Reddy Kallam' <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Jason Gunthorpe' <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Andrew Murray' <andrew.murray-5wv7dgnIgG8@public.gmane.org>, 'Surendranath Gurivireddy Balla' <suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Thierry Reding' <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Palmas MFD node and the regulator nodes for OMAP5.
+Thanks for the update! A few comments again:
 
-The node definitions are based on: https://lkml.org/lkml/2013/6/6/25
+On Wednesday 12 June 2013 19:20:00 Jingoo Han wrote:
+> 
+> diff --git a/arch/arm/boot/dts/exynos5440-ssdk5440.dts b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+> index d55042b..efe7d39 100644
+> --- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+> +++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+> @@ -30,4 +30,12 @@
+>                         clock-frequency = <50000000>;
+>                 };
+>         };
+> +
+> +       pcie0@40000000 {
+> +               reset-gpio = <5>;
+> +       };
+> +
+> +       pcie1@60000000 {
+> +               reset-gpio = <22>;
+> +       };
+>  };
 
-Boot tested on omap5-uevm board.
+As mentioned before, please use the gpio binding to pass gpio numbers.
 
-Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
-Signed-off-by: J Keerthy <j-keerthy@ti.com>
----
-V5:
-Corrected the IRQ_TYPE flag for OMAP5 board.
+> diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+> index f6b1c89..2c15f9d 100644
+> --- a/arch/arm/boot/dts/exynos5440.dtsi
+> +++ b/arch/arm/boot/dts/exynos5440.dtsi
+> @@ -216,4 +216,42 @@
+>                 clock-names = "rtc";
+>                 status = "disabled";
+>         };
+> +
+> +       pcie0@0x290000 {
+> +               compatible = "samsung,exynos5440-pcie";
+> +               reg = <0x290000 0x1000
+> +                       0x270000 0x1000
+> +                       0x271000 0x40>;
+> +               interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
+> +               clocks = <&clock 28>, <&clock 27>;
+> +               clock-names = "pcie", "pcie_bus";
+> +               #address-cells = >;
+> +               #size-cells = <2>;
+> +               device_type = "pci";
+> +               ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00200000   /* configuration space */
+> +                         0x81000000 0 0          0x40200000 0 0x00010000   /* downstream I/O */
+> +                         0x82000000 0 0x40210000 0x40210000 0 0x10000000>; /* non-prefetchable memory */
 
-V4:
-Removed splitting Palmas node.
+I think you did not reply to my question regarding the size of the
+memory space. Does it extend from 0x40210000 to 0x50210000,
+or from 0x40210000 to 0x50000000. You probably meant the latter
+but wrote the former. If not, please add a comment for clarification.
 
-V3:
-Moved the entire Palmas device tree node to board file.
+> +               #interrupt-cells = <1>;
+> +               interrupt-map-mask = <0 0 0 0>;
+> +               interrupt-map = <0x0 0 &gic 53>;
+> +       };
 
- arch/arm/boot/dts/omap5-uevm.dts |  167 ++++++++++++++++++++++++++++++++++++++
- 1 files changed, 167 insertions(+), 0 deletions(-)
+So all PCI IntA interrupts are mapped to a single gic interrupt? That
+sounds like a bottleneck when you have a lot of devices on the bus.
+Do you have MSI support?
 
-diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-index 927db1e..3d0b7b6 100644
---- a/arch/arm/boot/dts/omap5-uevm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -8,6 +8,8 @@
- /dts-v1/;
- 
- #include "omap5.dtsi"
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- / {
- 	model = "TI OMAP5 uEVM board";
-@@ -254,6 +256,171 @@
- 	pinctrl-0 = <&i2c1_pins>;
- 
- 	clock-frequency = <400000>;
-+
-+	palmas: palmas@48 {
-+		reg = <0x48>;
-+		interrupts = <GIC_SPI 7 IRQ_TYPE_NONE>; /* IRQ_SYS_1N */
-+		interrupt-parent = <&gic>;
-+		compatible = "ti,palmas";
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		palmas_pmic {
-+			compatible = "ti,palmas-pmic";
-+			interrupt-parent = <&palmas>;
-+			interrupts = <14 IRQ_TYPE_NONE>;
-+			interrupt-name = "short-irq";
-+
-+			ti,ldo6-vibrator;
-+
-+			regulators {
-+				smps123_reg: smps123 {
-+					regulator-name = "smps123";
-+					regulator-min-microvolt = < 600000>;
-+					regulator-max-microvolt = <1500000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				smps45_reg: smps45 {
-+					regulator-name = "smps45";
-+					regulator-min-microvolt = < 600000>;
-+					regulator-max-microvolt = <1310000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				smps6_reg: smps6 {
-+					regulator-name = "smps6";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				smps7_reg: smps7 {
-+					regulator-name = "smps7";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				smps8_reg: smps8 {
-+					regulator-name = "smps8";
-+					regulator-min-microvolt = < 600000>;
-+					regulator-max-microvolt = <1310000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				smps9_reg: smps9 {
-+					regulator-name = "smps9";
-+					regulator-min-microvolt = <2100000>;
-+					regulator-max-microvolt = <2100000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+					ti,smps-range = <0x80>;
-+				};
-+
-+				smps10_reg: smps10 {
-+					regulator-name = "smps10";
-+					regulator-min-microvolt = <5000000>;
-+					regulator-max-microvolt = <5000000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo1_reg: ldo1 {
-+					regulator-name = "ldo1";
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo2_reg: ldo2 {
-+					regulator-name = "ldo2";
-+					regulator-min-microvolt = <2900000>;
-+					regulator-max-microvolt = <2900000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo3_reg: ldo3 {
-+					regulator-name = "ldo3";
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3000000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo4_reg: ldo4 {
-+					regulator-name = "ldo4";
-+					regulator-min-microvolt = <2200000>;
-+					regulator-max-microvolt = <2200000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo5_reg: ldo5 {
-+					regulator-name = "ldo5";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo6_reg: ldo6 {
-+					regulator-name = "ldo6";
-+					regulator-min-microvolt = <1500000>;
-+					regulator-max-microvolt = <1500000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo7_reg: ldo7 {
-+					regulator-name = "ldo7";
-+					regulator-min-microvolt = <1500000>;
-+					regulator-max-microvolt = <1500000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo8_reg: ldo8 {
-+					regulator-name = "ldo8";
-+					regulator-min-microvolt = <1500000>;
-+					regulator-max-microvolt = <1500000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo9_reg: ldo9 {
-+					regulator-name = "ldo9";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldoln_reg: ldoln {
-+					regulator-name = "ldoln";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldousb_reg: ldousb {
-+					regulator-name = "ldousb";
-+					regulator-min-microvolt = <3250000>;
-+					regulator-max-microvolt = <3250000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &i2c5 {
--- 
-1.7.5.4
+	Arnd
