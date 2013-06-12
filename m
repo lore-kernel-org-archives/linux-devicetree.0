@@ -1,48 +1,55 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: lockdep dump on devtree_lock (involving esdhc)
-Date: Wed, 12 Jun 2013 11:56:34 -0500
-Message-ID: <1371056194.18413.34@snotra>
-References: <20130611233330.GA15342@home.buserror.net>
-	<51B89723.7090808@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] ASoC: rt5640: add device tree support
+Date: Wed, 12 Jun 2013 10:56:46 -0600
+Message-ID: <51B8A84E.9010106@wwwdotorg.org>
+References: <1370983240-4976-1-git-send-email-swarren@wwwdotorg.org>
+ <20130612164628.GN1403@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; delsp=Yes; format=Flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <51B89723.7090808@wwwdotorg.org> (from swarren@wwwdotorg.org on
-	Wed Jun 12 10:43:31 2013)
-Content-Disposition: inline
-Sender: linux-mmc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, Jerry Huang <Chang-Ming.Huang@freescale.com>, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130612164628.GN1403@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: oder_chiou@realtek.com, alsa-devel@alsa-project.org, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Bard Liao <bardliao@realtek.com>, flove@realtek.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2013 10:43:31 AM, Stephen Warren wrote:
-> On 06/11/2013 05:33 PM, Scott Wood wrote:
-> > I get the following lockdump output on p2020rdb using
-> > v3.10-rc5-43-g34376a5.  While it's not particularly polite for the
-> > esdhc driver to be calling OF functions while holding another lock  
-> which
-> > can be acquired from interrupt context, why is devtree_lock usually
-> > acquired in an irqsafe manner but sometimes not?
-> >
-> > Both types of usage were added by the same commit:
-> >
-> > commit d6d3c4e656513dcea61ce900f0ecb9ca820ee7cd
-> > Author: Thomas Gleixner <tglx@linutronix.de>
-> > Date:   Wed Feb 6 15:30:56 2013 -0500
-> >
-> >     OF: convert devtree lock from rw_lock to raw spinlock
-> >
-> > Stephen, you asked about this here:
-> > http://lkml.indiana.edu/hypermail/linux/kernel/1302.1/01383.html
-> >
-> > Did you ever get an answer?
+On 06/12/2013 10:46 AM, Mark Brown wrote:
+> On Tue, Jun 11, 2013 at 02:40:40PM -0600, Stephen Warren wrote:
 > 
-> I believe that was fixed by c31a0c0 "of: fix recursive locking in
-> of_get_next_available_child()".
+>> +- realtek,ldo1-en-gpios : The GPIO that controls the CODEC's
+>> LDO1_EN pin.
+> 
+> Why gpios and not gpio?
 
-That may have fixed the hang that prompted that thread, but it didn't  
-answer the question you raised about mixing irqsafe and non-irqsafe  
-devtree_lock uses.
+For some reason, GPIO properties have always been named "gpios" rather
+than "gpio", even when only a single entry is expected. I don't really
+understand why, but I've been asked (or seen others asked) to
+s/gpio/gpios/ in DT bindings before. I explicitly CC'd Grant and Rob
+here in case they can shed any light.
 
--Scott
+>> -	if (rt5640->pdata.ldo1_en) { +	if
+>> (gpio_is_valid(rt5640->pdata.ldo1_en)) { ret =
+>> devm_gpio_request_one(&i2c->dev, rt5640->pdata.ldo1_en, 
+>> GPIOF_OUT_INIT_HIGH,
+> 
+> Unfortunately gpio_is_valid() is unhelpful for platform data since
+> often zero is a valid GPIO but it's also the default "do nothing"
+> platform data.  It's therefore better to either include a check for
+> non-zero as well or have code that takes a zero in the platform
+> data and sets it to a negative value instead.
+
+I think people filling in platform data should simply be required to
+put a valid/correct value in that field. There aren't any users of
+this, so it's not like adding a new field where
+backwards-compatibility might be a concern (and even then, updating
+all users of this platform data type wouldn't be hard), and it should
+be obvious if you get it wrong.
