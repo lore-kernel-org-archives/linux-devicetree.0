@@ -1,45 +1,47 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
- the DT binding
-Date: Wed, 12 Jun 2013 09:37:06 +0200
-Message-ID: <51B82522.5010903@gmail.com>
-References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130609014506.GB10027@obsidianresearch.com>
- <20130611135737.GC3996@localhost> <20835253.Agl4DfuI3k@wuerfel>
- <20130611215023.GA12649@obsidianresearch.com> <51B7A325.8070108@gmail.com>
- <20130611230845.GB13892@obsidianresearch.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: lockdep dump on devtree_lock (involving esdhc)
+Date: Wed, 12 Jun 2013 09:49:46 +0200 (CEST)
+Message-ID: <alpine.LFD.2.02.1306120948430.22970@ionos>
+References: <20130611233330.GA15342@home.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130611230845.GB13892-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20130611233330.GA15342@home.buserror.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Scott Wood <scottwood@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@wwwdotorg.org>, Jerry Huang <Chang-Ming.Huang@freescale.com>, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2013 01:08 AM, Jason Gunthorpe wrote:
-> On Wed, Jun 12, 2013 at 12:22:29AM +0200, Sebastian Hesselbarth wrote:
->> sorry to kick into this thread that late but Ezequiel made me think of
->> address windows when asking on IRC. From what I can see from your and
->> Arnd's proposal the only real difference is that having it Arnd's way
->> allows you to have two or more windows mapped to e.g. devbus with
->> totally independent address ranges - while yours requires one large
->> window for all child devices?
->
-> Sorry, I'm having problems following the possessives in your paragraph
-> - which things are you comparing?
+On Tue, 11 Jun 2013, Scott Wood wrote:
 
-Ahh, just forget what I said. I see you two wrapped you mind a dozen
-times more around it. I am starting to get the idea and its "beauty" ;)
+> I get the following lockdump output on p2020rdb using
+> v3.10-rc5-43-g34376a5.  While it's not particularly polite for the
+> esdhc driver to be calling OF functions while holding another lock which
+> can be acquired from interrupt context, why is devtree_lock usually
+> acquired in an irqsafe manner but sometimes not?
+> 
+> Both types of usage were added by the same commit:
+> 
+> commit d6d3c4e656513dcea61ce900f0ecb9ca820ee7cd
+> Author: Thomas Gleixner <tglx@linutronix.de>
+> Date:   Wed Feb 6 15:30:56 2013 -0500
+> 
+>     OF: convert devtree lock from rw_lock to raw spinlock
+> 
+> Stephen, you asked about this here:
+> http://lkml.indiana.edu/hypermail/linux/kernel/1302.1/01383.html
+> 
+> Did you ever get an answer?
 
-Sebastian
+https://patchwork.kernel.org/patch/2470731/
+ 
+> I'm also curious why devtree_lock was made raw to begin with... 
+> Iterating over a device tree doesn't seem like something you'd want to
+> trust to be low-latency.
+
+The reason is that it's taken in low level cpu bringup code and I did
+not find a different solution. :(
+
+Thanks,
+
+	tglx
