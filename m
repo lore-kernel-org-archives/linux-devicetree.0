@@ -1,19 +1,15 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
  the DT binding
-Date: Wed, 12 Jun 2013 14:12:00 -0600
-Message-ID: <20130612201200.GA21103@obsidianresearch.com>
+Date: Wed, 12 Jun 2013 22:45:55 +0200
+Message-ID: <201306122245.55960.arnd@arndb.de>
 References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130609014506.GB10027@obsidianresearch.com>
- <20130611135737.GC3996@localhost> <20835253.Agl4DfuI3k@wuerfel>
- <20130611215023.GA12649@obsidianresearch.com>
- <20130612200248.GA23012@localhost>
+ <4160363.LWJuHATm2F@wuerfel> <20130612111441.E6D603E0A56@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130612200248.GA23012@localhost>
+In-Reply-To: <20130612111441.E6D603E0A56@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,17 +20,25 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2013 at 05:02:50PM -0300, Ezequiel Garcia wrote:
+On Wednesday 12 June 2013, Grant Likely wrote:
+> I think we should have almost everything needed already to do this.
+> of_bus allows arbitrary mapping code to be used at any stage in the
+> translation. We might need to add some glue so that of_busses[] can
+> be assembled by the linker to allow an mbus of_bus stanza to live
+> outside of drivers/of/address.c
+> 
 
-> I'm probably missing something, but... are you sure that's supposed to work?
+Actually, the best thing about this solution is that we don't even
+have to bother setting up the mappings when loading the mbus driver:
+We don't need any ranges (other than internal-regs) in DT, and we
+don't need complex logic to search through the child devices to
+figure out what the mappings should be. The only thing one needs
+to do here is check if a mapping already exists when we get into the
+of_bus handler and create one for the device being translated if
+there isn't one!
 
-Hum.
-
-Looking through the yacc for dtc, it looks like all exprs must be enclosed
-in (), so no it shouldn't work, sadly.
-
-Jason
+	Arnd
