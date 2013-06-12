@@ -1,82 +1,61 @@
-From: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH REBASE] i2c-designware: make SDA hold time configurable
-Date: Wed, 12 Jun 2013 16:47:45 +0200
-Message-ID: <20130612144743.GB8102@ab42.lan>
-References: <20130514110745.GA10906@intel.com>
- <1368536642-7158-1-git-send-email-christian.ruppert@abilis.com>
- <20130610152954.GE2987@katana>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/3] Add PCIe driver for Samsung Exynos
+Date: Wed, 12 Jun 2013 16:57:26 +0200
+Message-ID: <201306121657.26441.arnd@arndb.de>
+References: <000d01ce6360$9504e7e0$bf0eb7a0$@samsung.com> <36071399.7aY6jgGn2d@wuerfel> <002401ce6718$d6bbc8f0$84335ad0$@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130610152954.GE2987@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <002401ce6718$d6bbc8f0$84335ad0$@samsung.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: devicetree-discuss@lists.ozlabs.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, linux-pci@vger.kernel.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 12 June 2013, Jingoo Han wrote:
+> On Friday, June 07, 2013 7:53 PM, Arnd Bergmann wrote:
+> > On Friday 07 June 2013 18:22:50 Jingoo Han wrote:
+> > 
+> > > +- ranges: ranges for the PCI memory and I/O regions
+> > > +- reset-gpio: gpio pin number of power good signal
+> > 
+> > The 'reset-gpio' property seems incorrect. I think this should either
+> > use the gpio binding or the reset-controller binding. Specifying
+> > bare numbers to use as gpio pins does not work, since the number
+> > space for Linux internal gpio numbers is not necessarily the same
+> > as used by the hardware.
+> 
+> As you mentioned, other Exynos SoCs such as Exynos5250 set
+> GPIO properties in DT, as below:
+> (./arch/arm/boot/dts/exynos5250-smdk5250.dts)
+> 	hdmi {
+> 		hpd-gpio = <&gpx3 7 0>;
+> 	};
+> 	usb@12110000 {
+> 		samsung,vbus-gpio = <&gpx2 6 0>;
+> 	};
+> 
+> However, the situation of Exynos5440 GPIO is different.
+> The following bare numbers of GPIO work properly on Exynos5440.
+> (./arch/arm/boot/dts/exynos5440-ssdk5440.dts)
+> 	pcie0@40000000 {
+> 		reset-gpio = <5>;
+> 	}
+> 	pcie0@40000000 {
+> 		reset-gpio = <22>;
+> 	}
+> 
+> Thomas Abraham is the author of pinctrl driver for EXYNOS5440.
+> (./drivers/pinctrl/pinctrl-exynos5440.c)
+> 
+> Thomas Abraham or Kukjin Kim, can you confirm this?
+> If I am wrong, please let me know kindly. :)
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is not about the code working at the moment, it is about
+it being correct. The current method you are using would stop
+working if something changes in the pinctrl code, and would
+not be portable to other SoCs.
 
-On Mon, Jun 10, 2013 at 05:29:55PM +0200, Wolfram Sang wrote:
-> On Tue, May 14, 2013 at 03:04:02PM +0200, Christian Ruppert wrote:
-> > This patch makes the SDA hold time configurable through device tree.
-> >=20
-> > [rebased to i2c-current/i2c-next/mainline-3.10-rc1]
-> >=20
-> > Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
->=20
-> Hmm, I really have problems adding a generic property. I need to better
-> understand why this is needed? What is the usecase? Can't a safe value
-> be calculated depending on the bus-speed? Is there a public datasheet
-> available somewhere?
-
-I checked with our PCB/Applications team and the data sheets for the
-peripherals in question (DVB demodulator front ends) are under NDA.
-Mika, you seem to be interested in this patch as well. Do you know of
-any publicly available data sheets for hardware requiring this
-adjustment?
-
-In the case of the Designware block, the parameter both changes SDA and
-START hold times, however, and you'll find lots of data sheets for
-hardware with START hold time requirements on the net, e.g.
-http://ww1.microchip.com/downloads/en/DeviceDoc/21805B.pdf
-
-The empirical solution in the function i2c_dw_scl_hcnt does not seem to
-work in all cases: Our lab guys confirmed that we have several PCB
-designs which do not work without adjusting the sda-hold-time parameter
-to an appropriate value. The value seems to be different for different
-PCBs.
-
-I suspect that this kind of configurability is not the same for all i2c
-bus master hardware. If you don't want to add a generic property, would
-you accept the patch with the property renamed to dwi2c,sda-hold-time?
-
-Greetings,
-  Christian
-
-
---=20
-  Christian Ruppert              ,          <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-Fleuri
-                             _// | bilis Systems   CH-1228 Plan-les-Ouates
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.14 (GNU/Linux)
-
-iEYEARECAAYFAlG4ig8ACgkQbI8SbDT4m4+xQACgudMzzFq2VpdSrGO40HHOo3kV
-HDgAmgP9Yvcdkp4fZng0JyHCgfBqCd/A
-=4bpo
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
+	Arnd
