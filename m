@@ -1,158 +1,200 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] extcon: Add an API to get extcon device from dt node
-Date: Wed, 12 Jun 2013 10:39:09 +0900
-Message-ID: <1371001149-16906-1-git-send-email-cw00.choi@samsung.com>
-References: <1370276020-17446-2-git-send-email-kishon@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: socfpga: dts: Add support for SD/MMC
+Date: Tue, 11 Jun 2013 20:47:11 -0500
+Message-ID: <51B7D31F.3030004@gmail.com>
+References: <1370996924-23048-1-git-send-email-dinguyen@altera.com> <1370996924-23048-2-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1370276020-17446-2-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: kishon-l0cyMroinI0@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, anish198519851985-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1370996924-23048-2-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinguyen@altera.com
+Cc: linux-mmc@vger.kernel.org, linux@arm.linux.org.uk, Pavel Machek <pavel@denx.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, cjb@laptop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+On 06/11/2013 07:28 PM, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
+> 
+> Add bindings for SD/MMC for SOCFPGA.
+> Add "syscon" to the "altr,sys-mgr" binding.
 
-Added an API of_extcon_get_extcon_dev() to be used by drivers to get
-extcon device in the case of dt boot (this can be used instead of
-extcon_get_extcon_dev()).
+Not sure how I see syscon is related to SD? That is a pretty vague name
+as well.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Myungjoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/extcon/Makefile          |  3 +++
- drivers/extcon/of-extcon.c       | 56 ++++++++++++++++++++++++++++++++++++++++
- include/linux/extcon/of-extcon.h | 30 +++++++++++++++++++++
- 3 files changed, 89 insertions(+)
- create mode 100644 drivers/extcon/of-extcon.c
- create mode 100644 include/linux/extcon/of-extcon.h
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> Reviewed-by: Pavel Machek <pavel@denx.de>
+> CC: Arnd Bergmann <arnd@arndb.de>
+> CC: Olof Johansson <olof@lixom.net>
+> Cc: Pavel Machek <pavel@denx.de>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Chris Ball <cjb@laptop.org>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-mmc@vger.kernel.org
+> CC: <linux@arm.linux.org.uk>
+> 
+> v2:
+> - Add "syscon" to "altr,sys-mgr"
+> - Remove pwr-en field
+> ---
+>  .../devicetree/bindings/mmc/socfpga-dw-mshc.txt    |   60 ++++++++++++++++++++
+>  arch/arm/boot/dts/socfpga.dtsi                     |   13 ++++-
+>  arch/arm/boot/dts/socfpga_cyclone5.dts             |   13 +++++
+>  arch/arm/boot/dts/socfpga_vt.dts                   |   12 ++++
+>  4 files changed, 97 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+> new file mode 100644
+> index 0000000..9d7062c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+> @@ -0,0 +1,60 @@
+> +* Altera SOCFPGA specific extensions to the Synopsis Designware Mobile
+> +  Storage Host Controller
+> +
+> +Required Properties:
+> +
+> +* compatible: should be
+> +	- "altr,socfpga-dw-mshc": for controllers with Altera SOCFPGA
+> +	  specific extentions.
 
-diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-index 540e2c3..39cdf95 100644
---- a/drivers/extcon/Makefile
-+++ b/drivers/extcon/Makefile
-@@ -2,9 +2,12 @@
- # Makefile for external connector class (extcon) devices
- #
- 
-+obj-$(CONFIG_OF)		+= of-extcon.o
-+
- obj-$(CONFIG_EXTCON)		+= extcon-class.o
- obj-$(CONFIG_EXTCON_GPIO)	+= extcon-gpio.o
- obj-$(CONFIG_EXTCON_ADC_JACK)	+= extcon-adc-jack.o
-+
- obj-$(CONFIG_EXTCON_MAX77693)	+= extcon-max77693.o
- obj-$(CONFIG_EXTCON_MAX8997)	+= extcon-max8997.o
- obj-$(CONFIG_EXTCON_ARIZONA)	+= extcon-arizona.o
-diff --git a/drivers/extcon/of-extcon.c b/drivers/extcon/of-extcon.c
-new file mode 100644
-index 0000000..29f82b4
---- /dev/null
-+++ b/drivers/extcon/of-extcon.c
-@@ -0,0 +1,56 @@
-+/*
-+ * OF helpers for External connector (extcon) framework
-+ *
-+ * Copyright (C) 2013 Texas Instruments, Inc.
-+ * Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-+ *
-+ * Copyright (C) 2013 Samsung Electronics
-+ * Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/extcon.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/extcon/of-extcon.h>
-+
-+struct extcon_dev *of_extcon_get_extcon_dev(struct device *dev, int index)
-+{
-+	struct device_node *node;
-+	struct extcon_dev *edev;
-+	struct platform_device *extcon_parent_dev;
-+
-+	if (!dev->of_node) {
-+		dev_dbg(dev, "device does not have a device node entry\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	node = of_parse_phandle(dev->of_node, "extcon", index);
-+	if (!node) {
-+		dev_dbg(dev, "failed to get phandle in %s node\n",
-+			dev->of_node->full_name);
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	extcon_parent_dev = of_find_device_by_node(node);
-+	if (!extcon_parent_dev) {
-+		dev_dbg(dev, "unable to find device by node\n");
-+		return ERR_PTR(-EPROBE_DEFER);
-+	}
-+
-+	edev = extcon_get_extcon_dev(dev_name(&extcon_parent_dev->dev));
-+	if (!edev) {
-+		dev_dbg(dev, "unable to get extcon device : %s\n",
-+				dev_name(&extcon_parent_dev->dev));
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	return edev;
-+}
-+EXPORT_SYMBOL_GPL(of_extcon_get_extcon_dev);
-diff --git a/include/linux/extcon/of-extcon.h b/include/linux/extcon/of-extcon.h
-new file mode 100644
-index 0000000..77d01ba
---- /dev/null
-+++ b/include/linux/extcon/of-extcon.h
-@@ -0,0 +1,30 @@
-+/*
-+ * OF helpers for External connector (extcon) framework
-+ *
-+ * Copyright (C) 2013 Texas Instruments, Inc.
-+ * Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-+ *
-+ * Copyright (C) 2013 Samsung Electronics
-+ * Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __LINUX_OF_EXTCON_H
-+#define __LINUX_OF_EXTCON_H
-+
-+#if defined(CONFIG_OF)
-+extern struct extcon_dev
-+	*of_extcon_get_extcon_dev(struct device *dev, int index);
-+#else
-+static inline struct extcon_dev
-+	*of_extcon_get_extcon_dev(struct device *dev, int index);
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_OF */
-+
-+#endif /* __LINUX_OF_EXTCON_H */
--- 
-1.8.0
+s/extentions/extensions/
+
+> +
+> +* altr,dw-mshc-ciu-div: Specifies the divider value for the card interface
+> +  unit (ciu) clock. The value should be (n-1). For Altera's SOCFPGA, the divider
+> +  value is fixed at 3, which mean parent_clock/4.
+> +
+> +* altr,dw-mshc-sdr-timing: Specifies the value of CIU clock phase shift value
+> +  in transmit mode and CIU clock phase shift value in receive mode for single
+> +  data rate mode operation. Refer notes below for the order of the cells and the
+> +  valid values.
+> +
+> +  Notes for the sdr-timing values:
+> +
+> +    The order of the cells should be
+> +      - First Cell: CIU clock phase shift value for RX mode, smplsel bits in
+> +	the system manager SDMMC control group.
+> +      - Second Cell: CIU clock phase shift value for TX mode, drvsel bits in
+> +	the system manager SDMMC control group.
+> +
+> +    Valid values for SDR CIU clock timing for SOCFPGA:
+> +      - valid value for tx phase shift and rx phase shift is 0 to 7.
+> +
+> +Required properties for a slot:
+> +
+> +* bus-width: Data width for card slot. 4-bit or 8-bit data.
+> +
+> +Example:
+> +
+> +  The MSHC controller node can be split into two portions, SoC specific and
+> +  board specific portions as listed below.
+> +
+> +	dwmmc0@ff704000 {
+> +		compatible = "altr,socfpga-dw-mshc";
+> +		reg = <0xff704000 0x1000>;
+> +		interrupts = <0 139 4>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +	};
+> +
+> +	dwmmc0@ff704000 {
+> +		num-slots = <1>;
+> +		supports-highspeed;
+> +		broken-cd;
+> +		fifo-depth = <0x400>;
+
+Are these already documented. If so, can you add a reference to the
+binding doc.
+
+> +		altr,dw-mshc-ciu-div = <3>;
+> +      		altr,dw-mshc-sdr-timing = <0 3>;
+> +
+> +		slot@0 {
+> +			reg = <0>;
+> +			bus-width = <4>;
+> +		};
+> +	};
+> +
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index bee62a2..dbf7f22 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -468,6 +468,17 @@
+>  			cache-level = <2>;
+>  		};
+>  
+> +		mmc: dwmmc0@ff704000 {
+> +			compatible = "altr,socfpga-dw-mshc";
+> +			reg = <0xff704000 0x1000>;
+> +			interrupts = <0 139 4>;
+> +			fifo-depth = <0x400>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
+> +			clock-names = "biu", "ciu";
+> +		};
+> +
+>  		/* Local timer */
+>  		timer@fffec600 {
+>  			compatible = "arm,cortex-a9-twd-timer";
+> @@ -521,7 +532,7 @@
+>  			};
+>  
+>  		sysmgr@ffd08000 {
+> -				compatible = "altr,sys-mgr";
+> +				compatible = "altr,sys-mgr", "syscon";
+>  				reg = <0xffd08000 0x4000>;
+>  			};
+>  	};
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dts b/arch/arm/boot/dts/socfpga_cyclone5.dts
+> index 973999d..1853cb1 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dts
+> @@ -54,6 +54,19 @@
+>  			status = "okay";
+>  		};
+>  
+> +		dwmmc0@ff704000 {
+> +			num-slots = <1>;
+> +			supports-highspeed;
+> +			broken-cd;
+> +			altr,dw-mshc-ciu-div = <3>;
+> +			altr,dw-mshc-sdr-timing = <0 3>;
+> +
+> +			slot@0 {
+> +				reg = <0>;
+> +				bus-width = <4>;
+> +			};
+> +		};
+> +
+>  		timer0@ffc08000 {
+>  			clock-frequency = <100000000>;
+>  		};
+> diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
+> index d1ec0ca..d93deb0 100644
+> --- a/arch/arm/boot/dts/socfpga_vt.dts
+> +++ b/arch/arm/boot/dts/socfpga_vt.dts
+> @@ -46,6 +46,18 @@
+>  			status = "okay";
+>  		};
+>  
+> +		dwmmc0@ff704000 {
+> +			num-slots = <1>;
+> +			supports-highspeed;
+> +			broken-cd;
+> +			altr,dw-mshc-ciu-div = <3>;
+> +
+> +			slot@0 {
+> +				reg = <0>;
+> +				bus-width = <4>;
+> +			};
+> +		};
+> +
+>  		timer0@ffc08000 {
+>  			clock-frequency = <7000000>;
+>  		};
+> 
+
