@@ -1,46 +1,77 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Device tree flattening code not copying properties from blob
-Date: Wed, 12 Jun 2013 17:02:40 +0100
-Message-ID: <CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg@mail.gmail.com>
-References: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696@corpatsmail4.corp.sensis.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 07/12] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Wed, 12 Jun 2013 10:09:10 -0600
+Message-ID: <51B89D26.9070605@wwwdotorg.org>
+References: <1365000318-28256-1-git-send-email-thierry.reding@avionic-design.de> <1365000318-28256-8-git-send-email-thierry.reding@avionic-design.de> <516C46BC.2040707@wwwdotorg.org> <20130612122959.GA32444@manwe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696-gEjpXB0kThW1wM3WIAwN2vV4jgPAACGKVpNB7YpNyf8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Collins, Rod" <Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130612122959.GA32444@manwe>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Andrew Murray <andrew.murray@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2013 at 3:32 PM, Collins, Rod
-<Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org> wrote:
->
-> I have been chasing a problem where a module device driver that uses the device tree I install, cannot find a compatible match when I know the device tree has the match for my driver.
->
-> So I wrote a small module device driver that dumps the device tree information. I add it to the device driver list using insmod dtdump.ko. If I add the insmod to the start of the rc (using uCLinux distribution) file then I get the proper contents. If I add insmod at the end of the rc file then the device tree is bad.
->
-> The problem is in the file fdt.c and the function unflatten_dt_node.
->
-> When the unflattened tree is created the memory is allocated for the nodes and the property structures, however the pointers are just inserted into the property structure. The pointers are pointing in the memory area freed after initialization. This will work if the embedded __init memory is not freed but freeing this memory ends up with tree nodes that have invalid properties and thus the device tree is no good.
+On 06/12/2013 06:30 AM, Thierry Reding wrote:
+> On Mon, Apr 15, 2013 at 12:28:12PM -0600, Stephen Warren wrote:
+>> On 04/03/2013 08:45 AM, Thierry Reding wrote:
+>>> Move the PCIe driver from arch/arm/mach-tegra into the
+>>> drivers/pci/host directory. The motivation is to collect
+>>> various host controller drivers in the same location in order
+>>> to facilitate refactoring.
+>>> 
+>>> The Tegra PCIe driver has been largely rewritten, both in order
+>>> to turn it into a proper platform driver and to add MSI (based
+>>> on code by Krishna Kishore <kthota@nvidia.com>) as well as
+>>> device tree support.
+...
+>>> +static irqreturn_t tegra_pcie_msi_irq(int irq, void *data)
+>> ...
+>>> +	return IRQ_HANDLED;
+>> 
+>> Shouldn't this function return IRQ_NONE if no MSI status bits
+>> were found set?
+> 
+> The IRQ isn't marked IRQF_SHARED, so I don't think this is needed.
 
-If your fdt blob is getting freed, then you've got a bug. How are you
-loading the device tree? Normally the device tree is passed in from
-the bootloader and the kernel marks the whole region as reserved.
+Isn't it still useful to detect unexpected/stuck interrupts?
 
-> I am working on a fix to the unflatten_dt_node function. Allocate space for the property name and value and copy them in also as the node name is done.
+>>> +static int tegra_pcie_enable(struct tegra_pcie *pcie)
+...
+>> 
+>> Why is that needed; when would a port get enabled if it was
+>> already enabled, and if it was already enabled, wouldn't you want
+>> this function to be a no-op rather than destroying everything and
+>> starting again?
+> 
+> I'm not sure I understand what you're saying. The intent of this 
+> function is to enable a port, check that there's a link and disable
+> the port otherwise. That way we don't keep ports around where
+> nothing is connected.
 
-unflatten_dt_node is actually doing the right thing. If the dt blob is
-in an __init section, then it needs to be copied into non-init memory
-before unflattening.
+Hmm. I have no idea either now:-( The body of tegra_pcie_enable()
+looks fine.
 
-g.
+>>> +static int tegra_pcie_probe(struct platform_device *pdev)
+>> ...
+>>> +	pcibios_min_mem = 0;
+>> 
+>> What does that mean/do? I wonder if that should be set to
+>> 0x80000000 by the Tegra30 patches?
+> 
+> ARM defines PCIBIOS_MIN_MEM to that variable. That macro in turn is
+> only used by pci_bus_alloc_resource() AFAICT, which uses it to
+> override the start of a resource when allocating if res->start ==
+> 0. As such it designates a lower-bound of valid PCI memory
+> addresses, so 0 on Tegra20 and 0x80000000 on Tegra30 don't seem
+> like good values. Maybe we need to set them to the lowest of the
+> prefetchable and non-prefetchable memory areas as defined in the
+> DT?
+> 
+> It doesn't currently seem to matter at all, though, since we never
+> pass in a range that's 0, so the start address of resources can
+> never be 0 and therefore PCIBIOS_MIN_MEM is never used.
+
+Hmmm. I guess ignore it then. If the value won't ever be used, 0 is as
+good a value as any?
