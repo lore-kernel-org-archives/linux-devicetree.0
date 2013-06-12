@@ -1,47 +1,41 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 08/10] ARM: dts: omap3: split omap3_pmx_core
-Date: Wed, 12 Jun 2013 10:54:44 -0700
-Message-ID: <20130612175444.GS8164@atomide.com>
-References: <20130523184045.GD13507@atomide.com>
- <1370546059-24181-1-git-send-email-balajitk@ti.com>
- <1370546059-24181-9-git-send-email-balajitk@ti.com>
- <20130612143459.GY8164@atomide.com>
- <51B8AB0F.9060701@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Device tree flattening code not copying properties from blob
+Date: Wed, 12 Jun 2013 19:23:23 +0100
+Message-ID: <CACxGe6urthkotuwU2OtqEMn8WmBxU=hSmrKyffHR=Pbayo_HKg@mail.gmail.com>
+References: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696@corpatsmail4.corp.sensis.com>
+ <CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg@mail.gmail.com>
+ <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF722@corpatsmail4.corp.sensis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51B8AB0F.9060701@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF722-gEjpXB0kThW1wM3WIAwN2vV4jgPAACGKVpNB7YpNyf8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Collins, Rod" <Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Balaji T K <balajitk@ti.com> [130612 10:14]:
-> On Wednesday 12 June 2013 08:05 PM, Tony Lindgren wrote:
-> >* Balaji T K <balajitk@ti.com> [130606 12:20]:
-> >>omap3_pmx_core: padconf register are in two banks 0x48003000 to 0x48002268
-> >>and 0x480025c0 to 0x480025f8.
-> >>
-> >>split omap3_pmx_core into 2 banks as register between 0x48002270 and 0x48002564
-> >>belongs to type pinctrl-single,bit-per-mux with access to certain bit
-> >>fields with bit field mask.
-> >
-> >Is this the right patch for the description? THe patch seems to deal with
-> >USB pins.
-> >
-> >Also, let's not hog any pins under the pinmux controllers, those make
-> >unloading pinctrl-single impossible which is not nice for distros and
-> >development.
-> 
-> omap3_pmx_core is not continuous, so had to split into two and
-> updated the only user in second bank (omap3_pmx_core2) which happened to be usb,
-> CC Roger for USB dynamic pin mux selection.
+On Wed, Jun 12, 2013 at 6:33 PM, Collins, Rod
+<Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org> wrote:
+> The blob is built into the zImage.initramfs.gz image which is put into
+> flash. The zImage.initramfs.gz is self copied from flash to RAM, then
+> uncompressed to the running area. I will dig into the location of the
+> blob in the image and report back.
 
-I see. OK yes we can split it as that saves memory too for the unused
-registers. While at it, please move remove the hogs from the pmx
-entries and move the pins to the drivers claiming them.
+Thanks. If it is appended to the zImage wrapper, then things should be
+fine (this is the expected way to do when not passed in from the
+bootloader). If a *.dtb.o target has been used to embedded it into the
+kernel-proper (vmlinux) then you will have a problem. The *.dtb.S
+target puts the dtb data into the dtb.init.rodata section which gets
+discarded.
 
-Regards,
-
-TOny
+g.
