@@ -1,46 +1,63 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH V6 6/6] clk: exynos5250: Add enum entries for divider clock of
- i2s1 and i2s2
-Date: Wed, 12 Jun 2013 13:37:43 +0530
-Message-ID: <1371024463-303-7-git-send-email-padma.v@samsung.com>
-References: <1371024463-303-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1371024463-303-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.v@samsung.com, padma.kvr@gmail.com
-Cc: sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com, mturquette@linaro.org
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH v3] ARM: dts: OMAP5: Add palmas MFD node and regulator
+ nodes
+Date: Wed, 12 Jun 2013 08:12:37 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229EB0EB@DBDE04.ent.ti.com>
+References: <1370928651-6278-1-git-send-email-j-keerthy@ti.com>
+ <51B749E7.6070808@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51B749E7.6070808@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "lee.jones@linaro.org" <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds enum entries for div_i2s1 and div_i2s2 which are
-required for i2s1 and i2s2 controllers.
 
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
----
- drivers/clk/samsung/clk-exynos5250.c |    5 +++--
- 1 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
-index 5c97e75..7c68850 100644
---- a/drivers/clk/samsung/clk-exynos5250.c
-+++ b/drivers/clk/samsung/clk-exynos5250.c
-@@ -87,6 +87,7 @@ enum exynos5250_clks {
- 	sclk_mmc0, sclk_mmc1, sclk_mmc2, sclk_mmc3, sclk_sata, sclk_usb3,
- 	sclk_jpeg, sclk_uart0, sclk_uart1, sclk_uart2, sclk_uart3, sclk_pwm,
- 	sclk_audio1, sclk_audio2, sclk_spdif, sclk_spi0, sclk_spi1, sclk_spi2,
-+	div_i2s1, div_i2s2,
- 
- 	/* gate clocks */
- 	gscl0 = 256, gscl1, gscl2, gscl3, gscl_wa, gscl_wb, smmu_gscl0,
-@@ -291,8 +292,8 @@ struct samsung_div_clock exynos5250_div_clks[] __initdata = {
- 	DIV(none, "div_pcm1", "sclk_audio1", DIV_PERIC4, 4, 8),
- 	DIV(none, "div_audio2", "mout_audio2", DIV_PERIC4, 16, 4),
- 	DIV(none, "div_pcm2", "sclk_audio2", DIV_PERIC4, 20, 8),
--	DIV(none, "div_i2s1", "sclk_audio1", DIV_PERIC5, 0, 6),
--	DIV(none, "div_i2s2", "sclk_audio2", DIV_PERIC5, 8, 6),
-+	DIV(div_i2s1, "div_i2s1", "sclk_audio1", DIV_PERIC5, 0, 6),
-+	DIV(div_i2s2, "div_i2s2", "sclk_audio2", DIV_PERIC5, 8, 6),
- 	DIV(sclk_pixel, "div_hdmi_pixel", "sclk_vpll", DIV_DISP1_0, 28, 4),
- 	DIV_A(none, "armclk", "div_arm", DIV_CPU0, 28, 3, "armclk"),
- 	DIV_F(none, "div_mipi1_pre", "div_mipi1",
--- 
-1.7.4.4
+> -----Original Message-----
+> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
+> Sent: Tuesday, June 11, 2013 9:32 PM
+> To: J, KEERTHY
+> Cc: Cousson, Benoit; devicetree-discuss@lists.ozlabs.org; linux-
+> omap@vger.kernel.org; linux-kernel@vger.kernel.org;
+> ldewangan@nvidia.com; grant.likely@secretlab.ca; swarren@nvidia.com;
+> sameo@linux.intel.com; gg@slimlogic.co.uk; lee.jones@linaro.org
+> Subject: Re: [PATCH v3] ARM: dts: OMAP5: Add palmas MFD node and
+> regulator nodes
+> 
+> On 06/10/2013 11:30 PM, J Keerthy wrote:
+> > This patch adds Palmas MFD node and the regulator nodes for OMAP5.
+> >
+> > The node definitions are based on: https://lkml.org/lkml/2013/6/6/25
+> >
+> > Boot tested on omap5-uevm board.
+> 
+> > diff --git a/arch/arm/boot/dts/omap5-uevm.dts
+> > b/arch/arm/boot/dts/omap5-uevm.dts
+> 
+> > +	palmas: palmas@48 {
+> > +		reg = <0x48>;
+> > +		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /* IRQ_SYS_1N
+> */
+> > +		interrupt-parent = <&gic>;
+> > +	};
+> > +};
+> > +
+> > +&palmas {
+> > +	compatible = "ti,palmas";
+> > +	interrupt-controller;
+> > +	#interrupt-cells = <2>;
+> 
+> I don't really see the point of splitting the node into two parts if
+> it's all going into a single file. It made sense if part of the node
+> came from a common .dtsi file, but not so much when it doesn't.
+
+The intent was to reduce indentation and to declare its sub-nodes outside
+of i2c1. I will club it and resend.
+
+Regards,
+Keerthy
