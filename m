@@ -1,103 +1,68 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 07/12] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Wed, 12 Jun 2013 23:23:10 +0200
-Message-ID: <20130612212308.GA27681@manwe>
-References: <1365000318-28256-1-git-send-email-thierry.reding@avionic-design.de>
- <1365000318-28256-8-git-send-email-thierry.reding@avionic-design.de>
- <516C46BC.2040707@wwwdotorg.org>
- <20130612122959.GA32444@manwe>
- <51B89D26.9070605@wwwdotorg.org>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Wed, 12 Jun 2013 15:26:42 -0600
+Message-ID: <20130612212641.GB8625@obsidianresearch.com>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <4160363.LWJuHATm2F@wuerfel> <20130612111441.E6D603E0A56@localhost>
+ <201306122245.55960.arnd@arndb.de>
+ <20130612211221.GB23012@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <51B89D26.9070605@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Andrew Murray <andrew.murray@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org
+In-Reply-To: <20130612211221.GB23012@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 12, 2013 at 06:12:22PM -0300, Ezequiel Garcia wrote:
 
---k+w/mQv8wyuph6w0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > Actually, the best thing about this solution is that we don't even
+> > have to bother setting up the mappings when loading the mbus driver:
+> > We don't need any ranges (other than internal-regs) in DT, and we
+> > don't need complex logic to search through the child devices to
+> > figure out what the mappings should be. The only thing one needs
 
-On Wed, Jun 12, 2013 at 10:09:10AM -0600, Stephen Warren wrote:
-> On 06/12/2013 06:30 AM, Thierry Reding wrote:
-> > On Mon, Apr 15, 2013 at 12:28:12PM -0600, Stephen Warren wrote:
-> >> On 04/03/2013 08:45 AM, Thierry Reding wrote:
-> >>> Move the PCIe driver from arch/arm/mach-tegra into the
-> >>> drivers/pci/host directory. The motivation is to collect
-> >>> various host controller drivers in the same location in order
-> >>> to facilitate refactoring.
-> >>>=20
-> >>> The Tegra PCIe driver has been largely rewritten, both in order
-> >>> to turn it into a proper platform driver and to add MSI (based
-> >>> on code by Krishna Kishore <kthota@nvidia.com>) as well as
-> >>> device tree support.
-> ...
-> >>> +static irqreturn_t tegra_pcie_msi_irq(int irq, void *data)
-> >> ...
-> >>> +	return IRQ_HANDLED;
-> >>=20
-> >> Shouldn't this function return IRQ_NONE if no MSI status bits
-> >> were found set?
-> >=20
-> > The IRQ isn't marked IRQF_SHARED, so I don't think this is needed.
->=20
-> Isn't it still useful to detect unexpected/stuck interrupts?
+To get optimal packing you need to have the list in advance so it can
+be sorted and best fit.
 
-Yes, you're right. I can't think of a nicer way to do it, though, so
-I'll go with a processed IRQ counter or a flag.
+Further, remember that to allocate the window we need to learn the
+maximum end offset of *all* reg users for that target id, not just the
+first one to request translation. Not sure how the of_bus stuff gets
+that for you??
 
-> >>> +static int tegra_pcie_probe(struct platform_device *pdev)
-> >> ...
-> >>> +	pcibios_min_mem =3D 0;
-> >>=20
-> >> What does that mean/do? I wonder if that should be set to
-> >> 0x80000000 by the Tegra30 patches?
-> >=20
-> > ARM defines PCIBIOS_MIN_MEM to that variable. That macro in turn is
-> > only used by pci_bus_alloc_resource() AFAICT, which uses it to
-> > override the start of a resource when allocating if res->start =3D=3D
-> > 0. As such it designates a lower-bound of valid PCI memory
-> > addresses, so 0 on Tegra20 and 0x80000000 on Tegra30 don't seem
-> > like good values. Maybe we need to set them to the lowest of the
-> > prefetchable and non-prefetchable memory areas as defined in the
-> > DT?
-> >=20
-> > It doesn't currently seem to matter at all, though, since we never
-> > pass in a range that's 0, so the start address of resources can
-> > never be 0 and therefore PCIBIOS_MIN_MEM is never used.
->=20
-> Hmmm. I guess ignore it then. If the value won't ever be used, 0 is as
-> good a value as any?
+> > to do here is check if a mapping already exists when we get into the
+> > of_bus handler and create one for the device being translated if
+> > there isn't one!
+> 
+> This departs considerably from what I'm aiming right now.
+> 
+> Are you suggesting to not put *any* mapping in the mbus 'ranges' node in
+> the DT (other than internal-regs)?
 
-Alright, I'll do that then.
+My view is that the ranges should be respected. If an address is
+present, it should be used, unless there is a conflict.
 
-Thierry
+If no address is present (unclear why anyone would do this, but OK)
+then demand allocate via the linux resource allocator through the
+of_bus stuff seems reasonable to me..
 
---k+w/mQv8wyuph6w0
-Content-Type: application/pgp-signature
+Just to re-iterate Arnd's earlier comment: The DT representation
+must handle dynamic allocation, but we can defer implementing the
+kernel side until there is a need.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+It isn't clear to me there is a need.....
 
-iQIcBAEBAgAGBQJRuOa8AAoJEN0jrNd/PrOh+bkP/jn3lGBiGbjNi027XeevREsp
-DkwcxH4QnBbAUP+pGCm319oquZuLiptR865uEx60r02QC2N+HpWBVtd/zcjfGs+x
-drQZ4SrEO53ZqSuWHxu1hZvWE2U1cmr6FfchKOD6KXhaURr8g4rlMQClu7fuGsgL
-22TD9m40R/0LasWk54/oYuFH+H1A/06dTiHYABgQGCK2YpXK/iyo4gAWqPgmuufU
-4VdTZLnmi50lGQqjOrMG4rdwI0FbKqut0c2eejXm5PgPEkUfG/OkryvIjmfR7IKw
-EKBolfOC1g6Uk0kRKSF4bOGhrHKN7sPyZRVzaMisAXpddlhb/ehsprrfM+J9BDfk
-sluOcOJsrCXinuSudHsTHlKbc5hP+cjkgOKqI1mmkGIKl34BBSvycThoi+kVj8rw
-LK3MyWK3xo3nG9Jinmdc3UaWLnZ+gCSbOOh1mSNtx9kx+u3ALAENJS0XwN71njoK
-BZB6JuM/jBn4nQ7+avMMB1D3BFx4KPy4vQvs0Usd1v+eqNjMkSOvXzCCMso8Idv3
-mheOhkI1PFhhZvHSfZ2SkG+pClA84vBqd+CJ5nXMfz4z5EYslV6//BgoWCKyXklN
-4cOI+1Ef05egOfYAAcNy4MvOmtedtuQih1I7NnqttTwYcxSePh4P/gXBrlEtBLcj
-mpF1VcqVjw32JldQNaCt
-=lrtv
------END PGP SIGNATURE-----
-
---k+w/mQv8wyuph6w0--
+Jason
