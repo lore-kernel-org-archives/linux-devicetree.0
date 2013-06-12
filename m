@@ -1,121 +1,276 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: microblaze device-tree description - pair intc/buses and timers
-Date: Wed, 12 Jun 2013 14:19:18 +0200
-Message-ID: <51B86746.5040601@monstr.eu>
-References: <51A35E6D.5040706@monstr.eu>
- <20130611130236.D2ACA3E0A90@localhost> <51B72F4B.9030700@monstr.eu>
- <20130611222225.9753A3E0D8D@localhost> <51B8157D.5000407@monstr.eu>
- <CACxGe6skAtfzcNFX=0upAWqr6td+7wYsPxvo1q6Q9khn4N=Y6Q@mail.gmail.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 07/12] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Wed, 12 Jun 2013 14:30:00 +0200
+Message-ID: <20130612122959.GA32444@manwe>
+References: <1365000318-28256-1-git-send-email-thierry.reding@avionic-design.de>
+ <1365000318-28256-8-git-send-email-thierry.reding@avionic-design.de>
+ <516C46BC.2040707@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8869449679258972657=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6skAtfzcNFX=0upAWqr6td+7wYsPxvo1q6Q9khn4N=Y6Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Edgar Iglesias <edgari-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Peter Crosthwaite <pcrost-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <516C46BC.2040707-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============8869449679258972657==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2OFKXASQNGPWAKIWQTNWX"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2OFKXASQNGPWAKIWQTNWX
-Content-Type: text/plain; charset=ISO-8859-1
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 06/12/2013 11:16 AM, Grant Likely wrote:
-> On Wed, Jun 12, 2013 at 7:30 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:=
-
->> On 06/12/2013 12:22 AM, Grant Likely wrote:
->>> On Tue, 11 Jun 2013 16:08:11 +0200, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> w=
-rote:
->>> It would mean every device driver needs to be polled. As long as the
->>> polling frequency is high enough for the work load then it should be
->>> okay. I don't see a problem with there being no interrupt controller,=
-
->>> unless there needs to be a dummy one just to keep the kernel happy.
->>
->> Interesting. I have tried to compile the fragment below by dtc
->> and there is no warning. It also means that there is missing checking
->> in DTC for interrupt-cells.
->>
->> What I am worried about is that request_irq in the driver will require=
-
->> irq chip functions which there are not.
+On Mon, Apr 15, 2013 at 12:28:12PM -0600, Stephen Warren wrote:
+> On 04/03/2013 08:45 AM, Thierry Reding wrote:
+> > Move the PCIe driver from arch/arm/mach-tegra into the drivers/pci/host
+> > directory. The motivation is to collect various host controller drivers
+> > in the same location in order to facilitate refactoring.
+> >=20
+> > The Tegra PCIe driver has been largely rewritten, both in order to turn
+> > it into a proper platform driver and to add MSI (based on code by
+> > Krishna Kishore <kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>) as well as device tree support.
 >=20
-> A driver cannot call request_irq if it doesn't have an irq number to
-> call it with, and it won't have an IRQ number if there is no irq
-> specifier in the DT, so you should be fine in that regard.
+> > diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+>=20
+> > +struct tegra_msi {
+> > +	DECLARE_BITMAP(used, INT_PCI_MSI_NR);
+> > +	struct irq_domain *domain;
+> > +	struct msi_chip chip;
+>=20
+> Nit: You could move that to be the first field in the struct, then
+> to_tegra_msi() would end up being a no-op, which might save a byte or two.
 
-That's correct but in my example there was interrupt listed and connected=
+Done.
 
-because it also says that interrupt is enabled directly on the IP.
+> > +static int tegra_pcie_write_conf(struct pci_bus *bus, unsigned int dev=
+fn,
+> > +				 int where, int size, u32 value)
+> ...
+> > +	if (bus->number =3D=3D 0) {
+> > +		unsigned int slot =3D PCI_SLOT(devfn);
+> > +		struct tegra_pcie_port *port;
+> > +
+> > +		list_for_each_entry(port, &pcie->ports, list) {
+> > +			if (port->index + 1 =3D=3D slot) {
+> > +				addr =3D port->base + (where & ~3);
+> > +				break;
+> > +			}
+> > +		}
+> > +	} else {
+> > +		addr =3D tegra_pcie_bus_map(pcie, bus->number);
+> > +		if (!addr) {
+> > +			dev_err(pcie->dev,
+> > +				"failed to map cfg. space for bus %u\n",
+> > +				bus->number);
+> > +			return PCIBIOS_DEVICE_NOT_FOUND;
+> > +		}
+> > +
+> > +		addr +=3D tegra_pcie_conf_offset(devfn, where);
+> > +	}
+>=20
+> It seems like that chunk of code could be shared between
+> tegra_pcie_read_conf() and tegra_pcie_write_conf().
+>=20
+> Also, tegra_pcie_read_conf() checks again for addr =3D=3D NULL and returns
+> if so. read and write should be consistent.
 
-I have also started to think how to properly describe clocksource
-driver because it is also uniq in the system because all cpus
-should have access to this IP.
-It means that not every timer could be possible to use for this purpose.
-What we have for single microblaze and multi cpu system is just extension=
+Done.
 
-of this is that we are using special name for this clocksource timer
-which is called system-timer.
-Do you think that this rule is fine or any additional description should
-be made?
+> > +static void tegra_pcie_port_free(struct tegra_pcie_port *port)
+> > +{
+> > +	struct tegra_pcie *pcie =3D port->pcie;
+> > +
+> > +	devm_iounmap(pcie->dev, port->base);
+> > +	devm_release_mem_region(pcie->dev, port->regs.start,
+> > +				resource_size(&port->regs));
+> > +	list_del(&port->list);
+> > +	devm_kfree(pcie->dev, port);
+> > +}
+>=20
+> Do ports get allocated and freed separately from the host controller,
+> such that it's actually worth manually calling the
+> devm_iounmap/release/free functions?
 
-Clockevent is easy because the first suitable timer can be used for it
-or the most accurate one.
+Yes, they can be freed separately. When a link is down and hence no
+device is connected to the port, tegra_pcie_enable() will disable and
+free that port.
 
-Thanks,
-Michal
+That's in fact the only place where this is called because we don't
+actually support removing the controller. I don't know of any ARM
+architecture support to do that (i.e. there is no counterpart to
+pci_common_init()).
 
+> > +static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
+> ...
+> > +	/* disable all exceptions */
+> > +	afi_writel(pcie, 0, AFI_FPCI_ERROR_MASKS);
+>=20
+> Is that a good idea?
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+I have no idea what that register means. It's one of the undocumented
+registers. Note that I also didn't change this, it's been there since
+the beginning.
 
+It's probably worth finding out about the register's meaning and about
+how to catch these exceptions at runtime, though. I'm adding Jay on Cc
+maybe he can research internally.
 
+> > +static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
+>=20
+> > +	err =3D devm_request_irq(&pdev->dev, pcie->irq, tegra_pcie_isr,
+> > +			       IRQF_SHARED, "PCIE", pcie);
+>=20
+> devm_request_irq and IRQF_SHARED sounds like a bad combination; what if
+> the IRQ goes off after this driver's remove() is called, but before the
+> driver core devm cleanup runs?
 
-------enig2OFKXASQNGPWAKIWQTNWX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+You're right. Changed to request_irq() in tegra_pcie_get_resources() and
+added free_irq() to tegra_pcie_put_resources().
+
+> > +static irqreturn_t tegra_pcie_msi_irq(int irq, void *data)
+> ...
+> > +	return IRQ_HANDLED;
+>=20
+> Shouldn't this function return IRQ_NONE if no MSI status bits were found
+> set?
+
+The IRQ isn't marked IRQF_SHARED, so I don't think this is needed.
+
+> > +static int tegra_pcie_enable_msi(struct tegra_pcie *pcie)
+>=20
+> > +	/* setup AFI/FPCI range */
+> > +	msi->pages =3D __get_free_pages(GFP_KERNEL, 3);
+>=20
+> If tegra_msi_setup_irq() hard-codes the MSI address as msi->pages, then
+> I expect you can get away with a single page here. Of course, perhaps
+> tegra_msi_setup_irq() is supposed to give a different address to every
+> MSI client? Even so, 256 clients * 4 bytes is still less than 1 page.
+
+Yes, I'll try setting the order to 0 and see if that still works. I
+don't have a setup with more than one MSI client so test results may not
+be very reliable, though.
+
+> > +static u32 tegra_pcie_get_xbar_config(struct tegra_pcie *pcie, u32 lan=
+es)
+> > +{
+> > +	struct device_node *np =3D pcie->dev->of_node;
+> > +
+> > +	switch (lanes) {
+> > +	case 0x00000004:
+> > +		dev_info(pcie->dev, "single-mode configuration\n");
+> > +		return AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_SINGLE;
+> > +
+> > +	case 0x00000202:
+> > +		dev_info(pcie->dev, "dual-mode configuration\n");
+> > +		return AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_DUAL;
+> > +	}
+> > +
+> > +	return 0;
+>=20
+> Shouldn't that return an error, and dev_err() about it? If not, then I
+> think using one of the #defines for the default would make the result a
+> lot more obvious.
+
+I've changed tegra_pcie_get_xbar_config() to return -EINVAL if an
+invalid combination of lanes is encountered and 0 otherwise, passing
+back the corresponding define in an output parameter. I think it's
+reasonable to fail if an invalid combination is provided instead of
+assuming that some default will work.
+
+> > +static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+>=20
+> > +	pcie->xbar_config =3D tegra_pcie_get_xbar_config(pcie, lanes);
+> > +	if (!pcie->xbar_config) {
+> > +		dev_err(pcie->dev, "invalid lane configuration\n");
+> > +		return -EINVAL;
+> > +	}
+>=20
+> Oh, but AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_SINGLE=3D=3D0, which is valid=
+=2E..
+
+Fixed by the above change.
+
+> > +static bool tegra_pcie_port_check_link(struct tegra_pcie_port *port)
+> ...
+> > +			if (value & 0x20000000)
+> > +				return true;
+>=20
+> Can we use a #define for 0x20000000?
+
+Yes, we could use something like RP_LINK_CONTROL_STATUS_DL_LINK_ACTIVE
+=66rom the TRM, though it's rather long...
+
+> > +static int tegra_pcie_enable(struct tegra_pcie *pcie)
+> > +{
+> > +	struct tegra_pcie_port *port, *tmp;
+> > +	struct hw_pci hw;
+> > +
+> > +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+> > +		dev_info(pcie->dev, "probing port %u, using %u lanes\n",
+> > +			 port->index, port->lanes);
+> > +
+> > +		tegra_pcie_port_enable(port);
+> > +
+> > +		if (tegra_pcie_port_check_link(port))
+> > +			continue;
+> > +
+> > +		dev_info(pcie->dev, "link %u down, ignoring\n", port->index);
+> > +
+> > +		tegra_pcie_port_disable(port);
+> > +		tegra_pcie_port_free(port);
+> > +	}
+>=20
+> Why is that needed; when would a port get enabled if it was already
+> enabled, and if it was already enabled, wouldn't you want this function
+> to be a no-op rather than destroying everything and starting again?
+
+I'm not sure I understand what you're saying. The intent of this
+function is to enable a port, check that there's a link and disable the
+port otherwise. That way we don't keep ports around where nothing is
+connected.
+
+> > +static int tegra_pcie_probe(struct platform_device *pdev)
+> ...
+> > +	pcibios_min_mem =3D 0;
+>=20
+> What does that mean/do? I wonder if that should be set to 0x80000000 by
+> the Tegra30 patches?
+
+ARM defines PCIBIOS_MIN_MEM to that variable. That macro in turn is only
+used by pci_bus_alloc_resource() AFAICT, which uses it to override the
+start of a resource when allocating if res->start =3D=3D 0. As such it
+designates a lower-bound of valid PCI memory addresses, so 0 on Tegra20
+and 0x80000000 on Tegra30 don't seem like good values. Maybe we need to
+set them to the lowest of the prefetchable and non-prefetchable memory
+areas as defined in the DT?
+
+It doesn't currently seem to matter at all, though, since we never pass
+in a range that's 0, so the start address of resources can never be 0
+and therefore PCIBIOS_MIN_MEM is never used.
+
+Thierry
+
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-iEYEARECAAYFAlG4Z0cACgkQykllyylKDCGTIwCgijlqtQ12xKF7RcGprEkSZCvf
-XfwAn2Qolb8m8t3jvd2l6P6EkQDBTMUu
-=1AYi
+iQIcBAEBAgAGBQJRuGnHAAoJEN0jrNd/PrOhZ2wP+wbfTMwHj/mzIsEJIqwVu7/k
+wFUPRPld364uIEmYSTJ9cjyriEBhK/gR1dinm9jCLD70JEwpkfULAArx6k2IJfKJ
+MvUnyXD5ArSXX7W712Q8rc4+X6j/Oen36WBKmw/ZtBQ0BPSMTVgEs2vMsaMCoyOL
+K8s352nsJrVX2WKfNs52ZJlZqHc5zl/DWH5Gf4JPIPqrXLftR5c+BqqJF6/5gB2s
+T3kvvJzgpKhPIATkYaes9BdBDW48s30kZ/Yj8c9BVPV5ocYaBv0JWDNTYH+t2XYD
+p91p60uk3piaCtDM+gQlkTDCrq54hUugj+C+HSyHb/jDT2nl/PYTUQo5P1Nj3VLz
+gXVUmcXWFQvHO4ZpSa5bLkl+HPC3sFcN3GpG/bZlrumSm/794BgPC6Mo4lCkn0Tg
+BJqixhbyIfpGSfzTDPWurZLQbj1oWqK3VqjFq0SODdjaanLwQvMGQwiOaep37aks
+6RXBLP60CLS53Vi2rsxIfWJG2zZhGVPxwcao9ZwD3PNOSwq0WvTZzne2EpABaLTa
+VSylIqAXFc4qjLBWjzQvXZFQJvP09wh6RitiLx1mWX1GVs8zX1fu4Z3lMV9jadzT
+mhqCrDxlYnn+qjo4NfT1dZ1U/67a2WGQHSaC30nQABv8jtRusKucQE+ndyPO+DOE
+gAK6HB/goOgi/nD/RehW
+=jWNR
 -----END PGP SIGNATURE-----
 
-------enig2OFKXASQNGPWAKIWQTNWX--
-
---===============8869449679258972657==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8869449679258972657==--
+--bp/iNruPH9dso1Pn--
