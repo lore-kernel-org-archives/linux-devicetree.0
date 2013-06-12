@@ -1,15 +1,12 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Device tree flattening code not copying properties from blob
-Date: Wed, 12 Jun 2013 19:23:23 +0100
-Message-ID: <CACxGe6urthkotuwU2OtqEMn8WmBxU=hSmrKyffHR=Pbayo_HKg@mail.gmail.com>
-References: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696@corpatsmail4.corp.sensis.com>
- <CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg@mail.gmail.com>
- <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF722@corpatsmail4.corp.sensis.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2] ASoC: rt5640: add device tree support
+Date: Wed, 12 Jun 2013 19:25:33 +0100
+Message-ID: <20130612182533.GS1403@sirena.org.uk>
+References: <1371058470-25100-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============7790958259095699690=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF722-gEjpXB0kThW1wM3WIAwN2vV4jgPAACGKVpNB7YpNyf8@public.gmane.org>
+In-Reply-To: <1371058470-25100-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,22 +17,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Collins, Rod" <Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, flove-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2013 at 6:33 PM, Collins, Rod
-<Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org> wrote:
-> The blob is built into the zImage.initramfs.gz image which is put into
-> flash. The zImage.initramfs.gz is self copied from flash to RAM, then
-> uncompressed to the running area. I will dig into the location of the
-> blob in the image and report back.
 
-Thanks. If it is appended to the zImage wrapper, then things should be
-fine (this is the expected way to do when not passed in from the
-bootloader). If a *.dtb.o target has been used to embedded it into the
-kernel-proper (vmlinux) then you will have a problem. The *.dtb.S
-target puts the dtb data into the dtb.init.rodata section which gets
-discarded.
+--===============7790958259095699690==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7JtmyEQckRKrnqj+"
+Content-Disposition: inline
 
-g.
+
+--7JtmyEQckRKrnqj+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 12, 2013 at 11:34:30AM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> Modify the RT5640 driver to parse platform data from device tree. Write
+> a DT binding document to describe those properties.
+
+Applied, thanks.
+
+--7JtmyEQckRKrnqj+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRuL0aAAoJELSic+t+oim96XwQAIxk6AMpo/wMwXd693ej8n2h
+iIPS4AtuVDvnnjSeDKlBPRdq5VcYZX3pNf7jP7EMP/SMPUR1CtsMLQXik8jyPcMn
+LG0aDxdkJoSRYC1sTL/B8WBhJRnPBaBF5JXHskCEpjgCMJnU/7P+KAWic09Ub8rt
+Mkan0wGYn4eGlriIkcXq7UvvL6irzy0Ne6GfEOcxAxTBQUF0DbX76V4nHL1MCpf/
+XQhxvEnFOUEq0rXpc7I3GVC7tXzEe5SlSSTfYeA3UTEtf8EkoOX9NmyR/4CKIF/c
+0gefYIcUAkTb1ekV8kPCLuZw26svgHlBrWO/SF1ncUlf9RpHV22EsribCb+tD/LD
+FtcxSBS+fnrBu6qyq+6ZaPLwFppoj3DzOoIGUN2Mn3y1ahhfE6LL9IIH/FQrO7aL
+D64kOCAXV5NdF99R10uRP4tnC7OKkZc88EF3RQ0ASCN9dfqh55ziER2SXuwZBsNp
+zA4Vqa/WyzPTuBIZaQDIhqsOqKQ1wvqjUkMRZrquqD94zTaCjl8PR6b6VO3KUW9G
+WIfmuqj3ANPjSuZKW+OvumCbzg8qLj2syuW5+MkSzRaLhwVcc/X0YTw74aj/oXW6
+KPXqjZn/U4LMPmXIkXTfaRBRLq25zCm4e3diQ5g7Mpi9h1ZUnK6wleoyQSKvftin
+5pzpTJ9NhimyohnCowCr
+=/ys/
+-----END PGP SIGNATURE-----
+
+--7JtmyEQckRKrnqj+--
+
+--===============7790958259095699690==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7790958259095699690==--
