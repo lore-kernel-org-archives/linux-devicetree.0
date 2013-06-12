@@ -1,40 +1,39 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 09/10] ARM: dts: omap3: add pbias and mmc_init
- pinctrl states
-Date: Wed, 12 Jun 2013 10:50:05 -0700
-Message-ID: <20130612175005.GR8164@atomide.com>
-References: <20130523184045.GD13507@atomide.com>
- <1370546059-24181-1-git-send-email-balajitk@ti.com>
- <1370546059-24181-10-git-send-email-balajitk@ti.com>
- <20130612143548.GZ8164@atomide.com>
- <51B8B35E.20307@ti.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v2 0/4] dw_apb_timer: osc as sched_clock, clocks and
+ clocksource_of support
+Date: Wed, 12 Jun 2013 10:51:42 -0700
+Message-ID: <20130612175142.GB2760@quad.lixom.net>
+References: <201306041136.09566.heiko@sntech.de>
+ <201306121055.53685.heiko@sntech.de>
+ <CACRpkdZmDWTy=U_rhU9uVXy9N5jEOk6qQingiO5kb+Kc2WkL3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51B8B35E.20307@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, cjb@laptop.org, b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <CACRpkdZmDWTy=U_rhU9uVXy9N5jEOk6qQingiO5kb+Kc2WkL3w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jamie Iles <jamie@jamieiles.com>, Dinh Nguyen <dinguyen@altera.com>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
-* Balaji T K <balajitk@ti.com> [130612 10:50]:
-> On Wednesday 12 June 2013 08:05 PM, Tony Lindgren wrote:
-> >* Balaji T K <balajitk@ti.com> [130606 12:20]:
-> >>add pbias states for pbias 0, 1.8V, 3V
-> >>add omap3 sd/mmc2 loop back clock config for devconf1 in mmc2_init pinctrl state
-> >>add OMAP3430 sd/mmc1 loop back clock config for devconf0 in mmc1_init pinctrl state
-> >>add OMAP3630 sd/mmc1 speed mode config for prog_io1 in mmc1_init pinctrl state
-> >
-> >Looks OK to me, except these should be under mmc1 for omap[345].dtsi files.
-> >
-> 
-> I think I can move &omap3_pmx_general to omap3.dtsi and override
-> &pbias_1v8, &pbias_3v in omap36xx.dtsi, but I doubt pinctrl-[0,1,2,3,4]
-> since pull up setting can vary between boards.
+On Wed, Jun 12, 2013 at 11:46:37AM +0200, Linus Walleij wrote:
+> On Wed, Jun 12, 2013 at 10:55 AM, Heiko St=FCbner <heiko@sntech.de> w=
+rote:
+>=20
+> > with clocksource_of conversion of picoxcell and socfpga, this serie=
+s stands on
+> > its own. Is anybody going to pick it up?
+>=20
+> I would suggest you send a pull request to the ARM SoC maintainers.
+> This is where most clocksource code and refactorings related to
+> ARM things come in.
 
-OK makes sense to me if it's board specific.
+Yeah, or we can pick them up and apply from the list too. Have you coll=
+ected
+all Acked-bys and reposted a final version? If not, cc arm@kenrel.org o=
+n the
+final posting.
 
-Regards,
 
-Tony
+-Olof
