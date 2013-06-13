@@ -1,164 +1,186 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH] HID: i2c-hid: add DT bindings
-Date: Thu, 13 Jun 2013 09:50:35 +0200
-Message-ID: <1371109835-30796-1-git-send-email-benjamin.tissoires@redhat.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Benjamin Tissoires <benjamin.tissoires@gmail.com>, Jiri Kosina <jkosina@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
+Date: Thu, 13 Jun 2013 10:26:30 +0200
+Message-ID: <20130613082629.GA17071@ab42.lan>
+References: <20130530211944.05F4D3E0A90@localhost>
+ <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com>
+ <alpine.LFD.2.02.1305311835040.2905@ionos>
+ <20130531221814.534DF3E08FE@localhost>
+ <20130601110133.GA4051@ab42.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130601110133.GA4051@ab42.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree based support for HID over I2C devices.
+On Sat, Jun 01, 2013 at 01:01:33PM +0200, Christian Ruppert wrote:
+> On Fri, May 31, 2013 at 11:18:14PM +0100, Grant Likely wrote:
+> > On Fri, 31 May 2013 19:32:34 +0200 (CEST), Thomas Gleixner <tglx@li=
+nutronix.de> wrote:
+> > > On Fri, 31 May 2013, Christian Ruppert wrote:
+> > >=20
+> > > > The SOC interrupt controller driver for the Abilis Systems TB10=
+x series of
+> > > > SOCs based on ARC700 CPUs.
+> > > >=20
+> > > > This patch depends on commits eb76bdd407d8a90e59a06cb0158886df3=
+90e5d1c and
+> > > > 712bc93df9e7f14b8a163148d2aa7c778e151627 from branch irq/for-ar=
+m of
+> > > > git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git.
+> > >=20
+> > > That branch can be pulled into ARC as well. It only contains the
+> > > changes, which are necessary for the irq domain support of the ge=
+neric
+> > > irq chip.
+>=20
+> Vineet, what do you think about this? For the moment I have pulled th=
+e
+> patch set into our local branch and to me it doesn't matter, we just
+> have to make sure to respect this dependency when merging everything
+> together.
+>=20
+> > > > +static void tb10x_irq_cascade(unsigned int irq, struct irq_des=
+c *desc)
+> > > > +{
+> > > > +	struct irq_domain *domain =3D irq_desc_get_handler_data(desc)=
+;
+> > > > +
+> > > > +	generic_handle_irq(irq_find_mapping(domain, irq));
+> > > > +}
+> > >=20
+> > > ...
+> > >=20
+> > > > +	for (i =3D 0; i < nrirqs; i++) {
+> > > > +		unsigned int irq =3D irq_of_parse_and_map(ictl, i);
+> > > > +
+> > > > +		irq_set_handler_data(irq, domain);
+> > > > +		irq_set_chained_handler(irq, tb10x_irq_cascade);
+> > > > +	}
+> > >=20
+> > > I might be completely confused, but this does not make any sense =
+at
+> > > all.
+> > >=20
+> > > You allocate a linear domain and then map the interrupts in the
+> > > domain. The mapping function retrieves the hardware interrupt num=
+ber
+> > > and creates a virtual interrupt number, installs the chip and the
+> > > handler for the interrupt and finally returns the virtual interru=
+pt
+> > > number.
+> > >=20
+> > > Now you take that virtual interrupt number and install
+> > > tb10x_irq_cascade as the handler. irq_set_chained_handler() will
+> > > startup (unmask) the interrupt right away.
+> > >=20
+> > > In the cascade handler you take the virtual interrupt number, whi=
+ch
+> > > you get as argument, and find the mapping, i.e. the matching VIRT=
+UAL
+> > > interrupt number for the VIRTUAL interrupt number and then call t=
+he
+> > > handler.
+> > >=20
+> > > How is this supposed to work?
+> >=20
+> > I think what is going on here is that the tb10x interrupt controlle=
+r
+> > appears to be more of a front-end to another interrupt controller w=
+ith
+> > each input wired up 1:1 to the interrupt inputs of the other contro=
+ller.
+>=20
+> Exactly. The TB10x interrupt controller is a front-end for the ARC CP=
+U
+> built-in interrupt controller.
+>=20
+> > (I don't know why someone would design an interrupt controller that=
+ way,
+> > but that's another issue).
+>=20
+> There are several technical reasons for this front-end. The one that
+> concerns us most in the kernel is that the TB10x front-end does the
+> translation from all kinds of interrupt trigger modes to the level
+> triggered interrupts natively understood by the ARC CPU built-in
+> controller.
+>=20
+> > The loop above is mapping each of the
+> > interrupt inputs on the parent controller so that each child contro=
+ller
+> > can be chained to it as an input. I can't think of how else it coul=
+d be
+> > set up with the current code if the drivers were kept separate.
+>=20
+> This is exactly the intention. I haven't found an easier way to do th=
+is
+> either but I'm open to suggestions. Btw, I have noticed that the pare=
+nt
+> controller interrupts from this loop are not listed in /proc/interrup=
+ts.
+> I'm not sure if what is done in the loop is sufficient or if I should
+> add something else (the naive option of using request_irq doesn't wor=
+k,
+> the kernel saying something in the lines of "irq XX triggered but noo=
+ne
+> cares").
+>=20
+> > Christian, what is the parent interrupt controller for this SoC? It
+> > really feels like the tb10x-ictl belongs as part of the parent
+> > controller. I went and looked at the parent node, and I saw this:
+> >=20
+> > 		intc: interrupt-controller {
+> > 				compatible =3D "snps,arc700-intc";
+> > 				interrupt-controller;
+> > 				#interrupt-cells =3D <1>;
+> > 		};
+> >=20
+> > I noticed the conspicuous absence of a reg property. Is this someth=
+ing
+> > architectural?
+>=20
+> The parent controller is part of the CPU itself, see
+> arch/arc/kernel/irq.c. This controller is maintained by Vineet and IM=
+HO
+> we should keep it separate from the TB10x one since it is implicitly
+> used in all ARC-based platforms whereas the TB10x controller is used =
+in
+> Abilis chips only.
+>=20
+> > If I were working on this system I'd drop the
+> > snps,arc700-intc node entirely and have a single abilis,tb10x-intc =
+that
+> > encapsulated the properties of both (you would of course want to sh=
+are
+> > handler functions for the 'normal' inputs without the custom featur=
+es).
+> > That would eliminate the goofyness of listing 27 separate interrupt=
+s in
+> > the abilis,tb10x-ictl interrupts property.
+>=20
+> To complicate things even further, some ARC CPU built-in peripherals
+> (e.g. timers) generate interrupts directly to the ARC built-in interr=
+upt
+> controller (without going through the TB10x front-end), hence the
+> "goofy" list of interrupts in the TB10x DT node.
 
-Tested on an Odroid-X board with a Synaptics touchpad.
+Hello Thomas,
 
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
----
+Any news about this one?
 
-Hi guys,
+Greetings,
+  Christian
 
-well, as the commit message says, this is the DT binding for HID over I2C.
-I honestly don't know if it will be used besides me, but it may help others
-with a DT based board.
-As the spec is for ACPI only, I had no specifications regarding the DT names. So
-these names can be changed if you think they are bad.
-
-I also created a new bindings directory in the devicetree doc to reflect the
-split we have between input and hid. However, if the DT experts prefer having
-it under input, I'm fine with that.
-
-Cheers,
-Benjamin
-
- .../devicetree/bindings/hid/hid-over-i2c.txt       | 28 ++++++++++++++
- drivers/hid/i2c-hid/i2c-hid.c                      | 44 +++++++++++++++++++++-
- include/linux/i2c/i2c-hid.h                        |  3 +-
- 3 files changed, 73 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hid/hid-over-i2c.txt
-
-diff --git a/Documentation/devicetree/bindings/hid/hid-over-i2c.txt b/Documentation/devicetree/bindings/hid/hid-over-i2c.txt
-new file mode 100644
-index 0000000..488edcb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hid/hid-over-i2c.txt
-@@ -0,0 +1,28 @@
-+* HID over I2C Device-Tree bindings
-+
-+HID over I2C provides support for various Human Interface Devices over the
-+I2C bus. These devices can be for example touchpads, keyboards, touch screens
-+or sensors.
-+
-+The specification has been written by Microsoft and is currently available here:
-+http://msdn.microsoft.com/en-us/library/windows/hardware/hh852380.aspx
-+
-+If this binding is used, the kernel module i2c-hid will handle the communication
-+with the device and the generic hid core layer will handle the protocol.
-+
-+Required properties:
-+- compatible: must be "hid-over-i2c"
-+- reg: i2c slave address
-+- hid-descr-addr: HID descriptor address
-+- interrupt-parent: the phandle for the interrupt controller
-+- interrupts: interrupt line
-+
-+Example:
-+
-+	i2c-hid-dev@2c {
-+		compatible = "hid-over-i2c";
-+		reg = <0x2c>;
-+		hid-descr-addr = <0x0020>;
-+		interrupt-parent = <&gpx3>;
-+		interrupts = <3 2>;
-+	};
-diff --git a/drivers/hid/i2c-hid/i2c-hid.c b/drivers/hid/i2c-hid/i2c-hid.c
-index 2b1799a..85b15a8 100644
---- a/drivers/hid/i2c-hid/i2c-hid.c
-+++ b/drivers/hid/i2c-hid/i2c-hid.c
-@@ -35,6 +35,7 @@
- #include <linux/hid.h>
- #include <linux/mutex.h>
- #include <linux/acpi.h>
-+#include <linux/of.h>
- 
- #include <linux/i2c/i2c-hid.h>
- 
-@@ -919,6 +920,42 @@ static inline int i2c_hid_acpi_pdata(struct i2c_client *client,
- }
- #endif
- 
-+#ifdef CONFIG_OF
-+static int i2c_hid_of_probe(struct i2c_client *client,
-+		struct i2c_hid_platform_data *pdata)
-+{
-+	struct device *dev = &client->dev;
-+	u32 val;
-+	int ret;
-+
-+	ret = of_property_read_u32(dev->of_node, "hid-descr-addr", &val);
-+	if (ret) {
-+		dev_err(&client->dev, "HID register address not provided\n");
-+		return -ENODEV;
-+	}
-+	if (val >> 16) {
-+		dev_err(&client->dev, "Bad HID register address: 0x%08x\n",
-+			val);
-+		return -EINVAL;
-+	}
-+	pdata->hid_descriptor_address = val;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id i2c_hid_of_match[] = {
-+	{ .compatible = "hid-over-i2c" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, i2c_hid_of_match);
-+#else
-+static inline int i2c_hid_of_probe(struct i2c_client *client,
-+		struct i2c_hid_platform_data *pdata)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- static int i2c_hid_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *dev_id)
- {
-@@ -940,7 +977,11 @@ static int i2c_hid_probe(struct i2c_client *client,
- 	if (!ihid)
- 		return -ENOMEM;
- 
--	if (!platform_data) {
-+	if (client->dev.of_node) {
-+		ret = i2c_hid_of_probe(client, &ihid->pdata);
-+		if (ret)
-+			goto err;
-+	} else if (!platform_data) {
- 		ret = i2c_hid_acpi_pdata(client, &ihid->pdata);
- 		if (ret) {
- 			dev_err(&client->dev,
-@@ -1081,6 +1122,7 @@ static struct i2c_driver i2c_hid_driver = {
- 		.owner	= THIS_MODULE,
- 		.pm	= &i2c_hid_pm,
- 		.acpi_match_table = ACPI_PTR(i2c_hid_acpi_match),
-+		.of_match_table = of_match_ptr(i2c_hid_of_match),
- 	},
- 
- 	.probe		= i2c_hid_probe,
-diff --git a/include/linux/i2c/i2c-hid.h b/include/linux/i2c/i2c-hid.h
-index 60e411d..7aa901d 100644
---- a/include/linux/i2c/i2c-hid.h
-+++ b/include/linux/i2c/i2c-hid.h
-@@ -19,7 +19,8 @@
-  * @hid_descriptor_address: i2c register where the HID descriptor is stored.
-  *
-  * Note that it is the responsibility of the platform driver (or the acpi 5.0
-- * driver) to setup the irq related to the gpio in the struct i2c_board_info.
-+ * driver, or the flattened device tree) to setup the irq related to the gpio in
-+ * the struct i2c_board_info.
-  * The platform driver should also setup the gpio according to the device:
-  *
-  * A typical example is the following:
--- 
-1.8.2.1
-
+--=20
+  Christian Ruppert              ,          <christian.ruppert@abilis.c=
+om>
+                                /|
+  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
+leuri
+                             _// | bilis Systems   CH-1228 Plan-les-Oua=
+tes
