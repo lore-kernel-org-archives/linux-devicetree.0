@@ -1,111 +1,93 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [RFC PATCH v3 0/2] drivers: mfd: Versatile Express SPC support
-Date: Thu, 13 Jun 2013 02:13:11 +0200
-Message-ID: <20130613001311.GC4567@zurbaran>
-References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com>
- <20130611090545.GC8164@e102568-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130611090545.GC8164@e102568-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Pawel Moll <Pawel.Moll@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [RFC/PATCH 00/13] Add support for MSM's mmio clocks
+Date: Wed, 12 Jun 2013 18:48:56 -0700
+Message-ID: <1371088149-22562-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, James Hogan <james.hogan@imgtec.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+Posting as an RFC because I haven't gone through and generated all 
+the data needed yet. This is just a few clocks for now to give a general
+idea of where things are headed.
 
-On Tue, Jun 11, 2013 at 10:05:45AM +0100, Lorenzo Pieralisi wrote:
-> Hi Samuel,
-> 
-> if nobody has objections I think this set is ready to get merged. As
-> Nico mentioned in:
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-June/173541.html
-> 
-> since we would like to get it merged through the ARM SoC tree owing to
-> dependencies between this code and ARM power management back-ends, your ack
-> would be appreciated, if you think it is worth it of course.
-I'm fine with it going through the arm-soc tree, but please prepare a
-branch for me to pull from.
-AFAIR, we got a merge conflict during the last merge window with the
-vexpress driver, I want to avoid that for the next one.
+The first 4 patches are generic clock framework patches. They add support
+for finding clocks in DT and parsing them generically. They also add support
+for setting the rate and the parent at the same time based on patches from
+James Hogan's remuxing set_rate series [1].
 
-Now, about the driver itself, besides the really odd code design, the
-static variables all over the place, the nasty init hacks and the
-unneeded long function names, someone should refresh my memory and explain
-to me why is this guy under mfd. I can see it somehow supports IP blocks
-providing different functions, but the design is not sharing anything with
-most of the rest of the mfd drivers.
-Not only that, but the whole vexpress-config code design is not the
-nicest piece of code I've ever seen. And I'm usually not picky. e.g. the
-whole vexpress-config ad-hoc API is awkward and I wonder if it could be
-implemented as a bus instead.
+After that we add MSM clock hardware support and then fill in the DT and
+data to actually register clocks. This is sufficient enough to get the UART
+going on my msm8960 device.
 
-FWIW I take the blame here for not reviewing the initial driver
-submission that Arnd kindly sent to me...But now that I'm looking at it,
-I think it really is on the edge of being staging material. Any thought
-on that ?
+I'm currently waffling between the DT bindings being more descriptive
+versus just using the clocks as numbers method. From what I can tell
+nobody is complaining either way so it seems I could put all of
+the information I encode in C structs into DT. It would be great
+if more experienced DT persons could weigh in here.
 
-Cheers,
-Samuel.
+Please note this patchset relies on my previous patch series that moves
+existing MSM clock code to the common clock framework [2].
 
-> Thank you very much indeed,
-> Lorenzo
-> 
-> On Thu, Jun 06, 2013 at 10:59:21AM +0100, Lorenzo Pieralisi wrote:
-> > This patch is v3 of a previous posting:
-> > 
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2013-June/173464.html
-> > 
-> > v3 changes:
-> > 
-> > - added __refdata to spc_check_loaded pointer
-> > - removed some exported symbols
-> > - added node pointer check in vexpress_spc_init()
-> > 
-> > v2 changes:
-> > 
-> > - Dropped timeout interface patch
-> > - Converted interfaces to non-timeout ones, integrated and retested
-> > - Removed mutex used at init
-> > - Refactored code to work around init sections warning
-> > - Fixed two minor bugs
-> > 
-> > This patch series introduces support for the Versatile Express Serial
-> > Power Controller (SPC) present in ARM Versatile Express TC2 core tiles.
-> > SPC driver is a fundamental component of TC2 power management and allows
-> > to carry out C-state management and DVFS for A15 and A7 clusters.
-> > 
-> > First patch provides changes required by SPC to comply with the
-> > Versatile Express config API, second patch is the SPC driver implementation.
-> > 
-> > Code extensively exercised through CPUidle and CPUfreq power states and
-> > operating point transitions.
-> > 
-> > Lorenzo Pieralisi (1):
-> >   drivers: mfd: vexpress: add Serial Power Controller (SPC) support
-> > 
-> > Pawel Moll (1):
-> >   drivers: mfd: refactor the vexpress config bridge API
-> > 
-> >  Documentation/devicetree/bindings/mfd/vexpress-spc.txt |  35 +
-> >  drivers/mfd/Kconfig                                    |   7 +
-> >  drivers/mfd/Makefile                                   |   1 +
-> >  drivers/mfd/vexpress-config.c                          |  61 +-
-> >  drivers/mfd/vexpress-spc.c                             | 633 ++++++++++
-> >  drivers/mfd/vexpress-sysreg.c                          |   2 +-
-> >  include/linux/vexpress.h                               |  59 +-
-> >  7 files changed, 770 insertions(+), 28 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/vexpress-spc.txt
-> >  create mode 100644 drivers/mfd/vexpress-spc.c
-> > 
-> > -- 
-> > 1.8.2.2
-> > 
-> 
+Stephen Boyd (13):
+  clk: fixed-rate: Export clk_fixed_rate_register()
+  clk: Add of_init_clk_data() to parse common clock bindings
+  clk: Add of_clk_match() for device drivers
+  clk: Add set_rate_and_parent() op
+  clk: msm: Add support for phase locked loops (PLLs)
+  clk: msm: Add support for root clock generators (RCGs)
+  clk: msm: Add support for branches/gate clocks
+  clk: msm: Add MSM clock driver
+  clk: msm: Add support for MSM8960's global clock controller (GCC)
+  clk: msm: Add support for MSM8960's multimedia clock controller (MMCC)
+  ARM: dts: msm: Add MSM8960 GCC DT nodes
+  ARM: dts: msm: Add MSM8960 MMCC DT nodes
+  ARM: dts: msm: Add clock entries for MSM8960 uart device
 
+ Documentation/clk.txt                              |   3 +
+ Documentation/devicetree/bindings/clock/msm.txt    |  99 +++
+ .../devicetree/bindings/clock/qcom,gcc.txt         |  55 ++
+ .../devicetree/bindings/clock/qcom,mmcc.txt        |  38 ++
+ arch/arm/boot/dts/msm8960-cdp.dts                  | 111 +++
+ drivers/clk/Kconfig                                |   2 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-fixed-rate.c                       |   1 +
+ drivers/clk/clk.c                                  | 201 +++++-
+ drivers/clk/msm/Kconfig                            |  22 +
+ drivers/clk/msm/Makefile                           |  11 +
+ drivers/clk/msm/clk-branch.c                       | 190 ++++++
+ drivers/clk/msm/clk-branch.h                       |  48 ++
+ drivers/clk/msm/clk-pll.c                          | 233 +++++++
+ drivers/clk/msm/clk-pll.h                          |  43 ++
+ drivers/clk/msm/clk-rcg.c                          | 754 +++++++++++++++++++++
+ drivers/clk/msm/clk-rcg.h                          | 114 ++++
+ drivers/clk/msm/clk-rcg2.c                         | 320 +++++++++
+ drivers/clk/msm/core.c                             | 271 ++++++++
+ drivers/clk/msm/gcc-8960.c                         | 174 +++++
+ drivers/clk/msm/internal.h                         |  27 +
+ drivers/clk/msm/mmcc-8960.c                        | 142 ++++
+ include/linux/clk-provider.h                       |  28 +
+ 23 files changed, 2868 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/msm.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+ create mode 100644 drivers/clk/msm/Kconfig
+ create mode 100644 drivers/clk/msm/Makefile
+ create mode 100644 drivers/clk/msm/clk-branch.c
+ create mode 100644 drivers/clk/msm/clk-branch.h
+ create mode 100644 drivers/clk/msm/clk-pll.c
+ create mode 100644 drivers/clk/msm/clk-pll.h
+ create mode 100644 drivers/clk/msm/clk-rcg.c
+ create mode 100644 drivers/clk/msm/clk-rcg.h
+ create mode 100644 drivers/clk/msm/clk-rcg2.c
+ create mode 100644 drivers/clk/msm/core.c
+ create mode 100644 drivers/clk/msm/gcc-8960.c
+ create mode 100644 drivers/clk/msm/internal.h
+ create mode 100644 drivers/clk/msm/mmcc-8960.c
+
+[1] <1369056507-32521-1-git-send-email-james.hogan@imgtec.com>
+[2] 
 -- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
