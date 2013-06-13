@@ -1,117 +1,278 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu
- reg control
-Date: Thu, 13 Jun 2013 10:55:36 +0200
-Message-ID: <51B98908.8050403@samsung.com>
-References: <1370935073-7475-1-git-send-email-rahul.sharma@samsung.com>
- <CAAQKjZMuSQhbYtOyni-RdHhXu0fv3U2Dm_2iqRLe0smSt_jjjQ@mail.gmail.com>
- <CAAQKjZOZCtLnE_OPs60NU+Z4pkHiSCqZcBOi1Dv+PC=01HKqyg@mail.gmail.com>
- <CAPdUM4Nis0uwyZf1hNDOMmdqFm0K7beVPoyAWRjMBwq0jcwwCQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC] Allow GPIO ranges based on pinctl pin groups
+Date: Thu, 13 Jun 2013 11:00:26 +0200
+Message-ID: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com>
+References: <20130522094958.GA4789@ab42.lan>
+ <1371055449-15828-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAPdUM4Nis0uwyZf1hNDOMmdqFm0K7beVPoyAWRjMBwq0jcwwCQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: Rahul Sharma <r.sh.open@gmail.com>, Inki Dae <inki.dae@samsung.com>, linux-samsung-soc@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene.kim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Sean Paul <seanpaul@chromium.org>, sunil joshi <joshi@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, grant.likely@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371055449-15828-1-git-send-email-christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Cc: Sascha Leuenberger <sascha.leuenberger-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Jun 12, 2013 at 6:44 PM, Christian Ruppert
+<christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org> wrote:
 
-On 06/13/2013 06:26 AM, Rahul Sharma wrote:
-> Mr. Dae,
-> 
-> Thanks for your valuable inputs.
-> 
-> I posted it as RFC because, I also have received comments to register
-> hdmiphy as a clock controller. As we always configure it for specific
-> frequency, hdmi-phy looks similar to a PLL. But it really doesn't
-> belong to that class. Secondly prior to exynos5420, it was a i2c
-> device. I am not sure we can register a I2C device as a clock
-> controller. I wanted to discuss and explore this option here.
+> This patch allows the definition of GPIO ranges based on pin groups in
+> addition to the traditional linear pin ranges. GPIO ranges based on pin
+> groups have the following advantages over traditional pin ranges:
+> . Previously, pins associated to a given functionality were defined
+>   inside the pin controller (e.g. a pin controller can define a group
+>   spi0_pins defining which pins are used by SPI port 0). This mechanism
+>   did not apply to GPIO controllers, however, which had to define GPIO
+>   ranges based on pin numbers otherwise confined to the pin controller.
+>   With the possibility to use pin groups for pin ranges, the pins
+>   associated to any functionality, including GPIO, can now be entirely
+>   defined inside the pin controller. Everything that needs to be known
+>   to the outside world is the name of the pin group.
+> . Non-consecutive pin ranges and arbitrary pin ordering is now possible
+>   in GPIO ranges.
+> . Linux internal pin numbers now no longer leak out of the kernel, e.g.
+>   to device tree. If the pinctrl driver author chooses to, GPIO range
+>   management can now entirely be based on symbolic names of pin groups.
+>
+> Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
 
-Have you considered using the generic PHY framework for those HDMI 
-PHY devices [1] ? I guess we could add a dedicated group of ops for 
-video PHYs, similarly as is is done with struct v4l2_subdev_ops. For
-configuring things like the carrier/pixel clock frequency or anything 
-what's common across the video PHYs.
+Overall this approach looks nice.
 
-Perhaps you could have a look and see if this framework would be 
-useful for HDMI and possibly point out anything what might be missing ?
- 
-I'm not sure it it really solves the issues specific to the Exynos 
-HDMI but at least with a generic PHY driver the PHY module would be 
-separate from the PHY controller, as often same HDMI DPHY can be used 
-with various types of a HDMI controller. So this would allow to not 
-duplicate the HDMI PHY drivers in the long-term perspective.
+There are details that need fixing though:
 
-[1] https://lkml.org/lkml/2013/4/29/95
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+(...)
+> @@ -112,3 +112,39 @@ where,
+>
+>  The pinctrl node must have "#gpio-range-cells" property to show number of
+>  arguments to pass with phandle from gpio controllers node.
+> +
+> +In addition, gpio ranges can be mapped to pin groups of a given pin
+> +controller (see Documentation/pinctrl.txt):
 
-Thanks,
-Sylwester
+Do not reference Linux particulars in bindings. The idea is to
+reuse these bindings with other operating systems as well.
 
-> As you said, in parallel, I will align these changes and along with
-> "drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver"
-> series and post them.
-> 
-> I hope we should be able to close on one of the above approaches for
-> hdmiphy.
-> 
-> regards,
-> Rahul Sharma.
-> 
-> On Wed, Jun 12, 2013 at 9:57 AM, Inki Dae <inki.dae@samsung.com> wrote:
->>
->> 2013/6/12 Inki Dae <inki.dae@samsung.com>
->>>
->>> Hi Rahul,
->>>
->>> This patch is important to us. Actually, previous hdmi driver had
->>> controlled hdmiphy HDMI_PHY_CONTROL as if that were a clock but now that
->>> doesn't exist anymore. So we need to discuss how hdmiphy should be handled.
->>> I konw that you had already posted hdmiphy relevant patch set, [PATCH 0/4]
->>> drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver.
->>>
->>> I think we can couple pmu register controlling codes with that patch set
->>> without RFC. Could you update and post them again? like below,
->>> [PATCH 0/4] drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver
->>> + [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu reg
->>> control
->>>
->>> And then let's start review :)
->>
->> And I think It would be better to move the pmu register controlling codes
->> into hdmiphy driver like drivers/usb/phy/phy-samsung-usb2.c driver does.
->>>
->>> Thanks,
->>> Inki Dae
->>>
->>> 2013/6/11 Rahul Sharma <rahul.sharma@samsung.com>
->>>>
->>>> Previously, hdmiphy is added as a dummy clock in clock file for
->>>> exynos SoCs. Enable/Disable to this clock, actually toggles the power
->>>> control bit in PMU, instead of controlling the clock gate.
->>>>
->>>> This RFC adds the support to parse hdmiphy control node which is a child
->>>> node to hdmi, and map the pmu register to toggle the power control bit.
->>>>
->>>> This is based on drm-next branch in Inki Dae's tree.
->>>>
->>>> Rahul Sharma (2):
->>>>   drm/exynos: replace dummy hdmiphy clock with pmu register control
->>>>   ARM/dts: add hdmiphy power control pmu register to hdmi dt node
->>>>
->>>>  arch/arm/boot/dts/exynos5250.dtsi    |    6 +++
->>>>  drivers/gpu/drm/exynos/exynos_hdmi.c |   69
->>>> ++++++++++++++++++++++++++++++----
->>>>  drivers/gpu/drm/exynos/regs-hdmi.h   |    4 ++
->>>>  3 files changed, 71 insertions(+), 8 deletions(-)
->>>>
->>>> --
->>>> 1.7.10.4
+> +
+> +       gpio_pio_g: gpio-controller@1480 {
+> +               #gpio-cells = <2>;
+> +               compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
+> +               reg = <0x1480 0x18>;
+> +               gpio-controller;
+> +               gpio-pingrps = <&pinctrl1 0>, <&pinctrl2 3>;
+> +               gpio-pingrp-names = "pctl1_gpio_g", "pctl2_gpio_g";
+> +       }
 
--- 
-Sylwester Nawrocki
-Samsung R&D Institute Poland
-Samsung Electronics
+End with semicolon?
+
+> +where,
+> +   &pinctrl1 and &pinctrl2 is the phandle to the pinctrl DT node.
+
+There is something weird with spacing above.
+
+> +   Next values specify the base GPIO offset of the pin range with respect to
+> +   the GPIO controller's base. The number of pins in the range is the number
+> +   of pins in the pin group.
+> +
+> +   gpio-pingrp-names defines the name of each pingroup of the respective pin
+> +   controller.
+
+That seems like a good idea.
+
+> +The pinctrl node msut have a "#gpio-pingrp-cells" property set to one to
+
+must
+
+> +define the number of arguments to pass with the phandle.
+> +
+> +Both methods can be combined in the same GPIO controller, e.g.
+> +
+> +       gpio_pio_i: gpio-controller@14B0 {
+> +               #gpio-cells = <2>;
+> +               compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
+> +               reg = <0x1480 0x18>;
+> +               gpio-controller;
+> +               gpio-ranges = <&pinctrl1 0 20 10>;
+> +               gpio-pingrps = <&pinctrl2 10>;
+> +               gpio-pingrp-names = "gpio_g_pins";
+> +       }
+
+Semicolon after that closing brace.
+
+> +++ b/drivers/gpio/gpiolib-of.c
+(...)
+> +       index = 0;
+> +       of_property_for_each_string(np, "gpio-pingrp-names", prop, name) {
+> +               ret = of_parse_phandle_with_args(np, "gpio-pingrps",
+> +                                                       "#gpio-pingrp-cells",
+> +                                                       index, &pinspec);
+> +               if (ret < 0)
+> +                       break;
+> +
+> +               index ++;
+> +
+> +               pctldev = of_pinctrl_get(pinspec.np);
+> +
+> +               gpiochip_add_pingroup_range(chip, pctldev,
+> +                                       pinspec.args[0], name);
+> +       }
+>  }
+
+This part looks fine.
+
+(...)
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1318,6 +1318,54 @@ EXPORT_SYMBOL_GPL(gpiochip_find);
+>  #ifdef CONFIG_PINCTRL
+>
+>  /**
+> + * gpiochip_add_pingroup_range() - add a range for GPIO <-> pin mapping
+> + * @chip: the gpiochip to add the range for
+> + * @pinctrl: the dev_name() of the pin controller to map to
+> + * @gpio_offset: the start offset in the current gpio_chip number space
+> + * @pin_group: name of the pin group inside the pin controller
+> + */
+> +int gpiochip_add_pingroup_range(struct gpio_chip *chip,
+> +                       struct pinctrl_dev *pctldev,
+> +                       unsigned int gpio_offset, const char *pin_group)
+> +{
+> +       struct gpio_pin_range *pin_range;
+> +       int ret;
+> +
+> +       pin_range = kzalloc(sizeof(*pin_range), GFP_KERNEL);
+> +       if (!pin_range) {
+> +               pr_err("%s: GPIO chip: failed to allocate pin ranges\n",
+> +                               chip->label);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       /* Use local offset as range ID */
+> +       pin_range->range.id = gpio_offset;
+> +       pin_range->range.gc = chip;
+> +       pin_range->range.name = chip->label;
+> +       pin_range->range.base = chip->base + gpio_offset;
+> +       pin_range->range.pin_base = 0;
+> +       ret = pinctrl_get_group_pins(pctldev, pin_group,
+> +                                       &pin_range->range.pins,
+> +                                       &pin_range->range.npins);
+> +       if (ret < 0) {
+> +               pr_err("%s: GPIO chip: could not create pin range %s\n",
+> +                      chip->label, pin_group);
+> +       }
+> +       pin_range->pctldev = pctldev;
+> +       pinctrl_add_gpio_range(pctldev, &pin_range->range);
+> +
+> +       pr_debug("GPIO chip %s: created GPIO range %d->%d ==> %s PINGRP %s\n",
+> +                chip->label, gpio_offset,
+> +                gpio_offset + pin_range->range.npins - 1,
+> +                pinctrl_dev_get_devname(pctldev), pin_group);
+> +
+> +       list_add_tail(&pin_range->node, &chip->pin_ranges);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(gpiochip_add_pingroup_range);
+
+This thing has *waaaay* to much pinctrl stuff in it. You need to find
+a better way to partition this between gpiolib and drivers/pinctrl/core.c.
+For example: get rid of the function pinctrl_get_group_pins(),
+why should GPIOlib know about that stuff?
+
+Pass the groupname to the pinctrl core and let it handle this
+business.
+
+> +/**
+>   * gpiochip_add_pin_range() - add a range for GPIO <-> pin mapping
+>   * @chip: the gpiochip to add the range for
+>   * @pinctrl_name: the dev_name() of the pin controller to map to
+
+That seems like an unrelated fix I'd like a separate patch for.
+
+(...)
+> +++ b/drivers/pinctrl/core.c
+> @@ -279,6 +279,15 @@ static int pinctrl_register_pins(struct pinctrl_dev *pctldev,
+>         return 0;
+>  }
+>
+> +static inline int gpio2pin(struct pinctrl_gpio_range *range, unsigned int gpio)
+> +{
+> +       unsigned int offset = gpio - range->base;
+> +       if (range->pins)
+> +               return range->pins[offset];
+> +       else
+> +               return range->pin_base + offset;
+> +}
+
+Clever function. Document it! :-)
+
+>  /**
+>   * pinctrl_match_gpio_range() - check if a certain GPIO pin is in range
+>   * @pctldev: pin controller device to check
+> @@ -444,8 +453,14 @@ pinctrl_find_gpio_range_from_pin(struct pinctrl_dev *pctldev,
+>         /* Loop over the ranges */
+>         list_for_each_entry(range, &pctldev->gpio_ranges, node) {
+>                 /* Check if we're in the valid range */
+> -               if (pin >= range->pin_base &&
+> -                   pin < range->pin_base + range->npins) {
+> +               if (range->pins) {
+> +                       int a;
+> +                       for (a = 0; a < range->npins; a++) {
+> +                               if (range->pins[a] == pin)
+> +                                       return range;
+> +                       }
+> +               } else if (pin >= range->pin_base &&
+> +                          pin < range->pin_base + range->npins) {
+>                         mutex_unlock(&pctldev->mutex);
+>                         return range;
+>                 }
+
+This seems like it could be a separate refactoring patch, i.e. a
+patch refactoring the ranges to be an array of disparate pins
+instead of a linear, consecutive range.
+
+>  /**
+> + * pinctrl_get_group_pins() - returns a pin group
+> + * @pctldev: the pin controller handling the group
+> + * @pin_group: the pin group to look up
+> + * @pins: returns a pointer to an array of pin numbers in the group
+> + * @npins: returns the number of pins in the group
+> + */
+> +int pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+> +                       const char *pin_group,
+> +                       unsigned const **pins, unsigned * const npins)
+> +{
+> +       const struct pinctrl_ops *pctlops = pctldev->desc->pctlops;
+> +       unsigned group_selector;
+> +
+> +       group_selector = pinctrl_get_group_selector(pctldev, pin_group);
+> +       if (group_selector < 0)
+> +               return group_selector;
+> +
+> +       return pctlops->get_group_pins(pctldev, group_selector, pins, npins);
+> +}
+> +EXPORT_SYMBOL_GPL(pinctrl_get_group_pins);
+
+As mentioned I don't like these pinctrl internals to be exposed
+to the whole wide world. You need to find another partitioning.
+
+>         /* Convert to the pin controllers number space */
+> -       pin = gpio - range->base + range->pin_base;
+> +       pin = gpio2pin(range, gpio);
+
+Nice, can I have a patch adding this gpio2pin (hm maybe
+you can rename that gpio_to_pin() I don't mind...)
+and refactoring the code? It's a nice refactoring in its own
+right.
+
+Yours,
+Linus Walleij
