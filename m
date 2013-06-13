@@ -1,46 +1,132 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [net-next PATCH v4 1/5] net: cpsw: enhance pinctrl support
-Date: Thu, 13 Jun 2013 02:54:44 -0700 (PDT)
-Message-ID: <20130613.025444.626549509946164895.davem@davemloft.net>
-References: <20130607.004234.2007576325541054686.davem@davemloft.net>
-	<51B1F2EB.80109@ti.com>
-	<CACRpkdbKWRyBxUF1w82C8WUAvXM5hsUc6N-C+CcwXr8eCyviWQ@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH v3 2/2] drivers: mfd: vexpress: add Serial Power
+ Controller (SPC) support
+Date: Thu, 13 Jun 2013 10:54:46 +0100
+Message-ID: <20130613095445.GA9045@e102568-lin.cambridge.arm.com>
+References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1370512763-32200-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <20130613000143.GB4567@zurbaran>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbKWRyBxUF1w82C8WUAvXM5hsUc6N-C+CcwXr8eCyviWQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: mugunthanvnm@ti.com, broonie@kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gururaja.hebbar@ti.com, benoit.cousson@linaro.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130613000143.GB4567@zurbaran>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Pawel Moll <Pawel.Moll@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 10 Jun 2013 17:48:16 +0200
+Hi Samuel,
 
-> On Fri, Jun 7, 2013 at 4:49 PM, Mugunthan V N <mugunthanvnm@ti.com> wrote:
+first things first, thanks a lot for having a look.
+
+On Thu, Jun 13, 2013 at 01:01:43AM +0100, Samuel Ortiz wrote:
+> Hi Lorenzo,
 > 
->>> If you want to merge the direct networking parts of this series into
->>> another tree, I'm fine with that:
->>>
->>> Acked-by: David S. Miller <davem@davemloft.net>
->>
->> David
->>
->> Can you the below patch series as i have adopted pinctrl PM api in another
->> series,
->> this patch has direct usage of pinctrl_select_state apis
->> http://marc.info/?l=linux-netdev&m=137054250018667&w=2
->>
->> Linus Walleij
->>
->> Please drop this patch series and take my other [atch set mentioned above
->> with David's Ack.
+> I don't particularily like this code, but I guess most of my dislike
+> comes from the whole bridge interface API and how that forces you into
+> implementing pretty much static code.
+
+I do not particularly like it either; you have to grant us though, as Nico
+explained, that the usage of this piece of hardware very early at boot is
+forcing us to find a solution that is not necessarily easy to implement.
+
+> A few nitpicks:
 > 
-> Sure I didn't see David ACK the new versions explicitly but
-> since they're even less intrusive I'll apply them assuming
-> his ACK on these versions too...
+> On Thu, Jun 06, 2013 at 10:59:23AM +0100, Lorenzo Pieralisi wrote:
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index d54e985..391eda1 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -1148,3 +1148,10 @@ config VEXPRESS_CONFIG
+> >  	help
+> >  	  Platform configuration infrastructure for the ARM Ltd.
+> >  	  Versatile Express.
+> > +
+> > +config VEXPRESS_SPC
+> > +	bool "Versatile Express SPC driver support"
+> > +	depends on ARM
+> > +	depends on VEXPRESS_CONFIG
+> > +	help
+> Please provide a detailed help entry here. 
 
-Just in case it isn't clear:
+Ok.
 
-Acked-by: David S. Miller <davem@davemloft.net>
+> > +	  Serial Power Controller driver for ARM Ltd. test chips.
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index 718e94a..3a01203 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -153,5 +153,6 @@ obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
+> >  obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
+> >  obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
+> >  obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o vexpress-sysreg.o
+> > +obj-$(CONFIG_VEXPRESS_SPC)	+= vexpress-spc.o
+> So you have Versatile Express platforms that will not need SPC ? i.e.
+> why isn't all that stuff under a generic CONFIG_VEXPRESS symbol ?
+
+You answered your own question, the Serial Power Controller aka SPC is
+present only in one of the many coretiles that can be stacked on top
+of the versatile express motherboard, so it requires a specific entry
+unless we want to compile it in for all vexpress platforms.
+
+> > +static struct vexpress_spc_drvdata *info;
+> > +static u32 *vexpress_spc_config_data;
+> > +static struct vexpress_config_bridge *vexpress_spc_config_bridge;
+> > +static struct vexpress_config_func *opp_func, *perf_func;
+> > +
+> > +static int vexpress_spc_load_result = -EAGAIN;
+> As I said, quite static...
+
+I will have a look and see if I can improve it, I could include some of
+those variables in the driver data and alloc them dynamically.
+
+> > +irqreturn_t vexpress_spc_irq_handler(int irq, void *data)
+> missing a static here ?
+
+Were not there enough :-) ? Correct, I will fix it.
+
+> > +static bool __init __vexpress_spc_check_loaded(void);
+> > +/*
+> > + * Pointer spc_check_loaded is swapped after init hence it is safe
+> > + * to initialize it to a function in the __init section
+> > + */
+> > +static bool (*spc_check_loaded)(void) __refdata = &__vexpress_spc_check_loaded;
+> > +
+> > +static bool __init __vexpress_spc_check_loaded(void)
+> > +{
+> > +	if (vexpress_spc_load_result == -EAGAIN)
+> > +		vexpress_spc_load_result = vexpress_spc_init();
+> > +	spc_check_loaded = &vexpress_spc_initialized;
+> > +	return vexpress_spc_initialized();
+> > +}
+> > +
+> > +/*
+> > + * Function exported to manage early_initcall ordering.
+> > + * SPC code is needed very early in the boot process
+> > + * to bring CPUs out of reset and initialize power
+> > + * management back-end. After boot swap pointers to
+> > + * make the functionality check available to loadable
+> > + * modules, when early boot init functions have been
+> > + * already freed from kernel address space.
+> > + */
+> > +bool vexpress_spc_check_loaded(void)
+> > +{
+> > +	return spc_check_loaded();
+> > +}
+> > +EXPORT_SYMBOL_GPL(vexpress_spc_check_loaded);
+> That one and the previous function look really nasty to me.
+> The simple fact that you need a static variable in your code to check if
+> your module is loaded sounds really fishy.
+
+Nico explained the reasons behind this nasty hack, because that's what it
+is. The only solution is resorting to vexpress platform code to initialize
+this driver directly (providing a static virtual memory mapping since that
+has to happen very early) to remove all needs for early_initcall
+synchronization and remove that variable. It won't look nicer though.
+
+I will review the code again to see how I can improve it.
+
+Thanks a lot,
+Lorenzo
