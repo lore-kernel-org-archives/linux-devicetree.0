@@ -1,28 +1,42 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] Make non-linear GPIO ranges accesible from gpiolib
-Date: Thu, 13 Jun 2013 20:36:22 +0200
-Message-ID: <CACRpkdbP6VUurFuWV_dzm=9pq+xEu9iDs0NZwinLJXZBNrVzFA@mail.gmail.com>
-References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com>
-	<1371128132-18266-2-git-send-email-christian.ruppert@abilis.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3] ethernet/arc/arc_emac - Add new driver
+Date: Thu, 13 Jun 2013 22:16:48 +0300
+Message-ID: <CAHp75VdNpJ3x59+dV06rb29N=46W_GaDCc9EER3w8R6aSBZqnQ@mail.gmail.com>
+References: <1371134239-4531-1-git-send-email-abrodkin@synopsys.com>
+	<CAHp75Vf4zjtebbaQMp4L0EmUPDVyrNPfvLODo7gHBuBEsWmZeA@mail.gmail.com>
+	<1371148401.31941.20.camel@joe-AO722>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1371128132-18266-2-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1371148401.31941.20.camel@joe-AO722>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Alexey Brodkin <Alexey.Brodkin@synopsys.com>, netdev <netdev@vger.kernel.org>, Francois Romieu <romieu@fr.zoreil.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2013 at 2:55 PM, Christian Ruppert
-<christian.ruppert@abilis.com> wrote:
+On Thu, Jun 13, 2013 at 9:33 PM, Joe Perches <joe@perches.com> wrote:
+> On Thu, 2013-06-13 at 21:25 +0300, Andy Shevchenko wrote:
+>> On Thu, Jun 13, 2013 at 5:37 PM, Alexey Brodkin
+>> <Alexey.Brodkin@synopsys.com> wrote:
+>> > Driver for non-standard on-chip ethernet device ARC EMAC 10/100,
+>> > instantiated in some legacy ARC (Synopsys) FPGA Boards such as
+>> > ARCAngel4/ML50x.
 
-> This patch adds the infrastructure required to register non-linear gpio
-> ranges through gpiolib and the standard GPIO device tree bindings.
+>> > +++ b/drivers/net/ethernet/arc/arc_emac.h
+> []
+>> > +               if (unlikely((info & OWN_MASK) == FOR_EMAC)) {
+>> > +                       /* BD is still owned by EMAC */
+>> > +                       continue;
+>> > +               }
+>>
+>> Redundant braces.
 >
-> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+> Maybe not.  Braces can be a visual aid when there is
+> a comment in the test.
 
-Splendid. I'll just wait some more time before applying so that others
-get a chance to comment on this, but I'm happy!
+I'm okay with both approaches. If author considers the comment is
+useful in that form, I agree with him.
 
-Yours,
-Linus Walleij
+--
+With Best Regards,
+Andy Shevchenko
