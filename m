@@ -1,92 +1,71 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC/PATCH v2 2/2] gpio-rcar: Add DT support
-Date: Thu, 13 Jun 2013 19:08:42 +0200
-Message-ID: <2687390.IKNGX5KlWy@avalon>
-References: <1369136406-23800-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1369136406-23800-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20130612114911.638683E0A56@localhost>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 06/10] mmc: omap_hsmmc: add support for pbias
+ configuration in dt
+Date: Thu, 13 Jun 2013 18:45:54 +0100
+Message-ID: <20130613174554.GB1403@sirena.org.uk>
+References: <20130523184045.GD13507@atomide.com>
+ <1370546059-24181-1-git-send-email-balajitk@ti.com>
+ <1370546059-24181-7-git-send-email-balajitk@ti.com>
+ <CACRpkdZAzAJW0UxGCSj-PWXTSi2Q6T8fqL9SQ+Y-91sELQ3SRQ@mail.gmail.com>
+ <20130613095353.GX8164@atomide.com>
+ <51B9DA30.1090308@ti.com>
+ <CACRpkdY6cZ+bT-C9Go3sZVw6ErQqTm0m9__uKQrkg4eUU1thHA@mail.gmail.com>
+ <20130613162937.GK8164@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130612114911.638683E0A56@localhost>
-Sender: linux-sh-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, Magnus Damm <damm@opensource.se>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dWDJ72qfEa57oDWE"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130613162937.GK8164@atomide.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Balaji T K <balajitk@ti.com>, Lee Jones <lee.jones@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
 
-Thanks for the review.
+--dWDJ72qfEa57oDWE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wednesday 12 June 2013 12:49:11 Grant Likely wrote:
-> On Tue, 21 May 2013 13:40:06 +0200, Laurent Pinchart wrote:
-> > Add DT bindings for the gpio-rcar driver and read the device
-> > configuration from the DT node at probe time if available.
-> > 
-> > Cc: devicetree-discuss@lists.ozlabs.org
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > 
-> >  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt | 52 +++++++++++++++++
-> >  drivers/gpio/gpio-rcar.c                           | 66 ++++++++++++++---
-> >  2 files changed, 108 insertions(+), 10 deletions(-)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+On Thu, Jun 13, 2013 at 09:29:38AM -0700, Tony Lindgren wrote:
+> * Linus Walleij <linus.walleij@linaro.org> [130613 08:35]:
 
-[snip]
+> > No. If we go down that road *anything* that is connected to a
+> > pad becomes part of the pinctrl subsystem, then pinctrl-single
+> > becomes some kind of hardware abstraction or BIOS, and that
+> > is *not* the intent. It is only supposed to deal with the bits
+> > there that are 100% related to what pinctrl does, nothing else.
 
-> > diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-> > index 0f3d647..c153837 100644
-> > --- a/drivers/gpio/gpio-rcar.c
-> > +++ b/drivers/gpio/gpio-rcar.c
+> Sounds like the way to go is to do a standalone regulator driver that
+> optionally uses pinctrl-single,bits. But only for the bits in the PBIAS
+> register that are 100% related to pinctrl.
 
-[snip]
+> In any case the PBIAS regulator driver should be a separate driver
+> as it may need to be a child of the SCM driver for PM needs in the
+> future.
 
-> > +static void gpio_rcar_parse_pdata(struct gpio_rcar_priv *p)
-> > +{
-> > +	struct gpio_rcar_config *pdata = p->pdev->dev.platform_data;
-> > +#ifdef CONFIG_OF
-> > +	struct device_node *np = p->pdev->dev.of_node;
-> > +	struct of_phandle_args args;
-> > +	int ret;
-> > +#endif
-> > +
-> > +	if (pdata)
-> > +		p->config = *pdata;
-> > +#ifdef CONFIG_OF
-> > +	else if (np) {
-> 
-> Try this:
-> 	else if ((IS_ENABLED(CONFIG_OF)) && np) {
-> 
-> It's much better than adding #ifdef blocks to .c files. In v3.11 a bunch
-> of the OF forward declarations get pulled out from under the #ifdef
-> block so that you can use the above construct.
+This all seems sensible to me.
 
-As a pull request has already been sent to the ARM SoC maintainers, and given 
-that this isn't a critical issue, I'll address it as a follow-up patch if 
-that's fine with you.
+--dWDJ72qfEa57oDWE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> > +		ret = of_parse_phandle_with_args(np, "gpio-ranges",
-> > +				"#gpio-range-cells", 0, &args);
-> > +		p->config.number_of_pins = ret == 0 && args.args_count == 3
-> > +					 ? args.args[2]
-> > +					 : RCAR_MAX_GPIO_PER_BANK;
-> > +		p->config.gpio_base = -1;
-> > +	}
-> > +#endif
-> > +
-> > +	if (p->config.number_of_pins == 0 ||
-> > +	    p->config.number_of_pins > RCAR_MAX_GPIO_PER_BANK) {
-> > +		dev_warn(&p->pdev->dev,
-> > +			 "Invalid number of gpio lines %u, using %u\n",
-> > +			 p->config.number_of_pins, RCAR_MAX_GPIO_PER_BANK);
-> > +		p->config.number_of_pins = RCAR_MAX_GPIO_PER_BANK;
-> > +	}
-> > +}
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
--- 
-Regards,
+iQIcBAEBAgAGBQJRugVOAAoJELSic+t+oim9Xh4P/i8yow/72dAO2CNeRUYvEOUZ
+gW8nWnKB8HXiujoJiPzl94fcMNL9RBV9t2xIJG6Gk2+P7Pelhm4WZ7fDa3Cd0tr7
+BX0t4VRLHT7KCSqQXuodvJSw38Xo0GDbZsucrxbXJeKo3VMXZGznxr07qwfYaS0E
+BxbcwW7hpvc4hGQ9Qv4+4+Uw3/5OyoJpapKtB1qW44Q8KHVGNexPXA8L7kYrlXZE
+ISbrvKN9C1xlnZ6suUOLMRywCMGjBX/rSBweX421BAn8XnYeIR+iK1G0X8l6kfet
+IaKkktM2f9kISuovBhxHpht8rtD0KtBQEGHJZZsR1rLkFcranyO87jlFCD54o2Bf
+Q3e7qpbDDelAQoGV2XjOSCKs6+Lpk5klxCo1TODSn0UU9X/Ekubq5G6VoMTnVKBS
+HjbLeyRvXllR5WJEAVxD9EZ9O2LiN5OefVhI6seqcO6cifdAoyc00DBQ6mo3bOBI
+j7GUPBax1Yov7RHlMdRJ7CwJH+/CWNKg80R16GARFFxgDG7hS7af1AaeTsn6EWVH
+3eI5vzmWm7aaeM92/NE2diygiVX6MfR/2toPQ/gEF0oRKzdV3wzcYP1IrO9BafGl
+KGx1Jo25ews6TK79m7kHdelM+JF9fXq5pOrXGvUVhnNGpcUh3gdRtBVX7yWfzr1K
+JX3a0kwDSJkVPlv+xL6i
+=A+R2
+-----END PGP SIGNATURE-----
 
-Laurent Pinchart
-
+--dWDJ72qfEa57oDWE--
