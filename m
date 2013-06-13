@@ -1,49 +1,43 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [RFC PATCH 1/4] regulator: Introduce OMAP regulator to control
- PMIC over VC/VP
-Date: Thu, 13 Jun 2013 10:12:26 -0500
-Message-ID: <CAGo_u6pQ+_N0J8RObxhbgiQBm2tdW4oLziEjiHhqP1WV4HbGsQ@mail.gmail.com>
-References: <1369246717-4167-1-git-send-email-nm@ti.com>
-	<1369246717-4167-2-git-send-email-nm@ti.com>
-	<20130610103131.GR31367@sirena.org.uk>
-	<CAGo_u6qTiPpd0DDe3jnPh_UxTwox22azhcMGy=fftL8H+DGeyw@mail.gmail.com>
-	<20130610164905.GJ1403@sirena.org.uk>
-	<CAGo_u6ov=yaCwt8apbvW57ErAvhgUBHHw9gwADBC1fJUrfucUQ@mail.gmail.com>
-	<20130610180150.GQ1403@sirena.org.uk>
-	<20130613133950.GA32174@kahuna>
-	<20130613144726.GY1403@sirena.org.uk>
-	<20130613145803.GA32324@kahuna>
-	<20130613150710.GZ1403@sirena.org.uk>
+From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: [RFC] OF: make of_property_for_each_u32() use parameters if OF is not
+ enabled
+Date: Thu, 13 Jun 2013 17:28:51 +0200
+Message-ID: <1371137331-4652-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130613150710.GZ1403@sirena.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Paul Walmsley <paul@pwsan.com>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2013 at 10:07 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Jun 13, 2013 at 09:58:03AM -0500, Nishanth Menon wrote:
->
->> I am proposing moving the following into OF match data.
->> ti,i2c-slave-address
->> ti,i2c-voltage-register
->> ti,i2c-command-register
->> ti,slew-rate-microvolt
->> ti,step-size-micro-volts
->> ti,voltage-selector-set-bits
->> ti,voltage-selector-mask
->> ti,voltage-selector-offset
->> ti,non-zero-voltage-selector
->
->> The only thing I propose to retain is board specific variations - e.g.
->> gpios, boot voltage and standard regulator min,max overrides if any.
->
->> I can also do voltage selector based operations while at it.
->
-> OK, this sounds like a step in the right direction.
-Thanks for the review and guidance. I will post a new RFC series with
-the above changes in a day or so.
-Regards,
-Nishanth Menon
+SSBhbSBnZXR0aW5nIGEgZmV3Cnx3YXJuaW5nOiB1bnVzZWQgdmFyaWFibGUg4oCYcOKAmSBbLVd1
+bnVzZWQtdmFyaWFibGVdCnx3YXJuaW5nOiB1bnVzZWQgdmFyaWFibGUg4oCYcHJvcOKAmSBbLVd1
+bnVzZWQtdmFyaWFibGVdCgppbiB0aGUgY2FzZSB3aGVyZSBDT05GSUdfT0YgaXMgbm90IGRlZmlu
+ZWQgYW5kIHRoZSBwYXJhbWV0ZXJzIGFyZSBvbmx5CnVzZWQgaW4gdGhlIGxvb3AgbWFjcm8uCgpT
+aWduZWQtb2ZmLWJ5OiBTZWJhc3RpYW4gQW5kcnplaiBTaWV3aW9yIDxiaWdlYXN5QGxpbnV0cm9u
+aXguZGU+Ci0tLQogaW5jbHVkZS9saW51eC9vZi5oIHwgICAgNCArKy0tCiAxIGZpbGUgY2hhbmdl
+ZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2luY2x1ZGUv
+bGludXgvb2YuaCBiL2luY2x1ZGUvbGludXgvb2YuaAppbmRleCAxZmQwOGNhLi41YTg5ZjNmIDEw
+MDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L29mLmgKKysrIGIvaW5jbHVkZS9saW51eC9vZi5oCkBA
+IC01MDcsOCArNTA3LDggQEAgc3RhdGljIGlubGluZSBpbnQgb2ZfbWFjaGluZV9pc19jb21wYXRp
+YmxlKGNvbnN0IGNoYXIgKmNvbXBhdCkKIAogI2RlZmluZSBvZl9tYXRjaF9wdHIoX3B0cikJTlVM
+TAogI2RlZmluZSBvZl9tYXRjaF9ub2RlKF9tYXRjaGVzLCBfbm9kZSkJTlVMTAotI2RlZmluZSBv
+Zl9wcm9wZXJ0eV9mb3JfZWFjaF91MzIobnAsIHByb3BuYW1lLCBwcm9wLCBwLCB1KSBcCi0Jd2hp
+bGUgKDApCisjZGVmaW5lIG9mX3Byb3BlcnR5X2Zvcl9lYWNoX3UzMihucCwgcHJvcG5hbWUsIHBy
+b3AsIHAsIHUpCVwKKwlmb3IgKHByb3AgPSBOVUxMLCBwID0gTlVMTDsgMDsgcHJvcCsrLCBwKysp
+CiAjZGVmaW5lIG9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZyhucCwgcHJvcG5hbWUsIHByb3As
+IHMpIFwKIAl3aGlsZSAoMCkKICNlbmRpZiAvKiBDT05GSUdfT0YgKi8KLS0gCjEuNy4xMC40Cgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVl
+LWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3Jn
+Cmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
