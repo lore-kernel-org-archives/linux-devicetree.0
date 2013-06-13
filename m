@@ -1,107 +1,110 @@
 From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [RFC PATCH v3 2/2] drivers: mfd: vexpress: add Serial Power
- Controller (SPC) support
-Date: Thu, 13 Jun 2013 02:01:43 +0200
-Message-ID: <20130613000143.GB4567@zurbaran>
+Subject: Re: [RFC PATCH v3 0/2] drivers: mfd: Versatile Express SPC support
+Date: Thu, 13 Jun 2013 02:13:11 +0200
+Message-ID: <20130613001311.GC4567@zurbaran>
 References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1370512763-32200-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <20130611090545.GC8164@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1370512763-32200-3-git-send-email-lorenzo.pieralisi@arm.com>
+In-Reply-To: <20130611090545.GC8164@e102568-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Pawel Moll <pawel.moll@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <achin.gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Pawel Moll <Pawel.Moll@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Lorenzo,
 
-I don't particularily like this code, but I guess most of my dislike
-comes from the whole bridge interface API and how that forces you into
-implementing pretty much static code.
-A few nitpicks:
+On Tue, Jun 11, 2013 at 10:05:45AM +0100, Lorenzo Pieralisi wrote:
+> Hi Samuel,
+> 
+> if nobody has objections I think this set is ready to get merged. As
+> Nico mentioned in:
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-June/173541.html
+> 
+> since we would like to get it merged through the ARM SoC tree owing to
+> dependencies between this code and ARM power management back-ends, your ack
+> would be appreciated, if you think it is worth it of course.
+I'm fine with it going through the arm-soc tree, but please prepare a
+branch for me to pull from.
+AFAIR, we got a merge conflict during the last merge window with the
+vexpress driver, I want to avoid that for the next one.
 
-On Thu, Jun 06, 2013 at 10:59:23AM +0100, Lorenzo Pieralisi wrote:
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index d54e985..391eda1 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1148,3 +1148,10 @@ config VEXPRESS_CONFIG
->  	help
->  	  Platform configuration infrastructure for the ARM Ltd.
->  	  Versatile Express.
-> +
-> +config VEXPRESS_SPC
-> +	bool "Versatile Express SPC driver support"
-> +	depends on ARM
-> +	depends on VEXPRESS_CONFIG
-> +	help
-Please provide a detailed help entry here. 
+Now, about the driver itself, besides the really odd code design, the
+static variables all over the place, the nasty init hacks and the
+unneeded long function names, someone should refresh my memory and explain
+to me why is this guy under mfd. I can see it somehow supports IP blocks
+providing different functions, but the design is not sharing anything with
+most of the rest of the mfd drivers.
+Not only that, but the whole vexpress-config code design is not the
+nicest piece of code I've ever seen. And I'm usually not picky. e.g. the
+whole vexpress-config ad-hoc API is awkward and I wonder if it could be
+implemented as a bus instead.
 
-
-> +	  Serial Power Controller driver for ARM Ltd. test chips.
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 718e94a..3a01203 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -153,5 +153,6 @@ obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
->  obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
->  obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
->  obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o vexpress-sysreg.o
-> +obj-$(CONFIG_VEXPRESS_SPC)	+= vexpress-spc.o
-So you have Versatile Express platforms that will not need SPC ? i.e.
-why isn't all that stuff under a generic CONFIG_VEXPRESS symbol ?
-
-
-
-> +static struct vexpress_spc_drvdata *info;
-> +static u32 *vexpress_spc_config_data;
-> +static struct vexpress_config_bridge *vexpress_spc_config_bridge;
-> +static struct vexpress_config_func *opp_func, *perf_func;
-> +
-> +static int vexpress_spc_load_result = -EAGAIN;
-As I said, quite static...
-
-> +irqreturn_t vexpress_spc_irq_handler(int irq, void *data)
-missing a static here ?
-
-
-> +static bool __init __vexpress_spc_check_loaded(void);
-> +/*
-> + * Pointer spc_check_loaded is swapped after init hence it is safe
-> + * to initialize it to a function in the __init section
-> + */
-> +static bool (*spc_check_loaded)(void) __refdata = &__vexpress_spc_check_loaded;
-> +
-> +static bool __init __vexpress_spc_check_loaded(void)
-> +{
-> +	if (vexpress_spc_load_result == -EAGAIN)
-> +		vexpress_spc_load_result = vexpress_spc_init();
-> +	spc_check_loaded = &vexpress_spc_initialized;
-> +	return vexpress_spc_initialized();
-> +}
-> +
-> +/*
-> + * Function exported to manage early_initcall ordering.
-> + * SPC code is needed very early in the boot process
-> + * to bring CPUs out of reset and initialize power
-> + * management back-end. After boot swap pointers to
-> + * make the functionality check available to loadable
-> + * modules, when early boot init functions have been
-> + * already freed from kernel address space.
-> + */
-> +bool vexpress_spc_check_loaded(void)
-> +{
-> +	return spc_check_loaded();
-> +}
-> +EXPORT_SYMBOL_GPL(vexpress_spc_check_loaded);
-That one and the previous function look really nasty to me.
-The simple fact that you need a static variable in your code to check if
-your module is loaded sounds really fishy.
+FWIW I take the blame here for not reviewing the initial driver
+submission that Arnd kindly sent to me...But now that I'm looking at it,
+I think it really is on the edge of being staging material. Any thought
+on that ?
 
 Cheers,
 Samuel.
+
+> Thank you very much indeed,
+> Lorenzo
+> 
+> On Thu, Jun 06, 2013 at 10:59:21AM +0100, Lorenzo Pieralisi wrote:
+> > This patch is v3 of a previous posting:
+> > 
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2013-June/173464.html
+> > 
+> > v3 changes:
+> > 
+> > - added __refdata to spc_check_loaded pointer
+> > - removed some exported symbols
+> > - added node pointer check in vexpress_spc_init()
+> > 
+> > v2 changes:
+> > 
+> > - Dropped timeout interface patch
+> > - Converted interfaces to non-timeout ones, integrated and retested
+> > - Removed mutex used at init
+> > - Refactored code to work around init sections warning
+> > - Fixed two minor bugs
+> > 
+> > This patch series introduces support for the Versatile Express Serial
+> > Power Controller (SPC) present in ARM Versatile Express TC2 core tiles.
+> > SPC driver is a fundamental component of TC2 power management and allows
+> > to carry out C-state management and DVFS for A15 and A7 clusters.
+> > 
+> > First patch provides changes required by SPC to comply with the
+> > Versatile Express config API, second patch is the SPC driver implementation.
+> > 
+> > Code extensively exercised through CPUidle and CPUfreq power states and
+> > operating point transitions.
+> > 
+> > Lorenzo Pieralisi (1):
+> >   drivers: mfd: vexpress: add Serial Power Controller (SPC) support
+> > 
+> > Pawel Moll (1):
+> >   drivers: mfd: refactor the vexpress config bridge API
+> > 
+> >  Documentation/devicetree/bindings/mfd/vexpress-spc.txt |  35 +
+> >  drivers/mfd/Kconfig                                    |   7 +
+> >  drivers/mfd/Makefile                                   |   1 +
+> >  drivers/mfd/vexpress-config.c                          |  61 +-
+> >  drivers/mfd/vexpress-spc.c                             | 633 ++++++++++
+> >  drivers/mfd/vexpress-sysreg.c                          |   2 +-
+> >  include/linux/vexpress.h                               |  59 +-
+> >  7 files changed, 770 insertions(+), 28 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/vexpress-spc.txt
+> >  create mode 100644 drivers/mfd/vexpress-spc.c
+> > 
+> > -- 
+> > 1.8.2.2
+> > 
+> 
 
 -- 
 Intel Open Source Technology Centre
