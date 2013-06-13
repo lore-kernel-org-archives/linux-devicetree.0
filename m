@@ -1,145 +1,347 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V4 1/3] pci: Add PCIe driver for Samsung Exynos
-Date: Thu, 13 Jun 2013 16:18:47 +0200
-Message-ID: <28355406.ThqqvnG0Yj@wuerfel>
-References: <003601ce6756$444e8cd0$cceba670$@samsung.com> <2061566.hRLrhtBK6z@wuerfel> <000901ce6838$8b514720$a1f3d560$@samsung.com>
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: tegra: basic support for Trusted Foundations
+Date: Thu, 13 Jun 2013 15:35:42 +0100
+Message-ID: <20130613143536.GA18021@localhost.localdomain>
+References: <1371114745-24710-1-git-send-email-acourbot@nvidia.com>
+ <1371114745-24710-2-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <000901ce6838$8b514720$a1f3d560$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1371114745-24710-2-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 13 June 2013 22:18:50 Jingoo Han wrote:
-> On Wednesday, June 12, 2013 8:23 PM, Arnd Bergmann wrote:
-> > On Wednesday 12 June 2013 19:19:05 Jingoo Han wrote:
-
-> > > +
-> > > +/* synopsis specific PCIE configuration registers*/
-> > > +#define PCIE_PORT_LINK_CONTROL		0x710
-> > > +#define PORT_LINK_MODE_MASK		(0x3f << 16)
-> > > +#define PORT_LINK_MODE_4_LANES		(0x7 << 16)
-> > 
-> > Do you mean this is a "Synopsys" designware part? In that case it
-> > should really not be called "exynos-pcie" but "designware-pcie"
-> > and you should make sure that the driver makes no assumptions about
-> > the platform. A lot of other platforms also use designware
-> > parts and should be able to reuse this driver.
+On Thu, Jun 13, 2013 at 06:12:23PM +0900, Alexandre Courbot wrote:
+> Add basic support for booting secondary processors on Tegra devices
+> using the Trusted Foundations secure monitor.
 > 
-> Sorry, I don't think so.
-> Only core block is a "Synopsys" designware part IP block,
-> other parts are Exynos-specific.
-> So, it is hard to share with other PCIe IPs using synopsis core.
-
-Just call it synopsys anyway and put a comment in to explain this.
-That should be enough for the next person with a synopsys PCI core
-to reuse your code and split out the exynos specific parts into a
-separate file.
-
-> > I think you should not assume that the physical base address is a 32
-> > bit value. The hardware clearly supports "lower" and "upper" halves
-> > for the address window, so when resource_size_t is 64 bit, you should
-> > set the upper half accordingly. Since the hardware is always 64 bit,
-> > you can use a "u64" type rather than resource_size_t to simplify the
-> > code here.
+> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/tegra.txt    | 11 +++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+>  arch/arm/configs/tegra_defconfig                   |  1 +
+>  arch/arm/mach-tegra/Kconfig                        | 14 ++++++
+>  arch/arm/mach-tegra/Makefile                       |  3 ++
+>  arch/arm/mach-tegra/common.c                       |  2 +
+>  arch/arm/mach-tegra/firmware.c                     | 40 +++++++++++++++++
+>  arch/arm/mach-tegra/firmware.h                     | 19 ++++++++
+>  arch/arm/mach-tegra/trusted_foundations.c          | 51 ++++++++++++++++++++++
+>  9 files changed, 142 insertions(+)
+>  create mode 100644 arch/arm/mach-tegra/firmware.c
+>  create mode 100644 arch/arm/mach-tegra/firmware.h
+>  create mode 100644 arch/arm/mach-tegra/trusted_foundations.c
 > 
-> OK, I will replace "u32" with "u64".
+> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+> index ed9c853..d59bc19 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra.txt
+> @@ -32,3 +32,14 @@ board-specific compatible values:
+>    nvidia,whistler
+>    toradex,colibri_t20-512
+>    toradex,iris
+> +
+> +Optional nodes
+> +-------------------------------------------
+> +
+> +Trusted Foundations:
+> +Boards using the Trusted Foundations secure monitor should signal its
+> +presence by declaring a node compatible with "tl,trusted-foundations":
+> +
+> +	firmware {
 
-Not what I meant, please read it again.
+You need to make a clear statement about whether the node name is
 
-> > > +static void exynos_pcie_prog_viewport_io_outbound(struct pcie_port *pp)
-> > > +{
-> > > +	u32 val;
-> > > +	void __iomem *dbi_base = pp->dbi_base;
-> > > +
-> > > +	/* Program viewport 1 : OUTBOUND : IO */
-> > > +	val = PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX1;
-> > > +	writel_rc(pp, val, dbi_base + PCIE_ATU_VIEWPORT);
-> > > +	writel_rc(pp, PCIE_ATU_TYPE_IO, dbi_base + PCIE_ATU_CR1);
-> > > +	val = PCIE_ATU_ENABLE;
-> > > +	writel_rc(pp, val, dbi_base + PCIE_ATU_CR2);
-> > > +	writel_rc(pp, (u32)pp->io_base, dbi_base + PCIE_ATU_LOWER_BASE);
-> > > +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_BASE);
-> > > +	writel_rc(pp, (u32)(pp->io_base + pp->config.io_size - 1),
-> > > +			dbi_base + PCIE_ATU_LIMIT);
-> > > +	writel_rc(pp, (u32)pp->io_base, dbi_base + PCIE_ATU_LOWER_TARGET);
-> > > +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_TARGET);
-> > > +}
-> > 
-> > You don't actually map the I/O space anywhere into virtual memory.
-> > I think you need to call pci_ioremap_io with the pp->io_base at
-> > boot time.
+I think it shouldn't required to be exactly equal to "firmware", because
+that would lead to problems if there were multiple independent firmware
+APIs present (which is certainly possible, whether or not it is true
+on Tegra).
+
+> +		compatible = "tl,trusted-foundations";
+> +	};
+
+For now, it might make more sense to make this binding tegra-specific,
+and to interpret the node is only implying the presence of the low-
+level SoC functions you are using on Tegra, not TF as a whole. 
+
+Otherwise, it feels too generic.  There is no description of exactly
+what functionality will be available if this node it present: if
+this is going to be a generic binding for TF, then it needs to work
+for all deployments of TF, not just your specific case.  For example,
+how to you find out what functionality is present?  Will there be
+a standard probing ABI for all versions and deployments of TF, or
+would extra information need to be described in the DT?
+
+Partly, this depends on whether the TF_SET_CPU_BOOT_ADDR_SMC call will
+be present, working, and with compatible ABI and semantics, on every SoC
+where an implementation of TF is present.  Someone from Trusted Logic, or
+someone with visibility of the relevant ABI/API specs would need to
+judge on that -- do you have that info?
+
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 6931c43..c21e1e9 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -58,6 +58,7 @@ st	STMicroelectronics
+>  ste	ST-Ericsson
+>  stericsson	ST-Ericsson
+>  ti	Texas Instruments
+> +tl	Trusted Logic
+>  toshiba	Toshiba Corporation
+>  via	VIA Technologies, Inc.
+>  wlf	Wolfson Microelectronics
+> diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
+> index 4de3bce..3bf158a 100644
+> --- a/arch/arm/configs/tegra_defconfig
+> +++ b/arch/arm/configs/tegra_defconfig
+> @@ -28,6 +28,7 @@ CONFIG_ARCH_TEGRA_3x_SOC=y
+>  CONFIG_ARCH_TEGRA_114_SOC=y
+>  CONFIG_TEGRA_PCI=y
+>  CONFIG_TEGRA_EMC_SCALING_ENABLE=y
+> +CONFIG_TEGRA_TRUSTED_FOUNDATIONS=y
+>  CONFIG_SMP=y
+>  CONFIG_PREEMPT=y
+>  CONFIG_AEABI=y
+> diff --git a/arch/arm/mach-tegra/Kconfig b/arch/arm/mach-tegra/Kconfig
+> index 84d72fc..055f496 100644
+> --- a/arch/arm/mach-tegra/Kconfig
+> +++ b/arch/arm/mach-tegra/Kconfig
+> @@ -87,4 +87,18 @@ config TEGRA_AHB
+>  config TEGRA_EMC_SCALING_ENABLE
+>  	bool "Enable scaling the memory frequency"
+>  
+> +config TEGRA_TRUSTED_FOUNDATIONS
+> +	bool "Trusted Foundations secure monitor support"
+> +	help
+> +	  Many Tegra devices are booted with the Trusted Foundations secure
+> +	  monitor active, requiring some core operations to be performed by
+> +	  the secure monitor instead of the kernel.
+> +
+> +	  This option allows the kernel to invoke the secure monitor when
+> +	  required on devices using Trusted Foundations.
+> +
+> +	  Devices using Trusted Foundations should pass a device tree containing
+> +	  a node compatible with "tl,trusted-foundations" to signal the presence
+> +	  of the secure monitor.
+> +
+>  endmenu
+> diff --git a/arch/arm/mach-tegra/Makefile b/arch/arm/mach-tegra/Makefile
+> index d011f0a..9fdc004 100644
+> --- a/arch/arm/mach-tegra/Makefile
+> +++ b/arch/arm/mach-tegra/Makefile
+> @@ -12,6 +12,7 @@ obj-y					+= pm.o
+>  obj-y					+= reset.o
+>  obj-y					+= reset-handler.o
+>  obj-y					+= sleep.o
+> +obj-y					+= firmware.o
+>  obj-y					+= tegra.o
+>  obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
+>  obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= tegra20_speedo.o
+> @@ -37,3 +38,5 @@ endif
+>  obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= board-harmony-pcie.o
+>  
+>  obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= board-paz00.o
+> +
+> +obj-$(CONFIG_TEGRA_TRUSTED_FOUNDATIONS)	+= trusted_foundations.o
+> diff --git a/arch/arm/mach-tegra/common.c b/arch/arm/mach-tegra/common.c
+> index 9f852c6..4796bb0 100644
+> --- a/arch/arm/mach-tegra/common.c
+> +++ b/arch/arm/mach-tegra/common.c
+> @@ -37,6 +37,7 @@
+>  #include "sleep.h"
+>  #include "pm.h"
+>  #include "reset.h"
+> +#include "firmware.h"
+>  
+>  /*
+>   * Storage for debug-macro.S's state.
+> @@ -97,6 +98,7 @@ static void __init tegra_init_cache(void)
+>  
+>  void __init tegra_init_early(void)
+>  {
+> +	tegra_init_firmware();
+>  	tegra_cpu_reset_handler_init();
+>  	tegra_apb_io_init();
+>  	tegra_init_fuse();
+> diff --git a/arch/arm/mach-tegra/firmware.c b/arch/arm/mach-tegra/firmware.c
+> new file mode 100644
+> index 0000000..ea861ca
+> --- /dev/null
+> +++ b/arch/arm/mach-tegra/firmware.c
+> @@ -0,0 +1,40 @@
+> +/*
+> + * SecureOS support for Tegra CPUs
+
+Should the name "SecureOS" change in these comment headers? (affects
+multiple files)
+
+> + *
+> + * Copyright (c) 2013, NVIDIA Corporation.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + */
+> +
+> +#include <linux/printk.h>
+> +#include <linux/kconfig.h>
+> +#include <linux/of.h>
+> +#include <asm/firmware.h>
+> +
+> +#if IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS)
+> +extern const struct firmware_ops tegra_trusted_foundations_ops;
+> +#endif
+> +
+> +void __init tegra_init_firmware(void)
+> +{
+> +	struct device_node *node;
+> +
+> +	if (!of_have_populated_dt())
+> +		return;
+> +
+> +	node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
+> +	if (node && !IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS))
+> +		pr_warn("Trusted Foundations detected but support missing!\n");
+
+Should this be more than just a warning?
+
+It looks to me like tegra_cpu_reset_handler_set() might either silently
+fail or trigger an external abort in this situation, depending on the
+hardware and on how TF sets things up.
+
+There seems to be no way to signal an error when attempting to set a
+CPU's reset address.
+
+> +#if IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS)
+> +	else if (node)
+> +		register_firmware_ops(&tegra_trusted_foundations_ops);
+> +#endif
+> +}
+
+
+IS_ENABLED() allows #ifdefs to be avoided -- maybe this would be clearer
+as:
+
+	node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
+	if (!node)
+		return;
+
+	if (WARN_ON(!IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS))) {
+		pr_warn("Trusted Foundations detected but support missing!\n");
+		return;
+	}
+
+	register_firmware_ops(&tegra_trusted_foundations_ops);
+	
+
+> diff --git a/arch/arm/mach-tegra/firmware.h b/arch/arm/mach-tegra/firmware.h
+> new file mode 100644
+> index 0000000..77c62fb
+> --- /dev/null
+> +++ b/arch/arm/mach-tegra/firmware.h
+> @@ -0,0 +1,19 @@
+> +/*
+> + * Copyright (c) 2013, NVIDIA Corporation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + */
+> +
+> +#ifndef __TEGRA_FIRMWARE_H
+> +#define __TEGRA_FIRMWARE_H
+> +
+> +void tegra_init_firmware(void);
+> +
+> +#endif
+> diff --git a/arch/arm/mach-tegra/trusted_foundations.c b/arch/arm/mach-tegra/trusted_foundations.c
+> new file mode 100644
+> index 0000000..411044f
+> --- /dev/null
+> +++ b/arch/arm/mach-tegra/trusted_foundations.c
+> @@ -0,0 +1,51 @@
+> +/*
+> + * SecureOS support for Tegra CPUs
+> + *
+> + * Copyright (c) 2013, NVIDIA Corporation.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <asm/firmware.h>
+> +
+> +#define TF_SET_CPU_BOOT_ADDR_SMC 0xfffff200
+> +
+> +static void __attribute__((naked)) tegra_tf_generic_smc(u32 type, u32 subtype,
+> +							u32 arg)
+> +{
+> +	asm volatile(
+> +		".arch_extension	sec\n\t"
+> +		"stmfd	sp!, {r3 - r11, lr}\n\t"
+
+I think you don't need to save r3: the ARM PCS makes r3 caller-save, so
+it shouldn't matter if the SMC call causes it to get trashed.
+
+> +		__asmeq("%0", "r0")
+> +		__asmeq("%1", "r1")
+> +		__asmeq("%2", "r2")
+> +		"mov	r3, #0\n\t"
+> +		"mov	r4, #0\n\t"
+> +		"smc	#0\n\t"
+> +		"ldmfd	sp!, {r3 - r11, pc}"
+> +		:
+> +		: "r" (type), "r" (subtype), "r" (arg)
+> +		: "memory");
+> +}
+> +
+> +static int tegra_tf_set_cpu_boot_addr(int cpu, unsigned long boot_addr)
+> +{
+> +	tegra_tf_generic_smc(TF_SET_CPU_BOOT_ADDR_SMC, boot_addr, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +const struct firmware_ops tegra_trusted_foundations_ops = {
+> +	.set_cpu_boot_addr = tegra_tf_set_cpu_boot_addr,
+> +};
+> -- 
+> 1.8.3
 > 
-> Sorry, when pci_ioremap_io() is used, Exynos5440 hangs.
-> I don't know how to deal this.
-
-You have to call it, there is no way around that. You will have to debug
-this yourself, I'm sure there is an easy solution.
-
-> > 
-> > You hardcode the in_mem_size to 256 MB. Does that mean you only allow
-> > PCI bus master DMA on the first part of RAM? Shouldn't it get
-> > computed from the actual location and size of RAM?
-> 
-> I will remove the hard-coded in_mem_size, instead use the size of MEM region.
-
-This should be system RAM, not the PCI memory space. What good would
-it be to have an inbound window that only redirects back to the bus?
-
-> > > +static void exynos_pcie_prog_viewport_io_inbound(struct pcie_port *pp)
-> > > +{
-> > > +	u32 val;
-> > > +	void __iomem *dbi_base = pp->dbi_base;
-> > > +	struct pcie_port_info *config = &pp->config;
-> > > +
-> > > +	/* Program viewport 1 : INBOUND : IO */
-> > > +	val = PCIE_ATU_REGION_INBOUND | PCIE_ATU_REGION_INDEX1;
-> > > +	writel_rc(pp, val, dbi_base + PCIE_ATU_VIEWPORT);
-> > > +	writel_rc(pp, PCIE_ATU_TYPE_IO, dbi_base + PCIE_ATU_CR1);
-> > > +	val = PCIE_ATU_ENABLE | PCIE_ATU_BAR_MODE_ENABLE;
-> > > +	writel_rc(pp, val, dbi_base + PCIE_ATU_CR2);
-> > > +	writel_rc(pp, 0, dbi_base + PCIE_ATU_LOWER_BASE);
-> > > +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_BASE);
-> > > +	writel_rc(pp, config->in_mem_size - 1, dbi_base + PCIE_ATU_LIMIT);
-> > > +	writel_rc(pp, 0, dbi_base + PCIE_ATU_LOWER_TARGET);
-> > > +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_TARGET);
-> > > +}
-> > 
-> > I don't understand what in inbound I/O access actually means. What
-> > does this do, is it for PCI target emulation?
-> 
-> I reviewed the manual, and I will fix it.
-> I will add bus addresses and host physical addresses to
-> PCIE_ATU_LOWER_BASE/ PCIE_ATU_LOWER_TARGET.
- 
-You have not answered my question.
-
-> > > +static int exynos_pcie_setup(int nr, struct pci_sys_data *sys)
-> > > +{
-> > > +	struct pcie_port *pp;
-> > > +
-> > > +	pp = sys_to_pcie(sys);
-> > > +
-> > > +	if (!pp)
-> > > +		return 0;
-> > > +
-> > > +	pci_add_resource_offset(&sys->resources, &pp->io, sys->io_offset);
-> > > +	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
-> > > +
-> > > +	return 1;
-> > > +}
-> > 
-> > You don't actually set up io_offset and mem_offset, right?
-> 
-> OK, I will replace pci_add_resource_offset() with pci_add_resource().
-
-No, you have to set up the offsets.
-
-Please don't post another version until you actually understand what
-you need to do. If you don't understand the comments, ask back rather
-than picking a random interpretation.
-
-	Arnd
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
