@@ -1,95 +1,152 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu
- reg control
-Date: Thu, 13 Jun 2013 18:24:05 +0530
-Message-ID: <51B9C0ED.2040605@ti.com>
-References: <1370935073-7475-1-git-send-email-rahul.sharma@samsung.com>
- <CAAQKjZMuSQhbYtOyni-RdHhXu0fv3U2Dm_2iqRLe0smSt_jjjQ@mail.gmail.com>
- <CAAQKjZOZCtLnE_OPs60NU+Z4pkHiSCqZcBOi1Dv+PC=01HKqyg@mail.gmail.com>
- <CAPdUM4Nis0uwyZf1hNDOMmdqFm0K7beVPoyAWRjMBwq0jcwwCQ@mail.gmail.com>
- <51B98908.8050403@samsung.com>
- <02c101ce6828$29ab0f20$7d012d60$%dae@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <02c101ce6828$29ab0f20$7d012d60$%dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, 'Seung-Woo Kim' <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'sunil joshi' <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'DRI mailing list' <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Sylwester Nawrocki' <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, 'Rahul Sharma' <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Rahul Sharma' <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: [PATCH 1/2] Add pin list based GPIO ranges
+Date: Thu, 13 Jun 2013 14:55:31 +0200
+Message-ID: <1371128132-18266-1-git-send-email-christian.ruppert@abilis.com>
+References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: Patrice CHOTARD <patrice.chotard@st.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>, Christian Ruppert <christian.ruppert@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Traditionally, GPIO ranges are based on consecutive ranges of both GPIO
+and pin numbers. This patch allows for GPIO ranges with arbitrary lists
+of pin numbers.
 
-On Thursday 13 June 2013 04:51 PM, Inki Dae wrote:
->
->
->> -----Original Message-----
->> From: Sylwester Nawrocki [mailto:s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org]
->> Sent: Thursday, June 13, 2013 5:56 PM
->> To: Rahul Sharma
->> Cc: Rahul Sharma; Inki Dae; linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-
->> discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; DRI mailing list; Kukjin Kim; Seung-Woo Kim;
->> Sean Paul; sunil joshi; Kishon Vijay Abraham I; Stephen Warren;
->> grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
->> Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with
->> pmu reg control
->>
->> Hi,
->>
->> On 06/13/2013 06:26 AM, Rahul Sharma wrote:
->>> Mr. Dae,
->>>
->>> Thanks for your valuable inputs.
->>>
->>> I posted it as RFC because, I also have received comments to register
->>> hdmiphy as a clock controller. As we always configure it for specific
->>> frequency, hdmi-phy looks similar to a PLL. But it really doesn't
->>> belong to that class. Secondly prior to exynos5420, it was a i2c
->>> device. I am not sure we can register a I2C device as a clock
->>> controller. I wanted to discuss and explore this option here.
->>
->> Have you considered using the generic PHY framework for those HDMI
->> PHY devices [1] ? I guess we could add a dedicated group of ops for
->> video PHYs, similarly as is is done with struct v4l2_subdev_ops. For
->> configuring things like the carrier/pixel clock frequency or anything
->> what's common across the video PHYs.
->>
->> Perhaps you could have a look and see if this framework would be
->> useful for HDMI and possibly point out anything what might be missing ?
->>
->> I'm not sure it it really solves the issues specific to the Exynos
->> HDMI but at least with a generic PHY driver the PHY module would be
->> separate from the PHY controller, as often same HDMI DPHY can be used
->> with various types of a HDMI controller. So this would allow to not
->> duplicate the HDMI PHY drivers in the long-term perspective.
->
-> Yeah, at least, it seems that we could use PHY module to control PMU
-> register, HDMI_PHY_CONTROL. However, PHY module provides only init/on/off
-> callbacks. As you may know, HDMIPHY needs i2c interfaces to control HDMIPHY
-> clock. So with PHY module, HDMIPHY driver could enable PMU more generically,
-> but also has to use existing i2c stuff to control HDMIPHY clock. I had a
-> quick review to Generic PHY Framework[v6] but I didn't see that the PHY
-> module could generically support more features such as i2c stuff.
+Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+---
+ drivers/pinctrl/core.c          |   59 ++++++++++++++++++++++++++++++++------
+ include/linux/pinctrl/pinctrl.h |    4 ++-
+ 2 files changed, 52 insertions(+), 11 deletions(-)
 
-I don't think PHY framework needs to provide i2c interfaces to program 
-certain configurations. Instead in one of the callbacks (init/on/off) 
-PHY driver can program whatever it wants using any of the interfaces it 
-needs. IMO PHY framework should work independent of the interfaces.
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 5327f35..25bb17e 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -280,6 +280,29 @@ static int pinctrl_register_pins(struct pinctrl_dev *pctldev,
+ }
+ 
+ /**
++ * gpio_to_pin() - GPIO range GPIO number to pin number translation
++ * @range: GPIO range used for the translation
++ * @gpio: gpio pin to translate to a pin number
++ *
++ * Finds the pin number for a given GPIO using the specified GPIO range
++ * as a base for translation. The distinction between linear GPIO ranges
++ * and pin list based GPIO ranges is managed correctly by this function.
++ *
++ * This function assumes the gpio is part of the specified GPIO range, use
++ * only after making sure this is the case (e.g. by calling it on the
++ * result of successful pinctrl_get_device_gpio_range calls)!
++ */
++static inline int gpio_to_pin(struct pinctrl_gpio_range *range,
++				unsigned int gpio)
++{
++	unsigned int offset = gpio - range->base;
++	if (range->pins)
++		return range->pins[offset];
++	else
++		return range->pin_base + offset;
++}
++
++/**
+  * pinctrl_match_gpio_range() - check if a certain GPIO pin is in range
+  * @pctldev: pin controller device to check
+  * @gpio: gpio pin to check taken from the global GPIO pin space
+@@ -444,8 +467,14 @@ pinctrl_find_gpio_range_from_pin(struct pinctrl_dev *pctldev,
+ 	/* Loop over the ranges */
+ 	list_for_each_entry(range, &pctldev->gpio_ranges, node) {
+ 		/* Check if we're in the valid range */
+-		if (pin >= range->pin_base &&
+-		    pin < range->pin_base + range->npins) {
++		if (range->pins) {
++			int a;
++			for (a = 0; a < range->npins; a++) {
++				if (range->pins[a] == pin)
++					return range;
++			}
++		} else if (pin >= range->pin_base &&
++			   pin < range->pin_base + range->npins) {
+ 			mutex_unlock(&pctldev->mutex);
+ 			return range;
+ 		}
+@@ -528,7 +557,7 @@ int pinctrl_request_gpio(unsigned gpio)
+ 	}
+ 
+ 	/* Convert to the pin controllers number space */
+-	pin = gpio - range->base + range->pin_base;
++	pin = gpio_to_pin(range, gpio);
+ 
+ 	ret = pinmux_request_gpio(pctldev, range, pin, gpio);
+ 
+@@ -562,7 +591,7 @@ void pinctrl_free_gpio(unsigned gpio)
+ 	mutex_lock(&pctldev->mutex);
+ 
+ 	/* Convert to the pin controllers number space */
+-	pin = gpio - range->base + range->pin_base;
++	pin = gpio_to_pin(range, gpio);
+ 
+ 	pinmux_free_gpio(pctldev, pin, range);
+ 
+@@ -589,7 +618,7 @@ static int pinctrl_gpio_direction(unsigned gpio, bool input)
+ 	mutex_lock(&pctldev->mutex);
+ 
+ 	/* Convert to the pin controllers number space */
+-	pin = gpio - range->base + range->pin_base;
++	pin = gpio_to_pin(range, gpio);
+ 	ret = pinmux_gpio_direction(pctldev, range, pin, input);
+ 
+ 	mutex_unlock(&pctldev->mutex);
+@@ -1296,11 +1325,21 @@ static int pinctrl_gpioranges_show(struct seq_file *s, void *what)
+ 
+ 	/* Loop over the ranges */
+ 	list_for_each_entry(range, &pctldev->gpio_ranges, node) {
+-		seq_printf(s, "%u: %s GPIOS [%u - %u] PINS [%u - %u]\n",
+-			   range->id, range->name,
+-			   range->base, (range->base + range->npins - 1),
+-			   range->pin_base,
+-			   (range->pin_base + range->npins - 1));
++		if (range->pins) {
++			int a;
++			seq_printf(s, "%u: %s GPIOS [%u - %u] PINS {",
++				range->id, range->name,
++				range->base, (range->base + range->npins - 1));
++			for (a = 0; a < range->npins - 1; a++)
++				seq_printf(s, "%u, ", range->pins[a]);
++			seq_printf(s, "%u}\n", range->pins[a]);
++		}
++		else
++			seq_printf(s, "%u: %s GPIOS [%u - %u] PINS [%u - %u]\n",
++				range->id, range->name,
++				range->base, (range->base + range->npins - 1),
++				range->pin_base,
++				(range->pin_base + range->npins - 1));
+ 	}
+ 
+ 	mutex_unlock(&pctldev->mutex);
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+index 2c2a9e8..176a6c1 100644
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -49,7 +49,8 @@ struct pinctrl_pin_desc {
+  * @name: a name for the chip in this range
+  * @id: an ID number for the chip in this range
+  * @base: base offset of the GPIO range
+- * @pin_base: base pin number of the GPIO range
++ * @pin_base: base pin number of the GPIO range if pins != NULL
++ * @pins: enumeration of pins in GPIO range or NULL
+  * @npins: number of pins in the GPIO range, including the base number
+  * @gc: an optional pointer to a gpio_chip
+  */
+@@ -59,6 +60,7 @@ struct pinctrl_gpio_range {
+ 	unsigned int id;
+ 	unsigned int base;
+ 	unsigned int pin_base;
++	unsigned const *pins;
+ 	unsigned int npins;
+ 	struct gpio_chip *gc;
+ };
+-- 
+1.7.1
 
-For example, twl4030 phy driver actually uses i2c to program its 
-registers but still it uses the PHY framework [1].
-
-[1] --> http://www.gossamer-threads.com/lists/linux/kernel/1729414
-
-Thanks
-Kishon
