@@ -1,14 +1,19 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 2/2] ARM: dts: omap3-beagle: Make USB host pin naming
- consistent
-Date: Thu, 13 Jun 2013 15:53:17 +0300
-Message-ID: <1371127997-8089-3-git-send-email-rogerq@ti.com>
-References: <1371127997-8089-1-git-send-email-rogerq@ti.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu
+ reg control
+Date: Thu, 13 Jun 2013 18:24:05 +0530
+Message-ID: <51B9C0ED.2040605@ti.com>
+References: <1370935073-7475-1-git-send-email-rahul.sharma@samsung.com>
+ <CAAQKjZMuSQhbYtOyni-RdHhXu0fv3U2Dm_2iqRLe0smSt_jjjQ@mail.gmail.com>
+ <CAAQKjZOZCtLnE_OPs60NU+Z4pkHiSCqZcBOi1Dv+PC=01HKqyg@mail.gmail.com>
+ <CAPdUM4Nis0uwyZf1hNDOMmdqFm0K7beVPoyAWRjMBwq0jcwwCQ@mail.gmail.com>
+ <51B98908.8050403@samsung.com>
+ <02c101ce6828$29ab0f20$7d012d60$%dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371127997-8089-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <02c101ce6828$29ab0f20$7d012d60$%dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,52 +24,72 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: b-cousson-l0cyMroinI0@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, 'Seung-Woo Kim' <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'sunil joshi' <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'DRI mailing list' <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Sylwester Nawrocki' <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, 'Rahul Sharma' <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Rahul Sharma' <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use a common naming scheme "mode0name.modename flags" for the
-USB host pins to be consistent.
+Hi,
 
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/omap3-beagle.dts |   24 ++++++++++++------------
- 1 files changed, 12 insertions(+), 12 deletions(-)
+On Thursday 13 June 2013 04:51 PM, Inki Dae wrote:
+>
+>
+>> -----Original Message-----
+>> From: Sylwester Nawrocki [mailto:s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org]
+>> Sent: Thursday, June 13, 2013 5:56 PM
+>> To: Rahul Sharma
+>> Cc: Rahul Sharma; Inki Dae; linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-
+>> discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; DRI mailing list; Kukjin Kim; Seung-Woo Kim;
+>> Sean Paul; sunil joshi; Kishon Vijay Abraham I; Stephen Warren;
+>> grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+>> Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with
+>> pmu reg control
+>>
+>> Hi,
+>>
+>> On 06/13/2013 06:26 AM, Rahul Sharma wrote:
+>>> Mr. Dae,
+>>>
+>>> Thanks for your valuable inputs.
+>>>
+>>> I posted it as RFC because, I also have received comments to register
+>>> hdmiphy as a clock controller. As we always configure it for specific
+>>> frequency, hdmi-phy looks similar to a PLL. But it really doesn't
+>>> belong to that class. Secondly prior to exynos5420, it was a i2c
+>>> device. I am not sure we can register a I2C device as a clock
+>>> controller. I wanted to discuss and explore this option here.
+>>
+>> Have you considered using the generic PHY framework for those HDMI
+>> PHY devices [1] ? I guess we could add a dedicated group of ops for
+>> video PHYs, similarly as is is done with struct v4l2_subdev_ops. For
+>> configuring things like the carrier/pixel clock frequency or anything
+>> what's common across the video PHYs.
+>>
+>> Perhaps you could have a look and see if this framework would be
+>> useful for HDMI and possibly point out anything what might be missing ?
+>>
+>> I'm not sure it it really solves the issues specific to the Exynos
+>> HDMI but at least with a generic PHY driver the PHY module would be
+>> separate from the PHY controller, as often same HDMI DPHY can be used
+>> with various types of a HDMI controller. So this would allow to not
+>> duplicate the HDMI PHY drivers in the long-term perspective.
+>
+> Yeah, at least, it seems that we could use PHY module to control PMU
+> register, HDMI_PHY_CONTROL. However, PHY module provides only init/on/off
+> callbacks. As you may know, HDMIPHY needs i2c interfaces to control HDMIPHY
+> clock. So with PHY module, HDMIPHY driver could enable PMU more generically,
+> but also has to use existing i2c stuff to control HDMIPHY clock. I had a
+> quick review to Generic PHY Framework[v6] but I didn't see that the PHY
+> module could generically support more features such as i2c stuff.
 
-diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-index 6d47c4b..5d11eb1 100644
---- a/arch/arm/boot/dts/omap3-beagle.dts
-+++ b/arch/arm/boot/dts/omap3-beagle.dts
-@@ -81,18 +81,18 @@
- 
- 	hsusbb2_pins: pinmux_hsusbb2_pins {
- 		pinctrl-single,pins = <
--			0x5c0 (PIN_OUTPUT | MUX_MODE3)		/* usbb2_ulpitll_clk.usbb1_ulpiphy_clk */
--			0x5c2 (PIN_OUTPUT | MUX_MODE3)		/* usbb2_ulpitll_clk.usbb1_ulpiphy_stp */
--			0x5c4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* usbb2_ulpitll_clk.usbb1_ulpiphy_dir */
--			0x5c6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* usbb2_ulpitll_clk.usbb1_ulpiphy_nxt */
--			0x5c8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* usbb2_ulpitll_clk.usbb1_ulpiphy_dat0 */
--			0x5cA (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* usbb2_ulpitll_clk.usbb1_ulpiphy_dat1 */
--			0x1a4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* usbb2_ulpitll_clk.usbb1_ulpiphy_dat2 */
--			0x1a6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* usbb2_ulpitll_clk.usbb1_ulpiphy_dat3 */
--			0x1a8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* usbb2_ulpitll_clk.usbb1_ulpiphy_dat4 */
--			0x1aa (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* usbb2_ulpitll_clk.usbb1_ulpiphy_dat5 */
--			0x1ac (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* usbb2_ulpitll_clk.usbb1_ulpiphy_dat6 */
--			0x1ae (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* usbb2_ulpitll_clk.usbb1_ulpiphy_dat7 */
-+			0x5c0 (PIN_OUTPUT | MUX_MODE3)		/* etk_d10.hsusb2_clk */
-+			0x5c2 (PIN_OUTPUT | MUX_MODE3)		/* etk_d11.hsusb2_stp */
-+			0x5c4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d12.hsusb2_dir */
-+			0x5c6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d13.hsusb2_nxt */
-+			0x5c8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d14.hsusb2_data0 */
-+			0x5cA (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d15.hsusb2_data1 */
-+			0x1a4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi1_cs3.hsusb2_data2 */
-+			0x1a6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_clk.hsusb2_data7 */
-+			0x1a8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_simo.hsusb2_data4 */
-+			0x1aa (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_somi.hsusb2_data5 */
-+			0x1ac (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_cs0.hsusb2_data6 */
-+			0x1ae (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_cs1.hsusb2_data3 */
- 		>;
- 	};
- };
--- 
-1.7.4.1
+I don't think PHY framework needs to provide i2c interfaces to program 
+certain configurations. Instead in one of the callbacks (init/on/off) 
+PHY driver can program whatever it wants using any of the interfaces it 
+needs. IMO PHY framework should work independent of the interfaces.
+
+For example, twl4030 phy driver actually uses i2c to program its 
+registers but still it uses the PHY framework [1].
+
+[1] --> http://www.gossamer-threads.com/lists/linux/kernel/1729414
+
+Thanks
+Kishon
