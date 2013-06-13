@@ -1,87 +1,62 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [RFC PATCH v3 2/2] drivers: mfd: vexpress: add Serial Power
- Controller (SPC) support
-Date: Wed, 12 Jun 2013 23:26:19 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1306122307390.18597@syhkavp.arg>
-References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com> <1370512763-32200-3-git-send-email-lorenzo.pieralisi@arm.com> <20130613000143.GB4567@zurbaran>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH v4] ARM: dts: OMAP5: Add palmas MFD node and regulator
+ nodes
+Date: Thu, 13 Jun 2013 04:09:22 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229EB4B8@DBDE04.ent.ti.com>
+References: <1371025140-25376-1-git-send-email-j-keerthy@ti.com>
+ <51B8990A.8030506@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130613000143.GB4567@zurbaran>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Pawel Moll <pawel.moll@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <achin.gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51B8990A.8030506@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "lee.jones@linaro.org" <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Jun 2013, Samuel Ortiz wrote:
+Hi Stephen,
 
-> > +static struct vexpress_spc_drvdata *info;
-> > +static u32 *vexpress_spc_config_data;
-> > +static struct vexpress_config_bridge *vexpress_spc_config_bridge;
-> > +static struct vexpress_config_func *opp_func, *perf_func;
-> > +
-> > +static int vexpress_spc_load_result = -EAGAIN;
-> As I said, quite static...
+> -----Original Message-----
+> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
+> Sent: Wednesday, June 12, 2013 9:22 PM
+> To: J, KEERTHY
+> Cc: Cousson, Benoit; devicetree-discuss@lists.ozlabs.org; linux-
+> omap@vger.kernel.org; linux-kernel@vger.kernel.org;
+> ldewangan@nvidia.com; grant.likely@secretlab.ca; swarren@nvidia.com;
+> sameo@linux.intel.com; gg@slimlogic.co.uk; lee.jones@linaro.org
+> Subject: Re: [PATCH v4] ARM: dts: OMAP5: Add palmas MFD node and
+> regulator nodes
 > 
-> > +static bool __init __vexpress_spc_check_loaded(void);
-> > +/*
-> > + * Pointer spc_check_loaded is swapped after init hence it is safe
-> > + * to initialize it to a function in the __init section
-> > + */
-> > +static bool (*spc_check_loaded)(void) __refdata = &__vexpress_spc_check_loaded;
-> > +
-> > +static bool __init __vexpress_spc_check_loaded(void)
-> > +{
-> > +	if (vexpress_spc_load_result == -EAGAIN)
-> > +		vexpress_spc_load_result = vexpress_spc_init();
-> > +	spc_check_loaded = &vexpress_spc_initialized;
-> > +	return vexpress_spc_initialized();
-> > +}
-> > +
-> > +/*
-> > + * Function exported to manage early_initcall ordering.
-> > + * SPC code is needed very early in the boot process
-> > + * to bring CPUs out of reset and initialize power
-> > + * management back-end. After boot swap pointers to
-> > + * make the functionality check available to loadable
-> > + * modules, when early boot init functions have been
-> > + * already freed from kernel address space.
-> > + */
-> > +bool vexpress_spc_check_loaded(void)
-> > +{
-> > +	return spc_check_loaded();
-> > +}
-> > +EXPORT_SYMBOL_GPL(vexpress_spc_check_loaded);
-> That one and the previous function look really nasty to me.
-> The simple fact that you need a static variable in your code to check if
-> your module is loaded sounds really fishy.
+> On 06/12/2013 02:19 AM, J Keerthy wrote:
+> > This patch adds Palmas MFD node and the regulator nodes for OMAP5.
+> >
+> > The node definitions are based on: https://lkml.org/lkml/2013/6/6/25
+> >
+> > Boot tested on omap5-uevm board.
+> 
+> Reviewed-by: Stephen Warren <swarren@nvidia.com>
 
-Maybe a bit of context might explain why things are done this way.
+Thanks..
 
-This code is, amongst other things, needed to properly bring up 
-secondary CPUs during boot.  This means that it has to be initialized at 
-the early_initcall level before SMP is initialized.  So that rules out 
-most of the device driver niceties which are not initialized yet, and 
-that also means that this can't be made into a loadable module.
+> 
+> > diff --git a/arch/arm/boot/dts/omap5-uevm.dts
+> > b/arch/arm/boot/dts/omap5-uevm.dts
+> 
+> > +	palmas: palmas@48 {
+> > +		reg = <0x48>;
+> > +		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /* IRQ_SYS_1N
+> */
+> > +		interrupt-parent = <&gic>;
+> > +		compatible = "ti,palmas";
+> 
+> ... although personally I prefer the compatible property to be right at
+> the top of each node, since it's what implies the schema for the rest
+> of the node. That's a tiny nit though; feel free to ignore it if the
+> OMAP files don't follow that convention.
 
-To make things even more subtle, this code is needed to implement the 
-backend for the MCPM layer through which the actual bringup of secondary 
-CPUs is done.  So that MCPM backend is itself also initialized at the 
-early_initcall level, but we don't know and can't enforce the order 
-those different things will be initialized.  So the MCPM backend calls 
-vexpress_spc_check_loaded() to initialize it if it has not been 
-initialized yet, or return false if there is no SPC on the booted 
-system.
+Sure. I will send hopefully the last version incorporating this :-).
 
-Yet this code is also the entry point for some operating point changes 
-requested by the cpufreq driver, and that one can be modular.  And the 
-cpufreq driver also has to test for the presence of a SPC via 
-vexpress_spc_check_loaded().
-
-So that's the main reason why there is a static state variable, and why 
-there is a switch of function pointed by spc_check_loaded to let the 
-init code go after boot and still be able to be referenced by modules 
-after boot.
-
-
-Nicolas
+Regards,
+Keerthy
