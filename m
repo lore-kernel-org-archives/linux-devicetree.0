@@ -1,145 +1,87 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC] pinctrl: generic: Add DT bindings
-Date: Fri, 14 Jun 2013 00:46:11 +0200
-Message-ID: <1489582.v1309hbNQ9@avalon>
-References: <1370988237-30593-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <51B8878B.5090705@imgtec.com>
+From: "Collins, Rod" <Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org>
+Subject: RE: Device tree flattening code not copying properties from blob
+Date: Thu, 13 Jun 2013 18:49:04 -0400
+Message-ID: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF975@corpatsmail4.corp.sensis.com>
+References: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696@corpatsmail4.corp.sensis.com>
+ <CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <51B8878B.5090705@imgtec.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, linux-sh@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Class: urn:content-classes:message
+In-Reply-To: <CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi James,
+Grant
 
-On Wednesday 12 June 2013 15:36:59 James Hogan wrote:
-> On 11/06/13 23:03, Laurent Pinchart wrote:
-> > Document DT properties for the generic pinctrl parameters and add a
-> > parser function.
-> > 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > 
-> >  .../bindings/pinctrl/pinctrl-bindings.txt          | 29 +++++++
-> >  drivers/pinctrl/pinconf-generic.c                  | 94 +++++++++++++++++
-> >  drivers/pinctrl/pinconf.h                          | 17 ++++
-> >  3 files changed, 140 insertions(+)
-> > 
-> > I've successfully tested this patch (or more accurately only the pull-up
-> > and pull-down properties) with the Renesas sh-pfc pinctrl device driver.
-> > I will resent the sh-pfc DT bindings patch series rebased on the generic
-> > pinconf bindings.
-> > 
-> > Not all generic pinconf properties are currently implemented, but I don't
-> > think that should be a showstopper. We can add them later as needed.
-> > 
-> > The code is based on both the sh-pfc pinconf DT parser and James Hogan's
-> > tz1090 DT parser ("[PATCH v2 6/9] pinctrl-tz1090: add TZ1090 pinctrl
-> > driver").
+What is considered the correct way to include the blob in the build so
+that it is not removed?
+
+Rod
+
+Rod Collins
+Principal Software Engineer
+Saab Sensis Corporation
+315-445-5784
+rodc-eu1g02Y2shuDvotElmWtJA@public.gmane.org
+
+
+-----Original Message-----
+From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of
+Grant Likely
+Sent: Wednesday, June 12, 2013 12:03 PM
+To: Collins, Rod
+Cc: devicetree-discuss
+Subject: Re: Device tree flattening code not copying properties from
+blob
+
+On Wed, Jun 12, 2013 at 3:32 PM, Collins, Rod
+<Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org> wrote:
 >
-> Thanks for this patch. I haven't tested it (yet), but have a few
-> comments below.
-> 
-> > diff --git
-> > a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt index
-> > c95ea82..e499ff0 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > @@ -126,3 +126,32 @@ device; they may be grandchildren, for example.
-> > Whether this is legal, and> 
-> >  whether there is any interaction between the child and intermediate
-> >  parent nodes, is again defined entirely by the binding for the individual
-> >  pin controller device.
-> > 
-> > +
-> > +== Generic pinconf parameters ==
-> > +
-> > +Pin configuration parameters are expressed by DT properties in the pin
-> > +controller device state nodes and child nodes. For devices that use the
-> > generic +pinconf parameters the following properties are defined.
-> > +
-> > +- tristate: A boolean, put the pin into high impedance state when set.
-> > +
-> > +- pull-up: An integer representing the pull-up strength. 0 disables the
-> > pull-up, +  non-zero values enable it.
-> > +
-> > +- pull-down: An integer representing the pull-down strength. 0 disables
-> > the +  pull-down, non-zero values enables it.
-> > +
-> > +- schmitt: An integer, enable or disable Schmitt trigger mode for the
-> > pins. +  Valid values are
-> > +    0: Schmitt trigger disabled (no hysteresis)
-> > +    1: Schmitt trigger enabled
-> 
-> this is set as a flag, so I think it should be described like tristate,
-> "A boolean, ... when set."? Same for pull-up and pull-down (see comment
-> below).
+> I have been chasing a problem where a module device driver that uses
+the device tree I install, cannot find a compatible match when I know
+the device tree has the match for my driver.
+>
+> So I wrote a small module device driver that dumps the device tree
+information. I add it to the device driver list using insmod dtdump.ko.
+If I add the insmod to the start of the rc (using uCLinux distribution)
+file then I get the proper contents. If I add insmod at the end of the
+rc file then the device tree is bad.
+>
+> The problem is in the file fdt.c and the function unflatten_dt_node.
+>
+> When the unflattened tree is created the memory is allocated for the
+nodes and the property structures, however the pointers are just
+inserted into the property structure. The pointers are pointing in the
+memory area freed after initialization. This will work if the embedded
+__init memory is not freed but freeing this memory ends up with tree
+nodes that have invalid properties and thus the device tree is no good.
 
-Can't the value be used to control schmitt trigger parameters (same as for the 
-pull-up and pull-down values, as explained below) ?
+If your fdt blob is getting freed, then you've got a bug. How are you
+loading the device tree? Normally the device tree is passed in from the
+bootloader and the kernel marks the whole region as reserved.
 
-> <snip>
-> 
-> > +	{ "pull-up",		PIN_CONFIG_BIAS_PULL_UP,		false },
-> > +	{ "pull-down",		PIN_CONFIG_BIAS_PULL_DOWN,		false },
-> 
-> pinconf-generic.h says "If the argument is != 0 pull-up is enabled, if
-> it is 0, pull-up is disabled", so I think these should be flags unless
-> it's changed there first.
+> I am working on a fix to the unflatten_dt_node function. Allocate
+space for the property name and value and copy them in also as the node
+name is done.
 
-== 0 for disabled and != 0 for enabled doesn't mean that all != 0 values are 
-equivalent. As I read it drivers can use the value to control the pull-up/down 
-strength without violating the documentation.
+unflatten_dt_node is actually doing the right thing. If the dt blob is
+in an __init section, then it needs to be copied into non-init memory
+before unflattening.
 
-> Any chance of adding the new "bus-hold" entry too
-> (PIN_CONFIG_BIAS_BUS_HOLD, and flag=true I suppose)? see
-> aa69352252a7a952e6e77734cb87135143a377d2 in LinuxW's pinctrl for-next
-> branch.
-
-Another generic pinconf DT bindings proposal has been submitted and applied to 
-the devel branch in Linus' pinctrl tree. It includes support for 
-PIN_CONFIG_BIAS_BUS_HOLD. Linus asked me to review the patch, so this one will 
-likely be dropped or at least integrated into the other one.
-
-> <snip>
-> 
-> > +EXPORT_SYMBOL_GPL(pinconf_generic_parse_params);
-> > diff --git a/drivers/pinctrl/pinconf.h b/drivers/pinctrl/pinconf.h
-> > index 92c7267..eb8550b 100644
-> > --- a/drivers/pinctrl/pinconf.h
-> > +++ b/drivers/pinctrl/pinconf.h
-> > @@ -90,6 +90,23 @@ static inline void pinconf_init_device_debugfs(struct
-> > dentry *devroot,> 
-> >   * pin config.
-> >   */
-> > 
-> > +#if defined(CONFIG_GENERIC_PINCONF)
-> > +
-> > +int pinconf_generic_parse_params(struct device *dev, struct device_node
-> > *np, +				 unsigned long **cfgs);
-> > +
-> > +#else
-> > +
-> > +static inline int pinconf_generic_parse_params(struct device *dev,
-> > +					       struct device_node *np,
-> > +					       unsigned long **cfgs)
-> > +{
-> > +	*cfgs = NULL;
-> > +	return 0;
-> > +}
-> 
-> Should this ever be necessary? Sounds like if the driver wanted to use
-> this it should already have selected GENERIC_PINCONF anyway.
-
-You're right.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+g.
+-
+This message is intended only for the addressee and may contain information that is company confidential or privileged.  Any technical data in this message may be exported only in accordance with the U.S. International Traffic in Arms Regulations (22 CFR Parts 120-130) or the Export Administration Regulations (15 CFR Parts 730-774). Unauthorized use is strictly prohibited and may be unlawful. If you are not the intended recipient, or the person responsible for delivering to the intended recipient, you should not read, copy, disclose or otherwise use this message. If you have received this email in error, please delete it, and advise the sender immediately. 
+-                                                                                                                                                                                                                                                       
