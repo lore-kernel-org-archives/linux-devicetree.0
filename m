@@ -1,121 +1,48 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v6 17/18] ARM: shmobile: marzen-reference: Move pinctrl mappings to device tree
-Date: Fri, 14 Jun 2013 01:46:02 +0200
-Message-ID: <1371167163-10507-18-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Simon Horman <horms@verge.net.au>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Device tree flattening code not copying properties from blob
+Date: Fri, 14 Jun 2013 00:47:43 +0100
+Message-ID: <CACxGe6s+Br8mYDfULsDcA9Ym3mqtyXZ41uK1un-nzcZH0BHtDg@mail.gmail.com>
+References: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696@corpatsmail4.corp.sensis.com>
+ <CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg@mail.gmail.com>
+ <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF975@corpatsmail4.corp.sensis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF975-gEjpXB0kThW1wM3WIAwN2vV4jgPAACGKVpNB7YpNyf8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Collins, Rod" <Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Replace the pinctrl mappings in board code by device tree mappings.
-For devices that are still instantiated from board code reference the
-mappings as the default pin controller state to apply them at boot time.
+On Thu, Jun 13, 2013 at 11:49 PM, Collins, Rod
+<Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org> wrote:
+> Grant
+>
+> What is considered the correct way to include the blob in the build so
+> that it is not removed?
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- arch/arm/boot/dts/r8a7779-marzen-reference.dts  | 35 +++++++++++++++++++++++++
- arch/arm/mach-shmobile/board-marzen-reference.c | 27 -------------------
- 2 files changed, 35 insertions(+), 27 deletions(-)
+Don't put it in an __init section.  :-p
 
-diff --git a/arch/arm/boot/dts/r8a7779-marzen-reference.dts b/arch/arm/boot/dts/r8a7779-marzen-reference.dts
-index 72be4c8..6d20247 100644
---- a/arch/arm/boot/dts/r8a7779-marzen-reference.dts
-+++ b/arch/arm/boot/dts/r8a7779-marzen-reference.dts
-@@ -37,6 +37,9 @@
- 	lan0@18000000 {
- 		compatible = "smsc,lan9220", "smsc,lan9115";
- 		reg = <0x18000000 0x100>;
-+		pinctrl-0 = <&lan0_pins>;
-+		pinctrl-names = "default";
-+
- 		phy-mode = "mii";
- 		interrupt-parent = <&gic>;
- 		interrupts = <0 28 0x4>;
-@@ -45,3 +48,35 @@
- 		vdd33a-supply = <&fixedregulator3v3>;
- 	};
- };
-+
-+&pfc {
-+	pinctrl-0 = <&scif2_pins &scif4_pins &sdhi0_pins>;
-+	pinctrl-names = "default";
-+
-+	lan0_pins: lan0 {
-+		intc {
-+			renesas,groups = "intc_irq1_b";
-+			renesas,function = "intc";
-+		};
-+		lbsc {
-+			renesas,groups = "lbsc_ex_cs0";
-+			renesas,function = "lbsc";
-+		};
-+	};
-+
-+	scif2_pins: scif2 {
-+		renesas,groups = "scif2_data_c";
-+		renesas,function = "scif2";
-+	};
-+
-+	scif4_pins: scif4 {
-+		renesas,groups = "scif4_data";
-+		renesas,function = "scif4";
-+	};
-+
-+	sdhi0_pins: sdhi0 {
-+		renesas,groups = "sdhi0_data4", "sdhi0_ctrl", "sdhi0_cd",
-+				 "sdhi0_wp";
-+		renesas,function = "sdhi0";
-+	};
-+};
-diff --git a/arch/arm/mach-shmobile/board-marzen-reference.c b/arch/arm/mach-shmobile/board-marzen-reference.c
-index 94804f3..3d1c439 100644
---- a/arch/arm/mach-shmobile/board-marzen-reference.c
-+++ b/arch/arm/mach-shmobile/board-marzen-reference.c
-@@ -19,41 +19,14 @@
-  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  */
- 
--#include <linux/pinctrl/machine.h>
- #include <mach/r8a7779.h>
- #include <mach/common.h>
- #include <mach/irqs.h>
- #include <asm/irq.h>
- #include <asm/mach/arch.h>
- 
--static const struct pinctrl_map marzen_pinctrl_map[] = {
--	/* SCIF2 (CN18: DEBUG0) */
--	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.2", "fffc0000.pfc",
--				  "scif2_data_c", "scif2"),
--	/* SCIF4 (CN19: DEBUG1) */
--	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "fffc0000.pfc",
--				  "scif4_data", "scif4"),
--	/* SDHI0 */
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
--				  "sdhi0_data4", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
--				  "sdhi0_ctrl", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
--				  "sdhi0_cd", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
--				  "sdhi0_wp", "sdhi0"),
--	/* SMSC */
--	PIN_MAP_MUX_GROUP_DEFAULT("smsc911x", "fffc0000.pfc",
--				  "intc_irq1_b", "intc"),
--	PIN_MAP_MUX_GROUP_DEFAULT("smsc911x", "fffc0000.pfc",
--				  "lbsc_ex_cs0", "lbsc"),
--};
--
- static void __init marzen_init(void)
- {
--	pinctrl_register_mappings(marzen_pinctrl_map,
--				  ARRAY_SIZE(marzen_pinctrl_map));
--
- 	r8a7779_add_standard_devices_dt();
- }
- 
--- 
-1.8.1.5
+However, I realized that the .dtb.S target does exactly that under the
+assumption that multiple blobs may be linked into the kernel, but only
+one actually used. The correct thing to do in your case is indeed copy
+the blob at boot.
 
+Actually, the best thing to do is to not link the dtb into the kernel
+at all. Either append it as another payload or pass it in via the
+bootloader and make the kernel mark the dtb memory as reserved.
+Statically linking into the kernel proper means the kernel needs to be
+rebuilt for each and every target which neuters one of the reasons for
+using device tree in the first place.
+
+g.
