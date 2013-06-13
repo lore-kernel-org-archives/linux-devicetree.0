@@ -1,66 +1,97 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [RFC PATCH v3 0/2] drivers: mfd: Versatile Express SPC support
-Date: Thu, 13 Jun 2013 10:45:57 +0100
-Message-ID: <1371116757.3307.13.camel@hornet>
-References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com>
-	 <20130611090545.GC8164@e102568-lin.cambridge.arm.com>
-	 <20130613001311.GC4567@zurbaran>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 06/10] mmc: omap_hsmmc: add support for pbias
+ configuration in dt
+Date: Thu, 13 Jun 2013 02:53:54 -0700
+Message-ID: <20130613095353.GX8164@atomide.com>
+References: <20130523184045.GD13507@atomide.com>
+ <1370546059-24181-1-git-send-email-balajitk@ti.com>
+ <1370546059-24181-7-git-send-email-balajitk@ti.com>
+ <CACRpkdZAzAJW0UxGCSj-PWXTSi2Q6T8fqL9SQ+Y-91sELQ3SRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130613001311.GC4567@zurbaran>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZAzAJW0UxGCSj-PWXTSi2Q6T8fqL9SQ+Y-91sELQ3SRQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Balaji T K <balajitk@ti.com>, Lee Jones <lee.jones@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-06-13 at 01:13 +0100, Samuel Ortiz wrote:
-> Now, about the driver itself, besides the really odd code design, the
-> static variables all over the place, the nasty init hacks and the
-> unneeded long function names, someone should refresh my memory and explain
-> to me why is this guy under mfd. I can see it somehow supports IP blocks
-> providing different functions, but the design is not sharing anything with
-> most of the rest of the mfd drivers.
+* Linus Walleij <linus.walleij@linaro.org> [130613 02:42]:
+> On Thu, Jun 6, 2013 at 9:14 PM, Balaji T K <balajitk@ti.com> wrote:
+> 
+> > PBIAS register configuration is based on the regulator voltage
+> > which supplies these pbias cells, sd i/o pads.
+> > With PBIAS register address and bit definitions different across
+> > omap[3,4,5], Simplify PBIAS configuration under three different
+> > regulator voltage levels - O V, 1.8 V, 3 V. Corresponding pinctrl states
+> > are defined as pbias_off, pbias_1v8, pbias_3v.
+> >
+> > pinctrl state mmc_init is used for configuring speed mode, loopback clock
+> > (in devconf0/devconf1/prog_io1 register for omap3) and pull strength
+> > configuration (in control_mmc1 for omap4)
+> >
+> > Signed-off-by: Balaji T K <balajitk@ti.com>
+> 
+> You *need* Lee Jones and Mark Brown to review this.
+> Maybe Laurent has something to add too.
+> 
+> Ux500 had the very same thing, and there this was solved using
+> a GPIO regulator for "vqmmc" a level-shifter. I vaguely remember
+> Laurent doing something similar with the SH stuff.
+> 
+> > +       /* 100ms delay required for PBIAS configuration */
+> > +       msleep(100);
+> > +       if (!vdd && host->pinctrl && host->pbias_off) {
+> > +               ret = pinctrl_select_state(host->pinctrl, host->pbias_off);
+> > +               if (ret < 0)
+> > +                       dev_err(host->dev, "pinctrl pbias_off select error\n");
+> > +       } else if (((1 << vdd) <= MMC_VDD_165_195) && host->pinctrl &&
+> > +                       host->pbias_1v8) {
+> > +               ret = pinctrl_select_state(host->pinctrl, host->pbias_1v8);
+> > +               if (ret < 0)
+> > +                       dev_err(host->dev, "pinctrl pbias_1v8 select error\n");
+> > +       } else if (((1 << vdd) > MMC_VDD_165_195) && host->pinctrl &&
+> > +                       host->pbias_3v) {
+> > +               ret = pinctrl_select_state(host->pinctrl, host->pbias_3v);
+> > +               if (ret < 0)
+> > +                       dev_err(host->dev, "pinctrl pbias_3v select error\n");
+> > +       }
+> 
+> So why does the pin control API control bias voltage?
 
-I belive the vexpress-sysreg.c is a Multi Function Device by all means.
-It does so many things that only a water fountain is missing ;-)
+I agree, it should be a regulator for the MMC driver and that's what I
+already suggested earlier. Having it as a regulator allows us to get
+rid of all the non-standard before and after calls in the omap_hsmmc.c.
+This way the omap_hsmmc.c code can handle the internal and external
+voltages the same way.
+ 
+> This seem so intuitively wrong as it can possibly get, clearly this
+> is regulator territory.
 
-If you feel strongly about it, I'm ready to split it into mfd_cells and
-move the gpio and leds code into separate drivers, however I'm not
-convinced that it's worth the effort.
+The PBIAS for MMC1 is a mux + comparator for the MMC pin, so it makes
+sense for the regulator driver to access the register via pinctrl API.
+I think the reason why we have registers like this and the USB comparators
+in the omap SCM (System Control Module) as the all seem to relate to
+pin states.
+ 
+> This also looks strange from an MMC point of view.
 
-Now, as to the vexpress-config.c... The first time I've posted the
-series, all parts lived in "driver/misc(/vexpress)", but (if I remember
-correctly) Arnd had some feelings about "misc" existence at all... I was
-thinking about a separate directory for random "system/platform/machine
-configuration" drivers, but the idea didn't get any traction.
+Yes I agree, it should be a regulator for MMC. Doing it this way just
+adds yet more code that's usable for only one of the omap MMC
+controllers.
+ 
+> It just seems these bits in these registers should be poked at
+> by the regulator world, not the pinctrl world. That the bits are
+> in the middle of pinctrl things does not really matter.
+> 
+> > +       usleep_range(350, 400);
+> 
+> And the regulator framework supports power-on delays.
 
-> Not only that, but the whole vexpress-config code design is not the
-> nicest piece of code I've ever seen. And I'm usually not picky. e.g. the
-> whole vexpress-config ad-hoc API is awkward and I wonder if it could be
-> implemented as a bus instead.
+Yes. And it seems that the delays should not be needed, but instead
+the comparator bits should be checked.
 
-Funny you mention this :-) Again, the first version actually was a
-vexpress-config bus. The feedback was - a whole bus_type is over the top
-(I'm simplifying the letter slightly but this was the spirit).
+Regards,
 
-> FWIW I take the blame here for not reviewing the initial driver
-> submission that Arnd kindly sent to me...But now that I'm looking at it,
-> I think it really is on the edge of being staging material. Any thought
-> on that ?
-
-I'm more than happy to improve it. The infrastructure (as in: the
-hardware) itself is slightly strange and the code pretty much reflects
-the situation. There is also a very good reason for some of the oddities
-like static bridges array etc - the infrastructure must be functional
-very early, long before slab is available (this also caused a lot of
-issues with the bus-based implementation, as the device model does
-kmalloc all over the place).
-
-So to summarize - I'm open to any suggestions and ready to spend time on
-this stuff.
-
-Regards and thanks for your time!
-
-Pawel
+Tony
