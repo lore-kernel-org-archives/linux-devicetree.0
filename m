@@ -1,145 +1,117 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v7 7/9] usb: musb: omap2430: use the new generic PHY framework
-Date: Thu, 13 Jun 2013 14:13:57 +0530
-Message-ID: <1371113039-5784-8-git-send-email-kishon@ti.com>
-References: <1371113039-5784-1-git-send-email-kishon@ti.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu
+ reg control
+Date: Thu, 13 Jun 2013 10:55:36 +0200
+Message-ID: <51B98908.8050403@samsung.com>
+References: <1370935073-7475-1-git-send-email-rahul.sharma@samsung.com>
+ <CAAQKjZMuSQhbYtOyni-RdHhXu0fv3U2Dm_2iqRLe0smSt_jjjQ@mail.gmail.com>
+ <CAAQKjZOZCtLnE_OPs60NU+Z4pkHiSCqZcBOi1Dv+PC=01HKqyg@mail.gmail.com>
+ <CAPdUM4Nis0uwyZf1hNDOMmdqFm0K7beVPoyAWRjMBwq0jcwwCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1371113039-5784-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, kishon@ti.com, arnd@arndb.de, swarren@nvidia.com, sylvester.nawrocki@gmail.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org
-Cc: rob.herring@calxeda.com, rob@landley.net, b-cousson@ti.com, linux@arm.linux.org.uk, benoit.cousson@linaro.org, mchehab@redhat.com, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAPdUM4Nis0uwyZf1hNDOMmdqFm0K7beVPoyAWRjMBwq0jcwwCQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: Rahul Sharma <r.sh.open@gmail.com>, Inki Dae <inki.dae@samsung.com>, linux-samsung-soc@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene.kim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Sean Paul <seanpaul@chromium.org>, sunil joshi <joshi@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Use the generic PHY framework API to get the PHY. The usb_phy_set_resume
-and usb_phy_set_suspend is replaced with power_on/get_sync and
-power_off/put_sync to align with the new PHY framework.
+Hi,
 
-musb->xceiv can't be removed as of now because musb core uses xceiv.state and
-xceiv.otg. Once there is a separate state machine to handle otg, these can be
-moved out of xceiv and then we can start using the generic PHY framework.
+On 06/13/2013 06:26 AM, Rahul Sharma wrote:
+> Mr. Dae,
+> 
+> Thanks for your valuable inputs.
+> 
+> I posted it as RFC because, I also have received comments to register
+> hdmiphy as a clock controller. As we always configure it for specific
+> frequency, hdmi-phy looks similar to a PLL. But it really doesn't
+> belong to that class. Secondly prior to exynos5420, it was a i2c
+> device. I am not sure we can register a I2C device as a clock
+> controller. I wanted to discuss and explore this option here.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/usb/musb/musb_core.c |    1 +
- drivers/usb/musb/musb_core.h |    3 +++
- drivers/usb/musb/omap2430.c  |   29 +++++++++++++++++++++--------
- 3 files changed, 25 insertions(+), 8 deletions(-)
+Have you considered using the generic PHY framework for those HDMI 
+PHY devices [1] ? I guess we could add a dedicated group of ops for 
+video PHYs, similarly as is is done with struct v4l2_subdev_ops. For
+configuring things like the carrier/pixel clock frequency or anything 
+what's common across the video PHYs.
 
-diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
-index 37a261a..f732bcc 100644
---- a/drivers/usb/musb/musb_core.c
-+++ b/drivers/usb/musb/musb_core.c
-@@ -1864,6 +1864,7 @@ musb_init_controller(struct device *dev, int nIrq, void __iomem *ctrl)
- 	musb->board_set_power = plat->set_power;
- 	musb->min_power = plat->min_power;
- 	musb->ops = plat->platform_ops;
-+	musb->phy_label = plat->phy_label;
+Perhaps you could have a look and see if this framework would be 
+useful for HDMI and possibly point out anything what might be missing ?
  
- 	/* The musb_platform_init() call:
- 	 *   - adjusts musb->mregs
-diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
-index 7fb4819..498ae21 100644
---- a/drivers/usb/musb/musb_core.h
-+++ b/drivers/usb/musb/musb_core.h
-@@ -46,6 +46,7 @@
- #include <linux/usb.h>
- #include <linux/usb/otg.h>
- #include <linux/usb/musb.h>
-+#include <linux/phy/phy.h>
- 
- struct musb;
- struct musb_hw_ep;
-@@ -357,6 +358,7 @@ struct musb {
- 	u16			int_tx;
- 
- 	struct usb_phy		*xceiv;
-+	struct phy		*phy;
- 
- 	int nIrq;
- 	unsigned		irq_wake:1;
-@@ -434,6 +436,7 @@ struct musb {
- 	unsigned                double_buffer_not_ok:1;
- 
- 	struct musb_hdrc_config	*config;
-+	const char		*phy_label;
- 
- #ifdef MUSB_CONFIG_PROC_FS
- 	struct proc_dir_entry *proc_entry;
-diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
-index 628b93f..c62a004 100644
---- a/drivers/usb/musb/omap2430.c
-+++ b/drivers/usb/musb/omap2430.c
-@@ -348,14 +348,24 @@ static int omap2430_musb_init(struct musb *musb)
- 	 * up through ULPI.  TWL4030-family PMICs include one,
- 	 * which needs a driver, drivers aren't always needed.
- 	 */
--	if (dev->parent->of_node)
-+	if (dev->parent->of_node) {
-+		musb->phy = devm_phy_get(dev->parent, "usb2-phy");
-+
-+		/* We can't totally remove musb->xceiv as of now because
-+		 * musb core uses xceiv.state and xceiv.otg. Once we have
-+		 * a separate state machine to handle otg, these can be moved
-+		 * out of xceiv and then we can start using the generic PHY
-+		 * framework
-+		 */
- 		musb->xceiv = devm_usb_get_phy_by_phandle(dev->parent,
- 		    "usb-phy", 0);
--	else
-+	} else {
- 		musb->xceiv = devm_usb_get_phy_dev(dev, 0);
-+		musb->phy = devm_phy_get(dev, musb->phy_label);
-+	}
- 
--	if (IS_ERR(musb->xceiv)) {
--		status = PTR_ERR(musb->xceiv);
-+	if (IS_ERR(musb->xceiv) || IS_ERR(musb->phy)) {
-+		status = PTR_ERR(musb->xceiv) | PTR_ERR(musb->phy);
- 
- 		if (status == -ENXIO)
- 			return status;
-@@ -397,9 +407,10 @@ static int omap2430_musb_init(struct musb *musb)
- 	if (glue->status != OMAP_MUSB_UNKNOWN)
- 		omap_musb_set_mailbox(glue);
- 
--	usb_phy_init(musb->xceiv);
-+	phy_init(musb->phy);
- 
- 	pm_runtime_put_noidle(musb->controller);
-+	phy_pm_runtime_put(musb->phy);
- 	return 0;
- 
- err1:
-@@ -460,6 +471,7 @@ static int omap2430_musb_exit(struct musb *musb)
- 	del_timer_sync(&musb_idle_timer);
- 
- 	omap2430_low_level_exit(musb);
-+	phy_exit(musb->phy);
- 
- 	return 0;
- }
-@@ -619,7 +631,8 @@ static int omap2430_runtime_suspend(struct device *dev)
- 				OTG_INTERFSEL);
- 
- 		omap2430_low_level_exit(musb);
--		usb_phy_set_suspend(musb->xceiv, 1);
-+		phy_power_off(musb->phy);
-+		phy_pm_runtime_put(musb->phy);
- 	}
- 
- 	return 0;
-@@ -634,8 +647,8 @@ static int omap2430_runtime_resume(struct device *dev)
- 		omap2430_low_level_init(musb);
- 		musb_writel(musb->mregs, OTG_INTERFSEL,
- 				musb->context.otg_interfsel);
--
--		usb_phy_set_suspend(musb->xceiv, 0);
-+		phy_pm_runtime_get_sync(musb->phy);
-+		phy_power_on(musb->phy);
- 	}
- 
- 	return 0;
+I'm not sure it it really solves the issues specific to the Exynos 
+HDMI but at least with a generic PHY driver the PHY module would be 
+separate from the PHY controller, as often same HDMI DPHY can be used 
+with various types of a HDMI controller. So this would allow to not 
+duplicate the HDMI PHY drivers in the long-term perspective.
+
+[1] https://lkml.org/lkml/2013/4/29/95
+
+Thanks,
+Sylwester
+
+> As you said, in parallel, I will align these changes and along with
+> "drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver"
+> series and post them.
+> 
+> I hope we should be able to close on one of the above approaches for
+> hdmiphy.
+> 
+> regards,
+> Rahul Sharma.
+> 
+> On Wed, Jun 12, 2013 at 9:57 AM, Inki Dae <inki.dae@samsung.com> wrote:
+>>
+>> 2013/6/12 Inki Dae <inki.dae@samsung.com>
+>>>
+>>> Hi Rahul,
+>>>
+>>> This patch is important to us. Actually, previous hdmi driver had
+>>> controlled hdmiphy HDMI_PHY_CONTROL as if that were a clock but now that
+>>> doesn't exist anymore. So we need to discuss how hdmiphy should be handled.
+>>> I konw that you had already posted hdmiphy relevant patch set, [PATCH 0/4]
+>>> drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver.
+>>>
+>>> I think we can couple pmu register controlling codes with that patch set
+>>> without RFC. Could you update and post them again? like below,
+>>> [PATCH 0/4] drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver
+>>> + [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu reg
+>>> control
+>>>
+>>> And then let's start review :)
+>>
+>> And I think It would be better to move the pmu register controlling codes
+>> into hdmiphy driver like drivers/usb/phy/phy-samsung-usb2.c driver does.
+>>>
+>>> Thanks,
+>>> Inki Dae
+>>>
+>>> 2013/6/11 Rahul Sharma <rahul.sharma@samsung.com>
+>>>>
+>>>> Previously, hdmiphy is added as a dummy clock in clock file for
+>>>> exynos SoCs. Enable/Disable to this clock, actually toggles the power
+>>>> control bit in PMU, instead of controlling the clock gate.
+>>>>
+>>>> This RFC adds the support to parse hdmiphy control node which is a child
+>>>> node to hdmi, and map the pmu register to toggle the power control bit.
+>>>>
+>>>> This is based on drm-next branch in Inki Dae's tree.
+>>>>
+>>>> Rahul Sharma (2):
+>>>>   drm/exynos: replace dummy hdmiphy clock with pmu register control
+>>>>   ARM/dts: add hdmiphy power control pmu register to hdmi dt node
+>>>>
+>>>>  arch/arm/boot/dts/exynos5250.dtsi    |    6 +++
+>>>>  drivers/gpu/drm/exynos/exynos_hdmi.c |   69
+>>>> ++++++++++++++++++++++++++++++----
+>>>>  drivers/gpu/drm/exynos/regs-hdmi.h   |    4 ++
+>>>>  3 files changed, 71 insertions(+), 8 deletions(-)
+>>>>
+>>>> --
+>>>> 1.7.10.4
+
 -- 
-1.7.10.4
+Sylwester Nawrocki
+Samsung R&D Institute Poland
+Samsung Electronics
