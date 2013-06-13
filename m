@@ -1,61 +1,108 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v3 5/7] clk: add basic Rockchip rk3066a clock support
-Date: Thu, 13 Jun 2013 01:40:05 +0200
-Message-ID: <201306130140.05981.heiko@sntech.de>
-References: <201306111328.52679.heiko@sntech.de> <201306130045.41723.heiko@sntech.de> <20130612230234.GB9016@quad.lixom.net>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [RFC PATCH v3 2/2] drivers: mfd: vexpress: add Serial Power
+ Controller (SPC) support
+Date: Thu, 13 Jun 2013 02:01:43 +0200
+Message-ID: <20130613000143.GB4567@zurbaran>
+References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1370512763-32200-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20130612230234.GB9016@quad.lixom.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Mike Turquette <mturquette@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1370512763-32200-3-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Pawel Moll <pawel.moll@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <achin.gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 13. Juni 2013, 01:02:34 schrieb Olof Johansson:
-> On Thu, Jun 13, 2013 at 12:45:41AM +0200, Heiko St=FCbner wrote:
-> > Part of me simply wants to wait for this - but rockchip stuff might=
- be to
-> > late for 3.11 anyway, as we're near rc6.
->=20
-> For a new platform like this, it's useful to get some of the drivers =
-to
-> land even if the main platform code isn't. Where things tend to get m=
-essy
-> is when we have to add a lot of code late in the cycle that has a lot=
- of
-> external dependencies, since everybody then has to scramble about get=
-ting
-> things sorted out.
->=20
-> It's not too late for 3.11 yet, and in particular it'd be nice to see
-> things like clock and pinctrl stuff go in even if some other stuff mi=
-sses
-> the train.
+Hi Lorenzo,
 
-pinctrl is already in Linus Walleijs tree :-)
+I don't particularily like this code, but I guess most of my dislike
+comes from the whole bridge interface API and how that forces you into
+implementing pretty much static code.
+A few nitpicks:
 
-Tomorrow I'll try to send the mmc stuff to the mmc lists, as my dw-mmc=20
-dependency from Dinh Nguyen also seems to go this way.
+On Thu, Jun 06, 2013 at 10:59:23AM +0100, Lorenzo Pieralisi wrote:
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index d54e985..391eda1 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1148,3 +1148,10 @@ config VEXPRESS_CONFIG
+>  	help
+>  	  Platform configuration infrastructure for the ARM Ltd.
+>  	  Versatile Express.
+> +
+> +config VEXPRESS_SPC
+> +	bool "Versatile Express SPC driver support"
+> +	depends on ARM
+> +	depends on VEXPRESS_CONFIG
+> +	help
+Please provide a detailed help entry here. 
 
-The clocks are the really hard part, simply because Mike's upcoming dt =
-support=20
-for the divider and mux clocks will let me get rid of the small clocks =
-that=20
-simply hold. And of course I also need the HIWORD_MASK flag for the clo=
-cks from=20
-the hisilicon series.
 
-Is there some sane intermediate step for the clocks? One possibility th=
-at=20
-comes to mind, would be to only declare the gates and provide fixed rat=
-e=20
-parents to the timer and mmc and add the divs and muxes when Mikes dt p=
-atches=20
-are ready.
+> +	  Serial Power Controller driver for ARM Ltd. test chips.
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 718e94a..3a01203 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -153,5 +153,6 @@ obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
+>  obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
+>  obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
+>  obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o vexpress-sysreg.o
+> +obj-$(CONFIG_VEXPRESS_SPC)	+= vexpress-spc.o
+So you have Versatile Express platforms that will not need SPC ? i.e.
+why isn't all that stuff under a generic CONFIG_VEXPRESS symbol ?
 
-I.e. I would keep the gate clocks grouped like now to not have to decla=
-re 160=20
-individual gates later :-)
 
+
+> +static struct vexpress_spc_drvdata *info;
+> +static u32 *vexpress_spc_config_data;
+> +static struct vexpress_config_bridge *vexpress_spc_config_bridge;
+> +static struct vexpress_config_func *opp_func, *perf_func;
+> +
+> +static int vexpress_spc_load_result = -EAGAIN;
+As I said, quite static...
+
+> +irqreturn_t vexpress_spc_irq_handler(int irq, void *data)
+missing a static here ?
+
+
+> +static bool __init __vexpress_spc_check_loaded(void);
+> +/*
+> + * Pointer spc_check_loaded is swapped after init hence it is safe
+> + * to initialize it to a function in the __init section
+> + */
+> +static bool (*spc_check_loaded)(void) __refdata = &__vexpress_spc_check_loaded;
+> +
+> +static bool __init __vexpress_spc_check_loaded(void)
+> +{
+> +	if (vexpress_spc_load_result == -EAGAIN)
+> +		vexpress_spc_load_result = vexpress_spc_init();
+> +	spc_check_loaded = &vexpress_spc_initialized;
+> +	return vexpress_spc_initialized();
+> +}
+> +
+> +/*
+> + * Function exported to manage early_initcall ordering.
+> + * SPC code is needed very early in the boot process
+> + * to bring CPUs out of reset and initialize power
+> + * management back-end. After boot swap pointers to
+> + * make the functionality check available to loadable
+> + * modules, when early boot init functions have been
+> + * already freed from kernel address space.
+> + */
+> +bool vexpress_spc_check_loaded(void)
+> +{
+> +	return spc_check_loaded();
+> +}
+> +EXPORT_SYMBOL_GPL(vexpress_spc_check_loaded);
+That one and the previous function look really nasty to me.
+The simple fact that you need a static variable in your code to check if
+your module is loaded sounds really fishy.
+
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
