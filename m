@@ -1,147 +1,60 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4 3/4] arm: add debug uarts for rockchip rk29xx and rk3xxx
- series
-Date: Thu, 13 Jun 2013 17:00:58 +0200
-Message-ID: <201306131700.59010.heiko@sntech.de>
-References: <201306131658.36584.heiko@sntech.de>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH v2 06/10] mmc: omap_hsmmc: add support for pbias configuration
+ in dt
+Date: Thu, 13 Jun 2013 20:31:52 +0530
+Message-ID: <51B9DEE0.1060305@ti.com>
+References: <20130523184045.GD13507@atomide.com> <1370546059-24181-1-git-send-email-balajitk@ti.com> <1370546059-24181-7-git-send-email-balajitk@ti.com> <CACRpkdZAzAJW0UxGCSj-PWXTSi2Q6T8fqL9SQ+Y-91sELQ3SRQ@mail.gmail.com> <20130613104715.GC16677@laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201306131658.36584.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130613104715.GC16677@laptop>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, ext Tony Lindgren <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Uarts on all recent Rockchip SoCs are Synopsis DesignWare 8250 types.
-Only their addresses vary very much.
+On Thursday 13 June 2013 04:17 PM, Lee Jones wrote:
+> On Thu, 13 Jun 2013, Linus Walleij wrote:
+>
+>> On Thu, Jun 6, 2013 at 9:14 PM, Balaji T K <balajitk@ti.com> wrote:
+>>
+>>> PBIAS register configuration is based on the regulator voltage
+>>> which supplies these pbias cells, sd i/o pads.
+>>> With PBIAS register address and bit definitions different across
+>>> omap[3,4,5], Simplify PBIAS configuration under three different
+>>> regulator voltage levels - O V, 1.8 V, 3 V. Corresponding pinctrl states
+>>> are defined as pbias_off, pbias_1v8, pbias_3v.
+>>>
+>>> pinctrl state mmc_init is used for configuring speed mode, loopback clock
+>>> (in devconf0/devconf1/prog_io1 register for omap3) and pull strength
+>>> configuration (in control_mmc1 for omap4)
+>>>
+>>> Signed-off-by: Balaji T K <balajitk@ti.com>
+>>
+>> You *need* Lee Jones and Mark Brown to review this.
+>> Maybe Laurent has something to add too.
+>>
+>> Ux500 had the very same thing, and there this was solved using
+>> a GPIO regulator for "vqmmc" a level-shifter. I vaguely remember
+>> Laurent doing something similar with the SH stuff.
+>
+> I haven't seem much of this patch-set, but this certainly looks like
+> it should be handled by a GPIO regulator instead of pinctrl. States
+> are easily declared in a 'struct gpio_regulator_state', which the
+> framework then uses to set the correct pins for the required voltage.
+>
 
-This patch adds the necessary definitions to use any of the uart ports
-for early debug purposes.
+Thanks for the pointer, but wondering why is it named as gpio-regulator
+and how it is different from fixed-regulator.
+After going through git log description, I understand that voltage/current level
+for a particular regulator is controlled by a set of pad/pin on the POWER IC
+and pad/pin may be usually connected to gpio pins if it is needs to be
+configurable and ground/pulled for constant voltage.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/Kconfig.debug            |   34 ++++++++++++++++++++++++++++++
- arch/arm/include/debug/rockchip.S |   42 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 76 insertions(+)
- create mode 100644 arch/arm/include/debug/rockchip.S
+Collection of gpios logic level are modeled as state for particular voltage.
+But gpio is not used in my case.
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 29f7623..2060cd5 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -360,6 +360,13 @@ choice
- 		  their output to the standard serial port on the RealView
- 		  PB1176 platform.
- 
-+	config DEBUG_ROCKCHIP_UART
-+		bool "Kernel low-level debugging messages via Rockchip UART"
-+		depends on ARCH_ROCKCHIP
-+		help
-+		  Say Y here if you want kernel low-level debugging support
-+		  on Rockchip based platforms.
-+
- 	config DEBUG_S3C_UART0
- 		depends on PLAT_SAMSUNG
- 		select DEBUG_EXYNOS_UART if ARCH_EXYNOS
-@@ -597,6 +604,32 @@ endchoice
- 
- choice
- 	prompt "Low-level debug console UART"
-+	depends on DEBUG_ROCKCHIP_UART
-+
-+	config DEBUG_RK29_UART0
-+		bool "RK29 UART0"
-+
-+	config DEBUG_RK29_UART1
-+		bool "RK29 UART1"
-+
-+	config DEBUG_RK29_UART2
-+		bool "RK29 UART2"
-+
-+	config DEBUG_RK3X_UART0
-+		bool "RK3X UART0"
-+
-+	config DEBUG_RK3X_UART1
-+		bool "RK3X UART1"
-+
-+	config DEBUG_RK3X_UART2
-+		bool "RK3X UART2"
-+
-+	config DEBUG_RK3X_UART3
-+		bool "RK3X UART3"
-+endchoice
-+
-+choice
-+	prompt "Low-level debug console UART"
- 	depends on DEBUG_LL && DEBUG_TEGRA_UART
- 
- 	config TEGRA_DEBUG_UART_AUTO_ODMDATA
-@@ -648,6 +681,7 @@ config DEBUG_LL_INCLUDE
- 	default "debug/picoxcell.S" if DEBUG_PICOXCELL_UART
- 	default "debug/pxa.S" if DEBUG_PXA_UART1 || DEBUG_MMP_UART2 || \
- 				 DEBUG_MMP_UART3
-+	default "debug/rockchip.S" if DEBUG_ROCKCHIP_UART
- 	default "debug/sirf.S" if DEBUG_SIRFPRIMA2_UART1 || DEBUG_SIRFMARCO_UART1
- 	default "debug/socfpga.S" if DEBUG_SOCFPGA_UART
- 	default "debug/sunxi.S" if DEBUG_SUNXI_UART0 || DEBUG_SUNXI_UART1
-diff --git a/arch/arm/include/debug/rockchip.S b/arch/arm/include/debug/rockchip.S
-new file mode 100644
-index 0000000..cfd883e
---- /dev/null
-+++ b/arch/arm/include/debug/rockchip.S
-@@ -0,0 +1,42 @@
-+/*
-+ * Early serial output macro for Rockchip SoCs
-+ *
-+ * Copyright (C) 2012 Maxime Ripard
-+ *
-+ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+#if defined(CONFIG_DEBUG_RK29_UART0)
-+#define ROCKCHIP_UART_DEBUG_PHYS_BASE 0x20060000
-+#define ROCKCHIP_UART_DEBUG_VIRT_BASE 0xfed60000
-+#elif defined(CONFIG_DEBUG_RK29_UART1)
-+#define ROCKCHIP_UART_DEBUG_PHYS_BASE 0x20064000
-+#define ROCKCHIP_UART_DEBUG_VIRT_BASE 0xfed64000
-+#elif defined(CONFIG_DEBUG_RK29_UART2)
-+#define ROCKCHIP_UART_DEBUG_PHYS_BASE 0x20068000
-+#define ROCKCHIP_UART_DEBUG_VIRT_BASE 0xfed68000
-+#elif defined(CONFIG_DEBUG_RK3X_UART0)
-+#define ROCKCHIP_UART_DEBUG_PHYS_BASE 0x10124000
-+#define ROCKCHIP_UART_DEBUG_VIRT_BASE 0xfeb24000
-+#elif defined(CONFIG_DEBUG_RK3X_UART1)
-+#define ROCKCHIP_UART_DEBUG_PHYS_BASE 0x10126000
-+#define ROCKCHIP_UART_DEBUG_VIRT_BASE 0xfeb26000
-+#elif defined(CONFIG_DEBUG_RK3X_UART2)
-+#define ROCKCHIP_UART_DEBUG_PHYS_BASE 0x20064000
-+#define ROCKCHIP_UART_DEBUG_VIRT_BASE 0xfed64000
-+#elif defined(CONFIG_DEBUG_RK3X_UART3)
-+#define ROCKCHIP_UART_DEBUG_PHYS_BASE 0x20068000
-+#define ROCKCHIP_UART_DEBUG_VIRT_BASE 0xfed68000
-+#endif
-+
-+	.macro	addruart, rp, rv, tmp
-+	ldr	\rp, =ROCKCHIP_UART_DEBUG_PHYS_BASE
-+	ldr	\rv, =ROCKCHIP_UART_DEBUG_VIRT_BASE
-+	.endm
-+
-+#define UART_SHIFT	2
-+#include <asm/hardware/debug-8250.S>
--- 
-1.7.10.4
+> And yes, 'vqmmc' is a good place to store the this regulator.
+>
+
