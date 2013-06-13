@@ -1,71 +1,213 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 06/10] mmc: omap_hsmmc: add support for pbias
- configuration in dt
-Date: Thu, 13 Jun 2013 18:45:54 +0100
-Message-ID: <20130613174554.GB1403@sirena.org.uk>
-References: <20130523184045.GD13507@atomide.com>
- <1370546059-24181-1-git-send-email-balajitk@ti.com>
- <1370546059-24181-7-git-send-email-balajitk@ti.com>
- <CACRpkdZAzAJW0UxGCSj-PWXTSi2Q6T8fqL9SQ+Y-91sELQ3SRQ@mail.gmail.com>
- <20130613095353.GX8164@atomide.com>
- <51B9DA30.1090308@ti.com>
- <CACRpkdY6cZ+bT-C9Go3sZVw6ErQqTm0m9__uKQrkg4eUU1thHA@mail.gmail.com>
- <20130613162937.GK8164@atomide.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3] ethernet/arc/arc_emac - Add new driver
+Date: Thu, 13 Jun 2013 21:25:55 +0300
+Message-ID: <CAHp75Vf4zjtebbaQMp4L0EmUPDVyrNPfvLODo7gHBuBEsWmZeA@mail.gmail.com>
+References: <1371134239-4531-1-git-send-email-abrodkin@synopsys.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dWDJ72qfEa57oDWE"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130613162937.GK8164@atomide.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Balaji T K <balajitk@ti.com>, Lee Jones <lee.jones@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1371134239-4531-1-git-send-email-abrodkin@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: netdev <netdev@vger.kernel.org>, Francois Romieu <romieu@fr.zoreil.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 13, 2013 at 5:37 PM, Alexey Brodkin
+<Alexey.Brodkin@synopsys.com> wrote:
+> Driver for non-standard on-chip ethernet device ARC EMAC 10/100,
+> instantiated in some legacy ARC (Synopsys) FPGA Boards such as
+> ARCAngel4/ML50x.
 
---dWDJ72qfEa57oDWE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Much better. But still few comments below.
 
-On Thu, Jun 13, 2013 at 09:29:38AM -0700, Tony Lindgren wrote:
-> * Linus Walleij <linus.walleij@linaro.org> [130613 08:35]:
+> +++ b/drivers/net/ethernet/arc/arc_emac.h
 
-> > No. If we go down that road *anything* that is connected to a
-> > pad becomes part of the pinctrl subsystem, then pinctrl-single
-> > becomes some kind of hardware abstraction or BIOS, and that
-> > is *not* the intent. It is only supposed to deal with the bits
-> > there that are 100% related to what pinctrl does, nothing else.
+What the point to keep arc_emac prefix for files? You have separate
+folder for them. This particular one can be main.h.
 
-> Sounds like the way to go is to do a standalone regulator driver that
-> optionally uses pinctrl-single,bits. But only for the bits in the PBIAS
-> register that are 100% related to pinctrl.
+> +struct arc_emac_priv {
+> +       struct net_device_stats stats;
+> +       unsigned int clock_frequency;
+> +       unsigned int max_speed;
+> +
+> +       /* Pointers to BD rings - CPU side */
+> +       struct arc_emac_bd_t *rxbd;
+> +       struct arc_emac_bd_t *txbd;
 
-> In any case the PBIAS regulator driver should be a separate driver
-> as it may need to be a child of the SCM driver for PM needs in the
-> future.
+Usually "_t" means "type" that is used in definitions without 'struct' word.
+I don't think this is the case here.
 
-This all seems sensible to me.
+> +       /* Pointers to BD rings - Device side */
+> +       dma_addr_t rxbd_dma_hdl;
+> +       dma_addr_t txbd_dma_hdl;
+> +
+> +       /* The actual socket buffers */
+> +       struct buffer_state rx_buff[RX_BD_NUM];
+> +       struct buffer_state tx_buff[TX_BD_NUM];
+> +       unsigned int txbd_curr;
+> +       unsigned int txbd_dirty;
+> +
+> +       /* Remember where driver last saw a packet, so next iteration it
+> +        * starts from here and not 0
+> +        */
+> +       unsigned int last_rx_bd;
+> +
+> +       struct napi_struct napi;
+> +
+> +       /* Phy saved state */
+> +       int duplex;
+> +       int speed;
+> +
+> +       /* Devices */
+> +       struct device *dev;
+> +       struct device_node *phy_node;
+> +       struct phy_device *phy_dev;
+> +       struct net_device *ndev;
+> +       struct mii_bus *bus;
+> +
+> +       /* EMAC registers base address */
+> +       void __iomem *reg_base_addr;
+> +};
 
---dWDJ72qfEa57oDWE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+It seems you missed my comments against the names of the members. Can
+you address them or comment why not?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
+> +++ b/drivers/net/ethernet/arc/arc_emac_main.c
 
-iQIcBAEBAgAGBQJRugVOAAoJELSic+t+oim9Xh4P/i8yow/72dAO2CNeRUYvEOUZ
-gW8nWnKB8HXiujoJiPzl94fcMNL9RBV9t2xIJG6Gk2+P7Pelhm4WZ7fDa3Cd0tr7
-BX0t4VRLHT7KCSqQXuodvJSw38Xo0GDbZsucrxbXJeKo3VMXZGznxr07qwfYaS0E
-BxbcwW7hpvc4hGQ9Qv4+4+Uw3/5OyoJpapKtB1qW44Q8KHVGNexPXA8L7kYrlXZE
-ISbrvKN9C1xlnZ6suUOLMRywCMGjBX/rSBweX421BAn8XnYeIR+iK1G0X8l6kfet
-IaKkktM2f9kISuovBhxHpht8rtD0KtBQEGHJZZsR1rLkFcranyO87jlFCD54o2Bf
-Q3e7qpbDDelAQoGV2XjOSCKs6+Lpk5klxCo1TODSn0UU9X/Ekubq5G6VoMTnVKBS
-HjbLeyRvXllR5WJEAVxD9EZ9O2LiN5OefVhI6seqcO6cifdAoyc00DBQ6mo3bOBI
-j7GUPBax1Yov7RHlMdRJ7CwJH+/CWNKg80R16GARFFxgDG7hS7af1AaeTsn6EWVH
-3eI5vzmWm7aaeM92/NE2diygiVX6MfR/2toPQ/gEF0oRKzdV3wzcYP1IrO9BafGl
-KGx1Jo25ews6TK79m7kHdelM+JF9fXq5pOrXGvUVhnNGpcUh3gdRtBVX7yWfzr1K
-JX3a0kwDSJkVPlv+xL6i
-=A+R2
------END PGP SIGNATURE-----
+> +static int arc_emac_get_settings(struct net_device *ndev,
+> +                                struct ethtool_cmd *cmd)
+> +{
+> +       struct arc_emac_priv *priv = netdev_priv(ndev);
+> +
+> +       if (priv->phy_dev)
+> +               return phy_ethtool_gset(priv->phy_dev, cmd);
+> +
+> +       return -EINVAL;
 
---dWDJ72qfEa57oDWE--
+May be
+if (!...)
+ return -EINVAL;
+return ...;
+
+> +static int arc_emac_set_settings(struct net_device *ndev,
+> +                                struct ethtool_cmd *cmd)
+> +{
+> +       struct arc_emac_priv *priv = netdev_priv(ndev);
+> +
+> +       if (!capable(CAP_NET_ADMIN))
+> +               return -EPERM;
+> +
+> +       if (priv->phy_dev)
+> +               return phy_ethtool_sset(priv->phy_dev, cmd);
+> +
+> +       return -EINVAL;
+
+Ditto.
+
+> +static int arc_emac_poll(struct napi_struct *napi, int budget)
+> +{
+> +       struct net_device *ndev = napi->dev;
+> +       struct arc_emac_priv *priv = netdev_priv(ndev);
+> +       unsigned int i, loop, work_done = 0;
+> +       struct sk_buff *skb;
+
+> +       for (loop = 0; loop < RX_BD_NUM; loop++) {
+> +               struct net_device_stats *stats = &priv->stats;
+> +               struct buffer_state *rx_buff;
+> +               struct arc_emac_bd_t *rxbd;
+> +               dma_addr_t addr;
+> +               unsigned int info, pktlen;
+> +               unsigned int buflen = ndev->mtu + EMAC_BUFFER_PAD;
+> +
+> +               i = (i + 1) % RX_BD_NUM;
+
+I just realize you are using circular buffer here. What about to use
+them with linux' native framework? Documentation/circular-buffers.txt
+
+> +               if (unlikely((info & OWN_MASK) == FOR_EMAC)) {
+> +                       /* BD is still owned by EMAC */
+> +                       continue;
+> +               }
+
+Redundant braces.
+
+> +               addr = dma_map_single(&ndev->dev, (void *)rx_buff->skb->data,
+> +                                     buflen, DMA_FROM_DEVICE);
+> +               if (dma_mapping_error(&ndev->dev, addr)) {
+> +                       if (net_ratelimit())
+> +                               if (net_ratelimit())
+
+Is it not a typo?
+
+> +                                       netdev_err(ndev, "cannot dma map\n");
+
+> +               work_done++;
+> +               if (work_done >= budget)
+> +                       break;
+
+Those three could easily go to the for () on the top of this function.
+
+> +static irqreturn_t arc_emac_intr(int irq, void *dev_instance)
+> +{
+
+> +       if (status & TXINT_MASK) {
+> +               unsigned int i;
+> +
+> +               for (i = 0; i < TX_BD_NUM; i++) {
+> +                       unsigned int *txbd_dirty = &priv->txbd_dirty;
+> +                       struct arc_emac_bd_t *txbd = &priv->txbd[*txbd_dirty];
+> +                       struct buffer_state *tx_buff = &priv->tx_buff[*txbd_dirty];
+> +                       struct sk_buff *skb = tx_buff->skb;
+> +                       unsigned int info = txbd->info;
+
+> +                       txbd->data = 0x0;
+> +                       txbd->info = 0x0;
+
+Plain 0?
+
+> +                       *txbd_dirty = (*txbd_dirty + 1) % TX_BD_NUM;
+
+Same idea about circular buffers.
+
+> +static int arc_emac_open(struct net_device *ndev)
+> +{
+
+> +       /* Set Poll rate so that it polls every 1 ms */
+> +       arc_reg_set(priv, R_POLLRATE,
+> +                    priv->clock_frequency / 1000000);
+
+I don't understand how you end up with 1ms here. 1000000 is just a
+magic number, clock_frequency generally is an arbitrary value.
+
+> +static struct net_device_stats *arc_emac_stats(struct net_device *ndev)
+> +{
+> +       unsigned long miss, rxerr, rxfram, rxcrc, rxoflow;
+> +       struct arc_emac_priv *priv = netdev_priv(ndev);
+> +       struct net_device_stats *stats = &priv->stats;
+> +
+> +       rxerr = arc_reg_get(priv, R_RXERR);
+> +       miss = arc_reg_get(priv, R_MISS);
+> +
+> +       rxcrc = rxerr & 0xff;
+> +       rxfram = rxerr >> 8 & 0xff;
+> +       rxoflow = rxerr >> 16 & 0xff;
+
+If you declare those three as u8, you can avoid those & 0xff.
+
+> +       ndev = alloc_etherdev(sizeof(struct arc_emac_priv));
+> +       if (!ndev) {
+> +               err = -ENOMEM;
+> +               goto out;
+> +       }
+
+Redundant goto. Just return here.
+
+> +       }
+> +
+> +
+
+Extra line.
+
+--
+With Best Regards,
+Andy Shevchenko
