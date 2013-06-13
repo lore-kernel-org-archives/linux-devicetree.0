@@ -1,40 +1,74 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v2 09/11] ARM:stixxxx: Add stixxxx options to multi_v7_defconfig
-Date: Thu, 13 Jun 2013 10:24:45 +0100
-Message-ID: <51B98FDD.4010401@st.com>
-References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com> <1370856477-7237-1-git-send-email-srinivas.kandagatla@st.com> <20130610104032.GA2513@e106331-lin.cambridge.arm.com> <51B5B15E.50901@st.com> <20130610131513.GB2513@e106331-lin.cambridge.arm.com>
-Reply-To: srinivas.kandagatla@st.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 06/10] mmc: omap_hsmmc: add support for pbias
+ configuration in dt
+Date: Thu, 13 Jun 2013 11:37:01 +0200
+Message-ID: <CACRpkdZAzAJW0UxGCSj-PWXTSi2Q6T8fqL9SQ+Y-91sELQ3SRQ@mail.gmail.com>
+References: <20130523184045.GD13507@atomide.com>
+	<1370546059-24181-1-git-send-email-balajitk@ti.com>
+	<1370546059-24181-7-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130610131513.GB2513@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Gallimore <stephen.gallimore@st.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Stuart Menefy <stuart.menefy@st.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mauro
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1370546059-24181-7-git-send-email-balajitk@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>, Lee Jones <lee.jones@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Linux-OMAP <linux-omap@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, ext Tony Lindgren <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/06/13 14:15, Mark Rutland wrote:
-> CONFIG_EXPERIMENTAL's gone as of 3d374d09f1: "final removal of
-> CONFIG_EXPERIMENTAL", so that's fine to go. CONFIG_GPIO_PL061 and
-> CONFIG_MMC_WMT get selected elsewhere, so that's fine.
-> 
+On Thu, Jun 6, 2013 at 9:14 PM, Balaji T K <balajitk@ti.com> wrote:
 
-Am planning to send a patch to clean this up, so that any new platform
-addition to the multi_v7_defconfig will not under go this discussion again..
+> PBIAS register configuration is based on the regulator voltage
+> which supplies these pbias cells, sd i/o pads.
+> With PBIAS register address and bit definitions different across
+> omap[3,4,5], Simplify PBIAS configuration under three different
+> regulator voltage levels - O V, 1.8 V, 3 V. Corresponding pinctrl states
+> are defined as pbias_off, pbias_1v8, pbias_3v.
+>
+> pinctrl state mmc_init is used for configuring speed mode, loopback clock
+> (in devconf0/devconf1/prog_io1 register for omap3) and pull strength
+> configuration (in control_mmc1 for omap4)
+>
+> Signed-off-by: Balaji T K <balajitk@ti.com>
 
-> It looks like the architected timer deselection is fallout of my own making,
-> the multi_v7_defconfig should now contain HAVE_ARM_ARCH_TIMER rather than
-> ARM_ARCH_TIMER.
-Why should it even contain HAVE_ARM_ARCH_TIMER/ARM_ARCH_TIMER?
-The only reason I see for de-selection is because none of the platforms
-in the multi_v7 defconfig selects it.
+You *need* Lee Jones and Mark Brown to review this.
+Maybe Laurent has something to add too.
 
-Looks like there is no platform in mulit_v7 config which requires this
-support. If there is one I think it should select it.
+Ux500 had the very same thing, and there this was solved using
+a GPIO regulator for "vqmmc" a level-shifter. I vaguely remember
+Laurent doing something similar with the SH stuff.
 
-Am I correct?
+> +       /* 100ms delay required for PBIAS configuration */
+> +       msleep(100);
+> +       if (!vdd && host->pinctrl && host->pbias_off) {
+> +               ret = pinctrl_select_state(host->pinctrl, host->pbias_off);
+> +               if (ret < 0)
+> +                       dev_err(host->dev, "pinctrl pbias_off select error\n");
+> +       } else if (((1 << vdd) <= MMC_VDD_165_195) && host->pinctrl &&
+> +                       host->pbias_1v8) {
+> +               ret = pinctrl_select_state(host->pinctrl, host->pbias_1v8);
+> +               if (ret < 0)
+> +                       dev_err(host->dev, "pinctrl pbias_1v8 select error\n");
+> +       } else if (((1 << vdd) > MMC_VDD_165_195) && host->pinctrl &&
+> +                       host->pbias_3v) {
+> +               ret = pinctrl_select_state(host->pinctrl, host->pbias_3v);
+> +               if (ret < 0)
+> +                       dev_err(host->dev, "pinctrl pbias_3v select error\n");
+> +       }
 
-Thanks,
-srini
+So why does the pin control API control bias voltage?
 
+This seem so intuitively wrong as it can possibly get, clearly this
+is regulator territory.
+
+This also looks strange from an MMC point of view.
+
+It just seems these bits in these registers should be poked at
+by the regulator world, not the pinctrl world. That the bits are
+in the middle of pinctrl things does not really matter.
+
+> +       usleep_range(350, 400);
+
+And the regulator framework supports power-on delays.
+
+Yours,
+Linus Walleij
