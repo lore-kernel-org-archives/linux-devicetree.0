@@ -1,50 +1,130 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 7/7] ARM: mxc: remove #gpio-ranges-cells property
-Date: Thu, 13 Jun 2013 14:59:59 -0600
-Message-ID: <1371157199-7272-7-git-send-email-swarren@wwwdotorg.org>
-References: <1371157199-7272-1-git-send-email-swarren@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/2] Make non-linear GPIO ranges accesible from gpiolib
+Date: Thu, 13 Jun 2013 15:38:09 -0600
+Message-ID: <51BA3BC1.3090109@wwwdotorg.org>
+References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com> <1371128132-18266-2-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371157199-7272-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1371128132-18266-2-git-send-email-christian.ruppert@abilis.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 06/13/2013 06:55 AM, Christian Ruppert wrote:
+> This patch adds the infrastructure required to register non-linear gpio
+> ranges through gpiolib and the standard GPIO device tree bindings.
 
-This property is no longer required by the GPIO binding. Remove it.
+That's not exactly true. The existing gpio-ranges property already
+allows non-linear ranges to be represented quite easily; each entry in
+the gpio-ranges list is <gpio-base> <pinctrl-base> <count>, so you can
+piece together any mapping you want.
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Assuming the previous patches are accepted, I assume this should be
-applied or squashed into the branch where vf610.dtsi was added.
----
- arch/arm/boot/dts/vf610.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+The potential advantage of this patch is that the pinctrl-side of the
+mapping can be a group name rather than pin IDs, which might reduce the
+size of the mapping list if you have an extremely sparse or non-linear
+mapping /and/ parts of that mapping just happen to align with the pin
+groups in the pin controller HW, since each entry in the gpio-ranges
+property can be sparse/non-linear, rather than being a small linear
+chunk of the mapping.
 
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index e1eb7da..8577780 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -162,7 +162,6 @@
- 			iomuxc: iomuxc@40048000 {
- 				compatible = "fsl,vf610-iomuxc";
- 				reg = <0x40048000 0x1000>;
--				#gpio-range-cells = <3>;
- 
- 				/* functions and groups pins */
- 
--- 
-1.8.1.5
+As an aside, for Tegra I solved this differently: In the pinctrl driver,
+I simply defined the pin IDs to exactly match the GPIO IDs in order, so
+the mapping is 100% linear. Of course, this only works if your pinctrl
+HW documentation doesn't define any kind of numbering/ordering for your
+pins, so you can pick any order you want for the pinctrl binding/driver.
+This was true for Tegra20, since the HW only used groups for muxing.
+Given more recent Tegra SoCs have moved to per-pin muxing, that might
+not have been the best decision though, since now the HW registers at
+least do have a defined ordering/ID for each pin. If only we'd started
+with Tegra30 support not Tegra20:-)
+
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+
+> +In addition, named groups of pins can be mapped to pin groups of a given
+> +pin controller:
+> +
+> +	gpio_pio_g: gpio-controller@1480 {
+> +		#gpio-cells = <2>;
+> +		compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
+> +		reg = <0x1480 0x18>;
+> +		gpio-controller;
+> +		gpio-pingrps = <&pinctrl1 0>, <&pinctrl2 3>;
+> +		gpio-pingrp-names = "pctl1_gpio_g", "pctl2_gpio_g";
+
+A few thoughts here:
+
+"gpio-pingrps" doesn't sound very similar to the existing "gpio-ranges".
+Can we make their equivalent purpose more obvious by renaming this
+"gpio-group-ranges"?
+
+I'm not actually even sure we need a new property for this, except for
+the string group names. We could fold the new gpio-pingrps into the
+existing gpio-ranges, whose entries have the format:
+
+<gpio-base> <pinctrl-base> <count>
+
+... by saying that if count==0, it means to use a group name instead of
+a pinctrl-base value. We can insist that pinctrl-base==0 in this case
+too. If we go made, count==0 could mean "special" and pinctrl-base==0
+could mean "by pinctrl group name", and other values of pinctrl-base
+could be added later to mean other things!
+
+gpio-ranges =
+	<&pinctrl1 0 20 10>, /* Existing numeric style */
+	<&pinctrl2 10 0 0>,  /* Count==0, so group name style */
+	<&pinctrl1 0 20 10>, /* Existing numeric style */
+gpio-ranges-group-names =
+	"",    /* No group name required for entry 0 */
+	"gr1", /* Group name for entry 1 */
+	"";    /* No group name required for entry 2 */
+
+Does this seem better?
+
+> +		gpio-pingrp-names = "pctl1_gpio_g", "pctl2_gpio_g";
+
+I'm slightly worried that those example group names appear to be
+globally scoped. I would hope the group names are interpreted
+relative-to or within the pin controller that they are associated with.
+I wouldn't expect the pin controllers to include their own name in the
+names of the pin groups they expose. In other words, I'd expect that
+example to be more like:
+
+> +		gpio-pingrp-names = "foo", "bar";
+
+...
+> +The pinctrl node must have a "#gpio-pingrp-cells" property set to one to
+> +define the number of arguments to pass with the phandle.
+
+This shouldn't be required.
+
+Such properties are useful when one node references a second node, and
+that second node dictates the format of the reference. However, that is
+not the case here; the definition of gpio-pingrp-names itself always
+dictates its format entirely, and hence the value #gpio-pingrp-cells
+must always be 1, and hence there is no point requiring any referenced
+node to include this property.
+
+I realize this issue was inherited from the existing gpio-ranges
+documentation/implementation, but I've posted patches to solve that,
+triggered by thinking about this patch:
+
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-June/035462.html
+(the rest of the series will make it more clear, i.e. the new of_ API)
+
+> +Both methods can be combined in the same GPIO controller, e.g.
+
+In the proposal I have above, combining the mechanisms is slightly more
+cohesive, I think.
+
+> +	gpio_pio_i: gpio-controller@14B0 {
+> +		#gpio-cells = <2>;
+> +		compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
+> +		reg = <0x1480 0x18>;
+> +		gpio-controller;
+> +		gpio-ranges = <&pinctrl1 0 20 10>;
+> +		gpio-pingrps = <&pinctrl2 10>;
+> +		gpio-pingrp-names = "gpio_g_pins";
+> +	};
