@@ -1,62 +1,103 @@
-From: "J, KEERTHY" <j-keerthy@ti.com>
-Subject: RE: [PATCH v4] ARM: dts: OMAP5: Add palmas MFD node and regulator
- nodes
-Date: Thu, 13 Jun 2013 04:09:22 +0000
-Message-ID: <DC88CAD03C0052499C1907B327FC63229EB4B8@DBDE04.ent.ti.com>
-References: <1371025140-25376-1-git-send-email-j-keerthy@ti.com>
- <51B8990A.8030506@wwwdotorg.org>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu
+ reg control
+Date: Thu, 13 Jun 2013 09:56:42 +0530
+Message-ID: <CAPdUM4Nis0uwyZf1hNDOMmdqFm0K7beVPoyAWRjMBwq0jcwwCQ@mail.gmail.com>
+References: <1370935073-7475-1-git-send-email-rahul.sharma@samsung.com>
+	<CAAQKjZMuSQhbYtOyni-RdHhXu0fv3U2Dm_2iqRLe0smSt_jjjQ@mail.gmail.com>
+	<CAAQKjZOZCtLnE_OPs60NU+Z4pkHiSCqZcBOi1Dv+PC=01HKqyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51B8990A.8030506@wwwdotorg.org>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "lee.jones@linaro.org" <lee.jones@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAAQKjZOZCtLnE_OPs60NU+Z4pkHiSCqZcBOi1Dv+PC=01HKqyg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene.kim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Sean Paul <seanpaul@chromium.org>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Mr. Dae,
 
-> -----Original Message-----
-> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
-> Sent: Wednesday, June 12, 2013 9:22 PM
-> To: J, KEERTHY
-> Cc: Cousson, Benoit; devicetree-discuss@lists.ozlabs.org; linux-
-> omap@vger.kernel.org; linux-kernel@vger.kernel.org;
-> ldewangan@nvidia.com; grant.likely@secretlab.ca; swarren@nvidia.com;
-> sameo@linux.intel.com; gg@slimlogic.co.uk; lee.jones@linaro.org
-> Subject: Re: [PATCH v4] ARM: dts: OMAP5: Add palmas MFD node and
-> regulator nodes
-> 
-> On 06/12/2013 02:19 AM, J Keerthy wrote:
-> > This patch adds Palmas MFD node and the regulator nodes for OMAP5.
-> >
-> > The node definitions are based on: https://lkml.org/lkml/2013/6/6/25
-> >
-> > Boot tested on omap5-uevm board.
-> 
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+Thanks for your valuable inputs.
 
-Thanks..
+I posted it as RFC because, I also have received comments to register
+hdmiphy as a clock controller. As we always configure it for specific
+frequency, hdmi-phy looks similar to a PLL. But it really doesn't
+belong to that class. Secondly prior to exynos5420, it was a i2c
+device. I am not sure we can register a I2C device as a clock
+controller. I wanted to discuss and explore this option here.
 
-> 
-> > diff --git a/arch/arm/boot/dts/omap5-uevm.dts
-> > b/arch/arm/boot/dts/omap5-uevm.dts
-> 
-> > +	palmas: palmas@48 {
-> > +		reg = <0x48>;
-> > +		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /* IRQ_SYS_1N
-> */
-> > +		interrupt-parent = <&gic>;
-> > +		compatible = "ti,palmas";
-> 
-> ... although personally I prefer the compatible property to be right at
-> the top of each node, since it's what implies the schema for the rest
-> of the node. That's a tiny nit though; feel free to ignore it if the
-> OMAP files don't follow that convention.
+As you said, in parallel, I will align these changes and along with
+"drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver"
+series and post them.
 
-Sure. I will send hopefully the last version incorporating this :-).
+I hope we should be able to close on one of the above approaches for
+hdmiphy.
 
-Regards,
-Keerthy
+regards,
+Rahul Sharma.
+
+On Wed, Jun 12, 2013 at 9:57 AM, Inki Dae <inki.dae@samsung.com> wrote:
+>
+>
+>
+> 2013/6/12 Inki Dae <inki.dae@samsung.com>
+>>
+>> Hi Rahul,
+>>
+>> This patch is important to us. Actually, previous hdmi driver had
+>> controlled hdmiphy HDMI_PHY_CONTROL as if that were a clock but now that
+>> doesn't exist anymore. So we need to discuss how hdmiphy should be handled.
+>> I konw that you had already posted hdmiphy relevant patch set, [PATCH 0/4]
+>> drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver.
+>>
+>> I think we can couple pmu register controlling codes with that patch set
+>> without RFC. Could you update and post them again? like below,
+>> [PATCH 0/4] drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver
+>> + [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu reg
+>> control
+>>
+>> And then let's start review :)
+>
+>
+> And I think It would be better to move the pmu register controlling codes
+> into hdmiphy driver like drivers/usb/phy/phy-samsung-usb2.c driver does.
+>
+>>
+>>
+>> Thanks,
+>> Inki Dae
+>>
+>>
+>>
+>> 2013/6/11 Rahul Sharma <rahul.sharma@samsung.com>
+>>>
+>>> Previously, hdmiphy is added as a dummy clock in clock file for
+>>> exynos SoCs. Enable/Disable to this clock, actually toggles the power
+>>> control bit in PMU, instead of controlling the clock gate.
+>>>
+>>> This RFC adds the support to parse hdmiphy control node which is a child
+>>> node to hdmi, and map the pmu register to toggle the power control bit.
+>>>
+>>> This is based on drm-next branch in Inki Dae's tree.
+>>>
+>>> Rahul Sharma (2):
+>>>   drm/exynos: replace dummy hdmiphy clock with pmu register control
+>>>   ARM/dts: add hdmiphy power control pmu register to hdmi dt node
+>>>
+>>>  arch/arm/boot/dts/exynos5250.dtsi    |    6 +++
+>>>  drivers/gpu/drm/exynos/exynos_hdmi.c |   69
+>>> ++++++++++++++++++++++++++++++----
+>>>  drivers/gpu/drm/exynos/regs-hdmi.h   |    4 ++
+>>>  3 files changed, 71 insertions(+), 8 deletions(-)
+>>>
+>>> --
+>>> 1.7.10.4
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe
+>>> linux-samsung-soc" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>
+>
