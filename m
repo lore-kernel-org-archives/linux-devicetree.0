@@ -1,7 +1,7 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 5/7] gpio: implement gpio-ranges binding document fix
-Date: Thu, 13 Jun 2013 14:59:57 -0600
-Message-ID: <1371157199-7272-5-git-send-email-swarren@wwwdotorg.org>
+Subject: [PATCH 6/7] ARM: spear: remove #gpio-ranges-cells property
+Date: Thu, 13 Jun 2013 14:59:58 -0600
+Message-ID: <1371157199-7272-6-git-send-email-swarren@wwwdotorg.org>
 References: <1371157199-7272-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,28 +24,70 @@ List-Id: devicetree@vger.kernel.org
 
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Use the new of_parse_phandle_with_fixed_args() to implement the
-corrected gpio-ranges DT property definition.
+This property is no longer required by the GPIO binding. Remove it.
 
 Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/gpio/gpiolib-of.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This should presumably be applied along with the previous changes
+---
+ arch/arm/boot/dts/spear1310.dtsi | 1 -
+ arch/arm/boot/dts/spear1340.dtsi | 1 -
+ arch/arm/boot/dts/spear310.dtsi  | 1 -
+ arch/arm/boot/dts/spear320.dtsi  | 2 --
+ 4 files changed, 5 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 665f953..48cda3c 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -194,8 +194,8 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
- 		return;
+diff --git a/arch/arm/boot/dts/spear1310.dtsi b/arch/arm/boot/dts/spear1310.dtsi
+index 122ae94..90e99b5 100644
+--- a/arch/arm/boot/dts/spear1310.dtsi
++++ b/arch/arm/boot/dts/spear1310.dtsi
+@@ -89,7 +89,6 @@
+ 		pinmux: pinmux@e0700000 {
+ 			compatible = "st,spear1310-pinmux";
+ 			reg = <0xe0700000 0x1000>;
+-			#gpio-range-cells = <3>;
+ 		};
  
- 	for (;; index++) {
--		ret = of_parse_phandle_with_args(np, "gpio-ranges",
--				"#gpio-range-cells", index, &pinspec);
-+		ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3,
-+				index, &pinspec);
- 		if (ret)
- 			break;
+ 		apb {
+diff --git a/arch/arm/boot/dts/spear1340.dtsi b/arch/arm/boot/dts/spear1340.dtsi
+index 54d128d..5003013 100644
+--- a/arch/arm/boot/dts/spear1340.dtsi
++++ b/arch/arm/boot/dts/spear1340.dtsi
+@@ -63,7 +63,6 @@
+ 		pinmux: pinmux@e0700000 {
+ 			compatible = "st,spear1340-pinmux";
+ 			reg = <0xe0700000 0x1000>;
+-			#gpio-range-cells = <3>;
+ 		};
  
+ 		pwm: pwm@e0180000 {
+diff --git a/arch/arm/boot/dts/spear310.dtsi b/arch/arm/boot/dts/spear310.dtsi
+index 9537208..1e1318e 100644
+--- a/arch/arm/boot/dts/spear310.dtsi
++++ b/arch/arm/boot/dts/spear310.dtsi
+@@ -25,7 +25,6 @@
+ 		pinmux: pinmux@b4000000 {
+ 			compatible = "st,spear310-pinmux";
+ 			reg = <0xb4000000 0x1000>;
+-			#gpio-range-cells = <3>;
+ 		};
+ 
+ 		fsmc: flash@44000000 {
+diff --git a/arch/arm/boot/dts/spear320.dtsi b/arch/arm/boot/dts/spear320.dtsi
+index ffea342..f630d0c 100644
+--- a/arch/arm/boot/dts/spear320.dtsi
++++ b/arch/arm/boot/dts/spear320.dtsi
+@@ -1,4 +1,3 @@
+-/*
+  * DTS file for SPEAr320 SoC
+  *
+  * Copyright 2012 Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+@@ -24,7 +23,6 @@
+ 		pinmux: pinmux@b3000000 {
+ 			compatible = "st,spear320-pinmux";
+ 			reg = <0xb3000000 0x1000>;
+-			#gpio-range-cells = <3>;
+ 		};
+ 
+ 		clcd@90000000 {
 -- 
 1.8.1.5
