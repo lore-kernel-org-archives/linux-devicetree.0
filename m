@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v6 03/18] ARM: shmobile: r8a73a4: Add pin control device to device tree
-Date: Fri, 14 Jun 2013 01:45:48 +0200
-Message-ID: <1371167163-10507-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v6 01/18] sh-pfc: Remove support for platform data
+Date: Fri, 14 Jun 2013 01:45:46 +0200
+Message-ID: <1371167163-10507-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,29 +10,28 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Add a pfc node to the r8a73a4 device tree.
+Platform data isn't used, support can thus be removed.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/boot/dts/r8a73a4.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pinctrl/sh-pfc/core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-index 4ff2019..5aa1180 100644
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -85,4 +85,11 @@
- 		interrupt-parent = <&gic>;
- 		interrupts = <0 69 4>;
- 	};
-+
-+	pfc: pfc@e6050000 {
-+		compatible = "renesas,pfc-r8a73a4";
-+		reg = <0xe6050000 0x9000>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
- };
+diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
+index 3b2fd43..ac45084 100644
+--- a/drivers/pinctrl/sh-pfc/core.c
++++ b/drivers/pinctrl/sh-pfc/core.c
+@@ -354,8 +354,7 @@ static int sh_pfc_probe(struct platform_device *pdev)
+ 	struct sh_pfc *pfc;
+ 	int ret;
+ 
+-	info = pdev->id_entry->driver_data
+-	      ? (void *)pdev->id_entry->driver_data : pdev->dev.platform_data;
++	info = (void *)pdev->id_entry->driver_data;
+ 	if (info == NULL)
+ 		return -ENODEV;
+ 
 -- 
 1.8.1.5
 
