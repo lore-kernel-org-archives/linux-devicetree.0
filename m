@@ -1,7 +1,7 @@
 From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4 1/4] clk: add support for Rockchip gate clocks
-Date: Thu, 13 Jun 2013 16:59:40 +0200
-Message-ID: <201306131659.40802.heiko@sntech.de>
+Subject: [PATCH v4 2/4] arm: Add basic clocks for Rockchip rk3066a SoCs
+Date: Thu, 13 Jun 2013 17:00:23 +0200
+Message-ID: <201306131700.23376.heiko@sntech.de>
 References: <201306131658.36584.heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,57 +22,79 @@ To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-
 Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds basic support for gate-clocks on Rockchip SoCs.
-There are 16 gates in each register and use the HIWORD_MASK
-mechanism for changing gate settings.
+This adds a basic clock setup for rk3066a SoCs. Only the gates are
+set up currently, as the mux and dividers should use the upcoming
+generic devicetree bindings.
 
-The gate registers form a continuos block which makes the dt node
-structure a matter of taste, as either all 160 gates can be put into
-one gate clock spanning all registers or they can be divided into
-the 10 individual gates containing 16 clocks each.
-The code supports both approaches.
+Clocks whose rates need to be known are supplied by fixed-rate
+"dummy"-clocks that provide the correct rate. This is uncritical insofar
+that the only bootloader currently in existence for Rockchip devices
+is the propietary Rockchip one that always setups the clocks in the
+necessary way.
 
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- .../devicetree/bindings/clock/rockchip.txt         |   74 +++++++++++++++
- drivers/clk/Makefile                               |    1 +
- drivers/clk/rockchip/Makefile                      |    5 ++
- drivers/clk/rockchip/clk-rockchip.c                |   94 ++++++++++++++++++++
- 4 files changed, 174 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip.txt
- create mode 100644 drivers/clk/rockchip/Makefile
- create mode 100644 drivers/clk/rockchip/clk-rockchip.c
+ arch/arm/boot/dts/rk3066a-clocks.dtsi |  300 +++++++++++++++++++++++++++++++++
+ 1 file changed, 300 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3066a-clocks.dtsi
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip.txt b/Documentation/devicetree/bindings/clock/rockchip.txt
+diff --git a/arch/arm/boot/dts/rk3066a-clocks.dtsi b/arch/arm/boot/dts/rk3066a-clocks.dtsi
 new file mode 100644
-index 0000000..a891c82
+index 0000000..bdbe18a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip.txt
-@@ -0,0 +1,74 @@
-+Device Tree Clock bindings for arch-rockchip
++++ b/arch/arm/boot/dts/rk3066a-clocks.dtsi
+@@ -0,0 +1,300 @@
++/*
++ * Copyright (c) 2013 MundoReader S.L.
++ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+This binding uses the common clock binding[1].
++/ {
++	clocks {
++		compatible = "rockchip,clocks";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++		/*
++		 * This is a dummy clock, to be used as placeholder on
++		 * other mux clocks when a specific parent clock is not
++		 * yet implemented. It should be dropped when the driver
++		 * is complete.
++		 */
++		dummy: dummy {
++			compatible = "fixed-clock";
++			clock-frequency = <0>;
++			#clock-cells = <0>;
++		};
 +
-+== Gate clocks ==
++		xin24m: xin24m {
++			compatible = "fixed-clock";
++			clock-frequency = <24000000>;
++			#clock-cells = <0>;
++		};
 +
-+The gate registers form a continuos block which makes the dt node
-+structure a matter of taste, as either all gates can be put into
-+one gate clock spanning all registers or they can be divided into
-+the 10 individual gates containing 16 clocks each.
-+The code supports both approaches.
++		dummy48m: dummy48m {
++			compatible = "fixed-clock";
++			clock-frequency = <48000000>;
++			#clock-cells = <0>;
++		};
 +
-+Required properties:
-+- compatible : "rockchip,rk2928-gate-clk"
-+- reg : shall be the control register address(es) for the clock.
-+- #clock-cells : from common clock binding; shall be set to 1
-+- clock-output-names : the corresponding gate names that the clock controls
-+- clocks : should contain the parent clock for each individual gate,
-+  therefore the number of clocks elements should match the number of
-+  clock-output-names
-+
-+Example using multiple gate clocks:
++		dummy150m: dummy150m {
++			compatible = "fixed-clock";
++			clock-frequency = <150000000>;
++			#clock-cells = <0>;
++		};
 +
 +		clk_gates0: gate-clk@200000d0 {
 +			compatible = "rockchip,rk2928-gate-clk";
@@ -123,128 +145,204 @@ index 0000000..a891c82
 +
 +			#clock-cells = <1>;
 +		};
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index f51b52b..2e2e957 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -25,6 +25,7 @@ ifeq ($(CONFIG_COMMON_CLK), y)
- obj-$(CONFIG_ARCH_MMP)		+= mmp/
- endif
- obj-$(CONFIG_MACH_LOONGSON1)	+= clk-ls1x.o
-+obj-$(CONFIG_ARCH_ROCKCHIP)	+= rockchip/
- obj-$(CONFIG_ARCH_SUNXI)	+= sunxi/
- obj-$(CONFIG_ARCH_U8500)	+= ux500/
- obj-$(CONFIG_ARCH_VT8500)	+= clk-vt8500.o
-diff --git a/drivers/clk/rockchip/Makefile b/drivers/clk/rockchip/Makefile
-new file mode 100644
-index 0000000..8d3aefa
---- /dev/null
-+++ b/drivers/clk/rockchip/Makefile
-@@ -0,0 +1,5 @@
-+#
-+# Rockchip Clock specific Makefile
-+#
 +
-+obj-y	+= clk-rockchip.o
-diff --git a/drivers/clk/rockchip/clk-rockchip.c b/drivers/clk/rockchip/clk-rockchip.c
-new file mode 100644
-index 0000000..ff990c4
---- /dev/null
-+++ b/drivers/clk/rockchip/clk-rockchip.c
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright (c) 2013 MundoReader S.L.
-+ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++		clk_gates2: gate-clk@200000d8 {
++			compatible = "rockchip,rk2928-gate-clk";
++			reg = <0x200000d8 0x4>;
++			clocks = <&clk_gates2 1>, <&dummy>,
++				 <&dummy>, <&dummy>,
++				 <&dummy>, <&dummy>,
++				 <&clk_gates2 3>, <&dummy>,
++				 <&dummy>, <&dummy>,
++				 <&dummy>, <&dummy48m>,
++				 <&dummy>, <&dummy48m>,
++				 <&dummy>, <&dummy>;
 +
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
++			clock-output-names =
++				"gate_periph_src", "gate_aclk_periph",
++				"gate_hclk_periph", "gate_pclk_periph",
++				"gate_smc", "gate_mac",
++				"gate_hsadc", "gate_hsadc_frac",
++				"gate_saradc", "gate_spi0",
++				"gate_spi1", "gate_mmc0",
++				"gate_mac_lbtest", "gate_mmc1",
++				"gate_emmc", "gate_tsadc";
 +
-+static DEFINE_SPINLOCK(clk_lock);
++			#clock-cells = <1>;
++		};
 +
-+/*
-+ * Gate clocks
-+ */
++		clk_gates3: gate-clk@200000dc {
++			compatible = "rockchip,rk2928-gate-clk";
++			reg = <0x200000dc 0x4>;
++			clocks = <&dummy>, <&dummy>,
++				 <&dummy>, <&dummy>,
++				 <&dummy>, <&dummy>,
++				 <&dummy>, <&dummy>,
++				 <&dummy>, <&dummy>,
++				 <&dummy>, <&dummy>,
++				 <&dummy>, <&dummy>,
++				 <&dummy>, <&dummy>;
 +
-+static void __init rk2928_gate_clk_init(struct device_node *node,
-+					 void *data)
-+{
-+	struct clk_onecell_data *clk_data;
-+	const char *clk_parent;
-+	const char *clk_name;
-+	void __iomem *reg;
-+	void __iomem *reg_idx;
-+	int flags;
-+	int qty;
-+	int reg_bit;
-+	int clkflags = CLK_SET_RATE_PARENT;
-+	int i;
++			clock-output-names =
++				"gate_aclk_lcdc0_src", "gate_dclk_lcdc0",
++				"gate_dclk_lcdc1", "gate_pclkin_cif0",
++				"gate_pclkin_cif1", "reserved",
++				"reserved", "gate_cif0_out",
++				"gate_cif1_out", "gate_aclk_vepu",
++				"gate_hclk_vepu", "gate_aclk_vdpu",
++				"gate_hclk_vdpu", "gate_gpu_src",
++				"reserved", "gate_xin27m";
 +
-+	qty = of_property_count_strings(node, "clock-output-names");
-+	if (qty < 0) {
-+		pr_err("%s: error in clock-output-names %d\n", __func__, qty);
-+		return;
-+	}
++			#clock-cells = <1>;
++		};
 +
-+	if (qty == 0) {
-+		pr_info("%s: nothing to do\n", __func__);
-+		return;
-+	}
++		clk_gates4: gate-clk@200000e0 {
++			compatible = "rockchip,rk2928-gate-clk";
++			reg = <0x200000e0 0x4>;
++			clocks = <&clk_gates2 2>, <&clk_gates2 3>,
++				 <&clk_gates2 1>, <&clk_gates2 1>,
++				 <&clk_gates2 1>, <&clk_gates2 2>,
++				 <&clk_gates2 2>, <&clk_gates2 2>,
++				 <&clk_gates0 4>, <&clk_gates0 4>,
++				 <&clk_gates0 3>, <&clk_gates0 3>,
++				 <&clk_gates0 3>, <&clk_gates2 3>,
++				 <&clk_gates0 4>;
 +
-+	reg = of_iomap(node, 0);
++			clock-output-names =
++				"gate_hclk_peri_axi_matrix", "gate_pclk_peri_axi_matrix",
++				"gate_aclk_cpu_peri", "gate_aclk_peri_axi_matrix",
++				"gate_aclk_pei_niu", "gate_hclk_usb_peri",
++				"gate_hclk_peri_ahb_arbi", "gate_hclk_emem_peri",
++				"gate_hclk_cpubus", "gate_hclk_ahb2apb",
++				"gate_aclk_strc_sys", "gate_aclk_l2mem_con",
++				"gate_aclk_intmem", "gate_pclk_tsadc",
++				"gate_hclk_hdmi";
 +
-+	clk_data = kzalloc(sizeof(struct clk_onecell_data), GFP_KERNEL);
-+	if (!clk_data)
-+		return;
++			#clock-cells = <1>;
++		};
 +
-+	clk_data->clks = kzalloc(qty * sizeof(struct clk *), GFP_KERNEL);
-+	if (!clk_data->clks) {
-+		kfree(clk_data);
-+		return;
-+	}
++		clk_gates5: gate-clk@200000e4 {
++			compatible = "rockchip,rk2928-gate-clk";
++			reg = <0x200000e4 0x4>;
++			clocks = <&clk_gates0 3>, <&clk_gates2 1>,
++				 <&clk_gates0 5>, <&clk_gates0 5>,
++				 <&clk_gates0 5>, <&clk_gates0 5>,
++				 <&clk_gates0 4>, <&clk_gates0 5>,
++				 <&clk_gates2 1>, <&clk_gates2 2>,
++				 <&clk_gates2 2>, <&clk_gates2 2>,
++				 <&clk_gates2 2>, <&clk_gates4 5>,
++				 <&clk_gates4 5>, <&dummy>;
 +
-+	flags = CLK_GATE_HIWORD_MASK | CLK_GATE_SET_TO_DISABLE;
++			clock-output-names =
++				"gate_aclk_dmac1", "gate_aclk_dmac2",
++				"gate_pclk_efuse", "gate_pclk_tzpc",
++				"gate_pclk_grf", "gate_pclk_pmu",
++				"gate_hclk_rom", "gate_pclk_ddrupctl",
++				"gate_aclk_smc", "gate_hclk_nandc",
++				"gate_hclk_mmc0", "gate_hclk_mmc1",
++				"gate_hclk_emmc", "gate_hclk_otg0",
++				"gate_hclk_otg1", "gate_aclk_gpu";
 +
-+	for (i = 0; i < qty; i++) {
-+		of_property_read_string_index(node, "clock-output-names",
-+					      i, &clk_name);
++			#clock-cells = <1>;
++		};
 +
-+		/* ignore empty slots */
-+		if (!strcmp("reserved", clk_name))
-+			continue;
++		clk_gates6: gate-clk@200000e8 {
++			compatible = "rockchip,rk2928-gate-clk";
++			reg = <0x200000e8 0x4>;
++			clocks = <&clk_gates3 0>, <&clk_gates0 4>,
++				 <&clk_gates0 4>, <&clk_gates1 4>,
++				 <&clk_gates0 4>, <&clk_gates3 0>,
++				 <&clk_gates0 4>, <&clk_gates1 4>,
++				 <&clk_gates3 0>, <&clk_gates0 4>,
++				 <&clk_gates0 4>, <&clk_gates1 4>,
++				 <&clk_gates0 4>, <&clk_gates3 0>,
++				 <&dummy>, <&dummy>;
 +
-+		clk_parent = of_clk_get_parent_name(node, i);
++			clock-output-names =
++				"gate_aclk_lcdc0", "gate_hclk_lcdc0",
++				"gate_hclk_lcdc1", "gate_aclk_lcdc1",
++				"gate_hclk_cif0", "gate_aclk_cif0",
++				"gate_hclk_cif1", "gate_aclk_cif1",
++				"gate_aclk_ipp", "gate_hclk_ipp",
++				"gate_hclk_rga", "gate_aclk_rga",
++				"gate_hclk_vio_bus", "gate_aclk_vio0",
++				"gate_aclk_vcodec", "gate_shclk_vio_h2h";
 +
-+		/* keep all gates untouched for now */
-+		clkflags |= CLK_IGNORE_UNUSED;
++			#clock-cells = <1>;
++		};
 +
-+		reg_idx = reg + (4 * (i / 16));
-+		reg_bit = (i % 16);
++		clk_gates7: gate-clk@200000ec {
++			compatible = "rockchip,rk2928-gate-clk";
++			reg = <0x200000ec 0x4>;
++			clocks = <&clk_gates2 2>, <&clk_gates0 4>,
++				 <&clk_gates0 4>, <&clk_gates0 4>,
++				 <&clk_gates0 4>, <&clk_gates2 2>,
++				 <&clk_gates2 2>, <&clk_gates0 5>,
++				 <&clk_gates0 5>, <&clk_gates0 5>,
++				 <&clk_gates0 5>, <&clk_gates2 3>,
++				 <&clk_gates2 3>, <&clk_gates2 3>,
++				 <&clk_gates2 3>, <&clk_gates2 3>;
 +
-+		clk_data->clks[i] = clk_register_gate(NULL, clk_name,
-+						      clk_parent, clkflags,
-+						      reg_idx, reg_bit,
-+						      flags,
-+						      &clk_lock);
-+		WARN_ON(IS_ERR(clk_data->clks[i]));
-+	}
++			clock-output-names =
++				"gate_hclk_emac", "gate_hclk_spdif",
++				"gate_hclk_i2s0_2ch", "gate_hclk_i2s1_2ch",
++				"gate_hclk_i2s_8ch", "gate_hclk_hsadc",
++				"gate_hclk_pidf", "gate_pclk_timer0",
++				"gate_pclk_timer1", "gate_pclk_timer2",
++				"gate_pclk_pwm01", "gate_pclk_pwm23",
++				"gate_pclk_spi0", "gate_pclk_spi1",
++				"gate_pclk_saradc", "gate_pclk_wdt";
 +
-+	clk_data->clk_num = qty;
++			#clock-cells = <1>;
++		};
 +
-+	of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+}
-+CLK_OF_DECLARE(rk2928_gate, "rockchip,rk2928-gate-clk", rk2928_gate_clk_init);
++		clk_gates8: gate-clk@200000f0 {
++			compatible = "rockchip,rk2928-gate-clk";
++			reg = <0x200000f0 0x4>;
++			clocks = <&clk_gates0 5>, <&clk_gates0 5>,
++				 <&clk_gates2 3>, <&clk_gates2 3>,
++				 <&clk_gates0 5>, <&clk_gates0 5>,
++				 <&clk_gates2 3>, <&clk_gates2 3>,
++				 <&clk_gates2 3>, <&clk_gates0 5>,
++				 <&clk_gates0 5>, <&clk_gates0 5>,
++				 <&clk_gates2 3>, <&clk_gates2 3>,
++				 <&dummy>, <&clk_gates0 5>;
++
++			clock-output-names =
++				"gate_pclk_uart0", "gate_pclk_uart1",
++				"gate_pclk_uart2", "gate_pclk_uart3",
++				"gate_pclk_i2c0", "gate_pclk_i2c1",
++				"gate_pclk_i2c2", "gate_pclk_i2c3",
++				"gate_pclk_i2c4", "gate_pclk_gpio0",
++				"gate_pclk_gpio1", "gate_pclk_gpio2",
++				"gate_pclk_gpio3", "gate_pclk_gpio4",
++				"reserved", "gate_pclk_gpio6";
++
++			#clock-cells = <1>;
++		};
++
++		clk_gates9: gate-clk@200000f4 {
++			compatible = "rockchip,rk2928-gate-clk";
++			reg = <0x200000f4 0x4>;
++			clocks = <&dummy>, <&clk_gates0 5>,
++				 <&dummy>, <&dummy>,
++				 <&dummy>, <&clk_gates1 4>,
++				 <&clk_gates0 5>, <&dummy>,
++				 <&dummy>, <&dummy>,
++				 <&dummy>;
++
++			clock-output-names =
++				"gate_clk_core_dbg", "gate_pclk_dbg",
++				"gate_clk_trace", "gate_atclk",
++				"gate_clk_l2c", "gate_aclk_vio1",
++				"gate_pclk_publ", "gate_aclk_intmem0",
++				"gate_aclk_intmem1", "gate_aclk_intmem2",
++				"gate_aclk_intmem3";
++
++			#clock-cells = <1>;
++		};
++	};
++
++};
 -- 
 1.7.10.4
