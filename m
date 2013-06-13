@@ -1,56 +1,34 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 06/11] ARM:stixxxx: Add STiH415 SOC support
-Date: Thu, 13 Jun 2013 14:47:27 +0200
-Message-ID: <CACRpkdaiPubGw5t8xN+aVXkZBJNuLfPbxEFOkp+u14NtzRyTAw@mail.gmail.com>
-References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com>
-	<1370856381-6644-1-git-send-email-srinivas.kandagatla@st.com>
-	<CAHTX3d+dk3W_9b7SVUokWq4KYXnj=Z1=WPj5zJ-gUvJqqwE=+Q@mail.gmail.com>
-	<51B5BCB3.3060405@st.com>
-	<20130610231934.GG18614@n2100.arm.linux.org.uk>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 0/2] ARM: dts: Add USB host support for Beagle-xm
+Date: Thu, 13 Jun 2013 15:53:15 +0300
+Message-ID: <1371127997-8089-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130610231934.GG18614@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Michal Simek <monstr@monstr.eu>, linux-arm <linux-arm-kernel@lists.infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: b-cousson-l0cyMroinI0@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 11, 2013 at 1:19 AM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Mon, Jun 10, 2013 at 12:46:59PM +0100, Srinivas KANDAGATLA wrote:
->> >     +       aux_ctrl = (0x1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT) |
->> >     +               (0x1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT) |
->> >     +               (0x1 << L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT) |
->> >     +               (way_size << L2X0_AUX_CTRL_WAY_SIZE_SHIFT);
->> >
->> >
->> >
->> > #include <linux/bitops.h>
->> > Linus Walleij would write use  BIT() here
->>
->> I will use BIT() macro.
->
-> Without checking those fields... BIT() is only appropriate if you're
-> really talking about single bits.  If you have a field of more than a
-> single bit which you happen to be setting to '1' then it's not
-> appropriate to use BIT().
+Adds USB host support for Beagle-xm.
 
-This is true. Luckily I didn't push for it myself this time.
+Roger Quadros (2):
+  ARM: dts: omap3-beagle-xm: Add USB Host support
+  ARM: dts: omap3-beagle: Make USB host pin naming consistent
 
-However, on a related key we have this hidden away in MFD
-drivers/mfd/dbx500-prcmu-regs.h:
+ arch/arm/boot/dts/omap3-beagle-xm.dts |   61 +++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/omap3-beagle.dts    |   24 ++++++------
+ 2 files changed, 73 insertions(+), 12 deletions(-)
 
-#define BITS(_start, _end) ((BIT(_end) - BIT(_start)) + BIT(_end))
-
-It's used like so:
-
-#define PRCM_PLL_FREQ_D_MASK    BITS(0, 7)
-
-So you can define an multi-bit mask with a macro like that.
-
-If there is interest in a construct like this I can make a patch to
-move this thing to <linux/bitops.h>.
-
-Yours,
-Linus Walleij
+-- 
+1.7.4.1
