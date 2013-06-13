@@ -1,186 +1,112 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
-Date: Thu, 13 Jun 2013 10:26:30 +0200
-Message-ID: <20130613082629.GA17071@ab42.lan>
-References: <20130530211944.05F4D3E0A90@localhost>
- <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com>
- <alpine.LFD.2.02.1305311835040.2905@ionos>
- <20130531221814.534DF3E08FE@localhost>
- <20130601110133.GA4051@ab42.lan>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: nomadik: add the new clocks to the device tree
+Date: Thu, 13 Jun 2013 10:37:48 +0200
+Message-ID: <CACRpkdbqzA3ydsg6O4korKrRZSRc+p1Kea3wzrTCjXiFaHr1bQ@mail.gmail.com>
+References: <1370775348-7440-1-git-send-email-linus.walleij@linaro.org>
+ <1370775348-7440-2-git-send-email-linus.walleij@linaro.org>
+ <201306091621.02506.arnd@arndb.de>
+ <CACRpkdZNZ4_FzjEsstUm0bn8hE7FPTN1y_QnXtWUvGUzCNynBg@mail.gmail.com>
+ <20130612132441.637B23E0A56@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130601110133.GA4051@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130612132441.637B23E0A56@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 01, 2013 at 01:01:33PM +0200, Christian Ruppert wrote:
-> On Fri, May 31, 2013 at 11:18:14PM +0100, Grant Likely wrote:
-> > On Fri, 31 May 2013 19:32:34 +0200 (CEST), Thomas Gleixner <tglx@li=
-nutronix.de> wrote:
-> > > On Fri, 31 May 2013, Christian Ruppert wrote:
-> > >=20
-> > > > The SOC interrupt controller driver for the Abilis Systems TB10=
-x series of
-> > > > SOCs based on ARC700 CPUs.
-> > > >=20
-> > > > This patch depends on commits eb76bdd407d8a90e59a06cb0158886df3=
-90e5d1c and
-> > > > 712bc93df9e7f14b8a163148d2aa7c778e151627 from branch irq/for-ar=
-m of
-> > > > git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git.
-> > >=20
-> > > That branch can be pulled into ARC as well. It only contains the
-> > > changes, which are necessary for the irq domain support of the ge=
-neric
-> > > irq chip.
->=20
-> Vineet, what do you think about this? For the moment I have pulled th=
-e
-> patch set into our local branch and to me it doesn't matter, we just
-> have to make sure to respect this dependency when merging everything
-> together.
->=20
-> > > > +static void tb10x_irq_cascade(unsigned int irq, struct irq_des=
-c *desc)
-> > > > +{
-> > > > +	struct irq_domain *domain =3D irq_desc_get_handler_data(desc)=
-;
-> > > > +
-> > > > +	generic_handle_irq(irq_find_mapping(domain, irq));
-> > > > +}
-> > >=20
-> > > ...
-> > >=20
-> > > > +	for (i =3D 0; i < nrirqs; i++) {
-> > > > +		unsigned int irq =3D irq_of_parse_and_map(ictl, i);
-> > > > +
-> > > > +		irq_set_handler_data(irq, domain);
-> > > > +		irq_set_chained_handler(irq, tb10x_irq_cascade);
-> > > > +	}
-> > >=20
-> > > I might be completely confused, but this does not make any sense =
-at
-> > > all.
-> > >=20
-> > > You allocate a linear domain and then map the interrupts in the
-> > > domain. The mapping function retrieves the hardware interrupt num=
-ber
-> > > and creates a virtual interrupt number, installs the chip and the
-> > > handler for the interrupt and finally returns the virtual interru=
-pt
-> > > number.
-> > >=20
-> > > Now you take that virtual interrupt number and install
-> > > tb10x_irq_cascade as the handler. irq_set_chained_handler() will
-> > > startup (unmask) the interrupt right away.
-> > >=20
-> > > In the cascade handler you take the virtual interrupt number, whi=
-ch
-> > > you get as argument, and find the mapping, i.e. the matching VIRT=
-UAL
-> > > interrupt number for the VIRTUAL interrupt number and then call t=
-he
-> > > handler.
-> > >=20
-> > > How is this supposed to work?
-> >=20
-> > I think what is going on here is that the tb10x interrupt controlle=
-r
-> > appears to be more of a front-end to another interrupt controller w=
-ith
-> > each input wired up 1:1 to the interrupt inputs of the other contro=
-ller.
->=20
-> Exactly. The TB10x interrupt controller is a front-end for the ARC CP=
-U
-> built-in interrupt controller.
->=20
-> > (I don't know why someone would design an interrupt controller that=
- way,
-> > but that's another issue).
->=20
-> There are several technical reasons for this front-end. The one that
-> concerns us most in the kernel is that the TB10x front-end does the
-> translation from all kinds of interrupt trigger modes to the level
-> triggered interrupts natively understood by the ARC CPU built-in
-> controller.
->=20
-> > The loop above is mapping each of the
-> > interrupt inputs on the parent controller so that each child contro=
-ller
-> > can be chained to it as an input. I can't think of how else it coul=
-d be
-> > set up with the current code if the drivers were kept separate.
->=20
-> This is exactly the intention. I haven't found an easier way to do th=
-is
-> either but I'm open to suggestions. Btw, I have noticed that the pare=
-nt
-> controller interrupts from this loop are not listed in /proc/interrup=
-ts.
-> I'm not sure if what is done in the loop is sufficient or if I should
-> add something else (the naive option of using request_irq doesn't wor=
-k,
-> the kernel saying something in the lines of "irq XX triggered but noo=
-ne
-> cares").
->=20
-> > Christian, what is the parent interrupt controller for this SoC? It
-> > really feels like the tb10x-ictl belongs as part of the parent
-> > controller. I went and looked at the parent node, and I saw this:
-> >=20
-> > 		intc: interrupt-controller {
-> > 				compatible =3D "snps,arc700-intc";
-> > 				interrupt-controller;
-> > 				#interrupt-cells =3D <1>;
-> > 		};
-> >=20
-> > I noticed the conspicuous absence of a reg property. Is this someth=
-ing
-> > architectural?
->=20
-> The parent controller is part of the CPU itself, see
-> arch/arc/kernel/irq.c. This controller is maintained by Vineet and IM=
-HO
-> we should keep it separate from the TB10x one since it is implicitly
-> used in all ARC-based platforms whereas the TB10x controller is used =
-in
-> Abilis chips only.
->=20
-> > If I were working on this system I'd drop the
-> > snps,arc700-intc node entirely and have a single abilis,tb10x-intc =
-that
-> > encapsulated the properties of both (you would of course want to sh=
-are
-> > handler functions for the 'normal' inputs without the custom featur=
-es).
-> > That would eliminate the goofyness of listing 27 separate interrupt=
-s in
-> > the abilis,tb10x-ictl interrupts property.
->=20
-> To complicate things even further, some ARC CPU built-in peripherals
-> (e.g. timers) generate interrupts directly to the ARC built-in interr=
-upt
-> controller (without going through the TB10x front-end), hence the
-> "goofy" list of interrupts in the TB10x DT node.
+On Wed, Jun 12, 2013 at 3:24 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Mon, 10 Jun 2013 09:43:30 +0200, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Sun, Jun 9, 2013 at 4:21 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Sunday 09 June 2013, Linus Walleij wrote:
+>> >> +               /*
+>> >> +                * IP AMBA bus clocks, driving the bus side of the
+>> >> +                * peripheral clocking, clock gates.
+>> >> +                */
+>> >> +
+>> >> +               hclkdma0: hclkdma0@48M {
+>> >> +                       #clock-cells = <0>;
+>> >> +                       compatible = "st,nomadik-src-clock";
+>> >> +                       clock-id = <0>;
+>> >> +                       clocks = <&hclk>;
+>> >> +               };
+>> >> +               hclksmc: hclksmc@48M {
+>> >> +                       #clock-cells = <0>;
+>> >> +                       compatible = "st,nomadik-src-clock";
+>> >> +                       clock-id = <1>;
+>> >> +                       clocks = <&hclk>;
+>> >> +               };
+>> >> +               hclksdram: hclksdram@48M {
+>> >> +                       #clock-cells = <0>;
+>> >> +                       compatible = "st,nomadik-src-clock";
+>> >> +                       clock-id = <2>;
+>> >> +                       clocks = <&hclk>;
+>> >> +               };
+>> >> +               hclkdma1: hclkdma1@48M {
+>> >> +                       #clock-cells = <0>;
+>> >> +                       compatible = "st,nomadik-src-clock";
+>> >> +                       clock-id = <3>;
+>> >> +                       clocks = <&hclk>;
+>> >> +               };
+>> >
+>> > Sorry if I'm being slow to understand how the clock bindings work, but if
+>> > you have 63 identical clocks that only differ in ther clock-id, can't you
+>> > just have a single DT node for them instead with #clock-cells=1 to pass the
+>> > number from the device using it?
+>>
+>> I first had exactly that implementation but it didn't work. This is explained
+>> in the commit message on patch 1/1:
+>>
+>>   The gated clocks are implemented with zero cells and
+>>   given the clock ID as a property of each node, so every
+>>   gate need to have its own node in the device tree.
+>>   This is because the gate registers contain both HCLK
+>>   gates and PCLK gates, where the latter has HCLK as
+>>   parent. As can be seen from the register layout, this
+>>   is a complete mixup, which means all these gates need
+>>   their own node to properly model parent/child relations
+>>   for PCLKs apart from the HCLKs.
+>>
+>> Basically the "shortcoming" in device tree is that modelling this with
+>> clock-cells = 1 requires them all to have one and the same parent,
+>> but they don't.
+>
+> Are you prevented from increasing the number of clock-cells used here?
 
-Hello Thomas,
+No, I can do this, but it involves loosing HW information from the
+device tree and the debugfs representation of the clocks will
+not correspond to the actual clock hierarchy.
 
-Any news about this one?
+In short it creates a mess for the understanding of the system
+for some poor engineer with a datasheet and a device tree.
 
-Greetings,
-  Christian
+And AFAIK one of the goals of the device tree is to make
+things easier to understand, not harder.
 
---=20
-  Christian Ruppert              ,          <christian.ruppert@abilis.c=
-om>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
-leuri
-                             _// | bilis Systems   CH-1228 Plan-les-Oua=
-tes
+Doing this with additional cells would sacrifice readability
+and HW representation for fewer lines of DTS, basically.
+
+What I wonder is which one is more important for the
+DT community. We cannot let the kernel community's
+will to keep down the number of lines in the files (as I'm
+starting to suspect is behind some of the reasoning here,
+correct me if wrong) influence everyone else, if we want
+to keep things reusable for other OS:es.
+
+That said I've recently had the feeling that the majority
+of the civilized world has started to think of DT as a
+Linux thing only ... so maybe I'm fighting windmills?
+
+Yours,
+Linus Walleij
