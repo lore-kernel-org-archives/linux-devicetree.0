@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v6 06/18] ARM: shmobile: r8a7778: Add GPIO controller devices to device tree
-Date: Fri, 14 Jun 2013 01:45:51 +0200
-Message-ID: <1371167163-10507-7-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v6 04/18] ARM: shmobile: r8a7740: Add pin control device to device tree
+Date: Fri, 14 Jun 2013 01:45:49 +0200
+Message-ID: <1371167163-10507-5-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,77 +10,75 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Add GPIO controller nodes to the r8a7778 core device tree.
+Add a pfc node to the r8a7740 device tree and remove manual pinmux
+initialization from the corresponding board files.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7778.dtsi | 51 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ arch/arm/boot/dts/r8a7740.dtsi                           |  8 ++++++++
+ arch/arm/mach-shmobile/board-armadillo800eva-reference.c | 16 ++++++++--------
+ 2 files changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
-index c8dbf14..0639e8b 100644
---- a/arch/arm/boot/dts/r8a7778.dtsi
-+++ b/arch/arm/boot/dts/r8a7778.dtsi
-@@ -33,8 +33,59 @@
- 		      <0xfe430000 0x100>;
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index 25dc930..2fa3708 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -135,4 +135,12 @@
+ 			      0 72 0x4
+ 			      0 73 0x4>;
  	};
- 
-+	gpio0: gpio@ffc40000 {
-+		compatible = "renesas,gpio-r8a7778", "renesas,gpio-rcar";
-+		reg = <0xffc40000 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 103 0x4>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 0 32>;
-+	};
 +
-+	gpio1: gpio@ffc41000 {
-+		compatible = "renesas,gpio-r8a7778", "renesas,gpio-rcar";
-+		reg = <0xffc41000 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 103 0x4>;
-+		#gpio-cells = <2>;
++	pfc: pfc@e6050000 {
++		compatible = "renesas,pfc-r8a7740";
++		reg = <0xe6050000 0x8000>,
++		      <0xe605800c 0x20>;
 +		gpio-controller;
-+		gpio-ranges = <&pfc 0 32 32>;
-+	};
-+
-+	gpio2: gpio@ffc42000 {
-+		compatible = "renesas,gpio-r8a7778", "renesas,gpio-rcar";
-+		reg = <0xffc42000 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 103 0x4>;
 +		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 64 32>;
 +	};
-+
-+	gpio3: gpio@ffc43000 {
-+		compatible = "renesas,gpio-r8a7778", "renesas,gpio-rcar";
-+		reg = <0xffc43000 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 103 0x4>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 96 32>;
-+	};
-+
-+	gpio4: gpio@ffc44000 {
-+		compatible = "renesas,gpio-r8a7778", "renesas,gpio-rcar";
-+		reg = <0xffc44000 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 103 0x4>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 128 27>;
-+	};
-+
- 	pfc: pfc@fffc0000 {
- 		compatible = "renesas,pfc-r8a7778";
- 		reg = <0xfffc000 0x118>;
-+		#gpio-range-cells = <3>;
- 	};
  };
+diff --git a/arch/arm/mach-shmobile/board-armadillo800eva-reference.c b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
+index 03b85fe..f25b6aa 100644
+--- a/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
++++ b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
+@@ -121,7 +121,7 @@
+ 
+ static const struct pinctrl_map eva_pinctrl_map[] = {
+ 	/* SCIFA1 */
+-	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.1", "pfc-r8a7740",
++	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.1", "e6050000.pfc",
+ 				  "scifa1_data", "scifa1"),
+ };
+ 
+@@ -170,22 +170,22 @@ static void __init eva_init(void)
+ 	eva_clock_init();
+ 
+ 	pinctrl_register_mappings(eva_pinctrl_map, ARRAY_SIZE(eva_pinctrl_map));
+-	r8a7740_pinmux_init();
+ 
+ 	r8a7740_meram_workaround();
+ 
+-	/*
+-	 * Touchscreen
+-	 * TODO: Move reset GPIO over to .dts when we can reference it
+-	 */
+-	gpio_request_one(166, GPIOF_OUT_INIT_HIGH, NULL); /* TP_RST_B */
+-
+ #ifdef CONFIG_CACHE_L2X0
+ 	/* Early BRESP enable, Shared attribute override enable, 32K*8way */
+ 	l2x0_init(IOMEM(0xf0002000), 0x40440000, 0x82000fff);
+ #endif
+ 
+ 	r8a7740_add_standard_devices_dt();
++
++	/*
++	 * Touchscreen
++	 * TODO: Move reset GPIO over to .dts when we can reference it
++	 */
++	gpio_request_one(166, GPIOF_OUT_INIT_HIGH, NULL); /* TP_RST_B */
++
+ 	r8a7740_pm_init();
+ }
+ 
 -- 
 1.8.1.5
 
