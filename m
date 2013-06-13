@@ -1,21 +1,13 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [RFC PATCH 1/4] regulator: Introduce OMAP regulator to control
- PMIC over VC/VP
-Date: Thu, 13 Jun 2013 08:39:50 -0500
-Message-ID: <20130613133950.GA32174@kahuna>
-References: <1369246717-4167-1-git-send-email-nm@ti.com>
- <1369246717-4167-2-git-send-email-nm@ti.com>
- <20130610103131.GR31367@sirena.org.uk>
- <CAGo_u6qTiPpd0DDe3jnPh_UxTwox22azhcMGy=fftL8H+DGeyw@mail.gmail.com>
- <20130610164905.GJ1403@sirena.org.uk>
- <CAGo_u6ov=yaCwt8apbvW57ErAvhgUBHHw9gwADBC1fJUrfucUQ@mail.gmail.com>
- <20130610180150.GQ1403@sirena.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
+Date: Thu, 13 Jun 2013 16:13:59 +0200
+Message-ID: <13685067.uPzcc2y1CU@wuerfel>
+References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130610180150.GQ1403@sirena.org.uk>
+In-Reply-To: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,82 +17,173 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Paul Walmsley <paul@pwsan.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-doc@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, lkml <linux-kernel@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 19:01-20130610, Mark Brown wrote:
-> On Mon, Jun 10, 2013 at 12:51:42PM -0500, Nishanth Menon wrote:
-> 
-> > a) Tegra seems to use Lookup Table for sending predefinied voltage
-> > values to PMIC. OMAP has no concept of lookup table.
-> 
-> They seem to be doing basically the same thing here, you've got a linear
-> map of selector to voltage too AFAICT.
-> 
-> > b) Tegra and OMAP h/w blocks seem to use I2C - that is good.
-> > c) How about the i2c slave and register addresses, slew rates, start,
-> > end voltages, max voltages that SoC can support etc, I am yet to
-> > understand those.
-> > d) OMAP has 3 modules - AVS (SmartReflex), Voltage Processor(VP),
-> > Voltage Controller(VC) - I am not yet sure about the Tegra hardware
-> > blocks involved.
-> 
-> This all seems like it's at the implementation detail level - the bit
-> that seems like we should be able to share it is the big picture bit for
-> how we describe how the AP side stuff and PMIC are hooked up without
-> having to have a bunch of completely non-framework stuff for things
-> like describing the PMIC.
+On Thursday 13 June 2013 22:22:31 Jingoo Han wrote:
 
-I am having a bit of a difficulty trying to understand your concern
-here.
+> +struct pcie_port_info {
+> +	u32		cfg0_size;
+> +	u32		cfg1_size;
+> +	u32		io_size;
+> +	u32		mem_size;
+> +	phys_addr_t	io_bus_addr;
+> +	phys_addr_t	mem_bus_addr;
+> +};
+> +
+> +struct pcie_port {
+> +	struct device		*dev;
+> +	u8			controller;
+> +	u8			root_bus_nr;
+> +	void __iomem		*dbi_base;
+> +	void __iomem		*elbi_base;
+> +	void __iomem		*phy_base;
+> +	void __iomem		*purple_base;
+> +	phys_addr_t		cfg0_base;
+> +	void __iomem		*va_cfg0_base;
+> +	phys_addr_t		cfg1_base;
+> +	void __iomem		*va_cfg1_base;
+> +	phys_addr_t		io_base;
+> +	phys_addr_t		mem_base;
+> +	spinlock_t		conf_lock;
+> +	struct resource		cfg;
+> +	struct resource		io;
+> +	struct resource		mem;
+> +	struct pcie_port_info	config;
+> +	struct clk		*clk;
+> +	struct clk		*bus_clk;
+> +	int			irq;
+> +	int			reset_gpio;
+> +};
 
-Problem statement:
-OMAP has this weird custom h/w where one programs the voltage and that
-voltage is send over i2c - this is not same as Tegra's lookup table
-array which automatically sends out entries, in OMAP, software has to trigger
-the voltage transition
-This path is split into 3 different modules - AVS, VC, VP -> This is
-implementation detail as you already mentioned.
+You mentioned that you'd use u64 for the resources here but did not.
 
-Anyhow, to recap, the overview of the hardware interface is as follows:
-PMIC that OMAP interfaces to are of two categories:
-a) ones that talk only on the custom OMAP VC path
-b) ones that talk both custom OMAP VC and regular i2c (e.g.
-   twl4030,6030,palmas)
+> +
+> +static void exynos_pcie_prog_viewport_cfg0(struct pcie_port *pp, u32 busdev)
+> +{
+> +	u32 val;
+> +	void __iomem *dbi_base = pp->dbi_base;
+> +
+> +	/* Program viewport 0 : OUTBOUND : CFG0 */
+> +	val = PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX0;
+> +	writel_rc(pp, val, dbi_base + PCIE_ATU_VIEWPORT);
+> +	writel_rc(pp, (u64)pp->cfg0_base, dbi_base + PCIE_ATU_LOWER_BASE);
+> +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_BASE);
+> +	writel_rc(pp, (u64)pp->cfg0_base + pp->config.cfg0_size - 1,
+> +			dbi_base + PCIE_ATU_LIMIT);
+> +	writel_rc(pp, busdev, dbi_base + PCIE_ATU_LOWER_TARGET);
+> +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_TARGET);
+> +	writel_rc(pp, PCIE_ATU_TYPE_CFG0, dbi_base + PCIE_ATU_CR1);
+> +	val = PCIE_ATU_ENABLE;
+> +	writel_rc(pp, val, dbi_base + PCIE_ATU_CR2);
+> +}
+> +
+> +static void exynos_pcie_prog_viewport_cfg1(struct pcie_port *pp, u32 busdev)
+> +{
+> +	u32 val;
+> +	void __iomem *dbi_base = pp->dbi_base;
+> +
+> +	/* Program viewport 1 : OUTBOUND : CFG1 */
+> +	val = PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX1;
+> +	writel_rc(pp, val, dbi_base + PCIE_ATU_VIEWPORT);
+> +	writel_rc(pp, PCIE_ATU_TYPE_CFG1, dbi_base + PCIE_ATU_CR1);
+> +	val = PCIE_ATU_ENABLE;
+> +	writel_rc(pp, val, dbi_base + PCIE_ATU_CR2);
+> +	writel_rc(pp, (u64)pp->cfg1_base, dbi_base + PCIE_ATU_LOWER_BASE);
+> +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_BASE);
+> +	writel_rc(pp, (u64)pp->cfg1_base + pp->config.cfg1_size - 1,
+> +			dbi_base + PCIE_ATU_LIMIT);
+> +	writel_rc(pp, busdev, dbi_base + PCIE_ATU_LOWER_TARGET);
+> +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_TARGET);
+> +}
 
-The voltage control for a voltage rail (e.g. vdd_mpu) is again PMIC
-specific
-a) 6030 will not allow voltage to be set over regular i2c
-b) 4030 allows either custom i2c path OR regular i2c path (only 1 at a
-   time).
-c) palmas allows both custom i2c path AND regular i2c path to set
-   voltage!
+And you still don't set up the UPPER halves, which was really the point
+of my comment. Same thing for all the other ones.
 
->From a Linux angle, when using regular i2c, it is a piece of cake. Standard
-regulator uses regular i2c, vc-vp angle avoided
-Example: Palmas: we'd use the regular palmas driver to do this.
+> +static void exynos_pcie_prog_viewport_mem_inbound(struct pcie_port *pp)
+> +{
+> +	u32 val;
+> +	void __iomem *dbi_base = pp->dbi_base;
+> +
+> +	/* Program viewport 0 : INBOUND : MEM */
+> +	val = PCIE_ATU_REGION_INBOUND | PCIE_ATU_REGION_INDEX0;
+> +	writel_rc(pp, val, dbi_base + PCIE_ATU_VIEWPORT);
+> +	writel_rc(pp, PCIE_ATU_TYPE_MEM, dbi_base + PCIE_ATU_CR1);
+> +	val = PCIE_ATU_ENABLE | PCIE_ATU_BAR_MODE_ENABLE;
+> +	writel_rc(pp, val, dbi_base + PCIE_ATU_CR2);
+> +	writel_rc(pp, (u64)pp->config.mem_bus_addr,
+> +			dbi_base + PCIE_ATU_LOWER_BASE);
+> +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_BASE);
+> +	writel_rc(pp, (u64)pp->config.mem_bus_addr + pp->config.mem_size - 1,
+> +			dbi_base + PCIE_ATU_LIMIT);
+> +	writel_rc(pp, (u64)pp->mem_base, dbi_base + PCIE_ATU_LOWER_TARGET);
+> +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_TARGET);
+> +}
 
-When using custom i2c path(vc/vp/avs), it gets a bit complex
-We'd like (if possible) drivers like cpufreq to be ignorant of regulator
-and transfer path used ofcourse as this depends on the board component
-selection.
-E.g. 4030/palmas/6030 vdd_mpu can be represented as a regulator, which in turn
-uses custom OMAP data transfer path to set voltage
+This makes even less sense than before, it seems like now you only
+allow DMA between PCI devices but not to main memory.
 
-I was trying to understand your statement as to what Paul was doing
-(which was basically pull out the vsel values and put them in his
- hardware lookup table for h/w to auto send the voltage) Vs what I was
-attempting to do (describe OMAP's view of the PMIC and provide data
-path).
-In my view, we were trying to do "voltage scale" in two completely
-different ways depending on the SoC we were working on.
+> +static void exynos_pcie_prog_viewport_io_inbound(struct pcie_port *pp)
+> +{
+> +	u32 val;
+> +	void __iomem *dbi_base = pp->dbi_base;
+> +
+> +	/* Program viewport 1 : INBOUND : IO */
+> +	val = PCIE_ATU_REGION_INBOUND | PCIE_ATU_REGION_INDEX1;
+> +	writel_rc(pp, val, dbi_base + PCIE_ATU_VIEWPORT);
+> +	writel_rc(pp, PCIE_ATU_TYPE_IO, dbi_base + PCIE_ATU_CR1);
+> +	val = PCIE_ATU_ENABLE | PCIE_ATU_BAR_MODE_ENABLE;
+> +	writel_rc(pp, val, dbi_base + PCIE_ATU_CR2);
+> +	writel_rc(pp, (u64)pp->config.io_bus_addr,
+> +			dbi_base + PCIE_ATU_LOWER_BASE);
+> +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_BASE);
+> +	writel_rc(pp, (u64)pp->config.io_bus_addr + pp->config.io_size - 1,
+> +			dbi_base + PCIE_ATU_LIMIT);
+> +	writel_rc(pp, (u64)pp->io_base, dbi_base + PCIE_ATU_LOWER_TARGET);
+> +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_TARGET);
+> +}
 
-If your concern was describing PMIC parameters in dts, I can easily move
-them inside the omap_pmic driver and provide required compatible flags.
-If, on the other hand, the entire approach followed is flawed, I'd like to
-understand the rationale for the same.
+Can you please explain what the inbound window is as I asked you?
+I still don't see why you would need to set it up like this.
 
--- 
-Regards,
-Nishanth Menon
+> +static int exynos_pcie_setup(int nr, struct pci_sys_data *sys)
+> +{
+> +	struct pcie_port *pp;
+> +
+> +	pp = sys_to_pcie(sys);
+> +
+> +	if (!pp)
+> +		return 0;
+> +
+> +	pci_add_resource(&sys->resources, &pp->io);
+> +	pci_add_resource(&sys->resources, &pp->mem);
+
+Now you are missing the offsets. You have to at least pass an offset for one
+of the I/O spaces, since they are using the same bus address. The offset must
+match the value you pass to pci_ioremap_io.
+
+For the memory space, you should pass the difference between the physical
+base address and the bus address. That address happens to be zero with
+you DT setup, but I would advise to also try out some other values in DT,
+just to ensure it still works.
+
+> +	pp->reset_gpio = of_get_named_gpio(np, "reset-gpio", 0);
+
+Ok.
+
+> +
+> +static int __exit exynos_pcie_remove(struct platform_device *pdev)
+> +{
+> +	struct pcie_port *pp = platform_get_drvdata(pdev);
+> +
+> +	clk_disable_unprepare(pp->bus_clk);
+> +	clk_disable_unprepare(pp->clk);
+> +
+> +	return 0;
+> +}
+
+You also don't remove the PCI devices here, as mentioned in an earlier
+review.
+
+	Arnd
