@@ -1,251 +1,316 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 09/12] libfdt: Add fdt_find_regions()
-Date: Thu, 13 Jun 2013 15:10:08 -0700
-Message-ID: <1371161411-2834-10-git-send-email-sjg@chromium.org>
-References: <1371161411-2834-1-git-send-email-sjg@chromium.org>
+From: Francois Romieu <romieu@fr.zoreil.com>
+Subject: Re: [PATCH v3] ethernet/arc/arc_emac - Add new driver
+Date: Fri, 14 Jun 2013 00:19:46 +0200
+Message-ID: <20130613221946.GA16632@electric-eye.fr.zoreil.com>
+References: <1371134239-4531-1-git-send-email-abrodkin@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371161411-2834-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>, Will Drewry <wad-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Bill Richardson <wfrichar-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Randall Spangler <rspangler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Vadim Bendebury <vbendeb-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?q?Andreas=20B=C3=A4ck?= <andreas.back778-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1371134239-4531-1-git-send-email-abrodkin@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: netdev@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add a function to find regions in device tree given a list of nodes to
-include and properties to exclude.
+Alexey Brodkin <Alexey.Brodkin@synopsys.com> :
+[...]
+> diff --git a/drivers/net/ethernet/arc/arc_emac.h b/drivers/net/ethernet/arc/arc_emac.h
+> new file mode 100644
+> index 0000000..6691db2
+> --- /dev/null
+> +++ b/drivers/net/ethernet/arc/arc_emac.h
+[...]
+> +struct arc_emac_priv {
+> +	struct net_device_stats stats;
+> +	unsigned int clock_frequency;
+> +	unsigned int max_speed;
+> +
+> +	/* Pointers to BD rings - CPU side */
+> +	struct arc_emac_bd_t *rxbd;
 
-See the header file for full documentation.
+There does not seem to be much need for rxbd->data.
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v3: None
-Changes in v2:
-- Fix checkpatch checks about parenthesis alignment
+> +	struct arc_emac_bd_t *txbd;
 
- include/libfdt.h     |  64 +++++++++++++++++++++++++
- lib/libfdt/fdt_wip.c | 129 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 193 insertions(+)
+[...]
+> +static int arc_emac_get_settings(struct net_device *ndev,
+> +				 struct ethtool_cmd *cmd)
+> +{
+> +	struct arc_emac_priv *priv = netdev_priv(ndev);
+> +
+> +	if (priv->phy_dev)
+> +		return phy_ethtool_gset(priv->phy_dev, cmd);
 
-diff --git a/include/libfdt.h b/include/libfdt.h
-index c5ec2ac..765d84f 100644
---- a/include/libfdt.h
-+++ b/include/libfdt.h
-@@ -1511,4 +1511,68 @@ int fdt_del_node(void *fdt, int nodeoffset);
- 
- const char *fdt_strerror(int errval);
- 
-+struct fdt_region {
-+	int offset;
-+	int size;
-+};
-+
-+/**
-+ * fdt_find_regions() - find regions in device tree
-+ *
-+ * Given a list of nodes to include and properties to exclude, find
-+ * the regions of the device tree which describe those included parts.
-+ *
-+ * The intent is to get a list of regions which will be invariant provided
-+ * those parts are invariant. For example, if you request a list of regions
-+ * for all nodes but exclude the property "data", then you will get the
-+ * same region contents regardless of any change to "data" properties.
-+ *
-+ * This function can be used to produce a byte-stream to send to a hashing
-+ * function to verify that critical parts of the FDT have not changed.
-+ *
-+ * Nodes which are given in 'inc' are included in the region list, as
-+ * are the names of the immediate subnodes nodes (but not the properties
-+ * or subnodes of those subnodes).
-+ *
-+ * For eaxample "/" means to include the root node, all root properties
-+ * and the FDT_BEGIN_NODE and FDT_END_NODE of all subnodes of /. The latter
-+ * ensures that we capture the names of the subnodes. In a hashing situation
-+ * it prevents the root node from changing at all Any change to non-excluded
-+ * properties, names of subnodes or number of subnodes would be detected.
-+ *
-+ * When used with FITs this provides the ability to hash and sign parts of
-+ * the FIT based on different configurations in the FIT. Then it is
-+ * impossible to change anything about that configuration (include images
-+ * attached to the configuration), but it may be possible to add new
-+ * configurations, new images or new signatures within the existing
-+ * framework.
-+ *
-+ * Adding new properties to a device tree may result in the string table
-+ * being extended (if the new property names are different from those
-+ * already added). This function can optionally include a region for
-+ * the string table so that this can be part of the hash too.
-+ *
-+ * The device tree header is not included in the list.
-+ *
-+ * @fdt:	Device tree to check
-+ * @inc:	List of node paths to included
-+ * @inc_count:	Number of node paths in list
-+ * @exc_prop:	List of properties names to exclude
-+ * @exc_prop_count:	Number of properties in exclude list
-+ * @region:	Returns list of regions
-+ * @max_region:	Maximum length of region list
-+ * @path:	Pointer to a temporary string for the function to use for
-+ *		building path names
-+ * @path_len:	Length of path, must be large enough to hold the longest
-+ *		path in the tree
-+ * @add_string_tab:	1 to add a region for the string table
-+ * @return number of regions in list. If this is >max_regions then the
-+ * region array was exhausted. You should increase max_regions and try
-+ * the call again.
-+ */
-+int fdt_find_regions(const void *fdt, char * const inc[], int inc_count,
-+		     char * const exc_prop[], int exc_prop_count,
-+		     struct fdt_region region[], int max_regions,
-+		     char *path, int path_len, int add_string_tab);
-+
- #endif /* _LIBFDT_H */
-diff --git a/lib/libfdt/fdt_wip.c b/lib/libfdt/fdt_wip.c
-index 63e67b7..b9e3c4a 100644
---- a/lib/libfdt/fdt_wip.c
-+++ b/lib/libfdt/fdt_wip.c
-@@ -120,3 +120,132 @@ int fdt_nop_node(void *fdt, int nodeoffset)
- 			endoffset - nodeoffset);
- 	return 0;
- }
-+
-+#define FDT_MAX_DEPTH	32
-+
-+static int str_in_list(const char *str, char * const list[], int count)
-+{
-+	int i;
-+
-+	for (i = 0; i < count; i++)
-+		if (!strcmp(list[i], str))
-+			return 1;
-+
-+	return 0;
-+}
-+
-+int fdt_find_regions(const void *fdt, char * const inc[], int inc_count,
-+		     char * const exc_prop[], int exc_prop_count,
-+		     struct fdt_region region[], int max_regions,
-+		     char *path, int path_len, int add_string_tab)
-+{
-+	int stack[FDT_MAX_DEPTH];
-+	char *end;
-+	int nextoffset = 0;
-+	uint32_t tag;
-+	int count = 0;
-+	int start = -1;
-+	int depth = -1;
-+	int want = 0;
-+	int base = fdt_off_dt_struct(fdt);
-+
-+	end = path;
-+	*end = '\0';
-+	do {
-+		const struct fdt_property *prop;
-+		const char *name;
-+		const char *str;
-+		int include = 0;
-+		int stop_at = 0;
-+		int offset;
-+		int len;
-+
-+		offset = nextoffset;
-+		tag = fdt_next_tag(fdt, offset, &nextoffset);
-+		stop_at = nextoffset;
-+
-+		switch (tag) {
-+		case FDT_PROP:
-+			include = want >= 2;
-+			stop_at = offset;
-+			prop = fdt_get_property_by_offset(fdt, offset, NULL);
-+			str = fdt_string(fdt, fdt32_to_cpu(prop->nameoff));
-+			if (str_in_list(str, exc_prop, exc_prop_count))
-+				include = 0;
-+			break;
-+
-+		case FDT_NOP:
-+			include = want >= 2;
-+			stop_at = offset;
-+			break;
-+
-+		case FDT_BEGIN_NODE:
-+			depth++;
-+			if (depth == FDT_MAX_DEPTH)
-+				return -FDT_ERR_BADSTRUCTURE;
-+			name = fdt_get_name(fdt, offset, &len);
-+			if (end - path + 2 + len >= path_len)
-+				return -FDT_ERR_NOSPACE;
-+			if (end != path + 1)
-+				*end++ = '/';
-+			strcpy(end, name);
-+			end += len;
-+			stack[depth] = want;
-+			if (want == 1)
-+				stop_at = offset;
-+			if (str_in_list(path, inc, inc_count))
-+				want = 2;
-+			else if (want)
-+				want--;
-+			else
-+				stop_at = offset;
-+			include = want;
-+			break;
-+
-+		case FDT_END_NODE:
-+			include = want;
-+			want = stack[depth--];
-+			while (end > path && *--end != '/')
-+				;
-+			*end = '\0';
-+			break;
-+
-+		case FDT_END:
-+			include = 1;
-+			break;
-+		}
-+
-+		if (include && start == -1) {
-+			/* Should we merge with previous? */
-+			if (count && count <= max_regions &&
-+			    offset == region[count - 1].offset +
-+					region[count - 1].size - base)
-+				start = region[--count].offset - base;
-+			else
-+				start = offset;
-+		}
-+
-+		if (!include && start != -1) {
-+			if (count < max_regions) {
-+				region[count].offset = base + start;
-+				region[count].size = stop_at - start;
-+			}
-+			count++;
-+			start = -1;
-+		}
-+	} while (tag != FDT_END);
-+
-+	if (nextoffset != fdt_size_dt_struct(fdt))
-+		return -FDT_ERR_BADLAYOUT;
-+
-+	/* Add a region for the END tag and the string table */
-+	if (count < max_regions) {
-+		region[count].offset = base + start;
-+		region[count].size = nextoffset - start;
-+		if (add_string_tab)
-+			region[count].size += fdt_size_dt_strings(fdt);
-+	}
-+	count++;
-+
-+	return count;
-+}
+arc_emac_probe() succeeded : priv->phy_dev can't be NULL.
+
+[...]
+> +static int arc_emac_set_settings(struct net_device *ndev,
+> +				 struct ethtool_cmd *cmd)
+> +{
+> +	struct arc_emac_priv *priv = netdev_priv(ndev);
+> +
+> +	if (!capable(CAP_NET_ADMIN))
+> +		return -EPERM;
+> +
+> +	if (priv->phy_dev)
+> +		return phy_ethtool_sset(priv->phy_dev, cmd);
+
+priv->phy_dev can't be NULL either.
+
+[...]
+> +static int arc_emac_poll(struct napi_struct *napi, int budget)
+> +{
+> +	struct net_device *ndev = napi->dev;
+> +	struct arc_emac_priv *priv = netdev_priv(ndev);
+> +	unsigned int i, loop, work_done = 0;
+> +	struct sk_buff *skb;
+> +
+> +	/* Loop thru the BD chain, but not always from 0.
+> +	 * Start from right after where we last saw a packet.
+> +	 */
+> +	i = priv->last_rx_bd;
+> +
+> +	for (loop = 0; loop < RX_BD_NUM; loop++) {
+> +		struct net_device_stats *stats = &priv->stats;
+> +		struct buffer_state *rx_buff;
+> +		struct arc_emac_bd_t *rxbd;
+> +		dma_addr_t addr;
+> +		unsigned int info, pktlen;
+> +		unsigned int buflen = ndev->mtu + EMAC_BUFFER_PAD;
+> +
+> +		i = (i + 1) % RX_BD_NUM;
+> +		rx_buff = &priv->rx_buff[i];
+> +		rxbd = &priv->rxbd[i];
+> +		info = rxbd->info;
+
+You may / should update 'i' so that you can:
+
+		struct buffer_state *rx_buff = priv->rx_buff + i;
+		struct arc_emac_bd_t *rxbd = priv->rxbd + i;
+		unsigned int pktlen, info = rxbd->info;
+
+> +
+> +		/* Process current BD */
+> +
+> +		if (unlikely((info & OWN_MASK) == FOR_EMAC)) {
+> +			/* BD is still owned by EMAC */
+> +			continue;
+> +		}
+
+Processing starts at priv->last_rx_bd. Could it not be a 'break' ?
+
+[...]
+> +		pktlen = info & LEN_MASK;
+> +		stats->rx_packets++;
+> +		stats->rx_bytes += pktlen;
+> +		skb = rx_buff->skb;
+> +		skb_put(skb, pktlen);
+> +		skb->dev = ndev;
+> +		skb->protocol = eth_type_trans(skb, ndev);
+> +		netif_receive_skb(skb);
+> +
+> +		dma_unmap_single(&ndev->dev,
+> +				 dma_unmap_addr(&rx_buff, addr),
+> +				 dma_unmap_len(&rx_buff, len),
+> +				 DMA_FROM_DEVICE);
+
+		dma_unmap_single(&ndev->dev, dma_unmap_addr(&rx_buff, addr),
+				 dma_unmap_len(&rx_buff, len), DMA_FROM_DEVICE);
+
+Please unmap before netif_receive_skb.
+
+> +
+> +		/* Prepare the BD for next cycle */
+> +		rx_buff->skb = netdev_alloc_skb_ip_align(ndev, buflen);
+> +		if (unlikely(!rx_buff->skb)) {
+> +			if (net_ratelimit())
+> +				netdev_err(ndev, "cannot allocate skb\n");
+> +			stats->rx_errors++;
+> +			continue;
+> +		}
+
+The descriptor entry is left unchanged. Afaiu the driver will move to the
+next descriptor and crash on dereferencing NULL (rx_buff->)skb next time
+it wraps.
+
+I suggest avoiding holes: don't netif_receive_skb if you can't alloc a new
+skb.
+
+[...]
+> +static irqreturn_t arc_emac_intr(int irq, void *dev_instance)
+> +{
+> +	struct net_device *ndev = dev_instance;
+> +	struct arc_emac_priv *priv = netdev_priv(ndev);
+> +	struct net_device_stats *stats = &priv->stats;
+> +	unsigned int status;
+> +
+> +	status = arc_reg_get(priv, R_STATUS);
+> +	status &= ~MDIO_MASK;
+> +
+> +	/* Reset all flags except "MDIO complete"*/
+> +	arc_reg_set(priv, R_STATUS, status);
+> +
+> +	if (status & RXINT_MASK) {
+> +		if (likely(napi_schedule_prep(&priv->napi))) {
+> +			arc_reg_clr(priv, R_ENABLE, RXINT_MASK);
+> +			__napi_schedule(&priv->napi);
+> +		}
+> +	}
+> +
+> +	if (status & TXINT_MASK) {
+
+You may consider moving everything into the napi poll handler.
+
+[...]
+> +static int arc_emac_open(struct net_device *ndev)
+> +{
+> +	struct arc_emac_priv *priv = netdev_priv(ndev);
+> +	struct phy_device *phy_dev = priv->phy_dev;
+> +	struct arc_emac_bd_t *bd;
+> +	struct sk_buff *skb;
+> +	int i;
+> +
+> +	phy_dev->autoneg = AUTONEG_ENABLE;
+> +	phy_dev->speed = 0;
+> +	phy_dev->duplex = 0;
+> +	phy_dev->advertising = phy_dev->supported;
+> +
+> +	if (priv->max_speed > 100) {
+> +		phy_dev->advertising &= PHY_GBIT_FEATURES;
+> +	} else if (priv->max_speed <= 100) {
+> +		phy_dev->advertising &= PHY_BASIC_FEATURES;
+> +		if (priv->max_speed <= 10) {
+> +			phy_dev->advertising &= ~SUPPORTED_100baseT_Half;
+> +			phy_dev->advertising &= ~SUPPORTED_100baseT_Full;
+> +		}
+> +	}
+> +
+> +	/* Allocate and set buffers for Rx BD's */
+> +	bd = priv->rxbd;
+> +	for (i = 0; i < RX_BD_NUM; i++) {
+> +		skb = netdev_alloc_skb_ip_align(ndev, ndev->mtu +
+> +						EMAC_BUFFER_PAD);
+> +
+
+Missing NULL check.
+
+[...]
+> +	/* Set BD ring pointers for device side */
+> +	arc_reg_set(priv, R_RX_RING,
+> +		     (unsigned int)priv->rxbd_dma_hdl);
+
+	arc_reg_set(priv, R_RX_RING, (unsigned int)priv->rxbd_dma_hdl);
+
+> +
+> +	arc_reg_set(priv, R_TX_RING,
+> +		     (unsigned int)priv->rxbd_dma_hdl + RX_RING_SZ);
+
+Forgot priv->txbd_dma_hdl ?
+
+> +
+> +	/* Set Poll rate so that it polls every 1 ms */
+> +	arc_reg_set(priv, R_POLLRATE,
+> +		     priv->clock_frequency / 1000000);
+
+	arc_reg_set(priv, R_POLLRATE, priv->clock_frequency / 1000000);
+
+> +
+> +	/* Enable interrupts */
+> +	arc_reg_set(priv, R_ENABLE,
+> +		     TXINT_MASK | RXINT_MASK | ERR_MASK);
+
+	arc_reg_set(priv, R_ENABLE, TXINT_MASK | RXINT_MASK | ERR_MASK);
+
+> +
+> +	/* Set CONTROL */
+> +	arc_reg_set(priv, R_CTRL,
+> +		     (RX_BD_NUM << 24) |	/* RX BD table length */
+> +		     (TX_BD_NUM << 16) |	/* TX BD table length */
+> +		     TXRN_MASK | RXRN_MASK);
+> +
+> +	/* Enable EMAC */
+> +	arc_reg_or(priv, R_CTRL, EN_MASK);
+> +
+> +	phy_start_aneg(priv->phy_dev);
+> +
+> +	netif_start_queue(ndev);
+> +	napi_enable(&priv->napi);
+
+napi must be enabled before the first rx packet / irq kicks in.
+
+[...]
+> +static int arc_emac_tx(struct sk_buff *skb, struct net_device *ndev)
+> +{
+> +	struct arc_emac_priv *priv = netdev_priv(ndev);
+> +	unsigned int info, len, *txbd_curr = &priv->txbd_curr;
+> +	dma_addr_t addr;
+> +	char *pkt = skb->data;
+> +
+> +	len = max_t(unsigned int, ETH_ZLEN, skb->len);
+
+The device automatically pads, right ?
+
+> +	info = priv->txbd[*txbd_curr].info;
+> +
+> +	/* EMAC still holds this buffer in its possession.
+> +	 * CPU must not modify this buffer descriptor
+> +	 */
+> +	if (unlikely((info & OWN_MASK) == FOR_EMAC)) {
+> +		netif_stop_queue(ndev);
+> +		return NETDEV_TX_BUSY;
+
+It is more than unlikely: you may check for it as a bug but you should
+stop_queue when the tx ring is full (before returning below).
+
+> +	}
+> +
+> +	addr = dma_map_single(&ndev->dev, (void *)pkt, len, DMA_TO_DEVICE);
+> +	if (unlikely(dma_mapping_error(&ndev->dev, addr))) {
+> +		dev_kfree_skb(skb);
+> +		return NETDEV_TX_OK;
+
+Please update tx_dropped stats.
+
+> +	}
+> +	dma_unmap_addr_set(&priv->tx_buff[*txbd_curr], mapping, addr);
+> +	dma_unmap_len_set(&priv->tx_buff[*txbd_curr], len, len);
+> +
+> +	priv->tx_buff[*txbd_curr].skb = skb;
+> +	priv->txbd[*txbd_curr].data = pkt;
+
+Insert memory barrier.
+
+> +	priv->txbd[*txbd_curr].info = FOR_EMAC | FRST_MASK | LAST_MASK | len;
+> +
+> +	*txbd_curr = (*txbd_curr + 1) % TX_BD_NUM;
+> +
+> +	arc_reg_set(priv, R_STATUS, TXPL_MASK);
+> +
+> +	skb_tx_timestamp(skb);
+> +
+> +	return NETDEV_TX_OK;
+> +}
+
+[...]
+> +static int arc_emac_probe(struct platform_device *pdev)
+> +{
+[...]
+> +	err = arc_mdio_probe(pdev->dev.of_node, priv);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "failed to probe MII bus\n");
+> +		goto out;
+> +	}
+> +
+> +
+> +	priv->phy_dev = of_phy_connect(ndev, priv->phy_node,
+> +				       arc_emac_adjust_link, 0,
+> +				       PHY_INTERFACE_MODE_MII);
+> +	if (!priv->phy_dev) {
+> +		netdev_err(ndev, "of_phy_connect() failed\n");
+> +		return -ENODEV;
+
+arc_mdio_remove leak.
+
 -- 
-1.8.3
+Ueimor
