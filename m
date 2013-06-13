@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v6 07/18] ARM: shmobile: r8a7779: Add pin control device to device tree
-Date: Fri, 14 Jun 2013 01:45:52 +0200
-Message-ID: <1371167163-10507-8-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v6 14/18] ARM: shmobile: armadillo-reference: Add st1232 pin mappings
+Date: Fri, 14 Jun 2013 01:45:59 +0200
+Message-ID: <1371167163-10507-15-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,76 +10,37 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Add a pfc node to the r8a7779 device tree and remove manual pinmux
-initialization from the corresponding board files.
+Add pin mappings for the st1232 device to the device tree and reference
+them as the default state for the device.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7779.dtsi                  |  5 +++++
- arch/arm/mach-shmobile/board-marzen-reference.c | 17 ++++++++---------
- 2 files changed, 13 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index 7f146c6..9dfc438 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -101,6 +101,11 @@
- 		interrupts = <0 81 0x4>;
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+index 4a7ae32..a6c6606 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+@@ -41,6 +41,8 @@
+ 		reg = <0x55>;
+ 		interrupt-parent = <&irqpin1>;
+ 		interrupts = <2 0>; /* IRQ10: hwirq 2 on irqpin1 */
++		pinctrl-0 = <&st1232_pins>;
++		pinctrl-names = "default";
  	};
- 
-+	pfc: pfc@fffc0000 {
-+		compatible = "renesas,pfc-r8a7779";
-+		reg = <0xfffc0000 0x23c>;
-+	};
-+
- 	thermal@ffc48000 {
- 		compatible = "renesas,rcar-thermal";
- 		reg = <0xffc48000 0x38>;
-diff --git a/arch/arm/mach-shmobile/board-marzen-reference.c b/arch/arm/mach-shmobile/board-marzen-reference.c
-index 480d882..94804f3 100644
---- a/arch/arm/mach-shmobile/board-marzen-reference.c
-+++ b/arch/arm/mach-shmobile/board-marzen-reference.c
-@@ -28,24 +28,24 @@
- 
- static const struct pinctrl_map marzen_pinctrl_map[] = {
- 	/* SCIF2 (CN18: DEBUG0) */
--	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.2", "pfc-r8a7779",
-+	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.2", "fffc0000.pfc",
- 				  "scif2_data_c", "scif2"),
- 	/* SCIF4 (CN19: DEBUG1) */
--	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "pfc-r8a7779",
-+	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "fffc0000.pfc",
- 				  "scif4_data", "scif4"),
- 	/* SDHI0 */
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "pfc-r8a7779",
-+	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
- 				  "sdhi0_data4", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "pfc-r8a7779",
-+	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
- 				  "sdhi0_ctrl", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "pfc-r8a7779",
-+	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
- 				  "sdhi0_cd", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "pfc-r8a7779",
-+	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
- 				  "sdhi0_wp", "sdhi0"),
- 	/* SMSC */
--	PIN_MAP_MUX_GROUP_DEFAULT("smsc911x", "pfc-r8a7779",
-+	PIN_MAP_MUX_GROUP_DEFAULT("smsc911x", "fffc0000.pfc",
- 				  "intc_irq1_b", "intc"),
--	PIN_MAP_MUX_GROUP_DEFAULT("smsc911x", "pfc-r8a7779",
-+	PIN_MAP_MUX_GROUP_DEFAULT("smsc911x", "fffc0000.pfc",
- 				  "lbsc_ex_cs0", "lbsc"),
  };
  
-@@ -53,7 +53,6 @@ static void __init marzen_init(void)
- {
- 	pinctrl_register_mappings(marzen_pinctrl_map,
- 				  ARRAY_SIZE(marzen_pinctrl_map));
--	r8a7779_pinmux_init();
- 
- 	r8a7779_add_standard_devices_dt();
- }
+@@ -52,4 +54,9 @@
+ 		renesas,groups = "scifa1_data";
+ 		renesas,function = "scifa1";
+ 	};
++
++	st1232_pins: st1232 {
++		renesas,groups = "intc_irq10";
++		renesas,function = "intc";
++	};
+ };
 -- 
 1.8.1.5
 
