@@ -1,93 +1,275 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [RFC/PATCH 00/13] Add support for MSM's mmio clocks
-Date: Wed, 12 Jun 2013 18:48:56 -0700
-Message-ID: <1371088149-22562-1-git-send-email-sboyd@codeaurora.org>
+Subject: [RFC/PATCH 10/13] clk: msm: Add support for MSM8960's multimedia clock controller (MMCC)
+Date: Wed, 12 Jun 2013 18:49:06 -0700
+Message-ID: <1371088149-22562-11-git-send-email-sboyd@codeaurora.org>
+References: <1371088149-22562-1-git-send-email-sboyd@codeaurora.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1371088149-22562-1-git-send-email-sboyd@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, James Hogan <james.hogan@imgtec.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Posting as an RFC because I haven't gone through and generated all 
-the data needed yet. This is just a few clocks for now to give a general
-idea of where things are headed.
+Fill in the data and wire up the multimedia clock controller to
+the MSM clock driver. This should allow multimedia device drivers
+to control their clocks on 8960 based platforms.
 
-The first 4 patches are generic clock framework patches. They add support
-for finding clocks in DT and parsing them generically. They also add support
-for setting the rate and the parent at the same time based on patches from
-James Hogan's remuxing set_rate series [1].
-
-After that we add MSM clock hardware support and then fill in the DT and
-data to actually register clocks. This is sufficient enough to get the UART
-going on my msm8960 device.
-
-I'm currently waffling between the DT bindings being more descriptive
-versus just using the clocks as numbers method. From what I can tell
-nobody is complaining either way so it seems I could put all of
-the information I encode in C structs into DT. It would be great
-if more experienced DT persons could weigh in here.
-
-Please note this patchset relies on my previous patch series that moves
-existing MSM clock code to the common clock framework [2].
-
-Stephen Boyd (13):
-  clk: fixed-rate: Export clk_fixed_rate_register()
-  clk: Add of_init_clk_data() to parse common clock bindings
-  clk: Add of_clk_match() for device drivers
-  clk: Add set_rate_and_parent() op
-  clk: msm: Add support for phase locked loops (PLLs)
-  clk: msm: Add support for root clock generators (RCGs)
-  clk: msm: Add support for branches/gate clocks
-  clk: msm: Add MSM clock driver
-  clk: msm: Add support for MSM8960's global clock controller (GCC)
-  clk: msm: Add support for MSM8960's multimedia clock controller (MMCC)
-  ARM: dts: msm: Add MSM8960 GCC DT nodes
-  ARM: dts: msm: Add MSM8960 MMCC DT nodes
-  ARM: dts: msm: Add clock entries for MSM8960 uart device
-
- Documentation/clk.txt                              |   3 +
- Documentation/devicetree/bindings/clock/msm.txt    |  99 +++
- .../devicetree/bindings/clock/qcom,gcc.txt         |  55 ++
- .../devicetree/bindings/clock/qcom,mmcc.txt        |  38 ++
- arch/arm/boot/dts/msm8960-cdp.dts                  | 111 +++
- drivers/clk/Kconfig                                |   2 +
- drivers/clk/Makefile                               |   1 +
- drivers/clk/clk-fixed-rate.c                       |   1 +
- drivers/clk/clk.c                                  | 201 +++++-
- drivers/clk/msm/Kconfig                            |  22 +
- drivers/clk/msm/Makefile                           |  11 +
- drivers/clk/msm/clk-branch.c                       | 190 ++++++
- drivers/clk/msm/clk-branch.h                       |  48 ++
- drivers/clk/msm/clk-pll.c                          | 233 +++++++
- drivers/clk/msm/clk-pll.h                          |  43 ++
- drivers/clk/msm/clk-rcg.c                          | 754 +++++++++++++++++++++
- drivers/clk/msm/clk-rcg.h                          | 114 ++++
- drivers/clk/msm/clk-rcg2.c                         | 320 +++++++++
- drivers/clk/msm/core.c                             | 271 ++++++++
- drivers/clk/msm/gcc-8960.c                         | 174 +++++
- drivers/clk/msm/internal.h                         |  27 +
- drivers/clk/msm/mmcc-8960.c                        | 142 ++++
- include/linux/clk-provider.h                       |  28 +
- 23 files changed, 2868 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/msm.txt
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.txt
+Cc: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+ .../devicetree/bindings/clock/qcom,mmcc.txt        |  38 ++++++
+ drivers/clk/msm/Kconfig                            |   8 ++
+ drivers/clk/msm/Makefile                           |   1 +
+ drivers/clk/msm/core.c                             |   3 +
+ drivers/clk/msm/internal.h                         |   1 +
+ drivers/clk/msm/mmcc-8960.c                        | 142 +++++++++++++++++++++
+ 6 files changed, 193 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
- create mode 100644 drivers/clk/msm/Kconfig
- create mode 100644 drivers/clk/msm/Makefile
- create mode 100644 drivers/clk/msm/clk-branch.c
- create mode 100644 drivers/clk/msm/clk-branch.h
- create mode 100644 drivers/clk/msm/clk-pll.c
- create mode 100644 drivers/clk/msm/clk-pll.h
- create mode 100644 drivers/clk/msm/clk-rcg.c
- create mode 100644 drivers/clk/msm/clk-rcg.h
- create mode 100644 drivers/clk/msm/clk-rcg2.c
- create mode 100644 drivers/clk/msm/core.c
- create mode 100644 drivers/clk/msm/gcc-8960.c
- create mode 100644 drivers/clk/msm/internal.h
  create mode 100644 drivers/clk/msm/mmcc-8960.c
 
-[1] <1369056507-32521-1-git-send-email-james.hogan@imgtec.com>
-[2] 
+diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.txt b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+new file mode 100644
+index 0000000..e06577e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+@@ -0,0 +1,38 @@
++MSM Multimedia Clock Controller Binding
++-----------------------------------------
++
++Required properties :
++- compatible : shall contain at least "qcom,mmcc" and only one of the
++	       following:
++
++			"qcom,mmcc-8660"
++			"qcom,mmcc-8960"
++
++- reg : shall contain base register location and length
++- clocks : shall contain clocks supplied by the clock controller
++
++Example:
++	clock-controller@4000000 {
++		compatible = "qcom,mmcc-8960", "qcom,mmcc";
++		reg = <0x4000000 0x1000>;
++
++		clocks {
++			pll2: pll2 {
++				#clock-cells = <0>;
++				compatible = "qcom,pll";
++				clocks = <&pxo>;
++			};
++
++			mdp_rcg: mdp_rcg {
++				#clock-cells = <0>;
++				compatible = "qcom,mn8-dyn-clock";
++				clocks = <&pxo>, <&pll2>, <&vpll8>;
++			};
++
++			mdp_cxc: mdp_cxc {
++				#clock-cells = <0>;
++				compatible = "qcom,cxc-clock";
++				clocks = <&mdp_rcg>;
++			};
++		};
++	};
+diff --git a/drivers/clk/msm/Kconfig b/drivers/clk/msm/Kconfig
+index 3eaffb6..6147380 100644
+--- a/drivers/clk/msm/Kconfig
++++ b/drivers/clk/msm/Kconfig
+@@ -11,4 +11,12 @@ config MSM_GCC_8960
+ 	  Say Y if you want to use peripheral devices such as UART, SPI,
+ 	  i2c, USB, SD/eMMC, SATA, PCIe, etc.
+ 
++config MSM_MMCC_8960
++	bool "MSM8960 Multimedia Clock Controller"
++	select MSM_GCC_8960
++	help
++	  Support for the multimedia clock controller on msm8960 devices.
++	  Say Y if you want to support multimedia devices such as display,
++	  graphics, video encode/decode, camera, etc.
++
+ endif
+diff --git a/drivers/clk/msm/Makefile b/drivers/clk/msm/Makefile
+index c785943..ae199f5 100644
+--- a/drivers/clk/msm/Makefile
++++ b/drivers/clk/msm/Makefile
+@@ -8,3 +8,4 @@ clk-msm-$(CONFIG_COMMON_CLK_MSM) += clk-branch.o
+ clk-msm-$(CONFIG_COMMON_CLK_MSM) += core.o
+ 
+ clk-msm-$(CONFIG_MSM_GCC_8960) += gcc-8960.o
++clk-msm-$(CONFIG_MSM_MMCC_8960) += mmcc-8960.o
+diff --git a/drivers/clk/msm/core.c b/drivers/clk/msm/core.c
+index b1ac8c1..f30aee5 100644
+--- a/drivers/clk/msm/core.c
++++ b/drivers/clk/msm/core.c
+@@ -176,6 +176,9 @@ static const struct of_device_id msm_cc_match_table[] = {
+ #ifdef CONFIG_MSM_GCC_8960
+ 	{ .compatible = "qcom,gcc-8960", .data = &msm_gcc_clk_matches },
+ #endif
++#ifdef CONFIG_MSM_MMCC_8960
++	{ .compatible = "qcom,mmcc-8960", .data = &msm_mmcc_clk_matches },
++#endif
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, msm_cc_match_table);
+diff --git a/drivers/clk/msm/internal.h b/drivers/clk/msm/internal.h
+index 0b6b9fe..77ffc45 100644
+--- a/drivers/clk/msm/internal.h
++++ b/drivers/clk/msm/internal.h
+@@ -22,5 +22,6 @@ struct msm_clk_match {
+ };
+ 
+ extern const struct msm_clk_match msm_gcc_clk_matches;
++extern const struct msm_clk_match msm_mmcc_clk_matches;
+ 
+ #endif
+diff --git a/drivers/clk/msm/mmcc-8960.c b/drivers/clk/msm/mmcc-8960.c
+new file mode 100644
+index 0000000..c57e9cc
+--- /dev/null
++++ b/drivers/clk/msm/mmcc-8960.c
+@@ -0,0 +1,142 @@
++/*
++ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/clk-provider.h>
++
++#include "internal.h"
++#include "clk-pll.h"
++#include "clk-rcg.h"
++#include "clk-branch.h"
++
++static struct pll_desc pll2_desc = {
++	.l_reg = 0x320,
++	.m_reg = 0x324,
++	.n_reg = 0x328,
++	.config_reg = 0x32c,
++	.mode_reg = 0x31c,
++	.status_reg = 0x334,
++	.status_bit = 16,
++};
++
++#define PXO	0
++#define PLL2	1
++#define PLL8	2
++
++static u8 mmcc_pxo_pll2_pll8_map[] = {
++	[PXO]	= 0,
++	[PLL2]	= 1,
++	[PLL8]	= 2,
++};
++
++static struct freq_tbl clk_tbl_mdp[] = {
++	{   9600000, PLL8, 0, 1, 40 },
++	{  13710000, PLL8, 0, 1, 28 },
++	{  27000000, PXO,  0, 0,  0 },
++	{  29540000, PLL8, 0, 1, 13 },
++	{  34910000, PLL8, 0, 1, 11 },
++	{  38400000, PLL8, 0, 1, 10 },
++	{  59080000, PLL8, 0, 2, 13 },
++	{  76800000, PLL8, 0, 1,  5 },
++	{  85330000, PLL8, 0, 2,  9 },
++	{  96000000, PLL8, 0, 1,  4 },
++	{ 128000000, PLL8, 0, 1,  3 },
++	{ 160000000, PLL2, 0, 1,  5 },
++	{ 177780000, PLL2, 0, 2,  9 },
++	{ 200000000, PLL2, 0, 1,  4 },
++	{ 228571000, PLL2, 0, 2,  7 },
++	{ 266667000, PLL2, 0, 1,  3 },
++	{ }
++};
++
++static struct rcg_dyn_desc mdp_rcg = {
++	.ctl_reg = 0xc0,
++	.ns_reg = 0xd0,
++	.md0_reg = 0xc4,
++	.md1_reg = 0xc8,
++	.ctl_bit = 2,
++	.mnctr0_en_bit = 8,
++	.mnctr1_en_bit = 5,
++	.mnctr0_reset_bit = 31,
++	.mnctr1_reset_bit = 30,
++	.mnctr0_mode_shift = 9,
++	.mnctr1_mode_shift = 6,
++	.src0_sel_shift = 3,
++	.src1_sel_shift = 0,
++	.n0_val_shift = 22,
++	.n1_val_shift = 14,
++	.m0_val_shift = 8,
++	.m1_val_shift = 8,
++	.mux_sel_bit = 11,
++	.parent_map = mmcc_pxo_pll2_pll8_map,
++	.freq_tbl = clk_tbl_mdp,
++};
++
++static struct branch_desc mdp_cxc = {
++	.ctl_reg = 0xc0,
++	.halt_reg = 0x1d0,
++	.ctl_bit = 0,
++	.halt_bit = 10,
++	.halt_check = BRANCH_HALT,
++};
++
++static struct freq_tbl clk_tbl_rot[] = {
++	{  27000000, PXO,   1 },
++	{  29540000, PLL8, 13 },
++	{  32000000, PLL8, 12 },
++	{  38400000, PLL8, 10 },
++	{  48000000, PLL8,  8 },
++	{  54860000, PLL8,  7 },
++	{  64000000, PLL8,  6 },
++	{  76800000, PLL8,  5 },
++	{  96000000, PLL8,  4 },
++	{ 100000000, PLL2,  8 },
++	{ 114290000, PLL2,  7 },
++	{ 133330000, PLL2,  6 },
++	{ 160000000, PLL2,  5 },
++	{ 200000000, PLL2,  4 },
++	{ }
++};
++
++static struct rcg_dyn_desc rot_rcg = {
++	.ctl_reg = 0xe0,
++	.ns_reg = 0xe8,
++	.ctl_bit = 2,
++	.pre_div0_shift = 22,
++	.pre_div1_shift = 26,
++	.src0_sel_shift = 16,
++	.src1_sel_shift = 19,
++	.mux_sel_bit = 30,
++	.parent_map = mmcc_pxo_pll2_pll8_map,
++	.freq_tbl = clk_tbl_rot,
++};
++
++static struct branch_desc rot_cxc = {
++	.ctl_reg = 0xe0,
++	.halt_reg = 0x1d0,
++	.ctl_bit = 0,
++	.halt_bit = 15,
++	.halt_check = BRANCH_HALT,
++};
++
++static struct of_clk_match msm_mmcc_clk_match[] = {
++	{ .name = "pll2", .driver_data = &pll2_desc },
++	{ .name = "mdp_rcg", .driver_data = &mdp_rcg },
++	{ .name = "mdp_cxc", .driver_data = &mdp_cxc },
++	{ .name = "rot_rcg", .driver_data = &rot_rcg },
++	{ .name = "rot_cxc", .driver_data = &rot_cxc },
++};
++
++const struct msm_clk_match msm_mmcc_clk_matches = {
++	.matches = msm_mmcc_clk_match,
++	.size = ARRAY_SIZE(msm_mmcc_clk_match)
++};
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
