@@ -1,57 +1,76 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 06/10] mmc: omap_hsmmc: add support for pbias configuration in dt
-Date: Thu, 13 Jun 2013 16:53:55 +0200
-Message-ID: <1968512.0aFcQ2JZmT@avalon>
-References: <20130523184045.GD13507@atomide.com> <10084205.q81YqXBJ5H@avalon> <51B9DCBA.4050509@ti.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC PATCH 1/4] regulator: Introduce OMAP regulator to control
+ PMIC over VC/VP
+Date: Thu, 13 Jun 2013 09:58:03 -0500
+Message-ID: <20130613145803.GA32324@kahuna>
+References: <1369246717-4167-1-git-send-email-nm@ti.com>
+ <1369246717-4167-2-git-send-email-nm@ti.com>
+ <20130610103131.GR31367@sirena.org.uk>
+ <CAGo_u6qTiPpd0DDe3jnPh_UxTwox22azhcMGy=fftL8H+DGeyw@mail.gmail.com>
+ <20130610164905.GJ1403@sirena.org.uk>
+ <CAGo_u6ov=yaCwt8apbvW57ErAvhgUBHHw9gwADBC1fJUrfucUQ@mail.gmail.com>
+ <20130610180150.GQ1403@sirena.org.uk>
+ <20130613133950.GA32174@kahuna>
+ <20130613144726.GY1403@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <51B9DCBA.4050509@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130613144726.GY1403@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Paul Walmsley <paul@pwsan.com>, Liam Girdwood <lgirdwood@gmail.com>, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thursday 13 June 2013 20:22:42 Balaji T K wrote:
-> On Thursday 13 June 2013 03:32 PM, Laurent Pinchart wrote:
-> > On Thursday 13 June 2013 02:53:54 Tony Lindgren wrote:
-> >> * Linus Walleij <linus.walleij@linaro.org> [130613 02:42]:
-> >>> On Thu, Jun 6, 2013 at 9:14 PM, Balaji T K <balajitk@ti.com> wrote:
-> >>>> PBIAS register configuration is based on the regulator voltage
-> >>>> which supplies these pbias cells, sd i/o pads.
-> >>>> With PBIAS register address and bit definitions different across
-> >>>> omap[3,4,5], Simplify PBIAS configuration under three different
-> >>>> regulator voltage levels - O V, 1.8 V, 3 V. Corresponding pinctrl
-> >>>> states
-> >>>> are defined as pbias_off, pbias_1v8, pbias_3v.
-> >>>> 
-> >>>> pinctrl state mmc_init is used for configuring speed mode, loopback
-> >>>> clock (in devconf0/devconf1/prog_io1 register for omap3) and pull
-> >>>> strength configuration (in control_mmc1 for omap4)
-> >>>> 
-> >>>> Signed-off-by: Balaji T K <balajitk@ti.com>
-> >>> 
-> >>> You *need* Lee Jones and Mark Brown to review this.
-> >>> Maybe Laurent has something to add too.
-> >>> 
-> >>> Ux500 had the very same thing, and there this was solved using
-> >>> a GPIO regulator for "vqmmc" a level-shifter. I vaguely remember
-> >>> Laurent doing something similar with the SH stuff.
-> > 
-> > The SH pinctrl driver registers an MMC regulator. The code is available at
-> > git://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git. Look at
-> > drivers/pinctrl/sh-pfc/pfc-sh73a0.c in tags/renesas-next-20130611v2.
+On 15:47-20130613, Mark Brown wrote:
+> On Thu, Jun 13, 2013 at 08:39:50AM -0500, Nishanth Menon wrote:
 > 
-> Thanks for the link, I think I need some time to understand
-> where pfc->window[1].virt is coming from.
+> > I am having a bit of a difficulty trying to understand your concern
+> > here.
+> 
+> Your device tree for this stuff appears to mostly consist of repeating
+> the description of the PMIC that we already have - this really doesn't
+> seem like a great result.
+> 
+> > Problem statement:
+> 
+> > OMAP has this weird custom h/w where one programs the voltage and that
+> > voltage is send over i2c - this is not same as Tegra's lookup table
+> > array which automatically sends out entries, in OMAP, software has to trigger
+> > the voltage transition
+> 
+> The basic idea that's important here is that you need to figure out how
+> to tell the hardware what to write - how those writes get triggered is a
+> separate problem.
+> 
+> > If your concern was describing PMIC parameters in dts, I can easily move
+> > them inside the omap_pmic driver and provide required compatible flags.
+> > If, on the other hand, the entire approach followed is flawed, I'd like to
+> > understand the rationale for the same.
+> 
+> That's the biggest problem I saw so far but to be honest I've not
+> drilled down too much into the specifics.  From my point of view the
+> main thing is how this fits into the frameworks and so on, having the
+> register information in the DT was an alarm flag that suggested the
+> overall approach was a concern.
+OK. would you be ok with an generic omap_pmic driver if the PMIC
+specific data set is moved into OF compatible data?
+I am proposing moving the following into OF match data.
+ti,i2c-slave-address
+ti,i2c-voltage-register
+ti,i2c-command-register
+ti,slew-rate-microvolt
+ti,step-size-micro-volts
+ti,voltage-selector-set-bits
+ti,voltage-selector-mask
+ti,voltage-selector-offset
+ti,non-zero-voltage-selector
 
-That's just the ioremapped pinctrl device address spaced.
+The only thing I propose to retain is board specific variations - e.g.
+gpios, boot voltage and standard regulator min,max overrides if any.
+
+I can also do voltage selector based operations while at it.
 
 -- 
 Regards,
-
-Laurent Pinchart
-
+Nishanth Menon
