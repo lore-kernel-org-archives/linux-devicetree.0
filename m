@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v6 09/18] ARM: shmobile: r8a7790: Add pin control device to device tree
-Date: Fri, 14 Jun 2013 01:45:54 +0200
-Message-ID: <1371167163-10507-10-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v6 08/18] ARM: shmobile: r8a7779: Add GPIO controller devices to device tree
+Date: Fri, 14 Jun 2013 01:45:53 +0200
+Message-ID: <1371167163-10507-9-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,27 +10,102 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Add a pfc node to the r8a7790 device tree.
+Add GPIO controller nodes to the r8a7779 core device tree.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/r8a7779.dtsi | 71 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 339d9b1..13caf12 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -54,4 +54,9 @@
- 		interrupt-parent = <&gic>;
- 		interrupts = <0 0 4>, <0 1 4>, <0 2 4>,	<0 3 4>;
- 	};
-+
-+	pfc: pfc@e6060000 {
-+		compatible = "renesas,pfc-r8a7790";
-+		reg = <0 0xe6060000 0 0x250>;
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index 9dfc438..2bbb4cb 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -48,6 +48,76 @@
+                       <0xf0000100 0x100>;
+         };
+ 
++	gpio0: gpio@ffc40000 {
++		compatible = "renesas,gpio-r8a7779", "renesas,gpio-rcar";
++		reg = <0xffc40000 0x2c>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 141 0x4>;
++		#gpio-cells = <2>;
++		gpio-controller;
++		gpio-ranges = <&pfc 0 0 32>;
 +	};
- };
++
++	gpio1: gpio@ffc41000 {
++		compatible = "renesas,gpio-r8a7779", "renesas,gpio-rcar";
++		reg = <0xffc41000 0x2c>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 142 0x4>;
++		#gpio-cells = <2>;
++		gpio-controller;
++		gpio-ranges = <&pfc 0 32 32>;
++	};
++
++	gpio2: gpio@ffc42000 {
++		compatible = "renesas,gpio-r8a7779", "renesas,gpio-rcar";
++		reg = <0xffc42000 0x2c>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 143 0x4>;
++		#gpio-cells = <2>;
++		gpio-controller;
++		gpio-ranges = <&pfc 0 64 32>;
++	};
++
++	gpio3: gpio@ffc43000 {
++		compatible = "renesas,gpio-r8a7779", "renesas,gpio-rcar";
++		reg = <0xffc43000 0x2c>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 144 0x4>;
++		#gpio-cells = <2>;
++		gpio-controller;
++		gpio-ranges = <&pfc 0 96 32>;
++	};
++
++	gpio4: gpio@ffc44000 {
++		compatible = "renesas,gpio-r8a7779", "renesas,gpio-rcar";
++		reg = <0xffc44000 0x2c>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 145 0x4>;
++		#gpio-cells = <2>;
++		gpio-controller;
++		gpio-ranges = <&pfc 0 128 32>;
++	};
++
++	gpio5: gpio@ffc45000 {
++		compatible = "renesas,gpio-r8a7779", "renesas,gpio-rcar";
++		reg = <0xffc45000 0x2c>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 146 0x4>;
++		#gpio-cells = <2>;
++		gpio-controller;
++		gpio-ranges = <&pfc 0 160 32>;
++	};
++
++	gpio6: gpio@ffc46000 {
++		compatible = "renesas,gpio-r8a7779", "renesas,gpio-rcar";
++		reg = <0xffc46000 0x2c>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 147 0x4>;
++		#gpio-cells = <2>;
++		gpio-controller;
++		gpio-ranges = <&pfc 0 192 9>;
++	};
++
+ 	irqpin0: irqpin@fe780010 {
+ 		compatible = "renesas,intc-irqpin";
+ 		#interrupt-cells = <2>;
+@@ -104,6 +174,7 @@
+ 	pfc: pfc@fffc0000 {
+ 		compatible = "renesas,pfc-r8a7779";
+ 		reg = <0xfffc0000 0x23c>;
++		#gpio-range-cells = <3>;
+ 	};
+ 
+ 	thermal@ffc48000 {
 -- 
 1.8.1.5
 
