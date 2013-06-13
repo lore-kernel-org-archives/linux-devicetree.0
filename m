@@ -1,103 +1,224 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu
- reg control
-Date: Thu, 13 Jun 2013 09:56:42 +0530
-Message-ID: <CAPdUM4Nis0uwyZf1hNDOMmdqFm0K7beVPoyAWRjMBwq0jcwwCQ@mail.gmail.com>
-References: <1370935073-7475-1-git-send-email-rahul.sharma@samsung.com>
-	<CAAQKjZMuSQhbYtOyni-RdHhXu0fv3U2Dm_2iqRLe0smSt_jjjQ@mail.gmail.com>
-	<CAAQKjZOZCtLnE_OPs60NU+Z4pkHiSCqZcBOi1Dv+PC=01HKqyg@mail.gmail.com>
+From: J Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v6] ARM: dts: OMAP5: Add Palmas MFD node and regulator nodes
+Date: Thu, 13 Jun 2013 10:00:11 +0530
+Message-ID: <1371097811-4618-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAQKjZOZCtLnE_OPs60NU+Z4pkHiSCqZcBOi1Dv+PC=01HKqyg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene.kim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Sean Paul <seanpaul@chromium.org>, sunil joshi <joshi@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org
+Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, grant.likely@secretlab.ca, swarren@wwwdotorg.org, swarren@nvidia.com, sameo@linux.intel.com, gg@slimlogic.co.uk, lee.jones@linaro.org, J Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Mr. Dae,
+This patch adds Palmas MFD node and the regulator nodes for OMAP5.
 
-Thanks for your valuable inputs.
+The node definitions are based on: https://lkml.org/lkml/2013/6/6/25
 
-I posted it as RFC because, I also have received comments to register
-hdmiphy as a clock controller. As we always configure it for specific
-frequency, hdmi-phy looks similar to a PLL. But it really doesn't
-belong to that class. Secondly prior to exynos5420, it was a i2c
-device. I am not sure we can register a I2C device as a clock
-controller. I wanted to discuss and explore this option here.
+Boot tested on omap5-uevm board.
 
-As you said, in parallel, I will align these changes and along with
-"drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver"
-series and post them.
+Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
+Signed-off-by: J Keerthy <j-keerthy@ti.com>
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
+---
+V6:
+Changed the order of properties.
 
-I hope we should be able to close on one of the above approaches for
-hdmiphy.
+V5:
+Corrected the IRQ_TYPE flag for OMAP5 board.
 
-regards,
-Rahul Sharma.
+V4:
+Removed splitting Palmas node.
 
-On Wed, Jun 12, 2013 at 9:57 AM, Inki Dae <inki.dae@samsung.com> wrote:
->
->
->
-> 2013/6/12 Inki Dae <inki.dae@samsung.com>
->>
->> Hi Rahul,
->>
->> This patch is important to us. Actually, previous hdmi driver had
->> controlled hdmiphy HDMI_PHY_CONTROL as if that were a clock but now that
->> doesn't exist anymore. So we need to discuss how hdmiphy should be handled.
->> I konw that you had already posted hdmiphy relevant patch set, [PATCH 0/4]
->> drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver.
->>
->> I think we can couple pmu register controlling codes with that patch set
->> without RFC. Could you update and post them again? like below,
->> [PATCH 0/4] drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver
->> + [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu reg
->> control
->>
->> And then let's start review :)
->
->
-> And I think It would be better to move the pmu register controlling codes
-> into hdmiphy driver like drivers/usb/phy/phy-samsung-usb2.c driver does.
->
->>
->>
->> Thanks,
->> Inki Dae
->>
->>
->>
->> 2013/6/11 Rahul Sharma <rahul.sharma@samsung.com>
->>>
->>> Previously, hdmiphy is added as a dummy clock in clock file for
->>> exynos SoCs. Enable/Disable to this clock, actually toggles the power
->>> control bit in PMU, instead of controlling the clock gate.
->>>
->>> This RFC adds the support to parse hdmiphy control node which is a child
->>> node to hdmi, and map the pmu register to toggle the power control bit.
->>>
->>> This is based on drm-next branch in Inki Dae's tree.
->>>
->>> Rahul Sharma (2):
->>>   drm/exynos: replace dummy hdmiphy clock with pmu register control
->>>   ARM/dts: add hdmiphy power control pmu register to hdmi dt node
->>>
->>>  arch/arm/boot/dts/exynos5250.dtsi    |    6 +++
->>>  drivers/gpu/drm/exynos/exynos_hdmi.c |   69
->>> ++++++++++++++++++++++++++++++----
->>>  drivers/gpu/drm/exynos/regs-hdmi.h   |    4 ++
->>>  3 files changed, 71 insertions(+), 8 deletions(-)
->>>
->>> --
->>> 1.7.10.4
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe
->>> linux-samsung-soc" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->>
->
+V3:
+Moved the entire Palmas device tree node to board file.
+
+ arch/arm/boot/dts/omap5-uevm.dts |  167 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 167 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
+index 927db1e..3d0b7b6 100644
+--- a/arch/arm/boot/dts/omap5-uevm.dts
++++ b/arch/arm/boot/dts/omap5-uevm.dts
+@@ -8,6 +8,8 @@
+ /dts-v1/;
+ 
+ #include "omap5.dtsi"
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+ / {
+ 	model = "TI OMAP5 uEVM board";
+@@ -254,6 +256,171 @@
+ 	pinctrl-0 = <&i2c1_pins>;
+ 
+ 	clock-frequency = <400000>;
++
++	palmas: palmas@48 {
++		compatible = "ti,palmas";
++		interrupts = <GIC_SPI 7 IRQ_TYPE_NONE>; /* IRQ_SYS_1N */
++		interrupt-parent = <&gic>;
++		reg = <0x48>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		palmas_pmic {
++			compatible = "ti,palmas-pmic";
++			interrupt-parent = <&palmas>;
++			interrupts = <14 IRQ_TYPE_NONE>;
++			interrupt-name = "short-irq";
++
++			ti,ldo6-vibrator;
++
++			regulators {
++				smps123_reg: smps123 {
++					regulator-name = "smps123";
++					regulator-min-microvolt = < 600000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				smps45_reg: smps45 {
++					regulator-name = "smps45";
++					regulator-min-microvolt = < 600000>;
++					regulator-max-microvolt = <1310000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				smps6_reg: smps6 {
++					regulator-name = "smps6";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				smps7_reg: smps7 {
++					regulator-name = "smps7";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				smps8_reg: smps8 {
++					regulator-name = "smps8";
++					regulator-min-microvolt = < 600000>;
++					regulator-max-microvolt = <1310000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				smps9_reg: smps9 {
++					regulator-name = "smps9";
++					regulator-min-microvolt = <2100000>;
++					regulator-max-microvolt = <2100000>;
++					regulator-always-on;
++					regulator-boot-on;
++					ti,smps-range = <0x80>;
++				};
++
++				smps10_reg: smps10 {
++					regulator-name = "smps10";
++					regulator-min-microvolt = <5000000>;
++					regulator-max-microvolt = <5000000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo1_reg: ldo1 {
++					regulator-name = "ldo1";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo2_reg: ldo2 {
++					regulator-name = "ldo2";
++					regulator-min-microvolt = <2900000>;
++					regulator-max-microvolt = <2900000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo3_reg: ldo3 {
++					regulator-name = "ldo3";
++					regulator-min-microvolt = <3000000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo4_reg: ldo4 {
++					regulator-name = "ldo4";
++					regulator-min-microvolt = <2200000>;
++					regulator-max-microvolt = <2200000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo5_reg: ldo5 {
++					regulator-name = "ldo5";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo6_reg: ldo6 {
++					regulator-name = "ldo6";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo7_reg: ldo7 {
++					regulator-name = "ldo7";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo8_reg: ldo8 {
++					regulator-name = "ldo8";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldo9_reg: ldo9 {
++					regulator-name = "ldo9";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldoln_reg: ldoln {
++					regulator-name = "ldoln";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldousb_reg: ldousb {
++					regulator-name = "ldousb";
++					regulator-min-microvolt = <3250000>;
++					regulator-max-microvolt = <3250000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++			};
++		};
++	};
+ };
+ 
+ &i2c5 {
+-- 
+1.7.5.4
