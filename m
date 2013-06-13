@@ -1,101 +1,106 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: [PATCH V5 3/3] ARM: dts: Add pcie controller node for Samsung
- EXYNOS5440 SoC
-Date: Thu, 13 Jun 2013 22:23:27 +0900
-Message-ID: <000d01ce6839$3047a7b0$90d6f710$@samsung.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC PATCH 1/4] regulator: Introduce OMAP regulator to control
+ PMIC over VC/VP
+Date: Thu, 13 Jun 2013 08:39:50 -0500
+Message-ID: <20130613133950.GA32174@kahuna>
+References: <1369246717-4167-1-git-send-email-nm@ti.com>
+ <1369246717-4167-2-git-send-email-nm@ti.com>
+ <20130610103131.GR31367@sirena.org.uk>
+ <CAGo_u6qTiPpd0DDe3jnPh_UxTwox22azhcMGy=fftL8H+DGeyw@mail.gmail.com>
+ <20130610164905.GJ1403@sirena.org.uk>
+ <CAGo_u6ov=yaCwt8apbvW57ErAvhgUBHHw9gwADBC1fJUrfucUQ@mail.gmail.com>
+ <20130610180150.GQ1403@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, Jingoo Han <jg1.han@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130610180150.GQ1403@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Paul Walmsley <paul@pwsan.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-doc@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, lkml <linux-kernel@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Exynos5440 has two PCIe controllers which can be used as root complex
-for PCIe interface.
+On 19:01-20130610, Mark Brown wrote:
+> On Mon, Jun 10, 2013 at 12:51:42PM -0500, Nishanth Menon wrote:
+> 
+> > a) Tegra seems to use Lookup Table for sending predefinied voltage
+> > values to PMIC. OMAP has no concept of lookup table.
+> 
+> They seem to be doing basically the same thing here, you've got a linear
+> map of selector to voltage too AFAICT.
+> 
+> > b) Tegra and OMAP h/w blocks seem to use I2C - that is good.
+> > c) How about the i2c slave and register addresses, slew rates, start,
+> > end voltages, max voltages that SoC can support etc, I am yet to
+> > understand those.
+> > d) OMAP has 3 modules - AVS (SmartReflex), Voltage Processor(VP),
+> > Voltage Controller(VC) - I am not yet sure about the Tegra hardware
+> > blocks involved.
+> 
+> This all seems like it's at the implementation detail level - the bit
+> that seems like we should be able to share it is the big picture bit for
+> how we describe how the AP side stuff and PMIC are hooked up without
+> having to have a bunch of completely non-framework stuff for things
+> like describing the PMIC.
 
-Signed-off-by: Jingoo Han <jg1.han@samsung.com>
----
-Tested on Exynos5440.
+I am having a bit of a difficulty trying to understand your concern
+here.
 
- arch/arm/boot/dts/exynos5440-ssdk5440.dts |    8 ++++++
- arch/arm/boot/dts/exynos5440.dtsi         |   40 ++++++++++++++++++++++++++++-
- 2 files changed, 47 insertions(+), 1 deletion(-)
+Problem statement:
+OMAP has this weird custom h/w where one programs the voltage and that
+voltage is send over i2c - this is not same as Tegra's lookup table
+array which automatically sends out entries, in OMAP, software has to trigger
+the voltage transition
+This path is split into 3 different modules - AVS, VC, VP -> This is
+implementation detail as you already mentioned.
 
-diff --git a/arch/arm/boot/dts/exynos5440-ssdk5440.dts b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-index d55042b..198b3c1 100644
---- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-+++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-@@ -30,4 +30,12 @@
- 			clock-frequency = <50000000>;
- 		};
- 	};
-+
-+	pcie0@290000 {
-+		reset-gpio = <&pin_ctrl 5 0>;
-+	};
-+
-+	pcie1@2a0000 {
-+		reset-gpio = <&pin_ctrl 22 0>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-index f6b1c89..9d40e0e 100644
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -113,7 +113,7 @@
- 		clock-names = "spi", "spi_busclk0";
- 	};
- 
--	pinctrl {
-+	pin_ctrl: pinctrl {
- 		compatible = "samsung,exynos5440-pinctrl";
- 		reg = <0xE0000 0x1000>;
- 		interrupts = <0 37 0>, <0 38 0>, <0 39 0>, <0 40 0>,
-@@ -216,4 +216,42 @@
- 		clock-names = "rtc";
- 		status = "disabled";
- 	};
-+
-+	pcie0@290000 {
-+		compatible = "samsung,exynos5440-pcie";
-+		reg = <0x290000 0x1000
-+			0x270000 0x1000
-+			0x271000 0x40>;
-+		interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
-+		clocks = <&clock 28>, <&clock 27>;
-+		clock-names = "pcie", "pcie_bus";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000   /* configuration space */
-+			  0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
-+			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0x0 0 &gic 53>;
-+	};
-+
-+	pcie1@2a0000 {
-+		compatible = "samsung,exynos5440-pcie";
-+		reg = <0x2a0000 0x1000
-+			0x272000 0x1000
-+			0x271040 0x40>;
-+		interrupts = <0 23 0>, <0 24 0>, <0 25 0>;
-+		clocks = <&clock 29>, <&clock 27>;
-+		clock-names = "pcie", "pcie_bus";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000   /* configuration space */
-+			  0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
-+			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0x0 0 &gic 56>;
-+	};
- };
+Anyhow, to recap, the overview of the hardware interface is as follows:
+PMIC that OMAP interfaces to are of two categories:
+a) ones that talk only on the custom OMAP VC path
+b) ones that talk both custom OMAP VC and regular i2c (e.g.
+   twl4030,6030,palmas)
+
+The voltage control for a voltage rail (e.g. vdd_mpu) is again PMIC
+specific
+a) 6030 will not allow voltage to be set over regular i2c
+b) 4030 allows either custom i2c path OR regular i2c path (only 1 at a
+   time).
+c) palmas allows both custom i2c path AND regular i2c path to set
+   voltage!
+
+>From a Linux angle, when using regular i2c, it is a piece of cake. Standard
+regulator uses regular i2c, vc-vp angle avoided
+Example: Palmas: we'd use the regular palmas driver to do this.
+
+When using custom i2c path(vc/vp/avs), it gets a bit complex
+We'd like (if possible) drivers like cpufreq to be ignorant of regulator
+and transfer path used ofcourse as this depends on the board component
+selection.
+E.g. 4030/palmas/6030 vdd_mpu can be represented as a regulator, which in turn
+uses custom OMAP data transfer path to set voltage
+
+I was trying to understand your statement as to what Paul was doing
+(which was basically pull out the vsel values and put them in his
+ hardware lookup table for h/w to auto send the voltage) Vs what I was
+attempting to do (describe OMAP's view of the PMIC and provide data
+path).
+In my view, we were trying to do "voltage scale" in two completely
+different ways depending on the SoC we were working on.
+
+If your concern was describing PMIC parameters in dts, I can easily move
+them inside the omap_pmic driver and provide required compatible flags.
+If, on the other hand, the entire approach followed is flawed, I'd like to
+understand the rationale for the same.
+
 -- 
-1.7.10.4
+Regards,
+Nishanth Menon
