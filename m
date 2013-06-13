@@ -1,70 +1,215 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH RESEND V2] ARM: dts: Correct the base address of pinctrl_3
- on Exynos5250
-Date: Thu, 13 Jun 2013 21:14:59 +0900
-Message-ID: <150d01ce682f$a007f230$e017d690$%kim@samsung.com>
-References: <1371025425-480-1-git-send-email-padma.v@samsung.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 01/10] metag: init common clk and use "core" clk
+Date: Thu, 13 Jun 2013 13:19:32 +0100
+Message-ID: <1371125981-5184-2-git-send-email-james.hogan@imgtec.com>
+References: <1371125981-5184-1-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1371025425-480-1-git-send-email-padma.v@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Padmavathi Venna' <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com
-Cc: sbkim73@samsung.com, broonie@kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371125981-5184-1-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Padmavathi Venna wrote:
-> 
-> This patch corrects the base address of pinctrl_3 on Exynos5250
-> platform.
-> 
-> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
-> ---
-> Changes since V1:
-> 	- Added platform name in the subject line.
-> 
->  arch/arm/boot/dts/exynos5250-pinctrl.dtsi |    2 +-
->  arch/arm/boot/dts/exynos5250.dtsi         |    4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-> b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-> index d1650fb..ded558b 100644
-> --- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-> @@ -763,7 +763,7 @@
->  		};
->  	};
-> 
-> -	pinctrl@03680000 {
-> +	pinctrl@03860000 {
->  		gpz: gpz {
->  			gpio-controller;
->  			#gpio-cells = <2>;
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
-> b/arch/arm/boot/dts/exynos5250.dtsi
-> index 7154e3d..e9bfd13 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -169,9 +169,9 @@
->  		interrupts = <0 50 0>;
->  	};
-> 
-> -	pinctrl_3: pinctrl@03680000 {
-> +	pinctrl_3: pinctrl@03860000 {
->  		compatible = "samsung,exynos5250-pinctrl";
-> -		reg = <0x0368000 0x1000>;
-> +		reg = <0x03860000 0x1000>;
->  		interrupts = <0 47 0>;
->  	};
-> 
-> --
-> 1.7.4.4
+If the common clock framework is enabled, call of_clk_init(NULL) in
+time_init() to register device tree clocks with the clock framework.
 
-Yes, right.
+After this time_init() calls a new function init_metag_clocks(), which
+looks for a clock named "core" in the node compatible with "img,meta"
+(usually the root node). If found the get_core_freq machine callback is
+overridden to obtain the core clock frequency using that clock.
 
-Thanks, applied.
+Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ Documentation/devicetree/bindings/metag/meta.txt | 30 +++++++++++++
+ arch/metag/include/asm/clock.h                   |  8 ++++
+ arch/metag/kernel/clock.c                        | 57 +++++++++++++++++++++++-
+ arch/metag/kernel/time.c                         | 14 +++++-
+ 4 files changed, 106 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/metag/meta.txt
 
-- Kukjin
+diff --git a/Documentation/devicetree/bindings/metag/meta.txt b/Documentation/devicetree/bindings/metag/meta.txt
+new file mode 100644
+index 0000000..f4457f5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/metag/meta.txt
+@@ -0,0 +1,30 @@
++* Meta Processor Binding
++
++This binding specifies what properties must be available in the device tree
++representation of a Meta Processor Core, which is the root node in the tree.
++
++Required properties:
++
++    - compatible: Specifies the compatibility list for the Meta processor.
++      The type shall be <string> and the value shall include "img,meta".
++
++Optional properties:
++
++    - clocks: Clock consumer specifiers as described in
++      Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++    - clock-names: Clock consumer names as described in
++      Documentation/devicetree/bindings/clock/clock-bindings.txt.
++
++Clocks are identified by name. Valid clocks are:
++
++    - "core": The Meta core clock from which the Meta timers are derived.
++
++* Examples
++
++/ {
++	compatible = "toumaz,tz1090", "img,meta";
++
++	clocks = <&meta_core_clk>;
++	clock-names = "core";
++};
+diff --git a/arch/metag/include/asm/clock.h b/arch/metag/include/asm/clock.h
+index 3e2915a..ded4ab2 100644
+--- a/arch/metag/include/asm/clock.h
++++ b/arch/metag/include/asm/clock.h
+@@ -19,6 +19,8 @@
+  *			core frequency will be determined like this:
+  *			Meta 1: based on loops_per_jiffy.
+  *			Meta 2: (EXPAND_TIMER_DIV + 1) MHz.
++ *			If a "core" clock is provided by the device tree, it
++ *			will override this function.
+  */
+ struct meta_clock_desc {
+ 	unsigned long		(*get_core_freq)(void);
+@@ -27,6 +29,12 @@ struct meta_clock_desc {
+ extern struct meta_clock_desc _meta_clock;
+ 
+ /*
++ * Perform platform clock initialisation, reading clocks from device tree etc.
++ * Only accessible during boot.
++ */
++void init_metag_clocks(void);
++
++/*
+  * Set up the default clock, ensuring all callbacks are valid - only accessible
+  * during boot.
+  */
+diff --git a/arch/metag/kernel/clock.c b/arch/metag/kernel/clock.c
+index defc840..8bfd6a5 100644
+--- a/arch/metag/kernel/clock.c
++++ b/arch/metag/kernel/clock.c
+@@ -8,8 +8,10 @@
+  * published by the Free Software Foundation.
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/io.h>
++#include <linux/of.h>
+ 
+ #include <asm/param.h>
+ #include <asm/clock.h>
+@@ -34,8 +36,61 @@ static unsigned long get_core_freq_default(void)
+ #endif
+ }
+ 
++static struct clk *clk_core;
++
++/* Clk based get_core_freq callback. */
++static unsigned long get_core_freq_clk(void)
++{
++	return clk_get_rate(clk_core);
++}
++
++/**
++ * init_metag_core_clock() - Set up core clock from devicetree.
++ *
++ * Checks to see if a "core" clock is provided in the device tree, and overrides
++ * the get_core_freq callback to use it.
++ */
++static void __init init_metag_core_clock(void)
++{
++	/*
++	 * See if a core clock is provided by the devicetree (and
++	 * registered by the init callback above).
++	 */
++	struct device_node *node;
++	node = of_find_compatible_node(NULL, NULL, "img,meta");
++	if (!node) {
++		pr_warn("%s: no compatible img,meta DT node found\n",
++			__func__);
++		return;
++	}
++
++	clk_core = of_clk_get_by_name(node, "core");
++	if (IS_ERR(clk_core)) {
++		pr_warn("%s: no core clock found in DT\n",
++			__func__);
++		return;
++	}
++
++	/*
++	 * Override the core frequency callback to use
++	 * this clk.
++	 */
++	_meta_clock.get_core_freq = get_core_freq_clk;
++}
++
++/**
++ * init_metag_clocks() - Set up clocks from devicetree.
++ *
++ * Set up important clocks from device tree. In particular any needed for clock
++ * sources.
++ */
++void __init init_metag_clocks(void)
++{
++	init_metag_core_clock();
++}
++
+ /**
+- * setup_meta_clocks() - Set up the Meta clock.
++ * setup_meta_clocks() - Early set up of the Meta clock.
+  * @desc:	Clock descriptor usually provided by machine description
+  *
+  * Ensures all callbacks are valid.
+diff --git a/arch/metag/kernel/time.c b/arch/metag/kernel/time.c
+index 17dc107..f1c8c53 100644
+--- a/arch/metag/kernel/time.c
++++ b/arch/metag/kernel/time.c
+@@ -5,11 +5,21 @@
+  *
+  */
+ 
+-#include <linux/init.h>
+-
+ #include <clocksource/metag_generic.h>
++#include <linux/clk-provider.h>
++#include <linux/init.h>
++#include <asm/clock.h>
+ 
+ void __init time_init(void)
+ {
++#ifdef CONFIG_COMMON_CLK
++	/* Init clocks from device tree */
++	of_clk_init(NULL);
++#endif
++
++	/* Init meta clocks, particularly the core clock */
++	init_metag_clocks();
++
++	/* Set up the timer clock sources */
+ 	metag_generic_timer_init();
+ }
+-- 
+1.8.1.2
