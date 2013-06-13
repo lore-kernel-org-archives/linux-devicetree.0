@@ -1,121 +1,67 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH RFC 3/3] clk: dt: binding for basic divider clock
-Date: Wed, 12 Jun 2013 19:41:38 -0700
-Message-ID: <20130613024138.26381.96286@quantum>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
- <1370281990-15090-4-git-send-email-mturquette@linaro.org>
- <201306040018.33236.heiko@sntech.de>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V6 6/6] clk: exynos5250: Add enum entries for divider
+ clock of i2s1 and i2s2
+Date: Thu, 13 Jun 2013 08:32:23 +0530
+Message-ID: <CAAgF-BfEvBcrm186t6U9Tp4r64wB3sEsy6hoXMQi=dHJgncvfw@mail.gmail.com>
+References: <1371024463-303-1-git-send-email-padma.v@samsung.com>
+	<1371024463-303-7-git-send-email-padma.v@samsung.com>
+	<20130612164553.26381.41398@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306040018.33236.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130612164553.26381.41398@quantum>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Heiko St=C3=BCbner (2013-06-03 15:18:32)
-> Am Montag, 3. Juni 2013, 19:53:10 schrieb Mike Turquette:
-> > Devicetree binding for the basic clock divider, plus the setup func=
-tion
-> > to register the clock.  Based on the existing fixed-clock binding.
-> >=20
-> > Signed-off-by: Mike Turquette <mturquette@linaro.org>
-> > ---
->=20
-> [...]
->=20
-> > +/**
-> > + * of_div_clk_setup() - Setup function for simple div rate clock
-> > + */
-> > +void of_divider_clk_setup(struct device_node *node)
-> > +{
-> > +     struct clk *clk;
-> > +     const char *clk_name =3D node->name;
-> > +     void __iomem *reg;
-> > +     const char *parent_name;
-> > +     u8 clk_divider_flags =3D 0;
-> > +     u8 mask =3D 0;
-> > +     u8 shift =3D 0;
->=20
-> in the mux-clock these 3 are unsigned long and u32 types ... what is =
-correct?
->=20
+Hi Mike,
 
-Good catch.  Shifts should be u8, masks should be u32.  I've left the
-flags as u8.  The binding doesn't dictate this and if we end up having
-more flags (hopefully not!) then this value can be embiggened.
+On Wed, Jun 12, 2013 at 10:15 PM, Mike Turquette <mturquette@linaro.org> wrote:
+> Quoting Padmavathi Venna (2013-06-12 01:07:43)
+>> This patch adds enum entries for div_i2s1 and div_i2s2 which are
+>> required for i2s1 and i2s2 controllers.
+>>
+>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+>
+> Looks good.  Did you want me to take the clk patches or just gathering
+> Acks?
 
->=20
-> > +     struct clk_div_table *table;
-> > +
-> > +     of_property_read_string(node, "clock-output-names", &clk_name=
-);
-> > +
-> > +     parent_name =3D of_clk_get_parent_name(node, 0);
-> > +
-> > +     reg =3D of_iomap(node, 0);
-> > +
-> > +     if (of_property_read_u8(node, "mask", &mask)) {
-> > +             pr_err("%s: missing mask property for %s\n", __func__=
-, node->name);
-> > +             return;
-> > +     }
-> > +
-> > +     if (of_property_read_u8(node, "shift", &shift))
-> > +             pr_debug("%s: missing shift property defaults to zero=
- for %s\n",
-> > +                             __func__, node->name);
->=20
-> same here ... mux reads u32
->=20
-> > +     if (of_property_read_bool(node, "index_one"))
-> > +             clk_divider_flags |=3D CLK_DIVIDER_ONE_BASED;
-> > +
-> > +     if (of_property_read_bool(node, "index_power_of_two"))
-> > +             clk_divider_flags |=3D CLK_DIVIDER_POWER_OF_TWO;
-> > +
-> > +     if (of_property_read_bool(node, "index_allow_zero"))
-> > +             clk_divider_flags |=3D CLK_DIVIDER_ALLOW_ZERO;
-> > +
-> > +     table =3D of_clk_get_div_table(node);
-> > +     if (IS_ERR(table))
-> > +             return;
-> > +
-> > +     clk =3D clk_register_divider_table(NULL, clk_name,
-> > +                     parent_name, 0,
-> > +                     reg, shift, mask,
-> > +                     clk_divider_flags, table,
-> > +                     NULL);
->=20
-> this causes trouble, as the divider clock code above still requires a=
- width=20
-> instead of a mask. I remember talk about this going to change separat=
-ely, but=20
-> couldn't find anything of the sort in linux-next.
+Please take the patches :).
 
-Right.  I viewed creation of the DT bindings a bit separately from the
-CCF code, which I think is the right approach.  A mask is definitely a
-more useful structure than a width value, and the DT bindings need to b=
-e
-at least a little future-proof, so I chose a mask.
+Thanks
+Padma
 
-I'll update the divider code to use a mask and post that as part of the
-v2 series.
-
-Regards,
-Mike
-
->=20
->=20
->=20
-> > +
-> > +     if (!IS_ERR(clk))
-> > +             of_clk_add_provider(node, of_clk_src_simple_get, clk)=
-;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_divider_clk_setup);
-> > +CLK_OF_DECLARE(divider_clk, "divider-clock", of_divider_clk_setup)=
-;
-> > +#endif
+>
+> Regards,
+> Mike
+>
+>> ---
+>>  drivers/clk/samsung/clk-exynos5250.c |    5 +++--
+>>  1 files changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
+>> index 5c97e75..7c68850 100644
+>> --- a/drivers/clk/samsung/clk-exynos5250.c
+>> +++ b/drivers/clk/samsung/clk-exynos5250.c
+>> @@ -87,6 +87,7 @@ enum exynos5250_clks {
+>>         sclk_mmc0, sclk_mmc1, sclk_mmc2, sclk_mmc3, sclk_sata, sclk_usb3,
+>>         sclk_jpeg, sclk_uart0, sclk_uart1, sclk_uart2, sclk_uart3, sclk_pwm,
+>>         sclk_audio1, sclk_audio2, sclk_spdif, sclk_spi0, sclk_spi1, sclk_spi2,
+>> +       div_i2s1, div_i2s2,
+>>
+>>         /* gate clocks */
+>>         gscl0 = 256, gscl1, gscl2, gscl3, gscl_wa, gscl_wb, smmu_gscl0,
+>> @@ -291,8 +292,8 @@ struct samsung_div_clock exynos5250_div_clks[] __initdata = {
+>>         DIV(none, "div_pcm1", "sclk_audio1", DIV_PERIC4, 4, 8),
+>>         DIV(none, "div_audio2", "mout_audio2", DIV_PERIC4, 16, 4),
+>>         DIV(none, "div_pcm2", "sclk_audio2", DIV_PERIC4, 20, 8),
+>> -       DIV(none, "div_i2s1", "sclk_audio1", DIV_PERIC5, 0, 6),
+>> -       DIV(none, "div_i2s2", "sclk_audio2", DIV_PERIC5, 8, 6),
+>> +       DIV(div_i2s1, "div_i2s1", "sclk_audio1", DIV_PERIC5, 0, 6),
+>> +       DIV(div_i2s2, "div_i2s2", "sclk_audio2", DIV_PERIC5, 8, 6),
+>>         DIV(sclk_pixel, "div_hdmi_pixel", "sclk_vpll", DIV_DISP1_0, 28, 4),
+>>         DIV_A(none, "armclk", "div_arm", DIV_CPU0, 28, 3, "armclk"),
+>>         DIV_F(none, "div_mipi1_pre", "div_mipi1",
+>> --
+>> 1.7.4.4
