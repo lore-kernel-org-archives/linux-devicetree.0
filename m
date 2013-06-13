@@ -1,64 +1,161 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 06/10] mmc: omap_hsmmc: add support for pbias
- configuration in dt
-Date: Thu, 13 Jun 2013 11:47:15 +0100
-Message-ID: <20130613104715.GC16677@laptop>
-References: <20130523184045.GD13507@atomide.com>
- <1370546059-24181-1-git-send-email-balajitk@ti.com>
- <1370546059-24181-7-git-send-email-balajitk@ti.com>
- <CACRpkdZAzAJW0UxGCSj-PWXTSi2Q6T8fqL9SQ+Y-91sELQ3SRQ@mail.gmail.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: RE: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu
+	reg control
+Date: Thu, 13 Jun 2013 20:21:23 +0900
+Message-ID: <02c101ce6828$29ab0f20$7d012d60$%dae@samsung.com>
+References: <1370935073-7475-1-git-send-email-rahul.sharma@samsung.com>
+	<CAAQKjZMuSQhbYtOyni-RdHhXu0fv3U2Dm_2iqRLe0smSt_jjjQ@mail.gmail.com>
+	<CAAQKjZOZCtLnE_OPs60NU+Z4pkHiSCqZcBOi1Dv+PC=01HKqyg@mail.gmail.com>
+	<CAPdUM4Nis0uwyZf1hNDOMmdqFm0K7beVPoyAWRjMBwq0jcwwCQ@mail.gmail.com>
+	<51B98908.8050403@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZAzAJW0UxGCSj-PWXTSi2Q6T8fqL9SQ+Y-91sELQ3SRQ@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Balaji T K <balajitk@ti.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, ext Tony Lindgren <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-reply-to: <51B98908.8050403@samsung.com>
+Content-language: ko
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Rahul Sharma' <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, 'Stephen Warren' <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, 'Seung-Woo Kim' <sw0312.kim@samsung.com>, 'sunil joshi' <joshi@samsung.com>, 'DRI mailing list' <dri-devel@lists.freedesktop.org>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Jun 2013, Linus Walleij wrote:
 
-> On Thu, Jun 6, 2013 at 9:14 PM, Balaji T K <balajitk@ti.com> wrote:
->=20
-> > PBIAS register configuration is based on the regulator voltage
-> > which supplies these pbias cells, sd i/o pads.
-> > With PBIAS register address and bit definitions different across
-> > omap[3,4,5], Simplify PBIAS configuration under three different
-> > regulator voltage levels - O V, 1.8 V, 3 V. Corresponding pinctrl s=
-tates
-> > are defined as pbias_off, pbias_1v8, pbias_3v.
+
+> -----Original Message-----
+> From: Sylwester Nawrocki [mailto:s.nawrocki@samsung.com]
+> Sent: Thursday, June 13, 2013 5:56 PM
+> To: Rahul Sharma
+> Cc: Rahul Sharma; Inki Dae; linux-samsung-soc@vger.kernel.org; devicetree-
+> discuss@lists.ozlabs.org; DRI mailing list; Kukjin Kim; Seung-Woo Kim;
+> Sean Paul; sunil joshi; Kishon Vijay Abraham I; Stephen Warren;
+> grant.likely@linaro.org
+> Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with
+> pmu reg control
+> 
+> Hi,
+> 
+> On 06/13/2013 06:26 AM, Rahul Sharma wrote:
+> > Mr. Dae,
 > >
-> > pinctrl state mmc_init is used for configuring speed mode, loopback=
- clock
-> > (in devconf0/devconf1/prog_io1 register for omap3) and pull strengt=
-h
-> > configuration (in control_mmc1 for omap4)
+> > Thanks for your valuable inputs.
 > >
-> > Signed-off-by: Balaji T K <balajitk@ti.com>
->=20
-> You *need* Lee Jones and Mark Brown to review this.
-> Maybe Laurent has something to add too.
->=20
-> Ux500 had the very same thing, and there this was solved using
-> a GPIO regulator for "vqmmc" a level-shifter. I vaguely remember
-> Laurent doing something similar with the SH stuff.
+> > I posted it as RFC because, I also have received comments to register
+> > hdmiphy as a clock controller. As we always configure it for specific
+> > frequency, hdmi-phy looks similar to a PLL. But it really doesn't
+> > belong to that class. Secondly prior to exynos5420, it was a i2c
+> > device. I am not sure we can register a I2C device as a clock
+> > controller. I wanted to discuss and explore this option here.
+> 
+> Have you considered using the generic PHY framework for those HDMI
+> PHY devices [1] ? I guess we could add a dedicated group of ops for
+> video PHYs, similarly as is is done with struct v4l2_subdev_ops. For
+> configuring things like the carrier/pixel clock frequency or anything
+> what's common across the video PHYs.
+> 
+> Perhaps you could have a look and see if this framework would be
+> useful for HDMI and possibly point out anything what might be missing ?
+> 
+> I'm not sure it it really solves the issues specific to the Exynos
+> HDMI but at least with a generic PHY driver the PHY module would be
+> separate from the PHY controller, as often same HDMI DPHY can be used
+> with various types of a HDMI controller. So this would allow to not
+> duplicate the HDMI PHY drivers in the long-term perspective.
 
-I haven't seem much of this patch-set, but this certainly looks like
-it should be handled by a GPIO regulator instead of pinctrl. States
-are easily declared in a 'struct gpio_regulator_state', which the
-framework then uses to set the correct pins for the required voltage.
+Yeah, at least, it seems that we could use PHY module to control PMU
+register, HDMI_PHY_CONTROL. However, PHY module provides only init/on/off
+callbacks. As you may know, HDMIPHY needs i2c interfaces to control HDMIPHY
+clock. So with PHY module, HDMIPHY driver could enable PMU more generically,
+but also has to use existing i2c stuff to control HDMIPHY clock. I had a
+quick review to Generic PHY Framework[v6] but I didn't see that the PHY
+module could generically support more features such as i2c stuff.
 
-And yes, 'vqmmc' is a good place to store the this regulator.
+Thanks,
+Inki Dae
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> [1] https://lkml.org/lkml/2013/4/29/95
+> 
+> Thanks,
+> Sylwester
+> 
+> > As you said, in parallel, I will align these changes and along with
+> > "drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver"
+> > series and post them.
+> >
+> > I hope we should be able to close on one of the above approaches for
+> > hdmiphy.
+> >
+> > regards,
+> > Rahul Sharma.
+> >
+> > On Wed, Jun 12, 2013 at 9:57 AM, Inki Dae <inki.dae@samsung.com> wrote:
+> >>
+> >> 2013/6/12 Inki Dae <inki.dae@samsung.com>
+> >>>
+> >>> Hi Rahul,
+> >>>
+> >>> This patch is important to us. Actually, previous hdmi driver had
+> >>> controlled hdmiphy HDMI_PHY_CONTROL as if that were a clock but now
+> that
+> >>> doesn't exist anymore. So we need to discuss how hdmiphy should be
+> handled.
+> >>> I konw that you had already posted hdmiphy relevant patch set, [PATCH
+> 0/4]
+> >>> drm/exynos: hdmi: move hdmiphy related code to hdmiphy driver.
+> >>>
+> >>> I think we can couple pmu register controlling codes with that patch
+> set
+> >>> without RFC. Could you update and post them again? like below,
+> >>> [PATCH 0/4] drm/exynos: hdmi: move hdmiphy related code to hdmiphy
+> driver
+> >>> + [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu reg
+> >>> control
+> >>>
+> >>> And then let's start review :)
+> >>
+> >> And I think It would be better to move the pmu register controlling
+> codes
+> >> into hdmiphy driver like drivers/usb/phy/phy-samsung-usb2.c driver
+does.
+> >>>
+> >>> Thanks,
+> >>> Inki Dae
+> >>>
+> >>> 2013/6/11 Rahul Sharma <rahul.sharma@samsung.com>
+> >>>>
+> >>>> Previously, hdmiphy is added as a dummy clock in clock file for
+> >>>> exynos SoCs. Enable/Disable to this clock, actually toggles the power
+> >>>> control bit in PMU, instead of controlling the clock gate.
+> >>>>
+> >>>> This RFC adds the support to parse hdmiphy control node which is a
+> child
+> >>>> node to hdmi, and map the pmu register to toggle the power control
+> bit.
+> >>>>
+> >>>> This is based on drm-next branch in Inki Dae's tree.
+> >>>>
+> >>>> Rahul Sharma (2):
+> >>>>   drm/exynos: replace dummy hdmiphy clock with pmu register control
+> >>>>   ARM/dts: add hdmiphy power control pmu register to hdmi dt node
+> >>>>
+> >>>>  arch/arm/boot/dts/exynos5250.dtsi    |    6 +++
+> >>>>  drivers/gpu/drm/exynos/exynos_hdmi.c |   69
+> >>>> ++++++++++++++++++++++++++++++----
+> >>>>  drivers/gpu/drm/exynos/regs-hdmi.h   |    4 ++
+> >>>>  3 files changed, 71 insertions(+), 8 deletions(-)
+> >>>>
+> >>>> --
+> >>>> 1.7.10.4
+> 
+> --
+> Sylwester Nawrocki
+> Samsung R&D Institute Poland
+> Samsung Electronics
