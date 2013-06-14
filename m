@@ -1,39 +1,38 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/7] ARM: mxc: fix gpio-ranges for VF610
-Date: Fri, 14 Jun 2013 20:21:10 +0800
-Message-ID: <20130614122108.GA4489@S2101-09.ap.freescale.net>
-References: <1371157199-7272-1-git-send-email-swarren@wwwdotorg.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
+Date: Fri, 14 Jun 2013 14:38:49 +0200
+Message-ID: <3309315.fJN6KWK0oA@wuerfel>
+References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com> <000001ce68d7$ca762200$5f626600$@samsung.com> <20130614105310.GA19060@manwe>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1371157199-7272-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130614105310.GA19060@manwe>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2013 at 02:59:53PM -0600, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Friday 14 June 2013 12:53:11 Thierry Reding wrote:
 > 
-> The gpio-ranges properties in vf610.dtsi were written according to an
-> older version of the GPIO bindings. Unfortunately, these were changed
-> incompatibly in commit 86853c8 "gpio: add gpio offset in gpio range
-> cells property". This patch adds the missing required extra cell in each
-> gpio-ranges property.
+> I think the biggest missing piece is pci_common_exit(), the counterpart
+> of pci_common_init(), to cleanup a host bridge on ARM. I haven't looked
+> in detail at the other architectures, but I suspect there must be some
+> code to call when a host bridge is removed.
 > 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Looking at drivers/pci/remove.c, it seems like pci_remove_root_bus()
+> might be what we're looking at. It isn't exported so it can't be used by
+> modules, but that can be changed. Is that how a host bridge is typically
+> removed from the system?
 
-Applied, thanks.
+It's fairly new to have host bridges in loadable modules, so I'm pretty
+sure it's not supported by the core yet, but it also doesn't seem hard
+to do. I think you are right with regard to pci_remove_root_bus,
+and Bjorn might be able to provide more information.
 
-Shawn
+Ideally we should be able to load and unload the pci host driver
+in a loop indefinitely without crashing or exposing any races
+or leaks, but I would not bet on that working without bugs in the
+core, since that goes beyond the normal pci (device) hotplug case.
+
+	Arnd
