@@ -1,38 +1,205 @@
 From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
-Date: Fri, 14 Jun 2013 14:38:49 +0200
-Message-ID: <3309315.fJN6KWK0oA@wuerfel>
-References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com> <000001ce68d7$ca762200$5f626600$@samsung.com> <20130614105310.GA19060@manwe>
+Date: Fri, 14 Jun 2013 14:53:38 +0200
+Message-ID: <3539874.V7zkhbMg0b@wuerfel>
+References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com>
+ <13685067.uPzcc2y1CU@wuerfel> <000001ce68d7$ca762200$5f626600$@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130614105310.GA19060@manwe>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <000001ce68d7$ca762200$5f626600$@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 14 June 2013 12:53:11 Thierry Reding wrote:
-> 
-> I think the biggest missing piece is pci_common_exit(), the counterpart
-> of pci_common_init(), to cleanup a host bridge on ARM. I haven't looked
-> in detail at the other architectures, but I suspect there must be some
-> code to call when a host bridge is removed.
-> 
-> Looking at drivers/pci/remove.c, it seems like pci_remove_root_bus()
-> might be what we're looking at. It isn't exported so it can't be used by
-> modules, but that can be changed. Is that how a host bridge is typically
-> removed from the system?
+On Friday 14 June 2013 17:18:46 Jingoo Han wrote:
+> On Thursday, June 13, 2013 11:14 PM, Arnd Bergmann wrote:
+> > On Thursday 13 June 2013 22:22:31 Jingoo Han wrote:
 
-It's fairly new to have host bridges in loadable modules, so I'm pretty
-sure it's not supported by the core yet, but it also doesn't seem hard
-to do. I think you are right with regard to pci_remove_root_bus,
-and Bjorn might be able to provide more information.
+> > > +struct pcie_port {
+> > > +	struct device		*dev;
+> > > +	u8			controller;
+> > > +	u8			root_bus_nr;
+> > > +	void __iomem		*dbi_base;
+> > > +	void __iomem		*elbi_base;
+> > > +	void __iomem		*phy_base;
+> > > +	void __iomem		*purple_base;
+> > > +	phys_addr_t		cfg0_base;
+> > > +	void __iomem		*va_cfg0_base;
+> > > +	phys_addr_t		cfg1_base;
+> > > +	void __iomem		*va_cfg1_base;
+> > > +	phys_addr_t		io_base;
+> > > +	phys_addr_t		mem_base;
+> > > +	spinlock_t		conf_lock;
+> > > +	struct resource		cfg;
+> > > +	struct resource		io;
+> > > +	struct resource		mem;
+> > > +	struct pcie_port_info	config;
+> > > +	struct clk		*clk;
+> > > +	struct clk		*bus_clk;
+> > > +	int			irq;
+> > > +	int			reset_gpio;
+> > > +};
+> > 
+> > You mentioned that you'd use u64 for the resources here but did not.
+> 
+> Do you mean the following?
+> 
+> +	u64		cfg0_base;
+> +	u64		cfg1_base;
+> +	u64		io_base;
+> +	u64		mem_base;
 
-Ideally we should be able to load and unload the pci host driver
-in a loop indefinitely without crashing or exposing any races
-or leaks, but I would not bet on that working without bugs in the
-core, since that goes beyond the normal pci (device) hotplug case.
+Yes, anything you need to program into a 64 bit hardware register.
+
+> > > +static void exynos_pcie_prog_viewport_cfg1(struct pcie_port *pp, u32 busdev)
+> > > +{
+> > > +	u32 val;
+> > > +	void __iomem *dbi_base = pp->dbi_base;
+> > > +
+> > > +	/* Program viewport 1 : OUTBOUND : CFG1 */
+> > > +	val = PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX1;
+> > > +	writel_rc(pp, val, dbi_base + PCIE_ATU_VIEWPORT);
+> > > +	writel_rc(pp, PCIE_ATU_TYPE_CFG1, dbi_base + PCIE_ATU_CR1);
+> > > +	val = PCIE_ATU_ENABLE;
+> > > +	writel_rc(pp, val, dbi_base + PCIE_ATU_CR2);
+> > > +	writel_rc(pp, (u64)pp->cfg1_base, dbi_base + PCIE_ATU_LOWER_BASE);
+> > > +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_BASE);
+> > > +	writel_rc(pp, (u64)pp->cfg1_base + pp->config.cfg1_size - 1,
+> > > +			dbi_base + PCIE_ATU_LIMIT);
+> > > +	writel_rc(pp, busdev, dbi_base + PCIE_ATU_LOWER_TARGET);
+> > > +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_TARGET);
+> > > +}
+> > 
+> > And you still don't set up the UPPER halves, which was really the point
+> > of my comment. Same thing for all the other ones.
+> 
+> Do you mean the following?
+> 
+> +	writel_rc(pp, pp->cfg1_base, dbi_base + PCIE_ATU_LOWER_BASE);
+> +	writel_rc(pp, (pp->cfg1_base >> 32), dbi_base + PCIE_ATU_UPPER_BASE);
+
+Right. Note that you could achieve the same using phys_addr_t instead of
+u64, but it's more complicated to get that to work for both 32 and 64 bit
+phys_addr_t types, since you cannot shift a 32 bit value by 32 bits in C.
+
+> > > +static void exynos_pcie_prog_viewport_mem_inbound(struct pcie_port *pp)
+> > > +{
+> > > +	u32 val;
+> > > +	void __iomem *dbi_base = pp->dbi_base;
+> > > +
+> > > +	/* Program viewport 0 : INBOUND : MEM */
+> > > +	val = PCIE_ATU_REGION_INBOUND | PCIE_ATU_REGION_INDEX0;
+> > > +	writel_rc(pp, val, dbi_base + PCIE_ATU_VIEWPORT);
+> > > +	writel_rc(pp, PCIE_ATU_TYPE_MEM, dbi_base + PCIE_ATU_CR1);
+> > > +	val = PCIE_ATU_ENABLE | PCIE_ATU_BAR_MODE_ENABLE;
+> > > +	writel_rc(pp, val, dbi_base + PCIE_ATU_CR2);
+> > > +	writel_rc(pp, (u64)pp->config.mem_bus_addr,
+> > > +			dbi_base + PCIE_ATU_LOWER_BASE);
+> > > +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_BASE);
+> > > +	writel_rc(pp, (u64)pp->config.mem_bus_addr + pp->config.mem_size - 1,
+> > > +			dbi_base + PCIE_ATU_LIMIT);
+> > > +	writel_rc(pp, (u64)pp->mem_base, dbi_base + PCIE_ATU_LOWER_TARGET);
+> > > +	writel_rc(pp, 0, dbi_base + PCIE_ATU_UPPER_TARGET);
+> > > +}
+> > 
+> > This makes even less sense than before, it seems like now you only
+> > allow DMA between PCI devices but not to main memory.
+> 
+> Sorry, I cannot understand it.
+> Could you give me more details?
+> Also, pseudo-code will be very helpful.
+
+Please look up the documentation about inbound viewport and describe
+in a code comment what it does. I /assume/ that this is how DMA accesses
+from the bus get translated into AXI bus transactions. If so, you have
+to let the window translate addresses from RAM. If it's something else,
+then you should document what it is and how it needs to be set up.
+ 
+> > > +static int exynos_pcie_setup(int nr, struct pci_sys_data *sys)
+> > > +{
+> > > +	struct pcie_port *pp;
+> > > +
+> > > +	pp = sys_to_pcie(sys);
+> > > +
+> > > +	if (!pp)
+> > > +		return 0;
+> > > +
+> > > +	pci_add_resource(&sys->resources, &pp->io);
+> > > +	pci_add_resource(&sys->resources, &pp->mem);
+> > 
+> > Now you are missing the offsets. You have to at least pass an offset for one
+> > of the I/O spaces, since they are using the same bus address. The offset must
+> > match the value you pass to pci_ioremap_io.
+> > 
+> > For the memory space, you should pass the difference between the physical
+> > base address and the bus address. That address happens to be zero with
+> > you DT setup, but I would advise to also try out some other values in DT,
+> > just to ensure it still works.
+> 
+> Um, I cannot understand it, too.
+> Could you give me Psuedo-code?
+> Or, let me know which pcie driver can be the good reference.
+
+I think most hardware is not as flexible as yours, so they can just hardcode
+a lot of this.
+
+What you need here is
+
+static unsigned long global_io_offset = 0;
+if (global_io_offset < SZ_1M && pp->config.io_size > 0) {
+	sys->io_offset = global_io_offset - pp->config.io_bus_addr; /* normally 0 */
+	pci_ioremap_io(sys->io_offset, pp->io.start);
+	global_io_offset += SZ_64K;
+}
+sys->mem_offset = pp->mem.start - pp->config.mem_bus_addr; /* normally 0 */
+
+sys->io_offset normally increases by 64K for each bus but should always
+be between 0 and 1MB, it is the index into the registers mapped at
+(void __iomem*)PCI_IO_VIRT_BASE.
+
+It is best practice to map 64KB of I/O space at bus address 0 for each
+domain into PCI_IO_VIRT_BASE, and set up a 1:1 translation between
+memory space bus addresses and CPU physical addresses, as you do
+in your 'ranges' property.
+
+However, you should be able to use any other bus addresses with the code
+above, except for broken device drivers.
+
+> > > +static int __exit exynos_pcie_remove(struct platform_device *pdev)
+> > > +{
+> > > +	struct pcie_port *pp = platform_get_drvdata(pdev);
+> > > +
+> > > +	clk_disable_unprepare(pp->bus_clk);
+> > > +	clk_disable_unprepare(pp->clk);
+> > > +
+> > > +	return 0;
+> > > +}
+> > 
+> > You also don't remove the PCI devices here, as mentioned in an earlier
+> > review.
+> 
+> I reviewed Marvell PCIe driver and Tegra PCIe driver; however,
+> I cannot know what you mean.
+> 
+> Could let me know which additional functions are needed?
+
+The mvebu driver does not allow module unload. I haven't looked at the
+tegra driver. If you allow unloading the driver and provide a 'remove'
+callback, that callback needs to clean up the entire bus and remove
+all child devices that were added as well as undo everything the
+probe function did. I think it would be great if you can do that, although
+it might not be easy. The simplest solution would be to not support
+unloading though.
 
 	Arnd
