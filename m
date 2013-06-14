@@ -1,8 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [RFC v2 07/12] ARM: mvebu: Use the preprocessor on Armada 370/XP
- device tree files
-Date: Fri, 14 Jun 2013 13:07:47 -0300
-Message-ID: <1371226072-28896-8-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [RFC v2 08/12] ARM: mvebu: Add MBus to Armada 370/XP device tree
+Date: Fri, 14 Jun 2013 13:07:48 -0300
+Message-ID: <1371226072-28896-9-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1371226072-28896-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,149 +22,112 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The Armada 370/XP SoC family has a completely configurable address
+space handled by the MBus controller.
+
+This patch introduces the device tree layout of MBus, making the
+'soc' node as mbus-compatible.
+Since every peripheral/controller is a child of this 'soc' node,
+this makes all of them sit behind the mbus, thus describing the
+hardware accurately.
+
+A translation entry has been added for the internal-regs mapping.
+This can't be done in the common armada-370-xp.dtsi because A370
+and AXP have different addressing width.
+
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-db.dts              | 2 +-
- arch/arm/boot/dts/armada-370-mirabox.dts         | 2 +-
- arch/arm/boot/dts/armada-370-rd.dts              | 2 +-
- arch/arm/boot/dts/armada-370.dtsi                | 2 +-
- arch/arm/boot/dts/armada-xp-db.dts               | 2 +-
- arch/arm/boot/dts/armada-xp-gp.dts               | 2 +-
- arch/arm/boot/dts/armada-xp-mv78260.dtsi         | 2 +-
- arch/arm/boot/dts/armada-xp-mv78460.dtsi         | 2 +-
- arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 2 +-
- arch/arm/boot/dts/armada-xp.dtsi                 | 2 +-
- 10 files changed, 10 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/armada-370-xp.dtsi             | 7 ++-----
+ arch/arm/boot/dts/armada-370.dtsi                | 6 ++++--
+ arch/arm/boot/dts/armada-xp-gp.dts               | 3 ---
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 3 ---
+ arch/arm/boot/dts/armada-xp.dtsi                 | 4 ++++
+ 5 files changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
-index 2353b1f..231f8b2 100644
---- a/arch/arm/boot/dts/armada-370-db.dts
-+++ b/arch/arm/boot/dts/armada-370-db.dts
-@@ -14,7 +14,7 @@
-  */
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index 52a1f5e..633534dd 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -29,18 +29,15 @@
+ 	};
  
- /dts-v1/;
--/include/ "armada-370.dtsi"
-+#include "armada-370.dtsi"
+ 	soc {
+-		#address-cells = <1>;
++		#address-cells = <2>;
+ 		#size-cells = <1>;
+-		compatible = "simple-bus";
+ 		interrupt-parent = <&mpic>;
+-		ranges = <0          0 0xd0000000 0x0100000 /* internal registers */
+-			  0xe0000000 0 0xe0000000 0x8100000 /* PCIe */>;
  
- / {
- 	model = "Marvell Armada 370 Evaluation Board";
-diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
-index 14e36e1..7005f27 100644
---- a/arch/arm/boot/dts/armada-370-mirabox.dts
-+++ b/arch/arm/boot/dts/armada-370-mirabox.dts
-@@ -9,7 +9,7 @@
-  */
+ 		internal-regs {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges;
++			ranges = <0 0xffff0001 0 0x100000>;
  
- /dts-v1/;
--/include/ "armada-370.dtsi"
-+#include "armada-370.dtsi"
- 
- / {
- 	model = "Globalscale Mirabox";
-diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
-index 130f839..5c3a1ec 100644
---- a/arch/arm/boot/dts/armada-370-rd.dts
-+++ b/arch/arm/boot/dts/armada-370-rd.dts
-@@ -12,7 +12,7 @@
-  */
- 
- /dts-v1/;
--/include/ "armada-370.dtsi"
-+#include "armada-370.dtsi"
- 
- / {
- 	model = "Marvell Armada 370 Reference Design";
+ 			mpic: interrupt-controller@20000 {
+ 				compatible = "marvell,mpic";
 diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index fa3dfc6..08ec6e3 100644
+index 08ec6e3..937db5d 100644
 --- a/arch/arm/boot/dts/armada-370.dtsi
 +++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -15,7 +15,7 @@
-  * common to all Armada SoCs.
-  */
+@@ -29,8 +29,10 @@
+ 	};
  
--/include/ "armada-370-xp.dtsi"
-+#include "armada-370-xp.dtsi"
- /include/ "skeleton.dtsi"
- 
- / {
-diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
-index d6cc8bf..9a6ad0e 100644
---- a/arch/arm/boot/dts/armada-xp-db.dts
-+++ b/arch/arm/boot/dts/armada-xp-db.dts
-@@ -14,7 +14,7 @@
-  */
- 
- /dts-v1/;
--/include/ "armada-xp-mv78460.dtsi"
-+#include "armada-xp-mv78460.dtsi"
- 
- / {
- 	model = "Marvell Armada XP Evaluation Board";
+ 	soc {
+-		ranges = <0          0xd0000000 0x0100000 /* internal registers */
+-			  0xe0000000 0xe0000000 0x8100000 /* PCIe */>;
++		compatible = "marvell,armada370-mbus";
++		reg = <0xd0020000 0x100>, <0xd0020180 0x20>;
++		ranges = <0xffff0001 0 0xd0000000 0x100000>;
++
+ 		internal-regs {
+ 			system-controller@18200 {
+ 				compatible = "marvell,armada-370-xp-system-controller";
 diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 3ee63d1..e0c6f60 100644
+index e0c6f60..cc44b27 100644
 --- a/arch/arm/boot/dts/armada-xp-gp.dts
 +++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -14,7 +14,7 @@
-  */
+@@ -39,9 +39,6 @@
+ 	};
  
- /dts-v1/;
--/include/ "armada-xp-mv78460.dtsi"
-+#include "armada-xp-mv78460.dtsi"
- 
- / {
- 	model = "Marvell Armada XP Development Board DB-MV784MP-GP";
-diff --git a/arch/arm/boot/dts/armada-xp-mv78260.dtsi b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-index f4029f0..c80c60e 100644
---- a/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-@@ -13,7 +13,7 @@
-  * common to all Armada XP SoCs.
-  */
- 
--/include/ "armada-xp.dtsi"
-+#include "armada-xp.dtsi"
- 
- / {
- 	model = "Marvell Armada XP MV78260 SoC";
-diff --git a/arch/arm/boot/dts/armada-xp-mv78460.dtsi b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-index 488ca5e..3874548 100644
---- a/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-@@ -13,7 +13,7 @@
-  * common to all Armada XP SoCs.
-  */
- 
--/include/ "armada-xp.dtsi"
-+#include "armada-xp.dtsi"
- 
- / {
- 	model = "Marvell Armada XP MV78460 SoC";
+ 	soc {
+-		ranges = <0          0 0xd0000000 0x100000
+-			  0xf0000000 0 0xf0000000 0x1000000>;
+-
+ 		internal-regs {
+ 			serial@12000 {
+ 				clock-frequency = <250000000>;
 diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-index 46b7850..27a0ecf 100644
+index 27a0ecf..3863fe2 100644
 --- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
 +++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-@@ -11,7 +11,7 @@
-  */
+@@ -27,9 +27,6 @@
+ 	};
  
- /dts-v1/;
--/include/ "armada-xp-mv78260.dtsi"
-+#include "armada-xp-mv78260.dtsi"
- 
- / {
- 	model = "PlatHome OpenBlocks AX3-4 board";
+ 	soc {
+-		ranges = <0          0 0xd0000000 0x100000
+-			  0xf0000000 0 0xf0000000 0x8000000>;
+-
+ 		internal-regs {
+ 			serial@12000 {
+ 				clock-frequency = <250000000>;
 diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index 1ee8540..3e770db 100644
+index 3e770db..dda8588 100644
 --- a/arch/arm/boot/dts/armada-xp.dtsi
 +++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -16,7 +16,7 @@
-  * common to all Armada SoCs.
-  */
+@@ -23,6 +23,10 @@
+ 	compatible = "marvell,armadaxp", "marvell,armada-370-xp";
  
--/include/ "armada-370-xp.dtsi"
-+#include "armada-370-xp.dtsi"
- 
- / {
- 	model = "Marvell Armada XP family SoC";
+ 	soc {
++		compatible = "marvell,armadaxp-mbus";
++		reg = <0 0xd0020000 0 0x100>, <0 0xd0020180 0 0x20>;
++		ranges = <0xffff0001 0 0 0xd0000000 0x100000>;
++
+ 		internal-regs {
+ 			L2: l2-cache {
+ 				compatible = "marvell,aurora-system-cache";
 -- 
 1.8.1.5
