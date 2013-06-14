@@ -1,15 +1,16 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Device tree flattening code not copying properties from blob
-Date: Fri, 14 Jun 2013 00:47:43 +0100
-Message-ID: <CACxGe6s+Br8mYDfULsDcA9Ym3mqtyXZ41uK1un-nzcZH0BHtDg@mail.gmail.com>
-References: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696@corpatsmail4.corp.sensis.com>
- <CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg@mail.gmail.com>
- <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF975@corpatsmail4.corp.sensis.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v3 2/2] drivers: mfd: vexpress: add Serial Power
+ Controller (SPC) support
+Date: Thu, 13 Jun 2013 20:21:29 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1306132006390.18597@syhkavp.arg>
+References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1370512763-32200-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <20130613225233.GB22310@quad.lixom.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF975-gEjpXB0kThW1wM3WIAwN2vV4jgPAACGKVpNB7YpNyf8@public.gmane.org>
+In-Reply-To: <20130613225233.GB22310-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,29 +21,18 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Collins, Rod" <Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <achin.gupta-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2013 at 11:49 PM, Collins, Rod
-<Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org> wrote:
-> Grant
->
-> What is considered the correct way to include the blob in the build so
-> that it is not removed?
+On Thu, 13 Jun 2013, Olof Johansson wrote:
 
-Don't put it in an __init section.  :-p
+> > +	u32 status = readl_relaxed(info->baseaddr + PWC_STATUS);
+> 
+> Why readl_relaxed() here? Can't you use a normal readl()?
 
-However, I realized that the .dtb.S target does exactly that under the
-assumption that multiple blobs may be linked into the kernel, but only
-one actually used. The correct thing to do in your case is indeed copy
-the blob at boot.
+Unfortunately, on ARM readl_relaxed() _is_ the normal readl() because 
+the actual readl() may have side effects.  See commit 79f64dbf68c8.
 
-Actually, the best thing to do is to not link the dtb into the kernel
-at all. Either append it as another payload or pass it in via the
-bootloader and make the kernel mark the dtb memory as reserved.
-Statically linking into the kernel proper means the kernel needs to be
-rebuilt for each and every target which neuters one of the reasons for
-using device tree in the first place.
 
-g.
+Nicolas
