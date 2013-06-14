@@ -1,53 +1,72 @@
-From: Joel A Fernandes <agnel.joel@gmail.com>
-Subject: Re: [PATCH v2 0/3] omap_hsmmc DT DMA Client support
-Date: Fri, 14 Jun 2013 13:10:58 -0500
-Message-ID: <CAD=GYpaSMkTCWgetPxvchuZMWzzB09_F3nqazKFRJob1imoXUw@mail.gmail.com>
-References: <1362518004-7083-1-git-send-email-mporter@ti.com>
-	<201303052126.01572.arnd@arndb.de>
-	<20130306133717.GJ6209@beef>
-	<CAD=GYpbmFyZxwpRwSVjasehhmR5UzMQaGCZf_5Gfo9biQyb0Ww@mail.gmail.com>
+From: Francois Romieu <romieu@fr.zoreil.com>
+Subject: Re: [PATCH v3] ethernet/arc/arc_emac - Add new driver
+Date: Fri, 14 Jun 2013 21:27:04 +0200
+Message-ID: <20130614192704.GA4857@electric-eye.fr.zoreil.com>
+References: <1371134239-4531-1-git-send-email-abrodkin@synopsys.com>
+ <20130613221946.GA16632@electric-eye.fr.zoreil.com>
+ <4881796E12491D4BB15146FE0209CE643F5E3A07@DE02WEMBXB.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=GYpbmFyZxwpRwSVjasehhmR5UzMQaGCZf_5Gfo9biQyb0Ww@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <4881796E12491D4BB15146FE0209CE643F5E3A07@DE02WEMBXB.internal.synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: matt@ohporter.com
-Cc: Arnd Bergmann <arnd@arndb.de>, Linux OMAP List <linux-omap@vger.kernel.org>, Balaji T K <balajitk@ti.com>, Vinod Koul <vinod.koul@intel.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Dan Williams <djbw@fb.com>, Chris Ball <cjb@laptop.org>
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Resending on Matt's new email, thanks.
+Alexey Brodkin <Alexey.Brodkin@synopsys.com> :
+> On 06/14/2013 02:20 AM, Francois Romieu wrote:
+[...]
+> >> +struct arc_emac_priv {
+> >> +	struct net_device_stats stats;
+> >> +	unsigned int clock_frequency;
+> >> +	unsigned int max_speed;
+> >> +
+> >> +	/* Pointers to BD rings - CPU side */
+> >> +	struct arc_emac_bd_t *rxbd;
+> >
+> > There does not seem to be much need for rxbd->data.
+> 
+> Could you please clarify this comment? Not clear what do you mean.
 
-On Fri, Jun 14, 2013 at 1:10 PM, Joel A Fernandes <agnel.joel@gmail.com> wrote:
-> Hi,
->
-> On Wed, Mar 6, 2013 at 7:37 AM, Matt Porter <mporter@ti.com> wrote:
->> On Tue, Mar 05, 2013 at 09:26:01PM +0000, Arnd Bergmann wrote:
->>> On Tuesday 05 March 2013, Matt Porter wrote:
->>> > Changes since v1:
->>> >         - rebase to 3.9-rc1, previous dependencies upstream
->>> >
->>> > This series adds DT DMA Engine Client support to the omap_hsmmc.
->>> > It leverages the generic DMA OF helpers in -next and the
->>> > dma_request_slave_channel_compat() wrapper introduced in the
->>> > AM33XX DMA Engine series to support DMA in omap_hsmmc on platforms
->>> > booting via DT. These platforms include omap2/3/4/5 and am33xx.
->>> >
->>> > These patches were split out from the v5 version of the AM33XX DMA
->>> > series and split from the EDMA-specific omap_hsmmc changes.
->>> >
->>>
->>> The description seems stale, but the patches all look good to me.
->>>
->>> I guess they can now get merged in any order.
->>>
->>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>
->> Yes, missed updating that to indicating that those are now in
->> 3.9-rc1.
->
-> If there are no more changes, could this patch please be merged in for
-> 3.10 or if not, could Matt please update the description as requested
-> and repost?
->
-> Thanks,
-> Joel
+Rx and Tx use the same struct but they don't work the same.
+They could/should use differents struct.
+
+[...]
+> > The descriptor entry is left unchanged. Afaiu the driver will move to the
+> > next descriptor and crash on dereferencing NULL (rx_buff->)skb next time
+> > it wraps.
+> >
+> > I suggest avoiding holes: don't netif_receive_skb if you can't alloc a new
+> > skb.
+> 
+> Frankly I cannot understand how "don't netif_receive_skb" for one of the 
+> received packets helps to prevent crash on the next iteration?
+> And I don't see a way to return any error state from NAPI poll handler.
+> Could you please clarify your idea?
+
+The driver assigns the otherwise-netif_received skb to the current rx
+descriptor as if it was a newly allocated one. The driver increases
+stats.rx_dropped. The rx descriptor ring doesn't ever exhibit a hole.
+
+[...]
+> >> +static int arc_emac_tx(struct sk_buff *skb, struct net_device *ndev)
+> >> +{
+> >> +	struct arc_emac_priv *priv = netdev_priv(ndev);
+> >> +	unsigned int info, len, *txbd_curr = &priv->txbd_curr;
+> >> +	dma_addr_t addr;
+> >> +	char *pkt = skb->data;
+> >> +
+> >> +	len = max_t(unsigned int, ETH_ZLEN, skb->len);
+> >
+> > The device automatically pads, right ?
+> 
+> What do you mean here?
+
+Does the device fill a smaller than 64 bytes packet with zeroes or may
+the driver leak information ? The driver should use skb_pad if the
+latter applies.
+
+-- 
+Ueimor
