@@ -1,65 +1,44 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of: irq: Pass trigger type in IRQ resource flags
-Date: Fri, 14 Jun 2013 23:00:30 +0100
-Message-ID: <20130614220030.82ECF3E0A56@localhost>
-References: <1368917790-23770-1-git-send-email-tomasz.figa@gmail.com> <54821523.hBKS2L2vLj@flatron>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54821523.hBKS2L2vLj@flatron>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>, devicetree-discuss@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH] dtc: ensure #line directives don't consume data from the next line
+Date: Fri, 14 Jun 2013 23:01:35 +0100
+Message-ID: <20130614220135.0D0D63E0A56@localhost>
+References: <1370273816-19411-1-git-send-email-swarren@wwwdotorg.org> <51AF6C3A.5020609@wwwdotorg.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <51AF6C3A.5020609@wwwdotorg.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Ian Campbell <Ian.Campbell@citrix.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Michal Marek <mmarek@suse.cz>, linux-kbuild@vger.kernel.org, jdl@jdl.com, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 05 Jun 2013 20:20:39 +0200, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi,
+On Wed, 05 Jun 2013 10:50:02 -0600, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 06/03/2013 09:36 AM, Stephen Warren wrote:
+> > From: Stephen Warren <swarren@nvidia.com>
+> > 
+> > Previously, the #line parsing regex ended with ({WS}+[0-9]+)?. The {WS}
+> > could match line-break characters. If the #line directive did not contain
+> > the optional flags field at the end, this could cause any integer data on
+> > the next line to be consumed as part of the #line directive parsing. This
+> > could cause syntax errors (i.e. #line parsing consuming the leading 0
+> > from a hex literal 0x1234, leaving x1234 to be parsed as cell data,
+> > which is a syntax error), or invalid compilation results (i.e. simply
+> > consuming literal 1234 as part of the #line processing, thus removing it
+> > from the cell data).
+> > 
+> > Fix this by replacing {WS} with [ \t] so that it can't match line-breaks.
+> > 
+> > Convert all instances of {WS}, even though the other instances should be
+> > irrelevant for any well-formed #line directive. This is done for
+> > consistency and ultimate safety.
+> > 
+> > This is a port of upstream dtc commit a1ee6f0 (with same subject) to the
+> > kernel's copy of dtc.
 > 
-> On Sunday 19 of May 2013 00:56:30 Tomasz Figa wrote:
-> > Some drivers might rely on availability of trigger flags in IRQ
-> > resource, for example to configure the hardware for particular interrupt
-> > type. However current code creating IRQ resources from data in device
-> > tree does not configure trigger flags in resulting resources.
-> > 
-> > This patch solves the problem, based on the fact that
-> > irq_of_parse_and_map() configures the trigger based on DT interrupt
-> > specifier, IRQD_TRIGGER_* flags are consistent with IORESOURCE_IRQ_*,
-> > and we can get trigger type by calling irqd_get_trigger_type() after
-> > mapping the interrupt.
-> > 
-> > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> > ---
-> >  drivers/of/irq.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> > index a3c1c5a..79a7a26 100644
-> > --- a/drivers/of/irq.c
-> > +++ b/drivers/of/irq.c
-> > @@ -355,6 +355,16 @@ int of_irq_to_resource(struct device_node *dev, int
-> > index, struct resource *r) r->start = r->end = irq;
-> >  		r->flags = IORESOURCE_IRQ;
-> >  		r->name = name ? name : dev->full_name;
-> > +
-> > +		/*
-> > +		 * Some drivers might rely on availability of trigger 
-> flags
-> > +		 * in IRQ resource. Since irq_of_parse_and_map() 
-> configures the
-> > +		 * trigger based on interrupt specifier and IRQD_TRIGGER_*
-> > +		 * flags are consistent with IORESOURCE_IRQ_*, we can get
-> > +		 * trigger type that was just set and pass it through 
-> resource
-> > +		 * flags as well.
-> > +		 */
-> > +		r->flags |= irqd_get_trigger_type(irq_get_irq_data(irq));
-> >  	}
-> > 
-> >  	return irq;
-> 
-> Any comments on this patch?
+> Rob, Grant, does this look OK to apply for v3.10-rc*?
 
-That's actually a pretty good solution and a whole lot less invasive
-that the approach that Javier was pursuing. Javier, I'm going to pick
-up this patch. Please yell if it doesn't solve the problem that you're
-trying to solve.
+The fix is in mainline now. Please check to make sure it is working for you.
 
 g.
+
+
+-- 
+email sent from notmuch.vim plugin
