@@ -1,17 +1,11 @@
-From: "Collins, Rod" <Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org>
-Subject: RE: Device tree flattening code not copying properties from blob
-Date: Fri, 14 Jun 2013 11:55:49 -0400
-Message-ID: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEFA19@corpatsmail4.corp.sensis.com>
-References: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696@corpatsmail4.corp.sensis.com>
- <CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg@mail.gmail.com>
- <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF975@corpatsmail4.corp.sensis.com>
- <CACxGe6s+Br8mYDfULsDcA9Ym3mqtyXZ41uK1un-nzcZH0BHtDg@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [RFC v2 00/12] MBus device tree binding
+Date: Fri, 14 Jun 2013 13:07:40 -0300
+Message-ID: <1371226072-28896-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Class: urn:content-classes:message
-In-Reply-To: <CACxGe6s+Br8mYDfULsDcA9Ym3mqtyXZ41uK1un-nzcZH0BHtDg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,103 +16,167 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Grant
+This is the v2 of the MBus driver patchset. A considerable re-work has been
+made to the DT layout proposed in the previous patchset, as a result of
+the recent discussion [1].
 
-That makes perfect sense, but I find that the DTB is included in the
-vmlinux.lds.h file which lives in source/include/asm-generic.
+[1] http://www.spinics.net/lists/arm-kernel/msg249496.html
 
-This seems to always want to put the dtb in the init section which gets
-removed. To fix this the asm-generic/vmlinux.lds.h file would need to be
-changed.
+In the current device tree binding proposal, for each MBus' child device
+there's a mbus-node 'ranges' property entry, in addition to the ranges
+property of the child itself.
 
-Forgive me ahead of time for not understanding all of the versions and
-the intents. We are using the 3.7 kernel in the uCLinux distribution.
+If the child is avaiable (i.e. status not 'disabled'), then the MBus driver
+creates a decoding window for it, on probe time.
+For instance, in the example below the BootROM child is specified:
 
-It seems to me that it should always be added to rodata when linked in,
-unless it is passed as a command line parameter?
+	soc {
+		compatible = "marvell,armada370-mbus", "simple-bus";
+		reg = <0xd0020000 0x100>, <0xd0020180 0x20>;
+		#address-cells = <2>;
+		#size-cells = <1>;
 
-Rod
+		/* The window base address is encoded in this translation */
+		ranges = < ... /* other entries */
+			   0x011d0000 0 0 0xfff00000 0x100000>;
 
+		bootrom {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			ranges = <0 0x011d0000 0 0x100000>;
+		};
+	};
 
-/* init and exit section handling */
-#define INIT_DATA
-\
-	*(.init.data)
-\
-	DEV_DISCARD(init.data)
-\
-	CPU_DISCARD(init.data)
-\
-	MEM_DISCARD(init.data)
-\
-	KERNEL_CTORS()
-\
-	MCOUNT_REC()
-\
-	*(.init.rodata)
-\
-	FTRACE_EVENTS()
-\
-	TRACE_SYSCALLS()
-\
-	DEV_DISCARD(init.rodata)
-\
-	CPU_DISCARD(init.rodata)
-\
-	MEM_DISCARD(init.rodata)
-\
-	KERNEL_DTB()
+The target ID and attribute are encoding in the first cell of the MBus
+address space. The lower bytes are 0x0000 for entries that correspond
+directly to decoding windows.
 
-#define RO_DATA(align)  RO_DATA_SECTION(align)
+Since we also need to have valid translations for the internal register
+space and the PCIe space, yet these translations do not correspond to
+windows that need allocation, we choose to put 0xffff as target ID
+and attribute, and use the lower bytes to allow different translations.
 
-Change to
+In the example below there's an extract of a device tree showing how
+the internal-regs and pcie nodes can be represented:
 
-#define RO_DATA(align)  RO_DATA_SECTION(align) \
-	KERNEL_DTB()
+	#define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
 
-Rod Collins
-Principal Software Engineer
-Saab Sensis Corporation
-315-445-5784
-rodc-eu1g02Y2shuDvotElmWtJA@public.gmane.org
+	soc {
+		compatible = "marvell,armadaxp-mbus";
+		reg = <0 0xd0020000 0 0x100>, <0 0xd0020180 0 0x20>;
 
+		ranges = <0xffff0001 0 0 0xd0000000 0x100000   /* internal-regs */
+			  0xffff0000 0 0 0xe0000000 0x8100000  /* pcie */
+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x8000000>;
 
------Original Message-----
-From: glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org [mailto:glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org] On Behalf Of
-Grant Likely
-Sent: Thursday, June 13, 2013 7:48 PM
-To: Collins, Rod
-Cc: devicetree-discuss
-Subject: Re: Device tree flattening code not copying properties from
-blob
+		bootrom {
+			#address-cells = <1>;
+			#size-cells = <1>;
+			ranges = <0 MBUS_ID(0x01, 0x1d) 0 0x100000>;
+		};
 
-On Thu, Jun 13, 2013 at 11:49 PM, Collins, Rod
-<Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org> wrote:
-> Grant
->
-> What is considered the correct way to include the blob in the build so
+		devbus-bootcs {
+			status = "okay";
+			ranges = <0 MBUS_ID(0x01, 0x2f) 0 0x8000000>;
 
-> that it is not removed?
+			/* NOR */
+			nor {
+				compatible = "cfi-flash";
+				reg = <0 0x8000000>;
+				bank-width = <2>;
+			};
+		};
 
-Don't put it in an __init section.  :-p
+		pcie-controller {
+			compatible = "marvell,armada-xp-pcie";
+			status = "okay";
+			device_type = "pci";
 
-However, I realized that the .dtb.S target does exactly that under the
-assumption that multiple blobs may be linked into the kernel, but only
-one actually used. The correct thing to do in your case is indeed copy
-the blob at boot.
+			#address-cells = <3>;
+			#size-cells = <2>;
 
-Actually, the best thing to do is to not link the dtb into the kernel at
-all. Either append it as another payload or pass it in via the
-bootloader and make the kernel mark the dtb memory as reserved.
-Statically linking into the kernel proper means the kernel needs to be
-rebuilt for each and every target which neuters one of the reasons for
-using device tree in the first place.
+			ranges =
+			       <0x82000000 0 0x40000 0xffff0001 0x40000 0 0x00002000   /* Port 0.0 registers */
+				0x82000000 0 0x42000 0xffff0001 0x42000 0 0x00002000   /* Port 2.0 registers */
+				0x82000000 0 0x44000 0xffff0001 0x44000 0 0x00002000   /* Port 0.1 registers */
+				0x82000000 0 0x48000 0xffff0001 0x48000 0 0x00002000   /* Port 0.2 registers */
+				0x82000000 0 0x4c000 0xffff0001 0x4c000 0 0x00002000   /* Port 0.3 registers */
+				0x82000000 0 0x80000 0xffff0001 0x80000 0 0x00002000   /* Port 1.0 registers */
+				0x82000000 0 0x82000 0xffff0001 0x82000 0 0x00002000   /* Port 3.0 registers */
+				0x82000000 0 0xe0000000 0xffff0000 0 0 0x08000000   /* non-prefetchable memory */
+				0x81000000 0 0 0xffff0000 0x8000000 0 0x00100000>; /* downstream I/O */
 
-g.
--
-This message is intended only for the addressee and may contain information that is company confidential or privileged.  Any technical data in this message may be exported only in accordance with the U.S. International Traffic in Arms Regulations (22 CFR Parts 120-130) or the Export Administration Regulations (15 CFR Parts 730-774). Unauthorized use is strictly prohibited and may be unlawful. If you are not the intended recipient, or the person responsible for delivering to the intended recipient, you should not read, copy, disclose or otherwise use this message. If you have received this email in error, please delete it, and advise the sender immediately. 
--                                                                                                                                                                                                                                                       
+			pcie@1,0 {
+				/* Port 0, Lane 0 */
+				status = "okay";
+			};
+		};
+
+		internal-regs {
+			compatible = "simple-bus";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			ranges = <0 0xffff0001 0 0x100000>;
+
+			interrupt-controller@20000 {
+			      reg = <0x20a00 0x2d0>, <0x21070 0x58>;
+			};
+		};
+	};
+
+This binding is by no means complete. I'm sending this v2 merely to see how
+things are going and receieve further feedback to continue the discussion.
+
+The mbus driver itself can/will be fixed to change the way it creates the
+windows from the information in the DT. However I expect this can be done
+independently of the device tree itself, so I'd like to focus in the latter
+for now and reach an agreement about how the DT binding should be.
+
+This patchset is based on v3.10-rc4, with Jason Cooper's mvebu/regmap branch
+applied, and with the mvebu-devbus commit (3edad321b1 in linux-next):
+"drivers: memory: Introduce Marvell EBU Device Bus driver"
+
+Thanks a lot!
+
+Ezequiel Garcia (12):
+  bus: mvebu-mbus: Factor out initialization details
+  bus: mvebu-mbus: Introduce device tree binding
+  bus: mvebu-mbus: Add static window allocation to the DT binding
+  ARM: mvebu: Initialize MBus using the DT binding
+  ARM: mvebu: Remove the harcoded BootROM window allocation
+  memory: mvebu-devbus: Remove address decoding window workaround
+  ARM: mvebu: Use the preprocessor on Armada 370/XP device tree files
+  ARM: mvebu: Add MBus to Armada 370/XP device tree
+  ARM: mvebu: Add BootROM to Armada 370/XP device tree
+  ARM: mvebu: Relocate Armada 370/XP DeviceBus device tree nodes
+  ARM: mvebu: Relocate Armada 370 PCIe device tree nodes
+  ARM: mvebu: Relocate Armada XP PCIe device tree nodes
+
+ .../devicetree/bindings/bus/mvebu-mbus.txt         | 161 +++++++++
+ arch/arm/boot/dts/armada-370-db.dts                |   2 +-
+ arch/arm/boot/dts/armada-370-mirabox.dts           |  34 +-
+ arch/arm/boot/dts/armada-370-rd.dts                |   2 +-
+ arch/arm/boot/dts/armada-370-xp.dtsi               |  98 +++---
+ arch/arm/boot/dts/armada-370.dtsi                  | 113 +++---
+ arch/arm/boot/dts/armada-xp-db.dts                 |  68 ++--
+ arch/arm/boot/dts/armada-xp-gp.dts                 | 108 +++---
+ arch/arm/boot/dts/armada-xp-mv78230.dtsi           | 209 ++++++------
+ arch/arm/boot/dts/armada-xp-mv78260.dtsi           | 247 +++++++-------
+ arch/arm/boot/dts/armada-xp-mv78460.dtsi           | 379 +++++++++++----------
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts   |  84 ++---
+ arch/arm/boot/dts/armada-xp.dtsi                   |  13 +-
+ arch/arm/mach-mvebu/armada-370-xp.c                |  34 +-
+ arch/arm/mach-mvebu/platsmp.c                      |   1 -
+ drivers/bus/mvebu-mbus.c                           | 194 ++++++++++-
+ drivers/memory/mvebu-devbus.c                      |  64 +---
+ include/linux/mbus.h                               |   1 +
+ 18 files changed, 1038 insertions(+), 774 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/mvebu-mbus.txt
+
+-- 
+1.8.1.5
