@@ -1,100 +1,44 @@
-From: Jonas Jensen <jonas.jensen@gmail.com>
-Subject: Re: [PATCH 2/3] ARM: mach-moxart: add MOXA ART device tree files
-Date: Fri, 14 Jun 2013 16:34:24 +0200
-Message-ID: <CACmBeS0T1n92CcGN6kR+eBcFPuwsWc+PsUx7Cms+4vbeVFhQKg@mail.gmail.com>
-References: <1371040448-28742-1-git-send-email-jonas.jensen@gmail.com>
-	<1371040448-28742-3-git-send-email-jonas.jensen@gmail.com>
-	<20130612224952.GB8146@quad.lixom.net>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: tegra: basic support for Trusted Foundations
+Date: Fri, 14 Jun 2013 09:25:17 -0600
+Message-ID: <51BB35DD.4030004@wwwdotorg.org>
+References: <1371114745-24710-1-git-send-email-acourbot@nvidia.com> <1371114745-24710-2-git-send-email-acourbot@nvidia.com> <51BA1B41.6030002@wwwdotorg.org> <CAAVeFuLc57pV=To5yaE5x9mrVy1yknH2e90QockCiNbEXRm0WQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130612224952.GB8146@quad.lixom.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, arm@kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAVeFuLc57pV=To5yaE5x9mrVy1yknH2e90QockCiNbEXRm0WQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 06/14/2013 02:27 AM, Alexandre Courbot wrote:
+> On Fri, Jun 14, 2013 at 4:19 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 06/13/2013 03:12 AM, Alexandre Courbot wrote:
+>>> Add basic support for booting secondary processors on Tegra devices
+>>> using the Trusted Foundations secure monitor.
 
-Thanks for the replies.
+>>> diff --git a/arch/arm/mach-tegra/firmware.c b/arch/arm/mach-tegra/firmware.c
+>>
+>>> +void __init tegra_init_firmware(void)
+...
+>>> +     node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
+>>> +     if (node && !IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS))
+>>> +             pr_warn("Trusted Foundations detected but support missing!\n");
+>>> +#if IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS)
+>>> +     else if (node)
+>>> +             register_firmware_ops(&tegra_trusted_foundations_ops);
+>>> +#endif
+>>> +}
+>>
+>> Is it worth continuing on in the node && !IS_ENABLED case here? After
+>> all, we can be pretty certain that the write to the CPU reset vector is
+>> immediately going to trap...
+> 
+> That's what was happening until 3.9, but from 3.10 on the trap is
+> apparently handled and the boot completes (although with only one
+> processor).
 
-What isn't commented below should already be fixed.
-
-On 13 June 2013 00:49, Olof Johansson <olof@lixom.net> wrote:
-> Hi,
->
-> You should add a bindings description for the MOXA SoC platforms, similar to
-> how others do it, under Documentation/devicetree/bindings/arm/.
-
-The following is now added under Documentation:
-
- Documentation/devicetree/bindings/arm/moxart.txt   |    8 +++
- .../arm/moxart/moxart-interrupt-controller.txt     |   29 ++++++++++++
- .../bindings/arm/moxart/moxart-timer.txt           |   17 +++++++
-
-> Same goes for other device bindings below -- they all need to be added to the
-> bindings documentation. You might be better off removing some of them until you
-> post and merge the corresponding drivers.
-
-I'll remove them for now with the intent of adding them later. Maybe
-when (and if) all drivers are posted and merged.
-
->> +/dts-v1/;
->> +/include/ "moxart.dtsi"
->> +
->> +/ {
->> +     model = "MOXA UC-7112-LX";
->> +     compatible = "moxa,moxart-uc-7112-lx";
->
-> Is there a generic board design / eval board that you can have as a fallback
-> compatible value? That way you won't have to add every board to the table in
-> the c file.
-
-There isn't really a generic board but the same can be accomplished by
-adding "moxa,moxart" to compatible? New boards can then be added
-without patching arch/arm/mach-moxart/moxart.c.
-
->> +     mxser@98200040 {
->> +             compatible = "moxa,moxart-mxser";
->> +             reg =   <0x98200040 0x00000080>,        /* UART "3" base */
->> +                             <0x982000e4 0x00000080>,        /* UART mode base */
->> +                             <0x982000c0 0x00000020>;        /* UART interrupt vector */
->
-> Are there other registers for other devices inbetween, or could you just do one
-> large memory area here?
-
-No, reg could simply be 0x98200040 to 0x982000e0. I split them out as
-documentation but those could be defined in the driver instead, also
-because it's sort of easier to assign values with of_iomap.
-
->> +             interrupts = <31 1>;
->> +     };
->> +
->> +     mac0: mac@90900000 {
->> +             compatible = "moxa,moxart-mac0";
->> +             reg =   <0x90900000 0x1000>,
->> +                             <0x80000050 0x5>;                       /* MAC address stored on flash */
->
-> This is a pretty unusal way to indicate mac address location. While I suppose
-> it works, I'd like to get the device tree maintainers in the loop. ADding them
-> to cc.
->
-> Also, there should be a bindings doc for this device (and a driver)
-
-I'm removing ethernet until the driver is submitted. This allows me to
-submit bindings doc later?
-
-> I'm also surprised that you have a 5-byte mac address. 6 bytes is much more
-> common. :)
-
-That _is_ surprising :) Corrected to 6 bytes.
-
-> Finally, are the two MACs using the same driver? if so, using the same
-> compatible value makes more sense.
-
-Yes, using the same driver is the point. I see now they can use the
-same value, they'll still be probed from the DT entries.
-
-
-Best regards,
-Jonas
+Why does that happen; surely the kernel shouldn't be ignoring failures?
+How does it recover?
