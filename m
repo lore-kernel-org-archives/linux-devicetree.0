@@ -1,181 +1,172 @@
-From: =?UTF-8?B?6rmA7Iq57Jqw?= <sw0312.kim@samsung.com>
-Subject: Re: [PATCH 5/9] drm/exynos: add support for exynos5420 mixer
-Date: Fri, 14 Jun 2013 16:13:45 +0900
-Message-ID: <51BAC2A9.4070301@samsung.com>
-References: <1370959891-8923-1-git-send-email-rahul.sharma@samsung.com>
- <1370959891-8923-6-git-send-email-rahul.sharma@samsung.com>
-Reply-To: sw0312.kim@samsung.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1370959891-8923-6-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, joshi@samsung.com, Seung-Woo Kim <sw0312.kim@samsung.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH v2] extcon: Add an API to get extcon device from dt node
+Date: Fri, 14 Jun 2013 16:15:46 +0900
+Message-ID: <1371194146-17260-1-git-send-email-cw00.choi@samsung.com>
+References: <1370276020-17446-2-git-send-email-kishon@ti.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1370276020-17446-2-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: kishon@ti.com, myungjoo.ham@samsung.com, cw00.choi@samsung.com, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, gregkh@linuxfoundation.org, benoit.cousson@linaro.org, anish198519851985@gmail.com, pmeerw@pmeerw.net
 List-Id: devicetree@vger.kernel.org
 
-Hello Rahul,
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-This patch looks good to me just with mixer part of 2nd patch because
-there is no hdmiphy related things.
+Added an API of_extcon_get_extcon_dev() to be used by drivers to get
+extcon device in the case of dt boot (this can be used instead of
+extcon_get_extcon_dev()).
 
-On 2013=EB=85=84 06=EC=9B=94 11=EC=9D=BC 23:11, Rahul Sharma wrote:
-> Add support for exynos5420 mixer IP in the drm mixer driver.
->=20
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
->  drivers/gpu/drm/exynos/exynos_mixer.c |   49 +++++++++++++++++++++++=
-++--------
->  drivers/gpu/drm/exynos/regs-mixer.h   |    7 +++++
->  2 files changed, 44 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/=
-exynos/exynos_mixer.c
-> index 58dfd3f..101d5bb 100644
-> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
-> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
-> @@ -78,6 +78,7 @@ struct mixer_resources {
->  enum mixer_version_id {
->  	MXR_VER_0_0_0_16,
->  	MXR_VER_16_0_33_0,
-> +	MXR_VER_128_0_0_184,
->  };
-> =20
->  struct mixer_context {
-> @@ -283,17 +284,19 @@ static void mixer_cfg_scan(struct mixer_context=
- *ctx, unsigned int height)
->  	val =3D (ctx->interlace ? MXR_CFG_SCAN_INTERLACE :
->  				MXR_CFG_SCAN_PROGRASSIVE);
-> =20
-> -	/* choosing between porper HD and SD mode */
-> -	if (height <=3D 480)
-> -		val |=3D MXR_CFG_SCAN_NTSC | MXR_CFG_SCAN_SD;
-> -	else if (height <=3D 576)
-> -		val |=3D MXR_CFG_SCAN_PAL | MXR_CFG_SCAN_SD;
-> -	else if (height <=3D 720)
-> -		val |=3D MXR_CFG_SCAN_HD_720 | MXR_CFG_SCAN_HD;
-> -	else if (height <=3D 1080)
-> -		val |=3D MXR_CFG_SCAN_HD_1080 | MXR_CFG_SCAN_HD;
-> -	else
-> -		val |=3D MXR_CFG_SCAN_HD_720 | MXR_CFG_SCAN_HD;
-> +	if (ctx->mxr_ver !=3D MXR_VER_128_0_0_184) {
-> +		/* choosing between proper HD and SD mode */
-> +		if (height <=3D 480)
-> +			val |=3D MXR_CFG_SCAN_NTSC | MXR_CFG_SCAN_SD;
-> +		else if (height <=3D 576)
-> +			val |=3D MXR_CFG_SCAN_PAL | MXR_CFG_SCAN_SD;
-> +		else if (height <=3D 720)
-> +			val |=3D MXR_CFG_SCAN_HD_720 | MXR_CFG_SCAN_HD;
-> +		else if (height <=3D 1080)
-> +			val |=3D MXR_CFG_SCAN_HD_1080 | MXR_CFG_SCAN_HD;
-> +		else
-> +			val |=3D MXR_CFG_SCAN_HD_720 | MXR_CFG_SCAN_HD;
-> +	}
-> =20
->  	mixer_reg_writemask(res, MXR_CFG, val, MXR_CFG_SCAN_MASK);
->  }
-> @@ -557,6 +560,14 @@ static void mixer_graph_buffer(struct mixer_cont=
-ext *ctx, int win)
->  	/* setup geometry */
->  	mixer_reg_write(res, MXR_GRAPHIC_SPAN(win), win_data->fb_width);
-> =20
-> +	/* setup display size */
-> +	if (ctx->mxr_ver =3D=3D MXR_VER_128_0_0_184 &&
-> +		win =3D=3D MIXER_DEFAULT_WIN) {
-> +		val  =3D MXR_MXR_RES_HEIGHT(win_data->fb_height);
-> +		val |=3D MXR_MXR_RES_WIDTH(win_data->fb_width);
-> +		mixer_reg_write(res, MXR_RESOLUTION, val);
-> +	}
-> +
->  	val  =3D MXR_GRP_WH_WIDTH(win_data->crtc_width);
->  	val |=3D MXR_GRP_WH_HEIGHT(win_data->crtc_height);
->  	val |=3D MXR_GRP_WH_H_SCALE(x_ratio);
-> @@ -581,7 +592,8 @@ static void mixer_graph_buffer(struct mixer_conte=
-xt *ctx, int win)
->  	mixer_cfg_layer(ctx, win, true);
-> =20
->  	/* layer update mandatory for mixer 16.0.33.0 */
-> -	if (ctx->mxr_ver =3D=3D MXR_VER_16_0_33_0)
-> +	if (ctx->mxr_ver =3D=3D MXR_VER_16_0_33_0 ||
-> +		ctx->mxr_ver =3D=3D MXR_VER_128_0_0_184)
->  		mixer_layer_update(ctx);
-> =20
->  	mixer_run(ctx);
-> @@ -822,6 +834,7 @@ static void mixer_win_disable(void *ctx, int win)
-> =20
->  static int mixer_check_mode(void *ctx, struct drm_display_mode *mode=
-)
->  {
-> +	struct mixer_context *mixer_ctx =3D ctx;
->  	u32 w, h;
-> =20
->  	w =3D mode->hdisplay;
-> @@ -831,6 +844,10 @@ static int mixer_check_mode(void *ctx, struct dr=
-m_display_mode *mode)
->  		mode->hdisplay, mode->vdisplay, mode->vrefresh,
->  		(mode->flags & DRM_MODE_FLAG_INTERLACE) ? 1 : 0);
-> =20
-> +	if (mixer_ctx->mxr_ver =3D=3D MXR_VER_0_0_0_16 ||
-> +		mixer_ctx->mxr_ver =3D=3D MXR_VER_128_0_0_184)
-> +		return 0;
-> +
->  	if ((w >=3D 464 && w <=3D 720 && h >=3D 261 && h <=3D 576) ||
->  		(w >=3D 1024 && w <=3D 1280 && h >=3D 576 && h <=3D 720) ||
->  		(w >=3D 1664 && w <=3D 1920 && h >=3D 936 && h <=3D 1080))
-> @@ -1127,6 +1144,11 @@ static int vp_resources_init(struct exynos_drm=
-_hdmi_context *ctx,
->  	return 0;
->  }
-> =20
-> +static struct mixer_drv_data exynos5420_mxr_drv_data =3D {
-> +	.version =3D MXR_VER_128_0_0_184,
-> +	.is_vp_enabled =3D 0,
-> +};
-> +
->  static struct mixer_drv_data exynos5250_mxr_drv_data =3D {
->  	.version =3D MXR_VER_16_0_33_0,
->  	.is_vp_enabled =3D 0,
-> @@ -1151,6 +1173,9 @@ static struct platform_device_id mixer_driver_t=
-ypes[] =3D {
-> =20
->  static struct of_device_id mixer_match_types[] =3D {
->  	{
-> +		.compatible =3D "samsung,exynos5420-mixer",
-> +		.data	=3D &exynos5420_mxr_drv_data,
-> +	}, {
->  		.compatible =3D "samsung,exynos5250-mixer",
->  		.data	=3D &exynos5250_mxr_drv_data,
->  	}, {
-> diff --git a/drivers/gpu/drm/exynos/regs-mixer.h b/drivers/gpu/drm/ex=
-ynos/regs-mixer.h
-> index 5d8dbc0..4537026 100644
-> --- a/drivers/gpu/drm/exynos/regs-mixer.h
-> +++ b/drivers/gpu/drm/exynos/regs-mixer.h
-> @@ -44,6 +44,9 @@
->  #define MXR_CM_COEFF_Y			0x0080
->  #define MXR_CM_COEFF_CB			0x0084
->  #define MXR_CM_COEFF_CR			0x0088
-> +#define MXR_MO				0x0304
-> +#define MXR_RESOLUTION			0x0310
-> +
->  #define MXR_GRAPHIC0_BASE_S		0x2024
->  #define MXR_GRAPHIC1_BASE_S		0x2044
-> =20
-> @@ -119,6 +122,10 @@
->  #define MXR_GRP_WH_WIDTH(x)		MXR_MASK_VAL(x, 26, 16)
->  #define MXR_GRP_WH_HEIGHT(x)		MXR_MASK_VAL(x, 10, 0)
-> =20
-> +/* bits for MXR_RESOLUTION */
-> +#define MXR_MXR_RES_HEIGHT(x)		MXR_MASK_VAL(x, 26, 16)
-> +#define MXR_MXR_RES_WIDTH(x)		MXR_MASK_VAL(x, 10, 0)
-> +
->  /* bits for MXR_GRAPHICn_SXY */
->  #define MXR_GRP_SXY_SX(x)		MXR_MASK_VAL(x, 26, 16)
->  #define MXR_GRP_SXY_SY(x)		MXR_MASK_VAL(x, 10, 0)
->=20
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Myungjoo Ham <myungjoo.ham@samsung.com>
+---
+Changes since v1:
+- If edev->name is NULL, dev_name(dev) is used as edev->name.
+- Change filename from of-extcon.* to of_extcon.*
+- Fix build error when CONFIG_OF is not set
+- Add header file(linux/err.h) to of_extcon.c
 
---=20
-Seung-Woo Kim
-Samsung Software R&D Center
---
+ drivers/extcon/Makefile          |  2 ++
+ drivers/extcon/extcon-class.c    |  3 +-
+ drivers/extcon/of_extcon.c       | 64 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/extcon/of_extcon.h | 30 +++++++++++++++++++
+ 4 files changed, 98 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/extcon/of_extcon.c
+ create mode 100644 include/linux/extcon/of_extcon.h
+
+diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
+index 540e2c3..83468f7 100644
+--- a/drivers/extcon/Makefile
++++ b/drivers/extcon/Makefile
+@@ -2,6 +2,8 @@
+ # Makefile for external connector class (extcon) devices
+ #
+ 
++obj-$(CONFIG_OF)		+= of_extcon.o
++
+ obj-$(CONFIG_EXTCON)		+= extcon-class.o
+ obj-$(CONFIG_EXTCON_GPIO)	+= extcon-gpio.o
+ obj-$(CONFIG_EXTCON_ADC_JACK)	+= extcon-adc-jack.o
+diff --git a/drivers/extcon/extcon-class.c b/drivers/extcon/extcon-class.c
+index 23f11ea..08509ea 100644
+--- a/drivers/extcon/extcon-class.c
++++ b/drivers/extcon/extcon-class.c
+@@ -602,7 +602,8 @@ int extcon_dev_register(struct extcon_dev *edev, struct device *dev)
+ 	edev->dev->class = extcon_class;
+ 	edev->dev->release = extcon_dev_release;
+ 
+-	dev_set_name(edev->dev, edev->name ? edev->name : dev_name(dev));
++	edev->name = edev->name ? edev->name : dev_name(dev);
++	dev_set_name(edev->dev, edev->name);
+ 
+ 	if (edev->max_supported) {
+ 		char buf[10];
+diff --git a/drivers/extcon/of_extcon.c b/drivers/extcon/of_extcon.c
+new file mode 100644
+index 0000000..72173ec
+--- /dev/null
++++ b/drivers/extcon/of_extcon.c
+@@ -0,0 +1,64 @@
++/*
++ * OF helpers for External connector (extcon) framework
++ *
++ * Copyright (C) 2013 Texas Instruments, Inc.
++ * Kishon Vijay Abraham I <kishon@ti.com>
++ *
++ * Copyright (C) 2013 Samsung Electronics
++ * Chanwoo Choi <cw00.choi@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/module.h>
++#include <linux/slab.h>
++#include <linux/err.h>
++#include <linux/extcon.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/extcon/of_extcon.h>
++
++/*
++ * of_extcon_get_extcon_dev - Get the name of extcon device from devicetree
++ * @dev - instance to the given device
++ * @index - index into list of extcon_dev
++ *
++ * return the instance of extcon device
++ */
++struct extcon_dev *of_extcon_get_extcon_dev(struct device *dev, int index)
++{
++	struct device_node *node;
++	struct extcon_dev *edev;
++	struct platform_device *extcon_parent_dev;
++
++	if (!dev->of_node) {
++		dev_dbg(dev, "device does not have a device node entry\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	node = of_parse_phandle(dev->of_node, "extcon", index);
++	if (!node) {
++		dev_dbg(dev, "failed to get phandle in %s node\n",
++			dev->of_node->full_name);
++		return ERR_PTR(-ENODEV);
++	}
++
++	extcon_parent_dev = of_find_device_by_node(node);
++	if (!extcon_parent_dev) {
++		dev_dbg(dev, "unable to find device by node\n");
++		return ERR_PTR(-EPROBE_DEFER);
++	}
++
++	edev = extcon_get_extcon_dev(dev_name(&extcon_parent_dev->dev));
++	if (!edev) {
++		dev_dbg(dev, "unable to get extcon device : %s\n",
++				dev_name(&extcon_parent_dev->dev));
++		return ERR_PTR(-ENODEV);
++	}
++
++	return edev;
++}
++EXPORT_SYMBOL_GPL(of_extcon_get_extcon_dev);
+diff --git a/include/linux/extcon/of_extcon.h b/include/linux/extcon/of_extcon.h
+new file mode 100644
+index 0000000..462f071
+--- /dev/null
++++ b/include/linux/extcon/of_extcon.h
+@@ -0,0 +1,30 @@
++/*
++ * OF helpers for External connector (extcon) framework
++ *
++ * Copyright (C) 2013 Texas Instruments, Inc.
++ * Kishon Vijay Abraham I <kishon@ti.com>
++ *
++ * Copyright (C) 2013 Samsung Electronics
++ * Chanwoo Choi <cw00.choi@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#ifndef __LINUX_OF_EXTCON_H
++#define __LINUX_OF_EXTCON_H
++
++#if defined(CONFIG_OF) && defined(CONFIG_EXTCON)
++extern struct extcon_dev
++	*of_extcon_get_extcon_dev(struct device *dev, int index);
++#else
++static inline struct extcon_dev
++	*of_extcon_get_extcon_dev(struct device *dev, int index)
++{
++	return NULL;
++}
++#endif /* CONFIG_OF */
++
++#endif /* __LINUX_OF_EXTCON_H */
+-- 
+1.8.0
+
