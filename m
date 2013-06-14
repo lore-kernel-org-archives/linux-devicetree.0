@@ -1,225 +1,165 @@
-From: David Daney <ddaney.cavm@gmail.com>
-Subject: [PATCH] gpio MIPS/OCTEON: Add a driver for OCTEON's on-chip GPIO pins.
-Date: Fri, 14 Jun 2013 16:18:35 -0700
-Message-ID: <1371251915-18271-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, ralf@linux-mips.org, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, David Daney <david.daney@cavium.com>
+From: Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+Date: Fri, 14 Jun 2013 18:43:51 -0500
+Message-ID: <CAD=GYpYfMAZeV1RUC=DqhYGZaKiiukpTZg7bhO582eKwimS9aA@mail.gmail.com>
+References: <41fde401c8e646689123d7c6d3a2dffc@DLEE71.ent.ti.com>
+ <20130307141235.GQ6209@beef>
+ <79CD15C6BA57404B839C016229A409A83EC20C57@DBDE01.ent.ti.com>
+ <20130307144656.GR6209@beef>
+ <79CD15C6BA57404B839C016229A409A83EC20CCA@DBDE01.ent.ti.com>
+ <20130307150408.GU6209@beef>
+ <79CD15C6BA57404B839C016229A409A83EC20D27@DBDE01.ent.ti.com>
+ <20130307160236.GV6209@beef>
+ <79CD15C6BA57404B839C016229A409A83EC213C8@DBDE01.ent.ti.com>
+ <CAD=GYpb3+nvoz863+VKO7iJijRHnM5RzsVj-5VJfQ-OHoUy19Q@mail.gmail.com>
+ <20130614222537.GA25428@arwen.pp.htv.fi>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============3792420093623824256=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130614222537.GA25428-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "Krishnamoorthy, Balaji T" <balajitk-l0cyMroinI0@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Daney <david.daney@cavium.com>
+--===============3792420093623824256==
+Content-Type: multipart/alternative; boundary=001a11c339d2ace27b04df25d1f9
 
-The SOCs in the OCTEON family have 16 (or in some cases 20) on-chip
-GPIO pins, this driver handles them all.  Configuring the pins as
-interrupt sources is handled elsewhere (OCTEON's irq handling code).
+--001a11c339d2ace27b04df25d1f9
+Content-Type: text/plain; charset=ISO-8859-1
 
-Signed-off-by: David Daney <david.daney@cavium.com>
----
+Felipe,
 
-This patch depends somewhat on patches in Ralf's MIPS/Linux -next tree
-where we have patches that enable the Kconfig CAVIUM_OCTEON_SOC and
-ARCH_REQUIRE_GPIOLIB symbols.  Apart from that it is stand-alone and
-is probably suitable for merging via the GPIO tree.
+On Friday, June 14, 2013, Felipe Balbi wrote:
 
-Device tree binding defintions already exist for this device in
-Documentation/devicetree/bindings/gpio/cavium-octeon-gpio.txt
+> Hi,
+>
+> On Fri, Jun 14, 2013 at 02:54:33PM -0500, Joel A Fernandes wrote:
+> > Hi Tony, Vaibhav,
+> >
+> > >> I just doublechecked MMC rootfs on bone and evmsk as it's the standard
+> > >> smoke test. My EVM is intermittent now so trying to coax it to power
+> up
+> > >> to reverify.
+> > >>
+> > >
+> > > Matt,
+> > >
+> > > Your branch is working for me, I tested it on EVM. Not sure what is
+> wrong with manual rebasing
+> > > I did yesterday. I will try to nail-down root-cause here.
+> > >
+> > > And you can submit the next version fixing the comments I have given.
+> >
+> > The only comment I could find in the whole discussion was adding of
+> > the interrupts property. I tested I don't have any problem booting
+> > with Matt's patch, without having the interrupts property.
+>
+> might very well be, but we want to figure out why adding "intrrupts"
+> causes issues. Why does it have to come through hwmod ? You might have
+> uncovered a real problem which needs fixing. Besides, at the end of the
 
- drivers/gpio/Kconfig       |   8 +++
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpio-octeon.c | 153 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 162 insertions(+)
- create mode 100644 drivers/gpio/gpio-octeon.c
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 573c449..7b5df9a 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -190,6 +190,14 @@ config GPIO_MXS
- 	select GPIO_GENERIC
- 	select GENERIC_IRQ_CHIP
- 
-+config GPIO_OCTEON
-+	tristate "Cavium OCTEON GPIO"
-+	depends on GPIOLIB && CAVIUM_OCTEON_SOC
-+	default y
-+	help
-+	  Say yes here to support the on-chip GPIO lines on the OCTEON
-+	  family of SOCs.
-+
- config GPIO_PL061
- 	bool "PrimeCell PL061 GPIO support"
- 	depends on ARM && ARM_AMBA
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 0cb2d65..b8487b6 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -50,6 +50,7 @@ obj-$(CONFIG_GPIO_MSM_V2)	+= gpio-msm-v2.o
- obj-$(CONFIG_GPIO_MVEBU)        += gpio-mvebu.o
- obj-$(CONFIG_GPIO_MXC)		+= gpio-mxc.o
- obj-$(CONFIG_GPIO_MXS)		+= gpio-mxs.o
-+obj-$(CONFIG_GPIO_OCTEON)	+= gpio-octeon.o
- obj-$(CONFIG_ARCH_OMAP)		+= gpio-omap.o
- obj-$(CONFIG_GPIO_PCA953X)	+= gpio-pca953x.o
- obj-$(CONFIG_GPIO_PCF857X)	+= gpio-pcf857x.o
-diff --git a/drivers/gpio/gpio-octeon.c b/drivers/gpio/gpio-octeon.c
-new file mode 100644
-index 0000000..f5bd127
---- /dev/null
-+++ b/drivers/gpio/gpio-octeon.c
-@@ -0,0 +1,153 @@
-+/*
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ *
-+ * Copyright (C) 2011, 2012 Cavium Inc.
-+ */
-+
-+#include <linux/platform_device.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/gpio.h>
-+#include <linux/io.h>
-+
-+#include <asm/octeon/octeon.h>
-+#include <asm/octeon/cvmx-gpio-defs.h>
-+
-+#define RX_DAT 0x80
-+#define TX_SET 0x88
-+#define TX_CLEAR 0x90
-+/*
-+ * The address offset of the GPIO configuration register for a given
-+ * line.
-+ */
-+static unsigned int bit_cfg_reg(unsigned int gpio)
-+{
-+	if (gpio < 16)
-+		return 8 * gpio;
-+	else
-+		return 8 * (gpio - 16) + 0x100;
-+}
-+
-+struct octeon_gpio {
-+	struct gpio_chip chip;
-+	u64 register_base;
-+};
-+
-+static int octeon_gpio_dir_in(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-+
-+	cvmx_write_csr(gpio->register_base + bit_cfg_reg(offset), 0);
-+	return 0;
-+}
-+
-+static void octeon_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-+{
-+	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-+	u64 mask = 1ull << offset;
-+	u64 reg = gpio->register_base + (value ? TX_SET : TX_CLEAR);
-+	cvmx_write_csr(reg, mask);
-+}
-+
-+static int octeon_gpio_dir_out(struct gpio_chip *chip, unsigned offset,
-+			       int value)
-+{
-+	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-+	union cvmx_gpio_bit_cfgx cfgx;
-+
-+	octeon_gpio_set(chip, offset, value);
-+
-+	cfgx.u64 = 0;
-+	cfgx.s.tx_oe = 1;
-+
-+	cvmx_write_csr(gpio->register_base + bit_cfg_reg(offset), cfgx.u64);
-+	return 0;
-+}
-+
-+static int octeon_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-+	u64 read_bits = cvmx_read_csr(gpio->register_base + RX_DAT);
-+
-+	return ((1ull << offset) & read_bits) != 0;
-+}
-+
-+static int octeon_gpio_probe(struct platform_device *pdev)
-+{
-+	struct octeon_gpio *gpio;
-+	struct gpio_chip *chip;
-+	struct resource *res_mem;
-+	int err = 0;
-+
-+	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+	chip = &gpio->chip;
-+
-+	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (res_mem == NULL) {
-+		dev_err(&pdev->dev, "found no memory resource\n");
-+		err = -ENXIO;
-+		goto out;
-+	}
-+	if (!devm_request_mem_region(&pdev->dev, res_mem->start,
-+					resource_size(res_mem),
-+				     res_mem->name)) {
-+		dev_err(&pdev->dev, "request_mem_region failed\n");
-+		err = -ENXIO;
-+		goto out;
-+	}
-+	gpio->register_base = (u64)devm_ioremap(&pdev->dev, res_mem->start,
-+						resource_size(res_mem));
-+
-+	pdev->dev.platform_data = chip;
-+	chip->label = "octeon-gpio";
-+	chip->dev = &pdev->dev;
-+	chip->owner = THIS_MODULE;
-+	chip->base = 0;
-+	chip->can_sleep = 0;
-+	chip->ngpio = 20;
-+	chip->direction_input = octeon_gpio_dir_in;
-+	chip->get = octeon_gpio_get;
-+	chip->direction_output = octeon_gpio_dir_out;
-+	chip->set = octeon_gpio_set;
-+	err = gpiochip_add(chip);
-+	if (err)
-+		goto out;
-+
-+	dev_info(&pdev->dev, "OCTEON GPIO\n");
-+out:
-+	return err;
-+}
-+
-+static int octeon_gpio_remove(struct platform_device *pdev)
-+{
-+	struct gpio_chip *chip = pdev->dev.platform_data;
-+	return gpiochip_remove(chip);
-+}
-+
-+static struct of_device_id octeon_gpio_match[] = {
-+	{
-+		.compatible = "cavium,octeon-3860-gpio",
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, octeon_gpio_match);
-+
-+static struct platform_driver octeon_gpio_driver = {
-+	.driver = {
-+		.name		= "octeon_gpio",
-+		.owner		= THIS_MODULE,
-+		.of_match_table = octeon_gpio_match,
-+	},
-+	.probe		= octeon_gpio_probe,
-+	.remove		= octeon_gpio_remove,
-+};
-+
-+module_platform_driver(octeon_gpio_driver);
-+
-+MODULE_DESCRIPTION("Cavium Inc. OCTEON GPIO Driver");
-+MODULE_AUTHOR("David Daney");
-+MODULE_LICENSE("GPL");
--- 
-1.7.11.7
+No actually I think I wasn't very descriptive in my post. There is no
+problem here. Whether it comes from DT or not, it works in both cases . (I
+haven't tried adding interrupt node to dts but what I gathered from
+Vaibhav's post is that it works also when added to dts)
+
+But I can revisit Vaibhav's suggestion of adding it to dts for completeness
+sake. My tree currently works and picks up the interrupt info from hwmod. I
+just didn't see any activity on this thread for a while so I thought of
+enquiring it was ok to pull it in for the 3.11 merge window or if the
+consensus was that interrupt node be added to dts even though it works
+without it.
+
+Thanks,
+
+-Joel
+
+
+> day, we want to remove the redundant hwmod data if we already have DTS
+> bindings covering the same requirements.
+> --
+> balbi
+>
+
+--001a11c339d2ace27b04df25d1f9
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Felipe,<br><br>On Friday, June 14, 2013, Felipe Balbi  wrote:<br><blockquot=
+e class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc sol=
+id;padding-left:1ex">Hi,<br>
+<br>
+On Fri, Jun 14, 2013 at 02:54:33PM -0500, Joel A Fernandes wrote:<br>
+&gt; Hi Tony, Vaibhav,<br>
+&gt;<br>
+&gt; &gt;&gt; I just doublechecked MMC rootfs on bone and evmsk as it&#39;s=
+ the standard<br>
+&gt; &gt;&gt; smoke test. My EVM is intermittent now so trying to coax it t=
+o power up<br>
+&gt; &gt;&gt; to reverify.<br>
+&gt; &gt;&gt;<br>
+&gt; &gt;<br>
+&gt; &gt; Matt,<br>
+&gt; &gt;<br>
+&gt; &gt; Your branch is working for me, I tested it on EVM. Not sure what =
+is wrong with manual rebasing<br>
+&gt; &gt; I did yesterday. I will try to nail-down root-cause here.<br>
+&gt; &gt;<br>
+&gt; &gt; And you can submit the next version fixing the comments I have gi=
+ven.<br>
+&gt;<br>
+&gt; The only comment I could find in the whole discussion was adding of<br=
+>
+&gt; the interrupts property. I tested I don&#39;t have any problem booting=
+<br>
+&gt; with Matt&#39;s patch, without having the interrupts property.<br>
+<br>
+might very well be, but we want to figure out why adding &quot;intrrupts&qu=
+ot;<br>
+causes issues. Why does it have to come through hwmod ? You might have<br>
+uncovered a real problem which needs fixing. Besides, at the end of the</bl=
+ockquote><div><br></div><div>No actually I think I wasn&#39;t very descript=
+ive in my post.=A0There=A0is no problem here. Whether it comes from DT or n=
+ot, it works in both cases . (I haven&#39;t tried adding interrupt node to =
+dts but what I gathered from Vaibhav&#39;s post is that it works also when =
+added to dts)</div>
+<div><br></div><div>But I can=A0revisit Vaibhav&#39;s suggestion of adding =
+it to dts for completeness sake.=A0My tree currently works and picks up the=
+ interrupt info from hwmod. I just didn&#39;t see any activity on this thre=
+ad for a while so I thought of enquiring=A0it was ok to pull it in for the =
+3.11=A0merge window or if the consensus was that interrupt node be added to=
+ dts even though it works without it.<span></span></div>
+<div></div><div><br></div><div>Thanks,</div><div><br></div><div>-Joel</div>=
+<div>=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;=
+border-left:1px #ccc solid;padding-left:1ex">
+day, we want to remove the redundant hwmod data if we already have DTS<br>
+bindings covering the same requirements.<br>
+--<br>
+balbi<br>
+</blockquote>
+
+--001a11c339d2ace27b04df25d1f9--
+
+--===============3792420093623824256==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3792420093623824256==--
