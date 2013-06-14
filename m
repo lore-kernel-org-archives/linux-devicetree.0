@@ -1,246 +1,49 @@
-From: Ley Foon Tan <lftan@altera.com>
-Subject: Re: [PATCH] of/fdt: Add FDT address translation
-Date: Fri, 14 Jun 2013 17:41:04 +0800
-Message-ID: <1371202864.23304.0.camel@leyfoon-vm>
-References: <1369388190-16365-1-git-send-email-lftan@altera.com>
+From: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/4] GPIO DT support for da850
+Date: Fri, 14 Jun 2013 15:13:36 +0530
+Message-ID: <1371203020-15092-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1369388190-16365-1-git-send-email-lftan@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Kenneth Tan <cytan@altera.com>, Walter Goossens <waltergoossens@home.nl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: nsekhar-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinashphilip-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Any comment or feedback for this patch?
+With conversion of GPIO davinci driver to platform driver, gpio-davinci driver
+can support DT boot.
+This patch series
+- adds dt binding support for gpio-davinci.
+- da850 dt support goio.
 
+This patch series is based on Linux 3.10-rc4 and is availabel at [1].
 
-On Fri, 2013-05-24 at 17:36 +0800, Ley Foon Tan wrote:
-> This patch adds address translation to fdt. It is needed when the early
-> console is connected to a simple-bus (bridge) that has address translation
-> enabled.
-> 
-> Walter Goossens have submitted first version of patch previously. This
-> patch resolved the feedback from first submission and some enhancements
-> on translation functions.
-> 
-> Reviewed-by: Walter Goossens <waltergoossens@home.nl>
-> Signed-off-by: Ley Foon Tan <lftan@altera.com>
-> ---
->  drivers/of/fdt.c       |  188 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_fdt.h |    2 +
->  2 files changed, 190 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 808be06..74cc1bc 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -695,6 +695,194 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
->  	/* break now */
->  	return 1;
->  }
-> +/**
-> + * flat_dt_translate_address - Translate an address using the ranges property
-> + *
-> + * This function converts address from "node address-space" to "parent address-
-> + * space"
-> + */
-> +static int __init flat_dt_translate_address(unsigned long node,
-> +		unsigned long parent, u64 *address)
-> +{
-> +	unsigned long size = 0;
-> +	__be32 *prop;
-> +	__be32 *ranges;
-> +	int size_cells = 0;
-> +	int addr_cells = 0;
-> +	int paddr_cells = OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
-> +
-> +	ranges = of_get_flat_dt_prop(node, "ranges", &size);
-> +
-> +	if (!ranges) {
-> +		pr_warn("Address cannot be translated\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!size) {
-> +		pr_debug("No translation possible/necessary\n");
-> +		return 0;
-> +	}
-> +
-> +	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
-> +	if (!prop)
-> +		return -EINVAL;
-> +	size_cells = be32_to_cpup(prop);
-> +
-> +	prop = of_get_flat_dt_prop(node, "#address-cells", NULL);
-> +	if (!prop)
-> +		return -EINVAL;
-> +	addr_cells = be32_to_cpup(prop);
-> +
-> +	if (parent) {
-> +		prop = of_get_flat_dt_prop(parent, "#address-cells", NULL);
-> +		if (prop)
-> +			paddr_cells = be32_to_cpup(prop);
-> +	}
-> +	if ((addr_cells <= 0) || (size_cells <= 0) ||
-> +		(addr_cells > 2) || (size_cells > 2) || (paddr_cells > 2)) {
-> +		pr_warn("Translation not possible in fdt. Invalid address.\n");
-> +		*address = 0;
-> +		return -1;
-> +	}
-> +
-> +	while (size > 0) {
-> +		u64 from, to, tsize;
-> +		from = be32_to_cpup(ranges++);
-> +		size -= 4;
-> +		if (addr_cells == 2) {
-> +			from += (((u64)be32_to_cpup(ranges++)) << 32);
-> +			size -= 4;
-> +		}
-> +		to = be32_to_cpup(ranges++);
-> +		size -= 4;
-> +		if (paddr_cells == 2) {
-> +			to += (((u64)be32_to_cpup(ranges++)) << 32);
-> +			size -= 4;
-> +		}
-> +		tsize = be32_to_cpup(ranges++);
-> +		size -= 4;
-> +		if (size_cells == 2) {
-> +			tsize += (((u64)be32_to_cpup(ranges++)) << 32);
-> +			size -= 4;
-> +		}
-> +		pr_debug("  From %llX To %llX Size %llX\n", from, to, tsize);
-> +		if ((*address >= from) && (*address < (from + tsize)))
-> +			*address += (to - from);
-> +	}
-> +	return 1;
-> +}
-> +
-> +static int __init of_scan_flat_dt_ranges(unsigned long *pnode,
-> +				unsigned long parent, unsigned long target,
-> +				u64 *address, int ignore)
-> +{
-> +	int rc = 0;
-> +	int depth = -1;
-> +	const char *pathp;
-> +	unsigned long p = *pnode;
-> +	do {
-> +		u32 tag = be32_to_cpup((__be32 *)p);
-> +
-> +		p += 4;
-> +		if (tag == OF_DT_END_NODE) {
-> +			if (depth--)
-> +				break;
-> +			else
-> +				continue;
-> +		}
-> +		if (tag == OF_DT_NOP)
-> +			continue;
-> +		if (tag == OF_DT_END)
-> +			break;
-> +		if (tag == OF_DT_PROP) {
-> +			u32 sz = be32_to_cpup((__be32 *)p);
-> +			p += 8;
-> +			if (be32_to_cpu(initial_boot_params->version) < 0x10)
-> +				p = ALIGN(p, sz >= 8 ? 8 : 4);
-> +			p += sz;
-> +			p = ALIGN(p, 4);
-> +			continue;
-> +		}
-> +		if (tag != OF_DT_BEGIN_NODE) {
-> +			pr_err("Invalid tag %x in flat device tree!\n", tag);
-> +			return -EINVAL;
-> +		}
-> +		pathp = (char *)p;
-> +		p = ALIGN(p + strlen(pathp) + 1, 4);
-> +		if ((*pathp) == '/')
-> +			pathp = kbasename(pathp);
-> +		if ((ignore == 0) && (p == target)) {
-> +			rc = 1;
-> +			ignore++;
-> +			pr_debug("Found target. Start address translation\n");
-> +		}
-> +		if (depth) {
-> +			int res;
-> +			*pnode = p;
-> +			res = of_scan_flat_dt_ranges(pnode, p, target,
-> +							address, ignore);
-> +			if (res < 0) {
-> +				/* Something bad happened */
-> +				return -1;
-> +			} else if (res > 0) {
-> +				/* Something good happened. Translate. */
-> +				rc++;
-> +				pr_debug("translate %08lX %s\n", p, pathp);
-> +				if (flat_dt_translate_address(p, parent,
-> +						address) < 0)
-> +					return -1;
-> +			}
-> +			p = *pnode;
-> +		} else
-> +			depth++;
-> +	} while (1);
-> +
-> +	*pnode = p;
-> +	return rc;
-> +}
-> +/**
-> + * of_get_flat_dt_address - get address from a node
-> + * @node: targeted node
-> + *
-> + * Returns address or OF_BAD_ADDR if error.
-> + */
-> +u64 __init of_get_flat_dt_address(unsigned long node)
-> +{
-> +	__be32 *valp;
-> +	u64 addr = OF_BAD_ADDR;
-> +	unsigned long sz;
-> +
-> +	valp = of_get_flat_dt_prop(node, "reg", &sz);
-> +	if (valp) {
-> +		if (sz == 1)
-> +			addr = be32_to_cpu(valp[0]);
-> +		 else if (sz == 2)
-> +			addr = (((u64)be32_to_cpu(valp[0]) << 32)) |
-> +				be32_to_cpu(valp[1]);
-> +	}
-> +	return addr;
-> +}
-> +
-> +/**
-> + * of_get_flat_dt_translated_address - get translated address from a node
-> + * @node: targeted node
-> + *
-> + * Returns translated address or OF_BAD_ADDR if error.
-> + */
-> +u64 __init of_get_flat_dt_translated_address(unsigned long node)
-> +{
-> +	unsigned long p = of_get_flat_dt_root();
-> +	u64 addr64;
-> +	int rc;
-> +
-> +	addr64 = of_get_flat_dt_address(node);
-> +	if (addr64 != OF_BAD_ADDR) {
-> +		rc = of_scan_flat_dt_ranges(&p, 0, node, &addr64, 0);
-> +		if (rc > 0)
-> +			return addr64;
-> +	}
-> +	return OF_BAD_ADDR;
-> +}
->  
->  /**
->   * unflatten_device_tree - create tree of device_nodes from flat blob
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index ed136ad..48046ed 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -100,6 +100,8 @@ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
->  extern void * early_init_dt_alloc_memory_arch(u64 size, u64 align);
->  extern u64 dt_mem_next_cell(int s, __be32 **cellp);
->  
-> +extern u64 __init of_get_flat_dt_address(unsigned long node);
-> +extern u64 __init of_get_flat_dt_translated_address(unsigned long node);
->  /*
->   * If BLK_DEV_INITRD, the fdt early init code will call this function,
->   * to be provided by the arch code. start and end are specified as
+1. https://github.com/avinashphilip/am335x_linux/tree/linux_davinci_v3.10_soc_gpio_v310-rc4
+
+KV Sujith (3):
+  gpio: davinci: DT changes for driver
+  ARM: davinci: da850: add GPIO DT entries
+  ARM: davinci: da850 evm: add GPIO DT data
+
+Philip Avinash (1):
+  ARM: davinci: da850: Use #include for all device trees
+
+ .../devicetree/bindings/gpio/gpio-davinci.txt      |   32 +++++++++++
+ arch/arm/boot/dts/da850-enbw-cmc.dts               |    2 +-
+ arch/arm/boot/dts/da850-evm.dts                    |   21 +++++++-
+ arch/arm/boot/dts/da850.dtsi                       |   17 +++++-
+ drivers/gpio/gpio-davinci.c                        |   57 ++++++++++++++++++--
+ 5 files changed, 123 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+
+-- 
+1.7.9.5
