@@ -1,72 +1,48 @@
-From: Francois Romieu <romieu@fr.zoreil.com>
-Subject: Re: [PATCH v3] ethernet/arc/arc_emac - Add new driver
-Date: Fri, 14 Jun 2013 21:27:04 +0200
-Message-ID: <20130614192704.GA4857@electric-eye.fr.zoreil.com>
-References: <1371134239-4531-1-git-send-email-abrodkin@synopsys.com>
- <20130613221946.GA16632@electric-eye.fr.zoreil.com>
- <4881796E12491D4BB15146FE0209CE643F5E3A07@DE02WEMBXB.internal.synopsys.com>
+From: Joel A Fernandes <agnel.joel@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+Date: Fri, 14 Jun 2013 14:54:33 -0500
+Message-ID: <CAD=GYpb3+nvoz863+VKO7iJijRHnM5RzsVj-5VJfQ-OHoUy19Q@mail.gmail.com>
+References: <1362629799-22485-1-git-send-email-mporter@ti.com>
+	<1362629799-22485-3-git-send-email-mporter@ti.com>
+	<41fde401c8e646689123d7c6d3a2dffc@DLEE71.ent.ti.com>
+	<20130307141235.GQ6209@beef>
+	<79CD15C6BA57404B839C016229A409A83EC20C57@DBDE01.ent.ti.com>
+	<20130307144656.GR6209@beef>
+	<79CD15C6BA57404B839C016229A409A83EC20CCA@DBDE01.ent.ti.com>
+	<20130307150408.GU6209@beef>
+	<79CD15C6BA57404B839C016229A409A83EC20D27@DBDE01.ent.ti.com>
+	<20130307160236.GV6209@beef>
+	<79CD15C6BA57404B839C016229A409A83EC213C8@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4881796E12491D4BB15146FE0209CE643F5E3A07@DE02WEMBXB.internal.synopsys.com>
+In-Reply-To: <79CD15C6BA57404B839C016229A409A83EC213C8@DBDE01.ent.ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Cc: "Porter, Matt" <mporter@ti.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "Krishnamoorthy, Balaji T" <balajitk@ti.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Alexey Brodkin <Alexey.Brodkin@synopsys.com> :
-> On 06/14/2013 02:20 AM, Francois Romieu wrote:
-[...]
-> >> +struct arc_emac_priv {
-> >> +	struct net_device_stats stats;
-> >> +	unsigned int clock_frequency;
-> >> +	unsigned int max_speed;
-> >> +
-> >> +	/* Pointers to BD rings - CPU side */
-> >> +	struct arc_emac_bd_t *rxbd;
-> >
-> > There does not seem to be much need for rxbd->data.
-> 
-> Could you please clarify this comment? Not clear what do you mean.
+Hi Tony, Vaibhav,
 
-Rx and Tx use the same struct but they don't work the same.
-They could/should use differents struct.
+>> I just doublechecked MMC rootfs on bone and evmsk as it's the standard
+>> smoke test. My EVM is intermittent now so trying to coax it to power up
+>> to reverify.
+>>
+>
+> Matt,
+>
+> Your branch is working for me, I tested it on EVM. Not sure what is wrong with manual rebasing
+> I did yesterday. I will try to nail-down root-cause here.
+>
+> And you can submit the next version fixing the comments I have given.
 
-[...]
-> > The descriptor entry is left unchanged. Afaiu the driver will move to the
-> > next descriptor and crash on dereferencing NULL (rx_buff->)skb next time
-> > it wraps.
-> >
-> > I suggest avoiding holes: don't netif_receive_skb if you can't alloc a new
-> > skb.
-> 
-> Frankly I cannot understand how "don't netif_receive_skb" for one of the 
-> received packets helps to prevent crash on the next iteration?
-> And I don't see a way to return any error state from NAPI poll handler.
-> Could you please clarify your idea?
+The only comment I could find in the whole discussion was adding of
+the interrupts property. I tested I don't have any problem booting
+with Matt's patch, without having the interrupts property.
 
-The driver assigns the otherwise-netif_received skb to the current rx
-descriptor as if it was a newly allocated one. The driver increases
-stats.rx_dropped. The rx descriptor ring doesn't ever exhibit a hole.
+Can this patch be pulled in for 3.11?
 
-[...]
-> >> +static int arc_emac_tx(struct sk_buff *skb, struct net_device *ndev)
-> >> +{
-> >> +	struct arc_emac_priv *priv = netdev_priv(ndev);
-> >> +	unsigned int info, len, *txbd_curr = &priv->txbd_curr;
-> >> +	dma_addr_t addr;
-> >> +	char *pkt = skb->data;
-> >> +
-> >> +	len = max_t(unsigned int, ETH_ZLEN, skb->len);
-> >
-> > The device automatically pads, right ?
-> 
-> What do you mean here?
+Tested-by: Joel A Fernandes <joelagnel@ti.com>
 
-Does the device fill a smaller than 64 bytes packet with zeroes or may
-the driver leak information ? The driver should use skb_pad if the
-latter applies.
-
--- 
-Ueimor
+Thanks,
+Joel
