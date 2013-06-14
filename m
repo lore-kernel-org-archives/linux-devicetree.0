@@ -1,65 +1,166 @@
-From: =?UTF-8?B?6rmA7Iq57Jqw?= <sw0312.kim@samsung.com>
-Subject: Re: [PATCH 7/9] drm/exynos: use of_get_named_gpio to get hdmi hpd gpio
-Date: Fri, 14 Jun 2013 16:17:52 +0900
-Message-ID: <51BAC3A0.7000002@samsung.com>
-References: <1370959891-8923-1-git-send-email-rahul.sharma@samsung.com>
- <1370959891-8923-8-git-send-email-rahul.sharma@samsung.com>
-Reply-To: sw0312.kim@samsung.com
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: Re: [PATCH 1/2] Add pin list based GPIO ranges
+Date: Fri, 14 Jun 2013 09:17:53 +0200
+Message-ID: <51BAC3A1.80105@st.com>
+References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com>
+ <1371128132-18266-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1370959891-8923-8-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, joshi@samsung.com, Seung-Woo Kim <sw0312.kim@samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1371128132-18266-1-git-send-email-christian.ruppert@abilis.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rahul,
+On 06/13/2013 02:55 PM, Christian Ruppert wrote:
 
-this patch is not related with others and it looks good to me.
-
-On 2013=EB=85=84 06=EC=9B=94 11=EC=9D=BC 23:11, Rahul Sharma wrote:
-> Cleanup by removing flags variable from drm_hdmi_dt_parse_pdata
-> which is not used anywhere. Swtiching to of_get_named_gpio instead
-> of of_get_named_gpio_flags solved this.
->=20
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-
-Acked-by: Seung-Woo Kim <sw0312.kim@samsung.com>
-
+> Traditionally, GPIO ranges are based on consecutive ranges of both GPIO
+> and pin numbers. This patch allows for GPIO ranges with arbitrary lists
+> of pin numbers.
+> 
+> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
 > ---
->  drivers/gpu/drm/exynos/exynos_hdmi.c |    3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/e=
-xynos/exynos_hdmi.c
-> index 1eb5ffb..fc6a9b0 100644
-> --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-> @@ -2081,7 +2081,6 @@ static struct s5p_hdmi_platform_data *drm_hdmi_=
-dt_parse_pdata
->  {
->  	struct device_node *np =3D dev->of_node;
->  	struct s5p_hdmi_platform_data *pd;
-> -	enum of_gpio_flags flags;
->  	u32 value;
-> =20
->  	pd =3D devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
-> @@ -2095,7 +2094,7 @@ static struct s5p_hdmi_platform_data *drm_hdmi_=
-dt_parse_pdata
->  		goto err_data;
+>  drivers/pinctrl/core.c          |   59 ++++++++++++++++++++++++++++++++------
+>  include/linux/pinctrl/pinctrl.h |    4 ++-
+>  2 files changed, 52 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> index 5327f35..25bb17e 100644
+> --- a/drivers/pinctrl/core.c
+> +++ b/drivers/pinctrl/core.c
+> @@ -280,6 +280,29 @@ static int pinctrl_register_pins(struct pinctrl_dev *pctldev,
+>  }
+>  
+>  /**
+> + * gpio_to_pin() - GPIO range GPIO number to pin number translation
+> + * @range: GPIO range used for the translation
+> + * @gpio: gpio pin to translate to a pin number
+> + *
+> + * Finds the pin number for a given GPIO using the specified GPIO range
+> + * as a base for translation. The distinction between linear GPIO ranges
+> + * and pin list based GPIO ranges is managed correctly by this function.
+> + *
+> + * This function assumes the gpio is part of the specified GPIO range, use
+> + * only after making sure this is the case (e.g. by calling it on the
+> + * result of successful pinctrl_get_device_gpio_range calls)!
+> + */
+> +static inline int gpio_to_pin(struct pinctrl_gpio_range *range,
+> +				unsigned int gpio)
+> +{
+> +	unsigned int offset = gpio - range->base;
+> +	if (range->pins)
+> +		return range->pins[offset];
+> +	else
+> +		return range->pin_base + offset;
+> +}
+> +
+> +/**
+>   * pinctrl_match_gpio_range() - check if a certain GPIO pin is in range
+>   * @pctldev: pin controller device to check
+>   * @gpio: gpio pin to check taken from the global GPIO pin space
+> @@ -444,8 +467,14 @@ pinctrl_find_gpio_range_from_pin(struct pinctrl_dev *pctldev,
+>  	/* Loop over the ranges */
+>  	list_for_each_entry(range, &pctldev->gpio_ranges, node) {
+>  		/* Check if we're in the valid range */
+> -		if (pin >= range->pin_base &&
+> -		    pin < range->pin_base + range->npins) {
+> +		if (range->pins) {
+> +			int a;
+> +			for (a = 0; a < range->npins; a++) {
+> +				if (range->pins[a] == pin)
+> +					return range;
+> +			}
+> +		} else if (pin >= range->pin_base &&
+> +			   pin < range->pin_base + range->npins) {
+>  			mutex_unlock(&pctldev->mutex);
+>  			return range;
+>  		}
+> @@ -528,7 +557,7 @@ int pinctrl_request_gpio(unsigned gpio)
 >  	}
-> =20
-> -	pd->hpd_gpio =3D of_get_named_gpio_flags(np, "hpd-gpio", 0, &flags)=
-;
-> +	pd->hpd_gpio =3D of_get_named_gpio(np, "hpd-gpio", 0);
-> =20
->  	return pd;
-> =20
->=20
+>  
+>  	/* Convert to the pin controllers number space */
+> -	pin = gpio - range->base + range->pin_base;
+> +	pin = gpio_to_pin(range, gpio);
+>  
+>  	ret = pinmux_request_gpio(pctldev, range, pin, gpio);
+>  
+> @@ -562,7 +591,7 @@ void pinctrl_free_gpio(unsigned gpio)
+>  	mutex_lock(&pctldev->mutex);
+>  
+>  	/* Convert to the pin controllers number space */
+> -	pin = gpio - range->base + range->pin_base;
+> +	pin = gpio_to_pin(range, gpio);
+>  
+>  	pinmux_free_gpio(pctldev, pin, range);
+>  
+> @@ -589,7 +618,7 @@ static int pinctrl_gpio_direction(unsigned gpio, bool input)
+>  	mutex_lock(&pctldev->mutex);
+>  
+>  	/* Convert to the pin controllers number space */
+> -	pin = gpio - range->base + range->pin_base;
+> +	pin = gpio_to_pin(range, gpio);
+>  	ret = pinmux_gpio_direction(pctldev, range, pin, input);
+>  
+>  	mutex_unlock(&pctldev->mutex);
+> @@ -1296,11 +1325,21 @@ static int pinctrl_gpioranges_show(struct seq_file *s, void *what)
+>  
+>  	/* Loop over the ranges */
+>  	list_for_each_entry(range, &pctldev->gpio_ranges, node) {
+> -		seq_printf(s, "%u: %s GPIOS [%u - %u] PINS [%u - %u]\n",
+> -			   range->id, range->name,
+> -			   range->base, (range->base + range->npins - 1),
+> -			   range->pin_base,
+> -			   (range->pin_base + range->npins - 1));
+> +		if (range->pins) {
+> +			int a;
+> +			seq_printf(s, "%u: %s GPIOS [%u - %u] PINS {",
+> +				range->id, range->name,
+> +				range->base, (range->base + range->npins - 1));
+> +			for (a = 0; a < range->npins - 1; a++)
+> +				seq_printf(s, "%u, ", range->pins[a]);
+> +			seq_printf(s, "%u}\n", range->pins[a]);
+> +		}
+> +		else
+> +			seq_printf(s, "%u: %s GPIOS [%u - %u] PINS [%u - %u]\n",
+> +				range->id, range->name,
+> +				range->base, (range->base + range->npins - 1),
+> +				range->pin_base,
+> +				(range->pin_base + range->npins - 1));
+>  	}
+>  
+>  	mutex_unlock(&pctldev->mutex);
+> diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+> index 2c2a9e8..176a6c1 100644
+> --- a/include/linux/pinctrl/pinctrl.h
+> +++ b/include/linux/pinctrl/pinctrl.h
+> @@ -49,7 +49,8 @@ struct pinctrl_pin_desc {
+>   * @name: a name for the chip in this range
+>   * @id: an ID number for the chip in this range
+>   * @base: base offset of the GPIO range
+> - * @pin_base: base pin number of the GPIO range
+> + * @pin_base: base pin number of the GPIO range if pins != NULL
 
---=20
-Seung-Woo Kim
-Samsung Software R&D Center
---
+
+
+Hi Christian,
+
+It seems that your comment is not correct, it should be :
+* @pin_base: base pin number of the GPIO range if pins == NULL
+
+Patrice
+
+> + * @pins: enumeration of pins in GPIO range or NULL
+>   * @npins: number of pins in the GPIO range, including the base number
+>   * @gc: an optional pointer to a gpio_chip
+>   */
+> @@ -59,6 +60,7 @@ struct pinctrl_gpio_range {
+>  	unsigned int id;
+>  	unsigned int base;
+>  	unsigned int pin_base;
+> +	unsigned const *pins;
+>  	unsigned int npins;
+>  	struct gpio_chip *gc;
+>  };
