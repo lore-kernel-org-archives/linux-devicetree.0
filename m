@@ -1,187 +1,145 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] extcon: Add an API to get extcon device from dt node
-Date: Fri, 14 Jun 2013 14:06:33 +0530
-Message-ID: <51BAD611.1070306@ti.com>
-References: <1370276020-17446-2-git-send-email-kishon@ti.com>
- <1371194146-17260-1-git-send-email-cw00.choi@samsung.com>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: tegra: basic support for Trusted Foundations
+Date: Fri, 14 Jun 2013 17:43:03 +0900
+Message-ID: <CAAVeFuLufKSfeQzP-tX1JpX9qtHa2EdFA9J8qpKE4Pyyrc8UQg@mail.gmail.com>
+References: <1371114745-24710-1-git-send-email-acourbot@nvidia.com>
+ <1371114745-24710-2-git-send-email-acourbot@nvidia.com> <20130613143536.GA18021@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371194146-17260-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, anish198519851985-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130613143536.GA18021-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jun 13, 2013 at 11:35 PM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
+>> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+>> index ed9c853..d59bc19 100644
+>> --- a/Documentation/devicetree/bindings/arm/tegra.txt
+>> +++ b/Documentation/devicetree/bindings/arm/tegra.txt
+>> @@ -32,3 +32,14 @@ board-specific compatible values:
+>>    nvidia,whistler
+>>    toradex,colibri_t20-512
+>>    toradex,iris
+>> +
+>> +Optional nodes
+>> +-------------------------------------------
+>> +
+>> +Trusted Foundations:
+>> +Boards using the Trusted Foundations secure monitor should signal its
+>> +presence by declaring a node compatible with "tl,trusted-foundations":
+>> +
+>> +     firmware {
+>
+> You need to make a clear statement about whether the node name is
+>
+> I think it shouldn't required to be exactly equal to "firmware", because
+> that would lead to problems if there were multiple independent firmware
+> APIs present (which is certainly possible, whether or not it is true
+> on Tegra).
 
-On Friday 14 June 2013 12:45 PM, Chanwoo Choi wrote:
-> From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->
-> Added an API of_extcon_get_extcon_dev() to be used by drivers to get
-> extcon device in the case of dt boot (this can be used instead of
-> extcon_get_extcon_dev()).
->
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Myungjoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
-> Changes since v1:
-> - If edev->name is NULL, dev_name(dev) is used as edev->name.
-> - Change filename from of-extcon.* to of_extcon.*
-> - Fix build error when CONFIG_OF is not set
-> - Add header file(linux/err.h) to of_extcon.c
->
->   drivers/extcon/Makefile          |  2 ++
->   drivers/extcon/extcon-class.c    |  3 +-
->   drivers/extcon/of_extcon.c       | 64 ++++++++++++++++++++++++++++++++++++++++
->   include/linux/extcon/of_extcon.h | 30 +++++++++++++++++++
->   4 files changed, 98 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/extcon/of_extcon.c
->   create mode 100644 include/linux/extcon/of_extcon.h
->
-> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-> index 540e2c3..83468f7 100644
-> --- a/drivers/extcon/Makefile
-> +++ b/drivers/extcon/Makefile
-> @@ -2,6 +2,8 @@
->   # Makefile for external connector class (extcon) devices
->   #
->
-> +obj-$(CONFIG_OF)		+= of_extcon.o
-> +
->   obj-$(CONFIG_EXTCON)		+= extcon-class.o
->   obj-$(CONFIG_EXTCON_GPIO)	+= extcon-gpio.o
->   obj-$(CONFIG_EXTCON_ADC_JACK)	+= extcon-adc-jack.o
-> diff --git a/drivers/extcon/extcon-class.c b/drivers/extcon/extcon-class.c
-> index 23f11ea..08509ea 100644
-> --- a/drivers/extcon/extcon-class.c
-> +++ b/drivers/extcon/extcon-class.c
-> @@ -602,7 +602,8 @@ int extcon_dev_register(struct extcon_dev *edev, struct device *dev)
->   	edev->dev->class = extcon_class;
->   	edev->dev->release = extcon_dev_release;
->
-> -	dev_set_name(edev->dev, edev->name ? edev->name : dev_name(dev));
-> +	edev->name = edev->name ? edev->name : dev_name(dev);
-> +	dev_set_name(edev->dev, edev->name);
->
->   	if (edev->max_supported) {
->   		char buf[10];
-> diff --git a/drivers/extcon/of_extcon.c b/drivers/extcon/of_extcon.c
-> new file mode 100644
-> index 0000000..72173ec
-> --- /dev/null
-> +++ b/drivers/extcon/of_extcon.c
-> @@ -0,0 +1,64 @@
-> +/*
-> + * OF helpers for External connector (extcon) framework
-> + *
-> + * Copyright (C) 2013 Texas Instruments, Inc.
-> + * Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> + *
-> + * Copyright (C) 2013 Samsung Electronics
-> + * Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/err.h>
-> +#include <linux/extcon.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/extcon/of_extcon.h>
-> +
-> +/*
-> + * of_extcon_get_extcon_dev - Get the name of extcon device from devicetree
-> + * @dev - instance to the given device
-> + * @index - index into list of extcon_dev
-> + *
-> + * return the instance of extcon device
-> + */
-> +struct extcon_dev *of_extcon_get_extcon_dev(struct device *dev, int index)
-> +{
-> +	struct device_node *node;
-> +	struct extcon_dev *edev;
-> +	struct platform_device *extcon_parent_dev;
-> +
-> +	if (!dev->of_node) {
-> +		dev_dbg(dev, "device does not have a device node entry\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	node = of_parse_phandle(dev->of_node, "extcon", index);
-> +	if (!node) {
-> +		dev_dbg(dev, "failed to get phandle in %s node\n",
-> +			dev->of_node->full_name);
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	extcon_parent_dev = of_find_device_by_node(node);
-> +	if (!extcon_parent_dev) {
-> +		dev_dbg(dev, "unable to find device by node\n");
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +	}
-> +
-> +	edev = extcon_get_extcon_dev(dev_name(&extcon_parent_dev->dev));
-> +	if (!edev) {
-> +		dev_dbg(dev, "unable to get extcon device : %s\n",
-> +				dev_name(&extcon_parent_dev->dev));
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	return edev;
-> +}
-> +EXPORT_SYMBOL_GPL(of_extcon_get_extcon_dev);
-> diff --git a/include/linux/extcon/of_extcon.h b/include/linux/extcon/of_extcon.h
-> new file mode 100644
-> index 0000000..462f071
-> --- /dev/null
-> +++ b/include/linux/extcon/of_extcon.h
-> @@ -0,0 +1,30 @@
-> +/*
-> + * OF helpers for External connector (extcon) framework
-> + *
-> + * Copyright (C) 2013 Texas Instruments, Inc.
-> + * Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> + *
-> + * Copyright (C) 2013 Samsung Electronics
-> + * Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#ifndef __LINUX_OF_EXTCON_H
-> +#define __LINUX_OF_EXTCON_H
-> +
-> +#if defined(CONFIG_OF) && defined(CONFIG_EXTCON)
-> +extern struct extcon_dev
-> +	*of_extcon_get_extcon_dev(struct device *dev, int index);
-> +#else
-> +static inline struct extcon_dev
-> +	*of_extcon_get_extcon_dev(struct device *dev, int index)
-> +{
-> +	return NULL;
+Yes, the name of the node is not fixed (doing so would make its lookup
+faster, but the gain is not obvious). Will make it explicit in the
+doc.
 
-Can we have some error value returned here instead of NULL?
-ERR_PTR(-ENOSYS)?
+>> +             compatible = "tl,trusted-foundations";
+>> +     };
+>
+> For now, it might make more sense to make this binding tegra-specific,
+> and to interpret the node is only implying the presence of the low-
+> level SoC functions you are using on Tegra, not TF as a whole.
 
-Thanks
-Kishon
+Do you mean the vendor should be changed from "tl" to "nvidia" here?
+
+> Otherwise, it feels too generic.  There is no description of exactly
+> what functionality will be available if this node it present: if
+> this is going to be a generic binding for TF, then it needs to work
+> for all deployments of TF, not just your specific case.  For example,
+> how to you find out what functionality is present?  Will there be
+> a standard probing ABI for all versions and deployments of TF, or
+> would extra information need to be described in the DT?
+>
+> Partly, this depends on whether the TF_SET_CPU_BOOT_ADDR_SMC call will
+> be present, working, and with compatible ABI and semantics, on every SoC
+> where an implementation of TF is present.  Someone from Trusted Logic, or
+> someone with visibility of the relevant ABI/API specs would need to
+> judge on that -- do you have that info?
+
+I'm currently looking into that. This patch makes the assumption that
+all TF implementations have the same features and the same interface -
+if this is the case, do you agree this binding is ok as it is?
+
+If indeed TF's functionality and ABI is the same no matter whether we
+are on Tegra on not, then its support should even be moved outside of
+mach-tegra.
+
+
+>> --- /dev/null
+>> +++ b/arch/arm/mach-tegra/firmware.c
+>> @@ -0,0 +1,40 @@
+>> +/*
+>> + * SecureOS support for Tegra CPUs
+>
+> Should the name "SecureOS" change in these comment headers? (affects
+> multiple files)
+
+Yes, I missed these ones, thanks. Another missed opportunity to use git grep...
+
+>> +     node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
+>> +     if (node && !IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS))
+>> +             pr_warn("Trusted Foundations detected but support missing!\n");
+>
+> Should this be more than just a warning?
+>
+> It looks to me like tegra_cpu_reset_handler_set() might either silently
+> fail or trigger an external abort in this situation, depending on the
+> hardware and on how TF sets things up.
+
+What will happen (from 3.10) is that tegra_cpu_reset_handler_set()
+will output a "CPUX: failed to come online" for each secondary CPU and
+boot will continue (albeit on one CPU). The system's features are
+degraded, but it is not fatal, so I think it is reasonable to continue
+here.
+
+> There seems to be no way to signal an error when attempting to set a
+> CPU's reset address.
+
+Indeed. But even if that fails the system can still survive, at least on Tegra.
+
+>> +#if IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS)
+>> +     else if (node)
+>> +             register_firmware_ops(&tegra_trusted_foundations_ops);
+>> +#endif
+>> +}
+>
+>
+> IS_ENABLED() allows #ifdefs to be avoided -- maybe this would be clearer
+> as:
+>
+>         node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
+>         if (!node)
+>                 return;
+>
+>         if (WARN_ON(!IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS))) {
+>                 pr_warn("Trusted Foundations detected but support missing!\n");
+>                 return;
+>         }
+>
+>         register_firmware_ops(&tegra_trusted_foundations_ops);
+
+But then you will get a link error when TF support is not compiled in
+because tegra_trusted_foundations_ops will not be defined. That's why
+I used a #ifdef here - I agree it is terribly inelegant though.
+
+>> +     asm volatile(
+>> +             ".arch_extension        sec\n\t"
+>> +             "stmfd  sp!, {r3 - r11, lr}\n\t"
+>
+> I think you don't need to save r3: the ARM PCS makes r3 caller-save, so
+> it shouldn't matter if the SMC call causes it to get trashed.
+
+One less register to save, I take it! :)
+
+Thanks,
+Alex.
