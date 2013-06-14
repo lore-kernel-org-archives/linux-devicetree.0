@@ -1,44 +1,170 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] dtc: ensure #line directives don't consume data from the next line
-Date: Fri, 14 Jun 2013 23:01:35 +0100
-Message-ID: <20130614220135.0D0D63E0A56@localhost>
-References: <1370273816-19411-1-git-send-email-swarren@wwwdotorg.org> <51AF6C3A.5020609@wwwdotorg.org>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <51AF6C3A.5020609@wwwdotorg.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Ian Campbell <Ian.Campbell@citrix.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Michal Marek <mmarek@suse.cz>, linux-kbuild@vger.kernel.org, jdl@jdl.com, Stephen Warren <swarren@nvidia.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH RFC 1/3] clk: omap: introduce clock driver
+Date: Fri, 14 Jun 2013 23:12:27 +0100
+Message-ID: <20130614221227.A9EE03E0A56@localhost>
+References: <1370327958-19776-1-git-send-email-mturquette@linaro.org> <1370327958-19776-2-git-send-email-mturquette@linaro.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1370327958-19776-2-git-send-email-mturquette@linaro.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Nishanth Menon <nm@ti.com>, Joel A Fernandes <joelagnel@ti.com>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 05 Jun 2013 10:50:02 -0600, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 06/03/2013 09:36 AM, Stephen Warren wrote:
-> > From: Stephen Warren <swarren@nvidia.com>
-> > 
-> > Previously, the #line parsing regex ended with ({WS}+[0-9]+)?. The {WS}
-> > could match line-break characters. If the #line directive did not contain
-> > the optional flags field at the end, this could cause any integer data on
-> > the next line to be consumed as part of the #line directive parsing. This
-> > could cause syntax errors (i.e. #line parsing consuming the leading 0
-> > from a hex literal 0x1234, leaving x1234 to be parsed as cell data,
-> > which is a syntax error), or invalid compilation results (i.e. simply
-> > consuming literal 1234 as part of the #line processing, thus removing it
-> > from the cell data).
-> > 
-> > Fix this by replacing {WS} with [ \t] so that it can't match line-breaks.
-> > 
-> > Convert all instances of {WS}, even though the other instances should be
-> > irrelevant for any well-formed #line directive. This is done for
-> > consistency and ultimate safety.
-> > 
-> > This is a port of upstream dtc commit a1ee6f0 (with same subject) to the
-> > kernel's copy of dtc.
+On Mon,  3 Jun 2013 23:39:16 -0700, Mike Turquette <mturquette@linaro.org> wrote:
+> Parses OMAP clock data from DT and registers those clocks with the clock
+> framework.  dt_omap_clk_init must be called early during boot for timer
+> initialization so it is exported and called from the existing clock code
+> instead of probing like a real driver.
 > 
-> Rob, Grant, does this look OK to apply for v3.10-rc*?
+> Cc: Benoit Cousson <b-cousson@ti.com>
+> Cc: Rajendra Nayak <rnayak@ti.com>
+> Cc: Joel A Fernandes <joelagnel@ti.com>
+> Cc: Nishanth Menon <nm@ti.com>
+> Cc: Paul Walmsley <paul@pwsan.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Mike Turquette <mturquette@linaro.org>
 
-The fix is in mainline now. Please check to make sure it is working for you.
+Hi Mike,
+
+Comments below...
+
+> ---
+> This driver simply matches the basic bindings (so far).  Eventually it
+> would match omap-specific bindings for DPLLs, CLKOUTX2 and strange leaf
+> clocks as well.  This doesn't scale well since non-OMAP related clock
+> data (e.g. a pmic or discrete audio codec) will get grouped into this
+> driver if it matches on a basic clock type.  Suggestions?
+
+Take a look at the definition of irqchip_init(). It would be possible to
+do the same think for clk chips so that merely configuring in the driver
+would add the support to a global list of clk chip initializers.
+
+drivers/irqchip/irqchip.c
+
+> 
+>  drivers/clk/Makefile      |  1 +
+>  drivers/clk/omap/Makefile |  1 +
+>  drivers/clk/omap/clk.c    | 55 +++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/clk/omap.h  | 24 +++++++++++++++++++++
+>  4 files changed, 81 insertions(+)
+>  create mode 100644 drivers/clk/omap/Makefile
+>  create mode 100644 drivers/clk/omap/clk.c
+>  create mode 100644 include/linux/clk/omap.h
+> 
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index f51b52b..efd4f2a 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -31,6 +31,7 @@ obj-$(CONFIG_ARCH_VT8500)	+= clk-vt8500.o
+>  obj-$(CONFIG_ARCH_ZYNQ)		+= clk-zynq.o
+>  obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+>  obj-$(CONFIG_PLAT_SAMSUNG)	+= samsung/
+> +obj-$(CONFIG_ARCH_OMAP)		+= omap/
+>  
+>  obj-$(CONFIG_X86)		+= x86/
+>  
+> diff --git a/drivers/clk/omap/Makefile b/drivers/clk/omap/Makefile
+> new file mode 100644
+> index 0000000..8195931
+> --- /dev/null
+> +++ b/drivers/clk/omap/Makefile
+> @@ -0,0 +1 @@
+> +obj-y					+= clk.o
+> diff --git a/drivers/clk/omap/clk.c b/drivers/clk/omap/clk.c
+> new file mode 100644
+> index 0000000..e9e5c95
+> --- /dev/null
+> +++ b/drivers/clk/omap/clk.c
+> @@ -0,0 +1,55 @@
+> +/*
+> + * OMAP PRCM clock driver
+> + *
+> + * Copyright (C) 2013 Linaro.org - http://www.linaro.org
+> + * 	Mike Turquette <mturquette@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/clk/omap.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +
+> +/* FIXME - should the OMAP PRCM clock driver match generic types? */
+> +static const struct of_device_id clk_match[] = {
+> +	{.compatible = "fixed-clock", .data = of_fixed_clk_setup, },
+> +	{.compatible = "mux-clock", .data = of_mux_clk_setup, },
+> +	{.compatible = "fixed-factor-clock",
+> +		.data = of_fixed_factor_clk_setup, },
+> +	{},
+> +};
+> +
+> +static int omap_clk_probe(struct platform_device *pdev)
+> +{
+> +	of_clk_init(clk_match);
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver omap_clk_driver = {
+> +	.probe = omap_clk_probe,
+> +	.driver = {
+> +		   .name = "omap_clk",
+> +		   .of_match_table = of_match_ptr(clk_match),
+> +		   },
+> +};
+> +
+> +/* FIXME - need to initialize early; skip real driver registration & probe */
+> +int __init dt_omap_clk_init(void)
+> +{
+> +	return omap_clk_probe(NULL);
+> +}
+
+Since this isn't remotely a platform_driver, I would drop the pretense
+and cut out all the platform_drivers references. omap_clk_driver isn't
+even referenced anywhere!
+
+> +
+> +MODULE_DESCRIPTION("OMAP Clock driver");
+> +MODULE_AUTHOR("Texas Instruments Inc.");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/clk/omap.h b/include/linux/clk/omap.h
+> new file mode 100644
+> index 0000000..504e838
+> --- /dev/null
+> +++ b/include/linux/clk/omap.h
+> @@ -0,0 +1,24 @@
+> +/*
+> + * Copyright (C) 2010 Broadcom
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, write to the Free Software
+> + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+> + */
+> +
+> +#ifndef __LINUX_CLK_OMAP_H_
+> +#define __LINUX_CLK_OMAP_H_
+> +
+> +int __init dt_omap_clk_init(void);
+
+__init annotations don't generally go in the header files.
 
 g.
-
-
--- 
-email sent from notmuch.vim plugin
