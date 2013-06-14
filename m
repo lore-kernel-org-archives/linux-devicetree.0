@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [RFC v2 08/12] ARM: mvebu: Add MBus to Armada 370/XP device tree
-Date: Fri, 14 Jun 2013 13:07:48 -0300
-Message-ID: <1371226072-28896-9-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [RFC v2 09/12] ARM: mvebu: Add BootROM to Armada 370/XP device tree
+Date: Fri, 14 Jun 2013 13:07:49 -0300
+Message-ID: <1371226072-28896-10-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1371226072-28896-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,112 +22,69 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Armada 370/XP SoC family has a completely configurable address
-space handled by the MBus controller.
-
-This patch introduces the device tree layout of MBus, making the
-'soc' node as mbus-compatible.
-Since every peripheral/controller is a child of this 'soc' node,
-this makes all of them sit behind the mbus, thus describing the
-hardware accurately.
-
-A translation entry has been added for the internal-regs mapping.
-This can't be done in the common armada-370-xp.dtsi because A370
-and AXP have different addressing width.
+In order to access the SoC BootROM, we need to declare a mapping
+(through a ranges property). The mbus driver will use this property
+to allocate a suitable address decoding window.
 
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-xp.dtsi             | 7 ++-----
- arch/arm/boot/dts/armada-370.dtsi                | 6 ++++--
- arch/arm/boot/dts/armada-xp-gp.dts               | 3 ---
- arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 3 ---
- arch/arm/boot/dts/armada-xp.dtsi                 | 4 ++++
- 5 files changed, 10 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/armada-370-xp.dtsi | 2 ++
+ arch/arm/boot/dts/armada-370.dtsi    | 9 ++++++++-
+ arch/arm/boot/dts/armada-xp.dtsi     | 9 ++++++++-
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-index 52a1f5e..633534dd 100644
+index 633534dd..4ae5eb5 100644
 --- a/arch/arm/boot/dts/armada-370-xp.dtsi
 +++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-@@ -29,18 +29,15 @@
- 	};
+@@ -16,6 +16,8 @@
+  * 370 and Armada XP SoC.
+  */
  
- 	soc {
--		#address-cells = <1>;
-+		#address-cells = <2>;
- 		#size-cells = <1>;
--		compatible = "simple-bus";
- 		interrupt-parent = <&mpic>;
--		ranges = <0          0 0xd0000000 0x0100000 /* internal registers */
--			  0xe0000000 0 0xe0000000 0x8100000 /* PCIe */>;
++#define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
++
+ /include/ "skeleton64.dtsi"
  
- 		internal-regs {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			ranges;
-+			ranges = <0 0xffff0001 0 0x100000>;
- 
- 			mpic: interrupt-controller@20000 {
- 				compatible = "marvell,mpic";
+ / {
 diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index 08ec6e3..937db5d 100644
+index 937db5d..f46abd6 100644
 --- a/arch/arm/boot/dts/armada-370.dtsi
 +++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -29,8 +29,10 @@
- 	};
- 
+@@ -31,7 +31,14 @@
  	soc {
--		ranges = <0          0xd0000000 0x0100000 /* internal registers */
--			  0xe0000000 0xe0000000 0x8100000 /* PCIe */>;
-+		compatible = "marvell,armada370-mbus";
-+		reg = <0xd0020000 0x100>, <0xd0020180 0x20>;
-+		ranges = <0xffff0001 0 0xd0000000 0x100000>;
+ 		compatible = "marvell,armada370-mbus";
+ 		reg = <0xd0020000 0x100>, <0xd0020180 0x20>;
+-		ranges = <0xffff0001 0 0xd0000000 0x100000>;
++		ranges = <0xffff0001 0 0xd0000000 0x100000
++			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
 +
++		bootrom {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 MBUS_ID(0x01, 0xe0) 0 0x100000>;
++		};
+ 
  		internal-regs {
  			system-controller@18200 {
- 				compatible = "marvell,armada-370-xp-system-controller";
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index e0c6f60..cc44b27 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -39,9 +39,6 @@
- 	};
- 
- 	soc {
--		ranges = <0          0 0xd0000000 0x100000
--			  0xf0000000 0 0xf0000000 0x1000000>;
--
- 		internal-regs {
- 			serial@12000 {
- 				clock-frequency = <250000000>;
-diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-index 27a0ecf..3863fe2 100644
---- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-+++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-@@ -27,9 +27,6 @@
- 	};
- 
- 	soc {
--		ranges = <0          0 0xd0000000 0x100000
--			  0xf0000000 0 0xf0000000 0x8000000>;
--
- 		internal-regs {
- 			serial@12000 {
- 				clock-frequency = <250000000>;
 diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index 3e770db..dda8588 100644
+index dda8588..efb256d 100644
 --- a/arch/arm/boot/dts/armada-xp.dtsi
 +++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -23,6 +23,10 @@
- 	compatible = "marvell,armadaxp", "marvell,armada-370-xp";
- 
+@@ -25,7 +25,14 @@
  	soc {
-+		compatible = "marvell,armadaxp-mbus";
-+		reg = <0 0xd0020000 0 0x100>, <0 0xd0020180 0 0x20>;
-+		ranges = <0xffff0001 0 0 0xd0000000 0x100000>;
+ 		compatible = "marvell,armadaxp-mbus";
+ 		reg = <0 0xd0020000 0 0x100>, <0 0xd0020180 0 0x20>;
+-		ranges = <0xffff0001 0 0 0xd0000000 0x100000>;
++		ranges = <0xffff0001 0 0 0xd0000000 0x100000
++			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
 +
++		bootrom {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 MBUS_ID(0x01, 0x1d) 0 0x100000>;
++		};
+ 
  		internal-regs {
  			L2: l2-cache {
- 				compatible = "marvell,aurora-system-cache";
 -- 
 1.8.1.5
