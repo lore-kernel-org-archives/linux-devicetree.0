@@ -1,84 +1,121 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
-Date: Fri, 14 Jun 2013 12:53:11 +0200
-Message-ID: <20130614105310.GA19060@manwe>
-References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com>
- <13685067.uPzcc2y1CU@wuerfel>
- <000001ce68d7$ca762200$5f626600$@samsung.com>
+From: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH 2/2] rtc: omap: add rtc wakeup support to alarm events
+Date: Fri, 14 Jun 2013 11:38:41 +0000
+Message-ID: <1BAFE6F6C881BF42822005164F1491C33EC35C68@DBDE04.ent.ti.com>
+References: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com>
+	<1369982005-8572-3-git-send-email-gururaja.hebbar@ti.com>
+	<87a9nb2gjh.fsf@linaro.org>
+	<1BAFE6F6C881BF42822005164F1491C33EC34679@DBDE04.ent.ti.com>
+	<87k3lxabyg.fsf@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <000001ce68d7$ca762200$5f626600$@samsung.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Arnd Bergmann' <arnd@arndb.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <87k3lxabyg.fsf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jun 14, 2013 at 03:51:43, Kevin Hilman wrote:
+> "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org> writes:
+> 
+> > Hi Kevin,
+> >
+> > On Mon, Jun 10, 2013 at 16:55:17, Hebbar, Gururaja wrote:
+> >> On Fri, May 31, 2013 at 23:11:22, Kevin Hilman wrote:
+> >> > Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org> writes:
+> >> > 
+> >> > > On some platforms (like AM33xx), a special register (RTC_IRQWAKEEN)
+> >> > > is available to enable Wakeup feature for Alarm Events.
+> >> > >
+> >> > > Since new platforms/Boards are now added through DT only, this feature
+> >> > > is supported via DT property only.
+> >> > 
+> >> > > Platforms using such IP should add the property "ti,has_irq_wake_enb"
+> >> > > in rtc DT node.
+> >> > 
+> >> > This is a property of the IP, not the board.  Can't you detect this
+> >> > based on the revision of the IP?
+> >> 
+> >> Here is what I found out till now.
+> >> 
+> >> 1. rtc-omap driver is used by Davinci, OMAP-1/2 & AM33xx SoC.
+> >> 
+> >> 2. Only AM33xx soc rtc ip has revision register (& populated). Older OMAP
+> >>    Or davinci doesn't have this register.
+> >> 
+> >> 3. AFAIK, this was the reason why Afzal used platform_device_id & 
+> >>    of_device_id->data method to detect new versions (commit
+> >>    9e0344dcc225fe1a0e8b8af9ff7df44ec4613580)
+> >> 
+> >> 
+> >> So now either 
+> >> a. I can follow the same method and add new member to omap_rtc_devtype & add a new compatible in 
+> >>  omap_rtc_of_match in rtc-omap.c
+> >> 
+> >> or
+> >> 
+> >> b. use dt property to indicate existence of above property.
+> >> 
+> >> 
+> >> Kindly let me know your opinion about the same.
+> >
+> > Any update on this. I have patch ready for both the choices. Waiting for your ok to send
+> 
+> I think (a) is better.
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok. I will add the property using a new DT compatibility.
 
-On Fri, Jun 14, 2013 at 05:18:46PM +0900, Jingoo Han wrote:
-> On Thursday, June 13, 2013 11:14 PM, Arnd Bergmann wrote:
-> > On Thursday 13 June 2013 22:22:31 Jingoo Han wrote:
-[...]
-> > > +static int __exit exynos_pcie_remove(struct platform_device *pdev)
-> > > +{
-> > > +	struct pcie_port *pp =3D platform_get_drvdata(pdev);
-> > > +
-> > > +	clk_disable_unprepare(pp->bus_clk);
-> > > +	clk_disable_unprepare(pp->clk);
-> > > +
-> > > +	return 0;
-> > > +}
-> >=20
-> > You also don't remove the PCI devices here, as mentioned in an earlier
-> > review.
->=20
-> I reviewed Marvell PCIe driver and Tegra PCIe driver; however,
-> I cannot know what you mean.
->=20
-> Could let me know which additional functions are needed?
 
-We don't currently do that on Tegra either. pci-mvebu doesn't do that
-either, but they don't implement the driver's .remove() in the first
-place.
+> 
+> The driver should always do a device_init_wakeup(dev, true), *except*
+> for devtypes that don't have this feature.
 
-I think the biggest missing piece is pci_common_exit(), the counterpart
-of pci_common_init(), to cleanup a host bridge on ARM. I haven't looked
-in detail at the other architectures, but I suspect there must be some
-code to call when a host bridge is removed.
+"wakeup capable" and "irq-wake-enable-for-alarm-event" are different
 
-Looking at drivers/pci/remove.c, it seems like pci_remove_root_bus()
-might be what we're looking at. It isn't exported so it can't be used by
-modules, but that can be changed. Is that how a host bridge is typically
-removed from the system?
+For "irq-wake-enable-for-alarm-event", I will add a new DT compability.
 
-Thierry
+However, wakeup capable notification is done in another patch using the a 
+DT property "ti,wakeup_capable".
 
---Nq2Wo0NMKNjxTN9z
-Content-Type: application/pgp-signature
+The reason for using a dt property is specified below
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRuvYWAAoJEN0jrNd/PrOhkAgQAJTtOn0GJ8ho/oFuRmDVC/bk
-sc2guYC3/M2NK6JHpZFjb5Etylru0j6dC+8ivPH7uQlYg6AOZuOpSGk1bwmE8geM
-rzy0nRQw3JiPwtCY9rNT1NC9d4pVlfTRjzJJ6b4kfazE9ia0SyHFodbdbZER0dU0
-WuL+F2cWHYYDtYibEHRlBxG7fGPSrXnETE68kvMUCErBwMnyzsv+DXVhz1aN+F4c
-ZugaoEx3FFREGByxrS8msFjaoLca38ZRqA7mVRiaz+3ArghRwTGo+KTO2ArGsb5e
-J3gGqgJTUEWB3sDj3XLxaUQvCYHcd0dgHRDiAKE1iGZ3s3M8eQ/EaqemL9Utxx/w
-75LFWUhOaMjFFfQZJ2L+KA2FS/XQyUC4G4CVh0CtLoOaJMw2HbgqMy6fSUd9Cm5s
-jVDaxbtYGULrYpywxhgxQi1UwkjsGgA3Yq0hWowlKTqBtE3elZ8l2BqbMzMf+Yko
-DUKBVRahRl+PB7Wc5OZsoWrnQ64LeErhzDW15018+Cdrq6QOr5QzQUqvl6yMBl08
-C/Rk45vLkTpwmzUkVw8ZafybmKH4qCG6XUFkLnMON1BgxE1lvkcbTDqsOW0IREQs
-gpFKyCpkbJV1xzRzf7w+Fg53ezNXtE1Xu8Gq2WWV052boBCvMq/bIb4juINceBpI
-QbE9icw15Vwu5aW7b/Eb
-=MlcV
------END PGP SIGNATURE-----
+	commit fa5b07820fe3a0fc06ac368516e71f10a59b9539
+	Author: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+	Date:   Wed Oct 27 15:33:05 2010 -0700
 
---Nq2Wo0NMKNjxTN9z--
+	rtc: omap: let device wakeup capability be configured from chip
+	init logic
+
+	The rtc-omap driver currently hardcodes the RTC wakeup
+	capability to be "not capable".  While this seems to be true for
+	existing OMAP1 boards which are not wired for this, the
+	DA850/OMAP-L138 SoC, the RTC can always be wake up source from
+	its "deep sleep" mode.
+
+
+So I cannot directly add device_init_wakeup(dev, true), inside driver code.
+So, I added a DT property
+
+
+
+
+> 
+> Kevin
+> 
+> 
+
+
+Regards, 
+Gururaja
