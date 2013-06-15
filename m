@@ -1,55 +1,33 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: RFC: New release for DTC?
-Date: Sat, 15 Jun 2013 01:17:12 +0100
-Message-ID: <20130615001712.D35FB3E0A2E@localhost>
-References: <201208232015.39613.yann.morin.1998@free.fr>
- <51A79033.7080800@wwwdotorg.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 0/1] gpio-rcar: Add DT support
+Date: Fri, 14 Jun 2013 17:47:51 -0700
+Message-ID: <20130615004751.GM18124@quad.lixom.net>
+References: <1371106826-25313-1-git-send-email-horms+renesas@verge.net.au>
+ <1371106826-25313-2-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51A79033.7080800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Yann E. MORIN" <yann.morin.1998-GANU6spQydw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1371106826-25313-2-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 May 2013 11:45:23 -0600, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 08/23/2012 12:15 PM, Yann E. MORIN wrote:
-> > Hello All!
-> > 
-> > Following advice from Jon Loeliger, I would suggest that a new release
-> > of DTC be tagged and packaged.
-> > 
-> > It is important for some projects to rely on a released version, rather
-> > than use a random cset from the repository. Comes to mind, the automated
-> > build-systems, such as buildroot.
-> > 
-> > Of course, I can help, if need be! ;-)
-> > 
-> > Are there any others who think that a release would make sense?
+On Thu, Jun 13, 2013 at 04:00:26PM +0900, Simon Horman wrote:
+> From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 > 
-> I'd love to see a new release. This would for example allow the U-Boot
-> project to say "dtc vXXX is required to build the DT files contained in
-> U-Boot", which might make agreeing on allowing the use of new dtc
-> features in U-Boot easier. While this could simply be done by referring
-> to a specific git commit ID, release versions or tags probably carry
-> more weight. Tagging a release might also act as a specific trigger for
-> distros to pick up and carry the new version.
+> Add DT bindings for the gpio-rcar driver and read the device
+> configuration from the DT node at probe time if available.
 > 
-> Does it make sense to simply tag the current git HEAD as v1.4? If so,
-> can we do this?
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-If a new release can be done in the next week or so, then I will use
-that to update the in-kernel dtc version.
+Hi,
 
-g.
+I don't see this cc/acked by Linus or Grant/Rob. However, the binding
+looks very vanilla to me, so I'll merge it anyway.
+
+
+-Olof
