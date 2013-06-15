@@ -1,32 +1,46 @@
-From: Francois Romieu <romieu@fr.zoreil.com>
-Subject: Re: [PATCH v3] ethernet/arc/arc_emac - Add new driver
-Date: Sat, 15 Jun 2013 13:12:20 +0200
-Message-ID: <20130615111220.GB14242@electric-eye.fr.zoreil.com>
-References: <1371134239-4531-1-git-send-email-abrodkin@synopsys.com>
- <20130613221946.GA16632@electric-eye.fr.zoreil.com>
- <4881796E12491D4BB15146FE0209CE643F5E3A07@DE02WEMBXB.internal.synopsys.com>
- <20130614192704.GA4857@electric-eye.fr.zoreil.com>
- <4881796E12491D4BB15146FE0209CE643F5E5730@DE02WEMBXB.internal.synopsys.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 0/1] gpio-rcar: Add DT support
+Date: Sat, 15 Jun 2013 13:31:08 +0200
+Message-ID: <2295525.muus9MNBiz@avalon>
+References: <1371106826-25313-1-git-send-email-horms+renesas@verge.net.au> <1371106826-25313-2-git-send-email-horms+renesas@verge.net.au> <20130615004751.GM18124@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4881796E12491D4BB15146FE0209CE643F5E5730@DE02WEMBXB.internal.synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20130615004751.GM18124@quad.lixom.net>
+Sender: linux-sh-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-Alexey Brodkin <Alexey.Brodkin@synopsys.com> :
-[...]
-> If my comment doesn't make sense to you or I misunderstood your message 
-> could you please add more clarifications for your idea?
+Hi Olof,
 
-Sorry, I temporarily forgot it was the descriptor ring itself. :o/
+On Friday 14 June 2013 17:47:51 Olof Johansson wrote:
+> On Thu, Jun 13, 2013 at 04:00:26PM +0900, Simon Horman wrote:
+> > From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > 
+> > Add DT bindings for the gpio-rcar driver and read the device
+> > configuration from the DT node at probe time if available.
+> > 
+> > Cc: devicetree-discuss@lists.ozlabs.org
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+> Hi,
+> 
+> I don't see this cc/acked by Linus or Grant/Rob.
 
-It would make sense to qualify the descriptor members as __{le/be}32 then
-use them with proper cpu_to_{le/be} wrappers _and_ mapping addresses
-instead of direct skb->data assignment.
+The patch has been acked by Linus, but it seems the ack got lost somewhere.
+
+https://patchwork.kernel.org/patch/2596901/
+
+> However, the binding looks very vanilla to me, so I'll merge it anyway.
+
+Thank you.
 
 -- 
-Ueimor
+Regards,
+
+Laurent Pinchart
+
