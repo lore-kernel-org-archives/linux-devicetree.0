@@ -1,46 +1,73 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/1] gpio-rcar: Add DT support
-Date: Sat, 15 Jun 2013 13:31:08 +0200
-Message-ID: <2295525.muus9MNBiz@avalon>
-References: <1371106826-25313-1-git-send-email-horms+renesas@verge.net.au> <1371106826-25313-2-git-send-email-horms+renesas@verge.net.au> <20130615004751.GM18124@quad.lixom.net>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Device tree flattening code not copying properties from blob
+Date: Sat, 15 Jun 2013 14:14:32 +0100
+Message-ID: <20130615131432.287D23E0A2E@localhost>
+References: <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF696@corpatsmail4.corp.sensis.com>
+ <CACxGe6sdsXp0g9MJ2npupQedXpnge7kp_v=BqnErf+J6oXnyeg@mail.gmail.com>
+ <8BE8E6569B96CE4AA5EDE9F8314B7FB1EEF722@corpatsmail4.corp.sensis.com>
+ <CACxGe6urthkotuwU2OtqEMn8WmBxU=hSmrKyffHR=Pbayo_HKg@mail.gmail.com>
+ <51B8C827.7060704@home.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130615004751.GM18124@quad.lixom.net>
-Sender: linux-sh-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51B8C827.7060704-CmkmPbn3yAE@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: nios2-dev <nios2-dev-1eJk0qcHJCcaeqlQEoCUNoJY59XmG8rH@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
-
-On Friday 14 June 2013 17:47:51 Olof Johansson wrote:
-> On Thu, Jun 13, 2013 at 04:00:26PM +0900, Simon Horman wrote:
-> > From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > 
-> > Add DT bindings for the gpio-rcar driver and read the device
-> > configuration from the DT node at probe time if available.
-> > 
-> > Cc: devicetree-discuss@lists.ozlabs.org
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+On Wed, 12 Jun 2013 21:12:39 +0200, Walter Goossens <waltergoossens-CmkmPbn3yAE@public.gmane.org> wrote:
+> On 06/12/13 20:23, Grant Likely wrote:
+> > On Wed, Jun 12, 2013 at 6:33 PM, Collins, Rod
+> > <Rod.Collins-eu1g02Y2shuDvotElmWtJA@public.gmane.org> wrote:
+> >> The blob is built into the zImage.initramfs.gz image which is put into
+> >> flash. The zImage.initramfs.gz is self copied from flash to RAM, then
+> >> uncompressed to the running area. I will dig into the location of the
+> >> blob in the image and report back.
+> > Thanks. If it is appended to the zImage wrapper, then things should be
+> > fine (this is the expected way to do when not passed in from the
+> > bootloader). If a *.dtb.o target has been used to embedded it into the
+> > kernel-proper (vmlinux) then you will have a problem. The *.dtb.S
+> > target puts the dtb data into the dtb.init.rodata section which gets
+> > discarded.
+> >
+> > g.
 > 
-> Hi,
+> Hi Grant,
 > 
-> I don't see this cc/acked by Linus or Grant/Rob.
+> you're right that's exactly what nios2 is doing...
+> I guess we could modify the section where it gets loaded but that sounds
+> to me a bit like a hack... What is the best target to look at for a
+> clean, similar solution? Arm with CONFIG_ARM_APPENDED_DTB?
 
-The patch has been acked by Linus, but it seems the ack got lost somewhere.
+My first recommendation would be the way it is described in
+Documentation/arm/Booting and Documentation/devicetree/booting-without-of.txt,
+by which I mean passing the dtb into the kernel from the bootloader.
+This is the preferred approach on both PowerPC and ARM, but I do
+undertstand that doesn't work in all situations; such as if there is no
+bootloader.
 
-https://patchwork.kernel.org/patch/2596901/
+The second choice is to attach it to the kernel image as a
+post-processing step. On ARM that is enabled by CONFIG_ARM_APPENDED_DTB
+which makes it possible to merely dd the DTB onto the end of the kernel
+image. PowerPC uses a slighly different approach where a script takes
+care of linking the DTB into the bootwrapper. See the
+arch/powerpc/boot/wrapper script for details.
 
-> However, the binding looks very vanilla to me, so I'll merge it anyway.
+Either way, I don't think it is a good architectural decision to link
+the dtb directly into the kernel proper because doing so precludes ever
+having a single kernel image bootable on multiple platforms. On an FPGA
+platform it is particularly useful not having to rebuild the kernel
+every time the FPGA design changes.
 
-Thank you.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+g.
