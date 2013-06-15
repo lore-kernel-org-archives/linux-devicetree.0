@@ -1,80 +1,77 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH] of: irq: Pass trigger type in IRQ resource flags
-Date: Sat, 15 Jun 2013 02:57:17 +0200
-Message-ID: <19FA54F4-522D-4976-9D98-8EA2827D22F6@collabora.co.uk>
-References: <1368917790-23770-1-git-send-email-tomasz.figa@gmail.com> <54821523.hBKS2L2vLj@flatron> <20130614220030.82ECF3E0A56@localhost>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130614220030.82ECF3E0A56@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] Bump version number to 1.4.0
+Date: Sat, 15 Jun 2013 11:12:45 +1000
+Message-ID: <20130615011245.GB9218@voom.bne.redhat.com>
+References: <1370970685-21755-1-git-send-email-swarren@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2272682744505113804=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370970685-21755-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 15/06/2013, at 00:00, Grant Likely <grant.likely@linaro.org> wrote:
+--===============2272682744505113804==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TakKZr9L6Hm6aLOc"
+Content-Disposition: inline
 
-> On Wed, 05 Jun 2013 20:20:39 +0200, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> Hi,
->> 
->> On Sunday 19 of May 2013 00:56:30 Tomasz Figa wrote:
->>> Some drivers might rely on availability of trigger flags in IRQ
->>> resource, for example to configure the hardware for particular interrupt
->>> type. However current code creating IRQ resources from data in device
->>> tree does not configure trigger flags in resulting resources.
->>> 
->>> This patch solves the problem, based on the fact that
->>> irq_of_parse_and_map() configures the trigger based on DT interrupt
->>> specifier, IRQD_TRIGGER_* flags are consistent with IORESOURCE_IRQ_*,
->>> and we can get trigger type by calling irqd_get_trigger_type() after
->>> mapping the interrupt.
->>> 
->>> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
->>> ---
->>> drivers/of/irq.c | 10 ++++++++++
->>> 1 file changed, 10 insertions(+)
->>> 
->>> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
->>> index a3c1c5a..79a7a26 100644
->>> --- a/drivers/of/irq.c
->>> +++ b/drivers/of/irq.c
->>> @@ -355,6 +355,16 @@ int of_irq_to_resource(struct device_node *dev, int
->>> index, struct resource *r) r->start = r->end = irq;
->>>        r->flags = IORESOURCE_IRQ;
->>>        r->name = name ? name : dev->full_name;
->>> +
->>> +        /*
->>> +         * Some drivers might rely on availability of trigger
->> flags
->>> +         * in IRQ resource. Since irq_of_parse_and_map()
->> configures the
->>> +         * trigger based on interrupt specifier and IRQD_TRIGGER_*
->>> +         * flags are consistent with IORESOURCE_IRQ_*, we can get
->>> +         * trigger type that was just set and pass it through
->> resource
->>> +         * flags as well.
->>> +         */
->>> +        r->flags |= irqd_get_trigger_type(irq_get_irq_data(irq));
->>>    }
->>> 
->>>    return irq;
->> 
->> Any comments on this patch?
-> 
-> That's actually a pretty good solution and a whole lot less invasive
-> that the approach that Javier was pursuing. Javier, I'm going to pick
-> up this patch. Please yell if it doesn't solve the problem that you're
-> trying to solve.
-> 
-> g.
-> 
 
-It solves the issue I was trying to solve and the solution is indeed more elegant and simpler than the one I posted.
+--TakKZr9L6Hm6aLOc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks a lot for pointing this out.
+On Tue, Jun 11, 2013 at 11:11:25AM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> Many useful new features have been added to dtc since the last release.
+> Projects that use dtc wish to test the version number to determine
+> which features are available. Increment the version number to allow
+> this.
 
-Best regards,
-Javier
+Hrm.  We should make a new release.  But I don't think we should bump
+the version without actuall rolling a release.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--TakKZr9L6Hm6aLOc
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.13 (GNU/Linux)
+
+iEYEARECAAYFAlG7v40ACgkQaILKxv3ab8bjHACaAzLagk1rAx1A3Gs/uoL5KGit
+7EAAnjpeGN3tyeVx4uIufNR3Bp5HIUf8
+=/e8c
+-----END PGP SIGNATURE-----
+
+--TakKZr9L6Hm6aLOc--
+
+--===============2272682744505113804==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2272682744505113804==--
