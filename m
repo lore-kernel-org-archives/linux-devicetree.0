@@ -1,33 +1,80 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 0/1] gpio-rcar: Add DT support
-Date: Fri, 14 Jun 2013 17:47:51 -0700
-Message-ID: <20130615004751.GM18124@quad.lixom.net>
-References: <1371106826-25313-1-git-send-email-horms+renesas@verge.net.au>
- <1371106826-25313-2-git-send-email-horms+renesas@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1371106826-25313-2-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH] of: irq: Pass trigger type in IRQ resource flags
+Date: Sat, 15 Jun 2013 02:57:17 +0200
+Message-ID: <19FA54F4-522D-4976-9D98-8EA2827D22F6@collabora.co.uk>
+References: <1368917790-23770-1-git-send-email-tomasz.figa@gmail.com> <54821523.hBKS2L2vLj@flatron> <20130614220030.82ECF3E0A56@localhost>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130614220030.82ECF3E0A56@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2013 at 04:00:26PM +0900, Simon Horman wrote:
-> From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+
+On 15/06/2013, at 00:00, Grant Likely <grant.likely@linaro.org> wrote:
+
+> On Wed, 05 Jun 2013 20:20:39 +0200, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>> Hi,
+>> 
+>> On Sunday 19 of May 2013 00:56:30 Tomasz Figa wrote:
+>>> Some drivers might rely on availability of trigger flags in IRQ
+>>> resource, for example to configure the hardware for particular interrupt
+>>> type. However current code creating IRQ resources from data in device
+>>> tree does not configure trigger flags in resulting resources.
+>>> 
+>>> This patch solves the problem, based on the fact that
+>>> irq_of_parse_and_map() configures the trigger based on DT interrupt
+>>> specifier, IRQD_TRIGGER_* flags are consistent with IORESOURCE_IRQ_*,
+>>> and we can get trigger type by calling irqd_get_trigger_type() after
+>>> mapping the interrupt.
+>>> 
+>>> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+>>> ---
+>>> drivers/of/irq.c | 10 ++++++++++
+>>> 1 file changed, 10 insertions(+)
+>>> 
+>>> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+>>> index a3c1c5a..79a7a26 100644
+>>> --- a/drivers/of/irq.c
+>>> +++ b/drivers/of/irq.c
+>>> @@ -355,6 +355,16 @@ int of_irq_to_resource(struct device_node *dev, int
+>>> index, struct resource *r) r->start = r->end = irq;
+>>>        r->flags = IORESOURCE_IRQ;
+>>>        r->name = name ? name : dev->full_name;
+>>> +
+>>> +        /*
+>>> +         * Some drivers might rely on availability of trigger
+>> flags
+>>> +         * in IRQ resource. Since irq_of_parse_and_map()
+>> configures the
+>>> +         * trigger based on interrupt specifier and IRQD_TRIGGER_*
+>>> +         * flags are consistent with IORESOURCE_IRQ_*, we can get
+>>> +         * trigger type that was just set and pass it through
+>> resource
+>>> +         * flags as well.
+>>> +         */
+>>> +        r->flags |= irqd_get_trigger_type(irq_get_irq_data(irq));
+>>>    }
+>>> 
+>>>    return irq;
+>> 
+>> Any comments on this patch?
 > 
-> Add DT bindings for the gpio-rcar driver and read the device
-> configuration from the DT node at probe time if available.
+> That's actually a pretty good solution and a whole lot less invasive
+> that the approach that Javier was pursuing. Javier, I'm going to pick
+> up this patch. Please yell if it doesn't solve the problem that you're
+> trying to solve.
 > 
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> g.
+> 
 
-Hi,
+It solves the issue I was trying to solve and the solution is indeed more elegant and simpler than the one I posted.
 
-I don't see this cc/acked by Linus or Grant/Rob. However, the binding
-looks very vanilla to me, so I'll merge it anyway.
+Thanks a lot for pointing this out.
 
-
--Olof
+Best regards,
+Javier
