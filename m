@@ -1,68 +1,116 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v8 11/11] ASoC: fsl: Update fsl-ssi binding doc
-Date: Sun, 16 Jun 2013 15:25:17 +0200
-Message-ID: <1371389117-19729-12-git-send-email-mpa@pengutronix.de>
-References: <1371389117-19729-1-git-send-email-mpa@pengutronix.de>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH v2] pinctrl: rockchip: correctly handle arguments of pinconf options
+Date: Sun, 16 Jun 2013 17:41:16 +0200
+Message-ID: <201306161741.17048.heiko@sntech.de>
+References: <201306141741.46077.heiko@sntech.de> <201306161302.32156.heiko@sntech.de> <CACRpkdZxO-8rQPBRPsxAx8OBfwvh_BQuts7NAi379gMZG+1ocg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371389117-19729-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZxO-8rQPBRPsxAx8OBfwvh_BQuts7NAi379gMZG+1ocg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, James Hogan <james.hogan@imgtec.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the fsl-ssi bindings. DMA is no required property anymore and
-uses the generic DMA bindings. imx-fiq is a new alternative to DMA
+Change the rockchip pinctrl driver to handle the arguments to the pull
+pinconfig options correctly. So only accept non-0 values for the
+pull options as the rockchip pin-controller can only turn pulls on and
+off (this via BIAS_DISABLE).
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
+changes since v1:
+ really respect the values for arguments of the pull options (aka 0 is not
+ meant to turn off a pull).
+ Replacing the patch also makes sure that no wrong knowledge stays in the
+ kernel via the old commit message, least somebody else reads it and takes
+ it as true.
 
-Notes:
-    Changes in v4:
-     - Add a comment about hardware bugs for imx-pcm-fiq
-    
-    Changes in v3:
-     - In previous versions, I removed fsl,playback-dma and capture-dma. But they
-       are still in use by fsl_dma.c, so I added them again.
+ drivers/pinctrl/pinctrl-rockchip.c      |   41 ++++++++++++++++++++++++++++---
+ 1 file changed, 37 insertions(+), 4 deletions(-)
 
- Documentation/devicetree/bindings/sound/fsl,ssi.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/fsl,ssi.txt b/Documentation/devicetree/bindings/sound/fsl,ssi.txt
-index 5ff76c9..0375ee0 100644
---- a/Documentation/devicetree/bindings/sound/fsl,ssi.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,ssi.txt
-@@ -43,10 +43,20 @@ Required properties:
-                     together.  This would still allow different sample sizes,
-                     but not different sample rates.
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index c605b63..427564f 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -563,6 +563,25 @@ static const struct pinmux_ops rockchip_pmx_ops = {
+  * Pinconf_ops handling
+  */
  
-+Note that either dmas, dma-names or fsl,imx-fiq are required.
++static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
++					enum pin_config_param pull)
++{
++	/* rk3066b does support any pulls */
++	if (!ctrl->pull_offset)
++		return pull ? false : true;
 +
- Optional properties:
- - codec-handle:     Phandle to a 'codec' node that defines an audio
-                     codec connected to this SSI.  This node is typically
-                     a child of an I2C or other control node.
-+- dmas:		    Generic dma devicetree binding as described in
-+		    Documentation/devicetree/bindings/dma/dma.txt.
-+- dma-names:	    Two dmas have to be defined, "tx" and "rx", if fsl,imx-fiq
-+		    is not defined.
-+- fsl,imx-fiq:	    Bool property. Use imx-pcm-fiq instead of imx-pcm-dma.
-+  		    Only necessary for some boards with incompatible
-+		    codec. imx-pcm-fiq will manually filter some data from
-+		    the codec. It is a workaround for a hardware bug.
++	if (ctrl->pull_auto) {
++		if (pull != PIN_CONFIG_BIAS_PULL_PIN_DEFAULT &&
++					pull != PIN_CONFIG_BIAS_DISABLE)
++			return false;
++	} else {
++		if (pull == PIN_CONFIG_BIAS_PULL_PIN_DEFAULT)
++			return false;
++	}
++
++	return true;
++}
++
+ /* set the pin config settings for a specified pin */
+ static int rockchip_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 							unsigned long config)
+@@ -570,12 +589,21 @@ static int rockchip_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	struct rockchip_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+ 	struct rockchip_pin_bank *bank = pin_to_bank(info, pin);
+ 	enum pin_config_param param = pinconf_to_config_param(config);
++	u16 arg = pinconf_to_config_argument(config);
  
- Child 'codec' node required properties:
- - compatible:       Compatible list, contains the name of the codec
+ 	switch (param) {
+ 	case PIN_CONFIG_BIAS_DISABLE:
++		return rockchip_set_pull(bank, pin - bank->pin_base, param);
++		break;
+ 	case PIN_CONFIG_BIAS_PULL_UP:
+ 	case PIN_CONFIG_BIAS_PULL_DOWN:
+ 	case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
++		if (!rockchip_pinconf_pull_valid(info->ctrl, param))
++			return -ENOTSUPP;
++
++		if (!arg)
++			return -EINVAL;
++
+ 		return rockchip_set_pull(bank, pin - bank->pin_base, param);
+ 		break;
+ 	default:
+@@ -593,19 +621,24 @@ static int rockchip_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
+ 	struct rockchip_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+ 	struct rockchip_pin_bank *bank = pin_to_bank(info, pin);
+ 	enum pin_config_param param = pinconf_to_config_param(*config);
+-	unsigned int pull;
+ 
+ 	switch (param) {
+ 	case PIN_CONFIG_BIAS_DISABLE:
++		if (rockchip_get_pull(bank, pin - bank->pin_base) != param)
++			return -EINVAL;
++
++		*config = 0;
++		break;
+ 	case PIN_CONFIG_BIAS_PULL_UP:
+ 	case PIN_CONFIG_BIAS_PULL_DOWN:
+ 	case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
+-		pull = rockchip_get_pull(bank, pin - bank->pin_base);
++		if (!rockchip_pinconf_pull_valid(info->ctrl, param))
++			return -ENOTSUPP;
+ 
+-		if (pull != param)
++		if (rockchip_get_pull(bank, pin - bank->pin_base) != param)
+ 			return -EINVAL;
+ 
+-		*config = 0;
++		*config = 1;
+ 		break;
+ 	default:
+ 		return -ENOTSUPP;
 -- 
-1.8.2.1
+1.7.10.4
