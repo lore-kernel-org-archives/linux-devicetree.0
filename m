@@ -1,45 +1,30 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: nomadik: implement the Nomadik clocks properly
-Date: Sun, 16 Jun 2013 21:08:17 +0200
-Message-ID: <CACRpkdbtz=sJM+1ZEgLhfXT-or1a8AX6uwLWB1S8qS7b3N7fvw@mail.gmail.com>
-References: <1370775348-7440-1-git-send-email-linus.walleij@linaro.org>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [RFC PATCH 5/5] ARM: Samsung: Remove MIPI PHY setup code
+Date: Mon, 17 Jun 2013 05:52:48 +0900
+Message-ID: <51BE25A0.6050202@samsung.com>
+References: <1371231951-1969-1-git-send-email-s.nawrocki@samsung.com> <1371231951-1969-6-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370775348-7440-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1371231951-1969-6-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: kishon@ti.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 9, 2013 at 12:55 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On 06/15/13 02:45, Sylwester Nawrocki wrote:
+> Generic PHY drivers are used to handle the MIPI CSIS and MIPI DSIM
+> DPHYs so we can remove now unused code at arch/arm/plat-samsung.
 
-> The Nomadik clock implementation was a stub just using
-> fixed clocks.
->
-> This implements the clocks properly instead of relying
-> on them all being on at boot and leaving them all on.
+If so, sounds good :)
 
-Mike, ping on this.
+> In case there is any board file for S5PV210 platforms using MIPI
+> CSIS/DSIM (not any upstream currently) it should use the generic
+> PHY API to bind the PHYs to respective PHY consumer drivers.
 
-There was some debate on whether to use 0 or 1 cells
-for the clocks, but I made some argument that this is how
-they need to be represented.
+To be honest, I didn't test this on boards but if the working is fine, 
+please go ahead without RFC.
 
-As subsystem maintainer I suspect you will need to be
-the Judge (Dredd) on this. I think I overheard some kind
-of positive tone to this style of modelling them  in some
-other review but it might've been imagination ...
-
-Yours,
-Linus Walleij
+Thanks,
+- Kukjin
