@@ -1,116 +1,45 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH v2] pinctrl: rockchip: correctly handle arguments of pinconf options
-Date: Sun, 16 Jun 2013 17:41:16 +0200
-Message-ID: <201306161741.17048.heiko@sntech.de>
-References: <201306141741.46077.heiko@sntech.de> <201306161302.32156.heiko@sntech.de> <CACRpkdZxO-8rQPBRPsxAx8OBfwvh_BQuts7NAi379gMZG+1ocg@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: nomadik: implement the Nomadik clocks properly
+Date: Sun, 16 Jun 2013 21:08:17 +0200
+Message-ID: <CACRpkdbtz=sJM+1ZEgLhfXT-or1a8AX6uwLWB1S8qS7b3N7fvw@mail.gmail.com>
+References: <1370775348-7440-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZxO-8rQPBRPsxAx8OBfwvh_BQuts7NAi379gMZG+1ocg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, James Hogan <james.hogan@imgtec.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370775348-7440-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Change the rockchip pinctrl driver to handle the arguments to the pull
-pinconfig options correctly. So only accept non-0 values for the
-pull options as the rockchip pin-controller can only turn pulls on and
-off (this via BIAS_DISABLE).
+On Sun, Jun 9, 2013 at 12:55 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
-changes since v1:
- really respect the values for arguments of the pull options (aka 0 is not
- meant to turn off a pull).
- Replacing the patch also makes sure that no wrong knowledge stays in the
- kernel via the old commit message, least somebody else reads it and takes
- it as true.
+> The Nomadik clock implementation was a stub just using
+> fixed clocks.
+>
+> This implements the clocks properly instead of relying
+> on them all being on at boot and leaving them all on.
 
- drivers/pinctrl/pinctrl-rockchip.c      |   41 ++++++++++++++++++++++++++++---
- 1 file changed, 37 insertions(+), 4 deletions(-)
+Mike, ping on this.
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index c605b63..427564f 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -563,6 +563,25 @@ static const struct pinmux_ops rockchip_pmx_ops = {
-  * Pinconf_ops handling
-  */
- 
-+static bool rockchip_pinconf_pull_valid(struct rockchip_pin_ctrl *ctrl,
-+					enum pin_config_param pull)
-+{
-+	/* rk3066b does support any pulls */
-+	if (!ctrl->pull_offset)
-+		return pull ? false : true;
-+
-+	if (ctrl->pull_auto) {
-+		if (pull != PIN_CONFIG_BIAS_PULL_PIN_DEFAULT &&
-+					pull != PIN_CONFIG_BIAS_DISABLE)
-+			return false;
-+	} else {
-+		if (pull == PIN_CONFIG_BIAS_PULL_PIN_DEFAULT)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- /* set the pin config settings for a specified pin */
- static int rockchip_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 							unsigned long config)
-@@ -570,12 +589,21 @@ static int rockchip_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 	struct rockchip_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
- 	struct rockchip_pin_bank *bank = pin_to_bank(info, pin);
- 	enum pin_config_param param = pinconf_to_config_param(config);
-+	u16 arg = pinconf_to_config_argument(config);
- 
- 	switch (param) {
- 	case PIN_CONFIG_BIAS_DISABLE:
-+		return rockchip_set_pull(bank, pin - bank->pin_base, param);
-+		break;
- 	case PIN_CONFIG_BIAS_PULL_UP:
- 	case PIN_CONFIG_BIAS_PULL_DOWN:
- 	case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
-+		if (!rockchip_pinconf_pull_valid(info->ctrl, param))
-+			return -ENOTSUPP;
-+
-+		if (!arg)
-+			return -EINVAL;
-+
- 		return rockchip_set_pull(bank, pin - bank->pin_base, param);
- 		break;
- 	default:
-@@ -593,19 +621,24 @@ static int rockchip_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
- 	struct rockchip_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
- 	struct rockchip_pin_bank *bank = pin_to_bank(info, pin);
- 	enum pin_config_param param = pinconf_to_config_param(*config);
--	unsigned int pull;
- 
- 	switch (param) {
- 	case PIN_CONFIG_BIAS_DISABLE:
-+		if (rockchip_get_pull(bank, pin - bank->pin_base) != param)
-+			return -EINVAL;
-+
-+		*config = 0;
-+		break;
- 	case PIN_CONFIG_BIAS_PULL_UP:
- 	case PIN_CONFIG_BIAS_PULL_DOWN:
- 	case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
--		pull = rockchip_get_pull(bank, pin - bank->pin_base);
-+		if (!rockchip_pinconf_pull_valid(info->ctrl, param))
-+			return -ENOTSUPP;
- 
--		if (pull != param)
-+		if (rockchip_get_pull(bank, pin - bank->pin_base) != param)
- 			return -EINVAL;
- 
--		*config = 0;
-+		*config = 1;
- 		break;
- 	default:
- 		return -ENOTSUPP;
--- 
-1.7.10.4
+There was some debate on whether to use 0 or 1 cells
+for the clocks, but I made some argument that this is how
+they need to be represented.
+
+As subsystem maintainer I suspect you will need to be
+the Judge (Dredd) on this. I think I overheard some kind
+of positive tone to this style of modelling them  in some
+other review but it might've been imagination ...
+
+Yours,
+Linus Walleij
