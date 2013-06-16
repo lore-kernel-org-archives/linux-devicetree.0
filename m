@@ -1,16 +1,15 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] pinctrl: generic: Add DT bindings
-Date: Sun, 16 Jun 2013 02:04:45 +0200
-Message-ID: <CACRpkdZePYMHFMOc0WEy73vqix9uRFyedS66sKcyP_D_Kq+nQg@mail.gmail.com>
-References: <1370988237-30593-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1795038.rqcr6GWLdP@avalon>
- <CACRpkdYi=ekV8okmz68HZ8Ydv9hTrHnHvQh0HYMs5SfURd9mdA@mail.gmail.com>
- <1422045.RvRkWGR9K7@avalon>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [RESEND,PATCHv6 1/1] Add support for GMT G762/G763 PWM fan
+ controllers
+Date: Sat, 15 Jun 2013 18:59:39 -0700
+Message-ID: <20130616015939.GA5535@roeck-us.net>
+References: <87sj0jhuhn.fsf@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1422045.RvRkWGR9K7@avalon>
+Content-Disposition: inline
+In-Reply-To: <87sj0jhuhn.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,39 +20,37 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Olivier Mouchet <olivier.mouchet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 16, 2013 at 1:52 AM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> Hi Linus,
-> On Sunday 16 June 2013 01:51:32 Linus Walleij wrote:
+On Sun, Jun 16, 2013 at 12:36:20AM +0200, Arnaud Ebalard wrote:
+> 
+> GMT G762/763 fan speed PWM controller is connected directly to a fan
+> and performs closed-loop or open-loop control of the fan speed. Two
+> modes - PWM or DC - are supported by the chip. Introduced driver
+> provides various knobs to control the operations of the chip (via
+> sysfs interface). Specific characteristics of the system can be passed
+> either using board init code or via DT. Documentation for both the
+> driver and DT bindings are also provided.
+> 
+> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+> ---
+> Hi Guenter,
+> 
+> In the end, I think handling the clock properly for DT path
+> (clk_prepare_enable() and associated clk_disable_unprepare()
+> for both error and module unloading) adds some code but I
+> do not see how to spare this. Comments welcome.
+> 
+> If you have additional comments and a new version is required,
+> I'll handle those with Simon's tests on its platform.
+> 
+We might need to be more careful with the clocks. Several drivers
+save the value retrieved with of_clk_get() and call clk_put()
+afterwards. But some drivers don't do that, so I don't really
+know the implications.
 
->> As dicussed earlier this was designed for systems where
->> you could set the pull-up resistance, like
->>
->> bias-pull-up = <600000>;
->>
->> would give 600kOhm pull up.
->>
->> In most existing systems that is silly, as they can't specify it, so they
->> should be able to do just:
->>
->> bias-pull-up;
->>
->> as that is all they can do. If we have to cut one way, we should cut the
->> former until such a system appears.
->
-> I'm fine with bias-pull-up = <1>; vs bias-pull-up;. What bothers me a bit is
-> bias-pull-up = <0>; vs bias-disable;.
+I'll look into it some more to make sure everything is correct.
 
-Oh yeah OK you got a point there for sure.
-
-Setting bias-pull-up = <0>; would be equal to short-circuit
-so it does not make any kind of sense.
-
-Let's keep an eye on this.
-
-Yours,
-Linus Walleij
+Guenter
