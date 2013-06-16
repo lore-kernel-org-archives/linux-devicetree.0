@@ -1,14 +1,13 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/7] gpio: clean up gpio-ranges documentation
-Date: Sun, 16 Jun 2013 14:43:30 +0200
-Message-ID: <CACRpkdYhMGg3OXTuD9T3WS3SQT2P+1WGG5KexmNqzomd00nErQ@mail.gmail.com>
-References: <1371157199-7272-1-git-send-email-swarren@wwwdotorg.org>
- <1371157199-7272-2-git-send-email-swarren@wwwdotorg.org>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v8 07/11] ARM: imx: Export ac97 reset functions
+Date: Sun, 16 Jun 2013 15:25:13 +0200
+Message-ID: <1371389117-19729-8-git-send-email-mpa@pengutronix.de>
+References: <1371389117-19729-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371157199-7272-2-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1371389117-19729-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,35 +18,95 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 13, 2013 at 10:59 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/mach-imx/mach-pca100.c | 7 +++++--
+ arch/arm/mach-imx/mach-pcm043.c | 7 +++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> This change makes documentation of the the gpio-ranges property shorter
-> and more succinct, more consistent with the style of the rest of the
-> document, and not mention Linux-specifics such as the API
-> pinctrl_request_gpio(); DT binding documents should be OS independant
-> where at all possible.
->
-> This change also removes any mention of the #gpio-range-cells property.
-> Such properties are useful when one node references a second node, and
-> that second node dictates the format of the reference. However, that is
-> not the case here; the definition of gpio-ranges itself always dictates
-> its format entirely, and hence the value #gpio-range-cells must always
-> be 3, and hence there is no point requiring any referenced node to
-> include this property.
->
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> Patches 2-6 need to be applied in the same branch, since they all build
-> upon each-other.
-
-Very nice. If I can just get the OF maintainers to ACK the OF
-patches I can carry this stuff in pinctrl or gpio alike.
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm/mach-imx/mach-pca100.c b/arch/arm/mach-imx/mach-pca100.c
+index b8b15bb..68badf8 100644
+--- a/arch/arm/mach-imx/mach-pca100.c
++++ b/arch/arm/mach-imx/mach-pca100.c
+@@ -22,6 +22,7 @@
+ #include <linux/i2c.h>
+ #include <linux/i2c/at24.h>
+ #include <linux/dma-mapping.h>
++#include <linux/export.h>
+ #include <linux/spi/spi.h>
+ #include <linux/spi/eeprom.h>
+ #include <linux/irq.h>
+@@ -208,7 +209,7 @@ static const struct spi_imx_master pca100_spi0_data __initconst = {
+ 	.num_chipselect = ARRAY_SIZE(pca100_spi_cs),
+ };
+ 
+-static void pca100_ac97_warm_reset(struct snd_ac97 *ac97)
++void pca100_ac97_warm_reset(struct snd_ac97 *ac97)
+ {
+ 	mxc_gpio_mode(GPIO_PORTC | 20 | GPIO_GPIO | GPIO_OUT);
+ 	gpio_set_value(GPIO_PORTC + 20, 1);
+@@ -217,8 +218,9 @@ static void pca100_ac97_warm_reset(struct snd_ac97 *ac97)
+ 	mxc_gpio_mode(PC20_PF_SSI1_FS);
+ 	msleep(2);
+ }
++EXPORT_SYMBOL(pca100_ac97_warm_reset);
+ 
+-static void pca100_ac97_cold_reset(struct snd_ac97 *ac97)
++void pca100_ac97_cold_reset(struct snd_ac97 *ac97)
+ {
+ 	mxc_gpio_mode(GPIO_PORTC | 20 | GPIO_GPIO | GPIO_OUT);  /* FS */
+ 	gpio_set_value(GPIO_PORTC + 20, 0);
+@@ -232,6 +234,7 @@ static void pca100_ac97_cold_reset(struct snd_ac97 *ac97)
+ 	mxc_gpio_mode(PC22_PF_SSI1_TXD);
+ 	msleep(2);
+ }
++EXPORT_SYMBOL(pca100_ac97_cold_reset);
+ 
+ static const struct imx_ssi_platform_data pca100_ssi_pdata __initconst = {
+ 	.ac97_reset		= pca100_ac97_cold_reset,
+diff --git a/arch/arm/mach-imx/mach-pcm043.c b/arch/arm/mach-imx/mach-pcm043.c
+index 8ed533f..4f318ca 100644
+--- a/arch/arm/mach-imx/mach-pcm043.c
++++ b/arch/arm/mach-imx/mach-pcm043.c
+@@ -27,6 +27,7 @@
+ #include <linux/i2c/at24.h>
+ #include <linux/usb/otg.h>
+ #include <linux/usb/ulpi.h>
++#include <linux/export.h>
+ 
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -217,7 +218,7 @@ static iomux_v3_cfg_t pcm043_pads[] = {
+ #define SD1_GPIO_WP	IMX_GPIO_NR(2, 23)
+ #define SD1_GPIO_CD	IMX_GPIO_NR(2, 24)
+ 
+-static void pcm043_ac97_warm_reset(struct snd_ac97 *ac97)
++void pcm043_ac97_warm_reset(struct snd_ac97 *ac97)
+ {
+ 	iomux_v3_cfg_t txfs_gpio = MX35_PAD_STXFS4__GPIO2_31;
+ 	iomux_v3_cfg_t txfs = MX35_PAD_STXFS4__AUDMUX_AUD4_TXFS;
+@@ -239,8 +240,9 @@ static void pcm043_ac97_warm_reset(struct snd_ac97 *ac97)
+ 	gpio_free(AC97_GPIO_TXFS);
+ 	mxc_iomux_v3_setup_pad(txfs);
+ }
++EXPORT_SYMBOL(pcm043_ac97_warm_reset);
+ 
+-static void pcm043_ac97_cold_reset(struct snd_ac97 *ac97)
++void pcm043_ac97_cold_reset(struct snd_ac97 *ac97)
+ {
+ 	iomux_v3_cfg_t txfs_gpio = MX35_PAD_STXFS4__GPIO2_31;
+ 	iomux_v3_cfg_t txfs = MX35_PAD_STXFS4__AUDMUX_AUD4_TXFS;
+@@ -286,6 +288,7 @@ err1:
+ 		printk("%s failed with %d\n", __func__, ret);
+ 	mdelay(1);
+ }
++EXPORT_SYMBOL(pcm043_ac97_cold_reset);
+ 
+ static const struct imx_ssi_platform_data pcm043_ssi_pdata __initconst = {
+ 	.ac97_reset = pcm043_ac97_cold_reset,
+-- 
+1.8.2.1
