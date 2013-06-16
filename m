@@ -1,15 +1,15 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [RESEND,PATCHv6 1/1] Add support for GMT G762/G763 PWM fan
- controllers
-Date: Sat, 15 Jun 2013 18:59:39 -0700
-Message-ID: <20130616015939.GA5535@roeck-us.net>
-References: <87sj0jhuhn.fsf@natisbad.org>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4] ethernet/arc/arc_emac - Add new driver
+Date: Sun, 16 Jun 2013 00:41:31 -0700
+Message-ID: <1371368491.2116.0.camel@joe-AO722>
+References: <1371327652-9368-1-git-send-email-abrodkin@synopsys.com>
+ <1371328671.2117.6.camel@joe-AO722>
+ <4881796E12491D4BB15146FE0209CE643F5E7779@DE02WEMBXB.internal.synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87sj0jhuhn.fsf-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <4881796E12491D4BB15146FE0209CE643F5E7779-okAzG6w2b9vBRDCkatnZjvufCSb+aD3WLzEdoUbNIic@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,37 +20,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Olivier Mouchet <olivier.mouchet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+To: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Francois Romieu <romieu-W8zweXLXuWQS+FvcfC7Uqw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mischa Jonker <Mischa.Jonker-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 16, 2013 at 12:36:20AM +0200, Arnaud Ebalard wrote:
+On Sat, 2013-06-15 at 20:47 +0000, Alexey Brodkin wrote:
+> On 06/16/2013 12:37 AM, Joe Perches wrote:
+> > On Sun, 2013-06-16 at 00:20 +0400, Alexey Brodkin wrote:
+[]
+> >> +static int arc_emac_rx(struct net_device *ndev, int budget)
+> > []
+> >> +		/* Prepare the BD for next cycle */
+> >> +		rx_buff->skb = netdev_alloc_skb_ip_align(ndev, buflen);
+> >> +		if (unlikely(!rx_buff->skb)) {
+> >> +			if (net_ratelimit())
+> >> +				netdev_err(ndev, "cannot allocate skb\n");
+> >
+> > Unnecessary OOM message, might as well remove it.
+> > rx_dropped gives the same info.
 > 
-> GMT G762/763 fan speed PWM controller is connected directly to a fan
-> and performs closed-loop or open-loop control of the fan speed. Two
-> modes - PWM or DC - are supported by the chip. Introduced driver
-> provides various knobs to control the operations of the chip (via
-> sysfs interface). Specific characteristics of the system can be passed
-> either using board init code or via DT. Documentation for both the
-> driver and DT bindings are also provided.
-> 
-> Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-> ---
-> Hi Guenter,
-> 
-> In the end, I think handling the clock properly for DT path
-> (clk_prepare_enable() and associated clk_disable_unprepare()
-> for both error and module unloading) adds some code but I
-> do not see how to spare this. Comments welcome.
-> 
-> If you have additional comments and a new version is required,
-> I'll handle those with Simon's tests on its platform.
-> 
-We might need to be more careful with the clocks. Several drivers
-save the value retrieved with of_clk_get() and call clk_put()
-afterwards. But some drivers don't do that, so I don't really
-know the implications.
+> With all those error messages I wanted to make life easier (especially 
+> for me) if errors appear. User will immediately know where problem 
+> happened. Indeed "rx_dropped" (when it is used only once in driver) may 
+> show where issue happened, but if later at some point "rx_dropped" will 
+> be incremented in other locations then user won't understand immediately 
+> where error happened.
 
-I'll look into it some more to make sure everything is correct.
-
-Guenter
+Alloc errors emit a dump_stack() already so this is redundant.
