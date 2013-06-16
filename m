@@ -1,49 +1,28 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4] ethernet/arc/arc_emac - Add new driver
-Date: Sun, 16 Jun 2013 00:41:31 -0700
-Message-ID: <1371368491.2116.0.camel@joe-AO722>
-References: <1371327652-9368-1-git-send-email-abrodkin@synopsys.com>
- <1371328671.2117.6.camel@joe-AO722>
- <4881796E12491D4BB15146FE0209CE643F5E7779@DE02WEMBXB.internal.synopsys.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] Fix comment on pinctrl_gpio_range.pin_base
+Date: Sun, 16 Jun 2013 12:19:33 +0200
+Message-ID: <CACRpkdY2t0jeRYmUAwvvGYoyrGrtU00_P76=cL0w0egRnLtO6Q@mail.gmail.com>
+References: <51BAC3A1.80105@st.com>
+	<1371198288-23829-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4881796E12491D4BB15146FE0209CE643F5E7779-okAzG6w2b9vBRDCkatnZjvufCSb+aD3WLzEdoUbNIic@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Francois Romieu <romieu-W8zweXLXuWQS+FvcfC7Uqw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mischa Jonker <Mischa.Jonker-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1371198288-23829-1-git-send-email-christian.ruppert@abilis.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Patrice CHOTARD <patrice.chotard@st.com>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2013-06-15 at 20:47 +0000, Alexey Brodkin wrote:
-> On 06/16/2013 12:37 AM, Joe Perches wrote:
-> > On Sun, 2013-06-16 at 00:20 +0400, Alexey Brodkin wrote:
-[]
-> >> +static int arc_emac_rx(struct net_device *ndev, int budget)
-> > []
-> >> +		/* Prepare the BD for next cycle */
-> >> +		rx_buff->skb = netdev_alloc_skb_ip_align(ndev, buflen);
-> >> +		if (unlikely(!rx_buff->skb)) {
-> >> +			if (net_ratelimit())
-> >> +				netdev_err(ndev, "cannot allocate skb\n");
-> >
-> > Unnecessary OOM message, might as well remove it.
-> > rx_dropped gives the same info.
-> 
-> With all those error messages I wanted to make life easier (especially 
-> for me) if errors appear. User will immediately know where problem 
-> happened. Indeed "rx_dropped" (when it is used only once in driver) may 
-> show where issue happened, but if later at some point "rx_dropped" will 
-> be incremented in other locations then user won't understand immediately 
-> where error happened.
+On Fri, Jun 14, 2013 at 10:24 AM, Christian Ruppert
+<christian.ruppert@abilis.com> wrote:
 
-Alloc errors emit a dump_stack() already so this is redundant.
+> The comment introduced with the recently added pinctrl_gpio_range.pins
+> element was wrong. This corrects it.
+> Thanks to Patrice Chotard for pointing this out.
+>
+> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+
+Patch applied.
+
+Yours,
+Linus Walleij
