@@ -1,63 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 6/6] DT: Add documentation for gpio-xilinx
-Date: Mon, 17 Jun 2013 07:50:21 +0200
-Message-ID: <CACRpkdaaZKyqBeJHnL4Q5vc3ZVa_psF61McJ2wsFQJMTGvn-NA@mail.gmail.com>
-References: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
-	<af7595252de09373f5591f21262e5ffa7c9e0dc2.1370262666.git.michal.simek@xilinx.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+Date: Sun, 16 Jun 2013 23:20:53 -0700
+Message-ID: <20130617062052.GG20992@atomide.com>
+References: <20130307144656.GR6209@beef>
+ <79CD15C6BA57404B839C016229A409A83EC20CCA@DBDE01.ent.ti.com>
+ <20130307150408.GU6209@beef>
+ <79CD15C6BA57404B839C016229A409A83EC20D27@DBDE01.ent.ti.com>
+ <20130307160236.GV6209@beef>
+ <79CD15C6BA57404B839C016229A409A83EC213C8@DBDE01.ent.ti.com>
+ <CAD=GYpb3+nvoz863+VKO7iJijRHnM5RzsVj-5VJfQ-OHoUy19Q@mail.gmail.com>
+ <20130614222537.GA25428@arwen.pp.htv.fi>
+ <CAD=GYpYfMAZeV1RUC=DqhYGZaKiiukpTZg7bhO582eKwimS9aA@mail.gmail.com>
+ <20130615150500.GA27629@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <af7595252de09373f5591f21262e5ffa7c9e0dc2.1370262666.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130615150500.GA27629-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "Krishnamoorthy,
+ Balaji T" <balajitk-l0cyMroinI0@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 3, 2013 at 2:31 PM, Michal Simek <michal.simek@xilinx.com> wrote:
+* Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [130615 08:12]:
+> 
+> fair enough, then let's just add those interrupts to hwmod which will,
+> eventually, let us drop all of that data from hwmod.
 
-> Describe gpio-xilinx binding.
->
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> Changes in v2:
-> - Extend description
+Nope, we're already dropping the duplicate data from hwmod for
+am33xx and omap4. See omap-for-v3.11/cleanup branch.
 
-Thanks, patch applied but look into this:
+Regards,
 
-> +Optional properties:
-> +- interrupts : Interrupt mapping for GPIO IRQ.
-> +- interrupt-parent : Phandle for the interrupt controller that
-> +  services interrupts for this device.
-> +- xlnx,all-inputs : if n-th bit is setup, GPIO-n is input
-> +- xlnx,dout-default : if n-th bit is 1, GPIO-n default value is 1
-> +- xlnx,gpio-width : gpio width
-> +- xlnx,tri-default : if n-th bit is 1, GPIO-n is in tristate mode
-> +- xlnx,is-dual : if 1, controller also uses the second channel
-
-If is present, xlnx,is-dual;
-
-> +Example:
-> +gpio: gpio@40000000 {
-> +       #gpio-cells = <2>;
-> +       compatible = "xlnx,xps-gpio-1.00.a";
-> +       gpio-controller ;
-> +       interrupt-parent = <&microblaze_0_intc>;
-> +       interrupts = < 6 2 >;
-> +       reg = < 0x40000000 0x10000 >;
-> +       xlnx,all-inputs = <0x0>;
-> +       xlnx,all-inputs-2 = <0x0>;
-> +       xlnx,dout-default = <0x0>;
-> +       xlnx,dout-default-2 = <0x0>;
-> +       xlnx,gpio-width = <0x2>;
-> +       xlnx,gpio2-width = <0x2>;
-> +       xlnx,interrupt-present = <0x1>;
-> +       xlnx,is-dual = <0x1>;
-
-xlnx,is-dual;
-
-I'm not giving up on this suggestion.
-
-Test it please...
-
-Yours,
-Linus Walleij
+Tony
