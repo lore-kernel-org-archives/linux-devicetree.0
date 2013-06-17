@@ -1,70 +1,266 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v10 5/8] dmaengine: edma: Add TI EDMA device tree binding
-Date: Mon, 17 Jun 2013 16:31:24 +0530
-Message-ID: <51BEEC84.1080102@ti.com>
-References: <1371263570-9323-1-git-send-email-joelagnel@ti.com>
-	<1371263570-9323-5-git-send-email-joelagnel@ti.com>
+From: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/3] ARM: mach-moxart: add MOXA ART SoC files
+Date: Mon, 17 Jun 2013 13:08:01 +0200
+Message-ID: <1371467283-6981-1-git-send-email-jonas.jensen@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1371263570-9323-5-git-send-email-joelagnel-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant, Rob,
+Add MOXA ART SoC support.
+The MOXA ART SoC is based on a Faraday FA526 ARMv4 32-bit 192 MHz CPU with MMU and 16KB/8KB D/I-cache (UC-7112-LX).
+Used on models UC-7101, UC-7112/UC-7110, IA240/IA241, IA3341.
 
-Can one of you please take a look at this patch and see if you have any
-comments on the binding definition?
+Signed-off-by: Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/Kconfig                           |    2 +
+ arch/arm/Makefile                          |    1 +
+ arch/arm/configs/moxart_uc7112lx_defconfig |  111 ++++++++++++++++++++++++++++
+ arch/arm/mach-moxart/Kconfig               |   28 +++++++
+ arch/arm/mach-moxart/Makefile              |    3 +
+ arch/arm/mach-moxart/moxart.c              |   33 ++++++++
+ 6 files changed, 178 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/configs/moxart_uc7112lx_defconfig
+ create mode 100644 arch/arm/mach-moxart/Kconfig
+ create mode 100644 arch/arm/mach-moxart/Makefile
+ create mode 100644 arch/arm/mach-moxart/moxart.c
 
-Joel,
-
-Ideally the bindings are described before they are used or along with
-its usage. In that aspect, this patch is present too far back in the
-series. Can you please fix this if you get to posting another version. I
-think I gave the same comment on v9 as well.
-
-On 6/15/2013 8:02 AM, Joel A Fernandes wrote:
-> From: Matt Porter <mdp-l0cyMroinI0@public.gmane.org>
-> 
-> The binding definition is based on the generic DMA controller
-> binding.
-> 
-> Joel: Droped reserved and queue DT entries from Documentation
-> for now from the original patch series.
-> 
-> Signed-off-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/dma/ti-edma.txt |   26 +++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/ti-edma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> new file mode 100644
-> index 0000000..ada0018
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> @@ -0,0 +1,26 @@
-> +TI EDMA
-> +
-> +Required properties:
-> +- compatible : "ti,edma3"
-> +- ti,hwmods: Name of the hwmods associated to the EDMA
-
-ti,hwmods should be optional, no? hwmod is not present on DaVinci where
-EDMA is also used. If it is not optional then these bindings wont work
-there.
-
-Thanks,
-Sekhar
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 94f08af..f91fbbf 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -938,6 +938,8 @@ source "arch/arm/mach-footbridge/Kconfig"
+ 
+ source "arch/arm/mach-gemini/Kconfig"
+ 
++source "arch/arm/mach-moxart/Kconfig"
++
+ source "arch/arm/mach-highbank/Kconfig"
+ 
+ source "arch/arm/mach-integrator/Kconfig"
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 3380c4f..eb8f48e 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -148,6 +148,7 @@ machine-$(CONFIG_ARCH_DOVE)		+= dove
+ machine-$(CONFIG_ARCH_EBSA110)		+= ebsa110
+ machine-$(CONFIG_ARCH_EP93XX)		+= ep93xx
+ machine-$(CONFIG_ARCH_GEMINI)		+= gemini
++machine-$(CONFIG_ARCH_MOXART)		+= moxart
+ machine-$(CONFIG_ARCH_HIGHBANK)		+= highbank
+ machine-$(CONFIG_ARCH_INTEGRATOR)	+= integrator
+ machine-$(CONFIG_ARCH_IOP13XX)		+= iop13xx
+diff --git a/arch/arm/configs/moxart_uc7112lx_defconfig b/arch/arm/configs/moxart_uc7112lx_defconfig
+new file mode 100644
+index 0000000..e3d231b
+--- /dev/null
++++ b/arch/arm/configs/moxart_uc7112lx_defconfig
+@@ -0,0 +1,111 @@
++# CONFIG_LOCALVERSION_AUTO is not set
++# CONFIG_SWAP is not set
++CONFIG_SYSVIPC=y
++CONFIG_IKCONFIG=y
++CONFIG_IKCONFIG_PROC=y
++CONFIG_SYSCTL_SYSCALL=y
++# CONFIG_ELF_CORE is not set
++# CONFIG_BASE_FULL is not set
++# CONFIG_SIGNALFD is not set
++# CONFIG_TIMERFD is not set
++# CONFIG_EVENTFD is not set
++# CONFIG_AIO is not set
++CONFIG_EMBEDDED=y
++# CONFIG_VM_EVENT_COUNTERS is not set
++# CONFIG_SLUB_DEBUG is not set
++# CONFIG_COMPAT_BRK is not set
++# CONFIG_LBDAF is not set
++# CONFIG_BLK_DEV_BSG is not set
++# CONFIG_IOSCHED_DEADLINE is not set
++CONFIG_ARCH_MULTI_V4=y
++# CONFIG_ARCH_MULTI_V7 is not set
++CONFIG_ARCH_MOXART=y
++CONFIG_PREEMPT=y
++CONFIG_AEABI=y
++# CONFIG_OABI_COMPAT is not set
++# CONFIG_ATAGS is not set
++CONFIG_ARM_APPENDED_DTB=y
++CONFIG_NET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
++# CONFIG_INET_XFRM_MODE_TUNNEL is not set
++# CONFIG_INET_XFRM_MODE_BEET is not set
++# CONFIG_INET_LRO is not set
++# CONFIG_INET_DIAG is not set
++# CONFIG_IPV6 is not set
++# CONFIG_WIRELESS is not set
++CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# CONFIG_PREVENT_FIRMWARE_BUILD is not set
++# CONFIG_FW_LOADER is not set
++CONFIG_MTD=y
++CONFIG_MTD_BLOCK=y
++CONFIG_MTD_CFI=y
++CONFIG_MTD_CFI_ADV_OPTIONS=y
++CONFIG_MTD_CFI_GEOMETRY=y
++CONFIG_MTD_CFI_INTELEXT=y
++CONFIG_MTD_COMPLEX_MAPPINGS=y
++CONFIG_MTD_PHYSMAP=y
++CONFIG_MTD_PHYSMAP_OF=y
++CONFIG_PROC_DEVICETREE=y
++CONFIG_NETDEVICES=y
++# CONFIG_NET_CADENCE is not set
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_CIRRUS is not set
++# CONFIG_NET_VENDOR_FARADAY is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MARVELL is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++# CONFIG_NET_VENDOR_SMSC is not set
++# CONFIG_NET_VENDOR_STMICRO is not set
++# CONFIG_NET_VENDOR_WIZNET is not set
++CONFIG_ARM_MOXART_ETHER=y
++# CONFIG_WLAN is not set
++# CONFIG_INPUT is not set
++# CONFIG_SERIO is not set
++# CONFIG_VT is not set
++# CONFIG_LEGACY_PTYS is not set
++CONFIG_MOXA_SMARTIO=y
++# CONFIG_DEVKMEM is not set
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_NR_UARTS=1
++CONFIG_SERIAL_8250_RUNTIME_UARTS=1
++CONFIG_SERIAL_8250_EXTENDED=y
++CONFIG_SERIAL_8250_SHARE_IRQ=y
++CONFIG_SERIAL_OF_PLATFORM=y
++# CONFIG_HW_RANDOM is not set
++CONFIG_GPIO_MOXART=y
++# CONFIG_HWMON is not set
++CONFIG_WATCHDOG=y
++CONFIG_MOXART_WDT=y
++# CONFIG_USB_SUPPORT is not set
++CONFIG_MMC=y
++CONFIG_MMC_SDHCI_MOXART=y
++CONFIG_RTC_CLASS=y
++CONFIG_RTC_DRV_MOXART=y
++CONFIG_DMADEVICES=y
++CONFIG_MOXART_DMA=y
++# CONFIG_IOMMU_SUPPORT is not set
++CONFIG_EXT3_FS=y
++CONFIG_TMPFS=y
++CONFIG_JFFS2_FS=y
++CONFIG_PRINTK_TIME=y
++# CONFIG_ENABLE_WARN_DEPRECATED is not set
++# CONFIG_ENABLE_MUST_CHECK is not set
++CONFIG_MAGIC_SYSRQ=y
++CONFIG_DEBUG_SHIRQ=y
++CONFIG_DETECT_HUNG_TASK=y
++# CONFIG_SCHED_DEBUG is not set
++# CONFIG_DEBUG_PREEMPT is not set
++CONFIG_PROVE_LOCKING=y
++CONFIG_DEBUG_INFO=y
++CONFIG_DEBUG_MEMORY_INIT=y
++# CONFIG_FTRACE is not set
++CONFIG_DEBUG_LL=y
++CONFIG_EARLY_PRINTK=y
++CONFIG_KEYS=y
+diff --git a/arch/arm/mach-moxart/Kconfig b/arch/arm/mach-moxart/Kconfig
+new file mode 100644
+index 0000000..8879053
+--- /dev/null
++++ b/arch/arm/mach-moxart/Kconfig
+@@ -0,0 +1,28 @@
++config ARCH_MOXART
++	bool "MOXA ART SoC" if ARCH_MULTI_V4
++	select CPU_FA526
++	select ARM_DMA_MEM_BUFFERABLE
++	select USE_OF
++	select CLKSRC_OF
++	select HAVE_CLK
++	select COMMON_CLK
++	select GENERIC_IRQ_CHIP
++	select ARCH_REQUIRE_GPIOLIB
++	help
++	  Say Y here if you want to run your kernel on hardware with a
++	  MOXA ART SoC.
++	  The MOXA ART SoC is based on a Faraday FA526 ARMv4 32-bit
++	  192 MHz CPU with MMU and 16KB/8KB D/I-cache (UC-7112-LX).
++	  Used on models UC-7101, UC-7112/UC-7110, IA240/IA241, IA3341.
++
++if ARCH_MOXART
++
++config MACH_UC7112LX
++	bool "MOXA UC-7112-LX"
++	depends on ARCH_MOXART
++	default y
++	help
++	  Say Y here if you intend to run this kernel on a MOXA
++	  UC-7112-LX embedded computer.
++
++endif
+diff --git a/arch/arm/mach-moxart/Makefile b/arch/arm/mach-moxart/Makefile
+new file mode 100644
+index 0000000..fa022eb
+--- /dev/null
++++ b/arch/arm/mach-moxart/Makefile
+@@ -0,0 +1,3 @@
++# Object file lists.
++
++obj-$(CONFIG_MACH_UC7112LX)	+= moxart.o
+diff --git a/arch/arm/mach-moxart/moxart.c b/arch/arm/mach-moxart/moxart.c
+new file mode 100644
+index 0000000..660d53a
+--- /dev/null
++++ b/arch/arm/mach-moxart/moxart.c
+@@ -0,0 +1,33 @@
++/*
++ * arch/arm/mach-moxart/moxart.c
++ *
++ * (C) Copyright 2013, Jonas Jensen <jonas.jensen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
++ * MA 02111-1307 USA
++ */
++
++#include <linux/init.h>
++
++#include <asm/mach/arch.h>
++
++static const char * const moxart_dt_compat[] = {
++	"moxa,moxart",
++	NULL,
++};
++
++DT_MACHINE_START(MOXART, "MOXA UC-7112-LX")
++	.dt_compat		= moxart_dt_compat,
++MACHINE_END
+-- 
+1.7.2.5
