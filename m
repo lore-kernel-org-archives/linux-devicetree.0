@@ -1,82 +1,55 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH v2] OF: make of_property_for_each_{u32|string}() use
- parameters if OF is not enabled
-Date: Mon, 17 Jun 2013 16:48:13 +0200
-Message-ID: <20130617144813.GA10582@linutronix.de>
-References: <1371137331-4652-1-git-send-email-bigeasy@linutronix.de>
- <20130615140018.572793E0A2E@localhost>
+From: "Fernandes, Joel A" <joelagnel@ti.com>
+Subject: RE: [PATCH v10 5/8] dmaengine: edma: Add TI EDMA device tree binding
+Date: Mon, 17 Jun 2013 15:05:55 +0000
+Message-ID: <083BC63EECB6FD41B8E81CF7FD87CC0F2E4E92DA@DLEE08.ent.ti.com>
+References: <1371263570-9323-1-git-send-email-joelagnel@ti.com>
+ <1371263570-9323-5-git-send-email-joelagnel@ti.com> <51BEEC84.1080102@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130615140018.572793E0A2E@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51BEEC84.1080102@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Nori, Sekhar" <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Russell King <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Koen Kooi <koen@beagleboard.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Jason Kridner <jkridner@beagleboard.org>, Rob Landley <rob@landley.net>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Andrew Morton <akpm@linux-foundation.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Matt Porter <matt@ohporter.com>
 List-Id: devicetree@vger.kernel.org
 
-SSBhbSBnZXR0aW5nIGEgZmV3Cnx3YXJuaW5nOiB1bnVzZWQgdmFyaWFibGUg4oCYcOKAmSBbLVd1
-bnVzZWQtdmFyaWFibGVdCnx3YXJuaW5nOiB1bnVzZWQgdmFyaWFibGUg4oCYcHJvcOKAmSBbLVd1
-bnVzZWQtdmFyaWFibGVdCgppbiB0aGUgY2FzZSB3aGVyZSBDT05GSUdfT0YgaXMgbm90IGRlZmlu
-ZWQgYW5kIHRoZSBwYXJhbWV0ZXJzIGFyZSBvbmx5CnVzZWQgaW4gdGhlIGxvb3AgbWFjcm8uCgpT
-aWduZWQtb2ZmLWJ5OiBTZWJhc3RpYW4gQW5kcnplaiBTaWV3aW9yIDxiaWdlYXN5QGxpbnV0cm9u
-aXguZGU+Ci0tLQoKSSBhbHNvIG1hZGUgdGhhdCBjaGFuZ2UgZm9yIG9mX3Byb3BlcnR5X2Zvcl9l
-YWNoX3N0cmluZygpLgoKIGluY2x1ZGUvbGludXgvb2YuaCB8IDM5ICsrKysrKysrKysrKysrKysr
-KysrKysrKy0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyks
-IDE1IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvb2YuaCBiL2luY2x1
-ZGUvbGludXgvb2YuaAppbmRleCAxZmQwOGNhLi45MGE4ODExIDEwMDY0NAotLS0gYS9pbmNsdWRl
-L2xpbnV4L29mLmgKKysrIGIvaW5jbHVkZS9saW51eC9vZi5oCkBAIC0zMjMsMTIgKzMyMyw2IEBA
-IGV4dGVybiBpbnQgb2ZfZGV0YWNoX25vZGUoc3RydWN0IGRldmljZV9ub2RlICopOwogICovCiBj
-b25zdCBfX2JlMzIgKm9mX3Byb3BfbmV4dF91MzIoc3RydWN0IHByb3BlcnR5ICpwcm9wLCBjb25z
-dCBfX2JlMzIgKmN1ciwKIAkJCSAgICAgICB1MzIgKnB1KTsKLSNkZWZpbmUgb2ZfcHJvcGVydHlf
-Zm9yX2VhY2hfdTMyKG5wLCBwcm9wbmFtZSwgcHJvcCwgcCwgdSkJXAotCWZvciAocHJvcCA9IG9m
-X2ZpbmRfcHJvcGVydHkobnAsIHByb3BuYW1lLCBOVUxMKSwJXAotCQlwID0gb2ZfcHJvcF9uZXh0
-X3UzMihwcm9wLCBOVUxMLCAmdSk7CQlcCi0JCXA7CQkJCQkJXAotCQlwID0gb2ZfcHJvcF9uZXh0
-X3UzMihwcm9wLCBwLCAmdSkpCi0KIC8qCiAgKiBzdHJ1Y3QgcHJvcGVydHkgKnByb3A7CiAgKiBj
-b25zdCBjaGFyICpzOwpAQCAtMzM3LDExICszMzEsNiBAQCBjb25zdCBfX2JlMzIgKm9mX3Byb3Bf
-bmV4dF91MzIoc3RydWN0IHByb3BlcnR5ICpwcm9wLCBjb25zdCBfX2JlMzIgKmN1ciwKICAqICAg
-ICAgICAgcHJpbnRrKCJTdHJpbmcgdmFsdWU6ICVzXG4iLCBzKTsKICAqLwogY29uc3QgY2hhciAq
-b2ZfcHJvcF9uZXh0X3N0cmluZyhzdHJ1Y3QgcHJvcGVydHkgKnByb3AsIGNvbnN0IGNoYXIgKmN1
-cik7Ci0jZGVmaW5lIG9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZyhucCwgcHJvcG5hbWUsIHBy
-b3AsIHMpCVwKLQlmb3IgKHByb3AgPSBvZl9maW5kX3Byb3BlcnR5KG5wLCBwcm9wbmFtZSwgTlVM
-TCksCVwKLQkJcyA9IG9mX3Byb3BfbmV4dF9zdHJpbmcocHJvcCwgTlVMTCk7CQlcCi0JCXM7CQkJ
-CQkJXAotCQlzID0gb2ZfcHJvcF9uZXh0X3N0cmluZyhwcm9wLCBzKSkKIAogI2Vsc2UgLyogQ09O
-RklHX09GICovCiAKQEAgLTUwNSwxMiArNDk0LDIwIEBAIHN0YXRpYyBpbmxpbmUgaW50IG9mX21h
-Y2hpbmVfaXNfY29tcGF0aWJsZShjb25zdCBjaGFyICpjb21wYXQpCiAJcmV0dXJuIDA7CiB9CiAK
-K3N0YXRpYyBpbmxpbmUgY29uc3QgX19iZTMyICpvZl9wcm9wX25leHRfdTMyKHN0cnVjdCBwcm9w
-ZXJ0eSAqcHJvcCwKKwkJY29uc3QgX19iZTMyICpjdXIsIHUzMiAqcHUpCit7CisJcmV0dXJuIE5V
-TEw7Cit9CisKK3N0YXRpYyBpbmxpbmUgY29uc3QgY2hhciAqb2ZfcHJvcF9uZXh0X3N0cmluZyhz
-dHJ1Y3QgcHJvcGVydHkgKnByb3AsCisJCWNvbnN0IGNoYXIgKmN1cikKK3sKKwlyZXR1cm4gTlVM
-TDsKK30KKwogI2RlZmluZSBvZl9tYXRjaF9wdHIoX3B0cikJTlVMTAogI2RlZmluZSBvZl9tYXRj
-aF9ub2RlKF9tYXRjaGVzLCBfbm9kZSkJTlVMTAotI2RlZmluZSBvZl9wcm9wZXJ0eV9mb3JfZWFj
-aF91MzIobnAsIHByb3BuYW1lLCBwcm9wLCBwLCB1KSBcCi0Jd2hpbGUgKDApCi0jZGVmaW5lIG9m
-X3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZyhucCwgcHJvcG5hbWUsIHByb3AsIHMpIFwKLQl3aGls
-ZSAoMCkKICNlbmRpZiAvKiBDT05GSUdfT0YgKi8KIAogI2lmbmRlZiBvZl9ub2RlX3RvX25pZApA
-QCAtNTU5LDYgKzU1NiwxOCBAQCBzdGF0aWMgaW5saW5lIGludCBvZl9wcm9wZXJ0eV9yZWFkX3Uz
-Mihjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLAogCXJldHVybiBvZl9wcm9wZXJ0eV9yZWFk
-X3UzMl9hcnJheShucCwgcHJvcG5hbWUsIG91dF92YWx1ZSwgMSk7CiB9CiAKKyNkZWZpbmUgb2Zf
-cHJvcGVydHlfZm9yX2VhY2hfdTMyKG5wLCBwcm9wbmFtZSwgcHJvcCwgcCwgdSkJXAorCWZvciAo
-cHJvcCA9IG9mX2ZpbmRfcHJvcGVydHkobnAsIHByb3BuYW1lLCBOVUxMKSwJXAorCQlwID0gb2Zf
-cHJvcF9uZXh0X3UzMihwcm9wLCBOVUxMLCAmdSk7CQlcCisJCXA7CQkJCQkJXAorCQlwID0gb2Zf
-cHJvcF9uZXh0X3UzMihwcm9wLCBwLCAmdSkpCisKKyNkZWZpbmUgb2ZfcHJvcGVydHlfZm9yX2Vh
-Y2hfc3RyaW5nKG5wLCBwcm9wbmFtZSwgcHJvcCwgcykJXAorCWZvciAocHJvcCA9IG9mX2ZpbmRf
-cHJvcGVydHkobnAsIHByb3BuYW1lLCBOVUxMKSwJXAorCQlzID0gb2ZfcHJvcF9uZXh0X3N0cmlu
-Zyhwcm9wLCBOVUxMKTsJCVwKKwkJczsJCQkJCQlcCisJCXMgPSBvZl9wcm9wX25leHRfc3RyaW5n
-KHByb3AsIHMpKQorCiAjaWYgZGVmaW5lZChDT05GSUdfUFJPQ19GUykgJiYgZGVmaW5lZChDT05G
-SUdfUFJPQ19ERVZJQ0VUUkVFKQogZXh0ZXJuIHZvaWQgcHJvY19kZXZpY2VfdHJlZV9hZGRfbm9k
-ZShzdHJ1Y3QgZGV2aWNlX25vZGUgKiwgc3RydWN0IHByb2NfZGlyX2VudHJ5ICopOwogZXh0ZXJu
-IHZvaWQgcHJvY19kZXZpY2VfdHJlZV9hZGRfcHJvcChzdHJ1Y3QgcHJvY19kaXJfZW50cnkgKnBk
-ZSwgc3RydWN0IHByb3BlcnR5ICpwcm9wKTsKLS0gCjEuOC4zLjEKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5n
-IGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
-emxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+Hi Sekhar,
+
+> -----Original Message-----
+> From: Nori, Sekhar
+> Sent: Monday, June 17, 2013 6:01 AM
+> To: Fernandes, Joel A; Grant Likely; Rob Herring
+> Cc: Tony Lindgren; Matt Porter; Vinod Koul; Mark Brown; Cousson, Benoit;
+> Russell King; Rob Landley; Andrew Morton; Jason Kridner; Koen Kooi;
+> Devicetree Discuss; Linux OMAP List; Linux ARM Kernel List; Linux DaVinci
+> Kernel List; Linux Kernel Mailing List; Linux Documentation List; Linux MMC
+> List; Linux SPI Devel List; Arnd Bergmann
+> Subject: Re: [PATCH v10 5/8] dmaengine: edma: Add TI EDMA device tree
+> binding
+> 
+> Grant, Rob,
+> 
+> Can one of you please take a look at this patch and see if you have any
+> comments on the binding definition?
+> 
+> Joel,
+> 
+> Ideally the bindings are described before they are used or along with its
+> usage. In that aspect, this patch is present too far back in the series. Can you
+> please fix this if you get to posting another version. I think I gave the same
+> comment on v9 as well.
+ 
+[Joel] Yes, sure, I will make a note to push this up the series during the next posting.
+
+Thanks,
+Joel
