@@ -1,74 +1,98 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 01/11] pinctrl: single: adopt pinctrl sleep mode management
-Date: Mon, 17 Jun 2013 10:27:52 -0700
-Message-ID: <20130617172751.GT20992@atomide.com>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<1369995191-20855-2-git-send-email-gururaja.hebbar@ti.com>
-	<CACRpkdZjvW6M1Q+K3OD1x_Jkz91AofdOdBThyJLGJ+Wx-BDTNw@mail.gmail.com>
-	<20130617120340.GE10305@atomide.com>
-	<CACRpkdZGV7v2=rrKfiLXF7k3JG-1BEDr5=dC+E96gvpnPCCRcQ@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [RFC PATCH v4 2/2] drivers: mfd: vexpress: add Serial Power
+ Controller (SPC) support
+Date: Mon, 17 Jun 2013 10:44:51 -0700
+Message-ID: <20130617174451.GF28497@quad.lixom.net>
+References: <1371484269-11743-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1371484269-11743-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZGV7v2=rrKfiLXF7k3JG-1BEDr5=dC+E96gvpnPCCRcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1371484269-11743-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <achin.gupta-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [130617 09:14]:
-> On Mon, Jun 17, 2013 at 2:03 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > * Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [130617 04:38]:
-> >> On Fri, May 31, 2013 at 12:13 PM, Hebbar Gururaja
-> >> <gururaja.hebbar-l0cyMroinI0@public.gmane.org> wrote:
-> >>
-> >> > Make pinctrl-single able to handle suspend/resume events and change
-> >> > hogged pins states accordingly.
-> >> >
-> >> > Signed-off-by: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-> >> > Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>
-> >> Noone said anything about this patch, but it looks very straight-forward
-> >> to me and seems sound so I have applied it.
-> >>
-> >> If Tony or Haojian has strong feelings about it I will dequeue it.
-> >
-> > I don't like the hogged pins at all as they prevent me from unloading
-> > pinctrl-single.. But the patch seems fine to me:
+On Mon, Jun 17, 2013 at 04:51:09PM +0100, Lorenzo Pieralisi wrote:
+> The TC2 versatile express core tile integrates a logic block that provides the
+> interface between the dual cluster test-chip and the M3 microcontroller that
+> carries out power management. The logic block, called Serial Power Controller
+> (SPC), contains several memory mapped registers to control among other things
+> low-power states, operating points and reset control.
 > 
-> Hm? I think the hogged pins are the *only* pins we can
-> reliably release when unloading the driver, look:
-
-In most cases all the pins can be released reliably if
-the pinctrl driver won't do anything with the pins on
-release.
-
-After all that's what bootloaders have been doing for
-ages :)
-
-> void pinctrl_unregister(struct pinctrl_dev *pctldev)
-> {
-> (...)
->         if (!IS_ERR(pctldev->p))
->                 pinctrl_put(pctldev->p);
+> This patch provides a driver that enables run-time control of features
+> implemented by the SPC control logic.
 > 
-> That releases all hogged pinctrl handles when unloading
-> a pinctrl driver.
+> The SPC control logic is required to be programmed very early in the boot
+> process to reset secondary CPUs on the TC2 testchip, set-up jump addresses and
+> wake-up IRQs for power management.
+> Since the SPC logic is also used to control clocks and operating points,
+> that have to be initialized early as well, the SPC interface consumers can not
+> rely on early initcalls ordering, which is inconsistent, to wait for SPC
+> initialization. Hence, in order to keep the components relying on the SPC
+> coded in a sane way, the driver puts in place a synchronization scheme that
+> allows kernel drivers to check if the SPC driver has been initialized and if
+> not, to initialize it upon check.
+> 
+> A status variable is kept in memory so that loadable modules that require SPC
+> interface (eg CPUfreq drivers) can still check the correct initialization and
+> use the driver correctly after functions used at boot to init the driver are
+> freed.
+> 
+> The driver also provides a bridge interface through the vexpress config
+> infrastructure. Operations allowing to read/write operating points are
+> made to go via the same interface as configuration transactions so that
+> all requests to M3 are serialized.
+> 
+> Device tree bindings documentation for the SPC component is provided with
+> the patchset.
 
-Hmm maybe I need to try it again. The last time I tried
-I had to comment those out, but that was a while back.
-And I probably had also some other hack to release pins.
+Sorry, I got to think of this over the weekend and should have replied
+before you had a chance to repost, but still:
 
-Regards,
+Why is the operating point and frequency change code in this driver at all?
+Usually, the MFD driver contains a shared method to access register space on
+a multifunction device, but the actual operation of each subdevice is handled
+by individual drivers in the regular locations.
 
-Tony
+So, in the case of operating points and requencies, that should be in
+a cpufreq driver. And the clock setup should presumably be in a clk
+framework driver if needed.
+
+Then all that would be left here is the functionality for submitting the two
+kinds of commands, and handling interrupts.
+
+That'll trim down the driver to a point where I think you'll find it much
+easier to get merged. :-)
+
+
+[...]
+
+> +struct ve_spc_drvdata {
+> +	void __iomem *baseaddr;
+> +	/* A15 processor MPIDR[15:8] bitfield */
+
+A comment describing what the meaning is would be more useful, even if
+less technically specific. Or maybe something like "Cluster ID of the
+A15 cluster, from MPIDR[15:8]" or similar.
+
+> +	u32 a15_clusid;
+
+
+(I reserve the right to have more comments later but I think we want to discuss
+the removal of frequency management code first. :-)
+
+
+-Olof
