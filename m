@@ -1,40 +1,60 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH] DT: add vendor prefixes for hisilicon
-Date: Mon, 17 Jun 2013 13:04:59 +0800
-Message-ID: <1371445499-27265-1-git-send-email-zhangfei.gao@linaro.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v4 0/7] xilinxfb changes
+Date: Mon, 17 Jun 2013 07:23:54 +0200
+Message-ID: <51BE9D6A.70001@monstr.eu>
+References: <cover.1370254386.git.michal.simek@xilinx.com> <20130606162336.GW19468@game.jcrosoft.org>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2DBLSSIASFSJATVRLDSHX"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130606162336.GW19468@game.jcrosoft.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Timur Tabi <timur@tabi.org>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 1 file changed, 1 insertion(+)
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2DBLSSIASFSJATVRLDSHX
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 6931c43..e18f3ad 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -25,6 +25,7 @@ est	ESTeem Wireless Modems
- fsl	Freescale Semiconductor
- GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
- gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
-+hisilicon	Hisilicon Limited.
- hp	Hewlett Packard
- ibm	International Business Machines (IBM)
- idt	Integrated Device Technologies, Inc.
--- 
-1.7.9.5
+On 06/06/2013 06:23 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 12:13 Mon 03 Jun     , Michal Simek wrote:
+>> Hi,
+>>
+>=20
+> Arnd can you take look on it again please
+>=20
+> I'll take a look on it next week
+
+Any update on this?
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+------enig2DBLSSIASFSJATVRLDSHX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlG+nWoACgkQykllyylKDCES8gCfUdxI7Uf0tw9BmWoyGvtQR+Je
+YmEAn0UbbF1w5yPfuNieotHQWpsID0hX
+=oqMA
+-----END PGP SIGNATURE-----
+
+------enig2DBLSSIASFSJATVRLDSHX--
