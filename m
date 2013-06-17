@@ -1,113 +1,40 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 1/6] GPIO: xilinx: Simplify driver probe function
-Date: Mon, 17 Jun 2013 07:25:08 +0200
-Message-ID: <51BE9DB4.1090400@monstr.eu>
-References: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
-Reply-To: monstr@monstr.eu
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] GPIO: Add support for dual channel in gpio-xilinx.c
+Date: Mon, 17 Jun 2013 07:29:49 +0200
+Message-ID: <CACRpkdbL4pqiF8zxMi28SRTJ9AESiFt0wJMhK1oBio_cfFhpsQ@mail.gmail.com>
+References: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
+	<CACRpkdY4xaCOe28nu-NrYQ7pafjhj8-xqFcJRF9iJUy3SrCVrA@mail.gmail.com>
+	<51A8387C.4030704@monstr.eu>
+	<CACRpkdbHiaK6YPgXyxNgEeZxAsddK4x0vS-q3YfyXnj_BgHvuw@mail.gmail.com>
+	<51A852A1.7020505@monstr.eu>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2ANGUJJVNGULOBRSUXEJC"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
+In-Reply-To: <51A852A1.7020505@monstr.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2ANGUJJVNGULOBRSUXEJC
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 31, 2013 at 9:34 AM, Michal Simek <monstr@monstr.eu> wrote:
+> On 05/31/2013 09:14 AM, Linus Walleij wrote:
 
-Hi Linus,
+>> It's OK, but fix the boolean member so as to just needing to
+>> be present:
+>>
+>> xlnx,is-dual;
+>>
+>> Rather than
+>>
+>> xlnx,is-dual = <1>;
+>
+> Surely I can do it but it means to change our BSP and because
+> this IP is used on Microblaze from beginning this change
+> breaks all DTSes from past.
 
-can you please look at this?
+I think of_property_read_bool() will accept
+xlnx,is-dual = <1>; to mean the same as xlnx,is-dual;
+try it.
 
-Thanks,
-Michal
-
-
-On 06/03/2013 02:31 PM, Michal Simek wrote:
-> Simplification is done by using OF helper function
-> which increase readability of code and remove
-> (if (var) var =3D be32_to_cpup;) assignment.
->=20
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> Changes in v2:
-> - New patch in this series
->=20
->  drivers/gpio/gpio-xilinx.c | 24 ++++++++++--------------
->  1 file changed, 10 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 9ae7aa8..2aad534 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -170,24 +170,20 @@ static int xgpio_of_probe(struct device_node *np)=
-
->  		return -ENOMEM;
->=20
->  	/* Update GPIO state shadow register with default value */
-> -	tree_info =3D of_get_property(np, "xlnx,dout-default", NULL);
-> -	if (tree_info)
-> -		chip->gpio_state =3D be32_to_cpup(tree_info);
-> +	of_property_read_u32(np, "xlnx,dout-default", &chip->gpio_state);
-> +
-> +	/* By default, all pins are inputs */
-> +	chip->gpio_dir =3D 0xFFFFFFFF;
->=20
->  	/* Update GPIO direction shadow register with default value */
-> -	chip->gpio_dir =3D 0xFFFFFFFF; /* By default, all pins are inputs */
-> -	tree_info =3D of_get_property(np, "xlnx,tri-default", NULL);
-> -	if (tree_info)
-> -		chip->gpio_dir =3D be32_to_cpup(tree_info);
-> +	of_property_read_u32(np, "xlnx,tri-default", &chip->gpio_dir);
-> +
-> +	/* By default assume full GPIO controller */
-> +	chip->mmchip.gc.ngpio =3D 32;
->=20
->  	/* Check device node and parent device node for device width */
-> -	chip->mmchip.gc.ngpio =3D 32; /* By default assume full GPIO controll=
-er */
-> -	tree_info =3D of_get_property(np, "xlnx,gpio-width", NULL);
-> -	if (!tree_info)
-> -		tree_info =3D of_get_property(np->parent,
-> -					    "xlnx,gpio-width", NULL);
-> -	if (tree_info)
-> -		chip->mmchip.gc.ngpio =3D be32_to_cpup(tree_info);
-> +	of_property_read_u32(np, "xlnx,gpio-width",
-> +			      (u32 *)&chip->mmchip.gc.ngpio);
->=20
->  	spin_lock_init(&chip->gpio_lock);
->=20
-> --
-> 1.8.2.3
->=20
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
-------enig2ANGUJJVNGULOBRSUXEJC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlG+nbQACgkQykllyylKDCHaIQCfSF7uZ/Uy3gP6J383I+w+I2RX
-PawAn36ckKZ3JdNJ3MsHrFA1dqZgWFlb
-=RSbJ
------END PGP SIGNATURE-----
-
-------enig2ANGUJJVNGULOBRSUXEJC--
+Yours,
+Linus Walleij
