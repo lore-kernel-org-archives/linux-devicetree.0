@@ -1,73 +1,45 @@
-From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] omap_hsmmc DT DMA Client support
-Date: Mon, 17 Jun 2013 21:14:47 +0530
-Message-ID: <51BF2EEF.8070209@ti.com>
-References: <1362518004-7083-1-git-send-email-mporter@ti.com>
- <201303052126.01572.arnd@arndb.de> <20130306133717.GJ6209@beef>
- <CAD=GYpbmFyZxwpRwSVjasehhmR5UzMQaGCZf_5Gfo9biQyb0Ww@mail.gmail.com>
- <CAD=GYpaSMkTCWgetPxvchuZMWzzB09_F3nqazKFRJob1imoXUw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] pinctrl: rockchip: correctly handle arguments of
+ pinconf options
+Date: Mon, 17 Jun 2013 17:48:23 +0200
+Message-ID: <CACRpkdZx9pjfqzn_keKTGGPsP1jHOY2=4OQX9mmymeo9EPn=Cg@mail.gmail.com>
+References: <201306141741.46077.heiko@sntech.de>
+	<201306161302.32156.heiko@sntech.de>
+	<CACRpkdZxO-8rQPBRPsxAx8OBfwvh_BQuts7NAi379gMZG+1ocg@mail.gmail.com>
+	<201306161741.17048.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAD=GYpaSMkTCWgetPxvchuZMWzzB09_F3nqazKFRJob1imoXUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201306161741.17048.heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, James Hogan <james.hogan@imgtec.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 14 June 2013 11:40 PM, Joel A Fernandes wrote:
-> Resending on Matt's new email, thanks.
+On Sun, Jun 16, 2013 at 5:41 PM, Heiko St=FCbner <heiko@sntech.de> wrot=
+e:
+
+> Change the rockchip pinctrl driver to handle the arguments to the pul=
+l
+> pinconfig options correctly. So only accept non-0 values for the
+> pull options as the rockchip pin-controller can only turn pulls on an=
+d
+> off (this via BIAS_DISABLE).
 >
-> On Fri, Jun 14, 2013 at 1:10 PM, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi,
->>
->> On Wed, Mar 6, 2013 at 7:37 AM, Matt Porter <mporter-l0cyMroinI0@public.gmane.org> wrote:
->>> On Tue, Mar 05, 2013 at 09:26:01PM +0000, Arnd Bergmann wrote:
->>>> On Tuesday 05 March 2013, Matt Porter wrote:
->>>>> Changes since v1:
->>>>>          - rebase to 3.9-rc1, previous dependencies upstream
->>>>>
->>>>> This series adds DT DMA Engine Client support to the omap_hsmmc.
->>>>> It leverages the generic DMA OF helpers in -next and the
->>>>> dma_request_slave_channel_compat() wrapper introduced in the
->>>>> AM33XX DMA Engine series to support DMA in omap_hsmmc on platforms
->>>>> booting via DT. These platforms include omap2/3/4/5 and am33xx.
->>>>>
->>>>> These patches were split out from the v5 version of the AM33XX DMA
->>>>> series and split from the EDMA-specific omap_hsmmc changes.
->>>>>
->>>>
->>>> The description seems stale, but the patches all look good to me.
->>>>
->>>> I guess they can now get merged in any order.
->>>>
->>>> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>>
->>> Yes, missed updating that to indicating that those are now in
->>> 3.9-rc1.
->>
->> If there are no more changes, could this patch please be merged in for
->> 3.10 or if not, could Matt please update the description as requested
->> and repost?
->>
-Hi Joel,
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+> changes since v1:
+>  really respect the values for arguments of the pull options (aka 0 i=
+s not
+>  meant to turn off a pull).
+>  Replacing the patch also makes sure that no wrong knowledge stays in=
+ the
+>  kernel via the old commit message, least somebody else reads it and =
+takes
+>  it as true.
 
-   mmc: omap_hsmmc: Skip platform_get_resource_byname() for dt case
-   mmc: omap_hsmmc: convert to dma_request_slave_channel_compat()
-got merged in 3.10 rc5
+OK took out the v1 and put in this v2 version instead...
 
-   mmc: omap_hsmmc: add generic DMA request support to the DT binding
-should go along with edma dts patch series
-
->> Thanks,
->> Joel
+Thanks!
+Linus Walleij
