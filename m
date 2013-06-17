@@ -1,30 +1,38 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
- tree driver
-Date: Mon, 17 Jun 2013 10:49:16 -0600
-Message-ID: <51BF3E0C.6050009@wwwdotorg.org>
-References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org> <CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com> <51BF2FC5.40207@wwwdotorg.org> <CACRpkdbjy+PcpNkSg4PuuP2Z9RyrnqSW0uchHFHVZ8VYPeoDyA@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH RESEND V2] ARM: dts: Correct the base address of
+ pinctrl_3 on Exynos5250
+Date: Mon, 17 Jun 2013 10:04:51 -0700
+Message-ID: <20130617170451.GB28497@quad.lixom.net>
+References: <1371025425-480-1-git-send-email-padma.v@samsung.com>
+ <1a1601ce6b5a$6833d8a0$389b89e0$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbjy+PcpNkSg4PuuP2Z9RyrnqSW0uchHFHVZ8VYPeoDyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1a1601ce6b5a$6833d8a0$389b89e0$%kim@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: 'Padmavathi Venna' <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2013 10:33 AM, Linus Walleij wrote:
-> On Mon, Jun 17, 2013 at 5:48 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+On Mon, Jun 17, 2013 at 09:58:47PM +0900, Kukjin Kim wrote:
+> Padmavathi Venna wrote:
+> > 
+> > This patch corrects the base address of pinctrl_3 on Exynos5250
+> > platform.
+> > 
+> > Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
 > 
->> This has just shown up in next-20130617, and breaks at least the
->> TPS65910 and TPS62360 drivers, since they assume that the id parameter
->> passed to probe is non-NULL. However, now the parameter is NULL since
->> these drivers have both an ID table and an OF match table.
+> (+ Olof)
 > 
-> So you mean they come in through the DT boot path and assume
-> that parameter is non-null even though they should not make use of
-> it?
+> Olof, there is no other fixes in my tree for v3.10 yet, so would be helpful
+> if you could take this into fixes in arm-soc for v3.10. Just note, the wrong
+> address added during v3.10 merge window.
 
-Yes. Since this wasn't true/enforced before, it probably wasn't clear
-that rule existed.
+Huh. I guess we lucked out on snow since we're definitely using this and didn't
+hit any problems from it.
+
+I'll apply to fixes.
+
+
+-Olof
