@@ -1,16 +1,19 @@
 From: Loh Tien Hock <thloh@altera.com>
 Subject: Re: [PATCH 1/1] drivers/gpio: Altera soft IP GPIO driver
-Date: Mon, 17 Jun 2013 15:10:50 +0800
-Message-ID: <CAJKo0K4mRA-w43CsGGr_u0_51g5sh3kM6VUXMu56LXTaw1p4WA@mail.gmail.com>
-References: <1370505910-2102-1-git-send-email-thloh@altera.com> <CACRpkdZZyTDT6mo-3iqRnSSbeJtt4HnVnmkeqoir-UV_8nG0rQ@mail.gmail.com>
+Date: Mon, 17 Jun 2013 15:29:36 +0800
+Message-ID: <CAJKo0K4eic5LsMJ-bs0Jdge-Qm2ACjLKqpFYALvh305j4mZ4Ag@mail.gmail.com>
+References: <1370505910-2102-1-git-send-email-thloh@altera.com>
+ <CACRpkdZZyTDT6mo-3iqRnSSbeJtt4HnVnmkeqoir-UV_8nG0rQ@mail.gmail.com> <CAJKo0K4mRA-w43CsGGr_u0_51g5sh3kM6VUXMu56LXTaw1p4WA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZZyTDT6mo-3iqRnSSbeJtt4HnVnmkeqoir-UV_8nG0rQ@mail.gmail.com>
+In-Reply-To: <CAJKo0K4mRA-w43CsGGr_u0_51g5sh3kM6VUXMu56LXTaw1p4WA@mail.gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
+
+Sorry for the spam, had a bad copy and paste in previous email.
 
 On Mon, Jun 17, 2013 at 2:38 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
 > On Thu, Jun 6, 2013 at 10:05 AM,  <thloh@altera.com> wrote:
@@ -78,91 +81,7 @@ Yup, bad documentation. I'll update this.
 > gpio_ddr |= BIT(offset);
 
 Noted, that looks cleaner.
-Noted.
 
-A question regarding readl_relaxed(), is that because the endianess
-swapping? If that's the case, should codes in other functions use
-readl_relaxed()/writel_
-relaxed() as well?
-
->
->> +       if (of_get_property(node, "interrupts", &reg) == NULL)
->> +               goto skip_irq;
->> +       altera_gc->hwirq = irq_of_parse_and_map(node, 0);
->
-> But wait. How can a hardware IRQ be something coming out
-> of irq_of_parse_and_map()???
->
-> The entire point of mapping an IRQ is to move it into some
-> free Linux IRQ slot, it is as far away from a HW IRQ you
-> ever get.
->
-> Either rename the variable or rethink what you're doing here.
-
-The variable naming came from gpio-mpc8xxx.c, I'll update this to a better name.
-
->
-> Yours,
-> Linus Walleij
-
-On Mon, Jun 17, 2013 at 2:38 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Jun 6, 2013 at 10:05 AM,  <thloh@altera.com> wrote:
->
->> From: Tien Hock Loh <thloh@altera.com>
->>
->> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
->> Tested on Altera CV SoC board.
->>
->> Signed-off-by: Tien Hock Loh <thloh@altera.com>
-> (...)
->
-> This is looking much better, some remaining comments.
->
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
->> @@ -0,0 +1,36 @@
->> +Altera GPIO controller bindings
->> +
->> +Required properties:
->> +- compatible:
->> +  - "altr,pio-1.0"
->
-> I asked you to add this prefix to
-> Documentation/devicetree/bindings/vendor-prefixes.txt
->
->> +- reg: Physical base address and length of the controller's registers.
->> +- #gpio-cells : Should be 1
->> +  - first cell is the gpio offset number
->> +- gpio-controller : Marks the device node as a GPIO controller.
->> +- #interrupt-cells : Should be 1.
->> +- interrupts: Specify the interrupt.
->> +- interrupt-controller: Mark the device node as an interrupt controller
->> +  The first cell is the GPIO number.
->
-> How can that cell be the "GPIO number"? Surely it is the local
-> interrupt offset number on the GPIO controller?
->
-> (...)
->> +++ b/drivers/gpio/gpio-altera.c
->
->> +static int altera_gpio_get(struct gpio_chip *gc, unsigned offset)
->> +{
->> +       struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
->> +
->> +       return (readl(mm_gc->regs + ALTERA_GPIO_DATA) >> offset) & 1;
->
-> I usually would write that like this:
->
-> #include <linux/bitops.h>
->
-> return !!(readl(mm_gc->regs + ALTERA_GPIO_DATA) & BIT(offset));
->
-> But no big deal.
->
->> +       gpio_ddr |= (1 << offset);
->
-> And with <linux/bitops.h> I would just:
->
-> gpio_ddr |= BIT(offset);
 >
 >> +static void altera_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
 >> +{
@@ -206,6 +125,13 @@ On Mon, Jun 17, 2013 at 2:38 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
 > Why is the above code using __raw_* accessors?
 >
 > Atleast use readl_relaxed() instead of __raw.
+
+Noted.
+
+A question regarding readl_relaxed(), is that because the endianess
+swapping? If that's the case, should codes in other functions use
+readl_relaxed()/writel_relaxed() as well?
+
 >
 >> +       if (of_get_property(node, "interrupts", &reg) == NULL)
 >> +               goto skip_irq;
@@ -219,6 +145,9 @@ On Mon, Jun 17, 2013 at 2:38 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
 > ever get.
 >
 > Either rename the variable or rethink what you're doing here.
+
+The variable naming came from gpio-mpc8xxx.c, I'll update this to a better name.
+
 >
 > Yours,
 > Linus Walleij
