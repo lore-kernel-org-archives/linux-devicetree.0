@@ -1,61 +1,49 @@
-From: "Fernandes, Joel A" <joelagnel-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v10 5/8] dmaengine: edma: Add TI EDMA device tree binding
-Date: Mon, 17 Jun 2013 16:25:31 +0000
-Message-ID: <083BC63EECB6FD41B8E81CF7FD87CC0F2E4E9479@DLEE08.ent.ti.com>
-References: <1371263570-9323-1-git-send-email-joelagnel@ti.com>
-	<3940138.jZFEtfGGLz@wuerfel>
-	<083BC63EECB6FD41B8E81CF7FD87CC0F2E4E9395@DLEE08.ent.ti.com>
-	<201306171819.57900.arnd@arndb.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 05/11] pinctrl:stixxxx: Add pinctrl and pinconf support.
+Date: Mon, 17 Jun 2013 18:27:28 +0200
+Message-ID: <CACRpkdbJD=bgLizJkDV2eVNs-eOQ0LLo+PtqmhKCN47eH7=fkg@mail.gmail.com>
+References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com>
+ <1370856161-6600-1-git-send-email-srinivas.kandagatla@st.com>
+ <CACRpkdYN-6W8tvbWNVOdCKOWObm3PCtzXqZuUnvHddBtyw2pyQ@mail.gmail.com>
+ <51BF0FC2.4000601@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <201306171819.57900.arnd-r2nGTMty4D4@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "Cousson,  Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andrew Morton <akpm>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51BF0FC2.4000601-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Stephen Gallimore <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 17, 2013 at 3:31 PM, Srinivas KANDAGATLA
+<srinivas.kandagatla-qxv4g6HH51o@public.gmane.org> wrote:
 
+>>> +config PINCTRL_STIXXXX
+>>
+>> As mentioned elsewhere STIXXXX is a bit too much X:es in.
+>> Please come up with some better naming if possible.
+>
+> Are you OK if I use pinctrl-st.c?
 
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> Sent: Monday, June 17, 2013 11:20 AM
-> To: Fernandes, Joel A
-> Cc: Tony Lindgren; Nori, Sekhar; Matt Porter; Grant Likely; Rob Herring; Vinod
-> Koul; Mark Brown; Cousson, Benoit; Russell King; Rob Landley; Andrew Morton;
-> Jason Kridner; Koen Kooi; Devicetree Discuss; Linux OMAP List; Linux ARM
-> Kernel List; Linux DaVinci Kernel List; Linux Kernel Mailing List; Linux
-> Documentation List; Linux MMC List; Linux SPI Devel List
-> Subject: Re: [PATCH v10 5/8] dmaengine: edma: Add TI EDMA device tree
-> binding
-> 
-> On Monday 17 June 2013, Fernandes, Joel A wrote:
-> > [Joel] Thanks for the suggestion, I updated it and it looks like this now:
-> >
-> > Required properties:
-> > - compatible : "ti,edma3"
-> > - ti,hwmods: Name of the hwmods associated to the EDMA
-> > - ti,edma-regions: Number of regions
-> > - ti,edma-slots: Number of slots
-> > - #dma-cells: Should be set to <1>
-> >               Clients should use a single number per DMA channel request.
-> 
-> That still does not say what that number refers to.
-> Is it a channel number, or a request line number, or something completely
-> different?
- 
-[Joel] 
-Ah! Will fix, it's a channel number.
+It seems to no be taken so OK :-)
 
-Thanks,
-Joel
+The best choice is just the name of the IP block,
+something unique. I would consider trying to ask the
+hardware engineer writing that pinctrl block what name
+s/he prefer on it, if not possible just go with pinctrl-st.c.
+
+The rest seems to be addressed nicely, waiting for the
+next iteration!
+
+Yours,
+Linus Walleij
