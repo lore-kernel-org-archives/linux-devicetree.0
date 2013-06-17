@@ -1,122 +1,43 @@
-From: Marek Belisko <marek.belisko@open-nandra.com>
-Subject: [PATCH] arm/dts: Add basic support for gta04 (Openmoko next generation) board.
-Date: Mon, 17 Jun 2013 23:06:11 +0200
-Message-ID: <1371503171-21416-1-git-send-email-marek.belisko@open-nandra.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: b-cousson@ti.com, tony@atomide.com
-Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Marek Belisko <marek.belisko@open-nandra.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] xilinxfb changes
+Date: Mon, 17 Jun 2013 23:07:18 +0200
+Message-ID: <201306172307.19114.arnd@arndb.de>
+References: <cover.1370254386.git.michal.simek@xilinx.com>
+ <20130617085640.GE305@game.jcrosoft.org> <51BED093.1040207@monstr.eu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51BED093.1040207-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
----
-Resending because patch wasn't applied yet and was first time sent
-in January.
+On Monday 17 June 2013, Michal Simek wrote:
+> On 06/17/2013 10:56 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 07:23 Mon 17 Jun     , Michal Simek wrote:
+> >> On 06/06/2013 06:23 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >>> On 12:13 Mon 03 Jun     , Michal Simek wrote:
+> >>>> Hi,
+> >>>>
+> >>>
+> >>> Arnd can you take look on it again please
+> >>>
+> >>> I'll take a look on it next week
+> >>
+> >> Any update on this?
+> > look ok but I want the Ack from Arnd
 
- arch/arm/boot/dts/omap3-gta04.dts | 94 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-gta04.dts
+Sorry for the delay, everything looks good to me.
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
-new file mode 100644
-index 0000000..9e7e3ec
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-gta04.dts
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright (C) 2013 Marek Belisko <marek.belisko@open-nandra.com>
-+ *
-+ * Based on omap3-beagle-xm.dts
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+/include/ "omap3.dtsi"
-+
-+/ {
-+	model = "OMAP3 GTA04";
-+	compatible = "ti,omap3-gta04", "ti,omap3";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512 MB */
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		aux-button {
-+			label = "AUX";
-+			linux,code = <169>;
-+			gpios = <&gpio1 7 1>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <2600000>;
-+
-+	twl: twl@48 {
-+		reg = <0x48>;
-+		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+		interrupt-parent = <&intc>;
-+	};
-+};
-+
-+/include/ "twl4030.dtsi"
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+	/* Pressure Sensor */
-+	bmp085@77 {
-+		compatible = "bosch,bmp085";
-+		reg = <0x77>;
-+	};
-+
-+	/* leds */
-+	tca6507@45 {
-+		compatible = "ti,tca6507";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x45>;
-+
-+		gta04_led0: red_aux@0 {
-+			label = "gta04:red:aux";
-+			reg = <0x0>;
-+		};
-+
-+		gta04_led1: green_aux@1 {
-+			label = "gta04:green:aux";
-+			reg = <0x1>;
-+		};
-+
-+		gta04_led3: red_power@3 {
-+			label = "gta04:red:power";
-+			reg = <0x3>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		gta04_led4: green_power@4 {
-+			label = "gta04:green:power";
-+			reg = <0x4>;
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+};
-+
-+&mmc1 {
-+	vmmc-supply = <&vmmc1>;
-+	bus-width = <4>;
-+};
-+
--- 
-1.8.1.2
-
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
