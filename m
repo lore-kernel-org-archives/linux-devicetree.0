@@ -1,57 +1,104 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/1] gpio-rcar: Add DT support
-Date: Mon, 17 Jun 2013 11:07:18 +0900
-Message-ID: <20130617020717.GH15043@verge.net.au>
-References: <1371106826-25313-1-git-send-email-horms+renesas@verge.net.au>
- <1371106826-25313-2-git-send-email-horms+renesas@verge.net.au>
- <20130615004751.GM18124@quad.lixom.net>
- <2295525.muus9MNBiz@avalon>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH 1/9] drm/exynos: use SoC name to identify hdmi version
+Date: Mon, 17 Jun 2013 07:36:57 +0530
+Message-ID: <CAPdUM4N6nsRMQnML-n8n924yxSO=p4Vqg7WrA8O6YPKM=9N8Hg@mail.gmail.com>
+References: <1370959891-8923-1-git-send-email-rahul.sharma@samsung.com>
+	<1370959891-8923-2-git-send-email-rahul.sharma@samsung.com>
+	<51BABDDC.60603@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2295525.muus9MNBiz@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Content-Type: text/plain; charset=EUC-KR
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51BABDDC.60603@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: sw0312.kim@samsung.com
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 15, 2013 at 01:31:08PM +0200, Laurent Pinchart wrote:
-> Hi Olof,
-> 
-> On Friday 14 June 2013 17:47:51 Olof Johansson wrote:
-> > On Thu, Jun 13, 2013 at 04:00:26PM +0900, Simon Horman wrote:
-> > > From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > > 
-> > > Add DT bindings for the gpio-rcar driver and read the device
-> > > configuration from the DT node at probe time if available.
-> > > 
-> > > Cc: devicetree-discuss@lists.ozlabs.org
-> > > Signed-off-by: Laurent Pinchart
-> > > <laurent.pinchart+renesas@ideasonboard.com>
-> > > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> > 
-> > Hi,
-> > 
-> > I don't see this cc/acked by Linus or Grant/Rob.
-> 
-> The patch has been acked by Linus, but it seems the ack got lost somewhere.
-> 
-> https://patchwork.kernel.org/patch/2596901/
+Thanks Seung-Woo,
 
-Sorry for missing that.
+On Fri, Jun 14, 2013 at 12:23 PM, =B1=E8=BD=C2=BF=EC <sw0312.kim@samsun=
+g.com> wrote:
+> Hello Rahul,
+>
+> On 2013=B3=E2 06=BF=F9 11=C0=CF 23:11, Rahul Sharma wrote:
+>> Exynos hdmi IP version is named after hdmi specification version i.e=
+=2E
+>> 1.3 and 1.4. This versioning mechanism is not sufficient to handle
+>> the diversity in the hdmi/phy IPs which are present across the exyno=
+s
+>> SoC family.
+>>
+>> This patch changes the hdmi version to the name of the SoC in which
+>> the IP was introduced for the first time. Same version is applicable
+>> to all subsequent SoCs having the same IP version.
+>>
+>> Exynos4210 has 1.3 HDMI, i2c mapped phy with configuration set.
+>> Exynos5250 has 1.4 HDMI, i2c mapped phy with configuration set.
+>> Exynos5420 has 1.4 HDMI, Platform Bus mapped phy with configuration =
+set.
+>>
+>> Based on the HDMI IP version we cannot decide to pick Exynos5250 phy=
+ conf
+>> and use i2c for data transfer or Exynos5420 phy confs and platform b=
+us
+>> calls for communication.
+>
+> Considering your other patch to divide hdmi and hdmiphy, how do you
+> think using hdmiphy version parsed from hdmiphy dt binding from phy c=
+ode
+> instead of using hdmi version for both hdmi and hdmiphy? If that, thi=
+s
+> SoC identifying hdmi version is not necessary because there is no cha=
+nge
+> at least in hdmi side.
+>
+> And IMO, it seems easy to merge hdmiphy related patch first before
+> merging patch for exynos5420.
+>
 
-> > However, the binding looks very vanilla to me, so I'll merge it anyway.
-> 
-> Thank you.
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
+You are right. If we isolate hdmiphy first from hdmi IP driver, we
+dont need this
+patch. I will revive the hdmiphy separation patch and get that merge fi=
+rst.
+
+regards,
+Rahul Sharma.
+
+>>
+>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>> ---
+>>  drivers/gpu/drm/exynos/exynos_hdmi.c |  249 +++++++++++++++++------=
+-----------
+>>  drivers/gpu/drm/exynos/regs-hdmi.h   |   78 +++++------
+>>  2 files changed, 164 insertions(+), 163 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/=
+exynos/exynos_hdmi.c
+>> index 75a6bf3..9384ffc 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
+>> +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
+>> @@ -73,9 +73,9 @@ enum HDMI_PACKET_TYPE {
+>>       HDMI_PACKET_TYPE_AUI =3D HDMI_PACKET_TYPE_INFOFRAME + 4
+>>  };
+>>
+>> -enum hdmi_type {
+>> -     HDMI_TYPE13,
+>> -     HDMI_TYPE14,
+>> +enum hdmi_version {
+>> +     HDMI_VER_EXYNOS4210,
+>> +     HDMI_VER_EXYNOS4212,
+>>  };
+>
+> <snip>
+>
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> Seung-Woo Kim
+> Samsung Software R&D Center
+> --
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
+ng-soc" in
 > the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
