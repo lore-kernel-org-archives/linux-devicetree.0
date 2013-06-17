@@ -1,38 +1,66 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH RESEND V2] ARM: dts: Correct the base address of
- pinctrl_3 on Exynos5250
-Date: Mon, 17 Jun 2013 10:04:51 -0700
-Message-ID: <20130617170451.GB28497@quad.lixom.net>
-References: <1371025425-480-1-git-send-email-padma.v@samsung.com>
- <1a1601ce6b5a$6833d8a0$389b89e0$%kim@samsung.com>
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH] of: Add more stubs for non-OF builds
+Date: Mon, 17 Jun 2013 21:24:42 +0400
+Message-ID: <1371489882-11143-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1a1601ce6b5a$6833d8a0$389b89e0$%kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Padmavathi Venna' <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2013 at 09:58:47PM +0900, Kukjin Kim wrote:
-> Padmavathi Venna wrote:
-> > 
-> > This patch corrects the base address of pinctrl_3 on Exynos5250
-> > platform.
-> > 
-> > Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
-> 
-> (+ Olof)
-> 
-> Olof, there is no other fixes in my tree for v3.10 yet, so would be helpful
-> if you could take this into fixes in arm-soc for v3.10. Just note, the wrong
-> address added during v3.10 merge window.
+Patch adds of_get_next_child and of_get_next_available_child
+stubs for non-OF builds.
 
-Huh. I guess we lucked out on snow since we're definitely using this and didn't
-hit any problems from it.
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ include/linux/of.h | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-I'll apply to fixes.
-
-
--Olof
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 1fd08ca..df0e644 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -366,8 +366,17 @@ static inline bool of_have_populated_dt(void)
+ 	return false;
+ }
+ 
+-#define for_each_child_of_node(parent, child) \
+-	while (0)
++static struct device_node *of_get_next_child(const struct device_node *node,
++					     struct device_node *prev)
++{
++	return NULL;
++}
++
++static struct device_node *of_get_next_available_child(
++	const struct device_node *node, struct device_node *prev)
++{
++	return NULL;
++}
+ 
+ static inline struct device_node *of_get_child_by_name(
+ 					const struct device_node *node,
+@@ -376,6 +385,9 @@ static inline struct device_node *of_get_child_by_name(
+ 	return NULL;
+ }
+ 
++#define for_each_child_of_node(parent, child) \
++	while (0)
++
+ static inline int of_get_child_count(const struct device_node *np)
+ {
+ 	return 0;
+-- 
+1.8.1.5
