@@ -1,49 +1,128 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
- tree driver
-Date: Mon, 17 Jun 2013 09:48:21 -0600
-Message-ID: <51BF2FC5.40207@wwwdotorg.org>
-References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org> <CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 3/3] DMA: shdma: add DT support
+Date: Mon, 17 Jun 2013 17:48:11 +0200
+Message-ID: <201306171748.11836.arnd@arndb.de>
+References: <1370533645-23690-1-git-send-email-g.liakhovetski@gmx.de> <1370533645-23690-4-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com>
-Sender: linux-next-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa@the-dreams.de>
-Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1370533645-23690-4-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-sh@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2013 01:56 AM, Linus Walleij wrote:
-> On Mon, May 13, 2013 at 10:18 PM, Linus Walleij
-> <linus.walleij@linaro.org> wrote:
-> 
->> This tries to address an issue found when writing an MFD driver
->> for the Nomadik STw481x PMICs: as the platform is using device
->> tree exclusively I want to specify the driver matching like
->> this:
-> (...)
->> ---
->> ChangeLog v1->v2:
->> - Use of_match_device() to determine if there is a DT match in
->>   the probe code. If there is a match we pass NULL for the
->>   id_table match parameter.
-> 
-> Ping on this.
-> 
-> v2 should be doing what Grant suggested...
+On Thursday 06 June 2013, Guennadi Liakhovetski wrote:
+> +Required properties:
+> +- dmas:		a list of <[DMA controller phandle] [MID/RID value]> pairs
+> +- dma-names:	a list of DMA channel names, one per "dmas" entry
 
-This has just shown up in next-20130617, and breaks at least the
-TPS65910 and TPS62360 drivers, since they assume that the id parameter
-passed to probe is non-NULL. However, now the parameter is NULL since
-these drivers have both an ID table and an OF match table.
+Looks ok to me, although it might be helpful to clarify what MID/RID means,
+by expanding the acronym and describing whether one needs to pass both
+or just one of them. If both, what is the bit pattern?
 
-I'd like to suggest this patch be reverted an re-introduced immediately
-after the merge window. That should give enough time for everyone to get
-a heads-up on fixing any drivers with a similar problem, rather than
-trying to cram all that in immediately before the merge window. I'd also
-suggest that this patch should be accompanied by fixes for any similarly
-broken drivers, based on code inspection.
+>   * services would have to provide their own filters, which first would check
+>   * the device driver, similar to how other DMAC drivers, e.g., sa11x0-dma.c, do
+>   * this, and only then, in case of a match, call this common filter.
+> + * NOTE 2: This filter function is also used in the DT case by shdma_xlate().
+> + * In that case the MID-RID value is used for slave channel filtering and is
+> + * passed to this function in the "arg" parameter.
+>   */
+>  bool shdma_chan_filter(struct dma_chan *chan, void *arg)
+>  {
+>  	struct shdma_chan *schan = to_shdma_chan(chan);
+>  	struct shdma_dev *sdev = to_shdma_dev(schan->dma_chan.device);
+>  	const struct shdma_ops *ops = sdev->ops;
+> -	int slave_id = (int)arg;
+> +	int match = (int)arg;
+>  	int ret;
+>  
+> -	if (slave_id < 0)
+> +	if (match < 0)
+>  		/* No slave requested - arbitrary channel */
+>  		return true;
+>  
+> -	if (slave_id >= slave_num)
+> +	if (!schan->dev->of_node && match >= slave_num)
+>  		return false;
+>  
+> -	ret = ops->set_slave(schan, slave_id, true);
+> +	ret = ops->set_slave(schan, match, true);
+>  	if (ret < 0)
+>  		return false;
 
-Do people agree? If not, please let us know ASAP so we can post patches
-to fix this.
+This is complicated by the fact that you are using the same function for
+two entirely different purposes. It would be easier to have a separate
+filter for the DT case, rather than reusing the one that uses the slave_id
+as an argument.
+
+> @@ -867,6 +883,29 @@ void shdma_chan_remove(struct shdma_chan *schan)
+>  }
+>  EXPORT_SYMBOL(shdma_chan_remove);
+>  
+> +struct dma_chan *shdma_xlate(struct of_phandle_args *dma_spec,
+> +				 struct of_dma *ofdma)
+> +{
+> +	struct shdma_dev *sdev = ofdma->of_dma_data;
+> +	u32 id = dma_spec->args[0];
+> +	dma_cap_mask_t mask;
+> +	struct dma_chan *chan;
+> +
+> +	if (dma_spec->args_count != 1 || !sdev)
+> +		return NULL;
+> +
+> +	dma_cap_zero(mask);
+> +	/* Only slave DMA channels can be allocated via DT */
+> +	dma_cap_set(DMA_SLAVE, mask);
+> +
+> +	chan = dma_request_channel(mask, shdma_chan_filter, (void *)id);
+> +	if (chan)
+> +		to_shdma_chan(chan)->hw_req = id;
+> +
+> +	return chan;
+> +}
+> +EXPORT_SYMBOL(shdma_xlate);
+
+I would suggest keeping this to the drivers/dma/sh/shdma.c file
+and not exporting it. The sudma would use a different binding anyway.
+
+> +/*
+> + * Find a slave channel configuration from the contoller list by either a slave
+> + * ID in the non-DT case, or by a MID/RID value in the DT case
+> + */
+>  static const struct sh_dmae_slave_config *dmae_find_slave(
+> -	struct sh_dmae_chan *sh_chan, int slave_id)
+> +	struct sh_dmae_chan *sh_chan, int match)
+>  {
+>  	struct sh_dmae_device *shdev = to_sh_dev(sh_chan);
+>  	struct sh_dmae_pdata *pdata = shdev->pdata;
+>  	const struct sh_dmae_slave_config *cfg;
+>  	int i;
+>  
+> -	if (slave_id >= SH_DMA_SLAVE_NUMBER)
+> -		return NULL;
+> +	if (!sh_chan->shdma_chan.dev->of_node) {
+> +		if (match >= SH_DMA_SLAVE_NUMBER)
+> +			return NULL;
+>  
+> -	for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
+> -		if (cfg->slave_id == slave_id)
+> -			return cfg;
+> +		for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
+> +			if (cfg->slave_id == match)
+> +				return cfg;
+> +	} else {
+> +		for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
+> +			if (cfg->mid_rid == match) {
+> +				sh_chan->shdma_chan.slave_id = cfg->slave_id;
+> +				return cfg;
+> +			}
+> +	}
+
+The pdata and slave_id should really not be needed here for the lookup in the DT
+case. Is this just temporary until all slave drivers use dmaenging_slave_config
+to pass the address? That should be clarified in a comment.
+
+	Arnd
