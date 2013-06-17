@@ -1,134 +1,151 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH REBASE] i2c-designware: make SDA hold time configurable
-Date: Mon, 17 Jun 2013 15:55:30 -0500
-Message-ID: <51BF77C2.70004@gmail.com>
-References: <20130514110745.GA10906@intel.com> <1368536642-7158-1-git-send-email-christian.ruppert@abilis.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] dmaengine: Add hisilicon k3 DMA engine driver
+Date: Mon, 17 Jun 2013 22:58:07 +0200
+Message-ID: <201306172258.08185.arnd@arndb.de>
+References: <1371444872-26994-1-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1368536642-7158-1-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371444872-26994-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2013 08:04 AM, Christian Ruppert wrote:
-> This patch makes the SDA hold time configurable through device tree.
+On Monday 17 June 2013, Zhangfei Gao wrote:
+> Add dmaengine driver for hisilicon k3 platform based on virt_dma
 > 
-> [rebased to i2c-current/i2c-next/mainline-3.10-rc1]
-> 
-> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-> Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
-> ---
->  .../devicetree/bindings/i2c/i2c-designware.txt     |   14 ++++++++++++++
->  drivers/i2c/busses/i2c-designware-core.c           |    5 +++++
->  drivers/i2c/busses/i2c-designware-core.h           |    1 +
->  drivers/i2c/busses/i2c-designware-platdrv.c        |    9 +++++++++
->  4 files changed, 29 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> index e42a2ee..21fabe7 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> @@ -10,6 +10,9 @@ Recommended properties :
->  
->   - clock-frequency : desired I2C bus clock frequency in Hz.
->  
-> +Optional properties :
-> + - sda-hold-time : should contain the SDA hold time in nanoseconds.
+> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Tested-by: Kai Yang <jean.yangkai-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 
-Please specify time units in the property name. Perhaps
-i2c-sda-hold-time-ns.
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-Based on reading the discussion, there is one similar property I have
-found: "samsung,i2c-sda-delay = <100>". I wouldn't copy it as it doesn't
-tell the units or what the delay is.
-
-Otherwise, looks fine to me.
-
-Rob
-
+> diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
+> new file mode 100644
+> index 0000000..cf156f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
+> @@ -0,0 +1,44 @@
+> +* Hisilicon K3 DMA controller
 > +
->  Example :
->  
->  	i2c@f0000 {
-> @@ -20,3 +23,14 @@ Example :
->  		interrupts = <11>;
->  		clock-frequency = <400000>;
->  	};
+> +See dma.txt first
 > +
-> +	i2c@1120000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "snps,designware-i2c";
-> +		reg = <0x1120000 0x1000>;
-> +		interrupt-parent = <&ictl>;
-> +		interrupts = <12 1>;
-> +		clock-frequency = <400000>;
-> +		sda-hold-time = <300>;
-> +	};
-> diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
-> index 21fbb34..91d422c 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.c
-> +++ b/drivers/i2c/busses/i2c-designware-core.c
-> @@ -67,6 +67,7 @@
->  #define DW_IC_STATUS		0x70
->  #define DW_IC_TXFLR		0x74
->  #define DW_IC_RXFLR		0x78
-> +#define DW_IC_SDA_HOLD		0x7c
->  #define DW_IC_TX_ABRT_SOURCE	0x80
->  #define DW_IC_ENABLE_STATUS	0x9c
->  #define DW_IC_COMP_PARAM_1	0xf4
-> @@ -332,6 +333,10 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
->  	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
->  	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt, lcnt);
->  
-> +	/* Configure SDA Hold Time if required */
-> +	if (dev->sda_hold_time)
-> +		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
+> +Required properties:
+> +- compatible: Should be "hisilicon,k3-dma-1.0"
+> +- reg: Should contain DMA registers location and length.
+> +- interrupts: Should contain one interrupt shared by all channel
+> +- #dma-cells: see dma.txt, should be 1, para number
+> +- dma-channels: virtual channels supported, each virtual channel
+> +		have specific request line
+> +- clocks: clock required
 > +
->  	/* Configure Tx/Rx FIFO threshold levels */
->  	dw_writel(dev, dev->tx_fifo_depth - 1, DW_IC_TX_TL);
->  	dw_writel(dev, 0, DW_IC_RX_TL);
-> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-> index 9c1840e..33dfec3 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.h
-> +++ b/drivers/i2c/busses/i2c-designware-core.h
-> @@ -88,6 +88,7 @@ struct dw_i2c_dev {
->  	u32			master_cfg;
->  	unsigned int		tx_fifo_depth;
->  	unsigned int		rx_fifo_depth;
-> +	u32			sda_hold_time;
->  };
->  
->  #define ACCESS_SWAP		0x00000001
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index 8ec9133..589f414 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -34,6 +34,7 @@
->  #include <linux/sched.h>
->  #include <linux/err.h>
->  #include <linux/interrupt.h>
-> +#include <linux/of.h>
->  #include <linux/of_i2c.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm.h>
-> @@ -120,6 +121,14 @@ static int dw_i2c_probe(struct platform_device *pdev)
->  		return PTR_ERR(dev->clk);
->  	clk_prepare_enable(dev->clk);
->  
-> +	if (pdev->dev.of_node) {
-> +		u32 ht;
-> +		u32 ic_clk = dev->get_clk_rate_khz(dev);
+> +Example:
 > +
-> +		of_property_read_u32(pdev->dev.of_node, "sda-hold-time", &ht);
-> +		dev->sda_hold_time = ((u64)ic_clk * ht + 500000) / 1000000;
+> +Controller:
+> +		dma0: dma@fcd02000 {
+> +			compatible = "hisilicon,k3-dma-1.0";
+> +			reg = <0xfcd02000 0x1000>;
+> +			#dma-cells = <1>;
+> +			dma-channels = <27>;
+> +			interrupts = <0 12 4>;
+> +			clocks = <&pclk>;
+> +			status = "disable";
+> +		};
+> +
+> +Client:
+> +Use specific request line passing from dmax
+> +For example, i2c0 read channel request line is 18, while write channel use 19
+> +
+> +		i2c0: i2c@fcb08000 {
+> +			compatible = "snps,designware-i2c";
+> +			dmas =	<&dma0 18          /* read channel */
+> +				 &dma0 19>;        /* write channel */
+> +			dma-names = "rx", "tx";
+> +		};
+> +
+> +		i2c1: i2c@fcb09000 {
+> +			compatible = "snps,designware-i2c";
+> +			dmas =	<&dma0 20          /* read channel */
+> +				 &dma0 21>;        /* write channel */
+> +			dma-names = "rx", "tx";
+> +		};
+
+The binding looks good to me. 
+
+I'd like to make sure the "dma-channels" property is right though:
+You specify that number in DT but ...
+
+> +#define DRIVER_NAME		"k3-dma"
+> +#define NR_PHY_CHAN		16
+> +#define DMA_ALIGN		3
+
+... you also hardcode the number to 16. Shouldn't the channels be
+allocated dynamically based on the dma-channels property?
+
+You do allocate "virtual channels" based on the "dma-channels"
+later. Wouldn't that be request line numbers, i.e. "dma-requests"
+rather than "dma-channels"?
+
+> +static struct of_dma_filter_info k3_dma_filter;
+> +static bool k3_dma_filter_fn(struct dma_chan *chan, void *param)
+> +{
+> +	return  (*(int *)param == chan->chan_id);
+> +}
+
+This filter function works only as long as there is no more than
+one DMA engine in the system, which is something that needs to
+be documented better. Unfortunately, providing a filter
+function to be called by .xlate is currently the only way that
+the dma-engine API supports, but we should really get over that.
+
+Vinod: I think we need to add a way for a dmaengine driver to
+just return one of its channels to the xlate function. The
+current method is getting very silly, and it adds run-time and
+code complexity without any need.
+
+How about something like
+
+int dma_get_slave_channel(struct dma_chan *chan)
+{
+	/* lock against __dma_request_channel */
+	mutex_lock(&dma_list_mutex);
+
+	if (chan->client_count == 0)
+		ret = dma_chan_get(chan);
+	else	
+		ret = -EBUSY;
+
+	mutex_unlock(&dma_list_mutex);
+
+	return ret;
+}
+EXPORT_SYMBOL_GPL(dma_get_slave_channel);
+
+> +	/* init virtual channel */
+> +	for (i = 0; i < dma_channels; i++) {
+> +		struct k3_dma_chan *c;
+> +
+> +		c = devm_kzalloc(&op->dev,
+> +				sizeof(struct k3_dma_chan), GFP_KERNEL);
+> +		if (c == NULL)
+> +			return -ENOMEM;
+> +
+> +		INIT_LIST_HEAD(&c->node);
+> +		c->vc.desc_free = k3_dma_free_desc;
+> +		vchan_init(&c->vc, &d->slave);
 > +	}
-> +
->  	dev->functionality =
->  		I2C_FUNC_I2C |
->  		I2C_FUNC_10BIT_ADDR |
-> 
 
+Note that a single devm_kzalloc would be slightly more space efficient
+here.
+
+	Arnd
