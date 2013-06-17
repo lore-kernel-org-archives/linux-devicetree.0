@@ -1,41 +1,61 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
- tree driver
-Date: Mon, 17 Jun 2013 17:25:53 -0600
-Message-ID: <51BF9B01.1090205@wwwdotorg.org>
-References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org> <CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com> <51BF2FC5.40207@wwwdotorg.org> <CACRpkdbjy+PcpNkSg4PuuP2Z9RyrnqSW0uchHFHVZ8VYPeoDyA@mail.gmail.com> <CACxGe6sTq=h9jjqesjvUA4Bweh7zgE4VOLoOTgGPC_D_v+8NtA@mail.gmail.com>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH 1/3] mfd: twl4030-power: Split from twl-core into a
+ dedicated module
+Date: Tue, 18 Jun 2013 01:56:44 +0200
+Message-ID: <20130617235644.GB7998@zurbaran>
+References: <1369921916-7435-1-git-send-email-florian.vaussard@epfl.ch>
+ <1369921916-7435-2-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6sTq=h9jjqesjvUA4Bweh7zgE4VOLoOTgGPC_D_v+8NtA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1369921916-7435-2-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-doc-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@epfl.ch>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Tero Kristo <t-kristo@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2013 04:15 PM, Grant Likely wrote:
-> On Mon, Jun 17, 2013 at 5:33 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Mon, Jun 17, 2013 at 5:48 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>
->>> This has just shown up in next-20130617, and breaks at least the
->>> TPS65910 and TPS62360 drivers, since they assume that the id parameter
->>> passed to probe is non-NULL. However, now the parameter is NULL since
->>> these drivers have both an ID table and an OF match table.
->>
->> So you mean they come in through the DT boot path and assume
->> that parameter is non-null even though they should not make use of
->> it?
->>
->>> I'd like to suggest this patch be reverted an re-introduced immediately
->>> after the merge window. That should give enough time for everyone to get
->>> a heads-up on fixing any drivers with a similar problem, rather than
->>> trying to cram all that in immediately before the merge window.
->>
->> OK that works for me, I'm not in any hurry.
-> 
-> Deferring by a merge window isn't going to make it any less painful.
+Hi Florian,
 
-It'll give a lot more time for people to be exposed to the change and
-hence find/fix it linux-next rather than seeing it for the first time in
-Linus's tree.
+On Thu, May 30, 2013 at 03:51:54PM +0200, Florian Vaussard wrote:
+> For now, the call to twl4030-power is hard-wired inside twl-core.
+> To ease the future transition to DT, make twl4030-power as a
+> separate module, like what is already done for twl4030-audio
+> and others.
+> 
+> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+> ---
+>  drivers/mfd/twl-core.c      |   12 ++++++---
+>  drivers/mfd/twl4030-power.c |   54 +++++++++++++++++++++++++++++++++++--------
+>  include/linux/i2c/twl.h     |    1 -
+>  3 files changed, 52 insertions(+), 15 deletions(-)
+Looks good, I only have one comment:
+
+> +static struct platform_driver twl4030_power_driver = {
+> +	.driver = {
+> +		.name	= "twl4030_power",
+> +		.owner	= THIS_MODULE,
+> +	},
+> +	.probe		= twl4030_power_probe,
+> +	.remove		= twl4030_power_remove,
+> +};
+> +
+> +static int __init twl4030_power_init(void)
+> +{
+> +	return platform_driver_register(&twl4030_power_driver);
+>  }
+> +subsys_initcall(twl4030_power_init);
+> +
+> +static void __exit twl4030_power_exit(void)
+> +{
+> +	platform_driver_unregister(&twl4030_power_driver);
+> +}
+> +module_exit(twl4030_power_exit);
+Please use module_platform_driver() here.
+
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
