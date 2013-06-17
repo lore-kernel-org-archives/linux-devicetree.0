@@ -1,256 +1,134 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v7 3/3] sh-pfc: Add pinconf support to DT bindings
-Date: Mon, 17 Jun 2013 20:50:03 +0200
-Message-ID: <1371495003-11185-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1371495003-11185-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1371495003-11185-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <damm@opensource.se>, Simon Horman <horms@verge.net.au>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH REBASE] i2c-designware: make SDA hold time configurable
+Date: Mon, 17 Jun 2013 15:55:30 -0500
+Message-ID: <51BF77C2.70004@gmail.com>
+References: <20130514110745.GA10906@intel.com> <1368536642-7158-1-git-send-email-christian.ruppert@abilis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1368536642-7158-1-git-send-email-christian.ruppert@abilis.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |  36 +++++--
- drivers/pinctrl/sh-pfc/pinctrl.c                   | 109 ++++++++++++++++++---
- 2 files changed, 124 insertions(+), 21 deletions(-)
+On 05/14/2013 08:04 AM, Christian Ruppert wrote:
+> This patch makes the SDA hold time configurable through device tree.
+> 
+> [rebased to i2c-current/i2c-next/mainline-3.10-rc1]
+> 
+> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+> Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
+> ---
+>  .../devicetree/bindings/i2c/i2c-designware.txt     |   14 ++++++++++++++
+>  drivers/i2c/busses/i2c-designware-core.c           |    5 +++++
+>  drivers/i2c/busses/i2c-designware-core.h           |    1 +
+>  drivers/i2c/busses/i2c-designware-platdrv.c        |    9 +++++++++
+>  4 files changed, 29 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> index e42a2ee..21fabe7 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -10,6 +10,9 @@ Recommended properties :
+>  
+>   - clock-frequency : desired I2C bus clock frequency in Hz.
+>  
+> +Optional properties :
+> + - sda-hold-time : should contain the SDA hold time in nanoseconds.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-index 8264cbc..d5dac7b 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-@@ -30,20 +30,27 @@ The PFC node also acts as a container for pin configuration nodes. Please refer
- to pinctrl-bindings.txt in this directory for the definition of the term "pin
- configuration node" and for the common pinctrl bindings used by client devices.
- 
--Each pin configuration node represents desired functions to select on a pin
--group or a list of pin groups. The functions and pin groups can be specified
--directly in the pin configuration node, or grouped in child subnodes. Several
--functions can thus be referenced as a single pin configuration node by client
--devices.
-+Each pin configuration node represents a desired configuration for a pin, a
-+pin group, or a list of pins or pin groups. The configuration can include the
-+function to select on those pin(s) and pin configuration parameters (such as
-+pull-up and pull-down).
- 
--A configuration node or subnode must contain a function and reference at least
--one pin group.
-+Pin configuration nodes contain pin configuration properties, either directly
-+or grouped in child subnodes. Both pin muxing and configuration parameters can
-+be grouped in that way and referenced as a single pin configuration node by
-+client devices.
-+
-+A configuration node or subnode must reference at least one pin (through the
-+pins or pin groups properties) and contain at least a function or one
-+configuration parameter. When the function is present only pin groups can be
-+used to reference pins.
- 
- All pin configuration nodes and subnodes names are ignored. All of those nodes
- are parsed through phandles and processed purely based on their content.
- 
- Pin Configuration Node Properties:
- 
-+- renesas,pins : An array of strings, each string containing the name of a pin.
- - renesas,groups : An array of strings, each string containing the name of a pin
-   group.
- 
-@@ -54,6 +61,10 @@ Pin Configuration Node Properties:
-   function arrays of the PFC data file corresponding to the SoC
-   (drivers/pinctrl/sh-pfc/pfc-*.c)
- 
-+The pin configuration parameters use the generic pinconf bindings defined in
-+pinctrl-bindings.txt in this directory. The supported parameters are
-+bias-disable, bias-pull-up and bias-pull-down.
-+
- 
- GPIO
- ----
-@@ -113,8 +124,15 @@ Example 3: KZM-A9-GT (SH-Mobile AG5) default pin state hog and pin control maps
- 		pinctrl-names = "default";
- 
- 		mmcif_pins: mmcif {
--			renesas,groups = "mmc0_data8_0", "mmc0_ctrl_0";
--			renesas,function = "mmc0";
-+			mux {
-+				renesas,groups = "mmc0_data8_0", "mmc0_ctrl_0";
-+				renesas,function = "mmc0";
-+			};
-+			cfg {
-+				renesas,groups = "mmc0_data8_0";
-+				renesas,pins = "PORT279";
-+				bias-pull-up;
-+			};
- 		};
- 
- 		scifa4_pins: scifa4 {
-diff --git a/drivers/pinctrl/sh-pfc/pinctrl.c b/drivers/pinctrl/sh-pfc/pinctrl.c
-index 7e32bb8..2cf2347 100644
---- a/drivers/pinctrl/sh-pfc/pinctrl.c
-+++ b/drivers/pinctrl/sh-pfc/pinctrl.c
-@@ -74,6 +74,27 @@ static void sh_pfc_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
- 	seq_printf(s, "%s", DRV_NAME);
- }
- 
-+static int sh_pfc_map_add_config(struct pinctrl_map *map,
-+				 const char *group_or_pin,
-+				 enum pinctrl_map_type type,
-+				 unsigned long *configs,
-+				 unsigned int num_configs)
-+{
-+	unsigned long *cfgs;
-+
-+	cfgs = kmemdup(configs, num_configs * sizeof(*cfgs),
-+		       GFP_KERNEL);
-+	if (cfgs == NULL)
-+		return -ENOMEM;
-+
-+	map->type = type;
-+	map->data.configs.group_or_pin = group_or_pin;
-+	map->data.configs.configs = cfgs;
-+	map->data.configs.num_configs = num_configs;
-+
-+	return 0;
-+}
-+
- static int sh_pfc_dt_subnode_to_map(struct device *dev, struct device_node *np,
- 				    struct pinctrl_map **map,
- 				    unsigned int *num_maps, unsigned int *index)
-@@ -81,9 +102,14 @@ static int sh_pfc_dt_subnode_to_map(struct device *dev, struct device_node *np,
- 	struct pinctrl_map *maps = *map;
- 	unsigned int nmaps = *num_maps;
- 	unsigned int idx = *index;
-+	unsigned int num_configs;
- 	const char *function = NULL;
-+	unsigned long *configs;
- 	struct property *prop;
-+	unsigned int num_groups;
-+	unsigned int num_pins;
- 	const char *group;
-+	const char *pin;
- 	int ret;
- 
- 	/* Parse the function and configuration properties. At least a function
-@@ -95,25 +121,47 @@ static int sh_pfc_dt_subnode_to_map(struct device *dev, struct device_node *np,
- 		return ret;
- 	}
- 
--	if (!function) {
--		dev_err(dev, "DT node must contain at least one function\n");
-+	ret = pinconf_generic_parse_dt_config(np, &configs, &num_configs);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!function && num_configs == 0) {
-+		dev_err(dev,
-+			"DT node must contain at least a function or config\n");
- 		goto done;
- 	}
- 
--	/* Count the number of groups and reallocate mappings. */
-+	/* Count the number of pins and groups and reallocate mappings. */
-+	ret = of_property_count_strings(np, "renesas,pins");
-+	if (ret == -EINVAL) {
-+		num_pins = 0;
-+	} else if (ret < 0) {
-+		dev_err(dev, "Invalid pins list in DT\n");
-+		goto done;
-+	} else {
-+		num_pins = ret;
-+	}
-+
- 	ret = of_property_count_strings(np, "renesas,groups");
--	if (ret < 0 && ret != -EINVAL) {
-+	if (ret == -EINVAL) {
-+		num_groups = 0;
-+	} else if (ret < 0) {
- 		dev_err(dev, "Invalid pin groups list in DT\n");
- 		goto done;
-+	} else {
-+		num_groups = ret;
- 	}
- 
--	if (!ret) {
--		dev_err(dev, "No group provided in DT node\n");
-+	if (!num_pins && !num_groups) {
-+		dev_err(dev, "No pin or group provided in DT node\n");
- 		ret = -ENODEV;
- 		goto done;
- 	}
- 
--	nmaps += ret;
-+	if (function)
-+		nmaps += num_groups;
-+	if (configs)
-+		nmaps += num_pins + num_groups;
- 
- 	maps = krealloc(maps, sizeof(*maps) * nmaps, GFP_KERNEL);
- 	if (maps == NULL) {
-@@ -126,22 +174,59 @@ static int sh_pfc_dt_subnode_to_map(struct device *dev, struct device_node *np,
- 
- 	/* Iterate over pins and groups and create the mappings. */
- 	of_property_for_each_string(np, "renesas,groups", prop, group) {
--		maps[idx].type = PIN_MAP_TYPE_MUX_GROUP;
--		maps[idx].data.mux.group = group;
--		maps[idx].data.mux.function = function;
--		idx++;
-+		if (function) {
-+			maps[idx].type = PIN_MAP_TYPE_MUX_GROUP;
-+			maps[idx].data.mux.group = group;
-+			maps[idx].data.mux.function = function;
-+			idx++;
-+		}
-+
-+		if (configs) {
-+			ret = sh_pfc_map_add_config(&maps[idx], group,
-+						    PIN_MAP_TYPE_CONFIGS_GROUP,
-+						    configs, num_configs);
-+			if (ret < 0)
-+				goto done;
-+
-+			idx++;
-+		}
- 	}
- 
--	ret = 0;
-+	if (!configs) {
-+		ret = 0;
-+		goto done;
-+	}
-+
-+	of_property_for_each_string(np, "renesas,pins", prop, pin) {
-+		ret = sh_pfc_map_add_config(&maps[idx], pin,
-+					    PIN_MAP_TYPE_CONFIGS_PIN,
-+					    configs, num_configs);
-+		if (ret < 0)
-+			goto done;
-+
-+		idx++;
-+	}
- 
- done:
- 	*index = idx;
-+	kfree(configs);
- 	return ret;
- }
- 
- static void sh_pfc_dt_free_map(struct pinctrl_dev *pctldev,
- 			       struct pinctrl_map *map, unsigned num_maps)
- {
-+	unsigned int i;
-+
-+	if (map == NULL)
-+		return;
-+
-+	for (i = 0; i < num_maps; ++i) {
-+		if (map[i].type == PIN_MAP_TYPE_CONFIGS_GROUP ||
-+		    map[i].type == PIN_MAP_TYPE_CONFIGS_PIN)
-+			kfree(map[i].data.configs.configs);
-+	}
-+
- 	kfree(map);
- }
- 
--- 
-1.8.1.5
+Please specify time units in the property name. Perhaps
+i2c-sda-hold-time-ns.
+
+Based on reading the discussion, there is one similar property I have
+found: "samsung,i2c-sda-delay = <100>". I wouldn't copy it as it doesn't
+tell the units or what the delay is.
+
+Otherwise, looks fine to me.
+
+Rob
+
+> +
+>  Example :
+>  
+>  	i2c@f0000 {
+> @@ -20,3 +23,14 @@ Example :
+>  		interrupts = <11>;
+>  		clock-frequency = <400000>;
+>  	};
+> +
+> +	i2c@1120000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "snps,designware-i2c";
+> +		reg = <0x1120000 0x1000>;
+> +		interrupt-parent = <&ictl>;
+> +		interrupts = <12 1>;
+> +		clock-frequency = <400000>;
+> +		sda-hold-time = <300>;
+> +	};
+> diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
+> index 21fbb34..91d422c 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.c
+> +++ b/drivers/i2c/busses/i2c-designware-core.c
+> @@ -67,6 +67,7 @@
+>  #define DW_IC_STATUS		0x70
+>  #define DW_IC_TXFLR		0x74
+>  #define DW_IC_RXFLR		0x78
+> +#define DW_IC_SDA_HOLD		0x7c
+>  #define DW_IC_TX_ABRT_SOURCE	0x80
+>  #define DW_IC_ENABLE_STATUS	0x9c
+>  #define DW_IC_COMP_PARAM_1	0xf4
+> @@ -332,6 +333,10 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
+>  	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
+>  	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt, lcnt);
+>  
+> +	/* Configure SDA Hold Time if required */
+> +	if (dev->sda_hold_time)
+> +		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
+> +
+>  	/* Configure Tx/Rx FIFO threshold levels */
+>  	dw_writel(dev, dev->tx_fifo_depth - 1, DW_IC_TX_TL);
+>  	dw_writel(dev, 0, DW_IC_RX_TL);
+> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+> index 9c1840e..33dfec3 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.h
+> +++ b/drivers/i2c/busses/i2c-designware-core.h
+> @@ -88,6 +88,7 @@ struct dw_i2c_dev {
+>  	u32			master_cfg;
+>  	unsigned int		tx_fifo_depth;
+>  	unsigned int		rx_fifo_depth;
+> +	u32			sda_hold_time;
+>  };
+>  
+>  #define ACCESS_SWAP		0x00000001
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> index 8ec9133..589f414 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/err.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/of.h>
+>  #include <linux/of_i2c.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm.h>
+> @@ -120,6 +121,14 @@ static int dw_i2c_probe(struct platform_device *pdev)
+>  		return PTR_ERR(dev->clk);
+>  	clk_prepare_enable(dev->clk);
+>  
+> +	if (pdev->dev.of_node) {
+> +		u32 ht;
+> +		u32 ic_clk = dev->get_clk_rate_khz(dev);
+> +
+> +		of_property_read_u32(pdev->dev.of_node, "sda-hold-time", &ht);
+> +		dev->sda_hold_time = ((u64)ic_clk * ht + 500000) / 1000000;
+> +	}
+> +
+>  	dev->functionality =
+>  		I2C_FUNC_I2C |
+>  		I2C_FUNC_10BIT_ADDR |
+> 
 
