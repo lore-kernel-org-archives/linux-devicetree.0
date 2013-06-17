@@ -1,31 +1,51 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 01/11] pinctrl: single: adopt pinctrl sleep mode management
-Date: Mon, 17 Jun 2013 13:32:38 +0200
-Message-ID: <CACRpkdZjvW6M1Q+K3OD1x_Jkz91AofdOdBThyJLGJ+Wx-BDTNw@mail.gmail.com>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<1369995191-20855-2-git-send-email-gururaja.hebbar@ti.com>
+From: Timur Tabi <timur@tabi.org>
+Subject: Re: [PATCH v8 02/11] ASoC: imx-pcm-fiq: Introduce
+	pcm-fiq-params
+Date: Mon, 17 Jun 2013 06:39:55 -0500
+Message-ID: <51BEF58B.8070405@tabi.org>
+References: <1371389117-19729-1-git-send-email-mpa@pengutronix.de>
+ <1371389117-19729-3-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1369995191-20855-2-git-send-email-gururaja.hebbar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hebbar Gururaja <gururaja.hebbar@ti.com>, ext Tony Lindgren <tony@atomide.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vaibhav Bedia <vaibhav.bedia@ti.com>, sudhakar.raj@ti.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1371389117-19729-3-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 31, 2013 at 12:13 PM, Hebbar Gururaja
-<gururaja.hebbar@ti.com> wrote:
+Markus Pargmann wrote:
+>   #ifdef CONFIG_SND_SOC_IMX_PCM_FIQ
+> -int imx_pcm_fiq_init(struct platform_device *pdev);
+> +int imx_pcm_fiq_init(struct platform_device *pdev,
+> +		struct imx_pcm_fiq_params *params);
+>   void imx_pcm_fiq_exit(struct platform_device *pdev);
+>   #else
+> -static inline int imx_pcm_fiq_init(struct platform_device *pdev)
+> +static inline int imx_pcm_fiq_init(struct platform_device *pdev,
+> +		struct imx_pcm_fiq_params *params);
+>   {
+>   	return -ENODEV;
+>   }
 
-> Make pinctrl-single able to handle suspend/resume events and change
-> hogged pins states accordingly.
->
-> Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
+This won't compile on PowerPC, because of the ;
 
-Noone said anything about this patch, but it looks very straight-forward
-to me and seems sound so I have applied it.
+In file included from 
+/home/b04825/git/linux.alsa2/sound/soc/fsl/fsl_ssi.c:53:0:
+/home/b04825/git/linux.alsa2/sound/soc/fsl/imx-pcm.h:65:1: error: expected 
+identifier or '(' before '{' token
+/home/b04825/git/linux.alsa2/sound/soc/fsl/imx-pcm.h:63:19: warning: 
+'imx_pcm_fiq_init' used but never defined
 
-If Tony or Haojian has strong feelings about it I will dequeue it.
 
-Yours,
-Linus Walleij
+-- 
+Timur Tabi
