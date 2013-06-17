@@ -1,40 +1,29 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] GPIO: Add support for dual channel in gpio-xilinx.c
-Date: Mon, 17 Jun 2013 07:29:49 +0200
-Message-ID: <CACRpkdbL4pqiF8zxMi28SRTJ9AESiFt0wJMhK1oBio_cfFhpsQ@mail.gmail.com>
-References: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
-	<CACRpkdY4xaCOe28nu-NrYQ7pafjhj8-xqFcJRF9iJUy3SrCVrA@mail.gmail.com>
-	<51A8387C.4030704@monstr.eu>
-	<CACRpkdbHiaK6YPgXyxNgEeZxAsddK4x0vS-q3YfyXnj_BgHvuw@mail.gmail.com>
-	<51A852A1.7020505@monstr.eu>
+Subject: Re: [PATCH v2 1/6] GPIO: xilinx: Simplify driver probe function
+Date: Mon, 17 Jun 2013 07:39:16 +0200
+Message-ID: <CACRpkdZceLvsLUHd=T6d_B0L98MmLzPojxtJei4ypea-zthuCA@mail.gmail.com>
+References: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51A852A1.7020505@monstr.eu>
+In-Reply-To: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 31, 2013 at 9:34 AM, Michal Simek <monstr@monstr.eu> wrote:
-> On 05/31/2013 09:14 AM, Linus Walleij wrote:
+On Mon, Jun 3, 2013 at 2:31 PM, Michal Simek <michal.simek@xilinx.com> wrote:
 
->> It's OK, but fix the boolean member so as to just needing to
->> be present:
->>
->> xlnx,is-dual;
->>
->> Rather than
->>
->> xlnx,is-dual = <1>;
+> Simplification is done by using OF helper function
+> which increase readability of code and remove
+> (if (var) var = be32_to_cpup;) assignment.
 >
-> Surely I can do it but it means to change our BSP and because
-> this IP is used on Microblaze from beginning this change
-> breaks all DTSes from past.
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> Changes in v2:
+> - New patch in this series
 
-I think of_property_read_bool() will accept
-xlnx,is-dual = <1>; to mean the same as xlnx,is-dual;
-try it.
+Patch applied. Nice cleanup!
 
 Yours,
 Linus Walleij
