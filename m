@@ -1,54 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 2/2] spi: omap2-mcspi: Add FIFO buffer support
-Date: Mon, 17 Jun 2013 10:16:30 +0100
-Message-ID: <20130617091630.GZ1403@sirena.org.uk>
-References: <1371226328-24147-1-git-send-email-illia.smyrnov@ti.com>
- <1371226328-24147-3-git-send-email-illia.smyrnov@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 09/11] ARM:stixxxx: Add stixxxx options to
+ multi_v7_defconfig
+Date: Mon, 17 Jun 2013 10:32:48 +0100
+Message-ID: <20130617093248.GB6809@e106331-lin.cambridge.arm.com>
+References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com>
+ <1370856477-7237-1-git-send-email-srinivas.kandagatla@st.com>
+ <20130610104032.GA2513@e106331-lin.cambridge.arm.com>
+ <51B5B15E.50901@st.com>
+ <20130610131513.GB2513@e106331-lin.cambridge.arm.com>
+ <51B98FDD.4010401@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="i/mq3IMNEv8uWibA"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1371226328-24147-3-git-send-email-illia.smyrnov@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Illia Smyrnov <illia.smyrnov@ti.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Daniel Mack <zonque@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, linux-omap@vger.kernel.org
+In-Reply-To: <51B98FDD.4010401@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Gallimore <stephen.gallimore@st.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Stuart Menefy <stuart.menefy@st.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mauro
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 13, 2013 at 10:24:45AM +0100, Srinivas KANDAGATLA wrote:
+> On 10/06/13 14:15, Mark Rutland wrote:
+> > CONFIG_EXPERIMENTAL's gone as of 3d374d09f1: "final removal of
+> > CONFIG_EXPERIMENTAL", so that's fine to go. CONFIG_GPIO_PL061 and
+> > CONFIG_MMC_WMT get selected elsewhere, so that's fine.
+> > 
+> 
+> Am planning to send a patch to clean this up, so that any new platform
+> addition to the multi_v7_defconfig will not under go this discussion again..
+> 
+> > It looks like the architected timer deselection is fallout of my own making,
+> > the multi_v7_defconfig should now contain HAVE_ARM_ARCH_TIMER rather than
+> > ARM_ARCH_TIMER.
+> Why should it even contain HAVE_ARM_ARCH_TIMER/ARM_ARCH_TIMER?
+> The only reason I see for de-selection is because none of the platforms
+> in the multi_v7 defconfig selects it.
+> 
+> Looks like there is no platform in mulit_v7 config which requires this
+> support. If there is one I think it should select it.
+> 
+> Am I correct?
 
---i/mq3IMNEv8uWibA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You're right, I agree that the selection should be moved down into the
+platforms requiring it. I'll put together patches to fix up those platforms.
 
-On Fri, Jun 14, 2013 at 07:12:08PM +0300, Illia Smyrnov wrote:
-> The MCSPI controller has a built-in FIFO buffer to unload the DMA or interrupt
-> handler and improve data throughput. This patch adds FIFO buffer support for SPI
-> transfers in DMA mode.
-
-This looks good but doesn't apply against my topic/omap branch - can you
-please check and resend?  Probably something that applies against -next
-will be fine.
-
---i/mq3IMNEv8uWibA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRvtPqAAoJELSic+t+oim98jgP/RVFzo1lUH8F7aEumfJrjMAn
-M6C8sli0qJLqDlPsAqctewNnu2E7FDKBUGvTLT+R6z91q7u8QVV0B2ZFwzAWl4wW
-TYmTYpumFyMn1PhKxeBcoR09QdxWsBxybt0URJPw5+sLzyRmg1o8FckIqanzjnXb
-yOC0gePj7s6WAymNwRahOnBY+kvUoYhzdbxswsl4HTPJicdjSBIJh2f1YiJkuNnX
-IAxPtnVsHX9OdJaUZlRGkmnPVa5g0XusXXj+YHJz1VnRYE3/Wm3hWIbbnRlMeEJt
-//GV3luxJexZbNwen4ihUtv5iXaKSrxP+VtfQjJFPakcSoPyYPkCU4B19ik9qUn4
-EzLGqaHAti7+lN5r56Dt9Di/oNJyyyR8nJzfaUcUOYmP0FemHBB2AGo3jJg6IQD3
-7AQUCye/28vE6+LMagU3eGJCNSlyQVsIRCqF/k2kTc+kPeuYPTaAtIlB+408qifH
-OWo681oTHmwj2ok/4Migze+D0d1+3fLC2b9/dNAjxRfCQHSGQEwd52o67wLqsZfn
-X+Sykutpl+ExQMxbsq0Czj8Tu5apqvvhhF+IMge2Q5QQCdLEhGT9VxWnak82qvNf
-SChOM+oiux9ilbRtjONlEC1eS+1z25UbmvPhqTEGD6C9R+Vi4NwV6Lj/mNRtET1W
-hKg0RnDZRlvnegfIGdSo
-=S+oO
------END PGP SIGNATURE-----
-
---i/mq3IMNEv8uWibA--
+Thanks,
+Mark.
