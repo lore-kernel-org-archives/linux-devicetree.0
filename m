@@ -1,29 +1,46 @@
-From: Illia Smyrnov <x0194613@ti.com>
-Subject: Re: [PATCH v3 2/2] spi: omap2-mcspi: Add FIFO buffer support
-Date: Mon, 17 Jun 2013 16:39:02 +0300
-Message-ID: <51BF1176.7070608@ti.com>
-References: <1371226328-24147-1-git-send-email-illia.smyrnov@ti.com> <1371226328-24147-3-git-send-email-illia.smyrnov@ti.com> <20130617091630.GZ1403@sirena.org.uk>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] staging: imx_drm: imx_ldb: fix 18 bit format
+Date: Mon, 17 Jun 2013 22:03:16 +0800
+Message-ID: <20130617140314.GJ31687@S2101-09.ap.freescale.net>
+References: <1371459772-16443-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130617091630.GZ1403@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Illia Smyrnov <illia.smyrnov@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Daniel Mack <zonque@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, linux-omap@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1371459772-16443-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 17, 2013 at 11:02:52AM +0200, Steffen Trumtrar wrote:
+> From: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
+> 
+> Since 18 bit is supported as datawidth in device tree it should be
+> supported in driver. Beside the LDB channel the IPU channel has also
+> to be configured to use BGR666.
+> 
+> Signed-off-by: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+> This is based on the series: "staging: drm/imx: Add LDB support" by Philipp.
 
+Greg,
 
-On 06/17/2013 12:16 PM, Mark Brown wrote:
-> On Fri, Jun 14, 2013 at 07:12:08PM +0300, Illia Smyrnov wrote:
->> The MCSPI controller has a built-in FIFO buffer to unload the DMA or interrupt
->> handler and improve data throughput. This patch adds FIFO buffer support for SPI
->> transfers in DMA mode.
->
-> This looks good but doesn't apply against my topic/omap branch - can you
-> please check and resend?  Probably something that applies against -next
-> will be fine.
->
+Can you queued this patch and "staging: drm/imx: Add LDB support" from
+Philipp Zabel for 3.11 please?  With these two patches, I can boot my
+imx6q board into LUbuntu 13.04 with LVDS panel.  So for both patches,
 
-I fixed it and sent v4 of "spi: omap2-mcspi: Add FIFO buffer support" patch.
+Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Shawn
