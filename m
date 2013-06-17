@@ -1,38 +1,91 @@
 From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v4 0/7] xilinxfb changes
-Date: Mon, 17 Jun 2013 07:23:54 +0200
-Message-ID: <51BE9D6A.70001@monstr.eu>
-References: <cover.1370254386.git.michal.simek@xilinx.com> <20130606162336.GW19468@game.jcrosoft.org>
+Subject: Re: [PATCH v2 1/6] GPIO: xilinx: Simplify driver probe function
+Date: Mon, 17 Jun 2013 07:25:08 +0200
+Message-ID: <51BE9DB4.1090400@monstr.eu>
+References: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
 Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
  protocol="application/pgp-signature";
- boundary="----enig2DBLSSIASFSJATVRLDSHX"
+ boundary="----enig2ANGUJJVNGULOBRSUXEJC"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130606162336.GW19468@game.jcrosoft.org>
+In-Reply-To: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Timur Tabi <timur@tabi.org>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2DBLSSIASFSJATVRLDSHX
+------enig2ANGUJJVNGULOBRSUXEJC
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On 06/06/2013 06:23 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 12:13 Mon 03 Jun     , Michal Simek wrote:
->> Hi,
->>
->=20
-> Arnd can you take look on it again please
->=20
-> I'll take a look on it next week
+Hi Linus,
 
-Any update on this?
+can you please look at this?
 
 Thanks,
 Michal
+
+
+On 06/03/2013 02:31 PM, Michal Simek wrote:
+> Simplification is done by using OF helper function
+> which increase readability of code and remove
+> (if (var) var =3D be32_to_cpup;) assignment.
+>=20
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> Changes in v2:
+> - New patch in this series
+>=20
+>  drivers/gpio/gpio-xilinx.c | 24 ++++++++++--------------
+>  1 file changed, 10 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index 9ae7aa8..2aad534 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -170,24 +170,20 @@ static int xgpio_of_probe(struct device_node *np)=
+
+>  		return -ENOMEM;
+>=20
+>  	/* Update GPIO state shadow register with default value */
+> -	tree_info =3D of_get_property(np, "xlnx,dout-default", NULL);
+> -	if (tree_info)
+> -		chip->gpio_state =3D be32_to_cpup(tree_info);
+> +	of_property_read_u32(np, "xlnx,dout-default", &chip->gpio_state);
+> +
+> +	/* By default, all pins are inputs */
+> +	chip->gpio_dir =3D 0xFFFFFFFF;
+>=20
+>  	/* Update GPIO direction shadow register with default value */
+> -	chip->gpio_dir =3D 0xFFFFFFFF; /* By default, all pins are inputs */
+> -	tree_info =3D of_get_property(np, "xlnx,tri-default", NULL);
+> -	if (tree_info)
+> -		chip->gpio_dir =3D be32_to_cpup(tree_info);
+> +	of_property_read_u32(np, "xlnx,tri-default", &chip->gpio_dir);
+> +
+> +	/* By default assume full GPIO controller */
+> +	chip->mmchip.gc.ngpio =3D 32;
+>=20
+>  	/* Check device node and parent device node for device width */
+> -	chip->mmchip.gc.ngpio =3D 32; /* By default assume full GPIO controll=
+er */
+> -	tree_info =3D of_get_property(np, "xlnx,gpio-width", NULL);
+> -	if (!tree_info)
+> -		tree_info =3D of_get_property(np->parent,
+> -					    "xlnx,gpio-width", NULL);
+> -	if (tree_info)
+> -		chip->mmchip.gc.ngpio =3D be32_to_cpup(tree_info);
+> +	of_property_read_u32(np, "xlnx,gpio-width",
+> +			      (u32 *)&chip->mmchip.gc.ngpio);
+>=20
+>  	spin_lock_init(&chip->gpio_lock);
+>=20
+> --
+> 1.8.2.3
+>=20
+
 
 --=20
 Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
@@ -43,7 +96,7 @@ Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
 
-------enig2DBLSSIASFSJATVRLDSHX
+------enig2ANGUJJVNGULOBRSUXEJC
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -52,9 +105,9 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.10 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iEYEARECAAYFAlG+nWoACgkQykllyylKDCES8gCfUdxI7Uf0tw9BmWoyGvtQR+Je
-YmEAn0UbbF1w5yPfuNieotHQWpsID0hX
-=oqMA
+iEYEARECAAYFAlG+nbQACgkQykllyylKDCHaIQCfSF7uZ/Uy3gP6J383I+w+I2RX
+PawAn36ckKZ3JdNJ3MsHrFA1dqZgWFlb
+=RSbJ
 -----END PGP SIGNATURE-----
 
-------enig2DBLSSIASFSJATVRLDSHX--
+------enig2ANGUJJVNGULOBRSUXEJC--
