@@ -1,108 +1,32 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] arm: add basic support for Rockchip RK3066a boards
-Date: Mon, 17 Jun 2013 14:35:15 -0700
-Message-ID: <20130617213515.GK28497@quad.lixom.net>
-References: <201306131658.36584.heiko@sntech.de>
- <201306131702.13400.heiko@sntech.de>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH V2] Documentation: Add examples to samsung-pinctrl device
+ tree bindings documentation
+Date: Tue, 18 Jun 2013 06:59:22 +0900
+Message-ID: <51BF86BA.3030505@samsung.com>
+References: <1371473826-2595-1-git-send-email-l.krishna@samsung.com> <CACRpkdZ2wn6XAuxvjOsjQ_8wChv-F4fdPTcfNTaPgQnapaa4dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201306131702.13400.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZ2wn6XAuxvjOsjQ_8wChv-F4fdPTcfNTaPgQnapaa4dw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 06/18/13 01:21, Linus Walleij wrote:
+> On Mon, Jun 17, 2013 at 2:57 PM, Leela Krishna Amudala
+> <l.krishna@samsung.com>  wrote:
+>
+>> This patch adds examples to samsung-pinctrl.txt documentaion file
+>> on how to make gpio binding and gpio request
+>>
+>> Signed-off-by: Leela Krishna Amudala<l.krishna@samsung.com>
+>> Reviewed-by: Doug Anderson<dianders@chromium.org>
+>
+> Looks like generic GPIO bindings.
+> Acked-by: Linus Walleij<linus.walleij@linaro.org>
+>
+Applied, thanks.
 
-Just some small comments below. Once fixed:
-
-Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-
-On Thu, Jun 13, 2013 at 05:02:13PM +0200, Heiko St=FCbner wrote:
-
-> +		dwmmc@10214000 {
-> +			compatible =3D "rockchip,rk2928-dw-mshc";
-
-does it make sense to fall back and also specify "snps,dw-mshc"?
-
-> diff --git a/arch/arm/mach-rockchip/rockchip.c b/arch/arm/mach-rockchip/r=
-ockchip.c
-> new file mode 100644
-> index 0000000..0933e17
-> --- /dev/null
-> +++ b/arch/arm/mach-rockchip/rockchip.c
-> @@ -0,0 +1,54 @@
-> +/*
-> + * Device Tree support for Rockchip SoCs
-> + *
-> + * Copyright (c) 2013 MundoReader S.L.
-> + * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/dw_apb_timer.h>
-> +#include <linux/clk-provider.h>
-> +#include <asm/mach/arch.h>
-> +#include <asm/mach/map.h>
-> +#include <asm/hardware/cache-l2x0.h>
-> +
-> +static void __init rockchip_timer_init(void)
-> +{
-> +	of_clk_init(NULL);
-> +	clocksource_of_init();
-> +}
-> +
-> +static void __init rockchip_dt_init(void)
-> +{
-> +#ifdef CONFIG_CACHE_L2X0
-> +	l2x0_of_init(0, ~0UL);
-> +#endif
-
-No need to ifdef, there's a stub if CONFIG_CACHE_L2X0 isn't defined.
-
-Side comment: I think it would be nice if the generic code did this
-init if a l2x0 device node was in the device tree, since the only
-reason to override init_machine is to do this call in addition to
-of_platform_populate().
-
-> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-> +}
-> +
-> +static const char * const rockchip_board_dt_compat[] =3D {
-> +	"rockchip,rk2928",
-> +	"rockchip,rk3066a",
-> +	"rockchip,rk3066b",
-> +	"rockchip,rk3188",
-> +	NULL,
-> +};
-> +
-> +DT_MACHINE_START(ROCKCHIP_DT, "Rockchip Cortex-A9 (Device Tree)")
-> +	.init_machine	=3D rockchip_dt_init,
-> +	.init_time	=3D rockchip_timer_init,
-> +	.dt_compat	=3D rockchip_board_dt_compat,
-> +MACHINE_END
+- Kukjin
