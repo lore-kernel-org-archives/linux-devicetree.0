@@ -1,56 +1,63 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/6] GPIO: xilinx: Add support for dual channel
-Date: Mon, 17 Jun 2013 07:44:37 +0200
-Message-ID: <CACRpkdaDO7QZZB28ugUY7XqgrhHPj8UrxdOsFuSdFt4RCVz2Ng@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] DT: Add documentation for gpio-xilinx
+Date: Mon, 17 Jun 2013 07:50:21 +0200
+Message-ID: <CACRpkdaaZKyqBeJHnL4Q5vc3ZVa_psF61McJ2wsFQJMTGvn-NA@mail.gmail.com>
 References: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
-	<d678410ae1b6ff11a221a996f5aa4b4ee4ed01a5.1370262666.git.michal.simek@xilinx.com>
+	<af7595252de09373f5591f21262e5ffa7c9e0dc2.1370262666.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d678410ae1b6ff11a221a996f5aa4b4ee4ed01a5.1370262666.git.michal.simek@xilinx.com>
+In-Reply-To: <af7595252de09373f5591f21262e5ffa7c9e0dc2.1370262666.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Jun 3, 2013 at 2:31 PM, Michal Simek <michal.simek@xilinx.com> wrote:
 
-> Supporting the second channel in the driver.
-> Offset is 0x8 and both channnels share the same
-> IRQ.
+> Describe gpio-xilinx binding.
 >
 > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->
 > ---
 > Changes in v2:
-> - Use kernel doc format - suggested by Linus Walleij
-> - Do not use __raw_readl/__raw_writel IO in this patch
-> - Use of_property_read_u32 helper function
-> - Use BIT()
-> - Change patch subject
+> - Extend description
 
-Patch is looking overall nice and improves the kernel so
-applied.
+Thanks, patch applied but look into this:
 
-But check this:
+> +Optional properties:
+> +- interrupts : Interrupt mapping for GPIO IRQ.
+> +- interrupt-parent : Phandle for the interrupt controller that
+> +  services interrupts for this device.
+> +- xlnx,all-inputs : if n-th bit is setup, GPIO-n is input
+> +- xlnx,dout-default : if n-th bit is 1, GPIO-n default value is 1
+> +- xlnx,gpio-width : gpio width
+> +- xlnx,tri-default : if n-th bit is 1, GPIO-n is in tristate mode
+> +- xlnx,is-dual : if 1, controller also uses the second channel
 
-> @@ -202,6 +230,57 @@ static int xgpio_of_probe(struct device_node *np)
->                        np->full_name, status);
->                 return status;
->         }
-> +
-> +       pr_info("XGpio: %s: registered, base is %d\n", np->full_name,
-> +                                                       chip->mmchip.gc.base);
-> +
-> +       tree_info = of_get_property(np, "xlnx,is-dual", NULL);
-> +       if (tree_info && be32_to_cpup(tree_info)) {
+If is present, xlnx,is-dual;
 
-Doesn't this work:
+> +Example:
+> +gpio: gpio@40000000 {
+> +       #gpio-cells = <2>;
+> +       compatible = "xlnx,xps-gpio-1.00.a";
+> +       gpio-controller ;
+> +       interrupt-parent = <&microblaze_0_intc>;
+> +       interrupts = < 6 2 >;
+> +       reg = < 0x40000000 0x10000 >;
+> +       xlnx,all-inputs = <0x0>;
+> +       xlnx,all-inputs-2 = <0x0>;
+> +       xlnx,dout-default = <0x0>;
+> +       xlnx,dout-default-2 = <0x0>;
+> +       xlnx,gpio-width = <0x2>;
+> +       xlnx,gpio2-width = <0x2>;
+> +       xlnx,interrupt-present = <0x1>;
+> +       xlnx,is-dual = <0x1>;
 
-if (of_property_read_bool(np, "xlnx,is-dual")) {
-(...)
+xlnx,is-dual;
 
-?
+I'm not giving up on this suggestion.
+
+Test it please...
 
 Yours,
 Linus Walleij
