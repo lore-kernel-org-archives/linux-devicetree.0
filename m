@@ -1,45 +1,49 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] pinctrl: rockchip: correctly handle arguments of
- pinconf options
-Date: Mon, 17 Jun 2013 17:48:23 +0200
-Message-ID: <CACRpkdZx9pjfqzn_keKTGGPsP1jHOY2=4OQX9mmymeo9EPn=Cg@mail.gmail.com>
-References: <201306141741.46077.heiko@sntech.de>
-	<201306161302.32156.heiko@sntech.de>
-	<CACRpkdZxO-8rQPBRPsxAx8OBfwvh_BQuts7NAi379gMZG+1ocg@mail.gmail.com>
-	<201306161741.17048.heiko@sntech.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
+ tree driver
+Date: Mon, 17 Jun 2013 09:48:21 -0600
+Message-ID: <51BF2FC5.40207@wwwdotorg.org>
+References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org> <CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306161741.17048.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, James Hogan <james.hogan@imgtec.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa@the-dreams.de>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 16, 2013 at 5:41 PM, Heiko St=FCbner <heiko@sntech.de> wrot=
-e:
+On 05/22/2013 01:56 AM, Linus Walleij wrote:
+> On Mon, May 13, 2013 at 10:18 PM, Linus Walleij
+> <linus.walleij@linaro.org> wrote:
+> 
+>> This tries to address an issue found when writing an MFD driver
+>> for the Nomadik STw481x PMICs: as the platform is using device
+>> tree exclusively I want to specify the driver matching like
+>> this:
+> (...)
+>> ---
+>> ChangeLog v1->v2:
+>> - Use of_match_device() to determine if there is a DT match in
+>>   the probe code. If there is a match we pass NULL for the
+>>   id_table match parameter.
+> 
+> Ping on this.
+> 
+> v2 should be doing what Grant suggested...
 
-> Change the rockchip pinctrl driver to handle the arguments to the pul=
-l
-> pinconfig options correctly. So only accept non-0 values for the
-> pull options as the rockchip pin-controller can only turn pulls on an=
-d
-> off (this via BIAS_DISABLE).
->
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> ---
-> changes since v1:
->  really respect the values for arguments of the pull options (aka 0 i=
-s not
->  meant to turn off a pull).
->  Replacing the patch also makes sure that no wrong knowledge stays in=
- the
->  kernel via the old commit message, least somebody else reads it and =
-takes
->  it as true.
+This has just shown up in next-20130617, and breaks at least the
+TPS65910 and TPS62360 drivers, since they assume that the id parameter
+passed to probe is non-NULL. However, now the parameter is NULL since
+these drivers have both an ID table and an OF match table.
 
-OK took out the v1 and put in this v2 version instead...
+I'd like to suggest this patch be reverted an re-introduced immediately
+after the merge window. That should give enough time for everyone to get
+a heads-up on fixing any drivers with a similar problem, rather than
+trying to cram all that in immediately before the merge window. I'd also
+suggest that this patch should be accompanied by fixes for any similarly
+broken drivers, based on code inspection.
 
-Thanks!
-Linus Walleij
+Do people agree? If not, please let us know ASAP so we can post patches
+to fix this.
