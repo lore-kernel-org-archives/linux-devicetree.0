@@ -1,50 +1,117 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 01/11] pinctrl: single: adopt pinctrl sleep mode management
-Date: Mon, 17 Jun 2013 18:08:51 +0200
-Message-ID: <CACRpkdZGV7v2=rrKfiLXF7k3JG-1BEDr5=dC+E96gvpnPCCRcQ@mail.gmail.com>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<1369995191-20855-2-git-send-email-gururaja.hebbar@ti.com>
-	<CACRpkdZjvW6M1Q+K3OD1x_Jkz91AofdOdBThyJLGJ+Wx-BDTNw@mail.gmail.com>
-	<20130617120340.GE10305@atomide.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] dmaengine: add support for DMA multiplexer DT nodes
+Date: Mon, 17 Jun 2013 18:16:12 +0200
+Message-ID: <201306171816.12331.arnd@arndb.de>
+References: <1370533645-23690-1-git-send-email-g.liakhovetski@gmx.de> <1370533645-23690-3-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130617120340.GE10305@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Hebbar Gururaja <gururaja.hebbar@ti.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vaibhav Bedia <vaibhav.bedia@ti.com>, sudhakar.raj@ti.com
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1370533645-23690-3-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-sh@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2013 at 2:03 PM, Tony Lindgren <tony@atomide.com> wrote:
-> * Linus Walleij <linus.walleij@linaro.org> [130617 04:38]:
->> On Fri, May 31, 2013 at 12:13 PM, Hebbar Gururaja
->> <gururaja.hebbar@ti.com> wrote:
->>
->> > Make pinctrl-single able to handle suspend/resume events and change
->> > hogged pins states accordingly.
->> >
->> > Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
->> > Cc: Linus Walleij <linus.walleij@linaro.org>
->>
->> Noone said anything about this patch, but it looks very straight-forward
->> to me and seems sound so I have applied it.
->>
->> If Tony or Haojian has strong feelings about it I will dequeue it.
->
-> I don't like the hogged pins at all as they prevent me from unloading
-> pinctrl-single.. But the patch seems fine to me:
+On Thursday 06 June 2013, Guennadi Liakhovetski wrote:
+>  Documentation/devicetree/bindings/dma/dma.txt |   44 +++++++++++++++++++++++++
+>  drivers/dma/of-dma.c                          |   31 +++++++++++++----
+>  2 files changed, 67 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+> index 8f504e6..a861298 100644
+> --- a/Documentation/devicetree/bindings/dma/dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/dma.txt
+> @@ -31,6 +31,50 @@ Example:
+>  		dma-requests = <127>;
+>  	};
+>  
+> +* DMA multiplexer
+> +
+> +Several DMA controllers with the same #dma-cells number and the same request
+> +line IDs can be grouped under a DMA multiplexer super-node, if slaves can use
+> +DMA channels on any of them.
+> +
+> +Required property:
+> +- compatible:		Must include "dma-mux".
+> +
+> +Some standard optional properties can be helpful:
+> +
+> +Optional properties:
+> +- compatible:		You will probably also want to include compatibility
+> +			with "simple-bus" to automatically create platform
+> +			devices from subnodes.
+> +- ranges:		Map DMA controller memory areas in the parent address
+> +			space.
+> +- #address-cells:	Number of address cells in case automatic propagation
+> +			with the help of "ranges" doesn't work.
+> +- #size-cells:		Number of size cells.
+> +
+> +Example:
+> +
+> +	dmac: dma-mux {
+> +		compatible = "simple-bus", "dma-mux";
+> +		ranges;
+> +
+> +		dma0: dma@10000000 {
+> +			#dma-cells = <1>;
+> +			...
+> +		};
+> +
+> +		dma1: dma@20000000 {
+> +			#dma-cells = <1>;
+> +			...
+> +		};
+> +	};
+> +
+> +	mmc0: mmc@30000000 {
+> +			dmas = <&dmac 1
+> +				&dmac 2>;
+> +			dma-names = "tx", "rx";
+> +			...
+> +	};
+>  
+>  * DMA client
 
-Hm? I think the hogged pins are the *only* pins we can
-reliably release when unloading the driver, look:
+Hmm, you've clearly shown that this can work, but it feels like a really odd way to
+do this. I don't think we should do it this way, because it tries to be really
+generic but then cannot some of the interesting cases, e.g.
 
-void pinctrl_unregister(struct pinctrl_dev *pctldev)
-{
-(...)
-        if (!IS_ERR(pctldev->p))
-                pinctrl_put(pctldev->p);
+1. you have multiplexed dma engines, but they need different #dma-cells.
+1. you have multiplexed dma engines, but they need different dma specifiers.
+2. The mux is between devices that are not on the same parent bus.
 
-That releases all hogged pinctrl handles when unloading
-a pinctrl driver.
+I think this should either not try to be fully generic and just limited to
+the case you care about, i.e. shdma, or it should be more abstract and
+multiplex between the individual channels. In either case, I guess
+it would not need a change like this to the of_dma_request_slave_channel()
+function, and the node pointer used by the slave would be the same node
+that defines the address space for the channel descriptions with #dma-cells.
 
-Yours,
-Linus Walleij
+I think the easiest way would be the first of those two, so it would
+essentially look like 
+
+	dmac: dma-mux {
+		compatible = "renesas,shdma-mux"; /* not simple-bus! */
+		#dma-cells = <1>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+	
+		dma@10000000 {
+			compatible = "renesas,shdma";
+			reg = <0x10000000 0x1000>;
+			interrupts = <10>;
+		};
+		dma@20000000 {
+			compatible = "renesas,shdma";
+			reg = <0x10000000 0x1000>;
+			interrupts = <10>;
+		};
+	}
+
+You then register a device driver for the master device, which
+will call of_dma_controller_register() for itself and create
+its child devices.
+
+	Arnd
