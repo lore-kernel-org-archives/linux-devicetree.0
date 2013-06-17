@@ -1,41 +1,103 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
- tree driver
-Date: Mon, 17 Jun 2013 23:15:30 +0100
-Message-ID: <CACxGe6sTq=h9jjqesjvUA4Bweh7zgE4VOLoOTgGPC_D_v+8NtA@mail.gmail.com>
-References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org>
- <CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com>
- <51BF2FC5.40207@wwwdotorg.org> <CACRpkdbjy+PcpNkSg4PuuP2Z9RyrnqSW0uchHFHVZ8VYPeoDyA@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 1/3] ARM: mach-moxart: add MOXA ART SoC files
+Date: Mon, 17 Jun 2013 15:21:11 -0700
+Message-ID: <20130617222111.GA13266@quad.lixom.net>
+References: <1371040448-28742-1-git-send-email-jonas.jensen@gmail.com>
+ <1371040448-28742-2-git-send-email-jonas.jensen@gmail.com>
+ <20130612224235.GA8146@quad.lixom.net>
+ <CACmBeS1xNgc=TN3ZdhhHS0K+SMU+Zc1cvH7VXQHiTye=Ufoj8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbjy+PcpNkSg4PuuP2Z9RyrnqSW0uchHFHVZ8VYPeoDyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACmBeS1xNgc=TN3ZdhhHS0K+SMU+Zc1cvH7VXQHiTye=Ufoj8Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonas Jensen <jonas.jensen@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2013 at 5:33 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Jun 17, 2013 at 5:48 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->
->> This has just shown up in next-20130617, and breaks at least the
->> TPS65910 and TPS62360 drivers, since they assume that the id parameter
->> passed to probe is non-NULL. However, now the parameter is NULL since
->> these drivers have both an ID table and an OF match table.
->
-> So you mean they come in through the DT boot path and assume
-> that parameter is non-null even though they should not make use of
-> it?
->
->> I'd like to suggest this patch be reverted an re-introduced immediately
->> after the merge window. That should give enough time for everyone to get
->> a heads-up on fixing any drivers with a similar problem, rather than
->> trying to cram all that in immediately before the merge window.
->
-> OK that works for me, I'm not in any hurry.
+Hi,
 
-Deferring by a merge window isn't going to make it any less painful.
-Do your best to find all the users that need to be changed. Use a
-coccinelle search perhaps, but I think it should be merged anyway.
+On Fri, Jun 14, 2013 at 04:33:29PM +0200, Jonas Jensen wrote:
+> Hi,
+> 
+> Thanks for the replies.
+> 
+> What isn't commented below should already be fixed. I'll resubmit the
+> entire set when it looks like there's nothing left to amend.
+> 
+> On 13 June 2013 00:42, Olof Johansson <olof@lixom.net> wrote:
+> > You should provide a commit message, ideally with a short introduction of the
+> > platform.
+> 
+> Will do. I was thinking I should do that, this is the first time I
+> used git format-patch / git send-email.
+> 
+> >> +++ b/arch/arm/configs/moxart_uc7112lx_defconfig
+> >
+> > It'd be nice to keep the defconfig generic, and make sure to enable all boards
+> > in it -- we're generally OK with adding one defconfig per platform upstream but
+> > not more.
+> 
+> Since MACH_UC7112LX is the only board right now, how can it "enable all boards"?
 
-g.
+Yeah, that was more with respect to future use of the defconfig. So keeping it
+generic in name for now (moxart_defconfig) is really all I am asking for.
+
+> One way I can think of is to remove CONFIG_MACH_UC7112LX=y from
+> defconfig and have it (and all future boards) "default y" in
+> arch/arm/mach-moxart/Kconfig.
+
+Enabling it in the defconfig is just fine, no need to change anything there at
+this time.
+
+> I focus on a single hardware, UC-7112-LX. There's at least one more
+> board with only minor differences (RAM / flash size). But for now,
+> MACH_UC7112LX is the one I have access to and can test. I think
+> UC-7110 is already supported, that it would boot, just copy
+> arch/arm/boot/dts/moxart-uc7112lx.dts and modify ranges for RAM and
+> MTD. I want to leave this in a state where remaining hardware can
+> easily be added, albeit by someone that isn't me :)
+
+Sure, that's a fair stance.
+
+> > If you multiplatform enable this, then you need to have a check in
+> > moxart_idle_init() to make sure you're running on a moxart soc. Otherwise this
+> > will still be called and override the arm_pm_idle setting on other platforms as
+> > well.
+> 
+> I can't find a good example of how other platforms do this, is a DT
+> lookup an accepted solution? :
+> 
+> static const struct of_device_id moxart_match[] = {
+>        { .compatible = "moxa,moxart" },
+>        { }
+> };
+> 
+> static int __init moxart_idle_init(void)
+> {
+>     struct device_node *node;
+> 
+>     node = of_find_matching_node(NULL, moxart_match);
+>     if (!node)
+>         return -ENODEV;
+> 
+>     arm_pm_idle = moxart_idle;
+>     return 0;
+> }
+> 
+> arch_initcall(moxart_idle_init);
+
+Easiest of all is if you have a "moxa,moxart" compatible field as the
+most-specific one for your machine, then you can just do:
+
+...
+{
+	if (!of_machine_is_compatible("moxa,moxart"))
+		return -ENODEV;
+
+	arm_pm_idle = moxart_idle;
+	return 0;
+}
+
+-Olof
