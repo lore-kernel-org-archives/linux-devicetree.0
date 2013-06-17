@@ -1,46 +1,37 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v2 1/5] clk: divider: replace bitfield width with mask
-Date: Mon, 17 Jun 2013 23:22:35 +0800
-Message-ID: <20130617152233.GK31687@S2101-09.ap.freescale.net>
-References: <1371437905-15567-1-git-send-email-mturquette@linaro.org>
- <1371437905-15567-2-git-send-email-mturquette@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH -next v2] dmaengine: ste_dma40: fix error return code in d40_probe()
+Date: Mon, 17 Jun 2013 17:38:43 +0200
+Message-ID: <CACRpkdYf3cx=-+nZJGCxGJs5TbBAkLwtfaYXWErzn-wnxeFLuQ@mail.gmail.com>
+References: <CAPgLHd-gjJ6ju3HyhiQi98YFGojvU3aYSTn7SOe4NhQPY1r++w@mail.gmail.com>
+	<CACRpkdYBfvr0kA7bd-6Ns78UH7JtBCFDzFxyHLgtReB32O4D+w@mail.gmail.com>
+	<20130530173326.GD3767@intel.com>
+	<CACRpkdZhK6TUAC132vzcaLKqdMTwPma+ZhKG5Y+AUvekNpz6EQ@mail.gmail.com>
+	<20130612095443.GU4107@intel.com>
+	<CACRpkdYS8MYEBs_kcGyOPvcenBALxAXtksRA=+TmkeyOZW=Xzg@mail.gmail.com>
+	<20130617135028.GE10671@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1371437905-15567-2-git-send-email-mturquette@linaro.org>
+In-Reply-To: <20130617135028.GE10671@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Matt Sealey <neko@bakuhatsu.net>, Stephen Boyd <sboyd@codeaurora.org>, Sascha Hauer <kernel@pengutronix.de>
+To: Vinod Koul <vinod.koul@intel.com>, "arm@kernel.org" <arm@kernel.org>
+Cc: Wei Yongjun <weiyj.lk@gmail.com>, Srinidhi KASAGAR <srinidhi.kasagar@stericsson.com>, Dan Williams <djbw@fb.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 16, 2013 at 07:58:21PM -0700, Mike Turquette wrote:
-> The forthcoming Device Tree binding for the divider clock type will use
-> a bitfield mask instead of bitfield width, which is what the current
-> basic divider implementation uses.
-> 
-> This patch replaces the u8 width in struct clk_divider with a u32 mask.
-> The divider code is updated to use the bit mask internally but the two
-> registration functions still accept the width to maintain compatibility
-> with existing users.
-> 
-> Also updated in this patch is the clk-private.h divider macro and two
-> Freescale clock divider implementations that are based on struct
-> clk_divider.
-> 
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Shawn Guo <shawn.guo@linaro.org>
-> Signed-off-by: Mike Turquette <mturquette@linaro.org>
-> ---
-> No change since v1, new patch
-> 
->  arch/arm/mach-imx/clk-busy.c |  2 +-
->  drivers/clk/clk-divider.c    | 31 +++++++++++++++----------------
->  drivers/clk/mxs/clk-div.c    |  2 +-
->  include/linux/clk-private.h  |  2 +-
->  include/linux/clk-provider.h |  2 +-
->  5 files changed, 19 insertions(+), 20 deletions(-)
+On Mon, Jun 17, 2013 at 3:50 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Thu, Jun 13, 2013 at 09:49:04AM +0200, Linus Walleij wrote:
 
-On imx and mxs,
+>> I haven't sent this patch to ARM SoC so it will not appear from any other source
+>> in the merge window or cause any conflicts.
+>
+> Doesnt apply on my next or -rc6. I think it has some ste dependecies. So either
+> we wait and I send this for next -rc2 or you apply with my Ack
 
-Tested-by: Shawn Guo <shawn.guo@linaro.org>
+I have it queued in my tree so it won't be forgotten.
+
+That said: ARM SoC folks: can you apply this fix directly
+to wherever in the ARM SoC tree the DMA40 patches have
+ended up? (Looks like next/drivers)
+
+Yours,
+Linus Walleij
