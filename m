@@ -1,68 +1,78 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v4 0/7] xilinxfb changes
-Date: Mon, 17 Jun 2013 11:02:11 +0200
-Message-ID: <51BED093.1040207@monstr.eu>
-References: <cover.1370254386.git.michal.simek@xilinx.com> <20130606162336.GW19468@game.jcrosoft.org> <51BE9D6A.70001@monstr.eu> <20130617085640.GE305@game.jcrosoft.org>
-Reply-To: monstr@monstr.eu
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2] staging: imx_drm: imx_ldb: fix 18 bit format
+Date: Mon, 17 Jun 2013 11:02:52 +0200
+Message-ID: <1371459772-16443-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2PFUVRPETDRBKDENUHGDL"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130617085640.GE305@game.jcrosoft.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Timur Tabi <timur@tabi.org>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2PFUVRPETDRBKDENUHGDL
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+From: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
 
-On 06/17/2013 10:56 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 07:23 Mon 17 Jun     , Michal Simek wrote:
->> On 06/06/2013 06:23 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>> On 12:13 Mon 03 Jun     , Michal Simek wrote:
->>>> Hi,
->>>>
->>>
->>> Arnd can you take look on it again please
->>>
->>> I'll take a look on it next week
->>
->> Any update on this?
-> look ok but I want the Ack from Arnd
+Since 18 bit is supported as datawidth in device tree it should be
+supported in driver. Beside the LDB channel the IPU channel has also
+to be configured to use BGR666.
 
-ok.
-Arnd?
+Signed-off-by: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+This is based on the series: "staging: drm/imx: Add LDB support" by Philipp.
 
-Thanks,
-Michal
+Changes since v1:
+	- fixed function call: imx_drm_crtc_panel_format_pins -> imx_drm_crtc_panel_format
 
+ drivers/staging/imx-drm/imx-ldb.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
-------enig2PFUVRPETDRBKDENUHGDL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlG+0JMACgkQykllyylKDCELKACdHnIcszs50x9896Lmt0wwrp8P
-hA8AoJrdl5ilcsnLlSu9TysavJ3kUT6q
-=E5uE
------END PGP SIGNATURE-----
-
-------enig2PFUVRPETDRBKDENUHGDL--
+diff --git a/drivers/staging/imx-drm/imx-ldb.c b/drivers/staging/imx-drm/imx-ldb.c
+index 0a7e4da..92a0e21 100644
+--- a/drivers/staging/imx-drm/imx-ldb.c
++++ b/drivers/staging/imx-drm/imx-ldb.c
+@@ -179,6 +179,7 @@ static void imx_ldb_encoder_prepare(struct drm_encoder *encoder)
+ 	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
+ 	struct imx_ldb *ldb = imx_ldb_ch->ldb;
+ 	struct drm_display_mode *mode = &encoder->crtc->mode;
++	u32 pixel_fmt;
+ 	unsigned long serial_clk;
+ 	unsigned long di_clk = mode->clock * 1000;
+ 	int mux = imx_drm_encoder_get_mux_id(imx_ldb_ch->imx_drm_encoder,
+@@ -194,8 +195,23 @@ static void imx_ldb_encoder_prepare(struct drm_encoder *encoder)
+ 		imx_ldb_set_clock(ldb, mux, imx_ldb_ch->chno, serial_clk, di_clk);
+ 	}
+ 
++	switch (imx_ldb_ch->chno) {
++	case 0:
++		pixel_fmt = (ldb->ldb_ctrl & LDB_DATA_WIDTH_CH0_24) ?
++			V4L2_PIX_FMT_RGB24 : V4L2_PIX_FMT_BGR666;
++		break;
++	case 1:
++		pixel_fmt = (ldb->ldb_ctrl & LDB_DATA_WIDTH_CH1_24) ?
++			V4L2_PIX_FMT_RGB24 : V4L2_PIX_FMT_BGR666;
++		break;
++	default:
++		dev_err(ldb->dev, "unable to config di%d panel format\n",
++			imx_ldb_ch->chno);
++		pixel_fmt = V4L2_PIX_FMT_RGB24;
++	}
++
+ 	imx_drm_crtc_panel_format(encoder->crtc, DRM_MODE_ENCODER_LVDS,
+-			V4L2_PIX_FMT_RGB24);
++			pixel_fmt);
+ }
+ 
+ static void imx_ldb_encoder_commit(struct drm_encoder *encoder)
+-- 
+1.8.3.1
