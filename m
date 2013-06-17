@@ -1,44 +1,122 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2] staging: imx_drm: imx_ldb: fix 18 bit format
-Date: Mon, 17 Jun 2013 13:59:48 -0700
-Message-ID: <20130617205948.GA3018@kroah.com>
-References: <1371459772-16443-1-git-send-email-s.trumtrar@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1371459772-16443-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Marek Belisko <marek.belisko@open-nandra.com>
+Subject: [PATCH] arm/dts: Add basic support for gta04 (Openmoko next generation) board.
+Date: Mon, 17 Jun 2013 23:06:11 +0200
+Message-ID: <1371503171-21416-1-git-send-email-marek.belisko@open-nandra.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: b-cousson@ti.com, tony@atomide.com
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Marek Belisko <marek.belisko@open-nandra.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2013 at 11:02:52AM +0200, Steffen Trumtrar wrote:
-> From: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
-> 
-> Since 18 bit is supported as datawidth in device tree it should be
-> supported in driver. Beside the LDB channel the IPU channel has also
-> to be configured to use BGR666.
-> 
-> Signed-off-by: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> This is based on the series: "staging: drm/imx: Add LDB support" by Philipp.
+Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
+---
+Resending because patch wasn't applied yet and was first time sent
+in January.
 
-I don't seem to have that series in my queue anywhere, can someone
-please resend it, and this patch, so that I can apply them?
+ arch/arm/boot/dts/omap3-gta04.dts | 94 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omap3-gta04.dts
 
-thanks,
+diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
+new file mode 100644
+index 0000000..9e7e3ec
+--- /dev/null
++++ b/arch/arm/boot/dts/omap3-gta04.dts
+@@ -0,0 +1,94 @@
++/*
++ * Copyright (C) 2013 Marek Belisko <marek.belisko@open-nandra.com>
++ *
++ * Based on omap3-beagle-xm.dts
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
++
++/include/ "omap3.dtsi"
++
++/ {
++	model = "OMAP3 GTA04";
++	compatible = "ti,omap3-gta04", "ti,omap3";
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>; /* 512 MB */
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		aux-button {
++			label = "AUX";
++			linux,code = <169>;
++			gpios = <&gpio1 7 1>;
++			gpio-key,wakeup;
++		};
++	};
++};
++
++&i2c1 {
++	clock-frequency = <2600000>;
++
++	twl: twl@48 {
++		reg = <0x48>;
++		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
++		interrupt-parent = <&intc>;
++	};
++};
++
++/include/ "twl4030.dtsi"
++
++&i2c2 {
++	clock-frequency = <400000>;
++	/* Pressure Sensor */
++	bmp085@77 {
++		compatible = "bosch,bmp085";
++		reg = <0x77>;
++	};
++
++	/* leds */
++	tca6507@45 {
++		compatible = "ti,tca6507";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x45>;
++
++		gta04_led0: red_aux@0 {
++			label = "gta04:red:aux";
++			reg = <0x0>;
++		};
++
++		gta04_led1: green_aux@1 {
++			label = "gta04:green:aux";
++			reg = <0x1>;
++		};
++
++		gta04_led3: red_power@3 {
++			label = "gta04:red:power";
++			reg = <0x3>;
++			linux,default-trigger = "default-on";
++		};
++
++		gta04_led4: green_power@4 {
++			label = "gta04:green:power";
++			reg = <0x4>;
++		};
++	};
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++};
++
++&mmc1 {
++	vmmc-supply = <&vmmc1>;
++	bus-width = <4>;
++};
++
+-- 
+1.8.1.2
 
-greg k-h
