@@ -1,104 +1,40 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH 1/9] drm/exynos: use SoC name to identify hdmi version
-Date: Mon, 17 Jun 2013 07:36:57 +0530
-Message-ID: <CAPdUM4N6nsRMQnML-n8n924yxSO=p4Vqg7WrA8O6YPKM=9N8Hg@mail.gmail.com>
-References: <1370959891-8923-1-git-send-email-rahul.sharma@samsung.com>
-	<1370959891-8923-2-git-send-email-rahul.sharma@samsung.com>
-	<51BABDDC.60603@samsung.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 00/11] ASoC: fsl-ssi: ac97-slave support
+Date: Mon, 17 Jun 2013 10:36:57 +0800
+Message-ID: <20130617023656.GE31687@S2101-09.ap.freescale.net>
+References: <1371389117-19729-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=EUC-KR
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51BABDDC.60603@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: sw0312.kim@samsung.com
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, joshi@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1371389117-19729-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Seung-Woo,
+On Sun, Jun 16, 2013 at 03:25:06PM +0200, Markus Pargmann wrote:
+> Markus Pargmann (11):
+>       ASoC: imx-pcm-dma: DT support
+>       ASoC: imx-pcm-fiq: Introduce pcm-fiq-params
+>       ASoC: fsl: Move soc_ac97_ops from imx-ssi to fsl_ssi
+>       ASoC: fsl-ssi: Add support for imx-pcm-fiq
+>       ASoC: fsl-ssi: Use generic DMA bindings if possible
+>       ASoC: fsl-ssi: imx ac97 support
+>       ARM: imx: Export ac97 reset functions
+>       ASoC: Add phycore-ac97-dt driver
+>       ASoC: fsl: Kconfig: Use fsl-ssi for phycore-ac97
+>       ASoC: fsl: Move fsl-ssi binding doc to sound/
+>       ASoC: fsl: Update fsl-ssi binding doc
 
-On Fri, Jun 14, 2013 at 12:23 PM, =B1=E8=BD=C2=BF=EC <sw0312.kim@samsun=
-g.com> wrote:
-> Hello Rahul,
->
-> On 2013=B3=E2 06=BF=F9 11=C0=CF 23:11, Rahul Sharma wrote:
->> Exynos hdmi IP version is named after hdmi specification version i.e=
-=2E
->> 1.3 and 1.4. This versioning mechanism is not sufficient to handle
->> the diversity in the hdmi/phy IPs which are present across the exyno=
-s
->> SoC family.
->>
->> This patch changes the hdmi version to the name of the SoC in which
->> the IP was introduced for the first time. Same version is applicable
->> to all subsequent SoCs having the same IP version.
->>
->> Exynos4210 has 1.3 HDMI, i2c mapped phy with configuration set.
->> Exynos5250 has 1.4 HDMI, i2c mapped phy with configuration set.
->> Exynos5420 has 1.4 HDMI, Platform Bus mapped phy with configuration =
-set.
->>
->> Based on the HDMI IP version we cannot decide to pick Exynos5250 phy=
- conf
->> and use i2c for data transfer or Exynos5420 phy confs and platform b=
-us
->> calls for communication.
->
-> Considering your other patch to divide hdmi and hdmiphy, how do you
-> think using hdmiphy version parsed from hdmiphy dt binding from phy c=
-ode
-> instead of using hdmi version for both hdmi and hdmiphy? If that, thi=
-s
-> SoC identifying hdmi version is not necessary because there is no cha=
-nge
-> at least in hdmi side.
->
-> And IMO, it seems easy to merge hdmiphy related patch first before
-> merging patch for exynos5420.
->
-
-You are right. If we isolate hdmiphy first from hdmi IP driver, we
-dont need this
-patch. I will revive the hdmiphy separation patch and get that merge fi=
-rst.
-
-regards,
-Rahul Sharma.
-
->>
->> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->> ---
->>  drivers/gpu/drm/exynos/exynos_hdmi.c |  249 +++++++++++++++++------=
------------
->>  drivers/gpu/drm/exynos/regs-hdmi.h   |   78 +++++------
->>  2 files changed, 164 insertions(+), 163 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/=
-exynos/exynos_hdmi.c
->> index 75a6bf3..9384ffc 100644
->> --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
->> +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
->> @@ -73,9 +73,9 @@ enum HDMI_PACKET_TYPE {
->>       HDMI_PACKET_TYPE_AUI =3D HDMI_PACKET_TYPE_INFOFRAME + 4
->>  };
->>
->> -enum hdmi_type {
->> -     HDMI_TYPE13,
->> -     HDMI_TYPE14,
->> +enum hdmi_version {
->> +     HDMI_VER_EXYNOS4210,
->> +     HDMI_VER_EXYNOS4212,
->>  };
->
-> <snip>
->
-> --
-> Seung-Woo Kim
-> Samsung Software R&D Center
-> --
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
-ng-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
