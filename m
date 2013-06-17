@@ -1,106 +1,130 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 6/6] DT: Add documentation for gpio-xilinx
-Date: Mon, 17 Jun 2013 08:21:41 +0200
-Message-ID: <51BEAAF5.6070003@monstr.eu>
-References: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com> <af7595252de09373f5591f21262e5ffa7c9e0dc2.1370262666.git.michal.simek@xilinx.com> <CACRpkdaaZKyqBeJHnL4Q5vc3ZVa_psF61McJ2wsFQJMTGvn-NA@mail.gmail.com>
-Reply-To: monstr@monstr.eu
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Mon, 17 Jun 2013 08:38:27 +0200
+Message-ID: <CACRpkdZZyTDT6mo-3iqRnSSbeJtt4HnVnmkeqoir-UV_8nG0rQ@mail.gmail.com>
+References: <1370505910-2102-1-git-send-email-thloh@altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2PCWIGJANAVCVGJLACRJP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaaZKyqBeJHnL4Q5vc3ZVa_psF61McJ2wsFQJMTGvn-NA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1370505910-2102-1-git-send-email-thloh@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tien Hock Loh <thloh@altera.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Loh Tien Hock <thloh85@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2PCWIGJANAVCVGJLACRJP
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 6, 2013 at 10:05 AM,  <thloh@altera.com> wrote:
 
-On 06/17/2013 07:50 AM, Linus Walleij wrote:
-> On Mon, Jun 3, 2013 at 2:31 PM, Michal Simek <michal.simek@xilinx.com> =
-wrote:
->=20
->> Describe gpio-xilinx binding.
->>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->> Changes in v2:
->> - Extend description
->=20
-> Thanks, patch applied but look into this:
->=20
->> +Optional properties:
->> +- interrupts : Interrupt mapping for GPIO IRQ.
->> +- interrupt-parent : Phandle for the interrupt controller that
->> +  services interrupts for this device.
->> +- xlnx,all-inputs : if n-th bit is setup, GPIO-n is input
->> +- xlnx,dout-default : if n-th bit is 1, GPIO-n default value is 1
->> +- xlnx,gpio-width : gpio width
->> +- xlnx,tri-default : if n-th bit is 1, GPIO-n is in tristate mode
->> +- xlnx,is-dual : if 1, controller also uses the second channel
->=20
-> If is present, xlnx,is-dual;
->=20
->> +Example:
->> +gpio: gpio@40000000 {
->> +       #gpio-cells =3D <2>;
->> +       compatible =3D "xlnx,xps-gpio-1.00.a";
->> +       gpio-controller ;
->> +       interrupt-parent =3D <&microblaze_0_intc>;
->> +       interrupts =3D < 6 2 >;
->> +       reg =3D < 0x40000000 0x10000 >;
->> +       xlnx,all-inputs =3D <0x0>;
->> +       xlnx,all-inputs-2 =3D <0x0>;
->> +       xlnx,dout-default =3D <0x0>;
->> +       xlnx,dout-default-2 =3D <0x0>;
->> +       xlnx,gpio-width =3D <0x2>;
->> +       xlnx,gpio2-width =3D <0x2>;
->> +       xlnx,interrupt-present =3D <0x1>;
->> +       xlnx,is-dual =3D <0x1>;
->=20
-> xlnx,is-dual;
->=20
-> I'm not giving up on this suggestion.
+> From: Tien Hock Loh <thloh@altera.com>
+>
+> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
+> Tested on Altera CV SoC board.
+>
+> Signed-off-by: Tien Hock Loh <thloh@altera.com>
+(...)
 
-I have commented this in the v1. The point is that all dtses for the last=
+This is looking much better, some remaining comments.
 
-3-4 years are using this binding and this value is present there for a lo=
-ng
-time. That's why I think it is better to keep this binding and do not bre=
-ak
-backward compatibility which there is.
-Also it reflects how design tool describe hardware.
-IP is designed that can be easily extended to more channels which means
-that it won't be simple yes/no option.
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> @@ -0,0 +1,36 @@
+> +Altera GPIO controller bindings
+> +
+> +Required properties:
+> +- compatible:
+> +  - "altr,pio-1.0"
 
-Thanks,
-Michal
+I asked you to add this prefix to
+Documentation/devicetree/bindings/vendor-prefixes.txt
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+> +- reg: Physical base address and length of the controller's registers.
+> +- #gpio-cells : Should be 1
+> +  - first cell is the gpio offset number
+> +- gpio-controller : Marks the device node as a GPIO controller.
+> +- #interrupt-cells : Should be 1.
+> +- interrupts: Specify the interrupt.
+> +- interrupt-controller: Mark the device node as an interrupt controller
+> +  The first cell is the GPIO number.
 
+How can that cell be the "GPIO number"? Surely it is the local
+interrupt offset number on the GPIO controller?
 
+(...)
+> +++ b/drivers/gpio/gpio-altera.c
 
-------enig2PCWIGJANAVCVGJLACRJP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+> +static int altera_gpio_get(struct gpio_chip *gc, unsigned offset)
+> +{
+> +       struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
+> +
+> +       return (readl(mm_gc->regs + ALTERA_GPIO_DATA) >> offset) & 1;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+I usually would write that like this:
 
-iEYEARECAAYFAlG+qvUACgkQykllyylKDCHkPACdEcoHTEqhdgwg8mFEdr7Nby4l
-rkgAoIbbodkQh1JyFCSsrPo4AkdcnwGE
-=yTP5
------END PGP SIGNATURE-----
+#include <linux/bitops.h>
 
-------enig2PCWIGJANAVCVGJLACRJP--
+return !!(readl(mm_gc->regs + ALTERA_GPIO_DATA) & BIT(offset));
+
+But no big deal.
+
+> +       gpio_ddr |= (1 << offset);
+
+And with <linux/bitops.h> I would just:
+
+gpio_ddr |= BIT(offset);
+
+> +static void altera_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
+> +{
+> +       struct altera_gpio_chip *altera_gc = irq_desc_get_handler_data(desc);
+> +       struct irq_chip *chip = irq_desc_get_chip(desc);
+> +       struct of_mm_gpio_chip *mm_gc = &altera_gc->mmchip;
+> +       unsigned long status;
+> +
+> +       int base;
+> +       chip->irq_mask(&desc->irq_data);
+> +
+> +       if (altera_gc->level_trigger) {
+> +               status = __raw_readl(mm_gc->regs + ALTERA_GPIO_DATA);
+> +               status &= __raw_readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
+> +
+> +               for (base = 0; base < mm_gc->gc.ngpio; base++) {
+> +                       if ((1 << base) & status) {
+> +                               generic_handle_irq(irq_linear_revmap(
+> +                                       altera_gc->irq, base));
+> +                       }
+> +               }
+> +       } else {
+> +               while ((status =
+> +                       (__raw_readl(mm_gc->regs + ALTERA_GPIO_EDGE_CAP) &
+> +                       __raw_readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK)))) {
+> +                       __raw_writel(status,
+> +                               mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
+> +                       for (base = 0; base < mm_gc->gc.ngpio; base++) {
+> +                               if ((1 << base) & status) {
+> +                                       generic_handle_irq(irq_linear_revmap(
+> +                                               altera_gc->irq, base));
+> +                               }
+> +                       }
+> +               }
+> +       }
+> +
+> +       chip->irq_eoi(irq_desc_get_irq_data(desc));
+> +       chip->irq_unmask(&desc->irq_data);
+> +}
+
+Why is the above code using __raw_* accessors?
+
+Atleast use readl_relaxed() instead of __raw.
+
+> +       if (of_get_property(node, "interrupts", &reg) == NULL)
+> +               goto skip_irq;
+> +       altera_gc->hwirq = irq_of_parse_and_map(node, 0);
+
+But wait. How can a hardware IRQ be something coming out
+of irq_of_parse_and_map()???
+
+The entire point of mapping an IRQ is to move it into some
+free Linux IRQ slot, it is as far away from a HW IRQ you
+ever get.
+
+Either rename the variable or rethink what you're doing here.
+
+Yours,
+Linus Walleij
