@@ -1,46 +1,44 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH v4] ethernet/arc/arc_emac - Add new driver
-Date: Mon, 17 Jun 2013 09:03:50 +0000
-Message-ID: <4881796E12491D4BB15146FE0209CE643F5EC000@DE02WEMBXB.internal.synopsys.com>
-References: <1371327652-9368-1-git-send-email-abrodkin@synopsys.com>
-	 <1371328671.2117.6.camel@joe-AO722>
-	 <4881796E12491D4BB15146FE0209CE643F5E7779@DE02WEMBXB.internal.synopsys.com>
- <1371368491.2116.0.camel@joe-AO722>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v4 0/7] xilinxfb changes
+Date: Mon, 17 Jun 2013 10:56:40 +0200
+Message-ID: <20130617085640.GE305@game.jcrosoft.org>
+References: <cover.1370254386.git.michal.simek@xilinx.com>
+ <20130606162336.GW19468@game.jcrosoft.org>
+ <51BE9D6A.70001@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <51BE9D6A.70001@monstr.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Francois Romieu <romieu@fr.zoreil.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+To: Michal Simek <monstr@monstr.eu>
+Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Timur Tabi <timur@tabi.org>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/2013 11:41 AM, Joe Perches wrote:
-> On Sat, 2013-06-15 at 20:47 +0000, Alexey Brodkin wrote:
->> On 06/16/2013 12:37 AM, Joe Perches wrote:
->>> On Sun, 2013-06-16 at 00:20 +0400, Alexey Brodkin wrote:
-> []
->>>> +static int arc_emac_rx(struct net_device *ndev, int budget)
->>> []
->>>> +		/* Prepare the BD for next cycle */
->>>> +		rx_buff->skb = netdev_alloc_skb_ip_align(ndev, buflen);
->>>> +		if (unlikely(!rx_buff->skb)) {
->>>> +			if (net_ratelimit())
->>>> +				netdev_err(ndev, "cannot allocate skb\n");
->>>
->>> Unnecessary OOM message, might as well remove it.
->>> rx_dropped gives the same info.
->>
->> With all those error messages I wanted to make life easier (especially
->> for me) if errors appear. User will immediately know where problem
->> happened. Indeed "rx_dropped" (when it is used only once in driver) may
->> show where issue happened, but if later at some point "rx_dropped" will
->> be incremented in other locations then user won't understand immediately
->> where error happened.
->
-> Alloc errors emit a dump_stack() already so this is redundant.
+On 07:23 Mon 17 Jun     , Michal Simek wrote:
+> On 06/06/2013 06:23 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 12:13 Mon 03 Jun     , Michal Simek wrote:
+> >> Hi,
+> >>
+> > 
+> > Arnd can you take look on it again please
+> > 
+> > I'll take a look on it next week
+> 
+> Any update on this?
+look ok but I want the Ack from Arnd
 
-Makes sense. Will remove this comment.
-
--Alexey
+Best Regards,
+J.
+> 
+> Thanks,
+> Michal
+> 
+> -- 
+> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+> Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+> Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+> 
+> 
