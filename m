@@ -1,85 +1,32 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: [PATCH] Documentation: Add examples to samsung-pinctrl device tree
- bindings documentation
-Date: Mon, 17 Jun 2013 16:14:55 +0530
-Message-ID: <1371465896-2762-1-git-send-email-l.krishna@samsung.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH RESEND V2] ARM: dts: wm8994: Add wm8994 regulator support
+ on smdk5250.
+Date: Mon, 17 Jun 2013 19:21:48 +0900
+Message-ID: <19b301ce6b44$7a102670$6e307350$%kim@samsung.com>
+References: <1371025425-480-1-git-send-email-padma.v@samsung.com>
+ <1371025425-480-2-git-send-email-padma.v@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1371025425-480-2-git-send-email-padma.v@samsung.com>
+Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dianders@chromium.org
+To: 'Padmavathi Venna' <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds examples to samsung-pinctrl.txt documentaion file
-on how to make gpio binding and gpio request
+Padmavathi Venna wrote:
+> 
+> This patch adds the required regulator supplies and properties
+> for wm8994 codec on smdk5250 board.
+> 
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> ---
+> 
+> Changes since V1:
+> 	- Clubbed the same supply regulators as suggested by Mark.
+> 
+Applied, thanks.
 
-Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
----
- .../bindings/pinctrl/samsung-pinctrl.txt           |   48 +++++++++++++++++++-
- 1 file changed, 46 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-index b2bc219..f1cf177 100644
---- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-@@ -25,8 +25,18 @@ Required Properties:
- 
-   - gpio-controller: identifies the node as a gpio controller and pin bank.
-   - #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
--    binding is used, the amount of cells must be specified as 2. See generic
--    GPIO binding documentation for description of particular cells.
-+    binding is used, the amount of cells must be specified as 2. See the below
-+    mentioned gpio binding representation for description of particular cells.
-+
-+	Eg: <&gpx2 6 0>
-+	<[phandle of the gpio controller node]
-+	[pin number within the gpio controller]
-+	[flags]>
-+
-+	Values for gpio specifier:
-+	- Pin number: is a value between 0 to 7.
-+	- Flags: 0 - Active High
-+		 1 - Active Low
- 
- - Pin mux/config groups as child nodes: The pin mux (selecting pin function
-   mode) and pin config (pull up/down, driver strength) settings are represented
-@@ -274,3 +284,37 @@ Example 4: Set up the default pin state for uart controller.
- 
- 		pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
- 	}
-+
-+Example 5: A display port client node that supports 'default' pinctrl state
-+	   and gpio binding.
-+
-+	display-port-controller {
-+		samsung,color-space = <0>;
-+		samsung,dynamic-range = <0>;
-+		samsung,ycbcr-coeff = <0>;
-+		samsung,color-depth = <1>;
-+		samsung,link-rate = <0x06>;
-+		samsung,lane-count = <2>;
-+		samsung,hpd-gpio = <&gpx2 6 0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&dp_hpd>;
-+	};
-+
-+Example 6: Request the gpio for display port controller
-+
-+	static int exynos_dp_probe(struct platform_device *pdev)
-+	{
-+		int hpd_gpio, ret;
-+		struct device *dev = &pdev->dev;
-+		struct device_node *dp_node = dev->of_node;
-+
-+		/* ... */
-+
-+		hpd_gpio = of_get_named_gpio(dp_node, "samsung,hpd-gpio", 0);
-+
-+		/* ... */
-+
-+		ret = devm_gpio_request_one(&pdev->dev, hpd_gpio, GPIOF_IN,
-+					    "hpd_gpio");
-+		/* ... */
-+	}
--- 
-1.7.9.5
+- Kukjin
