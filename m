@@ -1,150 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio MIPS/OCTEON: Add a driver for OCTEON's on-chip GPIO pins.
-Date: Mon, 17 Jun 2013 10:51:42 +0200
-Message-ID: <CACRpkdYHzBBbPNujYRGkMFGuQRzeYKs9jgfc3e3HWyxQFahvRQ@mail.gmail.com>
-References: <1371251915-18271-1-git-send-email-ddaney.cavm@gmail.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v4 0/7] xilinxfb changes
+Date: Mon, 17 Jun 2013 11:02:11 +0200
+Message-ID: <51BED093.1040207@monstr.eu>
+References: <cover.1370254386.git.michal.simek@xilinx.com> <20130606162336.GW19468@game.jcrosoft.org> <51BE9D6A.70001@monstr.eu> <20130617085640.GE305@game.jcrosoft.org>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2PFUVRPETDRBKDENUHGDL"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1371251915-18271-1-git-send-email-ddaney.cavm@gmail.com>
+In-Reply-To: <20130617085640.GE305@game.jcrosoft.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, David Daney <david.daney@cavium.com>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Timur Tabi <timur@tabi.org>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 15, 2013 at 1:18 AM, David Daney <ddaney.cavm@gmail.com> wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2PFUVRPETDRBKDENUHGDL
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> From: David Daney <david.daney@cavium.com>
->
-> The SOCs in the OCTEON family have 16 (or in some cases 20) on-chip
-> GPIO pins, this driver handles them all.  Configuring the pins as
-> interrupt sources is handled elsewhere (OCTEON's irq handling code).
->
-> Signed-off-by: David Daney <david.daney@cavium.com>
+On 06/17/2013 10:56 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 07:23 Mon 17 Jun     , Michal Simek wrote:
+>> On 06/06/2013 06:23 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>> On 12:13 Mon 03 Jun     , Michal Simek wrote:
+>>>> Hi,
+>>>>
+>>>
+>>> Arnd can you take look on it again please
+>>>
+>>> I'll take a look on it next week
+>>
+>> Any update on this?
+> look ok but I want the Ack from Arnd
 
-> This patch depends somewhat on patches in Ralf's MIPS/Linux -next tree
-> where we have patches that enable the Kconfig CAVIUM_OCTEON_SOC and
-> ARCH_REQUIRE_GPIOLIB symbols.  Apart from that it is stand-alone and
-> is probably suitable for merging via the GPIO tree.
+ok.
+Arnd?
 
-Really? You're using this:
-
-+#include <asm/octeon/octeon.h>
-+#include <asm/octeon/cvmx-gpio-defs.h>
-
-I cannot find this in my tree.
-
-Further I ask why that second file is not part of *this* patch?
-It surely seems GPIO-related, and would probably need to
-go into include/linux/platform_data/gpio-octeon.h or something
-rather than such platform dirs.
-
-(...)
-> +config GPIO_OCTEON
-> +       tristate "Cavium OCTEON GPIO"
-> +       depends on GPIOLIB && CAVIUM_OCTEON_SOC
-
-depend on OF as well right? Or does the CAVIUM_OCTEON_SOC already
-imply that?
-
-(...)
-> +++ b/drivers/gpio/gpio-octeon.c
+Thanks,
+Michal
 
 
-> +#define RX_DAT 0x80
-> +#define TX_SET 0x88
-> +#define TX_CLEAR 0x90
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
-> +/*
-> + * The address offset of the GPIO configuration register for a given
-> + * line.
-> + */
-> +static unsigned int bit_cfg_reg(unsigned int gpio)
-+       default y
-+       help
-+         Say yes here to support the on-chip GPIO lines on the OCTEON
-+         family of SOCs.
-+
 
-Maybe the passed variable shall be named "offset" here, as it is named
-offset on all call sites, and it surely local for this instance?
+------enig2PFUVRPETDRBKDENUHGDL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-> +{
-> +       if (gpio < 16)
-> +               return 8 * gpio;
-> +       else
-> +               return 8 * (gpio - 16) + 0x100;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-Put this 0x100 in the #defines above with the name something like
-STRIDE.
+iEYEARECAAYFAlG+0JMACgkQykllyylKDCELKACdHnIcszs50x9896Lmt0wwrp8P
+hA8AoJrdl5ilcsnLlSu9TysavJ3kUT6q
+=E5uE
+-----END PGP SIGNATURE-----
 
-> +struct octeon_gpio {
-> +       struct gpio_chip chip;
-> +       u64 register_base;
-> +};
-
-OMG everything is 64 bit. Well has to come to this I guess.
-
-> +static void octeon_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-> +{
-> +       struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-> +       u64 mask = 1ull << offset;
-
-And now BIT(offset) does not work anymore because it is defined as
-#define BIT(nr)                 (1UL << (nr))
-OK we will have to live with this FTM I guess.
-
-> +static int octeon_gpio_dir_out(struct gpio_chip *chip, unsigned offset,
-> +                              int value)
-> +{
-> +       struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-> +       union cvmx_gpio_bit_cfgx cfgx;
-> +
-> +       octeon_gpio_set(chip, offset, value);
-> +
-> +       cfgx.u64 = 0;
-> +       cfgx.s.tx_oe = 1;
-
-This makes me want to review that magic header file of yours,
-I guess this comes from <asm/octeon/cvmx-gpio-defs.h>?
-
-Should not this latter variable be a bool?
-
-I'm not a fan of packed bitfields like this, I prefer if you just
-OR | and AND & the bits together in the driver.
-
-> +static int octeon_gpio_get(struct gpio_chip *chip, unsigned offset)
-> +{
-> +       struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
-> +       u64 read_bits = cvmx_read_csr(gpio->register_base + RX_DAT);
-> +
-> +       return ((1ull << offset) & read_bits) != 0;
-
-A common idiom we use for this is:
-
-return !!(read_bits & (1ull << offset));
-
-> +       pdev->dev.platform_data = chip;
-> +       chip->label = "octeon-gpio";
-> +       chip->dev = &pdev->dev;
-> +       chip->owner = THIS_MODULE;
-> +       chip->base = 0;
-> +       chip->can_sleep = 0;
-> +       chip->ngpio = 20;
-> +       chip->direction_input = octeon_gpio_dir_in;
-> +       chip->get = octeon_gpio_get;
-> +       chip->direction_output = octeon_gpio_dir_out;
-> +       chip->set = octeon_gpio_set;
-> +       err = gpiochip_add(chip);
-> +       if (err)
-> +               goto out;
-> +
-> +       dev_info(&pdev->dev, "OCTEON GPIO\n");
-
-This is like shouting "REAL MADRID!" in the bootlog, be a bit more
-precise: "octeon GPIO driver probed\n" or something so we know what
-is happening.
-
-Yours,
-Linus Walleij
+------enig2PFUVRPETDRBKDENUHGDL--
