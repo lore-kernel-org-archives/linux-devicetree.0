@@ -1,78 +1,46 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2] staging: imx_drm: imx_ldb: fix 18 bit format
-Date: Mon, 17 Jun 2013 11:02:52 +0200
-Message-ID: <1371459772-16443-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH v4] ethernet/arc/arc_emac - Add new driver
+Date: Mon, 17 Jun 2013 09:03:50 +0000
+Message-ID: <4881796E12491D4BB15146FE0209CE643F5EC000@DE02WEMBXB.internal.synopsys.com>
+References: <1371327652-9368-1-git-send-email-abrodkin@synopsys.com>
+	 <1371328671.2117.6.camel@joe-AO722>
+	 <4881796E12491D4BB15146FE0209CE643F5E7779@DE02WEMBXB.internal.synopsys.com>
+ <1371368491.2116.0.camel@joe-AO722>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Francois Romieu <romieu@fr.zoreil.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
+On 06/16/2013 11:41 AM, Joe Perches wrote:
+> On Sat, 2013-06-15 at 20:47 +0000, Alexey Brodkin wrote:
+>> On 06/16/2013 12:37 AM, Joe Perches wrote:
+>>> On Sun, 2013-06-16 at 00:20 +0400, Alexey Brodkin wrote:
+> []
+>>>> +static int arc_emac_rx(struct net_device *ndev, int budget)
+>>> []
+>>>> +		/* Prepare the BD for next cycle */
+>>>> +		rx_buff->skb = netdev_alloc_skb_ip_align(ndev, buflen);
+>>>> +		if (unlikely(!rx_buff->skb)) {
+>>>> +			if (net_ratelimit())
+>>>> +				netdev_err(ndev, "cannot allocate skb\n");
+>>>
+>>> Unnecessary OOM message, might as well remove it.
+>>> rx_dropped gives the same info.
+>>
+>> With all those error messages I wanted to make life easier (especially
+>> for me) if errors appear. User will immediately know where problem
+>> happened. Indeed "rx_dropped" (when it is used only once in driver) may
+>> show where issue happened, but if later at some point "rx_dropped" will
+>> be incremented in other locations then user won't understand immediately
+>> where error happened.
+>
+> Alloc errors emit a dump_stack() already so this is redundant.
 
-Since 18 bit is supported as datawidth in device tree it should be
-supported in driver. Beside the LDB channel the IPU channel has also
-to be configured to use BGR666.
+Makes sense. Will remove this comment.
 
-Signed-off-by: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-This is based on the series: "staging: drm/imx: Add LDB support" by Philipp.
-
-Changes since v1:
-	- fixed function call: imx_drm_crtc_panel_format_pins -> imx_drm_crtc_panel_format
-
- drivers/staging/imx-drm/imx-ldb.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/staging/imx-drm/imx-ldb.c b/drivers/staging/imx-drm/imx-ldb.c
-index 0a7e4da..92a0e21 100644
---- a/drivers/staging/imx-drm/imx-ldb.c
-+++ b/drivers/staging/imx-drm/imx-ldb.c
-@@ -179,6 +179,7 @@ static void imx_ldb_encoder_prepare(struct drm_encoder *encoder)
- 	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
- 	struct imx_ldb *ldb = imx_ldb_ch->ldb;
- 	struct drm_display_mode *mode = &encoder->crtc->mode;
-+	u32 pixel_fmt;
- 	unsigned long serial_clk;
- 	unsigned long di_clk = mode->clock * 1000;
- 	int mux = imx_drm_encoder_get_mux_id(imx_ldb_ch->imx_drm_encoder,
-@@ -194,8 +195,23 @@ static void imx_ldb_encoder_prepare(struct drm_encoder *encoder)
- 		imx_ldb_set_clock(ldb, mux, imx_ldb_ch->chno, serial_clk, di_clk);
- 	}
- 
-+	switch (imx_ldb_ch->chno) {
-+	case 0:
-+		pixel_fmt = (ldb->ldb_ctrl & LDB_DATA_WIDTH_CH0_24) ?
-+			V4L2_PIX_FMT_RGB24 : V4L2_PIX_FMT_BGR666;
-+		break;
-+	case 1:
-+		pixel_fmt = (ldb->ldb_ctrl & LDB_DATA_WIDTH_CH1_24) ?
-+			V4L2_PIX_FMT_RGB24 : V4L2_PIX_FMT_BGR666;
-+		break;
-+	default:
-+		dev_err(ldb->dev, "unable to config di%d panel format\n",
-+			imx_ldb_ch->chno);
-+		pixel_fmt = V4L2_PIX_FMT_RGB24;
-+	}
-+
- 	imx_drm_crtc_panel_format(encoder->crtc, DRM_MODE_ENCODER_LVDS,
--			V4L2_PIX_FMT_RGB24);
-+			pixel_fmt);
- }
- 
- static void imx_ldb_encoder_commit(struct drm_encoder *encoder)
--- 
-1.8.3.1
+-Alexey
