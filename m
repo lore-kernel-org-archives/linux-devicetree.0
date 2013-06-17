@@ -1,49 +1,307 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [PATCH v8 00/11] ASoC: fsl-ssi: ac97-slave support
-Date: Sun, 16 Jun 2013 23:05:53 -0500
-Message-ID: <51BE8B21.8050605@tabi.org>
-References: <1371389117-19729-1-git-send-email-mpa@pengutronix.de>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v4] usb: dwc3: use extcon fwrk to receive connect/disconnect
+Date: Mon, 17 Jun 2013 13:09:49 +0900
+Message-ID: <51BE8C0D.9060003@samsung.com>
+References: <1370276020-17446-6-git-send-email-kishon@ti.com>
+ <1371215425-1979-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1371389117-19729-1-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1371215425-1979-1-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: myungjoo.ham@samsung.com, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, gregkh@linuxfoundation.org, benoit.cousson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Markus Pargmann wrote:
-> Hi,
->
-> This series adds DT support for phycore-ac97. Beside ac97 support, the series
-> adds imx-pcm-fiq and generic DMA bindings to fsl-ssi.
->
-> In version 8 I fixed the build issues by seperating the DT capable ac97 phycore
-> driver from the old driver.
+On 06/14/2013 10:10 PM, Kishon Vijay Abraham I wrote:
+> Modified dwc3-omap to receive connect and disconnect notification using
+> extcon framework. Also did the necessary cleanups required after
+> adapting to extcon framework.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Acked-by: Felipe Balbi <balbi@ti.com>
+> ---
+> This patch depends on
+> git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/extcon.git commit:f7ae906
+> 
+> It should also be applied on top of
+> usb: dwc3: omap: improve error handling of dwc3_omap_probe patch which is
+> merged in Felipe's tree.
+> 
+> So I'm not sure on whose tree this patch should go in.
+> 
+> Changes from v3:
+> * did #include of of_extcon.h after Chanwoo resent the patch separating
+> extcon-class.c from of_extcon.c
+> Changes from v2:
+> * updated the Documentation with dwc3 dt binding information.
+> * used of_extcon_get_extcon_dev to get extcon device from device tree data.
+> Changes from v1:
+> * regulator enable/disable is now done here instead of palmas-usb as some users
+> of palmas-usb wont need regulator.
+> 
+>  Documentation/devicetree/bindings/usb/omap-usb.txt |    5 +
+>  drivers/usb/dwc3/dwc3-omap.c                       |  119 ++++++++++++++++----
+>  include/linux/usb/dwc3-omap.h                      |   30 -----
+>  3 files changed, 105 insertions(+), 49 deletions(-)
+>  delete mode 100644 include/linux/usb/dwc3-omap.h
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
+> index d4769f3..f1c15f3 100644
+> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+> @@ -53,6 +53,11 @@ OMAP DWC3 GLUE
+>     It should be set to "1" for HW mode and "2" for SW mode.
+>   - ranges: the child address space are mapped 1:1 onto the parent address space
+>  
+> +Optional Properties:
+> + - extcon : phandle for the extcon device omap dwc3 uses to detect
+> +   connect/disconnect events.
+> + - vbus-supply : phandle to the regulator device tree node if needed.
+> +
+>  Sub-nodes:
+>  The dwc3 core should be added as subnode to omap dwc3 glue.
+>  - dwc3 :
+> diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
+> index f8f76e6..14c1f1b 100644
+> --- a/drivers/usb/dwc3/dwc3-omap.c
+> +++ b/drivers/usb/dwc3/dwc3-omap.c
+> @@ -43,13 +43,15 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/platform_data/dwc3-omap.h>
+> -#include <linux/usb/dwc3-omap.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/ioport.h>
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/extcon.h>
+> +#include <linux/extcon/of_extcon.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #include <linux/usb/otg.h>
+>  
+> @@ -124,9 +126,21 @@ struct dwc3_omap {
+>  	u32			utmi_otg_status;
+>  
+>  	u32			dma_status:1;
+> +
+> +	struct extcon_specific_cable_nb extcon_vbus_dev;
+> +	struct extcon_specific_cable_nb extcon_id_dev;
+> +	struct notifier_block	vbus_nb;
+> +	struct notifier_block	id_nb;
+> +
+> +	struct regulator	*vbus_reg;
+>  };
+>  
+> -static struct dwc3_omap		*_omap;
+> +enum omap_dwc3_vbus_id_status {
+> +	OMAP_DWC3_ID_FLOAT,
+> +	OMAP_DWC3_ID_GROUND,
+> +	OMAP_DWC3_VBUS_OFF,
+> +	OMAP_DWC3_VBUS_VALID,
+> +};
+>  
+>  static inline u32 dwc3_omap_readl(void __iomem *base, u32 offset)
+>  {
+> @@ -138,18 +152,23 @@ static inline void dwc3_omap_writel(void __iomem *base, u32 offset, u32 value)
+>  	writel(value, base + offset);
+>  }
+>  
+> -int dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status status)
+> +static void dwc3_omap_set_mailbox(struct dwc3_omap *omap,
+> +	enum omap_dwc3_vbus_id_status status)
+>  {
+> -	u32			val;
+> -	struct dwc3_omap	*omap = _omap;
+> -
+> -	if (!omap)
+> -		return -EPROBE_DEFER;
+> +	int	ret;
+> +	u32	val;
+>  
+>  	switch (status) {
+>  	case OMAP_DWC3_ID_GROUND:
+>  		dev_dbg(omap->dev, "ID GND\n");
+>  
+> +		if (omap->vbus_reg) {
+> +			ret = regulator_enable(omap->vbus_reg);
+> +			if (ret) {
+> +				dev_dbg(omap->dev, "regulator enable failed\n");
+> +				return;
+> +			}
+> +		}
+>  		val = dwc3_omap_readl(omap->base, USBOTGSS_UTMI_OTG_STATUS);
+>  		val &= ~(USBOTGSS_UTMI_OTG_STATUS_IDDIG
+>  				| USBOTGSS_UTMI_OTG_STATUS_VBUSVALID
+> @@ -172,6 +191,9 @@ int dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status status)
+>  		break;
+>  
+>  	case OMAP_DWC3_ID_FLOAT:
+> +		if (omap->vbus_reg)
+> +			regulator_disable(omap->vbus_reg);
+> +
+>  	case OMAP_DWC3_VBUS_OFF:
+>  		dev_dbg(omap->dev, "VBUS Disconnect\n");
+>  
+> @@ -185,12 +207,9 @@ int dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status status)
+>  		break;
+>  
+>  	default:
+> -		dev_dbg(omap->dev, "ID float\n");
+> +		dev_dbg(omap->dev, "invalid state\n");
+>  	}
+> -
+> -	return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(dwc3_omap_mailbox);
+>  
+>  static irqreturn_t dwc3_omap_interrupt(int irq, void *_omap)
+>  {
+> @@ -282,6 +301,32 @@ static void dwc3_omap_disable_irqs(struct dwc3_omap *omap)
+>  
+>  static u64 dwc3_omap_dma_mask = DMA_BIT_MASK(32);
+>  
+> +static int dwc3_omap_id_notifier(struct notifier_block *nb,
+> +	unsigned long event, void *ptr)
+> +{
+> +	struct dwc3_omap *omap = container_of(nb, struct dwc3_omap, id_nb);
+> +
+> +	if (event)
+> +		dwc3_omap_set_mailbox(omap, OMAP_DWC3_ID_GROUND);
+> +	else
+> +		dwc3_omap_set_mailbox(omap, OMAP_DWC3_ID_FLOAT);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static int dwc3_omap_vbus_notifier(struct notifier_block *nb,
+> +	unsigned long event, void *ptr)
+> +{
+> +	struct dwc3_omap *omap = container_of(nb, struct dwc3_omap, vbus_nb);
+> +
+> +	if (event)
+> +		dwc3_omap_set_mailbox(omap, OMAP_DWC3_VBUS_VALID);
+> +	else
+> +		dwc3_omap_set_mailbox(omap, OMAP_DWC3_VBUS_OFF);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+>  static int dwc3_omap_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node	*node = pdev->dev.of_node;
+> @@ -289,6 +334,8 @@ static int dwc3_omap_probe(struct platform_device *pdev)
+>  	struct dwc3_omap	*omap;
+>  	struct resource		*res;
+>  	struct device		*dev = &pdev->dev;
+> +	struct extcon_dev	*edev;
+> +	struct regulator	*vbus_reg = NULL;
+>  
+>  	int			ret = -ENOMEM;
+>  	int			irq;
+> @@ -330,19 +377,22 @@ static int dwc3_omap_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	}
+>  
+> +	if (of_property_read_bool(node, "vbus-supply")) {
+> +		vbus_reg = devm_regulator_get(dev, "vbus");
+> +		if (IS_ERR(vbus_reg)) {
+> +			dev_err(dev, "vbus init failed\n");
+> +			return PTR_ERR(vbus_reg);
+> +		}
+> +	}
+> +
+>  	spin_lock_init(&omap->lock);
+>  
+>  	omap->dev	= dev;
+>  	omap->irq	= irq;
+>  	omap->base	= base;
+> +	omap->vbus_reg	= vbus_reg;
+>  	dev->dma_mask	= &dwc3_omap_dma_mask;
+>  
+> -	/*
+> -	 * REVISIT if we ever have two instances of the wrapper, we will be
+> -	 * in big trouble
+> -	 */
+> -	_omap	= omap;
+> -
+>  	pm_runtime_enable(dev);
+>  	ret = pm_runtime_get_sync(dev);
+>  	if (ret < 0) {
+> @@ -381,14 +431,41 @@ static int dwc3_omap_probe(struct platform_device *pdev)
+>  
+>  	dwc3_omap_enable_irqs(omap);
+>  
+> +	if (of_property_read_bool(node, "extcon")) {
+> +		edev = of_extcon_get_extcon_dev(dev, 0);
+> +		if (IS_ERR(edev)) {
+> +			dev_vdbg(dev, "couldn't get extcon device\n");
+> +			ret = PTR_ERR(edev);
+> +			goto err2;
+> +		}
+> +
+> +		omap->vbus_nb.notifier_call = dwc3_omap_vbus_notifier;
+> +		extcon_register_interest(&omap->extcon_vbus_dev, edev->name,
+> +					 "USB", &omap->vbus_nb);
+> +		omap->id_nb.notifier_call = dwc3_omap_id_notifier;
+> +		extcon_register_interest(&omap->extcon_id_dev, edev->name,
+> +					 "USB-HOST", &omap->id_nb);
 
-FYI, I get some warnings applying this patchset:
+I prefer adding exception handling code about return value of extcon_register_interest().
 
-Applying: ASoC: Add phycore-ac97-dt driver
-/home/b04825/git/linux.alsa2/.git/rebase-apply/patch:375: new blank line 
-at EOF.
-+
-warning: 1 line adds whitespace errors.
-Applying: ASoC: fsl: Kconfig: Use fsl-ssi for phycore-ac97
-Applying: ASoC: fsl: Move fsl-ssi binding doc to sound/
-Applying: ASoC: fsl: Update fsl-ssi binding doc
-/home/b04825/git/linux.alsa2/.git/rebase-apply/patch:33: space before tab 
-in indent.
-   		    Only necessary for some boards with incompatible
-warning: 1 line adds whitespace errors.
+> +
+> +		if (extcon_get_cable_state(edev, "USB") == true)
+> +			dwc3_omap_set_mailbox(omap, OMAP_DWC3_VBUS_VALID);
+> +		if (extcon_get_cable_state(edev, "USB-HOST") == true)
+> +			dwc3_omap_set_mailbox(omap, OMAP_DWC3_ID_GROUND);
+> +	}
+> +
+>  	ret = of_platform_populate(node, NULL, NULL, dev);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "failed to create dwc3 core\n");
+> -		goto err2;
+> +		goto err3;
+>  	}
+>  
+>  	return 0;
+>  
+> +err3:
+> +	if (omap->extcon_vbus_dev.edev)
+> +		extcon_unregister_interest(&omap->extcon_vbus_dev);
+> +	if (omap->extcon_id_dev.edev)
+> +		extcon_unregister_interest(&omap->extcon_id_dev);
+> +
+>  err2:
+>  	dwc3_omap_disable_irqs(omap);
+>  
+> @@ -405,6 +482,10 @@ static int dwc3_omap_remove(struct platform_device *pdev)
+>  {
+>  	struct dwc3_omap	*omap = platform_get_drvdata(pdev);
+>  
+> +	if (omap->extcon_vbus_dev.edev)
+> +		extcon_unregister_interest(&omap->extcon_vbus_dev);
+> +	if (omap->extcon_id_dev.edev)
+> +		extcon_unregister_interest(&omap->extcon_id_dev);
+>  	dwc3_omap_disable_irqs(omap);
+>  	pm_runtime_put_sync(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
+> diff --git a/include/linux/usb/dwc3-omap.h b/include/linux/usb/dwc3-omap.h
+> deleted file mode 100644
+> index 5615f4d..0000000
+> 
 
--- 
-Timur Tabi
+It looks good if you add exception handler about return value of extcon_register_interest().
+
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+But, we have to apply this patch after all of the extcon patchset(for 3.11) will be applied
+because this patch has dependency of extcon patch related to DT.
+- http://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git/commit/?h=extcon-next&id=f7ae906806279e5b57bfd302b945e1bcdddce95b
+
+Thanks,
+Chanwoo Choi
+
