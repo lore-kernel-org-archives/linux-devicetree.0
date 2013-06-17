@@ -1,51 +1,51 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [PATCH v8 02/11] ASoC: imx-pcm-fiq: Introduce
-	pcm-fiq-params
-Date: Mon, 17 Jun 2013 06:39:55 -0500
-Message-ID: <51BEF58B.8070405@tabi.org>
-References: <1371389117-19729-1-git-send-email-mpa@pengutronix.de>
- <1371389117-19729-3-git-send-email-mpa@pengutronix.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 02/18] sh-pfc: Add DT support
+Date: Mon, 17 Jun 2013 13:51:40 +0200
+Message-ID: <1406175.HWcNhf6MjM@avalon>
+References: <1371167163-10507-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1785860.1aS5315FIj@avalon> <CACRpkdYf36uf6xikRi=YrS03j1mENvg7OLSBxxq_XHXt8ymOOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1371389117-19729-3-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYf36uf6xikRi=YrS03j1mENvg7OLSBxxq_XHXt8ymOOA@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Simon Horman <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <damm@opensource.se>
 List-Id: devicetree@vger.kernel.org
 
-Markus Pargmann wrote:
->   #ifdef CONFIG_SND_SOC_IMX_PCM_FIQ
-> -int imx_pcm_fiq_init(struct platform_device *pdev);
-> +int imx_pcm_fiq_init(struct platform_device *pdev,
-> +		struct imx_pcm_fiq_params *params);
->   void imx_pcm_fiq_exit(struct platform_device *pdev);
->   #else
-> -static inline int imx_pcm_fiq_init(struct platform_device *pdev)
-> +static inline int imx_pcm_fiq_init(struct platform_device *pdev,
-> +		struct imx_pcm_fiq_params *params);
->   {
->   	return -ENODEV;
->   }
+Hi Linus,
 
-This won't compile on PowerPC, because of the ;
+On Monday 17 June 2013 13:28:52 Linus Walleij wrote:
+> On Mon, Jun 17, 2013 at 1:00 PM, Laurent Pinchart wrote:
+> > On Monday 17 June 2013 16:03:16 Simon Horman wrote:
+> >> Hi Laurent,
+> >> 
+> >> As 3.10-rc6 has been released it is probably now too late for me
+> >> to take this series through the renesas tree for v3.11.
+> >> 
+> >> I am happy for Linus to take it if that is what he would like to do.
+> > 
+> > OK.
+> > 
+> > Linus, would you like to take the series through your tree, or push it
+> > back to v3.12 ?
+> 
+> Maybe a little bit of both?
+> 
+> I don't want to carry anything that will collide with the stuff harvested
+> into ARM SoC through Simon.
+> 
+> Can you send a small set of self-contained patches that do not touch
+> anything in arch/arm/* and which does not collide with anything already
+> queued in ARM SoC for v3.11?
+> 
+> In that case I'd be happy to take it as some preparation for v3.12.
 
-In file included from 
-/home/b04825/git/linux.alsa2/sound/soc/fsl/fsl_ssi.c:53:0:
-/home/b04825/git/linux.alsa2/sound/soc/fsl/imx-pcm.h:65:1: error: expected 
-identifier or '(' before '{' token
-/home/b04825/git/linux.alsa2/sound/soc/fsl/imx-pcm.h:63:19: warning: 
-'imx_pcm_fiq_init' used but never defined
-
+Thank you. Would it be possible in that case to also get generic pinconf DT 
+support for the sh-pfc driver in v3.11 if I send the additional patch today ?
 
 -- 
-Timur Tabi
+Regards,
+
+Laurent Pinchart
+
