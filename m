@@ -1,61 +1,83 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH 1/3] mfd: twl4030-power: Split from twl-core into a
- dedicated module
-Date: Tue, 18 Jun 2013 01:56:44 +0200
-Message-ID: <20130617235644.GB7998@zurbaran>
-References: <1369921916-7435-1-git-send-email-florian.vaussard@epfl.ch>
- <1369921916-7435-2-git-send-email-florian.vaussard@epfl.ch>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] Bump version number to 1.4.0
+Date: Tue, 18 Jun 2013 09:42:57 +1000
+Message-ID: <20130617234256.GC16876@voom.redhat.com>
+References: <1370970685-21755-1-git-send-email-swarren@wwwdotorg.org>
+ <20130615011245.GB9218@voom.bne.redhat.com>
+ <E1UnsTK-00082V-KV@jdl.com> <51BF7F76.1080604@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1369921916-7435-2-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-doc-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Tero Kristo <t-kristo@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0728784707788920097=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51BF7F76.1080604-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
 
-On Thu, May 30, 2013 at 03:51:54PM +0200, Florian Vaussard wrote:
-> For now, the call to twl4030-power is hard-wired inside twl-core.
-> To ease the future transition to DT, make twl4030-power as a
-> separate module, like what is already done for twl4030-audio
-> and others.
-> 
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> ---
->  drivers/mfd/twl-core.c      |   12 ++++++---
->  drivers/mfd/twl4030-power.c |   54 +++++++++++++++++++++++++++++++++++--------
->  include/linux/i2c/twl.h     |    1 -
->  3 files changed, 52 insertions(+), 15 deletions(-)
-Looks good, I only have one comment:
+--===============0728784707788920097==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kvUQC+jR9YzypDnK"
+Content-Disposition: inline
 
-> +static struct platform_driver twl4030_power_driver = {
-> +	.driver = {
-> +		.name	= "twl4030_power",
-> +		.owner	= THIS_MODULE,
-> +	},
-> +	.probe		= twl4030_power_probe,
-> +	.remove		= twl4030_power_remove,
-> +};
-> +
-> +static int __init twl4030_power_init(void)
-> +{
-> +	return platform_driver_register(&twl4030_power_driver);
->  }
-> +subsys_initcall(twl4030_power_init);
-> +
-> +static void __exit twl4030_power_exit(void)
-> +{
-> +	platform_driver_unregister(&twl4030_power_driver);
-> +}
-> +module_exit(twl4030_power_exit);
-Please use module_platform_driver() here.
 
-Cheers,
-Samuel.
+--kvUQC+jR9YzypDnK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+On Mon, Jun 17, 2013 at 03:28:22PM -0600, Stephen Warren wrote:
+> On 06/15/2013 09:32 AM, Jon Loeliger wrote:
+> >>
+> >> Hrm.  We should make a new release.  But I don't think we should bump
+> >> the version without actuall rolling a release.
+> >=20
+> > ..and are we ready to do so?
+>=20
+> I don't see anyone saying no...
+>=20
+> How about if nobody objects, a release is made by the end of the
+> week?
+
+Works for me.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--kvUQC+jR9YzypDnK
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.13 (GNU/Linux)
+
+iEYEARECAAYFAlG/nwAACgkQaILKxv3ab8YrYgCglJF7axfW9zLZZTb47Tmppvqg
+H4UAnimM9PH+gessAwxB9glc2PA20Qap
+=Txse
+-----END PGP SIGNATURE-----
+
+--kvUQC+jR9YzypDnK--
+
+--===============0728784707788920097==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0728784707788920097==--
