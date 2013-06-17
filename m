@@ -1,89 +1,150 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH REBASE] i2c-designware: make SDA hold time configurable
-Date: Mon, 17 Jun 2013 11:23:31 +0300
-Message-ID: <20130617082331.GG11878@intel.com>
-References: <20130514110745.GA10906@intel.com>
- <1368536642-7158-1-git-send-email-christian.ruppert@abilis.com>
- <20130610152954.GE2987@katana>
- <20130612144743.GB8102@ab42.lan>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio MIPS/OCTEON: Add a driver for OCTEON's on-chip GPIO pins.
+Date: Mon, 17 Jun 2013 10:51:42 +0200
+Message-ID: <CACRpkdYHzBBbPNujYRGkMFGuQRzeYKs9jgfc3e3HWyxQFahvRQ@mail.gmail.com>
+References: <1371251915-18271-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130612144743.GB8102@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1371251915-18271-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2013 at 04:47:45PM +0200, Christian Ruppert wrote:
-> On Mon, Jun 10, 2013 at 05:29:55PM +0200, Wolfram Sang wrote:
-> > On Tue, May 14, 2013 at 03:04:02PM +0200, Christian Ruppert wrote:
-> > > This patch makes the SDA hold time configurable through device tr=
-ee.
-> > >=20
-> > > [rebased to i2c-current/i2c-next/mainline-3.10-rc1]
-> > >=20
-> > > Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-> > > Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
-> >=20
-> > Hmm, I really have problems adding a generic property. I need to be=
-tter
-> > understand why this is needed? What is the usecase? Can't a safe va=
-lue
-> > be calculated depending on the bus-speed? Is there a public datashe=
-et
-> > available somewhere?
->=20
-> I checked with our PCB/Applications team and the data sheets for the
-> peripherals in question (DVB demodulator front ends) are under NDA.
-> Mika, you seem to be interested in this patch as well. Do you know of
-> any publicly available data sheets for hardware requiring this
-> adjustment?
+On Sat, Jun 15, 2013 at 1:18 AM, David Daney <ddaney.cavm@gmail.com> wrote:
 
-Sorry for the delay, I was on vacation.
+> From: David Daney <david.daney@cavium.com>
+>
+> The SOCs in the OCTEON family have 16 (or in some cases 20) on-chip
+> GPIO pins, this driver handles them all.  Configuring the pins as
+> interrupt sources is handled elsewhere (OCTEON's irq handling code).
+>
+> Signed-off-by: David Daney <david.daney@cavium.com>
 
-I'm not aware of any publicly available datasheets for this block,
-unfortunately.
+> This patch depends somewhat on patches in Ralf's MIPS/Linux -next tree
+> where we have patches that enable the Kconfig CAVIUM_OCTEON_SOC and
+> ARCH_REQUIRE_GPIOLIB symbols.  Apart from that it is stand-alone and
+> is probably suitable for merging via the GPIO tree.
 
-> In the case of the Designware block, the parameter both changes SDA a=
-nd
-> START hold times, however, and you'll find lots of data sheets for
-> hardware with START hold time requirements on the net, e.g.
-> http://ww1.microchip.com/downloads/en/DeviceDoc/21805B.pdf
->=20
-> The empirical solution in the function i2c_dw_scl_hcnt does not seem =
-to
-> work in all cases: Our lab guys confirmed that we have several PCB
-> designs which do not work without adjusting the sda-hold-time paramet=
-er
-> to an appropriate value. The value seems to be different for differen=
-t
-> PCBs.
+Really? You're using this:
 
-Yeah, we see the same problem. Our platform guys have solved this so th=
-at
-they made the SDA hold time available from ACPI to the device driver.
++#include <asm/octeon/octeon.h>
++#include <asm/octeon/cvmx-gpio-defs.h>
 
-> I suspect that this kind of configurability is not the same for all i=
-2c
-> bus master hardware. If you don't want to add a generic property, wou=
-ld
-> you accept the patch with the property renamed to dwi2c,sda-hold-time=
-?
->=20
-> Greetings,
->   Christian
->=20
->=20
-> --=20
->   Christian Ruppert              ,          <christian.ruppert@abilis=
-=2Ecom>
->                                 /|
->   Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9=
--Fleuri
->                              _// | bilis Systems   CH-1228 Plan-les-O=
-uates
+I cannot find this in my tree.
+
+Further I ask why that second file is not part of *this* patch?
+It surely seems GPIO-related, and would probably need to
+go into include/linux/platform_data/gpio-octeon.h or something
+rather than such platform dirs.
+
+(...)
+> +config GPIO_OCTEON
+> +       tristate "Cavium OCTEON GPIO"
+> +       depends on GPIOLIB && CAVIUM_OCTEON_SOC
+
+depend on OF as well right? Or does the CAVIUM_OCTEON_SOC already
+imply that?
+
+(...)
+> +++ b/drivers/gpio/gpio-octeon.c
 
 
+> +#define RX_DAT 0x80
+> +#define TX_SET 0x88
+> +#define TX_CLEAR 0x90
+
+
+> +/*
+> + * The address offset of the GPIO configuration register for a given
+> + * line.
+> + */
+> +static unsigned int bit_cfg_reg(unsigned int gpio)
++       default y
++       help
++         Say yes here to support the on-chip GPIO lines on the OCTEON
++         family of SOCs.
++
+
+Maybe the passed variable shall be named "offset" here, as it is named
+offset on all call sites, and it surely local for this instance?
+
+> +{
+> +       if (gpio < 16)
+> +               return 8 * gpio;
+> +       else
+> +               return 8 * (gpio - 16) + 0x100;
+
+Put this 0x100 in the #defines above with the name something like
+STRIDE.
+
+> +struct octeon_gpio {
+> +       struct gpio_chip chip;
+> +       u64 register_base;
+> +};
+
+OMG everything is 64 bit. Well has to come to this I guess.
+
+> +static void octeon_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+> +{
+> +       struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
+> +       u64 mask = 1ull << offset;
+
+And now BIT(offset) does not work anymore because it is defined as
+#define BIT(nr)                 (1UL << (nr))
+OK we will have to live with this FTM I guess.
+
+> +static int octeon_gpio_dir_out(struct gpio_chip *chip, unsigned offset,
+> +                              int value)
+> +{
+> +       struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
+> +       union cvmx_gpio_bit_cfgx cfgx;
+> +
+> +       octeon_gpio_set(chip, offset, value);
+> +
+> +       cfgx.u64 = 0;
+> +       cfgx.s.tx_oe = 1;
+
+This makes me want to review that magic header file of yours,
+I guess this comes from <asm/octeon/cvmx-gpio-defs.h>?
+
+Should not this latter variable be a bool?
+
+I'm not a fan of packed bitfields like this, I prefer if you just
+OR | and AND & the bits together in the driver.
+
+> +static int octeon_gpio_get(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio, chip);
+> +       u64 read_bits = cvmx_read_csr(gpio->register_base + RX_DAT);
+> +
+> +       return ((1ull << offset) & read_bits) != 0;
+
+A common idiom we use for this is:
+
+return !!(read_bits & (1ull << offset));
+
+> +       pdev->dev.platform_data = chip;
+> +       chip->label = "octeon-gpio";
+> +       chip->dev = &pdev->dev;
+> +       chip->owner = THIS_MODULE;
+> +       chip->base = 0;
+> +       chip->can_sleep = 0;
+> +       chip->ngpio = 20;
+> +       chip->direction_input = octeon_gpio_dir_in;
+> +       chip->get = octeon_gpio_get;
+> +       chip->direction_output = octeon_gpio_dir_out;
+> +       chip->set = octeon_gpio_set;
+> +       err = gpiochip_add(chip);
+> +       if (err)
+> +               goto out;
+> +
+> +       dev_info(&pdev->dev, "OCTEON GPIO\n");
+
+This is like shouting "REAL MADRID!" in the bootlog, be a bit more
+precise: "octeon GPIO driver probed\n" or something so we know what
+is happening.
+
+Yours,
+Linus Walleij
