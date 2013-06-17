@@ -1,102 +1,54 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] Documentation: Add examples to samsung-pinctrl device tree
- bindings documentation
-Date: Mon, 17 Jun 2013 14:10:26 +0200
-Message-ID: <2164838.KETqnlhoKR@amdc1227>
-References: <1371465896-2762-1-git-send-email-l.krishna@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v10 5/8] dmaengine: edma: Add TI EDMA device tree binding
+Date: Mon, 17 Jun 2013 13:12:32 +0200
+Message-ID: <3940138.jZFEtfGGLz@wuerfel>
+References: <1371263570-9323-1-git-send-email-joelagnel@ti.com>
+ <1371263570-9323-5-git-send-email-joelagnel@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1371465896-2762-1-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dianders@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371263570-9323-5-git-send-email-joelagnel-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>
+Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leela,
-
-On Monday 17 of June 2013 16:14:55 Leela Krishna Amudala wrote:
-> This patch adds examples to samsung-pinctrl.txt documentaion file
-> on how to make gpio binding and gpio request
+On Friday 14 June 2013 21:32:47 Joel A Fernandes wrote:
 > 
-> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> ---
->  .../bindings/pinctrl/samsung-pinctrl.txt           |   48
-> +++++++++++++++++++- 1 file changed, 46 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt index
-> b2bc219..f1cf177 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> @@ -25,8 +25,18 @@ Required Properties:
-> 
->    - gpio-controller: identifies the node as a gpio controller and pin bank.
-> - #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO - 
->   binding is used, the amount of cells must be specified as 2. See generic
-> -    GPIO binding documentation for description of particular cells. +   
-> binding is used, the amount of cells must be specified as 2. See the below
-> +    mentioned gpio binding representation for description of particular
-> cells. +
-> +	Eg: <&gpx2 6 0>
-> +	<[phandle of the gpio controller node]
-> +	[pin number within the gpio controller]
-> +	[flags]>
+> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
+> new file mode 100644
+> index 0000000..ada0018
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+> @@ -0,0 +1,26 @@
+> +TI EDMA
 > +
-> +	Values for gpio specifier:
-> +	- Pin number: is a value between 0 to 7.
-> +	- Flags: 0 - Active High
-> +		 1 - Active Low
-> 
->  - Pin mux/config groups as child nodes: The pin mux (selecting pin function
-> mode) and pin config (pull up/down, driver strength) settings are
-> represented @@ -274,3 +284,37 @@ Example 4: Set up the default pin state
-> for uart controller.
-> 
->  		pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
->  	}
+> +Required properties:
+> +- compatible : "ti,edma3"
+> +- ti,hwmods: Name of the hwmods associated to the EDMA
+> +- ti,edma-regions: Number of regions
+> +- ti,edma-slots: Number of slots
 > +
-> +Example 5: A display port client node that supports 'default' pinctrl state
-> +	   and gpio binding.
-> +
-> +	display-port-controller {
-> +		samsung,color-space = <0>;
-> +		samsung,dynamic-range = <0>;
-> +		samsung,ycbcr-coeff = <0>;
-> +		samsung,color-depth = <1>;
-> +		samsung,link-rate = <0x06>;
-> +		samsung,lane-count = <2>;
+> +Optional properties:
+> +- ti,edma-xbar-event-map: Crossbar event to channel map
 
-Maybe it would be better to omit those properties above for readability of the 
-example? Just like you did with example 6.
+You need to list #dma-cells as required here, and which values are accepted by
+the driver (I suppose only <1>). You should also explain the format of the
+dma-specifier for a slave here for each possible value of #dma-cells.
 
-But generally it's a good addition to our documentation. Thanks.
+For each of the standard properties (reg, interrupts, dma-channels), list
+whether they are optional or required. Since the example has three interrupts,
+you should probably list how many interrupts need to be specified (minimum
+and maximum if the number is variable) and in what order to expect them.
 
-Best regards,
-Tomasz
-
-> +		samsung,hpd-gpio = <&gpx2 6 0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&dp_hpd>;
-> +	};
-> +
-> +Example 6: Request the gpio for display port controller
-> +
-> +	static int exynos_dp_probe(struct platform_device *pdev)
-> +	{
-> +		int hpd_gpio, ret;
-> +		struct device *dev = &pdev->dev;
-> +		struct device_node *dp_node = dev->of_node;
-> +
-> +		/* ... */
-> +
-> +		hpd_gpio = of_get_named_gpio(dp_node, "samsung,hpd-gpio", 0);
-> +
-> +		/* ... */
-> +
-> +		ret = devm_gpio_request_one(&pdev->dev, hpd_gpio, GPIOF_IN,
-> +					    "hpd_gpio");
-> +		/* ... */
-> +	}
+	Arnd
