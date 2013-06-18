@@ -1,46 +1,55 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 2/9] usb: phy: omap-usb2: use the new generic PHY
- framework
-Date: Tue, 18 Jun 2013 15:19:03 +0530
-Message-ID: <51C02D0F.6010302@ti.com>
-References: <1371113039-5784-1-git-send-email-kishon@ti.com>
- <1371113039-5784-3-git-send-email-kishon@ti.com>
- <20130618094058.GQ5461@arwen.pp.htv.fi>
+From: Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [PATCH] HID: i2c-hid: add DT bindings
+Date: Tue, 18 Jun 2013 11:51:38 +0200 (CEST)
+Message-ID: <alpine.LNX.2.00.1306181151030.6750@pobox.suse.cz>
+References: <1371109835-30796-1-git-send-email-benjamin.tissoires@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130618094058.GQ5461-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1371109835-30796-1-git-send-email-benjamin.tissoires@redhat.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 13 Jun 2013, Benjamin Tissoires wrote:
 
-On Tuesday 18 June 2013 03:10 PM, Felipe Balbi wrote:
-> Hi,
->
-> On Thu, Jun 13, 2013 at 02:13:52PM +0530, Kishon Vijay Abraham I wrote:
->> @@ -159,6 +191,12 @@ static int omap_usb2_probe(struct platform_device *pdev)
->>   	otg->start_srp		= omap_usb_start_srp;
->>   	otg->phy		= &phy->phy;
->>
->> +	pm_runtime_enable(phy->dev);
->
-> enabling pm_runtime here has the potential to cause a real big problem.
-> How have you tested this patch ?
+> Add device tree based support for HID over I2C devices.
+> 
+> Tested on an Odroid-X board with a Synaptics touchpad.
+> 
+> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> ---
+> 
+> Hi guys,
+> 
+> well, as the commit message says, this is the DT binding for HID over I2C.
+> I honestly don't know if it will be used besides me, but it may help others
+> with a DT based board.
+> As the spec is for ACPI only, I had no specifications regarding the DT names. So
+> these names can be changed if you think they are bad.
+> 
+> I also created a new bindings directory in the devicetree doc to reflect the
+> split we have between input and hid. However, if the DT experts prefer having
+> it under input, I'm fine with that.
+> 
+> Cheers,
+> Benjamin
+> 
+>  .../devicetree/bindings/hid/hid-over-i2c.txt       | 28 ++++++++++++++
+>  drivers/hid/i2c-hid/i2c-hid.c                      | 44 +++++++++++++++++++++-
+>  include/linux/i2c/i2c-hid.h                        |  3 +-
+>  3 files changed, 73 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hid/hid-over-i2c.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hid/hid-over-i2c.txt b/Documentation/devicetree/bindings/hid/hid-over-i2c.txt
 
-performed boot and enumeration testing. What issue do you expect here?
+DT folks, any objections to this, please?
 
-Thanks
-Kishon
+If not, I'd like to apply this for 3.11 into my tree.
+
+Thanks.
+
+-- 
+Jiri Kosina
+SUSE Labs
