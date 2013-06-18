@@ -1,48 +1,66 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v7 0/3] SH pinctrl DT support
-Date: Tue, 18 Jun 2013 10:53:35 +0200
-Message-ID: <201306181053.36823.heiko@sntech.de>
-References: <1371495003-11185-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CACRpkdZh709J3pFsfbReQ20LU5W0Q1HacE0ZpssWXofKTJJ6pQ@mail.gmail.com>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH 1/3] mfd: twl4030-power: Split from twl-core into a dedicated
+ module
+Date: Tue, 18 Jun 2013 10:53:50 +0200
+Message-ID: <51C0201E.2040909@epfl.ch>
+References: <1369921916-7435-1-git-send-email-florian.vaussard@epfl.ch> <1369921916-7435-2-git-send-email-florian.vaussard@epfl.ch> <20130617235644.GB7998@zurbaran>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZh709J3pFsfbReQ20LU5W0Q1HacE0ZpssWXofKTJJ6pQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, James Hogan <james.hogan@imgtec.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <damm@opensource.se>, Simon Horman <horms@verge.net.au>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130617235644.GB7998@zurbaran>
+Sender: linux-doc-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Tero Kristo <t-kristo@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 18. Juni 2013, 10:05:30 schrieb Linus Walleij:
-> On Mon, Jun 17, 2013 at 8:50 PM, Laurent Pinchart
-> 
-> <laurent.pinchart+renesas@ideasonboard.com> wrote:
-> > Hello,
-> > 
-> > Here's the seventh (and hopefully final) version of the SuperH and SH
-> > Mobile pin controllers (PFC) DT support patch set.
-> > 
-> > The patches have been rebased on the for-next branch of the pinctrl
-> > repository. All ARM-specific patches have been dropped and will be pushed
-> > through to ARM SoC tree in v3.12. This series thus only contains DT
-> > support for the sh-pfc driver.
-> > 
-> > I've tried merging Simon's latest tag (renesas-next-20130617v3) with
-> > these patches and no conflict occurred. Linus, would it finally be
-> > possible to get this applied for v3.11 ?
-> > 
-> > Changes since v6:
-> > 
-> > - Added generic pinconf support back
-> > - Dropped all ARM-specific patches
-> 
-> Thanks, this looks really nice and I've applied all three.
-> 
-> Heiko, James can you have a look from a generic pinconf
-> point of view so we are sure we get this right? (Looks right
-> to me atleast.)
+Hello,
 
-the pinconfig handling looks nice to me.
+Thank you for the review.
 
-Acked-by: Heiko Stuebner <heiko@sntech.de>
+On 06/18/2013 01:56 AM, Samuel Ortiz wrote:
+> Hi Florian,
+>
+> On Thu, May 30, 2013 at 03:51:54PM +0200, Florian Vaussard wrote:
+>> For now, the call to twl4030-power is hard-wired inside twl-core.
+>> To ease the future transition to DT, make twl4030-power as a
+>> separate module, like what is already done for twl4030-audio
+>> and others.
+>>
+>> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+>> ---
+>>   drivers/mfd/twl-core.c      |   12 ++++++---
+>>   drivers/mfd/twl4030-power.c |   54 +++++++++++++++++++++++++++++++++++--------
+>>   include/linux/i2c/twl.h     |    1 -
+>>   3 files changed, 52 insertions(+), 15 deletions(-)
+> Looks good, I only have one comment:
+>
+>> +static struct platform_driver twl4030_power_driver = {
+>> +	.driver = {
+>> +		.name	= "twl4030_power",
+>> +		.owner	= THIS_MODULE,
+>> +	},
+>> +	.probe		= twl4030_power_probe,
+>> +	.remove		= twl4030_power_remove,
+>> +};
+>> +
+>> +static int __init twl4030_power_init(void)
+>> +{
+>> +	return platform_driver_register(&twl4030_power_driver);
+>>   }
+>> +subsys_initcall(twl4030_power_init);
+>> +
+>> +static void __exit twl4030_power_exit(void)
+>> +{
+>> +	platform_driver_unregister(&twl4030_power_driver);
+>> +}
+>> +module_exit(twl4030_power_exit);
+> Please use module_platform_driver() here.
+>
+
+Sure!
+
+Regards,
+
+Florian
