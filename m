@@ -1,20 +1,16 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v3 05/12] ARM: mvebu: Remove the harcoded BootROM window
- allocation
-Date: Tue, 18 Jun 2013 14:10:21 -0600
-Message-ID: <20130618201021.GA11688@obsidianresearch.com>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1371554737-25319-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130618173906.GC2204@obsidianresearch.com>
- <20130618194330.GA2394@localhost>
- <20130618195111.GC6578@obsidianresearch.com>
- <20130618200240.GB2470@localhost>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Fix potential merge conflict for dw_apb_timer_of
+Date: Tue, 18 Jun 2013 13:11:52 -0700
+Message-ID: <CAOesGMjyzTtHGTxE5722o0AXnJSGmsmDZbbq4-CYGf9=FEAJCg@mail.gmail.com>
+References: <1371514129-22801-1-git-send-email-dinguyen@altera.com>
+ <20130618150244.GC18055@amd.pavel.ucw.cz>
+ <201306181738.35671.heiko@sntech.de>
+ <201306182028.50762.heiko@sntech.de> <51C0A9AF.4030409@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130618200240.GB2470@localhost>
+In-Reply-To: <51C0A9AF.4030409-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,23 +21,136 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 05:02:42PM -0300, Ezequiel Garcia wrote:
-> > Having the kernel enforce that the DT node is present and at the right
-> > location, I think, is helpful for the bootloader folks to ensure they
-> > write correct DTs.
+On Tue, Jun 18, 2013 at 11:40 AM, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrot=
+e:
+> On 06/18/2013 11:28 AM, Heiko St=FCbner wrote:
+>>
+>> Am Dienstag, 18. Juni 2013, 17:38:35 schrieb Heiko St=FCbner:
+>>>
+>>> Hi Pavel,
+>>>
+>>> Am Dienstag, 18. Juni 2013, 17:02:44 schrieb Pavel Machek:
+>>>>
+>>>> Hi!
+>>>>
+>>>>>> The following 2 patches will eliminate the need for the patch in John
+>>>>>> Stultz's tree. If there is to be merge of the 2 trees, then the
+>>>>>> patch:
+>>>>>>
+>>>>>> dw_apb_timer_of.c: Remove parts that were picoxcell-specific
+>>>>>>
+>>>>>> can be removed from John's tree to avoid a merge-conflict.
+>>>>>>
+>>>>>> Based on arm-soc/for-next:
+>>>>>>
+>>>>>> PATCH[1/2] - Rename "dw-apb-timer-osc" and "dw-apb-timer-sp" bindings
+>>>>>> to just "dw-apb-timer"
+>>>>>> PATCH[2/2] - Fix user/system reporting by fixing read_sched_clock()
+>>>>>
+>>>>> Pavel/Jamie: Can you take a look at these too and make sure these cov=
+er
+>>>>> what you were doing.
+>>>>
+>>>> [It seems like Heiko St=FCbner was not aware of patches in the clock
+>>>> tree, so did pretty much equivalent patch.]
+>>>
+>>> Correct ... I was going after what was in linux-next and the tip.git
+>>> [which
+>>> I also only saw recently at all] does not seem to be part of it.
+>>>
+>>>> Dinh's changes look good to me, but
+>>>>
+>>>> [PATCH v2 4/4] clocksource: dw_apb_timer_of: use clocksource_of_init
+>>>>
+>>>> does not exactly look nice: (I'm sorry I did not see original series,
+>>>> before it was merged to -soc.). The function counts number of times it
+>>>> was called, and behaves differently in each case. It is not very
+>>>> traditional kernel code at the very least.
+>>>>
+>>>> +static int num_called;
+>>>> +static void __init dw_apb_timer_init(struct device_node *timer)
+>>>>
+>>>>   {
+>>>>
+>>>> -       struct device_node *event_timer, *source_timer;
+>>>> -
+>>>> -       event_timer =3D of_find_matching_node(NULL, osctimer_ids);
+>>>> -       if (!event_timer)
+>>>> -               panic("No timer for clockevent");
+>>>> -       add_clockevent(event_timer);
+>>>> -
+>>>> -       source_timer =3D of_find_matching_node(event_timer,
+>>>> osctimer_ids);
+>>>> -       if (!source_timer)
+>>>> -               panic("No timer for clocksource");
+>>>> -       add_clocksource(source_timer);
+>>>> -
+>>>> -       of_node_put(source_timer);
+>>>> +       switch (num_called) {
+>>>> +       case 0:
+>>>> +               pr_debug("%s: found clockevent timer\n", __func__);
+>>>> +               add_clockevent(timer);
+>>>> +               of_node_put(timer);
+>>>> +               break;
+>>>> +       case 1:
+>>>> +               pr_debug("%s: found clocksource timer\n", __func__);
+>>>> +               add_clocksource(timer);
+>>>> +               of_node_put(timer);
+>>>> +               init_sched_clock();
+>>>> +               break;
+>>>> +       default:
+>>>> +               break;
+>>>> +       }
+>>>>
+>>>> -       init_sched_clock();
+>>>> +       num_called++;
+>>>>
+>>>>   }
+>>>>
+>>>> Heiko, can you take a look at John Stultz tree? We modified this area
+>>>> already... I understand you only have one timer on your silicon?
+>>
+>> also it seems like not being able to use the apb_timer as sched_clock wi=
+ll
+>> hurt my platform too.
+>>
+>> I've tried to use the arm_arch_timer, but when the arch_timer_get_cntfrq=
+()
+>> function gets called, I only get an "undefined instruction" Oops for the
+>> executed asm in there.
+>>
+>> As there is no manual available for the SoC, I can only guess that it
+>> doesn't
+>> contain such a component. This is fueled additionally by the PPI part of
+>> the
+>> gic only having 3 interrupt sources [there is small excerpt of the
+>> soc-manual
+>> floating around that contains this information], with one already being
+>> the
+>> twd interrupt, while the arm_arch_timer seems to require 4 itself.
+>>
+>> Therefore it would cool, if we could keep the sched_clock functionality
+>> (provided by the clocksource timer) around somehow.
+>
+>
+> So whats the plan now?
+>
+> I'm feeling likely to revert "dw_apb_timer_of.c: Remove parts that were
+> picoxcell-specific" in my tree and leave the rest of the wreckage to the
+> arm-soc folks to sort out (either getting the fix in or reverting the lot
+> and trying again for 3.12), unless we get some agreed upon path forward
+> sorted quickly here.
 
-> Granted. But then I wonder... why do we bother to put the BootROM in the
-> DT window if we're going to check for a fixed address it in any case?
+It was bad timing that linux-next was down for a week right around the
+time of all of this, but not much we can do about in hindsight.
 
-Code re-use in the mbus driver?
+I'd be OK with reverting on your side and revisiting for 3.12. Arnd is
+doing arm-soc merges for a bit so it's up to him if he wants to try
+merging it without conflicts on our side.
 
-Maybe future SOCs in this family will have programmable SMP startup
-addresses?
 
-Non-SMP systems don't need to map the boot rom at all?
-
-Jason
+-Olof
