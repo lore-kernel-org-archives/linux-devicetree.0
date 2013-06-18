@@ -1,109 +1,98 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v4 02/10] pinctrl: mvebu: dove pinctrl driver
-Date: Tue, 18 Jun 2013 14:01:39 +0200
-Message-ID: <51C04C23.4090807@gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-3-git-send-email-sebastian.hesselbarth@gmail.com> <20130618113606.GA26763@n2100.arm.linux.org.uk>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH 7/9] drm/exynos: use of_get_named_gpio to get hdmi hpd gpio
+Date: Tue, 18 Jun 2013 17:35:32 +0530
+Message-ID: <CAPdUM4OQGgGfzg-fjvVj4mBBL96f4+2yFwkgdAivDcHZpzoBCw@mail.gmail.com>
+References: <1370959891-8923-1-git-send-email-rahul.sharma@samsung.com>
+	<1370959891-8923-8-git-send-email-rahul.sharma@samsung.com>
+	<51BAC3A0.7000002@samsung.com>
+	<CAAQKjZNGuhpWck4VqbpP+Ge5fWDP0hkLSHj2zVAKc5sUPok2Xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130618113606.GA26763@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAAQKjZNGuhpWck4VqbpP+Ge5fWDP0hkLSHj2zVAKc5sUPok2Xg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, sunil joshi <joshi@samsung.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, linux-samsung-soc@vger.kernel.org, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/13 13:36, Russell King - ARM Linux wrote:
-> On Thu, Sep 13, 2012 at 05:41:44PM +0200, Sebastian Hesselbarth wrote:
->> +#define DOVE_GLOBAL_CONFIG_1		(DOVE_SB_REGS_VIRT_BASE | 0xe802C)
->> +#define  DOVE_TWSI_ENABLE_OPTION1	BIT(7)
->> +#define DOVE_GLOBAL_CONFIG_2		(DOVE_SB_REGS_VIRT_BASE | 0xe8030)
->> +#define  DOVE_TWSI_ENABLE_OPTION2	BIT(20)
->> +#define  DOVE_TWSI_ENABLE_OPTION3	BIT(21)
->> +#define  DOVE_TWSI_OPTION3_GPIO		BIT(22)
-> ...
+Thanks Mr. Dae,
 
-Russell,
+Please discard the REST of the patches in this series. I am posting a
+another patch-set which has all the patches independent of hdmiphy
+related changes.
 
-the above absolute addresses already made me think of cleaning up dove
-pinctrl a while ago. I also had in mind that below function exclusively
-request ownership of global config registers.
+regards,
+Rahul Sharma.
 
->> +static int dove_twsi_ctrl_set(struct mvebu_mpp_ctrl *ctrl,
->> +				unsigned long config)
->> +{
->> +	unsigned long gcfg1 = readl(DOVE_GLOBAL_CONFIG_1);
->> +	unsigned long gcfg2 = readl(DOVE_GLOBAL_CONFIG_2);
->> +
->> +	gcfg1 &= ~DOVE_TWSI_ENABLE_OPTION1;
->> +	gcfg2 &= ~(DOVE_TWSI_ENABLE_OPTION2 | DOVE_TWSI_ENABLE_OPTION2);
->> +
->> +	switch (config) {
->> +	case 1:
->> +		gcfg1 |= DOVE_TWSI_ENABLE_OPTION1;
->> +		break;
->> +	case 2:
->> +		gcfg2 |= DOVE_TWSI_ENABLE_OPTION2;
->> +		break;
->> +	case 3:
->> +		gcfg2 |= DOVE_TWSI_ENABLE_OPTION3;
->> +		break;
->> +	}
->> +
->> +	writel(gcfg1, DOVE_GLOBAL_CONFIG_1);
->> +	writel(gcfg2, DOVE_GLOBAL_CONFIG_2);
->> +
->> +	return 0;
->> +}
+On Mon, Jun 17, 2013 at 8:22 AM, Inki Dae <inki.dae@samsung.com> wrote:
+> Applied.
 >
-> So, I've just been thinking about the LCD clocking on the Armada 510,
-> and found that there's dividers for the internal LCD clocks in the
-> global config 1/2 registers.  So I grepped the kernel source for
-> references to these, expecting to find something in drivers/clk, but
-> found the above.
-
-We have no peripheral clock handling for Dove, yet. Just core clocks and
-clock gates are implemented. And I guess they are DT only anyway.
-
-> However, todays kernel is sometimes SMP, commonly with kernel preemption
-> enabled, maybe even RT.  This makes things like the above sequence a
-> problem where a multifunction register is read, modified and then
-> written back.
+> Thanks,
+> Inki Dae
 >
-> Consider two threads doing this, and a preemption event happening in the
-> middle of this sequence to another thread also doing a read-modify-write
-> of the same register.  Which one wins depends on the preemption sequence,
-> but ultimately one loses out.
-
-Yeah, sure. We have the same issue with watchdog driver messing with
-timer registers. There I exported a function to _clrset TIMER_CTRL
-register safely. Just went into irqchip (tip for-next).
-
-> Any access to such registers needs careful thought, and protection in some
-> manner.
 >
-> Maybe what we need is something like this:
+> 2013/6/14 =EA=B9=80=EC=8A=B9=EC=9A=B0 <sw0312.kim@samsung.com>
+>>
+>> Hello Rahul,
+>>
+>> this patch is not related with others and it looks good to me.
+>>
+>> On 2013=EB=85=84 06=EC=9B=94 11=EC=9D=BC 23:11, Rahul Sharma wrote:
+>> > Cleanup by removing flags variable from drm_hdmi_dt_parse_pdata
+>> > which is not used anywhere. Swtiching to of_get_named_gpio instead
+>> > of of_get_named_gpio_flags solved this.
+>> >
+>> > Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>>
+>> Acked-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+>>
+>> > ---
+>> >  drivers/gpu/drm/exynos/exynos_hdmi.c |    3 +--
+>> >  1 file changed, 1 insertion(+), 2 deletions(-)
+>> >
+>> > diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c
+>> > b/drivers/gpu/drm/exynos/exynos_hdmi.c
+>> > index 1eb5ffb..fc6a9b0 100644
+>> > --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
+>> > +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
+>> > @@ -2081,7 +2081,6 @@ static struct s5p_hdmi_platform_data
+>> > *drm_hdmi_dt_parse_pdata
+>> >  {
+>> >       struct device_node *np =3D dev->of_node;
+>> >       struct s5p_hdmi_platform_data *pd;
+>> > -     enum of_gpio_flags flags;
+>> >       u32 value;
+>> >
+>> >       pd =3D devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
+>> > @@ -2095,7 +2094,7 @@ static struct s5p_hdmi_platform_data
+>> > *drm_hdmi_dt_parse_pdata
+>> >               goto err_data;
+>> >       }
+>> >
+>> > -     pd->hpd_gpio =3D of_get_named_gpio_flags(np, "hpd-gpio", 0, =
+&flags);
+>> > +     pd->hpd_gpio =3D of_get_named_gpio(np, "hpd-gpio", 0);
+>> >
+>> >       return pd;
+>> >
+>> >
+>>
+>> --
+>> Seung-Woo Kim
+>> Samsung Software R&D Center
+>> --
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe
+>> linux-samsung-soc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 >
-> static DEFINE_SPINLOCK(io_lock);
-> static void modifyl(u32 new, u32 mask, void __iomem *reg)
-> {
-> 	unsigned long flags;
-> 	u32 val;
 >
-> 	spin_lock_irqsave(&io_lock, flags);
-> 	val = readl(reg) & ~mask;
-> 	val |= new | mask;
-> 	writel(val, reg);
-> 	spin_unlock_irqrestore(&io_lock, flags);
-> }
 >
-> in order to provide arbitrated access to these kinds of multifunction
-> registers in a safe, platform agnostic way.
-
-I am fine with a generic modify function with a single lock. Most cases
-should be fine with a single lock even for non-related register
-accesses, e.g. watchdog will access TIMER_CTRL only once to enable
-itself. If you think you need a special lock because you have a lot of
-writes to shared registers, you can still have your own modify lock.
-
-Sebastian
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
