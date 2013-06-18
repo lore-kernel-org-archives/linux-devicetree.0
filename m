@@ -1,44 +1,105 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 3/4] ARM: dts: omap5-uevm: Provide USB Host PHY clock frequency
-Date: Tue, 18 Jun 2013 19:04:46 +0300
-Message-ID: <1371571487-14389-4-git-send-email-rogerq@ti.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Tue, 18 Jun 2013 18:14:33 +0200
+Message-ID: <201306181814.33941.arnd@arndb.de>
+References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1371554737-25319-4-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1371571487-14389-1-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, b-cousson@ti.com
-Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>, Sricharan R <r.sricharan@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371554737-25319-4-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-USB Host PHY clock on port 2 must be configured to 19.2MHz.
-Provide this information.
+On Tuesday 18 June 2013, Ezequiel Garcia wrote:
+> +Required properties:
+> +
+> +- compatible:	 Should be set to one of the following:
+> +		 marvell,armada370-mbus
+> +		 marvell,armadaxp-mbus
+> +
+> +- reg:		 Device's register space.
+> +		 Two entries are expected, see the examples below.
+> +		 The first one controls the devices decoding window and
+> +		 the second one controls the SDRAM decoding window.
+> +
+> +- address-cells: Must be '2'. The first cell for the MBus ID encoding,
+> +                 the second cell for the address offset within the window.
+> +
+> +- size-cells:    Must be '1'.
+> +
+> +- ranges:        Must be set up to provide a proper translation for each child.
+> +	         See the examples below.
 
-CC: Sricharan R <r.sricharan@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/omap5-uevm.dts |    7 +++++++
- 1 files changed, 7 insertions(+), 0 deletions(-)
+You should explain here what the policy is regarding windows set up by the
+boot loader. Are the ranges in here required to be the ones that the boot
+loader has preconfigured, or are they the ones that the mbus driver is supposed
+to set up?
 
-diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-index 927db1e..c0ad472 100644
---- a/arch/arm/boot/dts/omap5-uevm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -40,6 +40,13 @@
- 	hsusb2_phy: hsusb2_phy {
- 		compatible = "usb-nop-xceiv";
- 		reset-supply = <&hsusb2_reset>;
-+	/**
-+	  * FIXME
-+	  * Put the right clock phandle here when available
-+	  *	clocks = <&auxclk1>;
-+	  *	clock-names = "main_clk";
-+	  */
-+		clock-frequency = <19200000>;
- 	};
- 
- 	/* HS USB Port 3 RESET */
--- 
-1.7.4.1
+> +Each child device needs at least a 'ranges' property. If the child is avaiable
+> +(i.e. status not 'disabled'), then the MBus driver creates a decoding window
+> +for it. For instance, in the example below the BootROM child is specified:
+> +
+> +	soc {
+> +		compatible = "marvell,armada370-mbus", "simple-bus";
+> +		reg = <0xd0020000 0x100>, <0xd0020180 0x20>;
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +
+> +		ranges = < ... /* other entries */
+> +			   0x011d0000 0 0 0xfff00000 0x100000>;
+> +
+> +		bootrom {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0x011d0000 0 0x100000>;
+> +		};
+> +
+> +		/* other children */
+> +		...
+> +	};
 
+Do you really want to require the child to provide a "ranges" property?
+I think this makes it more complicated to specify devices that belong
+into the "internal-regs" category.
+
+Is this mainly for convenience when settup up the windows?
+
+> +
+> +			ranges =
+> +			       <0x82000000 0 0x40000 0xffff0001 0x40000 0 0x00002000   /* Port 0.0 registers */
+> +				0x82000000 0 0x42000 0xffff0001 0x42000 0 0x00002000   /* Port 2.0 registers */
+> +				0x82000000 0 0x44000 0xffff0001 0x44000 0 0x00002000   /* Port 0.1 registers */
+> +				0x82000000 0 0x48000 0xffff0001 0x48000 0 0x00002000   /* Port 0.2 registers */
+> +				0x82000000 0 0x4c000 0xffff0001 0x4c000 0 0x00002000   /* Port 0.3 registers */
+> +				0x82000000 0 0x80000 0xffff0001 0x80000 0 0x00002000   /* Port 1.0 registers */
+> +				0x82000000 0 0x82000 0xffff0001 0x82000 0 0x00002000   /* Port 3.0 registers */
+> +				0x82000000 0 0xe0000000 0xffff0002 0 0 0x08000000   /* non-prefetchable memory */
+> +				0x81000000 0 0 0xffff0002 0x8000000 0 0x00100000>; /* downstream I/O */
+
+Using 0xffff0002 as a placeholder for the pcie translation is definitely
+better than 0xffff0000 as you had before, but let me ask again in case
+you missed it the last time (and sorry if I missed the answer):
+
+Why not just put the actual translation here the way it happens for each
+of the PCIe ports? With the definition here, the PCIe driver actually has no
+way to figure out what settings the windows need to use!
+
+On a side note, is there a reason why you use 0xffff0001 for the internal-regs
+rather than just 0x1? This one isn't important as they both work as well, it's
+just more to write your way.
+
+	Arnd
