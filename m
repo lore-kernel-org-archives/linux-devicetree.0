@@ -1,117 +1,59 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v7 5/9] ARM: OMAP: USB: Add phy binding information
-Date: Tue, 18 Jun 2013 15:35:36 +0300
-Message-ID: <20130618123536.GD8620@arwen.pp.htv.fi>
-References: <1371113039-5784-1-git-send-email-kishon@ti.com>
- <1371113039-5784-6-git-send-email-kishon@ti.com>
- <20130618094438.GT5461@arwen.pp.htv.fi> <51C030B4.5070707@ti.com>
- <20130618102725.GB7843@arwen.pp.htv.fi> <51C040E8.2050904@ti.com>
-Reply-To: balbi@ti.com
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 06/12] memory: mvebu-devbus: Remove address decoding
+ window workaround
+Date: Tue, 18 Jun 2013 09:48:04 -0300
+Message-ID: <20130618124803.GA25416@localhost>
+References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1371554737-25319-7-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130618113920.GW31667@titan.lakedaemon.net>
+ <20130618141731.56e7966c@skate>
+ <20130618123354.GX31667@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4179515433463946222=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51C040E8.2050904@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: mchehab@redhat.com, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, swarren@nvidia.com, grant.likely@linaro.org, cesarb@cesarb.net, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, rob.herring@calxeda.com, linux@arm.linux.org.uk, sylvester.nawrocki@gmail.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b-cousson@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com, rob@landley.net, benoit.cousson@linaro.org, akpm@linux-foundation.org, shawn.guo@linaro.org, davem@davemloft.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130618123354.GX31667-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============4179515433463946222==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MAH+hnPXVZWQ5cD/"
-Content-Disposition: inline
-
---MAH+hnPXVZWQ5cD/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Jun 18, 2013 at 04:43:44PM +0530, Kishon Vijay Abraham I wrote:
-> >On Tue, Jun 18, 2013 at 03:34:36PM +0530, Kishon Vijay Abraham I wrote:
-> >>On Tuesday 18 June 2013 03:14 PM, Felipe Balbi wrote:
-> >>>On Thu, Jun 13, 2013 at 02:13:55PM +0530, Kishon Vijay Abraham I wrote:
-> >>>>In order for controllers to get PHY in case of non dt boot, the phy
-> >>>>binding information (phy device name) should be added in the platform
-> >>>>data of the controller.
-> >>>>
-> >>>>Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >>>
-> >>>I would rather not pass strings around, any other way to handle this ?
-> >>>Why do you need to pass this string ?
-> >>
-> >>Our old way of binding the controller and the phy using device name
-> >>started creating problems after the devices are created using
-> >>PLATFORM_DEVID_AUTO. Infact non-dt boot is broken in mainline for
-> >>OMAP3 platforms for which I have posted a RFC series
-> >>http://www.serverphorums.com/read.php?12,708632 which also uses
-> >>strings.
-> >>I'm not sure of any other way to deal with this.
-> >
-> >have you checked how other frameworks handle it ? Regulator has some
-> >sort of binding in board-files, but I guess it passes the regulator
-> >name?
->=20
-> From whatever I could make of, regulator has 3 ways to get the
-> regulator one of which is using the binding in board-files (but it
-> also uses device name which could create the same problem that we are
-> facing).
->=20
-> 1.) from dt data
-> 2.) from _supply_ name
-> 3.) from binding in board file
->=20
-> (referred regulator_dev_lookup() in regulator/core.c)
-
-right, spot on. Which means we don't have a better, more elegant
-solution now. Let's go ahead with this.
-
---=20
-balbi
-
---MAH+hnPXVZWQ5cD/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRwFQYAAoJEIaOsuA1yqRE9mIQAI2MqozlRuRD5dPS+8PB7X/n
-szivthcudB8IORFZOcZcYungNvj8XALlJsDMpeP5GHMmNRHC2PCYXBrXSWgLFW0m
-OVOZ1KjmpyoY9ufcR/M0T9AmaSCQ2TrVF92Ey7JL09CW9vH6/4DZiva7Nlc79wJQ
-dltl8RWnltcDTOIKkzkkvwq9+cKequoiWk8j/sTK6EzYaXAb5XkegZIiRS+Taala
-ZszOvqd94Wh64SJePeT95YwlZNT+yu7B1FWsNyJ10JLQju1ldJggzTEEzgYR0eSr
-ljzMWJC10WHAGSNU5RqOpbYzBV9MQsDo3U91Azax08YkH8SHBxdPYcz91P2eoTF6
-h1DMLKg2cOl4Fo2vF02aY5pikhH0JL3JUkTCCgpu9CGmZrQjWMiuEezBracp28rc
-bd87cviLYFoN8AEju9LNgJDYwjJTBWcEmPuem4bkNqge6g0Qi9eovA5JolnTPBK3
-SNTcT+6nZLSPlZ8kfl/Bstvc3/53j1aM3OBjp1RGJyOIS33dTF/uRnCW+mMaXblt
-XT9WhIyTKjvA3kx8Y1T4BB/x/72+gPfVB1M1xBTLraU68stKJ/rCEHMLBHf20LkD
-3olvxVPa/iNRYzDnSseUgL6bxpBWtXstIXaGx9h2QjP3SKXzN4i9lR2ORYg+xbbr
-mUn/SY6GH/i1TsovMdcO
-=lCNm
------END PGP SIGNATURE-----
-
---MAH+hnPXVZWQ5cD/--
-
-
---===============4179515433463946222==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4179515433463946222==--
+T24gVHVlLCBKdW4gMTgsIDIwMTMgYXQgMDg6MzM6NTRBTSAtMDQwMCwgSmFzb24gQ29vcGVyIHdy
+b3RlOgo+IE9uIFR1ZSwgSnVuIDE4LCAyMDEzIGF0IDAyOjE3OjMxUE0gKzAyMDAsIFRob21hcyBQ
+ZXRhenpvbmkgd3JvdGU6Cj4gPiBEZWFyIEphc29uIENvb3BlciwKPiA+IAo+ID4gT24gVHVlLCAx
+OCBKdW4gMjAxMyAwNzozOToyMCAtMDQwMCwgSmFzb24gQ29vcGVyIHdyb3RlOgo+ID4gPiBPbiBU
+dWUsIEp1biAxOCwgMjAxMyBhdCAwODoyNTozMUFNIC0wMzAwLCBFemVxdWllbCBHYXJjaWEgd3Jv
+dGU6Cj4gPiA+ID4gTm93IHRoYXQgbWJ1cyBkZXZpY2UgdHJlZSBiaW5kaW5nIGhhcyBiZWVuIGlu
+dHJvZHVjZWQsIHJlbW92ZSB0aGUgYWRkcmVzcwo+ID4gPiA+IGRlY29kaW5nIHdpbmRvdyBtYW5h
+Z2VtZW50IGZyb20gdGhpcyBkcml2ZXIuCj4gPiA+ID4gQSBzdWl0YWJsZSAncmFuZ2VzJyBlbnRy
+eSBzaG91bGQgYmUgYWRkZWQgdG8gdGhlIGRldmJ1cy1jb21wYXRpYmxlIG5vZGUgaW4KPiA+ID4g
+PiB0aGUgZGV2aWNlIHRyZWUsIGFzIGRlc2NyaWJlZCBieSB0aGUgbWJ1cyBiaW5kaW5nIGRvY3Vt
+ZW50YXRpb24uCj4gPiA+ID4gCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogRXplcXVpZWwgR2FyY2lh
+IDxlemVxdWllbC5nYXJjaWFAZnJlZS1lbGVjdHJvbnMuY29tPgo+ID4gPiA+IC0tLQo+ID4gPiA+
+ICBkcml2ZXJzL21lbW9yeS9tdmVidS1kZXZidXMuYyB8IDY0ICsrLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0
+aW9ucygrKSwgNjIgZGVsZXRpb25zKC0pCj4gPiA+IAo+ID4gPiBVbmZvcnR1bmF0ZWx5LCB0aGUg
+cGF0Y2ggYWRkaW5nIG12ZWJ1LWRldmJ1cyBpcyBnb2luZyB0aHJvdWdoIGdyZWdraCdzCj4gPiA+
+IHRyZWUuICBFaXRoZXIgdGhpcyBwYXRjaCBuZWVkcyB0byB3YWl0IGZvciB2My4xMiwgb3IgYXNr
+IEdyZWcgaWYgaGUgY2FuCj4gPiA+IHRha2UgdGhpcyBvbmUuCj4gPiAKPiA+IEkgYmVsaWV2ZSB0
+aGF0IHdoYXQgd2UncmUgbG9va2luZyBmb3IgcmlnaHQgbm93IGlzIGEgQWNrZWQtYnkgZnJvbSBi
+b3RoCj4gPiB0aGUgTWFydmVsbCBtYWludGFpbmVycywgQXJuZCBCZXJnbWFubiBhbmQgSmFzb24g
+R3VudGhvcnBlLiBPbmNlIHdlIGdldAo+ID4gdGhvc2UgQWNrZWQtYnksIHdlIGNhbiBmaWd1cmUg
+b3V0IHRoZSBtZXJnZSBzdHJhdGVneSBmb3IgdGhpcyBwYXRjaAo+ID4gc2V0Lgo+IAo+IFJpZ2h0
+LiAgSSB3YXMgbW9yZSBsb29raW5nIHRvIGdpdmUgRXplcXVpZWwgYSBoZWFkcyB1cAoKLi4gYW5k
+IHlvdSBkaWQgOikKClRoYW5rcyBhIGxvdCwKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxl
+Y3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0
+cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUt
+ZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
+by9kZXZpY2V0cmVlLWRpc2N1c3MK
