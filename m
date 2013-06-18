@@ -1,59 +1,63 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH 0/5] clk/exynos5250: add clocks for hdmi subsystem
-Date: Tue, 18 Jun 2013 10:39:09 +0530
-Message-ID: <CAPdUM4P8x+aeMwynE=rxfOD8L-fx1W8-C6=zqAnYO73ootX3hw@mail.gmail.com>
-References: <1370862062-16680-1-git-send-email-rahul.sharma@samsung.com>
-	<CALt3h7-9vMRx0XdxFvM4vkMOekbCwdaa_QP9Bj5Egk6vyZ5WYg@mail.gmail.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
+Date: Tue, 18 Jun 2013 14:35:54 +0900
+Message-ID: <000001ce6be5$b3fd0730$1bf71590$@samsung.com>
+References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com>
+ <3539874.V7zkhbMg0b@wuerfel> <005e01ce6b3f$74e3c940$5eab5bc0$@samsung.com>
+ <7174350.I5qK0sQfHM@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CALt3h7-9vMRx0XdxFvM4vkMOekbCwdaa_QP9Bj5Egk6vyZ5WYg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arunkk.samsung@gmail.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Kukjin Kim <kgene.kim@samsung.com>, sw0312.kim@samsung.com, inki.dae@samsung.com, sunil joshi <joshi@samsung.com>, Arun Kumar K <arun.kk@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <7174350.I5qK0sQfHM@wuerfel>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Arnd Bergmann' <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mr. Kukjin,
+On Monday, June 17, 2013 9:45 PM, Arnd Bergmann wrote:
+> On Monday 17 June 2013 18:45:52 Jingoo Han wrote:
+> > On Friday, June 14, 2013 9:54 PM, Arnd Bergmann wrote:
+> > >
+[.....]
+> > > > > > +static int __exit exynos_pcie_remove(struct platform_device *pdev)
+> > > > > > +{
+> > > > > > +	struct pcie_port *pp = platform_get_drvdata(pdev);
+> > > > > > +
+> > > > > > +	clk_disable_unprepare(pp->bus_clk);
+> > > > > > +	clk_disable_unprepare(pp->clk);
+> > > > > > +
+> > > > > > +	return 0;
+> > > > > > +}
+> > > > >
+> > > > > You also don't remove the PCI devices here, as mentioned in an earlier
+> > > > > review.
+> > > >
+> > > > I reviewed Marvell PCIe driver and Tegra PCIe driver; however,
+> > > > I cannot know what you mean.
+> > > >
+> > > > Could let me know which additional functions are needed?
+> > >
+> > > The mvebu driver does not allow module unload. I haven't looked at the
+> > > tegra driver. If you allow unloading the driver and provide a 'remove'
+> > > callback, that callback needs to clean up the entire bus and remove
+> > > all child devices that were added as well as undo everything the
+> > > probe function did. I think it would be great if you can do that, although
+> > > it might not be easy. The simplest solution would be to not support
+> > > unloading though.
+> >
+> > As the mvebu driver uses platform_driver_probe(), the Exynos driver uses
+> > platform_driver_probe(). Thus, I will not provide a 'remove' callback.
+> 
+> Well, the important part is not to provide a module_exit() function, which
+> will ensure the driver cannot be unloaded.
 
-Kindly consider the following patches for review and integration.
+Aha, I see.
+I will not provide a module_exit() function), as the mvebu driver does.
 
-regards,
-Rahul Sharma.
+Best regards,
+Jingoo Han
 
-On Fri, Jun 14, 2013 at 3:39 PM, Arun Kumar K <arunkk.samsung@gmail.com> wrote:
-> Hi,
-> Tested this series on snow board and is working fine.
->
-> Tested-by: Arun Kumar K <arun.kk@samsung.com>
->
-> Regards
-> Arun
->
-> On Mon, Jun 10, 2013 at 4:30 PM, Rahul Sharma <rahul.sharma@samsung.com> wrote:
->> Add clock changes for hdmi subsystem for exynos5250 SoC. These
->> include addition of new clocks like mout_hdmi and smmu_tv, associating
->> ID to clk_hdmiphy and some essential corrections.
->>
->> This set is based on kukjin's for-next branch at
->> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
->>
->> Arun Kumar K (1):
->>   clk/exynos5250: Fix HDMI clock number in documentation
->>
->> Rahul Sharma (4):
->>   clk/exynos5250: add mout_hdmi mux clock for hdmi
->>   clk/exynos5250: add sclk_hdmiphy in the list of special clocks
->>   clk/exynos5250: add clock for tv sysmmu
->>   clk/exynos5250: change parent to aclk200_disp1 for hdmi subsystem
->>
->>  .../devicetree/bindings/clock/exynos5250-clock.txt   |   12 +++++++++++-
->>  drivers/clk/samsung/clk-exynos5250.c                 |   18 +++++++++++++-----
->>  2 files changed, 24 insertions(+), 6 deletions(-)
->>
->> --
->> 1.7.10.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 	Arnd
