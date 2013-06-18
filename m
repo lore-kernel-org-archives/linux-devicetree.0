@@ -1,47 +1,58 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 5/5] clk/exynos5420: assign sclk_pixel id to pixel clock divider
-Date: Tue, 18 Jun 2013 20:03:18 +0530
-Message-ID: <1371565998-3642-6-git-send-email-rahul.sharma@samsung.com>
-References: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
-Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 4/4] arm: add basic support for Rockchip RK3066a boards
+Date: Tue, 18 Jun 2013 16:13:16 +0200
+Message-ID: <201306181613.16911.arnd@arndb.de>
+References: <201306131658.36584.heiko@sntech.de>
+ <20130617213515.GK28497@quad.lixom.net> <201306180026.25973.heiko@sntech.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201306180026.25973.heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Cc: Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-sclk_pixel is used to represent pixel clock divider on all exynos
-SoCs not as a gate clock. It is queried in driver to pass as the
-parent to hdmi clock while switching between parents. A new ID can
-be asssigned Pixel gate clock which is currently not in use. Pixel
-clock gate is default 'on'.
+On Tuesday 18 June 2013, Heiko St=FCbner wrote:
+> > Side comment: I think it would be nice if the generic code did this
+> > init if a l2x0 device node was in the device tree, since the only
+> > reason to override init_machine is to do this call in addition to
+> > of_platform_populate().
+> =
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- drivers/clk/samsung/clk-exynos5420.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Arnd said similar things in the initial version :-).
+> =
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 59cf177..edd0696 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -434,7 +434,7 @@ struct samsung_div_clock exynos5420_div_clks[] __initdata = {
- 	DIV(none, "dout_fimd1", "mout_fimd1", DIV_DISP10, 0, 4),
- 	DIV(none, "dout_mipi1", "mout_mipi1", DIV_DISP10, 16, 8),
- 	DIV(none, "dout_dp1", "mout_dp1", DIV_DISP10, 24, 4),
--	DIV(none, "dout_hdmi_pixel", "mout_pixel", DIV_DISP10, 28, 4),
-+	DIV(sclk_pixel, "dout_hdmi_pixel", "mout_pixel", DIV_DISP10, 28, 4),
- 
- 	/* Audio Block */
- 	DIV(none, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
-@@ -570,7 +570,7 @@ struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
- 		GATE_TOP_SCLK_DISP1, 3, CLK_SET_RATE_PARENT, 0),
- 	GATE(sclk_hdmi, "sclk_hdmi", "mout_hdmi",
- 		GATE_TOP_SCLK_DISP1, 9, CLK_SET_RATE_PARENT, 0),
--	GATE(sclk_pixel, "sclk_pixel", "dout_hdmi_pixel",
-+	GATE(none, "sclk_pixel", "dout_hdmi_pixel",
- 		GATE_TOP_SCLK_DISP1, 10, CLK_SET_RATE_PARENT, 0),
- 	GATE(sclk_dp1, "sclk_dp1", "dout_dp1",
- 		GATE_TOP_SCLK_DISP1, 20, CLK_SET_RATE_PARENT, 0),
--- 
-1.7.10.4
+> Currently I'm wondering if it wouldn't be enough to call always l2x0_of_i=
+nit =
+
+> somewhere, because it does the checking for the dt nodes itself already.
+> =
+
+> The only obstacle would be platforms having the need to use special aux-v=
+alues =
+
+> or which are currently calling the function from some other parts of the =
+boot =
+
+> process (tegra inits the cache in its tegra_init_early function for examp=
+le).
+
+I think we can handle this by ensuring the function only gets called once,
+and all platforms with special requirements call it before the common code
+does.
+
+I tried to understand what the requirement for non-zero argument is however
+and couldn't figure it out. Shouldn't we just be able to specify all the
+bits as DT properties all the time?
+
+	Arnd
