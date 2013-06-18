@@ -1,22 +1,16 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation
- to the DT binding
-Date: Tue, 18 Jun 2013 18:10:03 -0300
-Message-ID: <20130618211002.GC2516@localhost>
-References: <20130618174622.GD2204@obsidianresearch.com>
- <51C0A5F8.8030300@gmail.com> <201306182039.50736.arnd@arndb.de>
- <51C0AA8E.9080807@gmail.com>
- <20130618184753.GA6090@obsidianresearch.com>
- <51C0ADF7.5050609@gmail.com>
- <20130618191018.GB6578@obsidianresearch.com>
- <51C0B4A0.90204@gmail.com> <20130618204911.GB2516@localhost>
- <20130618205522.GA13691@obsidianresearch.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 11/12] ARM: mvebu: Relocate Armada 370 PCIe device tree
+ nodes
+Date: Tue, 18 Jun 2013 23:20:07 +0200
+Message-ID: <201306182320.07351.arnd@arndb.de>
+References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306182022.08927.arnd@arndb.de>
+ <20130618190223.GA6578@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130618205522.GA13691-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20130618190223.GA6578-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -28,36 +22,83 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTgsIDIwMTMgYXQgMDI6NTU6MjJQTSAtMDYwMCwgSmFzb24gR3VudGhvcnBl
-IHdyb3RlOgo+IE9uIFR1ZSwgSnVuIDE4LCAyMDEzIGF0IDA1OjQ5OjExUE0gLTAzMDAsIEV6ZXF1
-aWVsIEdhcmNpYSB3cm90ZToKPiA+IEhpIFNlYmFzdGlhbiwKPiA+IAo+ID4gWW91IGxvb3NlICsx
-IGludGVybmV0IHBvaW50cyBmb3IgZHJvcHBpbmcgbWUgZnJvbSBDYyA7LSkKPiA+IAo+ID4gT24g
-VHVlLCBKdW4gMTgsIDIwMTMgYXQgMDk6Mjc6MjhQTSArMDIwMCwgU2ViYXN0aWFuIEhlc3NlbGJh
-cnRoIHdyb3RlOgo+ID4gPiBPbiAwNi8xOC8yMDEzIDA5OjEwIFBNLCBKYXNvbiBHdW50aG9ycGUg
-d3JvdGU6Cj4gPiA+ID4KPiA+ID4gPiBUaGUgZm9ybXMgY291bGQgYmU6Cj4gPiA+ID4KPiA+ID4g
-PiAgIDBJQUEwMDAwCj4gPiA+ID4gICBGSzAwMDAwMAo+ID4gPiA+ICAgICAtIEs9MCAtPiAgaW50
-ZXJuYWwgcmVncwo+ID4gPiA+ICAgICAtIEs9MSAtPiAgUENJLUUgdGhpbmd5Cj4gPiA+ID4gICAg
-ICBldGMKPiA+ID4gPiAgIDFJSUFBMDAwIChmdXR1cmUgZXhwYW5zaW9uIGV4YW1wbGUpCj4gPiA+
-IAo+ID4gPiBPaywgZ290IGl0LiBBbnkgZW5jb2RpbmcgaXMgZmluZSB0aGF0IGFsbG93cyB0byBk
-aXN0aW5ndWlzaCByZWFsCj4gPiA+IHJlbWFwIHdpbmRvd3MgYW5kIGZha2Ugb25lcy4gSSBhc3N1
-bWVkIHRoYXQgbWF5YmUgc29tZWRheSB0aGVyZQo+ID4gPiB3aWxsIGJlIG1vcmUgdGhhbiA0YiB0
-YXJnZXQgaWQgc28gMHg4MCBhcyBzcGVjaWFsIGNhc2UgaW5kaWNhdG9yCj4gPiA+IGxlYXZlcyA3
-YiBvZiBub3JtYWwgdGFyZ2V0IGlkIGluIHRoZSBfY3VycmVudF8gbWFwcGluZy4KPiA+ID4gCj4g
-PiAKPiA+IEknbSBhbHNvIHdvbmRlcmluZyBhYm91dCB3aHkgd2Ugbm90IGNhcmUgYWJvdXQgdGFy
-Z2V0IElEcyBiZWluZyBtb3JlCj4gPiB0aGFuIDQgYml0cy4KPiA+IAo+ID4gSmFzb246IChJJ20g
-Y2hlY2tpbmcgbm93IGJ1dCBwZXJoYXBzIHlvdSBrbm93IGJldHRlciB0aGFuIG1lKToKPiA+IElz
-IHRoZXJlIGFueSBNQnVzLWFyY2hpdGVjdHVyYWwgcmVhc29uIGZvciB5b3UgYXNzdXJpbmcgdGhl
-Cj4gPiB0YXJnZXQgSUQgd2lsbCBhbHdheXMgYmUgd2l0aGluIDQtYml0cz8KPiAKPiBUaGUgbWFu
-dWFscyBJIGhhdmUgZm9yIHRoZSByZWdpc3RlciBzZXQgc2F5IDQgYml0cyBpcyBhbGxvY2F0ZWQg
-Zm9yCj4gbWJ1cyB0YXJnZXRzLi4gQXJlIHlvdXJzIGRpZmZlcmVudD8KPiAKCk5vcGUuIDQgYml0
-cyBoZXJlIGFzIHdlbGwuCgo+IElmIHRoZXkgY2hhbmdlIGl0IHRoZW4gdGhlIHdpbmRvdyByZWdp
-c3RlciBsYXlvdXQgY2hhbmdlcyBhbmQgdGhlbiB0aGUKPiBtYnVzIGRyaXZlciBwcm9iYWJseSBu
-ZWVkIHRvIGNoYW5nZSBhcyB3ZWxsLgo+IAoKT2tleSwgdGhlbi4KCi0tIApFemVxdWllbCBHYXJj
-w61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRyb2lkIEVu
-Z2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlz
-dApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFi
-cy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Tuesday 18 June 2013, Jason Gunthorpe wrote:
+> On Tue, Jun 18, 2013 at 08:22:08PM +0200, Arnd Bergmann wrote:
+> 
+> > > > > Arnd, we've discussed this at length with you while getting the PCIe
+> > > > > driver merged, and we've explained this to you numerous times. Could
+> > > > > you please understand that any of your proposal that suggests writing
+> > > > > down static windows for PCIe devices will not work?
+> > > > 
+> > > > Where did I suggest static windows for PCIe devices?
+> > > 
+> > > Where does your new proposal buys us anything useful compared to the
+> > > existing PCIe DT binding that has been discussed at length with you?
+> > 
+> > I'm pretty sure I explained the idea above originally and was ignored.
+> > Jason Gunthorpe might remember better, but I think he liked it when I
+> > originally proposed doing it this way.
+> 
+> I remember it took a bit to understand your proposal, but I thought it
+> could work, but I admit I forget all the little details now :(
+> 
+> Ah, if I can just rephrase simply - the notion was to move the
+> determination of the aperture to use dynmic allocation and then
+> restructure the ranges around the mbus target, since they no longer
+> need to encode the aperture.
+
+Right.
+
+> My concern: dynamically sizing the aperture is hard. There are three
+> apertures that need to be picked, and the PCI core code has no support
+> for dynamic apertures. Getting the aperture from the DT is a
+> functional compromise.
+
+After some discussion on IRC with Ezequiel, I think it's best to leave
+the aperture listed in DT but say in the binding that the OS may
+override it.
+
+I would still want to see the actual MBUS IDs in the ranges property
+of the pci-controller nodes. Right now, the pcie driver has to call
+into the mbus driver passing a hardcoded string for setting up the
+mapping, which is then used to look up the MBUS ID. This is rather
+inconsistent and we should have all that information in DT. Ideally
+we should also use it, to ensure it's correct but for 3.11 it would
+be enough to get the DT representation right. We can replace the
+string passing in 3.12.
+
+> > * Since the host physical address for the PCIe memory space window
+> >   is set up dynamically anyway, there is no reason to hardcode it in
+> >   DT. We want it to be as large as possible, and this way the mbus
+> >   driver can just pick the largest free area itself after setting up
+> >   all the other mappings from the ranges property.
+> 
+> This seems to get really complicated if the mbus driver is ever
+> required to support dynamic mappings.. If PCI-E claims all memory and
+> then you modprobe something it could fail.
+
+Yes, good point. However that is something we can figure out if it
+comes to that. With my suggestion of setting up the mbus windows
+in the of_bus xlate function, we would already create them at boot
+time when of_platform_populate gets called, so that wouldn't be a
+problem.
+
+> IMHO, I go back to my original thoughts. There is no real need for any
+> of this to be dynamic, we can use the values in the DT, presumably set
+> by the bootloader and things will work well.
+> 
+> The added complexity and failure modes for dynamic is simply not worth
+> it..
+
+I don't think it's too hard to be prepared for fully dynamic operation.
+As Grant said in his comment on v2, the real complexity comes from the
+fact that we are mixing dynamic and static configuration here, and
+the PCIe configuration is inherently dynamic.
+
+The change I'm proposing would just mean the DT representation reflects
+the dynamic nature of the PCIe windows.
+
+	Arnd
