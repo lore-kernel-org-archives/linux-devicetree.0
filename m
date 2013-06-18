@@ -1,8 +1,7 @@
 From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 4/5] clk/exynos5420: add hdmi mux to change parents in hdmi
- driver
-Date: Tue, 18 Jun 2013 20:03:17 +0530
-Message-ID: <1371565998-3642-5-git-send-email-rahul.sharma@samsung.com>
+Subject: [PATCH 5/5] clk/exynos5420: assign sclk_pixel id to pixel clock divider
+Date: Tue, 18 Jun 2013 20:03:18 +0530
+Message-ID: <1371565998-3642-6-git-send-email-rahul.sharma@samsung.com>
 References: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-reply-to: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>
@@ -11,55 +10,38 @@ To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-
 Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-hdmi driver needs to change the parent of hdmi clock
-to pixel clock or hdmiphy clock, based on the stability
-of hdmiphy. This patch is exposing the mux for changing
-the parent.
+sclk_pixel is used to represent pixel clock divider on all exynos
+SoCs not as a gate clock. It is queried in driver to pass as the
+parent to hdmi clock while switching between parents. A new ID can
+be asssigned Pixel gate clock which is currently not in use. Pixel
+clock gate is default 'on'.
 
 Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 ---
- Documentation/devicetree/bindings/clock/exynos5420-clock.txt |    5 +++++
- drivers/clk/samsung/clk-exynos5420.c                         |    5 ++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ drivers/clk/samsung/clk-exynos5420.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/exynos5420-clock.txt b/Documentation/devicetree/bindings/clock/exynos5420-clock.txt
-index f0b1ce0..c7a319d 100644
---- a/Documentation/devicetree/bindings/clock/exynos5420-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/exynos5420-clock.txt
-@@ -182,6 +182,11 @@ clock which they consume.
-   g3d			501
-   smmu_tv		502
- 
-+  Mux			ID
-+  ----------------------------
-+
-+  mout_hdmi		1024
-+
- Example 1: An example of a clock controller node is listed below.
- 
- 	clock: clock-controller@0x10010000 {
 diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 193d25e..59cf177 100644
+index 59cf177..edd0696 100644
 --- a/drivers/clk/samsung/clk-exynos5420.c
 +++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -111,6 +111,9 @@ enum exynos5420_clks {
- 	aclk333_g2d = 480, g2d, aclk333_432_gscl = 490, smmu_3aa, smmu_fimcl0,
- 	smmu_fimcl1, smmu_fimcl3, fimc_lite3, aclk_g3d = 500, g3d, smmu_tv,
+@@ -434,7 +434,7 @@ struct samsung_div_clock exynos5420_div_clks[] __initdata = {
+ 	DIV(none, "dout_fimd1", "mout_fimd1", DIV_DISP10, 0, 4),
+ 	DIV(none, "dout_mipi1", "mout_mipi1", DIV_DISP10, 16, 8),
+ 	DIV(none, "dout_dp1", "mout_dp1", DIV_DISP10, 24, 4),
+-	DIV(none, "dout_hdmi_pixel", "mout_pixel", DIV_DISP10, 28, 4),
++	DIV(sclk_pixel, "dout_hdmi_pixel", "mout_pixel", DIV_DISP10, 28, 4),
  
-+	/* mux clocks */
-+	mout_hdmi = 1024,
-+
- 	nr_clks,
- };
- 
-@@ -371,7 +374,7 @@ struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 	MUX(none, "mout_mipi1", group2_p, SRC_DISP10, 16, 3),
- 	MUX(none, "mout_dp1", group2_p, SRC_DISP10, 20, 3),
- 	MUX(none, "mout_pixel", group2_p, SRC_DISP10, 24, 3),
--	MUX(none, "mout_hdmi", hdmi_p, SRC_DISP10, 28, 1),
-+	MUX(mout_hdmi, "mout_hdmi", hdmi_p, SRC_DISP10, 28, 1),
- 
- 	/* MAU Block */
- 	MUX(none, "mout_maudio0", maudio0_p, SRC_MAU, 28, 3),
+ 	/* Audio Block */
+ 	DIV(none, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
+@@ -570,7 +570,7 @@ struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+ 		GATE_TOP_SCLK_DISP1, 3, CLK_SET_RATE_PARENT, 0),
+ 	GATE(sclk_hdmi, "sclk_hdmi", "mout_hdmi",
+ 		GATE_TOP_SCLK_DISP1, 9, CLK_SET_RATE_PARENT, 0),
+-	GATE(sclk_pixel, "sclk_pixel", "dout_hdmi_pixel",
++	GATE(none, "sclk_pixel", "dout_hdmi_pixel",
+ 		GATE_TOP_SCLK_DISP1, 10, CLK_SET_RATE_PARENT, 0),
+ 	GATE(sclk_dp1, "sclk_dp1", "dout_dp1",
+ 		GATE_TOP_SCLK_DISP1, 20, CLK_SET_RATE_PARENT, 0),
 -- 
 1.7.10.4
