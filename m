@@ -1,16 +1,18 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
- translation
-Date: Tue, 18 Jun 2013 16:47:57 -0300
-Message-ID: <20130618194756.GA2470@localhost>
-References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <51C0B838.90809@gmail.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v3 05/12] ARM: mvebu: Remove the harcoded BootROM window
+ allocation
+Date: Tue, 18 Jun 2013 13:51:11 -0600
+Message-ID: <20130618195111.GC6578@obsidianresearch.com>
+References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1371554737-25319-6-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130618173906.GC2204@obsidianresearch.com>
+ <20130618194330.GA2394@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <51C0B838.90809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20130618194330.GA2394@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,41 +23,37 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTgsIDIwMTMgYXQgMDk6NDI6NDhQTSArMDIwMCwgU2ViYXN0aWFuIEhlc3Nl
-bGJhcnRoIHdyb3RlOgo+IE9uIDA2LzE4LzIwMTMgMDU6MzEgUE0sIEV6ZXF1aWVsIEdhcmNpYSB3
-cm90ZToKPiA+IEFsdGhvdWdoIHRoZSBpbnRlcm5hbCByZWdpc3RlciB3aW5kb3cgc2l6ZSBpcyAx
-IE1pQiwgdGhlIHByZXZpb3VzCj4gPiByYW5nZXMgdHJhbnNsYXRpb24gZm9yIHRoZSBpbnRlcm5h
-bCByZWdpc3RlciBzcGFjZSBoYWQgYSBzaXplIG9mCj4gPiAweDQwMDAwMDAuIFRoaXMgd2FzIGRv
-bmUgdG8gYWxsb3cgdGhlIGNyeXB0byBhbmQgbmFuZCBub2RlIHRvIGFjY2Vzcwo+ID4gdGhlIGNv
-cnJlc3BvbmRpbmcgJ3NyYW0nIGFuZCAnbmFuZCcgZGVjb2Rpbmcgd2luZG93cy4KPiA+Cj4gPiBJ
-biBvcmRlciB0byBkZXNjcmliZSB0aGUgaGFyZHdhcmUgbW9yZSBhY2N1cmF0ZWx5LCB3ZSBkZWNs
-YXJlIHRoZQo+ID4gcmVhbCAxIE1pQiBpbnRlcm5hbCByZWdpc3RlciBzcGFjZSBpbiB0aGUgcmFu
-Z2VzLCBhbmQgYWRkIGEgdHJhbnNsYXRpb24KPiA+IGVudHJ5IGZvciB0aGUgbmFuZCBub2RlIHRv
-IGFjY2VzcyB0aGUgJ25hbmQnIHdpbmRvdy4KPiA+Cj4gPiBUaGlzIGNvbW1pdCB3aWxsIG1ha2Ug
-ZnV0dXJlIGltcHJvdmVtZW50cyBvbiB0aGUgTUJ1cyBEVCBiaW5kaW5nIGVhc2llci4KPiA+Cj4g
-PiBTaWduZWQtb2ZmLWJ5OiBFemVxdWllbCBHYXJjaWE8ZXplcXVpZWwuZ2FyY2lhQGZyZWUtZWxl
-Y3Ryb25zLmNvbT4KPiA+IC0tLQo+ID4gVGVzdGVkIG9uIFBsYXRob21lIE9wZW5ibG9ja3MgQTYg
-Ym9hcmQuCj4gPgo+ID4gICBhcmNoL2FybS9ib290L2R0cy9raXJrd29vZC5kdHNpIHwgNSArKyst
-LQo+ID4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+
-ID4KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9raXJrd29vZC5kdHNpIGIvYXJj
-aC9hcm0vYm9vdC9kdHMva2lya3dvb2QuZHRzaQo+ID4gaW5kZXggOGExZTNiYi4uOTEwZmFiYyAx
-MDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2tpcmt3b29kLmR0c2kKPiA+ICsrKyBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL2tpcmt3b29kLmR0c2kKPiA+IEBAIC0zOCw3ICszOCw4IEBACj4g
-Pgo+ID4gICAJb2NwQGYxMDAwMDAwIHsKPiA+ICAgCQljb21wYXRpYmxlID0gInNpbXBsZS1idXMi
-Owo+ID4gLQkJcmFuZ2VzID08MHgwMDAwMDAwMCAweGYxMDAwMDAwIDB4NDAwMDAwMAo+ID4gKwkJ
-cmFuZ2VzID08MHgwMDAwMDAwMCAweGYxMDAwMDAwIDB4MDEwMDAwMAo+ID4gKwkJICAgICAgICAg
-IDB4ZjQwMDAwMDAgMHhmNDAwMDAwMCAweDAwMDA0MDAKPiA+ICAgCQkgICAgICAgICAgMHhmNTAw
-MDAwMCAweGY1MDAwMDAwIDB4MDAwMDQwMD47Cj4gCj4gRXplcXVpZWwsCj4gCj4gbWF5YmUgeW91
-IHNob3VsZCBhbHNvIHB1dCBhIGNvbW1lbnQgYXQgdGhlIGVuZCBvZiBlYWNoIHJhbmdlcwo+IGxp
-bmUgdG8gbmFtZSB0aGUgcmVtYXAgaXQgZG9lcz8KPiAKPiBBbHNvLCBhcyBhbHJlYWR5IG1lbnRp
-b25lZCBvbiBJUkMsIGl0IHdvdWxkIGJlIGdyZWF0IHRvIGFsc28KPiBoYXZlIGRvdmUuZHRzaSB1
-cGRhdGVkIGFjY29yZGluZ2x5Lgo+IAoKSW5kZWVkLCBJIHdpbGwgZG8gYm90aC4KClRoYW5rcyEK
-LS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJu
-ZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
-c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
-dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Tue, Jun 18, 2013 at 04:43:31PM -0300, Ezequiel Garcia wrote:
+
+> > I think some kind of test is needed here. As I understand it the SMP
+> > startup uses a trampoline in the boot rom and the boot rom *must* be
+> > mapped to 0xfff00000 ?
+
+> Yes, that's my understanding as well, but I will do some testing since
+> it should be interesting...
+
+If it is like the earlier chips you will also have the choice of
+something based at 0, there is a register bit that sets the reset
+address.
+ 
+> > Verifying the DT is setup this way and aborting if it is not seems
+> > like a good idea..
+
+> I have no problem doing that, but to me it sounds as it's the
+> responsability of the one that writes the DT, no?
+
+Having the kernel enforce that the DT node is present and at the right
+location, I think, is helpful for the bootloader folks to ensure they
+write correct DTs.
+
+> Maybe this is a requirement for this SoC, but not for another...
+> so, why should the kernel *check* for that?
+
+The function was called armada_xp_smp_prepare_cpus - all Armada XP's
+will work like this..
+
+Jason
