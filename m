@@ -1,46 +1,56 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] staging: imx_drm: imx_ldb: fix 18 bit format
-Date: Tue, 18 Jun 2013 09:25:47 +0800
-Message-ID: <20130618012545.GA28381@S2101-09.ap.freescale.net>
-References: <1371459772-16443-1-git-send-email-s.trumtrar@pengutronix.de>
- <20130617205948.GA3018@kroah.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [v1 2/3] ata: ahci_platform: enable imx6q ahci sata support
+Date: Tue, 18 Jun 2013 10:01:54 +0800
+Message-ID: <20130618020153.GB28381@S2101-09.ap.freescale.net>
+References: <1371462767-16630-1-git-send-email-r65037@freescale.com>
+ <1371462767-16630-3-git-send-email-r65037@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130617205948.GA3018-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1371462767-16630-3-git-send-email-r65037@freescale.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Richard Zhu <richard.zhuhongxing@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, jgarzik@pobox.com, linux-ide@vger.kernel.org, Richard Zhu <r65037@freescale.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2013 at 01:59:48PM -0700, Greg Kroah-Hartman wrote:
-> On Mon, Jun 17, 2013 at 11:02:52AM +0200, Steffen Trumtrar wrote:
-> > From: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
-> > 
-> > Since 18 bit is supported as datawidth in device tree it should be
-> > supported in driver. Beside the LDB channel the IPU channel has also
-> > to be configured to use BGR666.
-> > 
-> > Signed-off-by: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> > This is based on the series: "staging: drm/imx: Add LDB support" by Philipp.
+On Mon, Jun 17, 2013 at 05:52:46PM +0800, Richard Zhu wrote:
+> imx6q contains the Synopsys AHCI SATA controller which shares
+> ahci_platform driver with other controllers.
 > 
-> I don't seem to have that series in my queue anywhere, can someone
-> please resend it, and this patch, so that I can apply them?
+> This patch updates the DT compatible list for ahci_platform,
+> and enable the imx6q ahci sata support.
+> 
+> Signed-off-by: Richard Zhu <r65037@freescale.com>
+> ---
+>  drivers/ata/ahci_platform.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> index 7a8a284..61f2142 100644
+> --- a/drivers/ata/ahci_platform.c
+> +++ b/drivers/ata/ahci_platform.c
+> @@ -327,6 +327,7 @@ static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_suspend, ahci_resume);
+>  
+>  static const struct of_device_id ahci_of_match[] = {
+>  	{ .compatible = "snps,spear-ahci", },
+> +	{ .compatible = "snps,imx-ahci", },
 
-I just resent them to you.
+I'm not sure it makes much sense to invent multiple platform specific
+strings for an IP which is completely compatible between them.
+Why don't we just have a generic compatible string like "snps,ahci"
+for all those compatible platforms, and only add platform specific
+string when there is incompatibility on particular platform to deal
+with?
+
+Added devicetree-discuss to get DT people's opinion.
 
 Shawn
+
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, ahci_of_match);
+> -- 
+> 1.7.5.4
+> 
+
