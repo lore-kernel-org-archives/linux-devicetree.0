@@ -1,38 +1,94 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 0/3] SH pinctrl DT support
-Date: Tue, 18 Jun 2013 11:05:43 +0200
-Message-ID: <CACRpkdbFEKJxQfvT4xR4z1iymHPmbbCYJriVPD95P_L0oCC6Jg@mail.gmail.com>
-References: <1371495003-11185-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<CACRpkdZh709J3pFsfbReQ20LU5W0Q1HacE0ZpssWXofKTJJ6pQ@mail.gmail.com>
-	<51C01FAF.8050006@imgtec.com>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [RFC PATCH v3 0/2] drivers: mfd: Versatile Express SPC support
+Date: Tue, 18 Jun 2013 11:09:41 +0200
+Message-ID: <20130618090941.GE7161@zurbaran>
+References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <20130611090545.GC8164@e102568-lin.cambridge.arm.com>
+ <20130613001311.GC4567@zurbaran>
+ <1371116757.3307.13.camel@hornet>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <51C01FAF.8050006@imgtec.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <damm@opensource.se>, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1371116757.3307.13.camel@hornet>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 10:51 AM, James Hogan <james.hogan@imgtec.com> wrote:
+Hi Pawell,
 
-> Should we be standardizing the pins/groups/function properties too,
-> since the strings are pretty much passed straight through? The usage
-> seems pretty similar between the drivers I've seen (except ugly vendor
-> prefixes), so we could presumably get away with a single implementation
-> of dt_node_to_map?
+On Thu, Jun 13, 2013 at 10:45:57AM +0100, Pawel Moll wrote:
+> On Thu, 2013-06-13 at 01:13 +0100, Samuel Ortiz wrote:
+> > Now, about the driver itself, besides the really odd code design, the
+> > static variables all over the place, the nasty init hacks and the
+> > unneeded long function names, someone should refresh my memory and explain
+> > to me why is this guy under mfd. I can see it somehow supports IP blocks
+> > providing different functions, but the design is not sharing anything with
+> > most of the rest of the mfd drivers.
+> 
+> I belive the vexpress-sysreg.c is a Multi Function Device by all means.
+> It does so many things that only a water fountain is missing ;-)
+> 
+> If you feel strongly about it, I'm ready to split it into mfd_cells and
+> move the gpio and leds code into separate drivers, however I'm not
+> convinced that it's worth the effort.
+Well, after seeing your last patch for ifdef'ing the GPIO and LED code,
+I think it is worth the effort.
 
-This is an orthogonal issue I'd say.
+> Now, as to the vexpress-config.c... The first time I've posted the
+> series, all parts lived in "driver/misc(/vexpress)", but (if I remember
+> correctly) Arnd had some feelings about "misc" existence at all... I was
+> thinking about a separate directory for random "system/platform/machine
+> configuration" drivers, but the idea didn't get any traction.
+drivers/misc would already have been a nicer option imo.
 
-Basically this goes back to the quite prolonged discussion about
-device tree bindings and the fact that we added the
-.dt_node_to_map() and .dt_free_map() functions in the
-first place.
+ 
+> > Not only that, but the whole vexpress-config code design is not the
+> > nicest piece of code I've ever seen. And I'm usually not picky. e.g. the
+> > whole vexpress-config ad-hoc API is awkward and I wonder if it could be
+> > implemented as a bus instead.
+> 
+> Funny you mention this :-) Again, the first version actually was a
+> vexpress-config bus. The feedback was - a whole bus_type is over the top
+> (I'm simplifying the letter slightly but this was the spirit).
+I think it would make sense to have it under drivers/bus/. It might be a
+little over the top, but when I look at the current code I'd be really
+happy to read an over-the-top bus driver instead. At least we'd know
+straight away what youre trying to achieve with this code and it would
+probably remove a fair chunk of the weird bridge API (the registering
+and the function reference stuff).
+Do you have a reference for the patch first version ?
 
-I'd be happy to consolidate these mapping functions where
-possible, by moving to the core, basically.
 
-But that would be a separate patch series.... interested? ;-)
+> > FWIW I take the blame here for not reviewing the initial driver
+> > submission that Arnd kindly sent to me...But now that I'm looking at it,
+> > I think it really is on the edge of being staging material. Any thought
+> > on that ?
+> 
+> I'm more than happy to improve it. The infrastructure (as in: the
+> hardware) itself is slightly strange and the code pretty much reflects
+> the situation. There is also a very good reason for some of the oddities
+> like static bridges array etc - the infrastructure must be functional
+> very early, long before slab is available (this also caused a lot of
+> issues with the bus-based implementation, as the device model does
+> kmalloc all over the place).
+> 
+> So to summarize - I'm open to any suggestions and ready to spend time on
+> this stuff.
+I'd say splitting the sysreg driver and leaving only the MFD bits in the
+MFD driver would be a first step.
+Also, re-considering the bus implementation for the config part would
+also be interesting. I'd be interested in looking at your first version
+of the patch.
 
-Yours,
-Linus Walleij
+
+> Regards and thanks for your time!
+Thanks for your understanding.
+
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
