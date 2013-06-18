@@ -1,17 +1,15 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation
- to the DT binding
-Date: Tue, 18 Jun 2013 18:34:55 -0300
-Message-ID: <20130618213454.GD2516@localhost>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 11/12] ARM: mvebu: Relocate Armada 370 PCIe device tree
+ nodes
+Date: Tue, 18 Jun 2013 23:35:50 +0200
+Message-ID: <201306182335.50722.arnd@arndb.de>
 References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1371554737-25319-4-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306181814.33941.arnd@arndb.de>
+ <1371554737-25319-12-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201306181814.33941.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <1371554737-25319-12-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,64 +20,59 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QXJuZCwKCk9uIFR1ZSwgSnVuIDE4LCAyMDEzIGF0IDA2OjE0OjMzUE0gKzAyMDAsIEFybmQgQmVy
-Z21hbm4gd3JvdGU6Cj4gT24gVHVlc2RheSAxOCBKdW5lIDIwMTMsIEV6ZXF1aWVsIEdhcmNpYSB3
-cm90ZToKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gKwo+ID4gKy0gY29tcGF0aWJsZToJ
-IFNob3VsZCBiZSBzZXQgdG8gb25lIG9mIHRoZSBmb2xsb3dpbmc6Cj4gPiArCQkgbWFydmVsbCxh
-cm1hZGEzNzAtbWJ1cwo+ID4gKwkJIG1hcnZlbGwsYXJtYWRheHAtbWJ1cwo+ID4gKwo+ID4gKy0g
-cmVnOgkJIERldmljZSdzIHJlZ2lzdGVyIHNwYWNlLgo+ID4gKwkJIFR3byBlbnRyaWVzIGFyZSBl
-eHBlY3RlZCwgc2VlIHRoZSBleGFtcGxlcyBiZWxvdy4KPiA+ICsJCSBUaGUgZmlyc3Qgb25lIGNv
-bnRyb2xzIHRoZSBkZXZpY2VzIGRlY29kaW5nIHdpbmRvdyBhbmQKPiA+ICsJCSB0aGUgc2Vjb25k
-IG9uZSBjb250cm9scyB0aGUgU0RSQU0gZGVjb2Rpbmcgd2luZG93Lgo+ID4gKwo+ID4gKy0gYWRk
-cmVzcy1jZWxsczogTXVzdCBiZSAnMicuIFRoZSBmaXJzdCBjZWxsIGZvciB0aGUgTUJ1cyBJRCBl
-bmNvZGluZywKPiA+ICsgICAgICAgICAgICAgICAgIHRoZSBzZWNvbmQgY2VsbCBmb3IgdGhlIGFk
-ZHJlc3Mgb2Zmc2V0IHdpdGhpbiB0aGUgd2luZG93Lgo+ID4gKwo+ID4gKy0gc2l6ZS1jZWxsczog
-ICAgTXVzdCBiZSAnMScuCj4gPiArCj4gPiArLSByYW5nZXM6ICAgICAgICBNdXN0IGJlIHNldCB1
-cCB0byBwcm92aWRlIGEgcHJvcGVyIHRyYW5zbGF0aW9uIGZvciBlYWNoIGNoaWxkLgo+ID4gKwkg
-ICAgICAgICBTZWUgdGhlIGV4YW1wbGVzIGJlbG93Lgo+IAo+IFlvdSBzaG91bGQgZXhwbGFpbiBo
-ZXJlIHdoYXQgdGhlIHBvbGljeSBpcyByZWdhcmRpbmcgd2luZG93cyBzZXQgdXAgYnkgdGhlCj4g
-Ym9vdCBsb2FkZXIuIEFyZSB0aGUgcmFuZ2VzIGluIGhlcmUgcmVxdWlyZWQgdG8gYmUgdGhlIG9u
-ZXMgdGhhdCB0aGUgYm9vdAo+IGxvYWRlciBoYXMgcHJlY29uZmlndXJlZCwgb3IgYXJlIHRoZXkg
-dGhlIG9uZXMgdGhhdCB0aGUgbWJ1cyBkcml2ZXIgaXMgc3VwcG9zZWQKPiB0byBzZXQgdXA/Cj4g
-CgpBY3R1YWxseSwgSSBtaWdodCBiZSBjb25mdXNlZCBidXQgdGhlIGtlcm5lbCBNQnVzIGRyaXZl
-ciBpcyBjb21wbGV0ZWx5CmluZGVwZW5kZW50IGZyb20gdGhlIGJvb3Rsb2FkZXIncyAtZXhjZXB0
-IGluIHRoZSBpbnRlcm5hbCByZWdpc3RlciBjYXNlLAooYmVjYXVzZSB3ZSBkb24ndCB0b3VjaCB0
-aGF0IGZyb20gd2hlcmUgdGhlIGJvb3Rsb2FkZXIgbGVmdCBpdCkuCgpXaGF0IGhhcHBlbnMgaXMg
-dGhhdCBhbnkgZGVjb2Rpbmcgd2luZG93IHRoYXQgd2FzIHNldHVwIGJ5IHRoZSBib290bG9hZGVy
-LAppcyB3aXBlZCBhbmQgY29tcGxldGVseSBuZXcgd2luZG93cyBhcmUgYWxsb2NhdGVkIHVzaW5n
-IHRoZSB0cmFuc2xhdGlvbnMKaW4gdGhlIERULCBhcyBkZXNjcmliZWQgYnkgdGhpcyBiaW5kaW5n
-LgoKVGhpcyB3YXMgdGhlIGNhc2UgZnJvbSB0aGUgc3RhcnQgd2l0aCB0aGUgb2xkIE1CdXMgZHJp
-dmVyLiBGV0lXLCBJIHRoaW5rCml0J3MgYWN0dWFsbHkgdGhlIGJlc3QgY2hvaWNlIHRoYXQgY2Fu
-IGJlIG1hZGU6IGl0IG1ha2VzIHRoZSBrZXJuZWwKaW5kZXBlbmRlbnQgb2YgdGhlIHByZXZpb3Vz
-IHNldHRpbmcuCgpJIGtub3cgeW91J3ZlIHN1Z2dlc3RlZCBkaWZmZXJlbnRseSBpbiB0aGUgcGFz
-dCwgYnV0IEknbSBub3Qgc3VyZSBJCnVuZGVyc3RhbmQgd2hhdCdzIHRoZSBiZW5lZml0IGluIGtl
-ZXBpbmcgdGhlIGJvb3Rsb2FkZXJzIGNvbmZpZ3VyYXRpb24uCgo+ID4gK0VhY2ggY2hpbGQgZGV2
-aWNlIG5lZWRzIGF0IGxlYXN0IGEgJ3JhbmdlcycgcHJvcGVydHkuIElmIHRoZSBjaGlsZCBpcyBh
-dmFpYWJsZQo+ID4gKyhpLmUuIHN0YXR1cyBub3QgJ2Rpc2FibGVkJyksIHRoZW4gdGhlIE1CdXMg
-ZHJpdmVyIGNyZWF0ZXMgYSBkZWNvZGluZyB3aW5kb3cKPiA+ICtmb3IgaXQuIEZvciBpbnN0YW5j
-ZSwgaW4gdGhlIGV4YW1wbGUgYmVsb3cgdGhlIEJvb3RST00gY2hpbGQgaXMgc3BlY2lmaWVkOgo+
-ID4gKwo+ID4gKwlzb2Mgewo+ID4gKwkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGFybWFkYTM3MC1t
-YnVzIiwgInNpbXBsZS1idXMiOwo+ID4gKwkJcmVnID0gPDB4ZDAwMjAwMDAgMHgxMDA+LCA8MHhk
-MDAyMDE4MCAweDIwPjsKPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ID4gKwkJI3NpemUt
-Y2VsbHMgPSA8MT47Cj4gPiArCj4gPiArCQlyYW5nZXMgPSA8IC4uLiAvKiBvdGhlciBlbnRyaWVz
-ICovCj4gPiArCQkJICAgMHgwMTFkMDAwMCAwIDAgMHhmZmYwMDAwMCAweDEwMDAwMD47Cj4gPiAr
-Cj4gPiArCQlib290cm9tIHsKPiA+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiA+ICsJCQkj
-c2l6ZS1jZWxscyA9IDwxPjsKPiA+ICsJCQlyYW5nZXMgPSA8MCAweDAxMWQwMDAwIDAgMHgxMDAw
-MDA+Owo+ID4gKwkJfTsKPiA+ICsKPiA+ICsJCS8qIG90aGVyIGNoaWxkcmVuICovCj4gPiArCQku
-Li4KPiA+ICsJfTsKPiAKPiBEbyB5b3UgcmVhbGx5IHdhbnQgdG8gcmVxdWlyZSB0aGUgY2hpbGQg
-dG8gcHJvdmlkZSBhICJyYW5nZXMiIHByb3BlcnR5Pwo+IEkgdGhpbmsgdGhpcyBtYWtlcyBpdCBt
-b3JlIGNvbXBsaWNhdGVkIHRvIHNwZWNpZnkgZGV2aWNlcyB0aGF0IGJlbG9uZwo+IGludG8gdGhl
-ICJpbnRlcm5hbC1yZWdzIiBjYXRlZ29yeS4KPiAKCk5vLCB0aGlzIHRleHQgaXMgYWN0dWFsbHkg
-YSBsZWZ0LW92ZXIgZnJvbSB0aGUgcHJldmlvdXMgcGF0Y2hzZXQsIGluCmN1cnJlbnQgdjMgcGF0
-Y2hzZXQgTUJ1cyBjaGlsZHJlbiBhcmUgKm5vdCogcmVxdWlyZWQgdG8gaGF2ZSBhbnkgcmFuZ2Vz
-LgpPbiB0aGUgb3RoZXJzaWRlLCBhbHRob3VnaCB5b3Ugd2lsbCBuZWVkIG9uZSBleGNlcHQgaW4g
-dGhlIG1vc3QgdHJpdmlhbApjYXNlcyBsaWtlIGZvciB0aGUgQm9vdFJPTS4KCi0tIApFemVxdWll
-bCBHYXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRy
-b2lkIEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxp
-bmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
-Lm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Tuesday 18 June 2013, Ezequiel Garcia wrote:
+> +
+> +                       ranges =
+> +                              <0x82000000 0 0x40000    0xffff0001 0x40000 0 0x00002000
+> +                               0x82000000 0 0x80000    0xffff0001 0x80000 0 0x00002000
+> +                               0x82000000 0 0xe0000000 0xffff0002 0          0 0x08000000
+> +                               0x81000000 0 0          0xffff0002 0x8000000  0 0x00100000>;
+
+As pointed out on IRC, this is not a good representation of the memory space,
+since it requires a non-zero sys->mem_offset, and it conflicts with the straight
+mapping I suggested.
+
+I think it should be
+
+                               0x82000000 0 0xe0000000 0xffff0002 0  0xe0000000 0x08000000
+
+if we want to encode the aperture in the ranges property here, i.e. have
+a 1:1 mapping between PCI memory space and MBUS space, and in mbus,
+you need the corresponding
+
+-                           0xffff0002 0 0xe0000000 0x8100000
++                           0xffff0002 0xe0000000 0xe0000000 0x8100000
+
+so that mbus actually translates the right addresses. You could also
+have the PCI memory space start at 0, which would mean
+
+                               0x82000000 0 0 0xffff0002 0  0 0x08000000
+
+and
+
+                              0xffff0002 0 0xe0000000 0x8100000
+
+Note that the driver doesn't actually handle the generic case correctly, you would
+need to apply this patch
+	
+diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
+index 13a633b..aa674f4 100644
+--- a/drivers/pci/host/pci-mvebu.c
++++ b/drivers/pci/host/pci-mvebu.c
+@@ -790,6 +790,7 @@ static int __init mvebu_pcie_probe(struct platform_device *pdev)
+ 		}
+ 		if (restype == IORESOURCE_MEM) {
+ 			of_pci_range_to_resource(&range, np, &pcie->mem);
++			sys->mem_offset = range.cpu_addr - range.pci_addr;
+ 			pcie->mem.name = "MEM";
+ 		}
+ 	}
+
+to deal with the generic case where the bus address is different from the
+CPU address.
+
+	Arnd
