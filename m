@@ -1,62 +1,35 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] ARM: shmobile: irqpin: add a DT property to enable
- masking on parent
-Date: Tue, 18 Jun 2013 16:41:48 +0900
-Message-ID: <20130618074146.GG24960@verge.net.au>
-References: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
- <CANqRtoTqHiRixV571CrMkc=ijWcrfZFzaSrfjN1SKRNTgTTcZA@mail.gmail.com>
- <20130612083850.GF6006@verge.net.au>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
+ tree driver
+Date: Tue, 18 Jun 2013 09:44:17 +0200
+Message-ID: <CACRpkdakdUVzHM4L5qOJ5Ls8NwOimy197NCUDSP=X28d2fzHPg@mail.gmail.com>
+References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org>
+	<CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com>
+	<51BF2FC5.40207@wwwdotorg.org>
+	<CACRpkdbjy+PcpNkSg4PuuP2Z9RyrnqSW0uchHFHVZ8VYPeoDyA@mail.gmail.com>
+	<CACxGe6sTq=h9jjqesjvUA4Bweh7zgE4VOLoOTgGPC_D_v+8NtA@mail.gmail.com>
+	<20130618073302.GA2962@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130612083850.GF6006@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130618073302.GA2962@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 12, 2013 at 05:38:50PM +0900, Simon Horman wrote:
-> On Tue, Jun 11, 2013 at 06:37:24PM +0900, Magnus Damm wrote:
-> > On Fri, May 24, 2013 at 6:13 PM, Guennadi Liakhovetski
-> > <g.liakhovetski@gmx.de> wrote:
-> > > To disable spurious interrupts, that get triggered on certain hardware, the
-> > > irqpin driver masks them on the parent interrupt controller. To specify
-> > > such broken devices a .control_parent parameter can be provided in the
-> > > platform data. In the DT case we need a property, to do the same.
-> > >
-> > > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > > ---
-> > >
-> > > These two patches simply split the earlier "ARM: shmobile: irqpin: fix
-> > > handling of spurious interrupts in DT case" patch into two parts.
-> > > Otherwise no change.
-> > 
-> > I'm fine with this portion of the patch series. Thanks for your help!
-> >
-> > Acked-by: Magnus Damm <damm@opensource.se>
-> 
-> I believe that this patch depends on
-> "irqchip: renesas-intc-irqpin: DT binding for sense bitfield width"
-> which Arnd has requested some modifications to.
-> 
-> "I think you should add documentation here about how the two interrupt
-> cells are to be interpreted, to allow people to fill the values from a data
-> sheet or board schematic."
-> http://www.spinics.net/lists/linux-sh/msg20202.html
-> 
-> Please post a fresh series that:
-> 
-> 1. Includes a fresh version of "irqchip: renesas-intc-irqpin: DT binding
->    for sense bitfield width" with Arnd's concerns addressed.
-> 
-> 2. Includes this patch with Magnus's Ack.
-> 
-> Please be sure to CC Arnd on the new series.
+On Tue, Jun 18, 2013 at 9:33 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+> On Mon, Jun 17, 2013 at 11:15:30PM +0100, Grant Likely wrote:
+>> On Mon, Jun 17, 2013 at 5:33 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > OK that works for me, I'm not in any hurry.
+>>
+>> Deferring by a merge window isn't going to make it any less painful.
+>> Do your best to find all the users that need to be changed. Use a
+>> coccinelle search perhaps, but I think it should be merged anyway.
+>
+> I'll try a bit of my coccinelle-foo today and then decide.
 
-Hi Guennadi,
+Thanks Wolfram, much appreciated.
 
-I see that you reposted "irqchip: renesas-intc-irqpin: DT binding
-for sense bitfield width", which I have queued-up, without this patch.
-
-Please rebase this patch and repost it with Magnus's Ack.
+Yours,
+Linus Walleij
