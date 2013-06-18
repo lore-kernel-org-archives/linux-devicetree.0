@@ -1,88 +1,46 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] MBus device tree binding
-Date: Tue, 18 Jun 2013 10:07:51 -0300
-Message-ID: <20130618130750.GB25416@localhost>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <51C04591.3010206@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v11 0/8] ] DMA Engine support for AM33XX
+Date: Tue, 18 Jun 2013 15:07:40 +0200
+Message-ID: <201306181507.40849.arnd@arndb.de>
+References: <1371537499-12970-1-git-send-email-joelagnel@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51C04591.3010206-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1371537499-12970-1-git-send-email-joelagnel@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel A Fernandes <joelagnel@ti.com>
+Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Sekhar Nori <nsekhar@ti.com>, Koen Kooi <koen@beagleboard.org>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Jason Kridner <jkridner@beagleboard.org>, Rob Landley <rob@landley.net>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Andrew Morton <akpm@linux-foundation.org>, Linux OMAP List <linux-omap@vger.kernel.org>Linux ARM Kernel List <linux->
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2ViYXN0aWFuLAoKT24gVHVlLCBKdW4gMTgsIDIwMTMgYXQgMDE6MzM6MzdQTSArMDIwMCwg
-U2ViYXN0aWFuIEhlc3NlbGJhcnRoIHdyb3RlOgo+IE9uIDA2LzE4LzEzIDEzOjI1LCBFemVxdWll
-bCBHYXJjaWEgd3JvdGU6Cj4gPiBJbiB0aGUgZXhhbXBsZSBiZWxvdyB0aGVyZSdzIGFuIGV4dHJh
-Y3Qgb2YgYSBkZXZpY2UgdHJlZSBzaG93aW5nIGhvdwo+ID4gdGhlIGludGVybmFsLXJlZ3MgYW5k
-IHBjaWUgbm9kZXMgY2FuIGJlIHJlcHJlc2VudGVkOgo+ID4KPiA+IAkjZGVmaW5lIE1CVVNfSUQo
-dGFyZ2V0LGF0dHJpYnV0ZXMpICgoKHRhcmdldCkgPDwgMjQpIHwgKChhdHRyaWJ1dGVzKSA8PCAx
-NikpCj4gPgo+ID4gCXNvYyB7Cj4gPiAJCWNvbXBhdGlibGUgPSAibWFydmVsbCxhcm1hZGF4cC1t
-YnVzIjsKPiA+IAkJcmVnID0gPDAgMHhkMDAyMDAwMCAwIDB4MTAwPiwgPDAgMHhkMDAyMDE4MCAw
-IDB4MjA+Owo+ID4KPiA+IAkJcmFuZ2VzID0gPDB4ZmZmZjAwMDEgMCAwIDB4ZDAwMDAwMDAgMHgx
-MDAwMDAgICAvKiBpbnRlcm5hbC1yZWdzICovCj4gPiAJCQkgIDB4ZmZmZjAwMDAgMCAwIDB4ZTAw
-MDAwMDAgMHg4MTAwMDAwICAvKiBwY2llICovCj4gPiAJCQkgIE1CVVNfSUQoMHgwMSwgMHgxZCkg
-MCAwIDB4ZmZmMDAwMDAgMHgxMDAwMDAKPiA+IAkJCSAgTUJVU19JRCgweDAxLCAweDJmKSAwIDAg
-MHhmMDAwMDAwMCAweDgwMDAwMDA+Owo+IAo+IEV6ZXF1aWVsLAo+IAo+IHlvdSBzaG91bGQgdXBk
-YXRlIFBDSUUgYWJvdmUgKGFuZCBwb3NzaWJseSBhbnl3aGVyZSBlbHNlKSB0b28uCj4gCgpSaWdo
-dC4gSSd2ZSBqdXN0IGNoZWNrZWQgYW5kIEkgb25seSBmb3Jnb3QgdG8gdXBkYXRlIHRoZSBQQ0ll
-IGZpcnN0LWNlbGwKKDB4ZmZmZjAwMDAgLT4gMHhmZmZmMDAwMikgaW4gdGhpcyBjb3Zlci1sZXR0
-ZXIuIFRoZSBkZXZpY2UgdHJlZSBmaWxlcyAKYW5kIHRoZSBkb2N1bWVudGF0aW9uIGxvb2sgY29y
-cmVjdC4KClNvcnJ5IGZvciB0aGUgY29uZnVzaW9uIQoKPiA+IAkJcGNpZS1jb250cm9sbGVyIHsK
-PiA+IAkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxhcm1hZGEteHAtcGNpZSI7Cj4gPiAJCQlzdGF0
-dXMgPSAib2theSI7Cj4gPiAJCQlkZXZpY2VfdHlwZSA9ICJwY2kiOwo+ID4KPiA+IAkJCSNhZGRy
-ZXNzLWNlbGxzID0gPDM+Owo+ID4gCQkJI3NpemUtY2VsbHMgPSA8Mj47Cj4gPgo+ID4gCQkJcmFu
-Z2VzID0KPiA+IAkJCSAgICAgICA8MHg4MjAwMDAwMCAwIDB4NDAwMDAgMHhmZmZmMDAwMSAweDQw
-MDAwIDAgMHgwMDAwMjAwMCAgIC8qIFBvcnQgMC4wIHJlZ2lzdGVycyAqLwo+ID4gCQkJCTB4ODIw
-MDAwMDAgMCAweDQyMDAwIDB4ZmZmZjAwMDEgMHg0MjAwMCAwIDB4MDAwMDIwMDAgICAvKiBQb3J0
-IDIuMCByZWdpc3RlcnMgKi8KPiA+IAkJCQkweDgyMDAwMDAwIDAgMHg0NDAwMCAweGZmZmYwMDAx
-IDB4NDQwMDAgMCAweDAwMDAyMDAwICAgLyogUG9ydCAwLjEgcmVnaXN0ZXJzICovCj4gPiAJCQkJ
-MHg4MjAwMDAwMCAwIDB4NDgwMDAgMHhmZmZmMDAwMSAweDQ4MDAwIDAgMHgwMDAwMjAwMCAgIC8q
-IFBvcnQgMC4yIHJlZ2lzdGVycyAqLwo+ID4gCQkJCTB4ODIwMDAwMDAgMCAweDRjMDAwIDB4ZmZm
-ZjAwMDEgMHg0YzAwMCAwIDB4MDAwMDIwMDAgICAvKiBQb3J0IDAuMyByZWdpc3RlcnMgKi8KPiA+
-IAkJCQkweDgyMDAwMDAwIDAgMHg4MDAwMCAweGZmZmYwMDAxIDB4ODAwMDAgMCAweDAwMDAyMDAw
-ICAgLyogUG9ydCAxLjAgcmVnaXN0ZXJzICovCj4gPiAJCQkJMHg4MjAwMDAwMCAwIDB4ODIwMDAg
-MHhmZmZmMDAwMSAweDgyMDAwIDAgMHgwMDAwMjAwMCAgIC8qIFBvcnQgMy4wIHJlZ2lzdGVycyAq
-Lwo+ID4gCQkJCTB4ODIwMDAwMDAgMCAweGUwMDAwMDAwIDB4ZmZmZjAwMDAgMCAwIDB4MDgwMDAw
-MDAgICAvKiBub24tcHJlZmV0Y2hhYmxlIG1lbW9yeSAqLwo+ID4gCQkJCTB4ODEwMDAwMDAgMCAw
-IDB4ZmZmZjAwMDAgMHg4MDAwMDAwIDAgMHgwMDEwMDAwMD47IC8qIGRvd25zdHJlYW0gSS9PICov
-Cj4gCj4gSGVyZSBmb3IgZXhhbXBsZS4KPiAKPiA+IENoYW5nZXMgZnJvbSB2MjoKPiA+ICAgKiBS
-ZXBsYWNlZCB0aGUgUENJZSBtYXBwaW5nIHdpdGggMHhmZmZmMDAwMiwgdG8gYXZvaWQgdXNpbmcg
-YSByZXByZXNlbnRhdGlvbgo+ID4gICAgIHRoYXQgbWlnaHQgY29ycmVzcG9uZCB0byBhIHBvc3Np
-YmxlIHdpbmRvdyBpZC4KPiAKPiBPdXQgb2YgY3VyaW9zaXR5LCBob3cgd2lsbCB0aGVzZSBmYWtl
-IG1hcHBpbmdzIHBsYXkgd2l0aCBMUEFFPyBJZiB5b3UKPiBleHRlbmQgcG9zc2libGUgYWRkcmVz
-cyBzcGFjZSB0byA+MzJiIHRoZSBsb3dlciBiaXRzIG1heSBiZWxvbmcgdG8gdmFsaWQKPiBhZGRy
-ZXNzZXMuCj4gTWF5YmUgeW91IGNhbiAoYWxyZWFkeSBkbz8pIGlnbm9yZSB0aGF0IGJlY2F1c2Ug
-b2YgdGhlIDMyYiBhZGRyZXNzCj4gcmVzdHJpY3Rpb24gZm9yIGludGVybmFsIHJlZ2lzdGVycyBJ
-SVJDIFRob21hcyBtZW50aW9uZWQ/Cj4gCgpUaGF0J3MgYSB0cmlja3kgcXVlc3Rpb24uIFRoZSBi
-ZXN0IGV4cGxhbmF0aW9uIEkgY2FuIGdpdmUgeW91IGlzIHRoYXQKdGhlc2UgZmFrZSBtYXBwaW5n
-cyBiZWxvbmcgdG8gdGhlIE1CdXMgY2hpbGRyZW4gYWRkcmVzcyBzcGFjZSwgd2hpY2ggaXMKZGlm
-ZmVyZW50IGZyb20gdGhlIHBoeXNpY2FsIGFkZHJlc3Mgc3BhY2Ugd2hlcmUgTFBBRSBjb21lcyBp
-bnRvIHBsYXkuCgpUaGlzIE1CdXMgY2hpbGRyZW4gYWRkcmVzcyBzcGFjZSBjb25zaXN0cyBvZiB0
-d28gMzItYml0IGNlbGxzOgoKSUlBQTAwQ0MgMDBvb29vb28KClRoZSBmaXJzdCBvbmUgZW5jb2Rl
-cyB0aGUgdGFyZ2V0IElEIGFuZCBhdHRyaWJ1dGUgaW4gaXRzIHVwcGVyIDE2IGJpdHMsCmFuZCBj
-dXN0b20gdmFsdWVzIGZvciB0aGUgZmFrZSBtYXBwaW5ncyBpbiB0aGUgbG93ZXIgOCBiaXRzLgpU
-aGUgc2Vjb25kIG9uZSBlbmNvZGVzIHRoZSBvZmZzZXQgaW50byB0aGUgTUJ1cyBkZWNvZGluZyB3
-aW5kb3csIGFuZAp0aGlzIHdpbmRvdyBjYW4gYmUgYXMgbGFyZ2UgYXMgNCBHaUIuCgpUaGUgYWRk
-cmVzcyBzcGFjZSBJJ3ZlIGp1c3QgZGVzY3JpYmVkIGlzIG5vdCB0aGUgcGh5c2ljYWwgNjQtYml0
-IGFkZHJlc3MKc3BhY2U7IGl0J3MgdGhlIG9uZSB3aGVyZSBNQnVzIGNoaWxkcmVuIHNpdC4KCkkg
-aG9wZSBJIHVuZGVyc3Rvb2QgeW91J3JlIHF1ZXN0aW9uLCBhbmQgSSBob3BlIGFueSBvZiB0aGUg
-YWJvdmUgbWFrZXMKc2Vuc2UhCgotLSAKRXplcXVpZWwgR2FyY8OtYSwgRnJlZSBFbGVjdHJvbnMK
-RW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBFbmdpbmVlcmluZwpodHRwOi8vZnJl
-ZS1lbGVjdHJvbnMuY29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNz
-QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2Rldmlj
-ZXRyZWUtZGlzY3Vzcwo=
+On Tuesday 18 June 2013, Joel A Fernandes wrote:
+> 
+> This series is a repost of Matt Porter's EDMA patches for AM33XX EDMA support
+> with changes for few pending review comments on v9 series.
+> 
+> Currently this is required for AM33XX (Beaglebone or EVM) to access MMC
+> and be able mount to rootfs and boot till command prompt over MMC.
+> Unless there are other pending review comments, I hope this series can
+> make it into 3.11 merge window, the dependent series has been posted at [1]
+> and completed review.
+> 
+> Tested EDMA on AM1808 EVM and AM33XX Beaglebone with MMC.
+> 
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+
+The binding looks good now.
+
+My usual comment about the fact that we shouldn't use a filter function in
+.xlate() applies here, but that is more about the missing interface of
+the dmaengine layer than the particular driver.
+
+	Arnd
