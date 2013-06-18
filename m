@@ -1,8 +1,8 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 10/12] ARM: mvebu: Relocate Armada 370/XP DeviceBus device
- tree nodes
-Date: Tue, 18 Jun 2013 08:25:35 -0300
-Message-ID: <1371554737-25319-11-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v3 11/12] ARM: mvebu: Relocate Armada 370 PCIe device tree
+ nodes
+Date: Tue, 18 Jun 2013 08:25:36 -0300
+Message-ID: <1371554737-25319-12-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,283 +24,209 @@ Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJ
 List-Id: devicetree@vger.kernel.org
 
 Now that mbus has been added to the device tree, it's possible to
-move the DeviceBus out of internal registers, placing it directly
-below the mbus. This is a more accurate representation of the hardware.
+move the PCIe nodes out of internal registers, placing it directly
+below the mbus. This is a more accurate representation of the
+hardware.
 
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-xp.dtsi             | 94 +++++++++++++-----------
- arch/arm/boot/dts/armada-xp-gp.dts               | 60 +++++++--------
- arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 60 +++++++--------
- 3 files changed, 110 insertions(+), 104 deletions(-)
+ arch/arm/boot/dts/armada-370-db.dts      |  1 +
+ arch/arm/boot/dts/armada-370-mirabox.dts | 33 +++++------
+ arch/arm/boot/dts/armada-370-rd.dts      |  1 +
+ arch/arm/boot/dts/armada-370.dtsi        | 97 ++++++++++++++++----------------
+ 4 files changed, 68 insertions(+), 64 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-index 4ae5eb5..0cd23ac 100644
---- a/arch/arm/boot/dts/armada-370-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-@@ -35,6 +35,56 @@
- 		#size-cells = <1>;
- 		interrupt-parent = <&mpic>;
+diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
+index c313968..6891343 100644
+--- a/arch/arm/boot/dts/armada-370-db.dts
++++ b/arch/arm/boot/dts/armada-370-db.dts
+@@ -31,6 +31,7 @@
  
-+		devbus-bootcs {
-+			compatible = "marvell,mvebu-devbus";
-+			reg = <0xffff0001 0x10400 0x8>;
-+			ranges = <0 MBUS_ID(0x01, 0x2f) 0 0xffffffff>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			clocks = <&coreclk 0>;
-+			status = "disabled";
-+		};
+ 	soc {
+ 		ranges = <0xffff0001 0 0xd0000000 0x100000
++			  0xffff0002 0 0xe0000000 0x8100000
+ 			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
+ 
+ 		internal-regs {
+diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
+index abb1ccf..830727a 100644
+--- a/arch/arm/boot/dts/armada-370-mirabox.dts
++++ b/arch/arm/boot/dts/armada-370-mirabox.dts
+@@ -26,8 +26,25 @@
+ 
+ 	soc {
+ 		ranges = <0xffff0001 0 0xd0000000 0x100000
++			  0xffff0002 0 0xe0000000 0x8100000
+ 			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
+ 
++		pcie-controller {
++			status = "okay";
 +
-+		devbus-cs0 {
-+			compatible = "marvell,mvebu-devbus";
-+			reg = <0xffff0001 0x10408 0x8>;
-+			ranges = <0 MBUS_ID(0x01, 0x3e) 0 0xffffffff>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			clocks = <&coreclk 0>;
-+			status = "disabled";
-+		};
++			/* Internal mini-PCIe connector */
++			pcie@1,0 {
++				/* Port 0, Lane 0 */
++				status = "okay";
++			};
 +
-+		devbus-cs1 {
-+			compatible = "marvell,mvebu-devbus";
-+			reg = <0xffff0001 0x10410 0x8>;
-+			ranges = <0 MBUS_ID(0x01, 0x3d) 0 0xffffffff>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			clocks = <&coreclk 0>;
-+			status = "disabled";
-+		};
-+
-+		devbus-cs2 {
-+			compatible = "marvell,mvebu-devbus";
-+			reg = <0xffff0001 0x10418 0x8>;
-+			ranges = <0 MBUS_ID(0x01, 0x3b) 0 0xffffffff>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			clocks = <&coreclk 0>;
-+			status = "disabled";
-+		};
-+
-+		devbus-cs3 {
-+			compatible = "marvell,mvebu-devbus";
-+			reg = <0xffff0001 0x10420 0x8>;
-+			ranges = <0 MBUS_ID(0x01, 0x37) 0 0xffffffff>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			clocks = <&coreclk 0>;
-+			status = "disabled";
++			/* Connected on the PCB to a USB 3.0 XHCI controller */
++			pcie@2,0 {
++				/* Port 1, Lane 0 */
++				status = "okay";
++			};
 +		};
 +
  		internal-regs {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
-@@ -181,50 +231,6 @@
- 				status = "disabled";
+ 			serial@12000 {
+ 				clock-frequency = <200000000>;
+@@ -122,22 +139,6 @@
+ 					reg = <0x25>;
+ 				};
  			};
- 
--			devbus-bootcs@10400 {
--				compatible = "marvell,mvebu-devbus";
--				reg = <0x10400 0x8>;
--				#address-cells = <1>;
--				#size-cells = <1>;
--				clocks = <&coreclk 0>;
--				status = "disabled";
--			};
 -
--			devbus-cs0@10408 {
--				compatible = "marvell,mvebu-devbus";
--				reg = <0x10408 0x8>;
--				#address-cells = <1>;
--				#size-cells = <1>;
--				clocks = <&coreclk 0>;
--				status = "disabled";
--			};
+-			pcie-controller {
+-				status = "okay";
 -
--			devbus-cs1@10410 {
--				compatible = "marvell,mvebu-devbus";
--				reg = <0x10410 0x8>;
--				#address-cells = <1>;
--				#size-cells = <1>;
--				clocks = <&coreclk 0>;
--				status = "disabled";
--			};
+-				/* Internal mini-PCIe connector */
+-				pcie@1,0 {
+-					/* Port 0, Lane 0 */
+-					status = "okay";
+-				};
 -
--			devbus-cs2@10418 {
--				compatible = "marvell,mvebu-devbus";
--				reg = <0x10418 0x8>;
--				#address-cells = <1>;
--				#size-cells = <1>;
--				clocks = <&coreclk 0>;
--				status = "disabled";
--			};
--
--			devbus-cs3@10420 {
--				compatible = "marvell,mvebu-devbus";
--				reg = <0x10420 0x8>;
--				#address-cells = <1>;
--				#size-cells = <1>;
--				clocks = <&coreclk 0>;
--				status = "disabled";
+-				/* Connected on the PCB to a USB 3.0 XHCI controller */
+-				pcie@2,0 {
+-					/* Port 1, Lane 0 */
+-					status = "okay";
+-				};
 -			};
  		};
  	};
-  };
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 1f4daa7..3e14e82 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -40,7 +40,36 @@
+ };
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index 9ae8bdc..132cf8e 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -29,6 +29,7 @@
  
  	soc {
- 		ranges = <0xffff0001 0 0 0xd0000000 0x100000
--			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
-+			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000>;
-+
-+		devbus-bootcs {
-+			status = "okay";
-+
-+			/* Device Bus parameters are required */
-+
-+			/* Read parameters */
-+			devbus,bus-width    = <8>;
-+			devbus,turn-off-ps  = <60000>;
-+			devbus,badr-skew-ps = <0>;
-+			devbus,acc-first-ps = <124000>;
-+			devbus,acc-next-ps  = <248000>;
-+			devbus,rd-setup-ps  = <0>;
-+			devbus,rd-hold-ps   = <0>;
-+
-+			/* Write parameters */
-+			devbus,sync-enable = <0>;
-+			devbus,wr-high-ps  = <60000>;
-+			devbus,wr-low-ps   = <60000>;
-+			devbus,ale-wr-ps   = <60000>;
-+
-+			/* NOR 16 MiB */
-+			nor@0 {
-+				compatible = "cfi-flash";
-+				reg = <0 0x1000000>;
-+				bank-width = <2>;
-+			};
-+		};
+ 		ranges = <0xffff0001 0 0xd0000000 0x100000
++			  0xffff0002 0 0xe0000000 0x8100000
+ 			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
  
  		internal-regs {
- 			serial@12000 {
-@@ -116,35 +145,6 @@
- 				};
- 			};
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index c7f9971..1288a78 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -38,6 +38,55 @@
+ 			ranges = <0 MBUS_ID(0x01, 0xe0) 0 0xffffffff>;
+ 		};
  
--			devbus-bootcs@10400 {
--				status = "okay";
--				ranges = <0 0xf0000000 0x1000000>; /* @addr 0xf000000, size 0x1000000 */
--
--				/* Device Bus parameters are required */
--
--				/* Read parameters */
--				devbus,bus-width    = <8>;
--				devbus,turn-off-ps  = <60000>;
--				devbus,badr-skew-ps = <0>;
--				devbus,acc-first-ps = <124000>;
--				devbus,acc-next-ps  = <248000>;
--				devbus,rd-setup-ps  = <0>;
--				devbus,rd-hold-ps   = <0>;
--
--				/* Write parameters */
--				devbus,sync-enable = <0>;
--				devbus,wr-high-ps  = <60000>;
--				devbus,wr-low-ps   = <60000>;
--				devbus,ale-wr-ps   = <60000>;
--
--				/* NOR 16 MiB */
--				nor@0 {
--					compatible = "cfi-flash";
--					reg = <0 0x1000000>;
--					bank-width = <2>;
--				};
--			};
--
- 			pcie-controller {
- 				status = "okay";
- 
-diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-index ea47196..490c423 100644
---- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-+++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-@@ -28,7 +28,36 @@
- 
- 	soc {
- 		ranges = <0xffff0001 0 0 0xd0000000 0x100000
--			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
-+			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x8000000>;
++		pcie-controller {
++			compatible = "marvell,armada-370-pcie";
++			status = "disabled";
++			device_type = "pci";
 +
-+		devbus-bootcs {
-+			status = "okay";
++			#address-cells = <3>;
++			#size-cells = <2>;
 +
-+			/* Device Bus parameters are required */
++			bus-range = <0x00 0xff>;
 +
-+			/* Read parameters */
-+			devbus,bus-width    = <8>;
-+			devbus,turn-off-ps  = <60000>;
-+			devbus,badr-skew-ps = <0>;
-+			devbus,acc-first-ps = <124000>;
-+			devbus,acc-next-ps  = <248000>;
-+			devbus,rd-setup-ps  = <0>;
-+			devbus,rd-hold-ps   = <0>;
++			ranges =
++			       <0x82000000 0 0x40000    0xffff0001 0x40000 0 0x00002000
++				0x82000000 0 0x80000    0xffff0001 0x80000 0 0x00002000
++				0x82000000 0 0xe0000000 0xffff0002 0          0 0x08000000
++				0x81000000 0 0          0xffff0002 0x8000000  0 0x00100000>;
 +
-+			/* Write parameters */
-+			devbus,sync-enable = <0>;
-+			devbus,wr-high-ps  = <60000>;
-+			devbus,wr-low-ps   = <60000>;
-+			devbus,ale-wr-ps   = <60000>;
++			pcie@1,0 {
++				device_type = "pci";
++				assigned-addresses = <0x82000800 0 0x40000 0 0x2000>;
++				reg = <0x0800 0 0 0 0>;
++				#address-cells = <3>;
++				#size-cells = <2>;
++				#interrupt-cells = <1>;
++				ranges;
++				interrupt-map-mask = <0 0 0 0>;
++				interrupt-map = <0 0 0 0 &mpic 58>;
++				marvell,pcie-port = <0>;
++				marvell,pcie-lane = <0>;
++				clocks = <&gateclk 5>;
++				status = "disabled";
++			};
 +
-+			/* NOR 128 MiB */
-+			nor@0 {
-+				compatible = "cfi-flash";
-+				reg = <0 0x8000000>;
-+				bank-width = <2>;
++			pcie@2,0 {
++				device_type = "pci";
++				assigned-addresses = <0x82002800 0 0x80000 0 0x2000>;
++				reg = <0x1000 0 0 0 0>;
++				#address-cells = <3>;
++				#size-cells = <2>;
++				#interrupt-cells = <1>;
++				ranges;
++				interrupt-map-mask = <0 0 0 0>;
++				interrupt-map = <0 0 0 0 &mpic 62>;
++				marvell,pcie-port = <1>;
++				marvell,pcie-lane = <0>;
++				clocks = <&gateclk 9>;
++				status = "disabled";
 +			};
 +		};
- 
++
  		internal-regs {
- 			serial@12000 {
-@@ -144,35 +173,6 @@
+ 			system-controller@18200 {
+ 				compatible = "marvell,armada-370-xp-system-controller";
+@@ -176,54 +225,6 @@
+ 					0x18304 0x4>;
  				status = "okay";
  			};
- 
--			devbus-bootcs@10400 {
--				status = "okay";
--				ranges = <0 0xf0000000 0x8000000>; /* @addr 0xf000000, size 0x8000000 */
 -
--				/* Device Bus parameters are required */
+-			pcie-controller {
+-				compatible = "marvell,armada-370-pcie";
+-				status = "disabled";
+-				device_type = "pci";
 -
--				/* Read parameters */
--				devbus,bus-width    = <8>;
--				devbus,turn-off-ps  = <60000>;
--				devbus,badr-skew-ps = <0>;
--				devbus,acc-first-ps = <124000>;
--				devbus,acc-next-ps  = <248000>;
--				devbus,rd-setup-ps  = <0>;
--				devbus,rd-hold-ps   = <0>;
+-				#address-cells = <3>;
+-				#size-cells = <2>;
 -
--				/* Write parameters */
--				devbus,sync-enable = <0>;
--				devbus,wr-high-ps  = <60000>;
--				devbus,wr-low-ps   = <60000>;
--				devbus,ale-wr-ps   = <60000>;
+-				bus-range = <0x00 0xff>;
 -
--				/* NOR 128 MiB */
--				nor@0 {
--					compatible = "cfi-flash";
--					reg = <0 0x8000000>;
--					bank-width = <2>;
+-				ranges = <0x82000000 0 0x40000 0x40000 0 0x00002000   /* Port 0.0 registers */
+-					0x82000000 0 0x80000 0x80000 0 0x00002000   /* Port 1.0 registers */
+-					0x82000000 0 0xe0000000 0xe0000000 0 0x08000000   /* non-prefetchable memory */
+-					0x81000000 0 0          0xe8000000 0 0x00100000>; /* downstream I/O */
+-
+-				pcie@1,0 {
+-					device_type = "pci";
+-					assigned-addresses = <0x82000800 0 0x40000 0 0x2000>;
+-					reg = <0x0800 0 0 0 0>;
+-					#address-cells = <3>;
+-					#size-cells = <2>;
+-					#interrupt-cells = <1>;
+-					ranges;
+-					interrupt-map-mask = <0 0 0 0>;
+-					interrupt-map = <0 0 0 0 &mpic 58>;
+-					marvell,pcie-port = <0>;
+-					marvell,pcie-lane = <0>;
+-					clocks = <&gateclk 5>;
+-					status = "disabled";
+-				};
+-
+-				pcie@2,0 {
+-					device_type = "pci";
+-					assigned-addresses = <0x82002800 0 0x80000 0 0x2000>;
+-					reg = <0x1000 0 0 0 0>;
+-					#address-cells = <3>;
+-					#size-cells = <2>;
+-					#interrupt-cells = <1>;
+-					ranges;
+-					interrupt-map-mask = <0 0 0 0>;
+-					interrupt-map = <0 0 0 0 &mpic 62>;
+-					marvell,pcie-port = <1>;
+-					marvell,pcie-lane = <0>;
+-					clocks = <&gateclk 9>;
+-					status = "disabled";
 -				};
 -			};
--
- 			pcie-controller {
- 				status = "okay";
- 				/* Internal mini-PCIe connector */
+ 		};
+ 	};
+ };
 -- 
 1.8.1.5
