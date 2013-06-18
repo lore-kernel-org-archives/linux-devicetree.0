@@ -1,45 +1,65 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 02/10] pinctrl: mvebu: dove pinctrl driver
-Date: Tue, 18 Jun 2013 17:23:00 +0200
-Message-ID: <CACRpkdadS4Si0pqrxRrnriQk81aZgeKKQta7onEpJv3vi6mfdw@mail.gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1347550912-18021-3-git-send-email-sebastian.hesselbarth@gmail.com>
-	<20130618113606.GA26763@n2100.arm.linux.org.uk>
-	<CACRpkdZTVN2O-Rv4u-Ccb9EzV0At3zc7GYQyTq=HkseOi=GTeg@mail.gmail.com>
-	<20130618151116.GZ2718@n2100.arm.linux.org.uk>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] ARM: Kirkwood: Fix the internal register ranges translation
+Date: Tue, 18 Jun 2013 12:31:19 -0300
+Message-ID: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130618151116.GZ2718@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 5:11 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Tue, Jun 18, 2013 at 05:02:49PM +0200, Linus Walleij wrote:
->> Nowadays I would do the above with regmap_update_bits().
->>
->> Mutual exclusion for read-modify-write of individual bits in a
->> register is one of those cases where doing a regmap over
->> a memory-mapped register range makes a lot of sense.
->> (drivers/mfd/syscon.c being a nice example)
->
-> So, for that solution we need to have some kind of global regmap per
-> register or somesuch.  Then you run into regmap needing a struct
-> device - well, with a shared register, which struct device do you
-> use, or do you have to invent one?
+Although the internal register window size is 1 MiB, the previous
+ranges translation for the internal register space had a size of
+0x4000000. This was done to allow the crypto and nand node to access
+the corresponding 'sram' and 'nand' decoding windows.
 
-Usually, like for syscon, you create an MFD hub which
-carry the regmap.
+In order to describe the hardware more accurately, we declare the
+real 1 MiB internal register space in the ranges, and add a translation
+entry for the nand node to access the 'nand' window.
 
-> That sounds more heavy-weight than is really necessary.
+This commit will make future improvements on the MBus DT binding easier.
 
-May be so, especially if there is just one register to protect.
-The usefulness of MM-regmap increase with the set of registers
-needing to be protected.
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+Tested on Plathome Openblocks A6 board.
 
-Yours,
-Linus Walleij
+ arch/arm/boot/dts/kirkwood.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+index 8a1e3bb..910fabc 100644
+--- a/arch/arm/boot/dts/kirkwood.dtsi
++++ b/arch/arm/boot/dts/kirkwood.dtsi
+@@ -38,7 +38,8 @@
+ 
+ 	ocp@f1000000 {
+ 		compatible = "simple-bus";
+-		ranges = <0x00000000 0xf1000000 0x4000000
++		ranges = <0x00000000 0xf1000000 0x0100000
++		          0xf4000000 0xf4000000 0x0000400
+ 		          0xf5000000 0xf5000000 0x0000400>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -171,7 +172,7 @@
+ 			ale = <1>;
+ 			bank-width = <1>;
+ 			compatible = "marvell,orion-nand";
+-			reg = <0x3000000 0x400>;
++			reg = <0xf4000000 0x400>;
+ 			chip-delay = <25>;
+ 			/* set partition map and/or chip-delay in board dts */
+ 			clocks = <&gate_clk 7>;
+-- 
+1.8.1.5
