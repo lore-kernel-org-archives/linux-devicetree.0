@@ -1,80 +1,62 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
- tree driver
-Date: Tue, 18 Jun 2013 09:33:02 +0200
-Message-ID: <20130618073302.GA2962@katana>
-References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org>
- <CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com>
- <51BF2FC5.40207@wwwdotorg.org>
- <CACRpkdbjy+PcpNkSg4PuuP2Z9RyrnqSW0uchHFHVZ8VYPeoDyA@mail.gmail.com>
- <CACxGe6sTq=h9jjqesjvUA4Bweh7zgE4VOLoOTgGPC_D_v+8NtA@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] ARM: shmobile: irqpin: add a DT property to enable
+ masking on parent
+Date: Tue, 18 Jun 2013 16:41:48 +0900
+Message-ID: <20130618074146.GG24960@verge.net.au>
+References: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
+ <CANqRtoTqHiRixV571CrMkc=ijWcrfZFzaSrfjN1SKRNTgTTcZA@mail.gmail.com>
+ <20130612083850.GF6006@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
-Return-path: <linux-next-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACxGe6sTq=h9jjqesjvUA4Bweh7zgE4VOLoOTgGPC_D_v+8NtA@mail.gmail.com>
-Sender: linux-next-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+In-Reply-To: <20130612083850.GF6006@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, SH-Linux <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 17, 2013 at 11:15:30PM +0100, Grant Likely wrote:
-> On Mon, Jun 17, 2013 at 5:33 PM, Linus Walleij <linus.walleij@linaro.org>=
- wrote:
-> > On Mon, Jun 17, 2013 at 5:48 PM, Stephen Warren <swarren@wwwdotorg.org>=
- wrote:
+On Wed, Jun 12, 2013 at 05:38:50PM +0900, Simon Horman wrote:
+> On Tue, Jun 11, 2013 at 06:37:24PM +0900, Magnus Damm wrote:
+> > On Fri, May 24, 2013 at 6:13 PM, Guennadi Liakhovetski
+> > <g.liakhovetski@gmx.de> wrote:
+> > > To disable spurious interrupts, that get triggered on certain hardware, the
+> > > irqpin driver masks them on the parent interrupt controller. To specify
+> > > such broken devices a .control_parent parameter can be provided in the
+> > > platform data. In the DT case we need a property, to do the same.
+> > >
+> > > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > > ---
+> > >
+> > > These two patches simply split the earlier "ARM: shmobile: irqpin: fix
+> > > handling of spurious interrupts in DT case" patch into two parts.
+> > > Otherwise no change.
+> > 
+> > I'm fine with this portion of the patch series. Thanks for your help!
 > >
-> >> This has just shown up in next-20130617, and breaks at least the
-> >> TPS65910 and TPS62360 drivers, since they assume that the id parameter
-> >> passed to probe is non-NULL. However, now the parameter is NULL since
-> >> these drivers have both an ID table and an OF match table.
-> >
-> > So you mean they come in through the DT boot path and assume
-> > that parameter is non-null even though they should not make use of
-> > it?
-> >
-> >> I'd like to suggest this patch be reverted an re-introduced immediately
-> >> after the merge window. That should give enough time for everyone to g=
-et
-> >> a heads-up on fixing any drivers with a similar problem, rather than
-> >> trying to cram all that in immediately before the merge window.
-> >
-> > OK that works for me, I'm not in any hurry.
->=20
-> Deferring by a merge window isn't going to make it any less painful.
-> Do your best to find all the users that need to be changed. Use a
-> coccinelle search perhaps, but I think it should be merged anyway.
+> > Acked-by: Magnus Damm <damm@opensource.se>
+> 
+> I believe that this patch depends on
+> "irqchip: renesas-intc-irqpin: DT binding for sense bitfield width"
+> which Arnd has requested some modifications to.
+> 
+> "I think you should add documentation here about how the two interrupt
+> cells are to be interpreted, to allow people to fill the values from a data
+> sheet or board schematic."
+> http://www.spinics.net/lists/linux-sh/msg20202.html
+> 
+> Please post a fresh series that:
+> 
+> 1. Includes a fresh version of "irqchip: renesas-intc-irqpin: DT binding
+>    for sense bitfield width" with Arnd's concerns addressed.
+> 
+> 2. Includes this patch with Magnus's Ack.
+> 
+> Please be sure to CC Arnd on the new series.
 
-I'll try a bit of my coccinelle-foo today and then decide.
+Hi Guennadi,
 
+I see that you reposted "irqchip: renesas-intc-irqpin: DT binding
+for sense bitfield width", which I have queued-up, without this patch.
 
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRwA0uAAoJEBQN5MwUoCm2DB8P/Az8wiEb2cwzphIDhYCXYWOO
-Jbb7s1EFytCe83si1+IpcsUe3PndEV6KtB1YeSdWrOexbXr5qpr/8KCsj0Msoexy
-8cE0Lox7OxHukUo/ExgShJ0adUtEoOxAuaF4i/+QnYv+QCbtjVDdsjZJ+6xH4vqy
-mMQacT+UFpg5GdLi5kA/aPEOEBl6WuyXZuzwWebffa/rqNyBfOMJ0nfbtGlQEmGt
-CFU1Tgd4qrZ3ezS9Y3TsriFpdfrfXnJcsawsvKSr32yq9S2WHcj4eSx1GTWAFzvh
-rPZIGlHCXcMsJAvd19a57iGj1JMomMeh9flXoxLyvaKcLCvQgUlHY+tfncIbkK7y
-lnSpAOq63thZA9wivxUMaYWBRhZ9L0JiYf1pAYCdVqtKpcZfBfTL3q4w+VCSE+1R
-WXxZKg2JZuedJowh5j4fulWJAdWr4oqvKAeHS/RBSJWP9H9V7SyjEewKujws6czI
-XoC+KPpABLnwRSA91TVGJAl777qqRw3Drl2/7j2TBLP0+T3xaO64HvDd0kqGBNUp
-hqk1DhyLVo6Ky9jnASxPuxOG+SIVgg84vgcL/Q90a1Keohs8/7Oy3xvLGk4ye0We
-P6kxZkgj3MAPKmJet4kr7CaJSvYcubaQ2zUgCPCQVUOYKWAhS8uf8mvHeQMvxW9K
-uN0JH5OeVgja/5g7nuXw
-=372C
------END PGP SIGNATURE-----
-
---qDbXVdCdHGoSgWSk--
+Please rebase this patch and repost it with Magnus's Ack.
