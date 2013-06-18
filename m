@@ -1,363 +1,141 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH v3] DMA: shdma: add DT support
-Date: Tue, 18 Jun 2013 18:16:57 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1306181813380.30844@axis700.grange>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 2/2] i2c: designware: add two optional property
+ tx/rx-fifo-size
+Date: Tue, 18 Jun 2013 18:22:58 +0200
+Message-ID: <20130618162257.GF7718@katana>
+References: <1370918230-24793-1-git-send-email-zhangfei.gao@linaro.org>
+ <1370918230-24793-3-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============6238680365223771222=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1370918230-24793-3-git-send-email-zhangfei.gao@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Dirk Brandewie <dirk.brandewie@gmail.com>, baruch@tkos.co.il, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Device Tree support to the shdma driver. No special DT
-properties are used, only standard DMA DT bindings are implemented. Since
-shdma controllers reside on SoCs, their configuration is SoC-specific and
-shall be passed to the driver from the SoC platform data, using the
-auxdata procedure.
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
+--===============6238680365223771222==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sDKAb4OeUBrWWL6P"
+Content-Disposition: inline
 
-v3: reimplementation without a common DMAC multiplexer support in 
-dmaengine core, the multiplexer is now SHDMA local.
 
- Documentation/devicetree/bindings/dma/shdma.txt |   75 +++++++++++++++++++++
- drivers/dma/sh/Makefile                         |    2 +-
- drivers/dma/sh/shdma-base.c                     |   26 ++++++--
- drivers/dma/sh/shdma-of.c                       |   82 +++++++++++++++++++++++
- drivers/dma/sh/shdma.c                          |   31 +++++++--
- include/linux/shdma-base.h                      |    2 +
- 6 files changed, 205 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/shdma.txt
- create mode 100644 drivers/dma/sh/shdma-of.c
+--sDKAb4OeUBrWWL6P
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/dma/shdma.txt b/Documentation/devicetree/bindings/dma/shdma.txt
-new file mode 100644
-index 0000000..c15994a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/shdma.txt
-@@ -0,0 +1,75 @@
-+* SHDMA Device Tree bindings
-+
-+Sh-/r-mobile and r-car systems often have multiple identical DMA controller
-+instances, capable of serving any of a common set of DMA slave devices, using
-+the same configuration. To describe this topology we require all compatible
-+SHDMA DT nodes to be placed under a DMA multiplexer node. All such compatible
-+DMAC instances have the same number of channels and use the same DMA
-+descriptors. Therefore respective DMA DT bindings can also all be placed in the
-+multiplexer node. Even if there is only one such DMAC instance on a system, it
-+still has to be placed under such a multiplexer node.
-+
-+* DMA multiplexer
-+
-+Required properties:
-+- compatible:	should be "renesas,shdma-mux"
-+- #dma-cells:	should be <1>, see "dmas" property below
-+
-+Optional properties (currently unused):
-+- dma-channels:	number of DMA channels
-+- dma-requests:	number of DMA request signals
-+
-+* DMA controller
-+
-+Required properties:
-+- compatible:	should be "renesas,shdma"
-+
-+Example:
-+	dmac: dma-mux0 {
-+		compatible = "renesas,shdma-mux";
-+		#dma-cells = <1>;
-+		dma-channels = <6>;
-+		dma-requests = <256>;
-+		reg = <0 0>;	/* Needed for AUXDATA */
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		dma0: shdma@fe008020 {
-+			compatible = "renesas,shdma";
-+			reg = <0xfe008020 0x270>,
-+				<0xfe009000 0xc>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <0 34 4
-+					0 28 4
-+					0 29 4
-+					0 30 4
-+					0 31 4
-+					0 32 4
-+					0 33 4>;
-+			interrupt-names = "error",
-+					"ch0", "ch1", "ch2", "ch3",
-+					"ch4", "ch5";
-+		};
-+
-+		dma1: shdma@fe018020 {
-+			...
-+		};
-+
-+		dma2: shdma@fe028020 {
-+			...
-+		};
-+	};
-+
-+* DMA client
-+
-+Required properties:
-+- dmas:		a list of <[DMA multiplexer phandle] [MID/RID value]> pairs,
-+		where MID/RID values are fixed handles, specified in the SoC
-+		manual
-+- dma-names:	a list of DMA channel names, one per "dmas" entry
-+
-+Example:
-+	dmas = <&dmac 0xd1
-+		&dmac 0xd2>;
-+	dma-names = "tx", "rx";
-diff --git a/drivers/dma/sh/Makefile b/drivers/dma/sh/Makefile
-index c07ca46..c962138 100644
---- a/drivers/dma/sh/Makefile
-+++ b/drivers/dma/sh/Makefile
-@@ -1,3 +1,3 @@
--obj-$(CONFIG_SH_DMAE_BASE) += shdma-base.o
-+obj-$(CONFIG_SH_DMAE_BASE) += shdma-base.o shdma-of.o
- obj-$(CONFIG_SH_DMAE) += shdma.o
- obj-$(CONFIG_SUDMAC) += sudmac.o
-diff --git a/drivers/dma/sh/shdma-base.c b/drivers/dma/sh/shdma-base.c
-index 4acb85a..28ca361 100644
---- a/drivers/dma/sh/shdma-base.c
-+++ b/drivers/dma/sh/shdma-base.c
-@@ -175,7 +175,18 @@ static int shdma_setup_slave(struct shdma_chan *schan, int slave_id)
- {
- 	struct shdma_dev *sdev = to_shdma_dev(schan->dma_chan.device);
- 	const struct shdma_ops *ops = sdev->ops;
--	int ret;
-+	int ret, match;
-+
-+	if (schan->dev->of_node) {
-+		match = schan->hw_req;
-+		ret = ops->set_slave(schan, match, true);
-+		if (ret < 0)
-+			return ret;
-+
-+		slave_id = schan->slave_id;
-+	} else {
-+		match = slave_id;
-+	}
- 
- 	if (slave_id < 0 || slave_id >= slave_num)
- 		return -EINVAL;
-@@ -183,7 +194,7 @@ static int shdma_setup_slave(struct shdma_chan *schan, int slave_id)
- 	if (test_and_set_bit(slave_id, shdma_slave_used))
- 		return -EBUSY;
- 
--	ret = ops->set_slave(schan, slave_id, false);
-+	ret = ops->set_slave(schan, match, false);
- 	if (ret < 0) {
- 		clear_bit(slave_id, shdma_slave_used);
- 		return ret;
-@@ -206,23 +217,26 @@ static int shdma_setup_slave(struct shdma_chan *schan, int slave_id)
-  * services would have to provide their own filters, which first would check
-  * the device driver, similar to how other DMAC drivers, e.g., sa11x0-dma.c, do
-  * this, and only then, in case of a match, call this common filter.
-+ * NOTE 2: This filter function is also used in the DT case by shdma_of_xlate().
-+ * In that case the MID-RID value is used for slave channel filtering and is
-+ * passed to this function in the "arg" parameter.
-  */
- bool shdma_chan_filter(struct dma_chan *chan, void *arg)
- {
- 	struct shdma_chan *schan = to_shdma_chan(chan);
- 	struct shdma_dev *sdev = to_shdma_dev(schan->dma_chan.device);
- 	const struct shdma_ops *ops = sdev->ops;
--	int slave_id = (int)arg;
-+	int match = (int)arg;
- 	int ret;
- 
--	if (slave_id < 0)
-+	if (match < 0)
- 		/* No slave requested - arbitrary channel */
- 		return true;
- 
--	if (slave_id >= slave_num)
-+	if (!schan->dev->of_node && match >= slave_num)
- 		return false;
- 
--	ret = ops->set_slave(schan, slave_id, true);
-+	ret = ops->set_slave(schan, match, true);
- 	if (ret < 0)
- 		return false;
- 
-diff --git a/drivers/dma/sh/shdma-of.c b/drivers/dma/sh/shdma-of.c
-new file mode 100644
-index 0000000..9ab869d
---- /dev/null
-+++ b/drivers/dma/sh/shdma-of.c
-@@ -0,0 +1,82 @@
-+/*
-+ * SHDMA Device Tree glue
-+ *
-+ * Copyright (C) 2013 Renesas Electronics Inc.
-+ * Author: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-+ *
-+ * This is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/dmaengine.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_dma.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/shdma-base.h>
-+
-+#define to_shdma_chan(c) container_of(c, struct shdma_chan, dma_chan)
-+
-+static struct dma_chan *shdma_of_xlate(struct of_phandle_args *dma_spec,
-+				       struct of_dma *ofdma)
-+{
-+	u32 id = dma_spec->args[0];
-+	dma_cap_mask_t mask;
-+	struct dma_chan *chan;
-+
-+	if (dma_spec->args_count != 1)
-+		return NULL;
-+
-+	dma_cap_zero(mask);
-+	/* Only slave DMA channels can be allocated via DT */
-+	dma_cap_set(DMA_SLAVE, mask);
-+
-+	chan = dma_request_channel(mask, shdma_chan_filter, (void *)id);
-+	if (chan)
-+		to_shdma_chan(chan)->hw_req = id;
-+
-+	return chan;
-+}
-+
-+static int shdma_of_probe(struct platform_device *pdev)
-+{
-+	const struct of_dev_auxdata *lookup = pdev->dev.platform_data;
-+	int ret;
-+
-+	if (!lookup)
-+		return -EINVAL;
-+
-+	ret = of_dma_controller_register(pdev->dev.of_node,
-+					 shdma_of_xlate, pdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = of_platform_populate(pdev->dev.of_node, NULL, lookup, &pdev->dev);
-+	if (ret < 0)
-+		of_dma_controller_free(pdev->dev.of_node);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id shdma_of_match[] = {
-+	{ .compatible = "renesas,shdma-mux", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sh_dmae_of_match);
-+
-+static struct platform_driver shdma_of = {
-+	.driver 	= {
-+		.owner	= THIS_MODULE,
-+		.name	= "shdma-of",
-+		.of_match_table = shdma_of_match,
-+	},
-+	.probe		= shdma_of_probe,
-+};
-+
-+module_platform_driver(shdma_of);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("SH-DMA driver DT glue");
-+MODULE_AUTHOR("Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>");
-diff --git a/drivers/dma/sh/shdma.c b/drivers/dma/sh/shdma.c
-index a5a1887..b67f45f 100644
---- a/drivers/dma/sh/shdma.c
-+++ b/drivers/dma/sh/shdma.c
-@@ -301,20 +301,32 @@ static void sh_dmae_setup_xfer(struct shdma_chan *schan,
- 	}
- }
- 
-+/*
-+ * Find a slave channel configuration from the contoller list by either a slave
-+ * ID in the non-DT case, or by a MID/RID value in the DT case
-+ */
- static const struct sh_dmae_slave_config *dmae_find_slave(
--	struct sh_dmae_chan *sh_chan, int slave_id)
-+	struct sh_dmae_chan *sh_chan, int match)
- {
- 	struct sh_dmae_device *shdev = to_sh_dev(sh_chan);
- 	struct sh_dmae_pdata *pdata = shdev->pdata;
- 	const struct sh_dmae_slave_config *cfg;
- 	int i;
- 
--	if (slave_id >= SH_DMA_SLAVE_NUMBER)
--		return NULL;
-+	if (!sh_chan->shdma_chan.dev->of_node) {
-+		if (match >= SH_DMA_SLAVE_NUMBER)
-+			return NULL;
- 
--	for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
--		if (cfg->slave_id == slave_id)
--			return cfg;
-+		for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
-+			if (cfg->slave_id == match)
-+				return cfg;
-+	} else {
-+		for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
-+			if (cfg->mid_rid == match) {
-+				sh_chan->shdma_chan.slave_id = cfg->slave_id;
-+				return cfg;
-+			}
-+	}
- 
- 	return NULL;
- }
-@@ -920,11 +932,18 @@ static int sh_dmae_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id sh_dmae_of_match[] = {
-+	{ .compatible = "renesas,shdma", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sh_dmae_of_match);
-+
- static struct platform_driver sh_dmae_driver = {
- 	.driver 	= {
- 		.owner	= THIS_MODULE,
- 		.pm	= &sh_dmae_pm,
- 		.name	= SH_DMAE_DRV_NAME,
-+		.of_match_table = sh_dmae_of_match,
- 	},
- 	.remove		= sh_dmae_remove,
- 	.shutdown	= sh_dmae_shutdown,
-diff --git a/include/linux/shdma-base.h b/include/linux/shdma-base.h
-index 9a93897..382cf71 100644
---- a/include/linux/shdma-base.h
-+++ b/include/linux/shdma-base.h
-@@ -68,6 +68,8 @@ struct shdma_chan {
- 	int id;				/* Raw id of this channel */
- 	int irq;			/* Channel IRQ */
- 	int slave_id;			/* Client ID for slave DMA */
-+	int hw_req;			/* DMA request line for slave DMA - same
-+					 * as MID/RID, used with DT */
- 	enum shdma_pm_state pm_state;
- };
- 
--- 
-1.7.2.5
+On Tue, Jun 11, 2013 at 10:37:10AM +0800, Zhangfei Gao wrote:
+> rx-fifo-size and tx-fifo-size will be updated if provided from dts
+>=20
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> CC: Baruch Siach <baruch@tkos.co.il>
+> ---
+>  .../devicetree/bindings/i2c/i2c-designware.txt     |    7 +++++++
+>  drivers/i2c/busses/i2c-designware-platdrv.c        |    3 +++
+>  2 files changed, 10 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/D=
+ocumentation/devicetree/bindings/i2c/i2c-designware.txt
+> index e42a2ee..84717fe 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -6,6 +6,11 @@ Required properties :
+>   - reg : Offset and length of the register set for the device
+>   - interrupts : <IRQ> where IRQ is the interrupt number.
+> =20
+> +Optional properties:
+> +
+> + - rx-fifo-size : 1 cell, Rx fifo size
+> + - tx-fifo-size : 1 cell, Tx fifo size
+> +
+
+I'd think the bindings are okay, yet I wonder they are not more used in
+practice. So, an ack from a dt-expert would be appreciated.
+
+>  Recommended properties :
+> =20
+>   - clock-frequency : desired I2C bus clock frequency in Hz.
+> @@ -18,5 +23,7 @@ Example :
+>  		compatible =3D "snps,designware-i2c";
+>  		reg =3D <0xf0000 0x1000>;
+>  		interrupts =3D <11>;
+> +		rx-fifo-size =3D <16>;
+> +		tx-fifo-size =3D <16>;
+>  		clock-frequency =3D <400000>;
+>  	};
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/bu=
+sses/i2c-designware-platdrv.c
+> index 41659c0..6760cea 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -85,6 +85,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
+>  	struct dw_i2c_dev *dev;
+>  	struct i2c_adapter *adap;
+>  	struct resource *mem;
+> +	struct device_node *np =3D pdev->dev.of_node;
+>  	int irq, r;
+> =20
+>  	/* NOTE: driver uses the static register mapping */
+> @@ -140,6 +141,8 @@ static int dw_i2c_probe(struct platform_device *pdev)
+>  		dev->rx_fifo_depth =3D ((param1 >> 8)  & 0xff) + 1;
+>  		dev->adapter.nr =3D pdev->id;
+>  	}
+> +	of_property_read_u32(np, "rx-fifo-size", &dev->rx_fifo_depth);
+> +	of_property_read_u32(np, "tx-fifo-size", &dev->tx_fifo_depth);
+
+Those can fail.
+
+>  	r =3D i2c_dw_init(dev);
+>  	if (r)
+>  		return r;
+> --=20
+> 1.7.9.5
+>=20
+
+--sDKAb4OeUBrWWL6P
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRwIlhAAoJEBQN5MwUoCm2BjQP/ApnqIEv1Z23wU4SjynOEOqB
+CNcCgZue0J6mAB/20gyvdjrfRl5mEPPakDarOmosWaUQexy8pLOELMudokCEdYoW
+nubae0aMaxG66DjYYeYkHaTo79QuP/lAy1dZU33Jnve44c9UyQi5nvhrkmcL/HzQ
+knekhmr7coavgwbFGGQrVKlUCclOU514O5/0mFJZoSHmsAFrxMkuhLwZwDN056xX
+1ezbwRlPCLYQPAl6ycxy1q/NcWfIC2aNM4JQgMgj6kV5Qw5tuX2tpb1kPApdNWV7
+4I83wjUmY4sQWtpmRn3IAtMmi3fH/82PSfZb0bnhB8mHpH91yiMWmXGGf6HeMA1P
+eg6HH+tJZdVJGUosRsyugxLw/7Zjy8NxEBvzANylsz15vvn7asY0CtLyqmciWmi3
+GsT/JOccofCzH2NvZ21jbDCrSHektIKapElkyQbFQGLfoHPQAoNIMXxklvfWuYHP
+dqHQy7iYog50L6BY/xtz9NX/eYY3FNZcBECZTq0mg1Bw3+EPCdzKQhd0rJONPnjV
+/g7Ji+lA974SnlyIGtPUvE9Kg7qQHx4l1VyhP4nE8fKWl22S2TLiqR5vUXqDbn7a
+BIbRACrk+XUi0ofRt0hIRyax2SedNCMu2RrplUrvYqYQkOmzKl+5zND8BsVMEwcY
+C/3d1BCkXLnQ6HL43H+T
+=Whes
+-----END PGP SIGNATURE-----
+
+--sDKAb4OeUBrWWL6P--
+
+
+--===============6238680365223771222==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6238680365223771222==--
