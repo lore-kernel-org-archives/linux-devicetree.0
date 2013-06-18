@@ -1,104 +1,85 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v7 1/9] drivers: phy: add generic PHY framework
-Date: Tue, 18 Jun 2013 23:22:52 +0200
-Message-ID: <51C0CFAC.9080606@gmail.com>
-References: <1371113039-5784-1-git-send-email-kishon@ti.com> <1371113039-5784-2-git-send-email-kishon@ti.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation
+ to the DT binding
+Date: Tue, 18 Jun 2013 18:34:55 -0300
+Message-ID: <20130618213454.GD2516@localhost>
+References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1371554737-25319-4-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306181814.33941.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1371113039-5784-2-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, arnd@arndb.de, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, rob.herring@calxeda.com, rob@landley.net, b-cousson@ti.com, linux@arm.linux.org.uk, benoit.cousson@linaro.org, mchehab@redhat.com, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201306181814.33941.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-I've noticed there is a little inconsistency between the code and 
-documentation.
-
-On 06/13/2013 10:43 AM, Kishon Vijay Abraham I wrote:
-> +3. Creating the PHY
-> +
-> +The PHY driver should create the PHY in order for other peripheral controllers
-> +to make use of it. The PHY framework provides 2 APIs to create the PHY.
-> +
-> +struct phy *phy_create(struct device *dev, int id, const struct phy_ops *ops,
-> +	void *priv);
-> +struct phy *devm_phy_create(struct device *dev, int id,
-> +	const struct phy_ops *ops, void *priv);
-
-The 'label' argument is missing in those function prototypes. It seems the
-labels must be unique, I guess this needs to be documented. And do we allow
-NULL labels ? If so, then there is probably a check for NULL label needed
-in phy_lookup() and if not, then phy_create() should fail when NULL label
-is passed ?
-
-> +The PHY drivers can use one of the above 2 APIs to create the PHY by passing
-> +the device pointer, id, phy ops and a driver data.
-> +phy_ops is a set of function pointers for performing PHY operations such as
-> +init, exit, power_on and power_off.
-
-> +/**
-> + * phy_create() - create a new phy
-> + * @dev: device that is creating the new phy
-> + * @id: id of the phy
-> + * @ops: function pointers for performing phy operations
-> + * @label: label given to the phy
-> + * @priv: private data from phy driver
-> + *
-> + * Called to create a phy using phy framework.
-> + */
-> +struct phy *phy_create(struct device *dev, u8 id, const struct phy_ops *ops,
-> +	const char *label, void *priv)
-> +{
-> +	int ret;
-> +	struct phy *phy;
-> +
-> +	if (!dev) {
-> +		dev_WARN(dev, "no device provided for PHY\n");
-> +		ret = -EINVAL;
-> +		goto err0;
-> +	}
-> +
-> +	phy = kzalloc(sizeof(*phy), GFP_KERNEL);
-> +	if (!phy) {
-> +		ret = -ENOMEM;
-> +		goto err0;
-> +	}
-> +
-> +	device_initialize(&phy->dev);
-> +
-> +	phy->dev.class = phy_class;
-> +	phy->dev.parent = dev;
-> +	phy->dev.of_node = dev->of_node;
-> +	phy->id = id;
-> +	phy->ops = ops;
-> +	phy->label = label;
-> +
-> +	dev_set_drvdata(&phy->dev, priv);
-> +
-> +	ret = dev_set_name(&phy->dev, "%s.%d", dev_name(dev), id);
-> +	if (ret)
-> +		goto err1;
-> +
-> +	ret = device_add(&phy->dev);
-> +	if (ret)
-> +		goto err1;
-> +
-> +	if (pm_runtime_enabled(dev))
-> +		pm_runtime_enable(&phy->dev);
-> +
-> +	return phy;
-> +
-> +err1:
-> +	put_device(&phy->dev);
-> +	kfree(phy);
-> +
-> +err0:
-> +	return ERR_PTR(ret);
-> +}
-
-Thanks,
-Sylwester
+QXJuZCwKCk9uIFR1ZSwgSnVuIDE4LCAyMDEzIGF0IDA2OjE0OjMzUE0gKzAyMDAsIEFybmQgQmVy
+Z21hbm4gd3JvdGU6Cj4gT24gVHVlc2RheSAxOCBKdW5lIDIwMTMsIEV6ZXF1aWVsIEdhcmNpYSB3
+cm90ZToKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gKwo+ID4gKy0gY29tcGF0aWJsZToJ
+IFNob3VsZCBiZSBzZXQgdG8gb25lIG9mIHRoZSBmb2xsb3dpbmc6Cj4gPiArCQkgbWFydmVsbCxh
+cm1hZGEzNzAtbWJ1cwo+ID4gKwkJIG1hcnZlbGwsYXJtYWRheHAtbWJ1cwo+ID4gKwo+ID4gKy0g
+cmVnOgkJIERldmljZSdzIHJlZ2lzdGVyIHNwYWNlLgo+ID4gKwkJIFR3byBlbnRyaWVzIGFyZSBl
+eHBlY3RlZCwgc2VlIHRoZSBleGFtcGxlcyBiZWxvdy4KPiA+ICsJCSBUaGUgZmlyc3Qgb25lIGNv
+bnRyb2xzIHRoZSBkZXZpY2VzIGRlY29kaW5nIHdpbmRvdyBhbmQKPiA+ICsJCSB0aGUgc2Vjb25k
+IG9uZSBjb250cm9scyB0aGUgU0RSQU0gZGVjb2Rpbmcgd2luZG93Lgo+ID4gKwo+ID4gKy0gYWRk
+cmVzcy1jZWxsczogTXVzdCBiZSAnMicuIFRoZSBmaXJzdCBjZWxsIGZvciB0aGUgTUJ1cyBJRCBl
+bmNvZGluZywKPiA+ICsgICAgICAgICAgICAgICAgIHRoZSBzZWNvbmQgY2VsbCBmb3IgdGhlIGFk
+ZHJlc3Mgb2Zmc2V0IHdpdGhpbiB0aGUgd2luZG93Lgo+ID4gKwo+ID4gKy0gc2l6ZS1jZWxsczog
+ICAgTXVzdCBiZSAnMScuCj4gPiArCj4gPiArLSByYW5nZXM6ICAgICAgICBNdXN0IGJlIHNldCB1
+cCB0byBwcm92aWRlIGEgcHJvcGVyIHRyYW5zbGF0aW9uIGZvciBlYWNoIGNoaWxkLgo+ID4gKwkg
+ICAgICAgICBTZWUgdGhlIGV4YW1wbGVzIGJlbG93Lgo+IAo+IFlvdSBzaG91bGQgZXhwbGFpbiBo
+ZXJlIHdoYXQgdGhlIHBvbGljeSBpcyByZWdhcmRpbmcgd2luZG93cyBzZXQgdXAgYnkgdGhlCj4g
+Ym9vdCBsb2FkZXIuIEFyZSB0aGUgcmFuZ2VzIGluIGhlcmUgcmVxdWlyZWQgdG8gYmUgdGhlIG9u
+ZXMgdGhhdCB0aGUgYm9vdAo+IGxvYWRlciBoYXMgcHJlY29uZmlndXJlZCwgb3IgYXJlIHRoZXkg
+dGhlIG9uZXMgdGhhdCB0aGUgbWJ1cyBkcml2ZXIgaXMgc3VwcG9zZWQKPiB0byBzZXQgdXA/Cj4g
+CgpBY3R1YWxseSwgSSBtaWdodCBiZSBjb25mdXNlZCBidXQgdGhlIGtlcm5lbCBNQnVzIGRyaXZl
+ciBpcyBjb21wbGV0ZWx5CmluZGVwZW5kZW50IGZyb20gdGhlIGJvb3Rsb2FkZXIncyAtZXhjZXB0
+IGluIHRoZSBpbnRlcm5hbCByZWdpc3RlciBjYXNlLAooYmVjYXVzZSB3ZSBkb24ndCB0b3VjaCB0
+aGF0IGZyb20gd2hlcmUgdGhlIGJvb3Rsb2FkZXIgbGVmdCBpdCkuCgpXaGF0IGhhcHBlbnMgaXMg
+dGhhdCBhbnkgZGVjb2Rpbmcgd2luZG93IHRoYXQgd2FzIHNldHVwIGJ5IHRoZSBib290bG9hZGVy
+LAppcyB3aXBlZCBhbmQgY29tcGxldGVseSBuZXcgd2luZG93cyBhcmUgYWxsb2NhdGVkIHVzaW5n
+IHRoZSB0cmFuc2xhdGlvbnMKaW4gdGhlIERULCBhcyBkZXNjcmliZWQgYnkgdGhpcyBiaW5kaW5n
+LgoKVGhpcyB3YXMgdGhlIGNhc2UgZnJvbSB0aGUgc3RhcnQgd2l0aCB0aGUgb2xkIE1CdXMgZHJp
+dmVyLiBGV0lXLCBJIHRoaW5rCml0J3MgYWN0dWFsbHkgdGhlIGJlc3QgY2hvaWNlIHRoYXQgY2Fu
+IGJlIG1hZGU6IGl0IG1ha2VzIHRoZSBrZXJuZWwKaW5kZXBlbmRlbnQgb2YgdGhlIHByZXZpb3Vz
+IHNldHRpbmcuCgpJIGtub3cgeW91J3ZlIHN1Z2dlc3RlZCBkaWZmZXJlbnRseSBpbiB0aGUgcGFz
+dCwgYnV0IEknbSBub3Qgc3VyZSBJCnVuZGVyc3RhbmQgd2hhdCdzIHRoZSBiZW5lZml0IGluIGtl
+ZXBpbmcgdGhlIGJvb3Rsb2FkZXJzIGNvbmZpZ3VyYXRpb24uCgo+ID4gK0VhY2ggY2hpbGQgZGV2
+aWNlIG5lZWRzIGF0IGxlYXN0IGEgJ3JhbmdlcycgcHJvcGVydHkuIElmIHRoZSBjaGlsZCBpcyBh
+dmFpYWJsZQo+ID4gKyhpLmUuIHN0YXR1cyBub3QgJ2Rpc2FibGVkJyksIHRoZW4gdGhlIE1CdXMg
+ZHJpdmVyIGNyZWF0ZXMgYSBkZWNvZGluZyB3aW5kb3cKPiA+ICtmb3IgaXQuIEZvciBpbnN0YW5j
+ZSwgaW4gdGhlIGV4YW1wbGUgYmVsb3cgdGhlIEJvb3RST00gY2hpbGQgaXMgc3BlY2lmaWVkOgo+
+ID4gKwo+ID4gKwlzb2Mgewo+ID4gKwkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGFybWFkYTM3MC1t
+YnVzIiwgInNpbXBsZS1idXMiOwo+ID4gKwkJcmVnID0gPDB4ZDAwMjAwMDAgMHgxMDA+LCA8MHhk
+MDAyMDE4MCAweDIwPjsKPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ID4gKwkJI3NpemUt
+Y2VsbHMgPSA8MT47Cj4gPiArCj4gPiArCQlyYW5nZXMgPSA8IC4uLiAvKiBvdGhlciBlbnRyaWVz
+ICovCj4gPiArCQkJICAgMHgwMTFkMDAwMCAwIDAgMHhmZmYwMDAwMCAweDEwMDAwMD47Cj4gPiAr
+Cj4gPiArCQlib290cm9tIHsKPiA+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiA+ICsJCQkj
+c2l6ZS1jZWxscyA9IDwxPjsKPiA+ICsJCQlyYW5nZXMgPSA8MCAweDAxMWQwMDAwIDAgMHgxMDAw
+MDA+Owo+ID4gKwkJfTsKPiA+ICsKPiA+ICsJCS8qIG90aGVyIGNoaWxkcmVuICovCj4gPiArCQku
+Li4KPiA+ICsJfTsKPiAKPiBEbyB5b3UgcmVhbGx5IHdhbnQgdG8gcmVxdWlyZSB0aGUgY2hpbGQg
+dG8gcHJvdmlkZSBhICJyYW5nZXMiIHByb3BlcnR5Pwo+IEkgdGhpbmsgdGhpcyBtYWtlcyBpdCBt
+b3JlIGNvbXBsaWNhdGVkIHRvIHNwZWNpZnkgZGV2aWNlcyB0aGF0IGJlbG9uZwo+IGludG8gdGhl
+ICJpbnRlcm5hbC1yZWdzIiBjYXRlZ29yeS4KPiAKCk5vLCB0aGlzIHRleHQgaXMgYWN0dWFsbHkg
+YSBsZWZ0LW92ZXIgZnJvbSB0aGUgcHJldmlvdXMgcGF0Y2hzZXQsIGluCmN1cnJlbnQgdjMgcGF0
+Y2hzZXQgTUJ1cyBjaGlsZHJlbiBhcmUgKm5vdCogcmVxdWlyZWQgdG8gaGF2ZSBhbnkgcmFuZ2Vz
+LgpPbiB0aGUgb3RoZXJzaWRlLCBhbHRob3VnaCB5b3Ugd2lsbCBuZWVkIG9uZSBleGNlcHQgaW4g
+dGhlIG1vc3QgdHJpdmlhbApjYXNlcyBsaWtlIGZvciB0aGUgQm9vdFJPTS4KCi0tIApFemVxdWll
+bCBHYXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRy
+b2lkIEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxp
+bmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
+Lm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
