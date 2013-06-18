@@ -1,131 +1,80 @@
-From: Joel A Fernandes <joelagnel@ti.com>
-Subject: [PATCH v11 8/8] spi: omap2-mcspi: convert to dma_request_slave_channel_compat()
-Date: Tue, 18 Jun 2013 01:38:19 -0500
-Message-ID: <1371537499-12970-9-git-send-email-joelagnel@ti.com>
-References: <1371537499-12970-1-git-send-email-joelagnel@ti.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
+ tree driver
+Date: Tue, 18 Jun 2013 09:33:02 +0200
+Message-ID: <20130618073302.GA2962@katana>
+References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org>
+ <CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com>
+ <51BF2FC5.40207@wwwdotorg.org>
+ <CACRpkdbjy+PcpNkSg4PuuP2Z9RyrnqSW0uchHFHVZ8VYPeoDyA@mail.gmail.com>
+ <CACxGe6sTq=h9jjqesjvUA4Bweh7zgE4VOLoOTgGPC_D_v+8NtA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1371537499-12970-1-git-send-email-joelagnel@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Jason Kridner <jkridner@beagleboard.org>, Koen Kooi <koen@beagleboard.org>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Arnd Bergmann <arnd@arndb.de>, Joel A Fernandes <joelagnel@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Return-path: <linux-next-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6sTq=h9jjqesjvUA4Bweh7zgE4VOLoOTgGPC_D_v+8NtA@mail.gmail.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Matt Porter <mporter@ti.com>
 
-Convert dmaengine channel requests to use
-dma_request_slave_channel_compat(). This supports the DT case of
-platforms requiring channel selection from either the OMAP DMA or
-the EDMA engine. AM33xx only boots from DT and is the only user
-implementing EDMA so in the !DT case we can default to the OMAP DMA
-filter.
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Matt Porter <mporter@ti.com>
-Acked-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Signed-off-by: Joel A Fernandes <joelagnel@ti.com>
----
- drivers/spi/spi-omap2-mcspi.c |   64 ++++++++++++++++++++++++++++-------------
- 1 file changed, 44 insertions(+), 20 deletions(-)
+On Mon, Jun 17, 2013 at 11:15:30PM +0100, Grant Likely wrote:
+> On Mon, Jun 17, 2013 at 5:33 PM, Linus Walleij <linus.walleij@linaro.org>=
+ wrote:
+> > On Mon, Jun 17, 2013 at 5:48 PM, Stephen Warren <swarren@wwwdotorg.org>=
+ wrote:
+> >
+> >> This has just shown up in next-20130617, and breaks at least the
+> >> TPS65910 and TPS62360 drivers, since they assume that the id parameter
+> >> passed to probe is non-NULL. However, now the parameter is NULL since
+> >> these drivers have both an ID table and an OF match table.
+> >
+> > So you mean they come in through the DT boot path and assume
+> > that parameter is non-null even though they should not make use of
+> > it?
+> >
+> >> I'd like to suggest this patch be reverted an re-introduced immediately
+> >> after the merge window. That should give enough time for everyone to g=
+et
+> >> a heads-up on fixing any drivers with a similar problem, rather than
+> >> trying to cram all that in immediately before the merge window.
+> >
+> > OK that works for me, I'm not in any hurry.
+>=20
+> Deferring by a merge window isn't going to make it any less painful.
+> Do your best to find all the users that need to be changed. Use a
+> coccinelle search perhaps, but I think it should be merged anyway.
 
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 86d2158..ca4ab78 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -102,6 +102,9 @@ struct omap2_mcspi_dma {
- 
- 	struct completion dma_tx_completion;
- 	struct completion dma_rx_completion;
-+
-+	char dma_rx_ch_name[14];
-+	char dma_tx_ch_name[14];
- };
- 
- /* use PIO for small transfers, avoiding DMA setup/teardown overhead and
-@@ -830,12 +833,20 @@ static int omap2_mcspi_request_dma(struct spi_device *spi)
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
- 	sig = mcspi_dma->dma_rx_sync_dev;
--	mcspi_dma->dma_rx = dma_request_channel(mask, omap_dma_filter_fn, &sig);
-+
-+	mcspi_dma->dma_rx =
-+		dma_request_slave_channel_compat(mask, omap_dma_filter_fn,
-+						 &sig, &master->dev,
-+						 mcspi_dma->dma_rx_ch_name);
- 	if (!mcspi_dma->dma_rx)
- 		goto no_dma;
- 
- 	sig = mcspi_dma->dma_tx_sync_dev;
--	mcspi_dma->dma_tx = dma_request_channel(mask, omap_dma_filter_fn, &sig);
-+	mcspi_dma->dma_tx =
-+		dma_request_slave_channel_compat(mask, omap_dma_filter_fn,
-+						 &sig, &master->dev,
-+						 mcspi_dma->dma_tx_ch_name);
-+
- 	if (!mcspi_dma->dma_tx) {
- 		dma_release_channel(mcspi_dma->dma_rx);
- 		mcspi_dma->dma_rx = NULL;
-@@ -1256,29 +1267,42 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
- 		goto free_master;
- 
- 	for (i = 0; i < master->num_chipselect; i++) {
--		char dma_ch_name[14];
-+		char *dma_rx_ch_name = mcspi->dma_channels[i].dma_rx_ch_name;
-+		char *dma_tx_ch_name = mcspi->dma_channels[i].dma_tx_ch_name;
- 		struct resource *dma_res;
- 
--		sprintf(dma_ch_name, "rx%d", i);
--		dma_res = platform_get_resource_byname(pdev, IORESOURCE_DMA,
--				dma_ch_name);
--		if (!dma_res) {
--			dev_dbg(&pdev->dev, "cannot get DMA RX channel\n");
--			status = -ENODEV;
--			break;
--		}
-+		sprintf(dma_rx_ch_name, "rx%d", i);
-+		if (!pdev->dev.of_node) {
-+			dma_res =
-+				platform_get_resource_byname(pdev,
-+							     IORESOURCE_DMA,
-+							     dma_rx_ch_name);
-+			if (!dma_res) {
-+				dev_dbg(&pdev->dev,
-+					"cannot get DMA RX channel\n");
-+				status = -ENODEV;
-+				break;
-+			}
- 
--		mcspi->dma_channels[i].dma_rx_sync_dev = dma_res->start;
--		sprintf(dma_ch_name, "tx%d", i);
--		dma_res = platform_get_resource_byname(pdev, IORESOURCE_DMA,
--				dma_ch_name);
--		if (!dma_res) {
--			dev_dbg(&pdev->dev, "cannot get DMA TX channel\n");
--			status = -ENODEV;
--			break;
-+			mcspi->dma_channels[i].dma_rx_sync_dev =
-+				dma_res->start;
- 		}
-+		sprintf(dma_tx_ch_name, "tx%d", i);
-+		if (!pdev->dev.of_node) {
-+			dma_res =
-+				platform_get_resource_byname(pdev,
-+							     IORESOURCE_DMA,
-+							     dma_tx_ch_name);
-+			if (!dma_res) {
-+				dev_dbg(&pdev->dev,
-+					"cannot get DMA TX channel\n");
-+				status = -ENODEV;
-+				break;
-+			}
- 
--		mcspi->dma_channels[i].dma_tx_sync_dev = dma_res->start;
-+			mcspi->dma_channels[i].dma_tx_sync_dev =
-+				dma_res->start;
-+		}
- 	}
- 
- 	if (status < 0)
--- 
-1.7.9.5
+I'll try a bit of my coccinelle-foo today and then decide.
 
+
+--qDbXVdCdHGoSgWSk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRwA0uAAoJEBQN5MwUoCm2DB8P/Az8wiEb2cwzphIDhYCXYWOO
+Jbb7s1EFytCe83si1+IpcsUe3PndEV6KtB1YeSdWrOexbXr5qpr/8KCsj0Msoexy
+8cE0Lox7OxHukUo/ExgShJ0adUtEoOxAuaF4i/+QnYv+QCbtjVDdsjZJ+6xH4vqy
+mMQacT+UFpg5GdLi5kA/aPEOEBl6WuyXZuzwWebffa/rqNyBfOMJ0nfbtGlQEmGt
+CFU1Tgd4qrZ3ezS9Y3TsriFpdfrfXnJcsawsvKSr32yq9S2WHcj4eSx1GTWAFzvh
+rPZIGlHCXcMsJAvd19a57iGj1JMomMeh9flXoxLyvaKcLCvQgUlHY+tfncIbkK7y
+lnSpAOq63thZA9wivxUMaYWBRhZ9L0JiYf1pAYCdVqtKpcZfBfTL3q4w+VCSE+1R
+WXxZKg2JZuedJowh5j4fulWJAdWr4oqvKAeHS/RBSJWP9H9V7SyjEewKujws6czI
+XoC+KPpABLnwRSA91TVGJAl777qqRw3Drl2/7j2TBLP0+T3xaO64HvDd0kqGBNUp
+hqk1DhyLVo6Ky9jnASxPuxOG+SIVgg84vgcL/Q90a1Keohs8/7Oy3xvLGk4ye0We
+P6kxZkgj3MAPKmJet4kr7CaJSvYcubaQ2zUgCPCQVUOYKWAhS8uf8mvHeQMvxW9K
+uN0JH5OeVgja/5g7nuXw
+=372C
+-----END PGP SIGNATURE-----
+
+--qDbXVdCdHGoSgWSk--
