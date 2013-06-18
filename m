@@ -1,115 +1,72 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Subject: Re: [RFC PATCH v4 2/2] drivers: mfd: vexpress: add Serial Power
  Controller (SPC) support
-Date: Tue, 18 Jun 2013 11:22:13 +0100
-Message-ID: <20130618102213.GA1564@e102568-lin.cambridge.arm.com>
+Date: Tue, 18 Jun 2013 11:26:14 +0100
+Message-ID: <20130618102614.GB1564@e102568-lin.cambridge.arm.com>
 References: <1371484269-11743-1-git-send-email-lorenzo.pieralisi@arm.com>
  <1371484269-11743-3-git-send-email-lorenzo.pieralisi@arm.com>
- <20130617174451.GF28497@quad.lixom.net>
+ <alpine.LFD.2.03.1306180001410.18597@syhkavp.arg>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130617174451.GF28497@quad.lixom.net>
+In-Reply-To: <alpine.LFD.2.03.1306180001410.18597@syhkavp.arg>
 Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <Pawel.Moll@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Pawel Moll <Pawel.Moll@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
-
-thanks a lot.
-
-On Mon, Jun 17, 2013 at 06:44:51PM +0100, Olof Johansson wrote:
-> On Mon, Jun 17, 2013 at 04:51:09PM +0100, Lorenzo Pieralisi wrote:
+On Tue, Jun 18, 2013 at 05:25:22AM +0100, Nicolas Pitre wrote:
+> On Mon, 17 Jun 2013, Lorenzo Pieralisi wrote:
+> 
 > > The TC2 versatile express core tile integrates a logic block that provides the
 > > interface between the dual cluster test-chip and the M3 microcontroller that
 > > carries out power management. The logic block, called Serial Power Controller
 > > (SPC), contains several memory mapped registers to control among other things
 > > low-power states, operating points and reset control.
-> > 
-> > This patch provides a driver that enables run-time control of features
-> > implemented by the SPC control logic.
-> > 
-> > The SPC control logic is required to be programmed very early in the boot
-> > process to reset secondary CPUs on the TC2 testchip, set-up jump addresses and
-> > wake-up IRQs for power management.
-> > Since the SPC logic is also used to control clocks and operating points,
-> > that have to be initialized early as well, the SPC interface consumers can not
-> > rely on early initcalls ordering, which is inconsistent, to wait for SPC
-> > initialization. Hence, in order to keep the components relying on the SPC
-> > coded in a sane way, the driver puts in place a synchronization scheme that
-> > allows kernel drivers to check if the SPC driver has been initialized and if
-> > not, to initialize it upon check.
-> > 
-> > A status variable is kept in memory so that loadable modules that require SPC
-> > interface (eg CPUfreq drivers) can still check the correct initialization and
-> > use the driver correctly after functions used at boot to init the driver are
-> > freed.
-> > 
-> > The driver also provides a bridge interface through the vexpress config
-> > infrastructure. Operations allowing to read/write operating points are
-> > made to go via the same interface as configuration transactions so that
-> > all requests to M3 are serialized.
-> > 
-> > Device tree bindings documentation for the SPC component is provided with
-> > the patchset.
 > 
-> Sorry, I got to think of this over the weekend and should have replied
-> before you had a chance to repost, but still:
-> 
-> Why is the operating point and frequency change code in this driver at all?
-> Usually, the MFD driver contains a shared method to access register space on
-> a multifunction device, but the actual operation of each subdevice is handled
-> by individual drivers in the regular locations.
-> 
-> So, in the case of operating points and requencies, that should be in
-> a cpufreq driver. And the clock setup should presumably be in a clk
-> framework driver if needed.
-
-Well, yes this can be done. I will probably move this code out of mfd
-since this choice caused more issues than the current driver solves.
-
-By moving the frequency changes into subsystems, we are certainly
-trimming down the code, not sure we improve the maintainability though,
-keep in mind that we already had to change the vexpress-config interface
-to cope with SPC oddities, at least now these intricacies are self-contained.
-
-What you are suggesting makes sense though, I will do it.
-
-> Then all that would be left here is the functionality for submitting the two
-> kinds of commands, and handling interrupts.
-
-Not really. There are still a bunch of registers to set-up wake-up IRQs,
-power down flags and warm-boot jump addresses that do not go through the
-vexpress interface, they are ad-hoc. I could also split that stuff, but I
-really do not think it is worth the effort.
-
-> That'll trim down the driver to a point where I think you'll find it much
-> easier to get merged. :-)
-
-To start with I have to understand in which directory this code should
-live. Moving the frequency settings in clk/CPUfreq drivers should be
-feasible with extra DT complexity for their bindings.
-
 > [...]
 > 
-> > +struct ve_spc_drvdata {
-> > +	void __iomem *baseaddr;
-> > +	/* A15 processor MPIDR[15:8] bitfield */
+> I slightly modified the following before committing this patch to my TC2 
+> branch:
 > 
-> A comment describing what the meaning is would be more useful, even if
-> less technically specific. Or maybe something like "Cluster ID of the
-> A15 cluster, from MPIDR[15:8]" or similar.
+> > +/**
+> > + * ve_spc_cpu_wakeup_irq()
+> > + *
+> > + * Function to set/clear per-CPU wake-up IRQs. Not protected by locking since
+> > + * it might be used in code paths where normal cacheable locks are not
+> > + * working. Locking must be provided by the caller to ensure atomicity.
+> > + *
+> > + * @cpu: mpidr[7:0] bitfield describing cpu affinity level
+> > + * @cluster: mpidr[15:8] bitfield describing cluster affinity level
+> > + * @set: if true, wake-up IRQs are set, if false they are cleared
+> > + */
+> > +void ve_spc_cpu_wakeup_irq(u32 cpu, u32 cluster, bool set)
+> > +{
 > 
-> > +	u32 a15_clusid;
-> 
-> 
-> (I reserve the right to have more comments later but I think we want to discuss
-> the removal of frequency management code first. :-)
+> I made cluster first then cpu.  All the other functions have the cluster 
+> argument first, and ve_spc_set_resume_addr() already uses that order.
 
-I will do that and comments are always welcome.
+Ok thanks.
 
-Thanks,
+> [...]
+> > +#ifdef CONFIG_VEXPRESS_SPC
+> > +int ve_spc_probe(void);
+> > +int ve_spc_get_freq(u32 cluster);
+> > +int ve_spc_set_freq(u32 cluster, u32 freq);
+> > +int ve_spc_get_freq_table(u32 cluster, const u32 **fptr);
+> > +void ve_spc_global_wakeup_irq(bool set);
+> > +void ve_spc_cpu_wakeup_irq(u32 cpu, u32 cluster, bool set);
+> > +void ve_spc_set_resume_addr(u32 cluster, u32 cpu, u32 addr);
+> > +u32 ve_spc_get_nr_cpus(u32 cluster);
+> > +void ve_spc_powerdown(u32 cluster, bool enable);
+> > +#else
+> > +static inline bool ve_spc_probe(void) { return -ENODEV; }
+> 
+> s/bool/int/
+
+Bah, sorry.
+
+Thanks a lot,
 Lorenzo
