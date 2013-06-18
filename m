@@ -1,15 +1,17 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] Fix potential merge conflict for dw_apb_timer_of
-Date: Tue, 18 Jun 2013 20:28:50 +0200
-Message-ID: <201306182028.50762.heiko@sntech.de>
-References: <1371514129-22801-1-git-send-email-dinguyen@altera.com>
- <20130618150244.GC18055@amd.pavel.ucw.cz>
- <201306181738.35671.heiko@sntech.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 02/10] pinctrl: mvebu: dove pinctrl driver
+Date: Tue, 18 Jun 2013 19:33:59 +0100
+Message-ID: <20130618183359.GR1403@sirena.org.uk>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1347550912-18021-3-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20130618113606.GA26763@n2100.arm.linux.org.uk>
+ <CACRpkdZTVN2O-Rv4u-Ccb9EzV0At3zc7GYQyTq=HkseOi=GTeg@mail.gmail.com>
+ <20130618151116.GZ2718@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="===============4885860729906618282=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201306181738.35671.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20130618151116.GZ2718-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,165 +22,80 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 18. Juni 2013, 17:38:35 schrieb Heiko St=FCbner:
-> Hi Pavel,
-> =
 
-> Am Dienstag, 18. Juni 2013, 17:02:44 schrieb Pavel Machek:
-> > Hi!
-> > =
-
-> > > >The following 2 patches will eliminate the need for the patch in John
-> > > >Stultz's tree. If there is to be merge of the 2 trees, then the
-> > > >patch:
-> > > >
-> > > >dw_apb_timer_of.c: Remove parts that were picoxcell-specific
-> > > >
-> > > >can be removed from John's tree to avoid a merge-conflict.
-> > > >
-> > > >Based on arm-soc/for-next:
-> > > >
-> > > >PATCH[1/2] - Rename "dw-apb-timer-osc" and "dw-apb-timer-sp" bindings
-> > > >to just "dw-apb-timer"
-> > > >PATCH[2/2] - Fix user/system reporting by fixing read_sched_clock()
-> > > =
-
-> > > Pavel/Jamie: Can you take a look at these too and make sure these cov=
-er
-> > > what you were doing.
-> > =
-
-> > [It seems like Heiko St=FCbner was not aware of patches in the clock
-> > tree, so did pretty much equivalent patch.]
-> =
-
-> Correct ... I was going after what was in linux-next and the tip.git [whi=
-ch
-> I also only saw recently at all] does not seem to be part of it.
-> =
-
-> > Dinh's changes look good to me, but
-> > =
-
-> > [PATCH v2 4/4] clocksource: dw_apb_timer_of: use clocksource_of_init
-> > =
-
-> > does not exactly look nice: (I'm sorry I did not see original series,
-> > before it was merged to -soc.). The function counts number of times it
-> > was called, and behaves differently in each case. It is not very
-> > traditional kernel code at the very least.
-> > =
-
-> > +static int num_called;
-> > +static void __init dw_apb_timer_init(struct device_node *timer)
-> > =
-
-> >  {
-> > =
-
-> > -       struct device_node *event_timer, *source_timer;
-> > -
-> > -       event_timer =3D of_find_matching_node(NULL, osctimer_ids);
-> > -       if (!event_timer)
-> > -               panic("No timer for clockevent");
-> > -       add_clockevent(event_timer);
-> > -
-> > -       source_timer =3D of_find_matching_node(event_timer,
-> > osctimer_ids);
-> > -       if (!source_timer)
-> > -               panic("No timer for clocksource");
-> > -       add_clocksource(source_timer);
-> > -
-> > -       of_node_put(source_timer);
-> > +       switch (num_called) {
-> > +       case 0:
-> > +               pr_debug("%s: found clockevent timer\n", __func__);
-> > +               add_clockevent(timer);
-> > +               of_node_put(timer);
-> > +               break;
-> > +       case 1:
-> > +               pr_debug("%s: found clocksource timer\n", __func__);
-> > +               add_clocksource(timer);
-> > +               of_node_put(timer);
-> > +               init_sched_clock();
-> > +               break;
-> > +       default:
-> > +               break;
-> > +       }
-> > =
-
-> > -       init_sched_clock();
-> > +       num_called++;
-> > =
-
-> >  }
-> > =
-
-> > Heiko, can you take a look at John Stultz tree? We modified this area
-> > already... I understand you only have one timer on your silicon?
-
-also it seems like not being able to use the apb_timer as sched_clock will =
-
-hurt my platform too.
-
-I've tried to use the arm_arch_timer, but when the arch_timer_get_cntfrq() =
-
-function gets called, I only get an "undefined instruction" Oops for the =
-
-executed asm in there.
-
-As there is no manual available for the SoC, I can only guess that it doesn=
-'t =
-
-contain such a component. This is fueled additionally by the PPI part of th=
-e =
-
-gic only having 3 interrupt sources [there is small excerpt of the soc-manu=
-al =
-
-floating around that contains this information], with one already being the =
-
-twd interrupt, while the arm_arch_timer seems to require 4 itself.
-
-Therefore it would cool, if we could keep the sched_clock functionality =
-
-(provided by the clocksource timer) around somehow.
+--===============4885860729906618282==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sEhs5GQW+P4Mb8ab"
+Content-Disposition: inline
 
 
-Heiko
+--sEhs5GQW+P4Mb8ab
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Tue, Jun 18, 2013 at 04:11:16PM +0100, Russell King - ARM Linux wrote:
+> On Tue, Jun 18, 2013 at 05:02:49PM +0200, Linus Walleij wrote:
+> > Nowadays I would do the above with regmap_update_bits().
 
+> > Mutual exclusion for read-modify-write of individual bits in a
+> > register is one of those cases where doing a regmap over
+> > a memory-mapped register range makes a lot of sense.
+> > (drivers/mfd/syscon.c being a nice example)
 
-> nope, my silicon has actually three timers of this type (all of them of t=
-he
-> "snps,dw-apb-timer-osc" type ... which did change it seems).
-> =
+> So, for that solution we need to have some kind of global regmap per
+> register or somesuch.  Then you run into regmap needing a struct
+> device - well, with a shared register, which struct device do you
+> use, or do you have to invent one?
 
-> But the clocksource also needs to provide the sched_clock on it.
-> =
+> That sounds more heavy-weight than is really necessary.
 
-> Due to the multiple matching I came up with the numbering, because the of-
-> clocksource must match the timer ips multiple times and needs to use one =
-as
-> clockevent and one as clocksource.
-> =
+Yes, regmap is far too heavyweight for a lot of these things - it
+shouldn't really go in performance critical at the CPU level paths, it's
+designed around things where I/O costs are considerable and worth
+avoiding.
 
-> > Would perhaps parameter on dw_apb_timer_init telling it what to do be
-> > better solution? I don't like the "num_called" variable too much...
-> =
+I do think that this is a very good idea - with the I2C/SPI drivers I
+was reviewing prior to regmap there were always just far too many simple
+bugs with read/modify/write cycles so factoring out the code really
+helped with review.
 
-> The problem I see is, how do you want to distinguish between the timer us=
-ed
-> as clockevent and the one used as clocksource. The ip blocks are the same,
-> so the dt binding must also be the same, as it only describes the
-> hardware.
-> =
+--sEhs5GQW+P4Mb8ab
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> And the
-> CLOCKSOURCE_OF_DECLARE(apb_timer, "snps,dw-apb-timer-osc",
-> dw_apb_timer_init); of course also matches against all the timer nodes in
-> the dt.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIbBAEBAgAGBQJRwKgUAAoJELSic+t+oim931YP9jgT/xuYt1YPLvhNf0/K6YN5
+t/d+KbC9qgJ1bsujku0xCFXAJozmt3b1WdvVYgz4CAgHLBmLMk3zeGeRTkjT1F+v
+HJAwDGyHu6uX27GDSkGSemJoo2w3OUbJurcs8684dFLtOqYXYkdvPg4csyGilG29
+8CnybUedH+wM3Lpd08r1NyKU4imuwzeCoLAV9LO7jAy9BikmyHDWtaW6QHYtQjz9
+xD50jgxVKXWT+6zEUCFTrZVExmfFcJFoh7VPhI54ZjJId5Ljb4xS41uVUZB+fMz2
+BrRDp156qr1CjC2moNgd0eFW5HO6iB8RPxg8spFpFAz06mupBvgj/mGK8bsTd9P/
+3xXBhszaXSe08H7bd32KS7fEkEoRGnPI2eKzThF24atjN6vTUInyfnucYresPwA6
+JVE2bNIfnAVF0DXcSksQm6FyNrcIn9po69ZjonR6vAH8NXrE/oc8767Q5voASzxw
+mAbYf658nPJ/d9fA+lgoI/ALFFgbT6qrDrWh4ooVHhw0rSquwiWKJbCda085Ifvc
+EMIKfRYcJKFDBPyEwzYoZ9c+LlDw5YXVzTrXz5o/5yTUX+xktwks01JdmhkyIaSW
+G1FmomSA54Nvw+4wa1SsLIXRyfRFNTEVoyuyxA4zQDbjdbmYn6aMUuT4BdSLy6EU
+yhvZavCs2IgnZS+xdXg=
+=LaNA
+-----END PGP SIGNATURE-----
+
+--sEhs5GQW+P4Mb8ab--
+
+--===============4885860729906618282==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4885860729906618282==--
