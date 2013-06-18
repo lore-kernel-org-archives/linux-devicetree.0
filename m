@@ -1,142 +1,93 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 3/3] DMA: shdma: add DT support
-Date: Tue, 18 Jun 2013 15:30:59 +0200
-Message-ID: <201306181531.00023.arnd@arndb.de>
-References: <1370533645-23690-1-git-send-email-g.liakhovetski@gmx.de> <201306171748.11836.arnd@arndb.de> <Pine.LNX.4.64.1306180959190.30844@axis700.grange>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
+Date: Tue, 18 Jun 2013 15:56:47 +0200
+Message-ID: <201306181556.47656.arnd@arndb.de>
+References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com>
+ <7174350.I5qK0sQfHM@wuerfel> <000001ce6bd7$50146e60$f03d4b20$@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1306180959190.30844@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <000001ce6bd7$50146e60$f03d4b20$@samsung.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Siva Reddy Kallam' <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, 'Thierry Reding' <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Jason Gunthorpe' <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, 'Surendranath Gurivireddy Balla' <suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Andrew Murray' <andrew.murray-5wv7dgnIgG8@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 June 2013, Guennadi Liakhovetski wrote:
-> Hi Arnd
-> 
-> On Mon, 17 Jun 2013, Arnd Bergmann wrote:
-> 
-> > On Thursday 06 June 2013, Guennadi Liakhovetski wrote:
-> > > +Required properties:
-> > > +- dmas:		a list of <[DMA controller phandle] [MID/RID value]> pairs
-> > > +- dma-names:	a list of DMA channel names, one per "dmas" entry
+On Tuesday 18 June 2013, Jingoo Han wrote:
+> On Monday, June 17, 2013 9:45 PM, Arnd Bergmann wrote:
+> > On Monday 17 June 2013 18:45:52 Jingoo Han wrote:
+> > > On Friday, June 14, 2013 9:54 PM, Arnd Bergmann wrote:
+> > > >
+> > > > Please look up the documentation about inbound viewport and describe
+> > > > in a code comment what it does. I /assume/ that this is how DMA accesses
+> > > > from the bus get translated into AXI bus transactions. If so, you have
+> > > > to let the window translate addresses from RAM. If it's something else,
+> > > > then you should document what it is and how it needs to be set up.
+> > >
+> > > One of our hardware engineer confirmed it.
+> > > He said that these inbound functions are unnecessary.
+> > > Also, I checked that PCIe works properly without these functions.
+> > > So, I will remove these inbound functions.
 > > 
-> > Looks ok to me, although it might be helpful to clarify what MID/RID means,
-> > by expanding the acronym and describing whether one needs to pass both
-> > or just one of them. If both, what is the bit pattern?
+> > Ok, good. So DMA just gets translated 1:1 independent of the
+> > inbound viewport? Have you tested this with PCI device using
+> > DMA?
 > 
-> One word: magic. MID/RID is what that value is called in the datasheet. 
-> E.g. on APE6 (r8a73a4) it is indeed divided into 2 fields - 2 and 6 bits 
-> for RID and MID respectively, I _guess_ 2 bits are to select a channel 
-> within a slave device and 6 bits to pick up one of slaves, but that 
-> doesn't fit with a slave with 8 channels (HSI), there are also slave 
-> devices with different MID values, so, those values are really better 
-> considered as a single magic value - an 8-bit channel request handle, 
-> which is also how they are listed in a reference table.
-
-Ok.
-
-> > >   * services would have to provide their own filters, which first would check
-> > >   * the device driver, similar to how other DMAC drivers, e.g., sa11x0-dma.c, do
-> > >   * this, and only then, in case of a match, call this common filter.
-> > > + * NOTE 2: This filter function is also used in the DT case by shdma_xlate().
-> > > + * In that case the MID-RID value is used for slave channel filtering and is
-> > > + * passed to this function in the "arg" parameter.
-> > >   */
-> > >  bool shdma_chan_filter(struct dma_chan *chan, void *arg)
-> > >  {
-> > >  	struct shdma_chan *schan = to_shdma_chan(chan);
-> > >  	struct shdma_dev *sdev = to_shdma_dev(schan->dma_chan.device);
-> > >  	const struct shdma_ops *ops = sdev->ops;
-> > > -	int slave_id = (int)arg;
-> > > +	int match = (int)arg;
-> > >  	int ret;
-> > >  
-> > > -	if (slave_id < 0)
-> > > +	if (match < 0)
-> > >  		/* No slave requested - arbitrary channel */
-> > >  		return true;
-> > >  
-> > > -	if (slave_id >= slave_num)
-> > > +	if (!schan->dev->of_node && match >= slave_num)
-> > >  		return false;
-> > >  
-> > > -	ret = ops->set_slave(schan, slave_id, true);
-> > > +	ret = ops->set_slave(schan, match, true);
-> > >  	if (ret < 0)
-> > >  		return false;
-> > 
-> > This is complicated by the fact that you are using the same function for
-> > two entirely different purposes. It would be easier to have a separate
-> > filter for the DT case, rather than reusing the one that uses the slave_id
-> > as an argument.
+> According to our hardware engineer,
+> He said that
+> "That's correct. We tested it by doing a memory write from the device.
+> A device DMA is a series of memory r/w so I expect it to work same way."
 > 
-> Hm, yes, I was considering either making 2 functions or reusing one, but 
-> it's really the same code with only difference - the DT version wouldn't 
-> have the "> slave_num" check. So, I decided to use a single function 
-> renaming "slave_id" to a neutral "match." You really think it's become too 
-> complex and should be copied for clarity?
+> Also, he thought that I already tested too, since it works after removing
+> the functions.
 
-I think it would be easier to understand if you have two functions, but
-it's not very important. Especially if you make the new function specific
-to shdma, that would be clearer.
+It could be that the default setting just creates a 1:1 map so that would
+work, but if you tested it, that should be good enough.
 
-> > > @@ -867,6 +883,29 @@ void shdma_chan_remove(struct shdma_chan *schan)
-> > >  }
-> > >  EXPORT_SYMBOL(shdma_chan_remove);
-> > >  
-> > > +struct dma_chan *shdma_xlate(struct of_phandle_args *dma_spec,
-> > > +				 struct of_dma *ofdma)
-> > > +{
-> > > +	struct shdma_dev *sdev = ofdma->of_dma_data;
-> > > +	u32 id = dma_spec->args[0];
-> > > +	dma_cap_mask_t mask;
-> > > +	struct dma_chan *chan;
-> > > +
-> > > +	if (dma_spec->args_count != 1 || !sdev)
-> > > +		return NULL;
-> > > +
-> > > +	dma_cap_zero(mask);
-> > > +	/* Only slave DMA channels can be allocated via DT */
-> > > +	dma_cap_set(DMA_SLAVE, mask);
-> > > +
-> > > +	chan = dma_request_channel(mask, shdma_chan_filter, (void *)id);
-> > > +	if (chan)
-> > > +		to_shdma_chan(chan)->hw_req = id;
-> > > +
-> > > +	return chan;
-> > > +}
-> > > +EXPORT_SYMBOL(shdma_xlate);
-> > 
-> > I would suggest keeping this to the drivers/dma/sh/shdma.c file
-> > and not exporting it. The sudma would use a different binding anyway.
+> I looked at the pci-mvebu driver,
+> Then I fixed it as the pci-mvebu driver did.
+> Also, I added 'global_io_offset'.
 > 
-> Ok, can do that and then see, how different sudma's .xlate() function will 
-> be. If it's the same we can make this common again.
-
-I hope we can get rid of the need for calling dma_request_channel() from
-xlate soon, since that is a bit silly anyway. Ideally you would just pick
-the right channel of the dma_device (or the first free one, depending on
-the driver) and return that from xlate.
-
-> > The pdata and slave_id should really not be needed here for the lookup in the DT
-> > case. Is this just temporary until all slave drivers use dmaenging_slave_config
-> > to pass the address? That should be clarified in a comment.
+> @@ -909,6 +909,12 @@ static int __init exynos_pcie_probe(struct platform_device *pdev)
+>                 if (restype == IORESOURCE_IO) {
+>                         of_pci_range_to_resource(&range, np, &pp->io);
+>                         pp->io.name = "I/O";
+> +                       pp->io.start = max_t(resource_size_t,
+> +                                               PCIBIOS_MIN_IO,
+> +                                               range.pci_addr + global_io_offset);
+> +                       pp->io.end = min_t(resource_size_t,
+> +                                               IO_SPACE_LIMIT,
+> +                                               range.pci_addr + range.size + global_io_offset);
+>                         pp->config.io_size = resource_size(&pp->io);
+>                         pp->config.io_bus_addr = range.pci_addr;
 > 
-> Also with DT we still use platform data, passed to the driver using 
-> auxdata. This function finds a suitable struct sh_dmae_slave_config 
-> channel configuration entry in the platform data and returns it to the 
-> caller. I don't think this can be avoided without carrying all the 
-> platform data over to DT.
+> In this case, boot message is as below:
+> 
+> PCI host bridge to bus 0000:00
+> pci_bus 0000:00: root bus resource [io  0x1000-0x10000]
+> pci_bus 0000:00: root bus resource [mem 0x40011000-0x5fffffff]
+> [.....]
+> PCI host bridge to bus 0001:00
+> pci_bus 0001:00: root bus resource [io  0x10000-0x20000] (bus address [0x0000-0x10000])
+> pci_bus 0001:00: root bus resource [mem 0x60011000-0x7fffffff]
 
-I think that should be done anyway. A lot of the data can just be hardcoded
-in the driver based on the specific "compatible" value, e.g. the register offsets
-of the individual channels.
+Ok, very good.
+> 
+> I will remove a 'remove' callback. Is it OK?
+> Or what should I do?
 
-The list of slaves that is currently passed in platform data should not be needed,
-but I realize that moving the FIFO addresses into the drivers is work in progress.
+I think you should keep the remove function, but add a comment explaining that
+you don't allow module unload and that in order to allow it, the remove function
+will have to remove all pci buses and devices under the host bridge.
 
 	Arnd
