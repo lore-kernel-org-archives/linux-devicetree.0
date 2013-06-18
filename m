@@ -1,37 +1,45 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH REBASE] i2c-designware: make SDA hold time configurable
-Date: Tue, 18 Jun 2013 13:32:23 +0300
-Message-ID: <CAHp75VfgJ805yaM6mOf-H3tA5jNhKpe4C1SxL2yrvoe_h6jKzw@mail.gmail.com>
-References: <20130514110745.GA10906@intel.com>
-	<1368536642-7158-1-git-send-email-christian.ruppert@abilis.com>
-	<51BF77C2.70004@gmail.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH v2 0/4] ARM: dts: Add LCD and PWM support for exynos4210-origen
+Date: Tue, 18 Jun 2013 16:31:18 +0530
+Message-ID: <CAK9yfHwO3aC28ao__4s_CWVzj5w3NDwK+Dn5cwvviH2K6Rpj9A@mail.gmail.com>
+References: <1370932192-19365-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51BF77C2.70004@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Christian Ruppert <christian.ruppert@abilis.com>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux Documentation List <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1370932192-19365-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, t.figa@samsung.com, sachin.kamat@linaro.org, tushar.behera@linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2013 at 11:55 PM, Rob Herring <robherring2@gmail.com> wrote:
+Ping Kukjin.
 
->> +Optional properties :
->> + - sda-hold-time : should contain the SDA hold time in nanoseconds.
+On 11 June 2013 11:59, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> This series is based on for-next branch of Kukjin's tree.
+> Tested on Origen board.
 >
-> Please specify time units in the property name. Perhaps
-> i2c-sda-hold-time-ns.
+> Changes since v1:
+> * Split LCD patch into LCD and PWM as suggested by Tomasz Figa.
+> * Added all PWM output nodes to pinctrl dtsi file.
 >
-> Based on reading the discussion, there is one similar property I have
-> found: "samsung,i2c-sda-delay = <100>". I wouldn't copy it as it doesn't
-> tell the units or what the delay is.
+> Sachin Kamat (3):
+>   ARM: dts: exynos4210: Add PWM related pinctrl entries
+>   ARM: dts: exynos4210: Add LCD related pinctrl entries
+>   ARM: dts: Add FIMD node to Origen4210 board
+>
+> Tushar Behera (1):
+>   ARM: dts: Set BUCK7 as always on for Origen board
+>
+>  arch/arm/boot/dts/exynos4210-origen.dts   |   22 +++++++
+>  arch/arm/boot/dts/exynos4210-pinctrl.dtsi |   89 +++++++++++++++++++++++++++++
+>  2 files changed, 111 insertions(+)
+>
+> --
+> 1.7.9.5
+>
 
-Often on of the painful issues with DT models is the absence of the properties.
-Should someone create the property definition first under
-Documentation and _then_ patch everything around?
-(Though I think better to think and create documents first and after
-program accordingly)
 
---
-With Best Regards,
-Andy Shevchenko
+
+-- 
+With warm regards,
+Sachin
