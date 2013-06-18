@@ -1,120 +1,111 @@
-From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: [PATCH v2 2/5] mfd: twl4030-power: Simplify probing of power scripts
- and resources
-Date: Tue, 18 Jun 2013 15:17:57 +0200
-Message-ID: <1371561480-28325-3-git-send-email-florian.vaussard@epfl.ch>
-References: <1371561480-28325-1-git-send-email-florian.vaussard@epfl.ch>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] dmaengine: add support for DMA multiplexer DT nodes
+Date: Tue, 18 Jun 2013 15:23:33 +0200
+Message-ID: <201306181523.33959.arnd@arndb.de>
+References: <1370533645-23690-1-git-send-email-g.liakhovetski@gmx.de> <201306171816.12331.arnd@arndb.de> <Pine.LNX.4.64.1306181016420.30844@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371561480-28325-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1306181016420.30844@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Increase lisibility when probing power scripts and resources by
-creating dedicated functions.
+On Tuesday 18 June 2013, Guennadi Liakhovetski wrote:
+> > 
+> > Hmm, you've clearly shown that this can work, but it feels like a really odd way to
+> > do this. I don't think we should do it this way, because it tries to be really
+> > generic but then cannot some of the interesting cases, e.g.
+> > 
+> > 1. you have multiplexed dma engines, but they need different #dma-cells.
+> > 1. you have multiplexed dma engines, but they need different dma specifiers.
+> > 2. The mux is between devices that are not on the same parent bus.
+> 
+> Yes, I know about these restrictions. I'm not sure whether we really ever 
+> will get DMA multiplexers with different #dma-cells or DMA specifiers, but 
+> in any case we can make this less generic - either keep it as a generic 
+> "uniform multiplexer" or making it shdma specific - I'm fine either way.
 
-Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
----
- drivers/mfd/twl4030-power.c |   60 ++++++++++++++++++++++++++++--------------
- 1 files changed, 40 insertions(+), 20 deletions(-)
+Ok, let's make it shdma specific then.
 
-diff --git a/drivers/mfd/twl4030-power.c b/drivers/mfd/twl4030-power.c
-index 7ade81b..8fa6c7b 100644
---- a/drivers/mfd/twl4030-power.c
-+++ b/drivers/mfd/twl4030-power.c
-@@ -492,6 +492,39 @@ int twl4030_remove_script(u8 flags)
- 	return err;
- }
- 
-+int twl4030_power_configure_scripts(struct twl4030_power_data *pdata)
-+{
-+	int err;
-+	int i;
-+	u8 address = twl4030_start_script_address;
-+
-+	for (i = 0; i < pdata->num; i++) {
-+		err = load_twl4030_script(pdata->scripts[i], address);
-+		if (err)
-+			return err;
-+		address += pdata->scripts[i]->size;
-+	}
-+
-+	return 0;
-+}
-+
-+int twl4030_power_configure_resources(struct twl4030_power_data *pdata)
-+{
-+	struct twl4030_resconfig *resconfig = pdata->resource_config;
-+	int err;
-+
-+	if (resconfig) {
-+		while (resconfig->resource) {
-+			err = twl4030_configure_resource(resconfig);
-+			if (err)
-+				return err;
-+			resconfig++;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * In master mode, start the power off sequence.
-  * After a successful execution, TWL shuts down the power to the SoC
-@@ -511,9 +544,7 @@ int twl4030_power_probe(struct platform_device *pdev)
- {
- 	struct twl4030_power_data *pdata = pdev->dev.platform_data;
- 	int err = 0;
--	int i;
--	struct twl4030_resconfig *resconfig;
--	u8 val, address = twl4030_start_script_address;
-+	u8 val;
- 
- 	err = twl_i2c_write_u8(TWL_MODULE_PM_MASTER, TWL4030_PM_MASTER_KEY_CFG1,
- 			       TWL4030_PM_MASTER_PROTECT_KEY);
-@@ -525,23 +556,12 @@ int twl4030_power_probe(struct platform_device *pdev)
- 	if (err)
- 		goto unlock;
- 
--	for (i = 0; i < pdata->num; i++) {
--		err = load_twl4030_script(pdata->scripts[i], address);
--		if (err)
--			goto load;
--		address += pdata->scripts[i]->size;
--	}
--
--	resconfig = pdata->resource_config;
--	if (resconfig) {
--		while (resconfig->resource) {
--			err = twl4030_configure_resource(resconfig);
--			if (err)
--				goto resource;
--			resconfig++;
--
--		}
--	}
-+	err = twl4030_power_configure_scripts(pdata);
-+	if (err)
-+		goto load;
-+	err = twl4030_power_configure_resources(pdata);
-+	if (err)
-+		goto resource;
- 
- 	/* Board has to be wired properly to use this feature */
- 	if (pdata->use_poweroff && !pm_power_off) {
--- 
-1.7.5.4
+> > I think this should either not try to be fully generic and just limited to
+> > the case you care about, i.e. shdma, or it should be more abstract and
+> > multiplex between the individual channels. In either case, I guess
+> > it would not need a change like this to the of_dma_request_slave_channel()
+> > function, and the node pointer used by the slave would be the same node
+> > that defines the address space for the channel descriptions with #dma-cells.
+> > 
+> > I think the easiest way would be the first of those two, so it would
+> > essentially look like 
+> > 
+> > 	dmac: dma-mux {
+> > 		compatible = "renesas,shdma-mux"; /* not simple-bus! */
+> > 		#dma-cells = <1>;
+> > 		#address-cells = <1>;
+> > 		#size-cells = <1>;
+> > 	
+> > 		dma@10000000 {
+> > 			compatible = "renesas,shdma";
+> > 			reg = <0x10000000 0x1000>;
+> > 			interrupts = <10>;
+> > 		};
+> > 		dma@20000000 {
+> > 			compatible = "renesas,shdma";
+> > 			reg = <0x10000000 0x1000>;
+> > 			interrupts = <10>;
+> > 		};
+> > 	}
+> > 
+> > You then register a device driver for the master device, which
+> > will call of_dma_controller_register() for itself and create
+> > its child devices.
+> 
+> Hmm, it is an interesting idea to only register one struct of_dma instance 
+> for all compatible shdma instances instead of one per shdma controller, 
+> and then call of_platform_populate() to instantiate all shdma instances. A 
+> couple of drawbacks:
+> 
+> 1. we'll always have to put a mux DT node in .dts, even if there's just 
+> one DMAC instance on the system.
+>
+> 2. as AUXDATA for the new wrapper device we'll have to use an AUXDATA 
+> array for all child nodes, to be passed to of_platform_populate().
+
+My suggestion above is just one of the possible ways to do it, and I'm
+less concerned about it if you make it specific to shdma. Other
+options would be:
+
+1 using phandles from the mux to the individual dma engine instances,
+  but have them as independent nodes.
+2 same as 1, but using phandles from the individual instances to the mux
+3 Keep using the simple-bus.
+4 Have just one combined device node for all shdma instances, with multiple
+  'reg' and 'interrupts' properties, and handle the muxing in the shdma
+  driver. You could create platform_device_create_resndata from the
+  top-level driver to reuse most of the existing code.
+
+In any of these cases you should be able to support both muxed and non-muxed
+operation in the shdma driver if you want to. You'd just have two separate
+ofdma registrations.
+
+> 3. it seems confusing to me - having one ofdma instance for multiple 
+> dmaengine devices.
+
+I don't see a better way around this one, but I also don't see it as problematic.
+Wiht a mux, you always end up having just one node that the slaves
+point to, but multiple dma_device structures in the kernel. struct ofdma
+really refers to the first one.
+
+> The advantage is, of course, that we don't need to extend existing OF and 
+> dmaengine APIs.
+> 
+> So, I think, it can be done this way, but do you really think it'd be an 
+> improvement over my original proposal?
+
+My main interest is to keep the shdma specifics out of the generic dmaengine
+binding document, where it just complicates the common case.
+
+	Arnd
