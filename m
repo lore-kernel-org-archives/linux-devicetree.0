@@ -1,75 +1,94 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 00/12] MBus device tree binding
-Date: Tue, 18 Jun 2013 13:33:37 +0200
-Message-ID: <51C04591.3010206@gmail.com>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v4 02/10] pinctrl: mvebu: dove pinctrl driver
+Date: Tue, 18 Jun 2013 12:36:06 +0100
+Message-ID: <20130618113606.GA26763@n2100.arm.linux.org.uk>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-3-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371554737-25319-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1347550912-18021-3-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/13 13:25, Ezequiel Garcia wrote:
-> In the example below there's an extract of a device tree showing how
-> the internal-regs and pcie nodes can be represented:
->
-> 	#define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
->
-> 	soc {
-> 		compatible = "marvell,armadaxp-mbus";
-> 		reg = <0 0xd0020000 0 0x100>, <0 0xd0020180 0 0x20>;
->
-> 		ranges = <0xffff0001 0 0 0xd0000000 0x100000   /* internal-regs */
-> 			  0xffff0000 0 0 0xe0000000 0x8100000  /* pcie */
-> 			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
-> 			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x8000000>;
+On Thu, Sep 13, 2012 at 05:41:44PM +0200, Sebastian Hesselbarth wrote:
+> +#define DOVE_GLOBAL_CONFIG_1		(DOVE_SB_REGS_VIRT_BASE | 0xe802C)
+> +#define  DOVE_TWSI_ENABLE_OPTION1	BIT(7)
+> +#define DOVE_GLOBAL_CONFIG_2		(DOVE_SB_REGS_VIRT_BASE | 0xe8030)
+> +#define  DOVE_TWSI_ENABLE_OPTION2	BIT(20)
+> +#define  DOVE_TWSI_ENABLE_OPTION3	BIT(21)
+> +#define  DOVE_TWSI_OPTION3_GPIO		BIT(22)
+...
+> +static int dove_twsi_ctrl_set(struct mvebu_mpp_ctrl *ctrl,
+> +				unsigned long config)
+> +{
+> +	unsigned long gcfg1 = readl(DOVE_GLOBAL_CONFIG_1);
+> +	unsigned long gcfg2 = readl(DOVE_GLOBAL_CONFIG_2);
+> +
+> +	gcfg1 &= ~DOVE_TWSI_ENABLE_OPTION1;
+> +	gcfg2 &= ~(DOVE_TWSI_ENABLE_OPTION2 | DOVE_TWSI_ENABLE_OPTION2);
+> +
+> +	switch (config) {
+> +	case 1:
+> +		gcfg1 |= DOVE_TWSI_ENABLE_OPTION1;
+> +		break;
+> +	case 2:
+> +		gcfg2 |= DOVE_TWSI_ENABLE_OPTION2;
+> +		break;
+> +	case 3:
+> +		gcfg2 |= DOVE_TWSI_ENABLE_OPTION3;
+> +		break;
+> +	}
+> +
+> +	writel(gcfg1, DOVE_GLOBAL_CONFIG_1);
+> +	writel(gcfg2, DOVE_GLOBAL_CONFIG_2);
+> +
+> +	return 0;
+> +}
 
-Ezequiel,
+So, I've just been thinking about the LCD clocking on the Armada 510,
+and found that there's dividers for the internal LCD clocks in the
+global config 1/2 registers.  So I grepped the kernel source for
+references to these, expecting to find something in drivers/clk, but
+found the above.
 
-you should update PCIE above (and possibly anywhere else) too.
+Now, the reason that I'm replying to this is that we're again falling
+into the same trap that we did with SA1100 devices.  Back in those
+days, there wasn't so much of a problem because the kernel was basically
+single threaded when it came to code like the above on such platforms.
+There was no kernel preemption.
 
-> 		pcie-controller {
-> 			compatible = "marvell,armada-xp-pcie";
-> 			status = "okay";
-> 			device_type = "pci";
->
-> 			#address-cells = <3>;
-> 			#size-cells = <2>;
->
-> 			ranges =
-> 			       <0x82000000 0 0x40000 0xffff0001 0x40000 0 0x00002000   /* Port 0.0 registers */
-> 				0x82000000 0 0x42000 0xffff0001 0x42000 0 0x00002000   /* Port 2.0 registers */
-> 				0x82000000 0 0x44000 0xffff0001 0x44000 0 0x00002000   /* Port 0.1 registers */
-> 				0x82000000 0 0x48000 0xffff0001 0x48000 0 0x00002000   /* Port 0.2 registers */
-> 				0x82000000 0 0x4c000 0xffff0001 0x4c000 0 0x00002000   /* Port 0.3 registers */
-> 				0x82000000 0 0x80000 0xffff0001 0x80000 0 0x00002000   /* Port 1.0 registers */
-> 				0x82000000 0 0x82000 0xffff0001 0x82000 0 0x00002000   /* Port 3.0 registers */
-> 				0x82000000 0 0xe0000000 0xffff0000 0 0 0x08000000   /* non-prefetchable memory */
-> 				0x81000000 0 0 0xffff0000 0x8000000 0 0x00100000>; /* downstream I/O */
+However, todays kernel is sometimes SMP, commonly with kernel preemption
+enabled, maybe even RT.  This makes things like the above sequence a
+problem where a multifunction register is read, modified and then
+written back.
 
-Here for example.
+Consider two threads doing this, and a preemption event happening in the
+middle of this sequence to another thread also doing a read-modify-write
+of the same register.  Which one wins depends on the preemption sequence,
+but ultimately one loses out.
 
-> Changes from v2:
->   * Replaced the PCIe mapping with 0xffff0002, to avoid using a representation
->     that might correspond to a possible window id.
+Any access to such registers needs careful thought, and protection in some
+manner.
 
-Out of curiosity, how will these fake mappings play with LPAE? If you
-extend possible address space to >32b the lower bits may belong to valid
-addresses.
-Maybe you can (already do?) ignore that because of the 32b address
-restriction for internal registers IIRC Thomas mentioned?
+Maybe what we need is something like this:
 
-Sebastian
+static DEFINE_SPINLOCK(io_lock);
+static void modifyl(u32 new, u32 mask, void __iomem *reg)
+{
+	unsigned long flags;
+	u32 val;
+
+	spin_lock_irqsave(&io_lock, flags);
+	val = readl(reg) & ~mask;
+	val |= new | mask;
+	writel(val, reg);
+	spin_unlock_irqrestore(&io_lock, flags);
+}
+
+in order to provide arbitrated access to these kinds of multifunction
+registers in a safe, platform agnostic way.
+
+Comments?
