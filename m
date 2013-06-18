@@ -1,57 +1,109 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 02/10] pinctrl: mvebu: dove pinctrl driver
-Date: Tue, 18 Jun 2013 17:02:49 +0200
-Message-ID: <CACRpkdZTVN2O-Rv4u-Ccb9EzV0At3zc7GYQyTq=HkseOi=GTeg@mail.gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1347550912-18021-3-git-send-email-sebastian.hesselbarth@gmail.com>
- <20130618113606.GA26763@n2100.arm.linux.org.uk>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH 0/2] Fix potential merge conflict for dw_apb_timer_of
+Date: Tue, 18 Jun 2013 17:02:44 +0200
+Message-ID: <20130618150244.GC18055@amd.pavel.ucw.cz>
+References: <1371514129-22801-1-git-send-email-dinguyen@altera.com>
+ <51BFABE8.5090504@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130618113606.GA26763-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <51BFABE8.5090504@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: John Stultz <john.stultz@linaro.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: dinh.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Jamie Iles <jamie@jamieiles.com>, dinguyen@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 1:36 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+Hi!
 
-> Maybe what we need is something like this:
->
-> static DEFINE_SPINLOCK(io_lock);
-> static void modifyl(u32 new, u32 mask, void __iomem *reg)
-> {
->         unsigned long flags;
->         u32 val;
->
->         spin_lock_irqsave(&io_lock, flags);
->         val = readl(reg) & ~mask;
->         val |= new | mask;
->         writel(val, reg);
->         spin_unlock_irqrestore(&io_lock, flags);
-> }
->
-> in order to provide arbitrated access to these kinds of multifunction
-> registers in a safe, platform agnostic way.
+> >The following 2 patches will eliminate the need for the patch in John
+> >Stultz's tree. If there is to be merge of the 2 trees, then the
+> >patch:
+> >
+> >dw_apb_timer_of.c: Remove parts that were picoxcell-specific
+> >
+> >can be removed from John's tree to avoid a merge-conflict.
+> >
+> >Based on arm-soc/for-next:
+> >
+> >PATCH[1/2] - Rename "dw-apb-timer-osc" and "dw-apb-timer-sp" bindings to=
+ just
+> >"dw-apb-timer"
+> >PATCH[2/2] - Fix user/system reporting by fixing read_sched_clock()
+> =
 
-Nowadays I would do the above with regmap_update_bits().
+> Pavel/Jamie: Can you take a look at these too and make sure these cover w=
+hat you were doing.
 
-Mutual exclusion for read-modify-write of individual bits in a
-register is one of those cases where doing a regmap over
-a memory-mapped register range makes a lot of sense.
-(drivers/mfd/syscon.c being a nice example)
+[It seems like Heiko St=FCbner was not aware of patches in the clock
+tree, so did pretty much equivalent patch.]
 
-Yours,
-Linus Walleij
+Dinh's changes look good to me, but
+
+[PATCH v2 4/4] clocksource: dw_apb_timer_of: use clocksource_of_init
+
+does not exactly look nice: (I'm sorry I did not see original series,
+before it was merged to -soc.). The function counts number of times it
+was called, and behaves differently in each case. It is not very
+traditional kernel code at the very least.
+
++static int num_called;
++static void __init dw_apb_timer_init(struct device_node *timer)
+ {
+-       struct device_node *event_timer, *source_timer;
+-
+-       event_timer =3D of_find_matching_node(NULL, osctimer_ids);
+-       if (!event_timer)
+-               panic("No timer for clockevent");
+-       add_clockevent(event_timer);
+-       =
+
+-       source_timer =3D of_find_matching_node(event_timer,
+osctimer_ids);
+-       if (!source_timer)
+-               panic("No timer for clocksource");
+-       add_clocksource(source_timer);
+-
+-       of_node_put(source_timer);
++       switch (num_called) {
++       case 0:
++               pr_debug("%s: found clockevent timer\n", __func__);
++               add_clockevent(timer);
++               of_node_put(timer);
++               break;
++       case 1:
++               pr_debug("%s: found clocksource timer\n", __func__);
++               add_clocksource(timer);
++               of_node_put(timer);
++               init_sched_clock();
++               break;
++       default:
++               break;
++       }
+
+-       init_sched_clock();
++       num_called++;
+ }
+
+Heiko, can you take a look at John Stultz tree? We modified this area
+already... I understand you only have one timer on your silicon?
+
+Would perhaps parameter on dw_apb_timer_init telling it what to do be
+better solution? I don't like the "num_called" variable too much...
+
+Thanks,
+									Pavel
+-- =
+
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
