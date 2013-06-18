@@ -1,58 +1,47 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 06/12] memory: mvebu-devbus: Remove address decoding
- window workaround
-Date: Tue, 18 Jun 2013 14:17:31 +0200
-Message-ID: <20130618141731.56e7966c@skate>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1371554737-25319-7-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130618113920.GW31667@titan.lakedaemon.net>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: Re: [PATCH -next] [media] coda: fix missing unlock on error in coda_stop_streaming()
+Date: Tue, 18 Jun 2013 20:23:19 +0800
+Message-ID: <CAPgLHd-NoSghhz6TnsppzTK3nP-+jFpF2eQ94z113dsigjDxSA@mail.gmail.com>
+References: <CAPgLHd9hFGfuQ2Esm-7C1YdSgWojDJRADwv8_m5DnJ6UAFJtpQ@mail.gmail.com>
+	<1371549806.4275.6.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130618113920.GW31667-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1371549806.4275.6.camel@pizza.hi.pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: p.zabel@pengutronix.de
+Cc: mchehab@redhat.com, grant.likely@linaro.org, rob.herring@calxeda.com, javier.martin@vista-silicon.com, k.debski@samsung.com, hans.verkuil@cisco.com, yongjun_wei@trendmicro.com.cn, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Jason Cooper,
+On 06/18/2013 06:03 PM, Philipp Zabel wrote:
+> Am Dienstag, den 18.06.2013, 13:00 +0800 schrieb Wei Yongjun:
+>> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>>
+>> Add the missing unlock before return from function coda_stop_streaming()
+>> in the error handling case.
+>>
+>> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>> ---
+>>  drivers/media/platform/coda.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/media/platform/coda.c b/drivers/media/platform/coda.c
+>> index df4ada88..2c3cd17 100644
+>> --- a/drivers/media/platform/coda.c
+>> +++ b/drivers/media/platform/coda.c
+>> @@ -1347,6 +1347,7 @@ static int coda_stop_streaming(struct vb2_queue *q)
+>>  	if (coda_command_sync(ctx, CODA_COMMAND_SEQ_END)) {
+>>  		v4l2_err(&dev->v4l2_dev,
+>>  			 "CODA_COMMAND_SEQ_END failed\n");
+>> +		mutex_unlock(&dev->coda_mutex);
+>>  		return -ETIMEDOUT;
+>>  	}
+>>  	mutex_unlock(&dev->coda_mutex);
+>>
+>>
+> Thanks! If you don't mind, I'll integrate this change into the "[media]
+> coda: add CODA7541 decoding support" for v2.
 
-On Tue, 18 Jun 2013 07:39:20 -0400, Jason Cooper wrote:
-> On Tue, Jun 18, 2013 at 08:25:31AM -0300, Ezequiel Garcia wrote:
-> > Now that mbus device tree binding has been introduced, remove the address
-> > decoding window management from this driver.
-> > A suitable 'ranges' entry should be added to the devbus-compatible node in
-> > the device tree, as described by the mbus binding documentation.
-> > 
-> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  drivers/memory/mvebu-devbus.c | 64 ++-----------------------------------------
-> >  1 file changed, 2 insertions(+), 62 deletions(-)
-> 
-> Unfortunately, the patch adding mvebu-devbus is going through gregkh's
-> tree.  Either this patch needs to wait for v3.12, or ask Greg if he can
-> take this one.
+No problem. Thanks.
 
-I believe that what we're looking for right now is a Acked-by from both
-the Marvell maintainers, Arnd Bergmann and Jason Gunthorpe. Once we get
-those Acked-by, we can figure out the merge strategy for this patch
-set.
-
-Thanks!
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Yongjun Wei
