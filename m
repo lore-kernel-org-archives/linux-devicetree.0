@@ -1,57 +1,61 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation
- to the DT binding
-Date: Tue, 18 Jun 2013 19:12:55 +0200
-Message-ID: <20130618191255.178d2f42@skate>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1371554737-25319-4-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306181814.33941.arnd@arndb.de>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH 0/5] clk/exynos5250: add clocks for hdmi subsystem
+Date: Wed, 19 Jun 2013 02:14:56 +0900
+Message-ID: <51C09590.5020607@samsung.com>
+References: <1370862062-16680-1-git-send-email-rahul.sharma@samsung.com>	<CALt3h7-9vMRx0XdxFvM4vkMOekbCwdaa_QP9Bj5Egk6vyZ5WYg@mail.gmail.com> <CAPdUM4P8x+aeMwynE=rxfOD8L-fx1W8-C6=zqAnYO73ootX3hw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201306181814.33941.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAPdUM4P8x+aeMwynE=rxfOD8L-fx1W8-C6=zqAnYO73ootX3hw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <r.sh.open@gmail.com>
+Cc: Arun Kumar K <arunkk.samsung@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Kukjin Kim <kgene.kim@samsung.com>, sw0312.kim@samsung.com, inki.dae@samsung.com, sunil joshi <joshi@samsung.com>, Arun Kumar K <arun.kk@samsung.com>, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd Bergmann,
+On 06/18/13 14:09, Rahul Sharma wrote:
+> Hi Mr. Kukjin,
+>
+> Kindly consider the following patches for review and integration.
+>
+(+ Mike)
 
-On Tue, 18 Jun 2013 18:14:33 +0200, Arnd Bergmann wrote:
+Rahul, basically, looks good to me but I'm waiting for Mike's ack on 
+this series...
 
-> Using 0xffff0002 as a placeholder for the pcie translation is definitely
-> better than 0xffff0000 as you had before, but let me ask again in case
-> you missed it the last time (and sorry if I missed the answer):
-> 
-> Why not just put the actual translation here the way it happens for each
-> of the PCIe ports? With the definition here, the PCIe driver actually has no
-> way to figure out what settings the windows need to use!
+> regards,
+> Rahul Sharma.
+>
+> On Fri, Jun 14, 2013 at 3:39 PM, Arun Kumar K<arunkk.samsung@gmail.com>  wrote:
+>> Hi,
+>> Tested this series on snow board and is working fine.
+>>
+>> Tested-by: Arun Kumar K<arun.kk@samsung.com>
+>>
+Arun, thanks for your test.
 
-Come on Arnd, this is something we have already discussed *countless*
-times with you.
+- Kukjin
 
-We *cannot* define translations for each PCIe port because we don't
-know in advance how much I/O and memory space each PCIe device will
-request. This is the reason why we have *one* global range for I/O
-space and *one* global space for memory space, that are given to the
-Linux PCI core, which then dynamically assigns sub-ranges for each
-PCIe device into those two global ranges.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+>> Regards
+>> Arun
+>>
+>> On Mon, Jun 10, 2013 at 4:30 PM, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
+>>> Add clock changes for hdmi subsystem for exynos5250 SoC. These
+>>> include addition of new clocks like mout_hdmi and smmu_tv, associating
+>>> ID to clk_hdmiphy and some essential corrections.
+>>>
+>>> This set is based on kukjin's for-next branch at
+>>> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
+>>>
+>>> Arun Kumar K (1):
+>>>    clk/exynos5250: Fix HDMI clock number in documentation
+>>>
+>>> Rahul Sharma (4):
+>>>    clk/exynos5250: add mout_hdmi mux clock for hdmi
+>>>    clk/exynos5250: add sclk_hdmiphy in the list of special clocks
+>>>    clk/exynos5250: add clock for tv sysmmu
+>>>    clk/exynos5250: change parent to aclk200_disp1 for hdmi subsystem
+>>>
+>>>   .../devicetree/bindings/clock/exynos5250-clock.txt   |   12 +++++++++++-
+>>>   drivers/clk/samsung/clk-exynos5250.c                 |   18 +++++++++++++-----
+>>>   2 files changed, 24 insertions(+), 6 deletions(-)
