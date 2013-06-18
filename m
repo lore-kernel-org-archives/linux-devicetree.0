@@ -1,56 +1,93 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [v1 2/3] ata: ahci_platform: enable imx6q ahci sata support
-Date: Tue, 18 Jun 2013 10:01:54 +0800
-Message-ID: <20130618020153.GB28381@S2101-09.ap.freescale.net>
-References: <1371462767-16630-1-git-send-email-r65037@freescale.com>
- <1371462767-16630-3-git-send-email-r65037@freescale.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCH 0/2] Fix potential merge conflict for dw_apb_timer_of
+Date: Mon, 17 Jun 2013 21:11:56 -0500
+Message-ID: <51BFC1EC.50408@gmail.com>
+References: <1371514129-22801-1-git-send-email-dinguyen@altera.com>
+ <51BFABE8.5090504@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1371462767-16630-3-git-send-email-r65037@freescale.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Richard Zhu <richard.zhuhongxing@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, jgarzik@pobox.com, linux-ide@vger.kernel.org, Richard Zhu <r65037@freescale.com>, devicetree-discuss@lists.ozlabs.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51BFABE8.5090504@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@denx.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Jamie Iles <jamie@jamieiles.com>, dinguyen@altera.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2013 at 05:52:46PM +0800, Richard Zhu wrote:
-> imx6q contains the Synopsys AHCI SATA controller which shares
-> ahci_platform driver with other controllers.
+Hi John,
+
+On 06/17/2013 07:38 PM, John Stultz wrote:
+> On 06/17/2013 05:08 PM, dinguyen@altera.com wrote:
+>> From: Dinh Nguyen <dinguyen@altera.com>
+>>
+>> Hi Arnd/Olof,
+>>
+>> Because of the following patch series that is currently in
+>> arm-soc/for-next:
+>>
+>> 10021488997317d1121505a7ac659124c058efed clocksource: dw_apb_timer_of:
+>> use clocksource_of_init
+>> 1b4eca0f634be2a99f2baa6c29dfd183590ead3f clocksource: dw_apb_timer_of:
+>> select DW_APB_TIMER
+>> a8b447f2bbbba737ff4478f498d7f83c75a9461b clocksource: dw_apb_timer_of:
+>> add clock-handling
+>> a1198f83407ae3421f3f58355a0f296d5ea6249c clocksource: dw_apb_timer_of:
+>> enable the use the clocksource as sched clock
+>>
+>> there will be a merge conflict with:
+>>
+>> 55a68c23e0a675b2b8ac2656fd6edbf98b78e4c6 dw_apb_timer_of.c: Remove
+>> parts that were picoxcell-specific
+>>
+>> that is currently in John Stultz's tree fortglx/3.11/time.
 > 
-> This patch updates the DT compatible list for ahci_platform,
-> and enable the imx6q ahci sata support.
+> :( That one is also in Thomas' tip/timers/core already.
 > 
-> Signed-off-by: Richard Zhu <r65037@freescale.com>
-> ---
->  drivers/ata/ahci_platform.c |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
 > 
-> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-> index 7a8a284..61f2142 100644
-> --- a/drivers/ata/ahci_platform.c
-> +++ b/drivers/ata/ahci_platform.c
-> @@ -327,6 +327,7 @@ static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_suspend, ahci_resume);
->  
->  static const struct of_device_id ahci_of_match[] = {
->  	{ .compatible = "snps,spear-ahci", },
-> +	{ .compatible = "snps,imx-ahci", },
-
-I'm not sure it makes much sense to invent multiple platform specific
-strings for an IP which is completely compatible between them.
-Why don't we just have a generic compatible string like "snps,ahci"
-for all those compatible platforms, and only add platform specific
-string when there is incompatibility on particular platform to deal
-with?
-
-Added devicetree-discuss to get DT people's opinion.
-
-Shawn
-
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, ahci_of_match);
-> -- 
-> 1.7.5.4
+>> The following 2 patches will eliminate the need for the patch in John
+>> Stultz's tree. If there is to be merge of the 2 trees, then the
+>> patch:
+>>
+>> dw_apb_timer_of.c: Remove parts that were picoxcell-specific
+>>
+>> can be removed from John's tree to avoid a merge-conflict.
+>>
+>> Based on arm-soc/for-next:
+>>
+>> PATCH[1/2] - Rename "dw-apb-timer-osc" and "dw-apb-timer-sp" bindings
+>> to just
+>> "dw-apb-timer"
+>> PATCH[2/2] - Fix user/system reporting by fixing read_sched_clock()
 > 
+> Pavel/Jamie: Can you take a look at these too and make sure these cover
+> what you were doing.
+> 
+> 
+> So Dinh, just to get this right, you're wanting me to revert  "Remove
+> parts that were picoxcell-specific" and apply your two changes to my tree?
 
+Yes, revert the "Remove parts that were picoxcell-specific". My 2
+patches were not based on your tree, so I don't think they can be
+applied there. It was based on the arm-soc with the 4 patches in it.
+
+> 
+> The other 4 patches above are then fine to go in via arm-soc? Or do I
+> need to merge those in too?
+
+The 4 patches are fine in arm-soc. But I'll let Arnd, Olof and yourself
+decide on what's best. I just know that Pavel's patch will conflict with
+the 4 that are in arm-soc.
+
+Dinh
+> 
+> thanks
+> -john
+> 
