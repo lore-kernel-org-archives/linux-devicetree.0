@@ -1,47 +1,41 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: Re: [PATCH -next] [media] coda: fix missing unlock on error in coda_stop_streaming()
-Date: Tue, 18 Jun 2013 20:23:19 +0800
-Message-ID: <CAPgLHd-NoSghhz6TnsppzTK3nP-+jFpF2eQ94z113dsigjDxSA@mail.gmail.com>
-References: <CAPgLHd9hFGfuQ2Esm-7C1YdSgWojDJRADwv8_m5DnJ6UAFJtpQ@mail.gmail.com>
-	<1371549806.4275.6.camel@pizza.hi.pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1371549806.4275.6.camel@pizza.hi.pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: p.zabel@pengutronix.de
-Cc: mchehab@redhat.com, grant.likely@linaro.org, rob.herring@calxeda.com, javier.martin@vista-silicon.com, k.debski@samsung.com, hans.verkuil@cisco.com, yongjun_wei@trendmicro.com.cn, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH 0/4] exynos5420/hdmi: add support for hdmi subsystem
+Date: Tue, 18 Jun 2013 18:19:34 +0530
+Message-ID: <1371559778-9359-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
+Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/2013 06:03 PM, Philipp Zabel wrote:
-> Am Dienstag, den 18.06.2013, 13:00 +0800 schrieb Wei Yongjun:
->> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->>
->> Add the missing unlock before return from function coda_stop_streaming()
->> in the error handling case.
->>
->> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->> ---
->>  drivers/media/platform/coda.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/media/platform/coda.c b/drivers/media/platform/coda.c
->> index df4ada88..2c3cd17 100644
->> --- a/drivers/media/platform/coda.c
->> +++ b/drivers/media/platform/coda.c
->> @@ -1347,6 +1347,7 @@ static int coda_stop_streaming(struct vb2_queue *q)
->>  	if (coda_command_sync(ctx, CODA_COMMAND_SEQ_END)) {
->>  		v4l2_err(&dev->v4l2_dev,
->>  			 "CODA_COMMAND_SEQ_END failed\n");
->> +		mutex_unlock(&dev->coda_mutex);
->>  		return -ETIMEDOUT;
->>  	}
->>  	mutex_unlock(&dev->coda_mutex);
->>
->>
-> Thanks! If you don't mind, I'll integrate this change into the "[media]
-> coda: add CODA7541 decoding support" for v2.
+Add support for exynos5420 hdmi subsystem. It adds compatible strings
+for exynos5420 mixer and Changes the drivers as per IP modifications.
 
-No problem. Thanks.
+This set doesn't have changes for hdmiphy, which will posted
+independently.
 
-Yongjun Wei
+This set is based on drm-next branch of Inki Dae's tree at
+http://git.kernel.org/cgit/linux/kernel/git/daeinki/drm-exynos.git.
+
+Rahul Sharma (4):
+  drm/exynos: rename compatible strings for hdmi subsystem
+  drm/exynos: add support for exynos5420 mixer
+  drm/exynos: fix interlace resolutions for exynos5420
+  ARM/dts: change compatible strings for hdmi subsystem
+
+ .../devicetree/bindings/video/exynos_hdmi.txt      |    6 +-
+ .../devicetree/bindings/video/exynos_hdmiddc.txt   |    4 +-
+ .../devicetree/bindings/video/exynos_hdmiphy.txt   |    6 +-
+ .../devicetree/bindings/video/exynos_mixer.txt     |    7 ++-
+ arch/arm/boot/dts/cros5250-common.dtsi             |    4 +-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    4 +-
+ drivers/gpu/drm/exynos/exynos_ddc.c                |    2 +-
+ drivers/gpu/drm/exynos/exynos_hdmi.c               |   16 ++---
+ drivers/gpu/drm/exynos/exynos_hdmiphy.c            |    4 +-
+ drivers/gpu/drm/exynos/exynos_mixer.c              |   61 ++++++++++++++------
+ drivers/gpu/drm/exynos/regs-mixer.h                |    7 +++
+ 12 files changed, 84 insertions(+), 41 deletions(-)
+
+-- 
+1.7.10.4
