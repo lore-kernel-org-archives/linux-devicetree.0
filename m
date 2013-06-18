@@ -1,18 +1,14 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation
- to the DT binding
-Date: Tue, 18 Jun 2013 21:27:28 +0200
-Message-ID: <51C0B4A0.90204@gmail.com>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130618174622.GD2204@obsidianresearch.com> <51C0A5F8.8030300@gmail.com>
- <201306182039.50736.arnd@arndb.de> <51C0AA8E.9080807@gmail.com>
- <20130618184753.GA6090@obsidianresearch.com> <51C0ADF7.5050609@gmail.com>
- <20130618191018.GB6578@obsidianresearch.com>
+Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
+ translation
+Date: Tue, 18 Jun 2013 21:42:48 +0200
+Message-ID: <51C0B838.90809@gmail.com>
+References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130618191018.GB6578-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1371569479-31498-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,71 +19,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/2013 09:10 PM, Jason Gunthorpe wrote:
-> On Tue, Jun 18, 2013 at 08:59:03PM +0200, Sebastian Hesselbarth wrote:
+On 06/18/2013 05:31 PM, Ezequiel Garcia wrote:
+> Although the internal register window size is 1 MiB, the previous
+> ranges translation for the internal register space had a size of
+> 0x4000000. This was done to allow the crypto and nand node to access
+> the corresponding 'sram' and 'nand' decoding windows.
 >
->>> S = 0 means 4 bit I, 8 bit A
->>> S = F means special
->>> S = 1 could mean 16 bit I, etc , etc
->>
->> S&  0x8 == 0x0 means 7b target
->> S&  0x8 == 0x8 means 7b special ?
+> In order to describe the hardware more accurately, we declare the
+> real 1 MiB internal register space in the ranges, and add a translation
+> entry for the nand node to access the 'nand' window.
 >
-> No need, special == mbus driver defined. There is no target ID.
+> This commit will make future improvements on the MBus DT binding easier.
 >
-> The forms could be:
+> Signed-off-by: Ezequiel Garcia<ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+> Tested on Plathome Openblocks A6 board.
 >
->   0IAA0000
->   FK000000
->     - K=0 ->  internal regs
->     - K=1 ->  PCI-E thingy
->      etc
->   1IIAA000 (future expansion example)
-
-Ok, got it. Any encoding is fine that allows to distinguish real
-remap windows and fake ones. I assumed that maybe someday there
-will be more than 4b target id so 0x80 as special case indicator
-leaves 7b of normal target id in the _current_ mapping.
-
-But yes, we can always invent a new encoding compatible with the
-current mapping to allow more bits for either target id or attr
-encoding.
-
-I am fine with anything that leaves some room for >32b remap
-windows.
-
->>> The mbus top level ranges remap already supports>4G locations for
->>> the windows, even though current hardware cannot do that.
->>
->> True. But as Arnd also mentioned, I don't think it will ever be a
->> problem at all. Possibly there will never be any future SoC with mbus
->> that will either allow>32b remap base addresses nor>4G size.
+>   arch/arm/boot/dts/kirkwood.dtsi | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
 >
-> Actually, I think the failure to allow>  32b remap is a mistake
-> on Marvell's part. Linux needs as much low memory as possible, moving
-> things above 4G gives you more low SDRAM.
+> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+> index 8a1e3bb..910fabc 100644
+> --- a/arch/arm/boot/dts/kirkwood.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood.dtsi
+> @@ -38,7 +38,8 @@
 >
-> So I'd hope to see 40bit addressing for MBUS windows in a future chip.
->
-> But again, that already works with what Ezequiel has..
+>   	ocp@f1000000 {
+>   		compatible = "simple-bus";
+> -		ranges =<0x00000000 0xf1000000 0x4000000
+> +		ranges =<0x00000000 0xf1000000 0x0100000
+> +		          0xf4000000 0xf4000000 0x0000400
+>   		          0xf5000000 0xf5000000 0x0000400>;
 
-Yeah, but currently Ezequiel e.g. uses 0xffff0001 for internal regs
-that will not look nice with MBUS_ID(0xff,0xff) | 0x0001.
+Ezequiel,
 
-The whole point in the last mails was to ensure, Ezequiel will update
-all remap windows to use MBUS_ID() and the fake ones to
-MBUS_ID(0xf0,0x01), MBUS_ID(0xf0,0x02), aso.
+maybe you should also put a comment at the end of each ranges
+line to name the remap it does?
 
-Otherwise, I agree on _everything_ you said! :)
+Also, as already mentioned on IRC, it would be great to also
+have dove.dtsi updated accordingly.
 
-> To be very clear, the only issue with the 32 bit offset is if we need
-> to describe an offset into a target in DT that is larger than 32
-> bits. The only use of offsets in DT is for internal regs. The
-> need for a>  32 bit offset in DT does not exist with the current
-> architecture.
->
-> Jason
+Sebastian
+
+>   		#address-cells =<1>;
+>   		#size-cells =<1>;
+> @@ -171,7 +172,7 @@
+>   			ale =<1>;
+>   			bank-width =<1>;
+>   			compatible = "marvell,orion-nand";
+> -			reg =<0x3000000 0x400>;
+> +			reg =<0xf4000000 0x400>;
+>   			chip-delay =<25>;
+>   			/* set partition map and/or chip-delay in board dts */
+>   			clocks =<&gate_clk 7>;
