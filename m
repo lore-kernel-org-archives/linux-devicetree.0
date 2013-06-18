@@ -1,98 +1,58 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH 7/9] drm/exynos: use of_get_named_gpio to get hdmi hpd gpio
-Date: Tue, 18 Jun 2013 17:35:32 +0530
-Message-ID: <CAPdUM4OQGgGfzg-fjvVj4mBBL96f4+2yFwkgdAivDcHZpzoBCw@mail.gmail.com>
-References: <1370959891-8923-1-git-send-email-rahul.sharma@samsung.com>
-	<1370959891-8923-8-git-send-email-rahul.sharma@samsung.com>
-	<51BAC3A0.7000002@samsung.com>
-	<CAAQKjZNGuhpWck4VqbpP+Ge5fWDP0hkLSHj2zVAKc5sUPok2Xg@mail.gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 06/12] memory: mvebu-devbus: Remove address decoding
+ window workaround
+Date: Tue, 18 Jun 2013 14:17:31 +0200
+Message-ID: <20130618141731.56e7966c@skate>
+References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1371554737-25319-7-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130618113920.GW31667@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAQKjZNGuhpWck4VqbpP+Ge5fWDP0hkLSHj2zVAKc5sUPok2Xg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Seung-Woo Kim <sw0312.kim@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, sunil joshi <joshi@samsung.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, linux-samsung-soc@vger.kernel.org, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130618113920.GW31667-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Mr. Dae,
+Dear Jason Cooper,
 
-Please discard the REST of the patches in this series. I am posting a
-another patch-set which has all the patches independent of hdmiphy
-related changes.
+On Tue, 18 Jun 2013 07:39:20 -0400, Jason Cooper wrote:
+> On Tue, Jun 18, 2013 at 08:25:31AM -0300, Ezequiel Garcia wrote:
+> > Now that mbus device tree binding has been introduced, remove the address
+> > decoding window management from this driver.
+> > A suitable 'ranges' entry should be added to the devbus-compatible node in
+> > the device tree, as described by the mbus binding documentation.
+> > 
+> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/memory/mvebu-devbus.c | 64 ++-----------------------------------------
+> >  1 file changed, 2 insertions(+), 62 deletions(-)
+> 
+> Unfortunately, the patch adding mvebu-devbus is going through gregkh's
+> tree.  Either this patch needs to wait for v3.12, or ask Greg if he can
+> take this one.
 
-regards,
-Rahul Sharma.
+I believe that what we're looking for right now is a Acked-by from both
+the Marvell maintainers, Arnd Bergmann and Jason Gunthorpe. Once we get
+those Acked-by, we can figure out the merge strategy for this patch
+set.
 
-On Mon, Jun 17, 2013 at 8:22 AM, Inki Dae <inki.dae@samsung.com> wrote:
-> Applied.
->
-> Thanks,
-> Inki Dae
->
->
-> 2013/6/14 =EA=B9=80=EC=8A=B9=EC=9A=B0 <sw0312.kim@samsung.com>
->>
->> Hello Rahul,
->>
->> this patch is not related with others and it looks good to me.
->>
->> On 2013=EB=85=84 06=EC=9B=94 11=EC=9D=BC 23:11, Rahul Sharma wrote:
->> > Cleanup by removing flags variable from drm_hdmi_dt_parse_pdata
->> > which is not used anywhere. Swtiching to of_get_named_gpio instead
->> > of of_get_named_gpio_flags solved this.
->> >
->> > Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->>
->> Acked-by: Seung-Woo Kim <sw0312.kim@samsung.com>
->>
->> > ---
->> >  drivers/gpu/drm/exynos/exynos_hdmi.c |    3 +--
->> >  1 file changed, 1 insertion(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c
->> > b/drivers/gpu/drm/exynos/exynos_hdmi.c
->> > index 1eb5ffb..fc6a9b0 100644
->> > --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
->> > +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
->> > @@ -2081,7 +2081,6 @@ static struct s5p_hdmi_platform_data
->> > *drm_hdmi_dt_parse_pdata
->> >  {
->> >       struct device_node *np =3D dev->of_node;
->> >       struct s5p_hdmi_platform_data *pd;
->> > -     enum of_gpio_flags flags;
->> >       u32 value;
->> >
->> >       pd =3D devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
->> > @@ -2095,7 +2094,7 @@ static struct s5p_hdmi_platform_data
->> > *drm_hdmi_dt_parse_pdata
->> >               goto err_data;
->> >       }
->> >
->> > -     pd->hpd_gpio =3D of_get_named_gpio_flags(np, "hpd-gpio", 0, =
-&flags);
->> > +     pd->hpd_gpio =3D of_get_named_gpio(np, "hpd-gpio", 0);
->> >
->> >       return pd;
->> >
->> >
->>
->> --
->> Seung-Woo Kim
->> Samsung Software R&D Center
->> --
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe
->> linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->
+Thanks!
+
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
