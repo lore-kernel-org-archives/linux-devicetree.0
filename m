@@ -1,13 +1,15 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v11 0/8] ] DMA Engine support for AM33XX
-Date: Tue, 18 Jun 2013 15:07:40 +0200
-Message-ID: <201306181507.40849.arnd@arndb.de>
-References: <1371537499-12970-1-git-send-email-joelagnel@ti.com>
+Subject: Re: [PATCH 1/2] ARM: dts: Change dw-apb-timer-osc and dw-apb-timer-sp
+ to just dw-apb-timer
+Date: Tue, 18 Jun 2013 15:11:23 +0200
+Message-ID: <201306181511.24004.arnd@arndb.de>
+References: <1371514129-22801-1-git-send-email-dinguyen@altera.com>
+ <1371514129-22801-2-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1371537499-12970-1-git-send-email-joelagnel@ti.com>
+In-Reply-To: <1371514129-22801-2-git-send-email-dinguyen@altera.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,30 +19,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel A Fernandes <joelagnel@ti.com>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Sekhar Nori <nsekhar@ti.com>, Koen Kooi <koen@beagleboard.org>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Jason Kridner <jkridner@beagleboard.org>, Rob Landley <rob@landley.net>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Andrew Morton <akpm@linux-foundation.org>, Linux OMAP List <linux-omap@vger.kernel.org>Linux ARM Kernel List <linux->
+To: dinguyen@altera.com
+Cc: dinh.linux@gmail.com, Pavel Machek <pavel@denx.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Jamie Iles <jamie@jamieiles.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 June 2013, Joel A Fernandes wrote:
-> 
-> This series is a repost of Matt Porter's EDMA patches for AM33XX EDMA support
-> with changes for few pending review comments on v9 series.
-> 
-> Currently this is required for AM33XX (Beaglebone or EVM) to access MMC
-> and be able mount to rootfs and boot till command prompt over MMC.
-> Unless there are other pending review comments, I hope this series can
-> make it into 3.11 merge window, the dependent series has been posted at [1]
-> and completed review.
-> 
-> Tested EDMA on AM1808 EVM and AM33XX Beaglebone with MMC.
-> 
+On Tuesday 18 June 2013, dinguyen@altera.com wrote:
+> @@ -476,27 +476,31 @@
+>                 };
+>  
+>                 timer0: timer0@ffc08000 {
+> -                       compatible = "snps,dw-apb-timer-sp";
+> +                       compatible = "snps,dw-apb-timer";
+>                         interrupts = <0 167 4>;
+>                         reg = <0xffc08000 0x1000>;
+> +                       clocks = <&osc>;
+>                 };
+>  
+>                 timer1: timer1@ffc09000 {
+> -                       compatible = "snps,dw-apb-timer-sp";
+> +                       compatible = "snps,dw-apb-timer";
+>                         interrupts = <0 168 4>;
+>                         reg = <0xffc09000 0x1000>;
+> +                       clocks = <&osc>;
+>                 };
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+I think it would make sense to fix the device name as well, they should
+all be named "timer", not "timer0", so I would add
 
-The binding looks good now.
 
-My usual comment about the fact that we shouldn't use a filter function in
-.xlate() applies here, but that is more about the missing interface of
-the dmaengine layer than the particular driver.
+-                 timer0: timer0@ffc08000 {
++                 timer0: timer@ffc08000 {
+
+for all the timers in the dts file here.
 
 	Arnd
