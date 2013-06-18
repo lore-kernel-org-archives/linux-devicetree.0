@@ -1,54 +1,47 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] SH pinctrl DT support
-Date: Tue, 18 Jun 2013 10:05:30 +0200
-Message-ID: <CACRpkdZh709J3pFsfbReQ20LU5W0Q1HacE0ZpssWXofKTJJ6pQ@mail.gmail.com>
-References: <1371495003-11185-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/4] Make non-linear GPIO ranges accesible from gpiolib
+Date: Tue, 18 Jun 2013 10:09:47 +0200
+Message-ID: <CACRpkdYZ6QXsh_7fG=B_Ci5hqm2LQe=Hbf5dyZK+tjdnVaHF4A@mail.gmail.com>
+References: <20130617160324.GA15853@ab42.lan>
+	<1371485086-16016-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371495003-11185-1-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1371485086-16016-1-git-send-email-christian.ruppert@abilis.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2013 at 8:50 PM, Laurent Pinchart
-<laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+On Mon, Jun 17, 2013 at 6:04 PM, Christian Ruppert
+<christian.ruppert@abilis.com> wrote:
 
-> Hello,
+> This patch adds the infrastructure required to register non-linear gpio
+> ranges through gpiolib and the standard GPIO device tree bindings.
 >
-> Here's the seventh (and hopefully final) version of the SuperH and SH Mobile
-> pin controllers (PFC) DT support patch set.
->
-> The patches have been rebased on the for-next branch of the pinctrl
-> repository. All ARM-specific patches have been dropped and will be pushed
-> through to ARM SoC tree in v3.12. This series thus only contains DT support
-> for the sh-pfc driver.
->
-> I've tried merging Simon's latest tag (renesas-next-20130617v3) with these
-> patches and no conflict occurred. Linus, would it finally be possible to get
-> this applied for v3.11 ?
->
-> Changes since v6:
->
-> - Added generic pinconf support back
-> - Dropped all ARM-specific patches
+> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
 
-Thanks, this looks really nice and I've applied all three.
+>  Documentation/devicetree/bindings/gpio/gpio.txt |   44 ++++++++++++++++++
+>  arch/arc/boot/dts/abilis_tb100.dtsi             |   56 +++++++++++-----------
+>  arch/arc/boot/dts/abilis_tb101.dtsi             |   56 +++++++++++-----------
+>  arch/arc/boot/dts/abilis_tb10x.dtsi             |    3 +-
+>  drivers/gpio/gpiolib-of.c                       |   31 +++++++++---
+>  drivers/gpio/gpiolib.c                          |   47 +++++++++++++++++++
+>  drivers/pinctrl/core.c                          |   23 +++++++++
+>  include/asm-generic/gpio.h                      |   10 ++++
+>  include/linux/gpio.h                            |    9 ++++
+>  include/linux/pinctrl/pinctrl.h                 |    3 +
+>  10 files changed, 216 insertions(+), 66 deletions(-)
 
-Heiko, James can you have a look from a generic pinconf
-point of view so we are sure we get this right? (Looks right
-to me atleast.)
+Can you please split this patch in two?
+
+One altering drivers/* include/* and the Documentation/*
+
+And a separate patch to alter all the abilis trees?
+
+I do not maintain bisectability across device trees
+to the rest of the kernel, as these trees are supposed
+to be moved out of the kernel at some point.
 
 Yours,
 Linus Walleij
