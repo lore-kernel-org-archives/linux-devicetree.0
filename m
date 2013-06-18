@@ -1,83 +1,71 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] Bump version number to 1.4.0
-Date: Tue, 18 Jun 2013 09:42:57 +1000
-Message-ID: <20130617234256.GC16876@voom.redhat.com>
-References: <1370970685-21755-1-git-send-email-swarren@wwwdotorg.org>
- <20130615011245.GB9218@voom.bne.redhat.com>
- <E1UnsTK-00082V-KV@jdl.com> <51BF7F76.1080604@wwwdotorg.org>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH 2/3] mfd: twl4030-power: Start transition to DT
+Date: Tue, 18 Jun 2013 02:02:11 +0200
+Message-ID: <20130618000211.GC7998@zurbaran>
+References: <1369921916-7435-1-git-send-email-florian.vaussard@epfl.ch>
+ <1369921916-7435-3-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0728784707788920097=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51BF7F76.1080604-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1369921916-7435-3-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-doc-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@epfl.ch>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Tero Kristo <t-kristo@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Florian,
 
---===============0728784707788920097==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kvUQC+jR9YzypDnK"
-Content-Disposition: inline
+On Thu, May 30, 2013 at 03:51:55PM +0200, Florian Vaussard wrote:
+>  int twl4030_power_probe(struct platform_device *pdev)
+>  {
+>  	struct twl4030_power_data *pdata = pdev->dev.platform_data;
+> +	struct device_node *node = pdev->dev.of_node;
+>  	int err = 0;
+> -	int i;
+> -	struct twl4030_resconfig *resconfig;
+> -	u8 val, address = twl4030_start_script_address;
+> +	u8 val;
+> +
+> +	if (!pdata && !node) {
+> +		dev_err(&pdev->dev, "Platform data is missing\n");
+> +		return -EINVAL;
+> +	}
+>  
+>  	err = twl_i2c_write_u8(TWL_MODULE_PM_MASTER, TWL4030_PM_MASTER_KEY_CFG1,
+>  			       TWL4030_PM_MASTER_PROTECT_KEY);
+> @@ -525,26 +575,17 @@ int twl4030_power_probe(struct platform_device *pdev)
+>  	if (err)
+>  		goto unlock;
+>  
+> -	for (i = 0; i < pdata->num; i++) {
+> -		err = load_twl4030_script(pdata->scripts[i], address);
+> +	if (pdata) {
+> +		err = twl4030_power_configure_scripts(pdata);
+>  		if (err)
+>  			goto load;
+> -		address += pdata->scripts[i]->size;
+> -	}
+> -
+> -	resconfig = pdata->resource_config;
+> -	if (resconfig) {
+> -		while (resconfig->resource) {
+> -			err = twl4030_configure_resource(resconfig);
+> -			if (err)
+> -				goto resource;
+> -			resconfig++;
+> -
+> -		}
+> +		err = twl4030_power_configure_resources(pdata);
+> +		if (err)
+> +			goto resource;
+You're simplifying the probe routine here by defining 2
+twl4030_power_configure_* functions. That's good, but it should be a
+separate patch as it's not related to the DT porting effort.
 
+Cheers,
+Samuel.
 
---kvUQC+jR9YzypDnK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jun 17, 2013 at 03:28:22PM -0600, Stephen Warren wrote:
-> On 06/15/2013 09:32 AM, Jon Loeliger wrote:
-> >>
-> >> Hrm.  We should make a new release.  But I don't think we should bump
-> >> the version without actuall rolling a release.
-> >=20
-> > ..and are we ready to do so?
->=20
-> I don't see anyone saying no...
->=20
-> How about if nobody objects, a release is made by the end of the
-> week?
-
-Works for me.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---kvUQC+jR9YzypDnK
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.13 (GNU/Linux)
-
-iEYEARECAAYFAlG/nwAACgkQaILKxv3ab8YrYgCglJF7axfW9zLZZTb47Tmppvqg
-H4UAnimM9PH+gessAwxB9glc2PA20Qap
-=Txse
------END PGP SIGNATURE-----
-
---kvUQC+jR9YzypDnK--
-
---===============0728784707788920097==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0728784707788920097==--
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
