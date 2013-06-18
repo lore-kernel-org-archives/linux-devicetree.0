@@ -1,85 +1,78 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 1/2] i2c: designware: use module_platform_driver
-Date: Tue, 18 Jun 2013 18:27:11 +0200
-Message-ID: <20130618162711.GG7718@katana>
-References: <1370918230-24793-1-git-send-email-zhangfei.gao@linaro.org>
- <1370918230-24793-2-git-send-email-zhangfei.gao@linaro.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Add more stubs for non-OF builds
+Date: Tue, 18 Jun 2013 11:25:26 -0500
+Message-ID: <51C089F6.2060902@gmail.com>
+References: <1371489882-11143-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5473805318291936015=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1370918230-24793-2-git-send-email-zhangfei.gao@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: Dirk Brandewie <dirk.brandewie@gmail.com>, baruch@tkos.co.il, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371489882-11143-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Perhaps a more specific subject.
 
---===============5473805318291936015==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MrRUTeZlqqNo1jQ9"
-Content-Disposition: inline
+On 06/17/2013 12:24 PM, Alexander Shiyan wrote:
+> Patch adds of_get_next_child and of_get_next_available_child
+> stubs for non-OF builds.
+> 
+> Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+> ---
 
+What changed for v2?
 
---MrRUTeZlqqNo1jQ9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>  include/linux/of.h | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 1fd08ca..df0e644 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -366,8 +366,17 @@ static inline bool of_have_populated_dt(void)
+>  	return false;
+>  }
+>  
+> -#define for_each_child_of_node(parent, child) \
+> -	while (0)
+> +static struct device_node *of_get_next_child(const struct device_node *node,
+> +					     struct device_node *prev)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static struct device_node *of_get_next_available_child(
+> +	const struct device_node *node, struct device_node *prev)
+> +{
+> +	return NULL;
+> +}
+>  
+>  static inline struct device_node *of_get_child_by_name(
+>  					const struct device_node *node,
+> @@ -376,6 +385,9 @@ static inline struct device_node *of_get_child_by_name(
+>  	return NULL;
+>  }
+>  
+> +#define for_each_child_of_node(parent, child) \
 
-On Tue, Jun 11, 2013 at 10:37:09AM +0800, Zhangfei Gao wrote:
-> Instead of use platform_driver_probe, use module_platform_driver
-> To support deferred probing
-> Also subsys_initcall may too early to auto set pinctl
->=20
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> CC: Baruch Siach <baruch@tkos.co.il>
+parent and child need unused annotations to avoid unused variable warnings.
 
-Basically OK, but please resend for 3.12, so we get enough testing
-before entering mainline. I am a bit anxious of side
-effects and 3.11 is too near.
+Rob
 
-
---MrRUTeZlqqNo1jQ9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRwIpfAAoJEBQN5MwUoCm2ZQcP/03Q4zJRDyyT3+At4MPXITuE
-LB27CizN62ltk0Yvdsh2Qt4waq88Ch8/EtEL71BWP0wlQzBG2KGnpGPc2Zz5n8tZ
-irlP3kuDEUdCTSOMesppic71Ltl6+pKhgRqXrO71M7VmSqQ7ddpIV83NbtTKis+1
-XjvbHwNnRqv4tZAB5xWV28y/ScdHe6lAJ1LR+xmu/hXFIRq1WoCKMnNacQkHIoK+
-Z4VH23gb3o4ousfLlSLZlb/e3KIWnm4yBcJbCMRnHzM58XO0/pj/uN5O8LIf0BYf
-bZrKYG/BXFUytiFsd/GItDIn1y+vtSNB4TQgu2aCjrbLKWxiJRscnUfrb/lMn05g
-oUelDUUZuFokrQ/ZMWr7kLKKG61xB/EfPpH8nUYBc3WRNMU74Jt2zX8e82pUGXRd
-MmFukhkyC0zQdYpI4xS0F0IU5D949u5P3QcvPCL7hDCn6LYByFZEsKo4uf47RzYR
-gkCbGpqcx6IZh8RsuJu/T97U1nTukVE3/zykdLquub3kovtpHZCB5isGbIoSh9ei
-m+WKojc0BJyxozHgxsMK/L28rJCpqib85sd/9IQzJ0iZaSDKWAPZnPBpO+mfEDRM
-kd3mfC8GaFmgDEw4e06b2qA9152o+U1/iTtVbaLiNZ4XFrPzPx5UukfQKXJcTQJ7
-uQajYdXJ/ywn66a5rsCC
-=9Ywo
------END PGP SIGNATURE-----
-
---MrRUTeZlqqNo1jQ9--
-
-
---===============5473805318291936015==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5473805318291936015==--
+> +	while (0)
+> +
+>  static inline int of_get_child_count(const struct device_node *np)
+>  {
+>  	return 0;
+> 
