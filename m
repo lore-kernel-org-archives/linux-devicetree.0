@@ -1,92 +1,35 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 4/4] ARM/dts: change compatible strings for hdmi subsystem
-Date: Tue, 18 Jun 2013 18:19:38 +0530
-Message-ID: <1371559778-9359-5-git-send-email-rahul.sharma@samsung.com>
-References: <1371559778-9359-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1371559778-9359-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
-Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 4/4] ARM: OMAP2+: dts: HACK: Provide alias to USB PHY
+ clock
+Date: Tue, 18 Jun 2013 15:33:06 +0300
+Message-ID: <51C05382.8090805@ti.com>
+References: <1371553891-29364-1-git-send-email-rogerq@ti.com> <1371553891-29364-5-git-send-email-rogerq@ti.com> <20130618112342.GN5523@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130618112342.GN5523@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: b-cousson@ti.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch renames the combatible strings for hdmi, mixer, ddc
-and hdmiphy. It follows the convention of using compatible string
-which represent the SoC in which the IP was added for the first
-time.
+On 06/18/2013 02:23 PM, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [130618 04:17]:
+>> Till the OMAP clocks are correctly defined in device tree, use
+>> this temporary hack to provide clock alias to the USB PHY clocks.
+>>
+>> Without this, USB Host & Ethernet will not be functional with
+>> device tree boots on Panda and uEVM.
+> 
+> Thanks, this looks OK to me to have USB working until we have the
+> DT defined clock patches ready.
+> 
+> The $Subject needs updating though, just make it ARM: OMAP2+: and
+> leave out the dts and hack from there.
+> 
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- arch/arm/boot/dts/cros5250-common.dtsi    |    4 ++--
- arch/arm/boot/dts/exynos5250-smdk5250.dts |    4 ++--
- arch/arm/boot/dts/exynos5250.dtsi         |    4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+OK. will send v2 as i need to make another minor change in the panda dts file.
 
-diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
-index 3f0239e..dc259e8b 100644
---- a/arch/arm/boot/dts/cros5250-common.dtsi
-+++ b/arch/arm/boot/dts/cros5250-common.dtsi
-@@ -190,7 +190,7 @@
- 		samsung,i2c-max-bus-freq = <66000>;
- 
- 		hdmiddc@50 {
--			compatible = "samsung,exynos5-hdmiddc";
-+			compatible = "samsung,exynos4210-hdmiddc";
- 			reg = <0x50>;
- 		};
- 	};
-@@ -224,7 +224,7 @@
- 		samsung,i2c-max-bus-freq = <378000>;
- 
- 		hdmiphy@38 {
--			compatible = "samsung,exynos5-hdmiphy";
-+			compatible = "samsung,exynos4212-hdmiphy";
- 			reg = <0x38>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 3e0c792..f320d7c 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -72,7 +72,7 @@
- 		samsung,i2c-max-bus-freq = <66000>;
- 
- 		hdmiddc@50 {
--			compatible = "samsung,exynos5-hdmiddc";
-+			compatible = "samsung,exynos4210-hdmiddc";
- 			reg = <0x50>;
- 		};
- 	};
-@@ -102,7 +102,7 @@
- 		samsung,i2c-max-bus-freq = <66000>;
- 
- 		hdmiphy@38 {
--			compatible = "samsung,exynos5-hdmiphy";
-+			compatible = "samsung,exynos4212-hdmiphy";
- 			reg = <0x38>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 0673524..2f7763b 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -601,7 +601,7 @@
- 	};
- 
- 	hdmi {
--		compatible = "samsung,exynos5-hdmi";
-+		compatible = "samsung,exynos4212-hdmi";
- 		reg = <0x14530000 0x70000>;
- 		interrupts = <0 95 0>;
- 		clocks = <&clock 333>, <&clock 136>, <&clock 137>,
-@@ -611,7 +611,7 @@
- 	};
- 
- 	mixer {
--		compatible = "samsung,exynos5-mixer";
-+		compatible = "samsung,exynos5250-mixer";
- 		reg = <0x14450000 0x10000>;
- 		interrupts = <0 94 0>;
- 	};
--- 
-1.7.10.4
+cheers,
+-roger
