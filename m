@@ -1,60 +1,54 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 10/12] ARM: mvebu: Relocate Armada 370/XP DeviceBus
- device tree nodes
-Date: Tue, 18 Jun 2013 19:14:37 -0300
-Message-ID: <20130618221436.GB24056@localhost>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1371554737-25319-11-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306181816.26530.arnd@arndb.de>
- <20130618220929.GA24056@localhost>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH 0/3] omap mailbox dt support
+Date: Tue, 18 Jun 2013 17:34:42 -0500
+Message-ID: <1371594882-37530-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130618220929.GA24056@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, Paul Walmsley <paul@pwsan.com>, Ohad Ben-Cohen <ohad@wizery.com>, Omar Ramirez Luna <omar.ramirez@copitl.com>, Jassi Brar <jaswinder.singh@linaro.org>, Loic Pallardy <loic.pallardy@st.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTgsIDIwMTMgYXQgMDc6MDk6MjlQTSAtMDMwMCwgRXplcXVpZWwgR2FyY2lh
-IHdyb3RlOgo+IE9uIFR1ZSwgSnVuIDE4LCAyMDEzIGF0IDA2OjE2OjI2UE0gKzAyMDAsIEFybmQg
-QmVyZ21hbm4gd3JvdGU6Cj4gPiBPbiBUdWVzZGF5IDE4IEp1bmUgMjAxMywgRXplcXVpZWwgR2Fy
-Y2lhIHdyb3RlOgo+ID4gPiAKPiA+ID4gKyAgICAgICAgICAgICAgIGRldmJ1cy1ib290Y3Mgewo+
-ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm1hcnZlbGwsbXZlYnUt
-ZGV2YnVzIjsKPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4ZmZmZjAwMDEg
-MHgxMDQwMCAweDg+Owo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICByYW5nZXMgPSA8MCBN
-QlVTX0lEKDB4MDEsIDB4MmYpIDAgMHhmZmZmZmZmZj47Cj4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAjc2l6ZS1jZWxscyA9IDwxPjsKPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2tz
-ID0gPCZjb3JlY2xrIDA+Owo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSAi
-ZGlzYWJsZWQiOwo+ID4gPiArICAgICAgICAgICAgICAgfTsKPiA+IAo+ID4gVGhpcyBpcyBhIHZp
-b2xhdGlvbiBvZiB0aGUgYmluZGluZyBhcyBmYXIgYXMgSSBjYW4gdGVsbCwgc2luY2UgeW91IGRv
-bid0IHNwZWNpZnkgcmFuZ2VzCj4gPiB0byBhY2Nlc3MgdGhlIDB4ZmZmZjAwMDEgMHgxMDQwMCBh
-ZGRyZXNzLiBIb3dldmVyLCBhcyBJIGV4cGxhaW5lZCBpbiBteSBjb21tZW50IGZvcgo+ID4gdGhl
-IGJpbmRpbmcsIEkgdGhpbmsgeW91IHNob3VsZCBjbGFyaWZ5IHRoZSBiaW5kaW5nIGFuZCBsZWF2
-ZSB0aGUgaW1wbGVtZW50YXRpb24KPiA+IGFzIHlvdSBoYXZlIGl0IGhlcmUuCj4gPiAKPiAKPiBN
-bW0uLi4gYWdhaW4gSSBnb3QgbG9zdCBoZXJlLiBXaGljaCAncmFuZ2VzJyB5b3Ugc2F5IEkgZG9u
-J3Qgc3BlY2lmeSB0bwo+IGFjY2VzcyB0aGUgKGZvcm1lcmx5KSAweGZmZmYwMDAxPwo+IAoKT2gs
-IG1heWJlIHlvdSBtZWFudCBJJ20gbm90IHNwZWNpZnlpbmcgYW4gbWJ1cy1ub2RlIHJhbmdlcyB0
-cmFuc2xhdGlvbgppbiB0aGlzIHNhbWUgcGF0Y2ggaW4gdGhpcyAuZHRzaSBmaWxlIEknbSBtb2Rp
-Znlpbmc/CgpJbiB0aGF0IGNhc2UsIHRoYXQncyBvbiBwdXJwb3NlIHRvIGF2b2lkIHRoZSBuaWdo
-dG1hcmUgaW52b2x2ZWQgaW4KbWl4aW5nICdyYW5nZXMnIGluIHBlci1ib2FyZCAuZHRzIGZpbGVz
-IHRvZ2V0aGVyIHdpdGggdGhlIHJhbmdlcwpkZWNsYXJlZCBpbiBlYWNoIGluY2x1ZGVkIC5kdHNp
-LgoKQnkgaGF2aW5nIG9ubHkgb25lIG1idXMtbm9kZSByYW5nZXMgcHJvcGVydHksIHBlci1ib2Fy
-ZCwgaXQgZ2V0cyBhIGJpdApzaW1wbGVyLgoKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxl
-Y3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0
-cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUt
-ZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
-by9kZXZpY2V0cmVlLWRpc2N1c3MK
+Hi,
+
+This series adds the device tree support to the OMAP mailbox
+driver. The first patch in the series is a multi-purpose 
+preparatory patch, useful for adapting to the upcoming mailbox
+framework, and storing certain DT entries that are per mailbox
+IP block instance. The second patch adds the dt parsing support
+to the OMAP2+ mailbox driver, while the last patch adds the DT
+nodes for OMAP2, OMAP3 and OMAP4 SoCs. The DT nodes for OMAP5,
+AM335, AM437 will be added separately.
+
+This series is dependent on the recent OMAP mailbox driver move
+to drivers/mailbox [1] and Benoit's DT branch for 3.11 [2]. After
+this series, the hwmod attr data for mailboxes can be dropped
+once the corresponding SoC is switched to a DT-boot only.
+
+I have tested this series on Panda 4 and Beagle-XM.
+
+[1] http://marc.info/?l=linux-omap&m=137146636924592&w=2
+[2] https://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.11/dts
+
+Suman Anna (3):
+  mailbox/omap: add a parent structure common to all mboxes
+  mailbox/omap: add support for parsing dt devices
+  ARM: dts: OMAP2+: Add mailbox nodes
+
+ .../devicetree/bindings/mailbox/omap-mailbox.txt   |  46 +++++
+ arch/arm/boot/dts/omap2420.dtsi                    |  13 ++
+ arch/arm/boot/dts/omap2430.dtsi                    |  12 ++
+ arch/arm/boot/dts/omap3.dtsi                       |  12 ++
+ arch/arm/boot/dts/omap4.dtsi                       |  12 ++
+ arch/arm/mach-omap2/devices.c                      |   2 +-
+ drivers/mailbox/mailbox-omap1.c                    |  27 ++-
+ drivers/mailbox/mailbox-omap2.c                    | 228 ++++++++++++++++-----
+ drivers/mailbox/omap-mailbox.c                     |  32 ++-
+ drivers/mailbox/omap-mbox.h                        |  10 +
+ 10 files changed, 320 insertions(+), 74 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+
+-- 
+1.8.3.1
+
