@@ -1,14 +1,16 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 4/4] arm: add basic support for Rockchip RK3066a boards
-Date: Tue, 18 Jun 2013 16:13:16 +0200
-Message-ID: <201306181613.16911.arnd@arndb.de>
-References: <201306131658.36584.heiko@sntech.de>
- <20130617213515.GK28497@quad.lixom.net> <201306180026.25973.heiko@sntech.de>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH] dmaengine: Add hisilicon k3 DMA engine driver
+Date: Tue, 18 Jun 2013 22:22:17 +0800
+Message-ID: <51C06D19.3020304@linaro.org>
+References: <1371444872-26994-1-git-send-email-zhangfei.gao@linaro.org>
+ <201306172258.08185.arnd@arndb.de>
+ <CAMj5Bkh8=zc=RYoS9T_9ORYFuJeswQP2hfZ5GH_vywa_qM2DRA@mail.gmail.com>
+ <201306181609.14966.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201306180026.25973.heiko@sntech.de>
+In-Reply-To: <201306181609.14966.arnd@arndb.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,41 +20,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Cc: Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Vinod Koul <vinod.koul@intel.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, zhangfei gao <zhangfei.gao@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 June 2013, Heiko St=FCbner wrote:
-> > Side comment: I think it would be nice if the generic code did this
-> > init if a l2x0 device node was in the device tree, since the only
-> > reason to override init_machine is to do this call in addition to
-> > of_platform_populate().
-> =
+On 13-06-18 10:09 PM, Arnd Bergmann wrote:
+> On Tuesday 18 June 2013, zhangfei gao wrote:
+>> On Tue, Jun 18, 2013 at 4:58 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>>
+>>>> +static struct of_dma_filter_info k3_dma_filter;
+>>>> +static bool k3_dma_filter_fn(struct dma_chan *chan, void *param)
+>>>> +{
+>>>> +     return  (*(int *)param == chan->chan_id);
+>>>> +}
+>>>
+>>> This filter function works only as long as there is no more than
+>>> one DMA engine in the system, which is something that needs to
+>>> be documented better. Unfortunately, providing a filter
+>>> function to be called by .xlate is currently the only way that
+>>> the dma-engine API supports, but we should really get over that.
+>>>
+>>> Vinod: I think we need to add a way for a dmaengine driver to
+>>> just return one of its channels to the xlate function. The
+>>> current method is getting very silly, and it adds run-time and
+>>> code complexity without any need.
+>>>
+>>> How about something like
+>>>
+>>> int dma_get_slave_channel(struct dma_chan *chan)
+>>> {
+>>>          /* lock against __dma_request_channel */
+>>>          mutex_lock(&dma_list_mutex);
+>>>
+>>>          if (chan->client_count == 0)
+>>>                  ret = dma_chan_get(chan);
+>>>          else
+>>>                  ret = -EBUSY;
+>>>
+>>>          mutex_unlock(&dma_list_mutex);
+>>>
+>>>          return ret;
+>>> }
+>>> EXPORT_SYMBOL_GPL(dma_get_slave_channel);
+>>
+>> Want to double check here.
+>> Device need specific channel via request line, the requirement still
+>> can be met, right?
+>
+> The driver can have a simple array of pointers that is indexed by
+> the request number, so you end up with something like
+>
+> struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+>                                                  struct of_dma *ofdma)
+> {
+>          struct k3_dma_dev *dev = ofdma->of_dma_data;
+> 	unsigned int vchan = dma_spec->args[0];
+>
+> 	if (vchan > dev->nr_channels)
+> 		return NULL;
+>
+>          return dma_get_slave_channel(dev->vchan[vchan]);
+> }
+>
+> With no need to have a filter function.
 
-> Arnd said similar things in the initial version :-).
-> =
-
-> Currently I'm wondering if it wouldn't be enough to call always l2x0_of_i=
-nit =
-
-> somewhere, because it does the checking for the dt nodes itself already.
-> =
-
-> The only obstacle would be platforms having the need to use special aux-v=
-alues =
-
-> or which are currently calling the function from some other parts of the =
-boot =
-
-> process (tegra inits the cache in its tegra_init_early function for examp=
-le).
-
-I think we can handle this by ensuring the function only gets called once,
-and all platforms with special requirements call it before the common code
-does.
-
-I tried to understand what the requirement for non-zero argument is however
-and couldn't figure it out. Shouldn't we just be able to specify all the
-bits as DT properties all the time?
-
-	Arnd
+Cool, then I would like to wait for the patch.
