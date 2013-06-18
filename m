@@ -1,101 +1,37 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v7 5/9] ARM: OMAP: USB: Add phy binding information
-Date: Tue, 18 Jun 2013 13:27:25 +0300
-Message-ID: <20130618102725.GB7843@arwen.pp.htv.fi>
-References: <1371113039-5784-1-git-send-email-kishon@ti.com>
- <1371113039-5784-6-git-send-email-kishon@ti.com>
- <20130618094438.GT5461@arwen.pp.htv.fi> <51C030B4.5070707@ti.com>
-Reply-To: balbi@ti.com
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH REBASE] i2c-designware: make SDA hold time configurable
+Date: Tue, 18 Jun 2013 13:32:23 +0300
+Message-ID: <CAHp75VfgJ805yaM6mOf-H3tA5jNhKpe4C1SxL2yrvoe_h6jKzw@mail.gmail.com>
+References: <20130514110745.GA10906@intel.com>
+	<1368536642-7158-1-git-send-email-christian.ruppert@abilis.com>
+	<51BF77C2.70004@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8081120397044998597=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51C030B4.5070707@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: mchehab@redhat.com, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, swarren@nvidia.com, grant.likely@linaro.org, cesarb@cesarb.net, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, rob.herring@calxeda.com, linux@arm.linux.org.uk, sylvester.nawrocki@gmail.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b-cousson@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com, rob@landley.net, benoit.cousson@linaro.org, akpm@linux-foundation.org, shawn.guo@linaro.org, davem@davemloft.net
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51BF77C2.70004@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Christian Ruppert <christian.ruppert@abilis.com>, Wolfram Sang <wsa@the-dreams.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux Documentation List <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
---===============8081120397044998597==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
-Content-Disposition: inline
+On Mon, Jun 17, 2013 at 11:55 PM, Rob Herring <robherring2@gmail.com> wrote:
 
---v9Ux+11Zm5mwPlX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> +Optional properties :
+>> + - sda-hold-time : should contain the SDA hold time in nanoseconds.
+>
+> Please specify time units in the property name. Perhaps
+> i2c-sda-hold-time-ns.
+>
+> Based on reading the discussion, there is one similar property I have
+> found: "samsung,i2c-sda-delay = <100>". I wouldn't copy it as it doesn't
+> tell the units or what the delay is.
 
-Hi,
+Often on of the painful issues with DT models is the absence of the properties.
+Should someone create the property definition first under
+Documentation and _then_ patch everything around?
+(Though I think better to think and create documents first and after
+program accordingly)
 
-On Tue, Jun 18, 2013 at 03:34:36PM +0530, Kishon Vijay Abraham I wrote:
-> On Tuesday 18 June 2013 03:14 PM, Felipe Balbi wrote:
-> >On Thu, Jun 13, 2013 at 02:13:55PM +0530, Kishon Vijay Abraham I wrote:
-> >>In order for controllers to get PHY in case of non dt boot, the phy
-> >>binding information (phy device name) should be added in the platform
-> >>data of the controller.
-> >>
-> >>Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >
-> >I would rather not pass strings around, any other way to handle this ?
-> >Why do you need to pass this string ?
->=20
-> Our old way of binding the controller and the phy using device name
-> started creating problems after the devices are created using
-> PLATFORM_DEVID_AUTO. Infact non-dt boot is broken in mainline for
-> OMAP3 platforms for which I have posted a RFC series
-> http://www.serverphorums.com/read.php?12,708632 which also uses
-> strings.
-> I'm not sure of any other way to deal with this.
-
-have you checked how other frameworks handle it ? Regulator has some
-sort of binding in board-files, but I guess it passes the regulator
-name?
-
---=20
-balbi
-
---v9Ux+11Zm5mwPlX6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRwDYMAAoJEIaOsuA1yqREUX4P/3OuItDq1QeDBeuFjqAIQR+8
-O5h8zEMhbPGeHFY/ieRkQ66RbD60nEJNqn46EpBP/KI0bIwS8tK0T38nAhS//Dl4
-/wXfCfVbDCnglIQCpdrnxnZEN0854rqDA7Gsc3CI8oEro9dBnWh1oOYjWZiBJrKX
-SizirgLGvFmn1SMMTZGe+qJT/DyGWmGcd86fSsiu1amRFGXjP82Ov1HNxa4F4VvE
-umzn8VDn4J08wER0F2LyIlUfXkEKxAY/DK72RewiyY8EJUXAnV0GUliGqK7hfuto
-KAUi/17ZSKp80ec9LEqiredvwwQyoWvvg8TjcpMJz1UYN4Yzbl6ehiwYE4Tr423k
-3fDWaH1gagwa+0Vd0HQeLCaHByR/W3utBWcc6AYe5sWsQmzYNqiB1Z1DodrldGks
-m2vJn2mY13PH7emSN1AiIpy1IH9B9wZbeYfJeD3v9T8GCGhPO+N5SREkdNSqEAXB
-LIPu3etHFqnIMtlhWHbhKCNfX314mP6g45rGMJSWsSyr+cokI7Sk06xp1WWJaYt7
-qW3zszUTeQfuODKbxnVQjmHlDutkaMGyI3nS2wud+j1LamHnaZhCBDfJePKfGWdE
-e15xd4i9PTVbSSNZy3+S06I3SS0FdXOBlx/W/5cx+cu6XOEDD+702CRCXCXVQksg
-3+Ug6SAoVp+U69YFJ58q
-=AoQU
------END PGP SIGNATURE-----
-
---v9Ux+11Zm5mwPlX6--
-
-
---===============8081120397044998597==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8081120397044998597==--
+--
+With Best Regards,
+Andy Shevchenko
