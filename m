@@ -1,18 +1,19 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH v3 05/12] ARM: mvebu: Remove the harcoded BootROM window
  allocation
-Date: Tue, 18 Jun 2013 13:51:11 -0600
-Message-ID: <20130618195111.GC6578@obsidianresearch.com>
+Date: Tue, 18 Jun 2013 17:02:42 -0300
+Message-ID: <20130618200240.GB2470@localhost>
 References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
  <1371554737-25319-6-git-send-email-ezequiel.garcia@free-electrons.com>
  <20130618173906.GC2204@obsidianresearch.com>
  <20130618194330.GA2394@localhost>
+ <20130618195111.GC6578@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130618194330.GA2394@localhost>
+In-Reply-To: <20130618195111.GC6578-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,37 +24,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 04:43:31PM -0300, Ezequiel Garcia wrote:
-
-> > I think some kind of test is needed here. As I understand it the SMP
-> > startup uses a trampoline in the boot rom and the boot rom *must* be
-> > mapped to 0xfff00000 ?
-
-> Yes, that's my understanding as well, but I will do some testing since
-> it should be interesting...
-
-If it is like the earlier chips you will also have the choice of
-something based at 0, there is a register bit that sets the reset
-address.
- 
-> > Verifying the DT is setup this way and aborting if it is not seems
-> > like a good idea..
-
-> I have no problem doing that, but to me it sounds as it's the
-> responsability of the one that writes the DT, no?
-
-Having the kernel enforce that the DT node is present and at the right
-location, I think, is helpful for the bootloader folks to ensure they
-write correct DTs.
-
-> Maybe this is a requirement for this SoC, but not for another...
-> so, why should the kernel *check* for that?
-
-The function was called armada_xp_smp_prepare_cpus - all Armada XP's
-will work like this..
-
-Jason
+T24gVHVlLCBKdW4gMTgsIDIwMTMgYXQgMDE6NTE6MTFQTSAtMDYwMCwgSmFzb24gR3VudGhvcnBl
+IHdyb3RlOgo+IE9uIFR1ZSwgSnVuIDE4LCAyMDEzIGF0IDA0OjQzOjMxUE0gLTAzMDAsIEV6ZXF1
+aWVsIEdhcmNpYSB3cm90ZToKPiAKPiA+ID4gSSB0aGluayBzb21lIGtpbmQgb2YgdGVzdCBpcyBu
+ZWVkZWQgaGVyZS4gQXMgSSB1bmRlcnN0YW5kIGl0IHRoZSBTTVAKPiA+ID4gc3RhcnR1cCB1c2Vz
+IGEgdHJhbXBvbGluZSBpbiB0aGUgYm9vdCByb20gYW5kIHRoZSBib290IHJvbSAqbXVzdCogYmUK
+PiA+ID4gbWFwcGVkIHRvIDB4ZmZmMDAwMDAgPwo+IAo+ID4gWWVzLCB0aGF0J3MgbXkgdW5kZXJz
+dGFuZGluZyBhcyB3ZWxsLCBidXQgSSB3aWxsIGRvIHNvbWUgdGVzdGluZyBzaW5jZQo+ID4gaXQg
+c2hvdWxkIGJlIGludGVyZXN0aW5nLi4uCj4gCj4gSWYgaXQgaXMgbGlrZSB0aGUgZWFybGllciBj
+aGlwcyB5b3Ugd2lsbCBhbHNvIGhhdmUgdGhlIGNob2ljZSBvZgo+IHNvbWV0aGluZyBiYXNlZCBh
+dCAwLCB0aGVyZSBpcyBhIHJlZ2lzdGVyIGJpdCB0aGF0IHNldHMgdGhlIHJlc2V0Cj4gYWRkcmVz
+cy4KPiAgCj4gPiA+IFZlcmlmeWluZyB0aGUgRFQgaXMgc2V0dXAgdGhpcyB3YXkgYW5kIGFib3J0
+aW5nIGlmIGl0IGlzIG5vdCBzZWVtcwo+ID4gPiBsaWtlIGEgZ29vZCBpZGVhLi4KPiAKPiA+IEkg
+aGF2ZSBubyBwcm9ibGVtIGRvaW5nIHRoYXQsIGJ1dCB0byBtZSBpdCBzb3VuZHMgYXMgaXQncyB0
+aGUKPiA+IHJlc3BvbnNhYmlsaXR5IG9mIHRoZSBvbmUgdGhhdCB3cml0ZXMgdGhlIERULCBubz8K
+PiAKPiBIYXZpbmcgdGhlIGtlcm5lbCBlbmZvcmNlIHRoYXQgdGhlIERUIG5vZGUgaXMgcHJlc2Vu
+dCBhbmQgYXQgdGhlIHJpZ2h0Cj4gbG9jYXRpb24sIEkgdGhpbmssIGlzIGhlbHBmdWwgZm9yIHRo
+ZSBib290bG9hZGVyIGZvbGtzIHRvIGVuc3VyZSB0aGV5Cj4gd3JpdGUgY29ycmVjdCBEVHMuCj4K
+CkdyYW50ZWQuIEJ1dCB0aGVuIEkgd29uZGVyLi4uIHdoeSBkbyB3ZSBib3RoZXIgdG8gcHV0IHRo
+ZSBCb290Uk9NIGluIHRoZQpEVCB3aW5kb3cgaWYgd2UncmUgZ29pbmcgdG8gY2hlY2sgZm9yIGEg
+Zml4ZWQgYWRkcmVzcyBpdCBpbiBhbnkgY2FzZT8KCj4gPiBNYXliZSB0aGlzIGlzIGEgcmVxdWly
+ZW1lbnQgZm9yIHRoaXMgU29DLCBidXQgbm90IGZvciBhbm90aGVyLi4uCj4gPiBzbywgd2h5IHNo
+b3VsZCB0aGUga2VybmVsICpjaGVjayogZm9yIHRoYXQ/Cj4gCj4gVGhlIGZ1bmN0aW9uIHdhcyBj
+YWxsZWQgYXJtYWRhX3hwX3NtcF9wcmVwYXJlX2NwdXMgLSBhbGwgQXJtYWRhIFhQJ3MKPiB3aWxs
+IHdvcmsgbGlrZSB0aGlzLi4KPiAKClJpZ2h0LiBTaWxseSBvYmplY3Rpb24uCgotLSAKRXplcXVp
+ZWwgR2FyY8OtYSwgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5k
+cm9pZCBFbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWls
+aW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0
+cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
