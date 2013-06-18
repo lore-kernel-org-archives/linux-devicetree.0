@@ -1,46 +1,77 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation
- to the DT binding
-Date: Tue, 18 Jun 2013 11:46:22 -0600
-Message-ID: <20130618174622.GD2204@obsidianresearch.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 11/12] ARM: mvebu: Relocate Armada 370 PCIe device tree
+ nodes
+Date: Tue, 18 Jun 2013 20:22:08 +0200
+Message-ID: <201306182022.08927.arnd@arndb.de>
 References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1371554737-25319-4-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306181918.59046.arnd@arndb.de> <20130618192154.4c1530cc@skate>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1371554737-25319-4-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130618192154.4c1530cc@skate>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 08:25:28AM -0300, Ezequiel Garcia wrote:
-> +
-> +IIAA0000
-> +
-> +Where:
-> +  -- I = Marvell defined target ID for programmable windows
-> +  -- A = Marvell defined target attributes for programmable windows
+On Tuesday 18 June 2013, Thomas Petazzoni wrote:
+> On Tue, 18 Jun 2013 19:18:58 +0200, Arnd Bergmann wrote:
+> 
+> > > >                        ranges =
+> > > >                               <0x82000000 0 0x40000    0xffff0001 0x40000 0 0x00002000
+> > > >                                0x82000000 0 0x80000    0xffff0001 0x80000 0 0x00002000
+> > > >                                0x82000000 1 0 MBUS_ID(0x12, 0x34) 0  1 0
+> > > >                                0x82000000 2 0 MBUS_ID(0x13, 0x34) 0  1 0
+> > > >                                0x81000000 1 0 MBUS_ID(0x12, 0x35) 0 0 0x10000;
+> > > >                                0x81000000 2 0 MBUS_ID(0x13, 0x35) 0 0 0x10000>;
+> > > > 
+> > > > The MBUS_ID numbers above are made up since I don't know them, but this way you can
+> > > > describe how the entire 4GB MMIO address space of the PCI bus is mapped into the
+> > > > MBUS address space.
+> > > 
+> > > This is NOT possible because we don't know in advance how much memory
+> > > space and I/O space each PCIe device will require.
+> > > 
+> > > Arnd, we've discussed this at length with you while getting the PCIe
+> > > driver merged, and we've explained this to you numerous times. Could
+> > > you please understand that any of your proposal that suggests writing
+> > > down static windows for PCIe devices will not work?
+> > 
+> > Where did I suggest static windows for PCIe devices?
+> 
+> Where does your new proposal buys us anything useful compared to the
+> existing PCIe DT binding that has been discussed at length with you?
 
-I thought we agreed to something like:
+I'm pretty sure I explained the idea above originally and was ignored.
+Jason Gunthorpe might remember better, but I think he liked it when I
+originally proposed doing it this way.
 
-SIAA0000
+The main differences are:
 
-Where 'S' is the designator for the special items like PCI-E and
-internal-regs. 0 = normal target ids, 0xF = special ids.
+* It unifies the binding for the PCIe case and all other registers. There is no
+  need to treat PCIe special in the binding this way, which is more future-proof
+  and more consistent.
 
-The target is only 4 bits, the attr is 8, so a little doc update to
-clarify this should be enough, no need to change the DTs.
+* Since the host physical address for the PCIe memory space window is set up
+  dynamically anyway, there is no reason to hardcode it in DT. We want it to
+  be as large as possible, and this way the mbus driver can just pick the largest
+  free area itself after setting up all the other mappings from the ranges
+  property.
 
-Jason
+* The binding actually allows the PCIe translation to be discontiguous, so if
+  we want to improve the code in the future, we can fill all the holes in the
+  mbus space with PCIe windows without changing the binding.
+
+* It separates hardware description (in the PCIe node) from policy (in the mbus
+  node), just like we do for all the other mbus children.
+
+	Arnd
