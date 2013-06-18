@@ -1,63 +1,32 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
-Date: Tue, 18 Jun 2013 14:35:54 +0900
-Message-ID: <000001ce6be5$b3fd0730$1bf71590$@samsung.com>
-References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com>
- <3539874.V7zkhbMg0b@wuerfel> <005e01ce6b3f$74e3c940$5eab5bc0$@samsung.com>
- <7174350.I5qK0sQfHM@wuerfel>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v10 0/8] DMA Engine support for AM33XX
+Date: Tue, 18 Jun 2013 11:18:18 +0530
+Message-ID: <51BFF4A2.6020006@ti.com>
+References: <1371263352-9229-1-git-send-email-joelagnel@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <7174350.I5qK0sQfHM@wuerfel>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Arnd Bergmann' <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, Jingoo Han <jg1.han@samsung.com>
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1371263352-9229-1-git-send-email-joelagnel-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>
+Cc: Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TasMV2rI37PzA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, June 17, 2013 9:45 PM, Arnd Bergmann wrote:
-> On Monday 17 June 2013 18:45:52 Jingoo Han wrote:
-> > On Friday, June 14, 2013 9:54 PM, Arnd Bergmann wrote:
-> > >
-[.....]
-> > > > > > +static int __exit exynos_pcie_remove(struct platform_device *pdev)
-> > > > > > +{
-> > > > > > +	struct pcie_port *pp = platform_get_drvdata(pdev);
-> > > > > > +
-> > > > > > +	clk_disable_unprepare(pp->bus_clk);
-> > > > > > +	clk_disable_unprepare(pp->clk);
-> > > > > > +
-> > > > > > +	return 0;
-> > > > > > +}
-> > > > >
-> > > > > You also don't remove the PCI devices here, as mentioned in an earlier
-> > > > > review.
-> > > >
-> > > > I reviewed Marvell PCIe driver and Tegra PCIe driver; however,
-> > > > I cannot know what you mean.
-> > > >
-> > > > Could let me know which additional functions are needed?
-> > >
-> > > The mvebu driver does not allow module unload. I haven't looked at the
-> > > tegra driver. If you allow unloading the driver and provide a 'remove'
-> > > callback, that callback needs to clean up the entire bus and remove
-> > > all child devices that were added as well as undo everything the
-> > > probe function did. I think it would be great if you can do that, although
-> > > it might not be easy. The simplest solution would be to not support
-> > > unloading though.
-> >
-> > As the mvebu driver uses platform_driver_probe(), the Exynos driver uses
-> > platform_driver_probe(). Thus, I will not provide a 'remove' callback.
-> 
-> Well, the important part is not to provide a module_exit() function, which
-> will ensure the driver cannot be unloaded.
+Joel,
 
-Aha, I see.
-I will not provide a module_exit() function), as the mvebu driver does.
+When you respin this, please base on top of Prabhakar's clean-up titled:
+"ARM: edma: Convert to devm_* api".
 
-Best regards,
-Jingoo Han
+Or better still, include his patch in your series.
 
-> 
-> 	Arnd
+Thanks,
+Sekhar
