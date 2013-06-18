@@ -1,18 +1,17 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation
  to the DT binding
-Date: Tue, 18 Jun 2013 12:47:53 -0600
-Message-ID: <20130618184753.GA6090@obsidianresearch.com>
+Date: Tue, 18 Jun 2013 20:59:03 +0200
+Message-ID: <51C0ADF7.5050609@gmail.com>
 References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130618174622.GD2204@obsidianresearch.com>
- <51C0A5F8.8030300@gmail.com> <201306182039.50736.arnd@arndb.de>
- <51C0AA8E.9080807@gmail.com>
+ <20130618174622.GD2204@obsidianresearch.com> <51C0A5F8.8030300@gmail.com>
+ <201306182039.50736.arnd@arndb.de> <51C0AA8E.9080807@gmail.com>
+ <20130618184753.GA6090@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51C0AA8E.9080807-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20130618184753.GA6090-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,41 +22,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 08:44:30PM +0200, Sebastian Hesselbarth wrote:
-> On 06/18/2013 08:39 PM, Arnd Bergmann wrote:
-> >On Tuesday 18 June 2013, Sebastian Hesselbarth wrote:
-> >>Also allows you to have up to 40b offset, which might be important
-> >>with LPAE enabled.
-> >
-> >Not with the current generation I think, since the mbus windows are
-> >32 bit only, but it would avoid having to come up with a new format
-> >for a potential future-generation mbus that has wider address.
-> 
-> Yeah, I also recall Thomas or Gregory mention a 32b limitation in
-> remap windows. But we don't need to waste addresses here
-> 
-> And even if SIAA0000 is a concern because there may be target id >15
-> someday, we can still have IIAASS00 instead of IIAA00SS. I guess
-> LPAE will not rise above 40b quickly ;)
+On 06/18/2013 08:47 PM, Jason Gunthorpe wrote:
+> On Tue, Jun 18, 2013 at 08:44:30PM +0200, Sebastian Hesselbarth wrote:
+>> Yeah, I also recall Thomas or Gregory mention a 32b limitation in
+>> remap windows. But we don't need to waste addresses here
+>>
+>> And even if SIAA0000 is a concern because there may be target id>15
+>> someday, we can still have IIAASS00 instead of IIAA00SS. I guess
+>> LPAE will not rise above 40b quickly ;)
+>
+> S = 0 means 4 bit I, 8 bit A
+> S = F means special
+> S = 1 could mean 16 bit I, etc , etc
 
-S = 0 means 4 bit I, 8 bit A
-S = F means special
-S = 1 could mean 16 bit I, etc , etc
+S & 0x8 == 0x0 means 7b target
+S & 0x8 == 0x8 means 7b special ?
 
-Yes, we could define things as 'SIAAoooo oooooooo'
+> Yes, we could define things as 'SIAAoooo oooooooo'
+>
+> But remember 'o' is the offset within the window, it is not related to
+> LPAE.
+>
+> To need>  32 bits 'o' you need to have windows>  4G in size. The only
+> thing that could possibly do that is PCI-E, and it is all special
+> anyhow..
+>
+> The mbus top level ranges remap already supports>4G locations for
+> the windows, even though current hardware cannot do that.
 
-But remember 'o' is the offset within the window, it is not related to
-LPAE.
+True. But as Arnd also mentioned, I don't think it will ever be a
+problem at all. Possibly there will never be any future SoC with mbus
+that will either allow >32b remap base addresses nor >4G size.
 
-To need > 32 bits 'o' you need to have windows > 4G in size. The only
-thing that could possibly do that is PCI-E, and it is all special
-anyhow..
+But never the less, IIAA00SS (which is used in v3 of the patches) will
+limit both to 32b/4G forever.
 
-The mbus top level ranges remap already supports >4G locations for
-the windows, even though current hardware cannot do that.
+And we already have +3 for SIAAoooo ;)
 
-Jason
+Sebastian
