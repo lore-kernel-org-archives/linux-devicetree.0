@@ -1,29 +1,61 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v4 02/10] pinctrl: mvebu: dove pinctrl driver
-Date: Tue, 18 Jun 2013 16:11:16 +0100
-Message-ID: <20130618151116.GZ2718@n2100.arm.linux.org.uk>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-3-git-send-email-sebastian.hesselbarth@gmail.com> <20130618113606.GA26763@n2100.arm.linux.org.uk> <CACRpkdZTVN2O-Rv4u-Ccb9EzV0At3zc7GYQyTq=HkseOi=GTeg@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 2/2] mmc: dw_mmc: Add the ability to set the ciu clock frequency
+Date: Tue, 18 Jun 2013 08:15:37 -0700
+Message-ID: <CAD=FV=Wy5X9C=NOUVyAzZK5+BKD1w4FTmoTHzKipq2j_Y9rdtg@mail.gmail.com>
+References: <1370580406-10254-1-git-send-email-dianders@chromium.org>
+	<1370626110-1731-1-git-send-email-dianders@chromium.org>
+	<1370626110-1731-2-git-send-email-dianders@chromium.org>
+	<51BFE754.6000909@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZTVN2O-Rv4u-Ccb9EzV0At3zc7GYQyTq=HkseOi=GTeg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <51BFE754.6000909@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: Chris Ball <cjb@laptop.org>, Olof Johansson <olof@lixom.net>, Andrew Bresticker <abrestic@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Abhilash Kesavan <a.kesavan@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Seungwon Jeon <tgih.jun@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Will Newton <will.newton@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 05:02:49PM +0200, Linus Walleij wrote:
-> Nowadays I would do the above with regmap_update_bits().
-> 
-> Mutual exclusion for read-modify-write of individual bits in a
-> register is one of those cases where doing a regmap over
-> a memory-mapped register range makes a lot of sense.
-> (drivers/mfd/syscon.c being a nice example)
+Jaehoon,
 
-So, for that solution we need to have some kind of global regmap per
-register or somesuch.  Then you run into regmap needing a struct
-device - well, with a shared register, which struct device do you
-use, or do you have to invent one?
+On Mon, Jun 17, 2013 at 9:51 PM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> Hi Doug,
+>
+> I have one question for using <clock-frequency>.
+> I found the fixed-rate-clocks feature.
+> If we want to set <clock-frequency>, then can we use the fixed-rate-clocks?
+> i'm not sure how use the fixed-rate-clocks. but it seems to set fixed-rate value for clock frequency.
+>
+> clk_set_rate() didn't ensure to set the <clock-frequency> value.
 
-That sounds more heavy-weight than is really necessary.
+I'm not sure I understand the question.  I don't think that the
+fixed-rate-clocks have a close relation to the clock-frequency or the
+ciu clock.  The fixed-rate-clock entries for a board usually specify
+the root clock source for a board.  For instance in exynos5250-snow
+you can see:
+
+fixed-rate-clocks {
+  xxti {
+    compatible = "samsung,clock-xxti";
+    clock-frequency = <24000000>;
+  };
+};
+
+Other clocks in the board are derived from this clock through PLLs,
+muxes, dividers, gates, etc.  On 5250 we have:
+
+ fin_pll (xxti) -> fout_mpll -> fout_mplldiv2 -> mout_mpll_fout ->
+ sclk_mpll -> sclk_mpll_user -> mout_mmc1 -> div_mmc1
+ div_mmc_pre1 -> sclk_mmc1
+
+In 5250 the ciu clock for mmc1 is sclk_mmc1, which is a simple gate.
+When you "enable" this clock it, ungates it.  The sclk_mmc1 has the
+flag CLK_SET_RATE_PARENT on it.  That means when you try to set the
+rate it will involve the parent clock (div_mmc_pre1).  The parent
+clock also has CLK_SET_RATE_PARENT, so it can also involve div_mmc1.
+I haven't dug through to see how the clock framework splits up divides
+between div_mmc1 and div_mmc_pre1, but it's supposed to handle that.
+
+We don't allow clk_set_rate to percolate any higher (no
+CLK_SET_RATE_PARENT at mout_mmc1).
+
+-Doug
