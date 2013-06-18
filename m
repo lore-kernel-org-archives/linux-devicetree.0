@@ -1,65 +1,170 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: [PATCH v2 5/5] mfd: twl4030-power: Fix relocking on error
-Date: Tue, 18 Jun 2013 15:18:00 +0200
-Message-ID: <1371561480-28325-6-git-send-email-florian.vaussard@epfl.ch>
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: [PATCH v2 1/5] mfd: twl4030-power: Split from twl-core into a
+ dedicated module
+Date: Tue, 18 Jun 2013 15:17:56 +0200
+Message-ID: <1371561480-28325-2-git-send-email-florian.vaussard@epfl.ch>
 References: <1371561480-28325-1-git-send-email-florian.vaussard@epfl.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1371561480-28325-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Samuel Ortiz <sameo@linux.intel.com>
-Cc: Kevin Hilman <khilman@linaro.org>, Rob Landley <rob@landley.net>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Tero Kristo <t-kristo@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@epfl.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371561480-28325-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If an error occurs when loading power scripts or resources, the
-registers are not correctly relocked. Fix it.
+For now, the call to twl4030-power is hard-wired inside twl-core.
+To ease the future transition to DT, make twl4030-power as a
+separate module, like what is already done for twl4030-audio
+and others.
 
-Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 ---
- drivers/mfd/twl4030-power.c |   12 ++++++++----
- 1 files changed, 8 insertions(+), 4 deletions(-)
+ drivers/mfd/twl-core.c      |   12 +++++++---
+ drivers/mfd/twl4030-power.c |   44 +++++++++++++++++++++++++++++++++---------
+ include/linux/i2c/twl.h     |    1 -
+ 3 files changed, 42 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/mfd/twl4030-power.c b/drivers/mfd/twl4030-power.c
-index 1c19d82..a8b33c9 100644
---- a/drivers/mfd/twl4030-power.c
-+++ b/drivers/mfd/twl4030-power.c
-@@ -558,6 +558,7 @@ int twl4030_power_probe(struct platform_device *pdev)
- 	struct twl4030_power_data *pdata = pdev->dev.platform_data;
- 	struct device_node *node = pdev->dev.of_node;
- 	int err = 0;
-+	int err2 = 0;
- 	u8 val;
- 
- 	if (!pdata && !node) {
-@@ -581,12 +582,12 @@ int twl4030_power_probe(struct platform_device *pdev)
- 		err = twl4030_power_configure_scripts(pdata);
- 		if (err) {
- 			pr_err("TWL4030 failed to load scripts\n");
--			return err;
-+			goto relock;
- 		}
- 		err = twl4030_power_configure_resources(pdata);
- 		if (err) {
- 			pr_err("TWL4030 failed to configure resource\n");
--			return err;
-+			goto relock;
- 		}
+diff --git a/drivers/mfd/twl-core.c b/drivers/mfd/twl-core.c
+index 8d9bc10..dbd52b3 100644
+--- a/drivers/mfd/twl-core.c
++++ b/drivers/mfd/twl-core.c
+@@ -1023,6 +1023,14 @@ add_children(struct twl4030_platform_data *pdata, unsigned irq_base,
+ 			return PTR_ERR(child);
  	}
  
-@@ -612,10 +613,13 @@ int twl4030_power_probe(struct platform_device *pdev)
- 	}
- 
- relock:
--	err = twl_i2c_write_u8(TWL_MODULE_PM_MASTER, 0,
-+	err2 = twl_i2c_write_u8(TWL_MODULE_PM_MASTER, 0,
- 			       TWL4030_PM_MASTER_PROTECT_KEY);
--	if (err)
-+	if (err2) {
- 		pr_err("TWL4030 Unable to relock registers\n");
-+		return err2;
++	if (IS_ENABLED(CONFIG_TWL4030_POWER) && pdata->power) {
++		child = add_child(TWL_MODULE_PM_MASTER, "twl4030_power",
++				  pdata->power, sizeof(*pdata->power), false,
++				  0, 0);
++		if (IS_ERR(child))
++			return PTR_ERR(child);
 +	}
 +
- 	return err;
+ 	return 0;
  }
+ 
+@@ -1234,10 +1242,6 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		WARN(status < 0, "Error: reading twl_idcode register value\n");
+ 	}
+ 
+-	/* load power event scripts */
+-	if (IS_ENABLED(CONFIG_TWL4030_POWER) && pdata && pdata->power)
+-		twl4030_power_init(pdata->power);
+-
+ 	/* Maybe init the T2 Interrupt subsystem */
+ 	if (client->irq) {
+ 		if (twl_class_is_4030()) {
+diff --git a/drivers/mfd/twl4030-power.c b/drivers/mfd/twl4030-power.c
+index dd362c1..7ade81b 100644
+--- a/drivers/mfd/twl4030-power.c
++++ b/drivers/mfd/twl4030-power.c
+@@ -507,8 +507,9 @@ void twl4030_power_off(void)
+ 		pr_err("TWL4030 Unable to power off\n");
+ }
+ 
+-void twl4030_power_init(struct twl4030_power_data *twl4030_scripts)
++int twl4030_power_probe(struct platform_device *pdev)
+ {
++	struct twl4030_power_data *pdata = pdev->dev.platform_data;
+ 	int err = 0;
+ 	int i;
+ 	struct twl4030_resconfig *resconfig;
+@@ -524,14 +525,14 @@ void twl4030_power_init(struct twl4030_power_data *twl4030_scripts)
+ 	if (err)
+ 		goto unlock;
+ 
+-	for (i = 0; i < twl4030_scripts->num; i++) {
+-		err = load_twl4030_script(twl4030_scripts->scripts[i], address);
++	for (i = 0; i < pdata->num; i++) {
++		err = load_twl4030_script(pdata->scripts[i], address);
+ 		if (err)
+ 			goto load;
+-		address += twl4030_scripts->scripts[i]->size;
++		address += pdata->scripts[i]->size;
+ 	}
+ 
+-	resconfig = twl4030_scripts->resource_config;
++	resconfig = pdata->resource_config;
+ 	if (resconfig) {
+ 		while (resconfig->resource) {
+ 			err = twl4030_configure_resource(resconfig);
+@@ -543,7 +544,7 @@ void twl4030_power_init(struct twl4030_power_data *twl4030_scripts)
+ 	}
+ 
+ 	/* Board has to be wired properly to use this feature */
+-	if (twl4030_scripts->use_poweroff && !pm_power_off) {
++	if (pdata->use_poweroff && !pm_power_off) {
+ 		/* Default for SEQ_OFFSYNC is set, lets ensure this */
+ 		err = twl_i2c_read_u8(TWL_MODULE_PM_MASTER, &val,
+ 				      TWL4030_PM_MASTER_CFG_P123_TRANSITION);
+@@ -568,18 +569,41 @@ relock:
+ 			       TWL4030_PM_MASTER_PROTECT_KEY);
+ 	if (err)
+ 		pr_err("TWL4030 Unable to relock registers\n");
+-	return;
++	return err;
+ 
+ unlock:
+ 	if (err)
+ 		pr_err("TWL4030 Unable to unlock registers\n");
+-	return;
++	return err;
+ load:
+ 	if (err)
+ 		pr_err("TWL4030 failed to load scripts\n");
+-	return;
++	return err;
+ resource:
+ 	if (err)
+ 		pr_err("TWL4030 failed to configure resource\n");
+-	return;
++	return err;
+ }
++
++static int twl4030_power_remove(struct platform_device *pdev)
++{
++	return 0;
++}
++
++static struct platform_driver twl4030_power_driver = {
++	.driver = {
++		.name	= "twl4030_power",
++		.owner	= THIS_MODULE,
++	},
++	.probe		= twl4030_power_probe,
++	.remove		= twl4030_power_remove,
++};
++
++module_platform_driver(twl4030_power_driver);
++
++MODULE_AUTHOR("Nokia Corporation");
++MODULE_AUTHOR("Texas Instruments, Inc.");
++MODULE_DESCRIPTION("Power management for TWL4030");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:twl4030_power");
++
+diff --git a/include/linux/i2c/twl.h b/include/linux/i2c/twl.h
+index 488debb..2167c0d0 100644
+--- a/include/linux/i2c/twl.h
++++ b/include/linux/i2c/twl.h
+@@ -658,7 +658,6 @@ struct twl4030_power_data {
+ 	bool use_poweroff;	/* Board is wired for TWL poweroff */
+ };
+ 
+-extern void twl4030_power_init(struct twl4030_power_data *triton2_scripts);
+ extern int twl4030_remove_script(u8 flags);
+ extern void twl4030_power_off(void);
  
 -- 
 1.7.5.4
