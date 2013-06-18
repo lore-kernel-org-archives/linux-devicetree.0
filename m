@@ -1,67 +1,66 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH 5/5] clk/exynos5420: assign sclk_pixel id to pixel clock divider
-Date: Tue, 18 Jun 2013 19:54:29 +0530
-Message-ID: <CAPdUM4NUJv7E+KqrGgHsWHYnf89_2cbiMP_D6S1pWTW=XeZO+g@mail.gmail.com>
-References: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>
-	<1371565998-3642-6-git-send-email-rahul.sharma@samsung.com>
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH v2] of: Add more stubs for non-OF builds
+Date: Tue, 18 Jun 2013 18:39:22 +0400
+Message-ID: <1371566362-9334-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1371565998-3642-6-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With this patch, it is at par with Exynos5250 and Exynos4 clocks
-where sclk_pixel ID is assigned to a divider clock but in real,
-sclk_pixel is listed under gate clocks (enum value).
+Patch adds of_get_next_child and of_get_next_available_child
+stubs for non-OF builds.
 
-Alternate to this, I can allocate a new ID, div_pixel, listed under
-new category of Divider Clocks for Exyno4, 5250 and 5420.
-div_pixel ID can be assigned to pixel clock dividers for all 3 SoCs.
-This ID can be accessed by hdmi driver as usual. While sclk_pixel
-ID can be left unused for Exyno4, 5250 as there are no pixel clock
-gates. And, For 5420, sclk_pixel can optionally be used to
-enable/disable the pixel clock gate.
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ include/linux/of.h | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-Regards,
-Rahul Sharma.
-
-On Tue, Jun 18, 2013 at 8:03 PM, Rahul Sharma <rahul.sharma@samsung.com> wrote:
-> sclk_pixel is used to represent pixel clock divider on all exynos
-> SoCs not as a gate clock. It is queried in driver to pass as the
-> parent to hdmi clock while switching between parents. A new ID can
-> be asssigned Pixel gate clock which is currently not in use. Pixel
-> clock gate is default 'on'.
->
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
->  drivers/clk/samsung/clk-exynos5420.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index 59cf177..edd0696 100644
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -434,7 +434,7 @@ struct samsung_div_clock exynos5420_div_clks[] __initdata = {
->         DIV(none, "dout_fimd1", "mout_fimd1", DIV_DISP10, 0, 4),
->         DIV(none, "dout_mipi1", "mout_mipi1", DIV_DISP10, 16, 8),
->         DIV(none, "dout_dp1", "mout_dp1", DIV_DISP10, 24, 4),
-> -       DIV(none, "dout_hdmi_pixel", "mout_pixel", DIV_DISP10, 28, 4),
-> +       DIV(sclk_pixel, "dout_hdmi_pixel", "mout_pixel", DIV_DISP10, 28, 4),
->
->         /* Audio Block */
->         DIV(none, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
-> @@ -570,7 +570,7 @@ struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
->                 GATE_TOP_SCLK_DISP1, 3, CLK_SET_RATE_PARENT, 0),
->         GATE(sclk_hdmi, "sclk_hdmi", "mout_hdmi",
->                 GATE_TOP_SCLK_DISP1, 9, CLK_SET_RATE_PARENT, 0),
-> -       GATE(sclk_pixel, "sclk_pixel", "dout_hdmi_pixel",
-> +       GATE(none, "sclk_pixel", "dout_hdmi_pixel",
->                 GATE_TOP_SCLK_DISP1, 10, CLK_SET_RATE_PARENT, 0),
->         GATE(sclk_dp1, "sclk_dp1", "dout_dp1",
->                 GATE_TOP_SCLK_DISP1, 20, CLK_SET_RATE_PARENT, 0),
-> --
-> 1.7.10.4
->
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 1fd08ca..c086c1a 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -366,8 +366,17 @@ static inline bool of_have_populated_dt(void)
+ 	return false;
+ }
+ 
+-#define for_each_child_of_node(parent, child) \
+-	while (0)
++static inline struct device_node *of_get_next_child(
++	const struct device_node *node, struct device_node *prev)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_get_next_available_child(
++	const struct device_node *node, struct device_node *prev)
++{
++	return NULL;
++}
+ 
+ static inline struct device_node *of_get_child_by_name(
+ 					const struct device_node *node,
+@@ -376,6 +385,9 @@ static inline struct device_node *of_get_child_by_name(
+ 	return NULL;
+ }
+ 
++#define for_each_child_of_node(parent, child) \
++	while (0)
++
+ static inline int of_get_child_count(const struct device_node *np)
+ {
+ 	return 0;
+-- 
+1.8.1.5
