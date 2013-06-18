@@ -1,123 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation to
- the DT binding
-Date: Tue, 18 Jun 2013 23:45:26 +0200
-Message-ID: <201306182345.26281.arnd@arndb.de>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 10/12] ARM: mvebu: Relocate Armada 370/XP DeviceBus
+ device tree nodes
+Date: Tue, 18 Jun 2013 19:09:30 -0300
+Message-ID: <20130618220929.GA24056@localhost>
 References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306181814.33941.arnd@arndb.de> <20130618213454.GD2516@localhost>
+ <1371554737-25319-11-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306181816.26530.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130618213454.GD2516@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201306181816.26530.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 June 2013, Ezequiel Garcia wrote:
-> On Tue, Jun 18, 2013 at 06:14:33PM +0200, Arnd Bergmann wrote:
-> > On Tuesday 18 June 2013, Ezequiel Garcia wrote:
-> > > +Required properties:
-> > > +
-> > > +- compatible:	 Should be set to one of the following:
-> > > +		 marvell,armada370-mbus
-> > > +		 marvell,armadaxp-mbus
-> > > +
-> > > +- reg:		 Device's register space.
-> > > +		 Two entries are expected, see the examples below.
-> > > +		 The first one controls the devices decoding window and
-> > > +		 the second one controls the SDRAM decoding window.
-> > > +
-> > > +- address-cells: Must be '2'. The first cell for the MBus ID encoding,
-> > > +                 the second cell for the address offset within the window.
-> > > +
-> > > +- size-cells:    Must be '1'.
-> > > +
-> > > +- ranges:        Must be set up to provide a proper translation for each child.
-> > > +	         See the examples below.
-> > 
-> > You should explain here what the policy is regarding windows set up by the
-> > boot loader. Are the ranges in here required to be the ones that the boot
-> > loader has preconfigured, or are they the ones that the mbus driver is supposed
-> > to set up?
-> > 
-> 
-> Actually, I might be confused but the kernel MBus driver is completely
-> independent from the bootloader's -except in the internal register case,
-> (because we don't touch that from where the bootloader left it).
-
-Right, then state that clearly in the binding.
-
-> What happens is that any decoding window that was setup by the bootloader,
-> is wiped and completely new windows are allocated using the translations
-> in the DT, as described by this binding.
-> 
-> This was the case from the start with the old MBus driver. FWIW, I think
-> it's actually the best choice that can be made: it makes the kernel
-> independent of the previous setting.
-> 
-> I know you've suggested differently in the past, but I'm not sure I
-> understand what's the benefit in keeping the bootloaders configuration.
-
-The device tree /normally/ describes things that are either wired up
-in hardware or set up by the boot loader. Describing things that the
-boot loader may or may not have set up and that the kernel should
-set up but may ignore if it wants to is a bit fishy, but it seems
-that you have decided to do it that way. You should definitely
-document the fact that all ranges except the "internal-regs" are just
-suggestions and cannot be relied on to be present at boot time.
-
-A cleaner approach would be to require that all ranges here are exactly
-the ones that have been configured by the boot loader, and state the
-OS can either assume that they are valid or can reprogram them as
-needed. That would imply that you don't actually need an mbus driver
-unless you want to dynamically reassign the windows.
-
-Please also add a property that describes the address range in which
-the windows might be reassigned, i.e. everything that is not RAM.
-
-> > > +Each child device needs at least a 'ranges' property. If the child is avaiable
-> > > +(i.e. status not 'disabled'), then the MBus driver creates a decoding window
-> > > +for it. For instance, in the example below the BootROM child is specified:
-> > > +
-> > > +	soc {
-> > > +		compatible = "marvell,armada370-mbus", "simple-bus";
-> > > +		reg = <0xd0020000 0x100>, <0xd0020180 0x20>;
-> > > +		#address-cells = <2>;
-> > > +		#size-cells = <1>;
-> > > +
-> > > +		ranges = < ... /* other entries */
-> > > +			   0x011d0000 0 0 0xfff00000 0x100000>;
-> > > +
-> > > +		bootrom {
-> > > +			#address-cells = <1>;
-> > > +			#size-cells = <1>;
-> > > +			ranges = <0 0x011d0000 0 0x100000>;
-> > > +		};
-> > > +
-> > > +		/* other children */
-> > > +		...
-> > > +	};
-> > 
-> > Do you really want to require the child to provide a "ranges" property?
-> > I think this makes it more complicated to specify devices that belong
-> > into the "internal-regs" category.
-> > 
-> 
-> No, this text is actually a left-over from the previous patchset, in
-> current v3 patchset MBus children are *not* required to have any ranges.
-> On the otherside, although you will need one except in the most trivial
-> cases like for the BootROM.
-
-Ok.
-
-	Arnd
+T24gVHVlLCBKdW4gMTgsIDIwMTMgYXQgMDY6MTY6MjZQTSArMDIwMCwgQXJuZCBCZXJnbWFubiB3
+cm90ZToKPiBPbiBUdWVzZGF5IDE4IEp1bmUgMjAxMywgRXplcXVpZWwgR2FyY2lhIHdyb3RlOgo+
+ID4gCj4gPiArICAgICAgICAgICAgICAgZGV2YnVzLWJvb3RjcyB7Cj4gPiArICAgICAgICAgICAg
+ICAgICAgICAgICBjb21wYXRpYmxlID0gIm1hcnZlbGwsbXZlYnUtZGV2YnVzIjsKPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweGZmZmYwMDAxIDB4MTA0MDAgMHg4PjsKPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIHJhbmdlcyA9IDwwIE1CVVNfSUQoMHgwMSwgMHgyZikgMCAw
+eGZmZmZmZmZmPjsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0g
+PDE+Owo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MT47Cj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmNvcmVjbGsgMD47Cj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gKyAgICAgICAgICAgICAg
+IH07Cj4gCj4gVGhpcyBpcyBhIHZpb2xhdGlvbiBvZiB0aGUgYmluZGluZyBhcyBmYXIgYXMgSSBj
+YW4gdGVsbCwgc2luY2UgeW91IGRvbid0IHNwZWNpZnkgcmFuZ2VzCj4gdG8gYWNjZXNzIHRoZSAw
+eGZmZmYwMDAxIDB4MTA0MDAgYWRkcmVzcy4gSG93ZXZlciwgYXMgSSBleHBsYWluZWQgaW4gbXkg
+Y29tbWVudCBmb3IKPiB0aGUgYmluZGluZywgSSB0aGluayB5b3Ugc2hvdWxkIGNsYXJpZnkgdGhl
+IGJpbmRpbmcgYW5kIGxlYXZlIHRoZSBpbXBsZW1lbnRhdGlvbgo+IGFzIHlvdSBoYXZlIGl0IGhl
+cmUuCj4gCgpNbW0uLi4gYWdhaW4gSSBnb3QgbG9zdCBoZXJlLiBXaGljaCAncmFuZ2VzJyB5b3Ug
+c2F5IEkgZG9uJ3Qgc3BlY2lmeSB0bwphY2Nlc3MgdGhlIChmb3JtZXJseSkgMHhmZmZmMDAwMT8K
+CkFGQUlLLCAncmFuZ2VzJyBhcmUgb25seSBmb3IgY2hpbGRyZW4gdHJhbnNsYXRpb24sIHdoaWNo
+IG1lYW5zIEkgZG9uJ3QKbmVlZCB0byBzcGVjaWZ5IGEgcmFuZ2VzIGZvciB0aGF0IGluIHRoZSBk
+ZXZidXMgbm9kZSwgYnV0IGluIGl0cyBwYXJlbnQsCnJpZ2h0PwoKVGhpcyByYW5nZXMgdGhpbmcg
+Y2FuIGJlIHZlcnkgdHJpY2t5LCBzbyBwbGVhc2UgY29ycmVjdCBtZSBpZiBJJ20KbWlzdGFrZW4u
+CgotLSAKRXplcXVpZWwgR2FyY8OtYSwgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXgsIEtl
+cm5lbCBhbmQgQW5kcm9pZCBFbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUt
+ZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcK
+aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
