@@ -1,177 +1,54 @@
-From: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v8] i2c-designware: make SDA hold time configurable
-Date: Tue, 18 Jun 2013 09:44:29 +0200
-Message-ID: <1371541469-20623-1-git-send-email-christian.ruppert@abilis.com>
-References: <51BF77C2.70004@gmail.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51BF77C2.70004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 0/3] SH pinctrl DT support
+Date: Tue, 18 Jun 2013 10:05:30 +0200
+Message-ID: <CACRpkdZh709J3pFsfbReQ20LU5W0Q1HacE0ZpssWXofKTJJ6pQ@mail.gmail.com>
+References: <1371495003-11185-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371495003-11185-1-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch makes the SDA hold time configurable through device tree.
+On Mon, Jun 17, 2013 at 8:50 PM, Laurent Pinchart
+<laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
 
-Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/i2c/i2c-designware.txt     |   14 ++++++++++++++
- arch/arc/boot/dts/abilis_tb100_dvk.dts             |   10 +++++-----
- arch/arc/boot/dts/abilis_tb101_dvk.dts             |   10 +++++-----
- drivers/i2c/busses/i2c-designware-core.c           |    5 +++++
- drivers/i2c/busses/i2c-designware-core.h           |    1 +
- drivers/i2c/busses/i2c-designware-platdrv.c        |   10 ++++++++++
- 6 files changed, 40 insertions(+), 10 deletions(-)
+> Hello,
+>
+> Here's the seventh (and hopefully final) version of the SuperH and SH Mobile
+> pin controllers (PFC) DT support patch set.
+>
+> The patches have been rebased on the for-next branch of the pinctrl
+> repository. All ARM-specific patches have been dropped and will be pushed
+> through to ARM SoC tree in v3.12. This series thus only contains DT support
+> for the sh-pfc driver.
+>
+> I've tried merging Simon's latest tag (renesas-next-20130617v3) with these
+> patches and no conflict occurred. Linus, would it finally be possible to get
+> this applied for v3.11 ?
+>
+> Changes since v6:
+>
+> - Added generic pinconf support back
+> - Dropped all ARM-specific patches
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-index e42a2ee..3266cc7 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-@@ -10,6 +10,9 @@ Recommended properties :
- 
-  - clock-frequency : desired I2C bus clock frequency in Hz.
- 
-+Optional properties :
-+ - i2c-sda-hold-time-ns : should contain the SDA hold time in nanoseconds.
-+
- Example :
- 
- 	i2c@f0000 {
-@@ -20,3 +23,14 @@ Example :
- 		interrupts = <11>;
- 		clock-frequency = <400000>;
- 	};
-+
-+	i2c@1120000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,designware-i2c";
-+		reg = <0x1120000 0x1000>;
-+		interrupt-parent = <&ictl>;
-+		interrupts = <12 1>;
-+		clock-frequency = <400000>;
-+		i2c-sda-hold-time-ns = <300>;
-+	};
-diff --git a/arch/arc/boot/dts/abilis_tb100_dvk.dts b/arch/arc/boot/dts/abilis_tb100_dvk.dts
-index 0fa0d4a..ebc313a 100644
---- a/arch/arc/boot/dts/abilis_tb100_dvk.dts
-+++ b/arch/arc/boot/dts/abilis_tb100_dvk.dts
-@@ -45,19 +45,19 @@
- 		};
- 
- 		i2c0: i2c@FF120000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c1: i2c@FF121000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c2: i2c@FF122000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c3: i2c@FF123000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c4: i2c@FF124000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 
- 		leds {
-diff --git a/arch/arc/boot/dts/abilis_tb101_dvk.dts b/arch/arc/boot/dts/abilis_tb101_dvk.dts
-index a4d80ce..b204657 100644
---- a/arch/arc/boot/dts/abilis_tb101_dvk.dts
-+++ b/arch/arc/boot/dts/abilis_tb101_dvk.dts
-@@ -45,19 +45,19 @@
- 		};
- 
- 		i2c0: i2c@FF120000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c1: i2c@FF121000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c2: i2c@FF122000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c3: i2c@FF123000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c4: i2c@FF124000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 
- 		leds {
-diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
-index c41ca63..6c0e776 100644
---- a/drivers/i2c/busses/i2c-designware-core.c
-+++ b/drivers/i2c/busses/i2c-designware-core.c
-@@ -67,6 +67,7 @@
- #define DW_IC_STATUS		0x70
- #define DW_IC_TXFLR		0x74
- #define DW_IC_RXFLR		0x78
-+#define DW_IC_SDA_HOLD		0x7c
- #define DW_IC_TX_ABRT_SOURCE	0x80
- #define DW_IC_ENABLE_STATUS	0x9c
- #define DW_IC_COMP_PARAM_1	0xf4
-@@ -332,6 +333,10 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
- 	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
- 	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt, lcnt);
- 
-+	/* Configure SDA Hold Time if required */
-+	if (dev->sda_hold_time)
-+		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
-+
- 	/* Configure Tx/Rx FIFO threshold levels */
- 	dw_writel(dev, dev->tx_fifo_depth - 1, DW_IC_TX_TL);
- 	dw_writel(dev, 0, DW_IC_RX_TL);
-diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-index e761ad1..912aa22 100644
---- a/drivers/i2c/busses/i2c-designware-core.h
-+++ b/drivers/i2c/busses/i2c-designware-core.h
-@@ -90,6 +90,7 @@ struct dw_i2c_dev {
- 	unsigned int		tx_fifo_depth;
- 	unsigned int		rx_fifo_depth;
- 	int			rx_outstanding;
-+	u32			sda_hold_time;
- };
- 
- #define ACCESS_SWAP		0x00000001
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 35b70a1..81362e5 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -34,6 +34,7 @@
- #include <linux/sched.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
-+#include <linux/of.h>
- #include <linux/of_i2c.h>
- #include <linux/platform_device.h>
- #include <linux/pm.h>
-@@ -121,6 +122,15 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 		return PTR_ERR(dev->clk);
- 	clk_prepare_enable(dev->clk);
- 
-+	if (pdev->dev.of_node) {
-+		u32 ht;
-+		u32 ic_clk = dev->get_clk_rate_khz(dev);
-+
-+		of_property_read_u32(pdev->dev.of_node,
-+					"i2c-sda-hold-time-ns", &ht);
-+		dev->sda_hold_time = ((u64)ic_clk * ht + 500000) / 1000000;
-+	}
-+
- 	dev->functionality =
- 		I2C_FUNC_I2C |
- 		I2C_FUNC_10BIT_ADDR |
--- 
-1.7.1
+Thanks, this looks really nice and I've applied all three.
+
+Heiko, James can you have a look from a generic pinconf
+point of view so we are sure we get this right? (Looks right
+to me atleast.)
+
+Yours,
+Linus Walleij
