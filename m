@@ -1,142 +1,71 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 3/3] ARM: dts: OMAP2+: Add mailbox nodes
-Date: Tue, 18 Jun 2013 17:35:00 -0500
-Message-ID: <1371594900-37640-1-git-send-email-s-anna@ti.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v3 2/2] i2c: designware: add two optional property
+ tx/rx-fifo-size
+Date: Wed, 19 Jun 2013 08:37:14 +0800
+Message-ID: <51C0FD3A.2060309@linaro.org>
+References: <1370918230-24793-1-git-send-email-zhangfei.gao@linaro.org>
+ <1370918230-24793-3-git-send-email-zhangfei.gao@linaro.org>
+ <20130618162257.GF7718@katana>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, Ohad Ben-Cohen <ohad@wizery.com>, Omar Ramirez Luna <omar.ramirez@copitl.com>, Jassi Brar <jaswinder.singh@linaro.org>, Loic Pallardy <loic.pallardy@st.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Suman Anna <s-anna@ti.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130618162257.GF7718@katana>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Dirk Brandewie <dirk.brandewie@gmail.com>, baruch@tkos.co.il, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The mailbox DT node data has been added for OMAP2420,
-OMAP2430, OMAP3430/OMAP3630, OMAP44xx devices. Data for
-OMAP5 is skipped for now since the corresponding hwmod
-entry is not present.
+On 13-06-19 12:22 AM, Wolfram Sang wrote:
+> On Tue, Jun 11, 2013 at 10:37:10AM +0800, Zhangfei Gao wrote:
+>> rx-fifo-size and tx-fifo-size will be updated if provided from dts
+>>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> CC: Baruch Siach <baruch@tkos.co.il>
+>> ---
+>>   .../devicetree/bindings/i2c/i2c-designware.txt     |    7 +++++++
+>>   drivers/i2c/busses/i2c-designware-platdrv.c        |    3 +++
+>>   2 files changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>> index e42a2ee..84717fe 100644
+>> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+>> @@ -6,6 +6,11 @@ Required properties :
+>>    - reg : Offset and length of the register set for the device
+>>    - interrupts : <IRQ> where IRQ is the interrupt number.
+>>
+>> +Optional properties:
+>> +
+>> + - rx-fifo-size : 1 cell, Rx fifo size
+>> + - tx-fifo-size : 1 cell, Tx fifo size
+>> +
+>
+> I'd think the bindings are okay, yet I wonder they are not more used in
+> practice. So, an ack from a dt-expert would be appreciated.
 
-The mailbox static device initialization logic is also
-adjusted for a DT boot.
+Thanks Wolfram,
+The patches also acked by Baruch, the original writer.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/omap2420.dtsi | 13 +++++++++++++
- arch/arm/boot/dts/omap2430.dtsi | 12 ++++++++++++
- arch/arm/boot/dts/omap3.dtsi    | 12 ++++++++++++
- arch/arm/boot/dts/omap4.dtsi    | 12 ++++++++++++
- arch/arm/mach-omap2/devices.c   |  2 +-
- 5 files changed, 50 insertions(+), 1 deletion(-)
+Some platform can not provide fifo info from register 
+DW_IC_COMP_PARAM_1, hisilicon read such register is 0.
 
-diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap2420.dtsi
-index c8f9c55..e0f4e47 100644
---- a/arch/arm/boot/dts/omap2420.dtsi
-+++ b/arch/arm/boot/dts/omap2420.dtsi
-@@ -114,6 +114,19 @@
- 			dma-names = "tx", "rx";
- 		};
- 
-+		mailbox: mailbox@48094000 {
-+			compatible = "ti,omap2-mailbox";
-+			reg = <0x48094000 0x200>;
-+			interrupts = <26>, /* DSP Interrupt */
-+				     <34>; /* IVA Interrupt */
-+			ti,hwmods = "mailbox";
-+			ti,mbox-num-users = <4>;
-+			ti,mbox-num-fifos = <6>;
-+			#ti,mbox-data-cells = <4>;
-+			ti,mbox-names = "dsp", "iva";
-+			ti,mbox-data = <0 1 0 0>, <2 3 1 3>;
-+		};
-+
- 		timer1: timer@48028000 {
- 			compatible = "ti,omap2420-timer";
- 			reg = <0x48028000 0x400>;
-diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
-index c535a5a..b413423 100644
---- a/arch/arm/boot/dts/omap2430.dtsi
-+++ b/arch/arm/boot/dts/omap2430.dtsi
-@@ -175,6 +175,18 @@
- 			dma-names = "tx", "rx";
- 		};
- 
-+		mailbox: mailbox@48094000 {
-+			compatible = "ti,omap2-mailbox";
-+			reg = <0x48094000 0x200>;
-+			interrupts = <26>;
-+			ti,hwmods = "mailbox";
-+			ti,mbox-num-users = <4>;
-+			ti,mbox-num-fifos = <6>;
-+			#ti,mbox-data-cells = <4>;
-+			ti,mbox-names = "dsp";
-+			ti,mbox-data = <0 1 0 0>;
-+		};
-+
- 		timer1: timer@49018000 {
- 			compatible = "ti,omap2420-timer";
- 			reg = <0x49018000 0x400>;
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 6d05ee0..3cc7c28 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -380,6 +380,18 @@
- 			dma-names = "tx", "rx";
- 		};
- 
-+		mailbox: mailbox@48094000 {
-+			compatible = "ti,omap2-mailbox";
-+			reg = <0x48094000 0x200>;
-+			interrupts = <26>;
-+			ti,hwmods = "mailbox";
-+			ti,mbox-num-users = <2>;
-+			ti,mbox-num-fifos = <2>;
-+			#ti,mbox-data-cells = <4>;
-+			ti,mbox-names = "dsp";
-+			ti,mbox-data = <0 1 0 0>;
-+		};
-+
- 		timer1: timer@48318000 {
- 			compatible = "ti,omap3430-timer";
- 			reg = <0x48318000 0x400>;
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 463b97d..0155182 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -516,6 +516,18 @@
- 			};
- 		};
- 
-+		mailbox: mailbox@4a0f4000 {
-+			compatible = "ti,omap4-mailbox";
-+			reg = <0x4a0f4000 0x200>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,hwmods = "mailbox";
-+			ti,mbox-num-users = <3>;
-+			ti,mbox-num-fifos = <8>;
-+			#ti,mbox-data-cells = <4>;
-+			ti,mbox-names = "mbox-ipu", "mbox-dsp";
-+			ti,mbox-data = <0 1 0 0>, <3 2 0 0>;
-+		};
-+
- 		timer1: timer@4a318000 {
- 			compatible = "ti,omap3430-timer";
- 			reg = <0x4a318000 0x80>;
-diff --git a/arch/arm/mach-omap2/devices.c b/arch/arm/mach-omap2/devices.c
-index 73762ac..2058f24 100644
---- a/arch/arm/mach-omap2/devices.c
-+++ b/arch/arm/mach-omap2/devices.c
-@@ -655,11 +655,11 @@ static int __init omap2_init_devices(void)
- 	omap_init_audio();
- 	omap_init_camera();
- 	omap_init_hdmi_audio();
--	omap_init_mbox();
- 	/* If dtb is there, the devices will be created dynamically */
- 	if (!of_have_populated_dt()) {
- 		omap_init_control_usb();
- 		omap_init_dmic();
-+		omap_init_mbox();
- 		omap_init_mcpdm();
- 		omap_init_mcspi();
- 		omap_init_sham();
--- 
-1.8.3.1
 
+>> +	of_property_read_u32(np, "rx-fifo-size", &dev->rx_fifo_depth);
+>> +	of_property_read_u32(np, "tx-fifo-size", &dev->tx_fifo_depth);
+>
+> Those can fail.
+
+"rx-fifo-size and tx-fifo-size will be updated if provided from dts"
+The thought is if dts have the optional properties, then update.
+otherwise just use original value, read from register.
+
+So I thought the read fail is fine?
