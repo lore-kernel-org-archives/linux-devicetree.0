@@ -1,114 +1,154 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 11/12] ARM: mvebu: Relocate Armada 370 PCIe device tree
- nodes
-Date: Wed, 19 Jun 2013 14:11:58 +0200
-Message-ID: <201306191411.59010.arnd@arndb.de>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306182335.50722.arnd@arndb.de> <20130619111257.GD16138@localhost>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCH 1/1] arm: add bandgap DT entry for OMAP5
+Date: Wed, 19 Jun 2013 08:12:02 -0400
+Message-ID: <51C1A012.7050809@ti.com>
+References: <1371609398-26454-1-git-send-email-eduardo.valentin@ti.com> <51C18990.8000109@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130619111257.GD16138@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="----enig2MIMGNGBWQONRSXIXJEWA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51C18990.8000109@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, benoit.cousson@linaro.org, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, J Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 19 June 2013, Ezequiel Garcia wrote:
-> Arnd,
-> 
-> Going through this a couple questions came out...
-> 
-> On Tue, Jun 18, 2013 at 11:35:50PM +0200, Arnd Bergmann wrote:
-> > On Tuesday 18 June 2013, Ezequiel Garcia wrote:
-> > > +
-> > > +                       ranges =
-> > > +                              <0x82000000 0 0x40000    0xffff0001 0x40000 0 0x00002000
-> > > +                               0x82000000 0 0x80000    0xffff0001 0x80000 0 0x00002000
-> > > +                               0x82000000 0 0xe0000000 0xffff0002 0          0 0x08000000
-> > > +                               0x81000000 0 0          0xffff0002 0x8000000  0 0x00100000>;
-> > 
-> > As pointed out on IRC, this is not a good representation of the memory space,
-> > since it requires a non-zero sys->mem_offset, and it conflicts with the straight
-> > mapping I suggested.
-> > 
-> > I think it should be
-> > 
-> >                                0x82000000 0 0xe0000000 0xffff0002 0  0xe0000000 0x08000000
-> 
-> So far, so good.
-> 
-> > 
-> > if we want to encode the aperture in the ranges property here, i.e. have
-> > a 1:1 mapping between PCI memory space and MBUS space, and in mbus,
-> > you need the corresponding
-> > 
-> > -                           0xffff0002 0 0xe0000000 0x8100000
-> > +                           0xffff0002 0xe0000000 0xe0000000 0x8100000
-> 
-> ... I obviously got something wrong, but I thought you said that
-> this change allowed to *not* have any mbus-node ranges translation.
+------enig2MIMGNGBWQONRSXIXJEWA
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I wasn't making a specific requirement here on whether you have that
-in the mbus ranges or not, but if you put it in there, you have to adapt
-the contents as above.
+On 19-06-2013 06:36, Benoit Cousson wrote:
+> Hi Eduardo,
+>=20
+> On 06/18/2013 09:36 PM, Eduardo Valentin wrote:
+>> Add bandgap device DT entry for OMAP5 dtsi.
+>>
+>> Cc: "Beno=C3=AEt Cousson" <b-cousson@ti.com>
+>> Cc: Tony Lindgren <tony@atomide.com>
+>> Cc: Russell King <linux@arm.linux.org.uk>
+>> Cc: linux-omap@vger.kernel.org
+>> Cc: devicetree-discuss@lists.ozlabs.org
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+>> Signed-off-by: J Keerthy <j-keerthy@ti.com>
+>> ---
+>>   arch/arm/boot/dts/omap5.dtsi | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>> ---
+>>
+>> Benoit,
+>>
+>> Sorry for this very late request, but can you please consider
+>> these patches for 3.11 still?
+>>
+>> I completely forgot to send these on my "Enable TI SoC thermal driver"=
+ series.
+>>
+>> All best,
+>>
+>> Eduardo
+>>
+>> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dt=
+si
+>> index 2ad63c4..5ede6e1 100644
+>> --- a/arch/arm/boot/dts/omap5.dtsi
+>> +++ b/arch/arm/boot/dts/omap5.dtsi
+>> @@ -615,5 +615,13 @@
+>>   			interrupts =3D <0 80 0x4>;
+>>   			ti,hwmods =3D "wd_timer2";
+>>   		};
+>=20
+> missing blank line
+>=20
+>> +		bandgap {
+>=20
+> You must use the first address in that case. Otherwise DT will affect a=
+ random number and provide a non-standard device name. That does not real=
+ly matter in theory, but it will looks ugly in the /sys/devices list.
+>=20
+>> +			reg =3D <0x4a0021e0 0xc
+>> +				0x4a00232c 0xc
+>> +				0x4a002380 0x2c
+>> +				0x4a0023C0 0x3c>;
+>> +				interrupts =3D <0 126 4>; /* talert */
+>=20
+> Not well aligned and should use the macros.
+>=20
+>> +			compatible =3D "ti,omap5430-bandgap";
+>> +		};
+>>   	};
+>>   };
+>>
+>=20
+> I did the update for you :-)
+>=20
+> Here is the version I've just applied.
+>=20
+> Benoit
+>=20
+>=20
+>>From f0160bb93467e22f2f8bc77591dcd7e35cdee999 Mon Sep 17 00:00:00 2001
+> From: Eduardo Valentin <eduardo.valentin@ti.com>
+> Date: Tue, 18 Jun 2013 22:36:38 -0400
+> Subject: [PATCH] ARM: dts: Add bandgap DT entry for OMAP5
+>=20
+> Add bandgap device DT entry for OMAP5 dtsi.
+>=20
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+> Signed-off-by: J Keerthy <j-keerthy@ti.com>
+> Signed-off-by: Benoit Cousson <benoit.cousson@linaro.org>
+> ---
+>  arch/arm/boot/dts/omap5.dtsi |    9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dts=
+i
+> index accab62..47693c9 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -696,5 +696,14 @@
+>  				interrupts =3D <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+>  			};
+>  		};
+> +
+> +		bandgap@4a0021e0 {
+> +			reg =3D <0x4a0021e0 0xc
+> +			       0x4a00232c 0xc
+> +			       0x4a002380 0x2c
+> +			       0x4a0023C0 0x3c>;
+> +			interrupts =3D <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
+> +			compatible =3D "ti,omap5430-bandgap";
+> +		};
+>  	};
+>  };
+>=20
+
+Looks good to me.
+
+Tks Benoit!
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
 
 
+------enig2MIMGNGBWQONRSXIXJEWA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-> > so that mbus actually translates the right addresses. You could also
-> > have the PCI memory space start at 0, which would mean
-> > 
-> >                                0x82000000 0 0 0xffff0002 0  0 0x08000000
-> > 
-> > and
-> > 
-> >                               0xffff0002 0 0xe0000000 0x8100000
-> 
-> Mmm.. and why is this option acceptable?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-As I explained on IRC, there is no requirement to pick a specific bus
-aperture. The only two sensible choices are to make the bus address
-the same as the CPU address, or to make the bus address start at 0,
-which is what this does.
+iF4EAREIAAYFAlHBoBIACgkQCXcVR3XQvP0+FQEAm/fHb0/HoHu/hnFAVQwuQQbT
+nylEaeFACipMg44SpMYA/0j27UnQ2QFwuhLMNRwrazuw8n/dRIvhwJiu9eYoo1W4
+=jxcH
+-----END PGP SIGNATURE-----
 
-> > 
-> > Note that the driver doesn't actually handle the generic case correctly, you would
-> > need to apply this patch
-> >
-> 
-> This patch does not apply. I tried to understand what you did, but I'm
-> confused by the fact I don't need to apply any patch to make it work
-> on my boxes, using your proposed ranges translations.
-> 
-> > diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
-> > index 13a633b..aa674f4 100644
-> > --- a/drivers/pci/host/pci-mvebu.c
-> > +++ b/drivers/pci/host/pci-mvebu.c
-> > @@ -790,6 +790,7 @@ static int __init mvebu_pcie_probe(struct platform_device *pdev)
-> >  		}
-> >  		if (restype == IORESOURCE_MEM) {
-> >  			of_pci_range_to_resource(&range, np, &pcie->mem);
-> > +			sys->mem_offset = range.cpu_addr - range.pci_addr;
-> >  			pcie->mem.name = "MEM";
-> >  		}
-> >  	}
-> > 
-> > to deal with the generic case where the bus address is different from the
-> > CPU address.
-
-This patch is needed only if you change the ranges to have the bus
-aperture start at 0. However, if we pick a different way to specify
-the aperture than putting it into both ranges properties, that point
-is moot, since you wouldn't use of_pci_range_to_resource here
-anyway.
-
-	Arnd
+------enig2MIMGNGBWQONRSXIXJEWA--
