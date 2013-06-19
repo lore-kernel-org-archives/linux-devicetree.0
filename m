@@ -1,63 +1,80 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC] pinctrl: generic: Add DT bindings
-Date: Wed, 19 Jun 2013 15:58:29 -0600
-Message-ID: <51C22985.50106@wwwdotorg.org>
-References: <1370988237-30593-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: Re: [PATCH 2/5] pinctrl: clarify some dt pinconfig options
+Date: Wed, 19 Jun 2013 16:10:39 -0600
+Message-ID: <51C22C5F.5020402@wwwdotorg.org>
+References: <201306141741.46077.heiko@sntech.de> <201306141742.49923.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1370988237-30593-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, James Hogan <james.hogan@imgtec.com>, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201306141742.49923.heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, James Hogan <james.hogan@imgtec.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2013 04:03 PM, Laurent Pinchart wrote:
-> Document DT properties for the generic pinctrl parameters and add a
-> parser function.
+On 06/14/2013 09:42 AM, Heiko St=C3=BCbner wrote:
+> The bias-pull-* options use values > 0 to indicate that the pull shou=
+ld
+> be activated and optionally also indicate the strength of the pull.
+> Therefore use an default value of 1 for these options.
+>=20
+> Split the low-power-mode option into low-power-enable and -disable.
+>=20
+> Update the documentation to describe the param arguments better.
+>=20
+> Wrong default options
+> Reported-by: James Hogan <james.hogan@imgtec.com>
+>=20
 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+That blank line should be before the Reported-by not after it.
 
-> +== Generic pinconf parameters ==
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindin=
+gs.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+
+> -low-power-mode		- low power mode
+> +low-power-enable	- enable low power mode
+> +low-power-disable	- disable low power mode
+
+Hmmm. That's changing the binding definition. What if somebody already
+wrote their device tree according previous definition?
+
+It seems to be that tri-states are preferable for pinctrl DT:
+
+no entry: do nothing
+=3D 0: disable
+=3D 1: enable
+
+> +Arguments for parameters:
 > +
-> +Pin configuration parameters are expressed by DT properties in the pin
-> +controller device state nodes and child nodes. For devices that use the generic
-> +pinconf parameters the following properties are defined.
+> +- bias-pull-up, -down and -pin-default take as optional argument 0 t=
+o disable
+> +  the pull, on hardware supporting it the pull strength in Ohm. bias=
+-disable
+> +  will also disable any active pull.
+
+Does this agree with the latest definition of the kernel-internal
+meaning of 0 for pull-up/down?
+
+> +- input-schmitt takes as argument the adjustable hysteresis in a
+> +  driver-specific format
 > +
-> +- tristate: A boolean, put the pin into high impedance state when set.
-
-I don't think that a Boolean is appropriate here; it's really a tri-state:
-
-* Nothing is specified about the tristate value; don't touch that aspect
-of HW.
-* Turn tristate on.
-* Turn tristate off.
-
-This can be a meaningful distinction when relying on e.g. the bootloader
-having already set up the appropriate tristate value, or when
-dynamically switching between different pinctrl states and not wanting
-to affect tristate, or when piecing together multiple DT nodes that
-describe part of a state, where one node covers just muxing and the
-other just pin config (e.g. where the mux and pin config configuration
-registers in HW affect different overlapping groups).
-
-> +- schmitt: An integer, enable or disable Schmitt trigger mode for the pins.
-> +  Valid values are
-> +    0: Schmitt trigger disabled (no hysteresis)
-> +    1: Schmitt trigger enabled
-
-A similar comment applies here.
-
-> +- slew-rate: An integer controlling the pin slew rate. Values are device-
-> +  dependent.
+> +- input-debounce takes the debounce time as argument or 0 to disable=
+ debouncing
 > +
-> +- drive-strength: An integer representing the drive strength of pins in mA.
-> +  Valid values are device-dependent.
+> +- power-source argument is the custom value describing the source to=
+ select
+> +
+> +- slew-rate takes as argument the target rate in a driver-specific f=
+ormat
 
-I'm still not convinced that requiring this to be in mA is a good idea.
-Different HW will use different units for documentation, or even specify
-no units at all, so it might not always be possible to represent this in
-terms of mA. Asking for the documentation to be re-written simply to
-support the DT binding just isn't going to happen.
-
+If those things have driver-specific (note: should be
+DT-binding-specific, not driver-specific) values, then I'm not convince=
+d
+that having a generic parameter name for them is a good idea; it makes
+things look the same when they aren't. By forcing each binding to
+include the vendor prefix on those properties and hence define a custom
+property name, you're making it clear that the semantics may be differe=
+nt.
