@@ -1,110 +1,81 @@
-From: <Yuantian.Tang@freescale.com>
-Subject: [PATCH v2] hwmon: (ina2xx) Add device tree support to
-	pass the shunt resistor
-Date: Wed, 19 Jun 2013 14:50:20 +0800
-Message-ID: <1371624620-14254-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 2/2] clk: exynos4: Add alias for cpufreq related clocks
+Date: Wed, 19 Jun 2013 09:43:52 +0200
+Message-ID: <65316055.UrW2Xpt9hs@flatron>
+References: <1370517749-29892-1-git-send-email-tushar.behera@linaro.org> <51BE95A5.5090509@linaro.org> <51C13886.1050201@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <lm-sensors-bounces@lm-sensors.org>
-List-Unsubscribe: <http://lists.lm-sensors.org/mailman/options/lm-sensors>,
-	<mailto:lm-sensors-request@lm-sensors.org?subject=unsubscribe>
-List-Archive: <http://lists.lm-sensors.org/pipermail/lm-sensors/>
-List-Post: <mailto:lm-sensors@lm-sensors.org>
-List-Help: <mailto:lm-sensors-request@lm-sensors.org?subject=help>
-List-Subscribe: <http://lists.lm-sensors.org/mailman/listinfo/lm-sensors>,
-	<mailto:lm-sensors-request@lm-sensors.org?subject=subscribe>
-Sender: lm-sensors-bounces@lm-sensors.org
-Errors-To: lm-sensors-bounces@lm-sensors.org
-To: linux@roeck-us.net
-Cc: Tang Yuantian <Yuantian.Tang@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, lm-sensors@lm-sensors.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51C13886.1050201@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, kgene.kim@samsung.com, patches@linaro.org, swarren@wwwdotorg.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, broonie@kernel.org, l.majewski@samsung.com, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <yuantian.tang@freescale.com>
+Hi Tushar,
 
-Adding another way that is device tree to pass the shunt resistor
-value to driver except for platform data.
+On Wednesday 19 of June 2013 10:20:14 Tushar Behera wrote:
+> On 06/17/2013 10:20 AM, Tushar Behera wrote:
+> > On 06/11/2013 12:23 AM, Tomasz Figa wrote:
+> >> On Monday 10 of June 2013 09:13:11 Tushar Behera wrote:
+> >>> On 06/08/2013 05:20 PM, Tomasz Figa wrote:
+> >>>> On Thursday 06 of June 2013 16:52:28 Tushar Behera wrote:
+> > [ ... ]
+> > 
+> >>>>>  	MUX_A(mout_core, "mout_core", mout_core_p4210,
+> >>>>> 
+> >>>>> -			SRC_CPU, 16, 1, "mout_core"),
+> >>>>> +			SRC_CPU, 16, 1, "moutcore"),
+> >>>> 
+> >>>> IMHO those typo corrections are not part of this patch.
+> >>> 
+> >>> But the older drivers (before migration to CCF) were using the clock
+> >>> "moutcore" (not "mout_core").
+> >> 
+> >> I mean, this should be placed in a separate patch, as this change is
+> >> not "adding alias for cpufreq related clocks", but rather fixing a
+> >> typo.> 
+> > Is it ok if I split this patch into 2, one adding clock alias
+> > 'mout_apll' and another one fixing the alias names 'mout_mpll',
+> > 'moutcore' and 'armclk'?
+> 
+> I have to fix up another clock for exynos4x12 too. I feel all these
+> modifications are too small to justify different patches. I would modify
+> the commit message appropriately.
 
-Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
----
-v2:
-	- add device tree bindings file
-	- refine the code per Guenter's suggestion
+Fine.
 
- Documentation/devicetree/bindings/i2c/ina2xx.txt | 22 ++++++++++++++++++++++
- Documentation/hwmon/ina2xx                       |  4 +++-
- drivers/hwmon/ina2xx.c                           |  4 ++++
- 3 files changed, 29 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/ina2xx.txt
+> > [ ... ]
+> > 
+> >>>> Basically I don't like the idea of those global aliases, which IMHO
+> >>>> should be completely dropped. Someone might not like it, but I'd go
+> >>>> with the conversion of our cpufreq drivers to platform drivers
+> >>>> instead, which could receive things like clocks and regulators
+> >>>> using
+> >>>> DT-based lookups.
+> >>> 
+> >>> I agree. Migration of exynos-cpufreq driver as a platform driver is
+> >>> the
+> >>> best solution. But unless someone picks up that work, cpufreq
+> >>> support
+> >>> for EXYNOS4 based systems is broken because of the incorrect clock
+> >>> aliases.
+> >> 
+> >> We have patches for this in our internal tree. I will clean them up a
+> >> bit and submit soon.
+> > 
+> > If you are going to submit the cpufreq driver patches for v3.11, then
+> > we can ignore this patchset. Otherwise, I would prefer to get these
+> > patches merged for v3.11 to get cpufreq working. Once the driver
+> > changes are incorporated, we can very well modify these later.
 
-diff --git a/Documentation/devicetree/bindings/i2c/ina2xx.txt b/Documentation/devicetree/bindings/i2c/ina2xx.txt
-new file mode 100644
-index 0000000..a2ad85d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/ina2xx.txt
-@@ -0,0 +1,22 @@
-+ina2xx properties
-+
-+Required properties:
-+- compatible: Must be one of the following:
-+	- "ti,ina219" for ina219
-+	- "ti,ina220" for ina220
-+	- "ti,ina226" for ina226
-+	- "ti,ina230" for ina230
-+- reg: I2C address
-+
-+Optional properties:
-+
-+- shunt-resistor
-+	Shunt resistor value in micro-Ohm
-+
-+Example:
-+
-+ina220@44 {
-+	compatible = "ti,ina220";
-+	reg = <0x44>;
-+	shunt-resistor = <1000>;
-+};
-diff --git a/Documentation/hwmon/ina2xx b/Documentation/hwmon/ina2xx
-index 03444f9..4223c2d 100644
---- a/Documentation/hwmon/ina2xx
-+++ b/Documentation/hwmon/ina2xx
-@@ -44,4 +44,6 @@ The INA226 monitors both a shunt voltage drop and bus supply voltage.
- The INA230 is a high or low side current shunt and power monitor with an I2C
- interface. The INA230 monitors both a shunt voltage drop and bus supply voltage.
- 
--The shunt value in micro-ohms can be set via platform data.
-+The shunt value in micro-ohms can be set via platform data or device tree.
-+Please refer to the Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings
-+if the device tree is used.
-diff --git a/drivers/hwmon/ina2xx.c b/drivers/hwmon/ina2xx.c
-index 4958b2f..a52d5f0 100644
---- a/drivers/hwmon/ina2xx.c
-+++ b/drivers/hwmon/ina2xx.c
-@@ -221,6 +221,7 @@ static int ina2xx_probe(struct i2c_client *client,
- 	struct ina2xx_data *data;
- 	struct ina2xx_platform_data *pdata;
- 	int ret;
-+	u32 val;
- 	long shunt = 10000; /* default shunt value 10mOhms */
- 
- 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA))
-@@ -234,6 +235,9 @@ static int ina2xx_probe(struct i2c_client *client,
- 		pdata =
- 		  (struct ina2xx_platform_data *)client->dev.platform_data;
- 		shunt = pdata->shunt_uohms;
-+	} else if (!of_property_read_u32(client->dev.of_node,
-+				"shunt-resistor", &val)) {
-+			shunt = val;
- 	}
- 
- 	if (shunt <= 0)
--- 
-1.8.0
+I hope we can get my patches merged for 3.11, but just to be safe and have 
+things working for now, please proceed with yours.
 
+I need a bit more time for this, because IMHO the current design of our 
+cpufreq drivers is inappropriate (directly accessing CMU registers) with 
+common clock framework already existing and it needs to be redesigned.
 
-
-_______________________________________________
-lm-sensors mailing list
-lm-sensors@lm-sensors.org
-http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
+Best regards,
+Tomasz
