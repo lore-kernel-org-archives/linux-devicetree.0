@@ -1,33 +1,49 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] ARM: shmobile: irqpin: add a DT property to enable
- masking on parent
-Date: Wed, 19 Jun 2013 21:27:54 +0900
-Message-ID: <20130619122754.GD32292@verge.net.au>
-References: <Pine.LNX.4.64.1306190751090.6945@axis700.grange>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1306190751090.6945@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss@lists.ozlabs.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v3 0/3] exynos5420/hdmi: add support for hdmi subsystem
+Date: Wed, 19 Jun 2013 18:21:06 +0530
+Message-ID: <1371646269-21880-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
+Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2013 at 07:53:09AM +0200, Guennadi Liakhovetski wrote:
-> To disable spurious interrupts, that get triggered on certain hardware, the
-> irqpin driver masks them on the parent interrupt controller. To specify
-> such broken devices a .control_parent parameter can be provided in the
-> platform data. In the DT case we need a property, to do the same.
-> 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Acked-by: Magnus Damm <damm@opensource.se>
-> ---
-> 
-> v2: rebased on top of the current tree, also added Acked-by from Magnus
-> 
->  .../interrupt-controller/renesas,intc-irqpin.txt   |    2 ++
->  drivers/irqchip/irq-renesas-intc-irqpin.c          |    7 +++++--
->  2 files changed, 7 insertions(+), 2 deletions(-)
+Add support for exynos5420 hdmi subsystem. It adds compatible strings
+for exynos5420 mixer and Changes the drivers as per IP modifications.
 
-Thanks, I will queue this up in the dt branch.
+This set doesn't have changes for hdmiphy, which will posted
+independently.
+
+This set is based on drm-next branch of Inki Dae's tree at
+http://git.kernel.org/cgit/linux/kernel/git/daeinki/drm-exynos.git.
+
+v3:
+1) instead of replacing with old compatible strings, new ones are added
+without removing the support for older ones.
+2) removed patch "drm/exynos: fix interlace resolutions for exynos5420" as
+it is independently merged.
+
+v2:
+1)update device mixer tree binding document with "samsung,exynos5420-mixer"
+
+Rahul Sharma (3):
+  drm/exynos: add new compatible strings for hdmi subsystem
+  drm/exynos: add support for exynos5420 mixer
+  ARM/dts: change compatible strings for hdmi subsystem
+
+ .../devicetree/bindings/video/exynos_hdmi.txt      |    7 ++-
+ .../devicetree/bindings/video/exynos_hdmiddc.txt   |    7 ++-
+ .../devicetree/bindings/video/exynos_hdmiphy.txt   |    7 ++-
+ .../devicetree/bindings/video/exynos_mixer.txt     |    9 ++-
+ arch/arm/boot/dts/cros5250-common.dtsi             |    4 +-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    4 +-
+ drivers/gpu/drm/exynos/exynos_ddc.c                |    2 +
+ drivers/gpu/drm/exynos/exynos_hdmi.c               |    3 +
+ drivers/gpu/drm/exynos/exynos_hdmiphy.c            |    4 ++
+ drivers/gpu/drm/exynos/exynos_mixer.c              |   62 ++++++++++++++------
+ drivers/gpu/drm/exynos/regs-mixer.h                |    7 +++
+ 12 files changed, 89 insertions(+), 31 deletions(-)
+
+-- 
+1.7.10.4
