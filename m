@@ -1,63 +1,57 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH v3 0/2] drivers: mfd: Versatile Express SPC support
-Date: Wed, 19 Jun 2013 14:37:20 +0200
-Message-ID: <201306191437.20759.arnd@arndb.de>
-References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com> <1371547782.16725.11.camel@hornet> <20130619093014.GX7161@zurbaran>
+Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
+Date: Wed, 19 Jun 2013 14:43:09 +0200
+Message-ID: <201306191443.09598.arnd@arndb.de>
+References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com> <201306181556.47656.arnd@arndb.de> <002401ce6c8a$2dd1e4a0$8975ade0$@samsung.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130619093014.GX7161@zurbaran>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <002401ce6c8a$2dd1e4a0$8975ade0$@samsung.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 19 June 2013, Samuel Ortiz wrote:
-> > 2. Move the vexpress-sysreg "platform management" functions into misc
-> > (unless we get any better place for it)
-> This is for Arnd and Greg to decide I suppose.
+On Wednesday 19 June 2013, Jingoo Han wrote:
+> Then, do you mean the following?
+> 
+> static int __exit exynos_pcie_remove(struct platform_device *pdev)
+> {
+>         struct pcie_port *pp = platform_get_drvdata(pdev);
+> 
+>         clk_disable_unprepare(pp->bus_clk);
+>         clk_disable_unprepare(pp->clk);
+> 
+>         return 0;
+> }
+> 
+> static struct platform_driver exynos_pcie_driver = {
+>         .remove = __exit_p(exynos_pcie_remove),
+> 
+> [.....]
+> 
+> /* Exynos PCIe driver does not allow module unload */
+> 
+> static int __init pcie_init(void)
+> {
+>         hook_fault_code(16 + 6, exynos_pcie_abort, SIGBUS, 0,
+>                         "imprecise external abort");
+> 
+>         platform_driver_probe(&exynos_pcie_driver, exynos_pcie_probe);
+> 
+>         return 0;
+> }
+> subsys_initcall(pcie_init);
+> 
+> MODULE_AUTHOR("Jingoo Han <jg1.han@samsung.com>");
+> MODULE_DESCRIPTION("Samsung PCIe host controller driver");
+> MODULE_LICENSE("GPLv2");
+> 
 
-
-I think when vexpress-sysreg was created, we didn't have the syscon driver
-yet, otherwise I think we should have used that, and put separate
-drivers on top.
-
-Not sure if it's too late for changing it to that now, given that
-we already have a binding.
-
-It seems we should use the same code for versatile and realview, or
-at least it will only need small modifications to apply to all of
-these platforms.
-
-What I think could be helpful here is:
-
-* export a "syscon" for the low-level registers
-
-* add a gpio driver based on the syscon interface, and move the gpiochip
-  implementation there
-
-* move the low-leve "config" code from the sysreg driver into the
-  vexpress-config driver and make it use the syscon.
-
-* move the other global functions from the driver into the callers
-  and use syscon there.
-
-That would end up eliminating the sysreg driver, aside from maybe
-a one-line change to the syscon driver to allow it to probe the
-right device.
-
-> > 3. Move vexpress-config into drivers/bus as it is (however I see no one
-> > in MAINTAINERS for this directory)
-> ISTR that Arnd originally created that directory, so he may help here.
-> Arnd also had some concerns about implementing this code as a bus,
-> mostly about it not being a discoverable bus. IMHO that's a valid
-> concern, and this is why you ended up putting it under MFD which can be
-> seen as some sort of platform devices bus. But I still believe the bus
-> API would make this code look cleaner and easier to maintain.
-
-Sorry, I don't see why it would be a bus. I assume that there is code
-missing somewhere that is not yet merged, right?
+Yes, this looks good. I would probably use platform_driver_register
+rather than platform_driver_probe, but that is your choice. using
+platform_driver_probe() mean you cannot deal with deferred probing.
 
 	Arnd
