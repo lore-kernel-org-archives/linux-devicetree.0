@@ -1,92 +1,89 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v3 3/3] ARM/dts: change compatible strings for hdmi subsystem
-Date: Wed, 19 Jun 2013 18:21:09 +0530
-Message-ID: <1371646269-21880-4-git-send-email-rahul.sharma@samsung.com>
-References: <1371646269-21880-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1371646269-21880-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
-Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
+Date: Wed, 19 Jun 2013 05:32:18 -0700
+Message-ID: <20130619123217.GB5523@atomide.com>
+References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
+ <1371571487-14389-2-git-send-email-rogerq@ti.com>
+ <51C106A1.9030001@ti.com>
+ <51C15F7E.5020305@ti.com>
+ <20130619074605.GW5523@atomide.com>
+ <51C183AC.8040801@ti.com>
+ <51C19011.5050107@ti.com>
+ <51C19E6C.4040802@epfl.ch>
+ <51C1A2AE.2020506@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51C1A2AE.2020506@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: florian.vaussard@epfl.ch, Roger Quadros <rogerq@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch renames the combatible strings for hdmi, mixer, ddc
-and hdmiphy. It follows the convention of using compatible string
-which represent the SoC in which the IP was added for the first
-time.
+* Benoit Cousson <b-cousson@ti.com> [130619 05:30]:
+> On 06/19/2013 07:05 AM, Florian Vaussard wrote:
+> >>>>>>>+
+> >>>>>>>+    /* HS USB Port 1 RESET */
+> >>>>>>>+    hsusb1_reset: hsusb1_reset_reg {
+> >>>>>>>+        compatible = "regulator-fixed";
+> >>>>>>>+        regulator-name = "hsusb1_reset";
+> >>>>>>>+        regulator-min-microvolt = <3300000>;
+> >>>>>>>+        regulator-max-microvolt = <3300000>;
+> >>>>>>>+        gpio = <&gpio2 30 0>;    /* gpio_62 */
+> >>>>>>>+        startup-delay-us = <70000>;
+> >>>>>>>+        enable-active-high;
+> >>>>>>>+    };
+> >>>>>>
+> >>>>>>Is this really a regulator? Or just a GPIO line used to reset the
+> >>>>>>USB PHY?
+> >>>>>
+> >>>>>It is in fact a GPIO line used as reset.
+> >>>>>>
+> >>>>>>If this is the case, I don't think it should be represented as a
+> >>>>>>regulator.
+> >>>>>
+> >>>>>Why not? I think it fits very well in the regulator device model.
+> >>>
+> >>>I'm not sure fitting very well is the correct term.
+> >>>It works, for sure, but it is no different than when we were trying
+> >>>to abuse the regulator fmwk to enable the 32k clock in phoenix.
+> >>>It is just a hack.
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- arch/arm/boot/dts/cros5250-common.dtsi    |    4 ++--
- arch/arm/boot/dts/exynos5250-smdk5250.dts |    4 ++--
- arch/arm/boot/dts/exynos5250.dtsi         |    4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+If it's a reset, then yeah it's not a regulator. If the GPIO line is
+really used to control the regulator in the external device, then it
+makes sense to set it up as a regulator.
 
-diff --git a/arch/arm/boot/dts/cros5250-common.dtsi b/arch/arm/boot/dts/cros5250-common.dtsi
-index 3f0239e..dc259e8b 100644
---- a/arch/arm/boot/dts/cros5250-common.dtsi
-+++ b/arch/arm/boot/dts/cros5250-common.dtsi
-@@ -190,7 +190,7 @@
- 		samsung,i2c-max-bus-freq = <66000>;
+> >>The only difference is there is a dedicated framework for clocks.
+> >>Since there is nothing specific to
+> >>handle reset lines it is left to the driver writer how he wants to
+> >>manage it.
+> >>
+> >
+> >There is a proposed binding for gpio-controlled reset lines, but it is
+> >not yet merged [1].
+> >I guess it can fit most usage patterns, and it can be an interesting
+> >move in the future.
+> 
+> I'm glad to see that I was not the only one thinking that the
+> regulator was not the right fmwk to do that :-)
+> 
+> Thanks for the pointer Florian.
+
+Good to hear about the gpio-controlled reset lines :)
  
- 		hdmiddc@50 {
--			compatible = "samsung,exynos5-hdmiddc";
-+			compatible = "samsung,exynos4210-hdmiddc";
- 			reg = <0x50>;
- 		};
- 	};
-@@ -224,7 +224,7 @@
- 		samsung,i2c-max-bus-freq = <378000>;
- 
- 		hdmiphy@38 {
--			compatible = "samsung,exynos5-hdmiphy";
-+			compatible = "samsung,exynos4212-hdmiphy";
- 			reg = <0x38>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 3e0c792..f320d7c 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -72,7 +72,7 @@
- 		samsung,i2c-max-bus-freq = <66000>;
- 
- 		hdmiddc@50 {
--			compatible = "samsung,exynos5-hdmiddc";
-+			compatible = "samsung,exynos4210-hdmiddc";
- 			reg = <0x50>;
- 		};
- 	};
-@@ -102,7 +102,7 @@
- 		samsung,i2c-max-bus-freq = <66000>;
- 
- 		hdmiphy@38 {
--			compatible = "samsung,exynos5-hdmiphy";
-+			compatible = "samsung,exynos4212-hdmiphy";
- 			reg = <0x38>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 0673524..2f7763b 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -601,7 +601,7 @@
- 	};
- 
- 	hdmi {
--		compatible = "samsung,exynos5-hdmi";
-+		compatible = "samsung,exynos4212-hdmi";
- 		reg = <0x14530000 0x70000>;
- 		interrupts = <0 95 0>;
- 		clocks = <&clock 333>, <&clock 136>, <&clock 137>,
-@@ -611,7 +611,7 @@
- 	};
- 
- 	mixer {
--		compatible = "samsung,exynos5-mixer";
-+		compatible = "samsung,exynos5250-mixer";
- 		reg = <0x14450000 0x10000>;
- 		interrupts = <0 94 0>;
- 	};
--- 
-1.7.10.4
+> I guess that series should be merged for 3.11? Based on the thread,
+> it should to through arm-soc.
+> 
+> Roger,
+> 
+> It might be tricky to have dependency on that series, but if this is
+> possible, you should try. Otherwise, just keep the existing one,
+> adding that a new solution will be available soon as a disclaimer.
+
+We need some solution for v3.11 for omap4 USB on panda so people can
+use it with DT.
+
+Regards,
+
+Tony
