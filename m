@@ -1,104 +1,79 @@
-From: Simon Guinot <simon.guinot@sequanux.org>
-Subject: Re: [RESEND,PATCHv6 1/1] Add support for GMT G762/G763 PWM fan
- controllers
-Date: Wed, 19 Jun 2013 23:26:33 +0200
-Message-ID: <20130619212633.GC7626@kw.sim.vm.gnt>
-References: <87sj0jhuhn.fsf@natisbad.org>
- <20130617101948.GY7626@kw.sim.vm.gnt>
- <8761x9svpf.fsf@natisbad.org>
- <20130619205321.GA7625@roeck-us.net>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC] pinctrl: generic: Add DT bindings
+Date: Wed, 19 Jun 2013 15:52:54 -0600
+Message-ID: <51C22836.9090909@wwwdotorg.org>
+References: <1370988237-30593-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <2555796.PtkImJGaK8@avalon>
+ <CACRpkdaF7V3FGhNNj+N+Dc-NWhsfQ=bqh+ETx0wGBFbLmxfGTw@mail.gmail.com>
+ <201306152216.14252.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dKeYJkA19bNVVKdr"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130619205321.GA7625@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Arnaud Ebalard <arno@natisbad.org>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201306152216.14252.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/15/2013 02:16 PM, Heiko St=FCbner wrote:
+> Am Samstag, 15. Juni 2013, 21:56:05 schrieb Linus Walleij:
+>> On Fri, Jun 14, 2013 at 12:39 AM, Laurent Pinchart
+>>
+>> <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+>>>         mmcif_pins: mmcif {
+>>>         =
 
---dKeYJkA19bNVVKdr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>>                 mux {
+>>>                 =
 
-On Wed, Jun 19, 2013 at 01:53:21PM -0700, Guenter Roeck wrote:
-> On Wed, Jun 19, 2013 at 10:15:56PM +0200, Arnaud Ebalard wrote:
-> > Hi Simon,
-> >=20
-> > Simon Guinot <simon.guinot@sequanux.org> writes:
-> >=20
-> > > I have tested this patch on my 2Big Network v2 board.
-> > >
-> > > Sometimes I get a weird "No such device" error while reading or writi=
-ng
-> > > the hwmon sysfs attributes. For example:
-> > >
-> > > # cat pwm1
-> > > cat: read error: No such device
-> > > # cat pwm1
-> > > 0
-> >=20
-> This is odd, since ENODEV should not be returned as error code from i2c r=
-ead
-> operations.
->=20
-> What is the i2c controller ?
+>>>                         renesas,groups =3D "mmc0_data8_0", "mmc0_ctrl_0=
+";
+>>>                         renesas,function =3D "mmc0";
+>>>                 =
 
-The controller is the very same as for the ReadyNAS Duo v2. It is built
-in the Marvell Kirkwood SoC and the driver is i2c-mv64xxx.
+>>>                 };
+>>>                 cfg {
+>>>                 =
 
-I will try an another board to see if I reproduce the error.
+>>>                         renesas,groups =3D "mmc0_data8_0";
+>>>                         renesas,pins =3D "PORT279";
+>>>                         bias-pull-up =3D <1>;
+>>
+>> If I understood your code correctly that last statement can *optionally*
+>> be written like just:
+>>
+>>  bias-pull-up;
+>>
+>> Without the parameter?
+>>
+>> I think that Heiko's implementation does this anyway.
+> =
 
-Regards,
+> Yep, with the fixes-series from yesterday the bias-pull-* now have a bett=
+er =
 
-Simon
+> default value of <1>.
+> =
 
->=20
-> Thanks,
-> Guenter
->=20
-> > Weird, I cannot reproduce that at all on my ReadyNAS Duo v2.
-> >=20
-> > > Note, that if the same command is executed again (just after the faul=
-ty
-> > > one), then it will succeed most of the time. The errors seems to happ=
-en
-> > > quite randomly and not very often. I'd say one time over ten tries.
-> > > I suppose this error is now visible due to the enhanced error path in
-> > > g762_update_client. It looks like we learn something by checking the
-> > > return value for i2c_smbus_read_byte_data :)
-> > >
-> > > Except that, all is working as expected. This new version fixes
-> > > effectively open-loop driving when the set_cnt register is set to 0xf=
-f.
-> > >
-> > > Also I am planning (hopefully this Wednesday) to test your patch on my
-> > > 5Big Network v2 board. This last also embed a g762 controller but wit=
-h a
-> > > three wires fan instead. Then, I should be able to test the closed-lo=
-op
-> > > mode behaviour.
-> >=20
-> > Thanks for your tests, Simon.
-> >=20
-> > Cheers,
-> >=20
-> > a+=20
-> >=20
+> so you can do
+> 	bias-pull-up;
+> which is then identical to the
+> 	bias-pull-up =3D <1>;
+> above (both are valid of course).
 
---dKeYJkA19bNVVKdr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+A property with a value is an integer. One without is a Boolean. The
+same property shouldn't be both.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlHCIgkACgkQgtp0PDeOcDqrPgCfUajNe0ZTe+biXf+4Em8HEc70
-fQsAn2WWO9TCwP++2hzQZYB/n5BxfbO8
-=tpGH
------END PGP SIGNATURE-----
-
---dKeYJkA19bNVVKdr--
+Regarding the value representing resistance: That feels pretty odd.
+Enabling a pullup and selecting the pullup resistance feel like
+orthogonal options which shouldn't be bound to each-other.
