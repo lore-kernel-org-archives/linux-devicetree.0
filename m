@@ -1,15 +1,16 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 07/11] ARM:stixxxx: Add STiH416 SOC support
-Date: Wed, 19 Jun 2013 20:34:52 +0200
-Message-ID: <CACRpkdYmHaMhg2r4hkxoKM++_bDWug228tdjx+kiVG4h76SXVg@mail.gmail.com>
-References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com>
- <1370856425-7135-1-git-send-email-srinivas.kandagatla@st.com>
- <3733079.FxbR14kFrs@wuerfel>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
+ translation
+Date: Wed, 19 Jun 2013 14:36:27 -0400
+Message-ID: <20130619183627.GF31667@titan.lakedaemon.net>
+References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <51C0B838.90809@gmail.com> <20130618194756.GA2470@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <3733079.FxbR14kFrs@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <20130618194756.GA2470@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,27 +21,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Gallimore <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm@linux-foundation.o>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2013 at 3:52 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 10 June 2013 10:27:05 Srinivas KANDAGATLA wrote:
->
->> +     soc {
->> +             pin-controller-sbc {
->> +                     #address-cells  = <1>;
->> +                     #size-cells     = <1>;
->> +                     compatible      = "st,stih416-pinctrl", "simple-bus";
->
-> Why is this both its own device with a compatible string and a
-> "simple-bus" at the same time? Wouldn't it be simpler to just
-> scan the child device nodes from the "st,stih416-pinctrl"
-> driver instead of having a separate platform_driver for them?
+On Tue, Jun 18, 2013 at 04:47:57PM -0300, Ezequiel Garcia wrote:
+> On Tue, Jun 18, 2013 at 09:42:48PM +0200, Sebastian Hesselbarth wrote:
+> > On 06/18/2013 05:31 PM, Ezequiel Garcia wrote:
+> > > Although the internal register window size is 1 MiB, the previous
+> > > ranges translation for the internal register space had a size of
+> > > 0x4000000. This was done to allow the crypto and nand node to access
+> > > the corresponding 'sram' and 'nand' decoding windows.
+> > >
+> > > In order to describe the hardware more accurately, we declare the
+> > > real 1 MiB internal register space in the ranges, and add a translation
+> > > entry for the nand node to access the 'nand' window.
+> > >
+> > > This commit will make future improvements on the MBus DT binding easier.
+> > >
+> > > Signed-off-by: Ezequiel Garcia<ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > ---
+> > > Tested on Plathome Openblocks A6 board.
+> > >
+> > >   arch/arm/boot/dts/kirkwood.dtsi | 5 +++--
+> > >   1 file changed, 3 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+> > > index 8a1e3bb..910fabc 100644
+> > > --- a/arch/arm/boot/dts/kirkwood.dtsi
+> > > +++ b/arch/arm/boot/dts/kirkwood.dtsi
+> > > @@ -38,7 +38,8 @@
+> > >
+> > >   	ocp@f1000000 {
+> > >   		compatible = "simple-bus";
+> > > -		ranges =<0x00000000 0xf1000000 0x4000000
+> > > +		ranges =<0x00000000 0xf1000000 0x0100000
+> > > +		          0xf4000000 0xf4000000 0x0000400
+> > >   		          0xf5000000 0xf5000000 0x0000400>;
+> > 
+> > Ezequiel,
+> > 
+> > maybe you should also put a comment at the end of each ranges
+> > line to name the remap it does?
+> > 
+> > Also, as already mentioned on IRC, it would be great to also
+> > have dove.dtsi updated accordingly.
+> > 
+> 
+> Indeed, I will do both.
 
-I think that in my comments to the pinctrl driver I had some
-similar comment, so it's probably a good idea to look into
-this.
+The sooner, the better.  This is probably the last patch to get in for
+this merge window for mvebu...
 
-Yours,
-Linus Walleij
+thx,
+
+Jason.
