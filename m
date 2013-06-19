@@ -1,79 +1,110 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
-Date: Wed, 19 Jun 2013 10:36:30 +0300
-Message-ID: <51C15F7E.5020305@ti.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
- <1371571487-14389-2-git-send-email-rogerq@ti.com> <51C106A1.9030001@ti.com>
+From: <Yuantian.Tang@freescale.com>
+Subject: [PATCH v2] hwmon: (ina2xx) Add device tree support to
+	pass the shunt resistor
+Date: Wed, 19 Jun 2013 14:50:20 +0800
+Message-ID: <1371624620-14254-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51C106A1.9030001@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <lm-sensors-bounces@lm-sensors.org>
+List-Unsubscribe: <http://lists.lm-sensors.org/mailman/options/lm-sensors>,
+	<mailto:lm-sensors-request@lm-sensors.org?subject=unsubscribe>
+List-Archive: <http://lists.lm-sensors.org/pipermail/lm-sensors/>
+List-Post: <mailto:lm-sensors@lm-sensors.org>
+List-Help: <mailto:lm-sensors-request@lm-sensors.org?subject=help>
+List-Subscribe: <http://lists.lm-sensors.org/mailman/listinfo/lm-sensors>,
+	<mailto:lm-sensors-request@lm-sensors.org?subject=subscribe>
+Sender: lm-sensors-bounces@lm-sensors.org
+Errors-To: lm-sensors-bounces@lm-sensors.org
+To: linux@roeck-us.net
+Cc: Tang Yuantian <Yuantian.Tang@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, lm-sensors@lm-sensors.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+From: Tang Yuantian <yuantian.tang@freescale.com>
 
-On 06/19/2013 04:17 AM, Benoit Cousson wrote:
-> Hi Roger,
-> 
-> On 06/18/2013 11:04 AM, Roger Quadros wrote:
->> Provide the RESET and Power regulators for the USB PHY,
->> the USB Host port mode and the PHY device.
->>
->> Also provide pin multiplexer information for the USB host
->> pins.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>   arch/arm/boot/dts/omap4-panda-common.dtsi |   62 +++++++++++++++++++++++++++++
->>   1 files changed, 62 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
->> index 00cbaa5..7a21e8e 100644
->> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
->> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
->> @@ -59,6 +59,42 @@
->>               "AFML", "Line In",
->>               "AFMR", "Line In";
->>       };
->> +
->> +    /* HS USB Port 1 RESET */
->> +    hsusb1_reset: hsusb1_reset_reg {
->> +        compatible = "regulator-fixed";
->> +        regulator-name = "hsusb1_reset";
->> +        regulator-min-microvolt = <3300000>;
->> +        regulator-max-microvolt = <3300000>;
->> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
->> +        startup-delay-us = <70000>;
->> +        enable-active-high;
->> +    };
-> 
-> Is this really a regulator? Or just a GPIO line used to reset the USB PHY?
+Adding another way that is device tree to pass the shunt resistor
+value to driver except for platform data.
 
-It is in fact a GPIO line used as reset.
-> 
-> If this is the case, I don't think it should be represented as a regulator.
+Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
+---
+v2:
+	- add device tree bindings file
+	- refine the code per Guenter's suggestion
 
-Why not? I think it fits very well in the regulator device model. I couldn't find a better
-way to represent this. It gives us a way to specify not only the GPIO line but also
-the polarity. I know mostly reset is active low but still there is flexibility as you never
-know for sure.
+ Documentation/devicetree/bindings/i2c/ina2xx.txt | 22 ++++++++++++++++++++++
+ Documentation/hwmon/ina2xx                       |  4 +++-
+ drivers/hwmon/ina2xx.c                           |  4 ++++
+ 3 files changed, 29 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/ina2xx.txt
 
-Do you have any better ideas?
+diff --git a/Documentation/devicetree/bindings/i2c/ina2xx.txt b/Documentation/devicetree/bindings/i2c/ina2xx.txt
+new file mode 100644
+index 0000000..a2ad85d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/ina2xx.txt
+@@ -0,0 +1,22 @@
++ina2xx properties
++
++Required properties:
++- compatible: Must be one of the following:
++	- "ti,ina219" for ina219
++	- "ti,ina220" for ina220
++	- "ti,ina226" for ina226
++	- "ti,ina230" for ina230
++- reg: I2C address
++
++Optional properties:
++
++- shunt-resistor
++	Shunt resistor value in micro-Ohm
++
++Example:
++
++ina220@44 {
++	compatible = "ti,ina220";
++	reg = <0x44>;
++	shunt-resistor = <1000>;
++};
+diff --git a/Documentation/hwmon/ina2xx b/Documentation/hwmon/ina2xx
+index 03444f9..4223c2d 100644
+--- a/Documentation/hwmon/ina2xx
++++ b/Documentation/hwmon/ina2xx
+@@ -44,4 +44,6 @@ The INA226 monitors both a shunt voltage drop and bus supply voltage.
+ The INA230 is a high or low side current shunt and power monitor with an I2C
+ interface. The INA230 monitors both a shunt voltage drop and bus supply voltage.
+ 
+-The shunt value in micro-ohms can be set via platform data.
++The shunt value in micro-ohms can be set via platform data or device tree.
++Please refer to the Documentation/devicetree/bindings/i2c/ina2xx.txt for bindings
++if the device tree is used.
+diff --git a/drivers/hwmon/ina2xx.c b/drivers/hwmon/ina2xx.c
+index 4958b2f..a52d5f0 100644
+--- a/drivers/hwmon/ina2xx.c
++++ b/drivers/hwmon/ina2xx.c
+@@ -221,6 +221,7 @@ static int ina2xx_probe(struct i2c_client *client,
+ 	struct ina2xx_data *data;
+ 	struct ina2xx_platform_data *pdata;
+ 	int ret;
++	u32 val;
+ 	long shunt = 10000; /* default shunt value 10mOhms */
+ 
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA))
+@@ -234,6 +235,9 @@ static int ina2xx_probe(struct i2c_client *client,
+ 		pdata =
+ 		  (struct ina2xx_platform_data *)client->dev.platform_data;
+ 		shunt = pdata->shunt_uohms;
++	} else if (!of_property_read_u32(client->dev.of_node,
++				"shunt-resistor", &val)) {
++			shunt = val;
+ 	}
+ 
+ 	if (shunt <= 0)
+-- 
+1.8.0
 
-FYI. The USB PHY driver is already treating reset as a regulator and is into 3.10. Reworking that
-will take some time. Not getting these in will prevent USB host/ethernet support on panda.
 
-cheers,
--roger
+
+_______________________________________________
+lm-sensors mailing list
+lm-sensors@lm-sensors.org
+http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
