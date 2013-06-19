@@ -1,17 +1,16 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 11/12] ARM: mvebu: Relocate Armada 370 PCIe device
- tree nodes
-Date: Wed, 19 Jun 2013 08:12:58 -0300
-Message-ID: <20130619111257.GD16138@localhost>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1371554737-25319-12-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306182335.50722.arnd@arndb.de>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: kernel: document ARM CPUs clock-frequency property
+Date: Wed, 19 Jun 2013 12:23:24 +0100
+Message-ID: <20130619112324.GA32207@e102568-lin.cambridge.arm.com>
+References: <1371635237-22860-1-git-send-email-f.fainelli@gmail.com>
+ <20130619100450.GA27181@e106331-lin.cambridge.arm.com>
+ <CAGVrzcY8oxZ7zUbThvXgsVyEGBCsxcvu4R0it_9s9wsKkJ3W0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAGVrzcY8oxZ7zUbThvXgsVyEGBCsxcvu4R0it_9s9wsKkJ3W0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201306182335.50722.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,58 +21,37 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QXJuZCwKCkdvaW5nIHRocm91Z2ggdGhpcyBhIGNvdXBsZSBxdWVzdGlvbnMgY2FtZSBvdXQuLi4K
-Ck9uIFR1ZSwgSnVuIDE4LCAyMDEzIGF0IDExOjM1OjUwUE0gKzAyMDAsIEFybmQgQmVyZ21hbm4g
-d3JvdGU6Cj4gT24gVHVlc2RheSAxOCBKdW5lIDIwMTMsIEV6ZXF1aWVsIEdhcmNpYSB3cm90ZToK
-PiA+ICsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJhbmdlcyA9Cj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgPDB4ODIwMDAwMDAgMCAweDQwMDAwICAgIDB4ZmZmZjAwMDEg
-MHg0MDAwMCAwIDB4MDAwMDIwMDAKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-MHg4MjAwMDAwMCAwIDB4ODAwMDAgICAgMHhmZmZmMDAwMSAweDgwMDAwIDAgMHgwMDAwMjAwMAo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDgyMDAwMDAwIDAgMHhlMDAwMDAw
-MCAweGZmZmYwMDAyIDAgICAgICAgICAgMCAweDA4MDAwMDAwCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIDB4ODEwMDAwMDAgMCAwICAgICAgICAgIDB4ZmZmZjAwMDIgMHg4MDAw
-MDAwICAwIDB4MDAxMDAwMDA+Owo+IAo+IEFzIHBvaW50ZWQgb3V0IG9uIElSQywgdGhpcyBpcyBu
-b3QgYSBnb29kIHJlcHJlc2VudGF0aW9uIG9mIHRoZSBtZW1vcnkgc3BhY2UsCj4gc2luY2UgaXQg
-cmVxdWlyZXMgYSBub24temVybyBzeXMtPm1lbV9vZmZzZXQsIGFuZCBpdCBjb25mbGljdHMgd2l0
-aCB0aGUgc3RyYWlnaHQKPiBtYXBwaW5nIEkgc3VnZ2VzdGVkLgo+IAo+IEkgdGhpbmsgaXQgc2hv
-dWxkIGJlCj4gCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4ODIwMDAwMDAgMCAw
-eGUwMDAwMDAwIDB4ZmZmZjAwMDIgMCAgMHhlMDAwMDAwMCAweDA4MDAwMDAwCgpTbyBmYXIsIHNv
-IGdvb2QuCgo+IAo+IGlmIHdlIHdhbnQgdG8gZW5jb2RlIHRoZSBhcGVydHVyZSBpbiB0aGUgcmFu
-Z2VzIHByb3BlcnR5IGhlcmUsIGkuZS4gaGF2ZQo+IGEgMToxIG1hcHBpbmcgYmV0d2VlbiBQQ0kg
-bWVtb3J5IHNwYWNlIGFuZCBNQlVTIHNwYWNlLCBhbmQgaW4gbWJ1cywKPiB5b3UgbmVlZCB0aGUg
-Y29ycmVzcG9uZGluZwo+IAo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAweGZmZmYwMDAy
-IDAgMHhlMDAwMDAwMCAweDgxMDAwMDAKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgMHhm
-ZmZmMDAwMiAweGUwMDAwMDAwIDB4ZTAwMDAwMDAgMHg4MTAwMDAwCgouLi4gSSBvYnZpb3VzbHkg
-Z290IHNvbWV0aGluZyB3cm9uZywgYnV0IEkgdGhvdWdodCB5b3Ugc2FpZCB0aGF0CnRoaXMgY2hh
-bmdlIGFsbG93ZWQgdG8gKm5vdCogaGF2ZSBhbnkgbWJ1cy1ub2RlIHJhbmdlcyB0cmFuc2xhdGlv
-bi4KCj4gCj4gc28gdGhhdCBtYnVzIGFjdHVhbGx5IHRyYW5zbGF0ZXMgdGhlIHJpZ2h0IGFkZHJl
-c3Nlcy4gWW91IGNvdWxkIGFsc28KPiBoYXZlIHRoZSBQQ0kgbWVtb3J5IHNwYWNlIHN0YXJ0IGF0
-IDAsIHdoaWNoIHdvdWxkIG1lYW4KPiAKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-MHg4MjAwMDAwMCAwIDAgMHhmZmZmMDAwMiAwICAwIDB4MDgwMDAwMDAKPiAKPiBhbmQKPiAKPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweGZmZmYwMDAyIDAgMHhlMDAwMDAwMCAweDgx
-MDAwMDAKCk1tbS4uIGFuZCB3aHkgaXMgdGhpcyBvcHRpb24gYWNjZXB0YWJsZT8KCj4gCj4gTm90
-ZSB0aGF0IHRoZSBkcml2ZXIgZG9lc24ndCBhY3R1YWxseSBoYW5kbGUgdGhlIGdlbmVyaWMgY2Fz
-ZSBjb3JyZWN0bHksIHlvdSB3b3VsZAo+IG5lZWQgdG8gYXBwbHkgdGhpcyBwYXRjaAo+CgpUaGlz
-IHBhdGNoIGRvZXMgbm90IGFwcGx5LiBJIHRyaWVkIHRvIHVuZGVyc3RhbmQgd2hhdCB5b3UgZGlk
-LCBidXQgSSdtCmNvbmZ1c2VkIGJ5IHRoZSBmYWN0IEkgZG9uJ3QgbmVlZCB0byBhcHBseSBhbnkg
-cGF0Y2ggdG8gbWFrZSBpdCB3b3JrCm9uIG15IGJveGVzLCB1c2luZyB5b3VyIHByb3Bvc2VkIHJh
-bmdlcyB0cmFuc2xhdGlvbnMuCgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9ob3N0L3BjaS1t
-dmVidS5jIGIvZHJpdmVycy9wY2kvaG9zdC9wY2ktbXZlYnUuYwo+IGluZGV4IDEzYTYzM2IuLmFh
-Njc0ZjQgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9wY2kvaG9zdC9wY2ktbXZlYnUuYwo+ICsrKyBi
-L2RyaXZlcnMvcGNpL2hvc3QvcGNpLW12ZWJ1LmMKPiBAQCAtNzkwLDYgKzc5MCw3IEBAIHN0YXRp
-YyBpbnQgX19pbml0IG12ZWJ1X3BjaWVfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikKPiAgCQl9Cj4gIAkJaWYgKHJlc3R5cGUgPT0gSU9SRVNPVVJDRV9NRU0pIHsKPiAgCQkJb2Zf
-cGNpX3JhbmdlX3RvX3Jlc291cmNlKCZyYW5nZSwgbnAsICZwY2llLT5tZW0pOwo+ICsJCQlzeXMt
-Pm1lbV9vZmZzZXQgPSByYW5nZS5jcHVfYWRkciAtIHJhbmdlLnBjaV9hZGRyOwo+ICAJCQlwY2ll
-LT5tZW0ubmFtZSA9ICJNRU0iOwo+ICAJCX0KPiAgCX0KPiAKPiB0byBkZWFsIHdpdGggdGhlIGdl
-bmVyaWMgY2FzZSB3aGVyZSB0aGUgYnVzIGFkZHJlc3MgaXMgZGlmZmVyZW50IGZyb20gdGhlCj4g
-Q1BVIGFkZHJlc3MuCj4gCgpUaGFua3MhCi0tIApFemVxdWllbCBHYXJjw61hLCBGcmVlIEVsZWN0
-cm9ucwpFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5nCmh0dHA6
-Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRp
-c2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8v
-ZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Wed, Jun 19, 2013 at 11:27:50AM +0100, Florian Fainelli wrote:
+> Hello Mark,
+> 
+> 2013/6/19 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
+> > On Wed, Jun 19, 2013 at 10:47:17AM +0100, Florian Fainelli wrote:
+> >> ARM CPU device tree nodes may contain an optional clock-frequency
+> >> property, when set, this property must contain the CPU frequency in Hz,
+> >> which is then used by the topology parsing code in
+> >> arch/arm/kernel/topology.c to infer the CPU capacity.
+> >
+> > I see that arch/arm/kernel/topology.c does a pr_err when clock-frequency isn't
+> > present. If we're documenting it as optional, should we not downgrade that or
+> > remove it entirely?
+> 
+> Good question. I think it might be good to just dowgrade the error to
+> a simple warning, we should clearly be fixing the binding if we have a
+> device_type = "cpu" property but no clock-frequency property.
+
+Well, this means that that pr_err will trigger as soon as the dts
+updates hit the mainline, now probably it is silent because cpu nodes
+for architectures with "arm,cortex-a15" as cpus miss device_type = "cpu".
+ePAPR defines "clock-frequency" as required.
+
+So either we downgrade it to optional or we are in for another slew of dts
+updates, I am really looking forward to that. Certainly it has to be added
+to the bindings.
+
+Thoughts ?
+
+Lorenzo
