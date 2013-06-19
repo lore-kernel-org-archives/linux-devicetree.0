@@ -1,116 +1,159 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [RFC PATCH v3 0/2] drivers: mfd: Versatile Express SPC support
-Date: Wed, 19 Jun 2013 11:30:14 +0200
-Message-ID: <20130619093014.GX7161@zurbaran>
-References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com>
- <20130611090545.GC8164@e102568-lin.cambridge.arm.com>
- <20130613001311.GC4567@zurbaran>
- <1371116757.3307.13.camel@hornet>
- <20130618090941.GE7161@zurbaran>
- <1371547782.16725.11.camel@hornet>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH 1/4] drm/exynos: rename compatible strings for hdmi subsystem
+Date: Wed, 19 Jun 2013 15:02:59 +0530
+Message-ID: <CAPdUM4OmQqkmuW3pUHuTRsZfLDwuj30aoKeA0L8Kbqn4qa1fUA@mail.gmail.com>
+References: <1371559778-9359-1-git-send-email-rahul.sharma@samsung.com>
+	<1371559778-9359-2-git-send-email-rahul.sharma@samsung.com>
+	<7536863.RugNVV3dBS@flatron>
+	<1371628750.4230.3.camel@weser.hi.pengutronix.de>
+	<00a001ce6cc6$ca1807e0$5e4817a0$%dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1371547782.16725.11.camel@hornet>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <00a001ce6cc6$ca1807e0$5e4817a0$%dae@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sw0312.kim@samsung.com, joshi@samsung.com, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pawel,
+Hi All,
 
-On Tue, Jun 18, 2013 at 10:29:42AM +0100, Pawel Moll wrote:
-> On Tue, 2013-06-18 at 10:09 +0100, Samuel Ortiz wrote:
-> > Hi Pawell,
-> 
-> Double l in the wrong place ;-)
-Apologies...
+On Wed, Jun 19, 2013 at 1:57 PM, Inki Dae <inki.dae@samsung.com> wrote:
+>
+>
+>> -----Original Message-----
+>> From: dri-devel-bounces+inki.dae=samsung.com@lists.freedesktop.org
+>> [mailto:dri-devel-bounces+inki.dae=samsung.com@lists.freedesktop.org] On
+>> Behalf Of Lucas Stach
+>> Sent: Wednesday, June 19, 2013 4:59 PM
+>> To: Tomasz Figa
+>> Cc: kgene.kim@samsung.com; devicetree-discuss@lists.ozlabs.org;
+>> sw0312.kim@samsung.com; joshi@samsung.com;
+> dri-devel@lists.freedesktop.org;
+>> linux-samsung-soc@vger.kernel.org; rob.herring@calxeda.com;
+>> s.nawrocki@samsung.com; grant.likely@linaro.org; Rahul Sharma
+>> Subject: Re: [PATCH 1/4] drm/exynos: rename compatible strings for hdmi
+>> subsystem
+>>
+>> Am Mittwoch, den 19.06.2013, 09:52 +0200 schrieb Tomasz Figa:
+>> > Hi Rahul,
+>> >
+>> > On Tuesday 18 of June 2013 18:19:35 Rahul Sharma wrote:
+>> > > This patch renames the combatible strings for hdmi, mixer, ddc
+>> > > and hdmiphy. It follows the convention of using compatible string
+>> > > which represent the SoC in which the IP was added for the first
+>> > > time.
+>> > >
+>> > > Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>> > > ---
+>> > >  Documentation/devicetree/bindings/video/exynos_hdmi.txt    |    6
+>> > > ++++-- Documentation/devicetree/bindings/video/exynos_hdmiddc.txt |
+>> > > 4 ++-- Documentation/devicetree/bindings/video/exynos_hdmiphy.txt |
+>> > > 6 ++++-- Documentation/devicetree/bindings/video/exynos_mixer.txt   |
+>> > >  7 +++++-- drivers/gpu/drm/exynos/exynos_ddc.c
+> |
+>> > >    2 +- drivers/gpu/drm/exynos/exynos_hdmi.c                       |
+>> > > 2 +- drivers/gpu/drm/exynos/exynos_hdmiphy.c                    |    4
+>> > > +++- drivers/gpu/drm/exynos/exynos_mixer.c                      |   12
+>> > > ++++++------ 8 files changed, 26 insertions(+), 17 deletions(-)
+>> > >
+>> > > diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>> > > b/Documentation/devicetree/bindings/video/exynos_hdmi.txt index
+>> > > 589edee..2ac01ca 100644
+>> > > --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>> > > +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+>> > > @@ -1,7 +1,9 @@
+>> > >  Device-Tree bindings for drm hdmi driver
+>> > >
+>> > >  Required properties:
+>> > > -- compatible: value should be "samsung,exynos5-hdmi".
+>> > > +- compatible: value should be one among the following:
+>> > > + 1) "samsung,exynos4210-hdmi"
+>> > > + 2) "samsung,exynos4212-hdmi"
+>> > >  - reg: physical base address of the hdmi and length of memory mapped
+>> > >   region.
+>> > >  - interrupts: interrupt number to the cpu.
+>> > > @@ -15,7 +17,7 @@ Required properties:
+>> > >  Example:
+>> > >
+>> > >   hdmi {
+>> > > -         compatible = "samsung,exynos5-hdmi";
+>> > > +         compatible = "samsung,exynos4212-hdmi";
+>> >
+>> > Sorry, but it's a NAK from me.
+>> >
+>> > DeviceTree bindings are considered an ABI. This is to allow older dtbs
+>> to
+>> > work with new kernels.
+>> >
+>> > If you just change the binding this way, you break all the existing
+>> users
+>> > of this compatible value.
+>> >
+>> > In addition you are doing it in a way that breaks bisection:
+>> >  - patch 1/4 breaks existing in-tree users of current compatible values,
+>> >  - after patch 2 and 3 it is still broken,
+>> >  - and eventually all in-tree users are fixed by patch 4 (but you can't
+>> > fix out-of-tree users).
+>> >
 
- 
-> > > If you feel strongly about it, I'm ready to split it into mfd_cells and
-> > > move the gpio and leds code into separate drivers, however I'm not
-> > > convinced that it's worth the effort.
-> > Well, after seeing your last patch for ifdef'ing the GPIO and LED code,
-> > I think it is worth the effort.
-> 
-> Good point. But as this - obviously - won't happen on time for 3.11, I
-> hope you would be kind enough to take the #ifdef patch in for now.
-I see that you guys are willing to improve this stuff, so I can take it,
-yes.
+@Tomasz, I understand your point but how is it possible to change
+compatible types in driver as well as in dtbs by not breaking either of them
+other then putting changes in a single patch. I ensured that hdmi stuff is
+intact with whole series merged in either tree (drm or arch). Please suggest
+a better way.
 
+The Only existing user is Exynos5250, which is modified in the same patch
+set.
 
-> > > Now, as to the vexpress-config.c... The first time I've posted the
-> > > series, all parts lived in "driver/misc(/vexpress)", but (if I remember
-> > > correctly) Arnd had some feelings about "misc" existence at all... I was
-> > > thinking about a separate directory for random "system/platform/machine
-> > > configuration" drivers, but the idea didn't get any traction.
-> > drivers/misc would already have been a nicer option imo.
-> 
-> Ok. Quite conveniently Arnd is the driver/misc maintainer so I'll get
-> first-hand feedback on this.
-> 
-> > > > Not only that, but the whole vexpress-config code design is not the
-> > > > nicest piece of code I've ever seen. And I'm usually not picky. e.g. the
-> > > > whole vexpress-config ad-hoc API is awkward and I wonder if it could be
-> > > > implemented as a bus instead.
-> > > 
-> > > Funny you mention this :-) Again, the first version actually was a
-> > > vexpress-config bus. The feedback was - a whole bus_type is over the top
-> > > (I'm simplifying the letter slightly but this was the spirit).
-> > I think it would make sense to have it under drivers/bus/. It might be a
-> > little over the top, but when I look at the current code I'd be really
-> > happy to read an over-the-top bus driver instead. At least we'd know
-> > straight away what youre trying to achieve with this code and it would
-> > probably remove a fair chunk of the weird bridge API (the registering
-> > and the function reference stuff).
-> > Do you have a reference for the patch first version ?
-> 
-> http://thread.gmane.org/gmane.linux.ports.arm.kernel/185014/focus=185019
+>> > Please do it without changing existing compatible values. Even if they
+>> are
+>> > misleading, this is all can be described in the documentation - just
+>> list
+>> > SoCs that can be used with each compatible value there.
+>> >
+>>
+>> Or you could just introduce the new compatible value and make all
+>> in-tree users use this, but keep the old values around and still accept
+>> them in the drivers. This way you get the goodness of the cleaner new
+>> symbols without breaking existing users. Just mark the old values as
+>> deprecated in the documentation, so no new devicetree usees them.
+>>
 
+I agree, above is a decent approach, but in this case we have only one
+user for this compatible type including in flight patches which I have
+modified along.
 
- 
-> > > So to summarize - I'm open to any suggestions and ready to spend time on
-> > > this stuff.
-> > I'd say splitting the sysreg driver and leaving only the MFD bits in the
-> > MFD driver would be a first step.
-> > Also, re-considering the bus implementation for the config part would
-> > also be interesting. 
-> 
-> Ok, so what I'll do:
-> 
-> 1. Split vexpress-sysreg into
-> * gpio driver
-> * leds driver
-> * the rest (still in mfd though)
-Sounds good to me.
+If it seems better to keep old compatible type (deprecated), it is fine
+with me.
 
+>
+> That's a good idea. We really need to mitigate such misleading somehow or
+> other.
 
-> 2. Move the vexpress-sysreg "platform management" functions into misc
-> (unless we get any better place for it)
-This is for Arnd and Greg to decide I suppose.
+Please sugggest me how to proceed.
 
+regards,
+Rahul Sharma.
 
-> 3. Move vexpress-config into drivers/bus as it is (however I see no one
-> in MAINTAINERS for this directory)
-ISTR that Arnd originally created that directory, so he may help here.
-Arnd also had some concerns about implementing this code as a bus,
-mostly about it not being a discoverable bus. IMHO that's a valid
-concern, and this is why you ended up putting it under MFD which can be
-seen as some sort of platform devices bus. But I still believe the bus
-API would make this code look cleaner and easier to maintain.
-
-> 4. *Try* to use more of the standard bus (aka bus_type) infrastructure,
-> however this will be the trickiest part of this all - as I've mentioned
-> the code must be functional before SLAB is up...
-> 
-> You shall see some patches before 3.11-rc1.
-Ok, we'll have plenty of time to have it ready for the 3.12 merge window
-then.
-
-Cheers,
-Samuel.
-
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+>
+> Thanks,
+> Inki Dae
+>
+>> Regards,
+>> Lucas
+>> --
+>> Pengutronix e.K.                           | Lucas Stach                 |
+>> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+>> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
+>> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
