@@ -1,57 +1,141 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ARM: kernel: document ARM CPUs clock-frequency property
-Date: Wed, 19 Jun 2013 12:23:24 +0100
-Message-ID: <20130619112324.GA32207@e102568-lin.cambridge.arm.com>
-References: <1371635237-22860-1-git-send-email-f.fainelli@gmail.com>
- <20130619100450.GA27181@e106331-lin.cambridge.arm.com>
- <CAGVrzcY8oxZ7zUbThvXgsVyEGBCsxcvu4R0it_9s9wsKkJ3W0w@mail.gmail.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
+Date: Wed, 19 Jun 2013 06:30:03 -0500
+Message-ID: <51C1963B.2070501@ti.com>
+References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
+ <1371571487-14389-2-git-send-email-rogerq@ti.com> <51C106A1.9030001@ti.com>
+ <51C15F7E.5020305@ti.com> <20130619074605.GW5523@atomide.com>
+ <51C183AC.8040801@ti.com> <51C19011.5050107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAGVrzcY8oxZ7zUbThvXgsVyEGBCsxcvu4R0it_9s9wsKkJ3W0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51C19011.5050107@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2013 at 11:27:50AM +0100, Florian Fainelli wrote:
-> Hello Mark,
-> 
-> 2013/6/19 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
-> > On Wed, Jun 19, 2013 at 10:47:17AM +0100, Florian Fainelli wrote:
-> >> ARM CPU device tree nodes may contain an optional clock-frequency
-> >> property, when set, this property must contain the CPU frequency in Hz,
-> >> which is then used by the topology parsing code in
-> >> arch/arm/kernel/topology.c to infer the CPU capacity.
-> >
-> > I see that arch/arm/kernel/topology.c does a pr_err when clock-frequency isn't
-> > present. If we're documenting it as optional, should we not downgrade that or
-> > remove it entirely?
-> 
-> Good question. I think it might be good to just dowgrade the error to
-> a simple warning, we should clearly be fixing the binding if we have a
-> device_type = "cpu" property but no clock-frequency property.
+On 06/19/2013 06:03 AM, Roger Quadros wrote:
+> On 06/19/2013 01:10 PM, Benoit Cousson wrote:
+>> On 06/19/2013 02:46 AM, Tony Lindgren wrote:
+>>> * Roger Quadros <rogerq@ti.com> [130619 00:42]:
+>>>> Hi Benoit,
+>>>>
+>>>> On 06/19/2013 04:17 AM, Benoit Cousson wrote:
+>>>>> Hi Roger,
+>>>>>
+>>>>> On 06/18/2013 11:04 AM, Roger Quadros wrote:
+>>>>>> Provide the RESET and Power regulators for the USB PHY,
+>>>>>> the USB Host port mode and the PHY device.
+>>>>>>
+>>>>>> Also provide pin multiplexer information for the USB host
+>>>>>> pins.
+>>>>>>
+>>>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>>>> ---
+>>>>>>     arch/arm/boot/dts/omap4-panda-common.dtsi |   62 +++++++++++++++++++++++++++++
+>>>>>>     1 files changed, 62 insertions(+), 0 deletions(-)
+>>>>>>
+>>>>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>>> index 00cbaa5..7a21e8e 100644
+>>>>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>>> @@ -59,6 +59,42 @@
+>>>>>>                 "AFML", "Line In",
+>>>>>>                 "AFMR", "Line In";
+>>>>>>         };
+>>>>>> +
+>>>>>> +    /* HS USB Port 1 RESET */
+>>>>>> +    hsusb1_reset: hsusb1_reset_reg {
+>>>>>> +        compatible = "regulator-fixed";
+>>>>>> +        regulator-name = "hsusb1_reset";
+>>>>>> +        regulator-min-microvolt = <3300000>;
+>>>>>> +        regulator-max-microvolt = <3300000>;
+>>>>>> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
+>>>>>> +        startup-delay-us = <70000>;
+>>>>>> +        enable-active-high;
+>>>>>> +    };
+>>>>>
+>>>>> Is this really a regulator? Or just a GPIO line used to reset the USB PHY?
+>>>>
+>>>> It is in fact a GPIO line used as reset.
+>>>>>
+>>>>> If this is the case, I don't think it should be represented as a regulator.
+>>>>
+>>>> Why not? I think it fits very well in the regulator device model.
+>>
+>> I'm not sure fitting very well is the correct term.
+>> It works, for sure, but it is no different than when we were trying to abuse the regulator fmwk to enable the 32k clock in phoenix.
+>> It is just a hack.
+>>
+>
+> The only difference is there is a dedicated framework for clocks. Since there is nothing specific to
+> handle reset lines it is left to the driver writer how he wants to manage it.
 
-Well, this means that that pr_err will trigger as soon as the dts
-updates hit the mainline, now probably it is silent because cpu nodes
-for architectures with "arm,cortex-a15" as cpus miss device_type = "cpu".
-ePAPR defines "clock-frequency" as required.
+Well, at that time, it was not available either. The point is still that 
+using a existing fmwk that has nothing to do with the signal you need to 
+handle just because it works is not a very good justification.
 
-So either we downgrade it to optional or we are in for another slew of dts
-updates, I am really looking forward to that. Certainly it has to be added
-to the bindings.
+>>>> I couldn't find a better
+>>>> way to represent this. It gives us a way to specify not only the GPIO line but also
+>>>> the polarity. I know mostly reset is active low but still there is flexibility as you never
+>>>> know for sure.
+>>
+>> Mmm, and what about just controlling the gpio from the driver?
+>
+> Yes gpio is possible. But then you need to add additional code in the driver to parse GPIO number and polarity.
+> Using regulator_get() was plain simple for me.
 
-Thoughts ?
+Maybe, but it is not the right thing to do.
+Can you explain me the commonality between a reset line and a regulator???
 
-Lorenzo
+>>> I think it's really a mux + a comparator. But from Linux driver point of view
+>>> a regulator fits well as we don't have anything better. After all, the pin
+>>> voltage changes, and then something can be done based on the comparator
+>>> value.
+>>>
+>>>> Do you have any better ideas?
+>>>
+>>> We have a similar issue with the MMC1 PBIAS. I think in the long run we
+>>> should expand regulator (and possibly pinctrl) framework(s) to handle
+>>> comparators. We could just assume that a comparatator is a regulator,
+>>> and have a comparator binding that just uses the regulator code.
+>>
+>> In the case of pbias, the pinctrl seems to be a much better fit for my point of view. pinctrl can handle pin configuration and this is what the pbias is in the case of MMC pins.
+>>
+>>>> FYI. The USB PHY driver is already treating reset as a regulator and is into 3.10. Reworking that
+>>>> will take some time. Not getting these in will prevent USB host/ethernet support on panda.
+>>
+>> That's not because we did some mistake in the past that we have to keep doing that :-)
+>
+> I had actually thought it well and don't consider it as a mistake. It is just a difference in opinion.
+
+Well, I don't think so. Again, you are abusing the regulator fmwk to 
+enable at boot time a GPIO line that should reset the IP. I doubt the 
+regulator fmwk was done for that. Otherwise Mark would have named it 
+"miscellaneous fmwk" or "regulator & reset" fmwk.
+
+>>> Yes and we need to have some solution for v3.11 as we've dropped the
+>>> legacy data for omap4. Otherwise things won't work properly.
+>>
+>> I'm fine taking it as soon as big disclaimer is added to avoid mis-using the regulator in the future for controlling a gpio line.
+>>
+>
+> I can re-work the phy driver. No problem. But I'm still not convinced
+> what it will improve. IMHO it just adds more code in the phy driver without any benefits.
+
+Yes, it will. It will give explicitly the reset control to the driver 
+that knows and needs it. Moreover, it will avoid abusing a fmwk that was 
+not done for that purpose.
+
+Regards,
+Benoit
