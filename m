@@ -1,67 +1,128 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] mfd: twl4030-power: Start DT conversion and updates
-Date: Wed, 19 Jun 2013 10:23:48 +0200
-Message-ID: <20130619082348.GQ7161@zurbaran>
-References: <1371561480-28325-1-git-send-email-florian.vaussard@epfl.ch>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: RE: [PATCH 1/4] drm/exynos: rename compatible strings for hdmi
+	subsystem
+Date: Wed, 19 Jun 2013 17:27:08 +0900
+Message-ID: <00a001ce6cc6$ca1807e0$5e4817a0$%dae@samsung.com>
+References: <1371559778-9359-1-git-send-email-rahul.sharma@samsung.com>
+ <1371559778-9359-2-git-send-email-rahul.sharma@samsung.com>
+ <7536863.RugNVV3dBS@flatron> <1371628750.4230.3.camel@weser.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1371561480-28325-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1371628750.4230.3.camel@weser.hi.pengutronix.de>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Lucas Stach' <l.stach@pengutronix.de>, 'Tomasz Figa' <tomasz.figa@gmail.com>
+Cc: kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, sw0312.kim@samsung.com, joshi@samsung.com, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, 'Rahul Sharma' <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
 
-On Tue, Jun 18, 2013 at 03:17:55PM +0200, Florian Vaussard wrote:
-> Hello,
-> 
-> This series enables a partial DT support for twl4030-power. The
-> missing part is the power management scripts, as the required
-> binding should be defined first. It however enables the complete
-> shutdown of the processor at poweroff when booting with DT,
-> dropping the power consumption from around 350 mA on Overo+Tobi
-> to about 40 mA.
-> 
-> The poweroff callback was tested with both DT and non-DT boots.
-> 
-> The last two patches simplify the error path in the probe function,
-> and fix registers relocking on error.
-> 
-> Best regards,
-> 
-> Florian
-> 
-> Since v1:
-> - use module_platform_driver()
-> - split the refactoring of the probe function into a dedicated patch
-> - new patch to fix registers relocking on error
-> - rebased on mfd-next
-> 
-> 
-> Florian Vaussard (5):
->   mfd: twl4030-power: Split from twl-core into a dedicated module
->   mfd: twl4030-power: Simplify probing of power scripts and resources
->   mfd: twl4030-power: Start transition to DT
->   mfd: twl4030-power: Simplify error path
->   mfd: twl4030-power: Fix relocking on error
-All 5 patches applied, thanks.
 
-Cheers,
-Samuel.
+> -----Original Message-----
+> From: dri-devel-bounces+inki.dae=samsung.com@lists.freedesktop.org
+> [mailto:dri-devel-bounces+inki.dae=samsung.com@lists.freedesktop.org] On
+> Behalf Of Lucas Stach
+> Sent: Wednesday, June 19, 2013 4:59 PM
+> To: Tomasz Figa
+> Cc: kgene.kim@samsung.com; devicetree-discuss@lists.ozlabs.org;
+> sw0312.kim@samsung.com; joshi@samsung.com;
+dri-devel@lists.freedesktop.org;
+> linux-samsung-soc@vger.kernel.org; rob.herring@calxeda.com;
+> s.nawrocki@samsung.com; grant.likely@linaro.org; Rahul Sharma
+> Subject: Re: [PATCH 1/4] drm/exynos: rename compatible strings for hdmi
+> subsystem
+> 
+> Am Mittwoch, den 19.06.2013, 09:52 +0200 schrieb Tomasz Figa:
+> > Hi Rahul,
+> >
+> > On Tuesday 18 of June 2013 18:19:35 Rahul Sharma wrote:
+> > > This patch renames the combatible strings for hdmi, mixer, ddc
+> > > and hdmiphy. It follows the convention of using compatible string
+> > > which represent the SoC in which the IP was added for the first
+> > > time.
+> > >
+> > > Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/video/exynos_hdmi.txt    |    6
+> > > ++++-- Documentation/devicetree/bindings/video/exynos_hdmiddc.txt |
+> > > 4 ++-- Documentation/devicetree/bindings/video/exynos_hdmiphy.txt |
+> > > 6 ++++-- Documentation/devicetree/bindings/video/exynos_mixer.txt   |
+> > >  7 +++++-- drivers/gpu/drm/exynos/exynos_ddc.c
+|
+> > >    2 +- drivers/gpu/drm/exynos/exynos_hdmi.c                       |
+> > > 2 +- drivers/gpu/drm/exynos/exynos_hdmiphy.c                    |    4
+> > > +++- drivers/gpu/drm/exynos/exynos_mixer.c                      |   12
+> > > ++++++------ 8 files changed, 26 insertions(+), 17 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> > > b/Documentation/devicetree/bindings/video/exynos_hdmi.txt index
+> > > 589edee..2ac01ca 100644
+> > > --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> > > +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> > > @@ -1,7 +1,9 @@
+> > >  Device-Tree bindings for drm hdmi driver
+> > >
+> > >  Required properties:
+> > > -- compatible: value should be "samsung,exynos5-hdmi".
+> > > +- compatible: value should be one among the following:
+> > > +	1) "samsung,exynos4210-hdmi"
+> > > +	2) "samsung,exynos4212-hdmi"
+> > >  - reg: physical base address of the hdmi and length of memory mapped
+> > >  	region.
+> > >  - interrupts: interrupt number to the cpu.
+> > > @@ -15,7 +17,7 @@ Required properties:
+> > >  Example:
+> > >
+> > >  	hdmi {
+> > > -		compatible = "samsung,exynos5-hdmi";
+> > > +		compatible = "samsung,exynos4212-hdmi";
+> >
+> > Sorry, but it's a NAK from me.
+> >
+> > DeviceTree bindings are considered an ABI. This is to allow older dtbs
+> to
+> > work with new kernels.
+> >
+> > If you just change the binding this way, you break all the existing
+> users
+> > of this compatible value.
+> >
+> > In addition you are doing it in a way that breaks bisection:
+> >  - patch 1/4 breaks existing in-tree users of current compatible values,
+> >  - after patch 2 and 3 it is still broken,
+> >  - and eventually all in-tree users are fixed by patch 4 (but you can't
+> > fix out-of-tree users).
+> >
+> > Please do it without changing existing compatible values. Even if they
+> are
+> > misleading, this is all can be described in the documentation - just
+> list
+> > SoCs that can be used with each compatible value there.
+> >
+> 
+> Or you could just introduce the new compatible value and make all
+> in-tree users use this, but keep the old values around and still accept
+> them in the drivers. This way you get the goodness of the cleaner new
+> symbols without breaking existing users. Just mark the old values as
+> deprecated in the documentation, so no new devicetree usees them.
+> 
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+That's a good idea. We really need to mitigate such misleading somehow or
+other.
+
+Thanks,
+Inki Dae
+
+> Regards,
+> Lucas
+> --
+> Pengutronix e.K.                           | Lucas Stach                 |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
