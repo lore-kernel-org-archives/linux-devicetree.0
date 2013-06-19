@@ -1,59 +1,74 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v4 06/12] memory: mvebu-devbus: Remove address decoding
- window workaround
-Date: Wed, 19 Jun 2013 15:16:11 -0700
-Message-ID: <20130619221611.GC9518@kroah.com>
-References: <1371672446-21583-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1371672446-21583-7-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130619201805.GJ31667@titan.lakedaemon.net>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/4] Make non-linear GPIO ranges accesible from gpiolib
+Date: Wed, 19 Jun 2013 16:27:44 -0600
+Message-ID: <51C23060.50807@wwwdotorg.org>
+References: <20130618092516.GC18663@ab42.lan> <1371547751-13873-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130619201805.GJ31667-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1371547751-13873-1-git-send-email-christian.ruppert@abilis.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2013 at 04:18:05PM -0400, Jason Cooper wrote:
-> On Wed, Jun 19, 2013 at 05:07:20PM -0300, Ezequiel Garcia wrote:
-> > Now that mbus device tree binding has been introduced, remove the address
-> > decoding window management from this driver.
-> > A suitable 'ranges' entry should be added to the devbus-compatible node in
-> > the device tree, as described by the mbus binding documentation.
-> > 
-> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> > Greg,
-> > 
-> > I'm Ccing you, since you're carrying the mvebu-devbus driver in your trees.
-> > This patch should be applied only after the MBus DT binding is accepted
-> > and/or merged; although I doubt we will see that happening any time soon.
-> > 
-> >  drivers/memory/mvebu-devbus.c | 64 ++-----------------------------------------
-> >  1 file changed, 2 insertions(+), 62 deletions(-)
-> 
-> Since this MBus series is most likely for v3.12, Greg's tree will be
-> merged by then.  At which time, we can decide if it's best to keep the
-> series together or continue to send devbus changes through him.  I'm
-> fine either way, and but I have a preference for keeping the series
-> together.
+On 06/18/2013 03:29 AM, Christian Ruppert wrote:
+> This patch adds the infrastructure required to register non-linear gpio
+> ranges through gpiolib and the standard GPIO device tree bindings.
 
-Ok, I'll ignore this then, as it shouldn't go into 3.11, and I don't
-have trees that go beyond that at this point in time.
+I review this in case we decide to go with it anyway.
 
-thanks,
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
 
-greg k-h
+> +In addition, named groups of pins can be mapped to pin groups of a given
+> +pin controller:
+> +
+> +	gpio_pio_g: gpio-controller@1480 {
+> +		#gpio-cells = <2>;
+> +		compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
+> +		reg = <0x1480 0x18>;
+> +		gpio-controller;
+> +		gpio-ranges = <&pinctrl1 0 0 0>, <&pinctrl2 3 0 0>;
+> +		gpio-ranges-group-names = "foo", "bar";
+> +	};
+> +
+> +where,
+> +   &pinctrl1 and &pinctrl2 is the phandle to the pinctrl DT node.
+> +
+> +   The following value specifies the base GPIO offset of the pin range with
+> +   respect to the GPIO controller's base. The remaining two values must be
+> +   0 to indicate that a named pin group should be used for the respective
+> +   range. The number of pins in the range is the number of pins in the pin
+> +   group.
+
+It'd be good to re-write this section in a similar style to the cleanup
+patches that I sent for the existing gpio-ranges documentation. That
+makes the format description more of a raw syntax than English text.
+
+> +   gpio-ranges-group-names defines the name of each pingroup of the
+> +   respective pin controller.
+> +
+> +The pinctrl node must have a "#gpio-#gpio-range-cells" property set to three
+> +to define the number of arguments to pass with the phandle.
+
+There's some mistake in the property name there. I'd assert we should
+remove those two lines anyway, and use the new OF parsing code I posted
+when cleaning up gpio-ranges.
+
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+
+> +		if (pinspec.args[2]) {
+> +			/* npins != 0: linear range */
+> +			ret = gpiochip_add_pin_range(chip,
+> +					pinctrl_dev_get_devname(pctldev),
+> +					pinspec.args[0],
+> +					pinspec.args[1],
+> +					pinspec.args[2]);
+> +			if (ret)
+> +				break;
+> +		} else {
+
+I think here we should validate !pinspec.args[1], to ensure that value
+doesn't get set to anything wonky.
+
