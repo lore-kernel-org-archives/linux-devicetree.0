@@ -1,80 +1,59 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/5] pinctrl: clarify some dt pinconfig options
-Date: Wed, 19 Jun 2013 16:10:39 -0600
-Message-ID: <51C22C5F.5020402@wwwdotorg.org>
-References: <201306141741.46077.heiko@sntech.de> <201306141742.49923.heiko@sntech.de>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4 06/12] memory: mvebu-devbus: Remove address decoding
+ window workaround
+Date: Wed, 19 Jun 2013 15:16:11 -0700
+Message-ID: <20130619221611.GC9518@kroah.com>
+References: <1371672446-21583-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1371672446-21583-7-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130619201805.GJ31667@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306141742.49923.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, James Hogan <james.hogan@imgtec.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130619201805.GJ31667-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/14/2013 09:42 AM, Heiko St=C3=BCbner wrote:
-> The bias-pull-* options use values > 0 to indicate that the pull shou=
-ld
-> be activated and optionally also indicate the strength of the pull.
-> Therefore use an default value of 1 for these options.
->=20
-> Split the low-power-mode option into low-power-enable and -disable.
->=20
-> Update the documentation to describe the param arguments better.
->=20
-> Wrong default options
-> Reported-by: James Hogan <james.hogan@imgtec.com>
->=20
+On Wed, Jun 19, 2013 at 04:18:05PM -0400, Jason Cooper wrote:
+> On Wed, Jun 19, 2013 at 05:07:20PM -0300, Ezequiel Garcia wrote:
+> > Now that mbus device tree binding has been introduced, remove the address
+> > decoding window management from this driver.
+> > A suitable 'ranges' entry should be added to the devbus-compatible node in
+> > the device tree, as described by the mbus binding documentation.
+> > 
+> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> > Greg,
+> > 
+> > I'm Ccing you, since you're carrying the mvebu-devbus driver in your trees.
+> > This patch should be applied only after the MBus DT binding is accepted
+> > and/or merged; although I doubt we will see that happening any time soon.
+> > 
+> >  drivers/memory/mvebu-devbus.c | 64 ++-----------------------------------------
+> >  1 file changed, 2 insertions(+), 62 deletions(-)
+> 
+> Since this MBus series is most likely for v3.12, Greg's tree will be
+> merged by then.  At which time, we can decide if it's best to keep the
+> series together or continue to send devbus changes through him.  I'm
+> fine either way, and but I have a preference for keeping the series
+> together.
 
-That blank line should be before the Reported-by not after it.
+Ok, I'll ignore this then, as it shouldn't go into 3.11, and I don't
+have trees that go beyond that at this point in time.
 
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+thanks,
 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindin=
-gs.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-
-> -low-power-mode		- low power mode
-> +low-power-enable	- enable low power mode
-> +low-power-disable	- disable low power mode
-
-Hmmm. That's changing the binding definition. What if somebody already
-wrote their device tree according previous definition?
-
-It seems to be that tri-states are preferable for pinctrl DT:
-
-no entry: do nothing
-=3D 0: disable
-=3D 1: enable
-
-> +Arguments for parameters:
-> +
-> +- bias-pull-up, -down and -pin-default take as optional argument 0 t=
-o disable
-> +  the pull, on hardware supporting it the pull strength in Ohm. bias=
--disable
-> +  will also disable any active pull.
-
-Does this agree with the latest definition of the kernel-internal
-meaning of 0 for pull-up/down?
-
-> +- input-schmitt takes as argument the adjustable hysteresis in a
-> +  driver-specific format
-> +
-> +- input-debounce takes the debounce time as argument or 0 to disable=
- debouncing
-> +
-> +- power-source argument is the custom value describing the source to=
- select
-> +
-> +- slew-rate takes as argument the target rate in a driver-specific f=
-ormat
-
-If those things have driver-specific (note: should be
-DT-binding-specific, not driver-specific) values, then I'm not convince=
-d
-that having a generic parameter name for them is a good idea; it makes
-things look the same when they aren't. By forcing each binding to
-include the vendor prefix on those properties and hence define a custom
-property name, you're making it clear that the semantics may be differe=
-nt.
+greg k-h
