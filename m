@@ -1,107 +1,504 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
-Date: Wed, 19 Jun 2013 17:05:00 +0300
-Message-ID: <51C1BA8C.6000703@ti.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com> <1371571487-14389-2-git-send-email-rogerq@ti.com> <51C106A1.9030001@ti.com> <51C15F7E.5020305@ti.com> <20130619074605.GW5523@atomide.com> <51C183AC.8040801@ti.com> <51C19011.5050107@ti.com> <51C19E6C.4040802@epfl.ch> <51C1A2AE.2020506@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51C1A2AE.2020506@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: florian.vaussard@epfl.ch, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH] ARM: dts: Add basic dts for Exynos4412-based Trats 2 board
+Date: Wed, 19 Jun 2013 16:49:17 +0200
+Message-ID: <1371653357-1389-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Thomas Abraham <thomas.abraham@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/19/2013 03:23 PM, Benoit Cousson wrote:
-> On 06/19/2013 07:05 AM, Florian Vaussard wrote:
->> Hello,
->>
->> On 06/19/2013 01:03 PM, Roger Quadros wrote:
->>> On 06/19/2013 01:10 PM, Benoit Cousson wrote:
->>>> On 06/19/2013 02:46 AM, Tony Lindgren wrote:
->>>>> * Roger Quadros <rogerq@ti.com> [130619 00:42]:
->>>>>> Hi Benoit,
->>>>>>
->>>>>> On 06/19/2013 04:17 AM, Benoit Cousson wrote:
->>>>>>> Hi Roger,
->>>>>>>
->>>>>>> On 06/18/2013 11:04 AM, Roger Quadros wrote:
->>>>>>>> Provide the RESET and Power regulators for the USB PHY,
->>>>>>>> the USB Host port mode and the PHY device.
->>>>>>>>
->>>>>>>> Also provide pin multiplexer information for the USB host
->>>>>>>> pins.
->>>>>>>>
->>>>>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>>>>>> ---
->>>>>>>>     arch/arm/boot/dts/omap4-panda-common.dtsi |   62
->>>>>>>> +++++++++++++++++++++++++++++
->>>>>>>>     1 files changed, 62 insertions(+), 0 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>>>>> b/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>>>>> index 00cbaa5..7a21e8e 100644
->>>>>>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>>>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>>>>> @@ -59,6 +59,42 @@
->>>>>>>>                 "AFML", "Line In",
->>>>>>>>                 "AFMR", "Line In";
->>>>>>>>         };
->>>>>>>> +
->>>>>>>> +    /* HS USB Port 1 RESET */
->>>>>>>> +    hsusb1_reset: hsusb1_reset_reg {
->>>>>>>> +        compatible = "regulator-fixed";
->>>>>>>> +        regulator-name = "hsusb1_reset";
->>>>>>>> +        regulator-min-microvolt = <3300000>;
->>>>>>>> +        regulator-max-microvolt = <3300000>;
->>>>>>>> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
->>>>>>>> +        startup-delay-us = <70000>;
->>>>>>>> +        enable-active-high;
->>>>>>>> +    };
->>>>>>>
->>>>>>> Is this really a regulator? Or just a GPIO line used to reset the
->>>>>>> USB PHY?
->>>>>>
->>>>>> It is in fact a GPIO line used as reset.
->>>>>>>
->>>>>>> If this is the case, I don't think it should be represented as a
->>>>>>> regulator.
->>>>>>
->>>>>> Why not? I think it fits very well in the regulator device model.
->>>>
->>>> I'm not sure fitting very well is the correct term.
->>>> It works, for sure, but it is no different than when we were trying
->>>> to abuse the regulator fmwk to enable the 32k clock in phoenix.
->>>> It is just a hack.
->>>>
->>>
->>> The only difference is there is a dedicated framework for clocks.
->>> Since there is nothing specific to
->>> handle reset lines it is left to the driver writer how he wants to
->>> manage it.
->>>
->>
->> There is a proposed binding for gpio-controlled reset lines, but it is
->> not yet merged [1].
->> I guess it can fit most usage patterns, and it can be an interesting
->> move in the future.
-> 
-> I'm glad to see that I was not the only one thinking that the regulator was not the right fmwk to do that :-)
-> 
-> Thanks for the pointer Florian.
+This patch introduces device tree sources for Samsung Trats 2 board
+based on Exynos4412 SoC.
 
-Thanks again Florian.
-> 
-> I guess that series should be merged for 3.11? Based on the thread, it should to through arm-soc.
-> 
-> Roger,
-> 
-> It might be tricky to have dependency on that series, but if this is possible, you should try. Otherwise, just keep the existing one, adding that a new solution will be available soon as a disclaimer.
-> 
+Currently support includes:
+ - eMMC,
+ - main PMIC (max77686),
+ - serial ports,
+ - GPIO keys,
+ - touchscreen.
 
-I will rework the PHY driver to use the new gpio-reset driver. But for 3.11 let's proceed the way it is.
-I'll resend this one with a disclaimer.
+Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ arch/arm/boot/dts/Makefile              |   1 +
+ arch/arm/boot/dts/exynos4412-trats2.dts | 456 ++++++++++++++++++++++++++++++++
+ 2 files changed, 457 insertions(+)
+ create mode 100644 arch/arm/boot/dts/exynos4412-trats2.dts
 
-cheers,
--roger
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 1357510..8cdc7cc 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -53,6 +53,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+ 	exynos4412-odroidx.dtb \
+ 	exynos4412-smdk4412.dtb \
+ 	exynos4412-origen.dtb \
++	exynos4412-trats2.dtb \
+ 	exynos5250-arndale.dtb \
+ 	exynos5440-sd5v1.dtb \
+ 	exynos5250-smdk5250.dtb \
+diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+new file mode 100644
+index 0000000..056b835
+--- /dev/null
++++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+@@ -0,0 +1,456 @@
++/*
++ * Samsung's Exynos4412 based Trats 2 board device tree source
++ *
++ * Copyright (c) 2013 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * Device tree source file for Samsung's Trats 2 board which is based on
++ * Samsung's Exynos4412 SoC.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
++
++/dts-v1/;
++#include "exynos4412.dtsi"
++
++/ {
++	model = "Samsung Trats 2 based on Exynos4412";
++	compatible = "samsung,trats2", "samsung,exynos4412";
++
++	memory {
++		reg =  <0x40000000 0x40000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rootwait earlyprintk panic=5";
++	};
++
++	firmware@0204F000 {
++		compatible = "samsung,secure-firmware";
++		reg = <0x0204F000 0x1000>;
++	};
++
++	fixed-rate-clocks {
++		xxti {
++			compatible = "samsung,clock-xxti", "fixed-clock";
++			clock-frequency = <0>;
++		};
++
++		xusbxti {
++			compatible = "samsung,clock-xusbxti", "fixed-clock";
++			clock-frequency = <24000000>;
++		};
++	};
++
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		vemmc_reg: regulator-0 {
++			compatible = "regulator-fixed";
++			regulator-name = "VMEM_VDD_2.8V";
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++			gpio = <&gpk0 2 0>;
++			enable-active-high;
++		};
++
++		/* More to come */
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		key-down {
++			interrupt-parent = <&gpj1>;
++			interrupts = <2 0>;
++			gpios = <&gpj1 2 1>;
++			linux,code = <114>;
++			label = "volume down";
++			debounce-interval = <10>;
++		};
++
++		key-up {
++			interrupt-parent = <&gpj1>;
++			interrupts = <1 0>;
++			gpios = <&gpj1 1 1>;
++			linux,code = <115>;
++			label = "volume up";
++			debounce-interval = <10>;
++		};
++
++		key-power {
++			interrupt-parent = <&gpx2>;
++			interrupts = <7 0>;
++			gpios = <&gpx2 7 1>;
++			linux,code = <116>;
++			label = "power";
++			debounce-interval = <10>;
++			gpio-key,wakeup;
++		};
++	};
++
++	i2c@13890000 {
++		samsung,i2c-sda-delay = <100>;
++		samsung,i2c-slave-addr = <0x10>;
++		samsung,i2c-max-bus-freq = <400000>;
++		pinctrl-0 = <&i2c3_bus>;
++		pinctrl-names = "default";
++		status = "okay";
++
++		mms114-touchscreen@48 {
++			compatible = "melfas,mms114";
++			reg = <0x48>;
++			interrupt-parent = <&gpm2>;
++			interrupts = <3 2>;
++			x-size = <720>;
++			y-size = <1280>;
++			avdd-supply = <&ldo23_reg>;
++			vdd-supply = <&ldo24_reg>;
++		};
++	};
++
++	i2c@138D0000 {
++		samsung,i2c-sda-delay = <100>;
++		samsung,i2c-slave-addr = <0x10>;
++		samsung,i2c-max-bus-freq = <100000>;
++		pinctrl-0 = <&i2c7_bus>;
++		pinctrl-names = "default";
++		status = "okay";
++
++		max77686_pmic@09 {
++			compatible = "maxim,max77686";
++			interrupt-parent = <&gpx0>;
++			interrupts = <7 0>;
++			reg = <0x09>;
++
++			voltage-regulators {
++				ldo1_reg: ldo1 {
++					regulator-compatible = "LDO1";
++					regulator-name = "VALIVE_1.0V_AP";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-always-on;
++					regulator-mem-on;
++				};
++
++				ldo2_reg: ldo2 {
++					regulator-compatible = "LDO2";
++					regulator-name = "VM1M2_1.2V_AP";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-mem-on;
++				};
++
++				ldo3_reg: ldo3 {
++					regulator-compatible = "LDO3";
++					regulator-name = "VCC_1.8V_AP";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-mem-on;
++				};
++
++				ldo4_reg: ldo4 {
++					regulator-compatible = "LDO4";
++					regulator-name = "VCC_2.8V_AP";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-always-on;
++					regulator-mem-on;
++				};
++
++				ldo5_reg: ldo5 {
++					regulator-compatible = "LDO5";
++					regulator-name = "VCC_1.8V_IO";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-mem-on;
++				};
++
++				ldo6_reg: ldo6 {
++					regulator-compatible = "LDO6";
++					regulator-name = "VMPLL_1.0V_AP";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-always-on;
++					regulator-mem-on;
++				};
++
++				ldo7_reg: ldo7 {
++					regulator-compatible = "LDO7";
++					regulator-name = "VPLL_1.0V_AP";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-always-on;
++					regulator-mem-on;
++				};
++
++				ldo8_reg: ldo8 {
++					regulator-compatible = "LDO8";
++					regulator-name = "VMIPI_1.0V";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-mem-off;
++				};
++
++				ldo9_reg: ldo9 {
++					regulator-compatible = "LDO9";
++					regulator-name = "CAM_ISP_MIPI_1.2V";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-mem-idle;
++				};
++
++				ldo10_reg: ldo10 {
++					regulator-compatible = "LDO10";
++					regulator-name = "VMIPI_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-mem-off;
++				};
++
++				ldo11_reg: ldo11 {
++					regulator-compatible = "LDO11";
++					regulator-name = "VABB1_1.95V";
++					regulator-min-microvolt = <1950000>;
++					regulator-max-microvolt = <1950000>;
++					regulator-always-on;
++					regulator-mem-off;
++				};
++
++				ldo12_reg: ldo12 {
++					regulator-compatible = "LDO12";
++					regulator-name = "VUOTG_3.0V";
++					regulator-min-microvolt = <3000000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-mem-off;
++				};
++
++				ldo13_reg: ldo13 {
++					regulator-compatible = "LDO13";
++					regulator-name = "NFC_AVDD_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-mem-idle;
++				};
++
++				ldo14_reg: ldo14 {
++					regulator-compatible = "LDO14";
++					regulator-name = "VABB2_1.95V";
++					regulator-min-microvolt = <1950000>;
++					regulator-max-microvolt = <1950000>;
++					regulator-always-on;
++					regulator-mem-off;
++				};
++
++				ldo15_reg: ldo15 {
++					regulator-compatible = "LDO15";
++					regulator-name = "VHSIC_1.0V";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-mem-off;
++				};
++
++				ldo16_reg: ldo16 {
++					regulator-compatible = "LDO16";
++					regulator-name = "VHSIC_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-mem-off;
++				};
++
++				ldo17_reg: ldo17 {
++					regulator-compatible = "LDO17";
++					regulator-name = "CAM_SENSOR_CORE_1.2V";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-mem-idle;
++				};
++
++				ldo18_reg: ldo18 {
++					regulator-compatible = "LDO18";
++					regulator-name = "CAM_ISP_SEN_IO_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-mem-idle;
++				};
++
++				ldo19_reg: ldo19 {
++					regulator-compatible = "LDO19";
++					regulator-name = "VT_CAM_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-mem-idle;
++				};
++
++				ldo20_reg: ldo20 {
++					regulator-compatible = "LDO20";
++					regulator-name = "VDDQ_PRE_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-mem-idle;
++				};
++
++				ldo21_reg: ldo21 {
++					regulator-compatible = "LDO21";
++					regulator-name = "VTF_2.8V";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-mem-idle;
++				};
++
++				ldo22_reg: ldo22 {
++					regulator-compatible = "LDO22";
++					regulator-name = "VMEM_VDD_2.8V";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-always-on;
++					regulator-mem-off;
++				};
++
++				ldo23_reg: ldo23 {
++					regulator-compatible = "LDO23";
++					regulator-name = "TSP_AVDD_3.3V";
++					regulator-min-microvolt = <3300000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-mem-idle;
++				};
++
++				ldo24_reg: ldo24 {
++					regulator-compatible = "LDO24";
++					regulator-name = "TSP_VDD_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-mem-idle;
++				};
++
++				ldo25_reg: ldo25 {
++					regulator-compatible = "LDO25";
++					regulator-name = "LCD_VCC_3.3V";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-mem-idle;
++				};
++
++				ldo26_reg: ldo26 {
++					regulator-compatible = "LDO26";
++					regulator-name = "MOTOR_VCC_3.0V";
++					regulator-min-microvolt = <3000000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-mem-idle;
++				};
++
++				buck1_reg: buck1 {
++					regulator-compatible = "BUCK1";
++					regulator-name = "vdd_mif";
++					regulator-min-microvolt = <850000>;
++					regulator-max-microvolt = <1100000>;
++					regulator-always-on;
++					regulator-boot-on;
++					regulator-mem-off;
++				};
++
++				buck2_reg: buck2 {
++					regulator-compatible = "BUCK2";
++					regulator-name = "vdd_arm";
++					regulator-min-microvolt = <850000>;
++					regulator-max-microvolt = <1500000>;
++					regulator-always-on;
++					regulator-boot-on;
++					regulator-mem-off;
++				};
++
++				buck3_reg: buck3 {
++					regulator-compatible = "BUCK3";
++					regulator-name = "vdd_int";
++					regulator-min-microvolt = <850000>;
++					regulator-max-microvolt = <1150000>;
++					regulator-always-on;
++					regulator-boot-on;
++					regulator-mem-off;
++				};
++
++				buck4_reg: buck4 {
++					regulator-compatible = "BUCK4";
++					regulator-name = "vdd_g3d";
++					regulator-min-microvolt = <850000>;
++					regulator-max-microvolt = <1150000>;
++					regulator-boot-on;
++					regulator-mem-off;
++				};
++
++				buck5_reg: buck5 {
++					regulator-compatible = "BUCK5";
++					regulator-name = "VMEM_1.2V_AP";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++				};
++
++				buck6_reg: buck6 {
++					regulator-compatible = "BUCK6";
++					regulator-name = "VCC_SUB_1.35V";
++					regulator-min-microvolt = <1350000>;
++					regulator-max-microvolt = <1350000>;
++					regulator-always-on;
++				};
++
++				buck7_reg: buck7 {
++					regulator-compatible = "BUCK7";
++					regulator-name = "VCC_SUB_2.0V";
++					regulator-min-microvolt = <2000000>;
++					regulator-max-microvolt = <2000000>;
++					regulator-always-on;
++				};
++
++				buck8_reg: buck8 {
++					regulator-compatible = "BUCK8";
++					regulator-name = "VMEM_VDDF_3.0V";
++					regulator-min-microvolt = <2850000>;
++					regulator-max-microvolt = <2850000>;
++					regulator-always-on;
++					regulator-mem-off;
++				};
++
++				buck9_reg: buck9 {
++					regulator-compatible = "BUCK9";
++					regulator-name = "CAM_ISP_CORE_1.2V";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-mem-off;
++				};
++			};
++		};
++	};
++
++	sdhci@12510000 {
++		bus-width = <8>;
++		non-removable;
++		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus8>;
++		pinctrl-names = "default";
++		vmmc-supply = <&vemmc_reg>;
++		status = "okay";
++	};
++
++	serial@13800000 {
++		status = "okay";
++	};
++
++	serial@13810000 {
++		status = "okay";
++	};
++
++	serial@13820000 {
++		status = "okay";
++	};
++
++	serial@13830000 {
++		status = "okay";
++	};
++};
+-- 
+1.8.2.1
