@@ -1,61 +1,82 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/4] gpio: davinci: DT changes for driver
-Date: Wed, 19 Jun 2013 21:10:40 +0200
-Message-ID: <CACRpkdbJJVKC539CAPNxxEbofVfw3Pr0gyCSZyY9YbkXneE-qQ@mail.gmail.com>
-References: <1371203020-15092-1-git-send-email-avinashphilip@ti.com>
-	<1371205241-17205-3-git-send-email-avinashphilipk@gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation
+ to the DT binding
+Date: Wed, 19 Jun 2013 16:29:16 -0300
+Message-ID: <20130619192915.GA8769@localhost>
+References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306182345.26281.arnd@arndb.de>
+ <20130619185224.GB5701@localhost>
+ <201306192108.30998.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1371205241-17205-3-git-send-email-avinashphilipk@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Philip Avinash <avinashphilipk@gmail.com>
-Cc: "Nori, Sekhar" <nsekhar@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Philip Avinash <avinashphilip@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201306192108.30998.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 14, 2013 at 12:20 PM, Philip Avinash
-<avinashphilipk@gmail.com> wrote:
-
-> From: KV Sujith <sujithkv@ti.com>
->
-> - Add of_device_id for Davinci GPIO driver.
-> - Add function to populate data from DT.
-> - Modify the probe to read from DT if DT match is found.
-> - Add DT binding documentation for Davinci GPIO properties in a new file
->   gpio-davinci.txt located at Documentation/devicetree/bindings/gpio/.
->
-> Signed-off-by: KV Sujith <sujithkv@ti.com>
-> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
-> ---
-> Changes since v1:
->         - description for interrupts changed to reflecti
->            interrupt array usage.
-(...)
-
-> +static struct davinci_gpio_platform_data *davinci_gpio_set_pdata_of(
-> +                                               struct platform_device *pdev)
-> +{
-> +       struct device_node *dn = pdev->dev.of_node;
-> +       struct davinci_gpio_platform_data *pdata;
-> +       u32 val, ret;
-> +
-> +       pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +       if (pdata) {
-
-Instead of this arrow pattern:
-
-if (!pdata) {
-  dev_err( ... "out of memory allocating platform data");
-  return NULL;
-}
-
-And de-indent the rest.
-
-With that change:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-I guess this may go through the DaVinci tree with the rest of the DaVinci
-patches?
-
-Yours,
-Linus Walleij
+T24gV2VkLCBKdW4gMTksIDIwMTMgYXQgMDk6MDg6MzBQTSArMDIwMCwgQXJuZCBCZXJnbWFubiB3
+cm90ZToKPiBPbiBXZWRuZXNkYXkgMTkgSnVuZSAyMDEzLCBFemVxdWllbCBHYXJjaWEgd3JvdGU6
+Cj4gPiA+ID4gV2hhdCBoYXBwZW5zIGlzIHRoYXQgYW55IGRlY29kaW5nIHdpbmRvdyB0aGF0IHdh
+cyBzZXR1cCBieSB0aGUgYm9vdGxvYWRlciwKPiA+ID4gPiBpcyB3aXBlZCBhbmQgY29tcGxldGVs
+eSBuZXcgd2luZG93cyBhcmUgYWxsb2NhdGVkIHVzaW5nIHRoZSB0cmFuc2xhdGlvbnMKPiA+ID4g
+PiBpbiB0aGUgRFQsIGFzIGRlc2NyaWJlZCBieSB0aGlzIGJpbmRpbmcuCj4gPiA+ID4gCj4gPiA+
+ID4gVGhpcyB3YXMgdGhlIGNhc2UgZnJvbSB0aGUgc3RhcnQgd2l0aCB0aGUgb2xkIE1CdXMgZHJp
+dmVyLiBGV0lXLCBJIHRoaW5rCj4gPiA+ID4gaXQncyBhY3R1YWxseSB0aGUgYmVzdCBjaG9pY2Ug
+dGhhdCBjYW4gYmUgbWFkZTogaXQgbWFrZXMgdGhlIGtlcm5lbAo+ID4gPiA+IGluZGVwZW5kZW50
+IG9mIHRoZSBwcmV2aW91cyBzZXR0aW5nLgo+ID4gPiA+IAo+ID4gPiA+IEkga25vdyB5b3UndmUg
+c3VnZ2VzdGVkIGRpZmZlcmVudGx5IGluIHRoZSBwYXN0LCBidXQgSSdtIG5vdCBzdXJlIEkKPiA+
+ID4gPiB1bmRlcnN0YW5kIHdoYXQncyB0aGUgYmVuZWZpdCBpbiBrZWVwaW5nIHRoZSBib290bG9h
+ZGVycyBjb25maWd1cmF0aW9uLgo+ID4gPiAKPiA+ID4gVGhlIGRldmljZSB0cmVlIG5vcm1hbGx5
+IGRlc2NyaWJlcyB0aGluZ3MgdGhhdCBhcmUgZWl0aGVyIHdpcmVkIHVwCj4gPiA+IGluIGhhcmR3
+YXJlIG9yIHNldCB1cCBieSB0aGUgYm9vdCBsb2FkZXIuIERlc2NyaWJpbmcgdGhpbmdzIHRoYXQg
+dGhlCj4gPiA+IGJvb3QgbG9hZGVyIG1heSBvciBtYXkgbm90IGhhdmUgc2V0IHVwIGFuZCB0aGF0
+IHRoZSBrZXJuZWwgc2hvdWxkCj4gPiA+IHNldCB1cCBidXQgbWF5IGlnbm9yZSBpZiBpdCB3YW50
+cyB0byBpcyBhIGJpdCBmaXNoeSwgYnV0IGl0IHNlZW1zCj4gPiA+IHRoYXQgeW91IGhhdmUgZGVj
+aWRlZCB0byBkbyBpdCB0aGF0IHdheS4gWW91IHNob3VsZCBkZWZpbml0ZWx5Cj4gPiA+IGRvY3Vt
+ZW50IHRoZSBmYWN0IHRoYXQgYWxsIHJhbmdlcyBleGNlcHQgdGhlICJpbnRlcm5hbC1yZWdzIiBh
+cmUganVzdAo+ID4gPiBzdWdnZXN0aW9ucyBhbmQgY2Fubm90IGJlIHJlbGllZCBvbiB0byBiZSBw
+cmVzZW50IGF0IGJvb3QgdGltZS4KPiA+ID4gCj4gPiAKPiA+IEhvbGQgb24hIEkndmUganVzdCBu
+b3RpY2VkIHRoaXMsIGFuZCBJIHdhbnQgdG8gY2xhcmlmeSBzb21ldGhpbmcsIGp1c3QKPiA+IHRv
+IGF2b2lkIG1pcy1pbnRlcnByZXRhdGlvbnMuIFRoZSBiaW5kaW5nIGlzIG5vdCBzYXlpbmcgInRo
+ZSB3aW5kb3dzCj4gPiBkZXNjcmliZWQgdGhyb3VnaCB0aGlzIHJhbmdlcyBhcmUgcHJlc2VudCBh
+dCBib290IHRpbWUiLgo+ID4gCj4gPiBSYXRoZXIsIGl0IGlzICJ0aGlzIGJpbmRpbmcgd2lsbCBn
+dWFyYW50ZWUgdGhhdCB0aGUgd2luZG93cyBkZXNjcmliZWQgCj4gPiBpbiBpdCB3aWxsIGJlIHBy
+ZXNlbnQgYWZ0ZXIgdGhlIG1idXMgYWxsb2NhdGVzIHRoZW0iLgo+ID4gCj4gPiBEb2VzIGl0IHNv
+dW5kIHRvbyBmaXNoeT8KPiAKPiBJIGRvbid0IHRoaW5rIGl0J3MgYSBndWFyYW50ZWUgdGhhdCB0
+aGUgYmluZGluZyBjYW4gbWFrZS4gVGhlIGJpbmRpbmcKPiBkZXNjcmliZXMgdGhlIGludGVyZmFj
+ZSBiZXR3ZWVuIHRoZSBoYXJkd2FyZS9maXJtd2FyZSBhbmQgdGhlIGtlcm5lbCwKPiBub3QgYW4g
+aW50ZXJmYWNlIGJldHdlZW4gb25lIGtlcm5lbCBkcml2ZXIgYW5kIGFub3RoZXIuCj4gCj4gWW91
+IGNvdWxkIGluc3RlYWQgd3JpdGU6Cj4gCj4gIlRoZSByYW5nZXMgcHJvcGVydHkgZGVmaW5lcyBh
+IHNldCBvZiBtYnVzIHdpbmRvd3MgdGhhdCBhcmUgZXhwZWN0ZWQKPiB0byBiZSBzZXQgYnkgdGhl
+IG9wZXJhdGluZyBzeXN0ZW0gYW5kIHRoYXQgYXJlIGd1YXJhbnRlZWQgdG8gYmUgZnJlZQo+IG9m
+IG92ZXJsYXBzIHdpdGggb25lIGFub3RoZXIgb3Igd2l0aCB0aGUgc3lzdGVtIG1lbW9yeSByYW5n
+ZXMuCj4gRWFjaCBlbnRyeSBpbiB0aGUgcHJvcGVydHkgcmVmZXJzIHRvIGV4YWN0bHkgb25lIHdp
+bmRvdy4gSWYgYW4KPiBvcGVyYXRpbmcgc3lzdGVtIGNob3NlcyB0byB1c2UgYSBkaWZmZXJlbnQg
+c2V0IG9mIG1idXMgd2luZG93cywKPiBpdCBtdXN0IGVuc3VyZSB0aGF0IGFueSBhZGRyZXNzIHRy
+YW5zbGF0aW9ucyBwZXJmb3JtZWQgZnJvbSBkb3duc3RyZWFtCj4gZGV2aWNlcyBhcmUgYWRhcHRl
+ZCBhY2NvcmRpbmdseS4gVGhlIG9wZXJhdGluZyBzeXN0ZW0gbWF5IGluc2VydAo+IGFkZGl0aW9u
+YWwgbWJ1cyB3aW5kb3dzIHRoYXQgZG8gbm90IGNvbmZsaWN0IHdpdGggdGhlIG9uZXMgbGlzdGVk
+Cj4gaW4gdGhlIHJhbmdlcywgZS5nLiBmb3IgbWFwcGluZyBQQ0llIGRldmljZXMuIEFzIGEgc3Bl
+Y2lhbCBjYXNlLAo+IHRoZSBpbnRlcm5hbCByZWdpc3RlciB3aW5kb3cgbXVzdCBiZSBzZXQgdXAg
+YnkgdGhlIGJvb3QgbG9hZGVyCj4gYXQgdGhlIGFkZHJlc3MgbGlzdGVkIGluIHRoZSByYW5nZXMg
+cHJvcGVydHksIHNpbmNlIHRoZSBvcGVyYXRpbmcKPiB1c2VzIGl0IHRvIHNldCB1cCB0aGUgb3Ro
+ZXIgd2luZG93cy4iCj4gCgpOaWNlIQoKU2hhbWVsZXNzbHkgY29weS1wYXN0ZWQgaW50byB0aGUg
+YmluZGluZyBkb2N1bWVudGF0aW9uLgoKVGhhbmtzLAotLSAKRXplcXVpZWwgR2FyY8OtYSwgRnJl
+ZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBFbmdpbmVlcmlu
+ZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNl
+dHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
+c3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
