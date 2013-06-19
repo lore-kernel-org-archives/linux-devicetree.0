@@ -1,42 +1,61 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [RFC PATCH 5/5] ARM: Samsung: Remove MIPI PHY setup code
-Date: Wed, 19 Jun 2013 19:24:44 +0200
-Message-ID: <51C1E95C.5040607@samsung.com>
-References: <1371231951-1969-1-git-send-email-s.nawrocki@samsung.com>
- <1371231951-1969-6-git-send-email-s.nawrocki@samsung.com>
- <51BE25A0.6050202@samsung.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 05/12] ARM: mvebu: Remove the harcoded BootROM window
+ allocation
+Date: Wed, 19 Jun 2013 14:58:24 -0300
+Message-ID: <20130619175823.GB2324@localhost>
+References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1371554737-25319-6-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130618173906.GC2204@obsidianresearch.com>
+ <20130619100159.GB16138@localhost>
+ <20130619165834.GB32155@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <51BE25A0.6050202@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: kishon@ti.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, dh09.lee@samsung.com, jg1.han@samsung.com, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130619165834.GB32155-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/2013 10:52 PM, Kukjin Kim wrote:
-> On 06/15/13 02:45, Sylwester Nawrocki wrote:
->> > Generic PHY drivers are used to handle the MIPI CSIS and MIPI DSIM
->> > DPHYs so we can remove now unused code at arch/arm/plat-samsung.
->
-> If so, sounds good :)
-> 
->> > In case there is any board file for S5PV210 platforms using MIPI
->> > CSIS/DSIM (not any upstream currently) it should use the generic
->> > PHY API to bind the PHYs to respective PHY consumer drivers.
->
-> To be honest, I didn't test this on boards but if the working is fine, 
-> please go ahead without RFC.
-
-Thanks for review. I've tested it on Exynos4412 based board, and will
-check also on Exynos4210 TRATS before posting the final version.
-It seems to work fine, I just won't be able to test on any non-dt
-platform (s5pv210), and there is currently no users of MIPI CSIS/DSIM
-on s5pv210. Moreover this series depends on the generic PHY API,
-perhaps it can be merged for 3.11.
-
-[1] http://www.spinics.net/lists/arm-kernel/msg251232.html
-
-Regards,
-Sylwester
+T24gV2VkLCBKdW4gMTksIDIwMTMgYXQgMTA6NTg6MzRBTSAtMDYwMCwgSmFzb24gR3VudGhvcnBl
+IHdyb3RlOgo+IE9uIFdlZCwgSnVuIDE5LCAyMDEzIGF0IDA3OjAyOjAwQU0gLTAzMDAsIEV6ZXF1
+aWVsIEdhcmNpYSB3cm90ZToKPiAKPiA+ID4gVmVyaWZ5aW5nIHRoZSBEVCBpcyBzZXR1cCB0aGlz
+IHdheSBhbmQgYWJvcnRpbmcgaWYgaXQgaXMgbm90IHNlZW1zCj4gPiA+IGxpa2UgYSBnb29kIGlk
+ZWEuLgo+ID4gCj4gPiBJIGFncmVlIGl0J3MgYSBuaWNlIGlkZWEsIGJ1dCBJJ20gbm90IHRvbyBz
+dXJlIGhvdyB0byBhY2NvbXBsaXNoIHRoaXMKPiA+IGluIGEgc2ltcGxlIGFuZCBnZW5lcmljIHdh
+eS4gVGhlcmUncyBub3RoaW5nIGluIHRoZSBEVCB0aGF0IGFsbG93cyB5b3UKPiA+IHRvIGtub3cg
+d2hpY2ggb2YgdGhlIHJhbmdlcyBlbnRyaWVzIGNvcnJlc3BvbmQgdG8gdGhlIEJvb3RST00sIHVu
+bGVzcyB5b3UgZ28KPiA+IHRocm91Z2ggZWFjaCBvZiB0aGUgZW50cmllcyBjb21wYXJpbmcgYWdh
+aW5zdCB0aGUga25vd24gdGFyZ2V0IElEIGFuZAo+ID4gYXR0cmlidXRlLgo+IAo+IEkgdGhpbmsg
+eW91IG5lZWQgdG8gaGF2ZSBhIGRlZmluZWQgY29tcGF0aWJsZSBzdHJpbmcgZm9yIHRoZSBib290
+cm9tLAo+IHVzZSBvbmUgb2YgdGhlIG9mX2ZpbmQuLiBmdW5jdGlvbnMgdG8gbG9jYXRlIHRoZSBu
+b2RlLCB0aGVuIHRyYW5zbGF0ZQo+IHRoZSByZWdzIHRvIGdldCBhIENQVSBhZGRyZXNzLCBlbnN1
+cmUgaXQgaXMgdGhlIHJpZ2h0IGJhc2UgYW5kIHNpemUuLgo+IAoKSSB3YXNuJ3Qgc3VyZSB5b3Ug
+d2FudGVkIHRvIHBhbmljKCksIHRvIGNsaXAgb24gYXZhaWxhYmxlIENQVXMsCm9yIHRvIGp1c3Qg
+ZG8gYSBwcl93YXJuIC8gV0FSTigpLCBzbyBoZXJlJ3MgYSBwaWVjZSBvZiBjb2RlOgooZGlzY2xh
+aW1lcjogbm9uLXRlc3RlZCwgbm9uLWNvbXBpbGVkLCBldGMuKQoKCS8qCgkgKiBJbiBvcmRlciB0
+byBib290IHRoZSBzZWNvbmRhcnkgQ1BVcyB3ZSBuZWVkIHRvIGVuc3VyZQoJICogdGhlIGJvb3RS
+T00gaXMgbWFwcGVkIGF0IHRoZSBjb3JyZWN0IGFkZHJlc3MuCgkgKi8KCW5vZGUgPSBvZl9maW5k
+X2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAiYm9vdHJvbSIpOwoJaWYgKCFub2RlKSB7CgkJ
+cHJfd2FybigiTm8gJ2Jvb3Ryb20nIG5vZGUgZm91bmQiKTsKCQlyZXR1cm47Cgl9CgoJZXJyID0g
+b2ZfYWRkcmVzc190b19yZXNvdXJjZShub2RlLCAwLCAmcmVzKTsKCWlmIChlcnIgPCAwKSB7CgkJ
+cHJfd2FybigiQ2Fubm90IGdldCAnYm9vdHJvbScgbm9kZSBhZGRyZXNzIik7CgkJcmV0dXJuOwoJ
+fQoKCWlmIChyZXMuc3RhcnQgIT0gQVhQX0JPT1RST01fQkFTRXx8CgkgICAgcmVzb3VyY2Vfc2l6
+ZSgmcmVzKSAhPSBBWFBfQk9PVFJPTV9TSVpFKSB7CgkJcHJfd2FybigiYm9vdHJvbSBhZGRyZXNz
+IGlzIGluY29ycmVjdCIpOwoJCXJldHVybjsKCX0KCkhvdyBkb2VzIGl0IGxvb2s/CgotLSAKRXpl
+cXVpZWwgR2FyY8OtYSwgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQg
+QW5kcm9pZCBFbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBt
+YWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9s
+aXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
