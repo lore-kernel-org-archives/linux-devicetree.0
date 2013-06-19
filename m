@@ -1,67 +1,63 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
-Date: Wed, 19 Jun 2013 07:34:38 -0500
-Message-ID: <51C1A55E.9040500@ti.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
- <1371571487-14389-2-git-send-email-rogerq@ti.com> <51C106A1.9030001@ti.com>
- <51C15F7E.5020305@ti.com> <20130619074605.GW5523@atomide.com>
- <51C183AC.8040801@ti.com> <20130619122715.GA5523@atomide.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH v3 0/2] drivers: mfd: Versatile Express SPC support
+Date: Wed, 19 Jun 2013 14:37:20 +0200
+Message-ID: <201306191437.20759.arnd@arndb.de>
+References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com> <1371547782.16725.11.camel@hornet> <20130619093014.GX7161@zurbaran>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130619122715.GA5523@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130619093014.GX7161@zurbaran>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Wednesday 19 June 2013, Samuel Ortiz wrote:
+> > 2. Move the vexpress-sysreg "platform management" functions into misc
+> > (unless we get any better place for it)
+> This is for Arnd and Greg to decide I suppose.
 
-On 06/19/2013 07:27 AM, Tony Lindgren wrote:
-> * Benoit Cousson <b-cousson@ti.com> [130619 03:17]:
->> On 06/19/2013 02:46 AM, Tony Lindgren wrote:
->>>
->>> We have a similar issue with the MMC1 PBIAS. I think in the long run we
->>> should expand regulator (and possibly pinctrl) framework(s) to handle
->>> comparators. We could just assume that a comparatator is a regulator,
->>> and have a comparator binding that just uses the regulator code.
->>
->> In the case of pbias, the pinctrl seems to be a much better fit for
->> my point of view. pinctrl can handle pin configuration and this is
->> what the pbias is in the case of MMC pins.
->
-> Well just recently Linus W specifically wanted us to use regulator
-> framework for the MMC1 PBIAS rather than pinctrl. That's because
-> from consumer driver point of view, it changes voltage and there's
-> a delay involved. So I guess no conclusion yet, and it's best to
-> do stand alone drivers to deal with those that use pinctrl for the
-> pinctrl specific parts and export it as a regulator for the consumer
-> devices.
 
-In the case of pbias, the boundary is not that clear, and it is true 
-that writing a complete pinctrl driver is really overkill.
-I've tried in the past, and gave up due to the complexity of fmwk and 
-the lack of time. I still think, it is a much better fmwk to handle pin 
-configuration than the regulator fmwk.
+I think when vexpress-sysreg was created, we didn't have the syscon driver
+yet, otherwise I think we should have used that, and put separate
+drivers on top.
 
-> That's pretty much along the lines what Roger has done,
-> except the transceiver could use the pinctrl-single,bits for the
-> muxing and pinconf.
+Not sure if it's too late for changing it to that now, given that
+we already have a binding.
 
-Well, in that case, this is a reset line, so it does not have anything 
-to do with voltage :-)
+It seems we should use the same code for versatile and realview, or
+at least it will only need small modifications to apply to all of
+these platforms.
 
-Anyway, thanks to Florian, we know that there is a real solution to that 
-problem. It is just not merged now :-(
+What I think could be helpful here is:
 
-Regards,
-Benoit
+* export a "syscon" for the low-level registers
+
+* add a gpio driver based on the syscon interface, and move the gpiochip
+  implementation there
+
+* move the low-leve "config" code from the sysreg driver into the
+  vexpress-config driver and make it use the syscon.
+
+* move the other global functions from the driver into the callers
+  and use syscon there.
+
+That would end up eliminating the sysreg driver, aside from maybe
+a one-line change to the syscon driver to allow it to probe the
+right device.
+
+> > 3. Move vexpress-config into drivers/bus as it is (however I see no one
+> > in MAINTAINERS for this directory)
+> ISTR that Arnd originally created that directory, so he may help here.
+> Arnd also had some concerns about implementing this code as a bus,
+> mostly about it not being a discoverable bus. IMHO that's a valid
+> concern, and this is why you ended up putting it under MFD which can be
+> seen as some sort of platform devices bus. But I still believe the bus
+> API would make this code look cleaner and easier to maintain.
+
+Sorry, I don't see why it would be a bus. I assume that there is code
+missing somewhere that is not yet merged, right?
+
+	Arnd
