@@ -1,18 +1,18 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
- translation
-Date: Wed, 19 Jun 2013 14:43:29 -0400
-Message-ID: <20130619184329.GG31667@titan.lakedaemon.net>
-References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <51C0B838.90809@gmail.com> <20130618194756.GA2470@localhost>
- <20130619183627.GF31667@titan.lakedaemon.net>
- <CALF0-+VhjAc24_gZFWB6vmqddUyOy=OcEbHRZeq1nkmcoYAfeg@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation
+ to the DT binding
+Date: Wed, 19 Jun 2013 15:52:25 -0300
+Message-ID: <20130619185224.GB5701@localhost>
+References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306181814.33941.arnd@arndb.de>
+ <20130618213454.GD2516@localhost>
+ <201306182345.26281.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CALF0-+VhjAc24_gZFWB6vmqddUyOy=OcEbHRZeq1nkmcoYAfeg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <201306182345.26281.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,65 +23,65 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2013 at 03:42:27PM -0300, Ezequiel Garcia wrote:
-> On Wed, Jun 19, 2013 at 3:36 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> > On Tue, Jun 18, 2013 at 04:47:57PM -0300, Ezequiel Garcia wrote:
-> >> On Tue, Jun 18, 2013 at 09:42:48PM +0200, Sebastian Hesselbarth wrote:
-> >> > On 06/18/2013 05:31 PM, Ezequiel Garcia wrote:
-> >> > > Although the internal register window size is 1 MiB, the previous
-> >> > > ranges translation for the internal register space had a size of
-> >> > > 0x4000000. This was done to allow the crypto and nand node to access
-> >> > > the corresponding 'sram' and 'nand' decoding windows.
-> >> > >
-> >> > > In order to describe the hardware more accurately, we declare the
-> >> > > real 1 MiB internal register space in the ranges, and add a translation
-> >> > > entry for the nand node to access the 'nand' window.
-> >> > >
-> >> > > This commit will make future improvements on the MBus DT binding easier.
-> >> > >
-> >> > > Signed-off-by: Ezequiel Garcia<ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> > > ---
-> >> > > Tested on Plathome Openblocks A6 board.
-> >> > >
-> >> > >   arch/arm/boot/dts/kirkwood.dtsi | 5 +++--
-> >> > >   1 file changed, 3 insertions(+), 2 deletions(-)
-> >> > >
-> >> > > diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-> >> > > index 8a1e3bb..910fabc 100644
-> >> > > --- a/arch/arm/boot/dts/kirkwood.dtsi
-> >> > > +++ b/arch/arm/boot/dts/kirkwood.dtsi
-> >> > > @@ -38,7 +38,8 @@
-> >> > >
-> >> > >           ocp@f1000000 {
-> >> > >                   compatible = "simple-bus";
-> >> > > -         ranges =<0x00000000 0xf1000000 0x4000000
-> >> > > +         ranges =<0x00000000 0xf1000000 0x0100000
-> >> > > +                   0xf4000000 0xf4000000 0x0000400
-> >> > >                             0xf5000000 0xf5000000 0x0000400>;
-> >> >
-> >> > Ezequiel,
-> >> >
-> >> > maybe you should also put a comment at the end of each ranges
-> >> > line to name the remap it does?
-> >> >
-> >> > Also, as already mentioned on IRC, it would be great to also
-> >> > have dove.dtsi updated accordingly.
-> >> >
-> >>
-> >> Indeed, I will do both.
-> >
-> > The sooner, the better.  This is probably the last patch to get in for
-> > this merge window for mvebu...
-> >
-> 
-> Right. Please don't wait for this patch if it's not in your mailbox by tomorrow.
-
-Ok.
-
-thx,
-
-Jason.
+SGkgQXJuZCwKCk9uIFR1ZSwgSnVuIDE4LCAyMDEzIGF0IDExOjQ1OjI2UE0gKzAyMDAsIEFybmQg
+QmVyZ21hbm4gd3JvdGU6Cj4gT24gVHVlc2RheSAxOCBKdW5lIDIwMTMsIEV6ZXF1aWVsIEdhcmNp
+YSB3cm90ZToKPiA+IE9uIFR1ZSwgSnVuIDE4LCAyMDEzIGF0IDA2OjE0OjMzUE0gKzAyMDAsIEFy
+bmQgQmVyZ21hbm4gd3JvdGU6Cj4gPiA+IE9uIFR1ZXNkYXkgMTggSnVuZSAyMDEzLCBFemVxdWll
+bCBHYXJjaWEgd3JvdGU6Cj4gPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+ID4gKwo+
+ID4gPiA+ICstIGNvbXBhdGlibGU6CSBTaG91bGQgYmUgc2V0IHRvIG9uZSBvZiB0aGUgZm9sbG93
+aW5nOgo+ID4gPiA+ICsJCSBtYXJ2ZWxsLGFybWFkYTM3MC1tYnVzCj4gPiA+ID4gKwkJIG1hcnZl
+bGwsYXJtYWRheHAtbWJ1cwo+ID4gPiA+ICsKPiA+ID4gPiArLSByZWc6CQkgRGV2aWNlJ3MgcmVn
+aXN0ZXIgc3BhY2UuCj4gPiA+ID4gKwkJIFR3byBlbnRyaWVzIGFyZSBleHBlY3RlZCwgc2VlIHRo
+ZSBleGFtcGxlcyBiZWxvdy4KPiA+ID4gPiArCQkgVGhlIGZpcnN0IG9uZSBjb250cm9scyB0aGUg
+ZGV2aWNlcyBkZWNvZGluZyB3aW5kb3cgYW5kCj4gPiA+ID4gKwkJIHRoZSBzZWNvbmQgb25lIGNv
+bnRyb2xzIHRoZSBTRFJBTSBkZWNvZGluZyB3aW5kb3cuCj4gPiA+ID4gKwo+ID4gPiA+ICstIGFk
+ZHJlc3MtY2VsbHM6IE11c3QgYmUgJzInLiBUaGUgZmlyc3QgY2VsbCBmb3IgdGhlIE1CdXMgSUQg
+ZW5jb2RpbmcsCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgdGhlIHNlY29uZCBjZWxsIGZvciB0
+aGUgYWRkcmVzcyBvZmZzZXQgd2l0aGluIHRoZSB3aW5kb3cuCj4gPiA+ID4gKwo+ID4gPiA+ICst
+IHNpemUtY2VsbHM6ICAgIE11c3QgYmUgJzEnLgo+ID4gPiA+ICsKPiA+ID4gPiArLSByYW5nZXM6
+ICAgICAgICBNdXN0IGJlIHNldCB1cCB0byBwcm92aWRlIGEgcHJvcGVyIHRyYW5zbGF0aW9uIGZv
+ciBlYWNoIGNoaWxkLgo+ID4gPiA+ICsJICAgICAgICAgU2VlIHRoZSBleGFtcGxlcyBiZWxvdy4K
+PiA+ID4gCj4gPiA+IFlvdSBzaG91bGQgZXhwbGFpbiBoZXJlIHdoYXQgdGhlIHBvbGljeSBpcyBy
+ZWdhcmRpbmcgd2luZG93cyBzZXQgdXAgYnkgdGhlCj4gPiA+IGJvb3QgbG9hZGVyLiBBcmUgdGhl
+IHJhbmdlcyBpbiBoZXJlIHJlcXVpcmVkIHRvIGJlIHRoZSBvbmVzIHRoYXQgdGhlIGJvb3QKPiA+
+ID4gbG9hZGVyIGhhcyBwcmVjb25maWd1cmVkLCBvciBhcmUgdGhleSB0aGUgb25lcyB0aGF0IHRo
+ZSBtYnVzIGRyaXZlciBpcyBzdXBwb3NlZAo+ID4gPiB0byBzZXQgdXA/Cj4gPiA+IAo+ID4gCj4g
+PiBBY3R1YWxseSwgSSBtaWdodCBiZSBjb25mdXNlZCBidXQgdGhlIGtlcm5lbCBNQnVzIGRyaXZl
+ciBpcyBjb21wbGV0ZWx5Cj4gPiBpbmRlcGVuZGVudCBmcm9tIHRoZSBib290bG9hZGVyJ3MgLWV4
+Y2VwdCBpbiB0aGUgaW50ZXJuYWwgcmVnaXN0ZXIgY2FzZSwKPiA+IChiZWNhdXNlIHdlIGRvbid0
+IHRvdWNoIHRoYXQgZnJvbSB3aGVyZSB0aGUgYm9vdGxvYWRlciBsZWZ0IGl0KS4KPiAKPiBSaWdo
+dCwgdGhlbiBzdGF0ZSB0aGF0IGNsZWFybHkgaW4gdGhlIGJpbmRpbmcuCj4gCj4gPiBXaGF0IGhh
+cHBlbnMgaXMgdGhhdCBhbnkgZGVjb2Rpbmcgd2luZG93IHRoYXQgd2FzIHNldHVwIGJ5IHRoZSBi
+b290bG9hZGVyLAo+ID4gaXMgd2lwZWQgYW5kIGNvbXBsZXRlbHkgbmV3IHdpbmRvd3MgYXJlIGFs
+bG9jYXRlZCB1c2luZyB0aGUgdHJhbnNsYXRpb25zCj4gPiBpbiB0aGUgRFQsIGFzIGRlc2NyaWJl
+ZCBieSB0aGlzIGJpbmRpbmcuCj4gPiAKPiA+IFRoaXMgd2FzIHRoZSBjYXNlIGZyb20gdGhlIHN0
+YXJ0IHdpdGggdGhlIG9sZCBNQnVzIGRyaXZlci4gRldJVywgSSB0aGluawo+ID4gaXQncyBhY3R1
+YWxseSB0aGUgYmVzdCBjaG9pY2UgdGhhdCBjYW4gYmUgbWFkZTogaXQgbWFrZXMgdGhlIGtlcm5l
+bAo+ID4gaW5kZXBlbmRlbnQgb2YgdGhlIHByZXZpb3VzIHNldHRpbmcuCj4gPiAKPiA+IEkga25v
+dyB5b3UndmUgc3VnZ2VzdGVkIGRpZmZlcmVudGx5IGluIHRoZSBwYXN0LCBidXQgSSdtIG5vdCBz
+dXJlIEkKPiA+IHVuZGVyc3RhbmQgd2hhdCdzIHRoZSBiZW5lZml0IGluIGtlZXBpbmcgdGhlIGJv
+b3Rsb2FkZXJzIGNvbmZpZ3VyYXRpb24uCj4gCj4gVGhlIGRldmljZSB0cmVlIC9ub3JtYWxseS8g
+ZGVzY3JpYmVzIHRoaW5ncyB0aGF0IGFyZSBlaXRoZXIgd2lyZWQgdXAKPiBpbiBoYXJkd2FyZSBv
+ciBzZXQgdXAgYnkgdGhlIGJvb3QgbG9hZGVyLiBEZXNjcmliaW5nIHRoaW5ncyB0aGF0IHRoZQo+
+IGJvb3QgbG9hZGVyIG1heSBvciBtYXkgbm90IGhhdmUgc2V0IHVwIGFuZCB0aGF0IHRoZSBrZXJu
+ZWwgc2hvdWxkCj4gc2V0IHVwIGJ1dCBtYXkgaWdub3JlIGlmIGl0IHdhbnRzIHRvIGlzIGEgYml0
+IGZpc2h5LCBidXQgaXQgc2VlbXMKPiB0aGF0IHlvdSBoYXZlIGRlY2lkZWQgdG8gZG8gaXQgdGhh
+dCB3YXkuIFlvdSBzaG91bGQgZGVmaW5pdGVseQo+IGRvY3VtZW50IHRoZSBmYWN0IHRoYXQgYWxs
+IHJhbmdlcyBleGNlcHQgdGhlICJpbnRlcm5hbC1yZWdzIiBhcmUganVzdAo+IHN1Z2dlc3Rpb25z
+IGFuZCBjYW5ub3QgYmUgcmVsaWVkIG9uIHRvIGJlIHByZXNlbnQgYXQgYm9vdCB0aW1lLgo+IAoK
+SG9sZCBvbiEgSSd2ZSBqdXN0IG5vdGljZWQgdGhpcywgYW5kIEkgd2FudCB0byBjbGFyaWZ5IHNv
+bWV0aGluZywganVzdAp0byBhdm9pZCBtaXMtaW50ZXJwcmV0YXRpb25zLiBUaGUgYmluZGluZyBp
+cyBub3Qgc2F5aW5nICJ0aGUgd2luZG93cwpkZXNjcmliZWQgdGhyb3VnaCB0aGlzIHJhbmdlcyBh
+cmUgcHJlc2VudCBhdCBib290IHRpbWUiLgoKUmF0aGVyLCBpdCBpcyAidGhpcyBiaW5kaW5nIHdp
+bGwgZ3VhcmFudGVlIHRoYXQgdGhlIHdpbmRvd3MgZGVzY3JpYmVkIAppbiBpdCB3aWxsIGJlIHBy
+ZXNlbnQgYWZ0ZXIgdGhlIG1idXMgYWxsb2NhdGVzIHRoZW0iLgoKRG9lcyBpdCBzb3VuZCB0b28g
+ZmlzaHk/Ci0tIApFemVxdWllbCBHYXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51
+eCwgS2VybmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5j
+b20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNl
+dHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJz
+Lm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNz
+Cg==
