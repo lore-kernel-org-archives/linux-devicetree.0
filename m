@@ -1,43 +1,114 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v3 11/12] ARM: mvebu: Relocate Armada 370 PCIe device tree
  nodes
-Date: Wed, 19 Jun 2013 14:06:03 +0200
-Message-ID: <201306191406.04120.arnd@arndb.de>
+Date: Wed, 19 Jun 2013 14:11:58 +0200
+Message-ID: <201306191411.59010.arnd@arndb.de>
 References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306182320.07351.arnd@arndb.de> <20130618214049.GA15234@localhost>
+ <201306182335.50722.arnd@arndb.de> <20130619111257.GD16138@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130618214049.GA15234@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130619111257.GD16138@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 June 2013, Ezequiel Garcia wrote:
-> Although I'd like the binding to take this into account, for there's no
-> point in restricting it -a priori- I can't see any advantage on doing
-> fully dynamic window configuration on devices that are fixed in the
-> first place. It sounds like bloating the whole thing without a strong
-> need.
+On Wednesday 19 June 2013, Ezequiel Garcia wrote:
+> Arnd,
+> 
+> Going through this a couple questions came out...
+> 
+> On Tue, Jun 18, 2013 at 11:35:50PM +0200, Arnd Bergmann wrote:
+> > On Tuesday 18 June 2013, Ezequiel Garcia wrote:
+> > > +
+> > > +                       ranges =
+> > > +                              <0x82000000 0 0x40000    0xffff0001 0x40000 0 0x00002000
+> > > +                               0x82000000 0 0x80000    0xffff0001 0x80000 0 0x00002000
+> > > +                               0x82000000 0 0xe0000000 0xffff0002 0          0 0x08000000
+> > > +                               0x81000000 0 0          0xffff0002 0x8000000  0 0x00100000>;
+> > 
+> > As pointed out on IRC, this is not a good representation of the memory space,
+> > since it requires a non-zero sys->mem_offset, and it conflicts with the straight
+> > mapping I suggested.
+> > 
+> > I think it should be
+> > 
+> >                                0x82000000 0 0xe0000000 0xffff0002 0  0xe0000000 0x08000000
+> 
+> So far, so good.
+> 
+> > 
+> > if we want to encode the aperture in the ranges property here, i.e. have
+> > a 1:1 mapping between PCI memory space and MBUS space, and in mbus,
+> > you need the corresponding
+> > 
+> > -                           0xffff0002 0 0xe0000000 0x8100000
+> > +                           0xffff0002 0xe0000000 0xe0000000 0x8100000
+> 
+> ... I obviously got something wrong, but I thought you said that
+> this change allowed to *not* have any mbus-node ranges translation.
 
-After the suggestions that Grant made about the of_bus, I think the
-fully dynamic model would actually be simpler than what you have here.
-You wouldn't actually have to dissect the "ranges" property at all,
-just keep the mapping table in memory for all devices that are in use,
-with a special case for the internal-regs.
+I wasn't making a specific requirement here on whether you have that
+in the mbus ranges or not, but if you put it in there, you have to adapt
+the contents as above.
 
-But I think that's fine, we can alway simplify the code later as long
-as the binding covers all cases.
+
+
+> > so that mbus actually translates the right addresses. You could also
+> > have the PCI memory space start at 0, which would mean
+> > 
+> >                                0x82000000 0 0 0xffff0002 0  0 0x08000000
+> > 
+> > and
+> > 
+> >                               0xffff0002 0 0xe0000000 0x8100000
+> 
+> Mmm.. and why is this option acceptable?
+
+As I explained on IRC, there is no requirement to pick a specific bus
+aperture. The only two sensible choices are to make the bus address
+the same as the CPU address, or to make the bus address start at 0,
+which is what this does.
+
+> > 
+> > Note that the driver doesn't actually handle the generic case correctly, you would
+> > need to apply this patch
+> >
+> 
+> This patch does not apply. I tried to understand what you did, but I'm
+> confused by the fact I don't need to apply any patch to make it work
+> on my boxes, using your proposed ranges translations.
+> 
+> > diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
+> > index 13a633b..aa674f4 100644
+> > --- a/drivers/pci/host/pci-mvebu.c
+> > +++ b/drivers/pci/host/pci-mvebu.c
+> > @@ -790,6 +790,7 @@ static int __init mvebu_pcie_probe(struct platform_device *pdev)
+> >  		}
+> >  		if (restype == IORESOURCE_MEM) {
+> >  			of_pci_range_to_resource(&range, np, &pcie->mem);
+> > +			sys->mem_offset = range.cpu_addr - range.pci_addr;
+> >  			pcie->mem.name = "MEM";
+> >  		}
+> >  	}
+> > 
+> > to deal with the generic case where the bus address is different from the
+> > CPU address.
+
+This patch is needed only if you change the ranges to have the bus
+aperture start at 0. However, if we pick a different way to specify
+the aperture than putting it into both ranges properties, that point
+is moot, since you wouldn't use of_pci_range_to_resource here
+anyway.
 
 	Arnd
