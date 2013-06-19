@@ -1,81 +1,88 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 2/2] clk: exynos4: Add alias for cpufreq related clocks
-Date: Wed, 19 Jun 2013 09:43:52 +0200
-Message-ID: <65316055.UrW2Xpt9hs@flatron>
-References: <1370517749-29892-1-git-send-email-tushar.behera@linaro.org> <51BE95A5.5090509@linaro.org> <51C13886.1050201@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
+Date: Wed, 19 Jun 2013 00:46:06 -0700
+Message-ID: <20130619074605.GW5523@atomide.com>
+References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
+ <1371571487-14389-2-git-send-email-rogerq@ti.com>
+ <51C106A1.9030001@ti.com>
+ <51C15F7E.5020305@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51C13886.1050201@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tushar Behera <tushar.behera@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, kgene.kim@samsung.com, patches@linaro.org, swarren@wwwdotorg.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, broonie@kernel.org, l.majewski@samsung.com, s.nawrocki@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51C15F7E.5020305@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tushar,
-
-On Wednesday 19 of June 2013 10:20:14 Tushar Behera wrote:
-> On 06/17/2013 10:20 AM, Tushar Behera wrote:
-> > On 06/11/2013 12:23 AM, Tomasz Figa wrote:
-> >> On Monday 10 of June 2013 09:13:11 Tushar Behera wrote:
-> >>> On 06/08/2013 05:20 PM, Tomasz Figa wrote:
-> >>>> On Thursday 06 of June 2013 16:52:28 Tushar Behera wrote:
-> > [ ... ]
-> > 
-> >>>>>  	MUX_A(mout_core, "mout_core", mout_core_p4210,
-> >>>>> 
-> >>>>> -			SRC_CPU, 16, 1, "mout_core"),
-> >>>>> +			SRC_CPU, 16, 1, "moutcore"),
-> >>>> 
-> >>>> IMHO those typo corrections are not part of this patch.
-> >>> 
-> >>> But the older drivers (before migration to CCF) were using the clock
-> >>> "moutcore" (not "mout_core").
-> >> 
-> >> I mean, this should be placed in a separate patch, as this change is
-> >> not "adding alias for cpufreq related clocks", but rather fixing a
-> >> typo.> 
-> > Is it ok if I split this patch into 2, one adding clock alias
-> > 'mout_apll' and another one fixing the alias names 'mout_mpll',
-> > 'moutcore' and 'armclk'?
+* Roger Quadros <rogerq@ti.com> [130619 00:42]:
+> Hi Benoit,
 > 
-> I have to fix up another clock for exynos4x12 too. I feel all these
-> modifications are too small to justify different patches. I would modify
-> the commit message appropriately.
-
-Fine.
-
-> > [ ... ]
+> On 06/19/2013 04:17 AM, Benoit Cousson wrote:
+> > Hi Roger,
 > > 
-> >>>> Basically I don't like the idea of those global aliases, which IMHO
-> >>>> should be completely dropped. Someone might not like it, but I'd go
-> >>>> with the conversion of our cpufreq drivers to platform drivers
-> >>>> instead, which could receive things like clocks and regulators
-> >>>> using
-> >>>> DT-based lookups.
-> >>> 
-> >>> I agree. Migration of exynos-cpufreq driver as a platform driver is
-> >>> the
-> >>> best solution. But unless someone picks up that work, cpufreq
-> >>> support
-> >>> for EXYNOS4 based systems is broken because of the incorrect clock
-> >>> aliases.
-> >> 
-> >> We have patches for this in our internal tree. I will clean them up a
-> >> bit and submit soon.
+> > On 06/18/2013 11:04 AM, Roger Quadros wrote:
+> >> Provide the RESET and Power regulators for the USB PHY,
+> >> the USB Host port mode and the PHY device.
+> >>
+> >> Also provide pin multiplexer information for the USB host
+> >> pins.
+> >>
+> >> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> >> ---
+> >>   arch/arm/boot/dts/omap4-panda-common.dtsi |   62 +++++++++++++++++++++++++++++
+> >>   1 files changed, 62 insertions(+), 0 deletions(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+> >> index 00cbaa5..7a21e8e 100644
+> >> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+> >> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+> >> @@ -59,6 +59,42 @@
+> >>               "AFML", "Line In",
+> >>               "AFMR", "Line In";
+> >>       };
+> >> +
+> >> +    /* HS USB Port 1 RESET */
+> >> +    hsusb1_reset: hsusb1_reset_reg {
+> >> +        compatible = "regulator-fixed";
+> >> +        regulator-name = "hsusb1_reset";
+> >> +        regulator-min-microvolt = <3300000>;
+> >> +        regulator-max-microvolt = <3300000>;
+> >> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
+> >> +        startup-delay-us = <70000>;
+> >> +        enable-active-high;
+> >> +    };
 > > 
-> > If you are going to submit the cpufreq driver patches for v3.11, then
-> > we can ignore this patchset. Otherwise, I would prefer to get these
-> > patches merged for v3.11 to get cpufreq working. Once the driver
-> > changes are incorporated, we can very well modify these later.
+> > Is this really a regulator? Or just a GPIO line used to reset the USB PHY?
+> 
+> It is in fact a GPIO line used as reset.
+> > 
+> > If this is the case, I don't think it should be represented as a regulator.
+> 
+> Why not? I think it fits very well in the regulator device model. I couldn't find a better
+> way to represent this. It gives us a way to specify not only the GPIO line but also
+> the polarity. I know mostly reset is active low but still there is flexibility as you never
+> know for sure.
 
-I hope we can get my patches merged for 3.11, but just to be safe and have 
-things working for now, please proceed with yours.
+I think it's really a mux + a comparator. But from Linux driver point of view
+a regulator fits well as we don't have anything better. After all, the pin
+voltage changes, and then something can be done based on the comparator
+value.
+ 
+> Do you have any better ideas?
 
-I need a bit more time for this, because IMHO the current design of our 
-cpufreq drivers is inappropriate (directly accessing CMU registers) with 
-common clock framework already existing and it needs to be redesigned.
+We have a similar issue with the MMC1 PBIAS. I think in the long run we
+should expand regulator (and possibly pinctrl) framework(s) to handle
+comparators. We could just assume that a comparatator is a regulator,
+and have a comparator binding that just uses the regulator code.
+ 
+> FYI. The USB PHY driver is already treating reset as a regulator and is into 3.10. Reworking that
+> will take some time. Not getting these in will prevent USB host/ethernet support on panda.
 
-Best regards,
-Tomasz
+Yes and we need to have some solution for v3.11 as we've dropped the
+legacy data for omap4. Otherwise things won't work properly.
+
+Regards,
+
+Tony
