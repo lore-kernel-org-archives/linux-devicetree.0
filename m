@@ -1,45 +1,33 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
-Date: Wed, 19 Jun 2013 05:27:15 -0700
-Message-ID: <20130619122715.GA5523@atomide.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
- <1371571487-14389-2-git-send-email-rogerq@ti.com>
- <51C106A1.9030001@ti.com>
- <51C15F7E.5020305@ti.com>
- <20130619074605.GW5523@atomide.com>
- <51C183AC.8040801@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] ARM: shmobile: irqpin: add a DT property to enable
+ masking on parent
+Date: Wed, 19 Jun 2013 21:27:54 +0900
+Message-ID: <20130619122754.GD32292@verge.net.au>
+References: <Pine.LNX.4.64.1306190751090.6945@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51C183AC.8040801@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Roger Quadros <rogerq@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <Pine.LNX.4.64.1306190751090.6945@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-* Benoit Cousson <b-cousson@ti.com> [130619 03:17]:
-> On 06/19/2013 02:46 AM, Tony Lindgren wrote:
-> >
-> >We have a similar issue with the MMC1 PBIAS. I think in the long run we
-> >should expand regulator (and possibly pinctrl) framework(s) to handle
-> >comparators. We could just assume that a comparatator is a regulator,
-> >and have a comparator binding that just uses the regulator code.
+On Wed, Jun 19, 2013 at 07:53:09AM +0200, Guennadi Liakhovetski wrote:
+> To disable spurious interrupts, that get triggered on certain hardware, the
+> irqpin driver masks them on the parent interrupt controller. To specify
+> such broken devices a .control_parent parameter can be provided in the
+> platform data. In the DT case we need a property, to do the same.
 > 
-> In the case of pbias, the pinctrl seems to be a much better fit for
-> my point of view. pinctrl can handle pin configuration and this is
-> what the pbias is in the case of MMC pins.
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> Acked-by: Magnus Damm <damm@opensource.se>
+> ---
+> 
+> v2: rebased on top of the current tree, also added Acked-by from Magnus
+> 
+>  .../interrupt-controller/renesas,intc-irqpin.txt   |    2 ++
+>  drivers/irqchip/irq-renesas-intc-irqpin.c          |    7 +++++--
+>  2 files changed, 7 insertions(+), 2 deletions(-)
 
-Well just recently Linus W specifically wanted us to use regulator
-framework for the MMC1 PBIAS rather than pinctrl. That's because
-from consumer driver point of view, it changes voltage and there's
-a delay involved. So I guess no conclusion yet, and it's best to
-do stand alone drivers to deal with those that use pinctrl for the
-pinctrl specific parts and export it as a regulator for the consumer
-devices. That's pretty much along the lines what Roger has done,
-except the transceiver could use the pinctrl-single,bits for the
-muxing and pinconf.
-
-Regards,
-
-Tony
+Thanks, I will queue this up in the dt branch.
