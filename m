@@ -1,70 +1,104 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ARM: kernel: document ARM CPUs clock-frequency property
-Date: Wed, 19 Jun 2013 11:04:50 +0100
-Message-ID: <20130619100450.GA27181@e106331-lin.cambridge.arm.com>
-References: <1371635237-22860-1-git-send-email-f.fainelli@gmail.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
+Date: Wed, 19 Jun 2013 05:10:52 -0500
+Message-ID: <51C183AC.8040801@ti.com>
+References: <1371571487-14389-1-git-send-email-rogerq@ti.com> <1371571487-14389-2-git-send-email-rogerq@ti.com> <51C106A1.9030001@ti.com> <51C15F7E.5020305@ti.com> <20130619074605.GW5523@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1371635237-22860-1-git-send-email-f.fainelli@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "nico@linaro.org" <nico@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130619074605.GW5523@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Roger Quadros <rogerq@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2013 at 10:47:17AM +0100, Florian Fainelli wrote:
-> ARM CPU device tree nodes may contain an optional clock-frequency
-> property, when set, this property must contain the CPU frequency in Hz,
-> which is then used by the topology parsing code in
-> arch/arm/kernel/topology.c to infer the CPU capacity.
+On 06/19/2013 02:46 AM, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [130619 00:42]:
+>> Hi Benoit,
+>>
+>> On 06/19/2013 04:17 AM, Benoit Cousson wrote:
+>>> Hi Roger,
+>>>
+>>> On 06/18/2013 11:04 AM, Roger Quadros wrote:
+>>>> Provide the RESET and Power regulators for the USB PHY,
+>>>> the USB Host port mode and the PHY device.
+>>>>
+>>>> Also provide pin multiplexer information for the USB host
+>>>> pins.
+>>>>
+>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>> ---
+>>>>    arch/arm/boot/dts/omap4-panda-common.dtsi |   62 +++++++++++++++++++++++++++++
+>>>>    1 files changed, 62 insertions(+), 0 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>> index 00cbaa5..7a21e8e 100644
+>>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>> @@ -59,6 +59,42 @@
+>>>>                "AFML", "Line In",
+>>>>                "AFMR", "Line In";
+>>>>        };
+>>>> +
+>>>> +    /* HS USB Port 1 RESET */
+>>>> +    hsusb1_reset: hsusb1_reset_reg {
+>>>> +        compatible = "regulator-fixed";
+>>>> +        regulator-name = "hsusb1_reset";
+>>>> +        regulator-min-microvolt = <3300000>;
+>>>> +        regulator-max-microvolt = <3300000>;
+>>>> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
+>>>> +        startup-delay-us = <70000>;
+>>>> +        enable-active-high;
+>>>> +    };
+>>>
+>>> Is this really a regulator? Or just a GPIO line used to reset the USB PHY?
+>>
+>> It is in fact a GPIO line used as reset.
+>>>
+>>> If this is the case, I don't think it should be represented as a regulator.
+>>
+>> Why not? I think it fits very well in the regulator device model.
 
-I see that arch/arm/kernel/topology.c does a pr_err when clock-frequency isn't
-present. If we're documenting it as optional, should we not downgrade that or
-remove it entirely?
+I'm not sure fitting very well is the correct term.
+It works, for sure, but it is no different than when we were trying to 
+abuse the regulator fmwk to enable the 32k clock in phoenix.
+It is just a hack.
 
-Thanks,
-Mark.
+>>I couldn't find a better
+>> way to represent this. It gives us a way to specify not only the GPIO line but also
+>> the polarity. I know mostly reset is active low but still there is flexibility as you never
+>> know for sure.
 
-> 
-> Document this property to avoid any possible confusion on the
-> clock-frequency unit.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index f32494d..a33b956 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -45,6 +45,8 @@ For the ARM architecture every CPU node must contain the following properties:
->  		"marvell,xsc3"
->  		"marvell,xscale"
->  
-> +- clock-frequency : The frequency of the CPU, in Hz. Optional.
-> +
->  Example:
->  
->  	cpus {
-> -- 
-> 1.8.1.2
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Mmm, and what about just controlling the gpio from the driver?
+
+> I think it's really a mux + a comparator. But from Linux driver point of view
+> a regulator fits well as we don't have anything better. After all, the pin
+> voltage changes, and then something can be done based on the comparator
+> value.
+>
+>> Do you have any better ideas?
+>
+> We have a similar issue with the MMC1 PBIAS. I think in the long run we
+> should expand regulator (and possibly pinctrl) framework(s) to handle
+> comparators. We could just assume that a comparatator is a regulator,
+> and have a comparator binding that just uses the regulator code.
+
+In the case of pbias, the pinctrl seems to be a much better fit for my 
+point of view. pinctrl can handle pin configuration and this is what the 
+pbias is in the case of MMC pins.
+
+>> FYI. The USB PHY driver is already treating reset as a regulator and is into 3.10. Reworking that
+>> will take some time. Not getting these in will prevent USB host/ethernet support on panda.
+
+That's not because we did some mistake in the past that we have to keep 
+doing that :-)
+
+> Yes and we need to have some solution for v3.11 as we've dropped the
+> legacy data for omap4. Otherwise things won't work properly.
+
+I'm fine taking it as soon as big disclaimer is added to avoid mis-using 
+the regulator in the future for controlling a gpio line.
+
+Regards,
+Benoit
