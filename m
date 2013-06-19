@@ -1,62 +1,40 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH v2] ARM: shmobile: irqpin: add a DT property to enable masking
- on parent
-Date: Wed, 19 Jun 2013 07:53:09 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1306190751090.6945@axis700.grange>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH 0/3] Add pinmux DT nodes to CPSW for AM335x
+Date: Wed, 19 Jun 2013 11:23:54 +0530
+Message-ID: <51C14772.4090701@ti.com>
+References: <1370604775-21264-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1370604775-21264-1-git-send-email-mugunthanvnm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Mugunthan V N <mugunthanvnm@ti.com>, benoit.cousson@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-To disable spurious interrupts, that get triggered on certain hardware, the
-irqpin driver masks them on the parent interrupt controller. To specify
-such broken devices a .control_parent parameter can be provided in the
-platform data. In the DT case we need a property, to do the same.
+On 6/7/2013 5:02 PM, Mugunthan V N wrote:
+> Add pinmux DT nodes to CPSW for the following AM335x boards
+> * AM335x Beaglebone
+> * AM335x EVM
+> * AM335x EVMsk
+> default state contains the pinmux required for active mode and
+> sleep mode contains pinmux reset values for energy saving.
+>
+> Mugunthan V N (3):
+>    ARM: dts: AM33XX: Add pinmux configuration for CPSW to beaglebone
+>    ARM: dts: AM33XX: Add pinmux configuration for CPSW to EVMsk
+>    ARM: dts: AM33XX: Add pinmux configuration for CPSW to am335x EVM
+>
+>   arch/arm/boot/dts/am335x-bone.dts  |   67 ++++++++++++++++++++++++++
+>   arch/arm/boot/dts/am335x-evm.dts   |   64 +++++++++++++++++++++++++
+>   arch/arm/boot/dts/am335x-evmsk.dts |   92 ++++++++++++++++++++++++++++++++++++
+>   3 files changed, 223 insertions(+)
+>
+Benoit
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Acked-by: Magnus Damm <damm@opensource.se>
----
+Do you have any comments on this patch series,
+if not can you queue it for v3.11
 
-v2: rebased on top of the current tree, also added Acked-by from Magnus
-
- .../interrupt-controller/renesas,intc-irqpin.txt   |    2 ++
- drivers/irqchip/irq-renesas-intc-irqpin.c          |    7 +++++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-index 66fcaf5..1f8b0c5 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-@@ -12,3 +12,5 @@ Optional properties:
-   properties
- - sense-bitfield-width: width of a single sense bitfield in the SENSE register,
-   if different from the default 4 bits
-+- control-parent: disable and enable interrupts on the parent interrupt
-+  controller, needed for some broken implementations
-diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
-index 4aca1b2..82cec63 100644
---- a/drivers/irqchip/irq-renesas-intc-irqpin.c
-+++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
-@@ -348,11 +348,14 @@ static int intc_irqpin_probe(struct platform_device *pdev)
- 	}
- 
- 	/* deal with driver instance configuration */
--	if (pdata)
-+	if (pdata) {
- 		memcpy(&p->config, pdata, sizeof(*pdata));
--	else
-+	} else {
- 		of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
- 				     &p->config.sense_bitfield_width);
-+		p->config.control_parent = of_property_read_bool(pdev->dev.of_node,
-+								 "control-parent");
-+	}
- 	if (!p->config.sense_bitfield_width)
- 		p->config.sense_bitfield_width = 4; /* default to 4 bits */
- 
--- 
-1.7.2.5
-
+Regards
+Mugunthan V N
