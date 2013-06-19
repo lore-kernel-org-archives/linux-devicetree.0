@@ -1,124 +1,47 @@
-From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
-Date: Wed, 19 Jun 2013 13:17:58 -0500
-Message-ID: <51C1F5D6.3040304@ti.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
- <1371571487-14389-2-git-send-email-rogerq@ti.com> <51C106A1.9030001@ti.com>
- <51C15F7E.5020305@ti.com> <20130619074605.GW5523@atomide.com>
- <51C183AC.8040801@ti.com> <51C19011.5050107@ti.com>
- <51C19E6C.4040802@epfl.ch> <51C1A2AE.2020506@ti.com>
- <51C1BA8C.6000703@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/2] Make non-linear GPIO ranges accesible from gpiolib
+Date: Wed, 19 Jun 2013 12:10:54 -0600
+Message-ID: <51C1F42E.5090107@wwwdotorg.org>
+References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com> <1371128132-18266-2-git-send-email-christian.ruppert@abilis.com> <51BA3BC1.3090109@wwwdotorg.org> <20130614091241.GA23745@ab42.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51C1BA8C.6000703-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130614091241.GA23745@ab42.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/19/2013 09:05 AM, Roger Quadros wrote:
-> On 06/19/2013 03:23 PM, Benoit Cousson wrote:
->> On 06/19/2013 07:05 AM, Florian Vaussard wrote:
->>> Hello,
->>>
->>> On 06/19/2013 01:03 PM, Roger Quadros wrote:
->>>> On 06/19/2013 01:10 PM, Benoit Cousson wrote:
->>>>> On 06/19/2013 02:46 AM, Tony Lindgren wrote:
->>>>>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [130619 00:42]:
->>>>>>> Hi Benoit,
->>>>>>>
->>>>>>> On 06/19/2013 04:17 AM, Benoit Cousson wrote:
->>>>>>>> Hi Roger,
->>>>>>>>
->>>>>>>> On 06/18/2013 11:04 AM, Roger Quadros wrote:
->>>>>>>>> Provide the RESET and Power regulators for the USB PHY,
->>>>>>>>> the USB Host port mode and the PHY device.
->>>>>>>>>
->>>>>>>>> Also provide pin multiplexer information for the USB host
->>>>>>>>> pins.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->>>>>>>>> ---
->>>>>>>>>      arch/arm/boot/dts/omap4-panda-common.dtsi |   62
->>>>>>>>> +++++++++++++++++++++++++++++
->>>>>>>>>      1 files changed, 62 insertions(+), 0 deletions(-)
->>>>>>>>>
->>>>>>>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>>>>>> b/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>>>>>> index 00cbaa5..7a21e8e 100644
->>>>>>>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>>>>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>>>>>> @@ -59,6 +59,42 @@
->>>>>>>>>                  "AFML", "Line In",
->>>>>>>>>                  "AFMR", "Line In";
->>>>>>>>>          };
->>>>>>>>> +
->>>>>>>>> +    /* HS USB Port 1 RESET */
->>>>>>>>> +    hsusb1_reset: hsusb1_reset_reg {
->>>>>>>>> +        compatible = "regulator-fixed";
->>>>>>>>> +        regulator-name = "hsusb1_reset";
->>>>>>>>> +        regulator-min-microvolt = <3300000>;
->>>>>>>>> +        regulator-max-microvolt = <3300000>;
->>>>>>>>> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
->>>>>>>>> +        startup-delay-us = <70000>;
->>>>>>>>> +        enable-active-high;
->>>>>>>>> +    };
->>>>>>>>
->>>>>>>> Is this really a regulator? Or just a GPIO line used to reset the
->>>>>>>> USB PHY?
->>>>>>>
->>>>>>> It is in fact a GPIO line used as reset.
->>>>>>>>
->>>>>>>> If this is the case, I don't think it should be represented as a
->>>>>>>> regulator.
->>>>>>>
->>>>>>> Why not? I think it fits very well in the regulator device model.
->>>>>
->>>>> I'm not sure fitting very well is the correct term.
->>>>> It works, for sure, but it is no different than when we were trying
->>>>> to abuse the regulator fmwk to enable the 32k clock in phoenix.
->>>>> It is just a hack.
->>>>>
->>>>
->>>> The only difference is there is a dedicated framework for clocks.
->>>> Since there is nothing specific to
->>>> handle reset lines it is left to the driver writer how he wants to
->>>> manage it.
->>>>
->>>
->>> There is a proposed binding for gpio-controlled reset lines, but it is
->>> not yet merged [1].
->>> I guess it can fit most usage patterns, and it can be an interesting
->>> move in the future.
+On 06/14/2013 03:12 AM, Christian Ruppert wrote:
+> On Thu, Jun 13, 2013 at 03:38:09PM -0600, Stephen Warren wrote:
+>> On 06/13/2013 06:55 AM, Christian Ruppert wrote:
+>>> This patch adds the infrastructure required to register non-linear gpio
+>>> ranges through gpiolib and the standard GPIO device tree bindings.
 >>
->> I'm glad to see that I was not the only one thinking that the regulator was not the right fmwk to do that :-)
->>
->> Thanks for the pointer Florian.
->
-> Thanks again Florian.
->>
->> I guess that series should be merged for 3.11? Based on the thread, it should to through arm-soc.
->>
->> Roger,
->>
->> It might be tricky to have dependency on that series, but if this is possible, you should try. Otherwise, just keep the existing one, adding that a new solution will be available soon as a disclaimer.
->>
->
-> I will rework the PHY driver to use the new gpio-reset driver. But for 3.11 let's proceed the way it is.
-> I'll resend this one with a disclaimer.
+>> That's not exactly true. The existing gpio-ranges property already
+>> allows non-linear ranges to be represented quite easily; each entry in
+>> the gpio-ranges list is <gpio-base> <pinctrl-base> <count>, so you can
+>> piece together any mapping you want.
+> 
+> You're right, my description is somewhat imprecise here.
+> 
+>> The potential advantage of this patch is that the pinctrl-side of the
+>> mapping can be a group name rather than pin IDs, which might reduce the
+>> size of the mapping list if you have an extremely sparse or non-linear
+>> mapping /and/ parts of that mapping just happen to align with the pin
+>> groups in the pin controller HW, since each entry in the gpio-ranges
+>> property can be sparse/non-linear, rather than being a small linear
+>> chunk of the mapping.
+> 
+> Pin controller authors have the freedom to define pin groups just for
+> the purpose of "predefining" the pinctrl side of GPIO ranges.
 
-OK, sounds good.
-
-Thanks,
-Benoit
+Hmm. I suppose that's true. I'm not sure how enthusiastic I am about
+doing this though... The reason I'm unsure is because it starts using
+pin groups from something other than groups of pins in HW that are all
+affected by the same mux or config bits in a register, and starts using
+pin groups for something else; GPIO<->pinmux pins mapping. Perhaps it's
+OK though, considering the other abuses of pin groups that are already
+present, such as using pin groups to represent default/common uses of
+groups of pins that don't actually exist in HW.
