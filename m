@@ -1,19 +1,20 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 Subject: Re: [PATCH v3 05/12] ARM: mvebu: Remove the harcoded BootROM window
  allocation
-Date: Wed, 19 Jun 2013 14:58:24 -0300
-Message-ID: <20130619175823.GB2324@localhost>
+Date: Wed, 19 Jun 2013 12:03:20 -0600
+Message-ID: <20130619180320.GA25000@obsidianresearch.com>
 References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
  <1371554737-25319-6-git-send-email-ezequiel.garcia@free-electrons.com>
  <20130618173906.GC2204@obsidianresearch.com>
  <20130619100159.GB16138@localhost>
  <20130619165834.GB32155@obsidianresearch.com>
+ <20130619175823.GB2324@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130619165834.GB32155-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20130619175823.GB2324@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,38 +25,22 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTksIDIwMTMgYXQgMTA6NTg6MzRBTSAtMDYwMCwgSmFzb24gR3VudGhvcnBl
-IHdyb3RlOgo+IE9uIFdlZCwgSnVuIDE5LCAyMDEzIGF0IDA3OjAyOjAwQU0gLTAzMDAsIEV6ZXF1
-aWVsIEdhcmNpYSB3cm90ZToKPiAKPiA+ID4gVmVyaWZ5aW5nIHRoZSBEVCBpcyBzZXR1cCB0aGlz
-IHdheSBhbmQgYWJvcnRpbmcgaWYgaXQgaXMgbm90IHNlZW1zCj4gPiA+IGxpa2UgYSBnb29kIGlk
-ZWEuLgo+ID4gCj4gPiBJIGFncmVlIGl0J3MgYSBuaWNlIGlkZWEsIGJ1dCBJJ20gbm90IHRvbyBz
-dXJlIGhvdyB0byBhY2NvbXBsaXNoIHRoaXMKPiA+IGluIGEgc2ltcGxlIGFuZCBnZW5lcmljIHdh
-eS4gVGhlcmUncyBub3RoaW5nIGluIHRoZSBEVCB0aGF0IGFsbG93cyB5b3UKPiA+IHRvIGtub3cg
-d2hpY2ggb2YgdGhlIHJhbmdlcyBlbnRyaWVzIGNvcnJlc3BvbmQgdG8gdGhlIEJvb3RST00sIHVu
-bGVzcyB5b3UgZ28KPiA+IHRocm91Z2ggZWFjaCBvZiB0aGUgZW50cmllcyBjb21wYXJpbmcgYWdh
-aW5zdCB0aGUga25vd24gdGFyZ2V0IElEIGFuZAo+ID4gYXR0cmlidXRlLgo+IAo+IEkgdGhpbmsg
-eW91IG5lZWQgdG8gaGF2ZSBhIGRlZmluZWQgY29tcGF0aWJsZSBzdHJpbmcgZm9yIHRoZSBib290
-cm9tLAo+IHVzZSBvbmUgb2YgdGhlIG9mX2ZpbmQuLiBmdW5jdGlvbnMgdG8gbG9jYXRlIHRoZSBu
-b2RlLCB0aGVuIHRyYW5zbGF0ZQo+IHRoZSByZWdzIHRvIGdldCBhIENQVSBhZGRyZXNzLCBlbnN1
-cmUgaXQgaXMgdGhlIHJpZ2h0IGJhc2UgYW5kIHNpemUuLgo+IAoKSSB3YXNuJ3Qgc3VyZSB5b3Ug
-d2FudGVkIHRvIHBhbmljKCksIHRvIGNsaXAgb24gYXZhaWxhYmxlIENQVXMsCm9yIHRvIGp1c3Qg
-ZG8gYSBwcl93YXJuIC8gV0FSTigpLCBzbyBoZXJlJ3MgYSBwaWVjZSBvZiBjb2RlOgooZGlzY2xh
-aW1lcjogbm9uLXRlc3RlZCwgbm9uLWNvbXBpbGVkLCBldGMuKQoKCS8qCgkgKiBJbiBvcmRlciB0
-byBib290IHRoZSBzZWNvbmRhcnkgQ1BVcyB3ZSBuZWVkIHRvIGVuc3VyZQoJICogdGhlIGJvb3RS
-T00gaXMgbWFwcGVkIGF0IHRoZSBjb3JyZWN0IGFkZHJlc3MuCgkgKi8KCW5vZGUgPSBvZl9maW5k
-X2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAiYm9vdHJvbSIpOwoJaWYgKCFub2RlKSB7CgkJ
-cHJfd2FybigiTm8gJ2Jvb3Ryb20nIG5vZGUgZm91bmQiKTsKCQlyZXR1cm47Cgl9CgoJZXJyID0g
-b2ZfYWRkcmVzc190b19yZXNvdXJjZShub2RlLCAwLCAmcmVzKTsKCWlmIChlcnIgPCAwKSB7CgkJ
-cHJfd2FybigiQ2Fubm90IGdldCAnYm9vdHJvbScgbm9kZSBhZGRyZXNzIik7CgkJcmV0dXJuOwoJ
-fQoKCWlmIChyZXMuc3RhcnQgIT0gQVhQX0JPT1RST01fQkFTRXx8CgkgICAgcmVzb3VyY2Vfc2l6
-ZSgmcmVzKSAhPSBBWFBfQk9PVFJPTV9TSVpFKSB7CgkJcHJfd2FybigiYm9vdHJvbSBhZGRyZXNz
-IGlzIGluY29ycmVjdCIpOwoJCXJldHVybjsKCX0KCkhvdyBkb2VzIGl0IGxvb2s/CgotLSAKRXpl
-cXVpZWwgR2FyY8OtYSwgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQg
-QW5kcm9pZCBFbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBt
-YWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9s
-aXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Wed, Jun 19, 2013 at 02:58:24PM -0300, Ezequiel Garcia wrote:
+
+> I wasn't sure you wanted to panic(), to clip on available CPUs,
+> or to just do a pr_warn / WARN(), so here's a piece of code:
+> (disclaimer: non-tested, non-compiled, etc.)
+
+Up to you, but you know it won't work if it isn't right so continuing
+on to try and startup the CPUs is not ideal. panic is probably
+reasonable?
+ 
+> 	node = of_find_compatible_node(NULL, NULL, "bootrom");
+
+"marvell,bootrom" ?
+
+Jason
