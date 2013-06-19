@@ -1,126 +1,171 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
-Date: Wed, 19 Jun 2013 14:03:45 +0300
-Message-ID: <51C19011.5050107@ti.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
- <1371571487-14389-2-git-send-email-rogerq@ti.com> <51C106A1.9030001@ti.com>
- <51C15F7E.5020305@ti.com> <20130619074605.GW5523@atomide.com>
- <51C183AC.8040801@ti.com>
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: tegra: basic support for Trusted Foundations
+Date: Wed, 19 Jun 2013 12:11:32 +0100
+Message-ID: <20130619111126.GA3582@localhost.localdomain>
+References: <1371114745-24710-1-git-send-email-acourbot@nvidia.com>
+ <1371114745-24710-2-git-send-email-acourbot@nvidia.com>
+ <51BA1B41.6030002@wwwdotorg.org>
+ <CAAVeFuLc57pV=To5yaE5x9mrVy1yknH2e90QockCiNbEXRm0WQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51C183AC.8040801@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFuLc57pV=To5yaE5x9mrVy1yknH2e90QockCiNbEXRm0WQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/19/2013 01:10 PM, Benoit Cousson wrote:
-> On 06/19/2013 02:46 AM, Tony Lindgren wrote:
->> * Roger Quadros <rogerq@ti.com> [130619 00:42]:
->>> Hi Benoit,
->>>
->>> On 06/19/2013 04:17 AM, Benoit Cousson wrote:
->>>> Hi Roger,
->>>>
->>>> On 06/18/2013 11:04 AM, Roger Quadros wrote:
->>>>> Provide the RESET and Power regulators for the USB PHY,
->>>>> the USB Host port mode and the PHY device.
->>>>>
->>>>> Also provide pin multiplexer information for the USB host
->>>>> pins.
->>>>>
->>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>>> ---
->>>>>    arch/arm/boot/dts/omap4-panda-common.dtsi |   62 +++++++++++++++++++++++++++++
->>>>>    1 files changed, 62 insertions(+), 0 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>> index 00cbaa5..7a21e8e 100644
->>>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>>> @@ -59,6 +59,42 @@
->>>>>                "AFML", "Line In",
->>>>>                "AFMR", "Line In";
->>>>>        };
->>>>> +
->>>>> +    /* HS USB Port 1 RESET */
->>>>> +    hsusb1_reset: hsusb1_reset_reg {
->>>>> +        compatible = "regulator-fixed";
->>>>> +        regulator-name = "hsusb1_reset";
->>>>> +        regulator-min-microvolt = <3300000>;
->>>>> +        regulator-max-microvolt = <3300000>;
->>>>> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
->>>>> +        startup-delay-us = <70000>;
->>>>> +        enable-active-high;
->>>>> +    };
->>>>
->>>> Is this really a regulator? Or just a GPIO line used to reset the USB PHY?
->>>
->>> It is in fact a GPIO line used as reset.
->>>>
->>>> If this is the case, I don't think it should be represented as a regulator.
->>>
->>> Why not? I think it fits very well in the regulator device model.
+On Fri, Jun 14, 2013 at 05:43:03PM +0900, Alexandre Courbot wrote:
+> On Thu, Jun 13, 2013 at 11:35 PM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
+> >> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+> >> index ed9c853..d59bc19 100644
+> >> --- a/Documentation/devicetree/bindings/arm/tegra.txt
+> >> +++ b/Documentation/devicetree/bindings/arm/tegra.txt
+> >> @@ -32,3 +32,14 @@ board-specific compatible values:
+> >>    nvidia,whistler
+> >>    toradex,colibri_t20-512
+> >>    toradex,iris
+> >> +
+> >> +Optional nodes
+> >> +-------------------------------------------
+> >> +
+> >> +Trusted Foundations:
+> >> +Boards using the Trusted Foundations secure monitor should signal its
+> >> +presence by declaring a node compatible with "tl,trusted-foundations":
+> >> +
+> >> +     firmware {
+> >
+> > You need to make a clear statement about whether the node name is
+> >
+> > I think it shouldn't required to be exactly equal to "firmware", because
+> > that would lead to problems if there were multiple independent firmware
+> > APIs present (which is certainly possible, whether or not it is true
+> > on Tegra).
 > 
-> I'm not sure fitting very well is the correct term.
-> It works, for sure, but it is no different than when we were trying to abuse the regulator fmwk to enable the 32k clock in phoenix.
-> It is just a hack.
+> Yes, the name of the node is not fixed (doing so would make its lookup
+> faster, but the gain is not obvious). Will make it explicit in the
+> doc.
 > 
+> >> +             compatible = "tl,trusted-foundations";
+> >> +     };
+> >
+> > For now, it might make more sense to make this binding tegra-specific,
+> > and to interpret the node is only implying the presence of the low-
+> > level SoC functions you are using on Tegra, not TF as a whole.
+> 
+> Do you mean the vendor should be changed from "tl" to "nvidia" here?
 
-The only difference is there is a dedicated framework for clocks. Since there is nothing specific to
-handle reset lines it is left to the driver writer how he wants to manage it.
+Since this is a Tegra-specific integration, I think that would be wise,
+unless you can confirm by looking at the API specs that the functionality
+you are trying to describe and use it truly intended to be generic across
+all deployments of TF (either always present, or at least as a well-
+specified optional feature).
 
->>> I couldn't find a better
->>> way to represent this. It gives us a way to specify not only the GPIO line but also
->>> the polarity. I know mostly reset is active low but still there is flexibility as you never
->>> know for sure.
+> > Otherwise, it feels too generic.  There is no description of exactly
+> > what functionality will be available if this node it present: if
+> > this is going to be a generic binding for TF, then it needs to work
+> > for all deployments of TF, not just your specific case.  For example,
+> > how to you find out what functionality is present?  Will there be
+> > a standard probing ABI for all versions and deployments of TF, or
+> > would extra information need to be described in the DT?
+> >
+> > Partly, this depends on whether the TF_SET_CPU_BOOT_ADDR_SMC call will
+> > be present, working, and with compatible ABI and semantics, on every SoC
+> > where an implementation of TF is present.  Someone from Trusted Logic, or
+> > someone with visibility of the relevant ABI/API specs would need to
+> > judge on that -- do you have that info?
 > 
-> Mmm, and what about just controlling the gpio from the driver?
+> I'm currently looking into that. This patch makes the assumption that
+> all TF implementations have the same features and the same interface -
+> if this is the case, do you agree this binding is ok as it is?
 
-Yes gpio is possible. But then you need to add additional code in the driver to parse GPIO number and polarity.
-Using regulator_get() was plain simple for me.
+It's a judgement call, but if the SMC you use is a mandatory part of
+TF after a certain version, and if it's guaranteed to have a fixed ABI
+(including function ID) and behaviour, then that binding works.
 
-> 
->> I think it's really a mux + a comparator. But from Linux driver point of view
->> a regulator fits well as we don't have anything better. After all, the pin
->> voltage changes, and then something can be done based on the comparator
->> value.
->>
->>> Do you have any better ideas?
->>
->> We have a similar issue with the MMC1 PBIAS. I think in the long run we
->> should expand regulator (and possibly pinctrl) framework(s) to handle
->> comparators. We could just assume that a comparatator is a regulator,
->> and have a comparator binding that just uses the regulator code.
-> 
-> In the case of pbias, the pinctrl seems to be a much better fit for my point of view. pinctrl can handle pin configuration and this is what the pbias is in the case of MMC pins.
-> 
->>> FYI. The USB PHY driver is already treating reset as a regulator and is into 3.10. Reworking that
->>> will take some time. Not getting these in will prevent USB host/ethernet support on panda.
-> 
-> That's not because we did some mistake in the past that we have to keep doing that :-)
-> 
+If the function is an optional or SoC-specific feature, then it's not
+sufficient to say that TF firmware is present -- we need to describe
+something about the SoC-specific and optional features present, unless
+there's a well-defined generic way to probe for them.
 
-I had actually thought it well and don't consider it as a mistake. It is just a difference in opinion.
+> If indeed TF's functionality and ABI is the same no matter whether we
+> are on Tegra on not, then its support should even be moved outside of
+> mach-tegra.
 
->> Yes and we need to have some solution for v3.11 as we've dropped the
->> legacy data for omap4. Otherwise things won't work properly.
+Agreed, that's the ideal outcome.  I'm just not convinced we're ready
+for that just now (but I'm happy to be corrected).
+
+> >> --- /dev/null
+> >> +++ b/arch/arm/mach-tegra/firmware.c
+> >> @@ -0,0 +1,40 @@
+> >> +/*
+> >> + * SecureOS support for Tegra CPUs
+> >
+> > Should the name "SecureOS" change in these comment headers? (affects
+> > multiple files)
 > 
-> I'm fine taking it as soon as big disclaimer is added to avoid mis-using the regulator in the future for controlling a gpio line.
+> Yes, I missed these ones, thanks. Another missed opportunity to use git grep...
 > 
+> >> +     node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
+> >> +     if (node && !IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS))
+> >> +             pr_warn("Trusted Foundations detected but support missing!\n");
+> >
+> > Should this be more than just a warning?
+> >
+> > It looks to me like tegra_cpu_reset_handler_set() might either silently
+> > fail or trigger an external abort in this situation, depending on the
+> > hardware and on how TF sets things up.
+> 
+> What will happen (from 3.10) is that tegra_cpu_reset_handler_set()
+> will output a "CPUX: failed to come online" for each secondary CPU and
+> boot will continue (albeit on one CPU). The system's features are
+> degraded, but it is not fatal, so I think it is reasonable to continue
+> here.
 
-I can re-work the phy driver. No problem. But I'm still not convinced
-what it will improve. IMHO it just adds more code in the phy driver without any benefits.
+I don't think we should rely on ignoring in imprecise external abort,
+because such aborts indicate serious or potentially fatal system errors
+or bugs.
 
-cheers,
--roger
+If you're getting a precise abort (so that we know the faulted address)
+or no abort at all, that's less harmful, though it's hard to guarantee
+across all SoCs, because the ARM Architecture doesn't guarantee synchronous
+aborts for slave errors on writes.
+
+What was heppening differently on 3.9 compared with 3.10?
+
+> > There seems to be no way to signal an error when attempting to set a
+> > CPU's reset address.
+> 
+> Indeed. But even if that fails the system can still survive, at least on Tegra.
+> 
+> >> +#if IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS)
+> >> +     else if (node)
+> >> +             register_firmware_ops(&tegra_trusted_foundations_ops);
+> >> +#endif
+> >> +}
+> >
+> >
+> > IS_ENABLED() allows #ifdefs to be avoided -- maybe this would be clearer
+> > as:
+> >
+> >         node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
+> >         if (!node)
+> >                 return;
+> >
+> >         if (WARN_ON(!IS_ENABLED(CONFIG_TEGRA_TRUSTED_FOUNDATIONS))) {
+> >                 pr_warn("Trusted Foundations detected but support missing!\n");
+> >                 return;
+> >         }
+> >
+> >         register_firmware_ops(&tegra_trusted_foundations_ops);
+> 
+> But then you will get a link error when TF support is not compiled in
+> because tegra_trusted_foundations_ops will not be defined. That's why
+> I used a #ifdef here - I agree it is terribly inelegant though.
+
+Hmmm, fair point.  Dead code elimination in the compiler may solve that,
+but I've never been too keen on relying on that.
+
+Cheers
+---Dave
