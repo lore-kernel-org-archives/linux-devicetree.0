@@ -1,21 +1,18 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 05/12] ARM: mvebu: Remove the harcoded BootROM window
- allocation
-Date: Wed, 19 Jun 2013 15:17:36 -0300
-Message-ID: <20130619181735.GA5701@localhost>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1371554737-25319-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130618173906.GC2204@obsidianresearch.com>
- <20130619100159.GB16138@localhost>
- <20130619165834.GB32155@obsidianresearch.com>
- <20130619175823.GB2324@localhost>
- <20130619180320.GA25000@obsidianresearch.com>
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
+Date: Wed, 19 Jun 2013 13:17:58 -0500
+Message-ID: <51C1F5D6.3040304@ti.com>
+References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
+ <1371571487-14389-2-git-send-email-rogerq@ti.com> <51C106A1.9030001@ti.com>
+ <51C15F7E.5020305@ti.com> <20130619074605.GW5523@atomide.com>
+ <51C183AC.8040801@ti.com> <51C19011.5050107@ti.com>
+ <51C19E6C.4040802@epfl.ch> <51C1A2AE.2020506@ti.com>
+ <51C1BA8C.6000703@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130619180320.GA25000-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <51C1BA8C.6000703-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -26,26 +23,102 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMTksIDIwMTMgYXQgMTI6MDM6MjBQTSAtMDYwMCwgSmFzb24gR3VudGhvcnBl
-IHdyb3RlOgo+IE9uIFdlZCwgSnVuIDE5LCAyMDEzIGF0IDAyOjU4OjI0UE0gLTAzMDAsIEV6ZXF1
-aWVsIEdhcmNpYSB3cm90ZToKPiAKPiA+IEkgd2Fzbid0IHN1cmUgeW91IHdhbnRlZCB0byBwYW5p
-YygpLCB0byBjbGlwIG9uIGF2YWlsYWJsZSBDUFVzLAo+ID4gb3IgdG8ganVzdCBkbyBhIHByX3dh
-cm4gLyBXQVJOKCksIHNvIGhlcmUncyBhIHBpZWNlIG9mIGNvZGU6Cj4gPiAoZGlzY2xhaW1lcjog
-bm9uLXRlc3RlZCwgbm9uLWNvbXBpbGVkLCBldGMuKQo+IAo+IFVwIHRvIHlvdSwgYnV0IHlvdSBr
-bm93IGl0IHdvbid0IHdvcmsgaWYgaXQgaXNuJ3QgcmlnaHQgc28gY29udGludWluZwo+IG9uIHRv
-IHRyeSBhbmQgc3RhcnR1cCB0aGUgQ1BVcyBpcyBub3QgaWRlYWwuIHBhbmljIGlzIHByb2JhYmx5
-Cj4gcmVhc29uYWJsZT8KPiAgCgpXZWxsLCB0aGUgb3RoZXIgQ1BVcyBkb24ndCBzdGFydCBidXQg
-dGhlIHN5c3RlbSBpdHNlbGYgZG9lcyBub3QgZGllLAoob3IgYXQgbGVhc3QgdGhhdCdzIHRoZSBj
-YXNlIG9uIG15IHN5c3RlbXMpLgoKSXQncyB1cCB0byB5b3UsIEknbSBmaW5lIHdpdGggZWl0aGVy
-LCBhbHRob3VnaCBJJ20gaW5jbGluZWQgdG8ganVzdApwYW5pYy4KCj4gPiAJbm9kZSA9IG9mX2Zp
-bmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsIE5VTEwsICJib290cm9tIik7Cj4gCj4gIm1hcnZlbGws
-Ym9vdHJvbSIgPwo+IAoKWWVzLCBpbmRlZWQuCgotLSAKRXplcXVpZWwgR2FyY8OtYSwgRnJlZSBF
-bGVjdHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBFbmdpbmVlcmluZwpo
-dHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJl
-ZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3Rp
-bmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On 06/19/2013 09:05 AM, Roger Quadros wrote:
+> On 06/19/2013 03:23 PM, Benoit Cousson wrote:
+>> On 06/19/2013 07:05 AM, Florian Vaussard wrote:
+>>> Hello,
+>>>
+>>> On 06/19/2013 01:03 PM, Roger Quadros wrote:
+>>>> On 06/19/2013 01:10 PM, Benoit Cousson wrote:
+>>>>> On 06/19/2013 02:46 AM, Tony Lindgren wrote:
+>>>>>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [130619 00:42]:
+>>>>>>> Hi Benoit,
+>>>>>>>
+>>>>>>> On 06/19/2013 04:17 AM, Benoit Cousson wrote:
+>>>>>>>> Hi Roger,
+>>>>>>>>
+>>>>>>>> On 06/18/2013 11:04 AM, Roger Quadros wrote:
+>>>>>>>>> Provide the RESET and Power regulators for the USB PHY,
+>>>>>>>>> the USB Host port mode and the PHY device.
+>>>>>>>>>
+>>>>>>>>> Also provide pin multiplexer information for the USB host
+>>>>>>>>> pins.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>>>>>>>>> ---
+>>>>>>>>>      arch/arm/boot/dts/omap4-panda-common.dtsi |   62
+>>>>>>>>> +++++++++++++++++++++++++++++
+>>>>>>>>>      1 files changed, 62 insertions(+), 0 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>>>>>> b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>>>>>> index 00cbaa5..7a21e8e 100644
+>>>>>>>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>>>>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>>>>>> @@ -59,6 +59,42 @@
+>>>>>>>>>                  "AFML", "Line In",
+>>>>>>>>>                  "AFMR", "Line In";
+>>>>>>>>>          };
+>>>>>>>>> +
+>>>>>>>>> +    /* HS USB Port 1 RESET */
+>>>>>>>>> +    hsusb1_reset: hsusb1_reset_reg {
+>>>>>>>>> +        compatible = "regulator-fixed";
+>>>>>>>>> +        regulator-name = "hsusb1_reset";
+>>>>>>>>> +        regulator-min-microvolt = <3300000>;
+>>>>>>>>> +        regulator-max-microvolt = <3300000>;
+>>>>>>>>> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
+>>>>>>>>> +        startup-delay-us = <70000>;
+>>>>>>>>> +        enable-active-high;
+>>>>>>>>> +    };
+>>>>>>>>
+>>>>>>>> Is this really a regulator? Or just a GPIO line used to reset the
+>>>>>>>> USB PHY?
+>>>>>>>
+>>>>>>> It is in fact a GPIO line used as reset.
+>>>>>>>>
+>>>>>>>> If this is the case, I don't think it should be represented as a
+>>>>>>>> regulator.
+>>>>>>>
+>>>>>>> Why not? I think it fits very well in the regulator device model.
+>>>>>
+>>>>> I'm not sure fitting very well is the correct term.
+>>>>> It works, for sure, but it is no different than when we were trying
+>>>>> to abuse the regulator fmwk to enable the 32k clock in phoenix.
+>>>>> It is just a hack.
+>>>>>
+>>>>
+>>>> The only difference is there is a dedicated framework for clocks.
+>>>> Since there is nothing specific to
+>>>> handle reset lines it is left to the driver writer how he wants to
+>>>> manage it.
+>>>>
+>>>
+>>> There is a proposed binding for gpio-controlled reset lines, but it is
+>>> not yet merged [1].
+>>> I guess it can fit most usage patterns, and it can be an interesting
+>>> move in the future.
+>>
+>> I'm glad to see that I was not the only one thinking that the regulator was not the right fmwk to do that :-)
+>>
+>> Thanks for the pointer Florian.
+>
+> Thanks again Florian.
+>>
+>> I guess that series should be merged for 3.11? Based on the thread, it should to through arm-soc.
+>>
+>> Roger,
+>>
+>> It might be tricky to have dependency on that series, but if this is possible, you should try. Otherwise, just keep the existing one, adding that a new solution will be available soon as a disclaimer.
+>>
+>
+> I will rework the PHY driver to use the new gpio-reset driver. But for 3.11 let's proceed the way it is.
+> I'll resend this one with a disclaimer.
+
+OK, sounds good.
+
+Thanks,
+Benoit
