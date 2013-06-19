@@ -1,242 +1,62 @@
-From: =?EUC-KR?B?sei9wr/s?= <sw0312.kim@samsung.com>
-Subject: Re: [PATCH 1/4] drm/exynos: rename compatible strings for hdmi
- subsystem
-Date: Wed, 19 Jun 2013 14:43:45 +0900
-Message-ID: <51C14511.202@samsung.com>
-References: <1371559778-9359-1-git-send-email-rahul.sharma@samsung.com>
- <1371559778-9359-2-git-send-email-rahul.sharma@samsung.com>
-Reply-To: sw0312.kim@samsung.com
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH v2] ARM: shmobile: irqpin: add a DT property to enable masking
+ on parent
+Date: Wed, 19 Jun 2013 07:53:09 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1306190751090.6945@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=EUC-KR
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1371559778-9359-2-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, r.sh.open@gmail.com, Seung-Woo Kim <sw0312.kim@samsung.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+To disable spurious interrupts, that get triggered on certain hardware, the
+irqpin driver masks them on the parent interrupt controller. To specify
+such broken devices a .control_parent parameter can be provided in the
+platform data. In the DT case we need a property, to do the same.
 
-It looks good, at least, to me.
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Acked-by: Magnus Damm <damm@opensource.se>
+---
 
-Best Regards,
-- Seung-Woo Kim
+v2: rebased on top of the current tree, also added Acked-by from Magnus
 
-On 2013=B3=E2 06=BF=F9 18=C0=CF 21:49, Rahul Sharma wrote:
-> This patch renames the combatible strings for hdmi, mixer, ddc
-> and hdmiphy. It follows the convention of using compatible string
-> which represent the SoC in which the IP was added for the first
-> time.
->=20
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
->  Documentation/devicetree/bindings/video/exynos_hdmi.txt    |    6 ++=
-++--
->  Documentation/devicetree/bindings/video/exynos_hdmiddc.txt |    4 ++=
---
->  Documentation/devicetree/bindings/video/exynos_hdmiphy.txt |    6 ++=
-++--
->  Documentation/devicetree/bindings/video/exynos_mixer.txt   |    7 ++=
-+++--
->  drivers/gpu/drm/exynos/exynos_ddc.c                        |    2 +-
->  drivers/gpu/drm/exynos/exynos_hdmi.c                       |    2 +-
->  drivers/gpu/drm/exynos/exynos_hdmiphy.c                    |    4 ++=
-+-
->  drivers/gpu/drm/exynos/exynos_mixer.c                      |   12 ++=
-++++------
->  8 files changed, 26 insertions(+), 17 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt =
-b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> index 589edee..2ac01ca 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> @@ -1,7 +1,9 @@
->  Device-Tree bindings for drm hdmi driver
-> =20
->  Required properties:
-> -- compatible: value should be "samsung,exynos5-hdmi".
-> +- compatible: value should be one among the following:
-> +	1) "samsung,exynos4210-hdmi"
-> +	2) "samsung,exynos4212-hdmi"
->  - reg: physical base address of the hdmi and length of memory mapped
->  	region.
->  - interrupts: interrupt number to the cpu.
-> @@ -15,7 +17,7 @@ Required properties:
->  Example:
-> =20
->  	hdmi {
-> -		compatible =3D "samsung,exynos5-hdmi";
-> +		compatible =3D "samsung,exynos4212-hdmi";
->  		reg =3D <0x14530000 0x100000>;
->  		interrupts =3D <0 95 0>;
->  		hpd-gpio =3D <&gpx3 7 0xf 1 3>;
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmiddc.t=
-xt b/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
-> index fa166d9..c1bd2ea 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
-> @@ -1,12 +1,12 @@
->  Device-Tree bindings for hdmiddc driver
-> =20
->  Required properties:
-> -- compatible: value should be "samsung,exynos5-hdmiddc".
-> +- compatible: value should be "samsung,exynos4210-hdmiddc".
->  - reg: I2C address of the hdmiddc device.
-> =20
->  Example:
-> =20
->  	hdmiddc {
-> -		compatible =3D "samsung,exynos5-hdmiddc";
-> +		compatible =3D "samsung,exynos4210-hdmiddc";
->  		reg =3D <0x50>;
->  	};
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmiphy.t=
-xt b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
-> index 858f4f9..e59d793 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
-> @@ -1,12 +1,14 @@
->  Device-Tree bindings for hdmiphy driver
-> =20
->  Required properties:
-> -- compatible: value should be "samsung,exynos5-hdmiphy".
-> +- compatible: value should be
-> +	1) "samsung,exynos4210-hdmiphy".
-> +	2) "samsung,exynos4212-hdmiphy".
->  - reg: I2C address of the hdmiphy device.
-> =20
->  Example:
-> =20
->  	hdmiphy {
-> -		compatible =3D "samsung,exynos5-hdmiphy";
-> +		compatible =3D "samsung,exynos4210-hdmiphy";
->  		reg =3D <0x38>;
->  	};
-> diff --git a/Documentation/devicetree/bindings/video/exynos_mixer.txt=
- b/Documentation/devicetree/bindings/video/exynos_mixer.txt
-> index 9b2ea03..a8b063f 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_mixer.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
-> @@ -1,7 +1,10 @@
->  Device-Tree bindings for mixer driver
-> =20
->  Required properties:
-> -- compatible: value should be "samsung,exynos5-mixer".
-> +- compatible: value should be:
-> +	1) "samsung,exynos4210-mixer"
-> +	2) "samsung,exynos5250-mixer"
-> +
->  - reg: physical base address of the mixer and length of memory mappe=
-d
->  	region.
->  - interrupts: interrupt number to the cpu.
-> @@ -9,7 +12,7 @@ Required properties:
->  Example:
-> =20
->  	mixer {
-> -		compatible =3D "samsung,exynos5-mixer";
-> +		compatible =3D "samsung,exynos5250-mixer";
->  		reg =3D <0x14450000 0x10000>;
->  		interrupts =3D <0 94 0>;
->  	};
-> diff --git a/drivers/gpu/drm/exynos/exynos_ddc.c b/drivers/gpu/drm/ex=
-ynos/exynos_ddc.c
-> index 4e9b5ba..1a0cca1 100644
-> --- a/drivers/gpu/drm/exynos/exynos_ddc.c
-> +++ b/drivers/gpu/drm/exynos/exynos_ddc.c
-> @@ -51,7 +51,7 @@ static struct i2c_device_id ddc_idtable[] =3D {
->  #ifdef CONFIG_OF
->  static struct of_device_id hdmiddc_match_types[] =3D {
->  	{
-> -		.compatible =3D "samsung,exynos5-hdmiddc",
-> +		.compatible =3D "samsung,exynos4210-hdmiddc",
->  	}, {
->  		/* end node */
->  	}
-> diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/e=
-xynos/exynos_hdmi.c
-> index 743059f..8752171 100644
-> --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-> @@ -1913,7 +1913,7 @@ static struct platform_device_id hdmi_driver_ty=
-pes[] =3D {
->  #ifdef CONFIG_OF
->  static struct of_device_id hdmi_match_types[] =3D {
->  	{
-> -		.compatible =3D "samsung,exynos5-hdmi",
-> +		.compatible =3D "samsung,exynos4212-hdmi",
->  		.data	=3D (void	*)HDMI_TYPE14,
->  	}, {
->  		/* end node */
-> diff --git a/drivers/gpu/drm/exynos/exynos_hdmiphy.c b/drivers/gpu/dr=
-m/exynos/exynos_hdmiphy.c
-> index ea49d13..bf1718a 100644
-> --- a/drivers/gpu/drm/exynos/exynos_hdmiphy.c
-> +++ b/drivers/gpu/drm/exynos/exynos_hdmiphy.c
-> @@ -49,7 +49,9 @@ static const struct i2c_device_id hdmiphy_id[] =3D =
-{
->  #ifdef CONFIG_OF
->  static struct of_device_id hdmiphy_match_types[] =3D {
->  	{
-> -		.compatible =3D "samsung,exynos5-hdmiphy",
-> +		.compatible =3D "samsung,exynos4210-hdmiphy",
-> +	}, {
-> +		.compatible =3D "samsung,exynos4212-hdmiphy",
->  	}, {
->  		/* end node */
->  	}
-> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/=
-exynos/exynos_mixer.c
-> index f36f878..2fe6d33 100644
-> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
-> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
-> @@ -1115,12 +1115,12 @@ static int vp_resources_init(struct exynos_dr=
-m_hdmi_context *ctx,
->  	return 0;
->  }
-> =20
-> -static struct mixer_drv_data exynos5_mxr_drv_data =3D {
-> +static struct mixer_drv_data exynos5250_mxr_drv_data =3D {
->  	.version =3D MXR_VER_16_0_33_0,
->  	.is_vp_enabled =3D 0,
->  };
-> =20
-> -static struct mixer_drv_data exynos4_mxr_drv_data =3D {
-> +static struct mixer_drv_data exynos4210_mxr_drv_data =3D {
->  	.version =3D MXR_VER_0_0_0_16,
->  	.is_vp_enabled =3D 1,
->  };
-> @@ -1128,10 +1128,10 @@ static struct mixer_drv_data exynos4_mxr_drv_=
-data =3D {
->  static struct platform_device_id mixer_driver_types[] =3D {
->  	{
->  		.name		=3D "s5p-mixer",
-> -		.driver_data	=3D (unsigned long)&exynos4_mxr_drv_data,
-> +		.driver_data	=3D (unsigned long)&exynos4210_mxr_drv_data,
->  	}, {
->  		.name		=3D "exynos5-mixer",
-> -		.driver_data	=3D (unsigned long)&exynos5_mxr_drv_data,
-> +		.driver_data	=3D (unsigned long)&exynos5250_mxr_drv_data,
->  	}, {
->  		/* end node */
->  	}
-> @@ -1139,8 +1139,8 @@ static struct platform_device_id mixer_driver_t=
-ypes[] =3D {
-> =20
->  static struct of_device_id mixer_match_types[] =3D {
->  	{
-> -		.compatible =3D "samsung,exynos5-mixer",
-> -		.data	=3D &exynos5_mxr_drv_data,
-> +		.compatible =3D "samsung,exynos5250-mixer",
-> +		.data	=3D &exynos5250_mxr_drv_data,
->  	}, {
->  		/* end node */
->  	}
->=20
+ .../interrupt-controller/renesas,intc-irqpin.txt   |    2 ++
+ drivers/irqchip/irq-renesas-intc-irqpin.c          |    7 +++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
---=20
-Seung-Woo Kim
-Samsung Software R&D Center
---
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+index 66fcaf5..1f8b0c5 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+@@ -12,3 +12,5 @@ Optional properties:
+   properties
+ - sense-bitfield-width: width of a single sense bitfield in the SENSE register,
+   if different from the default 4 bits
++- control-parent: disable and enable interrupts on the parent interrupt
++  controller, needed for some broken implementations
+diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
+index 4aca1b2..82cec63 100644
+--- a/drivers/irqchip/irq-renesas-intc-irqpin.c
++++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
+@@ -348,11 +348,14 @@ static int intc_irqpin_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* deal with driver instance configuration */
+-	if (pdata)
++	if (pdata) {
+ 		memcpy(&p->config, pdata, sizeof(*pdata));
+-	else
++	} else {
+ 		of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
+ 				     &p->config.sense_bitfield_width);
++		p->config.control_parent = of_property_read_bool(pdev->dev.of_node,
++								 "control-parent");
++	}
+ 	if (!p->config.sense_bitfield_width)
+ 		p->config.sense_bitfield_width = 4; /* default to 4 bits */
+ 
+-- 
+1.7.2.5
+
