@@ -1,62 +1,70 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 05/12] ARM: mvebu: Remove the harcoded BootROM window
- allocation
-Date: Wed, 19 Jun 2013 07:02:00 -0300
-Message-ID: <20130619100159.GB16138@localhost>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1371554737-25319-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130618173906.GC2204@obsidianresearch.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] ARM: kernel: document ARM CPUs clock-frequency property
+Date: Wed, 19 Jun 2013 11:04:50 +0100
+Message-ID: <20130619100450.GA27181@e106331-lin.cambridge.arm.com>
+References: <1371635237-22860-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20130618173906.GC2204-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1371635237-22860-1-git-send-email-f.fainelli@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "nico@linaro.org" <nico@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdW4gMTgsIDIwMTMgYXQgMTE6Mzk6MDZBTSAtMDYwMCwgSmFzb24gR3VudGhvcnBl
-IHdyb3RlOgo+IE9uIFR1ZSwgSnVuIDE4LCAyMDEzIGF0IDA4OjI1OjMwQU0gLTAzMDAsIEV6ZXF1
-aWVsIEdhcmNpYSB3cm90ZToKPiA+IFRoZSBhZGRyZXNzIGRlY29kaW5nIHdpbmRvdyB0byBhY2Nl
-c3MgdGhlIEJvb3RST00gc2hvdWxkIG5vdCBiZQo+ID4gYWxsb2NhdGVkIHByb2dyYW1hdGljYWxs
-eSwgYnV0IGluc3RlYWQgZGVjbGFyZWQgaW4gdGhlIGRldmljZSB0cmVlLgo+ID4gCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBFemVxdWllbCBHYXJjaWEgPGV6ZXF1aWVsLmdhcmNpYUBmcmVlLWVsZWN0cm9u
-cy5jb20+Cj4gPiAgYXJjaC9hcm0vbWFjaC1tdmVidS9wbGF0c21wLmMgfCAxIC0KPiA+ICAxIGZp
-bGUgY2hhbmdlZCwgMSBkZWxldGlvbigtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-bWFjaC1tdmVidS9wbGF0c21wLmMgYi9hcmNoL2FybS9tYWNoLW12ZWJ1L3BsYXRzbXAuYwo+ID4g
-aW5kZXggOTNmMmYzYS4uZDQxOWZhYyAxMDA2NDQKPiA+ICsrKyBiL2FyY2gvYXJtL21hY2gtbXZl
-YnUvcGxhdHNtcC5jCj4gPiBAQCAtMTE4LDcgKzExOCw2IEBAIHZvaWQgX19pbml0IGFybWFkYV94
-cF9zbXBfcHJlcGFyZV9jcHVzKHVuc2lnbmVkIGludCBtYXhfY3B1cykKPiA+ICAJc2V0X3NlY29u
-ZGFyeV9jcHVzX2Nsb2NrKCk7Cj4gPiAgCWZsdXNoX2NhY2hlX2FsbCgpOwo+ID4gIAlzZXRfY3B1
-X2NvaGVyZW50KGNwdV9sb2dpY2FsX21hcChzbXBfcHJvY2Vzc29yX2lkKCkpLCAwKTsKPiA+IC0J
-bXZlYnVfbWJ1c19hZGRfd2luZG93KCJib290cm9tIiwgMHhmZmYwMDAwMCwgU1pfMU0pOwo+ID4g
-IH0KPiAKPiBJIHRoaW5rIHNvbWUga2luZCBvZiB0ZXN0IGlzIG5lZWRlZCBoZXJlLiBBcyBJIHVu
-ZGVyc3RhbmQgaXQgdGhlIFNNUAo+IHN0YXJ0dXAgdXNlcyBhIHRyYW1wb2xpbmUgaW4gdGhlIGJv
-b3Qgcm9tIGFuZCB0aGUgYm9vdCByb20gKm11c3QqIGJlCj4gbWFwcGVkIHRvIDB4ZmZmMDAwMDAg
-Pwo+IAoKSW5kZWVkLCBzZXR0aW5nIHVwIDB4ZmZmMDAwMDAgaXMgYSAqbXVzdCouCgo+IFZlcmlm
-eWluZyB0aGUgRFQgaXMgc2V0dXAgdGhpcyB3YXkgYW5kIGFib3J0aW5nIGlmIGl0IGlzIG5vdCBz
-ZWVtcwo+IGxpa2UgYSBnb29kIGlkZWEuLgo+IAoKSSBhZ3JlZSBpdCdzIGEgbmljZSBpZGVhLCBi
-dXQgSSdtIG5vdCB0b28gc3VyZSBob3cgdG8gYWNjb21wbGlzaCB0aGlzCmluIGEgc2ltcGxlIGFu
-ZCBnZW5lcmljIHdheS4gVGhlcmUncyBub3RoaW5nIGluIHRoZSBEVCB0aGF0IGFsbG93cyB5b3UK
-dG8ga25vdyB3aGljaCBvZiB0aGUgcmFuZ2VzIGVudHJpZXMgY29ycmVzcG9uZCB0byB0aGUgQm9v
-dFJPTSwgdW5sZXNzIHlvdSBnbwp0aHJvdWdoIGVhY2ggb2YgdGhlIGVudHJpZXMgY29tcGFyaW5n
-IGFnYWluc3QgdGhlIGtub3duIHRhcmdldCBJRCBhbmQKYXR0cmlidXRlLgoKWW91IGNvdWxkIGFs
-c28gZG8gYSAnb2ZfZmluZF9ub2RlX2J5X25hbWUoTlVMTCwgImJvb3Ryb20iKTsnIGJ1dCB0aGUg
-YmluZGluZwpubyBsb25nZXIgcmVxdWlyZXMgdG8gZXZlbiBoYXZlIGFueSBjaGlsZHJlbiBmb3Ig
-dGhlIHdpbmRvdy4KCkFueSBpZGVhcz8KCi0tIApFemVxdWllbCBHYXJjw61hLCBGcmVlIEVsZWN0
-cm9ucwpFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5nCmh0dHA6
-Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRp
-c2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8v
-ZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Wed, Jun 19, 2013 at 10:47:17AM +0100, Florian Fainelli wrote:
+> ARM CPU device tree nodes may contain an optional clock-frequency
+> property, when set, this property must contain the CPU frequency in Hz,
+> which is then used by the topology parsing code in
+> arch/arm/kernel/topology.c to infer the CPU capacity.
+
+I see that arch/arm/kernel/topology.c does a pr_err when clock-frequency isn't
+present. If we're documenting it as optional, should we not downgrade that or
+remove it entirely?
+
+Thanks,
+Mark.
+
+> 
+> Document this property to avoid any possible confusion on the
+> clock-frequency unit.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index f32494d..a33b956 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -45,6 +45,8 @@ For the ARM architecture every CPU node must contain the following properties:
+>  		"marvell,xsc3"
+>  		"marvell,xscale"
+>  
+> +- clock-frequency : The frequency of the CPU, in Hz. Optional.
+> +
+>  Example:
+>  
+>  	cpus {
+> -- 
+> 1.8.1.2
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
