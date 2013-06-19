@@ -1,73 +1,72 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/4] Make non-linear GPIO ranges accesible from gpiolib
-Date: Wed, 19 Jun 2013 14:03:02 +0200
-Message-ID: <CACRpkdbhTsRAGSkxQURd01_yd5arw7=ktVXAmeEo22gFg4U38Q@mail.gmail.com>
-References: <20130618092516.GC18663@ab42.lan>
-	<1371547751-13873-1-git-send-email-christian.ruppert@abilis.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 10/12] ARM: mvebu: Relocate Armada 370/XP DeviceBus
+ device tree nodes
+Date: Wed, 19 Jun 2013 14:03:20 +0200
+Message-ID: <201306191403.20569.arnd@arndb.de>
+References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <201306181816.26530.arnd@arndb.de> <20130618220929.GA24056@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1371547751-13873-1-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130618220929.GA24056@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 11:29 AM, Christian Ruppert
-<christian.ruppert@abilis.com> wrote:
+On Wednesday 19 June 2013, Ezequiel Garcia wrote:
+> On Tue, Jun 18, 2013 at 06:16:26PM +0200, Arnd Bergmann wrote:
+> > On Tuesday 18 June 2013, Ezequiel Garcia wrote:
+> > > 
+> > > +               devbus-bootcs {
+> > > +                       compatible = "marvell,mvebu-devbus";
+> > > +                       reg = <0xffff0001 0x10400 0x8>;
+> > > +                       ranges = <0 MBUS_ID(0x01, 0x2f) 0 0xffffffff>;
+> > > +                       #address-cells = <1>;
+> > > +                       #size-cells = <1>;
+> > > +                       clocks = <&coreclk 0>;
+> > > +                       status = "disabled";
+> > > +               };
+> > 
+> > This is a violation of the binding as far as I can tell, since you don't specify ranges
+> > to access the 0xffff0001 0x10400 address. However, as I explained in my comment for
+> > the binding, I think you should clarify the binding and leave the implementation
+> > as you have it here.
+> > 
+> 
+> Mmm... again I got lost here. Which 'ranges' you say I don't specify to
+> access the (formerly) 0xffff0001?
+> 
+> AFAIK, 'ranges' are only for children translation, which means I don't
+> need to specify a ranges for that in the devbus node, but in its parent,
+> right?
+> 
+> This ranges thing can be very tricky, so please correct me if I'm
+> mistaken.
 
-> This patch adds the infrastructure required to register non-linear gpio
-> ranges through gpiolib and the standard GPIO device tree bindings.
+You already clarified that the binding was wrong. This was about the
+part where you replied:
+
+>> Do you really want to require the child to provide a "ranges" property?
+>> I think this makes it more complicated to specify devices that belong
+>> into the "internal-regs" category.
+>> 
 >
-> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+>No, this text is actually a left-over from the previous patchset, in
+>current v3 patchset MBus children are not required to have any ranges.
+>On the otherside, although you will need one except in the most trivial
+>cases like for the BootROM.
 
-I'm basically fine with this, but would like Stephen's ACK if possible.
+With that change, everything above is ok.
 
-> +In addition, named groups of pins can be mapped to pin groups of a given
-> +pin controller:
-> +
-> +       gpio_pio_g: gpio-controller@1480 {
-> +               #gpio-cells = <2>;
-> +               compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
-> +               reg = <0x1480 0x18>;
-> +               gpio-controller;
-> +               gpio-ranges = <&pinctrl1 0 0 0>, <&pinctrl2 3 0 0>;
-> +               gpio-ranges-group-names = "foo", "bar";
-> +       };
-> +
-> +where,
-> +   &pinctrl1 and &pinctrl2 is the phandle to the pinctrl DT node.
-> +
-> +   The following value specifies the base GPIO offset of the pin range with
-> +   respect to the GPIO controller's base. The remaining two values must be
-> +   0 to indicate that a named pin group should be used for the respective
-> +   range. The number of pins in the range is the number of pins in the pin
-> +   group.
-
-So while this works, these zeroes seem a bit awkward, but maybe
-it's the only way?
-
-I'm not good enough on device tree conventions, but isn't this possible:
-
-              gpio-ranges = <&pinctrl1 0>, <&pinctrl2 3>;
-              gpio-ranges-group-names = "foo", "bar";
-
-Since we don't have any #gpio-ranges-cells or anything like that I
-guess we can define this to have a flexible number of cells
-depending on use case?
-
-In the mixed case the blank groups does not look
-good eitherm, wouldn't this be possible:
-
-
-        gpio-ranges =           <&pinctrl1 0 20 10>,
-                                        <&pinctrl2 10>,
-                                        <&pinctrl1 15 0 10>,
-                                        <&pinctrl2 25>;
-        // Matches the two ranges without pins
-        gpio-ranges-group-names = "foo", "bar";
-
-Or is this just making things complicated?
-
-Yours,
-Linus Walleij
+	Arnd
