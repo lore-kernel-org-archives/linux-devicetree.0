@@ -1,16 +1,16 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 11/12] ARM: mvebu: Relocate Armada 370 PCIe device tree
- nodes
-Date: Wed, 19 Jun 2013 20:55:41 +0200
-Message-ID: <201306192055.41678.arnd@arndb.de>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306191411.59010.arnd@arndb.de>
- <20130619165348.GA32155@obsidianresearch.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 06/11] ARM:stixxxx: Add STiH415 SOC support
+Date: Wed, 19 Jun 2013 20:59:34 +0200
+Message-ID: <CACRpkdZDhR88Ezx0qVOk8bFtukSNsOtwQuQaFdn4u25OUYs+vA@mail.gmail.com>
+References: <1370855828-5318-1-git-send-email-srinivas.kandagatla@st.com>
+ <1370856381-6644-1-git-send-email-srinivas.kandagatla@st.com>
+ <CACRpkdZ-xnDO+bte4tyKDWwY4A_qWUhLru3dUmuY9MQwseP3uQ@mail.gmail.com>
+ <51B6011E.1060909@st.com> <51BAC6EC.8000703@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130619165348.GA32155-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <51BAC6EC.8000703-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,33 +21,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Stephen Gallimore <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 19 June 2013, Jason Gunthorpe wrote:
-> 
-> Today 18:53:48
->    
-> On Wed, Jun 19, 2013 at 02:11:58PM +0200, Arnd Bergmann wrote:
-> 
-> > > Mmm.. and why is this option acceptable?
-> > 
-> > As I explained on IRC, there is no requirement to pick a specific bus
-> > aperture. The only two sensible choices are to make the bus address
-> > the same as the CPU address, or to make the bus address start at 0,
-> > which is what this does.
-> 
-> PCI bus addresses must not alias other addresess in the system or
-> you'll get weirdness. For instance DMA initiated from the PCI bus at
-> address 0, intended to read from SDRAM at 0 must not be claimed by
-> another device on the PCI bus. IMHO, a 1:1 mapping between PCI and CPU
-> is strongly preferred. Any other configuration will need some
-> additional techniques to avoid aliasing.
+On Fri, Jun 14, 2013 at 9:31 AM, Srinivas KANDAGATLA
+<srinivas.kandagatla-qxv4g6HH51o@public.gmane.org> wrote:
+> On 10/06/13 17:38, Srinivas Kandagatla wrote:
+>>> +++ b/arch/arm/boot/dts/stixxxx-pincfg.h
+>>> >> @@ -0,0 +1,94 @@
+>>> >> +#ifndef _STIXXXX_PINCFG_H_
+>>> >> +#define _STIXXXX_PINCFG_H_
+>>> >> +
+>>> >> +/* Alternate functions */
+>>> >> +#define ALT1   1
+>>> >> +#define ALT2   2
+>>> >> +#define ALT3   3
+>>> >> +#define ALT4   4
+>>> >> +#define ALT5   5
+>>> >> +#define ALT6   6
+>>> >> +#define ALT7   7
+>>>
+>>> Why is this part of the DT definitions? In the pinctrl world this
+>>> is an intrinsic detail on how groups and functions are associated,
+>>> not something that you hard-code into the device tree. The
+>>> device tree should state how to combine functions with groups
+>>> and those will be strings, not numerals.
+>
+> Hi Linus,
+> I would like to get correct understanding of the point your raised here.
+> I use these ALT function values in "st,function" property for pinctrl
+> group as shown in this simple example:
+>
+> pinctrl_sbc_serial1:sbc_serial1 {
+>        st,function = <ALT3>;
+>        st,pins {
+>               tx      = <&PIO2 6 OUT>;
+>               rx      = <&PIO2 7 IN>;
+>        };
+> };
+>
+> If I do something like what rockchip pinctrl did the pinctrl group will
+> look like.
+>
+> pinctrl_sbc_serial1:sbc_serial1 {
+>        st,pins {
+>               tx      = <&PIO2 6 OUT ALT3>;
+>               rx      = <&PIO2 7 IN ALT3>;
+>        };
+> };
+>
+> Is this the right way to do it?
 
-Ah, good point. You are obviously right, it should definitely be a 1:1
-mapping, anything else just creates a mess. I was working on a system
-like that before, it wasn't pretty (you have to provide separate
-dma_map_ops then).
+Basically there is no right way to do it since we haven't been able
+to agree on a common way to represent pin controllers in the
+device tree.
 
-	Arnd
+Those I have looked closer at tend to encode the selected
+function/group as a string rather than a numeral though.
+
+Yours,
+Linus Walleij
