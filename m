@@ -1,22 +1,50 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3 1/4] MFD: Palmas: Check if irq is valid
-Date: Wed, 19 Jun 2013 11:08:53 -0600
-Message-ID: <51C1E5A5.9090105@wwwdotorg.org>
-References: <1371621470-22279-1-git-send-email-j-keerthy@ti.com> <1371621470-22279-2-git-send-email-j-keerthy@ti.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [RFC PATCH 3/5] video: exynos_dsi: Use generic PHY driver
+Date: Wed, 19 Jun 2013 19:10:52 +0200
+Message-ID: <51C1E61C.8030808@samsung.com>
+References: <1371231951-1969-1-git-send-email-s.nawrocki@samsung.com>
+ <1371231951-1969-4-git-send-email-s.nawrocki@samsung.com>
+ <1502179.yCdHZgQgqV@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1371621470-22279-2-git-send-email-j-keerthy@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: linux-omap@vger.kernel.org, broonie@kernel.org, ldewangan@nvidia.com, sameo@linux.intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gg@slimlogic.co.uk
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1502179.yCdHZgQgqV@flatron>
+Sender: linux-media-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: kishon@ti.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/2013 11:57 PM, Keerthy wrote:
-> From: J Keerthy <j-keerthy@ti.com>
+On 06/16/2013 11:15 PM, Tomasz Figa wrote:
+> On Friday 14 of June 2013 19:45:49 Sylwester Nawrocki wrote:
+>> > Use the generic PHY API instead of the platform callback to control
+>> > the MIPI DSIM DPHY.
+>> > 
+>> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> > ---
+>> >  drivers/video/display/source-exynos_dsi.c |   36
+>> > +++++++++-------------------- include/video/exynos_dsi.h               
+>> > |    5 ----
+>> >  2 files changed, 11 insertions(+), 30 deletions(-)
+>
+> Yes, this is what I was really missing a lot while developing this driver.
 > 
-> Check if irq value obtained is valid. If it is not valid
-> then skip the irq request step and go ahead with the probe.
+> Definitely looks good! It's a shame we don't have this driver in mainline 
+> yet ;)
 
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
+Yes, I should have mentioned in the cover letter this patch depends
+on modified version of this [1] patch set of yours. I'll drop this
+patch and will update the driver staying in mainline now, but I won't
+be able to test it, on a non-dt platform.
+
+I guess even some pre-eliminary display (panel) API would be helpful.
+The CDF development seems to have been stalled for some time. I wonder
+if we could first have something that works for limited set of devices
+and be extending it gradually, rather than living with zero support
+for displays on DT based ARM platforms.
+
+[1] http://www.spinics.net/lists/linux-fbdev/msg09689.html
+
+Regards,
+Sylwester
