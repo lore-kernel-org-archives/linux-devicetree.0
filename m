@@ -1,19 +1,11 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v3 03/12] bus: mvebu-mbus: Add static window allocation
- to the DT binding
-Date: Wed, 19 Jun 2013 15:37:05 -0400
-Message-ID: <20130619193705.GH31667@titan.lakedaemon.net>
-References: <1371554737-25319-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <201306182345.26281.arnd@arndb.de>
- <20130619185224.GB5701@localhost>
- <201306192108.30998.arnd@arndb.de>
- <20130619192915.GA8769@localhost>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 00/12] MBus device tree binding
+Date: Wed, 19 Jun 2013 17:07:14 -0300
+Message-ID: <1371672446-21583-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130619192915.GA8769@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,69 +16,157 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2013 at 04:29:16PM -0300, Ezequiel Garcia wrote:
-> On Wed, Jun 19, 2013 at 09:08:30PM +0200, Arnd Bergmann wrote:
-> > On Wednesday 19 June 2013, Ezequiel Garcia wrote:
-> > > > > What happens is that any decoding window that was setup by the bootloader,
-> > > > > is wiped and completely new windows are allocated using the translations
-> > > > > in the DT, as described by this binding.
-> > > > > 
-> > > > > This was the case from the start with the old MBus driver. FWIW, I think
-> > > > > it's actually the best choice that can be made: it makes the kernel
-> > > > > independent of the previous setting.
-> > > > > 
-> > > > > I know you've suggested differently in the past, but I'm not sure I
-> > > > > understand what's the benefit in keeping the bootloaders configuration.
-> > > > 
-> > > > The device tree normally describes things that are either wired up
-> > > > in hardware or set up by the boot loader. Describing things that the
-> > > > boot loader may or may not have set up and that the kernel should
-> > > > set up but may ignore if it wants to is a bit fishy, but it seems
-> > > > that you have decided to do it that way. You should definitely
-> > > > document the fact that all ranges except the "internal-regs" are just
-> > > > suggestions and cannot be relied on to be present at boot time.
-> > > > 
-> > > 
-> > > Hold on! I've just noticed this, and I want to clarify something, just
-> > > to avoid mis-interpretations. The binding is not saying "the windows
-> > > described through this ranges are present at boot time".
-> > > 
-> > > Rather, it is "this binding will guarantee that the windows described 
-> > > in it will be present after the mbus allocates them".
-> > > 
-> > > Does it sound too fishy?
-> > 
-> > I don't think it's a guarantee that the binding can make. The binding
-> > describes the interface between the hardware/firmware and the kernel,
-> > not an interface between one kernel driver and another.
-> > 
-> > You could instead write:
-> > 
-> > "The ranges property defines a set of mbus windows that are expected
-> > to be set by the operating system and that are guaranteed to be free
-> > of overlaps with one another or with the system memory ranges.
-> > Each entry in the property refers to exactly one window. If an
-> > operating system choses to use a different set of mbus windows,
-> > it must ensure that any address translations performed from downstream
-> > devices are adapted accordingly. The operating system may insert
-> > additional mbus windows that do not conflict with the ones listed
-> > in the ranges, e.g. for mapping PCIe devices. As a special case,
-> > the internal register window must be set up by the boot loader
-> > at the address listed in the ranges property, since the operating
+See the previous version of this patchset for further context:
 
-...system...
+http://www.spinics.net/lists/arm-kernel/msg252656.html
 
-> > uses it to set up the other windows."
-> > 
-> 
-> Nice!
-> 
-> Shamelessly copy-pasted into the binding documentation.
+In the current patchset, the proposal is slightly different.
+As an example of the current status, here's an extract of a device tree:
 
-thx,
+	#define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
 
-Jason.
+	soc {
+		compatible = "marvell,armadaxp-mbus";
+		reg = <0 0xd0020000 0 0x100>, <0 0xd0020180 0 0x20>;
+
+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000   /* internal-regs */
+			  MBUS_ID(0xf0, 0x02) 0xe0000000 0 0xe0000000 0x8100000  /* pcie */
+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x8000000>;
+
+		bootrom {
+			compatible = "marvell,bootrom";
+			reg = <MBUS_ID(0x01, 0x1d) 0 0x100000>
+		};
+
+		devbus-bootcs {
+			status = "okay";
+
+			/* NOR */
+			nor {
+				compatible = "cfi-flash";
+				reg = <0 0x8000000>;
+				bank-width = <2>;
+			};
+		};
+
+		pcie-controller {
+			compatible = "marvell,armada-xp-pcie";
+			status = "okay";
+			device_type = "pci";
+
+			#address-cells = <3>;
+			#size-cells = <2>;
+
+			ranges =
+			       <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000   /* Port 0.0 registers */
+				0x82000000 0 0x42000 MBUS_ID(0xf0, 0x01) 0x42000 0 0x00002000   /* Port 2.0 registers */
+				0x82000000 0 0x44000 MBUS_ID(0xf0, 0x01) 0x44000 0 0x00002000   /* Port 0.1 registers */
+				0x82000000 0 0x48000 MBUS_ID(0xf0, 0x01) 0x48000 0 0x00002000   /* Port 0.2 registers */
+				0x82000000 0 0x4c000 MBUS_ID(0xf0, 0x01) 0x4c000 0 0x00002000   /* Port 0.3 registers */
+				0x82000000 0 0x80000 MBUS_ID(0xf0, 0x01) 0x80000 0 0x00002000   /* Port 1.0 registers */
+				0x82000000 0 0x82000 MBUS_ID(0xf0, 0x01) 0x82000 0 0x00002000   /* Port 3.0 registers */
+				0x82000000 0 0xe0000000 MBUS_ID(0xf0, 0x02) 0xe0000000 0 0x08000000   /* non-prefetchable memory */
+				0x81000000 0 0 MBUS_ID(0xf0, 0x02) 0xe8000000 0 0x00100000>; /* downstream I/O */
+
+			pcie@1,0 {
+				/* Port 0, Lane 0 */
+				status = "okay";
+			};
+		};
+
+		internal-regs {
+			compatible = "simple-bus";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			...
+		};
+	};
+
+This patchset is based on v3.10-rc4, with Jason Cooper's mvebu/regmap branch
+applied, and with the mvebu-devbus commit (3edad321b1 in linux-next):
+"drivers: memory: Introduce Marvell EBU Device Bus driver"
+
+Changes from v3:
+ * Fixed the pcie-controller to mbus address space translations, to match
+   a 1:1 mapping between the PCI and CPU busses.
+
+ * Fixed the binding documentation with suggestions from Arnd Bergmann.
+
+ * Added a BootROM sanity check on AXP SMP initialization, as suggested
+   by Jason Gunthorpe. This also implied changing slightly the bootrom
+   node.
+
+ * Changed the first cell format for the MBus address space.
+
+Changes from v2:
+ * Replaced the PCIe mapping with 0xffff0002, to avoid using a representation
+   that might correspond to a possible window id.
+
+ * Remove every mbus-node 'ranges' property from the dtsi files. Having them
+   on the per-board dts files only makes maintaince less painful.
+
+ * Declare children window size, in the children 'ranges' property, as large
+   as possible (4 GiB size) and move the property to the dtsi files.
+   The per-board dts, does not need to declare that property now.
+ 
+ * The MBus driver now creates the decoding window using the base address and
+   size specified in the mbus-node, instead of using the children entries.
+
+Change from v1:
+ * Changed the way the address spaces were declared: the window's base
+   addresses are only present in the mbus-node ranges property.
+   This makes sense since that information belongs only to the MBus
+   address space.
+
+ * Drop the ranges dynamic update, since now the DT translations are complete.
+ 
+ * Replaced the internal register first cell mapping with 0xffff0001, to avoid
+   clashing when using 0x00000000.
+
+ * Replaced the PCIe mapping with 0xffff0000.
+
+Thanks a lot!
+
+
+Ezequiel Garcia (12):
+  bus: mvebu-mbus: Factor out initialization details
+  bus: mvebu-mbus: Introduce device tree binding
+  bus: mvebu-mbus: Add static window allocation to the DT binding
+  ARM: mvebu: Initialize MBus using the DT binding
+  ARM: mvebu: Remove the harcoded BootROM window allocation
+  memory: mvebu-devbus: Remove address decoding window workaround
+  ARM: mvebu: Use the preprocessor on Armada 370/XP device tree files
+  ARM: mvebu: Add MBus to Armada 370/XP device tree
+  ARM: mvebu: Add BootROM to Armada 370/XP device tree
+  ARM: mvebu: Relocate Armada 370/XP DeviceBus device tree nodes
+  ARM: mvebu: Relocate Armada 370 PCIe device tree nodes
+  ARM: mvebu: Relocate Armada XP PCIe device tree nodes
+
+ .../devicetree/bindings/bus/mvebu-mbus.txt         | 203 +++++++++++
+ arch/arm/boot/dts/armada-370-db.dts                |   5 +-
+ arch/arm/boot/dts/armada-370-mirabox.dts           |  38 ++-
+ arch/arm/boot/dts/armada-370-rd.dts                |   5 +-
+ arch/arm/boot/dts/armada-370-xp.dtsi               | 103 +++---
+ arch/arm/boot/dts/armada-370.dtsi                  | 109 +++---
+ arch/arm/boot/dts/armada-xp-db.dts                 |  72 ++--
+ arch/arm/boot/dts/armada-xp-gp.dts                 | 107 +++---
+ arch/arm/boot/dts/armada-xp-mv78230.dtsi           | 209 ++++++------
+ arch/arm/boot/dts/armada-xp-mv78260.dtsi           | 247 +++++++-------
+ arch/arm/boot/dts/armada-xp-mv78460.dtsi           | 379 +++++++++++----------
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts   |  83 ++---
+ arch/arm/boot/dts/armada-xp.dtsi                   |  10 +-
+ arch/arm/mach-mvebu/armada-370-xp.c                |  34 +-
+ arch/arm/mach-mvebu/platsmp.c                      |  25 +-
+ drivers/bus/mvebu-mbus.c                           | 196 ++++++++++-
+ drivers/memory/mvebu-devbus.c                      |  64 +---
+ include/linux/mbus.h                               |   1 +
+ 18 files changed, 1116 insertions(+), 774 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/mvebu-mbus.txt
+
+-- 
+1.8.1.5
