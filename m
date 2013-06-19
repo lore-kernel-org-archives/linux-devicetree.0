@@ -1,57 +1,72 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
-Date: Wed, 19 Jun 2013 14:43:09 +0200
-Message-ID: <201306191443.09598.arnd@arndb.de>
-References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com> <201306181556.47656.arnd@arndb.de> <002401ce6c8a$2dd1e4a0$8975ade0$@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
+Date: Wed, 19 Jun 2013 05:44:13 -0700
+Message-ID: <20130619124412.GC5523@atomide.com>
+References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
+ <1371571487-14389-2-git-send-email-rogerq@ti.com>
+ <51C106A1.9030001@ti.com>
+ <51C15F7E.5020305@ti.com>
+ <20130619074605.GW5523@atomide.com>
+ <51C183AC.8040801@ti.com>
+ <20130619122715.GA5523@atomide.com>
+ <51C1A55E.9040500@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <002401ce6c8a$2dd1e4a0$8975ade0$@samsung.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51C1A55E.9040500@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 19 June 2013, Jingoo Han wrote:
-> Then, do you mean the following?
+* Benoit Cousson <b-cousson@ti.com> [130619 05:41]:
+> Hi Tony,
 > 
-> static int __exit exynos_pcie_remove(struct platform_device *pdev)
-> {
->         struct pcie_port *pp = platform_get_drvdata(pdev);
+> On 06/19/2013 07:27 AM, Tony Lindgren wrote:
+> >* Benoit Cousson <b-cousson@ti.com> [130619 03:17]:
+> >>On 06/19/2013 02:46 AM, Tony Lindgren wrote:
+> >>>
+> >>>We have a similar issue with the MMC1 PBIAS. I think in the long run we
+> >>>should expand regulator (and possibly pinctrl) framework(s) to handle
+> >>>comparators. We could just assume that a comparatator is a regulator,
+> >>>and have a comparator binding that just uses the regulator code.
+> >>
+> >>In the case of pbias, the pinctrl seems to be a much better fit for
+> >>my point of view. pinctrl can handle pin configuration and this is
+> >>what the pbias is in the case of MMC pins.
+> >
+> >Well just recently Linus W specifically wanted us to use regulator
+> >framework for the MMC1 PBIAS rather than pinctrl. That's because
+> >from consumer driver point of view, it changes voltage and there's
+> >a delay involved. So I guess no conclusion yet, and it's best to
+> >do stand alone drivers to deal with those that use pinctrl for the
+> >pinctrl specific parts and export it as a regulator for the consumer
+> >devices.
 > 
->         clk_disable_unprepare(pp->bus_clk);
->         clk_disable_unprepare(pp->clk);
-> 
->         return 0;
-> }
-> 
-> static struct platform_driver exynos_pcie_driver = {
->         .remove = __exit_p(exynos_pcie_remove),
-> 
-> [.....]
-> 
-> /* Exynos PCIe driver does not allow module unload */
-> 
-> static int __init pcie_init(void)
-> {
->         hook_fault_code(16 + 6, exynos_pcie_abort, SIGBUS, 0,
->                         "imprecise external abort");
-> 
->         platform_driver_probe(&exynos_pcie_driver, exynos_pcie_probe);
-> 
->         return 0;
-> }
-> subsys_initcall(pcie_init);
-> 
-> MODULE_AUTHOR("Jingoo Han <jg1.han@samsung.com>");
-> MODULE_DESCRIPTION("Samsung PCIe host controller driver");
-> MODULE_LICENSE("GPLv2");
-> 
+> In the case of pbias, the boundary is not that clear, and it is true
+> that writing a complete pinctrl driver is really overkill.
+> I've tried in the past, and gave up due to the complexity of fmwk
+> and the lack of time. I still think, it is a much better fmwk to
+> handle pin configuration than the regulator fmwk.
 
-Yes, this looks good. I would probably use platform_driver_register
-rather than platform_driver_probe, but that is your choice. using
-platform_driver_probe() mean you cannot deal with deferred probing.
+For omaps, these kind of registers can already be handled by
+pinctrl-single,bits. What's missing is the capability to create
+a regulator out of the voltage mux + comparator bits.
+ 
+> >That's pretty much along the lines what Roger has done,
+> >except the transceiver could use the pinctrl-single,bits for the
+> >muxing and pinconf.
+> 
+> Well, in that case, this is a reset line, so it does not have
+> anything to do with voltage :-)
+> 
+> Anyway, thanks to Florian, we know that there is a real solution to
+> that problem. It is just not merged now :-(
 
-	Arnd
+Right. Meanwhile, sounds like the transceiver driver needs to
+deal with the GPIO directly.
+
+Regards,
+
+Tony
