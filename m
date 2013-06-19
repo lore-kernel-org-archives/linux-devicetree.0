@@ -1,47 +1,76 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v3 1/2] i2c: designware: use module_platform_driver
-Date: Wed, 19 Jun 2013 09:00:02 +0800
-Message-ID: <51C10292.9000906@linaro.org>
-References: <1370918230-24793-1-git-send-email-zhangfei.gao@linaro.org>
- <1370918230-24793-2-git-send-email-zhangfei.gao@linaro.org>
- <20130618162711.GG7718@katana>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
+Date: Wed, 19 Jun 2013 10:13:16 +0900
+Message-ID: <002401ce6c8a$2dd1e4a0$8975ade0$@samsung.com>
+References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com>
+ <7174350.I5qK0sQfHM@wuerfel> <000001ce6bd7$50146e60$f03d4b20$@samsung.com>
+ <201306181556.47656.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130618162711.GG7718@katana>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Dirk Brandewie <dirk.brandewie@gmail.com>, baruch@tkos.co.il, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <201306181556.47656.arnd@arndb.de>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Arnd Bergmann' <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13-06-19 12:27 AM, Wolfram Sang wrote:
-> On Tue, Jun 11, 2013 at 10:37:09AM +0800, Zhangfei Gao wrote:
->> Instead of use platform_driver_probe, use module_platform_driver
->> To support deferred probing
->> Also subsys_initcall may too early to auto set pinctl
->>
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> CC: Baruch Siach <baruch@tkos.co.il>
->
-> Basically OK, but please resend for 3.12, so we get enough testing
-> before entering mainline. I am a bit anxious of side
-> effects and 3.11 is too near.
->
+On Tuesday, June 18, 2013 10:57 PM, Arnd Bergmann wrote:
+> On Tuesday 18 June 2013, Jingoo Han wrote:
+> > On Monday, June 17, 2013 9:45 PM, Arnd Bergmann wrote:
+> > > On Monday 17 June 2013 18:45:52 Jingoo Han wrote:
+> > > > On Friday, June 14, 2013 9:54 PM, Arnd Bergmann wrote:
+> > > > >
 
-Dear Wolfram,
+[.....]
 
-Sorry for the silly question: How to be prepared for 3.12?
+> >
+> > I will remove a 'remove' callback. Is it OK?
+> > Or what should I do?
+> 
+> I think you should keep the remove function, but add a comment explaining that
+> you don't allow module unload and that in order to allow it, the remove function
+> will have to remove all pci buses and devices under the host bridge.
 
-Do you mean there is specific git & branch, which I should rebase on?
-linux-next.git is what I use now.
+Then, do you mean the following?
 
-Thanks
+static int __exit exynos_pcie_remove(struct platform_device *pdev)
+{
+	struct pcie_port *pp = platform_get_drvdata(pdev);
+
+	clk_disable_unprepare(pp->bus_clk);
+	clk_disable_unprepare(pp->clk);
+
+	return 0;
+}
+
+static struct platform_driver exynos_pcie_driver = {
+	.remove	= __exit_p(exynos_pcie_remove),
+
+[.....]
+
+/* Exynos PCIe driver does not allow module unload */
+
+static int __init pcie_init(void)
+{
+	hook_fault_code(16 + 6, exynos_pcie_abort, SIGBUS, 0,
+			"imprecise external abort");
+
+	platform_driver_probe(&exynos_pcie_driver, exynos_pcie_probe);
+
+	return 0;
+}
+subsys_initcall(pcie_init);
+
+MODULE_AUTHOR("Jingoo Han <jg1.han@samsung.com>");
+MODULE_DESCRIPTION("Samsung PCIe host controller driver");
+MODULE_LICENSE("GPLv2");
+
+
+> 
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
