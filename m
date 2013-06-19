@@ -1,72 +1,75 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
-Date: Wed, 19 Jun 2013 05:44:13 -0700
-Message-ID: <20130619124412.GC5523@atomide.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
- <1371571487-14389-2-git-send-email-rogerq@ti.com>
- <51C106A1.9030001@ti.com>
- <51C15F7E.5020305@ti.com>
- <20130619074605.GW5523@atomide.com>
- <51C183AC.8040801@ti.com>
- <20130619122715.GA5523@atomide.com>
- <51C1A55E.9040500@ti.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [RFC PATCH v3 0/2] drivers: mfd: Versatile Express SPC support
+Date: Wed, 19 Jun 2013 13:55:30 +0100
+Message-ID: <1371646530.3867.12.camel@hornet>
+References: <1370512763-32200-1-git-send-email-lorenzo.pieralisi@arm.com>
+	 <1371547782.16725.11.camel@hornet> <20130619093014.GX7161@zurbaran>
+	 <201306191437.20759.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51C1A55E.9040500@ti.com>
+In-Reply-To: <201306191437.20759.arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Roger Quadros <rogerq@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-* Benoit Cousson <b-cousson@ti.com> [130619 05:41]:
-> Hi Tony,
-> 
-> On 06/19/2013 07:27 AM, Tony Lindgren wrote:
-> >* Benoit Cousson <b-cousson@ti.com> [130619 03:17]:
-> >>On 06/19/2013 02:46 AM, Tony Lindgren wrote:
-> >>>
-> >>>We have a similar issue with the MMC1 PBIAS. I think in the long run we
-> >>>should expand regulator (and possibly pinctrl) framework(s) to handle
-> >>>comparators. We could just assume that a comparatator is a regulator,
-> >>>and have a comparator binding that just uses the regulator code.
-> >>
-> >>In the case of pbias, the pinctrl seems to be a much better fit for
-> >>my point of view. pinctrl can handle pin configuration and this is
-> >>what the pbias is in the case of MMC pins.
-> >
-> >Well just recently Linus W specifically wanted us to use regulator
-> >framework for the MMC1 PBIAS rather than pinctrl. That's because
-> >from consumer driver point of view, it changes voltage and there's
-> >a delay involved. So I guess no conclusion yet, and it's best to
-> >do stand alone drivers to deal with those that use pinctrl for the
-> >pinctrl specific parts and export it as a regulator for the consumer
-> >devices.
-> 
-> In the case of pbias, the boundary is not that clear, and it is true
-> that writing a complete pinctrl driver is really overkill.
-> I've tried in the past, and gave up due to the complexity of fmwk
-> and the lack of time. I still think, it is a much better fmwk to
-> handle pin configuration than the regulator fmwk.
+On Wed, 2013-06-19 at 13:37 +0100, Arnd Bergmann wrote:
+> I think when vexpress-sysreg was created, we didn't have the syscon d=
+river
+> yet, otherwise I think we should have used that, and put separate
+> drivers on top.
+>=20
+> Not sure if it's too late for changing it to that now, given that
+> we already have a binding.
 
-For omaps, these kind of registers can already be handled by
-pinctrl-single,bits. What's missing is the capability to create
-a regulator out of the voltage mux + comparator bits.
- 
-> >That's pretty much along the lines what Roger has done,
-> >except the transceiver could use the pinctrl-single,bits for the
-> >muxing and pinconf.
-> 
-> Well, in that case, this is a reset line, so it does not have
-> anything to do with voltage :-)
-> 
-> Anyway, thanks to Florian, we know that there is a real solution to
-> that problem. It is just not merged now :-(
+I will have a look try to use the syscon stuff for generic configuratio=
+n
+bits and pieces...
 
-Right. Meanwhile, sounds like the transceiver driver needs to
-deal with the GPIO directly.
+> That would end up eliminating the sysreg driver, aside from maybe
+> a one-line change to the syscon driver to allow it to probe the
+> right device.
 
-Regards,
+=2E.. but sysreg does more than just that. In particular it provides a
+pseudo-gpio controller (I don't think you want to hide this behind the
+syscon) *and* it can act as a bridge to the configuration bus - see
+below. In short - no, I don't think sysreg driver can disappear. It can
+be reduced in size, yes.
 
-Tony
+> > > 3. Move vexpress-config into drivers/bus as it is (however I see =
+no one
+> > > in MAINTAINERS for this directory)
+> > ISTR that Arnd originally created that directory, so he may help he=
+re.
+> > Arnd also had some concerns about implementing this code as a bus,
+> > mostly about it not being a discoverable bus. IMHO that's a valid
+> > concern, and this is why you ended up putting it under MFD which ca=
+n be
+> > seen as some sort of platform devices bus. But I still believe the =
+bus
+> > API would make this code look cleaner and easier to maintain.
+>=20
+> Sorry, I don't see why it would be a bus. I assume that there is code
+> missing somewhere that is not yet merged, right?
+
+Well, different VE components (configuration microcontrollers on
+motherboard and daughterboards in particular) talk to each other over a
+bus (an SPI derivative, in case you were wondering). So there is a bus.
+A non-discoverable one, but it does 42 (approximately ;-) different
+things. We already have: clk, hwmon, regulator and reset drivers using
+it.
+
+And, to make things more complicated, the SPC in question, can act as a
+bridge to *some* of the functions as well. What's a difference? About
+190ms, in at least one case - accessing the energy monitor data (hwmon)
+can take up to 200ms going through sysreg and about 10ms going through
+SPC. And there are people interesting in getting this numbers as often
+as possible. But (obviously, to make things even more complex() only th=
+e
+daughterboard's components can be accessed through it. Eg. the
+motherboard clock generators must still be accessed through sysregs.
+Hope you see why the problem is not trivial.
+
+Pawe=C5=82
