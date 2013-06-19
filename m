@@ -1,104 +1,68 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: omap4-panda: Add USB Host support
-Date: Wed, 19 Jun 2013 05:10:52 -0500
-Message-ID: <51C183AC.8040801@ti.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com> <1371571487-14389-2-git-send-email-rogerq@ti.com> <51C106A1.9030001@ti.com> <51C15F7E.5020305@ti.com> <20130619074605.GW5523@atomide.com>
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: Add MFC node for exynos 5420
+Date: Wed, 19 Jun 2013 15:49:31 +0530
+Message-ID: <CALt3h79ii8TA_gWACGS2f0QViTpCQQwqZ_i=wRiK120tRMnyRA@mail.gmail.com>
+References: <1371631969-10076-1-git-send-email-arun.kk@samsung.com>
+	<1371631969-10076-2-git-send-email-arun.kk@samsung.com>
+	<CAK9yfHw2GETii9gvuSkUE53DaqBuy7+srhKpOxJX=N7iRBAz1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130619074605.GW5523@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Roger Quadros <rogerq@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAK9yfHw2GETii9gvuSkUE53DaqBuy7+srhKpOxJX=N7iRBAz1w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/19/2013 02:46 AM, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [130619 00:42]:
->> Hi Benoit,
+Hi Sachin,
+
+On Wed, Jun 19, 2013 at 2:54 PM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> On 19 June 2013 14:22, Arun Kumar K <arun.kk@samsung.com> wrote:
+>> The patch adds MFC nodes for exynos 5420 and for
+>> smdk 5420 board.
 >>
->> On 06/19/2013 04:17 AM, Benoit Cousson wrote:
->>> Hi Roger,
->>>
->>> On 06/18/2013 11:04 AM, Roger Quadros wrote:
->>>> Provide the RESET and Power regulators for the USB PHY,
->>>> the USB Host port mode and the PHY device.
->>>>
->>>> Also provide pin multiplexer information for the USB host
->>>> pins.
->>>>
->>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>> ---
->>>>    arch/arm/boot/dts/omap4-panda-common.dtsi |   62 +++++++++++++++++++++++++++++
->>>>    1 files changed, 62 insertions(+), 0 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>> index 00cbaa5..7a21e8e 100644
->>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
->>>> @@ -59,6 +59,42 @@
->>>>                "AFML", "Line In",
->>>>                "AFMR", "Line In";
->>>>        };
->>>> +
->>>> +    /* HS USB Port 1 RESET */
->>>> +    hsusb1_reset: hsusb1_reset_reg {
->>>> +        compatible = "regulator-fixed";
->>>> +        regulator-name = "hsusb1_reset";
->>>> +        regulator-min-microvolt = <3300000>;
->>>> +        regulator-max-microvolt = <3300000>;
->>>> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
->>>> +        startup-delay-us = <70000>;
->>>> +        enable-active-high;
->>>> +    };
->>>
->>> Is this really a regulator? Or just a GPIO line used to reset the USB PHY?
+>> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos5420-smdk5420.dts |    5 +++++
+>>  arch/arm/boot/dts/exynos5420.dtsi         |    8 ++++++++
+>>  2 files changed, 13 insertions(+)
 >>
->> It is in fact a GPIO line used as reset.
->>>
->>> If this is the case, I don't think it should be represented as a regulator.
->>
->> Why not? I think it fits very well in the regulator device model.
-
-I'm not sure fitting very well is the correct term.
-It works, for sure, but it is no different than when we were trying to 
-abuse the regulator fmwk to enable the 32k clock in phoenix.
-It is just a hack.
-
->>I couldn't find a better
->> way to represent this. It gives us a way to specify not only the GPIO line but also
->> the polarity. I know mostly reset is active low but still there is flexibility as you never
->> know for sure.
-
-Mmm, and what about just controlling the gpio from the driver?
-
-> I think it's really a mux + a comparator. But from Linux driver point of view
-> a regulator fits well as we don't have anything better. After all, the pin
-> voltage changes, and then something can be done based on the comparator
-> value.
+>> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> index 08607df..682532c 100644
+>> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> @@ -30,4 +30,9 @@
+>>                         clock-frequency = <24000000>;
+>>                 };
+>>         };
+>> +
+>> +       codec@11000000 {
+>> +               samsung,mfc-r = <0x43000000 0x800000>;
+>> +               samsung,mfc-l = <0x51000000 0x800000>;
+>> +       };
+>>  };
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index 8474d63..cb74356 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -100,4 +100,12 @@
+>>                 clocks = <&clock 260>, <&clock 131>;
+>>                 clock-names = "uart", "clk_uart_baud0";
+>>         };
+>> +
+>> +       codec@11000000 {
+>> +               compatible = "samsung,mfc-v7";
+>> +               reg = <0x11000000 0x10000>;
+>> +               interrupts = <0 96 0>;
+>> +               clocks = <&clock 401>;
+>> +               clock-names = "mfc";
+>> +       };
 >
->> Do you have any better ideas?
+> I think it is better if we disable the IPs in dtsi file and enbale
+> them in respective board files as was followed for Exynos4.
 >
-> We have a similar issue with the MMC1 PBIAS. I think in the long run we
-> should expand regulator (and possibly pinctrl) framework(s) to handle
-> comparators. We could just assume that a comparatator is a regulator,
-> and have a comparator binding that just uses the regulator code.
 
-In the case of pbias, the pinctrl seems to be a much better fit for my 
-point of view. pinctrl can handle pin configuration and this is what the 
-pbias is in the case of MMC pins.
+Right. Will change it.
 
->> FYI. The USB PHY driver is already treating reset as a regulator and is into 3.10. Reworking that
->> will take some time. Not getting these in will prevent USB host/ethernet support on panda.
-
-That's not because we did some mistake in the past that we have to keep 
-doing that :-)
-
-> Yes and we need to have some solution for v3.11 as we've dropped the
-> legacy data for omap4. Otherwise things won't work properly.
-
-I'm fine taking it as soon as big disclaimer is added to avoid mis-using 
-the regulator in the future for controlling a gpio line.
-
-Regards,
-Benoit
+Regards
+Arun
