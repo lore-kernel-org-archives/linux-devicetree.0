@@ -1,49 +1,32 @@
 From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH 3/3] ARM: EXYNOS: Add mfc-v7 to memory reserve
-Date: Wed, 19 Jun 2013 14:22:49 +0530
-Message-ID: <1371631969-10076-3-git-send-email-arun.kk@samsung.com>
-References: <1371631969-10076-1-git-send-email-arun.kk@samsung.com>
+Subject: [PATCH 1/3] ARM: dts: Add MFC clock entry for 5250
+Date: Wed, 19 Jun 2013 14:22:47 +0530
+Message-ID: <1371631969-10076-1-git-send-email-arun.kk@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1371631969-10076-1-git-send-email-arun.kk@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 Cc: kgene.kim@samsung.com, k.debski@samsung.com, s.nawrocki@samsung.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The patch updates the exynos5 memory reservation to reserve
-memory for mfc-v7 also in addition to v6.
+The patch adds the MFC clock entry for the 5250 SoC
 
 Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
 ---
- arch/arm/mach-exynos/mach-exynos5-dt.c |   14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/exynos5250.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index f874b77..fdb6181 100644
---- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -60,13 +60,17 @@ static char const *exynos5_dt_compat[] __initdata = {
- static void __init exynos5_reserve(void)
- {
- #ifdef CONFIG_S5P_DEV_MFC
--	struct s5p_mfc_dt_meminfo mfc_mem;
-+	int i;
-+	struct s5p_mfc_dt_meminfo mfc_mem[] = {
-+		{.compatible = "samsung,mfc-v6"},
-+		{.compatible = "samsung,mfc-v7"},
-+	};
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index d04ab0a..9c6cda6 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -168,6 +168,8 @@
+ 		reg = <0x11000000 0x10000>;
+ 		interrupts = <0 96 0>;
+ 		samsung,power-domain = <&pd_mfc>;
++		clocks = <&clock 266>;
++		clock-names = "mfc";
+ 	};
  
- 	/* Reserve memory for MFC only if it's available */
--	mfc_mem.compatible = "samsung,mfc-v6";
--	if (of_scan_flat_dt(s5p_fdt_find_mfc_mem, &mfc_mem))
--		s5p_mfc_reserve_mem(mfc_mem.roff, mfc_mem.rsize, mfc_mem.loff,
--				mfc_mem.lsize);
-+	for (i = 0; i < ARRAY_SIZE(mfc_mem); i++)
-+		if (of_scan_flat_dt(s5p_fdt_find_mfc_mem, &mfc_mem[i]))
-+			s5p_mfc_reserve_mem(mfc_mem[i].roff, mfc_mem[i].rsize,
-+					mfc_mem[i].loff, mfc_mem[i].lsize);
- #endif
- }
- 
+ 	rtc {
 -- 
 1.7.9.5
