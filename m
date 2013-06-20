@@ -1,76 +1,140 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] GPIO: Add support for dual channel in gpio-xilinx.c
-Date: Thu, 20 Jun 2013 13:33:10 +0200
-Message-ID: <CACRpkdbcq+e099mT+TVwv9vDjXwkf8QdB_4b4UXuysPF+40oUQ@mail.gmail.com>
-References: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
-	<CACRpkdY4xaCOe28nu-NrYQ7pafjhj8-xqFcJRF9iJUy3SrCVrA@mail.gmail.com>
-	<51A8387C.4030704@monstr.eu>
-	<CACRpkdbHiaK6YPgXyxNgEeZxAsddK4x0vS-q3YfyXnj_BgHvuw@mail.gmail.com>
-	<51A852A1.7020505@monstr.eu>
-	<CACRpkdbL4pqiF8zxMi28SRTJ9AESiFt0wJMhK1oBio_cfFhpsQ@mail.gmail.com>
-	<51C2B47A.6010906@monstr.eu>
-	<CACRpkdbWXFLgcUJ-gcUArRotJMoX4JBU9mmheooJBWsLR=QHOA@mail.gmail.com>
-	<51C2E0AF.7040702@monstr.eu>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH V4 1/3] pci: Add PCIe driver for Samsung Exynos
+Date: Thu, 20 Jun 2013 20:36:01 +0900
+Message-ID: <00d901ce6daa$56ffb6b0$04ff2410$@samsung.com>
+References: <003601ce6756$444e8cd0$cceba670$@samsung.com>
+ <2061566.hRLrhtBK6z@wuerfel> <000901ce6838$8b514720$a1f3d560$@samsung.com>
+ <28355406.ThqqvnG0Yj@wuerfel> <51C2D260.6000303@st.com>
+ <00d701ce6da5$10216ae0$306440a0$@samsung.com> <51C2E6E5.1050001@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51C2E0AF.7040702@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <51C2E6E5.1050001@st.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Pratyush Anand' <pratyush.anand@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>
+Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2013 at 12:59 PM, Michal Simek <monstr@monstr.eu> wrote:
-> On 06/20/2013 11:23 AM, Linus Walleij wrote:
+On Thursday, June 20, 2013 8:26 PM, Pratyush Anand wrote:
+> On 6/20/2013 4:28 PM, Jingoo Han wrote:
+> > On Thursday, June 20, 2013 6:59 PM, Pratyush Anand wrote:
+> >> On 6/13/2013 7:48 PM, Arnd Bergmann wrote:
+> >>> On Thursday 13 June 2013 22:18:50 Jingoo Han wrote:
+> >>>>> On Wednesday, June 12, 2013 8:23 PM, Arnd Bergmann wrote:
+> >>>>>>> On Wednesday 12 June 2013 19:19:05 Jingoo Han wrote:
+> >>>>>>>>> +
+> >>>>>>>>> +/* synopsis specific PCIE configuration registers*/
+> >>>>>>>>> +#define PCIE_PORT_LINK_CONTROL		0x710
+> >>>>>>>>> +#define PORT_LINK_MODE_MASK		(0x3f << 16)
+> >>>>>>>>> +#define PORT_LINK_MODE_4_LANES		(0x7 << 16)
+> >>>>>>>
+> >>>>>>> Do you mean this is a "Synopsys" designware part? In that case it
+> >>>>>>> should really not be called "exynos-pcie" but "designware-pcie"
+> >>>>>>> and you should make sure that the driver makes no assumptions about
+> >>>>>>> the platform. A lot of other platforms also use designware
+> >>>>>>> parts and should be able to reuse this driver.
+> >>>>>
+> >>>>> Sorry, I don't think so.
+> >>>>> Only core block is a "Synopsys" designware part IP block,
+> >>>>> other parts are Exynos-specific.
+> >>>>> So, it is hard to share with other PCIe IPs using synopsis core.
+> >>> Just call it synopsys anyway and put a comment in to explain this.
+> >>> That should be enough for the next person with a synopsys PCI core
+> >>> to reuse your code and split out the exynos specific parts into a
+> >>> separate file.
+> >>>
+> >>
+> >> I agree to Arnd that this patch should be split. I had worked in past
+> >> with SPEAr PCIe which also had designware PCIe IP. I see some code which
+> >> will fit both in SPEAr as well as in exynos. Unfortunately, I was not
+> >> able to get SPEAr driver pushed to mainline, as I moved to some other
+> >> project and got heavily occupied.
+> >
+> > Oh, I see.
+> >
+> > How about this?
+> > At the next PATCH v7, I will change the file name from 'pci-exynos.c'
+> > to 'pci-designware.c', as Arnd mentioned.
+> >
+> > Then, when Spear or other platform using designware is submitted,
+> > this 'pci-designware.c' will be split to two separate files such as
+> > 'pci-designware.c' and 'pci-exynos.c'.
+> >
+> 
+> For me it's OK. Let it go to mainline as Arnd mentioned.
+> Please keep Mohit in mail chain, who might have some bandwidth to
+> further add and follow up for SPEAr on top of your patches.
 
->> What about something like this:
->>
->> static bool is_dual (struct device_node *np)
->> {
->>     struct property *prop = of_find_property(np, "xlnx,is-dual", NULL);
->>     int ret;
->>     u32 val;
->>
->>     if (!prop)
->>         return false;
->>
->>     ret = of_property_read_u32(np, "xlnx,is-dual", &val);
->>     if (ret < 0)
->>         return true; /* node exists but has no cells */
->>
->>     return !!val;
->> }
->
-> we can do it in this way but what I don't like on this is that IP
-> is design to support 2 channels right now.
-> It can happen that Xilinx decides to extend this for new channels.
-> Register map is prepared for it and there is enough space to do it.
->
-> And when this is done then is-dual (which is current name which
-> is used in hardware configuration from design tools) will contain
-> larger value >1.
-> I agree that is-dual is not the best name.
+Dear Pratyush Anand,
 
-You don't say. It's about as smart as this:
+Thank you for accepting the suggestion. :)
+OK, I will keep Mohit in main chain.
 
-#define NUMBER_TWO 4
 
-Oh well, that's not your fault.
+Best regards,
+Jingoo Han
 
-But seriously:
-
-  xlnx,is-dual;
-
-without an argument can still be taken to mean "2", and
-you still need to inperpret the absence if this parameter
-as "1" do you not?
-
-> What about to do it differently?
-> Generate number of channel in the description.
-> And also do for() loop in the probe function to read values based
-> on this channel number.
-
-Sorry I can't translate this, can you send a patch?
-
-Yours,
-Linus Walleij
+> 
+> Regards
+> Pratyush
+> 
+> >
+> > Best regards,
+> > Jingoo Han
+> >
+> >>
+> >> Last patch is here:
+> >>
+> >> https://patchwork.kernel.org/patch/1661441/
+> >>
+> >> Infact, these functions should be common to all arm platforms.
+> >>
+> >> sys_to_pcie
+> >> cfg_read
+> >> cfg_write
+> >>
+> >> Following functions should be common to all designware based driver (at
+> >> least they are same in SPEAr)
+> >>
+> >> exynos_pcie_prog_viewport_cfg0
+> >> exynos_pcie_prog_viewport_cfg1
+> >> exynos_pcie_rd_other_conf
+> >> exynos_pcie_wr_other_conf
+> >> exynos_pcie_setup
+> >> exynos_pcie_valid_config
+> >> exynos_pcie_rd_conf
+> >> exynos_pcie_wd_conf
+> >> exynos_pcie_scan_bus
+> >> exynos_pcie_map_irq
+> >> add_pcie_port (after a bit of generalization)
+> >> exynos_pcie_probe
+> >> exynos_pcie_remove
+> >>
+> >>
+> >>
+> >> Following should be specific to exynos:
+> >>
+> >> exynos_pcie_rd_own_conf
+> >> exynos_pcie_wr_own_conf
+> >> exynos_pcie_link_up
+> >> exynos_pcie_setup_rc
+> >> exynos_pcie_assert_core_reset
+> >> exynos_pcie_deassert_core_reset
+> >> exynos_pcie_assert_phy_reset
+> >> exynos_pcie_deassert_phy_reset
+> >> exynos_pcie_init_phy
+> >> exynos_pcie_assert_reset
+> >> exynos_pcie_establish_link
+> >> exynos_pcie_host_init
+> >>
+> >>
+> >>
+> >> struct pcie_port_info and struct pcie_port can also be standardized.
+> >>
+> >> Regards
+> >> Pratyush
+> >
+> > .
+> >
