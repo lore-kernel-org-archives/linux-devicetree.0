@@ -1,122 +1,86 @@
-From: Joel A Fernandes <agnel.joel@gmail.com>
-Subject: Re: [PATCH v11 3/8] ARM: edma: Add EDMA crossbar event mux support
-Date: Wed, 19 Jun 2013 19:36:48 -0500
-Message-ID: <CAD=GYpbVUu4H8vkLHYAGPUMqdzmbJncX4yOR+5k+5B8NJhfgAQ@mail.gmail.com>
-References: <1371537499-12970-1-git-send-email-joelagnel@ti.com>
-	<1371537499-12970-4-git-send-email-joelagnel@ti.com>
-	<51C0344F.6010709@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RESEND,PATCHv6 1/1] Add support for GMT G762/G763 PWM fan
+ controllers
+Date: Wed, 19 Jun 2013 18:20:27 -0700
+Message-ID: <20130620012027.GB29521@roeck-us.net>
+References: <87sj0jhuhn.fsf@natisbad.org>
+ <20130617101948.GY7626@kw.sim.vm.gnt>
+ <8761x9svpf.fsf@natisbad.org>
+ <20130619205321.GA7625@roeck-us.net>
+ <20130619212633.GC7626@kw.sim.vm.gnt>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51C0344F.6010709@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20130619212633.GC7626@kw.sim.vm.gnt>
 Sender: linux-doc-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Joel A Fernandes <joelagnel@ti.com>, Tony Lindgren <tony@atomide.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Jason Kridner <jkridner@beagleboard.org>, Koen Kooi <koen@beagleboard.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@v>
+To: Simon Guinot <simon.guinot@sequanux.org>
+Cc: Arnaud Ebalard <arno@natisbad.org>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
-Thanks for the feedback.
+On Wed, Jun 19, 2013 at 11:26:33PM +0200, Simon Guinot wrote:
+> On Wed, Jun 19, 2013 at 01:53:21PM -0700, Guenter Roeck wrote:
+> > On Wed, Jun 19, 2013 at 10:15:56PM +0200, Arnaud Ebalard wrote:
+> > > Hi Simon,
+> > > 
+> > > Simon Guinot <simon.guinot@sequanux.org> writes:
+> > > 
+> > > > I have tested this patch on my 2Big Network v2 board.
+> > > >
+> > > > Sometimes I get a weird "No such device" error while reading or writing
+> > > > the hwmon sysfs attributes. For example:
+> > > >
+> > > > # cat pwm1
+> > > > cat: read error: No such device
+> > > > # cat pwm1
+> > > > 0
+> > > 
+> > This is odd, since ENODEV should not be returned as error code from i2c read
+> > operations.
+> > 
+> > What is the i2c controller ?
+> 
+> The controller is the very same as for the ReadyNAS Duo v2. It is built
+> in the Marvell Kirkwood SoC and the driver is i2c-mv64xxx.
+> 
+> I will try an another board to see if I reproduce the error.
+> 
+Might be a flaky i2c connection or a problematic board. The i2c-mv64xxx driver
+does return ENODEV in error cases. I submitted a patch to change it to ENXIO;
+we'll see if it gets accepted.
 
-On Tue, Jun 18, 2013 at 5:19 AM, Sekhar Nori <nsekhar@ti.com> wrote:
-> On 6/18/2013 12:08 PM, Joel A Fernandes wrote:
->> From: Matt Porter <mporter@ti.com>
->>
->> Changes by Joel:
->> * Split EDMA xbar support out of original EDMA DT parsing patch
->> to keep it easier for review.
->> * Rewrite shift and offset calculation.
->>
->> Suggested-by: Sekhar Nori <nsekhar@ti.com>
->> Suggested by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Signed-off-by: Joel A Fernandes <joelagnel@ti.com>
->>
->> Reference:
->> [1] https://patchwork.kernel.org/patch/2226991/
->> ---
->>  arch/arm/common/edma.c             |   59 ++++++++++++++++++++++++++++++++++++
->>  include/linux/platform_data/edma.h |    1 +
->>  2 files changed, 60 insertions(+)
->>
->> diff --git a/arch/arm/common/edma.c b/arch/arm/common/edma.c
->> index 9823b79..1c2fb15 100644
->> --- a/arch/arm/common/edma.c
->> +++ b/arch/arm/common/edma.c
->> @@ -1410,6 +1410,52 @@ static int edma_of_read_u32_to_s16_array(const struct device_node *np,
->>       return 0;
->>  }
->>
->> +static int edma_xbar_event_map(struct device *dev,
->> +                            struct device_node *node,
->> +                            struct edma_soc_info *pdata, int len)
->> +{
->> +     int ret = 0;
->> +     int i;
->> +     struct resource res;
->> +     void *xbar;
->
-> void __iomem *xbar;
+Guenter
 
-OK.
-
->> +     const s16 (*xbar_chans)[2];
->> +     u32 shift, offset, mux;
->> +
->> +     xbar_chans = devm_kzalloc(dev,
->> +                               len/sizeof(s16) + 2*sizeof(s16),
->> +                               GFP_KERNEL);
->> +     if (!xbar_chans)
->> +             return -ENOMEM;
->> +
->> +     ret = of_address_to_resource(node, 1, &res);
->> +     if (ret)
->> +             return -EIO;
->> +
->> +     xbar = devm_ioremap(dev, res.start, resource_size(&res));
->> +     if (!xbar)
->> +             return -ENOMEM;
->> +
->> +     ret = edma_of_read_u32_to_s16_array(node,
->> +                                         "ti,edma-xbar-event-map",
->> +                                         (s16 *)xbar_chans,
->> +                                         len/sizeof(u32));
->> +     if (ret)
->> +             return -EIO;
->> +
->> +     for (i = 0; xbar_chans[i][0] != -1; i++) {
->> +             shift = (xbar_chans[i][1] & 0x03) << 3;
->> +             offset = xbar_chans[i][1] & 0xfffffffc;
->> +             mux = readl((void *)((u32)xbar + offset));
->
-> Please drop unnecessary casting. Simply:
-
-Done.
-
->
->         mux = readl(xbar + offset);
->
->> +             mux &= ~(0xff << shift);
->> +             mux |= xbar_chans[i][0] << shift;
->> +             writel(mux, (void *)((u32)xbar + offset));
->
-> Fix the writel likewise.
-
-Done.
+> Regards,
+> 
+> Simon
+> 
+> > 
+> > Thanks,
+> > Guenter
+> > 
+> > > Weird, I cannot reproduce that at all on my ReadyNAS Duo v2.
+> > > 
+> > > > Note, that if the same command is executed again (just after the faulty
+> > > > one), then it will succeed most of the time. The errors seems to happen
+> > > > quite randomly and not very often. I'd say one time over ten tries.
+> > > > I suppose this error is now visible due to the enhanced error path in
+> > > > g762_update_client. It looks like we learn something by checking the
+> > > > return value for i2c_smbus_read_byte_data :)
+> > > >
+> > > > Except that, all is working as expected. This new version fixes
+> > > > effectively open-loop driving when the set_cnt register is set to 0xff.
+> > > >
+> > > > Also I am planning (hopefully this Wednesday) to test your patch on my
+> > > > 5Big Network v2 board. This last also embed a g762 controller but with a
+> > > > three wires fan instead. Then, I should be able to test the closed-loop
+> > > > mode behaviour.
+> > > 
+> > > Thanks for your tests, Simon.
+> > > 
+> > > Cheers,
+> > > 
+> > > a+ 
+> > > 
 
 
->>               }
->>
->> +             /* Clear the xbar mapped channels in unused list */
->> +             xbar_chans = info[j]->xbar_chans;
->> +             if (xbar_chans) {
->> +                     for (i = 0; xbar_chans[i][1] != -1; i++) {
->> +                             off = xbar_chans[i][1];
->> +                             clear_bits(off, 1,
->> +                                     edma_cc[j]->edma_unused);
->
-> Please fix the alignment here.
-
-I noticed the alignment was off in a few other places in that driver.
-Fixed those up too.
-
-Thanks,
-Joel
