@@ -1,35 +1,54 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] ARM: davinci: da850: Use #include for all device
-	trees
-Date: Thu, 20 Jun 2013 16:36:34 +0530
-Message-ID: <51C2E23A.5070409@ti.com>
-References: <1371203020-15092-1-git-send-email-avinashphilip@ti.com>
-	<1371203156-15260-2-git-send-email-avinashphilip@ti.com>
+From: J Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 2/4] MFD: Palmas: Add TPS659038 PMIC support
+Date: Thu, 20 Jun 2013 16:35:16 +0530
+Message-ID: <1371726316-10078-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1371203156-15260-2-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, sameo@linux.intel.com
+Cc: broonie@kernel.org, j-keerthy@ti.com, ldewangan@nvidia.com, grant.likely@secretlab.ca, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On 6/14/2013 3:15 PM, Philip Avinash wrote:
-> Replace /include/ by #include for da850 device tree files, in order to
-> use the C pre-processor, making use of #define features possible.
-> 
-> Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+The Patch adds TPS659038 PMIC support in the palmas mfd driver.
+The TPS659038 has almost the same registers as of the earlier
+supported variants of PALMAS family such as the TWL6035.
 
-Added this to my v3.11/dt branch.
+The critical differences between TPS659038 and TWL6035 being:
 
-Thanks,
-Sekhar
+1) TPS659038 has nothing related to battery charging and back up battery stuff.
+2) TPS659038 does not have does not have SMPS10(Boost) step up convertor.
+3) TPS659038 does not have Battery detection and anything related to battery.
+4) SD card detection, Battery presence detection, Vibrator, USB OTG are missing
+   when compared to TWL6035.
+
+Signed-off-by: J Keerthy <j-keerthy@ti.com>
+Acked-by: Samuel Ortiz <sameo@linux.intel.com>
+---
+ drivers/mfd/palmas.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
+index ad2edd6..8b20055 100644
+--- a/drivers/mfd/palmas.c
++++ b/drivers/mfd/palmas.c
+@@ -233,12 +233,17 @@ static void palmas_dt_to_pdata(struct i2c_client *i2c,
+ }
+ 
+ static unsigned int palmas_features = PALMAS_PMIC_FEATURE_SMPS10_BOOST;
++static unsigned int tps659038_features;
+ 
+ static const struct of_device_id of_palmas_match_tbl[] = {
+ 	{
+ 		.compatible = "ti,palmas",
+ 		.data = &palmas_features,
+ 	},
++	{
++		.compatible = "ti,tps659038",
++		.data = &tps659038_features,
++	},
+ 	{ },
+ };
+ 
+-- 
+1.7.5.4
