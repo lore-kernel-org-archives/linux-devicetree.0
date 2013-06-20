@@ -1,69 +1,164 @@
-From: Arun Kumar K <arunkk.samsung@gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: Add MFC node for exynos 5420
-Date: Thu, 20 Jun 2013 10:00:56 +0530
-Message-ID: <CALt3h7-xxSUtwqeVRNHKmqd1xk3eNnOe7upmUN2E8CN0xzv8hQ@mail.gmail.com>
-References: <1371631969-10076-1-git-send-email-arun.kk@samsung.com>
-	<1371631969-10076-2-git-send-email-arun.kk@samsung.com>
-	<CANuQgHGR1vDgz6TkCYKr5XtBLVdXng+tF90NShae_4Cqse3G+g@mail.gmail.com>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH v3 2/4] MFD: Palmas: Add SMPS10_BOOST feature
+Date: Thu, 20 Jun 2013 04:34:42 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229ECC05@DBDE04.ent.ti.com>
+References: <1371621470-22279-1-git-send-email-j-keerthy@ti.com>
+ <1371621470-22279-3-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANuQgHGR1vDgz6TkCYKr5XtBLVdXng+tF90NShae_4Cqse3G+g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chander Kashyap <chander.kashyap@linaro.org>
-Cc: Arun Kumar K <arun.kk@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1371621470-22279-3-git-send-email-j-keerthy@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "sameo@linux.intel.com" <sameo@linux.intel.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "J, KEERTHY" <j-keerthy@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chander,
+Hello Samuel,
 
-On Wed, Jun 19, 2013 at 5:34 PM, Chander Kashyap
-<chander.kashyap@linaro.org> wrote:
-> On 19 June 2013 14:22, Arun Kumar K <arun.kk@samsung.com> wrote:
->> The patch adds MFC nodes for exynos 5420 and for
->> smdk 5420 board.
->>
->> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5420-smdk5420.dts |    5 +++++
->>  arch/arm/boot/dts/exynos5420.dtsi         |    8 ++++++++
->>  2 files changed, 13 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> index 08607df..682532c 100644
->> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> @@ -30,4 +30,9 @@
->>                         clock-frequency = <24000000>;
->>                 };
->>         };
->> +
->> +       codec@11000000 {
->> +               samsung,mfc-r = <0x43000000 0x800000>;
->> +               samsung,mfc-l = <0x51000000 0x800000>;
->> +       };
->>  };
->> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->> index 8474d63..cb74356 100644
->> --- a/arch/arm/boot/dts/exynos5420.dtsi
->> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->> @@ -100,4 +100,12 @@
->>                 clocks = <&clock 260>, <&clock 131>;
->>                 clock-names = "uart", "clk_uart_baud0";
->>         };
->> +
->> +       codec@11000000 {
->> +               compatible = "samsung,mfc-v7";
->> +               reg = <0x11000000 0x10000>;
->> +               interrupts = <0 96 0>;
->> +               clocks = <&clock 401>;
->> +               clock-names = "mfc";
->> +       };
-> Is it not possible to move the common part of this node to common
-> exynos5.dtsi? As exynos5250 is using same property values.
+> -----Original Message-----
+> From: J, KEERTHY
+> Sent: Wednesday, June 19, 2013 11:28 AM
+> To: linux-omap@vger.kernel.org
+> Cc: broonie@kernel.org; J, KEERTHY; ldewangan@nvidia.com;
+> sameo@linux.intel.com; grant.likely@secretlab.ca; swarren@nvidia.com;
+> linux-kernel@vger.kernel.org; linux-doc@vger.kernel.org; devicetree-
+> discuss@lists.ozlabs.org; gg@slimlogic.co.uk
+> Subject: [PATCH v3 2/4] MFD: Palmas: Add SMPS10_BOOST feature
+> 
+> From: J Keerthy <j-keerthy@ti.com>
+> 
+> The SMPS10 regulator is not presesnt in all the variants of the PALMAS
+> PMIC family. Hence adding a feature to distingush between them.
+> 
 
-Yes that can be done. I have kept it separate as the IP is different
-and compatible is also changing. But the reg and interrupt remains same
-and hopefully that can be moved to common exynos5.dtsi.
+Could you please pull this patch?
 
-Regards
-Arun
+> Signed-off-by: J Keerthy <j-keerthy@ti.com>
+> ---
+>  drivers/mfd/palmas.c                 |   27 ++++++++++++++++++++------
+> -
+>  drivers/regulator/palmas-regulator.c |    3 +++
+>  include/linux/mfd/palmas.h           |   14 ++++++++++++++
+>  3 files changed, 37 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c index
+> b24bee3..1cacc6a 100644
+> --- a/drivers/mfd/palmas.c
+> +++ b/drivers/mfd/palmas.c
+> @@ -231,6 +231,16 @@ static void palmas_dt_to_pdata(struct i2c_client
+> *i2c,
+>  		palmas_set_pdata_irq_flag(i2c, pdata);  }
+> 
+> +static unsigned int palmas_features =
+> PALMAS_PMIC_FEATURE_SMPS10_BOOST;
+> +
+> +static const struct of_device_id of_palmas_match_tbl[] = {
+> +	{
+> +		.compatible = "ti,palmas",
+> +		.data = &palmas_features,
+> +	},
+> +	{ },
+> +};
+> +
+>  static int palmas_i2c_probe(struct i2c_client *i2c,
+>  			    const struct i2c_device_id *id)
+>  {
+> @@ -238,8 +248,9 @@ static int palmas_i2c_probe(struct i2c_client *i2c,
+>  	struct palmas_platform_data *pdata;
+>  	struct device_node *node = i2c->dev.of_node;
+>  	int ret = 0, i;
+> -	unsigned int reg, addr;
+> +	unsigned int reg, addr, *features;
+>  	int slave;
+> +	const struct of_device_id *match;
+> 
+>  	pdata = dev_get_platdata(&i2c->dev);
+> 
+> @@ -261,9 +272,16 @@ static int palmas_i2c_probe(struct i2c_client
+> *i2c,
+> 
+>  	i2c_set_clientdata(i2c, palmas);
+>  	palmas->dev = &i2c->dev;
+> -	palmas->id = id->driver_data;
+>  	palmas->irq = i2c->irq;
+> 
+> +	match = of_match_device(of_match_ptr(of_palmas_match_tbl), &i2c-
+> >dev);
+> +
+> +	if (!match)
+> +		return -ENODATA;
+> +
+> +	features = (unsigned int *)match->data;
+> +	palmas->features = *features;
+> +
+>  	for (i = 0; i < PALMAS_NUM_CLIENTS; i++) {
+>  		if (i == 0)
+>  			palmas->i2c_clients[i] = i2c;
+> @@ -433,11 +451,6 @@ static const struct i2c_device_id palmas_i2c_id[]
+> = {  };  MODULE_DEVICE_TABLE(i2c, palmas_i2c_id);
+> 
+> -static struct of_device_id of_palmas_match_tbl[] = {
+> -	{ .compatible = "ti,palmas", },
+> -	{ /* end */ }
+> -};
+> -
+>  static struct i2c_driver palmas_i2c_driver = {
+>  	.driver = {
+>  		   .name = "palmas",
+> diff --git a/drivers/regulator/palmas-regulator.c
+> b/drivers/regulator/palmas-regulator.c
+> index 3ae44ac..1ae1e83 100644
+> --- a/drivers/regulator/palmas-regulator.c
+> +++ b/drivers/regulator/palmas-regulator.c
+> @@ -838,6 +838,9 @@ static int palmas_regulators_probe(struct
+> platform_device *pdev)
+>  				continue;
+>  			ramp_delay_support = true;
+>  			break;
+> +		case PALMAS_REG_SMPS10:
+> +			if (!PALMAS_PMIC_HAS(palmas, SMPS10_BOOST))
+> +				continue;
+>  		}
+> 
+>  		if ((id == PALMAS_REG_SMPS6) || (id == PALMAS_REG_SMPS8))
+> diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
+> index 8f21daf..98058ca 100644
+> --- a/include/linux/mfd/palmas.h
+> +++ b/include/linux/mfd/palmas.h
+> @@ -32,6 +32,19 @@
+>  			((a) == PALMAS_CHIP_ID))
+>  #define is_palmas_charger(a) ((a) == PALMAS_CHIP_CHARGER_ID)
+> 
+> +/**
+> + * Palmas PMIC feature types
+> + *
+> + * PALMAS_PMIC_FEATURE_SMPS10_BOOST - used when the PMIC provides
+> SMPS10_BOOST
+> + *	regulator.
+> + *
+> + * PALMAS_PMIC_HAS(b, f) - macro to check if a bandgap device is
+> capable of a
+> + *	specific feature (above) or not. Return non-zero, if yes.
+> + */
+> +#define PALMAS_PMIC_FEATURE_SMPS10_BOOST	BIT(0)
+> +#define PALMAS_PMIC_HAS(b, f)			\
+> +			((b)->features & PALMAS_PMIC_FEATURE_ ## f)
+> +
+>  struct palmas_pmic;
+>  struct palmas_gpadc;
+>  struct palmas_resource;
+> @@ -46,6 +59,7 @@ struct palmas {
+>  	/* Stored chip id */
+>  	int id;
+> 
+> +	unsigned int features;
+>  	/* IRQ Data */
+>  	int irq;
+>  	u32 irq_mask;
+> --
+> 1.7.5.4
+
+Regards,
+Keerthy
