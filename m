@@ -1,57 +1,61 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v2 0/8] ARM: dts: exynos5420: add support for hdmi subsystem
-Date: Thu, 20 Jun 2013 18:43:46 +0530
-Message-ID: <1371734034-21296-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
-Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v8 00/11] ASoC: fsl-ssi: ac97-slave support
+Date: Thu, 20 Jun 2013 14:51:48 +0200
+Message-ID: <20130620125148.GC3085@s25.your-server.de>
+References: <1371389117-19729-1-git-send-email-mpa@pengutronix.de>
+ <51BE8B21.8050605@tabi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51BE8B21.8050605-N01EOCouUvQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Common properties for I2C and Hdmi Subsystem is moved to exynos5
-dtsi file. It also adds Device tree nodes and clocks information
-for exynos5420 SoC. It adds pinctrl node for hdmi hpd gpio and
-update binding documents.
+On Sun, Jun 16, 2013 at 11:05:53PM -0500, Timur Tabi wrote:
+> Markus Pargmann wrote:
+> > Hi,
+> >
+> > This series adds DT support for phycore-ac97. Beside ac97 support, the series
+> > adds imx-pcm-fiq and generic DMA bindings to fsl-ssi.
+> >
+> > In version 8 I fixed the build issues by seperating the DT capable ac97 phycore
+> > driver from the old driver.
+> 
+> FYI, I get some warnings applying this patchset:
+> 
+> Applying: ASoC: Add phycore-ac97-dt driver
+> /home/b04825/git/linux.alsa2/.git/rebase-apply/patch:375: new blank line 
+> at EOF.
+> +
+> warning: 1 line adds whitespace errors.
+> Applying: ASoC: fsl: Kconfig: Use fsl-ssi for phycore-ac97
+> Applying: ASoC: fsl: Move fsl-ssi binding doc to sound/
+> Applying: ASoC: fsl: Update fsl-ssi binding doc
+> /home/b04825/git/linux.alsa2/.git/rebase-apply/patch:33: space before tab 
+> in indent.
+>    		    Only necessary for some boards with incompatible
+> warning: 1 line adds whitespace errors.
 
-This patch is based on v3.11-next/soc-exynos5420-pinctrl branch
-at http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git
+Thanks, I fixed all whitespace errors and the compile error.
 
-device tree binding document for hdmi compatible type is update at
-http://www.spinics.net/lists/dri-devel/msg39987.html
+Regards,
 
-v2:
-1) Added patch for moving common i2c properties to exynos5.dtsi
-2) Added patch for moving common hdmi, mixer properties to exynos5.dtsi
-3) moved hpd pinctrl node to board file.
-4) Added Sachin's patch to update binding document for hdmi with hpd
-information.
+Markus
 
-Andrew Bresticker (1):
-  ARM: dts: exynos5420: add i2c device nodes
-
-Rahul Sharma (6):
-  ARM: dts: exynos5250: move common i2c properties to exynos5 dtsi
-  ARM: dts: exynos5250: move common hdmi properties to exynos5 dtsi
-  ARM: dts: exynos5420: add dt nodes for hdmi subsystem
-  ARM: dts: exynos5420: add clocks for hdmi subsystem
-  ARM: dts: exynos5420: add hdmi hpd gpio pinctrl node
-  of/documentation: update with clock information for exynos hdmi
-    subsystem
-
-Sachin Kamat (1):
-  of/documentation: Update hpd gpio property for exynos_hdmi
-
- .../devicetree/bindings/video/exynos_hdmi.txt      |   20 ++++++--
- .../devicetree/bindings/video/exynos_mixer.txt     |    4 ++
- arch/arm/boot/dts/cros5250-common.dtsi             |    2 +-
- arch/arm/boot/dts/exynos5.dtsi                     |   48 ++++++++++++++++++++
- arch/arm/boot/dts/exynos5250-arndale.dts           |    8 +++-
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |   10 +++-
- arch/arm/boot/dts/exynos5250-snow.dts              |    8 ++++
- arch/arm/boot/dts/exynos5250.dtsi                  |   28 +-----------
- arch/arm/boot/dts/exynos5420-smdk5420.dts          |   31 +++++++++++++
- arch/arm/boot/dts/exynos5420.dtsi                  |   46 +++++++++++++++++++
- 10 files changed, 171 insertions(+), 34 deletions(-)
-
--- 
-1.7.10.4
+> 
+> -- 
+> Timur Tabi
+> 
