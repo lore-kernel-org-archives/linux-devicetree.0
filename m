@@ -1,7 +1,7 @@
 From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 3/6] ARM: dts: imx27: Add imx framebuffer device
-Date: Thu, 20 Jun 2013 16:50:12 +0200
-Message-ID: <1371739815-6666-4-git-send-email-mpa@pengutronix.de>
+Subject: [PATCH 4/6] ARM: dts: imx27: Add 1-wire
+Date: Thu, 20 Jun 2013 16:50:13 +0200
+Message-ID: <1371739815-6666-5-git-send-email-mpa@pengutronix.de>
 References: <1371739815-6666-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,28 +24,27 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/imx27.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/imx27.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
-index 4f76453..044004a 100644
+index 044004a..e883e77 100644
 --- a/arch/arm/boot/dts/imx27.dtsi
 +++ b/arch/arm/boot/dts/imx27.dtsi
-@@ -354,6 +354,15 @@
- 			reg = <0x10020000 0x20000>;
- 			ranges;
+@@ -110,6 +110,14 @@
+ 				clock-names = "ipg", "per";
+ 			};
  
-+			imxfb: fb@10021000 {
-+				compatible = "fsl,imx27-fb", "fsl,imx21-fb";
-+				interrupts = <61>;
-+				reg = <0x10021000 0x1000>;
-+				clocks = <&clks 36>, <&clks 65>, <&clks 59>;
-+				clock-names = "ipg", "ahb", "per";
++			owire: owire@10009000 {
++				compatible = "fsl,imx21-owire";
++				reg = <0x10009000 0x1000>;
++				clocks = <&clks 35>;
++				clock-names = "ipg";
 +				status = "disabled";
 +			};
 +
- 			coda: coda@10023000 {
- 				compatible = "fsl,imx27-vpu";
- 				reg = <0x10023000 0x0200>;
+ 			uart1: serial@1000a000 {
+ 				compatible = "fsl,imx27-uart", "fsl,imx21-uart";
+ 				reg = <0x1000a000 0x1000>;
 -- 
 1.8.2.1
