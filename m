@@ -1,228 +1,38 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH v3 1/3] drm/exynos: add new compatible strings for hdmi subsystem
-Date: Thu, 20 Jun 2013 07:41:53 +0530
-Message-ID: <CAPdUM4NdY9eTTq3Dtgd10RVTA=gPAddebCYJO2HKtiZbF-MKLg@mail.gmail.com>
-References: <1371646269-21880-1-git-send-email-rahul.sharma@samsung.com>
-	<1371646269-21880-2-git-send-email-rahul.sharma@samsung.com>
+From: Tang Yuantian-B29983 <B29983@freescale.com>
+Subject: RE: [PATCH v2] hwmon: (ina2xx) Add device tree support to pass the
+ shunt resistor
+Date: Thu, 20 Jun 2013 02:27:18 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B0B20DC69@039-SN2MPN1-011.039d.mgd.msft.net>
+References: <1371624620-14254-1-git-send-email-Yuantian.Tang@freescale.com>
+ <20130619154310.GA29516@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1371646269-21880-2-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130619154310.GA29516@roeck-us.net>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: "khali@linux-fr.org" <khali@linux-fr.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz, Lucas,
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2VjayBb
+bWFpbHRvOmxpbnV4QHJvZWNrLXVzLm5ldF0NCj4gU2VudDogMjAxM8TqNtTCMTnI1SDQx8bayP0g
+MjM6NDMNCj4gVG86IFRhbmcgWXVhbnRpYW4tQjI5OTgzDQo+IENjOiBraGFsaUBsaW51eC1mci5v
+cmc7IGxtLXNlbnNvcnNAbG0tc2Vuc29ycy5vcmc7IGRldmljZXRyZWUtDQo+IGRpc2N1c3NAbGlz
+dHMub3psYWJzLm9yZzsgbGludXgtZG9jQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTog
+W1BBVENIIHYyXSBod21vbjogKGluYTJ4eCkgQWRkIGRldmljZSB0cmVlIHN1cHBvcnQgdG8gcGFz
+cw0KPiB0aGUgc2h1bnQgcmVzaXN0b3INCj4gDQo+IE9uIFdlZCwgSnVuIDE5LCAyMDEzIGF0IDAy
+OjUwOjIwUE0gKzA4MDAsIFl1YW50aWFuLlRhbmdAZnJlZXNjYWxlLmNvbQ0KPiB3cm90ZToNCj4g
+PiBGcm9tOiBUYW5nIFl1YW50aWFuIDx5dWFudGlhbi50YW5nQGZyZWVzY2FsZS5jb20+DQo+ID4N
+Cj4gPiBBZGRpbmcgYW5vdGhlciB3YXkgdGhhdCBpcyBkZXZpY2UgdHJlZSB0byBwYXNzIHRoZSBz
+aHVudCByZXNpc3Rvcg0KPiA+IHZhbHVlIHRvIGRyaXZlciBleGNlcHQgZm9yIHBsYXRmb3JtIGRh
+dGEuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1YW50aWFuIDxZdWFudGlhbi5UYW5n
+QGZyZWVzY2FsZS5jb20+DQo+IA0KPiBJIG5vdGljZWQgdGhhdCBvZi5oIGluY2x1ZGUgd2FzIG1p
+c3NpbmcuIE5vIG5lZWQgdG8gcmUtc2VuZDsgSSBhZGRlZCBpdA0KPiBteXNlbGYuDQo+IEFwcGxp
+ZWQgdG8gLW5leHQuDQo+IA0KDQpUaGFua3MgZm9yIHlvdXIgaGVscC4gT2YuaCBpcyBhbHJlYWR5
+IGluY2x1ZGVkIGluIGkyYy5oLg0KSWYgaXQgaXMgcmVhbGx5IG5lZWRlZCwgSSBzaG91bGQgaGF2
+ZSBzZWVuIHRoZSB3YXJuaW5nIG9yIGVycm9yIHdoZW4gY29tcGlsZS4NCkluY2x1ZGluZyBpdCBl
+eHBsaWNpdGx5IGlzIGFsc28gYSBnb29kIHBvaW50Lg0KDQpSZWdhcmRzLA0KWXVhbnRpYW4NCg0K
+PiBUaGFua3MsDQo+IEd1ZW50ZXINCg0K
 
-How does this patch look to you ? Please share your views.
-
-regards,
-Rahul Sharma.
-
-On Wed, Jun 19, 2013 at 6:21 PM, Rahul Sharma <rahul.sharma@samsung.com> wrote:
-> This patch adds new combatible strings for hdmi, mixer, ddc
-> and hdmiphy. It follows the convention of using compatible string
-> which represent the SoC in which the IP was added for the first
-> time.
->
-> Drivers continue to support the previous compatible strings
-> but further addition of these compatible strings in device tree
-> is deprecated.
->
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
->  Documentation/devicetree/bindings/video/exynos_hdmi.txt   |    7 +++++--
->  .../devicetree/bindings/video/exynos_hdmiddc.txt          |    7 +++++--
->  .../devicetree/bindings/video/exynos_hdmiphy.txt          |    7 +++++--
->  Documentation/devicetree/bindings/video/exynos_mixer.txt  |    8 ++++++--
->  drivers/gpu/drm/exynos/exynos_ddc.c                       |    2 ++
->  drivers/gpu/drm/exynos/exynos_hdmi.c                      |    3 +++
->  drivers/gpu/drm/exynos/exynos_hdmiphy.c                   |    4 ++++
->  drivers/gpu/drm/exynos/exynos_mixer.c                     |   13 ++++++++-----
->  8 files changed, 38 insertions(+), 13 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> index 589edee..c71d0f0 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-> @@ -1,7 +1,10 @@
->  Device-Tree bindings for drm hdmi driver
->
->  Required properties:
-> -- compatible: value should be "samsung,exynos5-hdmi".
-> +- compatible: value should be one among the following:
-> +       1) "samsung,exynos5-hdmi" <DEPRECATED>
-> +       2) "samsung,exynos4210-hdmi"
-> +       3) "samsung,exynos4212-hdmi"
->  - reg: physical base address of the hdmi and length of memory mapped
->         region.
->  - interrupts: interrupt number to the cpu.
-> @@ -15,7 +18,7 @@ Required properties:
->  Example:
->
->         hdmi {
-> -               compatible = "samsung,exynos5-hdmi";
-> +               compatible = "samsung,exynos4212-hdmi";
->                 reg = <0x14530000 0x100000>;
->                 interrupts = <0 95 0>;
->                 hpd-gpio = <&gpx3 7 0xf 1 3>;
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt b/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
-> index fa166d9..41eee97 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
-> @@ -1,12 +1,15 @@
->  Device-Tree bindings for hdmiddc driver
->
->  Required properties:
-> -- compatible: value should be "samsung,exynos5-hdmiddc".
-> +- compatible: value should be one of the following
-> +       1) "samsung,exynos5-hdmiddc" <DEPRECATED>
-> +       2) "samsung,exynos4210-hdmiddc"
-> +
->  - reg: I2C address of the hdmiddc device.
->
->  Example:
->
->         hdmiddc {
-> -               compatible = "samsung,exynos5-hdmiddc";
-> +               compatible = "samsung,exynos4210-hdmiddc";
->                 reg = <0x50>;
->         };
-> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
-> index 858f4f9..162f641 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
-> @@ -1,12 +1,15 @@
->  Device-Tree bindings for hdmiphy driver
->
->  Required properties:
-> -- compatible: value should be "samsung,exynos5-hdmiphy".
-> +- compatible: value should be one of the following:
-> +       1) "samsung,exynos5-hdmiphy" <DEPRECATED>
-> +       2) "samsung,exynos4210-hdmiphy".
-> +       3) "samsung,exynos4212-hdmiphy".
->  - reg: I2C address of the hdmiphy device.
->
->  Example:
->
->         hdmiphy {
-> -               compatible = "samsung,exynos5-hdmiphy";
-> +               compatible = "samsung,exynos4210-hdmiphy";
->                 reg = <0x38>;
->         };
-> diff --git a/Documentation/devicetree/bindings/video/exynos_mixer.txt b/Documentation/devicetree/bindings/video/exynos_mixer.txt
-> index 9b2ea03..9131b99 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_mixer.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
-> @@ -1,7 +1,11 @@
->  Device-Tree bindings for mixer driver
->
->  Required properties:
-> -- compatible: value should be "samsung,exynos5-mixer".
-> +- compatible: value should be one of the following:
-> +       1) "samsung,exynos5-mixer" <DEPRECATED>
-> +       2) "samsung,exynos4210-mixer"
-> +       3) "samsung,exynos5250-mixer"
-> +
->  - reg: physical base address of the mixer and length of memory mapped
->         region.
->  - interrupts: interrupt number to the cpu.
-> @@ -9,7 +13,7 @@ Required properties:
->  Example:
->
->         mixer {
-> -               compatible = "samsung,exynos5-mixer";
-> +               compatible = "samsung,exynos5250-mixer";
->                 reg = <0x14450000 0x10000>;
->                 interrupts = <0 94 0>;
->         };
-> diff --git a/drivers/gpu/drm/exynos/exynos_ddc.c b/drivers/gpu/drm/exynos/exynos_ddc.c
-> index 4e9b5ba..95c75ed 100644
-> --- a/drivers/gpu/drm/exynos/exynos_ddc.c
-> +++ b/drivers/gpu/drm/exynos/exynos_ddc.c
-> @@ -53,6 +53,8 @@ static struct of_device_id hdmiddc_match_types[] = {
->         {
->                 .compatible = "samsung,exynos5-hdmiddc",
->         }, {
-> +               .compatible = "samsung,exynos4210-hdmiddc",
-> +       }, {
->                 /* end node */
->         }
->  };
-> diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
-> index 743059f..de39530 100644
-> --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-> @@ -1916,6 +1916,9 @@ static struct of_device_id hdmi_match_types[] = {
->                 .compatible = "samsung,exynos5-hdmi",
->                 .data   = (void *)HDMI_TYPE14,
->         }, {
-> +               .compatible = "samsung,exynos4212-hdmi",
-> +               .data   = (void *)HDMI_TYPE14,
-> +       }, {
->                 /* end node */
->         }
->  };
-> diff --git a/drivers/gpu/drm/exynos/exynos_hdmiphy.c b/drivers/gpu/drm/exynos/exynos_hdmiphy.c
-> index ea49d13..ef04255 100644
-> --- a/drivers/gpu/drm/exynos/exynos_hdmiphy.c
-> +++ b/drivers/gpu/drm/exynos/exynos_hdmiphy.c
-> @@ -51,6 +51,10 @@ static struct of_device_id hdmiphy_match_types[] = {
->         {
->                 .compatible = "samsung,exynos5-hdmiphy",
->         }, {
-> +               .compatible = "samsung,exynos4210-hdmiphy",
-> +       }, {
-> +               .compatible = "samsung,exynos4212-hdmiphy",
-> +       }, {
->                 /* end node */
->         }
->  };
-> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exynos/exynos_mixer.c
-> index f36f878..6225501 100644
-> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
-> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
-> @@ -1115,12 +1115,12 @@ static int vp_resources_init(struct exynos_drm_hdmi_context *ctx,
->         return 0;
->  }
->
-> -static struct mixer_drv_data exynos5_mxr_drv_data = {
-> +static struct mixer_drv_data exynos5250_mxr_drv_data = {
->         .version = MXR_VER_16_0_33_0,
->         .is_vp_enabled = 0,
->  };
->
-> -static struct mixer_drv_data exynos4_mxr_drv_data = {
-> +static struct mixer_drv_data exynos4210_mxr_drv_data = {
->         .version = MXR_VER_0_0_0_16,
->         .is_vp_enabled = 1,
->  };
-> @@ -1128,10 +1128,10 @@ static struct mixer_drv_data exynos4_mxr_drv_data = {
->  static struct platform_device_id mixer_driver_types[] = {
->         {
->                 .name           = "s5p-mixer",
-> -               .driver_data    = (unsigned long)&exynos4_mxr_drv_data,
-> +               .driver_data    = (unsigned long)&exynos4210_mxr_drv_data,
->         }, {
->                 .name           = "exynos5-mixer",
-> -               .driver_data    = (unsigned long)&exynos5_mxr_drv_data,
-> +               .driver_data    = (unsigned long)&exynos5250_mxr_drv_data,
->         }, {
->                 /* end node */
->         }
-> @@ -1140,7 +1140,10 @@ static struct platform_device_id mixer_driver_types[] = {
->  static struct of_device_id mixer_match_types[] = {
->         {
->                 .compatible = "samsung,exynos5-mixer",
-> -               .data   = &exynos5_mxr_drv_data,
-> +               .data   = &exynos5250_mxr_drv_data,
-> +       }, {
-> +               .compatible = "samsung,exynos5250-mixer",
-> +               .data   = &exynos5250_mxr_drv_data,
->         }, {
->                 /* end node */
->         }
-> --
-> 1.7.10.4
->
