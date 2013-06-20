@@ -1,61 +1,164 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v8 00/11] ASoC: fsl-ssi: ac97-slave support
-Date: Thu, 20 Jun 2013 14:51:48 +0200
-Message-ID: <20130620125148.GC3085@s25.your-server.de>
-References: <1371389117-19729-1-git-send-email-mpa@pengutronix.de>
- <51BE8B21.8050605@tabi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51BE8B21.8050605-N01EOCouUvQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v2 1/8] ARM: dts: exynos5250: move common i2c properties to
+ exynos5 dtsi
+Date: Thu, 20 Jun 2013 18:43:47 +0530
+Message-ID: <1371734034-21296-2-git-send-email-rahul.sharma@samsung.com>
+References: <1371734034-21296-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1371734034-21296-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
+Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 16, 2013 at 11:05:53PM -0500, Timur Tabi wrote:
-> Markus Pargmann wrote:
-> > Hi,
-> >
-> > This series adds DT support for phycore-ac97. Beside ac97 support, the series
-> > adds imx-pcm-fiq and generic DMA bindings to fsl-ssi.
-> >
-> > In version 8 I fixed the build issues by seperating the DT capable ac97 phycore
-> > driver from the old driver.
-> 
-> FYI, I get some warnings applying this patchset:
-> 
-> Applying: ASoC: Add phycore-ac97-dt driver
-> /home/b04825/git/linux.alsa2/.git/rebase-apply/patch:375: new blank line 
-> at EOF.
-> +
-> warning: 1 line adds whitespace errors.
-> Applying: ASoC: fsl: Kconfig: Use fsl-ssi for phycore-ac97
-> Applying: ASoC: fsl: Move fsl-ssi binding doc to sound/
-> Applying: ASoC: fsl: Update fsl-ssi binding doc
-> /home/b04825/git/linux.alsa2/.git/rebase-apply/patch:33: space before tab 
-> in indent.
->    		    Only necessary for some boards with incompatible
-> warning: 1 line adds whitespace errors.
+I2C nodes shares many properties across exynos5 SoCs (exynos5250
+and exyno5420). Common code is moved to exynos5.dtsi which is
+included in exyno5250 and exynos5420 SoC files.
 
-Thanks, I fixed all whitespace errors and the compile error.
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+---
+ arch/arm/boot/dts/exynos5.dtsi            |   36 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts  |    1 +
+ arch/arm/boot/dts/exynos5250-smdk5250.dts |    3 +++
+ arch/arm/boot/dts/exynos5250.dtsi         |   20 ----------------
+ 4 files changed, 40 insertions(+), 20 deletions(-)
 
-Regards,
-
-Markus
-
-> 
-> -- 
-> Timur Tabi
-> 
+diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+index f65e124..1ae179e 100644
+--- a/arch/arm/boot/dts/exynos5.dtsi
++++ b/arch/arm/boot/dts/exynos5.dtsi
+@@ -108,4 +108,40 @@
+ 		interrupts = <0 42 0>;
+ 		status = "disabled";
+ 	};
++
++	i2c_0: i2c@12C60000 {
++		compatible = "samsung,s3c2440-i2c";
++		reg = <0x12C60000 0x100>;
++		interrupts = <0 56 0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c_1: i2c@12C70000 {
++		compatible = "samsung,s3c2440-i2c";
++		reg = <0x12C70000 0x100>;
++		interrupts = <0 57 0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c_2: i2c@12C80000 {
++		compatible = "samsung,s3c2440-i2c";
++		reg = <0x12C80000 0x100>;
++		interrupts = <0 58 0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	i2c_3: i2c@12C90000 {
++		compatible = "samsung,s3c2440-i2c";
++		reg = <0x12C90000 0x100>;
++		interrupts = <0 59 0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
+ };
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index abc7272..5c7dd6d 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -30,6 +30,7 @@
+ 	};
+ 
+ 	i2c@12C60000 {
++		status = "okay";
+ 		samsung,i2c-sda-delay = <100>;
+ 		samsung,i2c-max-bus-freq = <20000>;
+ 		samsung,i2c-slave-addr = <0x66>;
+diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+index 35a66de..d3da369 100644
+--- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
++++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+@@ -28,6 +28,7 @@
+ 	};
+ 
+ 	i2c@12C60000 {
++		status = "okay";
+ 		samsung,i2c-sda-delay = <100>;
+ 		samsung,i2c-max-bus-freq = <20000>;
+ 
+@@ -62,6 +63,7 @@
+ 	};
+ 
+ 	i2c@12C70000 {
++		status = "okay";
+ 		samsung,i2c-sda-delay = <100>;
+ 		samsung,i2c-max-bus-freq = <20000>;
+ 
+@@ -101,6 +103,7 @@
+ 	};
+ 
+ 	i2c@12C80000 {
++		status = "okay";
+ 		samsung,i2c-sda-delay = <100>;
+ 		samsung,i2c-max-bus-freq = <66000>;
+ 
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index d04ab0a..baf6f88 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -217,11 +217,6 @@
+ 	};
+ 
+ 	i2c_0: i2c@12C60000 {
+-		compatible = "samsung,s3c2440-i2c";
+-		reg = <0x12C60000 0x100>;
+-		interrupts = <0 56 0>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		clocks = <&clock 294>;
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+@@ -229,11 +224,6 @@
+ 	};
+ 
+ 	i2c_1: i2c@12C70000 {
+-		compatible = "samsung,s3c2440-i2c";
+-		reg = <0x12C70000 0x100>;
+-		interrupts = <0 57 0>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		clocks = <&clock 295>;
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+@@ -241,11 +231,6 @@
+ 	};
+ 
+ 	i2c_2: i2c@12C80000 {
+-		compatible = "samsung,s3c2440-i2c";
+-		reg = <0x12C80000 0x100>;
+-		interrupts = <0 58 0>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		clocks = <&clock 296>;
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+@@ -253,11 +238,6 @@
+ 	};
+ 
+ 	i2c_3: i2c@12C90000 {
+-		compatible = "samsung,s3c2440-i2c";
+-		reg = <0x12C90000 0x100>;
+-		interrupts = <0 59 0>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		clocks = <&clock 297>;
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+-- 
+1.7.10.4
