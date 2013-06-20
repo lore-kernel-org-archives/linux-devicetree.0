@@ -1,27 +1,25 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6] ethernet/arc/arc_emac - Add new driver
-Date: Thu, 20 Jun 2013 19:12:23 +0300
-Message-ID: <CAHp75VdV0s_v7NSPjWh67rRgnK8N2d-YydMQ3zJ9z5Ha3Kds=g@mail.gmail.com>
-References: <1371729196-4505-1-git-send-email-abrodkin@synopsys.com>
-	<CAHp75Vf8+z0B6PMjGqVNPuEJrVYiR-yMT5dvqqBAs=GA5utLrQ@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/7] metag: add <dt-bindings/> symlink
+Date: Thu, 20 Jun 2013 10:29:35 -0600
+Message-ID: <51C32DEF.1060209@wwwdotorg.org>
+References: <1371729758-10196-1-git-send-email-james.hogan@imgtec.com> <1371729758-10196-2-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vf8+z0B6PMjGqVNPuEJrVYiR-yMT5dvqqBAs=GA5utLrQ@mail.gmail.com>
+In-Reply-To: <1371729758-10196-2-git-send-email-james.hogan@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: netdev <netdev@vger.kernel.org>, Francois Romieu <romieu@fr.zoreil.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Florian Fainelli <florian@openwrt.org>
+To: James Hogan <james.hogan@imgtec.com>
+Cc: linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, Michal Marek <mmarek@suse.cz>, Shawn Guo <shawn.guo@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2013 at 7:00 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Thu, Jun 20, 2013 at 2:53 PM, Alexey Brodkin
-> <Alexey.Brodkin@synopsys.com> wrote:
+On 06/20/2013 06:02 AM, James Hogan wrote:
+> Add symlink to include/dt-bindings from arch/metag/boot/dts/include/ to
+> match the one in arch/arm/... (see the commit below) so that
+> preprocessed device tree files can include various useful constant
+> definitions.
+> 
+> Commit c58299aa87544a590c62bda0bf52b69fa56cb8d5 ("kbuild: create an
+> "include chroot" for DT bindings") merged in v3.10-rc1.
 
->> please take a look at 6th re-spin of the patch.
-> Usually it's better to start new thread for new version of the patchset.
-Oh, sorry, It seems Gmail too smart.
-
---
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
