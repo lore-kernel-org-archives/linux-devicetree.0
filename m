@@ -1,57 +1,116 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 2/2] regulator: palmas: model SMPS10 as two regulators
-Date: Thu, 20 Jun 2013 16:22:27 +0530
-Message-ID: <51C2DEEB.9090600@nvidia.com>
-References: <1371717458-10307-1-git-send-email-kishon@ti.com> <1371717458-10307-3-git-send-email-kishon@ti.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH V4 1/3] pci: Add PCIe driver for Samsung Exynos
+Date: Thu, 20 Jun 2013 19:58:14 +0900
+Message-ID: <00d701ce6da5$10216ae0$306440a0$@samsung.com>
+References: <003601ce6756$444e8cd0$cceba670$@samsung.com>
+ <2061566.hRLrhtBK6z@wuerfel> <000901ce6838$8b514720$a1f3d560$@samsung.com>
+ <28355406.ThqqvnG0Yj@wuerfel> <51C2D260.6000303@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1371717458-10307-3-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Stephen Warren <swarren@nvidia.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "ian@slimlogic.co.uk" <ian@slimlogic.co.uk>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <51C2D260.6000303@st.com>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Pratyush Anand' <pratyush.anand@st.com>, 'Arnd Bergmann' <arnd@arndb.de>
+Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 June 2013 02:07 PM, Kishon Vijay Abraham I wrote:
-> SMPS10 has two outputs OUT1 and OUT2 and have one input IN1.
-> SMPS10-OUT2 is connected to SMPS10-IN1 and can be configured either
-> in BOOST mode or BYPASS mode. regulator_enable of SMPS10-OUT2 configures
-> it in BOOST mode. For BYPASS mode regulator_allow_bypass() API can be
-> used. SMPS10-OUT1 is connected to SMPS10-OUT2 and can be enabled using
-> regulator_enable().
->
-> Cc: Laxman Dewangan <ldewangan@nvidia.com>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->   drivers/regulator/palmas-regulator.c |   39 ++++++++++++++++++++++++++++++----
->   include/linux/mfd/palmas.h           |    9 ++++----
->   2 files changed, 40 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
-> index 3ae44ac..7004bab 100644
-> --- a/drivers/regulator/palmas-regulator.c
-> +++ b/drivers/regulator/palmas-regulator.c
-> @@ -97,7 +97,12 @@ static const struct regs_info palmas_regs_info[] = {
->   		.ctrl_addr	= PALMAS_SMPS9_CTRL,
->   	},
->   	{
-> -		.name		= "SMPS10",
-> +		.name		= "SMPS10_OUT1",
-> +		.sname		= "smps10-out2",
-> +		.ctrl_addr	= PALMAS_SMPS10_CTRL,
-> +	},
-> +	{
-> +		.name		= "SMPS10_OUT2",
->   		.sname		= "smps10-in",
->
+On Thursday, June 20, 2013 6:59 PM, Pratyush Anand wrote:
+> On 6/13/2013 7:48 PM, Arnd Bergmann wrote:
+> > On Thursday 13 June 2013 22:18:50 Jingoo Han wrote:
+> >> >On Wednesday, June 12, 2013 8:23 PM, Arnd Bergmann wrote:
+> >>> > >On Wednesday 12 June 2013 19:19:05 Jingoo Han wrote:
+> >>>> > > >+
+> >>>> > > >+/* synopsis specific PCIE configuration registers*/
+> >>>> > > >+#define PCIE_PORT_LINK_CONTROL		0x710
+> >>>> > > >+#define PORT_LINK_MODE_MASK		(0x3f << 16)
+> >>>> > > >+#define PORT_LINK_MODE_4_LANES		(0x7 << 16)
+> >>> > >
+> >>> > >Do you mean this is a "Synopsys" designware part? In that case it
+> >>> > >should really not be called "exynos-pcie" but "designware-pcie"
+> >>> > >and you should make sure that the driver makes no assumptions about
+> >>> > >the platform. A lot of other platforms also use designware
+> >>> > >parts and should be able to reuse this driver.
+> >> >
+> >> >Sorry, I don't think so.
+> >> >Only core block is a "Synopsys" designware part IP block,
+> >> >other parts are Exynos-specific.
+> >> >So, it is hard to share with other PCIe IPs using synopsis core.
+> > Just call it synopsys anyway and put a comment in to explain this.
+> > That should be enough for the next person with a synopsys PCI core
+> > to reuse your code and split out the exynos specific parts into a
+> > separate file.
+> >
+> 
+> I agree to Arnd that this patch should be split. I had worked in past
+> with SPEAr PCIe which also had designware PCIe IP. I see some code which
+> will fit both in SPEAr as well as in exynos. Unfortunately, I was not
+> able to get SPEAr driver pushed to mainline, as I moved to some other
+> project and got heavily occupied.
 
-This sequence can create regulator to be never register.
-In probe, we register regulator from 0 to max_id.
-Here smps10-out1 comes first and see the supply as smps10-out2 which is 
-not registered yet and so will fail with PROBE_DEFER
-When again it tries, the same issue.
+Oh, I see.
 
-I think we need to reverse the sequence, SMPS10-OUT2 and then SMPS10-OUT1.
+How about this?
+At the next PATCH v7, I will change the file name from 'pci-exynos.c'
+to 'pci-designware.c', as Arnd mentioned.
+
+Then, when Spear or other platform using designware is submitted,
+this 'pci-designware.c' will be split to two separate files such as
+'pci-designware.c' and 'pci-exynos.c'.
 
 
+Best regards,
+Jingoo Han
+
+> 
+> Last patch is here:
+> 
+> https://patchwork.kernel.org/patch/1661441/
+> 
+> Infact, these functions should be common to all arm platforms.
+> 
+> sys_to_pcie
+> cfg_read
+> cfg_write
+> 
+> Following functions should be common to all designware based driver (at
+> least they are same in SPEAr)
+> 
+> exynos_pcie_prog_viewport_cfg0
+> exynos_pcie_prog_viewport_cfg1
+> exynos_pcie_rd_other_conf
+> exynos_pcie_wr_other_conf
+> exynos_pcie_setup
+> exynos_pcie_valid_config
+> exynos_pcie_rd_conf
+> exynos_pcie_wd_conf
+> exynos_pcie_scan_bus
+> exynos_pcie_map_irq
+> add_pcie_port (after a bit of generalization)
+> exynos_pcie_probe
+> exynos_pcie_remove
+> 
+> 
+> 
+> Following should be specific to exynos:
+> 
+> exynos_pcie_rd_own_conf
+> exynos_pcie_wr_own_conf
+> exynos_pcie_link_up
+> exynos_pcie_setup_rc
+> exynos_pcie_assert_core_reset
+> exynos_pcie_deassert_core_reset
+> exynos_pcie_assert_phy_reset
+> exynos_pcie_deassert_phy_reset
+> exynos_pcie_init_phy
+> exynos_pcie_assert_reset
+> exynos_pcie_establish_link
+> exynos_pcie_host_init
+> 
+> 
+> 
+> struct pcie_port_info and struct pcie_port can also be standardized.
+> 
+> Regards
+> Pratyush
