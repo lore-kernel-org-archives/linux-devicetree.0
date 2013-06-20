@@ -1,197 +1,206 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCHv2 1/2] ARM: socfpga: dts: Add support for SD/MMC
-Date: Thu, 20 Jun 2013 10:54:27 +0900
-Message-ID: <51C260D3.4070003@samsung.com>
-References: <1371588170-17149-1-git-send-email-dinguyen@altera.com>
- <1371588170-17149-2-git-send-email-dinguyen@altera.com>
+From: =?EUC-KR?B?sei9wr/s?= <sw0312.kim@samsung.com>
+Subject: Re: [PATCH v3 2/3] drm/exynos: add support for exynos5420 mixer
+Date: Thu, 20 Jun 2013 11:03:17 +0900
+Message-ID: <51C262E5.6050605@samsung.com>
+References: <1371646269-21880-1-git-send-email-rahul.sharma@samsung.com>
+ <1371646269-21880-3-git-send-email-rahul.sharma@samsung.com>
+Reply-To: sw0312.kim@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1371588170-17149-2-git-send-email-dinguyen@altera.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dinguyen@altera.com
-Cc: dinh.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Pavel Machek <pavel@denx.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Chris Ball <cjb@laptop.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux@arm.linux.org.uk
+Content-Type: text/plain; charset=EUC-KR
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1371646269-21880-3-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, Seung-Woo Kim <sw0312.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-I didn't have the socfpga board. But it's looks good.
+Hello Rahul,
 
-Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+This patch is exactly same with v2 2/4 and only rebased on v3 1/3, so m=
+y
+ack is valid for this patch.
+
+On 2013=B3=E2 06=BF=F9 19=C0=CF 21:51, Rahul Sharma wrote:
+> Add support for exynos5420 mixer IP in the drm mixer driver.
+>=20
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+
+Acked-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+
+Anyway, this patch can be merged after merging [Patch v3 1/3] as like v=
+2.
 
 Best Regards,
-Jaehoon Chung
+- Seung-Woo Kim
 
-On 06/19/2013 05:42 AM, dinguyen@altera.com wrote:
-> From: Dinh Nguyen <dinguyen@altera.com>
-> 
-> Add bindings for SD/MMC for SOCFPGA.
-> Add "syscon" to the "altr,sys-mgr" binding.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-> Reviewed-by: Pavel Machek <pavel@denx.de>
-> CC: Arnd Bergmann <arnd@arndb.de>
-> CC: Olof Johansson <olof@lixom.net>
-> Cc: Pavel Machek <pavel@denx.de>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Chris Ball <cjb@laptop.org>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-mmc@vger.kernel.org
-> CC: <linux@arm.linux.org.uk>
-> 
-> v2:
-> - Fixed misspellings extentions->extensions
 > ---
->  .../devicetree/bindings/mmc/socfpga-dw-mshc.txt    |   60 ++++++++++++++++++++
->  arch/arm/boot/dts/socfpga.dtsi                     |   13 ++++-
->  arch/arm/boot/dts/socfpga_cyclone5.dts             |   13 +++++
->  arch/arm/boot/dts/socfpga_vt.dts                   |   12 ++++
->  4 files changed, 97 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-> new file mode 100644
-> index 0000000..f218bb8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-> @@ -0,0 +1,60 @@
-> +* Altera SOCFPGA specific extensions to the Synopsis Designware Mobile
-> +  Storage Host Controller
+>  .../devicetree/bindings/video/exynos_mixer.txt     |    1 +
+>  drivers/gpu/drm/exynos/exynos_mixer.c              |   49 ++++++++++=
++++++-----
+>  drivers/gpu/drm/exynos/regs-mixer.h                |    7 +++
+>  3 files changed, 45 insertions(+), 12 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/video/exynos_mixer.txt=
+ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+> index 9131b99..3334b0a 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_mixer.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+> @@ -5,6 +5,7 @@ Required properties:
+>  	1) "samsung,exynos5-mixer" <DEPRECATED>
+>  	2) "samsung,exynos4210-mixer"
+>  	3) "samsung,exynos5250-mixer"
+> +	4) "samsung,exynos5420-mixer"
+> =20
+>  - reg: physical base address of the mixer and length of memory mappe=
+d
+>  	region.
+> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/=
+exynos/exynos_mixer.c
+> index 6225501..b1280b4 100644
+> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
+> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
+> @@ -78,6 +78,7 @@ struct mixer_resources {
+>  enum mixer_version_id {
+>  	MXR_VER_0_0_0_16,
+>  	MXR_VER_16_0_33_0,
+> +	MXR_VER_128_0_0_184,
+>  };
+> =20
+>  struct mixer_context {
+> @@ -283,17 +284,19 @@ static void mixer_cfg_scan(struct mixer_context=
+ *ctx, unsigned int height)
+>  	val =3D (ctx->interlace ? MXR_CFG_SCAN_INTERLACE :
+>  				MXR_CFG_SCAN_PROGRASSIVE);
+> =20
+> -	/* choosing between porper HD and SD mode */
+> -	if (height <=3D 480)
+> -		val |=3D MXR_CFG_SCAN_NTSC | MXR_CFG_SCAN_SD;
+> -	else if (height <=3D 576)
+> -		val |=3D MXR_CFG_SCAN_PAL | MXR_CFG_SCAN_SD;
+> -	else if (height <=3D 720)
+> -		val |=3D MXR_CFG_SCAN_HD_720 | MXR_CFG_SCAN_HD;
+> -	else if (height <=3D 1080)
+> -		val |=3D MXR_CFG_SCAN_HD_1080 | MXR_CFG_SCAN_HD;
+> -	else
+> -		val |=3D MXR_CFG_SCAN_HD_720 | MXR_CFG_SCAN_HD;
+> +	if (ctx->mxr_ver !=3D MXR_VER_128_0_0_184) {
+> +		/* choosing between proper HD and SD mode */
+> +		if (height <=3D 480)
+> +			val |=3D MXR_CFG_SCAN_NTSC | MXR_CFG_SCAN_SD;
+> +		else if (height <=3D 576)
+> +			val |=3D MXR_CFG_SCAN_PAL | MXR_CFG_SCAN_SD;
+> +		else if (height <=3D 720)
+> +			val |=3D MXR_CFG_SCAN_HD_720 | MXR_CFG_SCAN_HD;
+> +		else if (height <=3D 1080)
+> +			val |=3D MXR_CFG_SCAN_HD_1080 | MXR_CFG_SCAN_HD;
+> +		else
+> +			val |=3D MXR_CFG_SCAN_HD_720 | MXR_CFG_SCAN_HD;
+> +	}
+> =20
+>  	mixer_reg_writemask(res, MXR_CFG, val, MXR_CFG_SCAN_MASK);
+>  }
+> @@ -557,6 +560,14 @@ static void mixer_graph_buffer(struct mixer_cont=
+ext *ctx, int win)
+>  	/* setup geometry */
+>  	mixer_reg_write(res, MXR_GRAPHIC_SPAN(win), win_data->fb_width);
+> =20
+> +	/* setup display size */
+> +	if (ctx->mxr_ver =3D=3D MXR_VER_128_0_0_184 &&
+> +		win =3D=3D MIXER_DEFAULT_WIN) {
+> +		val  =3D MXR_MXR_RES_HEIGHT(win_data->fb_height);
+> +		val |=3D MXR_MXR_RES_WIDTH(win_data->fb_width);
+> +		mixer_reg_write(res, MXR_RESOLUTION, val);
+> +	}
 > +
-> +Required Properties:
+>  	val  =3D MXR_GRP_WH_WIDTH(win_data->crtc_width);
+>  	val |=3D MXR_GRP_WH_HEIGHT(win_data->crtc_height);
+>  	val |=3D MXR_GRP_WH_H_SCALE(x_ratio);
+> @@ -581,7 +592,8 @@ static void mixer_graph_buffer(struct mixer_conte=
+xt *ctx, int win)
+>  	mixer_cfg_layer(ctx, win, true);
+> =20
+>  	/* layer update mandatory for mixer 16.0.33.0 */
+> -	if (ctx->mxr_ver =3D=3D MXR_VER_16_0_33_0)
+> +	if (ctx->mxr_ver =3D=3D MXR_VER_16_0_33_0 ||
+> +		ctx->mxr_ver =3D=3D MXR_VER_128_0_0_184)
+>  		mixer_layer_update(ctx);
+> =20
+>  	mixer_run(ctx);
+> @@ -816,6 +828,7 @@ static void mixer_win_disable(void *ctx, int win)
+> =20
+>  static int mixer_check_mode(void *ctx, struct drm_display_mode *mode=
+)
+>  {
+> +	struct mixer_context *mixer_ctx =3D ctx;
+>  	u32 w, h;
+> =20
+>  	w =3D mode->hdisplay;
+> @@ -825,6 +838,10 @@ static int mixer_check_mode(void *ctx, struct dr=
+m_display_mode *mode)
+>  		mode->hdisplay, mode->vdisplay, mode->vrefresh,
+>  		(mode->flags & DRM_MODE_FLAG_INTERLACE) ? 1 : 0);
+> =20
+> +	if (mixer_ctx->mxr_ver =3D=3D MXR_VER_0_0_0_16 ||
+> +		mixer_ctx->mxr_ver =3D=3D MXR_VER_128_0_0_184)
+> +		return 0;
 > +
-> +* compatible: should be
-> +	- "altr,socfpga-dw-mshc": for controllers with Altera SOCFPGA
-> +	  specific extensions.
+>  	if ((w >=3D 464 && w <=3D 720 && h >=3D 261 && h <=3D 576) ||
+>  		(w >=3D 1024 && w <=3D 1280 && h >=3D 576 && h <=3D 720) ||
+>  		(w >=3D 1664 && w <=3D 1920 && h >=3D 936 && h <=3D 1080))
+> @@ -1115,6 +1132,11 @@ static int vp_resources_init(struct exynos_drm=
+_hdmi_context *ctx,
+>  	return 0;
+>  }
+> =20
+> +static struct mixer_drv_data exynos5420_mxr_drv_data =3D {
+> +	.version =3D MXR_VER_128_0_0_184,
+> +	.is_vp_enabled =3D 0,
+> +};
 > +
-> +* altr,dw-mshc-ciu-div: Specifies the divider value for the card interface
-> +  unit (ciu) clock. The value should be (n-1). For Altera's SOCFPGA, the divider
-> +  value is fixed at 3, which mean parent_clock/4.
+>  static struct mixer_drv_data exynos5250_mxr_drv_data =3D {
+>  	.version =3D MXR_VER_16_0_33_0,
+>  	.is_vp_enabled =3D 0,
+> @@ -1145,6 +1167,9 @@ static struct of_device_id mixer_match_types[] =
+=3D {
+>  		.compatible =3D "samsung,exynos5250-mixer",
+>  		.data	=3D &exynos5250_mxr_drv_data,
+>  	}, {
+> +		.compatible =3D "samsung,exynos5420-mixer",
+> +		.data	=3D &exynos5420_mxr_drv_data,
+> +	}, {
+>  		/* end node */
+>  	}
+>  };
+> diff --git a/drivers/gpu/drm/exynos/regs-mixer.h b/drivers/gpu/drm/ex=
+ynos/regs-mixer.h
+> index 5d8dbc0..4537026 100644
+> --- a/drivers/gpu/drm/exynos/regs-mixer.h
+> +++ b/drivers/gpu/drm/exynos/regs-mixer.h
+> @@ -44,6 +44,9 @@
+>  #define MXR_CM_COEFF_Y			0x0080
+>  #define MXR_CM_COEFF_CB			0x0084
+>  #define MXR_CM_COEFF_CR			0x0088
+> +#define MXR_MO				0x0304
+> +#define MXR_RESOLUTION			0x0310
 > +
-> +* altr,dw-mshc-sdr-timing: Specifies the value of CIU clock phase shift value
-> +  in transmit mode and CIU clock phase shift value in receive mode for single
-> +  data rate mode operation. Refer notes below for the order of the cells and the
-> +  valid values.
+>  #define MXR_GRAPHIC0_BASE_S		0x2024
+>  #define MXR_GRAPHIC1_BASE_S		0x2044
+> =20
+> @@ -119,6 +122,10 @@
+>  #define MXR_GRP_WH_WIDTH(x)		MXR_MASK_VAL(x, 26, 16)
+>  #define MXR_GRP_WH_HEIGHT(x)		MXR_MASK_VAL(x, 10, 0)
+> =20
+> +/* bits for MXR_RESOLUTION */
+> +#define MXR_MXR_RES_HEIGHT(x)		MXR_MASK_VAL(x, 26, 16)
+> +#define MXR_MXR_RES_WIDTH(x)		MXR_MASK_VAL(x, 10, 0)
 > +
-> +  Notes for the sdr-timing values:
-> +
-> +    The order of the cells should be
-> +      - First Cell: CIU clock phase shift value for RX mode, smplsel bits in
-> +	the system manager SDMMC control group.
-> +      - Second Cell: CIU clock phase shift value for TX mode, drvsel bits in
-> +	the system manager SDMMC control group.
-> +
-> +    Valid values for SDR CIU clock timing for SOCFPGA:
-> +      - valid value for tx phase shift and rx phase shift is 0 to 7.
-> +
-> +Required properties for a slot:
-> +
-> +* bus-width: Data width for card slot. 4-bit or 8-bit data.
-> +
-> +Example:
-> +
-> +  The MSHC controller node can be split into two portions, SoC specific and
-> +  board specific portions as listed below.
-> +
-> +	dwmmc0@ff704000 {
-> +		compatible = "altr,socfpga-dw-mshc";
-> +		reg = <0xff704000 0x1000>;
-> +		interrupts = <0 139 4>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +	};
-> +
-> +	dwmmc0@ff704000 {
-> +		num-slots = <1>;
-> +		supports-highspeed;
-> +		broken-cd;
-> +		fifo-depth = <0x400>;
-> +		altr,dw-mshc-ciu-div = <3>;
-> +      		altr,dw-mshc-sdr-timing = <0 3>;
-> +
-> +		slot@0 {
-> +			reg = <0>;
-> +			bus-width = <4>;
-> +		};
-> +	};
-> +
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index bee62a2..dbf7f22 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -468,6 +468,17 @@
->  			cache-level = <2>;
->  		};
->  
-> +		mmc: dwmmc0@ff704000 {
-> +			compatible = "altr,socfpga-dw-mshc";
-> +			reg = <0xff704000 0x1000>;
-> +			interrupts = <0 139 4>;
-> +			fifo-depth = <0x400>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
-> +			clock-names = "biu", "ciu";
-> +		};
-> +
->  		/* Local timer */
->  		timer@fffec600 {
->  			compatible = "arm,cortex-a9-twd-timer";
-> @@ -521,7 +532,7 @@
->  			};
->  
->  		sysmgr@ffd08000 {
-> -				compatible = "altr,sys-mgr";
-> +				compatible = "altr,sys-mgr", "syscon";
->  				reg = <0xffd08000 0x4000>;
->  			};
->  	};
-> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dts b/arch/arm/boot/dts/socfpga_cyclone5.dts
-> index 973999d..1853cb1 100644
-> --- a/arch/arm/boot/dts/socfpga_cyclone5.dts
-> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dts
-> @@ -54,6 +54,19 @@
->  			status = "okay";
->  		};
->  
-> +		dwmmc0@ff704000 {
-> +			num-slots = <1>;
-> +			supports-highspeed;
-> +			broken-cd;
-> +			altr,dw-mshc-ciu-div = <3>;
-> +			altr,dw-mshc-sdr-timing = <0 3>;
-> +
-> +			slot@0 {
-> +				reg = <0>;
-> +				bus-width = <4>;
-> +			};
-> +		};
-> +
->  		timer0@ffc08000 {
->  			clock-frequency = <100000000>;
->  		};
-> diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
-> index d1ec0ca..d93deb0 100644
-> --- a/arch/arm/boot/dts/socfpga_vt.dts
-> +++ b/arch/arm/boot/dts/socfpga_vt.dts
-> @@ -46,6 +46,18 @@
->  			status = "okay";
->  		};
->  
-> +		dwmmc0@ff704000 {
-> +			num-slots = <1>;
-> +			supports-highspeed;
-> +			broken-cd;
-> +			altr,dw-mshc-ciu-div = <3>;
-> +
-> +			slot@0 {
-> +				reg = <0>;
-> +				bus-width = <4>;
-> +			};
-> +		};
-> +
->  		timer0@ffc08000 {
->  			clock-frequency = <7000000>;
->  		};
-> 
+>  /* bits for MXR_GRAPHICn_SXY */
+>  #define MXR_GRP_SXY_SX(x)		MXR_MASK_VAL(x, 26, 16)
+>  #define MXR_GRP_SXY_SY(x)		MXR_MASK_VAL(x, 10, 0)
+>=20
 
+--=20
+Seung-Woo Kim
+Samsung Software R&D Center
+--
