@@ -1,107 +1,53 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/2] regulator: palmas: model SMPS10 as two regulators
-Date: Thu, 20 Jun 2013 20:56:40 +0530
-Message-ID: <51C31F30.5000307@ti.com>
-References: <1371717458-10307-1-git-send-email-kishon@ti.com> <1371717458-10307-3-git-send-email-kishon@ti.com> <51C2DEEB.9090600@nvidia.com> <51C3089F.5030003@ti.com> <51C30B95.4010406@nvidia.com> <51C30F60.3060100@ti.com> <51C31537.9030705@nvidia.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAxLzZdIEFSTTogbXgyNzogUmVwbGFjZSBjbGtfcmVnaXN0?=
+ =?UTF-8?B?ZXJfY2xrZGV2IHdpdGggY2xvY2sgRFQgbG9va3Vw?=
+Date: Thu, 20 Jun 2013 19:28:08 +0400
+Message-ID: <1371742088.528552668@f66.mail.ru>
+References: <1371739815-6666-1-git-send-email-mpa@pengutronix.de>
+ <1371739815-6666-2-git-send-email-mpa@pengutronix.de>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51C31537.9030705@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Stephen Warren <swarren@nvidia.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371739815-6666-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: =?UTF-8?B?TWFya3VzIFBhcmdtYW5u?= <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Similarly as it was done for mx6q, use a DT lookup in order to make maintainance
+> task for the clock devices easier.
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> [Markus Pargmann: Add gpio clocks]
+> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx27.dtsi | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+> index 0695264..48c263c 100644
+> --- a/arch/arm/boot/dts/imx27.dtsi
+> +++ b/arch/arm/boot/dts/imx27.dtsi
+> @@ -208,6 +208,8 @@
+>  				#gpio-cells = <2>;
+>  				interrupt-controller;
+>  				#interrupt-cells = <2>;
+> +				clocks = <&clks 47>;
+> +				clock-names = "ipg";
 
-On Thursday 20 June 2013 08:14 PM, Laxman Dewangan wrote:
-> On Thursday 20 June 2013 07:49 PM, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On Thursday 20 June 2013 07:33 PM, Laxman Dewangan wrote:
->>> On Thursday 20 June 2013 07:20 PM, Kishon Vijay Abraham I wrote:
->>>> Hi,
->>>>
->>>> On Thursday 20 June 2013 04:22 PM, Laxman Dewangan wrote:
->>>>> On Thursday 20 June 2013 02:07 PM, Kishon Vijay Abraham I wrote:
->>>>>> SMPS10 has two outputs OUT1 and OUT2 and have one input IN1.
->>>>>> SMPS10-OUT2 is connected to SMPS10-IN1 and can be configured either
->>>>>> in BOOST mode or BYPASS mode. regulator_enable of SMPS10-OUT2 configures
->>>>>> it in BOOST mode. For BYPASS mode regulator_allow_bypass() API can be
->>>>>> used. SMPS10-OUT1 is connected to SMPS10-OUT2 and can be enabled using
->>>>>> regulator_enable().
->>>>>>
->>>>>> Cc: Laxman Dewangan <ldewangan@nvidia.com>
->>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>>> ---
->>>>>>     drivers/regulator/palmas-regulator.c |   39
->>>>>> ++++++++++++++++++++++++++++++----
->>>>>>     include/linux/mfd/palmas.h           |    9 ++++----
->>>>>>     2 files changed, 40 insertions(+), 8 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/regulator/palmas-regulator.c
->>>>>> b/drivers/regulator/palmas-regulator.c
->>>>>> index 3ae44ac..7004bab 100644
->>>>>> --- a/drivers/regulator/palmas-regulator.c
->>>>>> +++ b/drivers/regulator/palmas-regulator.c
->>>>>> @@ -97,7 +97,12 @@ static const struct regs_info palmas_regs_info[] = {
->>>>>>             .ctrl_addr    = PALMAS_SMPS9_CTRL,
->>>>>>         },
->>>>>>         {
->>>>>> -        .name        = "SMPS10",
->>>>>> +        .name        = "SMPS10_OUT1",
->>>>>> +        .sname        = "smps10-out2",
->>>>>> +        .ctrl_addr    = PALMAS_SMPS10_CTRL,
->>>>>> +    },
->>>>>> +    {
->>>>>> +        .name        = "SMPS10_OUT2",
->>>>>>             .sname        = "smps10-in",
->>>>>>
->>>>> This sequence can create regulator to be never register.
->>>>> In probe, we register regulator from 0 to max_id.
->>>>> Here smps10-out1 comes first and see the supply as smps10-out2 which is not
->>>>> registered yet and so will fail with PROBE_DEFER
->>>>> When again it tries, the same issue.
->>>> hmm.. But I was able to get (regulator_get) *SMPS10_OUT1* without any issue
->>>> during my testing. From looking at the code, I couldn't see *sname* being used
->>>> anywhere.
->>> We used the sname as
->>> pmic->desc[id].supply_name = palmas_regs_info[id].sname;
->>>
->>> However, how you have populated your dt?
->>> Have you added like
->>> smps10-out2-supply = <&SMPS10_OUT2>
->>>
->>> for the palmas regualtor -dt.
->> I added the regulator data like
->>
->> +                       smps10_out1_reg: smps10_out1 {
->> +                               regulator-name = "smps10_out1";
->> +                               regulator-min-microvolt = <5000000>;
->> +                               regulator-max-microvolt = <5000000>;
->> +                               regulator-always-on;
->> +                               regulator-boot-on;
->> +                               regulator-allow-bypass;
->> +                               ti,warm_sleep = <0>;
->> +                               ti,roof_floor = <0>;
->> +                               ti,mode_sleep = <0>;
->> +                               ti,warm_reset = <0>;
->> +                               ti,tstep = <0>;
->> +                               ti,vsel = <0>;
->> +                       };
->>
->> and from my controller I reference it using
->> +               vbus-supply = <&smps10_out1_reg>;
->>
->> and in the controller driver I use
->> +               vbus_reg = devm_regulator_get(dev, "vbus");
->
-> Have you added the regulator supply entries?
-> Are you testing on mainline linux-next?
+Clock is not used in the gpio driver, so I doubt the usefulness of this patch.
 
-Not in linux-next :-( Tested only with mainline.
-Does inverting the order helps?
-
-Thanks
-Kishon
+---
