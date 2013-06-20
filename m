@@ -1,130 +1,50 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] regulator: palmas: model SMPS10 as two regulators
-Date: Thu, 20 Jun 2013 20:14:07 +0530
-Message-ID: <51C31537.9030705@nvidia.com>
-References: <1371717458-10307-1-git-send-email-kishon@ti.com>
- <1371717458-10307-3-git-send-email-kishon@ti.com>
- <51C2DEEB.9090600@nvidia.com> <51C3089F.5030003@ti.com>
- <51C30B95.4010406@nvidia.com> <51C30F60.3060100@ti.com>
+From: "Florian Fainelli" <f.fainelli@gmail.com>
+Subject: [PATCH 2/3] ARM: kernel: downgrade missing clock-frequency from
+ error to warning
+Date: Thu, 20 Jun 2013 15:39:05 +0100
+Message-ID: <1371739146-32639-3-git-send-email-f.fainelli@gmail.com>
+References: <1371739146-32639-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51C30F60.3060100-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org" <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1371739146-32639-1-git-send-email-f.fainelli@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: lorenzo.pieralisi@arm.com
+Cc: Florian Fainelli <f.fainelli@gmail.com>, nico@linaro.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 June 2013 07:49 PM, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Thursday 20 June 2013 07:33 PM, Laxman Dewangan wrote:
->> On Thursday 20 June 2013 07:20 PM, Kishon Vijay Abraham I wrote:
->>> Hi,
->>>
->>> On Thursday 20 June 2013 04:22 PM, Laxman Dewangan wrote:
->>>> On Thursday 20 June 2013 02:07 PM, Kishon Vijay Abraham I wrote:
->>>>> SMPS10 has two outputs OUT1 and OUT2 and have one input IN1.
->>>>> SMPS10-OUT2 is connected to SMPS10-IN1 and can be configured either
->>>>> in BOOST mode or BYPASS mode. regulator_enable of SMPS10-OUT2 configures
->>>>> it in BOOST mode. For BYPASS mode regulator_allow_bypass() API can be
->>>>> used. SMPS10-OUT1 is connected to SMPS10-OUT2 and can be enabled using
->>>>> regulator_enable().
->>>>>
->>>>> Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->>>>> ---
->>>>>     drivers/regulator/palmas-regulator.c |   39
->>>>> ++++++++++++++++++++++++++++++----
->>>>>     include/linux/mfd/palmas.h           |    9 ++++----
->>>>>     2 files changed, 40 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/drivers/regulator/palmas-regulator.c
->>>>> b/drivers/regulator/palmas-regulator.c
->>>>> index 3ae44ac..7004bab 100644
->>>>> --- a/drivers/regulator/palmas-regulator.c
->>>>> +++ b/drivers/regulator/palmas-regulator.c
->>>>> @@ -97,7 +97,12 @@ static const struct regs_info palmas_regs_info[] = {
->>>>>             .ctrl_addr    = PALMAS_SMPS9_CTRL,
->>>>>         },
->>>>>         {
->>>>> -        .name        = "SMPS10",
->>>>> +        .name        = "SMPS10_OUT1",
->>>>> +        .sname        = "smps10-out2",
->>>>> +        .ctrl_addr    = PALMAS_SMPS10_CTRL,
->>>>> +    },
->>>>> +    {
->>>>> +        .name        = "SMPS10_OUT2",
->>>>>             .sname        = "smps10-in",
->>>>>
->>>> This sequence can create regulator to be never register.
->>>> In probe, we register regulator from 0 to max_id.
->>>> Here smps10-out1 comes first and see the supply as smps10-out2 which is not
->>>> registered yet and so will fail with PROBE_DEFER
->>>> When again it tries, the same issue.
->>> hmm.. But I was able to get (regulator_get) *SMPS10_OUT1* without any issue
->>> during my testing. From looking at the code, I couldn't see *sname* being used
->>> anywhere.
->> We used the sname as
->> pmic->desc[id].supply_name = palmas_regs_info[id].sname;
->>
->> However, how you have populated your dt?
->> Have you added like
->> smps10-out2-supply = <&SMPS10_OUT2>
->>
->> for the palmas regualtor -dt.
-> I added the regulator data like
->
-> +                       smps10_out1_reg: smps10_out1 {
-> +                               regulator-name = "smps10_out1";
-> +                               regulator-min-microvolt = <5000000>;
-> +                               regulator-max-microvolt = <5000000>;
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-allow-bypass;
-> +                               ti,warm_sleep = <0>;
-> +                               ti,roof_floor = <0>;
-> +                               ti,mode_sleep = <0>;
-> +                               ti,warm_reset = <0>;
-> +                               ti,tstep = <0>;
-> +                               ti,vsel = <0>;
-> +                       };
->
-> and from my controller I reference it using
-> +               vbus-supply = <&smps10_out1_reg>;
->
-> and in the controller driver I use
-> +               vbus_reg = devm_regulator_get(dev, "vbus");
+A subsequent patch will modify the ARM CPU binding documentation to make
+it mandatory to supply either a "clocks" node, or a "clock-frequency"
+node when the property "device_type" equals "cpu". Since this is going
+to start spitting errors for some in-tree platforms, dowgrade the error
+message to a simple warning.
 
-Have you added the regulator supply entries?
-Are you testing on mainline linux-next?
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm/kernel/topology.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I have DT entry as:
-                 palmas: tps65913@58 {
-                         compatible = "ti,palmas";
-                         reg = <0x58>;
-                         interrupts = <0 86 0x4>;
-
-                 :::::::::::::::;
-                         palmas_pmic {
-                             compatible = "ti,palmas-pmic";
-                             smps1-in-supply = <&tps65090_dcdc3_reg>;
-                             smps3-in-supply = <&tps65090_dcdc3_reg>;
-                             smps4-in-supply = <&tps65090_dcdc2_reg>;
-  :::::::::;
-
-			smps10-out2-supply = <&SMPS10_OUT2>
-:::::::::::::;
-}
-
-And it fails.
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index 8f340a1..091ec84 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -124,7 +124,7 @@ static void __init parse_dt_topology(void)
+ 		if (IS_ERR(cpu_clk)) {
+ 			prop = of_get_property(cn, "clock-frequency", &len);
+ 			if (!prop || len != 4) {
+-				pr_err("%s missing clock-frequency property\n",
++				pr_warn("%s missing clock-frequency property\n",
+ 					cn->full_name);
+ 				continue;
+ 			}
+-- 
+1.8.1.2
