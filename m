@@ -1,49 +1,43 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: [PATCH V8 2/4] ARM: EXYNOS: Enable PCIe support for Exynos5440
-Date: Thu, 20 Jun 2013 21:43:51 +0900
-Message-ID: <00dc01ce6db3$d118a570$7349f050$@samsung.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH v7 0/3] SH pinctrl DT support
+Date: Thu, 20 Jun 2013 13:44:26 +0100
+Message-ID: <51C2F92A.5050101@imgtec.com>
+References: <1371495003-11185-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <CACRpkdZh709J3pFsfbReQ20LU5W0Q1HacE0ZpssWXofKTJJ6pQ@mail.gmail.com> <51C01FAF.8050006@imgtec.com> <CACRpkdbFEKJxQfvT4xR4z1iymHPmbbCYJriVPD95P_L0oCC6Jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Tomasz Figa' <t.figa@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, Jingoo Han <jg1.han@samsung.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbFEKJxQfvT4xR4z1iymHPmbbCYJriVPD95P_L0oCC6Jg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <damm@opensource.se>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Enable PCIe support for Exynos5440 which has two PCIe controllers.
+On 18/06/13 10:05, Linus Walleij wrote:
+> On Tue, Jun 18, 2013 at 10:51 AM, James Hogan <james.hogan@imgtec.com> wrote:
+> 
+>> Should we be standardizing the pins/groups/function properties too,
+>> since the strings are pretty much passed straight through? The usage
+>> seems pretty similar between the drivers I've seen (except ugly vendor
+>> prefixes), so we could presumably get away with a single implementation
+>> of dt_node_to_map?
+> 
+> This is an orthogonal issue I'd say.
 
-Signed-off-by: Jingoo Han <jg1.han@samsung.com>
----
- arch/arm/Kconfig             |    1 +
- arch/arm/mach-exynos/Kconfig |    2 ++
- 2 files changed, 3 insertions(+)
+agreed.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 804f41d..098eaef 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1427,6 +1427,7 @@ config PCI_HOST_ITE8152
- 	select DMABOUNCE
- 
- source "drivers/pci/Kconfig"
-+source "drivers/pci/pcie/Kconfig"
- 
- source "drivers/pcmcia/Kconfig"
- 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 359af2c..f5f65b5 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -95,6 +95,8 @@ config SOC_EXYNOS5440
- 	select ARCH_HAS_OPP
- 	select HAVE_ARM_ARCH_TIMER
- 	select AUTO_ZRELADDR
-+	select MIGHT_HAVE_PCI
-+	select PCI_DOMAINS if PCI
- 	select PINCTRL_EXYNOS5440
- 	select PM_OPP
- 	help
--- 
-1.7.10.4
+> Basically this goes back to the quite prolonged discussion about
+> device tree bindings and the fact that we added the
+> .dt_node_to_map() and .dt_free_map() functions in the
+> first place.
+> 
+> I'd be happy to consolidate these mapping functions where
+> possible, by moving to the core, basically.
+> 
+> But that would be a separate patch series.... interested? ;-)
+
+Mildly, but I can't guarantee I'll get the time.
+
+Cheers
+James
+
