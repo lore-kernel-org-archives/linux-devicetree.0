@@ -1,62 +1,54 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2] hwmon: (ina2xx) Add device tree support to pass the
+From: Tang Yuantian-B29983 <B29983@freescale.com>
+Subject: RE: [PATCH v2] hwmon: (ina2xx) Add device tree support to pass the
  shunt resistor
-Date: Wed, 19 Jun 2013 19:40:18 -0700
-Message-ID: <20130620024018.GA835@roeck-us.net>
+Date: Thu, 20 Jun 2013 02:45:58 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B0B20DCBA@039-SN2MPN1-011.039d.mgd.msft.net>
 References: <1371624620-14254-1-git-send-email-Yuantian.Tang@freescale.com>
  <20130619154310.GA29516@roeck-us.net>
  <D07C73A334FF604B95B3CBD2A545D07B0B20DC69@039-SN2MPN1-011.039d.mgd.msft.net>
+ <20130620024018.GA835@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B0B20DC69@039-SN2MPN1-011.039d.mgd.msft.net>
+In-Reply-To: <20130620024018.GA835@roeck-us.net>
+Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: Tang Yuantian-B29983 <B29983@freescale.com>
+To: Guenter Roeck <linux@roeck-us.net>
 Cc: "khali@linux-fr.org" <khali@linux-fr.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2013 at 02:27:18AM +0000, Tang Yuantian-B29983 wrote:
->=20
->=20
-> > -----Original Message-----
-> > From: Guenter Roeck [mailto:linux@roeck-us.net]
-> > Sent: 2013=E5=B9=B46=E6=9C=8819=E6=97=A5 =E6=98=9F=E6=9C=9F=E4=B8=89=
- 23:43
-> > To: Tang Yuantian-B29983
-> > Cc: khali@linux-fr.org; lm-sensors@lm-sensors.org; devicetree-
-> > discuss@lists.ozlabs.org; linux-doc@vger.kernel.org
-> > Subject: Re: [PATCH v2] hwmon: (ina2xx) Add device tree support to =
-pass
-> > the shunt resistor
-> >=20
-> > On Wed, Jun 19, 2013 at 02:50:20PM +0800, Yuantian.Tang@freescale.c=
-om
-> > wrote:
-> > > From: Tang Yuantian <yuantian.tang@freescale.com>
-> > >
-> > > Adding another way that is device tree to pass the shunt resistor
-> > > value to driver except for platform data.
-> > >
-> > > Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
-> >=20
-> > I noticed that of.h include was missing. No need to re-send; I adde=
-d it
-> > myself.
-> > Applied to -next.
-> >=20
->=20
-> Thanks for your help. Of.h is already included in i2c.h.
-> If it is really needed, I should have seen the warning or error when =
-compile.
-> Including it explicitly is also a good point.
->=20
-Common rule is to include a file if its definitions are used. We can no=
-t rely
-on some other file including it for us, since it is not guaranteed that=
- this
-will always be the case.
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEd1ZW50ZXIgUm9lY2sgW21h
+aWx0bzpsaW51eEByb2Vjay11cy5uZXRdDQo+IFNlbnQ6IDIwMTPlubQ25pyIMjDml6Ug5pif5pyf
+5ZubIDEwOjQwDQo+IFRvOiBUYW5nIFl1YW50aWFuLUIyOTk4Mw0KPiBDYzoga2hhbGlAbGludXgt
+ZnIub3JnOyBsbS1zZW5zb3JzQGxtLXNlbnNvcnMub3JnOyBkZXZpY2V0cmVlLQ0KPiBkaXNjdXNz
+QGxpc3RzLm96bGFicy5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDog
+UmU6IFtQQVRDSCB2Ml0gaHdtb246IChpbmEyeHgpIEFkZCBkZXZpY2UgdHJlZSBzdXBwb3J0IHRv
+IHBhc3MNCj4gdGhlIHNodW50IHJlc2lzdG9yDQo+IA0KPiBPbiBUaHUsIEp1biAyMCwgMjAxMyBh
+dCAwMjoyNzoxOEFNICswMDAwLCBUYW5nIFl1YW50aWFuLUIyOTk4MyB3cm90ZToNCj4gPg0KPiA+
+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogR3VlbnRlciBS
+b2VjayBbbWFpbHRvOmxpbnV4QHJvZWNrLXVzLm5ldF0NCj4gPiA+IFNlbnQ6IDIwMTPlubQ25pyI
+MTnml6Ug5pif5pyf5LiJIDIzOjQzDQo+ID4gPiBUbzogVGFuZyBZdWFudGlhbi1CMjk5ODMNCj4g
+PiA+IENjOiBraGFsaUBsaW51eC1mci5vcmc7IGxtLXNlbnNvcnNAbG0tc2Vuc29ycy5vcmc7IGRl
+dmljZXRyZWUtDQo+ID4gPiBkaXNjdXNzQGxpc3RzLm96bGFicy5vcmc7IGxpbnV4LWRvY0B2Z2Vy
+Lmtlcm5lbC5vcmcNCj4gPiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIGh3bW9uOiAoaW5hMnh4
+KSBBZGQgZGV2aWNlIHRyZWUgc3VwcG9ydCB0bw0KPiA+ID4gcGFzcyB0aGUgc2h1bnQgcmVzaXN0
+b3INCj4gPiA+DQo+ID4gPiBPbiBXZWQsIEp1biAxOSwgMjAxMyBhdCAwMjo1MDoyMFBNICswODAw
+LA0KPiA+ID4gWXVhbnRpYW4uVGFuZ0BmcmVlc2NhbGUuY29tDQo+ID4gPiB3cm90ZToNCj4gPiA+
+ID4gRnJvbTogVGFuZyBZdWFudGlhbiA8eXVhbnRpYW4udGFuZ0BmcmVlc2NhbGUuY29tPg0KPiA+
+ID4gPg0KPiA+ID4gPiBBZGRpbmcgYW5vdGhlciB3YXkgdGhhdCBpcyBkZXZpY2UgdHJlZSB0byBw
+YXNzIHRoZSBzaHVudCByZXNpc3Rvcg0KPiA+ID4gPiB2YWx1ZSB0byBkcml2ZXIgZXhjZXB0IGZv
+ciBwbGF0Zm9ybSBkYXRhLg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1
+YW50aWFuIDxZdWFudGlhbi5UYW5nQGZyZWVzY2FsZS5jb20+DQo+ID4gPg0KPiA+ID4gSSBub3Rp
+Y2VkIHRoYXQgb2YuaCBpbmNsdWRlIHdhcyBtaXNzaW5nLiBObyBuZWVkIHRvIHJlLXNlbmQ7IEkg
+YWRkZWQNCj4gPiA+IGl0IG15c2VsZi4NCj4gPiA+IEFwcGxpZWQgdG8gLW5leHQuDQo+ID4gPg0K
+PiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIGhlbHAuIE9mLmggaXMgYWxyZWFkeSBpbmNsdWRlZCBp
+biBpMmMuaC4NCj4gPiBJZiBpdCBpcyByZWFsbHkgbmVlZGVkLCBJIHNob3VsZCBoYXZlIHNlZW4g
+dGhlIHdhcm5pbmcgb3IgZXJyb3Igd2hlbg0KPiBjb21waWxlLg0KPiA+IEluY2x1ZGluZyBpdCBl
+eHBsaWNpdGx5IGlzIGFsc28gYSBnb29kIHBvaW50Lg0KPiA+DQo+IENvbW1vbiBydWxlIGlzIHRv
+IGluY2x1ZGUgYSBmaWxlIGlmIGl0cyBkZWZpbml0aW9ucyBhcmUgdXNlZC4gV2UgY2FuIG5vdA0K
+PiByZWx5IG9uIHNvbWUgb3RoZXIgZmlsZSBpbmNsdWRpbmcgaXQgZm9yIHVzLCBzaW5jZSBpdCBp
+cyBub3QgZ3VhcmFudGVlZA0KPiB0aGF0IHRoaXMgd2lsbCBhbHdheXMgYmUgdGhlIGNhc2UuDQo+
+IA0KR29vZCBwb2ludCwgSSB3aWxsIGZvbGxvdyB0aGlzIHJ1bGUuIFRoYW5rcywNCg0KVGhhbmtz
+LA0KWXVhbnRpYW4NCg0KPiBUaGFua3MsDQo+IEd1ZW50ZXINCg0K
 
-Thanks,
-Guenter
