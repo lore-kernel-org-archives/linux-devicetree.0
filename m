@@ -1,68 +1,107 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCA2LzZdIEFSTTogZHRzOiBBZGQgZGV2aWNlIHRyZWUgc3Vw?=
- =?UTF-8?B?cG9ydCBmb3IgcGh5Y2FyZCBwY2ExMDA=?=
-Date: Thu, 20 Jun 2013 19:21:10 +0400
-Message-ID: <1371741670.186508416@f66.mail.ru>
-References: <1371739815-6666-1-git-send-email-mpa@pengutronix.de>
- <1371739815-6666-7-git-send-email-mpa@pengutronix.de>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/2] regulator: palmas: model SMPS10 as two regulators
+Date: Thu, 20 Jun 2013 20:56:40 +0530
+Message-ID: <51C31F30.5000307@ti.com>
+References: <1371717458-10307-1-git-send-email-kishon@ti.com> <1371717458-10307-3-git-send-email-kishon@ti.com> <51C2DEEB.9090600@nvidia.com> <51C3089F.5030003@ti.com> <51C30B95.4010406@nvidia.com> <51C30F60.3060100@ti.com> <51C31537.9030705@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1371739815-6666-7-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?TWFya3VzIFBhcmdtYW5u?= <mpa@pengutronix.de>
-Cc: =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <fabio.estevam@freescale.com>, =?UTF-8?B?U3RlZmZlbiBUcnVtdHJhcg==?= <s.trumtrar@pengutronix.de>, =?UTF-8?B?SmFuIEx1ZWJiZQ==?= <jlu@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel@pengutronix.de>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51C31537.9030705@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Stephen Warren <swarren@nvidia.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> Based on patches from:
-> 
-> Steffen Trumtrar <s.trumtrar@pengutronix.de>:
->  - Original patch
->  - ARM: dts: Set partition offsets for phycard
->  - ARM: dts: Use CSPI1 instead of CSPI2 on phycard pca100
->  - ARM: imx27-phytec-phycard-S.dts: resize nand partitions
-> 
-> Jan Luebbe <jlu@pengutronix.de>:
->  - ARM: dts: Enable bad block table in NAND
-> 
-> Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> Cc: Jan Luebbe <jlu@pengutronix.de>
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-...
-> +			gpio@10015000 {
-> +				status = "okay";
-> +			};
-> +
-> +			gpio@10015100 {
-> +				status = "okay";
-> +			};
-> +
-> +			gpio@10015200 {
-> +				status = "okay";
-> +			};
-> +
-> +			gpio@10015300 {
-> +				status = "okay";
-> +			};
-> +
-> +			gpio@10015400 {
-> +				status = "okay";
-> +			};
-> +
-> +			gpio@10015500 {
-> +				status = "okay";
-> +			};
+Hi,
 
-No need setup status for devices which not disabled in imx27.dts
+On Thursday 20 June 2013 08:14 PM, Laxman Dewangan wrote:
+> On Thursday 20 June 2013 07:49 PM, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Thursday 20 June 2013 07:33 PM, Laxman Dewangan wrote:
+>>> On Thursday 20 June 2013 07:20 PM, Kishon Vijay Abraham I wrote:
+>>>> Hi,
+>>>>
+>>>> On Thursday 20 June 2013 04:22 PM, Laxman Dewangan wrote:
+>>>>> On Thursday 20 June 2013 02:07 PM, Kishon Vijay Abraham I wrote:
+>>>>>> SMPS10 has two outputs OUT1 and OUT2 and have one input IN1.
+>>>>>> SMPS10-OUT2 is connected to SMPS10-IN1 and can be configured either
+>>>>>> in BOOST mode or BYPASS mode. regulator_enable of SMPS10-OUT2 configures
+>>>>>> it in BOOST mode. For BYPASS mode regulator_allow_bypass() API can be
+>>>>>> used. SMPS10-OUT1 is connected to SMPS10-OUT2 and can be enabled using
+>>>>>> regulator_enable().
+>>>>>>
+>>>>>> Cc: Laxman Dewangan <ldewangan@nvidia.com>
+>>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>>> ---
+>>>>>>     drivers/regulator/palmas-regulator.c |   39
+>>>>>> ++++++++++++++++++++++++++++++----
+>>>>>>     include/linux/mfd/palmas.h           |    9 ++++----
+>>>>>>     2 files changed, 40 insertions(+), 8 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/regulator/palmas-regulator.c
+>>>>>> b/drivers/regulator/palmas-regulator.c
+>>>>>> index 3ae44ac..7004bab 100644
+>>>>>> --- a/drivers/regulator/palmas-regulator.c
+>>>>>> +++ b/drivers/regulator/palmas-regulator.c
+>>>>>> @@ -97,7 +97,12 @@ static const struct regs_info palmas_regs_info[] = {
+>>>>>>             .ctrl_addr    = PALMAS_SMPS9_CTRL,
+>>>>>>         },
+>>>>>>         {
+>>>>>> -        .name        = "SMPS10",
+>>>>>> +        .name        = "SMPS10_OUT1",
+>>>>>> +        .sname        = "smps10-out2",
+>>>>>> +        .ctrl_addr    = PALMAS_SMPS10_CTRL,
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +        .name        = "SMPS10_OUT2",
+>>>>>>             .sname        = "smps10-in",
+>>>>>>
+>>>>> This sequence can create regulator to be never register.
+>>>>> In probe, we register regulator from 0 to max_id.
+>>>>> Here smps10-out1 comes first and see the supply as smps10-out2 which is not
+>>>>> registered yet and so will fail with PROBE_DEFER
+>>>>> When again it tries, the same issue.
+>>>> hmm.. But I was able to get (regulator_get) *SMPS10_OUT1* without any issue
+>>>> during my testing. From looking at the code, I couldn't see *sname* being used
+>>>> anywhere.
+>>> We used the sname as
+>>> pmic->desc[id].supply_name = palmas_regs_info[id].sname;
+>>>
+>>> However, how you have populated your dt?
+>>> Have you added like
+>>> smps10-out2-supply = <&SMPS10_OUT2>
+>>>
+>>> for the palmas regualtor -dt.
+>> I added the regulator data like
+>>
+>> +                       smps10_out1_reg: smps10_out1 {
+>> +                               regulator-name = "smps10_out1";
+>> +                               regulator-min-microvolt = <5000000>;
+>> +                               regulator-max-microvolt = <5000000>;
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-allow-bypass;
+>> +                               ti,warm_sleep = <0>;
+>> +                               ti,roof_floor = <0>;
+>> +                               ti,mode_sleep = <0>;
+>> +                               ti,warm_reset = <0>;
+>> +                               ti,tstep = <0>;
+>> +                               ti,vsel = <0>;
+>> +                       };
+>>
+>> and from my controller I reference it using
+>> +               vbus-supply = <&smps10_out1_reg>;
+>>
+>> and in the controller driver I use
+>> +               vbus_reg = devm_regulator_get(dev, "vbus");
+>
+> Have you added the regulator supply entries?
+> Are you testing on mainline linux-next?
 
----
+Not in linux-next :-( Tested only with mainline.
+Does inverting the order helps?
+
+Thanks
+Kishon
