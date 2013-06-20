@@ -1,13 +1,14 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v5 3/3] arm: add basic support for Rockchip RK3066a boards
-Date: Fri, 21 Jun 2013 00:41:02 +0200
-Message-ID: <201306210041.02863.heiko@sntech.de>
-References: <201306210039.14740.heiko@sntech.de>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] clk: add support for Rockchip gate clocks
+Date: Thu, 20 Jun 2013 16:29:03 -0700
+Message-ID: <20130620232903.9136.70323@quantum>
+References: <201306131658.36584.heiko@sntech.de>
+ <201306131659.40802.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201306210039.14740.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <201306131659.40802.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,539 +19,174 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a generic devicetree board file and a dtsi for boards
-based on the RK3066a SoCs from Rockchip.
-
-Apart from the generic parts (gic, clocks, pinctrl) the only components
-currently supported are the timers, uarts and mmc ports (all DesignWare-
-based).
-
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
----
- arch/arm/Kconfig                  |    2 +
- arch/arm/Makefile                 |    1 +
- arch/arm/boot/dts/rk3066a.dtsi    |  390 +++++++++++++++++++++++++++++++++++++
- arch/arm/mach-rockchip/Kconfig    |   16 ++
- arch/arm/mach-rockchip/Makefile   |    1 +
- arch/arm/mach-rockchip/rockchip.c |   52 +++++
- 6 files changed, 462 insertions(+)
- create mode 100644 arch/arm/boot/dts/rk3066a.dtsi
- create mode 100644 arch/arm/mach-rockchip/Kconfig
- create mode 100644 arch/arm/mach-rockchip/Makefile
- create mode 100644 arch/arm/mach-rockchip/rockchip.c
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index ca30d75..6c696f5 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1006,6 +1006,8 @@ source "arch/arm/mach-mmp/Kconfig"
- 
- source "arch/arm/mach-realview/Kconfig"
- 
-+source "arch/arm/mach-rockchip/Kconfig"
-+
- source "arch/arm/mach-sa1100/Kconfig"
- 
- source "arch/arm/plat-samsung/Kconfig"
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index d7e5e8c..c01e4a7 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -172,6 +172,7 @@ machine-$(CONFIG_ARCH_PICOXCELL)	+= picoxcell
- machine-$(CONFIG_ARCH_SIRF)		+= prima2
- machine-$(CONFIG_ARCH_PXA)		+= pxa
- machine-$(CONFIG_ARCH_REALVIEW)		+= realview
-+machine-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip
- machine-$(CONFIG_ARCH_RPC)		+= rpc
- machine-$(CONFIG_ARCH_S3C24XX)		+= s3c24xx
- machine-$(CONFIG_ARCH_S3C64XX)		+= s3c64xx
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-new file mode 100644
-index 0000000..5c40ea9
---- /dev/null
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -0,0 +1,390 @@
-+/*
-+ * Copyright (c) 2013 MundoReader S.L.
-+ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/pinctrl/rockchip.h>
-+#include "skeleton.dtsi"
-+#include "rk3066a-clocks.dtsi"
-+
-+/ {
-+	compatible = "rockchip,rk3066a";
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <0x0>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			next-level-cache = <&L2>;
-+			reg = <0x1>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
-+
-+		gic: interrupt-controller@1013d000 {
-+			compatible = "arm,cortex-a9-gic";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0x1013d000 0x1000>,
-+			      <0x1013c100 0x0100>;
-+		};
-+
-+		L2: l2-cache-controller@10138000 {
-+			compatible = "arm,pl310-cache";
-+			reg = <0x10138000 0x1000>;
-+			cache-unified;
-+			cache-level = <2>;
-+		};
-+
-+		local-timer@1013c600 {
-+			compatible = "arm,cortex-a9-twd-timer";
-+			reg = <0x1013c600 0x20>;
-+			interrupts = <GIC_PPI 13 0x304>;
-+			clocks = <&dummy150m>;
-+		};
-+
-+		timer@20038000 {
-+			compatible = "snps,dw-apb-timer-osc";
-+			reg = <0x20038000 0x100>;
-+			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&xin24m>, <&dummy>;
-+			clock-names = "timer", "pclk";
-+		};
-+
-+		timer@2003a000 {
-+			compatible = "snps,dw-apb-timer-osc";
-+			reg = <0x2003a000 0x100>;
-+			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&xin24m>, <&dummy>;
-+			clock-names = "timer", "pclk";
-+		};
-+
-+		timer@2000e000 {
-+			compatible = "snps,dw-apb-timer-osc";
-+			reg = <0x2000e000 0x100>;
-+			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&xin24m>, <&dummy>;
-+			clock-names = "timer", "pclk";
-+		};
-+
-+		pinctrl@20008000 {
-+			compatible = "rockchip,rk3066a-pinctrl";
-+			reg = <0x20008000 0x150>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			gpio0: gpio0@20034000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x20034000 0x100>;
-+				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&dummy>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio1: gpio1@2003c000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x2003c000 0x100>;
-+				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&dummy>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio2: gpio2@2003e000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x2003e000 0x100>;
-+				interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&dummy>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio3: gpio3@20080000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x20080000 0x100>;
-+				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&dummy>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio4: gpio4@20084000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x20084000 0x100>;
-+				interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&dummy>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			gpio6: gpio6@2000a000 {
-+				compatible = "rockchip,gpio-bank";
-+				reg = <0x2000a000 0x100>;
-+				interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&dummy>;
-+
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+
-+			pcfg_pull_default: pcfg_pull_default {
-+				bias-pull-pin-default;
-+			};
-+
-+			pcfg_pull_none: pcfg_pull_none {
-+				bias-disable;
-+			};
-+
-+			uart0 {
-+				uart0_xfer: uart0-xfer {
-+					rockchip,pins = <RK_GPIO1 0 RK_FUNC_1 &pcfg_pull_default>,
-+							<RK_GPIO1 1 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				uart0_cts: uart0-cts {
-+					rockchip,pins = <RK_GPIO1 2 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				uart0_rts: uart0-rts {
-+					rockchip,pins = <RK_GPIO1 3 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+			};
-+
-+			uart1 {
-+				uart1_xfer: uart1-xfer {
-+					rockchip,pins = <RK_GPIO1 4 RK_FUNC_1 &pcfg_pull_default>,
-+							<RK_GPIO1 5 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				uart1_cts: uart1-cts {
-+					rockchip,pins = <RK_GPIO1 6 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				uart1_rts: uart1-rts {
-+					rockchip,pins = <RK_GPIO1 7 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+			};
-+
-+			uart2 {
-+				uart2_xfer: uart2-xfer {
-+					rockchip,pins = <RK_GPIO1 8 RK_FUNC_1 &pcfg_pull_default>,
-+							<RK_GPIO1 9 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+				/* no rts / cts for uart2 */
-+			};
-+
-+			uart3 {
-+				uart3_xfer: uart3-xfer {
-+					rockchip,pins = <RK_GPIO3 27 RK_FUNC_1 &pcfg_pull_default>,
-+							<RK_GPIO3 28 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				uart3_cts: uart3-cts {
-+					rockchip,pins = <RK_GPIO3 29 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				uart3_rts: uart3-rts {
-+					rockchip,pins = <RK_GPIO3 30 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+			};
-+
-+			sd0 {
-+				sd0_clk: sd0-clk {
-+					rockchip,pins = <RK_GPIO3 8 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				sd0_cmd: sd0-cmd {
-+					rockchip,pins = <RK_GPIO3 9 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				sd0_cd: sd0-cd {
-+					rockchip,pins = <RK_GPIO3 14 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				sd0_wp: sd0-wp {
-+					rockchip,pins = <RK_GPIO3 15 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				sd0_bus1: sd0-bus-width1 {
-+					rockchip,pins = <RK_GPIO3 10 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				sd0_bus4: sd0-bus-width4 {
-+					rockchip,pins = <RK_GPIO3 10 RK_FUNC_1 &pcfg_pull_default>,
-+							<RK_GPIO3 11 RK_FUNC_1 &pcfg_pull_default>,
-+							<RK_GPIO3 12 RK_FUNC_1 &pcfg_pull_default>,
-+							<RK_GPIO3 13 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+			};
-+
-+			sd1 {
-+				sd1_clk: sd1-clk {
-+					rockchip,pins = <RK_GPIO3 21 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				sd1_cmd: sd1-cmd {
-+					rockchip,pins = <RK_GPIO3 16 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				sd1_cd: sd1-cd {
-+					rockchip,pins = <RK_GPIO3 22 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				sd1_wp: sd1-wp {
-+					rockchip,pins = <RK_GPIO3 23 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				sd1_bus1: sd1-bus-width1 {
-+					rockchip,pins = <RK_GPIO3 17 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+
-+				sd1_bus4: sd1-bus-width4 {
-+					rockchip,pins = <RK_GPIO3 17 RK_FUNC_1 &pcfg_pull_default>,
-+							<RK_GPIO3 18 RK_FUNC_1 &pcfg_pull_default>,
-+							<RK_GPIO3 19 RK_FUNC_1 &pcfg_pull_default>,
-+							<RK_GPIO3 20 RK_FUNC_1 &pcfg_pull_default>;
-+					rockchip,config = <&pcfg_pull_default>;
-+				};
-+			};
-+		};
-+
-+		uart0: serial@10124000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x10124000 0x400>;
-+			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <1>;
-+			clocks = <&xin24m>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@10126000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x10126000 0x400>;
-+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <1>;
-+			clocks = <&xin24m>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@20064000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x20064000 0x400>;
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <1>;
-+			clocks = <&xin24m>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@20068000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x20068000 0x400>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+			reg-io-width = <1>;
-+			clocks = <&xin24m>;
-+			status = "disabled";
-+		};
-+
-+		dwmmc@10214000 {
-+			compatible = "rockchip,rk2928-dw-mshc";
-+			reg = <0x10214000 0x1000>;
-+			interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			clocks = <&dummy>, <&dummy48m>;
-+			clock-names = "biu", "ciu";
-+
-+			status = "disabled";
-+		};
-+
-+		dwmmc@10218000 {
-+			compatible = "rockchip,rk2928-dw-mshc";
-+			reg = <0x10218000 0x1000>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			clocks = <&dummy>, <&dummy48m>;
-+			clock-names = "biu", "ciu";
-+
-+			status = "disabled";
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-rockchip/Kconfig b/arch/arm/mach-rockchip/Kconfig
-new file mode 100644
-index 0000000..25ee12b
---- /dev/null
-+++ b/arch/arm/mach-rockchip/Kconfig
-@@ -0,0 +1,16 @@
-+config ARCH_ROCKCHIP
-+	bool "Rockchip RK2928 and RK3xxx SOCs" if ARCH_MULTI_V7
-+	select PINCTRL
-+	select PINCTRL_ROCKCHIP
-+	select ARCH_REQUIRE_GPIOLIB
-+	select ARM_GIC
-+	select CACHE_L2X0
-+	select HAVE_ARM_TWD if LOCAL_TIMERS
-+	select HAVE_SMP
-+	select LOCAL_TIMERS if SMP
-+	select COMMON_CLK
-+	select GENERIC_CLOCKEVENTS
-+	select DW_APB_TIMER_OF
-+	help
-+	  Support for Rockchip's Cortex-A9 Single-to-Quad-Core-SoCs
-+	  containing the RK2928, RK30xx and RK31xx series.
-diff --git a/arch/arm/mach-rockchip/Makefile b/arch/arm/mach-rockchip/Makefile
-new file mode 100644
-index 0000000..1547d4f
---- /dev/null
-+++ b/arch/arm/mach-rockchip/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_ARCH_ROCKCHIP) += rockchip.o
-diff --git a/arch/arm/mach-rockchip/rockchip.c b/arch/arm/mach-rockchip/rockchip.c
-new file mode 100644
-index 0000000..724d2d8
---- /dev/null
-+++ b/arch/arm/mach-rockchip/rockchip.c
-@@ -0,0 +1,52 @@
-+/*
-+ * Device Tree support for Rockchip SoCs
-+ *
-+ * Copyright (c) 2013 MundoReader S.L.
-+ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/of_platform.h>
-+#include <linux/irqchip.h>
-+#include <linux/dw_apb_timer.h>
-+#include <linux/clk-provider.h>
-+#include <asm/mach/arch.h>
-+#include <asm/mach/map.h>
-+#include <asm/hardware/cache-l2x0.h>
-+
-+static void __init rockchip_timer_init(void)
-+{
-+	of_clk_init(NULL);
-+	clocksource_of_init();
-+}
-+
-+static void __init rockchip_dt_init(void)
-+{
-+	l2x0_of_init(0, ~0UL);
-+	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-+}
-+
-+static const char * const rockchip_board_dt_compat[] = {
-+	"rockchip,rk2928",
-+	"rockchip,rk3066a",
-+	"rockchip,rk3066b",
-+	"rockchip,rk3188",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(ROCKCHIP_DT, "Rockchip Cortex-A9 (Device Tree)")
-+	.init_machine	= rockchip_dt_init,
-+	.init_time	= rockchip_timer_init,
-+	.dt_compat	= rockchip_board_dt_compat,
-+MACHINE_END
--- 
-1.7.10.4
+UXVvdGluZyBIZWlrbyBTdMO8Ym5lciAoMjAxMy0wNi0xMyAwNzo1OTo0MCkKPiBUaGlzIGFkZHMg
+YmFzaWMgc3VwcG9ydCBmb3IgZ2F0ZS1jbG9ja3Mgb24gUm9ja2NoaXAgU29Dcy4KPiBUaGVyZSBh
+cmUgMTYgZ2F0ZXMgaW4gZWFjaCByZWdpc3RlciBhbmQgdXNlIHRoZSBISVdPUkRfTUFTSwo+IG1l
+Y2hhbmlzbSBmb3IgY2hhbmdpbmcgZ2F0ZSBzZXR0aW5ncy4KPiAKPiBUaGUgZ2F0ZSByZWdpc3Rl
+cnMgZm9ybSBhIGNvbnRpbnVvcyBibG9jayB3aGljaCBtYWtlcyB0aGUgZHQgbm9kZQo+IHN0cnVj
+dHVyZSBhIG1hdHRlciBvZiB0YXN0ZSwgYXMgZWl0aGVyIGFsbCAxNjAgZ2F0ZXMgY2FuIGJlIHB1
+dCBpbnRvCj4gb25lIGdhdGUgY2xvY2sgc3Bhbm5pbmcgYWxsIHJlZ2lzdGVycyBvciB0aGV5IGNh
+biBiZSBkaXZpZGVkIGludG8KPiB0aGUgMTAgaW5kaXZpZHVhbCBnYXRlcyBjb250YWluaW5nIDE2
+IGNsb2NrcyBlYWNoLgo+IFRoZSBjb2RlIHN1cHBvcnRzIGJvdGggYXBwcm9hY2hlcy4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgoKSSd2ZSB0YWtl
+biB0aGlzIHBhdGNoIGludG8gY2xrLW5leHQgZm9yIDMuMTEuIFBlcmhhcHMgaW4gdGhlIGZ1dHVy
+ZSB0aGUKZ2F0ZS1jbG9jayBiaW5kaW5nIGNhbiBiZSBlbmhhbmNlZCB0byBhbGxvdyBmb3IgdGhp
+cyBraW5kIG9mIGNsb2NrCmdsb2JiaW5nIGFuZCB0aGlzIGRyaXZlciBjYW4gZGlzYXBwZWFyIGVu
+dGlyZWx5LgoKUmVnYXJkcywKTWlrZQoKPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+Y2xvY2svcm9ja2NoaXAudHh0ICAgICAgICAgfCAgIDc0ICsrKysrKysrKysrKysrKwo+ICBkcml2
+ZXJzL2Nsay9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+
+ICBkcml2ZXJzL2Nsay9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8ICAg
+IDUgKysKPiAgZHJpdmVycy9jbGsvcm9ja2NoaXAvY2xrLXJvY2tjaGlwLmMgICAgICAgICAgICAg
+ICAgfCAgIDk0ICsrKysrKysrKysrKysrKysrKysrCj4gIDQgZmlsZXMgY2hhbmdlZCwgMTc0IGlu
+c2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9jbG9jay9yb2NrY2hpcC50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvY2xrL3JvY2tjaGlwL01ha2VmaWxlCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Ns
+ay9yb2NrY2hpcC9jbGstcm9ja2NoaXAuYwo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcm9ja2NoaXAudHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3JvY2tjaGlwLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0Cj4gaW5kZXggMDAwMDAwMC4uYTg5MWM4Mgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcm9ja2NoaXAudHh0Cj4gQEAgLTAs
+MCArMSw3NCBAQAo+ICtEZXZpY2UgVHJlZSBDbG9jayBiaW5kaW5ncyBmb3IgYXJjaC1yb2NrY2hp
+cAo+ICsKPiArVGhpcyBiaW5kaW5nIHVzZXMgdGhlIGNvbW1vbiBjbG9jayBiaW5kaW5nWzFdLgo+
+ICsKPiArWzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1i
+aW5kaW5ncy50eHQKPiArCj4gKz09IEdhdGUgY2xvY2tzID09Cj4gKwo+ICtUaGUgZ2F0ZSByZWdp
+c3RlcnMgZm9ybSBhIGNvbnRpbnVvcyBibG9jayB3aGljaCBtYWtlcyB0aGUgZHQgbm9kZQo+ICtz
+dHJ1Y3R1cmUgYSBtYXR0ZXIgb2YgdGFzdGUsIGFzIGVpdGhlciBhbGwgZ2F0ZXMgY2FuIGJlIHB1
+dCBpbnRvCj4gK29uZSBnYXRlIGNsb2NrIHNwYW5uaW5nIGFsbCByZWdpc3RlcnMgb3IgdGhleSBj
+YW4gYmUgZGl2aWRlZCBpbnRvCj4gK3RoZSAxMCBpbmRpdmlkdWFsIGdhdGVzIGNvbnRhaW5pbmcg
+MTYgY2xvY2tzIGVhY2guCj4gK1RoZSBjb2RlIHN1cHBvcnRzIGJvdGggYXBwcm9hY2hlcy4KPiAr
+Cj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZSA6ICJyb2NrY2hpcCxyazI5
+MjgtZ2F0ZS1jbGsiCj4gKy0gcmVnIDogc2hhbGwgYmUgdGhlIGNvbnRyb2wgcmVnaXN0ZXIgYWRk
+cmVzcyhlcykgZm9yIHRoZSBjbG9jay4KPiArLSAjY2xvY2stY2VsbHMgOiBmcm9tIGNvbW1vbiBj
+bG9jayBiaW5kaW5nOyBzaGFsbCBiZSBzZXQgdG8gMQo+ICstIGNsb2NrLW91dHB1dC1uYW1lcyA6
+IHRoZSBjb3JyZXNwb25kaW5nIGdhdGUgbmFtZXMgdGhhdCB0aGUgY2xvY2sgY29udHJvbHMKPiAr
+LSBjbG9ja3MgOiBzaG91bGQgY29udGFpbiB0aGUgcGFyZW50IGNsb2NrIGZvciBlYWNoIGluZGl2
+aWR1YWwgZ2F0ZSwKPiArICB0aGVyZWZvcmUgdGhlIG51bWJlciBvZiBjbG9ja3MgZWxlbWVudHMg
+c2hvdWxkIG1hdGNoIHRoZSBudW1iZXIgb2YKPiArICBjbG9jay1vdXRwdXQtbmFtZXMKPiArCj4g
+K0V4YW1wbGUgdXNpbmcgbXVsdGlwbGUgZ2F0ZSBjbG9ja3M6Cj4gKwo+ICsgICAgICAgICAgICAg
+ICBjbGtfZ2F0ZXMwOiBnYXRlLWNsa0AyMDAwMDBkMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazI5MjgtZ2F0ZS1jbGsiOwo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIHJlZyA9IDwweDIwMDAwMGQwIDB4ND47Cj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgY2xvY2tzID0gPCZkdW1teT4sIDwmZHVtbXk+LAo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIDwmZHVtbXk+LCA8JmR1bW15PiwKPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICA8JmR1bW15PiwgPCZkdW1teT4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgPCZkdW1teT4sIDwmZHVtbXk+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIDwmZHVtbXk+LCA8JmR1bW15PiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICA8JmR1bW15PiwgPCZkdW1teT4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgPCZkdW1teT4sIDwmZHVtbXk+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IDwmZHVtbXk+LCA8JmR1bW15PjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2st
+b3V0cHV0LW5hbWVzID0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJnYXRlX2Nv
+cmVfcGVyaXBoIiwgImdhdGVfY3B1X2dwbGwiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgImdhdGVfZGRycGh5IiwgImdhdGVfYWNsa19jcHUiLAo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgImdhdGVfaGNsa19jcHUiLCAiZ2F0ZV9wY2xrX2NwdSIsCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAiZ2F0ZV9hdGNsa19jcHUiLCAiZ2F0ZV9pMnMwIiwK
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJnYXRlX2kyczBfZnJhYyIsICJnYXRl
+X2kyczEiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImdhdGVfaTJzMV9mcmFj
+IiwgImdhdGVfaTJzMiIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiZ2F0ZV9p
+MnMyX2ZyYWMiLCAiZ2F0ZV9zcGRpZiIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAiZ2F0ZV9zcGRpZl9mcmFjIiwgImdhdGVfdGVzdGNsayI7Cj4gKwo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICNjbG9jay1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgfTsKPiArCj4g
+KyAgICAgICAgICAgICAgIGNsa19nYXRlczE6IGdhdGUtY2xrQDIwMDAwMGQ0IHsKPiArICAgICAg
+ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMjkyOC1nYXRlLWNsayI7
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MjAwMDAwZDQgMHg0PjsKPiArICAg
+ICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JnhpbjI0bT4sIDwmeGluMjRtPiwKPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JnhpbjI0bT4sIDwmZHVtbXk+LAo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmZHVtbXk+LCA8JnhpbjI0bT4sCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZ4aW4yNG0+LCA8JmR1bW15PiwKPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICA8JnhpbjI0bT4sIDwmZHVtbXk+LAo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIDwmeGluMjRtPiwgPCZkdW1teT4sCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgPCZ4aW4yNG0+LCA8JmR1bW15PiwKPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICA8JnhpbjI0bT4sIDwmZHVtbXk+Owo+ICsKPiArICAgICAg
+ICAgICAgICAgICAgICAgICBjbG9jay1vdXRwdXQtbmFtZXMgPQo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgImdhdGVfdGltZXIwIiwgImdhdGVfdGltZXIxIiwKPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICJnYXRlX3RpbWVyMiIsICJnYXRlX2p0YWciLAo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgImdhdGVfYWNsa19sY2RjMV9zcmMiLCAiZ2F0ZV9v
+dGdwaHkwIiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJnYXRlX290Z3BoeTEi
+LCAiZ2F0ZV9kZHJfZ3BsbCIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiZ2F0
+ZV91YXJ0MCIsICJnYXRlX2ZyYWNfdWFydDAiLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgImdhdGVfdWFydDEiLCAiZ2F0ZV9mcmFjX3VhcnQxIiwKPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICJnYXRlX3VhcnQyIiwgImdhdGVfZnJhY191YXJ0MiIsCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAiZ2F0ZV91YXJ0MyIsICJnYXRlX2ZyYWNfdWFydDMi
+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8MT47Cj4gKyAg
+ICAgICAgICAgICAgIH07Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL01ha2VmaWxlIGIvZHJp
+dmVycy9jbGsvTWFrZWZpbGUKPiBpbmRleCBmNTFiNTJiLi4yZTJlOTU3IDEwMDY0NAo+IC0tLSBh
+L2RyaXZlcnMvY2xrL01ha2VmaWxlCj4gKysrIGIvZHJpdmVycy9jbGsvTWFrZWZpbGUKPiBAQCAt
+MjUsNiArMjUsNyBAQCBpZmVxICgkKENPTkZJR19DT01NT05fQ0xLKSwgeSkKPiAgb2JqLSQoQ09O
+RklHX0FSQ0hfTU1QKSAgICAgICAgICs9IG1tcC8KPiAgZW5kaWYKPiAgb2JqLSQoQ09ORklHX01B
+Q0hfTE9PTkdTT04xKSAgICs9IGNsay1sczF4Lm8KPiArb2JqLSQoQ09ORklHX0FSQ0hfUk9DS0NI
+SVApICAgICs9IHJvY2tjaGlwLwo+ICBvYmotJChDT05GSUdfQVJDSF9TVU5YSSkgICAgICAgKz0g
+c3VueGkvCj4gIG9iai0kKENPTkZJR19BUkNIX1U4NTAwKSAgICAgICArPSB1eDUwMC8KPiAgb2Jq
+LSQoQ09ORklHX0FSQ0hfVlQ4NTAwKSAgICAgICs9IGNsay12dDg1MDAubwo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL2Nsay9yb2NrY2hpcC9NYWtlZmlsZSBiL2RyaXZlcnMvY2xrL3JvY2tjaGlwL01h
+a2VmaWxlCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi44ZDNhZWZhCj4g
+LS0tIC9kZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvY2xrL3JvY2tjaGlwL01ha2VmaWxlCj4gQEAg
+LTAsMCArMSw1IEBACj4gKyMKPiArIyBSb2NrY2hpcCBDbG9jayBzcGVjaWZpYyBNYWtlZmlsZQo+
+ICsjCj4gKwo+ICtvYmoteSAgKz0gY2xrLXJvY2tjaGlwLm8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9jbGsvcm9ja2NoaXAvY2xrLXJvY2tjaGlwLmMgYi9kcml2ZXJzL2Nsay9yb2NrY2hpcC9jbGst
+cm9ja2NoaXAuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uZmY5OTBj
+NAo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJzL2Nsay9yb2NrY2hpcC9jbGstcm9ja2No
+aXAuYwo+IEBAIC0wLDAgKzEsOTQgQEAKPiArLyoKPiArICogQ29weXJpZ2h0IChjKSAyMDEzIE11
+bmRvUmVhZGVyIFMuTC4KPiArICogQXV0aG9yOiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNo
+LmRlPgo+ICsgKgo+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiBy
+ZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQo+ICsgKiBpdCB1bmRlciB0aGUgdGVybXMgb2Yg
+dGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxpc2hlZCBieQo+ICsgKiB0aGUg
+RnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNl
+LCBvcgo+ICsgKiAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLgo+ICsgKgo+ICsg
+KiBUaGlzIHByb2dyYW0gaXMgZGlzdHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJl
+IHVzZWZ1bCwKPiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhl
+IGltcGxpZWQgd2FycmFudHkgb2YKPiArICogTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9S
+IEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZQo+ICsgKiBHTlUgR2VuZXJhbCBQdWJsaWMg
+TGljZW5zZSBmb3IgbW9yZSBkZXRhaWxzLgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlIDxsaW51eC9j
+bGstcHJvdmlkZXIuaD4KPiArI2luY2x1ZGUgPGxpbnV4L2Nsa2Rldi5oPgo+ICsjaW5jbHVkZSA8
+bGludXgvb2YuaD4KPiArI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KPiArCj4gK3N0YXRp
+YyBERUZJTkVfU1BJTkxPQ0soY2xrX2xvY2spOwo+ICsKPiArLyoKPiArICogR2F0ZSBjbG9ja3MK
+PiArICovCj4gKwo+ICtzdGF0aWMgdm9pZCBfX2luaXQgcmsyOTI4X2dhdGVfY2xrX2luaXQoc3Ry
+dWN0IGRldmljZV9ub2RlICpub2RlLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgdm9pZCAqZGF0YSkKPiArewo+ICsgICAgICAgc3RydWN0IGNsa19vbmVjZWxsX2Rh
+dGEgKmNsa19kYXRhOwo+ICsgICAgICAgY29uc3QgY2hhciAqY2xrX3BhcmVudDsKPiArICAgICAg
+IGNvbnN0IGNoYXIgKmNsa19uYW1lOwo+ICsgICAgICAgdm9pZCBfX2lvbWVtICpyZWc7Cj4gKyAg
+ICAgICB2b2lkIF9faW9tZW0gKnJlZ19pZHg7Cj4gKyAgICAgICBpbnQgZmxhZ3M7Cj4gKyAgICAg
+ICBpbnQgcXR5Owo+ICsgICAgICAgaW50IHJlZ19iaXQ7Cj4gKyAgICAgICBpbnQgY2xrZmxhZ3Mg
+PSBDTEtfU0VUX1JBVEVfUEFSRU5UOwo+ICsgICAgICAgaW50IGk7Cj4gKwo+ICsgICAgICAgcXR5
+ID0gb2ZfcHJvcGVydHlfY291bnRfc3RyaW5ncyhub2RlLCAiY2xvY2stb3V0cHV0LW5hbWVzIik7
+Cj4gKyAgICAgICBpZiAocXR5IDwgMCkgewo+ICsgICAgICAgICAgICAgICBwcl9lcnIoIiVzOiBl
+cnJvciBpbiBjbG9jay1vdXRwdXQtbmFtZXMgJWRcbiIsIF9fZnVuY19fLCBxdHkpOwo+ICsgICAg
+ICAgICAgICAgICByZXR1cm47Cj4gKyAgICAgICB9Cj4gKwo+ICsgICAgICAgaWYgKHF0eSA9PSAw
+KSB7Cj4gKyAgICAgICAgICAgICAgIHByX2luZm8oIiVzOiBub3RoaW5nIHRvIGRvXG4iLCBfX2Z1
+bmNfXyk7Cj4gKyAgICAgICAgICAgICAgIHJldHVybjsKPiArICAgICAgIH0KPiArCj4gKyAgICAg
+ICByZWcgPSBvZl9pb21hcChub2RlLCAwKTsKPiArCj4gKyAgICAgICBjbGtfZGF0YSA9IGt6YWxs
+b2Moc2l6ZW9mKHN0cnVjdCBjbGtfb25lY2VsbF9kYXRhKSwgR0ZQX0tFUk5FTCk7Cj4gKyAgICAg
+ICBpZiAoIWNsa19kYXRhKQo+ICsgICAgICAgICAgICAgICByZXR1cm47Cj4gKwo+ICsgICAgICAg
+Y2xrX2RhdGEtPmNsa3MgPSBremFsbG9jKHF0eSAqIHNpemVvZihzdHJ1Y3QgY2xrICopLCBHRlBf
+S0VSTkVMKTsKPiArICAgICAgIGlmICghY2xrX2RhdGEtPmNsa3MpIHsKPiArICAgICAgICAgICAg
+ICAga2ZyZWUoY2xrX2RhdGEpOwo+ICsgICAgICAgICAgICAgICByZXR1cm47Cj4gKyAgICAgICB9
+Cj4gKwo+ICsgICAgICAgZmxhZ3MgPSBDTEtfR0FURV9ISVdPUkRfTUFTSyB8IENMS19HQVRFX1NF
+VF9UT19ESVNBQkxFOwo+ICsKPiArICAgICAgIGZvciAoaSA9IDA7IGkgPCBxdHk7IGkrKykgewo+
+ICsgICAgICAgICAgICAgICBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZ19pbmRleChub2RlLCAiY2xv
+Y2stb3V0cHV0LW5hbWVzIiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgaSwgJmNsa19uYW1lKTsKPiArCj4gKyAgICAgICAgICAgICAgIC8qIGlnbm9yZSBl
+bXB0eSBzbG90cyAqLwo+ICsgICAgICAgICAgICAgICBpZiAoIXN0cmNtcCgicmVzZXJ2ZWQiLCBj
+bGtfbmFtZSkpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7Cj4gKwo+ICsgICAg
+ICAgICAgICAgICBjbGtfcGFyZW50ID0gb2ZfY2xrX2dldF9wYXJlbnRfbmFtZShub2RlLCBpKTsK
+PiArCj4gKyAgICAgICAgICAgICAgIC8qIGtlZXAgYWxsIGdhdGVzIHVudG91Y2hlZCBmb3Igbm93
+ICovCj4gKyAgICAgICAgICAgICAgIGNsa2ZsYWdzIHw9IENMS19JR05PUkVfVU5VU0VEOwo+ICsK
+PiArICAgICAgICAgICAgICAgcmVnX2lkeCA9IHJlZyArICg0ICogKGkgLyAxNikpOwo+ICsgICAg
+ICAgICAgICAgICByZWdfYml0ID0gKGkgJSAxNik7Cj4gKwo+ICsgICAgICAgICAgICAgICBjbGtf
+ZGF0YS0+Y2xrc1tpXSA9IGNsa19yZWdpc3Rlcl9nYXRlKE5VTEwsIGNsa19uYW1lLAo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsa19wYXJl
+bnQsIGNsa2ZsYWdzLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHJlZ19pZHgsIHJlZ19iaXQsCj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZmxhZ3MsCj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJmNsa19sb2NrKTsKPiArICAgICAg
+ICAgICAgICAgV0FSTl9PTihJU19FUlIoY2xrX2RhdGEtPmNsa3NbaV0pKTsKPiArICAgICAgIH0K
+PiArCj4gKyAgICAgICBjbGtfZGF0YS0+Y2xrX251bSA9IHF0eTsKPiArCj4gKyAgICAgICBvZl9j
+bGtfYWRkX3Byb3ZpZGVyKG5vZGUsIG9mX2Nsa19zcmNfb25lY2VsbF9nZXQsIGNsa19kYXRhKTsK
+PiArfQo+ICtDTEtfT0ZfREVDTEFSRShyazI5MjhfZ2F0ZSwgInJvY2tjaGlwLHJrMjkyOC1nYXRl
+LWNsayIsIHJrMjkyOF9nYXRlX2Nsa19pbml0KTsKPiAtLSAKPiAxLjcuMTAuNApfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3Mg
+bWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
+bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
