@@ -1,42 +1,82 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V6 3/3] ARM: dts: Add pcie controller node for Samsung
- EXYNOS5440 SoC
-Date: Thu, 20 Jun 2013 09:48:35 +0200
-Message-ID: <20130620094835.3f1f34c2@skate>
-References: <00c201ce6d85$83b072a0$8b1157e0$@samsung.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH 1/2] GPIO: Add support for dual channel in gpio-xilinx.c
+Date: Thu, 20 Jun 2013 09:51:22 +0200
+Message-ID: <51C2B47A.6010906@monstr.eu>
+References: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com> <CACRpkdY4xaCOe28nu-NrYQ7pafjhj8-xqFcJRF9iJUy3SrCVrA@mail.gmail.com> <51A8387C.4030704@monstr.eu> <CACRpkdbHiaK6YPgXyxNgEeZxAsddK4x0vS-q3YfyXnj_BgHvuw@mail.gmail.com> <51A852A1.7020505@monstr.eu> <CACRpkdbL4pqiF8zxMi28SRTJ9AESiFt0wJMhK1oBio_cfFhpsQ@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <00c201ce6d85$83b072a0$8b1157e0$@samsung.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Siva Reddy Kallam' <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Jason Gunthorpe' <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Surendranath Gurivireddy Balla' <suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, 'Thierry Reding' <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Andrew Murray' <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2ONHUSDNFEOVSEJBAVAPB"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbL4pqiF8zxMi28SRTJ9AESiFt0wJMhK1oBio_cfFhpsQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Jingoo Han,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2ONHUSDNFEOVSEJBAVAPB
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 20 Jun 2013 16:12:24 +0900, Jingoo Han wrote:
+On 06/17/2013 07:29 AM, Linus Walleij wrote:
+> On Fri, May 31, 2013 at 9:34 AM, Michal Simek <monstr@monstr.eu> wrote:=
 
-> -	pinctrl {
-> +	pin_ctrl: pinctrl {
->  		compatible = "samsung,exynos5440-pinctrl";
+>> On 05/31/2013 09:14 AM, Linus Walleij wrote:
+>=20
+>>> It's OK, but fix the boolean member so as to just needing to
+>>> be present:
+>>>
+>>> xlnx,is-dual;
+>>>
+>>> Rather than
+>>>
+>>> xlnx,is-dual =3D <1>;
+>>
+>> Surely I can do it but it means to change our BSP and because
+>> this IP is used on Microblaze from beginning this change
+>> breaks all DTSes from past.
+>=20
+> I think of_property_read_bool() will accept
+> xlnx,is-dual =3D <1>; to mean the same as xlnx,is-dual;
+> try it.
 
-I know I'm nitpicking, but isn't this change completely unrelated to
-PCIe support?
+First of all sorry for delay.
+You are right that of_property_read_bool()
+also accept xlnx,is-dual =3D <1>;
+but also accept and return 1 when xlnx,is-dual =3D <0>;
+which is incorrect behaviour.
 
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+If of_prorety_read_bool return 0 for case when xlnx,is-dual =3D <0>
+we can use it.
+Maybe this will be good change for this function behaviour.
+If there is also value then use it. 0 -> false, 1 -> true
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+------enig2ONHUSDNFEOVSEJBAVAPB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlHCtHoACgkQykllyylKDCEfBACeN6A57Yl5emIAA9DlnPyqbaQc
+iyQAnRc5yYXko/KJsYUIS3CNYl90YSlp
+=W2YQ
+-----END PGP SIGNATURE-----
+
+------enig2ONHUSDNFEOVSEJBAVAPB--
