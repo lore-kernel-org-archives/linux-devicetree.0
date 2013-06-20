@@ -1,73 +1,446 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 2/2] regulator: palmas: model SMPS10 as two regulators
-Date: Thu, 20 Jun 2013 19:33:01 +0530
-Message-ID: <51C30B95.4010406@nvidia.com>
-References: <1371717458-10307-1-git-send-email-kishon@ti.com> <1371717458-10307-3-git-send-email-kishon@ti.com> <51C2DEEB.9090600@nvidia.com> <51C3089F.5030003@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51C3089F.5030003@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Stephen Warren <swarren@nvidia.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "ian@slimlogic.co.uk" <ian@slimlogic.co.uk>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: [PATCH v3 02/10] clocksource:arm_global_timer: Add ARM global timer support.
+Date: Thu, 20 Jun 2013 15:05:21 +0100
+Message-ID: <1371737121-9295-1-git-send-email-srinivas.kandagatla@st.com>
+References: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel@stlinux.com, linux-serial@vger.kernel.org, Mark Brown <broonie@kernel.org>, Stephen Gallimore <stephen.gallimore@st.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 June 2013 07:20 PM, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Thursday 20 June 2013 04:22 PM, Laxman Dewangan wrote:
->> On Thursday 20 June 2013 02:07 PM, Kishon Vijay Abraham I wrote:
->>> SMPS10 has two outputs OUT1 and OUT2 and have one input IN1.
->>> SMPS10-OUT2 is connected to SMPS10-IN1 and can be configured either
->>> in BOOST mode or BYPASS mode. regulator_enable of SMPS10-OUT2 configures
->>> it in BOOST mode. For BYPASS mode regulator_allow_bypass() API can be
->>> used. SMPS10-OUT1 is connected to SMPS10-OUT2 and can be enabled using
->>> regulator_enable().
->>>
->>> Cc: Laxman Dewangan <ldewangan@nvidia.com>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>> ---
->>>    drivers/regulator/palmas-regulator.c |   39 ++++++++++++++++++++++++++++++----
->>>    include/linux/mfd/palmas.h           |    9 ++++----
->>>    2 files changed, 40 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/regulator/palmas-regulator.c
->>> b/drivers/regulator/palmas-regulator.c
->>> index 3ae44ac..7004bab 100644
->>> --- a/drivers/regulator/palmas-regulator.c
->>> +++ b/drivers/regulator/palmas-regulator.c
->>> @@ -97,7 +97,12 @@ static const struct regs_info palmas_regs_info[] = {
->>>            .ctrl_addr    = PALMAS_SMPS9_CTRL,
->>>        },
->>>        {
->>> -        .name        = "SMPS10",
->>> +        .name        = "SMPS10_OUT1",
->>> +        .sname        = "smps10-out2",
->>> +        .ctrl_addr    = PALMAS_SMPS10_CTRL,
->>> +    },
->>> +    {
->>> +        .name        = "SMPS10_OUT2",
->>>            .sname        = "smps10-in",
->>>
->> This sequence can create regulator to be never register.
->> In probe, we register regulator from 0 to max_id.
->> Here smps10-out1 comes first and see the supply as smps10-out2 which is not
->> registered yet and so will fail with PROBE_DEFER
->> When again it tries, the same issue.
-> hmm.. But I was able to get (regulator_get) *SMPS10_OUT1* without any issue
-> during my testing. From looking at the code, I couldn't see *sname* being used
-> anywhere.
+From: Stuart Menefy <stuart.menefy@st.com>
 
-We used the sname as
-pmic->desc[id].supply_name = palmas_regs_info[id].sname;
+This is a simple driver for the global timer module found in the Cortex
+A9-MP cores from revision r1p0 onwards. This should be able to perform
+the functions of the system timer and the local timer in an SMP system.
 
-However, how you have populated your dt?
-Have you added like
-smps10-out2-supply = <&SMPS10_OUT2>
+The global timer has the following features:
+    The global timer is a 64-bit incrementing counter with an
+auto-incrementing feature. It continues incrementing after sending
+interrupts. The global timer is memory mapped in the private memory
+region.
+    The global timer is accessible to all Cortex-A9 processors in the
+cluster. Each Cortex-A9 processor has a private 64-bit comparator that
+is used to assert a private interrupt when the global timer has reached
+the comparator value. All the Cortex-A9 processors in a design use the
+banked ID, ID27, for this interrupt. ID27 is sent to the Interrupt
+Controller as a Private Peripheral Interrupt. The global timer is
+clocked by PERIPHCLK.
 
-for the palmas regualtor -dt.
+Signed-off-by: Stuart Menefy <stuart.menefy@st.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+CC: Arnd Bergmann <arnd@arndb.de>
+CC: Rob Herring <robherring2@gmail.com>
+CC: Linus Walleij <linus.walleij@linaro.org>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Thomas Gleixner <tglx@linutronix.de>
+---
+ .../devicetree/bindings/arm/global_timer.txt       |   21 ++
+ drivers/clocksource/Kconfig                        |   13 +
+ drivers/clocksource/Makefile                       |    1 +
+ drivers/clocksource/arm_global_timer.c             |  330 ++++++++++++++++++++
+ 4 files changed, 365 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/global_timer.txt
+ create mode 100644 drivers/clocksource/arm_global_timer.c
 
-
-
-
+diff --git a/Documentation/devicetree/bindings/arm/global_timer.txt b/Documentation/devicetree/bindings/arm/global_timer.txt
+new file mode 100644
+index 0000000..b64abac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/global_timer.txt
+@@ -0,0 +1,21 @@
++
++* ARM Global Timer
++	Cortex-A9 are often associated with a per-core Global timer.
++
++** Timer node required properties:
++
++- compatible : Should be "arm,cortex-a9-global-timer"
++		Driver supports versions r2p0 and above.
++
++- interrupts : One interrupt to each core
++
++- reg : Specify the base address and the size of the GT timer
++	register window.
++
++Example:
++
++	timer@2c000600 {
++		compatible = "arm,cortex-a9-global-timer";
++		reg = <0x2c000600 0x20>;
++		interrupts = <1 13 0xf01>;
++	};
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index f151c6c..b0c4c42 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -67,6 +67,19 @@ config ARM_ARCH_TIMER
+ 	bool
+ 	select CLKSRC_OF if OF
+ 
++config ARM_GLOBAL_TIMER
++	bool
++	select CLKSRC_OF if OF
++	help
++	  This options enables support for the ARM global timer unit
++
++config CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
++	bool
++	depends on ARM_GLOBAL_TIMER
++	default y
++	help
++	 Use ARM global timer clock source as sched_clock
++
+ config CLKSRC_METAG_GENERIC
+ 	def_bool y if METAG
+ 	help
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 8d979c7..b2363cb 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -28,4 +28,5 @@ obj-$(CONFIG_CLKSRC_EXYNOS_MCT)	+= exynos_mct.o
+ obj-$(CONFIG_CLKSRC_SAMSUNG_PWM)	+= samsung_pwm_timer.o
+ 
+ obj-$(CONFIG_ARM_ARCH_TIMER)		+= arm_arch_timer.o
++obj-$(CONFIG_ARM_GLOBAL_TIMER)		+= arm_global_timer.o
+ obj-$(CONFIG_CLKSRC_METAG_GENERIC)	+= metag_generic.o
+diff --git a/drivers/clocksource/arm_global_timer.c b/drivers/clocksource/arm_global_timer.c
+new file mode 100644
+index 0000000..43cd32a
+--- /dev/null
++++ b/drivers/clocksource/arm_global_timer.c
+@@ -0,0 +1,330 @@
++/*
++ * drivers/clocksource/arm_global_timer.c
++ *
++ * Copyright (C) 2013 STMicroelectronics (R&D) Limited.
++ * Author: Stuart Menefy <stuart.menefy@st.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/clocksource.h>
++#include <linux/clockchips.h>
++#include <linux/clk.h>
++#include <linux/clkdev.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
++#include <linux/of_address.h>
++
++#include <asm/sched_clock.h>
++#include <asm/mach/irq.h>
++#include <asm/cputype.h>
++#include <asm/localtimer.h>
++
++#define GT_COUNTER0	0x00
++#define GT_COUNTER1	0x04
++
++#define GT_CONTROL	0x08
++#define GT_CONTROL_TIMER_ENABLE		BIT(0)  /* this bit is NOT banked */
++#define GT_CONTROL_COMP_ENABLE		BIT(1)	/* banked */
++#define GT_CONTROL_IRQ_ENABLE		BIT(2)	/* banked */
++#define GT_CONTROL_AUTO_INC		BIT(3)	/* banked */
++
++#define GT_INT_STATUS	0x0c
++#define GT_INT_STATUS_EVENT_FLAG	BIT(0)
++
++#define GT_COMP0	0x10
++#define GT_COMP1	0x14
++#define GT_AUTO_INC	0x18
++
++/*
++ * We are expecting to be clocked by the ARM peripheral clock.
++ *
++ * Note: it is assumed we are using a prescaler value of zero, so this is
++ * the units for all operations.
++ */
++static void __iomem *gt_base;
++static unsigned long gt_clk_rate;
++static int gt_ppi;
++static struct clock_event_device __percpu **gt_evt;
++static DEFINE_PER_CPU(bool, percpu_init_called);
++static DEFINE_PER_CPU(struct clock_event_device, gt_clockevent);
++
++/*
++ * To get the value from the Global Timer Counter register proceed as follows:
++ * 1. Read the upper 32-bit timer counter register
++ * 2. Read the lower 32-bit timer counter register
++ * 3. Read the upper 32-bit timer counter register again. If the value is
++ *  different to the 32-bit upper value read previously, go back to step 2.
++ *  Otherwise the 64-bit timer counter value is correct.
++ */
++static u64 gt_counter_read(void)
++{
++	u64 counter;
++	u32 lower;
++	u32 upper, old_upper;
++
++	upper = __raw_readl(gt_base + GT_COUNTER1);
++	do {
++		old_upper = upper;
++		lower = __raw_readl(gt_base + GT_COUNTER0);
++		upper = __raw_readl(gt_base + GT_COUNTER1);
++	} while (upper != old_upper);
++
++	counter = upper;
++	counter <<= 32;
++	counter |= lower;
++	return counter;
++}
++
++/**
++ * To ensure that updates to comparator value register do not set the
++ * Interrupt Status Register proceed as follows:
++ * 1. Clear the Comp Enable bit in the Timer Control Register.
++ * 2. Write the lower 32-bit Comparator Value Register.
++ * 3. Write the upper 32-bit Comparator Value Register.
++ * 4. Set the Comp Enable bit and, if necessary, the IRQ enable bit.
++ */
++static void gt_compare_set(unsigned long delta, int periodic)
++{
++	u64 counter = gt_counter_read();
++	unsigned long ctrl = __raw_readl(gt_base + GT_CONTROL);
++
++	counter += delta;
++	ctrl &=  ~(GT_CONTROL_COMP_ENABLE | GT_CONTROL_IRQ_ENABLE);
++
++	__raw_writel(ctrl, gt_base + GT_CONTROL);
++	__raw_writel(lower_32_bits(counter), gt_base + GT_COMP0);
++	__raw_writel(upper_32_bits(counter), gt_base + GT_COMP1);
++
++	if (periodic) {
++		__raw_writel(delta, gt_base + GT_AUTO_INC);
++		ctrl |= GT_CONTROL_AUTO_INC;
++	}
++
++	ctrl |= GT_CONTROL_COMP_ENABLE | GT_CONTROL_IRQ_ENABLE;
++	__raw_writel(ctrl, gt_base + GT_CONTROL);
++}
++
++static void gt_clockevent_set_mode(enum clock_event_mode mode,
++				   struct clock_event_device *clk)
++{
++	unsigned long ctrl;
++
++	ctrl = __raw_readl(gt_base + GT_CONTROL);
++	switch (mode) {
++	case CLOCK_EVT_MODE_PERIODIC:
++		gt_compare_set(DIV_ROUND_CLOSEST(gt_clk_rate, HZ), 1);
++		break;
++	case CLOCK_EVT_MODE_ONESHOT:
++		ctrl &= ~(GT_CONTROL_AUTO_INC);
++		__raw_writel(ctrl, gt_base + GT_CONTROL);
++		break;
++	/* Can not shut down it as enable bit is not banked */
++	case CLOCK_EVT_MODE_UNUSED:
++	case CLOCK_EVT_MODE_SHUTDOWN:
++		ctrl &= ~(GT_CONTROL_COMP_ENABLE |
++				GT_CONTROL_IRQ_ENABLE | GT_CONTROL_AUTO_INC);
++		__raw_writel(ctrl, gt_base + GT_CONTROL);
++		break;
++	default:
++		break;
++	}
++}
++
++static int gt_clockevent_set_next_event(unsigned long evt,
++					struct clock_event_device *unused)
++{
++	gt_compare_set(evt, 0);
++	return 0;
++}
++
++static irqreturn_t gt_clockevent_interrupt(int irq, void *dev_id)
++{
++	struct clock_event_device *evt = *(struct clock_event_device **)dev_id;
++
++	if (__raw_readl(gt_base + GT_INT_STATUS) & GT_INT_STATUS_EVENT_FLAG) {
++		/**
++		 * ERRATA 740657( Global Timer can send 2 interrupts for
++		 * the same event in single-shot mode)
++		 * Workaround:
++		 *	Either disable single-shot mode.
++		 *	Or
++		 *	Modify the Interrupt Handler to avoid the
++		 *	offending sequence. This is achieved by clearing
++		 *	the Global Timer flag _after_ having incremented
++		 *	the Comparator register	value to a higher value.
++		 */
++		if (!(__raw_readl(gt_base + GT_CONTROL) & GT_CONTROL_AUTO_INC))
++			gt_compare_set(ULONG_MAX, 0);
++
++		__raw_writel(GT_INT_STATUS_EVENT_FLAG, gt_base + GT_INT_STATUS);
++
++		evt->event_handler(evt);
++		return IRQ_HANDLED;
++	}
++
++	return IRQ_NONE;
++}
++
++static int __cpuinit gt_clockevents_init(struct clock_event_device *clk)
++{
++	struct clock_event_device **this_cpu_clk;
++	int cpu = smp_processor_id();
++
++	clk->name = "ARM global timer clock event";
++	clk->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
++	clk->set_mode = gt_clockevent_set_mode;
++	clk->set_next_event = gt_clockevent_set_next_event;
++	this_cpu_clk = __this_cpu_ptr(gt_evt);
++	*this_cpu_clk = clk;
++	clk->cpumask = cpumask_of(cpu);
++	clk->irq = gt_ppi;
++	clockevents_config_and_register(clk, gt_clk_rate,
++					1, 0xffffffff);
++	per_cpu(percpu_init_called, cpu) = true;
++	enable_percpu_irq(clk->irq, IRQ_TYPE_NONE);
++	return 0;
++}
++
++static void gt_clockevents_stop(struct clock_event_device *clk)
++{
++	gt_clockevent_set_mode(CLOCK_EVT_MODE_UNUSED, clk);
++	disable_percpu_irq(clk->irq);
++}
++
++static int __cpuinit gt_clockevents_setup(struct clock_event_device *clk)
++{
++	/* Use existing clock_event for boot cpu */
++	if (per_cpu(percpu_init_called, smp_processor_id()))
++		return 0;
++
++	/* already enabled in gt_clocksource_init. */
++	return gt_clockevents_init(clk);
++}
++
++static cycle_t gt_clocksource_read(struct clocksource *cs)
++{
++	return gt_counter_read();
++}
++
++static struct clocksource gt_clocksource = {
++	.name	= "ARM global timer clock source",
++	.rating	= 300,
++	.read	= gt_clocksource_read,
++	.mask	= CLOCKSOURCE_MASK(64),
++	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
++};
++
++#ifdef CONFIG_CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
++static u32 gt_sched_clock_read(void)
++{
++	if (!gt_base)
++		return 0;
++
++	return gt_counter_read();
++}
++#endif
++
++static void __init gt_clocksource_init(void)
++{
++	__raw_writel(0, gt_base + GT_CONTROL);
++	__raw_writel(0, gt_base + GT_COUNTER0);
++	__raw_writel(0, gt_base + GT_COUNTER1);
++	/* enables timer on all the cores */
++	__raw_writel(GT_CONTROL_TIMER_ENABLE, gt_base + GT_CONTROL);
++
++#ifdef CONFIG_CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
++	setup_sched_clock(gt_sched_clock_read, 32, gt_clk_rate);
++#endif
++	clocksource_register_hz(&gt_clocksource, gt_clk_rate);
++}
++
++#ifdef CONFIG_LOCAL_TIMERS
++static struct local_timer_ops gt_lt_ops __cpuinitdata = {
++	.setup	= gt_clockevents_setup,
++	.stop	= gt_clockevents_stop,
++};
++#endif
++
++static void __init global_timer_of_register(struct device_node *np)
++{
++	unsigned int cpu = smp_processor_id();
++	struct clock_event_device *evt = &per_cpu(gt_clockevent, cpu);
++	struct clk *gt_clk;
++	int err = 0;
++
++	/*
++	 * In r2p0 the comparators for each processor with the global timer
++	 * fire when the timer value is greater than or equal to. In previous
++	 * revisions the comparators fired when the timer value was equal to.
++	 */
++	if ((read_cpuid_id() & 0xf0000f) < 0x200000) {
++		pr_warn("global-timer: non support for this cpu version.\n");
++		return;
++	}
++
++	gt_ppi = irq_of_parse_and_map(np, 0);
++	if (!gt_ppi) {
++		pr_warn("global-timer: unable to parse irq\n");
++		return;
++	}
++
++	gt_base = of_iomap(np, 0);
++	if (!gt_base) {
++		pr_warn("global-timer: invalid base address\n");
++		return;
++	}
++
++	gt_clk = of_clk_get(np, 0);
++	if (!IS_ERR(gt_clk)) {
++		err = clk_prepare_enable(gt_clk);
++	} else {
++		pr_warn("global-timer: clk not found\n");
++		err = -EINVAL;
++		goto out_unmap;
++	}
++
++	gt_evt = alloc_percpu(struct clock_event_device *);
++	if (!gt_evt) {
++		pr_warn("global-timer: can't allocate memory\n");
++		err = -ENOMEM;
++		goto out_unmap;
++	}
++
++	err = request_percpu_irq(gt_ppi, gt_clockevent_interrupt,
++				 "gt", gt_evt);
++	if (err) {
++		pr_warn("global-timer: can't register interrupt %d (%d)\n",
++			gt_ppi, err);
++		goto out_free;
++	}
++
++	gt_clk_rate = clk_get_rate(gt_clk);
++	gt_clocksource_init();
++	gt_clockevents_init(evt);
++#ifdef CONFIG_LOCAL_TIMERS
++	err =  local_timer_register(&gt_lt_ops);
++	if (err) {
++		pr_warn("global-timer: unable to register local timer.\n");
++		free_percpu_irq(gt_ppi, gt_evt);
++		goto out_free;
++	}
++#endif
++	return;
++
++out_free:
++	free_percpu(gt_evt);
++out_unmap:
++	iounmap(gt_base);
++	WARN(err, "ARM Global timer register failed (%d)\n", err);
++}
++
++/* Only tested on r2p2 and r3p0  */
++CLOCKSOURCE_OF_DECLARE(arm_gt, "arm,cortex-a9-global-timer",
++			global_timer_of_register);
+-- 
+1.7.6.5
