@@ -1,172 +1,83 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 3/3] ARM: dts: OMAP2+: Add mailbox nodes
-Date: Thu, 20 Jun 2013 17:28:30 -0500
-Message-ID: <51C3820E.3020108@ti.com>
-References: <1371594900-37640-1-git-send-email-s-anna@ti.com> <51C37AD7.1020309@ti.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v5 0/3] arm: add basic support for Rockchip Cortex-A9 SoCs
+Date: Fri, 21 Jun 2013 00:39:14 +0200
+Message-ID: <201306210039.14740.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51C37AD7.1020309@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Ohad Ben-Cohen <ohad@wizery.com>, Omar Ramirez Luna <omar.ramirez@copitl.com>, Jassi Brar <jaswinder.singh@linaro.org>, Loic Pallardy <loic.pallardy@st.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+Fifth version of basic Rockchip A9 support.
 
-On 06/20/2013 04:57 PM, Cousson, Benoit wrote:
-> On 6/18/2013 5:35 PM, Suman Anna wrote:
->> The mailbox DT node data has been added for OMAP2420,
->> OMAP2430, OMAP3430/OMAP3630, OMAP44xx devices. Data for
->> OMAP5 is skipped for now since the corresponding hwmod
->> entry is not present.
->>
->> The mailbox static device initialization logic is also
->> adjusted for a DT boot.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->>   arch/arm/boot/dts/omap2420.dtsi | 13 +++++++++++++
->>   arch/arm/boot/dts/omap2430.dtsi | 12 ++++++++++++
->>   arch/arm/boot/dts/omap3.dtsi    | 12 ++++++++++++
->>   arch/arm/boot/dts/omap4.dtsi    | 12 ++++++++++++
->>   arch/arm/mach-omap2/devices.c   |  2 +-
->>   5 files changed, 50 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/omap2420.dtsi
->> b/arch/arm/boot/dts/omap2420.dtsi
->> index c8f9c55..e0f4e47 100644
->> --- a/arch/arm/boot/dts/omap2420.dtsi
->> +++ b/arch/arm/boot/dts/omap2420.dtsi
->> @@ -114,6 +114,19 @@
->>               dma-names = "tx", "rx";
->>           };
->>
->> +        mailbox: mailbox@48094000 {
->> +            compatible = "ti,omap2-mailbox";
->> +            reg = <0x48094000 0x200>;
->> +            interrupts = <26>, /* DSP Interrupt */
->> +                     <34>; /* IVA Interrupt */
->> +            ti,hwmods = "mailbox";
->> +            ti,mbox-num-users = <4>;
->> +            ti,mbox-num-fifos = <6>;
->> +            #ti,mbox-data-cells = <4>;
-> 
-> If this is always 4, why do you want to expose that?
+Following a comment from Arnd, I stripped the submission from all specific
+clocks, only using dummy clocks for now. It's enough to reach a shell in an
+initramfs. MMC patches are currently pending on the mmc list, so if they also
+get merged accessing the sd controllers would also be possible.
 
-I have followed the example of interrupt-cells here, as it indicates the
-length that each mbox-data should have. If you do think that it doesn't
-belong here, I can remove this and do the check directly in the driver,
-and update the DT binding accordingly.
+Changes since v4:
+- remove ifdef around l2x0 init
+- only use dummy clocks
 
-> BTW, I guess that most of these attribute are generic enough to avoid
-> the "ti," prefix.
+Changes since v3:
+- split out standalone dw_mmc patches (submitted to linux-mmc)
+- Remove divider and mux clocks and use fixed rate clocks instead until
+  divider and mux clocks have got their generic dt bindings
+- Make the gate clock use CLK_OF_DECLARE and document the bindings
 
-Since these are specific attributes needed for describing the data for
-TI mailboxes, I used the "ti,' prefix so that it won't clash with other
-SoCs.
+Changes since v2:
+- use common (pending review) HIWORD_MASK clock flag from Haojian Zhuang and me
+- pinctrl driver is already in the pinctrl tree
+- add core-periph clock that supplies the twd
+- split "mmc: dw_mmc-pltfm: add Rockchip variant" into move and feature parts
+  as suggested by Andy Shevchenko
 
-regards
-Suman
-> 
-> Benoit
-> 
->> +            ti,mbox-names = "dsp", "iva";
->> +            ti,mbox-data = <0 1 0 0>, <2 3 1 3>;
->> +        };
->> +
->>           timer1: timer@48028000 {
->>               compatible = "ti,omap2420-timer";
->>               reg = <0x48028000 0x400>;
->> diff --git a/arch/arm/boot/dts/omap2430.dtsi
->> b/arch/arm/boot/dts/omap2430.dtsi
->> index c535a5a..b413423 100644
->> --- a/arch/arm/boot/dts/omap2430.dtsi
->> +++ b/arch/arm/boot/dts/omap2430.dtsi
->> @@ -175,6 +175,18 @@
->>               dma-names = "tx", "rx";
->>           };
->>
->> +        mailbox: mailbox@48094000 {
->> +            compatible = "ti,omap2-mailbox";
->> +            reg = <0x48094000 0x200>;
->> +            interrupts = <26>;
->> +            ti,hwmods = "mailbox";
->> +            ti,mbox-num-users = <4>;
->> +            ti,mbox-num-fifos = <6>;
->> +            #ti,mbox-data-cells = <4>;
->> +            ti,mbox-names = "dsp";
->> +            ti,mbox-data = <0 1 0 0>;
->> +        };
->> +
->>           timer1: timer@49018000 {
->>               compatible = "ti,omap2420-timer";
->>               reg = <0x49018000 0x400>;
->> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
->> index 6d05ee0..3cc7c28 100644
->> --- a/arch/arm/boot/dts/omap3.dtsi
->> +++ b/arch/arm/boot/dts/omap3.dtsi
->> @@ -380,6 +380,18 @@
->>               dma-names = "tx", "rx";
->>           };
->>
->> +        mailbox: mailbox@48094000 {
->> +            compatible = "ti,omap2-mailbox";
->> +            reg = <0x48094000 0x200>;
->> +            interrupts = <26>;
->> +            ti,hwmods = "mailbox";
->> +            ti,mbox-num-users = <2>;
->> +            ti,mbox-num-fifos = <2>;
->> +            #ti,mbox-data-cells = <4>;
->> +            ti,mbox-names = "dsp";
->> +            ti,mbox-data = <0 1 0 0>;
->> +        };
->> +
->>           timer1: timer@48318000 {
->>               compatible = "ti,omap3430-timer";
->>               reg = <0x48318000 0x400>;
->> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
->> index 463b97d..0155182 100644
->> --- a/arch/arm/boot/dts/omap4.dtsi
->> +++ b/arch/arm/boot/dts/omap4.dtsi
->> @@ -516,6 +516,18 @@
->>               };
->>           };
->>
->> +        mailbox: mailbox@4a0f4000 {
->> +            compatible = "ti,omap4-mailbox";
->> +            reg = <0x4a0f4000 0x200>;
->> +            interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
->> +            ti,hwmods = "mailbox";
->> +            ti,mbox-num-users = <3>;
->> +            ti,mbox-num-fifos = <8>;
->> +            #ti,mbox-data-cells = <4>;
->> +            ti,mbox-names = "mbox-ipu", "mbox-dsp";
->> +            ti,mbox-data = <0 1 0 0>, <3 2 0 0>;
->> +        };
->> +
->>           timer1: timer@4a318000 {
->>               compatible = "ti,omap3430-timer";
->>               reg = <0x4a318000 0x80>;
->> diff --git a/arch/arm/mach-omap2/devices.c
->> b/arch/arm/mach-omap2/devices.c
->> index 73762ac..2058f24 100644
->> --- a/arch/arm/mach-omap2/devices.c
->> +++ b/arch/arm/mach-omap2/devices.c
->> @@ -655,11 +655,11 @@ static int __init omap2_init_devices(void)
->>       omap_init_audio();
->>       omap_init_camera();
->>       omap_init_hdmi_audio();
->> -    omap_init_mbox();
->>       /* If dtb is there, the devices will be created dynamically */
->>       if (!of_have_populated_dt()) {
->>           omap_init_control_usb();
->>           omap_init_dmic();
->> +        omap_init_mbox();
->>           omap_init_mcpdm();
->>           omap_init_mcspi();
->>           omap_init_sham();
->>
-> 
+Changes since v1:
+- addressed Linus Walleij's comments to the pinctrl driver, including the
+  move to generic pinconfig (hopefully I did catch all)
+- renamed the clocks to use the SoC name of the initial user
+  as suggested by Olof Johansson
+- fixed the uart address, found by Arnd Bergmann
+- address Arnd's comments on the board file (use of_clk_init and friends,
+  remove map_io, use real soc names)
+- removed Makefile.boot as suggested by Thomas Petazzoni
 
+
+no dependencies anymore
+
+Heiko Stuebner (3):
+  arm: Add basic clocks for Rockchip rk3066a SoCs
+  arm: add debug uarts for rockchip rk29xx and rk3xxx series
+  arm: add basic support for Rockchip RK3066a boards
+
+ arch/arm/Kconfig                      |    2 +
+ arch/arm/Kconfig.debug                |   34 +++
+ arch/arm/Makefile                     |    1 +
+ arch/arm/boot/dts/rk3066a-clocks.dtsi |   52 +++++
+ arch/arm/boot/dts/rk3066a.dtsi        |  390 +++++++++++++++++++++++++++++++++
+ arch/arm/include/debug/rockchip.S     |   42 ++++
+ arch/arm/mach-rockchip/Kconfig        |   16 ++
+ arch/arm/mach-rockchip/Makefile       |    1 +
+ arch/arm/mach-rockchip/rockchip.c     |   52 +++++
+ 9 files changed, 590 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3066a-clocks.dtsi
+ create mode 100644 arch/arm/boot/dts/rk3066a.dtsi
+ create mode 100644 arch/arm/include/debug/rockchip.S
+ create mode 100644 arch/arm/mach-rockchip/Kconfig
+ create mode 100644 arch/arm/mach-rockchip/Makefile
+ create mode 100644 arch/arm/mach-rockchip/rockchip.c
+
+-- 
+1.7.10.4
