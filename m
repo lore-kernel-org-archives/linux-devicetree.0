@@ -1,49 +1,68 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v8 00/11] ASoC: fsl-ssi: ac97-slave support
-Date: Thu, 20 Jun 2013 14:53:27 +0200
-Message-ID: <20130620125327.GD3085@s25.your-server.de>
-References: <1371389117-19729-1-git-send-email-mpa@pengutronix.de>
- <20130617023656.GE31687@S2101-09.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20130617023656.GE31687@S2101-09.ap.freescale.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v2 4/8] ARM: dts: exynos5420: add dt nodes for hdmi subsystem
+Date: Thu, 20 Jun 2013 18:43:50 +0530
+Message-ID: <1371734034-21296-5-git-send-email-rahul.sharma@samsung.com>
+References: <1371734034-21296-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1371734034-21296-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
+Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 17, 2013 at 10:36:57AM +0800, Shawn Guo wrote:
-> On Sun, Jun 16, 2013 at 03:25:06PM +0200, Markus Pargmann wrote:
-> > Markus Pargmann (11):
-> >       ASoC: imx-pcm-dma: DT support
-> >       ASoC: imx-pcm-fiq: Introduce pcm-fiq-params
-> >       ASoC: fsl: Move soc_ac97_ops from imx-ssi to fsl_ssi
-> >       ASoC: fsl-ssi: Add support for imx-pcm-fiq
-> >       ASoC: fsl-ssi: Use generic DMA bindings if possible
-> >       ASoC: fsl-ssi: imx ac97 support
-> >       ARM: imx: Export ac97 reset functions
-> >       ASoC: Add phycore-ac97-dt driver
-> >       ASoC: fsl: Kconfig: Use fsl-ssi for phycore-ac97
-> >       ASoC: fsl: Move fsl-ssi binding doc to sound/
-> >       ASoC: fsl: Update fsl-ssi binding doc
-> 
-> Tested-by: Shawn Guo <shawn.guo@linaro.org>
-> 
-> 
+Add hdmi, mixer, ddc device tree nodes for Exynos 5420 SoC.
 
-Thank you for testing.
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+---
+ arch/arm/boot/dts/exynos5420-smdk5420.dts |   20 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos5420.dtsi         |    8 ++++++++
+ 2 files changed, 28 insertions(+)
 
-Regards,
-
-Markus
+diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+index 08607df..fcd0f69 100644
+--- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
++++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+@@ -30,4 +30,24 @@
+ 			clock-frequency = <24000000>;
+ 		};
+ 	};
++
++	hdmi@14530000 {
++		status = "okay";
++		hpd-gpio = <&gpx3 7 0>;
++	};
++
++	mixer@14450000 {
++		status = "okay";
++	};
++
++	i2c_2: i2c@12C80000 {
++		samsung,i2c-sda-delay = <100>;
++		samsung,i2c-max-bus-freq = <66000>;
++		status = "okay";
++
++		hdmiddc@50 {
++			compatible = "samsung,exynos4210-hdmiddc";
++			reg = <0x50>;
++		};
++	};
+ };
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 953f877..93caef7 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -177,4 +177,12 @@
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c3_bus>;
+ 	};
++
++	hdmi@14530000 {
++		compatible = "samsung,exynos4212-hdmi";
++	};
++
++	mixer@14450000 {
++		compatible = "samsung,exynos5420-mixer";
++	};
+ };
+-- 
+1.7.10.4
