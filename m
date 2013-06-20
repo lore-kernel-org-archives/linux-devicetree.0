@@ -1,141 +1,111 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: [PATCH v3 10/10] ARM:stih41x: Add B2020 board support
-Date: Thu, 20 Jun 2013 15:07:03 +0100
-Message-ID: <1371737223-9650-1-git-send-email-srinivas.kandagatla@st.com>
-References: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel@stlinux.com, linux-serial@vger.kernel.org, Mark Brown <broonie@kernel.org>, Stephen Gallimore <stephen.gallimore@st.com>, Arnd Bergmann <arnd@arndb.de>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] regulator: palmas: model SMPS10 as two regulators
+Date: Thu, 20 Jun 2013 19:49:12 +0530
+Message-ID: <51C30F60.3060100@ti.com>
+References: <1371717458-10307-1-git-send-email-kishon@ti.com>
+ <1371717458-10307-3-git-send-email-kishon@ti.com>
+ <51C2DEEB.9090600@nvidia.com> <51C3089F.5030003@ti.com>
+ <51C30B95.4010406@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51C30B95.4010406-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org" <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-B2020 ADI board is reference board for STIH415/416 SOCs, it has 2 x
-UART, 4x USB, 1 x Ethernet, 1 x SATA, 1 x PCIe, and 2GB RAM  with
-standard set-top box IPs.
+Hi,
 
-This patch adds initial support to B2020 with STiH415/416 with SBC_UART1
-as console and a heard beat LED.
+On Thursday 20 June 2013 07:33 PM, Laxman Dewangan wrote:
+> On Thursday 20 June 2013 07:20 PM, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Thursday 20 June 2013 04:22 PM, Laxman Dewangan wrote:
+>>> On Thursday 20 June 2013 02:07 PM, Kishon Vijay Abraham I wrote:
+>>>> SMPS10 has two outputs OUT1 and OUT2 and have one input IN1.
+>>>> SMPS10-OUT2 is connected to SMPS10-IN1 and can be configured either
+>>>> in BOOST mode or BYPASS mode. regulator_enable of SMPS10-OUT2 configures
+>>>> it in BOOST mode. For BYPASS mode regulator_allow_bypass() API can be
+>>>> used. SMPS10-OUT1 is connected to SMPS10-OUT2 and can be enabled using
+>>>> regulator_enable().
+>>>>
+>>>> Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>>>> ---
+>>>>    drivers/regulator/palmas-regulator.c |   39
+>>>> ++++++++++++++++++++++++++++++----
+>>>>    include/linux/mfd/palmas.h           |    9 ++++----
+>>>>    2 files changed, 40 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/regulator/palmas-regulator.c
+>>>> b/drivers/regulator/palmas-regulator.c
+>>>> index 3ae44ac..7004bab 100644
+>>>> --- a/drivers/regulator/palmas-regulator.c
+>>>> +++ b/drivers/regulator/palmas-regulator.c
+>>>> @@ -97,7 +97,12 @@ static const struct regs_info palmas_regs_info[] = {
+>>>>            .ctrl_addr    = PALMAS_SMPS9_CTRL,
+>>>>        },
+>>>>        {
+>>>> -        .name        = "SMPS10",
+>>>> +        .name        = "SMPS10_OUT1",
+>>>> +        .sname        = "smps10-out2",
+>>>> +        .ctrl_addr    = PALMAS_SMPS10_CTRL,
+>>>> +    },
+>>>> +    {
+>>>> +        .name        = "SMPS10_OUT2",
+>>>>            .sname        = "smps10-in",
+>>>>
+>>> This sequence can create regulator to be never register.
+>>> In probe, we register regulator from 0 to max_id.
+>>> Here smps10-out1 comes first and see the supply as smps10-out2 which is not
+>>> registered yet and so will fail with PROBE_DEFER
+>>> When again it tries, the same issue.
+>> hmm.. But I was able to get (regulator_get) *SMPS10_OUT1* without any issue
+>> during my testing. From looking at the code, I couldn't see *sname* being used
+>> anywhere.
+>
+> We used the sname as
+> pmic->desc[id].supply_name = palmas_regs_info[id].sname;
+>
+> However, how you have populated your dt?
+> Have you added like
+> smps10-out2-supply = <&SMPS10_OUT2>
+>
+> for the palmas regualtor -dt.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-CC: Stephen Gallimore <stephen.gallimore@st.com>
-CC: Stuart Menefy <stuart.menefy@st.com>
-CC: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/boot/dts/Makefile           |    4 ++-
- arch/arm/boot/dts/stih415-b2020.dts  |   15 ++++++++++++
- arch/arm/boot/dts/stih416-b2020.dts  |   16 +++++++++++++
- arch/arm/boot/dts/stih41x-b2020.dtsi |   42 ++++++++++++++++++++++++++++++++++
- 4 files changed, 76 insertions(+), 1 deletions(-)
- create mode 100644 arch/arm/boot/dts/stih415-b2020.dts
- create mode 100644 arch/arm/boot/dts/stih416-b2020.dts
- create mode 100644 arch/arm/boot/dts/stih41x-b2020.dtsi
+I added the regulator data like
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d4615fd..0d24c95 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -178,7 +178,9 @@ dtb-$(CONFIG_ARCH_SPEAR3XX)+= spear300-evb.dtb \
- 	spear320-hmi.dtb
- dtb-$(CONFIG_ARCH_SPEAR6XX)+= spear600-evb.dtb
- dtb-$(CONFIG_ARCH_STIXXXX)+= stih415-b2000.dtb \
--	stih416-b2000.dtb
-+	stih416-b2000.dtb \
-+	stih415-b2020.dtb \
-+	stih416-b2020.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += \
- 	sun4i-a10-cubieboard.dtb \
- 	sun4i-a10-mini-xplus.dtb \
-diff --git a/arch/arm/boot/dts/stih415-b2020.dts b/arch/arm/boot/dts/stih415-b2020.dts
-new file mode 100644
-index 0000000..442b019
---- /dev/null
-+++ b/arch/arm/boot/dts/stih415-b2020.dts
-@@ -0,0 +1,15 @@
-+/*
-+ * Copyright (C) 2013 STMicroelectronics (R&D) Limited.
-+ * Author: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * publishhed by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+#include "stih415.dtsi"
-+#include "stih41x-b2020.dtsi"
-+/ {
-+	model = "STiH415 B2020 Board";
-+	compatible = "st,stih415", "st,stih415-b2020";
-+};
-diff --git a/arch/arm/boot/dts/stih416-b2020.dts b/arch/arm/boot/dts/stih416-b2020.dts
-new file mode 100644
-index 0000000..276f28d
---- /dev/null
-+++ b/arch/arm/boot/dts/stih416-b2020.dts
-@@ -0,0 +1,16 @@
-+/*
-+ * Copyright (C) 2013 STMicroelectronics (R&D) Limited.
-+ * Author: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * publishhed by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+#include "stih416.dtsi"
-+#include "stih41x-b2020.dtsi"
-+/ {
-+	model = "STiH416 B2020";
-+	compatible = "st,stih416", "st,stih416-b2020";
-+
-+};
-diff --git a/arch/arm/boot/dts/stih41x-b2020.dtsi b/arch/arm/boot/dts/stih41x-b2020.dtsi
-new file mode 100644
-index 0000000..133e181
---- /dev/null
-+++ b/arch/arm/boot/dts/stih41x-b2020.dtsi
-@@ -0,0 +1,42 @@
-+/*
-+ * Copyright (C) 2013 STMicroelectronics (R&D) Limited.
-+ * Author: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * publishhed by the Free Software Foundation.
-+ */
-+/ {
-+	memory{
-+		device_type = "memory";
-+		reg = <0x40000000 0x80000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyAS0,115200";
-+		linux,stdout-path = &sbc_serial1;
-+	};
-+
-+	aliases {
-+		ttyAS0 = &sbc_serial1;
-+	};
-+	soc {
-+		sbc_serial1: serial@fe531000 {
-+			status = "okay";
-+		};
-+
-+		leds {
-+			compatible	= "gpio-leds";
-+			red {
-+				#gpio-cells = <1>;
-+				label	= "Front Panel LED";
-+				gpios	= <&PIO4 1>;
-+				linux,default-trigger	= "heartbeat";
-+			};
-+			green {
-+				gpios	= <&PIO4 7>;
-+				default-state = "off";
-+			};
-+		};
-+	};
-+};
--- 
-1.7.6.5
++                       smps10_out1_reg: smps10_out1 {
++                               regulator-name = "smps10_out1";
++                               regulator-min-microvolt = <5000000>;
++                               regulator-max-microvolt = <5000000>;
++                               regulator-always-on;
++                               regulator-boot-on;
++                               regulator-allow-bypass;
++                               ti,warm_sleep = <0>;
++                               ti,roof_floor = <0>;
++                               ti,mode_sleep = <0>;
++                               ti,warm_reset = <0>;
++                               ti,tstep = <0>;
++                               ti,vsel = <0>;
++                       };
+
+and from my controller I reference it using
++               vbus-supply = <&smps10_out1_reg>;
+
+and in the controller driver I use
++               vbus_reg = devm_regulator_get(dev, "vbus");
+
+Thanks
+Kishon
