@@ -1,68 +1,255 @@
-From: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v12 04/11] dmaengine: edma: enable build for AM33XX
-Date: Thu, 20 Jun 2013 16:06:40 -0500
-Message-ID: <1371762407-24544-5-git-send-email-joelagnel@ti.com>
-References: <1371762407-24544-1-git-send-email-joelagnel@ti.com>
+From: Heiko =?iso-8859-15?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v2 4/5] clk: dt: binding for basic divider clock
+Date: Thu, 20 Jun 2013 23:22:54 +0200
+Message-ID: <201306202322.54645.heiko@sntech.de>
+References: <1371437905-15567-1-git-send-email-mturquette@linaro.org> <1371437905-15567-5-git-send-email-mturquette@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1371762407-24544-1-git-send-email-joelagnel-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Matt Porter <matt-agtwNxEcTQJWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
-Cc: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1371437905-15567-5-git-send-email-mturquette@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Matt Sealey <neko@bakuhatsu.net>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
+Hi Mike,
 
-Enable TI EDMA option on OMAP and TI_PRIV_EDMA
+Am Montag, 17. Juni 2013, 04:58:24 schrieb Mike Turquette:
+> Devicetree binding for the basic clock divider, plus the setup function
+> to register the clock.  Based on the existing fixed-clock binding.
+> 
+> Signed-off-by: Mike Turquette <mturquette@linaro.org>
+> ---
+> Changes since v1:
+> * mask is u32, shift is u8
+> * use bit mask instead of bitfield width
+> * DT property names use dashes instead of underscores
+> * DT property names are more verbose
+> * added minimum/maximum divider values to binding
+> * shift property is optional in binding and can be auto-generated from a
+>   full 32-bit mask
+> 
+>  .../devicetree/bindings/clock/divider-clock.txt    | 87
+> +++++++++++++++++++++ drivers/clk/clk-divider.c                          |
+> 90 +++++++++++++++++++++- include/linux/clk-provider.h                    
+>   |  2 +
+>  3 files changed, 178 insertions(+), 1 deletion(-)
+>  create mode 100644
+> Documentation/devicetree/bindings/clock/divider-clock.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/divider-clock.txt
+> b/Documentation/devicetree/bindings/clock/divider-clock.txt new file mode
+> 100644
+> index 0000000..96bea07
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/divider-clock.txt
+> @@ -0,0 +1,87 @@
+> +Binding for simple divider clock.
+> +
+> +This binding uses the common clock binding[1].  It assumes a
+> +register-mapped adjustable clock rate divider that does not gate and has
+> +only one input clock or parent.  By default the value programmed into
+> +the register is one less than the actual divisor value.  E.g:
+> +
+> +register value		actual divisor value
+> +0			1
+> +1			2
+> +2			3
+> +
+> +This assumption may be modified by the following optional properties:
+> +
+> +index-starts-at-one - valid divisor values start at 1, not the default
+> +of 0.  E.g:
+> +register value		actual divisor value
+> +1			1
+> +2			2
+> +3			3
+> +
+> +index-power-of-two - valid divisor values are powers of two.  E.g:
+> +register value		actual divisor value
+> +0			1
+> +1			2
+> +2			4
+> +
+> +index-allow-zero - same as index_one, but zero is divide-by-1.  E.g:
+> +register value		actual divisor value
+> +0			1
+> +1			1
+> +2			2
+> +
+> +Additionally a table of valid dividers may be supplied like so:
+> +
+> +	table = <4 0>, <8, 1>;
+> +
+> +where the first value in the pair is the divider and the second value is
+> +the programmed register bitfield.
 
-Signed-off-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>
----
- arch/arm/mach-omap2/Kconfig |    1 +
- drivers/dma/Kconfig         |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-index f49cd51..f91b07f 100644
---- a/arch/arm/mach-omap2/Kconfig
-+++ b/arch/arm/mach-omap2/Kconfig
-@@ -17,6 +17,7 @@ config ARCH_OMAP2PLUS
- 	select PROC_DEVICETREE if PROC_FS
- 	select SOC_BUS
- 	select SPARSE_IRQ
-+	select TI_PRIV_EDMA
- 	select USE_OF
- 	help
- 	  Systems based on OMAP2, OMAP3, OMAP4 or OMAP5
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index e992489..3215a3c 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -213,7 +213,7 @@ config SIRF_DMA
- 
- config TI_EDMA
- 	tristate "TI EDMA support"
--	depends on ARCH_DAVINCI
-+	depends on ARCH_DAVINCI || ARCH_OMAP
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	default n
--- 
-1.7.9.5
+this doesn't match the current code that is taking the first as bit-value
+and the second as divider.
 
 
-------------------------------------------------------------------------------
-This SF.net email is sponsored by Windows:
+> +
+> +The binding must also provide the register to control the divider and
+> +the mask for the corresponding control bits.  Optionally the number of
+> +bits to shift that mask, if necessary.  If the shift value is missing it
+> +is the same as supplying a zero shift.
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible : shall be "divider-clock".
+> +- #clock-cells : from common clock binding; shall be set to 0.
+> +- clocks : link to phandle of parent clock
+> +- reg : base address for register controlling adjustable divider
+> +- bit-mask : arbitrary bitmask for programming the adjustable divider
+> +
+> +Optional properties:
+> +- clock-output-names : from common clock binding.
+> +- table : array of integer pairs defining divisors & bitfield values
+> +- bit-shift : number of bits to shift the bit-mask, defaults to
+> +  (ffs(mask) - 1) if not present
+> +- minimum-divider : min divisor for dividing the input clock rate, only
+> +  needed if the first divisor is offset from the default value
+> +- maximum-divider : max divisor for dividing the input clock rate, only
+> +  needed if the max divisor is less than (mask + 1).
+> +- index-starts-at-one : valid divisor programming starts at 1, not zero
+> +- index-power-of-two : valid divisor programming must be a power of two
+> +- index-allow-zero : implies index-one, and programming zero results in
+> +  divide-by-one
+> +
+> +Examples:
+> +	clock_foo: clock_foo@4a008100 {
+> +		compatible = "divider-clock";
+> +		#clock-cells = <0>;
+> +		clocks = <&clock_baz>;
+> +		reg = <0x4a008100 0x4>
+> +		mask = <0x3>
+> +		maximum-divider = <3>
+> +	};
+> +
+> +	clock_bar: clock_bar@4a008108 {
+> +		#clock-cells = <0>;
+> +		compatible = "divider-clock";
+> +		clocks = <&clock_foo>;
+> +		reg = <0x4a008108 0x4>;
+> +		mask = <0x1>;
+> +		shift = <0>;
+> +		table = < 4 0 >, < 8 1 >;
+> +	};
 
-Build for Windows Store.
+the shift and mask properties should probably also get their "bit-" additions.
 
-http://p.sf.net/sfu/windows-dev2dev
+Also, if you really want to use the u8 as type, it seems like the property
+must also get a "/bits/ 8" prefix, making it:
+
+			bit-shift = /bits/ 8 <6>;
+
+so the example should probably reflect this. Without this the
+of_property_read_u8 returns wrong values.
+
+
+> diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
+> index ac9cb7f..8c42c7f 100644
+> --- a/drivers/clk/clk-divider.c
+> +++ b/drivers/clk/clk-divider.c
+> @@ -1,7 +1,7 @@
+>  /*
+>   * Copyright (C) 2011 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
+>   * Copyright (C) 2011 Richard Zhao, Linaro <richard.zhao@linaro.org>
+> - * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd
+> <mturquette@linaro.org> + * Copyright (C) 2011-2013 Mike Turquette, Linaro
+> Ltd <mturquette@linaro.org> *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License version 2 as
+> @@ -17,6 +17,8 @@
+>  #include <linux/err.h>
+>  #include <linux/string.h>
+>  #include <linux/log2.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> 
+>  /*
+>   * DOC: basic adjustable divider clock that cannot gate
+> @@ -340,3 +342,89 @@ struct clk *clk_register_divider_table(struct device
+> *dev, const char *name, return _register_divider(dev, name, parent_name,
+> flags, reg, shift, ((1 << width) - 1), clk_divider_flags, table, lock);
+>  }
+> +
+> +#ifdef CONFIG_OF
+> +struct clk_div_table *of_clk_get_div_table(struct device_node *node)
+> +{
+> +	int i;
+> +	int table_size = 0;
+> +	struct clk_div_table *table;
+> +	u32 pair[2];
+> +
+> +	table_size = of_count_phandle_with_args(node, "table", "#clock-cells");
+
+I don't really understand what this should do ... especially what are the "#clock-cells" doing there?
+
+Of course the function also doesn't work for my
+			table = <2 0>, <4 1>, <8 2>, <16 3>;
+table.
+
+
+> +
+> +	if (table_size < 1)
+> +		return NULL;
+> +
+> +	table = kzalloc(sizeof(struct clk_div_table) * table_size, GFP_KERNEL);
+> +	if (!table) {
+> +		pr_err("%s: unable to allocate memory for %s table\n", __func__,
+> node->name); +		return NULL;
+> +	}
+> +
+> +	for (i = 0; i < table_size; i++) {
+> +		if (!of_property_read_u32_array(node, "table", pair, ARRAY_SIZE(pair)))
+
+wouldn't this always read the same values? It does not seem to iterate thru all the table entries.
+
+
+
+> { +			table[i].val = pair[0];
+> +			table[i].div = pair[1];
+> +		}
+> +	}
+> +
+> +	return table;
+> +}
+> +
+
+how about:
+
+struct clk_div_table *of_clk_get_div_table(struct device_node *node)
+{
+	int i;
+	int table_size = 0;
+	struct clk_div_table *table;
+	const __be32 *list;
+
+	list = of_get_property(node, "table", &table_size);
+	table_size /= sizeof(*list);
+
+	if (table_size < 2 || table_size % 2)
+		return NULL;
+
+	table_size /= 2;
+
+	table = kzalloc(sizeof(struct clk_div_table) * table_size, GFP_KERNEL);
+	if (!table) {
+		pr_err("%s: unable to allocate memory for %s table\n", __func__, node->name);
+		return NULL;
+	}
+
+	for (i = 0; i < table_size; i++) {
+		table[i].div = be32_to_cpu(*list++);
+		table[i].val = be32_to_cpu(*list++);
+	}
+
+	return table;
+}
+
+
+Heiko
