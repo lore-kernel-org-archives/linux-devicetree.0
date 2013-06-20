@@ -1,69 +1,55 @@
-From: "J, KEERTHY" <j-keerthy@ti.com>
-Subject: RE: [PATCH v3 2/4] MFD: Palmas: Add SMPS10_BOOST feature
-Date: Thu, 20 Jun 2013 09:13:06 +0000
-Message-ID: <DC88CAD03C0052499C1907B327FC63229ECDCE@DBDE04.ent.ti.com>
-References: <1371621470-22279-1-git-send-email-j-keerthy@ti.com>
- <1371621470-22279-3-git-send-email-j-keerthy@ti.com>
- <DC88CAD03C0052499C1907B327FC63229ECC05@DBDE04.ent.ti.com>
- <20130620090737.GF15667@zurbaran>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] GPIO: Add support for dual channel in gpio-xilinx.c
+Date: Thu, 20 Jun 2013 11:23:36 +0200
+Message-ID: <CACRpkdbWXFLgcUJ-gcUArRotJMoX4JBU9mmheooJBWsLR=QHOA@mail.gmail.com>
+References: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
+	<CACRpkdY4xaCOe28nu-NrYQ7pafjhj8-xqFcJRF9iJUy3SrCVrA@mail.gmail.com>
+	<51A8387C.4030704@monstr.eu>
+	<CACRpkdbHiaK6YPgXyxNgEeZxAsddK4x0vS-q3YfyXnj_BgHvuw@mail.gmail.com>
+	<51A852A1.7020505@monstr.eu>
+	<CACRpkdbL4pqiF8zxMi28SRTJ9AESiFt0wJMhK1oBio_cfFhpsQ@mail.gmail.com>
+	<51C2B47A.6010906@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130620090737.GF15667@zurbaran>
-Content-Language: en-US
+In-Reply-To: <51C2B47A.6010906@monstr.eu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+To: Michal Simek <monstr@monstr.eu>
+Cc: Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Samuel,
+On Thu, Jun 20, 2013 at 9:51 AM, Michal Simek <monstr@monstr.eu> wrote:
+> On 06/17/2013 07:29 AM, Linus Walleij wrote:
 
-> -----Original Message-----
-> From: Samuel Ortiz [mailto:sameo@linux.intel.com]
-> Sent: Thursday, June 20, 2013 2:38 PM
-> To: J, KEERTHY
-> Cc: broonie@kernel.org; ldewangan@nvidia.com;
-> grant.likely@secretlab.ca; swarren@nvidia.com; linux-
-> kernel@vger.kernel.org; linux-doc@vger.kernel.org; devicetree-
-> discuss@lists.ozlabs.org; gg@slimlogic.co.uk; linux-
-> omap@vger.kernel.org
-> Subject: Re: [PATCH v3 2/4] MFD: Palmas: Add SMPS10_BOOST feature
-> 
-> Hi,
-> 
-> On Thu, Jun 20, 2013 at 04:34:42AM +0000, J, KEERTHY wrote:
-> > > -----Original Message-----
-> > > From: J, KEERTHY
-> > > Sent: Wednesday, June 19, 2013 11:28 AM
-> > > To: linux-omap@vger.kernel.org
-> > > Cc: broonie@kernel.org; J, KEERTHY; ldewangan@nvidia.com;
-> > > sameo@linux.intel.com; grant.likely@secretlab.ca;
-> > > swarren@nvidia.com; linux-kernel@vger.kernel.org;
-> > > linux-doc@vger.kernel.org; devicetree- discuss@lists.ozlabs.org;
-> > > gg@slimlogic.co.uk
-> > > Subject: [PATCH v3 2/4] MFD: Palmas: Add SMPS10_BOOST feature
-> > >
-> > > From: J Keerthy <j-keerthy@ti.com>
-> > >
-> > > The SMPS10 regulator is not presesnt in all the variants of the
-> > > PALMAS PMIC family. Hence adding a feature to distingush between
-> them.
-> > >
-> >
-> > Could you please pull this patch?
-> I'm reverting this one for now as of_match_device is not define for
-> !CONFIG_OF.
+>> I think of_property_read_bool() will accept
+>> xlnx,is-dual = <1>; to mean the same as xlnx,is-dual;
+>> try it.
+>
+> First of all sorry for delay.
+> You are right that of_property_read_bool()
+> also accept xlnx,is-dual = <1>;
+> but also accept and return 1 when xlnx,is-dual = <0>;
+> which is incorrect behaviour.
 
-So the of_match_device parts can come under #ifdef CONFIG_OF?
+OK but that is a coding issue, not a DT bindings design issue.
+Can't we think a bit outside the box?
+What about something like this:
 
-> 
-> Cheers,
-> Samuel.
-> 
-> --
-> Intel Open Source Technology Centre
-> http://oss.intel.com/
+static bool is_dual (struct device_node *np)
+{
+    struct property *prop = of_find_property(np, "xlnx,is-dual", NULL);
+    int ret;
+    u32 val;
 
-Regards,
-Keerthy
+    if (!prop)
+        return false;
+
+    ret = of_property_read_u32(np, "xlnx,is-dual", &val);
+    if (ret < 0)
+        return true; /* node exists but has no cells */
+
+    return !!val;
+}
+
+Yours,
+Linus Walleij
