@@ -1,116 +1,140 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH V4 1/3] pci: Add PCIe driver for Samsung Exynos
-Date: Thu, 20 Jun 2013 19:58:14 +0900
-Message-ID: <00d701ce6da5$10216ae0$306440a0$@samsung.com>
-References: <003601ce6756$444e8cd0$cceba670$@samsung.com>
- <2061566.hRLrhtBK6z@wuerfel> <000901ce6838$8b514720$a1f3d560$@samsung.com>
- <28355406.ThqqvnG0Yj@wuerfel> <51C2D260.6000303@st.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 1/2] GPIO: Add support for dual channel in gpio-xilinx.c
+Date: Thu, 20 Jun 2013 12:59:59 +0200
+Message-ID: <51C2E0AF.7040702@monstr.eu>
+References: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
+ <CACRpkdY4xaCOe28nu-NrYQ7pafjhj8-xqFcJRF9iJUy3SrCVrA@mail.gmail.com>
+ <51A8387C.4030704@monstr.eu>
+ <CACRpkdbHiaK6YPgXyxNgEeZxAsddK4x0vS-q3YfyXnj_BgHvuw@mail.gmail.com>
+ <51A852A1.7020505@monstr.eu>
+ <CACRpkdbL4pqiF8zxMi28SRTJ9AESiFt0wJMhK1oBio_cfFhpsQ@mail.gmail.com>
+ <51C2B47A.6010906@monstr.eu>
+ <CACRpkdbWXFLgcUJ-gcUArRotJMoX4JBU9mmheooJBWsLR=QHOA@mail.gmail.com>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-reply-to: <51C2D260.6000303@st.com>
-Content-language: ko
-Sender: linux-pci-owner@vger.kernel.org
-To: 'Pratyush Anand' <pratyush.anand@st.com>, 'Arnd Bergmann' <arnd@arndb.de>
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, Jingoo Han <jg1.han@samsung.com>
+Content-Type: multipart/mixed; boundary="===============7493824358057007772=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdbWXFLgcUJ-gcUArRotJMoX4JBU9mmheooJBWsLR=QHOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, June 20, 2013 6:59 PM, Pratyush Anand wrote:
-> On 6/13/2013 7:48 PM, Arnd Bergmann wrote:
-> > On Thursday 13 June 2013 22:18:50 Jingoo Han wrote:
-> >> >On Wednesday, June 12, 2013 8:23 PM, Arnd Bergmann wrote:
-> >>> > >On Wednesday 12 June 2013 19:19:05 Jingoo Han wrote:
-> >>>> > > >+
-> >>>> > > >+/* synopsis specific PCIE configuration registers*/
-> >>>> > > >+#define PCIE_PORT_LINK_CONTROL		0x710
-> >>>> > > >+#define PORT_LINK_MODE_MASK		(0x3f << 16)
-> >>>> > > >+#define PORT_LINK_MODE_4_LANES		(0x7 << 16)
-> >>> > >
-> >>> > >Do you mean this is a "Synopsys" designware part? In that case it
-> >>> > >should really not be called "exynos-pcie" but "designware-pcie"
-> >>> > >and you should make sure that the driver makes no assumptions about
-> >>> > >the platform. A lot of other platforms also use designware
-> >>> > >parts and should be able to reuse this driver.
-> >> >
-> >> >Sorry, I don't think so.
-> >> >Only core block is a "Synopsys" designware part IP block,
-> >> >other parts are Exynos-specific.
-> >> >So, it is hard to share with other PCIe IPs using synopsis core.
-> > Just call it synopsys anyway and put a comment in to explain this.
-> > That should be enough for the next person with a synopsys PCI core
-> > to reuse your code and split out the exynos specific parts into a
-> > separate file.
-> >
-> 
-> I agree to Arnd that this patch should be split. I had worked in past
-> with SPEAr PCIe which also had designware PCIe IP. I see some code which
-> will fit both in SPEAr as well as in exynos. Unfortunately, I was not
-> able to get SPEAr driver pushed to mainline, as I moved to some other
-> project and got heavily occupied.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============7493824358057007772==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2HPSMLBMTGVVEBVKMEWOO"
 
-Oh, I see.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2HPSMLBMTGVVEBVKMEWOO
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-How about this?
-At the next PATCH v7, I will change the file name from 'pci-exynos.c'
-to 'pci-designware.c', as Arnd mentioned.
+On 06/20/2013 11:23 AM, Linus Walleij wrote:
+> On Thu, Jun 20, 2013 at 9:51 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:=
 
-Then, when Spear or other platform using designware is submitted,
-this 'pci-designware.c' will be split to two separate files such as
-'pci-designware.c' and 'pci-exynos.c'.
+>> On 06/17/2013 07:29 AM, Linus Walleij wrote:
+>=20
+>>> I think of_property_read_bool() will accept
+>>> xlnx,is-dual =3D <1>; to mean the same as xlnx,is-dual;
+>>> try it.
+>>
+>> First of all sorry for delay.
+>> You are right that of_property_read_bool()
+>> also accept xlnx,is-dual =3D <1>;
+>> but also accept and return 1 when xlnx,is-dual =3D <0>;
+>> which is incorrect behaviour.
+>=20
+> OK but that is a coding issue, not a DT bindings design issue.
+> Can't we think a bit outside the box?
+
+Before that fyi: I am working on supporing irq in this driver too.
+Sure.
+
+> What about something like this:
+>=20
+> static bool is_dual (struct device_node *np)
+> {
+>     struct property *prop =3D of_find_property(np, "xlnx,is-dual", NULL=
+);
+>     int ret;
+>     u32 val;
+>=20
+>     if (!prop)
+>         return false;
+>=20
+>     ret =3D of_property_read_u32(np, "xlnx,is-dual", &val);
+>     if (ret < 0)
+>         return true; /* node exists but has no cells */
+>=20
+>     return !!val;
+> }
+
+we can do it in this way but what I don't like on this is that IP
+is design to support 2 channels right now.
+It can happen that Xilinx decides to extend this for new channels.
+Register map is prepared for it and there is enough space to do it.
+
+And when this is done then is-dual (which is current name which
+is used in hardware configuration from design tools) will contain
+larger value >1.
+I agree that is-dual is not the best name.
+
+What about to do it differently?
+Generate number of channel in the description.
+And also do for() loop in the probe function to read values based
+on this channel number.
+
+Thanks,
+Michal
 
 
-Best regards,
-Jingoo Han
 
-> 
-> Last patch is here:
-> 
-> https://patchwork.kernel.org/patch/1661441/
-> 
-> Infact, these functions should be common to all arm platforms.
-> 
-> sys_to_pcie
-> cfg_read
-> cfg_write
-> 
-> Following functions should be common to all designware based driver (at
-> least they are same in SPEAr)
-> 
-> exynos_pcie_prog_viewport_cfg0
-> exynos_pcie_prog_viewport_cfg1
-> exynos_pcie_rd_other_conf
-> exynos_pcie_wr_other_conf
-> exynos_pcie_setup
-> exynos_pcie_valid_config
-> exynos_pcie_rd_conf
-> exynos_pcie_wd_conf
-> exynos_pcie_scan_bus
-> exynos_pcie_map_irq
-> add_pcie_port (after a bit of generalization)
-> exynos_pcie_probe
-> exynos_pcie_remove
-> 
-> 
-> 
-> Following should be specific to exynos:
-> 
-> exynos_pcie_rd_own_conf
-> exynos_pcie_wr_own_conf
-> exynos_pcie_link_up
-> exynos_pcie_setup_rc
-> exynos_pcie_assert_core_reset
-> exynos_pcie_deassert_core_reset
-> exynos_pcie_assert_phy_reset
-> exynos_pcie_deassert_phy_reset
-> exynos_pcie_init_phy
-> exynos_pcie_assert_reset
-> exynos_pcie_establish_link
-> exynos_pcie_host_init
-> 
-> 
-> 
-> struct pcie_port_info and struct pcie_port can also be standardized.
-> 
-> Regards
-> Pratyush
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+------enig2HPSMLBMTGVVEBVKMEWOO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlHC4LEACgkQykllyylKDCFZjACfU8XBcP4LjjjRlf9q1B6ahskU
+ZJ8An25m30BfZbMwQ+Hb3R5X7P7ZrwNY
+=2nKg
+-----END PGP SIGNATURE-----
+
+------enig2HPSMLBMTGVVEBVKMEWOO--
+
+--===============7493824358057007772==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7493824358057007772==--
