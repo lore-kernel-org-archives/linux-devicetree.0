@@ -1,321 +1,228 @@
-From: Russ Dill <Russ.Dill@ti.com>
-Subject: Re: [PATCH 2/3] mailbox/omap: add support for parsing dt devices
-Date: Wed, 19 Jun 2013 19:11:28 -0700
-Message-ID: <CA+Bv8XZtSyED3RdxTPPaZ1Y4_vx2JVyJ_-UVY06q2JhzAk5rpQ@mail.gmail.com>
-References: <1371594892-37603-1-git-send-email-s-anna@ti.com>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH v3 1/3] drm/exynos: add new compatible strings for hdmi subsystem
+Date: Thu, 20 Jun 2013 07:41:53 +0530
+Message-ID: <CAPdUM4NdY9eTTq3Dtgd10RVTA=gPAddebCYJO2HKtiZbF-MKLg@mail.gmail.com>
+References: <1371646269-21880-1-git-send-email-rahul.sharma@samsung.com>
+	<1371646269-21880-2-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1371594892-37603-1-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>, Omar Ramirez Luna <omar.ramirez@copitl.com>, Jassi Brar <jaswinder.singh@linaro.org>, Loic Pallardy <loic.pallardy@st.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1371646269-21880-2-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 3:34 PM, Suman Anna <s-anna@ti.com> wrote:
-> Logic has been added to the OMAP2+ mailbox code to
-> parse the mailbox dt nodes and construct the different
-> mailboxes associated with the instance. The design is
-> based on gathering the same information that was being
-> passed previously through the platform data, except for
-> the interrupt type configuration information.
+Hi Tomasz, Lucas,
+
+How does this patch look to you ? Please share your views.
+
+regards,
+Rahul Sharma.
+
+On Wed, Jun 19, 2013 at 6:21 PM, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+> This patch adds new combatible strings for hdmi, mixer, ddc
+> and hdmiphy. It follows the convention of using compatible string
+> which represent the SoC in which the IP was added for the first
+> time.
 >
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-
-Reviewed-by: Russ Dill <russ.dill@ti.com>
-
+> Drivers continue to support the previous compatible strings
+> but further addition of these compatible strings in device tree
+> is deprecated.
+>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 > ---
->  .../devicetree/bindings/mailbox/omap-mailbox.txt   |  46 +++++++
->  drivers/mailbox/mailbox-omap2.c                    | 141 ++++++++++++++++++---
->  2 files changed, 172 insertions(+), 15 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+>  Documentation/devicetree/bindings/video/exynos_hdmi.txt   |    7 +++++--
+>  .../devicetree/bindings/video/exynos_hdmiddc.txt          |    7 +++++--
+>  .../devicetree/bindings/video/exynos_hdmiphy.txt          |    7 +++++--
+>  Documentation/devicetree/bindings/video/exynos_mixer.txt  |    8 ++++++--
+>  drivers/gpu/drm/exynos/exynos_ddc.c                       |    2 ++
+>  drivers/gpu/drm/exynos/exynos_hdmi.c                      |    3 +++
+>  drivers/gpu/drm/exynos/exynos_hdmiphy.c                   |    4 ++++
+>  drivers/gpu/drm/exynos/exynos_mixer.c                     |   13 ++++++++-----
+>  8 files changed, 38 insertions(+), 13 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt b/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
-> new file mode 100644
-> index 0000000..913bc13
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
-> @@ -0,0 +1,46 @@
-> +OMAP2+ Mailbox Driver
+> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> index 589edee..c71d0f0 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+> @@ -1,7 +1,10 @@
+>  Device-Tree bindings for drm hdmi driver
+>
+>  Required properties:
+> -- compatible: value should be "samsung,exynos5-hdmi".
+> +- compatible: value should be one among the following:
+> +       1) "samsung,exynos5-hdmi" <DEPRECATED>
+> +       2) "samsung,exynos4210-hdmi"
+> +       3) "samsung,exynos4212-hdmi"
+>  - reg: physical base address of the hdmi and length of memory mapped
+>         region.
+>  - interrupts: interrupt number to the cpu.
+> @@ -15,7 +18,7 @@ Required properties:
+>  Example:
+>
+>         hdmi {
+> -               compatible = "samsung,exynos5-hdmi";
+> +               compatible = "samsung,exynos4212-hdmi";
+>                 reg = <0x14530000 0x100000>;
+>                 interrupts = <0 95 0>;
+>                 hpd-gpio = <&gpx3 7 0xf 1 3>;
+> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt b/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
+> index fa166d9..41eee97 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
+> @@ -1,12 +1,15 @@
+>  Device-Tree bindings for hdmiddc driver
+>
+>  Required properties:
+> -- compatible: value should be "samsung,exynos5-hdmiddc".
+> +- compatible: value should be one of the following
+> +       1) "samsung,exynos5-hdmiddc" <DEPRECATED>
+> +       2) "samsung,exynos4210-hdmiddc"
 > +
-> +Required properties:
-> +- compatible:          Should be one of the following,
-> +                           "ti,omap2-mailbox" for
-> +                               OMAP2420, OMAP2430, OMAP3430, OMAP3630 SoCs
-> +                           "ti,omap4-mailbox" for
-> +                               OMAP44xx, OMAP54xx, AM33xx, AM43xx, DRA7xx SoCs
-> +- reg:                 Contains the mailbox register address range (base address
-> +                       and length)
-> +- interrupts:          Contains the interrupt information for the mailbox
-> +                       device. The format is dependent on which interrupt
-> +                       controller the OMAP device uses
-> +- ti,hwmods:           Name of the hwmod associated with the mailbox
-> +- ti,mbox-num-users:   Number of targets (processor devices) that the mailbox device
-> +                       can interrupt
-> +- ti,mbox-num-fifos:   Number of h/w fifos within the mailbox device
-> +- #ti,mbox-data-cells: Cell size for describing a mailbox
-> +                       (currently should be 4)
-> +- ti,mbox-names:       Array of the names of the mailboxes
-> +- ti,mbox-data:                Mailbox descriptor data private to each mailbox. The 4
-> +                       cells represent the following data,
-> +                         Cell #1 (tx_id) - mailbox fifo id used for
-> +                                               transmitting messages
-> +                         Cell #2 (rx_id) - mailbox fifo id on which messages
-> +                                               are received
-> +                         Cell #3 (irq_id) - irq identifier index number to use
-> +                                               from the interrupts data
-> +                         Cell #4 (usr_id) - mailbox user id for identifying the
-> +                                               interrupt into the MPU interrupt
-> +                                               controller.
+>  - reg: I2C address of the hdmiddc device.
+>
+>  Example:
+>
+>         hdmiddc {
+> -               compatible = "samsung,exynos5-hdmiddc";
+> +               compatible = "samsung,exynos4210-hdmiddc";
+>                 reg = <0x50>;
+>         };
+> diff --git a/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
+> index 858f4f9..162f641 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
+> @@ -1,12 +1,15 @@
+>  Device-Tree bindings for hdmiphy driver
+>
+>  Required properties:
+> -- compatible: value should be "samsung,exynos5-hdmiphy".
+> +- compatible: value should be one of the following:
+> +       1) "samsung,exynos5-hdmiphy" <DEPRECATED>
+> +       2) "samsung,exynos4210-hdmiphy".
+> +       3) "samsung,exynos4212-hdmiphy".
+>  - reg: I2C address of the hdmiphy device.
+>
+>  Example:
+>
+>         hdmiphy {
+> -               compatible = "samsung,exynos5-hdmiphy";
+> +               compatible = "samsung,exynos4210-hdmiphy";
+>                 reg = <0x38>;
+>         };
+> diff --git a/Documentation/devicetree/bindings/video/exynos_mixer.txt b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+> index 9b2ea03..9131b99 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_mixer.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+> @@ -1,7 +1,11 @@
+>  Device-Tree bindings for mixer driver
+>
+>  Required properties:
+> -- compatible: value should be "samsung,exynos5-mixer".
+> +- compatible: value should be one of the following:
+> +       1) "samsung,exynos5-mixer" <DEPRECATED>
+> +       2) "samsung,exynos4210-mixer"
+> +       3) "samsung,exynos5250-mixer"
 > +
-> +Example:
-> +
-> +/* OMAP4 */
-> +mailbox: mailbox@4a0f4000 {
-> +       compatible = "ti,omap4-mailbox";
-> +       reg = <0x4a0f4000 0x200>;
-> +       interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-> +       ti,hwmods = "mailbox";
-> +       ti,mbox-num-users = <3>;
-> +       ti,mbox-num-fifos = <8>;
-> +       #ti,mbox-data-cells = <4>
-> +       ti,mbox-names = "mbox-ipu", "mbox-dsp";
-> +       ti,mbox-data = <0 1 0 0>, <3 2 0 0>;
-> +};
-> diff --git a/drivers/mailbox/mailbox-omap2.c b/drivers/mailbox/mailbox-omap2.c
-> index 6c0687c..3fe08de 100644
-> --- a/drivers/mailbox/mailbox-omap2.c
-> +++ b/drivers/mailbox/mailbox-omap2.c
-> @@ -14,6 +14,7 @@
->  #include <linux/slab.h>
->  #include <linux/clk.h>
->  #include <linux/err.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/io.h>
->  #include <linux/pm_runtime.h>
-> @@ -222,6 +223,21 @@ static struct omap_mbox_ops omap2_mbox_ops = {
->         .restore_ctx    = omap2_mbox_restore_ctx,
+>  - reg: physical base address of the mixer and length of memory mapped
+>         region.
+>  - interrupts: interrupt number to the cpu.
+> @@ -9,7 +13,7 @@ Required properties:
+>  Example:
+>
+>         mixer {
+> -               compatible = "samsung,exynos5-mixer";
+> +               compatible = "samsung,exynos5250-mixer";
+>                 reg = <0x14450000 0x10000>;
+>                 interrupts = <0 94 0>;
+>         };
+> diff --git a/drivers/gpu/drm/exynos/exynos_ddc.c b/drivers/gpu/drm/exynos/exynos_ddc.c
+> index 4e9b5ba..95c75ed 100644
+> --- a/drivers/gpu/drm/exynos/exynos_ddc.c
+> +++ b/drivers/gpu/drm/exynos/exynos_ddc.c
+> @@ -53,6 +53,8 @@ static struct of_device_id hdmiddc_match_types[] = {
+>         {
+>                 .compatible = "samsung,exynos5-hdmiddc",
+>         }, {
+> +               .compatible = "samsung,exynos4210-hdmiddc",
+> +       }, {
+>                 /* end node */
+>         }
 >  };
->
-> +static const struct of_device_id omap_mailbox_of_match[] = {
-> +       {
-> +               .compatible     = "ti,omap2-mailbox",
-> +               .data           = (void *) MBOX_INTR_CFG_TYPE1,
-> +       },
-> +       {
-> +               .compatible     = "ti,omap4-mailbox",
-> +               .data           = (void *) MBOX_INTR_CFG_TYPE2,
-> +       },
-> +       {
-> +               /* end */
-> +       },
-> +};
-> +MODULE_DEVICE_TABLE(of, omap_mailbox_of_match);
-> +
->  static int omap2_mbox_probe(struct platform_device *pdev)
->  {
->         struct resource *mem;
-> @@ -229,47 +245,138 @@ static int omap2_mbox_probe(struct platform_device *pdev)
->         struct omap_mbox **list, *mbox, *mboxblk;
->         struct omap_mbox2_priv *priv, *privblk;
->         struct omap_mbox_pdata *pdata = pdev->dev.platform_data;
-> -       struct omap_mbox_dev_info *info;
->         struct omap_mbox_device *mdev;
-> -       int i;
-> -
-> -       if (!pdata || !pdata->info_cnt || !pdata->info) {
-> +       struct omap_mbox_dev_info *info, *of_info = NULL;
-> +       struct device_node *node = pdev->dev.of_node;
-> +       int i, j;
-> +       u32 info_count = 0, intr_type = 0;
-> +       u32 num_users = 0, num_fifos = 0;
-> +       u32 dlen, dsize;
-> +       u32 *tmp;
-> +       const __be32 *mbox_data;
-> +
-> +       if (!node && (!pdata || !pdata->info_cnt || !pdata->info)) {
->                 pr_err("%s: platform not supported\n", __func__);
->                 return -ENODEV;
+> diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
+> index 743059f..de39530 100644
+> --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
+> @@ -1916,6 +1916,9 @@ static struct of_device_id hdmi_match_types[] = {
+>                 .compatible = "samsung,exynos5-hdmi",
+>                 .data   = (void *)HDMI_TYPE14,
+>         }, {
+> +               .compatible = "samsung,exynos4212-hdmi",
+> +               .data   = (void *)HDMI_TYPE14,
+> +       }, {
+>                 /* end node */
 >         }
->
-> +       if (node) {
-> +               intr_type = (u32)of_match_device(omap_mailbox_of_match,
-> +                                                       &pdev->dev)->data;
-> +               if (intr_type != 0 && intr_type != 1) {
-> +                       dev_err(&pdev->dev, "invalid match data value\n");
-> +                       return -EINVAL;
-> +               }
-> +
-> +               if (of_property_read_u32(node, "ti,mbox-num-users",
-> +                                                               &num_users)) {
-> +                       dev_err(&pdev->dev,
-> +                               "no ti,mbox-num-users configuration found\n");
-> +                       return -ENODEV;
-> +               }
-> +
-> +               if (of_property_read_u32(node, "ti,mbox-num-fifos",
-> +                                                               &num_fifos)) {
-> +                       dev_err(&pdev->dev,
-> +                               "no ti,mbox-num-fifos configuration found\n");
-> +                       return -ENODEV;
-> +               }
-> +
-> +               if (of_property_read_u32(node, "#ti,mbox-data-cells", &dsize)) {
-> +                       dev_err(&pdev->dev,
-> +                               "no #ti,mbox-data-cells configuration found\n");
-> +                       return -ENODEV;
-> +               }
-> +               if (dsize != 4) {
-> +                       dev_err(&pdev->dev,
-> +                               "invalid size for #ti,mbox-data-cells\n");
-> +                       return -EINVAL;
-> +               }
-> +
-> +               info_count = of_property_count_strings(node, "ti,mbox-names");
-> +               if (!info_count) {
-> +                       dev_err(&pdev->dev, "no mbox devices found\n");
-> +                       return -ENODEV;
-> +               }
-> +
-> +               mbox_data = of_get_property(node, "ti,mbox-data", &dlen);
-> +               if (!mbox_data) {
-> +                       dev_err(&pdev->dev, "no mbox device data found\n");
-> +                       return -ENODEV;
-> +               }
-> +               dlen /= sizeof(dsize);
-> +               if (dlen != dsize * info_count) {
-> +                       dev_err(&pdev->dev, "mbox device data is truncated\n");
-> +                       return -ENODEV;
-> +               }
-> +
-> +               of_info = kzalloc(info_count * sizeof(*of_info), GFP_KERNEL);
-> +               if (!of_info)
-> +                       return -ENOMEM;
-> +
-> +               i = 0;
-> +               while (i < info_count) {
-> +                       info = of_info + i;
-> +                       if (of_property_read_string_index(node,
-> +                                       "ti,mbox-names", i,  &info->name)) {
-> +                               dev_err(&pdev->dev,
-> +                                       "mbox_name [%d] read failed\n", i);
-> +                               ret = -ENODEV;
-> +                               goto free_of;
-> +                       }
-> +
-> +                       tmp = &info->tx_id;
-> +                       for (j = 0; j < dsize; j++) {
-> +                               tmp[j] = of_read_number(
-> +                                               mbox_data + j + (i * dsize), 1);
-> +                       }
-> +                       i++;
-> +               }
-> +       }
-> +
-> +       if (!node) { /* non-DT device creation */
-> +               info_count = pdata->info_cnt;
-> +               info = pdata->info;
-> +               intr_type = pdata->intr_type;
-> +               num_users = pdata->num_users;
-> +               num_fifos = pdata->num_fifos;
-> +       } else {
-> +               info = of_info;
-> +       }
-> +
->         mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
-> -       if (!mdev)
-> -               return -ENOMEM;
-> +       if (!mdev) {
-> +               ret = -ENOMEM;
-> +               goto free_of;
-> +       }
->
->         /* allocate one extra for marking end of list */
-> -       list = kzalloc((pdata->info_cnt + 1) * sizeof(*list), GFP_KERNEL);
-> +       list = kzalloc((info_count + 1) * sizeof(*list), GFP_KERNEL);
->         if (!list) {
->                 ret = -ENOMEM;
->                 goto free_mdev;
+>  };
+> diff --git a/drivers/gpu/drm/exynos/exynos_hdmiphy.c b/drivers/gpu/drm/exynos/exynos_hdmiphy.c
+> index ea49d13..ef04255 100644
+> --- a/drivers/gpu/drm/exynos/exynos_hdmiphy.c
+> +++ b/drivers/gpu/drm/exynos/exynos_hdmiphy.c
+> @@ -51,6 +51,10 @@ static struct of_device_id hdmiphy_match_types[] = {
+>         {
+>                 .compatible = "samsung,exynos5-hdmiphy",
+>         }, {
+> +               .compatible = "samsung,exynos4210-hdmiphy",
+> +       }, {
+> +               .compatible = "samsung,exynos4212-hdmiphy",
+> +       }, {
+>                 /* end node */
 >         }
->
-> -       mboxblk = mbox = kzalloc(pdata->info_cnt * sizeof(*mbox), GFP_KERNEL);
-> +       mboxblk = mbox = kzalloc(info_count * sizeof(*mbox), GFP_KERNEL);
->         if (!mboxblk) {
->                 ret = -ENOMEM;
->                 goto free_list;
->         }
->
-> -       privblk = priv = kzalloc(pdata->info_cnt * sizeof(*priv), GFP_KERNEL);
-> +       privblk = priv = kzalloc(info_count * sizeof(*priv), GFP_KERNEL);
->         if (!privblk) {
->                 ret = -ENOMEM;
->                 goto free_mboxblk;
->         }
->
-> -       info = pdata->info;
-> -       for (i = 0; i < pdata->info_cnt; i++, info++, priv++) {
-> +       for (i = 0; i < info_count; i++, info++, priv++) {
->                 priv->tx_fifo.msg = MAILBOX_MESSAGE(info->tx_id);
->                 priv->tx_fifo.fifo_stat = MAILBOX_FIFOSTATUS(info->tx_id);
->                 priv->rx_fifo.msg =  MAILBOX_MESSAGE(info->rx_id);
->                 priv->rx_fifo.msg_stat =  MAILBOX_MSGSTATUS(info->rx_id);
->                 priv->notfull_bit = MAILBOX_IRQ_NOTFULL(info->tx_id);
->                 priv->newmsg_bit = MAILBOX_IRQ_NEWMSG(info->rx_id);
-> -               if (pdata->intr_type) {
-> +               if (intr_type) {
->                         priv->irqenable = OMAP4_MAILBOX_IRQENABLE(info->usr_id);
->                         priv->irqstatus = OMAP4_MAILBOX_IRQSTATUS(info->usr_id);
->                         priv->irqdisable =
-> @@ -279,7 +386,7 @@ static int omap2_mbox_probe(struct platform_device *pdev)
->                         priv->irqstatus = MAILBOX_IRQSTATUS(info->usr_id);
->                         priv->irqdisable = MAILBOX_IRQENABLE(info->usr_id);
->                 }
-> -               priv->intr_type = pdata->intr_type;
-> +               priv->intr_type = intr_type;
->
->                 mbox->priv = priv;
->                 mbox->parent = mdev;
-> @@ -307,8 +414,8 @@ static int omap2_mbox_probe(struct platform_device *pdev)
->
->         mutex_init(&mdev->cfg_lock);
->         mdev->dev = &pdev->dev;
-> -       mdev->num_users = pdata->num_users;
-> -       mdev->num_fifos = pdata->num_fifos;
-> +       mdev->num_users = num_users;
-> +       mdev->num_fifos = num_fifos;
->         mdev->mboxes = list;
->         ret = omap_mbox_register(&pdev->dev, list);
->         if (ret)
-> @@ -317,6 +424,7 @@ static int omap2_mbox_probe(struct platform_device *pdev)
->
->         pm_runtime_enable(mdev->dev);
->
-> +       kfree(of_info);
+>  };
+> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exynos/exynos_mixer.c
+> index f36f878..6225501 100644
+> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
+> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
+> @@ -1115,12 +1115,12 @@ static int vp_resources_init(struct exynos_drm_hdmi_context *ctx,
 >         return 0;
->
->  unmap_mbox:
-> @@ -329,6 +437,8 @@ free_list:
->         kfree(list);
->  free_mdev:
->         kfree(mdev);
-> +free_of:
-> +       kfree(of_info);
->         return ret;
 >  }
 >
-> @@ -358,6 +468,7 @@ static struct platform_driver omap2_mbox_driver = {
->         .remove = omap2_mbox_remove,
->         .driver = {
->                 .name = "omap-mailbox",
-> +               .of_match_table = omap_mailbox_of_match,
->         },
+> -static struct mixer_drv_data exynos5_mxr_drv_data = {
+> +static struct mixer_drv_data exynos5250_mxr_drv_data = {
+>         .version = MXR_VER_16_0_33_0,
+>         .is_vp_enabled = 0,
 >  };
 >
+> -static struct mixer_drv_data exynos4_mxr_drv_data = {
+> +static struct mixer_drv_data exynos4210_mxr_drv_data = {
+>         .version = MXR_VER_0_0_0_16,
+>         .is_vp_enabled = 1,
+>  };
+> @@ -1128,10 +1128,10 @@ static struct mixer_drv_data exynos4_mxr_drv_data = {
+>  static struct platform_device_id mixer_driver_types[] = {
+>         {
+>                 .name           = "s5p-mixer",
+> -               .driver_data    = (unsigned long)&exynos4_mxr_drv_data,
+> +               .driver_data    = (unsigned long)&exynos4210_mxr_drv_data,
+>         }, {
+>                 .name           = "exynos5-mixer",
+> -               .driver_data    = (unsigned long)&exynos5_mxr_drv_data,
+> +               .driver_data    = (unsigned long)&exynos5250_mxr_drv_data,
+>         }, {
+>                 /* end node */
+>         }
+> @@ -1140,7 +1140,10 @@ static struct platform_device_id mixer_driver_types[] = {
+>  static struct of_device_id mixer_match_types[] = {
+>         {
+>                 .compatible = "samsung,exynos5-mixer",
+> -               .data   = &exynos5_mxr_drv_data,
+> +               .data   = &exynos5250_mxr_drv_data,
+> +       }, {
+> +               .compatible = "samsung,exynos5250-mixer",
+> +               .data   = &exynos5250_mxr_drv_data,
+>         }, {
+>                 /* end node */
+>         }
 > --
-> 1.8.3.1
+> 1.7.10.4
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
