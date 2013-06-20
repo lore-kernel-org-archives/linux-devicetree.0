@@ -1,247 +1,157 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH V6 3/3] ARM: dts: Add pcie controller node for Samsung
- EXYNOS5440 SoC
-Date: Thu, 20 Jun 2013 11:36:20 +0200
-Message-ID: <228629412.BqSshikCdN@amdc1227>
-References: <00c201ce6d85$83b072a0$8b1157e0$@samsung.com>
- <3250954.dVh4O1LchK@flatron> <00c501ce6d8f$af1bf900$0d53eb00$@samsung.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH v5] ethernet/arc/arc_emac - Add new driver
+Date: Thu, 20 Jun 2013 09:49:48 +0000
+Message-ID: <4881796E12491D4BB15146FE0209CE643F5F2F56@DE02WEMBXB.internal.synopsys.com>
+References: <1371629537-8076-1-git-send-email-abrodkin@synopsys.com>
+ <CAHp75Vc-Aza03ZLJj3CkLP2YhvdRi94bfutxKbV34hTc1_6k4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <00c501ce6d8f$af1bf900$0d53eb00$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Francois Romieu <romieu@fr.zoreil.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 of June 2013 17:25:12 Jingoo Han wrote:
-> On Thursday, June 20, 2013 5:04 PM, Tomasz Figa wrote:
-> > Hi Jingoo,
-> > 
-> > On Thursday 20 of June 2013 16:12:24 Jingoo Han wrote:
-> > > Exynos5440 has two PCIe controllers which can be used as root complex
-> > > for PCIe interface.
-> > > 
-> > > Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-> > > ---
-> > > 
-> > >  arch/arm/boot/dts/exynos5440-ssdk5440.dts |    8 ++++++
-> > >  arch/arm/boot/dts/exynos5440.dtsi         |   40
-> > > 
-> > > ++++++++++++++++++++++++++++- 2 files changed, 47 insertions(+), 1
-> > > deletion(-)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-> > > b/arch/arm/boot/dts/exynos5440-ssdk5440.dts index f32cd77..3d93804
-> > > 100644
-> > > --- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-> > > +++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-> > > @@ -65,4 +65,12 @@
-> > > 
-> > >  			clock-frequency = <50000000>;
-> > >  		
-> > >  		};
-> > >  	
-> > >  	};
-> > > 
-> > > +
-> > > +	pcie0@290000 {
-> > > +		reset-gpio = <&pin_ctrl 5 0>;
-> > > +	};
-> > > +
-> > > +	pcie1@2a0000 {
-> > > +		reset-gpio = <&pin_ctrl 22 0>;
-> > > +	};
-> > > 
-> > >  };
-> > > 
-> > > diff --git a/arch/arm/boot/dts/exynos5440.dtsi
-> > > b/arch/arm/boot/dts/exynos5440.dtsi index 03d40c0..6295eda 100644
-> > > --- a/arch/arm/boot/dts/exynos5440.dtsi
-> > > +++ b/arch/arm/boot/dts/exynos5440.dtsi
-> > > @@ -126,7 +126,7 @@
-> > > 
-> > >  		clock-names = "spi", "spi_busclk0";
-> > >  	
-> > >  	};
-> > > 
-> > > -	pinctrl {
-> > > +	pin_ctrl: pinctrl {
-> > > 
-> > >  		compatible = "samsung,exynos5440-pinctrl";
-> > >  		reg = <0xE0000 0x1000>;
-> > >  		interrupts = <0 37 0>, <0 38 0>, <0 39 0>, <0 40 0>,
-> > > 
-> > > @@ -230,4 +230,42 @@
-> > > 
-> > >  		clocks = <&clock 24>;
-> > >  		clock-names = "usbhost";
-> > >  	
-> > >  	};
-> > 
-> > I think this patch should be split into two:
-> >  - patch adding just generlic PCIe nodes for Exynos5440,
-> >  - patch adding label to the pinctrl node (which is a prerequisite) and
-> > 
-> > board-specific properties of PCIe nodes.
-> 
-> Do you mean the following?
-> 
-> 1. patch adding just generlic PCIe nodes for Exynos5440
->     [PATCH] ARM: dts: Add pcie controller node for Samsung EXYNOS5440 SoC
-> 
-> arch/arm/boot/dts/exynos5440.dtsi
-> +
-> +	pcie@290000 {
-> +		compatible = "samsung,exynos5440-pcie";
-> +		reg = <0x290000 0x1000
-> +			0x270000 0x1000
-> +			0x271000 0x40>;
-> +		interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
-> +		clocks = <&clock 28>, <&clock 27>;
-> +		clock-names = "pcie", "pcie_bus";
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		device_type = "pci";
-> +		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000   /*
-> configuration space */ +			  0x81000000 0 0	  0x40001000 0 0x00010000  
-> /* downstream I/O */ +			  0x82000000 0 0x40011000 0x40011000 0
-> 0x1ffef000>; /* non-prefetchable memory */ +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0 0 0 0>;
-> +		interrupt-map = <0x0 0 &gic 53>;
-> +	};
-> +
-> +	pcie@2a0000 {
-> +		compatible = "samsung,exynos5440-pcie";
-> +		reg = <0x2a0000 0x1000
-> +			0x272000 0x1000
-> +			0x271040 0x40>;
-> +		interrupts = <0 23 0>, <0 24 0>, <0 25 0>;
-> +		clocks = <&clock 29>, <&clock 27>;
-> +		clock-names = "pcie", "pcie_bus";
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		device_type = "pci";
-> +		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000   /*
-> configuration space */ +			  0x81000000 0 0	  0x60001000 0 0x00010000  
-> /* downstream I/O */ +			  0x82000000 0 0x60011000 0x60011000 0
-> 0x1ffef000>; /* non-prefetchable memory */ +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0 0 0 0>;
-> +		interrupt-map = <0x0 0 &gic 56>;
-> +	};
-> 
-> 
-> 
-> 2. patch adding label to the pinctrl node (which is a prerequisite) and
->     board-specific properties of PCIe nodes.
->    [PATCH] ARM: dts: Add pcie controller node for exynos5440-ssdk5440
-> 
-> arch/arm/boot/dts/exynos5440-ssdk5440.dts
-> +
-> +	pcie0@290000 {
-> +		reset-gpio = <&pin_ctrl 5 0>;
-> +	};
-> +
-> +	pcie1@2a0000 {
-> +		reset-gpio = <&pin_ctrl 22 0>;
-> +	};
-> 
-> arch/arm/boot/dts/exynos5440.dtsi
-> -	pinctrl {
-> +	pin_ctrl: pinctrl {
-> 
+On 06/19/2013 04:06 PM, Andy Shevchenko wrote:
+> On Wed, Jun 19, 2013 at 11:12 AM, Alexey Brodkin
+> <Alexey.Brodkin@synopsys.com> wrote:
+>> Driver for non-standard on-chip ethernet device ARC EMAC 10/100,
+>> instantiated in some legacy ARC (Synopsys) FPGA Boards such as
+>> ARCAngel4/ML50x.
+>>
+>> This is based off of current Linus tree.
+>
+> This line should go away from commit message.
 
-Exactly.
+Ok, will do.
 
-> > > +
-> > > +	pcie0@290000 {
-> > 
-> > Node naming looks incorrect here. The name should be as generic as
-> > possible, without any hardware-specific IDs, e.g. pcie, not pcie0. The
-> > @290000 suffix is enough to make the node unique.
-> 
-> I see. You are right.
-> I will fix it.
+>> +static int arc_emac_rx(struct net_device *ndev, int budget)
+>> +{
+>> +       struct arc_emac_priv *priv = netdev_priv(ndev);
+>> +       unsigned int work_done;
+>> +
+>> +       for (work_done = 0; work_done <= budget;) {
+>> +               unsigned int *last_rx_bd = &priv->last_rx_bd;
+>> +               struct net_device_stats *stats = &priv->stats;
+>> +               struct buffer_state *rx_buff = &priv->rx_buff[*last_rx_bd];
+>> +               struct arc_emac_bd *rxbd = &priv->rxbd[*last_rx_bd];
+>> +               unsigned int buflen = EMAC_BUFFER_SIZE;
+>> +               unsigned int pktlen, info = __le32_to_cpu(rxbd->info);
+>> +               struct sk_buff *skb;
+>> +               dma_addr_t addr;
+>> +
+>> +               if (unlikely((info & OWN_MASK) == FOR_EMAC))
+>> +                       break;
+>
+>> +               work_done++;
+>
+> Why it can't be inside for()?
 
-Thanks.
+Indeed it can. Earlier there was "continue" instead of "break" that's 
+why increment was done at this particular place. With "break" in place 
+I'm moving incrementation in "for".
 
-Best regards,
-Tomasz
+>> +               if (unlikely((info & FRST_OR_LAST_MASK) != FRST_OR_LAST_MASK)) {
+>> +                       /* Buffer chaining results in a significant
+>> +                        * amount of additional bus overhead and thus
+>> +                        * a higher CLK frequency or larger FIFOs are required.
+>> +                        * Because of that fact we don't support
+>> +                        * chaining of receive packets. We pre-allocate
+>> +                        * buffers of MTU size so incoming packets
+>> +                        * won't be chained.
+>> +                        */
+>
+> Could that comment take less LOC?
+>
+>> +                       /* Return ownership to EMAC */
+>> +                       rxbd->info = __cpu_to_le32(FOR_EMAC | buflen);
+>
+> Here and in the whole file. Parhaps cpu_to_le32()?
 
-> Best regards,
-> Jingoo Han
-> 
-> > > +		compatible = "samsung,exynos5440-pcie";
-> > > +		reg = <0x290000 0x1000
-> > > +			0x270000 0x1000
-> > > +			0x271000 0x40>;
-> > > +		interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
-> > > +		clocks = <&clock 28>, <&clock 27>;
-> > > +		clock-names = "pcie", "pcie_bus";
-> > > +		#address-cells = <3>;
-> > > +		#size-cells = <2>;
-> > > +		device_type = "pci";
-> > > +		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00001000
-> > 
-> > /*
-> > 
-> > > configuration space */ +			  0x81000000 0 0
-> > 
-> > 0x40001000 0 0x00010000
-> > 
-> > > /* downstream I/O */ +			  0x82000000 0 0x40011000
-> > 
-> > 0x40011000 0
-> > 
-> > > 0x1ffef000>; /* non-prefetchable memory */ +		#interrupt-cells =
-> > 
-> > <1>;
-> > 
-> > > +		interrupt-map-mask = <0 0 0 0>;
-> > > +		interrupt-map = <0x0 0 &gic 53>;
-> > > +	};
-> > > +
-> > > +	pcie1@2a0000 {
-> > 
-> > Same here.
-> > 
-> > Best regards,
-> > Tomasz
-> > 
-> > > +		compatible = "samsung,exynos5440-pcie";
-> > > +		reg = <0x2a0000 0x1000
-> > > +			0x272000 0x1000
-> > > +			0x271040 0x40>;
-> > > +		interrupts = <0 23 0>, <0 24 0>, <0 25 0>;
-> > > +		clocks = <&clock 29>, <&clock 27>;
-> > > +		clock-names = "pcie", "pcie_bus";
-> > > +		#address-cells = <3>;
-> > > +		#size-cells = <2>;
-> > > +		device_type = "pci";
-> > > +		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00001000
-> > 
-> > /*
-> > 
-> > > configuration space */ +			  0x81000000 0 0
-> > 
-> > 0x60001000 0 0x00010000
-> > 
-> > > /* downstream I/O */ +			  0x82000000 0 0x60011000
-> > 
-> > 0x60011000 0
-> > 
-> > > 0x1ffef000>; /* non-prefetchable memory */ +		#interrupt-cells =
-> > 
-> > <1>;
-> > 
-> > > +		interrupt-map-mask = <0 0 0 0>;
-> > > +		interrupt-map = <0x0 0 &gic 56>;
-> > > +	};
-> > > 
-> > >  };
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe
-> linux-samsung-soc" in the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Indeed. Replaced both "__cpu_to_le32" and "__le32_to_cpu" with no "__" 
+versions.
+
+>> +               /* Once EMAC sees he is an owner of this BD, EMAC will start to
+>> +                * use it for receiving or transmitting packets,
+>> +                * depending on BD: Tx or Rx.
+>> +                * That's why we need to make sure "data" has proper address
+>> +                * before writing "info" word with owner flag.
+>> +                */
+>
+> Less LOC?
+
+Reduced.
+
+>> +static int arc_emac_probe(struct platform_device *pdev)
+>> +{
+>
+>> +       err = of_address_to_resource(pdev->dev.of_node, 0, &res_regs);
+>
+>> +       if (of_property_read_u32(pdev->dev.of_node, "clock-frequency",
+>> +                                &clock_frequency)) {
+>
+>> +       err = of_irq_to_resource(pdev->dev.of_node, 0, &res_irq);
+>
+> You may save few lines if you move those checks before allocation of the netdev.
+
+Correct, but having netdev is handy because I may have driver's private 
+structure allocated as well and may set corresponding values right in 
+the order I parse them from DT.
+Moreover I need to have private structure pretty early in place just to 
+read EMAC's ID from a register.
+So I'd better leave netdev allocation on top of the probe.
+
+>> +       err = arc_mdio_probe(pdev->dev.of_node, priv);
+>> +       if (err) {
+>> +               dev_err(&pdev->dev, "failed to probe MII bus\n");
+>> +               goto out;
+>> +       }
+>> +
+>> +       priv->phy_dev = of_phy_connect(ndev, phy_node, arc_emac_adjust_link, 0,
+>> +                                      PHY_INTERFACE_MODE_MII);
+>> +       if (!priv->phy_dev) {
+>> +               netdev_err(ndev, "of_phy_connect() failed\n");
+>
+> Can we be consistent and use here dev_err()?
+
+Right. Replaced.
+
+>> +++ b/drivers/net/ethernet/arc/emac_mdio.c
+>> @@ -0,0 +1,151 @@
+>
+>> +static int arc_mdio_complete_wait(struct arc_emac_priv *priv)
+>> +{
+>> +       unsigned int i;
+>> +
+>> +       for (i = 0; i < ARC_MDIO_COMPLETE_POLL_COUNT * 40; i++) {
+>
+>> +               msleep(25);
+>
+> So, in the worst case it takes ARC_MDIO_COMPLETE_POLL_COUNT seconds to
+> wait. Quite a long time.
+> Does user expect such a delay?
+
+Well, but it shouldn't be that long. It's just a check for illegal 
+situation. If this transaction never ends then it doesn't matter if we 
+wait for 1 second or 2 - after this time period "libphy" will "halt" 
+MDIO anyways.
+
+In general MDIO register gets polled by "libphy" once in a couple of 
+seconds, so delay of 25 milliseconds IMHO is fine.
+
+>> +int arc_mdio_probe(struct device_node *dev_node, struct arc_emac_priv *priv)
+>> +{
+>
+>> +       snprintf(bus->id, MII_BUS_ID_SIZE, "%.8x", (unsigned int)priv->regs);
+>
+> Is bus->id exposed to user-space somehow?
+
+Well as a boot-up message from "libphy":
+====
+libphy: Synopsys MII Bus: probed
+====
+
+Regards,
+Alexey
