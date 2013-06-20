@@ -1,13 +1,15 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v9 02/10] ASoC: imx-pcm-fiq: Introduce pcm-fiq-params
-Date: Thu, 20 Jun 2013 15:20:21 +0200
-Message-ID: <1371734429-6081-3-git-send-email-mpa@pengutronix.de>
-References: <1371734429-6081-1-git-send-email-mpa@pengutronix.de>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] regulator: palmas: model SMPS10 as two regulators
+Date: Thu, 20 Jun 2013 19:20:23 +0530
+Message-ID: <51C3089F.5030003@ti.com>
+References: <1371717458-10307-1-git-send-email-kishon@ti.com>
+ <1371717458-10307-3-git-send-email-kishon@ti.com>
+ <51C2DEEB.9090600@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371734429-6081-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <51C2DEEB.9090600-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,156 +20,56 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org" <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org" <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cleaner parameter passing for imx-pcm-fiq. Create a seperated fiq-params
-struct to pass all arguments.
+Hi,
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Tested-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
+On Thursday 20 June 2013 04:22 PM, Laxman Dewangan wrote:
+> On Thursday 20 June 2013 02:07 PM, Kishon Vijay Abraham I wrote:
+>> SMPS10 has two outputs OUT1 and OUT2 and have one input IN1.
+>> SMPS10-OUT2 is connected to SMPS10-IN1 and can be configured either
+>> in BOOST mode or BYPASS mode. regulator_enable of SMPS10-OUT2 configures
+>> it in BOOST mode. For BYPASS mode regulator_allow_bypass() API can be
+>> used. SMPS10-OUT1 is connected to SMPS10-OUT2 and can be enabled using
+>> regulator_enable().
+>>
+>> Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   drivers/regulator/palmas-regulator.c |   39 ++++++++++++++++++++++++++++++----
+>>   include/linux/mfd/palmas.h           |    9 ++++----
+>>   2 files changed, 40 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/regulator/palmas-regulator.c
+>> b/drivers/regulator/palmas-regulator.c
+>> index 3ae44ac..7004bab 100644
+>> --- a/drivers/regulator/palmas-regulator.c
+>> +++ b/drivers/regulator/palmas-regulator.c
+>> @@ -97,7 +97,12 @@ static const struct regs_info palmas_regs_info[] = {
+>>           .ctrl_addr    = PALMAS_SMPS9_CTRL,
+>>       },
+>>       {
+>> -        .name        = "SMPS10",
+>> +        .name        = "SMPS10_OUT1",
+>> +        .sname        = "smps10-out2",
+>> +        .ctrl_addr    = PALMAS_SMPS10_CTRL,
+>> +    },
+>> +    {
+>> +        .name        = "SMPS10_OUT2",
+>>           .sname        = "smps10-in",
+>>
+>
+> This sequence can create regulator to be never register.
+> In probe, we register regulator from 0 to max_id.
+> Here smps10-out1 comes first and see the supply as smps10-out2 which is not
+> registered yet and so will fail with PROBE_DEFER
+> When again it tries, the same issue.
 
-Notes:
-    Changes in v9:
-     - Remove semicolon in function
-    
-    Changes in v7:
-     - Fix init function signature for !CONFIG_SND_SOC_IMX_PCM_FIQ
-    
-    Changes in v6:
-     - After rebasing onto Shawn's imx-pcm cleanups, the imx_pcm_fiq_params are now
-       passed as function arguments instead of platform driver data.
-    
-    Changes in v3:
-     - Using snd_dmaengine_dai_dma_data for dma_params after rebasing onto
-       dmaengine cleanups.
+hmm.. But I was able to get (regulator_get) *SMPS10_OUT1* without any issue
+during my testing. From looking at the code, I couldn't see *sname* being used
+anywhere.
 
- sound/soc/fsl/imx-pcm-fiq.c | 18 ++++++++++--------
- sound/soc/fsl/imx-pcm.h     | 15 +++++++++++++--
- sound/soc/fsl/imx-ssi.c     |  7 ++++++-
- sound/soc/fsl/imx-ssi.h     |  1 +
- 4 files changed, 30 insertions(+), 11 deletions(-)
-
-diff --git a/sound/soc/fsl/imx-pcm-fiq.c b/sound/soc/fsl/imx-pcm-fiq.c
-index 310d902..3b2ba99 100644
---- a/sound/soc/fsl/imx-pcm-fiq.c
-+++ b/sound/soc/fsl/imx-pcm-fiq.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- 
- #include <sound/core.h>
-+#include <sound/dmaengine_pcm.h>
- #include <sound/initval.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
-@@ -32,6 +33,7 @@
- #include <linux/platform_data/asoc-imx-ssi.h>
- 
- #include "imx-ssi.h"
-+#include "imx-pcm.h"
- 
- struct imx_pcm_runtime_data {
- 	unsigned int period;
-@@ -366,9 +368,9 @@ static struct snd_soc_platform_driver imx_soc_platform_fiq = {
- 	.pcm_free	= imx_pcm_fiq_free,
- };
- 
--int imx_pcm_fiq_init(struct platform_device *pdev)
-+int imx_pcm_fiq_init(struct platform_device *pdev,
-+		struct imx_pcm_fiq_params *params)
- {
--	struct imx_ssi *ssi = platform_get_drvdata(pdev);
- 	int ret;
- 
- 	ret = claim_fiq(&fh);
-@@ -377,15 +379,15 @@ int imx_pcm_fiq_init(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	mxc_set_irq_fiq(ssi->irq, 1);
--	ssi_irq = ssi->irq;
-+	mxc_set_irq_fiq(params->irq, 1);
-+	ssi_irq = params->irq;
- 
--	imx_pcm_fiq = ssi->irq;
-+	imx_pcm_fiq = params->irq;
- 
--	imx_ssi_fiq_base = (unsigned long)ssi->base;
-+	imx_ssi_fiq_base = (unsigned long)params->base;
- 
--	ssi->dma_params_tx.maxburst = 4;
--	ssi->dma_params_rx.maxburst = 6;
-+	params->dma_params_tx->maxburst = 4;
-+	params->dma_params_rx->maxburst = 6;
- 
- 	ret = snd_soc_register_platform(&pdev->dev, &imx_soc_platform_fiq);
- 	if (ret)
-diff --git a/sound/soc/fsl/imx-pcm.h b/sound/soc/fsl/imx-pcm.h
-index 67f656c..fd56cad 100644
---- a/sound/soc/fsl/imx-pcm.h
-+++ b/sound/soc/fsl/imx-pcm.h
-@@ -32,6 +32,15 @@ imx_pcm_dma_params_init_data(struct imx_dma_data *dma_data,
- 		dma_data->peripheral_type = IMX_DMATYPE_SSI;
- }
- 
-+struct imx_pcm_fiq_params {
-+	int irq;
-+	void __iomem *base;
-+
-+	/* Pointer to original ssi driver to setup tx rx sizes */
-+	struct snd_dmaengine_dai_dma_data *dma_params_rx;
-+	struct snd_dmaengine_dai_dma_data *dma_params_tx;
-+};
-+
- #ifdef CONFIG_SND_SOC_IMX_PCM_DMA
- int imx_pcm_dma_init(struct platform_device *pdev);
- void imx_pcm_dma_exit(struct platform_device *pdev);
-@@ -47,10 +56,12 @@ static inline void imx_pcm_dma_exit(struct platform_device *pdev)
- #endif
- 
- #ifdef CONFIG_SND_SOC_IMX_PCM_FIQ
--int imx_pcm_fiq_init(struct platform_device *pdev);
-+int imx_pcm_fiq_init(struct platform_device *pdev,
-+		struct imx_pcm_fiq_params *params);
- void imx_pcm_fiq_exit(struct platform_device *pdev);
- #else
--static inline int imx_pcm_fiq_init(struct platform_device *pdev)
-+static inline int imx_pcm_fiq_init(struct platform_device *pdev,
-+		struct imx_pcm_fiq_params *params)
- {
- 	return -ENODEV;
- }
-diff --git a/sound/soc/fsl/imx-ssi.c b/sound/soc/fsl/imx-ssi.c
-index a8362be..16ae16d 100644
---- a/sound/soc/fsl/imx-ssi.c
-+++ b/sound/soc/fsl/imx-ssi.c
-@@ -590,7 +590,12 @@ static int imx_ssi_probe(struct platform_device *pdev)
- 		goto failed_register;
- 	}
- 
--	ret = imx_pcm_fiq_init(pdev);
-+	ssi->fiq_params.irq = ssi->irq;
-+	ssi->fiq_params.base = ssi->base;
-+	ssi->fiq_params.dma_params_rx = &ssi->dma_params_rx;
-+	ssi->fiq_params.dma_params_tx = &ssi->dma_params_tx;
-+
-+	ret = imx_pcm_fiq_init(pdev, &ssi->fiq_params);
- 	if (ret)
- 		goto failed_pcm_fiq;
- 
-diff --git a/sound/soc/fsl/imx-ssi.h b/sound/soc/fsl/imx-ssi.h
-index d5003ce..fb1616b 100644
---- a/sound/soc/fsl/imx-ssi.h
-+++ b/sound/soc/fsl/imx-ssi.h
-@@ -209,6 +209,7 @@ struct imx_ssi {
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
- 	struct imx_dma_data filter_data_tx;
- 	struct imx_dma_data filter_data_rx;
-+	struct imx_pcm_fiq_params fiq_params;
- 
- 	int enabled;
- };
--- 
-1.8.2.1
+Thanks
+Kishon
