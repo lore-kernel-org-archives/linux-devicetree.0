@@ -1,140 +1,60 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH V4 1/3] pci: Add PCIe driver for Samsung Exynos
-Date: Thu, 20 Jun 2013 20:36:01 +0900
-Message-ID: <00d901ce6daa$56ffb6b0$04ff2410$@samsung.com>
-References: <003601ce6756$444e8cd0$cceba670$@samsung.com>
- <2061566.hRLrhtBK6z@wuerfel> <000901ce6838$8b514720$a1f3d560$@samsung.com>
- <28355406.ThqqvnG0Yj@wuerfel> <51C2D260.6000303@st.com>
- <00d701ce6da5$10216ae0$306440a0$@samsung.com> <51C2E6E5.1050001@st.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH V6 3/3] ARM: dts: Add pcie controller node for Samsung
+ EXYNOS5440 SoC
+Date: Thu, 20 Jun 2013 13:42:43 +0200
+Message-ID: <1490597.TZb2cDc7ca@amdc1227>
+References: <00c201ce6d85$83b072a0$8b1157e0$@samsung.com>
+ <201306201216.37248.arnd@arndb.de>
+ <00d801ce6da5$fa792d80$ef6b8880$@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <51C2E6E5.1050001@st.com>
-Content-language: ko
+In-reply-to: <00d801ce6da5$fa792d80$ef6b8880$@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Pratyush Anand' <pratyush.anand@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, Jingoo Han <jg1.han@samsung.com>
+To: Jingoo Han <jg1.han@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>
+Cc: 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, June 20, 2013 8:26 PM, Pratyush Anand wrote:
-> On 6/20/2013 4:28 PM, Jingoo Han wrote:
-> > On Thursday, June 20, 2013 6:59 PM, Pratyush Anand wrote:
-> >> On 6/13/2013 7:48 PM, Arnd Bergmann wrote:
-> >>> On Thursday 13 June 2013 22:18:50 Jingoo Han wrote:
-> >>>>> On Wednesday, June 12, 2013 8:23 PM, Arnd Bergmann wrote:
-> >>>>>>> On Wednesday 12 June 2013 19:19:05 Jingoo Han wrote:
-> >>>>>>>>> +
-> >>>>>>>>> +/* synopsis specific PCIE configuration registers*/
-> >>>>>>>>> +#define PCIE_PORT_LINK_CONTROL		0x710
-> >>>>>>>>> +#define PORT_LINK_MODE_MASK		(0x3f << 16)
-> >>>>>>>>> +#define PORT_LINK_MODE_4_LANES		(0x7 << 16)
-> >>>>>>>
-> >>>>>>> Do you mean this is a "Synopsys" designware part? In that case it
-> >>>>>>> should really not be called "exynos-pcie" but "designware-pcie"
-> >>>>>>> and you should make sure that the driver makes no assumptions about
-> >>>>>>> the platform. A lot of other platforms also use designware
-> >>>>>>> parts and should be able to reuse this driver.
-> >>>>>
-> >>>>> Sorry, I don't think so.
-> >>>>> Only core block is a "Synopsys" designware part IP block,
-> >>>>> other parts are Exynos-specific.
-> >>>>> So, it is hard to share with other PCIe IPs using synopsis core.
-> >>> Just call it synopsys anyway and put a comment in to explain this.
-> >>> That should be enough for the next person with a synopsys PCI core
-> >>> to reuse your code and split out the exynos specific parts into a
-> >>> separate file.
-> >>>
-> >>
-> >> I agree to Arnd that this patch should be split. I had worked in past
-> >> with SPEAr PCIe which also had designware PCIe IP. I see some code which
-> >> will fit both in SPEAr as well as in exynos. Unfortunately, I was not
-> >> able to get SPEAr driver pushed to mainline, as I moved to some other
-> >> project and got heavily occupied.
-> >
-> > Oh, I see.
-> >
-> > How about this?
-> > At the next PATCH v7, I will change the file name from 'pci-exynos.c'
-> > to 'pci-designware.c', as Arnd mentioned.
-> >
-> > Then, when Spear or other platform using designware is submitted,
-> > this 'pci-designware.c' will be split to two separate files such as
-> > 'pci-designware.c' and 'pci-exynos.c'.
-> >
+On Thursday 20 of June 2013 20:04:47 Jingoo Han wrote:
+> On Thursday, June 20, 2013 7:17 PM, Arnd Bergmann wrote:
+> > On Thursday 20 June 2013, Jingoo Han wrote:
+> > > 2. patch adding label to the pinctrl node (which is a prerequisite)
+> > > and
+> > > 
+> > >     board-specific properties of PCIe nodes.
+> > >    
+> > >    [PATCH] ARM: dts: Add pcie controller node for exynos5440-ssdk5440
+> > > 
+> > > arch/arm/boot/dts/exynos5440-ssdk5440.dts
+> > > +
+> > > +       pcie0@290000 {
+> > > +               reset-gpio = <&pin_ctrl 5 0>;
+> > > +       };
+> > > +
+> > > +       pcie1@2a0000 {
+> > > +               reset-gpio = <&pin_ctrl 22 0>;
+> > > +       };
+> > > 
+> > > arch/arm/boot/dts/exynos5440.dtsi
+> > > -       pinctrl {
+> > > +       pin_ctrl: pinctrl {
+> > 
+> > Note that you don't really have to use a label, you can also refer
+> > to the pinctrl node by its full path, which is just "/pinctrl"
+> > or "/pinctrl@e0000".
+
+Sure, you can, but this is ugly.
+
 > 
-> For me it's OK. Let it go to mainline as Arnd mentioned.
-> Please keep Mohit in mail chain, who might have some bandwidth to
-> further add and follow up for SPEAr on top of your patches.
+> I see.
+> 
+> But, I have a question.
+> Using phandle has been the usual way to referring to a node.
+> Why do you want to do it differently?
 
-Dear Pratyush Anand,
+Path is translated to a phandle as well.
 
-Thank you for accepting the suggestion. :)
-OK, I will keep Mohit in main chain.
-
-
+--
 Best regards,
-Jingoo Han
-
-> 
-> Regards
-> Pratyush
-> 
-> >
-> > Best regards,
-> > Jingoo Han
-> >
-> >>
-> >> Last patch is here:
-> >>
-> >> https://patchwork.kernel.org/patch/1661441/
-> >>
-> >> Infact, these functions should be common to all arm platforms.
-> >>
-> >> sys_to_pcie
-> >> cfg_read
-> >> cfg_write
-> >>
-> >> Following functions should be common to all designware based driver (at
-> >> least they are same in SPEAr)
-> >>
-> >> exynos_pcie_prog_viewport_cfg0
-> >> exynos_pcie_prog_viewport_cfg1
-> >> exynos_pcie_rd_other_conf
-> >> exynos_pcie_wr_other_conf
-> >> exynos_pcie_setup
-> >> exynos_pcie_valid_config
-> >> exynos_pcie_rd_conf
-> >> exynos_pcie_wd_conf
-> >> exynos_pcie_scan_bus
-> >> exynos_pcie_map_irq
-> >> add_pcie_port (after a bit of generalization)
-> >> exynos_pcie_probe
-> >> exynos_pcie_remove
-> >>
-> >>
-> >>
-> >> Following should be specific to exynos:
-> >>
-> >> exynos_pcie_rd_own_conf
-> >> exynos_pcie_wr_own_conf
-> >> exynos_pcie_link_up
-> >> exynos_pcie_setup_rc
-> >> exynos_pcie_assert_core_reset
-> >> exynos_pcie_deassert_core_reset
-> >> exynos_pcie_assert_phy_reset
-> >> exynos_pcie_deassert_phy_reset
-> >> exynos_pcie_init_phy
-> >> exynos_pcie_assert_reset
-> >> exynos_pcie_establish_link
-> >> exynos_pcie_host_init
-> >>
-> >>
-> >>
-> >> struct pcie_port_info and struct pcie_port can also be standardized.
-> >>
-> >> Regards
-> >> Pratyush
-> >
-> > .
-> >
+Tomasz
