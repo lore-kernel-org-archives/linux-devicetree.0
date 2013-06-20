@@ -1,40 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 06/10] ARM:stixxxx: Add DEBUG_LL console support
-Date: Thu, 20 Jun 2013 20:55:42 +0200
-Message-ID: <201306202055.43189.arnd@arndb.de>
-References: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com> <1371737176-9473-1-git-send-email-srinivas.kandagatla@st.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1371737176-9473-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel@stlinux.com, linux-serial@vger.kernel.org, Mark Brown <broonie@kernel.org>, Stephen Gallimore <stephen.gallimore@st.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv2 0/3] Add support for the Nuvoton NAU7802 ADC to the cfa10049
+Date: Thu, 20 Jun 2013 20:57:52 +0200
+Message-ID: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: jimwall@q.com, brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 June 2013, Srinivas KANDAGATLA wrote:
-> --- a/arch/arm/mach-stixxxx/board-dt.c
-> +++ b/arch/arm/mach-stixxxx/board-dt.c
-> @@ -11,6 +11,7 @@
->  #include <linux/clocksource.h>
->  #include <linux/irq.h>
->  #include <asm/hardware/cache-l2x0.h>
-> +#include <asm/mach/map.h>
->  #include <asm/mach/arch.h>
->  
->  #include "smp.h"
-> @@ -42,6 +43,7 @@ static const char *stih41x_dt_match[] __initdata = {
->  };
->  
->  DT_MACHINE_START(STM, "STiH415/416 SoC with Flattened Device Tree")
-> +       .map_io         = debug_ll_io_init,
->         .init_time      = stih41x_timer_init,
->         .smp            = smp_ops(stixxxx_smp_ops),
->         .dt_compat      = stih41x_dt_match,
+Hi,
 
-This part of the patch is no longer needed, we do the same when .map_io
-is not set.
+Sorry for the delay, this is v2 of the patchset that adds support for the 3
+Nuvoton NAU7802 ADCs present on the CFA-10049 board from Crystalfontz. The first
+patch adds the driver, the next ones are adding them in the DT after switching
+the second i2c bus to bitbanging following a lot of timeout issues we have on
+that bus.
 
-	Arnd
+Since v1, I've taken into account the review from Jonathan Cameron, Lars-Peter
+Clausen and Maxime Ripard:
+ - channels are now statically allocated
+ - no wrappers around i2c functions
+ - sampling_freq is a shared attribute
+ - setting gain is done through scale
+ - cosmetics changes (s/idev/indio_dev/, blank lines before returns)
+ - use of sign_extend32 to extend the sign
+ - reading scale now returns IIO_VAL_FRACTIONAL_LOG2
+ - no dt lookup for interrupts, this is done in of_i2c.c but that was mask due
+ to a bug.
+
+what I didn't address is setting the external reference voltage through a fixed
+regulator and I kept the vldo attribute to set the internal voltage reference in
+the DT as Jonathan seemed to be ok with that. If anybody is using a nau7802 with
+an external reference, it will still be time to add the fixed regulator. It
+shouldn't be difficult but I don't have any hardware to test.
+
+Regards,
+
+Alexandre Belloni (1):
+  iio: Add Nuvoton NAU7802 ADC driver
+
+Maxime Ripard (2):
+  ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
+  ARM: mxs: cfa10049: Add NAU7802 ADCs to the device tree
+
+ .../bindings/iio/adc/nuvoton-nau7802.txt           |  17 +
+ arch/arm/boot/dts/imx28-cfa10049.dts               | 126 +++--
+ drivers/iio/adc/Kconfig                            |   9 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/nau7802.c                          | 603 +++++++++++++++++++++
+ 5 files changed, 713 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton-nau7802.txt
+ create mode 100644 drivers/iio/adc/nau7802.c
+
+-- 
+1.8.1.2
