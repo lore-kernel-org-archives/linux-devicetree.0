@@ -1,7 +1,7 @@
 From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCHv2 2/3] ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
-Date: Thu, 20 Jun 2013 20:57:54 +0200
-Message-ID: <1371754675-12242-3-git-send-email-alexandre.belloni@free-electrons.com>
+Subject: [PATCHv2 3/3] ARM: mxs: cfa10049: Add NAU7802 ADCs to the device tree
+Date: Thu, 20 Jun 2013 20:57:55 +0200
+Message-ID: <1371754675-12242-4-git-send-email-alexandre.belloni@free-electrons.com>
 References: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com>
@@ -12,148 +12,55 @@ List-Id: devicetree@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-The ADCs connected to this bus have been experiencing some timeout
-issues when using the iMX28 i2c controller. Switching back to bitbanging
-solves this.
+Since these ADCs share the same non-configurable address on the I2C bus,
+they have to be put behind a muxer.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- arch/arm/boot/dts/imx28-cfa10049.dts | 108 +++++++++++++++++++++--------------
- 1 file changed, 65 insertions(+), 43 deletions(-)
+ arch/arm/boot/dts/imx28-cfa10049.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx28-cfa10049.dts b/arch/arm/boot/dts/imx28-cfa10049.dts
-index 05ae549..d3758c2 100644
+index d3758c2..efc4213 100644
 --- a/arch/arm/boot/dts/imx28-cfa10049.dts
 +++ b/arch/arm/boot/dts/imx28-cfa10049.dts
-@@ -139,6 +139,17 @@
- 					fsl,pull-up = <0>; /* 0 will enable the keeper */
- 				};
- 
-+				i2c1_pins_cfa10049: i2c1@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						0x3103 /* MX28_PAD_PWM0__GPIO */
-+						0x3113 /* MX28_PAD_PWM1__I2C1_SDA */
-+					>;
-+					fsl,drive-strength = <1>;
-+					fsl,voltage = <1>;
-+					fsl,pull-up = <1>;
-+				};
+@@ -356,18 +356,36 @@
+ 			reg = <0>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 +
- 				fiq_pins_cfa10049: fiq@0 {
- 					reg = <0>;
- 					fsl,pinmux-ids = <
-@@ -199,49 +210,6 @@
- 				status = "okay";
- 			};
- 
--			i2c1: i2c@8005a000 {
--				pinctrl-names = "default";
--				pinctrl-0 = <&i2c1_pins_a>;
--				status = "okay";
--			};
--
--			i2cmux {
--				compatible = "i2c-mux-gpio";
--				#address-cells = <1>;
--				#size-cells = <0>;
--				mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
--				i2c-parent = <&i2c1>;
--
--				i2c@0 {
--					reg = <0>;
--				};
--
--				i2c@1 {
--					reg = <1>;
--				};
--
--				i2c@2 {
--					reg = <2>;
--				};
--
--				i2c@3 {
--					reg = <3>;
--					#address-cells = <1>;
--					#size-cells = <0>;
--
--					pca9555: pca9555@20 {
--						compatible = "nxp,pca9555";
--						interrupt-parent = <&gpio2>;
--						interrupts = <19 0x2>;
--						gpio-controller;
--						#gpio-cells = <2>;
--						interrupt-controller;
--						#interrupt-cells = <2>;
--						reg = <0x20>;
--					};
--				};
--			};
--
- 			usbphy1: usbphy@8007e000 {
- 				status = "okay";
- 			};
-@@ -366,6 +334,60 @@
- 		rotary-encoder,relative-axis;
- 	};
- 
-+	i2c1gpio: i2c@0 {
-+		compatible = "i2c-gpio";
-+		pinctrl-0 = <&i2c1_pins_cfa10049>;
-+		pinctrl-names = "default";
-+		gpios = <
-+			&gpio3 17 0 /* sda */
-+			&gpio3 16 0 /* scl */
-+			 >;
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+	};
-+
-+	i2cmux {
-+		compatible = "i2c-mux-gpio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
-+		i2c-parent = <&i2c1gpio>;
-+
-+		i2c@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c@2 {
-+			reg = <2>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c@3 {
-+			reg = <3>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pca9555: pca9555@20 {
-+				compatible = "nxp,pca9555";
-+				interrupt-parent = <&gpio2>;
-+				interrupts = <19 0x2>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x20>;
++			adc0: nau7802@2a {
++				compatible = "nuvoton,nau7802";
++				reg = <0x2a>;
++				nuvoton,vldo = <3000>;
 +			};
-+		};
-+	};
+ 		};
+ 
+ 		i2c@1 {
+ 			reg = <1>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 +
- 	backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm 3 5000000>;
++			adc1: nau7802@2a {
++				compatible = "nuvoton,nau7802";
++				reg = <0x2a>;
++				nuvoton,vldo = <3000>;
++			};
+ 		};
+ 
+ 		i2c@2 {
+ 			reg = <2>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++
++			adc2: nau7802@2a {
++				compatible = "nuvoton,nau7802";
++				reg = <0x2a>;
++				nuvoton,vldo = <3000>;
++			};
+ 		};
+ 
+ 		i2c@3 {
 -- 
 1.8.1.2
