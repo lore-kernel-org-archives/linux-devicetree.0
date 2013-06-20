@@ -1,90 +1,86 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V6 1/3] pci: Add PCIe driver for Samsung Exynos
-Date: Thu, 20 Jun 2013 12:00:57 +0200
-Message-ID: <201306201200.58057.arnd@arndb.de>
-References: <00c001ce6d85$4613e530$d23baf90$@samsung.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH v5] ethernet/arc/arc_emac - Add new driver
+Date: Thu, 20 Jun 2013 10:16:04 +0000
+Message-ID: <4881796E12491D4BB15146FE0209CE643F5F30BF@DE02WEMBXB.internal.synopsys.com>
+References: <1371629537-8076-1-git-send-email-abrodkin@synopsys.com>
+ <CAHp75Vc-Aza03ZLJj3CkLP2YhvdRi94bfutxKbV34hTc1_6k4g@mail.gmail.com>
+ <4881796E12491D4BB15146FE0209CE643F5F2F56@DE02WEMBXB.internal.synopsys.com>
+ <CAGVrzcYoz-pGG46otLjZDHs=xek-qpPEWxUtDQV1CcWCPs8WYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <00c001ce6d85$4613e530$d23baf90$@samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, Pratyush Anand <pratyush.anand@st.com>
+To: Florian Fainelli <florian@openwrt.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, netdev <netdev@vger.kernel.org>, Francois Romieu <romieu@fr.zoreil.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 June 2013, Jingoo Han wrote:
-> Exynos5440 has a PCIe controller which can be used as Root Complex.
-> This driver supports a PCIe controller as Root Complex mode.
-> 
-> Signed-off-by: Surendranath Gurivireddy Balla <suren.reddy@samsung.com>
-> Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+On 06/20/2013 01:57 PM, Florian Fainelli wrote:
+> 2013/6/20 Alexey Brodkin <Alexey.Brodkin@synopsys.com>:
+> [snip]
+>
+>>
+>> In general MDIO register gets polled by "libphy" once in a couple of
+>> seconds, so delay of 25 milliseconds IMHO is fine.
+>>
+>>>> +int arc_mdio_probe(struct device_node *dev_node, struct arc_emac_priv *priv)
+>>>> +{
+>>>
+>>>> +       snprintf(bus->id, MII_BUS_ID_SIZE, "%.8x", (unsigned int)priv->regs);
+>>>
+>>> Is bus->id exposed to user-space somehow?
+>>
+>> Well as a boot-up message from "libphy":
+>> ====
+>> libphy: Synopsys MII Bus: probed
+>> ====
+>
+> Well not only as a boot-up message, this serves as unique identifer in
+> the entire system for your MDIO bus. It is crucial that you have an
+> unique MDIO bus identifier for at least the two following reasons:
+>
+> - the corresponding kobject/sysfs node that is going to be created
+> also needs to be unique in the system
+> - you may have multiple MDIO bus in the system (e.g: the one for your
+> specific driver and the fixed MDIO bus)
 
-The code looks good now.
+Good explanation. I didn't realize it yet.
+And it seems like I talked about bus "name", not "id".
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Since you are using Device Tree already, you may just turn this into:
+>
+> snprintf(bus->id, MII_BUS_ID_SIZE, "%s", pdev->name);
+>
+> assuming that your node is already properly labelleled (e.g:
+> mdio@deadbeef) which would be exactly equivalent to what you are doing
+> with priv->regs;
 
->  .../devicetree/bindings/pci/exynos-pcie.txt        |   71 ++
->  drivers/pci/host/Kconfig                           |    5 +
->  drivers/pci/host/Makefile                          |    1 +
->  drivers/pci/host/pci-exynos.c                      | 1057 ++++++++++++++++++++
->  4 files changed, 1134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/exynos-pcie.txt
->  create mode 100644 drivers/pci/host/pci-exynos.c
+The thing is I don't have separate "mdio" device description in DT.
+Regs value is read from "ethernet" device description.
 
-But please change the identifier to designware or synopsys as I
-asked you to.
+Here's my DT entry for entire emac:
+=============
+		ethernet@c0fc2000 {
+			compatible = "snps,arc-emac";
+			reg = <0xc0fc2000 0x3c>;
+			interrupts = <6>;
+			mac-address = [ 00 11 22 33 44 55 ];
+			clock-frequency = <80000000>;
+			max-speed = <100>;
+			phy = <&phy0>;
 
-Have a look at http://permalink.gmane.org/gmane.linux.kernel.pci/18400
+			#address-cells = <1>;
+			#size-cells = <0>;
+			phy0: ethernet-phy@0 {
+				reg = <1>;
+			};
+		};
+=============
 
-This was an earlier submission for a PCIe host driver obviously
-based on the same IP block. I don't know why that driver never
-made it into the kernel, but if it gets submitted again, or another
-platform uses the same block, it should share most of your driver.
+So with your proposal bus id will be just "ethernet" which is not that 
+unique, right?
 
-Whatever is exynos specific then can be moved out to a separate
-file.
+That's why address of registers IMHO fits better to a bus id.
 
-> +Required properties:
-> +-compatible: should be "samsung,exynos5440-pcie"
-
-Please also add a generic string, e.g.
-
-- compatible: should contain "snps,dwc-pcie" to identify the
-  core, plus an identifier for the specific instance, such
-  as "samsung,exynos5440-pcie".
-
-> +
-> +static unsigned long global_io_offset;
-> +
-> +static int exynos_pcie_setup(int nr, struct pci_sys_data *sys)
-> +{
-> +	struct pcie_port *pp;
-> +
-> +	pp = sys_to_pcie(sys);
-> +
-> +	if (!pp)
-> +		return 0;
-> +
-> +	if (global_io_offset < SZ_1M && pp->config.io_size > 0) {
-> +		sys->io_offset = global_io_offset - pp->config.io_bus_addr;
-> +		pci_ioremap_io(sys->io_offset, pp->io.start);
-> +		global_io_offset += SZ_64K;
-> +	}
-> +
-> +	sys->mem_offset = pp->mem.start - pp->config.mem_bus_addr;
-> +
-> +	pci_add_resource_offset(&sys->resources, &pp->io, sys->io_offset);
-> +	pci_add_resource_offset(&sys->resources, &pp->mem, sys->mem_offset);
-> +
-> +	return 1;
-> +}
-
-Just noticed one detail here: the 'pci_add_resource_offset' for the
-I/O window should be inside of the 'if' clause, we must not annouce
-the I/O port range to the PCI core layer unless we have actually
-mapped it.
-
-	Arnd
+-Alexey
