@@ -1,52 +1,43 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH v5] ethernet/arc/arc_emac - Add new driver
-Date: Thu, 20 Jun 2013 10:56:46 +0100
-Message-ID: <CAGVrzcYoz-pGG46otLjZDHs=xek-qpPEWxUtDQV1CcWCPs8WYg@mail.gmail.com>
-References: <1371629537-8076-1-git-send-email-abrodkin@synopsys.com>
- <CAHp75Vc-Aza03ZLJj3CkLP2YhvdRi94bfutxKbV34hTc1_6k4g@mail.gmail.com> <4881796E12491D4BB15146FE0209CE643F5F2F56@DE02WEMBXB.internal.synopsys.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH V7 1/4] pci: Add PCIe driver for Samsung Exynos
+Date: Thu, 20 Jun 2013 18:59:46 +0900
+Message-ID: <00cf01ce6d9c$e5870540$b0950fc0$@samsung.com>
+References: <00cb01ce6d99$0e932030$2bb96090$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4881796E12491D4BB15146FE0209CE643F5F2F56@DE02WEMBXB.internal.synopsys.com>
+In-reply-to: <00cb01ce6d99$0e932030$2bb96090$@samsung.com>
+Content-language: ko
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, netdev <netdev@vger.kernel.org>, Francois Romieu <romieu@fr.zoreil.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
+To: 'Bjorn Helgaas' <bhelgaas@google.com>
+Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2013/6/20 Alexey Brodkin <Alexey.Brodkin@synopsys.com>:
-[snip]
+On Thursday, June 20, 2013 6:32 PM, Jingoo Han wrote:
+> 
+> Exynos5440 has a PCIe controller which can be used as Root Complex.
+> This driver supports a PCIe controller as Root Complex mode.
+> 
+> Signed-off-by: Surendranath Gurivireddy Balla <suren.reddy@samsung.com>
+> Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+> ---
+>  .../devicetree/bindings/pci/exynos-pcie.txt        |   71 ++
+>  drivers/pci/host/Kconfig                           |    5 +
+>  drivers/pci/host/Makefile                          |    1 +
+>  drivers/pci/host/pci-exynos.c                      | 1057 ++++++++++++++++++++
+>  4 files changed, 1134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/exynos-pcie.txt
+>  create mode 100644 drivers/pci/host/pci-exynos.c
 
->
-> In general MDIO register gets polled by "libphy" once in a couple of
-> seconds, so delay of 25 milliseconds IMHO is fine.
->
->>> +int arc_mdio_probe(struct device_node *dev_node, struct arc_emac_priv *priv)
->>> +{
->>
->>> +       snprintf(bus->id, MII_BUS_ID_SIZE, "%.8x", (unsigned int)priv->regs);
->>
->> Is bus->id exposed to user-space somehow?
->
-> Well as a boot-up message from "libphy":
-> ====
-> libphy: Synopsys MII Bus: probed
-> ====
+Dear Bjorn Helgass,
 
-Well not only as a boot-up message, this serves as unique identifer in
-the entire system for your MDIO bus. It is crucial that you have an
-unique MDIO bus identifier for at least the two following reasons:
+Would you review this patch?
+I have posted the Exynos PCIe patch for about 4 months.
+But, I have not received your reply.
+I need your feedback. :)
+Thank you.
 
-- the corresponding kobject/sysfs node that is going to be created
-also needs to be unique in the system
-- you may have multiple MDIO bus in the system (e.g: the one for your
-specific driver and the fixed MDIO bus)
-
-Since you are using Device Tree already, you may just turn this into:
-
-snprintf(bus->id, MII_BUS_ID_SIZE, "%s", pdev->name);
-
-assuming that your node is already properly labelleled (e.g:
-mdio@deadbeef) which would be exactly equivalent to what you are doing
-with priv->regs;
---
-Florian
+Best regards,
+Jingoo Han
