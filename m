@@ -1,142 +1,57 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v5 1/2] ARM: dts: omap3-beagle-xm: Add USB Host support
-Date: Thu, 20 Jun 2013 15:46:13 +0300
-Message-ID: <1371732374-27191-2-git-send-email-rogerq@ti.com>
-References: <1371732374-27191-1-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1371732374-27191-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: b-cousson@ti.com
-Cc: tony@atomide.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v2 0/8] ARM: dts: exynos5420: add support for hdmi subsystem
+Date: Thu, 20 Jun 2013 18:43:46 +0530
+Message-ID: <1371734034-21296-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org
+Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Provide RESET and Power regulators for the USB PHY,
-the USB Host port mode and the PHY device. Provide
-pin multiplexer information for USB host pins.
+Common properties for I2C and Hdmi Subsystem is moved to exynos5
+dtsi file. It also adds Device tree nodes and clocks information
+for exynos5420 SoC. It adds pinctrl node for hdmi hpd gpio and
+update binding documents.
 
-We also relocate omap3_pmx_core pin definations so that they
-are close to omap3_pmx_wkup pin definations.
+This patch is based on v3.11-next/soc-exynos5420-pinctrl branch
+at http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git
 
-NOTE: The reset control will be replaced with the proper
-gpio-controlled reset driver as soon it will be merged [1].
-[1] http://thread.gmane.org/gmane.linux.drivers.devicetree/36830
+device tree binding document for hdmi compatible type is update at
+http://www.spinics.net/lists/dri-devel/msg39987.html
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/omap3-beagle-xm.dts |   81 +++++++++++++++++++++++++++++----
- 1 files changed, 72 insertions(+), 9 deletions(-)
+v2:
+1) Added patch for moving common i2c properties to exynos5.dtsi
+2) Added patch for moving common hdmi, mixer properties to exynos5.dtsi
+3) moved hpd pinctrl node to board file.
+4) Added Sachin's patch to update binding document for hdmi with hpd
+information.
 
-diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-index afdb164..371b1e2 100644
---- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-+++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-@@ -69,6 +69,39 @@
- 		};
- 
- 	};
-+
-+	/*
-+	 * Temp hack: Need to be replaced with the proper gpio-controlled
-+	 * reset driver as soon it will be merged.
-+	 * http://thread.gmane.org/gmane.linux.drivers.devicetree/36830
-+	 */
-+	/* HS USB Port 2 RESET */
-+	hsusb2_reset: hsusb2_reset_reg {
-+		compatible = "regulator-fixed";
-+		regulator-name = "hsusb2_reset";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio5 19 0>;	/* gpio_147 */
-+		startup-delay-us = <70000>;
-+		enable-active-high;
-+	};
-+
-+	/* HS USB Port 2 Power */
-+	hsusb2_power: hsusb2_power_reg {
-+		compatible = "regulator-fixed";
-+		regulator-name = "hsusb2_vbus";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&twl_gpio 18 0>;	/* GPIO LEDA */
-+		startup-delay-us = <70000>;
-+	};
-+
-+	/* HS USB Host PHY on PORT 2 */
-+	hsusb2_phy: hsusb2_phy {
-+		compatible = "usb-nop-xceiv";
-+		reset-supply = <&hsusb2_reset>;
-+		vcc-supply = <&hsusb2_power>;
-+	};
- };
- 
- &omap3_pmx_wkup {
-@@ -79,6 +112,37 @@
- 	};
- };
- 
-+&omap3_pmx_core {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+			&hsusbb2_pins
-+	>;
-+
-+	uart3_pins: pinmux_uart3_pins {
-+		pinctrl-single,pins = <
-+			0x16e (PIN_INPUT | PIN_OFF_WAKEUPENABLE | MUX_MODE0) /* uart3_rx_irrx.uart3_rx_irrx */
-+			0x170 (PIN_OUTPUT | MUX_MODE0) /* uart3_tx_irtx.uart3_tx_irtx OUTPUT | MODE0 */
-+		>;
-+	};
-+
-+	hsusbb2_pins: pinmux_hsusbb2_pins {
-+		pinctrl-single,pins = <
-+			0x5c0 (PIN_OUTPUT | MUX_MODE3)		/* etk_d10.hsusb2_clk */
-+			0x5c2 (PIN_OUTPUT | MUX_MODE3)		/* etk_d11.hsusb2_stp */
-+			0x5c4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d12.hsusb2_dir */
-+			0x5c6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d13.hsusb2_nxt */
-+			0x5c8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d14.hsusb2_data0 */
-+			0x5cA (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* etk_d15.hsusb2_data1 */
-+			0x1a4 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi1_cs3.hsusb2_data2 */
-+			0x1a6 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_clk.hsusb2_data7 */
-+			0x1a8 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_simo.hsusb2_data4 */
-+			0x1aa (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_somi.hsusb2_data5 */
-+			0x1ac (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_cs0.hsusb2_data6 */
-+			0x1ae (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* mcspi2_cs1.hsusb2_data3 */
-+		>;
-+	};
-+};
-+
- &i2c1 {
- 	clock-frequency = <2600000>;
- 
-@@ -148,15 +212,6 @@
- 	power = <50>;
- };
- 
--&omap3_pmx_core {
--	uart3_pins: pinmux_uart3_pins {
--		pinctrl-single,pins = <
--			0x16e (PIN_INPUT | PIN_OFF_WAKEUPENABLE | MUX_MODE0) /* uart3_rx_irrx.uart3_rx_irrx */
--			0x170 (PIN_OUTPUT | MUX_MODE0) /* uart3_tx_irtx.uart3_tx_irtx OUTPUT | MODE0 */
--		>;
--	};
--};
--
- &uart3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart3_pins>;
-@@ -166,3 +221,11 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&gpio1_pins>;
- };
-+
-+&usbhshost {
-+	port2-mode = "ehci-phy";
-+};
-+
-+&usbhsehci {
-+	phys = <0 &hsusb2_phy>;
-+};
+Andrew Bresticker (1):
+  ARM: dts: exynos5420: add i2c device nodes
+
+Rahul Sharma (6):
+  ARM: dts: exynos5250: move common i2c properties to exynos5 dtsi
+  ARM: dts: exynos5250: move common hdmi properties to exynos5 dtsi
+  ARM: dts: exynos5420: add dt nodes for hdmi subsystem
+  ARM: dts: exynos5420: add clocks for hdmi subsystem
+  ARM: dts: exynos5420: add hdmi hpd gpio pinctrl node
+  of/documentation: update with clock information for exynos hdmi
+    subsystem
+
+Sachin Kamat (1):
+  of/documentation: Update hpd gpio property for exynos_hdmi
+
+ .../devicetree/bindings/video/exynos_hdmi.txt      |   20 ++++++--
+ .../devicetree/bindings/video/exynos_mixer.txt     |    4 ++
+ arch/arm/boot/dts/cros5250-common.dtsi             |    2 +-
+ arch/arm/boot/dts/exynos5.dtsi                     |   48 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-arndale.dts           |    8 +++-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   10 +++-
+ arch/arm/boot/dts/exynos5250-snow.dts              |    8 ++++
+ arch/arm/boot/dts/exynos5250.dtsi                  |   28 +-----------
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |   31 +++++++++++++
+ arch/arm/boot/dts/exynos5420.dtsi                  |   46 +++++++++++++++++++
+ 10 files changed, 171 insertions(+), 34 deletions(-)
+
 -- 
-1.7.4.1
+1.7.10.4
