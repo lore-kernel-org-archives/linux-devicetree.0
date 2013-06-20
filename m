@@ -1,128 +1,153 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v7 1/9] drivers: phy: add generic PHY framework
-Date: Thu, 20 Jun 2013 10:58:09 +0530
-Message-ID: <51C292E9.2010904@ti.com>
-References: <1371113039-5784-1-git-send-email-kishon@ti.com>
- <1371113039-5784-2-git-send-email-kishon@ti.com>
- <51C1D30D.1050907@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51C1D30D.1050907@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: mchehab@redhat.com, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, swarren@nvidia.com, grant.likely@linaro.org, cesarb@cesarb.net, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, rob.herring@calxeda.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b-cousson@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com, rob@landley.net, benoit.cousson@linaro.org, akpm@linux-foundation.org, shawn.guo@linaro.org, davem@davemloft.net
+From: Sunil Joshi <joshi@samsung.com>
+Subject: [PATCH] ARM: dts: Add device tree support for dwmmc
+Date: Thu, 20 Jun 2013 12:06:28 +0530
+Message-ID: <1371710188-22885-1-git-send-email-joshi@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, alim.akhtar@samsung.com, prathyush.k@samsung.com, arun.kk@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Alim Akhtar <alim.akhtar@samsung.com>
 
-On Wednesday 19 June 2013 09:19 PM, Sylwester Nawrocki wrote:
-> Hi,
->
-> On 06/13/2013 10:43 AM, Kishon Vijay Abraham I wrote:
->> +/**
->> + * phy_create() - create a new phy
->> + * @dev: device that is creating the new phy
->> + * @id: id of the phy
->> + * @ops: function pointers for performing phy operations
->> + * @label: label given to the phy
->> + * @priv: private data from phy driver
->> + *
->> + * Called to create a phy using phy framework.
->> + */
->> +struct phy *phy_create(struct device *dev, u8 id, const struct phy_ops *ops,
->> +	const char *label, void *priv)
->> +{
->> +	int ret;
->> +	struct phy *phy;
->> +
->> +	if (!dev) {
->> +		dev_WARN(dev, "no device provided for PHY\n");
->> +		ret = -EINVAL;
->> +		goto err0;
->> +	}
->> +
->> +	phy = kzalloc(sizeof(*phy), GFP_KERNEL);
->> +	if (!phy) {
->> +		ret = -ENOMEM;
->> +		goto err0;
->> +	}
->> +
->> +	device_initialize(&phy->dev);
->> +
->> +	phy->dev.class = phy_class;
->> +	phy->dev.parent = dev;
->> +	phy->dev.of_node = dev->of_node;
->> +	phy->id = id;
->> +	phy->ops = ops;
->> +	phy->label = label;
->
-> Perhaps we could make it:
->
-> 	phy->label = kstrdup(label, GFP_KERNEL);
->
-> and free the label in phy_destroy() ?
+This patch adds alias names, device tree nodes for
+dw-mmc controller for exynos5420 soc.
 
-yeah.. Fixed.
->
-> That way the users would't need to keep the label around. It might
-> be useful when PHY provider generates the labels dynamically. I guess
-> it is OK for PHY providers to hard code the labels and having the PHY
-> user drivers passed labels in platform data ?
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Prathyush K <prathyush.k@samsung.com>
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Signed-off-by: Sunil Joshi <joshi@samsung.com>
+---
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +-
+ arch/arm/boot/dts/exynos5.dtsi                     |    3 ++
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |   38 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos5420.dtsi                  |   21 +++++++++++
+ 4 files changed, 63 insertions(+), 1 deletion(-)
 
-yeah. But the only concern here is there is no way to enforce the
-labels are passed in platform data. The PHY user driver can also
-hard code the labels while getting the reference to the PHY and we can
-catch such cases only by review.
-
->
->> +	dev_set_drvdata(&phy->dev, priv);
->> +
->> +	ret = dev_set_name(&phy->dev, "%s.%d", dev_name(dev), id);
->> +	if (ret)
->> +		goto err1;
->> +
->> +	ret = device_add(&phy->dev);
->> +	if (ret)
->> +		goto err1;
->> +
->> +	if (pm_runtime_enabled(dev))
->> +		pm_runtime_enable(&phy->dev);
->> +
->> +	return phy;
->> +
->> +err1:
->> +	put_device(&phy->dev);
->> +	kfree(phy);
->> +
->> +err0:
->> +	return ERR_PTR(ret);
->> +}
->> +EXPORT_SYMBOL_GPL(phy_create);
->
->> +/**
->> + * phy_destroy() - destroy the phy
->> + * @phy: the phy to be destroyed
->> + *
->> + * Called to destroy the phy.
->> + */
->> +void phy_destroy(struct phy *phy)
->> +{
->> +	pm_runtime_disable(&phy->dev);
->> +	device_unregister(&phy->dev);
->
-> Isn't kfree(phy); missing here ?
-
-Not actually. Its done in phy_release (class's dev_release method)
-
-Thanks
-Kishon
+diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+index 6d1c098..c48570e 100644
+--- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+@@ -15,7 +15,7 @@ Required Properties:
+ 	- "samsung,exynos4412-dw-mshc": for controllers with Samsung Exynos4412
+ 	  specific extensions.
+ 	- "samsung,exynos5250-dw-mshc": for controllers with Samsung Exynos5250
+-	  specific extensions.
++	  and Exynos5420 specific extensions.
+ 
+ * samsung,dw-mshc-ciu-div: Specifies the divider value for the card interface
+   unit (ciu) clock. This property is applicable only for Exynos5 SoC's and
+diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+index f65e124..6cb6f03 100644
+--- a/arch/arm/boot/dts/exynos5.dtsi
++++ b/arch/arm/boot/dts/exynos5.dtsi
+@@ -55,6 +55,7 @@
+ 		interrupts = <0 75 0>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		status = "disabled";
+ 	};
+ 
+ 	dwmmc_1: dwmmc1@12210000 {
+@@ -62,6 +63,7 @@
+ 		interrupts = <0 76 0>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		status = "disabled";
+ 	};
+ 
+ 	dwmmc_2: dwmmc2@12220000 {
+@@ -69,6 +71,7 @@
+ 		interrupts = <0 77 0>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		status = "disabled";
+ 	};
+ 
+ 	serial@12C00000 {
+diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+index 08607df..d05de7a 100644
+--- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
++++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+@@ -30,4 +30,42 @@
+ 			clock-frequency = <24000000>;
+ 		};
+ 	};
++
++	dwmmc0@12200000 {
++		status = "okay";
++		num-slots = <1>;
++		broken-cd;
++		bypass-smu;
++		supports-highspeed;
++		fifo-depth = <0x40>;
++		card-detect-delay = <200>;
++		samsung,dw-mshc-ciu-div = <3>;
++		samsung,dw-mshc-sdr-timing = <0 4>;
++		samsung,dw-mshc-ddr-timing = <0 2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
++
++		slot@0 {
++			reg = <0>;
++			bus-width = <8>;
++		};
++	};
++
++	dwmmc2@12220000 {
++		status = "okay";
++		num-slots = <1>;
++		supports-highspeed;
++		fifo-depth = <0x40>;
++		card-detect-delay = <200>;
++		samsung,dw-mshc-ciu-div = <3>;
++		samsung,dw-mshc-sdr-timing = <2 3>;
++		samsung,dw-mshc-ddr-timing = <1 2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
++
++		slot@0 {
++			reg = <0>;
++			bus-width = <4>;
++		};
++	};
+ };
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 8c54c4b..0736994 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -24,6 +24,9 @@
+ 		pinctrl2 = &pinctrl_2;
+ 		pinctrl3 = &pinctrl_3;
+ 		pinctrl4 = &pinctrl_4;
++		mshc0 = &dwmmc_0;
++		mshc1 = &dwmmc_1;
++		mshc2 = &dwmmc_2;
+ 	};
+ 
+ 	cpus {
+@@ -145,4 +148,22 @@
+ 		clocks = <&clock 260>, <&clock 131>;
+ 		clock-names = "uart", "clk_uart_baud0";
+ 	};
++
++	dwmmc_0: dwmmc0@12200000 {
++		reg = <0x12200000 0x2000>;
++		clocks = <&clock 351>, <&clock 132>;
++		clock-names = "biu", "ciu";
++	};
++
++	dwmmc_1: dwmmc1@12210000 {
++		reg = <0x12210000 0x2000>;
++		clocks = <&clock 352>, <&clock 133>;
++		clock-names = "biu", "ciu";
++	};
++
++	dwmmc_2: dwmmc2@12220000 {
++		reg = <0x12220000 0x2000>;
++		clocks = <&clock 353>, <&clock 134>;
++		clock-names = "biu", "ciu";
++	};
+ };
+-- 
+1.7.9.5
