@@ -1,51 +1,90 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V6 3/3] ARM: dts: Add pcie controller node for Samsung
- EXYNOS5440 SoC
-Date: Thu, 20 Jun 2013 12:16:36 +0200
-Message-ID: <201306201216.37248.arnd@arndb.de>
-References: <00c201ce6d85$83b072a0$8b1157e0$@samsung.com>
- <3250954.dVh4O1LchK@flatron> <00c501ce6d8f$af1bf900$0d53eb00$@samsung.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] gpio: davinci: DT changes for driver
+Date: Thu, 20 Jun 2013 16:06:19 +0530
+Message-ID: <51C2DB23.9070705@ti.com>
+References: <1371203020-15092-1-git-send-email-avinashphilip@ti.com>
+	<1371205241-17205-3-git-send-email-avinashphilipk@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <00c501ce6d8f$af1bf900$0d53eb00$@samsung.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Jason Gunthorpe' <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Siva Reddy Kallam' <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Surendranath Gurivireddy Balla' <suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, 'Thierry Reding' <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, 'Tomasz Figa' <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Andrew Murray' <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1371205241-17205-3-git-send-email-avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Philip Avinash <avinashphilipk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, avinashphilip-l0cyMroinI0@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 20 June 2013, Jingoo Han wrote:
-> 2. patch adding label to the pinctrl node (which is a prerequisite) and
->     board-specific properties of PCIe nodes.
->    [PATCH] ARM: dts: Add pcie controller node for exynos5440-ssdk5440
+On 6/14/2013 3:50 PM, Philip Avinash wrote:
+> From: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
 > 
-> arch/arm/boot/dts/exynos5440-ssdk5440.dts
+> - Add of_device_id for Davinci GPIO driver.
+> - Add function to populate data from DT.
+> - Modify the probe to read from DT if DT match is found.
+> - Add DT binding documentation for Davinci GPIO properties in a new file
+>   gpio-davinci.txt located at Documentation/devicetree/bindings/gpio/.
+> 
+> Signed-off-by: KV Sujith <sujithkv-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+> ---
+> Changes since v1:
+> 	- description for interrupts changed to reflecti
+> 	   interrupt array usage.
+> 
+>  .../devicetree/bindings/gpio/gpio-davinci.txt      |   32 +++++++++++
+>  drivers/gpio/gpio-davinci.c                        |   57 ++++++++++++++++++--
+>  2 files changed, 86 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> new file mode 100644
+> index 0000000..1c31638
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> @@ -0,0 +1,32 @@
+> +Davinci GPIO controller bindings
 > +
-> +       pcie0@290000 {
-> +               reset-gpio = <&pin_ctrl 5 0>;
-> +       };
+> +Required Properties:
+> +- compatible:"ti,da830-gpio"
+
+"ti,dm6441-gpio" instead since this came first on DM6441?
+
 > +
-> +       pcie1@2a0000 {
-> +               reset-gpio = <&pin_ctrl 22 0>;
-> +       };
-> 
-> arch/arm/boot/dts/exynos5440.dtsi
-> -       pinctrl {
-> +       pin_ctrl: pinctrl {
-> 
+> +- reg: Physical base address of the controller and length of memory mapped
+> +	region.
+> +
+> +- interrupts: Array of GPIO interrupt number.
+> +
+> +- ngpio: The number of GPIO pins supported
 
-Note that you don't really have to use a label, you can also refer
-to the pinctrl node by its full path, which is just "/pinctrl"
-or "/pinctrl@e0000".
+Is this a generic GPIO property? I could not find it in documentation.
+Looks like Marvell GPIO uses a similar property too, but even there it
+is not marked as Marvell specific. Should this be added as a generic
+GPIO property?
 
-	Arnd
+> +- intc_irq_num: The number of IRQs supported by the Interrupt Controller
+
+You are not actually looking at the number of IRQs interrupt controller
+on the SoC supports (which is quite unrelated to GPIO module). What you
+are actually looking for is the base from where GPIO interrupt numbering
+can start. So "ti,davinci-gpio-irq-base" is more meaningful.
+
+That said, this property is probably not required if irqdomains are used
+(I myself have to read about that). Not sure if it is okay to add this
+property now waiting for irqdomain conversion. I will let Linus take a call.
+
+> +
+> +- gpio_unbanked: The number of GPIOs that have an individual interrupt
+> +		line to processor.
+
+This is also a TI specific property so it should be
+"ti,davinci-gpio-unbanked".
+
+Thanks,
+Sekhar
