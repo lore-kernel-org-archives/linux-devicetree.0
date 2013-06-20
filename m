@@ -1,43 +1,35 @@
-From: J Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 1/4] MFD: Add TPS659038 documentation under Palmas
-Date: Thu, 20 Jun 2013 16:34:49 +0530
-Message-ID: <1371726289-10042-1-git-send-email-j-keerthy@ti.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] ARM: davinci: da850: Use #include for all device
+	trees
+Date: Thu, 20 Jun 2013 16:36:34 +0530
+Message-ID: <51C2E23A.5070409@ti.com>
+References: <1371203020-15092-1-git-send-email-avinashphilip@ti.com>
+	<1371203156-15260-2-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, grant.likely@secretlab.ca
-Cc: broonie@kernel.org, j-keerthy@ti.com, ldewangan@nvidia.com, sameo@linux.intel.com, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gg@slimlogic.co.uk
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1371203156-15260-2-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add TPS659038 documentation under Palmas.
+On 6/14/2013 3:15 PM, Philip Avinash wrote:
+> Replace /include/ by #include for da850 device tree files, in order to
+> use the C pre-processor, making use of #define features possible.
+> 
+> Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
 
-Signed-off-by: J Keerthy <j-keerthy@ti.com>
-Acked-by: Samuel Ortiz <sameo@linux.intel.com>
----
- Documentation/devicetree/bindings/mfd/palmas.txt |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+Added this to my v3.11/dt branch.
 
-diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
-index 7bcd59c..89cb773 100644
---- a/Documentation/devicetree/bindings/mfd/palmas.txt
-+++ b/Documentation/devicetree/bindings/mfd/palmas.txt
-@@ -5,6 +5,7 @@ twl6035 (palmas)
- twl6037 (palmas)
- tps65913 (palmas)
- tps65914 (palmas)
-+tps659038
- 
- Required properties:
- - compatible : Should be from the list
-@@ -14,6 +15,7 @@ Required properties:
-   ti,tps65913
-   ti,tps65914
-   ti,tps80036
-+  ti,tps659038
- and also the generic series names
-   ti,palmas
- - interrupt-controller : palmas has its own internal IRQs
--- 
-1.7.5.4
-
+Thanks,
+Sekhar
