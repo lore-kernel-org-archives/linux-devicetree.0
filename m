@@ -1,97 +1,65 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [RFC PATCH v4 2/2] drivers: mfd: vexpress: add Serial Power
- Controller (SPC) support
-Date: Fri, 21 Jun 2013 00:24:32 -0700
-Message-ID: <20130621072432.GB30076@quad.lixom.net>
-References: <1371484269-11743-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1371484269-11743-3-git-send-email-lorenzo.pieralisi@arm.com>
- <20130617174451.GF28497@quad.lixom.net>
- <20130618102213.GA1564@e102568-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130618102213.GA1564-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <Achin.Gupta-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Boris BREZILLON <b.brezillon@overkiz.com>
+Subject: [PATCH v2 2/4] watchdog: at91sam9_wdt: update device tree doc
+Date: Fri, 21 Jun 2013 09:23:34 +0200
+Message-ID: <1371799414-3654-1-git-send-email-b.brezillon@overkiz.com>
+References: <1371799176-3408-1-git-send-email-b.brezillon@overkiz.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1371799176-3408-1-git-send-email-b.brezillon@overkiz.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Yang Wenyou <Wenyou.Yang@atmel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Fabio Porcedda <fabio.porcedda@gmail.com>
+Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add new at91sam9 watchdog properties to the documentation.
 
-On Tue, Jun 18, 2013 at 11:22:13AM +0100, Lorenzo Pieralisi wrote:
-> Hi Olof,
-> 
-> thanks a lot.
-> 
-> On Mon, Jun 17, 2013 at 06:44:51PM +0100, Olof Johansson wrote:
-> > 
-> > Sorry, I got to think of this over the weekend and should have replied
-> > before you had a chance to repost, but still:
-> > 
-> > Why is the operating point and frequency change code in this driver at all?
-> > Usually, the MFD driver contains a shared method to access register space on
-> > a multifunction device, but the actual operation of each subdevice is handled
-> > by individual drivers in the regular locations.
-> > 
-> > So, in the case of operating points and requencies, that should be in
-> > a cpufreq driver. And the clock setup should presumably be in a clk
-> > framework driver if needed.
-> 
-> Well, yes this can be done. I will probably move this code out of mfd
-> since this choice caused more issues than the current driver solves.
-> 
-> By moving the frequency changes into subsystems, we are certainly
-> trimming down the code, not sure we improve the maintainability though,
-> keep in mind that we already had to change the vexpress-config interface
-> to cope with SPC oddities, at least now these intricacies are self-contained.
+Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
+---
+ .../devicetree/bindings/watchdog/atmel-wdt.txt     |   30 ++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-Yes, I think it makes sense to split up the "mess", and not expose
-everybody to all of the quirks and complexities of the system design
-unless it makes sense to need to know about it at a particular layer of
-the driver stack.
-
-> What you are suggesting makes sense though, I will do it.
-
-Ok, cool. I think Sam will be happy to see a smaller driver (and hopefully be
-quick at merging it) once that's done too. But it looks like it'd be 3.12
-material given the current phase of 3.10 and the fact that it'll take a while
-to do the refactoring.
-
-> > Then all that would be left here is the functionality for submitting the two
-> > kinds of commands, and handling interrupts.
-> 
-> Not really. There are still a bunch of registers to set-up wake-up IRQs,
-> power down flags and warm-boot jump addresses that do not go through the
-> vexpress interface, they are ad-hoc. I could also split that stuff, but I
-> really do not think it is worth the effort.
-
-It _sounds_ like you could be fine with moving direct access to those pieces of
-hardware out to the drivers that need to touch them. MFD is mostly about
-allowing a arbitration point for when multiple drivers need to syncronize
-and/or share an interface such as a mapped register bank or i2c device.
-
-> > That'll trim down the driver to a point where I think you'll find it much
-> > easier to get merged. :-)
-> 
-> To start with I have to understand in which directory this code should
-> live. Moving the frequency settings in clk/CPUfreq drivers should be
-> feasible with extra DT complexity for their bindings.
-
-Yes, clock and cpufreq would go in their corresponding driver trees. I'll need
-to revisit the code a bit tomorrow to see what else would be left and where
-good homes for them would be.
-
-
-
--Olof
+diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+index fcdd48f..e043106 100644
+--- a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+@@ -9,11 +9,37 @@ Required properties:
+ 
+ Optional properties:
+ - timeout-sec: contains the watchdog timeout in seconds.
++- interrupts : Should contain WDT interrupt.
++- atmel,max-heartbeat-sec : Should contain the maximum heartbeat value in
++	seconds. This value should be less than 16. It is used to compute the
++	WDV field.
++- atmel,min-heartbeat-sec : Should contain the minimum heartbeat value in
++	seconds. This value should be less than 4 times the max-heartbeat-sec
++	value. It is used to compute the WDD field.
++- atmel,watchdog-type : Should be "hardware" or "software". Hardware watchdog
++	use the at91 watchdog reset. Software watchdog use the watchdog
++	interrupt to trigger a software reset.
++- atmel,reset-type : Should be "proc" or "all".
++	"all" : assert peripherals and processor reset signals
++	"proc" : assert the processor reset signal
++	This is valid only when using "hardware" watchdog.
++- atmel,disable : Should be present if you want to disable the watchdog.
++- atmel,idle-halt : Should be present if you want to stop the watchdog when
++	entering idle state.
++- atmel,dbg-halt : Should be present if you want to stop the watchdog when
++	entering debug state.
+ 
+ Example:
+-
+ 	watchdog@fffffd40 {
+ 		compatible = "atmel,at91sam9260-wdt";
+ 		reg = <0xfffffd40 0x10>;
+-		timeout-sec = <10>;
++		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
++		timeout-sec = <15>;
++		atmel,watchdog-type = "hardware";
++		atmel,reset-type = "all";
++		atmel,dbg-halt;
++		atmel,idle-halt;
++		atmel,max-heartbeat-sec = <16>;
++		atmel,min-heartbeat-sec = <0>;
++		status = "okay";
+ 	};
+-- 
+1.7.9.5
