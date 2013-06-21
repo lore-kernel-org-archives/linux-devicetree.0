@@ -1,69 +1,113 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH v7] ethernet/arc/arc_emac - Add new driver
-Date: Fri, 21 Jun 2013 10:53:47 +0000
-Message-ID: <4881796E12491D4BB15146FE0209CE643F5F587E@DE02WEMBXB.internal.synopsys.com>
-References: <1371799241-27771-1-git-send-email-abrodkin@synopsys.com>
- <1371810775.19215.30.camel@joe-AO722>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v6 4/8] ARM: Add .init_platform() callback to machine
+ descriptor
+Date: Fri, 21 Jun 2013 13:14:34 +0200
+Message-ID: <72209947.cQvP4jsDBz@amdc1227>
+References: <1371774924-9224-1-git-send-email-tomasz.figa@gmail.com>
+ <1371774924-9224-5-git-send-email-tomasz.figa@gmail.com>
+ <51C429F4.60709@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-reply-to: <51C429F4.60709@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Francois Romieu <romieu@fr.zoreil.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Florian Fainelli <florian@openwrt.org>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Jason Cooper <jason@lakedaemon.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nicolas Pitre <nico@fluxnic.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <Will.Deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2013 02:32 PM, Joe Perches wrote:
-> On Fri, 2013-06-21 at 11:20 +0400, Alexey Brodkin wrote:
->> Driver for non-standard on-chip ethernet device ARC EMAC 10/100,
->> instantiated in some legacy ARC (Synopsys) FPGA Boards such as
->> ARCAngel4/ML50x.
->
-> Looks fine to me.
->
-> One nit you could fix later and a question.
->
->> diff --git a/drivers/net/ethernet/arc/emac_main.c b/drivers/net/ethernet/arc/emac_main.c
-> []
->> +static int arc_emac_rx(struct net_device *ndev, int budget)
->> +{
-> []
->> +			if (net_ratelimit())
->> +				netdev_err(ndev, "incomplete packed received\n");
->
-> s/packed/packet/
+Hi Marc,
 
-Ooops. Thanks for noticing this subtle misspelling.
+On Friday 21 of June 2013 11:24:52 Marc Zyngier wrote:
+> On 21/06/13 01:35, Tomasz Figa wrote:
+> 
+> Hi Tomasz,
+> 
+> > Most ARM platforms have parts that should be initialized as early as
+> > possible, which usually means as soon as memory management (kmalloc,
+> > ioremap) starts to work,
+> > 
+> > However, currently there is no appropriate callback in machine_desc
+> > struct to use for such initialization and platforms tend to stuff
+> > things
+> > up .init_irq() and .init_time() callbacks.
+> > 
+> > Since all the DT-based platforms are going towards generic IRQ and time
+> > initialization (using irqchip_init and clocksource_of_init) and current
+> > code assumes that if custom callbacks are not provided in machine_desc
+> > then generic ones should be used, this problem has become a bit more
+> > inconvenient.
+> > 
+> > This patch tries to solve this issue by introducing new callback called
+> > .init_platform(), where any custom low level initialization of platform
+> > can be done safely.
+> > 
+> > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> > ---
+> > 
+> >  arch/arm/include/asm/mach/arch.h | 1 +
+> >  arch/arm/kernel/irq.c            | 3 +++
+> >  2 files changed, 4 insertions(+)
+> > 
+> > diff --git a/arch/arm/include/asm/mach/arch.h
+> > b/arch/arm/include/asm/mach/arch.h index 308ad7d..b2f4d11 100644
+> > --- a/arch/arm/include/asm/mach/arch.h
+> > +++ b/arch/arm/include/asm/mach/arch.h
+> > @@ -46,6 +46,7 @@ struct machine_desc {
+> > 
+> >  	void			(*reserve)(void);/* reserve mem blocks	*/
+> >  	void			(*map_io)(void);/* IO mapping function	*/
+> >  	void			(*init_early)(void);
+> > 
+> > +	void			(*init_platform)(void);
+> > 
+> >  	void			(*init_irq)(void);
+> >  	void			(*init_time)(void);
+> >  	void			(*init_machine)(void);
+> > 
+> > diff --git a/arch/arm/kernel/irq.c b/arch/arm/kernel/irq.c
+> > index 9723d17..61e2000 100644
+> > --- a/arch/arm/kernel/irq.c
+> > +++ b/arch/arm/kernel/irq.c
+> > @@ -115,6 +115,9 @@ EXPORT_SYMBOL_GPL(set_irq_flags);
+> > 
+> >  void __init init_IRQ(void)
+> >  {
+> > 
+> > +	if (machine_desc->init_platform)
+> > +		machine_desc->init_platform();
+> > +
+> > 
+> >  	if (IS_ENABLED(CONFIG_OF) && !machine_desc->init_irq)
+> >  	
+> >  		irqchip_init();
+> >  	
+> >  	else
+> 
+> To me, this new hook is strictly equivalent to init_irq. What do we gain
+> exactly? I didn't think init_irq was going away...
+> 
+> I know init_irq is not pretty, and we tend to overload it with other
+> stuff, but I don't really see the point of adding a new callback that
+> has the exact same properties.
 
->> +		rxbd->data = (unsigned char *)cpu_to_le32(rx_buff->skb->data);
->
-> 32 bit only.  Should the Kconfig block have some arch_arc dependency
-> so it can't get compiled for 64 bit systems?
+Well, it doesn't really give us any functional benefits.
 
-Well, initially I add dependency on ARC in Kconfig.
-But later removed it because in driver itself there're really no 
-ARC-specific things. So why don't make it available for any other arch?
-For example I re-used Xilinx SystemACE driver on ARC even though it was 
-only targeted for PPC/Microblaze. And now I need to add another 
-dependency (+ || ARC) in Kconfig for all block devices.
+However in my opinion it looks much saner in case of DT-only platforms that 
+don't need any specific IRQ initialization, but need to call some platform 
+specific initialization routines, after memory management, but before 
+anything else is initialized.
 
-But your comment regarding 64-bit arches makes perfect sense. But still 
-I don't know if there's a way to restrict usage on only 32-bit arches 
-(independent of being x86/arc/mips/etc). I may suppose that only strict 
-specification of all virtually supported 32-bit arches - which is 
-nonsense I think.
+This way irqchip_init() doesn't have to be explicitly called in platform 
+code.
 
-Also independence of architecture makes it possible to compile driver on 
-x86 for x86 with native toolchain. In other words anybody may try to 
-compile it. And I thought it's if not mandatory but at least very 
-welcome - if maintainer or reviewer may compile stuff and teach me how 
-to eliminate all compile-time warnings/errors.
+Anyway, I don't have any strong opinion on this. If it is perfectly fine to 
+abuse irqchip_init() for anything that must be done at this stage of boot, 
+then I'm fine with this either and will modify the board file from further 
+patch from this series to not rely on this change any more.
 
-But during compilation on x86 one needs to enable OF. Which will lead to 
-compilation errors in other things.
+Best regards,
+Tomasz
 
-So for now I may easily add dependency on ARC if it makes acceptance of 
-driver easier.
-
--Alexey
+> 
+> 	M.
