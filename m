@@ -1,81 +1,60 @@
-From: "J, KEERTHY" <j-keerthy@ti.com>
-Subject: RE: [PATCH 2/4] MFD: Palmas: Add TPS659038 PMIC support
-Date: Fri, 21 Jun 2013 09:06:49 +0000
-Message-ID: <DC88CAD03C0052499C1907B327FC63229EDC73@DBDE04.ent.ti.com>
-References: <1371726316-10078-1-git-send-email-j-keerthy@ti.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v3 01/10] serial:st-asc: Add ST ASC driver.
+Date: Fri, 21 Jun 2013 10:17:25 +0100
+Message-ID: <51C41A25.20508@st.com>
+References: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com> <1371737103-8871-1-git-send-email-srinivas.kandagatla@st.com> <201306202101.11261.arnd@arndb.de>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1371726316-10078-1-git-send-email-j-keerthy@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "sameo@linux.intel.com" <sameo@linux.intel.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201306202101.11261.arnd@arndb.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Rob Landley <rob@landley.net>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jslaby@suse.cz>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Samuel,
+On 20/06/13 20:01, Arnd Bergmann wrote:
+> On Thursday 20 June 2013, Srinivas KANDAGATLA wrote:
+>> This patch adds support to ASC (asynchronous serial controller)
+>> driver, which is basically a standard serial driver. This IP is common
+>> across all the ST parts for settop box platforms.
+>>
+>> ASC is embedded in ST COMMS IP block. It supports Rx & Tx functionality.
+>> It support all industry standard baud rates.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>> CC: Stephen Gallimore <stephen.gallimore@st.com>
+>> CC: Stuart Menefy <stuart.menefy@st.com>
+>> CC: Arnd Bergmann <arnd@arndb.de>
+>> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+>>From my point of view the series is ready for merging in 3.11,
+> I only had a few final comments. I would prefer the first three
+> patches to go through the respective serial/clocksource/pinctrl
+> trees, since there are no direct build dependencies to the
+> platform parts.
+> 
+Thankyou Arnd,
 
-> -----Original Message-----
-> From: J, KEERTHY
-> Sent: Thursday, June 20, 2013 4:35 PM
-> To: linux-omap@vger.kernel.org; sameo@linux.intel.com
-> Cc: broonie@kernel.org; J, KEERTHY; ldewangan@nvidia.com;
-> grant.likely@secretlab.ca; swarren@nvidia.com; linux-
-> kernel@vger.kernel.org; linux-doc@vger.kernel.org; devicetree-
-> discuss@lists.ozlabs.org; gg@slimlogic.co.uk
-> Subject: [PATCH 2/4] MFD: Palmas: Add TPS659038 PMIC support
+There are no build dependencies on serial/clocksource/pinctrl.
+
+I will re-spin SOC support patches 4-10 for arm-soc inclusion and wait
+for comments on serial/clocksource/pinctrl driver v3 patches.
+
+
+Thanks,
+srini
+
+> If there is a reason to take those through arm-soc, I would
+> insist on getting Acked-by's from the subsystem maintainers.
 > 
-> The Patch adds TPS659038 PMIC support in the palmas mfd driver.
-> The TPS659038 has almost the same registers as of the earlier supported
-> variants of PALMAS family such as the TWL6035.
+> 	Arnd
 > 
-> The critical differences between TPS659038 and TWL6035 being:
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
-> 1) TPS659038 has nothing related to battery charging and back up
-> battery stuff.
-> 2) TPS659038 does not have does not have SMPS10(Boost) step up
-> convertor.
-> 3) TPS659038 does not have Battery detection and anything related to
-> battery.
-> 4) SD card detection, Battery presence detection, Vibrator, USB OTG are
-> missing
->    when compared to TWL6035.
 > 
 
-Could you please pull this patch?
-
-> Signed-off-by: J Keerthy <j-keerthy@ti.com>
-> Acked-by: Samuel Ortiz <sameo@linux.intel.com>
-> ---
->  drivers/mfd/palmas.c |    5 +++++
->  1 files changed, 5 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c index
-> ad2edd6..8b20055 100644
-> --- a/drivers/mfd/palmas.c
-> +++ b/drivers/mfd/palmas.c
-> @@ -233,12 +233,17 @@ static void palmas_dt_to_pdata(struct i2c_client
-> *i2c,  }
-> 
->  static unsigned int palmas_features =
-> PALMAS_PMIC_FEATURE_SMPS10_BOOST;
-> +static unsigned int tps659038_features;
-> 
->  static const struct of_device_id of_palmas_match_tbl[] = {
->  	{
->  		.compatible = "ti,palmas",
->  		.data = &palmas_features,
->  	},
-> +	{
-> +		.compatible = "ti,tps659038",
-> +		.data = &tps659038_features,
-> +	},
->  	{ },
->  };
-> 
-> --
-> 1.7.5.4
-
-Regards,
-Keerthy
