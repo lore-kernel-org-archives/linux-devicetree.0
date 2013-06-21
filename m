@@ -1,14 +1,15 @@
-From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH] of: Add more stubs for non-OF builds
-Date: Thu, 20 Jun 2013 16:49:54 -0700
-Message-ID: <CAK5ve-+96fNSF0cV1gefzgJNFX-nefZ08HWupPirQYauecEQYw@mail.gmail.com>
+Date: Fri, 21 Jun 2013 01:26:07 +0100
+Message-ID: <20130621002607.F24A63E093E@localhost>
 References: <1371489882-11143-1-git-send-email-shc_work@mail.ru>
  <51C089F6.2060902@gmail.com> <1371573337.452797583@f398.i.mail.ru>
+ <CAK5ve-+96fNSF0cV1gefzgJNFX-nefZ08HWupPirQYauecEQYw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371573337.452797583-x9YND1UlJWJsdVUOrk1QfQ@public.gmane.org>
+In-Reply-To: <CAK5ve-+96fNSF0cV1gefzgJNFX-nefZ08HWupPirQYauecEQYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,76 +20,92 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, 20 Jun 2013 16:49:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Rob,
+> 
+> Is this patch good for merging?
+> 
+> In Alex's one patch to add device tree supporting for a leds driver,
+> we got building errors due to miss definitions of some of_xxx api
+> functions.
+> 
+> It looks obviously to me that we need to fix this in device tree core
+> instead put #ifdef CONFIG_OF everywhere.
 
-Is this patch good for merging?
+Actually, the reason those things aren't universally defined is to catch
+exactly what it caught. The "leds-mc13783: Add devicetree support" patch
+interleaves DT and non-DT parsing which isn't generally a good idea. The
+DT parsing code should be shuffled off into a separate function and/or
+contained with "if (IS_ENABLED(CONFIG_OF)) {}".
 
-In Alex's one patch to add device tree supporting for a leds driver,
-we got building errors due to miss definitions of some of_xxx api
-functions.
+So, no, I don't want this patch merged.
 
-It looks obviously to me that we need to fix this in device tree core
-instead put #ifdef CONFIG_OF everywhere.
+g.
 
-Thanks,
--Bryan
 
-On Tue, Jun 18, 2013 at 9:35 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
->> Perhaps a more specific subject.
->
-> I can just specify stub function names in the subject.
-> Is this enough?
->
->> On 06/17/2013 12:24 PM, Alexander Shiyan wrote:
->> > Patch adds of_get_next_child and of_get_next_available_child
->> > stubs for non-OF builds.
->> >
->> > Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
->> > ---
->>
->> What changed for v2?
->
-> v1 not contain "inline" for prototypes.
->
->> >  include/linux/of.h | 16 ++++++++++++++--
->> >  1 file changed, 14 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/include/linux/of.h b/include/linux/of.h
->> > index 1fd08ca..df0e644 100644
->> > --- a/include/linux/of.h
->> > +++ b/include/linux/of.h
->> > @@ -366,8 +366,17 @@ static inline bool of_have_populated_dt(void)
->> >     return false;
->> >  }
->> >
->> > -#define for_each_child_of_node(parent, child) \
->> > -   while (0)
->> > +static struct device_node *of_get_next_child(const struct device_node *node,
->> > +                                        struct device_node *prev)
->> > +{
->> > +   return NULL;
->> > +}
->> > +
->> > +static struct device_node *of_get_next_available_child(
->> > +   const struct device_node *node, struct device_node *prev)
->> > +{
->> > +   return NULL;
->> > +}
->> >
->> >  static inline struct device_node *of_get_child_by_name(
->> >                                     const struct device_node *node,
->> > @@ -376,6 +385,9 @@ static inline struct device_node *of_get_child_by_name(
->> >     return NULL;
->> >  }
->> >
->> > +#define for_each_child_of_node(parent, child) \
->>
->> parent and child need unused annotations to avoid unused variable warnings.
->
-> This define has been moved just for keep same order as for OF-version.
->
-> ---
+> 
+> Thanks,
+> -Bryan
+> 
+> On Tue, Jun 18, 2013 at 9:35 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
+> >> Perhaps a more specific subject.
+> >
+> > I can just specify stub function names in the subject.
+> > Is this enough?
+> >
+> >> On 06/17/2013 12:24 PM, Alexander Shiyan wrote:
+> >> > Patch adds of_get_next_child and of_get_next_available_child
+> >> > stubs for non-OF builds.
+> >> >
+> >> > Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+> >> > ---
+> >>
+> >> What changed for v2?
+> >
+> > v1 not contain "inline" for prototypes.
+> >
+> >> >  include/linux/of.h | 16 ++++++++++++++--
+> >> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> >> >
+> >> > diff --git a/include/linux/of.h b/include/linux/of.h
+> >> > index 1fd08ca..df0e644 100644
+> >> > --- a/include/linux/of.h
+> >> > +++ b/include/linux/of.h
+> >> > @@ -366,8 +366,17 @@ static inline bool of_have_populated_dt(void)
+> >> >     return false;
+> >> >  }
+> >> >
+> >> > -#define for_each_child_of_node(parent, child) \
+> >> > -   while (0)
+> >> > +static struct device_node *of_get_next_child(const struct device_node *node,
+> >> > +                                        struct device_node *prev)
+> >> > +{
+> >> > +   return NULL;
+> >> > +}
+> >> > +
+> >> > +static struct device_node *of_get_next_available_child(
+> >> > +   const struct device_node *node, struct device_node *prev)
+> >> > +{
+> >> > +   return NULL;
+> >> > +}
+> >> >
+> >> >  static inline struct device_node *of_get_child_by_name(
+> >> >                                     const struct device_node *node,
+> >> > @@ -376,6 +385,9 @@ static inline struct device_node *of_get_child_by_name(
+> >> >     return NULL;
+> >> >  }
+> >> >
+> >> > +#define for_each_child_of_node(parent, child) \
+> >>
+> >> parent and child need unused annotations to avoid unused variable warnings.
+> >
+> > This define has been moved just for keep same order as for OF-version.
+> >
+> > ---
+
+-- 
+email sent from notmuch.vim plugin
