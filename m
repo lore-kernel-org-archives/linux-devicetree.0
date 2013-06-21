@@ -1,71 +1,76 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [RFC PATCH 0/4] watchdog: at91sam9_wdt: handle already
- configured wdt
-Date: Fri, 21 Jun 2013 01:47:40 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641687DE078@penmbx01>
-References: <1370947890-954-1-git-send-email-b.brezillon@overkiz.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: dts: imx27 cpufreq-cpu0 frequencies
+Date: Fri, 21 Jun 2013 10:44:08 +0800
+Message-ID: <20130621024406.GB24268@S2101-09.ap.freescale.net>
+References: <1371739815-6666-1-git-send-email-mpa@pengutronix.de>
+ <1371739815-6666-6-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1370947890-954-1-git-send-email-b.brezillon@overkiz.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>, Wim Van Sebroeck <wim@iguana.be>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1371739815-6666-6-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtYXJtLWtlcm5l
-bCBbbWFpbHRvOmxpbnV4LWFybS1rZXJuZWwtYm91bmNlc0BsaXN0cy5pbmZyYWRlYWQub3JnXQ0K
-PiBPbiBCZWhhbGYgT2YgQm9yaXMgQlJFWklMTE9ODQo+IFNlbnQ6IDIwMTPE6jbUwjExyNUgMTg6
-NTENCj4gVG86IFdpbSBWYW4gU2Vicm9lY2s7IEplYW4tQ2hyaXN0b3BoZSBQbGFnbmlvbC1WaWxs
-YXJkOyBGZXJyZSwgTmljb2xhczsNCj4gbGludXgtd2F0Y2hkb2dAdmdlci5rZXJuZWwub3JnDQo+
-IENjOiBkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZzsgbGludXgtZG9jQHZnZXIu
-a2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBCb3Jpcw0KPiBCUkVaSUxMT04NCj4gU3ViamVjdDog
-W1JGQyBQQVRDSCAwLzRdIHdhdGNoZG9nOiBhdDkxc2FtOV93ZHQ6IGhhbmRsZSBhbHJlYWR5IGNv
-bmZpZ3VyZWQNCj4gd2R0DQo+IA0KPiBIZWxsbywNCj4gDQo+IFRoaXMgcGF0Y2ggc2VyaWVzIGlz
-IGEgcG9ycG9zYWwgdG8gZW5oYW5jZSB0aGUgc2FtOSB3YXRjaGRvZyB0aW1lciBzdXBwb3J0Lg0K
-PiANCj4gVGhlIGF0OTFzYW05IHdhdGNoZG9nIHRpbWVyIGNhbm5vdCBjb25maWd1cmVkIHR3aWNl
-LCBhbmQgdGhlIGN1cnJlbnQNCj4gaW1wbGVtZW50YXRpb24gb25seSB0cmllcyB0byBjb25maWd1
-cmUgaW4gYSBzdGF0aWMgd2F5Og0KPiAtIDIgc2Vjb25kcyB0aW1lb3V0DQo+IC0gd2R0IHJlc3Rh
-cnQgZXZlcnkgNTAwbXMNCj4gDQo+IElmIHRoZSB0aW1lciBoYXMgYWxyZWFkeSBiZWVuIGNvbmZp
-Z3VyZWQgd2l0aCBkaWZmZXJlbnQgdmFsdWVzLCBpdCByZXR1cm5zIGFuDQo+IGVycm9yIGFuZCBk
-byBub3QgY3JlYXRlIGFueSB3YXRjaGRvZyBkZXZpY2UuDQo+IA0KPiBUaGlzIGlzIG5vdCBjcml0
-aWNhbCBpZiB0aGUgd2F0Y2hkb2cgaXMgZGlzYWJsZWQsIGJ1dCBpZiBpdCBoYXMgYmVlbiBlbmFi
-bGVkIHdpdGgNCj4gZGlmZmVyZW50IHRpbWVvdXQgdmFsdWVzIGl0IHdpbGwgbGVhZCB0byBhIFNv
-QyByZXNldC4NCj4gDQo+IFRoaXMgcGF0Y2ggc2VyaWVzIHRyaWVzIHRvIGFkZHJlc3MgdGhpcyBp
-c3N1ZSBieSBhZGFwdGluZyB0aGUgaGVhcnRiZWF0IHZhbHVlDQo+IGFjY29yZGluZyB0aGUgV0RU
-IHRpbWVyIGNvbmZpZzoNCj4gLSBpdCBmaXJzdCB0cmllcyB0byBjb25maWd1cmUgdGhlIHRpbWVy
-IGFzIHJlcXVlc3RlZC4NCj4gLSBpZiBpdCBmYWlscyBpdCBmYWxsYmFja3MgdG8gdGhlIGN1cnJl
-bnQgY29uZmlnLCBhZGFwdGluZyBpdHMgaGVhcnRiZWF0IHRpbWVyDQo+IHRvIHRoZSBuZWVkcw0K
-PiANCj4gVGhpcyBwYXRjaCBzZXJpZXMgYWxzbyBtb3ZlIHRvIGEgZHluYW1pY2FsbHkgYWxsb2Nh
-dGVkIGF0OTF3ZHQgZGV2aWNlIGluc3RlYWQNCj4gb2YgdGhlIHN0YXRpYyBpbnN0YW5jZS4gSSdt
-IG5vdCBzdXJlIHRoaXMgaXMgdGhlIGJlc3Qgc29sdXRpb24sIHNvIHBsZWFzZSB0ZWxsDQo+IG1l
-IGlmIHlvdSBwcmVmZXIgdG8ga2VlcCBzdGF0aWMgaW5zdGFuY2Ugb2Ygd2F0Y2hkb2cuDQo+IA0K
-PiBJdCBhZGRzIGEgbmV3IGF0OTEgd2R0IHR5cGU6IHNvZnR3YXJlLiBUaGlzIG5ldyB0eXBlIG1h
-a2UgdXNlIG9mIHRoZSBhdDkxIHdkdA0KPiBpbnRlcnJ1cHQgdG8gdHJpZ2dlciBhIHNvZnR3YXJl
-IHdhdGNoZG9nLg0KPiANCj4gRmluYWxseSBpdCBhZGRzIHNldmVyYWwgcHJvcGVydGllcyB0byB0
-aGUgZGV2aWNlIHRyZWUgYmluZGluZ3MuDQo+IA0KPiBCZXN0IFJlZ2FyZHMsDQo+IEJvcmlzDQo+
-IA0KPiBCb3JpcyBCUkVaSUxMT04gKDQpOg0KPiAgIHdhdGNoZG9nOiBhdDkxc2FtOV93ZHQ6IGJl
-dHRlciB3YXRjaGRvZyBzdXBwb3J0DQo+ICAgd2F0Y2hkb2c6IGF0OTFzYW05X3dkdDogdXBkYXRl
-IGRldmljZSB0cmVlIGRvYw0KPiAgIEFSTTogYXQ5MS9kdDogYWRkIHNhbTkgd2F0Y2hkb2cgZGVm
-YXVsdCBvcHRpb25zIHRvIFNvQ3MNCj4gICBBUk06IGF0OTEvZHQ6IGFkZCB3YXRjaGRvZyBwcm9w
-ZXJ0aWVzIHRvIGtpemJveCBib2FyZA0KPiANCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dh
-dGNoZG9nL2F0bWVsLXdkdC50eHQgICAgIHwgICAzMCArLQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMv
-YXQ5MXNhbTkyNjAuZHRzaSAgICAgICAgICAgICAgICAgfCAgICA1ICsNCj4gIGFyY2gvYXJtL2Jv
-b3QvZHRzL2F0OTFzYW05MjYzLmR0c2kgICAgICAgICAgICAgICAgIHwgICAgNSArDQo+ICBhcmNo
-L2FybS9ib290L2R0cy9hdDkxc2FtOWc0NS5kdHNpICAgICAgICAgICAgICAgICB8ICAgIDUgKw0K
-PiAgYXJjaC9hcm0vYm9vdC9kdHMvYXQ5MXNhbTluMTIuZHRzaSAgICAgICAgICAgICAgICAgfCAg
-ICA1ICsNCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2F0OTFzYW05eDUuZHRzaSAgICAgICAgICAgICAg
-ICAgIHwgICAgNSArDQo+ICBhcmNoL2FybS9ib290L2R0cy9raXpib3guZHRzICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgIDYgKw0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkMy5kdHNpICAg
-ICAgICAgICAgICAgICAgICAgfCAgICA1ICsNCj4gIGRyaXZlcnMvd2F0Y2hkb2cvYXQ5MXNhbTlf
-d2R0LmMgICAgICAgICAgICAgICAgICAgIHwgIDMxOQ0KPiArKysrKysrKysrKysrKystLS0tLQ0K
-PiAgOSBmaWxlcyBjaGFuZ2VkLCAzMDAgaW5zZXJ0aW9ucygrKSwgODUgZGVsZXRpb25zKC0pDQo+
-IA0KPiAtLQ0KPiAxLjcuOS41DQo+IA0KPiANClRlc3RlZCBvbiBzYW1hNWQzNGVrLCBhdDkxc2Ft
-OWcyNWVrLCBsaW51eC1uZXh0XzIwMTMwNjIwDQoNClRlc3RlZCBieSBXZW55b3UgWWFuZyA8V2Vu
-eW91LnlhbmdAYXRtZWwuY29tPg0KDQoNCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18NCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4gbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbA0K
+On Thu, Jun 20, 2013 at 04:50:14PM +0200, Markus Pargmann wrote:
+> Set operating-points for imx27. There is no regulator support, so the
+> voltages are 0. The frequencies should be the same for all imx27 boards,
+> so it is defined here and can be overwritten if necessary.
+> 
+> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx27.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+> index e883e77..3ebd98a 100644
+> --- a/arch/arm/boot/dts/imx27.dtsi
+> +++ b/arch/arm/boot/dts/imx27.dtsi
+> @@ -47,6 +47,25 @@
+>  		};
+>  	};
+>  
+> +	cpus {
+> +		#size-cells = <0>;
+> +		#address-cells = <1>;
+> +
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "fsl,imx27", "arm,arm926ejs";
+
+>From what Documentation/devicetree/bindings/arm/cpus.txt tells, it
+should be "arm,arm926".  Also, why do you put "fsl,imx27" there?
+"imx27" is a SoC name not cpu core.
+
+Shawn
+
+> +			reg = <0>;
+> +			operating-points = <
+> +				/* kHz  uV (No regulator support) */
+> +				133000  0
+> +				399000  0
+> +			>;
+> +			clock-latency = <61036>; /* two CLK32 periods */
+> +			clocks = <&clks 18>;
+> +			clock-names = "cpu";
+> +		};
+> +	};
+> +
+>  	soc {
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> -- 
+> 1.8.2.1
+> 
