@@ -1,50 +1,168 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
- translation
-Date: Fri, 21 Jun 2013 11:41:35 -0400
-Message-ID: <20130621154135.GS31667@titan.lakedaemon.net>
-References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4] clocksource:arm_global_timer: Add ARM global timer
+ support.
+Date: Fri, 21 Jun 2013 17:56:10 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1306211634510.4013@ionos.tec.linutronix.de>
+References: <1371820267-12099-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1371569479-31498-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1371820267-12099-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: John Stultz <john.stultz@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 12:31:19PM -0300, Ezequiel Garcia wrote:
-> Although the internal register window size is 1 MiB, the previous
-> ranges translation for the internal register space had a size of
-> 0x4000000. This was done to allow the crypto and nand node to access
-> the corresponding 'sram' and 'nand' decoding windows.
-> 
-> In order to describe the hardware more accurately, we declare the
-> real 1 MiB internal register space in the ranges, and add a translation
-> entry for the nand node to access the 'nand' window.
-> 
-> This commit will make future improvements on the MBus DT binding easier.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
-> Tested on Plathome Openblocks A6 board.
-> 
->  arch/arm/boot/dts/kirkwood.dtsi | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+On Fri, 21 Jun 2013, Srinivas KANDAGATLA wrote:
+> +static void gt_clockevent_set_mode(enum clock_event_mode mode,
+> +				   struct clock_event_device *clk)
+> +{
+> +	unsigned long ctrl;
+> +
+> +	ctrl = readl(gt_base + GT_CONTROL);
+> +	switch (mode) {
+> +	case CLOCK_EVT_MODE_PERIODIC:
+> +		gt_compare_set(DIV_ROUND_CLOSEST(gt_clk_rate, HZ), 1);
+> +		break;
+> +	case CLOCK_EVT_MODE_ONESHOT:
+> +		ctrl &= ~(GT_CONTROL_AUTO_INC);
 
-Applied to mvebu/dt
+You should probably clear the irq enable bit as well. The core will
+program the next event right away.
 
-thx,
+> +static irqreturn_t gt_clockevent_interrupt(int irq, void *dev_id)
+> +{
+> +	struct clock_event_device *evt = *(struct clock_event_device **)dev_id;
 
-Jason.
+What kind of construct is this?
+
+You are using request_percpu_irq() and the device id is pointing to
+per cpu memory. Why do you need this horrible pointer indirection?
+
+Because a lot of other ARM code uses the same broken construct?
+
+> +static struct clock_event_device __percpu **gt_evt;
+> +static DEFINE_PER_CPU(struct clock_event_device, gt_clockevent);
+
+So you have compile time allocated clock event device structures and
+then you allocate a percpu pointer area which holds pointers to the
+static area. Whatfor?
+
+Why not doing the obvious?
+
+static struct clock_event_device __percpu *gt_evt;
+
+	gt_evt = alloc_percpu(struct clock_event_device):
+
+	request_percpu_irq(......, gt_evt);
+ 
+And in the interrupt handler
+
+	struct clock_event_device *evt = dev_id;
+
+> +static int __cpuinit gt_clockevents_init(struct clock_event_device *clk)
+> +{
+> +	struct clock_event_device **this_cpu_clk;
+> +	int cpu = smp_processor_id();
+> +
+> +	clk->name = "ARM global timer clock event";
+
+No spaces in the names please
+
+> +	clk->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
+> +	clk->set_mode = gt_clockevent_set_mode;
+> +	clk->set_next_event = gt_clockevent_set_next_event;
+> +	this_cpu_clk = __this_cpu_ptr(gt_evt);
+> +	*this_cpu_clk = clk;
+> +	clk->cpumask = cpumask_of(cpu);
+> +	clk->irq = gt_ppi;
+> +	clockevents_config_and_register(clk, gt_clk_rate,
+> +					1, 0xffffffff);
+> +	per_cpu(percpu_init_called, cpu) = true;
+> +	enable_percpu_irq(clk->irq, IRQ_TYPE_NONE);
+> +	return 0;
+> +}
+> +
+> +static void gt_clockevents_stop(struct clock_event_device *clk)
+> +{
+> +	gt_clockevent_set_mode(CLOCK_EVT_MODE_UNUSED, clk);
+> +	disable_percpu_irq(clk->irq);
+> +}
+> +
+> +static int __cpuinit gt_clockevents_setup(struct clock_event_device *clk)
+> +{
+> +	/* Use existing clock_event for boot cpu */
+
+That comment is telling me what?
+
+> +	if (per_cpu(percpu_init_called, smp_processor_id()))
+> +		return 0;
+
+And why do you need another percpu variable, if you can deduce the
+same information from clk as well.
+
+      	return clk->name ? 0 : gt_clockevents_init(clk);
+
+Hmm?
+
+> +	/* already enabled in gt_clocksource_init. */
+
+Huch?
+
+> +	return gt_clockevents_init(clk);
+> +}
+
+> +static void __init global_timer_of_register(struct device_node *np)
+> +{
+> +	gt_clk = of_clk_get(np, 0);
+> +	if (!IS_ERR(gt_clk)) {
+> +		err = clk_prepare_enable(gt_clk);
+
+If that fails, you happily proceed, right?
+
+> +	} else {
+> +		pr_warn("global-timer: clk not found\n");
+> +		err = -EINVAL;
+> +		goto out_unmap;
+> +	}
+> +
+> +	gt_evt = alloc_percpu(struct clock_event_device *);
+> +	if (!gt_evt) {
+> +		pr_warn("global-timer: can't allocate memory\n");
+> +		err = -ENOMEM;
+> +		goto out_unmap;
+
+Leaves the clock enabled and prepared.
+
+> +	}
+> +
+> +	err = request_percpu_irq(gt_ppi, gt_clockevent_interrupt,
+> +				 "gt", gt_evt);
+> +	if (err) {
+> +		pr_warn("global-timer: can't register interrupt %d (%d)\n",
+> +			gt_ppi, err);
+> +		goto out_free;
+
+Ditto
+
+> +	}
+> +
+> +	gt_clk_rate = clk_get_rate(gt_clk);
+> +	gt_clocksource_init();
+> +	gt_clockevents_init(evt);
+> +#ifdef CONFIG_LOCAL_TIMERS
+> +	err =  local_timer_register(&gt_lt_ops);
+> +	if (err) {
+> +		pr_warn("global-timer: unable to register local timer.\n");
+> +		free_percpu_irq(gt_ppi, gt_evt);
+> +		goto out_free;
+
+So that frees your magic pointers, but you still have the clockevent
+registered for the boot cpu. The interrupt handler of that device is
+happily dereferencing the freed percpu memory.
+
+How is that supposed to work?
+
+Thanks,
+
+	tglx
