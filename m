@@ -1,15 +1,15 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: kernel: document ARM CPUs clocks and
- clock-frequency properties
-Date: Fri, 21 Jun 2013 10:30:11 +0100
-Message-ID: <20130621093011.GB14268@e102568-lin.cambridge.arm.com>
+Subject: Re: [PATCH 1/3] ARM: kernel: get cpu clock rate from cpu clock node
+ first
+Date: Fri, 21 Jun 2013 10:35:26 +0100
+Message-ID: <20130621093526.GC14268@e102568-lin.cambridge.arm.com>
 References: <1371739146-32639-1-git-send-email-f.fainelli@gmail.com>
- <1371739146-32639-4-git-send-email-f.fainelli@gmail.com>
+ <1371739146-32639-2-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371739146-32639-4-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1371739146-32639-2-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
@@ -25,62 +25,69 @@ To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2013 at 03:39:06PM +0100, Florian Fainelli wrote:
-> ARM CPU device tree nodes may contain a "clock-frequency" property,
-> when set, this property must contain the CPU frequency in Hz,
-> which is then used by the topology parsing code in
-> arch/arm/kernel/topology.c to deduced the CPU capacity. The "clocks"
-> property, if present shall be a phandle to a valid clock node.
-> 
-> Document thes properties to avoid any possible confusion on the
-> clock-frequency unit and also specify that "device_type" is also
-> used by the topology code.
+On Thu, Jun 20, 2013 at 03:39:04PM +0100, Florian Fainelli wrote:
+> The current topology code will only attempt to parse a "clock-frequency"
+> property for a given CPU node. Some platforms such as the ecx-2000
+> provide a clock node. Change the logic to first look for a clock node,
+> and if we fail, fallback to parsing a "clock-frequency" property. To
+> avoid unnecessary casting, change rate from u32 to unsigned long, and
+> introduce the "prop" variable to hold the contents of the
+> "clock-frequency" property.
 > 
 > Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  arch/arm/kernel/topology.c | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index f32494d..1ce1ace 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -10,7 +10,7 @@ http://devicetree.org
+> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> index c5a5954..8f340a1 100644
+> --- a/arch/arm/kernel/topology.c
+> +++ b/arch/arm/kernel/topology.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/of.h>
+>  #include <linux/sched.h>
+>  #include <linux/slab.h>
+> +#include <linux/clk.h>
 >  
->  For the ARM architecture every CPU node must contain the following properties:
+>  #include <asm/cputype.h>
+>  #include <asm/topology.h>
+> @@ -104,7 +105,9 @@ static void __init parse_dt_topology(void)
+>  	cpu_capacity = kzalloc(alloc_size, GFP_NOWAIT);
 >  
-> -- device_type:	must be "cpu"
-> +- device_type:	must be "cpu". Use by the topology code.
-
-No. These are DT bindings, they are not related to kernel code and must
-be defined independently.
-
->  - reg:		property matching the CPU MPIDR[23:0] register bits
->  		reg[31:24] bits must be set to 0
->  - compatible:	should be one of:
-> @@ -45,6 +45,11 @@ For the ARM architecture every CPU node must contain the following properties:
->  		"marvell,xsc3"
->  		"marvell,xscale"
+>  	while ((cn = of_find_node_by_type(cn, "cpu"))) {
+> -		const u32 *rate, *reg;
+> +		const u32 *prop, *reg;
+> +		unsigned long rate;
+> +		struct clk *cpu_clk;
+>  		int len;
 >  
-> +- clocks:	phandle and clock specifier for the CPU clock, used if
-> +		"device_type" is present.
+>  		if (cpu >= num_possible_cpus())
+> @@ -117,11 +120,17 @@ static void __init parse_dt_topology(void)
+>  		if (cpu_eff->compatible == NULL)
+>  			continue;
+>  
+> -		rate = of_get_property(cn, "clock-frequency", &len);
+> -		if (!rate || len != 4) {
+> -			pr_err("%s missing clock-frequency property\n",
+> -				cn->full_name);
+> -			continue;
+> +		cpu_clk = of_clk_get(cn, 0);
+> +		if (IS_ERR(cpu_clk)) {
+> +			prop = of_get_property(cn, "clock-frequency", &len);
+> +			if (!prop || len != 4) {
+> +				pr_err("%s missing clock-frequency property\n",
+> +					cn->full_name);
+> +				continue;
+> +			}
+> +			rate = be32_to_cpup(prop);
+> +		} else {
+> +			rate = clk_get_rate(cpu_clk);
 
-"device_type" must be present, no "if" there (see latest bindings that are on
-their way to the kernel)
-
-git://linux-arm.org/linux-2.6-lp.git dt-cpus-bindings
-
-Then we can see if a "clocks" property is suitable here, and try to understand
-what needs to happen when a platform has DVFS capabilities. I need to think
-more about this.
-
-> +- clock-frequency: the frequency of the CPU, in Hz. Mandatory if "device_type"
-> +		   is also present, used as fallback is "clocks" is not present.
-We should not define bindings to fix kernel code. Either "clock-frequency"
-is required or it is not, it should not depend on "device_type" being
-present and "device_type" is mandatory anyway. As I mentioned above, we
-still have to check how to handle multiple frequencies, and how to do it.
-
-I will give it more thought on my side.
+I am not questioning whether adding a "clocks" property is proper or
+not, but let me say cpu related info and parsing are already scattered
+all over the place and this is wrong. We are currently trying to
+consolidate CPU related info in a single structure in the kernel, and
+then this code can become a consumer of that data. As to the "clocks"
+property as I mentioned in another reply, that requires more thought.
 
 Lorenzo
