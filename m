@@ -1,65 +1,50 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmVbNF06IFtQQVRDSF0gb2Y6IEFkZCBtb3JlIHN0dWJzIGZvciBub24tT0Yg?=
- =?UTF-8?B?YnVpbGRz?=
-Date: Fri, 21 Jun 2013 21:21:15 +0400
-Message-ID: <1371835275.689989846@f181.mail.ru>
-References: <1371489882-11143-1-git-send-email-shc_work@mail.ru>
- <1371824246.856851759@f137.mail.ru>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?UTF-8?B?QnJ5YW4gV3U=?= <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?ZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmc=?= <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, =?UTF-8?B?TGludXggTEVEIFN1YnN5c3RlbQ==?= <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCHv3/RESEND 0/4] Memory mapped architected timers
+Date: Fri, 21 Jun 2013 10:39:17 -0700
+Message-ID: <1371836361-20574-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree-discuss@lists.ozlabs.org, Marc Zyngier <Marc.Zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-> On Fri, Jun 21, 2013 at 7:17 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
-> >> On Thu, Jun 20, 2013 at 5:26 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >> > On Thu, 20 Jun 2013 16:49:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> >> Hi Rob,
-> >> >>
-> >> >> Is this patch good for merging?
-> >> >>
-> >> >> In Alex's one patch to add device tree supporting for a leds driver,
-> >> >> we got building errors due to miss definitions of some of_xxx api
-> >> >> functions.
-> >> >>
-> >> >> It looks obviously to me that we need to fix this in device tree core
-> >> >> instead put #ifdef CONFIG_OF everywhere.
-> >> >
-> >> > Actually, the reason those things aren't universally defined is to catch
-> >> > exactly what it caught. The "leds-mc13783: Add devicetree support" patch
-> >> > interleaves DT and non-DT parsing which isn't generally a good idea. The
-> >> > DT parsing code should be shuffled off into a separate function and/or
-> >> > contained with "if (IS_ENABLED(CONFIG_OF)) {}".
-> >> >
-> >>
-> >> Agree, reasonable! I will remove this patch from my tree firstly.
-> >>
-> >> Alex, could you please update your patch with Grant's feedback?
-> >
-> > As far I understand you mean only the last part of patch. Where DT support
-> > is introduced. Is not it?
-> >
-> 
-> Yes, exactly. I still keep those 2 non-DT related patches in my tree
-> and just removed that DT supporting patch.
-> 
-> Please update that patch and posted again to linux-leds and DT
-> maintainers as well.
+(Resending this patchset to Daniel since it looks like Daniel is
+picking up these types of patches.)
 
-I am really dont like any #ifdef in the source, but will do if this is only
-one way to put this patch into the main tree.
+This patchset adds support for memory mapped architected timers. We
+don't have any other global broadcast timer in our system, so we use the
+mmio timer during low power modes. The first patch is the binding.
+The next two patches lay some groundwork so that the last patch is simpler.
+The final patch adds support for mmio timers.
 
----
+Patches are based on a patch from Mark that removes the
+physical count reading (clocksource: arch_timer: use virtual counter,
+message id <1364404312-4427-4-git-send-email-mark.rutland@arm.com>).
+This patch is now in RMK's devel-stable branch:
+
+ ftp://ftp.arm.linux.org.uk/pub/linux/arm/kernel/git-cur/linux-2.6-arm.git/ devel-stable
+
+Updates since v2:
+ * Rebased onto v3.10-rc1
+
+Updates since v1:
+ * Assigned counter reading function and commented why for arm64
+ * Updated DT binding to replace frame-id with frame-number and use status
+   property
+
+Stephen Boyd (4):
+  Documentation: Add memory mapped ARM architected timer binding
+  clocksource: arch_timer: Pass clock event to set_mode callback
+  clocksource: arch_timer: Push the read/write wrappers deeper
+  clocksource: arch_timer: Add support for memory mapped timers
+
+ .../devicetree/bindings/arm/arch_timer.txt         |  59 ++-
+ arch/arm/include/asm/arch_timer.h                  |   5 +-
+ arch/arm64/include/asm/arch_timer.h                |   4 +-
+ drivers/clocksource/arm_arch_timer.c               | 452 +++++++++++++++++----
+ include/clocksource/arm_arch_timer.h               |   4 +-
+ 5 files changed, 448 insertions(+), 76 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
