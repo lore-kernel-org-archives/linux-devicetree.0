@@ -1,42 +1,81 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH] of: Specify initrd location using 64-bit
-Date: Fri, 21 Jun 2013 11:04:28 +0200
-Message-ID: <51C4171C.9050908@linutronix.de>
-References: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH 2/4] MFD: Palmas: Add TPS659038 PMIC support
+Date: Fri, 21 Jun 2013 09:06:49 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229EDC73@DBDE04.ent.ti.com>
+References: <1371726316-10078-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com>
+In-Reply-To: <1371726316-10078-1-git-send-email-j-keerthy@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: linux-kernel@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, James Hogan <james.hogan@imgtec.com>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, x86@kernel.org, arm@kernel.org, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, robherring2@gmail.com, Nicolas Pitre <nicolas.pitre@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org, linux-xtensa@linux-xtensa.
+To: "sameo@linux.intel.com" <sameo@linux.intel.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "swarren@nvidia.com" <swarren@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2013 02:52 AM, Santosh Shilimkar wrote:
-> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-> index 0a2c68f..62e2e8f 100644
-> --- a/arch/microblaze/kernel/prom.c
-> +++ b/arch/microblaze/kernel/prom.c
-> @@ -136,8 +136,7 @@ void __init early_init_devtree(void *params)
->  }
->  
->  #ifdef CONFIG_BLK_DEV_INITRD
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -		unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	initrd_start = (unsigned long)__va(start);
->  	initrd_end = (unsigned long)__va(end);
+Hello Samuel,
 
-I think it would better to go here for phys_addr_t instead of u64. This
-would force you in of_flat_dt_match() to check if the value passed from
-DT specifies a memory address outside of 32bit address space and the
-kernel can't deal with this because its phys_addr_t is 32bit only due
-to a Kconfig switch.
+> -----Original Message-----
+> From: J, KEERTHY
+> Sent: Thursday, June 20, 2013 4:35 PM
+> To: linux-omap@vger.kernel.org; sameo@linux.intel.com
+> Cc: broonie@kernel.org; J, KEERTHY; ldewangan@nvidia.com;
+> grant.likely@secretlab.ca; swarren@nvidia.com; linux-
+> kernel@vger.kernel.org; linux-doc@vger.kernel.org; devicetree-
+> discuss@lists.ozlabs.org; gg@slimlogic.co.uk
+> Subject: [PATCH 2/4] MFD: Palmas: Add TPS659038 PMIC support
+> 
+> The Patch adds TPS659038 PMIC support in the palmas mfd driver.
+> The TPS659038 has almost the same registers as of the earlier supported
+> variants of PALMAS family such as the TWL6035.
+> 
+> The critical differences between TPS659038 and TWL6035 being:
+> 
+> 1) TPS659038 has nothing related to battery charging and back up
+> battery stuff.
+> 2) TPS659038 does not have does not have SMPS10(Boost) step up
+> convertor.
+> 3) TPS659038 does not have Battery detection and anything related to
+> battery.
+> 4) SD card detection, Battery presence detection, Vibrator, USB OTG are
+> missing
+>    when compared to TWL6035.
+> 
 
-For x86, the initrd has to remain in the 32bit address space so passing
-the initrd in the upper range would violate the ABI. Not sure if this
-is true for other archs as well (ARM obviously not).
+Could you please pull this patch?
 
-Sebastian
+> Signed-off-by: J Keerthy <j-keerthy@ti.com>
+> Acked-by: Samuel Ortiz <sameo@linux.intel.com>
+> ---
+>  drivers/mfd/palmas.c |    5 +++++
+>  1 files changed, 5 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c index
+> ad2edd6..8b20055 100644
+> --- a/drivers/mfd/palmas.c
+> +++ b/drivers/mfd/palmas.c
+> @@ -233,12 +233,17 @@ static void palmas_dt_to_pdata(struct i2c_client
+> *i2c,  }
+> 
+>  static unsigned int palmas_features =
+> PALMAS_PMIC_FEATURE_SMPS10_BOOST;
+> +static unsigned int tps659038_features;
+> 
+>  static const struct of_device_id of_palmas_match_tbl[] = {
+>  	{
+>  		.compatible = "ti,palmas",
+>  		.data = &palmas_features,
+>  	},
+> +	{
+> +		.compatible = "ti,tps659038",
+> +		.data = &tps659038_features,
+> +	},
+>  	{ },
+>  };
+> 
+> --
+> 1.7.5.4
+
+Regards,
+Keerthy
