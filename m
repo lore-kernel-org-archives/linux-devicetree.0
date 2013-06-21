@@ -1,102 +1,64 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH] of: Specify initrd location using 64-bit
-Date: Fri, 21 Jun 2013 13:12:38 -0400
-Message-ID: <51C48986.6080602@ti.com>
-References: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com> <51C3D8E7.5030601@synopsys.com> <51C40D78.4040603@imgtec.com>
+From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Re[2]: [PATCH] of: Add more stubs for non-OF builds
+Date: Fri, 21 Jun 2013 10:13:52 -0700
+Message-ID: <CAK5ve-L7MSc0wjiNK1gPfRFSC5xkZ8BwvqL9MM=eGRd2hc08+g@mail.gmail.com>
+References: <1371489882-11143-1-git-send-email-shc_work@mail.ru>
+ <20130621002607.F24A63E093E@localhost>
+ <CAK5ve-JX1BC-jdpSzBx_en_o4FYjie-1GRL39B18NywUvXAHrg@mail.gmail.com>
+ <1371824246.856851759@f137.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <51C40D78.4040603@imgtec.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: James Hogan <james.hogan@imgtec.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, x86@kernel.org, arm@kernel.org, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, bigeasy@linutronix.de, robherring2@gmail.com, Nicolas Pitre <nicolas.pitre@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.orglin
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371824246.856851759-pyBXd9eNxi0edp2WBT/QOw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Vineet, James,
-
-On Friday 21 June 2013 04:23 AM, James Hogan wrote:
-> On 21/06/13 05:39, Vineet Gupta wrote:
->> Hi Santosh,
+On Fri, Jun 21, 2013 at 7:17 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
+>> On Thu, Jun 20, 2013 at 5:26 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On Thu, 20 Jun 2013 16:49:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >> Hi Rob,
+>> >>
+>> >> Is this patch good for merging?
+>> >>
+>> >> In Alex's one patch to add device tree supporting for a leds driver,
+>> >> we got building errors due to miss definitions of some of_xxx api
+>> >> functions.
+>> >>
+>> >> It looks obviously to me that we need to fix this in device tree core
+>> >> instead put #ifdef CONFIG_OF everywhere.
+>> >
+>> > Actually, the reason those things aren't universally defined is to catch
+>> > exactly what it caught. The "leds-mc13783: Add devicetree support" patch
+>> > interleaves DT and non-DT parsing which isn't generally a good idea. The
+>> > DT parsing code should be shuffled off into a separate function and/or
+>> > contained with "if (IS_ENABLED(CONFIG_OF)) {}".
+>> >
 >>
->> On 06/21/2013 06:22 AM, Santosh Shilimkar wrote:
->>> Cc: Vineet Gupta <vgupta@synopsys.com>
->>> Cc: Russell King <linux@arm.linux.org.uk>
->>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>> Cc: Will Deacon <will.deacon@arm.com>
->>> Cc: Mark Salter <msalter@redhat.com>
->>> Cc: Aurelien Jacquiot <a-jacquiot@ti.com>
->>> Cc: James Hogan <james.hogan@imgtec.com>
->>> Cc: Michal Simek <monstr@monstr.eu>
->>> Cc: Ralf Baechle <ralf@linux-mips.org>
->>> Cc: Jonas Bonn <jonas@southpole.se>
->>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->>> Cc: Paul Mackerras <paulus@samba.org>
->>> Cc: x86@kernel.org
->>> Cc: arm@kernel.org
->>> Cc: Chris Zankel <chris@zankel.net>
->>> Cc: Max Filippov <jcmvbkbc@gmail.com>
->>> Cc: Grant Likely <grant.likely@linaro.org>
->>> Cc: Rob Herring <rob.herring@calxeda.com>
->>> Cc: bigeasy@linutronix.de
->>> Cc: robherring2@gmail.com
->>> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
->>>
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Cc: linux-c6x-dev@linux-c6x.org
->>> Cc: linux-mips@linux-mips.org
->>> Cc: linuxppc-dev@lists.ozlabs.org
->>> Cc: linux-xtensa@linux-xtensa.org
->>> Cc: devicetree-discuss@lists.ozlabs.org
->>>
->>> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>> ---
->>>  arch/arc/mm/init.c            |    3 +--
->>>  arch/arm/mm/init.c            |    2 +-
->>>  arch/arm64/mm/init.c          |    3 +--
->>>  arch/c6x/kernel/devicetree.c  |    3 +--
->>>  arch/metag/mm/init.c          |    3 +--
->>>  arch/microblaze/kernel/prom.c |    3 +--
->>>  arch/mips/kernel/prom.c       |    3 +--
->>>  arch/openrisc/kernel/prom.c   |    3 +--
->>>  arch/powerpc/kernel/prom.c    |    3 +--
->>>  arch/x86/kernel/devicetree.c  |    3 +--
->>>  arch/xtensa/kernel/setup.c    |    3 +--
->>>  drivers/of/fdt.c              |   10 ++++++----
->>>  include/linux/of_fdt.h        |    3 +--
->>>  13 files changed, 18 insertions(+), 27 deletions(-)
->>>
->>> diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
->>> index 4a17736..3640c74 100644
->>> --- a/arch/arc/mm/init.c
->>> +++ b/arch/arc/mm/init.c
->>> @@ -157,8 +157,7 @@ void __init free_initrd_mem(unsigned long start, unsigned long end)
->>>  #endif
->>>  
->>>  #ifdef CONFIG_OF_FLATTREE
->>> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
->>> -					    unsigned long end)
->>> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->>>  {
->>>  	pr_err("%s(%lx, %lx)\n", __func__, start, end);
->>>  }
+>> Agree, reasonable! I will remove this patch from my tree firstly.
 >>
->> To avoid gcc warnings, you need to fix the print format specifiers too.
-> 
-> The same thing goes for arch/metag too.
-> 
-Will update that in next version based on what we will end
-after the dicussion. i.e u64 or phys_addr_t
+>> Alex, could you please update your patch with Grant's feedback?
+>
+> As far I understand you mean only the last part of patch. Where DT support
+> is introduced. Is not it?
+>
 
-Thanks for comments.
+Yes, exactly. I still keep those 2 non-DT related patches in my tree
+and just removed that DT supporting patch.
 
-Regards,
-Santosh
+Please update that patch and posted again to linux-leds and DT
+maintainers as well.
+
+Thanks,
+-Bryan
