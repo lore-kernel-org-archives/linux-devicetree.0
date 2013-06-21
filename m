@@ -1,83 +1,65 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH] of: Specify initrd location using 64-bit
-Date: Fri, 21 Jun 2013 10:09:03 +0530
-Message-ID: <51C3D8E7.5030601@synopsys.com>
-References: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH 0/5] clk/exynos5420: add clocks for hdmi subsystem
+Date: Fri, 21 Jun 2013 10:17:35 +0530
+Message-ID: <CAPdUM4NxCKtKrZg1RYD0=83jDYt9Nzd3paYL53ZL9tt2zfJy7A@mail.gmail.com>
+References: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>
+	<CAPdUM4MtBXMaZDDRT1aKsS=HzwjpbyMY85oRLMbk-KvJCU1hag@mail.gmail.com>
+	<51C1B9AD.8060804@samsung.com>
+	<20130621043252.9136.66418@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, James Hogan <james.hogan@imgtec.com>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, x86@kernel.org, arm@kernel.org, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, bigeasy@linutronix.de, robherring2@gmail.com, Nicolas Pitre <nicolas.pitre@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org, linux-xtensa
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130621043252.9136.66418@quantum>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Santosh,
-
-On 06/21/2013 06:22 AM, Santosh Shilimkar wrote:
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Salter <msalter@redhat.com>
-> Cc: Aurelien Jacquiot <a-jacquiot@ti.com>
-> Cc: James Hogan <james.hogan@imgtec.com>
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Jonas Bonn <jonas@southpole.se>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: x86@kernel.org
-> Cc: arm@kernel.org
-> Cc: Chris Zankel <chris@zankel.net>
-> Cc: Max Filippov <jcmvbkbc@gmail.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: bigeasy@linutronix.de
-> Cc: robherring2@gmail.com
-> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+On Fri, Jun 21, 2013 at 10:02 AM, Mike Turquette <mturquette@linaro.org> wrote:
+> Quoting Kukjin Kim (2013-06-19 07:01:17)
+>> On 06/19/13 13:04, Rahul Sharma wrote:
+>> > + mike
+>> >
+>> Mike, I'm waiting for your reply on this. If you're OK, let me take this
+>> series on top of exynos5420 stuff in samsung tree.
+>>
+>> Of course, if any concerns, please let me know.
 >
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-c6x-dev@linux-c6x.org
-> Cc: linux-mips@linux-mips.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-xtensa@linux-xtensa.org
-> Cc: devicetree-discuss@lists.ozlabs.org
+> I never got these patches.  I'm not subscribed to devicetree-devel or
+> linux-samsung so I only got two replies to patch #0, but none of the
+> code. Can you or Rajul resend?
 >
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> ---
->  arch/arc/mm/init.c            |    3 +--
->  arch/arm/mm/init.c            |    2 +-
->  arch/arm64/mm/init.c          |    3 +--
->  arch/c6x/kernel/devicetree.c  |    3 +--
->  arch/metag/mm/init.c          |    3 +--
->  arch/microblaze/kernel/prom.c |    3 +--
->  arch/mips/kernel/prom.c       |    3 +--
->  arch/openrisc/kernel/prom.c   |    3 +--
->  arch/powerpc/kernel/prom.c    |    3 +--
->  arch/x86/kernel/devicetree.c  |    3 +--
->  arch/xtensa/kernel/setup.c    |    3 +--
->  drivers/of/fdt.c              |   10 ++++++----
->  include/linux/of_fdt.h        |    3 +--
->  13 files changed, 18 insertions(+), 27 deletions(-)
+
+Sure mike.
+
+> Thanks,
+> Mike
 >
-> diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-> index 4a17736..3640c74 100644
-> --- a/arch/arc/mm/init.c
-> +++ b/arch/arc/mm/init.c
-> @@ -157,8 +157,7 @@ void __init free_initrd_mem(unsigned long start, unsigned long end)
->  #endif
->  
->  #ifdef CONFIG_OF_FLATTREE
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -					    unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	pr_err("%s(%lx, %lx)\n", __func__, start, end);
->  }
-
-To avoid gcc warnings, you need to fix the print format specifiers too.
-
-Thx,
--Vineet
+>>
+>> Thanks,
+>> - Kukjin
+>>
+>> > On Tue, Jun 18, 2013 at 8:03 PM, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
+>> >> Add clock changes for hdmi subsystem for exynos5250 SoC. These
+>> >> include addition of new clocks like mout_hdmi and smmu_tv, associating
+>> >> ID to clk_hdmiphy and some essential corrections.
+>> >>
+>> >> This set is based on kukjin's for-next branch at
+>> >> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
+>> >>
+>> >> This set dependents on the following patches which add support for Exynos5420
+>> >> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg19264.html
+>> >>
+>> >> Rahul Sharma (5):
+>> >>    clk/exynos5420: add sclk_hdmiphy to the list of special clocks
+>> >>    clk/exynos5420: add gate clock for tv sysmmu
+>> >>    clk/exynos5420: fix the order of parents of hdmi mux
+>> >>    clk/exynos5420: add hdmi mux to change parents in hdmi driver
+>> >>    clk/exynos5420: assign sclk_pixel id to pixel clock divider
+>> >>
+>> >>   .../devicetree/bindings/clock/exynos5420-clock.txt   |    7 +++++++
+>> >>   drivers/clk/samsung/clk-exynos5420.c                 |   18 +++++++++++-------
+>> >>   2 files changed, 18 insertions(+), 7 deletions(-)
+>> >>
+>> >> --
+>> >> 1.7.10.4
