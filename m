@@ -1,220 +1,81 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 8/9] iommu: add support for ARM Ltd. System MMU
-	architecture
-Date: Fri, 21 Jun 2013 11:23:18 +0100
-Message-ID: <20130621102318.GB7766@mudshark.cambridge.arm.com>
-References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
-	<1370889285-22799-9-git-send-email-will.deacon@arm.com>
-	<20130620212646.GG11309@8bytes.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v6 4/8] ARM: Add .init_platform() callback to machine
+ descriptor
+Date: Fri, 21 Jun 2013 11:24:52 +0100
+Message-ID: <51C429F4.60709@arm.com>
+References: <1371774924-9224-1-git-send-email-tomasz.figa@gmail.com> <1371774924-9224-5-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130620212646.GG11309-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1371774924-9224-5-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Jason Cooper <jason@lakedaemon.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nicolas Pitre <nico@fluxnic.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <Will.Deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2013 at 10:26:46PM +0100, Joerg Roedel wrote:
-> Hi Will,
+On 21/06/13 01:35, Tomasz Figa wrote:
 
-Hi Joerg,
+Hi Tomasz,
 
-First, thanks for looking at this patch. I really appreciate it.
-
-> On Mon, Jun 10, 2013 at 07:34:44PM +0100, Will Deacon wrote:
-> > This patch adds support for SMMUs implementing the ARM System MMU
-> > architecture versions 1 or 2. Both arm and arm64 are supported, although
-> > the v7s descriptor format is not used.
-> > 
-> > Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > Cc: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Most ARM platforms have parts that should be initialized as early as
+> possible, which usually means as soon as memory management (kmalloc,
+> ioremap) starts to work,
 > 
-> A few general questions:
+> However, currently there is no appropriate callback in machine_desc
+> struct to use for such initialization and platforms tend to stuff things
+> up .init_irq() and .init_time() callbacks.
 > 
-> How have you tested this code? Has it been run on real hardware? What
-> were the results?
-
-I've only tested it with software models, however they are fairly
-sophisticated and provide *lots* of tunables, so you can test different
-configurations which don't actually exist in hardware yet. You also get a
-tonne of trace output, so you can inspect things like page table walking and
-TLB filling to make sure the driver is setting things up as you planned.
-
-I have also tested on MMU-400 (AArch32) and MMU-500 (both AArch32 and
-AArch64, with 4k and 64k pages in the latter case) models. The setup I used
-was 4 PL330 DMA controllers driven by dmatest.ko, which I hacked to call into
-the ARM dma-mapping API to create a separate domain for each controller.
-
-The results were that the memory-to-memory DMA didn't show any corruption. I
-also managed to tickle access faults by messing around with the permissions,
-then remap the buffers and resume the transfers.
-
-> The code looks good and clean in general, minus a few places mentioned
-> below were I have questions and/or suggestions:
-
-Cheers, responses inline.
-
-> > +static struct arm_smmu_device *find_parent_smmu(struct arm_smmu_device *smmu)
-> > +{
-> > +	struct arm_smmu_device *parent, *tmp;
-> > +
-> > +	if (!smmu->parent_of_node)
-> > +		return NULL;
-> > +
-> > +	list_for_each_entry_safe(parent, tmp, &arm_smmu_devices, list)
-> > +		if (parent->dev->of_node == smmu->parent_of_node)
-> > +			return parent;
+> Since all the DT-based platforms are going towards generic IRQ and time
+> initialization (using irqchip_init and clocksource_of_init) and current
+> code assumes that if custom callbacks are not provided in machine_desc
+> then generic ones should be used, this problem has become a bit more
+> inconvenient.
 > 
-> Why do you need the _safe variant here? You are not changing the list in
-> this loop so you should be fine with list_for_each_entry().
-
-For a system with multiple SMMUs (regardless of chaining), couldn't this
-code run in parallel with probing of another SMMU (which has to add to the
-arm_smmu_devices list)? The same applies for device removal, which could
-perhaps be driven from some power-managment code.
-
-> > +
-> > +	dev_warn(smmu->dev,
-> > +		 "Failed to find SMMU parent despite parent in DT\n");
-> > +	return NULL;
-> > +}
+> This patch tries to solve this issue by introducing new callback called
+> .init_platform(), where any custom low level initialization of platform
+> can be done safely.
 > 
-> > +/* Wait for any pending TLB invalidations to complete */
-> > +static void arm_smmu_tlb_sync(struct arm_smmu_device *smmu)
-> > +{
-> > +	void __iomem *gr0_base = ARM_SMMU_GR0(smmu);
-> > +
-> > +	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_sTLBGSYNC);
-> > +	while (readl_relaxed(gr0_base + ARM_SMMU_GR0_sTLBGSTATUS)
-> > +	       & sTLBGSTATUS_GSACTIVE)
-> > +		cpu_relax();
+> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> ---
+>  arch/arm/include/asm/mach/arch.h | 1 +
+>  arch/arm/kernel/irq.c            | 3 +++
+>  2 files changed, 4 insertions(+)
 > 
-> Other IOMMU drivers have a timeout for this loop and report an error
-> when the state does not change. I think this makes sense here too so
-> that the kernel will not just stop spinning in that loop if something
-> goes wrong but prints an error instead.
+> diff --git a/arch/arm/include/asm/mach/arch.h b/arch/arm/include/asm/mach/arch.h
+> index 308ad7d..b2f4d11 100644
+> --- a/arch/arm/include/asm/mach/arch.h
+> +++ b/arch/arm/include/asm/mach/arch.h
+> @@ -46,6 +46,7 @@ struct machine_desc {
+>  	void			(*reserve)(void);/* reserve mem blocks	*/
+>  	void			(*map_io)(void);/* IO mapping function	*/
+>  	void			(*init_early)(void);
+> +	void			(*init_platform)(void);
+>  	void			(*init_irq)(void);
+>  	void			(*init_time)(void);
+>  	void			(*init_machine)(void);
+> diff --git a/arch/arm/kernel/irq.c b/arch/arm/kernel/irq.c
+> index 9723d17..61e2000 100644
+> --- a/arch/arm/kernel/irq.c
+> +++ b/arch/arm/kernel/irq.c
+> @@ -115,6 +115,9 @@ EXPORT_SYMBOL_GPL(set_irq_flags);
+>  
+>  void __init init_IRQ(void)
+>  {
+> +	if (machine_desc->init_platform)
+> +		machine_desc->init_platform();
+> +
+>  	if (IS_ENABLED(CONFIG_OF) && !machine_desc->init_irq)
+>  		irqchip_init();
+>  	else
 
-Good idea, I'll add that.
+To me, this new hook is strictly equivalent to init_irq. What do we gain
+exactly? I didn't think init_irq was going away...
 
-> > +}
-> > +static void arm_smmu_flush_pgtable(struct arm_smmu_device *smmu, void *addr,
-> > +				   size_t size)
-> > +{
-> > +	unsigned long offset = (unsigned long)addr & ~PAGE_MASK;
-> > +
-> > +	/*
-> > +	 * If the SMMU can't walk tables in the CPU caches, treat them
-> > +	 * like non-coherent DMA...
-> > +	 */
-> > +	if (!(smmu->features & ARM_SMMU_FEAT_COHERENT_WALK))
-> > +		dma_map_page(smmu->dev, virt_to_page(addr), offset, size,
-> > +			     DMA_TO_DEVICE);
-> 
-> Why can you call into DMA-API here? A DMA-API implementation may call
-> back into this IOMMU driver, no? So this looks a little bit like a
-> layering violation.
+I know init_irq is not pretty, and we tend to overload it with other
+stuff, but I don't really see the point of adding a new callback that
+has the exact same properties.
 
-So this is subtle, and the comment could probably do with more explanation.
-
-The problem is that the SMMU hardware page table walker might not be able to
-snoop the CPU caches. This means that after writing page table entries on
-the CPU, we have to flush them *all* the way out to main memory, so the SMMU
-can pick them up. There are only two other places I can think of where we
-have to do something like this in Linux:
-
-  (1) In the bowels of CPU suspend, where we may need to clean all of our
-      caches prior to shutdown. This is all hidden away in low-level arch
-      code.
-
-  (2) When dealing with non-coherent DMA, since we have to transfer buffer
-      ownership between the CPU and the device. There is an API for this.
-
-so, in fact, non-coherent DMA is a perfect fit for what we're trying to
-achieve with the SMMU page tables! I admit it looks odd, but it can't
-possibly go recursive because the master in question is a page-table walker,
-rather than anything backed by a struct device.
-
-> > +}
-> 
-> > +static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
-> > +			phys_addr_t paddr, size_t size, int flags)
-> > +{
-> > +	struct arm_smmu_domain *smmu_domain = domain->priv;
-> > +	struct arm_smmu_device *smmu = smmu_domain->leaf_smmu;
-> > +
-> > +	if (!smmu_domain || !smmu)
-> > +		return -ENODEV;
-> > +
-> > +	/*
-> > +	 * Check for silent address truncation up the SMMU chain.
-> > +	 */
-> > +	do {
-> > +		phys_addr_t output_mask = (1ULL << smmu->s2_output_size) - 1;
-> > +		if ((phys_addr_t)iova & ~output_mask)
-> > +			return -ERANGE;
-> > +	} while ((smmu = find_parent_smmu(smmu)));
-> 
-> This looks a bit too expensive to have in the map path. How about saving
-> something like an effective_output_mask (or output_size) which contains
-> the logical OR of every mask up the path? This would make this check a
-> lot cheaper.
-
-As mentioned in the DT binding thread, it's rare that this loop would
-execute more than once, and largely inconceivable that it would execute more
-than twice, so I don't know how much we need to worry about the cost.
-
-> > +
-> > +	return arm_smmu_create_mapping(smmu_domain, iova, paddr, size, flags);
-> > +}
-> > +
-> > +static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
-> > +			     size_t size)
-> > +{
-> > +	int ret;
-> > +	struct arm_smmu_domain *smmu_domain = domain->priv;
-> > +	struct arm_smmu_cfg *root_cfg = &smmu_domain->root_cfg;
-> > +	struct arm_smmu_device *smmu = root_cfg->smmu;
-> > +	void __iomem *gr0_base = ARM_SMMU_GR0(smmu);
-> > +
-> > +	ret = arm_smmu_create_mapping(smmu_domain, iova, 0, size, 0);
-> 
-> Since this function does also unmapping, how about renaming it to
-> arm_smmu_handle_mapping(). The 'create' part in there is misleading.
-
-Yep, that's a hangover from when I originally had separate functions. Will
-fix,
-
-> > +	writel_relaxed(root_cfg->vmid, gr0_base + ARM_SMMU_GR0_TLBIVMID);
-> > +	arm_smmu_tlb_sync(smmu);
-> > +	return ret ? ret : size;
-> > +}
-> > +static int arm_smmu_add_device(struct device *dev)
-> > +{
-> > +	struct arm_smmu_device *child, *parent, *smmu;
-> > +	struct arm_smmu_device *tmp[2];
-> > +	struct arm_smmu_master *master = NULL;
-> > +
-> > +	list_for_each_entry_safe(parent, tmp[0], &arm_smmu_devices, list) {
-> 
-> Again, why do you use the _safe variant, you do not seem to change the
-> lists traversed here.
-
-Same reasoning as above. Happy to remove it if it's not actually required...
-
-Cheers again,
-
-Will
+	M.
+-- 
+Jazz is not dead. It just smells funny...
