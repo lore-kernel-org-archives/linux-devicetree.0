@@ -1,61 +1,65 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH] of: Specify initrd location using 64-bit
-Date: Fri, 21 Jun 2013 13:20:26 -0400
-Message-ID: <51C48B5A.2040404@ti.com>
-References: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com> <51C4171C.9050908@linutronix.de>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmVbNF06IFtQQVRDSF0gb2Y6IEFkZCBtb3JlIHN0dWJzIGZvciBub24tT0Yg?=
+ =?UTF-8?B?YnVpbGRz?=
+Date: Fri, 21 Jun 2013 21:21:15 +0400
+Message-ID: <1371835275.689989846@f181.mail.ru>
+References: <1371489882-11143-1-git-send-email-shc_work@mail.ru>
+ <1371824246.856851759@f137.mail.ru>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <51C4171C.9050908@linutronix.de>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, robherring2@gmail.com
-Cc: linux-kernel@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, James Hogan <james.hogan@imgtec.com>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, x86@kernel.org, arm@kernel.org, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, linux-arm-kernel@lists.infradead.orgli
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: =?UTF-8?B?QnJ5YW4gV3U=?= <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?ZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmc=?= <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, =?UTF-8?B?TGludXggTEVEIFN1YnN5c3RlbQ==?= <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 21 June 2013 05:04 AM, Sebastian Andrzej Siewior wrote:
-> On 06/21/2013 02:52 AM, Santosh Shilimkar wrote:
->> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
->> index 0a2c68f..62e2e8f 100644
->> --- a/arch/microblaze/kernel/prom.c
->> +++ b/arch/microblaze/kernel/prom.c
->> @@ -136,8 +136,7 @@ void __init early_init_devtree(void *params)
->>  }
->>  
->>  #ifdef CONFIG_BLK_DEV_INITRD
->> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
->> -		unsigned long end)
->> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->>  {
->>  	initrd_start = (unsigned long)__va(start);
->>  	initrd_end = (unsigned long)__va(end);
+> On Fri, Jun 21, 2013 at 7:17 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
+> >> On Thu, Jun 20, 2013 at 5:26 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> >> > On Thu, 20 Jun 2013 16:49:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> >> Hi Rob,
+> >> >>
+> >> >> Is this patch good for merging?
+> >> >>
+> >> >> In Alex's one patch to add device tree supporting for a leds driver,
+> >> >> we got building errors due to miss definitions of some of_xxx api
+> >> >> functions.
+> >> >>
+> >> >> It looks obviously to me that we need to fix this in device tree core
+> >> >> instead put #ifdef CONFIG_OF everywhere.
+> >> >
+> >> > Actually, the reason those things aren't universally defined is to catch
+> >> > exactly what it caught. The "leds-mc13783: Add devicetree support" patch
+> >> > interleaves DT and non-DT parsing which isn't generally a good idea. The
+> >> > DT parsing code should be shuffled off into a separate function and/or
+> >> > contained with "if (IS_ENABLED(CONFIG_OF)) {}".
+> >> >
+> >>
+> >> Agree, reasonable! I will remove this patch from my tree firstly.
+> >>
+> >> Alex, could you please update your patch with Grant's feedback?
+> >
+> > As far I understand you mean only the last part of patch. Where DT support
+> > is introduced. Is not it?
+> >
 > 
-> I think it would better to go here for phys_addr_t instead of u64. This
-> would force you in of_flat_dt_match() to check if the value passed from
-> DT specifies a memory address outside of 32bit address space and the
-> kernel can't deal with this because its phys_addr_t is 32bit only due
-> to a Kconfig switch.
+> Yes, exactly. I still keep those 2 non-DT related patches in my tree
+> and just removed that DT supporting patch.
 > 
-> For x86, the initrd has to remain in the 32bit address space so passing
-> the initrd in the upper range would violate the ABI. Not sure if this
-> is true for other archs as well (ARM obviously not).
-> 
-That pretty much means phys_addr_t. It will work for me as well but
-in last thread from consistency with memory and reserved node, Rob
-insisted to keep it as u64. So before I re-spin another version,
-would like to here what Rob has to say considering the x86 requirement.
+> Please update that patch and posted again to linux-leds and DT
+> maintainers as well.
 
-Rob,
-Are you ok with phys_addr_t since your concern was about rest
-of the memory specific bits of the device-tree code use u64 ?
+I am really dont like any #ifdef in the source, but will do if this is only
+one way to put this patch into the main tree.
 
-Regards,
-Santosh
+---
