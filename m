@@ -1,109 +1,39 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCHv3/RESEND 1/4] Documentation: Add memory mapped ARM architected timer binding
-Date: Fri, 21 Jun 2013 10:39:18 -0700
-Message-ID: <1371836361-20574-2-git-send-email-sboyd@codeaurora.org>
-References: <1371836361-20574-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1371836361-20574-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree-discuss@lists.ozlabs.org, Marc Zyngier <Marc.Zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v4] clocksource:arm_global_timer: Add ARM global timer
+ support.
+Date: Fri, 21 Jun 2013 10:45:35 -0700
+Message-ID: <51C4913F.2020608@codeaurora.org>
+References: <1371820267-12099-1-git-send-email-srinivas.kandagatla@st.com> <alpine.DEB.2.02.1306211634510.4013@ionos.tec.linutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1306211634510.4013@ionos.tec.linutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, John Stultz <john.stultz@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a binding for the arm architected timer hardware's memory
-mapped interface. The mmio timer hardware is made up of one base
-frame and a collection of up to 8 timer frames, where each of the
-8 timer frames can have either one or two views. A frame
-typically maps to a privilege level (user/kernel, hypervisor,
-secure). The first view has full access to the registers within a
-frame, while the second view can be restricted to particular
-registers within a frame. Each frame must support a physical
-timer. It's optional for a frame to support a virtual timer.
+On 06/21/13 08:56, Thomas Gleixner wrote:
+>
+>> +static irqreturn_t gt_clockevent_interrupt(int irq, void *dev_id)
+>> +{
+>> +	struct clock_event_device *evt = *(struct clock_event_device **)dev_id;
+> What kind of construct is this?
+>
+> You are using request_percpu_irq() and the device id is pointing to
+> per cpu memory. Why do you need this horrible pointer indirection?
+>
+> Because a lot of other ARM code uses the same broken construct?
 
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robherring2@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- .../devicetree/bindings/arm/arch_timer.txt         | 59 ++++++++++++++++++++--
- 1 file changed, 56 insertions(+), 3 deletions(-)
+This is an artifact of the ARM local timer API. I have been trying for a
+few months to remove the API but I need my first two patches to go
+through the tip/timers tree. Please accept them so we don't have this
+construct anymore.
 
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-index 20746e5..06fc760 100644
---- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-@@ -1,10 +1,14 @@
- * ARM architected timer
- 
--ARM cores may have a per-core architected timer, which provides per-cpu timers.
-+ARM cores may have a per-core architected timer, which provides per-cpu timers,
-+or a memory mapped architected timer, which provides up to 8 frames with a
-+physical and optional virtual timer per frame.
- 
--The timer is attached to a GIC to deliver its per-processor interrupts.
-+The per-core architected timer is attached to a GIC to deliver its
-+per-processor interrupts via PPIs. The memory mapped timer is attached to a GIC
-+to deliver its interrupts via SPIs.
- 
--** Timer node properties:
-+** CP15 Timer node properties:
- 
- - compatible : Should at least contain one of
- 	"arm,armv7-timer"
-@@ -26,3 +30,52 @@ Example:
- 			     <1 10 0xf08>;
- 		clock-frequency = <100000000>;
- 	};
-+
-+** Memory mapped timer node properties:
-+
-+- compatible : Should at least contain "arm,armv7-timer-mem".
-+
-+- clock-frequency : The frequency of the main counter, in Hz. Optional.
-+
-+- reg : The control frame base address.
-+
-+Note that #address-cells, #size-cells, and ranges shall be present to ensure
-+the CPU can address a frame's registers.
-+
-+A timer node has up to 8 frame sub-nodes, each with the following properties:
-+
-+- frame-number: 0 to 7.
-+
-+- interrupts : Interrupt list for physical and virtual timers in that order.
-+  The virtual timer interrupt is optional.
-+
-+- reg : The first and second view base addresses in that order. The second view
-+  base address is optional.
-+
-+- status : "disabled" indicates the frame is not available for use. Optional.
-+
-+Example:
-+
-+	timer@f0000000 {
-+		compatible = "arm,armv7-timer-mem";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		reg = <0xf0000000 0x1000>;
-+		clock-frequency = <50000000>;
-+
-+		frame@f0001000 {
-+			frame-number = <0>
-+			interrupts = <0 13 0x8>,
-+				     <0 14 0x8>;
-+			reg = <0xf0001000 0x1000>,
-+			      <0xf0002000 0x1000>;
-+		};
-+
-+		frame@f0003000 {
-+			frame-number = <1>
-+			interrupts = <0 15 0x8>;
-+			reg = <0xf0003000 0x1000>;
-+			status = "disabled";
-+		};
-+	};
+https://lkml.org/lkml/2013/6/3/584
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 hosted by The Linux Foundation
+
