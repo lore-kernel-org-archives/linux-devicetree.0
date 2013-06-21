@@ -1,70 +1,148 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: dts: imx27 cpufreq-cpu0 frequencies
-Date: Fri, 21 Jun 2013 13:23:46 +0800
-Message-ID: <20130621052344.GA25633@S2101-09.ap.freescale.net>
-References: <1371739815-6666-1-git-send-email-mpa@pengutronix.de>
- <1371739815-6666-6-git-send-email-mpa@pengutronix.de>
- <20130621024406.GB24268@S2101-09.ap.freescale.net>
- <1371790493.32418815@f415.i.mail.ru>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH v3 3/3] ARM/dts: change compatible strings for hdmi subsystem
+Date: Fri, 21 Jun 2013 10:57:14 +0530
+Message-ID: <CAPdUM4Okr3C9S4DfimG7-js7o0yVh7UbS0Ersmtbzz6M09JPag@mail.gmail.com>
+References: <1371646269-21880-1-git-send-email-rahul.sharma@samsung.com>
+	<1371646269-21880-4-git-send-email-rahul.sharma@samsung.com>
+	<51C1B72A.6080801@samsung.com>
+	<51C1B799.10008@samsung.com>
+	<CAPdUM4Pg7wG4EaPw_7R=N=Lx1qWrNt4=LxhzH2+V5YGx0USfNg@mail.gmail.com>
+	<CAAQKjZOHmr57WoLuPvLM_KbGvvuOFNjNtD_aBmsykAebt+B+AQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1371790493.32418815-PR9Oqn8FVc1sdVUOrk1QfQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAAQKjZOHmr57WoLuPvLM_KbGvvuOFNjNtD_aBmsykAebt+B+AQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <daeinki@gmail.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, Sean Paul <seanpaul@chromium.org>, Lucas Stach <l.stach@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, grant.likely@linaro.org, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2013 at 08:54:53AM +0400, Alexander Shiyan wrote:
-> > On Thu, Jun 20, 2013 at 04:50:14PM +0200, Markus Pargmann wrote:
-> > > +	cpus {
-> > > +		#size-cells = <0>;
-> > > +		#address-cells = <1>;
-> > > +
-> > > +		cpu@0 {
-> > > +			device_type = "cpu";
-> > > +			compatible = "fsl,imx27", "arm,arm926ejs";
-> > 
-> > From what Documentation/devicetree/bindings/arm/cpus.txt tells, it
-> > should be "arm,arm926".  Also, why do you put "fsl,imx27" there?
-> > "imx27" is a SoC name not cpu core.
-> 
-> I think Markus take this ARM property from one of existing DTS.
-> 
-> shc@shc /home/git/linux-mx27/arch/arm/boot/dts $ grep arm926 *.dtsi
-> at91sam9260.dtsi:                       compatible = "arm,arm926ejs";
-> at91sam9263.dtsi:                       compatible = "arm,arm926ejs";
-> at91sam9g45.dtsi:                       compatible = "arm,arm926ejs";
-> at91sam9n12.dtsi:                       compatible = "arm,arm926ejs";
-> at91sam9x5.dtsi:                        compatible = "arm,arm926ejs";
-> imx23.dtsi:                     compatible = "arm,arm926ejs";
-> imx28.dtsi:                     compatible = "arm,arm926ejs";
-> lpc32xx.dtsi:                   compatible = "arm,arm926ejs";
-> s3c2416.dtsi:                   compatible = "arm,arm926ejs";
-> spear3xx.dtsi:                  compatible = "arm,arm926ejs";
-> spear600.dtsi:                  compatible = "arm,arm926ejs";
-> wm8505.dtsi:                    compatible = "arm,arm926ejs";
-> 
-> So, documentation need to be updated or these values should be fixed.
-> Another solution  is specify compatible string as:
-> compatible = "arm,arm926ejs", "arm,arm926";
-> What you think about this?
+Thanks Mr. Dae, nothing else for this series.
 
-I assume that the compatible string in the binding doc has been reviewed
-and agreed by people, so we should fix the existing users before kernel
-starts using it to for matching something.
-
-Lorenzo, comment?
-
-Shawn
+On Fri, Jun 21, 2013 at 10:47 AM, Inki Dae <daeinki@gmail.com> wrote:
+>
+>
+>
+> 2013/6/20 Rahul Sharma <r.sh.open@gmail.com>
+>>
+>> Thanks Mr. Kim,
+>>
+>> I will post v4 with aforesaid change.
+>>
+>
+> You don't need  to re-post it. I gonna change it to "ARM/dts: change
+> compatible strings for Exynos5250 hdmi subsystem", and merge it. Is there
+> another you want?
+>
+> Thanks,
+> Inki Dae
+>
+>> regards,
+>> Rahul Sharma.
+>>
+>> On Wed, Jun 19, 2013 at 7:22 PM, Kukjin Kim <kgene.kim@samsung.com> wrote:
+>> > On 06/19/13 22:50, Kukjin Kim wrote:
+>> >>
+>> >> On 06/19/13 21:51, Rahul Sharma wrote:
+>> >>>
+>> >>> This patch renames the combatible strings for hdmi, mixer, ddc
+>> >>> and hdmiphy. It follows the convention of using compatible string
+>> >>> which represent the SoC in which the IP was added for the first
+>> >>> time.
+>> >>>
+>> >>> Signed-off-by: Rahul Sharma<rahul.sharma@samsung.com>
+>> >>
+>> >>
+>> >> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
+>> >>
+>> >
+>> > Just one nit in subject:
+>> >
+>> > [PATCH] ARM: dts: ..... for exynos5250
+>> >
+>> > Thanks,
+>> >
+>> > - Kukjin
+>> >
+>> >>> ---
+>> >>> arch/arm/boot/dts/cros5250-common.dtsi | 4 ++--
+>> >>> arch/arm/boot/dts/exynos5250-smdk5250.dts | 4 ++--
+>> >>> arch/arm/boot/dts/exynos5250.dtsi | 4 ++--
+>> >>> 3 files changed, 6 insertions(+), 6 deletions(-)
+>> >>>
+>> >>> diff --git a/arch/arm/boot/dts/cros5250-common.dtsi
+>> >>> b/arch/arm/boot/dts/cros5250-common.dtsi
+>> >>> index 3f0239e..dc259e8b 100644
+>> >>> --- a/arch/arm/boot/dts/cros5250-common.dtsi
+>> >>> +++ b/arch/arm/boot/dts/cros5250-common.dtsi
+>> >>> @@ -190,7 +190,7 @@
+>> >>> samsung,i2c-max-bus-freq =<66000>;
+>> >>>
+>> >>> hdmiddc@50 {
+>> >>> - compatible = "samsung,exynos5-hdmiddc";
+>> >>> + compatible = "samsung,exynos4210-hdmiddc";
+>> >>> reg =<0x50>;
+>> >>> };
+>> >>> };
+>> >>> @@ -224,7 +224,7 @@
+>> >>> samsung,i2c-max-bus-freq =<378000>;
+>> >>>
+>> >>> hdmiphy@38 {
+>> >>> - compatible = "samsung,exynos5-hdmiphy";
+>> >>> + compatible = "samsung,exynos4212-hdmiphy";
+>> >>> reg =<0x38>;
+>> >>> };
+>> >>> };
+>> >>> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> >>> b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> >>> index 3e0c792..f320d7c 100644
+>> >>> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> >>> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+>> >>> @@ -72,7 +72,7 @@
+>> >>> samsung,i2c-max-bus-freq =<66000>;
+>> >>>
+>> >>> hdmiddc@50 {
+>> >>> - compatible = "samsung,exynos5-hdmiddc";
+>> >>> + compatible = "samsung,exynos4210-hdmiddc";
+>> >>> reg =<0x50>;
+>> >>> };
+>> >>> };
+>> >>> @@ -102,7 +102,7 @@
+>> >>> samsung,i2c-max-bus-freq =<66000>;
+>> >>>
+>> >>> hdmiphy@38 {
+>> >>> - compatible = "samsung,exynos5-hdmiphy";
+>> >>> + compatible = "samsung,exynos4212-hdmiphy";
+>> >>> reg =<0x38>;
+>> >>> };
+>> >>> };
+>> >>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+>> >>> b/arch/arm/boot/dts/exynos5250.dtsi
+>> >>> index 0673524..2f7763b 100644
+>> >>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>> >>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>> >>> @@ -601,7 +601,7 @@
+>> >>> };
+>> >>>
+>> >>> hdmi {
+>> >>> - compatible = "samsung,exynos5-hdmi";
+>> >>> + compatible = "samsung,exynos4212-hdmi";
+>> >>> reg =<0x14530000 0x70000>;
+>> >>> interrupts =<0 95 0>;
+>> >>> clocks =<&clock 333>,<&clock 136>,<&clock 137>,
+>> >>> @@ -611,7 +611,7 @@
+>> >>> };
+>> >>>
+>> >>> mixer {
+>> >>> - compatible = "samsung,exynos5-mixer";
+>> >>> + compatible = "samsung,exynos5250-mixer";
+>> >>> reg =<0x14450000 0x10000>;
+>> >>> interrupts =<0 94 0>;
+>> >>> };
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe
+>> linux-samsung-soc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
