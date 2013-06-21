@@ -1,81 +1,52 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re[6]: [PATCH] of: Add more stubs for non-OF builds
-Date: Fri, 21 Jun 2013 19:56:29 +0100
-Message-ID: <CACxGe6uqng-s4KtSwQ-MEUQ3Ed9_moNw_KvZeaPoN2OaGZnNWA@mail.gmail.com>
-References: <1371489882-11143-1-git-send-email-shc_work@mail.ru>
- <1371835275.689989846@f181.mail.ru> <1371839716.602513920@f133.mail.ru>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4] clocksource:arm_global_timer: Add ARM global timer
+ support.
+Date: Fri, 21 Jun 2013 23:00:38 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1306212250450.4013@ionos.tec.linutronix.de>
+References: <1371820267-12099-1-git-send-email-srinivas.kandagatla@st.com> <alpine.DEB.2.02.1306211634510.4013@ionos.tec.linutronix.de> <51C4913F.2020608@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371839716.602513920-Sq8Ym99z60Iedp2WBT/QOw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51C4913F.2020608@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, John Stultz <john.stultz@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2013 at 7:35 PM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
->> >> On Fri, Jun 21, 2013 at 7:17 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
->> >> >> On Thu, Jun 20, 2013 at 5:26 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> >> >> > On Thu, 20 Jun 2013 16:49:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> >> >> >> Hi Rob,
->> >> >> >>
->> >> >> >> Is this patch good for merging?
->> >> >> >>
->> >> >> >> In Alex's one patch to add device tree supporting for a leds driver,
->> >> >> >> we got building errors due to miss definitions of some of_xxx api
->> >> >> >> functions.
->> >> >> >>
->> >> >> >> It looks obviously to me that we need to fix this in device tree core
->> >> >> >> instead put #ifdef CONFIG_OF everywhere.
->> >> >> >
->> >> >> > Actually, the reason those things aren't universally defined is to catch
->> >> >> > exactly what it caught. The "leds-mc13783: Add devicetree support" patch
->> >> >> > interleaves DT and non-DT parsing which isn't generally a good idea. The
->> >> >> > DT parsing code should be shuffled off into a separate function and/or
->> >> >> > contained with "if (IS_ENABLED(CONFIG_OF)) {}".
->> >> >> >
->> >> >>
->> >> >> Agree, reasonable! I will remove this patch from my tree firstly.
->> >> >>
->> >> >> Alex, could you please update your patch with Grant's feedback?
->> >> >
->> >> > As far I understand you mean only the last part of patch. Where DT support
->> >> > is introduced. Is not it?
->> >> >
->> >>
->> >> Yes, exactly. I still keep those 2 non-DT related patches in my tree
->> >> and just removed that DT supporting patch.
->> >>
->> >> Please update that patch and posted again to linux-leds and DT
->> >> maintainers as well.
->> >
->> > I am really dont like any #ifdef in the source, but will do if this is only
->> > one way to put this patch into the main tree.
->>
->> You don't need any #ifdefs. Put all the DT-related calls into a
->> separate function specifically for decoding the DT information and
->> wrap the contents with:
->>
->>     if (IS_ENABLED(CONFIG_OF)) { }
->
-> This macro does not help for undefined reference, unfortunately.
-> So #ifdef and/or stubs for OF-functions is needed in this case anymore.
->
-> if (IS_ENABLED(CONFIG_OF))
->   some = of_get_next_child(foo, bar);
-> will produce an error at compile time if OF is not enabled,
-> because we have not empty function (if !OF) for this.
+On Fri, 21 Jun 2013, Stephen Boyd wrote:
 
-Check linux-next.
+> On 06/21/13 08:56, Thomas Gleixner wrote:
+> >
+> >> +static irqreturn_t gt_clockevent_interrupt(int irq, void *dev_id)
+> >> +{
+> >> +	struct clock_event_device *evt = *(struct clock_event_device **)dev_id;
+> > What kind of construct is this?
+> >
+> > You are using request_percpu_irq() and the device id is pointing to
+> > per cpu memory. Why do you need this horrible pointer indirection?
+> >
+> > Because a lot of other ARM code uses the same broken construct?
+> 
+> This is an artifact of the ARM local timer API. I have been trying for a
 
-g.
+No, it's not an artifact. It's a copy and paste issue. Looking at
+drivers/clocksource/arm_arch_timer.c
+
+        arch_timer_evt = alloc_percpu(struct clock_event_device);
+...
+	err = request_percpu_irq(ppi, arch_timer_handler_virt,
+                                 "arch_timer", arch_timer_evt);
+
+This code is correct and it does not need any of the changes.
+
+Doing it with the pointer madness is just wrong, nothing else. Even if
+there is a historic reason why the pointer juggling was necessary at
+some point, it's obviously not needed anymore.
+
+And historic crap is no justification for brainlessly copied code.
+
+Thanks,
+
+	tglx
+
+
