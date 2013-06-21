@@ -1,83 +1,57 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH v6] ethernet/arc/arc_emac - Add new driver
-Date: Fri, 21 Jun 2013 07:05:44 +0000
-Message-ID: <4881796E12491D4BB15146FE0209CE643F5F4A8F@DE02WEMBXB.internal.synopsys.com>
-References: <1371729196-4505-1-git-send-email-abrodkin@synopsys.com>
- <CAHp75Vf8+z0B6PMjGqVNPuEJrVYiR-yMT5dvqqBAs=GA5utLrQ@mail.gmail.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v3 02/10] clocksource:arm_global_timer: Add ARM global
+ timer support.
+Date: Fri, 21 Jun 2013 08:15:28 +0100
+Message-ID: <51C3FD90.8010505@st.com>
+References: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com> <1371737121-9295-1-git-send-email-srinivas.kandagatla@st.com> <201306202102.30478.arnd@arndb.de>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, Francois Romieu <romieu@fr.zoreil.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Florian Fainelli <florian@openwrt.org>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201306202102.30478.arnd@arndb.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel@stlinux.com, linux-serial@vger.kernel.org, Mark Brown <broonie@kernel.org>, Stephen Gallimore <stephen.gallimore@st.com>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2013 08:00 PM, Andy Shevchenko wrote:
-> On Thu, Jun 20, 2013 at 2:53 PM, Alexey Brodkin
->> +               if ((info & FOR_EMAC) || !txbd->data)
->
-> Redundant internal braces. Up to you.
+On 20/06/13 20:02, Arnd Bergmann wrote:
+> On Thursday 20 June 2013, Srinivas KANDAGATLA wrote:
+>> +static u64 gt_counter_read(void)
+>> +{
+>> +       u64 counter;
+>> +       u32 lower;
+>> +       u32 upper, old_upper;
+>> +
+>> +       upper = __raw_readl(gt_base + GT_COUNTER1);
+>> +       do {
+>> +               old_upper = upper;
+>> +               lower = __raw_readl(gt_base + GT_COUNTER0);
+>> +               upper = __raw_readl(gt_base + GT_COUNTER1);
+>> +       } while (upper != old_upper);
+>> +
+>> +       counter = upper;
+>> +       counter <<= 32;
+>> +       counter |= lower;
+>> +       return counter;
+>> +}
+> 
+> Please replace __raw_readl etc with the non-__raw variants
+> throughout the code.
+> 
+> The __raw accessors are not endian safe and are not meant
+> for device drivers. If you are worried about latency from
+> extra barriers, use readl_relaxed().
+Endian safe is good point. I will move to using readl/writel which does
+both ordering and byteswapping.
+And use relaxed versions in gt_counter_read to reduce the latency.
 
-I left them so priorities of operations will be obvious.
+looks like smp_twd.c too needs this type of change.
 
->> +#define FRST_OR_LAST_MASK      (FRST_MASK | LAST_MASK)
->
-> You may re-use it in *_tx_clean() above.
-> Also, please use full English word FIRST. Actually is there any
-> conflicts with existing drivers? Should it be with [ARC_]EMAC prefix?
+Thanks,
+srini
 
-Re-used it in 2 mentioned places. And changed FRST with FIRST.
-I don't see defines with the same name anywhere else.
+> 
+> 	Arnd
+> 
 
->
->> +               /* Make sure pointer to data buffer is set */
->> +               mb();
->
-> I'm not so familiar with memory barriers, but is this somehow differ
-> from smp_mb()?
-> Which one suits better? And what about the other places in this file?
-
-Since for now driver itself is not SMP-safe so I don't see any reason 
-for "smp_" barriers. Later I plan to add SMP compatibility and that this 
-point barriers will be replaced as well.
-
-Another thing is I switched to "wmb()" (which is a barrier fror write in 
-particular) instead of generic "mb()".
-
->> +       /* Allocate Tx BD's similar to Rx BD's. All Tx BD's owned by CPU */
->> +       bd = priv->txbd;
->> +       for (i = 0; i < TX_BD_NUM; i++) {
->> +               bd->data = 0;
->> +               bd->info = 0;
->> +               bd++;
->> +       }
->
-> Looks like
-> memset(priv->txbd, 0, siezeof(*priv->txbd) * TX_BD_NUM);
-
-Correct.
-
->> +       /* Get "info" of the next BD */
->
->> +       /* Get PHY from device tree */
->> +       phy_node = of_parse_phandle(pdev->dev.of_node, "phy", 0);
->
->> +       /* Get EMAC registers base address from device tree */
->> +       err = of_address_to_resource(pdev->dev.of_node, 0, &res_regs);
->
->> +       /* Get CPU clock frequency from device tree */
->> +       if (of_property_read_u32(pdev->dev.of_node, "clock-frequency",
->> +                                &clock_frequency)) {
->
->> +       /* Get IRQ from device tree */
->> +       err = of_irq_to_resource(pdev->dev.of_node, 0, &res_irq);
->
-> So, you don't like the idea to get as much as possible before
-> alloc_netdev(), don't you?
-
-Ok, I did this change)))
-
-Regards,
-Alexey
