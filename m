@@ -1,60 +1,69 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v12 09/11] spi: omap2-mcspi: convert to
-	dma_request_slave_channel_compat()
-Date: Fri, 21 Jun 2013 16:07:51 +0530
-Message-ID: <51C42CFF.10002@ti.com>
-References: <1371762407-24544-1-git-send-email-joelagnel@ti.com>
-	<1371762407-24544-10-git-send-email-joelagnel@ti.com>
-	<51C42A71.1090403@ti.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH v7] ethernet/arc/arc_emac - Add new driver
+Date: Fri, 21 Jun 2013 10:53:47 +0000
+Message-ID: <4881796E12491D4BB15146FE0209CE643F5F587E@DE02WEMBXB.internal.synopsys.com>
+References: <1371799241-27771-1-git-send-email-abrodkin@synopsys.com>
+ <1371810775.19215.30.camel@joe-AO722>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <51C42A71.1090403-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>Linux
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Francois Romieu <romieu@fr.zoreil.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Florian Fainelli <florian@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixing Mark's e-mail.
+On 06/21/2013 02:32 PM, Joe Perches wrote:
+> On Fri, 2013-06-21 at 11:20 +0400, Alexey Brodkin wrote:
+>> Driver for non-standard on-chip ethernet device ARC EMAC 10/100,
+>> instantiated in some legacy ARC (Synopsys) FPGA Boards such as
+>> ARCAngel4/ML50x.
+>
+> Looks fine to me.
+>
+> One nit you could fix later and a question.
+>
+>> diff --git a/drivers/net/ethernet/arc/emac_main.c b/drivers/net/ethernet/arc/emac_main.c
+> []
+>> +static int arc_emac_rx(struct net_device *ndev, int budget)
+>> +{
+> []
+>> +			if (net_ratelimit())
+>> +				netdev_err(ndev, "incomplete packed received\n");
+>
+> s/packed/packet/
 
-Mark,
+Ooops. Thanks for noticing this subtle misspelling.
 
-On 6/21/2013 3:56 PM, Sourav Poddar wrote:
-> Hi Mark,
+>> +		rxbd->data = (unsigned char *)cpu_to_le32(rx_buff->skb->data);
+>
+> 32 bit only.  Should the Kconfig block have some arch_arc dependency
+> so it can't get compiled for 64 bit systems?
 
-> On Friday 21 June 2013 02:36 AM, Joel A Fernandes wrote:
->> From: Matt Porter<mporter-l0cyMroinI0@public.gmane.org>
->>
->> Convert dmaengine channel requests to use
->> dma_request_slave_channel_compat(). This supports the DT case of
->> platforms requiring channel selection from either the OMAP DMA or
->> the EDMA engine. AM33xx only boots from DT and is the only user
->> implementing EDMA so in the !DT case we can default to the OMAP DMA
->> filter.
->>
->> Signed-off-by: Matt Porter<mporter-l0cyMroinI0@public.gmane.org>
->> Acked-by: Mark Brown<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
->> Signed-off-by: Joel A Fernandes<joelagnel-l0cyMroinI0@public.gmane.org>
+Well, initially I add dependency on ARC in Kconfig.
+But later removed it because in driver itself there're really no 
+ARC-specific things. So why don't make it available for any other arch?
+For example I re-used Xilinx SystemACE driver on ARC even though it was 
+only targeted for PPC/Microblaze. And now I need to add another 
+dependency (+ || ARC) in Kconfig for all block devices.
 
-[...]
+But your comment regarding 64-bit arches makes perfect sense. But still 
+I don't know if there's a way to restrict usage on only 32-bit arches 
+(independent of being x86/arc/mips/etc). I may suppose that only strict 
+specification of all virtually supported 32-bit arches - which is 
+nonsense I think.
 
-> Acked-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-> Tested-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-> 
-> This patch can go independently and does not depend on the rest of the
-> series.
-> Can these patch be pulled?
+Also independence of architecture makes it possible to compile driver on 
+x86 for x86 with native toolchain. In other words anybody may try to 
+compile it. And I thought it's if not mandatory but at least very 
+welcome - if maintainer or reviewer may compile stuff and teach me how 
+to eliminate all compile-time warnings/errors.
 
-We can resend the patch if you don't have it from the mailing list.
+But during compilation on x86 one needs to enable OF. Which will lead to 
+compilation errors in other things.
 
-Thanks,
-Sekhar
+So for now I may easily add dependency on ARC if it makes acceptance of 
+driver easier.
+
+-Alexey
