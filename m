@@ -1,16 +1,13 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v6 2/3] arm: add debug uarts for rockchip rk29xx and
- rk3xxx series
-Date: Fri, 21 Jun 2013 00:30:29 -0700
-Message-ID: <20130621073029.GC30076@quad.lixom.net>
-References: <201306210129.54629.heiko@sntech.de>
- <201306210131.11224.heiko@sntech.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V10 0/4] PCIe support for Samsung Exynos5440 SoC
+Date: Fri, 21 Jun 2013 09:31:58 +0200
+Message-ID: <201306210931.58428.arnd@arndb.de>
+References: <003901ce6e50$03d039a0$0b70ace0$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201306210131.11224.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <003901ce6e50$03d039a0$0b70ace0$@samsung.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,22 +18,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: 'Jason Gunthorpe' <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Siva Reddy Kallam' <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Surendranath Gurivireddy Balla' <suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, 'Thierry Reding' <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Mohit KUMAR' <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Andrew Murray' <andrew.murray-5wv7dgnIgG8@public.gmane.org>, 'Pratyush Anand' <pratyush.anand-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2013 at 01:31:10AM +0200, Heiko St=FCbner wrote:
-> Uarts on all recent Rockchip SoCs are Synopsis DesignWare 8250 types.
-> Only their addresses vary very much.
-> =
+On Friday 21 June 2013, Jingoo Han wrote:
+> Changes between v9 and v10:
+>   * Changed the file name from 'pci-designware.c' to 'pcie-designware.c'
+>     guided by Pratyush Anand, because synopsis pcie and pci controllers
+>     are different.
+>   * Fixed the typos of document, reported by Sachin Kamat.
+> 
+> Changes between v8 and v9:
+>   * Changed the file name from 'exynos-pcie.txt' to 'designware-pcie.txt'.
+>   * Added 'snps,dw-pcie' string to compatible property.
+> 
+> Changes between v7 and v8:
+>   * Changed the file name from 'pci-exynos.c' to 'pci-designware.c',
+>     and added a generic string for compatible property to exynos-pcie.txt
+>   * Moved pci_add_resource_offset() for I/O space to the 'if' clause
+>   * Added Arnd's Acked-by
+> 
+> Changes between v6 and v7:
+>   * Split ARM DT patch to two patches
+>   * Fixed node naming
+>   * Added Arnd's Acked-by
 
-> This patch adds the necessary definitions to use any of the uart ports
-> for early debug purposes.
-> =
+Ok, that takes care of all my comments.
 
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Bjorn, are you still considering to merge this for 3.11 or have you
+closed your tree for the merge window? I think it would be good to get
+it in.
 
-Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-
-
--Olof
+	Arnd
