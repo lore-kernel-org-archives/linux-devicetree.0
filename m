@@ -1,111 +1,98 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Add more stubs for non-OF builds
-Date: Fri, 21 Jun 2013 01:26:07 +0100
-Message-ID: <20130621002607.F24A63E093E@localhost>
-References: <1371489882-11143-1-git-send-email-shc_work@mail.ru>
- <51C089F6.2060902@gmail.com> <1371573337.452797583@f398.i.mail.ru>
- <CAK5ve-+96fNSF0cV1gefzgJNFX-nefZ08HWupPirQYauecEQYw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAK5ve-+96fNSF0cV1gefzgJNFX-nefZ08HWupPirQYauecEQYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: [PATCH v6 0/8] Initial Device Tree support for S3C64xx
+Date: Fri, 21 Jun 2013 02:35:16 +0200
+Message-ID: <1371774924-9224-1-git-send-email-tomasz.figa@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene.kim@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, devicetree-discuss@lists.ozlabs.org, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Nicolas Pitre <nico@fluxnic.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Jun 2013 16:49:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Rob,
-> 
-> Is this patch good for merging?
-> 
-> In Alex's one patch to add device tree supporting for a leds driver,
-> we got building errors due to miss definitions of some of_xxx api
-> functions.
-> 
-> It looks obviously to me that we need to fix this in device tree core
-> instead put #ifdef CONFIG_OF everywhere.
+This series adds Device Tree support for Samsung S3C64xx SoC series.
 
-Actually, the reason those things aren't universally defined is to catch
-exactly what it caught. The "leds-mc13783: Add devicetree support" patch
-interleaves DT and non-DT parsing which isn't generally a good idea. The
-DT parsing code should be shuffled off into a separate function and/or
-contained with "if (IS_ENABLED(CONFIG_OF)) {}".
+It fixes several problems preventing from booting an S3C64xx-based system
+using Device Tree, adds all the infrastructure for Device Tree-based board
+support, including mach-s3c64xx-dt and dts include files for S3C64xx SoCs,
+and basic device tree source for FriendlyARM Mini6410 and SAMSUNG SMDK6410
+boards.
 
-So, no, I don't want this patch merged.
+Current support is somewhat limite, but should be fine as a start and
+will be extended in future, hopefully with help of S3C64xx board
+maintainers.
 
-g.
+Depends on:
+ - [PATCH 0/7] Common Clock Framework support for Samsung S3C64xx
+   http://comments.gmane.org/gmane.linux.usb.general/87571
 
+Changes since v5:
+ - Rebased onto current for-next branch of Kgene's tree,
+ - Added support for new Common Clock Framework based clock driver,
+ - Introduced hierarchical structure of device nodes (representing
+   physical AHB and APB buses),
+ - Bypassed most of legacy initialization when booting with DT,
+ - Used preprocessor macros in dts files to improve readabilty,
+ - Added support for SMDK6410 board.
 
-> 
-> Thanks,
-> -Bryan
-> 
-> On Tue, Jun 18, 2013 at 9:35 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
-> >> Perhaps a more specific subject.
-> >
-> > I can just specify stub function names in the subject.
-> > Is this enough?
-> >
-> >> On 06/17/2013 12:24 PM, Alexander Shiyan wrote:
-> >> > Patch adds of_get_next_child and of_get_next_available_child
-> >> > stubs for non-OF builds.
-> >> >
-> >> > Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-> >> > ---
-> >>
-> >> What changed for v2?
-> >
-> > v1 not contain "inline" for prototypes.
-> >
-> >> >  include/linux/of.h | 16 ++++++++++++++--
-> >> >  1 file changed, 14 insertions(+), 2 deletions(-)
-> >> >
-> >> > diff --git a/include/linux/of.h b/include/linux/of.h
-> >> > index 1fd08ca..df0e644 100644
-> >> > --- a/include/linux/of.h
-> >> > +++ b/include/linux/of.h
-> >> > @@ -366,8 +366,17 @@ static inline bool of_have_populated_dt(void)
-> >> >     return false;
-> >> >  }
-> >> >
-> >> > -#define for_each_child_of_node(parent, child) \
-> >> > -   while (0)
-> >> > +static struct device_node *of_get_next_child(const struct device_node *node,
-> >> > +                                        struct device_node *prev)
-> >> > +{
-> >> > +   return NULL;
-> >> > +}
-> >> > +
-> >> > +static struct device_node *of_get_next_available_child(
-> >> > +   const struct device_node *node, struct device_node *prev)
-> >> > +{
-> >> > +   return NULL;
-> >> > +}
-> >> >
-> >> >  static inline struct device_node *of_get_child_by_name(
-> >> >                                     const struct device_node *node,
-> >> > @@ -376,6 +385,9 @@ static inline struct device_node *of_get_child_by_name(
-> >> >     return NULL;
-> >> >  }
-> >> >
-> >> > +#define for_each_child_of_node(parent, child) \
-> >>
-> >> parent and child need unused annotations to avoid unused variable warnings.
-> >
-> > This define has been moved just for keep same order as for OF-version.
-> >
-> > ---
+Changes since v4:
+ - Rebased onto current for-next branch of Kgene's tree
+ - Added support for pinctrl (driver merged through pinctrl tree)
+ - Added labels to all nodes that can be overridden from board dts
+ - Modified board dts to use the &label syntax to reference device nodes
+
+Changes since v3:
+ - Rebased onto current for-next branch of Kgene's tree
+ - Updated timer node for next version of samsung-time patches
+ - Replaced local s3c64xx_dt_init_irq with irqchip_init
+
+Changes since v2:
+ - Updated timer node for next version of samsung-time patches
+
+Changes since v1:
+ - Dropped two VIC-related patches that are no longer necessary
+ - Added Device Tree-based instantation of system timers
+ - Corrected VIC interrupt specifiers
+ - Adjusted CPU compatible values and dropped @id
+
+Tomasz Figa (8):
+  ARM: common: vic: Parse interrupt and resume masks from device tree
+  ARM: s3c64xx: Bypass legacy initialization when booting with DT
+  gpio: samsung: Skip legacy GPIO registration if pinctrl-s3c64xx is
+    present
+  ARM: Add .init_platform() callback to machine descriptor
+  ARM: s3c64xx: Add board file for boot using Device Tree
+  ARM: dts: Add basic dts include files for Samsung S3C64xx SoCs
+  ARM: dts: Add dts file for S3C6410-based Mini6410 board
+  ARM: dts: Add dts file for S3C6410-based SMDK6410 board
+
+ Documentation/devicetree/bindings/arm/vic.txt |   6 +
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/s3c6400.dtsi                |  41 ++
+ arch/arm/boot/dts/s3c6410-mini6410.dts        | 199 ++++++++
+ arch/arm/boot/dts/s3c6410-smdk6410.dts        |  93 ++++
+ arch/arm/boot/dts/s3c6410.dtsi                |  41 ++
+ arch/arm/boot/dts/s3c64xx-pinctrl.dtsi        | 687 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/s3c64xx.dtsi                | 190 +++++++
+ arch/arm/include/asm/mach/arch.h              |   1 +
+ arch/arm/kernel/irq.c                         |   3 +
+ arch/arm/mach-s3c64xx/Kconfig                 |  16 +
+ arch/arm/mach-s3c64xx/Makefile                |   1 +
+ arch/arm/mach-s3c64xx/common.c                |  12 +
+ arch/arm/mach-s3c64xx/dma.c                   |   9 +
+ arch/arm/mach-s3c64xx/irq-pm.c                |   9 +
+ arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c       |  83 ++++
+ arch/arm/mach-s3c64xx/s3c6400.c               |   9 +
+ arch/arm/mach-s3c64xx/s3c6410.c               |   9 +
+ arch/arm/plat-samsung/init.c                  |  12 +-
+ drivers/gpio/gpio-samsung.c                   |   3 +-
+ drivers/irqchip/irq-vic.c                     |   7 +-
+ 21 files changed, 1430 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/boot/dts/s3c6400.dtsi
+ create mode 100644 arch/arm/boot/dts/s3c6410-mini6410.dts
+ create mode 100644 arch/arm/boot/dts/s3c6410-smdk6410.dts
+ create mode 100644 arch/arm/boot/dts/s3c6410.dtsi
+ create mode 100644 arch/arm/boot/dts/s3c64xx-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/s3c64xx.dtsi
+ create mode 100644 arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
 
 -- 
-email sent from notmuch.vim plugin
+1.8.2.1
