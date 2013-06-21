@@ -1,61 +1,40 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH 0/5] clk/exynos5420: add clocks for hdmi subsystem
-Date: Thu, 20 Jun 2013 21:32:52 -0700
-Message-ID: <20130621043252.9136.66418@quantum>
-References: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>
- <CAPdUM4MtBXMaZDDRT1aKsS=HzwjpbyMY85oRLMbk-KvJCU1hag@mail.gmail.com>
- <51C1B9AD.8060804@samsung.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH V9 1/4] pci: Add PCIe driver for Samsung Exynos
+Date: Fri, 21 Jun 2013 13:38:29 +0900
+Message-ID: <003601ce6e39$2dd30b40$897921c0$@samsung.com>
+References: <002001ce6e2e$623d7970$26b86c50$@samsung.com>
+ <51C3D517.1080301@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51C1B9AD.8060804@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <r.sh.open@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <51C3D517.1080301@st.com>
+Content-language: ko
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Pratyush Anand' <pratyush.anand@st.com>
+Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Tomasz Figa' <t.figa@samsung.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kukjin Kim (2013-06-19 07:01:17)
-> On 06/19/13 13:04, Rahul Sharma wrote:
-> > + mike
-> >
-> Mike, I'm waiting for your reply on this. If you're OK, let me take this 
-> series on top of exynos5420 stuff in samsung tree.
+On Friday, June 21, 2013 1:23 PM, Pratyush Anand wrote:
+> On 6/21/2013 8:51 AM, Jingoo Han wrote:
+> > diff --git a/drivers/pci/host/pci-designware.c b/drivers/pci/host/pci-designware.c
+> > new file mode 100644
+> > index 0000000..f8558ff
+> > --- /dev/null
+> > +++ b/drivers/pci/host/pci-designware.c
 > 
-> Of course, if any concerns, please let me know.
+> If you plan to send next version, then I would suggest to rename it as
+> pcie-designware.c, because synopsis pcie and pci controllers are different.
 
-I never got these patches.  I'm not subscribed to devicetree-devel or
-linux-samsung so I only got two replies to patch #0, but none of the
-code. Can you or Rajul resend?
+OK, I see.
+I rename it as 'pcie-designware.c'.
+Thank you for your suggestion. :)
 
-Thanks,
-Mike
+Best regards,
+Jingoo Han
 
 > 
-> Thanks,
-> - Kukjin
+> Regards
+> Pratyush
 > 
-> > On Tue, Jun 18, 2013 at 8:03 PM, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
-> >> Add clock changes for hdmi subsystem for exynos5250 SoC. These
-> >> include addition of new clocks like mout_hdmi and smmu_tv, associating
-> >> ID to clk_hdmiphy and some essential corrections.
-> >>
-> >> This set is based on kukjin's for-next branch at
-> >> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
-> >>
-> >> This set dependents on the following patches which add support for Exynos5420
-> >> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg19264.html
-> >>
-> >> Rahul Sharma (5):
-> >>    clk/exynos5420: add sclk_hdmiphy to the list of special clocks
-> >>    clk/exynos5420: add gate clock for tv sysmmu
-> >>    clk/exynos5420: fix the order of parents of hdmi mux
-> >>    clk/exynos5420: add hdmi mux to change parents in hdmi driver
-> >>    clk/exynos5420: assign sclk_pixel id to pixel clock divider
-> >>
-> >>   .../devicetree/bindings/clock/exynos5420-clock.txt   |    7 +++++++
-> >>   drivers/clk/samsung/clk-exynos5420.c                 |   18 +++++++++++-------
-> >>   2 files changed, 18 insertions(+), 7 deletions(-)
-> >>
-> >> --
-> >> 1.7.10.4
+> 
