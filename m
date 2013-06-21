@@ -1,49 +1,67 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v1 10/12] input: keypad_matrix: use usleep_range() for
- scan delay
-Date: Fri, 21 Jun 2013 16:00:19 -0600
-Message-ID: <51C4CCF3.20603@wwwdotorg.org>
-References: <1371838198-7327-1-git-send-email-gsi@denx.de> <1371838198-7327-11-git-send-email-gsi@denx.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v12 05/11] edma: config: Enable config options for EDMA
+Date: Sat, 22 Jun 2013 00:14:16 +0200
+Message-ID: <201306220014.16427.arnd@arndb.de>
+References: <1371762407-24544-1-git-send-email-joelagnel@ti.com> <201306212044.26677.arnd@arndb.de> <CAD=GYpY4koXd9f6_ijQfDHsiULD4d53cdu=9X421WXSAit_YQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1371838198-7327-11-git-send-email-gsi@denx.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Gerhard Sittig <gsi@denx.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Chao Xie <xiechao.mail@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Detlev Zundel <dzu@denx.de>, Sekhar Nori <nsekhar@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAD=GYpY4koXd9f6_ijQfDHsiULD4d53cdu=9X421WXSAit_YQg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Joel A Fernandes <agnel.joel@gmail.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Joel A Fernandes <joelagnel@ti.com>, Tony Lindgren <tony@atomide.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Jason Kridner <jkridner@beagleboard.org>, Koen Kooi <koen@beagleboard.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2013 12:09 PM, Gerhard Sittig wrote:
-> querying keyboards isn't a time critical task and does not depend on
-> exact timing in the microseconds order -- the timeouts and delays are
-> arbitrary choices or educated guesses at best anyway
+On Friday 21 June 2013, Joel A Fernandes wrote:
+> Hi Arnd,
+> 
+> On Fri, Jun 21, 2013 at 1:44 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Friday 21 June 2013, Joel A Fernandes wrote:
+> >> I think we are talking about different things, I agree the 'select
+> >> DMADEVICES' can be dropped but lets please keep the default y option
+> >> (not adding new select statements, just saying that if someone select
+> >> DMADEVICES in menuconfig and if they're ARCH_OMAP=1 , then default to
+> >> EDMA). This will simply allow people to have a default. Thanks.
+> >
+> > Yes, that's ok.
+> 
+> Ok, thanks. I will follow up with a patch in my next submissions that builds it.
+> 
+> Perhaps a:
+> default y if 'ARCH_OMAP2PLUS'
+> 
+> and leave the existing as it is...
+> default n if  'ARCH_DAVINCI || ARCH_OMAP1 || ARCH_OMAP2'
+> 
+> would make most sense to me. Basically EDMA is seen on current and all
+> new OMAP2PLUS.
 
-> diff --git a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
+Ok
 
-> @@ -93,7 +93,10 @@ Optional Properties:
->  			a column line and reading back its row status,
->  			such that pin levels can settle after
->  			propagating through the matrix and its
-> -			associated hardware components
-> +			associated hardware components, can be specified
-> +			with either one value giving the exact delay, or
-> +			with two values giving a delay range (allowing
-> +			for reduced timer management overhead)
->  - col-switch-delay-ms:	columns switch interval in milliseconds instead
->  			of using interrupts to detect key press changes,
->  			enables polling mode when specified
-> @@ -146,7 +149,7 @@ Examples:
->  	matrix_keypad {
->  		compatible = "gpio-matrix-keypad";
->  		debounce-delay-ms = <5>;
-> -		col-scan-delay-us = <1>;
-> +		col-scan-delay-us = <2 10>;
+> > config TI_EDMA
+> >         tristate "TI EDMA support"
+> >         default m if 'ARCH_DAVINCI || ARCH_OMAP1 || ARCH_OMAP2
+> >         select DMA_ENGINE
+> >         select DMA_VIRTUAL_CHANNELS
+> 
+> 
+> MMC depends on EDMA specially on AM33xx there's no PIO mode AFAIK. The
+> 'm' option will require some initramfs to load the module when needing
+> to MMC boot, I suggest lets leave it as y.
+> 
 
-Is it really useful to change the binding this way?
+Ah, right: you still export a filter function from the edma driver
+and use it in slave drivers:
 
-The values in DT presumably represent the minimum delays that the HW
-will tolerate or that are useful. SW is always free to scan more slowly
-than that. As such, if you're simply modifying the driver to allow more
-flexibility in timing, then I don't think you have to modify the DT
-binding to allow for this?
+drivers/mmc/host/davinci_mmc.c:         dma_request_slave_channel_compat(mask, edma_filter_fn,
+drivers/mmc/host/davinci_mmc.c:         dma_request_slave_channel_compat(mask, edma_filter_fn,
+drivers/spi/spi-davinci.c:      dspi->dma_rx = dma_request_channel(mask, edma_filter_fn,
+drivers/spi/spi-davinci.c:      dspi->dma_tx = dma_request_channel(mask, edma_filter_fn,
+
+As long as this is the case, you have to be careful with the dependencies
+to make sure that davinci_mmc and spi-davinci either depend on TI_EDMA, or
+edma_filter_fn gets defined to NULL when you are building for a DT-only platform.
+
+	Arnd
