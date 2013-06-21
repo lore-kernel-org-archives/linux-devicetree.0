@@ -1,39 +1,72 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCHv2 10/11] ARM: dts: omap4 clock data
-Date: Thu, 20 Jun 2013 18:24:22 -0700
-Message-ID: <51C3AB46.4040609@codeaurora.org>
-References: <1371647942-4811-1-git-send-email-t-kristo@ti.com> <1371647942-4811-11-git-send-email-t-kristo@ti.com>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [RFC PATCH 2/4] watchdog: at91sam9_wdt: update device tree doc
+Date: Fri, 21 Jun 2013 01:42:26 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641687DE052@penmbx01>
+References: <1370947890-954-1-git-send-email-b.brezillon@overkiz.com>
+ <1370947890-954-3-git-send-email-b.brezillon@overkiz.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1371647942-4811-11-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, mturquette@linaro.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1370947890-954-3-git-send-email-b.brezillon@overkiz.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon@overkiz.com>, Wim Van Sebroeck <wim@iguana.be>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>
+Cc: "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/19/13 06:19, Tero Kristo wrote:
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index 2a56428..70608db 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -106,6 +106,8 @@
->  			ti,hwmods = "counter_32k";
->  		};
->  
-> +		/include/ "omap4-clocks.dtsi"
-> +
-
-Doesn't this cause one platform device to be allocated for each clock
-node defined in omap4-clocks.dtsi? Are you concerned about wasting
-memory on things that aren't really devices and that will never be probed?
-
->  		omap4_pmx_core: pinmux@4a100040 {
->  			compatible = "ti,omap4-padconf", "pinctrl-single";
->  			reg = <0x4a100040 0x0196>;
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtYXJtLWtlcm5l
+bCBbbWFpbHRvOmxpbnV4LWFybS1rZXJuZWwtYm91bmNlc0BsaXN0cy5pbmZyYWRlYWQub3JnXQ0K
+PiBPbiBCZWhhbGYgT2YgQm9yaXMgQlJFWklMTE9ODQo+IFNlbnQ6IDIwMTPE6jbUwjExyNUgMTg6
+NTENCj4gVG86IFdpbSBWYW4gU2Vicm9lY2s7IEplYW4tQ2hyaXN0b3BoZSBQbGFnbmlvbC1WaWxs
+YXJkOyBGZXJyZSwgTmljb2xhcw0KPiBDYzogbGludXgtd2F0Y2hkb2dAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1kb2NAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMu
+b3psYWJzLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgUm9iDQo+IEhlcnJpbmc7
+IEJvcmlzIEJSRVpJTExPTjsgUm9iIExhbmRsZXk7IEdyYW50IExpa2VseTsNCj4gbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFtSRkMgUEFUQ0ggMi80XSB3
+YXRjaGRvZzogYXQ5MXNhbTlfd2R0OiB1cGRhdGUgZGV2aWNlIHRyZWUgZG9jDQo+IA0KPiBBZGQg
+bmV3IGF0OTFzYW05IHdhdGNoZG9nIHByb3BlcnRpZXMgdG8gdGhlIGRvY3VtZW50YXRpb24uDQo+
+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCb3JpcyBCUkVaSUxMT04gPGIuYnJlemlsbG9uQG92ZXJraXou
+Y29tPg0KPiAtLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL2F0bWVsLXdk
+dC50eHQgICAgIHwgICAzMA0KPiArKysrKysrKysrKysrKysrKystLQ0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDI4IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL2F0bWVsLXdkdC50eHQN
+Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvYXRtZWwtd2R0
+LnR4dA0KPiBpbmRleCBmY2RkNDhmLi5lMDQzMTA2IDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvYXRtZWwtd2R0LnR4dA0KPiArKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvYXRtZWwtd2R0LnR4dA0K
+PiBAQCAtOSwxMSArOSwzNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiANCj4gIE9wdGlvbmFs
+IHByb3BlcnRpZXM6DQo+ICAtIHRpbWVvdXQtc2VjOiBjb250YWlucyB0aGUgd2F0Y2hkb2cgdGlt
+ZW91dCBpbiBzZWNvbmRzLg0KPiArLSBpbnRlcnJ1cHRzIDogU2hvdWxkIGNvbnRhaW4gV0RUIGlu
+dGVycnVwdC4NCj4gKy0gYXRtZWwsbWF4LWhlYXJ0YmVhdC1zZWMgOiBTaG91bGQgY29udGFpbiB0
+aGUgbWF4aW11bSBoZWFydGJlYXQgdmFsdWUgaW4NCj4gKwlzZWNvbmRzLiBUaGlzIHZhbHVlIHNo
+b3VsZCBiZSBsZXNzIHRoYW4gMTYuIEl0IGlzIHVzZWQgdG8gY29tcHV0ZSB0aGUNCj4gKwlXRFYg
+ZmllbGQuDQo+ICstIGF0bWVsLG1heC1oZWFydGJlYXQtc2VjIDogU2hvdWxkIGNvbnRhaW4gdGhl
+IG1pbmltdW0gaGVhcnRiZWF0IHZhbHVlIGluDQpUeXBvLCBzaG91bGQgYmUsDQotIGF0bWVsLG1p
+bi1oZWFydGJlYXQtc2VjDQo+ICsJc2Vjb25kcy4gVGhpcyB2YWx1ZSBzaG91bGQgYmUgbGVzcyB0
+aGFuIDQgdGltZXMgdGhlIG1heC1oZWFydGJlYXQtc2VjDQo+ICsJdmFsdWUuIEl0IGlzIHVzZWQg
+dG8gY29tcHV0ZSB0aGUgV0REIGZpZWxkLg0KPiArLSBhdG1lbCx3YXRjaGRvZy10eXBlIDogU2hv
+dWxkIGJlICJoYXJkd2FyZSIgb3IgInNvZnR3YXJlIi4gSGFyZHdhcmUNCj4gd2F0Y2hkb2cNCj4g
+Kwl1c2UgdGhlIGF0OTEgd2F0Y2hkb2cgcmVzZXQuIFNvZnR3YXJlIHdhdGNoZG9nIHVzZSB0aGUg
+d2F0Y2RvZw0KPiBpbnRlcnJ1cA0KPiArCXRvIHRyaWdnZXIgYSBzb2Z0d2FyZSByZXNldC4NCj4g
+Ky0gYXRtZWwscmVzZXQtdHlwZSA6IFNob3VsZCBiZSAicHJvYyIgb3IgImFsbCIuDQo+ICsJImFs
+bCIgOiBhc3NlcnQgcGVyaXBoZXJhbHMgYW5kIHByb2Nlc3NvciByZXNldCBzaWduYWxzDQo+ICsJ
+InByb2MiIDogYXNzZXJ0IHRoZSBwcm9jZXNzb3IgcmVzZXQgc2lnbmFsDQo+ICsJVGhpcyBpcyB2
+YWxpZCBvbmx5IHdoZW4gdXNpbmcgImhhcmR3YXJlIiB3YXRjaGRvZy4NCj4gKy0gYXRtZWwsZGlz
+YWJsZSA6IFNob3VsZCBiZSBwcmVzZW50IGlmIHlvdSB3YW50IHRvIGRpc2FibGUgdGhlIHdhdGNo
+ZG9nLg0KPiArLSBhdG1lbCxpZGxlLWhhbHQgOiBTaG91bGQgYmUgcHJlc2VudCBpZiB5b3Ugd2Fu
+dCB0byBzdG9wIHRoZSB3YXRjaGRvZyB3aGVuDQo+ICsJZW50ZXJpbmcgaWRsZSBzdGF0ZS4NCj4g
+Ky0gYXRtZWwsZGJnLWhhbHQgOiBTaG91bGQgYmUgcHJlc2VudCBpZiB5b3Ugd2FudCB0byBzdG9w
+IHRoZSB3YXRjaGRvZyB3aGVuDQo+ICsJZW50ZXJpbmcgZGVidWcgc3RhdGUuDQo+IA0KPiAgRXhh
+bXBsZToNCj4gLQ0KPiAgCXdhdGNoZG9nQGZmZmZmZDQwIHsNCj4gIAkJY29tcGF0aWJsZSA9ICJh
+dG1lbCxhdDkxc2FtOTI2MC13ZHQiOw0KPiAgCQlyZWcgPSA8MHhmZmZmZmQ0MCAweDEwPjsNCj4g
+LQkJdGltZW91dC1zZWMgPSA8MTA+Ow0KPiArCQlpbnRlcnJ1cHRzID0gPDEgSVJRX1RZUEVfTEVW
+RUxfSElHSCA3PjsNCj4gKwkJdGltZW91dC1zZWMgPSA8MTU+Ow0KPiArCQlhdG1lbCx3YXRjaGRv
+Zy10eXBlID0gImhhcmR3YXJlIjsNCj4gKwkJYXRtZWwscmVzZXQtdHlwZSA9ICJhbGwiOw0KPiAr
+CQlhdG1lbCxkYmctaGFsdDsNCj4gKwkJYXRtZWwsaWRsZS1oYWx0Ow0KPiArCQlhdG1lbCxtYXgt
+aGVhcnRiZWF0LXNlYyA9IDwxNj47DQo+ICsJCWF0bWVsLG1pbi1oZWFydGJlYXQtc2VjID0gPDA+
+Ow0KPiArCQlzdGF0dXMgPSAib2theSI7DQo+ICAJfTsNCj4gLS0NCj4gMS43LjkuNQ0KPiANCj4g
+DQpCZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0KPiBfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXw0KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdA0K
+PiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsDQo=
