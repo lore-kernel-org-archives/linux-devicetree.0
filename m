@@ -1,110 +1,83 @@
-From: boris brezillon <b.brezillon@overkiz.com>
-Subject: Re: [RFC PATCH 0/4] watchdog: at91sam9_wdt: handle already configured
- wdt
-Date: Fri, 21 Jun 2013 08:59:41 +0200
-Message-ID: <51C3F9DD.5040709@overkiz.com>
-References: <1370947890-954-1-git-send-email-b.brezillon@overkiz.com> <B256D81BAE5131468A838E5D7A243641687DE078@penmbx01>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH v6] ethernet/arc/arc_emac - Add new driver
+Date: Fri, 21 Jun 2013 07:05:44 +0000
+Message-ID: <4881796E12491D4BB15146FE0209CE643F5F4A8F@DE02WEMBXB.internal.synopsys.com>
+References: <1371729196-4505-1-git-send-email-abrodkin@synopsys.com>
+ <CAHp75Vf8+z0B6PMjGqVNPuEJrVYiR-yMT5dvqqBAs=GA5utLrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=GB2312
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <B256D81BAE5131468A838E5D7A243641687DE078@penmbx01>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, Francois Romieu <romieu@fr.zoreil.com>, Joe Perches <joe@perches.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Florian Fainelli <florian@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/06/2013 03:47, Yang, Wenyou wrote:
+On 06/20/2013 08:00 PM, Andy Shevchenko wrote:
+> On Thu, Jun 20, 2013 at 2:53 PM, Alexey Brodkin
+>> +               if ((info & FOR_EMAC) || !txbd->data)
 >
->> -----Original Message-----
->> From: linux-arm-kernel [mailto:linux-arm-kernel-bounces@lists.infrad=
-ead.org]
->> On Behalf Of Boris BREZILLON
->> Sent: 2013=C4=EA6=D4=C211=C8=D5 18:51
->> To: Wim Van Sebroeck; Jean-Christophe Plagniol-Villard; Ferre, Nicol=
-as;
->> linux-watchdog@vger.kernel.org
->> Cc: devicetree-discuss@lists.ozlabs.org; linux-doc@vger.kernel.org;
->> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; =
-Boris
->> BREZILLON
->> Subject: [RFC PATCH 0/4] watchdog: at91sam9_wdt: handle already conf=
-igured
->> wdt
->>
->> Hello,
->>
->> This patch series is a porposal to enhance the sam9 watchdog timer s=
-upport.
->>
->> The at91sam9 watchdog timer cannot configured twice, and the current
->> implementation only tries to configure in a static way:
->> - 2 seconds timeout
->> - wdt restart every 500ms
->>
->> If the timer has already been configured with different values, it r=
-eturns an
->> error and do not create any watchdog device.
->>
->> This is not critical if the watchdog is disabled, but if it has been=
- enabled with
->> different timeout values it will lead to a SoC reset.
->>
->> This patch series tries to address this issue by adapting the heartb=
-eat value
->> according the WDT timer config:
->> - it first tries to configure the timer as requested.
->> - if it fails it fallbacks to the current config, adapting its heart=
-beat timer
->> to the needs
->>
->> This patch series also move to a dynamically allocated at91wdt devic=
-e instead
->> of the static instance. I'm not sure this is the best solution, so p=
-lease tell
->> me if you prefer to keep static instance of watchdog.
->>
->> It adds a new at91 wdt type: software. This new type make use of the=
- at91 wdt
->> interrupt to trigger a software watchdog.
->>
->> Finally it adds several properties to the device tree bindings.
->>
->> Best Regards,
->> Boris
->>
->> Boris BREZILLON (4):
->>   watchdog: at91sam9_wdt: better watchdog support
->>   watchdog: at91sam9_wdt: update device tree doc
->>   ARM: at91/dt: add sam9 watchdog default options to SoCs
->>   ARM: at91/dt: add watchdog properties to kizbox board
->>
->>  .../devicetree/bindings/watchdog/atmel-wdt.txt     |   30 +-
->>  arch/arm/boot/dts/at91sam9260.dtsi                 |    5 +
->>  arch/arm/boot/dts/at91sam9263.dtsi                 |    5 +
->>  arch/arm/boot/dts/at91sam9g45.dtsi                 |    5 +
->>  arch/arm/boot/dts/at91sam9n12.dtsi                 |    5 +
->>  arch/arm/boot/dts/at91sam9x5.dtsi                  |    5 +
->>  arch/arm/boot/dts/kizbox.dts                       |    6 +
->>  arch/arm/boot/dts/sama5d3.dtsi                     |    5 +
->>  drivers/watchdog/at91sam9_wdt.c                    |  319
->> +++++++++++++++-----
->>  9 files changed, 300 insertions(+), 85 deletions(-)
->>
->> --
->> 1.7.9.5
->>
->>
-> Tested on sama5d34ek, at91sam9g25ek, linux-next_20130620
->
-> Tested by Wenyou Yang <Wenyou.yang@atmel.com>
->
-Thanks for your tests and review.
+> Redundant internal braces. Up to you.
 
-Best Regards,
+I left them so priorities of operations will be obvious.
 
-Boris
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>> +#define FRST_OR_LAST_MASK      (FRST_MASK | LAST_MASK)
+>
+> You may re-use it in *_tx_clean() above.
+> Also, please use full English word FIRST. Actually is there any
+> conflicts with existing drivers? Should it be with [ARC_]EMAC prefix?
+
+Re-used it in 2 mentioned places. And changed FRST with FIRST.
+I don't see defines with the same name anywhere else.
+
+>
+>> +               /* Make sure pointer to data buffer is set */
+>> +               mb();
+>
+> I'm not so familiar with memory barriers, but is this somehow differ
+> from smp_mb()?
+> Which one suits better? And what about the other places in this file?
+
+Since for now driver itself is not SMP-safe so I don't see any reason 
+for "smp_" barriers. Later I plan to add SMP compatibility and that this 
+point barriers will be replaced as well.
+
+Another thing is I switched to "wmb()" (which is a barrier fror write in 
+particular) instead of generic "mb()".
+
+>> +       /* Allocate Tx BD's similar to Rx BD's. All Tx BD's owned by CPU */
+>> +       bd = priv->txbd;
+>> +       for (i = 0; i < TX_BD_NUM; i++) {
+>> +               bd->data = 0;
+>> +               bd->info = 0;
+>> +               bd++;
+>> +       }
+>
+> Looks like
+> memset(priv->txbd, 0, siezeof(*priv->txbd) * TX_BD_NUM);
+
+Correct.
+
+>> +       /* Get "info" of the next BD */
+>
+>> +       /* Get PHY from device tree */
+>> +       phy_node = of_parse_phandle(pdev->dev.of_node, "phy", 0);
+>
+>> +       /* Get EMAC registers base address from device tree */
+>> +       err = of_address_to_resource(pdev->dev.of_node, 0, &res_regs);
+>
+>> +       /* Get CPU clock frequency from device tree */
+>> +       if (of_property_read_u32(pdev->dev.of_node, "clock-frequency",
+>> +                                &clock_frequency)) {
+>
+>> +       /* Get IRQ from device tree */
+>> +       err = of_irq_to_resource(pdev->dev.of_node, 0, &res_irq);
+>
+> So, you don't like the idea to get as much as possible before
+> alloc_netdev(), don't you?
+
+Ok, I did this change)))
+
+Regards,
+Alexey
