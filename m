@@ -1,38 +1,47 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v7] ethernet/arc/arc_emac - Add new driver
-Date: Fri, 21 Jun 2013 07:43:33 -0700
-Message-ID: <1371825813.19215.34.camel@joe-AO722>
-References: <1371799241-27771-1-git-send-email-abrodkin@synopsys.com>
-	 <1371810775.19215.30.camel@joe-AO722>
-	 <4881796E12491D4BB15146FE0209CE643F5F587E@DE02WEMBXB.internal.synopsys.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4] serial:st-asc: Add ST ASC driver.
+Date: Fri, 21 Jun 2013 07:53:14 -0700
+Message-ID: <20130621145314.GA5110@kroah.com>
+References: <1371823617-17380-1-git-send-email-srinivas.kandagatla@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4881796E12491D4BB15146FE0209CE643F5F587E@DE02WEMBXB.internal.synopsys.com>
+Content-Disposition: inline
+In-Reply-To: <1371823617-17380-1-git-send-email-srinivas.kandagatla@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Francois Romieu <romieu@fr.zoreil.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Florian Fainelli <florian@openwrt.org>
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jiri Slaby <jslaby@suse.cz>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-06-21 at 10:53 +0000, Alexey Brodkin wrote:
-> On 06/21/2013 02:32 PM, Joe Perches wrote:
-> > On Fri, 2013-06-21 at 11:20 +0400, Alexey Brodkin wrote:
-> >> Driver for non-standard on-chip ethernet device ARC EMAC 10/100,
-> >> instantiated in some legacy ARC (Synopsys) FPGA Boards such as
-> >> ARCAngel4/ML50x.
-[]
-> >> +		rxbd->data = (unsigned char *)cpu_to_le32(rx_buff->skb->data);
-> >
-> > 32 bit only.  Should the Kconfig block have some arch_arc dependency
-> > so it can't get compiled for 64 bit systems?
-[]
-> So for now I may easily add dependency on ARC if it makes acceptance of 
-> driver easier.
+On Fri, Jun 21, 2013 at 03:06:57PM +0100, Srinivas KANDAGATLA wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> 
+> This patch adds support to ASC (asynchronous serial controller)
+> driver, which is basically a standard serial driver. This IP is common
+> across all the ST parts for settop box platforms.
+> 
+> ASC is embedded in ST COMMS IP block. It supports Rx & Tx functionality.
+> It support all industry standard baud rates.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> CC: Stephen Gallimore <stephen.gallimore@st.com>
+> CC: Stuart Menefy <stuart.menefy@st.com>
+> CC: Arnd Bergmann <arnd@arndb.de>
+> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> Hi Greg, 
+> 
+> As per your request am resend this patch.
+> 
+> This patch is the part of the driver support for Stixxxx SOCs.
+> This patch undergone 3 cycles of review in arm-kernel mailing list.
+> As Arnd prefered to take only SOC support patches via arm-soc, am 
+> sending this patch seperately.
 
-I don't think it's a big problem.
+Please redo this patch against the tty-next branch of my tty.git tree on
+git.kernel.org.  As it is, there are conflicts that you need to resolve
+in order for it to work and apply properly.
 
-Maybe add a Kconfig "depends on !64BIT".
+thanks,
 
-Another thing to do would be to run it through sparse
-with make C=1
+greg k-h
