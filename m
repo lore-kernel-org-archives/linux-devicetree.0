@@ -1,39 +1,79 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4] clocksource:arm_global_timer: Add ARM global timer
- support.
-Date: Fri, 21 Jun 2013 10:45:35 -0700
-Message-ID: <51C4913F.2020608@codeaurora.org>
-References: <1371820267-12099-1-git-send-email-srinivas.kandagatla@st.com> <alpine.DEB.2.02.1306211634510.4013@ionos.tec.linutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1306211634510.4013@ionos.tec.linutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, John Stultz <john.stultz@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: [PATCH v1 02/12] input: matrix-keymap: func call coding style nit
+Date: Fri, 21 Jun 2013 20:09:48 +0200
+Message-ID: <1371838198-7327-3-git-send-email-gsi@denx.de>
+References: <1371838198-7327-1-git-send-email-gsi@denx.de>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1371838198-7327-1-git-send-email-gsi@denx.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Chao Xie <xiechao.mail@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, Marek Vasut <marek.vasut@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Anatolij Gustschin <agust@denx.de>, Detlev Zundel <dzu@denx.de>, Gerhard Sittig <gsi@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/13 08:56, Thomas Gleixner wrote:
->
->> +static irqreturn_t gt_clockevent_interrupt(int irq, void *dev_id)
->> +{
->> +	struct clock_event_device *evt = *(struct clock_event_device **)dev_id;
-> What kind of construct is this?
->
-> You are using request_percpu_irq() and the device id is pointing to
-> per cpu memory. Why do you need this horrible pointer indirection?
->
-> Because a lot of other ARM code uses the same broken construct?
+make the matrix_keypad_map_key() routine return an error code
+instead of boolean, as its name suggests an action and not a query
 
-This is an artifact of the ARM local timer API. I have been trying for a
-few months to remove the API but I need my first two patches to go
-through the tip/timers tree. Please accept them so we don't have this
-construct anymore.
+Signed-off-by: Gerhard Sittig <gsi@denx.de>
+---
+ drivers/input/matrix-keymap.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-https://lkml.org/lkml/2013/6/3/584
-
+diff --git a/drivers/input/matrix-keymap.c b/drivers/input/matrix-keymap.c
+index 08b61f5..b7091f2 100644
+--- a/drivers/input/matrix-keymap.c
++++ b/drivers/input/matrix-keymap.c
+@@ -27,9 +27,10 @@
+ #include <linux/module.h>
+ #include <linux/input/matrix_keypad.h>
+ 
+-static bool matrix_keypad_map_key(struct input_dev *input_dev,
+-				  unsigned int rows, unsigned int cols,
+-				  unsigned int row_shift, unsigned int key)
++/* translates packed row/col/code specs to the corresponding keycode[] item */
++static int matrix_keypad_map_key(struct input_dev *input_dev,
++				 unsigned int rows, unsigned int cols,
++				 unsigned int row_shift, unsigned int key)
+ {
+ 	unsigned short *keymap = input_dev->keycode;
+ 	unsigned int row = KEY_ROW(key);
+@@ -40,13 +41,13 @@ static bool matrix_keypad_map_key(struct input_dev *input_dev,
+ 		dev_err(input_dev->dev.parent,
+ 			"%s: invalid keymap entry 0x%x (row: %d, col: %d, rows: %d, cols: %d)\n",
+ 			__func__, key, row, col, rows, cols);
+-		return false;
++		return -ERANGE;
+ 	}
+ 
+ 	keymap[MATRIX_SCAN_CODE(row, col, row_shift)] = code;
+ 	__set_bit(code, input_dev->keybit);
+ 
+-	return true;
++	return 0;
+ }
+ 
+ #ifdef CONFIG_OF
+@@ -109,8 +110,8 @@ static int matrix_keypad_parse_of_keymap(const char *propname,
+ 	for (i = 0; i < size; i++) {
+ 		unsigned int key = be32_to_cpup(prop + i);
+ 
+-		if (!matrix_keypad_map_key(input_dev, rows, cols,
+-					   row_shift, key))
++		if (matrix_keypad_map_key(input_dev, rows, cols,
++					  row_shift, key) != 0)
+ 			return -EINVAL;
+ 	}
+ 
+@@ -187,8 +188,8 @@ int matrix_keypad_build_keymap(const struct matrix_keymap_data *keymap_data,
+ 		for (i = 0; i < keymap_data->keymap_size; i++) {
+ 			unsigned int key = keymap_data->keymap[i];
+ 
+-			if (!matrix_keypad_map_key(input_dev, rows, cols,
+-						   row_shift, key))
++			if (matrix_keypad_map_key(input_dev, rows, cols,
++						  row_shift, key) != 0)
+ 				return -EINVAL;
+ 		}
+ 	} else {
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.10.4
 
