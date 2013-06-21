@@ -1,39 +1,36 @@
-From: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v12 09/11] spi: omap2-mcspi: convert to
-	dma_request_slave_channel_compat()
-Date: Fri, 21 Jun 2013 17:52:37 +0530
-Message-ID: <51C4458D.4060202@ti.com>
-References: <1371762407-24544-1-git-send-email-joelagnel@ti.com>
-	<1371762407-24544-10-git-send-email-joelagnel@ti.com>
-	<51C42A71.1090403@ti.com> <51C42CFF.10002@ti.com>
-	<20130621112832.GS27646@sirena.org.uk>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH v7] ethernet/arc/arc_emac - Add new driver
+Date: Fri, 21 Jun 2013 12:25:48 +0000
+Message-ID: <4881796E12491D4BB15146FE0209CE643F5F5DBB@DE02WEMBXB.internal.synopsys.com>
+References: <1371799241-27771-1-git-send-email-abrodkin@synopsys.com>
+	<1371810775.19215.30.camel@joe-AO722>
+	<4881796E12491D4BB15146FE0209CE643F5F587E@DE02WEMBXB.internal.synopsys.com>
+ <CAHp75Vf8A7YZGBtna7JAaacnJWq5+q_+m44eO13bChxKj6XZgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <20130621112832.GS27646-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>R
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Joe Perches <joe@perches.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Francois Romieu <romieu@fr.zoreil.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Florian Fainelli <florian@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-On Friday 21 June 2013 04:58 PM, Mark Brown wrote:
-> On Fri, Jun 21, 2013 at 04:07:51PM +0530, Sekhar Nori wrote:
+On 06/21/2013 04:15 PM, Andy Shevchenko wrote:
+> On Fri, Jun 21, 2013 at 1:53 PM, Alexey Brodkin
+> <Alexey.Brodkin@synopsys.com> wrote:
 >
->> We can resend the patch if you don't have it from the mailing list.
-> I'll probably have it assuming it's been sent to some mailing list I
-> read (the CC list here looks absurldy large...) but if you don't send me
-> the patch and/or ignore bounces then it's going to take longer.
-I have send you this patch seperately.
+> []
+>
+>> But during compilation on x86 one needs to enable OF. Which will lead to
+>> compilation errors in other things.
+>
+> JFYI, x86 has at least one platform with official OF dependency.
+> Once I actually tried to build kernel for Intel MID with OF enabled
+> (it required a hack in the arch Kconfig, of course), compiled fine.
 
-Thanks ,
-Sourav
+Ok, good to know it.
+
+Any other comments on patch itself?
+
+-Alexey
