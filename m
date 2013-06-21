@@ -1,35 +1,81 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v12 05/11] edma: config: Enable config options for EDMA
-Date: Fri, 21 Jun 2013 20:44:26 +0200
-Message-ID: <201306212044.26677.arnd@arndb.de>
-References: <1371762407-24544-1-git-send-email-joelagnel@ti.com> <201306211632.12577.arnd@arndb.de> <CAD=GYpbhBAaSkMtcJaPtVpWar7AcW37QpAk3A0qgwX6G5PDoZg@mail.gmail.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Re[6]: [PATCH] of: Add more stubs for non-OF builds
+Date: Fri, 21 Jun 2013 19:56:29 +0100
+Message-ID: <CACxGe6uqng-s4KtSwQ-MEUQ3Ed9_moNw_KvZeaPoN2OaGZnNWA@mail.gmail.com>
+References: <1371489882-11143-1-git-send-email-shc_work@mail.ru>
+ <1371835275.689989846@f181.mail.ru> <1371839716.602513920@f133.mail.ru>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAD=GYpbhBAaSkMtcJaPtVpWar7AcW37QpAk3A0qgwX6G5PDoZg@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Joel A Fernandes <agnel.joel@gmail.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Joel A Fernandes <joelagnel@ti.com>, Tony Lindgren <tony@atomide.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Jason Kridner <jkridner@beagleboard.org>, Koen Kooi <koen@beagleboard.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371839716.602513920-Sq8Ym99z60Iedp2WBT/QOw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 21 June 2013, Joel A Fernandes wrote:
-> I think we are talking about different things, I agree the 'select
-> DMADEVICES' can be dropped but lets please keep the default y option
-> (not adding new select statements, just saying that if someone select
-> DMADEVICES in menuconfig and if they're ARCH_OMAP=1 , then default to
-> EDMA). This will simply allow people to have a default. Thanks.
+On Fri, Jun 21, 2013 at 7:35 PM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
+>> >> On Fri, Jun 21, 2013 at 7:17 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
+>> >> >> On Thu, Jun 20, 2013 at 5:26 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> >> >> > On Thu, 20 Jun 2013 16:49:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >> >> >> Hi Rob,
+>> >> >> >>
+>> >> >> >> Is this patch good for merging?
+>> >> >> >>
+>> >> >> >> In Alex's one patch to add device tree supporting for a leds driver,
+>> >> >> >> we got building errors due to miss definitions of some of_xxx api
+>> >> >> >> functions.
+>> >> >> >>
+>> >> >> >> It looks obviously to me that we need to fix this in device tree core
+>> >> >> >> instead put #ifdef CONFIG_OF everywhere.
+>> >> >> >
+>> >> >> > Actually, the reason those things aren't universally defined is to catch
+>> >> >> > exactly what it caught. The "leds-mc13783: Add devicetree support" patch
+>> >> >> > interleaves DT and non-DT parsing which isn't generally a good idea. The
+>> >> >> > DT parsing code should be shuffled off into a separate function and/or
+>> >> >> > contained with "if (IS_ENABLED(CONFIG_OF)) {}".
+>> >> >> >
+>> >> >>
+>> >> >> Agree, reasonable! I will remove this patch from my tree firstly.
+>> >> >>
+>> >> >> Alex, could you please update your patch with Grant's feedback?
+>> >> >
+>> >> > As far I understand you mean only the last part of patch. Where DT support
+>> >> > is introduced. Is not it?
+>> >> >
+>> >>
+>> >> Yes, exactly. I still keep those 2 non-DT related patches in my tree
+>> >> and just removed that DT supporting patch.
+>> >>
+>> >> Please update that patch and posted again to linux-leds and DT
+>> >> maintainers as well.
+>> >
+>> > I am really dont like any #ifdef in the source, but will do if this is only
+>> > one way to put this patch into the main tree.
+>>
+>> You don't need any #ifdefs. Put all the DT-related calls into a
+>> separate function specifically for decoding the DT information and
+>> wrap the contents with:
+>>
+>>     if (IS_ENABLED(CONFIG_OF)) { }
+>
+> This macro does not help for undefined reference, unfortunately.
+> So #ifdef and/or stubs for OF-functions is needed in this case anymore.
+>
+> if (IS_ENABLED(CONFIG_OF))
+>   some = of_get_next_child(foo, bar);
+> will produce an error at compile time if OF is not enabled,
+> because we have not empty function (if !OF) for this.
 
-Yes, that's ok.
+Check linux-next.
 
-Also, if the driver doesn't strictly depend on these platforms but
-can build on anything, I would write it as
-
-config TI_EDMA
-        tristate "TI EDMA support"
-        default m if 'ARCH_DAVINCI || ARCH_OMAP1 || ARCH_OMAP2
-        select DMA_ENGINE
-        select DMA_VIRTUAL_CHANNELS
-
-	Arnd
+g.
