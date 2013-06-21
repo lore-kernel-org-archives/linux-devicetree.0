@@ -1,53 +1,71 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH v1 12/12] input: matrix-keypad: add diagnostics in probe()
-Date: Fri, 21 Jun 2013 20:09:58 +0200
-Message-ID: <1371838198-7327-13-git-send-email-gsi@denx.de>
-References: <1371838198-7327-1-git-send-email-gsi@denx.de>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1371838198-7327-1-git-send-email-gsi@denx.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Chao Xie <xiechao.mail@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, Marek Vasut <marek.vasut@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Anatolij Gustschin <agust@denx.de>, Detlev Zundel <dzu@denx.de>, Gerhard Sittig <gsi@denx.de>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Re[4]: [PATCH] of: Add more stubs for non-OF builds
+Date: Fri, 21 Jun 2013 19:22:36 +0100
+Message-ID: <CACxGe6s6tWicJ=r3ePVJNGC0bt8NYR2OfXFWaLeNiQPmfMAhNQ@mail.gmail.com>
+References: <1371489882-11143-1-git-send-email-shc_work@mail.ru>
+ <1371824246.856851759@f137.mail.ru> <1371835275.689989846@f181.mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371835275.689989846-g6/BKhZsNKQedp2WBT/QOw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-optionally dump relevant configuration of pins, matrix lines,
-and delay/interval times at the very end of the probe routine
-(development feature, silent by default)
+On Fri, Jun 21, 2013 at 6:21 PM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
+>> On Fri, Jun 21, 2013 at 7:17 AM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
+>> >> On Thu, Jun 20, 2013 at 5:26 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> >> > On Thu, 20 Jun 2013 16:49:54 -0700, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >> >> Hi Rob,
+>> >> >>
+>> >> >> Is this patch good for merging?
+>> >> >>
+>> >> >> In Alex's one patch to add device tree supporting for a leds driver,
+>> >> >> we got building errors due to miss definitions of some of_xxx api
+>> >> >> functions.
+>> >> >>
+>> >> >> It looks obviously to me that we need to fix this in device tree core
+>> >> >> instead put #ifdef CONFIG_OF everywhere.
+>> >> >
+>> >> > Actually, the reason those things aren't universally defined is to catch
+>> >> > exactly what it caught. The "leds-mc13783: Add devicetree support" patch
+>> >> > interleaves DT and non-DT parsing which isn't generally a good idea. The
+>> >> > DT parsing code should be shuffled off into a separate function and/or
+>> >> > contained with "if (IS_ENABLED(CONFIG_OF)) {}".
+>> >> >
+>> >>
+>> >> Agree, reasonable! I will remove this patch from my tree firstly.
+>> >>
+>> >> Alex, could you please update your patch with Grant's feedback?
+>> >
+>> > As far I understand you mean only the last part of patch. Where DT support
+>> > is introduced. Is not it?
+>> >
+>>
+>> Yes, exactly. I still keep those 2 non-DT related patches in my tree
+>> and just removed that DT supporting patch.
+>>
+>> Please update that patch and posted again to linux-leds and DT
+>> maintainers as well.
+>
+> I am really dont like any #ifdef in the source, but will do if this is only
+> one way to put this patch into the main tree.
 
-Signed-off-by: Gerhard Sittig <gsi@denx.de>
----
- drivers/input/keyboard/matrix_keypad.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+You don't need any #ifdefs. Put all the DT-related calls into a
+separate function specifically for decoding the DT information and
+wrap the contents with:
 
-diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
-index 275b157..69b15720 100644
---- a/drivers/input/keyboard/matrix_keypad.c
-+++ b/drivers/input/keyboard/matrix_keypad.c
-@@ -800,6 +800,24 @@ static int matrix_keypad_probe(struct platform_device *pdev)
- 	device_init_wakeup(&pdev->dev, pdata->wakeup);
- 	platform_set_drvdata(pdev, keypad);
- 
-+	dev_dbg(&pdev->dev, "gpios col num[%u] lvl[%s] drv[%s] enc[%s]\n",
-+		pdata->num_col_gpios,
-+		pdata->col_gpios_active_low ? "low" : "high",
-+		pdata->col_gpios_push_pull ? "pp" : "od",
-+		pdata->col_gpios_binary_encoded ? "bin" : "1-1");
-+	dev_dbg(&pdev->dev, "gpios row num[%u] lvl[%s]\n",
-+		pdata->num_row_gpios,
-+		pdata->row_gpios_active_low ? "low" : "high");
-+	dev_dbg(&pdev->dev, "matrix cols[%u] rows[%u] code shift[%u]\n",
-+		pdata->num_matrix_cols,
-+		pdata->num_matrix_rows,
-+		keypad->row_shift);
-+	dev_dbg(&pdev->dev, "times scan[%u-%u] bounce[%u] switch[%u]\n",
-+		pdata->col_scan_delay_us,
-+		pdata->col_scan_delay_us_max,
-+		pdata->debounce_ms,
-+		pdata->col_switch_delay_ms);
-+
- 	return 0;
- 
- err_free_gpio:
--- 
-1.7.10.4
+    if (IS_ENABLED(CONFIG_OF)) { }
 
+g.
