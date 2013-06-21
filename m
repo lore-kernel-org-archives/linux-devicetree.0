@@ -1,57 +1,42 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: [PATCH V10 4/4] ARM: dts: Add pcie controller node for
- exynos5440-ssdk5440
-Date: Fri, 21 Jun 2013 16:26:14 +0900
-Message-ID: <003d01ce6e50$9c925d80$d5b71880$@samsung.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] arm: add debug uarts for rockchip rk29xx and
+ rk3xxx series
+Date: Fri, 21 Jun 2013 00:30:29 -0700
+Message-ID: <20130621073029.GC30076@quad.lixom.net>
+References: <201306210129.54629.heiko@sntech.de>
+ <201306210131.11224.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Tomasz Figa' <t.figa@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, Jingoo Han <jg1.han@samsung.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201306210131.11224.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pcie controller node for exynos5440-ssdk5440,
-and also adds a phandle for pin controller node.
+On Fri, Jun 21, 2013 at 01:31:10AM +0200, Heiko St=FCbner wrote:
+> Uarts on all recent Rockchip SoCs are Synopsis DesignWare 8250 types.
+> Only their addresses vary very much.
+> =
 
-Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/boot/dts/exynos5440-ssdk5440.dts |    8 ++++++++
- arch/arm/boot/dts/exynos5440.dtsi         |    2 +-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+> This patch adds the necessary definitions to use any of the uart ports
+> for early debug purposes.
+> =
 
-diff --git a/arch/arm/boot/dts/exynos5440-ssdk5440.dts b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-index f32cd77..ede7727 100644
---- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-+++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
-@@ -65,4 +65,12 @@
- 			clock-frequency = <50000000>;
- 		};
- 	};
-+
-+	pcie@290000 {
-+		reset-gpio = <&pin_ctrl 5 0>;
-+	};
-+
-+	pcie@2a0000 {
-+		reset-gpio = <&pin_ctrl 22 0>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-index 1ac4f5b..ff7f5d8 100644
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -126,7 +126,7 @@
- 		clock-names = "spi", "spi_busclk0";
- 	};
- 
--	pinctrl {
-+	pin_ctrl: pinctrl {
- 		compatible = "samsung,exynos5440-pinctrl";
- 		reg = <0xE0000 0x1000>;
- 		interrupts = <0 37 0>, <0 38 0>, <0 39 0>, <0 40 0>,
--- 
-1.7.10.4
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+
+Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+
+
+-Olof
