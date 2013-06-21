@@ -1,50 +1,82 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 7/9] documentation: iommu: add description of ARM System
-	MMU binding
-Date: Fri, 21 Jun 2013 17:41:40 +0100
-Message-ID: <20130621164139.GK7766@mudshark.cambridge.arm.com>
-References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
-	<1370889285-22799-8-git-send-email-will.deacon@arm.com>
-	<20130620200845.GF11309@8bytes.org>
-	<20130621095729.GA7766@mudshark.cambridge.arm.com>
-	<20130621135507.GI11309@8bytes.org>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/5] clk/exynos5420: add clocks for hdmi subsystem
+Date: Fri, 21 Jun 2013 09:43:03 -0700
+Message-ID: <20130621164303.9136.5127@quantum>
+References: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>
+ <CAPdUM4MtBXMaZDDRT1aKsS=HzwjpbyMY85oRLMbk-KvJCU1hag@mail.gmail.com>
+ <51C1B9AD.8060804@samsung.com> <20130621043252.9136.66418@quantum>
+ <CAPdUM4NxCKtKrZg1RYD0=83jDYt9Nzd3paYL53ZL9tt2zfJy7A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130621135507.GI11309-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPdUM4NxCKtKrZg1RYD0=83jDYt9Nzd3paYL53ZL9tt2zfJy7A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rahul Sharma <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2013 at 02:55:08PM +0100, Joerg Roedel wrote:
-> On Fri, Jun 21, 2013 at 10:57:29AM +0100, Will Deacon wrote:
-> > This is a common driver that will support any IOMMUs compatible with v1 or
-> > v2 of the ARM SMMU architecture. Currently, that includes SMMUs known
-> > informatively as MMU-400, MMU-401 and MMU-500. I had a look at the other
-> > IOMMU drivers in the kernel and they seem to be driving incompatible IOMMUs,
-> > so I don't see how this driver can replace those.
-> > 
-> > However, we'll hopefully see ARM SMMU-compatible devices turning up soon (I
-> > know of many SoCs in development that are looking at them).
+Quoting Rahul Sharma (2013-06-20 21:47:35)
+> On Fri, Jun 21, 2013 at 10:02 AM, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > Quoting Kukjin Kim (2013-06-19 07:01:17)
+> >> On 06/19/13 13:04, Rahul Sharma wrote:
+> >> > + mike
+> >> >
+> >> Mike, I'm waiting for your reply on this. If you're OK, let me take this
+> >> series on top of exynos5420 stuff in samsung tree.
+> >>
+> >> Of course, if any concerns, please let me know.
+> >
+> > I never got these patches.  I'm not subscribed to devicetree-devel or
+> > linux-samsung so I only got two replies to patch #0, but none of the
+> > code. Can you or Rajul resend?
+> >
 > 
-> That sounds great. So in the future there will be a single driver for
-> most future SOCs. This is a real improvement over the current situation.
+> Sure mike.
+
+Acked-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Regards,
+Mike
+
 > 
-> From NVidia is another driver with 'smmu' in its name, is that one also
-> incompatible?
-
-Yup. I even checked with Stephen Warren before I started my driver, just in
-case :)
-
-Will
+> > Thanks,
+> > Mike
+> >
+> >>
+> >> Thanks,
+> >> - Kukjin
+> >>
+> >> > On Tue, Jun 18, 2013 at 8:03 PM, Rahul Sharma<rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>  wrote:
+> >> >> Add clock changes for hdmi subsystem for exynos5250 SoC. These
+> >> >> include addition of new clocks like mout_hdmi and smmu_tv, associating
+> >> >> ID to clk_hdmiphy and some essential corrections.
+> >> >>
+> >> >> This set is based on kukjin's for-next branch at
+> >> >> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
+> >> >>
+> >> >> This set dependents on the following patches which add support for Exynos5420
+> >> >> http://www.mail-archive.com/linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg19264.html
+> >> >>
+> >> >> Rahul Sharma (5):
+> >> >>    clk/exynos5420: add sclk_hdmiphy to the list of special clocks
+> >> >>    clk/exynos5420: add gate clock for tv sysmmu
+> >> >>    clk/exynos5420: fix the order of parents of hdmi mux
+> >> >>    clk/exynos5420: add hdmi mux to change parents in hdmi driver
+> >> >>    clk/exynos5420: assign sclk_pixel id to pixel clock divider
+> >> >>
+> >> >>   .../devicetree/bindings/clock/exynos5420-clock.txt   |    7 +++++++
+> >> >>   drivers/clk/samsung/clk-exynos5420.c                 |   18 +++++++++++-------
+> >> >>   2 files changed, 18 insertions(+), 7 deletions(-)
+> >> >>
+> >> >> --
+> >> >> 1.7.10.4
