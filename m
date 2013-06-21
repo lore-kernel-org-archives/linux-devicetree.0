@@ -1,189 +1,91 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: [PATCH v9] i2c-designware: make SDA hold time configurable
-Date: Fri, 21 Jun 2013 11:53:42 +0200
-Message-ID: <1371808422-27742-1-git-send-email-christian.ruppert@abilis.com>
-References: <20130620203716.GF2961@katana>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130620203716.GF2961@katana>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rob Herring <robherring2@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, Christian Ruppert <christian.ruppert@abilis.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 3/3] ARM: kernel: document ARM CPUs clocks and
+ clock-frequency properties
+Date: Fri, 21 Jun 2013 10:54:45 +0100
+Message-ID: <CAGVrzcZib6qBpugJn9WQ6hLo1EVkZB3r2PjbYwfvXOL3W5tbow@mail.gmail.com>
+References: <1371739146-32639-1-git-send-email-f.fainelli@gmail.com>
+ <1371739146-32639-4-git-send-email-f.fainelli@gmail.com>
+ <20130621093011.GB14268@e102568-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130621093011.GB14268@e102568-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "nico@linaro.org" <nico@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch makes the SDA hold time configurable through device tree.
+2013/6/21 Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>:
+> On Thu, Jun 20, 2013 at 03:39:06PM +0100, Florian Fainelli wrote:
+>> ARM CPU device tree nodes may contain a "clock-frequency" property,
+>> when set, this property must contain the CPU frequency in Hz,
+>> which is then used by the topology parsing code in
+>> arch/arm/kernel/topology.c to deduced the CPU capacity. The "clocks"
+>> property, if present shall be a phandle to a valid clock node.
+>>
+>> Document thes properties to avoid any possible confusion on the
+>> clock-frequency unit and also specify that "device_type" is also
+>> used by the topology code.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/arm/cpus.txt | 7 ++++++-
+>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+>> index f32494d..1ce1ace 100644
+>> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+>> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+>> @@ -10,7 +10,7 @@ http://devicetree.org
+>>
+>>  For the ARM architecture every CPU node must contain the following properties:
+>>
+>> -- device_type:       must be "cpu"
+>> +- device_type:       must be "cpu". Use by the topology code.
+>
+> No. These are DT bindings, they are not related to kernel code and must
+> be defined independently.
 
-Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
----
- .../devicetree/bindings/i2c/i2c-designware.txt     |   14 ++++++++++++++
- arch/arc/boot/dts/abilis_tb100_dvk.dts             |   10 +++++-----
- arch/arc/boot/dts/abilis_tb101_dvk.dts             |   10 +++++-----
- drivers/i2c/busses/i2c-designware-core.c           |   13 +++++++++++++
- drivers/i2c/busses/i2c-designware-core.h           |    1 +
- drivers/i2c/busses/i2c-designware-platdrv.c        |   10 ++++++++++
- 6 files changed, 48 insertions(+), 10 deletions(-)
+Ok.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-index e42a2ee..3266cc7 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-@@ -10,6 +10,9 @@ Recommended properties :
- 
-  - clock-frequency : desired I2C bus clock frequency in Hz.
- 
-+Optional properties :
-+ - i2c-sda-hold-time-ns : should contain the SDA hold time in nanoseconds.
-+
- Example :
- 
- 	i2c@f0000 {
-@@ -20,3 +23,14 @@ Example :
- 		interrupts = <11>;
- 		clock-frequency = <400000>;
- 	};
-+
-+	i2c@1120000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,designware-i2c";
-+		reg = <0x1120000 0x1000>;
-+		interrupt-parent = <&ictl>;
-+		interrupts = <12 1>;
-+		clock-frequency = <400000>;
-+		i2c-sda-hold-time-ns = <300>;
-+	};
-diff --git a/arch/arc/boot/dts/abilis_tb100_dvk.dts b/arch/arc/boot/dts/abilis_tb100_dvk.dts
-index 0fa0d4a..ebc313a 100644
---- a/arch/arc/boot/dts/abilis_tb100_dvk.dts
-+++ b/arch/arc/boot/dts/abilis_tb100_dvk.dts
-@@ -45,19 +45,19 @@
- 		};
- 
- 		i2c0: i2c@FF120000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c1: i2c@FF121000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c2: i2c@FF122000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c3: i2c@FF123000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c4: i2c@FF124000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 
- 		leds {
-diff --git a/arch/arc/boot/dts/abilis_tb101_dvk.dts b/arch/arc/boot/dts/abilis_tb101_dvk.dts
-index a4d80ce..b204657 100644
---- a/arch/arc/boot/dts/abilis_tb101_dvk.dts
-+++ b/arch/arc/boot/dts/abilis_tb101_dvk.dts
-@@ -45,19 +45,19 @@
- 		};
- 
- 		i2c0: i2c@FF120000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c1: i2c@FF121000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c2: i2c@FF122000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c3: i2c@FF123000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 		i2c4: i2c@FF124000 {
--			sda-hold-time = <432>;
-+			i2c-sda-hold-time-ns = <432>;
- 		};
- 
- 		leds {
-diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
-index c41ca63..66119e2 100644
---- a/drivers/i2c/busses/i2c-designware-core.c
-+++ b/drivers/i2c/busses/i2c-designware-core.c
-@@ -67,9 +67,12 @@
- #define DW_IC_STATUS		0x70
- #define DW_IC_TXFLR		0x74
- #define DW_IC_RXFLR		0x78
-+#define DW_IC_SDA_HOLD		0x7c
- #define DW_IC_TX_ABRT_SOURCE	0x80
- #define DW_IC_ENABLE_STATUS	0x9c
- #define DW_IC_COMP_PARAM_1	0xf4
-+#define DW_IC_COMP_VERSION	0xf8
-+#define DW_IC_SDA_HOLD_MIN_VERS	0x3131312A
- #define DW_IC_COMP_TYPE		0xfc
- #define DW_IC_COMP_TYPE_VALUE	0x44570140
- 
-@@ -332,6 +335,16 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
- 	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
- 	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt, lcnt);
- 
-+	/* Configure SDA Hold Time if required */
-+	reg = dw_readl(dev, DW_IC_COMP_VERSION);
-+	if (dev->sda_hold_time) {
-+		if (reg >= DW_IC_SDA_HOLD_MIN_VERS)
-+			dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
-+		else
-+			dev_warn(dev->dev,
-+				"Hardware too old to adjust SDA hold time.");
-+	}
-+
- 	/* Configure Tx/Rx FIFO threshold levels */
- 	dw_writel(dev, dev->tx_fifo_depth - 1, DW_IC_TX_TL);
- 	dw_writel(dev, 0, DW_IC_RX_TL);
-diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-index e761ad1..912aa22 100644
---- a/drivers/i2c/busses/i2c-designware-core.h
-+++ b/drivers/i2c/busses/i2c-designware-core.h
-@@ -90,6 +90,7 @@ struct dw_i2c_dev {
- 	unsigned int		tx_fifo_depth;
- 	unsigned int		rx_fifo_depth;
- 	int			rx_outstanding;
-+	u32			sda_hold_time;
- };
- 
- #define ACCESS_SWAP		0x00000001
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 35b70a1..8b9d3f1 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -34,6 +34,7 @@
- #include <linux/sched.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
-+#include <linux/of.h>
- #include <linux/of_i2c.h>
- #include <linux/platform_device.h>
- #include <linux/pm.h>
-@@ -121,6 +122,15 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 		return PTR_ERR(dev->clk);
- 	clk_prepare_enable(dev->clk);
- 
-+	if (pdev->dev.of_node) {
-+		u32 ht = 0;
-+		u32 ic_clk = dev->get_clk_rate_khz(dev);
-+
-+		of_property_read_u32(pdev->dev.of_node,
-+					"i2c-sda-hold-time-ns", &ht);
-+		dev->sda_hold_time = ((u64)ic_clk * ht + 500000) / 1000000;
-+	}
-+
- 	dev->functionality =
- 		I2C_FUNC_I2C |
- 		I2C_FUNC_10BIT_ADDR |
--- 
-1.7.1
+>
+>>  - reg:               property matching the CPU MPIDR[23:0] register bits
+>>               reg[31:24] bits must be set to 0
+>>  - compatible:        should be one of:
+>> @@ -45,6 +45,11 @@ For the ARM architecture every CPU node must contain the following properties:
+>>               "marvell,xsc3"
+>>               "marvell,xscale"
+>>
+>> +- clocks:    phandle and clock specifier for the CPU clock, used if
+>> +             "device_type" is present.
+>
+> "device_type" must be present, no "if" there (see latest bindings that are on
+> their way to the kernel)
+>
+> git://linux-arm.org/linux-2.6-lp.git dt-cpus-bindings
+>
+> Then we can see if a "clocks" property is suitable here, and try to understand
+> what needs to happen when a platform has DVFS capabilities. I need to think
+> more about this.
+>
+>> +- clock-frequency: the frequency of the CPU, in Hz. Mandatory if "device_type"
+>> +                is also present, used as fallback is "clocks" is not present.
+> We should not define bindings to fix kernel code. Either "clock-frequency"
+> is required or it is not, it should not depend on "device_type" being
+> present and "device_type" is mandatory anyway. As I mentioned above, we
+> still have to check how to handle multiple frequencies, and how to do it.
+>
+> I will give it more thought on my side.
 
+Sure. On the short term, I think it would be wise to clarify that
+"clock-frequency" must be in Hz so that people that define their
+binding now get it correctly.
