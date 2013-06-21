@@ -1,67 +1,31 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v12 05/11] edma: config: Enable config options for EDMA
-Date: Sat, 22 Jun 2013 00:14:16 +0200
-Message-ID: <201306220014.16427.arnd@arndb.de>
-References: <1371762407-24544-1-git-send-email-joelagnel@ti.com> <201306212044.26677.arnd@arndb.de> <CAD=GYpY4koXd9f6_ijQfDHsiULD4d53cdu=9X421WXSAit_YQg@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 2/3] ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
+Date: Fri, 21 Jun 2013 19:27:44 -0300
+Message-ID: <CAOMZO5AbZVLH0rxP=iuumrDBxFe5XVGH9qK9PyUdxtucbOHzdg@mail.gmail.com>
+References: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com>
+	<1371754675-12242-3-git-send-email-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAD=GYpY4koXd9f6_ijQfDHsiULD4d53cdu=9X421WXSAit_YQg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Joel A Fernandes <agnel.joel@gmail.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Joel A Fernandes <joelagnel@ti.com>, Tony Lindgren <tony@atomide.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Jason Kridner <jkridner@beagleboard.org>, Koen Kooi <koen@beagleboard.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1371754675-12242-3-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jimwall@q.com, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 21 June 2013, Joel A Fernandes wrote:
-> Hi Arnd,
-> 
-> On Fri, Jun 21, 2013 at 1:44 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Friday 21 June 2013, Joel A Fernandes wrote:
-> >> I think we are talking about different things, I agree the 'select
-> >> DMADEVICES' can be dropped but lets please keep the default y option
-> >> (not adding new select statements, just saying that if someone select
-> >> DMADEVICES in menuconfig and if they're ARCH_OMAP=1 , then default to
-> >> EDMA). This will simply allow people to have a default. Thanks.
-> >
-> > Yes, that's ok.
-> 
-> Ok, thanks. I will follow up with a patch in my next submissions that builds it.
-> 
-> Perhaps a:
-> default y if 'ARCH_OMAP2PLUS'
-> 
-> and leave the existing as it is...
-> default n if  'ARCH_DAVINCI || ARCH_OMAP1 || ARCH_OMAP2'
-> 
-> would make most sense to me. Basically EDMA is seen on current and all
-> new OMAP2PLUS.
+On Thu, Jun 20, 2013 at 3:57 PM, Alexandre Belloni
+<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>
+> The ADCs connected to this bus have been experiencing some timeout
+> issues when using the iMX28 i2c controller. Switching back to bitbanging
+> solves this.
 
-Ok
+Could you please investigate this timeout issue?
 
-> > config TI_EDMA
-> >         tristate "TI EDMA support"
-> >         default m if 'ARCH_DAVINCI || ARCH_OMAP1 || ARCH_OMAP2
-> >         select DMA_ENGINE
-> >         select DMA_VIRTUAL_CHANNELS
-> 
-> 
-> MMC depends on EDMA specially on AM33xx there's no PIO mode AFAIK. The
-> 'm' option will require some initramfs to load the module when needing
-> to MMC boot, I suggest lets leave it as y.
-> 
+The I2C timeouts I was having on mx28 when trying to access sgtl5000
+codec, was due to the lack
+of codec clock.
 
-Ah, right: you still export a filter function from the edma driver
-and use it in slave drivers:
-
-drivers/mmc/host/davinci_mmc.c:         dma_request_slave_channel_compat(mask, edma_filter_fn,
-drivers/mmc/host/davinci_mmc.c:         dma_request_slave_channel_compat(mask, edma_filter_fn,
-drivers/spi/spi-davinci.c:      dspi->dma_rx = dma_request_channel(mask, edma_filter_fn,
-drivers/spi/spi-davinci.c:      dspi->dma_tx = dma_request_channel(mask, edma_filter_fn,
-
-As long as this is the case, you have to be careful with the dependencies
-to make sure that davinci_mmc and spi-davinci either depend on TI_EDMA, or
-edma_filter_fn gets defined to NULL when you are building for a DT-only platform.
-
-	Arnd
+After I provided the codec clock I am able to use I2C without issues
+and just sent a patch for it.
