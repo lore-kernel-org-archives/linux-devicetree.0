@@ -1,37 +1,49 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv2 11/11] ARM: OMAP4: register DT clocks and remove old
- data
-Date: Fri, 21 Jun 2013 00:25:19 -0700
-Message-ID: <20130621072518.GN5523@atomide.com>
-References: <1371647942-4811-1-git-send-email-t-kristo@ti.com>
- <1371647942-4811-12-git-send-email-t-kristo@ti.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: [PATCH V10 2/4] ARM: EXYNOS: Enable PCIe support for Exynos5440
+Date: Fri, 21 Jun 2013 16:25:29 +0900
+Message-ID: <003b01ce6e50$81fa0bd0$85ee2370$@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1371647942-4811-12-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, mturquette@linaro.org, paul@pwsan.com, nm@ti.com, rnayak@ti.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Andrew Murray' <andrew.murray@arm.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Tomasz Figa' <t.figa@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [130619 06:25]:
-> Now that the OMAP4 PRCM clock data has been converted to device tree
-> representation, it is no longer needed as static clock data. OMAP4
-> clock init routine is also changed to register DT clocks first.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  arch/arm/mach-omap2/cclock44xx_data.c | 1674 +--------------------------------
->  1 file changed, 38 insertions(+), 1636 deletions(-)
+Enable PCIe support for Exynos5440 which has two PCIe controllers.
 
-This is nice, thanks for working on this. While at it, can
-you also keep your eyes open for the register defines in the
-header files we can also drop?
+Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+---
+ arch/arm/Kconfig             |    1 +
+ arch/arm/mach-exynos/Kconfig |    2 ++
+ 2 files changed, 3 insertions(+)
 
-Some of those headers are quite huge.. and should eventually
-be private to the related drivers if needed at all with DT.
-
-Regards,
-
-Tony 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index ca30d75..421ce68 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1428,6 +1428,7 @@ config PCI_HOST_ITE8152
+ 	select DMABOUNCE
+ 
+ source "drivers/pci/Kconfig"
++source "drivers/pci/pcie/Kconfig"
+ 
+ source "drivers/pcmcia/Kconfig"
+ 
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index 359af2c..f5f65b5 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -95,6 +95,8 @@ config SOC_EXYNOS5440
+ 	select ARCH_HAS_OPP
+ 	select HAVE_ARM_ARCH_TIMER
+ 	select AUTO_ZRELADDR
++	select MIGHT_HAVE_PCI
++	select PCI_DOMAINS if PCI
+ 	select PINCTRL_EXYNOS5440
+ 	select PM_OPP
+ 	help
+-- 
+1.7.10.4
