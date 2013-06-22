@@ -1,211 +1,50 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: [PATCH v2 2/2] media: i2c: tvp7002: add OF support
-Date: Sat, 22 Jun 2013 23:14:15 +0530
-Message-ID: <1371923055-29623-3-git-send-email-prabhakar.csengg@gmail.com>
-References: <1371923055-29623-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1371923055-29623-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH] Bump version number to 1.4.0
+Date: Sat, 22 Jun 2013 13:23:35 -0500
+Message-ID: <E1UqSTH-0001ep-BN@jdl.com>
+References: <1370970685-21755-1-git-send-email-swarren@wwwdotorg.org>
+ <20130615011245.GB9218@voom.bne.redhat.com> <E1UnsTK-00082V-KV@jdl.com>
+ <51BF7F76.1080604@wwwdotorg.org> <20130617234256.GC16876@voom.redhat.com>
+ <51C4D547.3000409@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <51C4D547.3000409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+> 
+> Great! I didn't see any objections, and the week is basically over.
+> Are we good for a release today?
 
-add OF support for the tvp7002 driver.
+Hear Ye!  Hear Ye!
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: davinci-linux-open-source@linux.davincidsp.com
----
- Depends on patch https://patchwork.kernel.org/patch/2765851/
- 
- .../devicetree/bindings/media/i2c/tvp7002.txt      |   43 +++++++++++++
- drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
- 2 files changed, 103 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+With a Mandate from the Masses for a tagged release,
+your wish has finally been granted!
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-new file mode 100644
-index 0000000..9daebe1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-@@ -0,0 +1,43 @@
-+* Texas Instruments TV7002 video decoder
-+
-+The TVP7002 device supports digitizing of video and graphics signal in RGB and
-+YPbPr color space.
-+
-+Required Properties :
-+- compatible : Must be "ti,tvp7002"
-+
-+- hsync-active: HSYNC Polarity configuration for endpoint.
-+
-+- vsync-active: VSYNC Polarity configuration for endpoint.
-+
-+- pclk-sample: Clock polarity of the endpoint.
-+
-+- video-sync: Video sync property of the endpoint.
-+
-+- ti,tvp7002-fid-polarity: Active-high Field ID polarity of the endpoint.
-+
-+
-+For further reading of port node refer Documentation/devicetree/bindings/media/
-+video-interfaces.txt.
-+
-+Example:
-+
-+	i2c0@1c22000 {
-+		...
-+		...
-+		tvp7002@5c {
-+			compatible = "ti,tvp7002";
-+			reg = <0x5c>;
-+
-+			port {
-+				tvp7002_1: endpoint {
-+					hsync-active = <1>;
-+					vsync-active = <1>;
-+					pclk-sample = <0>;
-+					video-sync = <V4L2_MBUS_VIDEO_SYNC_ON_GREEN>;
-+					ti,tvp7002-fid-polarity;
-+				};
-+			};
-+		};
-+		...
-+	};
-diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
-index b577548..4896024 100644
---- a/drivers/media/i2c/tvp7002.c
-+++ b/drivers/media/i2c/tvp7002.c
-@@ -35,6 +35,8 @@
- #include <media/v4l2-device.h>
- #include <media/v4l2-common.h>
- #include <media/v4l2-ctrls.h>
-+#include <media/v4l2-of.h>
-+
- #include "tvp7002_reg.h"
- 
- MODULE_DESCRIPTION("TI TVP7002 Video and Graphics Digitizer driver");
-@@ -943,6 +945,48 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
- 	.pad = &tvp7002_pad_ops,
- };
- 
-+static struct tvp7002_config *
-+tvp7002_get_pdata(struct i2c_client *client)
-+{
-+	struct v4l2_of_endpoint bus_cfg;
-+	struct tvp7002_config *pdata;
-+	struct device_node *endpoint;
-+	unsigned int flags;
-+
-+	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-+		return client->dev.platform_data;
-+
-+	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-+	if (!endpoint)
-+		return NULL;
-+
-+	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		goto done;
-+
-+	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
-+	flags = bus_cfg.bus.parallel.flags;
-+
-+	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-+		pdata->hs_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-+		pdata->vs_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-+		pdata->clk_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_VIDEO_SYNC_ON_GREEN)
-+		pdata->sog_polarity = 1;
-+
-+	pdata->fid_polarity = of_property_read_bool(endpoint,
-+						    "ti,tvp7002-fid-polarity");
-+
-+done:
-+	of_node_put(endpoint);
-+	return pdata;
-+}
-+
- /*
-  * tvp7002_probe - Probe a TVP7002 device
-  * @c: ptr to i2c_client struct
-@@ -954,32 +998,32 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
-  */
- static int tvp7002_probe(struct i2c_client *c, const struct i2c_device_id *id)
- {
-+	struct tvp7002_config *pdata = tvp7002_get_pdata(c);
- 	struct v4l2_subdev *sd;
- 	struct tvp7002 *device;
- 	struct v4l2_dv_timings timings;
- 	int polarity_a;
- 	int polarity_b;
- 	u8 revision;
--
- 	int error;
- 
-+	if (pdata == NULL) {
-+		dev_err(&c->dev, "No platform data\n");
-+		return -EINVAL;
-+	}
-+
- 	/* Check if the adapter supports the needed features */
- 	if (!i2c_check_functionality(c->adapter,
- 		I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
- 		return -EIO;
- 
--	if (!c->dev.platform_data) {
--		v4l_err(c, "No platform data!!\n");
--		return -ENODEV;
--	}
--
- 	device = devm_kzalloc(&c->dev, sizeof(struct tvp7002), GFP_KERNEL);
- 
- 	if (!device)
- 		return -ENOMEM;
- 
- 	sd = &device->sd;
--	device->pdata = c->dev.platform_data;
-+	device->pdata = pdata;
- 	device->current_timings = tvp7002_timings;
- 
- 	/* Tell v4l2 the device is ready */
-@@ -1085,9 +1129,18 @@ static const struct i2c_device_id tvp7002_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, tvp7002_id);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id tvp7002_of_match[] = {
-+	{ .compatible = "ti,tvp7002", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, tvp7002_of_match);
-+#endif
-+
- /* I2C driver data */
- static struct i2c_driver tvp7002_driver = {
- 	.driver = {
-+		.of_match_table = of_match_ptr(tvp7002_of_match),
- 		.owner = THIS_MODULE,
- 		.name = TVP7002_MODULE_NAME,
- 	},
--- 
-1.7.9.5
+    $ git tag -v v1.4.0
+    object 65cc4d2748a2c2e6f27f1cf39e07a5dbabd80ebf
+    type commit
+    tag v1.4.0
+    tagger Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org> 1371924387 -0500
 
+    DTC 1.4.0
+
+    The Mandate from the Masses release.
+    gpg: Signature made Sat 22 Jun 2013 01:06:41 PM CDT using RSA key ID B0272867
+    gpg: Good signature from "Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>"
+
+Enjoy,
+jdl
