@@ -1,67 +1,211 @@
-From: Heiko =?iso-8859-15?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] clk: dt: bindings for mux, divider & gate clocks
-Date: Sat, 22 Jun 2013 19:04:41 +0200
-Message-ID: <201306221904.41833.heiko@sntech.de>
-References: <1371795256-16703-1-git-send-email-mturquette@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371795256-16703-1-git-send-email-mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: [PATCH v2 2/2] media: i2c: tvp7002: add OF support
+Date: Sat, 22 Jun 2013 23:14:15 +0530
+Message-ID: <1371923055-29623-3-git-send-email-prabhakar.csengg@gmail.com>
+References: <1371923055-29623-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1371923055-29623-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 21. Juni 2013, 08:14:11 schrieb Mike Turquette:
-> This series introduces binding definitions for common register-mapped
-> clock multiplexer, divider and gate IP blocks along with the
-> corresponding setup functions for matching DT data.  The bindings are
-> similar to the struct definitions but please don't hold that against the
-> binding: the struct definitions closely model the hardware register
-> layout.
-> 
-> This version fixes bugs and incorporates support for the hiword-mask
-> property needed on Hisilicon and Rockchip platforms.
-> 
-> Tested on OMAP4460 Panda ES.
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 
-Now it works like a charm :-), so on a rk3066a based board
+add OF support for the tvp7002 driver.
 
-Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: davinci-linux-open-source@linux.davincidsp.com
+---
+ Depends on patch https://patchwork.kernel.org/patch/2765851/
+ 
+ .../devicetree/bindings/media/i2c/tvp7002.txt      |   43 +++++++++++++
+ drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
+ 2 files changed, 103 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+new file mode 100644
+index 0000000..9daebe1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+@@ -0,0 +1,43 @@
++* Texas Instruments TV7002 video decoder
++
++The TVP7002 device supports digitizing of video and graphics signal in RGB and
++YPbPr color space.
++
++Required Properties :
++- compatible : Must be "ti,tvp7002"
++
++- hsync-active: HSYNC Polarity configuration for endpoint.
++
++- vsync-active: VSYNC Polarity configuration for endpoint.
++
++- pclk-sample: Clock polarity of the endpoint.
++
++- video-sync: Video sync property of the endpoint.
++
++- ti,tvp7002-fid-polarity: Active-high Field ID polarity of the endpoint.
++
++
++For further reading of port node refer Documentation/devicetree/bindings/media/
++video-interfaces.txt.
++
++Example:
++
++	i2c0@1c22000 {
++		...
++		...
++		tvp7002@5c {
++			compatible = "ti,tvp7002";
++			reg = <0x5c>;
++
++			port {
++				tvp7002_1: endpoint {
++					hsync-active = <1>;
++					vsync-active = <1>;
++					pclk-sample = <0>;
++					video-sync = <V4L2_MBUS_VIDEO_SYNC_ON_GREEN>;
++					ti,tvp7002-fid-polarity;
++				};
++			};
++		};
++		...
++	};
+diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
+index b577548..4896024 100644
+--- a/drivers/media/i2c/tvp7002.c
++++ b/drivers/media/i2c/tvp7002.c
+@@ -35,6 +35,8 @@
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-common.h>
+ #include <media/v4l2-ctrls.h>
++#include <media/v4l2-of.h>
++
+ #include "tvp7002_reg.h"
+ 
+ MODULE_DESCRIPTION("TI TVP7002 Video and Graphics Digitizer driver");
+@@ -943,6 +945,48 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
+ 	.pad = &tvp7002_pad_ops,
+ };
+ 
++static struct tvp7002_config *
++tvp7002_get_pdata(struct i2c_client *client)
++{
++	struct v4l2_of_endpoint bus_cfg;
++	struct tvp7002_config *pdata;
++	struct device_node *endpoint;
++	unsigned int flags;
++
++	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
++		return client->dev.platform_data;
++
++	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++	if (!endpoint)
++		return NULL;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		goto done;
++
++	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
++	flags = bus_cfg.bus.parallel.flags;
++
++	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++		pdata->hs_polarity = 1;
++
++	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++		pdata->vs_polarity = 1;
++
++	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++		pdata->clk_polarity = 1;
++
++	if (flags & V4L2_MBUS_VIDEO_SYNC_ON_GREEN)
++		pdata->sog_polarity = 1;
++
++	pdata->fid_polarity = of_property_read_bool(endpoint,
++						    "ti,tvp7002-fid-polarity");
++
++done:
++	of_node_put(endpoint);
++	return pdata;
++}
++
+ /*
+  * tvp7002_probe - Probe a TVP7002 device
+  * @c: ptr to i2c_client struct
+@@ -954,32 +998,32 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
+  */
+ static int tvp7002_probe(struct i2c_client *c, const struct i2c_device_id *id)
+ {
++	struct tvp7002_config *pdata = tvp7002_get_pdata(c);
+ 	struct v4l2_subdev *sd;
+ 	struct tvp7002 *device;
+ 	struct v4l2_dv_timings timings;
+ 	int polarity_a;
+ 	int polarity_b;
+ 	u8 revision;
+-
+ 	int error;
+ 
++	if (pdata == NULL) {
++		dev_err(&c->dev, "No platform data\n");
++		return -EINVAL;
++	}
++
+ 	/* Check if the adapter supports the needed features */
+ 	if (!i2c_check_functionality(c->adapter,
+ 		I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
+ 		return -EIO;
+ 
+-	if (!c->dev.platform_data) {
+-		v4l_err(c, "No platform data!!\n");
+-		return -ENODEV;
+-	}
+-
+ 	device = devm_kzalloc(&c->dev, sizeof(struct tvp7002), GFP_KERNEL);
+ 
+ 	if (!device)
+ 		return -ENOMEM;
+ 
+ 	sd = &device->sd;
+-	device->pdata = c->dev.platform_data;
++	device->pdata = pdata;
+ 	device->current_timings = tvp7002_timings;
+ 
+ 	/* Tell v4l2 the device is ready */
+@@ -1085,9 +1129,18 @@ static const struct i2c_device_id tvp7002_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, tvp7002_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id tvp7002_of_match[] = {
++	{ .compatible = "ti,tvp7002", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, tvp7002_of_match);
++#endif
++
+ /* I2C driver data */
+ static struct i2c_driver tvp7002_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(tvp7002_of_match),
+ 		.owner = THIS_MODULE,
+ 		.name = TVP7002_MODULE_NAME,
+ 	},
+-- 
+1.7.9.5
 
-> Mike Turquette (5):
->   clk: divider: replace bitfield width with mask
->   clk: of: helper for determining number of parent clocks
->   clk: dt: binding for basic multiplexer clock
->   clk: dt: binding for basic divider clock
->   clk: dt: binding for basic gate clock
-> 
->  .../devicetree/bindings/clock/divider-clock.txt    |  90 +++++++++++++++
->  .../devicetree/bindings/clock/gate-clock.txt       |  36 ++++++
->  .../devicetree/bindings/clock/mux-clock.txt        |  79 +++++++++++++
->  arch/arm/mach-imx/clk-busy.c                       |   2 +-
->  drivers/clk/clk-divider.c                          | 127
-> ++++++++++++++++++--- drivers/clk/clk-gate.c                             |
->  43 +++++++
->  drivers/clk/clk-mux.c                              |  65 ++++++++++-
->  drivers/clk/clk.c                                  |   6 +
->  drivers/clk/mxs/clk-div.c                          |   2 +-
->  include/linux/clk-private.h                        |   2 +-
->  include/linux/clk-provider.h                       |  12 +-
->  11 files changed, 441 insertions(+), 23 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/clock/divider-clock.txt create mode
-> 100644 Documentation/devicetree/bindings/clock/gate-clock.txt create mode
-> 100644 Documentation/devicetree/bindings/clock/mux-clock.txt
