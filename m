@@ -1,38 +1,33 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCHv2 1/3] iio: Add Nuvoton NAU7802 ADC driver
-Date: Sat, 22 Jun 2013 15:20:25 +0200
-Message-ID: <51C5A499.5050509@metafoo.de>
-References: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com> <1371754675-12242-2-git-send-email-alexandre.belloni@free-electrons.com> <51C590B5.2060308@kernel.org> <51C5923D.6030609@metafoo.de> <51C5A1AF.3070404@free-electrons.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v1 02/12] input: matrix-keymap: func call coding style nit
+Date: Sat, 22 Jun 2013 15:23:15 +0200
+Message-ID: <201306221523.15431.marex@denx.de>
+References: <1371838198-7327-1-git-send-email-gsi@denx.de> <201306220418.59722.marex@denx.de> <20130622082207.GC24305@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51C5A1AF.3070404@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, jimwall@q.com, brian@crystalfontz.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Jonathan Cameron <jic23@cam.ac.uk>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20130622082207.GC24305@book.gsilab.sittig.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Gerhard Sittig <gsi@denx.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Chao Xie <xiechao.mail@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Anatolij Gustschin <agust@denx.de>, Detlev Zundel <dzu@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/22/2013 03:07 PM, Alexandre Belloni wrote:
-> On 22/06/2013 14:02, Lars-Peter Clausen wrote:
->> On 06/22/2013 01:55 PM, Jonathan Cameron wrote:
->>> On 06/20/2013 07:57 PM, Alexandre Belloni wrote:
->>>> The Nuvoton NAU7802 ADC is a 24-bit 2-channels I2C ADC, with adjustable
->>>> gain and sampling rates.
->>>>
->>> Sorry, somewhat low on time today so only a quick review.
->>>
->>> 1) Missing userspace ABI documentation.  Also, perhaps min_conversions is
->>>    a little vague?  Not that I have a better idea!
->> I really don't like the name min_conversions either. Isn't this effectively
->> a decimation filter?
-> 
-> Yeah, it could be seen like that but it is only relevant and only
-> happens when switching between channels. I'm open to any ideas.
-> 
+Dear Gerhard Sittig,
 
-I see. Is there anything about this in the datasheet on how many conversions
-you usually need? Is this really something you need to change at runtime or
-does moving this to platform data work?
+> On Sat, Jun 22, 2013 at 04:18 +0200, Marek Vasut wrote:
+> > ret = matrix_keypad_map_key(input_dev, rows, cols, row_shift, key);
+> > if (ret)
+> > 
+> > 	return ret;
+> > 
+> > Now that you return correct error codes from above, you should propagate
+> > them through.
+> 
+> Will do, queued for v2.  Thank you for reviewing this.
 
-- Lars
+Wait a little bit for some more feedback, esp. from the marvell guys ;-)
+
+Best regards,
+Marek Vasut
