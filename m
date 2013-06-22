@@ -1,70 +1,74 @@
 From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: [PATCH 1/2] media: i2c: ths8200: support asynchronous probing
-Date: Sat, 22 Jun 2013 15:16:34 +0530
-Message-ID: <1371894395-14414-2-git-send-email-prabhakar.csengg@gmail.com>
+Subject: [PATCH 2/2] media: i2c: ths8200: add OF support
+Date: Sat, 22 Jun 2013 15:16:35 +0530
+Message-ID: <1371894395-14414-3-git-send-email-prabhakar.csengg@gmail.com>
 References: <1371894395-14414-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1371894395-14414-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 
-This patch supports both synchronous and asynchronous
-ths8200 subdevice probing.
+add OF support for the ths8200 driver.
 
 Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 ---
- drivers/media/i2c/ths8200.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/media/i2c/ths8200.txt      |   19 +++++++++++++++++++
+ drivers/media/i2c/ths8200.c                        |    9 +++++++++
+ 2 files changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ths8200.txt
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/ths8200.txt b/Documentation/devicetree/bindings/media/i2c/ths8200.txt
+new file mode 100644
+index 0000000..285f6ae
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ths8200.txt
+@@ -0,0 +1,19 @@
++* Texas Instruments THS8200 video encoder
++
++The ths8200 device is a digital to analog converter used in DVD players, video
++recorders, set-top boxes.
++
++Required Properties :
++- compatible : value must be "ti,ths8200"
++
++Example:
++
++	i2c0@1c22000 {
++		...
++		...
++		ths8200@5c {
++			compatible = "ti,ths8200";
++			reg = <0x5c>;
++		};
++		...
++	};
 diff --git a/drivers/media/i2c/ths8200.c b/drivers/media/i2c/ths8200.c
-index a24f90c..cc1339a 100644
+index cc1339a..8a29810 100644
 --- a/drivers/media/i2c/ths8200.c
 +++ b/drivers/media/i2c/ths8200.c
-@@ -21,6 +21,7 @@
- #include <linux/module.h>
- #include <linux/v4l2-dv-timings.h>
+@@ -550,10 +550,19 @@ static struct i2c_device_id ths8200_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, ths8200_id);
  
-+#include <media/v4l2-async.h>
- #include <media/v4l2-device.h>
- 
- #include "ths8200_regs.h"
-@@ -500,6 +501,7 @@ static int ths8200_probe(struct i2c_client *client,
- {
- 	struct ths8200_state *state;
- 	struct v4l2_subdev *sd;
-+	int error;
- 
- 	/* Check if the adapter supports the needed features */
- 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
-@@ -517,6 +519,10 @@ static int ths8200_probe(struct i2c_client *client,
- 
- 	ths8200_core_init(sd);
- 
-+	error = v4l2_async_register_subdev(&state->sd);
-+	if (error)
-+		return error;
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id ths8200_of_match[] = {
++	{ .compatible = "ti,ths8200", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, ths8200_of_match);
++#endif
 +
- 	v4l2_info(sd, "%s found @ 0x%x (%s)\n", client->name,
- 		  client->addr << 1, client->adapter->name);
- 
-@@ -526,12 +532,13 @@ static int ths8200_probe(struct i2c_client *client,
- static int ths8200_remove(struct i2c_client *client)
- {
- 	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct ths8200_state *decoder = to_state(sd);
- 
- 	v4l2_dbg(1, debug, sd, "%s removed @ 0x%x (%s)\n", client->name,
- 		 client->addr << 1, client->adapter->name);
- 
- 	ths8200_s_power(sd, false);
--
-+	v4l2_async_unregister_subdev(&decoder->sd);
- 	v4l2_device_unregister_subdev(sd);
- 
- 	return 0;
+ static struct i2c_driver ths8200_driver = {
+ 	.driver = {
+ 		.owner = THIS_MODULE,
+ 		.name = "ths8200",
++		.of_match_table = of_match_ptr(ths8200_of_match),
+ 	},
+ 	.probe = ths8200_probe,
+ 	.remove = ths8200_remove,
 -- 
 1.7.9.5
