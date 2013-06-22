@@ -1,81 +1,28 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: Re: [PATCH v1 04/12] input: matrix-keypad: push/pull, separate
- polarity
-Date: Sat, 22 Jun 2013 11:36:49 +0200
-Message-ID: <20130622093649.GF24305@book.gsilab.sittig.org>
-References: <1371838198-7327-1-git-send-email-gsi@denx.de>
- <1371838198-7327-5-git-send-email-gsi@denx.de>
- <51C4C6C9.6030000@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51C4C6C9.6030000@wwwdotorg.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Chao Xie <xiechao.mail@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Detlev Zundel <dzu@denx.de>, Sekhar Nori <nsekhar@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: [PATCH 0/2] media: i2c: ths8200: Feature enhancement
+Date: Sat, 22 Jun 2013 15:16:33 +0530
+Message-ID: <1371894395-14414-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2013 at 15:34 -0600, Stephen Warren wrote:
-> 
-> On 06/21/2013 12:09 PM, Gerhard Sittig wrote:
-> > extend the device tree adjustable hardware configuration:
-> > - allow for differing polarity of the row and column GPIO pins
-> > - optionally fully drive column output pins instead of the former
-> >   unconditional open collector emulation approach
-> 
-> > diff --git a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-> 
-> > +- row-gpios-activelow:	row GPIO pins are active low
-> > +- col-gpios-activelow:	column GPIO pins are active low
-> >  - gpio-activelow:	row pins as well as column pins are active low
-> > +			(provided for backward compatibility, and useful
-> > +			for matrix layouts of identical polarity for
-> > +			rows and columns)
-> 
-> Those should all come from the existing GPIO flags, and may even differ
-> for each GPIO.
-> 
-> > +- col-gpios-pushpull:	fully drive the column selection pins in either
-> > +			direction (high and low signals), the default
-> > +			behaviour is to actively drive low signals and
-> > +			be passive otherwise (emulates an open collector
-> > +			output driver)
-> 
-> We don't actually have GPIO flags defined for pushpull-vs-open-collector
-> etc. Perhaps we should do so. Then, we wouldn't need to invent custom
-> properties to represent that in this binding.
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 
-I see your concerns and understand, but chose the above way to
-just extend the existing implementation in the least intrusive
-way without changing its nature.  See the reply on the first
-patch for more details on the motivation.
+The first patch of the series adds supports for asynchronous subdev
+registration for ths8200 driver, and the second patch of the series
+adds OF support the driver.
 
-Of course I agree that pin properties belong to the GPIO layer
-and that "application drivers" on top should not worry about
-that.  Were I allowed to break backwards compatibility, then I
-could have done more shuffling.  But lacking the capability to
-test the affected setups puts more burdon on others, which I
-wanted to avoid.
+Lad, Prabhakar (2):
+  media: i2c: ths8200: support asynchronous probing
+  media: i2c: ths8200: add OF support
 
-And then there's the question of whether the "active low" applies
-to the GPIO pin or to the matrix line (the above property
-suggests it's the pin, but I'm yet undecided), and whether the
-subsystems agree on a policy "where to put" the "overall
-polarity" of such a chain of driver logic and SoC pins and
-optionally involved inverting drivers and external components
-which the driver communicates to.
+ .../devicetree/bindings/media/i2c/ths8200.txt      |   19 +++++++++++++++++++
+ drivers/media/i2c/ths8200.c                        |   18 +++++++++++++++++-
+ 2 files changed, 36 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ths8200.txt
 
-The push-pull vs open-drain should never have made it into the
-keypad driver, but that fact wasn't introduced but did exist.
-Even if the kernel had no way to setup OD mode of a pin, the
-bootloader has, and the kernel just needs to setup "values" just
-like for any other pin regardless of push-pull or open-drain.
-
-
-virtually yours
-Gerhard Sittig
 -- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
+1.7.9.5
+
