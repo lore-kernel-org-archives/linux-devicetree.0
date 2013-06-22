@@ -1,46 +1,39 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v6 4/8] ARM: Add .init_platform() callback to machine descriptor
-Date: Sat, 22 Jun 2013 15:46:41 +0200
-Message-ID: <2503927.uZIubvXWLh@flatron>
-References: <1371774924-9224-1-git-send-email-tomasz.figa@gmail.com> <1371774924-9224-5-git-send-email-tomasz.figa@gmail.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH] Bump version number to 1.4.0
+Date: Sat, 22 Jun 2013 09:02:47 -0500
+Message-ID: <E1UqOOt-00014o-OQ@jdl.com>
+References: <1370970685-21755-1-git-send-email-swarren@wwwdotorg.org>
+ <20130615011245.GB9218@voom.bne.redhat.com> <E1UnsTK-00082V-KV@jdl.com>
+ <51BF7F76.1080604@wwwdotorg.org> <20130617234256.GC16876@voom.redhat.com>
+ <51C4D547.3000409@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1371774924-9224-5-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene.kim@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, devicetree-discuss@lists.ozlabs.org, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Nicolas Pitre <nico@fluxnic.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will.deacon@arm.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <51C4D547.3000409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+> >> 
+> >> How about if nobody objects, a release is made by the end of the 
+> >> week?
+> > 
+> > Works for me.
+> 
+> Great! I didn't see any objections, and the week is basically over.
+> Are we good for a release today?
 
-On Friday 21 of June 2013 02:35:20 Tomasz Figa wrote:
-> Most ARM platforms have parts that should be initialized as early as
-> possible, which usually means as soon as memory management (kmalloc,
-> ioremap) starts to work,
-> 
-> However, currently there is no appropriate callback in machine_desc
-> struct to use for such initialization and platforms tend to stuff things
-> up .init_irq() and .init_time() callbacks.
-> 
-> Since all the DT-based platforms are going towards generic IRQ and time
-> initialization (using irqchip_init and clocksource_of_init) and current
-> code assumes that if custom callbacks are not provided in machine_desc
-> then generic ones should be used, this problem has become a bit more
-> inconvenient.
-> 
-> This patch tries to solve this issue by introducing new callback called
-> .init_platform(), where any custom low level initialization of platform
-> can be done safely.
-> 
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> ---
->  arch/arm/include/asm/mach/arch.h | 1 +
->  arch/arm/kernel/irq.c            | 3 +++
->  2 files changed, 4 insertions(+)
+I get it, thanks.  I also have to have time to do it.
 
-Please disregard this patch when applying the series (if that happens).
-
-Best regards,
-Tomasz
+jdl
