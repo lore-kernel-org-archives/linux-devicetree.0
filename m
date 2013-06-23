@@ -1,43 +1,122 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH] dt: Typo fix
-Date: Sun, 23 Jun 2013 13:40:02 +0400
-Message-ID: <1371980402-27620-1-git-send-email-shc_work@mail.ru>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/8] ARM: dts: Correct camera pinctrl nodes for Exynos4x12 SoCs
+Date: Sun, 23 Jun 2013 12:12:42 +0200
+Message-ID: <7538808.XQjIcFgyeQ@flatron>
+References: <1371819024-12596-1-git-send-email-s.nawrocki@samsung.com> <1371819024-12596-2-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1371819024-12596-2-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, m.szyprowski@samsung.com, phil.carmody@partner.samsung.com, j.anaszewski@samsung.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylwester,
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- Documentation/devicetree/bindings/net/can/sja1000.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Friday 21 of June 2013 14:50:17 Sylwester Nawrocki wrote:
+> Add separate nodes for the CAMCLK pin and turn off pull-up on camera
+> ports A, B. The video bus pins and the clock output (CAMCLK) pin need
+> separate nodes since full camera port is not used in some
+> configurations, e.g. for MIPI CSI-2 bus only CAMCLK is required and
+> data/clock signal use separate dedicated pins.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4x12-pinctrl.dtsi |   40
+> ++++++++++++++++++++++++----- 1 file changed, 33 insertions(+), 7
+> deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
+> b/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi index 704290f..50eaa95
+> 100644
+> --- a/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
+> @@ -401,13 +401,26 @@
+>  			samsung,pin-drv = <0>;
+>  		};
+> 
+> -		cam_port_a: cam-port-a {
+> +		cam_port_a_io: cam-port-a-io {
+>  			samsung,pins = "gpj0-0", "gpj0-1", "gpj0-2", 
+"gpj0-3",
+>  					"gpj0-4", "gpj0-5", "gpj0-6", 
+"gpj0-7",
+> -					"gpj1-0", "gpj1-1", "gpj1-2", 
+"gpj1-3",
+> -					"gpj1-4";
+> +					"gpj1-0", "gpj1-1", "gpj1-2", 
+"gpj1-4";
+>  			samsung,pin-function = <2>;
+> -			samsung,pin-pud = <3>;
+> +			samsung,pin-pud = <0>;
+> +			samsung,pin-drv = <0>;
+> +		};
+> +
+> +		cam_port_a_clk_active: cam-port-a-clk-active {
+> +			samsung,pins = "gpj1-3";
+> +			samsung,pin-function = <2>;
+> +			samsung,pin-pud = <0>;
+> +			samsung,pin-drv = <3>;
+> +		};
+> +
+> +		cam_port_a_clk_idle: cam-port-a-clk-idle {
+> +			samsung,pins = "gpj1-3";
+> +			samsung,pin-function = <0>;
+> +			samsung,pin-pud = <0>;
+>  			samsung,pin-drv = <0>;
 
-diff --git a/Documentation/devicetree/bindings/net/can/sja1000.txt b/Documentation/devicetree/bindings/net/can/sja1000.txt
-index c2dbcec..f2105a4 100644
---- a/Documentation/devicetree/bindings/net/can/sja1000.txt
-+++ b/Documentation/devicetree/bindings/net/can/sja1000.txt
-@@ -37,7 +37,7 @@ Optional properties:
- 	If not specified or if the specified value is 0, the CLKOUT pin
- 	will be disabled.
- 
--- nxp,no-comparator-bypass : Allows to disable the CAN input comperator.
-+- nxp,no-comparator-bypass : Allows to disable the CAN input comparator.
- 
- For further information, please have a look to the SJA1000 data sheet.
- 
--- 
-1.8.1.5
+Who is driving the clock line in this configuration? Idle would suggest 
+that neither the camera nor the camif, so I think some pull should be 
+enabled to avoid floating pin. (Or is there an external pulling resistor 
+for this line in most common setups?)
+
+>  		};
+>  	};
+> @@ -778,16 +791,29 @@
+>  			samsung,pin-drv = <3>;
+>  		};
+> 
+> -		cam_port_b: cam-port-b {
+> +		cam_port_b_io: cam-port-b-io {
+>  			samsung,pins = "gpm0-0", "gpm0-1", "gpm0-2", 
+"gpm0-3",
+>  					"gpm0-4", "gpm0-5", "gpm0-6", 
+"gpm0-7",
+> -					"gpm1-0", "gpm1-1", "gpm2-0", 
+"gpm2-1",
+> -					"gpm2-2";
+> +					"gpm1-0", "gpm1-1", "gpm2-0", 
+"gpm2-1";
+>  			samsung,pin-function = <3>;
+>  			samsung,pin-pud = <3>;
+>  			samsung,pin-drv = <0>;
+>  		};
+> 
+> +		cam_port_b_clk_active: cam-port-b-clk-active {
+> +			samsung,pins = "gpm2-2";
+> +			samsung,pin-function = <3>;
+> +			samsung,pin-pud = <0>;
+> +			samsung,pin-drv = <3>;
+> +		};
+> +
+> +		cam_port_b_clk_idle: cam-port-b-clk-idle {
+> +			samsung,pins = "gpm2-2";
+> +			samsung,pin-function = <0>;
+> +			samsung,pin-pud = <0>;
+> +			samsung,pin-drv = <0>;
+> +		};
+
+Same here.
+
+Otherwise looks fine to me.
+
+Best regards,
+Tomasz
+
+> +
+>  		eint0: ext-int0 {
+>  			samsung,pins = "gpx0-0";
+>  			samsung,pin-function = <0xf>;
