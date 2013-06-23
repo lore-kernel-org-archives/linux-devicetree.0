@@ -1,122 +1,59 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/8] ARM: dts: Correct camera pinctrl nodes for Exynos4x12 SoCs
-Date: Sun, 23 Jun 2013 12:12:42 +0200
-Message-ID: <7538808.XQjIcFgyeQ@flatron>
-References: <1371819024-12596-1-git-send-email-s.nawrocki@samsung.com> <1371819024-12596-2-git-send-email-s.nawrocki@samsung.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCHv2 1/3] iio: Add Nuvoton NAU7802 ADC driver
+Date: Sun, 23 Jun 2013 15:54:08 +0200
+Message-ID: <51C6FE00.8010900@metafoo.de>
+References: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com> <1371754675-12242-2-git-send-email-alexandre.belloni@free-electrons.com> <51C590B5.2060308@kernel.org> <51C5923D.6030609@metafoo.de> <51C5A1AF.3070404@free-electrons.com> <51C5A499.5050509@metafoo.de> <51C5A68F.3000300@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1371819024-12596-2-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, m.szyprowski@samsung.com, phil.carmody@partner.samsung.com, j.anaszewski@samsung.com, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51C5A68F.3000300@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, jimwall@q.com, brian@crystalfontz.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Jonathan Cameron <jic23@cam.ac.uk>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
-
-On Friday 21 of June 2013 14:50:17 Sylwester Nawrocki wrote:
-> Add separate nodes for the CAMCLK pin and turn off pull-up on camera
-> ports A, B. The video bus pins and the clock output (CAMCLK) pin need
-> separate nodes since full camera port is not used in some
-> configurations, e.g. for MIPI CSI-2 bus only CAMCLK is required and
-> data/clock signal use separate dedicated pins.
+On 06/22/2013 03:28 PM, Alexandre Belloni wrote:
+> On 22/06/2013 15:20, Lars-Peter Clausen wrote:
+>> On 06/22/2013 03:07 PM, Alexandre Belloni wrote:
+>>> On 22/06/2013 14:02, Lars-Peter Clausen wrote:
+>>>> On 06/22/2013 01:55 PM, Jonathan Cameron wrote:
+>>>>> On 06/20/2013 07:57 PM, Alexandre Belloni wrote:
+>>>>>> The Nuvoton NAU7802 ADC is a 24-bit 2-channels I2C ADC, with adjustable
+>>>>>> gain and sampling rates.
+>>>>>>
+>>>>> Sorry, somewhat low on time today so only a quick review.
+>>>>>
+>>>>> 1) Missing userspace ABI documentation.  Also, perhaps min_conversions is
+>>>>>    a little vague?  Not that I have a better idea!
+>>>> I really don't like the name min_conversions either. Isn't this effectively
+>>>> a decimation filter?
+>>> Yeah, it could be seen like that but it is only relevant and only
+>>> happens when switching between channels. I'm open to any ideas.
+>>>
+>> I see. Is there anything about this in the datasheet on how many conversions
+>> you usually need? Is this really something you need to change at runtime or
+>> does moving this to platform data work?
+>>
+>>
 > 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4x12-pinctrl.dtsi |   40
-> ++++++++++++++++++++++++----- 1 file changed, 33 insertions(+), 7
-> deletions(-)
+> There is actually nothing in the datasheet. The default value (6
+> conversions) was found experimentally. What I did was saturating the ADC
+> with the higher value on one channel and the lower value on the other
+> one and I tried to find when reading both channel sequentially was
+> resulting in a correct value.
 > 
-> diff --git a/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
-> b/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi index 704290f..50eaa95
-> 100644
-> --- a/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
-> @@ -401,13 +401,26 @@
->  			samsung,pin-drv = <0>;
->  		};
+> You may not need to change it at runtime. And that value mainly depend
+> on the precision versus speed balance you want to achieve. If you know
+> that the values on both channels will not be to far apart, then you may
+> not need to wait at all.
 > 
-> -		cam_port_a: cam-port-a {
-> +		cam_port_a_io: cam-port-a-io {
->  			samsung,pins = "gpj0-0", "gpj0-1", "gpj0-2", 
-"gpj0-3",
->  					"gpj0-4", "gpj0-5", "gpj0-6", 
-"gpj0-7",
-> -					"gpj1-0", "gpj1-1", "gpj1-2", 
-"gpj1-3",
-> -					"gpj1-4";
-> +					"gpj1-0", "gpj1-1", "gpj1-2", 
-"gpj1-4";
->  			samsung,pin-function = <2>;
-> -			samsung,pin-pud = <3>;
-> +			samsung,pin-pud = <0>;
-> +			samsung,pin-drv = <0>;
-> +		};
-> +
-> +		cam_port_a_clk_active: cam-port-a-clk-active {
-> +			samsung,pins = "gpj1-3";
-> +			samsung,pin-function = <2>;
-> +			samsung,pin-pud = <0>;
-> +			samsung,pin-drv = <3>;
-> +		};
-> +
-> +		cam_port_a_clk_idle: cam-port-a-clk-idle {
-> +			samsung,pins = "gpj1-3";
-> +			samsung,pin-function = <0>;
-> +			samsung,pin-pud = <0>;
->  			samsung,pin-drv = <0>;
-
-Who is driving the clock line in this configuration? Idle would suggest 
-that neither the camera nor the camif, so I think some pull should be 
-enabled to avoid floating pin. (Or is there an external pulling resistor 
-for this line in most common setups?)
-
->  		};
->  	};
-> @@ -778,16 +791,29 @@
->  			samsung,pin-drv = <3>;
->  		};
+> Would you think that is something I should hide in the DT ? Or maybe I
+> can drop that knob for now and see if it is needed in the future.
 > 
-> -		cam_port_b: cam-port-b {
-> +		cam_port_b_io: cam-port-b-io {
->  			samsung,pins = "gpm0-0", "gpm0-1", "gpm0-2", 
-"gpm0-3",
->  					"gpm0-4", "gpm0-5", "gpm0-6", 
-"gpm0-7",
-> -					"gpm1-0", "gpm1-1", "gpm2-0", 
-"gpm2-1",
-> -					"gpm2-2";
-> +					"gpm1-0", "gpm1-1", "gpm2-0", 
-"gpm2-1";
->  			samsung,pin-function = <3>;
->  			samsung,pin-pud = <3>;
->  			samsung,pin-drv = <0>;
->  		};
-> 
-> +		cam_port_b_clk_active: cam-port-b-clk-active {
-> +			samsung,pins = "gpm2-2";
-> +			samsung,pin-function = <3>;
-> +			samsung,pin-pud = <0>;
-> +			samsung,pin-drv = <3>;
-> +		};
-> +
-> +		cam_port_b_clk_idle: cam-port-b-clk-idle {
-> +			samsung,pins = "gpm2-2";
-> +			samsung,pin-function = <0>;
-> +			samsung,pin-pud = <0>;
-> +			samsung,pin-drv = <0>;
-> +		};
 
-Same here.
+It is always a good idea to be conservative when introducing new ABI, so if
+you think we can get away with hardcoding this in the driver I think that's
+a good idea.
 
-Otherwise looks fine to me.
-
-Best regards,
-Tomasz
-
-> +
->  		eint0: ext-int0 {
->  			samsung,pins = "gpx0-0";
->  			samsung,pin-function = <0xf>;
+- Lars
