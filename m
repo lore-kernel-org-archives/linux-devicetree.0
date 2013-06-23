@@ -1,50 +1,40 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH] Bump version number to 1.4.0
-Date: Sat, 22 Jun 2013 13:23:35 -0500
-Message-ID: <E1UqSTH-0001ep-BN@jdl.com>
-References: <1370970685-21755-1-git-send-email-swarren@wwwdotorg.org>
- <20130615011245.GB9218@voom.bne.redhat.com> <E1UnsTK-00082V-KV@jdl.com>
- <51BF7F76.1080604@wwwdotorg.org> <20130617234256.GC16876@voom.redhat.com>
- <51C4D547.3000409@wwwdotorg.org>
+From: Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] of/irq: Avoid calling list_first_entry() for empty list
+Date: Sun, 23 Jun 2013 15:50:07 +0800
+Message-ID: <1371973807.23555.1.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <51C4D547.3000409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> 
-> Great! I didn't see any objections, and the week is basically over.
-> Are we good for a release today?
+list_first_entry() expects the list is not empty, we need to check if list is
+empty before calling list_first_entry(). Thus use list_first_entry_or_null()
+instead of list_first_entry().
 
-Hear Ye!  Hear Ye!
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/of/irq.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-With a Mandate from the Masses for a tagged release,
-your wish has finally been granted!
-
-    $ git tag -v v1.4.0
-    object 65cc4d2748a2c2e6f27f1cf39e07a5dbabd80ebf
-    type commit
-    tag v1.4.0
-    tagger Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org> 1371924387 -0500
-
-    DTC 1.4.0
-
-    The Mandate from the Masses release.
-    gpg: Signature made Sat 22 Jun 2013 01:06:41 PM CDT using RSA key ID B0272867
-    gpg: Good signature from "Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>"
-
-Enjoy,
-jdl
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index a3c1c5a..5c645c7 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -482,8 +482,9 @@ void __init of_irq_init(const struct of_device_id *matches)
+ 		}
+ 
+ 		/* Get the next pending parent that might have children */
+-		desc = list_first_entry(&intc_parent_list, typeof(*desc), list);
+-		if (list_empty(&intc_parent_list) || !desc) {
++		desc = list_first_entry_or_null(&intc_parent_list,
++						typeof(*desc), list);
++		if (!desc) {
+ 			pr_err("of_irq_init: children remain, but no parents\n");
+ 			break;
+ 		}
+-- 
+1.8.1.2
