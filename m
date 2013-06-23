@@ -1,66 +1,61 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCHv8 1/1] Add support for GMT G762/G763 PWM fan controllers
-Date: Sun, 23 Jun 2013 09:06:59 -0700
-Message-ID: <20130623160659.GB17536@roeck-us.net>
-References: <87a9mkttxr.fsf@natisbad.org>
- <20130623153931.GD7626@kw.sim.vm.gnt>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] iio: Add Nuvoton NAU7802 ADC driver
+Date: Sun, 23 Jun 2013 18:33:10 +0100
+Message-ID: <51C73156.7040807@kernel.org>
+References: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com> <1371754675-12242-2-git-send-email-alexandre.belloni@free-electrons.com> <51C590B5.2060308@kernel.org> <51C5923D.6030609@metafoo.de> <51C5A1AF.3070404@free-electrons.com> <51C5A499.5050509@metafoo.de> <51C5A68F.3000300@free-electrons.com> <51C6FE00.8010900@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130623153931.GD7626@kw.sim.vm.gnt>
-Sender: linux-doc-owner@vger.kernel.org
-To: Simon Guinot <simon.guinot@sequanux.org>
-Cc: Arnaud Ebalard <arno@natisbad.org>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51C6FE00.8010900-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, jimwall@q.com, brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 23, 2013 at 05:39:32PM +0200, Simon Guinot wrote:
-> On Thu, Jun 20, 2013 at 10:21:04PM +0200, Arnaud Ebalard wrote:
-> > 
-> > GMT G762/763 fan speed PWM controller is connected directly to a fan
-> > and performs closed-loop or open-loop control of the fan speed. Two
-> > modes - PWM or DC - are supported by the chip. Introduced driver
-> > provides various knobs to control the operations of the chip (via
-> > sysfs interface). Specific characteristics of the system can be passed
-> > either using board init code or via DT. Documentation for both the
-> > driver and DT bindings are also provided.
-> > 
-> > Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> > ---
-> > Hi Guenter,
-> > 
-> > I guess we can wait for Simon's tests against its 5Big Network to check
-> > everything is ok on another platform. Note that I also tested the patch
-> > on my (Armada 370 based) ReadyNAS 102 and it works as expected.
-> > 
-> > To be very accurate, I had to revert eda6bee6c7 to get both an out of
-> > tree driver for ISL 12057 chip and the g762 work *on the 102*, but this
-> > is an unrelated story (Debian bug #622325 [1] has more on the topic) for
-> > which I will create a separate thread. Simon, the symptom you reported
-> > for your read failures are different from those I get so I don't think
-> > the revert will fix your problem but it may be worth trying it.
-> > 
-> > [1] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=622325
+On 06/23/2013 02:54 PM, Lars-Peter Clausen wrote:
+> On 06/22/2013 03:28 PM, Alexandre Belloni wrote:
+>> On 22/06/2013 15:20, Lars-Peter Clausen wrote:
+>>> On 06/22/2013 03:07 PM, Alexandre Belloni wrote:
+>>>> On 22/06/2013 14:02, Lars-Peter Clausen wrote:
+>>>>> On 06/22/2013 01:55 PM, Jonathan Cameron wrote:
+>>>>>> On 06/20/2013 07:57 PM, Alexandre Belloni wrote:
+>>>>>>> The Nuvoton NAU7802 ADC is a 24-bit 2-channels I2C ADC, with adjustable
+>>>>>>> gain and sampling rates.
+>>>>>>>
+>>>>>> Sorry, somewhat low on time today so only a quick review.
+>>>>>>
+>>>>>> 1) Missing userspace ABI documentation.  Also, perhaps min_conversions is
+>>>>>>    a little vague?  Not that I have a better idea!
+>>>>> I really don't like the name min_conversions either. Isn't this effectively
+>>>>> a decimation filter?
+>>>> Yeah, it could be seen like that but it is only relevant and only
+>>>> happens when switching between channels. I'm open to any ideas.
+>>>>
+>>> I see. Is there anything about this in the datasheet on how many conversions
+>>> you usually need? Is this really something you need to change at runtime or
+>>> does moving this to platform data work?
+>>>
+>>>
+>>
+>> There is actually nothing in the datasheet. The default value (6
+>> conversions) was found experimentally. What I did was saturating the ADC
+>> with the higher value on one channel and the lower value on the other
+>> one and I tried to find when reading both channel sequentially was
+>> resulting in a correct value.
+>>
+>> You may not need to change it at runtime. And that value mainly depend
+>> on the precision versus speed balance you want to achieve. If you know
+>> that the values on both channels will not be to far apart, then you may
+>> not need to wait at all.
+>>
+>> Would you think that is something I should hide in the DT ? Or maybe I
+>> can drop that knob for now and see if it is needed in the future.
+>>
 > 
-> Hi Arnaud and Guenter,
+> It is always a good idea to be conservative when introducing new ABI, so if
+> you think we can get away with hardcoding this in the driver I think that's
+> a good idea.
 > 
-> Actually, reverting the commit eda6bee6c7 seems to solve the -ENODEV
-> issue...
-> 
-Did you let the i2c maintainers know ?
-
-> Then, I have been able to test successfully the g762 driver against the
-> following boards:
-> 
-> - 2Big NAS (open-loop mode)
-> - 2Big Network v2 (open-loop mode)
-> - 5Big Network v2 (closed-loop mode)
-> 
-> For the last, I have also been able to configure the clock frequency
-> through the platform_data structure.
-> 
-> Tested-by: Simon Guinot <simon.guinot@sequanux.org>
-> 
-Thanks a lot!
-
-Guenter
+I agree entirely.  We can always make it controllable later as long
+as we keep the default the same as the value you hard code in now.
