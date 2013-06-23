@@ -1,44 +1,79 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [PATCH v9 01/10] ASoC: imx-pcm-dma: DT support
-Date: Sun, 23 Jun 2013 12:49:17 -0500
-Message-ID: <51C7351D.9080004@tabi.org>
-References: <1371734429-6081-1-git-send-email-mpa@pengutronix.de>
- <1371734429-6081-2-git-send-email-mpa@pengutronix.de>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv8 1/1] Add support for GMT G762/G763 PWM fan controllers
+Date: Sun, 23 Jun 2013 20:07:08 +0200
+Message-ID: <87r4fsem5v.fsf@natisbad.org>
+References: <87a9mkttxr.fsf@natisbad.org>
+	<20130623153931.GD7626@kw.sim.vm.gnt>
+	<20130623160659.GB17536@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1371734429-6081-2-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130623160659.GB17536@roeck-us.net> (Guenter Roeck's message of
+	"Sun, 23 Jun 2013 09:06:59 -0700")
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Simon Guinot <simon.guinot@sequanux.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Markus Pargmann wrote:
-> This patch removes the NO_DT flag. The pdev pointer may have a proper
-> of_node with the dmas property, so we can use it to request DMA
-> channels.
->
-> Signed-off-by: Markus Pargmann<mpa@pengutronix.de>
-> Tested-by: Shawn Guo<shawn.guo@linaro.org>
-> ---
+Hi,
 
-I won't have access to functioning hardware for another month or two, so I 
-can't test to see if this patchset breaks PowerPC, but at least it does 
-compile.  I'm a little worried that the DMA changes won't actually run on 
-PowerPC, but I can't test that now.
+Guenter Roeck <linux@roeck-us.net> writes:
 
-So for the time being:
+> On Sun, Jun 23, 2013 at 05:39:32PM +0200, Simon Guinot wrote:
+>> On Thu, Jun 20, 2013 at 10:21:04PM +0200, Arnaud Ebalard wrote:
+>> > 
+>> > GMT G762/763 fan speed PWM controller is connected directly to a fan
+>> > and performs closed-loop or open-loop control of the fan speed. Two
+>> > modes - PWM or DC - are supported by the chip. Introduced driver
+>> > provides various knobs to control the operations of the chip (via
+>> > sysfs interface). Specific characteristics of the system can be passed
+>> > either using board init code or via DT. Documentation for both the
+>> > driver and DT bindings are also provided.
+>> > 
+>> > Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+>> > ---
+>> > Hi Guenter,
+>> > 
+>> > I guess we can wait for Simon's tests against its 5Big Network to check
+>> > everything is ok on another platform. Note that I also tested the patch
+>> > on my (Armada 370 based) ReadyNAS 102 and it works as expected.
+>> > 
+>> > To be very accurate, I had to revert eda6bee6c7 to get both an out of
+>> > tree driver for ISL 12057 chip and the g762 work *on the 102*, but this
+>> > is an unrelated story (Debian bug #622325 [1] has more on the topic) for
+>> > which I will create a separate thread. Simon, the symptom you reported
+>> > for your read failures are different from those I get so I don't think
+>> > the revert will fix your problem but it may be worth trying it.
+>> > 
+>> > [1] http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=622325
+>> 
+>> Hi Arnaud and Guenter,
+>> 
+>> Actually, reverting the commit eda6bee6c7 seems to solve the -ENODEV
+>> issue...
+>> 
+> Did you let the i2c maintainers know ?
 
-Acked-by: Timur Tabi <timur@tabi.org>
+As I wrote, I will create a separate thread on the topic. It is good to
+have another unrelated example for which the problem is solved by
+reverting this commit. I will keep both of you in the CC: list if you
+want to follow the discussion.
 
--- 
-Timur Tabi
+
+>> Then, I have been able to test successfully the g762 driver against the
+>> following boards:
+>> 
+>> - 2Big NAS (open-loop mode)
+>> - 2Big Network v2 (open-loop mode)
+>> - 5Big Network v2 (closed-loop mode)
+>> 
+>> For the last, I have also been able to configure the clock frequency
+>> through the platform_data structure.
+>> 
+>> Tested-by: Simon Guinot <simon.guinot@sequanux.org>
+
+Thanks for your time and efforts, Simon.
+
+Cheers,
+
+a+
