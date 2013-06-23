@@ -1,165 +1,98 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH 6/6] ARM: dts: Add device tree support for phycard pca100
-Date: Sun, 23 Jun 2013 10:17:50 +0200
-Message-ID: <20130623081701.GA13104@s25.your-server.de>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: dts: imx27 cpufreq-cpu0 frequencies
+Date: Sun, 23 Jun 2013 10:22:22 +0200
+Message-ID: <20130623082222.GB13104@s25.your-server.de>
 References: <1371739815-6666-1-git-send-email-mpa@pengutronix.de>
- <1371739815-6666-7-git-send-email-mpa@pengutronix.de>
- <20130621034604.GC24268@S2101-09.ap.freescale.net>
+ <1371739815-6666-6-git-send-email-mpa@pengutronix.de>
+ <20130621024406.GB24268@S2101-09.ap.freescale.net>
+ <1371790493.32418815@f415.i.mail.ru>
+ <20130621052344.GA25633@S2101-09.ap.freescale.net>
+ <20130621084740.GA14268@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130621034604.GC24268@S2101-09.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, Jan Luebbe <jlu@pengutronix.de>, Alexander Shiyan <shc_work@mail.ru>, devicetree-discuss@lists.ozlabs.org, Sascha Hauer <kernel@pengutronix.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20130621084740.GA14268-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMjEsIDIwMTMgYXQgMTE6NDY6MDVBTSArMDgwMCwgU2hhd24gR3VvIHdyb3Rl
-Ogo+IE9uIFRodSwgSnVuIDIwLCAyMDEzIGF0IDA0OjUwOjE1UE0gKzAyMDAsIE1hcmt1cyBQYXJn
-bWFubiB3cm90ZToKPiA+IEJhc2VkIG9uIHBhdGNoZXMgZnJvbToKPiA+IAo+ID4gU3RlZmZlbiBU
-cnVtdHJhciA8cy50cnVtdHJhckBwZW5ndXRyb25peC5kZT46Cj4gPiAgLSBPcmlnaW5hbCBwYXRj
-aAo+ID4gIC0gQVJNOiBkdHM6IFNldCBwYXJ0aXRpb24gb2Zmc2V0cyBmb3IgcGh5Y2FyZAo+ID4g
-IC0gQVJNOiBkdHM6IFVzZSBDU1BJMSBpbnN0ZWFkIG9mIENTUEkyIG9uIHBoeWNhcmQgcGNhMTAw
-Cj4gPiAgLSBBUk06IGlteDI3LXBoeXRlYy1waHljYXJkLVMuZHRzOiByZXNpemUgbmFuZCBwYXJ0
-aXRpb25zCj4gPiAKPiA+IEphbiBMdWViYmUgPGpsdUBwZW5ndXRyb25peC5kZT46Cj4gPiAgLSBB
-Uk06IGR0czogRW5hYmxlIGJhZCBibG9jayB0YWJsZSBpbiBOQU5ECj4gPiAKPiA+IENjOiBTdGVm
-ZmVuIFRydW10cmFyIDxzLnRydW10cmFyQHBlbmd1dHJvbml4LmRlPgo+ID4gQ2M6IEphbiBMdWVi
-YmUgPGpsdUBwZW5ndXRyb25peC5kZT4KPiA+IFNpZ25lZC1vZmYtYnk6IE1hcmt1cyBQYXJnbWFu
-biA8bXBhQHBlbmd1dHJvbml4LmRlPgo+ID4gLS0tCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvTWFr
-ZWZpbGUgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDI3LXBoeXRlYy1waHljYXJkLVMuZHRzIHwgMTk1ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-Kwo+ID4gIGFyY2gvYXJtL21hY2gtaW14L0tjb25maWcgICAgICAgICAgICAgICAgICAgIHwgICAx
-ICsKPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDE5NyBpbnNlcnRpb25zKCspCj4gPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDI3LXBoeXRlYy1waHljYXJkLVMuZHRzCj4g
-PiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL01ha2VmaWxlCj4gPiBpbmRleCBiM2E4NjYxLi5lOGZiMGJjIDEwMDY0NAo+ID4g
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL01ha2VmaWxlCj4gPiBAQCAtMTA1LDYgKzEwNSw3IEBAIGR0Yi0kKENPTkZJR19BUkNIX01Y
-QykgKz0gXAo+ID4gIAlpbXgyNy1wZGsuZHRiIFwKPiA+ICAJaW14MjctcGh5dGVjLXBoeWNvcmUt
-c29tLmR0YiBcCj4gPiAgCWlteDI3LXBoeXRlYy1waHljb3JlLXJkay5kdGIgXAo+ID4gKwlpbXgy
-Ny1waHl0ZWMtcGh5Y2FyZC1TLmR0YiBcCj4gPiAgCWlteDMxLWJ1Zy5kdGIgXAo+ID4gIAlpbXg1
-MS1hcGY1MS5kdGIgXAo+ID4gIAlpbXg1MS1hcGY1MWRldi5kdGIgXAo+ID4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI3LXBoeXRlYy1waHljYXJkLVMuZHRzIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14MjctcGh5dGVjLXBoeWNhcmQtUy5kdHMKPiA+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0Cj4gPiBpbmRleCAwMDAwMDAwLi5kYzNhOTNiCj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9pbXgyNy1waHl0ZWMtcGh5Y2FyZC1TLmR0cwo+ID4gQEAgLTAs
-MCArMSwxOTUgQEAKPiA+ICsvKgo+ID4gKyAqIENvcHlyaWdodCAyMDEyIFNhc2NoYSBIYXVlciwg
-VXdlIEtsZWluZS1Lw7ZuaWcgYW5kIFN0ZWZmZW4gVHJ1bXRyYXIsIFBlbmd1dHJvbml4Cj4gPiAr
-ICoKPiA+ICsgKiBUaGUgY29kZSBjb250YWluZWQgaGVyZWluIGlzIGxpY2Vuc2VkIHVuZGVyIHRo
-ZSBHTlUgR2VuZXJhbCBQdWJsaWMKPiA+ICsgKiBMaWNlbnNlLiBZb3UgbWF5IG9idGFpbiBhIGNv
-cHkgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlCj4gPiArICogVmVyc2lvbiAyIG9y
-IGxhdGVyIGF0IHRoZSBmb2xsb3dpbmcgbG9jYXRpb25zOgo+ID4gKyAqCj4gPiArICogaHR0cDov
-L3d3dy5vcGVuc291cmNlLm9yZy9saWNlbnNlcy9ncGwtbGljZW5zZS5odG1sCj4gPiArICogaHR0
-cDovL3d3dy5nbnUub3JnL2NvcHlsZWZ0L2dwbC5odG1sCj4gPiArICovCj4gPiArCj4gPiArL2R0
-cy12MS87Cj4gPiArI2luY2x1ZGUgImlteDI3LmR0c2kiCj4gPiArCj4gPiArLyB7Cj4gPiArCW1v
-ZGVsID0gIlBoeXRlYyBwY2ExMDAiOwo+ID4gKwljb21wYXRpYmxlID0gInBoeXRlYyxpbXgyNy1w
-Y2ExMDAiLCAiZnNsLGlteDI3IjsKPiA+ICsKPiA+ICsJbWVtb3J5IHsKPiA+ICsJCWRldmljZV90
-eXBlID0gIm1lbW9yeSI7Cj4gCj4gSXQncyBiZWVuIGNvdmVyZWQgYnkgc2tlbGV0b24uZHRzaS4K
-PiAKPiA+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gKwkJI3NpemUtY2VsbHMgPSA8MT47
-Cj4gCj4gVGhleSBhcmUgb25seSBuZWVkZWQgaWYgdGhlcmUgYXJlIGNoaWxkIG5vZGVzIHdpdGgg
-InJlZyIgcHJvcGVydHkuCgpSZW1vdmVkCgo+IAo+ID4gKwkJcmVnID0gPDB4MCAweDA4MDAwMDAw
-PjsgICAvLyAxMjhNQgo+ID4gKwl9Owo+ID4gKwo+ID4gKwlzb2Mgewo+ID4gKwkJYWlwaUAxMDAw
-MDAwMCB7IC8qIGFpcGkgKi8KPiA+ICsJCQl3ZG9nQDEwMDAyMDAwIHsKPiA+ICsJCQkJc3RhdHVz
-ID0gIm9rYXkiOwo+ID4gKwkJCX07Cj4gCj4gV2Ugbm93IHVzZSBub2RlIGxhYmVsIGluIGJvYXJk
-IGR0cyBmaWxlcyB0byByZWZlciB0byB0aGUgbm9kZXMgZGVmaW5lZAo+IGluIHNvYyBkdHMuCgpJ
-IHJlcGxhY2VkIGFsbCBub2RlIGlkZW50aWZpZXJzIHdpdGggdGhlaXIgbGFiZWxzLgoKPiAKPiA+
-ICsKPiA+ICsJCQlvd2lyZUAxMDAwOTAwMCB7Cj4gPiArCQkJCXN0YXR1cyA9ICJva2F5IjsKPiA+
-ICsJCQl9Owo+ID4gKwo+ID4gKwkJCXNlcmlhbEAxMDAwYTAwMCB7Cj4gPiArCQkJCWZzbCx1YXJ0
-LWhhcy1ydHNjdHM7Cj4gPiArCQkJCXN0YXR1cyA9ICJva2F5IjsKPiA+ICsJCQl9Owo+ID4gKwo+
-ID4gKwkJCXNlcmlhbEAxMDAwYjAwMCB7Cj4gPiArCQkJCWZzbCx1YXJ0LWhhcy1ydHNjdHM7Cj4g
-PiArCQkJCXN0YXR1cyA9ICJva2F5IjsKPiA+ICsJCQl9Owo+ID4gKwo+ID4gKwkJCXNlcmlhbEAx
-MDAwYzAwMCB7Cj4gPiArCQkJCWZzbCx1YXJ0LWhhcy1ydHNjdHM7Cj4gPiArCQkJCXN0YXR1cyA9
-ICJva2F5IjsKPiA+ICsJCQl9Owo+ID4gKwo+ID4gKwkJCWNzcGlAMTAwMGUwMDAgewo+ID4gKwkJ
-CQlmc2wsc3BpLW51bS1jaGlwc2VsZWN0cyA9IDwyPjsKPiA+ICsJCQkJY3MtZ3Bpb3MgPSA8Jmdw
-aW80IDI4IDA+LAo+ID4gKwkJCQkJPCZncGlvNCAyNyAwPjsKPiA+ICsJCQkJc3RhdHVzID0gIm9r
-YXkiOwo+ID4gKwkJCX07Cj4gPiArCj4gPiArCQkJaTJjQDEwMDEyMDAwIHsKPiA+ICsJCQkJc3Rh
-dHVzID0gIm9rYXkiOwo+ID4gKwkJCQlpb2V4cGFuZGVyQDQxIHsKPiA+ICsJCQkJCWNvbXBhdGli
-bGUgPSAibnhwLHBjYTk1MzYiOwo+ID4gKwkJCQkJcmVnID0gPDB4NDE+Owo+ID4gKwkJCQl9Owo+
-IAo+IFBsZWFzZSBwdXQgYmxhbmsgbGluZSBiZWZvcmUgYW5kIGFmdGVyIG5vZGUuCgpGaXhlZAoK
-PiAKPiA+ICsJCQkJcnRjQDUxIHsKPiA+ICsJCQkJCWNvbXBhdGlibGUgPSAibnhwLHBjZjg1NjMi
-Owo+ID4gKwkJCQkJcmVnID0gPDB4NTE+Owo+ID4gKwkJCQl9Owo+ID4gKwkJCQlkaW1tZXJANjAg
-ewo+ID4gKwkJCQkJY29tcGF0aWJsZSA9ICJueHAscGNhOTUzMCI7Cj4gPiArCQkJCQlyZWcgPSA8
-MHg2MD47Cj4gCj4gPiArCQkJCQlwd20gPSA8MSAxPjsKPiA+ICsJCQkJCXBzYyA9IDwxIDE+Owo+
-ID4gKwkJCQkJbGVkcyA9IDwmbGVkMCAmbGVkMT47Cj4gCj4gQXJlIHRoZXNlIGRvY3VtZW50ZWQv
-YWNjZXB0ZWQgYmluZGluZ3M/CgpObywgc29ycnksIEkgZm9yZ290IHRvIHJlbW92ZSB0aGVtLgoK
-PiAKPiA+ICsJCQkJCWxlZDA6IGxlZDAgewo+ID4gKwkJCQkJCWxhYmVsID0gInBiYS1sY2RfYnJp
-Z2h0bmVzcyI7Cj4gPiArCQkJCQkJZGVmYXVsdC1zdGF0ZSA9ICJvZmYiOwo+ID4gKwkJCQkJCXR5
-cGUgPSAibGVkIjsKPiAKPiBXaGF0IGlzIHRoaXMgInR5cGUiIHByb3BlcnR5IHVzZWQgZm9yPyAg
-SXMgaXQgZG9jdW1lbnRlZD8KPiAKPiA+ICsJCQkJCX07Cj4gPiArCQkJCQlsZWQxOiBsZWQxIHsK
-PiA+ICsJCQkJCQlsYWJlbCA9ICJwYmEtZnJlZV91c2UiOwo+ID4gKwkJCQkJCWRlZmF1bHQtc3Rh
-dGUgPSAib2ZmIjsKPiA+ICsJCQkJCQl0eXBlID0gImxlZCI7Cj4gPiArCQkJCQl9Owo+ID4gKwkJ
-CQl9Owo+ID4gKwkJCX07Cj4gPiArCj4gPiArCQkJc2RoY2lAMTAwMTQwMDAgewo+ID4gKwkJCQlj
-ZC1ncGlvcyA9IDwmZ3BpbzMgMjkgMD47Cj4gPiArCQkJCXN0YXR1cyA9ICJva2F5IjsKPiA+ICsJ
-CQl9Owo+ID4gKwo+ID4gKwkJCWdwaW9AMTAwMTUwMDAgewo+ID4gKwkJCQlzdGF0dXMgPSAib2th
-eSI7Cj4gPiArCQkJfTsKPiA+ICsKPiA+ICsJCQlncGlvQDEwMDE1MTAwIHsKPiA+ICsJCQkJc3Rh
-dHVzID0gIm9rYXkiOwo+ID4gKwkJCX07Cj4gPiArCj4gPiArCQkJZ3Bpb0AxMDAxNTIwMCB7Cj4g
-PiArCQkJCXN0YXR1cyA9ICJva2F5IjsKPiA+ICsJCQl9Owo+ID4gKwo+ID4gKwkJCWdwaW9AMTAw
-MTUzMDAgewo+ID4gKwkJCQlzdGF0dXMgPSAib2theSI7Cj4gPiArCQkJfTsKPiA+ICsKPiA+ICsJ
-CQlncGlvQDEwMDE1NDAwIHsKPiA+ICsJCQkJc3RhdHVzID0gIm9rYXkiOwo+ID4gKwkJCX07Cj4g
-PiArCj4gPiArCQkJZ3Bpb0AxMDAxNTUwMCB7Cj4gPiArCQkJCXN0YXR1cyA9ICJva2F5IjsKPiA+
-ICsJCQl9Owo+ID4gKwo+ID4gKwkJCWkyY0AxMDAxZDAwMCB7Cj4gPiArCQkJCXN0YXR1cyA9ICJv
-a2F5IjsKPiA+ICsKPiA+ICsJCQkJbG03NUA0YSB7Cj4gPiArCQkJCQljb21wYXRpYmxlID0gIm5h
-dGlvbmFsLGxtNzUiOwo+ID4gKwkJCQkJcmVnID0gPDB4NGE+Owo+ID4gKwkJCQl9Owo+ID4gKwo+
-ID4gKwkJCQlydGNANTEgewo+ID4gKwkJCQkJY29tcGF0aWJsZSA9ICJueHAscGNmODU2MyI7Cj4g
-PiArCQkJCQlyZWcgPSA8MHg1MT47Cj4gPiArCQkJCX07Cj4gPiArCj4gPiArCQkJCWF0MjRANTIg
-ewo+ID4gKwkJCQkJY29tcGF0aWJsZSA9ICJhdCwyNGMzMiI7Cj4gPiArCQkJCQlwYWdlc2l6ZSA9
-IDwzMj47Cj4gPiArCQkJCQlyZWcgPSA8MHg1Mj47Cj4gPiArCQkJCX07Cj4gPiArCQkJfTsKPiA+
-ICsJCX07Cj4gPiArCj4gPiArCQlhaXBpQDEwMDIwMDAwIHsgLyogQUlQSTIgKi8KPiA+ICsJCQlm
-YkAxMDAyMTAwMCB7Cj4gPiArCQkJCXN0YXR1cyA9ICJva2F5IjsKPiAKPiBQbGVhc2UgbGV0IGl0
-IGJlIHRoZSBsYXN0IHByb3BlcnR5IGluIHRoZSBub2RlLgoKRml4ZWQuCgo+IAo+ID4gKwkJCQlk
-aXNwbGF5ID0gPCZkaXNwbGF5MD47Cj4gPiArCQkJfTsKPiA+ICsKPiA+ICsJCQlldGhlcm5ldEAx
-MDAyYjAwMCB7Cj4gPiArCQkJCXN0YXR1cyA9ICJva2F5IjsKPiA+ICsJCQl9Owo+ID4gKwkJfTsg
-LyogQUlQSSAqLwo+ID4gKwo+ID4gKwkJbmFuZEBkODAwMDAwMCB7Cj4gPiArCQkJc3RhdHVzID0g
-Im9rYXkiOwo+IAo+IERpdHRvCj4gCj4gPiArCQkJbmFuZC1idXMtd2lkdGggPSA8OD47Cj4gPiAr
-CQkJbmFuZC1lY2MtbW9kZSA9ICJodyI7Cj4gPiArCQkJbmFuZC1vbi1mbGFzaC1iYnQ7Cj4gPiAr
-Cj4gPiArCQkJYmFyZWJveEAwIHsKPiA+ICsJCQkJbGFiZWwgPSAiYmFyZWJveCI7Cj4gPiArCQkJ
-CXJlZyA9IDwweDAgMHg4MDAwMD47Cj4gPiArCQkJfTsKPiA+ICsKPiA+ICsJCQliYXJlYm94ZW52
-QDgwMDAwIHsKPiA+ICsJCQkJbGFiZWwgPSAiYmFyZWJveGVudiI7Cj4gPiArCQkJCXJlZyA9IDww
-eDgwMDAwIDB4ODAwMDA+Owo+ID4gKwkJCX07Cj4gPiArCj4gPiArCQkJa2VybmVsQDEwMDAwMCB7
-Cj4gPiArCQkJCWxhYmVsID0gImtlcm5lbCI7Cj4gPiArCQkJCXJlZyA9IDwweDEwMDAwMCAweDUw
-MDAwMD47Cj4gPiArCQkJfTsKPiA+ICsKPiA+ICsJCQlyb290ZnNANTAwMDAwIHsKPiA+ICsJCQkJ
-bGFiZWwgPSAicm9vdGZzIjsKPiA+ICsJCQkJcmVnID0gPDB4NTAwMDAwIDB4N2IwMDAwMD47Cj4g
-PiArCQkJfTsKPiAKPiBQZW9wbGUgYXJlIGFnYWluc3QgdGhlIGlkZWEgb2YgcHV0dGluZyBwYXJ0
-aXRpb24gbGF5b3V0IGluIGRldmljZSB0cmVlLgoKUmVtb3ZlZC4KCj4gCj4gPiArCQl9Owo+ID4g
-Kwl9Owo+ID4gKwo+ID4gKwlkaXNwbGF5MDogZGlzcGxheTAgewo+ID4gKwkJbW9kZWwgPSAiUHJp
-bWV2aWV3LVBEMDUwVkwxIjsKPiA+ICsJCW5hdGl2ZS1tb2RlID0gPCZ0aW1pbmdfZGlzcDA+Owo+
-ID4gKwkJYml0cy1wZXItcGl4ZWwgPSA8MTY+OwkJLyogbm9uLXN0YW5kYXJkIGJ1dCByZXF1aXJl
-ZCAqLwo+ID4gKwkJZnNsLHBjciA9IDwweGYwYzg4MDgwPjsJLyogbm9uLXN0YW5kYXJkIGJ1dCBy
-ZXF1aXJlZCAqLwo+IAo+IEhhcyB0aGUgY29kZS9kb2N1bWVudCBmb3IgdGhlc2Ugbm9uLXN0YW5k
-YXJkIHByb3BlcnRpZXMgYmVlbiBhY2NlcHRlZD8KClllcywgaXQgd2FzIGFjY2VwdGVkOgpodHRw
-czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzI2MTQ5NTEvCgpUaGFuayB5b3UsCgpNYXJr
-dXMKCj4gCj4gU2hhd24KPiAKPiA+ICsJCWRpc3BsYXktdGltaW5ncyB7Cj4gPiArCQkJdGltaW5n
-X2Rpc3AwOiA2NDB4NDgwIHsKPiA+ICsJCQkJaGFjdGl2ZSA9IDw2NDA+Owo+ID4gKwkJCQl2YWN0
-aXZlID0gPDQ4MD47Cj4gPiArCQkJCWhiYWNrLXBvcmNoID0gPDExMj47Cj4gPiArCQkJCWhmcm9u
-dC1wb3JjaCA9IDwzNj47Cj4gPiArCQkJCWhzeW5jLWxlbiA9IDwzMj47Cj4gPiArCQkJCXZiYWNr
-LXBvcmNoID0gPDMzPjsKPiA+ICsJCQkJdmZyb250LXBvcmNoID0gPDMzPjsKPiA+ICsJCQkJdnN5
-bmMtbGVuID0gPDI+Owo+ID4gKwkJCQljbG9jay1mcmVxdWVuY3kgPSA8MjUwMDAwMDA+Owo+ID4g
-KwkJCX07Cj4gPiArCQl9Owo+ID4gKwl9Owo+ID4gK307Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9h
-cm0vbWFjaC1pbXgvS2NvbmZpZyBiL2FyY2gvYXJtL21hY2gtaW14L0tjb25maWcKPiA+IGluZGV4
-IGYyNWNmODguLjUzNzIzMzcgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9tYWNoLWlteC9LY29u
-ZmlnCj4gPiArKysgYi9hcmNoL2FybS9tYWNoLWlteC9LY29uZmlnCj4gPiBAQCAtNDQxLDYgKzQ0
-MSw3IEBAIGNvbmZpZyBNQUNIX0lNWDI3SVBDQU0KPiA+ICBjb25maWcgTUFDSF9JTVgyN19EVAo+
-ID4gIAlib29sICJTdXBwb3J0IGkuTVgyNyBwbGF0Zm9ybXMgZnJvbSBkZXZpY2UgdHJlZSIKPiA+
-ICAJc2VsZWN0IFNPQ19JTVgyNwo+ID4gKwlzZWxlY3QgSU1YX0hBVkVfUExBVEZPUk1fTVhDX05B
-TkQKPiA+ICAJaGVscAo+ID4gIAkgIEluY2x1ZGUgc3VwcG9ydCBmb3IgRnJlZXNjYWxlIGkuTVgy
-NyBiYXNlZCBwbGF0Zm9ybXMKPiA+ICAJICB1c2luZyB0aGUgZGV2aWNlIHRyZWUgZm9yIGRpc2Nv
-dmVyeQo+ID4gLS0gCj4gPiAxLjguMi4xCj4gPiAKPiAKPiAKCi0tIApQZW5ndXRyb25peCBlLksu
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-fApJbmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgICAgICAgICAgfCBodHRwOi8vd3d3
-LnBlbmd1dHJvbml4LmRlLyAgfApQZWluZXIgU3RyLiA2LTgsIDMxMTM3IEhpbGRlc2hlaW0sIEdl
-cm1hbnkgfCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3LTAgICAgfApBbXRzZ2VyaWNodCBIaWxkZXNo
-ZWltLCBIUkEgMjY4NiAgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTU1NTUgfAoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
-LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
-cm5lbAo=
+On Fri, Jun 21, 2013 at 09:47:40AM +0100, Lorenzo Pieralisi wrote:
+> On Fri, Jun 21, 2013 at 06:23:46AM +0100, Shawn Guo wrote:
+> > On Fri, Jun 21, 2013 at 08:54:53AM +0400, Alexander Shiyan wrote:
+> > > > On Thu, Jun 20, 2013 at 04:50:14PM +0200, Markus Pargmann wrote:
+> > > > > +	cpus {
+> > > > > +		#size-cells = <0>;
+> > > > > +		#address-cells = <1>;
+> > > > > +
+> > > > > +		cpu@0 {
+> > > > > +			device_type = "cpu";
+> > > > > +			compatible = "fsl,imx27", "arm,arm926ejs";
+> > > > 
+> > > > From what Documentation/devicetree/bindings/arm/cpus.txt tells, it
+> > > > should be "arm,arm926".  Also, why do you put "fsl,imx27" there?
+> > > > "imx27" is a SoC name not cpu core.
+> > > 
+> > > I think Markus take this ARM property from one of existing DTS.
+> > > 
+> > > shc@shc /home/git/linux-mx27/arch/arm/boot/dts $ grep arm926 *.dtsi
+> > > at91sam9260.dtsi:                       compatible = "arm,arm926ejs";
+> > > at91sam9263.dtsi:                       compatible = "arm,arm926ejs";
+> > > at91sam9g45.dtsi:                       compatible = "arm,arm926ejs";
+> > > at91sam9n12.dtsi:                       compatible = "arm,arm926ejs";
+> > > at91sam9x5.dtsi:                        compatible = "arm,arm926ejs";
+> > > imx23.dtsi:                     compatible = "arm,arm926ejs";
+> > > imx28.dtsi:                     compatible = "arm,arm926ejs";
+> > > lpc32xx.dtsi:                   compatible = "arm,arm926ejs";
+> > > s3c2416.dtsi:                   compatible = "arm,arm926ejs";
+> > > spear3xx.dtsi:                  compatible = "arm,arm926ejs";
+> > > spear600.dtsi:                  compatible = "arm,arm926ejs";
+> > > wm8505.dtsi:                    compatible = "arm,arm926ejs";
+> > > 
+> > > So, documentation need to be updated or these values should be fixed.
+> > > Another solution  is specify compatible string as:
+> > > compatible = "arm,arm926ejs", "arm,arm926";
+> > > What you think about this?
+> > 
+> > I assume that the compatible string in the binding doc has been reviewed
+> > and agreed by people, so we should fix the existing users before kernel
+> > starts using it to for matching something.
+> > 
+> > Lorenzo, comment?
+> 
+> I patched them all and changes are queued through arm-soc, according to the
+> latest bindings that should get merged this cycle and are available here:
+> 
+> git://linux-arm.org/linux-2.6-lp.git dt-cpus-bindings
+> 
+> If you are queuing dts updates please follow rules in there, waiting for
+> that document to get merged.
+> 
+> Lorenzo
+> 
+
+Okay, I changed it to "arm,arm926ej-s" and removed "reg" as described in
+the dt-cpus-bindings branch documentation.
+
+Thanks,
+
+Markus
+
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
