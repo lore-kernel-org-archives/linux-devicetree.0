@@ -1,19 +1,13 @@
 From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: dts: imx27 cpufreq-cpu0 frequencies
-Date: Sun, 23 Jun 2013 10:22:22 +0200
-Message-ID: <20130623082222.GB13104@s25.your-server.de>
-References: <1371739815-6666-1-git-send-email-mpa@pengutronix.de>
- <1371739815-6666-6-git-send-email-mpa@pengutronix.de>
- <20130621024406.GB24268@S2101-09.ap.freescale.net>
- <1371790493.32418815@f415.i.mail.ru>
- <20130621052344.GA25633@S2101-09.ap.freescale.net>
- <20130621084740.GA14268@e102568-lin.cambridge.arm.com>
+Subject: [PATCH v2 5/5] ARM: dts: Add device tree support for phycard pca100
+Date: Sun, 23 Jun 2013 10:44:21 +0200
+Message-ID: <1371977061-9891-6-git-send-email-mpa@pengutronix.de>
+References: <1371977061-9891-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130621084740.GA14268-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <1371977061-9891-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,75 +18,94 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2013 at 09:47:40AM +0100, Lorenzo Pieralisi wrote:
-> On Fri, Jun 21, 2013 at 06:23:46AM +0100, Shawn Guo wrote:
-> > On Fri, Jun 21, 2013 at 08:54:53AM +0400, Alexander Shiyan wrote:
-> > > > On Thu, Jun 20, 2013 at 04:50:14PM +0200, Markus Pargmann wrote:
-> > > > > +	cpus {
-> > > > > +		#size-cells = <0>;
-> > > > > +		#address-cells = <1>;
-> > > > > +
-> > > > > +		cpu@0 {
-> > > > > +			device_type = "cpu";
-> > > > > +			compatible = "fsl,imx27", "arm,arm926ejs";
-> > > > 
-> > > > From what Documentation/devicetree/bindings/arm/cpus.txt tells, it
-> > > > should be "arm,arm926".  Also, why do you put "fsl,imx27" there?
-> > > > "imx27" is a SoC name not cpu core.
-> > > 
-> > > I think Markus take this ARM property from one of existing DTS.
-> > > 
-> > > shc@shc /home/git/linux-mx27/arch/arm/boot/dts $ grep arm926 *.dtsi
-> > > at91sam9260.dtsi:                       compatible = "arm,arm926ejs";
-> > > at91sam9263.dtsi:                       compatible = "arm,arm926ejs";
-> > > at91sam9g45.dtsi:                       compatible = "arm,arm926ejs";
-> > > at91sam9n12.dtsi:                       compatible = "arm,arm926ejs";
-> > > at91sam9x5.dtsi:                        compatible = "arm,arm926ejs";
-> > > imx23.dtsi:                     compatible = "arm,arm926ejs";
-> > > imx28.dtsi:                     compatible = "arm,arm926ejs";
-> > > lpc32xx.dtsi:                   compatible = "arm,arm926ejs";
-> > > s3c2416.dtsi:                   compatible = "arm,arm926ejs";
-> > > spear3xx.dtsi:                  compatible = "arm,arm926ejs";
-> > > spear600.dtsi:                  compatible = "arm,arm926ejs";
-> > > wm8505.dtsi:                    compatible = "arm,arm926ejs";
-> > > 
-> > > So, documentation need to be updated or these values should be fixed.
-> > > Another solution  is specify compatible string as:
-> > > compatible = "arm,arm926ejs", "arm,arm926";
-> > > What you think about this?
-> > 
-> > I assume that the compatible string in the binding doc has been reviewed
-> > and agreed by people, so we should fix the existing users before kernel
-> > starts using it to for matching something.
-> > 
-> > Lorenzo, comment?
-> 
-> I patched them all and changes are queued through arm-soc, according to the
-> latest bindings that should get merged this cycle and are available here:
-> 
-> git://linux-arm.org/linux-2.6-lp.git dt-cpus-bindings
-> 
-> If you are queuing dts updates please follow rules in there, waiting for
-> that document to get merged.
-> 
-> Lorenzo
-> 
-
-Okay, I changed it to "arm,arm926ej-s" and removed "reg" as described in
-the dt-cpus-bindings branch documentation.
-
-Thanks,
-
-Markus
-
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Qm9hcmQgZmlsZXMgZm9yIFBoeXRlYyBQaHlDQVJELVMgIlN5c3RlbSBvbiBNb2R1bGUiIGFuZCAi
+UmFwaWQKRGV2ZWxvcG1lbnQgS2l0Ii4KCkJhc2VkIG9uIHBhdGNoZXMgZnJvbToKClN0ZWZmZW4g
+VHJ1bXRyYXIgPHMudHJ1bXRyYXJAcGVuZ3V0cm9uaXguZGU+OgogLSBPcmlnaW5hbCBwYXRjaAog
+LSBBUk06IGR0czogU2V0IHBhcnRpdGlvbiBvZmZzZXRzIGZvciBwaHljYXJkCiAtIEFSTTogZHRz
+OiBVc2UgQ1NQSTEgaW5zdGVhZCBvZiBDU1BJMiBvbiBwaHljYXJkIHBjYTEwMAogLSBBUk06IGlt
+eDI3LXBoeXRlYy1waHljYXJkLVMuZHRzOiByZXNpemUgbmFuZCBwYXJ0aXRpb25zCgpKYW4gTHVl
+YmJlIDxqbHVAcGVuZ3V0cm9uaXguZGU+OgogLSBBUk06IGR0czogRW5hYmxlIGJhZCBibG9jayB0
+YWJsZSBpbiBOQU5ECgpDYzogU3RlZmZlbiBUcnVtdHJhciA8cy50cnVtdHJhckBwZW5ndXRyb25p
+eC5kZT4KQ2M6IEphbiBMdWViYmUgPGpsdUBwZW5ndXRyb25peC5kZT4KU2lnbmVkLW9mZi1ieTog
+TWFya3VzIFBhcmdtYW5uIDxtcGFAcGVuZ3V0cm9uaXguZGU+Ci0tLQoKTm90ZXM6CiAgICBDaGFu
+Z2VzIGluIHYyOgogICAgIC0gUmVtb3ZlIHVubmVjZXNzYXJ5IEtjb25maWcgbmFuZCBzZWxlY3Rp
+b24uCiAgICAgLSBTdHlsZSBmaXhlcwogICAgIC0gUmVwbGFjZSBub2RlIGlkZW50aWZpZXJzIHdp
+dGggbm9kZSBsYWJlbHMKICAgICAtIEZpeCBjb21wYXRpYmlsaXR5IG9mIGNwdSBub2RlCiAgICAg
+LSBSZW1vdmUgZGV2aWNlIG5vZGUgZm9yIG5vdCBtYWlubGluZWQgZGltbWVyIGRyaXZlcgogICAg
+IC0gUmVtb3ZlIG5hbmQgcGFydGl0aW9uIHRhYmxlCiAgICAgLSBSZW1vdmUgbWVtb3J5IG5vZGUK
+ICAgICAtIFNwbGl0dGVkIGJvYXJkIGZpbGUgaW50byAic3lzdGVtIG9uIG1vZHVsZSIgYW5kICJy
+YXBpZCBkZXZlbG9wbWVudCBraXQiCgogYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAg
+ICAgICAgICAgICAgICAgIHwgIDIgKwogYXJjaC9hcm0vYm9vdC9kdHMvaW14MjctcGh5dGVjLXBo
+eWNhcmQtcy1yZGsuZHRzIHwgNjIgKysrKysrKysrKysrKysrKysrKysKIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDI3LXBoeXRlYy1waHljYXJkLXMtc29tLmR0cyB8IDcyICsrKysrKysrKysrKysrKysr
+KysrKysrKwogMyBmaWxlcyBjaGFuZ2VkLCAxMzYgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDI3LXBoeXRlYy1waHljYXJkLXMtcmRrLmR0cwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL2lteDI3LXBoeXRlYy1waHljYXJk
+LXMtc29tLmR0cwoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKaW5kZXggYjNhODY2MS4uNzA3YzE5MiAxMDA2NDQKLS0t
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvTWFr
+ZWZpbGUKQEAgLTEwNSw2ICsxMDUsOCBAQCBkdGItJChDT05GSUdfQVJDSF9NWEMpICs9IFwKIAlp
+bXgyNy1wZGsuZHRiIFwKIAlpbXgyNy1waHl0ZWMtcGh5Y29yZS1zb20uZHRiIFwKIAlpbXgyNy1w
+aHl0ZWMtcGh5Y29yZS1yZGsuZHRiIFwKKwlpbXgyNy1waHl0ZWMtcGh5Y2FyZC1zLXNvbS5kdGIg
+XAorCWlteDI3LXBoeXRlYy1waHljYXJkLXMtcmRrLmR0YiBcCiAJaW14MzEtYnVnLmR0YiBcCiAJ
+aW14NTEtYXBmNTEuZHRiIFwKIAlpbXg1MS1hcGY1MWRldi5kdGIgXApkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvaW14MjctcGh5dGVjLXBoeWNhcmQtcy1yZGsuZHRzIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvaW14MjctcGh5dGVjLXBoeWNhcmQtcy1yZGsuZHRzCm5ldyBmaWxlIG1vZGUgMTAw
+NjQ0CmluZGV4IDAwMDAwMDAuLmJmMTE0MjkKLS0tIC9kZXYvbnVsbAorKysgYi9hcmNoL2FybS9i
+b290L2R0cy9pbXgyNy1waHl0ZWMtcGh5Y2FyZC1zLXJkay5kdHMKQEAgLTAsMCArMSw2MiBAQAor
+LyoKKyAqIENvcHlyaWdodCAyMDEyIE1hcmt1cyBQYXJnbWFubiwgUGVuZ3V0cm9uaXgKKyAqCisg
+KiBUaGUgY29kZSBjb250YWluZWQgaGVyZWluIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSBHTlUgR2Vu
+ZXJhbCBQdWJsaWMKKyAqIExpY2Vuc2UuIFlvdSBtYXkgb2J0YWluIGEgY29weSBvZiB0aGUgR05V
+IEdlbmVyYWwgUHVibGljIExpY2Vuc2UKKyAqIFZlcnNpb24gMiBvciBsYXRlciBhdCB0aGUgZm9s
+bG93aW5nIGxvY2F0aW9uczoKKyAqCisgKiBodHRwOi8vd3d3Lm9wZW5zb3VyY2Uub3JnL2xpY2Vu
+c2VzL2dwbC1saWNlbnNlLmh0bWwKKyAqIGh0dHA6Ly93d3cuZ251Lm9yZy9jb3B5bGVmdC9ncGwu
+aHRtbAorICovCisKKyNpbmNsdWRlICJpbXgyNy1waHl0ZWMtcGh5Y2FyZC1zLXNvbS5kdHMiCisK
+Ky8geworCW1vZGVsID0gIlBoeXRlYyBwY2ExMDAgcmFwaWQgZGV2ZWxvcG1lbnQga2l0IjsKKwlj
+b21wYXRpYmxlID0gInBoeXRlYyxpbXgyNy1wY2ExMDAtcmRrIiwgInBoeXRlYyxpbXgyNy1wY2Ex
+MDAiLCAiZnNsLGlteDI3IjsKKworCWRpc3BsYXk6IGRpc3BsYXkgeworCQltb2RlbCA9ICJQcmlt
+ZXZpZXctUEQwNTBWTDEiOworCQluYXRpdmUtbW9kZSA9IDwmdGltaW5nMD47CisJCWJpdHMtcGVy
+LXBpeGVsID0gPDE2PjsgIC8qIG5vbi1zdGFuZGFyZCBidXQgcmVxdWlyZWQgKi8KKwkJZnNsLHBj
+ciA9IDwweGYwYzg4MDgwPjsJLyogbm9uLXN0YW5kYXJkIGJ1dCByZXF1aXJlZCAqLworCQlkaXNw
+bGF5LXRpbWluZ3MgeworCQkJdGltaW5nMDogNjQweDQ4MCB7CisJCQkJaGFjdGl2ZSA9IDw2NDA+
+OworCQkJCXZhY3RpdmUgPSA8NDgwPjsKKwkJCQloYmFjay1wb3JjaCA9IDwxMTI+OworCQkJCWhm
+cm9udC1wb3JjaCA9IDwzNj47CisJCQkJaHN5bmMtbGVuID0gPDMyPjsKKwkJCQl2YmFjay1wb3Jj
+aCA9IDwzMz47CisJCQkJdmZyb250LXBvcmNoID0gPDMzPjsKKwkJCQl2c3luYy1sZW4gPSA8Mj47
+CisJCQkJY2xvY2stZnJlcXVlbmN5ID0gPDI1MDAwMDAwPjsKKwkJCX07CisJCX07CisJfTsKK307
+CisKKyZpbXhmYiB7CisJZGlzcGxheSA9IDwmZGlzcGxheT47CisJc3RhdHVzID0gIm9rYXkiOwor
+fTsKKworJnNkaGNpMiB7CisJY2QtZ3Bpb3MgPSA8JmdwaW8zIDI5IDA+OworCXN0YXR1cyA9ICJv
+a2F5IjsKK307CisKKyZ1YXJ0MSB7CisJZnNsLHVhcnQtaGFzLXJ0c2N0czsKKwlzdGF0dXMgPSAi
+b2theSI7Cit9OworCismdWFydDIgeworCWZzbCx1YXJ0LWhhcy1ydHNjdHM7CisJc3RhdHVzID0g
+Im9rYXkiOworfTsKKworJnVhcnQzIHsKKwlmc2wsdWFydC1oYXMtcnRzY3RzOworCXN0YXR1cyA9
+ICJva2F5IjsKK307CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXgyNy1waHl0ZWMt
+cGh5Y2FyZC1zLXNvbS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyNy1waHl0ZWMtcGh5Y2Fy
+ZC1zLXNvbS5kdHMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uNmIyYjhhZDQK
+LS0tIC9kZXYvbnVsbAorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyNy1waHl0ZWMtcGh5Y2Fy
+ZC1zLXNvbS5kdHMKQEAgLTAsMCArMSw3MiBAQAorLyoKKyAqIENvcHlyaWdodCAyMDEyIFNhc2No
+YSBIYXVlciwgVXdlIEtsZWluZS1Lw7ZuaWcsIFN0ZWZmZW4gVHJ1bXRyYXIKKyAqIGFuZCBNYXJr
+dXMgUGFyZ21hbm4sIFBlbmd1dHJvbml4CisgKgorICogVGhlIGNvZGUgY29udGFpbmVkIGhlcmVp
+biBpcyBsaWNlbnNlZCB1bmRlciB0aGUgR05VIEdlbmVyYWwgUHVibGljCisgKiBMaWNlbnNlLiBZ
+b3UgbWF5IG9idGFpbiBhIGNvcHkgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlCisg
+KiBWZXJzaW9uIDIgb3IgbGF0ZXIgYXQgdGhlIGZvbGxvd2luZyBsb2NhdGlvbnM6CisgKgorICog
+aHR0cDovL3d3dy5vcGVuc291cmNlLm9yZy9saWNlbnNlcy9ncGwtbGljZW5zZS5odG1sCisgKiBo
+dHRwOi8vd3d3LmdudS5vcmcvY29weWxlZnQvZ3BsLmh0bWwKKyAqLworCisvZHRzLXYxLzsKKyNp
+bmNsdWRlICJpbXgyNy5kdHNpIgorCisvIHsKKwltb2RlbCA9ICJQaHl0ZWMgcGNhMTAwIjsKKwlj
+b21wYXRpYmxlID0gInBoeXRlYyxpbXgyNy1wY2ExMDAiLCAiZnNsLGlteDI3IjsKKworCW1lbW9y
+eSB7CisJCXJlZyA9IDwweDAgMHgwODAwMDAwMD47IC8qIDEyOE1CICovCisJfTsKK307CisKKyZj
+c3BpMSB7CisJZnNsLHNwaS1udW0tY2hpcHNlbGVjdHMgPSA8Mj47CisJY3MtZ3Bpb3MgPSA8Jmdw
+aW80IDI4IDA+LAorCQk8JmdwaW80IDI3IDA+OworCXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZm
+ZWMgeworCXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZpMmMxIHsKKwlzdGF0dXMgPSAib2theSI7
+CisKKwlpb2V4cGFuZGVyQDQxIHsKKwkJY29tcGF0aWJsZSA9ICJueHAscGNhOTUzNiI7CisJCXJl
+ZyA9IDwweDQxPjsKKwl9OworCisJcnRjQDUxIHsKKwkJY29tcGF0aWJsZSA9ICJueHAscGNmODU2
+MyI7CisJCXJlZyA9IDwweDUxPjsKKwl9OworfTsKKworJmkyYzIgeworCXN0YXR1cyA9ICJva2F5
+IjsKKworCWxtNzVANGEgeworCQljb21wYXRpYmxlID0gIm5hdGlvbmFsLGxtNzUiOworCQlyZWcg
+PSA8MHg0YT47CisJfTsKKworCXJ0Y0A1MSB7CisJCWNvbXBhdGlibGUgPSAibnhwLHBjZjg1NjMi
+OworCQlyZWcgPSA8MHg1MT47CisJfTsKKworCWF0MjRANTIgeworCQljb21wYXRpYmxlID0gImF0
+LDI0YzMyIjsKKwkJcGFnZXNpemUgPSA8MzI+OworCQlyZWcgPSA8MHg1Mj47CisJfTsKK307CisK
+KyZvd2lyZSB7CisJc3RhdHVzID0gIm9rYXkiOworfTsKLS0gCjEuOC4yLjEKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBt
+YWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9s
+aXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
