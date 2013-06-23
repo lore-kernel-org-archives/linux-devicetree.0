@@ -1,7 +1,7 @@
 From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 0/5] ARM: dts: imx27 Phytec PhyCARD-S
-Date: Sun, 23 Jun 2013 10:44:16 +0200
-Message-ID: <1371977061-9891-1-git-send-email-mpa@pengutronix.de>
+Subject: [PATCH] ARM: imx27: Fix documentation for SPLL clock
+Date: Sun, 23 Jun 2013 10:51:10 +0200
+Message-ID: <1371977470-12720-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,38 +16,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+spll_gate was added with commit b7eed2076183994dbda2c19bc7fba99b65a135e3
+"ARM: imx27: add a clock gate to activate SPLL clock".
 
-This series adds some device nodes for imx27 and board files for Phytec
-PhyCARD-S SOM and RDK. It is based on shawn's branch "imx/dt".
+spll_gate is missing in the devicetree clock documentation for imx27. This
+patch adds it to the list of clocks in the documentation.
 
-Regards,
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/clock/imx27-clock.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Markus
-
-Changes in v2:
- - Removed already accepted clocks patch
-   "ARM: mx27: Replace clk_register_clkdev with clock DT lookup"
- - pca100 board file was splitted into two parts SOM and RDK
- - other changes described in patch notes
-
-Fabio Estevam (1):
-      ARM: imx27: Use 'AITC' for the interrupt controller name
-
-Markus Pargmann (4):
-      ARM: dts: imx27: Add imx framebuffer device
-      ARM: dts: imx27: Add 1-wire
-      ARM: dts: imx27 cpufreq-cpu0 frequencies
-      ARM: dts: Add device tree support for phycard pca100
-
- arch/arm/boot/dts/Makefile                       |  2 +
- arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts | 62 ++++++++++++++++++++
- arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts | 72 ++++++++++++++++++++++++
- arch/arm/boot/dts/imx27.dtsi                     | 41 +++++++++++++-
- 4 files changed, 174 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
- create mode 100644 arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
+diff --git a/Documentation/devicetree/bindings/clock/imx27-clock.txt b/Documentation/devicetree/bindings/clock/imx27-clock.txt
+index ab1a56e..7a20703 100644
+--- a/Documentation/devicetree/bindings/clock/imx27-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx27-clock.txt
+@@ -98,6 +98,7 @@ clocks and IDs.
+ 	fpm                  83
+ 	mpll_osc_sel         84
+ 	mpll_sel             85
++	spll_gate	     86
+ 
+ Examples:
+ 
+-- 
+1.8.2.1
