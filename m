@@ -1,61 +1,44 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/3] iio: Add Nuvoton NAU7802 ADC driver
-Date: Sun, 23 Jun 2013 18:33:10 +0100
-Message-ID: <51C73156.7040807@kernel.org>
-References: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com> <1371754675-12242-2-git-send-email-alexandre.belloni@free-electrons.com> <51C590B5.2060308@kernel.org> <51C5923D.6030609@metafoo.de> <51C5A1AF.3070404@free-electrons.com> <51C5A499.5050509@metafoo.de> <51C5A68F.3000300@free-electrons.com> <51C6FE00.8010900@metafoo.de>
+From: Timur Tabi <timur@tabi.org>
+Subject: Re: [PATCH v9 01/10] ASoC: imx-pcm-dma: DT support
+Date: Sun, 23 Jun 2013 12:49:17 -0500
+Message-ID: <51C7351D.9080004@tabi.org>
+References: <1371734429-6081-1-git-send-email-mpa@pengutronix.de>
+ <1371734429-6081-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51C6FE00.8010900-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, jimwall@q.com, brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1371734429-6081-2-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/23/2013 02:54 PM, Lars-Peter Clausen wrote:
-> On 06/22/2013 03:28 PM, Alexandre Belloni wrote:
->> On 22/06/2013 15:20, Lars-Peter Clausen wrote:
->>> On 06/22/2013 03:07 PM, Alexandre Belloni wrote:
->>>> On 22/06/2013 14:02, Lars-Peter Clausen wrote:
->>>>> On 06/22/2013 01:55 PM, Jonathan Cameron wrote:
->>>>>> On 06/20/2013 07:57 PM, Alexandre Belloni wrote:
->>>>>>> The Nuvoton NAU7802 ADC is a 24-bit 2-channels I2C ADC, with adjustable
->>>>>>> gain and sampling rates.
->>>>>>>
->>>>>> Sorry, somewhat low on time today so only a quick review.
->>>>>>
->>>>>> 1) Missing userspace ABI documentation.  Also, perhaps min_conversions is
->>>>>>    a little vague?  Not that I have a better idea!
->>>>> I really don't like the name min_conversions either. Isn't this effectively
->>>>> a decimation filter?
->>>> Yeah, it could be seen like that but it is only relevant and only
->>>> happens when switching between channels. I'm open to any ideas.
->>>>
->>> I see. Is there anything about this in the datasheet on how many conversions
->>> you usually need? Is this really something you need to change at runtime or
->>> does moving this to platform data work?
->>>
->>>
->>
->> There is actually nothing in the datasheet. The default value (6
->> conversions) was found experimentally. What I did was saturating the ADC
->> with the higher value on one channel and the lower value on the other
->> one and I tried to find when reading both channel sequentially was
->> resulting in a correct value.
->>
->> You may not need to change it at runtime. And that value mainly depend
->> on the precision versus speed balance you want to achieve. If you know
->> that the values on both channels will not be to far apart, then you may
->> not need to wait at all.
->>
->> Would you think that is something I should hide in the DT ? Or maybe I
->> can drop that knob for now and see if it is needed in the future.
->>
-> 
-> It is always a good idea to be conservative when introducing new ABI, so if
-> you think we can get away with hardcoding this in the driver I think that's
-> a good idea.
-> 
-I agree entirely.  We can always make it controllable later as long
-as we keep the default the same as the value you hard code in now.
+Markus Pargmann wrote:
+> This patch removes the NO_DT flag. The pdev pointer may have a proper
+> of_node with the dmas property, so we can use it to request DMA
+> channels.
+>
+> Signed-off-by: Markus Pargmann<mpa@pengutronix.de>
+> Tested-by: Shawn Guo<shawn.guo@linaro.org>
+> ---
+
+I won't have access to functioning hardware for another month or two, so I 
+can't test to see if this patchset breaks PowerPC, but at least it does 
+compile.  I'm a little worried that the DMA changes won't actually run on 
+PowerPC, but I can't test that now.
+
+So for the time being:
+
+Acked-by: Timur Tabi <timur@tabi.org>
+
+-- 
+Timur Tabi
