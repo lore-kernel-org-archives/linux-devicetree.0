@@ -1,48 +1,57 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v3 03/10] pinctrl:st: Add pinctrl and pinconf support.
-Date: Mon, 24 Jun 2013 13:24:13 +0100
-Message-ID: <51C83A6D.2060009@st.com>
-References: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com> <1371737138-9340-1-git-send-email-srinivas.kandagatla@st.com> <51C45816.5010207@st.com> <CACRpkdb-H2=GdF54Fay+PQVdXLTs++L5+QYe_vFPuzpa+E4ZMg@mail.gmail.com>
-Reply-To: srinivas.kandagatla@st.com
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: imx27: Fix documentation for SPLL clock
+Date: Mon, 24 Jun 2013 20:48:38 +0800
+Message-ID: <20130624124836.GC30747@S2101-09.ap.freescale.net>
+References: <1371977470-12720-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb-H2=GdF54Fay+PQVdXLTs++L5+QYe_vFPuzpa+E4ZMg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, kernel@stlinux.com, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Stephen Gallimore <stephen.gallimore@st.com>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1371977470-12720-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/06/13 12:57, Linus Walleij wrote:
-> On Fri, Jun 21, 2013 at 3:41 PM, Srinivas KANDAGATLA
-> <srinivas.kandagatla@st.com> wrote:
+On Sun, Jun 23, 2013 at 10:51:10AM +0200, Markus Pargmann wrote:
+> spll_gate was added with commit b7eed2076183994dbda2c19bc7fba99b65a135e3
+> "ARM: imx27: add a clock gate to activate SPLL clock".
 > 
->> Hi Linus W,
->> If its not too late can this patch be considered for 3.11 via pinctrl tree?
->> There is a build dependecy with regmap_field apis pulled by Mark Brown
->> in regmap repository.
+> spll_gate is missing in the devicetree clock documentation for imx27. This
+> patch adds it to the list of clocks in the documentation.
 > 
-> This seems fairly complete, but I cannot have such a basic dependency onto
-> the regmap tree this late in the merge window, i.e. I'm not ready to pull
-> all of regmap into the pinctrl tree. I'd consider this for merging
-> for the next kernel cycle so it's more orthogonal.
-Hmmm..
-You mean 3.12*
+> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Am not sure, But..
-Is it possible to make just regmap field api patch go via pinctrl tree,
-as "Mark Brow" has already accepted it.
+Applied, thanks.
 
-Ideally, It would be nice this patch to be part of 3.11-* as, Arnd
-already pushed SOC support changes to his next branch.
+Shawn
 
-
-thanks,
-srini
-
+> ---
+>  Documentation/devicetree/bindings/clock/imx27-clock.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Yours,
-> Linus Walleij
+> diff --git a/Documentation/devicetree/bindings/clock/imx27-clock.txt b/Documentation/devicetree/bindings/clock/imx27-clock.txt
+> index ab1a56e..7a20703 100644
+> --- a/Documentation/devicetree/bindings/clock/imx27-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/imx27-clock.txt
+> @@ -98,6 +98,7 @@ clocks and IDs.
+>  	fpm                  83
+>  	mpll_osc_sel         84
+>  	mpll_sel             85
+> +	spll_gate	     86
+>  
+>  Examples:
+>  
+> -- 
+> 1.8.2.1
 > 
-
