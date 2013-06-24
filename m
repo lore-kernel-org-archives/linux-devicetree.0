@@ -1,68 +1,82 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V10 0/4] PCIe support for Samsung Exynos5440 SoC
-Date: Mon, 24 Jun 2013 11:52:10 +0900
-Message-ID: <007201ce7085$d2c4fed0$784efc70$@samsung.com>
-References: <003901ce6e50$03d039a0$0b70ace0$@samsung.com>
- <201306211030.47440.arnd@arndb.de>
- <20130621141144.GP31667@titan.lakedaemon.net>
- <201306211614.49434.arnd@arndb.de>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH 0/5] clk/exynos5420: add clocks for hdmi subsystem
+Date: Mon, 24 Jun 2013 09:33:59 +0530
+Message-ID: <CAPdUM4MENsYV3uA+FEt7UX9Qe8DyJ6a_cNj3wzW1+j1q+xf6Fg@mail.gmail.com>
+References: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>
+	<CAPdUM4MtBXMaZDDRT1aKsS=HzwjpbyMY85oRLMbk-KvJCU1hag@mail.gmail.com>
+	<51C1B9AD.8060804@samsung.com>
+	<20130621043252.9136.66418@quantum>
+	<CAPdUM4NxCKtKrZg1RYD0=83jDYt9Nzd3paYL53ZL9tt2zfJy7A@mail.gmail.com>
+	<20130621164303.9136.5127@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <201306211614.49434.arnd-r2nGTMty4D4@public.gmane.org>
-Content-language: ko
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Thomas Petazzoni' <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: 'Siva Reddy Kallam' <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Jason Gunthorpe' <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Jason Cooper' <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, 'Surendranath Gurivireddy Balla' <suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, 'Thierry Reding' <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Mohit KUMAR' <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Andrew Murray' <andrew.murray-5wv7dgnIgG8@public.gmane.org>, 'Pratyush Anand' <pratyush.anand-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130621164303.9136.5127@quantum>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, June 21, 2013 11:15 PM, Arnd Bergmann wrote:
-> On Friday 21 June 2013, Jason Cooper wrote:
-> > On Fri, Jun 21, 2013 at 10:30:47AM +0200, Arnd Bergmann wrote:
-> > > On Friday 21 June 2013, Thomas Petazzoni wrote:
-> > > > I am by far not an expert on how to solve merge strategies and so on,
-> > > > but to avoid conflicts at Linus's level while merging the arm-soc and
-> > > > pci trees, it would be better if this Samsung PCIe driver could go
-> > > > through arm-soc (with Bjorn ACK, of course), so that Arnd/Olof can
-> > > > make sure the ordering is correct with regard to the of/pci changes and
-> > > > the mvebu/pci driver.
+Thanks Mike.
 
-Yes, right.
-That is the reason why I based on 'linu-next' tree,
-instead of 'PCI' -next branch.
+I will rebase these patches to v3.11-next/samsung-clk branch and post v2.
 
+regards,
+Rahul Sharma.
 
-Bjorn Helgaas,
-Could you give your ACK?
-Thank you.
-
-
-Best regards,
-Jingoo Han
-
-> > >
-> > > Yes, good point.
-> > >
-> > > The alternative would be that Bjorn also takes the PCI branch dependencies
-> > > that are already in arm-soc into his tree. Either way works, but I agree
-> > > that what you suggest would be simpler.
-> >
-> > Yes, that is why we did it this way.  It was my understanding based on
-> > previous comments by yourself and LinusW that you both had patches
-> > depending on (now called) mvebu/of_pci.  So we got it into arm-soc
-> > early so those branches could depend on it.
-> 
-> Right. I wasn't paying enough attention for the early merges that
-> Olof did.
-> 
-> 	Arnd
+On Fri, Jun 21, 2013 at 10:13 PM, Mike Turquette <mturquette@linaro.org> wrote:
+> Quoting Rahul Sharma (2013-06-20 21:47:35)
+>> On Fri, Jun 21, 2013 at 10:02 AM, Mike Turquette <mturquette@linaro.org> wrote:
+>> > Quoting Kukjin Kim (2013-06-19 07:01:17)
+>> >> On 06/19/13 13:04, Rahul Sharma wrote:
+>> >> > + mike
+>> >> >
+>> >> Mike, I'm waiting for your reply on this. If you're OK, let me take this
+>> >> series on top of exynos5420 stuff in samsung tree.
+>> >>
+>> >> Of course, if any concerns, please let me know.
+>> >
+>> > I never got these patches.  I'm not subscribed to devicetree-devel or
+>> > linux-samsung so I only got two replies to patch #0, but none of the
+>> > code. Can you or Rajul resend?
+>> >
+>>
+>> Sure mike.
+>
+> Acked-by: Mike Turquette <mturquette@linaro.org>
+>
+> Regards,
+> Mike
+>
+>>
+>> > Thanks,
+>> > Mike
+>> >
+>> >>
+>> >> Thanks,
+>> >> - Kukjin
+>> >>
+>> >> > On Tue, Jun 18, 2013 at 8:03 PM, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
+>> >> >> Add clock changes for hdmi subsystem for exynos5250 SoC. These
+>> >> >> include addition of new clocks like mout_hdmi and smmu_tv, associating
+>> >> >> ID to clk_hdmiphy and some essential corrections.
+>> >> >>
+>> >> >> This set is based on kukjin's for-next branch at
+>> >> >> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
+>> >> >>
+>> >> >> This set dependents on the following patches which add support for Exynos5420
+>> >> >> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg19264.html
+>> >> >>
+>> >> >> Rahul Sharma (5):
+>> >> >>    clk/exynos5420: add sclk_hdmiphy to the list of special clocks
+>> >> >>    clk/exynos5420: add gate clock for tv sysmmu
+>> >> >>    clk/exynos5420: fix the order of parents of hdmi mux
+>> >> >>    clk/exynos5420: add hdmi mux to change parents in hdmi driver
+>> >> >>    clk/exynos5420: assign sclk_pixel id to pixel clock divider
+>> >> >>
+>> >> >>   .../devicetree/bindings/clock/exynos5420-clock.txt   |    7 +++++++
+>> >> >>   drivers/clk/samsung/clk-exynos5420.c                 |   18 +++++++++++-------
+>> >> >>   2 files changed, 18 insertions(+), 7 deletions(-)
+>> >> >>
+>> >> >> --
+>> >> >> 1.7.10.4
