@@ -1,32 +1,62 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH 0/5] clk/exynos5420: add clocks for hdmi subsystem
-Date: Tue, 25 Jun 2013 01:53:56 +0900
-Message-ID: <51C879A4.9020003@samsung.com>
-References: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>	<CAPdUM4MtBXMaZDDRT1aKsS=HzwjpbyMY85oRLMbk-KvJCU1hag@mail.gmail.com>	<51C1B9AD.8060804@samsung.com>	<20130621043252.9136.66418@quantum>	<CAPdUM4NxCKtKrZg1RYD0=83jDYt9Nzd3paYL53ZL9tt2zfJy7A@mail.gmail.com>	<20130621164303.9136.5127@quantum>	<CAPdUM4MENsYV3uA+FEt7UX9Qe8DyJ6a_cNj3wzW1+j1q+xf6Fg@mail.gmail.com> <CAPdUM4NOsQThGW7dGJir_a9-kkLm-AUDPi2hM0w2Jz7cdCwFrQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAPdUM4NOsQThGW7dGJir_a9-kkLm-AUDPi2hM0w2Jz7cdCwFrQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <r.sh.open@gmail.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv3 0/3] Add support for the Nuvoton NAU7802 ADC to the cfa10049
+Date: Mon, 24 Jun 2013 19:24:56 +0200
+Message-ID: <1372094699-3832-1-git-send-email-alexandre.belloni@free-electrons.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
+Cc: jimwall@q.com, brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/24/13 13:28, Rahul Sharma wrote:
+Hi,
 
-[...]
+This is v3 of the patchset that adds support for the 3 Nuvoton NAU7802 ADCs
+present on the CFA-10049 board from Crystalfontz. The first patch adds the
+driver, the next ones are adding them in the DT after switching the second i2c
+bus to bitbanging following a lot of timeout issues we have on that bus.
 
->>>>> I never got these patches.  I'm not subscribed to devicetree-devel or
->>>>> linux-samsung so I only got two replies to patch #0, but none of the
->>>>> code. Can you or Rajul resend?
->>>>>
->>>>
->>>> Sure mike.
->>>
->>> Acked-by: Mike Turquette<mturquette@linaro.org>
->>>
-Applied with Mike's ack.
+Changes in v3:
+ - removed the min_conversion knob in sysfs, it is now hardcoded to 6
+ - added error checking in probe
+ - corrected error checking
+ - corrected possibly uninitialized vldo
+ - used ARRAY_SIZE(nau7802_chan_array) instead of 2
+ - added that vldo refers to the internal voltage regulator
 
-Thanks,
-- Kukjin
+Changes in v2:
+ - channels are now statically allocated
+ - no wrappers around i2c functions
+ - sampling_freq is a shared attribute
+ - setting gain is done through scale
+ - cosmetics changes (s/idev/indio_dev/, blank lines before returns)
+ - use of sign_extend32 to extend the sign
+ - reading scale now returns IIO_VAL_FRACTIONAL_LOG2
+ - no dt lookup for interrupts, this is done in of_i2c.c but that was mask due
+ to a bug.
+
+what I didn't address is setting the external reference voltage through a fixed
+regulator and I kept the vldo attribute to set the internal voltage reference in
+the DT as Jonathan seemed to be ok with that. If anybody is using a nau7802 with
+an external reference, it will still be time to add the fixed regulator. It
+shouldn't be difficult but I don't have any hardware to test.
+
+Regards,
+
+Alexandre Belloni (1):
+  iio: Add Nuvoton NAU7802 ADC driver
+
+Maxime Ripard (2):
+  ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
+  ARM: mxs: cfa10049: Add NAU7802 ADCs to the device tree
+
+ .../bindings/iio/adc/nuvoton-nau7802.txt           |  18 +
+ arch/arm/boot/dts/imx28-cfa10049.dts               | 126 +++--
+ drivers/iio/adc/Kconfig                            |   9 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/nau7802.c                          | 576 +++++++++++++++++++++
+ 5 files changed, 687 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton-nau7802.txt
+ create mode 100644 drivers/iio/adc/nau7802.c
+
+-- 
+1.8.1.2
