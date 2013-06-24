@@ -1,138 +1,75 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Re: [PATCH] gpio MIPS/OCTEON: Add a driver for OCTEON's on-chip
- GPIO pins.
-Date: Tue, 25 Jun 2013 00:06:23 +0200
-Message-ID: <CACRpkdYmPuyrDYU1n+UpgW-if9-JS-vXJgLVCJ2zrx-4oKBtHw@mail.gmail.com>
-References: <1371251915-18271-1-git-send-email-ddaney.cavm@gmail.com>
-	<CACRpkdYHzBBbPNujYRGkMFGuQRzeYKs9jgfc3e3HWyxQFahvRQ@mail.gmail.com>
-	<51C34584.8070301@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v5] clocksource:arm_global_timer: Add ARM global timer
+ support.
+Date: Mon, 24 Jun 2013 15:08:28 -0700
+Message-ID: <51C8C35C.70307@codeaurora.org>
+References: <1372089195-29219-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51C34584.8070301@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, David Daney <david.daney@cavium.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1372089195-29219-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Stuart Menefy <stuart.menefy@st.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2013 at 8:10 PM, David Daney <ddaney.cavm@gmail.com> wrote:
-> On 06/17/2013 01:51 AM, Linus Walleij wrote:
+On 06/24/13 08:53, Srinivas KANDAGATLA wrote:
+> +#include <linux/clkdev.h>
 
->> +#include <asm/octeon/octeon.h>
->> +#include <asm/octeon/cvmx-gpio-defs.h>
->>
->> I cannot find this in my tree.
->
-> Weird, I see them here:
->
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/asm/octeon/cvmx-gpio-defs.h
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/asm/octeon/octeon.h
->
-> Do you not have these?
+Why do you need this include?
 
-Yeah no problem, I must have misgrepped.
-Sorry for the fuzz...
+> +#include <asm/mach/irq.h>
 
->> depend on OF as well right? Or does the CAVIUM_OCTEON_SOC already
->> imply that?
->
-> We already have 'select USE_OF', so I think adding OF here would be
-> redundant.
+And this one?
 
-OK.
+> +static u64 gt_counter_read(void)
+> +{
+> +	u64 counter;
+> +	u32 lower;
+> +	u32 upper, old_upper;
+> +
+> +	upper = readl_relaxed(gt_base + GT_COUNTER1);
+> +	do {
+> +		old_upper = upper;
+> +		lower = readl_relaxed(gt_base + GT_COUNTER0);
+> +		upper = readl_relaxed(gt_base + GT_COUNTER1);
+[snip]
+> +static void gt_compare_set(unsigned long delta, int periodic)
+> +{
+> +	u64 counter = gt_counter_read();
+> +	unsigned long ctrl = readl(gt_base + GT_CONTROL);
+> +
+> +	counter += delta;
+> +	ctrl &=  ~(GT_CONTROL_COMP_ENABLE | GT_CONTROL_IRQ_ENABLE);
+> +
+> +	writel(ctrl, gt_base + GT_CONTROL);
+> +	writel(lower_32_bits(counter), gt_base + GT_COMP0);
+> +	writel(upper_32_bits(counter), gt_base + GT_COMP1);
+> +
+> +	if (periodic) {
+> +		writel(delta, gt_base + GT_AUTO_INC);
+> +		ctrl |= GT_CONTROL_AUTO_INC;
+> +	}
+> +
+> +	ctrl |= GT_CONTROL_COMP_ENABLE | GT_CONTROL_IRQ_ENABLE;
+> +	writel(ctrl, gt_base + GT_CONTROL);
+> +}
 
->>> +/*
->>> + * The address offset of the GPIO configuration register for a given
->>> + * line.
->>> + */
->>> +static unsigned int bit_cfg_reg(unsigned int gpio)
->>
->> Maybe the passed variable shall be named "offset" here, as it is named
->> offset on all call sites, and it surely local for this instance?
->
-> Well it is the gpio line, so perhaps it should universally be change to
-> "line" or "pin"
+Why is there a mix of the relaxed and non-relaxed io accessors?
 
-We use "offset" to signify line enumerators in drivers/gpio/*
-well atleaste if they are local to a piece of hardware.
-(Check the GPIO siblings.)
+> +#ifdef CONFIG_CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
+> +static u32 gt_sched_clock_read(void)
 
->>> +{
->>> +       if (gpio < 16)
->>> +               return 8 * gpio;
->>> +       else
->>> +               return 8 * (gpio - 16) + 0x100;
->>
->>
->> Put this 0x100 in the #defines above with the name something like
->> STRIDE.
->
-> But it is not a 'STRIDE', it is a discontinuity compensation and used in
-> exactly one place.
+notrace
 
-OK what about a comment or something, because it isn't
-exactly intuitive right?
+> +{
+> +	if (!gt_base)
+> +		return 0;
 
->>> +struct octeon_gpio {
->>> +       struct gpio_chip chip;
->>> +       u64 register_base;
->>> +};
->>
->> OMG everything is 64 bit. Well has to come to this I guess.
->
-> Not everything.  This is custom logic in an SoC with 64-bit wide internal
-> address buses, what would you suggest?
+Seems impossible? Remove this check?
 
-Yep that's what I meant, no big deal. Just first time
-I really see it in driver bases.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
 
->> I'm not a fan of packed bitfields like this, I prefer if you just
->> OR | and AND & the bits together in the driver.
-
-I see you disregarded this comment, and looking at the header
-files it seems the MIPS arch is a big fan if packed bitfields so
-will live with it for this arch...
-
->>> +static int octeon_gpio_get(struct gpio_chip *chip, unsigned offset)
->>> +{
->>> +       struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio,
->>> chip);
->>> +       u64 read_bits = cvmx_read_csr(gpio->register_base + RX_DAT);
->>> +
->>> +       return ((1ull << offset) & read_bits) != 0;
->>
->> A common idiom we use for this is:
->>
->> return !!(read_bits & (1ull << offset));
->
-> I hate that idiom, but if its use is a condition of accepting the patch, I
-> will change it.
-
-Nah. If a good rational reason like "hate" is given for not using a coding
-idiom I will accept it as it stands ;-)
-
->>> +       dev_info(&pdev->dev, "OCTEON GPIO\n");
->>
->>
->> This is like shouting "REAL MADRID!" in the bootlog, be a bit more
->> precise: "octeon GPIO driver probed\n" or something so we know what
->> is happening.
->
-> No, more akin to 'Real Madrid', as 'OCTEON' is the correct spelling of its
-> given name.
->
-> I will happily add "driver probed", and grudgingly switch to lower case if
-> it is a necessary condition of patch acceptance.
-
-I don't know, does this rest of the MIPS drivers emit similar messages
-such that the bootlog will say
-
-OCTEON clocks
-OCTEON irqchip
-OCTEON I2C
-OCTEON GPIO
-
-then I guess it's convention and it can stay like this.
-
-Yours,
-Linus Walleij
