@@ -1,53 +1,51 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 3/4] pinctrl-tz1090-pdc: add TZ1090 PDC pinctrl driver
-Date: Mon, 24 Jun 2013 17:08:50 +0200
-Message-ID: <CACRpkdbq8OP1FYpUuoC+Zo=qD0mA6Hmj5gUQJCbJasOspWz6SA@mail.gmail.com>
-References: <1371720391-21825-1-git-send-email-james.hogan@imgtec.com>
-	<1371720391-21825-4-git-send-email-james.hogan@imgtec.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv12] spi: omap2-mcspi: add generic DMA request support to
+ the DT binding
+Date: Mon, 24 Jun 2013 16:08:50 +0100
+Message-ID: <20130624150850.GS27646@sirena.org.uk>
+References: <1372075319-21680-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7lT8fFUc+KaZWT5W"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1371720391-21825-4-git-send-email-james.hogan@imgtec.com>
+Content-Disposition: inline
+In-Reply-To: <1372075319-21680-1-git-send-email-sourav.poddar@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+To: Sourav Poddar <sourav.poddar@ti.com>
+Cc: tony@atomide.com, balbi@rocket1.ti.cm, joelagnel@ti.com, nsekhar@ti.com, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, linux-omap@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 20, 2013 at 11:26 AM, James Hogan <james.hogan@imgtec.com> wrote:
 
-> Add a pin control driver for the TZ1090's low power pins via the
-> powerdown controller SOC_GPIO_CONTROL registers.
->
-> These pins have individually controlled pull-up, and group controlled
-> schmitt, slew-rate, drive-strength, and power-on-start (pos).
->
-> The pdc_gpio0 and pdc_gpio1 pins can also be muxed onto the
-> ir_mod_stable_out and ir_mod_power_out functions respectively. If no
-> function is set they remain in GPIO mode. These muxes can be overridden
-> by requesting them as GPIOs.
->
-> Signed-off-by: James Hogan <james.hogan@imgtec.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-doc@vger.kernel.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> ---
-> Changes in v3:
->  - separated from irq-imgpdc and removed arch/metag changes to allow
->    these patches to go upstream separately via the pinctrl[/gpio] trees
->    (particularly the pinctrl drivers depend on the new pinconf DT
->    bindings).
->  - some s/unsigned/unsigned int/.
->  - pinctrl-tz1090*: switch to generic pinconfig DT bindings and
->    pinconf_generic_dump_config.
->  - pinctrl-tz1090*: use tz1090, prefix for pins and function in DT
->    bindings.
->  - pinctrl-tz1090*: make internal functions static.
->  - pinctrl-tz1090*: move initcall from postcore to arch.
+--7lT8fFUc+KaZWT5W
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks, patch applied as well.
+On Mon, Jun 24, 2013 at 05:31:59PM +0530, Sourav Poddar wrote:
 
-Yours,
-Linus Walleij
+> The binding definition is based on the generic DMA request binding
+
+Applied, thanks.
+
+--7lT8fFUc+KaZWT5W
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRyGD/AAoJELSic+t+oim9ku0P/1kgTselx9gdg+ZqaZlPtTll
+/vHCtgvm2nkPwI4yNhqReN+8eQ0+9bYqXV636Qh5tYJgrfOdYN3DOdh+X83nzcXN
+oX+pJOOIPpI1aGJgSbmvJl2pTDiWOoUfA4C7HUCRKIDpd6SRhnVK2aqGPbMARYaG
+qpJELJgiRLiFYWgYLf7a+yaSFnwZ+hLa7ZbFd2qMJs0MEhelPy4KttX01hELjTe0
+beyS0QYcoqRTVXBBPAgnz0HX/5SlnuqeJT5eppV1KnUBMviPJ0s8Rm1FJbSJZbE6
+A8r4N38qF/J9weOpW9tmHzWD3DeDR/e7Y4lHFQEjlKyHItXeGTjJMo/AkwUGlM0E
+EnfoHAGj24YsuQzOwbvlO9YJYs+vAv4Po6LWUBIhrPxtyR1W5+2hPQI/5vj7lLwe
+nIdWh582nRYiwVlgmDc9mD0WfCVUj2aUK8/Umn10PhNV+yIbAd1sE39CYfvTeaBw
+xlpC61gs5PsfnB4cnIyGeoSWsVVOvH2MzzpznoCJxFbenDE8I+Mp1O556pzaqQa8
+nyTyTBt2gWkvCJ4ujqFu8el+/Nmns9FEhDKqq1O4b+4NZp7EyvFn9mnl40eUCXtE
+guo0CamdZCCmhjluu9sywtbroCa1LNp73tu9QRDFVxihN1GlVa9TlBlX0abFfse6
+9swHjB8jJbhob/SSsXBJ
+=Xr6C
+-----END PGP SIGNATURE-----
+
+--7lT8fFUc+KaZWT5W--
