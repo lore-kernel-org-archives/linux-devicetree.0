@@ -1,55 +1,39 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
 Subject: Re: [PATCH v5] clocksource:arm_global_timer: Add ARM global timer
  support.
-Date: Mon, 24 Jun 2013 22:01:47 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1306242200460.4013@ionos.tec.linutronix.de>
+Date: Mon, 24 Jun 2013 13:06:32 -0700
+Message-ID: <51C8A6C8.8000009@codeaurora.org>
 References: <1372089195-29219-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1372089195-29219-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1372089195-29219-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Stuart Menefy <stuart.menefy@st.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Jun 2013, Srinivas KANDAGATLA wrote:
+On 06/24/13 08:53, Srinivas KANDAGATLA wrote:
+> +
+> +static void gt_clockevents_stop(struct clock_event_device *clk)
+> +{
+> +	gt_clockevent_set_mode(CLOCK_EVT_MODE_UNUSED, clk);
+> +	disable_percpu_irq(clk->irq);
+> +}
+> +
+> +static int __cpuinit gt_clockevents_setup(struct clock_event_device *clk)
+> +{
+> +	struct clock_event_device *evt = this_cpu_ptr(gt_evt);
+> +	return evt->name ? 0 : gt_clockevents_init(evt);
+> +}
 
-> From: Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>
-> 
-> This is a simple driver for the global timer module found in the Cortex
-> A9-MP cores from revision r1p0 onwards. This should be able to perform
-> the functions of the system timer and the local timer in an SMP system.
-> 
-> The global timer has the following features:
->     The global timer is a 64-bit incrementing counter with an
-> auto-incrementing feature. It continues incrementing after sending
-> interrupts. The global timer is memory mapped in the private memory
-> region.
->     The global timer is accessible to all Cortex-A9 processors in the
-> cluster. Each Cortex-A9 processor has a private 64-bit comparator that
-> is used to assert a private interrupt when the global timer has reached
-> the comparator value. All the Cortex-A9 processors in a design use the
-> banked ID, ID27, for this interrupt. ID27 is sent to the Interrupt
-> Controller as a Private Peripheral Interrupt. The global timer is
-> clocked by PERIPHCLK.
-> 
-> Signed-off-by: Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> CC: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> CC: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> CC: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> CC: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+How does this work? gt_clockevents_stop() is using the
+clock_event_device struct from the ARM local timer layer whereas
+gt_clockevents_setup() is using a driver private allocation. Please just
+don't use the local timer API at all and use cpu notifiers instead.
 
-Reviewed-by: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+
