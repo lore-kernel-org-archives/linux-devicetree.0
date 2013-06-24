@@ -1,57 +1,65 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: imx27: Fix documentation for SPLL clock
-Date: Mon, 24 Jun 2013 20:48:38 +0800
-Message-ID: <20130624124836.GC30747@S2101-09.ap.freescale.net>
-References: <1371977470-12720-1-git-send-email-mpa@pengutronix.de>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH 1/4] MFD: Add TPS659038 documentation under Palmas
+Date: Mon, 24 Jun 2013 12:55:43 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229EF495@DBDE04.ent.ti.com>
+References: <1371726289-10042-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1371977470-12720-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Gwenhael Goavec-Merou <gwenhael.goavec-merou-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1371726289-10042-1-git-send-email-j-keerthy@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "swarren@nvidia.com" <swarren@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "J, KEERTHY" <j-keerthy@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 23, 2013 at 10:51:10AM +0200, Markus Pargmann wrote:
-> spll_gate was added with commit b7eed2076183994dbda2c19bc7fba99b65a135e3
-> "ARM: imx27: add a clock gate to activate SPLL clock".
+Hello Grant,
+
+> -----Original Message-----
+> From: J, KEERTHY
+> Sent: Thursday, June 20, 2013 4:35 PM
+> To: linux-omap@vger.kernel.org; grant.likely@secretlab.ca
+> Cc: broonie@kernel.org; J, KEERTHY; ldewangan@nvidia.com;
+> sameo@linux.intel.com; swarren@nvidia.com; linux-
+> kernel@vger.kernel.org; linux-doc@vger.kernel.org; devicetree-
+> discuss@lists.ozlabs.org; gg@slimlogic.co.uk
+> Subject: [PATCH 1/4] MFD: Add TPS659038 documentation under Palmas
 > 
-> spll_gate is missing in the devicetree clock documentation for imx27. This
-> patch adds it to the list of clocks in the documentation.
+> Add TPS659038 documentation under Palmas.
 > 
-> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Applied, thanks.
+Could you pull this Please?
 
-Shawn
-
+> Signed-off-by: J Keerthy <j-keerthy@ti.com>
+> Acked-by: Samuel Ortiz <sameo@linux.intel.com>
 > ---
->  Documentation/devicetree/bindings/clock/imx27-clock.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/mfd/palmas.txt |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/imx27-clock.txt b/Documentation/devicetree/bindings/clock/imx27-clock.txt
-> index ab1a56e..7a20703 100644
-> --- a/Documentation/devicetree/bindings/clock/imx27-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/imx27-clock.txt
-> @@ -98,6 +98,7 @@ clocks and IDs.
->  	fpm                  83
->  	mpll_osc_sel         84
->  	mpll_sel             85
-> +	spll_gate	     86
->  
->  Examples:
->  
-> -- 
-> 1.8.2.1
+> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt
+> b/Documentation/devicetree/bindings/mfd/palmas.txt
+> index 7bcd59c..89cb773 100644
+> --- a/Documentation/devicetree/bindings/mfd/palmas.txt
+> +++ b/Documentation/devicetree/bindings/mfd/palmas.txt
+> @@ -5,6 +5,7 @@ twl6035 (palmas)
+>  twl6037 (palmas)
+>  tps65913 (palmas)
+>  tps65914 (palmas)
+> +tps659038
 > 
+>  Required properties:
+>  - compatible : Should be from the list
+> @@ -14,6 +15,7 @@ Required properties:
+>    ti,tps65913
+>    ti,tps65914
+>    ti,tps80036
+> +  ti,tps659038
+>  and also the generic series names
+>    ti,palmas
+>  - interrupt-controller : palmas has its own internal IRQs
+> --
+> 1.7.5.4
+
+Regards,
+Keerthy
