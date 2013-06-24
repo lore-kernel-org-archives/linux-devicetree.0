@@ -1,64 +1,67 @@
-From: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
-Subject: Re: [RFC] [PATCH 3/3] IRQ: irq domain: defer of irq ressoure resolve
- at platform_drv_probe
-Date: Mon, 24 Jun 2013 11:47:05 +0200
-Message-ID: <51C81599.3020407@nsn.com>
-References: <20130528145219.GA30411@game.jcrosoft.org>
- <1369753729-12997-1-git-send-email-plagnioj@jcrosoft.com>
- <1369753729-12997-3-git-send-email-plagnioj@jcrosoft.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v12 04/11] dmaengine: edma: enable build for AM33XX
+Date: Mon, 24 Jun 2013 03:17:56 -0700
+Message-ID: <20130624101756.GU5523@atomide.com>
+References: <1371762407-24544-1-git-send-email-joelagnel@ti.com>
+ <1371762407-24544-5-git-send-email-joelagnel@ti.com>
+ <51C427AA.6080601@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369753729-12997-3-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: ext Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51C427AA.6080601@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Joel A Fernandes <joelagnel@ti.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Jason Kridner <jkridner@beagleboard.org>, Koen Kooi <koen@beagleboard.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>Linux
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On 05/28/2013 05:08 PM, ext Jean-Christophe PLAGNIOL-VILLARD wrote:
-> Today in the current of implementation we populate all the ressources
-> at of_platform_populate time. But this leed to a chicken-egg dilemat
-> some the irq present in DT are from platform_device too. And you can
-> not resolve them as of_platform_populate. So delay the populate of irq
-> at platform_drv_probe.
+* Sekhar Nori <nsekhar@ti.com> [130621 03:21]:
+> On 6/21/2013 2:36 AM, Joel A Fernandes wrote:
+> > From: Matt Porter <mporter@ti.com>
+> > 
+> > Enable TI EDMA option on OMAP and TI_PRIV_EDMA
+> > 
+> > Signed-off-by: Matt Porter <mporter@ti.com>
+> > Signed-off-by: Joel A Fernandes <joelagnel@ti.com>
 > 
-> And if the irq_domain is not yet present just defer the probe (GPIO as example)
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> This will have to be taken by Tony.
 
-Tested-by: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Sekhar, please go ahead and take this one. I'll reply
+to the header email of this series how it should be
+queued.
 
-Tested the whole series. This is definitely a necessary feature.
-I've tested it on MIPS64 system with merge-able device-subtrees.
-If you would come with the new patch series, please put me on CC, I'll test it again.
+For the mach-omap2/Kconfig change:
 
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/base/platform.c     |    5 +++++
->  drivers/of/platform.c       |   29 +++++++++++++++++++++++++++--
->  include/linux/of_platform.h |    7 +++++++
->  3 files changed, 39 insertions(+), 2 deletions(-)
-
-...
-
--- 
-Best regards,
-Alexander Sverdlin.
+Acked-by: Tony Lindgren <tony@atomide.com>
+ 
+> > ---
+> >  arch/arm/mach-omap2/Kconfig |    1 +
+> >  drivers/dma/Kconfig         |    2 +-
+> >  2 files changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
+> > index f49cd51..f91b07f 100644
+> > --- a/arch/arm/mach-omap2/Kconfig
+> > +++ b/arch/arm/mach-omap2/Kconfig
+> > @@ -17,6 +17,7 @@ config ARCH_OMAP2PLUS
+> >  	select PROC_DEVICETREE if PROC_FS
+> >  	select SOC_BUS
+> >  	select SPARSE_IRQ
+> > +	select TI_PRIV_EDMA
+> >  	select USE_OF
+> >  	help
+> >  	  Systems based on OMAP2, OMAP3, OMAP4 or OMAP5
+> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> > index e992489..3215a3c 100644
+> > --- a/drivers/dma/Kconfig
+> > +++ b/drivers/dma/Kconfig
+> > @@ -213,7 +213,7 @@ config SIRF_DMA
+> >  
+> >  config TI_EDMA
+> >  	tristate "TI EDMA support"
+> > -	depends on ARCH_DAVINCI
+> > +	depends on ARCH_DAVINCI || ARCH_OMAP
+> >  	select DMA_ENGINE
+> >  	select DMA_VIRTUAL_CHANNELS
+> >  	default n
+> > 
