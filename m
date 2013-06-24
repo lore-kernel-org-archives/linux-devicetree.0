@@ -1,63 +1,154 @@
-From: Joel A Fernandes <agnel.joel@gmail.com>
-Subject: Re: [PATCH v12 05/11] edma: config: Enable config options for EDMA
-Date: Mon, 24 Jun 2013 15:32:11 -0500
-Message-ID: <CAD=GYpYwswOYGHRzZ6SeKD+sEfi-7s3HuqKr7G0OXQWFCA_EtQ@mail.gmail.com>
-References: <1371762407-24544-1-git-send-email-joelagnel@ti.com>
-	<201306220014.16427.arnd@arndb.de>
-	<CAD=GYpabakChmN-TEJbLn6p=BwX2wsK5KWsc5gH9-cAA+yWcEA@mail.gmail.com>
-	<201306242228.23297.arnd@arndb.de>
+From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH RESEND 1/1] ARM: dts: AM33XX: Add LCDC info into am335x-evm
+Date: Mon, 24 Jun 2013 15:32:47 -0500
+Message-ID: <1372105967-26669-1-git-send-email-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201306242228.23297.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sekhar Nori <nsekhar@ti.com>, Joel A Fernandes <joelagnel@ti.com>, Tony Lindgren <tony@atomide.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Jason Kridner <jkridner@beagleboard.org>, Koen Kooi <koen@beagleboard.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 24, 2013 at 3:28 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Saturday 22 June 2013, Joel A Fernandes wrote:
->>
->> >> > config TI_EDMA
->> >> >         tristate "TI EDMA support"
->> >> >         default m if 'ARCH_DAVINCI || ARCH_OMAP1 || ARCH_OMAP2
->> >> >         select DMA_ENGINE
->> >> >         select DMA_VIRTUAL_CHANNELS
->> >>
->> >>
->> >> MMC depends on EDMA specially on AM33xx there's no PIO mode AFAIK. The
->> >> 'm' option will require some initramfs to load the module when needing
->> >> to MMC boot, I suggest lets leave it as y.
->> >>
->> >
->> > Ah, right: you still export a filter function from the edma driver
->> > and use it in slave drivers:
->> >
->> > drivers/mmc/host/davinci_mmc.c:         dma_request_slave_channel_compat(mask, edma_filter_fn,
->> > drivers/mmc/host/davinci_mmc.c:         dma_request_slave_channel_compat(mask, edma_filter_fn,
->> > drivers/spi/spi-davinci.c:      dspi->dma_rx = dma_request_channel(mask, edma_filter_fn,
->> > drivers/spi/spi-davinci.c:      dspi->dma_tx = dma_request_channel(mask, edma_filter_fn,
->> >
->> > As long as this is the case, you have to be careful with the dependencies
->> > to make sure that davinci_mmc and spi-davinci either depend on TI_EDMA, or
->> > edma_filter_fn gets defined to NULL when you are building for a DT-only platform.
->>
->> Yes sure, right now they are defined  as follows in include/linux/edma.h:
->>
->> #if defined(CONFIG_TI_EDMA) || defined(CONFIG_TI_EDMA_MODULE)
->> bool edma_filter_fn(struct dma_chan *, void *);
->> #else
->> static inline bool edma_filter_fn(struct dma_chan *chan, void *param)
->> {
->> return false;
->> }
->> #endif
->
-> It's best to just define the filter function in the platform
-> code and pass a pointer to it through platform data. The way you do
-> it above makes the slave drivers inherently nonportable.
+Add LCDC device node in DT for am33xx
+Add LCDC and Panel info in DT for am335x-evm
 
-But with DT-only platforms, can you really do that?
+Signed-off-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-evm.dts |   78 ++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/am33xx.dtsi    |    9 +++++
+ 2 files changed, 87 insertions(+)
 
-Thanks,
-Joel
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index 0423298..40d7a3f 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -44,6 +44,40 @@
+ 				0x154 0x27	/* spi0_d0.gpio0_3, INPUT | MODE7 */
+ 			>;
+ 		};
++
++		lcd_pins_s0: lcd_pins_s0 {
++			pinctrl-single,pins = <
++				0x20 0x01	/* gpmc_ad8.lcd_data16, OUTPUT | MODE1 */
++				0x24 0x01	/* gpmc_ad9.lcd_data17, OUTPUT | MODE1 */
++				0x28 0x01	/* gpmc_ad10.lcd_data18, OUTPUT | MODE1 */
++				0x2c 0x01	/* gpmc_ad11.lcd_data19, OUTPUT | MODE1 */
++				0x30 0x01	/* gpmc_ad12.lcd_data20, OUTPUT | MODE1 */
++				0x34 0x01	/* gpmc_ad13.lcd_data21, OUTPUT | MODE1 */
++				0x38 0x01	/* gpmc_ad14.lcd_data22, OUTPUT | MODE1 */
++				0x3c 0x01	/* gpmc_ad15.lcd_data23, OUTPUT | MODE1 */
++				0xa0 0x00	/* lcd_data0.lcd_data0, OUTPUT | MODE0 */
++				0xa4 0x00	/* lcd_data1.lcd_data1, OUTPUT | MODE0 */
++				0xa8 0x00	/* lcd_data2.lcd_data2, OUTPUT | MODE0 */
++				0xac 0x00	/* lcd_data3.lcd_data3, OUTPUT | MODE0 */
++				0xb0 0x00	/* lcd_data4.lcd_data4, OUTPUT | MODE0 */
++				0xb4 0x00	/* lcd_data5.lcd_data5, OUTPUT | MODE0 */
++				0xb8 0x00	/* lcd_data6.lcd_data6, OUTPUT | MODE0 */
++				0xbc 0x00	/* lcd_data7.lcd_data7, OUTPUT | MODE0 */
++				0xc0 0x00	/* lcd_data8.lcd_data8, OUTPUT | MODE0 */
++				0xc4 0x00	/* lcd_data9.lcd_data9, OUTPUT | MODE0 */
++				0xc8 0x00	/* lcd_data10.lcd_data10, OUTPUT | MODE0 */
++				0xcc 0x00	/* lcd_data11.lcd_data11, OUTPUT | MODE0 */
++				0xd0 0x00	/* lcd_data12.lcd_data12, OUTPUT | MODE0 */
++				0xd4 0x00	/* lcd_data13.lcd_data13, OUTPUT | MODE0 */
++				0xd8 0x00	/* lcd_data14.lcd_data14, OUTPUT | MODE0 */
++				0xdc 0x00	/* lcd_data15.lcd_data15, OUTPUT | MODE0 */
++				0xe0 0x00	/* lcd_vsync.lcd_vsync, OUTPUT | MODE0 */
++				0xe4 0x00	/* lcd_hsync.lcd_hsync, OUTPUT | MODE0 */
++				0xe8 0x00	/* lcd_pclk.lcd_pclk, OUTPUT | MODE0 */
++				0xec 0x00	/* lcd_ac_bias_en.lcd_ac_bias_en, OUTPUT | MODE0 */
++			>;
++		};
++
+ 	};
+ 
+ 	ocp {
+@@ -102,6 +136,16 @@
+ 				reg = <0x48>;
+ 			};
+ 		};
++
++		lcdc {
++			compatible = "ti,am33xx-tilcdc";
++			reg = <0x4830e000 0x1000>;
++			interrupt-parent = <&intc>;
++			interrupts = <36>;
++			ti,hwmods = "lcdc";
++			ti,allow-non-reduced-blanking-modes;
++			status = "okay";
++		};
+ 	};
+ 
+ 	vbat: fixedregulator@0 {
+@@ -158,6 +202,40 @@
+ 			gpio-key,wakeup;
+ 		};
+ 	};
++
++	panel {
++		compatible = "ti,tilcdc,panel";
++		status = "okay";
++		pinctrl-names = "default";
++		pinctrl-0 = <&lcd_pins_s0>;
++		panel-info {
++			ac-bias           = <255>;
++			ac-bias-intrpt    = <0>;
++			dma-burst-sz      = <16>;
++			bpp               = <32>;
++			fdd               = <0x80>;
++			sync-edge         = <0>;
++			sync-ctrl         = <1>;
++			raster-order      = <0>;
++			fifo-th           = <0>;
++		};
++
++		display-timings {
++			800x480p62 {
++				clock-frequency = <30000000>;
++				hactive = <800>;
++				vactive = <480>;
++				hfront-porch = <39>;
++				hback-porch = <39>;
++				hsync-len = <47>;
++				vback-porch = <29>;
++				vfront-porch = <13>;
++				vsync-len = <2>;
++				hsync-active = <1>;
++				vsync-active = <1>;
++			};
++		};
++	};
+ };
+ 
+ /include/ "tps65910.dtsi"
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 8e1248f..05b2c4a 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -415,5 +415,14 @@
+ 			#size-cells = <1>;
+ 			status = "disabled";
+ 		};
++
++		lcdc: lcdc@4830e000 {
++			compatible = "ti,am33xx-tilcdc";
++			reg = <0x4830e000 0x1000>;
++			interrupt-parent = <&intc>;
++			interrupts = <36>;
++			ti,hwmods = "lcdc";
++			status = "disabled";
++		};
+ 	};
+ };
+-- 
+1.7.9.5
