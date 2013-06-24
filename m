@@ -1,93 +1,87 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH 0/5] clk/exynos5420: add clocks for hdmi subsystem
-Date: Mon, 24 Jun 2013 09:58:20 +0530
-Message-ID: <CAPdUM4NOsQThGW7dGJir_a9-kkLm-AUDPi2hM0w2Jz7cdCwFrQ@mail.gmail.com>
-References: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>
-	<CAPdUM4MtBXMaZDDRT1aKsS=HzwjpbyMY85oRLMbk-KvJCU1hag@mail.gmail.com>
-	<51C1B9AD.8060804@samsung.com>
-	<20130621043252.9136.66418@quantum>
-	<CAPdUM4NxCKtKrZg1RYD0=83jDYt9Nzd3paYL53ZL9tt2zfJy7A@mail.gmail.com>
-	<20130621164303.9136.5127@quantum>
-	<CAPdUM4MENsYV3uA+FEt7UX9Qe8DyJ6a_cNj3wzW1+j1q+xf6Fg@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] regulator: palmas: model SMPS10 as two regulators
+Date: Mon, 24 Jun 2013 10:53:41 +0530
+Message-ID: <51C7D7DD.2030703@ti.com>
+References: <1371717458-10307-1-git-send-email-kishon@ti.com>
+ <1371717458-10307-3-git-send-email-kishon@ti.com>
+ <51C2DEEB.9090600@nvidia.com> <51C3089F.5030003@ti.com>
+ <51C30B95.4010406@nvidia.com> <51C30F60.3060100@ti.com>
+ <51C31537.9030705@nvidia.com> <51C31F30.5000307@ti.com>
+ <51C45448.4080201@nvidia.com> <51C45C7A.5000509@ti.com>
+ <51C5A2BC.5060401@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAPdUM4MENsYV3uA+FEt7UX9Qe8DyJ6a_cNj3wzW1+j1q+xf6Fg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51C5A2BC.5060401-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org" <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mr. Kim,
+Hi,
 
-v3.11-next/soc-exynos5420 seems correct branch for it, not
-v3.11-next/samsung-clk. In this
-case rebasing is not required. It cleanly applies there.
-
-regards,
-Rahul Sharma.
-
-On Mon, Jun 24, 2013 at 9:33 AM, Rahul Sharma <r.sh.open@gmail.com> wrote:
-> Thanks Mike.
->
-> I will rebase these patches to v3.11-next/samsung-clk branch and post v2.
->
-> regards,
-> Rahul Sharma.
->
-> On Fri, Jun 21, 2013 at 10:13 PM, Mike Turquette <mturquette@linaro.org> wrote:
->> Quoting Rahul Sharma (2013-06-20 21:47:35)
->>> On Fri, Jun 21, 2013 at 10:02 AM, Mike Turquette <mturquette@linaro.org> wrote:
->>> > Quoting Kukjin Kim (2013-06-19 07:01:17)
->>> >> On 06/19/13 13:04, Rahul Sharma wrote:
->>> >> > + mike
->>> >> >
->>> >> Mike, I'm waiting for your reply on this. If you're OK, let me take this
->>> >> series on top of exynos5420 stuff in samsung tree.
->>> >>
->>> >> Of course, if any concerns, please let me know.
->>> >
->>> > I never got these patches.  I'm not subscribed to devicetree-devel or
->>> > linux-samsung so I only got two replies to patch #0, but none of the
->>> > code. Can you or Rajul resend?
->>> >
+On Saturday 22 June 2013 06:42 PM, Laxman Dewangan wrote:
+> On Friday 21 June 2013 07:30 PM, Kishon Vijay Abraham I wrote:
+>> On Friday 21 June 2013 06:55 PM, Laxman Dewangan wrote:
+>>> On Thursday 20 June 2013 08:56 PM, Kishon Vijay Abraham I wrote:
+>>>> Hi,
+>>>>
+>>>> On Thursday 20 June 2013 08:14 PM, Laxman Dewangan wrote:
+>>>>> Have you added the regulator supply entries?
+>>>>> Are you testing on mainline linux-next?
+>>>> Not in linux-next :-( Tested only with mainline.
+>>>> Does inverting the order helps?
+>>>>
+>>> I think because you do not have entry of supply in your dt node, it gets
+>>> ignored by regulator_dev_lookup() and continue.
 >>>
->>> Sure mike.
->>
->> Acked-by: Mike Turquette <mturquette@linaro.org>
->>
->> Regards,
->> Mike
->>
+>>> I made the entry like (added entry form smps10-out2-supply and smps10-in-supply
+>>> in dt node) and then it failed.
+>>> /***
 >>>
->>> > Thanks,
->>> > Mike
->>> >
->>> >>
->>> >> Thanks,
->>> >> - Kukjin
->>> >>
->>> >> > On Tue, Jun 18, 2013 at 8:03 PM, Rahul Sharma<rahul.sharma@samsung.com>  wrote:
->>> >> >> Add clock changes for hdmi subsystem for exynos5250 SoC. These
->>> >> >> include addition of new clocks like mout_hdmi and smmu_tv, associating
->>> >> >> ID to clk_hdmiphy and some essential corrections.
->>> >> >>
->>> >> >> This set is based on kukjin's for-next branch at
->>> >> >> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git.
->>> >> >>
->>> >> >> This set dependents on the following patches which add support for Exynos5420
->>> >> >> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg19264.html
->>> >> >>
->>> >> >> Rahul Sharma (5):
->>> >> >>    clk/exynos5420: add sclk_hdmiphy to the list of special clocks
->>> >> >>    clk/exynos5420: add gate clock for tv sysmmu
->>> >> >>    clk/exynos5420: fix the order of parents of hdmi mux
->>> >> >>    clk/exynos5420: add hdmi mux to change parents in hdmi driver
->>> >> >>    clk/exynos5420: assign sclk_pixel id to pixel clock divider
->>> >> >>
->>> >> >>   .../devicetree/bindings/clock/exynos5420-clock.txt   |    7 +++++++
->>> >> >>   drivers/clk/samsung/clk-exynos5420.c                 |   18 +++++++++++-------
->>> >> >>   2 files changed, 18 insertions(+), 7 deletions(-)
->>> >> >>
->>> >> >> --
->>> >> >> 1.7.10.4
+>>> +                           smps10-out2-supply = <&palmas_smps10_out2_reg>;
+>>> +                           smps10-in-supply = <&tps65090_dcdc3_reg>;
+>>>                               ldo3-in-supply = <&palmas_smps3_reg>;
+>>> @@ -903,6 +905,20 @@
+>>>                                           regulator-always-on;
+>>>                                   };
+>>>
+>>> +                               palmas_smps10_out1_reg: smps10_out1 {
+>>> +                                       regulator-name = "smps10_out1";
+>>> +                                       regulator-min-microvolt = <5000000>;
+>>> +                                       regulator-max-microvolt = <5000000>;
+>>> +                                       regulator-always-on;
+>>> +                               };
+>>> +
+>>> +                               palmas_smps10_out2_reg: smps10_out2 {
+>>> +                                       regulator-name = "smps10_out2";
+>>> +                                       regulator-min-microvolt = <5000000>;
+>>> +                                       regulator-max-microvolt = <5000000>;
+>>> +                                       regulator-always-on;
+>>> +                               };
+>>> +
+>>> **/
+>>>
+>>>
+>>> After reversing the sequence, it worked fine.
+>> You mean, changing the order in dt node helped?
+>
+> The sequence on DT does not matter. We register the regulators in the sequence
+> it is having enums value for regulator-id in loop. So we need to revert there.
+>
+> Yaah, it looks odd that SMPS10-OUT2come before SMPS10-OUT1 in enums definition.
+
+Will fix that and send a patch.
+
+Thanks
+Kishon
