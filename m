@@ -1,88 +1,121 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v12 04/11] dmaengine: edma: enable build for AM33XX
-Date: Mon, 24 Jun 2013 16:01:34 +0530
-Message-ID: <51C82006.6060008@ti.com>
-References: <1371762407-24544-1-git-send-email-joelagnel@ti.com>
-	<1371762407-24544-5-git-send-email-joelagnel@ti.com>
-	<51C427AA.6080601@ti.com> <20130624101756.GU5523@atomide.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCHv2 1/3] iio: Add Nuvoton NAU7802 ADC driver
+Date: Mon, 24 Jun 2013 12:37:29 +0200
+Message-ID: <51C82169.1010203@free-electrons.com>
+References: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com> <1371754675-12242-2-git-send-email-alexandre.belloni@free-electrons.com> <51C7EA23.1040707@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <20130624101756.GU5523-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andrew Morton <akpm@linux-foundati>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51C7EA23.1040707@metafoo.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, jimwall@q.com, brian@crystalfontz.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Jonathan Cameron <jic23@cam.ac.uk>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 6/24/2013 3:47 PM, Tony Lindgren wrote:
-> * Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> [130621 03:21]:
->> On 6/21/2013 2:36 AM, Joel A Fernandes wrote:
->>> From: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
->>>
->>> Enable TI EDMA option on OMAP and TI_PRIV_EDMA
->>>
->>> Signed-off-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
->>> Signed-off-by: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>
+On 24/06/2013 08:41, Lars-Peter Clausen wrote:
+> On 06/20/2013 08:57 PM, Alexandre Belloni wrote:
+>> The Nuvoton NAU7802 ADC is a 24-bit 2-channels I2C ADC, with adjustable
+>> gain and sampling rates.
 >>
->> This will have to be taken by Tony.
-> 
-> Sekhar, please go ahead and take this one. I'll reply
-> to the header email of this series how it should be
-> queued.
-> 
-> For the mach-omap2/Kconfig change:
-> 
-> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+>> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+>> ---
+>>  .../bindings/iio/adc/nuvoton-nau7802.txt           |  17 +
+>>  drivers/iio/adc/Kconfig                            |   9 +
+>>  drivers/iio/adc/Makefile                           |   1 +
+>>  drivers/iio/adc/nau7802.c                          | 603 +++++++++++++++++++++
+>>  4 files changed, 630 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton-nau7802.txt
+>>  create mode 100644 drivers/iio/adc/nau7802.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/nuvoton-nau7802.txt b/Documentation/devicetree/bindings/iio/adc/nuvoton-nau7802.txt
+>> new file mode 100644
+>> index 0000000..9bc4218
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/nuvoton-nau7802.txt
+>> @@ -0,0 +1,17 @@
+>> +* Nuvoton NAU7802 Analog to Digital Converter (ADC)use
+>> +
+>> +Required properties:
+>> +  - compatible: Should be "nuvoton,nau7802"
+>> +  - reg: Should contain the ADC I2C address
+>> +
+>> +Optional properties:
+>> +  - nuvoton,vldo: Reference voltage in millivolts (integer)
+>> +  - interrupts: IRQ line for the ADC. If not used the driver will use
+>> +    polling.
+>> +
+>> +Example:
+>> +adc2: nau7802@2a {
+>> +	compatible = "nuvoton,nau7802";
+>> +	reg = <0x2a>;
+>> +	nuvoton,vldo = <3000>;
+> We usually use the regulator framework for specifying the reference voltage.
 
-Thanks Tony. Added to v3.11/soc-2 branch with your and Arnd's acks included.
+I followed what Jonathan said in his review of my first patch. Do we
+want to use the regulator framework to set the internal reference
+voltage of the ADC ? I agree that if you supply an external voltage, it
+will be necessary to use the regulator framework. Unfortunately, I can't
+test that here.
 
-Vinod, it will be nice to get your ack too for the drivers/dma/Kconfig
-change.
+>> +};
+> [...]
+>> diff --git a/drivers/iio/adc/nau7802.c b/drivers/iio/adc/nau7802.c
+>> new file mode 100644
+>> index 0000000..e1b6981
+>> --- /dev/null
+>> +++ b/drivers/iio/adc/nau7802.c
+>> @@ -0,0 +1,603 @@
+> [...]
+>> +static int nau7802_set_gain(struct nau7802_state *st, int gain)
+>> +{
+>> +	u8 data;
+>> +	int ret;
+>> +
+>> +	mutex_lock(&st->lock);
+>> +	st->conversion_count = 0;
+>> +
+>> +	data = i2c_smbus_read_byte_data(st->client, NAU7802_REG_CTRL1);
+>> +	if (data < 0)
+>> +		goto nau7802_sysfs_set_gain_out;
+> ret will be uninitialized if the goto above is taken
 
-Regards,
-Sekhar
+Right, bigger issue, data is u8 so it will never be negative. I'm fixing
+that !
 
->  
->>> ---
->>>  arch/arm/mach-omap2/Kconfig |    1 +
->>>  drivers/dma/Kconfig         |    2 +-
->>>  2 files changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
->>> index f49cd51..f91b07f 100644
->>> --- a/arch/arm/mach-omap2/Kconfig
->>> +++ b/arch/arm/mach-omap2/Kconfig
->>> @@ -17,6 +17,7 @@ config ARCH_OMAP2PLUS
->>>  	select PROC_DEVICETREE if PROC_FS
->>>  	select SOC_BUS
->>>  	select SPARSE_IRQ
->>> +	select TI_PRIV_EDMA
->>>  	select USE_OF
->>>  	help
->>>  	  Systems based on OMAP2, OMAP3, OMAP4 or OMAP5
->>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->>> index e992489..3215a3c 100644
->>> --- a/drivers/dma/Kconfig
->>> +++ b/drivers/dma/Kconfig
->>> @@ -213,7 +213,7 @@ config SIRF_DMA
->>>  
->>>  config TI_EDMA
->>>  	tristate "TI EDMA support"
->>> -	depends on ARCH_DAVINCI
->>> +	depends on ARCH_DAVINCI || ARCH_OMAP
->>>  	select DMA_ENGINE
->>>  	select DMA_VIRTUAL_CHANNELS
->>>  	default n
->>>
-> 
-> 
+
+>> +	ret = i2c_smbus_write_byte_data(st->client, NAU7802_REG_CTRL1,
+>> +					(data & (~NAU7802_CTRL1_GAINS_BITS)) |
+>> +					gain);
+>> +
+>> +nau7802_sysfs_set_gain_out:
+>> +	mutex_unlock(&st->lock);
+>> +
+>> +	return ret ? ret : 0;
+>> +}
+> [...]
+>> +static int nau7802_read_irq(struct iio_dev *indio_dev,
+>> +			struct iio_chan_spec const *chan,
+>> +			int *val)
+>> +{
+>> +	struct nau7802_state *st = iio_priv(indio_dev);
+>> +	int ret;
+>> +
+>> +	INIT_COMPLETION(st->value_ok);
+>> +	enable_irq(st->client->irq);
+> Is it really necessary to enable/disable the IRQ or could you keep it
+> enabled all the time?
+
+Fact is that the ADC doesn't really care if you are reading data or not
+so you will probably endd up in a situation were you will get 320 IRQ
+per second but not caring about the result. We have 3 ADCs on the board.
+so that amounts to 960 IRQ per second when we are only reading like once
+par second !
+
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
