@@ -1,129 +1,32 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCHv2 1/3] iio: Add Nuvoton NAU7802 ADC driver
-Date: Mon, 24 Jun 2013 18:41:22 +0200
-Message-ID: <51C876B2.1050103@metafoo.de>
-References: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com> <1371754675-12242-2-git-send-email-alexandre.belloni@free-electrons.com> <51C7EA23.1040707@metafoo.de> <51C82169.1010203@free-electrons.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH 0/5] clk/exynos5420: add clocks for hdmi subsystem
+Date: Tue, 25 Jun 2013 01:53:56 +0900
+Message-ID: <51C879A4.9020003@samsung.com>
+References: <1371565998-3642-1-git-send-email-rahul.sharma@samsung.com>	<CAPdUM4MtBXMaZDDRT1aKsS=HzwjpbyMY85oRLMbk-KvJCU1hag@mail.gmail.com>	<51C1B9AD.8060804@samsung.com>	<20130621043252.9136.66418@quantum>	<CAPdUM4NxCKtKrZg1RYD0=83jDYt9Nzd3paYL53ZL9tt2zfJy7A@mail.gmail.com>	<20130621164303.9136.5127@quantum>	<CAPdUM4MENsYV3uA+FEt7UX9Qe8DyJ6a_cNj3wzW1+j1q+xf6Fg@mail.gmail.com> <CAPdUM4NOsQThGW7dGJir_a9-kkLm-AUDPi2hM0w2Jz7cdCwFrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51C82169.1010203-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, jimwall@q.com, brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAPdUM4NOsQThGW7dGJir_a9-kkLm-AUDPi2hM0w2Jz7cdCwFrQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <r.sh.open@gmail.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/24/2013 12:37 PM, Alexandre Belloni wrote:
-> On 24/06/2013 08:41, Lars-Peter Clausen wrote:
->> On 06/20/2013 08:57 PM, Alexandre Belloni wrote:
->>> The Nuvoton NAU7802 ADC is a 24-bit 2-channels I2C ADC, with adjustable
->>> gain and sampling rates.
+On 06/24/13 13:28, Rahul Sharma wrote:
+
+[...]
+
+>>>>> I never got these patches.  I'm not subscribed to devicetree-devel or
+>>>>> linux-samsung so I only got two replies to patch #0, but none of the
+>>>>> code. Can you or Rajul resend?
+>>>>>
+>>>>
+>>>> Sure mike.
 >>>
->>> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> ---
->>>  .../bindings/iio/adc/nuvoton-nau7802.txt           |  17 +
->>>  drivers/iio/adc/Kconfig                            |   9 +
->>>  drivers/iio/adc/Makefile                           |   1 +
->>>  drivers/iio/adc/nau7802.c                          | 603 +++++++++++++++++++++
->>>  4 files changed, 630 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton-nau7802.txt
->>>  create mode 100644 drivers/iio/adc/nau7802.c
+>>> Acked-by: Mike Turquette<mturquette@linaro.org>
 >>>
->>> diff --git a/Documentation/devicetree/bindings/iio/adc/nuvoton-nau7802.txt b/Documentation/devicetree/bindings/iio/adc/nuvoton-nau7802.txt
->>> new file mode 100644
->>> index 0000000..9bc4218
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/adc/nuvoton-nau7802.txt
->>> @@ -0,0 +1,17 @@
->>> +* Nuvoton NAU7802 Analog to Digital Converter (ADC)use
->>> +
->>> +Required properties:
->>> +  - compatible: Should be "nuvoton,nau7802"
->>> +  - reg: Should contain the ADC I2C address
->>> +
->>> +Optional properties:
->>> +  - nuvoton,vldo: Reference voltage in millivolts (integer)
->>> +  - interrupts: IRQ line for the ADC. If not used the driver will use
->>> +    polling.
->>> +
->>> +Example:
->>> +adc2: nau7802@2a {
->>> +	compatible = "nuvoton,nau7802";
->>> +	reg = <0x2a>;
->>> +	nuvoton,vldo = <3000>;
->> We usually use the regulator framework for specifying the reference voltage.
-> 
-> I followed what Jonathan said in his review of my first patch. Do we
-> want to use the regulator framework to set the internal reference
-> voltage of the ADC ? I agree that if you supply an external voltage, it
-> will be necessary to use the regulator framework. Unfortunately, I can't
-> test that here.
->
+Applied with Mike's ack.
 
-Ah, ok I missed that it is an internally generated voltage. It might makes
-sense to add that to the properties documentation.
-
-I guess ideally you'd also register a regulator for the internal regulator
-and then use that. But I think that will unnecessarily complicate the code,
-so I guess the current solution is fine.
-
-There is one bug in probe though, if nuvoton,vldo is not set tmp will remain
-uninitialized.
-
-
->>> +};
->> [...]
->>> diff --git a/drivers/iio/adc/nau7802.c b/drivers/iio/adc/nau7802.c
->>> new file mode 100644
->>> index 0000000..e1b6981
->>> --- /dev/null
->>> +++ b/drivers/iio/adc/nau7802.c
->>> @@ -0,0 +1,603 @@
->> [...]
->>> +static int nau7802_set_gain(struct nau7802_state *st, int gain)
->>> +{
->>> +	u8 data;
->>> +	int ret;
->>> +
->>> +	mutex_lock(&st->lock);
->>> +	st->conversion_count = 0;
->>> +
->>> +	data = i2c_smbus_read_byte_data(st->client, NAU7802_REG_CTRL1);
->>> +	if (data < 0)
->>> +		goto nau7802_sysfs_set_gain_out;
->> ret will be uninitialized if the goto above is taken
-> 
-> Right, bigger issue, data is u8 so it will never be negative. I'm fixing
-> that !
-> 
-> 
->>> +	ret = i2c_smbus_write_byte_data(st->client, NAU7802_REG_CTRL1,
->>> +					(data & (~NAU7802_CTRL1_GAINS_BITS)) |
->>> +					gain);
->>> +
->>> +nau7802_sysfs_set_gain_out:
->>> +	mutex_unlock(&st->lock);
->>> +
->>> +	return ret ? ret : 0;
->>> +}
->> [...]
->>> +static int nau7802_read_irq(struct iio_dev *indio_dev,
->>> +			struct iio_chan_spec const *chan,
->>> +			int *val)
->>> +{
->>> +	struct nau7802_state *st = iio_priv(indio_dev);
->>> +	int ret;
->>> +
->>> +	INIT_COMPLETION(st->value_ok);
->>> +	enable_irq(st->client->irq);
->> Is it really necessary to enable/disable the IRQ or could you keep it
->> enabled all the time?
-> 
-> Fact is that the ADC doesn't really care if you are reading data or not
-> so you will probably endd up in a situation were you will get 320 IRQ
-> per second but not caring about the result. We have 3 ADCs on the board.
-> so that amounts to 960 IRQ per second when we are only reading like once
-> par second !
-
-Ah, ok, makes sense.
+Thanks,
+- Kukjin
