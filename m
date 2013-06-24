@@ -1,59 +1,71 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
 Subject: Re: [PATCH v5] clocksource:arm_global_timer: Add ARM global timer
  support.
-Date: Mon, 24 Jun 2013 22:10:19 +0100
-Message-ID: <51C8B5BB.8040007@st.com>
-References: <1372089195-29219-1-git-send-email-srinivas.kandagatla@st.com> <alpine.DEB.2.02.1306242200460.4013@ionos.tec.linutronix.de>
-Reply-To: srinivas.kandagatla@st.com
+Date: Mon, 24 Jun 2013 15:00:18 -0700
+Message-ID: <51C8C172.8020207@codeaurora.org>
+References: <1372089195-29219-1-git-send-email-srinivas.kandagatla@st.com> <51C8A6C8.8000009@codeaurora.org> <51C8B551.9080203@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1306242200460.4013@ionos.tec.linutronix.de>
+In-Reply-To: <51C8B551.9080203@st.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Stuart Menefy <stuart.menefy@st.com>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>
+To: srinivas.kandagatla@st.com
+Cc: John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Stuart Menefy <stuart.menefy@st.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24/06/13 21:01, Thomas Gleixner wrote:
-> On Mon, 24 Jun 2013, Srinivas KANDAGATLA wrote:
-> 
->> From: Stuart Menefy <stuart.menefy@st.com>
->>
->> This is a simple driver for the global timer module found in the Cortex
->> A9-MP cores from revision r1p0 onwards. This should be able to perform
->> the functions of the system timer and the local timer in an SMP system.
->>
->> The global timer has the following features:
->>     The global timer is a 64-bit incrementing counter with an
->> auto-incrementing feature. It continues incrementing after sending
->> interrupts. The global timer is memory mapped in the private memory
->> region.
->>     The global timer is accessible to all Cortex-A9 processors in the
->> cluster. Each Cortex-A9 processor has a private 64-bit comparator that
->> is used to assert a private interrupt when the global timer has reached
->> the comparator value. All the Cortex-A9 processors in a design use the
->> banked ID, ID27, for this interrupt. ID27 is sent to the Interrupt
->> Controller as a Private Peripheral Interrupt. The global timer is
->> clocked by PERIPHCLK.
->>
->> Signed-off-by: Stuart Menefy <stuart.menefy@st.com>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
->> CC: Arnd Bergmann <arnd@arndb.de>
->> CC: Rob Herring <robherring2@gmail.com>
->> CC: Linus Walleij <linus.walleij@linaro.org>
->> CC: Will Deacon <will.deacon@arm.com>
->> CC: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Thanks Thomas,
-I will fix Stephen's comment in next spin.
+On 06/24/13 14:08, Srinivas KANDAGATLA wrote:
+> On 24/06/13 21:06, Stephen Boyd wrote:
+>> On 06/24/13 08:53, Srinivas KANDAGATLA wrote:
+>>> +
+>>> +static void gt_clockevents_stop(struct clock_event_device *clk)
+>>> +{
+>>> +	gt_clockevent_set_mode(CLOCK_EVT_MODE_UNUSED, clk);
+>>> +	disable_percpu_irq(clk->irq);
+>>> +}
+>>> +
+>>> +static int __cpuinit gt_clockevents_setup(struct clock_event_device *clk)
+>>> +{
+>>> +	struct clock_event_device *evt = this_cpu_ptr(gt_evt);
+>>> +	return evt->name ? 0 : gt_clockevents_init(evt);
+>>> +}
+>> How does this work? gt_clockevents_stop() is using the
+>> clock_event_device struct from the ARM local timer layer whereas
+>> gt_clockevents_setup() is using a driver private allocation.
+> Thanks for pointing this..
+> This should fix it.
+>
+> static void gt_clockevents_stop(struct clock_event_device *clk)
+> {
+> 	struct clock_event_device *evt = this_cpu_ptr(gt_evt);
+> 	gt_clockevent_set_mode(CLOCK_EVT_MODE_UNUSED, evt);
+> 	disable_percpu_irq(evt->irq);
+> }
 
-Thanks,
-srini
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+Looks good, but even better would be to not use the local timer API.
+
+>  Please just
+>> don't use the local timer API at all and use cpu notifiers instead.
+> Last time when I did try using cpu notifiers like arm_arch_timer, the
+> broadcast dummy timer did kick off and took over the local timer on the
+> secondary cpus. Resulting in lot of broadcast IPI's.
+>
+> If I use cpu notifiers I will end up two clk events on a each core (one
+> dummy from arm/kernel/smp.c and other gt clk_evt). I think I can only
+> use cpu notifiers in my case once your patches are in.
+> Also I cant disable LOCAL_TIMERS as it y by default.
+>
+> Am I missing something?
+>
+> Am happy to move to cpu notifiers if it works, else the driver will be
+> broken.
+
+I think the problem is your clockevent has no rating. Please give it a
+rating (300?) so that it prevents the dummy from taking over. You don't
+need to worry about disabling the local timer API, it will register a
+harmless clockevent with a low rating (100) that should be ignored.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
 
