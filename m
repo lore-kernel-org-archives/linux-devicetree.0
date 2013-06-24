@@ -1,42 +1,95 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/7] of: introduce of_parse_phandle_with_fixed_args
-Date: Mon, 24 Jun 2013 14:20:34 +0200
-Message-ID: <CACRpkda5U0efRNL+e2+mCKe8MEAdiCDTc8iB4v-i37244ZUsOg@mail.gmail.com>
-References: <1371157199-7272-1-git-send-email-swarren@wwwdotorg.org>
- <1371157199-7272-4-git-send-email-swarren@wwwdotorg.org>
- <51C4D75C.9060007@wwwdotorg.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 1/8] ARM: dts: Correct camera pinctrl nodes for Exynos4x12
+ SoCs
+Date: Mon, 24 Jun 2013 14:29:02 +0200
+Message-ID: <51C83B8E.6030806@samsung.com>
+References: <1371819024-12596-1-git-send-email-s.nawrocki@samsung.com>
+ <1371819024-12596-2-git-send-email-s.nawrocki@samsung.com>
+ <7538808.XQjIcFgyeQ@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51C4D75C.9060007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <7538808.XQjIcFgyeQ@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, m.szyprowski@samsung.com, phil.carmody@partner.samsung.com, j.anaszewski@samsung.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 22, 2013 at 12:44 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 06/13/2013 02:59 PM, Stephen Warren wrote:
->> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Hi Tomasz,
+
+Thanks for the review.
+
+On 06/23/2013 12:12 PM, Tomasz Figa wrote:
+> On Friday 21 of June 2013 14:50:17 Sylwester Nawrocki wrote:
+>> Add separate nodes for the CAMCLK pin and turn off pull-up on camera
+>> ports A, B. The video bus pins and the clock output (CAMCLK) pin need
+>> separate nodes since full camera port is not used in some
+>> configurations, e.g. for MIPI CSI-2 bus only CAMCLK is required and
+>> data/clock signal use separate dedicated pins.
 >>
->> This is identical to of_parse_phandle_with_args(), except that the
->> number of argument cells is fixed, rather than being parsed out of the
->> node referenced by each phandle.
->
-> Rob, Grant, are you OK with these two DT patches? LinusW would like an
-> ack so he can take the series, which implements gpio-ranges property
-> parsing cleanup, through the GPIO tree. Thanks.
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos4x12-pinctrl.dtsi |   40
+>> ++++++++++++++++++++++++----- 1 file changed, 33 insertions(+), 7
+>> deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
+>> b/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi index 704290f..50eaa95
+>> 100644
+>> --- a/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
+>> @@ -401,13 +401,26 @@
+>>  			samsung,pin-drv = <0>;
+>>  		};
+>>
+>> -		cam_port_a: cam-port-a {
+>> +		cam_port_a_io: cam-port-a-io {
+>>  			samsung,pins = "gpj0-0", "gpj0-1", "gpj0-2", 
+> "gpj0-3",
+>>  					"gpj0-4", "gpj0-5", "gpj0-6", 
+> "gpj0-7",
+>> -					"gpj1-0", "gpj1-1", "gpj1-2", 
+> "gpj1-3",
+>> -					"gpj1-4";
+>> +					"gpj1-0", "gpj1-1", "gpj1-2", 
+> "gpj1-4";
+>>  			samsung,pin-function = <2>;
+>> -			samsung,pin-pud = <3>;
+>> +			samsung,pin-pud = <0>;
+>> +			samsung,pin-drv = <0>;
+>> +		};
+>> +
+>> +		cam_port_a_clk_active: cam-port-a-clk-active {
+>> +			samsung,pins = "gpj1-3";
+>> +			samsung,pin-function = <2>;
+>> +			samsung,pin-pud = <0>;
+>> +			samsung,pin-drv = <3>;
+>> +		};
+>> +
+>> +		cam_port_a_clk_idle: cam-port-a-clk-idle {
+>> +			samsung,pins = "gpj1-3";
+>> +			samsung,pin-function = <0>;
+>> +			samsung,pin-pud = <0>;
+>>  			samsung,pin-drv = <0>;
+> 
+> Who is driving the clock line in this configuration? Idle would suggest 
+> that neither the camera nor the camif, so I think some pull should be 
+> enabled to avoid floating pin. (Or is there an external pulling resistor 
+> for this line in most common setups?)
 
-Yeah ping on this, it's a real nice cleanup.
+In normal operation it is the AP SoC that feeds the clock to an external
+image sensor. And the 'idle' pinctrl state is meant for a state where
+the sensor is powered down completely or is in a suspend state that does
+not require the sensor's master clock to be provided.
 
-Yours,
-Linus Walleij
+I took this configuration directly from the SoC vendor kernels, but it
+indeed seems more appropriate to enable pull down on these pins in idle
+state to avoid floating pins. If anything else is needed relevant
+pinctrl nodes could be overridden in a board dts file.
+
+I will update this and resend with pull down enabled.
+
+Thanks,
+Sylwester
