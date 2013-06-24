@@ -1,225 +1,42 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH v3 2/4] gpio-tz1090: add TZ1090 gpio driver
-Date: Mon, 24 Jun 2013 15:48:17 +0100
-Message-ID: <51C85C31.4070003@imgtec.com>
-References: <1371720391-21825-1-git-send-email-james.hogan@imgtec.com> <1371720391-21825-3-git-send-email-james.hogan@imgtec.com> <20130624133453.8FC5D3E0A89@localhost>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: davinci: da850: adopt to pinctrl-single driver
+	to configure multiple pins
+Date: Mon, 24 Jun 2013 20:22:54 +0530
+Message-ID: <51C85D46.3040209@ti.com>
+References: <1369145282-14419-1-git-send-email-prakash.pm@ti.com>
+	<1369145282-14419-5-git-send-email-prakash.pm@ti.com>
+	<A73F36158E33644199EB82C5EC81C7BC3EA911E0@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130624133453.8FC5D3E0A89@localhost>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3EA911E0-yXqyApvAXouIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Ujfalusi,  Peter" <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/06/13 14:34, Grant Likely wrote:
-> On Thu, 20 Jun 2013 10:26:28 +0100, James Hogan <james.hogan@imgtec.com> wrote:
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-tz1090.txt b/Documentation/devicetree/bindings/gpio/gpio-tz1090.txt
->> new file mode 100644
->> index 0000000..e017d4b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-tz1090.txt
->> @@ -0,0 +1,87 @@
->> +ImgTec TZ1090 GPIO Controller
->> +
->> +Required properties:
->> +- compatible: Compatible property value should be "img,tz1090-gpio>".
+On 6/24/2013 5:18 PM, Manjunathappa, Prakash wrote:
+> Hi Sekhar,
 > 
-> typo at end of line
-
-Yes, I'll fix in gpio-tz1090-pdc driver bindings too
-
->> +  Bank subnode optional properties:
->> +  - gpio-ranges: Mapping to pin controller pins
+> On Tue, May 21, 2013 at 19:38:02, Manjunathappa, Prakash wrote:
+>> function-mask property is a mask for a pin at each pin configure offset
+>> in a pincontrol register.
+>>
 > 
-> This is specific to this binding. To avoid namespace colisions, add a
-> "img," prefix to the property name.
+> Got 1/3 and 2/3 accepted, I do not know if this gets merged via DaVinci tree or
+> pincontrol tree. Could you please takecare of this?
 
-This property is described in
-Documentation/devicetree/bindings/gpio/gpio.txt... (and my examples are
-out of date from when the gpio offset cell was added in v3.10). I'll add
-a reference to that Document.
+I will send this via DaVinci tree. I had actually missed that there is a
+bit waiting for me here. So thanks for asking.
 
->> +/* GPIO chip callbacks */
->> +
->> +static int tz1090_gpio_direction_input(struct gpio_chip *chip,
->> +				       unsigned int offset)
->> +{
->> +	struct tz1090_gpio_bank *bank = to_bank(chip);
->> +	tz1090_gpio_set_bit(bank, REG_GPIO_DIR, offset);
->> +
->> +	return 0;
->> +}
->> +
->> +static int tz1090_gpio_direction_output(struct gpio_chip *chip,
->> +					unsigned int offset, int output_value)
->> +{
->> +	struct tz1090_gpio_bank *bank = to_bank(chip);
->> +	int lstat;
->> +
->> +	__global_lock2(lstat);
->> +	_tz1090_gpio_mod_bit(bank, REG_GPIO_DOUT, offset, output_value);
->> +	_tz1090_gpio_clear_bit(bank, REG_GPIO_DIR, offset);
->> +	__global_unlock2(lstat);
->> +
->> +	return 0;
->> +}
->> +
->> +/*
->> + * Return GPIO level
->> + */
->> +static int tz1090_gpio_get(struct gpio_chip *chip, unsigned int offset)
->> +{
->> +	struct tz1090_gpio_bank *bank = to_bank(chip);
->> +
->> +	return tz1090_gpio_read_bit(bank, REG_GPIO_DIN, offset);
->> +}
->> +
->> +/*
->> + * Set output GPIO level
->> + */
->> +static void tz1090_gpio_set(struct gpio_chip *chip, unsigned int offset,
->> +			    int output_value)
->> +{
->> +	struct tz1090_gpio_bank *bank = to_bank(chip);
->> +
->> +	tz1090_gpio_mod_bit(bank, REG_GPIO_DOUT, offset, output_value);
->> +}
->> +
->> +static int tz1090_gpio_request(struct gpio_chip *chip, unsigned int offset)
->> +{
->> +	struct tz1090_gpio_bank *bank = to_bank(chip);
->> +	int ret;
->> +
->> +	ret = pinctrl_request_gpio(chip->base + offset);
->> +	if (ret)
->> +		return ret;
->> +
->> +	tz1090_gpio_set_bit(bank, REG_GPIO_DIR, offset);
->> +	tz1090_gpio_set_bit(bank, REG_GPIO_BIT_EN, offset);
->> +
->> +	return 0;
->> +}
-> 
-> Is it possible to use the gpio-generic.c hooks for manipulating the
-> gpio bits?
-
-Due to the unfortunate necessity to use the __global_lock2 functions
-(for atomic accesses between different non-linux threads/cores) I don't
-think this is possible.
-
->> +/* IRQ chip handlers */
->> +
->> +/* Get TZ1090 GPIO chip from irq data provided to generic IRQ callbacks */
->> +static inline struct tz1090_gpio_bank *irqd_to_gpio_bank(struct irq_data *data)
->> +{
->> +	return (struct tz1090_gpio_bank *)data->domain->host_data;
->> +}
->> +
->> +static void tz1090_gpio_irq_clear(struct tz1090_gpio_bank *bank,
->> +				  unsigned int offset)
->> +{
->> +	tz1090_gpio_clear_bit(bank, REG_GPIO_IRQ_STS, offset);
->> +}
->> +
->> +static void tz1090_gpio_irq_enable(struct tz1090_gpio_bank *bank,
->> +				   unsigned int offset, bool enable)
->> +{
->> +	tz1090_gpio_mod_bit(bank, REG_GPIO_IRQ_EN, offset, enable);
->> +}
->> +
->> +static void tz1090_gpio_irq_polarity(struct tz1090_gpio_bank *bank,
->> +				     unsigned int offset, unsigned int polarity)
->> +{
->> +	tz1090_gpio_mod_bit(bank, REG_GPIO_IRQ_PLRT, offset, polarity);
->> +}
->> +
->> +static int tz1090_gpio_valid_handler(struct irq_desc *desc)
->> +{
->> +	return desc->handle_irq == handle_level_irq ||
->> +		desc->handle_irq == handle_edge_irq;
->> +}
->> +
->> +static void tz1090_gpio_irq_type(struct tz1090_gpio_bank *bank,
->> +				 unsigned int offset, unsigned int type)
->> +{
->> +	tz1090_gpio_mod_bit(bank, REG_GPIO_IRQ_TYPE, offset, type);
->> +}
->> +
->> +/* set polarity to trigger on next edge, whether rising or falling */
->> +static void tz1090_gpio_irq_next_edge(struct tz1090_gpio_bank *bank,
->> +				      unsigned int offset)
->> +{
->> +	unsigned int value_p, value_i;
->> +	int lstat;
->> +
->> +	/*
->> +	 * Set the GPIO's interrupt polarity to the opposite of the current
->> +	 * input value so that the next edge triggers an interrupt.
->> +	 */
->> +	__global_lock2(lstat);
->> +	value_i = ~tz1090_gpio_read(bank, REG_GPIO_DIN);
->> +	value_p = tz1090_gpio_read(bank, REG_GPIO_IRQ_PLRT);
->> +	value_p &= ~BIT(offset);
->> +	value_p |= value_i & BIT(offset);
->> +	tz1090_gpio_write(bank, REG_GPIO_IRQ_PLRT, value_p);
->> +	__global_unlock2(lstat);
->> +}
->> +
->> +static void gpio_ack_irq(struct irq_data *data)
->> +{
->> +	struct tz1090_gpio_bank *bank = irqd_to_gpio_bank(data);
->> +
->> +	tz1090_gpio_irq_clear(bank, data->hwirq);
->> +}
->> +
->> +static void gpio_mask_irq(struct irq_data *data)
->> +{
->> +	struct tz1090_gpio_bank *bank = irqd_to_gpio_bank(data);
->> +
->> +	tz1090_gpio_irq_enable(bank, data->hwirq, false);
->> +}
->> +
->> +static void gpio_unmask_irq(struct irq_data *data)
->> +{
->> +	struct tz1090_gpio_bank *bank = irqd_to_gpio_bank(data);
->> +
->> +	tz1090_gpio_irq_enable(bank, data->hwirq, true);
->> +}
-> 
-> Similarly, can this driver use the generic irq chip to eliminate the
-> above hooks?
-
-hmm, I could probably get away with it for irq callbacks since a bank's
-IRQ cannot be shared with non-Linux threads/cores.
-
-> 
-> [...]
->> +
->> +static void tz1090_gpio_register_banks(struct tz1090_gpio *priv)
->> +{
->> +	struct device_node *np = priv->dev->of_node;
->> +	struct device_node *node;
->> +
->> +	for_each_available_child_of_node(np, node) {
->> +		struct tz1090_gpio_bank_info info;
->> +		const __be32 *addr;
->> +		int len, ret;
->> +
->> +		addr = of_get_property(node, "reg", &len);
->> +		if (!addr || (len < sizeof(int))) {
->> +			dev_err(priv->dev, "invalid reg on %s\n",
->> +				node->full_name);
->> +			continue;
->> +		}
-> 
-> Use of_property_read_u32(). It's safer and does the be32 conversion for you.
-
-will do.
-
-Thanks for the review.
-
-Cheers
-James
-
+Regards,
+Sekhar
