@@ -1,95 +1,138 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v1 01/12] input: matrix-keypad: update devicetree binding
- doc
-Date: Mon, 24 Jun 2013 16:00:26 -0600
-Message-ID: <51C8C17A.1050700@wwwdotorg.org>
-References: <1371838198-7327-1-git-send-email-gsi@denx.de> <1371838198-7327-2-git-send-email-gsi@denx.de> <51C4C63B.3030300@wwwdotorg.org> <20130622092319.GE24305@book.gsilab.sittig.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: Re: [PATCH] gpio MIPS/OCTEON: Add a driver for OCTEON's on-chip
+ GPIO pins.
+Date: Tue, 25 Jun 2013 00:06:23 +0200
+Message-ID: <CACRpkdYmPuyrDYU1n+UpgW-if9-JS-vXJgLVCJ2zrx-4oKBtHw@mail.gmail.com>
+References: <1371251915-18271-1-git-send-email-ddaney.cavm@gmail.com>
+	<CACRpkdYHzBBbPNujYRGkMFGuQRzeYKs9jgfc3e3HWyxQFahvRQ@mail.gmail.com>
+	<51C34584.8070301@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20130622092319.GE24305@book.gsilab.sittig.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Chao Xie <xiechao.mail@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Detlev Zundel <dzu@denx.de>, Sekhar Nori <nsekhar@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51C34584.8070301@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/22/2013 03:23 AM, Gerhard Sittig wrote:
-...
-> On Fri, Jun 21, 2013 at 15:31 -0600, Stephen Warren wrote:
->> On 06/21/2013 12:09 PM, Gerhard Sittig wrote:
->>> update the device tree binding documentation for the GPIO matrix keypad
->>> driver: mention the driver's selecting all columns at once, reword the
->>> delay descriptions, add the missing active low GPIO pin level property
+On Thu, Jun 20, 2013 at 8:10 PM, David Daney <ddaney.cavm@gmail.com> wrote:
+> On 06/17/2013 01:51 AM, Linus Walleij wrote:
+
+>> +#include <asm/octeon/octeon.h>
+>> +#include <asm/octeon/cvmx-gpio-defs.h>
 >>
->>> diff --git a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-...
->>> +Simple keypad matrix layouts just connect GPIO lines to mechanical
->>> +switches, with no other active components involved.  Although due to the
+>> I cannot find this in my tree.
+>
+> Weird, I see them here:
+>
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/asm/octeon/cvmx-gpio-defs.h
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/asm/octeon/octeon.h
+>
+> Do you not have these?
+
+Yeah no problem, I must have misgrepped.
+Sorry for the fuzz...
+
+>> depend on OF as well right? Or does the CAVIUM_OCTEON_SOC already
+>> imply that?
+>
+> We already have 'select USE_OF', so I think adding OF here would be
+> redundant.
+
+OK.
+
+>>> +/*
+>>> + * The address offset of the GPIO configuration register for a given
+>>> + * line.
+>>> + */
+>>> +static unsigned int bit_cfg_reg(unsigned int gpio)
 >>
->> I don't think that's always true. On some Tegra boards for example,
->> multiple processes can "press" certain switches, so we actually have a
->> wired-OR feed into a transistor which then connects a particular
->> (column, row) combination. We do this e.g. for remote-control USB over
->> the power button for example. I believe the effect is the same, but it
->> does mean that statement above isn't quite true.
-> 
-> That's why I wrote about "simple ... layouts", but couldn't tell
-> exactly when it was appropriate to discuss the more advanced
-> setups as well, and in how much depth to do that in the device
-> tree binding.
-> 
-> So is there a better way of putting this?  Is the "simple" or the
-> "mechanical" the issue in the description?
+>> Maybe the passed variable shall be named "offset" here, as it is named
+>> offset on all call sites, and it surely local for this instance?
+>
+> Well it is the gpio line, so perhaps it should universally be change to
+> "line" or "pin"
 
-I think both "simple" and "mechanical" should be removed. My reasoning:
+We use "offset" to signify line enumerators in drivers/gpio/*
+well atleaste if they are local to a piece of hardware.
+(Check the GPIO siblings.)
 
-At the level of connection between rows/columns, aren't all matrix
-keypads set up such that something connects a row to a column to signify
-a keypress, not just "simple layouts".
-
-Similarly, "mechanical" should be removed since it's not always true,
-and even if it were, it would be irrelevant to anything outside the
-keyboard, perhaps aside from the need to debounce.
-
-In fact, thinking about this more, I think all four paragraphs of text
-that this patch adds would be better in Documentation/input/, as you
-mentioned elsewhere. When introducing any extra properties, you could
-mention their potential use by a driver, as explanation for why they're
-useful, but there's probably no need to describe the complete operation
-of the driver in the DT binding.
-
->>> +- gpio-activelow:	row pins as well as column pins are active low
+>>> +{
+>>> +       if (gpio < 16)
+>>> +               return 8 * gpio;
+>>> +       else
+>>> +               return 8 * (gpio - 16) + 0x100;
 >>
->> That one change is definitely wrong. Each entry in row-gpios and
->> col-gpios should include GPIO flags (in a format defined by the binding
->> for the DT node providing the GPIO). Those flags include an active-high
->> vs. active-low bit. In Linux, you can use of_get_gpio_flags() to
->> retrieve a standardized representation of the flags.
-> 
-> See my introduction above.  This isn't a "change", it's just
-> catching up in the documentation and adding what was omitted
-> before.
+>>
+>> Put this 0x100 in the #defines above with the name something like
+>> STRIDE.
+>
+> But it is not a 'STRIDE', it is a discontinuity compensation and used in
+> exactly one place.
 
-Oh dear, that's quite unfortunate. I see that even though that property
-wasn't documented in the binding doc, arch/powerpc/boot/dts/ac14xx.dts
-has still already used it, so we probably can't fix it. I suppose we
-must simply document it, and ignore the shortcomings of that binding:-(
+OK what about a comment or something, because it isn't
+exactly intuitive right?
 
-> And I can see another issue here (maybe shadowed by the wording I
-> used, referring to "row pins"):  The fact that a pin may be
-> inverted (within the SoC), and the fact that an externally
-> connected component might require low active stimulus over
-> otherwise high active pins/connections, might need to get
-> reflected well.  Or am I too picky here?
-> 
-> Are there other cases to learn from, where non-inverted physical
-> pins get attached to components which require inverted logical
-> information?  Do we combine the overall polarity within the GPIO
-> pin's abstraction, or do logical drivers above GPIO handle the
-> inversion?
+>>> +struct octeon_gpio {
+>>> +       struct gpio_chip chip;
+>>> +       u64 register_base;
+>>> +};
+>>
+>> OMG everything is 64 bit. Well has to come to this I guess.
+>
+> Not everything.  This is custom logic in an SoC with 64-bit wide internal
+> address buses, what would you suggest?
 
-In general, I would expect the binding to represent the overall
-effective polarity of the signal that must be programmed into the
-relevant GPIO controller. SW doesn't really care how/why the signal is
-inverted, simply that it needs to (or doesn't) invert the signal when it
-programs the GPIO controller.
+Yep that's what I meant, no big deal. Just first time
+I really see it in driver bases.
+
+>> I'm not a fan of packed bitfields like this, I prefer if you just
+>> OR | and AND & the bits together in the driver.
+
+I see you disregarded this comment, and looking at the header
+files it seems the MIPS arch is a big fan if packed bitfields so
+will live with it for this arch...
+
+>>> +static int octeon_gpio_get(struct gpio_chip *chip, unsigned offset)
+>>> +{
+>>> +       struct octeon_gpio *gpio = container_of(chip, struct octeon_gpio,
+>>> chip);
+>>> +       u64 read_bits = cvmx_read_csr(gpio->register_base + RX_DAT);
+>>> +
+>>> +       return ((1ull << offset) & read_bits) != 0;
+>>
+>> A common idiom we use for this is:
+>>
+>> return !!(read_bits & (1ull << offset));
+>
+> I hate that idiom, but if its use is a condition of accepting the patch, I
+> will change it.
+
+Nah. If a good rational reason like "hate" is given for not using a coding
+idiom I will accept it as it stands ;-)
+
+>>> +       dev_info(&pdev->dev, "OCTEON GPIO\n");
+>>
+>>
+>> This is like shouting "REAL MADRID!" in the bootlog, be a bit more
+>> precise: "octeon GPIO driver probed\n" or something so we know what
+>> is happening.
+>
+> No, more akin to 'Real Madrid', as 'OCTEON' is the correct spelling of its
+> given name.
+>
+> I will happily add "driver probed", and grudgingly switch to lower case if
+> it is a necessary condition of patch acceptance.
+
+I don't know, does this rest of the MIPS drivers emit similar messages
+such that the bootlog will say
+
+OCTEON clocks
+OCTEON irqchip
+OCTEON I2C
+OCTEON GPIO
+
+then I guess it's convention and it can stay like this.
+
+Yours,
+Linus Walleij
