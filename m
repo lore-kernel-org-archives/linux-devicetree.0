@@ -1,31 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 03/10] pinctrl:st: Add pinctrl and pinconf support.
-Date: Mon, 24 Jun 2013 13:57:56 +0200
-Message-ID: <CACRpkdb-H2=GdF54Fay+PQVdXLTs++L5+QYe_vFPuzpa+E4ZMg@mail.gmail.com>
-References: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com>
-	<1371737138-9340-1-git-send-email-srinivas.kandagatla@st.com>
-	<51C45816.5010207@st.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCHv12] spi: omap2-mcspi: add generic DMA request support to the DT binding
+Date: Mon, 24 Jun 2013 17:31:59 +0530
+Message-ID: <1372075319-21680-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51C45816.5010207@st.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, kernel@stlinux.com, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Stephen Gallimore <stephen.gallimore@st.com>, Arnd Bergmann <arnd@arndb.de>
+To: broonie@kernel.org, tony@atomide.com
+Cc: balbi@rocket1.ti.cm, joelagnel@ti.com, nsekhar@ti.com, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, linux-omap@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 21, 2013 at 3:41 PM, Srinivas KANDAGATLA
-<srinivas.kandagatla@st.com> wrote:
+From: Matt Porter <mporter@ti.com>
 
-> Hi Linus W,
-> If its not too late can this patch be considered for 3.11 via pinctrl tree?
-> There is a build dependecy with regmap_field apis pulled by Mark Brown
-> in regmap repository.
+The binding definition is based on the generic DMA request binding
 
-This seems fairly complete, but I cannot have such a basic dependency onto
-the regmap tree this late in the merge window, i.e. I'm not ready to pull
-all of regmap into the pinctrl tree. I'd consider this for merging
-for the next kernel cycle so it's more orthogonal.
+Signed-off-by: Matt Porter <mporter@ti.com>
+Signed-off-by: Joel A Fernandes <joelagnel@ti.com>
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+---
+ Documentation/devicetree/bindings/spi/omap-spi.txt |   27 +++++++++++++++++++-
+ 1 files changed, 26 insertions(+), 1 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/spi/omap-spi.txt b/Documentation/devicetree/bindings/spi/omap-spi.txt
+index 938809c..4c85c4c 100644
+--- a/Documentation/devicetree/bindings/spi/omap-spi.txt
++++ b/Documentation/devicetree/bindings/spi/omap-spi.txt
+@@ -10,7 +10,18 @@ Required properties:
+ 			  input. The default is D0 as input and
+ 			  D1 as output.
+ 
+-Example:
++Optional properties:
++- dmas: List of DMA specifiers with the controller specific format
++	as described in the generic DMA client binding. A tx and rx
++	specifier is required for each chip select.
++- dma-names: List of DMA request names. These strings correspond
++	1:1 with the DMA specifiers listed in dmas. The string naming
++	is to be "rxN" and "txN" for RX and TX requests,
++	respectively, where N equals the chip select number.
++
++Examples:
++
++[hwmod populated DMA resources]
+ 
+ mcspi1: mcspi@1 {
+     #address-cells = <1>;
+@@ -20,3 +31,17 @@ mcspi1: mcspi@1 {
+     ti,spi-num-cs = <4>;
+ };
+ 
++[generic DMA request binding]
++
++mcspi1: mcspi@1 {
++    #address-cells = <1>;
++    #size-cells = <0>;
++    compatible = "ti,omap4-mcspi";
++    ti,hwmods = "mcspi1";
++    ti,spi-num-cs = <2>;
++    dmas = <&edma 42
++	    &edma 43
++	    &edma 44
++	    &edma 45>;
++    dma-names = "tx0", "rx0", "tx1", "rx1";
++};
+-- 
+1.7.1
+
