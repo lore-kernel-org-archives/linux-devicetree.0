@@ -1,82 +1,90 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC] pinctrl: generic: Add DT bindings
-Date: Mon, 24 Jun 2013 11:43:43 +0200
-Message-ID: <CACRpkdaXv=5PNt4EZPbcWzHYE4XAYmALqyV7v51QA+s63ZvFiQ@mail.gmail.com>
-References: <1370988237-30593-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<51C22985.50106@wwwdotorg.org>
+Subject: Re: [PATCH 2/5] pinctrl: clarify some dt pinconfig options
+Date: Mon, 24 Jun 2013 11:51:32 +0200
+Message-ID: <CACRpkdbKOWEjnkzY2zGOqWPQ7okBjhK4=QR0tHhJYQa42nefXQ@mail.gmail.com>
+References: <201306141741.46077.heiko@sntech.de>
+	<201306141742.49923.heiko@sntech.de>
+	<51C22C5F.5020402@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51C22985.50106@wwwdotorg.org>
+In-Reply-To: <51C22C5F.5020402@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, James Hogan <james.hogan@imgtec.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, James Hogan <james.hogan@imgtec.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2013 at 11:58 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 06/11/2013 04:03 PM, Laurent Pinchart wrote:
+On Thu, Jun 20, 2013 at 12:10 AM, Stephen Warren <swarren@wwwdotorg.org=
+> wrote:
+> On 06/14/2013 09:42 AM, Heiko St=FCbner wrote:
 
->> +- tristate: A boolean, put the pin into high impedance state when set.
-
-The other patch defines bias-high-impedance which is more likely
-to be the string used.
-
-Anyway:
-
-> I don't think that a Boolean is appropriate here; it's really a tri-state:
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindi=
+ngs.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.tx=
+t
 >
-> * Nothing is specified about the tristate value; don't touch that aspect
-> of HW.
-> * Turn tristate on.
-> * Turn tristate off.
-
-I was thinking more about using bias-disable; to explicitly turn that
-off.
-
-But maybe a specific disable option is needed, like for schmitt-trigger
-(see below).
-
-> This can be a meaningful distinction when relying on e.g. the bootloader
-> having already set up the appropriate tristate value, or when
-> dynamically switching between different pinctrl states and not wanting
-> to affect tristate, or when piecing together multiple DT nodes that
-> describe part of a state, where one node covers just muxing and the
-> other just pin config (e.g. where the mux and pin config configuration
-> registers in HW affect different overlapping groups).
-
-OK point taken... although when we're dealing with generic pin config
-the idea is not to cover everything but the majority of not-so-complicated
-cases.
-
->> +- schmitt: An integer, enable or disable Schmitt trigger mode for the pins.
->> +  Valid values are
->> +    0: Schmitt trigger disabled (no hysteresis)
->> +    1: Schmitt trigger enabled
+>> -low-power-mode               - low power mode
+>> +low-power-enable     - enable low power mode
+>> +low-power-disable    - disable low power mode
 >
-> A similar comment applies here.
+> Hmmm. That's changing the binding definition. What if somebody alread=
+y
+> wrote their device tree according previous definition?
 
-The other patch adds:
-input-schmitt-enable;
-input-schmitt-disable;
+It's not merged so see it as alterations to a WIP in the
+turners workshop or something.
 
-So this is covered.
+> It seems to be that tri-states are preferable for pinctrl DT:
+>
+> no entry: do nothing
+> =3D 0: disable
+> =3D 1: enable
 
->> +- slew-rate: An integer controlling the pin slew rate. Values are device-
->> +  dependent.
+Better with explict enable/disable strings instead of
+<0> or <1> I think, but the semantic effect would be the
+same I guess, the upside with *enable/*disable strings is
+that we do not have to handle cases like
+tristate =3D <2>; ...
+
+>> +Arguments for parameters:
 >> +
->> +- drive-strength: An integer representing the drive strength of pins in mA.
->> +  Valid values are device-dependent.
+>> +- bias-pull-up, -down and -pin-default take as optional argument 0 =
+to disable
+>> +  the pull, on hardware supporting it the pull strength in Ohm. bia=
+s-disable
+>> +  will also disable any active pull.
 >
-> I'm still not convinced that requiring this to be in mA is a good idea.
-> Different HW will use different units for documentation, or even specify
-> no units at all, so it might not always be possible to represent this in
-> terms of mA. Asking for the documentation to be re-written simply to
-> support the DT binding just isn't going to happen.
+> Does this agree with the latest definition of the kernel-internal
+> meaning of 0 for pull-up/down?
 
-We can add custom DT bindings for these. This is to cover those
-where we know enough about it to actually use this generic binding.
-If we don't really know what is happening we may as well call it
-vendor,foo = <?>;
+No that is wrong. Heiko, care to fix this binding doc?
+
+>> +- input-schmitt takes as argument the adjustable hysteresis in a
+>> +  driver-specific format
+>> +
+>> +- input-debounce takes the debounce time as argument or 0 to disabl=
+e debouncing
+>> +
+>> +- power-source argument is the custom value describing the source t=
+o select
+>> +
+>> +- slew-rate takes as argument the target rate in a driver-specific =
+format
+>
+> If those things have driver-specific (note: should be
+> DT-binding-specific, not driver-specific) values, then I'm not convin=
+ced
+> that having a generic parameter name for them is a good idea; it make=
+s
+> things look the same when they aren't. By forcing each binding to
+> include the vendor prefix on those properties and hence define a cust=
+om
+> property name, you're making it clear that the semantics may be diffe=
+rent.
+
+Hmmm I don't think they're used right now, let's deal with them when
+we have something to showcase them with. Patches to delete the
+unclear bindings will be considered...
 
 Yours,
 Linus Walleij
