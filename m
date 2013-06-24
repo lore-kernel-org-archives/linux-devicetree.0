@@ -1,59 +1,62 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 03/10] pinctrl:st: Add pinctrl and pinconf support.
-Date: Mon, 24 Jun 2013 15:12:57 +0100
-Message-ID: <20130624141257.GM27646@sirena.org.uk>
-References: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com>
- <1371737138-9340-1-git-send-email-srinivas.kandagatla@st.com>
- <51C45816.5010207@st.com>
- <CACRpkdb-H2=GdF54Fay+PQVdXLTs++L5+QYe_vFPuzpa+E4ZMg@mail.gmail.com>
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v12 00/11] DMA Engine support for AM33XX
+Date: Mon, 24 Jun 2013 16:36:08 +0200
+Message-ID: <51C85958.9030502@ti.com>
+References: <1371762407-24544-1-git-send-email-joelagnel@ti.com>
+	<20130624101903.GV5523@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SvPICi00/oKz9jF1"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb-H2=GdF54Fay+PQVdXLTs++L5+QYe_vFPuzpa+E4ZMg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Stuart Menefy <stuart.menefy@st.com>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, kernel@stlinux.com, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Stephen Gallimore <stephen.gallimore@st.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20130624101903.GV5523-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andrew Morton <akpm@linux-foundat>
 List-Id: devicetree@vger.kernel.org
 
+Hi Tony,
 
---SvPICi00/oKz9jF1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 06/24/2013 12:19 PM, Tony Lindgren wrote:
+> Hi,
+> 
+> For merging this series, I suggest the following sets:
+> 
+> * Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org> [130620 14:13]:
+>>
+>> Joel A Fernandes (3):
+>>   edma: config: Enable config options for EDMA
+>>   da8xx: config: Enable MMC and FS options
+>>   ARM: davinci: Fix compiler warnings in devices-da8xx
+>>
+>> Matt Porter (8):
+>>   dmaengine: edma: Add TI EDMA device tree binding
+>>   ARM: edma: Add DT and runtime PM support to the private EDMA API
+>>   ARM: edma: Add EDMA crossbar event mux support
+>>   dmaengine: edma: enable build for AM33XX
+> 
+> Sekhar should queue the above patches, I've acked the
+> mach-omap2/Kconfig change.
+> 
+>>   spi: omap2-mcspi: add generic DMA request support to the DT binding
+>>   spi: omap2-mcspi: convert to dma_request_slave_channel_compat()
+> 
+> 
+> The spi changes should get merged via the driver list.
+> 
+>>   ARM: dts: add AM33XX EDMA support
+>>   ARM: dts: add AM33XX SPI DMA support
+> 
+> Benoit should queue the .dts changes.
 
-On Mon, Jun 24, 2013 at 01:57:56PM +0200, Linus Walleij wrote:
+I'll do that, but do you consider them for 3.11?
 
-> This seems fairly complete, but I cannot have such a basic dependency onto
-> the regmap tree this late in the merge window, i.e. I'm not ready to pull
-> all of regmap into the pinctrl tree. I'd consider this for merging
-> for the next kernel cycle so it's more orthogonal.
-
-I've got the patch on a topic branch in regmap to allow for this sort of
-stuff - I can readily provide a signed tag for you to get just that
-patch if that'd help?  Alternatively I'm happy to carry the pinctrl
-patch in regmap?
-
---SvPICi00/oKz9jF1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRyFPlAAoJELSic+t+oim9drkP/AvXwB+JkSkI5KOxPbYZLrAU
-f6QwGGF7ASGbxukfntYf3ktBYexugj5MQMCo/uPYam8jTRJ85tCoSwFDyWAnHleh
-8tEXp/7E0K6yEOUMlFjCvDQnQQctiBdKfTCy8/yI2BkvflVt2VzgJdGnck8PJ3ky
-RxjkPXNMGoDAwE6ylPhWS+wO27ZzH1pj37bQdOaOUxIP9DIAKhPtP2nP9MSiU9Lh
-0G1IwcmdrzCyUcwCTPEOzOcu0GlT7yHs6R0oDl5K/jR0z1WJOG+KOa+9zTOFJAk5
-ogGhX/tju2ej+kaQRxckbsiBedbhDedGik99a66hQLv6xv5bg5vBJq9FKDPMqvdP
-tUe1Xeua7BVvNop+TqfTvayVOPmoXRhe+Hz8qH0MgFQRy8kz1sD/HMfRTfRw9e39
-Khj/JBfmbZ+IIv+n3nFGJjb1+QSonlmYNxhABgjwDsgCVqgBkcCW4rh4r/zVzVZB
-jq2pFfchPnlASz1ZuzTIMnGS0cL3xGwnxMQKvAqe6rfWq+2uZPz1IhJSSwD7kAUJ
-bOQOizb5wm//SmZbIJKANN6YQ5MuUX3vbQahHczlnPZe/v9M++cUzr4zEaENRtsk
-WuiJqaS8+Vm5A7Gy9v8AmdT3saY7pqwCa1xBx58QQZUUDWV6eJIJ0m6zb9BMw6qR
-B48zlMq6FmnjmYq1kmV1
-=RT+C
------END PGP SIGNATURE-----
-
---SvPICi00/oKz9jF1--
+Thanks,
+Benoit
