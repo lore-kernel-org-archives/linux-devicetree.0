@@ -1,25 +1,42 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCHv2 1/3] iio: Add Nuvoton NAU7802 ADC driver
-Date: Mon, 24 Jun 2013 19:26:01 +0200
-Message-ID: <51C88129.30106@free-electrons.com>
-References: <1371754675-12242-1-git-send-email-alexandre.belloni@free-electrons.com> <1371754675-12242-2-git-send-email-alexandre.belloni@free-electrons.com> <51C7EA23.1040707@metafoo.de> <51C82169.1010203@free-electrons.com> <51C876B2.1050103@metafoo.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51C876B2.1050103@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, jimwall@q.com, brian@crystalfontz.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Jonathan Cameron <jic23@cam.ac.uk>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v2 0/8] ARM: dts: Add camera and magnetometer support for
+ TRATS2 board
+Date: Mon, 24 Jun 2013 20:05:43 +0200
+Message-ID: <1372097151-18122-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene.kim@samsung.com
+Cc: t.figa@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, myungjoo.ham@samsung.com, m.szyprowski@samsung.com, phil.carmody@partner.samsung.com, j.anaszewski@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24/06/2013 18:41, Lars-Peter Clausen wrote:
-> Ah, ok, makes sense.
->
+This patch series includes some fixes and extensions to the Exynos
+dts files to add the camera and magnetometer sensor support for TRATS2
+board. It depends on a patch from Tomasz adding initial TRATS2 board
+dts file [1].
 
-I just sent v3, thanks for your reviews !
+Changes since v1 (are also listed at individual patches, if any):
+  - enabled pull down in cam-port-{a, b}-clk-idle nodes (1/8)
+  - added node alias for i2c-gpio@0 I2C controller node (7/8).
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+[1] http://www.spinics.net/lists/arm-kernel/msg253184.html
+
+Jacek Anaszewski (1):
+  ARM: dts: Add AK8975 device node for Exynos4412 TRATS2 board
+
+Sylwester Nawrocki (7):
+  ARM: dts: Correct camera pinctrl nodes for Exynos4x12 SoCs
+  ARM: dts: Add pinctrl entries for Exynos4x12 FIMC-IS peripherals
+  ARM: dts: Add ISP power domain node for Exynos4x12
+  ARM: dts: Use generic DMA bindings for Exynos4 SPI devices
+  ARM: dts: Add camera nodes for Exynos4 SoCs
+  ARM: dts: Add camera subsystem nodes to exynos4x12.dtsi
+  ARM: dts: Add camera device nodes for Exynos4412 TRATS2 board
+
+ arch/arm/boot/dts/exynos4.dtsi            |   80 +++++++++++++++++--
+ arch/arm/boot/dts/exynos4412-trats2.dts   |  110 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos4x12-pinctrl.dtsi |   61 ++++++++++++--
+ arch/arm/boot/dts/exynos4x12.dtsi         |  123 +++++++++++++++++++++++++++++
+ 4 files changed, 361 insertions(+), 13 deletions(-)
+
+--
+1.7.9.5
