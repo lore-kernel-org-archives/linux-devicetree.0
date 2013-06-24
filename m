@@ -1,69 +1,63 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v1 10/12] input: keypad_matrix: use usleep_range() for
- scan delay
-Date: Mon, 24 Jun 2013 17:27:53 -0600
-Message-ID: <51C8D5F9.7040603@wwwdotorg.org>
-References: <1371838198-7327-1-git-send-email-gsi@denx.de> <1371838198-7327-11-git-send-email-gsi@denx.de> <51C4CCF3.20603@wwwdotorg.org> <20130622101739.GI24305@book.gsilab.sittig.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5] serial:st-asc: Add ST ASC driver.
+Date: Mon, 24 Jun 2013 16:38:13 -0700
+Message-ID: <20130624233813.GA4108@kroah.com>
+References: <1372058503-30505-1-git-send-email-srinivas.kandagatla@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20130622101739.GI24305@book.gsilab.sittig.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Chao Xie <xiechao.mail@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Detlev Zundel <dzu@denx.de>, Sekhar Nori <nsekhar@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372058503-30505-1-git-send-email-srinivas.kandagatla@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jiri Slaby <jslaby@suse.cz>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/22/2013 04:17 AM, Gerhard Sittig wrote:
-> On Fri, Jun 21, 2013 at 16:00 -0600, Stephen Warren wrote:
->>
->> On 06/21/2013 12:09 PM, Gerhard Sittig wrote:
->>> querying keyboards isn't a time critical task and does not depend on
->>> exact timing in the microseconds order -- the timeouts and delays are
->>> arbitrary choices or educated guesses at best anyway
->>
->>> diff --git a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
->>
->>> @@ -93,7 +93,10 @@ Optional Properties:
->>>  			a column line and reading back its row status,
->>>  			such that pin levels can settle after
->>>  			propagating through the matrix and its
->>> -			associated hardware components
->>> +			associated hardware components, can be specified
->>> +			with either one value giving the exact delay, or
->>> +			with two values giving a delay range (allowing
->>> +			for reduced timer management overhead)
->>>  - col-switch-delay-ms:	columns switch interval in milliseconds instead
->>>  			of using interrupts to detect key press changes,
->>>  			enables polling mode when specified
->>> @@ -146,7 +149,7 @@ Examples:
->>>  	matrix_keypad {
->>>  		compatible = "gpio-matrix-keypad";
->>>  		debounce-delay-ms = <5>;
->>> -		col-scan-delay-us = <1>;
->>> +		col-scan-delay-us = <2 10>;
->>
->> Is it really useful to change the binding this way?
->>
->> The values in DT presumably represent the minimum delays that the HW
->> will tolerate or that are useful. SW is always free to scan more slowly
->> than that. As such, if you're simply modifying the driver to allow more
->> flexibility in timing, then I don't think you have to modify the DT
->> binding to allow for this?
-> 
-> Yes, this puts less burdon on the .dts author.  The "problem"
-> would be to come up (programmatically, without the user's spec)
-> with an appropriate upper bound.
-> 
-> One might choose "half the col switch delay" when available (in
-> the polling scenario).  Or "three times the lower bound".  Or an
-> arbitrary upper bound in the 100us order.  Or actually with the
-> minimum of all the above.  That should keep the absolute minimum
-> (user specified) in the loop, and scan the keys fast enough, yet
-> drastically reduce timer management overhead, and hide all of
-> this from the .dts author.
-> 
-> I will ponder this for a moment ...
+On Mon, Jun 24, 2013 at 08:21:43AM +0100, Srinivas KANDAGATLA wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>=20
+> This patch adds support to ASC (asynchronous serial controller)
+> driver, which is basically a standard serial driver. This IP is commo=
+n
+> across all the ST parts for settop box platforms.
+>=20
+> ASC is embedded in ST COMMS IP block. It supports Rx & Tx functionali=
+ty.
+> It support all industry standard baud rates.
+>=20
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> CC: Stephen Gallimore <stephen.gallimore@st.com>
+> CC: Stuart Menefy <stuart.menefy@st.com>
+> CC: Arnd Bergmann <arnd@arndb.de>
+> ---
+> Hi Greg,
+>=20
+> This patch is the part of the driver support for Stixxxx SOCs.
+> This patch undergone 3-4 cycles of review in arm-kernel mailing list.
+> As Arnd prefered to take only SOC support patches via arm-soc, Am=20
+> sending this patch seperately.
+>=20
+> If its not too late, can you consider this patch for 3.11 via tty tre=
+e?
 
-Shouldn't this be driven by whatever key repeat delays the user
-configured in SW; scan only fast enough to implement the correct repeat
-delay/rate?
+I would have taken it, but it breaks the build on my machine:
+
+drivers/tty/serial/st-asc.c: In function =E2=80=98asc_serial_resume=E2=80=
+=99:
+drivers/tty/serial/st-asc.c:774:15: error: =E2=80=98struct device=E2=80=
+=99 has no member named =E2=80=98pins=E2=80=99
+drivers/tty/serial/st-asc.c:775:3: error: implicit declaration of funct=
+ion =E2=80=98pinctrl_select_state=E2=80=99 [-Werror=3Dimplicit-function=
+-declaration]
+drivers/tty/serial/st-asc.c:775:37: error: =E2=80=98struct device=E2=80=
+=99 has no member named =E2=80=98pins=E2=80=99
+drivers/tty/serial/st-asc.c:776:16: error: =E2=80=98struct device=E2=80=
+=99 has no member named =E2=80=98pins=E2=80=99
+
+Please test your patches out on a "normal" Linux system.
+
+Please feel free to resend this after 3.11-rc1 is out, for inclusion in
+3.12, after you have fixed the build problems.
+
+greg k-h
