@@ -1,90 +1,56 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH v6] clocksource:arm_global_timer: Add ARM global timer
- support.
-Date: Tue, 25 Jun 2013 14:42:11 +0100
-Message-ID: <51C99E33.4070009@st.com>
-References: <1372152678-29530-1-git-send-email-srinivas.kandagatla@st.com> <alpine.DEB.2.02.1306251459160.4013@ionos.tec.linutronix.de>
-Reply-To: srinivas.kandagatla@st.com
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH 3/4] pinctrl: remove slew-rate parameter from tz1090
+Date: Tue, 25 Jun 2013 14:50:49 +0100
+Message-ID: <51C9A039.4090804@imgtec.com>
+References: <201306251455.01540.heiko@sntech.de> <201306251456.36499.heiko@sntech.de> <51C99581.2010403@imgtec.com> <201306251521.55634.heiko@sntech.de> <51C99AB5.1080002@imgtec.com> <CACRpkdbdwvmBYFX=ppdM_RmGwyTcWVeTCMj60F4sh6YEVRE2Uw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1306251459160.4013@ionos.tec.linutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Stuart Menefy <stuart.menefy@st.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbdwvmBYFX=ppdM_RmGwyTcWVeTCMj60F4sh6YEVRE2Uw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the comments.
-On 25/06/13 14:17, Thomas Gleixner wrote:
-> On Tue, 25 Jun 2013, Srinivas KANDAGATLA wrote:
->> If its not too late can this patch be considered for 3.11 via clocksource tree?
-> 
-> Sure. No worry, though I noticed a little detail when reading through it
-> again. See below.
-> 
->> +/**
->> + * To ensure that updates to comparator value register do not set the
->> + * Interrupt Status Register proceed as follows:
->> + * 1. Clear the Comp Enable bit in the Timer Control Register.
->> + * 2. Write the lower 32-bit Comparator Value Register.
->> + * 3. Write the upper 32-bit Comparator Value Register.
->> + * 4. Set the Comp Enable bit and, if necessary, the IRQ enable bit.
->> + */
->> +static void gt_compare_set(unsigned long delta, int periodic)
->> +{
->> +	u64 counter = gt_counter_read();
->> +	unsigned long ctrl = readl(gt_base + GT_CONTROL);
-> 
-> Why are you reading the control register back over and over? All you
-> need to preserve is the GT_CONTROL_TIMER_ENABLE bit. So you can spare
-> that read out and just do
-> 
-> 	ctrl = GT_CONTROL_TIMER_ENABLE;
-> 	writel(ctrl, gt_base + GT_CONTROL);
+On 25/06/13 14:32, Linus Walleij wrote:
+> On Tue, Jun 25, 2013 at 3:27 PM, James Hogan <james.hogan@imgtec.com>=
+ wrote:
+>> On 25/06/13 14:21, Heiko St=FCbner wrote:
+>=20
+>>> My thoughts were that this code would never be reached when the par=
+sing was
+>>> removed and to not cause confusion to the driver when an acceptable=
+ binding
+>>> was found for slew-rate.
+>>>
+>>> But it of course also doesn't hurt to stay in.
+>>
+>> Okay, fair enough.
+>>
+>> Acked-by: James Hogan <james.hogan@imgtec.com>
+>=20
+> OK applied this so we have a clean slate.
+>=20
+> Patches adding it back in with SI measures will be welcomed!
 
-Logically you are right we could do as you suggested, However its not
-implicit that which bits are going to be cleared. Its more to do with
-readability of the code.
-If you still insist I can change it.
+Okay.
 
-> 
->> +static irqreturn_t gt_clockevent_interrupt(int irq, void *dev_id)
->> +{
->> +	struct clock_event_device *evt = dev_id;
->> +
->> +	if (readl_relaxed(gt_base + GT_INT_STATUS) &
->> +				GT_INT_STATUS_EVENT_FLAG) {
-> 
-> If you negate the check and return IRQ_NONE, you save one indent level
-> for the real code.
-> 
-Am ok either way, I will do it in the next version.
->> +		/**
->> +		 * ERRATA 740657( Global Timer can send 2 interrupts for
->> +		 * the same event in single-shot mode)
->> +		 * Workaround:
->> +		 *	Either disable single-shot mode.
->> +		 *	Or
->> +		 *	Modify the Interrupt Handler to avoid the
->> +		 *	offending sequence. This is achieved by clearing
->> +		 *	the Global Timer flag _after_ having incremented
->> +		 *	the Comparator register	value to a higher value.
->> +		 */
->> +		if (!(readl_relaxed(gt_base + GT_CONTROL) &
->> +						GT_CONTROL_AUTO_INC))
-> 
-> Again, no need to read from the hardware.
-> 
->        if (evt->mode == CLOCK_EVT_MODE_ONESHOT)
-Yes, we can get it from evt->mode. I will do it in next version.
+So the most descriptive documentation I can find for the slew rate in
+the TZ1090 pin config hardware is basically:
 
-> 
-> tells you what you need to know.
-> 
-> Thanks,
-> 
-> 	tglx
-> 
-> 
+0: slow (half frequency)
+1: fast
 
+Sounds like this pretty much precludes it from having a generic DT
+binding unless it can be mapped to some physical value, so I'll add a
+tz1090,slew-rate and use PIN_CONFIG_END+1 instead of PIN_CONFIG_SLEW_RA=
+TE.
+
+Anybody object to me adding an argument to
+pinconf_generic_parse_dt_config() so that an additional
+pinconf_generic_dt_params array can be optionally passed in? That way I
+can share the generic pinconf dt parsing code.
+
+Cheers
+James
