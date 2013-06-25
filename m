@@ -1,68 +1,51 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2] ARM: DTS: OMAP4: Add OMAP4 Blaze Tablet support
-Date: Tue, 25 Jun 2013 07:43:02 -0500
-Message-ID: <51C99056.5090104@ti.com>
-References: <1372159970-6361-1-git-send-email-ruslan.bilovol@ti.com> <51C9867C.80206@ti.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/4] Fix more issues with generic pinconf bindings
+Date: Tue, 25 Jun 2013 14:55:01 +0200
+Message-ID: <201306251455.01540.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51C9867C.80206@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ruslan Bilovol <ruslan.bilovol@ti.com>
-Cc: b-cousson@ti.com, tony@atomide.com, benoit.cousson@linaro.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/25/2013 07:01 AM, Nishanth Menon wrote:
-> On 06/25/2013 06:32 AM, Ruslan Bilovol wrote:
->> The OMAP4 Blaze Tablet is TI OMAP4 processor-based
->> development platform in a tablet formfactor.
->> The platform contains many of the features found in
->> present-day handsets (such as audio, video, wireless
->> functions and user interfaces) and in addition
->> contains features for software development and test.
->>
->> This patch adds initial support for the OMAP4 Blaze
->> Tablet development platform. Additional functionality
->> depends on different drivers and code modifications that
->> are not upstreamed yet or do not support DT yet, so will
->> be added later.
->
-> http://svtronics.com/omap/sevm4460,blaze,omap might help too :)
-> [...]
->> +
->> +#include "twl6030.dtsi"
->> +
-> Might be good to see the TWL interrupt pin information made available as
-> well?
-Allow me to rephrase a comment a little bit more :)
-Similar to twl4030_omap3.dtsi, we could introduce twl6030_omap4.dtsi. 
-this could contain the common pins used for 6030.
-  &omap4_pmx_wkup {
-          pinctrl-names = "default";
-          pinctrl-0 = <
-                          &twl6030_wkup_pins
-          >;
+As Stephen Warren pointed out, some pinconf bindings had deficits
+either in documentation or in the whole thought process.
 
-          twl6030_wkup_pins: pinmux_twl6030_wkup_pins { 
+Therefore this series tries to fix these issues by improving
+documentation and removing the real controversial bindings for now.
 
-                  pinctrl-single,pins = <
-                          0x14 (PIN_OUTPUT | MUX_MODE2)
-                  >;
-          };
-  };
+Of the changed pinconf bindings only the slew-rate had an acutal
+current user (since yesterday). James I hope it's ok to simply
+remove the slew-rate handling from the tz1090 driver until we can
+handle it correctly in dt.
 
-	twl6030_pins: pinmux_twl6030_pins {
-		pinctrl-single,pins = <
-			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* 
-sys_nirq1.sys_nirq1 */
-		>;
-	};
 
-which is now already duplicated in 2 places (SDP and Panda), and in this 
-patch duplicated again.
+Heiko Stuebner (4):
+  pinctrl: more clarifications for generic pull configs
+  pinctrl: set unit for debounce time pinconfig to usec
+  pinctrl: remove slew-rate parameter from tz1090
+  pinctrl: remove bindings for pinconf options needing more thought
 
-just my 2 cents :(
----
-Regards,
-Nishanth Menon
+ .../bindings/pinctrl/img,tz1090-pdc-pinctrl.txt      |    5 +----
+ .../bindings/pinctrl/img,tz1090-pinctrl.txt          |    7 +------
+ .../devicetree/bindings/pinctrl/pinctrl-bindings.txt |   18 ++++--------------
+ drivers/pinctrl/pinconf-generic.c                    |    5 +----
+ drivers/pinctrl/pinctrl-tz1090-pdc.c                 |    5 -----
+ drivers/pinctrl/pinctrl-tz1090.c                     |    5 -----
+ include/linux/pinctrl/pinconf-generic.h              |    7 +++++--
+ 7 files changed, 12 insertions(+), 40 deletions(-)
+
+-- 
+1.7.10.4
