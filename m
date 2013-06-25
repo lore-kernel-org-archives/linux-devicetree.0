@@ -1,95 +1,59 @@
-From: Luciano Coelho <coelho@ti.com>
-Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
-Date: Tue, 25 Jun 2013 22:37:04 +0300
-Message-ID: <1372189024.18889.19.camel@cumari.coelho.fi>
-References: <1372149330-24335-1-git-send-email-coelho@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/4] usb: gadget: s3c-hsotg: Allow driver instantiation
+ using device tree
+Date: Tue, 25 Jun 2013 23:46:32 +0300
+Message-ID: <20130625204632.GB9748@arwen.pp.htv.fi>
+References: <1372174706-5459-1-git-send-email-t.figa@samsung.com>
+ <1372174706-5459-2-git-send-email-t.figa@samsung.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1372149330-24335-1-git-send-email-coelho@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
-Cc: tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jy6Sn24JjFx/iggw"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372174706-5459-2-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene.kim@samsung.com>, devicetree-discuss@lists.ozlabs.org, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, m.szyprowski@samsung.com, l.majewski@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-(oh crap, now *really* fixed the ARM mailing list address)
+--jy6Sn24JjFx/iggw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2013-06-25 at 11:35 +0300, Luciano Coelho wrote:
-> Add device tree bindings documentation for the TI WiLink modules.
-> Currently only the WLAN part of the WiLink6, WiLink7 and WiLink8
-> modules is supported.
-> 
-> Signed-off-by: Luciano Coelho <coelho@ti.com>
-> ---
-> 
-> I created a new directory under net to contain wireless bindings documentation.
-> 
-> The actual implementation in the driver will follow separately.
-> 
->  .../devicetree/bindings/net/wireless/ti-wilink.txt |   46 ++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt b/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
-> new file mode 100644
-> index 0000000..d8e8bfbb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
-> @@ -0,0 +1,46 @@
-> +TI WiLink Wireless Modules Device Tree Bindings
-> +===============================================
-> +
-> +The WiLink modules provide wireless connectivity, such as WLAN,
-> +Bluetooth, FM and NFC.
-> +
-> +There are several different modules available, which can be grouped by
-> +their generation: WiLink6, WiLink7 and WiLink8.  WiLink4 is not
-> +currently supported with device tree.
-> +
-> +Currently, only the WLAN portion of the modules is supported with
-> +device tree.
-> +
-> +Required properties:
-> +--------------------
-> +
-> +- compatible: should be "ti,wilink6", "ti,wilink7" or "ti,wilink8"
-> +- interrupt-parent: the interrupt controller
-> +- interrupts: out-of-band WLAN interrupt
-> +	See the interrupt controller's bindings documentation for
-> +	detailed definition.
-> +
-> +Optional properties:
-> +--------------------
-> +
-> +- refclock: the internal WLAN reference clock frequency (required for
-> +  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
-> +  following:
-> +	0 = 19.2 MHz
-> +	1 = 26.0 MHz
-> +	2 = 38.4 MHz
-> +	3 = 52.0 MHz
-> +	4 = 38.4 MHz, XTAL
-> +	5 = 26.0 MHz, XTAL
-> +
-> +- tcxoclock: the internal WLAN TCXO clock frequency (required for
-> +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
-> +  following:
-> +	0 = 19.200 MHz
-> +	1 = 26.000 MHz
-> +	2 = 38.400 MHz
-> +	3 = 52.000 MHz
-> +	4 = 16.368 MHz
-> +	5 = 32.736 MHz
-> +	6 = 16.800 MHz
-> +	7 = 33.600 MHz
+On Tue, Jun 25, 2013 at 05:38:23PM +0200, Tomasz Figa wrote:
+> This patch adds OF match table to the driver to allow instantiating it
+> using device tree.
+>=20
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 
-If this is okay for everyone, can I push this via my tree (which goes to
-linux-wireless->net->linus)? I think it makes more sense to send the
-documentation together with the patch that actually implements the DT
-node parsing in the driver.
+when will this driver get merged into dwc2 ?
 
---
-Luca.
+--=20
+balbi
 
+--jy6Sn24JjFx/iggw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRygGnAAoJEIaOsuA1yqRE1rAP/2uhYD8P2bfGDzpHX/Cv0mxY
+82f/Oti3a3BGFrWwbKIdKbvloI9mYYoruKu4nIpuRXqbqtAoQ66/0hmm32sfh3N3
+lUCLlCR95i4qwYpx5AFK2YiCxueMGh3p1e1GGpKyuImTsC9TUKxIyRC0Pw7JnTpI
+SILKH/z50SW6LKZR7jBPIQCnqBXqmoNVBPXpJcz3aMUjQU+npxiMjOsqv6kQ3y2C
+JewA9P+dhZ5LnryIVe+kvHz7dNkD0TmmQK3TDdbJQxW8QoWswMYwTXs3Rq55XpgA
+/M1CUU8qIpKq9lejz6I1j7XCuGmRT0uNkbWzWZESGWVntrUk2dg9F2OhCU7Niv/Z
+w/O+BOrlTIE5IyYZ8ferDsTJLiUpKhCC96fk/I+n3Hrmq6Fj4k9wr/vSR9Ppxgl7
+u2qhzUHpIwCyumx1L1CTijMY6uqrPwBG1CfOQfevGNfVtX3Gi/rpaQu8yoSOCRwW
+uoCMg3j99rxEH/BrgvmKpTJat9eNPK+rygcOmCBPIDEOAR71yWtdSVC0tqcUI1Aq
+FwFeYDCr3N9TrPAdXYU9slvdS0KR8srnRsP6hrUtA3GBlA0+NJjeETHnPJxL/Ub9
+f6SpLXeRUczQgauy8ppHKpnc/lW+ZN5ek1KFEhX7KW6QFDDsybvKE0034Bhy5pgl
+T85MMzxAnruMtD77JSmh
+=JeRy
+-----END PGP SIGNATURE-----
+
+--jy6Sn24JjFx/iggw--
