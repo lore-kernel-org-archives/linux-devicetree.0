@@ -1,14 +1,15 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [RFC] early init and DT platform devices allocation/registration
-Date: Tue, 25 Jun 2013 17:53:53 +0100
-Message-ID: <20130625165353.GA28654@e102568-lin.cambridge.arm.com>
+Date: Tue, 25 Jun 2013 18:07:00 +0100
+Message-ID: <20130625170700.GB28654@e102568-lin.cambridge.arm.com>
 References: <20130624163340.GB26084@e102568-lin.cambridge.arm.com>
  <CACxGe6sPaV-sBz=SF46KdUexjAhWKGrMpG_ty+K26f6ZU5iKdg@mail.gmail.com>
+ <51C9AF96.3040107@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6sPaV-sBz=SF46KdUexjAhWKGrMpG_ty+K26f6ZU5iKdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <51C9AF96.3040107-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
@@ -20,150 +21,75 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-thanks for commenting.
-
-On Tue, Jun 25, 2013 at 12:45:25PM +0100, Grant Likely wrote:
-> On Mon, Jun 24, 2013 at 5:33 PM, Lorenzo Pieralisi
-> <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> > Hi all,
-> >
-> > I am dealing with a lingering problem related to init and probing of platform
-> > devices early (before initcalls) in the kernel boot process. The problem,
-> > which is nothing new, is related to how platform devices are created in the
-> > kernel from DT and when they become available. Platform devices are created
-> > through (assuming any legacy static initialization is removed from the kernel)
-> >
-> > of_platform_populate()
-> >
-> > at arch_initcall time on ARM. This is a problem for drivers that need to be
-> > probed and initialized before arch_initcall (ie early_initcall) because
-> > the corresponding platform_device has not been created yet.
-> >
-> > To work around this awkward situation, a driver, instead of relying on
-> > platform driver probing mechanism, can get initialized using early_initcall
-> > mechanism and rely on DT helpers (ie of_iomap() and company) to initialize
-> > resources. The problem comes when the driver functions must rely on an API
-> > (eg regmap) that requires a struct device to function properly; since the
-> > platform_device has not been created yet at early_initcall time, the
-> > driver cannot rely on it. The only solution consists in allocating a
-> > platform_device on the fly at driver init through
-> >
-> > of_platform_device_create()
-> >
-> > and use that device to initialize the (eg regmap) API. There is an issue
-> > with this solution, basically a platform device is allocated twice for
-> > a given device node - compatible property (because of_platform_populate()
-> > allocates a platform device for a node containing a compatible string even if
-> > a platform device has already been allocated for that device node).
-> >
-> > The second solution relies on early platform devices. Early platform devices
-> > are added by mach code and driver probing is carried out using the early
-> > platform device probing mechanism
-> >
-> > early_platform_driver_probe()
-> >
-> > The drawback with this solution is, AFAIK, it does not play well with DT,
-> > since the platform device duplication issue is still there (ie
-> > of_platform_populate() will allocate a platform device which is a duplicate
-> > of the one allocated at early boot to make the early platform device
-> > initialization possible).
-> >
-> > Please correct me if I am wrong, just trying to untangle a problem that does
-> > not look easy to solve.
-> >
-> > How this problem is supposed to be solved in the kernel ?
-> >
-> > 1- drivers that are to be up and running at early_initcall time must not
-> >    rely on the device/driver model (but then they cannot use any API that
-> >    requires a struct device to function (eg regmap))
-> > 2- the driver should allocate a platform device at early initcall from
-> >    a DT compatible node. Do not know how to deal with platform device
-> >    duplication though, since of_platform_populate() will create another
-> >    platform device when the node is parsed
+On Tue, Jun 25, 2013 at 03:56:22PM +0100, Stephen Warren wrote:
+> On 06/25/2013 05:45 AM, Grant Likely wrote:
+> > On Mon, Jun 24, 2013 at 5:33 PM, Lorenzo Pieralisi
+> > <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> >> Hi all,
+> >>
+> >> I am dealing with a lingering problem related to init and probing of platform
+> >> devices early (before initcalls) in the kernel boot process. The problem,
+> >> which is nothing new, is related to how platform devices are created in the
+> >> kernel from DT and when they become available. Platform devices are created
+> >> through (assuming any legacy static initialization is removed from the kernel)
+> >>
+> >> of_platform_populate()
+> >>
+> >> at arch_initcall time on ARM. This is a problem for drivers that need to be
+> >> probed and initialized before arch_initcall (ie early_initcall) because
+> >> the corresponding platform_device has not been created yet.
 > 
-> While I've resisted it in the past, I would be okay with adding struct
-> device pointer in the device_node structure. I've resisted because I
-> don't want drivers following the device_node pointer and making an
-> assumption about what /kind/ of device is pointed to by it. However,
-> this is an important use case and it makes it feasible to use an early
-> platform device with of_platform_populate.
+> What's the use-case here; why does the driver /have/ to be
+> allocated/probed so early? Can't drivers all be allocated from DT in the
+> usual fashion, and any dependencies resolved using deferred probe? In
+> almost all cases, that should work.
+
+The driver must be initialized in order to boot secondary CPUs, so
+very very early, its initialization cannot be deferred.
+Otherwise we would end up with MCPM back-end having to add ad-hoc
+kludges to boot secondary CPUs, and then replace the early function calls
+to the power controller drivers when the power controller has been
+properly initialized. Feasible, but really horrible.
+
+On top of that, the HW component is an IP that provides functionality
+beyond power management, so we really want it to be initialized and
+running after boot, we cannot just hide a couple of function calls in
+the MCPM back-end to boot the CPUs and forget about that IP afterwards.
+
+> ...
+> >> How this problem is supposed to be solved in the kernel ?
+> >>
+> >> 1- drivers that are to be up and running at early_initcall time must not
+> >>    rely on the device/driver model (but then they cannot use any API that
+> >>    requires a struct device to function (eg regmap))
+> >> 2- the driver should allocate a platform device at early initcall from
+> >>    a DT compatible node. Do not know how to deal with platform device
+> >>    duplication though, since of_platform_populate() will create another
+> >>    platform device when the node is parsed
+> > 
+> > While I've resisted it in the past, I would be okay with adding struct
+> > device pointer in the device_node structure. I've resisted because I
+> > don't want drivers following the device_node pointer and making an
+> > assumption about what /kind/ of device is pointed to by it. However,
+> > this is an important use case and it makes it feasible to use an early
+> > platform device with of_platform_populate.
 > 
-> Alternately, if others chime in and think it is too risky to have the
-> device pointer in the device node, we could simply add a flag to the
-> device_node which indicates the node has been parsed by
-> of_platform_populate.
-> 
-> There would need to be some careful coding to make sure that any call
-> to early platform device creation sets the pointer in the device node
-> correctly.
-> 
-> I would also make it a requirement that any early platform device
-> *must* be converted into a 'real' platform device during initcall
-> time. That includes being possible to be freed correctly. Static early
-> platform device definitions should not be allowed, otherwise there
-> needs to be a special case for the platform device release hook. I
-> really don't want that.
-> 
-> Something else that needs to be investigated is how the device
-> hierarchy will be affected by using early_platform_device. We still
-> want the platform_device to appear in the same place in the hierarchy
-> regardless of whether or not it was created 'early'. the question is
-> how to make sure that actually happens.
+> Hiroshi (who I have CC'd here) has also been asking about this same
+> issue downstream. The issue for us is that we need to initialize an SMMU
+> driver before any devices that are translated by the SMMU. One option is
+> to force the register/probe of the SMMU driver explicitly, early in the
+> machine's .init_machine() callback, before of_platform_populate(), to
+> ensure the ordering. Then, we run into the same duplicate device issue,
+> and the change Grant mentions above would help solve this.
 
-While acknowledging the complexity of adding this code, I tend to prefer
-a solution that allows allocation of early platform devices from DT
-instead of adding a flag to avoid duplicates, it is cleaner (but more
-complex as you mentioned) that's the point I wanted to make, otherwise
-we end up adding all kinds of kludges to the kernel to make early init
-work.
+Good to hear we are not alone. I still do not know if we are dealing
+with specific use cases or this is a problem that should be solved
+generically at kernel level. I think it is best to solve it once for
+all, otherwise we will all come up with workarounds to make things work,
+possibly violating the driver/device model usage guidelines.
 
-The question is: should we live with workarounds that allow early allocation
-of devices or should we fix the kernel to cope with these use cases ? I do not
-know how many drivers/devices require these changes, and how many do we need
-to justify this level of complexity.
-
-> > 3- driver should rely on early platform device/driver, but this does not
-> >    solve (?) the platform device duplication problem either, it will happen
-> >    when of_platform_populate() parses the DT and creates devices on the fly
-> >
-> > In theory there are other solutions such as:
-> >
-> > (a) declaring the platform device statically in arm/mach-* code and do not
-> >     define the device node in dts, basically going back in time to ARM legacy
-> >     kernel mechanism for this kind of devices
-> 
-> As stated above, no. Static device definitions are not a good idea,
-> and it doesn't scale in a multiplatform kernel world.
-
-Agreed, I was just listing solutions, (a) is certainly not what we want.
-
-> > (b) add a way to of_platform_populate() to exclude some compatible strings
-> >     from being matched
-> 
-> This method will probably be too error prone. It would be better to
-> add the check in of_platform_populate to skip nodes that have already
-> been populated. I can't think of any use-cases where we would want
-> of_platform_populate to process a single node more than once.
-
-+1
-
-> > Honestly there is not a solution I can say I like and maybe I am trying to
-> > solve a problem that has already been solved, apologies if so, that's why
-> > I am asking on the list to people with more knowledge than me on the subject.
-> 
-> No, it hasn't been solved yet, but it is worth solving. Either that or
-> figure out how to do of_platform_populate much earlier.
-
-Well, I am already relieved that you acknowledge it is something worth
-solving, because that would simplify things a lot, as MCPM lower-layers
-coding showed and I suspect that's not the only piece of PM code that
-requires this early initialization.
-
-Thank you !
 Lorenzo
