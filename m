@@ -1,90 +1,81 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/2] Make non-linear GPIO ranges accesible from gpiolib
-Date: Tue, 25 Jun 2013 09:31:00 -0600
-Message-ID: <51C9B7B4.6030109@wwwdotorg.org>
-References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com> <1371128132-18266-2-git-send-email-christian.ruppert@abilis.com> <51BA3BC1.3090109@wwwdotorg.org> <20130614091241.GA23745@ab42.lan> <51C1F42E.5090107@wwwdotorg.org> <51C1F82C.4020502@wwwdotorg.org> <20130620115710.GB942@ab42.lan> <51C4C2ED.5090505@wwwdotorg.org> <CACRpkdb5uVMBg96T5_CLYDMzs5KGB7a+njWd-OKewTm5D2mz1g@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 03/10] pinctrl:st: Add pinctrl and pinconf support.
+Date: Tue, 25 Jun 2013 16:35:31 +0100
+Message-ID: <20130625153531.GE27646@sirena.org.uk>
+References: <1371736996-8770-1-git-send-email-srinivas.kandagatla@st.com>
+ <1371737138-9340-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb5uVMBg96T5_CLYDMzs5KGB7a+njWd-OKewTm5D2mz1g@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Christian Ruppert <christian.ruppert@abilis.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: multipart/mixed; boundary="===============4579074815304669893=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1371737138-9340-1-git-send-email-srinivas.kandagatla@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, John Stultz <john.stultz@linaro.org>, Rob Landley <rob@landley.net>, linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jslaby@suse.cz>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/25/2013 08:56 AM, Linus Walleij wrote:
-> On Fri, Jun 21, 2013 at 11:17 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 06/20/2013 05:57 AM, Christian Ruppert wrote:
-> 
->>> Your remark seems to reflect one of the following two hardware
->>> architectures:
->>>
->>>                                                      +- SPI
->>>                  Physical pins --- GPIO --- pinctrl -+- I2C
->>>                                                      +- mmc
->>
->> (that's diagram 1)
->>
->>>
->>>                                 +- GPIO
->>>                  Physical pins -+           +- SPI
->>>                                 +- pinctrl -+- I2C
->>>                                             +- mmc
->>
->> (that's diagram 2)
->>
->>> TB10x hardware architecture:
->>>
->>>                                             +- SPI
->>>                  Physical pins --- pinctrl -+- I2C
->>>                                             +- mmc
->>>                                             +- GPIO
->>
->> (that's diagram 3)
->>
->> No, I was thinking of diagram 3 above. I'm not sure if diagrams (1) or
->> (2) are common or exist?
-> 
-> The U300 pin controller is obviously of type (1) as it can spy on
-> the signals.
 
-U300 HW might be diagram (1) - I can't say since I'm not familiar with
-the HW. However, the fact that GPIO can spy on signals in no way at all
-implies that the HW must conform to diagram (1).
+--===============4579074815304669893==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="W0CfcDg401mapelP"
+Content-Disposition: inline
 
-In diagram (2), the pins are routed to both the GPIO and pinctrl module,
-so there's no reason why GPIO couldn't spy on any input signals there too.
 
-Even in diagram 3, GPIO may be able to spy. The issue is how the
-"inbound" muxes work.
+--W0CfcDg401mapelP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For output signals from HW modules through the pinctrl HW to the pins,
-there's likely a plain n:1 mux that selects a single signal and drives
-it out.
+On Thu, Jun 20, 2013 at 03:05:38PM +0100, Srinivas KANDAGATLA wrote:
+> This patch add pinctrl support to ST SoCs.
+>=20
+> About hardware:
+> ST Set-Top-Box parts have two blocks called PIO and PIO-mux which handle
+> pin configurations.
 
-For input signals, there are still some choices; you might have a 1:n
-mux that only drives 1 single HW module's input signals from the pins,
-or you may simply wire the input pin through to all the possible HW
-modules in parallel on the input side, or you may always wire the input
-pin to the GPIO HW module, but have a 1:n mux for the dedicated HW
-modules so that (at most) one of those is driven by the pin, etc.
+Applied, thanks.
 
-For reference, the Tegra HW is diagram (3), although actually the GPIO
-module has the register bits that select between GPIO and mux-function
-for each pin! The signals that control this are fed from the GPIO
-register bits into input signals on the pinmux HW, which does all the
-actual muxing. The input path muxing is set up so that without affecting
-the pinmux programming, the GPIO module can spy on any input signal,
-although while doing so, it disconnects the input pin from the dedicated
-mux function, thus potentially causing some disruption.
+--W0CfcDg401mapelP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> The Nomadik pin controller is basically type (2).
-> 
-> Maybe this is part of the explanation to why we sometimes tend
-> to talk past each other :-D
-> 
-> (I would replace the string "pinctrl" with "pinmux" above,
-> as I just did in my documentation patch adding these
-> diagrams.)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
+iQIcBAEBAgAGBQJRybi7AAoJELSic+t+oim9FA0P/0iJa8Ju5H5xK5kh6NeaP84x
+CFrXACgHv/BG8cNtzc7q/o337dssp64KyMn5c7jLdExigYKyU9Uc3OJu0SSDwecu
+gOh4SES6QQs1B704eDmc1Gf4I6pSHxx7sLdFvH/UAGkeL20Clkh/KU+QhxUZKrjX
+CqUlP89VsRU21NaKKHLTMGH3oJO+pvU8e3B0kf7RjrsSuA8Pr9K3VZxQM/Z7NvLy
+MAX5tw05yt2dPCbJBXK5jQUEkXPSbMKkad4HGlLKPGgXhNC/hSGwPpWo0G84IBIZ
+SI/hLoFlGnPtPqHuQebTi7kaSR04eB8zcwBEEQprdZhrys6ARhY6iwoIcohM5yh9
+bu5nI5+J7KUamJ9G/QMHJCpprPJqOkhTk8hP06pgu9sBs0dE0T/qW9obz1cMNDN0
+lJlDI1z4KFoc2PoorKsi/JBujfENjijMOECG6rWt/TTieInRE8Fh+JQmE81LiQef
+qqRduNxOCAWnj9upB0qy8AdmrUmJ4gnnu4D9R9MahItrF1ivtZySUpfCRikE+abT
+XlxBdGxMtexgPJY2CIdW1ymEW4ls+BDMvBQHtMqeG8AN9xOWXJ6Ovm4iCK1Iv6Tk
+CgeB0A1NvquhXi8nkbeQJQjCogEUxKq4oq5zODSk/OuYUnx1XhdwQ/U1CyUMomSF
+55bc5vbU507t7lL1LxYE
+=R48h
+-----END PGP SIGNATURE-----
+
+--W0CfcDg401mapelP--
+
+
+--===============4579074815304669893==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4579074815304669893==--
