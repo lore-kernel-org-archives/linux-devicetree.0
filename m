@@ -1,86 +1,73 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/1] ARM: dts: AM33XX: Add LCDC info into am335x-evm
-Date: Tue, 25 Jun 2013 08:50:43 +0200
-Message-ID: <1372143043.4488.50.camel@coredoba.hi.pengutronix.de>
-References: <1372105967-26669-1-git-send-email-bparrot@ti.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v12 00/11] DMA Engine support for AM33XX
+Date: Mon, 24 Jun 2013 23:54:50 -0700
+Message-ID: <20130625065450.GY5523@atomide.com>
+References: <1371762407-24544-1-git-send-email-joelagnel@ti.com>
+	<20130624101903.GV5523@atomide.com> <51C85958.9030502@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1372105967-26669-1-git-send-email-bparrot-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51C85958.9030502-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andrew Morton <akpm@linux-foundat>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-06-24 at 15:32 -0500, Benoit Parrot wrote:
-> Add LCDC device node in DT for am33xx
-> Add LCDC and Panel info in DT for am335x-evm
+* Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org> [130624 07:42]:
+> Hi Tony,
+> 
+> On 06/24/2013 12:19 PM, Tony Lindgren wrote:
+> > Hi,
+> > 
+> > For merging this series, I suggest the following sets:
+> > 
+> > * Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org> [130620 14:13]:
+> >>
+> >> Joel A Fernandes (3):
+> >>   edma: config: Enable config options for EDMA
+> >>   da8xx: config: Enable MMC and FS options
+> >>   ARM: davinci: Fix compiler warnings in devices-da8xx
+> >>
+> >> Matt Porter (8):
+> >>   dmaengine: edma: Add TI EDMA device tree binding
+> >>   ARM: edma: Add DT and runtime PM support to the private EDMA API
+> >>   ARM: edma: Add EDMA crossbar event mux support
+> >>   dmaengine: edma: enable build for AM33XX
+> > 
+> > Sekhar should queue the above patches, I've acked the
+> > mach-omap2/Kconfig change.
+> > 
+> >>   spi: omap2-mcspi: add generic DMA request support to the DT binding
+> >>   spi: omap2-mcspi: convert to dma_request_slave_channel_compat()
+> > 
+> > 
+> > The spi changes should get merged via the driver list.
+> > 
+> >>   ARM: dts: add AM33XX EDMA support
+> >>   ARM: dts: add AM33XX SPI DMA support
+> > 
+> > Benoit should queue the .dts changes.
+> 
+> I'll do that, but do you consider them for 3.11?
 
-> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-> index 0423298..40d7a3f 100644
-> --- a/arch/arm/boot/dts/am335x-evm.dts
-> +++ b/arch/arm/boot/dts/am335x-evm.dts
-> @@ -102,6 +136,16 @@
->  				reg = <0x48>;
->  			};
->  		};
-> +
-> +		lcdc {
-> +			compatible = "ti,am33xx-tilcdc";
-> +			reg = <0x4830e000 0x1000>;
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <36>;
-> +			ti,hwmods = "lcdc";
-> +			ti,allow-non-reduced-blanking-modes;
-> +			status = "okay";
-> +		};
->  	};
->  
->  	vbat: fixedregulator@0 {
->  /include/ "tps65910.dtsi"
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 8e1248f..05b2c4a 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -415,5 +415,14 @@
->  			#size-cells = <1>;
->  			status = "disabled";
->  		};
-> +
-> +		lcdc: lcdc@4830e000 {
-> +			compatible = "ti,am33xx-tilcdc";
-> +			reg = <0x4830e000 0x1000>;
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <36>;
-> +			ti,hwmods = "lcdc";
-> +			status = "disabled";
-> +		};
->  	};
->  };
+Yes right after -rc1 if it makes the DMA work. We almost
+certainly need to send few branches of fixes after -rc1 once
+we find out what might have broken by the removal of the
+hwmod data..
 
-am335x-evm.dts includes am33xx.dtsi, so you shouldn't need to provide
-all SoC-specific settings again in the board dts. The way it's done
-here, you get two nodes ("lcdc" and "lcdc@4830e000") for the same HW
-module.
-
-It seems you just need status and maybe
-ti,allow-non-reduced-blanking-modes (for which I didn't see either the
-binding or the driver code yet).
+But let's stick to minimal changes for the -rc series
+naturally.
 
 Regards,
-Jan
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+Tony
