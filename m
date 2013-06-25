@@ -1,114 +1,94 @@
-From: Stuart Yoder <b08248-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 7/9] documentation: iommu: add description of ARM System
-	MMU binding
-Date: Tue, 25 Jun 2013 14:18:19 -0500
-Message-ID: <CALRxmdBxFWoRKv+bUu8VEwNNcAJUej9jM2V8N0rrqrr_Vpe8fQ@mail.gmail.com>
-References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
-	<1370889285-22799-8-git-send-email-will.deacon@arm.com>
+From: Luciano Coelho <coelho@ti.com>
+Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
+Date: Tue, 25 Jun 2013 22:35:00 +0300
+Message-ID: <1372188900.18889.18.camel@cumari.coelho.fi>
+References: <1372149330-24335-1-git-send-email-coelho@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1370889285-22799-8-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org Discuss" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1372149330-24335-1-git-send-email-coelho@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: grant.likely@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
+Cc: tony@atomide.comtony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 10, 2013 at 1:34 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> This patch adds a description of the device tree binding for the ARM
-> System MMU architecture.
->
-> Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+(fixed the ARM mailing list address)
+
+On Tue, 2013-06-25 at 11:35 +0300, Luciano Coelho wrote:
+> Add device tree bindings documentation for the TI WiLink modules.
+> Currently only the WLAN part of the WiLink6, WiLink7 and WiLink8
+> modules is supported.
+> 
+> Signed-off-by: Luciano Coelho <coelho@ti.com>
 > ---
->  .../devicetree/bindings/iommu/arm,smmu.txt         | 70 ++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu.txt
->
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> 
+> I created a new directory under net to contain wireless bindings documentation.
+> 
+> The actual implementation in the driver will follow separately.
+> 
+>  .../devicetree/bindings/net/wireless/ti-wilink.txt |   46 ++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt b/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
 > new file mode 100644
-> index 0000000..e34c6cd
+> index 0000000..d8e8bfbb
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -0,0 +1,70 @@
-> +* ARM System MMU Architecture Implementation
+> +++ b/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
+> @@ -0,0 +1,46 @@
+> +TI WiLink Wireless Modules Device Tree Bindings
+> +===============================================
 > +
-> +ARM SoCs may contain an implementation of the ARM System Memory
-> +Management Unit Architecture, which can be used to provide 1 or 2 stages
-> +of address translation to bus masters external to the CPU.
+> +The WiLink modules provide wireless connectivity, such as WLAN,
+> +Bluetooth, FM and NFC.
 > +
-> +The SMMU may also raise interrupts in response to various fault
-> +conditions.
+> +There are several different modules available, which can be grouped by
+> +their generation: WiLink6, WiLink7 and WiLink8.  WiLink4 is not
+> +currently supported with device tree.
 > +
-> +** System MMU required properties:
+> +Currently, only the WLAN portion of the modules is supported with
+> +device tree.
 > +
-> +- compatible    : Should be one of:
+> +Required properties:
+> +--------------------
 > +
-> +                        "arm,smmu-v1"
-> +                        "arm,smmu-v2"
-> +                        "arm,mmu-400"
-> +                        "arm,mmu-500"
+> +- compatible: should be "ti,wilink6", "ti,wilink7" or "ti,wilink8"
+> +- interrupt-parent: the interrupt controller
+> +- interrupts: out-of-band WLAN interrupt
+> +	See the interrupt controller's bindings documentation for
+> +	detailed definition.
 > +
-> +                  depending on the particular implementation and/or the
-> +                  version of the architecture implemented.
+> +Optional properties:
+> +--------------------
 > +
-> +- reg           : Base address and size of the SMMU.
+> +- refclock: the internal WLAN reference clock frequency (required for
+> +  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
+> +  following:
+> +	0 = 19.2 MHz
+> +	1 = 26.0 MHz
+> +	2 = 38.4 MHz
+> +	3 = 52.0 MHz
+> +	4 = 38.4 MHz, XTAL
+> +	5 = 26.0 MHz, XTAL
 > +
-> +- #global-interrupts : The number of global interrupts exposed by the
-> +                       device.
-> +
-> +- interrupts    : Interrupt list, with the first #global-irqs entries
-> +                  corresponding to the global interrupts
+> +- tcxoclock: the internal WLAN TCXO clock frequency (required for
+> +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
+> +  following:
+> +	0 = 19.200 MHz
+> +	1 = 26.000 MHz
+> +	2 = 38.400 MHz
+> +	3 = 52.000 MHz
+> +	4 = 16.368 MHz
+> +	5 = 32.736 MHz
+> +	6 = 16.800 MHz
+> +	7 = 33.600 MHz
 
-It seems like we don't have enough information here.   It's not enough
-for the OS to know that there are 2, 4, etc global interrupts, no?  It needs
-to know which hardware interrupt each corresponds to.   That kind of
-stuff is normally defined in the device binding.
+If this is okay for everyone, can I push this via my tree (which goes to
+linux-wireless->net->linus)? I think it makes more sense to send the
+documentation together with the patch that actually implements the DT
+node parsing in the driver.
 
-What is it that determines the number of global interrupts?
+--
+Luca.
 
-> and any
-> +                  following entries corresponding to context interrupts,
-> +                  specified in order of their indexing by the SMMU.
-> +
-> +                  For SMMUv2 implementations, there must be exactly one
-> +                  interrupt per context bank. In the case of a single,
-> +                  combined interrupt, it must be listed multiple times.
-> +
-> +- mmu-masters   : A list of phandles to device nodes representing bus
-> +                  masters for which the SMMU can provide a translation
-> +                  and their corresponding StreamIDs (see example below).
-> +                  Each device node linked from this list must have a
-> +                  "#stream-id-cells" property, indicating the number of
-> +                  StreamIDs associated with it.
-
-So to find a the SMMU for a given device, I walk up the bus hierarchy
-until I find an SMMU?
-
-> +** System MMU optional properties:
-> +
-> +- smmu-parent   : When multiple SMMUs are chained together, this
-> +                  property can be used to provide a phandle to the
-> +                  parent SMMU (that is the next SMMU on the path going
-> +                  from the mmu-masters towards memory) node for this
-> +                  SMMU.
-
-Why is an explicit phandle link needed here when you don't need a
-smmu-parent phandle in each mmu-master?    Won't walking the bus
-hierarchy identify the parent SMMU if things are chained?
-
-Thanks,
-
-Stuart Yoder
-Freescale Semiconductor
