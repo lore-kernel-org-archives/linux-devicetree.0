@@ -1,366 +1,538 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v3] DMA: shdma: add DT support
-Date: Tue, 25 Jun 2013 16:21:23 +0530
-Message-ID: <20130625105123.GN23141@intel.com>
-References: <Pine.LNX.4.64.1306181813380.30844@axis700.grange>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1306181813380.30844@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-sh@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>
+From: Ruslan Bilovol <ruslan.bilovol@ti.com>
+Subject: [PATCH v2] ARM: DTS: OMAP4: Add OMAP4 Blaze Tablet support
+Date: Tue, 25 Jun 2013 14:32:50 +0300
+Message-ID: <1372159970-6361-1-git-send-email-ruslan.bilovol@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: b-cousson@ti.com, tony@atomide.com
+Cc: benoit.cousson@linaro.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 18, 2013 at 06:16:57PM +0200, Guennadi Liakhovetski wrote:
-> This patch adds Device Tree support to the shdma driver. No special DT
-> properties are used, only standard DMA DT bindings are implemented. Since
-> shdma controllers reside on SoCs, their configuration is SoC-specific and
-> shall be passed to the driver from the SoC platform data, using the
-> auxdata procedure.
-> 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-Applied thanks.
+The OMAP4 Blaze Tablet is TI OMAP4 processor-based
+development platform in a tablet formfactor.
+The platform contains many of the features found in
+present-day handsets (such as audio, video, wireless
+functions and user interfaces) and in addition
+contains features for software development and test.
 
-Though checkpatch cribbed about space and tabs, fixed up manually...
+This patch adds initial support for the OMAP4 Blaze
+Tablet development platform. Additional functionality
+depends on different drivers and code modifications that
+are not upstreamed yet or do not support DT yet, so will
+be added later.
 
---
-~Vinod
-> ---
-> 
-> v3: reimplementation without a common DMAC multiplexer support in 
-> dmaengine core, the multiplexer is now SHDMA local.
-> 
->  Documentation/devicetree/bindings/dma/shdma.txt |   75 +++++++++++++++++++++
->  drivers/dma/sh/Makefile                         |    2 +-
->  drivers/dma/sh/shdma-base.c                     |   26 ++++++--
->  drivers/dma/sh/shdma-of.c                       |   82 +++++++++++++++++++++++
->  drivers/dma/sh/shdma.c                          |   31 +++++++--
->  include/linux/shdma-base.h                      |    2 +
->  6 files changed, 205 insertions(+), 13 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/shdma.txt
->  create mode 100644 drivers/dma/sh/shdma-of.c
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/shdma.txt b/Documentation/devicetree/bindings/dma/shdma.txt
-> new file mode 100644
-> index 0000000..c15994a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/shdma.txt
-> @@ -0,0 +1,75 @@
-> +* SHDMA Device Tree bindings
-> +
-> +Sh-/r-mobile and r-car systems often have multiple identical DMA controller
-> +instances, capable of serving any of a common set of DMA slave devices, using
-> +the same configuration. To describe this topology we require all compatible
-> +SHDMA DT nodes to be placed under a DMA multiplexer node. All such compatible
-> +DMAC instances have the same number of channels and use the same DMA
-> +descriptors. Therefore respective DMA DT bindings can also all be placed in the
-> +multiplexer node. Even if there is only one such DMAC instance on a system, it
-> +still has to be placed under such a multiplexer node.
-> +
-> +* DMA multiplexer
-> +
-> +Required properties:
-> +- compatible:	should be "renesas,shdma-mux"
-> +- #dma-cells:	should be <1>, see "dmas" property below
-> +
-> +Optional properties (currently unused):
-> +- dma-channels:	number of DMA channels
-> +- dma-requests:	number of DMA request signals
-> +
-> +* DMA controller
-> +
-> +Required properties:
-> +- compatible:	should be "renesas,shdma"
-> +
-> +Example:
-> +	dmac: dma-mux0 {
-> +		compatible = "renesas,shdma-mux";
-> +		#dma-cells = <1>;
-> +		dma-channels = <6>;
-> +		dma-requests = <256>;
-> +		reg = <0 0>;	/* Needed for AUXDATA */
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		dma0: shdma@fe008020 {
-> +			compatible = "renesas,shdma";
-> +			reg = <0xfe008020 0x270>,
-> +				<0xfe009000 0xc>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <0 34 4
-> +					0 28 4
-> +					0 29 4
-> +					0 30 4
-> +					0 31 4
-> +					0 32 4
-> +					0 33 4>;
-> +			interrupt-names = "error",
-> +					"ch0", "ch1", "ch2", "ch3",
-> +					"ch4", "ch5";
-> +		};
-> +
-> +		dma1: shdma@fe018020 {
-> +			...
-> +		};
-> +
-> +		dma2: shdma@fe028020 {
-> +			...
-> +		};
-> +	};
-> +
-> +* DMA client
-> +
-> +Required properties:
-> +- dmas:		a list of <[DMA multiplexer phandle] [MID/RID value]> pairs,
-> +		where MID/RID values are fixed handles, specified in the SoC
-> +		manual
-> +- dma-names:	a list of DMA channel names, one per "dmas" entry
-> +
-> +Example:
-> +	dmas = <&dmac 0xd1
-> +		&dmac 0xd2>;
-> +	dma-names = "tx", "rx";
-> diff --git a/drivers/dma/sh/Makefile b/drivers/dma/sh/Makefile
-> index c07ca46..c962138 100644
-> --- a/drivers/dma/sh/Makefile
-> +++ b/drivers/dma/sh/Makefile
-> @@ -1,3 +1,3 @@
-> -obj-$(CONFIG_SH_DMAE_BASE) += shdma-base.o
-> +obj-$(CONFIG_SH_DMAE_BASE) += shdma-base.o shdma-of.o
->  obj-$(CONFIG_SH_DMAE) += shdma.o
->  obj-$(CONFIG_SUDMAC) += sudmac.o
-> diff --git a/drivers/dma/sh/shdma-base.c b/drivers/dma/sh/shdma-base.c
-> index 4acb85a..28ca361 100644
-> --- a/drivers/dma/sh/shdma-base.c
-> +++ b/drivers/dma/sh/shdma-base.c
-> @@ -175,7 +175,18 @@ static int shdma_setup_slave(struct shdma_chan *schan, int slave_id)
->  {
->  	struct shdma_dev *sdev = to_shdma_dev(schan->dma_chan.device);
->  	const struct shdma_ops *ops = sdev->ops;
-> -	int ret;
-> +	int ret, match;
-> +
-> +	if (schan->dev->of_node) {
-> +		match = schan->hw_req;
-> +		ret = ops->set_slave(schan, match, true);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		slave_id = schan->slave_id;
-> +	} else {
-> +		match = slave_id;
-> +	}
->  
->  	if (slave_id < 0 || slave_id >= slave_num)
->  		return -EINVAL;
-> @@ -183,7 +194,7 @@ static int shdma_setup_slave(struct shdma_chan *schan, int slave_id)
->  	if (test_and_set_bit(slave_id, shdma_slave_used))
->  		return -EBUSY;
->  
-> -	ret = ops->set_slave(schan, slave_id, false);
-> +	ret = ops->set_slave(schan, match, false);
->  	if (ret < 0) {
->  		clear_bit(slave_id, shdma_slave_used);
->  		return ret;
-> @@ -206,23 +217,26 @@ static int shdma_setup_slave(struct shdma_chan *schan, int slave_id)
->   * services would have to provide their own filters, which first would check
->   * the device driver, similar to how other DMAC drivers, e.g., sa11x0-dma.c, do
->   * this, and only then, in case of a match, call this common filter.
-> + * NOTE 2: This filter function is also used in the DT case by shdma_of_xlate().
-> + * In that case the MID-RID value is used for slave channel filtering and is
-> + * passed to this function in the "arg" parameter.
->   */
->  bool shdma_chan_filter(struct dma_chan *chan, void *arg)
->  {
->  	struct shdma_chan *schan = to_shdma_chan(chan);
->  	struct shdma_dev *sdev = to_shdma_dev(schan->dma_chan.device);
->  	const struct shdma_ops *ops = sdev->ops;
-> -	int slave_id = (int)arg;
-> +	int match = (int)arg;
->  	int ret;
->  
-> -	if (slave_id < 0)
-> +	if (match < 0)
->  		/* No slave requested - arbitrary channel */
->  		return true;
->  
-> -	if (slave_id >= slave_num)
-> +	if (!schan->dev->of_node && match >= slave_num)
->  		return false;
->  
-> -	ret = ops->set_slave(schan, slave_id, true);
-> +	ret = ops->set_slave(schan, match, true);
->  	if (ret < 0)
->  		return false;
->  
-> diff --git a/drivers/dma/sh/shdma-of.c b/drivers/dma/sh/shdma-of.c
-> new file mode 100644
-> index 0000000..9ab869d
-> --- /dev/null
-> +++ b/drivers/dma/sh/shdma-of.c
-> @@ -0,0 +1,82 @@
-> +/*
-> + * SHDMA Device Tree glue
-> + *
-> + * Copyright (C) 2013 Renesas Electronics Inc.
-> + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> + *
-> + * This is free software; you can redistribute it and/or modify
-> + * it under the terms of version 2 of the GNU General Public License as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/dmaengine.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_dma.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/shdma-base.h>
-> +
-> +#define to_shdma_chan(c) container_of(c, struct shdma_chan, dma_chan)
-> +
-> +static struct dma_chan *shdma_of_xlate(struct of_phandle_args *dma_spec,
-> +				       struct of_dma *ofdma)
-> +{
-> +	u32 id = dma_spec->args[0];
-> +	dma_cap_mask_t mask;
-> +	struct dma_chan *chan;
-> +
-> +	if (dma_spec->args_count != 1)
-> +		return NULL;
-> +
-> +	dma_cap_zero(mask);
-> +	/* Only slave DMA channels can be allocated via DT */
-> +	dma_cap_set(DMA_SLAVE, mask);
-> +
-> +	chan = dma_request_channel(mask, shdma_chan_filter, (void *)id);
-> +	if (chan)
-> +		to_shdma_chan(chan)->hw_req = id;
-> +
-> +	return chan;
-> +}
-> +
-> +static int shdma_of_probe(struct platform_device *pdev)
-> +{
-> +	const struct of_dev_auxdata *lookup = pdev->dev.platform_data;
-> +	int ret;
-> +
-> +	if (!lookup)
-> +		return -EINVAL;
-> +
-> +	ret = of_dma_controller_register(pdev->dev.of_node,
-> +					 shdma_of_xlate, pdev);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = of_platform_populate(pdev->dev.of_node, NULL, lookup, &pdev->dev);
-> +	if (ret < 0)
-> +		of_dma_controller_free(pdev->dev.of_node);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id shdma_of_match[] = {
-> +	{ .compatible = "renesas,shdma-mux", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sh_dmae_of_match);
-> +
-> +static struct platform_driver shdma_of = {
-> +	.driver 	= {
-> +		.owner	= THIS_MODULE,
-> +		.name	= "shdma-of",
-> +		.of_match_table = shdma_of_match,
-> +	},
-> +	.probe		= shdma_of_probe,
-> +};
-> +
-> +module_platform_driver(shdma_of);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("SH-DMA driver DT glue");
-> +MODULE_AUTHOR("Guennadi Liakhovetski <g.liakhovetski@gmx.de>");
-> diff --git a/drivers/dma/sh/shdma.c b/drivers/dma/sh/shdma.c
-> index a5a1887..b67f45f 100644
-> --- a/drivers/dma/sh/shdma.c
-> +++ b/drivers/dma/sh/shdma.c
-> @@ -301,20 +301,32 @@ static void sh_dmae_setup_xfer(struct shdma_chan *schan,
->  	}
->  }
->  
-> +/*
-> + * Find a slave channel configuration from the contoller list by either a slave
-> + * ID in the non-DT case, or by a MID/RID value in the DT case
-> + */
->  static const struct sh_dmae_slave_config *dmae_find_slave(
-> -	struct sh_dmae_chan *sh_chan, int slave_id)
-> +	struct sh_dmae_chan *sh_chan, int match)
->  {
->  	struct sh_dmae_device *shdev = to_sh_dev(sh_chan);
->  	struct sh_dmae_pdata *pdata = shdev->pdata;
->  	const struct sh_dmae_slave_config *cfg;
->  	int i;
->  
-> -	if (slave_id >= SH_DMA_SLAVE_NUMBER)
-> -		return NULL;
-> +	if (!sh_chan->shdma_chan.dev->of_node) {
-> +		if (match >= SH_DMA_SLAVE_NUMBER)
-> +			return NULL;
->  
-> -	for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
-> -		if (cfg->slave_id == slave_id)
-> -			return cfg;
-> +		for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
-> +			if (cfg->slave_id == match)
-> +				return cfg;
-> +	} else {
-> +		for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
-> +			if (cfg->mid_rid == match) {
-> +				sh_chan->shdma_chan.slave_id = cfg->slave_id;
-> +				return cfg;
-> +			}
-> +	}
->  
->  	return NULL;
->  }
-> @@ -920,11 +932,18 @@ static int sh_dmae_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct of_device_id sh_dmae_of_match[] = {
-> +	{ .compatible = "renesas,shdma", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sh_dmae_of_match);
-> +
->  static struct platform_driver sh_dmae_driver = {
->  	.driver 	= {
->  		.owner	= THIS_MODULE,
->  		.pm	= &sh_dmae_pm,
->  		.name	= SH_DMAE_DRV_NAME,
-> +		.of_match_table = sh_dmae_of_match,
->  	},
->  	.remove		= sh_dmae_remove,
->  	.shutdown	= sh_dmae_shutdown,
-> diff --git a/include/linux/shdma-base.h b/include/linux/shdma-base.h
-> index 9a93897..382cf71 100644
-> --- a/include/linux/shdma-base.h
-> +++ b/include/linux/shdma-base.h
-> @@ -68,6 +68,8 @@ struct shdma_chan {
->  	int id;				/* Raw id of this channel */
->  	int irq;			/* Channel IRQ */
->  	int slave_id;			/* Client ID for slave DMA */
-> +	int hw_req;			/* DMA request line for slave DMA - same
-> +					 * as MID/RID, used with DT */
->  	enum shdma_pm_state pm_state;
->  };
->  
-> -- 
-> 1.7.2.5
-> 
+Signed-off-by: Ruslan Bilovol <ruslan.bilovol@ti.com>
+---
 
+v2:
+ - Rebased onto 'for_3.11/dts' branch of bcousson/linux-omap-dt tree
+ - Bound more hardware and picked up updates from omap4-sdp 
+
+ arch/arm/boot/dts/Makefile              |    1 +
+ arch/arm/boot/dts/omap4-blazetablet.dts |  483 +++++++++++++++++++++++++++++++
+ 2 files changed, 484 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omap4-blazetablet.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 05da469..4fafde1 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -150,6 +150,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	omap4-var-som.dtb \
+ 	omap4-sdp.dtb \
+ 	omap4-sdp-es23plus.dtb \
++	omap4-blazetablet.dtb \
+ 	omap5-uevm.dtb \
+ 	am335x-evm.dtb \
+ 	am335x-evmsk.dtb \
+diff --git a/arch/arm/boot/dts/omap4-blazetablet.dts b/arch/arm/boot/dts/omap4-blazetablet.dts
+new file mode 100644
+index 0000000..07f40b6
+--- /dev/null
++++ b/arch/arm/boot/dts/omap4-blazetablet.dts
+@@ -0,0 +1,483 @@
++/*
++ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * Author: Ruslan Bilovol <ruslan.bilovol@ti.com>
++ *
++ * based on omap4-sdp.dts
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
++
++#include "omap443x.dtsi"
++#include "elpida_ecb240abacn.dtsi"
++
++/ {
++	model = "TI OMAP4 Blaze Tablet";
++	compatible = "ti,omap4-blazetablet", "ti,omap4430", "ti,omap4";
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x40000000>; /* 1 GB */
++	};
++
++	vdd_eth: fixedregulator-vdd-eth {
++		compatible = "regulator-fixed";
++		regulator-name = "VDD_ETH";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio2 16 0>;  /* gpio line 48 */
++		enable-active-high;
++		regulator-boot-on;
++	};
++
++	vbat: fixedregulator-vbat {
++		compatible = "regulator-fixed";
++		regulator-name = "VBAT";
++		regulator-min-microvolt = <3750000>;
++		regulator-max-microvolt = <3750000>;
++		regulator-boot-on;
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++
++		volume_up {
++			label = "volume-up";
++			linux,code = <115>;	/* KEY_VOLUMEUP */
++			gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;	/* 43 */
++			gpio-key,wakeup;
++		};
++
++		home {
++			label = "home";
++			linux,code = <102>;	/* KEY_HOME */
++			gpios = <&gpio2 14 GPIO_ACTIVE_HIGH>;	/* 46 */
++			gpio-key,wakeup;
++		};
++
++		volume_down {
++			label = "volume-down";
++			linux,code = <114>;	/* KEY_VOLUMEDOWN */
++			gpios = <&gpio2 15 GPIO_ACTIVE_HIGH>;	/* 47 */
++			gpio-key,wakeup;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		debug2 {
++			label = "omap4:green:debug2";
++			gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>; /* 173 */
++		};
++
++		debug4 {
++			label = "omap4:green:debug4";
++			gpios = <&gpio2 18 GPIO_ACTIVE_HIGH>; /* 50 */
++		};
++
++		user1 {
++			label = "omap4:blue:user";
++			gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* 169 */
++		};
++
++		user2 {
++			label = "omap4:red:user";
++			gpios = <&gpio6 10 GPIO_ACTIVE_HIGH>; /* 170 */
++		};
++
++		user3 {
++			label = "omap4:green:user";
++			gpios = <&gpio6 14 GPIO_ACTIVE_HIGH>; /* 174 */
++		};
++	};
++
++	sound {
++		compatible = "ti,abe-twl6040";
++		ti,model = "BlazeTablet";
++
++		ti,jack-detection = <1>;
++		ti,mclk-freq = <38400000>;
++
++		ti,mcpdm = <&mcpdm>;
++		ti,dmic = <&dmic>;
++
++		ti,twl6040 = <&twl6040>;
++
++		/* Audio routing */
++		ti,audio-routing =
++			"Headset Stereophone", "HSOL",
++			"Headset Stereophone", "HSOR",
++			"Ext Spk", "HFL",
++			"Ext Spk", "HFR",
++			"Line Out", "AUXL",
++			"Line Out", "AUXR",
++			"Vibrator", "VIBRAL",
++			"Vibrator", "VIBRAR",
++			"HSMIC", "Headset Mic",
++			"Headset Mic", "Headset Mic Bias",
++			"MAINMIC", "Main Handset Mic",
++			"Main Handset Mic", "Main Mic Bias",
++			"SUBMIC", "Sub Handset Mic",
++			"Sub Handset Mic", "Main Mic Bias",
++			"AFML", "Line In",
++			"AFMR", "Line In",
++			"DMic", "Digital Mic",
++			"Digital Mic", "Digital Mic1 Bias";
++	};
++};
++
++&omap4_pmx_wkup {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++			&twl6030_wkup_pins
++	>;
++
++	twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
++		pinctrl-single,pins = <
++			0x14 (PIN_OUTPUT | MUX_MODE2)		/* fref_clk0_out.sys_drm_msecure */
++		>;
++	};
++};
++
++&omap4_pmx_core {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++			&twl6030_pins
++			&twl6040_pins
++			&mcpdm_pins
++			&dmic_pins
++			&mcbsp1_pins
++			&mcbsp2_pins
++			&dss_hdmi_pins
++			&tpd12s015_pins
++			&gpio_keys_pins
++			&leds_pins
++	>;
++
++	gpio_keys_pins: pinmux_gpio_keys_pins {
++		pinctrl-single,pins = <
++			0x26 (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_a19.gpio_43 */
++			0x2C (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_a22.gpio_46 */
++			0x2E (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_a22.gpio_47 */
++		>;
++	};
++
++	leds_pins: pinmux_led_pins {
++		pinctrl-single,pins = <
++			0x34 (PIN_OUTPUT | MUX_MODE3)	/* gpmc_ncs0.gpio_50 */
++			0x138 (PIN_OUTPUT | MUX_MODE3)	/* usbb2_hsic_data.gpio_169 */
++			0x13a (PIN_OUTPUT | MUX_MODE3)	/* usbb2_hsic_strobe.gpio_170 */
++			0x140 (PIN_OUTPUT | MUX_MODE3)	/* kpd_col5.gpio_173 */
++			0x142 (PIN_OUTPUT | MUX_MODE3)	/* kpd_col5.gpio_174 */
++		>;
++	};
++
++	uart2_pins: pinmux_uart2_pins {
++		pinctrl-single,pins = <
++			0xd8 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart2_cts.uart2_cts */
++			0xda (PIN_OUTPUT | MUX_MODE0)		/* uart2_rts.uart2_rts */
++			0xdc (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart2_rx.uart2_rx */
++			0xde (PIN_OUTPUT | MUX_MODE0)		/* uart2_tx.uart2_tx */
++		>;
++	};
++
++	uart3_pins: pinmux_uart3_pins {
++		pinctrl-single,pins = <
++			0x100 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart3_cts_rctx.uart3_cts_rctx */
++			0x102 (PIN_OUTPUT | MUX_MODE0)		/* uart3_rts_sd.uart3_rts_sd */
++			0x104 (PIN_INPUT | MUX_MODE0)		/* uart3_rx_irrx.uart3_rx_irrx */
++			0x106 (PIN_OUTPUT | MUX_MODE0)		/* uart3_tx_irtx.uart3_tx_irtx */
++		>;
++	};
++
++	uart4_pins: pinmux_uart4_pins {
++		pinctrl-single,pins = <
++			0x11c (PIN_INPUT | MUX_MODE0)		/* uart4_rx.uart4_rx */
++			0x11e (PIN_OUTPUT | MUX_MODE0)		/* uart4_tx.uart4_tx */
++		>;
++	};
++
++	twl6030_pins: pinmux_twl6030_pins {
++		pinctrl-single,pins = <
++			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* sys_nirq1.sys_nirq1 */
++		>;
++	};
++
++	twl6040_pins: pinmux_twl6040_pins {
++		pinctrl-single,pins = <
++			0xe0 (PIN_OUTPUT | MUX_MODE3)		/* hdq_sio.gpio_127 */
++			0x160 (PIN_INPUT | MUX_MODE0)		/* sys_nirq2.sys_nirq2 */
++		>;
++	};
++
++	mcpdm_pins: pinmux_mcpdm_pins {
++		pinctrl-single,pins = <
++			0xc6 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_pdm_ul_data.abe_pdm_ul_data */
++			0xc8 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_pdm_dl_data.abe_pdm_dl_data */
++			0xca (PIN_INPUT_PULLUP | MUX_MODE0)	/* abe_pdm_frame.abe_pdm_frame */
++			0xcc (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_pdm_lb_clk.abe_pdm_lb_clk */
++			0xce (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_clks.abe_clks */
++		>;
++	};
++
++	dmic_pins: pinmux_dmic_pins {
++		pinctrl-single,pins = <
++			0xd0 (PIN_OUTPUT | MUX_MODE0)		/* abe_dmic_clk1.abe_dmic_clk1 */
++			0xd2 (PIN_INPUT | MUX_MODE0)		/* abe_dmic_din1.abe_dmic_din1 */
++			0xd4 (PIN_INPUT | MUX_MODE0)		/* abe_dmic_din2.abe_dmic_din2 */
++			0xd6 (PIN_INPUT | MUX_MODE0)		/* abe_dmic_din3.abe_dmic_din3 */
++		>;
++	};
++
++	mcbsp1_pins: pinmux_mcbsp1_pins {
++		pinctrl-single,pins = <
++			0xbe (PIN_INPUT | MUX_MODE0)		/* abe_mcbsp1_clkx.abe_mcbsp1_clkx */
++			0xc0 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_mcbsp1_dr.abe_mcbsp1_dr */
++			0xc2 (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* abe_mcbsp1_dx.abe_mcbsp1_dx */
++			0xc4 (PIN_INPUT | MUX_MODE0)		/* abe_mcbsp1_fsx.abe_mcbsp1_fsx */
++		>;
++	};
++
++	mcbsp2_pins: pinmux_mcbsp2_pins {
++		pinctrl-single,pins = <
++			0xb6 (PIN_INPUT | MUX_MODE0)		/* abe_mcbsp2_clkx.abe_mcbsp2_clkx */
++			0xb8 (PIN_INPUT_PULLDOWN | MUX_MODE0)	/* abe_mcbsp2_dr.abe_mcbsp2_dr */
++			0xba (PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* abe_mcbsp2_dx.abe_mcbsp2_dx */
++			0xbc (PIN_INPUT | MUX_MODE0)		/* abe_mcbsp2_fsx.abe_mcbsp2_fsx */
++		>;
++	};
++
++	mcspi1_pins: pinmux_mcspi1_pins {
++		pinctrl-single,pins = <
++			0xf2 (PIN_INPUT | MUX_MODE0)		/*  mcspi1_clk.mcspi1_clk */
++			0xf4 (PIN_INPUT | MUX_MODE0)		/*  mcspi1_somi.mcspi1_somi */
++			0xf6 (PIN_INPUT | MUX_MODE0)		/*  mcspi1_simo.mcspi1_simo */
++			0xf8 (PIN_INPUT | MUX_MODE0)		/*  mcspi1_cs0.mcspi1_cs0 */
++			0xfa (PIN_INPUT | MUX_MODE0)		/*  mcspi1_cs1.mcspi1_cs1 */
++		>;
++	};
++
++	dss_hdmi_pins: pinmux_dss_hdmi_pins {
++		pinctrl-single,pins = <
++			0x5a (PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
++			0x5c (PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_scl.hdmi_scl */
++			0x5e (PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_sda.hdmi_sda */
++		>;
++	};
++
++	tpd12s015_pins: pinmux_tpd12s015_pins {
++		pinctrl-single,pins = <
++			0x22 (PIN_OUTPUT | MUX_MODE3)		/* gpmc_a17.gpio_41 */
++			0x48 (PIN_OUTPUT | MUX_MODE3)		/* gpmc_nbe1.gpio_60 */
++			0x58 (PIN_INPUT_PULLDOWN | MUX_MODE3)	/* hdmi_hpd.gpio_63 */
++		>;
++	};
++
++	i2c1_pins: pinmux_i2c1_pins {
++		pinctrl-single,pins = <
++			0xe2 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_scl */
++			0xe4 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c1_sda */
++		>;
++	};
++
++	i2c2_pins: pinmux_i2c2_pins {
++		pinctrl-single,pins = <
++			0xe6 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c2_scl */
++			0xe8 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c2_sda */
++		>;
++	};
++
++	i2c3_pins: pinmux_i2c3_pins {
++		pinctrl-single,pins = <
++			0xea (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c3_scl */
++			0xec (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c3_sda */
++		>;
++	};
++
++	i2c4_pins: pinmux_i2c4_pins {
++		pinctrl-single,pins = <
++			0xee (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c4_scl */
++			0xf0 (PIN_INPUT_PULLUP | MUX_MODE0)	/* i2c4_sda */
++		>;
++	};
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++
++	clock-frequency = <400000>;
++
++	twl: twl@48 {
++		reg = <0x48>;
++		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
++		interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>; /* IRQ_SYS_1N cascaded to gic */
++		interrupt-parent = <&gic>;
++	};
++
++	twl6040: twl@4b {
++		compatible = "ti,twl6040";
++		reg = <0x4b>;
++		/* SPI = 0, IRQ# = 119, 4 = active high level-sensitive */
++		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>; /* IRQ_SYS_2N cascaded to gic */
++		interrupt-parent = <&gic>;
++		ti,audpwron-gpio = <&gpio4 31 0>;  /* gpio line 127 */
++
++		vio-supply = <&v1v8>;
++		v2v1-supply = <&v2v1>;
++		enable-active-high;
++
++		/* regulators for vibra motor */
++		vddvibl-supply = <&vbat>;
++		vddvibr-supply = <&vbat>;
++
++		vibra {
++			/* Vibra driver, motor resistance parameters */
++			ti,vibldrv-res = <8>;
++			ti,vibrdrv-res = <3>;
++			ti,viblmotor-res = <10>;
++			ti,vibrmotor-res = <10>;
++			ti,vddvibl-uV = <0>;	/* fixed volt supply - VBAT */
++			ti,vddvibr-uV = <0>;	/* fixed volt supply - VBAT */
++		};
++	};
++};
++
++#include "twl6030.dtsi"
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++
++	clock-frequency = <400000>;
++};
++
++&i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c3_pins>;
++
++	clock-frequency = <400000>;
++
++	/*
++	 * Temperature Sensor
++	 * http://www.ti.com/lit/ds/symlink/tmp105.pdf
++	 */
++	tmp105@48 {
++		compatible = "ti,tmp105";
++		reg = <0x48>;
++	};
++};
++
++&i2c4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c4_pins>;
++
++	clock-frequency = <400000>;
++
++	/*
++	 * 3-Axis Digital Compass
++	 * https://www.sparkfun.com/products/10426
++	 */
++	hmc5883@1e {
++		compatible = "honeywell,hmc5883";
++		reg = <0x1e>;
++	};
++
++	/*
++	 * BMP085 digital pressure sensor
++	 */
++	bmp085@77 {
++		compatible = "bosch,bmp085";
++		reg = <0x77>;
++	};
++};
++
++&mcspi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mcspi1_pins>;
++
++	eth@0 {
++		compatible = "ks8851";
++		spi-max-frequency = <24000000>;
++		reg = <0>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <2 IRQ_TYPE_LEVEL_LOW>; /* gpio line 34 */
++		vdd-supply = <&vdd_eth>;
++	};
++
++	/*
++	 * Dummy interface for debug UART multiplexor
++	 */
++	quart@1 {
++		compatible = "dummy";
++		spi-max-frequency = <24000000>;
++		reg = <1>;
++	};
++};
++
++&mmc1 {
++	vmmc-supply = <&vmmc>;
++	bus-width = <8>;
++};
++
++&mmc2 {
++	vmmc-supply = <&vaux1>;
++	bus-width = <8>;
++	ti,non-removable;
++};
++
++&mmc3 {
++	status = "disabled";
++};
++
++&mmc4 {
++	status = "disabled";
++};
++
++&mmc5 {
++	bus-width = <4>;
++	ti,non-removable;
++};
++
++&emif1 {
++	cs1-used;
++	device-handle = <&elpida_ECB240ABACN>;
++};
++
++&emif2 {
++	cs1-used;
++	device-handle = <&elpida_ECB240ABACN>;
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins>;
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins>;
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart4_pins>;
++};
++
++&mcbsp3 {
++	status = "disabled";
++};
++
++&twl_usb_comparator {
++	usb-supply = <&vusb>;
++};
++
++&usb_otg_hs {
++	interface-type = <1>;
++	mode = <3>;
++	power = <100>;
++};
 -- 
+1.7.9.5
