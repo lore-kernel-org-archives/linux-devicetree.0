@@ -1,59 +1,46 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v8 7/8] usb: phy: omap-usb2: remove *set_suspend*
- callback from omap-usb2
-Date: Tue, 25 Jun 2013 18:20:44 +0300
-Message-ID: <20130625152044.GL21334@arwen.pp.htv.fi>
-References: <1372139926-3719-1-git-send-email-kishon@ti.com>
- <1372139926-3719-8-git-send-email-kishon@ti.com>
-Reply-To: <balbi@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/2] Make non-linear GPIO ranges accesible from gpiolib
+Date: Tue, 25 Jun 2013 09:22:02 -0600
+Message-ID: <51C9B59A.6000407@wwwdotorg.org>
+References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com> <1371128132-18266-2-git-send-email-christian.ruppert@abilis.com> <51BA3BC1.3090109@wwwdotorg.org> <20130614091241.GA23745@ab42.lan> <51C1F42E.5090107@wwwdotorg.org> <51C1F82C.4020502@wwwdotorg.org> <20130620115710.GB942@ab42.lan> <51C4C2ED.5090505@wwwdotorg.org> <CACRpkdaPJaZb7z+ua91MJ_krDRXGSaZS_5_3vHc7VcAFjUfdfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qo7zVO9a9OQ5oQtr"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1372139926-3719-8-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, arnd@arndb.de, swarren@nvidia.com, sylvester.nawrocki@gmail.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, benoit.cousson@linaro.org, mchehab@redhat.com, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, balajitk@ti.com, george.cherian@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaPJaZb7z+ua91MJ_krDRXGSaZS_5_3vHc7VcAFjUfdfQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Christian Ruppert <christian.ruppert@abilis.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
---qo7zVO9a9OQ5oQtr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 06/25/2013 08:32 AM, Linus Walleij wrote:
+> On Fri, Jun 21, 2013 at 11:17 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 06/20/2013 05:57 AM, Christian Ruppert wrote:
+> 
+>> The Linux pinctrl subsystem specifically doesn't provide mutual
+>> exclusion between "mux function" and GPIO usage within a pin group,
+>> although perhaps a driver could internally.
+> 
+> It used to block this at one point. But it doesn't make sense
+> when the hardware looks like so:
+> 
+>>>                                                      +- SPI
+>>>                  Physical pins --- GPIO --- pinctrl -+- I2C
+>>>                                                      +- mmc
+> 
+> As in this case it is perfectly legal to enable the GPIO as
+> input while the I2C bus is running and "spy" on the signals.
+> 
+> The driver should probably not allow the GPIO output to be
+> driven while some peripheral is muxed in though, that could be
+> disastrous...
 
-On Tue, Jun 25, 2013 at 11:28:45AM +0530, Kishon Vijay Abraham I wrote:
-> Now that omap-usb2 is adapted to the new generic PHY framework,
-> *set_suspend* ops can be removed from omap-usb2 driver.
->=20
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Reviewed-by: Felipe Balbi <balbi@ti.com>
-
-Acked-by: Felipe Balbi <balbi@ti.com>
-
---=20
-balbi
-
---qo7zVO9a9OQ5oQtr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRybVMAAoJEIaOsuA1yqREH6AQAJJX/sIADvIF9X+jt20tCw3V
-2Jan7WMJSQb2ZvV85w438A82HeJEufC5vf2CxpqMNJ+cdFHj3S3J/pp6pAd/GCdr
-rL52849y2rGEZDh20vHbul06/3h7UsVg6KFzHGMRiltO+BkclRXsTwcjX8iwoYCD
-F04FSpEnaXELxy4I3KKcObewLL5TihXuNrJMLHB4p49zRDE+SwiVmo7xMIX8iWlI
-UGapJ+dOkA1Zp1pLS4uJVboCmksxJ7b9nSxMwrfm5y/k9AZ7kUpqx2ynAo/M1bJm
-UOz2H2qOisSH5AT/ulG8guApg2iRw/MpvO6LJJHVE3ibmH66jOfom3Y1vxWRiR10
-yAguxp75HZKJqCnlWvWcCpHDkGTuZfXEZDCDIbpr0r5bz45HBRyeowysirlK4IcL
-BPj8HknHfheLYZYqfGA3kJY80K6xAXom3GTnTIl/ezvsQohi/R+ZvJvjne7vfntH
-zO7vFbtGn7nKF63lQPUyi4JQNICNqbsD0mkMEqaCdZP+sfOleUHoG15Uu3ZY7ll0
-iCMg/hE3Z9An2J4Z/P+mGfW7op2vankcZSgxpXAuzZnySIXQBCQkK+YBjOq5Nvvq
-vMhwE4bZ3FiyZTgJwMVSbrR3tt5H+plj34ag4ukrs21Cy72L8EGxAH7oyLW93eYA
-VA0gwq2FAlNHTeGx5LBW
-=OGPh
------END PGP SIGNATURE-----
-
---qo7zVO9a9OQ5oQtr--
+Well, in the HW diagram above, GPIO output probably simply overrides
+"mux function" output, so everything would work as requested. Whether it
+makes sense to request such an override is a policy question that
+pinctrl itself probably shouldn't decide. After all, what if there's a
+pin group containing 4 pins, which are used by the board as 2 GPIO and 2
+I2C. pinctrl shouldn't disallow selecting GPIO on any pin in that pin
+group simply because I2C is selected on it; that fact doesn't
+necessarily mean that the selected mux function actually uses every
+single pin in the group.
