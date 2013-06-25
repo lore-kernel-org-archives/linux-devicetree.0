@@ -1,142 +1,132 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC] early init and DT platform devices allocation/registration
-Date: Tue, 25 Jun 2013 18:36:28 +0200
-Message-ID: <20130625.193628.2143557800560690024.hdoyu@nvidia.com>
-References: <20130624163340.GB26084@e102568-lin.cambridge.arm.com><CACxGe6sPaV-sBz=SF46KdUexjAhWKGrMpG_ty+K26f6ZU5iKdg@mail.gmail.com><51C9AF96.3040107@wwwdotorg.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v9] i2c-designware: make SDA hold time configurable
+Date: Tue, 25 Jun 2013 18:39:02 +0200
+Message-ID: <20130625163902.GA2973@katana>
+References: <20130620203716.GF2961@katana>
+ <1371808422-27742-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51C9AF96.3040107-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "Pawel.Moll-5wv7dgnIgG8@public.gmane.org" <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1371808422-27742-1-git-send-email-christian.ruppert@abilis.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Rob Herring <robherring2@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Tue, 25 Jun 2013 16:56:22 +0200:
 
-> >> How this problem is supposed to be solved in the kernel ?
-> >>
-> >> 1- drivers that are to be up and running at early_initcall time must not
-> >>    rely on the device/driver model (but then they cannot use any API that
-> >>    requires a struct device to function (eg regmap))
-> >> 2- the driver should allocate a platform device at early initcall from
-> >>    a DT compatible node. Do not know how to deal with platform device
-> >>    duplication though, since of_platform_populate() will create another
-> >>    platform device when the node is parsed
-> > 
-> > While I've resisted it in the past, I would be okay with adding struct
-> > device pointer in the device_node structure. I've resisted because I
-> > don't want drivers following the device_node pointer and making an
-> > assumption about what /kind/ of device is pointed to by it. However,
-> > this is an important use case and it makes it feasible to use an early
-> > platform device with of_platform_populate.
-> 
-> Hiroshi (who I have CC'd here) has also been asking about this same
-> issue downstream. The issue for us is that we need to initialize an SMMU
-> driver before any devices that are translated by the SMMU. One option is
-> to force the register/probe of the SMMU driver explicitly, early in the
-> machine's .init_machine() callback, before of_platform_populate(), to
-> ensure the ordering. Then, we run into the same duplicate device issue,
-> and the change Grant mentions above would help solve this.
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Here's my workaround. I need to call of_detach_node() with OF_DYNAMIC
-to avoid duplicated device registration.
+Hi,
 
->From f4d88b8521c278b41b72028d326c03cfd2e90af8 Mon Sep 17 00:00:00 2001
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Date: Fri, 14 Jun 2013 15:22:02 +0300
-Subject: [PATCH 1/1] ARM: tegra: Populate AHB/IOMMU earlier than others
+On Fri, Jun 21, 2013 at 11:53:42AM +0200, Christian Ruppert wrote:
+> This patch makes the SDA hold time configurable through device tree.
+>=20
+> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+> Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
+> ---
+>  .../devicetree/bindings/i2c/i2c-designware.txt     |   14 ++++++++++++++
+>  arch/arc/boot/dts/abilis_tb100_dvk.dts             |   10 +++++-----
+>  arch/arc/boot/dts/abilis_tb101_dvk.dts             |   10 +++++-----
 
-Populate AHB/IOMMU earlier than others. IOMMU depends on AHB. IOMMU
-needs to be instanciated earlier than others so that IOMMU can
-register other platform devices as IOMMU'able. Once IOMMU is
-populated, IOMMU/AHB nodes are detached to prevent another
-registeration.
+Vineet, an ack for those would be nice since I think it is better if I
+take all this via I2C.
 
-Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/mach-tegra/Kconfig |  1 +
- arch/arm/mach-tegra/tegra.c | 24 ++++++++++++++++++++++++
- drivers/iommu/tegra-smmu.c  |  3 +++
- 3 files changed, 28 insertions(+)
+>  drivers/i2c/busses/i2c-designware-core.c           |   13 +++++++++++++
+>  drivers/i2c/busses/i2c-designware-core.h           |    1 +
+>  drivers/i2c/busses/i2c-designware-platdrv.c        |   10 ++++++++++
+>  6 files changed, 48 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/D=
+ocumentation/devicetree/bindings/i2c/i2c-designware.txt
+> index e42a2ee..3266cc7 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -10,6 +10,9 @@ Recommended properties :
+> =20
+>   - clock-frequency : desired I2C bus clock frequency in Hz.
+> =20
+> +Optional properties :
+> + - i2c-sda-hold-time-ns : should contain the SDA hold time in nanosecond=
+s.
 
-diff --git a/arch/arm/mach-tegra/Kconfig b/arch/arm/mach-tegra/Kconfig
-index ef3a8da..79905fe 100644
---- a/arch/arm/mach-tegra/Kconfig
-+++ b/arch/arm/mach-tegra/Kconfig
-@@ -15,6 +15,7 @@ config ARCH_TEGRA
- 	select SOC_BUS
- 	select SPARSE_IRQ
- 	select USE_OF
-+	select OF_DYNAMIC
- 	help
- 	  This enables support for NVIDIA Tegra based systems.
- 
-diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
-index 0d1e412..0c494b5 100644
---- a/arch/arm/mach-tegra/tegra.c
-+++ b/arch/arm/mach-tegra/tegra.c
-@@ -80,6 +80,28 @@ static struct of_dev_auxdata tegra20_auxdata_lookup[] __initdata = {
- 	{}
- };
- 
-+static void tegra_of_platform_populate_iommu(void)
-+{
-+	int i;
-+	struct platform_device *pdev;
-+	const char * const dname[] = {"ahb", "iommu", };
-+
-+	for (i = 0; i < ARRAY_SIZE(dname); i++) {
-+		struct device_node *np;
-+		char path[NAME_MAX];
-+
-+		snprintf(path, sizeof(path), "/%s", dname[i]);
-+		np  = of_find_node_by_path(path);
-+		if (!np)
-+			break;
-+
-+		pdev = of_platform_device_create(np, NULL, NULL);
-+		of_node_put(np);
-+		if (!pdev)
-+			break;
-+	}
-+}
-+
- static void __init tegra_dt_init(void)
- {
- 	struct soc_device_attribute *soc_dev_attr;
-@@ -107,6 +129,8 @@ static void __init tegra_dt_init(void)
- 
- 	parent = soc_device_to_device(soc_dev);
- 
-+	tegra_of_platform_populate_iommu();
-+
- 	/*
- 	 * Finished with the static registrations now; fill in the missing
- 	 * devices
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index f6f120e..6c9de3f 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -1238,6 +1238,9 @@ static int tegra_smmu_probe(struct platform_device *pdev)
- 	smmu_debugfs_create(smmu);
- 	smmu_handle = smmu;
- 	bus_set_iommu(&platform_bus_type, &smmu_iommu_ops);
-+
-+	of_detach_node(dev->of_node);
-+	of_detach_node(smmu->ahb);
- 	return 0;
- }
- 
--- 
-1.8.1.5
+Not on all versions, should be mentioned here.
+
+> +
+>  Example :
+> =20
+>  	i2c@f0000 {
+> @@ -20,3 +23,14 @@ Example :
+>  		interrupts =3D <11>;
+>  		clock-frequency =3D <400000>;
+>  	};
+> +
+> +	i2c@1120000 {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		compatible =3D "snps,designware-i2c";
+> +		reg =3D <0x1120000 0x1000>;
+> +		interrupt-parent =3D <&ictl>;
+> +		interrupts =3D <12 1>;
+> +		clock-frequency =3D <400000>;
+> +		i2c-sda-hold-time-ns =3D <300>;
+> +	};
+> diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busse=
+s/i2c-designware-core.c
+> index c41ca63..66119e2 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.c
+> +++ b/drivers/i2c/busses/i2c-designware-core.c
+> @@ -67,9 +67,12 @@
+>  #define DW_IC_STATUS		0x70
+>  #define DW_IC_TXFLR		0x74
+>  #define DW_IC_RXFLR		0x78
+> +#define DW_IC_SDA_HOLD		0x7c
+>  #define DW_IC_TX_ABRT_SOURCE	0x80
+>  #define DW_IC_ENABLE_STATUS	0x9c
+>  #define DW_IC_COMP_PARAM_1	0xf4
+> +#define DW_IC_COMP_VERSION	0xf8
+> +#define DW_IC_SDA_HOLD_MIN_VERS	0x3131312A
+>  #define DW_IC_COMP_TYPE		0xfc
+>  #define DW_IC_COMP_TYPE_VALUE	0x44570140
+> =20
+> @@ -332,6 +335,16 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
+>  	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
+>  	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT =3D %d:%d\n", hcnt, lcnt);
+> =20
+> +	/* Configure SDA Hold Time if required */
+> +	reg =3D dw_readl(dev, DW_IC_COMP_VERSION);
+
+Why not reading reg inside the if-block?
+
+Thanks,
+
+   Wolfram
+
+
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRycemAAoJEBQN5MwUoCm2hDQP/il6TfROvbnm1zZ2FMk58W5d
++4Nhlq9Zb5ZihCSiSKKwodv3TQKF891tM7JUmMUTn4AULBdNzM+ujVefBXforukm
+U5qIagClPzodtvc413ZZHlMFwpYZ7jNpDN3hrVDlAPTIBghCp1+p6os1gOguZCEq
+VOYQnlyfzYH2BuHU1bOkpQxdaT9mDPRtamylyp589PhXFkHSGGumSMHXN15dPtZk
+0LYPpnMLTh1ZHqM1DjASaW60kqrib6Y57t3VBgv1BPY5j6inxrMq7IvnhBEs6GNq
+g31GLQxaYsM2unXY5tJ4zb4kGtpKhxG/8Zt4efEYUo+zXjrgY2EjjlnweLIHftOh
+61P5CWwMjXW1EjBoCHJVKirecYILLIMAoiAadNhoIYQTgHevLKTRa5sBRcGGeDZh
+JbWgttJ75+OiCgaJOpMBBXAzHm3Hnb0Gr4d4ZgKSrzMWZddjDRRZC1LtTfIP8nQd
+ARRSqZVTW3Yr88DittK8e0SPl92DqbgoarAOzUQ/ZkUTinisJj6GybQLW+6nMiXQ
+e8RXD0qZsv4XAV/GjisSvLZeZigLGtiR4rJ4ho7d3KPenvojtY41ZQtglpR16QCF
+E/3ou4MuGxsnmQdb/Q+Xcra+f1QXiEBcChudeg/QA7pIHrH9LTybuxnCvwedgHhZ
+e35TBxjv6/qrzwyeMoCP
+=KT5L
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
