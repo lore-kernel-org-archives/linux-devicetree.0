@@ -1,66 +1,111 @@
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
 Subject: Re: [PATCH 2/2] Make non-linear GPIO ranges accesible from gpiolib
-Date: Tue, 25 Jun 2013 17:53:45 +0200
-Message-ID: <CACRpkdYoK7x0RJH3eR-gCTT6cfCD2sas3E_O_j4ALS6gHoxw+A@mail.gmail.com>
-References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com>
-	<1371128132-18266-2-git-send-email-christian.ruppert@abilis.com>
-	<51BA3BC1.3090109@wwwdotorg.org>
-	<20130614091241.GA23745@ab42.lan>
-	<51C1F42E.5090107@wwwdotorg.org>
-	<51C1F82C.4020502@wwwdotorg.org>
-	<20130620115710.GB942@ab42.lan>
-	<51C4C2ED.5090505@wwwdotorg.org>
-	<CACRpkdZQ=G=K6g25gwGKfS1dCrDS35XepaOs38N-ymEuR0+x=g@mail.gmail.com>
-	<51C9B9AB.2010403@wwwdotorg.org>
+Date: Tue, 25 Jun 2013 09:59:11 -0600
+Message-ID: <51C9BE4F.80200@wwwdotorg.org>
+References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com> <1371128132-18266-2-git-send-email-christian.ruppert@abilis.com> <51BA3BC1.3090109@wwwdotorg.org> <20130614091241.GA23745@ab42.lan> <51C1F42E.5090107@wwwdotorg.org> <51C1F82C.4020502@wwwdotorg.org> <20130620115710.GB942@ab42.lan> <51C4C2ED.5090505@wwwdotorg.org> <20130625115950.GB30827@ab42.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51C9B9AB.2010403@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Christian Ruppert <christian.ruppert@abilis.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130625115950.GB30827@ab42.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2013 at 5:39 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 06/25/2013 09:28 AM, Linus Walleij wrote:
+On 06/25/2013 05:59 AM, Christian Ruppert wrote:
+> On Fri, Jun 21, 2013 at 03:17:33PM -0600, Stephen Warren wrote:
 
->> But I do seem to recall some endless discussions about this,
->> I think we need to agree to disagree.
+...
+> To define some terminology, let's call a set of pins affected by the
+> same register / bit field a "port".
+
+Well, the terminology "group" already exists for this really, but I
+suppose we can call it a port instead...
+
+...
+>> 4) Depending on HW design, all register fields might be of type
+>> described at (2) above, or all of the type described at (3) above, or a
+>> mixture of both. Tegra is a mixture.
+> 
+> TB10x is all (3).
+> 
+>> 5) I expect the concept of a pin group to solely represent the various
+>> groups of pins affected by each register field; in (2) above one pin per
+>> group, in (3) above many pins per group.
+> 
+> In our example above, TB10x would have two ports, i.e. two bit fields in
+> its pinctrl register. Each of those bit fields would allow selecting one
+> of the configurations for grp1 and grp2 respectively.
 >
-> But the whole point of a subsystem is to provide clear common semantics
-> across all the different drivers that comprise it.
+> Do I understand your explanation correctly: You would implement the TB10x
+> pinctrl exactly like the example above, two pin groups with three and
+> five configurations?
 
-I guess we simply disagree on how deeply these semantics
-should go.
+Assuming there's a register field for grp1 that takes one of 3 values,
+and a register field for grp2 that takes one of 5 values, then yes.
 
-> IMHO, it's a great
-> failing of pinctrl that it doesn't clearly define its data model at all,
-> and just leaves individual driver authors to use groups in whatever
-> random fashion they want.
+...
+>> Consider a pin group in HW that encompasses 10 pins, but you've selected
+>> a function onto it that only actually uses 6 pins for that logical
+>> function. The other 4 pins aren't used, and can be GPIO. However, all
+>> pins in the group are "claimed" because some mux function has been
+>> selected onto the group that includes those 10 pins. In order to allow
+>> some of those pins to be claimed as a GPIO, the pinctrl core simply
+>> allows GPIO usage and mux function usage to be claimed on each
+>> individual pin without regard for each-other.
+> 
+> This might be the main source of confusion. I admit that I hadn't
+> understood (and still think it is at least unorthogonal if not
+> semantically wrong) that an entire port must be claimed if just one
+> interface inside the port is required. Probably many other driver
+> authors (those you mention above) didn't understand this either.
 
-I do not think any driver is using it in a "random" fashion.
-I would agree if the authors just stuck any pins into some
-random groups named after colors or rock bands.
+It's not that the "entire port /must/ be claimed", it's that there's
+choice in the matter; no concept of claiming anything (other than GPIO)
+at a level less than a port. The port (group in pinctrl terminology)
+*is* the level of granularity at which pinctrl claims pins.
 
-Obviously there is a mental model of the uses somewhere
-behind the code.
+>> Now, it would indeed be possible for each combination of (pin group, mux
+>> function) to be associated with a list of pins from the group that could
+>> be used as GPIO, and then for the pinctrl core to additionally enforce
+>> that only those pins be claimed for GPIO usage. However, the pinctrl
+>> core does not do this at present.
+> 
+> This is why it is implemented inside the TB10x driver.
 
-> We really should have different entries in the
-> pinctrl data model for these different concepts (real HW groups, and
-> logical/virtual/SW groups) since they're entirely different things with
-> different semantics.
+OK.
 
-That's what the tongue-in-cheek patch tried to convey, in some
-kind of humorous manner. I was just trying to lighten up the
-discussion a bit.
+If that concept ends up being more generally applicable, then it might
+make sense to move the validation into the pinctrl core. I don't know if
+this level of detail makes sense there or not though.
 
-> Perhaps it's simplest if I just step out of pinctrl and let it exist as
-> it is.
+>>> When writing our pinctrl driver, my understanding was slightly
+>>> different: I define seven pin groups:
+>>> spi1 = {A5, A6, A7, A8};
+>>> i2c = {A5, B5};
+>>> mmc2 = {A1, B1};
+>>> mmc4 = {A1, B1, C1, D1};
+>>> mmc8 = {A1, B1, C1, D1, E1, F1, G1, H1};
+>>> spi2 = {G1, G2, G3, G4};
+>>> gpios = {A1, A5, A6, A7, A8, B1, B5, C1, D1, E1, F1, G1, G2, G3, G4, H1};
+> 
+> Do I understand your explanation on the very top correctly that this is
+> actually the strategy you said was wrongly employed in several other
+> drivers?
 
-No not at all. Your work on defining and reviewing the pinctrl
-drivers and DT bindings is much appreciated. However all
-comittee work tend to lead to a few compromises. I don't
-think this one compromise is especially hard to live with.
+It looks like it on the surface. I'd have to look at the HW register
+specs to say for sure.
 
-Yours,
-Linus Walleij
+...
+>> In that case, the pinctrl driver or DT binding really shouldn't define
+>> pin groups to help define that mapping, since the mapping is something
+>> that exists outside the realm of the pinctrl HW block itself.
+> 
+> I agree. This is why the proposed pinctrl driver defines mux-side pin
+> controller interfaces as pingroups (these are actual hardware interfaces
+> of the pinctrl RTL module). GPIOs (and any other interfaces) are
+> connected at the top level to those interfaces.
+
+Pingroup definitions for "actual HW interfaces of the RTL module" make
+sense to me.
