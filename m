@@ -1,70 +1,76 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2 0/5] Generic PHY driver for the Exynos SoC MIPI CSI-2/DSI
- DPHYs
-Date: Tue, 25 Jun 2013 16:15:30 +0200
-Message-ID: <1372169735-12501-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, balbi@ti.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v12 00/11] DMA Engine support for AM33XX
+Date: Tue, 25 Jun 2013 19:46:20 +0530
+Message-ID: <51C9A634.6030605@ti.com>
+References: <1371762407-24544-1-git-send-email-joelagnel@ti.com>
+ <20130624101903.GV5523@atomide.com> <51C85958.9030502@ti.com>
+ <20130625065450.GY5523@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130625065450.GY5523-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds a simple driver for the Samsung S5P/Exynos SoC
-series MIPI CSI-2 receiver (MIPI DSIM) and MIPI DSI transmitter (MIPI
-DSIM) DPHYs, using the generic PHY framework [1]. Previously the MIPI
-CSIS and MIPI DSIM used a platform callback to control the PHY power
-enable and reset bits. The platform callback can be dropped now and
-those drivers don't depend any more on any platform code.
+On 6/25/2013 12:24 PM, Tony Lindgren wrote:
+> * Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org> [130624 07:42]:
+>> Hi Tony,
+>>
+>> On 06/24/2013 12:19 PM, Tony Lindgren wrote:
+>>> Hi,
+>>>
+>>> For merging this series, I suggest the following sets:
+>>>
+>>> * Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org> [130620 14:13]:
+>>>>
+>>>> Joel A Fernandes (3):
+>>>>   edma: config: Enable config options for EDMA
+>>>>   da8xx: config: Enable MMC and FS options
+>>>>   ARM: davinci: Fix compiler warnings in devices-da8xx
+>>>>
+>>>> Matt Porter (8):
+>>>>   dmaengine: edma: Add TI EDMA device tree binding
+>>>>   ARM: edma: Add DT and runtime PM support to the private EDMA API
+>>>>   ARM: edma: Add EDMA crossbar event mux support
+>>>>   dmaengine: edma: enable build for AM33XX
+>>>
+>>> Sekhar should queue the above patches, I've acked the
+>>> mach-omap2/Kconfig change.
+>>>
+>>>>   spi: omap2-mcspi: add generic DMA request support to the DT binding
+>>>>   spi: omap2-mcspi: convert to dma_request_slave_channel_compat()
+>>>
+>>>
+>>> The spi changes should get merged via the driver list.
+>>>
+>>>>   ARM: dts: add AM33XX EDMA support
+>>>>   ARM: dts: add AM33XX SPI DMA support
+>>>
+>>> Benoit should queue the .dts changes.
+>>
+>> I'll do that, but do you consider them for 3.11?
+> 
+> Yes right after -rc1 if it makes the DMA work. We almost
+> certainly need to send few branches of fixes after -rc1 once
+> we find out what might have broken by the removal of the
+> hwmod data..
 
-Changes since v1:
- - enabled build as module and with CONFIG_OF disabled,
- - added phy_id enum,
- - of_address_to_resource() replaced with platform_get_resource(),
- - adapted to changes in the PHY API v7, v8 - added phy labels,
- - added MODULE_DEVICE_TABLE() entry,
- - the driver file renamed to phy-exynos-mipi-video.c,
- - changed DT compatible string to "samsung,s5pv210-mipi-video-phy",
- - corrected the compatible property's description.
- - patch 3/5 "video: exynos_dsi: Use generic PHY driver" replaced
-   with a patch modifying the MIPI DSIM driver which is currently
-   in mainline.
+The DMA related changes went into arm-soc yesterday. So it should be
+safe to send the DT patches in before the merge window opens. If Tony is
+done with sending his pull requests may be Benoit can send to arm-soc
+directly?
 
-This series depends on the generic PHY framework [1]. It can be browsed
-at: http://git.linuxtv.org/snawrocki/samsung.git/exynos-mipi-phy
-This branch is based on the 'for-next' branch from
-git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
-and the patch series:
-http://www.spinics.net/lists/arm-kernel/msg254667.html
-
-Thank you for all the review comments.
-
-[1] https://lkml.org/lkml/2013/6/25/22
-
-Sylwester Nawrocki (5):
-  phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
-  ARM: dts: Add MIPI PHY node to exynos4.dtsi
-  video: exynos_mipi_dsim: Use generic PHY driver
-  exynos4-is: Use generic MIPI CSIS PHY driver
-  ARM: Samsung: Remove MIPI PHY setup code
-
- .../phy/samsung,s5pv210-mipi-video-phy.txt         |   14 ++
- arch/arm/boot/dts/exynos4.dtsi                     |   10 ++
- arch/arm/mach-exynos/include/mach/regs-pmu.h       |    5 -
- arch/arm/mach-s5pv210/include/mach/regs-clock.h    |    4 -
- arch/arm/plat-samsung/Kconfig                      |    5 -
- arch/arm/plat-samsung/Makefile                     |    1 -
- arch/arm/plat-samsung/setup-mipiphy.c              |   60 -------
- drivers/media/platform/exynos4-is/mipi-csis.c      |   16 +-
- drivers/phy/Kconfig                                |    9 +
- drivers/phy/Makefile                               |    3 +-
- drivers/phy/phy-exynos-mipi-video.c                |  173 ++++++++++++++++++++
- drivers/video/exynos/exynos_mipi_dsi.c             |   18 +-
- include/linux/platform_data/mipi-csis.h            |   11 +-
- include/video/exynos_mipi_dsim.h                   |    6 +-
- 14 files changed, 236 insertions(+), 99 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/samsung,s5pv210-mipi-video-phy.txt
- delete mode 100644 arch/arm/plat-samsung/setup-mipiphy.c
- create mode 100644 drivers/phy/phy-exynos-mipi-video.c
-
---
-1.7.9.5
+Thanks,
+Sekhar
