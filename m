@@ -1,45 +1,61 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
 Subject: Re: [PATCH 3/4] pinctrl: remove slew-rate parameter from tz1090
-Date: Tue, 25 Jun 2013 15:40:50 -0600
-Message-ID: <51CA0E62.2080403@wwwdotorg.org>
-References: <201306251455.01540.heiko@sntech.de> <201306251456.36499.heiko@sntech.de> <51C99581.2010403@imgtec.com> <201306251521.55634.heiko@sntech.de> <51C99AB5.1080002@imgtec.com> <CACRpkdbdwvmBYFX=ppdM_RmGwyTcWVeTCMj60F4sh6YEVRE2Uw@mail.gmail.com> <51C9A039.4090804@imgtec.com> <CACRpkda--Thd9sop2FRUwTKiXnePNyg38ajxAZVvKkROrQsGkw@mail.gmail.com>
+Date: Tue, 25 Jun 2013 15:46:24 -0600
+Message-ID: <51CA0FB0.7090608@wwwdotorg.org>
+References: <201306251455.01540.heiko@sntech.de> <201306251456.36499.heiko@sntech.de> <51C99581.2010403@imgtec.com> <CACRpkdaVsKCNzQ9zAG5DXfDO2BFpcCzw5VbmARazOrXCW1kmeQ@mail.gmail.com> <51C9AFC4.1020305@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda--Thd9sop2FRUwTKiXnePNyg38ajxAZVvKkROrQsGkw@mail.gmail.com>
+In-Reply-To: <51C9AFC4.1020305@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: James Hogan <james.hogan@imgtec.com>, =?ISO-8859-1?Q?Heiko_St=FCbne?= =?ISO-8859-1?Q?r?= <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+To: James Hogan <james.hogan@imgtec.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, =?ISO-8859-1?Q?Heiko_St=FC?= =?ISO-8859-1?Q?bner?= <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/25/2013 09:39 AM, Linus Walleij wrote:
-> On Tue, Jun 25, 2013 at 3:50 PM, James Hogan <james.hogan@imgtec.com> wrote:
->> On 25/06/13 14:32, Linus Walleij wrote:
-> 
->>> Patches adding it back in with SI measures will be welcomed!
+On 06/25/2013 08:57 AM, James Hogan wrote:
+> On 25/06/13 14:22, Linus Walleij wrote:
+>> Can't we just try to come up with a patch that nails down the meaning of
+>> slew rate in some meaningful manner then?
 >>
->> Okay.
+>> So according to:
+>> http://en.wikipedia.org/wiki/Slew_rate
+>> a proper expression for slew rate would be dV/dt i.e.
+>> something like microvolts per microsecond (which then just
+>> becomes volts/second).
 >>
->> So the most descriptive documentation I can find for the slew rate in
->> the TZ1090 pin config hardware is basically:
+>> What we need to figure out is what range will be applicable within
+>> reasonable doubt for current scenarios and the next few years.
 >>
->> 0: slow (half frequency)
->> 1: fast
->>
->> Sounds like this pretty much precludes it from having a generic DT
->> binding unless it can be mapped to some physical value, so I'll add a
->> tz1090,slew-rate and use PIN_CONFIG_END+1 instead of PIN_CONFIG_SLEW_RATE.
+>> What are your datasheets specifying here, and what would be
+>> a proper measure?
 > 
-> Okay... ut the Nomadik pin controller incidentally have a
-> similar definition: NMK_GPIO_LOWEMI. By slashing the
-> slew rate in half the EMI is of course reduced so that was
-> another name for the same thing.
+> My datasheet says:
 > 
-> Maybe this is something that should just be boolean?
+> 0: slow (half frequency)
+> 1: fast
 > 
-> slewrate-reduced-slope;
+> I just got a reply back from a hardware engineer, who said that the
+> relationship with the actual volts/usec will depend on both the drive
+> strength and the load on the pad, and that a definite answer probably
+> requires running a simulation.
 
-Tegra has, IIRC, 4 different slew rates. I'm not sure that a
-Boolean/dual-state value would be appropriate here; it'd be limited to
-supporting some arbitrary cases rather than being something generic.
+Tegra is similar here. The docs just say (for a 2-bit field expressed in
+binary) "Code 11 is the least slewing of the signal, code 00 is the
+highest slewing of the signal".
+
+I'm not sure that a generic parameter actually needs specific units. Why
+can't we simply specify the units as HW-defined, even while using a
+standardized DT property name and kernel-internal enum to represent the
+concept of slew rate? Even the order of whether 0 or 3 is highest or
+lowest need not be mandated by the spec?
+
+Note also that Tegra has separate rising and falling slew-rate
+configuration.
+
+And the slew rate is influenced by a "low-power mode" setting.
+
+And as for James, I imagine the actual dV/dT is influenced by the
+voltage on the IO rail for a particular board, since I'm pretty sure we
+have some IOs that can operate at multiple different voltages, simply
+based on whatever voltage is supplied for that pin/block's VDD.
