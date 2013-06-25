@@ -1,53 +1,35 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v6] clocksource:arm_global_timer: Add ARM global timer
- support.
-Date: Tue, 25 Jun 2013 16:00:25 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1306251559160.4013@ionos.tec.linutronix.de>
-References: <1372152678-29530-1-git-send-email-srinivas.kandagatla@st.com>
- <alpine.DEB.2.02.1306251459160.4013@ionos.tec.linutronix.de>
- <51C99E33.4070009@st.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2] ARM: DTS: OMAP4: Add OMAP4 Blaze Tablet support
+Date: Tue, 25 Jun 2013 09:07:14 -0500
+Message-ID: <51C9A412.1050802@ti.com>
+References: <1372159970-6361-1-git-send-email-ruslan.bilovol@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51C99E33.4070009-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1372159970-6361-1-git-send-email-ruslan.bilovol@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ruslan Bilovol <ruslan.bilovol@ti.com>
+Cc: b-cousson@ti.com, tony@atomide.com, benoit.cousson@linaro.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Jun 2013, Srinivas KANDAGATLA wrote:
-> On 25/06/13 14:17, Thomas Gleixner wrote:
-> > On Tue, 25 Jun 2013, Srinivas KANDAGATLA wrote:
-> >> +static void gt_compare_set(unsigned long delta, int periodic)
-> >> +{
-> >> +	u64 counter = gt_counter_read();
-> >> +	unsigned long ctrl = readl(gt_base + GT_CONTROL);
-> > 
-> > Why are you reading the control register back over and over? All you
-> > need to preserve is the GT_CONTROL_TIMER_ENABLE bit. So you can spare
-> > that read out and just do
-> > 
-> > 	ctrl = GT_CONTROL_TIMER_ENABLE;
-> > 	writel(ctrl, gt_base + GT_CONTROL);
-> 
-> Logically you are right we could do as you suggested, However its not
-> implicit that which bits are going to be cleared. Its more to do with
-> readability of the code.
-> If you still insist I can change it.
+On 06/25/2013 06:32 AM, Ruslan Bilovol wrote:
+> The OMAP4 Blaze Tablet is TI OMAP4 processor-based
+> development platform in a tablet formfactor.
+> The platform contains many of the features found in
+> present-day handsets (such as audio, video, wireless
+> functions and user interfaces) and in addition
+> contains features for software development and test.
+Why do we want to send this upstream?
+What is the advantage to having this supported?
 
-I'm not insisting. I just pointed out, that you can save cycles in a
-hotpath. :)
+I don't believe we need to add another community board.  We have a SDP 
+and Panda.
 
-Thanks,
+Dan
 
-	tglx
+<snip>
+
+-- 
+----------------------------------------------
+Dan Murphy
