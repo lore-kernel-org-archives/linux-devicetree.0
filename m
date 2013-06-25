@@ -1,224 +1,227 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v3 3/5] clk: dt: binding for basic multiplexer clock
-Date: Tue, 25 Jun 2013 10:40:30 -0700
-Message-ID: <20130625174030.23972.40841@quantum>
-References: <1371795256-16703-1-git-send-email-mturquette@linaro.org>
- <1371795256-16703-4-git-send-email-mturquette@linaro.org>
- <CAD6h2NS=AOQ4B6V=TtA120ga9ucF7eBxEguqFK0y4cfpa-F50Q@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Tue, 25 Jun 2013 19:44:52 +0200
+Message-ID: <51C9D714.4000703@samsung.com>
+References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com>
+ <20130625150649.GA21334@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD6h2NS=AOQ4B6V=TtA120ga9ucF7eBxEguqFK0y4cfpa-F50Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Matt Sealey <neko@bakuhatsu.net>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20130625150649.GA21334@arwen.pp.htv.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Haojian Zhuang (2013-06-25 01:27:58)
-> On 21 June 2013 14:14, Mike Turquette <mturquette@linaro.org> wrote:
-> > Device Tree binding for the basic clock multiplexer, plus the setup
-> > function to register the clock.  Based on the existing fixed-clock
-> > binding.
-> >
-> > Includes minor beautification of clk-provider.h where some whitespace is
-> > added and of_fixed_factor_clock_setup is relocated to maintain a
-> > consistent style.
-> >
-> > Tero Kristo contributed helpful bug fixes to this patch.
-> >
-> > Signed-off-by: Mike Turquette <mturquette@linaro.org>
-> > ---
-> > Changes since v2:
-> > * added hiword-mask property to the binding
-> > * changed bit-shift property from u8 to u32 in the dt binding
-> >
-> > Changes since v1:
-> > * pass shift value into clk_register_mux_table
-> > * s/multiplexor/multiplexer/
-> > * removed debug prints
-> > * mask is u32, shift is u8
-> > * DT property names use dashes instead of underscores
-> > * DT property names are more verbose
-> > * shift property is optional in binding and can be auto-generated from a
-> >   full 32-bit mask
-> >
-> >  .../devicetree/bindings/clock/mux-clock.txt        | 79 ++++++++++++++++++++++
-> >  drivers/clk/clk-mux.c                              | 65 +++++++++++++++++-
-> >  include/linux/clk-provider.h                       |  5 +-
-> >  3 files changed, 147 insertions(+), 2 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/mux-clock.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/mux-clock.txt b/Documentation/devicetree/bindings/clock/mux-clock.txt
-> > new file mode 100644
-> > index 0000000..54cb8d1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/mux-clock.txt
-> > @@ -0,0 +1,79 @@
-> > +Binding for simple mux clock.
-> > +
-> > +This binding uses the common clock binding[1].  It assumes a
-> > +register-mapped multiplexer with multiple input clock signals or
-> > +parents, one of which can be selected as output.  This clock does not
-> > +gate or adjust the parent rate via a divider or multiplier.
-> > +
-> > +By default the "clocks" property lists the parents in the same order
-> > +as they are programmed into the regster.  E.g:
-> > +
-> > +       clocks = <&foo_clock>, <&bar_clock>, <&baz_clock>;
-> > +
-> > +results in programming the register as follows:
-> > +
-> > +register value         selected parent clock
-> > +0                      foo_clock
-> > +1                      bar_clock
-> > +2                      baz_clock
-> > +
-> > +Some clock controller IPs do not allow a value of zero to be programmed
-> > +into the register, instead indexing begins at 1.  The optional property
-> > +"index_one" modified the scheme as follows:
-> > +
-> > +register value         selected clock parent
-> > +1                      foo_clock
-> > +2                      bar_clock
-> > +3                      baz_clock
-> > +
-> > +Additionally an optional table of bit and parent pairs may be supplied
-> > +like so:
-> > +
-> > +       table = <&foo_clock 0x0>, <&bar_clock, 0x2>, <&baz_clock, 0x4>;
-> > +
-> > +where the first value in the pair is the parent clock and the second
-> > +value is the bitfield to be programmed into the register.
-> > +
-> > +The binding must provide the register to control the mux and the mask
-> > +for the corresponding control bits.  Optionally the number of bits to
-> > +shift that mask if necessary.  If the shift value is missing it is the
-> > +same as supplying a zero shift.
-> > +
-> > +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +
-> > +Required properties:
-> > +- compatible : shall be "mux-clock".
-> > +- #clock-cells : from common clock binding; shall be set to 0.
-> > +- clocks : link phandles of parent clocks
-> > +- reg : base address for register controlling adjustable mux
-> > +- bit-mask : arbitrary bitmask for programming the adjustable mux
-> > +
-> > +Optional properties:
-> > +- clock-output-names : From common clock binding.
-> > +- table : array of integer pairs defining parents & bitfield values
-> > +- bit-shift : number of bits to shift the bit-mask, defaults to
-> > +  (ffs(mask) - 1) if not present
-> > +- index-starts-at-one : valid input select programming starts at 1, not
-> > +  zero
-> > +- hiword-mask : lower half of the register programs the mux, upper half
-> > +  of the register indicates bits that were updated in the lower half
-> > +
-> > +Examples:
-> > +       clock: clock@4a008100 {
-> > +               compatible = "mux-clock";
-> > +               #clock-cells = <0>;
-> > +               clocks = <&clock_foo>, <&clock_bar>, <&clock_baz>;
-> > +               reg = <0x4a008100 0x4>
-> > +               mask = <0x3>;
-> > +               index_one;
-> > +       };
-> > +
-> > +       clock: clock@4a008100 {
-> > +               #clock-cells = <0>;
-> > +               compatible = "mux-clock";
-> > +               clocks = <&clock_foo>, <&clock_bar>, <&clock_baz>;
-> > +               reg = <0x4a008100 0x4>;
-> > +               mask = <0x3>;
-> > +               shift = <0>;
-> > +               table = <&clock_foo 1>, <&clock_bar 2>, <&clock_baz 3>;
-> > +       };
-> > diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
-> > index 614444c..4751bce 100644
-> > --- a/drivers/clk/clk-mux.c
-> > +++ b/drivers/clk/clk-mux.c
-> > @@ -1,7 +1,7 @@
-> >  /*
-> >   * Copyright (C) 2011 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
-> >   * Copyright (C) 2011 Richard Zhao, Linaro <richard.zhao@linaro.org>
-> > - * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
-> > + * Copyright (C) 2011-2013 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
-> >   *
-> >   * This program is free software; you can redistribute it and/or modify
-> >   * it under the terms of the GNU General Public License version 2 as
-> > @@ -16,6 +16,8 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/io.h>
-> >  #include <linux/err.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> >
-> >  /*
-> >   * DOC: basic adjustable multiplexer clock that cannot gate
-> > @@ -166,3 +168,64 @@ struct clk *clk_register_mux(struct device *dev, const char *name,
-> >                                       flags, reg, shift, mask, clk_mux_flags,
-> >                                       NULL, lock);
-> >  }
-> > +
-> > +#ifdef CONFIG_OF
-> > +/**
-> > + * of_mux_clk_setup() - Setup function for simple mux rate clock
-> > + */
-> > +void of_mux_clk_setup(struct device_node *node)
-> > +{
-> > +       struct clk *clk;
-> > +       const char *clk_name = node->name;
-> > +       void __iomem *reg;
-> > +       int num_parents;
-> > +       const char **parent_names;
-> > +       int i;
-> > +       u8 clk_mux_flags = 0;
-> > +       u32 mask = 0;
-> > +       u32 shift = 0;
-> > +
-> > +       of_property_read_string(node, "clock-output-names", &clk_name);
-> > +
-> > +       num_parents = of_clk_get_parent_count(node);
-> > +       if (num_parents < 1) {
-> > +               pr_err("%s: mux-clock %s must have parent(s)\n",
-> > +                               __func__, node->name);
-> > +               return;
-> > +       }
-> > +
-> > +       parent_names = kzalloc((sizeof(char*) * num_parents),
-> > +                       GFP_KERNEL);
-> > +
-> > +       for (i = 0; i < num_parents; i++)
-> > +               parent_names[i] = of_clk_get_parent_name(node, i);
-> > +
-> > +       reg = of_iomap(node, 0);
-> 
-> As you mentioned above,  reg : base address for register controlling
-> adjustable mux.
-> 
-> Each clock node has the reg property. It means that we have to
-> allocate one page memory
-> for each register since of_iomap() is used at here. We always have
-> lots of registers with
-> continuous address in SoC, like 0x40a00040, 0x40a00044, .... Then
-> we'll waste too much
-> memory in system.
-> 
-> How about only define common function to parse property? Make register
-> mapping handled
-> by vendor's clock driver.
+Hi Felipe,
 
-This is probably a good idea. It is independent of the binding though.
-The reg property can still be used as described above and however the OS
-interacts with it is an implementation detail that can be sorted out
-later.
+Thanks for the review.
 
-I'll look into your suggestion though, since it could save some memory.
-
-Regards,
-Mike
-
+On 06/25/2013 05:06 PM, Felipe Balbi wrote:
+> On Tue, Jun 25, 2013 at 04:21:46PM +0200, Sylwester Nawrocki wrote:
+>> +enum phy_id {
+>> +	PHY_CSIS0,
+>> +	PHY_DSIM0,
+>> +	PHY_CSIS1,
+>> +	PHY_DSIM1,
+>> +	NUM_PHYS
 > 
-> Regards
-> Haojian
+> please prepend these with EXYNOS_PHY_ or EXYNOS_MIPI_PHY_
+
+OK, will fix that.
+
+>> +struct exynos_video_phy {
+>> +	spinlock_t slock;
+>> +	struct phy *phys[NUM_PHYS];
+> 
+> more than one phy ? This means you should instantiate driver multiple
+> drivers. Each phy id should call probe again.
+
+Why ? This single PHY _provider_ can well handle multiple PHYs.
+I don't see a good reason to further complicate this driver like
+this. Please note that MIPI-CSIS 0 and MIPI DSIM 0 share MMIO
+register, so does MIPI CSIS 1 and MIPI DSIM 1. There are only 2
+registers for those 4 PHYs. I could have the involved object
+multiplied, but it would have been just a waste of resources
+with no difference to the PHY consumers.
+
+>> +static int __set_phy_state(struct exynos_video_phy *state,
+>> +				enum phy_id id, unsigned int on)
+>> +{
+>> +	void __iomem *addr;
+>> +	unsigned long flags;
+>> +	u32 reg, reset;
+>> +
+>> +	if (WARN_ON(id > NUM_PHYS))
+>> +		return -EINVAL;
+> 
+> you don't want to do this, actually. It'll bug you everytime you want to
+> add another phy ID :-)
+
+If there is an SoC with more PHYs enum phy_id would be extended, and this
+part would not need to be touched. OTOH @id cannot be normally greater
+than NUM_PHYS. I think I'll drop that then.
+
+>> +	addr = state->regs + EXYNOS_MIPI_PHY_CONTROL(id / 2);
+>> +
+>> +	if (id == PHY_DSIM0 || id == PHY_DSIM1)
+>> +		reset = EXYNOS_MIPI_PHY_MRESETN;
+>> +	else
+>> +		reset = EXYNOS_MIPI_PHY_SRESETN;
+>> +
+>> +	spin_lock_irqsave(&state->slock, flags);
+>> +	reg = readl(addr);
+>> +	if (on)
+>> +		reg |= reset;
+>> +	else
+>> +		reg &= ~reset;
+>> +	writel(reg, addr);
+>> +
+>> +	/* Clear ENABLE bit only if MRESETN, SRESETN bits are not set. */
+>> +	if (on)
+>> +		reg |= EXYNOS_MIPI_PHY_ENABLE;
+>> +	else if (!(reg & EXYNOS_MIPI_PHY_RESET_MASK))
+>> +		reg &= ~EXYNOS_MIPI_PHY_ENABLE;
+>> +
+>> +	writel(reg, addr);
+>> +	spin_unlock_irqrestore(&state->slock, flags);
+>> +
+>> +	pr_debug("%s(): id: %d, on: %d, addr: %#x, base: %#x\n",
+>> +		 __func__, id, on, (u32)addr, (u32)state->regs);
+> 
+> use dev_dbg() instead.
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int exynos_video_phy_power_on(struct phy *phy)
+>> +{
+>> +	struct exynos_video_phy *state = dev_get_drvdata(&phy->dev);
+> 
+> looks like we should have phy_get_drvdata() helper :-) Kishon ?
+
+Indeed, that might be useful.
+
+>> +static struct phy *exynos_video_phy_xlate(struct device *dev,
+>> +					struct of_phandle_args *args)
+>> +{
+>> +	struct exynos_video_phy *state = dev_get_drvdata(dev);
+>> +
+>> +	if (WARN_ON(args->args[0] > NUM_PHYS))
+>> +		return NULL;
+> 
+> please remove this check.
+
+args->args[0] comes from DT as the PHY id and there is nothing
+preventing it from being greater or equal to the state->phys[]
+array length, unless I'm missing something. Actually it should
+have been 'if (args->args[0] >= NUM_PHYS)'.
+
+>> +	return state->phys[args->args[0]];
+> 
+> and your xlate is 'wrong'.
+
+What exactly is wrong here ?
+
+>> +}
+>> +
+>> +static struct phy_ops exynos_video_phy_ops = {
+>> +	.power_on	= exynos_video_phy_power_on,
+>> +	.power_off	= exynos_video_phy_power_off,
+>> +	.owner		= THIS_MODULE,
+>> +};
+>> +
+>> +static int exynos_video_phy_probe(struct platform_device *pdev)
+>> +{
+>> +	struct exynos_video_phy *state;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct resource *res;
+>> +	struct phy_provider *phy_provider;
+>> +	int i;
+>> +
+>> +	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
+>> +	if (!state)
+>> +		return -ENOMEM;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +
+>> +	state->regs = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(state->regs))
+>> +		return PTR_ERR(state->regs);
+>> +
+>> +	dev_set_drvdata(dev, state);
+> 
+> you can use platform_set_drvdata(pdev, state);
+
+I had it in the previous version, but changed for symmetry with
+dev_set_drvdata(). I guess those could be replaced with
+phy_{get, set}_drvdata as you suggested.
+
+> same thing though, no strong feelings.
+> 
+>> +	phy_provider = devm_of_phy_provider_register(dev,
+>> +					exynos_video_phy_xlate);
+>> +	if (IS_ERR(phy_provider))
+>> +		return PTR_ERR(phy_provider);
+>> +
+>> +	for (i = 0; i < NUM_PHYS; i++) {
+>> +		char label[8];
+>> +
+>> +		snprintf(label, sizeof(label), "%s.%d",
+>> +				i == PHY_DSIM0 || i == PHY_DSIM1 ?
+>> +				"dsim" : "csis", i / 2);
+>> +
+>> +		state->phys[i] = devm_phy_create(dev, i, &exynos_video_phy_ops,
+>> +								label, state);
+>> +		if (IS_ERR(state->phys[i])) {
+>> +			dev_err(dev, "failed to create PHY %s\n", label);
+>> +			return PTR_ERR(state->phys[i]);
+>> +		}
+>> +	}
+> 
+> this really doesn't look correct to me. It looks like you have multiple
+> PHYs, one for each ID. So your probe should be called for each PHY ID
+> and you have several phy_providers too.
+
+Yes, multiple PHY objects, but a single provider. There is no need
+whatsoever for multiple PHY providers.
+
+>> +static const struct of_device_id exynos_video_phy_of_match[] = {
+>> +	{ .compatible = "samsung,s5pv210-mipi-video-phy" },
+> 
+> and this should contain all PHY IDs:
+> 
+> 	{ .compatible = "samsung,s5pv210-mipi-video-dsim0-phy",
+> 		.data = (const void *) DSIM0, },
+> 	{ .compatible = "samsung,s5pv210-mipi-video-dsim1-phy",
+> 		.data = (const void *) DSIM1, },
+> 	{ .compatible = "samsung,s5pv210-mipi-video-csi0-phy"
+> 		.data = (const void *) CSI0, },
+> 	{ .compatible = "samsung,s5pv210-mipi-video-csi1-phy"
+> 		.data = (const void *) CSI1, },
+> 
+> then on your probe you can fetch that data field and use it as phy->id.
+
+This looks wrong to me, it doesn't look like a right usage of 'compatible'
+property. MIPI-CSIS0/MIPI-DSIM0, MIPI-CSIS1/MIPI-DSIM1 are identical pairs,
+so one compatible property would need to be used for them. We don't use
+different compatible strings for different instances of same device.
+And MIPI DSIM and MIPI CSIS share one MMIO register, so they need to be
+handled by one provider, to synchronize accesses. That's one of the main
+reasons I turned to the generic PHY framework for those devices.
+
+>> +static struct platform_driver exynos_video_phy_driver = {
+>> +	.probe	= exynos_video_phy_probe,
+> 
+> you *must* provide a remove method. drivers with NULL remove are
+> non-removable :-)
+
+Oops, my bad. I've forgotten to update this, after enabling build
+as module. Will update and test that. It will be an empty callback
+though.
+
+
+Thanks,
+Sylwester
