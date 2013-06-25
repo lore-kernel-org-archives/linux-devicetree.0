@@ -1,78 +1,88 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH 3/4] pinctrl: remove slew-rate parameter from tz1090
-Date: Tue, 25 Jun 2013 14:05:05 +0100
-Message-ID: <51C99581.2010403@imgtec.com>
-References: <201306251455.01540.heiko@sntech.de> <201306251456.36499.heiko@sntech.de>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
+Date: Tue, 25 Jun 2013 16:07:49 +0300
+Message-ID: <20130625130749.GD20439@arwen.pp.htv.fi>
+References: <1372149330-24335-1-git-send-email-coelho@ti.com>
+ <20130625111234.GJ15407@arwen.pp.htv.fi>
+ <1372161370.18889.13.camel@cumari.coelho.fi>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306251456.36499.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zbGR4y+acU1DwHSi"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372161370.18889.13.camel@cumari.coelho.fi>
+Sender: linux-omap-owner@vger.kernel.org
+To: Luciano Coelho <coelho@ti.com>
+Cc: balbi@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+--zbGR4y+acU1DwHSi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 25/06/13 13:56, Heiko St=C3=BCbner wrote:
-> As the binding for slew-rate is under discussion and seems to need
-> more tought it will get removed for now, so it doesn't get an offical
-
-s/tought/thought/
-s/offical/official/
-
-> release.
+On Tue, Jun 25, 2013 at 02:56:10PM +0300, Luciano Coelho wrote:
+> On Tue, 2013-06-25 at 14:12 +0300, Felipe Balbi wrote:
+> > On Tue, Jun 25, 2013 at 11:35:30AM +0300, Luciano Coelho wrote:
+> > > +- tcxoclock: the internal WLAN TCXO clock frequency (required for
+> > > +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
+> > > +  following:
+> > > +	0 =3D 19.200 MHz
+> > > +	1 =3D 26.000 MHz
+> > > +	2 =3D 38.400 MHz
+> > > +	3 =3D 52.000 MHz
+> > > +	4 =3D 16.368 MHz
+> > > +	5 =3D 32.736 MHz
+> > > +	6 =3D 16.800 MHz
+> > > +	7 =3D 33.600 MHz
+> >=20
+> > DTS files are pre-processed, so you could add defines in a header and
+> > share the header between DTS and driver. Could help you having:
+> >=20
+> > tcxoclock =3D WILINK_19_200MHz;
+> >=20
+> > instead of
+> >=20
+> > tcxoclock =3D 0;
 >=20
-> Therefore remove it again from the only current user, tz1090.
+> I don't see any .dts file really doing this.  There are some imx*.dtsi
+> files that include imx*.h files, but I don't see these headers being
+> included in any source code file.
 >=20
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> ---
-
-<snip>
-
-> diff --git a/drivers/pinctrl/pinctrl-tz1090-pdc.c b/drivers/pinctrl/p=
-inctrl-tz1090-pdc.c
-> index 12e4808..d4f12cc 100644
-> --- a/drivers/pinctrl/pinctrl-tz1090-pdc.c
-> +++ b/drivers/pinctrl/pinctrl-tz1090-pdc.c
-> @@ -809,11 +809,6 @@ static int tz1090_pdc_pinconf_group_reg(struct p=
-inctrl_dev *pctldev,
->  		*width =3D 1;
->  		*map =3D tz1090_pdc_boolean_map;
->  		break;
-> -	case PIN_CONFIG_SLEW_RATE:
-> -		*shift =3D REG_GPIO_CONTROL2_PDC_SR_S;
-> -		*width =3D 1;
-> -		*map =3D tz1090_pdc_boolean_map;
-> -		break;
->  	case PIN_CONFIG_DRIVE_STRENGTH:
->  		*shift =3D REG_GPIO_CONTROL2_PDC_DR_S;
->  		*width =3D 2;
-> diff --git a/drivers/pinctrl/pinctrl-tz1090.c b/drivers/pinctrl/pinct=
-rl-tz1090.c
-> index 02ff3a2..4edae08 100644
-> --- a/drivers/pinctrl/pinctrl-tz1090.c
-> +++ b/drivers/pinctrl/pinctrl-tz1090.c
-> @@ -1834,11 +1834,6 @@ static int tz1090_pinconf_group_reg(struct pin=
-ctrl_dev *pctldev,
->  		*width =3D 1;
->  		*map =3D tz1090_boolean_map;
->  		break;
-> -	case PIN_CONFIG_SLEW_RATE:
-> -		*reg =3D REG_PINCTRL_SR;
-> -		*width =3D 1;
-> -		*map =3D tz1090_boolean_map;
-> -		break;
->  	case PIN_CONFIG_DRIVE_STRENGTH:
->  		*reg =3D REG_PINCTRL_DR;
->  		*width =3D 2;
+> In fact, we already have all these values defined in
+> include/linux/wl12xx.h, so it could be nice to reuse.  But the
+> cross-directory includes would look "funny".  And I think it's a bit
+> overkill.
 >=20
+> These values are actually used by the firmware itself, not only the
+> driver, so they are also platform independent and not related to the OS.
 
-I don't see the harm in keeping the handling of PIN_CONFIG_SLEW_RATE,
-since PIN_CONFIG_SLEW_RATE is still present and you only seem to be
-removing the device tree bindings (which is the only important bit from
-the DT ABI point of view).
+fair enough, then there's no chance they'll change all of a sudden.
 
-Cheers
-James
+--=20
+balbi
+
+--zbGR4y+acU1DwHSi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRyZYlAAoJEIaOsuA1yqREXv4QAJQRZgQEp8AuANEzstQimGI/
+ck4ADV8V68nQMGI54PZJU31+rahn7sqp28rHGpQyp7K1AS3cZcDSsF45JgMb/7fx
+qWwIh4wUiw+Tfv0VwrSmRAMaDMcyrtA8lo80YFn4N2j2BL4OCfy+cF9H88cp87ow
+m/2WUrH9THWX1l3dhwzIZKY/IFo1wfaaxis8oQNCmESrTrVPCzT3Og0qsd5EqcI+
+nGSuidU7tOVDEZCLZVWtQKTUOeaxUxWNYAG6J8OfYz/RUtkzl1sNPsvLbM0mCkad
+DLasnzyJuC9LMhwnQpXxge6nkUvxmdFiTo4kdPqJ+U6PBtzsMC3XKmkvl7tVRx6D
+OdbCMcQK0jzjZB2K5sTsMGUQLDyp3UdqLcuQZFpDu4RV0Px4vAnKFEfr+M+i28NF
+DTPrzljtRuBUCJ7eHdyQZf4H3r2m0ai5mpbJW3ZG81is78QNwxG+GDItmltFmCnt
+yBppoNV7f7Uy8VbknMMHXvMRk9WHfce6S9hlnuEebU3YhP0du3iGtrVFOWdM8MtQ
+OszkpMQ1ue7LzKa/G31gQc+9Zq5tE40HkSboz5LVlfa9c2mKoI+yF9tXflrS8Yy+
+9OT5uiHiKZ86u7rQmat8yAWrb5+pXAxO6jWyXNW0EGExdCBT+v+EpL4L+URX2Qgi
+elgfMVdYh1R1K5aAvjMN
+=9n0b
+-----END PGP SIGNATURE-----
+
+--zbGR4y+acU1DwHSi--
