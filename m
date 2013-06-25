@@ -1,116 +1,46 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/4] usb: gadget: s3c-hsotg: Allow driver instantiation using
- device tree
-Date: Tue, 25 Jun 2013 17:38:23 +0200
-Message-ID: <1372174706-5459-2-git-send-email-t.figa@samsung.com>
-References: <1372174706-5459-1-git-send-email-t.figa@samsung.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/2] Make non-linear GPIO ranges accesible from gpiolib
+Date: Tue, 25 Jun 2013 09:39:23 -0600
+Message-ID: <51C9B9AB.2010403@wwwdotorg.org>
+References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com> <1371128132-18266-2-git-send-email-christian.ruppert@abilis.com> <51BA3BC1.3090109@wwwdotorg.org> <20130614091241.GA23745@ab42.lan> <51C1F42E.5090107@wwwdotorg.org> <51C1F82C.4020502@wwwdotorg.org> <20130620115710.GB942@ab42.lan> <51C4C2ED.5090505@wwwdotorg.org> <CACRpkdZQ=G=K6g25gwGKfS1dCrDS35XepaOs38N-ymEuR0+x=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1372174706-5459-1-git-send-email-t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZQ=G=K6g25gwGKfS1dCrDS35XepaOs38N-ymEuR0+x=g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Christian Ruppert <christian.ruppert@abilis.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds OF match table to the driver to allow instantiating it
-using device tree.
+On 06/25/2013 09:28 AM, Linus Walleij wrote:
+> On Fri, Jun 21, 2013 at 11:17 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> 
+>> And finally, I don't really like using pin groups for the purpose of
+>> defining these mappings, since I intended them to purely represent the
+>> mapping from register fields to the set of affected pins. However, I can
+>> see an argument for doing this, since the pin groups are in fact still
+>> representing /some/ aspect of the pinctrl internal HW.
+> 
+> The groups concept was part of the first pinctrl commit
+> 2744e8afb3b76343e7eb8197e8b3e085036010a5
+> and there the intention was clearly just to define a discrete
+> set of pins.
+> 
+> And some drivers use it like this still, with no connection to
+> physical registers, i.MX come to mind.
+> 
+> But I do seem to recall some endless discussions about this,
+> I think we need to agree to disagree.
 
-Signed-off-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/usb/samsung-hsotg.txt      | 40 ++++++++++++++++++++++
- drivers/usb/gadget/s3c-hsotg.c                     | 10 ++++++
- 2 files changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/samsung-hsotg.txt
+But the whole point of a subsystem is to provide clear common semantics
+across all the different drivers that comprise it. IMHO, it's a great
+failing of pinctrl that it doesn't clearly define its data model at all,
+and just leaves individual driver authors to use groups in whatever
+random fashion they want. We really should have different entries in the
+pinctrl data model for these different concepts (real HW groups, and
+logical/virtual/SW groups) since they're entirely different things with
+different semantics.
 
-diff --git a/Documentation/devicetree/bindings/usb/samsung-hsotg.txt b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
-new file mode 100644
-index 0000000..b83d428
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/samsung-hsotg.txt
-@@ -0,0 +1,40 @@
-+Samsung High Speed USB OTG controller
-+-----------------------------
-+
-+The Samsung HSOTG IP can be found on Samsung SoCs, from S3C6400 onwards.
-+It gives functionality of OTG-compliant USB 2.0 host and device with
-+support for USB 2.0 high-speed (480Mbps) and full-speed (12 Mbps)
-+operation.
-+
-+Currently only device mode is supported.
-+
-+Binding details
-+-----
-+
-+Required properties:
-+- compatible: "samsung,s3c6400-hsotg" should be used for all currently
-+    supported SoC,
-+- interrupt-parent: phandle for the interrupt controller to which the
-+    interrupt signal of the HSOTG block is routed,
-+- interrupts: specifier of interrupt signal of interrupt controller,
-+    according to bindings of interrupt controller,
-+- clocks: contains an array of clock specifiers:
-+    - first entry: OTG clock
-+- clock-names: contains array of clock names:
-+    - first entry: must be "otg"
-+- vusb_d-supply: phandle to voltage regulator of digital section,
-+- vusb_a-supply: phandle to voltage regulator of analog section.
-+
-+Example
-+-----
-+
-+	hsotg@12480000 {
-+		compatible = "samsung,s3c6400-hsotg";
-+		reg = <0x12480000 0x20000>;
-+		interrupts = <0 71 0>;
-+		clocks = <&clock 305>;
-+		clock-names = "otg";
-+		vusb_d-supply = <&vusb_reg>;
-+		vusb_a-supply = <&vusbdac_reg>;
-+	};
-+
-diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index af22f24..616ed51 100644
---- a/drivers/usb/gadget/s3c-hsotg.c
-+++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -29,6 +29,7 @@
- #include <linux/slab.h>
- #include <linux/clk.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/of_platform.h>
- 
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
-@@ -3648,10 +3649,19 @@ static int s3c_hsotg_remove(struct platform_device *pdev)
- #define s3c_hsotg_resume NULL
- #endif
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id s3c_hsotg_of_ids[] = {
-+	{ .compatible = "samsung,s3c6400-hsotg", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, s3c_hsotg_of_ids);
-+#endif
-+
- static struct platform_driver s3c_hsotg_driver = {
- 	.driver		= {
- 		.name	= "s3c-hsotg",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(s3c_hsotg_of_ids),
- 	},
- 	.probe		= s3c_hsotg_probe,
- 	.remove		= s3c_hsotg_remove,
--- 
-1.8.2.1
+Perhaps it's simplest if I just step out of pinctrl and let it exist as
+it is.
