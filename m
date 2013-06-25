@@ -1,49 +1,158 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/4] usb: gadget: s3c-hsotg: Allow driver instantiation using device tree
-Date: Tue, 25 Jun 2013 23:05:06 +0200
-Message-ID: <1543279.BFn8pxUra6@flatron>
-References: <1372174706-5459-1-git-send-email-t.figa@samsung.com> <5782443.xpFZv1Saq0@flatron> <20130625210044.GD9748@arwen.pp.htv.fi>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v6] clocksource:arm_global_timer: Add ARM global timer
+ support.
+Date: Tue, 25 Jun 2013 14:14:43 -0700
+Message-ID: <96d7573f-0991-4bda-8f4e-d1f36b743f95@VA3EHSMHS021.ehs.local>
+References: <1372152678-29530-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130625210044.GD9748@arwen.pp.htv.fi>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Tomasz Figa <t.figa@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene.kim@samsung.com>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, m.szyprowski@samsung.com, l.majewski@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>, Paul Zimmerman <paul.zimmerman@synopsys.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372152678-29530-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Stuart Menefy <stuart.menefy@st.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robherring2@gmail.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 26 of June 2013 00:00:44 Felipe Balbi wrote:
-> On Tue, Jun 25, 2013 at 10:57:06PM +0200, Tomasz Figa wrote:
-> > On Tuesday 25 of June 2013 23:46:32 Felipe Balbi wrote:
-> > > On Tue, Jun 25, 2013 at 05:38:23PM +0200, Tomasz Figa wrote:
-> > > > This patch adds OF match table to the driver to allow
-> > > > instantiating it
-> > > > using device tree.
-> > > > 
-> > > > Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-> > > > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> > > 
-> > > when will this driver get merged into dwc2 ?
-> > 
-> > What's dwc2? I can only see dwc3 in mainline kernel tree and it
-> > doesn't
-> > seem to be compatible with s3c-hsotg.
-> 
-> drivers/staging/dwc2/
+Hi Srinivas,
 
-Oh right, staging, I forgot to check there.
+On Tue, Jun 25, 2013 at 10:31:18AM +0100, Srinivas KANDAGATLA wrote:
+> From: Stuart Menefy <stuart.menefy@st.com>
+>=20
+> This is a simple driver for the global timer module found in the Cort=
+ex
+> A9-MP cores from revision r1p0 onwards. This should be able to perfor=
+m
+> the functions of the system timer and the local timer in an SMP syste=
+m.
+>=20
+> The global timer has the following features:
+>     The global timer is a 64-bit incrementing counter with an
+> auto-incrementing feature. It continues incrementing after sending
+> interrupts. The global timer is memory mapped in the private memory
+> region.
+>     The global timer is accessible to all Cortex-A9 processors in the
+> cluster. Each Cortex-A9 processor has a private 64-bit comparator tha=
+t
+> is used to assert a private interrupt when the global timer has reach=
+ed
+> the comparator value. All the Cortex-A9 processors in a design use th=
+e
+> banked ID, ID27, for this interrupt. ID27 is sent to the Interrupt
+> Controller as a Private Peripheral Interrupt. The global timer is
+> clocked by PERIPHCLK.
+>=20
+> Signed-off-by: Stuart Menefy <stuart.menefy@st.com>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> CC: Arnd Bergmann <arnd@arndb.de>
+> CC: Rob Herring <robherring2@gmail.com>
+> CC: Linus Walleij <linus.walleij@linaro.org>
+> CC: Will Deacon <will.deacon@arm.com>
+> ---
+>=20
+> Thankyou for reveiwing the v5 patch.
+> This patch is split out of the orignal 10 patches submitted for Stixx=
+xx SOC
+> support to arm-kernel mailing list. This patch has undergone few cycl=
+es of
+> reviews in arm-kernel mailing list.
+>=20
+> This patch is generated on top of timers/core branch.
+>=20
+> Arnd already picked up SOC support patches [4-10] and merged them via=
+ arm-soc
+> tree for 3.11.
+>=20
+> If its not too late can this patch be considered for 3.11 via clockso=
+urce tree?
+> This patch has no build dependencies.
+>=20
+> Thanks,
+> srini
+>=20
+> Changes since v5:
+> 	- moved to using cpu notifiers as suggested by Stephen Boyd.
+> 	- removed un-necessary headers as suggested by Stephen Boyd.
+> 	- patch rebased on top of timers/core.
+>=20
+> Changes since v4:
+> 	All the comments are from Thomas G.
+> 	- disabled irq and comp enable bits while setting one-shot mode.
+> 	- remove double pointer usage of clock_event_device structure.
+> 	- remove spaces from device name.
+> 	- remove few un-necessary comments.
+> 	- Fix error checks and error case handling in global_timer_of_regist=
+er
+>=20
+> Changes since v3:
+> 	- Arnd suggested to replaced all __raw_readl/__raw_writel with
+> 	readl/writel or readl_relaxed/writel_relaxed(for optimized path)
+> 	as __raw* apis are not Endian safe.
+>=20
+> Changes since v2:
+> 	- cleaned up arm-global-timer code for non-dt as suggested by Linus =
+W and
+> 	- fixed minmum clock tick setting pointed by Linus W.
+>=20
+> Changes since RFC:
+> 	Most of the comments are suggested by Linus W.
+> 	- moved to drivers/clocksource.
+> 	- added revision check in driver.
+> 	- removed unused header file.
+> 	- moved to u64 from union gt_counter
+> 	- comments added in get_counter
+> 	- removed leftover debug code.
+> 	- moved code to use __raw_readl/writel.
+> 	- used DIV_ROUND_CLOSEST
+> 	- added check in interrupt handler.
+> 	- expanded CE and CS acronyms usage.
+> 	- Fixed minimum clock ticks value.
+> 	- move to use clocksource_register_hz
+> 	- added arch sched_clock support.
+> 	- added ERRATA 740657 workaround.
+>=20
+>  .../devicetree/bindings/arm/global_timer.txt       |   21 ++
+>  drivers/clocksource/Kconfig                        |   13 +
+>  drivers/clocksource/Makefile                       |    1 +
+>  drivers/clocksource/arm_global_timer.c             |  325 ++++++++++=
+++++++++++
+>  4 files changed, 360 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/global_time=
+r.txt
+>  create mode 100644 drivers/clocksource/arm_global_timer.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/global_timer.txt b=
+/Documentation/devicetree/bindings/arm/global_timer.txt
+> new file mode 100644
+> index 0000000..b64abac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/global_timer.txt
+> @@ -0,0 +1,21 @@
+> +
+> +* ARM Global Timer
+> +	Cortex-A9 are often associated with a per-core Global timer.
+> +
+> +** Timer node required properties:
+> +
+> +- compatible : Should be "arm,cortex-a9-global-timer"
+> +		Driver supports versions r2p0 and above.
+> +
+> +- interrupts : One interrupt to each core
+> +
+> +- reg : Specify the base address and the size of the GT timer
+> +	register window.
+> +
+> +Example:
+> +
+> +	timer@2c000600 {
+> +		compatible =3D "arm,cortex-a9-global-timer";
+> +		reg =3D <0x2c000600 0x20>;
+> +		interrupts =3D <1 13 0xf01>;
+> +	};
+Isn't a 'clocks' entry missing here?
 
-> That's the same IP you're using Paul Zimmerman (now in Cc) is working
-> towards getting that out of staging. It currently has only host mode, so
-> plugging your code in there shouldn't be too difficult.
-> 
-> OTOH, it might be better to make your code a device-only version of dwc2
-> (drivers/usb/dwc2) and have Paul move his host side to that instead.
+	S=C3=B6ren
 
-Hmm, I believe Lukasz Majewski and Marek Szyprowski (both on CC) should be 
-able to say something more on this topic as I'm not really into USB 
-drivers and just doing Device Tree enablement here.
 
-Best regards,
-Tomasz
