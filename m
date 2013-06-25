@@ -1,55 +1,49 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
-Date: Tue, 25 Jun 2013 23:47:13 +0200
-Message-ID: <51CA0FE1.9090107@gmail.com>
-References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com> <20130625150649.GA21334@arwen.pp.htv.fi> <51C9D714.4000703@samsung.com> <20130625205452.GC9748@arwen.pp.htv.fi>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH -next] pwm: samsung: fix return value check in
+ pwm_samsung_probe()
+Date: Wed, 26 Jun 2013 06:55:18 +0800
+Message-ID: <CAPgLHd8g2ChKSfyGUkFWBB-Z_6At2awyMAMRvA1fTvmCmeea+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20130625205452.GC9748@arwen.pp.htv.fi>
-Sender: linux-media-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-On 06/25/2013 10:54 PM, Felipe Balbi wrote:
->>>> +static int exynos_video_phy_probe(struct platform_device *pdev)
->>>> >  >>  +{
->>>> >  >>  +	struct exynos_video_phy *state;
->>>> >  >>  +	struct device *dev =&pdev->dev;
->>>> >  >>  +	struct resource *res;
->>>> >  >>  +	struct phy_provider *phy_provider;
->>>> >  >>  +	int i;
->>>> >  >>  +
->>>> >  >>  +	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
->>>> >  >>  +	if (!state)
->>>> >  >>  +		return -ENOMEM;
->>>> >  >>  +
->>>> >  >>  +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> >  >>  +
->>>> >  >>  +	state->regs = devm_ioremap_resource(dev, res);
->>>> >  >>  +	if (IS_ERR(state->regs))
->>>> >  >>  +		return PTR_ERR(state->regs);
->>>> >  >>  +
->>>> >  >>  +	dev_set_drvdata(dev, state);
->>> >  >
->>> >  >  you can use platform_set_drvdata(pdev, state);
->> >
->> >  I had it in the previous version, but changed for symmetry with
->> >  dev_set_drvdata(). I guess those could be replaced with
->> >  phy_{get, set}_drvdata as you suggested.
->
-> hmm, you do need to set the drvdata() to the phy object, but also to the
-> pdev object (should you need it on a suspend/resume callback, for
-> instance). Those are separate struct device instances.
+In case of error, the function devm_ioremap_resource() returns ERR_PTR()
+and never returns NULL. The NULL test in the return value check should
+be replaced with IS_ERR().
 
-Indeed, I somehow confused phy->dev with with phy->dev.parent. I'm going
-to just drop the above call, since the pdev drvdata is currently not
-referenced anywhere.
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+---
+ drivers/pwm/pwm-samsung.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-Thanks,
-Sylwester
+diff --git a/drivers/pwm/pwm-samsung.c b/drivers/pwm/pwm-samsung.c
+index 2eb5439..6689c55 100644
+--- a/drivers/pwm/pwm-samsung.c
++++ b/drivers/pwm/pwm-samsung.c
+@@ -482,8 +482,8 @@ static int pwm_samsung_probe(struct platform_device *pdev)
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	chip->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (!chip->base)
+-		return -ENOMEM;
++	if (IS_ERR(chip->base))
++		return PTR_ERR(chip->base);
+ 
+ 	chip->base_clk = devm_clk_get(&pdev->dev, "timers");
+ 	if (IS_ERR(chip->base_clk)) {
