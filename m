@@ -1,14 +1,16 @@
 From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
-Date: Tue, 25 Jun 2013 15:58:43 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1306251551020.4013@ionos.tec.linutronix.de>
-References: <20130530211944.05F4D3E0A90@localhost>
- <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com>
+Subject: Re: [PATCH v6] clocksource:arm_global_timer: Add ARM global timer
+ support.
+Date: Tue, 25 Jun 2013 16:00:25 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1306251559160.4013@ionos.tec.linutronix.de>
+References: <1372152678-29530-1-git-send-email-srinivas.kandagatla@st.com>
+ <alpine.DEB.2.02.1306251459160.4013@ionos.tec.linutronix.de>
+ <51C99E33.4070009@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370014348-21121-1-git-send-email-christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <51C99E33.4070009-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,38 +21,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Cc: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 31 May 2013, Christian Ruppert wrote:
-> The SOC interrupt controller driver for the Abilis Systems TB10x series of
-> SOCs based on ARC700 CPUs.
+On Tue, 25 Jun 2013, Srinivas KANDAGATLA wrote:
+> On 25/06/13 14:17, Thomas Gleixner wrote:
+> > On Tue, 25 Jun 2013, Srinivas KANDAGATLA wrote:
+> >> +static void gt_compare_set(unsigned long delta, int periodic)
+> >> +{
+> >> +	u64 counter = gt_counter_read();
+> >> +	unsigned long ctrl = readl(gt_base + GT_CONTROL);
+> > 
+> > Why are you reading the control register back over and over? All you
+> > need to preserve is the GT_CONTROL_TIMER_ENABLE bit. So you can spare
+> > that read out and just do
+> > 
+> > 	ctrl = GT_CONTROL_TIMER_ENABLE;
+> > 	writel(ctrl, gt_base + GT_CONTROL);
 > 
-> This patch depends on commits eb76bdd407d8a90e59a06cb0158886df390e5d1c and
-> 712bc93df9e7f14b8a163148d2aa7c778e151627 from branch irq/for-arm of
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git.
+> Logically you are right we could do as you suggested, However its not
+> implicit that which bits are going to be cleared. Its more to do with
+> readability of the code.
+> If you still insist I can change it.
 
-This should go below --- as it is not part of the changelog.
- 
-> Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-
-Why is Pierrick in the SOB chain? 
-
-> ---
->  .../interrupt-controller/abilis,tb10x-ictl.txt     |   38 ++++
->  arch/arc/boot/dts/abilis_tb100.dtsi                |   32 ++--
->  arch/arc/boot/dts/abilis_tb101.dtsi                |   32 ++--
->  arch/arc/boot/dts/abilis_tb10x.dtsi                |   32 ++--
->  arch/arc/plat-tb10x/Kconfig                        |    1 +
->  drivers/irqchip/Kconfig                            |    5 +
->  drivers/irqchip/Makefile                           |    1 +
->  drivers/irqchip/irq-tb10x.c                        |  195 ++++++++++++++++++++
-
-I can pick it up, but I'm not so fond of carrying arch/arc patches
-which might conflict with other stuff in the arc tree. Veenet, if I
-should pick the whole thing up, I'd like to have an acked-by at least.
+I'm not insisting. I just pointed out, that you can save cycles in a
+hotpath. :)
 
 Thanks,
 
