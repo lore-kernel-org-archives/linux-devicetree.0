@@ -1,125 +1,114 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
-Date: Tue, 25 Jun 2013 20:05:31 +0200
-Message-ID: <3490805.zE8M3ZYxso@flatron>
-References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com> <20130625150649.GA21334@arwen.pp.htv.fi> <51C9D714.4000703@samsung.com>
+From: Stuart Yoder <b08248-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 7/9] documentation: iommu: add description of ARM System
+	MMU binding
+Date: Tue, 25 Jun 2013 14:18:19 -0500
+Message-ID: <CALRxmdBxFWoRKv+bUu8VEwNNcAJUej9jM2V8N0rrqrr_Vpe8fQ@mail.gmail.com>
+References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
+	<1370889285-22799-8-git-send-email-will.deacon@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51C9D714.4000703@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, balbi@ti.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1370889285-22799-8-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org Discuss" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester, Felipe,
+On Mon, Jun 10, 2013 at 1:34 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> This patch adds a description of the device tree binding for the ARM
+> System MMU architecture.
+>
+> Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iommu/arm,smmu.txt         | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> new file mode 100644
+> index 0000000..e34c6cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -0,0 +1,70 @@
+> +* ARM System MMU Architecture Implementation
+> +
+> +ARM SoCs may contain an implementation of the ARM System Memory
+> +Management Unit Architecture, which can be used to provide 1 or 2 stages
+> +of address translation to bus masters external to the CPU.
+> +
+> +The SMMU may also raise interrupts in response to various fault
+> +conditions.
+> +
+> +** System MMU required properties:
+> +
+> +- compatible    : Should be one of:
+> +
+> +                        "arm,smmu-v1"
+> +                        "arm,smmu-v2"
+> +                        "arm,mmu-400"
+> +                        "arm,mmu-500"
+> +
+> +                  depending on the particular implementation and/or the
+> +                  version of the architecture implemented.
+> +
+> +- reg           : Base address and size of the SMMU.
+> +
+> +- #global-interrupts : The number of global interrupts exposed by the
+> +                       device.
+> +
+> +- interrupts    : Interrupt list, with the first #global-irqs entries
+> +                  corresponding to the global interrupts
 
-On Tuesday 25 of June 2013 19:44:52 Sylwester Nawrocki wrote:
-> Hi Felipe,
-> 
-> Thanks for the review.
-> 
-> On 06/25/2013 05:06 PM, Felipe Balbi wrote:
-> > On Tue, Jun 25, 2013 at 04:21:46PM +0200, Sylwester Nawrocki wrote:
-> >> +enum phy_id {
-> >> +	PHY_CSIS0,
-> >> +	PHY_DSIM0,
-> >> +	PHY_CSIS1,
-> >> +	PHY_DSIM1,
-> >> +	NUM_PHYS
-> > 
-> > please prepend these with EXYNOS_PHY_ or EXYNOS_MIPI_PHY_
-> 
-> OK, will fix that.
-> 
-> >> +struct exynos_video_phy {
-> >> +	spinlock_t slock;
-> >> +	struct phy *phys[NUM_PHYS];
-> > 
-> > more than one phy ? This means you should instantiate driver multiple
-> > drivers. Each phy id should call probe again.
-> 
-> Why ? This single PHY _provider_ can well handle multiple PHYs.
-> I don't see a good reason to further complicate this driver like
-> this. Please note that MIPI-CSIS 0 and MIPI DSIM 0 share MMIO
-> register, so does MIPI CSIS 1 and MIPI DSIM 1. There are only 2
-> registers for those 4 PHYs. I could have the involved object
-> multiplied, but it would have been just a waste of resources
-> with no difference to the PHY consumers.
+It seems like we don't have enough information here.   It's not enough
+for the OS to know that there are 2, 4, etc global interrupts, no?  It needs
+to know which hardware interrupt each corresponds to.   That kind of
+stuff is normally defined in the device binding.
 
-IMHO one driver instance should represent one instance of IP block. Since 
-this is a single IP block containing multiple PHYs with shared control 
-interface, I think Sylwester did the right thing.
+What is it that determines the number of global interrupts?
 
-[snip]
-> >> +static struct phy *exynos_video_phy_xlate(struct device *dev,
-> >> +					struct of_phandle_args *args)
-> >> +{
-> >> +	struct exynos_video_phy *state = dev_get_drvdata(dev);
-> >> +
-> >> +	if (WARN_ON(args->args[0] > NUM_PHYS))
-> >> +		return NULL;
-> > 
-> > please remove this check.
-> 
-> args->args[0] comes from DT as the PHY id and there is nothing
-> preventing it from being greater or equal to the state->phys[]
-> array length, unless I'm missing something. Actually it should
-> have been 'if (args->args[0] >= NUM_PHYS)'.
+> and any
+> +                  following entries corresponding to context interrupts,
+> +                  specified in order of their indexing by the SMMU.
+> +
+> +                  For SMMUv2 implementations, there must be exactly one
+> +                  interrupt per context bank. In the case of a single,
+> +                  combined interrupt, it must be listed multiple times.
+> +
+> +- mmu-masters   : A list of phandles to device nodes representing bus
+> +                  masters for which the SMMU can provide a translation
+> +                  and their corresponding StreamIDs (see example below).
+> +                  Each device node linked from this list must have a
+> +                  "#stream-id-cells" property, indicating the number of
+> +                  StreamIDs associated with it.
 
-The xlate() callback gets directly whatever parsed from device tree, so it 
-is possible for an out of range value to get here and so this check is 
-valid. However I think it should rather return an ERR_PTR, not NULL. See 
-of_phy_get().
+So to find a the SMMU for a given device, I walk up the bus hierarchy
+until I find an SMMU?
 
-> >> +	return state->phys[args->args[0]];
-> > 
-> > and your xlate is 'wrong'.
-> 
-> What exactly is wrong here ?
+> +** System MMU optional properties:
+> +
+> +- smmu-parent   : When multiple SMMUs are chained together, this
+> +                  property can be used to provide a phandle to the
+> +                  parent SMMU (that is the next SMMU on the path going
+> +                  from the mmu-masters towards memory) node for this
+> +                  SMMU.
 
-Felipe, could you elaborate a bit more on this? I can't find any serious 
-problems with this code.
+Why is an explicit phandle link needed here when you don't need a
+smmu-parent phandle in each mmu-master?    Won't walking the bus
+hierarchy identify the parent SMMU if things are chained?
 
-[snip]
-> >> +	phy_provider = devm_of_phy_provider_register(dev,
-> >> +					exynos_video_phy_xlate);
-> >> +	if (IS_ERR(phy_provider))
-> >> +		return PTR_ERR(phy_provider);
-> >> +
-> >> +	for (i = 0; i < NUM_PHYS; i++) {
-> >> +		char label[8];
-> >> +
-> >> +		snprintf(label, sizeof(label), "%s.%d",
-> >> +				i == PHY_DSIM0 || i == PHY_DSIM1 ?
-> >> +				"dsim" : "csis", i / 2);
-> >> +
-> >> +		state->phys[i] = devm_phy_create(dev, i, 
-&exynos_video_phy_ops,
-> >> +								label, 
-state);
-> >> +		if (IS_ERR(state->phys[i])) {
-> >> +			dev_err(dev, "failed to create PHY %s\n", label);
-> >> +			return PTR_ERR(state->phys[i]);
-> >> +		}
-> >> +	}
-> > 
-> > this really doesn't look correct to me. It looks like you have
-> > multiple
-> > PHYs, one for each ID. So your probe should be called for each PHY ID
-> > and you have several phy_providers too.
-> 
-> Yes, multiple PHY objects, but a single provider. There is no need
-> whatsoever for multiple PHY providers.
+Thanks,
 
-The whole concept of whatever-provider is to allow managing multiple 
-objects by one parent object, like one clock provider for the whole clock 
-controller, one interrupt controller object for all interrupts of an 
-interrupt controller block, etc.
-
-This is why a phandle has args, to allow addressing subobjects inside a 
-provider.
-
-Best regards,
-Tomasz
+Stuart Yoder
+Freescale Semiconductor
