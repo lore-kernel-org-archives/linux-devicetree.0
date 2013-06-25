@@ -1,17 +1,11 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v5] clocksource:arm_global_timer: Add ARM global timer
- support.
-Date: Tue, 25 Jun 2013 09:40:20 +0100
-Message-ID: <51C95774.9060709@st.com>
-References: <1372089195-29219-1-git-send-email-srinivas.kandagatla@st.com>
- <51C8A6C8.8000009@codeaurora.org> <51C8B551.9080203@st.com>
- <51C8C172.8020207@codeaurora.org>
-Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 0/6] ARM: rockchip: add smp functionality
+Date: Tue, 25 Jun 2013 10:46:04 +0200
+Message-ID: <201306251046.04873.heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51C8C172.8020207-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,25 +16,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thankyou for the comments,
-On 24/06/13 23:00, Stephen Boyd wrote:
-> On 06/24/13 14:08, Srinivas KANDAGATLA wrote:
->> On 24/06/13 21:06, Stephen Boyd wrote:
->>> On 06/24/13 08:53, Srinivas KANDAGATLA wrote:
->
-> 
-> I think the problem is your clockevent has no rating. Please give it a
-> rating (300?) so that it prevents the dummy from taking over. You don't
-> need to worry about disabling the local timer API, it will register a
-> harmless clockevent with a low rating (100) that should be ignored.
-> 
-I think I forgot to add rating in my last attempt to use cpu notifier.
-With rating set to 300, the driver works fine with cpu notifiers.
-Will send a new patch.
+This series enables the use of the additional cores on Rockchip
+Cortex-A9 SoCs.
 
-Thanks,
-srini
+To achieve this, add the scu, the needed sram and power-management-unit.
+
+changes since v1:
+- add reserved block feature for mmio-sram, to not use two logical
+  sram nodes
+- the sram content is kept intact while the device is running, so
+  copying the trampoline is only needed once
+
+Heiko Stuebner (6):
+  misc: sram: fix error path in sram_probe
+  misc: sram: add ability to mark sram sections as reserved
+  arm: rockchip: add snoop-control-unit
+  arm: rockchip: add sram dt nodes and documentation for the smp part
+  arm: rockchip: add power-management-unit dt node
+  arm: rockchip: add smp bringup code
+
+ .../devicetree/bindings/arm/rockchip/pmu.txt       |   16 ++
+ .../devicetree/bindings/arm/rockchip/smp-sram.txt  |   23 +++
+ Documentation/devicetree/bindings/misc/sram.txt    |    8 +
+ arch/arm/boot/dts/rk3066a.dtsi                     |   16 ++
+ arch/arm/mach-rockchip/Kconfig                     |    1 +
+ arch/arm/mach-rockchip/Makefile                    |    1 +
+ arch/arm/mach-rockchip/core.h                      |   22 +++
+ arch/arm/mach-rockchip/headsmp.S                   |   32 +++
+ arch/arm/mach-rockchip/platsmp.c                   |  203 ++++++++++++++++++++
+ arch/arm/mach-rockchip/rockchip.c                  |    2 +
+ drivers/misc/sram.c                                |   85 +++++++-
+ 11 files changed, 404 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/pmu.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
+ create mode 100644 arch/arm/mach-rockchip/core.h
+ create mode 100644 arch/arm/mach-rockchip/headsmp.S
+ create mode 100644 arch/arm/mach-rockchip/platsmp.c
+
+-- 
+1.7.10.4
