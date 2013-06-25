@@ -1,144 +1,125 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] early init and DT platform devices allocation/registration
-Date: Tue, 25 Jun 2013 18:52:33 +0100
-Message-ID: <CACxGe6t9ifg9VRfXKypuhie3pXVPneZqcBy+J1bFpUaUx32P7g@mail.gmail.com>
-References: <20130624163340.GB26084@e102568-lin.cambridge.arm.com>
- <CACxGe6sPaV-sBz=SF46KdUexjAhWKGrMpG_ty+K26f6ZU5iKdg@mail.gmail.com>
- <51C9AF96.3040107@wwwdotorg.org> <20130625.193628.2143557800560690024.hdoyu@nvidia.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Tue, 25 Jun 2013 20:05:31 +0200
+Message-ID: <3490805.zE8M3ZYxso@flatron>
+References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com> <20130625150649.GA21334@arwen.pp.htv.fi> <51C9D714.4000703@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130625.193628.2143557800560690024.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Pawel.Moll-5wv7dgnIgG8@public.gmane.org" <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51C9D714.4000703@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, balbi@ti.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2013 at 5:36 PM, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Tue, 25 Jun 2013 16:56:22 +0200:
->
->> >> How this problem is supposed to be solved in the kernel ?
->> >>
->> >> 1- drivers that are to be up and running at early_initcall time must not
->> >>    rely on the device/driver model (but then they cannot use any API that
->> >>    requires a struct device to function (eg regmap))
->> >> 2- the driver should allocate a platform device at early initcall from
->> >>    a DT compatible node. Do not know how to deal with platform device
->> >>    duplication though, since of_platform_populate() will create another
->> >>    platform device when the node is parsed
->> >
->> > While I've resisted it in the past, I would be okay with adding struct
->> > device pointer in the device_node structure. I've resisted because I
->> > don't want drivers following the device_node pointer and making an
->> > assumption about what /kind/ of device is pointed to by it. However,
->> > this is an important use case and it makes it feasible to use an early
->> > platform device with of_platform_populate.
->>
->> Hiroshi (who I have CC'd here) has also been asking about this same
->> issue downstream. The issue for us is that we need to initialize an SMMU
->> driver before any devices that are translated by the SMMU. One option is
->> to force the register/probe of the SMMU driver explicitly, early in the
->> machine's .init_machine() callback, before of_platform_populate(), to
->> ensure the ordering. Then, we run into the same duplicate device issue,
->> and the change Grant mentions above would help solve this.
->
-> Here's my workaround. I need to call of_detach_node() with OF_DYNAMIC
-> to avoid duplicated device registration.
+Hi Sylwester, Felipe,
 
-Gah! my eyes!
+On Tuesday 25 of June 2013 19:44:52 Sylwester Nawrocki wrote:
+> Hi Felipe,
+> 
+> Thanks for the review.
+> 
+> On 06/25/2013 05:06 PM, Felipe Balbi wrote:
+> > On Tue, Jun 25, 2013 at 04:21:46PM +0200, Sylwester Nawrocki wrote:
+> >> +enum phy_id {
+> >> +	PHY_CSIS0,
+> >> +	PHY_DSIM0,
+> >> +	PHY_CSIS1,
+> >> +	PHY_DSIM1,
+> >> +	NUM_PHYS
+> > 
+> > please prepend these with EXYNOS_PHY_ or EXYNOS_MIPI_PHY_
+> 
+> OK, will fix that.
+> 
+> >> +struct exynos_video_phy {
+> >> +	spinlock_t slock;
+> >> +	struct phy *phys[NUM_PHYS];
+> > 
+> > more than one phy ? This means you should instantiate driver multiple
+> > drivers. Each phy id should call probe again.
+> 
+> Why ? This single PHY _provider_ can well handle multiple PHYs.
+> I don't see a good reason to further complicate this driver like
+> this. Please note that MIPI-CSIS 0 and MIPI DSIM 0 share MMIO
+> register, so does MIPI CSIS 1 and MIPI DSIM 1. There are only 2
+> registers for those 4 PHYs. I could have the involved object
+> multiplied, but it would have been just a waste of resources
+> with no difference to the PHY consumers.
 
-Don't do that. It is incredibly problematic. Look at inhibiting
-duplicate device creation instead.
+IMHO one driver instance should represent one instance of IP block. Since 
+this is a single IP block containing multiple PHYs with shared control 
+interface, I think Sylwester did the right thing.
 
-g.
+[snip]
+> >> +static struct phy *exynos_video_phy_xlate(struct device *dev,
+> >> +					struct of_phandle_args *args)
+> >> +{
+> >> +	struct exynos_video_phy *state = dev_get_drvdata(dev);
+> >> +
+> >> +	if (WARN_ON(args->args[0] > NUM_PHYS))
+> >> +		return NULL;
+> > 
+> > please remove this check.
+> 
+> args->args[0] comes from DT as the PHY id and there is nothing
+> preventing it from being greater or equal to the state->phys[]
+> array length, unless I'm missing something. Actually it should
+> have been 'if (args->args[0] >= NUM_PHYS)'.
 
->
-> From f4d88b8521c278b41b72028d326c03cfd2e90af8 Mon Sep 17 00:00:00 2001
-> From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Date: Fri, 14 Jun 2013 15:22:02 +0300
-> Subject: [PATCH 1/1] ARM: tegra: Populate AHB/IOMMU earlier than others
->
-> Populate AHB/IOMMU earlier than others. IOMMU depends on AHB. IOMMU
-> needs to be instanciated earlier than others so that IOMMU can
-> register other platform devices as IOMMU'able. Once IOMMU is
-> populated, IOMMU/AHB nodes are detached to prevent another
-> registeration.
->
-> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/mach-tegra/Kconfig |  1 +
->  arch/arm/mach-tegra/tegra.c | 24 ++++++++++++++++++++++++
->  drivers/iommu/tegra-smmu.c  |  3 +++
->  3 files changed, 28 insertions(+)
->
-> diff --git a/arch/arm/mach-tegra/Kconfig b/arch/arm/mach-tegra/Kconfig
-> index ef3a8da..79905fe 100644
-> --- a/arch/arm/mach-tegra/Kconfig
-> +++ b/arch/arm/mach-tegra/Kconfig
-> @@ -15,6 +15,7 @@ config ARCH_TEGRA
->         select SOC_BUS
->         select SPARSE_IRQ
->         select USE_OF
-> +       select OF_DYNAMIC
->         help
->           This enables support for NVIDIA Tegra based systems.
->
-> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
-> index 0d1e412..0c494b5 100644
-> --- a/arch/arm/mach-tegra/tegra.c
-> +++ b/arch/arm/mach-tegra/tegra.c
-> @@ -80,6 +80,28 @@ static struct of_dev_auxdata tegra20_auxdata_lookup[] __initdata = {
->         {}
->  };
->
-> +static void tegra_of_platform_populate_iommu(void)
-> +{
-> +       int i;
-> +       struct platform_device *pdev;
-> +       const char * const dname[] = {"ahb", "iommu", };
-> +
-> +       for (i = 0; i < ARRAY_SIZE(dname); i++) {
-> +               struct device_node *np;
-> +               char path[NAME_MAX];
-> +
-> +               snprintf(path, sizeof(path), "/%s", dname[i]);
-> +               np  = of_find_node_by_path(path);
-> +               if (!np)
-> +                       break;
-> +
-> +               pdev = of_platform_device_create(np, NULL, NULL);
-> +               of_node_put(np);
-> +               if (!pdev)
-> +                       break;
-> +       }
-> +}
-> +
->  static void __init tegra_dt_init(void)
->  {
->         struct soc_device_attribute *soc_dev_attr;
-> @@ -107,6 +129,8 @@ static void __init tegra_dt_init(void)
->
->         parent = soc_device_to_device(soc_dev);
->
-> +       tegra_of_platform_populate_iommu();
-> +
->         /*
->          * Finished with the static registrations now; fill in the missing
->          * devices
-> diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-> index f6f120e..6c9de3f 100644
-> --- a/drivers/iommu/tegra-smmu.c
-> +++ b/drivers/iommu/tegra-smmu.c
-> @@ -1238,6 +1238,9 @@ static int tegra_smmu_probe(struct platform_device *pdev)
->         smmu_debugfs_create(smmu);
->         smmu_handle = smmu;
->         bus_set_iommu(&platform_bus_type, &smmu_iommu_ops);
-> +
-> +       of_detach_node(dev->of_node);
-> +       of_detach_node(smmu->ahb);
->         return 0;
->  }
->
-> --
-> 1.8.1.5
->
+The xlate() callback gets directly whatever parsed from device tree, so it 
+is possible for an out of range value to get here and so this check is 
+valid. However I think it should rather return an ERR_PTR, not NULL. See 
+of_phy_get().
+
+> >> +	return state->phys[args->args[0]];
+> > 
+> > and your xlate is 'wrong'.
+> 
+> What exactly is wrong here ?
+
+Felipe, could you elaborate a bit more on this? I can't find any serious 
+problems with this code.
+
+[snip]
+> >> +	phy_provider = devm_of_phy_provider_register(dev,
+> >> +					exynos_video_phy_xlate);
+> >> +	if (IS_ERR(phy_provider))
+> >> +		return PTR_ERR(phy_provider);
+> >> +
+> >> +	for (i = 0; i < NUM_PHYS; i++) {
+> >> +		char label[8];
+> >> +
+> >> +		snprintf(label, sizeof(label), "%s.%d",
+> >> +				i == PHY_DSIM0 || i == PHY_DSIM1 ?
+> >> +				"dsim" : "csis", i / 2);
+> >> +
+> >> +		state->phys[i] = devm_phy_create(dev, i, 
+&exynos_video_phy_ops,
+> >> +								label, 
+state);
+> >> +		if (IS_ERR(state->phys[i])) {
+> >> +			dev_err(dev, "failed to create PHY %s\n", label);
+> >> +			return PTR_ERR(state->phys[i]);
+> >> +		}
+> >> +	}
+> > 
+> > this really doesn't look correct to me. It looks like you have
+> > multiple
+> > PHYs, one for each ID. So your probe should be called for each PHY ID
+> > and you have several phy_providers too.
+> 
+> Yes, multiple PHY objects, but a single provider. There is no need
+> whatsoever for multiple PHY providers.
+
+The whole concept of whatever-provider is to allow managing multiple 
+objects by one parent object, like one clock provider for the whole clock 
+controller, one interrupt controller object for all interrupts of an 
+interrupt controller block, etc.
+
+This is why a phandle has args, to allow addressing subobjects inside a 
+provider.
+
+Best regards,
+Tomasz
