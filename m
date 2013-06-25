@@ -1,84 +1,96 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v6] clocksource:arm_global_timer: Add ARM global timer
- support.
-Date: Tue, 25 Jun 2013 15:17:40 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1306251459160.4013@ionos.tec.linutronix.de>
-References: <1372152678-29530-1-git-send-email-srinivas.kandagatla@st.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 3/4] pinctrl: remove slew-rate parameter from tz1090
+Date: Tue, 25 Jun 2013 15:21:55 +0200
+Message-ID: <201306251521.55634.heiko@sntech.de>
+References: <201306251455.01540.heiko@sntech.de> <201306251456.36499.heiko@sntech.de> <51C99581.2010403@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1372152678-29530-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51C99581.2010403@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Jun 2013, Srinivas KANDAGATLA wrote:
-> If its not too late can this patch be considered for 3.11 via clocksource tree?
+Am Dienstag, 25. Juni 2013, 15:05:05 schrieb James Hogan:
+> Hi Heiko,
+>=20
+> On 25/06/13 13:56, Heiko St=C3=BCbner wrote:
+> > As the binding for slew-rate is under discussion and seems to need
+> > more tought it will get removed for now, so it doesn't get an offic=
+al
+>=20
+> s/tought/thought/
+> s/offical/official/
+>=20
+> > release.
+> >=20
+> > Therefore remove it again from the only current user, tz1090.
+> >=20
+> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> > ---
+>=20
+> <snip>
+>=20
+> > diff --git a/drivers/pinctrl/pinctrl-tz1090-pdc.c
+> > b/drivers/pinctrl/pinctrl-tz1090-pdc.c index 12e4808..d4f12cc 10064=
+4
+> > --- a/drivers/pinctrl/pinctrl-tz1090-pdc.c
+> > +++ b/drivers/pinctrl/pinctrl-tz1090-pdc.c
+> > @@ -809,11 +809,6 @@ static int tz1090_pdc_pinconf_group_reg(struct
+> > pinctrl_dev *pctldev,
+> >=20
+> >  		*width =3D 1;
+> >  		*map =3D tz1090_pdc_boolean_map;
+> >  		break;
+> >=20
+> > -	case PIN_CONFIG_SLEW_RATE:
+> > -		*shift =3D REG_GPIO_CONTROL2_PDC_SR_S;
+> > -		*width =3D 1;
+> > -		*map =3D tz1090_pdc_boolean_map;
+> > -		break;
+> >=20
+> >  	case PIN_CONFIG_DRIVE_STRENGTH:
+> >  		*shift =3D REG_GPIO_CONTROL2_PDC_DR_S;
+> >  		*width =3D 2;
+> >=20
+> > diff --git a/drivers/pinctrl/pinctrl-tz1090.c
+> > b/drivers/pinctrl/pinctrl-tz1090.c index 02ff3a2..4edae08 100644
+> > --- a/drivers/pinctrl/pinctrl-tz1090.c
+> > +++ b/drivers/pinctrl/pinctrl-tz1090.c
+> > @@ -1834,11 +1834,6 @@ static int tz1090_pinconf_group_reg(struct
+> > pinctrl_dev *pctldev,
+> >=20
+> >  		*width =3D 1;
+> >  		*map =3D tz1090_boolean_map;
+> >  		break;
+> >=20
+> > -	case PIN_CONFIG_SLEW_RATE:
+> > -		*reg =3D REG_PINCTRL_SR;
+> > -		*width =3D 1;
+> > -		*map =3D tz1090_boolean_map;
+> > -		break;
+> >=20
+> >  	case PIN_CONFIG_DRIVE_STRENGTH:
+> >  		*reg =3D REG_PINCTRL_DR;
+> >  		*width =3D 2;
+>=20
+> I don't see the harm in keeping the handling of PIN_CONFIG_SLEW_RATE,
+> since PIN_CONFIG_SLEW_RATE is still present and you only seem to be
+> removing the device tree bindings (which is the only important bit fr=
+om
+> the DT ABI point of view).
 
-Sure. No worry, though I noticed a little detail when reading through it
-again. See below.
+I'm partial to this :-)
 
-> +/**
-> + * To ensure that updates to comparator value register do not set the
-> + * Interrupt Status Register proceed as follows:
-> + * 1. Clear the Comp Enable bit in the Timer Control Register.
-> + * 2. Write the lower 32-bit Comparator Value Register.
-> + * 3. Write the upper 32-bit Comparator Value Register.
-> + * 4. Set the Comp Enable bit and, if necessary, the IRQ enable bit.
-> + */
-> +static void gt_compare_set(unsigned long delta, int periodic)
-> +{
-> +	u64 counter = gt_counter_read();
-> +	unsigned long ctrl = readl(gt_base + GT_CONTROL);
+My thoughts were that this code would never be reached when the parsing=
+ was=20
+removed and to not cause confusion to the driver when an acceptable bin=
+ding=20
+was found for slew-rate.
 
-Why are you reading the control register back over and over? All you
-need to preserve is the GT_CONTROL_TIMER_ENABLE bit. So you can spare
-that read out and just do
+But it of course also doesn't hurt to stay in.
 
-	ctrl = GT_CONTROL_TIMER_ENABLE;
-	writel(ctrl, gt_base + GT_CONTROL);
 
-> +static irqreturn_t gt_clockevent_interrupt(int irq, void *dev_id)
-> +{
-> +	struct clock_event_device *evt = dev_id;
-> +
-> +	if (readl_relaxed(gt_base + GT_INT_STATUS) &
-> +				GT_INT_STATUS_EVENT_FLAG) {
-
-If you negate the check and return IRQ_NONE, you save one indent level
-for the real code.
-
-> +		/**
-> +		 * ERRATA 740657( Global Timer can send 2 interrupts for
-> +		 * the same event in single-shot mode)
-> +		 * Workaround:
-> +		 *	Either disable single-shot mode.
-> +		 *	Or
-> +		 *	Modify the Interrupt Handler to avoid the
-> +		 *	offending sequence. This is achieved by clearing
-> +		 *	the Global Timer flag _after_ having incremented
-> +		 *	the Comparator register	value to a higher value.
-> +		 */
-> +		if (!(readl_relaxed(gt_base + GT_CONTROL) &
-> +						GT_CONTROL_AUTO_INC))
-
-Again, no need to read from the hardware.
-
-       if (evt->mode == CLOCK_EVT_MODE_ONESHOT)
-
-tells you what you need to know.
-
-Thanks,
-
-	tglx
+Heiko
