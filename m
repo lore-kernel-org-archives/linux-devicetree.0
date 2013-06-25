@@ -1,132 +1,169 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v9] i2c-designware: make SDA hold time configurable
-Date: Tue, 25 Jun 2013 18:39:02 +0200
-Message-ID: <20130625163902.GA2973@katana>
-References: <20130620203716.GF2961@katana>
- <1371808422-27742-1-git-send-email-christian.ruppert@abilis.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] early init and DT platform devices allocation/registration
+Date: Tue, 25 Jun 2013 17:53:53 +0100
+Message-ID: <20130625165353.GA28654@e102568-lin.cambridge.arm.com>
+References: <20130624163340.GB26084@e102568-lin.cambridge.arm.com>
+ <CACxGe6sPaV-sBz=SF46KdUexjAhWKGrMpG_ty+K26f6ZU5iKdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACxGe6sPaV-sBz=SF46KdUexjAhWKGrMpG_ty+K26f6ZU5iKdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1371808422-27742-1-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Rob Herring <robherring2@gmail.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Grant,
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+thanks for commenting.
 
-Hi,
+On Tue, Jun 25, 2013 at 12:45:25PM +0100, Grant Likely wrote:
+> On Mon, Jun 24, 2013 at 5:33 PM, Lorenzo Pieralisi
+> <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> > Hi all,
+> >
+> > I am dealing with a lingering problem related to init and probing of platform
+> > devices early (before initcalls) in the kernel boot process. The problem,
+> > which is nothing new, is related to how platform devices are created in the
+> > kernel from DT and when they become available. Platform devices are created
+> > through (assuming any legacy static initialization is removed from the kernel)
+> >
+> > of_platform_populate()
+> >
+> > at arch_initcall time on ARM. This is a problem for drivers that need to be
+> > probed and initialized before arch_initcall (ie early_initcall) because
+> > the corresponding platform_device has not been created yet.
+> >
+> > To work around this awkward situation, a driver, instead of relying on
+> > platform driver probing mechanism, can get initialized using early_initcall
+> > mechanism and rely on DT helpers (ie of_iomap() and company) to initialize
+> > resources. The problem comes when the driver functions must rely on an API
+> > (eg regmap) that requires a struct device to function properly; since the
+> > platform_device has not been created yet at early_initcall time, the
+> > driver cannot rely on it. The only solution consists in allocating a
+> > platform_device on the fly at driver init through
+> >
+> > of_platform_device_create()
+> >
+> > and use that device to initialize the (eg regmap) API. There is an issue
+> > with this solution, basically a platform device is allocated twice for
+> > a given device node - compatible property (because of_platform_populate()
+> > allocates a platform device for a node containing a compatible string even if
+> > a platform device has already been allocated for that device node).
+> >
+> > The second solution relies on early platform devices. Early platform devices
+> > are added by mach code and driver probing is carried out using the early
+> > platform device probing mechanism
+> >
+> > early_platform_driver_probe()
+> >
+> > The drawback with this solution is, AFAIK, it does not play well with DT,
+> > since the platform device duplication issue is still there (ie
+> > of_platform_populate() will allocate a platform device which is a duplicate
+> > of the one allocated at early boot to make the early platform device
+> > initialization possible).
+> >
+> > Please correct me if I am wrong, just trying to untangle a problem that does
+> > not look easy to solve.
+> >
+> > How this problem is supposed to be solved in the kernel ?
+> >
+> > 1- drivers that are to be up and running at early_initcall time must not
+> >    rely on the device/driver model (but then they cannot use any API that
+> >    requires a struct device to function (eg regmap))
+> > 2- the driver should allocate a platform device at early initcall from
+> >    a DT compatible node. Do not know how to deal with platform device
+> >    duplication though, since of_platform_populate() will create another
+> >    platform device when the node is parsed
+> 
+> While I've resisted it in the past, I would be okay with adding struct
+> device pointer in the device_node structure. I've resisted because I
+> don't want drivers following the device_node pointer and making an
+> assumption about what /kind/ of device is pointed to by it. However,
+> this is an important use case and it makes it feasible to use an early
+> platform device with of_platform_populate.
+> 
+> Alternately, if others chime in and think it is too risky to have the
+> device pointer in the device node, we could simply add a flag to the
+> device_node which indicates the node has been parsed by
+> of_platform_populate.
+> 
+> There would need to be some careful coding to make sure that any call
+> to early platform device creation sets the pointer in the device node
+> correctly.
+> 
+> I would also make it a requirement that any early platform device
+> *must* be converted into a 'real' platform device during initcall
+> time. That includes being possible to be freed correctly. Static early
+> platform device definitions should not be allowed, otherwise there
+> needs to be a special case for the platform device release hook. I
+> really don't want that.
+> 
+> Something else that needs to be investigated is how the device
+> hierarchy will be affected by using early_platform_device. We still
+> want the platform_device to appear in the same place in the hierarchy
+> regardless of whether or not it was created 'early'. the question is
+> how to make sure that actually happens.
 
-On Fri, Jun 21, 2013 at 11:53:42AM +0200, Christian Ruppert wrote:
-> This patch makes the SDA hold time configurable through device tree.
->=20
-> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-> Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
-> ---
->  .../devicetree/bindings/i2c/i2c-designware.txt     |   14 ++++++++++++++
->  arch/arc/boot/dts/abilis_tb100_dvk.dts             |   10 +++++-----
->  arch/arc/boot/dts/abilis_tb101_dvk.dts             |   10 +++++-----
+While acknowledging the complexity of adding this code, I tend to prefer
+a solution that allows allocation of early platform devices from DT
+instead of adding a flag to avoid duplicates, it is cleaner (but more
+complex as you mentioned) that's the point I wanted to make, otherwise
+we end up adding all kinds of kludges to the kernel to make early init
+work.
 
-Vineet, an ack for those would be nice since I think it is better if I
-take all this via I2C.
+The question is: should we live with workarounds that allow early allocation
+of devices or should we fix the kernel to cope with these use cases ? I do not
+know how many drivers/devices require these changes, and how many do we need
+to justify this level of complexity.
 
->  drivers/i2c/busses/i2c-designware-core.c           |   13 +++++++++++++
->  drivers/i2c/busses/i2c-designware-core.h           |    1 +
->  drivers/i2c/busses/i2c-designware-platdrv.c        |   10 ++++++++++
->  6 files changed, 48 insertions(+), 10 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/D=
-ocumentation/devicetree/bindings/i2c/i2c-designware.txt
-> index e42a2ee..3266cc7 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> @@ -10,6 +10,9 @@ Recommended properties :
-> =20
->   - clock-frequency : desired I2C bus clock frequency in Hz.
-> =20
-> +Optional properties :
-> + - i2c-sda-hold-time-ns : should contain the SDA hold time in nanosecond=
-s.
+> > 3- driver should rely on early platform device/driver, but this does not
+> >    solve (?) the platform device duplication problem either, it will happen
+> >    when of_platform_populate() parses the DT and creates devices on the fly
+> >
+> > In theory there are other solutions such as:
+> >
+> > (a) declaring the platform device statically in arm/mach-* code and do not
+> >     define the device node in dts, basically going back in time to ARM legacy
+> >     kernel mechanism for this kind of devices
+> 
+> As stated above, no. Static device definitions are not a good idea,
+> and it doesn't scale in a multiplatform kernel world.
 
-Not on all versions, should be mentioned here.
+Agreed, I was just listing solutions, (a) is certainly not what we want.
 
-> +
->  Example :
-> =20
->  	i2c@f0000 {
-> @@ -20,3 +23,14 @@ Example :
->  		interrupts =3D <11>;
->  		clock-frequency =3D <400000>;
->  	};
-> +
-> +	i2c@1120000 {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +		compatible =3D "snps,designware-i2c";
-> +		reg =3D <0x1120000 0x1000>;
-> +		interrupt-parent =3D <&ictl>;
-> +		interrupts =3D <12 1>;
-> +		clock-frequency =3D <400000>;
-> +		i2c-sda-hold-time-ns =3D <300>;
-> +	};
-> diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busse=
-s/i2c-designware-core.c
-> index c41ca63..66119e2 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.c
-> +++ b/drivers/i2c/busses/i2c-designware-core.c
-> @@ -67,9 +67,12 @@
->  #define DW_IC_STATUS		0x70
->  #define DW_IC_TXFLR		0x74
->  #define DW_IC_RXFLR		0x78
-> +#define DW_IC_SDA_HOLD		0x7c
->  #define DW_IC_TX_ABRT_SOURCE	0x80
->  #define DW_IC_ENABLE_STATUS	0x9c
->  #define DW_IC_COMP_PARAM_1	0xf4
-> +#define DW_IC_COMP_VERSION	0xf8
-> +#define DW_IC_SDA_HOLD_MIN_VERS	0x3131312A
->  #define DW_IC_COMP_TYPE		0xfc
->  #define DW_IC_COMP_TYPE_VALUE	0x44570140
-> =20
-> @@ -332,6 +335,16 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
->  	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
->  	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT =3D %d:%d\n", hcnt, lcnt);
-> =20
-> +	/* Configure SDA Hold Time if required */
-> +	reg =3D dw_readl(dev, DW_IC_COMP_VERSION);
+> > (b) add a way to of_platform_populate() to exclude some compatible strings
+> >     from being matched
+> 
+> This method will probably be too error prone. It would be better to
+> add the check in of_platform_populate to skip nodes that have already
+> been populated. I can't think of any use-cases where we would want
+> of_platform_populate to process a single node more than once.
 
-Why not reading reg inside the if-block?
++1
 
-Thanks,
+> > Honestly there is not a solution I can say I like and maybe I am trying to
+> > solve a problem that has already been solved, apologies if so, that's why
+> > I am asking on the list to people with more knowledge than me on the subject.
+> 
+> No, it hasn't been solved yet, but it is worth solving. Either that or
+> figure out how to do of_platform_populate much earlier.
 
-   Wolfram
+Well, I am already relieved that you acknowledge it is something worth
+solving, because that would simplify things a lot, as MCPM lower-layers
+coding showed and I suspect that's not the only piece of PM code that
+requires this early initialization.
 
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRycemAAoJEBQN5MwUoCm2hDQP/il6TfROvbnm1zZ2FMk58W5d
-+4Nhlq9Zb5ZihCSiSKKwodv3TQKF891tM7JUmMUTn4AULBdNzM+ujVefBXforukm
-U5qIagClPzodtvc413ZZHlMFwpYZ7jNpDN3hrVDlAPTIBghCp1+p6os1gOguZCEq
-VOYQnlyfzYH2BuHU1bOkpQxdaT9mDPRtamylyp589PhXFkHSGGumSMHXN15dPtZk
-0LYPpnMLTh1ZHqM1DjASaW60kqrib6Y57t3VBgv1BPY5j6inxrMq7IvnhBEs6GNq
-g31GLQxaYsM2unXY5tJ4zb4kGtpKhxG/8Zt4efEYUo+zXjrgY2EjjlnweLIHftOh
-61P5CWwMjXW1EjBoCHJVKirecYILLIMAoiAadNhoIYQTgHevLKTRa5sBRcGGeDZh
-JbWgttJ75+OiCgaJOpMBBXAzHm3Hnb0Gr4d4ZgKSrzMWZddjDRRZC1LtTfIP8nQd
-ARRSqZVTW3Yr88DittK8e0SPl92DqbgoarAOzUQ/ZkUTinisJj6GybQLW+6nMiXQ
-e8RXD0qZsv4XAV/GjisSvLZeZigLGtiR4rJ4ho7d3KPenvojtY41ZQtglpR16QCF
-E/3ou4MuGxsnmQdb/Q+Xcra+f1QXiEBcChudeg/QA7pIHrH9LTybuxnCvwedgHhZ
-e35TBxjv6/qrzwyeMoCP
-=KT5L
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+Thank you !
+Lorenzo
