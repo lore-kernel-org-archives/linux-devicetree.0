@@ -1,31 +1,34 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/4] pinctrl: set unit for debounce time pinconfig to usec
-Date: Tue, 25 Jun 2013 15:15:38 +0200
-Message-ID: <CACRpkdb8C=hR3JP9cpo4Hvj176AwGJ16M9o9Wd40AjTfP+9aEA@mail.gmail.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH 0/4] Fix more issues with generic pinconf bindings
+Date: Tue, 25 Jun 2013 14:16:19 +0100
+Message-ID: <51C99823.1060503@imgtec.com>
 References: <201306251455.01540.heiko@sntech.de>
-	<201306251456.12150.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306251456.12150.heiko@sntech.de>
+In-Reply-To: <201306251455.01540.heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, James Hogan <james.hogan@imgtec.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2013 at 2:56 PM, Heiko St=FCbner <heiko@sntech.de> wrot=
-e:
+On 25/06/13 13:55, Heiko St=C3=BCbner wrote:
+> As Stephen Warren pointed out, some pinconf bindings had deficits
+> either in documentation or in the whole thought process.
+>=20
+> Therefore this series tries to fix these issues by improving
+> documentation and removing the real controversial bindings for now.
+>=20
+> Of the changed pinconf bindings only the slew-rate had an acutal
+> current user (since yesterday). James I hope it's ok to simply
+> remove the slew-rate handling from the tz1090 driver until we can
+> handle it correctly in dt.
 
-> Currently the debounce time pinconfig option uses an unspecified
-> "time units" unit. As pinconfig options should use SI units and a
-> real unit is also necessary for generic dt bindings, change it
-> to usec. Currently no driver is using the generic pinconfig option
-> for this, so the unit change is safe to do.
->
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Other than my comment about patch 3 (which since it's the only case I
+don't mind too much, it can easily be added back again in the future):
 
-Patch applied.
+Reviewed-by: James Hogan <james.hogan@imgtec.com>
 
-Yours,
-Linus Walleij
+Cheers
+James
