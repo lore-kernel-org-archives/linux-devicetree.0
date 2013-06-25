@@ -1,71 +1,132 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
-Subject: [PATCH 2/4] pinctrl: set unit for debounce time pinconfig to usec
-Date: Tue, 25 Jun 2013 14:56:11 +0200
-Message-ID: <201306251456.12150.heiko@sntech.de>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 3/4] pinctrl: remove slew-rate parameter from tz1090
+Date: Tue, 25 Jun 2013 14:56:36 +0200
+Message-ID: <201306251456.36499.heiko@sntech.de>
 References: <201306251455.01540.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306251455.01540.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, James Hogan <james.hogan@imgtec.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201306251455.01540.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently the debounce time pinconfig option uses an unspecified
-"time units" unit. As pinconfig options should use SI units and a
-real unit is also necessary for generic dt bindings, change it
-to usec. Currently no driver is using the generic pinconfig option
-for this, so the unit change is safe to do.
+As the binding for slew-rate is under discussion and seems to need
+more tought it will get removed for now, so it doesn't get an offical
+release.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Therefore remove it again from the only current user, tz1090.
+
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt |    3 ++-
- drivers/pinctrl/pinconf-generic.c                              |    2 +-
- include/linux/pinctrl/pinconf-generic.h                        |    2 +-
- 3 files changed, 4 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/pinctrl/img,tz1090-pdc-pinctrl.txt      |    5 +----
+ .../devicetree/bindings/pinctrl/img,tz1090-pinctrl.txt          |    7 +------
+ drivers/pinctrl/pinctrl-tz1090-pdc.c                            |    5 -----
+ drivers/pinctrl/pinctrl-tz1090.c                                |    5 -----
+ 4 files changed, 2 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-index 7498bdc..788ab09 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -173,7 +173,8 @@ Arguments for parameters:
- - input-schmitt takes as argument the adjustable hysteresis in a
-   driver-specific format
+diff --git a/Documentation/devicetree/bindings/pinctrl/img,tz1090-pdc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/img,tz1090-pdc-
+pinctrl.txt
+index 9f7a85b..a186181 100644
+--- a/Documentation/devicetree/bindings/pinctrl/img,tz1090-pdc-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/img,tz1090-pdc-pinctrl.txt
+@@ -44,9 +44,6 @@ Optional subnode-properties:
+   - bias-pull-down
+   - input-schmitt-enable
+   - input-schmitt-disable
+-  - slew-rate: Integer, control slew rate of pins.
+-      0: slow (half frequency)
+-      1: fast
+   - drive-strength: Integer, control drive strength of pins in mA.
+       2: 2mA
+       4: 4mA
+@@ -83,7 +80,7 @@ Valid values for pin and group names are:
  
--- input-debounce takes the debounce time as argument or 0 to disable debouncing
-+- input-debounce takes the debounce time in usec as argument
-+  or 0 to disable debouncing
+   drive groups:
  
- - power-source argument is the custom value describing the source to select
+-    These support input-schmitt-enable, input-schmitt-disable, slew-rate,
++    These support input-schmitt-enable, input-schmitt-disable,
+     drive-strength, low-power-enable, and low-power-disable.
  
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index 794dad7..2b271d5 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -49,7 +49,7 @@ static struct pin_config_item conf_items[] = {
- 	PCONFDUMP(PIN_CONFIG_DRIVE_STRENGTH, "output drive strength", "mA"),
- 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT_ENABLE, "input schmitt enabled", NULL),
- 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT, "input schmitt trigger", NULL),
--	PCONFDUMP(PIN_CONFIG_INPUT_DEBOUNCE, "input debounce", "time units"),
-+	PCONFDUMP(PIN_CONFIG_INPUT_DEBOUNCE, "input debounce", "usec"),
- 	PCONFDUMP(PIN_CONFIG_POWER_SOURCE, "pin power source", "selector"),
- 	PCONFDUMP(PIN_CONFIG_SLEW_RATE, "slew rate", NULL),
- 	PCONFDUMP(PIN_CONFIG_LOW_POWER_MODE, "pin low power", "mode"),
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index 48aa4ba..bf7e989 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -70,7 +70,7 @@
-  *	setting pins to this mode.
-  * @PIN_CONFIG_INPUT_DEBOUNCE: this will configure the pin to debounce mode,
-  *	which means it will wait for signals to settle when reading inputs. The
-- *	argument gives the debounce time on a custom format. Setting the
-+ *	argument gives the debounce time in usecs. Setting the
-  *	argument to zero turns debouncing off.
-  * @PIN_CONFIG_POWER_SOURCE: if the pin can select between different power
-  *	supplies, the argument to this parameter (on a custom format) tells
+     pdc
+diff --git a/Documentation/devicetree/bindings/pinctrl/img,tz1090-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/img,tz1090-pinctrl.txt
+index 39bfd9c..4b27c99 100644
+--- a/Documentation/devicetree/bindings/pinctrl/img,tz1090-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/img,tz1090-pinctrl.txt
+@@ -44,9 +44,6 @@ Optional subnode-properties:
+   - bias-pull-down
+   - input-schmitt-enable
+   - input-schmitt-disable
+-  - slew-rate: Integer, control slew rate of pins.
+-      0: slow (half frequency)
+-      1: fast
+   - drive-strength: Integer, control drive strength of pins in mA.
+       2: 2mA
+       4: 4mA
+@@ -124,7 +121,6 @@ Valid values for pin and group names are:
+         function:              afe, ts_out_0.
+         input-schmitt-enable:  supported.
+         input-schmitt-disable: supported.
+-        slew-rate:             supported.
+         drive-strength:        supported.
+     pdm_d
+         pins:                  pdm_d.
+@@ -153,12 +149,11 @@ Valid values for pin and group names are:
+                                lcd_trace, phy_ringosc.
+         input-schmitt-enable:  supported.
+         input-schmitt-disable: supported.
+-        slew-rate:             supported.
+         drive-strength:        supported.
+ 
+   drive groups:
+ 
+-    These all support input-schmitt-enable, input-schmitt-disable, slew-rate,
++    These all support input-schmitt-enable, input-schmitt-disable,
+     and drive-strength.
+ 
+     jtag
+diff --git a/drivers/pinctrl/pinctrl-tz1090-pdc.c b/drivers/pinctrl/pinctrl-tz1090-pdc.c
+index 12e4808..d4f12cc 100644
+--- a/drivers/pinctrl/pinctrl-tz1090-pdc.c
++++ b/drivers/pinctrl/pinctrl-tz1090-pdc.c
+@@ -809,11 +809,6 @@ static int tz1090_pdc_pinconf_group_reg(struct pinctrl_dev *pctldev,
+ 		*width = 1;
+ 		*map = tz1090_pdc_boolean_map;
+ 		break;
+-	case PIN_CONFIG_SLEW_RATE:
+-		*shift = REG_GPIO_CONTROL2_PDC_SR_S;
+-		*width = 1;
+-		*map = tz1090_pdc_boolean_map;
+-		break;
+ 	case PIN_CONFIG_DRIVE_STRENGTH:
+ 		*shift = REG_GPIO_CONTROL2_PDC_DR_S;
+ 		*width = 2;
+diff --git a/drivers/pinctrl/pinctrl-tz1090.c b/drivers/pinctrl/pinctrl-tz1090.c
+index 02ff3a2..4edae08 100644
+--- a/drivers/pinctrl/pinctrl-tz1090.c
++++ b/drivers/pinctrl/pinctrl-tz1090.c
+@@ -1834,11 +1834,6 @@ static int tz1090_pinconf_group_reg(struct pinctrl_dev *pctldev,
+ 		*width = 1;
+ 		*map = tz1090_boolean_map;
+ 		break;
+-	case PIN_CONFIG_SLEW_RATE:
+-		*reg = REG_PINCTRL_SR;
+-		*width = 1;
+-		*map = tz1090_boolean_map;
+-		break;
+ 	case PIN_CONFIG_DRIVE_STRENGTH:
+ 		*reg = REG_PINCTRL_DR;
+ 		*width = 2;
 -- 
 1.7.10.4
