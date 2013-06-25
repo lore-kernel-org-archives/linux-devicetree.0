@@ -1,191 +1,210 @@
-From: Phil Carmody <phil.carmody@partner.samsung.com>
-Subject: RE: [PATCH v2 6/8] ARM: dts: Add camera subsystem nodes to
- exynos4x12.dtsi
-Date: Tue, 25 Jun 2013 08:24:32 +0000
-Message-ID: <19E27FB8C8BBCC47BD08BAF8EB69E51E0FFD8601@ex1.seri.co.uk>
-References: <1372097151-18122-1-git-send-email-s.nawrocki@samsung.com>
- <1372097151-18122-7-git-send-email-s.nawrocki@samsung.com>
+From: Haojian Zhuang <haojian.zhuang@linaro.org>
+Subject: Re: [PATCH v3 3/5] clk: dt: binding for basic multiplexer clock
+Date: Tue, 25 Jun 2013 16:27:58 +0800
+Message-ID: <CAD6h2NS=AOQ4B6V=TtA120ga9ucF7eBxEguqFK0y4cfpa-F50Q@mail.gmail.com>
+References: <1371795256-16703-1-git-send-email-mturquette@linaro.org>
+	<1371795256-16703-4-git-send-email-mturquette@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1372097151-18122-7-git-send-email-s.nawrocki@samsung.com>
-Content-language: en-GB
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>
-Cc: "t.figa@samsung.com" <t.figa@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "j.anaszewski@samsung.com" <j.anaszewski@samsung.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1371795256-16703-4-git-send-email-mturquette@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Matt Sealey <neko@bakuhatsu.net>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Sylwester Nawrocki wrote:
+On 21 June 2013 14:14, Mike Turquette <mturquette@linaro.org> wrote:
+> Device Tree binding for the basic clock multiplexer, plus the setup
+> function to register the clock.  Based on the existing fixed-clock
+> binding.
+>
+> Includes minor beautification of clk-provider.h where some whitespace is
+> added and of_fixed_factor_clock_setup is relocated to maintain a
+> consistent style.
+>
+> Tero Kristo contributed helpful bug fixes to this patch.
+>
+> Signed-off-by: Mike Turquette <mturquette@linaro.org>
+> ---
+> Changes since v2:
+> * added hiword-mask property to the binding
+> * changed bit-shift property from u8 to u32 in the dt binding
+>
+> Changes since v1:
+> * pass shift value into clk_register_mux_table
+> * s/multiplexor/multiplexer/
+> * removed debug prints
+> * mask is u32, shift is u8
+> * DT property names use dashes instead of underscores
+> * DT property names are more verbose
+> * shift property is optional in binding and can be auto-generated from a
+>   full 32-bit mask
+>
+>  .../devicetree/bindings/clock/mux-clock.txt        | 79 ++++++++++++++++++++++
+>  drivers/clk/clk-mux.c                              | 65 +++++++++++++++++-
+>  include/linux/clk-provider.h                       |  5 +-
+>  3 files changed, 147 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/mux-clock.txt
+>
+> diff --git a/Documentation/devicetree/bindings/clock/mux-clock.txt b/Documentation/devicetree/bindings/clock/mux-clock.txt
+> new file mode 100644
+> index 0000000..54cb8d1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/mux-clock.txt
+> @@ -0,0 +1,79 @@
+> +Binding for simple mux clock.
+> +
+> +This binding uses the common clock binding[1].  It assumes a
+> +register-mapped multiplexer with multiple input clock signals or
+> +parents, one of which can be selected as output.  This clock does not
+> +gate or adjust the parent rate via a divider or multiplier.
+> +
+> +By default the "clocks" property lists the parents in the same order
+> +as they are programmed into the regster.  E.g:
+> +
+> +       clocks = <&foo_clock>, <&bar_clock>, <&baz_clock>;
+> +
+> +results in programming the register as follows:
+> +
+> +register value         selected parent clock
+> +0                      foo_clock
+> +1                      bar_clock
+> +2                      baz_clock
+> +
+> +Some clock controller IPs do not allow a value of zero to be programmed
+> +into the register, instead indexing begins at 1.  The optional property
+> +"index_one" modified the scheme as follows:
+> +
+> +register value         selected clock parent
+> +1                      foo_clock
+> +2                      bar_clock
+> +3                      baz_clock
+> +
+> +Additionally an optional table of bit and parent pairs may be supplied
+> +like so:
+> +
+> +       table = <&foo_clock 0x0>, <&bar_clock, 0x2>, <&baz_clock, 0x4>;
+> +
+> +where the first value in the pair is the parent clock and the second
+> +value is the bitfield to be programmed into the register.
+> +
+> +The binding must provide the register to control the mux and the mask
+> +for the corresponding control bits.  Optionally the number of bits to
+> +shift that mask if necessary.  If the shift value is missing it is the
+> +same as supplying a zero shift.
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible : shall be "mux-clock".
+> +- #clock-cells : from common clock binding; shall be set to 0.
+> +- clocks : link phandles of parent clocks
+> +- reg : base address for register controlling adjustable mux
+> +- bit-mask : arbitrary bitmask for programming the adjustable mux
+> +
+> +Optional properties:
+> +- clock-output-names : From common clock binding.
+> +- table : array of integer pairs defining parents & bitfield values
+> +- bit-shift : number of bits to shift the bit-mask, defaults to
+> +  (ffs(mask) - 1) if not present
+> +- index-starts-at-one : valid input select programming starts at 1, not
+> +  zero
+> +- hiword-mask : lower half of the register programs the mux, upper half
+> +  of the register indicates bits that were updated in the lower half
+> +
+> +Examples:
+> +       clock: clock@4a008100 {
+> +               compatible = "mux-clock";
+> +               #clock-cells = <0>;
+> +               clocks = <&clock_foo>, <&clock_bar>, <&clock_baz>;
+> +               reg = <0x4a008100 0x4>
+> +               mask = <0x3>;
+> +               index_one;
+> +       };
+> +
+> +       clock: clock@4a008100 {
+> +               #clock-cells = <0>;
+> +               compatible = "mux-clock";
+> +               clocks = <&clock_foo>, <&clock_bar>, <&clock_baz>;
+> +               reg = <0x4a008100 0x4>;
+> +               mask = <0x3>;
+> +               shift = <0>;
+> +               table = <&clock_foo 1>, <&clock_bar 2>, <&clock_baz 3>;
+> +       };
+> diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
+> index 614444c..4751bce 100644
+> --- a/drivers/clk/clk-mux.c
+> +++ b/drivers/clk/clk-mux.c
+> @@ -1,7 +1,7 @@
+>  /*
+>   * Copyright (C) 2011 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
+>   * Copyright (C) 2011 Richard Zhao, Linaro <richard.zhao@linaro.org>
+> - * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
+> + * Copyright (C) 2011-2013 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
+>   *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License version 2 as
+> @@ -16,6 +16,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/io.h>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+>
+>  /*
+>   * DOC: basic adjustable multiplexer clock that cannot gate
+> @@ -166,3 +168,64 @@ struct clk *clk_register_mux(struct device *dev, const char *name,
+>                                       flags, reg, shift, mask, clk_mux_flags,
+>                                       NULL, lock);
+>  }
+> +
+> +#ifdef CONFIG_OF
+> +/**
+> + * of_mux_clk_setup() - Setup function for simple mux rate clock
+> + */
+> +void of_mux_clk_setup(struct device_node *node)
+> +{
+> +       struct clk *clk;
+> +       const char *clk_name = node->name;
+> +       void __iomem *reg;
+> +       int num_parents;
+> +       const char **parent_names;
+> +       int i;
+> +       u8 clk_mux_flags = 0;
+> +       u32 mask = 0;
+> +       u32 shift = 0;
+> +
+> +       of_property_read_string(node, "clock-output-names", &clk_name);
+> +
+> +       num_parents = of_clk_get_parent_count(node);
+> +       if (num_parents < 1) {
+> +               pr_err("%s: mux-clock %s must have parent(s)\n",
+> +                               __func__, node->name);
+> +               return;
+> +       }
+> +
+> +       parent_names = kzalloc((sizeof(char*) * num_parents),
+> +                       GFP_KERNEL);
+> +
+> +       for (i = 0; i < num_parents; i++)
+> +               parent_names[i] = of_clk_get_parent_name(node, i);
+> +
+> +       reg = of_iomap(node, 0);
 
-Add common camera node and Exynos4212/4412 specific nodes for
-FIMC, MIPI-CSIS, FIMC-LITE and FIMC-IS devices.
+As you mentioned above,  reg : base address for register controlling
+adjustable mux.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/boot/dts/exynos4x12.dtsi |  118 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+Each clock node has the reg property. It means that we have to
+allocate one page memory
+for each register since of_iomap() is used at here. We always have
+lots of registers with
+continuous address in SoC, like 0x40a00040, 0x40a00044, .... Then
+we'll waste too much
+memory in system.
 
-diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
-index 0e24d85..f8cc1d0 100644
---- a/arch/arm/boot/dts/exynos4x12.dtsi
-+++ b/arch/arm/boot/dts/exynos4x12.dtsi
-@@ -26,6 +26,8 @@
-                pinctrl1 = &pinctrl_1;
-                pinctrl2 = &pinctrl_2;
-                pinctrl3 = &pinctrl_3;
-+               fimc-lite0 = &fimc_lite_0;
-+               fimc-lite1 = &fimc_lite_1;
-        };
+How about only define common function to parse property? Make register
+mapping handled
+by vendor's clock driver.
 
-        pd_isp: isp-power-domain@10023CA0 {
-@@ -78,4 +80,120 @@
-                clock-names = "sclk_fimg2d", "fimg2d";
-                status = "disabled";
-        };
-+
-+       camera {
-+               clocks = <&clock 132>, <&clock 133>, <&clock 351>, <&clock 352>,
-+                        <&clock 388>, <&clock 389>, <&clock 17>;
-+               clock-names = "sclk_cam0", "sclk_cam1", "pxl_async0",
-+                           "pxl_async1", "mux_cam0", "mux_cam1", "parent";
-+
-+               fimc_0: fimc@11800000 {
-+                       compatible = "samsung,exynos4212-fimc";
-+                       clocks = <&clock 256>, <&clock 128>, <&clock 384>, <&clock 17>;
-+                       clock-names = "fimc", "sclk_fimc", "mux", "parent";
-+                       samsung,pix-limits = <4224 8192 1920 4224>;
-+                       samsung,mainscaler-ext;
-+                       samsung,isp-wb;
-+                       samsung,cam-if;
-+               };
-+
-+               fimc_1: fimc@11810000 {
-+                       compatible = "samsung,exynos4212-fimc";
-+                       clocks = <&clock 257>, <&clock 129>, <&clock 385>, <&clock 17>;
-+                       clock-names = "fimc", "sclk_fimc", "mux", "parent";
-+                       samsung,pix-limits = <4224 8192 1920 4224>;
-+                       samsung,mainscaler-ext;
-+                       samsung,isp-wb;
-+                       samsung,cam-if;
-+               };
-+
-+               fimc_2: fimc@11820000 {
-+                       compatible = "samsung,exynos4212-fimc";
-+                       clocks = <&clock 258>, <&clock 130>, <&clock 386>, <&clock 17>;
-+                       clock-names = "fimc", "sclk_fimc", "mux", "parent";
-+                       samsung,pix-limits = <4224 8192 1920 4224>;
-+                       samsung,mainscaler-ext;
-+                       samsung,isp-wb;
-+                       samsung,lcd-wb;
-+                       samsung,cam-if;
-+               };
-+
-+               fimc_3: fimc@11830000 {
-+                       compatible = "samsung,exynos4212-fimc";
-+                       clocks = <&clock 259>, <&clock 131>, <&clock 387>, <&clock 17>;
-+                       clock-names = "fimc", "sclk_fimc", "mux", "parent";
-+                       samsung,pix-limits = <1920 8192 1366 1920>;
-+                       samsung,rotators = <0>;
-+                       samsung,mainscaler-ext;
-+                       samsung,isp-wb;
-+                       samsung,lcd-wb;
-+               };
-+
-+               csis_0: csis@11880000 {
-+                       clocks = <&clock 260>, <&clock 134>, <&clock 390>, <&clock 17>;
-+                       clock-names = "csis", "sclk_csis", "mux", "parent";
-+               };
-+
-+               csis_1: csis@11890000 {
-+                       clocks = <&clock 261>, <&clock 135>, <&clock 391>, <&clock 17>;
-+                       clock-names = "csis", "sclk_csis", "mux", "parent";
-+               };
-+
-+               fimc_lite_0: fimc-lite@12390000 {
-+                       compatible = "samsung,exynos4212-fimc-lite";
-+                       reg = <0x12390000 0x1000>;
-+                       interrupts = <0 105 0>;
-+                       samsung,power-domain = <&pd_isp>;
-+                       clocks = <&clock 353>;
-+                       clock-names = "flite";
-+                       status = "disabled";
-+               };
-+
-+               fimc_lite_1: fimc-lite@123A0000 {
-+                       compatible = "samsung,exynos4212-fimc-lite";
-+                       reg = <0x123A0000 0x1000>;
-+                       interrupts = <0 106 0>;
-+                       samsung,power-domain = <&pd_isp>;
-+                       clocks = <&clock 354>;
-+                       clock-names = "flite";
-+                       status = "disabled";
-+               };
-+
-+               fimc_is: fimc-is@12000000 {
-+                       compatible = "samsung,exynos4212-fimc-is", "simple-bus";
-+                       reg = <0x12000000 0x260000>;
-+                       interrupts = <0 90 0>, <0 95 0>;
-+                       samsung,power-domain = <&pd_isp>;
-+                       clocks = <&clock 353>, <&clock 354>, <&clock 355>,
-+                               <&clock 356>, <&clock 17>, <&clock 357>,
-+                               <&clock 358>, <&clock 359>, <&clock 360>,
-+                               <&clock 450>,<&clock 451>, <&clock 452>,
-+                               <&clock 453>, <&clock 176>, <&clock 13>,
-+                               <&clock 454>, <&clock 395>, <&clock 455>;
-+                       clock-names = "lite0", "lite1", "ppmuispx",
-+                                     "ppmuispmx", "mpll", "isp",
-
-
-I notice a tiny typo in the documentation
-
---- a/Documentation/devicetree/bindings/media/exynos4-fimc-is.txt
-+++ b/Documentation/devicetree/bindings/media/exynos4-fimc-is.txt
-@@ -15,7 +15,7 @@ Required properties:
- - interrupts   : must contain two FIMC-IS interrupts, in order: ISP0, ISP1;
- - clocks       : list of clock specifiers, corresponding to entries in
-                  clock-names property;
--- clock-names  : must contain "ppmuispx", "ppmuispx", "lite0", "lite1"
-+- clock-names  : must contain "ppmuispx", "ppmuispmx", "lite0", "lite1"
-                  "mpll", "sysreg", "isp", "drc", "fd", "mcuisp", "uart",
-                  "ispdiv0", "ispdiv1", "mcuispdiv0", "mcuispdiv1", "aclk200",
-                  "div_aclk200", "aclk400mcuisp", "div_aclk400mcuisp" entries,
-
-
-+                                     "drc", "fd", "mcuisp",
-+                                     "ispdiv0", "ispdiv1", "mcuispdiv0",
-+                                     "mcuispdiv1", "uart", "aclk200",
-+                                     "div_aclk200", "aclk400mcuisp",
-+                                     "div_aclk400mcuisp";
-
-"sysreg" is missing from that list, but is listed as required in the documentation.
-
-+                       #address-cells = <1>;
-+                       #size-cells = <1>;
-+                       ranges;
-+                       status = "disabled";
-+
-+                       pmu {
-+                               reg = <0x10020000 0x3000>;
-+                       };
-+
-+                       i2c1_isp: i2c-isp@12140000 {
-+                               compatible = "samsung,exynos4212-i2c-isp";
-+                               reg = <0x12130000 0x100>;
-
-Typo 1214000 vs. 12130000?
-
-+                               clocks = <&clock 370>;
-+                               clock-names = "i2c_isp";
-+                               #address-cells = <1>;
-+                               #size-cells = <0>;
-+                       };
-+               };
-+       };
- };
-
-Cheers,
-Phil
---
-1.7.9.5
+Regards
+Haojian
