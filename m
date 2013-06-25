@@ -1,51 +1,64 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/4] Fix more issues with generic pinconf bindings
-Date: Tue, 25 Jun 2013 14:55:01 +0200
-Message-ID: <201306251455.01540.heiko@sntech.de>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
+Subject: [PATCH 1/4] pinctrl: more clarifications for generic pull configs
+Date: Tue, 25 Jun 2013 14:55:42 +0200
+Message-ID: <201306251455.42495.heiko@sntech.de>
+References: <201306251455.01540.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201306251455.01540.heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, James Hogan <james.hogan@imgtec.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-As Stephen Warren pointed out, some pinconf bindings had deficits
-either in documentation or in the whole thought process.
+PULL_PIN_DEFAULT is meant for hardware completely hiding any pull
+settings from the driver, so that it's really only possible to turn
+the pull on or off, but it not being possible to determine any
+pull settings from software.
 
-Therefore this series tries to fix these issues by improving
-documentation and removing the real controversial bindings for now.
+Also the binding-documentation for the pull arguments did not match
+the changes to the expected values.
 
-Of the changed pinconf bindings only the slew-rate had an acutal
-current user (since yesterday). James I hope it's ok to simply
-remove the slew-rate handling from the tz1090 driver until we can
-handle it correctly in dt.
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt |    5 ++---
+ include/linux/pinctrl/pinconf-generic.h                        |    5 ++++-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-
-Heiko Stuebner (4):
-  pinctrl: more clarifications for generic pull configs
-  pinctrl: set unit for debounce time pinconfig to usec
-  pinctrl: remove slew-rate parameter from tz1090
-  pinctrl: remove bindings for pinconf options needing more thought
-
- .../bindings/pinctrl/img,tz1090-pdc-pinctrl.txt      |    5 +----
- .../bindings/pinctrl/img,tz1090-pinctrl.txt          |    7 +------
- .../devicetree/bindings/pinctrl/pinctrl-bindings.txt |   18 ++++--------------
- drivers/pinctrl/pinconf-generic.c                    |    5 +----
- drivers/pinctrl/pinctrl-tz1090-pdc.c                 |    5 -----
- drivers/pinctrl/pinctrl-tz1090.c                     |    5 -----
- include/linux/pinctrl/pinconf-generic.h              |    7 +++++--
- 7 files changed, 12 insertions(+), 40 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index 2d730e3..7498bdc 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -165,9 +165,8 @@ output-high		- set the pin to output mode with high level
+ 
+ Arguments for parameters:
+ 
+-- bias-pull-up, -down and -pin-default take as optional argument 0 to disable
+-  the pull, on hardware supporting it the pull strength in Ohm. bias-disable
+-  will also disable any active pull.
++- bias-pull-up, -down and -pin-default take as optional argument on hardware
++  supporting it the pull strength in Ohm. bias-disable will disable the pull.
+ 
+ - drive-strength takes as argument the target strength in mA.
+ 
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index 10ad996..48aa4ba 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -41,7 +41,10 @@
+  *	impedance to GROUND). If the argument is != 0 pull-down is enabled,
+  *	if it is 0, pull-down is total, i.e. the pin is connected to GROUND.
+  * @PIN_CONFIG_BIAS_PULL_PIN_DEFAULT: the pin will be pulled up or down based
+- *	on embedded knowledge of the controller, like current mux function.
++ *	on embedded knowledge of the controller hardware, like current mux
++ *	function. The pull direction and possibly strength too will normally
++ *	be decided completely inside the hardware block and not be readable
++ *	from the kernel side.
+  *	If the argument is != 0 pull up/down is enabled, if it is 0, the
+  *	configuration is ignored. The proper way to disable it is to use
+  *	@PIN_CONFIG_BIAS_DISABLE.
 -- 
 1.7.10.4
