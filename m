@@ -1,56 +1,57 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH 3/4] pinctrl: remove slew-rate parameter from tz1090
-Date: Tue, 25 Jun 2013 14:50:49 +0100
-Message-ID: <51C9A039.4090804@imgtec.com>
-References: <201306251455.01540.heiko@sntech.de> <201306251456.36499.heiko@sntech.de> <51C99581.2010403@imgtec.com> <201306251521.55634.heiko@sntech.de> <51C99AB5.1080002@imgtec.com> <CACRpkdbdwvmBYFX=ppdM_RmGwyTcWVeTCMj60F4sh6YEVRE2Uw@mail.gmail.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
+Date: Tue, 25 Jun 2013 15:58:43 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1306251551020.4013@ionos.tec.linutronix.de>
+References: <20130530211944.05F4D3E0A90@localhost>
+ <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbdwvmBYFX=ppdM_RmGwyTcWVeTCMj60F4sh6YEVRE2Uw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370014348-21121-1-git-send-email-christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Cc: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/06/13 14:32, Linus Walleij wrote:
-> On Tue, Jun 25, 2013 at 3:27 PM, James Hogan <james.hogan@imgtec.com>=
- wrote:
->> On 25/06/13 14:21, Heiko St=FCbner wrote:
->=20
->>> My thoughts were that this code would never be reached when the par=
-sing was
->>> removed and to not cause confusion to the driver when an acceptable=
- binding
->>> was found for slew-rate.
->>>
->>> But it of course also doesn't hurt to stay in.
->>
->> Okay, fair enough.
->>
->> Acked-by: James Hogan <james.hogan@imgtec.com>
->=20
-> OK applied this so we have a clean slate.
->=20
-> Patches adding it back in with SI measures will be welcomed!
+On Fri, 31 May 2013, Christian Ruppert wrote:
+> The SOC interrupt controller driver for the Abilis Systems TB10x series of
+> SOCs based on ARC700 CPUs.
+> 
+> This patch depends on commits eb76bdd407d8a90e59a06cb0158886df390e5d1c and
+> 712bc93df9e7f14b8a163148d2aa7c778e151627 from branch irq/for-arm of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git.
 
-Okay.
+This should go below --- as it is not part of the changelog.
+ 
+> Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
 
-So the most descriptive documentation I can find for the slew rate in
-the TZ1090 pin config hardware is basically:
+Why is Pierrick in the SOB chain? 
 
-0: slow (half frequency)
-1: fast
+> ---
+>  .../interrupt-controller/abilis,tb10x-ictl.txt     |   38 ++++
+>  arch/arc/boot/dts/abilis_tb100.dtsi                |   32 ++--
+>  arch/arc/boot/dts/abilis_tb101.dtsi                |   32 ++--
+>  arch/arc/boot/dts/abilis_tb10x.dtsi                |   32 ++--
+>  arch/arc/plat-tb10x/Kconfig                        |    1 +
+>  drivers/irqchip/Kconfig                            |    5 +
+>  drivers/irqchip/Makefile                           |    1 +
+>  drivers/irqchip/irq-tb10x.c                        |  195 ++++++++++++++++++++
 
-Sounds like this pretty much precludes it from having a generic DT
-binding unless it can be mapped to some physical value, so I'll add a
-tz1090,slew-rate and use PIN_CONFIG_END+1 instead of PIN_CONFIG_SLEW_RA=
-TE.
+I can pick it up, but I'm not so fond of carrying arch/arc patches
+which might conflict with other stuff in the arc tree. Veenet, if I
+should pick the whole thing up, I'd like to have an acked-by at least.
 
-Anybody object to me adding an argument to
-pinconf_generic_parse_dt_config() so that an additional
-pinconf_generic_dt_params array can be optionally passed in? That way I
-can share the generic pinconf dt parsing code.
+Thanks,
 
-Cheers
-James
+	tglx
