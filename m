@@ -1,82 +1,84 @@
-From: Luciano Coelho <coelho@ti.com>
-Subject: [PATCH] Documentation: dt: bindings: TI WiLink modules
-Date: Tue, 25 Jun 2013 11:35:30 +0300
-Message-ID: <1372149330-24335-1-git-send-email-coelho@ti.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v5] clocksource:arm_global_timer: Add ARM global timer
+ support.
+Date: Tue, 25 Jun 2013 09:38:15 +0100
+Message-ID: <51C956F7.2040502@st.com>
+References: <1372089195-29219-1-git-send-email-srinivas.kandagatla@st.com> <51C8C35C.70307@codeaurora.org>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51C8C35C.70307@codeaurora.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-wireless@vger.kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Stuart Menefy <stuart.menefy@st.com>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for the TI WiLink modules.
-Currently only the WLAN part of the WiLink6, WiLink7 and WiLink8
-modules is supported.
+Thankyou for the comments.
+On 24/06/13 23:08, Stephen Boyd wrote:
+> On 06/24/13 08:53, Srinivas KANDAGATLA wrote:
+>> +#include <linux/clkdev.h>
+> 
+> Why do you need this include?
+> 
+>> +#include <asm/mach/irq.h>
+> 
+> And this one?
+Removed them.
+> 
+>> +static u64 gt_counter_read(void)
+>> +{
+>> +	u64 counter;
+>> +	u32 lower;
+>> +	u32 upper, old_upper;
+>> +
+>> +	upper = readl_relaxed(gt_base + GT_COUNTER1);
+>> +	do {
+>> +		old_upper = upper;
+>> +		lower = readl_relaxed(gt_base + GT_COUNTER0);
+>> +		upper = readl_relaxed(gt_base + GT_COUNTER1);
+> [snip]
+>> +static void gt_compare_set(unsigned long delta, int periodic)
+>> +{
+>> +	u64 counter = gt_counter_read();
+>> +	unsigned long ctrl = readl(gt_base + GT_CONTROL);
+>> +
+>> +	counter += delta;
+>> +	ctrl &=  ~(GT_CONTROL_COMP_ENABLE | GT_CONTROL_IRQ_ENABLE);
+>> +
+>> +	writel(ctrl, gt_base + GT_CONTROL);
+>> +	writel(lower_32_bits(counter), gt_base + GT_COMP0);
+>> +	writel(upper_32_bits(counter), gt_base + GT_COMP1);
+>> +
+>> +	if (periodic) {
+>> +		writel(delta, gt_base + GT_AUTO_INC);
+>> +		ctrl |= GT_CONTROL_AUTO_INC;
+>> +	}
+>> +
+>> +	ctrl |= GT_CONTROL_COMP_ENABLE | GT_CONTROL_IRQ_ENABLE;
+>> +	writel(ctrl, gt_base + GT_CONTROL);
+>> +}
+> 
+> Why is there a mix of the relaxed and non-relaxed io accessors?
 
-Signed-off-by: Luciano Coelho <coelho@ti.com>
----
+gt_counter_read will be used very frequently, so using relaxed can
+reduce latencies involved in memory barriers.
 
-I created a new directory under net to contain wireless bindings documentation.
+> 
+>> +#ifdef CONFIG_CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
+>> +static u32 gt_sched_clock_read(void)
+> 
+> notrace
+> 
+Ok, fixed it.
+>> +{
+>> +	if (!gt_base)
+>> +		return 0;
+> 
+> Seems impossible? Remove this check?
+Yep, I agree this case is impossible in the code flow.
+> 
 
-The actual implementation in the driver will follow separately.
-
- .../devicetree/bindings/net/wireless/ti-wilink.txt |   46 ++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
-
-diff --git a/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt b/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
-new file mode 100644
-index 0000000..d8e8bfbb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
-@@ -0,0 +1,46 @@
-+TI WiLink Wireless Modules Device Tree Bindings
-+===============================================
-+
-+The WiLink modules provide wireless connectivity, such as WLAN,
-+Bluetooth, FM and NFC.
-+
-+There are several different modules available, which can be grouped by
-+their generation: WiLink6, WiLink7 and WiLink8.  WiLink4 is not
-+currently supported with device tree.
-+
-+Currently, only the WLAN portion of the modules is supported with
-+device tree.
-+
-+Required properties:
-+--------------------
-+
-+- compatible: should be "ti,wilink6", "ti,wilink7" or "ti,wilink8"
-+- interrupt-parent: the interrupt controller
-+- interrupts: out-of-band WLAN interrupt
-+	See the interrupt controller's bindings documentation for
-+	detailed definition.
-+
-+Optional properties:
-+--------------------
-+
-+- refclock: the internal WLAN reference clock frequency (required for
-+  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
-+  following:
-+	0 = 19.2 MHz
-+	1 = 26.0 MHz
-+	2 = 38.4 MHz
-+	3 = 52.0 MHz
-+	4 = 38.4 MHz, XTAL
-+	5 = 26.0 MHz, XTAL
-+
-+- tcxoclock: the internal WLAN TCXO clock frequency (required for
-+  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
-+  following:
-+	0 = 19.200 MHz
-+	1 = 26.000 MHz
-+	2 = 38.400 MHz
-+	3 = 52.000 MHz
-+	4 = 16.368 MHz
-+	5 = 32.736 MHz
-+	6 = 16.800 MHz
-+	7 = 33.600 MHz
--- 
-1.7.10.4
-
+Thanks,
+srini
