@@ -1,95 +1,224 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] early init and DT platform devices allocation/registration
-Date: Tue, 25 Jun 2013 18:07:00 +0100
-Message-ID: <20130625170700.GB28654@e102568-lin.cambridge.arm.com>
-References: <20130624163340.GB26084@e102568-lin.cambridge.arm.com>
- <CACxGe6sPaV-sBz=SF46KdUexjAhWKGrMpG_ty+K26f6ZU5iKdg@mail.gmail.com>
- <51C9AF96.3040107@wwwdotorg.org>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v3 3/5] clk: dt: binding for basic multiplexer clock
+Date: Tue, 25 Jun 2013 10:40:30 -0700
+Message-ID: <20130625174030.23972.40841@quantum>
+References: <1371795256-16703-1-git-send-email-mturquette@linaro.org>
+ <1371795256-16703-4-git-send-email-mturquette@linaro.org>
+ <CAD6h2NS=AOQ4B6V=TtA120ga9ucF7eBxEguqFK0y4cfpa-F50Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51C9AF96.3040107-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD6h2NS=AOQ4B6V=TtA120ga9ucF7eBxEguqFK0y4cfpa-F50Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Matt Sealey <neko@bakuhatsu.net>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2013 at 03:56:22PM +0100, Stephen Warren wrote:
-> On 06/25/2013 05:45 AM, Grant Likely wrote:
-> > On Mon, Jun 24, 2013 at 5:33 PM, Lorenzo Pieralisi
-> > <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> >> Hi all,
-> >>
-> >> I am dealing with a lingering problem related to init and probing of platform
-> >> devices early (before initcalls) in the kernel boot process. The problem,
-> >> which is nothing new, is related to how platform devices are created in the
-> >> kernel from DT and when they become available. Platform devices are created
-> >> through (assuming any legacy static initialization is removed from the kernel)
-> >>
-> >> of_platform_populate()
-> >>
-> >> at arch_initcall time on ARM. This is a problem for drivers that need to be
-> >> probed and initialized before arch_initcall (ie early_initcall) because
-> >> the corresponding platform_device has not been created yet.
+Quoting Haojian Zhuang (2013-06-25 01:27:58)
+> On 21 June 2013 14:14, Mike Turquette <mturquette@linaro.org> wrote:
+> > Device Tree binding for the basic clock multiplexer, plus the setup
+> > function to register the clock.  Based on the existing fixed-clock
+> > binding.
+> >
+> > Includes minor beautification of clk-provider.h where some whitespace is
+> > added and of_fixed_factor_clock_setup is relocated to maintain a
+> > consistent style.
+> >
+> > Tero Kristo contributed helpful bug fixes to this patch.
+> >
+> > Signed-off-by: Mike Turquette <mturquette@linaro.org>
+> > ---
+> > Changes since v2:
+> > * added hiword-mask property to the binding
+> > * changed bit-shift property from u8 to u32 in the dt binding
+> >
+> > Changes since v1:
+> > * pass shift value into clk_register_mux_table
+> > * s/multiplexor/multiplexer/
+> > * removed debug prints
+> > * mask is u32, shift is u8
+> > * DT property names use dashes instead of underscores
+> > * DT property names are more verbose
+> > * shift property is optional in binding and can be auto-generated from a
+> >   full 32-bit mask
+> >
+> >  .../devicetree/bindings/clock/mux-clock.txt        | 79 ++++++++++++++++++++++
+> >  drivers/clk/clk-mux.c                              | 65 +++++++++++++++++-
+> >  include/linux/clk-provider.h                       |  5 +-
+> >  3 files changed, 147 insertions(+), 2 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/mux-clock.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/mux-clock.txt b/Documentation/devicetree/bindings/clock/mux-clock.txt
+> > new file mode 100644
+> > index 0000000..54cb8d1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/mux-clock.txt
+> > @@ -0,0 +1,79 @@
+> > +Binding for simple mux clock.
+> > +
+> > +This binding uses the common clock binding[1].  It assumes a
+> > +register-mapped multiplexer with multiple input clock signals or
+> > +parents, one of which can be selected as output.  This clock does not
+> > +gate or adjust the parent rate via a divider or multiplier.
+> > +
+> > +By default the "clocks" property lists the parents in the same order
+> > +as they are programmed into the regster.  E.g:
+> > +
+> > +       clocks = <&foo_clock>, <&bar_clock>, <&baz_clock>;
+> > +
+> > +results in programming the register as follows:
+> > +
+> > +register value         selected parent clock
+> > +0                      foo_clock
+> > +1                      bar_clock
+> > +2                      baz_clock
+> > +
+> > +Some clock controller IPs do not allow a value of zero to be programmed
+> > +into the register, instead indexing begins at 1.  The optional property
+> > +"index_one" modified the scheme as follows:
+> > +
+> > +register value         selected clock parent
+> > +1                      foo_clock
+> > +2                      bar_clock
+> > +3                      baz_clock
+> > +
+> > +Additionally an optional table of bit and parent pairs may be supplied
+> > +like so:
+> > +
+> > +       table = <&foo_clock 0x0>, <&bar_clock, 0x2>, <&baz_clock, 0x4>;
+> > +
+> > +where the first value in the pair is the parent clock and the second
+> > +value is the bitfield to be programmed into the register.
+> > +
+> > +The binding must provide the register to control the mux and the mask
+> > +for the corresponding control bits.  Optionally the number of bits to
+> > +shift that mask if necessary.  If the shift value is missing it is the
+> > +same as supplying a zero shift.
+> > +
+> > +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > +
+> > +Required properties:
+> > +- compatible : shall be "mux-clock".
+> > +- #clock-cells : from common clock binding; shall be set to 0.
+> > +- clocks : link phandles of parent clocks
+> > +- reg : base address for register controlling adjustable mux
+> > +- bit-mask : arbitrary bitmask for programming the adjustable mux
+> > +
+> > +Optional properties:
+> > +- clock-output-names : From common clock binding.
+> > +- table : array of integer pairs defining parents & bitfield values
+> > +- bit-shift : number of bits to shift the bit-mask, defaults to
+> > +  (ffs(mask) - 1) if not present
+> > +- index-starts-at-one : valid input select programming starts at 1, not
+> > +  zero
+> > +- hiword-mask : lower half of the register programs the mux, upper half
+> > +  of the register indicates bits that were updated in the lower half
+> > +
+> > +Examples:
+> > +       clock: clock@4a008100 {
+> > +               compatible = "mux-clock";
+> > +               #clock-cells = <0>;
+> > +               clocks = <&clock_foo>, <&clock_bar>, <&clock_baz>;
+> > +               reg = <0x4a008100 0x4>
+> > +               mask = <0x3>;
+> > +               index_one;
+> > +       };
+> > +
+> > +       clock: clock@4a008100 {
+> > +               #clock-cells = <0>;
+> > +               compatible = "mux-clock";
+> > +               clocks = <&clock_foo>, <&clock_bar>, <&clock_baz>;
+> > +               reg = <0x4a008100 0x4>;
+> > +               mask = <0x3>;
+> > +               shift = <0>;
+> > +               table = <&clock_foo 1>, <&clock_bar 2>, <&clock_baz 3>;
+> > +       };
+> > diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
+> > index 614444c..4751bce 100644
+> > --- a/drivers/clk/clk-mux.c
+> > +++ b/drivers/clk/clk-mux.c
+> > @@ -1,7 +1,7 @@
+> >  /*
+> >   * Copyright (C) 2011 Sascha Hauer, Pengutronix <s.hauer@pengutronix.de>
+> >   * Copyright (C) 2011 Richard Zhao, Linaro <richard.zhao@linaro.org>
+> > - * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
+> > + * Copyright (C) 2011-2013 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
+> >   *
+> >   * This program is free software; you can redistribute it and/or modify
+> >   * it under the terms of the GNU General Public License version 2 as
+> > @@ -16,6 +16,8 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/io.h>
+> >  #include <linux/err.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> >
+> >  /*
+> >   * DOC: basic adjustable multiplexer clock that cannot gate
+> > @@ -166,3 +168,64 @@ struct clk *clk_register_mux(struct device *dev, const char *name,
+> >                                       flags, reg, shift, mask, clk_mux_flags,
+> >                                       NULL, lock);
+> >  }
+> > +
+> > +#ifdef CONFIG_OF
+> > +/**
+> > + * of_mux_clk_setup() - Setup function for simple mux rate clock
+> > + */
+> > +void of_mux_clk_setup(struct device_node *node)
+> > +{
+> > +       struct clk *clk;
+> > +       const char *clk_name = node->name;
+> > +       void __iomem *reg;
+> > +       int num_parents;
+> > +       const char **parent_names;
+> > +       int i;
+> > +       u8 clk_mux_flags = 0;
+> > +       u32 mask = 0;
+> > +       u32 shift = 0;
+> > +
+> > +       of_property_read_string(node, "clock-output-names", &clk_name);
+> > +
+> > +       num_parents = of_clk_get_parent_count(node);
+> > +       if (num_parents < 1) {
+> > +               pr_err("%s: mux-clock %s must have parent(s)\n",
+> > +                               __func__, node->name);
+> > +               return;
+> > +       }
+> > +
+> > +       parent_names = kzalloc((sizeof(char*) * num_parents),
+> > +                       GFP_KERNEL);
+> > +
+> > +       for (i = 0; i < num_parents; i++)
+> > +               parent_names[i] = of_clk_get_parent_name(node, i);
+> > +
+> > +       reg = of_iomap(node, 0);
 > 
-> What's the use-case here; why does the driver /have/ to be
-> allocated/probed so early? Can't drivers all be allocated from DT in the
-> usual fashion, and any dependencies resolved using deferred probe? In
-> almost all cases, that should work.
-
-The driver must be initialized in order to boot secondary CPUs, so
-very very early, its initialization cannot be deferred.
-Otherwise we would end up with MCPM back-end having to add ad-hoc
-kludges to boot secondary CPUs, and then replace the early function calls
-to the power controller drivers when the power controller has been
-properly initialized. Feasible, but really horrible.
-
-On top of that, the HW component is an IP that provides functionality
-beyond power management, so we really want it to be initialized and
-running after boot, we cannot just hide a couple of function calls in
-the MCPM back-end to boot the CPUs and forget about that IP afterwards.
-
-> ...
-> >> How this problem is supposed to be solved in the kernel ?
-> >>
-> >> 1- drivers that are to be up and running at early_initcall time must not
-> >>    rely on the device/driver model (but then they cannot use any API that
-> >>    requires a struct device to function (eg regmap))
-> >> 2- the driver should allocate a platform device at early initcall from
-> >>    a DT compatible node. Do not know how to deal with platform device
-> >>    duplication though, since of_platform_populate() will create another
-> >>    platform device when the node is parsed
-> > 
-> > While I've resisted it in the past, I would be okay with adding struct
-> > device pointer in the device_node structure. I've resisted because I
-> > don't want drivers following the device_node pointer and making an
-> > assumption about what /kind/ of device is pointed to by it. However,
-> > this is an important use case and it makes it feasible to use an early
-> > platform device with of_platform_populate.
+> As you mentioned above,  reg : base address for register controlling
+> adjustable mux.
 > 
-> Hiroshi (who I have CC'd here) has also been asking about this same
-> issue downstream. The issue for us is that we need to initialize an SMMU
-> driver before any devices that are translated by the SMMU. One option is
-> to force the register/probe of the SMMU driver explicitly, early in the
-> machine's .init_machine() callback, before of_platform_populate(), to
-> ensure the ordering. Then, we run into the same duplicate device issue,
-> and the change Grant mentions above would help solve this.
+> Each clock node has the reg property. It means that we have to
+> allocate one page memory
+> for each register since of_iomap() is used at here. We always have
+> lots of registers with
+> continuous address in SoC, like 0x40a00040, 0x40a00044, .... Then
+> we'll waste too much
+> memory in system.
+> 
+> How about only define common function to parse property? Make register
+> mapping handled
+> by vendor's clock driver.
 
-Good to hear we are not alone. I still do not know if we are dealing
-with specific use cases or this is a problem that should be solved
-generically at kernel level. I think it is best to solve it once for
-all, otherwise we will all come up with workarounds to make things work,
-possibly violating the driver/device model usage guidelines.
+This is probably a good idea. It is independent of the binding though.
+The reg property can still be used as described above and however the OS
+interacts with it is an implementation detail that can be sorted out
+later.
 
-Lorenzo
+I'll look into your suggestion though, since it could save some memory.
+
+Regards,
+Mike
+
+> 
+> Regards
+> Haojian
