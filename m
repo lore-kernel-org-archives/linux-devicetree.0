@@ -1,59 +1,97 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v8 8/8] usb: phy: twl4030-usb: remove *set_suspend* and
- *phy_init* ops
-Date: Tue, 25 Jun 2013 18:21:05 +0300
-Message-ID: <20130625152105.GM21334@arwen.pp.htv.fi>
-References: <1372139926-3719-1-git-send-email-kishon@ti.com>
- <1372139926-3719-9-git-send-email-kishon@ti.com>
-Reply-To: <balbi@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] Make non-linear GPIO ranges accesible from gpiolib
+Date: Tue, 25 Jun 2013 17:28:41 +0200
+Message-ID: <CACRpkdZQ=G=K6g25gwGKfS1dCrDS35XepaOs38N-ymEuR0+x=g@mail.gmail.com>
+References: <CACRpkdY9F0cUaRfGJnHJW=2dYf_yKkr3M8Kh+_e6XQhh1WBoUA@mail.gmail.com>
+	<1371128132-18266-2-git-send-email-christian.ruppert@abilis.com>
+	<51BA3BC1.3090109@wwwdotorg.org>
+	<20130614091241.GA23745@ab42.lan>
+	<51C1F42E.5090107@wwwdotorg.org>
+	<51C1F82C.4020502@wwwdotorg.org>
+	<20130620115710.GB942@ab42.lan>
+	<51C4C2ED.5090505@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5V5c01chtBAiSHoy"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1372139926-3719-9-git-send-email-kishon@ti.com>
+In-Reply-To: <51C4C2ED.5090505@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, arnd@arndb.de, swarren@nvidia.com, sylvester.nawrocki@gmail.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, benoit.cousson@linaro.org, mchehab@redhat.com, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, balajitk@ti.com, george.cherian@ti.com
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Christian Ruppert <christian.ruppert@abilis.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
---5V5c01chtBAiSHoy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jun 21, 2013 at 11:17 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
 
-On Tue, Jun 25, 2013 at 11:28:46AM +0530, Kishon Vijay Abraham I wrote:
-> Now that twl4030-usb is adapted to the new generic PHY framework,
-> *set_suspend* and *phy_init* ops can be removed from twl4030-usb driver.
->=20
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Reviewed-by: Felipe Balbi <balbi@ti.com>
+> And finally, I don't really like using pin groups for the purpose of
+> defining these mappings, since I intended them to purely represent the
+> mapping from register fields to the set of affected pins. However, I can
+> see an argument for doing this, since the pin groups are in fact still
+> representing /some/ aspect of the pinctrl internal HW.
 
-Acked-by: Felipe Balbi <balbi@ti.com>
+The groups concept was part of the first pinctrl commit
+2744e8afb3b76343e7eb8197e8b3e085036010a5
+and there the intention was clearly just to define a discrete
+set of pins.
 
---=20
-balbi
+And some drivers use it like this still, with no connection to
+physical registers, i.MX come to mind.
 
---5V5c01chtBAiSHoy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+But I do seem to recall some endless discussions about this,
+I think we need to agree to disagree.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+I never saw any heavy reason for the driver not to define groups
+in some way it seemed would fit the muxing purposes right, we could
+say, if we compare to mathematical philiosophy, that I am a formalist
+rather than a platonist (i.e. I'm not requiring the description to strictly
+match a reality, but rather prefer that they fulfil a practical purpose).
+Here is an item for vacation reading...
+http://en.wikipedia.org/wiki/Philosophy_of_mathematics
 
-iQIcBAEBAgAGBQJRybVhAAoJEIaOsuA1yqREAxIQAJYWoDFBZnbz+ZyQAFyskF64
-j4wMKOZo/xDbRGl8UFvzHvesGvccUfEXKtGcdxCu0boL3H/KOwUmjJgWP2LZ0KKB
-4P34Kh7XFDh1on6xhfDvkO10ca2XU6vcAauJfWUKgon7fi/h/61u/4SeJn4fWaEJ
-qX0sBYFQkpLLoeqr3S9Gl1+hGZxJ40CwdE2BpOQiD2mUuT4QZ6xI0ilssJYkc8mJ
-XCTfiEgy6J1kZGd1il/Vng/nfSl8VRpAKP9I/BciOjtBR01K6GgpJP7ygG0+GW+q
-7PZry9RwyjVSa/gMqoaLBcFDFU4SHXLgdIRj2DZu1oDxSFZHDtdQc5cpSBxbh1Qy
-z8cf2vbyx0sJyfLnFw/dnLzBNqBX/4tjk7Dd990RmDOvcIlalie85KCx1JFIo32W
-bgbTOn9W+3/TG1/cvPVXmOeNsIHwRpXFYKNDcyknksUZhPfvzYQ7lYnN93GK/Eyj
-uRDw+1smwFVRZT4Sfpr4OU8z2s2kJrd8ax8igMNCl2weg2soeSoXB2/Mb0eKiWq8
-bIgDJT5q+m2winHOD34eS63g0981aojHeAtKdzfRvm7sh7lZ25Jn5krs+NWZK73N
-jaAOgA+Y43ZSMgbtz/aiet3RqXHGUR/AATDTS8IPpRqF8iyP4Azy/BU68wFPiI/z
-Zrh0V4bgnUxeHSTgYk04
-=JY2j
------END PGP SIGNATURE-----
+Maybe I will switch schools one day who knows.
 
---5V5c01chtBAiSHoy--
+Here is a tongue-in-cheek patch making fun of the whole debate:
+
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+index 5979147..d3ad8b0 100644
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -102,6 +102,21 @@ struct pinctrl_ops {
+ };
+
+ /**
++ * enum pinctrl_school - define the interpretation of group concept
++ * @PINCTRL_SCHOOL_PLATONIST: the group concept represents the authors
++ *    idea of a reality "behind" the pin controller, though in data
++ *    sheets and registers we may only see shadows of this reality
++ *    reflected as cavernous shades
++ * @PINCTRL_SCHOOL_FORMALIST: the group concept represents the authors
++ *    practical needs of dealing with pins in ordered groups and nothing
++ *    else
++ */
++enum pinctrl_school {
++    PINCTRL_SCHOOL_PLATONIST,
++    PINCTRL_SCHOOL_FORMALIST,
++};
++
++/**
+  * struct pinctrl_desc - pin controller descriptor, register this to pin
+  * control subsystem
+  * @name: name for the pin controller
+@@ -115,6 +130,7 @@ struct pinctrl_ops {
+  * @confops: pin config operations vtable, if you support pin configuration in
+  *    your driver
+  * @owner: module providing the pin controller, used for refcounting
++ * @school: which philosophical school the controller belongs to.
+  */
+ struct pinctrl_desc {
+     const char *name;
+@@ -124,6 +140,7 @@ struct pinctrl_desc {
+     const struct pinmux_ops *pmxops;
+     const struct pinconf_ops *confops;
+     struct module *owner;
++    enum pinctrl_school school;
+ };
+
+ /* External interface to pin controller */
+
+Yours,
+Linus Walleij
