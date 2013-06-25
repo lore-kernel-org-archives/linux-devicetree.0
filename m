@@ -1,70 +1,41 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
-Date: Tue, 25 Jun 2013 15:29:25 +0200
-Message-ID: <20130625132925.GC30827@ab42.lan>
-References: <20130530211944.05F4D3E0A90@localhost>
- <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com>
- <alpine.LFD.2.02.1305311835040.2905@ionos>
- <20130531221814.534DF3E08FE@localhost>
- <51AC15FA.4060800@synopsys.com>
- <CACxGe6se9rqOdLAqj7XQ+Awa5HP+2k1t7pN1AYOAPdiL2o3AjQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/4] pinctrl: remove slew-rate parameter from tz1090
+Date: Tue, 25 Jun 2013 15:32:47 +0200
+Message-ID: <CACRpkdbdwvmBYFX=ppdM_RmGwyTcWVeTCMj60F4sh6YEVRE2Uw@mail.gmail.com>
+References: <201306251455.01540.heiko@sntech.de>
+	<201306251456.36499.heiko@sntech.de>
+	<51C99581.2010403@imgtec.com>
+	<201306251521.55634.heiko@sntech.de>
+	<51C99AB5.1080002@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6se9rqOdLAqj7XQ+Awa5HP+2k1t7pN1AYOAPdiL2o3AjQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51C99AB5.1080002@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2013 at 10:51:06AM +0100, Grant Likely wrote:
-> On Mon, Jun 3, 2013 at 5:05 AM, Vineet Gupta <Vineet.Gupta1@synopsys.=
-com> wrote:
-> > On 06/01/2013 03:48 AM, Grant Likely wrote:
-> >> If I were working on this system I'd drop the
-> >> snps,arc700-intc node entirely and have a single abilis,tb10x-intc=
- that
-> >> encapsulated the properties of both (you would of course want to s=
-hare
-> >> handler functions for the 'normal' inputs without the custom featu=
-res).
-> >> That would eliminate the goofyness of listing 27 separate interrup=
-ts in
-> >> the abilis,tb10x-ictl interrupts property.
-> >
-> > But how is this different from other systems with a primary in-core=
- intc and a
-> > cascaded external intc. How do they do it. I guess I need to read u=
-p more on this.
->=20
-> Usually cascaded irq controllers have multiple irqs multiplexed onto =
-a
-> single irq on the parent controller. It's the 1:1 situation that make=
-s
-> this controller odd.
+On Tue, Jun 25, 2013 at 3:27 PM, James Hogan <james.hogan@imgtec.com> w=
+rote:
+> On 25/06/13 14:21, Heiko St=FCbner wrote:
 
-You're right, this might be a bit confusing. The controller was mainly
-designed as a compatibility layer between ARC770 built-in interrupts an=
-d
-the rest of the system.
+>> My thoughts were that this code would never be reached when the pars=
+ing was
+>> removed and to not cause confusion to the driver when an acceptable =
+binding
+>> was found for slew-rate.
+>>
+>> But it of course also doesn't hurt to stay in.
+>
+> Okay, fair enough.
+>
+> Acked-by: James Hogan <james.hogan@imgtec.com>
 
-Do you see a better way to drive this kind of hardware? Do you have any
-other comments on the driver?
+OK applied this so we have a clean slate.
 
-Without this driver, arch/arc/plat-tb10x and related drivers will not
-work and it would thus be good to have this in the kernel as quickly as
-possible if there are no more issues with it.
+Patches adding it back in with SI measures will be welcomed!
 
-Greetings,
-  Christian
-
---=20
-  Christian Ruppert              ,          <christian.ruppert@abilis.c=
-om>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
-leuri
-                             _// | bilis Systems   CH-1228 Plan-les-Oua=
-tes
+Yours,
+Linus Walleij
