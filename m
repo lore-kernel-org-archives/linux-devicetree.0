@@ -1,132 +1,104 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH 1/4] Make non-linear GPIO ranges accesible from gpiolib
-Date: Wed, 26 Jun 2013 13:42:01 +0200
-Message-ID: <20130626114159.GA7095@ab42.lan>
-References: <20130618092516.GC18663@ab42.lan>
- <1371547751-13873-1-git-send-email-christian.ruppert@abilis.com>
- <CACRpkdbhTsRAGSkxQURd01_yd5arw7=ktVXAmeEo22gFg4U38Q@mail.gmail.com>
- <51C1F531.3050205@wwwdotorg.org>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH -next] video: mxsfb: remove redundant dev_err call in
+ mxsfb_probe()
+Date: Wed, 26 Jun 2013 14:43:31 +0300
+Message-ID: <51CAD3E3.70707@ti.com>
+References: <CAPgLHd80wMDBg8ADjtDvZC1=yUoigS7_btHMz1=r8WQTwpgSvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51C1F531.3050205@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: multipart/mixed; boundary="===============8320985476954612802=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPgLHd80wMDBg8ADjtDvZC1=yUoigS7_btHMz1=r8WQTwpgSvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 19, 2013 at 12:15:13PM -0600, Stephen Warren wrote:
-> On 06/19/2013 06:03 AM, Linus Walleij wrote:
-> > On Tue, Jun 18, 2013 at 11:29 AM, Christian Ruppert
-> > <christian.ruppert@abilis.com> wrote:
-> >=20
-> >> This patch adds the infrastructure required to register non-linear=
- gpio
-> >> ranges through gpiolib and the standard GPIO device tree bindings.
-> >>
-> >> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-> >=20
-> > I'm basically fine with this, but would like Stephen's ACK if possi=
-ble.
-> >=20
-> >> +In addition, named groups of pins can be mapped to pin groups of =
-a given
-> >> +pin controller:
-> >> +
-> >> +       gpio_pio_g: gpio-controller@1480 {
-> >> +               #gpio-cells =3D <2>;
-> >> +               compatible =3D "fsl,qe-pario-bank-e", "fsl,qe-pari=
-o-bank";
-> >> +               reg =3D <0x1480 0x18>;
-> >> +               gpio-controller;
-> >> +               gpio-ranges =3D <&pinctrl1 0 0 0>, <&pinctrl2 3 0 =
-0>;
-> >> +               gpio-ranges-group-names =3D "foo", "bar";
-> >> +       };
-> >> +
-> >> +where,
-> >> +   &pinctrl1 and &pinctrl2 is the phandle to the pinctrl DT node.
-> >> +
-> >> +   The following value specifies the base GPIO offset of the pin =
-range with
-> >> +   respect to the GPIO controller's base. The remaining two value=
-s must be
-> >> +   0 to indicate that a named pin group should be used for the re=
-spective
-> >> +   range. The number of pins in the range is the number of pins i=
-n the pin
-> >> +   group.
-> >=20
-> > So while this works, these zeroes seem a bit awkward, but maybe
-> > it's the only way?
-> >=20
-> > I'm not good enough on device tree conventions, but isn't this poss=
-ible:
-> >=20
-> >               gpio-ranges =3D <&pinctrl1 0>, <&pinctrl2 3>;
-> >               gpio-ranges-group-names =3D "foo", "bar";
-> >=20
-> > Since we don't have any #gpio-ranges-cells or anything like that I
-> > guess we can define this to have a flexible number of cells
-> > depending on use case?
+--===============8320985476954612802==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="----enig2LOGFFUFCOMKGSJKKTSOQ"
+
+------enig2LOGFFUFCOMKGSJKKTSOQ
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 26/06/13 04:50, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 >=20
-> If we're willing to have gpio-ranges be either *all* group names, or
-> *all* IDs, we can define the format of gpio-ranges to have two cells
-> (phandle and GPIO number) if the property gpio-ranges-group-names
-> exists, but four cells (phandle, GPIO number, pin number, count)
-> otherwise. However, that's a little restrictive, since then what if o=
-ne
-> GPIO controller is hooked to two different pinmux controllers, and yo=
-u
-> want to use different formats for the references to each. A
-> #gpio-ranges-cells in the target of the phandle would allow this, but=
- I
-> don't think this is something the pinctrl node should dictate to thos=
-e
-> who reference it; it's quite legitimate for a GPIO node to use the pu=
-re
-> numeric mapping even if the pin controller happens to expose some pin
-> groups that allow you to do the mapping by name.
+> There is a error message within devm_ioremap_resource
+> already, so remove the dev_err call to avoid redundant
+> error message.
+>=20
+> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+> ---
+>  drivers/video/mxsfb.c | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/drivers/video/mxsfb.c b/drivers/video/mxsfb.c
+> index 21223d4..251bbec 100644
+> --- a/drivers/video/mxsfb.c
+> +++ b/drivers/video/mxsfb.c
+> @@ -899,7 +899,6 @@ static int mxsfb_probe(struct platform_device *pdev=
+)
+> =20
+>  	host->base =3D devm_ioremap_resource(&pdev->dev, res);
+>  	if (IS_ERR(host->base)) {
+> -		dev_err(&pdev->dev, "ioremap failed\n");
+>  		ret =3D PTR_ERR(host->base);
+>  		goto fb_release;
+>  	}
+>=20
 
-I actually had a version of the patch with #gpio-range-cells specifying
-the format (one argument for named ranges, three for classical ranges)
-before deciding to use a separate property and sending that version. As
-I said in a previous mail, I don't have a preference which of the
-following three possibilities to use and would be grateful for some
-guidance (if it matters at all).
+I've added this to my fbdev-3.11 branch.
 
-1.) separate property:
-	gpio {
-		gpio-ranges =3D <&pinctrl1 0 0 5>;
-		gpio-range-groups =3D <&pinctrl2 5>;
-		gpio-range-group-names =3D "gpios";
-	};
+ Tomi
 
-2.) fixed number of three arguments:
-	gpio {
-		gpio-ranges =3D <&pinctrl1 0 0 5>, <&pinctrl2 5 0 0>;
-		gpio-range-names =3D "", "gpios";
-	};
 
-3.) pinctrl-defined format.
-	pinctrl1: pctl1 {
-		#gpio-range-cells =3D <3>;
-	};
-	pinctrl2: pctl2 {
-		#gpio-range-cells =3D <1>;
-	};
-	gpio {
-		gpio-ranges =3D <&pinctrl1 0 0 5>, <&pinctrl2 5>;
-		gpio-range-names =3D "", "gpios";
-	};
 
---=20
-  Christian Ruppert              ,          <christian.ruppert@abilis.c=
-om>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
-leuri
-                             _// | bilis Systems   CH-1228 Plan-les-Oua=
-tes
+------enig2LOGFFUFCOMKGSJKKTSOQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJRytPjAAoJEPo9qoy8lh71rrYP/1Q4etU0ONBawoDNK2J2aoY/
+qqGuMn0uXUJlf3yNR4KOwiALbQeULTuOkacWg+66YAhEca5WuQMHMr+ehMdIINfz
+jajXFOzxozrCGeCxy01gYp7CpSELiIsFG0Sk8c77LWbKUp3mV9n1c5RMwkoUc10C
+RssLkj5QmcdwxJ/sKOf92nLcWP2bwzDZYd+F0IOrIbFEVVj6E2UMCSGOc2sDB+wa
+2YhP5lxUlxzE/hqP26kd9wohu6IQ87n7gtGEtm5Jlxrws5u8nmS5ZsXNcJ7TNaF6
+keEu/oIJwDl2gcVzhmXgcg3Wt7vfnr62AX/GqPKZyJnjTiyTsE7kRjsibXc9QoyW
+tWpR0RoI2RBZbJfSYGtxfz0uto0YAU/OgdQhgc2RaPsIU7gNRu/bcpasL5sLHjqd
+hLZc4OKTHEEk0F0JXXxMrt1okShNG2cfxfrV1xAJfLctN2pQfyMe/DumZkr9JvGo
+2m5RnOEl/UbrC/Z/uiJFxTliqwTH2Vvo3Qcyz48mXSDrrWRSAIq5vd2WH9JH4Hhm
+WmeOFtTcwyI4F/fqEhDPYe6jR/5NDNZcMGf3csYNWb7BWDeqTDNvn+m33UbhYmLa
+zlVRMLp2HN5zUpW6Z3H8ZfKg7BRrZPFqzlvPxTcu6ekDm8C9SlTk9mGP1frud0+9
+n810nUErcqFtc1si+BZi
+=72HT
+-----END PGP SIGNATURE-----
+
+------enig2LOGFFUFCOMKGSJKKTSOQ--
+
+--===============8320985476954612802==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============8320985476954612802==--
