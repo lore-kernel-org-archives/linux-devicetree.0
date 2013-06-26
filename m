@@ -1,77 +1,81 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v3 1/2] uio: Use of_match_ptr() macro in uio_pdrv_genirq.c
-Date: Wed, 26 Jun 2013 11:52:11 +0200
-Message-ID: <03c8973cc1e9efcd203e4d95d2dd9469afbcb39b.1372240320.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-21913-1372240333-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Pavel Machek <pavel@ucw.cz>, "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [GIT PULL] ARM DT cpus/cpu bindings documentation updates
+Date: Wed, 26 Jun 2013 10:55:04 +0100
+Message-ID: <20130626095504.GC22333@e102568-lin.cambridge.arm.com>
+References: <20130523103315.GA2866@e102568-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130523103315.GA2866-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+Hi Grant, Rob,
 
---=_mimegpg-monstr-desktop-21913-1372240333-0001
+On Thu, May 23, 2013 at 11:33:15AM +0100, Lorenzo Pieralisi wrote:
+> Hi Grant, Rob,
+> 
+> please pull the cpus/cpu nodes bindings updates for ARM. This pull
+> request completes my previous pull request:
+> 
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-May/169110.html
 
-This eliminates having an #ifdef returning NULL for the case
-when OF is disabled.
+Please let me know if you have any objection to these two pull requests
+(the one I am replying to and the one provided in the link above). I
+sent them quite early so I am just reminding you lest you missed them.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+These bindings are quite important and without them all in-kernel dts files,
+cpu map parsing code and topology updates are meaningless, I really hope you
+can queue them for this upcoming merge window.
 
----
-Changes in v3:
-- Rebased on Pavel's UIO patch
-  UIO: allow binding uio_pdrv_genirq.c to devices using command line option
-  (sha1: 05c3e0bb5629b897b0459e4bfb1b93d729033b99)
+They are based against early kernel versions (3.10-rc1 and 3.10-rc2), but
+they fast-forward cleanly to -rc7, please let me know if you want me to
+send pull requests with branches updated to -rc7, I do not think it is
+necessary.
 
-Changes in v2:
-- s/Use Use/Use/ from patch subject
+Thank you very much indeed,
+Lorenzo
 
- drivers/uio/uio_pdrv_genirq.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
-index bcd72f3..ad77450 100644
---- a/drivers/uio/uio_pdrv_genirq.c
-+++ b/drivers/uio/uio_pdrv_genirq.c
-@@ -274,8 +274,6 @@ MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
-
- module_param_string(of_id, uio_of_genirq_match[0].compatible, 128, 0);
- MODULE_PARM_DESC(of_id, "Openfirmware id of the device to be handled by uio");
--#else
--# define uio_of_genirq_match NULL
- #endif
-
- static struct platform_driver uio_pdrv_genirq = {
-@@ -285,7 +283,7 @@ static struct platform_driver uio_pdrv_genirq = {
- 		.name = DRIVER_NAME,
- 		.owner = THIS_MODULE,
- 		.pm = &uio_pdrv_genirq_dev_pm_ops,
--		.of_match_table = uio_of_genirq_match,
-+		.of_match_table = of_match_ptr(uio_of_genirq_match),
- 	},
- };
-
---
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-21913-1372240333-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlHKuc0ACgkQykllyylKDCE2LQCfedOrBbeWXuZ27YltKzhK7Rw8
-2tUAnjPqvQcLVRLZOfA21S+6a+FoQdFN
-=2Zg9
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-21913-1372240333-0001--
+> 
+> with the required changes for cpus/cpu nodes.
+> 
+> Thanks a lot,
+> Lorenzo
+> 
+> The following changes since commit c7788792a5e7b0d5d7f96d0766b4cb6112d47d75:
+> 
+>   Linux 3.10-rc2 (2013-05-20 14:37:38 -0700)
+> 
+> are available in the git repository at:
+> 
+>   git://linux-arm.org/linux-2.6-lp.git dt-cpus-bindings
+> 
+> for you to fetch changes up to 8e11f862d6a5491bb5f8ef73e13cfd66562e7be3:
+> 
+>   Documentation: devicetree: arm: cpus/cpu nodes bindings updates (2013-05-23 10:46:46 +0100)
+> 
+> ----------------------------------------------------------------
+> Lorenzo Pieralisi (1):
+>       Documentation: devicetree: arm: cpus/cpu nodes bindings updates
+> 
+>  Documentation/devicetree/bindings/arm/cpus.txt | 459 ++++++++++++++++++++++---
+>  1 file changed, 412 insertions(+), 47 deletions(-)
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
