@@ -1,37 +1,31 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 1/2] uio: Use of_match_ptr() macro in uio_pdrv_genirq.c
-Date: Wed, 26 Jun 2013 08:00:03 -0700
-Message-ID: <20130626150003.GA14117@kroah.com>
-References: <03c8973cc1e9efcd203e4d95d2dd9469afbcb39b.1372240320.git.michal.simek@xilinx.com>
- <CAK9yfHzVSt1XN7=OZOtF_n_3jbpXObqoiay_t6n3EauTjUUX+w@mail.gmail.com>
- <51CAC0A7.7090708@monstr.eu>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Wed, 26 Jun 2013 17:00:34 +0200
+Message-ID: <51CB0212.3050103@samsung.com>
+References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com>
+ <20130625150649.GA21334@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51CAC0A7.7090708@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Sachin Kamat <sachin.kamat@linaro.org>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, "Hans J. Koch" <hjk@hansjkoch.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20130625150649.GA21334@arwen.pp.htv.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 26, 2013 at 12:21:27PM +0200, Michal Simek wrote:
-> On 06/26/2013 12:00 PM, Sachin Kamat wrote:
-> > On 26 June 2013 15:22, Michal Simek <michal.simek@xilinx.com> wrote:
-> >> This eliminates having an #ifdef returning NULL for the case
-> >> when OF is disabled.
-> >>
-> >> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> > 
-> > I have already submitted a similar patch for doing this:
-> > https://lkml.org/lkml/2013/3/14/169
-> 
-> Ok. I don't care about it.
-> Greg: Can you please add any of this patch to your char-misc tree?
+Hi,
 
-I did that yesterday, can't you see it in there already, or did I mess
-something up?
+On 06/25/2013 05:06 PM, Felipe Balbi wrote:
+>> +static struct platform_driver exynos_video_phy_driver = {
+>> > +	.probe	= exynos_video_phy_probe,
+>
+> you *must* provide a remove method. drivers with NULL remove are
+> non-removable :-)
 
-thanks,
+Actually the remove() callback can be NULL, it's just missing module_exit
+function that makes a module not unloadable.
 
-greg k-h
+--
+Regards,
+Sylwester
