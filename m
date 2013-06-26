@@ -1,64 +1,89 @@
-From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH -next] pinctrl: st: fix return value check
-Date: Thu, 27 Jun 2013 00:30:10 +0800
-Message-ID: <CAPgLHd8-jbXfb95x1Bp7GsMuEJ3mOudUcknRqbxNpNmcdQvg3w@mail.gmail.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH 3/5] ARM: dts: am33xx: Add interrupts and memory resources
+ for MMC
+Date: Wed, 26 Jun 2013 22:03:54 +0530
+Message-ID: <51CB17F2.5060504@ti.com>
+References: <1372209888-6649-1-git-send-email-joelagnel@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1372209888-6649-1-git-send-email-joelagnel@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel A Fernandes <agnel.joel@gmail.com>
+Cc: Mark Brown <broonie@linaro.org>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Koen Kooi <koen@beagleboard.org>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, Linux Documentation List <linux-doc@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Arnd Bergmann <arnd@arndb.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Jason Kridner <jkridner@beagleboard.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Benoit Cousson <b-cousson@ti.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Landley <rob@landley.net>, Linux SPI Devel List <spi-dev>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+Hi Joel,
 
-In case of error, the function pinctrl_register() returns
-NULL not ERR_PTR(). The IS_ERR() test in the return value
-check should be replaced with NULL test.
-The function syscon_regmap_lookup_by_phandle() returns ERR_PTR()
-and never returns NULL. The NULL test in the return value check
-should be replaced with IS_ERR().
+On Wednesday 26 June 2013 06:54 AM, Joel A Fernandes wrote:
+> From: Joel A Fernandes <agnel.joel@gmail.com>
+>
+> HWMOD irq entries for MMC were removed. We provide the same from DT for MMC.
+>
+> This fixes issue where memory resource could not be found during probe.
+> Also, added the reg-offset property to account for the offset from start.
+>
+> Signed-off-by: Joel A Fernandes <agnel.joel@gmail.com>
+> ---
+>   arch/arm/boot/dts/am33xx.dtsi |   12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index 119f8a9..e0a5741 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -237,6 +237,10 @@
+>   			dmas = <&edma 24
+>   				&edma 25>;
+>   			dma-names = "tx", "rx";
+> +			interrupts = <64>;
+> +			interrupt-parent = <&intc>;
+> +			reg = <0x48060000 0x1000>;
+> +			reg-offset = <0x100>;
+>   			status = "disabled";
+>   		};
+>
+> @@ -247,6 +251,10 @@
+>   			dmas = <&edma 2
+>   				&edma 3>;
+>   			dma-names = "tx", "rx";
+> +			interrupts = <24>;
 
-Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
----
- drivers/pinctrl/pinctrl-st.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+s/24/28
 
-diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
-index 7effedf..de8c626 100644
---- a/drivers/pinctrl/pinctrl-st.c
-+++ b/drivers/pinctrl/pinctrl-st.c
-@@ -1299,9 +1299,9 @@ static int st_pctl_probe_dt(struct platform_device *pdev,
- 		return -ENOMEM;
- 
- 	info->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
--	if (!info->regmap) {
-+	if (IS_ERR(info->regmap)) {
- 		dev_err(info->dev, "No syscfg phandle specified\n");
--		return -ENOMEM;
-+		return PTR_ERR(info->regmap);
- 	}
- 	info->data = of_match_node(st_pctl_of_match, np)->data;
- 
-@@ -1376,9 +1376,9 @@ static int st_pctl_probe(struct platform_device *pdev)
- 	pctl_desc->name		= dev_name(&pdev->dev);
- 
- 	info->pctl = pinctrl_register(pctl_desc, &pdev->dev, info);
--	if (IS_ERR(info->pctl)) {
-+	if (!info->pctl) {
- 		dev_err(&pdev->dev, "Failed pinctrl registration\n");
--		return PTR_ERR(info->pctl);
-+		return -EINVAL;
- 	}
- 
- 	for (i = 0; i < info->nbanks; i++)
+> +			interrupt-parent = <&intc>;
+> +			reg = <0x481d8000 0x1000>;
+> +			reg-offset = <0x100>;
+>   			status = "disabled";
+>   		};
+>
+> @@ -254,6 +262,10 @@
+>   			compatible = "ti,omap3-hsmmc";
+
+compatible should be ti,omap4-hsmmc since omap4 hsmmc IP is re-used in am33xx
+and reg-offset property is not needed.
+combine this patch with 2/5 ARM: dts: add AM33XX MMC support and please add
+your signed-off to that patch.
+
+>   			ti,hwmods = "mmc3";
+>   			ti,needs-special-reset;
+> +			interrupts = <25>;
+
+s/25/29
+
+> +			interrupt-parent = <&intc>;
+> +			reg = <0x47810000 0x1000>;
+> +			reg-offset = <0x100>;
+>   			status = "disabled";
+>   		};
+>
+>
