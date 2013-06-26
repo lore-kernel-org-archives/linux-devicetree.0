@@ -1,88 +1,53 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
-Subject: [PATCH 3/3] watchdog: dw_wdt: add a devicetree binding
-Date: Wed, 26 Jun 2013 20:05:05 +0200
-Message-ID: <201306262005.05765.heiko@sntech.de>
-References: <201306262003.13256.heiko@sntech.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V10 1/4] pci: Add PCIe driver for Samsung Exynos
+Date: Wed, 26 Jun 2013 20:17:04 +0200
+Message-ID: <201306262017.04689.arnd@arndb.de>
+References: <003a01ce6e50$6d5418b0$47fc4a10$@samsung.com>
+ <20130625021102.GA13310@google.com>
+ <007e01ce7153$4d4b0730$e7e11590$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306262003.13256.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>
-Cc: Jamie Iles <jamie@jamieiles.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <007e01ce7153$4d4b0730$e7e11590$%kim@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Jingoo Han' <jg1.han@samsung.com>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Tomasz Figa' <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The dw_wdt does not use any platform-specific data, so no new properties
-need to be introduced. The dw-apb-wdt naming follows other designware
-components in the kernel and is also written like this in documentation
-describing the component.
+On Tuesday 25 June 2013, Kukjin Kim wrote:
+> Bjorn Helgaas wrote:
+> > 
+> > On Fri, Jun 21, 2013 at 04:24:54PM +0900, Jingoo Han wrote:
+> > > Exynos5440 has a PCIe controller which can be used as Root Complex.
+> > > This driver supports a PCIe controller as Root Complex mode.
+> > >
+> > > Signed-off-by: Surendranath Gurivireddy Balla <suren.reddy@samsung.com>
+> > > Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+> > > Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+> > > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > 
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > Please merge this through arm-soc as you discussed.
+> > 
+> Sounds great.
+> 
+> Arnd, please take this series into arm-soc tree directly by yourself with my
+> ack on arch/exynos stuff if you want ;)
+> 
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- .../devicetree/bindings/watchdog/snps-dw-apb-wdt.txt |   18 ++++++++++++++++++
- drivers/watchdog/dw_wdt.c                            |   10 ++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/snps-dw-apb-wdt.txt
+Ok, done.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/snps-dw-apb-wdt.txt b/Documentation/devicetree/bindings/watchdog/snps-dw-apb-wdt.txt
-new file mode 100644
-index 0000000..c20cdd1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/snps-dw-apb-wdt.txt
-@@ -0,0 +1,18 @@
-+* Synosis DesignWare APB Watchdog
-+
-+The Watchdog controller is used for resuming system operation
-+after a preset amount of time during which the WDT reset event has not
-+occurred.
-+
-+Required properties:
-+- compatible : "snps,dw-apb-wdt"
-+- reg : offset and length of the register set for the device.
-+- clocks : the periphal clock of the controller.
-+
-+Example:
-+
-+	watchdog@2004c000 {
-+		compatible = "snps,dw-apb-wdt";
-+		reg = <0x2004c000 0x100>;
-+		clocks = <&wdt_clock>;
-+	};
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index b922bec..829e148 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -35,6 +35,7 @@
- #include <linux/timer.h>
- #include <linux/uaccess.h>
- #include <linux/watchdog.h>
-+#include <linux/of.h>
- 
- #define WDOG_CONTROL_REG_OFFSET		    0x00
- #define WDOG_CONTROL_REG_WDT_EN_MASK	    0x01
-@@ -337,12 +338,21 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id dw_wdt_of_match[] = {
-+	{ .compatible = "snps,dw-apb-wdt", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
-+#endif
-+
- static struct platform_driver dw_wdt_driver = {
- 	.probe		= dw_wdt_drv_probe,
- 	.remove		= dw_wdt_drv_remove,
- 	.driver		= {
- 		.name	= "dw_wdt",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(dw_wdt_of_match),
- 		.pm	= &dw_wdt_pm_ops,
- 	},
- };
--- 
-1.7.10.4
+I've put this on top of the next/soc tree, which already contains the
+other PCI host controller support.
+
+	Arnd
