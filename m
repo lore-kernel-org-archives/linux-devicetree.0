@@ -1,86 +1,77 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
-Date: Wed, 26 Jun 2013 16:51:34 +0530
-Message-ID: <51CACEBE.9000505@ti.com>
-References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com> <20130625150649.GA21334@arwen.pp.htv.fi> <51C9D714.4000703@samsung.com> <20130625205452.GC9748@arwen.pp.htv.fi>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v4 0/7] xilinxfb changes
+Date: Wed, 26 Jun 2013 14:41:57 +0300
+Message-ID: <51CAD385.8060400@ti.com>
+References: <cover.1370254386.git.michal.simek@xilinx.com> <20130617085640.GE305@game.jcrosoft.org> <51BED093.1040207@monstr.eu> <201306172307.19114.arnd@arndb.de> <51CABC2A.50209@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130625205452.GC9748@arwen.pp.htv.fi>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="----enig2UIAOQTNPGVXGEMFPLXBL"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51CABC2A.50209@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: monstr@monstr.eu
+Cc: Arnd Bergmann <arnd@arndb.de>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Timur Tabi <timur@tabi.org>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
+
+------enig2UIAOQTNPGVXGEMFPLXBL
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Wednesday 26 June 2013 02:24 AM, Felipe Balbi wrote:
-> Hi,
->
-> On Tue, Jun 25, 2013 at 07:44:52PM +0200, Sylwester Nawrocki wrote:
->>>> +struct exynos_video_phy {
->>>> +	spinlock_t slock;
->>>> +	struct phy *phys[NUM_PHYS];
->>>
->>> more than one phy ? This means you should instantiate driver multiple
->>> drivers. Each phy id should call probe again.
+On 26/06/13 13:02, Michal Simek wrote:
+> On 06/17/2013 11:07 PM, Arnd Bergmann wrote:
+>> On Monday 17 June 2013, Michal Simek wrote:
+>>> On 06/17/2013 10:56 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>>> On 07:23 Mon 17 Jun     , Michal Simek wrote:
+>>>>> On 06/06/2013 06:23 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>>>>> On 12:13 Mon 03 Jun     , Michal Simek wrote:
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>
+>>>>>> Arnd can you take look on it again please
+>>>>>>
+>>>>>> I'll take a look on it next week
+>>>>>
+>>>>> Any update on this?
+>>>> look ok but I want the Ack from Arnd
 >>
->> Why ? This single PHY _provider_ can well handle multiple PHYs.
->> I don't see a good reason to further complicate this driver like
->> this. Please note that MIPI-CSIS 0 and MIPI DSIM 0 share MMIO
->> register, so does MIPI CSIS 1 and MIPI DSIM 1. There are only 2
->> registers for those 4 PHYs. I could have the involved object
->> multiplied, but it would have been just a waste of resources
->> with no difference to the PHY consumers.
->
-> alright, I misunderstood your code then. When I looked over your id
-> usage I missed the "/2" part and assumed that you would have separate
-> EXYNOS_MIPI_PHY_CONTROL() register for each ;-)
->
-> My bad, you can disregard the other comments.
->
->>>> +static int exynos_video_phy_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct exynos_video_phy *state;
->>>> +	struct device *dev = &pdev->dev;
->>>> +	struct resource *res;
->>>> +	struct phy_provider *phy_provider;
->>>> +	int i;
->>>> +
->>>> +	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
->>>> +	if (!state)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +
->>>> +	state->regs = devm_ioremap_resource(dev, res);
->>>> +	if (IS_ERR(state->regs))
->>>> +		return PTR_ERR(state->regs);
->>>> +
->>>> +	dev_set_drvdata(dev, state);
->>>
->>> you can use platform_set_drvdata(pdev, state);
+>> Sorry for the delay, everything looks good to me.
 >>
->> I had it in the previous version, but changed for symmetry with
->> dev_set_drvdata(). I guess those could be replaced with
->> phy_{get, set}_drvdata as you suggested.
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>=20
+> Jean-Christophe: Will you apply this series?
+> Or should I take it through my microblaze tree?
 
-right. currently I was setting dev_set_drvdata of phy (core) device
-in phy-core.c and the corresponding dev_get_drvdata in phy provider driver
-which is little confusing.
-So I'll add phy_set_drvdata and phy_get_drvdata in phy.h (as suggested by
-Felipe) to be used by phy provider drivers. So after creating the PHY, the
-phy provider should use phy_set_drvdata and in phy_ops, it can use
-phy_get_drvdata. (I'll remove the dev_set_drvdata in phy_create).
+I've added this to my fbdev-3.11 branch.
 
-This also means _void *priv_ in phy_create is useless. So I'll be removing
-_priv_ from phy_create.
+ Tomi
 
-Thanks
-Kishon
 
->
-> hmm, you do need to set the drvdata() to the phy object, but also to the
-> pdev object (should you need it on a suspend/resume callback, for
-> instance). Those are separate struct device instances.
+
+------enig2UIAOQTNPGVXGEMFPLXBL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJRytOFAAoJEPo9qoy8lh71xjgP/0fcVcyg77HowYq0FLm5lDW1
+lyV2s6OQy6umgnNKaxoWETjtoi/zDWQIekOwexTbaBPd4UEzg7oQBb2ETOxbE/IW
+5BoaBgpM8YJ3XBInLzQjP2Yi45DO9bGyvCYzh5VgrgYr2xaQvnKe9KeeS5mqE7vI
+YRx/i9NfEDl5lzNCa0+HWbmO+bHfrqhvJjRjj2P/KEnmgAPWlWC/JF1nw+cDG+r+
+5aZn4Y1M586aLPKQz1Qx318QMKFe5W9hhCFAuKNO7cYQcyGHGvZBnkfQKyxhkE3u
+nfCMBkAKasOwXo5QB7t4+cLcASkmB+xp1ivirtgFVpnmpTjLRi7Lq+Cb2HD0NUZA
+04GdTJv4iNYAYUydtIucGWPpBvuYbWxt2NHae84MgclAdENIQvL6XgIv4Upi5Dgp
++mIpAM96g1uAePfygetCYiKLnDu1Xuj4LZLLUpAGVX+UHePWYX6D4O75o6+OJbua
+6WgvXdo3pW6gNlHL5Kkyki3VH5Axa/VduU5GC9PuGCDSpI9mZzZjyXB53l/2eix1
+QA1qBFTtGatbGyrY2U7RWPFxVIcw0jvDfCK5HrGKUQREclMScpwZyRkIC6Z/6p/Z
+f36v6Ct4sYNFpFEx+RAaSPdeO8tv8HvaDYpIktwyA6a1xQpKBYkx35jIP+KoeYDP
+/uXigGCpNrfgOCAGuB9N
+=PjFZ
+-----END PGP SIGNATURE-----
+
+------enig2UIAOQTNPGVXGEMFPLXBL--
