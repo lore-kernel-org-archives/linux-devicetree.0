@@ -1,27 +1,92 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
-Date: Wed, 26 Jun 2013 09:53:42 +0530
-Message-ID: <51CA6CCE.9060202@synopsys.com>
-References: <20130530211944.05F4D3E0A90@localhost> <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com> <alpine.DEB.2.02.1306251551020.4013@ionos.tec.linutronix.de> <20130625141141.GA1720@ab42.lan>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Wed, 26 Jun 2013 08:23:54 +0300
+Message-ID: <20130626052353.GA12640@arwen.pp.htv.fi>
+References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com>
+ <20130625150649.GA21334@arwen.pp.htv.fi>
+ <51C9D714.4000703@samsung.com>
+ <20130625205452.GC9748@arwen.pp.htv.fi>
+ <51CA0FE1.9090107@gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130625141141.GA1720@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51CA0FE1.9090107@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: balbi@ti.com, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/25/2013 07:41 PM, Christian Ruppert wrote:
->>> > > Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
->>> > > Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
->> > 
->> > Why is Pierrick in the SOB chain? 
-> We work on the platform port together and review and test each others'
-> patches. It is planned submitting several of his patches as soon as
-> basic platform is in.
+--CE+1k2dSO48ffgeK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Which is fine, however the rule is, person sending the patch needs to do the last SOB.
+On Tue, Jun 25, 2013 at 11:47:13PM +0200, Sylwester Nawrocki wrote:
+> Hi,
+>=20
+> On 06/25/2013 10:54 PM, Felipe Balbi wrote:
+> >>>>+static int exynos_video_phy_probe(struct platform_device *pdev)
+> >>>>>  >>  +{
+> >>>>>  >>  +	struct exynos_video_phy *state;
+> >>>>>  >>  +	struct device *dev =3D&pdev->dev;
+> >>>>>  >>  +	struct resource *res;
+> >>>>>  >>  +	struct phy_provider *phy_provider;
+> >>>>>  >>  +	int i;
+> >>>>>  >>  +
+> >>>>>  >>  +	state =3D devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
+> >>>>>  >>  +	if (!state)
+> >>>>>  >>  +		return -ENOMEM;
+> >>>>>  >>  +
+> >>>>>  >>  +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >>>>>  >>  +
+> >>>>>  >>  +	state->regs =3D devm_ioremap_resource(dev, res);
+> >>>>>  >>  +	if (IS_ERR(state->regs))
+> >>>>>  >>  +		return PTR_ERR(state->regs);
+> >>>>>  >>  +
+> >>>>>  >>  +	dev_set_drvdata(dev, state);
+> >>>>  >
+> >>>>  >  you can use platform_set_drvdata(pdev, state);
+> >>>
+> >>>  I had it in the previous version, but changed for symmetry with
+> >>>  dev_set_drvdata(). I guess those could be replaced with
+> >>>  phy_{get, set}_drvdata as you suggested.
+> >
+> >hmm, you do need to set the drvdata() to the phy object, but also to the
+> >pdev object (should you need it on a suspend/resume callback, for
+> >instance). Those are separate struct device instances.
+>=20
+> Indeed, I somehow confused phy->dev with with phy->dev.parent. I'm going
+> to just drop the above call, since the pdev drvdata is currently not
+> referenced anywhere.
 
+ok cool :-)
 
+--=20
+balbi
+
+--CE+1k2dSO48ffgeK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRynrpAAoJEIaOsuA1yqRELnMQAIkKkzeFVgazZcFZtjVIDyjD
+Aua6SmiixQs5snwi9P50OpG0Vm3nBTwiXoedE92rnICodJ2PxSvRBa2GTtF+HVJK
+oy29Z/8xq0uzjoq2Q/2NwT2ak8Jz/eqxfCVwb/FsYFeBEXOrCpFCHlwrX5CwgDMK
+jXnOD7dYYUTQQmCutXaWQAU8FdLk47Db7vFrMvHgp6YGzVCteATkRJWg18CIHewT
+tzytJnxzT2tctm2srn7g4xHlJhGO6t/8tGPNK1IdV8KXynoXgyqV/6+dBWl8E2TD
+r64E9IS2feoZdE2hVHCTv7xdjhLm5n+qeHKQLYMGGaZosR8+yVkA2a6Xg0gWSMt2
+H3k6ghGwn0AY7LnoVqpmLmy+23JQleqiYP2JSi0ACPSUYSknayUClGeFs40I69cE
+fLruUtcm4ZM5L5wPy5XyXwkzPmzqhtgPHxva2jBg6KxjdUhgahcE7GXAwtknnzLI
++YIxRknUXFsovXxkOKdkSioVLb/ZC08z40cM716/HdbW2Q9y4fm6CfgsduETSOEQ
+YwWPea/jrXZtGQSr+2mApyLjk+aJ87LxDCbcxyRJ/Ubbu8PW+RnGeHxFgVLVE7jk
+RhjfXdTAFsdLDjG2EgFUZJ5CmtuK7yLE0PR2I9V3i/Xxx9BrS9JcYTZe6Kz5ENn4
+yO9SiWe/qVO11LfXXGCR
+=2sMa
+-----END PGP SIGNATURE-----
+
+--CE+1k2dSO48ffgeK--
