@@ -1,170 +1,58 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] leds: Add device tree binding for pca9633
-Date: Wed, 26 Jun 2013 07:17:06 -0700
-Message-ID: <20130626141705.GY5523@atomide.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: Add PCM1681 codec driver.
+Date: Wed, 26 Jun 2013 15:25:31 +0100
+Message-ID: <20130626142531.GO27646@sirena.org.uk>
+References: <1372251928-15706-1-git-send-email-marek.belisko@streamunlimited.com>
+ <51CAE9C8.3030005@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WeAyUrhnD1IdQdNw"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <51CAE9C8.3030005@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: Marek Belisko <marek.belisko@gmail.com>, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, lgirdwood@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Marek Belisko <marek.belisko@streamunlimited.com>
 List-Id: devicetree@vger.kernel.org
 
-Similar to tca6507, we can just parse the standard LED
-properties for pca9633.
 
-Tested on a pca9632, which is compatible with pca9633.
+--WeAyUrhnD1IdQdNw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+On Wed, Jun 26, 2013 at 03:16:56PM +0200, Daniel Mack wrote:
+> Hi Marek,
+>=20
+> On 26.06.2013 15:05, Marek Belisko wrote:
+> > PCM1681 can be controlled via I2C, SPI or in bootstrap mode. This code =
+add
+> > support only for I2C mode.
 
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/pca9633.txt
-@@ -0,0 +1,42 @@
-+LEDs connected to pca9633 or pca9632
-+
-+Required properties:
-+- compatible : should be : "nxp,pca963x"
-+
-+Each led is represented as a sub-node of the nxp,pca9633 device.
-+
-+LED sub-node properties:
-+- label : (optional) see Documentation/devicetree/bindings/leds/common.txt
-+- reg : number of LED line (could be from 0 to 4)
-+- linux,default-trigger : (optional)
-+   see Documentation/devicetree/bindings/leds/common.txt
-+
-+Examples:
-+
-+pca9632: pca9632 {
-+	compatible = "nxp,pca9632", "nxp,pca963x";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0x62>;
-+
-+	red@0 {
-+		label = "red";
-+		reg = <0>;
-+		linux,default-trigger = "none";
-+	};
-+	green@1 {
-+		label = "green";
-+		reg = <1>;
-+		linux,default-trigger = "none";
-+	};
-+	blue@2 {
-+		label = "blue";
-+		reg = <2>;
-+		linux,default-trigger = "none";
-+	};
-+	unused@3 {
-+		label = "unused";
-+		reg = <3>;
-+		linux,default-trigger = "none";
-+	};
-+};
---- a/drivers/leds/leds-pca9633.c
-+++ b/drivers/leds/leds-pca9633.c
-@@ -22,6 +22,7 @@
- #include <linux/i2c.h>
- #include <linux/workqueue.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
- #include <linux/platform_data/leds-pca9633.h>
- 
- /* LED select registers determine the source that drives LED outputs */
-@@ -93,6 +94,61 @@ static void pca9633_led_set(struct led_classdev *led_cdev,
- 	schedule_work(&pca9633->work);
- }
- 
-+#ifdef CONFIG_OF
-+static struct pca9633_platform_data *
-+pca9633_dt_init(struct i2c_client *client)
-+{
-+	struct device_node *np = client->dev.of_node, *child;
-+	struct pca9633_platform_data *pdata;
-+	struct led_info *pca9633_leds;
-+	int count;
-+
-+	count = of_get_child_count(np);
-+	if (!count || count > 4)
-+		return ERR_PTR(-ENODEV);
-+
-+	pca9633_leds = devm_kzalloc(&client->dev,
-+				sizeof(struct led_info) * count, GFP_KERNEL);
-+	if (!pca9633_leds)
-+		return ERR_PTR(-ENOMEM);
-+
-+	for_each_child_of_node(np, child) {
-+		struct led_info led;
-+		u32 reg;
-+		int res;
-+
-+		led.name =
-+			of_get_property(child, "label", NULL) ? : child->name;
-+		led.default_trigger =
-+			of_get_property(child, "linux,default-trigger", NULL);
-+		res = of_property_read_u32(child, "reg", &reg);
-+		if (res != 0)
-+			continue;
-+		pca9633_leds[reg] = led;
-+	}
-+	pdata = devm_kzalloc(&client->dev,
-+			     sizeof(struct pca9633_platform_data), GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pdata->leds.leds = pca9633_leds;
-+	pdata->leds.num_leds = count;
-+
-+	return pdata;
-+}
-+
-+static const struct of_device_id of_pca9633_match[] = {
-+	{ .compatible = "nxp,pca963x", },
-+	{},
-+};
-+#else
-+static struct pca9633_platform_data *
-+pca9633_dt_init(struct i2c_client *client)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+#endif
-+
- static int pca9633_probe(struct i2c_client *client,
- 					const struct i2c_device_id *id)
- {
-@@ -102,6 +158,14 @@ static int pca9633_probe(struct i2c_client *client,
- 
- 	pdata = client->dev.platform_data;
- 
-+	if (!pdata) {
-+		pdata = pca9633_dt_init(client);
-+		if (IS_ERR(pdata)) {
-+			dev_warn(&client->dev, "could not parse configuration\n");
-+			pdata = NULL;
-+		}
-+	}
-+
- 	if (pdata) {
- 		if (pdata->leds.num_leds <= 0 || pdata->leds.num_leds > 4) {
- 			dev_err(&client->dev, "board info must claim at most 4 LEDs");
-@@ -181,6 +245,7 @@ static struct i2c_driver pca9633_driver = {
- 	.driver = {
- 		.name	= "leds-pca9633",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(of_pca9633_match),
- 	},
- 	.probe	= pca9633_probe,
- 	.remove	= pca9633_remove,
+Guys, please delete unneeded context from replies so it's possible to
+find the content - otherwise people are wading through screen after
+screen to find what you added.
+
+--WeAyUrhnD1IdQdNw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRyvnXAAoJELSic+t+oim9w1oQAIm+AxMqP5tOL4blDxl+DMtm
+ytgyX+r56XyHNdjzvPO+w5BpM56ak7ZKWyA8Nz3N5LVCbHVz5xfU8iglfC/2V+2q
+Wo1IupUC73UG3eY2q39wohUsBhDaAgnOwjSMNPbyjxi0dHe65JfP6iW6FKSD1x08
+7OCALK4fx7NjsYtQezjMv3aNMXeaPmqLri1K/NWR1fXUXSCWeLzRaSJPLEV6LCPL
+r5Ad/Sz5orzzU6H+QhxY1EplAzf64FUDwz4mPFc7T+QmyJ7eOj3IPZ8eCfqXHTtJ
+fd+MIWsqeeNnfDXryq0hRe74ezhgKTHfY/kLb1u2FEKN5FTDZE0kXU6mUk3xIkEE
+x0ybdjvqe/I/zUxxwxwj5ms2PYaZsGZvRRcgDUk390KsY0gXteVftwSVLT1cIk2f
+igw3cYkC467eAImjBv/V6heoRrtJjesd0+1Lr9yu1Gym1/t10uRcAnJfrhSklo8s
+7OkEhoWfBSe89ii6u7SBCa4NkTs0boVOe9uV/dRDcL1ct0moZtksoBuUJm17Tq7U
+yLeOw5r6Bj6a/cDJXm13sg6kIbx2fEqCjyy7eEuuPV9Eth5yIOfeKnR2jxE23BCn
+2nn9dcCckAoDCZYGXT/HkOmlSP+fBCwr4l2++8yuinj2b9GuCNkUQ5vMuI5RMyKu
+em6NL61H9V37jG8RMPjI
+=u8wv
+-----END PGP SIGNATURE-----
+
+--WeAyUrhnD1IdQdNw--
