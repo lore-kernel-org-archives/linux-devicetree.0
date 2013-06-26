@@ -1,78 +1,63 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 7/9] documentation: iommu: add description of ARM System
-	MMU binding
-Date: Wed, 26 Jun 2013 18:42:31 +0100
-Message-ID: <20130626174231.GH10333@mudshark.cambridge.arm.com>
-References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
-	<1370889285-22799-8-git-send-email-will.deacon@arm.com>
-	<CALRxmdBxFWoRKv+bUu8VEwNNcAJUej9jM2V8N0rrqrr_Vpe8fQ@mail.gmail.com>
-	<20130626133941.GD7417@mudshark.cambridge.arm.com>
-	<CALRxmdCycFK2wW=C4aU79mudSaT+2vU8nzXxepdstubg+YSdQg@mail.gmail.com>
+From: Loc Ho <lho@apm.com>
+Subject: [PATCH v5 0/3] clk: Add APM X-Gene SoC clock driver
+Date: Wed, 26 Jun 2013 11:56:08 -0600
+Message-ID: <1372269371-22992-1-git-send-email-lho@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALRxmdCycFK2wW=C4aU79mudSaT+2vU8nzXxepdstubg+YSdQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Stuart Yoder <b08248-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org Discuss" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mark.rutland@arm.com
+Cc: fkan@apm.com, mturquette@linaro.org, Catalin.Marinas@arm.com, devicetree-discuss@lists.ozlabs.org, Loc Ho <lho@apm.com>, ksankaran@apm.com, vkale@apm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 26, 2013 at 05:19:48PM +0100, Stuart Yoder wrote:
-> On Wed, Jun 26, 2013 at 8:39 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> > I'd suggest looking at the driver I posted to get a gist of how the parsing
-> > code works, but suffice to say that we describe both the number of
-> > interrupts and the actual interrupt numbers here.
-> 
-> I understand that the number of interrupts and actual interrupt numbers
-> are described here, but was referring to the _meaning_ of the interrupt
-> numbers.   A binding for a device with 2 interrupts, a TX and RX would
-> normally identify which interrupt specifier is for TX and which is for RX.
-> 
-> Based on your code, the 2 global interrupts seem to be the secure
-> and non-secure fault interrupts...which your driver does not differentiate.
-> However, the device tree is describing hardware and  you can't assume
-> that all drivers don't care which is which.
+This patch adds APM X-Gene SoC clock driver support. Reference,
+PCP PLL, SoC PCP, and Ethernet clocks are defined via the DTS.
 
-Currently, the driver only works when Linux is running as non-secure, which is
-becoming more and more common since it is required to be able to make use of
-hyp mode.
+-v5:
+ * Remove duplicate code for soc/pcp clk init function
+ * Remove un-used flags field from structure
+ * Merge error handler code for device clock init function
+ * Update binding documentation
 
-There are actually two global interrupts for SMMUv1 and SMMUv2, which
-correspond to configuration faults and `other' global faults.
+-v4:
+ * Remove flags from DTS and check status instead
+ * Change DTS reg entry to be identified by reg-names property
 
-> If there are other interrupts added in the future like the performance interrupt
-> the definition could be expanded to add that.
+-v3:
+ * Make DTS compatible type for SoC PLL and PCP PLL
+ * Make use of of_iomap instead direct ioremap call
+ * Make kzalloc with variable instead structure
+ * Remove DTS binding for fixed-clock and fixed_factor_clock
+ * Remove unnecessary arch_initcall
 
-PMU interrupts would like have a separate property, since the PMU would be
-driven by a largely independent piece of code.
+-v2:
+ * Make depends on ARM64
+ * Fix duplicate registration
 
-> But a question.... why do you need the #global-interrupts property
-> at all?   Is the number of "global" interrupts really implementation dependent?
-> Does't a specific compatible string imply the number of interrupts that there
-> actually are?
+-v1 - Initial post 
 
-Integrators have a nasty habit of ORing interrupts together or not wiring
-them at all and I don't want to be caught out by that.
+Loc Ho (3):
+  clk: Add APM X-Gene SoC clock driver for reference, PLL, and device
+    clocks.
+  clk: arm64: Add DTS clock entry for APM X-Gene Storm SoC with
+    reference to
+  Documentation: Add documentation for APM X-Gene clock binding with
+    PLL and
 
-> > What bus hierarchy? If I have two SMMU device nodes, how do I infer any
-> > topological information without an explicit linkage?
-> 
-> I really don't know anything about SMMU chaining, but am inferring what
-> this might look like.   Does the "child" SMMU look just like another
-> mmu-master to the parent?   If so, why not just use the mmu-masters
-> property to establish the relationship.
-
-No, the child SMMU does not look like a master. It can remaster upstream
-StreamIDs, for example.
-
-Will
+ Documentation/devicetree/bindings/clock/xgene.txt |  111 +++++
+ arch/arm64/boot/dts/apm-storm.dtsi                |   75 +++
+ drivers/clk/Kconfig                               |    7 +
+ drivers/clk/Makefile                              |    1 +
+ drivers/clk/clk-xgene.c                           |  521 +++++++++++++++++++++
+ 5 files changed, 715 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/xgene.txt
+ create mode 100644 drivers/clk/clk-xgene.c
