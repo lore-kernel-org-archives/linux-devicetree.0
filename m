@@ -1,37 +1,59 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2] ARM: DTS: OMAP4: Add OMAP4 Blaze Tablet support
-Date: Tue, 25 Jun 2013 23:27:26 -0700
-Message-ID: <20130626062725.GL5523@atomide.com>
-References: <1372159970-6361-1-git-send-email-ruslan.bilovol@ti.com>
- <51C9A412.1050802@ti.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 2/4] ARM: dts: exynos4: Add node for hsotg
+Date: Wed, 26 Jun 2013 16:26:54 +0900
+Message-ID: <001501ce723e$88b6c020$9a244060$@samsung.com>
+References: <1372174706-5459-1-git-send-email-t.figa@samsung.com>
+ <1372174706-5459-3-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51C9A412.1050802@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Ruslan Bilovol <ruslan.bilovol@ti.com>, b-cousson@ti.com, benoit.cousson@linaro.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1372174706-5459-3-git-send-email-t.figa@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <t.figa@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 'Kukjin Kim' <kgene.kim@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Felipe Balbi' <balbi@ti.com>, 'Grant Likely' <grant.likely@linaro.org>, 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>, 'Linus Walleij' <linus.walleij@linaro.org>, linux-usb@vger.kernel.org, 'Rob Herring' <rob.herring@calxeda.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, m.szyprowski@samsung.com, l.majewski@samsung.com, 'Kyungmin Park' <kyungmin.park@samsung.com>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Dan Murphy <dmurphy@ti.com> [130625 07:13]:
-> On 06/25/2013 06:32 AM, Ruslan Bilovol wrote:
-> >The OMAP4 Blaze Tablet is TI OMAP4 processor-based
-> >development platform in a tablet formfactor.
-> >The platform contains many of the features found in
-> >present-day handsets (such as audio, video, wireless
-> >functions and user interfaces) and in addition
-> >contains features for software development and test.
-> Why do we want to send this upstream?
-> What is the advantage to having this supported?
+On Wednesday, June 26, 2013 12:38 AM, Tomasz Figa wrote:
 > 
-> I don't believe we need to add another community board.  We have a
-> SDP and Panda.
+> This patch adds device tree node for USB HSOTG controller present on
+> Exynos4 SoCs.
+> 
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 
-Why not? Just the .dts file is needed nowadays and it
-may make it easier to support various other omap4 based
-tablets that have similar features.
+It looks good.
 
-Regards,
+Reviewed-by: Jingoo Han <jg1.han@samsung.com>
 
-Tony
+Best regards,
+Jingoo Han
+
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index 359694c..d53b9da 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -119,6 +119,15 @@
+>  		status = "disabled";
+>  	};
+> 
+> +	hsotg@12480000 {
+> +		compatible = "samsung,s3c6400-hsotg";
+> +		reg = <0x12480000 0x20000>;
+> +		interrupts = <0 71 0>;
+> +		clocks = <&clock 305>;
+> +		clock-names = "otg";
+> +		status = "disabled";
+> +	};
+> +
+>  	sdhci@12510000 {
+>  		compatible = "samsung,exynos4210-sdhci";
+>  		reg = <0x12510000 0x100>;
+> --
+> 1.8.2.1
+> 
