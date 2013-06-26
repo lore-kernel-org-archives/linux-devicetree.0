@@ -1,459 +1,258 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: [PATCH] ARC: [TB10x] Updates for irqchip driver
-Date: Wed, 26 Jun 2013 16:01:28 +0200
-Message-ID: <1372255288-19901-1-git-send-email-christian.ruppert@abilis.com>
-References: <51CA6B6D.3080706@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51CA6B6D.3080706@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>, Christian Ruppert <christian.ruppert@abilis.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v3 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Wed, 26 Jun 2013 17:02:22 +0200
+Message-ID: <1372258946-15607-2-git-send-email-s.nawrocki@samsung.com>
+References: <1372258946-15607-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1372258946-15607-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, balbi@ti.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Device tree and Kconfig updates for irqchip driver.
+Add a PHY provider driver for the Samsung S5P/Exynos SoC MIPI CSI-2
+receiver and MIPI DSI transmitter DPHYs.
 
-Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 ---
- arch/arc/boot/dts/abilis_tb100.dtsi |   32 ++++++++++++++------------------
- arch/arc/boot/dts/abilis_tb101.dtsi |   32 ++++++++++++++------------------
- arch/arc/boot/dts/abilis_tb10x.dtsi |   32 ++++++++++++++------------------
- arch/arc/plat-tb10x/Kconfig         |    1 +
- 4 files changed, 43 insertions(+), 54 deletions(-)
+Changes since v2:
+ - adapted to the generic PHY API v9: use phy_set/get_drvdata(),
+ - fixed of_xlate callback to return ERR_PTR() instead of NULL,
+ - namespace cleanup, put "GPL v2" as MODULE_LICENSE, removed pr_debug,
+ - removed phy id check in __set_phy_state().
+---
+ .../phy/samsung,s5pv210-mipi-video-phy.txt         |   14 ++
+ drivers/phy/Kconfig                                |    9 ++
+ drivers/phy/Makefile                               |    3 +-
+ drivers/phy/phy-exynos-mipi-video.c                |  170 ++++++++++++++++++++
+ 4 files changed, 195 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/samsung,s5pv210-mipi-video-phy.txt
+ create mode 100644 drivers/phy/phy-exynos-mipi-video.c
 
-diff --git a/arch/arc/boot/dts/abilis_tb100.dtsi b/arch/arc/boot/dts/abilis_tb100.dtsi
-index 941ad11..d9f8249 100644
---- a/arch/arc/boot/dts/abilis_tb100.dtsi
-+++ b/arch/arc/boot/dts/abilis_tb100.dtsi
-@@ -21,10 +21,6 @@
+diff --git a/Documentation/devicetree/bindings/phy/samsung,s5pv210-mipi-video-phy.txt b/Documentation/devicetree/bindings/phy/samsung,s5pv210-mipi-video-phy.txt
+new file mode 100644
+index 0000000..5ff208c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/samsung,s5pv210-mipi-video-phy.txt
+@@ -0,0 +1,14 @@
++Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY
++-------------------------------------------------
++
++Required properties:
++- compatible : should be "samsung,s5pv210-mipi-video-phy";
++- reg : offset and length of the MIPI DPHY register set;
++- #phy-cells : from the generic phy bindings, must be 1;
++
++For "samsung,s5pv210-mipi-video-phy" compatible PHYs the second cell in
++the PHY specifier identifies the PHY and its meaning is as follows:
++  0 - MIPI CSIS 0,
++  1 - MIPI DSIM 0,
++  2 - MIPI CSIS 1,
++  3 - MIPI DSIM 1.
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 5f85909..6f446d0 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -11,3 +11,12 @@ menuconfig GENERIC_PHY
+ 	  devices present in the kernel. This layer will have the generic
+ 	  API by which phy drivers can create PHY using the phy framework and
+ 	  phy users can obtain reference to the PHY.
++
++if GENERIC_PHY
++
++config PHY_EXYNOS_MIPI_VIDEO
++	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
++	help
++	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung
++	  S5P and EXYNOS SoCs.
++endif
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index 9e9560f..71d8841 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -2,4 +2,5 @@
+ # Makefile for the phy drivers.
+ #
  
- /include/ "abilis_tb10x.dtsi"
- 
--/* interrupt specifiers
-- * --------------------
-- * 0: rising, 1: low, 2: high, 3: falling,
-- */
- 
- / {
- 	clock-frequency		= <500000000>;	/* 500 MHZ */
-@@ -173,7 +169,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF140000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -185,7 +181,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF141000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -197,7 +193,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF142000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -209,7 +205,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF143000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -221,7 +217,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF144000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -233,7 +229,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF145000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -245,7 +241,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF146000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -257,7 +253,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF147000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -269,7 +265,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF148000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -281,7 +277,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF149000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -293,7 +289,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF14A000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -305,7 +301,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF14B000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -317,7 +313,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF14C000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -329,7 +325,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF14D000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-diff --git a/arch/arc/boot/dts/abilis_tb101.dtsi b/arch/arc/boot/dts/abilis_tb101.dtsi
-index fd25c21..da8ca79 100644
---- a/arch/arc/boot/dts/abilis_tb101.dtsi
-+++ b/arch/arc/boot/dts/abilis_tb101.dtsi
-@@ -21,10 +21,6 @@
- 
- /include/ "abilis_tb10x.dtsi"
- 
--/* interrupt specifiers
-- * --------------------
-- * 0: rising, 1: low, 2: high, 3: falling,
-- */
- 
- / {
- 	clock-frequency		= <500000000>;	/* 500 MHZ */
-@@ -182,7 +178,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF140000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -194,7 +190,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF141000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -206,7 +202,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF142000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -218,7 +214,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF143000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -230,7 +226,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF144000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -242,7 +238,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF145000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -254,7 +250,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF146000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -266,7 +262,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF147000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -278,7 +274,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF148000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -290,7 +286,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF149000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -302,7 +298,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF14A000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -314,7 +310,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF14B000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -326,7 +322,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF14C000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-@@ -338,7 +334,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <27 1>;
-+			interrupts = <27 2>;
- 			reg = <0xFF14D000 0x1000>;
- 			gpio-controller;
- 			#gpio-cells = <1>;
-diff --git a/arch/arc/boot/dts/abilis_tb10x.dtsi b/arch/arc/boot/dts/abilis_tb10x.dtsi
-index b97e305..edf56f4 100644
---- a/arch/arc/boot/dts/abilis_tb10x.dtsi
-+++ b/arch/arc/boot/dts/abilis_tb10x.dtsi
-@@ -19,10 +19,6 @@
-  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
-  */
- 
--/* interrupt specifiers
-- * --------------------
-- * 0: rising, 1: low, 2: high, 3: falling,
-- */
- 
- / {
- 	compatible		= "abilis,arc-tb10x";
-@@ -78,7 +74,7 @@
- 			#interrupt-cells = <1>;
- 		};
- 		tb10x_ictl: pic@fe002000 {
--			compatible = "abilis,tb10x_ictl";
-+			compatible = "abilis,tb10x-ictl";
- 			reg = <0xFE002000 0x20>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -91,7 +87,7 @@
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0xFF100000 0x100>;
- 			clock-frequency = <166666666>;
--			interrupts = <25 1>;
-+			interrupts = <25 8>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			interrupt-parent = <&tb10x_ictl>;
-@@ -100,7 +96,7 @@
- 			compatible = "snps,dwmac-3.70a","snps,dwmac";
- 			reg = <0xFE100000 0x1058>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <6 1>;
-+			interrupts = <6 8>;
- 			interrupt-names = "macirq";
- 			clocks = <&ahb_clk>;
- 			clock-names = "stmmaceth";
-@@ -109,7 +105,7 @@
- 			compatible = "snps,dma-spear1340";
- 			reg = <0xFE000000 0x400>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <14 1>;
-+			interrupts = <14 8>;
- 			dma-channels = <6>;
- 			dma-requests = <0>;
- 			dma-masters = <1>;
-@@ -128,7 +124,7 @@
- 			compatible = "snps,designware-i2c";
- 			reg = <0xFF120000 0x1000>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <12 1>;
-+			interrupts = <12 8>;
- 			clocks = <&ahb_clk>;
- 		};
- 		i2c1: i2c@FF121000 {
-@@ -137,7 +133,7 @@
- 			compatible = "snps,designware-i2c";
- 			reg = <0xFF121000 0x1000>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <12 1>;
-+			interrupts = <12 8>;
- 			clocks = <&ahb_clk>;
- 		};
- 		i2c2: i2c@FF122000 {
-@@ -146,7 +142,7 @@
- 			compatible = "snps,designware-i2c";
- 			reg = <0xFF122000 0x1000>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <12 1>;
-+			interrupts = <12 8>;
- 			clocks = <&ahb_clk>;
- 		};
- 		i2c3: i2c@FF123000 {
-@@ -155,7 +151,7 @@
- 			compatible = "snps,designware-i2c";
- 			reg = <0xFF123000 0x1000>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <12 1>;
-+			interrupts = <12 8>;
- 			clocks = <&ahb_clk>;
- 		};
- 		i2c4: i2c@FF124000 {
-@@ -164,7 +160,7 @@
- 			compatible = "snps,designware-i2c";
- 			reg = <0xFF124000 0x1000>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <12 1>;
-+			interrupts = <12 8>;
- 			clocks = <&ahb_clk>;
- 		};
- 
-@@ -176,7 +172,7 @@
- 			num-cs = <1>;
- 			reg = <0xFE010000 0x20>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <26 1>;
-+			interrupts = <26 8>;
- 			clocks = <&ahb_clk>;
- 		};
- 		spi1: spi@0xFE011000 {
-@@ -187,7 +183,7 @@
- 			num-cs = <2>;
- 			reg = <0xFE011000 0x20>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <10 1>;
-+			interrupts = <10 8>;
- 			clocks = <&ahb_clk>;
- 		};
- 
-@@ -195,7 +191,7 @@
- 			compatible = "abilis,tb100-tsm";
- 			reg = <0xff316000 0x400>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <17 1>;
-+			interrupts = <17 8>;
- 			output-clkdiv = <4>;
- 			global-packet-delay = <0x21>;
- 			port-packet-delay = <0>;
-@@ -213,7 +209,7 @@
- 					"cpuctrl",
- 					"a6it_int_force";
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <20 1>, <19 1>;
-+			interrupts = <20 2>, <19 2>;
- 			interrupt-names = "cmd_irq", "event_irq";
- 		};
- 		tb10x_mdsc0: tb10x-mdscr@FF300000 {
-@@ -239,7 +235,7 @@
- 			compatible = "abilis,tb100-wfb";
- 			reg = <0xff319000 0x1000>;
- 			interrupt-parent = <&tb10x_ictl>;
--			interrupts = <16 1>;
-+			interrupts = <16 8>;
- 		};
- 	};
- };
-diff --git a/arch/arc/plat-tb10x/Kconfig b/arch/arc/plat-tb10x/Kconfig
-index 1d34521..1ab386b 100644
---- a/arch/arc/plat-tb10x/Kconfig
-+++ b/arch/arc/plat-tb10x/Kconfig
-@@ -22,6 +22,7 @@ menuconfig ARC_PLAT_TB10X
- 	select PINCTRL
- 	select PINMUX
- 	select ARCH_REQUIRE_GPIOLIB
-+	select TB10X_IRQC
- 	help
- 	  Support for platforms based on the TB10x home media gateway SOC by
- 	  Abilis Systems. TB10x is based on the ARC700 CPU architecture.
+-obj-$(CONFIG_GENERIC_PHY)	+= phy-core.o
++obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
++obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+diff --git a/drivers/phy/phy-exynos-mipi-video.c b/drivers/phy/phy-exynos-mipi-video.c
+new file mode 100644
+index 0000000..d0cd048
+--- /dev/null
++++ b/drivers/phy/phy-exynos-mipi-video.c
+@@ -0,0 +1,170 @@
++/*
++ * Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
++ *
++ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
++ * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/spinlock.h>
++
++/* MIPI_PHYn_CONTROL register offset: n = 0..1 */
++#define EXYNOS_MIPI_PHY_CONTROL(n)	((n) * 4)
++#define EXYNOS_MIPI_PHY_ENABLE		(1 << 0)
++#define EXYNOS_MIPI_PHY_SRESETN		(1 << 1)
++#define EXYNOS_MIPI_PHY_MRESETN		(1 << 2)
++#define EXYNOS_MIPI_PHY_RESET_MASK	(3 << 1)
++
++enum exynos_mipi_phy_id {
++	EXYNOS_MIPI_PHY_ID_CSIS0,
++	EXYNOS_MIPI_PHY_ID_DSIM0,
++	EXYNOS_MIPI_PHY_ID_CSIS1,
++	EXYNOS_MIPI_PHY_ID_DSIM1,
++	EXYNOS_MIPI_PHYS_NUM
++};
++
++#define IS_EXYNOS_MIPI_DSIM_PHY_ID(id) \
++	((id) == EXYNOS_MIPI_PHY_ID_DSIM0 || (id) == EXYNOS_MIPI_PHY_ID_DSIM0)
++
++struct exynos_mipi_video_phy {
++	spinlock_t slock;
++	struct phy *phys[EXYNOS_MIPI_PHYS_NUM];
++	void __iomem *regs;
++};
++
++static int __set_phy_state(struct exynos_mipi_video_phy *state,
++			enum exynos_mipi_phy_id id, unsigned int on)
++{
++	void __iomem *addr;
++	unsigned long flags;
++	u32 reg, reset;
++
++	addr = state->regs + EXYNOS_MIPI_PHY_CONTROL(id / 2);
++
++	if (IS_EXYNOS_MIPI_DSIM_PHY_ID(id))
++		reset = EXYNOS_MIPI_PHY_MRESETN;
++	else
++		reset = EXYNOS_MIPI_PHY_SRESETN;
++
++	spin_lock_irqsave(&state->slock, flags);
++	reg = readl(addr);
++	if (on)
++		reg |= reset;
++	else
++		reg &= ~reset;
++	writel(reg, addr);
++
++	/* Clear ENABLE bit only if MRESETN, SRESETN bits are not set. */
++	if (on)
++		reg |= EXYNOS_MIPI_PHY_ENABLE;
++	else if (!(reg & EXYNOS_MIPI_PHY_RESET_MASK))
++		reg &= ~EXYNOS_MIPI_PHY_ENABLE;
++
++	writel(reg, addr);
++	spin_unlock_irqrestore(&state->slock, flags);
++	return 0;
++}
++
++static int exynos_mipi_video_phy_power_on(struct phy *phy)
++{
++	struct exynos_mipi_video_phy *state = phy_get_drvdata(phy);
++	return __set_phy_state(state, phy->id, 1);
++}
++
++static int exynos_mipi_video_phy_power_off(struct phy *phy)
++{
++	struct exynos_mipi_video_phy *state = phy_get_drvdata(phy);
++	return __set_phy_state(state, phy->id, 0);
++}
++
++static struct phy *exynos_mipi_video_phy_xlate(struct device *dev,
++					struct of_phandle_args *args)
++{
++	struct exynos_mipi_video_phy *state = dev_get_drvdata(dev);
++
++	if (WARN_ON(args->args[0] > EXYNOS_MIPI_PHYS_NUM))
++		return ERR_PTR(-ENODEV);
++
++	return state->phys[args->args[0]];
++}
++
++static struct phy_ops exynos_mipi_video_phy_ops = {
++	.power_on	= exynos_mipi_video_phy_power_on,
++	.power_off	= exynos_mipi_video_phy_power_off,
++	.owner		= THIS_MODULE,
++};
++
++static int exynos_mipi_video_phy_probe(struct platform_device *pdev)
++{
++	struct exynos_mipi_video_phy *state;
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct phy_provider *phy_provider;
++	int i;
++
++	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
++	if (!state)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++
++	state->regs = devm_ioremap_resource(dev, res);
++	if (IS_ERR(state->regs))
++		return PTR_ERR(state->regs);
++
++	dev_set_drvdata(dev, state);
++
++	phy_provider = devm_of_phy_provider_register(dev,
++					exynos_mipi_video_phy_xlate);
++	if (IS_ERR(phy_provider))
++		return PTR_ERR(phy_provider);
++
++	for (i = 0; i < EXYNOS_MIPI_PHYS_NUM; i++) {
++		char label[8];
++
++		snprintf(label, sizeof(label), "%s.%d",
++				IS_EXYNOS_MIPI_DSIM_PHY_ID(i) ?
++				"dsim" : "csis", i / 2);
++
++		state->phys[i] = devm_phy_create(dev, i,
++				&exynos_mipi_video_phy_ops, label);
++		if (IS_ERR(state->phys[i])) {
++			dev_err(dev, "failed to create PHY %s\n", label);
++			return PTR_ERR(state->phys[i]);
++		}
++		phy_set_drvdata(state->phys[i], state);
++	}
++
++	return 0;
++}
++
++static const struct of_device_id exynos_mipi_video_phy_of_match[] = {
++	{ .compatible = "samsung,s5pv210-mipi-video-phy" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, exynos_mipi_video_phy_of_match);
++
++static struct platform_driver exynos_mipi_video_phy_driver = {
++	.probe	= exynos_mipi_video_phy_probe,
++	.driver = {
++		.of_match_table	= exynos_mipi_video_phy_of_match,
++		.name  = "exynos-mipi-video-phy",
++		.owner = THIS_MODULE,
++	}
++};
++module_platform_driver(exynos_mipi_video_phy_driver);
++
++MODULE_DESCRIPTION("Samsung S5P/EXYNOS SoC MIPI CSI-2/DSI PHY driver");
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
 -- 
-1.7.1
+1.7.9.5
