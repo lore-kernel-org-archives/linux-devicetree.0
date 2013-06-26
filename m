@@ -1,60 +1,86 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v3 1/2] uio: Use of_match_ptr() macro in uio_pdrv_genirq.c
-Date: Wed, 26 Jun 2013 16:43:43 +0530
-Message-ID: <CAK9yfHzuUhxUDhBRGJPvH8ftwaE3ZbauUgK=thMTbvc7LdMq7Q@mail.gmail.com>
-References: <03c8973cc1e9efcd203e4d95d2dd9469afbcb39b.1372240320.git.michal.simek@xilinx.com>
-	<CAK9yfHzVSt1XN7=OZOtF_n_3jbpXObqoiay_t6n3EauTjUUX+w@mail.gmail.com>
-	<51CAC0A7.7090708@monstr.eu>
-	<CAK9yfHxuHuf1BnzR36c8Ucw_xrVcMW--jE-Gpng6tPNd17sB2A@mail.gmail.com>
-	<51CACABF.4040902@monstr.eu>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Wed, 26 Jun 2013 16:51:34 +0530
+Message-ID: <51CACEBE.9000505@ti.com>
+References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com> <20130625150649.GA21334@arwen.pp.htv.fi> <51C9D714.4000703@samsung.com> <20130625205452.GC9748@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51CACABF.4040902@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130625205452.GC9748@arwen.pp.htv.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 June 2013 16:34, Michal Simek <monstr@monstr.eu> wrote:
-> On 06/26/2013 12:51 PM, Sachin Kamat wrote:
->> On 26 June 2013 15:51, Michal Simek <monstr@monstr.eu> wrote:
->>> On 06/26/2013 12:00 PM, Sachin Kamat wrote:
->>>> On 26 June 2013 15:22, Michal Simek <michal.simek@xilinx.com> wrote:
->>>>> This eliminates having an #ifdef returning NULL for the case
->>>>> when OF is disabled.
->>>>>
->>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>>>
->>>> I have already submitted a similar patch for doing this:
->>>> https://lkml.org/lkml/2013/3/14/169
->>>
->>> Ok. I don't care about it.
->>> Greg: Can you please add any of this patch to your char-misc tree?
->>>
->>> For Sachin patch.
->>> Acked-by: Michal Simek <monstr@monstr.eu>
->>
->> Thanks Michal. Since Hans wasn't active the patch has been pending
->> since some time.
->> The latest rebased version has been posted [1] for Greg to apply.
->>
->> [1] https://lkml.org/lkml/2013/6/25/7
->
->
-> Yeah. As I said I really don't care which version will be applied.
-> It is just necessary to have progress on this.
->
-> Here is the first version I have sent
-> http://lkml.org/lkml/2013/5/23/311
->
-> btw: do you agree about removing that uio_pdrv because
-> all functionality is already in uio_pdrv_genirq driver
-> and make no sense to have two drivers for the same thing?
+Hi,
 
-Sorry, I have'nt  seen much of this code other than the obvious
-cleanup for which I had sent the patch.
+On Wednesday 26 June 2013 02:24 AM, Felipe Balbi wrote:
+> Hi,
+>
+> On Tue, Jun 25, 2013 at 07:44:52PM +0200, Sylwester Nawrocki wrote:
+>>>> +struct exynos_video_phy {
+>>>> +	spinlock_t slock;
+>>>> +	struct phy *phys[NUM_PHYS];
+>>>
+>>> more than one phy ? This means you should instantiate driver multiple
+>>> drivers. Each phy id should call probe again.
+>>
+>> Why ? This single PHY _provider_ can well handle multiple PHYs.
+>> I don't see a good reason to further complicate this driver like
+>> this. Please note that MIPI-CSIS 0 and MIPI DSIM 0 share MMIO
+>> register, so does MIPI CSIS 1 and MIPI DSIM 1. There are only 2
+>> registers for those 4 PHYs. I could have the involved object
+>> multiplied, but it would have been just a waste of resources
+>> with no difference to the PHY consumers.
+>
+> alright, I misunderstood your code then. When I looked over your id
+> usage I missed the "/2" part and assumed that you would have separate
+> EXYNOS_MIPI_PHY_CONTROL() register for each ;-)
+>
+> My bad, you can disregard the other comments.
+>
+>>>> +static int exynos_video_phy_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct exynos_video_phy *state;
+>>>> +	struct device *dev = &pdev->dev;
+>>>> +	struct resource *res;
+>>>> +	struct phy_provider *phy_provider;
+>>>> +	int i;
+>>>> +
+>>>> +	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
+>>>> +	if (!state)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +
+>>>> +	state->regs = devm_ioremap_resource(dev, res);
+>>>> +	if (IS_ERR(state->regs))
+>>>> +		return PTR_ERR(state->regs);
+>>>> +
+>>>> +	dev_set_drvdata(dev, state);
+>>>
+>>> you can use platform_set_drvdata(pdev, state);
+>>
+>> I had it in the previous version, but changed for symmetry with
+>> dev_set_drvdata(). I guess those could be replaced with
+>> phy_{get, set}_drvdata as you suggested.
 
--- 
-With warm regards,
-Sachin
+right. currently I was setting dev_set_drvdata of phy (core) device
+in phy-core.c and the corresponding dev_get_drvdata in phy provider driver
+which is little confusing.
+So I'll add phy_set_drvdata and phy_get_drvdata in phy.h (as suggested by
+Felipe) to be used by phy provider drivers. So after creating the PHY, the
+phy provider should use phy_set_drvdata and in phy_ops, it can use
+phy_get_drvdata. (I'll remove the dev_set_drvdata in phy_create).
+
+This also means _void *priv_ in phy_create is useless. So I'll be removing
+_priv_ from phy_create.
+
+Thanks
+Kishon
+
+>
+> hmm, you do need to set the drvdata() to the phy object, but also to the
+> pdev object (should you need it on a suspend/resume callback, for
+> instance). Those are separate struct device instances.
