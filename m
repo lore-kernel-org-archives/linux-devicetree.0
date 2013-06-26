@@ -1,8 +1,11 @@
 From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH 1/4] arm: mxs: Add #io-channel-cells property to lradc
-Date: Wed, 26 Jun 2013 10:51:10 +0200
-Message-ID: <1372236673-20725-2-git-send-email-alexandre.belloni@free-electrons.com>
+Subject: [PATCH 3/4] hwmon: Add a simple driver to read the MXS SoC temperature
+Date: Wed, 26 Jun 2013 10:51:12 +0200
+Message-ID: <1372236673-20725-4-git-send-email-alexandre.belloni@free-electrons.com>
 References: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -10,25 +13,269 @@ To: Shawn Guo <shawn.guo@linaro.org>, Jean Delvare <khali@linux-fr.org>
 Cc: jimwall@q.com, brian@crystalfontz.com, Maxime Ripard <maxime.ripard@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Guenter Roeck <linux@roeck-us.net>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, linux-arm-kernel@lists.infradead.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Adding #io-channel-cells property to lradc allows us to use the lradc as an iio
-provider.
+The low resolution ADC of the mxs is able to read an internal temperatu=
+re
+sensor, expose that using hwmon.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 ---
- arch/arm/boot/dts/imx28.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/hwmon/mxs-cputemp.txt      |  18 +++
+ Documentation/hwmon/mxs-cputemp                    |  29 +++++
+ drivers/hwmon/Kconfig                              |  10 ++
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/mxs-cputemp.c                        | 132 +++++++++++++=
+++++++++
+ 5 files changed, 190 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/mxs-cputemp=
+=2Etxt
+ create mode 100644 Documentation/hwmon/mxs-cputemp
+ create mode 100644 drivers/hwmon/mxs-cputemp.c
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 600f7cb..9a7feeb 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -829,6 +829,7 @@
- 				interrupts = <10 14 15 16 17 18 19
- 						20 21 22 23 24 25>;
- 				status = "disabled";
-+				#io-channel-cells = <1>;
- 			};
- 
- 			spdif@80054000 {
--- 
+diff --git a/Documentation/devicetree/bindings/hwmon/mxs-cputemp.txt b/=
+Documentation/devicetree/bindings/hwmon/mxs-cputemp.txt
+new file mode 100644
+index 0000000..7d3ae47
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/mxs-cputemp.txt
+@@ -0,0 +1,18 @@
++mxs cputemp hwmon sensors
++-------------------------
++
++See: Documentation/hwmon/mxs-cputemp
++
++Required properties:
++- compatible: should be "fsl,mxs-internal-temp"
++- io-channels: should list the two adc channels needed to calculate th=
+e
++	       temperature
++- io-channel-names: should map the previously listed adc channels to t=
+he "min"
++		    and "max" value
++
++Example:
++	temp {
++		compatible =3D "fsl,mxs-internal-temp";
++		io-channels =3D <&lradc 8>, <&lradc 9>;
++		io-channel-names =3D "min", "max";
++	};
+diff --git a/Documentation/hwmon/mxs-cputemp b/Documentation/hwmon/mxs-=
+cputemp
+new file mode 100644
+index 0000000..6c6201f
+--- /dev/null
++++ b/Documentation/hwmon/mxs-cputemp
+@@ -0,0 +1,29 @@
++Kernel driver mxs-cputemp
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
++
++Supported chips:
++  * Freescale i.mx28
++    Datasheet: i.MX28 Applications Processor Reference Manual, Rev. 1,=
+ 2010
++    	       http://cache.freescale.com/files/dsp/doc/ref_manual/MCIMX2=
+8RM.pdf
++
++Author: Alexandre Belloni
++
++Description
++-----------
++This driver permits reading the internal die temperature sensor embedd=
+ed inside
++Freescale i.mx28 SoCs. This sensor is read through two channels of the=
+ on chip
++Low-Resolution ADC. After calculation, the three-sigma error of the te=
+mperature
++sensor should be within =C2=B1 1.5% in degrees Kelvin. Additionally, t=
+he temperature
++sampling has a three-sigma sample-to-sample variation of 2 degrees Kel=
+vin. If
++desired, this error can be removed by oversampling and averaging the t=
+emperature
++result.
++
++The formula is:
++	(Channel9 =E2=80=93 Channel8) * Gain_correction/4
++
++As recommended by the datasheet, Gain_correction is equal to 1.012.
++
++sysfs entries
++-------------
++temp1_input	Measured and corrected temperature in millidegrees Celsius
++
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 0428e8a..2daf794 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -929,6 +929,16 @@ config SENSORS_MCP3021
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called mcp3021.
+=20
++config SENSORS_MXS_CPU
++	tristate "MXS internal CPU temperature sensor"
++	depends on MXS_LRADC
++	help
++	  If you say yes here you get support for the i.mx28 internal
++	  temperature sensor.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called mxs-cputemp
++
+ config SENSORS_NCT6775
+ 	tristate "Nuvoton NCT6775F and compatibles"
+ 	depends on !PPC
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index d17d3e6..366c92d 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -108,6 +108,7 @@ obj-$(CONFIG_SENSORS_MAX6650)	+=3D max6650.o
+ obj-$(CONFIG_SENSORS_MAX6697)	+=3D max6697.o
+ obj-$(CONFIG_SENSORS_MC13783_ADC)+=3D mc13783-adc.o
+ obj-$(CONFIG_SENSORS_MCP3021)	+=3D mcp3021.o
++obj-$(CONFIG_SENSORS_MXS_CPU)	+=3D mxs-cputemp.o
+ obj-$(CONFIG_SENSORS_NCT6775)	+=3D nct6775.o
+ obj-$(CONFIG_SENSORS_NTC_THERMISTOR)	+=3D ntc_thermistor.o
+ obj-$(CONFIG_SENSORS_PC87360)	+=3D pc87360.o
+diff --git a/drivers/hwmon/mxs-cputemp.c b/drivers/hwmon/mxs-cputemp.c
+new file mode 100644
+index 0000000..a312fb5
+--- /dev/null
++++ b/drivers/hwmon/mxs-cputemp.c
+@@ -0,0 +1,132 @@
++/*
++ * Driver for the mxs internal temperature sensor
++ *
++ * Copyright 2013 Free Electrons
++ *
++ * Licensed under the GPLv2 or later.
++ */
++
++#define DRVNAME "mxs-hwmon"
++
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/iio/consumer.h>
++
++#define GAIN_CORRECTION 1012
++
++/* The value we calculate from the ADCs is in Kelvins, don't forget to=
+ convert
++ * it to Celsius */
++#define VALUES_TO_MILLIC(min, max) ((max - min) * GAIN_CORRECTION / 4 =
+- 272150)
++
++struct mxs_hwmon_data {
++	struct device *hwmon_dev;
++	struct iio_channel *chan_min;
++	struct iio_channel *chan_max;
++};
++
++static int mxs_hwmon_show_temp(struct device *dev,
++			       struct device_attribute *attr, char *buf)
++{
++	int err, val_min, val_max;
++
++	struct mxs_hwmon_data *data =3D dev_get_drvdata(dev);
++
++	err =3D iio_read_channel_raw(data->chan_min, &val_min);
++	if (err < 0)
++		return err;
++
++	err =3D iio_read_channel_raw(data->chan_max, &val_max);
++	if (err < 0)
++		return err;
++
++	return sprintf(buf, "%u\n", VALUES_TO_MILLIC(val_min, val_max));
++}
++
++static DEVICE_ATTR(temp1_input, S_IRUGO, mxs_hwmon_show_temp, NULL);
++
++static int mxs_hwmon_probe(struct platform_device *pdev)
++{
++	int err;
++	struct mxs_hwmon_data *data;
++
++	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, data);
++
++	err =3D device_create_file(&pdev->dev, &dev_attr_temp1_input);
++	if (err)
++		return err;
++
++	data->chan_min =3D iio_channel_get(&pdev->dev, "min");
++	if (IS_ERR(data->chan_min)) {
++		err =3D PTR_ERR(data->chan_min);
++		goto error_chan_min;
++	}
++
++	data->chan_max =3D iio_channel_get(&pdev->dev, "max");
++	if (IS_ERR(data->chan_max)) {
++		err =3D PTR_ERR(data->chan_max);
++		goto error_chan_max;
++	}
++
++	data->hwmon_dev =3D hwmon_device_register(&pdev->dev);
++	if (IS_ERR(data->hwmon_dev)) {
++		err =3D PTR_ERR(data->hwmon_dev);
++		goto error_hwmon;
++	}
++
++	return 0;
++
++error_hwmon:
++	iio_channel_release(data->chan_max);
++error_chan_max:
++	iio_channel_release(data->chan_min);
++error_chan_min:
++	device_remove_file(&pdev->dev, &dev_attr_temp1_input);
++
++	return err;
++}
++
++static int mxs_hwmon_remove(struct platform_device *pdev)
++{
++	struct mxs_hwmon_data *data =3D platform_get_drvdata(pdev);
++
++	iio_channel_release(data->chan_min);
++	iio_channel_release(data->chan_max);
++	hwmon_device_unregister(data->hwmon_dev);
++
++	device_remove_file(&pdev->dev, &dev_attr_temp1_input);
++
++	return 0;
++}
++
++static struct of_device_id mxs_hwmon_of_match[] =3D {
++	{ .compatible =3D "fsl,mxs-internal-temp", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, mxs_hwmon_of_match);
++
++static struct platform_driver mxs_hwmon_driver =3D {
++	.probe =3D mxs_hwmon_probe,
++	.remove =3D mxs_hwmon_remove,
++	.driver	=3D {
++		.name =3D DRVNAME,
++		.owner =3D THIS_MODULE,
++		.of_match_table =3D mxs_hwmon_of_match,
++	},
++};
++
++module_platform_driver(mxs_hwmon_driver);
++
++MODULE_AUTHOR("Alexandre Belloni <alexandre.belloni@free-electrons.com=
+>");
++MODULE_DESCRIPTION("Freescale i.MX28 hwmon sensor driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:mxs-hwmon");
+--=20
 1.8.1.2
