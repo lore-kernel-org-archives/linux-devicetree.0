@@ -1,63 +1,70 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
-Date: Wed, 26 Jun 2013 14:03:42 +0200
-Message-ID: <51CAD89E.3060800@samsung.com>
-References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com>
- <20130625150649.GA21334@arwen.pp.htv.fi> <51C9D714.4000703@samsung.com>
- <20130625205452.GC9748@arwen.pp.htv.fi> <51CACEBE.9000505@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v9 1/8] drivers: phy: add generic PHY framework
+Date: Wed, 26 Jun 2013 15:10:00 +0300
+Message-ID: <20130626121000.GZ12640@arwen.pp.htv.fi>
+References: <1372247257-30186-1-git-send-email-kishon@ti.com>
+ <1372247257-30186-2-git-send-email-kishon@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <51CACEBE.9000505@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3cI6DWK3Xt33P8nt"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372247257-30186-2-git-send-email-kishon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
 To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: balbi@ti.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
+Cc: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, arnd@arndb.de, swarren@nvidia.com, sylvester.nawrocki@gmail.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, benoit.cousson@linaro.org, mchehab@redhat.com, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, balajitk@ti.com, george.cherian@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/26/2013 01:21 PM, Kishon Vijay Abraham I wrote:
->>>>> +static int exynos_video_phy_probe(struct platform_device *pdev)
->>>>> >>>> +{
->>>>> >>>> +	struct exynos_video_phy *state;
->>>>> >>>> +	struct device *dev = &pdev->dev;
->>>>> >>>> +	struct resource *res;
->>>>> >>>> +	struct phy_provider *phy_provider;
->>>>> >>>> +	int i;
->>>>> >>>> +
->>>>> >>>> +	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
->>>>> >>>> +	if (!state)
->>>>> >>>> +		return -ENOMEM;
->>>>> >>>> +
->>>>> >>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>>> >>>> +
->>>>> >>>> +	state->regs = devm_ioremap_resource(dev, res);
->>>>> >>>> +	if (IS_ERR(state->regs))
->>>>> >>>> +		return PTR_ERR(state->regs);
->>>>> >>>> +
->>>>> >>>> +	dev_set_drvdata(dev, state);
->>>> >>>
->>>> >>> you can use platform_set_drvdata(pdev, state);
->>> >>
->>> >> I had it in the previous version, but changed for symmetry with
->>> >> dev_set_drvdata(). I guess those could be replaced with
->>> >> phy_{get, set}_drvdata as you suggested.
->
-> right. currently I was setting dev_set_drvdata of phy (core) device
-> in phy-core.c and the corresponding dev_get_drvdata in phy provider driver
-> which is little confusing.
-> So I'll add phy_set_drvdata and phy_get_drvdata in phy.h (as suggested by
-> Felipe) to be used by phy provider drivers. So after creating the PHY, the
-> phy provider should use phy_set_drvdata and in phy_ops, it can use
-> phy_get_drvdata. (I'll remove the dev_set_drvdata in phy_create).
-> 
-> This also means _void *priv_ in phy_create is useless. So I'll be removing
-> _priv_ from phy_create.
+--3cI6DWK3Xt33P8nt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, sounds good. Then in the phy ops phy_get_drvdata(&phy->dev) would
-be used and in a custom of_xlate dev_get_drvdata(dev) (assuming the phy
-provider sets drvdata on its device beforehand).
+On Wed, Jun 26, 2013 at 05:17:29PM +0530, Kishon Vijay Abraham I wrote:
+> The PHY framework provides a set of APIs for the PHY drivers to
+> create/destroy a PHY and APIs for the PHY users to obtain a reference to =
+the
+> PHY with or without using phandle. For dt-boot, the PHY drivers should
+> also register *PHY provider* with the framework.
+>=20
+> PHY drivers should create the PHY by passing id and ops like init, exit,
+> power_on and power_off. This framework is also pm runtime enabled.
+>=20
+> The documentation for the generic PHY framework is added in
+> Documentation/phy.txt and the documentation for dt binding can be found at
+> Documentation/devicetree/bindings/phy/phy-bindings.txt
+>=20
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Tested-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-I can't see any races from runtime PM with this approach.
+looks great to my eyes
 
-Regards,
-Sylwester
+Acked-by: Felipe Balbi <balbi@ti.com>
+
+--=20
+balbi
+
+--3cI6DWK3Xt33P8nt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRytoYAAoJEIaOsuA1yqREJxQP/iPE0WrYsa7JnctOcRP4XVnW
+GlMDbFMhAu7pQ0pFYbb7u4vHFs4RZdOqPsA5QHgbVzYxwZ5pcEOMtiwBtoh2GedK
+XM8l7Z5oO1LIeaUOvR4VG7ivo8jsyh3/i/7Y1v8Lj/298BdEudsLJYQHr/lZP0wt
+WRgwbDPBEVQjE5Z/9XoMkAWOnKhOmHcdgkd+69ORwudHleeNVmr+VsEgxHfS+XEK
+GSLopAFIgLm92PSP4XXxoTFzVd2bZ8PpGu2rQv2BoMdWNTgoet13Stok28hlNq+8
+kkINa7NyujVZrH2IgVaQbGDhS586xunUugUFxargrbZ3ySAiJILbm4vQ9xQ8Y/op
+2Hl41MDhjcKfQnKEVXWndsUIWhhvAjeggAFCpJ3/PyyScNGDug222xxFKZYCdUZv
+BXbrXgkq5r87MdMEVGk3TrVVcGJWGb1mfew4jzpT311MqPlWakKWbT48ezuKyIYt
+rrcIO1GEctDVQofkkG21c20RCpsfFC3ZEYiWhXZZz1m2mnx6rZYS5ZKT8xXx8vZb
+NTHwTCDD46P1+acZoVa29jY+5kza7/lUUsUqPehEyE4mtbvhsp1QXg7KptNa476V
+UmtgFF08tmQEmJi/xDM7DwQEKv4jI1JDw6IPXkN1Jihe3dPEzvtD5TRToyeEBuI8
+lgdkW9uGDLfNydx+5W8w
+=5RxU
+-----END PGP SIGNATURE-----
+
+--3cI6DWK3Xt33P8nt--
