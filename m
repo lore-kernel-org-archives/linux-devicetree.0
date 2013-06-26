@@ -1,136 +1,108 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] early init and DT platform devices allocation/registration
-Date: Wed, 26 Jun 2013 15:20:32 +0900
-Message-ID: <CANqRtoTVoLHLvhknpKW4th6wDM1EgY4GTx96OrM-yA42+Sm1aw@mail.gmail.com>
-References: <20130624163340.GB26084@e102568-lin.cambridge.arm.com>
- <CACxGe6sPaV-sBz=SF46KdUexjAhWKGrMpG_ty+K26f6ZU5iKdg@mail.gmail.com>
- <51C9AF96.3040107@wwwdotorg.org>
- <20130625170700.GB28654@e102568-lin.cambridge.arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
+Date: Tue, 25 Jun 2013 23:24:09 -0700
+Message-ID: <20130626062409.GK5523@atomide.com>
+References: <1372149330-24335-1-git-send-email-coelho@ti.com>
+ <1372189024.18889.19.camel@cumari.coelho.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130625170700.GB28654-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372189024.18889.19.camel@cumari.coelho.fi>
+Sender: linux-doc-owner@vger.kernel.org
+To: Luciano Coelho <coelho@ti.com>
+Cc: grant.likely@linaro.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+* Luciano Coelho <coelho@ti.com> [130625 12:43]:
+> (oh crap, now *really* fixed the ARM mailing list address)
+> 
+> On Tue, 2013-06-25 at 11:35 +0300, Luciano Coelho wrote:
+> > Add device tree bindings documentation for the TI WiLink modules.
+> > Currently only the WLAN part of the WiLink6, WiLink7 and WiLink8
+> > modules is supported.
+> > 
+> > Signed-off-by: Luciano Coelho <coelho@ti.com>
+> > ---
+> > 
+> > I created a new directory under net to contain wireless bindings documentation.
+> > 
+> > The actual implementation in the driver will follow separately.
+> > 
+> >  .../devicetree/bindings/net/wireless/ti-wilink.txt |   46 ++++++++++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt b/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
+> > new file mode 100644
+> > index 0000000..d8e8bfbb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/wireless/ti-wilink.txt
+> > @@ -0,0 +1,46 @@
+> > +TI WiLink Wireless Modules Device Tree Bindings
+> > +===============================================
+> > +
+> > +The WiLink modules provide wireless connectivity, such as WLAN,
+> > +Bluetooth, FM and NFC.
+> > +
+> > +There are several different modules available, which can be grouped by
+> > +their generation: WiLink6, WiLink7 and WiLink8.  WiLink4 is not
+> > +currently supported with device tree.
+> > +
+> > +Currently, only the WLAN portion of the modules is supported with
+> > +device tree.
+> > +
+> > +Required properties:
+> > +--------------------
+> > +
+> > +- compatible: should be "ti,wilink6", "ti,wilink7" or "ti,wilink8"
+> > +- interrupt-parent: the interrupt controller
+> > +- interrupts: out-of-band WLAN interrupt
+> > +	See the interrupt controller's bindings documentation for
+> > +	detailed definition.
+> > +
+> > +Optional properties:
+> > +--------------------
+> > +
+> > +- refclock: the internal WLAN reference clock frequency (required for
+> > +  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
+> > +  following:
+> > +	0 = 19.2 MHz
+> > +	1 = 26.0 MHz
+> > +	2 = 38.4 MHz
+> > +	3 = 52.0 MHz
+> > +	4 = 38.4 MHz, XTAL
+> > +	5 = 26.0 MHz, XTAL
 
-On Wed, Jun 26, 2013 at 2:07 AM, Lorenzo Pieralisi
-<lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Tue, Jun 25, 2013 at 03:56:22PM +0100, Stephen Warren wrote:
->> On 06/25/2013 05:45 AM, Grant Likely wrote:
->> > On Mon, Jun 24, 2013 at 5:33 PM, Lorenzo Pieralisi
->> > <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
->> >> Hi all,
->> >>
->> >> I am dealing with a lingering problem related to init and probing of platform
->> >> devices early (before initcalls) in the kernel boot process. The problem,
->> >> which is nothing new, is related to how platform devices are created in the
->> >> kernel from DT and when they become available. Platform devices are created
->> >> through (assuming any legacy static initialization is removed from the kernel)
->> >>
->> >> of_platform_populate()
->> >>
->> >> at arch_initcall time on ARM. This is a problem for drivers that need to be
->> >> probed and initialized before arch_initcall (ie early_initcall) because
->> >> the corresponding platform_device has not been created yet.
->>
->> What's the use-case here; why does the driver /have/ to be
->> allocated/probed so early? Can't drivers all be allocated from DT in the
->> usual fashion, and any dependencies resolved using deferred probe? In
->> almost all cases, that should work.
->
-> The driver must be initialized in order to boot secondary CPUs, so
-> very very early, its initialization cannot be deferred.
-> Otherwise we would end up with MCPM back-end having to add ad-hoc
-> kludges to boot secondary CPUs, and then replace the early function calls
-> to the power controller drivers when the power controller has been
-> properly initialized. Feasible, but really horrible.
+This is just the omap refclock, right? If so, you can just pass the
+standard clock phandle. I know we don't yet have the DT clocks merged,
+but Tero just posted another revision of those.
 
-How about moving part of the SMP initialization to later during boot?
+> > +- tcxoclock: the internal WLAN TCXO clock frequency (required for
+> > +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
+> > +  following:
+> > +	0 = 19.200 MHz
+> > +	1 = 26.000 MHz
+> > +	2 = 38.400 MHz
+> > +	3 = 52.000 MHz
+> > +	4 = 16.368 MHz
+> > +	5 = 32.736 MHz
+> > +	6 = 16.800 MHz
+> > +	7 = 33.600 MHz
 
-In particular I mean the bring up of the secondary cores. Just booting
-with a single CPU for a bit longer is certainly doable because it is
-today possible to bring secondary CPU cores up from user space via the
-hotplug interface. Below is some old prototype code that I hacked up a
-while ago - note that I copied the original comment about that this
-should be done in user space. =)
+Where does this clock come from? Maybe this can be set based on the
+compatible value if it's completely internal?
+ 
+> If this is okay for everyone, can I push this via my tree (which goes to
+> linux-wireless->net->linus)? I think it makes more sense to send the
+> documentation together with the patch that actually implements the DT
+> node parsing in the driver.
 
-I'd like to have secondary CPU cores initialized later so I can use
-the regular device model (DT or platform device) to describe one or
-more power domain hardware devices. These power domains control the
-CPU cores, so there is a dependency on the SMP bring up code...
+If we can use the standard bindings, it might be worth waiting until
+we have the DT clocks available as we have the pdata workaround merged
+anyways. That's because then we don't need to support the custom
+binding later on ;)
 
-Cheers,
+Regards,
 
-/ magnus
-
---- 0001/include/linux/smp.h
-+++ work/include/linux/smp.h    2013-05-21 20:08:42.000000000 +0900
-@@ -124,6 +124,7 @@ void smp_prepare_boot_cpu(void);
- extern unsigned int setup_max_cpus;
- extern void __init setup_nr_cpu_ids(void);
- extern void __init smp_init(void);
-+extern void __init smp_late_init(void);
-
- #else /* !SMP */
-
---- 0001/init/main.c
-+++ work/init/main.c    2013-05-21 20:09:34.000000000 +0900
-@@ -334,6 +334,7 @@ static void __init smp_init(void)
-
- static inline void setup_nr_cpu_ids(void) { }
- static inline void smp_prepare_cpus(unsigned int maxcpus) { }
-+static inline void smp_late_init(void) { }
- #endif
-
- /*
-@@ -879,6 +880,8 @@ static noinline void __init kernel_init_
-
-        do_basic_setup();
-
-+       smp_late_init();
-+
-        /* Open the /dev/console on the rootfs, this should never fail */
-        if (sys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
-                pr_err("Warning: unable to open an initial console.\n");
---- 0001/kernel/smp.c
-+++ work/kernel/smp.c   2013-05-21 20:07:06.000000000 +0900
-@@ -549,6 +549,20 @@ void __init smp_init(void)
-                if (!cpu_online(cpu))
-                        cpu_up(cpu);
-        }
-+}
-+
-+/* Called by boot processor late during boot to activate the rest. */
-+void __init smp_late_init(void)
-+{
-+       unsigned int cpu;
-+
-+       /* FIXME: This should be done in userspace --RR */
-+       for_each_present_cpu(cpu) {
-+               if (num_online_cpus() >= setup_max_cpus)
-+                       break;
-+               if (!cpu_online(cpu))
-+                       cpu_up(cpu);
-+       }
-
-        /* Any cleanup work */
-        printk(KERN_INFO "Brought up %ld CPUs\n", (long)num_online_cpus());
-
-
-Cheers,
-
-/ magnus
+Tony
