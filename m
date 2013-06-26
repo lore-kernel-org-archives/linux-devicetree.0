@@ -1,38 +1,36 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
-Date: Wed, 26 Jun 2013 09:47:49 +0530
-Message-ID: <51CA6B6D.3080706@synopsys.com>
-References: <20130530211944.05F4D3E0A90@localhost> <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com> <alpine.DEB.2.02.1306251551020.4013@ionos.tec.linutronix.de> <20130625141141.GA1720@ab42.lan> <alpine.DEB.2.02.1306251636270.4013@ionos.tec.linutronix.de>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v9] i2c-designware: make SDA hold time configurable
+Date: Wed, 26 Jun 2013 09:53:36 +0530
+Message-ID: <51CA6CC8.6070305@synopsys.com>
+References: <20130620203716.GF2961@katana> <1371808422-27742-1-git-send-email-christian.ruppert@abilis.com> <20130625163902.GA2973@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1306251636270.4013@ionos.tec.linutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Christian Ruppert <christian.ruppert@abilis.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130625163902.GA2973@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-
-On 06/25/2013 08:07 PM, Thomas Gleixner wrote:
+On 06/25/2013 10:09 PM, Wolfram Sang wrote:
+> Hi,
 >
->>> I can pick it up, but I'm not so fond of carrying arch/arc patches
->>> which might conflict with other stuff in the arc tree. Veenet, if I
->>> should pick the whole thing up, I'd like to have an acked-by at least.
->> Would you prefer if we separated everything in arch/arc from this patch
->> and push it through Vineet's channel?
-> If it can be split w/o breaking the world, this would be the most
-> elegant solution.
+> On Fri, Jun 21, 2013 at 11:53:42AM +0200, Christian Ruppert wrote:
+>> > This patch makes the SDA hold time configurable through device tree.
+>> > 
+>> > Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+>> > Signed-off-by: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+>> > ---
+>> >  .../devicetree/bindings/i2c/i2c-designware.txt     |   14 ++++++++++++++
+>> >  arch/arc/boot/dts/abilis_tb100_dvk.dts             |   10 +++++-----
+>> >  arch/arc/boot/dts/abilis_tb101_dvk.dts             |   10 +++++-----
+> Vineet, an ack for those would be nice since I think it is better if I
+> take all this via I2C.
+>
 
-I would have preferred it to be part of same patch, for bisectability if nothing
-else. However your tree gets merged in pretty early in the cycle so I'll make sure
-my pull request goes in after yours.
+Certainly, I was waiting for you guys to converge :-)
 
-Anyways, thanks for merging the driver.
-
-Chrisitian, please send over the forked out arch/arc bits for this to me
-separately. The i2c DT changes seem to touch different files though so I don't see
-merge issues as of now.
+Acked-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>   # for arch/arc/boot/dts/*
 
 -Vineet
