@@ -1,64 +1,92 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
-Date: Wed, 26 Jun 2013 18:18:55 +0530
-Message-ID: <51CAE337.3010508@ti.com>
-References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com> <20130625150649.GA21334@arwen.pp.htv.fi> <51C9D714.4000703@samsung.com> <20130625205452.GC9748@arwen.pp.htv.fi> <51CACEBE.9000505@ti.com> <51CAD89E.3060800@samsung.com> <20130626122238.GD12640@arwen.pp.htv.fi>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v3 1/2] uio: Use of_match_ptr() macro in uio_pdrv_genirq.c
+Date: Wed, 26 Jun 2013 14:50:16 +0200
+Message-ID: <51CAE388.9030602@monstr.eu>
+References: <03c8973cc1e9efcd203e4d95d2dd9469afbcb39b.1372240320.git.michal.simek@xilinx.com> <CAK9yfHzVSt1XN7=OZOtF_n_3jbpXObqoiay_t6n3EauTjUUX+w@mail.gmail.com> <51CAC0A7.7090708@monstr.eu> <CAK9yfHxuHuf1BnzR36c8Ucw_xrVcMW--jE-Gpng6tPNd17sB2A@mail.gmail.com> <51CACABF.4040902@monstr.eu> <CAK9yfHzuUhxUDhBRGJPvH8ftwaE3ZbauUgK=thMTbvc7LdMq7Q@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130626122238.GD12640@arwen.pp.htv.fi>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2HBDHRBQXRXECAMXESBXJ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK9yfHzuUhxUDhBRGJPvH8ftwaE3ZbauUgK=thMTbvc7LdMq7Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, "Hans J. Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 26 June 2013 05:52 PM, Felipe Balbi wrote:
-> On Wed, Jun 26, 2013 at 02:03:42PM +0200, Sylwester Nawrocki wrote:
->> On 06/26/2013 01:21 PM, Kishon Vijay Abraham I wrote:
->>>>>>> +static int exynos_video_phy_probe(struct platform_device *pdev)
->>>>>>>>>>> +{
->>>>>>>>>>> +	struct exynos_video_phy *state;
->>>>>>>>>>> +	struct device *dev = &pdev->dev;
->>>>>>>>>>> +	struct resource *res;
->>>>>>>>>>> +	struct phy_provider *phy_provider;
->>>>>>>>>>> +	int i;
->>>>>>>>>>> +
->>>>>>>>>>> +	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
->>>>>>>>>>> +	if (!state)
->>>>>>>>>>> +		return -ENOMEM;
->>>>>>>>>>> +
->>>>>>>>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>>>>>>>>> +
->>>>>>>>>>> +	state->regs = devm_ioremap_resource(dev, res);
->>>>>>>>>>> +	if (IS_ERR(state->regs))
->>>>>>>>>>> +		return PTR_ERR(state->regs);
->>>>>>>>>>> +
->>>>>>>>>>> +	dev_set_drvdata(dev, state);
->>>>>>>>>
->>>>>>>>> you can use platform_set_drvdata(pdev, state);
->>>>>>>
->>>>>>> I had it in the previous version, but changed for symmetry with
->>>>>>> dev_set_drvdata(). I guess those could be replaced with
->>>>>>> phy_{get, set}_drvdata as you suggested.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2HBDHRBQXRXECAMXESBXJ
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 06/26/2013 01:13 PM, Sachin Kamat wrote:
+> On 26 June 2013 16:34, Michal Simek <monstr@monstr.eu> wrote:
+>> On 06/26/2013 12:51 PM, Sachin Kamat wrote:
+>>> On 26 June 2013 15:51, Michal Simek <monstr@monstr.eu> wrote:
+>>>> On 06/26/2013 12:00 PM, Sachin Kamat wrote:
+>>>>> On 26 June 2013 15:22, Michal Simek <michal.simek@xilinx.com> wrote=
+:
+>>>>>> This eliminates having an #ifdef returning NULL for the case
+>>>>>> when OF is disabled.
+>>>>>>
+>>>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>>>>>
+>>>>> I have already submitted a similar patch for doing this:
+>>>>> https://lkml.org/lkml/2013/3/14/169
+>>>>
+>>>> Ok. I don't care about it.
+>>>> Greg: Can you please add any of this patch to your char-misc tree?
+>>>>
+>>>> For Sachin patch.
+>>>> Acked-by: Michal Simek <monstr@monstr.eu>
 >>>
->>> right. currently I was setting dev_set_drvdata of phy (core) device
->>> in phy-core.c and the corresponding dev_get_drvdata in phy provider driver
->>> which is little confusing.
->>> So I'll add phy_set_drvdata and phy_get_drvdata in phy.h (as suggested by
->>> Felipe) to be used by phy provider drivers. So after creating the PHY, the
->>> phy provider should use phy_set_drvdata and in phy_ops, it can use
->>> phy_get_drvdata. (I'll remove the dev_set_drvdata in phy_create).
+>>> Thanks Michal. Since Hans wasn't active the patch has been pending
+>>> since some time.
+>>> The latest rebased version has been posted [1] for Greg to apply.
 >>>
->>> This also means _void *priv_ in phy_create is useless. So I'll be removing
->>> _priv_ from phy_create.
+>>> [1] https://lkml.org/lkml/2013/6/25/7
 >>
->> Yeah, sounds good. Then in the phy ops phy_get_drvdata(&phy->dev) would
->
-> phy_get_drvdata(phy);
->
-> accessing the dev pointer will be done inside the helper :-)
+>>
+>> Yeah. As I said I really don't care which version will be applied.
+>> It is just necessary to have progress on this.
+>>
+>> Here is the first version I have sent
+>> http://lkml.org/lkml/2013/5/23/311
+>>
+>> btw: do you agree about removing that uio_pdrv because
+>> all functionality is already in uio_pdrv_genirq driver
+>> and make no sense to have two drivers for the same thing?
+>=20
+> Sorry, I have'nt  seen much of this code other than the obvious
+> cleanup for which I had sent the patch.
 
-right :-)
+ok. Fair enough.
 
--Kishon
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+------enig2HBDHRBQXRXECAMXESBXJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlHK44wACgkQykllyylKDCFmVACdFkwbQ3V+mLpasw5mcoqVqueX
+qpQAniYgbkf1bx48uJacd2ZzX6210MEe
+=xNMm
+-----END PGP SIGNATURE-----
+
+------enig2HBDHRBQXRXECAMXESBXJ--
