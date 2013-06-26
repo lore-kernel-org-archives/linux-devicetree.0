@@ -1,122 +1,78 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
-Date: Wed, 26 Jun 2013 11:40:42 -0600
-Message-ID: <51CB279A.1090404@wwwdotorg.org>
-References: <20130618092516.GC18663@ab42.lan> <1371547751-13873-2-git-send-email-christian.ruppert@abilis.com> <51C23222.2060906@wwwdotorg.org> <20130626115051.GC7095@ab42.lan>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 7/9] documentation: iommu: add description of ARM System
+	MMU binding
+Date: Wed, 26 Jun 2013 18:42:31 +0100
+Message-ID: <20130626174231.GH10333@mudshark.cambridge.arm.com>
+References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
+	<1370889285-22799-8-git-send-email-will.deacon@arm.com>
+	<CALRxmdBxFWoRKv+bUu8VEwNNcAJUej9jM2V8N0rrqrr_Vpe8fQ@mail.gmail.com>
+	<20130626133941.GD7417@mudshark.cambridge.arm.com>
+	<CALRxmdCycFK2wW=C4aU79mudSaT+2vU8nzXxepdstubg+YSdQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130626115051.GC7095@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CALRxmdCycFK2wW=C4aU79mudSaT+2vU8nzXxepdstubg+YSdQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Stuart Yoder <b08248-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org Discuss" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/26/2013 05:50 AM, Christian Ruppert wrote:
-> On Wed, Jun 19, 2013 at 04:35:14PM -0600, Stephen Warren wrote:
->> On 06/18/2013 03:29 AM, Christian Ruppert wrote:
->>> The pinmux driver of the Abilis Systems TB10x platform based on ARC700 CPUs.
->>> Used to control the pinmux and is a prerequisite for the GPIO driver.
->>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/abilis,tb10x-iomux.txt b/Documentation/devicetree/bindings/pinctrl/abilis,tb10x-iomux.txt
->>
->>> +Port definitions
->>> +----------------
->>> +
->>> +Ports are defined (and referenced) by sub-nodes of the pin controller. Every
->>> +sub-node defines exactly one port (i.e. a set of pins). Ports are predefined
->>> +as named pin groups inside the pin controller driver and these names are used
->>> +to associate pin group predefinitions to pin controller sub-nodes.
->>> +
->>> +Required port definition subnode properties:
->>> +  - pingrp: should be set to the name of the port's pin group.
->>
->> This seems odd.... More on that where I comment on the example.
->>
->>> +The following pin groups are available:
->>> +  - GPIO ports: gpioa_pins, gpiob_pins, gpioc_pins, gpiod_pins, gpioe_pins,
->>> +                gpiof_pins, gpiog_pins, gpioh_pins, gpioi_pins, gpioj_pins,
->>> +                gpiok_pins, gpiol_pins, gpiom_pins, gpion_pins
->> ...
->>> +  - JTAG: jtag_pins
->>
->> I'd suggest removing "_pins" from all those names, since it's the same
->> in all names and hence isn't necessary.
->>
->>> +GPIO ranges definition
->>> +----------------------
->>> +
->>> +The named pin groups of GPIO ports can be used to define GPIO ranges as
->>> +explained in Documentation/devicetree/bindings/gpio/gpio.txt.
->>
->> I wouldn't mention that here; the GPIO node contains the gpio-ranges
->> property, not the pin controller node. Hence, the binding for the GPIO
->> DT node should describe the property, not the binding for this node.
->>
->>> +Example
->>> +-------
->>> +
->>> +iomux: iomux@FF10601c {
->>> +	compatible = "abilis,tb10x-iomux";
->>> +	reg = <0xFF10601c 0x4>;
->>> +	pctl_gpio_a: pctl-gpio-a {
->>> +		pingrp = "gpioa_pins";
->>> +	};
->>> +	pctl_uart0: pctl-uart0 {
->>> +		pingrp = "uart0_pins";
->>> +	};
->>> +};
->>
->> The two nodes pctl-gpio-a and pctl-uart0 seem to be missing data. The
->> idea here is that you define nodes that says:
->>
->> * This node applies to these pin(s)/group(s).
->> * Select mux function X on those pins/groups and/or apply these pin
->> configuration options to those pins/groups.
->>
->> The examples above don't include any mux/config options, nor does the
->> binding say how to do specify them.
->>
->> The set of pin groups defined by this binding should correspond directly
->> to the set of pin groups that actually exist in HW. So, if you have 3
->> pin groups (A, B, C) in HW each of which has two mux functions (X, Y),
->> your DT binding should define just 3 pin groups (A, B, C), not 6 (A_X,
->> A_Y, B_X, B_Y, C_X, C_Y). In other words, the pin group name shouldn't
->> imply the mux function.
+On Wed, Jun 26, 2013 at 05:19:48PM +0100, Stuart Yoder wrote:
+> On Wed, Jun 26, 2013 at 8:39 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> > I'd suggest looking at the driver I posted to get a gist of how the parsing
+> > code works, but suffice to say that we describe both the number of
+> > interrupts and the actual interrupt numbers here.
 > 
-> Can we consider it as agreed now that this implementation is acceptable
-> for the TB10x pin controller?
+> I understand that the number of interrupts and actual interrupt numbers
+> are described here, but was referring to the _meaning_ of the interrupt
+> numbers.   A binding for a device with 2 interrupts, a TX and RX would
+> normally identify which interrupt specifier is for TX and which is for RX.
+> 
+> Based on your code, the 2 global interrupts seem to be the secure
+> and non-secure fault interrupts...which your driver does not differentiate.
+> However, the device tree is describing hardware and  you can't assume
+> that all drivers don't care which is which.
 
-There are two issues here:
+Currently, the driver only works when Linux is running as non-secure, which is
+becoming more and more common since it is required to be able to make use of
+hyp mode.
 
-1) What is a pin group:
+There are actually two global interrupts for SMMUv1 and SMMUv2, which
+correspond to configuration faults and `other' global faults.
 
-1a) Must it solely represent a group of pins that actually exists in HW
-(e.g. it's an RTL port, or a set of pins all controlled at once by a
-single bit/field in a register)
+> If there are other interrupts added in the future like the performance interrupt
+> the definition could be expanded to add that.
 
-1b) A SW-defined group of pins, simply because it's convenient to talk
-about that set of pins at once, even though HW doesn't impose that those
-pins are in a group in any way.
+PMU interrupts would like have a separate property, since the PMU would be
+driven by a largely independent piece of code.
 
-Defining groups for either of those reasons is fine, although this is
-the area where my preference and LinusW's differ.
+> But a question.... why do you need the #global-interrupts property
+> at all?   Is the number of "global" interrupts really implementation dependent?
+> Does't a specific compatible string imply the number of interrupts that there
+> actually are?
 
-2) Can groups represent just a set of pins, or can it also imply that a
-particular mux function is selected on that group?
+Integrators have a nasty habit of ORing interrupts together or not wiring
+them at all and I don't want to be caught out by that.
 
-I believe that both LinusW and I are in agreement that a group is simply
-a list/set/group of pins. You select mux functions onto groups. A
-groups's definition can't imply that a particular mux function is
-selected onto it.
+> > What bus hierarchy? If I have two SMMU device nodes, how do I infer any
+> > topological information without an explicit linkage?
+> 
+> I really don't know anything about SMMU chaining, but am inferring what
+> this might look like.   Does the "child" SMMU look just like another
+> mmu-master to the parent?   If so, why not just use the mmu-masters
+> property to establish the relationship.
 
-If we don't follow this rule, then you end up with a combinatorial
-explosion of groups; the cross-product of all possible groups of pins
-vs. the mux function to select on them, rather than simply having a list
-of groups of pins, which is a much smaller set/list.
+No, the child SMMU does not look like a master. It can remaster upstream
+StreamIDs, for example.
 
-So, in the DT example above, I still believe that you need an extra
-property that defines which mux function to select onto the specified
-group. The group name can't imply this, so there needs to be some way of
-specifying it.
+Will
