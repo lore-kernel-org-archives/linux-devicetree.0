@@ -1,104 +1,102 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH -next] video: mxsfb: remove redundant dev_err call in
- mxsfb_probe()
-Date: Wed, 26 Jun 2013 14:43:31 +0300
-Message-ID: <51CAD3E3.70707@ti.com>
-References: <CAPgLHd80wMDBg8ADjtDvZC1=yUoigS7_btHMz1=r8WQTwpgSvg@mail.gmail.com>
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: Re: [PATCH 1/4] Make non-linear GPIO ranges accesible from gpiolib
+Date: Wed, 26 Jun 2013 13:46:54 +0200
+Message-ID: <20130626114654.GB7095@ab42.lan>
+References: <20130618092516.GC18663@ab42.lan>
+ <1371547751-13873-1-git-send-email-christian.ruppert@abilis.com>
+ <51C23060.50807@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8320985476954612802=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPgLHd80wMDBg8ADjtDvZC1=yUoigS7_btHMz1=r8WQTwpgSvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51C23060.50807@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
---===============8320985476954612802==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="----enig2LOGFFUFCOMKGSJKKTSOQ"
-
-------enig2LOGFFUFCOMKGSJKKTSOQ
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 26/06/13 04:50, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+On Wed, Jun 19, 2013 at 04:27:44PM -0600, Stephen Warren wrote:
+> On 06/18/2013 03:29 AM, Christian Ruppert wrote:
+> > This patch adds the infrastructure required to register non-linear =
+gpio
+> > ranges through gpiolib and the standard GPIO device tree bindings.
 >=20
-> There is a error message within devm_ioremap_resource
-> already, so remove the dev_err call to avoid redundant
-> error message.
+> I review this in case we decide to go with it anyway.
 >=20
-> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
-> ---
->  drivers/video/mxsfb.c | 1 -
->  1 file changed, 1 deletion(-)
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Docu=
+mentation/devicetree/bindings/gpio/gpio.txt
 >=20
-> diff --git a/drivers/video/mxsfb.c b/drivers/video/mxsfb.c
-> index 21223d4..251bbec 100644
-> --- a/drivers/video/mxsfb.c
-> +++ b/drivers/video/mxsfb.c
-> @@ -899,7 +899,6 @@ static int mxsfb_probe(struct platform_device *pdev=
-)
-> =20
->  	host->base =3D devm_ioremap_resource(&pdev->dev, res);
->  	if (IS_ERR(host->base)) {
-> -		dev_err(&pdev->dev, "ioremap failed\n");
->  		ret =3D PTR_ERR(host->base);
->  		goto fb_release;
->  	}
+> > +In addition, named groups of pins can be mapped to pin groups of a=
+ given
+> > +pin controller:
+> > +
+> > +	gpio_pio_g: gpio-controller@1480 {
+> > +		#gpio-cells =3D <2>;
+> > +		compatible =3D "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
+> > +		reg =3D <0x1480 0x18>;
+> > +		gpio-controller;
+> > +		gpio-ranges =3D <&pinctrl1 0 0 0>, <&pinctrl2 3 0 0>;
+> > +		gpio-ranges-group-names =3D "foo", "bar";
+> > +	};
+> > +
+> > +where,
+> > +   &pinctrl1 and &pinctrl2 is the phandle to the pinctrl DT node.
+> > +
+> > +   The following value specifies the base GPIO offset of the pin r=
+ange with
+> > +   respect to the GPIO controller's base. The remaining two values=
+ must be
+> > +   0 to indicate that a named pin group should be used for the res=
+pective
+> > +   range. The number of pins in the range is the number of pins in=
+ the pin
+> > +   group.
+>=20
+> It'd be good to re-write this section in a similar style to the clean=
+up
+> patches that I sent for the existing gpio-ranges documentation. That
+> makes the format description more of a raw syntax than English text.
+
+can you please point me to some place where I can find those patches on
+the web?
+
+> > +   gpio-ranges-group-names defines the name of each pingroup of th=
+e
+> > +   respective pin controller.
+> > +
+> > +The pinctrl node must have a "#gpio-#gpio-range-cells" property se=
+t to three
+> > +to define the number of arguments to pass with the phandle.
+>=20
+> There's some mistake in the property name there. I'd assert we should
+> remove those two lines anyway, and use the new OF parsing code I post=
+ed
+> when cleaning up gpio-ranges.
+>=20
+> > diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+>=20
+> > +		if (pinspec.args[2]) {
+> > +			/* npins !=3D 0: linear range */
+> > +			ret =3D gpiochip_add_pin_range(chip,
+> > +					pinctrl_dev_get_devname(pctldev),
+> > +					pinspec.args[0],
+> > +					pinspec.args[1],
+> > +					pinspec.args[2]);
+> > +			if (ret)
+> > +				break;
+> > +		} else {
+>=20
+> I think here we should validate !pinspec.args[1], to ensure that valu=
+e
+> doesn't get set to anything wonky.
 >=20
 
-I've added this to my fbdev-3.11 branch.
-
- Tomi
-
-
-
-------enig2LOGFFUFCOMKGSJKKTSOQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJRytPjAAoJEPo9qoy8lh71rrYP/1Q4etU0ONBawoDNK2J2aoY/
-qqGuMn0uXUJlf3yNR4KOwiALbQeULTuOkacWg+66YAhEca5WuQMHMr+ehMdIINfz
-jajXFOzxozrCGeCxy01gYp7CpSELiIsFG0Sk8c77LWbKUp3mV9n1c5RMwkoUc10C
-RssLkj5QmcdwxJ/sKOf92nLcWP2bwzDZYd+F0IOrIbFEVVj6E2UMCSGOc2sDB+wa
-2YhP5lxUlxzE/hqP26kd9wohu6IQ87n7gtGEtm5Jlxrws5u8nmS5ZsXNcJ7TNaF6
-keEu/oIJwDl2gcVzhmXgcg3Wt7vfnr62AX/GqPKZyJnjTiyTsE7kRjsibXc9QoyW
-tWpR0RoI2RBZbJfSYGtxfz0uto0YAU/OgdQhgc2RaPsIU7gNRu/bcpasL5sLHjqd
-hLZc4OKTHEEk0F0JXXxMrt1okShNG2cfxfrV1xAJfLctN2pQfyMe/DumZkr9JvGo
-2m5RnOEl/UbrC/Z/uiJFxTliqwTH2Vvo3Qcyz48mXSDrrWRSAIq5vd2WH9JH4Hhm
-WmeOFtTcwyI4F/fqEhDPYe6jR/5NDNZcMGf3csYNWb7BWDeqTDNvn+m33UbhYmLa
-zlVRMLp2HN5zUpW6Z3H8ZfKg7BRrZPFqzlvPxTcu6ekDm8C9SlTk9mGP1frud0+9
-n810nUErcqFtc1si+BZi
-=72HT
------END PGP SIGNATURE-----
-
-------enig2LOGFFUFCOMKGSJKKTSOQ--
-
---===============8320985476954612802==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8320985476954612802==--
+--=20
+  Christian Ruppert              ,          <christian.ruppert@abilis.c=
+om>
+                                /|
+  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
+leuri
+                             _// | bilis Systems   CH-1228 Plan-les-Oua=
+tes
