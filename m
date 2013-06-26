@@ -1,14 +1,15 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [GIT PULL] ARM DT cpus/cpu bindings documentation updates
-Date: Wed, 26 Jun 2013 10:55:04 +0100
-Message-ID: <20130626095504.GC22333@e102568-lin.cambridge.arm.com>
-References: <20130523103315.GA2866@e102568-lin.cambridge.arm.com>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH -next] pwm: samsung: fix return value check in
+ pwm_samsung_probe()
+Date: Wed, 26 Jun 2013 17:56:06 +0800
+Message-ID: <CAPgLHd-sn=j_eStYTp6C7zJbB33-oXpnnm8K7J-zXn2Sdf7kFQ@mail.gmail.com>
+References: <CAPgLHd8g2ChKSfyGUkFWBB-Z_6At2awyMAMRvA1fTvmCmeea+g@mail.gmail.com>
+ <20130626094604.GA9794@mithrandir>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130523103315.GA2866-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <20130626094604.GA9794@mithrandir>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,63 +20,23 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant, Rob,
+On 06/26/2013 05:46 PM, Thierry Reding wrote:
+> On Wed, Jun 26, 2013 at 06:55:18AM +0800, Wei Yongjun wrote:
+>> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+>>
+>> In case of error, the function devm_ioremap_resource() returns ERR_PTR()
+>> and never returns NULL. The NULL test in the return value check should
+>> be replaced with IS_ERR().
+>>
+>> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+>> ---
+>>  drivers/pwm/pwm-samsung.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+> Missed another one of those. Given that this isn't merged yet, would you
+> mind if Tomasz and/or Kukjin squash it into their patch?
 
-On Thu, May 23, 2013 at 11:33:15AM +0100, Lorenzo Pieralisi wrote:
-> Hi Grant, Rob,
-> 
-> please pull the cpus/cpu nodes bindings updates for ARM. This pull
-> request completes my previous pull request:
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-May/169110.html
-
-Please let me know if you have any objection to these two pull requests
-(the one I am replying to and the one provided in the link above). I
-sent them quite early so I am just reminding you lest you missed them.
-
-These bindings are quite important and without them all in-kernel dts files,
-cpu map parsing code and topology updates are meaningless, I really hope you
-can queue them for this upcoming merge window.
-
-They are based against early kernel versions (3.10-rc1 and 3.10-rc2), but
-they fast-forward cleanly to -rc7, please let me know if you want me to
-send pull requests with branches updated to -rc7, I do not think it is
-necessary.
-
-Thank you very much indeed,
-Lorenzo
-
-> 
-> with the required changes for cpus/cpu nodes.
-> 
-> Thanks a lot,
-> Lorenzo
-> 
-> The following changes since commit c7788792a5e7b0d5d7f96d0766b4cb6112d47d75:
-> 
->   Linux 3.10-rc2 (2013-05-20 14:37:38 -0700)
-> 
-> are available in the git repository at:
-> 
->   git://linux-arm.org/linux-2.6-lp.git dt-cpus-bindings
-> 
-> for you to fetch changes up to 8e11f862d6a5491bb5f8ef73e13cfd66562e7be3:
-> 
->   Documentation: devicetree: arm: cpus/cpu nodes bindings updates (2013-05-23 10:46:46 +0100)
-> 
-> ----------------------------------------------------------------
-> Lorenzo Pieralisi (1):
->       Documentation: devicetree: arm: cpus/cpu nodes bindings updates
-> 
->  Documentation/devicetree/bindings/arm/cpus.txt | 459 ++++++++++++++++++++++---
->  1 file changed, 412 insertions(+), 47 deletions(-)
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+It's OK to me.
