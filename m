@@ -1,53 +1,63 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] early init and DT platform devices allocation/registration
-Date: Wed, 26 Jun 2013 14:44:37 +0200
-Message-ID: <51CAE235.1000807@gmail.com>
-References: <51C9AF96.3040107@wwwdotorg.org> <20130625.193628.2143557800560690024.hdoyu@nvidia.com> <CACxGe6t9ifg9VRfXKypuhie3pXVPneZqcBy+J1bFpUaUx32P7g@mail.gmail.com> <20130626.090030.1519009485651154440.hdoyu@nvidia.com> <CACxGe6te2RzFb6nkSZQFrzVX4fkQo4pyzLJ1D7Lf=440mE+jyg@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Wed, 26 Jun 2013 18:18:15 +0530
+Message-ID: <51CAE30F.9070700@ti.com>
+References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com> <20130625150649.GA21334@arwen.pp.htv.fi> <51C9D714.4000703@samsung.com> <20130625205452.GC9748@arwen.pp.htv.fi> <51CACEBE.9000505@ti.com> <51CAD89E.3060800@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6te2RzFb6nkSZQFrzVX4fkQo4pyzLJ1D7Lf=440mE+jyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "Pawel.Moll-5wv7dgnIgG8@public.gmane.org" <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51CAD89E.3060800@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: balbi@ti.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/26/13 12:03, Grant Likely wrote:
-> On Wed, Jun 26, 2013 at 7:00 AM, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote @ Tue, 25 Jun 2013 19:52:33 +0200:
+On Wednesday 26 June 2013 05:33 PM, Sylwester Nawrocki wrote:
+> On 06/26/2013 01:21 PM, Kishon Vijay Abraham I wrote:
+>>>>>> +static int exynos_video_phy_probe(struct platform_device *pdev)
+>>>>>>>>>> +{
+>>>>>>>>>> +	struct exynos_video_phy *state;
+>>>>>>>>>> +	struct device *dev = &pdev->dev;
+>>>>>>>>>> +	struct resource *res;
+>>>>>>>>>> +	struct phy_provider *phy_provider;
+>>>>>>>>>> +	int i;
+>>>>>>>>>> +
+>>>>>>>>>> +	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
+>>>>>>>>>> +	if (!state)
+>>>>>>>>>> +		return -ENOMEM;
+>>>>>>>>>> +
+>>>>>>>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>>>>>>>> +
+>>>>>>>>>> +	state->regs = devm_ioremap_resource(dev, res);
+>>>>>>>>>> +	if (IS_ERR(state->regs))
+>>>>>>>>>> +		return PTR_ERR(state->regs);
+>>>>>>>>>> +
+>>>>>>>>>> +	dev_set_drvdata(dev, state);
+>>>>>>>>
+>>>>>>>> you can use platform_set_drvdata(pdev, state);
+>>>>>>
+>>>>>> I had it in the previous version, but changed for symmetry with
+>>>>>> dev_set_drvdata(). I guess those could be replaced with
+>>>>>> phy_{get, set}_drvdata as you suggested.
 >>
->>>> Here's my workaround. I need to call of_detach_node() with OF_DYNAMIC
->>>> to avoid duplicated device registration.
->>>
->>> Gah! my eyes!
->>>
->>> Don't do that. It is incredibly problematic. Look at inhibiting
->>> duplicate device creation instead.
+>> right. currently I was setting dev_set_drvdata of phy (core) device
+>> in phy-core.c and the corresponding dev_get_drvdata in phy provider driver
+>> which is little confusing.
+>> So I'll add phy_set_drvdata and phy_get_drvdata in phy.h (as suggested by
+>> Felipe) to be used by phy provider drivers. So after creating the PHY, the
+>> phy provider should use phy_set_drvdata and in phy_ops, it can use
+>> phy_get_drvdata. (I'll remove the dev_set_drvdata in phy_create).
 >>
->> I may not follow this thread correctly, but could anyone point out the
->> above "inhibiting duplicate device creation" if there's already such
->> solution?
+>> This also means _void *priv_ in phy_create is useless. So I'll be removing
+>> _priv_ from phy_create.
 >
-> No, the solution doesn't exist yet, but it wouldn't be hard to
-> implement. What you need to do is to add a struct device pointer to
-> struct device_node, and set the pointer to the struct device when
-> of_platform_device_create creates a device. (it would also need to be
-> set for early_platform_device creation, but that's not something that
-> should affect you). You would also add a check to
-> of_platform_device_create to check if the device pointer is already
-> set. If it is, then skip creation of the device.
+> Yeah, sounds good. Then in the phy ops phy_get_drvdata(&phy->dev) would
+> be used and in a custom of_xlate dev_get_drvdata(dev) (assuming the phy
+> provider sets drvdata on its device beforehand).
 
-Grant,
+thats correct. btw when you send the next version just have MODULE_LICENSE set
+to GPL v2. Apart from that this patch looks good to me.
 
-What about the other way round, i.e. check if there is a device with
-.of_node pointed to the struct device_node currently at
-of_platform_device_create?
-
-That will avoid adding struct device to struct device_node which you
-fought against for good reasons.
-
-Also, I guess of_platform_device_create could be exported and used
-by anyone who wants to create platform_devices early.
-
-Sebastian
+Thanks
+Kishon
