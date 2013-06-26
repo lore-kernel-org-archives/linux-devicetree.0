@@ -1,113 +1,94 @@
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH/RFC 1/7] DMA: shdma: also support single top-level DMAC DT nodes
-Date: Wed, 26 Jun 2013 16:40:50 +0200
-Message-ID: <1372257656-9944-2-git-send-email-g.liakhovetski@gmx.de>
+Subject: [PATCH/RFC v3 2/7] ARM: shmobile: sh73a0: add support for the DMA0 controller in DT
+Date: Wed, 26 Jun 2013 16:40:51 +0200
+Message-ID: <1372257656-9944-3-git-send-email-g.liakhovetski@gmx.de>
 References: <1372257656-9944-1-git-send-email-g.liakhovetski@gmx.de>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1372257656-9944-1-git-send-email-g.liakhovetski@gmx.de>
 Sender: linux-sh-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>, Vinod Koul <vinod.koul@intel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently we support DMAC DT nodes, located under a multiplexer. This also
-supports systems with a single DMAC instance by placing it alone under such
-a multiplexer node, but this is rather unnatural. This patch adds an
-ability to shdma support such single DT nodes with no dummy multiplexer.
+Add a Device Tree node for the DMA0 controller on sh73a0 and
+auxdata to supply platform data to the driver. To enable the
+DMA0 controller it also has to be taken out of reset.
 
 Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-Cc: Vinod Koul <vinod.koul@intel.com>
 ---
- drivers/dma/sh/shdma-of.c |    5 +++--
- drivers/dma/sh/shdma.c    |   16 ++++++++++++++++
- include/linux/sh_dma.h    |    5 +++++
- 3 files changed, 24 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sh73a0.dtsi         |   36 +++++++++++++++++++++++++++++++++
+ arch/arm/mach-shmobile/setup-sh73a0.c |    4 +++
+ 2 files changed, 40 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/dma/sh/shdma-of.c b/drivers/dma/sh/shdma-of.c
-index 9ab869d..fd2fa10 100644
---- a/drivers/dma/sh/shdma-of.c
-+++ b/drivers/dma/sh/shdma-of.c
-@@ -19,8 +19,8 @@
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index b977502..e730246 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -119,6 +119,42 @@
+ 			      0 32 0x4>;
+ 	};
  
- #define to_shdma_chan(c) container_of(c, struct shdma_chan, dma_chan)
- 
--static struct dma_chan *shdma_of_xlate(struct of_phandle_args *dma_spec,
--				       struct of_dma *ofdma)
-+struct dma_chan *shdma_of_xlate(struct of_phandle_args *dma_spec,
-+				struct of_dma *ofdma)
- {
- 	u32 id = dma_spec->args[0];
- 	dma_cap_mask_t mask;
-@@ -39,6 +39,7 @@ static struct dma_chan *shdma_of_xlate(struct of_phandle_args *dma_spec,
- 
- 	return chan;
- }
-+EXPORT_SYMBOL(shdma_of_xlate);
- 
- static int shdma_of_probe(struct platform_device *pdev)
- {
-diff --git a/drivers/dma/sh/shdma.c b/drivers/dma/sh/shdma.c
-index 70bc99a..98b2693 100644
---- a/drivers/dma/sh/shdma.c
-+++ b/drivers/dma/sh/shdma.c
-@@ -20,6 +20,8 @@
- 
- #include <linux/init.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_dma.h>
- #include <linux/slab.h>
- #include <linux/interrupt.h>
- #include <linux/dmaengine.h>
-@@ -849,6 +851,15 @@ static int sh_dmae_probe(struct platform_device *pdev)
- 
- 	pm_runtime_put(&pdev->dev);
- 
-+	if (pdev->dev.of_node &&
-+	    !of_device_is_compatible(pdev->dev.of_node->parent,
-+				     "renesas,shdma-mux")) {
-+		err = of_dma_controller_register(pdev->dev.of_node,
-+						 shdma_of_xlate, pdev);
-+		if (err < 0)
-+			goto eofdma;
-+	}
++	dma0: shdma@fe000020 {
++		compatible = "renesas,shdma";
++		reg = <0xfe000020 0x89e0>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 129 4
++				0 109 4
++				0 110 4
++				0 111 4
++				0 112 4
++				0 113 4
++				0 114 4
++				0 115 4
++				0 116 4
++				0 117 4
++				0 118 4
++				0 119 4
++				0 120 4
++				0 121 4
++				0 122 4
++				0 123 4
++				0 124 4
++				0 125 4
++				0 126 4
++				0 127 4
++				0 128 4>;
++		interrupt-names = "error",
++				"ch0", "ch1", "ch2", "ch3",
++				"ch4", "ch5", "ch6", "ch7",
++				"ch8", "ch9", "ch10", "ch11",
++				"ch12", "ch13", "ch14", "ch15",
++				"ch16", "ch17", "ch18", "ch19";
++		#dma-cells = <1>;
++		dma-channels = <20>;
++		dma-requests = <256>;
++	};
 +
- 	err = dma_async_device_register(&shdev->shdma_dev.dma_dev);
- 	if (err < 0)
- 		goto edmadevreg;
-@@ -856,6 +867,8 @@ static int sh_dmae_probe(struct platform_device *pdev)
- 	return err;
+ 	i2c0: i2c@e6820000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+diff --git a/arch/arm/mach-shmobile/setup-sh73a0.c b/arch/arm/mach-shmobile/setup-sh73a0.c
+index 96e7ca1e..f95ecc7 100644
+--- a/arch/arm/mach-shmobile/setup-sh73a0.c
++++ b/arch/arm/mach-shmobile/setup-sh73a0.c
+@@ -959,6 +959,7 @@ void __init sh73a0_add_early_devices(void)
+ #ifdef CONFIG_USE_OF
  
- edmadevreg:
-+	of_dma_controller_free(pdev->dev.of_node);
-+eofdma:
- 	pm_runtime_get(&pdev->dev);
+ static const struct of_dev_auxdata sh73a0_auxdata_lookup[] __initconst = {
++	OF_DEV_AUXDATA("renesas,shdma", 0xfe000020, "sh-dma-engine.0", &sh73a0_dmae_platform_data),
+ 	{},
+ };
  
- chan_probe_err:
-@@ -901,6 +914,9 @@ static int sh_dmae_remove(struct platform_device *pdev)
+@@ -969,6 +970,9 @@ void __init sh73a0_add_standard_devices_dt(void)
+ 	/* clocks are setup late during boot in the case of DT */
+ 	sh73a0_clock_init();
  
- 	dma_async_device_unregister(dma_dev);
- 
-+	/* Is a NOP if this controller isn't registered with of-dma */
-+	of_dma_controller_free(pdev->dev.of_node);
++	/* Clear software reset bit on SY-DMAC module */
++	__raw_writel(__raw_readl(SRCR2) & ~(1 << 18), SRCR2);
 +
- 	if (errirq > 0)
- 		free_irq(errirq, shdev);
- 
-diff --git a/include/linux/sh_dma.h b/include/linux/sh_dma.h
-index 4e83f3e..887977d 100644
---- a/include/linux/sh_dma.h
-+++ b/include/linux/sh_dma.h
-@@ -99,4 +99,9 @@ struct sh_dmae_pdata {
- #define CHCR_TE	0x00000002
- #define CHCR_IE	0x00000004
- 
-+struct of_phandle_args;
-+struct of_dma;
-+struct dma_chan *shdma_of_xlate(struct of_phandle_args *dma_spec,
-+				struct of_dma *ofdma);
-+
- #endif
+ 	platform_add_devices(sh73a0_devices_dt,
+ 			     ARRAY_SIZE(sh73a0_devices_dt));
+ 	of_platform_populate(NULL, of_default_bus_match_table,
 -- 
 1.7.2.5
 
