@@ -1,15 +1,13 @@
-From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/1] ARM: dts: AM33XX: Add LCDC info into am335x-evm
-Date: Wed, 26 Jun 2013 17:13:26 -0500
-Message-ID: <20130626221326.GA11798@uda0270506>
-References: <1372105967-26669-1-git-send-email-bparrot@ti.com>
- <1372143043.4488.50.camel@coredoba.hi.pengutronix.de>
+From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] leds: Add device tree binding for pca9633
+Date: Wed, 26 Jun 2013 16:47:12 -0700
+Message-ID: <CAK5ve-KapwU9HbrW=VBeKnghhdqSZYKMfsDdGiYcYMwM7LZBNg@mail.gmail.com>
+References: <20130626141705.GY5523@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1372143043.4488.50.camel-oeorZI7ca7Kzss5je/eYgj6d/iTt6vPThC4ANOJQIlc@public.gmane.org>
+In-Reply-To: <20130626141705.GY5523-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,83 +18,160 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jan =?iso-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 25, 2013 at 08:50:43AM +0200, Jan L=FCbbe wrote:
-> On Mon, 2013-06-24 at 15:32 -0500, Benoit Parrot wrote:
-> > Add LCDC device node in DT for am33xx
-> > Add LCDC and Panel info in DT for am335x-evm
-> =
+On Wed, Jun 26, 2013 at 7:17 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> Similar to tca6507, we can just parse the standard LED
+> properties for pca9633.
+>
+> Tested on a pca9632, which is compatible with pca9633.
+>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/pca9633.txt
+> @@ -0,0 +1,42 @@
+> +LEDs connected to pca9633 or pca9632
+> +
+> +Required properties:
+> +- compatible : should be : "nxp,pca963x"
+> +
+> +Each led is represented as a sub-node of the nxp,pca9633 device.
+> +
+> +LED sub-node properties:
+> +- label : (optional) see Documentation/devicetree/bindings/leds/common.txt
+> +- reg : number of LED line (could be from 0 to 4)
+> +- linux,default-trigger : (optional)
+> +   see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Examples:
+> +
+> +pca9632: pca9632 {
+> +       compatible = "nxp,pca9632", "nxp,pca963x";
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +       reg = <0x62>;
+> +
+> +       red@0 {
+> +               label = "red";
+> +               reg = <0>;
+> +               linux,default-trigger = "none";
+> +       };
+> +       green@1 {
+> +               label = "green";
+> +               reg = <1>;
+> +               linux,default-trigger = "none";
+> +       };
+> +       blue@2 {
+> +               label = "blue";
+> +               reg = <2>;
+> +               linux,default-trigger = "none";
+> +       };
+> +       unused@3 {
+> +               label = "unused";
+> +               reg = <3>;
+> +               linux,default-trigger = "none";
+> +       };
+> +};
+> --- a/drivers/leds/leds-pca9633.c
+> +++ b/drivers/leds/leds-pca9633.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_data/leds-pca9633.h>
+>
+>  /* LED select registers determine the source that drives LED outputs */
+> @@ -93,6 +94,61 @@ static void pca9633_led_set(struct led_classdev *led_cdev,
+>         schedule_work(&pca9633->work);
+>  }
+>
+> +#ifdef CONFIG_OF
 
-> > diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335=
-x-evm.dts
-> > index 0423298..40d7a3f 100644
-> > --- a/arch/arm/boot/dts/am335x-evm.dts
-> > +++ b/arch/arm/boot/dts/am335x-evm.dts
-> > @@ -102,6 +136,16 @@
-> >  				reg =3D <0x48>;
-> >  			};
-> >  		};
-> > +
-> > +		lcdc {
-> > +			compatible =3D "ti,am33xx-tilcdc";
-> > +			reg =3D <0x4830e000 0x1000>;
-> > +			interrupt-parent =3D <&intc>;
-> > +			interrupts =3D <36>;
-> > +			ti,hwmods =3D "lcdc";
-> > +			ti,allow-non-reduced-blanking-modes;
-> > +			status =3D "okay";
-> > +		};
-> >  	};
-> >  =
+Shall we use "#if IS_ENABLED(CONFIG_OF)", as Grant pointed out recently.
 
-> >  	vbat: fixedregulator@0 {
-> >  /include/ "tps65910.dtsi"
-> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.d=
-tsi
-> > index 8e1248f..05b2c4a 100644
-> > --- a/arch/arm/boot/dts/am33xx.dtsi
-> > +++ b/arch/arm/boot/dts/am33xx.dtsi
-> > @@ -415,5 +415,14 @@
-> >  			#size-cells =3D <1>;
-> >  			status =3D "disabled";
-> >  		};
-> > +
-> > +		lcdc: lcdc@4830e000 {
-> > +			compatible =3D "ti,am33xx-tilcdc";
-> > +			reg =3D <0x4830e000 0x1000>;
-> > +			interrupt-parent =3D <&intc>;
-> > +			interrupts =3D <36>;
-> > +			ti,hwmods =3D "lcdc";
-> > +			status =3D "disabled";
-> > +		};
-> >  	};
-> >  };
-> =
+-Bryan
 
-> am335x-evm.dts includes am33xx.dtsi, so you shouldn't need to provide
-> all SoC-specific settings again in the board dts. The way it's done
-> here, you get two nodes ("lcdc" and "lcdc@4830e000") for the same HW
-> module.
-> =
-
-> It seems you just need status and maybe
-> ti,allow-non-reduced-blanking-modes (for which I didn't see either the
-> binding or the driver code yet).
-> =
-
-
-Thanks for the feedback. I did miss these cut-paste induced mistake.
-I'll update the patch and resubmit.
-
-> Regards,
-> Jan
-> -- =
-
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> =
+> +static struct pca9633_platform_data *
+> +pca9633_dt_init(struct i2c_client *client)
+> +{
+> +       struct device_node *np = client->dev.of_node, *child;
+> +       struct pca9633_platform_data *pdata;
+> +       struct led_info *pca9633_leds;
+> +       int count;
+> +
+> +       count = of_get_child_count(np);
+> +       if (!count || count > 4)
+> +               return ERR_PTR(-ENODEV);
+> +
+> +       pca9633_leds = devm_kzalloc(&client->dev,
+> +                               sizeof(struct led_info) * count, GFP_KERNEL);
+> +       if (!pca9633_leds)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       for_each_child_of_node(np, child) {
+> +               struct led_info led;
+> +               u32 reg;
+> +               int res;
+> +
+> +               led.name =
+> +                       of_get_property(child, "label", NULL) ? : child->name;
+> +               led.default_trigger =
+> +                       of_get_property(child, "linux,default-trigger", NULL);
+> +               res = of_property_read_u32(child, "reg", &reg);
+> +               if (res != 0)
+> +                       continue;
+> +               pca9633_leds[reg] = led;
+> +       }
+> +       pdata = devm_kzalloc(&client->dev,
+> +                            sizeof(struct pca9633_platform_data), GFP_KERNEL);
+> +       if (!pdata)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       pdata->leds.leds = pca9633_leds;
+> +       pdata->leds.num_leds = count;
+> +
+> +       return pdata;
+> +}
+> +
+> +static const struct of_device_id of_pca9633_match[] = {
+> +       { .compatible = "nxp,pca963x", },
+> +       {},
+> +};
+> +#else
+> +static struct pca9633_platform_data *
+> +pca9633_dt_init(struct i2c_client *client)
+> +{
+> +       return ERR_PTR(-ENODEV);
+> +}
+> +#endif
+> +
+>  static int pca9633_probe(struct i2c_client *client,
+>                                         const struct i2c_device_id *id)
+>  {
+> @@ -102,6 +158,14 @@ static int pca9633_probe(struct i2c_client *client,
+>
+>         pdata = client->dev.platform_data;
+>
+> +       if (!pdata) {
+> +               pdata = pca9633_dt_init(client);
+> +               if (IS_ERR(pdata)) {
+> +                       dev_warn(&client->dev, "could not parse configuration\n");
+> +                       pdata = NULL;
+> +               }
+> +       }
+> +
+>         if (pdata) {
+>                 if (pdata->leds.num_leds <= 0 || pdata->leds.num_leds > 4) {
+>                         dev_err(&client->dev, "board info must claim at most 4 LEDs");
+> @@ -181,6 +245,7 @@ static struct i2c_driver pca9633_driver = {
+>         .driver = {
+>                 .name   = "leds-pca9633",
+>                 .owner  = THIS_MODULE,
+> +               .of_match_table = of_match_ptr(of_pca9633_match),
+>         },
+>         .probe  = pca9633_probe,
+>         .remove = pca9633_remove,
