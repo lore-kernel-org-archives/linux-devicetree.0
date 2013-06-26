@@ -1,75 +1,99 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] early init and DT platform devices allocation/registration
-Date: Wed, 26 Jun 2013 14:12:06 +0100
-Message-ID: <CACxGe6u=BfnbwmS=7X5eYqKuSkmGdu9v-StAx+m7fLd+8C69pA@mail.gmail.com>
-References: <51C9AF96.3040107@wwwdotorg.org> <20130625.193628.2143557800560690024.hdoyu@nvidia.com>
- <CACxGe6t9ifg9VRfXKypuhie3pXVPneZqcBy+J1bFpUaUx32P7g@mail.gmail.com>
- <20130626.090030.1519009485651154440.hdoyu@nvidia.com> <CACxGe6te2RzFb6nkSZQFrzVX4fkQo4pyzLJ1D7Lf=440mE+jyg@mail.gmail.com>
- <51CAE235.1000807@gmail.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2] ARM: DTS: OMAP4: Add OMAP4 Blaze Tablet support
+Date: Wed, 26 Jun 2013 08:13:17 -0500
+Message-ID: <CAGo_u6ohf86j3VouQZKkkf6Gv3x-wJKfNN=TALSRCgvh0NBEtg@mail.gmail.com>
+References: <1372159970-6361-1-git-send-email-ruslan.bilovol@ti.com>
+	<51C9867C.80206@ti.com>
+	<51C99056.5090104@ti.com>
+	<CAB=otbQ71TXn=-f3WddNoyvP6NmTHCtSPqwDwkYr2Y7micqRTQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51CAE235.1000807-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "Pawel.Moll-5wv7dgnIgG8@public.gmane.org" <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAB=otbQ71TXn=-f3WddNoyvP6NmTHCtSPqwDwkYr2Y7micqRTQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ruslan Bilovol <ruslan.bilovol@ti.com>
+Cc: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, benoit.cousson@linaro.org, lkml <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 26, 2013 at 1:44 PM, Sebastian Hesselbarth
-<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 06/26/13 12:03, Grant Likely wrote:
->>
->> On Wed, Jun 26, 2013 at 7:00 AM, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+On Wed, Jun 26, 2013 at 3:03 AM, Ruslan Bilovol <ruslan.bilovol@ti.com> wrote:
+> Hi Nishanth,
+>
+> On Tue, Jun 25, 2013 at 3:43 PM, Nishanth Menon <nm@ti.com> wrote:
+>> On 06/25/2013 07:01 AM, Nishanth Menon wrote:
 >>>
->>> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote @ Tue, 25 Jun 2013
->>> 19:52:33 +0200:
->>>
->>>>> Here's my workaround. I need to call of_detach_node() with OF_DYNAMIC
->>>>> to avoid duplicated device registration.
+>>> On 06/25/2013 06:32 AM, Ruslan Bilovol wrote:
 >>>>
+>>>> The OMAP4 Blaze Tablet is TI OMAP4 processor-based
+>>>> development platform in a tablet formfactor.
+>>>> The platform contains many of the features found in
+>>>> present-day handsets (such as audio, video, wireless
+>>>> functions and user interfaces) and in addition
+>>>> contains features for software development and test.
 >>>>
->>>> Gah! my eyes!
->>>>
->>>> Don't do that. It is incredibly problematic. Look at inhibiting
->>>> duplicate device creation instead.
+>>>> This patch adds initial support for the OMAP4 Blaze
+>>>> Tablet development platform. Additional functionality
+>>>> depends on different drivers and code modifications that
+>>>> are not upstreamed yet or do not support DT yet, so will
+>>>> be added later.--
 >>>
 >>>
->>> I may not follow this thread correctly, but could anyone point out the
->>> above "inhibiting duplicate device creation" if there's already such
->>> solution?
+>>> http://svtronics.com/omap/sevm4460,blaze,omap might help too :)
+>
+> Yes, forgot to add this information from cover-letter from previous
+> version of patch :)
+
+;) - link was wrong!
+http://svtronics.com/omap?product_id=15 is more like it -> Blaze
+tablet by default comes in 4460/4470 variants. I suggest introducing
+4470 variant here.
+I am aware of the SOM compatibility and ability to support 4430 SOM on
+tablet as well, but to keep tablet alive and reduce scope of testing,
+keeping just 4470 in place might be a good choice.
+
+just my 2 cents, no strong feelings towards either. :)
+
+>
+>>> [...]
+>>>>
+>>>> +
+>>>> +#include "twl6030.dtsi"
+>>>> +
+>>>
+>>> Might be good to see the TWL interrupt pin information made available as
+>>> well?
 >>
+>> Allow me to rephrase a comment a little bit more :)
+>> Similar to twl4030_omap3.dtsi, we could introduce twl6030_omap4.dtsi. this
+>> could contain the common pins used for 6030.
+>>  &omap4_pmx_wkup {
+>>          pinctrl-names = "default";
+>>          pinctrl-0 = <
+>>                          &twl6030_wkup_pins
+>>          >;
 >>
->> No, the solution doesn't exist yet, but it wouldn't be hard to
->> implement. What you need to do is to add a struct device pointer to
->> struct device_node, and set the pointer to the struct device when
->> of_platform_device_create creates a device. (it would also need to be
->> set for early_platform_device creation, but that's not something that
->> should affect you). You would also add a check to
->> of_platform_device_create to check if the device pointer is already
->> set. If it is, then skip creation of the device.
+>>          twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
+>>                  pinctrl-single,pins = <
+>>                          0x14 (PIN_OUTPUT | MUX_MODE2)
+>>                  >;
+>>          };
+>>  };
+>>
+>>         twl6030_pins: pinmux_twl6030_pins {
+>>                 pinctrl-single,pins = <
+>>                         0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)
+>> /* sys_nirq1.sys_nirq1 */
+>>                 >;
+>>         };
+>>
+>> which is now already duplicated in 2 places (SDP and Panda), and in this
+>> patch duplicated again.
 >
+> Agree, I'm planning to do this later as part of moving common things into
+> some System-On-Module(SOM)-specific files, as discussed previously
+> here https://patchwork.kernel.org/patch/2118371/
 >
-> Grant,
->
-> What about the other way round, i.e. check if there is a device with
-> .of_node pointed to the struct device_node currently at
-> of_platform_device_create?
->
-> That will avoid adding struct device to struct device_node which you
-> fought against for good reasons.
-
-The main thing is that it means searching through the entire list of
-platform devices every time a new platform device is created. That
-seems unnecessarily expensive to me.
-
->
-> Also, I guess of_platform_device_create could be exported and used
-> by anyone who wants to create platform_devices early.
-
-Yes, but in that case it is probably better for them to call
-of_platform_populate early if of_platform_device_create is fixed to
-support early calling. Then you'd just set up all the devices earlier
-in init, allow drivers that support early probing to do so, and then
-everything else uses the normal initcall path.
-
-g.
+I dont think I was mentioning about that - I just would really like to
+avoid duplication of 6030 information all over the place. if we can
+avoid it, lets start consolidating.
+Regards,
+Nishanth Menon
