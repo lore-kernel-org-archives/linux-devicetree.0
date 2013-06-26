@@ -1,49 +1,62 @@
 From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH 0/4] Add an hwmon driver for the mxs soc internal sensor
-Date: Wed, 26 Jun 2013 10:51:09 +0200
-Message-ID: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
+Subject: [PATCH 2/4] arm: mxs: add lradc to cfa10036
+Date: Wed, 26 Jun 2013 10:51:11 +0200
+Message-ID: <1372236673-20725-3-git-send-email-alexandre.belloni@free-electrons.com>
+References: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Shawn Guo <shawn.guo@linaro.org>, Jean Delvare <khali@linux-fr.org>
 Cc: jimwall@q.com, brian@crystalfontz.com, Maxime Ripard <maxime.ripard@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Guenter Roeck <linux@roeck-us.net>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, linux-arm-kernel@lists.infradead.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset is ading a simple driver for the i.mx28 internal die temperature
-sensor.
+The lradc is actually available on the Crystalfontz cfa-10036.
 
-The first two patches are preparation patches an can be applied now.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+---
+ arch/arm/boot/dts/imx28-cfa10036.dts | 4 ++++
+ arch/arm/boot/dts/imx28-cfa10049.dts | 1 -
+ arch/arm/boot/dts/imx28-cfa10055.dts | 1 -
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-The first patch is adding the #io-channel-cells to the lrdac on i.mx28 so that
-it becomes an inkernel iio provider.
-
-The second patch defines the lradc as present on the cfa-10036 and thus removes
-it from i.mx28-cfa10049.dts and imx28-cfa10055.dts as they both include
-imx28-cfa10036.dts
-
-The third patch adds the driver itself.
-
-And the final patch adds the driver bindings to the cfa-10036.
-
-Alexandre Belloni (4):
-  arm: mxs: Add #io-channel-cells property to lradc
-  arm: mxs: add lradc to cfa10036
-  hwmon: Add a simple driver to read the MXS SoC temperature
-  arm: mxs: Add mxs internal temp sensor to cfa-10036
-
- .../devicetree/bindings/hwmon/mxs-cputemp.txt      |  18 +++
- Documentation/hwmon/mxs-cputemp                    |  29 +++++
- arch/arm/boot/dts/imx28-cfa10036.dts               |  10 ++
- arch/arm/boot/dts/imx28-cfa10049.dts               |   1 -
- arch/arm/boot/dts/imx28-cfa10055.dts               |   1 -
- arch/arm/boot/dts/imx28.dtsi                       |   1 +
- drivers/hwmon/Kconfig                              |  10 ++
- drivers/hwmon/Makefile                             |   1 +
- drivers/hwmon/mxs-cputemp.c                        | 132 +++++++++++++++++++++
- 9 files changed, 201 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/mxs-cputemp.txt
- create mode 100644 Documentation/hwmon/mxs-cputemp
- create mode 100644 drivers/hwmon/mxs-cputemp.c
-
+diff --git a/arch/arm/boot/dts/imx28-cfa10036.dts b/arch/arm/boot/dts/imx28-cfa10036.dts
+index 5e5213f..802e0e9 100644
+--- a/arch/arm/boot/dts/imx28-cfa10036.dts
++++ b/arch/arm/boot/dts/imx28-cfa10036.dts
+@@ -94,6 +94,10 @@
+ 			usbphy0: usbphy@8007c000 {
+ 				status = "okay";
+ 			};
++
++			lradc@80050000 {
++				status = "okay";
++			};
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28-cfa10049.dts b/arch/arm/boot/dts/imx28-cfa10049.dts
+index c26676b..4d3c0a6 100644
+--- a/arch/arm/boot/dts/imx28-cfa10049.dts
++++ b/arch/arm/boot/dts/imx28-cfa10049.dts
+@@ -215,7 +215,6 @@
+ 			};
+ 
+ 			lradc@80050000 {
+-				status = "okay";
+ 				fsl,lradc-touchscreen-wires = <4>;
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/imx28-cfa10055.dts b/arch/arm/boot/dts/imx28-cfa10055.dts
+index 1581112..e0de1aa 100644
+--- a/arch/arm/boot/dts/imx28-cfa10055.dts
++++ b/arch/arm/boot/dts/imx28-cfa10055.dts
+@@ -136,7 +136,6 @@
+ 		apbx@80040000 {
+ 			lradc@80050000 {
+ 				fsl,lradc-touchscreen-wires = <4>;
+-				status = "okay";
+ 			};
+ 
+ 			pwm: pwm@80064000 {
 -- 
 1.8.1.2
-
