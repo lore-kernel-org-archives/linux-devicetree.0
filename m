@@ -1,29 +1,46 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [RESEND PATCH V3 0/8] mmc_of_parse() adaptations, switch mvsdio to mmc_of_parse()
-Date: Thu, 27 Jun 2013 10:26:17 -0400
-Message-ID: <87sj03sk8m.fsf@octavius.laptop.org>
-References: <1370808858-32241-1-git-send-email-gmbnomis@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 3/4] hwmon: Add a simple driver to read the MXS SoC
+ temperature
+Date: Thu, 27 Jun 2013 07:27:58 -0700
+Message-ID: <20130627142758.GA5812@roeck-us.net>
+References: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <1372236673-20725-4-git-send-email-alexandre.belloni@free-electrons.com>
+ <20130626143927.GB31998@roeck-us.net>
+ <20130627091732.GP5803@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1370808858-32241-1-git-send-email-gmbnomis@gmail.com> (Simon
-	Baatz's message of "Sun, 9 Jun 2013 22:14:10 +0200")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Simon Baatz <gmbnomis@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130627091732.GP5803@lukather>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Shawn Guo <shawn.guo@linaro.org>, Jean Delvare <khali@linux-fr.org>, jimwall@q.com, brian@crystalfontz.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Thu, Jun 27, 2013 at 11:17:32AM +0200, Maxime Ripard wrote:
+> On Wed, Jun 26, 2013 at 07:39:27AM -0700, Guenter Roeck wrote:
+> > On Wed, Jun 26, 2013 at 10:51:12AM +0200, Alexandre Belloni wrote:
+> > > The low resolution ADC of the mxs is able to read an internal temperature
+> > > sensor, expose that using hwmon.
+> > > 
+> > > Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> > > ---
+> > 
+> > Wouldn't it make more sense to use iio-hwmon and improve it if necessary ?
+> 
+> Actually, I wonder if we should not just put the hwmon driver
+> capabilities directly into the mxs-lradc driver, just like it's already
+> been done in this driver for the touchscreen support.
+> 
+> The probing of this hwmon driver doesn't really belong to the DT, it's
+> not really realistic to probe it from the machine definition, and it
+> really is the IP that is wired that way.
+> 
+Merging iio-hwmon functionality into an adc driver seems just as bad
+(or even worse) as copying it into a new driver.
 
-Simon Baatz <gmbnomis@gmail.com> writes:
-> 	RESEND V3:
-> 	- Dropped patches 9 and 10, they are part of linux-next already
-> 	NB: patch 7 as well, but I did not want to change the numbering
+If the lradc driver knows that the ADC channels are temperature sensors, it
+should register them with the iio subsystem as IIO_TEMP type. Then you should
+be able to use iio_hwmon as is.
 
-I've pushed all patches except 7 to mmc-next for 3.11 now, and I made
-Stephen Warren's nit change to patch 6.  Thanks!
-
-- Chris.
--- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+Guenter
