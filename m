@@ -1,57 +1,60 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 2/5] ARM: dts: Add MIPI PHY node to exynos4.dtsi
-Date: Thu, 27 Jun 2013 10:52:44 +0300
-Message-ID: <20130627075244.GR15455@arwen.pp.htv.fi>
-References: <1372258946-15607-1-git-send-email-s.nawrocki@samsung.com>
- <1372258946-15607-3-git-send-email-s.nawrocki@samsung.com>
-Reply-To: <balbi@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/4] pinctrl: remove slew-rate parameter from tz1090
+Date: Thu, 27 Jun 2013 10:32:01 +0200
+Message-ID: <CACRpkdZ6KOa=bXqm_S7LbUXp8AeWzCTCS6pRSFDiRu5ELgypQg@mail.gmail.com>
+References: <201306251455.01540.heiko@sntech.de>
+	<201306251456.36499.heiko@sntech.de>
+	<51C99581.2010403@imgtec.com>
+	<CACRpkdaVsKCNzQ9zAG5DXfDO2BFpcCzw5VbmARazOrXCW1kmeQ@mail.gmail.com>
+	<51C9AFC4.1020305@imgtec.com>
+	<51CA0FB0.7090608@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="o0y1lerN6xYE2ROn"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1372258946-15607-3-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, balbi@ti.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51CA0FB0.7090608@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: James Hogan <james.hogan@imgtec.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
---o0y1lerN6xYE2ROn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 25, 2013 at 11:46 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 06/25/2013 08:57 AM, James Hogan wrote:
+>> 0: slow (half frequency)
+>> 1: fast
+>>
+>> I just got a reply back from a hardware engineer, who said that the
+>> relationship with the actual volts/usec will depend on both the drive
+>> strength and the load on the pad, and that a definite answer probably
+>> requires running a simulation.
+>
+> Tegra is similar here. The docs just say (for a 2-bit field expressed in
+> binary) "Code 11 is the least slewing of the signal, code 00 is the
+> highest slewing of the signal".
+>
+> I'm not sure that a generic parameter actually needs specific units. Why
+> can't we simply specify the units as HW-defined, even while using a
+> standardized DT property name and kernel-internal enum to represent the
+> concept of slew rate?
 
-On Wed, Jun 26, 2013 at 05:02:23PM +0200, Sylwester Nawrocki wrote:
-> Add PHY provider node for the MIPI CSIS and MIPI DSIM PHYs.
->=20
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+That is fine I guess, that is how it is currently defined for the
+kernel internals in
+<linux/pinconf/pinconf-generic.h>:
 
-Acked-by: Felipe Balbi <balbi@ti.com>
+ * @PIN_CONFIG_SLEW_RATE: if the pin can select slew rate, the argument to
+ *      this parameter (on a custom format) tells the driver which alternative
+ *      slew rate to use.
 
---=20
-balbi
+It's just that the very phrase "device tree" bring out the
+standards body slow-and-impersonal considering all aspects
+of the world side of me.
 
---o0y1lerN6xYE2ROn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Unless someone from the DT camp think it is horrible to have
+this value vendor-specific I'm all game.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+But I guess it needs some binding doc for each and every pin
+controller in that case, so referring to the generic binding will
+not work. (And the driver needs to do some range checking
+etc I guess.)
 
-iQIcBAEBAgAGBQJRy+9MAAoJEIaOsuA1yqREEJcP/ixAuKRVjAsuzj47/ABUW7QS
-glerAWcxGRZ3blSvF9X6aHGNVzneWXeg1VVu6knFDehbNXDNMdIcqtxVW5ep7TYv
-skhfoqjAFJYfnmFyHtIyJqk4RkG6VR0OUXOaluVvFbTir72A5zqIhtOI+Blozha1
-v24TJTqUI/69Hxh74vr+Q0IH2RRuzN5qxa/FsUD02at82swbSEJijE31izgK82fS
-4FVMRZY3hhIfdVKTNij1dAcFYhQKWW5RHXfe6NjBZvfbFz83Phuxl+9bR6BNHKnt
-KkEtnymAvGVXXxpU9TU7muue33oNXOsWIU6P1r8qOQJdaVt8wpNIVNAKePLn8EU5
-0jmAqCOnZe3T22QEvZC/5Jxb7EJq/u8l5MB3P0kwXdQ9KbbNZVPWcWo2wqkAebQp
-eoLf/PZAsEnRgQCrfaxgfxDXm4LVQpC0xeKMAfK0ASESkRO7dRjIUavByXL79Wc/
-xTOWA8Di61Iro8Xhhq3vpzPyV3uWZkD696T0S1d4PhB4xo/0hBuCCIY729UCkgQY
-cbNIoHEHUaw9vwjs7E+XJZrhwhFNs7XbcDzlW/1pit8+rcdZdgsu7Mo7Qsba6z3G
-6GK9aTr2H+JSC3O3pQvLvDuaWXONaCRUlQ9ctdH0YGUH14Y82otUk4Q3JEHpYK/4
-pvTE8GSGDNC/b6q/zxoz
-=t4FX
------END PGP SIGNATURE-----
-
---o0y1lerN6xYE2ROn--
+Yours,
+Linus Walleij
