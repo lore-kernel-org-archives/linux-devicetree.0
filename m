@@ -1,41 +1,351 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: Handle late vmmc regulators with EPROBE_DEFER
-Date: Thu, 27 Jun 2013 10:10:26 -0700
-Message-ID: <CAD=FV=X8qVAeD_F-kQLHcgusY65pw4WCs5mMsO0wTapqBUAiQw@mail.gmail.com>
-References: <1370580406-10254-1-git-send-email-dianders@chromium.org>
-	<1370626110-1731-1-git-send-email-dianders@chromium.org>
-	<87vc4zlczt.fsf@octavius.laptop.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <87vc4zlczt.fsf@octavius.laptop.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: Olof Johansson <olof@lixom.net>, Andrew Bresticker <abrestic@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Abhilash Kesavan <a.kesavan@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Will Newton <will.newton@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+From: Daniel Drake <dsd@laptop.org>
+Subject: [PATCH] Add OLPC AP-SP input driver
+Date: Thu, 27 Jun 2013 13:42:00 -0400 (EDT)
+Message-ID: <20130627174200.5F1B9FAAD4@dev.laptop.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, dtor@mail.ru
+Cc: linux-input@vger.kernel.org, pgf@laptop.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+The OLPC XO-1.75 and XO-4 laptops include a PS/2 touchpad and an AT
+keyboard, yet they do not have a hardware PS/2 controller. Instead, a
+firmware runs on a dedicated core ("Security Processor", part of the SoC)
+that acts as a PS/2 controller through bit-banging.
 
-On Thu, Jun 27, 2013 at 9:44 AM, Chris Ball <cjb@laptop.org> wrote:
-> This hunk breaks the build for me, because err_setup_bus and ret are
-> used in the error path of the call to mmc_add_host() in this function.
->
-> I'll push a version that leaves those in.  Let me know if you think
-> something strange is happening that made this work okay for you, like
-> a mismerge.
+Communication between the main cpu (Application Processor) and the
+Security Processor happens via a standard command mechanism implemented
+by the SoC. Add a driver for this interface to enable keyboard/mouse
+input on this platform.
 
-WTF.  OK, this is clearly my fault.  I went back to the exact patch
-and it didn't compile for me, either.  :(  My typical workflow is to
-develop something in our local tree and then cherry-pick (and test!)
-on ToT linux.  Probably what happened in this case was that there was
-a compile error and I didn't notice and somehow ended up testing my
-local tree (which doesn't error-check mmc_add_host).
+Original author: Saadia Baloch
+Signed-off-by: Daniel Drake <dsd@laptop.org>
+---
+ .../devicetree/bindings/serio/olpc,ap-sp.txt       |  13 +
+ drivers/input/serio/Kconfig                        |  10 +
+ drivers/input/serio/Makefile                       |   1 +
+ drivers/input/serio/olpc_apsp.c                    | 264 +++++++++++++++++++++
+ 4 files changed, 288 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serio/olpc,ap-sp.txt
+ create mode 100644 drivers/input/serio/olpc_apsp.c
 
-Sorry for the hassle.  Leaving the err_setup_bus in is correct (and
-leaving the "ret" variable declared).
+diff --git a/Documentation/devicetree/bindings/serio/olpc,ap-sp.txt b/Documentation/devicetree/bindings/serio/olpc,ap-sp.txt
+new file mode 100644
+index 0000000..0e72183
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serio/olpc,ap-sp.txt
+@@ -0,0 +1,13 @@
++OLPC AP-SP serio interface
++
++Required properties:
++- compatible : "olpc,ap-sp"
++- reg : base address and length of SoC's WTM registers
++- interrupts : SP-AP interrupt
++
++Example:
++	ap-sp@d4290000 {
++		compatible = "olpc,ap-sp";
++		reg = <0xd4290000 0x1000>;
++		interrupts = <40>;
++	}
+diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
+index 1bda828..94c17c2 100644
+--- a/drivers/input/serio/Kconfig
++++ b/drivers/input/serio/Kconfig
+@@ -256,4 +256,14 @@ config SERIO_APBPS2
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called apbps2.
+ 
++config SERIO_OLPC_APSP
++	tristate "OLPC AP-SP input support"
++	depends on OF
++	help
++	  Say Y here if you want support for the keyboard and touchpad included
++	  in the OLPC XO-1.75 and XO-4 laptops.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called olpc_apsp.
++
+ endif
+diff --git a/drivers/input/serio/Makefile b/drivers/input/serio/Makefile
+index 8edb36c..12298b1 100644
+--- a/drivers/input/serio/Makefile
++++ b/drivers/input/serio/Makefile
+@@ -27,3 +27,4 @@ obj-$(CONFIG_SERIO_XILINX_XPS_PS2)	+= xilinx_ps2.o
+ obj-$(CONFIG_SERIO_ALTERA_PS2)	+= altera_ps2.o
+ obj-$(CONFIG_SERIO_ARC_PS2)	+= arc_ps2.o
+ obj-$(CONFIG_SERIO_APBPS2)	+= apbps2.o
++obj-$(CONFIG_SERIO_OLPC_APSP)	+= olpc_apsp.o
+diff --git a/drivers/input/serio/olpc_apsp.c b/drivers/input/serio/olpc_apsp.c
+new file mode 100644
+index 0000000..068195c
+--- /dev/null
++++ b/drivers/input/serio/olpc_apsp.c
+@@ -0,0 +1,264 @@
++/*
++ * OLPC serio driver for multiplexed input from Marvell MMP security processor
++ *
++ * Copyright (C) 2011-2013 One Laptop Per Child
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/interrupt.h>
++#include <linux/init.h>
++#include <linux/serio.h>
++#include <linux/err.h>
++#include <linux/platform_device.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <asm/irq.h>
++#include <linux/delay.h>
++
++/*
++ * The OLPC XO-1.75 and XO-4 laptops do not have a hardware PS/2 controller.
++ * Instead, the OLPC firmware runs a bit-banging PS/2 implementation on an
++ * otherwise-unused slow processor which is included in the Marvell MMP2/MMP3
++ * SoC, known as the "Security Processor" (SP) or "Wireless Trusted Module"
++ * (WTM). This firmware then reports its results via the WTM registers,
++ * which we read from the Application Processor (AP, i.e. main CPU) in this
++ * driver.
++ *
++ * On the hardware side we have a PS/2 mouse and an AT keyboard, the data
++ * is multiplexed through this system. We create a serio port for each one,
++ * and demultiplex the data accordingly.
++ */
++
++static bool apsp_debug;
++module_param_named(debug, apsp_debug, bool, 0600);
++MODULE_PARM_DESC(debug, "Turn debugging mode on and off");
++
++#define dbg(format, arg...)						\
++	do {								\
++		if (apsp_debug)						\
++			pr_info(KBUILD_MODNAME ": " format, ##arg);	\
++	} while (0)
++
++
++/* WTM register offsets */
++#define SECURE_PROCESSOR_COMMAND	0x40
++#define COMMAND_RETURN_STATUS		0x80
++#define COMMAND_FIFO_STATUS		0xc4
++#define PJ_RST_INTERRUPT		0xc8
++#define PJ_INTERRUPT_MASK		0xcc
++
++/* The upper byte of SECURE_PROCESSOR_COMMAND and COMMAND_RETURN_STATUS is
++ * used to identify which port (device) is being talked to. The lower byte
++ * is the data being sent/received. */
++#define PORT_MASK	0xff00
++#define DATA_MASK	0x00ff
++#define PORT_SHIFT	8
++#define KEYBOARD_PORT	0
++#define TOUCHPAD_PORT	1
++
++/* COMMAND_FIFO_STATUS */
++#define CMD_CNTR_MASK		0x7 /* Number of pending/unprocessed commands */
++#define MAX_PENDING_CMDS	4 /* from device specs */
++
++/* PJ_RST_INTERRUPT */
++#define SP_COMMAND_COMPLETE_RESET	0x1
++
++/* PJ_INTERRUPT_MASK */
++#define INT_0	(1 << 0)
++
++/* COMMAND_FIFO_STATUS */
++#define CMD_STS_MASK	0x100
++
++struct olpc_apsp {
++	struct device *dev;
++	struct serio *kbio;
++	struct serio *padio;
++	void __iomem *base;
++};
++
++static int olpc_apsp_pad_write(struct serio *port, unsigned char val)
++{
++	struct olpc_apsp *priv = port->port_data;
++	unsigned int i;
++	u32 which = 0;
++
++	if (port == priv->padio)
++		which = TOUCHPAD_PORT << PORT_SHIFT;
++	else
++		which = KEYBOARD_PORT << PORT_SHIFT;
++
++	dbg("olpc_apsp_pad_write which=%x val=%x\n", which, val);
++	for (i = 0; i < 50; i++) {
++		u32 sts = readl(priv->base + COMMAND_FIFO_STATUS);
++		if ((sts & CMD_CNTR_MASK) < MAX_PENDING_CMDS) {
++			writel(which | val,
++			       priv->base + SECURE_PROCESSOR_COMMAND);
++			return 0;
++		}
++		msleep(1);
++	}
++
++	dbg("olpc_apsp_pad_write timeout, status=%x\n",
++	    readl(priv->base + COMMAND_FIFO_STATUS));
++	return -ETIMEDOUT;
++}
++
++static irqreturn_t olpc_input_rx(int irq, void *dev_id)
++{
++	struct olpc_apsp *priv = dev_id;
++	unsigned int w, tmp;
++	struct serio *serio;
++
++	/*
++	 * Write 1 to PJ_RST_INTERRUPT to acknowledge and clear the interrupt
++	 * Write 0xff00 to SECURE_PROCESSOR_COMMAND.
++	 */
++	tmp = readl(priv->base + PJ_RST_INTERRUPT);
++	if (!(tmp & SP_COMMAND_COMPLETE_RESET)) {
++		dev_warn(priv->dev, "spurious interrupt?\n");
++		return IRQ_NONE;
++	}
++
++	w = readl(priv->base + COMMAND_RETURN_STATUS);
++	dbg("olpc_input_rx %x\n", w);
++
++	if (w >> PORT_SHIFT == KEYBOARD_PORT)
++		serio = priv->kbio;
++	else
++		serio = priv->padio;
++
++	serio_interrupt(serio, w & DATA_MASK, 0);
++
++	/* Ack and clear interrupt */
++	writel(tmp | SP_COMMAND_COMPLETE_RESET, priv->base + PJ_RST_INTERRUPT);
++	writel(PORT_MASK, priv->base + SECURE_PROCESSOR_COMMAND);
++
++	pm_wakeup_event(priv->dev, 1000);
++	return IRQ_HANDLED;
++}
++
++static int olpc_apsp_pad_open(struct serio *port)
++{
++	unsigned int tmp;
++	struct olpc_apsp *priv = port->port_data;
++
++	/* Enable interrupt 0 by clearing its bit */
++	tmp = readl(priv->base + PJ_INTERRUPT_MASK);
++	writel(tmp & ~INT_0, priv->base + PJ_INTERRUPT_MASK);
++
++	return 0;
++}
++
++static int olpc_apsp_probe(struct platform_device *pdev)
++{
++	struct serio *kb_serio, *pad_serio;
++	struct olpc_apsp *priv;
++	struct resource *res;
++	struct device_node *np;
++	unsigned long l;
++	int ret;
++	int irq;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(struct olpc_apsp),
++			       GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	np = pdev->dev.of_node;
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (WARN_ON(!res))
++		return -ENOENT;
++
++	priv->base = devm_ioremap_resource(&pdev->dev, res);
++	if (WARN_ON(!priv->base))
++		return -EIO;
++
++	irq = platform_get_irq(pdev, 0);
++	if (WARN_ON(irq < 0))
++		return irq;
++
++	l = readl(priv->base + COMMAND_FIFO_STATUS);
++	if (!(l & CMD_STS_MASK)) {
++		dev_err(&pdev->dev, "SP cannot accept commands.\n");
++		return -ENODEV;
++	}
++
++	ret = devm_request_irq(&pdev->dev, irq, olpc_input_rx, 0, "olpc-apsp",
++			       priv);
++	if (WARN_ON(ret))
++		return ret;
++
++	/* KEYBOARD */
++	kb_serio = devm_kzalloc(&pdev->dev, sizeof(struct serio), GFP_KERNEL);
++	if (!kb_serio)
++		return -ENOMEM;
++	kb_serio->id.type	= SERIO_8042_XL;
++	kb_serio->write		= olpc_apsp_pad_write;
++	kb_serio->open		= olpc_apsp_pad_open;
++	kb_serio->port_data	= priv;
++	kb_serio->dev.parent	= &pdev->dev;
++	strlcpy(kb_serio->name, "sp keyboard", sizeof(kb_serio->name));
++	strlcpy(kb_serio->phys, "sp/serio0", sizeof(kb_serio->phys));
++	priv->kbio		= kb_serio;
++	serio_register_port(kb_serio);
++
++	/* TOUCHPAD */
++	pad_serio = devm_kzalloc(&pdev->dev, sizeof(struct serio), GFP_KERNEL);
++	if (!pad_serio) {
++		serio_unregister_port(kb_serio);
++		return -ENOMEM;
++	}
++	pad_serio->id.type	= SERIO_PS_PSTHRU;
++	pad_serio->write	= olpc_apsp_pad_write;
++	pad_serio->open		= olpc_apsp_pad_open;
++	pad_serio->port_data	= priv;
++	pad_serio->dev.parent	= &pdev->dev;
++	strlcpy(pad_serio->name, "sp touchpad", sizeof(pad_serio->name));
++	strlcpy(pad_serio->phys, "sp/serio1", sizeof(pad_serio->phys));
++	priv->padio		= pad_serio;
++	serio_register_port(pad_serio);
++
++	priv->dev = &pdev->dev;
++	device_init_wakeup(priv->dev, 1);
++	platform_set_drvdata(pdev, priv);
++	dev_info(&pdev->dev, "probed successfully.\n");
++	return 0;
++}
++
++static int olpc_apsp_remove(struct platform_device *pdev)
++{
++	struct olpc_apsp *priv = platform_get_drvdata(pdev);
++	serio_unregister_port(priv->kbio);
++	serio_unregister_port(priv->padio);
++	return 0;
++}
++
++static struct of_device_id olpc_apsp_dt_ids[] = {
++	{ .compatible = "olpc,ap-sp", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, olpc_apsp_driver_dt_ids);
++
++static struct platform_driver olpc_apsp_driver = {
++	.probe		= olpc_apsp_probe,
++	.remove		= olpc_apsp_remove,
++	.driver		= {
++		.name	= "olpc-apsp",
++		.owner	= THIS_MODULE,
++		.of_match_table = olpc_apsp_dt_ids,
++	},
++};
++
++MODULE_DESCRIPTION("OLPC AP-SP serio driver");
++MODULE_LICENSE("GPL");
++module_platform_driver(olpc_apsp_driver);
+-- 
+1.8.1.4
 
-I did those fixups and it now compiles and things boot.  I haven't
-tested the deferral case in ToT yet, though.  I'll try that now and
-post if something weird comes up.
-
--Doug
