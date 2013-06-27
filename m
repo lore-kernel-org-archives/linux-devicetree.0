@@ -1,55 +1,60 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of: Specify initrd location using 64-bit
-Date: Thu, 27 Jun 2013 15:54:20 -0500
-Message-ID: <51CCA67C.2010803@gmail.com>
-References: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com> <51C4171C.9050908@linutronix.de> <51C48B5A.2040404@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Testing a OF Device Tree driver on a kernel using a board file.
+Date: Thu, 27 Jun 2013 23:07:35 +0100
+Message-ID: <CACxGe6tUgUaKtfgGpD4He++mZ5WxGmPDL-SoF5gJKLOtCpACFA@mail.gmail.com>
+References: <F14D68B9-D4F3-4185-BF5A-833780FFCEFC@ingenutec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51C48B5A.2040404@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-kernel@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, James Hogan <james.hogan@imgtec.com>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, x86@kernel.org, arm@kernel.org, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <F14D68B9-D4F3-4185-BF5A-833780FFCEFC-yOrjPonjKN58UrSeD/g0lQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Mr. Robert G Palmer Jr." <robert.palmer-yOrjPonjKN58UrSeD/g0lQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2013 12:20 PM, Santosh Shilimkar wrote:
-> On Friday 21 June 2013 05:04 AM, Sebastian Andrzej Siewior wrote:
->> On 06/21/2013 02:52 AM, Santosh Shilimkar wrote:
->>> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
->>> index 0a2c68f..62e2e8f 100644
->>> --- a/arch/microblaze/kernel/prom.c
->>> +++ b/arch/microblaze/kernel/prom.c
->>> @@ -136,8 +136,7 @@ void __init early_init_devtree(void *params)
->>>  }
->>>  
->>>  #ifdef CONFIG_BLK_DEV_INITRD
->>> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
->>> -		unsigned long end)
->>> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->>>  {
->>>  	initrd_start = (unsigned long)__va(start);
->>>  	initrd_end = (unsigned long)__va(end);
->>
->> I think it would better to go here for phys_addr_t instead of u64. This
->> would force you in of_flat_dt_match() to check if the value passed from
->> DT specifies a memory address outside of 32bit address space and the
->> kernel can't deal with this because its phys_addr_t is 32bit only due
->> to a Kconfig switch.
->>
->> For x86, the initrd has to remain in the 32bit address space so passing
->> the initrd in the upper range would violate the ABI. Not sure if this
->> is true for other archs as well (ARM obviously not).
->>
-> That pretty much means phys_addr_t. It will work for me as well but
-> in last thread from consistency with memory and reserved node, Rob
-> insisted to keep it as u64. So before I re-spin another version,
-> would like to here what Rob has to say considering the x86 requirement.
-> 
-> Rob,
-> Are you ok with phys_addr_t since your concern was about rest
-> of the memory specific bits of the device-tree code use u64 ?
+On Thu, Jun 27, 2013 at 9:22 PM, Mr. Robert G Palmer Jr.
+<robert.palmer-yOrjPonjKN58UrSeD/g0lQ@public.gmane.org> wrote:
+> I apologize up front if this is the wrong place for these questions.  I'm
+> relatively new to the OF Device Tree.  If this is the wrong place, would
+> someone point me to the correct discussion location.
+>
+> 1. Is it possible to take an existing kernel build that uses a board file
+> move only a small portion into a Device Tree.  I am working on converting a
+> driver from supporting only the board file to supporting both the board file
+> and the OF Device Tree.  Unfortunately, the only test platform I have with
+> the appropriate hardware is a Nexus7 and I'm using the Cyanogenmod build.
+> This uses (or at least appears to use) a board file for the Nexus7.  Is it
+> possible to write a small Device Tree description for only the driver I am
+> working on?  Where would this device tree file be placed? How would I
+> include it in the build? Any assistance and/or pointers would be
+> appreciated.
 
-No. I still think it should be u64 for same reasons I said originally.
+Yes. Enable CONFIG_OF and add a dt_compat pointer to the existing
+nexus7 MACHINE_START() stanze. Then a trivial device tree with a
+top-level compatible property that matches something in the dt_compat
+table can be used to boot the platform.
 
-Rob
+arch/arm/mach-versatile/versatile_dt.c shows an example.
+
+> 2. Are there any suggestions or hints for searching for OF Device Tree
+> information.  The term "device tree" is used pervasively in the linux code
+> and various projects to refer to source branches of a particular device type
+> rather than the OF Device Tree.  This makes it extremely difficult to
+> isolate applicable answers.
+
+This link is useful:
+http://devicetree.org/Device_Tree_Usage
+
+Also, look at the files in Documentation/devicetree in the Linux kernel.
+
+g.
