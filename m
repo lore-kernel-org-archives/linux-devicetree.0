@@ -1,96 +1,57 @@
-From: Marek Belisko <marek.belisko@streamunlimited.com>
-Subject: Re: [PATCH] ASoC: Add PCM1681 codec driver.
-Date: Thu, 27 Jun 2013 09:49:56 +0200
-Message-ID: <51CBEEA4.5090106@streamunlimited.com>
-References: <1372251928-15706-1-git-send-email-marek.belisko@streamunlimited.com> <20130626143001.GP27646@sirena.org.uk>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 2/5] ARM: dts: Add MIPI PHY node to exynos4.dtsi
+Date: Thu, 27 Jun 2013 10:52:44 +0300
+Message-ID: <20130627075244.GR15455@arwen.pp.htv.fi>
+References: <1372258946-15607-1-git-send-email-s.nawrocki@samsung.com>
+ <1372258946-15607-3-git-send-email-s.nawrocki@samsung.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130626143001.GP27646@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Marek Belisko <marek.belisko@gmail.com>, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, lgirdwood@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, zonque@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="o0y1lerN6xYE2ROn"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372258946-15607-3-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, balbi@ti.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-On 06/26/2013 04:30 PM, Mark Brown wrote:
-> On Wed, Jun 26, 2013 at 03:05:28PM +0200, Marek Belisko wrote:
->
->> +#define PCM1681_ATT_CONTROL(X)	(X <= 6 ? X : X + 9) /* Attenuation level */
->
-> Write a function for this.
-This macro is used when creating controls for channels volume so this 
-cannot be rewritten to function. I also thinking about updating macro 
-name to PCM1681_CHANNEL_VOL(X).
->
->> +static bool pcm1681_writeable_reg(struct device *dev, unsigned register reg)
->> +{
->> +	return pcm1681_accessible_reg(dev, reg) &&
->> +		(reg != PCM1681_ZERO_DETECT_STATUS);
->> +}
->
->> +static int pcm1681_digital_mute(struct snd_soc_dai *dai, int mute)
->> +{
->> +	struct snd_soc_codec *codec = dai->codec;
->> +	struct pcm1681_private *priv = snd_soc_codec_get_drvdata(codec);
->> +	int ret, val = 0;
->> +
->> +	if (mute)
->> +		val = PCM1681_SOFT_MUTE_ALL;
->> +
->
-> This would be clearer if written as an if .. else - otherwise it looks
-> like an uninitalised value might be used.
-OK.
->
->> +static int pcm1681_hw_params(struct snd_pcm_substream *substream,
->> +			     struct snd_pcm_hw_params *params,
->> +			     struct snd_soc_dai *dai)
->> +{
->> +	struct snd_soc_codec *codec = dai->codec;
->> +	struct pcm1681_private *priv = snd_soc_codec_get_drvdata(codec);
->> +	int val = 0;
->> +	int pcm_format = params_format(params);
->> +
->> +	priv->rate = params_rate(params);
->> +
->
-> Shouldn't there be a call to set the deemphasis here?
-Right. I'll add it here.
->
->> +static int pcm1681_probe(struct snd_soc_codec *codec)
->> +{
->> +	return 0;
->> +}
->> +
->> +static int pcm1681_remove(struct snd_soc_codec *codec)
->> +{
->> +	return 0;
->> +}
->
-> Remove empty functions.
-Will do.
->
+--o0y1lerN6xYE2ROn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Wed, Jun 26, 2013 at 05:02:23PM +0200, Sylwester Nawrocki wrote:
+> Add PHY provider node for the MIPI CSIS and MIPI DSIM PHYs.
+>=20
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 
-marek
+Acked-by: Felipe Balbi <balbi@ti.com>
 
--- 
-Marek Belisko
+--=20
+balbi
 
-Software Developer
-StreamUnlimited Engineering GmbH
-Gutheil Schodergasse 8-12
-A-1100 Vienna, Austria
+--o0y1lerN6xYE2ROn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Office: +421 267200087
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-e-mail: marek.belisko@streamunlimited.com
-http://www.streamunlimited.com
+iQIcBAEBAgAGBQJRy+9MAAoJEIaOsuA1yqREEJcP/ixAuKRVjAsuzj47/ABUW7QS
+glerAWcxGRZ3blSvF9X6aHGNVzneWXeg1VVu6knFDehbNXDNMdIcqtxVW5ep7TYv
+skhfoqjAFJYfnmFyHtIyJqk4RkG6VR0OUXOaluVvFbTir72A5zqIhtOI+Blozha1
+v24TJTqUI/69Hxh74vr+Q0IH2RRuzN5qxa/FsUD02at82swbSEJijE31izgK82fS
+4FVMRZY3hhIfdVKTNij1dAcFYhQKWW5RHXfe6NjBZvfbFz83Phuxl+9bR6BNHKnt
+KkEtnymAvGVXXxpU9TU7muue33oNXOsWIU6P1r8qOQJdaVt8wpNIVNAKePLn8EU5
+0jmAqCOnZe3T22QEvZC/5Jxb7EJq/u8l5MB3P0kwXdQ9KbbNZVPWcWo2wqkAebQp
+eoLf/PZAsEnRgQCrfaxgfxDXm4LVQpC0xeKMAfK0ASESkRO7dRjIUavByXL79Wc/
+xTOWA8Di61Iro8Xhhq3vpzPyV3uWZkD696T0S1d4PhB4xo/0hBuCCIY729UCkgQY
+cbNIoHEHUaw9vwjs7E+XJZrhwhFNs7XbcDzlW/1pit8+rcdZdgsu7Mo7Qsba6z3G
+6GK9aTr2H+JSC3O3pQvLvDuaWXONaCRUlQ9ctdH0YGUH14Y82otUk4Q3JEHpYK/4
+pvTE8GSGDNC/b6q/zxoz
+=t4FX
+-----END PGP SIGNATURE-----
 
-Meet us at:
-
-IFA - Berlin, 6-11 September
-CEDIA - Denver, 25-28 September
+--o0y1lerN6xYE2ROn--
