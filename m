@@ -1,83 +1,96 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
-Date: Thu, 27 Jun 2013 10:52:23 +0300
-Message-ID: <20130627075223.GQ15455@arwen.pp.htv.fi>
-References: <1372258946-15607-1-git-send-email-s.nawrocki@samsung.com>
- <1372258946-15607-2-git-send-email-s.nawrocki@samsung.com>
-Reply-To: balbi@ti.com
+From: Marek Belisko <marek.belisko@streamunlimited.com>
+Subject: Re: [PATCH] ASoC: Add PCM1681 codec driver.
+Date: Thu, 27 Jun 2013 09:49:56 +0200
+Message-ID: <51CBEEA4.5090106@streamunlimited.com>
+References: <1372251928-15706-1-git-send-email-marek.belisko@streamunlimited.com> <20130626143001.GP27646@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7089843238766759566=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1372258946-15607-2-git-send-email-s.nawrocki@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, jg1.han@samsung.com, dh09.lee@samsung.com, balbi@ti.com, kishon@ti.com, inki.dae@samsung.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130626143001.GP27646@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Marek Belisko <marek.belisko@gmail.com>, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, lgirdwood@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, zonque@gmail.com
 List-Id: devicetree@vger.kernel.org
 
---===============7089843238766759566==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qnK4RqISe3HuYx1/"
-Content-Disposition: inline
+Hi Mark,
+On 06/26/2013 04:30 PM, Mark Brown wrote:
+> On Wed, Jun 26, 2013 at 03:05:28PM +0200, Marek Belisko wrote:
+>
+>> +#define PCM1681_ATT_CONTROL(X)	(X <= 6 ? X : X + 9) /* Attenuation level */
+>
+> Write a function for this.
+This macro is used when creating controls for channels volume so this 
+cannot be rewritten to function. I also thinking about updating macro 
+name to PCM1681_CHANNEL_VOL(X).
+>
+>> +static bool pcm1681_writeable_reg(struct device *dev, unsigned register reg)
+>> +{
+>> +	return pcm1681_accessible_reg(dev, reg) &&
+>> +		(reg != PCM1681_ZERO_DETECT_STATUS);
+>> +}
+>
+>> +static int pcm1681_digital_mute(struct snd_soc_dai *dai, int mute)
+>> +{
+>> +	struct snd_soc_codec *codec = dai->codec;
+>> +	struct pcm1681_private *priv = snd_soc_codec_get_drvdata(codec);
+>> +	int ret, val = 0;
+>> +
+>> +	if (mute)
+>> +		val = PCM1681_SOFT_MUTE_ALL;
+>> +
+>
+> This would be clearer if written as an if .. else - otherwise it looks
+> like an uninitalised value might be used.
+OK.
+>
+>> +static int pcm1681_hw_params(struct snd_pcm_substream *substream,
+>> +			     struct snd_pcm_hw_params *params,
+>> +			     struct snd_soc_dai *dai)
+>> +{
+>> +	struct snd_soc_codec *codec = dai->codec;
+>> +	struct pcm1681_private *priv = snd_soc_codec_get_drvdata(codec);
+>> +	int val = 0;
+>> +	int pcm_format = params_format(params);
+>> +
+>> +	priv->rate = params_rate(params);
+>> +
+>
+> Shouldn't there be a call to set the deemphasis here?
+Right. I'll add it here.
+>
+>> +static int pcm1681_probe(struct snd_soc_codec *codec)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static int pcm1681_remove(struct snd_soc_codec *codec)
+>> +{
+>> +	return 0;
+>> +}
+>
+> Remove empty functions.
+Will do.
+>
 
---qnK4RqISe3HuYx1/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks,
 
-On Wed, Jun 26, 2013 at 05:02:22PM +0200, Sylwester Nawrocki wrote:
-> Add a PHY provider driver for the Samsung S5P/Exynos SoC MIPI CSI-2
-> receiver and MIPI DSI transmitter DPHYs.
->=20
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+marek
 
-Acked-by: Felipe Balbi <balbi@ti.com>
+-- 
+Marek Belisko
 
---=20
-balbi
+Software Developer
+StreamUnlimited Engineering GmbH
+Gutheil Schodergasse 8-12
+A-1100 Vienna, Austria
 
---qnK4RqISe3HuYx1/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Office: +421 267200087
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+e-mail: marek.belisko@streamunlimited.com
+http://www.streamunlimited.com
 
-iQIcBAEBAgAGBQJRy+83AAoJEIaOsuA1yqREx9kP/Rxgg8Ajq+fiVZN0cviNBeJt
-oyKEqiTAbdqXrC6ncK+akon4WpyIt+YcubExZI88MTOXXjFmqSpXboB/SqxoznRl
-ne8R9QM8oAa00tONvi3njeDzN07etC2X6VCc3hmpZScEmP2iKzD2sB/asZNLuE2n
-MAFGeWEeqlEN/2B93aNIZT7EGrHSoTjQI2K5jHmFsbcDmSV/N2UuSOgWBvjPmCab
-GY27fKv7fVCUvmp6GdYcJDIVq5XsMbuYKaegS6SEQ15eh/SepFhAO1bQFVTXi0C7
-RLBWvIlkj7SrW7KJLG1zWZHl7lIE1ShN9P7EgmTRiR7+o4wmSO1MQNYpcw4FYLZs
-UFJe+i2cGCrnBDJE6Se6xcCgXt9/bHjFor0fJ8QuqEAwTqzqeo/bnzM6HQQhqJe5
-sIOxIxeFMc564TgP2X1qd6Bayl7NcgF9R8IrDIoFD5GJ9P0HtBgHmu/PyA7WqNYs
-s+3IhbCq9wIwX05rTT5HNbWnA3P/5unQGs2tAv5KnItPoemQ7Fk+jH8qj16d+pSM
-vJdFx0ewlAyzw9FkHAlF9xjebb21Ljbuiv5DZ8PZxonwSMt1FG/akm2hdrdwTAPZ
-RYp8p87n6+nEMD+AOKXaYYVbHXmySe+fkCTsaVubDsjYXFzpFokOkveAoiYLPLAa
-ANHgUEeMLIqcrYrvNRoa
-=v/Vo
------END PGP SIGNATURE-----
+Meet us at:
 
---qnK4RqISe3HuYx1/--
-
-
---===============7089843238766759566==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7089843238766759566==--
+IFA - Berlin, 6-11 September
+CEDIA - Denver, 25-28 September
