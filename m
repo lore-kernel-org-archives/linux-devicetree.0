@@ -1,47 +1,37 @@
 From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH] mmc: sh_mobile_sdhi: fix error return code in sh_mobile_sdhi_probe()
-Date: Thu, 27 Jun 2013 10:57:52 -0400
-Message-ID: <8738s3r47j.fsf@octavius.laptop.org>
-References: <CAPgLHd_dwxRp8Ug7=05=3gTTa9bPME5tb-Mq1aqRFXZSrgqFGg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: Handle late vmmc regulators with EPROBE_DEFER
+Date: Thu, 27 Jun 2013 11:34:39 -0400
+Message-ID: <87vc4zo9dc.fsf@octavius.laptop.org>
+References: <1370580406-10254-1-git-send-email-dianders@chromium.org>
+	<1370626110-1731-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd_dwxRp8Ug7=05=3gTTa9bPME5tb-Mq1aqRFXZSrgqFGg@mail.gmail.com> (Wei
-	Yongjun's message of "Tue, 28 May 2013 13:26:50 +0800")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: g.liakhovetski@gmx.de, ian@mnementh.co.uk, grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1370626110-1731-1-git-send-email-dianders@chromium.org> (Doug
+	Anderson's message of "Fri, 7 Jun 2013 10:28:29 -0700")
+Sender: linux-doc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Olof Johansson <olof@lixom.net>, Andrew Bresticker <abrestic@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Abhilash Kesavan <a.kesavan@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Will Newton <will.newton@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wei,
+Hi Doug,
 
-On Tue, May 28 2013, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On Fri, Jun 07 2013, Doug Anderson wrote:
+> It is possible to specify a regulator that should be turned on when
+> dw_mmc is probed.  At the moment dw_mmc will fail to use the regulator
+> properly if the regulator probes after dw_mmc.  Fix this problem by
+> honoring EPROBE_DEFER.
 >
-> Fix to return a negative error code instead of 0 when we cannot get
-> IRQ source by platform_get_irq(), as done elsewhere in this function.
+> At the same time move the regulator code out of the slot init code.
+> We only specify one regulator for the whole device and other parts of
+> the code (like suspend/resume) assume that the regulator has only been
+> enabled once.
 >
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
 > ---
->  drivers/mmc/host/sh_mobile_sdhi.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
-> index cc4c872..a4316b3 100644
-> --- a/drivers/mmc/host/sh_mobile_sdhi.c
-> +++ b/drivers/mmc/host/sh_mobile_sdhi.c
-> @@ -273,8 +273,10 @@ static int sh_mobile_sdhi_probe(struct platform_device *pdev)
->  		}
->  
->  		/* There must be at least one IRQ source */
-> -		if (!i)
-> +		if (!i) {
-> +			ret = irq;
->  			goto eirq;
-> +		}
->  	}
->  
->  	dev_info(&pdev->dev, "%s base at 0x%08lx clock rate %u MHz\n",
+> Changes in v2:
+> - Avoid hackery to detect regulators that will never show up.
+> - Move regulator out of slot init--it doesn't belong there.
 
 Thanks, pushed to mmc-next for 3.11.
 
