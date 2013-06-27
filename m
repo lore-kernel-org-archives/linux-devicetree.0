@@ -1,53 +1,74 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
-Date: Thu, 27 Jun 2013 09:49:02 +0100
-Message-ID: <20130627084902.GB4283@n2100.arm.linux.org.uk>
-References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com> <20130625150649.GA21334@arwen.pp.htv.fi> <51CB0212.3050103@samsung.com> <20130627061713.GF15455@arwen.pp.htv.fi>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/4] hwmon: Add a simple driver to read the MXS SoC
+ temperature
+Date: Thu, 27 Jun 2013 11:17:32 +0200
+Message-ID: <20130627091732.GP5803@lukather>
+References: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <1372236673-20725-4-git-send-email-alexandre.belloni@free-electrons.com>
+ <20130626143927.GB31998@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ga5bsqHr1s/xcZEm"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130627061713.GF15455@arwen.pp.htv.fi>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, jg1.han@samsung.com, dh09.lee@samsung.com, kishon@ti.com, inki.dae@samsung.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+In-Reply-To: <20130626143927.GB31998-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, jimwall@q.com, brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 27, 2013 at 09:17:13AM +0300, Felipe Balbi wrote:
-> On Wed, Jun 26, 2013 at 05:00:34PM +0200, Sylwester Nawrocki wrote:
-> > Hi,
-> > 
-> > On 06/25/2013 05:06 PM, Felipe Balbi wrote:
-> > >> +static struct platform_driver exynos_video_phy_driver = {
-> > >> > +	.probe	= exynos_video_phy_probe,
-> > >
-> > > you *must* provide a remove method. drivers with NULL remove are
-> > > non-removable :-)
-> > 
-> > Actually the remove() callback can be NULL, it's just missing module_exit
-> > function that makes a module not unloadable.
-> 
-> look at the implementation of platform_drv_remove():
-> 
->  499 static int platform_drv_remove(struct device *_dev)
->  500 {
->  501         struct platform_driver *drv = to_platform_driver(_dev->driver);
->  502         struct platform_device *dev = to_platform_device(_dev);
->  503         int ret;
->  504 
->  505         ret = drv->remove(dev);
->  506         if (ACPI_HANDLE(_dev))
->  507                 acpi_dev_pm_detach(_dev, true);
->  508 
->  509         return ret;
->  510 }
-> 
-> that's not a conditional call right :-)
 
-Wrong.
+--ga5bsqHr1s/xcZEm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-        if (drv->remove)
-                drv->driver.remove = platform_drv_remove;
+On Wed, Jun 26, 2013 at 07:39:27AM -0700, Guenter Roeck wrote:
+> On Wed, Jun 26, 2013 at 10:51:12AM +0200, Alexandre Belloni wrote:
+> > The low resolution ADC of the mxs is able to read an internal temperatu=
+re
+> > sensor, expose that using hwmon.
+> >=20
+> > Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+>=20
+> Wouldn't it make more sense to use iio-hwmon and improve it if necessary ?
 
-The function you quote will only be used if drv->remove is non-NULL.
-You do not need to provide a remove method.
+Actually, I wonder if we should not just put the hwmon driver
+capabilities directly into the mxs-lradc driver, just like it's already
+been done in this driver for the touchscreen support.
+
+The probing of this hwmon driver doesn't really belong to the DT, it's
+not really realistic to probe it from the machine definition, and it
+really is the IP that is wired that way.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--ga5bsqHr1s/xcZEm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRzAMsAAoJEBx+YmzsjxAgH7YP/j1sJHX0pBnLRoA7suWcPK/M
+ydWSdH9e9cX2NmNKi5qk2rKZb6pt041v2c5qGhlBG27B/ksYWQRggljtkFup2LCO
+3oewUreyrgVB3OIoJ15/JyIbkgLQsPNqdCf0dZbiefxwAAgnP5j45PlqNCtIvdS5
+KMkXcRT5CgXdMqUHBxXCdjdpSFCNdepbEQad1HX/90pddHaAvo8X9w7r0pmcIKkh
+oY6bE9EqgfwbCi22x1BwkS12S8WgVPh1EuJ+WjLb4PuhrVJ2+Yx1cMqmK8Qc0sDa
+IsmUaq9YZqqtihflSewUsBfTQynq43W6XkA4tuukooOc+D4nlndtvmnLn/ILjDpo
+Zr0wEiYAetGWDMVOKwqoZtPx2/awux5AUb4CfCAUQyDQVtVVMLLN3vNwPPlgZypt
+RCIj+SVSYFto1Qys0p+sTGioOXkDWtBJQKlYP0JqfIGJOGpxe/nHlaukmiMmJ7uA
+fF8k2q7pC1xTTGQ8XXGf+24wwc/7ASzLewpDmbqrT1hRfIeydWQtSZj3bTdS6kJf
+8yYtyE1tgwDYSWNDE2IjJCh0XQWqiTOXOS1S7adq3wvFnYNrqz4xoJT/kMNG7UMq
+4uj+8+2I6L4zJQds5iI5EXI5zp6FjK2HxV9K4mIp4ft6+aoSsfNywkHqAjPn54jq
+xSLjqihfQtMCBQS0A+PL
+=JG3w
+-----END PGP SIGNATURE-----
+
+--ga5bsqHr1s/xcZEm--
