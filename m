@@ -1,71 +1,67 @@
 From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
-Date: Thu, 27 Jun 2013 11:40:04 +0300
-Message-ID: <20130627084004.GS15455@arwen.pp.htv.fi>
-References: <1372258946-15607-1-git-send-email-s.nawrocki@samsung.com>
- <1372258946-15607-2-git-send-email-s.nawrocki@samsung.com>
- <20130627075223.GQ15455@arwen.pp.htv.fi>
- <51CBF9B8.70103@samsung.com>
+Subject: Re: [PATCH 2/4] ARM: OMAP5: clockdomain data: add init file for
+ omap54xx
+Date: Thu, 27 Jun 2013 11:44:34 +0300
+Message-ID: <20130627084434.GT15455@arwen.pp.htv.fi>
+References: <1372322299-25046-1-git-send-email-t-kristo@ti.com>
+ <1372322299-25046-3-git-send-email-t-kristo@ti.com>
 Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wnBGVoaGQwxWUIo6"
-Return-path: <linux-media-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="JHjDRUnf1JOMxzko"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51CBF9B8.70103@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: balbi@ti.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
+In-Reply-To: <1372322299-25046-3-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, mturquette@linaro.org, nm@ti.com, rnayak@ti.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
---wnBGVoaGQwxWUIo6
+--JHjDRUnf1JOMxzko
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 27, 2013 at 10:37:12AM +0200, Sylwester Nawrocki wrote:
-> On 06/27/2013 09:52 AM, Felipe Balbi wrote:
-> > On Wed, Jun 26, 2013 at 05:02:22PM +0200, Sylwester Nawrocki wrote:
-> >> Add a PHY provider driver for the Samsung S5P/Exynos SoC MIPI CSI-2
-> >> receiver and MIPI DSI transmitter DPHYs.
-> >>
-> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> >=20
-> > Acked-by: Felipe Balbi <balbi@ti.com>
->=20
-> Thank you for your review and ack!
->=20
-> Just for the record, I have tested this driver as a loadable
-> module on Exynos4412 TRATS2 board and it all worked fine for
-> both the camera and display side.
+Hi,
 
-Awesome dude :-) very cool, let's hope more users convert to Kishon's
-generic phy layer :-)
+On Thu, Jun 27, 2013 at 11:38:17AM +0300, Tero Kristo wrote:
+> +	rc =3D clk_set_parent(abe_dpll_ref, sys_32k_ck);
+> +	abe_dpll =3D clk_get_sys(NULL, "dpll_abe_ck");
+
+should these two lines be swaped ?
+
+> +	if (!rc)
+> +		rc =3D clk_set_rate(abe_dpll, OMAP5_DPLL_ABE_DEFFREQ);
+> +	if (rc)
+> +		pr_err("%s: failed to configure ABE DPLL!\n", __func__);
+> +
+> +	return 0;
+
+so even if (rc) you still return 0 ? Shouldn't you return rc instead ?
 
 --=20
 balbi
 
---wnBGVoaGQwxWUIo6
+--JHjDRUnf1JOMxzko
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRy/pkAAoJEIaOsuA1yqRE0usP/0kXzaQLwW6FcUZS/DU+PZ03
-Blwk6lKVGICnyrhp/xYuqQKmSgSk1wMJ+KIfu8mRi0OPJ2p0u4sDAPQ8sq0oLNVS
-rCwj75LqkbjqRWXYziFwyiSQqEsP1D4rvD3aDJXot+A5As86XAqc/YY629WZRraO
-jbpeY4FpK1A9eWgNyW4uBtyhJQKxe2/kV3Jipw6/TOl/cO2yCE+snWJXZTbrEaOy
-M1LxjHLhKqNjltxrWs5HJe2iQPSXl0zpgWZHuNht26u6wZY7F+Eo83RQeLnwzzlZ
-tK25jRT5e66UZ5vkQvKv/4cDdjGdESf5L68pAUKiUa35Bmre20GiO1IIdFy1n95f
-fb0FcK0Ye3RghjVDF8qqBqYnCGIR7+rHmRHp76/7PqbOujUHX0Nt8h3hqzthpA3I
-Uqrow12JDInJuVEgRsSEGkSU2+DT1bbZSJT2f5AYQKLu6bYLa4QU8ZuF4Ap5vysR
-UFVN8ZN2faPsB1+eQ8V2+qet5Enh46N+AAHnpe+iOJHb5khnJ8w+OKQFXwQPjag6
-2f1t9Jywy0CRWueJRhIWMv07dgZAb311JLBMzT06GzmqjsfHWo3iSkuhrWXO1Ota
-znPhyjEEifx4MeeMXfRJfE9PpcC59YH9YxWykbRFuWm3qApZFgBYq1hl5sZoGQxx
-di/7prNpFT4B2wAJF3Nu
-=OBbu
+iQIcBAEBAgAGBQJRy/tyAAoJEIaOsuA1yqREtqQP/0K8P3A7caoOlrE5gq44TBVE
+5XTFBc1I+8PAgiP/ivsY7wjoW0p1XtWqdJ49lUSJkDebnjJ9YDtODsl7ppSqOvCZ
+T3duaJrtfY5/EEu0QYMU+HSM5yG8nni7GN1sZXLkT92fmDRA5h4gX9aRqS/iYY34
+PfzUSjrY5vGgEJw+iVcS4m6aES0+4p8r4SDeSZuNI1wo2rqeo8pamrgPtdww1XbH
+9QzZawEJo9h6s3Acy/ScIt7giXJ5fngE43cpIJFvj1NQFMFCPizWPZXYZLyT+L7x
+ui67icXzyyD3ROBcr8KDCTYzy1EpjL8TBjTkn1gAVPanKr8ZXhgK1nWOx44oD0U/
+e+TCapx8m++d4fihEkR9FpLsLhQC309w0sgs2CpzHvbW5sLbpFRMwp/rGwgJ9CCe
+cPazOW/pYXwJOWSjUDuVN8a/8Mau+qQoRa8Yfr3ncsUMuhgucPCeb8Q6KtNTOO/R
+7bzGqPOQkvymEXvnw2RV7UL80vmwAwORo8IodaxhPKuy6QCt54fOVMXykk0xPoU3
+4UM4e15bUnMUSOGdJ2hHdapyYsSRGhdJXQsABEWdpP7i0skApTwRm1OE8pYWMznX
+AxOZim8ziO+BAO5MYVAJ9Ay7tKMazvITiox/SiXsUaGFRJNuW/oj5sCfMaKeypvZ
+u8eOUOuJggj4jQmScl1K
+=7asL
 -----END PGP SIGNATURE-----
 
---wnBGVoaGQwxWUIo6--
+--JHjDRUnf1JOMxzko--
