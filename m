@@ -1,78 +1,53 @@
-From: Luciano Coelho <coelho@ti.com>
-Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
-Date: Thu, 27 Jun 2013 11:47:31 +0300
-Message-ID: <1372322851.18889.53.camel@cumari.coelho.fi>
-References: <1372149330-24335-1-git-send-email-coelho@ti.com>
-	 <51CBC1C8.1040301@gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Thu, 27 Jun 2013 09:49:02 +0100
+Message-ID: <20130627084902.GB4283@n2100.arm.linux.org.uk>
+References: <1372170110-12993-1-git-send-email-s.nawrocki@samsung.com> <20130625150649.GA21334@arwen.pp.htv.fi> <51CB0212.3050103@samsung.com> <20130627061713.GF15455@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51CBC1C8.1040301@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <menon.nishanth@gmail.com>
-Cc: Nishanth Menon <nm@ti.com>, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130627061713.GF15455@arwen.pp.htv.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, jg1.han@samsung.com, dh09.lee@samsung.com, kishon@ti.com, inki.dae@samsung.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-(added mailing lists and everyone back to the thread)
-
-On Wed, 2013-06-26 at 23:38 -0500, Nishanth Menon wrote:
-> On 06/25/2013 03:35 AM, Luciano Coelho wrote:
-> > +Optional properties:
-> > +--------------------
-> > +
-> > +- refclock: the internal WLAN reference clock frequency (required for
-> > +  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
-> > +  following:
-> > +	0 = 19.2 MHz
-> > +	1 = 26.0 MHz
-> > +	2 = 38.4 MHz
-> > +	3 = 52.0 MHz
-> > +	4 = 38.4 MHz, XTAL
-> > +	5 = 26.0 MHz, XTAL
-> > +
-> > +- tcxoclock: the internal WLAN TCXO clock frequency (required for
-> > +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
-> > +  following:
-> > +	0 = 19.200 MHz
-> > +	1 = 26.000 MHz
-> > +	2 = 38.400 MHz
-> > +	3 = 52.000 MHz
-> > +	4 = 16.368 MHz
-> > +	5 = 32.736 MHz
-> > +	6 = 16.800 MHz
-> > +	7 = 33.600 MHz
-> >
-> just a gentle query - why not use frequency itself here in Hz for 
-> refclock and txoclk?
-
-I thought about using the actual frequencies, but I decided not to do
-so, because I'd have to convert them to these values anyway.  These
-values are used to configure the firmware and it uses these
-"enumerations".
-
-
-> might not another option of using
-> node {
-> clocks=<&clk>;
-> }
+On Thu, Jun 27, 2013 at 09:17:13AM +0300, Felipe Balbi wrote:
+> On Wed, Jun 26, 2013 at 05:00:34PM +0200, Sylwester Nawrocki wrote:
+> > Hi,
+> > 
+> > On 06/25/2013 05:06 PM, Felipe Balbi wrote:
+> > >> +static struct platform_driver exynos_video_phy_driver = {
+> > >> > +	.probe	= exynos_video_phy_probe,
+> > >
+> > > you *must* provide a remove method. drivers with NULL remove are
+> > > non-removable :-)
+> > 
+> > Actually the remove() callback can be NULL, it's just missing module_exit
+> > function that makes a module not unloadable.
 > 
-> Usually refclock is an external clock source, no?
+> look at the implementation of platform_drv_remove():
+> 
+>  499 static int platform_drv_remove(struct device *_dev)
+>  500 {
+>  501         struct platform_driver *drv = to_platform_driver(_dev->driver);
+>  502         struct platform_device *dev = to_platform_device(_dev);
+>  503         int ret;
+>  504 
+>  505         ret = drv->remove(dev);
+>  506         if (ACPI_HANDLE(_dev))
+>  507                 acpi_dev_pm_detach(_dev, true);
+>  508 
+>  509         return ret;
+>  510 }
+> 
+> that's not a conditional call right :-)
 
-No.  In the WiLink case, both refclock and tcxoclock are internal
-clocks.  They are in the module itself and what we need to do is tell
-the WiLink chip what the module's clocks look like.
+Wrong.
 
+        if (drv->remove)
+                drv->driver.remove = platform_drv_remove;
 
-> the above allows you to do an devm_clk_get and clk_get_rate() to figure 
-> out the exact clock frequency.
-
-No, we can't use these calls, because they are internal clocks.
-
-Please see my more complete explanation as an answer to Tony's email.
-
-Thanks for your review!
-
---
-Luca.
-
+The function you quote will only be used if drv->remove is non-NULL.
+You do not need to provide a remove method.
