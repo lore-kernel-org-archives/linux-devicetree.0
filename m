@@ -1,143 +1,124 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH 2/2] Input: Adding DT support for keyreset tuneables
-Date: Thu, 27 Jun 2013 12:42:14 -0600
-Message-ID: <51CC8786.1070200@linaro.org>
-References: <1372349605-4500-1-git-send-email-mathieu.poirier@linaro.org> <1372349605-4500-2-git-send-email-mathieu.poirier@linaro.org> <20130627162820.GA12070@core.coreip.homeip.net> <51CC7CD5.5090508@linaro.org> <20130627182500.GB12961@core.coreip.homeip.net>
+From: Ruslan Bilovol <ruslan.bilovol@ti.com>
+Subject: Re: [PATCH v2] ARM: DTS: OMAP4: Add OMAP4 Blaze Tablet support
+Date: Thu, 27 Jun 2013 21:45:45 +0300
+Message-ID: <CAB=otbT3Svu-H+TxFUwE-Y9-cm8H3q3wEqwbBLDgLGuXkC6QVA@mail.gmail.com>
+References: <1372159970-6361-1-git-send-email-ruslan.bilovol@ti.com>
+	<51C9867C.80206@ti.com>
+	<51C99056.5090104@ti.com>
+	<CAB=otbQ71TXn=-f3WddNoyvP6NmTHCtSPqwDwkYr2Y7micqRTQ@mail.gmail.com>
+	<CAGo_u6ohf86j3VouQZKkkf6Gv3x-wJKfNN=TALSRCgvh0NBEtg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20130627182500.GB12961@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: grant.likely@linaro.org, devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, kernel-team@android.com, linux-input@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGo_u6ohf86j3VouQZKkkf6Gv3x-wJKfNN=TALSRCgvh0NBEtg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, benoit.cousson@linaro.org, lkml <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 13-06-27 12:25 PM, Dmitry Torokhov wrote:
-> On Thu, Jun 27, 2013 at 11:56:37AM -0600, Mathieu Poirier wrote:
->> On 13-06-27 10:28 AM, Dmitry Torokhov wrote:
->>> Hi Mathieu,
->>>
->>> On Thu, Jun 27, 2013 at 10:13:25AM -0600, mathieu.poirier@linaro.org wrote:
->>>> From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
+Hi Nishanth,
+
+On Wed, Jun 26, 2013 at 4:13 PM, Nishanth Menon <nm@ti.com> wrote:
+> On Wed, Jun 26, 2013 at 3:03 AM, Ruslan Bilovol <ruslan.bilovol@ti.com> wrote:
+>> Hi Nishanth,
+>>
+>> On Tue, Jun 25, 2013 at 3:43 PM, Nishanth Menon <nm@ti.com> wrote:
+>>> On 06/25/2013 07:01 AM, Nishanth Menon wrote:
 >>>>
->>>> This patch adds the possibility to get the keyreset and timeout
->>>> values from the device tree.
+>>>> On 06/25/2013 06:32 AM, Ruslan Bilovol wrote:
+>>>>>
+>>>>> The OMAP4 Blaze Tablet is TI OMAP4 processor-based
+>>>>> development platform in a tablet formfactor.
+>>>>> The platform contains many of the features found in
+>>>>> present-day handsets (such as audio, video, wireless
+>>>>> functions and user interfaces) and in addition
+>>>>> contains features for software development and test.
+>>>>>
+>>>>> This patch adds initial support for the OMAP4 Blaze
+>>>>> Tablet development platform. Additional functionality
+>>>>> depends on different drivers and code modifications that
+>>>>> are not upstreamed yet or do not support DT yet, so will
+>>>>> be added later.--
 >>>>
->>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->>>> ---
->>>>  drivers/tty/sysrq.c |   54 +++++++++++++++++++++++++++++++++++++++++++++++++++
->>>>  1 file changed, 54 insertions(+)
 >>>>
->>>> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
->>>> index b51c154..91d081c 100644
->>>> --- a/drivers/tty/sysrq.c
->>>> +++ b/drivers/tty/sysrq.c
->>>> @@ -44,6 +44,7 @@
->>>>  #include <linux/uaccess.h>
->>>>  #include <linux/moduleparam.h>
->>>>  #include <linux/jiffies.h>
->>>> +#include <linux/of.h>
->>>>  
->>>>  #include <asm/ptrace.h>
->>>>  #include <asm/irq_regs.h>
->>>> @@ -671,6 +672,50 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
->>>>  	}
->>>>  }
->>>>  
->>>> +static void sysrq_of_get_keyreset_config(void)
->>>> +{
->>>> +	unsigned short key;
->>>> +	struct device_node *np;
->>>> +	const struct property *prop;
->>>> +	const __be32 *val;
->>>> +	int count, i;
->>>> +
->>>> +	np = of_find_node_by_path("/sysrq");
->>>> +	if (!np) {
->>>> +		pr_info("No sysrq node found");
+>>>> http://svtronics.com/omap/sevm4460,blaze,omap might help too :)
+>>
+>> Yes, forgot to add this information from cover-letter from previous
+>> version of patch :)
+>
+> ;) - link was wrong!
+
+I know, but don't worry about it - I will put correct one in v3 :)
+
+> http://svtronics.com/omap?product_id=15 is more like it -> Blaze
+> tablet by default comes in 4460/4470 variants. I suggest introducing
+> 4470 variant here.
+> I am aware of the SOM compatibility and ability to support 4430 SOM on
+> tablet as well, but to keep tablet alive and reduce scope of testing,
+> keeping just 4470 in place might be a good choice.
+
+Yes, this makes sense. I think as soon as OMAP4470 reach upstream, we can easily
+switch the BlazeTablet's  .dts to 4470
+
+>
+> just my 2 cents, no strong feelings towards either. :)
+>
+>>
+>>>> [...]
+>>>>>
+>>>>> +
+>>>>> +#include "twl6030.dtsi"
+>>>>> +
+>>>>
+>>>> Might be good to see the TWL interrupt pin information made available as
+>>>> well?
 >>>
->>> I do not think this should be an info as majority would not have it
->>> defined I think.
->>
->> I fail to understand your point - could you please be more specific ?
-> 
-> pr_info() will clutter everyone's dmesg because I expect majority of
-> installs will not have this enabled. Please change to pr_debug or just
-> drop it.
-
-Ah! Yes certainly.
-
-> 
->>
+>>> Allow me to rephrase a comment a little bit more :)
+>>> Similar to twl4030_omap3.dtsi, we could introduce twl6030_omap4.dtsi. this
+>>> could contain the common pins used for 6030.
+>>>  &omap4_pmx_wkup {
+>>>          pinctrl-names = "default";
+>>>          pinctrl-0 = <
+>>>                          &twl6030_wkup_pins
+>>>          >;
 >>>
->>>> +		goto out;
->>>> +	}
->>>> +
->>>> +	prop = of_find_property(np, "linux,input-keyset", NULL);
+>>>          twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
+>>>                  pinctrl-single,pins = <
+>>>                          0x14 (PIN_OUTPUT | MUX_MODE2)
+>>>                  >;
+>>>          };
+>>>  };
 >>>
->>> Maybe "linux,input-key*re*set"?
->>
->> I do not agree.  We want the binding to be generic and not tied
->> specifically to the keyreset functionality.  As such 'input-keyset' or
->> 'input-keychord' are more appropriate.
-> 
-> The binding is defined specifically for sysrq and specifically to
-> perform reset action.
-
-Yes for now but as the examples in the binding show, it is easy to
-envision how other drivers could use it.
-
-> 
->>
+>>>         twl6030_pins: pinmux_twl6030_pins {
+>>>                 pinctrl-single,pins = <
+>>>                         0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)
+>>> /* sys_nirq1.sys_nirq1 */
+>>>                 >;
+>>>         };
 >>>
->>>> +	if (!prop || !prop->value) {
->>>> +		pr_err("Invalid input-keyset");
->>>> +		goto out;
->>>> +	}
->>>> +
->>>> +	count = prop->length / sizeof(u32);
->>>> +	val = prop->value;
->>>> +
->>>> +	if (count > SYSRQ_KEY_RESET_MAX)
->>>> +		count = SYSRQ_KEY_RESET_MAX;
->>>> +
->>>> +	/* reset in case a __weak definition was present */
->>>> +	sysrq_reset_seq_len = 0;
->>>
->>> Hmm, my preference for ordering would be software over firmware, so that
->>> user could override firmware data, if needed.
+>>> which is now already duplicated in 2 places (SDP and Panda), and in this
+>>> patch duplicated again.
 >>
->> The idea is to offer flexibility.  The same kernel can be used on
->> multiple device.  As such DT information should be prioritised over a
->> __weak symbol, otherwise it defeats the purpose.
-> 
-> The weak symbol should defined in board data, so it won't get picked up
-> on multiple boards. But I guess I do not care that much as indeed we can
-> change the sequence from userspace so we won't be stuck with firmware
-> choices.
-
-Humm... My reply wasn't clear enough.  I was thinking about the same
-board with different input device, i.e keypad or touchscreen.  In that
-case the board file would have been the same but not the keyreset
-sequence, which is exactly what the above ordering allows to do.  But
-it's ok, we agree.
-
-> 
+>> Agree, I'm planning to do this later as part of moving common things into
+>> some System-On-Module(SOM)-specific files, as discussed previously
+>> here https://patchwork.kernel.org/patch/2118371/
 >>
->> Once the system is loaded user can still configure the keyreset
->> specifics by using the /sysfs interface.
->>
->>>
->>> Please also add the documenation describing the binding.
->>
->> The documentation describing the binding is in patch 1/2.  You suggest
->> that I add the documentation in this patch too ?
-> 
-> I simply missed your other patch as it hit my mailbox after this one.
-> But I would just combine the 2 together.
+> I dont think I was mentioning about that - I just would really like to
+> avoid duplication of 6030 information all over the place. if we can
+> avoid it, lets start consolidating.
 
-I will gladly do that.
+Okay, I got your point. Will prepare the patch in v3..
 
-> 
+> Regards,
+> Nishanth Menon
 
+
+-- 
+Best regards,
+Ruslan Bilvol
+
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
