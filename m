@@ -1,67 +1,78 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/4] ARM: OMAP5: clockdomain data: add init file for
- omap54xx
-Date: Thu, 27 Jun 2013 11:44:34 +0300
-Message-ID: <20130627084434.GT15455@arwen.pp.htv.fi>
-References: <1372322299-25046-1-git-send-email-t-kristo@ti.com>
- <1372322299-25046-3-git-send-email-t-kristo@ti.com>
-Reply-To: <balbi@ti.com>
+From: Luciano Coelho <coelho@ti.com>
+Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
+Date: Thu, 27 Jun 2013 11:47:31 +0300
+Message-ID: <1372322851.18889.53.camel@cumari.coelho.fi>
+References: <1372149330-24335-1-git-send-email-coelho@ti.com>
+	 <51CBC1C8.1040301@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JHjDRUnf1JOMxzko"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1372322299-25046-3-git-send-email-t-kristo@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, mturquette@linaro.org, nm@ti.com, rnayak@ti.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51CBC1C8.1040301@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nishanth Menon <menon.nishanth@gmail.com>
+Cc: Nishanth Menon <nm@ti.com>, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---JHjDRUnf1JOMxzko
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+(added mailing lists and everyone back to the thread)
 
-Hi,
+On Wed, 2013-06-26 at 23:38 -0500, Nishanth Menon wrote:
+> On 06/25/2013 03:35 AM, Luciano Coelho wrote:
+> > +Optional properties:
+> > +--------------------
+> > +
+> > +- refclock: the internal WLAN reference clock frequency (required for
+> > +  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
+> > +  following:
+> > +	0 = 19.2 MHz
+> > +	1 = 26.0 MHz
+> > +	2 = 38.4 MHz
+> > +	3 = 52.0 MHz
+> > +	4 = 38.4 MHz, XTAL
+> > +	5 = 26.0 MHz, XTAL
+> > +
+> > +- tcxoclock: the internal WLAN TCXO clock frequency (required for
+> > +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
+> > +  following:
+> > +	0 = 19.200 MHz
+> > +	1 = 26.000 MHz
+> > +	2 = 38.400 MHz
+> > +	3 = 52.000 MHz
+> > +	4 = 16.368 MHz
+> > +	5 = 32.736 MHz
+> > +	6 = 16.800 MHz
+> > +	7 = 33.600 MHz
+> >
+> just a gentle query - why not use frequency itself here in Hz for 
+> refclock and txoclk?
 
-On Thu, Jun 27, 2013 at 11:38:17AM +0300, Tero Kristo wrote:
-> +	rc =3D clk_set_parent(abe_dpll_ref, sys_32k_ck);
-> +	abe_dpll =3D clk_get_sys(NULL, "dpll_abe_ck");
+I thought about using the actual frequencies, but I decided not to do
+so, because I'd have to convert them to these values anyway.  These
+values are used to configure the firmware and it uses these
+"enumerations".
 
-should these two lines be swaped ?
 
-> +	if (!rc)
-> +		rc =3D clk_set_rate(abe_dpll, OMAP5_DPLL_ABE_DEFFREQ);
-> +	if (rc)
-> +		pr_err("%s: failed to configure ABE DPLL!\n", __func__);
-> +
-> +	return 0;
+> might not another option of using
+> node {
+> clocks=<&clk>;
+> }
+> 
+> Usually refclock is an external clock source, no?
 
-so even if (rc) you still return 0 ? Shouldn't you return rc instead ?
+No.  In the WiLink case, both refclock and tcxoclock are internal
+clocks.  They are in the module itself and what we need to do is tell
+the WiLink chip what the module's clocks look like.
 
---=20
-balbi
 
---JHjDRUnf1JOMxzko
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> the above allows you to do an devm_clk_get and clk_get_rate() to figure 
+> out the exact clock frequency.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+No, we can't use these calls, because they are internal clocks.
 
-iQIcBAEBAgAGBQJRy/tyAAoJEIaOsuA1yqREtqQP/0K8P3A7caoOlrE5gq44TBVE
-5XTFBc1I+8PAgiP/ivsY7wjoW0p1XtWqdJ49lUSJkDebnjJ9YDtODsl7ppSqOvCZ
-T3duaJrtfY5/EEu0QYMU+HSM5yG8nni7GN1sZXLkT92fmDRA5h4gX9aRqS/iYY34
-PfzUSjrY5vGgEJw+iVcS4m6aES0+4p8r4SDeSZuNI1wo2rqeo8pamrgPtdww1XbH
-9QzZawEJo9h6s3Acy/ScIt7giXJ5fngE43cpIJFvj1NQFMFCPizWPZXYZLyT+L7x
-ui67icXzyyD3ROBcr8KDCTYzy1EpjL8TBjTkn1gAVPanKr8ZXhgK1nWOx44oD0U/
-e+TCapx8m++d4fihEkR9FpLsLhQC309w0sgs2CpzHvbW5sLbpFRMwp/rGwgJ9CCe
-cPazOW/pYXwJOWSjUDuVN8a/8Mau+qQoRa8Yfr3ncsUMuhgucPCeb8Q6KtNTOO/R
-7bzGqPOQkvymEXvnw2RV7UL80vmwAwORo8IodaxhPKuy6QCt54fOVMXykk0xPoU3
-4UM4e15bUnMUSOGdJ2hHdapyYsSRGhdJXQsABEWdpP7i0skApTwRm1OE8pYWMznX
-AxOZim8ziO+BAO5MYVAJ9Ay7tKMazvITiox/SiXsUaGFRJNuW/oj5sCfMaKeypvZ
-u8eOUOuJggj4jQmScl1K
-=7asL
------END PGP SIGNATURE-----
+Please see my more complete explanation as an answer to Tony's email.
 
---JHjDRUnf1JOMxzko--
+Thanks for your review!
+
+--
+Luca.
+
