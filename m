@@ -1,113 +1,75 @@
-From: mathieu.poirier@linaro.org
-Subject: [PATCH 1/2] Input: Add device tree bindings for input keys
-Date: Thu, 27 Jun 2013 10:13:24 -0600
-Message-ID: <1372349605-4500-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: grant.likely@linaro.org
-Cc: devicetree-discuss@lists.ozlabs.org, dmitry.torokhov@gmail.com, john.stultz@linaro.org, kernel-team@android.com, linux-input@vger.kernel.org
+From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/5] AM33xx: MMC resources from DT without HWMOD data
+Date: Thu, 27 Jun 2013 21:56:50 +0530
+Message-ID: <51CC67CA.2070805@ti.com>
+References: <1372209808-6532-1-git-send-email-joelagnel@ti.com>
+	<CAD=GYpbdVVrh-tiqOcbHi3mkWRJUBdx0EsEZEFVVbgFgcCWgsw@mail.gmail.com>
+	<51CC2A1E.2040003@ti.com>
+	<CAD=GYpa9LQ1fV6=O9B65sJURVAigsgXCPLWav8cHXTuGQXPc9A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <CAD=GYpa9LQ1fV6=O9B65sJURVAigsgXCPLWav8cHXTuGQXPc9A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, joelf-l0cyMroinI0@public.gmane.org
+Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Koen Kooi <koen-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>Linux ARM Kernel List <l>
 List-Id: devicetree@vger.kernel.org
 
-From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
+On Thursday 27 June 2013 07:56 PM, Joel A Fernandes wrote:
+> Hi Benoit,
+>
+> On Thu, Jun 27, 2013 at 7:03 AM, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org> wrote:
+>> Hi Joel,
+>>
+>> On 06/26/2013 05:28 AM, Joel A Fernandes wrote:
+>>> On Tue, Jun 25, 2013 at 8:23 PM, Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org> wrote:
+>>>> From: Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>
+>>>> This series is fixes to get MMC working on AM33XX without HWMOD data.
+>>>> On removal of HWMOD data, interrupt and register properties need to be provided
+>>>> for the driver to function correctly.
+>>>
+>>> Please don't pull patches authored by me in this series. I have posted
+>>> them with my wrong email address by mistake. I will correct my email
+>>> during the next repost, after a round of review. Matt's patches in the
+>>> series are still good though.
+>>
+>> In that case, please repost these in two series to avoid pulling the DTS
+>> files in the MMC tree.
+>
+> The series has been replaced with the single patch:
+> "[PATCH v2] ARM: dts: add AM33XX MMC support"
+> http://marc.info/?l=linux-omap&m=137230403815943&w=2
+>
+> Some patches were squashed and others dropped in the series resulting
+> in the single
+> patch above. This patch should be good to apply
+Hi Joel,
 
-This adds a simple device tree binding for the specification of
-key sequences.  Definition of the keys found in the sequence are
-located in 'include/uapi/linux/input.h'.
+Before pushing mmc dts support for am335x, Can you please let me
+know if below 2 patches [1] are merged/accepted,
+IIRC these patches are needed for MMC to work properly.
 
-A keyset can be applied to a single device or the system as a
-whole, depending on the associated driver.  An extention is also
-provided for the definition of multiple keysets.
+I suggest to hold the dts patch until slave_sg_limit gets merged
+otherwise it will cause regression in am335x mmc.
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- .../devicetree/bindings/input/input-keyset.txt     |   78 ++++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/input-keyset.txt
+[PATCH v4 1/3] dmaengine: add dma_get_slave_sg_limits()
+[PATCH v4 2/3] dma: edma: add device_slave_sg_limits() support
 
-diff --git a/Documentation/devicetree/bindings/input/input-keyset.txt b/Documentation/devicetree/bindings/input/input-keyset.txt
-new file mode 100644
-index 0000000..4f96299
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/input-keyset.txt
-@@ -0,0 +1,78 @@
-+Input: keyset
-+
-+A simple binding to represent a set of keys as described in
-+include/uapi/linux/input.h.  This is targeted at devices that want
-+to react to certain key combination being pressed or need to
-+perform some configuration based on a set of input keys.
-+
-+It can also be used in a scenario where the system has a whole
-+needs to respond to a specific sequence of keys.
-+
-+Required properties:
-+ - linux,input-keyset: An array of 1-cell entries representing the
-+   values associated with the KEY_xyz #defines found in input.h.
-+
-+Example1:
-+Applicable to a specific device:
-+
-+        matrix-keypad {
-+                compatible = "gpio-matrix-keypad";
-+                debounce-delay-ms = <5>;
-+                col-scan-delay-us = <2>;
-+
-+                row-gpios = <&gpio2 25 0
-+                             &gpio2 26 0
-+                             &gpio2 27 0>;
-+
-+                col-gpios = <&gpio2 21 0
-+                             &gpio2 22 0
-+                             &gpio2 23 0>;
-+
-+                linux,keymap = <0x00000002
-+                                0x01000005
-+                                0x02000008
-+                                0x00010003
-+                                0x01010006
-+                                0x02010009
-+                                0x00020004
-+                                0x01020007
-+                                0x0202000a>;
-+
-+                linux,keyset = <0x04
-+                                0x05
-+                                0x0a>;
-+        };
-+
-+Example2:
-+Used as a system-wide parameter:
-+
-+	sysrq {
-+		linux,input-keyset = <0x01
-+				      0x0A
-+				      0x19>;
-+		timout-ms = <3000>;
-+	};
-+
-+Would represent KEY_1, KEY_9 and KEY_P.
-+
-+Example3:
-+Binding used when multiple declarations are needed:
-+
-+acme_keysets {
-+        keyset0 {
-+                linux,input-keyset = <0x01
-+                                      0x02
-+                                      0x03>;
-+        };
-+        keyset1 {
-+                linux,input-keyset = <0x04
-+                                      0x05
-+                                      0x06>;
-+        };
-+        keyset2 {
-+                linux,input-keyset = <0x07
-+                                      0x08
-+                                      0x09>;
-+        };
-+
-+};
--- 
-1.7.9.5
+[1]
+https://groups.google.com/forum/#!topic/linux.kernel/khTTcPtQpag
 
+>
+> Thanks,
+>
+> -Joel
+>
