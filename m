@@ -1,159 +1,214 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v4 5/5] ARM: Samsung: Remove the MIPI PHY setup code
-Date: Fri, 28 Jun 2013 15:43:11 +0200
-Message-ID: <1372426991-2482-6-git-send-email-s.nawrocki@samsung.com>
-References: <1372426991-2482-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1372426991-2482-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, balbi@ti.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, tomi.valkeinen@ti.com, plagnioj@jcrosoft.com, jason77.wang@gmail.com, linux-fbdev@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: mathieu.poirier@linaro.org
+Subject: [PATCH v2] Input: Add device tree bindings for input keys
+Date: Fri, 28 Jun 2013 07:46:12 -0600
+Message-ID: <1372427172-9546-1-git-send-email-mathieu.poirier@linaro.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: grant.likely@linaro.org
+Cc: devicetree-discuss@lists.ozlabs.org, dmitry.torokhov@gmail.com, john.stultz@linaro.org, kernel-team@android.com, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Generic PHY drivers are used to handle the MIPI CSIS and MIPI DSIM
-DPHYs so we can remove now unused code at arch/arm/plat-samsung.
-In case there is any board file for S5PV210 platforms using MIPI
-CSIS/DSIM (not any upstream currently) it should use the generic
-PHY API to bind the PHYs to respective PHY consumer drivers and
-a platform device for the PHY provider should be defined.
+From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-Acked-by: Felipe Balbi <balbi@ti.com>
-Acked-by: Kukjin Kim <kgene.kim@samsung.com>
+This adds a simple device tree binding for the specification of
+key sequences.  Definition of the keys found in the sequence are
+located in 'include/uapi/linux/input.h'.
+
+A keyset can be applied to a single device or the system as a
+whole, depending on the associated driver.  An extention is also
+provided for the definition of multiple keysets.
+
+Lastly, the possibility to get keyreset timeout values from the
+device tree based on the new binding is added.
+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- arch/arm/mach-exynos/include/mach/regs-pmu.h    |    5 --
- arch/arm/mach-s5pv210/include/mach/regs-clock.h |    4 --
- arch/arm/plat-samsung/Kconfig                   |    5 --
- arch/arm/plat-samsung/Makefile                  |    1 -
- arch/arm/plat-samsung/setup-mipiphy.c           |   60 -----------------------
- 5 files changed, 75 deletions(-)
- delete mode 100644 arch/arm/plat-samsung/setup-mipiphy.c
+changes for v2:
+   - Moving to pr_debug when 'sysrq' node isn't found.
+   - Merging binding description and code enhancement.
+---
+ .../devicetree/bindings/input/input-keyset.txt     |   78 ++++++++++++++++++++
+ drivers/tty/sysrq.c                                |   54 ++++++++++++++
+ 2 files changed, 132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/input-keyset.txt
 
-diff --git a/arch/arm/mach-exynos/include/mach/regs-pmu.h b/arch/arm/mach-exynos/include/mach/regs-pmu.h
-index 57344b7..2cdb63e 100644
---- a/arch/arm/mach-exynos/include/mach/regs-pmu.h
-+++ b/arch/arm/mach-exynos/include/mach/regs-pmu.h
-@@ -44,11 +44,6 @@
- #define S5P_DAC_PHY_CONTROL			S5P_PMUREG(0x070C)
- #define S5P_DAC_PHY_ENABLE			(1 << 0)
+diff --git a/Documentation/devicetree/bindings/input/input-keyset.txt b/Documentation/devicetree/bindings/input/input-keyset.txt
+new file mode 100644
+index 0000000..4f96299
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/input-keyset.txt
+@@ -0,0 +1,78 @@
++Input: keyset
++
++A simple binding to represent a set of keys as described in
++include/uapi/linux/input.h.  This is targeted at devices that want
++to react to certain key combination being pressed or need to
++perform some configuration based on a set of input keys.
++
++It can also be used in a scenario where the system has a whole
++needs to respond to a specific sequence of keys.
++
++Required properties:
++ - linux,input-keyset: An array of 1-cell entries representing the
++   values associated with the KEY_xyz #defines found in input.h.
++
++Example1:
++Applicable to a specific device:
++
++        matrix-keypad {
++                compatible = "gpio-matrix-keypad";
++                debounce-delay-ms = <5>;
++                col-scan-delay-us = <2>;
++
++                row-gpios = <&gpio2 25 0
++                             &gpio2 26 0
++                             &gpio2 27 0>;
++
++                col-gpios = <&gpio2 21 0
++                             &gpio2 22 0
++                             &gpio2 23 0>;
++
++                linux,keymap = <0x00000002
++                                0x01000005
++                                0x02000008
++                                0x00010003
++                                0x01010006
++                                0x02010009
++                                0x00020004
++                                0x01020007
++                                0x0202000a>;
++
++                linux,keyset = <0x04
++                                0x05
++                                0x0a>;
++        };
++
++Example2:
++Used as a system-wide parameter:
++
++	sysrq {
++		linux,input-keyset = <0x01
++				      0x0A
++				      0x19>;
++		timout-ms = <3000>;
++	};
++
++Would represent KEY_1, KEY_9 and KEY_P.
++
++Example3:
++Binding used when multiple declarations are needed:
++
++acme_keysets {
++        keyset0 {
++                linux,input-keyset = <0x01
++                                      0x02
++                                      0x03>;
++        };
++        keyset1 {
++                linux,input-keyset = <0x04
++                                      0x05
++                                      0x06>;
++        };
++        keyset2 {
++                linux,input-keyset = <0x07
++                                      0x08
++                                      0x09>;
++        };
++
++};
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index b51c154..9c20886 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -44,6 +44,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/moduleparam.h>
+ #include <linux/jiffies.h>
++#include <linux/of.h>
  
--#define S5P_MIPI_DPHY_CONTROL(n)		S5P_PMUREG(0x0710 + (n) * 4)
--#define S5P_MIPI_DPHY_ENABLE			(1 << 0)
--#define S5P_MIPI_DPHY_SRESETN			(1 << 1)
--#define S5P_MIPI_DPHY_MRESETN			(1 << 2)
--
- #define S5P_INFORM0				S5P_PMUREG(0x0800)
- #define S5P_INFORM1				S5P_PMUREG(0x0804)
- #define S5P_INFORM2				S5P_PMUREG(0x0808)
-diff --git a/arch/arm/mach-s5pv210/include/mach/regs-clock.h b/arch/arm/mach-s5pv210/include/mach/regs-clock.h
-index 032de66..e345584 100644
---- a/arch/arm/mach-s5pv210/include/mach/regs-clock.h
-+++ b/arch/arm/mach-s5pv210/include/mach/regs-clock.h
-@@ -147,10 +147,6 @@
- #define S5P_HDMI_PHY_CONTROL	S5P_CLKREG(0xE804)
- #define S5P_USB_PHY_CONTROL	S5P_CLKREG(0xE80C)
- #define S5P_DAC_PHY_CONTROL	S5P_CLKREG(0xE810)
--#define S5P_MIPI_DPHY_CONTROL(x) S5P_CLKREG(0xE814)
--#define S5P_MIPI_DPHY_ENABLE	(1 << 0)
--#define S5P_MIPI_DPHY_SRESETN	(1 << 1)
--#define S5P_MIPI_DPHY_MRESETN	(1 << 2)
+ #include <asm/ptrace.h>
+ #include <asm/irq_regs.h>
+@@ -671,6 +672,50 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
+ 	}
+ }
  
- #define S5P_INFORM0		S5P_CLKREG(0xF000)
- #define S5P_INFORM1		S5P_CLKREG(0xF004)
-diff --git a/arch/arm/plat-samsung/Kconfig b/arch/arm/plat-samsung/Kconfig
-index b21d9d5..60f6337 100644
---- a/arch/arm/plat-samsung/Kconfig
-+++ b/arch/arm/plat-samsung/Kconfig
-@@ -388,11 +388,6 @@ config S3C24XX_PWM
- 	  Support for exporting the PWM timer blocks via the pwm device
- 	  system
++static void sysrq_of_get_keyreset_config(void)
++{
++	unsigned short key;
++	struct device_node *np;
++	const struct property *prop;
++	const __be32 *val;
++	int count, i;
++
++	np = of_find_node_by_path("/sysrq");
++	if (!np) {
++		pr_debug("No sysrq node found");
++		goto out;
++	}
++
++	prop = of_find_property(np, "linux,input-keyset", NULL);
++	if (!prop || !prop->value) {
++		pr_err("Invalid input-keyset");
++		goto out;
++	}
++
++	count = prop->length / sizeof(u32);
++	val = prop->value;
++
++	if (count > SYSRQ_KEY_RESET_MAX)
++		count = SYSRQ_KEY_RESET_MAX;
++
++	/* reset in case a __weak definition was present */
++	sysrq_reset_seq_len = 0;
++
++	for (i = 0; i < count; i++) {
++		key = (unsigned short)be32_to_cpup(val++);
++		if (key == KEY_RESERVED || key > KEY_MAX)
++			break;
++
++		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
++	}
++
++	/* get reset timeout if any */
++	of_property_read_u32(np, "timeout-ms", &sysrq_reset_downtime_ms);
++
++ out:
++	;
++}
++
+ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+ {
+ 	struct sysrq_state *sysrq =
+@@ -688,6 +733,7 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+ 		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
+ 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
  
--config S5P_SETUP_MIPIPHY
--	bool
--	help
--	  Compile in common setup code for MIPI-CSIS and MIPI-DSIM devices
--
- config S3C_SETUP_CAMIF
- 	bool
- 	help
-diff --git a/arch/arm/plat-samsung/Makefile b/arch/arm/plat-samsung/Makefile
-index 5d7f839..0db786e 100644
---- a/arch/arm/plat-samsung/Makefile
-+++ b/arch/arm/plat-samsung/Makefile
-@@ -38,7 +38,6 @@ obj-$(CONFIG_S5P_DEV_UART)	+= s5p-dev-uart.o
- obj-$(CONFIG_SAMSUNG_DEV_BACKLIGHT)	+= dev-backlight.o
++
+ 		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
+ 		input_inject_event(handle, EV_KEY, alt_code, 0);
+ 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
+@@ -903,6 +949,7 @@ static inline void sysrq_register_handler(void)
+ 	int error;
+ 	int i;
  
- obj-$(CONFIG_S3C_SETUP_CAMIF)	+= setup-camif.o
--obj-$(CONFIG_S5P_SETUP_MIPIPHY)	+= setup-mipiphy.o
++	/* first check if a __weak interface was instantiated */
+ 	for (i = 0; i < ARRAY_SIZE(sysrq_reset_seq); i++) {
+ 		key = platform_sysrq_reset_seq[i];
+ 		if (key == KEY_RESERVED || key > KEY_MAX)
+@@ -911,6 +958,13 @@ static inline void sysrq_register_handler(void)
+ 		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
+ 	}
  
- # DMA support
- 
-diff --git a/arch/arm/plat-samsung/setup-mipiphy.c b/arch/arm/plat-samsung/setup-mipiphy.c
-deleted file mode 100644
-index 66df315..0000000
---- a/arch/arm/plat-samsung/setup-mipiphy.c
-+++ /dev/null
-@@ -1,60 +0,0 @@
--/*
-- * Copyright (C) 2011 Samsung Electronics Co., Ltd.
-- *
-- * S5P - Helper functions for MIPI-CSIS and MIPI-DSIM D-PHY control
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- */
--
--#include <linux/export.h>
--#include <linux/kernel.h>
--#include <linux/platform_device.h>
--#include <linux/io.h>
--#include <linux/spinlock.h>
--#include <mach/regs-clock.h>
--
--static int __s5p_mipi_phy_control(int id, bool on, u32 reset)
--{
--	static DEFINE_SPINLOCK(lock);
--	void __iomem *addr;
--	unsigned long flags;
--	u32 cfg;
--
--	id = max(0, id);
--	if (id > 1)
--		return -EINVAL;
--
--	addr = S5P_MIPI_DPHY_CONTROL(id);
--
--	spin_lock_irqsave(&lock, flags);
--
--	cfg = __raw_readl(addr);
--	cfg = on ? (cfg | reset) : (cfg & ~reset);
--	__raw_writel(cfg, addr);
--
--	if (on) {
--		cfg |= S5P_MIPI_DPHY_ENABLE;
--	} else if (!(cfg & (S5P_MIPI_DPHY_SRESETN |
--			    S5P_MIPI_DPHY_MRESETN) & ~reset)) {
--		cfg &= ~S5P_MIPI_DPHY_ENABLE;
--	}
--
--	__raw_writel(cfg, addr);
--	spin_unlock_irqrestore(&lock, flags);
--
--	return 0;
--}
--
--int s5p_csis_phy_enable(int id, bool on)
--{
--	return __s5p_mipi_phy_control(id, on, S5P_MIPI_DPHY_SRESETN);
--}
--EXPORT_SYMBOL(s5p_csis_phy_enable);
--
--int s5p_dsim_phy_enable(struct platform_device *pdev, bool on)
--{
--	return __s5p_mipi_phy_control(pdev->id, on, S5P_MIPI_DPHY_MRESETN);
--}
--EXPORT_SYMBOL(s5p_dsim_phy_enable);
++	/*
++	 * DT configuration takes precedence over anything
++	 * that would have been defined via the __weak
++	 * interface
++	 */
++	sysrq_of_get_keyreset_config();
++
+ 	error = input_register_handler(&sysrq_handler);
+ 	if (error)
+ 		pr_err("Failed to register input handler, error %d", error);
 -- 
 1.7.9.5
+
