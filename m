@@ -1,91 +1,63 @@
-From: Luciano Coelho <coelho@ti.com>
-Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
-Date: Fri, 28 Jun 2013 14:22:11 +0300
-Message-ID: <1372418531.21065.53.camel@cumari.coelho.fi>
-References: <1372149330-24335-1-git-send-email-coelho@ti.com>
-	 <20130628093848.GA2139@e106331-lin.cambridge.arm.com>
-	 <1372413215.21065.41.camel@cumari.coelho.fi>
-	 <20130628102145.GB2139@e106331-lin.cambridge.arm.com>
-	 <1372415514.21065.50.camel@cumari.coelho.fi>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCHv3] ARM: socfpga: dts: Add support for SD/MMC
+Date: Fri, 28 Jun 2013 13:28:33 +0200
+Message-ID: <20130628112833.GC22234@amd.pavel.ucw.cz>
+References: <1372397738-8093-1-git-send-email-dinguyen@altera.com>
+ <1372397738-8093-2-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1372415514.21065.50.camel@cumari.coelho.fi>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: mturquette@linaro.org, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-arm@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372397738-8093-2-git-send-email-dinguyen@altera.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: dinh.linux@gmail.com
+Cc: Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Chris Ball <cjb@laptop.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux@arm.linux.org.uk, wd@denx.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-06-28 at 13:31 +0300, Luciano Coelho wrote:
-> (fixed Mike's address)
+Hi!
+
+Just some nit-picking... (not worth blocking apply for this, can
+easily go through trivial tree later.)
+
+>  create mode 100644 Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
 > 
-> On Fri, 2013-06-28 at 11:21 +0100, Mark Rutland wrote:
-> > On Fri, Jun 28, 2013 at 10:53:35AM +0100, Luciano Coelho wrote:
-> > > On Fri, 2013-06-28 at 10:38 +0100, Mark Rutland wrote:
-> > > > On Tue, Jun 25, 2013 at 09:35:30AM +0100, Luciano Coelho wrote:
-> > > > > +Optional properties:
-> > > > > +--------------------
-> > > > > +
-> > > > > +- refclock: the internal WLAN reference clock frequency (required for
-> > > > > +  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
-> > > > > +  following:
-> > > > > +	0 = 19.2 MHz
-> > > > > +	1 = 26.0 MHz
-> > > > > +	2 = 38.4 MHz
-> > > > > +	3 = 52.0 MHz
-> > > > > +	4 = 38.4 MHz, XTAL
-> > > > > +	5 = 26.0 MHz, XTAL
-> > > > > +
-> > > > > +- tcxoclock: the internal WLAN TCXO clock frequency (required for
-> > > > > +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
-> > > > > +  following:
-> > > > > +	0 = 19.200 MHz
-> > > > > +	1 = 26.000 MHz
-> > > > > +	2 = 38.400 MHz
-> > > > > +	3 = 52.000 MHz
-> > > > > +	4 = 16.368 MHz
-> > > > > +	5 = 32.736 MHz
-> > > > > +	6 = 16.800 MHz
-> > > > > +	7 = 33.600 MHz
-> > > > 
-> > > > This looks suspiciously like what we have the common clock bindings for:
-> > > > 
-> > > > refclk {
-> > > > 	compatible = "fixed-clock";
-> > > > 	#clock-cells = <0>;
-> > > > 	clock-frequency = <19200000>;
-> > > > }
-> > > > 
-> > > > wilink {
-> > > > 	compatible = "ti,wilink7";
-> > > > 	interrupt-parent = <&some_interrupt_controller>;
-> > > > 	interrupts = <0 1 1>;
-> > > > 	clocks = <&refclk>, <&refclk>;
-> > > > 	clock-names = "refclk", "txoclk";
-> > > > };
-> > > > 
-> > > > Could you not use them?
-> > > 
-> > > Hmmm... this actually does look good.  But these are internal clocks in
-> > > the modules, they cannot be accessed from outside.  Does it make sense
-> > > to register them with the clock framework?
-> > 
-> > Given we already have a common way of describing clocks, I think it
-> > makes sense to use it -- people already understand the common bindings,
-> > and it's less code to add add to the kernel. I don't think the fact
-> > these clocks are internal should prevent us from describing them as we
-> > would an external clock.
-> 
-> Yes, I agree with you.  Thanks for the suggestion! I think it will look
-> much better.  And now that I dug a bit more into the code, I can see
-> that there are only structs being populated, so there shouldn't be any
-> other side-effects.
+> diff --git a/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+> new file mode 100644
+> index 0000000..f36b7ee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+> @@ -0,0 +1,60 @@
+> +* Altera SOCFPGA specific extensions to the Synopsis Designware Mobile
+> +  Storage Host Controller
+> +
+> +Required Properties:
+> +
+> +* compatible: should be
+> +	- "altr,socfpga-dw-mshc": for controllers with Altera SOCFPGA
+> +	  specific extensions.
+> +
+> +* altr,dw-mshc-ciu-div: Specifies the divider value for the card interface
+> +  unit (ciu) clock. The value should be (n+1). For Altera's SOCFPGA, the divider
+> +  value is fixed at 3, which mean parent_clock/4.
 
-Hmmm, one thing that escaped me.  Besides the frequency, I also need a
-boolean that tells if the clock is XTAL or not.  I can't figure out how
-to pass this if I use the generic clock framework.  Any suggestions?
+"which means".
 
---
-Luca.
+> +* altr,dw-mshc-sdr-timing: Specifies the value of CIU clock phase shift value
+> +  in transmit mode and CIU clock phase shift value in receive mode for single
+> +  data rate mode operation. Refer notes below for the order of the cells and the
 
+"refer to".
+
+> +Example:
+> +
+> +  The MSHC controller node can be split into two portions, SoC specific and
+> +  board specific portions as listed below.
+
+", as listed".
+
+Thanks,
+									Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
