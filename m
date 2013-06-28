@@ -1,77 +1,156 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 7/9] documentation: iommu: add description of ARM System
-	MMU binding
-Date: Fri, 28 Jun 2013 10:06:35 +0100
-Message-ID: <20130628090635.GB29002@mudshark.cambridge.arm.com>
-References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
-	<1370889285-22799-8-git-send-email-will.deacon@arm.com>
-	<CALRxmdBxFWoRKv+bUu8VEwNNcAJUej9jM2V8N0rrqrr_Vpe8fQ@mail.gmail.com>
-	<20130626133941.GD7417@mudshark.cambridge.arm.com>
-	<CALRxmdCycFK2wW=C4aU79mudSaT+2vU8nzXxepdstubg+YSdQg@mail.gmail.com>
-	<20130626174231.GH10333@mudshark.cambridge.arm.com>
-	<CALRxmdD5fyp06xW+z=rWagJc_bcJmpr1H9Zbdf=xbg9cCzvVfw@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 3/3] video: exynos_dp: Use the generic PHY driver
+Date: Fri, 28 Jun 2013 14:57:26 +0530
+Message-ID: <51CD56FE.4020302@ti.com>
+References: <001701ce73bf$bebf9f20$3c3edd60$@samsung.com> <51CD25F2.5010206@ti.com> <001c01ce73c5$552e1cc0$ff8a5640$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALRxmdD5fyp06xW+z=rWagJc_bcJmpr1H9Zbdf=xbg9cCzvVfw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Stuart Yoder <b08248-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org Discuss" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <001c01ce73c5$552e1cc0$ff8a5640$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 27, 2013 at 07:22:30PM +0100, Stuart Yoder wrote:
-> On Wed, Jun 26, 2013 at 12:42 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Wed, Jun 26, 2013 at 05:19:48PM +0100, Stuart Yoder wrote:
-> >> On Wed, Jun 26, 2013 at 8:39 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> >> > I'd suggest looking at the driver I posted to get a gist of how the parsing
-> >> > code works, but suffice to say that we describe both the number of
-> >> > interrupts and the actual interrupt numbers here.
-> >>
-> >> I understand that the number of interrupts and actual interrupt numbers
-> >> are described here, but was referring to the _meaning_ of the interrupt
-> >> numbers.   A binding for a device with 2 interrupts, a TX and RX would
-> >> normally identify which interrupt specifier is for TX and which is for RX.
-> >>
-> >> Based on your code, the 2 global interrupts seem to be the secure
-> >> and non-secure fault interrupts...which your driver does not differentiate.
-> >> However, the device tree is describing hardware and  you can't assume
-> >> that all drivers don't care which is which.
-> >
-> > Currently, the driver only works when Linux is running as non-secure, which is
-> > becoming more and more common since it is required to be able to make use of
-> > hyp mode.
-> >
-> > There are actually two global interrupts for SMMUv1 and SMMUv2, which
-> > correspond to configuration faults and `other' global faults.
-> 
-> So, why don't we define which interrupt is which in this binding?
-> ...e.g. "The first
-> interrupt specifier is for the configuration access fault interrupt, the second
-> interrupt specifier is for other global faults."
+Hi,
 
-Well, first of all, they're both global interrupts and the handler will have
-to go and access exactly the same registers to deal with the fault, so you
-don't really gain anything.
+On Friday 28 June 2013 11:34 AM, Jingoo Han wrote:
+> On Friday, June 28, 2013 2:58 PM, Kishon Vijay Abraham I wrote:
+>>
+>> Hi,
+>>
+>> On Friday 28 June 2013 10:54 AM, Jingoo Han wrote:
+>>> Use the generic PHY API instead of the platform callback to control
+>>> the DP PHY. The 'phy_label' field is added to the platform data
+>>> structure to allow PHY lookup on non-dt platforms.
+>>>
+>>> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+>>> ---
+>>>    .../devicetree/bindings/video/exynos_dp.txt        |   17 ---
+>>>    drivers/video/exynos/exynos_dp_core.c              |  118 ++------------------
+>>>    drivers/video/exynos/exynos_dp_core.h              |    2 +
+>>>    include/video/exynos_dp.h                          |    6 +-
+>>>    4 files changed, 15 insertions(+), 128 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt
+>> b/Documentation/devicetree/bindings/video/exynos_dp.txt
+>>> index 84f10c1..a8320e3 100644
+>>> --- a/Documentation/devicetree/bindings/video/exynos_dp.txt
+>>> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
+>>> @@ -1,17 +1,6 @@
+>>>    The Exynos display port interface should be configured based on
+>>>    the type of panel connected to it.
+>>>
+>>> -We use two nodes:
+>>> -	-dp-controller node
+>>> -	-dptx-phy node(defined inside dp-controller node)
+>>> -
+>>> -For the DP-PHY initialization, we use the dptx-phy node.
+>>> -Required properties for dptx-phy:
+>>> -	-reg:
+>>> -		Base address of DP PHY register.
+>>> -	-samsung,enable-mask:
+>>> -		The bit-mask used to enable/disable DP PHY.
+>>> -
+>>>    For the Panel initialization, we read data from dp-controller node.
+>>>    Required properties for dp-controller:
+>>>    	-compatible:
+>>> @@ -67,12 +56,6 @@ SOC specific portion:
+>>>    		interrupt-parent = <&combiner>;
+>>>    		clocks = <&clock 342>;
+>>>    		clock-names = "dp";
+>>> -
+>>> -		dptx-phy {
+>>> -			reg = <0x10040720>;
+>>> -			samsung,enable-mask = <1>;
+>>> -		};
+>>> -
+>>>    	};
+>>>
+>>>    Board Specific portion:
+>>> diff --git a/drivers/video/exynos/exynos_dp_core.c b/drivers/video/exynos/exynos_dp_core.c
+>>> index 12bbede..bac515b 100644
+>>> --- a/drivers/video/exynos/exynos_dp_core.c
+>>> +++ b/drivers/video/exynos/exynos_dp_core.c
+>>> @@ -19,6 +19,7 @@
+>>>    #include <linux/interrupt.h>
+>>>    #include <linux/delay.h>
+>>>    #include <linux/of.h>
+>>> +#include <linux/phy/phy.h>
+>>>
+>>>    #include <video/exynos_dp.h>
+>>>
+>>> @@ -960,84 +961,15 @@ static struct exynos_dp_platdata *exynos_dp_dt_parse_pdata(struct device *dev)
+>>>    		return ERR_PTR(-EINVAL);
+>>>    	}
+>>>
+>>> -	return pd;
+>>> -}
+>>> -
+>>> -static int exynos_dp_dt_parse_phydata(struct exynos_dp_device *dp)
+>>> -{
+>>> -	struct device_node *dp_phy_node = of_node_get(dp->dev->of_node);
+>>> -	u32 phy_base;
+>>> -	int ret = 0;
+>>> -
+>>> -	dp_phy_node = of_find_node_by_name(dp_phy_node, "dptx-phy");
+>>> -	if (!dp_phy_node) {
+>>> -		dev_err(dp->dev, "could not find dptx-phy node\n");
+>>> -		return -ENODEV;
+>>> -	}
+>>> -
+>>> -	if (of_property_read_u32(dp_phy_node, "reg", &phy_base)) {
+>>> -		dev_err(dp->dev, "failed to get reg for dptx-phy\n");
+>>> -		ret = -EINVAL;
+>>> -		goto err;
+>>> -	}
+>>> -
+>>> -	if (of_property_read_u32(dp_phy_node, "samsung,enable-mask",
+>>> -				&dp->enable_mask)) {
+>>> -		dev_err(dp->dev, "failed to get enable-mask for dptx-phy\n");
+>>> -		ret = -EINVAL;
+>>> -		goto err;
+>>> -	}
+>>> -
+>>> -	dp->phy_addr = ioremap(phy_base, SZ_4);
+>>> -	if (!dp->phy_addr) {
+>>> -		dev_err(dp->dev, "failed to ioremap dp-phy\n");
+>>> -		ret = -ENOMEM;
+>>> -		goto err;
+>>> -	}
+>>> -
+>>> -err:
+>>> -	of_node_put(dp_phy_node);
+>>> -
+>>> -	return ret;
+>>> -}
+>>> -
+>>> -static void exynos_dp_phy_init(struct exynos_dp_device *dp)
+>>> -{
+>>> -	u32 reg;
+>>> -
+>>> -	reg = __raw_readl(dp->phy_addr);
+>>> -	reg |= dp->enable_mask;
+>>> -	__raw_writel(reg, dp->phy_addr);
+>>> -}
+>>> -
+>>> -static void exynos_dp_phy_exit(struct exynos_dp_device *dp)
+>>> -{
+>>> -	u32 reg;
+>>> +	pd->phy_label = "dp";
+>>
+>> In the case of non-dt boot, this phy_label should have ideally come from
+>> platform code.
+>
+> No, this is NOT the case of non-dt.
+>
+> 'pd->phy_label = "dp";' is included in exynos_dp_dt_parse_pdata(),
+> not exynos_dp_phy_exit().
+> Also, exynos_dp_dt_parse_pdata() is called in the case of dt.
 
-However, the main reason is that you need to be able to handle:
+ah.. right. Do you support non-dt boot. I dont see any modifications in
+the platform code?
 
-  (1) Only one of the interrupts is routed to the interrupt controller
-  (2) The interrupts are ORd into a single line
-
-> How else is software supposed to know which interrupt corresponds to what
-> event.
-
-It really doesn't care. It can't, otherwise we break in the above
-situations.
-
-Will
+Thanks
+Kishon
