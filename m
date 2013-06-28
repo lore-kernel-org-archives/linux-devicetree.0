@@ -1,209 +1,84 @@
-From: Rohit Vaswani <rvaswani@codeaurora.org>
-Subject: [PATCH 3/4] ARM: msm: Add SMP support for 8960
-Date: Fri, 28 Jun 2013 16:26:01 -0700
-Message-ID: <1372461962-17197-4-git-send-email-rvaswani@codeaurora.org>
-References: <1372461962-17197-1-git-send-email-rvaswani@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1372461962-17197-1-git-send-email-rvaswani@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>
-Cc: Rohit Vaswani <rvaswani@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-msm@vger.kernel.org
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH] of: Specify initrd location using 64-bit
+Date: Fri, 28 Jun 2013 19:43:14 -0400
+Message-ID: <51CE1F92.3070802@ti.com>
+References: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com> <51C4171C.9050908@linutronix.de> <51C48B5A.2040404@ti.com> <51CCA67C.2010803@gmail.com> <CACxGe6vOH0sCFVVXrYqD3dbYdOvithVu7-d1cvy5885i8x_Myw@mail.gmail.com> <20130628134931.GD21034@game.jcrosoft.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20130628134931.GD21034@game.jcrosoft.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, linux-mips <linux-mips@linux-mips.org>, Aurelien Jacquiot <a-jacquiot@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, Jonas Bonn <jonas@southpole.se>, Russell King <linux@arm.linux.org.uk>, linux-c6x-dev@linux-c6x.org, x86@kernel.org, arm@kernel.org, linux-xtensa@linux-xtensa.org, James Hogan <james.hogan@imgtec.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the cpus bindings and the Krait release sequence
-to make SMP work for MSM8960
 
-Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/cpus.txt     |  2 +
- Documentation/devicetree/bindings/arm/msm/kpss.txt | 16 ++++++
- arch/arm/boot/dts/msm8960-cdp.dts                  | 22 +++++++++
- arch/arm/mach-msm/platsmp.c                        | 57 ++++++++++++++++++++++
- arch/arm/mach-msm/scm-boot.h                       |  8 +--
- 5 files changed, 102 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/kpss.txt
+Sebastian,
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 327aad2..1132eac 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -45,11 +45,13 @@ For the ARM architecture every CPU node must contain the following properties:
- 		"marvell,xsc3"
- 		"marvell,xscale"
- 		"qcom,scorpion"
-+		"qcom,krait"
- - enable-method: Specifies the method used to enable or take the secondary cores
- 		 out of reset. This allows different reset sequence for
- 		 different types of cpus.
- 		 This should be one of:
- 		 "qcom,scss"
-+		 "qcom,kpssv1"
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/arm/msm/kpss.txt b/Documentation/devicetree/bindings/arm/msm/kpss.txt
-new file mode 100644
-index 0000000..7272340
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/kpss.txt
-@@ -0,0 +1,16 @@
-+* KPSS - Krait Processor Sub-system
-+
-+Properties
-+
-+- compatible : Should contain "qcom,kpss".
-+
-+- reg: Specifies the base address for the KPSS registers used for
-+       booting up secondary cores.
-+
-+Example:
-+
-+	kpss@2088000 {
-+		compatible = "qcom,kpss";
-+		reg = <0x02088000 0x1000
-+			0x02098000 0x2000>;
-+	};
-diff --git a/arch/arm/boot/dts/msm8960-cdp.dts b/arch/arm/boot/dts/msm8960-cdp.dts
-index db2060c..8c82d5e 100644
---- a/arch/arm/boot/dts/msm8960-cdp.dts
-+++ b/arch/arm/boot/dts/msm8960-cdp.dts
-@@ -7,6 +7,22 @@
- 	compatible = "qcom,msm8960-cdp", "qcom,msm8960";
- 	interrupt-parent = <&intc>;
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "qcom,krait";
-+		device_type = "cpu";
-+		enable-method = "qcom,kpssv1";
-+
-+		cpu@0 {
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			reg = <1>;
-+		};
-+	};
-+
- 	intc: interrupt-controller@2000000 {
- 		compatible = "qcom,msm-qgic2";
- 		interrupt-controller;
-@@ -37,6 +53,12 @@
- 		reg = <0xfd510000 0x4000>;
- 	};
- 
-+	kpss@2088000 {
-+		compatible = "qcom,kpss";
-+		reg = <0x02088000 0x1000
-+			0x02098000 0x2000>;
-+	};
-+
- 	serial@16440000 {
- 		compatible = "qcom,msm-hsuart", "qcom,msm-uart";
- 		reg = <0x16440000 0x1000>,
-diff --git a/arch/arm/mach-msm/platsmp.c b/arch/arm/mach-msm/platsmp.c
-index 17022e0..82eb079 100644
---- a/arch/arm/mach-msm/platsmp.c
-+++ b/arch/arm/mach-msm/platsmp.c
-@@ -74,6 +74,56 @@ static int scorpion_release_secondary(void)
- 	return 0;
- }
- 
-+static int msm8960_release_secondary(unsigned int cpu)
-+{
-+	void __iomem *reg;
-+	struct device_node *dn = NULL;
-+
-+	if (cpu == 0 || cpu >= num_possible_cpus())
-+		return -EINVAL;
-+
-+	dn = of_find_compatible_node(dn, NULL, "qcom,kpss");
-+	if (!dn) {
-+		pr_err("%s : Missing kpss node from device tree\n", __func__);
-+		return -ENXIO;
-+	}
-+
-+	reg = of_iomap(dn, cpu);
-+	if (!reg)
-+		return -ENOMEM;
-+
-+	pr_debug("Starting secondary CPU %d\n", cpu);
-+
-+	/* Turn on CPU Rail */
-+	writel_relaxed(0xA4, reg+0x1014);
-+	mb();
-+	udelay(512);
-+
-+	/* Krait bring-up sequence */
-+	writel_relaxed(0x109, reg+0x04);
-+	writel_relaxed(0x101, reg+0x04);
-+	mb();
-+	ndelay(300);
-+
-+	writel_relaxed(0x121, reg+0x04);
-+	mb();
-+	udelay(2);
-+
-+	writel_relaxed(0x120, reg+0x04);
-+	mb();
-+	udelay(2);
-+
-+	writel_relaxed(0x100, reg+0x04);
-+	mb();
-+	udelay(100);
-+
-+	writel_relaxed(0x180, reg+0x04);
-+	mb();
-+
-+	iounmap(reg);
-+	return 0;
-+}
-+
- static DEFINE_PER_CPU(int, cold_boot_done);
- 
- static void boot_cold_cpu(unsigned int cpu)
-@@ -96,6 +146,11 @@ static void boot_cold_cpu(unsigned int cpu)
- 			scorpion_release_secondary();
- 			per_cpu(cold_boot_done, cpu) = true;
- 		}
-+	} else if (!strcmp(enable_method, "qcom,kpssv1")) {
-+		if (per_cpu(cold_boot_done, cpu) == false) {
-+			msm8960_release_secondary(cpu);
-+			per_cpu(cold_boot_done, cpu) = true;
-+		}
- 	} else {
- 		pr_err("%s: Invalid enable-method property: %s\n",
- 				__func__, enable_method);
-@@ -151,6 +206,8 @@ static void __init msm_smp_init_cpus(void)
- static const int cold_boot_flags[] __initconst = {
- 	0,
- 	SCM_FLAG_COLDBOOT_CPU1,
-+	SCM_FLAG_COLDBOOT_CPU2,
-+	SCM_FLAG_COLDBOOT_CPU3,
- };
- 
- static void __init msm_smp_prepare_cpus(unsigned int max_cpus)
-diff --git a/arch/arm/mach-msm/scm-boot.h b/arch/arm/mach-msm/scm-boot.h
-index 7be32ff..6aabb24 100644
---- a/arch/arm/mach-msm/scm-boot.h
-+++ b/arch/arm/mach-msm/scm-boot.h
-@@ -13,9 +13,11 @@
- #define __MACH_SCM_BOOT_H
- 
- #define SCM_BOOT_ADDR			0x1
--#define SCM_FLAG_COLDBOOT_CPU1		0x1
--#define SCM_FLAG_WARMBOOT_CPU1		0x2
--#define SCM_FLAG_WARMBOOT_CPU0		0x4
-+#define SCM_FLAG_COLDBOOT_CPU1		0x01
-+#define SCM_FLAG_COLDBOOT_CPU2		0x08
-+#define SCM_FLAG_COLDBOOT_CPU3		0x20
-+#define SCM_FLAG_WARMBOOT_CPU0		0x04
-+#define SCM_FLAG_WARMBOOT_CPU1		0x02
- 
- int scm_set_boot_addr(phys_addr_t addr, int flags);
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+On Friday 28 June 2013 09:49 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 10:59 Fri 28 Jun     , Grant Likely wrote:
+>> On Thu, Jun 27, 2013 at 9:54 PM, Rob Herring <robherring2@gmail.com> wrote:
+>>> On 06/21/2013 12:20 PM, Santosh Shilimkar wrote:
+>>>> On Friday 21 June 2013 05:04 AM, Sebastian Andrzej Siewior wrote:
+>>>>> On 06/21/2013 02:52 AM, Santosh Shilimkar wrote:
+>>>>>> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
+>>>>>> index 0a2c68f..62e2e8f 100644
+>>>>>> --- a/arch/microblaze/kernel/prom.c
+>>>>>> +++ b/arch/microblaze/kernel/prom.c
+>>>>>> @@ -136,8 +136,7 @@ void __init early_init_devtree(void *params)
+>>>>>>  }
+>>>>>>
+>>>>>>  #ifdef CONFIG_BLK_DEV_INITRD
+>>>>>> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
+>>>>>> -           unsigned long end)
+>>>>>> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
+>>>>>>  {
+>>>>>>     initrd_start = (unsigned long)__va(start);
+>>>>>>     initrd_end = (unsigned long)__va(end);
+>>>>>
+>>>>> I think it would better to go here for phys_addr_t instead of u64. This
+>>>>> would force you in of_flat_dt_match() to check if the value passed from
+>>>>> DT specifies a memory address outside of 32bit address space and the
+>>>>> kernel can't deal with this because its phys_addr_t is 32bit only due
+>>>>> to a Kconfig switch.
+>>>>>
+>>>>> For x86, the initrd has to remain in the 32bit address space so passing
+>>>>> the initrd in the upper range would violate the ABI. Not sure if this
+>>>>> is true for other archs as well (ARM obviously not).
+>>>>>
+>>>> That pretty much means phys_addr_t. It will work for me as well but
+>>>> in last thread from consistency with memory and reserved node, Rob
+>>>> insisted to keep it as u64. So before I re-spin another version,
+>>>> would like to here what Rob has to say considering the x86 requirement.
+>>>>
+>>>> Rob,
+>>>> Are you ok with phys_addr_t since your concern was about rest
+>>>> of the memory specific bits of the device-tree code use u64 ?
+>>>
+>>> No. I still think it should be u64 for same reasons I said originally.
+>>
+>> +1
+>>
+> +1
+> 
+> fix type
+> 
+Apart from waste of 32bit, what is the other concern you
+have ? I really want to converge on this patch because it
+has been a open ended discussion for quite some time. Does
+that really break any thing on x86 or your concern is more
+from semantics of the physical address.
+
+Thanks for help.
+
+Regards,
+Santosh
