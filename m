@@ -1,48 +1,47 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v9 1/8] drivers: phy: add generic PHY framework
-Date: Fri, 28 Jun 2013 10:45:58 +0530
-Message-ID: <51CD1C0E.5030000@ti.com>
-References: <000d01ce73af$62a95a60$27fc0f20$@samsung.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: [PATCH 0/3] Generic PHY driver for the Exynos SoC DP PHY
+Date: Fri, 28 Jun 2013 14:21:15 +0900
+Message-ID: <001401ce73bf$4f9a67b0$eecf3710$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <000d01ce73af$62a95a60$27fc0f20$@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, 'Rob Landley' <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, 'Benoit Cousson' <benoit.cousson@linaro.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, 'Cesar Eduardo Barros' <cesarb@cesarb.net>, "David S. Miller" <davem@davemloft.net>, 'Rajendra Nayak' <rnayak@ti.com>, Shawn Guo <shawn.guo@linaro.org>, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Balaji T K <balajitk@ti.com>, 'George Cherian'
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-media@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Felipe Balbi <balbi@ti.com>, Tomasz Figa <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 28 June 2013 08:57 AM, Jingoo Han wrote:
-> On Wed, 26 Jun 2013 17:17:29 +0530, Kishon Vijay Abraham Iwrote:
->> The PHY framework provides a set of APIs for the PHY drivers to
->> create/destroy a PHY and APIs for the PHY users to obtain a reference to the
->> PHY with or without using phandle. For dt-boot, the PHY drivers should
->> also register *PHY provider* with the framework.
->>
->> PHY drivers should create the PHY by passing id and ops like init, exit,
->> power_on and power_off. This framework is also pm runtime enabled.
->>
->> The documentation for the generic PHY framework is added in
->> Documentation/phy.txt and the documentation for dt binding can be found at
->> Documentation/devicetree/bindings/phy/phy-bindings.txt
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> Tested-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->
-> Tested-by: Jingoo Han <jg1.han@samsung.com>
->
-> It looks great to me!
->
-> I tested this General PHY framework with Exynos5250 eDP.
-> It works properly.
+This patch series adds a simple driver for the Samsung Exynos SoC
+series DP transmitter PHY, using the generic PHY framework [1].
+Previously the DP PHY used a platform callback or internal DT node
+to control the PHY power enable bit.
+The platform callback and internal DT node can be dropped and this
+driver does not need any calls back to the platform code.
 
-Thanks for testing this :-)
+This series depends on the generic PHY framework [1]. These patches
+refer to Sylwester Nawrocki's patches about Exynos MIPI [2].
 
-> I will share the patch 'Generic PHY driver for the Exynos SoC DP PHY', soon.
-> Thanks.
+[1] https://lkml.org/lkml/2013/6/26/259
+[2] http://www.spinics.net/lists/linux-samsung-soc/msg20034.html
 
-Cool.
+Jingoo Han (3):
+  phy: Add driver for Exynos DP PHY
+  ARM: dts: Add DP PHY node to exynos5250.dtsi
+  video: exynos_dp: Use the generic PHY driver
 
-Thanks
-Kishon
+ .../phy/samsung,exynos5250-dp-video-phy.txt        |    7 ++
+ .../devicetree/bindings/video/exynos_dp.txt        |   17 ---
+ arch/arm/boot/dts/exynos5250.dtsi                  |   13 ++++++++-----
+ drivers/phy/Kconfig                                |    8 ++
+ drivers/phy/Makefile                               |    3 +-
+ drivers/phy/phy-exynos-dp-video.c                  |  130 ++++++++++++++++++++
+ drivers/video/exynos/exynos_dp_core.c              |  118 ++------------------
+ drivers/video/exynos/exynos_dp_core.h              |    2 +
+ include/video/exynos_dp.h                          |    6 +-
+ 9 files changed, 170 insertions(+), 134 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/samsung,exynos5250-dp-video-phy.txt
+ create mode 100644 drivers/phy/phy-exynos-dp-video.c
+
+--
+1.7.10.4
