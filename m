@@ -1,187 +1,72 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
-Date: Fri, 28 Jun 2013 15:18:59 +0300
-Message-ID: <20130628121859.GP11297@arwen.pp.htv.fi>
-References: <1372149330-24335-1-git-send-email-coelho@ti.com>
- <20130628093848.GA2139@e106331-lin.cambridge.arm.com>
- <1372413215.21065.41.camel@cumari.coelho.fi>
- <20130628102145.GB2139@e106331-lin.cambridge.arm.com>
- <1372415514.21065.50.camel@cumari.coelho.fi>
- <1372418531.21065.53.camel@cumari.coelho.fi>
- <20130628114129.GO11297@arwen.pp.htv.fi>
- <1372421632.21065.60.camel@cumari.coelho.fi>
-Reply-To: <balbi@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC] early init and DT platform devices allocation/registration
+Date: Fri, 28 Jun 2013 13:27:15 +0100
+Message-ID: <CACxGe6vkM+awN94kU2GYfbXPdR=MgYwr=PbqmtD+=i5vmuVSnA@mail.gmail.com>
+References: <CACxGe6t9ifg9VRfXKypuhie3pXVPneZqcBy+J1bFpUaUx32P7g@mail.gmail.com>
+ <20130626.090030.1519009485651154440.hdoyu@nvidia.com> <CACxGe6te2RzFb6nkSZQFrzVX4fkQo4pyzLJ1D7Lf=440mE+jyg@mail.gmail.com>
+ <20130628.114915.1341075505557760886.hdoyu@nvidia.com> <20130628103826.GA17680@mithrandir>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="e2bLSPRkEYxxSNev"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1372421632.21065.60.camel@cumari.coelho.fi>
-Sender: linux-doc-owner@vger.kernel.org
-To: Luciano Coelho <coelho@ti.com>
-Cc: balbi@ti.com, mturquette@linaro.org, Mark Rutland <mark.rutland@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-arm@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130628103826.GA17680@mithrandir>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Pawel.Moll-5wv7dgnIgG8@public.gmane.org" <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---e2bLSPRkEYxxSNev
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jun 28, 2013 at 11:38 AM, Thierry Reding
+<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Jun 28, 2013 at 10:49:15AM +0200, Hiroshi Doyu wrote:
+>> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote @ Wed, 26 Jun 2013 12:03:20 +0200:
+>>
+>> > On Wed, Jun 26, 2013 at 7:00 AM, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> > > Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote @ Tue, 25 Jun 2013 19:52:33 +0200:
+>> > >
+>> > >> > Here's my workaround. I need to call of_detach_node() with OF_DYNAMIC
+>> > >> > to avoid duplicated device registration.
+>> > >>
+>> > >> Gah! my eyes!
+>> > >>
+>> > >> Don't do that. It is incredibly problematic. Look at inhibiting
+>> > >> duplicate device creation instead.
+>> > >
+>> > > I may not follow this thread correctly, but could anyone point out the
+>> > > above "inhibiting duplicate device creation" if there's already such
+>> > > solution?
+>> >
+>> > No, the solution doesn't exist yet, but it wouldn't be hard to
+>> > implement. What you need to do is to add a struct device pointer to
+>> > struct device_node, and set the pointer to the struct device when
+>> > of_platform_device_create creates a device. (it would also need to be
+>> > set for early_platform_device creation, but that's not something that
+>> > should affect you). You would also add a check to
+>> > of_platform_device_create to check if the device pointer is already
+>> > set. If it is, then skip creation of the device.
+>>
+>> Implemented as Grant suggested. At least this works for our case,
+>> where IOMMU needs to be instanciated earlier than other device[1].
+>> early_platform_device case still need to be covered.
+>
+> I think we arrived at a different conclusion in another branch of this
+> thread. With the patch below every driver needs to explicitly allocate
+> the platform device and set the struct device_node's .dev field, which
+> has other side-effects such as the device hierarchy getting messed up.
+>
+> A better alternative would be to have of_platform_populate() run early
+> such that the .dev field in the struct device_node can be set by core
+> code, which would not require every driver to be changed.
+>
+> I'm not sure exactly what needs to be done to make this work, however.
+> Grant, can you provide some guidance here as to how this may be fixed?
+> Where would we have to call of_platform_populate() from and what makes
+> this break with the current implementation?
 
-On Fri, Jun 28, 2013 at 03:13:52PM +0300, Luciano Coelho wrote:
-> On Fri, 2013-06-28 at 14:41 +0300, Felipe Balbi wrote:
-> > On Fri, Jun 28, 2013 at 02:22:11PM +0300, Luciano Coelho wrote:
-> > > On Fri, 2013-06-28 at 13:31 +0300, Luciano Coelho wrote:
-> > > > (fixed Mike's address)
-> > > >=20
-> > > > On Fri, 2013-06-28 at 11:21 +0100, Mark Rutland wrote:
-> > > > > On Fri, Jun 28, 2013 at 10:53:35AM +0100, Luciano Coelho wrote:
-> > > > > > On Fri, 2013-06-28 at 10:38 +0100, Mark Rutland wrote:
-> > > > > > > On Tue, Jun 25, 2013 at 09:35:30AM +0100, Luciano Coelho wrot=
-e:
-> > > > > > > > +Optional properties:
-> > > > > > > > +--------------------
-> > > > > > > > +
-> > > > > > > > +- refclock: the internal WLAN reference clock frequency (r=
-equired for
-> > > > > > > > +  WiLink6 and WiLink7; not used for WiLink8).  Must be one=
- of the
-> > > > > > > > +  following:
-> > > > > > > > +	0 =3D 19.2 MHz
-> > > > > > > > +	1 =3D 26.0 MHz
-> > > > > > > > +	2 =3D 38.4 MHz
-> > > > > > > > +	3 =3D 52.0 MHz
-> > > > > > > > +	4 =3D 38.4 MHz, XTAL
-> > > > > > > > +	5 =3D 26.0 MHz, XTAL
-> > > > > > > > +
-> > > > > > > > +- tcxoclock: the internal WLAN TCXO clock frequency (requi=
-red for
-> > > > > > > > +  WiLink7 not used for WiLink6 and WiLink8).  Must be one =
-of the
-> > > > > > > > +  following:
-> > > > > > > > +	0 =3D 19.200 MHz
-> > > > > > > > +	1 =3D 26.000 MHz
-> > > > > > > > +	2 =3D 38.400 MHz
-> > > > > > > > +	3 =3D 52.000 MHz
-> > > > > > > > +	4 =3D 16.368 MHz
-> > > > > > > > +	5 =3D 32.736 MHz
-> > > > > > > > +	6 =3D 16.800 MHz
-> > > > > > > > +	7 =3D 33.600 MHz
-> > > > > > >=20
-> > > > > > > This looks suspiciously like what we have the common clock bi=
-ndings for:
-> > > > > > >=20
-> > > > > > > refclk {
-> > > > > > > 	compatible =3D "fixed-clock";
-> > > > > > > 	#clock-cells =3D <0>;
-> > > > > > > 	clock-frequency =3D <19200000>;
-> > > > > > > }
-> > > > > > >=20
-> > > > > > > wilink {
-> > > > > > > 	compatible =3D "ti,wilink7";
-> > > > > > > 	interrupt-parent =3D <&some_interrupt_controller>;
-> > > > > > > 	interrupts =3D <0 1 1>;
-> > > > > > > 	clocks =3D <&refclk>, <&refclk>;
-> > > > > > > 	clock-names =3D "refclk", "txoclk";
-> > > > > > > };
-> > > > > > >=20
-> > > > > > > Could you not use them?
-> > > > > >=20
-> > > > > > Hmmm... this actually does look good.  But these are internal c=
-locks in
-> > > > > > the modules, they cannot be accessed from outside.  Does it mak=
-e sense
-> > > > > > to register them with the clock framework?
-> > > > >=20
-> > > > > Given we already have a common way of describing clocks, I think =
-it
-> > > > > makes sense to use it -- people already understand the common bin=
-dings,
-> > > > > and it's less code to add add to the kernel. I don't think the fa=
-ct
-> > > > > these clocks are internal should prevent us from describing them =
-as we
-> > > > > would an external clock.
-> > > >=20
-> > > > Yes, I agree with you.  Thanks for the suggestion! I think it will =
-look
-> > > > much better.  And now that I dug a bit more into the code, I can see
-> > > > that there are only structs being populated, so there shouldn't be =
-any
-> > > > other side-effects.
-> > >=20
-> > > Hmmm, one thing that escaped me.  Besides the frequency, I also need a
-> > > boolean that tells if the clock is XTAL or not.  I can't figure out h=
-ow
-> > > to pass this if I use the generic clock framework.  Any suggestions?
-> >=20
-> > Could you use clock-output-names for that ?
-> >=20
-> > XTAL clock:
-> >=20
-> > refclk {
-> > 	compatible =3D "fixed-clock";
-> > 	#clock cells =3D <0>;
-> > 	clock-frequency =3D <19200000>;
-> > 	clock-output-names =3D "xtal";
-> > };
-> >=20
-> > non-XTAL clock:
-> >=20
-> > refclk {
-> > 	compatible =3D "fixed-clock";
-> > 	#clock cells =3D <0>;
-> > 	clock-frequency =3D <19200000>;
-> > 	clock-output-names =3D "osc"; /* any better name ? */
-> > };
->=20
-> This starts looking a bit hacky.  Using the output name as a flag is not
-> very pretty.
->=20
-> I think it would be better to have a separate flag for it in the wlan
-> node.  Like an optional "refclock-xtal" boolean or something.  The
-> downside of this is that we would be adding information about the clock
-> details in the wilink node. :(
->=20
-> OTOH, we could add a flag to the generic clock binding? A new optional
-> boolean that tells whether the clock is XTAL or not:
->=20
-> refclk {
-> 	compatible =3D "fixed-clock";
-> 	#clock cells =3D <0>;
-> 	clock-frequency =3D <19200000>;
-> 	clock-xtal;
-> };
->=20
-> Do you think that would make sense?
+Try it and see!  :-) I cannot give a definite answer, but I suspect
+that it will fall down when registering the devices on to the
+platform_bus because it isn't initialized yet. If called early, the
+code would need to hold the platform_device in some kind of deferred
+list until the platform bus was initialize, and then have a cleanup
+function at initcall time to finish the registration of all early
+devices.
 
-sure, that looks alright to me. Surely there are other devices out there
-who want to know if the clock comes from a crystal or not ?!?
-
-cheers
-
---=20
-balbi
-
---e2bLSPRkEYxxSNev
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRzX8zAAoJEIaOsuA1yqREsWsP/iiJyFZ9PJ3JykDgPSb6Ih5D
-RQ2zf/mXGunKREm78Sym+8iz/1vsdwcxXt7YM7V+JrMU0DNrMc9m5Z93w/iKbe3y
-gz57n+C7hPeL7Ji+fu1f3ugLEPaJcYBraHtRIyY6SA7EsKGoc9+4i2jYa8VvOKs1
-nBeJXVcrWwnqsyWg7MSQ+zHUZdt9B/FnXqcEo1cPlD3ilG1hMxnDPomhqnedv2gZ
-Tk/w3xoKhMKFnmpTlsVg3hYTS/xMAcAr1hBO2nCucLV9EjpsmcmxC6JS7I1SdxpU
-vxyviRd3F/a1oMzs/jpwess2B73hqrfsEDseMRiYGolNxHD4BBV70ARwuoJO8/kk
-3EryxTORyX1XAI1tuNsov9FkWNRCwobP1j6sosr7t/RypZ5rQcUIIUhwoMLvUWNo
-giYdDU939aUngYMxiI6Yzaodj9IPwHq7xHV76c7yYZmcFvTpT4SPGALv/FHFg+h2
-I/W03AXqETT0S0RWxf50cvDbOFu0sO6gvdJWPZ6BNpTQaBShMUBYut6gUhbSCdIF
-jUhPIhEsb0s1TFxQz9ce+Dj0wve4f6+6rhQXRfjztBhE90sgvf0fIvjhSoOWCiak
-FapSNpbSnKg1u89TNJMedPtZI5FEVyHQ8V/ZVG6HAtbLRuUwzMy5R+NrITnwFgxP
-fkGiI0Nr0KJkWwNu1tF8
-=ZHWz
------END PGP SIGNATURE-----
-
---e2bLSPRkEYxxSNev--
+g.
