@@ -1,42 +1,64 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/3] phy: Add driver for Exynos DP PHY
-Date: Fri, 28 Jun 2013 15:01:27 +0530
-Message-ID: <51CD57EF.5010808@ti.com>
-References: <001501ce73bf$87c49c00$974dd400$@samsung.com>
+From: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/4] rtc: omap: handle rtc wakeup support in driver
+Date: Fri, 28 Jun 2013 15:05:05 +0530
+Message-ID: <1372412109-986-1-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <001501ce73bf$87c49c00$974dd400$@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+rtc-omap driver modules is used both by OMAP1/2, Davinci SoC platforms.
 
-On Friday 28 June 2013 10:52 AM, Jingoo Han wrote:
-> Add a PHY provider driver for the Samsung Exynos SoC DP PHY.
->
-> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-> ---
->   .../phy/samsung,exynos5250-dp-video-phy.txt        |    7 ++
->   drivers/phy/Kconfig                                |    8 ++
->   drivers/phy/Makefile                               |    3 +-
->   drivers/phy/phy-exynos-dp-video.c                  |  130 ++++++++++++++++++++
->   4 files changed, 147 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/phy/samsung,exynos5250-dp-video-phy.txt
->   create mode 100644 drivers/phy/phy-exynos-dp-video.c
->
-> diff --git a/Documentation/devicetree/bindings/phy/samsung,exynos5250-dp-video-phy.txt
-> b/Documentation/devicetree/bindings/phy/samsung,exynos5250-dp-video-phy.txt
-> new file mode 100644
-> index 0000000..8b6fa79
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/samsung,exynos5250-dp-video-phy.txt
+However, rtc wake support on OMAP1 is broken. Hence the
+device_init_wakeup() was removed from rtc-omap driver and moved to
+platform board files that supported it (DA850/OMAP-L138). [1]
 
-How about creating a single Documentation file for all samsung video phys? 
-Sylwester?
+However, recently [2] it was suggested that driver should always do a
+device_init_wakeup(dev, true). Platforms that don't want/need
+wakeup support can disable it from userspace via:
 
-Thanks
-Kishon
+    echo disabled > /sys/devices/.../power/wakeup
+
+Also, with the new DT boot-up, board file doesn't exist and hence there
+is no way to have device wakeup support rtc.
+
+The fix for above issues, is to hard code device_init_wakeup() inside
+driver and let platforms that don't need this, handle it through the
+sysfs power entry.
+
+
+Also, update Davinci & AM335x files to above changes.
+
+[1]
+https://patchwork.kernel.org/patch/136731/
+
+[2]
+http://www.mail-archive.com/davinci-linux-open-source@linux.
+davincidsp.com/msg26077.html
+
+Hebbar Gururaja (4):
+  rtc: omap: restore back (hard-code) wakeup support
+  davinci: da8xx/omap-l1: Remove hard coding of rtc device wakeup
+  rtc: omap: add rtc wakeup support to alarm events
+  ARM: dts: AM33XX: update rtc node compatibility
+
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |    6 +-
+ arch/arm/boot/dts/am33xx.dtsi                      |    2 +-
+ arch/arm/mach-davinci/devices-da8xx.c              |    9 +--
+ drivers/rtc/rtc-omap.c                             |   58 +++++++++++++++++---
+ 4 files changed, 58 insertions(+), 17 deletions(-)
+
+-- 
+1.7.9.5
