@@ -1,150 +1,85 @@
-From: Luciano Coelho <coelho-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
-Date: Fri, 28 Jun 2013 16:21:10 +0300
-Message-ID: <1372425670.21065.61.camel@cumari.coelho.fi>
-References: <1372149330-24335-1-git-send-email-coelho@ti.com>
-	 <20130628093848.GA2139@e106331-lin.cambridge.arm.com>
-	 <1372413215.21065.41.camel@cumari.coelho.fi>
-	 <20130628102145.GB2139@e106331-lin.cambridge.arm.com>
-	 <1372415514.21065.50.camel@cumari.coelho.fi>
-	 <1372418531.21065.53.camel@cumari.coelho.fi>
-	 <20130628114129.GO11297@arwen.pp.htv.fi>
-	 <1372421632.21065.60.camel@cumari.coelho.fi>
-	 <20130628121859.GP11297@arwen.pp.htv.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130628121859.GP11297-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: balbi-l0cyMroinI0@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v4 0/5] Generic PHY driver for the Exynos SoC MIPI CSI-2/DSI
+ DPHYs
+Date: Fri, 28 Jun 2013 15:43:06 +0200
+Message-ID: <1372426991-2482-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, balbi@ti.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, tomi.valkeinen@ti.com, plagnioj@jcrosoft.com, jason77.wang@gmail.com, linux-fbdev@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-06-28 at 15:18 +0300, Felipe Balbi wrote:
-> On Fri, Jun 28, 2013 at 03:13:52PM +0300, Luciano Coelho wrote:
-> > On Fri, 2013-06-28 at 14:41 +0300, Felipe Balbi wrote:
-> > > On Fri, Jun 28, 2013 at 02:22:11PM +0300, Luciano Coelho wrote:
-> > > > On Fri, 2013-06-28 at 13:31 +0300, Luciano Coelho wrote:
-> > > > > (fixed Mike's address)
-> > > > > 
-> > > > > On Fri, 2013-06-28 at 11:21 +0100, Mark Rutland wrote:
-> > > > > > On Fri, Jun 28, 2013 at 10:53:35AM +0100, Luciano Coelho wrote:
-> > > > > > > On Fri, 2013-06-28 at 10:38 +0100, Mark Rutland wrote:
-> > > > > > > > On Tue, Jun 25, 2013 at 09:35:30AM +0100, Luciano Coelho wrote:
-> > > > > > > > > +Optional properties:
-> > > > > > > > > +--------------------
-> > > > > > > > > +
-> > > > > > > > > +- refclock: the internal WLAN reference clock frequency (required for
-> > > > > > > > > +  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
-> > > > > > > > > +  following:
-> > > > > > > > > +	0 = 19.2 MHz
-> > > > > > > > > +	1 = 26.0 MHz
-> > > > > > > > > +	2 = 38.4 MHz
-> > > > > > > > > +	3 = 52.0 MHz
-> > > > > > > > > +	4 = 38.4 MHz, XTAL
-> > > > > > > > > +	5 = 26.0 MHz, XTAL
-> > > > > > > > > +
-> > > > > > > > > +- tcxoclock: the internal WLAN TCXO clock frequency (required for
-> > > > > > > > > +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
-> > > > > > > > > +  following:
-> > > > > > > > > +	0 = 19.200 MHz
-> > > > > > > > > +	1 = 26.000 MHz
-> > > > > > > > > +	2 = 38.400 MHz
-> > > > > > > > > +	3 = 52.000 MHz
-> > > > > > > > > +	4 = 16.368 MHz
-> > > > > > > > > +	5 = 32.736 MHz
-> > > > > > > > > +	6 = 16.800 MHz
-> > > > > > > > > +	7 = 33.600 MHz
-> > > > > > > > 
-> > > > > > > > This looks suspiciously like what we have the common clock bindings for:
-> > > > > > > > 
-> > > > > > > > refclk {
-> > > > > > > > 	compatible = "fixed-clock";
-> > > > > > > > 	#clock-cells = <0>;
-> > > > > > > > 	clock-frequency = <19200000>;
-> > > > > > > > }
-> > > > > > > > 
-> > > > > > > > wilink {
-> > > > > > > > 	compatible = "ti,wilink7";
-> > > > > > > > 	interrupt-parent = <&some_interrupt_controller>;
-> > > > > > > > 	interrupts = <0 1 1>;
-> > > > > > > > 	clocks = <&refclk>, <&refclk>;
-> > > > > > > > 	clock-names = "refclk", "txoclk";
-> > > > > > > > };
-> > > > > > > > 
-> > > > > > > > Could you not use them?
-> > > > > > > 
-> > > > > > > Hmmm... this actually does look good.  But these are internal clocks in
-> > > > > > > the modules, they cannot be accessed from outside.  Does it make sense
-> > > > > > > to register them with the clock framework?
-> > > > > > 
-> > > > > > Given we already have a common way of describing clocks, I think it
-> > > > > > makes sense to use it -- people already understand the common bindings,
-> > > > > > and it's less code to add add to the kernel. I don't think the fact
-> > > > > > these clocks are internal should prevent us from describing them as we
-> > > > > > would an external clock.
-> > > > > 
-> > > > > Yes, I agree with you.  Thanks for the suggestion! I think it will look
-> > > > > much better.  And now that I dug a bit more into the code, I can see
-> > > > > that there are only structs being populated, so there shouldn't be any
-> > > > > other side-effects.
-> > > > 
-> > > > Hmmm, one thing that escaped me.  Besides the frequency, I also need a
-> > > > boolean that tells if the clock is XTAL or not.  I can't figure out how
-> > > > to pass this if I use the generic clock framework.  Any suggestions?
-> > > 
-> > > Could you use clock-output-names for that ?
-> > > 
-> > > XTAL clock:
-> > > 
-> > > refclk {
-> > > 	compatible = "fixed-clock";
-> > > 	#clock cells = <0>;
-> > > 	clock-frequency = <19200000>;
-> > > 	clock-output-names = "xtal";
-> > > };
-> > > 
-> > > non-XTAL clock:
-> > > 
-> > > refclk {
-> > > 	compatible = "fixed-clock";
-> > > 	#clock cells = <0>;
-> > > 	clock-frequency = <19200000>;
-> > > 	clock-output-names = "osc"; /* any better name ? */
-> > > };
-> > 
-> > This starts looking a bit hacky.  Using the output name as a flag is not
-> > very pretty.
-> > 
-> > I think it would be better to have a separate flag for it in the wlan
-> > node.  Like an optional "refclock-xtal" boolean or something.  The
-> > downside of this is that we would be adding information about the clock
-> > details in the wilink node. :(
-> > 
-> > OTOH, we could add a flag to the generic clock binding? A new optional
-> > boolean that tells whether the clock is XTAL or not:
-> > 
-> > refclk {
-> > 	compatible = "fixed-clock";
-> > 	#clock cells = <0>;
-> > 	clock-frequency = <19200000>;
-> > 	clock-xtal;
-> > };
-> > 
-> > Do you think that would make sense?
-> 
-> sure, that looks alright to me. Surely there are other devices out there
-> who want to know if the clock comes from a crystal or not ?!?
+This patch series adds a simple driver for the Samsung S5P/Exynos SoC
+series MIPI CSI-2 receiver (MIPI CSIS) and MIPI DSI transmitter (MIPI
+DSIM) DPHYs, using the generic PHY framework [1]. Previously the MIPI
+CSIS and MIPI DSIM used a platform callback to control the PHY power
+enable and reset bits. The platform callback can now be dropped and
+those drivers don't need any calls back to the platform code, which
+makes migration to the device tree complete for MIPI CSIS.
 
-Mike, what do you think about this idea? If it sounds okay to you, I can
-cook up a patch adding this flag.
+Changes since v3 (only patch 1/5):
+ - replaced spin_(un)lock_irq_{save,restore} with spin_{lock,unlock}.
+ - DT binding file renamed to samsung-phy.txt, so it can be used for
+   other PHYs as well,
+ - removed <linux/delay.h> inclusion,
+ - added missing spin_lock_init().
+
+Changes since v2:
+ - adapted to the generic PHY API v9: use phy_set/get_drvdata(),
+ - fixed of_xlate callback to return ERR_PTR() instead of NULL,
+ - namespace cleanup, put "GPL v2" as MODULE_LICENSE, removed pr_debug,
+ - removed phy id check in __set_phy_state().
+
+Patches 2...3/5 are unchanged, description of patch 5/5 has been
+updated.
+
+Changes since v1:
+ - enabled build as module and with CONFIG_OF disabled,
+ - added phy_id enum,
+ - of_address_to_resource() replaced with platform_get_resource(),
+ - adapted to changes in the PHY API v7, v8 - added phy labels,
+ - added MODULE_DEVICE_TABLE() entry,
+ - the driver file renamed to phy-exynos-mipi-video.c,
+ - changed DT compatible string to "samsung,s5pv210-mipi-video-phy",
+ - corrected the compatible property's description.
+ - patch 3/5 "video: exynos_dsi: Use generic PHY driver" replaced
+   with a patch modifying the MIPI DSIM driver which is currently
+   in mainline.
+
+This series depends on the generic PHY framework [1]. It can be browsed at:
+ http://git.linuxtv.org/snawrocki/samsung.git/exynos-mipi-phy
+This branch is based on the 'for-next' branch from:
+ git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+and the patch series:
+ http://www.spinics.net/lists/arm-kernel/msg254667.html
+
+[1] https://lkml.org/lkml/2013/6/26/259
+
+Sylwester Nawrocki (5):
+  ARM: dts: Add MIPI PHY node to exynos4.dtsi
+  phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+  video: exynos_mipi_dsim: Use the generic PHY driver
+  [media] exynos4-is: Use the generic MIPI CSIS PHY driver
+  ARM: Samsung: Remove the MIPI PHY setup code
+
+ .../devicetree/bindings/phy/samsung-phy.txt        |   14 ++
+ arch/arm/boot/dts/exynos4.dtsi                     |   10 ++
+ arch/arm/mach-exynos/include/mach/regs-pmu.h       |    5 -
+ arch/arm/mach-s5pv210/include/mach/regs-clock.h    |    4 -
+ arch/arm/plat-samsung/Kconfig                      |    5 -
+ arch/arm/plat-samsung/Makefile                     |    1 -
+ arch/arm/plat-samsung/setup-mipiphy.c              |   60 -------
+ drivers/media/platform/exynos4-is/mipi-csis.c      |   16 +-
+ drivers/phy/Kconfig                                |    9 ++
+ drivers/phy/Makefile                               |    3 +-
+ drivers/phy/phy-exynos-mipi-video.c                |  169 ++++++++++++++++++++
+ drivers/video/exynos/exynos_mipi_dsi.c             |   19 +--
+ include/linux/platform_data/mipi-csis.h            |   11 +-
+ include/video/exynos_mipi_dsim.h                   |    6 +-
+ 14 files changed, 233 insertions(+), 99 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/samsung-phy.txt
+ delete mode 100644 arch/arm/plat-samsung/setup-mipiphy.c
+ create mode 100644 drivers/phy/phy-exynos-mipi-video.c
 
 --
-Cheers,
-Luca.
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
