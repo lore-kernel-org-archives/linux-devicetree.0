@@ -1,148 +1,150 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH 2/2] Input: Adding DT support for keyreset tuneables
-Date: Fri, 28 Jun 2013 07:19:06 -0600
-Message-ID: <51CD8D4A.10207@linaro.org>
-References: <1372349605-4500-1-git-send-email-mathieu.poirier@linaro.org> <1372349605-4500-2-git-send-email-mathieu.poirier@linaro.org> <20130627162820.GA12070@core.coreip.homeip.net> <51CC7CD5.5090508@linaro.org> <20130627182500.GB12961@core.coreip.homeip.net> <51CC8786.1070200@linaro.org> <20130628060945.GA17523@core.coreip.homeip.net>
+From: Luciano Coelho <coelho-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
+Date: Fri, 28 Jun 2013 16:21:10 +0300
+Message-ID: <1372425670.21065.61.camel@cumari.coelho.fi>
+References: <1372149330-24335-1-git-send-email-coelho@ti.com>
+	 <20130628093848.GA2139@e106331-lin.cambridge.arm.com>
+	 <1372413215.21065.41.camel@cumari.coelho.fi>
+	 <20130628102145.GB2139@e106331-lin.cambridge.arm.com>
+	 <1372415514.21065.50.camel@cumari.coelho.fi>
+	 <1372418531.21065.53.camel@cumari.coelho.fi>
+	 <20130628114129.GO11297@arwen.pp.htv.fi>
+	 <1372421632.21065.60.camel@cumari.coelho.fi>
+	 <20130628121859.GP11297@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20130628060945.GA17523@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: grant.likely@linaro.org, devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, kernel-team@android.com, linux-input@vger.kernel.org
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130628121859.GP11297-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13-06-28 12:09 AM, Dmitry Torokhov wrote:
-> On Thu, Jun 27, 2013 at 12:42:14PM -0600, Mathieu Poirier wrote:
->> On 13-06-27 12:25 PM, Dmitry Torokhov wrote:
->>> On Thu, Jun 27, 2013 at 11:56:37AM -0600, Mathieu Poirier wrote:
->>>> On 13-06-27 10:28 AM, Dmitry Torokhov wrote:
->>>>> Hi Mathieu,
->>>>>
->>>>> On Thu, Jun 27, 2013 at 10:13:25AM -0600, mathieu.poirier@linaro.org wrote:
->>>>>> From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
->>>>>>
->>>>>> This patch adds the possibility to get the keyreset and timeout
->>>>>> values from the device tree.
->>>>>>
->>>>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->>>>>> ---
->>>>>>  drivers/tty/sysrq.c |   54 +++++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>  1 file changed, 54 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
->>>>>> index b51c154..91d081c 100644
->>>>>> --- a/drivers/tty/sysrq.c
->>>>>> +++ b/drivers/tty/sysrq.c
->>>>>> @@ -44,6 +44,7 @@
->>>>>>  #include <linux/uaccess.h>
->>>>>>  #include <linux/moduleparam.h>
->>>>>>  #include <linux/jiffies.h>
->>>>>> +#include <linux/of.h>
->>>>>>  
->>>>>>  #include <asm/ptrace.h>
->>>>>>  #include <asm/irq_regs.h>
->>>>>> @@ -671,6 +672,50 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
->>>>>>  	}
->>>>>>  }
->>>>>>  
->>>>>> +static void sysrq_of_get_keyreset_config(void)
->>>>>> +{
->>>>>> +	unsigned short key;
->>>>>> +	struct device_node *np;
->>>>>> +	const struct property *prop;
->>>>>> +	const __be32 *val;
->>>>>> +	int count, i;
->>>>>> +
->>>>>> +	np = of_find_node_by_path("/sysrq");
->>>>>> +	if (!np) {
->>>>>> +		pr_info("No sysrq node found");
->>>>>
->>>>> I do not think this should be an info as majority would not have it
->>>>> defined I think.
->>>>
->>>> I fail to understand your point - could you please be more specific ?
->>>
->>> pr_info() will clutter everyone's dmesg because I expect majority of
->>> installs will not have this enabled. Please change to pr_debug or just
->>> drop it.
->>
->> Ah! Yes certainly.
->>
->>>
->>>>
->>>>>
->>>>>> +		goto out;
->>>>>> +	}
->>>>>> +
->>>>>> +	prop = of_find_property(np, "linux,input-keyset", NULL);
->>>>>
->>>>> Maybe "linux,input-key*re*set"?
->>>>
->>>> I do not agree.  We want the binding to be generic and not tied
->>>> specifically to the keyreset functionality.  As such 'input-keyset' or
->>>> 'input-keychord' are more appropriate.
->>>
->>> The binding is defined specifically for sysrq and specifically to
->>> perform reset action.
->>
->> Yes for now but as the examples in the binding show, it is easy to
->> envision how other drivers could use it.
+On Fri, 2013-06-28 at 15:18 +0300, Felipe Balbi wrote:
+> On Fri, Jun 28, 2013 at 03:13:52PM +0300, Luciano Coelho wrote:
+> > On Fri, 2013-06-28 at 14:41 +0300, Felipe Balbi wrote:
+> > > On Fri, Jun 28, 2013 at 02:22:11PM +0300, Luciano Coelho wrote:
+> > > > On Fri, 2013-06-28 at 13:31 +0300, Luciano Coelho wrote:
+> > > > > (fixed Mike's address)
+> > > > > 
+> > > > > On Fri, 2013-06-28 at 11:21 +0100, Mark Rutland wrote:
+> > > > > > On Fri, Jun 28, 2013 at 10:53:35AM +0100, Luciano Coelho wrote:
+> > > > > > > On Fri, 2013-06-28 at 10:38 +0100, Mark Rutland wrote:
+> > > > > > > > On Tue, Jun 25, 2013 at 09:35:30AM +0100, Luciano Coelho wrote:
+> > > > > > > > > +Optional properties:
+> > > > > > > > > +--------------------
+> > > > > > > > > +
+> > > > > > > > > +- refclock: the internal WLAN reference clock frequency (required for
+> > > > > > > > > +  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
+> > > > > > > > > +  following:
+> > > > > > > > > +	0 = 19.2 MHz
+> > > > > > > > > +	1 = 26.0 MHz
+> > > > > > > > > +	2 = 38.4 MHz
+> > > > > > > > > +	3 = 52.0 MHz
+> > > > > > > > > +	4 = 38.4 MHz, XTAL
+> > > > > > > > > +	5 = 26.0 MHz, XTAL
+> > > > > > > > > +
+> > > > > > > > > +- tcxoclock: the internal WLAN TCXO clock frequency (required for
+> > > > > > > > > +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
+> > > > > > > > > +  following:
+> > > > > > > > > +	0 = 19.200 MHz
+> > > > > > > > > +	1 = 26.000 MHz
+> > > > > > > > > +	2 = 38.400 MHz
+> > > > > > > > > +	3 = 52.000 MHz
+> > > > > > > > > +	4 = 16.368 MHz
+> > > > > > > > > +	5 = 32.736 MHz
+> > > > > > > > > +	6 = 16.800 MHz
+> > > > > > > > > +	7 = 33.600 MHz
+> > > > > > > > 
+> > > > > > > > This looks suspiciously like what we have the common clock bindings for:
+> > > > > > > > 
+> > > > > > > > refclk {
+> > > > > > > > 	compatible = "fixed-clock";
+> > > > > > > > 	#clock-cells = <0>;
+> > > > > > > > 	clock-frequency = <19200000>;
+> > > > > > > > }
+> > > > > > > > 
+> > > > > > > > wilink {
+> > > > > > > > 	compatible = "ti,wilink7";
+> > > > > > > > 	interrupt-parent = <&some_interrupt_controller>;
+> > > > > > > > 	interrupts = <0 1 1>;
+> > > > > > > > 	clocks = <&refclk>, <&refclk>;
+> > > > > > > > 	clock-names = "refclk", "txoclk";
+> > > > > > > > };
+> > > > > > > > 
+> > > > > > > > Could you not use them?
+> > > > > > > 
+> > > > > > > Hmmm... this actually does look good.  But these are internal clocks in
+> > > > > > > the modules, they cannot be accessed from outside.  Does it make sense
+> > > > > > > to register them with the clock framework?
+> > > > > > 
+> > > > > > Given we already have a common way of describing clocks, I think it
+> > > > > > makes sense to use it -- people already understand the common bindings,
+> > > > > > and it's less code to add add to the kernel. I don't think the fact
+> > > > > > these clocks are internal should prevent us from describing them as we
+> > > > > > would an external clock.
+> > > > > 
+> > > > > Yes, I agree with you.  Thanks for the suggestion! I think it will look
+> > > > > much better.  And now that I dug a bit more into the code, I can see
+> > > > > that there are only structs being populated, so there shouldn't be any
+> > > > > other side-effects.
+> > > > 
+> > > > Hmmm, one thing that escaped me.  Besides the frequency, I also need a
+> > > > boolean that tells if the clock is XTAL or not.  I can't figure out how
+> > > > to pass this if I use the generic clock framework.  Any suggestions?
+> > > 
+> > > Could you use clock-output-names for that ?
+> > > 
+> > > XTAL clock:
+> > > 
+> > > refclk {
+> > > 	compatible = "fixed-clock";
+> > > 	#clock cells = <0>;
+> > > 	clock-frequency = <19200000>;
+> > > 	clock-output-names = "xtal";
+> > > };
+> > > 
+> > > non-XTAL clock:
+> > > 
+> > > refclk {
+> > > 	compatible = "fixed-clock";
+> > > 	#clock cells = <0>;
+> > > 	clock-frequency = <19200000>;
+> > > 	clock-output-names = "osc"; /* any better name ? */
+> > > };
+> > 
+> > This starts looking a bit hacky.  Using the output name as a flag is not
+> > very pretty.
+> > 
+> > I think it would be better to have a separate flag for it in the wlan
+> > node.  Like an optional "refclock-xtal" boolean or something.  The
+> > downside of this is that we would be adding information about the clock
+> > details in the wilink node. :(
+> > 
+> > OTOH, we could add a flag to the generic clock binding? A new optional
+> > boolean that tells whether the clock is XTAL or not:
+> > 
+> > refclk {
+> > 	compatible = "fixed-clock";
+> > 	#clock cells = <0>;
+> > 	clock-frequency = <19200000>;
+> > 	clock-xtal;
+> > };
+> > 
+> > Do you think that would make sense?
 > 
-> I think you over-complicate things here. Unlike matrix-keypad binding,
-> where you have a common parsing code, here we have an individual driver.
-> I really do not see anyone else using such sequences or chords as such
-> processing should be done in userspace. Sysrq is quite an exception.
+> sure, that looks alright to me. Surely there are other devices out there
+> who want to know if the clock comes from a crystal or not ?!?
 
-To be honest I don't have a very strong opinion on the binding.  I made
-it as generic as possible on the guidance of the DT people.  Let's see
-what they think of it.
+Mike, what do you think about this idea? If it sounds okay to you, I can
+cook up a patch adding this flag.
 
-> 
->>
->>>
->>>>
->>>>>
->>>>>> +	if (!prop || !prop->value) {
->>>>>> +		pr_err("Invalid input-keyset");
->>>>>> +		goto out;
->>>>>> +	}
->>>>>> +
->>>>>> +	count = prop->length / sizeof(u32);
->>>>>> +	val = prop->value;
->>>>>> +
->>>>>> +	if (count > SYSRQ_KEY_RESET_MAX)
->>>>>> +		count = SYSRQ_KEY_RESET_MAX;
->>>>>> +
->>>>>> +	/* reset in case a __weak definition was present */
->>>>>> +	sysrq_reset_seq_len = 0;
->>>>>
->>>>> Hmm, my preference for ordering would be software over firmware, so that
->>>>> user could override firmware data, if needed.
->>>>
->>>> The idea is to offer flexibility.  The same kernel can be used on
->>>> multiple device.  As such DT information should be prioritised over a
->>>> __weak symbol, otherwise it defeats the purpose.
->>>
->>> The weak symbol should defined in board data, so it won't get picked up
->>> on multiple boards. But I guess I do not care that much as indeed we can
->>> change the sequence from userspace so we won't be stuck with firmware
->>> choices.
->>
->> Humm... My reply wasn't clear enough.  I was thinking about the same
->> board with different input device, i.e keypad or touchscreen.  In that
->> case the board file would have been the same but not the keyreset
->> sequence, which is exactly what the above ordering allows to do.
-> 
-> That does not quite make sense as the only sequence we are parsing is
-> the one in "sysrq" node, which is global.
+--
+Cheers,
+Luca.
 
-Once again our opinion diverge.  It is entirely possible to use the same
-kernel on different device (stemming from the same board file) with a
-device tree to guide the configuration.
-
-> 
-> Thanks.
-> 
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
