@@ -1,35 +1,51 @@
 From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 1/3] phy: Add driver for Exynos DP PHY
-Date: Fri, 28 Jun 2013 12:02:36 +0200
-Message-ID: <51CD5F3C.4010504@samsung.com>
-References: <001501ce73bf$87c49c00$974dd400$@samsung.com>
- <51CD57EF.5010808@ti.com>
+Subject: Re: [PATCH v3 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Fri, 28 Jun 2013 12:11:31 +0200
+Message-ID: <51CD6153.5050406@samsung.com>
+References: <1372258946-15607-1-git-send-email-s.nawrocki@samsung.com>
+ <1372258946-15607-2-git-send-email-s.nawrocki@samsung.com>
+ <51CD4698.3070409@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <51CD57EF.5010808@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <51CD4698.3070409@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Hui Wang <jason77.wang@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-media@vger.kernel.org, kyungmin.park@samsung.com, balbi@ti.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, dh09.lee@samsung.com, jg1.han@samsung.com, inki.dae@samsung.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 06/28/2013 10:17 AM, Hui Wang wrote:
+> On 06/26/2013 11:02 PM, Sylwester Nawrocki wrote:
+>> Add a PHY provider driver for the Samsung S5P/Exynos SoC MIPI CSI-2
+>> receiver and MIPI DSI transmitter DPHYs.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>> Changes since v2:
+>>   - adapted to the generic PHY API v9: use phy_set/get_drvdata(),
+>>   - fixed of_xlate callback to return ERR_PTR() instead of NULL,
+>>   - namespace cleanup, put "GPL v2" as MODULE_LICENSE, removed pr_debug,
+>>   - removed phy id check in __set_phy_state().
+>> ---
+> [...]
+>> +
+>> +	if (IS_EXYNOS_MIPI_DSIM_PHY_ID(id))
+>> +		reset = EXYNOS_MIPI_PHY_MRESETN;
+>> +	else
+>> +		reset = EXYNOS_MIPI_PHY_SRESETN;
+>> +
+>> +	spin_lock_irqsave(&state->slock, flags);
+>
+> Sorry for one stupid question here, why do you use spin_lock_irqsave() 
+> rather than spin_lock(),
+> I don't see the irq handler will use this spinlock anywhere in this c file.
 
-On 06/28/2013 11:31 AM, Kishon Vijay Abraham I wrote:
->> diff --git a/Documentation/devicetree/bindings/phy/samsung,exynos5250-dp-video-phy.txt
->> b/Documentation/devicetree/bindings/phy/samsung,exynos5250-dp-video-phy.txt
->> new file mode 100644
->> index 0000000..8b6fa79
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/samsung,exynos5250-dp-video-phy.txt
-> 
-> How about creating a single Documentation file for all samsung video phys? 
-> Sylwester?
-
-Yes, makes sense. There are quite a few various PHYs on the Exynos SoC.
-Let me resend my series with the binding description file name changed
-to samsung-phy.txt. I need to add couple fixes to that series anyway.
+Yes, there is no chance the PHY users could call the phy ops from within
+an interrupt context. Especially now when there is a per phy object 
+mutex used in the PHY operation helpers. So I'll replace it with plain 
+spin_lock/unlock. Thank you for the review.
 
 Regards,
 Sylwester
