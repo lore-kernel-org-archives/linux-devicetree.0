@@ -1,77 +1,56 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] of: Specify initrd location using 64-bit
-Date: Fri, 28 Jun 2013 15:49:31 +0200
-Message-ID: <20130628134931.GD21034@game.jcrosoft.org>
-References: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com>
- <51C4171C.9050908@linutronix.de> <51C48B5A.2040404@ti.com>
- <51CCA67C.2010803@gmail.com>
- <CACxGe6vOH0sCFVVXrYqD3dbYdOvithVu7-d1cvy5885i8x_Myw@mail.gmail.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 3/4] hwmon: Add a simple driver to read the MXS SoC temperature
+Date: Fri, 28 Jun 2013 16:18:01 +0200
+Message-ID: <51CD9B19.90407@metafoo.de>
+References: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com> <1372236673-20725-4-git-send-email-alexandre.belloni@free-electrons.com> <20130626143927.GB31998@roeck-us.net> <20130627091732.GP5803@lukather> <20130627142758.GA5812@roeck-us.net> <51CC91E8.50605@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6vOH0sCFVVXrYqD3dbYdOvithVu7-d1cvy5885i8x_Myw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mips <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>Santosh Shilimkar <s>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51CC91E8.50605@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Shawn Guo <shawn.guo@linaro.org>, Jean Delvare <khali@linux-fr.org>, jimwall@q.com, brian@crystalfontz.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10:59 Fri 28 Jun     , Grant Likely wrote:
-> On Thu, Jun 27, 2013 at 9:54 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On 06/21/2013 12:20 PM, Santosh Shilimkar wrote:
-> >> On Friday 21 June 2013 05:04 AM, Sebastian Andrzej Siewior wrote:
-> >>> On 06/21/2013 02:52 AM, Santosh Shilimkar wrote:
-> >>>> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-> >>>> index 0a2c68f..62e2e8f 100644
-> >>>> --- a/arch/microblaze/kernel/prom.c
-> >>>> +++ b/arch/microblaze/kernel/prom.c
-> >>>> @@ -136,8 +136,7 @@ void __init early_init_devtree(void *params)
-> >>>>  }
-> >>>>
-> >>>>  #ifdef CONFIG_BLK_DEV_INITRD
-> >>>> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> >>>> -           unsigned long end)
-> >>>> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
-> >>>>  {
-> >>>>     initrd_start = (unsigned long)__va(start);
-> >>>>     initrd_end = (unsigned long)__va(end);
-> >>>
-> >>> I think it would better to go here for phys_addr_t instead of u64. This
-> >>> would force you in of_flat_dt_match() to check if the value passed from
-> >>> DT specifies a memory address outside of 32bit address space and the
-> >>> kernel can't deal with this because its phys_addr_t is 32bit only due
-> >>> to a Kconfig switch.
-> >>>
-> >>> For x86, the initrd has to remain in the 32bit address space so passing
-> >>> the initrd in the upper range would violate the ABI. Not sure if this
-> >>> is true for other archs as well (ARM obviously not).
-> >>>
-> >> That pretty much means phys_addr_t. It will work for me as well but
-> >> in last thread from consistency with memory and reserved node, Rob
-> >> insisted to keep it as u64. So before I re-spin another version,
-> >> would like to here what Rob has to say considering the x86 requirement.
-> >>
-> >> Rob,
-> >> Are you ok with phys_addr_t since your concern was about rest
-> >> of the memory specific bits of the device-tree code use u64 ?
-> >
-> > No. I still think it should be u64 for same reasons I said originally.
+On 06/27/2013 09:26 PM, Alexandre Belloni wrote:
+> Hi,
 > 
-> +1
+> On 27/06/2013 16:27, Guenter Roeck wrote:
+>> On Thu, Jun 27, 2013 at 11:17:32AM +0200, Maxime Ripard wrote:
+>>> On Wed, Jun 26, 2013 at 07:39:27AM -0700, Guenter Roeck wrote:
+>>>> On Wed, Jun 26, 2013 at 10:51:12AM +0200, Alexandre Belloni wrote:
+>>>>> The low resolution ADC of the mxs is able to read an internal temperature
+>>>>> sensor, expose that using hwmon.
+>>>>>
+>>>>> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+>>>>> ---
+>>>> Wouldn't it make more sense to use iio-hwmon and improve it if necessary ?
+>>> Actually, I wonder if we should not just put the hwmon driver
+>>> capabilities directly into the mxs-lradc driver, just like it's already
+>>> been done in this driver for the touchscreen support.
+>>>
+>>> The probing of this hwmon driver doesn't really belong to the DT, it's
+>>> not really realistic to probe it from the machine definition, and it
+>>> really is the IP that is wired that way.
+>>>
+>> Merging iio-hwmon functionality into an adc driver seems just as bad
+>> (or even worse) as copying it into a new driver.
+>>
+>> If the lradc driver knows that the ADC channels are temperature sensors, it
+>> should register them with the iio subsystem as IIO_TEMP type. Then you should
+>> be able to use iio_hwmon as is.
 > 
-+1
+> They are already registered as IIO_TEMP but only implement read_raw. Also,
+> 
+> iio_hwmon_read_val() is using iio_read_channel_processed() and that will
+> basically only read one of the 2 channels. As I documented, you actually
+> need to read both channel 8 and channel 9 and then compute the value in
+> Kelvins. I'm not sure how you want me to do that in the current framework.
 
-fix type
+What are these two channels actually measuring? Is the value of a single
+channel meaningful on it's own? If not it might make sense to update the IIO
+driver to just have one temperature channel.
 
-Best Regards,
-J.
+- Lars
+
