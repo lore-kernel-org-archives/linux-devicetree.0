@@ -1,69 +1,91 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v1 08/12] input: keypad-matrix: tell GPIO pins from
- matrix lines
-Date: Fri, 28 Jun 2013 11:25:56 -0700
-Message-ID: <20130628182556.GB21589@core.coreip.homeip.net>
-References: <1371838198-7327-1-git-send-email-gsi@denx.de>
- <1371838198-7327-9-git-send-email-gsi@denx.de>
- <51C4C87B.3050300@wwwdotorg.org>
- <20130622100052.GH24305@book.gsilab.sittig.org>
- <51C8D599.2010706@wwwdotorg.org>
- <20130628075240.GU24305@book.gsilab.sittig.org>
- <51CD9F3E.9060003@wwwdotorg.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: binding for nvec mfd device
+Date: Fri, 28 Jun 2013 20:51:03 +0200
+Message-ID: <20130628185102.GB15416@manwe>
+References: <1690589.tt8Uan1NDT@ax5200p>
+ <51CDA822.3090005@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7iMSBzlTiPOCCT2k"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <51CD9F3E.9060003@wwwdotorg.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Chao Xie <xiechao.mail@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Detlev Zundel <dzu@denx.de>, Sekhar Nori <nsekhar@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
+In-Reply-To: <51CDA822.3090005-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 28, 2013 at 08:35:42AM -0600, Stephen Warren wrote:
-> On 06/28/2013 01:52 AM, Gerhard Sittig wrote:
-> > 
-> > [ late reply, just catching up with the backlog ]
-> > 
-> > On Mon, Jun 24, 2013 at 17:26 -0600, Stephen Warren wrote:
-> >>
-> >> [ ... sparse matrices, not all columns/rows populated ... ]
-> 
-> >> On some Tegra boards, there end up
-> >> being rather tri-angular keymaps, where key positions (0, 0), (0, 1),
-> >> (0, 2), (1, 1), (1, 2), (2, 2) end up being used. In this scenario,
-> >> detailed investigation of the keymap would reveal:
-> >>
-> >> * Only scan columns 0..2
-> >> * For column 0, scan rows 0..2
-> >> * For column 1, scan rows 1..2
-> >> * For columm 2, scan row 2.
-> > 
-> > That's another question I had.  So far I was concerned with just
-> > polling or scanning the relevant columns, while all the rows for
-> > a given column were queried (as the driver always used to do).
-> > 
-> > Now you raise the question of whether rows should get queried as
-> > well depending on whether "a key may sit there".  It wasn't the
-> > exact question I raised, but I added a comment to the spot where
-> > input subsystem events get generated:  Is the driver expected to
-> > emit events for matrix positions where no key map entry exists?
-> 
-> I would assume there is no need to, but I don't know for sure. Perhaps
-> Dmitry can answer that?
 
-It really depends whether the driver can absolutely be sure that the key
-is not there or if it might be. Because keymaps are configurable from
-userspace the driver should not make this decision based on keymap
-itself.
+--7iMSBzlTiPOCCT2k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-When you scan a matrix and come upon the "pressed key" condition, you
-supposed to emit EV_MSC/MSC_SCAN, followed by appropriate EV_KEY/KEY_*.
-Normally the "keys that aren't there" generate KEY_RESERVED events that
-are simply dropped by input core (cause it is easier to implement).
-MSC_SCAN events, however, reach the userspace intact.
+On Fri, Jun 28, 2013 at 09:13:38AM -0600, Stephen Warren wrote:
+> On 06/27/2013 12:26 PM, Marc Dietrich wrote:
+[...]
+> > Another question is how the children will get their platform data. I gu=
+ess=20
+> > they will just walk the device tree of their parent node and search for=
+ it,=20
+> > but maybe there is a better way?
+>=20
+> In option (a), there will be a separate struct device for each child
+> node, instantiated directly from the child DT node. Hence, the driver
+> (chosen from the compatible value just like any other) would simply
+> parse dev.of_node just like any other driver. The only difference would
+> be that the driver would have to go to the parent node, and search for a
+> driver for it, and ask that driver for any "supporting resources", such
+> as a device handle that allowed you to all APIs to send/receive bytes
+> over the protocol. Perhaps the parent device might just pre-create
+> regmaps for all the child devices if that abstraction works. That would
+> save the child devices even having to look for the parent device.
 
-Hope this helps.
+I've often seen a much easier method employed and something similar is
+also done in host1x/tegra-drm. Child devices directly pass dev->parent
+to some API provided by the parent. The API then takes care of checking
+and extracting the driver-specific data of the parent from the struct
+device before performing the operation. Or you could provide an API to
+cast from a struct device to the parent's type.
 
--- 
-Dmitry
+So in the specific case of nvec this would translate to either making
+the nvec_write_{sync,async}() functions take a struct device * instead
+of the struct nvec_chip as first parameter, then do something like:
+
+	struct nvec_chip *nvec =3D dev_get_drvdata(dev);
+
+Or provide a function such as this:
+
+	struct nvec_chip *nvec_chip_from_device(struct device *dev)
+	{
+		/* perhaps do some validation */
+		return dev_get_drvdata(dev);
+	}
+
+which can be called from child drivers before calling nvec_write_sync()
+or nvec_write_async().
+
+Thierry
+
+--7iMSBzlTiPOCCT2k
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRzdsWAAoJEN0jrNd/PrOheBEP/2M5CvudNEtqM7dNNIOxm5zP
+ks4qwhJrifi2DzSvrB70+TxQJavGQCzLDKB3bSbh5sY/+4xcN1XB/V8yHCbzIfJk
+UPLLIjm99cZQrAURTnPy/TigxDLXj0WwMUUDU1NrPA3lYYZ4wOwjIsE/+ZmVpeNm
+VE9KVKmgUaaOmFJgX1jz+CjbbIiIOXKZ2Km/+IffISsXd32GP1kz7O01zDAb1KWx
+7z3HsFSuJOfKQEUVvroat1x2OgAGAh8KSqeG/XTlvsHR6k+ct3L+mMseE87g5wNK
+OWhI1HBWHthSK6Iz9Xaptap7B2zy2Wn2jqkVlMh5i5OplvLXYY3/Kv/0Ude4gk2K
+x2U0V6UZL2inQoWWm6amjrIw861TKRkoJz2HPG4wW+v8mDKzjqX2GVlccElgzh+/
+J6Op+POFuljkwuy4cg+V/e2+9Z9NAWER3td/cEDkVGUpT+QOmoRQKHyH9HqnPyUa
+1gSiOlub/9RrHCr98E8iQ6VSvamAzhWHG564o34x7q3vZux6HYw9mAfkJuUbWBGA
+5YDmEhlpHlR0Mtfqm89pv/BwGSuXgX/mfy2SXF5649oM3T6Mock1CNDDt9acqMW3
+nN1kpe2euH+uCKy2TFqG04uBYz/ECge6Y8s0sqL4XOd8iThKO57L1F4d/VbX8Reg
+Dh/AxXaaKpMcWStc81+u
+=xSto
+-----END PGP SIGNATURE-----
+
+--7iMSBzlTiPOCCT2k--
