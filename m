@@ -1,72 +1,148 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] early init and DT platform devices allocation/registration
-Date: Fri, 28 Jun 2013 13:27:15 +0100
-Message-ID: <CACxGe6vkM+awN94kU2GYfbXPdR=MgYwr=PbqmtD+=i5vmuVSnA@mail.gmail.com>
-References: <CACxGe6t9ifg9VRfXKypuhie3pXVPneZqcBy+J1bFpUaUx32P7g@mail.gmail.com>
- <20130626.090030.1519009485651154440.hdoyu@nvidia.com> <CACxGe6te2RzFb6nkSZQFrzVX4fkQo4pyzLJ1D7Lf=440mE+jyg@mail.gmail.com>
- <20130628.114915.1341075505557760886.hdoyu@nvidia.com> <20130628103826.GA17680@mithrandir>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH 2/2] Input: Adding DT support for keyreset tuneables
+Date: Fri, 28 Jun 2013 07:19:06 -0600
+Message-ID: <51CD8D4A.10207@linaro.org>
+References: <1372349605-4500-1-git-send-email-mathieu.poirier@linaro.org> <1372349605-4500-2-git-send-email-mathieu.poirier@linaro.org> <20130627162820.GA12070@core.coreip.homeip.net> <51CC7CD5.5090508@linaro.org> <20130627182500.GB12961@core.coreip.homeip.net> <51CC8786.1070200@linaro.org> <20130628060945.GA17523@core.coreip.homeip.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130628103826.GA17680@mithrandir>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Pawel.Moll-5wv7dgnIgG8@public.gmane.org" <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20130628060945.GA17523@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: grant.likely@linaro.org, devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, kernel-team@android.com, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 28, 2013 at 11:38 AM, Thierry Reding
-<thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Jun 28, 2013 at 10:49:15AM +0200, Hiroshi Doyu wrote:
->> Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote @ Wed, 26 Jun 2013 12:03:20 +0200:
+On 13-06-28 12:09 AM, Dmitry Torokhov wrote:
+> On Thu, Jun 27, 2013 at 12:42:14PM -0600, Mathieu Poirier wrote:
+>> On 13-06-27 12:25 PM, Dmitry Torokhov wrote:
+>>> On Thu, Jun 27, 2013 at 11:56:37AM -0600, Mathieu Poirier wrote:
+>>>> On 13-06-27 10:28 AM, Dmitry Torokhov wrote:
+>>>>> Hi Mathieu,
+>>>>>
+>>>>> On Thu, Jun 27, 2013 at 10:13:25AM -0600, mathieu.poirier@linaro.org wrote:
+>>>>>> From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
+>>>>>>
+>>>>>> This patch adds the possibility to get the keyreset and timeout
+>>>>>> values from the device tree.
+>>>>>>
+>>>>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>>>> ---
+>>>>>>  drivers/tty/sysrq.c |   54 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>>  1 file changed, 54 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+>>>>>> index b51c154..91d081c 100644
+>>>>>> --- a/drivers/tty/sysrq.c
+>>>>>> +++ b/drivers/tty/sysrq.c
+>>>>>> @@ -44,6 +44,7 @@
+>>>>>>  #include <linux/uaccess.h>
+>>>>>>  #include <linux/moduleparam.h>
+>>>>>>  #include <linux/jiffies.h>
+>>>>>> +#include <linux/of.h>
+>>>>>>  
+>>>>>>  #include <asm/ptrace.h>
+>>>>>>  #include <asm/irq_regs.h>
+>>>>>> @@ -671,6 +672,50 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
+>>>>>>  	}
+>>>>>>  }
+>>>>>>  
+>>>>>> +static void sysrq_of_get_keyreset_config(void)
+>>>>>> +{
+>>>>>> +	unsigned short key;
+>>>>>> +	struct device_node *np;
+>>>>>> +	const struct property *prop;
+>>>>>> +	const __be32 *val;
+>>>>>> +	int count, i;
+>>>>>> +
+>>>>>> +	np = of_find_node_by_path("/sysrq");
+>>>>>> +	if (!np) {
+>>>>>> +		pr_info("No sysrq node found");
+>>>>>
+>>>>> I do not think this should be an info as majority would not have it
+>>>>> defined I think.
+>>>>
+>>>> I fail to understand your point - could you please be more specific ?
+>>>
+>>> pr_info() will clutter everyone's dmesg because I expect majority of
+>>> installs will not have this enabled. Please change to pr_debug or just
+>>> drop it.
 >>
->> > On Wed, Jun 26, 2013 at 7:00 AM, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> > > Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote @ Tue, 25 Jun 2013 19:52:33 +0200:
->> > >
->> > >> > Here's my workaround. I need to call of_detach_node() with OF_DYNAMIC
->> > >> > to avoid duplicated device registration.
->> > >>
->> > >> Gah! my eyes!
->> > >>
->> > >> Don't do that. It is incredibly problematic. Look at inhibiting
->> > >> duplicate device creation instead.
->> > >
->> > > I may not follow this thread correctly, but could anyone point out the
->> > > above "inhibiting duplicate device creation" if there's already such
->> > > solution?
->> >
->> > No, the solution doesn't exist yet, but it wouldn't be hard to
->> > implement. What you need to do is to add a struct device pointer to
->> > struct device_node, and set the pointer to the struct device when
->> > of_platform_device_create creates a device. (it would also need to be
->> > set for early_platform_device creation, but that's not something that
->> > should affect you). You would also add a check to
->> > of_platform_device_create to check if the device pointer is already
->> > set. If it is, then skip creation of the device.
+>> Ah! Yes certainly.
 >>
->> Implemented as Grant suggested. At least this works for our case,
->> where IOMMU needs to be instanciated earlier than other device[1].
->> early_platform_device case still need to be covered.
->
-> I think we arrived at a different conclusion in another branch of this
-> thread. With the patch below every driver needs to explicitly allocate
-> the platform device and set the struct device_node's .dev field, which
-> has other side-effects such as the device hierarchy getting messed up.
->
-> A better alternative would be to have of_platform_populate() run early
-> such that the .dev field in the struct device_node can be set by core
-> code, which would not require every driver to be changed.
->
-> I'm not sure exactly what needs to be done to make this work, however.
-> Grant, can you provide some guidance here as to how this may be fixed?
-> Where would we have to call of_platform_populate() from and what makes
-> this break with the current implementation?
+>>>
+>>>>
+>>>>>
+>>>>>> +		goto out;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	prop = of_find_property(np, "linux,input-keyset", NULL);
+>>>>>
+>>>>> Maybe "linux,input-key*re*set"?
+>>>>
+>>>> I do not agree.  We want the binding to be generic and not tied
+>>>> specifically to the keyreset functionality.  As such 'input-keyset' or
+>>>> 'input-keychord' are more appropriate.
+>>>
+>>> The binding is defined specifically for sysrq and specifically to
+>>> perform reset action.
+>>
+>> Yes for now but as the examples in the binding show, it is easy to
+>> envision how other drivers could use it.
+> 
+> I think you over-complicate things here. Unlike matrix-keypad binding,
+> where you have a common parsing code, here we have an individual driver.
+> I really do not see anyone else using such sequences or chords as such
+> processing should be done in userspace. Sysrq is quite an exception.
 
-Try it and see!  :-) I cannot give a definite answer, but I suspect
-that it will fall down when registering the devices on to the
-platform_bus because it isn't initialized yet. If called early, the
-code would need to hold the platform_device in some kind of deferred
-list until the platform bus was initialize, and then have a cleanup
-function at initcall time to finish the registration of all early
-devices.
+To be honest I don't have a very strong opinion on the binding.  I made
+it as generic as possible on the guidance of the DT people.  Let's see
+what they think of it.
 
-g.
+> 
+>>
+>>>
+>>>>
+>>>>>
+>>>>>> +	if (!prop || !prop->value) {
+>>>>>> +		pr_err("Invalid input-keyset");
+>>>>>> +		goto out;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	count = prop->length / sizeof(u32);
+>>>>>> +	val = prop->value;
+>>>>>> +
+>>>>>> +	if (count > SYSRQ_KEY_RESET_MAX)
+>>>>>> +		count = SYSRQ_KEY_RESET_MAX;
+>>>>>> +
+>>>>>> +	/* reset in case a __weak definition was present */
+>>>>>> +	sysrq_reset_seq_len = 0;
+>>>>>
+>>>>> Hmm, my preference for ordering would be software over firmware, so that
+>>>>> user could override firmware data, if needed.
+>>>>
+>>>> The idea is to offer flexibility.  The same kernel can be used on
+>>>> multiple device.  As such DT information should be prioritised over a
+>>>> __weak symbol, otherwise it defeats the purpose.
+>>>
+>>> The weak symbol should defined in board data, so it won't get picked up
+>>> on multiple boards. But I guess I do not care that much as indeed we can
+>>> change the sequence from userspace so we won't be stuck with firmware
+>>> choices.
+>>
+>> Humm... My reply wasn't clear enough.  I was thinking about the same
+>> board with different input device, i.e keypad or touchscreen.  In that
+>> case the board file would have been the same but not the keyreset
+>> sequence, which is exactly what the above ordering allows to do.
+> 
+> That does not quite make sense as the only sequence we are parsing is
+> the one in "sysrq" node, which is global.
+
+Once again our opinion diverge.  It is entirely possible to use the same
+kernel on different device (stemming from the same board file) with a
+device tree to guide the configuration.
+
+> 
+> Thanks.
+> 
+
