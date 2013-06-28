@@ -1,55 +1,143 @@
-From: Hui Wang <jason77.wang@gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: Add DP PHY node to exynos5250.dtsi
-Date: Fri, 28 Jun 2013 14:06:55 +0800
-Message-ID: <51CD27FF.1060706@gmail.com>
-References: <001601ce73bf$9f2e9120$dd8bb360$@samsung.com> <51CD2214.10506@ti.com> <001b01ce73c4$88f45020$9adcf060$@samsung.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/2] Input: Adding DT support for keyreset tuneables
+Date: Thu, 27 Jun 2013 23:09:45 -0700
+Message-ID: <20130628060945.GA17523@core.coreip.homeip.net>
+References: <1372349605-4500-1-git-send-email-mathieu.poirier@linaro.org>
+ <1372349605-4500-2-git-send-email-mathieu.poirier@linaro.org>
+ <20130627162820.GA12070@core.coreip.homeip.net>
+ <51CC7CD5.5090508@linaro.org>
+ <20130627182500.GB12961@core.coreip.homeip.net>
+ <51CC8786.1070200@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <001b01ce73c4$88f45020$9adcf060$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51CC8786.1070200@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: grant.likely@linaro.org, devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, kernel-team@android.com, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/28/2013 01:58 PM, Jingoo Han wrote:
-> On Friday, June 28, 2013 2:42 PM, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On Friday 28 June 2013 10:53 AM, Jingoo Han wrote:
->>> Add PHY provider node for the DP PHY.
->>>
->>> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
->>> ---
->>>    arch/arm/boot/dts/exynos5250.dtsi |   13 ++++++++-----
->>>    1 file changed, 8 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->>> index 41cd625..d1d6e14 100644
->>> --- a/arch/arm/boot/dts/exynos5250.dtsi
->>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->>> @@ -614,6 +614,12 @@
->>>    		interrupts = <0 94 0>;
->>>    	};
->>>
->>> +	dp_phy: video-phy@10040720 {
->>> +		compatible = "samsung,exynos5250-dp-video-phy";
->>> +		reg = <0x10040720 4>;
->>> +		#phy-cells = <1>;
->> phy-cells can be '0' here since this phy_provider implements only one PHY.
-> Oh, thank you.
-> I will fix it.
-Don't forget to fix the corresponding description in the 
-samsung,exynos5250-dp-video-phy.txt as well. :-)
-> Best regards,
-> Jingoo Han
->
->> Thanks
->> Kishon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
+On Thu, Jun 27, 2013 at 12:42:14PM -0600, Mathieu Poirier wrote:
+> On 13-06-27 12:25 PM, Dmitry Torokhov wrote:
+> > On Thu, Jun 27, 2013 at 11:56:37AM -0600, Mathieu Poirier wrote:
+> >> On 13-06-27 10:28 AM, Dmitry Torokhov wrote:
+> >>> Hi Mathieu,
+> >>>
+> >>> On Thu, Jun 27, 2013 at 10:13:25AM -0600, mathieu.poirier@linaro.org wrote:
+> >>>> From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
+> >>>>
+> >>>> This patch adds the possibility to get the keyreset and timeout
+> >>>> values from the device tree.
+> >>>>
+> >>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >>>> ---
+> >>>>  drivers/tty/sysrq.c |   54 +++++++++++++++++++++++++++++++++++++++++++++++++++
+> >>>>  1 file changed, 54 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> >>>> index b51c154..91d081c 100644
+> >>>> --- a/drivers/tty/sysrq.c
+> >>>> +++ b/drivers/tty/sysrq.c
+> >>>> @@ -44,6 +44,7 @@
+> >>>>  #include <linux/uaccess.h>
+> >>>>  #include <linux/moduleparam.h>
+> >>>>  #include <linux/jiffies.h>
+> >>>> +#include <linux/of.h>
+> >>>>  
+> >>>>  #include <asm/ptrace.h>
+> >>>>  #include <asm/irq_regs.h>
+> >>>> @@ -671,6 +672,50 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
+> >>>>  	}
+> >>>>  }
+> >>>>  
+> >>>> +static void sysrq_of_get_keyreset_config(void)
+> >>>> +{
+> >>>> +	unsigned short key;
+> >>>> +	struct device_node *np;
+> >>>> +	const struct property *prop;
+> >>>> +	const __be32 *val;
+> >>>> +	int count, i;
+> >>>> +
+> >>>> +	np = of_find_node_by_path("/sysrq");
+> >>>> +	if (!np) {
+> >>>> +		pr_info("No sysrq node found");
+> >>>
+> >>> I do not think this should be an info as majority would not have it
+> >>> defined I think.
+> >>
+> >> I fail to understand your point - could you please be more specific ?
+> > 
+> > pr_info() will clutter everyone's dmesg because I expect majority of
+> > installs will not have this enabled. Please change to pr_debug or just
+> > drop it.
+> 
+> Ah! Yes certainly.
+> 
+> > 
+> >>
+> >>>
+> >>>> +		goto out;
+> >>>> +	}
+> >>>> +
+> >>>> +	prop = of_find_property(np, "linux,input-keyset", NULL);
+> >>>
+> >>> Maybe "linux,input-key*re*set"?
+> >>
+> >> I do not agree.  We want the binding to be generic and not tied
+> >> specifically to the keyreset functionality.  As such 'input-keyset' or
+> >> 'input-keychord' are more appropriate.
+> > 
+> > The binding is defined specifically for sysrq and specifically to
+> > perform reset action.
+> 
+> Yes for now but as the examples in the binding show, it is easy to
+> envision how other drivers could use it.
+
+I think you over-complicate things here. Unlike matrix-keypad binding,
+where you have a common parsing code, here we have an individual driver.
+I really do not see anyone else using such sequences or chords as such
+processing should be done in userspace. Sysrq is quite an exception.
+
+> 
+> > 
+> >>
+> >>>
+> >>>> +	if (!prop || !prop->value) {
+> >>>> +		pr_err("Invalid input-keyset");
+> >>>> +		goto out;
+> >>>> +	}
+> >>>> +
+> >>>> +	count = prop->length / sizeof(u32);
+> >>>> +	val = prop->value;
+> >>>> +
+> >>>> +	if (count > SYSRQ_KEY_RESET_MAX)
+> >>>> +		count = SYSRQ_KEY_RESET_MAX;
+> >>>> +
+> >>>> +	/* reset in case a __weak definition was present */
+> >>>> +	sysrq_reset_seq_len = 0;
+> >>>
+> >>> Hmm, my preference for ordering would be software over firmware, so that
+> >>> user could override firmware data, if needed.
+> >>
+> >> The idea is to offer flexibility.  The same kernel can be used on
+> >> multiple device.  As such DT information should be prioritised over a
+> >> __weak symbol, otherwise it defeats the purpose.
+> > 
+> > The weak symbol should defined in board data, so it won't get picked up
+> > on multiple boards. But I guess I do not care that much as indeed we can
+> > change the sequence from userspace so we won't be stuck with firmware
+> > choices.
+> 
+> Humm... My reply wasn't clear enough.  I was thinking about the same
+> board with different input device, i.e keypad or touchscreen.  In that
+> case the board file would have been the same but not the keyreset
+> sequence, which is exactly what the above ordering allows to do.
+
+That does not quite make sense as the only sequence we are parsing is
+the one in "sysrq" node, which is global.
+
+Thanks.
+
+-- 
+Dmitry
