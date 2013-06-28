@@ -1,60 +1,60 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next RESEND] pinctrl: st: fix return value check
-Date: Fri, 28 Jun 2013 19:30:40 +0800
-Message-ID: <CAPgLHd_uSK-xYSvf-HCUFbDTSLMnSZa-maYQR4qDb=ih1soa=w@mail.gmail.com>
-References: <CAPgLHd8-jbXfb95x1Bp7GsMuEJ3mOudUcknRqbxNpNmcdQvg3w@mail.gmail.com>
-	<51CD6A21.4070201@st.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/1] of/documentation: Update s5m8767-regulator bindings
+ document
+Date: Fri, 28 Jun 2013 12:35:05 +0100
+Message-ID: <20130628113505.GG27646@sirena.org.uk>
+References: <1372066617-23518-1-git-send-email-sachin.kamat@linaro.org>
+ <20130624152553.GT27646@sirena.org.uk>
+ <CAK9yfHzBPO1Yr7_qLtw3oZKVVtqDBK_Yj7_r=HrU+94pod+XVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ezliVEEOO3pGSi0a"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51CD6A21.4070201@st.com>
+Content-Disposition: inline
+In-Reply-To: <CAK9yfHzBPO1Yr7_qLtw3oZKVVtqDBK_Yj7_r=HrU+94pod+XVA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@st.com, broonie@kernel.org
-Cc: linus.walleij@linaro.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob@landley.net, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-In case of error, the function pinctrl_register() returns
-NULL not ERR_PTR(). The IS_ERR() test in the return value
-check should be replaced with NULL test.
-The function syscon_regmap_lookup_by_phandle() returns ERR_PTR()
-and never returns NULL. The NULL test in the return value check
-should be replaced with IS_ERR().
+--ezliVEEOO3pGSi0a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
----
-cc to Mark Brown
----
- drivers/pinctrl/pinctrl-st.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On Tue, Jun 25, 2013 at 11:56:12AM +0530, Sachin Kamat wrote:
 
-diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
-index 7effedf..de8c626 100644
---- a/drivers/pinctrl/pinctrl-st.c
-+++ b/drivers/pinctrl/pinctrl-st.c
-@@ -1299,9 +1299,9 @@ static int st_pctl_probe_dt(struct platform_device *pdev,
- 		return -ENOMEM;
- 
- 	info->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
--	if (!info->regmap) {
-+	if (IS_ERR(info->regmap)) {
- 		dev_err(info->dev, "No syscfg phandle specified\n");
--		return -ENOMEM;
-+		return PTR_ERR(info->regmap);
- 	}
- 	info->data = of_match_node(st_pctl_of_match, np)->data;
- 
-@@ -1376,9 +1376,9 @@ static int st_pctl_probe(struct platform_device *pdev)
- 	pctl_desc->name		= dev_name(&pdev->dev);
- 
- 	info->pctl = pinctrl_register(pctl_desc, &pdev->dev, info);
--	if (IS_ERR(info->pctl)) {
-+	if (!info->pctl) {
- 		dev_err(&pdev->dev, "Failed pinctrl registration\n");
--		return PTR_ERR(info->pctl);
-+		return -EINVAL;
- 	}
- 
- 	for (i = 0; i < info->nbanks; i++)
+> There is no change in the bindings, but just a correction in the
+> documentation to reflect the
+> implementation. Earlier when Samsung platforms did not have pinctrl
+> driver, legacy GPIO driver
+> was used which took those 5 parameters. Now since we are using
+> pinctrl, we need only 3 parameters.
+> The document was somehow not updated to reflect this change.
+
+So there was a previous change to the code that mistakenly didn't update
+the binding document?
+
+--ezliVEEOO3pGSi0a
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRzXTlAAoJELSic+t+oim9PfIP/2/4JzoD2LlLJphjgHtWNkIO
++BeyeiTy/CykecuTz//ZracNs2hAP6kH9mWWp472Rsu3A0jmUOdf6HVQ6tFlDjsI
+BmOP1+4uxGbs5bxW3c0gHIjukbxjd+JUibMG9J19YSWFpfO1guhkE28Wmhzogicq
+pzJi3BIW2FdEu46CSjp5sLKMMz8oGlhtu6KB4+MWJNVghkJLoZnHuyZwMBPlTQ4Y
+YaiyadBANtOzPmglSMv6IFQKZbVlXd4NTGVHySM8auck8mTfBBE7L7Wu4V7Z1Au4
+M6dnXZR6DLoGELDjR4RdnREZUsQZhHdBf7u06bnWvSpLhidZT7fqLZ1Yn6W9mAF5
+TC+VEWdanfBwmUzvJUmZO0w1CwADKf0HMSluV2vVufzWDunllE09dA+58O9/Zk8M
+WDqNO8Imon5BCSzjEib1amWJQ0rNoi6A5rourkslhD3EtyUHM8q72tscdyR5zpV9
+LE8aZht683hjfhUlcltug4hiO57SI5h5QOlR8DTluhqBVAqZd3LNrk7xjn9pt7Wk
+XjFjnskZTIs6e5YOIfs5H6AQ24hKIynaFn2G5fbOMNgGcMG3+ith6vnXKg5hYI/0
+foXxBaLxBTqRMrgn/XQErQRpbHgyWfj4TbdBXnTln15uTQ3yjdzxwg3eRra6BHVa
+i1R5y9T/27KPfawC6RCO
+=5HfP
+-----END PGP SIGNATURE-----
+
+--ezliVEEOO3pGSi0a--
