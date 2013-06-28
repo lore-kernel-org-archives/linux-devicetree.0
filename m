@@ -1,63 +1,60 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCHv3] ARM: socfpga: dts: Add support for SD/MMC
-Date: Fri, 28 Jun 2013 13:28:33 +0200
-Message-ID: <20130628112833.GC22234@amd.pavel.ucw.cz>
-References: <1372397738-8093-1-git-send-email-dinguyen@altera.com>
- <1372397738-8093-2-git-send-email-dinguyen@altera.com>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH -next RESEND] pinctrl: st: fix return value check
+Date: Fri, 28 Jun 2013 19:30:40 +0800
+Message-ID: <CAPgLHd_uSK-xYSvf-HCUFbDTSLMnSZa-maYQR4qDb=ih1soa=w@mail.gmail.com>
+References: <CAPgLHd8-jbXfb95x1Bp7GsMuEJ3mOudUcknRqbxNpNmcdQvg3w@mail.gmail.com>
+	<51CD6A21.4070201@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1372397738-8093-2-git-send-email-dinguyen@altera.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dinh.linux@gmail.com
-Cc: Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Chris Ball <cjb@laptop.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux@arm.linux.org.uk, wd@denx.de
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51CD6A21.4070201@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: srinivas.kandagatla@st.com, broonie@kernel.org
+Cc: linus.walleij@linaro.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Just some nit-picking... (not worth blocking apply for this, can
-easily go through trivial tree later.)
+In case of error, the function pinctrl_register() returns
+NULL not ERR_PTR(). The IS_ERR() test in the return value
+check should be replaced with NULL test.
+The function syscon_regmap_lookup_by_phandle() returns ERR_PTR()
+and never returns NULL. The NULL test in the return value check
+should be replaced with IS_ERR().
 
->  create mode 100644 Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-> new file mode 100644
-> index 0000000..f36b7ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-> @@ -0,0 +1,60 @@
-> +* Altera SOCFPGA specific extensions to the Synopsis Designware Mobile
-> +  Storage Host Controller
-> +
-> +Required Properties:
-> +
-> +* compatible: should be
-> +	- "altr,socfpga-dw-mshc": for controllers with Altera SOCFPGA
-> +	  specific extensions.
-> +
-> +* altr,dw-mshc-ciu-div: Specifies the divider value for the card interface
-> +  unit (ciu) clock. The value should be (n+1). For Altera's SOCFPGA, the divider
-> +  value is fixed at 3, which mean parent_clock/4.
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+---
+cc to Mark Brown
+---
+ drivers/pinctrl/pinctrl-st.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-"which means".
-
-> +* altr,dw-mshc-sdr-timing: Specifies the value of CIU clock phase shift value
-> +  in transmit mode and CIU clock phase shift value in receive mode for single
-> +  data rate mode operation. Refer notes below for the order of the cells and the
-
-"refer to".
-
-> +Example:
-> +
-> +  The MSHC controller node can be split into two portions, SoC specific and
-> +  board specific portions as listed below.
-
-", as listed".
-
-Thanks,
-									Pavel
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+index 7effedf..de8c626 100644
+--- a/drivers/pinctrl/pinctrl-st.c
++++ b/drivers/pinctrl/pinctrl-st.c
+@@ -1299,9 +1299,9 @@ static int st_pctl_probe_dt(struct platform_device *pdev,
+ 		return -ENOMEM;
+ 
+ 	info->regmap = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
+-	if (!info->regmap) {
++	if (IS_ERR(info->regmap)) {
+ 		dev_err(info->dev, "No syscfg phandle specified\n");
+-		return -ENOMEM;
++		return PTR_ERR(info->regmap);
+ 	}
+ 	info->data = of_match_node(st_pctl_of_match, np)->data;
+ 
+@@ -1376,9 +1376,9 @@ static int st_pctl_probe(struct platform_device *pdev)
+ 	pctl_desc->name		= dev_name(&pdev->dev);
+ 
+ 	info->pctl = pinctrl_register(pctl_desc, &pdev->dev, info);
+-	if (IS_ERR(info->pctl)) {
++	if (!info->pctl) {
+ 		dev_err(&pdev->dev, "Failed pinctrl registration\n");
+-		return PTR_ERR(info->pctl);
++		return -EINVAL;
+ 	}
+ 
+ 	for (i = 0; i < info->nbanks; i++)
