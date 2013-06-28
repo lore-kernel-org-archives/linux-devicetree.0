@@ -1,190 +1,50 @@
-From: dinh.linux@gmail.com
-Subject: [PATCHv3] ARM: socfpga: dts: Add support for SD/MMC
-Date: Fri, 28 Jun 2013 00:35:38 -0500
-Message-ID: <1372397738-8093-2-git-send-email-dinguyen@altera.com>
-References: <1372397738-8093-1-git-send-email-dinguyen@altera.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1372397738-8093-1-git-send-email-dinguyen@altera.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: dinh.linux@gmail.com
-Cc: Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Pavel Machek <pavel@denx.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Chris Ball <cjb@laptop.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux@arm.linux.org.uk
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/3] ARM: dts: Add DP PHY node to exynos5250.dtsi
+Date: Fri, 28 Jun 2013 11:11:40 +0530
+Message-ID: <51CD2214.10506@ti.com>
+References: <001601ce73bf$9f2e9120$dd8bb360$@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <001601ce73bf$9f2e9120$dd8bb360$@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: linux-fbdev@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Inki Dae' <inki.dae@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, linux-samsung-soc@vger.kernel.org, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@altera.com>
+Hi,
 
-Add bindings for SD/MMC for SOCFPGA.
-Add "syscon" to the "altr,sys-mgr" binding.
+On Friday 28 June 2013 10:53 AM, Jingoo Han wrote:
+> Add PHY provider node for the DP PHY.
+>
+> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+> ---
+>   arch/arm/boot/dts/exynos5250.dtsi |   13 ++++++++-----
+>   1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index 41cd625..d1d6e14 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -614,6 +614,12 @@
+>   		interrupts = <0 94 0>;
+>   	};
+>
+> +	dp_phy: video-phy@10040720 {
+> +		compatible = "samsung,exynos5250-dp-video-phy";
+> +		reg = <0x10040720 4>;
+> +		#phy-cells = <1>;
 
-Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-Reviewed-by: Pavel Machek <pavel@denx.de>
-Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
-CC: Arnd Bergmann <arnd@arndb.de>
-CC: Olof Johansson <olof@lixom.net>
-Cc: Pavel Machek <pavel@denx.de>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Chris Ball <cjb@laptop.org>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-mmc@vger.kernel.org
-CC: <linux@arm.linux.org.uk>
+phy-cells can be '0' here since this phy_provider implements only one PHY.
 
-v3:
-- Add Ack-by: Jaehoon Chung <jh80.chung@samsung.com>
-
-v2:
-- Fixed misspellings extentions->extensions
----
- .../devicetree/bindings/mmc/socfpga-dw-mshc.txt    |   60 ++++++++++++++++++++
- arch/arm/boot/dts/socfpga.dtsi                     |   13 ++++-
- arch/arm/boot/dts/socfpga_cyclone5.dts             |   13 +++++
- arch/arm/boot/dts/socfpga_vt.dts                   |   12 ++++
- 4 files changed, 97 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-new file mode 100644
-index 0000000..f36b7ee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
-@@ -0,0 +1,60 @@
-+* Altera SOCFPGA specific extensions to the Synopsis Designware Mobile
-+  Storage Host Controller
-+
-+Required Properties:
-+
-+* compatible: should be
-+	- "altr,socfpga-dw-mshc": for controllers with Altera SOCFPGA
-+	  specific extensions.
-+
-+* altr,dw-mshc-ciu-div: Specifies the divider value for the card interface
-+  unit (ciu) clock. The value should be (n+1). For Altera's SOCFPGA, the divider
-+  value is fixed at 3, which mean parent_clock/4.
-+
-+* altr,dw-mshc-sdr-timing: Specifies the value of CIU clock phase shift value
-+  in transmit mode and CIU clock phase shift value in receive mode for single
-+  data rate mode operation. Refer notes below for the order of the cells and the
-+  valid values.
-+
-+  Notes for the sdr-timing values:
-+
-+    The order of the cells should be
-+      - First Cell: CIU clock phase shift value for RX mode, smplsel bits in
-+	the system manager SDMMC control group.
-+      - Second Cell: CIU clock phase shift value for TX mode, drvsel bits in
-+	the system manager SDMMC control group.
-+
-+    Valid values for SDR CIU clock timing for SOCFPGA:
-+      - valid value for tx phase shift and rx phase shift is 0 to 7.
-+
-+Required properties for a slot:
-+
-+* bus-width: Data width for card slot. 4-bit or 8-bit data.
-+
-+Example:
-+
-+  The MSHC controller node can be split into two portions, SoC specific and
-+  board specific portions as listed below.
-+
-+	dwmmc0@ff704000 {
-+		compatible = "altr,socfpga-dw-mshc";
-+		reg = <0xff704000 0x1000>;
-+		interrupts = <0 139 4>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	dwmmc0@ff704000 {
-+		num-slots = <1>;
-+		supports-highspeed;
-+		broken-cd;
-+		fifo-depth = <0x400>;
-+		altr,dw-mshc-ciu-div = <3>;
-+      		altr,dw-mshc-sdr-timing = <0 3>;
-+
-+		slot@0 {
-+			reg = <0>;
-+			bus-width = <4>;
-+		};
-+	};
-+-----
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index bee62a2..dbf7f22 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -468,6 +468,17 @@
- 			cache-level = <2>;
- 		};
- 
-+		mmc: dwmmc0@ff704000 {
-+			compatible = "altr,socfpga-dw-mshc";
-+			reg = <0xff704000 0x1000>;
-+			interrupts = <0 139 4>;
-+			fifo-depth = <0x400>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
-+			clock-names = "biu", "ciu";
-+		};
-+
- 		/* Local timer */
- 		timer@fffec600 {
- 			compatible = "arm,cortex-a9-twd-timer";
-@@ -521,7 +532,7 @@
- 			};
- 
- 		sysmgr@ffd08000 {
--				compatible = "altr,sys-mgr";
-+				compatible = "altr,sys-mgr", "syscon";
- 				reg = <0xffd08000 0x4000>;
- 			};
- 	};
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dts b/arch/arm/boot/dts/socfpga_cyclone5.dts
-index 973999d..1853cb1 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5.dts
-@@ -54,6 +54,19 @@
- 			status = "okay";
- 		};
- 
-+		dwmmc0@ff704000 {
-+			num-slots = <1>;
-+			supports-highspeed;
-+			broken-cd;
-+			altr,dw-mshc-ciu-div = <3>;
-+			altr,dw-mshc-sdr-timing = <0 3>;
-+
-+			slot@0 {
-+				reg = <0>;
-+				bus-width = <4>;
-+			};
-+		};
-+
- 		timer0@ffc08000 {
- 			clock-frequency = <100000000>;
- 		};
-diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
-index d1ec0ca..d93deb0 100644
---- a/arch/arm/boot/dts/socfpga_vt.dts
-+++ b/arch/arm/boot/dts/socfpga_vt.dts
-@@ -46,6 +46,18 @@
- 			status = "okay";
- 		};
- 
-+		dwmmc0@ff704000 {
-+			num-slots = <1>;
-+			supports-highspeed;
-+			broken-cd;
-+			altr,dw-mshc-ciu-div = <3>;
-+
-+			slot@0 {
-+				reg = <0>;
-+				bus-width = <4>;
-+			};
-+		};
-+
- 		timer0@ffc08000 {
- 			clock-frequency = <7000000>;
- 		};
--- 
-1.7.9.5
-
+Thanks
+Kishon
