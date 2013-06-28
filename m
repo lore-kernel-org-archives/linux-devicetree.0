@@ -1,39 +1,51 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 3/4] hwmon: Add a simple driver to read the MXS SoC temperature
-Date: Fri, 28 Jun 2013 16:50:39 +0200
-Message-ID: <51CDA2BF.5050501@free-electrons.com>
-References: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com> <1372236673-20725-4-git-send-email-alexandre.belloni@free-electrons.com> <20130626143927.GB31998@roeck-us.net> <20130627091732.GP5803@lukather> <20130627142758.GA5812@roeck-us.net> <51CC91E8.50605@free-electrons.com> <51CD9B19.90407@metafoo.de>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3 2/5] ARM: dts: imx27: Add imx framebuffer device
+Date: Fri, 28 Jun 2013 16:50:34 +0200
+Message-ID: <1372431037-13519-3-git-send-email-mpa@pengutronix.de>
+References: <1372431037-13519-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51CD9B19.90407@metafoo.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Guenter Roeck <linux@roeck-us.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Shawn Guo <shawn.guo@linaro.org>, Jean Delvare <khali@linux-fr.org>, jimwall@q.com, brian@crystalfontz.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1372431037-13519-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/06/2013 16:18, Lars-Peter Clausen wrote:
-> On 06/27/2013 09:26 PM, Alexandre Belloni wrote:
->>
->> They are already registered as IIO_TEMP but only implement read_raw. Also,
->>
->> iio_hwmon_read_val() is using iio_read_channel_processed() and that will
->> basically only read one of the 2 channels. As I documented, you actually
->> need to read both channel 8 and channel 9 and then compute the value in
->> Kelvins. I'm not sure how you want me to do that in the current framework.
-> What are these two channels actually measuring? Is the value of a single
-> channel meaningful on it's own? If not it might make sense to update the IIO
-> driver to just have one temperature channel.
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx27.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-It's not actually meaningful on its own. So, what you would do is expose
-one iio channel for two ADC channels and do the computation in read_raw
-? or read_processed ? Then using iio-hwon to export it. ?
-
-Regards,
-
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index 8603886..10dcbd3 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -342,6 +342,15 @@
+ 			reg = <0x10020000 0x20000>;
+ 			ranges;
+ 
++			imxfb: fb@10021000 {
++				compatible = "fsl,imx27-fb", "fsl,imx21-fb";
++				interrupts = <61>;
++				reg = <0x10021000 0x1000>;
++				clocks = <&clks 36>, <&clks 65>, <&clks 59>;
++				clock-names = "ipg", "ahb", "per";
++				status = "disabled";
++			};
++
+ 			coda: coda@10023000 {
+ 				compatible = "fsl,imx27-vpu";
+ 				reg = <0x10023000 0x0200>;
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
+1.8.2.1
