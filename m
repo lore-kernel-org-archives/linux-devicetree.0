@@ -1,56 +1,46 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 3/4] hwmon: Add a simple driver to read the MXS SoC temperature
-Date: Fri, 28 Jun 2013 16:18:01 +0200
-Message-ID: <51CD9B19.90407@metafoo.de>
-References: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com> <1372236673-20725-4-git-send-email-alexandre.belloni@free-electrons.com> <20130626143927.GB31998@roeck-us.net> <20130627091732.GP5803@lukather> <20130627142758.GA5812@roeck-us.net> <51CC91E8.50605@free-electrons.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v1 08/12] input: keypad-matrix: tell GPIO pins from matrix
+ lines
+Date: Fri, 28 Jun 2013 08:35:42 -0600
+Message-ID: <51CD9F3E.9060003@wwwdotorg.org>
+References: <1371838198-7327-1-git-send-email-gsi@denx.de> <1371838198-7327-9-git-send-email-gsi@denx.de> <51C4C87B.3050300@wwwdotorg.org> <20130622100052.GH24305@book.gsilab.sittig.org> <51C8D599.2010706@wwwdotorg.org> <20130628075240.GU24305@book.gsilab.sittig.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51CC91E8.50605@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Shawn Guo <shawn.guo@linaro.org>, Jean Delvare <khali@linux-fr.org>, jimwall@q.com, brian@crystalfontz.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20130628075240.GU24305@book.gsilab.sittig.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Chao Xie <xiechao.mail@gmail.com>, Eric Miao <eric.y.miao@gmail.com>, Detlev Zundel <dzu@denx.de>, Sekhar Nori <nsekhar@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2013 09:26 PM, Alexandre Belloni wrote:
-> Hi,
+On 06/28/2013 01:52 AM, Gerhard Sittig wrote:
 > 
-> On 27/06/2013 16:27, Guenter Roeck wrote:
->> On Thu, Jun 27, 2013 at 11:17:32AM +0200, Maxime Ripard wrote:
->>> On Wed, Jun 26, 2013 at 07:39:27AM -0700, Guenter Roeck wrote:
->>>> On Wed, Jun 26, 2013 at 10:51:12AM +0200, Alexandre Belloni wrote:
->>>>> The low resolution ADC of the mxs is able to read an internal temperature
->>>>> sensor, expose that using hwmon.
->>>>>
->>>>> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
->>>>> ---
->>>> Wouldn't it make more sense to use iio-hwmon and improve it if necessary ?
->>> Actually, I wonder if we should not just put the hwmon driver
->>> capabilities directly into the mxs-lradc driver, just like it's already
->>> been done in this driver for the touchscreen support.
->>>
->>> The probing of this hwmon driver doesn't really belong to the DT, it's
->>> not really realistic to probe it from the machine definition, and it
->>> really is the IP that is wired that way.
->>>
->> Merging iio-hwmon functionality into an adc driver seems just as bad
->> (or even worse) as copying it into a new driver.
+> [ late reply, just catching up with the backlog ]
+> 
+> On Mon, Jun 24, 2013 at 17:26 -0600, Stephen Warren wrote:
 >>
->> If the lradc driver knows that the ADC channels are temperature sensors, it
->> should register them with the iio subsystem as IIO_TEMP type. Then you should
->> be able to use iio_hwmon as is.
+>> [ ... sparse matrices, not all columns/rows populated ... ]
+
+>> On some Tegra boards, there end up
+>> being rather tri-angular keymaps, where key positions (0, 0), (0, 1),
+>> (0, 2), (1, 1), (1, 2), (2, 2) end up being used. In this scenario,
+>> detailed investigation of the keymap would reveal:
+>>
+>> * Only scan columns 0..2
+>> * For column 0, scan rows 0..2
+>> * For column 1, scan rows 1..2
+>> * For columm 2, scan row 2.
 > 
-> They are already registered as IIO_TEMP but only implement read_raw. Also,
+> That's another question I had.  So far I was concerned with just
+> polling or scanning the relevant columns, while all the rows for
+> a given column were queried (as the driver always used to do).
 > 
-> iio_hwmon_read_val() is using iio_read_channel_processed() and that will
-> basically only read one of the 2 channels. As I documented, you actually
-> need to read both channel 8 and channel 9 and then compute the value in
-> Kelvins. I'm not sure how you want me to do that in the current framework.
+> Now you raise the question of whether rows should get queried as
+> well depending on whether "a key may sit there".  It wasn't the
+> exact question I raised, but I added a comment to the spot where
+> input subsystem events get generated:  Is the driver expected to
+> emit events for matrix positions where no key map entry exists?
 
-What are these two channels actually measuring? Is the value of a single
-channel meaningful on it's own? If not it might make sense to update the IIO
-driver to just have one temperature channel.
-
-- Lars
-
+I would assume there is no need to, but I don't know for sure. Perhaps
+Dmitry can answer that?
