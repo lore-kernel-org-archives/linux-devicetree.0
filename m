@@ -1,97 +1,53 @@
-From: Stuart Yoder <b08248-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 7/9] documentation: iommu: add description of ARM System
-	MMU binding
-Date: Fri, 28 Jun 2013 11:03:57 -0500
-Message-ID: <CALRxmdB4EANJDU1D4dPz_gon4_C_nLGQmMmoP0MyAR-bz2v-PA@mail.gmail.com>
-References: <1370889285-22799-1-git-send-email-will.deacon@arm.com>
-	<1370889285-22799-8-git-send-email-will.deacon@arm.com>
-	<CALRxmdBxFWoRKv+bUu8VEwNNcAJUej9jM2V8N0rrqrr_Vpe8fQ@mail.gmail.com>
-	<20130626133941.GD7417@mudshark.cambridge.arm.com>
-	<CALRxmdCycFK2wW=C4aU79mudSaT+2vU8nzXxepdstubg+YSdQg@mail.gmail.com>
-	<20130626174231.GH10333@mudshark.cambridge.arm.com>
-	<CALRxmdD5fyp06xW+z=rWagJc_bcJmpr1H9Zbdf=xbg9cCzvVfw@mail.gmail.com>
-	<20130628090635.GB29002@mudshark.cambridge.arm.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 3/4] hwmon: Add a simple driver to read the MXS SoC
+ temperature
+Date: Fri, 28 Jun 2013 09:35:40 -0700
+Message-ID: <20130628163540.GA26547@roeck-us.net>
+References: <1372236673-20725-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <1372236673-20725-4-git-send-email-alexandre.belloni@free-electrons.com>
+ <20130626143927.GB31998@roeck-us.net>
+ <20130627091732.GP5803@lukather>
+ <20130627142758.GA5812@roeck-us.net>
+ <51CC91E8.50605@free-electrons.com>
+ <51CD9B19.90407@metafoo.de>
+ <51CDA2BF.5050501@free-electrons.com>
+ <51CDAABB.4020505@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20130628090635.GB29002-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org Discuss" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51CDAABB.4020505@metafoo.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Shawn Guo <shawn.guo@linaro.org>, Jean Delvare <khali@linux-fr.org>, jimwall@q.com, brian@crystalfontz.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 28, 2013 at 4:06 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Thu, Jun 27, 2013 at 07:22:30PM +0100, Stuart Yoder wrote:
->> On Wed, Jun 26, 2013 at 12:42 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Wed, Jun 26, 2013 at 05:19:48PM +0100, Stuart Yoder wrote:
->> >> On Wed, Jun 26, 2013 at 8:39 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
->> >> > I'd suggest looking at the driver I posted to get a gist of how the parsing
->> >> > code works, but suffice to say that we describe both the number of
->> >> > interrupts and the actual interrupt numbers here.
->> >>
->> >> I understand that the number of interrupts and actual interrupt numbers
->> >> are described here, but was referring to the _meaning_ of the interrupt
->> >> numbers.   A binding for a device with 2 interrupts, a TX and RX would
->> >> normally identify which interrupt specifier is for TX and which is for RX.
->> >>
->> >> Based on your code, the 2 global interrupts seem to be the secure
->> >> and non-secure fault interrupts...which your driver does not differentiate.
->> >> However, the device tree is describing hardware and  you can't assume
->> >> that all drivers don't care which is which.
->> >
->> > Currently, the driver only works when Linux is running as non-secure, which is
->> > becoming more and more common since it is required to be able to make use of
->> > hyp mode.
->> >
->> > There are actually two global interrupts for SMMUv1 and SMMUv2, which
->> > correspond to configuration faults and `other' global faults.
->>
->> So, why don't we define which interrupt is which in this binding?
->> ...e.g. "The first
->> interrupt specifier is for the configuration access fault interrupt, the second
->> interrupt specifier is for other global faults."
->
-> Well, first of all, they're both global interrupts and the handler will have
-> to go and access exactly the same registers to deal with the fault, so you
-> don't really gain anything.
+On Fri, Jun 28, 2013 at 05:24:43PM +0200, Lars-Peter Clausen wrote:
+> On 06/28/2013 04:50 PM, Alexandre Belloni wrote:
+> > On 28/06/2013 16:18, Lars-Peter Clausen wrote:
+> >> On 06/27/2013 09:26 PM, Alexandre Belloni wrote:
+> >>>
+> >>> They are already registered as IIO_TEMP but only implement read_raw. Also,
+> >>>
+> >>> iio_hwmon_read_val() is using iio_read_channel_processed() and that will
+> >>> basically only read one of the 2 channels. As I documented, you actually
+> >>> need to read both channel 8 and channel 9 and then compute the value in
+> >>> Kelvins. I'm not sure how you want me to do that in the current framework.
+> >> What are these two channels actually measuring? Is the value of a single
+> >> channel meaningful on it's own? If not it might make sense to update the IIO
+> >> driver to just have one temperature channel.
+> > 
+> > It's not actually meaningful on its own. So, what you would do is expose
+> > one iio channel for two ADC channels and do the computation in read_raw
+> > ? or read_processed ? Then using iio-hwon to export it. ?
+> > 
+> > Regards,
+> > 
+> 
+> Yes, return channel9 - channel8 as the raw value for the temperature channel
+> and provide proper scale and offset values, so that
+> iio_read_channel_processed() will return the correct value.
+> 
+Agreed.
 
-It should be up to the OS to handle 2 interrupts the same, not
-something
-
-> However, the main reason is that you need to be able to handle:
->
->   (1) Only one of the interrupts is routed to the interrupt controller
->   (2) The interrupts are ORd into a single line
-
-That's a particular SoC implementation, no?  It shouldn't
-dictate the SMMU binding.
-
-If they are ORed then the interrupt controller can't distinguish them
-and both interrupt specifiers should have the _same_ interrupt number:
-
-+                #global-interrupts = <2>;
-+                interrupts = <0 32 4>,
-+                             <0 32 4>,
-
-(...or perhaps only define 1 global interrupt-- interrupt 32)
-
-If an implementation chose to not OR them, then they will
-have different interrupt numbers and need to be distinguished:
-
-+                #global-interrupts = <2>;
-+                interrupts = <0 32 4>,
-+                             <0 33 4>,
-
-...and in that case the binding needs to differentiate which
-is which.
-
-Stuart
+Guenter
