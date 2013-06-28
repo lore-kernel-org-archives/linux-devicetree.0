@@ -1,214 +1,77 @@
-From: mathieu.poirier@linaro.org
-Subject: [PATCH v2] Input: Add device tree bindings for input keys
-Date: Fri, 28 Jun 2013 07:46:12 -0600
-Message-ID: <1372427172-9546-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: grant.likely@linaro.org
-Cc: devicetree-discuss@lists.ozlabs.org, dmitry.torokhov@gmail.com, john.stultz@linaro.org, kernel-team@android.com, linux-input@vger.kernel.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] of: Specify initrd location using 64-bit
+Date: Fri, 28 Jun 2013 15:49:31 +0200
+Message-ID: <20130628134931.GD21034@game.jcrosoft.org>
+References: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com>
+ <51C4171C.9050908@linutronix.de> <51C48B5A.2040404@ti.com>
+ <51CCA67C.2010803@gmail.com>
+ <CACxGe6vOH0sCFVVXrYqD3dbYdOvithVu7-d1cvy5885i8x_Myw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6vOH0sCFVVXrYqD3dbYdOvithVu7-d1cvy5885i8x_Myw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mips <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>Santosh Shilimkar <s>
 List-Id: devicetree@vger.kernel.org
 
-From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
+On 10:59 Fri 28 Jun     , Grant Likely wrote:
+> On Thu, Jun 27, 2013 at 9:54 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On 06/21/2013 12:20 PM, Santosh Shilimkar wrote:
+> >> On Friday 21 June 2013 05:04 AM, Sebastian Andrzej Siewior wrote:
+> >>> On 06/21/2013 02:52 AM, Santosh Shilimkar wrote:
+> >>>> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
+> >>>> index 0a2c68f..62e2e8f 100644
+> >>>> --- a/arch/microblaze/kernel/prom.c
+> >>>> +++ b/arch/microblaze/kernel/prom.c
+> >>>> @@ -136,8 +136,7 @@ void __init early_init_devtree(void *params)
+> >>>>  }
+> >>>>
+> >>>>  #ifdef CONFIG_BLK_DEV_INITRD
+> >>>> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
+> >>>> -           unsigned long end)
+> >>>> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
+> >>>>  {
+> >>>>     initrd_start = (unsigned long)__va(start);
+> >>>>     initrd_end = (unsigned long)__va(end);
+> >>>
+> >>> I think it would better to go here for phys_addr_t instead of u64. This
+> >>> would force you in of_flat_dt_match() to check if the value passed from
+> >>> DT specifies a memory address outside of 32bit address space and the
+> >>> kernel can't deal with this because its phys_addr_t is 32bit only due
+> >>> to a Kconfig switch.
+> >>>
+> >>> For x86, the initrd has to remain in the 32bit address space so passing
+> >>> the initrd in the upper range would violate the ABI. Not sure if this
+> >>> is true for other archs as well (ARM obviously not).
+> >>>
+> >> That pretty much means phys_addr_t. It will work for me as well but
+> >> in last thread from consistency with memory and reserved node, Rob
+> >> insisted to keep it as u64. So before I re-spin another version,
+> >> would like to here what Rob has to say considering the x86 requirement.
+> >>
+> >> Rob,
+> >> Are you ok with phys_addr_t since your concern was about rest
+> >> of the memory specific bits of the device-tree code use u64 ?
+> >
+> > No. I still think it should be u64 for same reasons I said originally.
+> 
+> +1
+> 
++1
 
-This adds a simple device tree binding for the specification of
-key sequences.  Definition of the keys found in the sequence are
-located in 'include/uapi/linux/input.h'.
+fix type
 
-A keyset can be applied to a single device or the system as a
-whole, depending on the associated driver.  An extention is also
-provided for the definition of multiple keysets.
-
-Lastly, the possibility to get keyreset timeout values from the
-device tree based on the new binding is added.
-
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
-changes for v2:
-   - Moving to pr_debug when 'sysrq' node isn't found.
-   - Merging binding description and code enhancement.
----
- .../devicetree/bindings/input/input-keyset.txt     |   78 ++++++++++++++++++++
- drivers/tty/sysrq.c                                |   54 ++++++++++++++
- 2 files changed, 132 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/input-keyset.txt
-
-diff --git a/Documentation/devicetree/bindings/input/input-keyset.txt b/Documentation/devicetree/bindings/input/input-keyset.txt
-new file mode 100644
-index 0000000..4f96299
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/input-keyset.txt
-@@ -0,0 +1,78 @@
-+Input: keyset
-+
-+A simple binding to represent a set of keys as described in
-+include/uapi/linux/input.h.  This is targeted at devices that want
-+to react to certain key combination being pressed or need to
-+perform some configuration based on a set of input keys.
-+
-+It can also be used in a scenario where the system has a whole
-+needs to respond to a specific sequence of keys.
-+
-+Required properties:
-+ - linux,input-keyset: An array of 1-cell entries representing the
-+   values associated with the KEY_xyz #defines found in input.h.
-+
-+Example1:
-+Applicable to a specific device:
-+
-+        matrix-keypad {
-+                compatible = "gpio-matrix-keypad";
-+                debounce-delay-ms = <5>;
-+                col-scan-delay-us = <2>;
-+
-+                row-gpios = <&gpio2 25 0
-+                             &gpio2 26 0
-+                             &gpio2 27 0>;
-+
-+                col-gpios = <&gpio2 21 0
-+                             &gpio2 22 0
-+                             &gpio2 23 0>;
-+
-+                linux,keymap = <0x00000002
-+                                0x01000005
-+                                0x02000008
-+                                0x00010003
-+                                0x01010006
-+                                0x02010009
-+                                0x00020004
-+                                0x01020007
-+                                0x0202000a>;
-+
-+                linux,keyset = <0x04
-+                                0x05
-+                                0x0a>;
-+        };
-+
-+Example2:
-+Used as a system-wide parameter:
-+
-+	sysrq {
-+		linux,input-keyset = <0x01
-+				      0x0A
-+				      0x19>;
-+		timout-ms = <3000>;
-+	};
-+
-+Would represent KEY_1, KEY_9 and KEY_P.
-+
-+Example3:
-+Binding used when multiple declarations are needed:
-+
-+acme_keysets {
-+        keyset0 {
-+                linux,input-keyset = <0x01
-+                                      0x02
-+                                      0x03>;
-+        };
-+        keyset1 {
-+                linux,input-keyset = <0x04
-+                                      0x05
-+                                      0x06>;
-+        };
-+        keyset2 {
-+                linux,input-keyset = <0x07
-+                                      0x08
-+                                      0x09>;
-+        };
-+
-+};
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index b51c154..9c20886 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -44,6 +44,7 @@
- #include <linux/uaccess.h>
- #include <linux/moduleparam.h>
- #include <linux/jiffies.h>
-+#include <linux/of.h>
- 
- #include <asm/ptrace.h>
- #include <asm/irq_regs.h>
-@@ -671,6 +672,50 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
- 	}
- }
- 
-+static void sysrq_of_get_keyreset_config(void)
-+{
-+	unsigned short key;
-+	struct device_node *np;
-+	const struct property *prop;
-+	const __be32 *val;
-+	int count, i;
-+
-+	np = of_find_node_by_path("/sysrq");
-+	if (!np) {
-+		pr_debug("No sysrq node found");
-+		goto out;
-+	}
-+
-+	prop = of_find_property(np, "linux,input-keyset", NULL);
-+	if (!prop || !prop->value) {
-+		pr_err("Invalid input-keyset");
-+		goto out;
-+	}
-+
-+	count = prop->length / sizeof(u32);
-+	val = prop->value;
-+
-+	if (count > SYSRQ_KEY_RESET_MAX)
-+		count = SYSRQ_KEY_RESET_MAX;
-+
-+	/* reset in case a __weak definition was present */
-+	sysrq_reset_seq_len = 0;
-+
-+	for (i = 0; i < count; i++) {
-+		key = (unsigned short)be32_to_cpup(val++);
-+		if (key == KEY_RESERVED || key > KEY_MAX)
-+			break;
-+
-+		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
-+	}
-+
-+	/* get reset timeout if any */
-+	of_property_read_u32(np, "timeout-ms", &sysrq_reset_downtime_ms);
-+
-+ out:
-+	;
-+}
-+
- static void sysrq_reinject_alt_sysrq(struct work_struct *work)
- {
- 	struct sysrq_state *sysrq =
-@@ -688,6 +733,7 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
- 		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
- 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
- 
-+
- 		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
- 		input_inject_event(handle, EV_KEY, alt_code, 0);
- 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
-@@ -903,6 +949,7 @@ static inline void sysrq_register_handler(void)
- 	int error;
- 	int i;
- 
-+	/* first check if a __weak interface was instantiated */
- 	for (i = 0; i < ARRAY_SIZE(sysrq_reset_seq); i++) {
- 		key = platform_sysrq_reset_seq[i];
- 		if (key == KEY_RESERVED || key > KEY_MAX)
-@@ -911,6 +958,13 @@ static inline void sysrq_register_handler(void)
- 		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
- 	}
- 
-+	/*
-+	 * DT configuration takes precedence over anything
-+	 * that would have been defined via the __weak
-+	 * interface
-+	 */
-+	sysrq_of_get_keyreset_config();
-+
- 	error = input_register_handler(&sysrq_handler);
- 	if (error)
- 		pr_err("Failed to register input handler, error %d", error);
--- 
-1.7.9.5
-
+Best Regards,
+J.
