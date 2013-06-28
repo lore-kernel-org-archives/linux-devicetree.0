@@ -1,57 +1,44 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH V2 1/3] phy: Add driver for Exynos DP PHY
-Date: Fri, 28 Jun 2013 12:32:47 +0300
-Message-ID: <20130628093247.GB11297@arwen.pp.htv.fi>
-References: <001f01ce73cf$46d8c940$d48a5bc0$@samsung.com>
-Reply-To: <balbi@ti.com>
+From: Hebbar Gururaja <gururaja.hebbar@ti.com>
+Subject: [PATCH 4/4] ARM: dts: AM33XX: update rtc node compatibility
+Date: Fri, 28 Jun 2013 15:05:09 +0530
+Message-ID: <1372412109-986-5-git-send-email-gururaja.hebbar@ti.com>
+References: <1372412109-986-1-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kXdP64Ggrk/fb43R"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <001f01ce73cf$46d8c940$d48a5bc0$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1372412109-986-1-git-send-email-gururaja.hebbar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: khilman@linaro.org, tony@atomide.com, b-cousson@ti.com
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, vaibhav.bedia@ti.com, sudhakar.raj@ti.com, gururaja.hebbar@ti.com, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
---kXdP64Ggrk/fb43R
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Since AM33xx  RTC IP has RTC_IRQWAKEEN to support Alarm Wake-up.
 
-On Fri, Jun 28, 2013 at 04:15:32PM +0900, Jingoo Han wrote:
-> Add a PHY provider driver for the Samsung Exynos SoC DP PHY.
->=20
-> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+Update the rtc compatible property to "ti,am3352-rtc" to enable handling
+of this feature inside rtc-omap driver.
 
-Now that you fixed Kishon's concerns, this looks pretty good:
+Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Sekhar Nori <nsekhar@ti.com>
+Cc: Kevin Hilman <khilman@linaro.org>
+Cc: b-cousson@ti.com
+---
+:100644 100644 77aa1b0... dde180a... M	arch/arm/boot/dts/am33xx.dtsi
+ arch/arm/boot/dts/am33xx.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Felipe Balbi <balbi@ti.com>
-
---=20
-balbi
-
---kXdP64Ggrk/fb43R
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRzVg/AAoJEIaOsuA1yqREwDYP/AsIqxzypV1GV5FsilYgeiYv
-lFFb/+n+AlgOFkoe4JJOJMlxkukMBgu2pTXB4dg+QAbF6Nhb+bJ/3XVeUFERQeae
-nzrifhvuFZn9rnqkQ3vhiYucnn7jN2cgbnzIcGogAGGd4KtA+m6JdGsi9tLM/fLS
-kZEHv++owa63Cud6EY6eXfMDk5hk+Ym6Yk5e5RLX0+Ox2mhSzjzo4rmvI+vXq7Of
-lQh8/+GfE75GUs9giYE6bWmrTjGddVZjKD6euv1AfZE4jq8RLdosfnLn4y2ZIagk
-KUSC3vBR2Jk540nUy4ObGxhaG9yT3uR+TU7lXX/AwcL5HwDUDo3gtUUOPOU32wkJ
-vu4207RUwd+IPUZeW2nVtv5b4y8HTjKgOW9JFNrcSSb87s5Eez1GABK98CfszCF9
-MBuIKhYpNYPnLZoxNzjiizBjY50DUzpVrWZvHqfCl9+knoWJEKu5mLfEvqW1JGtq
-7UkCT8jFaKtbHQO+Bdz5JAa1K0+yM3MALWMiFjty2JrNrcckBehFRqGBi/tJZc/U
-ZpDKKS11/twI3D7nELf9WFxt/7L96SaduZtLBKwoZVYmKBbx9U0567H6EwR+GCPY
-OwGUQ2a0QqYV3JQw5oGVeK5hy8ZIgZ6IvFiIxCwmxIiU8ra1AkoMHVOdzLG4PcOi
-N2431qH8bh6agDl78tZh
-=BnXT
------END PGP SIGNATURE-----
-
---kXdP64Ggrk/fb43R--
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 77aa1b0..dde180a 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -297,7 +297,7 @@
+ 		};
+ 
+ 		rtc@44e3e000 {
+-			compatible = "ti,da830-rtc";
++			compatible = "ti,am3352-rtc";
+ 			reg = <0x44e3e000 0x1000>;
+ 			interrupts = <75
+ 				      76>;
+-- 
+1.7.9.5
