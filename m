@@ -1,60 +1,40 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v3 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
-Date: Sat, 29 Jun 2013 21:34:03 +0200
-Message-ID: <51CF36AB.4010300@gmail.com>
-References: <1372258946-15607-1-git-send-email-s.nawrocki@samsung.com> <1372258946-15607-2-git-send-email-s.nawrocki@samsung.com> <51CD4698.3070409@gmail.com> <51CD6153.5050406@samsung.com> <51CEA197.8070207@ti.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v5 06/12] memory: mvebu-devbus: Remove address decoding
+ window workaround
+Date: Sat, 29 Jun 2013 13:11:24 -0700
+Message-ID: <20130629201124.GA15981@kroah.com>
+References: <1372532655-20321-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1372532655-20321-7-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <51CEA197.8070207@ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, jg1.han@samsung.com, dh09.lee@samsung.com, balbi@ti.com, inki.dae@samsung.com, kyungmin.park@samsung.com, Hui Wang <jason77.wang@gmail.com>, kgene.kim@samsung.com, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1372532655-20321-7-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sat, Jun 29, 2013 at 04:04:09PM -0300, Ezequiel Garcia wrote:
+> Now that mbus device tree binding has been introduced, remove the address
+> decoding window management from this driver.
+> A suitable 'ranges' entry should be added to the devbus-compatible node in
+> the device tree, as described by the mbus binding documentation.
+> 
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/memory/mvebu-devbus.c | 64 ++-----------------------------------------
+>  1 file changed, 2 insertions(+), 62 deletions(-)
 
-On 06/29/2013 10:57 AM, Kishon Vijay Abraham I wrote:
-> On Friday 28 June 2013 03:41 PM, Sylwester Nawrocki wrote:
->> On 06/28/2013 10:17 AM, Hui Wang wrote:
->>> On 06/26/2013 11:02 PM, Sylwester Nawrocki wrote:
->>>> Add a PHY provider driver for the Samsung S5P/Exynos SoC MIPI CSI-2
->>>> receiver and MIPI DSI transmitter DPHYs.
->>>>
->>>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->>>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>> ---
->>>> Changes since v2:
->>>> - adapted to the generic PHY API v9: use phy_set/get_drvdata(),
->>>> - fixed of_xlate callback to return ERR_PTR() instead of NULL,
->>>> - namespace cleanup, put "GPL v2" as MODULE_LICENSE, removed pr_debug,
->>>> - removed phy id check in __set_phy_state().
->>>> ---
->>> [...]
->>>> +
->>>> + if (IS_EXYNOS_MIPI_DSIM_PHY_ID(id))
->>>> + reset = EXYNOS_MIPI_PHY_MRESETN;
->>>> + else
->>>> + reset = EXYNOS_MIPI_PHY_SRESETN;
->>>> +
->>>> + spin_lock_irqsave(&state->slock, flags);
->>>
->>> Sorry for one stupid question here, why do you use spin_lock_irqsave()
->>> rather than spin_lock(),
->>> I don't see the irq handler will use this spinlock anywhere in this c
->>> file.
->>
->> Yes, there is no chance the PHY users could call the phy ops from within
->> an interrupt context. Especially now when there is a per phy object
->> mutex used in the PHY operation helpers. So I'll replace it with plain
->> spin_lock/unlock. Thank you for the review.
->
-> Now that PHY ops is already protected, do you really need a spin_lock here?
-
-It is still needed, to synchronize access to the control register from
-two separate PHY objects. The mutex is per PHY object, while the spinlock
-is per PHY provider.
-
-Thanks,
-Sylwester
+Acked-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
