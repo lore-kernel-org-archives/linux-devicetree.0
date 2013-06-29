@@ -1,42 +1,64 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] ARM: dts: imx27 Phytec phyCARD-S
-Date: Sat, 29 Jun 2013 10:38:59 +0200
-Message-ID: <20130629083859.GL516@pengutronix.de>
-References: <1372431037-13519-1-git-send-email-mpa@pengutronix.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 1/5] phy: Add driver for Exynos MIPI CSIS/DSIM DPHYs
+Date: Sat, 29 Jun 2013 14:27:59 +0530
+Message-ID: <51CEA197.8070207@ti.com>
+References: <1372258946-15607-1-git-send-email-s.nawrocki@samsung.com>
+ <1372258946-15607-2-git-send-email-s.nawrocki@samsung.com>
+ <51CD4698.3070409@gmail.com> <51CD6153.5050406@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1372431037-13519-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51CD6153.5050406@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, jg1.han@samsung.com, dh09.lee@samsung.com, balbi@ti.com, inki.dae@samsung.com, kyungmin.park@samsung.com, Hui Wang <jason77.wang@gmail.com>, kgene.kim@samsung.com, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 28, 2013 at 04:50:32PM +0200, Markus Pargmann wrote:
-> Hi,
-> 
-> This series adds some device nodes for imx27 and board files for Phytec
-> phyCARD-S SOM and RDK. It is based on shawn's branch "imx/dt".
+Hi,
 
-Looks good to me.
+On Friday 28 June 2013 03:41 PM, Sylwester Nawrocki wrote:
+> On 06/28/2013 10:17 AM, Hui Wang wrote:
+>> On 06/26/2013 11:02 PM, Sylwester Nawrocki wrote:
+>>> Add a PHY provider driver for the Samsung S5P/Exynos SoC MIPI CSI-2
+>>> receiver and MIPI DSI transmitter DPHYs.
+>>>
+>>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>> ---
+>>> Changes since v2:
+>>>    - adapted to the generic PHY API v9: use phy_set/get_drvdata(),
+>>>    - fixed of_xlate callback to return ERR_PTR() instead of NULL,
+>>>    - namespace cleanup, put "GPL v2" as MODULE_LICENSE, removed pr_debug,
+>>>    - removed phy id check in __set_phy_state().
+>>> ---
+>> [...]
+>>> +
+>>> +	if (IS_EXYNOS_MIPI_DSIM_PHY_ID(id))
+>>> +		reset = EXYNOS_MIPI_PHY_MRESETN;
+>>> +	else
+>>> +		reset = EXYNOS_MIPI_PHY_SRESETN;
+>>> +
+>>> +	spin_lock_irqsave(&state->slock, flags);
+>>
+>> Sorry for one stupid question here, why do you use spin_lock_irqsave()
+>> rather than spin_lock(),
+>> I don't see the irq handler will use this spinlock anywhere in this c file.
+>
+> Yes, there is no chance the PHY users could call the phy ops from within
+> an interrupt context. Especially now when there is a per phy object
+> mutex used in the PHY operation helpers. So I'll replace it with plain
+> spin_lock/unlock. Thank you for the review.
 
-Acked-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Now that PHY ops is already protected, do you really need a spin_lock here?
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks
+Kishon
