@@ -1,229 +1,79 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH V3 2/3] phy: Add driver for Exynos DP PHY
-Date: Mon, 01 Jul 2013 21:48:00 +0200
-Message-ID: <51D1DCF0.50803@gmail.com>
-References: <005301ce761b$32adf960$9809ec20$@samsung.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [RFC] wlcore: sdio: add wilink clock providers
+Date: Mon, 1 Jul 2013 23:46:33 +0300
+Message-ID: <20130701204633.GB805@arwen.pp.htv.fi>
+References: <1372707250-11998-1-git-send-email-coelho@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <005301ce761b$32adf960$9809ec20$@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org, 'Hui Wang' <jason77.wang@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NDin8bjvE/0mNLFQ"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372707250-11998-1-git-send-email-coelho@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Luciano Coelho <coelho@ti.com>
+Cc: mturquette@linaro.org, mark.rutland@arm.com, balbi@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, --linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-wireless@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/01/2013 07:24 AM, Jingoo Han wrote:
-> Add a PHY provider driver for the Samsung Exynos SoC DP PHY.
->
-> Signed-off-by: Jingoo Han<jg1.han@samsung.com>
-> Cc: Sylwester Nawrocki<s.nawrocki@samsung.com>
-> Acked-by: Felipe Balbi<balbi@ti.com>
-> ---
->   .../devicetree/bindings/phy/samsung-phy.txt        |    8 ++
->   drivers/phy/Kconfig                                |    5 +
->   drivers/phy/Makefile                               |    1 +
->   drivers/phy/phy-exynos-dp-video.c                  |  118 ++++++++++++++++++++
->   4 files changed, 132 insertions(+)
->   create mode 100644 drivers/phy/phy-exynos-dp-video.c
->
-> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> index 5ff208c..3fb656a 100644
-> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> @@ -12,3 +12,11 @@ the PHY specifier identifies the PHY and its meaning is as follows:
->     1 - MIPI DSIM 0,
->     2 - MIPI CSIS 1,
->     3 - MIPI DSIM 1.
-> +
-> +Samsung EXYNOS SoC series DP PHY
+--NDin8bjvE/0mNLFQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I would make it "Samsung EXYNOS SoC series Display Port PHY"
+Hi,
 
-> +-------------------------------------------------
+On Mon, Jul 01, 2013 at 10:34:10PM +0300, Luciano Coelho wrote:
+> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dt=
+s/omap4-panda-common.dtsi
+> index 670c3ce..7f061b8 100644
+> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+> @@ -65,11 +65,19 @@
+>  		enable-active-high;
+>  	};
+> =20
 > +
-> +Required properties:
-> +- compatible : should be "samsung,exynos5250-dp-video-phy";
-> +- reg : offset and length of the DP PHY register set;
-> +- #phy-cells : from the generic phy bindings, must be 0;
+>  	wlan {
+> -	     compatible =3D "ti,wilink6";
+> -	     interrupt-parent =3D <&gpio2>;
+> -	     interrupts =3D <21 0x4>;	/* gpio line 53, high level triggered */
+> -	     refclock =3D <2>;		/* 38.4 MHz */
+> +		compatible =3D "ti,wilink6";
+> +		interrupt-parent =3D <&gpio2>;
+> +		interrupts =3D <21 0x4>;	/* gpio line 53, high level triggered */
+> +		clocks =3D <&refclock>;
+> +		clock-names =3D "refclock";
 
-s/phy/PHY ?
+hmmm, shouldn't you provide both clocks (refclock and tcx0clock)
+explicitly here ?
 
-> \ No newline at end of file
+Also, you should probably make it clear that the WiLink module is fed by
+the 32K sync clock just to make sure clock usecounts are correctly
+incremented ?
 
-Missing new line character.
+--=20
+balbi
 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 6f446d0..760f55a 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -19,4 +19,9 @@ config PHY_EXYNOS_MIPI_VIDEO
->   	help
->   	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung
->   	  S5P and EXYNOS SoCs.
-> +
-> +config PHY_EXYNOS_DP_VIDEO
-> +	tristate "EXYNOS SoC series DP PHY driver"
+--NDin8bjvE/0mNLFQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-"EXYNOS SoC series Display Port PHY driver" ?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> +	help
-> +	  Support for DP PHY found on Samsung EXYNOS SoCs.
+iQIcBAEBAgAGBQJR0eqpAAoJEIaOsuA1yqRE5SsP/1OrvXmzGEAMUB8plu2sPDRS
+xpWYJFtYXDMTwxfHi6RnBvimRTmP1okmuulV6LgwbDPy00+eMWCGr5ig1BnEm5cJ
+5NaHQAk4js08NlgRYffE8+t6jkXR6xiFUvyhAdAn8ZuXeApIjLeoguWLHyG6RvTr
+J6lrB7+PRPR4I9fzTbu/QClOlipA073Xyjogd3jA686Oq7UtFj/G/XcBB16SeXcN
+q3zYUt9c6LNMnnt1WazQr8v4H5WPLBp+dXcwANbLxcr47aJlYZqzpzH2O7Z9Y7Hx
+AAdhhNeeQ1CCGVGMqNI2zS0UW9kZntrWO6Wd+YO1rSPKFBXFpphLO8OYE+QipJHH
+d92MmgCqzkWpJggx1NOSFFFC8v7TKc6zjdsEWSuFsZjt3rVkgoe+Vx73uxQr89Gx
+mJSe65bnpBZeOZnqaB0wfgMLq+fq0+LIcYQQlVoGG780h5ybpXVlqbXjWcQh1nJe
+YpHxyvP2ocWe5kQ+N6iy7nCszdtOaJTEEhAM2veLCCdpl6OsQEN1rcV86vCEgBVy
+B+hyio+gDrjP8bo6vcdhG9BWOwTf9qxV560kV5WKGelRwqJxqIlnZ4R00apVgk7q
+mC40OzCTVsv1NoxJsBsyeKSxYXiF19WFFx8+gUziMWZ01Z9I4obd6nZ6pcnLhTuM
+ggwzY03Wzis6VT8Hrjt3
+=TGWR
+-----END PGP SIGNATURE-----
 
-s/DP/Display Port ?
-
->   endif
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 71d8841..0fd1340 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -4,3 +4,4 @@
->
->   obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
->   obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
-> +obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
-> diff --git a/drivers/phy/phy-exynos-dp-video.c b/drivers/phy/phy-exynos-dp-video.c
-> new file mode 100644
-> index 0000000..75e1d11
-> --- /dev/null
-> +++ b/drivers/phy/phy-exynos-dp-video.c
-> @@ -0,0 +1,118 @@
-> +/*
-> + * Samsung EXYNOS SoC series DP PHY driver
-
-s/DP/Display Port ?
-
-> + *
-> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> + * Author: Jingoo Han<jg1.han@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include<linux/io.h>
-> +#include<linux/kernel.h>
-> +#include<linux/module.h>
-> +#include<linux/of.h>
-> +#include<linux/of_address.h>
-> +#include<linux/phy/phy.h>
-> +#include<linux/platform_device.h>
-> +
-> +/* DPTX_PHY_CONTROL register */
-> +#define EXYNOS_DPTX_PHY_ENABLE		(1<<  0)
-> +
-> +struct exynos_dp_video_phy {
-> +	void __iomem *regs;
-> +};
-> +
-> +static int __set_phy_state(struct exynos_dp_video_phy *state, unsigned int on)
-> +{
-> +	void __iomem *addr;
-
-How about just dropping this local variable ?
-
-> +	u32 reg;
-> +
-> +	addr = state->regs;
-> +
-> +	reg = readl(addr);
-> +	if (on)
-> +		reg |= EXYNOS_DPTX_PHY_ENABLE;
-> +	else
-> +		reg&= ~EXYNOS_DPTX_PHY_ENABLE;
-> +	writel(reg, addr);
-> +
-> +	return 0;
-> +}
-> +
-> +static int exynos_dp_video_phy_power_on(struct phy *phy)
-> +{
-> +	struct exynos_dp_video_phy *state = phy_get_drvdata(phy);
-> +
-> +	return __set_phy_state(state, 1);
-> +}
-> +
-> +static int exynos_dp_video_phy_power_off(struct phy *phy)
-> +{
-> +	struct exynos_dp_video_phy *state = phy_get_drvdata(phy);
-> +
-> +	return __set_phy_state(state, 0);
-> +}
-> +
-> +static struct phy_ops exynos_dp_video_phy_ops = {
-> +	.power_on	= exynos_dp_video_phy_power_on,
-> +	.power_off	= exynos_dp_video_phy_power_off,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static int exynos_dp_video_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct exynos_dp_video_phy *state;
-> +	struct device *dev =&pdev->dev;
-> +	struct resource *res;
-> +	struct phy_provider *phy_provider;
-> +	struct phy *phy;
-> +
-> +	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
-> +	if (!state)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +	state->regs = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(state->regs))
-> +		return PTR_ERR(state->regs);
-> +
-> +	dev_set_drvdata(dev, state);
-
-I can't see any corresponding dev_get_drvdata(), it should be safe
-to remove this assignment.
-
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	if (IS_ERR(phy_provider))
-> +		return PTR_ERR(phy_provider);
-> +
-> +	phy = devm_phy_create(dev, 0,&exynos_dp_video_phy_ops, "dp");
-
-The label could be NULL, since there is no need to support non-dt config.
-
-> +	if (IS_ERR(phy)) {
-> +		dev_err(dev, "failed to create DP PHY\n");
-> +		return PTR_ERR(phy);
-> +	}
-> +	phy_set_drvdata(phy, state);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_OF
-
-You don't use of_match_ptr() macro to assign of_match_table to the driver
-structure below. This means build with CONFIG_OF disabled is broken now.
-I would just remove that #ifdef and would make the driver depends on
-CONFIG_OF.
-
-> +static const struct of_device_id exynos_dp_video_phy_of_match[] = {
-> +	{ .compatible = "samsung,exynos5250-dp-video-phy" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, exynos_dp_video_phy_of_match);
-> +#endif
-> +
-> +static struct platform_driver exynos_dp_video_phy_driver = {
-> +	.probe	= exynos_dp_video_phy_probe,
-> +	.driver = {
-> +		.name	= "exynos-dp-video-phy",
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table	= exynos_dp_video_phy_of_match,
-> +	}
-> +};
-> +module_platform_driver(exynos_dp_video_phy_driver);
-> +
-> +MODULE_AUTHOR("Jingoo Han<jg1.han@samsung.com>");
-> +MODULE_DESCRIPTION("Samsung EXYNOS SoC DP PHY driver");
-> +MODULE_LICENSE("GPL v2");
-
-Thanks,
-Sylwester
+--NDin8bjvE/0mNLFQ--
