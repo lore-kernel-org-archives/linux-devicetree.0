@@ -1,164 +1,61 @@
-From: Luciano Coelho <coelho@ti.com>
-Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
-Date: Mon, 1 Jul 2013 15:39:30 +0300
-Message-ID: <1372682370.21065.68.camel@cumari.coelho.fi>
-References: <1372149330-24335-1-git-send-email-coelho@ti.com>
-	 <20130628093848.GA2139@e106331-lin.cambridge.arm.com>
-	 <1372413215.21065.41.camel@cumari.coelho.fi>
-	 <20130628102145.GB2139@e106331-lin.cambridge.arm.com>
-	 <1372415514.21065.50.camel@cumari.coelho.fi>
-	 <1372418531.21065.53.camel@cumari.coelho.fi>
-	 <20130628114129.GO11297@arwen.pp.htv.fi>
-	 <1372421632.21065.60.camel@cumari.coelho.fi>
-	 <20130628121859.GP11297@arwen.pp.htv.fi>
-	 <1372425670.21065.61.camel@cumari.coelho.fi>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH] of: Specify initrd location using 64-bit
+Date: Mon, 1 Jul 2013 09:58:35 -0400
+Message-ID: <51D18B0B.1060906@ti.com>
+References: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com> <51C4171C.9050908@linutronix.de> <51C48B5A.2040404@ti.com> <51CCA67C.2010803@gmail.com> <CACxGe6vOH0sCFVVXrYqD3dbYdOvithVu7-d1cvy5885i8x_Myw@mail.gmail.com> <20130628134931.GD21034@game.jcrosoft.org> <51CE1F92.3070802@ti.com> <51D1345B.8020509@linutronix.de> <CAMuHMdV6YM3-hASqjxkguEukZjnjK80gBjDNiabxjfQtC=c8ag@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1372425670.21065.61.camel@cumari.coelho.fi>
-Sender: linux-doc-owner@vger.kernel.org
-To: mturquette@linaro.org, Mark Rutland <mark.rutland@arm.com>
-Cc: balbi@ti.com, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-arm@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <CAMuHMdV6YM3-hASqjxkguEukZjnjK80gBjDNiabxjfQtC=c8ag@mail.gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, linux-mips <linux-mips@linux-mips.org>, Aurelien Jacquiot <a-jacquiot@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, Jonas Bonn <jonas@southpole.se>, Russell King <linux@arm.linux.org.uk>, linux-c6x-dev@linux-c6x.org, the arch/x86 maintainers <x86@kernel.org>, "arm@kernel.org" <arm@kernel.org>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-xtensa@linux-xtensa.org, James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-06-28 at 16:21 +0300, Luciano Coelho wrote:
-> On Fri, 2013-06-28 at 15:18 +0300, Felipe Balbi wrote:
-> > On Fri, Jun 28, 2013 at 03:13:52PM +0300, Luciano Coelho wrote:
-> > > On Fri, 2013-06-28 at 14:41 +0300, Felipe Balbi wrote:
-> > > > On Fri, Jun 28, 2013 at 02:22:11PM +0300, Luciano Coelho wrote:
-> > > > > On Fri, 2013-06-28 at 13:31 +0300, Luciano Coelho wrote:
-> > > > > > (fixed Mike's address)
-> > > > > > 
-> > > > > > On Fri, 2013-06-28 at 11:21 +0100, Mark Rutland wrote:
-> > > > > > > On Fri, Jun 28, 2013 at 10:53:35AM +0100, Luciano Coelho wrote:
-> > > > > > > > On Fri, 2013-06-28 at 10:38 +0100, Mark Rutland wrote:
-> > > > > > > > > On Tue, Jun 25, 2013 at 09:35:30AM +0100, Luciano Coelho wrote:
-> > > > > > > > > > +Optional properties:
-> > > > > > > > > > +--------------------
-> > > > > > > > > > +
-> > > > > > > > > > +- refclock: the internal WLAN reference clock frequency (required for
-> > > > > > > > > > +  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
-> > > > > > > > > > +  following:
-> > > > > > > > > > +	0 = 19.2 MHz
-> > > > > > > > > > +	1 = 26.0 MHz
-> > > > > > > > > > +	2 = 38.4 MHz
-> > > > > > > > > > +	3 = 52.0 MHz
-> > > > > > > > > > +	4 = 38.4 MHz, XTAL
-> > > > > > > > > > +	5 = 26.0 MHz, XTAL
-> > > > > > > > > > +
-> > > > > > > > > > +- tcxoclock: the internal WLAN TCXO clock frequency (required for
-> > > > > > > > > > +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
-> > > > > > > > > > +  following:
-> > > > > > > > > > +	0 = 19.200 MHz
-> > > > > > > > > > +	1 = 26.000 MHz
-> > > > > > > > > > +	2 = 38.400 MHz
-> > > > > > > > > > +	3 = 52.000 MHz
-> > > > > > > > > > +	4 = 16.368 MHz
-> > > > > > > > > > +	5 = 32.736 MHz
-> > > > > > > > > > +	6 = 16.800 MHz
-> > > > > > > > > > +	7 = 33.600 MHz
-> > > > > > > > > 
-> > > > > > > > > This looks suspiciously like what we have the common clock bindings for:
-> > > > > > > > > 
-> > > > > > > > > refclk {
-> > > > > > > > > 	compatible = "fixed-clock";
-> > > > > > > > > 	#clock-cells = <0>;
-> > > > > > > > > 	clock-frequency = <19200000>;
-> > > > > > > > > }
-> > > > > > > > > 
-> > > > > > > > > wilink {
-> > > > > > > > > 	compatible = "ti,wilink7";
-> > > > > > > > > 	interrupt-parent = <&some_interrupt_controller>;
-> > > > > > > > > 	interrupts = <0 1 1>;
-> > > > > > > > > 	clocks = <&refclk>, <&refclk>;
-> > > > > > > > > 	clock-names = "refclk", "txoclk";
-> > > > > > > > > };
-> > > > > > > > > 
-> > > > > > > > > Could you not use them?
-> > > > > > > > 
-> > > > > > > > Hmmm... this actually does look good.  But these are internal clocks in
-> > > > > > > > the modules, they cannot be accessed from outside.  Does it make sense
-> > > > > > > > to register them with the clock framework?
-> > > > > > > 
-> > > > > > > Given we already have a common way of describing clocks, I think it
-> > > > > > > makes sense to use it -- people already understand the common bindings,
-> > > > > > > and it's less code to add add to the kernel. I don't think the fact
-> > > > > > > these clocks are internal should prevent us from describing them as we
-> > > > > > > would an external clock.
-> > > > > > 
-> > > > > > Yes, I agree with you.  Thanks for the suggestion! I think it will look
-> > > > > > much better.  And now that I dug a bit more into the code, I can see
-> > > > > > that there are only structs being populated, so there shouldn't be any
-> > > > > > other side-effects.
-> > > > > 
-> > > > > Hmmm, one thing that escaped me.  Besides the frequency, I also need a
-> > > > > boolean that tells if the clock is XTAL or not.  I can't figure out how
-> > > > > to pass this if I use the generic clock framework.  Any suggestions?
-> > > > 
-> > > > Could you use clock-output-names for that ?
-> > > > 
-> > > > XTAL clock:
-> > > > 
-> > > > refclk {
-> > > > 	compatible = "fixed-clock";
-> > > > 	#clock cells = <0>;
-> > > > 	clock-frequency = <19200000>;
-> > > > 	clock-output-names = "xtal";
-> > > > };
-> > > > 
-> > > > non-XTAL clock:
-> > > > 
-> > > > refclk {
-> > > > 	compatible = "fixed-clock";
-> > > > 	#clock cells = <0>;
-> > > > 	clock-frequency = <19200000>;
-> > > > 	clock-output-names = "osc"; /* any better name ? */
-> > > > };
-> > > 
-> > > This starts looking a bit hacky.  Using the output name as a flag is not
-> > > very pretty.
-> > > 
-> > > I think it would be better to have a separate flag for it in the wlan
-> > > node.  Like an optional "refclock-xtal" boolean or something.  The
-> > > downside of this is that we would be adding information about the clock
-> > > details in the wilink node. :(
-> > > 
-> > > OTOH, we could add a flag to the generic clock binding? A new optional
-> > > boolean that tells whether the clock is XTAL or not:
-> > > 
-> > > refclk {
-> > > 	compatible = "fixed-clock";
-> > > 	#clock cells = <0>;
-> > > 	clock-frequency = <19200000>;
-> > > 	clock-xtal;
-> > > };
-> > > 
-> > > Do you think that would make sense?
-> > 
-> > sure, that looks alright to me. Surely there are other devices out there
-> > who want to know if the clock comes from a crystal or not ?!?
+On Monday 01 July 2013 03:59 AM, Geert Uytterhoeven wrote:
+> On Mon, Jul 1, 2013 at 9:48 AM, Sebastian Andrzej Siewior
+> <bigeasy@linutronix.de> wrote:
+>> On 06/29/2013 01:43 AM, Santosh Shilimkar wrote:
+>>> Apart from waste of 32bit, what is the other concern you
+>>> have ?
+>>
+>> You pass a u64 as a physical address which is represented in other
+>> parts of the kernel (for a good reason) by phys_addr_t.
+>>
+>>> I really want to converge on this patch because it
+>>> has been a open ended discussion for quite some time. Does
+>>> that really break any thing on x86 or your concern is more
+>>> from semantics of the physical address.
+>> You want to have your code in so you can continue with your work, that
+>> is okay. The other two arguments why u64 here is a good thing was "due
+>> to what I said earlier" and "+1" and I don't have the time to look
+>> that up.
+>>
+>> There should be no problems on x86 if this goes in as it is now.
+>>
+>> But think about this: What happens if you boot your ARM device without
+>> PAE and your initrd is in the upper region? If you are lucky the kernel
+>> looks at a different place where it also has a read permission, notices
+>> nothing sane is there, writes a message and continues. And if it is not
+>> allowed to read? It is clearly the user's fault for booting a non-PAE
+>> kernel.
 > 
-> Mike, what do you think about this idea? If it sounds okay to you, I can
-> cook up a patch adding this flag.
+> That's actual the original reason: DT has it as 64 bit, and passes it to a
+> 32 bit kernel when running in 32 bit mode without PAE.
+> 
+Thanks all for comments and useful discussion. I will resubmit the
+patch with update to fix the printk warnings reported by Vineet and
+James post the $subject change.
 
-Hmmm... I started implementing this whole thing, but using these clocks
-as "fixed-clock"s is not so straightforward.  The problem is that I
-would need to register my driver as a clock provider and add the OF
-match for "fixed-clock".
+Am assuming the patch will go via Grant Likely's tree.
 
-If I do that, all the other "fixed-clock" nodes would be passed to my
-driver too, which is wrong.  Or, the platform should register the
-"fixed-clock" match, but this would be wrong too, since it would find
-*my* fixed-clocks.
-
-The only thing I can come up with is to make a small clock driver (maybe
-even inside the WiLink module itself) that registers a new type of
-clock, "ti,wilink-clock" or something.  But this would really be
-overkill, wouldn't it?
-
-Any other ideas?
-
---
-Luca.
-
+Regards,
+Santosh
