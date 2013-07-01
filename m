@@ -1,215 +1,170 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v2 2/2] media: i2c: tvp7002: add OF support
-Date: Sun, 30 Jun 2013 17:57:28 +0200
-Message-ID: <51D05568.3090009@gmail.com>
-References: <1371923055-29623-1-git-send-email-prabhakar.csengg@gmail.com> <1371923055-29623-3-git-send-email-prabhakar.csengg@gmail.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 3/3] video: exynos_dp: Use the generic PHY driver
+Date: Mon, 01 Jul 2013 09:35:15 +0900
+Message-ID: <000001ce75f2$db156170$91402450$@samsung.com>
+References: <001701ce73bf$bebf9f20$3c3edd60$@samsung.com>
+ <51CD25F2.5010206@ti.com> <001c01ce73c5$552e1cc0$ff8a5640$@samsung.com>
+ <51CD56FE.4020302@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1371923055-29623-3-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <51CD56FE.4020302@ti.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Friday, June 28, 2013 6:27 PM, Kishon Vijay Abraham I wrote:
+> 
+> Hi,
+> 
+> On Friday 28 June 2013 11:34 AM, Jingoo Han wrote:
+> > On Friday, June 28, 2013 2:58 PM, Kishon Vijay Abraham I wrote:
+> >>
+> >> Hi,
+> >>
+> >> On Friday 28 June 2013 10:54 AM, Jingoo Han wrote:
+> >>> Use the generic PHY API instead of the platform callback to control
+> >>> the DP PHY. The 'phy_label' field is added to the platform data
+> >>> structure to allow PHY lookup on non-dt platforms.
+> >>>
+> >>> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+> >>> ---
+> >>>    .../devicetree/bindings/video/exynos_dp.txt        |   17 ---
+> >>>    drivers/video/exynos/exynos_dp_core.c              |  118 ++------------------
+> >>>    drivers/video/exynos/exynos_dp_core.h              |    2 +
+> >>>    include/video/exynos_dp.h                          |    6 +-
+> >>>    4 files changed, 15 insertions(+), 128 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt
+> >> b/Documentation/devicetree/bindings/video/exynos_dp.txt
+> >>> index 84f10c1..a8320e3 100644
+> >>> --- a/Documentation/devicetree/bindings/video/exynos_dp.txt
+> >>> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
+> >>> @@ -1,17 +1,6 @@
+> >>>    The Exynos display port interface should be configured based on
+> >>>    the type of panel connected to it.
+> >>>
+> >>> -We use two nodes:
+> >>> -	-dp-controller node
+> >>> -	-dptx-phy node(defined inside dp-controller node)
+> >>> -
+> >>> -For the DP-PHY initialization, we use the dptx-phy node.
+> >>> -Required properties for dptx-phy:
+> >>> -	-reg:
+> >>> -		Base address of DP PHY register.
+> >>> -	-samsung,enable-mask:
+> >>> -		The bit-mask used to enable/disable DP PHY.
+> >>> -
+> >>>    For the Panel initialization, we read data from dp-controller node.
+> >>>    Required properties for dp-controller:
+> >>>    	-compatible:
+> >>> @@ -67,12 +56,6 @@ SOC specific portion:
+> >>>    		interrupt-parent = <&combiner>;
+> >>>    		clocks = <&clock 342>;
+> >>>    		clock-names = "dp";
+> >>> -
+> >>> -		dptx-phy {
+> >>> -			reg = <0x10040720>;
+> >>> -			samsung,enable-mask = <1>;
+> >>> -		};
+> >>> -
+> >>>    	};
+> >>>
+> >>>    Board Specific portion:
+> >>> diff --git a/drivers/video/exynos/exynos_dp_core.c b/drivers/video/exynos/exynos_dp_core.c
+> >>> index 12bbede..bac515b 100644
+> >>> --- a/drivers/video/exynos/exynos_dp_core.c
+> >>> +++ b/drivers/video/exynos/exynos_dp_core.c
+> >>> @@ -19,6 +19,7 @@
+> >>>    #include <linux/interrupt.h>
+> >>>    #include <linux/delay.h>
+> >>>    #include <linux/of.h>
+> >>> +#include <linux/phy/phy.h>
+> >>>
+> >>>    #include <video/exynos_dp.h>
+> >>>
+> >>> @@ -960,84 +961,15 @@ static struct exynos_dp_platdata *exynos_dp_dt_parse_pdata(struct device
+> *dev)
+> >>>    		return ERR_PTR(-EINVAL);
+> >>>    	}
+> >>>
+> >>> -	return pd;
+> >>> -}
+> >>> -
+> >>> -static int exynos_dp_dt_parse_phydata(struct exynos_dp_device *dp)
+> >>> -{
+> >>> -	struct device_node *dp_phy_node = of_node_get(dp->dev->of_node);
+> >>> -	u32 phy_base;
+> >>> -	int ret = 0;
+> >>> -
+> >>> -	dp_phy_node = of_find_node_by_name(dp_phy_node, "dptx-phy");
+> >>> -	if (!dp_phy_node) {
+> >>> -		dev_err(dp->dev, "could not find dptx-phy node\n");
+> >>> -		return -ENODEV;
+> >>> -	}
+> >>> -
+> >>> -	if (of_property_read_u32(dp_phy_node, "reg", &phy_base)) {
+> >>> -		dev_err(dp->dev, "failed to get reg for dptx-phy\n");
+> >>> -		ret = -EINVAL;
+> >>> -		goto err;
+> >>> -	}
+> >>> -
+> >>> -	if (of_property_read_u32(dp_phy_node, "samsung,enable-mask",
+> >>> -				&dp->enable_mask)) {
+> >>> -		dev_err(dp->dev, "failed to get enable-mask for dptx-phy\n");
+> >>> -		ret = -EINVAL;
+> >>> -		goto err;
+> >>> -	}
+> >>> -
+> >>> -	dp->phy_addr = ioremap(phy_base, SZ_4);
+> >>> -	if (!dp->phy_addr) {
+> >>> -		dev_err(dp->dev, "failed to ioremap dp-phy\n");
+> >>> -		ret = -ENOMEM;
+> >>> -		goto err;
+> >>> -	}
+> >>> -
+> >>> -err:
+> >>> -	of_node_put(dp_phy_node);
+> >>> -
+> >>> -	return ret;
+> >>> -}
+> >>> -
+> >>> -static void exynos_dp_phy_init(struct exynos_dp_device *dp)
+> >>> -{
+> >>> -	u32 reg;
+> >>> -
+> >>> -	reg = __raw_readl(dp->phy_addr);
+> >>> -	reg |= dp->enable_mask;
+> >>> -	__raw_writel(reg, dp->phy_addr);
+> >>> -}
+> >>> -
+> >>> -static void exynos_dp_phy_exit(struct exynos_dp_device *dp)
+> >>> -{
+> >>> -	u32 reg;
+> >>> +	pd->phy_label = "dp";
+> >>
+> >> In the case of non-dt boot, this phy_label should have ideally come from
+> >> platform code.
+> >
+> > No, this is NOT the case of non-dt.
+> >
+> > 'pd->phy_label = "dp";' is included in exynos_dp_dt_parse_pdata(),
+> > not exynos_dp_phy_exit().
+> > Also, exynos_dp_dt_parse_pdata() is called in the case of dt.
+> 
+> ah.. right. Do you support non-dt boot. I dont see any modifications in
+> the platform code?
 
-On 06/22/2013 07:44 PM, Prabhakar Lad wrote:
-> From: "Lad, Prabhakar"<prabhakar.csengg@gmail.com>
->
-> add OF support for the tvp7002 driver.
->
-> Signed-off-by: Lad, Prabhakar<prabhakar.csengg@gmail.com>
-> Cc: Hans Verkuil<hans.verkuil@cisco.com>
-> Cc: Laurent Pinchart<laurent.pinchart@ideasonboard.com>
-> Cc: Mauro Carvalho Chehab<mchehab@redhat.com>
-> Cc: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
-> Cc: Sylwester Nawrocki<s.nawrocki@samsung.com>
-> Cc: Sakari Ailus<sakari.ailus@iki.fi>
-> Cc: Grant Likely<grant.likely@secretlab.ca>
-> Cc: Rob Herring<rob.herring@calxeda.com>
-> Cc: Rob Landley<rob@landley.net>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: davinci-linux-open-source@linux.davincidsp.com
-> ---
->   Depends on patch https://patchwork.kernel.org/patch/2765851/
->
->   .../devicetree/bindings/media/i2c/tvp7002.txt      |   43 +++++++++++++
->   drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
->   2 files changed, 103 insertions(+), 7 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-> new file mode 100644
-> index 0000000..9daebe1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-> @@ -0,0 +1,43 @@
-> +* Texas Instruments TV7002 video decoder
-> +
-> +The TVP7002 device supports digitizing of video and graphics signal in RGB and
-> +YPbPr color space.
-> +
-> +Required Properties :
-> +- compatible : Must be "ti,tvp7002"
-> +
-> +- hsync-active: HSYNC Polarity configuration for endpoint.
-> +
-> +- vsync-active: VSYNC Polarity configuration for endpoint.
-> +
-> +- pclk-sample: Clock polarity of the endpoint.
-> +
-> +- video-sync: Video sync property of the endpoint.
-> +
-> +- ti,tvp7002-fid-polarity: Active-high Field ID polarity of the endpoint.
-
-I thought it was agreed 'field-even-active' would be used instead of
-this device specific property. Did you run into any issues with that ?
-
-> +
-> +For further reading of port node refer Documentation/devicetree/bindings/media/
-> +video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	i2c0@1c22000 {
-> +		...
-> +		...
-> +		tvp7002@5c {
-> +			compatible = "ti,tvp7002";
-> +			reg =<0x5c>;
-> +
-> +			port {
-> +				tvp7002_1: endpoint {
-> +					hsync-active =<1>;
-> +					vsync-active =<1>;
-> +					pclk-sample =<0>;
-> +					video-sync =<V4L2_MBUS_VIDEO_SYNC_ON_GREEN>;
-> +					ti,tvp7002-fid-polarity;
-> +				};
-> +			};
-> +		};
-> +		...
-> +	};
-> diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
-> index b577548..4896024 100644
-> --- a/drivers/media/i2c/tvp7002.c
-> +++ b/drivers/media/i2c/tvp7002.c
-> @@ -35,6 +35,8 @@
->   #include<media/v4l2-device.h>
->   #include<media/v4l2-common.h>
->   #include<media/v4l2-ctrls.h>
-> +#include<media/v4l2-of.h>
-> +
->   #include "tvp7002_reg.h"
->
->   MODULE_DESCRIPTION("TI TVP7002 Video and Graphics Digitizer driver");
-> @@ -943,6 +945,48 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
->   	.pad =&tvp7002_pad_ops,
->   };
->
-> +static struct tvp7002_config *
-> +tvp7002_get_pdata(struct i2c_client *client)
-
-nit: unnecessary line break
-
-> +{
-> +	struct v4l2_of_endpoint bus_cfg;
-> +	struct tvp7002_config *pdata;
-> +	struct device_node *endpoint;
-> +	unsigned int flags;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-> +		return client->dev.platform_data;
-> +
-> +	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> +	if (!endpoint)
-> +		return NULL;
-> +
-> +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		goto done;
-> +
-> +	v4l2_of_parse_endpoint(endpoint,&bus_cfg);
-> +	flags = bus_cfg.bus.parallel.flags;
-> +
-> +	if (flags&  V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-> +		pdata->hs_polarity = 1;
-> +
-> +	if (flags&  V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-> +		pdata->vs_polarity = 1;
-> +
-> +	if (flags&  V4L2_MBUS_PCLK_SAMPLE_RISING)
-> +		pdata->clk_polarity = 1;
-> +
-> +	if (flags&  V4L2_MBUS_VIDEO_SYNC_ON_GREEN)
-> +		pdata->sog_polarity = 1;
-
-This clearly shows that you're using this property for something different
-you have defined it for. I asked previously if what you really needed for
-this TVP7002 chip is a DT property indicating sync-on-green _polarity_ or
-the sync-on-green _usage_. And you clearly need the polarity information.
-
-So I would just define a standard "sync-on-green-active" property and
-V4L2_MBUS_VIDEO_SOG_ACTIVE_{HIGH,LOW} flags. Presumably you don't need
-anything else, and the extra sync polarity flags would need eventually
-to be defined anyway, independently of any video sync selection property,
-should something like this ever need to be specified by firmware.
-
-> +	pdata->fid_polarity = of_property_read_bool(endpoint,
-> +						    "ti,tvp7002-fid-polarity");
-
-This could be just:
-
-	if (flags & V4L2_MBUS_FIELD_EVEN_HIGH)
-		pdata->fid_polarity = 1;
-
-if you used standard 'field-even-active' property.
-
-And this is what we find in the TVP7002 datasheet, in the section describing
-MISC Control 3 (18h) register's FID POL bit (pdata->fid_polarity is written
-directly to FID POL):
-
-"FID POL: Active-high Field ID output polarity control. Under normal
-operation,  the field ID output is set to logic 1 for an odd field (field 1)
-and set to logic 0 for an even field (field 0).
-0 = Normal operation (default)
-1 = FID output polarity inverted
-NOTE: This control bit also affects the polarity of the data enable output
-when selected (see Test output control [2:0] at subaddress 17h)."
+Platform code for non-DT has not been added; thus, there is no modification
+in the platform code.
 
 
-And include/media/tvp70002.h:
+Best regards,
+Jingoo Han
 
-  * fid_polarity:
-  *			0 -> the field ID output is set to logic 1 for an odd
-  *			     field (field 1) and set to logic 0 for an even
-  *			     field (field 0).
-  *			1 -> operation with polarity inverted.
-
-
-Do you know if the chip automatically selects video sync source 
-(sync-on-green
-vs. VSYNC/HSYNC) and there is no need to configure this on the analogue 
-input
-side ? At least the driver seems to always select the default SOGIN_1 input
-(TVP7002_IN_MUX_SEL_1 register is set only at initialization time).
-
-Or perhaps it just outputs on SOGOUT, VSOUT, HSOUT lines whatever is fed to
-its analogue inputs, and any further processing unit need to determine what
-synchronization signal is present and should be used ?
-
-I suspect that we don't need, e.g. another endpoint node to specify the
-configuration of the TVP7002 analogue input interface, that would contain
-a property like video-sync.
-
-> +done:
-> +	of_node_put(endpoint);
-> +	return pdata;
-> +}
-
-Regards,
-Sylwester
+> 
+> Thanks
+> Kishon
