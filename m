@@ -1,63 +1,36 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH] of: Specify initrd location using 64-bit
-Date: Mon, 01 Jul 2013 09:48:43 +0200
-Message-ID: <51D1345B.8020509@linutronix.de>
-References: <1371775956-16453-1-git-send-email-santosh.shilimkar@ti.com>
- <51C4171C.9050908@linutronix.de> <51C48B5A.2040404@ti.com>
- <51CCA67C.2010803@gmail.com>
- <CACxGe6vOH0sCFVVXrYqD3dbYdOvithVu7-d1cvy5885i8x_Myw@mail.gmail.com>
- <20130628134931.GD21034@game.jcrosoft.org> <51CE1F92.3070802@ti.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAzLzRdIFBDSTogQWRkIGRyaXZlciBmb3IgaS5NWDYgUENJ?=
+ =?UTF-8?B?IEV4cHJlc3M=?=
+Date: Mon, 01 Jul 2013 11:51:01 +0400
+Message-ID: <1372665061.36667486@f35.mail.ru>
+References: <1372662947-27160-1-git-send-email-xobs@kosagi.com>
+ <1372662947-27160-4-git-send-email-xobs@kosagi.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51CE1F92.3070802-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mips <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org, x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>, Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1372662947-27160-4-git-send-email-xobs@kosagi.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: =?UTF-8?B?U2VhbiBDcm9zcw==?= <xobs@kosagi.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/29/2013 01:43 AM, Santosh Shilimkar wrote:
-> 
-> Sebastian,
-> 
-> Apart from waste of 32bit, what is the other concern you
-> have ?
-
-You pass a u64 as a physical address which is represented in other
-parts of the kernel (for a good reason) by phys_addr_t.
-
-> I really want to converge on this patch because it
-> has been a open ended discussion for quite some time. Does
-> that really break any thing on x86 or your concern is more
-> from semantics of the physical address.
-You want to have your code in so you can continue with your work, that
-is okay. The other two arguments why u64 here is a good thing was "due
-to what I said earlier" and "+1" and I don't have the time to look
-that up.
-
-There should be no problems on x86 if this goes in as it is now.
-
-But think about this: What happens if you boot your ARM device without
-PAE and your initrd is in the upper region? If you are lucky the kernel
-looks at a different place where it also has a read permission, notices
-nothing sane is there, writes a message and continues. And if it is not
-allowed to read? It is clearly the user's fault for booting a non-PAE
-kernel.
-
-> 
-> Thanks for help.
-> 
-> Regards,
-> Santosh
-
-Sebastian
+PiBUaGlzIGFkZHMgYSBQQ0kgRXhwcmVzcyBwb3J0IGRyaXZlciBmb3IgdGhlIG9uLWNoaXAgUENJ
+IEV4cHJlc3MgcG9ydAo+IHByZXNlbnQgb24gdGhlIGkuTVg2IFNvQy4gIEl0IGlzIGJhc2VkIG9u
+IHRoZSBQQ0kgRXhwcmVzcyBkcml2ZXIgYXZhaWxhYmxlCj4gaW4gdGhlIEZyZWVzY2FsZSBCU1Au
+Cj4gCj4gU2lnbmVkLW9mZi1ieTogU2VhbiBDcm9zcyA8eG9ic0Brb3NhZ2kuY29tPgouLi4KPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2lteDZxLXBjaWUudHh0
+Cj4gQEAgLTAsMCArMSwyMCBAQAo+ICsqIEZyZWVzY2FsZSBpLk1YNlEgUENJIEV4cHJlc3MgYnJp
+ZGdlCj4gKwo+ICtFeGFtcGxlIChpLk1YNlEpCj4gKwlwY2llOiBwY2llQDAxZmZjMDAwIHsKPiAr
+CQljb21wYXRpYmxlID0gImZzbCxpbXg2cS1wY2llIjsKPiArCQlyZWcgPSA8MHgwMWZmYzAwMCAw
+eDQwMDA+LAo+ICsJCSAgICAgIDwweDAxMDAwMDAwIDB4MTAwMDAwPiwKPiArCQkgICAgICA8MHgw
+MTEwMDAwMCAweGUwMDAwMD4sCj4gKwkJICAgICAgPDB4MDFmMDAwMDAgMHhmYzAwMD47Cj4gKwkJ
+aW50ZXJydXB0cyA9IDwwIDEyMiAweDA0PjsKPiArCQljbG9ja3MgPSA8JmNsa3MgMTg2PiwgPCZj
+bGtzIDE4OT4sIDwmY2xrcyAxOTY+LAo+ICsJCQkgPCZjbGtzIDE5OD4sIDwmY2xrcyAxNDQ+Owo+
+ICsJCWNsb2NrLW5hbWVzID0gInNhdGFfcmVmIiwgInBjaWVfcmVmXzEyNW0iLCAibHZkczFfc2Vs
+IiwKPiArCQkJICAgICAgImx2ZHMxIiwgInBjaWVfYXhpIjsKPiArCQlwb3dlci1lbmFibGUgPSA8
+JmdwaW83IDEyIDA+Owo+ICsJCXBjaWUtcmVzZXQgPSA8JmdwaW8zIDI5IDA+OwoKQ2FuIHRoaXMg
+YmUgcmVwbGFjZWQgd2l0aCByZWd1bGF0b3IvcmVzZXQgQVBJPwoKPiArCQl3YWtlLXVwID0gPCZn
+cGlvMyAyMiAwPjsKPiArCQlkaXNhYmxlLWVuZHBvaW50ID0gPCZncGlvMiAxNiAwPjsKPiArCX07
+CgotLS0K
