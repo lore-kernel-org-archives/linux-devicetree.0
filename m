@@ -1,129 +1,164 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [alsa-devel] [PATCH] ASoC: Add PCM1681 codec driver.
-Date: Mon, 01 Jul 2013 14:37:09 +0200
-Message-ID: <51D177F5.2040805@metafoo.de>
-References: <1372251928-15706-1-git-send-email-marek.belisko@streamunlimited.com>
+From: Luciano Coelho <coelho@ti.com>
+Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
+Date: Mon, 1 Jul 2013 15:39:30 +0300
+Message-ID: <1372682370.21065.68.camel@cumari.coelho.fi>
+References: <1372149330-24335-1-git-send-email-coelho@ti.com>
+	 <20130628093848.GA2139@e106331-lin.cambridge.arm.com>
+	 <1372413215.21065.41.camel@cumari.coelho.fi>
+	 <20130628102145.GB2139@e106331-lin.cambridge.arm.com>
+	 <1372415514.21065.50.camel@cumari.coelho.fi>
+	 <1372418531.21065.53.camel@cumari.coelho.fi>
+	 <20130628114129.GO11297@arwen.pp.htv.fi>
+	 <1372421632.21065.60.camel@cumari.coelho.fi>
+	 <20130628121859.GP11297@arwen.pp.htv.fi>
+	 <1372425670.21065.61.camel@cumari.coelho.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1372251928-15706-1-git-send-email-marek.belisko@streamunlimited.com>
+In-Reply-To: <1372425670.21065.61.camel@cumari.coelho.fi>
 Sender: linux-doc-owner@vger.kernel.org
-To: Marek Belisko <marek.belisko@gmail.com>
-Cc: perex@perex.cz, tiwai@suse.de, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, lgirdwood@gmail.com, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, Marek Belisko <marek.belisko@streamunlimited.com>, broonie@kernel.org, rob@landley.net, grant.likely@linaro.org, zonque@gmail.com
+To: mturquette@linaro.org, Mark Rutland <mark.rutland@arm.com>
+Cc: balbi@ti.com, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-arm@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/26/2013 03:05 PM, Marek Belisko wrote:
-[...]
-> +static int pcm1681_deemph[] = { 44100, 48000, 32000 };
+On Fri, 2013-06-28 at 16:21 +0300, Luciano Coelho wrote:
+> On Fri, 2013-06-28 at 15:18 +0300, Felipe Balbi wrote:
+> > On Fri, Jun 28, 2013 at 03:13:52PM +0300, Luciano Coelho wrote:
+> > > On Fri, 2013-06-28 at 14:41 +0300, Felipe Balbi wrote:
+> > > > On Fri, Jun 28, 2013 at 02:22:11PM +0300, Luciano Coelho wrote:
+> > > > > On Fri, 2013-06-28 at 13:31 +0300, Luciano Coelho wrote:
+> > > > > > (fixed Mike's address)
+> > > > > > 
+> > > > > > On Fri, 2013-06-28 at 11:21 +0100, Mark Rutland wrote:
+> > > > > > > On Fri, Jun 28, 2013 at 10:53:35AM +0100, Luciano Coelho wrote:
+> > > > > > > > On Fri, 2013-06-28 at 10:38 +0100, Mark Rutland wrote:
+> > > > > > > > > On Tue, Jun 25, 2013 at 09:35:30AM +0100, Luciano Coelho wrote:
+> > > > > > > > > > +Optional properties:
+> > > > > > > > > > +--------------------
+> > > > > > > > > > +
+> > > > > > > > > > +- refclock: the internal WLAN reference clock frequency (required for
+> > > > > > > > > > +  WiLink6 and WiLink7; not used for WiLink8).  Must be one of the
+> > > > > > > > > > +  following:
+> > > > > > > > > > +	0 = 19.2 MHz
+> > > > > > > > > > +	1 = 26.0 MHz
+> > > > > > > > > > +	2 = 38.4 MHz
+> > > > > > > > > > +	3 = 52.0 MHz
+> > > > > > > > > > +	4 = 38.4 MHz, XTAL
+> > > > > > > > > > +	5 = 26.0 MHz, XTAL
+> > > > > > > > > > +
+> > > > > > > > > > +- tcxoclock: the internal WLAN TCXO clock frequency (required for
+> > > > > > > > > > +  WiLink7 not used for WiLink6 and WiLink8).  Must be one of the
+> > > > > > > > > > +  following:
+> > > > > > > > > > +	0 = 19.200 MHz
+> > > > > > > > > > +	1 = 26.000 MHz
+> > > > > > > > > > +	2 = 38.400 MHz
+> > > > > > > > > > +	3 = 52.000 MHz
+> > > > > > > > > > +	4 = 16.368 MHz
+> > > > > > > > > > +	5 = 32.736 MHz
+> > > > > > > > > > +	6 = 16.800 MHz
+> > > > > > > > > > +	7 = 33.600 MHz
+> > > > > > > > > 
+> > > > > > > > > This looks suspiciously like what we have the common clock bindings for:
+> > > > > > > > > 
+> > > > > > > > > refclk {
+> > > > > > > > > 	compatible = "fixed-clock";
+> > > > > > > > > 	#clock-cells = <0>;
+> > > > > > > > > 	clock-frequency = <19200000>;
+> > > > > > > > > }
+> > > > > > > > > 
+> > > > > > > > > wilink {
+> > > > > > > > > 	compatible = "ti,wilink7";
+> > > > > > > > > 	interrupt-parent = <&some_interrupt_controller>;
+> > > > > > > > > 	interrupts = <0 1 1>;
+> > > > > > > > > 	clocks = <&refclk>, <&refclk>;
+> > > > > > > > > 	clock-names = "refclk", "txoclk";
+> > > > > > > > > };
+> > > > > > > > > 
+> > > > > > > > > Could you not use them?
+> > > > > > > > 
+> > > > > > > > Hmmm... this actually does look good.  But these are internal clocks in
+> > > > > > > > the modules, they cannot be accessed from outside.  Does it make sense
+> > > > > > > > to register them with the clock framework?
+> > > > > > > 
+> > > > > > > Given we already have a common way of describing clocks, I think it
+> > > > > > > makes sense to use it -- people already understand the common bindings,
+> > > > > > > and it's less code to add add to the kernel. I don't think the fact
+> > > > > > > these clocks are internal should prevent us from describing them as we
+> > > > > > > would an external clock.
+> > > > > > 
+> > > > > > Yes, I agree with you.  Thanks for the suggestion! I think it will look
+> > > > > > much better.  And now that I dug a bit more into the code, I can see
+> > > > > > that there are only structs being populated, so there shouldn't be any
+> > > > > > other side-effects.
+> > > > > 
+> > > > > Hmmm, one thing that escaped me.  Besides the frequency, I also need a
+> > > > > boolean that tells if the clock is XTAL or not.  I can't figure out how
+> > > > > to pass this if I use the generic clock framework.  Any suggestions?
+> > > > 
+> > > > Could you use clock-output-names for that ?
+> > > > 
+> > > > XTAL clock:
+> > > > 
+> > > > refclk {
+> > > > 	compatible = "fixed-clock";
+> > > > 	#clock cells = <0>;
+> > > > 	clock-frequency = <19200000>;
+> > > > 	clock-output-names = "xtal";
+> > > > };
+> > > > 
+> > > > non-XTAL clock:
+> > > > 
+> > > > refclk {
+> > > > 	compatible = "fixed-clock";
+> > > > 	#clock cells = <0>;
+> > > > 	clock-frequency = <19200000>;
+> > > > 	clock-output-names = "osc"; /* any better name ? */
+> > > > };
+> > > 
+> > > This starts looking a bit hacky.  Using the output name as a flag is not
+> > > very pretty.
+> > > 
+> > > I think it would be better to have a separate flag for it in the wlan
+> > > node.  Like an optional "refclock-xtal" boolean or something.  The
+> > > downside of this is that we would be adding information about the clock
+> > > details in the wilink node. :(
+> > > 
+> > > OTOH, we could add a flag to the generic clock binding? A new optional
+> > > boolean that tells whether the clock is XTAL or not:
+> > > 
+> > > refclk {
+> > > 	compatible = "fixed-clock";
+> > > 	#clock cells = <0>;
+> > > 	clock-frequency = <19200000>;
+> > > 	clock-xtal;
+> > > };
+> > > 
+> > > Do you think that would make sense?
+> > 
+> > sure, that looks alright to me. Surely there are other devices out there
+> > who want to know if the clock comes from a crystal or not ?!?
+> 
+> Mike, what do you think about this idea? If it sounds okay to you, I can
+> cook up a patch adding this flag.
 
-const
+Hmmm... I started implementing this whole thing, but using these clocks
+as "fixed-clock"s is not so straightforward.  The problem is that I
+would need to register my driver as a clock provider and add the OF
+match for "fixed-clock".
 
-> +
-> +static int pcm1681_set_deemph(struct snd_soc_codec *codec)
-> +{
-> +	struct pcm1681_private *priv = snd_soc_codec_get_drvdata(codec);
-> +	int i = 0, val = -1, ret;
-> +
-> +	if (priv->deemph)
-> +		for (i = 0; i < ARRAY_SIZE(pcm1681_deemph); i++)
-> +			if (pcm1681_deemph[i] == priv->rate)
-> +				val = i;
-> +
-> +	/* enable choosen frequency */
-> +	if (val != -1)
-> +		regmap_update_bits(priv->regmap, PCM1681_DEEMPH_CONTROL,
-> +					PCM1681_DEEMPH_RATE_MASK, val);
+If I do that, all the other "fixed-clock" nodes would be passed to my
+driver too, which is wrong.  Or, the platform should register the
+"fixed-clock" match, but this would be wrong too, since it would find
+*my* fixed-clocks.
 
-So if the current sample rate doesn't match any of the available deempth rates
-the current setting is kept. This doesn't seem right.
+The only thing I can come up with is to make a small clock driver (maybe
+even inside the WiLink module itself) that registers a new type of
+clock, "ti,wilink-clock" or something.  But this would really be
+overkill, wouldn't it?
 
-> +
-> +	/* enable/disable deemphasis functionality */
-> +	ret = regmap_update_bits(priv->regmap, PCM1681_DEEMPH_CONTROL,
-> +				PCM1681_DEEMPH_MASK, priv->deemph);
-> +
-> +	return ret;
-> +}
-> +
-[...]
-> +
-> +static int pcm1681_digital_mute(struct snd_soc_dai *dai, int mute)
-> +{
-> +	struct snd_soc_codec *codec = dai->codec;
-> +	struct pcm1681_private *priv = snd_soc_codec_get_drvdata(codec);
-> +	int ret, val = 0;
-> +
-> +	if (mute)
-> +		val = PCM1681_SOFT_MUTE_ALL;
-> +
-> +	ret = regmap_write(priv->regmap, PCM1681_SOFT_MUTE, val);
+Any other ideas?
 
-How about just
-
-return regmap_write(...)
-
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-[...]
-> +static const DECLARE_TLV_DB_SCALE(pcm1681_dac_tlv, -6350, 50, 1);
-> +
-> +static const struct snd_kcontrol_new pcm1681_controls[] = {
-> +	SOC_DOUBLE_R_TLV("PCM1681 Channel 1/2 Playback Volume",
-> +			PCM1681_ATT_CONTROL(1), PCM1681_ATT_CONTROL(2), 0,
-> +			0x7f, 0, pcm1681_dac_tlv),
-> +	SOC_DOUBLE_R_TLV("PCM1681 Channel 3/4 Playback Volume",
-> +			PCM1681_ATT_CONTROL(3), PCM1681_ATT_CONTROL(4), 0,
-> +			0x7f, 0, pcm1681_dac_tlv),
-> +	SOC_DOUBLE_R_TLV("PCM1681 Channel 5/6 Playback Volume",
-> +			PCM1681_ATT_CONTROL(5), PCM1681_ATT_CONTROL(6), 0,
-> +			0x7f, 0, pcm1681_dac_tlv),
-> +	SOC_DOUBLE_R_TLV("PCM1681 Channel 7/8 Playback Volume",
-> +			PCM1681_ATT_CONTROL(7), PCM1681_ATT_CONTROL(8), 0,
-> +			0x7f, 0, pcm1681_dac_tlv),
-> +	SOC_SINGLE_BOOL_EXT("PCM1681 De-emphasis Switch", 0,
-> +			    pcm1681_get_deemph, pcm1681_put_deemph),
-> +};
-
-The name of the codec should probably not be in the control names.
-
-[...]
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id pcm1681_dt_ids[] = {
-> +	{ .compatible = "ti,pcm1681", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, pcm1681_dt_ids);
-> +#endif
-> +
-> +static const struct regmap_config pcm1681_regmap = {
-> +	.reg_bits		= 8,
-> +	.val_bits		= 8,
-> +	.max_register		= ARRAY_SIZE(pcm1681_reg_defaults),
-
-max_register is the last register in the register map, so usually this would be
-ARRAY_SIZE(...) + 1
-
-> +	.reg_defaults		= pcm1681_reg_defaults,
-> +	.num_reg_defaults	= ARRAY_SIZE(pcm1681_reg_defaults),
-> +	.writeable_reg		= pcm1681_writeable_reg,
-> +	.readable_reg		= pcm1681_accessible_reg,
-> +};
-[...]
-> +
-> +static struct snd_soc_codec_driver soc_codec_dev_pcm1681 = {
-> +	.probe			= pcm1681_probe,
-> +	.remove			= pcm1681_remove,
-> +	.controls		= pcm1681_controls,
-> +	.num_controls		= ARRAY_SIZE(pcm1681_controls),
-> +};
-> +
-> +#if defined(CONFIG_I2C) || defined(CONFIG_I2C_MODULE)
-
-Since the driver only supports I2C there is no need for this ifdef
-[...]
+--
+Luca.
 
