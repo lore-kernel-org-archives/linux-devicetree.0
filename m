@@ -1,117 +1,53 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: mx53qsb: Enable VPU support
-Date: Mon, 01 Jul 2013 09:07:20 +0200
-Message-ID: <1372662440.4971.15.camel@pizza.hi.pengutronix.de>
-References: <1372459759-10488-1-git-send-email-festevam@gmail.com>
- <CAHCPf3s6_+aNs=LycgJzcOajmFuWy-mp66-BX+OMCLYDApS9cg@mail.gmail.com>
+From: Sean Cross <xobs@kosagi.com>
+Subject: [PATCH 0/4] Add PCI Express to i.MX6
+Date: Mon,  1 Jul 2013 07:15:43 +0000
+Message-ID: <1372662947-27160-1-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAHCPf3s6_+aNs=LycgJzcOajmFuWy-mp66-BX+OMCLYDApS9cg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Sean Cross <xobs@kosagi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matt,
+This patchset adds a PCI Express driver for the Freescale i.MX6 series of 
+SoCs.  It is based on the BSP driver, available from Freescale
+athttp://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git
 
-[Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org]
+This patchset does the following:
 
-Am Freitag, den 28.06.2013, 23:49 -0500 schrieb Matt Sealey:
-> On Fri, Jun 28, 2013 at 5:49 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> >
-> > Enable Video Processing Unit (VPU) support.
-> >
-> > Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> > Depends on Philipp Zabel's patch:
-> > [PATCH] ARM: dts: add sram for imx53 and imx6q
-> >
-> > Philipp,
-> >
-> > I tried using the original mx53 vpu firmware that comes with the FSL BSP, but it
-> > failed to load:
-> >
-> > coda 63ff4000.vpu: firmware get command error
-> > coda 63ff4000.vpu: HW initialization failed
-> >
-> > Any suggestions?
-> >
-> > Thanks!
-> >
-> >  arch/arm/boot/dts/imx53-qsb.dts |  4 ++++
-> >  arch/arm/boot/dts/imx53.dtsi    | 10 ++++++++++
-> >  2 files changed, 14 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/imx53-qsb.dts b/arch/arm/boot/dts/imx53-qsb.dts
-> > index 512a1f6..eedd27e 100644
-> > --- a/arch/arm/boot/dts/imx53-qsb.dts
-> > +++ b/arch/arm/boot/dts/imx53-qsb.dts
-> > @@ -297,6 +297,10 @@
-> >         status = "okay";
-> >  };
-> >
-> > +&vpu {
-> > +       status = "okay";
-> > +};
-> > +
-> >  &usbh1 {
-> >         status = "okay";
-> >  };
-> > diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-> > index 3def46f..f94d4e5 100644
-> > --- a/arch/arm/boot/dts/imx53.dtsi
-> > +++ b/arch/arm/boot/dts/imx53.dtsi
-> > @@ -1086,6 +1086,16 @@
-> >                                 crtcs = <&ipu 1>;
-> >                                 status = "disabled";
-> >                         };
-> > +
-> > +                       vpu: vpu@63ff4000 {
-> > +                               compatible = "fsl,imx53-vpu";
-> > +                               reg = <0x63ff4000 0x1000>;
-> > +                               interrupts = <9>;
-> > +                               clocks = <&clks 63>, <&clks 63>;
-> > +                               clock-names = "per", "ahb";
-> > +                               iram = <&ocram>;
-> > +                               status = "disabled";
-> > +                       };
-> >                 };
-> >
-> >                 ocram: ocram@f8000000 {
-> 
-> Nitpick: what I see here around enabling the VPU driver is;
-> 
-> * A property called iram
-> * ... that references a node called ocram
-> * ... which is coincidentally driven by a driver called sram
-> 
-> Could we make up our minds as to what to call it? Something generic
-> that's potentially not i.MX-specific (since it does change over the
-> models, and it may not be technically SRAM..) that gets used
-> everywhere and belies it's purpose rather than naming a particular
-> technology, or particular IP core documentation if it changes a lot?
+    1) Add general-purpose LVDS clocks to drive the bus
+    2) Enable PCI Express on ARM
+    3) Add the pcie-imx driver
+    4) Add device tree bindings for imx6qdl.dtsi
 
-I'd be in favor of changing
--                 ocram: ocram@f8000000 {
-+                 ocram: sram@f8000000 {
-but it is very convenient to have the IP vendor's creative name in
-there, too, if I have to look it up in the reference manual.
+Sean Cross (4):
+  ARM i.MX6q: Add descriptors for LVDS clocks
+  ARM: Enable PCI Express on ARM
+  PCI: Add driver for i.MX6 PCI Express
+  ARM i.MX6: Add PCI Express to device tree
 
->From point of view of the VPU, the SRAM is a more local memory, in most
-implementations connected via a dedicated AXI bus to avoid load on the
-main memory bus.
+ .../devicetree/bindings/clock/imx6q-clock.txt      |    4 +
+ .../devicetree/bindings/pci/imx6q-pcie.txt         |   20 +
+ arch/arm/Kconfig                                   |    2 +
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   12 +
+ arch/arm/mach-imx/Kconfig                          |    1 +
+ arch/arm/mach-imx/clk-imx6q.c                      |   13 +-
+ drivers/pci/pcie/Kconfig                           |   10 +
+ drivers/pci/pcie/Makefile                          |    2 +
+ drivers/pci/pcie/pcie-imx.c                        | 1049 ++++++++++++++++++++
+ 9 files changed, 1111 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/imx6q-pcie.txt
+ create mode 100644 drivers/pci/pcie/pcie-imx.c
 
-regards
-Philipp
+-- 
+1.7.9.5
