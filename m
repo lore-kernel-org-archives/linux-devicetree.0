@@ -1,7 +1,7 @@
 From: Richard Genoud <richard.genoud@gmail.com>
-Subject: [RFC PATCH 13/13] sound: codec: wm8371: correct capture line/mic
-Date: Mon,  1 Jul 2013 10:39:38 +0200
-Message-ID: <1372667978-4718-14-git-send-email-richard.genoud@gmail.com>
+Subject: [RFC PATCH 11/13] sound: atmel-pcm-dma: check pointer before dereference
+Date: Mon,  1 Jul 2013 10:39:36 +0200
+Message-ID: <1372667978-4718-12-git-send-email-richard.genoud@gmail.com>
 References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
@@ -10,30 +10,27 @@ To: devicetree-discuss@lists.ozlabs.org
 Cc: linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-With the "switch" text, we can't enable the line and mic capture in
-alsamixer.
+If platform_data is NULL, filter() is called with a NULL slave
+parameter.
 
 Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
 ---
- sound/soc/codecs/wm8731.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/atmel/atmel-pcm-dma.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/soc/codecs/wm8731.c b/sound/soc/codecs/wm8731.c
-index 3cf6b20..dae1403 100644
---- a/sound/soc/codecs/wm8731.c
-+++ b/sound/soc/codecs/wm8731.c
-@@ -164,10 +164,10 @@ SOC_DOUBLE_R("Master Playback ZC Switch", WM8731_LOUT1V, WM8731_ROUT1V,
+diff --git a/sound/soc/atmel/atmel-pcm-dma.c b/sound/soc/atmel/atmel-pcm-dma.c
+index 1d38fd0..b20dbba 100644
+--- a/sound/soc/atmel/atmel-pcm-dma.c
++++ b/sound/soc/atmel/atmel-pcm-dma.c
+@@ -96,6 +96,9 @@ static bool filter(struct dma_chan *chan, void *slave)
+ {
+ 	struct at_dma_slave *sl = slave;
  
- SOC_DOUBLE_R_TLV("Capture Volume", WM8731_LINVOL, WM8731_RINVOL, 0, 31, 0,
- 		 in_tlv),
--SOC_DOUBLE_R("Line Capture Switch", WM8731_LINVOL, WM8731_RINVOL, 7, 1, 1),
-+SOC_DOUBLE_R("Line Capture", WM8731_LINVOL, WM8731_RINVOL, 7, 1, 1),
- 
- SOC_SINGLE_TLV("Mic Boost Volume", WM8731_APANA, 0, 1, 0, mic_tlv),
--SOC_SINGLE("Mic Capture Switch", WM8731_APANA, 1, 1, 1),
-+SOC_SINGLE("Mic Capture", WM8731_APANA, 1, 1, 1),
- 
- SOC_SINGLE_TLV("Sidetone Playback Volume", WM8731_APANA, 6, 3, 1,
- 	       sidetone_tlv),
++	if (!sl)
++		return false;
++
+ 	if (sl->dma_dev == chan->device->dev) {
+ 		chan->private = sl;
+ 		return true;
 -- 
 1.7.10.4
