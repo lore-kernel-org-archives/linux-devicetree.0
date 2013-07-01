@@ -1,107 +1,129 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: [PATCH RFC 3/3] dt:net:stmmac: Add dt specific phy reset callback support.
-Date: Mon,  1 Jul 2013 12:44:05 +0100
-Message-ID: <1372679045-13183-1-git-send-email-srinivas.kandagatla@st.com>
-References: <1372678962-12959-1-git-send-email-srinivas.kandagatla@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1372678962-12959-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@st.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [alsa-devel] [PATCH] ASoC: Add PCM1681 codec driver.
+Date: Mon, 01 Jul 2013 14:37:09 +0200
+Message-ID: <51D177F5.2040805@metafoo.de>
+References: <1372251928-15706-1-git-send-email-marek.belisko@streamunlimited.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1372251928-15706-1-git-send-email-marek.belisko@streamunlimited.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marek Belisko <marek.belisko@gmail.com>
+Cc: perex@perex.cz, tiwai@suse.de, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, lgirdwood@gmail.com, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, Marek Belisko <marek.belisko@streamunlimited.com>, broonie@kernel.org, rob@landley.net, grant.likely@linaro.org, zonque@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+On 06/26/2013 03:05 PM, Marek Belisko wrote:
+[...]
+> +static int pcm1681_deemph[] = { 44100, 48000, 32000 };
 
-This patch adds phy reset callback support for stmmac driver via device
-trees. It adds three new properties to gmac device tree bindings to
-define the reset signal via gpio.
+const
 
-With this patch users can conveniently pass reset gpio number with pre,
-pulse and post delay in micro secs via DTs.
+> +
+> +static int pcm1681_set_deemph(struct snd_soc_codec *codec)
+> +{
+> +	struct pcm1681_private *priv = snd_soc_codec_get_drvdata(codec);
+> +	int i = 0, val = -1, ret;
+> +
+> +	if (priv->deemph)
+> +		for (i = 0; i < ARRAY_SIZE(pcm1681_deemph); i++)
+> +			if (pcm1681_deemph[i] == priv->rate)
+> +				val = i;
+> +
+> +	/* enable choosen frequency */
+> +	if (val != -1)
+> +		regmap_update_bits(priv->regmap, PCM1681_DEEMPH_CONTROL,
+> +					PCM1681_DEEMPH_RATE_MASK, val);
 
- active low:
-		_________		 ____________
-	<pre-delay>	|<pulse-delay>	|<post-delay>
-		 	|		|
-		 	|_______________|
+So if the current sample rate doesn't match any of the available deempth rates
+the current setting is kept. This doesn't seem right.
 
- active high:
- 			 ________________
-	<pre-delay>	|<pulse-delay>	|<post-delay>
-			|		|
-		________|		|___________
+> +
+> +	/* enable/disable deemphasis functionality */
+> +	ret = regmap_update_bits(priv->regmap, PCM1681_DEEMPH_CONTROL,
+> +				PCM1681_DEEMPH_MASK, priv->deemph);
+> +
+> +	return ret;
+> +}
+> +
+[...]
+> +
+> +static int pcm1681_digital_mute(struct snd_soc_dai *dai, int mute)
+> +{
+> +	struct snd_soc_codec *codec = dai->codec;
+> +	struct pcm1681_private *priv = snd_soc_codec_get_drvdata(codec);
+> +	int ret, val = 0;
+> +
+> +	if (mute)
+> +		val = PCM1681_SOFT_MUTE_ALL;
+> +
+> +	ret = regmap_write(priv->regmap, PCM1681_SOFT_MUTE, val);
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
----
- Documentation/devicetree/bindings/net/stmmac.txt  |    6 ++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |   31 +++++++++++++++++++++
- 2 files changed, 37 insertions(+), 0 deletions(-)
+How about just
 
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index e1ddfcc..261c563 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -13,6 +13,12 @@ Required properties:
- - phy-mode: String, operation mode of the PHY interface.
-   Supported values are: "mii", "rmii", "gmii", "rgmii".
- - snps,phy-addr		phy address to connect to.
-+- snps,reset-gpio 	gpio number for phy reset.
-+- snps,reset-active-low boolean flag to indicate if phy reset is active low.
-+- snps,reset-delays-us  is triplet of delays
-+	The 1st cell is reset pre-delay in micro seconds.
-+	The 2nd cell is reset pulse in micro seconds.
-+	The 3rd cell is reset post-delay in micro seconds.
- - snps,pbl		Programmable Burst Length
- - snps,fixed-burst	Program the DMA to use the fixed burst mode
- - snps,mixed-burst	Program the DMA to use the mixed burst mode
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index cc15039..677ed16 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -27,6 +27,9 @@
- #include <linux/mii.h>
- #include <linux/phy.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+
- #include <asm/io.h>
- 
- #include "stmmac.h"
-@@ -131,6 +134,34 @@ static int stmmac_mdio_reset(struct mii_bus *bus)
- 	struct net_device *ndev = bus->priv;
- 	struct stmmac_priv *priv = netdev_priv(ndev);
- 	unsigned int mii_address = priv->hw->mii.addr;
-+	struct device *dev = priv->device;
-+
-+	if (dev->of_node) {
-+		int reset_gpio, active_low;
-+		struct device_node *np = dev->of_node;
-+		u32 delays[3] = {0,};
-+
-+		if (!np)
-+			return 0;
-+
-+		reset_gpio = of_get_named_gpio(np, "snps,reset-gpio", 0);
-+		if (reset_gpio < 0)
-+			return 0;
-+
-+		active_low = of_property_read_bool(np,
-+					"snps,reset-active-low");
-+		of_property_read_u32_array(np,
-+					"snps,reset-delays-us", delays, 3);
-+
-+		gpio_request(reset_gpio, "mdio-reset");
-+		gpio_direction_output(reset_gpio, active_low ? 1 : 0);
-+		udelay(delays[0]);
-+		gpio_set_value(reset_gpio, active_low ? 0 : 1);
-+		udelay(delays[1]);
-+		gpio_set_value(reset_gpio, active_low ? 1 : 0);
-+		udelay(delays[2]);
-+		gpio_free(reset_gpio);
-+	}
- 
- 	if (priv->plat->mdio_bus_data->phy_reset) {
- 		pr_debug("stmmac_mdio_reset: calling phy_reset\n");
--- 
-1.7.6.5
+return regmap_write(...)
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+[...]
+> +static const DECLARE_TLV_DB_SCALE(pcm1681_dac_tlv, -6350, 50, 1);
+> +
+> +static const struct snd_kcontrol_new pcm1681_controls[] = {
+> +	SOC_DOUBLE_R_TLV("PCM1681 Channel 1/2 Playback Volume",
+> +			PCM1681_ATT_CONTROL(1), PCM1681_ATT_CONTROL(2), 0,
+> +			0x7f, 0, pcm1681_dac_tlv),
+> +	SOC_DOUBLE_R_TLV("PCM1681 Channel 3/4 Playback Volume",
+> +			PCM1681_ATT_CONTROL(3), PCM1681_ATT_CONTROL(4), 0,
+> +			0x7f, 0, pcm1681_dac_tlv),
+> +	SOC_DOUBLE_R_TLV("PCM1681 Channel 5/6 Playback Volume",
+> +			PCM1681_ATT_CONTROL(5), PCM1681_ATT_CONTROL(6), 0,
+> +			0x7f, 0, pcm1681_dac_tlv),
+> +	SOC_DOUBLE_R_TLV("PCM1681 Channel 7/8 Playback Volume",
+> +			PCM1681_ATT_CONTROL(7), PCM1681_ATT_CONTROL(8), 0,
+> +			0x7f, 0, pcm1681_dac_tlv),
+> +	SOC_SINGLE_BOOL_EXT("PCM1681 De-emphasis Switch", 0,
+> +			    pcm1681_get_deemph, pcm1681_put_deemph),
+> +};
+
+The name of the codec should probably not be in the control names.
+
+[...]
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id pcm1681_dt_ids[] = {
+> +	{ .compatible = "ti,pcm1681", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pcm1681_dt_ids);
+> +#endif
+> +
+> +static const struct regmap_config pcm1681_regmap = {
+> +	.reg_bits		= 8,
+> +	.val_bits		= 8,
+> +	.max_register		= ARRAY_SIZE(pcm1681_reg_defaults),
+
+max_register is the last register in the register map, so usually this would be
+ARRAY_SIZE(...) + 1
+
+> +	.reg_defaults		= pcm1681_reg_defaults,
+> +	.num_reg_defaults	= ARRAY_SIZE(pcm1681_reg_defaults),
+> +	.writeable_reg		= pcm1681_writeable_reg,
+> +	.readable_reg		= pcm1681_accessible_reg,
+> +};
+[...]
+> +
+> +static struct snd_soc_codec_driver soc_codec_dev_pcm1681 = {
+> +	.probe			= pcm1681_probe,
+> +	.remove			= pcm1681_remove,
+> +	.controls		= pcm1681_controls,
+> +	.num_controls		= ARRAY_SIZE(pcm1681_controls),
+> +};
+> +
+> +#if defined(CONFIG_I2C) || defined(CONFIG_I2C_MODULE)
+
+Since the driver only supports I2C there is no need for this ifdef
+[...]
+
