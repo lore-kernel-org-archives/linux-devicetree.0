@@ -1,57 +1,60 @@
 From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v3 10/13] ARM: dts: Add FIMC nodes for Exynos4210 Trats board
-Date: Mon, 01 Jul 2013 17:22:32 +0200
-Message-ID: <1372692155-17653-11-git-send-email-s.nawrocki@samsung.com>
+Subject: [PATCH v3 11/13] ARM: dts: Add Exynos4210 SoC camera port pinctrl nodes
+Date: Mon, 01 Jul 2013 17:22:33 +0200
+Message-ID: <1372692155-17653-12-git-send-email-s.nawrocki@samsung.com>
 References: <1372692155-17653-1-git-send-email-s.nawrocki@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-reply-to: <1372692155-17653-1-git-send-email-s.nawrocki@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: kgene.kim@samsung.com
-Cc: t.figa@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, myungjoo.ham@samsung.com, m.szyprowski@samsung.com, phil.carmody@partner.samsung.com, j.anaszewski@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: t.figa@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, myungjoo.ham@samsung.com, m.szyprowski@samsung.com, phil.carmody@partner.samsung.com, j.anaszewski@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, Andrzej Hajda <a.hajda@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable FIMC devices on the Trats board. This allows using the
-device in memory-to-memory mode only. The camera port pinctrl
-property is now empty and will be updated while support for the
-camera sensors is added.
+From: Andrzej Hajda <a.hajda@samsung.com>
 
+Add pinctrl nodes for the camera parallel port CAM_A data bus
+and the CAM_A_CLKOUT clock output pin.
+
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 ---
- arch/arm/boot/dts/exynos4210-trats.dts |   23 +++++++++++++++++++++++
+ arch/arm/boot/dts/exynos4210-pinctrl.dtsi |   23 +++++++++++++++++++++++
  1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
-index 94eebff..6b1568e 100644
---- a/arch/arm/boot/dts/exynos4210-trats.dts
-+++ b/arch/arm/boot/dts/exynos4210-trats.dts
-@@ -301,4 +301,27 @@
- 			clock-frequency = <24000000>;
+diff --git a/arch/arm/boot/dts/exynos4210-pinctrl.dtsi b/arch/arm/boot/dts/exynos4210-pinctrl.dtsi
+index 553bcea..a7c2128 100644
+--- a/arch/arm/boot/dts/exynos4210-pinctrl.dtsi
++++ b/arch/arm/boot/dts/exynos4210-pinctrl.dtsi
+@@ -797,6 +797,29 @@
+ 			samsung,pin-pud = <0>;
+ 			samsung,pin-drv = <0>;
  		};
++
++		cam_port_a_io: cam-port-a-io {
++			samsung,pins = "gpj0-0", "gpj0-1", "gpj0-2", "gpj0-3",
++					"gpj0-4", "gpj0-5", "gpj0-6", "gpj0-7",
++					"gpj1-0", "gpj1-1", "gpj1-2", "gpj1-4";
++			samsung,pin-function = <2>;
++			samsung,pin-pud = <0>;
++			samsung,pin-drv = <0>;
++		};
++
++		cam_port_a_clk_active: cam-port-a-clk-active {
++			samsung,pins = "gpj1-3";
++			samsung,pin-function = <2>;
++			samsung,pin-pud = <0>;
++			samsung,pin-drv = <3>;
++		};
++
++		cam_port_a_clk_idle: cam-port-a-clk-idle {
++			samsung,pins = "gpj1-3";
++			samsung,pin-function = <0>;
++			samsung,pin-pud = <1>;
++			samsung,pin-drv = <0>;
++		};
  	};
-+
-+	camera {
-+		status = "okay";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <>;
-+
-+		fimc_0: fimc@11800000 {
-+			status = "okay";
-+		};
-+
-+		fimc_1: fimc@11810000 {
-+			status = "okay";
-+		};
-+
-+		fimc_2: fimc@11820000 {
-+			status = "okay";
-+		};
-+
-+		fimc_3: fimc@11830000 {
-+			status = "okay";
-+		};
-+	};
- };
+ 
+ 	pinctrl@03860000 {
 -- 
 1.7.9.5
