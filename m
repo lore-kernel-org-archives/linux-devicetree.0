@@ -1,133 +1,121 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: binding for nvec mfd device
-Date: Mon, 01 Jul 2013 09:36:55 -0600
-Message-ID: <51D1A217.7020605@wwwdotorg.org>
-References: <1690589.tt8Uan1NDT@ax5200p> <51CDA822.3090005@wwwdotorg.org> <5104794.7rpTCZqV23@ax5200p>
+From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Subject: Re: [PATCH RFC 2/3] dt:net:stmmac: Add support to dwmac version 3.610
+ and 3.710
+Date: Mon, 01 Jul 2013 19:20:18 +0200
+Message-ID: <51D1BA52.3030201@st.com>
+References: <1372678962-12959-1-git-send-email-srinivas.kandagatla@st.com> <1372679034-13139-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5104794.7rpTCZqV23@ax5200p>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Leon Romanovsky <leon-2ukJVAZIZ/Y@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1372679034-13139-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: netdev@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/29/2013 10:22 AM, Marc Dietrich wrote:
-> On Friday 28 June 2013 09:13:38 Stephen Warren wrote:
->> On 06/27/2013 12:26 PM, Marc Dietrich wrote:
-...
->>> I'm puzzling for some time now to find a binding for a mfd device. So
->>> let's
->>> start with something I think I have learned already, let's describe the
->>> hardware.
-...
->> I would eventually like to do the following:
->>
->> * Have a node that represents the I2C slave controller HW module in Tegra.
->>
->> * Have a node (or nodes) (perhaps a child node of that) which represents
->> the protocol that "binds" to the slave controller. This would have its
->> own compatible value that describes which protocol to instantiate.
->>
->> This will separate the driver for the I2C slave HW from the driver for
->> the protocol, so that you could even run the same protocol with a
->> different I2C slave device if needed.
-> 
-> I agree with you that the slave driver should be separated from the protocol 
-> (which itself can also be separated into e.g. smbus and nvec layers). But 
-> that's more like a long term goal which we cannot handle so quickly. For this 
-> to work, you probably also need a kernel api for i2c slaves which many people 
-> failed to introduce in the past already. The NVIDIA downstream kernel has 
-> something like this already (are there any clients?), but unfortunately no 
-> smbus protocol support yet.
-> 
-> So keeping this in mind, the binding above already looks ok, even if it is 
-> named "nvec" instead of e.g. "i2c-slave" for now.
+On 7/1/2013 1:43 PM, Srinivas KANDAGATLA wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>
+> This patch adds dt support to dwmac version 3.610 and 3.710 these
+> versions are integrated in STiH415 and STiH416 ARM A9 SOCs.
+> To support these IP version, some of the device tree properties are
+> extended.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> ---
+>   Documentation/devicetree/bindings/net/stmmac.txt   |    4 +++
+>   .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   25 ++++++++++++++++++++
+>   2 files changed, 29 insertions(+), 0 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index 060bbf0..e1ddfcc 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -12,6 +12,10 @@ Required properties:
+>     property
+>   - phy-mode: String, operation mode of the PHY interface.
+>     Supported values are: "mii", "rmii", "gmii", "rgmii".
+> +- snps,phy-addr		phy address to connect to.
+> +- snps,pbl		Programmable Burst Length
+> +- snps,fixed-burst	Program the DMA to use the fixed burst mode
+> +- snps,mixed-burst	Program the DMA to use the mixed burst mode
+>
+>   Optional properties:
+>   - mac-address: 6 bytes, mac address
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> index 5907920..060758d 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> @@ -29,17 +29,26 @@
+>   #include "stmmac.h"
+>
+>   #ifdef CONFIG_OF
+> +
+>   static int stmmac_probe_config_dt(struct platform_device *pdev,
+>   				  struct plat_stmmacenet_data *plat,
+>   				  const char **mac)
+>   {
+>   	struct device_node *np = pdev->dev.of_node;
+> +	struct stmmac_dma_cfg *dma_cfg;
+>
+>   	if (!np)
+>   		return -ENODEV;
+>
+>   	*mac = of_get_mac_address(np);
+>   	plat->interface = of_get_phy_mode(np);
+> +
+> +	plat->bus_id = of_alias_get_id(np, "ethernet");
+> +	if (plat->bus_id < 0)
+> +		plat->bus_id = 0;
+> +
+> +	of_property_read_u32(np, "snps,phy-addr", &plat->phy_addr);
+> +
+>   	plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
+>   					   sizeof(struct stmmac_mdio_bus_data),
+>   					   GFP_KERNEL);
+> @@ -51,11 +60,25 @@ static int stmmac_probe_config_dt(struct platform_device *pdev,
+>   	 */
+>   	if (of_device_is_compatible(np, "st,spear600-gmac") ||
+>   		of_device_is_compatible(np, "snps,dwmac-3.70a") ||
+> +		of_device_is_compatible(np, "snps,dwmac-3.610") ||
+>   		of_device_is_compatible(np, "snps,dwmac")) {
+>   		plat->has_gmac = 1;
+>   		plat->pmt = 1;
+>   	}
+>
+> +	if (of_device_is_compatible(np, "snps,dwmac-3.610") ||
+> +		of_device_is_compatible(np, "snps,dwmac-3.710")) {
+> +		plat->enh_desc = 1;
+> +		plat->bugged_jumbo = 1;
+> +		plat->force_sf_dma_mode = 1;
+> +	}
 
-Well, the DT binding is supposed to be describing the HW (or at least
-the SW-visible aspects of the HW), so we should not be designing the
-binding to suit a particular SW/driver structure. Instead, the binding
-should describe the HW, and the SW should be written to work with the
-binding.
+I think some these shouldn't be forced here. Maybe plat->enh_desc could
+be set because for new syn mac cores.
 
-Put another way, the binding is something that shouldn't change even if
-the SW/driver structure does.
+Also pmt could not be forced because it is an extra module so it could
+happen that a new chip has no PMT block.
 
-So, if we're coming up with a final binding to correctly represent nvec,
-we should split the I2C slave, protocol, protocol clients all out, since
-that's the best representation of the HW and protocol.
+> +
+> +	dma_cfg = devm_kzalloc(&pdev->dev, sizeof(*dma_cfg), GFP_KERNEL);
+> +	plat->dma_cfg = dma_cfg;
+> +	of_property_read_u32(np, "snps,pbl", &dma_cfg->pbl);
+> +	dma_cfg->fixed_burst = of_property_read_bool(np, "snps,fixed-burst");
+> +	dma_cfg->mixed_burst = of_property_read_bool(np, "snps,mixed-burst");
+> +
+>   	return 0;
+>   }
+>   #else
+> @@ -230,7 +253,9 @@ static const struct dev_pm_ops stmmac_pltfr_pm_ops;
+>
+>   static const struct of_device_id stmmac_dt_ids[] = {
+>   	{ .compatible = "st,spear600-gmac"},
+> +	{ .compatible = "snps,dwmac-3.610"},
+>   	{ .compatible = "snps,dwmac-3.70a"},
+> +	{ .compatible = "snps,dwmac-3.710"},
+>   	{ .compatible = "snps,dwmac"},
+>   	{ /* sentinel */ }
+>   };
+>
 
-...
->>> One question is now how to instantiate the mfd children from this. I see
->>> three> 
->>> different methods used in different drivers:
->>> 		a) just add a "compatible =" property to the child nodes and a
->>> 		
->>> 			"simple-bus" property to the the driver
->>
->> (or instead of simple-bus, have the top-level node's probe() do the
->> following at the end:
->>
->>         of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
->>
->> That's what sounds/soc/tegra/tegra30_ahub.c does.
-> 
-> "simple-bus" and maybe also of_platform_populate are only favored if there is 
-> a real bus, AFAIU, which isn't the here (and maybe also not for other mfds).
-
-I don't think that restriction is generally true. I've certainly seen
-seasoned DT experts state that *not* breaking things up into individual
-components has almost always turned out to be a mistake.
-
-Besides, the nvec protocol really is a bus, even a physical one in some
-ways. It multiplexes access to a variety of endpoints (keyboard, GPIOs)
-over a communication channel (nvec protocol, over a physical I2C channel).
-
->> I prefer either:
-...
->> 2) Your option a. I believe if we're going to break down the MFD device
->> into chunks, the way we do it should mirror existing DT techniques as
->> closely as possible, and using nodes with compatible values to represent
->> the child devices seems most consistent with existing techniques.
-> 
-> Thinking about what you said at the beginning, I think it's best not to use 
-> any sub-nodes at all, but give all children a node of their own (standalone 
-> driver) with compatible properties and a link property to the device 
-> responsible for the communications (nvec or i2c-slave in our case), similar to 
-> the backlight property for panels:
-> 
-> root {
-> ....
-> 	nvec: nvec {
-> 		compatible = "nvidia,nvec";
-> 		...
-> 	};
-> 
-> 	keyboard {
-> 		compatible = "nvidia,nvec-keyboard";
-> 		nvec = <&nvec>;
-> 	};
-> 	....
-> };
-
-So here, the keyboard node is using nvec as the communication transport
-for all its data. That *is* a bus, and devices on buses are typically
-child nodes of the bus itself; take a look at the I2C or SPI master
-bindings. The only exception to this I can think off quickly is the I2C
-mux bindings, and that's because the control of the muxing isn't
-necessarily part of the data path being muxed.
-
-> I'm not sure if we can still use the function exports from the nvec or if we 
-> need to add some "ops" to the nvec struct. Maybe the latter would be the 
-> better solution. I'm also wondering if we can guaranty that the nvec is loaded 
-> before any children and that the children are unloaded before the nvec core 
-> driver.
-
-The driver for the keyboard node above would have to convert the phandle
-in the nvec property to some kind of nvec device/driver handle. That
-process would need to defer the probe of the keyboard node's
-driver/device if the nvec node's driver/device was not yet available.
-
-However, this would be entirely automatic if nvec was a bus, and the
-devices behind the bus were children of the nvec node.
