@@ -1,8 +1,8 @@
 From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
 Subject: Re: [PATCH RFC 1/3] dt:net:stmmac: Allocate platform data only if
  its NULL.
-Date: Mon, 01 Jul 2013 19:20:37 +0200
-Message-ID: <51D1BA65.5000406@st.com>
+Date: Mon, 01 Jul 2013 19:20:22 +0200
+Message-ID: <51D1BA56.1000001@st.com>
 References: <1372678962-12959-1-git-send-email-srinivas.kandagatla@st.com> <1372679024-13089-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
@@ -24,7 +24,7 @@ On 7/1/2013 1:43 PM, Srinivas KANDAGATLA wrote:
 > This patch adds check and reuses platform_data if its valid, before
 > allocating a new one.
 
-Yes, we had seen this long time ago and IIRC i prepared the patch
+Ye, we had seen this long time ago and IIRC i prepared the patch
 so
 
 Acked-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
