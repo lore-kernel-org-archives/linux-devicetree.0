@@ -1,63 +1,53 @@
-From: Sean Cross <xobs@kosagi.com>
-Subject: Re: [PATCH 3/4] PCI: Add driver for i.MX6 PCI Express
-Date: Mon, 1 Jul 2013 17:24:00 +0800
-Message-ID: <C89FF158E3384F0E90A288AE1A712972@kosagi.com>
-References: <1372662947-27160-1-git-send-email-xobs@kosagi.com>
- <1372662947-27160-4-git-send-email-xobs@kosagi.com>
- <1372665061.36667486@f35.mail.ru>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] ARM: dts: imx27: Add imx framebuffer device
+Date: Mon, 1 Jul 2013 17:30:34 +0800
+Message-ID: <20130701093032.GG13206@S2101-09.ap.freescale.net>
+References: <1372431037-13519-1-git-send-email-mpa@pengutronix.de>
+ <1372431037-13519-3-git-send-email-mpa@pengutronix.de>
+ <1372432206.785926201@f326.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1372665061.36667486@f35.mail.ru>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1372432206.785926201-iyhzTVcwrO4edp2WBT/QOw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 1, 2013 at 3:51 PM, Alexander Shiyan wrote:
-> > This adds a PCI Express port driver for the on-chip PCI Express port
-> > present on the i.MX6 SoC. It is based on the PCI Express driver available
-> > in the Freescale BSP.
+On Fri, Jun 28, 2013 at 07:10:06PM +0400, Alexander Shiyan wrote:
+> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx27.dtsi | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
 > > 
-> > Signed-off-by: Sean Cross <xobs@kosagi.com (mailto:xobs@kosagi.com)>
-> ...
-> > +++ b/Documentation/devicetree/bindings/pci/imx6q-pcie.txt
-> > @@ -0,0 +1,20 @@
-> > +* Freescale i.MX6Q PCI Express bridge
-> > +
-> > +Example (i.MX6Q)
-> > + pcie: pcie@01ffc000 {
-> > + compatible = "fsl,imx6q-pcie";
-> > + reg = <0x01ffc000 0x4000>,
-> > + <0x01000000 0x100000>,
-> > + <0x01100000 0xe00000>,
-> > + <0x01f00000 0xfc000>;
-> > + interrupts = <0 122 0x04>;
-> > + clocks = <&clks 186>, <&clks 189>, <&clks 196>,
-> > + <&clks 198>, <&clks 144>;
-> > + clock-names = "sata_ref", "pcie_ref_125m", "lvds1_sel",
-> > + "lvds1", "pcie_axi";
-> > + power-enable = <&gpio7 12 0>;
-> > + pcie-reset = <&gpio3 29 0>;
+> > diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+> > index 8603886..10dcbd3 100644
+> > --- a/arch/arm/boot/dts/imx27.dtsi
+> > +++ b/arch/arm/boot/dts/imx27.dtsi
+> > @@ -342,6 +342,15 @@
+> >  			reg = <0x10020000 0x20000>;
+> >  			ranges;
+> >  
+> > +			imxfb: fb@10021000 {
 > 
-> 
-> 
-> Can this be replaced with regulator/reset API?
-I agree that power-enable might be better replaced with regulator API calls, and I'll rework this patch to incorporate a regulator.
+> If it can be fixed while applying, it would be right to use just "fb" here.
+> We now use a lot of devices without "imx"-prefix, so I do not see any need to use it here.
 
-I hadn't heard of the reset API before, and I note in the documentation that it says:
+I actually prefer to use the block name if it's not a thing defined by
+ePAPR.  In this case, it's "lcdc".  But since "fb" is already used in
+compatible.  Okay, I fixed it up by dropping "imx" prefix.
 
-    Reset signals for whole standalone chips are most likely better represented as
-    GPIOs, although there are likely to be exceptions to this rule.
+Applied the whole series, thanks.
 
-This is a reset line going directly to a PCIe slot, which I think counts as a "standalone chip".
-
-> > + wake-up = <&gpio3 22 0>;
-> > + disable-endpoint = <&gpio2 16 0>;
-> > + };
-> 
-> 
-> 
-> --- 
+Shawn
