@@ -1,85 +1,39 @@
 From: Richard Genoud <richard.genoud@gmail.com>
-Subject: [RFC PATCH 10/13] sound: atmel_ssc_dai: PM: actually stopping clock on suspend/resume
-Date: Mon,  1 Jul 2013 10:39:35 +0200
-Message-ID: <1372667978-4718-11-git-send-email-richard.genoud@gmail.com>
+Subject: [RFC PATCH 13/13] sound: codec: wm8371: correct capture line/mic
+Date: Mon,  1 Jul 2013 10:39:38 +0200
+Message-ID: <1372667978-4718-14-git-send-email-richard.genoud@gmail.com>
 References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Nicolas Ferre <nicolas.ferre@atmel.com>
+With the "switch" text, we can't enable the line and mic capture in
+alsamixer.
 
-Stop SSC clock on suspend/resume cycle checking if the controller is ac=
-tually
-initialized. This will save power while sleeping.
-
-Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
 ---
- sound/soc/atmel/atmel_ssc_dai.c |   20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ sound/soc/codecs/wm8731.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ss=
-c_dai.c
-index f3fdfa0..14da27a 100644
---- a/sound/soc/atmel/atmel_ssc_dai.c
-+++ b/sound/soc/atmel/atmel_ssc_dai.c
-@@ -659,12 +659,10 @@ static int atmel_ssc_prepare(struct snd_pcm_subst=
-ream *substream,
- #ifdef CONFIG_PM
- static int atmel_ssc_suspend(struct snd_soc_dai *cpu_dai)
- {
--	struct atmel_ssc_info *ssc_p;
-+	struct atmel_ssc_info *ssc_p =3D &ssc_info[cpu_dai->id];
-=20
- 	if (!cpu_dai->active)
--		return 0;
--
--	ssc_p =3D &ssc_info[cpu_dai->id];
-+		goto out;
-=20
- 	/* Save the status register before disabling transmit and receive */
- 	ssc_p->ssc_state.ssc_sr =3D ssc_readl(ssc_p->ssc->regs, SR);
-@@ -680,6 +678,11 @@ static int atmel_ssc_suspend(struct snd_soc_dai *c=
-pu_dai)
- 	ssc_p->ssc_state.ssc_tcmr =3D ssc_readl(ssc_p->ssc->regs, TCMR);
- 	ssc_p->ssc_state.ssc_tfmr =3D ssc_readl(ssc_p->ssc->regs, TFMR);
-=20
-+out:
-+	if (ssc_p->initialized) {
-+		pr_debug("atmel_ssc_dai: suspend - stop clock\n");
-+		clk_disable(ssc_p->ssc->clk);
-+	}
- 	return 0;
- }
-=20
-@@ -687,14 +690,17 @@ static int atmel_ssc_suspend(struct snd_soc_dai *=
-cpu_dai)
-=20
- static int atmel_ssc_resume(struct snd_soc_dai *cpu_dai)
- {
--	struct atmel_ssc_info *ssc_p;
-+	struct atmel_ssc_info *ssc_p =3D &ssc_info[cpu_dai->id];
- 	u32 cr;
-=20
-+	if (ssc_p->initialized) {
-+		pr_debug("atmel_ssc_dai: resume - restart clock\n");
-+		clk_enable(ssc_p->ssc->clk);
-+	}
-+
- 	if (!cpu_dai->active)
- 		return 0;
-=20
--	ssc_p =3D &ssc_info[cpu_dai->id];
--
- 	/* restore SSC register settings */
- 	ssc_writel(ssc_p->ssc->regs, TFMR, ssc_p->ssc_state.ssc_tfmr);
- 	ssc_writel(ssc_p->ssc->regs, TCMR, ssc_p->ssc_state.ssc_tcmr);
---=20
+diff --git a/sound/soc/codecs/wm8731.c b/sound/soc/codecs/wm8731.c
+index 3cf6b20..dae1403 100644
+--- a/sound/soc/codecs/wm8731.c
++++ b/sound/soc/codecs/wm8731.c
+@@ -164,10 +164,10 @@ SOC_DOUBLE_R("Master Playback ZC Switch", WM8731_LOUT1V, WM8731_ROUT1V,
+ 
+ SOC_DOUBLE_R_TLV("Capture Volume", WM8731_LINVOL, WM8731_RINVOL, 0, 31, 0,
+ 		 in_tlv),
+-SOC_DOUBLE_R("Line Capture Switch", WM8731_LINVOL, WM8731_RINVOL, 7, 1, 1),
++SOC_DOUBLE_R("Line Capture", WM8731_LINVOL, WM8731_RINVOL, 7, 1, 1),
+ 
+ SOC_SINGLE_TLV("Mic Boost Volume", WM8731_APANA, 0, 1, 0, mic_tlv),
+-SOC_SINGLE("Mic Capture Switch", WM8731_APANA, 1, 1, 1),
++SOC_SINGLE("Mic Capture", WM8731_APANA, 1, 1, 1),
+ 
+ SOC_SINGLE_TLV("Sidetone Playback Volume", WM8731_APANA, 6, 3, 1,
+ 	       sidetone_tlv),
+-- 
 1.7.10.4
