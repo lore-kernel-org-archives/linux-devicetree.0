@@ -1,59 +1,37 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH 02/13] misc: atmel_ssc: keep the count of pdev->id
-Date: Mon,  1 Jul 2013 10:39:27 +0200
-Message-ID: <1372667978-4718-3-git-send-email-richard.genoud@gmail.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: [RFC PATCH 05/13] ARM: AT91: DTS: sam9x5ek: add WM8731 codec
+Date: Mon,  1 Jul 2013 10:39:30 +0200
+Message-ID: <1372667978-4718-6-git-send-email-richard.genoud@gmail.com>
 References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1372667978-4718-1-git-send-email-richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-With device tree, pdev->id is always -1, so we introduce a local
-counter.
+The WM8731 codec on sam9x5ek board is on i2c, address 1A
 
-Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
 ---
- drivers/misc/atmel-ssc.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/at91sam9x5ek.dtsi |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/misc/atmel-ssc.c b/drivers/misc/atmel-ssc.c
-index 3afbd82..d1ec5ab 100644
---- a/drivers/misc/atmel-ssc.c
-+++ b/drivers/misc/atmel-ssc.c
-@@ -173,6 +173,12 @@ out:
- 	return err;
- }
+diff --git a/arch/arm/boot/dts/at91sam9x5ek.dtsi b/arch/arm/boot/dts/at91sam9x5ek.dtsi
+index b753855..a81a1a6 100644
+--- a/arch/arm/boot/dts/at91sam9x5ek.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5ek.dtsi
+@@ -59,6 +59,11 @@
  
-+/* counter of ssc devive instances.
-+ * With device tree pdev->id is always -1, so we have to keep the
-+ * count ourselves
-+ */
-+static int ssc_device_id;
+ 			i2c0: i2c@f8010000 {
+ 				status = "okay";
 +
- static int ssc_probe(struct platform_device *pdev)
- {
- 	struct resource *regs;
-@@ -235,6 +241,7 @@ static int ssc_probe(struct platform_device *pdev)
- 	}
++				wm8731: wm8731@1a {
++					compatible = "wm8731";
++					reg = <0x1a>;
++				};
+ 			};
  
- 	spin_lock(&user_lock);
-+	pdev->id = ssc_device_id++;
- 	list_add_tail(&ssc->list, &ssc_list);
- 	spin_unlock(&user_lock);
- 
+ 			pinctrl@fffff400 {
 -- 
 1.7.10.4
