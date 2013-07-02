@@ -1,96 +1,84 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] iio: lps331ap: Add support for DT
-Date: Tue, 02 Jul 2013 17:28:47 +0200
-Message-ID: <51D2F1AF.2040809@samsung.com>
-References: <1372767338-13179-1-git-send-email-l.czerwinski@samsung.com> <1372767338-13179-5-git-send-email-l.czerwinski@samsung.com> <51D2CE03.2070704@metafoo.de>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 4/9] wl12xx: use frequency instead of enumerations for
+ pdata clocks
+Date: Tue, 2 Jul 2013 18:31:13 +0300
+Message-ID: <20130702153113.GF7013@arwen.pp.htv.fi>
+References: <1372776948-24840-1-git-send-email-coelho@ti.com>
+ <1372776948-24840-5-git-send-email-coelho@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51D2CE03.2070704-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="K/NRh952CO+2tg14"
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1372776948-24840-5-git-send-email-coelho-l0cyMroinI0@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Luciano Coelho <coelho-l0cyMroinI0@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/2013 02:56 PM, Lars-Peter Clausen wrote:
-> On 07/02/2013 02:15 PM, Lukasz Czerwinski wrote:
->> From: Jacek Anaszewski<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> This patch adds DT support for the lps331ap barometer
->> sensor.
->>
->> Signed-off-by: Jacek Anaszewski<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Kyungmin Park<kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>   .../bindings/iio/pressure/st_pressure.txt          |   41 ++++++++++++++++++++
->>   drivers/iio/pressure/st_pressure_i2c.c             |    9 +++++
->>   drivers/iio/pressure/st_pressure_spi.c             |    9 +++++
->>   3 files changed, 59 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/iio/pressure/st_pressure.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/pressure/st_pressure.txt b/Documentation/devicetree/bindings/iio/pressure/st_pressure.txt
->> new file mode 100644
->> index 0000000..73a4b7d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/pressure/st_pressure.txt
->> @@ -0,0 +1,41 @@
->> +* STMicroelectronics LPS331AP barometer sensor
->> +
->> +Required properties:
->> +
->> +  - compatible : should be "lps331ap"
->
-> Needs the vendor prefix.
->
->> +  - reg : the I2C address of the barometer
->> +
->> +Optional properties:
->> +
->> +  - drdy-int-pin : redirect DRDY on pin INT1 (1) or pin INT2 (2) (u8)
->> +  - interrupt-parent : phandle to the interrupt map subnode
->> +  - interrupts : interrupt mapping for LPS331AP interrupt sources:
->> +		2 sources: 0 - INT1, 1 - INT2
->> +  - irq-map : irq sub-node defining interrupt map
->> +	      (all properties listed below are required):
->> +      - #interrupt-cells : should be 1
->> +      - #address-cells : should be 0
->> +      - #size-cells : should be 0
->> +      - interrupt-map : table of entries consisting of three child elements:
->> +	  - unit_interrupt_specifier - 0 : INT1, 1 : INT2
->> +	  - interrupt parent phandle
->> +	  - parent unit interrupt specifier consisiting of two elements:
->> +	      - index of the interrupt within the controller
->> +	      - flags : should be 0
->
-> While this works I wonder why you choose such a complicated example for setting
-> up the IRQ? Why not just reference the IRQ directly using the interrupts property?
+--K/NRh952CO+2tg14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Lars,
+Hi,
 
-I will try to clarify the reasons why the interrupt map was exploited:
+On Tue, Jul 02, 2013 at 05:55:43PM +0300, Luciano Coelho wrote:
+> diff --git a/drivers/net/wireless/ti/wl12xx/main.c b/drivers/net/wireless=
+/ti/wl12xx/main.c
+> index 1c627da..903dcb3 100644
+> --- a/drivers/net/wireless/ti/wl12xx/main.c
+> +++ b/drivers/net/wireless/ti/wl12xx/main.c
+> @@ -1701,6 +1701,42 @@ static struct ieee80211_sta_ht_cap wl12xx_ht_cap =
+=3D {
+>  		},
+>  };
+> =20
+> +static struct wl12xx_clock wl12xx_refclock_table[] =3D {
 
-1) The device exposes two interrupt pins: INT1 and INT2.
-2) Both of them can be configured either to generate data ready
-    interrupts or event interrupts.
-3) drdy-int-pin property conveys the information about the interrupt
-    pin routed to the CPU and allows the driver to configure
-    the device to generate data ready interrupts on the connected pin.
-4) The lps331ap barometer sensor handles only data ready interrupts
-    but it depends on the st_sensors library which expects interrupt map
-    in the device tree node.
-5) Because of the support for events added to the library in this
-    series it should be possible to pass two irq's to the driver. From
-    what I know it can't be accomplished with interrupts property if
-    the interrupts originate from different interrupt parents (which is
-    the case I deal with, where device int sources are routed to the
-    GPIOs in different banks).
-6) I agree that map filled with only one element may confuse the reader
-    but it is required for the st_common library to successfully parse
-    the node.
+const
 
-If you know better solution please let me know.
-Of course I agree with your remaining remarks.
+> +	{ 19200000,	false,	WL12XX_REFCLOCK_19	},
+> +	{ 26000000,	false,	WL12XX_REFCLOCK_26	},
+> +	{ 26000000,	true,	WL12XX_REFCLOCK_26_XTAL	},
+> +	{ 38400000,	false,	WL12XX_REFCLOCK_38	},
+> +	{ 38400000,	true,	WL12XX_REFCLOCK_38_XTAL	},
+> +	{ 52000000,	false,	WL12XX_REFCLOCK_52	},
+> +	{ 0,		false,	0 }
+> +};
+> +
+> +static struct wl12xx_clock wl12xx_tcxoclock_table[] =3D {
 
-Thanks,
-Jacek
+const
+
+--=20
+balbi
+
+--K/NRh952CO+2tg14
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR0vJBAAoJEIaOsuA1yqREKRUQAJ73pu94CGu/7VONZrN80bat
+GH4zZVV6q3bbm63/NzlUdZklonA5LwYUU8RUcRuF7xHBfkrt/iogHVfEtbtIrrgj
+izP9hFLOWEM/iIkT8IIRMtIjsiIh10rH3JQ0s+WECz5/6G+B4hz1lRf9/bibNCxh
+kyYCHD9ngHAtld0soEd2r7Yps0kzu4p1Eo+nmlTJg8pn9lB1eCPSOsMKfvATt32u
+sawu3i+hwDlC6fG6x9GKidWEU9/6I31nNgyoKNXZgINp0P51h9cC2WoulboweWmy
+SODIrBFfFfzp3YyCYpTxmD1bmN8vh8HCFTh+AdCiAG1rnN8/8m3qM0XfCSxWRO9b
+zbYmrUlFQW4uIcrG62YTX3Cmv/z/4Wg2oNNR6FGJLdOK7xWDgdsWEedpUcOMJ7yw
+MRed1iC7ve2Nk+iYv/T7jclfCIJYOpICs5VbwDca0eU1cu/vcKFC5/f13eR4qtdF
+uMgkSTCoOTyQYeDSiVxy1Cwk5cDOTOWFpnxWbCaUlp3uVFM6QtDt8pZzQxupZJIv
+bnd8LWXCvpktROTqJAeVZKOSaWRis1iJttgXF2j+cXaYIVe4cUVmYnPvbVYJsLbZ
+w+ulUSiE3AIlEul5IGo4lA6Qrt8cmRDLJBz3hAUFADdKbb+WllUU6nw3O71uJoFo
+Do6SpsKoCkxMoveFwq8p
+=rKY4
+-----END PGP SIGNATURE-----
+
+--K/NRh952CO+2tg14--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
