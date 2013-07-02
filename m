@@ -1,308 +1,67 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2] of: Specify initrd location using 64-bit
-Date: Mon, 01 Jul 2013 16:34:26 -0500
-Message-ID: <51D1F5E2.6070609@gmail.com>
-References: <1372702835-5333-1-git-send-email-santosh.shilimkar@ti.com>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH 1/4] rtc: omap: restore back (hard-code) wakeup support
+Date: Mon, 01 Jul 2013 17:06:38 -0700
+Message-ID: <87ehbhomep.fsf@linaro.org>
+References: <1372412109-986-1-git-send-email-gururaja.hebbar@ti.com>
+	<1372412109-986-2-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1372702835-5333-1-git-send-email-santosh.shilimkar@ti.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, linux-mips@linux-mips.org, Aurelien Jacquiot <a-jacquiot@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Will Deacon <will.deacon@arm.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, Jonas Bonn <jonas@southpole.se>, Russell King <linux@arm.linux.org.uk>, linux-c6x-dev@linux-c6x.org, x86@kernel.org, arm@kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, grant.likely@linaro.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-xtensa@linux-xtensa.org, James Hogan <james.hogan@imgtec.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Chris Zankel <chris@zankel.net>, Michal Simek <monstr@monstr.eu>, Vineet Gupta <vgupta@synopsys.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1372412109-986-2-git-send-email-gururaja.hebbar@ti.com> (Hebbar
+	Gururaja's message of "Fri, 28 Jun 2013 15:05:06 +0530")
+Sender: linux-omap-owner@vger.kernel.org
+To: Hebbar Gururaja <gururaja.hebbar@ti.com>
+Cc: tony@atomide.com, b-cousson@ti.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, vaibhav.bedia@ti.com, sudhakar.raj@ti.com, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/01/2013 01:20 PM, Santosh Shilimkar wrote:
-> On some PAE architectures, the entire range of physical memory could reside
-> outside the 32-bit limit.  These systems need the ability to specify the
-> initrd location using 64-bit numbers.
-> 
-> This patch globally modifies the early_init_dt_setup_initrd_arch() function to
-> use 64-bit numbers instead of the current unsigned long.
-> 
-> There has been quite a bit of debate about whether to use u64 or phys_addr_t.
-> It was concluded to stick to u64 to be consistent with rest of the device
-> tree code. As summarized by Geert, "The address to load the initrd is decided
-> by the bootloader/user and set at that point later in time. The dtb should not
-> be tied to the kernel you are booting"
+Hebbar Gururaja <gururaja.hebbar@ti.com> writes:
 
-That was quoting me. Otherwise:
+> rtc-omap driver modules is used both by OMAP1/2, Davinci SoC platforms.
+>
+> However, rtc wake support on OMAP1 is broken. Hence the
+> device_init_wakeup() was removed from rtc-omap driver and moved to
+> platform board files that supported it (DA850/OMAP-L138). [1]
+>
+> However, recently [2] it was suggested that driver should always do a
+> device_init_wakeup(dev, true). Platforms that don't want/need
+> wakeup support can disable it from userspace via:
+>
+>     echo disabled > /sys/devices/.../power/wakeup
+>
+> Also, with the new DT boot-up, board file doesn't exist and hence there
+> is no way to have device wakeup support rtc.
+>
+> The fix for above issues, is to hard code device_init_wakeup() inside
+> driver and let platforms that don't need this, handle it through the
+> sysfs power entry.
+>
+> [1]
+> https://patchwork.kernel.org/patch/136731/
+>
+> [2]
+> http://www.mail-archive.com/davinci-linux-open-source@linux.
+> davincidsp.com/msg26077.html
+>
+> Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: rtc-linux@googlegroups.com
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+Acked-by: Kevin Hilman <khilman@linaro.org>
 
-Unless Grant feels compelled to pick this up for 3.11, I think it has to
-wait for 3.12.
-
-Rob
-
-> 
-> More details on the discussion can be found here:
-> https://lkml.org/lkml/2013/6/20/690
-> https://lkml.org/lkml/2012/9/13/544
-> 
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Mark Salter <msalter@redhat.com>
-> Cc: Aurelien Jacquiot <a-jacquiot@ti.com>
-> Cc: James Hogan <james.hogan@imgtec.com>
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Jonas Bonn <jonas@southpole.se>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: x86@kernel.org
-> Cc: arm@kernel.org
-> Cc: Chris Zankel <chris@zankel.net>
-> Cc: Max Filippov <jcmvbkbc@gmail.com>
-> Cc: bigeasy@linutronix.de
-> Cc: robherring2@gmail.com
-> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-> 
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-c6x-dev@linux-c6x.org
-> Cc: linux-mips@linux-mips.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-xtensa@linux-xtensa.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> 
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 > ---
->  arch/arc/mm/init.c            |    5 ++---
->  arch/arm/mm/init.c            |    2 +-
->  arch/arm64/mm/init.c          |    3 +--
->  arch/c6x/kernel/devicetree.c  |    3 +--
->  arch/metag/mm/init.c          |    5 ++---
->  arch/microblaze/kernel/prom.c |    3 +--
->  arch/mips/kernel/prom.c       |    3 +--
->  arch/openrisc/kernel/prom.c   |    3 +--
->  arch/powerpc/kernel/prom.c    |    3 +--
->  arch/x86/kernel/devicetree.c  |    3 +--
->  arch/xtensa/kernel/setup.c    |    3 +--
->  drivers/of/fdt.c              |   10 ++++++----
->  include/linux/of_fdt.h        |    3 +--
->  13 files changed, 20 insertions(+), 29 deletions(-)
-> 
-> diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-> index 4a17736..7991e08 100644
-> --- a/arch/arc/mm/init.c
-> +++ b/arch/arc/mm/init.c
-> @@ -157,9 +157,8 @@ void __init free_initrd_mem(unsigned long start, unsigned long end)
->  #endif
+> :100644 100644 b0ba3fc... 761919d... M	drivers/rtc/rtc-omap.c
+>  drivers/rtc/rtc-omap.c |    2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+> index b0ba3fc..761919d 100644
+> --- a/drivers/rtc/rtc-omap.c
+> +++ b/drivers/rtc/rtc-omap.c
+> @@ -423,6 +423,8 @@ static int __init omap_rtc_probe(struct platform_device *pdev)
+>  	 *    is write-only, and always reads as zero...)
+>  	 */
 >  
->  #ifdef CONFIG_OF_FLATTREE
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -					    unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
-> -	pr_err("%s(%lx, %lx)\n", __func__, start, end);
-> +	pr_err("%s(%llx, %llx)\n", __func__, start, end);
->  }
->  #endif /* CONFIG_OF_FLATTREE */
-> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> index 9a5cdc0..afeaef7 100644
-> --- a/arch/arm/mm/init.c
-> +++ b/arch/arm/mm/init.c
-> @@ -76,7 +76,7 @@ static int __init parse_tag_initrd2(const struct tag *tag)
->  __tagtable(ATAG_INITRD2, parse_tag_initrd2);
->  
->  #ifdef CONFIG_OF_FLATTREE
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start, unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	phys_initrd_start = start;
->  	phys_initrd_size = end - start;
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index f497ca7..7047708 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -44,8 +44,7 @@ static unsigned long phys_initrd_size __initdata = 0;
->  
->  phys_addr_t memstart_addr __read_mostly = 0;
->  
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -					    unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	phys_initrd_start = start;
->  	phys_initrd_size = end - start;
-> diff --git a/arch/c6x/kernel/devicetree.c b/arch/c6x/kernel/devicetree.c
-> index bdb56f0..287d0e6 100644
-> --- a/arch/c6x/kernel/devicetree.c
-> +++ b/arch/c6x/kernel/devicetree.c
-> @@ -33,8 +33,7 @@ void __init early_init_devtree(void *params)
->  
->  
->  #ifdef CONFIG_BLK_DEV_INITRD
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -		unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	initrd_start = (unsigned long)__va(start);
->  	initrd_end = (unsigned long)__va(end);
-> diff --git a/arch/metag/mm/init.c b/arch/metag/mm/init.c
-> index d05b845..bdc4811 100644
-> --- a/arch/metag/mm/init.c
-> +++ b/arch/metag/mm/init.c
-> @@ -419,10 +419,9 @@ void free_initrd_mem(unsigned long start, unsigned long end)
->  #endif
->  
->  #ifdef CONFIG_OF_FLATTREE
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -					    unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
-> -	pr_err("%s(%lx, %lx)\n",
-> +	pr_err("%s(%llx, %llx)\n",
->  	       __func__, start, end);
->  }
->  #endif /* CONFIG_OF_FLATTREE */
-> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-> index 0a2c68f..62e2e8f 100644
-> --- a/arch/microblaze/kernel/prom.c
-> +++ b/arch/microblaze/kernel/prom.c
-> @@ -136,8 +136,7 @@ void __init early_init_devtree(void *params)
->  }
->  
->  #ifdef CONFIG_BLK_DEV_INITRD
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -		unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	initrd_start = (unsigned long)__va(start);
->  	initrd_end = (unsigned long)__va(end);
-> diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-> index 5712bb5..32b8788 100644
-> --- a/arch/mips/kernel/prom.c
-> +++ b/arch/mips/kernel/prom.c
-> @@ -58,8 +58,7 @@ void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
->  }
->  
->  #ifdef CONFIG_BLK_DEV_INITRD
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -					    unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	initrd_start = (unsigned long)__va(start);
->  	initrd_end = (unsigned long)__va(end);
-> diff --git a/arch/openrisc/kernel/prom.c b/arch/openrisc/kernel/prom.c
-> index 5869e3f..150215a 100644
-> --- a/arch/openrisc/kernel/prom.c
-> +++ b/arch/openrisc/kernel/prom.c
-> @@ -96,8 +96,7 @@ void __init early_init_devtree(void *params)
->  }
->  
->  #ifdef CONFIG_BLK_DEV_INITRD
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -		unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	initrd_start = (unsigned long)__va(start);
->  	initrd_end = (unsigned long)__va(end);
-> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-> index 8b6f7a9..2f3e252 100644
-> --- a/arch/powerpc/kernel/prom.c
-> +++ b/arch/powerpc/kernel/prom.c
-> @@ -550,8 +550,7 @@ void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
->  }
->  
->  #ifdef CONFIG_BLK_DEV_INITRD
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -		unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	initrd_start = (unsigned long)__va(start);
->  	initrd_end = (unsigned long)__va(end);
-> diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-> index b158152..2fbad6b 100644
-> --- a/arch/x86/kernel/devicetree.c
-> +++ b/arch/x86/kernel/devicetree.c
-> @@ -52,8 +52,7 @@ void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
->  }
->  
->  #ifdef CONFIG_BLK_DEV_INITRD
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -					    unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	initrd_start = (unsigned long)__va(start);
->  	initrd_end = (unsigned long)__va(end);
-> diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-> index 6dd25ec..d45e602 100644
-> --- a/arch/xtensa/kernel/setup.c
-> +++ b/arch/xtensa/kernel/setup.c
-> @@ -170,8 +170,7 @@ static int __init parse_tag_fdt(const bp_tag_t *tag)
->  
->  __tagtable(BP_TAG_FDT, parse_tag_fdt);
->  
-> -void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> -		unsigned long end)
-> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->  {
->  	initrd_start = (void *)__va(start);
->  	initrd_end = (void *)__va(end);
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 808be06..21123b8 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -550,7 +550,8 @@ int __init of_flat_dt_match(unsigned long node, const char *const *compat)
->   */
->  void __init early_init_dt_check_for_initrd(unsigned long node)
->  {
-> -	unsigned long start, end, len;
-> +	u64 start, end;
-> +	unsigned long len;
->  	__be32 *prop;
->  
->  	pr_debug("Looking for initrd properties... ");
-> @@ -558,15 +559,16 @@ void __init early_init_dt_check_for_initrd(unsigned long node)
->  	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &len);
->  	if (!prop)
->  		return;
-> -	start = of_read_ulong(prop, len/4);
-> +	start = of_read_number(prop, len/4);
->  
->  	prop = of_get_flat_dt_prop(node, "linux,initrd-end", &len);
->  	if (!prop)
->  		return;
-> -	end = of_read_ulong(prop, len/4);
-> +	end = of_read_number(prop, len/4);
->  
->  	early_init_dt_setup_initrd_arch(start, end);
-> -	pr_debug("initrd_start=0x%lx  initrd_end=0x%lx\n", start, end);
-> +	pr_debug("initrd_start=0x%llx  initrd_end=0x%llx\n",
-> +		 (unsigned long long)start, (unsigned long long)end);
->  }
->  #else
->  inline void early_init_dt_check_for_initrd(unsigned long node)
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index ed136ad..4a17939 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -106,8 +106,7 @@ extern u64 dt_mem_next_cell(int s, __be32 **cellp);
->   * physical addresses.
->   */
->  #ifdef CONFIG_BLK_DEV_INITRD
-> -extern void early_init_dt_setup_initrd_arch(unsigned long start,
-> -					    unsigned long end);
-> +extern void early_init_dt_setup_initrd_arch(u64 start, u64 end);
->  #endif
->  
->  /* Early flat tree scan hooks */
-> 
+> +	device_init_wakeup(&pdev->dev, true);
+> +
+>  	if (new_ctrl & (u8) OMAP_RTC_CTRL_SPLIT)
+>  		pr_info("%s: split power mode\n", pdev->name);
