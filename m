@@ -1,82 +1,57 @@
-From: Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Tue, 2 Jul 2013 21:25:48 +0100
-Message-ID: <20130702202548.GE13924@flint.arm.linux.org.uk>
-References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
- <20130702204255.2044c01b@armhf>
- <20130702191923.GD13924@flint.arm.linux.org.uk> <51D330AC.5060903@gmail.com>
+From: Luciano Coelho <coelho@ti.com>
+Subject: Re: [PATCH v2 4/9] wl12xx: use frequency instead of enumerations
+ for pdata clocks
+Date: Tue, 2 Jul 2013 23:27:30 +0300
+Message-ID: <1372796850.21065.93.camel@cumari.coelho.fi>
+References: <1372776948-24840-1-git-send-email-coelho@ti.com>
+ <1372776948-24840-5-git-send-email-coelho@ti.com>
+ <20130702150208.GA4233@kahuna>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51D330AC.5060903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130702150208.GA4233@kahuna>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>
+Cc: mark.rutland@arm.com, mturquette@linaro.org, linux-doc@vger.kernel.org, tony@atomide.com, linux-wireless@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 02, 2013 at 09:57:32PM +0200, Sebastian Hesselbarth wrote:
-> I am against a super node which contains lcd and dcon/ire nodes. You can
-> enable those devices on a per board basis. We add them to dove.dtsi but
-> disable them by default (status = "disabled").
->
-> The DRM driver itself should get a video-card node outside of  
-> soc/internal-regs where you can put e.g. video memory hole (or video
-> mem size if it will be taken from RAM later)
->
-> About the unusual case, I guess we should try to get both lcd
-> controllers into one DRM driver. Then support mirror or screen
-> extension X already provides. For those applications where you want
-> X on one lcd and some other totally different video stream - wait
-> for someone to come up with a request or proposal.
+On Tue, 2013-07-02 at 10:02 -0500, Nishanth Menon wrote:
+> On 17:55-20130702, Luciano Coelho wrote:
+> > Instead of defining an enumeration with the FW specific values for the
+> > different clock rates, use the actual frequency instead.  Also add a
+> > boolean to specify whether the clock is XTAL or not.
+> > 
+> > Change all board files to reflect this.
+> > 
+> > Cc: Tony Lindgren <tony@atomide.com>
+> > Cc: Sekhar Nori <nsekhar@ti.com>
+> > Signed-off-by: Luciano Coelho <coelho@ti.com>
+> > ---
+> >  arch/arm/mach-davinci/board-da850-evm.c      |    3 +-
+> >  arch/arm/mach-omap2/board-4430sdp.c          |    5 ++-
+> ^^
+> >  arch/arm/mach-omap2/board-omap3evm.c         |    3 +-
+> >  arch/arm/mach-omap2/board-omap4panda.c       |    3 +-
+> ^^
+> Please do not add more platform data to platforms that are DT only.
 
-Well, all I can say then is that the onus is on those who want to treat
-the components as separate devices to come up with some foolproof way
-to solve this problem which doesn't involve making assumptions about
-the way that devices are probed and doesn't end up creating artificial
-restrictions on how the devices can be used - and doesn't end up burdening
-the common case with lots of useless complexity that they don't need.
+Ah, I hadn't realized that board_omap4panda.c and board-4430sdp.c had
+been removed in linux-next.  I base my tree on wireless-next and it
+doesn't contain these changes yet.  I would only have noticed this when
+I rebased my tree once the merge window is closed. ;)
 
-It's _that_ case which needs to come up with a proposal about how to
-handle it because you _can't_ handle it at the moment in any sane
-manner which meets the criteria I've set out above, and at the moment
-the best proposal by far to resolve that is the "super node" approach.
+Thanks for pointing out, I'll make sure these changes will not be there
+when I send the pull request.
 
-There is _no_ way in the device model to combine several individual
-devices together into one logical device safely when the subsystem
-requires that there be a definite point where everything is known.
-That applies even more so with -EPROBE_DEFER.  With the presence of
-such a thing, there is now no logical point where any code can say
-definitively that the system has technically finished booting and all
-resources are known.
-
-That's the problem - if you don't od the super-node approach, you end
-up with lots of individual devices which you have to figure out some
-way of combining, and coping with missing ones which might not be
-available in the order you want them to be, etc.
-
-That's the advantage of the "super node" approach - it's a container
-to tell you what's required in order to complete the creation of the
-logical device, and you can parse the sub-nodes to locate the
-information you need.
-
-An alternative as I see it is that DRM - and not only DRM but also
-the DRM API and Xorg - would need to evolve hotplug support for the
-various parts of the display subsystem.  Do we have enough people
-with sufficient knowledge and willingness to be able to make all
-that happen?  I don't think we do, and I don't see that there's any
-funding out there to make such a project happen, which would make it
-a volunteer/spare time effort.
-
--- 
-Russell King
+--
+Cheers,
+Luca.
