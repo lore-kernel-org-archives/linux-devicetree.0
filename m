@@ -1,52 +1,43 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH 2/2] power: arm64: Add DTS entry for APM X-Gene reboot driver.
-Date: Tue,  2 Jul 2013 14:38:59 -0600
-Message-ID: <1372797539-13111-3-git-send-email-lho@apm.com>
-References: <1372797539-13111-1-git-send-email-lho@apm.com>
- <1372797539-13111-2-git-send-email-lho@apm.com>
+From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: Re: Best practice device tree design for display subsystems/DRM
+Date: Tue, 2 Jul 2013 15:04:56 -0600
+Message-ID: <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
+References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+ <20130702204255.2044c01b@armhf>
+ <20130702191923.GD13924@flint.arm.linux.org.uk>
+ <51D330AC.5060903@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1372797539-13111-2-git-send-email-lho@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: cbou@mail.ru, dwmw2@infradead.org, fkan@apm.com, ksankaran@apm.com
-Cc: Catalin.Marinas@arm.com, devicetree-discuss@lists.ozlabs.org, Loc Ho <lho@apm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51D330AC.5060903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-power: arm64: Add DTS entry for APM X-Gene reboot driver.
+On Tue, Jul 2, 2013 at 1:57 PM, Sebastian Hesselbarth
+<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> I am against a super node which contains lcd and dcon/ire nodes. You can
+> enable those devices on a per board basis. We add them to dove.dtsi but
+> disable them by default (status = "disabled").
+>
+> The DRM driver itself should get a video-card node outside of
+> soc/internal-regs where you can put e.g. video memory hole (or video
+> mem size if it will be taken from RAM later)
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Feng Kan <fkan@apm.com>
-Signed-off-by: Kumar Sankaran <ksankaran@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+For completeness of the discussion, and my understanding too, can you
+explain your objections to the display super-node in a bit more
+detail?
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index d37d736..e686919 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -178,6 +178,12 @@
- 			};
- 		};
- 
-+                reboot@0x17000014 {
-+                        compatible = "apm,xgene-reboot";
-+                        reg = <0x0 0x17000014 0x0 0x100>;
-+                        mask = <0x1>;
-+                };
-+
- 		serial0: serial@1c020000 {
- 			device_type = "serial";
- 			compatible = "ns16550";
--- 
-1.5.5
+Thanks
+Daniel
