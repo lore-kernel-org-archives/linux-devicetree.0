@@ -1,76 +1,93 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCHv3 2/3] ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
-Date: Tue, 02 Jul 2013 16:06:19 +0200
-Message-ID: <51D2DE5B.9060309@free-electrons.com>
-References: <1372094699-3832-1-git-send-email-alexandre.belloni@free-electrons.com> <1372094699-3832-3-git-send-email-alexandre.belloni@free-electrons.com> <CAOMZO5CLcT=OXYd=ggxpDzUqFxoXSaanqUPGugYLT2Og-VgzCA@mail.gmail.com> <51D2BB05.9040201@free-electrons.com> <CAOMZO5DZufiOjguOCEbe5n0j=w9B5ezBYh0Rejv3zF5Xht5_qQ@mail.gmail.com> <51D2BEA1.6010206@free-electrons.com>
+From: Luciano Coelho <coelho@ti.com>
+Subject: [PATCH v2 0/9] wilink: add device tree support
+Date: Tue, 2 Jul 2013 17:55:39 +0300
+Message-ID: <1372776948-24840-1-git-send-email-coelho@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51D2BEA1.6010206@free-electrons.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, Jonathan Cameron <jic23@cam.ac.uk>, brian@crystalfontz.com, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, jimwall@q.com, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>, Marek Vasut <marex@denx.de>
+To: linux-wireless@vger.kernel.org, tony@atomide.com, nsekhar@ti.com
+Cc: mturquette@linaro.org, mark.rutland@arm.com, balbi@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, coelho@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/2013 13:50, Alexandre Belloni wrote:
-> On 02/07/2013 13:45, Fabio Estevam wrote:
-> 
->> Shouldn't this be
->>
->>          i2c@1 {
->>                  reg = <1>; ?
->>
-> 
-> No, we have 4 devices on that mux and 2 pins to select the muxing.
-> 
+Hi,
 
-OK, got it working.
+This is a follow-up on a previous patch set that had a smaller
+audience.  This time, I added the lists and people who were involved
+in the review of the bindings documentation, since most of my changes
+in v2 are coming from discussions there.
 
-So, the results:
+This patch series adds device tree support to the wlcore_sdio driver,
+which is used by WiLink6, WiLink7 and WiLink8.
 
-bitbanging:
+The first patches do some clean-up to make the data needed in the
+wilink device tree node smaller.  The remaining patches implement the
+actual device tree node parsing in wlcore_sdio.
 
-# time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
-2637
-real	0m 0.09s
-user	0m 0.01s
-sys	0m 0.01s
+I still need to figure out how to add the information about whether
+the clocks are XTAL or not.  I'll send it in a separate patche set.
 
+The DTS file changes will be sent separately, since they need to go
+via different trees.
 
-i2c-mxs PIO mode:
+The bindings documentation patch will also be updated and sent
+separately, once the XTAL issue is solved.
 
-# time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
-[   35.007650] [sched_delayed] sched: RT throttling activated
-2627
-real	0m 7.14s
-user	0m 0.02s
-sys	0m 0.01s
+Tony has acked some of the patches that touch OMAP areas.  I still
+need one more ack to a new patch I added (wl12xx: use frequency
+instead of enumerations for pdata clocks).
 
+Sekhar, can you please check the patches that touch the davinci board
+file and ack them?
 
-i2c-mxs PIO mode without LRADC:
+Changes in v2:
 
-# time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
-[   18.007432] [sched_delayed] sched: RT throttling activated
-2629
-real	0m 7.09s
-user	0m 0.00s
-sys	0m 0.03s
+* New clean-up patch (4/9);
 
+* Patch 6/9 (previously patch 5/5) now doesn't add the clock parsing,
+  since it became more complicated and I added separate patches for
+  that;
 
-i2c-mxs DMA mode:
+* 3 new patches (from 7/9 till 9/9) to handle the clock reading in the
+  device tree;
 
-# time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
-2631
-real	0m 0.12s
-user	0m 0.01s
-sys	0m 0.01s
+Please review.
 
+--
+Cheers,
+Luca.
 
-It seems fine for me.
+Luciano Coelho (9):
+  wl1251: split wl251 platform data to a separate structure
+  wlcore: use irq_flags in pdata instead of hiding it behind a quirk
+  wlcore: remove pwr_in_suspend from platform data
+  wl12xx: use frequency instead of enumerations for pdata clocks
+  wlcore: always use one-shot IRQ
+  wlcore: add initial device tree support to the sdio module
+  wlcore: sdio: add wilink clock providers
+  wlcore: sdio: get clocks from device tree
+  wlcore/wl12xx: check if we got correct clock data from DT
 
+ arch/arm/mach-davinci/board-da850-evm.c        |    5 +-
+ arch/arm/mach-omap2/board-4430sdp.c            |    6 +-
+ arch/arm/mach-omap2/board-omap3evm.c           |    4 +-
+ arch/arm/mach-omap2/board-omap3pandora.c       |    4 +-
+ arch/arm/mach-omap2/board-omap4panda.c         |    4 +-
+ arch/arm/mach-omap2/board-rx51-peripherals.c   |    2 +-
+ arch/arm/mach-omap2/board-zoom-peripherals.c   |    4 +-
+ drivers/net/wireless/ti/wilink_platform_data.c |   37 ++++++--
+ drivers/net/wireless/ti/wl1251/sdio.c          |   12 +--
+ drivers/net/wireless/ti/wl1251/spi.c           |    2 +-
+ drivers/net/wireless/ti/wl12xx/main.c          |   78 +++++++++++++++--
+ drivers/net/wireless/ti/wl12xx/wl12xx.h        |   28 ++++++
+ drivers/net/wireless/ti/wlcore/debugfs.c       |    2 +-
+ drivers/net/wireless/ti/wlcore/main.c          |   16 ++--
+ drivers/net/wireless/ti/wlcore/sdio.c          |  112 ++++++++++++++++++++++--
+ drivers/net/wireless/ti/wlcore/wlcore.h        |    5 +-
+ drivers/net/wireless/ti/wlcore/wlcore_i.h      |    1 +
+ include/linux/wl12xx.h                         |   54 ++++++------
+ 18 files changed, 295 insertions(+), 81 deletions(-)
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+1.7.10.4
+
