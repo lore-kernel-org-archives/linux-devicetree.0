@@ -1,111 +1,96 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 2/9] wlcore: use irq_flags in pdata instead of hiding
- it behind a quirk
-Date: Tue, 2 Jul 2013 18:26:57 +0300
-Message-ID: <20130702152657.GE7013@arwen.pp.htv.fi>
-References: <1372776948-24840-1-git-send-email-coelho@ti.com>
- <1372776948-24840-3-git-send-email-coelho@ti.com>
-Reply-To: <balbi@ti.com>
+From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] iio: lps331ap: Add support for DT
+Date: Tue, 02 Jul 2013 17:28:47 +0200
+Message-ID: <51D2F1AF.2040809@samsung.com>
+References: <1372767338-13179-1-git-send-email-l.czerwinski@samsung.com> <1372767338-13179-5-git-send-email-l.czerwinski@samsung.com> <51D2CE03.2070704@metafoo.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HnQK338I3UIa/qiP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1372776948-24840-3-git-send-email-coelho@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luciano Coelho <coelho@ti.com>
-Cc: linux-wireless@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, mturquette@linaro.org, mark.rutland@arm.com, balbi@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51D2CE03.2070704-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---HnQK338I3UIa/qiP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 07/02/2013 02:56 PM, Lars-Peter Clausen wrote:
+> On 07/02/2013 02:15 PM, Lukasz Czerwinski wrote:
+>> From: Jacek Anaszewski<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>
+>> This patch adds DT support for the lps331ap barometer
+>> sensor.
+>>
+>> Signed-off-by: Jacek Anaszewski<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Kyungmin Park<kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   .../bindings/iio/pressure/st_pressure.txt          |   41 ++++++++++++++++++++
+>>   drivers/iio/pressure/st_pressure_i2c.c             |    9 +++++
+>>   drivers/iio/pressure/st_pressure_spi.c             |    9 +++++
+>>   3 files changed, 59 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/pressure/st_pressure.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/pressure/st_pressure.txt b/Documentation/devicetree/bindings/iio/pressure/st_pressure.txt
+>> new file mode 100644
+>> index 0000000..73a4b7d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/pressure/st_pressure.txt
+>> @@ -0,0 +1,41 @@
+>> +* STMicroelectronics LPS331AP barometer sensor
+>> +
+>> +Required properties:
+>> +
+>> +  - compatible : should be "lps331ap"
+>
+> Needs the vendor prefix.
+>
+>> +  - reg : the I2C address of the barometer
+>> +
+>> +Optional properties:
+>> +
+>> +  - drdy-int-pin : redirect DRDY on pin INT1 (1) or pin INT2 (2) (u8)
+>> +  - interrupt-parent : phandle to the interrupt map subnode
+>> +  - interrupts : interrupt mapping for LPS331AP interrupt sources:
+>> +		2 sources: 0 - INT1, 1 - INT2
+>> +  - irq-map : irq sub-node defining interrupt map
+>> +	      (all properties listed below are required):
+>> +      - #interrupt-cells : should be 1
+>> +      - #address-cells : should be 0
+>> +      - #size-cells : should be 0
+>> +      - interrupt-map : table of entries consisting of three child elements:
+>> +	  - unit_interrupt_specifier - 0 : INT1, 1 : INT2
+>> +	  - interrupt parent phandle
+>> +	  - parent unit interrupt specifier consisiting of two elements:
+>> +	      - index of the interrupt within the controller
+>> +	      - flags : should be 0
+>
+> While this works I wonder why you choose such a complicated example for setting
+> up the IRQ? Why not just reference the IRQ directly using the interrupts property?
 
-Hi,
+Hi Lars,
 
-On Tue, Jul 02, 2013 at 05:55:41PM +0300, Luciano Coelho wrote:
-> The platform_quirk element in the platform data was used to change the
-> way the IRQ is triggered.  When set, the EDGE_IRQ quirk would change
-> the irqflags used and treat edge trigger differently from the rest.
->=20
-> Instead of hiding this irq flag setting behind the quirk, export the
-> whole irq_flags element and let the board file define what to use.
-> This will be more meaningful than driver-specific quirks when we
-> switch to DT.
->=20
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Signed-off-by: Luciano Coelho <coelho@ti.com>
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> ---
->  arch/arm/mach-davinci/board-da850-evm.c      |    2 +-
->  arch/arm/mach-omap2/board-4430sdp.c          |    1 +
->  arch/arm/mach-omap2/board-omap3evm.c         |    1 +
->  arch/arm/mach-omap2/board-omap4panda.c       |    1 +
->  arch/arm/mach-omap2/board-zoom-peripherals.c |    1 +
->  drivers/net/wireless/ti/wlcore/debugfs.c     |    2 +-
->  drivers/net/wireless/ti/wlcore/main.c        |   13 +++----------
->  drivers/net/wireless/ti/wlcore/wlcore.h      |    5 ++---
->  include/linux/wl12xx.h                       |    5 +----
->  9 files changed, 12 insertions(+), 19 deletions(-)
->=20
-> diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davi=
-nci/board-da850-evm.c
-> index 8a24b6c..d2a2a98 100644
-> --- a/arch/arm/mach-davinci/board-da850-evm.c
-> +++ b/arch/arm/mach-davinci/board-da850-evm.c
-> @@ -1377,8 +1377,8 @@ static const short da850_wl12xx_pins[] __initconst =
-=3D {
-> =20
->  static struct wl12xx_platform_data da850_wl12xx_wlan_data __initdata =3D=
- {
->  	.irq			=3D -1,
-> +	.irq_flags		=3D IRQF_TRIGGER_RISING,
->  	.board_ref_clock	=3D WL12XX_REFCLOCK_38,
-> -	.platform_quirks	=3D WL12XX_PLATFORM_QUIRK_EDGE_IRQ,
->  };
-> =20
->  static __init int da850_wl12xx_init(void)
-> diff --git a/arch/arm/mach-omap2/board-4430sdp.c b/arch/arm/mach-omap2/bo=
-ard-4430sdp.c
-> index 56a9a4f..c2334aa 100644
-> --- a/arch/arm/mach-omap2/board-4430sdp.c
-> +++ b/arch/arm/mach-omap2/board-4430sdp.c
-> @@ -693,6 +693,7 @@ static void __init omap4_sdp4430_wifi_mux_init(void)
->  }
-> =20
->  static struct wl12xx_platform_data omap4_sdp4430_wlan_data __initdata =
-=3D {
-> +	.irq_flags =3D IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+I will try to clarify the reasons why the interrupt map was exploited:
 
-couldn't you just call irq_set_irq_type() from the board-file itself ?
-Then on your driver you can just pass IRQF_ONESHOT (to make sure heh) to
-your request_threaded_irq_handler()
+1) The device exposes two interrupt pins: INT1 and INT2.
+2) Both of them can be configured either to generate data ready
+    interrupts or event interrupts.
+3) drdy-int-pin property conveys the information about the interrupt
+    pin routed to the CPU and allows the driver to configure
+    the device to generate data ready interrupts on the connected pin.
+4) The lps331ap barometer sensor handles only data ready interrupts
+    but it depends on the st_sensors library which expects interrupt map
+    in the device tree node.
+5) Because of the support for events added to the library in this
+    series it should be possible to pass two irq's to the driver. From
+    what I know it can't be accomplished with interrupts property if
+    the interrupts originate from different interrupt parents (which is
+    the case I deal with, where device int sources are routed to the
+    GPIOs in different banks).
+6) I agree that map filled with only one element may confuse the reader
+    but it is required for the st_common library to successfully parse
+    the node.
 
---=20
-balbi
+If you know better solution please let me know.
+Of course I agree with your remaining remarks.
 
---HnQK338I3UIa/qiP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR0vFBAAoJEIaOsuA1yqRECwQP/2IQS04PpctSEMcrjcDpUu92
-tSnO/JSi9PxeftIE/brxPLI0x0fvzeR6t7W8mAo9aki1rIEfIgNdVPXBaaQmM7Ng
-jqzQ/66sp3f6ukuQGKmtfsIRTbORHRa2O232MfTAjULr4By1pSwB3SFg3qbg1Jd4
-csAc99AajYy54HAQA7ZrI4u0XO802rqa5MJMwa1QXrTVwhwPCMYQaJxToDg9FzLG
-3pnI2ImTgN2oKx93il+lcbL2v9eDoGruZ1l/iIdKlljLPkvbM1baDqc0hNuAtVUP
-ty27MDze9BhO2ZO5S4l/Oui/XlPtXt6tpebB5QaqtUFcUWEzkoQ9nwEqBkDzrfZA
-zB7h2g0R5GxaFJBVz/px8A8gCkXPS0fpAkstMCMHI59r/fk27GROmvuoLFE3oD9v
-aMUnqjqtRWr9ZLaxFO8i+Vq6gxI8LLIOxoWg3eTlRyo/eUorTp6qccAY/4nb49Ii
-Dp2T465o+MWWZS6E4OlbJh9R7uGhCY/Yrd6iOezfr4gQoaNttaSMIwElivZSJySd
-M3WHbHlpczxmzBEy94yvh+vb5DE2dmNwDcOu2aXU9A/+SBVoAy+7bwhM9RgwamMC
-nZ/cbOLf2zhfunCGXqNZy6ukqiS7SW9keaTiurx1rejg0Nkrckm2pfbphqqOIc6I
-ZKIynSdelkum1AQUfEEO
-=Tmqu
------END PGP SIGNATURE-----
-
---HnQK338I3UIa/qiP--
+Thanks,
+Jacek
