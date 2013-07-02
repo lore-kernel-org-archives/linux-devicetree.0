@@ -1,103 +1,101 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv3 2/3] ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
-Date: Tue, 02 Jul 2013 19:15:49 +0200
-Message-ID: <51D30AC5.9000701@free-electrons.com>
-References: <1372094699-3832-1-git-send-email-alexandre.belloni@free-electrons.com> <51D2BEA1.6010206@free-electrons.com> <51D2DE5B.9060309@free-electrons.com> <201307021833.04282.marex@denx.de>
+From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: Best practice device tree design for display subsystems/DRM
+Date: Tue, 2 Jul 2013 11:43:59 -0600
+Message-ID: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201307021833.04282.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jimwall@q.com, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: =?ISO-8859-1?Q?Jean=2DFran=E7ois_Moine?= <moinejf-GANU6spQydw@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/2013 18:33, Marek Vasut wrote:
-> Dear Alexandre Belloni,
-> 
->> On 02/07/2013 13:50, Alexandre Belloni wrote:
->>> On 02/07/2013 13:45, Fabio Estevam wrote:
->>>> Shouldn't this be
->>>>
->>>>          i2c@1 {
->>>>          
->>>>                  reg = <1>; ?
->>>
->>> No, we have 4 devices on that mux and 2 pins to select the muxing.
->>
->> OK, got it working.
->>
->> So, the results:
->>
->> bitbanging:
->>
->> # time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
->> 2637
->> real	0m 0.09s
->> user	0m 0.01s
->> sys	0m 0.01s
->>
->>
->> i2c-mxs PIO mode:
->>
->> # time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
->> [   35.007650] [sched_delayed] sched: RT throttling activated
->> 2627
->> real	0m 7.14s
->> user	0m 0.02s
->> sys	0m 0.01s
->>
->>
->> i2c-mxs PIO mode without LRADC:
->>
->> # time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
->> [   18.007432] [sched_delayed] sched: RT throttling activated
->> 2629
->> real	0m 7.09s
->> user	0m 0.00s
->> sys	0m 0.03s
->>
->>
->> i2c-mxs DMA mode:
->>
->> # time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
->> 2631
->> real	0m 0.12s
->> user	0m 0.01s
->> sys	0m 0.01s
->>
->>
->> It seems fine for me.
-> 
-> I think I'm getting a little lost in these gazilions of i2c and lradc threads. 
-> Can we not create one thread and keep the related stuff in there instead of 
-> discussing it all around !?
-> 
-> Only one question comes to mind with this email -- what do LRADC and I2C have to 
-> do with each other here ?
-> 
+Hi,
 
-Yeah, sorry, I meant the lradc touchscreen support. This seemed to
-trigger the issue for Fabio but as my testing shows, this is not the
-case for me, I get the issue with PIO, whether the lradc touchscreen
-support is activated or not.
+I'm looking into implementing devicetree support in armada_drm and
+would like to better understand the best practice here.
 
-I think Torsten is the one that investigated it the most :
+Adding DT support for a DRM driver seems to be complicated by the fact
+that DRM is not "hotpluggable" - it is not possible for the drm_device
+to be initialised without an output, with the output connector/encoder
+appearing at some later moment. Instead, the connectors/encoders must
+be fully loaded before the drm_driver load function returns. This
+means that we cannot drive the individual display components through
+individual, separate modules - we need a way to control their load
+order.
 
-http://www.spinics.net/lists/linux-i2c/msg12619.html
+Looking at existing DRM drivers:
+
+tilcdc_drm takes an approach that each of the components in the
+display subsystem (panel, framebuffer, encoder, display controllers)
+are separate DT nodes and do not have any DT-level linkage.
+It implements just a single module, and that module carefully
+initialises things in this order:
+ 1. Register platform drivers for output components
+ 2. Register main drm_driver
+
+When the output component's platform drivers get loaded, probes for
+such drivers immediately run as they match things in the device tree.
+At this point, there is no drm_device available for the outputs to
+bind to, so instead, references to these platform devices just get
+saved in some global structures.
+
+Later, when the drm_driver gets registered and loaded, the global
+structures are consulted to find all of the output devices at the
+right moment.
 
 
-> It'd be nice if someone could summarize on what I should focus and possibly 
-> prepare a testcase.
-> 
+exynos seems to take a the same approach. Components are separate in
+the device tree, and each component is implemented as a platform
+driver or i2c driver. However all the drivers are built together in
+the same module, and the module_init sequence is careful to initialise
+all of the output component drivers before loading the DRM driver. The
+output component driver store their findings in global structures.
 
-On my setup, it happens on every i2c read that are done in PIO mode.
-But, my setup may be a bit unconventional as we are using a i2c gpio muxer.
 
-Regards,
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Russell King suggested an alternative design for armada_drm. If all
+display components are represented within the same "display"
+super-node, we can examine the DT during drm_device initialisation and
+initialise the appropriate output components. In this case, the output
+components would not be registered as platform drivers.
+
+The end result would be something similar to exynos/tilcdc (i.e.
+drm_driver figuring out its output in the appropriate moment), however
+the hackyness of using global storage to store output devices before
+drm_driver is ready is avoided. And there is the obvious difference in
+devicetree layout, which would look something like:
+
+display {
+  compatible = "marvell,armada-510-display";
+  clocks = <&ext_clk0>, <&lcd_pll_clk>;
+  lcd0 {
+    compatible = "marvell,armada-510-lcd";
+    reg = <0xf1820000 0x1000>;
+    interrupts = <47>;
+  };
+  lcd1 {
+    compatible = "marvell,armada-510-lcd";
+    reg = <0xf1810000 0x1000>;
+    interrupts = <46>;
+  };
+  dcon {
+    compatible = "marvell,armada-510-dcon";
+    reg = <...>;
+  };
+};
+
+Any thoughts/comments?
+
+Thanks
+Daniel
