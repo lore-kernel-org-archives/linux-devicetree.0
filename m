@@ -1,16 +1,18 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Tue, 02 Jul 2013 23:41:09 +0200
-Message-ID: <51D348F5.2080205@gmail.com>
+Date: Tue, 2 Jul 2013 23:50:48 +0200
+Message-ID: <20130702215048.GI516@pengutronix.de>
 References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
  <20130702204255.2044c01b@armhf>
- <20130702191923.GD13924@flint.arm.linux.org.uk> <51D330AC.5060903@gmail.com>
- <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
+ <20130702191923.GD13924@flint.arm.linux.org.uk>
+ <51D330AC.5060903@gmail.com>
+ <20130702202548.GE13924@flint.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130702202548.GE13924-f404yB8NqCZvn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,118 +23,94 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/2013 11:04 PM, Daniel Drake wrote:
-> On Tue, Jul 2, 2013 at 1:57 PM, Sebastian Hesselbarth
-> <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>  wrote:
->> I am against a super node which contains lcd and dcon/ire nodes. You can
->> enable those devices on a per board basis. We add them to dove.dtsi but
->> disable them by default (status = "disabled").
->>
->> The DRM driver itself should get a video-card node outside of
->> soc/internal-regs where you can put e.g. video memory hole (or video
->> mem size if it will be taken from RAM later)
->
-> For completeness of the discussion, and my understanding too, can you
-> explain your objections to the display super-node in a bit more
-> detail?
+On Tue, Jul 02, 2013 at 09:25:48PM +0100, Russell King wrote:
+> On Tue, Jul 02, 2013 at 09:57:32PM +0200, Sebastian Hesselbarth wrote:
+> > I am against a super node which contains lcd and dcon/ire nodes. You can
+> > enable those devices on a per board basis. We add them to dove.dtsi but
+> > disable them by default (status = "disabled").
+> >
+> > The DRM driver itself should get a video-card node outside of  
+> > soc/internal-regs where you can put e.g. video memory hole (or video
+> > mem size if it will be taken from RAM later)
+> >
+> > About the unusual case, I guess we should try to get both lcd
+> > controllers into one DRM driver. Then support mirror or screen
+> > extension X already provides. For those applications where you want
+> > X on one lcd and some other totally different video stream - wait
+> > for someone to come up with a request or proposal.
+> 
+> Well, all I can say then is that the onus is on those who want to treat
+> the components as separate devices to come up with some foolproof way
+> to solve this problem which doesn't involve making assumptions about
+> the way that devices are probed and doesn't end up creating artificial
+> restrictions on how the devices can be used - and doesn't end up burdening
+> the common case with lots of useless complexity that they don't need.
+> 
+> It's _that_ case which needs to come up with a proposal about how to
+> handle it because you _can't_ handle it at the moment in any sane
+> manner which meets the criteria I've set out above, and at the moment
+> the best proposal by far to resolve that is the "super node" approach.
+> 
+> There is _no_ way in the device model to combine several individual
+> devices together into one logical device safely when the subsystem
+> requires that there be a definite point where everything is known.
+> That applies even more so with -EPROBE_DEFER.  With the presence of
+> such a thing, there is now no logical point where any code can say
+> definitively that the system has technically finished booting and all
+> resources are known.
+> 
+> That's the problem - if you don't od the super-node approach, you end
+> up with lots of individual devices which you have to figure out some
+> way of combining, and coping with missing ones which might not be
+> available in the order you want them to be, etc.
+> 
+> That's the advantage of the "super node" approach - it's a container
+> to tell you what's required in order to complete the creation of the
+> logical device, and you can parse the sub-nodes to locate the
+> information you need.
 
-lcd-controller nodes and dcon node will need to be children of
-internal-regs nodes. The internal-regs node is required for address
-translation as the mbus base address can be configured. The above does
-not permit a super-node - but you cannot have the nodes above outside
-of internal-regs.
+I think such an approach would lead to drm drivers which all parse their
+"super nodes" themselves and driver authors would become very creative
+how such a node should look like.
 
-As Russell stated, he wants a proposal for the "unusual case" i.e.
-you have two lcd controllers. You use one for Xorg and the other for
-e.g. running a linux terminal console.
+Also this gets messy with i2c devices which are normally registered
+under their i2c bus masters. With the super node approach these would
+have to live under the super node, maybe with a phandle to the i2c bus
+master. This again probably leads to very SoC specific solutions. It
+also doesn't solve the problem that the i2c bus master needs to be
+registered by the time the DRM driver probes.
 
-This would require some reference from the super node to the lcd
-controller to sort out which DRM device (represented by the super
-node) should be using which lcd controller device.
+On i.MX the IPU unit not only handles the display path but also the
+capture path. v4l2 begins to evolve an OF model in which each (sub)device
+has its natural position in the devicetree; the devices are then
+connected with phandles. I'm not sure how good this will work together
+with a super node approach.
 
-Using status = "disabled" alone will only allow to enable or disable
-lcd controller nodes but not assign any of it to your two super-nodes.
+> 
+> An alternative as I see it is that DRM - and not only DRM but also
+> the DRM API and Xorg - would need to evolve hotplug support for the
+> various parts of the display subsystem.  Do we have enough people
+> with sufficient knowledge and willingness to be able to make all
+> that happen?  I don't think we do, and I don't see that there's any
+> funding out there to make such a project happen, which would make it
+> a volunteer/spare time effort.
 
-So my current proposal after thinking about Russell's statements
-whould be phandles as Jean-Francois already mentioned. I am not sure
-what OF maintainers will think about it, but that is another thing.
++1 for this solution, even if this means more work to get from the
+ground.
 
-Basically, you will have:
-(Note: names and property-names are just to show how it could work,
-and example is joined from possible future dove.dtsi and dove-board.dts)
+Do we really need full hotplug support in the DRM API and Xorg? I mean
+it would really be nice if Xorg detected a newly registered device, but
+as a start it should be sufficient when Xorg detects what's there when
+it starts, no?
 
-video {
-	/* Single video card w/ multiple lcd controllers */
-	card0 {
-		compatible = "marvell,armada-510-display";
-		reg = <0 0x3f000000 0x1000000>; /* video-mem hole */
-		/* later: linux,video-memory-size = <0x1000000>; */
-		marvell,video-devices = <&lcd0 &lcd1 &dcon>;
-	};
+Sascha
 
-	/* OR: Multiple video card w/ single lcd controllers */
-	card0 {
-		compatible = "marvell,armada-510-display";
-		...
-		marvell,video-devices = <&lcd0>;
-	};
-
-	card1 {
-		compatible = "marvell,armada-510-display";
-		...
-		marvell,video-devices = <&lcd1>;
-	};
-};
-
-mbus {
-	compatible = "marvell,dove-mbus";
-	ranges = <...>;
-
-	sb-regs {
-		ranges = <0 0xf1000000 0 0x100000>;
-		...
-	}
-
-	nb-regs {
-		ranges = <0 0xf1800000 0 0x100000>;
-
-		lcd0: lcd-controller@20000 {
-			compatible = "marvell,armada-510-lcd";
-			reg = <0x20000 0x1000>;
-			interrupts = <47>;
-			...
-			/* use EXTCLK0 with lcd0 */
-			clocks = <&ext_clk0>;
-			clock-names = "extclk0";
-			marvell,external-encoder = <&tda998x>;
-		};
-
-		lcd1: lcd-controller@10000 {
-			compatible = "marvell,armada-510-lcd";
-			reg = <0x10000 0x1000>;
-			interrupts = <46>;
-			...
-			/* use LCDPLL with lcd1 */
-			clocks = <&lcd_pll_clk>;
-			clock-names = "lcdpll";
-		};
-	}
-};
-
-&i2c0 {
-	tda998x: hdmi-transmitter@60 {
-		compatible = "nxp,tda19988";
-		reg = <0x60>;
-		...
-	}
-};
-
-Each lcd controller node represents a platform_device and the display
-nodes above should look up phandles and determine type (ctrc or dcon)
-by compatible string of the nodes the phandles point to.
-
-Sebastian
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
