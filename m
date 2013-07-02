@@ -1,158 +1,76 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: [PATCH v1 3/3] dt:net:stmmac: Add dt specific phy reset callback support.
-Date: Tue,  2 Jul 2013 14:04:53 +0100
-Message-ID: <1372770293-1821-1-git-send-email-srinivas.kandagatla@st.com>
-References: <1372770219-1643-1-git-send-email-srinivas.kandagatla@st.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1372770219-1643-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@st.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCHv3 2/3] ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
+Date: Tue, 02 Jul 2013 16:06:19 +0200
+Message-ID: <51D2DE5B.9060309@free-electrons.com>
+References: <1372094699-3832-1-git-send-email-alexandre.belloni@free-electrons.com> <1372094699-3832-3-git-send-email-alexandre.belloni@free-electrons.com> <CAOMZO5CLcT=OXYd=ggxpDzUqFxoXSaanqUPGugYLT2Og-VgzCA@mail.gmail.com> <51D2BB05.9040201@free-electrons.com> <CAOMZO5DZufiOjguOCEbe5n0j=w9B5ezBYh0Rejv3zF5Xht5_qQ@mail.gmail.com> <51D2BEA1.6010206@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51D2BEA1.6010206@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Jonathan Cameron <jic23@cam.ac.uk>, brian@crystalfontz.com, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, jimwall@q.com, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+On 02/07/2013 13:50, Alexandre Belloni wrote:
+> On 02/07/2013 13:45, Fabio Estevam wrote:
+> 
+>> Shouldn't this be
+>>
+>>          i2c@1 {
+>>                  reg = <1>; ?
+>>
+> 
+> No, we have 4 devices on that mux and 2 pins to select the muxing.
+> 
 
-This patch adds phy reset callback support for stmmac driver via device
-trees. It adds three new properties to gmac device tree bindings to
-define the reset signal via gpio.
+OK, got it working.
 
-With this patch users can conveniently pass reset gpio number with pre,
-pulse and post delay in micro secs via DTs.
+So, the results:
 
- active low:
-		_________		 ____________
-	<pre-delay>	|<pulse-delay>	|<post-delay>
-		 	|		|
-		 	|_______________|
+bitbanging:
 
- active high:
- 			 ________________
-	<pre-delay>	|<pulse-delay>	|<post-delay>
-			|		|
-		________|		|___________
+# time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
+2637
+real	0m 0.09s
+user	0m 0.01s
+sys	0m 0.01s
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
----
- Documentation/devicetree/bindings/net/stmmac.txt  |    6 +++
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c |   50 ++++++++++++++++++++-
- include/linux/stmmac.h                            |    4 ++
- 3 files changed, 58 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index e1ddfcc..261c563 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -13,6 +13,12 @@ Required properties:
- - phy-mode: String, operation mode of the PHY interface.
-   Supported values are: "mii", "rmii", "gmii", "rgmii".
- - snps,phy-addr		phy address to connect to.
-+- snps,reset-gpio 	gpio number for phy reset.
-+- snps,reset-active-low boolean flag to indicate if phy reset is active low.
-+- snps,reset-delays-us  is triplet of delays
-+	The 1st cell is reset pre-delay in micro seconds.
-+	The 2nd cell is reset pulse in micro seconds.
-+	The 3rd cell is reset post-delay in micro seconds.
- - snps,pbl		Programmable Burst Length
- - snps,fixed-burst	Program the DMA to use the fixed burst mode
- - snps,mixed-burst	Program the DMA to use the mixed burst mode
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index cc15039..deb384e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -27,6 +27,9 @@
- #include <linux/mii.h>
- #include <linux/phy.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+
- #include <asm/io.h>
- 
- #include "stmmac.h"
-@@ -131,10 +134,47 @@ static int stmmac_mdio_reset(struct mii_bus *bus)
- 	struct net_device *ndev = bus->priv;
- 	struct stmmac_priv *priv = netdev_priv(ndev);
- 	unsigned int mii_address = priv->hw->mii.addr;
-+	struct device *dev = priv->device;
-+	struct stmmac_mdio_bus_data *data = priv->plat->mdio_bus_data;
-+
-+#ifdef CONFIG_OF
-+	if (dev->of_node) {
-+		int reset_gpio, active_low;
-+
-+		if (data->reset_gpio < 0) {
-+			struct device_node *np = dev->of_node;
-+			if (!np)
-+				return 0;
-+
-+			data->reset_gpio = of_get_named_gpio(np,
-+						"snps,reset-gpio", 0);
-+			if (data->reset_gpio < 0)
-+				return 0;
-+
-+			data->active_low = of_property_read_bool(np,
-+						"snps,reset-active-low");
-+			of_property_read_u32_array(np,
-+				"snps,reset-delays-us", data->delays, 3);
-+		}
-+
-+		reset_gpio = data->reset_gpio;
-+		active_low = data->active_low;
-+
-+		if (!gpio_request(reset_gpio, "mdio-reset")) {
-+			gpio_direction_output(reset_gpio, active_low ? 1 : 0);
-+			udelay(data->delays[0]);
-+			gpio_set_value(reset_gpio, active_low ? 0 : 1);
-+			udelay(data->delays[1]);
-+			gpio_set_value(reset_gpio, active_low ? 1 : 0);
-+			udelay(data->delays[2]);
-+			gpio_free(reset_gpio);
-+		}
-+	}
-+#endif
- 
--	if (priv->plat->mdio_bus_data->phy_reset) {
-+	if (data->phy_reset) {
- 		pr_debug("stmmac_mdio_reset: calling phy_reset\n");
--		priv->plat->mdio_bus_data->phy_reset(priv->plat->bsp_priv);
-+		data->phy_reset(priv->plat->bsp_priv);
- 	}
- 
- 	/* This is a workaround for problems with the STE101P PHY.
-@@ -157,6 +197,7 @@ int stmmac_mdio_register(struct net_device *ndev)
- 	struct mii_bus *new_bus;
- 	int *irqlist;
- 	struct stmmac_priv *priv = netdev_priv(ndev);
-+	struct device *dev = priv->device;
- 	struct stmmac_mdio_bus_data *mdio_bus_data = priv->plat->mdio_bus_data;
- 	int addr, found;
- 
-@@ -172,6 +213,11 @@ int stmmac_mdio_register(struct net_device *ndev)
- 	else
- 		irqlist = priv->mii_irq;
- 
-+#ifdef CONFIG_OF
-+	if (dev->of_node)
-+		mdio_bus_data->reset_gpio = -1;
-+#endif
-+
- 	new_bus->name = "stmmac";
- 	new_bus->read = &stmmac_mdio_read;
- 	new_bus->write = &stmmac_mdio_write;
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index c1b3ed3..9e495d31 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -80,6 +80,10 @@ struct stmmac_mdio_bus_data {
- 	unsigned int phy_mask;
- 	int *irqs;
- 	int probed_phy_irq;
-+#ifdef CONFIG_OF
-+	int reset_gpio, active_low;
-+	u32 delays[3];
-+#endif
- };
- 
- struct stmmac_dma_cfg {
+i2c-mxs PIO mode:
+
+# time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
+[   35.007650] [sched_delayed] sched: RT throttling activated
+2627
+real	0m 7.14s
+user	0m 0.02s
+sys	0m 0.01s
+
+
+i2c-mxs PIO mode without LRADC:
+
+# time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
+[   18.007432] [sched_delayed] sched: RT throttling activated
+2629
+real	0m 7.09s
+user	0m 0.00s
+sys	0m 0.03s
+
+
+i2c-mxs DMA mode:
+
+# time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
+2631
+real	0m 0.12s
+user	0m 0.01s
+sys	0m 0.01s
+
+
+It seems fine for me.
+
+
 -- 
-1.7.6.5
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
