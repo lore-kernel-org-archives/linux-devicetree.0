@@ -1,34 +1,78 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] ASoC: mop500: add .owner to struct snd_soc_card
-Date: Tue, 2 Jul 2013 17:25:37 +0800
-Message-ID: <CAPgLHd8i0kcs5RE2UUPmFS5ueMgRAzofeaAUnGz4WuYFBANeBw@mail.gmail.com>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH 3/4] regulators: Add TPS659038 documentation under Palmas
+Date: Tue, 2 Jul 2013 09:41:55 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229F80B4@DBDE04.ent.ti.com>
+References: <1371726344-10115-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, rob.herring@calxeda.com, lee.jones@linaro.org, linus.walleij@linaro.org, ola.o.lilja@stericsson.com, wfp5p@virginia.edu
-Cc: yongjun_wei@trendmicro.com.cn, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "J, KEERTHY" <j-keerthy@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "swarren@nvidia.com" <swarren@nvidia.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Hello Grant,
 
-Add missing .owner of struct snd_soc_card. This prevents the
-module from being removed from underneath its users.
+> -----Original Message-----
+> From: J, KEERTHY
+> Sent: Thursday, June 27, 2013 10:05 AM
+> To: grant.likely@secretlab.ca
+> Cc: broonie@kernel.org; ldewangan@nvidia.com; sameo@linux.intel.com;
+> swarren@nvidia.com; linux-kernel@vger.kernel.org; linux-
+> doc@vger.kernel.org; devicetree-discuss@lists.ozlabs.org;
+> gg@slimlogic.co.uk; linux-omap@vger.kernel.org
+> Subject: RE: [PATCH 3/4] regulators: Add TPS659038 documentation under
+> Palmas
+> 
+> Hello Grant,
+> 
+> > -----Original Message-----
+> > From: J, KEERTHY
+> > Sent: Thursday, June 20, 2013 4:36 PM
+> > To: linux-omap@vger.kernel.org; grant.likely@secretlab.ca
+> > Cc: broonie@kernel.org; J, KEERTHY; ldewangan@nvidia.com;
+> > sameo@linux.intel.com; swarren@nvidia.com; linux-
+> > kernel@vger.kernel.org; linux-doc@vger.kernel.org; devicetree-
+> > discuss@lists.ozlabs.org; gg@slimlogic.co.uk
+> > Subject: [PATCH 3/4] regulators: Add TPS659038 documentation under
+> > Palmas
+> >
+> > Add TPS659038 documentation under Palmas.
+> >
+> 
+> Could you please pull this one?
+> 
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- sound/soc/ux500/mop500.c | 1 +
- 1 file changed, 1 insertion(+)
+A gentle ping on this. Could you pull this one.
 
-diff --git a/sound/soc/ux500/mop500.c b/sound/soc/ux500/mop500.c
-index 8f5cd00..178d1ba 100644
---- a/sound/soc/ux500/mop500.c
-+++ b/sound/soc/ux500/mop500.c
-@@ -52,6 +52,7 @@ static struct snd_soc_dai_link mop500_dai_links[] = {
- 
- static struct snd_soc_card mop500_card = {
- 	.name = "MOP500-card",
-+	.owner = THIS_MODULE,
- 	.probe = NULL,
- 	.dai_link = mop500_dai_links,
- 	.num_links = ARRAY_SIZE(mop500_dai_links),
+> > Signed-off-by: J Keerthy <j-keerthy@ti.com>
+> > Acked-by: Mark Brown <broonie@linaro.org>
+> > ---
+> >  .../devicetree/bindings/regulator/palmas-pmic.txt  |    1 +
+> >  1 files changed, 1 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/regulator/palmas-
+> > pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-
+> pmic.txt
+> > index d5a3086..5115cd7 100644
+> > --- a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+> > +++ b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+> > @@ -7,6 +7,7 @@ Required properties:
+> >    ti,twl6037-pmic
+> >    ti,tps65913-pmic
+> >    ti,tps65914-pmic
+> > +  ti,tps659038-pmic
+> >  and also the generic series names
+> >    ti,palmas-pmic
+> >  - interrupt-parent : The parent interrupt controller which is
+> palmas.
+> > --
+> > 1.7.5.4
+> 
+> Regards,
+> Keerthy
+
+Regards,
+Keerthy
