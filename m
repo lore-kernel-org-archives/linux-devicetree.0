@@ -1,70 +1,84 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MyA1LzVdIEFSTTogZHRzOiBBZGQgZGV2aWNlIHRyZWUg?=
- =?UTF-8?B?c3VwcG9ydCBmb3IgcGh5Y2FyZCBwY2ExMDA=?=
-Date: Tue, 02 Jul 2013 20:27:49 +0400
-Message-ID: <1372782469.486055292@f129.mail.ru>
-References: <1372431037-13519-1-git-send-email-mpa@pengutronix.de>
- <1372431037-13519-6-git-send-email-mpa@pengutronix.de>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCHv3 2/3] ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
+Date: Tue, 2 Jul 2013 18:33:04 +0200
+Message-ID: <201307021833.04282.marex@denx.de>
+References: <1372094699-3832-1-git-send-email-alexandre.belloni@free-electrons.com> <51D2BEA1.6010206@free-electrons.com> <51D2DE5B.9060309@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1372431037-13519-6-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?UTF-8?B?TWFya3VzIFBhcmdtYW5u?= <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?UTF-8?B?U3RlZmZlbiBUcnVtdHJhcg==?= <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51D2DE5B.9060309@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, Jonathan Cameron <jic23@cam.ac.uk>, brian@crystalfontz.com, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, jimwall@q.com, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-> Board files for Phytec phyCARD-S "System on Module" and "Rapid
-> Development Kit".
-> 
-> Based on patches from:
-> 
-> Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
->  - Original patch
->  - ARM: dts: Set partition offsets for phycard
->  - ARM: dts: Use CSPI1 instead of CSPI2 on phycard pca100
->  - ARM: imx27-phytec-phycard-S.dts: resize nand partitions
-...
-> diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
-...
-> +&i2c1 {
-> +	status = "okay";
-> +
-> +	ioexpander@41 {
-> +		compatible = "nxp,pca9536";
-> +		reg = <0x41>;
-> +	};
-> +
-> +	rtc@51 {
-> +		compatible = "nxp,pcf8563";
-> +		reg = <0x51>;
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	status = "okay";
-> +
-> +	lm75@4a {
-> +		compatible = "national,lm75";
-> +		reg = <0x4a>;
-> +	};
-> +
-> +	rtc@51 {
-> +		compatible = "nxp,pcf8563";
-> +		reg = <0x51>;
-> +	};
+Dear Alexandre Belloni,
 
-Really two identical RTC on I2C1 & I2C2 or it is typo?
+> On 02/07/2013 13:50, Alexandre Belloni wrote:
+> > On 02/07/2013 13:45, Fabio Estevam wrote:
+> >> Shouldn't this be
+> >> 
+> >>          i2c@1 {
+> >>          
+> >>                  reg = <1>; ?
+> > 
+> > No, we have 4 devices on that mux and 2 pins to select the muxing.
+> 
+> OK, got it working.
+> 
+> So, the results:
+> 
+> bitbanging:
+> 
+> # time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
+> 2637
+> real	0m 0.09s
+> user	0m 0.01s
+> sys	0m 0.01s
+> 
+> 
+> i2c-mxs PIO mode:
+> 
+> # time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
+> [   35.007650] [sched_delayed] sched: RT throttling activated
+> 2627
+> real	0m 7.14s
+> user	0m 0.02s
+> sys	0m 0.01s
+> 
+> 
+> i2c-mxs PIO mode without LRADC:
+> 
+> # time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
+> [   18.007432] [sched_delayed] sched: RT throttling activated
+> 2629
+> real	0m 7.09s
+> user	0m 0.00s
+> sys	0m 0.03s
+> 
+> 
+> i2c-mxs DMA mode:
+> 
+> # time cat /sys/bus/iio/devices/iio\:device1/in_voltage0_raw
+> 2631
+> real	0m 0.12s
+> user	0m 0.01s
+> sys	0m 0.01s
+> 
+> 
+> It seems fine for me.
 
----
+I think I'm getting a little lost in these gazilions of i2c and lradc threads. 
+Can we not create one thread and keep the related stuff in there instead of 
+discussing it all around !?
+
+Only one question comes to mind with this email -- what do LRADC and I2C have to 
+do with each other here ?
+
+It'd be nice if someone could summarize on what I should focus and possibly 
+prepare a testcase.
+
+Best regards,
+Marek Vasut
