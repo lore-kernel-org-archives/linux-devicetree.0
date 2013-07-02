@@ -1,41 +1,35 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH 0/4] rtc: omap: handle rtc wakeup support in driver
-Date: Mon, 01 Jul 2013 17:18:54 -0700
-Message-ID: <87sizxn79t.fsf@linaro.org>
-References: <1372412109-986-1-git-send-email-gururaja.hebbar@ti.com>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH -next] spi: tegra114: remove redundant dev_err call in tegra_spi_probe()
+Date: Tue, 2 Jul 2013 08:37:44 +0800
+Message-ID: <CAPgLHd9XEH68ZnG2ou0K+EHn-ZWH7Ax_cmJOMBHjFcHgVscLDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1372412109-986-1-git-send-email-gururaja.hebbar@ti.com> (Hebbar
-	Gururaja's message of "Fri, 28 Jun 2013 15:05:05 +0530")
-Sender: linux-omap-owner@vger.kernel.org
-To: Hebbar Gururaja <gururaja.hebbar@ti.com>
-Cc: tony@atomide.com, b-cousson@ti.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, vaibhav.bedia@ti.com, sudhakar.raj@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hebbar,
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-Hebbar Gururaja <gururaja.hebbar@ti.com> writes:
+There is a error message within devm_ioremap_resource
+already, so remove the dev_err call to avoid redundant
+error message.
 
-> rtc-omap driver modules is used both by OMAP1/2, Davinci SoC platforms.
->
-> However, rtc wake support on OMAP1 is broken. Hence the
-> device_init_wakeup() was removed from rtc-omap driver and moved to
-> platform board files that supported it (DA850/OMAP-L138). [1]
->
-> However, recently [2] it was suggested that driver should always do a
-> device_init_wakeup(dev, true). Platforms that don't want/need
-> wakeup support can disable it from userspace via:
->
->     echo disabled > /sys/devices/.../power/wakeup
->
-> Also, with the new DT boot-up, board file doesn't exist and hence there
-> is no way to have device wakeup support rtc.
->
-> The fix for above issues, is to hard code device_init_wakeup() inside
-> driver and let platforms that don't need this, handle it through the
-> sysfs power entry.
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+---
+ drivers/spi/spi-tegra114.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-This series looks good now, thanks for your persistence.
-
-Kevin
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index e8f542a..8c99c00 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -1068,7 +1068,6 @@ static int tegra_spi_probe(struct platform_device *pdev)
+ 	tspi->base = devm_ioremap_resource(&pdev->dev, r);
+ 	if (IS_ERR(tspi->base)) {
+ 		ret = PTR_ERR(tspi->base);
+-		dev_err(&pdev->dev, "ioremap failed: err = %d\n", ret);
+ 		goto exit_free_master;
+ 	}
+ 
