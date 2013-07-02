@@ -1,32 +1,37 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH -next] net: ethernet: davinci_emac: remove redundant
- dev_err call in davinci_emac_probe()
-Date: Tue, 02 Jul 2013 01:10:32 -0700 (PDT)
-Message-ID: <20130702.011032.1180173730234333060.davem@davemloft.net>
-References: <CAPgLHd8L_FW1rJLgBiRdof2irA7cWNchxnAJm+nBP4L46UxWMA@mail.gmail.com>
-	<51D2630B.9010600@ti.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [RFC PATCH 01/13] misc: atmel_ssc: add device tree DMA support
+Date: Tue, 2 Jul 2013 10:13:08 +0200
+Message-ID: <CACQ1gAgcc=j3kmcpjp8bbdHhxr_k=h8jJs6R_paJbPUMv74uGg@mail.gmail.com>
+References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
+ <1372667978-4718-2-git-send-email-richard.genoud@gmail.com> <51D24299.9050209@atmel.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <51D2630B.9010600@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: mugunthanvnm@ti.com
-Cc: weiyj.lk@gmail.com, grant.likely@linaro.org, rob.herring@calxeda.com, prabhakar.csengg@gmail.com, jiri@resnulli.us, nsekhar@ti.com, yongjun_wei@trendmicro.com.cn, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51D24299.9050209@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Date: Tue, 2 Jul 2013 10:50:11 +0530
-
-> On Tuesday 02 July 2013 06:27 AM, Wei Yongjun wrote:
->> From: Wei Yongjun<yongjun_wei@trendmicro.com.cn>
+2013/7/2 Bo Shen <voice.shen@atmel.com>:
+> Hi Richard,
+>
+>
+> On 7/1/2013 16:39, Richard Genoud wrote:
 >>
->> There is a error message within devm_ioremap_resource
->> already, so remove the dev_err call to avoid redundant
->> error message.
->>
->> Signed-off-by: Wei Yongjun<yongjun_wei@trendmicro.com.cn>
-> 
-> Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
+>> The ssc device has to fill the at_dma_slave structure with the
+>> device tree informations.
+>> Doing a of_dma_request_slave_channel()+dma_release_channel() for that
+>> seems wrong (or at least not very clean).
+>
+>
+> Please hold on of this, as to the ASoC dmaengine will deal with this. So, we
+> not need do it manually.
+>
+> Now, I am working on it. And will send out the patch soon after testing OK.
+Ok, I stay tuned !
 
-Applied, thanks everyone.
+Thanks !
+
+Best regards,
+Richard
