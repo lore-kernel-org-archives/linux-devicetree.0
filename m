@@ -1,43 +1,75 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Tue, 2 Jul 2013 15:04:56 -0600
-Message-ID: <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
-References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
- <20130702204255.2044c01b@armhf>
- <20130702191923.GD13924@flint.arm.linux.org.uk>
- <51D330AC.5060903@gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 7/9] wlcore: sdio: add wilink clock providers
+Date: Wed, 3 Jul 2013 00:30:30 +0300
+Message-ID: <20130702213030.GB10388@arwen.pp.htv.fi>
+References: <1372776948-24840-1-git-send-email-coelho@ti.com>
+ <1372776948-24840-8-git-send-email-coelho@ti.com>
+ <20130702153423.GH7013@arwen.pp.htv.fi>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51D330AC.5060903-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130702153423.GH7013@arwen.pp.htv.fi>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Luciano Coelho <coelho@ti.com>, linux-wireless@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, mturquette@linaro.org, mark.rutland@arm.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 2, 2013 at 1:57 PM, Sebastian Hesselbarth
-<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> I am against a super node which contains lcd and dcon/ire nodes. You can
-> enable those devices on a per board basis. We add them to dove.dtsi but
-> disable them by default (status = "disabled").
->
-> The DRM driver itself should get a video-card node outside of
-> soc/internal-regs where you can put e.g. video memory hole (or video
-> mem size if it will be taken from RAM later)
+--4SFOXa2GPu3tIq4H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-For completeness of the discussion, and my understanding too, can you
-explain your objections to the display super-node in a bit more
-detail?
+Hi,
 
-Thanks
-Daniel
+On Tue, Jul 02, 2013 at 06:34:23PM +0300, Felipe Balbi wrote:
+> On Tue, Jul 02, 2013 at 05:55:46PM +0300, Luciano Coelho wrote:
+> > Add refclock and tcxoclock as clock providers in WiLink.  These clocks
+> > are not accesible outside the WiLink module, but they are registered
+> > in the clock framework anyway.  Only the WiLink chip consumes these
+> > clocks.
+> >=20
+> > In theory, the WiLink chip could be connected to external clocks
+> > instead of using these internal clocks, so make the clock consumer
+> > code generic enough.  If external clocks are used, then the internal
+> > clock device tree nodes are not necessary, but the external ones must
+> > be specified.
+> >=20
+> > Signed-off-by: Luciano Coelho <coelho@ti.com>
+>=20
+> Acked-by: Felipe Balbi <balbi@ti.com>
+
+I guess this should've been
+
+Reviewed-by: Felipe Balbi <balbi@ti.com>
+
+instead
+
+--=20
+balbi
+
+--4SFOXa2GPu3tIq4H
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR00Z2AAoJEIaOsuA1yqREEt8P/1njtIAvN5wlNlH6uuTde3Ul
+LVDwR8xpbaLKByJVAHcaGGA0ZWZ7SfTUVxBFoTM/ttRnYz9qXhimoRNuUKIgQDqI
+Kq45Va+AcKdOsDNpQl8lnfurXky8iwKCYCFCnfpe0lviYoTwK4Ri7I2B/R6nym1M
+w0Ehvc5XL3eBqNzdjtXTDPD9klCAVM7She/jWBQsvTCn1B/XxwO9I9WMwWFUeodA
++EdpCGyFO2UZJQH7XGQvYpeMgraFqC4iW7CNaF3A1cMgcx0qIo3q3X77+XM1Ar0O
+hLG+W2c4flz2Gt3ox/c2aRKEXnkhlmn2M9G/L7eeM+3g8Z6NZBHmNxue8OpXYrDn
+p2NmusEOEiha5EwkbiylhCOPEMdMPfQCF4gfUit76JXMnOOC7bDReKd2neKaqv//
+D96KeatpMYFcSVlrYjMwnLL8q4+R6m4b8wL7C1tzr/3ulChTntdWE888OcWqFoF7
+ITzjzGHJy7JNNVW/opLw3wv5JU6HLxe/+qfXGo02jlAwQc25lCR7Cz55Wqr11MDr
+AAR7D7p+wXxvZm06nWhNXNeoHYBKDfZlp5+O3B3Z3wtBFrDCijexAXKWQIfuI5nE
+2MIngJQz0VUz1Kc3j0WkZJRdT5haoWx4yWDKb6E1Mxzgqf430Lfezur+JdE1J/hD
+Pf/D9UwgGU+gKReHlJ5R
+=TM3w
+-----END PGP SIGNATURE-----
+
+--4SFOXa2GPu3tIq4H--
