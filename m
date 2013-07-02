@@ -1,60 +1,78 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/2] ARM: mvebu: fixes for v3.11
-Date: Tue,  2 Jul 2013 12:54:11 +0200
-Message-ID: <1372762453-12018-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Pekon Gupta <pekon@ti.com>
+Subject: [PATCH v4 0/4] mtd:nand:omap2: clean-up of supported ECC schemes
+Date: Tue, 2 Jul 2013 17:02:33 +0530
+Message-ID: <1372764757-29511-1-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, artem.bityutskiy@linux.intel.com, benoit.cousson@linaro.org, olof@lixom.net
+Cc: arnd@arndb.de, avinashphilipk@gmail.com, balbi@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, jp.francois@cynove.com, devicetree-discuss@lists.ozlabs.org, sfr@canb.auug.org.au, Pekon Gupta <pekon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set comprises two unrelated fixes for Marvell SoCs based on
-what is currently in next-20130701. There may be fixes already pending
-for the issues.
+(+ CC: devicetree-discuss@lists.ozlabs.org)
 
-The first patch is a clean-up patch removing dmacap,memset from the
-device tree binding and users. DMA_MEMSET support has been removed from
-DMA API and mv_xor driver.
+Changes v3 -> v4
+- [Patch 1/3] removed MTD_NAND_OMAP_BCH8 & MTD_NAND_OMAP_BCH4 from nand/Kconfig
+	ECC scheme selectable via nand DT (nand-ecc-opt).
+- [*] rebased for l2-mtd.git
 
-The second patch fixes compilation of orion5x edmini_v2 by adding a
-missing include.
+(with Author Name fixed)
+Changes v2 -> v3
+- PATCH-1: re-arranged code to remove redundancy, added NAND_BUSWIDTH_AUTO
+- PATCH-2: updated nand-ecc-opt DT mapping and Documentation
+- PATCH-3: code-cleaning + changes to match PATCH-1
+- PATCH-4 <DROPPED> update DT attribute for ti,nand-ecc-opt 
+	- received feedback to keep DT mapping independent of linuxism
+- PATCH-4:<NEW> : ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-opt
+	- independent patch for AM335x-evm.dts update based on PATCH-2
 
-devicetree-discuss is added on Cc for completeness, this is all Marvell
-related and should go through Jason Cooper's branch if there are no
-objections.
+Changes v1 -> v2
+	added 	[PATCH 3/4] and [PATCH 4/4]
 
-Sebastian Hesselbarth (2):
-  ARM: remove dmacap,memset from Device tree binding
-  ARM: orion5x: add missing mbus include
+Patches in this series:
+[PATCH 1/4]: clean-up and optimization for supported ECC schemes.
+[PATCH 2/4]: add separate DT options each supported ECC scheme.
+[PATCH 3/4]: update BCH4 ECC implementation (using ELM or using lib/bch.h)
+[PATCH 4/4]: ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-opt
 
- Documentation/devicetree/bindings/dma/mv-xor.txt |    2 --
- arch/arm/boot/dts/armada-370.dtsi                |    2 --
- arch/arm/boot/dts/armada-xp.dtsi                 |    2 --
- arch/arm/boot/dts/dove.dtsi                      |    2 --
- arch/arm/boot/dts/kirkwood.dtsi                  |    2 --
- arch/arm/boot/dts/orion5x.dtsi                   |    1 -
- arch/arm/mach-orion5x/edmini_v2-setup.c          |    1 +
- 7 files changed, 1 insertions(+), 11 deletions(-)
+After this patch series, omap2-nand driver will supports following ECC schemes:
++---------------------------------------+---------------+---------------+
+| ECC scheme				|ECC calculation|Error detection|
++---------------------------------------+---------------+---------------+
+|OMAP_ECC_HAMMING_CODE_DEFAULT		|S/W		|S/W		|
+|OMAP_ECC_HAMMING_CODE_HW		|H/W (GPMC)	|S/W		|
+|OMAP_ECC_HAMMING_CODE_HW_ROMCODE	|H/W (GPMC)	|S/W		|
++---------------------------------------+---------------+---------------+
+|OMAP_ECC_BCH4_CODE_HW_DETECTION_SW	|H/W (GPMC)	|S/W (lib/bch.h)|
+|OMAP_ECC_BCH4_CODE_HW			|H/W (GPMC)	|H/W (ELM)	|
++---------------------------------------+---------------+---------------+
+|OMAP_ECC_BCH8_CODE_HW_DETECTION_SW	|H/W (GPMC)	|S/W (lib/bch.h)|
+|OMAP_ECC_BCH8_CODE_HW			|H/W (GPMC)	|H/W (ELM)	|
++---------------------------------------+---------------+---------------+
+- Selection of OMAP_ECC_BCHx_CODE_HW_DETECTION_SW requires,
+	Kconfig: CONFIG_MTD_NAND_ECC_BCH: enables S/W based BCH ECC algorithm.
 
----
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+- Selection of OMAP_ECC_BCHx_CODE_HW requires,
+	Kconfig: CONFIG_MTD_NAND_OMAP_BCH: enables ELM H/W module.
+
+
+Pekon Gupta (4):
+  mtd:nand:omap2: clean-up BCHx_HW and BCHx_SW ECC configurations in
+    device_probe
+  ARM: OMAP2+: cleaned-up DT support of various ECC schemes
+  mtd:nand:omap2: updated support for BCH4 ECC scheme
+  ARM: dts: AM33xx: updated default ECC scheme in nand-ecc-opt
+
+ .../devicetree/bindings/mtd/gpmc-nand.txt          |  65 ++-
+ arch/arm/boot/dts/am335x-evm.dts                   |   2 +-
+ arch/arm/mach-omap2/gpmc.c                         |  14 +-
+ drivers/mtd/nand/Kconfig                           |  30 +-
+ drivers/mtd/nand/omap2.c                           | 481 ++++++++++-----------
+ include/linux/platform_data/elm.h                  |   4 +
+ include/linux/platform_data/mtd-nand-omap2.h       |  22 +-
+ 7 files changed, 308 insertions(+), 310 deletions(-)
+
 -- 
-1.7.2.5
+1.8.1
+
