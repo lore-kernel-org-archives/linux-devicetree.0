@@ -1,78 +1,68 @@
-From: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 4/4] ARM: dts: AM33XX: update rtc node compatibility
-Date: Tue, 2 Jul 2013 06:19:45 +0000
-Message-ID: <1BAFE6F6C881BF42822005164F1491C33EC4E80D@DBDE04.ent.ti.com>
-References: <1372412109-986-1-git-send-email-gururaja.hebbar@ti.com>
-	<1372412109-986-5-git-send-email-gururaja.hebbar@ti.com>
-	<51D26F61.7080308@ti.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH RFC 2/3] dt:net:stmmac: Add support to dwmac version 3.610
+ and 3.710
+Date: Tue, 02 Jul 2013 07:42:32 +0100
+Message-ID: <51D27658.1060806@st.com>
+References: <1372678962-12959-1-git-send-email-srinivas.kandagatla@st.com> <1372679034-13139-1-git-send-email-srinivas.kandagatla@st.com> <51D1BA52.3030201@st.com>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <51D26F61.7080308-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <benoit.cousson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51D1BA52.3030201@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Cc: netdev@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 02, 2013 at 11:42:49, Nori, Sekhar wrote:
-> Changing to Benoit's gmail id since he apparently wont access TI mail
-> anymore.
+Thanks Peppe for the comments,
+On 01/07/13 18:20, Giuseppe CAVALLARO wrote:
+> On 7/1/2013 1:43 PM, Srinivas KANDAGATLA wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>>
+>> +
+>> +    plat->bus_id = of_alias_get_id(np, "ethernet");
+>> +    if (plat->bus_id < 0)
+>> +        plat->bus_id = 0;
+>> +
+>> +    of_property_read_u32(np, "snps,phy-addr", &plat->phy_addr);
+>> +
+>>       plat->mdio_bus_data = devm_kzalloc(&pdev->dev,
+>>                          sizeof(struct stmmac_mdio_bus_data),
+>>                          GFP_KERNEL);
+>> @@ -51,11 +60,25 @@ static int stmmac_probe_config_dt(struct
+>> platform_device *pdev,
+>>        */
+>>       if (of_device_is_compatible(np, "st,spear600-gmac") ||
+>>           of_device_is_compatible(np, "snps,dwmac-3.70a") ||
+>> +        of_device_is_compatible(np, "snps,dwmac-3.610") ||
+I forgot to add "snps,dwmac-3.710" to this list, I will do it in V2 patch.
+
+>>           of_device_is_compatible(np, "snps,dwmac")) {
+>>           plat->has_gmac = 1;
+>>           plat->pmt = 1;
+>>       }
+>>
+>> +    if (of_device_is_compatible(np, "snps,dwmac-3.610") ||
+>> +        of_device_is_compatible(np, "snps,dwmac-3.710")) {
+>> +        plat->enh_desc = 1;
+>> +        plat->bugged_jumbo = 1;
+>> +        plat->force_sf_dma_mode = 1;
+>> +    }
 > 
-> On 6/28/2013 3:05 PM, Hebbar Gururaja wrote:
-> > Since AM33xx  RTC IP has RTC_IRQWAKEEN to support Alarm Wake-up.
-> > 
-> > Update the rtc compatible property to "ti,am3352-rtc" to enable handling
-> > of this feature inside rtc-omap driver.
-> > 
-> > Signed-off-by: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-> > Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> > Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> > Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: b-cousson-l0cyMroinI0@public.gmane.org
-> > ---
-> > :100644 100644 77aa1b0... dde180a... M	arch/arm/boot/dts/am33xx.dtsi
-> >  arch/arm/boot/dts/am33xx.dtsi |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> > index 77aa1b0..dde180a 100644
-> > --- a/arch/arm/boot/dts/am33xx.dtsi
-> > +++ b/arch/arm/boot/dts/am33xx.dtsi
-> > @@ -297,7 +297,7 @@
-> >  		};
-> >  
-> >  		rtc@44e3e000 {
-> > -			compatible = "ti,da830-rtc";
-> > +			compatible = "ti,am3352-rtc";
+> I think some these shouldn't be forced here. Maybe plat->enh_desc could
+> be set because for new syn mac cores.
 > 
-> compatible is a list so you can instead do:
-> 	
-> 	compatible = "ti,am3352-rtc", "ti,da830-rtc";
+> Also pmt could not be forced because it is an extra module so it could
+> happen that a new chip has no PMT block.
+I agree with you, But the new chips should/will have different version
+numbers, so having the version number in the compatible string should
+make it possible for cores without PMT module to not set pmt or any
+other properties.
 
-I believe the order is not important here. I mean, below is also fine. Right?
+Are you happy with the setting pmt based on compatible string or do you
+think passing pmt as another property to device tree makes more sense?
 
-	compatible = "ti,da830-rtc", "ti,am3352-rtc";
+Thanks,
+srini
 
-
-> 
-> That way the dts works irrespective of driver updates. When driver
-> supports enhanced features of hardware, they are available to the user
-> else the basic functionality still works.
-> 
-> Thanks,
-> Sekhar
-> 
-
-
-Regards, 
-Gururaja
