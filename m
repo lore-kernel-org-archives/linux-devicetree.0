@@ -1,11 +1,12 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: Best practice device tree design for display subsystems/DRM
-Date: Tue, 2 Jul 2013 11:43:59 -0600
-Message-ID: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: mop500: add .owner to struct snd_soc_card
+Date: Tue, 2 Jul 2013 19:15:44 +0100
+Message-ID: <20130702181544.GY27646@sirena.org.uk>
+References: <CAPgLHd8i0kcs5RE2UUPmFS5ueMgRAzofeaAUnGz4WuYFBANeBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============3709516239067490942=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPgLHd8i0kcs5RE2UUPmFS5ueMgRAzofeaAUnGz4WuYFBANeBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,86 +17,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: =?ISO-8859-1?Q?Jean=2DFran=E7ois_Moine?= <moinejf-GANU6spQydw@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: ola.o.lilja-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-I'm looking into implementing devicetree support in armada_drm and
-would like to better understand the best practice here.
-
-Adding DT support for a DRM driver seems to be complicated by the fact
-that DRM is not "hotpluggable" - it is not possible for the drm_device
-to be initialised without an output, with the output connector/encoder
-appearing at some later moment. Instead, the connectors/encoders must
-be fully loaded before the drm_driver load function returns. This
-means that we cannot drive the individual display components through
-individual, separate modules - we need a way to control their load
-order.
-
-Looking at existing DRM drivers:
-
-tilcdc_drm takes an approach that each of the components in the
-display subsystem (panel, framebuffer, encoder, display controllers)
-are separate DT nodes and do not have any DT-level linkage.
-It implements just a single module, and that module carefully
-initialises things in this order:
- 1. Register platform drivers for output components
- 2. Register main drm_driver
-
-When the output component's platform drivers get loaded, probes for
-such drivers immediately run as they match things in the device tree.
-At this point, there is no drm_device available for the outputs to
-bind to, so instead, references to these platform devices just get
-saved in some global structures.
-
-Later, when the drm_driver gets registered and loaded, the global
-structures are consulted to find all of the output devices at the
-right moment.
+--===============3709516239067490942==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IbuFj1t1LJkAAh+4"
+Content-Disposition: inline
 
 
-exynos seems to take a the same approach. Components are separate in
-the device tree, and each component is implemented as a platform
-driver or i2c driver. However all the drivers are built together in
-the same module, and the module_init sequence is careful to initialise
-all of the output component drivers before loading the DRM driver. The
-output component driver store their findings in global structures.
+--IbuFj1t1LJkAAh+4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jul 02, 2013 at 05:25:37PM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+>=20
+> Add missing .owner of struct snd_soc_card. This prevents the
+> module from being removed from underneath its users.
 
+Applied, thanks.
 
-Russell King suggested an alternative design for armada_drm. If all
-display components are represented within the same "display"
-super-node, we can examine the DT during drm_device initialisation and
-initialise the appropriate output components. In this case, the output
-components would not be registered as platform drivers.
+--IbuFj1t1LJkAAh+4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The end result would be something similar to exynos/tilcdc (i.e.
-drm_driver figuring out its output in the appropriate moment), however
-the hackyness of using global storage to store output devices before
-drm_driver is ready is avoided. And there is the obvious difference in
-devicetree layout, which would look something like:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
-display {
-  compatible = "marvell,armada-510-display";
-  clocks = <&ext_clk0>, <&lcd_pll_clk>;
-  lcd0 {
-    compatible = "marvell,armada-510-lcd";
-    reg = <0xf1820000 0x1000>;
-    interrupts = <47>;
-  };
-  lcd1 {
-    compatible = "marvell,armada-510-lcd";
-    reg = <0xf1810000 0x1000>;
-    interrupts = <46>;
-  };
-  dcon {
-    compatible = "marvell,armada-510-dcon";
-    reg = <...>;
-  };
-};
+iQIcBAEBAgAGBQJR0xjNAAoJELSic+t+oim9WVUP/25evwO0QIx9g7+xCIMtyTrb
+dmNWDo+hbZlzIJyi9mqV7Pj5LEfnxtHhxv6fxUVoli7rs0tmyYcBd/MMOr4IFrD5
+Ri+73worFrx8Oyps3KsC6j6Pfx+MKnjC8Btvc+wSLFvMYe5Q/w/BlQT6VQ9ng6wB
+hZXdJgkcsRCsmkUlqOx73CI9zyXHBGYMJZxU3SGbZALdg4ITPCFqxQufywfckS8N
+H5ybFtFM1b+3bLbZwaX0O16JjPJqAU7DH6BIiXhubooPtzSFK+ei12hBwWC72PZZ
+Q4TsRGkdiLpbHZUq4Z3xbG3VABsa6VbkJcZZVQtsF78uCp0/YPZCOkrxWvWLQTUc
+goRBENFY7zm6Hjt9qTT85ijH63XHs2rK2xKRElsCwJM99GMKtO5vPP1Z/AhBMVUi
+1mq2zA6bLTVWZT0GeKKffhDE5OzuEMzHAFQIyWwsdWBxSwGwk5wgMmmGi9bBLebN
+ZhB2LZNjJ7IBksPm/Bj1fpDR+a7XuZ8lEb3IznUXDbBXImCBpkKb9ZY7eStUC2FN
+vDAZ2sbNxYtE0yiFx7WiC97vcZ6Kk1L0Gpfzmq0jmS3PkwiFAWbfABVwYMHUPw1L
+ph2kGSNywx8a6JvECFFVogL+DYqaSRKzUWauc3vf+BFhnhUX7qvbx8PYL/iF0/gs
+im0LXaCo0KwvbqUdJRlc
+=4hk4
+-----END PGP SIGNATURE-----
 
-Any thoughts/comments?
+--IbuFj1t1LJkAAh+4--
 
-Thanks
-Daniel
+--===============3709516239067490942==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3709516239067490942==--
