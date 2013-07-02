@@ -1,80 +1,90 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2] of: Specify initrd location using 64-bit
-Date: Tue, 2 Jul 2013 04:17:46 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA23075137087@IN01WEMBXA.internal.synopsys.com>
-References: <1372702835-5333-1-git-send-email-santosh.shilimkar@ti.com>
+From: Pratyush Anand <pratyush.anand@st.com>
+Subject: Re: [PATCH 3/4] PCI: Add driver for i.MX6 PCI Express
+Date: Tue, 2 Jul 2013 10:11:55 +0530
+Message-ID: <51D25A13.9060006@st.com>
+References: <1372662947-27160-1-git-send-email-xobs@kosagi.com> <1372662947-27160-4-git-send-email-xobs@kosagi.com> <51D15513.7020101@st.com> <2E3BDF14016345FA887E3BACAE05DADA@kosagi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org" <linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org>, "x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org" <linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <rob.herr>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <2E3BDF14016345FA887E3BACAE05DADA@kosagi.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Sean Cross <xobs@kosagi.com>, Arnd Bergmann <arnd@arndb.de>, Mohit KUMAR <Mohit.KUMAR@st.com>, Jingoo Han <jg1.han@samsung.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/01/2013 11:52 PM, Santosh Shilimkar wrote:
-> On some PAE architectures, the entire range of physical memory could reside
-> outside the 32-bit limit.  These systems need the ability to specify the
-> initrd location using 64-bit numbers.
+On 7/2/2013 9:16 AM, Sean Cross wrote:
+>> >I may be wrong, but from these offset it seems to me that it is SNPS
+>> >controller. If yes, then please go through comments of
+>> >"[PATCH V1-10 0/4] PCIe support for Samsung Exynos5440 SoC"
+> Exynos5440 appears to use the same port logic controller.  However, the PHYs are different.  I'm not exactly certain which comments you want me to notice in that series of patchsets, but I see references to splitting Exynos-specific code into its own project.  Based on that, it seems like the best approach would be to:
 >
-> This patch globally modifies the early_init_dt_setup_initrd_arch() function to
-> use 64-bit numbers instead of the current unsigned long.
+>      1) Move Exynos code into its own file, say, pcie-exynos.c.  This would leave only Synopsys-specific ATC code in pcie-designware.c
+>      2) Rename generic exynos functions to reflect the fact that they're designware-generic functions.
+>      3) Have pcie-imx.c reference this generic designware ATC code.
 >
-> There has been quite a bit of debate about whether to use u64 or phys_addr_t.
-> It was concluded to stick to u64 to be consistent with rest of the device
-> tree code. As summarized by Geert, "The address to load the initrd is decided
-> by the bootloader/user and set at that point later in time. The dtb should not
-> be tied to the kernel you are booting"
->
-> More details on the discussion can be found here:
-> https://lkml.org/lkml/2013/6/20/690
-> https://lkml.org/lkml/2012/9/13/544
->
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Cc: Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>
-> Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-> Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> Cc: Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-> Cc: x86-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-> Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-> Cc: Chris Zankel <chris-YvXeqwSYzG2sTnJN9+BGXg@public.gmane.org>
-> Cc: Max Filippov <jcmvbkbc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
-> Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org
-> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: linux-xtensa-PjhNF2WwrV/0Sa2dR60CXw@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> ---
+> I'll rework the patch and re-submit it following these three changes.
 
-Acked-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>  [For arch/arc bits]
+Correct, Exactly these steps has to be done. But, Mohit might be doing 
+similar work, so it would be better to get consensus on what has to be done.
 
--Vineet
+IMO, there should be three categories of functions. May be arnd can 
+comment if we can do even something better.
+
+Group I: Initially, These functions should remain in pcie-designware.c 
+(offcourse by changing exynos tag to dw). Latter on, we can see if some 
+of them can even be moved to common pci layer.
+
+sys_to_pcie
+cfg_read
+cfg_write
+dw_pcie_prog_viewport_cfg0
+dw_pcie_prog_viewport_cfg1
+dw_pcie_prog_viewport_mem_outbound
+dw_pcie_prog_viewport_io_outbound
+dw_pcie_rd_other_conf
+dw_pcie_wr_other_conf
+dw_pcie_setup
+dw_pcie_valid_config
+dw_pcie_rd_conf
+dw_pcie_wd_conf
+dw_pcie_scan_bus
+dw_pcie_map_irq
+dw_pcie_setup_rc
+add_pcie_port (after a bit of generalization)
+dw_pcie_probe
+dw_pcie_remove
+
+
+Group II: These functions should still remain as dummy in 
+pcie-designware.c , and should be classified as __week. So, each 
+implementer of designware controller say Exynos/SPEAr/imx will have to 
+define their own function to super-seed default dummy definitions.
+
+dw_readl_rc
+dw_writel_rc
+dw_pcie_rd_own_conf
+dw_pcie_wr_own_conf
+dw_pcie_link_up
+dw_pcie_host_init (will contain all platform specific and phy 
+initialization)
+
+Group III: Functions specific to Exynos, which should move to pcie-exynos.c
+
+exynos_pcie_sideband_dbi_w_mode
+exynos_pcie_sideband_dbi_r_mode
+exynos_pcie_assert_core_reset
+exynos_pcie_deassert_core_reset
+exynos_pcie_assert_phy_reset
+exynos_pcie_deassert_phy_reset
+exynos_pcie_init_phy
+exynos_pcie_assert_reset
+exynos_pcie_establish_link
+
+
+@Mohit, See if you have BW then please take it further.
+
+arnd, are exynos patches applied to any branch of arm-soc git tree?
+
+Regards
+Pratyush
