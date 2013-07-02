@@ -1,135 +1,42 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: [PATCH V4 4/4] video: exynos_dp: Use the generic PHY driver
-Date: Tue, 02 Jul 2013 17:42:49 +0900
-Message-ID: <000d01ce7700$222a35a0$667ea0e0$@samsung.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [RFC PATCH 01/13] misc: atmel_ssc: add device tree DMA support
+Date: Tue, 2 Jul 2013 17:11:03 +0800
+Message-ID: <51D29927.80900@atmel.com>
+References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com> <1372667978-4718-2-git-send-email-richard.genoud@gmail.com> <51D24299.9050209@atmel.com> <CACQ1gAgcc=j3kmcpjp8bbdHhxr_k=h8jJs6R_paJbPUMv74uGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, 'Tomi Valkeinen' <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, 'Hui Wang' <jason77.wang@gmail.com>, Jingoo Han <jg1.han@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACQ1gAgcc=j3kmcpjp8bbdHhxr_k=h8jJs6R_paJbPUMv74uGg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Use the generic PHY API instead of the platform callback to control
-the DP PHY.
+Hi Richard,
 
-Signed-off-by: Jingoo Han <jg1.han@samsung.com>
----
- .../devicetree/bindings/video/exynos_dp.txt        |   23 +++++---------------
- drivers/video/exynos/exynos_dp_core.c              |   16 ++++++++++----
- drivers/video/exynos/exynos_dp_core.h              |    2 ++
- 3 files changed, 20 insertions(+), 21 deletions(-)
+On 7/2/2013 16:13, Richard Genoud wrote:
+>> Please hold on of this, as to the ASoC dmaengine will deal with this. So, we
+>> >not need do it manually.
+>> >
+>> >Now, I am working on it. And will send out the patch soon after testing OK.
+> Ok, I stay tuned !
 
-diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
-index 84f10c1..022f4b6 100644
---- a/Documentation/devicetree/bindings/video/exynos_dp.txt
-+++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
-@@ -1,17 +1,6 @@
- The Exynos display port interface should be configured based on
- the type of panel connected to it.
- 
--We use two nodes:
--	-dp-controller node
--	-dptx-phy node(defined inside dp-controller node)
--
--For the DP-PHY initialization, we use the dptx-phy node.
--Required properties for dptx-phy:
--	-reg:
--		Base address of DP PHY register.
--	-samsung,enable-mask:
--		The bit-mask used to enable/disable DP PHY.
--
- For the Panel initialization, we read data from dp-controller node.
- Required properties for dp-controller:
- 	-compatible:
-@@ -25,6 +14,10 @@ Required properties for dp-controller:
- 		from common clock binding: handle to dp clock.
- 	-clock-names:
- 		from common clock binding: Shall be "dp".
-+	-phys:
-+		from general PHY binding: the phandle for the PHY device.
-+	-phy-names:
-+		from general PHY binding: Should be "dp".
- 	-interrupt-parent:
- 		phandle to Interrupt combiner node.
- 	-samsung,color-space:
-@@ -67,12 +60,8 @@ SOC specific portion:
- 		interrupt-parent = <&combiner>;
- 		clocks = <&clock 342>;
- 		clock-names = "dp";
--
--		dptx-phy {
--			reg = <0x10040720>;
--			samsung,enable-mask = <1>;
--		};
--
-+		phys = <&dp_phy>;
-+		phy-names = "dp";
- 	};
- 
- Board Specific portion:
-diff --git a/drivers/video/exynos/exynos_dp_core.c b/drivers/video/exynos/exynos_dp_core.c
-index 05fed7d..5e1a715 100644
---- a/drivers/video/exynos/exynos_dp_core.c
-+++ b/drivers/video/exynos/exynos_dp_core.c
-@@ -19,6 +19,7 @@
- #include <linux/interrupt.h>
- #include <linux/delay.h>
- #include <linux/of.h>
-+#include <linux/phy/phy.h>
- 
- #include "exynos_dp_core.h"
- 
-@@ -960,8 +961,11 @@ static int exynos_dp_dt_parse_phydata(struct exynos_dp_device *dp)
- 
- 	dp_phy_node = of_find_node_by_name(dp_phy_node, "dptx-phy");
- 	if (!dp_phy_node) {
--		dev_err(dp->dev, "could not find dptx-phy node\n");
--		return -ENODEV;
-+		dp->phy = devm_phy_get(dp->dev, "dp");
-+		if (IS_ERR(dp->phy))
-+			return PTR_ERR(dp->phy);
-+		else
-+			return 0;
- 	}
- 
- 	if (of_property_read_u32(dp_phy_node, "reg", &phy_base)) {
-@@ -992,7 +996,9 @@ err:
- 
- static void exynos_dp_phy_init(struct exynos_dp_device *dp)
- {
--	if (dp->phy_addr) {
-+	if (dp->phy) {
-+		phy_power_on(dp->phy);
-+	} else if (dp->phy_addr) {
- 		u32 reg;
- 
- 		reg = __raw_readl(dp->phy_addr);
-@@ -1003,7 +1009,9 @@ static void exynos_dp_phy_init(struct exynos_dp_device *dp)
- 
- static void exynos_dp_phy_exit(struct exynos_dp_device *dp)
- {
--	if (dp->phy_addr) {
-+	if (dp->phy) {
-+		phy_power_off(dp->phy);
-+	} else if (dp->phy_addr) {
- 		u32 reg;
- 
- 		reg = __raw_readl(dp->phy_addr);
-diff --git a/drivers/video/exynos/exynos_dp_core.h b/drivers/video/exynos/exynos_dp_core.h
-index 56cfec8..87804b6 100644
---- a/drivers/video/exynos/exynos_dp_core.h
-+++ b/drivers/video/exynos/exynos_dp_core.h
-@@ -151,6 +151,8 @@ struct exynos_dp_device {
- 	struct video_info	*video_info;
- 	struct link_train	link_train;
- 	struct work_struct	hotplug_work;
-+
-+	struct phy		*phy;
- };
- 
- /* exynos_dp_reg.c */
--- 
-1.7.10.4
+I think you can go on working with the two patches I send just now.
+[1]: ASoC: atmel_ssc_dai: move set dma data to startup callback
+https://patchwork.kernel.org/patch/2811241/
+
+[2]: ASoC: atmel-pcm: use generic dmaengine framework
+https://patchwork.kernel.org/patch/2811261/
+
+I use your patches 4 ~ 8 do a quick testing, it works. Please note the 
+name of asound.state under /etc in your rootfs should the same with 
+atmel,model in patch 6.
+
+> Thanks !
+>
+> Best regards,
+> Richard
+
+Best Regards,
+Bo Shen
