@@ -1,79 +1,55 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH v3 2/8] wlcore: set irq_flags in the board files instead
- of hiding behind a quirk
-Date: Wed, 3 Jul 2013 17:12:25 +0200
-Message-ID: <CAAwP0s3xkqUGnGvojfpyQq97qUmKCqY3BD4RyK1_uuX=pNy91g@mail.gmail.com>
-References: <1372860209-3504-1-git-send-email-coelho@ti.com>
- <1372860209-3504-3-git-send-email-coelho@ti.com> <1372860925.21065.115.camel@cumari.coelho.fi>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v10] i2c-designware: make SDA hold time configurable
+Date: Wed, 3 Jul 2013 17:26:41 +0200
+Message-ID: <201307031726.42167.arnd@arndb.de>
+References: <20130625163902.GA2973@katana> <20130703145918.GE3929@ab42.lan>
+ <F7C43F8B2814514CA05F3436BC68046EF379F0@039-SN2MPN1-011.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1372860925.21065.115.camel@cumari.coelho.fi>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luciano Coelho <coelho@ti.com>
-Cc: linux-wireless@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, mturquette@linaro.org, mark.rutland@arm.com, balbi@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <F7C43F8B2814514CA05F3436BC68046EF379F0-RL0Hj/+nBVCMXPU/2EZmt64g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stehle Vincent-B46079 <B46079-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 3, 2013 at 4:15 PM, Luciano Coelho <coelho@ti.com> wrote:
-> On Wed, 2013-07-03 at 17:03 +0300, Luciano Coelho wrote:
->> The platform_quirk element in the platform data was used to change the
->> way the IRQ is triggered.  When set, the EDGE_IRQ quirk would change
->> the irqflags used and treat edge trigger differently from the rest.
->>
->> Instead of hiding this irq flag setting behind the quirk, have the
->> board files set the flags during initialization.  This will be more
->> meaningful than driver-specific quirks when we switch to DT.
->>
->> Additionally, fix missing gpio_request() calls in the boarding files
->> (so that setting the flags actually works).
->>
->> Cc: Tony Lindgren <tony@atomide.com>
->> Cc: Sekhar Nori <nsekhar@ti.com>
->> Signed-off-by: Luciano Coelho <coelho@ti.com>
->> ---
->
-> [...]
->
->> @@ -5928,16 +5927,21 @@ static void wlcore_nvs_cb(const struct firmware *fw, void *context)
->>       wlcore_adjust_conf(wl);
->>
->>       wl->irq = platform_get_irq(pdev, 0);
->> -     wl->platform_quirks = pdata->platform_quirks;
->>       wl->if_ops = pdev_data->if_ops;
->>
->> -     if (wl->platform_quirks & WL12XX_PLATFORM_QUIRK_EDGE_IRQ)
->> -             irqflags = IRQF_TRIGGER_RISING;
->> -     else
->> -             irqflags = IRQF_TRIGGER_HIGH | IRQF_ONESHOT;
->> +     irq_data = irq_get_irq_data(wl->irq);
->> +     if (!irq_data) {
->> +             wl1271_error("couldn't get irq data for irq %d\n", wl->irq);
->> +             ret = -EINVAL;
->> +             goto out_free_nvs;
->> +     }
->> +
->> +     wl->irq_flags = irqd_get_trigger_type(irq_data);
->
-> BTW, there seems to be a patch on its way to make reading the flags
-> easier (ie. no need to get the irq_data first):
->
-> http://mid.gmane.org/1367945288-5625-1-git-send-email-javier@dowhile0.org
->
-> I'm not sure if this is going to be taken in, but if it does, it would
-> be nice to change the code here to use the new irq_get_trigger_type()
-> function.
->
-> --
-> Luca.
->
+On Wednesday 03 July 2013, Stehle Vincent-B46079 wrote:
+> > From: Christian Ruppert [mailto:christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org]
+> (..)
+> > Although this doesn't explicitly state what the function returns to me
+> > this sounds more like the quotient is returned rather than the remainder?
+> 
+> Hi,
+> 
+> Yes div_u64() returns the quotient.
+> 
+> It is defined in linux/math64.h as:
+> 
+>   static inline u64 div_u64(u64 dividend, u32 divisor)
+>   {
+>           u32 remainder;
+>           return div_u64_rem(dividend, divisor, &remainder);
+>   }
+> 
+> The remainder is probably fully optimized out.
 
-Hi Luca
+Ah, you are right, sorry for the confusion on my part.
 
-That patch has been already merged in Linus tree as commit 1f6236bf
-("genirq: Add irq_get_trigger_type() to get IRQ flags").
+I thought you had used do_div() rather than div_u64().
+Everything's fine then, feel free to add my
 
-So yes, it would be better if you can use irq_get_trigger_type()
-instead calling irq_get_irq_data() + irqd_get_trigger_type().
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-Best regards,
-Javier
+to your patch.
+
+	Arnd
