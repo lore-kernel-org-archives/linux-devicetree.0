@@ -1,62 +1,36 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH v4 2/2] drivers: mfd: vexpress: add Serial Power
- Controller (SPC) support
-Date: Wed, 3 Jul 2013 20:43:03 +0100
-Message-ID: <20130703194303.GG27646@sirena.org.uk>
-References: <1371484269-11743-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1371484269-11743-3-git-send-email-lorenzo.pieralisi@arm.com>
- <20130617174451.GF28497@quad.lixom.net>
- <20130618102213.GA1564@e102568-lin.cambridge.arm.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v1 0/3] extend stmmac DT support.
+Date: Wed, 03 Jul 2013 16:04:23 -0700 (PDT)
+Message-ID: <20130703.160423.1285164466482391784.davem@davemloft.net>
+References: <1372770219-1643-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="a8+9vHbKxlFmeYtB"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130618102213.GA1564@e102568-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <Pawel.Moll@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1372770219-1643-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: srinivas.kandagatla@st.com
+Cc: netdev@vger.kernel.org, peppe.cavallaro@st.com, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---a8+9vHbKxlFmeYtB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jun 18, 2013 at 11:22:13AM +0100, Lorenzo Pieralisi wrote:
-> On Mon, Jun 17, 2013 at 06:44:51PM +0100, Olof Johansson wrote:
-
-> > That'll trim down the driver to a point where I think you'll find it much
-> > easier to get merged. :-)
-
-> To start with I have to understand in which directory this code should
-> live. Moving the frequency settings in clk/CPUfreq drivers should be
-> feasible with extra DT complexity for their bindings.
-
-You shoudn't really need to change the DT bindings at all - MFD is a
-purely Linux construct, it doesn't affect how the hardware is
-constructed.
-
---a8+9vHbKxlFmeYtB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR1H7DAAoJELSic+t+oim9+0MP/RWyhHhsAnEIpTmdpqahO7vc
-Gr3n04byK566EQNq2HjJwda2oT8EgFygPP1mQFx3kLwUh7DyfXCkL0rOYQmvxEnJ
-ZmcLyBH30zyTky0JAPiEZp2/tcIbXkvcfJO8LD1foWaqTu1u+Bq3DwcJv6SaZl0N
-Ymme2q/vL0fsI3OQHG7yJX22ANREMCkHDa1l4k7hWawAFxzETIrdZQUjWpUd/lho
-w7EEJCujCEDZ9SvXWMjxpcGMWSJZk90EhDdGuae7oeCvJpDvrvN0re9PH834U4Su
-NY7mwvPDgz/Iby14TfIwunbDu7IjC/cRNcTkKwW8IM99YQBTGsMDiKqSZWEgW9pg
-pAs89y86doVEDTC+JpHMUQprR3vIMlqBoLd6Aurnq0UOL/6Gb/q9pzog9x8bGCy/
-picj43+mcHhmirKcVGfxTn0EJMywbe1qXSP0KtQo9LzpOo3+fo72NGozjS1jLAgQ
-5Iw/hDdzuYfI/vHWC49IskajaVK1jaO3ZjaECSVi51icC+5K8L5KyUXSooVJi+6T
-nDGvgYEK+817KMizpKufI3ZMZ99G6gB94iO8OA5FtCRHoYGg2ayDWkFH37kHPIPI
-Q4ENp324BBtWKwMssIvsDpWbJG3Gq6idKDVGz6xqbYKVTnzVyZv+1c+bMwbUhFR1
-5eLsSVZXHjhFrFQMzbJr
-=U152
------END PGP SIGNATURE-----
-
---a8+9vHbKxlFmeYtB--
+RnJvbTogU3Jpbml2YXMgS0FOREFHQVRMQSA8c3Jpbml2YXMua2FuZGFnYXRsYUBzdC5jb20+DQpE
+YXRlOiBUdWUsICAyIEp1bCAyMDEzIDE0OjAzOjM5ICswMTAwDQoNCj4gRnJvbTogU3Jpbml2YXMg
+S2FuZGFnYXRsYSA8c3Jpbml2YXMua2FuZGFnYXRsYUBzdC5jb20+DQo+IA0KPiBIaSBQZXBwZSwN
+Cj4gDQo+IFRoYW5reW91IGZvciB0aGUgY29tbWVudHMgb24gUkZDIHBhdGNoZXMuDQo+IA0KPiBU
+aGlzIHBhdGNoIHNlcmllcyBhZGRzIHN1cHBvcnQgdG8gbmV3IGdtYWMgdmVyc2lvbnMgMy42LjEw
+IGFuZCAzLjcxMCwgdGhlc2UNCj4gdmVyc2lvbnMgb2YgSVAgYXJlIGludGVncmF0ZWQgaW50byBT
+VCBTVGlINDE1L1NUaUg0MTYgU09Dcy4NCj4gVGhpcyBwYXRjaHNldCBhbHNvIGFkZHMgcGh5IHJl
+c2V0IGNhcGFibGl0eSB0byBzdG1tYWMtbWRpbyBkcml2ZXIgdmlhIERULg0KPiANCj4gQ2hhbmdl
+cyBzaW5jZSBSRkM6DQo+IAktIHJlLXVzZSBleGlzdGluZyBjb21wYXRpYmxlIHN0cmluZ3MgdG8g
+c2VsZWN0IHJpZ2h0IHByb3BlcnRpZXMuDQo+IAktIGNsZWFuIHVwIHJlc2V0IGNhbGxiYWNrIHN1
+cHBvcnQgc28gdGhhdCBEVCBpcyBub3QgcGFyc2VkIGV2ZXJ5dGltZS4NCg0KWW91IGFyZSBnb2lu
+ZyB0byBoYXZlIHRvIGZpeCB1cCB0aGUgZm9sbG93aW5nIGJ1aWxkIHdhcm5pbmdzIGFuZCByZXN1
+Ym1pdDoNCg0KICBDQyBbTV0gIGRyaXZlcnMvbmV0L2V0aGVybmV0L3N0bWljcm8vc3RtbWFjL3N0
+bW1hY19tZGlvLm8NCmRyaXZlcnMvbmV0L2V0aGVybmV0L3N0bWljcm8vc3RtbWFjL3N0bW1hY19t
+ZGlvLmM6IEluIGZ1bmN0aW9uIKFzdG1tYWNfbWRpb19yZXNldKI6DQpkcml2ZXJzL25ldC9ldGhl
+cm5ldC9zdG1pY3JvL3N0bW1hYy9zdG1tYWNfbWRpby5jOjEzNzoxNzogd2FybmluZzogdW51c2Vk
+IHZhcmlhYmxlIKFkZXaiIFstV3VudXNlZC12YXJpYWJsZV0NCmRyaXZlcnMvbmV0L2V0aGVybmV0
+L3N0bWljcm8vc3RtbWFjL3N0bW1hY19tZGlvLmM6IEluIGZ1bmN0aW9uIKFzdG1tYWNfbWRpb19y
+ZWdpc3RlcqI6DQpkcml2ZXJzL25ldC9ldGhlcm5ldC9zdG1pY3JvL3N0bW1hYy9zdG1tYWNfbWRp
+by5jOjIwMDoxNzogd2FybmluZzogdW51c2VkIHZhcmlhYmxlIKFkZXaiIFstV3VudXNlZC12YXJp
+YWJsZV0NCg0KDQpUaGFua3MuDQo=
