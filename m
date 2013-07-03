@@ -1,56 +1,109 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 4/9] wl12xx: use frequency instead of enumerations
- for pdata clocks
-Date: Wed, 3 Jul 2013 04:33:34 -0700
-Message-ID: <20130703113334.GY5523@atomide.com>
-References: <1372776948-24840-1-git-send-email-coelho@ti.com>
- <1372776948-24840-5-git-send-email-coelho@ti.com>
- <20130702150208.GA4233@kahuna>
- <1372796850.21065.93.camel@cumari.coelho.fi>
+From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: Best practice device tree design for display subsystems/DRM
+Date: Wed, 03 Jul 2013 20:43:20 +0900
+Message-ID: <00cc01ce77e2$844b3a80$8ce1af80$%dae@samsung.com>
+References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+ <20130702204255.2044c01b@armhf>
+ <20130702191923.GD13924@flint.arm.linux.org.uk> <51D330AC.5060903@gmail.com>
+ <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
+ <51D348F5.2080205@gmail.com> <00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
+ <20130703090242.GM516@pengutronix.de> <51D3EA0E.2090008@gmail.com>
+ <00ba01ce77d2$80285f10$80791d30$%dae@samsung.com>
+ <20130703095338.GH13924@flint.arm.linux.org.uk> <51D40275.4020806@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1372796850.21065.93.camel@cumari.coelho.fi>
-Sender: linux-doc-owner@vger.kernel.org
-To: Luciano Coelho <coelho@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, linux-wireless@vger.kernel.org, nsekhar@ti.com, mturquette@linaro.org, mark.rutland@arm.com, balbi@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <51D40275.4020806-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-language: ko
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: 'Sebastian Hesselbarth' <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Russell King' <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, 'Jean-Francois Moine' <moinejf-GANU6spQydw@public.gmane.org>, 'Sascha Hauer' <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, 'Daniel Drake' <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Luciano Coelho <coelho@ti.com> [130702 13:33]:
-> On Tue, 2013-07-02 at 10:02 -0500, Nishanth Menon wrote:
-> > On 17:55-20130702, Luciano Coelho wrote:
-> > > Instead of defining an enumeration with the FW specific values for the
-> > > different clock rates, use the actual frequency instead.  Also add a
-> > > boolean to specify whether the clock is XTAL or not.
-> > > 
-> > > Change all board files to reflect this.
-> > > 
-> > > Cc: Tony Lindgren <tony@atomide.com>
-> > > Cc: Sekhar Nori <nsekhar@ti.com>
-> > > Signed-off-by: Luciano Coelho <coelho@ti.com>
-> > > ---
-> > >  arch/arm/mach-davinci/board-da850-evm.c      |    3 +-
-> > >  arch/arm/mach-omap2/board-4430sdp.c          |    5 ++-
-> > ^^
-> > >  arch/arm/mach-omap2/board-omap3evm.c         |    3 +-
-> > >  arch/arm/mach-omap2/board-omap4panda.c       |    3 +-
-> > ^^
-> > Please do not add more platform data to platforms that are DT only.
+
+
+> -----Original Message-----
+> From: Sebastian Hesselbarth [mailto:sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+> Sent: Wednesday, July 03, 2013 7:53 PM
+> To: Russell King
+> Cc: Inki Dae; 'Sascha Hauer'; 'Daniel Drake'; 'Jean-Francois Moine';
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> Subject: Re: Best practice device tree design for display subsystems/DRM
 > 
-> Ah, I hadn't realized that board_omap4panda.c and board-4430sdp.c had
-> been removed in linux-next.  I base my tree on wireless-next and it
-> doesn't contain these changes yet.  I would only have noticed this when
-> I rebased my tree once the merge window is closed. ;)
+> On 07/03/13 11:53, Russell King wrote:
+> > On Wed, Jul 03, 2013 at 06:48:41PM +0900, Inki Dae wrote:
+> >> That's not whether we can write device driver or not. dtsi is common
+> spot in
+> >> other subsystems. Do you think the cardX node is meaningful to other
+> >> subsystems?
+> >
+> > Yes, because fbdev could also use it to solve the same problem which
+> we're
+> > having with DRM.
 > 
-> Thanks for pointing out, I'll make sure these changes will not be there
-> when I send the pull request.
+> Inki,
+> 
+> I do not understand why you keep referring to the SoC dtsi. Im my
+> example, I said that it is made up and joined from both SoC dtsi and
+> board dts.
+> 
+> So, of course, lcd controller nodes and dcon are part of dove.dtsi
+> because they are physically available on every Dove SoC.
+> 
+> Also, the connection from lcd0 to the external HDMI encoder node
+> is in the board dts because you can happily build a Dove SoC board
+> with a different HDMI encoder or with no encoder at all.
+> 
+> The video-card super node is not in any way specific to DRM and
 
-Please separate out the minimal pdata and arch/arm/mach-omap2 changes int
-a immutable branch on v3.11-rc1 that I can also pull in. For v3.12, we're
-going to be making more boards device tree only, so these changes may
-otherwise cause pointless merge conflicts.
+In case of fbdev, framebuffer driver would use lcd0 or lcd1 driver, or lcd0
+and lcd1 drivers which are placed in drivers/video/backlight/.
 
-Regards,
+And let's assume the following:
 
-Tony
+On board A
+     Display controller ------------- lcd 0
+On board B
+     Display controller ------------- lcd 1
+On board C
+     Display controller ------------- lcd 0 and lcd 1
+
+Without the super node, user could configure Linux kernel through menuconfig
+like below;
+	board A:  enabling lcd 0, and disabling lcd 1,
+	board B: disabling lcd 0, and enabling lcd 1,
+	board C: enabling lcd 0 and lcd 1.
+
+All we have to do is to configure menuconfig to enable only drivers for
+certain board. Why does fbdev need the super node? Please give me comments
+if there is my missing point.
+
+Thanks,
+Inki Dae
+
+> describes a virtual graphics card comprising both SoC and board
+> components (on a per-board basis). You can have both DRM or fbdev
+> use that virtual video card node to register your subsystem drivers
+> required to provide video output.
+> 
+> I agree to what Sascha said, the decision to put one or two
+> virtual graphics card in the device tree depending on the use
+> case is sketchy. You can have one card/two card on the same
+> board, so at this point device tree is not describing HW but
+> use case.
+> 
+> But honestly, I see no way around it and it is the only way
+> to allow to even have the decision for one or two cards at all.
+> There is no way for auto-probing the users intention...
+> 
+> Sebastian
