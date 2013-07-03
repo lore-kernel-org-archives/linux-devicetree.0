@@ -1,74 +1,80 @@
-From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: Best practice device tree design for display subsystems/DRM
-Date: Wed, 03 Jul 2013 17:06:01 +0900
-Message-ID: <00a001ce77c4$285f4270$791dc750$%dae@samsung.com>
-References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
- <20130702184305.GB13924@flint.arm.linux.org.uk>
- <CAMLZHHSU1OVrQrtucTNn4AmTCiNER19njvQdomxTcXAzqxCi4A@mail.gmail.com>
- <20130702190809.GC13924@flint.arm.linux.org.uk>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: AM33XX: update rtc node compatibility
+Date: Wed, 3 Jul 2013 13:42:07 +0530
+Message-ID: <51D3DCD7.2010209@ti.com>
+References: <1372412109-986-1-git-send-email-gururaja.hebbar@ti.com>
+	<1372412109-986-5-git-send-email-gururaja.hebbar@ti.com>
+	<51D26F61.7080308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20130702190809.GC13924-f404yB8NqCZvn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Content-language: ko
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: 'Russell King' <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, 'Daniel Drake' <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Cc: =?ISO-8859-1?Q?'Jean-Fran=E7ois_Moine'?= <moinejf-GANU6spQydw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, 'Sebastian Hesselbarth' <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <51D26F61.7080308-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, =?UTF-8?B?QmVub8OudCBDb3Vzc29u?= <benoit.cousson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Gururaja,
 
+On 7/2/2013 11:42 AM, Sekhar Nori wrote:
+> Changing to Benoit's gmail id since he apparently wont access TI mail
+> anymore.
+> 
+> On 6/28/2013 3:05 PM, Hebbar Gururaja wrote:
+>> Since AM33xx  RTC IP has RTC_IRQWAKEEN to support Alarm Wake-up.
+>>
+>> Update the rtc compatible property to "ti,am3352-rtc" to enable handling
+>> of this feature inside rtc-omap driver.
+>>
+>> Signed-off-by: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>> Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: b-cousson-l0cyMroinI0@public.gmane.org
+>> ---
+>> :100644 100644 77aa1b0... dde180a... M	arch/arm/boot/dts/am33xx.dtsi
+>>  arch/arm/boot/dts/am33xx.dtsi |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+>> index 77aa1b0..dde180a 100644
+>> --- a/arch/arm/boot/dts/am33xx.dtsi
+>> +++ b/arch/arm/boot/dts/am33xx.dtsi
+>> @@ -297,7 +297,7 @@
+>>  		};
+>>  
+>>  		rtc@44e3e000 {
+>> -			compatible = "ti,da830-rtc";
+>> +			compatible = "ti,am3352-rtc";
+> 
+> compatible is a list so you can instead do:
+> 	
+> 	compatible = "ti,am3352-rtc", "ti,da830-rtc";
+> 
+> That way the dts works irrespective of driver updates. When driver
+> supports enhanced features of hardware, they are available to the user
+> else the basic functionality still works.
 
-> -----Original Message-----
-> From: dri-devel-bounces+inki.dae=3Dsamsung.com-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> [mailto:dri-devel-bounces+inki.dae=3Dsamsung.com-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org] On
-> Behalf Of Russell King
-> Sent: Wednesday, July 03, 2013 4:08 AM
-> To: Daniel Drake
-> Cc: Jean-Fran=E7ois Moine; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; dri-
-> devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org; Sebastian Hesselbarth
-> Subject: Re: Best practice device tree design for display subsystems/DRM
-> =
+On doing some experiments myself, the of_device_id which gets selected
+during probe depends on the order in which its entry appears in the
+match table inside the driver rather than how the compatible string is
+written. I think this puts undue dependency on how the driver is
+written, so I am okay with providing a single compatible value like the
+way you have done ATM.
 
-> On Tue, Jul 02, 2013 at 12:54:41PM -0600, Daniel Drake wrote:
-> > On Tue, Jul 2, 2013 at 12:43 PM, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> wrote:
-> > > I will point out that relying on driver probing orders has already
-> been
-> > > stated by driver model people to be unsafe.  This is why I will not
-> > > adopt such a solution for my driver; it is a bad design.
-> >
-> > Just to clarify, what you're objecting to is effectively the
-> > following? Because it is not guaranteed in the future that the probe
-> > order will be the same as the platform_driver_register() calls?
-> =
-
-> Correct.  Consider what happens if the devices are registered after
-> the driver(s) have been registered, which may not be in the correct
-> order.
-> =
-
-
-That's true but how drivers could be registered prior to devices? The
-devices registering codes are built in kernel image so the drivers cannot be
-registered prior to devices as long as we don't modify the devices to be
-registered first. Is there any case that driver should be registered first?
+I do think the string appearing first in the compatible list is what
+should be selected if a match is available but I am not sure if there
+are other considerations due to which of_match_device() is written the
+way it is written.
 
 Thanks,
-Inki Dae
-
-> --
-> Russell King
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+Sekhar
