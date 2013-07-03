@@ -1,57 +1,60 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v4 0/4] mtd:nand:omap2: clean-up of supported ECC schemes
-Date: Wed, 3 Jul 2013 18:04:21 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9E47B4@DBDE04.ent.ti.com>
-References: <1372764757-29511-1-git-send-email-pekon@ti.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9E46CA@DBDE04.ent.ti.com>
- <1372857987.9767.162.camel@sauron.fi.intel.com>
- <201307031527.17219.arnd@arndb.de>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/2] DMA: Freescale: Add new 8-channel DMA engine device
+ tree nodes
+Date: Wed, 3 Jul 2013 14:02:08 -0500
+Message-ID: <1372878128.8183.143@snotra>
+References: <1372650378-2936-1-git-send-email-hongbo.zhang@freescale.com>
+ <51D3A030.4020608@freescale.com> <51D3D76B.5040306@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201307031527.17219.arnd@arndb.de>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>
-Cc: "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "olof@lixom.net" <olof@lixom.net>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"; Format="Flowed"; DelSp="Yes"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51D3D76B.5040306-KZfg59tc24xl57MIdRCFDg@public.gmane.org> (from
+ hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org on Wed Jul  3 02:48:59 2013)
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vakul-KZfg59tc24xl57MIdRCFDg@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PiANCj4gT24gV2VkbmVzZGF5IDAzIEp1bHkgMjAxMywgQXJ0ZW0gQml0eXV0c2tpeSB3cm90ZToN
-Cj4gPiBPbiBXZWQsIDIwMTMtMDctMDMgYXQgMTM6MTYgKzAwMDAsIEd1cHRhLCBQZWtvbiB3cm90
-ZToNCj4gPiA+IFtQZWtvbl06IFllcywgSSdtIG5vdCBzZWVpbmcgdGhlc2UgYnVpbGQgaXNzdWVz
-LCBhcyBJJ20gY2xlYW5seQ0KPiA+ID4gcmV0dXJuaW5nIGZyb20gcHJvYmUgd2l0aCBwcl9lcnIo
-KSwgaWYgdGhlIHJlcXVpcmVkIGxpYnJhcmllcyAoL2xpYi9iY2guYykNCj4gPiA+IGFyZSBub3Qg
-YnVpbGQtaW4gdGhlIHN5c3RlbS4NCj4gPiA+IC0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+IFtQ
-YXRjaCB2NCAxLzRdOiBtdGQ6bmFuZDpvbWFwMjogY2xlYW4tdXAgQkNIeF9IVyBhbmQgQkNIeF9T
-VyBFQ0MuLg0KPiA+ID4gQEBzdGF0aWMgaW50IG9tYXBfbmFuZF9wcm9iZShzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpwZGV2KQ0KPiA+ID4gKwlkZWZhdWx0Og0KPiA+ID4gKwkJcHJfZXJyKCJzZWxl
-Y3RlZCBFQ0Mgc2NoZW1lIG5vdCBzdXBwb3J0ZWQgb3Igbm90DQo+IGVuYWJsZWRcbiIpOw0KPiA+
-ID4gKwkJZXJyID0gLUVJTlZBTDsNCj4gPiA+ICsJCWdvdG8gb3V0X3JlbGVhc2VfbWVtX3JlZ2lv
-bjsNCj4gPiA+ICsJfQ0KPiA+ID4gLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gSG93ZXZlciwg
-aWYgeW91IGFyZSBzdGlsbCBzZWVpbmcgdGhpcywgY291bGQgeW91IHBsZWFzZSBzZW5kIG1lIHlv
-dXINCj4gY29uZmlnPw0KPiA+DQo+ID4gSSBjb21waWxlIHRlc3RlZCB5b3VyIHBhdGNoZXMgdG9v
-LCBhbmQgZGlkIG5vdCBzZWUgYW55IGlzc3VlcyB3aXRoIG15DQo+ID4gb21hcDJfZGVmY29uZmln
-Lg0KPiANCj4gDQo+IFRvIGNsYXJpZnk6IEknbSBnZXR0aW5nIHRoaXMgZXJyb3Igd2l0aCByYW5k
-Y29uZmlnIG9uIHRvZGF5J3MgbGludXgtbmV4dC4NCj4gSSB0aGluayBpdCBvbmx5IGhhcHBlbnMg
-d2l0aCBNVERfTkFORF9FQ0NfQkNIIGVuYWJsZWQsIHdoaWNoIGlzIG5vdA0KPiB0aGUgZGVmYXVs
-dCBpbiBvbWFwMl9kZWZjb25maWcuDQo+IA0KPiAJQXJuZA0KDQpIaSBBcm5kLCBBcnRlbSwgU3Rl
-cGhlbiwNCg0KSSBzZWUgdGhlIGlzc3VlIGluIGxpbnV4LW5leHQvbWFzdGVyIHRyZWUuLg0KbGlu
-dXgtbmV4dC9tYXN0ZXIgaGFzIG9ubHkgdGhlIGZpcnN0IFtQYXRjaCB2NCAxLzRdIGZyb20gdGhl
-IHNlcmllcy4NCk90aGVyIHBhdGNoZXMgW1BhdGNoIHY0IDIvNC4uIDQvNF0gb2YgdGhpcyBzZXJp
-ZXMgd2VyZSBkcm9wcGVkLA0KYXMgJ09sb2YgSm9oYW5zc29uJyBoYWQgc29tZSBhcHByZWhlbnNp
-b25zIGFib3V0IERUIGJpbmRpbmdzLg0KaHR0cDovL3Blcm1hbGluay5nbWFuZS5vcmcvZ21hbmUu
-bGludXgucG9ydHMuYXJtLmtlcm5lbC8yNDk2NjINCg0KQXMgdGhlc2UgcGF0Y2hlcyBhcmUgaW50
-ZXItZGVwZW5kZW50LCBzbyBwbGVhc2UgZHJvcCB0aGUgd2hvbGUgc2VyaWVzDQppbmNsdWRpbmcg
-dGhlIGNvbW1pdCBiZWxvdy4NCmZiMTU4NWIgIFtQYXRjaCB2NCAxLzRdIG10ZDogbmFuZDogb21h
-cDI6IGNsZWFuLXVwIEJDSHhfSFcgYW5kIEJDSHhfU1cNCg0KSSdtIGF3YWl0aW5nIGZlZWRiYWNr
-cyBmcm9tICdPbG9mIEpvaGFuc3Nvbicgb3Igb3RoZXIgRFQgbWFpbnRhaW5lcnMsDQpvbmNlIGFw
-cHJvdmVkLCBJJ2xsIHJlc2VuZCB0aGUgd2hvbGUgc2VyaWVzLg0KDQoiW1BBVENIIHY0IDIvNF0g
-QVJNOiBPTUFQMis6IGNsZWFuZWQtdXAgRFQgc3VwcG9ydCAiIGhhZCB0aGUNCmRlY2xhcmF0aW9u
-cyB3aGljaCB3ZXJlIHJlcXVpcmVkIGZvciBhYm92ZSBidWlsZCBlcnJvcnMuDQotLS0tLS0tLS0t
-LS0tLS0NCmluY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9tdGQtbmFuZC1vbWFwMi5oDQplbnVt
-IG9tYXBfZWNjIHsNCisJLyogNC1iaXQgIEVDQyBjYWxjdWxhdGlvbiBieSBHUE1DLCBFcnJvciBk
-ZXRlY3Rpb24gYnkgU29mdHdhcmUgKi8NCisJT01BUF9FQ0NfQkNINF9DT0RFX0hXX0RFVEVDVElP
-Tl9TVywNCi4uLg0KKwkvKiA4LWJpdCAgRUNDIGNhbGN1bGF0aW9uIGJ5IEdQTUMsIEVycm9yIGRl
-dGVjdGlvbiBieSBTb2Z0d2FyZSAqLw0KKwlPTUFQX0VDQ19CQ0g4X0NPREVfSFdfREVURUNUSU9O
-X1NXDQotLS0tLS0tLS0tLS0tLS0NCg0KDQp3aXRoIHJlZ2FyZHMsIHBla29uDQoNCg==
+On 07/03/2013 02:48:59 AM, Hongbo Zhang wrote:
+> On 07/03/2013 11:53 AM, Hongbo Zhang wrote:
+>> hmm...add the devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org into list.
+>> 
+>> Note that we are discussing a better naming for this new compatible  
+>> property in the corresponding [PATCH 2/2], so I will resend a v2 of  
+>> this patch.
+>> 
+>> 
+>> On 07/01/2013 11:46 AM, hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+>>> From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>> 
+>>> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this  
+>>> patch add
+>>> the device tree nodes for them.
+>>> 
+>>> Signed-off-by: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>> ---
+>>>   arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi |   90  
+>>> +++++++++++++++++++++++++++
+>>>   arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi |   90  
+>>> +++++++++++++++++++++++++++
+>>>   arch/powerpc/boot/dts/fsl/t4240si-post.dtsi |    4 +-
+>>>   3 files changed, 182 insertions(+), 2 deletions(-)
+>>>   create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi
+>>>   create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi
+> Scott, any comment of these two file names?
+
+There's "dma2" again...
+
+How about elo3-dma-<n>.dtsi?
+
+-Scott
