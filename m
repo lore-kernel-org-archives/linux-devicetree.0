@@ -1,285 +1,74 @@
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
-Subject: Re: [PATCH 1/2] DMA: Freescale: Add new 8-channel DMA engine device
- tree nodes
-Date: Wed, 3 Jul 2013 15:48:59 +0800
-Message-ID: <51D3D76B.5040306@freescale.com>
-References: <1372650378-2936-1-git-send-email-hongbo.zhang@freescale.com> <51D3A030.4020608@freescale.com>
+From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: Best practice device tree design for display subsystems/DRM
+Date: Wed, 03 Jul 2013 17:06:01 +0900
+Message-ID: <00a001ce77c4$285f4270$791dc750$%dae@samsung.com>
+References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+ <20130702184305.GB13924@flint.arm.linux.org.uk>
+ <CAMLZHHSU1OVrQrtucTNn4AmTCiNER19njvQdomxTcXAzqxCi4A@mail.gmail.com>
+ <20130702190809.GC13924@flint.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51D3A030.4020608@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hongbo Zhang <hongbo.zhang@freescale.com>
-Cc: vinod.koul@intel.com, djbw@fb.com, scottwood@freescale.com, vakul@freescale.com, leoLi@freescale.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20130702190809.GC13924-f404yB8NqCZvn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Content-language: ko
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: 'Russell King' <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, 'Daniel Drake' <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: =?ISO-8859-1?Q?'Jean-Fran=E7ois_Moine'?= <moinejf-GANU6spQydw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, 'Sebastian Hesselbarth' <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/03/2013 11:53 AM, Hongbo Zhang wrote:
-> hmm...add the devicetree-discuss@lists.ozlabs.org into list.
->
-> Note that we are discussing a better naming for this new compatible 
-> property in the corresponding [PATCH 2/2], so I will resend a v2 of 
-> this patch.
->
->
-> On 07/01/2013 11:46 AM, hongbo.zhang@freescale.com wrote:
->> From: Hongbo Zhang <hongbo.zhang@freescale.com>
->>
->> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this 
->> patch add
->> the device tree nodes for them.
->>
->> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
->> ---
->>   arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi |   90 
->> +++++++++++++++++++++++++++
->>   arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi |   90 
->> +++++++++++++++++++++++++++
->>   arch/powerpc/boot/dts/fsl/t4240si-post.dtsi |    4 +-
->>   3 files changed, 182 insertions(+), 2 deletions(-)
->>   create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi
->>   create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi
-Scott, any comment of these two file names?
->>
->> diff --git a/arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi 
->> b/arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi
->> new file mode 100644
->> index 0000000..c626c49
->> --- /dev/null
->> +++ b/arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi
->> @@ -0,0 +1,90 @@
->> +/*
->> + * QorIQ DMA device tree stub [ controller @ offset 0x100000 ]
->> + *
->> + * Copyright 2011-2013 Freescale Semiconductor Inc.
->> + *
->> + * Redistribution and use in source and binary forms, with or without
->> + * modification, are permitted provided that the following 
->> conditions are met:
->> + *     * Redistributions of source code must retain the above copyright
->> + *       notice, this list of conditions and the following disclaimer.
->> + *     * Redistributions in binary form must reproduce the above 
->> copyright
->> + *       notice, this list of conditions and the following 
->> disclaimer in the
->> + *       documentation and/or other materials provided with the 
->> distribution.
->> + *     * Neither the name of Freescale Semiconductor nor the
->> + *       names of its contributors may be used to endorse or promote 
->> products
->> + *       derived from this software without specific prior written 
->> permission.
->> + *
->> + *
->> + * ALTERNATIVELY, this software may be distributed under the terms 
->> of the
->> + * GNU General Public License ("GPL") as published by the Free Software
->> + * Foundation, either version 2 of that License or (at your option) any
->> + * later version.
->> + *
->> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' 
->> AND ANY
->> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
->> IMPLIED
->> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
->> PURPOSE ARE
->> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE 
->> FOR ANY
->> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
->> CONSEQUENTIAL DAMAGES
->> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
->> OR SERVICES;
->> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
->> CAUSED AND
->> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
->> LIABILITY, OR TORT
->> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
->> USE OF THIS
->> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->> + */
->> +
->> +dma0: dma@100300 {
->> +    #address-cells = <1>;
->> +    #size-cells = <1>;
->> +    compatible = "fsl,eloplus-dma2";
->> +    reg = <0x100300 0x4 0x100600 0x4>;
->> +    ranges = <0x0 0x100100 0x500>;
->> +    cell-index = <0>;
->> +    dma-channel@0 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x0 0x80>;
->> +        cell-index = <0>;
->> +        interrupts = <28 2 0 0>;
->> +    };
->> +    dma-channel@80 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x80 0x80>;
->> +        cell-index = <1>;
->> +        interrupts = <29 2 0 0>;
->> +    };
->> +    dma-channel@100 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x100 0x80>;
->> +        cell-index = <2>;
->> +        interrupts = <30 2 0 0>;
->> +    };
->> +    dma-channel@180 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x180 0x80>;
->> +        cell-index = <3>;
->> +        interrupts = <31 2 0 0>;
->> +    };
->> +    dma-channel@300 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x300 0x80>;
->> +        cell-index = <4>;
->> +        interrupts = <76 2 0 0>;
->> +    };
->> +    dma-channel@380 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x380 0x80>;
->> +        cell-index = <5>;
->> +        interrupts = <77 2 0 0>;
->> +    };
->> +    dma-channel@400 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x400 0x80>;
->> +        cell-index = <6>;
->> +        interrupts = <78 2 0 0>;
->> +    };
->> +    dma-channel@480 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x480 0x80>;
->> +        cell-index = <7>;
->> +        interrupts = <79 2 0 0>;
->> +    };
->> +};
->> diff --git a/arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi 
->> b/arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi
->> new file mode 100644
->> index 0000000..980ea77
->> --- /dev/null
->> +++ b/arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi
->> @@ -0,0 +1,90 @@
->> +/*
->> + * QorIQ DMA device tree stub [ controller @ offset 0x101000 ]
->> + *
->> + * Copyright 2011-2013 Freescale Semiconductor Inc.
->> + *
->> + * Redistribution and use in source and binary forms, with or without
->> + * modification, are permitted provided that the following 
->> conditions are met:
->> + *     * Redistributions of source code must retain the above copyright
->> + *       notice, this list of conditions and the following disclaimer.
->> + *     * Redistributions in binary form must reproduce the above 
->> copyright
->> + *       notice, this list of conditions and the following 
->> disclaimer in the
->> + *       documentation and/or other materials provided with the 
->> distribution.
->> + *     * Neither the name of Freescale Semiconductor nor the
->> + *       names of its contributors may be used to endorse or promote 
->> products
->> + *       derived from this software without specific prior written 
->> permission.
->> + *
->> + *
->> + * ALTERNATIVELY, this software may be distributed under the terms 
->> of the
->> + * GNU General Public License ("GPL") as published by the Free Software
->> + * Foundation, either version 2 of that License or (at your option) any
->> + * later version.
->> + *
->> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' 
->> AND ANY
->> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
->> IMPLIED
->> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
->> PURPOSE ARE
->> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE 
->> FOR ANY
->> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
->> CONSEQUENTIAL DAMAGES
->> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
->> OR SERVICES;
->> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
->> CAUSED AND
->> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
->> LIABILITY, OR TORT
->> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
->> USE OF THIS
->> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->> + */
->> +
->> +dma1: dma@101300 {
->> +    #address-cells = <1>;
->> +    #size-cells = <1>;
->> +    compatible = "fsl,eloplus-dma2";
->> +    reg = <0x101300 0x4 0x101600 0x4>;
->> +    ranges = <0x0 0x101100 0x500>;
->> +    cell-index = <1>;
->> +    dma-channel@0 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x0 0x80>;
->> +        cell-index = <0>;
->> +        interrupts = <32 2 0 0>;
->> +    };
->> +    dma-channel@80 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x80 0x80>;
->> +        cell-index = <1>;
->> +        interrupts = <33 2 0 0>;
->> +    };
->> +    dma-channel@100 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x100 0x80>;
->> +        cell-index = <2>;
->> +        interrupts = <34 2 0 0>;
->> +    };
->> +    dma-channel@180 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x180 0x80>;
->> +        cell-index = <3>;
->> +        interrupts = <35 2 0 0>;
->> +    };
->> +    dma-channel@300 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x300 0x80>;
->> +        cell-index = <4>;
->> +        interrupts = <80 2 0 0>;
->> +    };
->> +    dma-channel@380 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x380 0x80>;
->> +        cell-index = <5>;
->> +        interrupts = <81 2 0 0>;
->> +    };
->> +    dma-channel@400 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x400 0x80>;
->> +        cell-index = <6>;
->> +        interrupts = <82 2 0 0>;
->> +    };
->> +    dma-channel@480 {
->> +        compatible = "fsl,eloplus-dma-channel";
->> +        reg = <0x480 0x80>;
->> +        cell-index = <7>;
->> +        interrupts = <83 2 0 0>;
->> +    };
->> +};
->> diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi 
->> b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
->> index bd611a9..7d8bac6 100644
->> --- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
->> +++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
->> @@ -387,8 +387,8 @@
->>           reg       = <0xea000 0x4000>;
->>       };
->>   -/include/ "qoriq-dma-0.dtsi"
->> -/include/ "qoriq-dma-1.dtsi"
->> +/include/ "qoriq-dma2-0.dtsi"
->> +/include/ "qoriq-dma2-1.dtsi"
->>     /include/ "qoriq-espi-0.dtsi"
->>       spi@110000 {
->
->
+
+
+> -----Original Message-----
+> From: dri-devel-bounces+inki.dae=3Dsamsung.com-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> [mailto:dri-devel-bounces+inki.dae=3Dsamsung.com-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org] On
+> Behalf Of Russell King
+> Sent: Wednesday, July 03, 2013 4:08 AM
+> To: Daniel Drake
+> Cc: Jean-Fran=E7ois Moine; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; dri-
+> devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org; Sebastian Hesselbarth
+> Subject: Re: Best practice device tree design for display subsystems/DRM
+> =
+
+> On Tue, Jul 02, 2013 at 12:54:41PM -0600, Daniel Drake wrote:
+> > On Tue, Jul 2, 2013 at 12:43 PM, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> wrote:
+> > > I will point out that relying on driver probing orders has already
+> been
+> > > stated by driver model people to be unsafe.  This is why I will not
+> > > adopt such a solution for my driver; it is a bad design.
+> >
+> > Just to clarify, what you're objecting to is effectively the
+> > following? Because it is not guaranteed in the future that the probe
+> > order will be the same as the platform_driver_register() calls?
+> =
+
+> Correct.  Consider what happens if the devices are registered after
+> the driver(s) have been registered, which may not be in the correct
+> order.
+> =
+
+
+That's true but how drivers could be registered prior to devices? The
+devices registering codes are built in kernel image so the drivers cannot be
+registered prior to devices as long as we don't modify the devices to be
+registered first. Is there any case that driver should be registered first?
+
+Thanks,
+Inki Dae
+
+> --
+> Russell King
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
