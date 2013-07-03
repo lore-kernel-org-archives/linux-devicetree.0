@@ -1,77 +1,285 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Tue, 2 Jul 2013 20:42:55 +0200
-Message-ID: <20130702204255.2044c01b@armhf>
-References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
+Subject: Re: [PATCH 1/2] DMA: Freescale: Add new 8-channel DMA engine device
+ tree nodes
+Date: Wed, 3 Jul 2013 15:48:59 +0800
+Message-ID: <51D3D76B.5040306@freescale.com>
+References: <1372650378-2936-1-git-send-email-hongbo.zhang@freescale.com> <51D3A030.4020608@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-In-Reply-To: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: Daniel Drake <dsd@laptop.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <rmk@arm.linux.org.uk>, dri-devel@lists.freedesktop.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51D3A030.4020608@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hongbo Zhang <hongbo.zhang@freescale.com>
+Cc: vinod.koul@intel.com, djbw@fb.com, scottwood@freescale.com, vakul@freescale.com, leoLi@freescale.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyIEp1bCAyMDEzIDExOjQzOjU5IC0wNjAwCkRhbmllbCBEcmFrZSA8ZHNkQGxhcHRv
-cC5vcmc+IHdyb3RlOgoKPiBIaSwKCkhpIERhbmllbCwKCj4gSSdtIGxvb2tpbmcgaW50byBpbXBs
-ZW1lbnRpbmcgZGV2aWNldHJlZSBzdXBwb3J0IGluIGFybWFkYV9kcm0gYW5kCj4gd291bGQgbGlr
-ZSB0byBiZXR0ZXIgdW5kZXJzdGFuZCB0aGUgYmVzdCBwcmFjdGljZSBoZXJlLgo+IAo+IEFkZGlu
-ZyBEVCBzdXBwb3J0IGZvciBhIERSTSBkcml2ZXIgc2VlbXMgdG8gYmUgY29tcGxpY2F0ZWQgYnkg
-dGhlIGZhY3QKPiB0aGF0IERSTSBpcyBub3QgImhvdHBsdWdnYWJsZSIgLSBpdCBpcyBub3QgcG9z
-c2libGUgZm9yIHRoZSBkcm1fZGV2aWNlCj4gdG8gYmUgaW5pdGlhbGlzZWQgd2l0aG91dCBhbiBv
-dXRwdXQsIHdpdGggdGhlIG91dHB1dCBjb25uZWN0b3IvZW5jb2Rlcgo+IGFwcGVhcmluZyBhdCBz
-b21lIGxhdGVyIG1vbWVudC4gSW5zdGVhZCwgdGhlIGNvbm5lY3RvcnMvZW5jb2RlcnMgbXVzdAo+
-IGJlIGZ1bGx5IGxvYWRlZCBiZWZvcmUgdGhlIGRybV9kcml2ZXIgbG9hZCBmdW5jdGlvbiByZXR1
-cm5zLiBUaGlzCj4gbWVhbnMgdGhhdCB3ZSBjYW5ub3QgZHJpdmUgdGhlIGluZGl2aWR1YWwgZGlz
-cGxheSBjb21wb25lbnRzIHRocm91Z2gKPiBpbmRpdmlkdWFsLCBzZXBhcmF0ZSBtb2R1bGVzIC0g
-d2UgbmVlZCBhIHdheSB0byBjb250cm9sIHRoZWlyIGxvYWQKPiBvcmRlci4KPiAKPiBMb29raW5n
-IGF0IGV4aXN0aW5nIERSTSBkcml2ZXJzOgoJW3NuaXBdCgpJdCBzZWVtcyB0aGF0IHlvdSBkaWQg
-bm90IGxvb2sgYXQgdGhlIE5WSURJQSBUZWdyYSBkcml2ZXIgKEkgZ290IGl0cwpnZW5lcmFsIGNv
-bmNlcHQgZm9yIG15IG93biBkcml2ZXIsIGJ1dCBJIHVzZWQgYSBzaW1wbGUgYXRvbWljIGNvdW50
-ZXIpOgoKLSBhdCBwcm9iZSB0aW1lLCB0aGUgbWFpbiBkcml2ZXIgKGRyaXZlcnMvZ3B1L2hvc3Qx
-eC9kcm0vZHJtLmMpIHNjYW5zCiAgdGhlIERUIGFuZCBmaW5kcyBpdHMgZXh0ZXJuYWwgbW9kdWxl
-cy4gVGhlc2Ugb25lcyBhcmUgcHV0IGluIGEKICAiY2xpZW50cyIgbGlzdC4KCi0gd2hlbiBsb2Fk
-ZWQsIHRoZSBvdGhlciBtb2R1bGVzIHJlZ2lzdGVyIHRoZW1zZWx2ZXMgaW50byB0aGUgbWFpbgog
-IGRyaXZlci4gVGhpcyBsYXN0IG9uZSBjaGVja3MgaWYgZWFjaCBtb2R1bGUgaXMgaW4gdGhlICJj
-bGllbnQiIGxpc3QuCiAgSWYgc28sIHRoZSBtb2R1bGUgaXMgbW92ZWQgZnJvbSB0aGUgImNsaWVu
-dCIgdG8gYW4gImFjdGl2ZSIgbGlzdCIuCgotIHdoZW4gdGhlICJjbGllbnQiIGxpc3QgaXMgZW1w
-dHksIHRoaXMgbWVhbnMgYWxsIG1vZHVsZXMgYXJlIHN0YXJ0ZWQsCiAgYW5kLCBzbywgdGhlIG1h
-aW4gZHJpdmVyIHN0YXJ0cyB0aGUgZHJtIHN0dWZmLgoKVGhlIGFjdGl2ZSBsaXN0IGlzIGtlcHQg
-Zm9yIG1vZHVsZSB1bmxvYWRpbmcuCgo+IFJ1c3NlbGwgS2luZyBzdWdnZXN0ZWQgYW4gYWx0ZXJu
-YXRpdmUgZGVzaWduIGZvciBhcm1hZGFfZHJtLiBJZiBhbGwKPiBkaXNwbGF5IGNvbXBvbmVudHMg
-YXJlIHJlcHJlc2VudGVkIHdpdGhpbiB0aGUgc2FtZSAiZGlzcGxheSIKPiBzdXBlci1ub2RlLCB3
-ZSBjYW4gZXhhbWluZSB0aGUgRFQgZHVyaW5nIGRybV9kZXZpY2UgaW5pdGlhbGlzYXRpb24gYW5k
-Cj4gaW5pdGlhbGlzZSB0aGUgYXBwcm9wcmlhdGUgb3V0cHV0IGNvbXBvbmVudHMuIEluIHRoaXMg
-Y2FzZSwgdGhlIG91dHB1dAo+IGNvbXBvbmVudHMgd291bGQgbm90IGJlIHJlZ2lzdGVyZWQgYXMg
-cGxhdGZvcm0gZHJpdmVycy4KPiAKPiBUaGUgZW5kIHJlc3VsdCB3b3VsZCBiZSBzb21ldGhpbmcg
-c2ltaWxhciB0byBleHlub3MvdGlsY2RjIChpLmUuCj4gZHJtX2RyaXZlciBmaWd1cmluZyBvdXQg
-aXRzIG91dHB1dCBpbiB0aGUgYXBwcm9wcmlhdGUgbW9tZW50KSwgaG93ZXZlcgo+IHRoZSBoYWNr
-eW5lc3Mgb2YgdXNpbmcgZ2xvYmFsIHN0b3JhZ2UgdG8gc3RvcmUgb3V0cHV0IGRldmljZXMgYmVm
-b3JlCj4gZHJtX2RyaXZlciBpcyByZWFkeSBpcyBhdm9pZGVkLiBBbmQgdGhlcmUgaXMgdGhlIG9i
-dmlvdXMgZGlmZmVyZW5jZSBpbgo+IGRldmljZXRyZWUgbGF5b3V0LCB3aGljaCB3b3VsZCBsb29r
-IHNvbWV0aGluZyBsaWtlOgo+IAo+IGRpc3BsYXkgewo+ICAgY29tcGF0aWJsZSA9ICJtYXJ2ZWxs
-LGFybWFkYS01MTAtZGlzcGxheSI7Cj4gICBjbG9ja3MgPSA8JmV4dF9jbGswPiwgPCZsY2RfcGxs
-X2Nsaz47Cj4gICBsY2QwIHsKPiAgICAgY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGFybWFkYS01MTAt
-bGNkIjsKPiAgICAgcmVnID0gPDB4ZjE4MjAwMDAgMHgxMDAwPjsKPiAgICAgaW50ZXJydXB0cyA9
-IDw0Nz47Cj4gICB9Owo+ICAgbGNkMSB7Cj4gICAgIGNvbXBhdGlibGUgPSAibWFydmVsbCxhcm1h
-ZGEtNTEwLWxjZCI7Cj4gICAgIHJlZyA9IDwweGYxODEwMDAwIDB4MTAwMD47Cj4gICAgIGludGVy
-cnVwdHMgPSA8NDY+Owo+ICAgfTsKPiAgIGRjb24gewo+ICAgICBjb21wYXRpYmxlID0gIm1hcnZl
-bGwsYXJtYWRhLTUxMC1kY29uIjsKPiAgICAgcmVnID0gPC4uLj47Cj4gICB9Owo+IH07CgpQdXR0
-aW5nICJwaGFuZGxlInMgaW4gdGhlICdkaXNwbGF5JyBzZWVtcyBtb3JlIGZsZXhpYmxlIChJIGRp
-ZCBub3QgZG8gc28KYmVjYXVzZSBJIGtuZXcgdGhlIGhhcmR3YXJlIC0gMiBMQ0RzIGFuZCB0aGUg
-ZGNvbi9pcmUpLgoKQnV0LCBhbnl3YXksIHRoaXMgZG9lcyBub3Qgc29sdmUgdGhlIGV4YWN0IG1v
-bWVudCB0aGUgbW9kdWxlcyBhcmUKbG9hZGVkIGF0IHN0YXJ0dXAgdGltZS4KCi0tIApLZW4gYXIg
-YydoZW50YcOxCXwJICAgICAgKiogQnJlaXpoIGhhIExpbnV4IGF0YXYhICoqCkplZgkJfAkJaHR0
-cDovL21vaW5lamYuZnJlZS5mci8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On 07/03/2013 11:53 AM, Hongbo Zhang wrote:
+> hmm...add the devicetree-discuss@lists.ozlabs.org into list.
+>
+> Note that we are discussing a better naming for this new compatible 
+> property in the corresponding [PATCH 2/2], so I will resend a v2 of 
+> this patch.
+>
+>
+> On 07/01/2013 11:46 AM, hongbo.zhang@freescale.com wrote:
+>> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+>>
+>> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this 
+>> patch add
+>> the device tree nodes for them.
+>>
+>> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+>> ---
+>>   arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi |   90 
+>> +++++++++++++++++++++++++++
+>>   arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi |   90 
+>> +++++++++++++++++++++++++++
+>>   arch/powerpc/boot/dts/fsl/t4240si-post.dtsi |    4 +-
+>>   3 files changed, 182 insertions(+), 2 deletions(-)
+>>   create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi
+>>   create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi
+Scott, any comment of these two file names?
+>>
+>> diff --git a/arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi 
+>> b/arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi
+>> new file mode 100644
+>> index 0000000..c626c49
+>> --- /dev/null
+>> +++ b/arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi
+>> @@ -0,0 +1,90 @@
+>> +/*
+>> + * QorIQ DMA device tree stub [ controller @ offset 0x100000 ]
+>> + *
+>> + * Copyright 2011-2013 Freescale Semiconductor Inc.
+>> + *
+>> + * Redistribution and use in source and binary forms, with or without
+>> + * modification, are permitted provided that the following 
+>> conditions are met:
+>> + *     * Redistributions of source code must retain the above copyright
+>> + *       notice, this list of conditions and the following disclaimer.
+>> + *     * Redistributions in binary form must reproduce the above 
+>> copyright
+>> + *       notice, this list of conditions and the following 
+>> disclaimer in the
+>> + *       documentation and/or other materials provided with the 
+>> distribution.
+>> + *     * Neither the name of Freescale Semiconductor nor the
+>> + *       names of its contributors may be used to endorse or promote 
+>> products
+>> + *       derived from this software without specific prior written 
+>> permission.
+>> + *
+>> + *
+>> + * ALTERNATIVELY, this software may be distributed under the terms 
+>> of the
+>> + * GNU General Public License ("GPL") as published by the Free Software
+>> + * Foundation, either version 2 of that License or (at your option) any
+>> + * later version.
+>> + *
+>> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' 
+>> AND ANY
+>> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+>> IMPLIED
+>> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+>> PURPOSE ARE
+>> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE 
+>> FOR ANY
+>> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+>> CONSEQUENTIAL DAMAGES
+>> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
+>> OR SERVICES;
+>> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+>> CAUSED AND
+>> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+>> LIABILITY, OR TORT
+>> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+>> USE OF THIS
+>> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>> + */
+>> +
+>> +dma0: dma@100300 {
+>> +    #address-cells = <1>;
+>> +    #size-cells = <1>;
+>> +    compatible = "fsl,eloplus-dma2";
+>> +    reg = <0x100300 0x4 0x100600 0x4>;
+>> +    ranges = <0x0 0x100100 0x500>;
+>> +    cell-index = <0>;
+>> +    dma-channel@0 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x0 0x80>;
+>> +        cell-index = <0>;
+>> +        interrupts = <28 2 0 0>;
+>> +    };
+>> +    dma-channel@80 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x80 0x80>;
+>> +        cell-index = <1>;
+>> +        interrupts = <29 2 0 0>;
+>> +    };
+>> +    dma-channel@100 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x100 0x80>;
+>> +        cell-index = <2>;
+>> +        interrupts = <30 2 0 0>;
+>> +    };
+>> +    dma-channel@180 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x180 0x80>;
+>> +        cell-index = <3>;
+>> +        interrupts = <31 2 0 0>;
+>> +    };
+>> +    dma-channel@300 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x300 0x80>;
+>> +        cell-index = <4>;
+>> +        interrupts = <76 2 0 0>;
+>> +    };
+>> +    dma-channel@380 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x380 0x80>;
+>> +        cell-index = <5>;
+>> +        interrupts = <77 2 0 0>;
+>> +    };
+>> +    dma-channel@400 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x400 0x80>;
+>> +        cell-index = <6>;
+>> +        interrupts = <78 2 0 0>;
+>> +    };
+>> +    dma-channel@480 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x480 0x80>;
+>> +        cell-index = <7>;
+>> +        interrupts = <79 2 0 0>;
+>> +    };
+>> +};
+>> diff --git a/arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi 
+>> b/arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi
+>> new file mode 100644
+>> index 0000000..980ea77
+>> --- /dev/null
+>> +++ b/arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi
+>> @@ -0,0 +1,90 @@
+>> +/*
+>> + * QorIQ DMA device tree stub [ controller @ offset 0x101000 ]
+>> + *
+>> + * Copyright 2011-2013 Freescale Semiconductor Inc.
+>> + *
+>> + * Redistribution and use in source and binary forms, with or without
+>> + * modification, are permitted provided that the following 
+>> conditions are met:
+>> + *     * Redistributions of source code must retain the above copyright
+>> + *       notice, this list of conditions and the following disclaimer.
+>> + *     * Redistributions in binary form must reproduce the above 
+>> copyright
+>> + *       notice, this list of conditions and the following 
+>> disclaimer in the
+>> + *       documentation and/or other materials provided with the 
+>> distribution.
+>> + *     * Neither the name of Freescale Semiconductor nor the
+>> + *       names of its contributors may be used to endorse or promote 
+>> products
+>> + *       derived from this software without specific prior written 
+>> permission.
+>> + *
+>> + *
+>> + * ALTERNATIVELY, this software may be distributed under the terms 
+>> of the
+>> + * GNU General Public License ("GPL") as published by the Free Software
+>> + * Foundation, either version 2 of that License or (at your option) any
+>> + * later version.
+>> + *
+>> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' 
+>> AND ANY
+>> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+>> IMPLIED
+>> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
+>> PURPOSE ARE
+>> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE 
+>> FOR ANY
+>> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+>> CONSEQUENTIAL DAMAGES
+>> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS 
+>> OR SERVICES;
+>> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+>> CAUSED AND
+>> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+>> LIABILITY, OR TORT
+>> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+>> USE OF THIS
+>> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>> + */
+>> +
+>> +dma1: dma@101300 {
+>> +    #address-cells = <1>;
+>> +    #size-cells = <1>;
+>> +    compatible = "fsl,eloplus-dma2";
+>> +    reg = <0x101300 0x4 0x101600 0x4>;
+>> +    ranges = <0x0 0x101100 0x500>;
+>> +    cell-index = <1>;
+>> +    dma-channel@0 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x0 0x80>;
+>> +        cell-index = <0>;
+>> +        interrupts = <32 2 0 0>;
+>> +    };
+>> +    dma-channel@80 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x80 0x80>;
+>> +        cell-index = <1>;
+>> +        interrupts = <33 2 0 0>;
+>> +    };
+>> +    dma-channel@100 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x100 0x80>;
+>> +        cell-index = <2>;
+>> +        interrupts = <34 2 0 0>;
+>> +    };
+>> +    dma-channel@180 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x180 0x80>;
+>> +        cell-index = <3>;
+>> +        interrupts = <35 2 0 0>;
+>> +    };
+>> +    dma-channel@300 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x300 0x80>;
+>> +        cell-index = <4>;
+>> +        interrupts = <80 2 0 0>;
+>> +    };
+>> +    dma-channel@380 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x380 0x80>;
+>> +        cell-index = <5>;
+>> +        interrupts = <81 2 0 0>;
+>> +    };
+>> +    dma-channel@400 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x400 0x80>;
+>> +        cell-index = <6>;
+>> +        interrupts = <82 2 0 0>;
+>> +    };
+>> +    dma-channel@480 {
+>> +        compatible = "fsl,eloplus-dma-channel";
+>> +        reg = <0x480 0x80>;
+>> +        cell-index = <7>;
+>> +        interrupts = <83 2 0 0>;
+>> +    };
+>> +};
+>> diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi 
+>> b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
+>> index bd611a9..7d8bac6 100644
+>> --- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
+>> +++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
+>> @@ -387,8 +387,8 @@
+>>           reg       = <0xea000 0x4000>;
+>>       };
+>>   -/include/ "qoriq-dma-0.dtsi"
+>> -/include/ "qoriq-dma-1.dtsi"
+>> +/include/ "qoriq-dma2-0.dtsi"
+>> +/include/ "qoriq-dma2-1.dtsi"
+>>     /include/ "qoriq-espi-0.dtsi"
+>>       spi@110000 {
+>
+>
