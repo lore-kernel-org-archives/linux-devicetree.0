@@ -1,85 +1,76 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Wed, 03 Jul 2013 10:20:37 +0200
-Message-ID: <51D3DED5.8080204@gmail.com>
-References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
- <20130702204255.2044c01b@armhf>
- <20130702191923.GD13924@flint.arm.linux.org.uk> <51D330AC.5060903@gmail.com>
- <20130702202548.GE13924@flint.arm.linux.org.uk>
- <20130702215048.GI516@pengutronix.de>
- <CAPM=9ty8W7wEewLpcKjNV-RXzVnReKVrPu_MGN80=Y-xPr-f+w@mail.gmail.com>
- <20130703065559.GJ516@pengutronix.de>
+From: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+Subject: [Patch V2 0/4] rtc: omap: handle rtc wakeup support in driver
+Date: Wed, 3 Jul 2013 14:17:01 +0530
+Message-ID: <1372841225-18813-1-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130703065559.GJ516-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephane Marchesin <stephane.marchesin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, benoit.cousson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/03/13 08:55, Sascha Hauer wrote:
-> On Wed, Jul 03, 2013 at 08:02:05AM +1000, Dave Airlie wrote:
->> Have you also considered how suspend/resume works in such a place,
->> where every driver is independent? The ChromeOS guys have bitched
->> before about the exynos driver which is has lots of sub-drivers, how
->> do you control the s/r ordering in a crazy system like that? I'd
->> prefer a central driver, otherwise there is too many moving parts.
->
-> Composing a DRM device out of subdevices doesn't necessarily mean the
-> components should be suspended/resumed in arbitrary order. The DRM
-> device should always be suspended first (thus deactivating sub devices
-> as necessary and as done already) and resumed last.
->
-> Note that a super node approach does not solve this magically. We would
-> still have to make sure that the i2c bus masters on our SoC are suspended
-> after the DRM device.
+rtc-omap driver modules is used both by OMAP1/2, Davinci SoC platforms.
 
-+1 for a video card supernode that at best should be some very generic
-node with standard properties provided by DRM backend. IIRC there was
-a proposal for of_video_card a while ago.
+However, rtc wake support on OMAP1 is broken. Hence the
+device_init_wakeup() was removed from rtc-omap driver and moved to
+platform board files that supported it (DA850/OMAP-L138). [1]
 
-At least for Marvell SoCs, moving device nodes out of the bus structure
-will not work. The parent bus is _required_ for address mapping as the
-base address is configurable. Using phandles can solve this without
-moving nodes.
+However, recently [2] it was suggested that driver should always do a
+device_init_wakeup(dev, true). Platforms that don't want/need
+wakeup support can disable it from userspace via:
 
-Also, having separate device nodes does not require a separate driver
-for each nodes. All nodes get platform_devices registered, but you can
-choose not to have a matching driver for it. Then the video card super
-node can pick up that nodes by using the phandles passed and register
-a single DRM driver claiming the devices.
+    echo disabled > /sys/devices/.../power/wakeup
 
-Moreover, if we talk about SoC graphics, we have to take audio into
-account. If you move all nodes to your video card super node, you will
-add another bunch of issues for ASoC linking to e.g. the I2C HDMI
-transmitter SPDIF codec.
+Also, with the new DT boot-up, board file doesn't exist and hence there
+is no way to have device wakeup support rtc.
 
-IMHO phandles and super node subnodes are equivalent from a driver
-point-of-view but phandles are more likely to cause less pain for
-other subsystems.
+The fix for above issues, is to hard code device_init_wakeup() inside
+driver and let platforms that don't need this, handle it through the
+sysfs power entry.
 
-The super node approach will also allow to have the same SoC/board
-components being used as single video card or multiple video cards
-environment. There is virtually no way to automatically determine what
-devices belong to "your" video card(s) in a SoC, so we need something to
-describe those cards.
 
-One thing I am concerned about is what Sascha pointed out above. If you
-hook up an external I2C encoder to your card, you cannot make sure I2C
-bus is suspended before DRM device. To be honest, proposing a solution
-for that is still way beyond my expertise wrt to Linux internals, so I
-am not even trying it. Maybe I am even missing a very important point
-for the super node/phandle proposal, if so, please clarify.
+Also, update Davinci & AM335x files to above changes.
 
-Sebastian
+[1]
+https://patchwork.kernel.org/patch/136731/
+
+[2]
+http://www.mail-archive.com/davinci-linux-open-source@linux.
+davincidsp.com/msg26077.html
+
+Changes in V2:
+	- Coding style corrections (remove extra space, use lower case
+	  for hex numbers
+	- use prefix ARM: for commit subject keeping with arch/arm
+	  convention)
+	- use "[AM/am]3352" instead of "[AM/am]335x" to keep the all
+	  usages in sync.
+	- Use index defined for struct members so they remain in sync
+	- Add new compatible to existing one so that when driver
+	  supports enhanced features of hardware, they are available
+	  to the user else the basic functionality still works
+
+Hebbar Gururaja (4):
+  rtc: omap: restore back (hard-code) wakeup support
+  ARM: Davinci: da8xx/omap-l1: Remove hard coding of rtc device wakeup
+  rtc: omap: add rtc wakeup support to alarm events
+  ARM: dts: AM33XX: update rtc node compatibility
+
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |    6 +-
+ arch/arm/boot/dts/am33xx.dtsi                      |    2 +-
+ arch/arm/mach-davinci/devices-da8xx.c              |    9 +--
+ drivers/rtc/rtc-omap.c                             |   62 +++++++++++++++++---
+ 4 files changed, 61 insertions(+), 18 deletions(-)
+
+-- 
+1.7.9.5
