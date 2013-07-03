@@ -1,87 +1,73 @@
-From: Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Wed, 3 Jul 2013 13:04:58 +0100
-Message-ID: <20130703120458.GJ13924@flint.arm.linux.org.uk>
-References: <51D330AC.5060903@gmail.com>
- <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
- <51D348F5.2080205@gmail.com>
- <00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
- <20130703090242.GM516@pengutronix.de> <51D3EA0E.2090008@gmail.com>
- <00ba01ce77d2$80285f10$80791d30$%dae@samsung.com>
- <20130703095338.GH13924@flint.arm.linux.org.uk> <51D40275.4020806@gmail.com>
- <00cc01ce77e2$844b3a80$8ce1af80$%dae@samsung.com>
+From: Luciano Coelho <coelho@ti.com>
+Subject: Re: [PATCH v2 4/9] wl12xx: use frequency instead of enumerations
+ for pdata clocks
+Date: Wed, 3 Jul 2013 15:14:34 +0300
+Message-ID: <1372853674.21065.106.camel@cumari.coelho.fi>
+References: <1372776948-24840-1-git-send-email-coelho@ti.com>
+ <1372776948-24840-5-git-send-email-coelho@ti.com>
+ <20130702150208.GA4233@kahuna> <1372796850.21065.93.camel@cumari.coelho.fi>
+ <20130703113334.GY5523@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <00cc01ce77e2$844b3a80$8ce1af80$%dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Jean-Francois Moine' <moinejf-GANU6spQydw@public.gmane.org>, 'Daniel Drake' <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, 'Sascha Hauer' <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, 'Sebastian Hesselbarth' <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130703113334.GY5523@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Nishanth Menon <nm@ti.com>, mark.rutland@arm.com, mturquette@linaro.org, linux-doc@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, balbi@ti.com, rob.herring@calxeda.com, grant.likely@linaro.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 03, 2013 at 08:43:20PM +0900, Inki Dae wrote:
-> In case of fbdev, framebuffer driver would use lcd0 or lcd1 driver, or lcd0
-> and lcd1 drivers which are placed in drivers/video/backlight/.
-
-No, that's totally wrong.  Framebuffer drivers are not backlights.
-Framebuffer drivers go in drivers/video not drivers/video/backlight.
-
-> And let's assume the following:
+On Wed, 2013-07-03 at 04:33 -0700, Tony Lindgren wrote:
+> * Luciano Coelho <coelho@ti.com> [130702 13:33]:
+> > On Tue, 2013-07-02 at 10:02 -0500, Nishanth Menon wrote:
+> > > On 17:55-20130702, Luciano Coelho wrote:
+> > > > Instead of defining an enumeration with the FW specific values for the
+> > > > different clock rates, use the actual frequency instead.  Also add a
+> > > > boolean to specify whether the clock is XTAL or not.
+> > > > 
+> > > > Change all board files to reflect this.
+> > > > 
+> > > > Cc: Tony Lindgren <tony@atomide.com>
+> > > > Cc: Sekhar Nori <nsekhar@ti.com>
+> > > > Signed-off-by: Luciano Coelho <coelho@ti.com>
+> > > > ---
+> > > >  arch/arm/mach-davinci/board-da850-evm.c      |    3 +-
+> > > >  arch/arm/mach-omap2/board-4430sdp.c          |    5 ++-
+> > > ^^
+> > > >  arch/arm/mach-omap2/board-omap3evm.c         |    3 +-
+> > > >  arch/arm/mach-omap2/board-omap4panda.c       |    3 +-
+> > > ^^
+> > > Please do not add more platform data to platforms that are DT only.
+> > 
+> > Ah, I hadn't realized that board_omap4panda.c and board-4430sdp.c had
+> > been removed in linux-next.  I base my tree on wireless-next and it
+> > doesn't contain these changes yet.  I would only have noticed this when
+> > I rebased my tree once the merge window is closed. ;)
+> > 
+> > Thanks for pointing out, I'll make sure these changes will not be there
+> > when I send the pull request.
 > 
-> On board A
->      Display controller ------------- lcd 0
-> On board B
->      Display controller ------------- lcd 1
-> On board C
->      Display controller ------------- lcd 0 and lcd 1
-> 
-> Without the super node, user could configure Linux kernel through menuconfig
-> like below;
-> 	board A:  enabling lcd 0, and disabling lcd 1,
-> 	board B: disabling lcd 0, and enabling lcd 1,
-> 	board C: enabling lcd 0 and lcd 1.
+> Please separate out the minimal pdata and arch/arm/mach-omap2 changes int
+> a immutable branch on v3.11-rc1 that I can also pull in. For v3.12, we're
+> going to be making more boards device tree only, so these changes may
+> otherwise cause pointless merge conflicts.
 
-I don't think so.  By using menuconfig, you completely miss the point of
-using DT - which is to allow us to have a single kernel image which can
-support multiple boards with different configurations, even different
-SoCs.
+Okay.  I don't want to freeze my work, I'll continue using my
+wireless-based tree (which is based on 3.10) for now.  When the merge
+window closes, I'll reorganize all this before sending pull requests, so
+we can avoid conflicts.
 
-> All we have to do is to configure menuconfig to enable only drivers for
-> certain board. Why does fbdev need the super node? Please give me comments
-> if there is my missing point.
+Please ignore my changes to board files that will disappear on 3.11 and
+keep reviewing the rest. ;)
 
-fbdev needs the supernode _OR_ some way to specify that information which
-you're putting into menuconfig, because what's correct for the way one
-board is physically wired is not correct for how another board is
-physically wired.
-
-With that information in menuconfig, you get a kernel image which can
-support board A, or board B, or board C but not a single kernel image
-which can support board A and board B and board C by loading that very
-same kernel image onto all three boards with just a different DT image.
-
-This is the *whole* point of ARM moving over to DT.
-
-If we wanted to use menuconfig to sort these kinds of board specific
-details, we wouldn't be investing so much time and effort into moving
-over to DT for ARM.  In fact, we used to use menuconfig to sort out
-some of these kinds of details, and we've firmly decided that this is
-the wrong approach.
-
-Today, there is a very strong push towards having a single kernel image
-which runs on every (modern) ARM board with DT describing not only the
-board level hardware but also the internal SoC as well.
-
--- 
-Russell King
+--
+Cheers,
+Luca.
