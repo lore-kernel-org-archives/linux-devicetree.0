@@ -1,13 +1,14 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] of/documentation: Update s5m8767-regulator bindings
- document
-Date: Wed, 3 Jul 2013 10:55:29 +0100
-Message-ID: <20130703095529.GG27646@sirena.org.uk>
-References: <1372066617-23518-1-git-send-email-sachin.kamat@linaro.org>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v9 0/8] Generic PHY Framework
+Date: Wed, 3 Jul 2013 15:35:39 +0530
+Message-ID: <51D3F773.9000209@ti.com>
+References: <1372247257-30186-1-git-send-email-kishon@ti.com>
+ <780E789C2E067A4BB8F69D0BB9EC4F253E975B5E@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2370657337799332154=="
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1372066617-23518-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <780E789C2E067A4BB8F69D0BB9EC4F253E975B5E-yXqyApvAXouIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,61 +19,123 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: "Patel, Satish" <satish.patel-l0cyMroinI0@public.gmane.org>
+Cc: "mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Nori,
+ Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org" <cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org>, "Cherian,
+ George" <george.cherian-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Krishnamoorthy, Balaji T" <balajitk-l0cyMroinI0@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TZNg+MwTxZMZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============2370657337799332154==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Z/W+H++SBmO57jII"
-Content-Disposition: inline
+On Wednesday 03 July 2013 03:02 PM, Patel, Satish wrote:
+> Hi Kishon,
+>
+>> -----Original Message-----
+>> From: ABRAHAM, KISHON VIJAY
+>> Sent: Wednesday, June 26, 2013 5:17 PM
+>> To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org; Balbi, Felipe; ABRAHAM,
+>> KISHON VIJAY; arnd-r2nGTMty4D4@public.gmane.org; swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org;
+>> sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+>> omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
+>> usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; akpm@linux-
+>> foundation.org
+>> Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org; rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org; linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org;
+>> benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org; cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org;
+>> davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; Nayak, Rajendra; shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Shilimkar,
+>> Santosh; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-
+>> doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Nori, Sekhar; Krishnamoorthy, Balaji T; Cherian,
+>> George
+>> Subject: [PATCH v9 0/8] Generic PHY Framework
+>>
+>> Added a generic PHY framework that provides a set of APIs for the PHY
+>> drivers
+>> to create/destroy a PHY and APIs for the PHY users to obtain a
+>> reference to
+>> the PHY with or without using phandle.
+>>
+>> This framework will be of use only to devices that uses external PHY
+>> (PHY
+>> functionality is not embedded within the controller).
+>>
+>> The intention of creating this framework is to bring the phy drivers
+>> spread
+>> all over the Linux kernel to drivers/phy to increase code re-use and
+>> to
+>> increase code maintainability.
+>
+> I would like to use this framework for a smart-card controller connected =
+to a
+> smart-card phy. I have some questions and would like to get feedback on t=
+he same.
 
+glad to know that :-)
+>
+> I am using =93TDA8026" Smartcard PHY from NXP. Here is the link for datas=
+heet
+> and app note for the same. The smart card controller is inside the TI SoC
+> I am working with.
+>
+> Datasheet :
+> www.nxp.com/documents/data_sheet/TDA8026.pdf?
+>
+> Appnote :
+> http://www.nxp.com/documents/application_note/AN10724.pdf
+>
+> The TI SoC details are not public (yet). I can provide details to you off=
+line.
+>
+> Brief about operation:
+> -	The controller can work with and without a PHY
+> -	When not using PHY, it is limited to talking to a single
+> 	smart card. There is also a need to put external de-activation logic
+> 	on card removal for this case.
+> -	With a PHY you can use more than one smart card.
+> -	Phy has 5 slots :  1 for smart card (credit/debit/other card with chip)
+>        and others for SAM =96 SIM like modules
+> - 	Once the PHY is initialized, there are some operations that the contro=
+ller
+> 	can request of the PHY like:
+> 	- Card configurations  - set voltage
+> 	- Activation of card
+> 	- ATR =96 Answer to reset
+> 	- Warm reset
+> 	- ADPU exchange
+> 	- Deactivation ( Normal/Emergency)
 
---Z/W+H++SBmO57jII
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+hmm.. We should think about extending the phy_ops to include these =
 
-On Mon, Jun 24, 2013 at 03:06:57PM +0530, Sachin Kamat wrote:
-> s5m8767 regulator is used on Exynos platforms which use pin controller
-> to configure GPIOs. Update the example accordingly.
+operations (something like phy_smart_card_ops so that other smart_card =
 
-Applied, thanks.  Please use subject lines that match the subsystem and
-try to make your changelogs clearer.
+PHYs will also be able to use it).
+> - 	In the mode when smartcard controller talks directly to the card witho=
+ut the need
+> 	for a PHY, all the above operations will be carried out by the controlle=
+r itself
+>
+> My current thought process is to make the controller driver provide the u=
+ser interface
+> and talk to the PHY using the generic PHY framework you proposed. In the =
+case where there
+> is no PHY, my idea is to create a "dummy" PHY which uses the controller f=
+unctionality itself.
 
---Z/W+H++SBmO57jII
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+right. And in the case where you actually have a PHY, create a PHY =
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
+driver and implement the phy_smart_card_ops and register with the PHY =
 
-iQIcBAEBAgAGBQJR0/UOAAoJELSic+t+oim9w5IQAIpyO2sJxDIvraWdfq29sjV1
-nL2F5uDpwwO5ucVTbjO9kDxYXJ5SZu09FZgAuRygZdMhGYs/vvI+q9F2hKHEBI00
-2FFLlOoQzJ9VRQopJZfeWS3zh67svQ2POC04CDtjMh7z3c4Y2DKFPCVSVQm74vIJ
-1jxBnBQEOTMFJnCmtDcsh6q5TOG4Y+8MshR43O+dC6sucMGYP9SZjDfHZeE9nc85
-DTN3kS3P7OP8b3YeVZdRUEecKIjkfaSURqrjrTyskLC6LP76ROP6vGh97o1e7jb0
-TE37fDGhO0K5hvVF/msCbLESld1hTSU4E9yuWXtILOz/GmfMIPw1A7LFDxowxp8s
-5seLBabLTihHWx2QZZfawPFptC/u60OKPQxY+j9alQQPHMYuXW7kSSoV4A4A7g/G
-W3thlZz0G6P92ypRnVSvKwTn4m7mc4ofAF2SbIVD/m8ahe/0C3fRHpY7fyXFgJd/
-6BtTAvjXEl1LvSRL9EM/kYE/cQeMXbqR34y9i4UrI1BW4Jop7salFakLthu4g678
-wdr0EqrDou5wYJe4Cbjh6pU9t56BBaRhOsZmV2fvFp7x2Fks7N6928tgJiKjsHEb
-nvlzuFL9tUlZ6D2Wzo5V7aLVVWxvRNdlcsiM9P6eCJkpph2Lkpj7mcaUOVWM8r8l
-ZrHHzAdQRJYsih0qtYVJ
-=Els0
------END PGP SIGNATURE-----
+framework.
+>
+> What I seem to be missing from the PHY framework is support for event det=
+ection and generic
+> read/write API which will enable the controller to talk to the PHY for th=
+e operations listed
+> above and also react to events from the PHY.
 
---Z/W+H++SBmO57jII--
+IMO the event detection should be handled in the PHY driver. And I dint =
 
---===============2370657337799332154==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+feel the need for a read/write API as phy_xxxx_ops should be doing that =
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+precisely.
 
---===============2370657337799332154==--
+Thanks
+Kishon
