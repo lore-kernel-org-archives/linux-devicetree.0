@@ -1,80 +1,85 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: AM33XX: update rtc node compatibility
-Date: Wed, 3 Jul 2013 13:42:07 +0530
-Message-ID: <51D3DCD7.2010209@ti.com>
-References: <1372412109-986-1-git-send-email-gururaja.hebbar@ti.com>
-	<1372412109-986-5-git-send-email-gururaja.hebbar@ti.com>
-	<51D26F61.7080308@ti.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Best practice device tree design for display subsystems/DRM
+Date: Wed, 03 Jul 2013 10:20:37 +0200
+Message-ID: <51D3DED5.8080204@gmail.com>
+References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+ <20130702204255.2044c01b@armhf>
+ <20130702191923.GD13924@flint.arm.linux.org.uk> <51D330AC.5060903@gmail.com>
+ <20130702202548.GE13924@flint.arm.linux.org.uk>
+ <20130702215048.GI516@pengutronix.de>
+ <CAPM=9ty8W7wEewLpcKjNV-RXzVnReKVrPu_MGN80=Y-xPr-f+w@mail.gmail.com>
+ <20130703065559.GJ516@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <51D26F61.7080308-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, =?UTF-8?B?QmVub8OudCBDb3Vzc29u?= <benoit.cousson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130703065559.GJ516-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephane Marchesin <stephane.marchesin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Gururaja,
+On 07/03/13 08:55, Sascha Hauer wrote:
+> On Wed, Jul 03, 2013 at 08:02:05AM +1000, Dave Airlie wrote:
+>> Have you also considered how suspend/resume works in such a place,
+>> where every driver is independent? The ChromeOS guys have bitched
+>> before about the exynos driver which is has lots of sub-drivers, how
+>> do you control the s/r ordering in a crazy system like that? I'd
+>> prefer a central driver, otherwise there is too many moving parts.
+>
+> Composing a DRM device out of subdevices doesn't necessarily mean the
+> components should be suspended/resumed in arbitrary order. The DRM
+> device should always be suspended first (thus deactivating sub devices
+> as necessary and as done already) and resumed last.
+>
+> Note that a super node approach does not solve this magically. We would
+> still have to make sure that the i2c bus masters on our SoC are suspended
+> after the DRM device.
 
-On 7/2/2013 11:42 AM, Sekhar Nori wrote:
-> Changing to Benoit's gmail id since he apparently wont access TI mail
-> anymore.
-> 
-> On 6/28/2013 3:05 PM, Hebbar Gururaja wrote:
->> Since AM33xx  RTC IP has RTC_IRQWAKEEN to support Alarm Wake-up.
->>
->> Update the rtc compatible property to "ti,am3352-rtc" to enable handling
->> of this feature inside rtc-omap driver.
->>
->> Signed-off-by: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
->> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
->> Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: b-cousson-l0cyMroinI0@public.gmane.org
->> ---
->> :100644 100644 77aa1b0... dde180a... M	arch/arm/boot/dts/am33xx.dtsi
->>  arch/arm/boot/dts/am33xx.dtsi |    2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
->> index 77aa1b0..dde180a 100644
->> --- a/arch/arm/boot/dts/am33xx.dtsi
->> +++ b/arch/arm/boot/dts/am33xx.dtsi
->> @@ -297,7 +297,7 @@
->>  		};
->>  
->>  		rtc@44e3e000 {
->> -			compatible = "ti,da830-rtc";
->> +			compatible = "ti,am3352-rtc";
-> 
-> compatible is a list so you can instead do:
-> 	
-> 	compatible = "ti,am3352-rtc", "ti,da830-rtc";
-> 
-> That way the dts works irrespective of driver updates. When driver
-> supports enhanced features of hardware, they are available to the user
-> else the basic functionality still works.
++1 for a video card supernode that at best should be some very generic
+node with standard properties provided by DRM backend. IIRC there was
+a proposal for of_video_card a while ago.
 
-On doing some experiments myself, the of_device_id which gets selected
-during probe depends on the order in which its entry appears in the
-match table inside the driver rather than how the compatible string is
-written. I think this puts undue dependency on how the driver is
-written, so I am okay with providing a single compatible value like the
-way you have done ATM.
+At least for Marvell SoCs, moving device nodes out of the bus structure
+will not work. The parent bus is _required_ for address mapping as the
+base address is configurable. Using phandles can solve this without
+moving nodes.
 
-I do think the string appearing first in the compatible list is what
-should be selected if a match is available but I am not sure if there
-are other considerations due to which of_match_device() is written the
-way it is written.
+Also, having separate device nodes does not require a separate driver
+for each nodes. All nodes get platform_devices registered, but you can
+choose not to have a matching driver for it. Then the video card super
+node can pick up that nodes by using the phandles passed and register
+a single DRM driver claiming the devices.
 
-Thanks,
-Sekhar
+Moreover, if we talk about SoC graphics, we have to take audio into
+account. If you move all nodes to your video card super node, you will
+add another bunch of issues for ASoC linking to e.g. the I2C HDMI
+transmitter SPDIF codec.
+
+IMHO phandles and super node subnodes are equivalent from a driver
+point-of-view but phandles are more likely to cause less pain for
+other subsystems.
+
+The super node approach will also allow to have the same SoC/board
+components being used as single video card or multiple video cards
+environment. There is virtually no way to automatically determine what
+devices belong to "your" video card(s) in a SoC, so we need something to
+describe those cards.
+
+One thing I am concerned about is what Sascha pointed out above. If you
+hook up an external I2C encoder to your card, you cannot make sure I2C
+bus is suspended before DRM device. To be honest, proposing a solution
+for that is still way beyond my expertise wrt to Linux internals, so I
+am not even trying it. Maybe I am even missing a very important point
+for the super node/phandle proposal, if so, please clarify.
+
+Sebastian
