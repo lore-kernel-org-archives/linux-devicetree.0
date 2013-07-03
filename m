@@ -1,66 +1,59 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 4/7] ARM: shmobile: r8a7740: add MMCIF DMA definitions
-Date: Wed, 3 Jul 2013 14:48:58 +0900
-Message-ID: <20130703054858.GA3912@verge.net.au>
-References: <1372257656-9944-1-git-send-email-g.liakhovetski@gmx.de>
- <1372257656-9944-5-git-send-email-g.liakhovetski@gmx.de>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: [PATCH] of: Fix address decoding on Bimini and js2x machines
+Date: Wed, 03 Jul 2013 16:01:10 +1000
+Message-ID: <1372831270.4122.36.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1372257656-9944-5-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree-discuss@lists.ozlabs.org
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 26, 2013 at 04:40:53PM +0200, Guennadi Liakhovetski wrote:
-> Add DMA channel slave IDs and configuration entries for the r8a7740
-> MMCIF controller.
-> 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-> ---
->  arch/arm/mach-shmobile/include/mach/r8a7740.h |    2 ++
->  arch/arm/mach-shmobile/setup-r8a7740.c        |   10 ++++++++++
->  2 files changed, 12 insertions(+), 0 deletions(-)
+ Commit:
+    
+  e38c0a1fbc5803cbacdaac0557c70ac8ca5152e7
+  of/address: Handle #address-cells > 2 specially
+    
+broke real time clock access on Bimini, js2x, and similar powerpc
+machines using the "maple" platform. That code was indirectly relying
+on the old (broken) behaviour of the translation for the hypertransport
+to ISA bridge.
+    
+This fixes it by treating hypertransport as a PCI bus
+    
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+CC: <stable@vger.kernel.org> [v3.6+]
+---
 
-Thanks, I will queue this up for v3.12 in the soc branch.
+Rob, if you have no objection I will put that in powerpc -next
 
-> 
-> diff --git a/arch/arm/mach-shmobile/include/mach/r8a7740.h b/arch/arm/mach-shmobile/include/mach/r8a7740.h
-> index b34d19b..56f3750 100644
-> --- a/arch/arm/mach-shmobile/include/mach/r8a7740.h
-> +++ b/arch/arm/mach-shmobile/include/mach/r8a7740.h
-> @@ -42,6 +42,8 @@ enum {
->  	SHDMA_SLAVE_FSIB_TX,
->  	SHDMA_SLAVE_USBHS_TX,
->  	SHDMA_SLAVE_USBHS_RX,
-> +	SHDMA_SLAVE_MMCIF_TX,
-> +	SHDMA_SLAVE_MMCIF_RX,
->  };
->  
->  extern void r8a7740_meram_workaround(void);
-> diff --git a/arch/arm/mach-shmobile/setup-r8a7740.c b/arch/arm/mach-shmobile/setup-r8a7740.c
-> index 00c5a70..6b3ed42 100644
-> --- a/arch/arm/mach-shmobile/setup-r8a7740.c
-> +++ b/arch/arm/mach-shmobile/setup-r8a7740.c
-> @@ -588,6 +588,16 @@ static const struct sh_dmae_slave_config r8a7740_dmae_slaves[] = {
->  		.addr		= 0xfe1f0064,
->  		.chcr		= CHCR_TX(XMIT_SZ_32BIT),
->  		.mid_rid	= 0xb5,
-> +	}, {
-> +		.slave_id	= SHDMA_SLAVE_MMCIF_TX,
-> +		.addr		= 0xe6bd0034,
-> +		.chcr		= CHCR_TX(XMIT_SZ_32BIT),
-> +		.mid_rid	= 0xd1,
-> +	}, {
-> +		.slave_id	= SHDMA_SLAVE_MMCIF_RX,
-> +		.addr		= 0xe6bd0034,
-> +		.chcr		= CHCR_RX(XMIT_SZ_32BIT),
-> +		.mid_rid	= 0xd2,
->  	},
->  };
->  
-> -- 
-> 1.7.2.5
-> 
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 04da786..7c8221d 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -106,8 +106,12 @@ static unsigned int of_bus_default_get_flags(const __be32 *
+ 
+ static int of_bus_pci_match(struct device_node *np)
+ {
+-       /* "vci" is for the /chaos bridge on 1st-gen PCI powermacs */
+-       return !strcmp(np->type, "pci") || !strcmp(np->type, "vci");
++       /*
++        * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
++        * "ht" is hypertransport
++        */
++       return !strcmp(np->type, "pci") || !strcmp(np->type, "vci") ||
++               !strcmp(np->type, "ht");
+ }
+ 
+ static void of_bus_pci_count_cells(struct device_node *np,
