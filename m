@@ -1,109 +1,55 @@
-From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: Best practice device tree design for display subsystems/DRM
-Date: Wed, 03 Jul 2013 20:43:20 +0900
-Message-ID: <00cc01ce77e2$844b3a80$8ce1af80$%dae@samsung.com>
-References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
- <20130702204255.2044c01b@armhf>
- <20130702191923.GD13924@flint.arm.linux.org.uk> <51D330AC.5060903@gmail.com>
- <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
- <51D348F5.2080205@gmail.com> <00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
- <20130703090242.GM516@pengutronix.de> <51D3EA0E.2090008@gmail.com>
- <00ba01ce77d2$80285f10$80791d30$%dae@samsung.com>
- <20130703095338.GH13924@flint.arm.linux.org.uk> <51D40275.4020806@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v10] i2c-designware: make SDA hold time configurable
+Date: Wed, 3 Jul 2013 13:43:11 +0200
+Message-ID: <201307031343.11647.arnd@arndb.de>
+References: <20130625163902.GA2973@katana> <1372236906-6933-1-git-send-email-christian.ruppert@abilis.com> <20130626140713.GB3119@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <51D40275.4020806-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-language: ko
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: 'Sebastian Hesselbarth' <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Russell King' <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, 'Jean-Francois Moine' <moinejf-GANU6spQydw@public.gmane.org>, 'Sascha Hauer' <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, 'Daniel Drake' <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130626140713.GB3119@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Sebastian Hesselbarth [mailto:sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
-> Sent: Wednesday, July 03, 2013 7:53 PM
-> To: Russell King
-> Cc: Inki Dae; 'Sascha Hauer'; 'Daniel Drake'; 'Jean-Francois Moine';
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> Subject: Re: Best practice device tree design for display subsystems/DRM
+On Wednesday 26 June 2013, Wolfram Sang wrote:
+>   On Wed, Jun 26, 2013 at 10:55:06AM +0200, Christian Ruppert wrote:
+> > This patch makes the SDA hold time configurable through device tree.
+> > 
+> > Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
 > 
-> On 07/03/13 11:53, Russell King wrote:
-> > On Wed, Jul 03, 2013 at 06:48:41PM +0900, Inki Dae wrote:
-> >> That's not whether we can write device driver or not. dtsi is common
-> spot in
-> >> other subsystems. Do you think the cardX node is meaningful to other
-> >> subsystems?
-> >
-> > Yes, because fbdev could also use it to solve the same problem which
-> we're
-> > having with DRM.
-> 
-> Inki,
-> 
-> I do not understand why you keep referring to the SoC dtsi. Im my
-> example, I said that it is made up and joined from both SoC dtsi and
-> board dts.
-> 
-> So, of course, lcd controller nodes and dcon are part of dove.dtsi
-> because they are physically available on every Dove SoC.
-> 
-> Also, the connection from lcd0 to the external HDMI encoder node
-> is in the board dts because you can happily build a Dove SoC board
-> with a different HDMI encoder or with no encoder at all.
-> 
-> The video-card super node is not in any way specific to DRM and
+> Applied to for-next, thanks for keeping at it and providing lots of
+> useful information. Much appreciated!
 
-In case of fbdev, framebuffer driver would use lcd0 or lcd1 driver, or lcd0
-and lcd1 drivers which are placed in drivers/video/backlight/.
+Sorry, but I got a regression that I didn't find reported elsewhere
+so far, even though it breaks a lot of the ARM defconfig builds:
 
-And let's assume the following:
+drivers/built-in.o: In function `dw_i2c_probe':
+/git/arm-soc/drivers/i2c/busses/i2c-designware-platdrv.c:125: undefined reference to `__udivdi3'
 
-On board A
-     Display controller ------------- lcd 0
-On board B
-     Display controller ------------- lcd 1
-On board C
-     Display controller ------------- lcd 0 and lcd 1
+I suspect you want something like the change below.
 
-Without the super node, user could configure Linux kernel through menuconfig
-like below;
-	board A:  enabling lcd 0, and disabling lcd 1,
-	board B: disabling lcd 0, and enabling lcd 1,
-	board C: enabling lcd 0 and lcd 1.
+Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-All we have to do is to configure menuconfig to enable only drivers for
-certain board. Why does fbdev need the super node? Please give me comments
-if there is my missing point.
-
-Thanks,
-Inki Dae
-
-> describes a virtual graphics card comprising both SoC and board
-> components (on a per-board basis). You can have both DRM or fbdev
-> use that virtual video card node to register your subsystem drivers
-> required to provide video output.
-> 
-> I agree to what Sascha said, the decision to put one or two
-> virtual graphics card in the device tree depending on the use
-> case is sketchy. You can have one card/two card on the same
-> board, so at this point device tree is not describing HW but
-> use case.
-> 
-> But honestly, I see no way around it and it is the only way
-> to allow to even have the decision for one or two cards at all.
-> There is no way for auto-probing the users intention...
-> 
-> Sebastian
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index def79b5..57e3a07 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -119,10 +119,13 @@ static int dw_i2c_probe(struct platform_device *pdev)
+ 	if (pdev->dev.of_node) {
+ 		u32 ht = 0;
+ 		u32 ic_clk = dev->get_clk_rate_khz(dev);
++		u64 hold_time;
+ 
+ 		of_property_read_u32(pdev->dev.of_node,
+ 					"i2c-sda-hold-time-ns", &ht);
+-		dev->sda_hold_time = ((u64)ic_clk * ht + 500000) / 1000000;
++		hold_time = (u64)ic_clk * ht + 500000;
++		do_div(hold_time, 1000000);
++		dev->sda_hold_time = hold_time;
+ 	}
+ 
+ 	dev->functionality =
