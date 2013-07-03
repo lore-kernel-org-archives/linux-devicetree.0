@@ -1,60 +1,62 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 1/2] DMA: Freescale: Add new 8-channel DMA engine device
- tree nodes
-Date: Wed, 3 Jul 2013 14:02:08 -0500
-Message-ID: <1372878128.8183.143@snotra>
-References: <1372650378-2936-1-git-send-email-hongbo.zhang@freescale.com>
- <51D3A030.4020608@freescale.com> <51D3D76B.5040306@freescale.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH v4 2/2] drivers: mfd: vexpress: add Serial Power
+ Controller (SPC) support
+Date: Wed, 3 Jul 2013 20:43:03 +0100
+Message-ID: <20130703194303.GG27646@sirena.org.uk>
+References: <1371484269-11743-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1371484269-11743-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <20130617174451.GF28497@quad.lixom.net>
+ <20130618102213.GA1564@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="Flowed"; DelSp="Yes"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51D3D76B.5040306-KZfg59tc24xl57MIdRCFDg@public.gmane.org> (from
- hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org on Wed Jul  3 02:48:59 2013)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="a8+9vHbKxlFmeYtB"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vakul-KZfg59tc24xl57MIdRCFDg@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <20130618102213.GA1564@e102568-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <Pawel.Moll@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/03/2013 02:48:59 AM, Hongbo Zhang wrote:
-> On 07/03/2013 11:53 AM, Hongbo Zhang wrote:
->> hmm...add the devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org into list.
->> 
->> Note that we are discussing a better naming for this new compatible  
->> property in the corresponding [PATCH 2/2], so I will resend a v2 of  
->> this patch.
->> 
->> 
->> On 07/01/2013 11:46 AM, hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
->>> From: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>> 
->>> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this  
->>> patch add
->>> the device tree nodes for them.
->>> 
->>> Signed-off-by: Hongbo Zhang <hongbo.zhang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>> ---
->>>   arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi |   90  
->>> +++++++++++++++++++++++++++
->>>   arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi |   90  
->>> +++++++++++++++++++++++++++
->>>   arch/powerpc/boot/dts/fsl/t4240si-post.dtsi |    4 +-
->>>   3 files changed, 182 insertions(+), 2 deletions(-)
->>>   create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-dma2-0.dtsi
->>>   create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-dma2-1.dtsi
-> Scott, any comment of these two file names?
 
-There's "dma2" again...
+--a8+9vHbKxlFmeYtB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-How about elo3-dma-<n>.dtsi?
+On Tue, Jun 18, 2013 at 11:22:13AM +0100, Lorenzo Pieralisi wrote:
+> On Mon, Jun 17, 2013 at 06:44:51PM +0100, Olof Johansson wrote:
 
--Scott
+> > That'll trim down the driver to a point where I think you'll find it much
+> > easier to get merged. :-)
+
+> To start with I have to understand in which directory this code should
+> live. Moving the frequency settings in clk/CPUfreq drivers should be
+> feasible with extra DT complexity for their bindings.
+
+You shoudn't really need to change the DT bindings at all - MFD is a
+purely Linux construct, it doesn't affect how the hardware is
+constructed.
+
+--a8+9vHbKxlFmeYtB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR1H7DAAoJELSic+t+oim9+0MP/RWyhHhsAnEIpTmdpqahO7vc
+Gr3n04byK566EQNq2HjJwda2oT8EgFygPP1mQFx3kLwUh7DyfXCkL0rOYQmvxEnJ
+ZmcLyBH30zyTky0JAPiEZp2/tcIbXkvcfJO8LD1foWaqTu1u+Bq3DwcJv6SaZl0N
+Ymme2q/vL0fsI3OQHG7yJX22ANREMCkHDa1l4k7hWawAFxzETIrdZQUjWpUd/lho
+w7EEJCujCEDZ9SvXWMjxpcGMWSJZk90EhDdGuae7oeCvJpDvrvN0re9PH834U4Su
+NY7mwvPDgz/Iby14TfIwunbDu7IjC/cRNcTkKwW8IM99YQBTGsMDiKqSZWEgW9pg
+pAs89y86doVEDTC+JpHMUQprR3vIMlqBoLd6Aurnq0UOL/6Gb/q9pzog9x8bGCy/
+picj43+mcHhmirKcVGfxTn0EJMywbe1qXSP0KtQo9LzpOo3+fo72NGozjS1jLAgQ
+5Iw/hDdzuYfI/vHWC49IskajaVK1jaO3ZjaECSVi51icC+5K8L5KyUXSooVJi+6T
+nDGvgYEK+817KMizpKufI3ZMZ99G6gB94iO8OA5FtCRHoYGg2ayDWkFH37kHPIPI
+Q4ENp324BBtWKwMssIvsDpWbJG3Gq6idKDVGz6xqbYKVTnzVyZv+1c+bMwbUhFR1
+5eLsSVZXHjhFrFQMzbJr
+=U152
+-----END PGP SIGNATURE-----
+
+--a8+9vHbKxlFmeYtB--
