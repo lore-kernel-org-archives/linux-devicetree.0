@@ -1,64 +1,66 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v3 5/7] ARM: shmobile: r8a7740: add DT nodes for three
- DMAC instance
-Date: Wed, 3 Jul 2013 14:36:05 +0900
-Message-ID: <CANqRtoT6tgy8rzyQtLZpZdjPUK6WptMuBQEfAPqdO_ySFawu-g@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 4/7] ARM: shmobile: r8a7740: add MMCIF DMA definitions
+Date: Wed, 3 Jul 2013 14:48:58 +0900
+Message-ID: <20130703054858.GA3912@verge.net.au>
 References: <1372257656-9944-1-git-send-email-g.liakhovetski@gmx.de>
-	<1372257656-9944-6-git-send-email-g.liakhovetski@gmx.de>
+ <1372257656-9944-5-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1372257656-9944-6-git-send-email-g.liakhovetski@gmx.de>
+Content-Disposition: inline
+In-Reply-To: <1372257656-9944-5-git-send-email-g.liakhovetski@gmx.de>
 Sender: linux-sh-owner@vger.kernel.org
 To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
-
-On Wed, Jun 26, 2013 at 11:40 PM, Guennadi Liakhovetski
-<g.liakhovetski@gmx.de> wrote:
-> This patch adds Device Tree support for the three DMA controller instances
-> on r8a7740 in a DMA multiplexer node.
->
+On Wed, Jun 26, 2013 at 04:40:53PM +0200, Guennadi Liakhovetski wrote:
+> Add DMA channel slave IDs and configuration entries for the r8a7740
+> MMCIF controller.
+> 
 > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 > ---
->  arch/arm/boot/dts/r8a7740.dtsi         |   62 ++++++++++++++++++++++++++++++++
->  arch/arm/mach-shmobile/setup-r8a7740.c |   12 ++++++
->  2 files changed, 74 insertions(+), 0 deletions(-)
+>  arch/arm/mach-shmobile/include/mach/r8a7740.h |    2 ++
+>  arch/arm/mach-shmobile/setup-r8a7740.c        |   10 ++++++++++
+>  2 files changed, 12 insertions(+), 0 deletions(-)
 
-Thanks for your work on this.
+Thanks, I will queue this up for v3.12 in the soc branch.
 
+> 
+> diff --git a/arch/arm/mach-shmobile/include/mach/r8a7740.h b/arch/arm/mach-shmobile/include/mach/r8a7740.h
+> index b34d19b..56f3750 100644
+> --- a/arch/arm/mach-shmobile/include/mach/r8a7740.h
+> +++ b/arch/arm/mach-shmobile/include/mach/r8a7740.h
+> @@ -42,6 +42,8 @@ enum {
+>  	SHDMA_SLAVE_FSIB_TX,
+>  	SHDMA_SLAVE_USBHS_TX,
+>  	SHDMA_SLAVE_USBHS_RX,
+> +	SHDMA_SLAVE_MMCIF_TX,
+> +	SHDMA_SLAVE_MMCIF_RX,
+>  };
+>  
+>  extern void r8a7740_meram_workaround(void);
+> diff --git a/arch/arm/mach-shmobile/setup-r8a7740.c b/arch/arm/mach-shmobile/setup-r8a7740.c
+> index 00c5a70..6b3ed42 100644
 > --- a/arch/arm/mach-shmobile/setup-r8a7740.c
 > +++ b/arch/arm/mach-shmobile/setup-r8a7740.c
-> @@ -996,7 +996,19 @@ void __init r8a7740_add_early_devices(void)
->
->  #ifdef CONFIG_USE_OF
->
-> +static struct of_dev_auxdata r8a7740_dmac_auxdata[] = {
-> +       OF_DEV_AUXDATA("renesas,shdma", 0xfe008020, "sh-dma-engine.0",
-> +                      &dma_platform_data),
-> +       OF_DEV_AUXDATA("renesas,shdma", 0xfe018020, "sh-dma-engine.1",
-> +                      &dma_platform_data),
-> +       OF_DEV_AUXDATA("renesas,shdma", 0xfe028020, "sh-dma-engine.2",
-> +                      &dma_platform_data),
-> +       { }
-> +};
-> +
->  static const struct of_dev_auxdata r8a7740_auxdata_lookup[] __initconst = {
-> +       OF_DEV_AUXDATA("renesas,shdma-mux", 0, "shdma-of.0",
-> +                      r8a7740_dmac_auxdata),
->         { }
+> @@ -588,6 +588,16 @@ static const struct sh_dmae_slave_config r8a7740_dmae_slaves[] = {
+>  		.addr		= 0xfe1f0064,
+>  		.chcr		= CHCR_TX(XMIT_SZ_32BIT),
+>  		.mid_rid	= 0xb5,
+> +	}, {
+> +		.slave_id	= SHDMA_SLAVE_MMCIF_TX,
+> +		.addr		= 0xe6bd0034,
+> +		.chcr		= CHCR_TX(XMIT_SZ_32BIT),
+> +		.mid_rid	= 0xd1,
+> +	}, {
+> +		.slave_id	= SHDMA_SLAVE_MMCIF_RX,
+> +		.addr		= 0xe6bd0034,
+> +		.chcr		= CHCR_RX(XMIT_SZ_32BIT),
+> +		.mid_rid	= 0xd2,
+>  	},
 >  };
-
-Uhm, what is the reason for adding AUXDATA? For all other cases we
-have clearly separated the DT reference bits from the C version
-without using AUXDATA. With that approach we can use the default NULL
-callbacks for ->init_machine(). Now with this patch we're going in the
-totally different direction...
-
-Why can't you use DT only for these?
-
-Cheers,
-
-/ magnus
+>  
+> -- 
+> 1.7.2.5
+> 
