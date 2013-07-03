@@ -1,55 +1,66 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v10] i2c-designware: make SDA hold time configurable
-Date: Wed, 3 Jul 2013 17:26:41 +0200
-Message-ID: <201307031726.42167.arnd@arndb.de>
-References: <20130625163902.GA2973@katana> <20130703145918.GE3929@ab42.lan>
- <F7C43F8B2814514CA05F3436BC68046EF379F0@039-SN2MPN1-011.039d.mgd.msft.net>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [RFC PATCH 01/13] misc: atmel_ssc: add device tree DMA support
+Date: Wed, 3 Jul 2013 17:51:49 +0200
+Message-ID: <CACQ1gAgPaRm3gxxJNgfj9bR565Q0+SNY3+EcjA_mrh1N+yPzSA@mail.gmail.com>
+References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
+ <1372667978-4718-2-git-send-email-richard.genoud@gmail.com>
+ <51D24299.9050209@atmel.com> <CACQ1gAgcc=j3kmcpjp8bbdHhxr_k=h8jJs6R_paJbPUMv74uGg@mail.gmail.com>
+ <51D29927.80900@atmel.com> <CACQ1gAhnDk-qSt_5xrsMakXqGGDO5pEbA-9UDWCJG=AABDc+zg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <F7C43F8B2814514CA05F3436BC68046EF379F0-RL0Hj/+nBVCMXPU/2EZmt64g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stehle Vincent-B46079 <B46079-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACQ1gAhnDk-qSt_5xrsMakXqGGDO5pEbA-9UDWCJG=AABDc+zg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 03 July 2013, Stehle Vincent-B46079 wrote:
-> > From: Christian Ruppert [mailto:christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org]
-> (..)
-> > Although this doesn't explicitly state what the function returns to me
-> > this sounds more like the quotient is returned rather than the remainder?
-> 
-> Hi,
-> 
-> Yes div_u64() returns the quotient.
-> 
-> It is defined in linux/math64.h as:
-> 
->   static inline u64 div_u64(u64 dividend, u32 divisor)
->   {
->           u32 remainder;
->           return div_u64_rem(dividend, divisor, &remainder);
->   }
-> 
-> The remainder is probably fully optimized out.
+2013/7/3 Richard Genoud <richard.genoud@gmail.com>:
+> 2013/7/2 Bo Shen <voice.shen@atmel.com>:
+>> Hi Richard,
+>>
+>>
+>> On 7/2/2013 16:13, Richard Genoud wrote:
+>>>>
+>>>> Please hold on of this, as to the ASoC dmaengine will deal with this. So,
+>>>> we
+>>>> >not need do it manually.
+>>>> >
+>>>> >Now, I am working on it. And will send out the patch soon after testing
+>>>> > OK.
+>>>
+>>> Ok, I stay tuned !
+>>
+>>
+>> I think you can go on working with the two patches I send just now.
+>> [1]: ASoC: atmel_ssc_dai: move set dma data to startup callback
+>> https://patchwork.kernel.org/patch/2811241/
+>>
+>> [2]: ASoC: atmel-pcm: use generic dmaengine framework
+>> https://patchwork.kernel.org/patch/2811261/
+>>
+>> I use your patches 4 ~ 8 do a quick testing, it works. Please note the name
+>> of asound.state under /etc in your rootfs should the same with atmel,model
+>> in patch 6.
+>
+> Thanks for testing !
+> I was just doing the same test, it works with
+> aplay  -Dplug:default  good_music.wav
+>
+> but there's a violent hang (kernel stops, no trace) when I try the record :
+> arecord -v -V stereo -Dplug:default -f cd -t wav -c 2 /tmp/toto.wav
+> last thing I see is :
+> dma dma0chan3: atc_control (3)
+>
+> I'll try to trace that.
+I think it's DMA related.
+the last thing done by the kernel is:
+ i2c i2c-0: i2c_outb: 0x34 A
+ i2c i2c-0: i2c_outb: 0x0c A
+ i2c i2c-0: i2c_outb: 0x5a A
+meaning: enable power on, LINE IN, ADC, OSC, on the WM8731
+so, after that, data is comming from the codec to the SSC and then is
+handled by the DMA.
+there must be something nasty on the DMA bus to hang everything like that...
 
-Ah, you are right, sorry for the confusion on my part.
-
-I thought you had used do_div() rather than div_u64().
-Everything's fine then, feel free to add my
-
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-
-to your patch.
-
-	Arnd
+Richard.
