@@ -1,66 +1,78 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: Re: [RFC PATCH 01/13] misc: atmel_ssc: add device tree DMA support
-Date: Wed, 3 Jul 2013 17:51:49 +0200
-Message-ID: <CACQ1gAgPaRm3gxxJNgfj9bR565Q0+SNY3+EcjA_mrh1N+yPzSA@mail.gmail.com>
-References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
- <1372667978-4718-2-git-send-email-richard.genoud@gmail.com>
- <51D24299.9050209@atmel.com> <CACQ1gAgcc=j3kmcpjp8bbdHhxr_k=h8jJs6R_paJbPUMv74uGg@mail.gmail.com>
- <51D29927.80900@atmel.com> <CACQ1gAhnDk-qSt_5xrsMakXqGGDO5pEbA-9UDWCJG=AABDc+zg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 01/10] ASoC: imx-pcm-dma: DT support
+Date: Wed, 3 Jul 2013 17:02:18 +0100
+Message-ID: <20130703160218.GO27646@sirena.org.uk>
+References: <1371734429-6081-1-git-send-email-mpa@pengutronix.de>
+ <1371734429-6081-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACQ1gAhnDk-qSt_5xrsMakXqGGDO5pEbA-9UDWCJG=AABDc+zg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Content-Type: multipart/mixed; boundary="===============5049908821415017243=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371734429-6081-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2013/7/3 Richard Genoud <richard.genoud@gmail.com>:
-> 2013/7/2 Bo Shen <voice.shen@atmel.com>:
->> Hi Richard,
->>
->>
->> On 7/2/2013 16:13, Richard Genoud wrote:
->>>>
->>>> Please hold on of this, as to the ASoC dmaengine will deal with this. So,
->>>> we
->>>> >not need do it manually.
->>>> >
->>>> >Now, I am working on it. And will send out the patch soon after testing
->>>> > OK.
->>>
->>> Ok, I stay tuned !
->>
->>
->> I think you can go on working with the two patches I send just now.
->> [1]: ASoC: atmel_ssc_dai: move set dma data to startup callback
->> https://patchwork.kernel.org/patch/2811241/
->>
->> [2]: ASoC: atmel-pcm: use generic dmaengine framework
->> https://patchwork.kernel.org/patch/2811261/
->>
->> I use your patches 4 ~ 8 do a quick testing, it works. Please note the name
->> of asound.state under /etc in your rootfs should the same with atmel,model
->> in patch 6.
->
-> Thanks for testing !
-> I was just doing the same test, it works with
-> aplay  -Dplug:default  good_music.wav
->
-> but there's a violent hang (kernel stops, no trace) when I try the record :
-> arecord -v -V stereo -Dplug:default -f cd -t wav -c 2 /tmp/toto.wav
-> last thing I see is :
-> dma dma0chan3: atc_control (3)
->
-> I'll try to trace that.
-I think it's DMA related.
-the last thing done by the kernel is:
- i2c i2c-0: i2c_outb: 0x34 A
- i2c i2c-0: i2c_outb: 0x0c A
- i2c i2c-0: i2c_outb: 0x5a A
-meaning: enable power on, LINE IN, ADC, OSC, on the WM8731
-so, after that, data is comming from the codec to the SSC and then is
-handled by the DMA.
-there must be something nasty on the DMA bus to hang everything like that...
 
-Richard.
+--===============5049908821415017243==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bk1rFQtr5T/2h+/m"
+Content-Disposition: inline
+
+
+--bk1rFQtr5T/2h+/m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Jun 20, 2013 at 03:20:20PM +0200, Markus Pargmann wrote:
+> This patch removes the NO_DT flag. The pdev pointer may have a proper
+> of_node with the dmas property, so we can use it to request DMA
+> channels.
+
+Applied, thanks.
+
+--bk1rFQtr5T/2h+/m
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR1EsGAAoJELSic+t+oim9gQcQAI62FNXD2MxYK0gDI10wETU7
+GAduvJehRbWv9dfNJHgTjOD6JKDk/G/MH8oCcWaue8l6ZdtGp39/xd1S5ld+tHzG
+6LkvfgpUZvLRxuggdHyKg1euSNFghAzeZbH0eUUQ7aF2tyYCnFghA5Mv32JRl4wP
+8Bkb28xgQLtyqewxvu2+jQ/iWKxG75I+tUscQYOXRDfooECKnuYHaKe4UrhvUIsf
+ouYUbc6JGVxHCDxX+FuoM+KO2URy8Tp2+f/NUrQYWvZpHKjqVfTAz1HiZftZIUBa
+PhXH02GRQsMOPzlXpzK/pKVAd3ubWyzD4ebUp+wyRcRcWkFrmDJdkA55y08o2i/M
+Ms6x+27QOswQXhPfF6giPCXSJvJKBYd9HS6u0iyapa+s64SHUP5FlYV9dDu0XQ0u
+1M1COe8c9dNViIeHZ0aUDpE+6j7rx8NxoJc+51Fv16PLiD9iWLVuSFWLxL50l+D4
+fZ2lqdOsEnXmbeK9MmuLw4RJo6T8X1qTWHzPBYghaHicueADgzGFnxP+CGDK1k4H
+K4+OwaoiJeyz9CCHLP1ql0gV4jLKW3YB2habivq+eU0yb4T3nT8lsYlNtcLd9FgR
+rCPOsYjUgyzvUyR3rL+SScas4gBoLSPsUMbpI8MuujVKdJKFwc88O3iOzIA2+1cg
+uZDjuloXF0NtQkMU+JCh
+=jGU6
+-----END PGP SIGNATURE-----
+
+--bk1rFQtr5T/2h+/m--
+
+--===============5049908821415017243==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5049908821415017243==--
