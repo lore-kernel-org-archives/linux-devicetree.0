@@ -1,87 +1,118 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Wed, 03 Jul 2013 11:08:30 +0200
-Message-ID: <51D3EA0E.2090008@gmail.com>
-References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
- <20130702204255.2044c01b@armhf>
- <20130702191923.GD13924@flint.arm.linux.org.uk> <51D330AC.5060903@gmail.com>
- <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
- <51D348F5.2080205@gmail.com>
- <00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
- <20130703090242.GM516@pengutronix.de>
+From: "Patel, Satish" <satish.patel@ti.com>
+Subject: RE: [PATCH v9 0/8] Generic PHY Framework
+Date: Wed, 3 Jul 2013 09:32:58 +0000
+Message-ID: <780E789C2E067A4BB8F69D0BB9EC4F253E975B5E@DBDE04.ent.ti.com>
+References: <1372247257-30186-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130703090242.GM516-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: 'Jean-Francois Moine' <moinejf-GANU6spQydw@public.gmane.org>, 'Daniel Drake' <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Russell King' <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=Windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1372247257-30186-1-git-send-email-kishon@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "tony@atomide.com" <tony@atomide.com>, "Balbi, Felipe" <balbi@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, "swarren@nvidia.com" <swarren@nvidia.com>, "sylvester.nawrocki@gmail.com" <sylvester.nawrocki@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "mchehab@redhat.com" <mchehab@redhat.com>, "cesarb@cesarb.net" <cesarb@cesarb.net>, "davem@davemloft.net" <davem@davemloft.net>, "Nayak, Rajendra" <rnayak@ti.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Krishnamoorthy, Balaji T" <balajitk@ti.com>, "Cherian, George" <george.cherian@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/03/13 11:02, Sascha Hauer wrote:
-> On Wed, Jul 03, 2013 at 05:57:18PM +0900, Inki Dae wrote:
->>> video {
->>> 	/* Single video card w/ multiple lcd controllers */
->>> 	card0 {
->>> 		compatible = "marvell,armada-510-display";
->>> 		reg = <0 0x3f000000 0x1000000>; /* video-mem hole */
->>> 		/* later: linux,video-memory-size = <0x1000000>; */
->>> 		marvell,video-devices = <&lcd0 &lcd1 &dcon>;
->>> 	};
->>>
->>> 	/* OR: Multiple video card w/ single lcd controllers */
->>> 	card0 {
->>> 		compatible = "marvell,armada-510-display";
->>> 		...
->>> 		marvell,video-devices = <&lcd0>;
->>> 	};
->>>
->>> 	card1 {
->>> 		compatible = "marvell,armada-510-display";
->>> 		...
->>> 		marvell,video-devices = <&lcd1>;
->>> 	};
->>> };
->>
->> Sorry but I'd like to say that this cannot be used commonly. Shouldn't you
->> really consider Linux framebuffer or other subsystems? The above dtsi file
->> is specific to DRM subsystem. And I think the dtsi file has no any
->> dependency on certain subsystem so board dtsi file should be considered for
->> all device drivers based on other subsystems: i.e., Linux framebuffer, DRM,
->> and so no. So I *strongly* object to it. All we have to do is to keep the
->> dtsi file as is, and to find other better way that can be used commonly in
->> DRM.
+Hi Kishon,
 
-Sascha, Inki,
+> -----Original Message-----
+> From: ABRAHAM, KISHON VIJAY
+> Sent: Wednesday, June 26, 2013 5:17 PM
+> To: grant.likely@linaro.org; tony@atomide.com; Balbi, Felipe; ABRAHAM=
+,
+> KISHON VIJAY; arnd@arndb.de; swarren@nvidia.com;
+> sylvester.nawrocki@gmail.com; linux-kernel@vger.kernel.org; linux-
+> omap@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> usb@vger.kernel.org; gregkh@linuxfoundation.org; akpm@linux-
+> foundation.org
+> Cc: rob.herring@calxeda.com; rob@landley.net; linux@arm.linux.org.uk;
+> benoit.cousson@linaro.org; mchehab@redhat.com; cesarb@cesarb.net;
+> davem@davemloft.net; Nayak, Rajendra; shawn.guo@linaro.org; Shilimkar=
+,
+> Santosh; devicetree-discuss@lists.ozlabs.org; linux-
+> doc@vger.kernel.org; Nori, Sekhar; Krishnamoorthy, Balaji T; Cherian,
+> George
+> Subject: [PATCH v9 0/8] Generic PHY Framework
+>=20
+> Added a generic PHY framework that provides a set of APIs for the PHY
+> drivers
+> to create/destroy a PHY and APIs for the PHY users to obtain a
+> reference to
+> the PHY with or without using phandle.
+>=20
+> This framework will be of use only to devices that uses external PHY
+> (PHY
+> functionality is not embedded within the controller).
+>=20
+> The intention of creating this framework is to bring the phy drivers
+> spread
+> all over the Linux kernel to drivers/phy to increase code re-use and
+> to
+> increase code maintainability.
 
-can you clarify how the above will _not_ allow you to write a fb driver
-exploiting the cardX nodes?
+I would like to use this framework for a smart-card controller connecte=
+d to a
+smart-card phy. I have some questions and would like to get feedback on=
+ the same.
 
-While lcd controller and dcon are physically available, the video card
-is just a virtual combination of those.
+I am using =93TDA8026" Smartcard PHY from NXP. Here is the link for dat=
+asheet
+and app note for the same. The smart card controller is inside the TI S=
+oC
+I am working with.
 
-> +1 for not encoding the projected usecase of the graphics subsystem into
-> the devicetree. Whether the two LCD controllers shall be used together
-> or separately should not affect the devicetree. devicetree is about
-> hardware description, not configuration.
+Datasheet :=20
+www.nxp.com/documents/data_sheet/TDA8026.pdf?
 
-Have you had a look at gpio-leds? It _is_ actually a configuration of
-GPIO to be used as LED triggers. IMHO DT is just fine for describing
-even "virtual" hardware you make up out of existing devices. Without it
-there is no way for the subsystems to determine the configuration.
+Appnote :
+http://www.nxp.com/documents/application_note/AN10724.pdf
 
-Regarding gpio-leds, how should the driver know the single gpio line
-out of tens of available lines, if you do not use a virtual gpio led
-node to describe it?
+The TI SoC details are not public (yet). I can provide details to you o=
+ffline.
 
-Sebastian
+Brief about operation:
+-	The controller can work with and without a PHY
+-	When not using PHY, it is limited to talking to a single
+	smart card. There is also a need to put external de-activation logic
+	on card removal for this case.
+-	With a PHY you can use more than one smart card.
+-	Phy has 5 slots :  1 for smart card (credit/debit/other card with chi=
+p)=20
+      and others for SAM =96 SIM like modules
+- 	Once the PHY is initialized, there are some operations that the cont=
+roller
+	can request of the PHY like:
+	- Card configurations  - set voltage
+	- Activation of card
+	- ATR =96 Answer to reset
+	- Warm reset
+	- ADPU exchange
+	- Deactivation ( Normal/Emergency)
+- 	In the mode when smartcard controller talks directly to the card	wit=
+hout the need
+	for a PHY, all the above operations will be carried	out by the control=
+ler itself
+
+My current thought process is to make the controller driver provide the=
+ user interface
+and talk to the PHY using the generic PHY framework you proposed. In th=
+e case where there
+is no PHY, my idea is to create a "dummy" PHY which uses the controller=
+ functionality itself.
+
+What I seem to be missing from the PHY framework is support for event d=
+etection and generic
+read/write API which will enable the controller to talk to the PHY for =
+the operations listed
+above and also react to events from the PHY.
+
+Is there a reason why such functionality has not been included. If it w=
+as only a case
+of lack of use case, then do you think it will be useful to extend the =
+framework to add
+such functionality? I can help with the development.
+
+Thanks,
+Satish
+
