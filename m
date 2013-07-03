@@ -1,80 +1,71 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 03/10] ASoC: fsl: Move soc_ac97_ops from imx-ssi to
- fsl_ssi
-Date: Wed, 3 Jul 2013 17:07:47 +0100
-Message-ID: <20130703160747.GR27646@sirena.org.uk>
-References: <1371734429-6081-1-git-send-email-mpa@pengutronix.de>
- <1371734429-6081-4-git-send-email-mpa@pengutronix.de>
+From: Ming Lei <tom.leiming@gmail.com>
+Subject: Re: [PATCH V3] of: Set the DMA mask to 64 bits when dma_addr_t is
+ 64-bits
+Date: Wed, 3 Jul 2013 22:15:50 +0800
+Message-ID: <CACVXFVPfkqP+UyoGd-+QFRzndSam_DtU=utrBPYCPjQCGQ_F6g@mail.gmail.com>
+References: <1367008266-1431-1-git-send-email-lauraa@codeaurora.org>
+ <517AF270.8040106@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7756542439339805216=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371734429-6081-4-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <517AF270.8040106@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, devicetree-discuss@lists.ozlabs.org, Laura Abbott <lauraa@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Apr 27, 2013 at 5:32 AM, Rob Herring <robherring2@gmail.com> wrote:
+> On 04/26/2013 03:31 PM, Laura Abbott wrote:
+>> Currently, of_platform_device_create_pdata always sets the
+>> coherent DMA mask to 32 bits. On ARM systems without CONFIG_ZONE_DMA,
+>> arm_dma_limit gets set to ~0 or 0xFFFFFFFFFFFFFFFF on LPAE based
+>> systems. Since arm_dma_limit represents the smallest dma_mask
+>> on the system, the default of 32 bits prevents any dma_coherent
+>> allocation from succeeding unless clients manually set the
+>> dma mask first. Rather than make every client on an LPAE system set
+>> the mask manually, account for the size of dma_addr_t when setting
+>> the coherent mask.
+>>
+>> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
+>> ---
+>>  drivers/of/platform.c |    2 +-
+>>  1 files changed, 1 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index 0970505..5f0ba94 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -214,7 +214,7 @@ struct platform_device *of_platform_device_create_pdata(
+>>  #if defined(CONFIG_MICROBLAZE)
+>>       dev->archdata.dma_mask = 0xffffffffUL;
+>>  #endif
+>> -     dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>> +     dev->dev.coherent_dma_mask = DMA_BIT_MASK(sizeof(dma_addr_t) * 8);
+>
+> This is going to change the mask from 32 to 64 bits on 64-bit powerpc
+> and others possibly. Maybe it doesn't matter. I think it doesn't, but
+> I'm not sure enough to apply for 3.10. So I'll queue it for 3.11.
 
---===============7756542439339805216==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JXgPQ6VbGllIp4i6"
-Content-Disposition: inline
+Without the patch, LPAE enabled board may not boot at all, but looks
+it still isn't in -next tree.
 
+But I am wondering if it is a correct approach, because enabling LPAE
+doesn't mean the I/O devices can support DMA to/from 64bit address, and
+it is very probably devices can't do it at all.
 
---JXgPQ6VbGllIp4i6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Another way is to always set arm_dma_limit as 0xFFFFFFFF when
+CONFIG_ZONE_DMA is unset, and let driver override device's dma
+mask if the device supports 64bit DMA.
 
-On Thu, Jun 20, 2013 at 03:20:22PM +0200, Markus Pargmann wrote:
-> fsl_ssi and imx-ssi can be both enabled at the same time. To be able to
-> add AC97 support to fsl_ssi, soc_ac97_ops have to be available to both
-> drivers.
-
-This needs to be redone on top of the changes that went into v3.11 to
-support multiplatform AC'97 - it won't apply any more.
-
---JXgPQ6VbGllIp4i6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR1ExQAAoJELSic+t+oim92C4P/Rb0QbfU4fazOijtfr3K2qh1
-3QpWROpoL2iyJjGN/zZfK4X/n1bRDsR3dFhpAAeUdQe6hxvIJRNWmUFH2fHlssS6
-NafGFB/SS5amNku8z3BB7NT6WtAF/LfSqKevysWRuK/gFnAqkg56ROTgj68/S86i
-Emhtl18nZpDeta+/F6OcgdVRDUHM+Z0NIOnVDEWAAZoZ+ahaYGQkgRgKd0lKUMTC
-AaxBh9rTiO/QZXtQhTwn3/ygkR2Q6UiC9WeOVLp33RtcJZUELX/JDDFDue7jQ2iX
-3kZqCO0w0+okvKCuDtufg3vS36yp5jR63URS7im0VOa0dPGe61Y2M12WQe/KI+9t
-8sdBpcEDUWUMtXWi0YziO4gWsTjIr7phK8EywwM2lB15tUV/bljs7oqhP4yTGJtS
-RTmfNgBmZFx6/m2INFrMv7yhtZd4B043ZkjhKiOJztMHbIkKuFhrF/L3WCY5vfuM
-FDS9lBFbHY3TQ8A43/dLTMAaN0t2cUGwoVqe1wrgwSDHxfo2/SFq2cgcnMy62jzQ
-S0EamAaimNyA5Lt09eQVw0M3to8Mc257H+FEnW+QYxihfu0u2j7pUIX2VMGHkRwi
-jlNEYg6qDaF4oSDdM2ToiRg/vqGjpjKO55FpaYvlShCaUPwtD6F9UZT0tGlvuuNA
-wRWHEQOI9v3tcR1RrVQ2
-=lS1i
------END PGP SIGNATURE-----
-
---JXgPQ6VbGllIp4i6--
-
---===============7756542439339805216==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============7756542439339805216==--
+Thanks,
+-- 
+Ming Lei
