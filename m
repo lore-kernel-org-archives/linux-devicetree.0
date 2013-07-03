@@ -1,78 +1,61 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v10] i2c-designware: make SDA hold time configurable
-Date: Wed, 3 Jul 2013 16:20:03 +0200
-Message-ID: <201307031620.03785.arnd@arndb.de>
-References: <20130625163902.GA2973@katana> <201307031343.11647.arnd@arndb.de>
- <20130703132905.GC3929@ab42.lan>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 8/8] wlcore/wl12xx: check if we got correct clock data
+ from DT
+Date: Wed, 3 Jul 2013 17:19:48 +0300
+Message-ID: <20130703141948.GS15056@arwen.pp.htv.fi>
+References: <1372860209-3504-1-git-send-email-coelho@ti.com>
+ <1372860209-3504-9-git-send-email-coelho@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130703132905.GC3929-7oYq3qWSd+k@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, vincent.stehle@freescale
-Cc: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="u+FGODhbLwgAeSOU"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372860209-3504-9-git-send-email-coelho@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luciano Coelho <coelho@ti.com>
+Cc: linux-wireless@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, mturquette@linaro.org, mark.rutland@arm.com, balbi@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 03 July 2013, Christian Ruppert wrote:
-> On Wed, Jul 03, 2013 at 01:43:11PM +0200, Arnd Bergmann wrote:
-> > On Wednesday 26 June 2013, Wolfram Sang wrote:
-> > >   On Wed, Jun 26, 2013 at 10:55:06AM +0200, Christian Ruppert wrote:
-> > > > This patch makes the SDA hold time configurable through device tree.
-> > > > 
-> > > > Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-> > > > Signed-off-by: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-> > > 
-> > > Applied to for-next, thanks for keeping at it and providing lots of
-> > > useful information. Much appreciated!
-> > 
-> > Sorry, but I got a regression that I didn't find reported elsewhere
-> > so far, even though it breaks a lot of the ARM defconfig builds:
-> > 
-> > drivers/built-in.o: In function `dw_i2c_probe':
-> > /git/arm-soc/drivers/i2c/busses/i2c-designware-platdrv.c:125: undefined reference to `__udivdi3'
-> > 
-> > I suspect you want something like the change below.
-> 
-> This looks similar to a patch Vincent Stehle submitted yesterday, see
-> https://lkml.org/lkml/2013/7/2/145
+--u+FGODhbLwgAeSOU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the link. Actually his patch looks wrong to me, because
+On Wed, Jul 03, 2013 at 05:03:29PM +0300, Luciano Coelho wrote:
+> The fref and the tcxo clocks settings are optional in some platforms.
+> WiLink8 doesn't need either, so we don't check the values.  WiLink 6
+> only needs the fref clock, so we check that it is valid or return with
+> an error.  WiLink7 needs both clocks, if either is not available we
+> return with an error.
+>=20
+> Signed-off-by: Luciano Coelho <coelho@ti.com>
 
- dev->sda_hold_time = div_u64((u64)ic_clk * ht + 500000, 1000000); 
+Reviewed-by: Felipe Balbi <balbi@ti.com>
 
-assigns the division remainder to sda_hold_time, not the quotient.
+--=20
+balbi
 
+--u+FGODhbLwgAeSOU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-	Arnd
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> > Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> > index def79b5..57e3a07 100644
-> > --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> > +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> > @@ -119,10 +119,13 @@ static int dw_i2c_probe(struct platform_device *pdev)
-> >  	if (pdev->dev.of_node) {
-> >  		u32 ht = 0;
-> >  		u32 ic_clk = dev->get_clk_rate_khz(dev);
-> > +		u64 hold_time;
-> >  
-> >  		of_property_read_u32(pdev->dev.of_node,
-> >  					"i2c-sda-hold-time-ns", &ht);
-> > -		dev->sda_hold_time = ((u64)ic_clk * ht + 500000) / 1000000;
-> > +		hold_time = (u64)ic_clk * ht + 500000;
-> > +		do_div(hold_time, 1000000);
-> > +		dev->sda_hold_time = hold_time;
-> >  	}
-> >  
-> >  	dev->functionality =
+iQIcBAEBAgAGBQJR1DMEAAoJEIaOsuA1yqREugcP/3uTpWP5GRAs6LFNea2T0c5G
+SFiWgOQuvQXE/zidY0v1cNW8bH1ka9WYN2ib3hQaFFsuuegYp64JWRda/1jrjkE2
+F2h3+FqPNTenxUe9cRIY3rlQSfh4FzMUzNbNki5PlZcs2u6ruWvW2vbANoFtMvxr
+M14LadV7hVzj19+fTKWjjW+ef84+lxl53VTlK4aGBWOUeLeZV4HKI9Zr6Fj78Gdn
+WL2AJd5HYsZc0pg4BEMFku2Ds9qGckI0ZDmeU6vWVxHSL5jwdeiQZjW+TLPIEdd2
+PkjYJT41pLrQQ0J2FNHNs881LdXIP1EQ7Zdo+d8WNsujoWjS10xjs1EnrN/tXPoo
+swNM2j+1pIPKVROcyMlVBbc8bXoWFGixSYikY+X8rbhNBQpPbGWNlAvN8UY8RIMe
+hA7q7jIHwf2ZygmeZbKiHUOW93R7xzc9wOoWx12+PNNt8td5eRn3hR33odLDfXqv
+psVXQ6yHa5sX1Xp3zo2aHfbpgCYzh81RP8Ls+iYf268U2VKdl0FnYpwAbSTeSQRG
+OKt5XkeUBRBnnXRgq0TC6jIaj33Cdaf8+ZRDu95r7I/j0mxb5Vb0JxoSE9ItMwgI
+v9Z6ecFgj3CGNUYOMLFER6VkhL57ImupeDDfvRi3o9i5XX5hyuIzN0TjimJKkc8h
+AirDbR8RSKCVPcNR4K50
+=E2O1
+-----END PGP SIGNATURE-----
+
+--u+FGODhbLwgAeSOU--
