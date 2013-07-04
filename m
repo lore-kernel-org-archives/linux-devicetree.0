@@ -1,141 +1,96 @@
-From: "Patel, Satish" <satish.patel@ti.com>
-Subject: RE: [PATCH v9 0/8] Generic PHY Framework
-Date: Thu, 4 Jul 2013 09:21:57 +0000
-Message-ID: <780E789C2E067A4BB8F69D0BB9EC4F253E975D6E@DBDE04.ent.ti.com>
-References: <1372247257-30186-1-git-send-email-kishon@ti.com>
- <780E789C2E067A4BB8F69D0BB9EC4F253E975B5E@DBDE04.ent.ti.com>
- <51D3F773.9000209@ti.com> <20130703132038.GI15056@arwen.pp.htv.fi>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: Best practice device tree design for display subsystems/DRM
+Date: Thu, 4 Jul 2013 11:23:05 +0200
+Message-ID: <20130704092305.GI10414@pengutronix.de>
+References: <51D330AC.5060903@gmail.com>
+ <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
+ <51D348F5.2080205@gmail.com>
+ <00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
+ <20130703090242.GM516@pengutronix.de>
+ <20130703095248.GG13924@flint.arm.linux.org.uk>
+ <20130704083307.GH10414@pengutronix.de>
+ <51D53634.5040405@gmail.com> <20130704085313.GY516@pengutronix.de>
+ <51D53C0B.6060106@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130703132038.GI15056@arwen.pp.htv.fi>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Balbi, Felipe" <balbi@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Cc: "mchehab@redhat.com" <mchehab@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "Nori, Sekhar" <nsekhar@ti.com>, "Mankad, Maulik Ojas" <maulik@ti.com>, "swarren@nvidia.com" <swarren@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "cesarb@cesarb.net" <cesarb@cesarb.net>, "Cherian,
- George" <george.cherian@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "sylvester.nawrocki@gmail.com" <sylvester.nawrocki@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Krishnamoorthy, Balaji T" <balajitk@ti.>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51D53C0B.6060106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: 'Jean-Francois Moine' <moinejf-GANU6spQydw@public.gmane.org>, 'Daniel Drake' <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQmFsYmksIEZlbGlw
-ZQ0KPiBTZW50OiBXZWRuZXNkYXksIEp1bHkgMDMsIDIwMTMgNjo1MSBQTQ0KPiBUbzogQUJSQUhB
-TSwgS0lTSE9OIFZJSkFZDQo+IENjOiBQYXRlbCwgU2F0aXNoOyBncmFudC5saWtlbHlAbGluYXJv
-Lm9yZzsgdG9ueUBhdG9taWRlLmNvbTsgQmFsYmksDQo+IEZlbGlwZTsgYXJuZEBhcm5kYi5kZTsg
-c3dhcnJlbkBudmlkaWEuY29tOw0KPiBzeWx2ZXN0ZXIubmF3cm9ja2lAZ21haWwuY29tOyBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gb21hcEB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtDQo+IHVzYkB2Z2Vy
-Lmtlcm5lbC5vcmc7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBha3BtQGxpbnV4LQ0KPiBm
-b3VuZGF0aW9uLm9yZzsgcm9iLmhlcnJpbmdAY2FseGVkYS5jb207IHJvYkBsYW5kbGV5Lm5ldDsN
-Cj4gbGludXhAYXJtLmxpbnV4Lm9yZy51azsgYmVub2l0LmNvdXNzb25AbGluYXJvLm9yZzsgbWNo
-ZWhhYkByZWRoYXQuY29tOw0KPiBjZXNhcmJAY2VzYXJiLm5ldDsgZGF2ZW1AZGF2ZW1sb2Z0Lm5l
-dDsgTmF5YWssIFJhamVuZHJhOw0KPiBzaGF3bi5ndW9AbGluYXJvLm9yZzsgU2hpbGlta2FyLCBT
-YW50b3NoOyBkZXZpY2V0cmVlLQ0KPiBkaXNjdXNzQGxpc3RzLm96bGFicy5vcmc7IGxpbnV4LWRv
-Y0B2Z2VyLmtlcm5lbC5vcmc7IE5vcmksIFNla2hhcjsNCj4gS3Jpc2huYW1vb3J0aHksIEJhbGFq
-aSBUOyBDaGVyaWFuLCBHZW9yZ2UNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2OSAwLzhdIEdlbmVy
-aWMgUEhZIEZyYW1ld29yaw0KPiANCj4gSGksDQo+IA0KPiBPbiBXZWQsIEp1bCAwMywgMjAxMyBh
-dCAwMzozNTozOVBNICswNTMwLCBLaXNob24gVmlqYXkgQWJyYWhhbSBJDQo+IHdyb3RlOg0KPiA+
-IE9uIFdlZG5lc2RheSAwMyBKdWx5IDIwMTMgMDM6MDIgUE0sIFBhdGVsLCBTYXRpc2ggd3JvdGU6
-DQo+ID4gPkhpIEtpc2hvbiwNCj4gPiA+DQo+ID4gPj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
-LQ0KPiA+ID4+RnJvbTogQUJSQUhBTSwgS0lTSE9OIFZJSkFZDQo+ID4gPj5TZW50OiBXZWRuZXNk
-YXksIEp1bmUgMjYsIDIwMTMgNToxNyBQTQ0KPiA+ID4+VG86IGdyYW50Lmxpa2VseUBsaW5hcm8u
-b3JnOyB0b255QGF0b21pZGUuY29tOyBCYWxiaSwgRmVsaXBlOw0KPiBBQlJBSEFNLA0KPiA+ID4+
-S0lTSE9OIFZJSkFZOyBhcm5kQGFybmRiLmRlOyBzd2FycmVuQG52aWRpYS5jb207DQo+ID4gPj5z
-eWx2ZXN0ZXIubmF3cm9ja2lAZ21haWwuY29tOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC0NCj4gPiA+Pm9tYXBAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiA+ID4+dXNiQHZnZXIua2VybmVsLm9yZzsgZ3Jl
-Z2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IGFrcG1AbGludXgtDQo+ID4gPj5mb3VuZGF0aW9uLm9y
-Zw0KPiA+ID4+Q2M6IHJvYi5oZXJyaW5nQGNhbHhlZGEuY29tOyByb2JAbGFuZGxleS5uZXQ7DQo+
-IGxpbnV4QGFybS5saW51eC5vcmcudWs7DQo+ID4gPj5iZW5vaXQuY291c3NvbkBsaW5hcm8ub3Jn
-OyBtY2hlaGFiQHJlZGhhdC5jb207IGNlc2FyYkBjZXNhcmIubmV0Ow0KPiA+ID4+ZGF2ZW1AZGF2
-ZW1sb2Z0Lm5ldDsgTmF5YWssIFJhamVuZHJhOyBzaGF3bi5ndW9AbGluYXJvLm9yZzsNCj4gU2hp
-bGlta2FyLA0KPiA+ID4+U2FudG9zaDsgZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5v
-cmc7IGxpbnV4LQ0KPiA+ID4+ZG9jQHZnZXIua2VybmVsLm9yZzsgTm9yaSwgU2VraGFyOyBLcmlz
-aG5hbW9vcnRoeSwgQmFsYWppIFQ7DQo+IENoZXJpYW4sDQo+ID4gPj5HZW9yZ2UNCj4gPiA+PlN1
-YmplY3Q6IFtQQVRDSCB2OSAwLzhdIEdlbmVyaWMgUEhZIEZyYW1ld29yaw0KPiA+ID4+DQo+ID4g
-Pj5BZGRlZCBhIGdlbmVyaWMgUEhZIGZyYW1ld29yayB0aGF0IHByb3ZpZGVzIGEgc2V0IG9mIEFQ
-SXMgZm9yIHRoZQ0KPiBQSFkNCj4gPiA+PmRyaXZlcnMNCj4gPiA+PnRvIGNyZWF0ZS9kZXN0cm95
-IGEgUEhZIGFuZCBBUElzIGZvciB0aGUgUEhZIHVzZXJzIHRvIG9idGFpbiBhDQo+ID4gPj5yZWZl
-cmVuY2UgdG8NCj4gPiA+PnRoZSBQSFkgd2l0aCBvciB3aXRob3V0IHVzaW5nIHBoYW5kbGUuDQo+
-ID4gPj4NCj4gPiA+PlRoaXMgZnJhbWV3b3JrIHdpbGwgYmUgb2YgdXNlIG9ubHkgdG8gZGV2aWNl
-cyB0aGF0IHVzZXMgZXh0ZXJuYWwNCj4gUEhZDQo+ID4gPj4oUEhZDQo+ID4gPj5mdW5jdGlvbmFs
-aXR5IGlzIG5vdCBlbWJlZGRlZCB3aXRoaW4gdGhlIGNvbnRyb2xsZXIpLg0KPiA+ID4+DQo+ID4g
-Pj5UaGUgaW50ZW50aW9uIG9mIGNyZWF0aW5nIHRoaXMgZnJhbWV3b3JrIGlzIHRvIGJyaW5nIHRo
-ZSBwaHkNCj4gZHJpdmVycw0KPiA+ID4+c3ByZWFkDQo+ID4gPj5hbGwgb3ZlciB0aGUgTGludXgg
-a2VybmVsIHRvIGRyaXZlcnMvcGh5IHRvIGluY3JlYXNlIGNvZGUgcmUtdXNlDQo+IGFuZA0KPiA+
-ID4+dG8NCj4gPiA+PmluY3JlYXNlIGNvZGUgbWFpbnRhaW5hYmlsaXR5Lg0KPiA+ID4NCj4gPiA+
-SSB3b3VsZCBsaWtlIHRvIHVzZSB0aGlzIGZyYW1ld29yayBmb3IgYSBzbWFydC1jYXJkIGNvbnRy
-b2xsZXINCj4gY29ubmVjdGVkIHRvIGENCj4gPiA+c21hcnQtY2FyZCBwaHkuIEkgaGF2ZSBzb21l
-IHF1ZXN0aW9ucyBhbmQgd291bGQgbGlrZSB0byBnZXQNCj4gZmVlZGJhY2sgb24gdGhlIHNhbWUu
-DQo+ID4NCj4gPiBnbGFkIHRvIGtub3cgdGhhdCA6LSkNCj4gPiA+DQo+ID4gPkkgYW0gdXNpbmcg
-4oCcVERBODAyNiIgU21hcnRjYXJkIFBIWSBmcm9tIE5YUC4gSGVyZSBpcyB0aGUgbGluayBmb3IN
-Cj4gZGF0YXNoZWV0DQo+ID4gPmFuZCBhcHAgbm90ZSBmb3IgdGhlIHNhbWUuIFRoZSBzbWFydCBj
-YXJkIGNvbnRyb2xsZXIgaXMgaW5zaWRlIHRoZQ0KPiBUSSBTb0MNCj4gPiA+SSBhbSB3b3JraW5n
-IHdpdGguDQo+ID4gPg0KPiA+ID5EYXRhc2hlZXQgOg0KPiA+ID53d3cubnhwLmNvbS9kb2N1bWVu
-dHMvZGF0YV9zaGVldC9UREE4MDI2LnBkZj8NCj4gPiA+DQo+ID4gPkFwcG5vdGUgOg0KPiA+ID5o
-dHRwOi8vd3d3Lm54cC5jb20vZG9jdW1lbnRzL2FwcGxpY2F0aW9uX25vdGUvQU4xMDcyNC5wZGYN
-Cj4gPiA+DQo+ID4gPlRoZSBUSSBTb0MgZGV0YWlscyBhcmUgbm90IHB1YmxpYyAoeWV0KS4gSSBj
-YW4gcHJvdmlkZSBkZXRhaWxzIHRvDQo+IHlvdSBvZmZsaW5lLg0KPiA+ID4NCj4gPiA+QnJpZWYg
-YWJvdXQgb3BlcmF0aW9uOg0KPiA+ID4tCVRoZSBjb250cm9sbGVyIGNhbiB3b3JrIHdpdGggYW5k
-IHdpdGhvdXQgYSBQSFkNCj4gPiA+LQlXaGVuIG5vdCB1c2luZyBQSFksIGl0IGlzIGxpbWl0ZWQg
-dG8gdGFsa2luZyB0byBhIHNpbmdsZQ0KPiA+ID4Jc21hcnQgY2FyZC4gVGhlcmUgaXMgYWxzbyBh
-IG5lZWQgdG8gcHV0IGV4dGVybmFsIGRlLWFjdGl2YXRpb24NCj4gbG9naWMNCj4gPiA+CW9uIGNh
-cmQgcmVtb3ZhbCBmb3IgdGhpcyBjYXNlLg0KPiA+ID4tCVdpdGggYSBQSFkgeW91IGNhbiB1c2Ug
-bW9yZSB0aGFuIG9uZSBzbWFydCBjYXJkLg0KPiA+ID4tCVBoeSBoYXMgNSBzbG90cyA6ICAxIGZv
-ciBzbWFydCBjYXJkIChjcmVkaXQvZGViaXQvb3RoZXIgY2FyZA0KPiB3aXRoIGNoaXApDQo+ID4g
-PiAgICAgICBhbmQgb3RoZXJzIGZvciBTQU0g4oCTIFNJTSBsaWtlIG1vZHVsZXMNCj4gPiA+LSAJ
-T25jZSB0aGUgUEhZIGlzIGluaXRpYWxpemVkLCB0aGVyZSBhcmUgc29tZSBvcGVyYXRpb25zIHRo
-YXQgdGhlDQo+IGNvbnRyb2xsZXINCj4gPiA+CWNhbiByZXF1ZXN0IG9mIHRoZSBQSFkgbGlrZToN
-Cj4gPiA+CS0gQ2FyZCBjb25maWd1cmF0aW9ucyAgLSBzZXQgdm9sdGFnZQ0KPiA+ID4JLSBBY3Rp
-dmF0aW9uIG9mIGNhcmQNCj4gPiA+CS0gQVRSIOKAkyBBbnN3ZXIgdG8gcmVzZXQNCj4gPiA+CS0g
-V2FybSByZXNldA0KPiA+ID4JLSBBRFBVIGV4Y2hhbmdlDQo+ID4gPgktIERlYWN0aXZhdGlvbiAo
-IE5vcm1hbC9FbWVyZ2VuY3kpDQo+ID4NCj4gPiBobW0uLiBXZSBzaG91bGQgdGhpbmsgYWJvdXQg
-ZXh0ZW5kaW5nIHRoZSBwaHlfb3BzIHRvIGluY2x1ZGUgdGhlc2UNCj4gPiBvcGVyYXRpb25zIChz
-b21ldGhpbmcgbGlrZSBwaHlfc21hcnRfY2FyZF9vcHMgc28gdGhhdCBvdGhlcg0KPiA+IHNtYXJ0
-X2NhcmQgUEhZcyB3aWxsIGFsc28gYmUgYWJsZSB0byB1c2UgaXQpLg0KPiANCj4gbGV0J3MgdHJ5
-IHRvIGF2b2lkIHVzZS1jYXNlIHNwZWNpZmljIGFkZGl0aW9ucy4gc2V0X3ZvbHRhZ2Ugc291bmRz
-DQo+IGxpa2UNCj4gYSByZWd1bGF0b3IgdGhpbmcsIGJ1dCB0aGUgcmVndWxhdG9yIGlzIGNvbnRy
-b2xsZWQgdGhyb3VnaCB0aGUgUEhZLiBJDQo+IGd1ZXNzIGl0IG1ha2VzIHNlbnNlIHRvIGhhdmUg
-YSBnZW5lcmljIHBoeV9zZXRfdm9sdGFnZSgpIGNhbGwgc2luY2UNCj4gZXZlbg0KPiBVU0IgY2Fu
-IG1ha2UgdXNlIG9mIHRoYXQuDQo+IA0KPiBGb3IgY2FyZCBhY3RpdmF0aW9uLCBpdCBzb3VuZHMg
-bGlrZSBwaHlfaW5pdCgpL3BoeV9zaHV0ZG93bigpIHdvdWxkDQo+IGNvdmVyIGl0Lg0KPiANCj4g
-Rm9yIHdhcm0gcmVzZXQgcGVyaGFwcyBhIHBoeV9yZXNldCgpIGNhbGxiYWNrID8gQWx0aG91Z2gg
-dGhhdCBjb3VsZCwNCj4gZWFzaWx5LCBnZXQgYWJ1c2VkLg0KPiANCj4gRm9yIGRlYWN0aXZhdGlv
-biwgdGhhdCdzIHBoeV9zaHV0ZG93bigpLg0KPiANCj4gQVRSIGFuZCBBRFBVIG5lZWRzIG1vcmUg
-dGhvdWdodCwgSSBndWVzcy4NCj4gDQo+ID4gPi0gCUluIHRoZSBtb2RlIHdoZW4gc21hcnRjYXJk
-IGNvbnRyb2xsZXIgdGFsa3MgZGlyZWN0bHkgdG8gdGhlDQo+IGNhcmQgd2l0aG91dCB0aGUgbmVl
-ZA0KPiA+ID4JZm9yIGEgUEhZLCBhbGwgdGhlIGFib3ZlIG9wZXJhdGlvbnMgd2lsbCBiZSBjYXJy
-aWVkIG91dCBieSB0aGUNCj4gY29udHJvbGxlciBpdHNlbGYNCj4gPiA+DQo+ID4gPk15IGN1cnJl
-bnQgdGhvdWdodCBwcm9jZXNzIGlzIHRvIG1ha2UgdGhlIGNvbnRyb2xsZXIgZHJpdmVyIHByb3Zp
-ZGUNCj4gdGhlIHVzZXIgaW50ZXJmYWNlDQo+ID4gPmFuZCB0YWxrIHRvIHRoZSBQSFkgdXNpbmcg
-dGhlIGdlbmVyaWMgUEhZIGZyYW1ld29yayB5b3UgcHJvcG9zZWQuDQo+IEluIHRoZSBjYXNlIHdo
-ZXJlIHRoZXJlDQo+ID4gPmlzIG5vIFBIWSwgbXkgaWRlYSBpcyB0byBjcmVhdGUgYSAiZHVtbXki
-IFBIWSB3aGljaCB1c2VzIHRoZQ0KPiBjb250cm9sbGVyIGZ1bmN0aW9uYWxpdHkgaXRzZWxmLg0K
-PiA+DQo+ID4gcmlnaHQuIEFuZCBpbiB0aGUgY2FzZSB3aGVyZSB5b3UgYWN0dWFsbHkgaGF2ZSBh
-IFBIWSwgY3JlYXRlIGEgUEhZDQo+ID4gZHJpdmVyIGFuZCBpbXBsZW1lbnQgdGhlIHBoeV9zbWFy
-dF9jYXJkX29wcyBhbmQgcmVnaXN0ZXIgd2l0aCB0aGUNCj4gUEhZDQo+ID4gZnJhbWV3b3JrLg0K
-PiANCj4gSSB3b3VsZCB0cnkgdG8gYXZvaWQgdGhhdC4gT3RoZXJ3aXNlIHdlIHdpbGwgaGF2ZSBw
-aHlfdXNiX29wcywNCj4gcGh5X3NhdGFfb3BzLCBwaHlfbmV0d29ya19vcHMsIHBoeV9wY2lfb3Bz
-LCBldGMgZXRjIGV0Yy4gSXQgd291bGQNCj4gZWFzaWx5DQo+IGJsb3cgdXAuDQo+IA0KDQotIEkg
-ZG8gYWdyZWUgd2l0aCB5b3UuIENyZWF0aW5nIFBoeSBzcGVjaWZpYyBvcHMgd2lsbCBibG93IHVw
-IHdob2xlIA0KICBjb25jZXB0IG9mIGdlbmVyaWMgcGh5IGYvdy4NCi0gQ2FuIHdlIGhhdmUgaW50
-ZXJmYWNlIGxpa2UgcGh5X3NldGNvbmZpZyAtIHdpdGggcGFyYW1ldGVyIGxpa2UgDQogIHBoeV9z
-ZXRjb25maWcoaW50IHBhcmFtLCB2b2lkICp2YWx1ZSkNCgktIEhlcmUgcGFyYW0gY2FuIGJlIGVu
-dW0gb2YgYXZhaWxhYmxlIGNvbmZpZyBwYXJhbWV0ZXJzIGZvciANCgkgIHNwZWNpZmljIHBoeS4g
-DQpQaHkgY2FuIHBlcmZvcm0gZGlmZmVyZW50IG9wZXJhdGlvbi9zZXQgaW50ZXJuYWwgc3RhdGUg
-YmFzZWQgb24gDQpwYXJhbSBzZWxlY3Rpb24gYW5kIHZhbHVlIHBhc3NlZCBieS4NCgkNCmUueCBp
-biBjYXNlIG9mIHNtYXJ0Y2FyZA0KCWVudW0gc2V0X2NvbmZpZyB7DQoJCVNFVF9WT0xBVEFHRSwN
-CgkJU0VUX0FDVElWQVRFLA0KCQlTRVRfV0FSTVJFU0VULA0KCQlTRVRfQVRSLA0KCQlTRVRfREVB
-Q1RJVkUsDQoJCS4uLi4NCgl9Ow0KDQotIEFsc28sIGNhbiBoYXZlIHNpbWlsYXIgaW50ZXJmYWNl
-IHBoeV9nZXRjb25maWcgdG8ga25vdyBjdXJyZW50IHBoeSBzdGF0ZS4NCg0KDQoNCj4gLS0NCj4g
-YmFsYmkNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+On Thu, Jul 04, 2013 at 11:10:35AM +0200, Sebastian Hesselbarth wrote:
+> On 07/04/13 10:53, Sascha Hauer wrote:
+> >On Thu, Jul 04, 2013 at 10:45:40AM +0200, Sebastian Hesselbarth wrote:
+> >>On 07/04/13 10:33, Sascha Hauer wrote:
+> >>>
+> >>>A componentized device never completes and it doesn't have to. A
+> >>>componentized device can start once there is a path from an input
+> >>>(crtc, i2s unit) to an output (connector, speaker).
+> >>>
+> >>>Consider what happens with a supernode approach. Your board provides a
+> >>>devicetree which has a supernode with hdmi and lvds referenced. Now you
+> >>>build a kernel with the hdmi driver disabled. You would still expect the
+> >>>lvds port to be working without having the kernel wait for the supernode
+> >>>being complete.
+> >>>
+> >>>Without supernode you can just start once you have everything between
+> >>>the crtc and lvds nodes. If later a hdmi device joins in then you can
+> >>>either notify the users (provided the DRM/KMS API supports it) or just
+> >>>ignore it until the DRM device gets reopened.
+> >>
+> >>Sascha,
+> >>
+> >>that is what it is all about. You assume you a priori know what devices
+> >>will be required for the componentized device to successfully output
+> >>a video stream.
+> >>
+> >>We have shown setups where you don't know what is required. Cubox
+> >>_needs_ lcd0 and hdmi-transmitter,
+> >
+> >Then your Cubox devicetree has a link (that's how they call it in v4l2,
+> >a link doesn't necessarily is a direct connection but can have multiple
+> >devices in it) between lcd0 and hdmi.
+> 
+> I haven't looked up v4l2 "link" yet. But (a) if it is a separate node
+> how is that different from the "super-node" we are talking about or (b)
+> if it is a property, where do you put it?
+
+Sorry, I should have explained this. The basic idea the v4l2 guys are
+following is that they describe their hardware pipelines in the devicetree.
+
+Each device can have ports which are connected via links. In the
+devicetree a link basically becomes a phandle (a remote device will have
+a phandle pointing back to the original device). For an overview have a
+look at
+
+Documentation/devicetree/bindings/media/video-interfaces.txt
+
+With this you can describe the whole graph of devices you have in the
+devicetree. The examples in this file have a path from a camera sensor
+via a MIPI converter to a capture interface.
+
+The difference to a supernode is that this approach describes the data
+flow in the devicetree so that we can iterate over it to find links
+between source and sink rather than relying on a list of subdevices to
+be completed.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
