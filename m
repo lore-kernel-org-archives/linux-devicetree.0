@@ -1,74 +1,60 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] misc: sram: fix error path in sram_probe
-Date: Thu, 04 Jul 2013 17:41:51 +0200
-Message-ID: <1372952511.3974.38.camel@pizza.hi.pengutronix.de>
-References: <201306251046.04873.heiko@sntech.de>
- <201306251046.38993.heiko@sntech.de>
- <1372151074.3981.21.camel@pizza.hi.pengutronix.de>
- <201307041634.11248.heiko@sntech.de>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] of: Fix address decoding on Bimini and js2x machines
+Date: Thu, 04 Jul 2013 17:18:28 +0100
+Message-ID: <20130704161828.EB08D3E08D0@localhost>
+References: <1372831270.4122.36.camel@pasglop> <51D430C7.8030100@gmail.com>
+ <CACxGe6ucVocguyNdZ9CiN0ef=WgmOrZe0FyVij_bC7bJZe41=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201307041634.11248.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <CACxGe6ucVocguyNdZ9CiN0ef=WgmOrZe0FyVij_bC7bJZe41=g@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Thierry Reding <thierry.reding@avionic-design.de>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpBbSBEb25uZXJzdGFnLCBkZW4gMDQuMDcuMjAxMywgMTY6MzQgKzAyMDAgc2No
-cmllYiBIZWlrbyBTdMO8Ym5lcjoKPiBIaSBQaGlsaXBwLAo+IAo+IEFtIERpZW5zdGFnLCAyNS4g
-SnVuaSAyMDEzLCAxMTowNDozNCBzY2hyaWViIFBoaWxpcHAgWmFiZWw6Cj4gPiBIaSBIZWlrbywK
-PiA+IAo+ID4gQW0gRGllbnN0YWcsIGRlbiAyNS4wNi4yMDEzLCAxMDo0NiArMDIwMCBzY2hyaWVi
-IEhlaWtvIFN0w7xibmVyOgo+ID4gPiBUaGUgcG9vbCBpcyBjcmVhdGVkIHRocnUgZGV2bV9nZW5f
-cG9vbF9jcmVhdGUsIHNvIHRoZSBjYWxsIHRvCj4gPiA+IGdlbl9wb29sX2Rlc3Ryb3kgaXMgbm90
-IG5lY2Vzc2FyeS4KPiA+ID4gSW5zdGVhZCB0aGUgc3JhbS1jbG9jayBtdXN0IGJlIHR1cm5lZCBv
-ZmYgYWdhaW4gaWYgaXQgZXhpc3RzLgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogSGVpa28g
-U3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiA+ID4gLS0tCj4gPiA+IAo+ID4gPiAgZHJpdmVy
-cy9taXNjL3NyYW0uYyB8ICAgIDMgKystCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRp
-b25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
-aXNjL3NyYW0uYyBiL2RyaXZlcnMvbWlzYy9zcmFtLmMKPiA+ID4gaW5kZXggZDg3Y2M5MS4uYWZl
-NjY1NzEgMTAwNjQ0Cj4gPiA+IC0tLSBhL2RyaXZlcnMvbWlzYy9zcmFtLmMKPiA+ID4gKysrIGIv
-ZHJpdmVycy9taXNjL3NyYW0uYwo+ID4gPiBAQCAtNjgsNyArNjgsOCBAQCBzdGF0aWMgaW50IHNy
-YW1fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ID4gCj4gPiA+ICAJcmV0
-ID0gZ2VuX3Bvb2xfYWRkX3ZpcnQoc3JhbS0+cG9vbCwgKHVuc2lnbmVkIGxvbmcpdmlydF9iYXNl
-LAo+ID4gPiAgCQo+ID4gPiAgCQkJCXJlcy0+c3RhcnQsIHNpemUsIC0xKTsKPiA+ID4gIAkKPiA+
-ID4gIAlpZiAocmV0IDwgMCkgewo+ID4gPiAKPiA+ID4gLQkJZ2VuX3Bvb2xfZGVzdHJveShzcmFt
-LT5wb29sKTsKPiA+IAo+ID4gUmlnaHQsIHRoYW5rcy4KPiA+IAo+ID4gPiArCQlpZiAoc3JhbS0+
-Y2xrKQo+ID4gPiArCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHNyYW0tPmNsayk7Cj4gPiA+IAo+
-ID4gPiAgCQlyZXR1cm4gcmV0Owo+ID4gPiAgCQo+ID4gPiAgCX0KPiA+IAo+ID4gSW4gbGlnaHQg
-b2YgdGhlIGZvbGxvd2luZyBwYXRjaCwgSSdkIHJhdGhlciBtb3ZlIHRoZQo+ID4gY2xrX3ByZXBh
-cmVfZW5hYmxlKCkgY2FsbCBhZnRlciBnZW5fcG9vbF9hZGRfdmlydCgpIGFuZCBpdHMgZXJyb3Ig
-cGF0aC4KPiAKPiBJJ20gbm90IHN1cmUsIGJ1dCBpc24ndCBtb3ZpbmcgdGhlIGNsb2NrIGVuYWJs
-ZW1lbnQgYmVsb3cgdGhlIHBvb2wgYWxsb2NhdGlvbiAKPiBwcm9kdWNpbmcgYSByYWNlIGNvbmRp
-dGlvbj8KCnNpbmNlIHRoaXMgaXMgYSBwbGF0Zm9ybSBkZXZpY2UsIGFuZCB0aGUgZHJpdmVyIGlz
-IG5vdCBhbGxvd2VkIHRvIGJlCmNvbXBpbGVkIGFzIGEgbW9kdWxlLCBpdCBpcyBwcm9iZWQgYXQg
-dGhlIHRpbWUgcGxhdGZvcm1fZHJpdmVyX3JlZ2lzdGVyCmlzIGNhbGxlZCBmcm9tIHBvc3Rjb3Jl
-X2luaXRjYWxsLgpZb3UnZCBoYXZlIHRvIGdvIHRvIHF1aXRlIHNvbWUgbGVuZ3RocyB0byBtYWtl
-IHRoaXMgcmFjZSBieSBwcm9iaW5nIHlvdXIKZHJpdmVyIGJlZm9yZSBtbWlvLXNyYW0gYW5kIHRo
-ZW4gYXN5bmNocm9ub3VzbHkgdHJ5aW5nIHRvIGFsbG9jYXRlCm1lbW9yeSBmcm9tIHRoZSBwb29s
-IHNvbWUgdGltZSBsYXRlciwgd2l0aG91dCBoYXZpbmcgbWFkZSBzdXJlIHRoYXQgdGhlCnBvb2wg
-ZXhpc3RzIGR1cmluZyBwcm9iZS4KCkl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSBjYWxsYmFja3Mg
-ZnJvbSBnZW5fcG9vbF9hbGxvYy9mcmVlIHRvCmVuYWJsZS9kaXNhYmxlIHRoZSBjbG9jay4KRm9y
-IHRoZSB0aW1lIGJlaW5nLCBtYXliZSBpdCdzIHRoZSBzYWZlc3QgYmV0IHRvIGp1c3QgZW5hYmxl
-IHRoZSBjbG9jawpiZWZvcmUsIGVzcGVjaWFsbHkgaWYgeW91IHJlb3JkZXIgdGhlIGxvb3Agc28g
-dGhlcmUgaXMgb25seSBvbmUKZ2VuX3Bvb2xfYWRkX3ZpcnQgYW5kIGNvcnJlc3BvbmRpbmcgZXJy
-b3IgcGF0aC4KCj4gSS5lLiBjYW4gdGhlIGNhc2UgaGFwcGVuIHRoYXQgc29tZSBvdGhlciBwYXJ0
-IHdhbnRzIHRvIGFsbG9jYXRlIHBhcnQgb2YgdGhlIAo+IG5ld2x5IGdlbmVyYXRlZCBwb29sIGFs
-cmVhZHksIHdoaWxlIHRoZSBzdWJzZXF1ZW50IGdlbl9wb29sX2FkZF92aXJ0IGNhbGxzIAo+IGZy
-b20gdGhlIGZvbGxvd2luZyBwYXRjaCBhcmUgc3RpbGwgcnVubmluZz8gLi4uIEFuZCB3aGF0IHdp
-bGwgaGFwcGVuIGluIHRoaXMgCj4gY2FzZSwgd2hlbiB0aGUgc3JhbSBjbG9jayBpcyBzdGlsbCBk
-aXNhYmxlZD8KCk9uIGkuTVg2LCB0aGUgc3lzdGVtIHdpbGwgaGFuZy4KCnJlZ2FyZHMKUGhpbGlw
-cAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNl
-dHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJz
-Lm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNz
-Cg==
+On Wed, 3 Jul 2013 15:37:56 +0100, Grant Likely <grant.likely@linaro.org> wrote:
+> On Wed, Jul 3, 2013 at 3:10 PM, Rob Herring <robherring2@gmail.com> wrote:
+> > On 07/03/2013 01:01 AM, Benjamin Herrenschmidt wrote:
+> >>  Commit:
+> >>
+> >>   e38c0a1fbc5803cbacdaac0557c70ac8ca5152e7
+> >>   of/address: Handle #address-cells > 2 specially
+> >>
+> >> broke real time clock access on Bimini, js2x, and similar powerpc
+> >> machines using the "maple" platform. That code was indirectly relying
+> >> on the old (broken) behaviour of the translation for the hypertransport
+> >> to ISA bridge.
+> >>
+> >> This fixes it by treating hypertransport as a PCI bus
+> >>
+> >> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> >> CC: <stable@vger.kernel.org> [v3.6+]
+> >> ---
+> >>
+> >> Rob, if you have no objection I will put that in powerpc -next
+> >
+> > NP.
+> >
+> > Acked-by: Rob Herring <rob.herring@calxeda.com>
+> 
+> I'll include this in my 3.11 pull request for Linus
+
+Oops. Ben, I misread what you wrote. It would have been just fine to
+include it in your powerpc -next branch. Sorry for the confusion.
+
+Anyway, I saw your powerpc pull req and that this patch wasn't in it, so
+I've picked it up and will send it to Linus as soon as the test build
+completes.
+
+g.
