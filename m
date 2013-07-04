@@ -1,71 +1,32 @@
-From: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Fri, 5 Jul 2013 07:28:32 +1000
-Message-ID: <CAPM=9tygEFHWsOw4ZBr9GdF7-2OUcczrNKThHMJ=YQFU-Cbbug@mail.gmail.com>
-References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
- <20130702204255.2044c01b@armhf>
- <20130702191923.GD13924@flint.arm.linux.org.uk>
- <51D330AC.5060903@gmail.com>
- <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
- <51D348F5.2080205@gmail.com>
- <00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
- <20130703090242.GM516@pengutronix.de>
- <CAF6AEGuzwNJtuAWS29YvdZ1fiMGk5cuv24n4wxkKsDPT8FrDBw@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/3] extend stmmac DT support
+Date: Thu, 04 Jul 2013 14:35:01 -0700 (PDT)
+Message-ID: <20130704.143501.1841830283181488951.davem@davemloft.net>
+References: <1372930496-18923-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAF6AEGuzwNJtuAWS29YvdZ1fiMGk5cuv24n4wxkKsDPT8FrDBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1372930496-18923-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: srinivas.kandagatla@st.com
+Cc: netdev@vger.kernel.org, peppe.cavallaro@st.com, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
- >             ...
->>> Sorry but I'd like to say that this cannot be used commonly. Shouldn't you
->>> really consider Linux framebuffer or other subsystems? The above dtsi file
->>> is specific to DRM subsystem. And I think the dtsi file has no any
->>> dependency on certain subsystem so board dtsi file should be considered for
->>> all device drivers based on other subsystems: i.e., Linux framebuffer, DRM,
->>> and so no. So I *strongly* object to it. All we have to do is to keep the
->>> dtsi file as is, and to find other better way that can be used commonly in
->>> DRM.
->>
->> +1 for not encoding the projected usecase of the graphics subsystem into
->> the devicetree. Whether the two LCD controllers shall be used together
->> or separately should not affect the devicetree. devicetree is about
->> hardware description, not configuration.
->
-> I do like the supernode idea, it would have avoided the ugly
-> global-list-of-sub-devices in tilcdc (and probably some other
-> drivers).
->
-> As for projection of use-case, and whether it is something drm
-> specific or not..  if there is a way to make it generic enough that it
-> could work for fbdev, well I suppose that is nice.  Not a hard
-> requirement in my mind, or at least it is a secondary priority
-> compared to having a better way to having drm devices composed of
-> sub-{devices,nodes,whatever}.
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Date: Thu,  4 Jul 2013 10:34:56 +0100
 
-I'm not following who has the requirement for exposing different
-output device paths
-as possibly one or two devices, so you could have a drm device for one
-or the other,
-or X could use a subset of devices.
+> Thankyou for the comments on v1 patches.
+> 
+> This patch series adds support to new gmac versions 3.6.10 and 3.710, these
+> versions of IP are integrated into ST STiH415/STiH416 SOCs.
+> This patchset also adds phy reset capablity to stmmac-mdio driver via DT.
+> 
+> Changes since v1:
+> 	- Fixed unused variable warings pointed by Dave M.
+> 
+> Changes since RFC:
+> 	- re-use existing compatible strings to select right properties.
+> 	- clean up reset callback support so that DT is not parsed everytime.
 
-I'm not really sure how best to deal with that, we have had plans for
-drm to actually
-expose sub-groups of crtc/encoders/connectors to userspace via
-different device nodes
-for a while, its just never received the final push on how to configure it.
-
-Dave.
+Series applied, thanks.
