@@ -1,81 +1,57 @@
-From: Luciano Coelho <coelho@ti.com>
-Subject: Re: [PATCH v3 2/8] wlcore: set irq_flags in the board files instead
- of hiding behind a quirk
-Date: Thu, 4 Jul 2013 17:21:43 +0300
-Message-ID: <1372947703.21065.126.camel@cumari.coelho.fi>
-References: <1372860209-3504-1-git-send-email-coelho@ti.com>
-	 <1372860209-3504-3-git-send-email-coelho@ti.com>
-	 <1372860925.21065.115.camel@cumari.coelho.fi>
-	 <CAAwP0s3xkqUGnGvojfpyQq97qUmKCqY3BD4RyK1_uuX=pNy91g@mail.gmail.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] misc: sram: fix error path in sram_probe
+Date: Thu, 4 Jul 2013 16:34:10 +0200
+Message-ID: <201307041634.11248.heiko@sntech.de>
+References: <201306251046.04873.heiko@sntech.de>
+ <201306251046.38993.heiko@sntech.de>
+ <1372151074.3981.21.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAAwP0s3xkqUGnGvojfpyQq97qUmKCqY3BD4RyK1_uuX=pNy91g@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>
-Cc: linux-wireless@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, mturquette@linaro.org, mark.rutland@arm.com, balbi@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1372151074.3981.21.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-07-03 at 17:12 +0200, Javier Martinez Canillas wrote:
-> On Wed, Jul 3, 2013 at 4:15 PM, Luciano Coelho <coelho@ti.com> wrote:
-> > On Wed, 2013-07-03 at 17:03 +0300, Luciano Coelho wrote:
-> >> The platform_quirk element in the platform data was used to change the
-> >> way the IRQ is triggered.  When set, the EDGE_IRQ quirk would change
-> >> the irqflags used and treat edge trigger differently from the rest.
-> >>
-> >> Instead of hiding this irq flag setting behind the quirk, have the
-> >> board files set the flags during initialization.  This will be more
-> >> meaningful than driver-specific quirks when we switch to DT.
-> >>
-> >> Additionally, fix missing gpio_request() calls in the boarding files
-> >> (so that setting the flags actually works).
-> >>
-> >> Cc: Tony Lindgren <tony@atomide.com>
-> >> Cc: Sekhar Nori <nsekhar@ti.com>
-> >> Signed-off-by: Luciano Coelho <coelho@ti.com>
-> >> ---
-> >
-> > [...]
-> >
-> >> @@ -5928,16 +5927,21 @@ static void wlcore_nvs_cb(const struct firmware *fw, void *context)
-> >>       wlcore_adjust_conf(wl);
-> >>
-> >>       wl->irq = platform_get_irq(pdev, 0);
-> >> -     wl->platform_quirks = pdata->platform_quirks;
-> >>       wl->if_ops = pdev_data->if_ops;
-> >>
-> >> -     if (wl->platform_quirks & WL12XX_PLATFORM_QUIRK_EDGE_IRQ)
-> >> -             irqflags = IRQF_TRIGGER_RISING;
-> >> -     else
-> >> -             irqflags = IRQF_TRIGGER_HIGH | IRQF_ONESHOT;
-> >> +     irq_data = irq_get_irq_data(wl->irq);
-> >> +     if (!irq_data) {
-> >> +             wl1271_error("couldn't get irq data for irq %d\n", wl->irq);
-> >> +             ret = -EINVAL;
-> >> +             goto out_free_nvs;
-> >> +     }
-> >> +
-> >> +     wl->irq_flags = irqd_get_trigger_type(irq_data);
-> >
-> > BTW, there seems to be a patch on its way to make reading the flags
-> > easier (ie. no need to get the irq_data first):
-> >
-> > http://mid.gmane.org/1367945288-5625-1-git-send-email-javier@dowhile0.org
-> >
-> > I'm not sure if this is going to be taken in, but if it does, it would
-> > be nice to change the code here to use the new irq_get_trigger_type()
-> > function.
-
-> That patch has been already merged in Linus tree as commit 1f6236bf
-> ("genirq: Add irq_get_trigger_type() to get IRQ flags").
-> 
-> So yes, it would be better if you can use irq_get_trigger_type()
-> instead calling irq_get_irq_data() + irqd_get_trigger_type().
-
-That's great, thanks! I'll make this change as soon as I get your patch
-into my tree (ie. after the merge window closes).
-
---
-Luca.
-
+SGkgUGhpbGlwcCwKCkFtIERpZW5zdGFnLCAyNS4gSnVuaSAyMDEzLCAxMTowNDozNCBzY2hyaWVi
+IFBoaWxpcHAgWmFiZWw6Cj4gSGkgSGVpa28sCj4gCj4gQW0gRGllbnN0YWcsIGRlbiAyNS4wNi4y
+MDEzLCAxMDo0NiArMDIwMCBzY2hyaWViIEhlaWtvIFN0w7xibmVyOgo+ID4gVGhlIHBvb2wgaXMg
+Y3JlYXRlZCB0aHJ1IGRldm1fZ2VuX3Bvb2xfY3JlYXRlLCBzbyB0aGUgY2FsbCB0bwo+ID4gZ2Vu
+X3Bvb2xfZGVzdHJveSBpcyBub3QgbmVjZXNzYXJ5Lgo+ID4gSW5zdGVhZCB0aGUgc3JhbS1jbG9j
+ayBtdXN0IGJlIHR1cm5lZCBvZmYgYWdhaW4gaWYgaXQgZXhpc3RzLgo+ID4gCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+ID4gLS0tCj4gPiAKPiA+
+ICBkcml2ZXJzL21pc2Mvc3JhbS5jIHwgICAgMyArKy0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBp
+bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L21pc2Mvc3JhbS5jIGIvZHJpdmVycy9taXNjL3NyYW0uYwo+ID4gaW5kZXggZDg3Y2M5MS4uYWZl
+NjY1NzEgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL21pc2Mvc3JhbS5jCj4gPiArKysgYi9kcml2
+ZXJzL21pc2Mvc3JhbS5jCj4gPiBAQCAtNjgsNyArNjgsOCBAQCBzdGF0aWMgaW50IHNyYW1fcHJv
+YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+IAo+ID4gIAlyZXQgPSBnZW5fcG9v
+bF9hZGRfdmlydChzcmFtLT5wb29sLCAodW5zaWduZWQgbG9uZyl2aXJ0X2Jhc2UsCj4gPiAgCQo+
+ID4gIAkJCQlyZXMtPnN0YXJ0LCBzaXplLCAtMSk7Cj4gPiAgCQo+ID4gIAlpZiAocmV0IDwgMCkg
+ewo+ID4gCj4gPiAtCQlnZW5fcG9vbF9kZXN0cm95KHNyYW0tPnBvb2wpOwo+IAo+IFJpZ2h0LCB0
+aGFua3MuCj4gCj4gPiArCQlpZiAoc3JhbS0+Y2xrKQo+ID4gKwkJCWNsa19kaXNhYmxlX3VucHJl
+cGFyZShzcmFtLT5jbGspOwo+ID4gCj4gPiAgCQlyZXR1cm4gcmV0Owo+ID4gIAkKPiA+ICAJfQo+
+IAo+IEluIGxpZ2h0IG9mIHRoZSBmb2xsb3dpbmcgcGF0Y2gsIEknZCByYXRoZXIgbW92ZSB0aGUK
+PiBjbGtfcHJlcGFyZV9lbmFibGUoKSBjYWxsIGFmdGVyIGdlbl9wb29sX2FkZF92aXJ0KCkgYW5k
+IGl0cyBlcnJvciBwYXRoLgoKSSdtIG5vdCBzdXJlLCBidXQgaXNuJ3QgbW92aW5nIHRoZSBjbG9j
+ayBlbmFibGVtZW50IGJlbG93IHRoZSBwb29sIGFsbG9jYXRpb24gCnByb2R1Y2luZyBhIHJhY2Ug
+Y29uZGl0aW9uPwoKSS5lLiBjYW4gdGhlIGNhc2UgaGFwcGVuIHRoYXQgc29tZSBvdGhlciBwYXJ0
+IHdhbnRzIHRvIGFsbG9jYXRlIHBhcnQgb2YgdGhlIApuZXdseSBnZW5lcmF0ZWQgcG9vbCBhbHJl
+YWR5LCB3aGlsZSB0aGUgc3Vic2VxdWVudCBnZW5fcG9vbF9hZGRfdmlydCBjYWxscyAKZnJvbSB0
+aGUgZm9sbG93aW5nIHBhdGNoIGFyZSBzdGlsbCBydW5uaW5nPyAuLi4gQW5kIHdoYXQgd2lsbCBo
+YXBwZW4gaW4gdGhpcyAKY2FzZSwgd2hlbiB0aGUgc3JhbSBjbG9jayBpcyBzdGlsbCBkaXNhYmxl
+ZD8KCgpUaGFua3MKSGVpa28KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1
+c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2
+aWNldHJlZS1kaXNjdXNzCg==
