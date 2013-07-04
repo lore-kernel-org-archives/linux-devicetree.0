@@ -1,32 +1,59 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/3] extend stmmac DT support
-Date: Thu, 04 Jul 2013 14:35:01 -0700 (PDT)
-Message-ID: <20130704.143501.1841830283181488951.davem@davemloft.net>
-References: <1372930496-18923-1-git-send-email-srinivas.kandagatla@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: Appended DTB files for multi-machine kernels
+Date: Thu, 4 Jul 2013 23:34:36 +0200
+Message-ID: <201307042334.37161.arnd@arndb.de>
+References: <51D5A938.30607@gmail.com> <20130704171148.GJ27646@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1372930496-18923-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: srinivas.kandagatla@st.com
-Cc: netdev@vger.kernel.org, peppe.cavallaro@st.com, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130704171148.GJ27646@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: stigge@antcom.de, Stephen Warren <swarren@nvidia.com>, Magnus Damm <magnus.damm@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Sven Neumann <s.neumann@raumfeld.com>, Daniel Mack <zonque@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Date: Thu,  4 Jul 2013 10:34:56 +0100
+On Thursday 04 July 2013, Mark Brown wrote:
+> On Thu, Jul 04, 2013 at 06:56:24PM +0200, Daniel Mack wrote:
+> 
+> > Unless I missed some recent discussion, this case is not easy to handle.
+> > Yes, I know that these kind of things should be handled by a
+> > next-generation bootloader, but in our case, we want to avoid a loader
+> > update of already shipped hardware by all means.
+> 
+> There was some discussion about appending multiple DTBs recently.  I
+> can't actually recall anything about it though so that's not an entirely
+> helpful thing...
 
-> Thankyou for the comments on v1 patches.
-> 
-> This patch series adds support to new gmac versions 3.6.10 and 3.710, these
-> versions of IP are integrated into ST STiH415/STiH416 SOCs.
-> This patchset also adds phy reset capablity to stmmac-mdio driver via DT.
-> 
-> Changes since v1:
-> 	- Fixed unused variable warings pointed by Dave M.
-> 
-> Changes since RFC:
-> 	- re-use existing compatible strings to select right properties.
-> 	- clean up reset callback support so that DT is not parsed everytime.
+Yes, it keeps coming up, I think by now everybody agreed it's a good
+idea to extend the ATAGS compat mode, but so far nobody has implemented
+it. Magnus Damm was very interested in this feature last year and
+was planning to work on it, but I don't know how far he got.
 
-Series applied, thanks.
+> > As a solution, I'm thinking of a small framework that could for example
+> > work as follows.
+> 
+> > a) A small mechanism allows storing multiple DTB binary files inside the
+> > kernel binary at compile time, and a simple function can extract them
+> > again by name at runtime (something like what the firmware framework
+> > does, but I don't know if that one can be used at such an early stage in
+> > the boot process).
+> 
+> Another way of skinning this would be for either the kernel to contain
+> a set of machine ID to compatible string mappings or for the device
+> trees for the boards to have an additional properties giving the machine
+> IDs that the boards match.  The kernel could then look for multiple DTBs
+> appended to the image and try to pick one based on ATAGs.
+
+IIRC there is actually an unused field in the dtb header that could
+be used to match a board ID.
+
+	Arnd
