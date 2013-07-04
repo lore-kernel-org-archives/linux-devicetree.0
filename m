@@ -1,87 +1,140 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Thu, 4 Jul 2013 11:51:49 +0200
-Message-ID: <20130704095149.GA516@pengutronix.de>
-References: <20130702204255.2044c01b@armhf>
- <20130702191923.GD13924@flint.arm.linux.org.uk>
- <51D330AC.5060903@gmail.com>
- <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
- <51D348F5.2080205@gmail.com>
- <00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
- <20130703090242.GM516@pengutronix.de>
- <20130703095248.GG13924@flint.arm.linux.org.uk>
- <20130704083307.GH10414@pengutronix.de>
- <20130704090829.GQ13924@flint.arm.linux.org.uk>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v9 0/8] Generic PHY Framework
+Date: Thu, 4 Jul 2013 15:25:32 +0530
+Message-ID: <51D54694.20203@ti.com>
+References: <1372247257-30186-1-git-send-email-kishon@ti.com>
+ <780E789C2E067A4BB8F69D0BB9EC4F253E975B5E@DBDE04.ent.ti.com>
+ <51D3F773.9000209@ti.com> <20130703132038.GI15056@arwen.pp.htv.fi>
+ <780E789C2E067A4BB8F69D0BB9EC4F253E975D6E@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130704090829.GQ13924-f404yB8NqCZvn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: 'Jean-Francois Moine' <moinejf-GANU6spQydw@public.gmane.org>, 'Daniel Drake' <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Sebastian Hesselbarth' <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <780E789C2E067A4BB8F69D0BB9EC4F253E975D6E@DBDE04.ent.ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Patel, Satish" <satish.patel@ti.com>
+Cc: "mchehab@redhat.com" <mchehab@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "Nori, Sekhar" <nsekhar@ti.com>, "Mankad, Maulik Ojas" <maulik@ti.com>, "swarren@nvidia.com" <swarren@nvidia.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "cesarb@cesarb.net" <cesarb@cesarb.net>, "Cherian,
+ George" <george.cherian@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "sylvester.nawrocki@gmail.com" <sylvester.nawrocki@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Krishnamoorthy, Balaji T" <balajitk@ti.>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 04, 2013 at 10:08:29AM +0100, Russell King wrote:
-> On Thu, Jul 04, 2013 at 10:33:07AM +0200, Sascha Hauer wrote:
-> > A componentized device never completes and it doesn't have to. A
-> > componentized device can start once there is a path from an input
-> > (crtc, i2s unit) to an output (connector, speaker).
-> 
-> Sorry for the incomplete reply.
-> 
-> If you read all the messages in this thread, then you will realise that
-> DRM does not support an incremental startup approach.  It needs to know
-> everything at the point of "load".
-
-I know that DRM does not support this incremental startup approach.
-
-> 
-> > Without supernode you can just start once you have everything between
-> > the crtc and lvds nodes. If later a hdmi device joins in then you can
-> > either notify the users (provided the DRM/KMS API supports it) or just
-> > ignore it until the DRM device gets reopened.
-> 
-> It's not a case that you can ignore it until the "DRM device gets reopened"
-> because the DRM device never shuts down.  You'd have to ignore it until
-> you tear down what you have already registered into DRM, causing all
-> the display hardware to be shutdown, and then re-"load" DRM.
-> 
-> To make this work, you would have to modify not only DRM to allow that,
-> but also the framebuffer layer too.  Are you volunteering? :)
-
-I tend to ignore the framebuffer layer since I still hope that it will
-be removed from DRM soon.
-
-We @pengutronix can put quite some time into this, but for sure we can't
-do it alone.
-
-A general problem with DRM on embedded at the moment is that there's
-very little cooperation between the different driver authors, mainly
-because DRM makes it hard to share code between the drivers. There
-currently is no place in DRM to register components in a drm_device
-agnostic way, so everyone currently tries to work around this in the SoC
-drivers. The supernode approach seems to be in this fashion.
-
-Coming from the embedded area componentized devices are nothing new to
-us and I believe that working on this could also help the desktop people
-who suddenly get componentized devices aswell (Optimus).
-
-Sascha
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+T24gVGh1cnNkYXkgMDQgSnVseSAyMDEzIDAyOjUxIFBNLCBQYXRlbCwgU2F0aXNoIHdyb3RlOgo+
+IEhpLAo+Cj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+IEZyb206IEJhbGJpLCBGZWxp
+cGUKPj4gU2VudDogV2VkbmVzZGF5LCBKdWx5IDAzLCAyMDEzIDY6NTEgUE0KPj4gVG86IEFCUkFI
+QU0sIEtJU0hPTiBWSUpBWQo+PiBDYzogUGF0ZWwsIFNhdGlzaDsgZ3JhbnQubGlrZWx5QGxpbmFy
+by5vcmc7IHRvbnlAYXRvbWlkZS5jb207IEJhbGJpLAo+PiBGZWxpcGU7IGFybmRAYXJuZGIuZGU7
+IHN3YXJyZW5AbnZpZGlhLmNvbTsKPj4gc3lsdmVzdGVyLm5hd3JvY2tpQGdtYWlsLmNvbTsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtCj4+IG9tYXBAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQo+PiB1c2JAdmdl
+ci5rZXJuZWwub3JnOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgYWtwbUBsaW51eC0KPj4g
+Zm91bmRhdGlvbi5vcmc7IHJvYi5oZXJyaW5nQGNhbHhlZGEuY29tOyByb2JAbGFuZGxleS5uZXQ7
+Cj4+IGxpbnV4QGFybS5saW51eC5vcmcudWs7IGJlbm9pdC5jb3Vzc29uQGxpbmFyby5vcmc7IG1j
+aGVoYWJAcmVkaGF0LmNvbTsKPj4gY2VzYXJiQGNlc2FyYi5uZXQ7IGRhdmVtQGRhdmVtbG9mdC5u
+ZXQ7IE5heWFrLCBSYWplbmRyYTsKPj4gc2hhd24uZ3VvQGxpbmFyby5vcmc7IFNoaWxpbWthciwg
+U2FudG9zaDsgZGV2aWNldHJlZS0KPj4gZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnOyBsaW51eC1k
+b2NAdmdlci5rZXJuZWwub3JnOyBOb3JpLCBTZWtoYXI7Cj4+IEtyaXNobmFtb29ydGh5LCBCYWxh
+amkgVDsgQ2hlcmlhbiwgR2VvcmdlCj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjkgMC84XSBHZW5l
+cmljIFBIWSBGcmFtZXdvcmsKPj4KPj4gSGksCj4+Cj4+IE9uIFdlZCwgSnVsIDAzLCAyMDEzIGF0
+IDAzOjM1OjM5UE0gKzA1MzAsIEtpc2hvbiBWaWpheSBBYnJhaGFtIEkKPj4gd3JvdGU6Cj4+PiBP
+biBXZWRuZXNkYXkgMDMgSnVseSAyMDEzIDAzOjAyIFBNLCBQYXRlbCwgU2F0aXNoIHdyb3RlOgo+
+Pj4+IEhpIEtpc2hvbiwKPj4+Pgo+Pj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+Pj4+
+PiBGcm9tOiBBQlJBSEFNLCBLSVNIT04gVklKQVkKPj4+Pj4gU2VudDogV2VkbmVzZGF5LCBKdW5l
+IDI2LCAyMDEzIDU6MTcgUE0KPj4+Pj4gVG86IGdyYW50Lmxpa2VseUBsaW5hcm8ub3JnOyB0b255
+QGF0b21pZGUuY29tOyBCYWxiaSwgRmVsaXBlOwo+PiBBQlJBSEFNLAo+Pj4+PiBLSVNIT04gVklK
+QVk7IGFybmRAYXJuZGIuZGU7IHN3YXJyZW5AbnZpZGlhLmNvbTsKPj4+Pj4gc3lsdmVzdGVyLm5h
+d3JvY2tpQGdtYWlsLmNvbTsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtCj4+
+Pj4+IG9tYXBAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmc7IGxpbnV4LQo+Pj4+PiB1c2JAdmdlci5rZXJuZWwub3JnOyBncmVna2hAbGludXhmb3Vu
+ZGF0aW9uLm9yZzsgYWtwbUBsaW51eC0KPj4+Pj4gZm91bmRhdGlvbi5vcmcKPj4+Pj4gQ2M6IHJv
+Yi5oZXJyaW5nQGNhbHhlZGEuY29tOyByb2JAbGFuZGxleS5uZXQ7Cj4+IGxpbnV4QGFybS5saW51
+eC5vcmcudWs7Cj4+Pj4+IGJlbm9pdC5jb3Vzc29uQGxpbmFyby5vcmc7IG1jaGVoYWJAcmVkaGF0
+LmNvbTsgY2VzYXJiQGNlc2FyYi5uZXQ7Cj4+Pj4+IGRhdmVtQGRhdmVtbG9mdC5uZXQ7IE5heWFr
+LCBSYWplbmRyYTsgc2hhd24uZ3VvQGxpbmFyby5vcmc7Cj4+IFNoaWxpbWthciwKPj4+Pj4gU2Fu
+dG9zaDsgZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmc7IGxpbnV4LQo+Pj4+PiBk
+b2NAdmdlci5rZXJuZWwub3JnOyBOb3JpLCBTZWtoYXI7IEtyaXNobmFtb29ydGh5LCBCYWxhamkg
+VDsKPj4gQ2hlcmlhbiwKPj4+Pj4gR2VvcmdlCj4+Pj4+IFN1YmplY3Q6IFtQQVRDSCB2OSAwLzhd
+IEdlbmVyaWMgUEhZIEZyYW1ld29yawo+Pj4+Pgo+Pj4+PiBBZGRlZCBhIGdlbmVyaWMgUEhZIGZy
+YW1ld29yayB0aGF0IHByb3ZpZGVzIGEgc2V0IG9mIEFQSXMgZm9yIHRoZQo+PiBQSFkKPj4+Pj4g
+ZHJpdmVycwo+Pj4+PiB0byBjcmVhdGUvZGVzdHJveSBhIFBIWSBhbmQgQVBJcyBmb3IgdGhlIFBI
+WSB1c2VycyB0byBvYnRhaW4gYQo+Pj4+PiByZWZlcmVuY2UgdG8KPj4+Pj4gdGhlIFBIWSB3aXRo
+IG9yIHdpdGhvdXQgdXNpbmcgcGhhbmRsZS4KPj4+Pj4KPj4+Pj4gVGhpcyBmcmFtZXdvcmsgd2ls
+bCBiZSBvZiB1c2Ugb25seSB0byBkZXZpY2VzIHRoYXQgdXNlcyBleHRlcm5hbAo+PiBQSFkKPj4+
+Pj4gKFBIWQo+Pj4+PiBmdW5jdGlvbmFsaXR5IGlzIG5vdCBlbWJlZGRlZCB3aXRoaW4gdGhlIGNv
+bnRyb2xsZXIpLgo+Pj4+Pgo+Pj4+PiBUaGUgaW50ZW50aW9uIG9mIGNyZWF0aW5nIHRoaXMgZnJh
+bWV3b3JrIGlzIHRvIGJyaW5nIHRoZSBwaHkKPj4gZHJpdmVycwo+Pj4+PiBzcHJlYWQKPj4+Pj4g
+YWxsIG92ZXIgdGhlIExpbnV4IGtlcm5lbCB0byBkcml2ZXJzL3BoeSB0byBpbmNyZWFzZSBjb2Rl
+IHJlLXVzZQo+PiBhbmQKPj4+Pj4gdG8KPj4+Pj4gaW5jcmVhc2UgY29kZSBtYWludGFpbmFiaWxp
+dHkuCj4+Pj4KPj4+PiBJIHdvdWxkIGxpa2UgdG8gdXNlIHRoaXMgZnJhbWV3b3JrIGZvciBhIHNt
+YXJ0LWNhcmQgY29udHJvbGxlcgo+PiBjb25uZWN0ZWQgdG8gYQo+Pj4+IHNtYXJ0LWNhcmQgcGh5
+LiBJIGhhdmUgc29tZSBxdWVzdGlvbnMgYW5kIHdvdWxkIGxpa2UgdG8gZ2V0Cj4+IGZlZWRiYWNr
+IG9uIHRoZSBzYW1lLgo+Pj4KPj4+IGdsYWQgdG8ga25vdyB0aGF0IDotKQo+Pj4+Cj4+Pj4gSSBh
+bSB1c2luZyDigJxUREE4MDI2IiBTbWFydGNhcmQgUEhZIGZyb20gTlhQLiBIZXJlIGlzIHRoZSBs
+aW5rIGZvcgo+PiBkYXRhc2hlZXQKPj4+PiBhbmQgYXBwIG5vdGUgZm9yIHRoZSBzYW1lLiBUaGUg
+c21hcnQgY2FyZCBjb250cm9sbGVyIGlzIGluc2lkZSB0aGUKPj4gVEkgU29DCj4+Pj4gSSBhbSB3
+b3JraW5nIHdpdGguCj4+Pj4KPj4+PiBEYXRhc2hlZXQgOgo+Pj4+IHd3dy5ueHAuY29tL2RvY3Vt
+ZW50cy9kYXRhX3NoZWV0L1REQTgwMjYucGRmPwo+Pj4+Cj4+Pj4gQXBwbm90ZSA6Cj4+Pj4gaHR0
+cDovL3d3dy5ueHAuY29tL2RvY3VtZW50cy9hcHBsaWNhdGlvbl9ub3RlL0FOMTA3MjQucGRmCj4+
+Pj4KPj4+PiBUaGUgVEkgU29DIGRldGFpbHMgYXJlIG5vdCBwdWJsaWMgKHlldCkuIEkgY2FuIHBy
+b3ZpZGUgZGV0YWlscyB0bwo+PiB5b3Ugb2ZmbGluZS4KPj4+Pgo+Pj4+IEJyaWVmIGFib3V0IG9w
+ZXJhdGlvbjoKPj4+PiAtCVRoZSBjb250cm9sbGVyIGNhbiB3b3JrIHdpdGggYW5kIHdpdGhvdXQg
+YSBQSFkKPj4+PiAtCVdoZW4gbm90IHVzaW5nIFBIWSwgaXQgaXMgbGltaXRlZCB0byB0YWxraW5n
+IHRvIGEgc2luZ2xlCj4+Pj4gCXNtYXJ0IGNhcmQuIFRoZXJlIGlzIGFsc28gYSBuZWVkIHRvIHB1
+dCBleHRlcm5hbCBkZS1hY3RpdmF0aW9uCj4+IGxvZ2ljCj4+Pj4gCW9uIGNhcmQgcmVtb3ZhbCBm
+b3IgdGhpcyBjYXNlLgo+Pj4+IC0JV2l0aCBhIFBIWSB5b3UgY2FuIHVzZSBtb3JlIHRoYW4gb25l
+IHNtYXJ0IGNhcmQuCj4+Pj4gLQlQaHkgaGFzIDUgc2xvdHMgOiAgMSBmb3Igc21hcnQgY2FyZCAo
+Y3JlZGl0L2RlYml0L290aGVyIGNhcmQKPj4gd2l0aCBjaGlwKQo+Pj4+ICAgICAgICBhbmQgb3Ro
+ZXJzIGZvciBTQU0g4oCTIFNJTSBsaWtlIG1vZHVsZXMKPj4+PiAtIAlPbmNlIHRoZSBQSFkgaXMg
+aW5pdGlhbGl6ZWQsIHRoZXJlIGFyZSBzb21lIG9wZXJhdGlvbnMgdGhhdCB0aGUKPj4gY29udHJv
+bGxlcgo+Pj4+IAljYW4gcmVxdWVzdCBvZiB0aGUgUEhZIGxpa2U6Cj4+Pj4gCS0gQ2FyZCBjb25m
+aWd1cmF0aW9ucyAgLSBzZXQgdm9sdGFnZQo+Pj4+IAktIEFjdGl2YXRpb24gb2YgY2FyZAo+Pj4+
+IAktIEFUUiDigJMgQW5zd2VyIHRvIHJlc2V0Cj4+Pj4gCS0gV2FybSByZXNldAo+Pj4+IAktIEFE
+UFUgZXhjaGFuZ2UKPj4+PiAJLSBEZWFjdGl2YXRpb24gKCBOb3JtYWwvRW1lcmdlbmN5KQo+Pj4K
+Pj4+IGhtbS4uIFdlIHNob3VsZCB0aGluayBhYm91dCBleHRlbmRpbmcgdGhlIHBoeV9vcHMgdG8g
+aW5jbHVkZSB0aGVzZQo+Pj4gb3BlcmF0aW9ucyAoc29tZXRoaW5nIGxpa2UgcGh5X3NtYXJ0X2Nh
+cmRfb3BzIHNvIHRoYXQgb3RoZXIKPj4+IHNtYXJ0X2NhcmQgUEhZcyB3aWxsIGFsc28gYmUgYWJs
+ZSB0byB1c2UgaXQpLgo+Pgo+PiBsZXQncyB0cnkgdG8gYXZvaWQgdXNlLWNhc2Ugc3BlY2lmaWMg
+YWRkaXRpb25zLiBzZXRfdm9sdGFnZSBzb3VuZHMKPj4gbGlrZQo+PiBhIHJlZ3VsYXRvciB0aGlu
+ZywgYnV0IHRoZSByZWd1bGF0b3IgaXMgY29udHJvbGxlZCB0aHJvdWdoIHRoZSBQSFkuIEkKPj4g
+Z3Vlc3MgaXQgbWFrZXMgc2Vuc2UgdG8gaGF2ZSBhIGdlbmVyaWMgcGh5X3NldF92b2x0YWdlKCkg
+Y2FsbCBzaW5jZQo+PiBldmVuCj4+IFVTQiBjYW4gbWFrZSB1c2Ugb2YgdGhhdC4KPj4KPj4gRm9y
+IGNhcmQgYWN0aXZhdGlvbiwgaXQgc291bmRzIGxpa2UgcGh5X2luaXQoKS9waHlfc2h1dGRvd24o
+KSB3b3VsZAo+PiBjb3ZlciBpdC4KPj4KPj4gRm9yIHdhcm0gcmVzZXQgcGVyaGFwcyBhIHBoeV9y
+ZXNldCgpIGNhbGxiYWNrID8gQWx0aG91Z2ggdGhhdCBjb3VsZCwKPj4gZWFzaWx5LCBnZXQgYWJ1
+c2VkLgo+Pgo+PiBGb3IgZGVhY3RpdmF0aW9uLCB0aGF0J3MgcGh5X3NodXRkb3duKCkuCj4+Cj4+
+IEFUUiBhbmQgQURQVSBuZWVkcyBtb3JlIHRob3VnaHQsIEkgZ3Vlc3MuCj4+Cj4+Pj4gLSAJSW4g
+dGhlIG1vZGUgd2hlbiBzbWFydGNhcmQgY29udHJvbGxlciB0YWxrcyBkaXJlY3RseSB0byB0aGUK
+Pj4gY2FyZCB3aXRob3V0IHRoZSBuZWVkCj4+Pj4gCWZvciBhIFBIWSwgYWxsIHRoZSBhYm92ZSBv
+cGVyYXRpb25zIHdpbGwgYmUgY2FycmllZCBvdXQgYnkgdGhlCj4+IGNvbnRyb2xsZXIgaXRzZWxm
+Cj4+Pj4KPj4+PiBNeSBjdXJyZW50IHRob3VnaHQgcHJvY2VzcyBpcyB0byBtYWtlIHRoZSBjb250
+cm9sbGVyIGRyaXZlciBwcm92aWRlCj4+IHRoZSB1c2VyIGludGVyZmFjZQo+Pj4+IGFuZCB0YWxr
+IHRvIHRoZSBQSFkgdXNpbmcgdGhlIGdlbmVyaWMgUEhZIGZyYW1ld29yayB5b3UgcHJvcG9zZWQu
+Cj4+IEluIHRoZSBjYXNlIHdoZXJlIHRoZXJlCj4+Pj4gaXMgbm8gUEhZLCBteSBpZGVhIGlzIHRv
+IGNyZWF0ZSBhICJkdW1teSIgUEhZIHdoaWNoIHVzZXMgdGhlCj4+IGNvbnRyb2xsZXIgZnVuY3Rp
+b25hbGl0eSBpdHNlbGYuCj4+Pgo+Pj4gcmlnaHQuIEFuZCBpbiB0aGUgY2FzZSB3aGVyZSB5b3Ug
+YWN0dWFsbHkgaGF2ZSBhIFBIWSwgY3JlYXRlIGEgUEhZCj4+PiBkcml2ZXIgYW5kIGltcGxlbWVu
+dCB0aGUgcGh5X3NtYXJ0X2NhcmRfb3BzIGFuZCByZWdpc3RlciB3aXRoIHRoZQo+PiBQSFkKPj4+
+IGZyYW1ld29yay4KPj4KPj4gSSB3b3VsZCB0cnkgdG8gYXZvaWQgdGhhdC4gT3RoZXJ3aXNlIHdl
+IHdpbGwgaGF2ZSBwaHlfdXNiX29wcywKPj4gcGh5X3NhdGFfb3BzLCBwaHlfbmV0d29ya19vcHMs
+IHBoeV9wY2lfb3BzLCBldGMgZXRjIGV0Yy4gSXQgd291bGQKPj4gZWFzaWx5Cj4+IGJsb3cgdXAu
+Cj4+Cj4KPiAtIEkgZG8gYWdyZWUgd2l0aCB5b3UuIENyZWF0aW5nIFBoeSBzcGVjaWZpYyBvcHMg
+d2lsbCBibG93IHVwIHdob2xlCj4gICAgY29uY2VwdCBvZiBnZW5lcmljIHBoeSBmL3cuCj4gLSBD
+YW4gd2UgaGF2ZSBpbnRlcmZhY2UgbGlrZSBwaHlfc2V0Y29uZmlnIC0gd2l0aCBwYXJhbWV0ZXIg
+bGlrZQo+ICAgIHBoeV9zZXRjb25maWcoaW50IHBhcmFtLCB2b2lkICp2YWx1ZSkKPiAJLSBIZXJl
+IHBhcmFtIGNhbiBiZSBlbnVtIG9mIGF2YWlsYWJsZSBjb25maWcgcGFyYW1ldGVycyBmb3IKPiAJ
+ICBzcGVjaWZpYyBwaHkuCj4gUGh5IGNhbiBwZXJmb3JtIGRpZmZlcmVudCBvcGVyYXRpb24vc2V0
+IGludGVybmFsIHN0YXRlIGJhc2VkIG9uCj4gcGFyYW0gc2VsZWN0aW9uIGFuZCB2YWx1ZSBwYXNz
+ZWQgYnkuCj4gCQo+IGUueCBpbiBjYXNlIG9mIHNtYXJ0Y2FyZAo+IAllbnVtIHNldF9jb25maWcg
+ewo+IAkJU0VUX1ZPTEFUQUdFLAo+IAkJU0VUX0FDVElWQVRFLAo+IAkJU0VUX1dBUk1SRVNFVCwK
+PiAJCVNFVF9BVFIsCj4gCQlTRVRfREVBQ1RJVkUsCj4gCQkuLi4uCj4gCX07CgpobW0uLiB0aGlz
+IGxvb2tzIHNpbWlsYXIgdG8gaW9jdGwgYW5kIGNhbiBiZSBhYnVzZWQgZWFzaWx5IElNTyA6cwoK
+LUtpc2hvbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
