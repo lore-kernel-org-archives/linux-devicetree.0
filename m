@@ -1,60 +1,70 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of: Fix address decoding on Bimini and js2x machines
-Date: Thu, 04 Jul 2013 17:18:28 +0100
-Message-ID: <20130704161828.EB08D3E08D0@localhost>
-References: <1372831270.4122.36.camel@pasglop> <51D430C7.8030100@gmail.com>
- <CACxGe6ucVocguyNdZ9CiN0ef=WgmOrZe0FyVij_bC7bJZe41=g@mail.gmail.com>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Appended DTB files for multi-machine kernels
+Date: Thu, 04 Jul 2013 18:56:24 +0200
+Message-ID: <51D5A938.30607@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <CACxGe6ucVocguyNdZ9CiN0ef=WgmOrZe0FyVij_bC7bJZe41=g@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Thierry Reding <thierry.reding@avionic-design.de>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sven Neumann <s.neumann-5g8ninUHluJWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 3 Jul 2013 15:37:56 +0100, Grant Likely <grant.likely@linaro.org> wrote:
-> On Wed, Jul 3, 2013 at 3:10 PM, Rob Herring <robherring2@gmail.com> wrote:
-> > On 07/03/2013 01:01 AM, Benjamin Herrenschmidt wrote:
-> >>  Commit:
-> >>
-> >>   e38c0a1fbc5803cbacdaac0557c70ac8ca5152e7
-> >>   of/address: Handle #address-cells > 2 specially
-> >>
-> >> broke real time clock access on Bimini, js2x, and similar powerpc
-> >> machines using the "maple" platform. That code was indirectly relying
-> >> on the old (broken) behaviour of the translation for the hypertransport
-> >> to ISA bridge.
-> >>
-> >> This fixes it by treating hypertransport as a PCI bus
-> >>
-> >> Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> >> CC: <stable@vger.kernel.org> [v3.6+]
-> >> ---
-> >>
-> >> Rob, if you have no objection I will put that in powerpc -next
-> >
-> > NP.
-> >
-> > Acked-by: Rob Herring <rob.herring@calxeda.com>
-> 
-> I'll include this in my 3.11 pull request for Linus
+Hi,
 
-Oops. Ben, I misread what you wrote. It would have been just fine to
-include it in your powerpc -next branch. Sorry for the confusion.
+I'm facing a problem with a transition from legacy board-file driven ARM
+machines to DTB, and I'm under the impression that a solution for it
+could be of broader interest.
 
-Anyway, I saw your powerpc pull req and that this patch wasn't in it, so
-I've picked it up and will send it to Linus as soon as the test build
-completes.
+In short, devices that have been deployed in quantities come in three
+hardware variants, which all boot with a unique machine-id. We ship
+kernel images that have board support for all three machine types, and
+do minor fixups to platform data of some drivers at runtime, depending
+on the board revision number (passed in via ATAGs).
 
-g.
+The built-in support for attaching a DTB to the zImage does not suffice
+here, because we have one image for all models, and also, we couldn't do
+a 'per-board-revision' selection that way either.
+
+Unless I missed some recent discussion, this case is not easy to handle.
+Yes, I know that these kind of things should be handled by a
+next-generation bootloader, but in our case, we want to avoid a loader
+update of already shipped hardware by all means.
+
+As a solution, I'm thinking of a small framework that could for example
+work as follows.
+
+a) A small mechanism allows storing multiple DTB binary files inside the
+kernel binary at compile time, and a simple function can extract them
+again by name at runtime (something like what the firmware framework
+does, but I don't know if that one can be used at such an early stage in
+the boot process).
+
+b) A DT_MACHINE_START-like macro takes both the machine ID and the name
+of a DTB file that is compiled in. When matched, generic functions would
+load the given file, populate the device tree and then conduct a generic
+DT boot for the specified platform.
+
+c) Allow users to open-code the DTB lookup depending on whatever kind of
+runtime information (be it the board_revision or anything else).
+
+
+Of course, everything has to be an opt-in that stubs itself out at zero
+costs if not needed.
+
+
+I'm open to opinion and sugesstions :)
+
+
+Thanks,
+Daniel
