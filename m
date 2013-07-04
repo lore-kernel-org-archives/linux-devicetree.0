@@ -1,70 +1,74 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Appended DTB files for multi-machine kernels
-Date: Thu, 04 Jul 2013 18:56:24 +0200
-Message-ID: <51D5A938.30607@gmail.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH v4 0/4] mtd:nand:omap2: clean-up of supported ECC schemes
+Date: Thu, 4 Jul 2013 22:27:07 +0530
+Message-ID: <51D5A963.6020102@ti.com>
+References: <1372764757-29511-1-git-send-email-pekon@ti.com> <20980858CB6D3A4BAE95CA194937D5E73E9E46CA@DBDE04.ent.ti.com> <1372857987.9767.162.camel@sauron.fi.intel.com> <201307031527.17219.arnd@arndb.de> <20980858CB6D3A4BAE95CA194937D5E73E9E47B4@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sven Neumann <s.neumann-5g8ninUHluJWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9E47B4@DBDE04.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Gupta, Pekon" <pekon@ti.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>, "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "olof@lixom.net" <olof@lixom.net>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 7/3/2013 11:34 PM, Gupta, Pekon wrote:
+>> On Wednesday 03 July 2013, Artem Bityutskiy wrote:
+>>> On Wed, 2013-07-03 at 13:16 +0000, Gupta, Pekon wrote:
+>>>> [Pekon]: Yes, I'm not seeing these build issues, as I'm cleanly
+>>>> returning from probe with pr_err(), if the required libraries (/lib/bch.c)
+>>>> are not build-in the system.
+>>>> -------------------
+>>>> [Patch v4 1/4]: mtd:nand:omap2: clean-up BCHx_HW and BCHx_SW ECC..
+>>>> @@static int omap_nand_probe(struct platform_device *pdev)
+>>>> +	default:
+>>>> +		pr_err("selected ECC scheme not supported or not
+>> enabled\n");
+>>>> +		err = -EINVAL;
+>>>> +		goto out_release_mem_region;
+>>>> +	}
+>>>> -------------------
+>>>> However, if you are still seeing this, could you please send me your
+>> config?
+>>> I compile tested your patches too, and did not see any issues with my
+>>> omap2_defconfig.
+>>
+>> To clarify: I'm getting this error with randconfig on today's linux-next.
+>> I think it only happens with MTD_NAND_ECC_BCH enabled, which is not
+>> the default in omap2_defconfig.
+>>
+>> 	Arnd
+> Hi Arnd, Artem, Stephen,
+>
+> I see the issue in linux-next/master tree..
+> linux-next/master has only the first [Patch v4 1/4] from the series.
+> Other patches [Patch v4 2/4.. 4/4] of this series were dropped,
+> as 'Olof Johansson' had some apprehensions about DT bindings.
+> http://permalink.gmane.org/gmane.linux.ports.arm.kernel/249662
+>
+> As these patches are inter-dependent, so please drop the whole series
+> including the commit below.
+> fb1585b  [Patch v4 1/4] mtd: nand: omap2: clean-up BCHx_HW and BCHx_SW
+>
+> I'm awaiting feedbacks from 'Olof Johansson' or other DT maintainers,
+> once approved, I'll resend the whole series.
+>
+> "[PATCH v4 2/4] ARM: OMAP2+: cleaned-up DT support " had the
+> declarations which were required for above build errors.
+> ---------------
+> include/linux/platform_data/mtd-nand-omap2.h
+> enum omap_ecc {
+> +	/* 4-bit  ECC calculation by GPMC, Error detection by Software */
+> +	OMAP_ECC_BCH4_CODE_HW_DETECTION_SW,
+> ...
+> +	/* 8-bit  ECC calculation by GPMC, Error detection by Software */
+> +	OMAP_ECC_BCH8_CODE_HW_DETECTION_SW
+> ---------------
+>
+But patches should not have inter dependency for compilation. It will affect
+the bisect process.
 
-I'm facing a problem with a transition from legacy board-file driven ARM
-machines to DTB, and I'm under the impression that a solution for it
-could be of broader interest.
+Regards
+Mugunthan V N
 
-In short, devices that have been deployed in quantities come in three
-hardware variants, which all boot with a unique machine-id. We ship
-kernel images that have board support for all three machine types, and
-do minor fixups to platform data of some drivers at runtime, depending
-on the board revision number (passed in via ATAGs).
-
-The built-in support for attaching a DTB to the zImage does not suffice
-here, because we have one image for all models, and also, we couldn't do
-a 'per-board-revision' selection that way either.
-
-Unless I missed some recent discussion, this case is not easy to handle.
-Yes, I know that these kind of things should be handled by a
-next-generation bootloader, but in our case, we want to avoid a loader
-update of already shipped hardware by all means.
-
-As a solution, I'm thinking of a small framework that could for example
-work as follows.
-
-a) A small mechanism allows storing multiple DTB binary files inside the
-kernel binary at compile time, and a simple function can extract them
-again by name at runtime (something like what the firmware framework
-does, but I don't know if that one can be used at such an early stage in
-the boot process).
-
-b) A DT_MACHINE_START-like macro takes both the machine ID and the name
-of a DTB file that is compiled in. When matched, generic functions would
-load the given file, populate the device tree and then conduct a generic
-DT boot for the specified platform.
-
-c) Allow users to open-code the DTB lookup depending on whatever kind of
-runtime information (be it the board_revision or anything else).
-
-
-Of course, everything has to be an opt-in that stubs itself out at zero
-costs if not needed.
-
-
-I'm open to opinion and sugesstions :)
-
-
-Thanks,
-Daniel
