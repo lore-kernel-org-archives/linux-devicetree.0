@@ -1,74 +1,96 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH v4 0/4] mtd:nand:omap2: clean-up of supported ECC schemes
-Date: Thu, 4 Jul 2013 22:27:07 +0530
-Message-ID: <51D5A963.6020102@ti.com>
-References: <1372764757-29511-1-git-send-email-pekon@ti.com> <20980858CB6D3A4BAE95CA194937D5E73E9E46CA@DBDE04.ent.ti.com> <1372857987.9767.162.camel@sauron.fi.intel.com> <201307031527.17219.arnd@arndb.de> <20980858CB6D3A4BAE95CA194937D5E73E9E47B4@DBDE04.ent.ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Appended DTB files for multi-machine kernels
+Date: Thu, 4 Jul 2013 18:11:48 +0100
+Message-ID: <20130704171148.GJ27646@sirena.org.uk>
+References: <51D5A938.30607@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9E47B4@DBDE04.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>, "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "olof@lixom.net" <olof@lixom.net>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: multipart/mixed; boundary="===============0143677987900294903=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51D5A938.30607-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sven Neumann <s.neumann-5g8ninUHluJWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/3/2013 11:34 PM, Gupta, Pekon wrote:
->> On Wednesday 03 July 2013, Artem Bityutskiy wrote:
->>> On Wed, 2013-07-03 at 13:16 +0000, Gupta, Pekon wrote:
->>>> [Pekon]: Yes, I'm not seeing these build issues, as I'm cleanly
->>>> returning from probe with pr_err(), if the required libraries (/lib/bch.c)
->>>> are not build-in the system.
->>>> -------------------
->>>> [Patch v4 1/4]: mtd:nand:omap2: clean-up BCHx_HW and BCHx_SW ECC..
->>>> @@static int omap_nand_probe(struct platform_device *pdev)
->>>> +	default:
->>>> +		pr_err("selected ECC scheme not supported or not
->> enabled\n");
->>>> +		err = -EINVAL;
->>>> +		goto out_release_mem_region;
->>>> +	}
->>>> -------------------
->>>> However, if you are still seeing this, could you please send me your
->> config?
->>> I compile tested your patches too, and did not see any issues with my
->>> omap2_defconfig.
->>
->> To clarify: I'm getting this error with randconfig on today's linux-next.
->> I think it only happens with MTD_NAND_ECC_BCH enabled, which is not
->> the default in omap2_defconfig.
->>
->> 	Arnd
-> Hi Arnd, Artem, Stephen,
->
-> I see the issue in linux-next/master tree..
-> linux-next/master has only the first [Patch v4 1/4] from the series.
-> Other patches [Patch v4 2/4.. 4/4] of this series were dropped,
-> as 'Olof Johansson' had some apprehensions about DT bindings.
-> http://permalink.gmane.org/gmane.linux.ports.arm.kernel/249662
->
-> As these patches are inter-dependent, so please drop the whole series
-> including the commit below.
-> fb1585b  [Patch v4 1/4] mtd: nand: omap2: clean-up BCHx_HW and BCHx_SW
->
-> I'm awaiting feedbacks from 'Olof Johansson' or other DT maintainers,
-> once approved, I'll resend the whole series.
->
-> "[PATCH v4 2/4] ARM: OMAP2+: cleaned-up DT support " had the
-> declarations which were required for above build errors.
-> ---------------
-> include/linux/platform_data/mtd-nand-omap2.h
-> enum omap_ecc {
-> +	/* 4-bit  ECC calculation by GPMC, Error detection by Software */
-> +	OMAP_ECC_BCH4_CODE_HW_DETECTION_SW,
-> ...
-> +	/* 8-bit  ECC calculation by GPMC, Error detection by Software */
-> +	OMAP_ECC_BCH8_CODE_HW_DETECTION_SW
-> ---------------
->
-But patches should not have inter dependency for compilation. It will affect
-the bisect process.
 
-Regards
-Mugunthan V N
+--===============0143677987900294903==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yo6atQ2PxMLW0cRR"
+Content-Disposition: inline
 
+
+--yo6atQ2PxMLW0cRR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Jul 04, 2013 at 06:56:24PM +0200, Daniel Mack wrote:
+
+> Unless I missed some recent discussion, this case is not easy to handle.
+> Yes, I know that these kind of things should be handled by a
+> next-generation bootloader, but in our case, we want to avoid a loader
+> update of already shipped hardware by all means.
+
+There was some discussion about appending multiple DTBs recently.  I
+can't actually recall anything about it though so that's not an entirely
+helpful thing...
+
+> As a solution, I'm thinking of a small framework that could for example
+> work as follows.
+
+> a) A small mechanism allows storing multiple DTB binary files inside the
+> kernel binary at compile time, and a simple function can extract them
+> again by name at runtime (something like what the firmware framework
+> does, but I don't know if that one can be used at such an early stage in
+> the boot process).
+
+Another way of skinning this would be for either the kernel to contain
+a set of machine ID to compatible string mappings or for the device
+trees for the boards to have an additional properties giving the machine
+IDs that the boards match.  The kernel could then look for multiple DTBs
+appended to the image and try to pick one based on ATAGs.
+
+--yo6atQ2PxMLW0cRR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR1azRAAoJELSic+t+oim9XMYP/0pG+ceAPKwVvkXGzLVIXgMK
+P/dnxhlYyzQb2dGen/xA9TsZB6RQclBq4cd9SgdSANJzXRUNoH083Z/kpPtmOZEt
+5pqpSHNh6GuFPgTwSLf8ggd0PE34uVUqFxZi5YaJUGHFJbVDxJZt50vZ4j3Uxfbo
+1Ev9Y5VfbPtFU5aryrhA5nrjjBnhxeMUfXMkhX9C7ONcdDUh0jFLZVc8BgY4m/1J
+E03D3debAXL+0QxAAsCp35yLMoFQM4WCul1a2PwozIX8Ghtww4PCHKBjGJe/8gHR
+8Sxoe5PIeXTjc2S9aBECSu9EXEh0xDpU45iOGlqN5keKVpKnHMrFOU1daNlFthWW
+tKlhyam+27djvzso8fMZ1U8JZU6Mmu318yHSiKb0UW00dAWPa+o0+JW6ReTW3STe
+01C0f/cGA/9MizKvw3Sf4slanUC9LlbSAPWVxj90WoX4TILtlsiPIHDOC4+KJjWC
+fCU7LLY2d5khEtDXUo5ZiCFkI7mlq/076xDvOKcq5woputrHevm+qstq46tTV3YR
+DxzErVbtYOOMyPSxiP2nZGj8UELotuMHvaCo2B7Ayum4d7G9556fxVvgLBcVgX2q
+wgyw9Hg7yLlA/j4R72DeHc58jCvlmCfimNcv+oCnHO7odejSgNsPhvTX+OkNTZd5
+DR0DJOwkfRPCJomuRzVl
+=JmNA
+-----END PGP SIGNATURE-----
+
+--yo6atQ2PxMLW0cRR--
+
+--===============0143677987900294903==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0143677987900294903==--
