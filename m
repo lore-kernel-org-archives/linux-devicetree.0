@@ -1,14 +1,16 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH V2 1/8] regulator: Introduce OMAP regulator to
- control PMIC over VC/VP
-Date: Thu, 4 Jul 2013 16:41:05 +0100
-Message-ID: <20130704154105.GD27646@sirena.org.uk>
-References: <1371849949-12649-1-git-send-email-nm@ti.com>
- <1371849949-12649-2-git-send-email-nm@ti.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/6] misc: sram: fix error path in sram_probe
+Date: Thu, 04 Jul 2013 17:41:51 +0200
+Message-ID: <1372952511.3974.38.camel@pizza.hi.pengutronix.de>
+References: <201306251046.04873.heiko@sntech.de>
+ <201306251046.38993.heiko@sntech.de>
+ <1372151074.3981.21.camel@pizza.hi.pengutronix.de>
+ <201307041634.11248.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1735028794965387270=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371849949-12649-2-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <201307041634.11248.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,82 +21,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Taras Kondratiuk <taras-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1735028794965387270==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uIl/38eSFNz6qklc"
-Content-Disposition: inline
-
-
---uIl/38eSFNz6qklc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jun 21, 2013 at 04:25:42PM -0500, Nishanth Menon wrote:
-
-> +static const struct omap_pmic_info omap_twl4030_vdd1 = {
-> +	.slave_addr = 0x12,
-> +	.voltage_reg_addr = 0x00,
-> +	.cmd_reg_addr = 0x00,
-> +	.i2c_timeout_us = 200,
-> +	.slew_rate_uV = 4000,
-> +	.step_size_uV = 12500,
-> +	.min_uV = 600000,
-> +	.max_uV = 1450000,
-> +	.voltage_selector_offset = 0,
-> +	.voltage_selector_mask = 0x7F,
-> +	.voltage_selector_setbits = 0x0,
-> +	.voltage_selector_zero = false,
-> +};
-
-So, this still has the thing where all the data about the PMIC is
-replicated (but now in this driver).  It should be possible to pull all
-the above information except possibly the I2C timeout and perhaps the
-I2C address (if there's a separate control interface) from the standard
-regulator core data structures for the PMIC.  This would allow the
-driver to Just Work with any PMIC without needing to add it in two
-places.
-
-Other than that this looks good, the only issue I see is where the
-driver is getting the data from.
-
---uIl/38eSFNz6qklc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR1ZeNAAoJELSic+t+oim9TYQP/i8xdUuqYSquZGFqcd6Q4RR6
-sx1wtU1lN5tmlgEa/HrSoU/qc8SRO5fvPYXweEbS0YPAlhWq4e9n+cq7nDSbSr7s
-YipfiCHA2sGBOzPd5HhU8ZUG+FvDWJ7vTKUuBrl4M7q8QkKkhGUypUC10Lm+MYlt
-mMwpNZ2HFhlLOdf7S7TtkW7Agls0rIE+rzkf0VJKQzxNf+qyJA05K8/I6JA6u4nR
-FjMfqFeI+770EDoQxyRP4RCM0VUNMPkYcPRRD8p0sRICYxxDLZieaKQfa1MCDuJY
-K9BSK0uJhh/Mhvxb8M82LqzuPxK1n903GRXnKC8iWV1op2EmqUVXbB2sxsCC75Ra
-fzEfY2n3RbO1TuMQi7LXiMKcl7ej19YjYfwUdwM51DaquBqLsJkx2M1n3A4Ryq5n
-Ykm6h56nzBZwwVktf8c7Rs2xxz3mS3T5K1jjE1mj7NdUHwYreB+ynVpyKseMSFp/
-Jqe8RKzGD1V4RhAkwezgedDoqihKDftaULPjREwzqihAcirlGLXnatvSGCVZB8Hd
-b+/3xTt78WqUtXTmQv9Pu0YXkgwvd0FSWZUt9i8oogm6eS/bE6OV4WgFXrrAmROb
-ZqWZvP1PwjgO8Fm+uXWwoGxa4FD/bRkoal+7wJvqwI6p9Fy8SfrChNHQ5MSN/lyP
-VmYNnKKBDikfiRFrBX6N
-=VOAi
------END PGP SIGNATURE-----
-
---uIl/38eSFNz6qklc--
-
---===============1735028794965387270==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1735028794965387270==--
+SGkgSGVpa28sCgpBbSBEb25uZXJzdGFnLCBkZW4gMDQuMDcuMjAxMywgMTY6MzQgKzAyMDAgc2No
+cmllYiBIZWlrbyBTdMO8Ym5lcjoKPiBIaSBQaGlsaXBwLAo+IAo+IEFtIERpZW5zdGFnLCAyNS4g
+SnVuaSAyMDEzLCAxMTowNDozNCBzY2hyaWViIFBoaWxpcHAgWmFiZWw6Cj4gPiBIaSBIZWlrbywK
+PiA+IAo+ID4gQW0gRGllbnN0YWcsIGRlbiAyNS4wNi4yMDEzLCAxMDo0NiArMDIwMCBzY2hyaWVi
+IEhlaWtvIFN0w7xibmVyOgo+ID4gPiBUaGUgcG9vbCBpcyBjcmVhdGVkIHRocnUgZGV2bV9nZW5f
+cG9vbF9jcmVhdGUsIHNvIHRoZSBjYWxsIHRvCj4gPiA+IGdlbl9wb29sX2Rlc3Ryb3kgaXMgbm90
+IG5lY2Vzc2FyeS4KPiA+ID4gSW5zdGVhZCB0aGUgc3JhbS1jbG9jayBtdXN0IGJlIHR1cm5lZCBv
+ZmYgYWdhaW4gaWYgaXQgZXhpc3RzLgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogSGVpa28g
+U3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiA+ID4gLS0tCj4gPiA+IAo+ID4gPiAgZHJpdmVy
+cy9taXNjL3NyYW0uYyB8ICAgIDMgKystCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRp
+b25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
+aXNjL3NyYW0uYyBiL2RyaXZlcnMvbWlzYy9zcmFtLmMKPiA+ID4gaW5kZXggZDg3Y2M5MS4uYWZl
+NjY1NzEgMTAwNjQ0Cj4gPiA+IC0tLSBhL2RyaXZlcnMvbWlzYy9zcmFtLmMKPiA+ID4gKysrIGIv
+ZHJpdmVycy9taXNjL3NyYW0uYwo+ID4gPiBAQCAtNjgsNyArNjgsOCBAQCBzdGF0aWMgaW50IHNy
+YW1fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ID4gCj4gPiA+ICAJcmV0
+ID0gZ2VuX3Bvb2xfYWRkX3ZpcnQoc3JhbS0+cG9vbCwgKHVuc2lnbmVkIGxvbmcpdmlydF9iYXNl
+LAo+ID4gPiAgCQo+ID4gPiAgCQkJCXJlcy0+c3RhcnQsIHNpemUsIC0xKTsKPiA+ID4gIAkKPiA+
+ID4gIAlpZiAocmV0IDwgMCkgewo+ID4gPiAKPiA+ID4gLQkJZ2VuX3Bvb2xfZGVzdHJveShzcmFt
+LT5wb29sKTsKPiA+IAo+ID4gUmlnaHQsIHRoYW5rcy4KPiA+IAo+ID4gPiArCQlpZiAoc3JhbS0+
+Y2xrKQo+ID4gPiArCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHNyYW0tPmNsayk7Cj4gPiA+IAo+
+ID4gPiAgCQlyZXR1cm4gcmV0Owo+ID4gPiAgCQo+ID4gPiAgCX0KPiA+IAo+ID4gSW4gbGlnaHQg
+b2YgdGhlIGZvbGxvd2luZyBwYXRjaCwgSSdkIHJhdGhlciBtb3ZlIHRoZQo+ID4gY2xrX3ByZXBh
+cmVfZW5hYmxlKCkgY2FsbCBhZnRlciBnZW5fcG9vbF9hZGRfdmlydCgpIGFuZCBpdHMgZXJyb3Ig
+cGF0aC4KPiAKPiBJJ20gbm90IHN1cmUsIGJ1dCBpc24ndCBtb3ZpbmcgdGhlIGNsb2NrIGVuYWJs
+ZW1lbnQgYmVsb3cgdGhlIHBvb2wgYWxsb2NhdGlvbiAKPiBwcm9kdWNpbmcgYSByYWNlIGNvbmRp
+dGlvbj8KCnNpbmNlIHRoaXMgaXMgYSBwbGF0Zm9ybSBkZXZpY2UsIGFuZCB0aGUgZHJpdmVyIGlz
+IG5vdCBhbGxvd2VkIHRvIGJlCmNvbXBpbGVkIGFzIGEgbW9kdWxlLCBpdCBpcyBwcm9iZWQgYXQg
+dGhlIHRpbWUgcGxhdGZvcm1fZHJpdmVyX3JlZ2lzdGVyCmlzIGNhbGxlZCBmcm9tIHBvc3Rjb3Jl
+X2luaXRjYWxsLgpZb3UnZCBoYXZlIHRvIGdvIHRvIHF1aXRlIHNvbWUgbGVuZ3RocyB0byBtYWtl
+IHRoaXMgcmFjZSBieSBwcm9iaW5nIHlvdXIKZHJpdmVyIGJlZm9yZSBtbWlvLXNyYW0gYW5kIHRo
+ZW4gYXN5bmNocm9ub3VzbHkgdHJ5aW5nIHRvIGFsbG9jYXRlCm1lbW9yeSBmcm9tIHRoZSBwb29s
+IHNvbWUgdGltZSBsYXRlciwgd2l0aG91dCBoYXZpbmcgbWFkZSBzdXJlIHRoYXQgdGhlCnBvb2wg
+ZXhpc3RzIGR1cmluZyBwcm9iZS4KCkl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSBjYWxsYmFja3Mg
+ZnJvbSBnZW5fcG9vbF9hbGxvYy9mcmVlIHRvCmVuYWJsZS9kaXNhYmxlIHRoZSBjbG9jay4KRm9y
+IHRoZSB0aW1lIGJlaW5nLCBtYXliZSBpdCdzIHRoZSBzYWZlc3QgYmV0IHRvIGp1c3QgZW5hYmxl
+IHRoZSBjbG9jawpiZWZvcmUsIGVzcGVjaWFsbHkgaWYgeW91IHJlb3JkZXIgdGhlIGxvb3Agc28g
+dGhlcmUgaXMgb25seSBvbmUKZ2VuX3Bvb2xfYWRkX3ZpcnQgYW5kIGNvcnJlc3BvbmRpbmcgZXJy
+b3IgcGF0aC4KCj4gSS5lLiBjYW4gdGhlIGNhc2UgaGFwcGVuIHRoYXQgc29tZSBvdGhlciBwYXJ0
+IHdhbnRzIHRvIGFsbG9jYXRlIHBhcnQgb2YgdGhlIAo+IG5ld2x5IGdlbmVyYXRlZCBwb29sIGFs
+cmVhZHksIHdoaWxlIHRoZSBzdWJzZXF1ZW50IGdlbl9wb29sX2FkZF92aXJ0IGNhbGxzIAo+IGZy
+b20gdGhlIGZvbGxvd2luZyBwYXRjaCBhcmUgc3RpbGwgcnVubmluZz8gLi4uIEFuZCB3aGF0IHdp
+bGwgaGFwcGVuIGluIHRoaXMgCj4gY2FzZSwgd2hlbiB0aGUgc3JhbSBjbG9jayBpcyBzdGlsbCBk
+aXNhYmxlZD8KCk9uIGkuTVg2LCB0aGUgc3lzdGVtIHdpbGwgaGFuZy4KCnJlZ2FyZHMKUGhpbGlw
+cAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNl
+dHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJz
+Lm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNz
+Cg==
