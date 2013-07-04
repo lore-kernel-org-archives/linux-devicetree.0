@@ -1,49 +1,94 @@
-From: Jonas Jensen <jonas.jensen@gmail.com>
-Subject: [PATCH v3 4/4] ARM: reinsert ARCH_MULTI_V4 Kconfig option
-Date: Thu,  4 Jul 2013 16:45:42 +0200
-Message-ID: <1372949142-8260-1-git-send-email-jonas.jensen@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, arm@kernel.org, arnd@arndb.de, olof@lixom.net, Jonas Jensen <jonas.jensen@gmail.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: Best practice device tree design for display subsystems/DRM
+Date: Thu, 4 Jul 2013 11:11:59 -0400
+Message-ID: <CAF6AEGuzwNJtuAWS29YvdZ1fiMGk5cuv24n4wxkKsDPT8FrDBw@mail.gmail.com>
+References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+	<20130702204255.2044c01b@armhf>
+	<20130702191923.GD13924@flint.arm.linux.org.uk>
+	<51D330AC.5060903@gmail.com>
+	<CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
+	<51D348F5.2080205@gmail.com>
+	<00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
+	<20130703090242.GM516@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-Reply-To: <20130703090242.GM516@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Jean-Francois Moine <moinejf@free.fr>, Daniel Drake <dsd@laptop.org>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Russell King <rmk@arm.linux.org.uk>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-CPU_FA526 is thumbless and adding under e.g. ARCH_MULTI_V4T instead means inclusion of CPU_ARM920T
-which in turn selects CPU_ABRT_EV4T, CPU_CACHE_V4WT, CPU_COPY_V4WB, CPU_TLB_V4WBI, which in turn can
-mean trouble when the kernel eventually tries to exec init:
+On Wed, Jul 3, 2013 at 5:02 AM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Wed, Jul 03, 2013 at 05:57:18PM +0900, Inki Dae wrote:
+>> > video {
+>> >     /* Single video card w/ multiple lcd controllers */
+>> >     card0 {
+>> >             compatible = "marvell,armada-510-display";
+>> >             reg = <0 0x3f000000 0x1000000>; /* video-mem hole */
+>> >             /* later: linux,video-memory-size = <0x1000000>; */
+>> >             marvell,video-devices = <&lcd0 &lcd1 &dcon>;
+>> >     };
+>> >
+>> >     /* OR: Multiple video card w/ single lcd controllers */
+>> >     card0 {
+>> >             compatible = "marvell,armada-510-display";
+>> >             ...
+>> >             marvell,video-devices = <&lcd0>;
+>> >     };
+>> >
+>> >     card1 {
+>> >             compatible = "marvell,armada-510-display";
+>> >             ...
+>> >             marvell,video-devices = <&lcd1>;
+>> >     };
+>> > };
+>>
+>> Sorry but I'd like to say that this cannot be used commonly. Shouldn't you
+>> really consider Linux framebuffer or other subsystems? The above dtsi file
+>> is specific to DRM subsystem. And I think the dtsi file has no any
+>> dependency on certain subsystem so board dtsi file should be considered for
+>> all device drivers based on other subsystems: i.e., Linux framebuffer, DRM,
+>> and so no. So I *strongly* object to it. All we have to do is to keep the
+>> dtsi file as is, and to find other better way that can be used commonly in
+>> DRM.
+>
+> +1 for not encoding the projected usecase of the graphics subsystem into
+> the devicetree. Whether the two LCD controllers shall be used together
+> or separately should not affect the devicetree. devicetree is about
+> hardware description, not configuration.
 
-[    2.580000] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
-[    2.580000]
-[    2.580000] CPU: 0 PID: 1 Comm: init Not tainted 3.10.0-next-20130703+ #3
-[    2.580000] [<c000cc64>] (unwind_backtrace+0x0/0xf0) from [<c000b524>] (show_stack+0x10/0x14)
-[    2.580000] [<c000b524>] (show_stack+0x10/0x14) from [<c021d6dc>] (panic+0x90/0x1e0)
-[    2.580000] [<c021d6dc>] (panic+0x90/0x1e0) from [<c0019664>] (do_exit+0x724/0x834)
-[    2.580000] [<c0019664>] (do_exit+0x724/0x834) from [<c00197d8>] (do_group_exit+0x3c/0xb0)
-[    2.580000] [<c00197d8>] (do_group_exit+0x3c/0xb0) from [<c0024c34>] (get_signal_to_deliver+0x2ec/0x598)
-[    2.580000] [<c0024c34>] (get_signal_to_deliver+0x2ec/0x598) from [<c021d2a8>] (do_signal+0x9c/0x3cc)
-[    2.580000] [<c021d2a8>] (do_signal+0x9c/0x3cc) from [<c000b110>] (do_work_pending+0xc4/0xe0)
-[    2.580000] [<c000b110>] (do_work_pending+0xc4/0xe0) from [<c0009334>] (work_pending+0xc/0x20)
+I do like the supernode idea, it would have avoided the ugly
+global-list-of-sub-devices in tilcdc (and probably some other
+drivers).
 
-Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
----
- arch/arm/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+As for projection of use-case, and whether it is something drm
+specific or not..  if there is a way to make it generic enough that it
+could work for fbdev, well I suppose that is nice.  Not a hard
+requirement in my mind, or at least it is a secondary priority
+compared to having a better way to having drm devices composed of
+sub-{devices,nodes,whatever}.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index d84161c..87e93ab 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -878,6 +878,11 @@ menu "Multiple platform selection"
- 
- comment "CPU Core family selection"
- 
-+config ARCH_MULTI_V4
-+	bool "ARMv4 based platforms (FA526, StrongARM)"
-+	depends on !ARCH_MULTI_V6_V7
-+	select ARCH_MULTI_V4_V5
-+
- config ARCH_MULTI_V4T
- 	bool "ARMv4T based platforms (ARM720T, ARM920T, ...)"
- 	depends on !ARCH_MULTI_V6_V7
--- 
-1.8.2.1
+BR,
+-R
+
+> Sascha
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
