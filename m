@@ -1,99 +1,71 @@
-From: Dirk Behme <dirk.behme@gmail.com>
-Subject: Re: Appended DTB files for multi-machine kernels
-Date: Thu, 04 Jul 2013 20:36:05 +0200
-Message-ID: <51D5C095.4070909@gmail.com>
-References: <51D5A938.30607@gmail.com>
+From: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Best practice device tree design for display subsystems/DRM
+Date: Fri, 5 Jul 2013 07:28:32 +1000
+Message-ID: <CAPM=9tygEFHWsOw4ZBr9GdF7-2OUcczrNKThHMJ=YQFU-Cbbug@mail.gmail.com>
+References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+ <20130702204255.2044c01b@armhf>
+ <20130702191923.GD13924@flint.arm.linux.org.uk>
+ <51D330AC.5060903@gmail.com>
+ <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
+ <51D348F5.2080205@gmail.com>
+ <00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
+ <20130703090242.GM516@pengutronix.de>
+ <CAF6AEGuzwNJtuAWS29YvdZ1fiMGk5cuv24n4wxkKsDPT8FrDBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51D5A938.30607@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: stigge@antcom.de, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Sven Neumann <s.neumann@raumfeld.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAF6AEGuzwNJtuAWS29YvdZ1fiMGk5cuv24n4wxkKsDPT8FrDBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 04.07.2013 18:56, schrieb Daniel Mack:
-> Hi,
+ >             ...
+>>> Sorry but I'd like to say that this cannot be used commonly. Shouldn't you
+>>> really consider Linux framebuffer or other subsystems? The above dtsi file
+>>> is specific to DRM subsystem. And I think the dtsi file has no any
+>>> dependency on certain subsystem so board dtsi file should be considered for
+>>> all device drivers based on other subsystems: i.e., Linux framebuffer, DRM,
+>>> and so no. So I *strongly* object to it. All we have to do is to keep the
+>>> dtsi file as is, and to find other better way that can be used commonly in
+>>> DRM.
+>>
+>> +1 for not encoding the projected usecase of the graphics subsystem into
+>> the devicetree. Whether the two LCD controllers shall be used together
+>> or separately should not affect the devicetree. devicetree is about
+>> hardware description, not configuration.
 >
-> I'm facing a problem with a transition from legacy board-file driven ARM
-> machines to DTB, and I'm under the impression that a solution for it
-> could be of broader interest.
+> I do like the supernode idea, it would have avoided the ugly
+> global-list-of-sub-devices in tilcdc (and probably some other
+> drivers).
 >
-> In short, devices that have been deployed in quantities come in three
-> hardware variants, which all boot with a unique machine-id. We ship
-> kernel images that have board support for all three machine types, and
-> do minor fixups to platform data of some drivers at runtime, depending
-> on the board revision number (passed in via ATAGs).
->
-> The built-in support for attaching a DTB to the zImage does not suffice
-> here, because we have one image for all models, and also, we couldn't do
-> a 'per-board-revision' selection that way either.
->
-> Unless I missed some recent discussion, this case is not easy to handle.
-> Yes, I know that these kind of things should be handled by a
-> next-generation bootloader, but in our case, we want to avoid a loader
-> update of already shipped hardware by all means.
->
-> As a solution, I'm thinking of a small framework that could for example
-> work as follows.
->
-> a) A small mechanism allows storing multiple DTB binary files inside the
-> kernel binary at compile time, and a simple function can extract them
-> again by name at runtime (something like what the firmware framework
-> does, but I don't know if that one can be used at such an early stage in
-> the boot process).
->
-> b) A DT_MACHINE_START-like macro takes both the machine ID and the name
-> of a DTB file that is compiled in. When matched, generic functions would
-> load the given file, populate the device tree and then conduct a generic
-> DT boot for the specified platform.
->
-> c) Allow users to open-code the DTB lookup depending on whatever kind of
-> runtime information (be it the board_revision or anything else).
->
->
-> Of course, everything has to be an opt-in that stubs itself out at zero
-> costs if not needed.
->
->
-> I'm open to opinion and sugesstions :)
+> As for projection of use-case, and whether it is something drm
+> specific or not..  if there is a way to make it generic enough that it
+> could work for fbdev, well I suppose that is nice.  Not a hard
+> requirement in my mind, or at least it is a secondary priority
+> compared to having a better way to having drm devices composed of
+> sub-{devices,nodes,whatever}.
 
-Depending on how different the board support for all your three 
-machine types is, there might be an (of course unimplemented) option
+I'm not following who has the requirement for exposing different
+output device paths
+as possibly one or two devices, so you could have a drm device for one
+or the other,
+or X could use a subset of devices.
 
-d) have only one DTB file which contains all the information for your 
-three machine types and then have a mechanism which selects 
-("activates") the entries valid for the board you boot based on some 
-external information, e.g. the machine ID. I.e. you have one DTB file 
-which contains alternative entries for the different boards. And which 
-entry is used/activated is selected at (early) kernel runtime by the 
-machine ID.
+I'm not really sure how best to deal with that, we have had plans for
+drm to actually
+expose sub-groups of crtc/encoders/connectors to userspace via
+different device nodes
+for a while, its just never received the final push on how to configure it.
 
-What I'm thinking about here is an extended version of the device tree 
-overlays used (invented?) by the Beagle board community. They have a 
-base device tree file and for their add on boards (capes) they load 
-device tree overlay files based on an EEPROM ID read.
-
-http://elinux.org/BeagleBone_and_the_3.8_Kernel#Cape_Manager_and_Device_Tree_Overlays
-
-With this, they extend the device tree at runtime based on the 
-attached extension boards.
-
-Going one step further, having the alternative plugin/overlay 
-definitions already in the initial DTB file and being able to 
-select/activate single plugin/overlay definitions already in the early 
-boot stage should give a general mechanism to support several, similar 
-boards with slightly different configurations with one DTB.
-
-Best regards
-
-Dirk
+Dave.
