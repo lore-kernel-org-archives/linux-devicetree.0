@@ -1,24 +1,13 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Thu, 04 Jul 2013 09:25:00 +0200
-Message-ID: <51D5234C.3070000@gmail.com>
-References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
- <20130702204255.2044c01b@armhf>
- <20130702191923.GD13924@flint.arm.linux.org.uk> <51D330AC.5060903@gmail.com>
- <CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
- <51D348F5.2080205@gmail.com>
- <00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
- <20130703090242.GM516@pengutronix.de> <51D3EA0E.2090008@gmail.com>
- <00ba01ce77d2$80285f10$80791d30$%dae@samsung.com>
- <20130703095338.GH13924@flint.arm.linux.org.uk> <51D40275.4020806@gmail.com>
- <00cc01ce77e2$844b3a80$8ce1af80$%dae@samsung.com>
- <51D4105C.3070503@gmail.com>
- <000601ce7884$e99ade20$bcd09a60$%dae@samsung.com>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH] pwm: atmel-pwm: add pwm controller driver
+Date: Thu, 4 Jul 2013 15:27:57 +0800
+Message-ID: <51D523FD.7040409@atmel.com>
+References: <1371804355-8071-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <000601ce7884$e99ade20$bcd09a60$%dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1371804355-8071-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -29,125 +18,423 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Jean-Francois Moine' <moinejf-GANU6spQydw@public.gmane.org>, 'Daniel Drake' <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, 'Sascha Hauer' <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, 'Russell King' <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/04/13 09:05, Inki Dae wrote:
->> -----Original Message-----
->> From: Sebastian Hesselbarth [mailto:sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
->> Sent: Wednesday, July 03, 2013 8:52 PM
->> To: Inki Dae
->> Cc: 'Russell King'; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; 'Jean-Francois
->> Moine'; 'Sascha Hauer'; 'Daniel Drake'; dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
->> Subject: Re: Best practice device tree design for display subsystems/DRM
->>
->> On 07/03/13 13:43, Inki Dae wrote:
->>>> I do not understand why you keep referring to the SoC dtsi. Im my
->>>> example, I said that it is made up and joined from both SoC dtsi and
->>>> board dts.
->>>>
->>>> So, of course, lcd controller nodes and dcon are part of dove.dtsi
->>>> because they are physically available on every Dove SoC.
->>>>
->>>> Also, the connection from lcd0 to the external HDMI encoder node
->>>> is in the board dts because you can happily build a Dove SoC board
->>>> with a different HDMI encoder or with no encoder at all.
->>>>
->>>> The video-card super node is not in any way specific to DRM and
->>>
->>> In case of fbdev, framebuffer driver would use lcd0 or lcd1 driver, or
->> lcd0
->>> and lcd1 drivers which are placed in drivers/video/backlight/.
->>>
->>> And let's assume the following:
->>>
->>> On board A
->>>        Display controller ------------- lcd 0
->>> On board B
->>>        Display controller ------------- lcd 1
->>> On board C
->>>        Display controller ------------- lcd 0 and lcd 1
->>>
->>> Without the super node, user could configure Linux kernel through
->> menuconfig
->>> like below;
->>> 	board A:  enabling lcd 0, and disabling lcd 1,
->>> 	board B: disabling lcd 0, and enabling lcd 1,
->>> 	board C: enabling lcd 0 and lcd 1.
->>>
->>> All we have to do is to configure menuconfig to enable only drivers for
->>> certain board. Why does fbdev need the super node? Please give me
->> comments
->>> if there is my missing point.
->>
->> I assume when you say "configure menuconfig" you mean
->> "create a CONFIG_DISPLAY_CONTROLLER_AS_USED_ON_BOARD_A,
->> CONFIG_DISPLAY_CONTROLLER_AS_USED_ON_BOARD_B, ..." ?
->>
->> This finally will require you to have
->> (a) #ifdef mess for every single board _and_ driver above
->> (b) new CONFIG_.._BOARD_D plus new #ifdefs in fbdev driver for every
->>       new board
->> (c) A new set of the above CONFIG_/#ifdef for DRM driver
->>
->> This can also be done with device_tree and supernode approach,
->> so for your example above:
->>
->> BoardA.dts:
->> video { card0 { video-devices = <&lcd0>; }; };
->>
->> BoardB.dts:
->> video { card0 { video-devices = <&lcd1>; }; };
->>
->> BoardC.dts:
->> video { card0 { video-devices = <&lcd0 &lcd1>; }; };
->>
->> and in the driver your are prepared for looping over the video-devices
->> property and parsing the compatible string of the nodes passed.
->>
+Hi All,
+
+On 6/21/2013 16:45, Bo Shen wrote:
+> add atmel pwm controller driver based on PWM framework
 >
-> As I mentioned before, fbdev don't need the super node, card0. Please see
-> the below,
+> this is basic function implementation of pwm controller
+> it can work with pwm based led and backlight
 >
-> BoardA.dts:
-> video { dcon: display-controller@830000 { video-devices = <&lcd0>; }; };
+> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>   .../devicetree/bindings/pwm/atmel-pwm.txt          |   19 ++
+>   drivers/pwm/Kconfig                                |    9 +
+>   drivers/pwm/Makefile                               |    1 +
+>   drivers/pwm/pwm-atmel.c                            |  326 ++++++++++++++++++++
+>   4 files changed, 355 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+>   create mode 100644 drivers/pwm/pwm-atmel.c
+
+Does this patch can be applied? If yes, I will send out the formal patch 
+without RFC in subject. If no, please help review this patch and give 
+your comments.
+
+Thanks.
+
+Best Regards,
+Bo Shen
+
+> diff --git a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+> new file mode 100644
+> index 0000000..127fcdb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+> @@ -0,0 +1,19 @@
+> +Atmel PWM controller
+> +
+> +Required properties:
+> +  - compatible: should be one of:
+> +    - "atmel,at91sam9rl-pwm"
+> +    - "atmel,sama5-pwm"
+> +  - reg: physical base address and length of the controller's registers
+> +  - #pwm-cells: Should be 3.
+> +    - The first cell specifies the per-chip index of the PWM to use
+> +    - The second cell is the period in nanoseconds
+> +    - The third cell is used to encode the polarity of PWM output
+> +
+> +Example:
+> +
+> +	pwm0: pwm@f8034000 {
+> +		compatible = "atmel,at91sam9rl-pwm";
+> +		reg = <0xf8034000 0x400>;
+> +		#pwm-cells = <3>;
+> +	};
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 115b644..70518c9 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -37,6 +37,15 @@ config PWM_AB8500
+>   	  To compile this driver as a module, choose M here: the module
+>   	  will be called pwm-ab8500.
 >
-> BoardB.dts:
-> video { dcon: display-controller@830000 { video-devices = <&lcd1>; }; };
+> +config PWM_ATMEL
+> +	tristate "Atmel PWM support"
+> +	depends on ARCH_AT91
+> +	help
+> +	  Generic PWM framework driver for Atmel SoC.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-atmel.
+> +
+>   config PWM_ATMEL_TCB
+>   	tristate "Atmel TC Block PWM support"
+>   	depends on ATMEL_TCLIB && OF
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 94ba21e..a905a52 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -1,5 +1,6 @@
+>   obj-$(CONFIG_PWM)		+= core.o
+>   obj-$(CONFIG_PWM_AB8500)	+= pwm-ab8500.o
+> +obj-$(CONFIG_PWM_ATMEL)		+= pwm-atmel.o
+>   obj-$(CONFIG_PWM_ATMEL_TCB)	+= pwm-atmel-tcb.o
+>   obj-$(CONFIG_PWM_BFIN)		+= pwm-bfin.o
+>   obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o
+> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+> new file mode 100644
+> index 0000000..15ec4d5
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-atmel.c
+> @@ -0,0 +1,326 @@
+> +/*
+> + * Driver for Atmel Pulse Width Modulation Controller
+> + *
+> + * Copyright (C) 2013 Atmel Semiconductor Technology Ltd.
+> + *
+> + * GPL v2 or later
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/slab.h>
+> +
+> +#define PWM_MR		0x00
+> +#define PWM_ENA		0x04
+> +#define PWM_DIS		0x08
+> +#define PWM_SR		0x0C
+> +
+> +#define PWM_CMR		0x00
+> +
+> +/* The following register for PWM v1 */
+> +#define PWMv1_CDTY	0x04
+> +#define PWMv1_CPRD	0x08
+> +#define PWMv1_CUPD	0x10
+> +
+> +/* The following register for PWM v2 */
+> +#define PWMv2_CDTY	0x04
+> +#define PWMv2_CDTYUPD	0x08
+> +#define PWMv2_CPRD	0x0C
+> +#define PWMv2_CPRDUPD	0x10
+> +
+> +#define PWM_NUM		4
+> +
+> +struct atmel_pwm_chip {
+> +	struct pwm_chip chip;
+> +	struct clk *clk;
+> +	void __iomem *base;
+> +
+> +	void (*config)(struct atmel_pwm_chip *chip, struct pwm_device *pwm,
+> +			unsigned int dty, unsigned int prd);
+> +};
+> +
+> +#define to_atmel_pwm_chip(chip) container_of(chip, struct atmel_pwm_chip, chip)
+> +
+> +static inline u32 atmel_pwm_readl(struct atmel_pwm_chip *chip, int offset)
+> +{
+> +	return readl(chip->base + offset);
+> +}
+> +
+> +static inline void atmel_pwm_writel(struct atmel_pwm_chip *chip, int offset,
+> +		u32 val)
+> +{
+> +	writel(val, chip->base + offset);
+> +}
+> +
+> +static inline u32 atmel_pwm_ch_readl(struct atmel_pwm_chip *chip, int ch,
+> +		int offset)
+> +{
+> +	return readl(chip->base + 0x200 + ch * 0x20 + offset);
+> +}
+> +
+> +static inline void atmel_pwm_ch_writel(struct atmel_pwm_chip *chip, int ch,
+> +		int offset, u32 val)
+> +{
+> +	writel(val, chip->base + 0x200 + ch * 0x20 + offset);
+> +}
+> +
+> +static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> +		int duty_ns, int period_ns)
+> +{
+> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+> +	unsigned long long val, prd, dty;
+> +	unsigned long long div, clk_rate;
+> +	int ret, pres = 0;
+> +
+> +	clk_rate = clk_get_rate(atmel_pwm->clk);
+> +
+> +	while (1) {
+> +		div = 1000000000;
+> +		div *= 1 << pres;
+> +		val = clk_rate * period_ns;
+> +		prd = div_u64(val, div);
+> +		val = clk_rate * duty_ns;
+> +		dty = div_u64(val, div);
+> +
+> +		if (prd < 0x0001 || dty < 0x0)
+> +			return -EINVAL;
+> +
+> +		if (prd > 0xffff || dty > 0xffff) {
+> +			if (++pres > 0x10)
+> +				return -EINVAL;
+> +			continue;
+> +		}
+> +
+> +		break;
+> +	}
+> +
+> +	/* Enable clock */
+> +	ret = clk_prepare_enable(atmel_pwm->clk);
+> +	if (ret) {
+> +		pr_err("failed to enable pwm clock\n");
+> +		return ret;
+> +	}
+> +
+> +	atmel_pwm->config(atmel_pwm, pwm, dty, prd);
+> +
+> +	/* Check whether need to disable clock */
+> +	val = atmel_pwm_readl(atmel_pwm, PWM_SR);
+> +	if ((val & 0xf) == 0)
+> +		clk_disable_unprepare(atmel_pwm->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static void atmel_pwm_config_v1(struct atmel_pwm_chip *atmel_pwm,
+> +		struct pwm_device *pwm, unsigned int dty, unsigned int prd)
+> +{
+> +	unsigned int val;
+> +
+> +	/*
+> +	 * if the pwm channel is enabled, using update register to update
+> +	 * related register value, or else write it directly
+> +	 */
+> +	if (test_bit(PWMF_ENABLED, &pwm->flags)) {
+> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMv1_CUPD, dty);
+> +
+> +		val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
+> +		val &= ~(1 << 10);
+> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
+> +	} else {
+> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMv1_CDTY, dty);
+> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMv1_CPRD, prd);
+> +	}
+> +}
+> +
+> +static void atmel_pwm_config_v2(struct atmel_pwm_chip *atmel_pwm,
+> +		struct pwm_device *pwm, unsigned int dty, unsigned int prd)
+> +{
+> +	/*
+> +	 * if the pwm channel is enabled, using update register to update
+> +	 * related register value, or else write it directly
+> +	 */
+> +	if (test_bit(PWMF_ENABLED, &pwm->flags)) {
+> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMv2_CDTYUPD, dty);
+> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMv2_CPRDUPD, prd);
+> +	} else {
+> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMv2_CDTY, dty);
+> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMv2_CPRD, prd);
+> +	}
+> +}
+> +
+> +static int atmel_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
+> +		enum pwm_polarity polarity)
+> +{
+> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+> +	u32 val = 0;
+> +	int ret;
+> +
+> +	/* Enable clock */
+> +	ret = clk_prepare_enable(atmel_pwm->clk);
+> +	if (ret) {
+> +		pr_err("failed to enable pwm clock\n");
+> +		return ret;
+> +	}
+> +
+> +	if (polarity == PWM_POLARITY_NORMAL)
+> +		val &= ~(1 << 9);
+> +	else
+> +		val |= 1 << 9;
+> +
+> +	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
+> +
+> +	/* Disable clock */
+> +	clk_disable_unprepare(atmel_pwm->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int atmel_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+> +
+> +	clk_prepare_enable(atmel_pwm->clk);
+> +
+> +	atmel_pwm_writel(atmel_pwm, PWM_ENA, 1 << pwm->hwpwm);
+> +
+> +	return 0;
+> +}
+> +
+> +static void atmel_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+> +	u32 val;
+> +
+> +	atmel_pwm_writel(atmel_pwm, PWM_DIS, 1 << pwm->hwpwm);
+> +
+> +	/* Disable clock */
+> +	val = atmel_pwm_readl(atmel_pwm, PWM_SR);
+> +	if ((val & 0xf) == 0)
+> +		clk_disable_unprepare(atmel_pwm->clk);
+> +}
+> +
+> +static const struct pwm_ops atmel_pwm_ops = {
+> +	.config = atmel_pwm_config,
+> +	.set_polarity = atmel_pwm_set_polarity,
+> +	.enable = atmel_pwm_enable,
+> +	.disable = atmel_pwm_disable,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +struct atmel_pwm_data {
+> +	void (*config)(struct atmel_pwm_chip *chip, struct pwm_device *pwm,
+> +			unsigned int dty, unsigned int prd);
+> +};
+> +
+> +static struct atmel_pwm_data atmel_pwm_data_v1 = {
+> +	.config = atmel_pwm_config_v1,
+> +};
+> +
+> +static struct atmel_pwm_data atmel_pwm_data_v2 = {
+> +	.config = atmel_pwm_config_v2,
+> +};
+> +
+> +static const struct of_device_id atmel_pwm_dt_ids[] = {
+> +	{
+> +		.compatible = "atmel,at91sam9rl-pwm",
+> +		.data = &atmel_pwm_data_v1,
+> +	}, {
+> +		.compatible = "atmel,sama5-pwm",
+> +		.data = &atmel_pwm_data_v2,
+> +	}, {
+> +		/* sentinel */
+> +	},
+> +};
+> +MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
+> +
+> +static int atmel_pwm_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *of_id =
+> +		of_match_device(atmel_pwm_dt_ids, &pdev->dev);
+> +	const struct atmel_pwm_data *data;
+> +	struct atmel_pwm_chip *atmel_pwm;
+> +	struct resource *res;
+> +	struct pinctrl *pinctrl;
+> +	int ret;
+> +
+> +	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
+> +	if (IS_ERR(pinctrl)) {
+> +		dev_err(&pdev->dev, "failed get pinctrl\n");
+> +		return PTR_ERR(pinctrl);
+> +	}
+> +
+> +	atmel_pwm = devm_kzalloc(&pdev->dev, sizeof(*atmel_pwm), GFP_KERNEL);
+> +	if (!atmel_pwm) {
+> +		dev_err(&pdev->dev, "out of memory\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "no memory resource defined\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	atmel_pwm->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(atmel_pwm->base)) {
+> +		dev_err(&pdev->dev, "ioremap failed\n");
+> +		return PTR_ERR(atmel_pwm->base);
+> +	}
+> +
+> +	atmel_pwm->clk = devm_clk_get(&pdev->dev, "pwm_clk");
+> +	if (IS_ERR(atmel_pwm->clk)) {
+> +		dev_err(&pdev->dev, "clk get failed\n");
+> +		return PTR_ERR(atmel_pwm->clk);
+> +	}
+> +
+> +	atmel_pwm->chip.dev = &pdev->dev;
+> +	atmel_pwm->chip.ops = &atmel_pwm_ops;
+> +	atmel_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
+> +	atmel_pwm->chip.of_pwm_n_cells = 3;
+> +	atmel_pwm->chip.base = -1;
+> +	atmel_pwm->chip.npwm = PWM_NUM;
+> +
+> +	data = of_id->data;
+> +	atmel_pwm->config = data->config;
+> +
+> +	ret = pwmchip_add(&atmel_pwm->chip);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to add pwm chip %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, atmel_pwm);
+> +
+> +	dev_info(&pdev->dev, "successfully register pwm\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int atmel_pwm_remove(struct platform_device *pdev)
+> +{
+> +	struct atmel_pwm_chip *atmel_pwm = platform_get_drvdata(pdev);
+> +
+> +	return pwmchip_remove(&atmel_pwm->chip);
+> +}
+> +
+> +static struct platform_driver atmel_pwm_driver = {
+> +	.driver = {
+> +		.name = "atmel-pwm",
+> +		.of_match_table = of_match_ptr(atmel_pwm_dt_ids),
+> +	},
+> +	.probe = atmel_pwm_probe,
+> +	.remove = atmel_pwm_remove,
+> +};
+> +module_platform_driver(atmel_pwm_driver);
+> +
+> +MODULE_ALIAS("platform:atmel-pwm");
+> +MODULE_AUTHOR("Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>");
+> +MODULE_DESCRIPTION("Atmel PWM driver");
+> +MODULE_LICENSE("GPL v2");
 >
-> BoardC.dts:
-> video { dcon: display-controller@830000 { video-devices = <&lcd0 &lcd1>; };
-> };
->
-> With the above dts file, does the fbdev have any problem? I just changed the
-> super node to real hardware node. That is why the super node is specific to
-> DRM.
-
-Inki,
-
-I guess there is a misunderstanding of what lcd-controller and display-
-controller are for on Dove. lcd-controller reads framebuffer from
-memory, optionally does some conversions/scaling, and drives the SoCs
-pins with pixel data and sync. display-controller (dcon) on Dove is for
-mirroring lcd0 framebuffer to lcd1 framebuffer and some other things.
-
-And, as stated several times, you cannot move internal-registers out of
-the corresponding node on Dove. You _need_ that parent node for address
-mapping.
-
-IMHO also fbdev needs the super-node because lcd0/1, dcon,
-hdmi-transmitter, programmable-pll is what make up what you would call
-a graphics card on x86. There is no such "graphics card" on most SoCs
-but it is built up by using separate devices and SoC internal devices.
-
-Moreover, it is highly board dependent because you will easily find
-another board manufacturer chosing a different hdmi-transmitter or
-programmable-pll, using two lcd-controllers or just one. And there is
-no way of probing the boards configuration.
-
-So even fvdev needs the super-node, there is no difference what video
-subsystem you use - just because DT describes HW (even virtual one) not
-subsystem.
-
-Sebastian
