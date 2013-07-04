@@ -1,43 +1,66 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [RFC PATCH 01/13] misc: atmel_ssc: add device tree DMA support
-Date: Thu, 4 Jul 2013 09:15:00 +0800
-Message-ID: <51D4CC94.3020908@atmel.com>
-References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com> <1372667978-4718-2-git-send-email-richard.genoud@gmail.com> <51D24299.9050209@atmel.com> <CACQ1gAgcc=j3kmcpjp8bbdHhxr_k=h8jJs6R_paJbPUMv74uGg@mail.gmail.com> <51D29927.80900@atmel.com> <CACQ1gAhnDk-qSt_5xrsMakXqGGDO5pEbA-9UDWCJG=AABDc+zg@mail.gmail.com> <CACQ1gAgPaRm3gxxJNgfj9bR565Q0+SNY3+EcjA_mrh1N+yPzSA@mail.gmail.com>
+From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH dtc] Makefile: provide separate install targets
+Date: Thu, 04 Jul 2013 09:58:23 +0800
+Message-ID: <1372903103.469879.182716284455.1.gpush@pablo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACQ1gAgPaRm3gxxJNgfj9bR565Q0+SNY3+EcjA_mrh1N+yPzSA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Genoud <richard.genoud@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+Currently `make install` will install the binaries, libraries and
+includes.
 
-On 7/3/2013 23:51, Richard Genoud wrote:
->> >but there's a violent hang (kernel stops, no trace) when I try the record :
->> >arecord -v -V stereo -Dplug:default -f cd -t wav -c 2 /tmp/toto.wav
->> >last thing I see is :
->> >dma dma0chan3: atc_control (3)
+This change separates the install target into install-bin, install-lib
+and install-includes, so we have more flexibility, particularly when
+we're just using libfdt.
 
-I don't meet this issue. Playback and recording works well on my side on 
-at91sam9g35ek board.
+Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 
->> >I'll try to trace that.
-> I think it's DMA related.
-> the last thing done by the kernel is:
->   i2c i2c-0: i2c_outb: 0x34 A
->   i2c i2c-0: i2c_outb: 0x0c A
->   i2c i2c-0: i2c_outb: 0x5a A
-> meaning: enable power on, LINE IN, ADC, OSC, on the WM8731
-> so, after that, data is comming from the codec to the SSC and then is
-> handled by the DMA.
-> there must be something nasty on the DMA bus to hang everything like that...
+---
+ Makefile |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Will you try i2c without DMA support to test this issue?
-
-> Richard.
-
-Best Regards,
-Bo Shen
+diff --git a/Makefile b/Makefile
+index 1169e6c..e64bf6b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -160,18 +160,26 @@ endif
+ # intermediate target and building them again "for real"
+ .SECONDARY: $(DTC_GEN_SRCS) $(CONVERT_GEN_SRCS)
+ 
+-install: all $(SCRIPTS)
+-	@$(VECHO) INSTALL
++install-bin: all $(SCRIPTS)
++	@$(VECHO) INSTALL-BIN
+ 	$(INSTALL) -d $(DESTDIR)$(BINDIR)
+ 	$(INSTALL) $(BIN) $(SCRIPTS) $(DESTDIR)$(BINDIR)
++
++install-lib: all
++	@$(VECHO) INSTALL-LIB
+ 	$(INSTALL) -d $(DESTDIR)$(LIBDIR)
+ 	$(INSTALL) $(LIBFDT_lib) $(DESTDIR)$(LIBDIR)
+ 	ln -sf $(notdir $(LIBFDT_lib)) $(DESTDIR)$(LIBDIR)/$(LIBFDT_soname)
+ 	ln -sf $(LIBFDT_soname) $(DESTDIR)$(LIBDIR)/libfdt.$(SHAREDLIB_EXT)
+ 	$(INSTALL) -m 644 $(LIBFDT_archive) $(DESTDIR)$(LIBDIR)
++
++install-includes:
++	@$(VECHO) INSTALL-INC
+ 	$(INSTALL) -d $(DESTDIR)$(INCLUDEDIR)
+ 	$(INSTALL) -m 644 $(LIBFDT_include) $(DESTDIR)$(INCLUDEDIR)
+ 
++install: install-bin install-lib install-includes
++
+ $(VERSION_FILE): Makefile FORCE
+ 	$(call filechk,version)
