@@ -1,107 +1,152 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] misc: sram: add ability to mark sram sections as
- reserved
-Date: Fri, 05 Jul 2013 16:24:49 +0200
-Message-ID: <1373034289.3935.33.camel@pizza.hi.pengutronix.de>
-References: <201307051440.19428.heiko@sntech.de>
- <201307051441.27605.heiko@sntech.de>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC PATCH V2 1/8] regulator: Introduce OMAP regulator to control
+ PMIC over VC/VP
+Date: Fri, 5 Jul 2013 09:50:34 -0500
+Message-ID: <51D6DD3A.1030002@ti.com>
+References: <1371849949-12649-1-git-send-email-nm@ti.com>
+ <1371849949-12649-2-git-send-email-nm@ti.com>
+ <20130704154105.GD27646@sirena.org.uk> <20130705135507.GA17439@kahuna>
+ <20130705140828.GA27646@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201307051441.27605.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130705140828.GA27646@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <b-cousson@ti.com>, linux-doc@vger.kernel.org, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Taras Kondratiuk <taras@ti.com>, Kevin Hilman <khilman@deeprootsystems.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gRnJlaXRhZywgZGVuIDA1LjA3LjIwMTMsIDE0OjQxICswMjAwIHNjaHJpZWIgSGVpa28gU3TD
-vGJuZXI6Cj4gU29tZSBTb0NzIG5lZWQgcGFydHMgb2YgdGhlaXIgc3JhbSBmb3Igc3BlY2lhbCBw
-dXJwb3Nlcy4gU28gd2hpbGUgYmVpbmcgcGFydAo+IG9mIHRoZSBwZXJpcGhhbCwgaXQgc2hvdWxk
-IG5vdCBiZSBwYXJ0IG9mIHRoZSBnZW5wb29sIGNvbnRyb2xsaW5nIHRoZSBzcmFtLgo+IAo+IFRo
-cmVmb3JlIGFkZCBhbiBvcHRpb24gbW1pby1zcmFtLXJlc2VydmVkIHRvIGtlZXAgYXJiaXRhcnkg
-cG9ydGlvbnMgb2YgdGhlCj4gc3JhbSBmcm9tIGJlaW5nIHBhcnQgb2YgdGhlIHBvb2wuCj4gCj4g
-U3VnZ2VzdGVkLWJ5OiBSb2IgSGVycmluZyA8cm9iaGVycmluZzJAZ21haWwuY29tPgo+IFNpZ25l
-ZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gVGVzdGVkLWJ5OiBV
-bHJpY2ggUHJpbnogPHVscmljaC5wcmluekBnb29nbGVtYWlsLmNvbT4KCkFja2VkLWJ5OiBQaGls
-aXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgoKPiAtLS0KPiAgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2Mvc3JhbS50eHQgfCAgICA4ICsrKwo+ICBkcml2ZXJz
-L21pc2Mvc3JhbS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgODAgKysrKysrKysr
-KysrKysrKysrKysrLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA4MiBpbnNlcnRpb25zKCspLCA2IGRl
-bGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbWlzYy9zcmFtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-aXNjL3NyYW0udHh0Cj4gaW5kZXggNGQwYTAwZS4uZWFlMDgwZSAxMDA2NDQKPiAtLS0gYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWlzYy9zcmFtLnR4dAo+ICsrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNjL3NyYW0udHh0Cj4gQEAgLTgsOSArOCwx
-NyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAKPiAgLSByZWcgOiBTUkFNIGlvbWVtIGFkZHJl
-c3MgcmFuZ2UKPiAgCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKwo+ICstIG1taW8tc3JhbS1y
-ZXNlcnZlZDogb3JkZXJlZCBsaXN0IG9mIHJlc2VydmVkIGNodW5rcyBpbnNpZGUgdGhlIHNyYW0g
-dGhhdAo+ICsgIHNob3VsZCBub3QgYmVjb21lIHBhcnQgb2YgdGhlIGdlbmFsbG9jIHBvb2wuCj4g
-KyAgRm9ybWF0IGlzIDxiYXNlIHNpemU+LCA8YmFzZSBzaXplPiwgLi4uOyB3aXRoIGJhc2UgYmVp
-bmcgcmVsYXRpdmUgdG8gdGhlCj4gKyAgcmVnIHByb3BlcnR5IGJhc2UuCj4gKwo+ICBFeGFtcGxl
-Ogo+ICAKPiAgc3JhbTogc3JhbUA1YzAwMDAwMCB7Cj4gIAljb21wYXRpYmxlID0gIm1taW8tc3Jh
-bSI7Cj4gIAlyZWcgPSA8MHg1YzAwMDAwMCAweDQwMDAwPjsgLyogMjU2IEtpQiBTUkFNIGF0IGFk
-ZHJlc3MgMHg1YzAwMDAwMCAqLwo+ICsJbW1pby1zcmFtLXJlc2VydmVkID0gPDB4MCAweDEwMD47
-IC8qIHJlc2VydmUgMHg1YzAwMDAwMC0weDVjMDAwMTAwICovCj4gIH07Cj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbWlzYy9zcmFtLmMgYi9kcml2ZXJzL21pc2Mvc3JhbS5jCj4gaW5kZXggYWZlNjY1
-NzEuLjkxMzFlNGEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9taXNjL3NyYW0uYwo+ICsrKyBiL2Ry
-aXZlcnMvbWlzYy9zcmFtLmMKPiBAQCAtNDIsNiArNDIsMTMgQEAgc3RhdGljIGludCBzcmFtX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gIAlzdHJ1Y3Qgc3JhbV9kZXYgKnNy
-YW07Cj4gIAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsKPiAgCXVuc2lnbmVkIGxvbmcgc2l6ZTsKPiAr
-CWNvbnN0IF9fYmUzMiAqcmVzZXJ2ZWRfbGlzdCA9IE5VTEw7Cj4gKwlpbnQgcmVzZXJ2ZWRfc2l6
-ZSA9IDA7Cj4gKwl1bnNpZ25lZCBpbnQgY3VyX3N0YXJ0ID0gMDsKPiArCXVuc2lnbmVkIGludCBj
-dXJfc2l6ZTsKPiArCXVuc2lnbmVkIGludCByc3RhcnQ7Cj4gKwl1bnNpZ25lZCBpbnQgcnNpemU7
-Cj4gKwlpbnQgaTsKPiAgCWludCByZXQ7Cj4gIAo+ICAJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291
-cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsKPiBAQCAtNjUsMTIgKzcyLDczIEBAIHN0YXRp
-YyBpbnQgc3JhbV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJaWYgKCFz
-cmFtLT5wb29sKQo+ICAJCXJldHVybiAtRU5PTUVNOwo+ICAKPiAtCXJldCA9IGdlbl9wb29sX2Fk
-ZF92aXJ0KHNyYW0tPnBvb2wsICh1bnNpZ25lZCBsb25nKXZpcnRfYmFzZSwKPiAtCQkJCXJlcy0+
-c3RhcnQsIHNpemUsIC0xKTsKPiAtCWlmIChyZXQgPCAwKSB7Cj4gLQkJaWYgKHNyYW0tPmNsaykK
-PiAtCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHNyYW0tPmNsayk7Cj4gLQkJcmV0dXJuIHJldDsK
-PiArCWlmIChwZGV2LT5kZXYub2Zfbm9kZSkgewo+ICsJCXJlc2VydmVkX2xpc3QgPSBvZl9nZXRf
-cHJvcGVydHkocGRldi0+ZGV2Lm9mX25vZGUsCj4gKwkJCQkJCSJtbWlvLXNyYW0tcmVzZXJ2ZWQi
-LAo+ICsJCQkJCQkmcmVzZXJ2ZWRfc2l6ZSk7Cj4gKwkJaWYgKHJlc2VydmVkX2xpc3QpIHsKPiAr
-CQkJcmVzZXJ2ZWRfc2l6ZSAvPSBzaXplb2YoKnJlc2VydmVkX2xpc3QpOwo+ICsJCQlpZiAoIXJl
-c2VydmVkX3NpemUgfHwgcmVzZXJ2ZWRfc2l6ZSAlIDIpIHsKPiArCQkJCWRldl93YXJuKCZwZGV2
-LT5kZXYsICJ3cm9uZyBudW1iZXIgb2YgYXJndW1lbnRzIGluIG1taW8tc3JhbS1yZXNlcnZlZFxu
-Iik7Cj4gKwkJCQlyZXNlcnZlZF9saXN0ID0gTlVMTDsKPiArCQkJfQo+ICsJCX0KPiArCX0KPiAr
-Cj4gKwlpZiAoIXJlc2VydmVkX2xpc3QpCj4gKwkJcmVzZXJ2ZWRfc2l6ZSA9IDA7Cj4gKwo+ICsJ
-Zm9yIChpID0gMDsgaSA8IChyZXNlcnZlZF9zaXplICsgMik7IGkgKz0gMikgewo+ICsJCWlmIChp
-IDwgcmVzZXJ2ZWRfc2l6ZSkgewo+ICsJCQkvKiBnZXQgdGhlIG5leHQgcmVzZXJ2ZWQgYmxvY2sg
-Ki8KPiArCQkJcnN0YXJ0ID0gYmUzMl90b19jcHUoKnJlc2VydmVkX2xpc3QrKyk7Cj4gKwkJCXJz
-aXplID0gYmUzMl90b19jcHUoKnJlc2VydmVkX2xpc3QrKyk7Cj4gKwo+ICsJCQkvKiBjYXRjaCB1
-bnNvcnRlZCBsaXN0IGVudHJpZXMgKi8KPiArCQkJaWYgKHJzdGFydCA8IGN1cl9zdGFydCkgewo+
-ICsJCQkJZGV2X2VycigmcGRldi0+ZGV2LAo+ICsJCQkJCSJ1bnNvcnRlZCByZXNlcnZlZCBsaXN0
-ICgweCV4IGJlZm9yZSBjdXJyZW50IDB4JXgpXG4iLAo+ICsJCQkJCXJzdGFydCwgY3VyX3N0YXJ0
-KTsKPiArCQkJCWlmIChzcmFtLT5jbGspCj4gKwkJCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHNy
-YW0tPmNsayk7Cj4gKwkJCQlyZXR1cm4gLUVJTlZBTDsKPiArCQkJfQo+ICsKPiArCQkJZGV2X2Ri
-ZygmcGRldi0+ZGV2LAo+ICsJCQkJImZvdW5kIHJlc2VydmVkIGJsb2NrIDB4JXgtMHgleFxuIiwK
-PiArCQkJCXJzdGFydCwgcnN0YXJ0ICsgcnNpemUpOwo+ICsJCX0gZWxzZSB7Cj4gKwkJCS8qIHRo
-ZSBsYXN0IGNodW5rIGV4dGVuZHMgdG8gdGhlIGVuZCBvZiB0aGUgcmVnaW9uICovCj4gKwkJCXJz
-dGFydCA9IHNpemU7Cj4gKwkJCXJzaXplID0gMDsKPiArCQl9Cj4gKwo+ICsJCS8qIGN1cnJlbnQg
-c3RhcnQgaXMgaW4gYSByZXNlcnZlZCBibG9jayAqLwo+ICsJCWlmIChyc3RhcnQgPD0gY3VyX3N0
-YXJ0KSB7Cj4gKwkJCWN1cl9zdGFydCA9IHJzdGFydCArIHJzaXplOwo+ICsJCQljb250aW51ZTsK
-PiArCQl9Cj4gKwo+ICsJCS8qCj4gKwkJICogYWxsb2NhdGUgdGhlIHNwYWNlIGJldHdlZW4gdGhl
-IGN1cnJlbnQgc3RhcnRpbmcKPiArCQkgKiBhZGRyZXNzIGFuZCB0aGUgZm9sbG93aW5nIHJlc2Vy
-dmVkIGJsb2NrLCBvciB0aGUKPiArCQkgKiBlbmQgb2YgdGhlIHJlZ2lvbi4KPiArCQkgKi8KPiAr
-CQljdXJfc2l6ZSA9IHJzdGFydCAtIGN1cl9zdGFydDsKPiArCj4gKwkJZGV2X2RiZygmcGRldi0+
-ZGV2LCAiYWRkaW5nIGNodW5rIDB4JXgtMHgleFxuIiwKPiArCQkJY3VyX3N0YXJ0LCBjdXJfc3Rh
-cnQgKyBjdXJfc2l6ZSk7Cj4gKwkJcmV0ID0gZ2VuX3Bvb2xfYWRkX3ZpcnQoc3JhbS0+cG9vbCwK
-PiArCQkJCSh1bnNpZ25lZCBsb25nKXZpcnRfYmFzZSArIGN1cl9zdGFydCwKPiArCQkJCXJlcy0+
-c3RhcnQgKyBjdXJfc3RhcnQsIGN1cl9zaXplLCAtMSk7Cj4gKwkJaWYgKHJldCA8IDApIHsKPiAr
-CQkJaWYgKHNyYW0tPmNsaykKPiArCQkJCWNsa19kaXNhYmxlX3VucHJlcGFyZShzcmFtLT5jbGsp
-Owo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJCX0KPiArCj4gKwkJLyogbmV4dCBhbGxvY2F0aW9uIGFm
-dGVyIHRoaXMgcmVzZXJ2ZWQgYmxvY2sgKi8KPiArCQljdXJfc3RhcnQgPSByc3RhcnQgKyByc2l6
-ZTsKPiAgCX0KPiAgCj4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBzcmFtKTsKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
-c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
-dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On 07/05/2013 09:08 AM, Mark Brown wrote:
+> On Fri, Jul 05, 2013 at 08:55:07AM -0500, Nishanth Menon wrote:
+>
+> Please write in paragraphs, an enormous wall of unbroken text isn't
+> helpful for legibility.
+
+Apologies on the same. Will try to do better.
+
+>
+>> On 16:41-20130704, Mark Brown wrote:
+>
+>>> So, this still has the thing where all the data about the PMIC is
+>>> replicated (but now in this driver).  It should be possible to pull all
+>>> the above information except possibly the I2C timeout and perhaps the
+>>> I2C address (if there's a separate control interface) from the standard
+>>> regulator core data structures for the PMIC.  This would allow the
+>>> driver to Just Work with any PMIC without needing to add it in two
+>>> places.
+>
+>> option 1) we just bypass get_voltage/set_voltage to point through to
+>> this function. result will be something similar to what we got here[1]
+>
+> I don't really know what you mean when you say "bypass get_voltage/set_voltage
+> so it's kind of hard to comment...  the link you posted appears to be a
+> link to the code I'm reviewing so it's not terribly enlightening.
+
+:) it is similar, yes. by bypass get/set_voltage, I mean something like [1]
+
+>
+>> Again, based on this discussion, it is wrong - and we already did implement
+>> the *wrong* way in OMAP and the new code is supposed to throw away the
+>> old code once all relevant platforms are converted to DT.
+>> - now, we could improve this by passing rdev and slurp out required
+>>   data from regulator structures, but obviously, as you pointed out, it wont
+>>   be sufficient.
+>> - In this solution, we will have existing regulator drivers supporting
+>> additional data path. *but* that also means that existing regulator
+>> drivers will need to be modified to handle multiple data path and "Just
+>> Work" wont happen - so not really good other than screw up existing
+>> regulator drivers with handling OMAP specific APIs in them.
+>
+> What makes you think that the existing regulator drivers need to be
+> modified?
+
+
+data path difference - Almost all standard regulators use i2c (standard 
+i2c APIs) for every other SMPS/LDO except for the ones controlled by 
+OMAP custom i2c path(vc/vp), the set_voltage/get_voltage needs a 
+different implementation when it comes to using the vc/vp path.
+
+ > They already have all the data exported to the core (or
+ > should do)...
+
+I see that twl-regulator does not indeed do it, but, assuming the 
+regulators have all the data exported to the core, the data is hidden in 
+struct regulator_desc which is private to the device and driver. lets go 
+through these:
+
+ > +static const struct omap_pmic_info omap_twl4030_vdd1 = {
+ > +	.slave_addr = 0x12,
+Not readily exposed, but we can solve that using reg=<0x12>; in dts - 
+this might not be duplication as the register address will be unique for 
+the bus.
+
+ > +	.voltage_reg_addr = 0x00,
+desc->vsel_reg maps fine
+
+ > +	.cmd_reg_addr = 0x00,
+command register is used for sending low power state commands - which is 
+not the same as voltage register or vsel_reg as used in depicted in 
+regulator_desc.	
+
+ > +	.i2c_timeout_us = 200,
+yep, does not match up.
+
+ > +	.slew_rate_uV = 4000,
+desc->ramp_delay maps fine
+
+ > +	.step_size_uV = 12500,
+desc->uV_step maps fine.
+
+ > +	.min_uV = 600000,
+desc->min_uV maps fine.
+
+ > +	.max_uV = 1450000,
+can be used with constraints, but most regulator drivers seem to store 
+this internally.
+
+ > +	.voltage_selector_offset = 0,
+ > +	.voltage_selector_mask = 0x7F,
+ > +	.voltage_selector_setbits = 0x0,
+ > +	.voltage_selector_zero = false,
+to an extent we can map these to vsel_mask, linear_min_sel etc. (again 
+assuming the regulator driver has populated it - most that implement 
+custom set_voltage, get_voltage do not do that.
+
+Now, How do you suggest I pick up this data in omap_pmic regulator?
+linux/regulator/consumer.h does not seem appropriate omap_pmic is not 
+really a consumer of the regulator and further all the detailed data is 
+not exposed either.
+
+Other option is to make rdev available to omap_pmic regulator - which 
+again implies change in existing regulator driver?
+
+
+> the only thing that's missing is the timeouts and it's
+> not at all obvious why those need to be tuned per device.
+
+OMAP VC hardware has no idea about how long to wait before giving up on 
+an ongoing i2c transaction. This may depend on PMIC and what it does 
+before acking on i2c.
+
+>
+>> option 2) make omap_pmic regulator use twl_regulator - regulator
+>> chaining.
+>
+> Again I don't know what this is.
+Lets ignore this for the moment.
+
+
+[1] 
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=63bfff4e20211b464cbea6e79e5fd36df227c154
+-- 
+Regards,
+Nishanth Menon
