@@ -1,36 +1,79 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 1/1] of/documentation: Fix a typo in exynos5250-clock.txt
-Date: Fri,  5 Jul 2013 13:48:01 +0530
-Message-ID: <1373012281-26433-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: mturquette@linaro.org, grant.likely@linaro.org, rob@landley.net, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Best practice device tree design for display subsystems/DRM
+Date: Fri, 5 Jul 2013 09:37:34 +0100
+Message-ID: <CACxGe6uTv2yaTH-_JLa=vtgmXwq=++wz3=eDpkRr2GVbKaME1A@mail.gmail.com>
+References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+ <20130702204255.2044c01b@armhf>
+ <20130702191923.GD13924@flint.arm.linux.org.uk>
+ <51D330AC.5060903@gmail.com> <20130702202548.GE13924@flint.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130702202548.GE13924-f404yB8NqCZvn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The clocks should be numbered sequentially as they are represented as
-enum values in the clock driver.
+On Tue, Jul 2, 2013 at 9:25 PM, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Tue, Jul 02, 2013 at 09:57:32PM +0200, Sebastian Hesselbarth wrote:
+>> I am against a super node which contains lcd and dcon/ire nodes. You can
+>> enable those devices on a per board basis. We add them to dove.dtsi but
+>> disable them by default (status = "disabled").
+>>
+>> The DRM driver itself should get a video-card node outside of
+>> soc/internal-regs where you can put e.g. video memory hole (or video
+>> mem size if it will be taken from RAM later)
+>>
+>> About the unusual case, I guess we should try to get both lcd
+>> controllers into one DRM driver. Then support mirror or screen
+>> extension X already provides. For those applications where you want
+>> X on one lcd and some other totally different video stream - wait
+>> for someone to come up with a request or proposal.
+>
+> Well, all I can say then is that the onus is on those who want to treat
+> the components as separate devices to come up with some foolproof way
+> to solve this problem which doesn't involve making assumptions about
+> the way that devices are probed and doesn't end up creating artificial
+> restrictions on how the devices can be used - and doesn't end up burdening
+> the common case with lots of useless complexity that they don't need.
+>
+> It's _that_ case which needs to come up with a proposal about how to
+> handle it because you _can't_ handle it at the moment in any sane
+> manner which meets the criteria I've set out above, and at the moment
+> the best proposal by far to resolve that is the "super node" approach.
+>
+> There is _no_ way in the device model to combine several individual
+> devices together into one logical device safely when the subsystem
+> requires that there be a definite point where everything is known.
+> That applies even more so with -EPROBE_DEFER.  With the presence of
+> such a thing, there is now no logical point where any code can say
+> definitively that the system has technically finished booting and all
+> resources are known.
+>
+> That's the problem - if you don't od the super-node approach, you end
+> up with lots of individual devices which you have to figure out some
+> way of combining, and coping with missing ones which might not be
+> available in the order you want them to be, etc.
+>
+> That's the advantage of the "super node" approach - it's a container
+> to tell you what's required in order to complete the creation of the
+> logical device, and you can parse the sub-nodes to locate the
+> information you need.
 
-Typo introduced by commit 17d4caccef ("clk: exynos5250: register
-display block gate clocks to common clock framework")
+Alternatively, you can have the same effect with a property or set of
+properties in the controller node that contains phandles to the
+required devices. That would provide the driver with the same
+information about which devices must be present.
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- .../devicetree/bindings/clock/exynos5250-clock.txt |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-index 781a627..1a05761 100644
---- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-@@ -154,7 +154,7 @@ clock which they consume.
-   dsim0			341
-   dp			342
-   mixer			343
--  hdmi			345
-+  hdmi			344
- 
- Example 1: An example of a clock controller node is listed below.
- 
--- 
-1.7.9.5
+g.
