@@ -1,93 +1,195 @@
-From: Laura Abbott <lauraa@codeaurora.org>
-Subject: Re: [PATCH V3] of: Set the DMA mask to 64 bits when dma_addr_t is
- 64-bits
-Date: Fri, 05 Jul 2013 12:33:21 -0700
-Message-ID: <51D71F81.5090503@codeaurora.org>
-References: <1367008266-1431-1-git-send-email-lauraa@codeaurora.org>
- <517AF270.8040106@gmail.com>
- <CACVXFVPfkqP+UyoGd-+QFRzndSam_DtU=utrBPYCPjQCGQ_F6g@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 00/21] MBus DT binding: PCIe strikes back
+Date: Fri,  5 Jul 2013 18:39:11 -0300
+Message-ID: <1373060372-32357-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACVXFVPfkqP+UyoGd-+QFRzndSam_DtU=utrBPYCPjQCGQ_F6g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ming Lei <tom.leiming@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/3/2013 7:15 AM, Ming Lei wrote:
-> On Sat, Apr 27, 2013 at 5:32 AM, Rob Herring <robherring2@gmail.com> wrote:
->> On 04/26/2013 03:31 PM, Laura Abbott wrote:
->>> Currently, of_platform_device_create_pdata always sets the
->>> coherent DMA mask to 32 bits. On ARM systems without CONFIG_ZONE_DMA,
->>> arm_dma_limit gets set to ~0 or 0xFFFFFFFFFFFFFFFF on LPAE based
->>> systems. Since arm_dma_limit represents the smallest dma_mask
->>> on the system, the default of 32 bits prevents any dma_coherent
->>> allocation from succeeding unless clients manually set the
->>> dma mask first. Rather than make every client on an LPAE system set
->>> the mask manually, account for the size of dma_addr_t when setting
->>> the coherent mask.
->>>
->>> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
->>> ---
->>>   drivers/of/platform.c |    2 +-
->>>   1 files changed, 1 insertions(+), 1 deletions(-)
->>>
->>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->>> index 0970505..5f0ba94 100644
->>> --- a/drivers/of/platform.c
->>> +++ b/drivers/of/platform.c
->>> @@ -214,7 +214,7 @@ struct platform_device *of_platform_device_create_pdata(
->>>   #if defined(CONFIG_MICROBLAZE)
->>>        dev->archdata.dma_mask = 0xffffffffUL;
->>>   #endif
->>> -     dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
->>> +     dev->dev.coherent_dma_mask = DMA_BIT_MASK(sizeof(dma_addr_t) * 8);
->>
->> This is going to change the mask from 32 to 64 bits on 64-bit powerpc
->> and others possibly. Maybe it doesn't matter. I think it doesn't, but
->> I'm not sure enough to apply for 3.10. So I'll queue it for 3.11.
->
-> Without the patch, LPAE enabled board may not boot at all, but looks
-> it still isn't in -next tree.
->
-> But I am wondering if it is a correct approach, because enabling LPAE
-> doesn't mean the I/O devices can support DMA to/from 64bit address, and
-> it is very probably devices can't do it at all.
->
+See the previous version of this patchset for further context:
 
-The problem is the way the arm_dma_limit is set up, all dma allocations 
-are currently broken regardless of if the actual device supports 64-bit 
-addresses or not.
+http://www.mail-archive.com/devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg35753.html
 
-> Another way is to always set arm_dma_limit as 0xFFFFFFFF when
-> CONFIG_ZONE_DMA is unset, and let driver override device's dma
-> mask if the device supports 64bit DMA.
->
+This new proposal is an attempt to address some issues raised about the PCIe
+'fake' windows mapping present in the previous version.
 
-I previously asked about the arm_dma_limit and was told that the current 
-behavior is the correct approach (see 
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-April/032729.html 
-and 
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-April/032690.html) 
+Instead of defining a 'fake' MBUS_ID(0xf0, 0x02) region for the whole
+PCIe memory and IO space, we use real target ID and attribute for the windows.
+
+See the example below, where a somewhat complete device tree extract is shown:
+
+	soc {
+		compatible = "marvell,armadaxp-mbus", "simple-bus";
+		controller = <&mbusc>;
+
+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000   /* internal-regs */
+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x8000000>;
+
+		bootrom {
+			compatible = "marvell,bootrom";
+			reg = <MBUS_ID(0x01, 0x1d) 0 0x100000>;
+		};
+
+		devbus-bootcs {
+			status = "okay";
+			ranges = <0 MBUS_ID(0x01, 0x2f) 0 0x8000000>;
+
+			/* NOR */
+			nor {
+				compatible = "cfi-flash";
+				reg = <0 0x8000000>;
+				bank-width = <2>;
+			};
+		};
+
+		pcie-controller {
+			compatible = "marvell,armada-xp-pcie";
+			status = "okay";
+			device_type = "pci";
+
+			#address-cells = <3>;
+			#size-cells = <2>;
+
+			ranges =
+			       <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000   /* Port 0.0 registers */
+				0x82000000 0 0x42000 MBUS_ID(0xf0, 0x01) 0x42000 0 0x00002000   /* Port 2.0 registers */
+				0x82000000 0 0x44000 MBUS_ID(0xf0, 0x01) 0x44000 0 0x00002000   /* Port 0.1 registers */
+				0x82000000 0 0x48000 MBUS_ID(0xf0, 0x01) 0x48000 0 0x00002000   /* Port 0.2 registers */
+				0x82000000 0 0x4c000 MBUS_ID(0xf0, 0x01) 0x4c000 0 0x00002000   /* Port 0.3 registers */
+				0x82000800 0 0xe0000000 MBUS_ID(0x04, 0xe8) 0xe0000000 0 0x08000000 /* Port 0.0 MEM */
+				0x81000800 0 0          MBUS_ID(0x04, 0xe0) 0xe8000000 0 0x00100000 /* Port 0.0 IO */>;
 
 
-The point here is to set the mask to something reasonable such that 
-allocations can succeed by default. If devices can't use part of the 
-memory space they can adjust the limit accordingly.
+			pcie@1,0 {
+				/* Port 0, Lane 0 */
+				status = "okay";
+			};
+		};
 
-Thanks,
-Laura
+		internal-regs {
+			compatible = "simple-bus";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			ranges = <0 MBUS_ID(0xf0, 0x01) 0 0x100000>;
+
+			mbusc: mbus-controller@20000 {
+				reg = <0x20000 0x100>, <0x20180 0x20>;
+			};
+
+			interrupt-controller@20000 {
+			      reg = <0x20a00 0x2d0>, <0x21070 0x58>;
+			};
+		};
+	};
+
+With this new approach there's no mbus-node ranges translation for the 'fake'
+window that maps the PCIe regions. Such a translation was actually wrong
+in the sense that the windows are allocated dynamically and hence the mappings
+need to be created dynamically.
+
+As the target ID and attribute is now encoded in the device tree, it's
+now possible to remove the name-based window allocation scheme, replacing
+it by a new one based in the IDs only.
+
+This makes the MBus DT binding much consistent, as now both the statically
+and dynamically allocated decoding window are defined in the same way.
+
+I'd like to see this binding accepted more or less soon, so if the current
+proposal is not accepted it'll be great to hear some hints on how to move
+forward.
+
+This series applies on top of today's linux-next. I will rebase it on v3.11-rc1
+as soon as that's available.
+
+Thanks a lot!
+
+Ezequiel Garcia (11):
+  memory: mvebu-devbus: Remove address decoding window workaround
+  bus: mvebu-mbus: Factor out initialization details
+  bus: mvebu-mbus: Introduce device tree binding
+  bus: mvebu-mbus: Add static window allocation to the DT binding
+  ARM: mvebu: Remove the harcoded BootROM window allocation
+  ARM: mvebu: Initialize MBus using the DT binding
+  ARM: mvebu: Use the preprocessor on Armada 370/XP device tree files
+  ARM: mvebu: Add MBus to Armada 370/XP device tree
+  ARM: mvebu: Add BootROM to Armada 370/XP device tree
+  ARM: mvebu: Relocate Armada 370/XP DeviceBus device tree nodes
+  ARM: mvebu: Relocate Armada 370/XP PCIe device tree nodes
+
+Thomas Petazzoni (10):
+  bus: mvebu-mbus: Add new API for window creation
+  ARM: kirkwood: Move to ID based MBus window creation
+  ARM: mv78xx0: Move to ID based window creation
+  ARM: orion5x: Move to ID based window creation
+  ARM: dove: Move to ID based window creation
+  pci: mvebu: Adapt to the new device tree layout
+  bus: mvebu-mbus: Remove the no longer used name-based API
+  bus: mvebu-mbus: Remove name -> target, attribute mapping tables
+  bus: mvebu-mbus: Update main description
+  bus: mvebu-mbus: Factorize Armada 370/XP data structures
+
+ .../devicetree/bindings/bus/mvebu-mbus.txt         | 256 +++++++++++++
+ arch/arm/boot/dts/armada-370-db.dts                |   5 +-
+ arch/arm/boot/dts/armada-370-mirabox.dts           |  37 +-
+ arch/arm/boot/dts/armada-370-rd.dts                |   5 +-
+ arch/arm/boot/dts/armada-370-xp.dtsi               | 109 +++---
+ arch/arm/boot/dts/armada-370.dtsi                  | 110 +++---
+ arch/arm/boot/dts/armada-xp-db.dts                 | 131 ++++---
+ arch/arm/boot/dts/armada-xp-gp.dts                 | 107 +++---
+ arch/arm/boot/dts/armada-xp-mv78230.dtsi           | 217 +++++------
+ arch/arm/boot/dts/armada-xp-mv78260.dtsi           | 258 ++++++-------
+ arch/arm/boot/dts/armada-xp-mv78460.dtsi           | 397 +++++++++++----------
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts   |  88 +++--
+ arch/arm/boot/dts/armada-xp.dtsi                   |   9 +-
+ arch/arm/mach-dove/common.c                        |  68 ++--
+ arch/arm/mach-kirkwood/common.c                    |  18 +-
+ arch/arm/mach-kirkwood/pcie.c                      |  40 ++-
+ arch/arm/mach-mv78xx0/pcie.c                       |  23 +-
+ arch/arm/mach-mvebu/armada-370-xp.c                |  34 +-
+ arch/arm/mach-mvebu/platsmp.c                      |  25 +-
+ arch/arm/mach-orion5x/common.c                     |  36 +-
+ arch/arm/mach-orion5x/common.h                     |  17 +
+ arch/arm/mach-orion5x/d2net-setup.c                |   6 +-
+ arch/arm/mach-orion5x/db88f5281-setup.c            |  24 +-
+ arch/arm/mach-orion5x/dns323-setup.c               |   6 +-
+ arch/arm/mach-orion5x/edmini_v2-setup.c            |   6 +-
+ arch/arm/mach-orion5x/kurobox_pro-setup.c          |  12 +-
+ arch/arm/mach-orion5x/ls-chl-setup.c               |   6 +-
+ arch/arm/mach-orion5x/ls_hgl-setup.c               |   6 +-
+ arch/arm/mach-orion5x/lsmini-setup.c               |   6 +-
+ arch/arm/mach-orion5x/mss2-setup.c                 |   6 +-
+ arch/arm/mach-orion5x/mv2120-setup.c               |   6 +-
+ arch/arm/mach-orion5x/net2big-setup.c              |   6 +-
+ arch/arm/mach-orion5x/pci.c                        |   9 +-
+ arch/arm/mach-orion5x/rd88f5181l-fxo-setup.c       |   6 +-
+ arch/arm/mach-orion5x/rd88f5181l-ge-setup.c        |   6 +-
+ arch/arm/mach-orion5x/rd88f5182-setup.c            |  13 +-
+ arch/arm/mach-orion5x/terastation_pro2-setup.c     |   6 +-
+ arch/arm/mach-orion5x/ts209-setup.c                |   6 +-
+ arch/arm/mach-orion5x/ts409-setup.c                |   6 +-
+ arch/arm/mach-orion5x/wnr854t-setup.c              |   6 +-
+ arch/arm/mach-orion5x/wrt350n-v2-setup.c           |   6 +-
+ drivers/bus/mvebu-mbus.c                           | 386 ++++++++++----------
+ drivers/memory/mvebu-devbus.c                      |  64 +---
+ drivers/pci/host/pci-mvebu.c                       | 152 ++++++--
+ include/linux/mbus.h                               |  12 +-
+ 45 files changed, 1610 insertions(+), 1148 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/mvebu-mbus.txt
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.8.1.5
