@@ -1,14 +1,13 @@
 From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 5/9] clocksource: dw_apb_timer: quirk for variants without
- EOI register
-Date: Sat, 6 Jul 2013 01:49:45 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1307060147070.32106@ionos.tec.linutronix.de>
+Subject: Re: [PATCH 6/9] clocksource: dw_apb_timer: quirk for inverted int mask
+Date: Sat, 6 Jul 2013 01:51:54 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1307060150030.32106@ionos.tec.linutronix.de>
 References: <201307060051.09716.heiko@sntech.de>
- <201307060054.07784.heiko@sntech.de>
+ <201307060054.35996.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-569905278-1373068186=:32106"
+Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-1376309650-1373068315=:32106"
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201307060054.07784.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <201307060054.35996.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -26,24 +25,21 @@ List-Id: devicetree@vger.kernel.org
   This message is in MIME format.  The first part should be readable text,
   while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323329-569905278-1373068186=:32106
+--8323329-1376309650-1373068315=:32106
 Content-Type: TEXT/PLAIN; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
 On Sat, 6 Jul 2013, Heiko St=C3=BCbner wrote:
-> -	dw_ced->eoi =3D apbt_eoi;
-> +	if (quirks & APBTMR_QUIRK_NO_EOI)
-> +		dw_ced->eoi =3D apbt_eoi_int_status;
-> +	else
-> +		dw_ced->eoi =3D apbt_eoi;
 
-No again. This has nothing to do with quirks. We use quirks for
-workarounds and not for refactoring of code.
+> Some timer variants use an inverted setting to mask the timer interrupt=
+.
+> Therefore add a quirk to handle these variants.
 
-Thanks,
+And by that add even more pointless conditionals into critical code
+pathes.
 
-	tglx
---8323329-569905278-1373068186=:32106
+
+--8323329-1376309650-1373068315=:32106
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -54,4 +50,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---8323329-569905278-1373068186=:32106--
+--8323329-1376309650-1373068315=:32106--
