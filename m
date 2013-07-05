@@ -1,8 +1,8 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 14/21] bus: mvebu-mbus: Factorize Armada 370/XP data
- structures
-Date: Fri,  5 Jul 2013 18:39:25 -0300
-Message-ID: <1373060372-32357-15-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v6 15/21] ARM: mvebu: Remove the harcoded BootROM window
+ allocation
+Date: Fri,  5 Jul 2013 18:39:26 -0300
+Message-ID: <1373060372-32357-16-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1373060372-32357-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,49 +23,66 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+The address decoding window to access the BootROM should not be
+allocated programatically, but instead declared in the device tree.
 
-These structures were only different in the mapping tables.
-Now that those tables have been removed, it doesn't make any sense
-to keep different structures.
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/bus/mvebu-mbus.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ arch/arm/mach-mvebu/platsmp.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
-index 58d3c8f..0b7f9f7 100644
---- a/drivers/bus/mvebu-mbus.c
-+++ b/drivers/bus/mvebu-mbus.c
-@@ -534,15 +534,7 @@ mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
- 	mvebu_mbus_dram_info.num_cs = cs;
+diff --git a/arch/arm/mach-mvebu/platsmp.c b/arch/arm/mach-mvebu/platsmp.c
+index ce81d30..7be1ec2 100644
+--- a/arch/arm/mach-mvebu/platsmp.c
++++ b/arch/arm/mach-mvebu/platsmp.c
+@@ -21,6 +21,7 @@
+ #include <linux/smp.h>
+ #include <linux/clk.h>
+ #include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/mbus.h>
+ #include <asm/cacheflush.h>
+ #include <asm/smp_plat.h>
+@@ -29,6 +30,9 @@
+ #include "pmsu.h"
+ #include "coherency.h"
+ 
++#define AXP_BOOTROM_BASE 0xfff00000
++#define AXP_BOOTROM_SIZE 0x100000
++
+ void __init set_secondary_cpus_clock(void)
+ {
+ 	int thiscpu;
+@@ -114,10 +118,29 @@ static void __init armada_xp_smp_init_cpus(void)
+ 
+ void __init armada_xp_smp_prepare_cpus(unsigned int max_cpus)
+ {
++	struct device_node *node;
++	struct resource res;
++	int err;
++
+ 	set_secondary_cpus_clock();
+ 	flush_cache_all();
+ 	set_cpu_coherent(cpu_logical_map(smp_processor_id()), 0);
+-	mvebu_mbus_add_window("bootrom", 0xfff00000, SZ_1M);
++
++	/*
++	 * In order to boot the secondary CPUs we need to ensure
++	 * the bootROM is mapped at the correct address.
++	 */
++	node = of_find_compatible_node(NULL, NULL, "marvell,bootrom");
++	if (!node)
++		panic("Cannot find 'marvell,bootrom' compatible node");
++
++	err = of_address_to_resource(node, 0, &res);
++	if (err < 0)
++		panic("Cannot get 'bootrom' node address");
++
++	if (res.start != AXP_BOOTROM_BASE ||
++	    resource_size(&res) != AXP_BOOTROM_SIZE)
++		panic("The address for the BootROM is incorrect");
  }
  
--static const struct mvebu_mbus_soc_data armada_370_mbus_data = {
--	.num_wins            = 20,
--	.num_remappable_wins = 8,
--	.win_cfg_offset      = armada_370_xp_mbus_win_offset,
--	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
--	.show_cpu_target     = mvebu_sdram_debug_show_orion,
--};
--
--static const struct mvebu_mbus_soc_data armada_xp_mbus_data = {
-+static const struct mvebu_mbus_soc_data armada_370_xp_mbus_data = {
- 	.num_wins            = 20,
- 	.num_remappable_wins = 8,
- 	.win_cfg_offset      = armada_370_xp_mbus_win_offset,
-@@ -602,9 +594,9 @@ static const struct mvebu_mbus_soc_data mv78xx0_mbus_data = {
-  */
- static const struct of_device_id of_mvebu_mbus_ids[] = {
- 	{ .compatible = "marvell,armada370-mbus",
--	  .data = &armada_370_mbus_data, },
-+	  .data = &armada_370_xp_mbus_data, },
- 	{ .compatible = "marvell,armadaxp-mbus",
--	  .data = &armada_xp_mbus_data, },
-+	  .data = &armada_370_xp_mbus_data, },
- 	{ .compatible = "marvell,kirkwood-mbus",
- 	  .data = &kirkwood_mbus_data, },
- 	{ .compatible = "marvell,dove-mbus",
+ struct smp_operations armada_xp_smp_ops __initdata = {
 -- 
 1.8.1.5
