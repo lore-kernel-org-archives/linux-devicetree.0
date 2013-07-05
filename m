@@ -1,40 +1,74 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 3/3] ARM: EXYNOS: Add G2D support to exynos5250
-Date: Fri,  5 Jul 2013 14:12:29 +0530
-Message-ID: <1373013749-14530-3-git-send-email-sachin.kamat@linaro.org>
-References: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org, mturquette@linaro.org, inki.dae@samsung.com
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Best practice device tree design for display subsystems/DRM
+Date: Fri, 5 Jul 2013 10:02:15 +0100
+Message-ID: <CACxGe6uO=-ABdg+z+fJ-LmXYWVZ-ToOztoSVhSTzv4AUgUxjcg@mail.gmail.com>
+References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+ <20130702204255.2044c01b@armhf>
+ <20130702191923.GD13924@flint.arm.linux.org.uk>
+ <51D330AC.5060903@gmail.com> <20130702202548.GE13924@flint.arm.linux.org.uk>
+ <CACxGe6uTv2yaTH-_JLa=vtgmXwq=++wz3=eDpkRr2GVbKaME1A@mail.gmail.com>
+ <20130705085020.GV13924@flint.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130705085020.GV13924-f404yB8NqCZvn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds G2D node to exynos5250 DT file.
+On Fri, Jul 5, 2013 at 9:50 AM, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Fri, Jul 05, 2013 at 09:37:34AM +0100, Grant Likely wrote:
+>> Alternatively, you can have the same effect with a property or set of
+>> properties in the controller node that contains phandles to the
+>> required devices. That would provide the driver with the same
+>> information about which devices must be present.
+>
+> How do you go from phandle to something-that-the-driver-for-that-device-
+> has-setup?
+>
+> From what I can see, you can go from phandle to OF node, but no further.
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- arch/arm/boot/dts/exynos5250.dtsi |    8 ++++++++
- 1 file changed, 8 insertions(+)
+Correct, and that has historically been by design because it is
+possible for multiple struct devices to reference a single
+device_node. Any subsystem that needs to get a particular device has a
+lookup mechanism that searches the list of known devices and returns a
+match.
 
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index ef57277..6f356ce 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -163,6 +163,14 @@
- 		clock-names = "watchdog";
- 	};
- 
-+	g2d@10850000 {
-+		compatible = "samsung,exynos5250-g2d";
-+		reg = <0x10850000 0x1000>;
-+		interrupts = <0 91 0>;
-+		clocks = <&clock 345>;
-+		clock-names = "fimg2d";
-+	};
-+
- 	codec@11000000 {
- 		compatible = "samsung,mfc-v6";
- 		reg = <0x11000000 0x10000>;
--- 
-1.7.9.5
+example: of_mdio_find_bus()
+
+> I'm guessing we'd need some kind of "registry" for sub-drivers with
+> these structures to register their devices OF node plus "shared" data
+> so that other drivers can find it.  "shared" data might be a
+> standardized operations struct or something similar to 'struct
+> device_driver' but for componentised devices.
+
+If it is per-subsystem, the effort shouldn't be too high because it
+will be able to collect devices of the same type. It gets more
+complicated to design a generic componentised device abstraction
+(which I'm not opposed to, it's just going to be tricky and subtle).
+
+One big concern I have is differentiating between manditory and
+optional dependencies. Manditory is always easy to handle, but what
+about cases where the supernode (using phandles to other nodes)
+references other devices, but it is perfectly valid for the driver to
+complete probing before it becomes available? I may just be borrowing
+trouble here though. Supporting only mandatory dependencies in the
+first cut would still be a big step forward.
+
+One simple approach would be to add a "depends on" list to struct
+device and make the driver core check that all the dependant devices
+have drivers before probing. The risk is that would become a
+complicated set of reference counting and housekeeping.
+
+g.
