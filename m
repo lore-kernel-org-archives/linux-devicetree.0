@@ -1,122 +1,93 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
-Date: Fri, 05 Jul 2013 12:40:55 -0600
-Message-ID: <51D71337.6030409@wwwdotorg.org>
-References: <20130618092516.GC18663@ab42.lan> <1371547751-13873-2-git-send-email-christian.ruppert@abilis.com> <51C23222.2060906@wwwdotorg.org> <20130626115051.GC7095@ab42.lan> <51CB279A.1090404@wwwdotorg.org> <20130705094859.GA27196@ab42.lan>
+From: Laura Abbott <lauraa@codeaurora.org>
+Subject: Re: [PATCH V3] of: Set the DMA mask to 64 bits when dma_addr_t is
+ 64-bits
+Date: Fri, 05 Jul 2013 12:33:21 -0700
+Message-ID: <51D71F81.5090503@codeaurora.org>
+References: <1367008266-1431-1-git-send-email-lauraa@codeaurora.org>
+ <517AF270.8040106@gmail.com>
+ <CACVXFVPfkqP+UyoGd-+QFRzndSam_DtU=utrBPYCPjQCGQ_F6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130705094859.GA27196@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACVXFVPfkqP+UyoGd-+QFRzndSam_DtU=utrBPYCPjQCGQ_F6g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ming Lei <tom.leiming@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2013 03:49 AM, Christian Ruppert wrote:
-> On Wed, Jun 26, 2013 at 11:40:42AM -0600, Stephen Warren wrote:
->> On 06/26/2013 05:50 AM, Christian Ruppert wrote:
->>> On Wed, Jun 19, 2013 at 04:35:14PM -0600, Stephen Warren wrote:
->>>> On 06/18/2013 03:29 AM, Christian Ruppert wrote:
->> [...]
->>>>> +Example
->>>>> +-------
->>>>> +
->>>>> +iomux: iomux@FF10601c {
->>>>> +	compatible = "abilis,tb10x-iomux";
->>>>> +	reg = <0xFF10601c 0x4>;
->>>>> +	pctl_gpio_a: pctl-gpio-a {
->>>>> +		pingrp = "gpioa_pins";
->>>>> +	};
->>>>> +	pctl_uart0: pctl-uart0 {
->>>>> +		pingrp = "uart0_pins";
->>>>> +	};
->>>>> +};
->>>>
->>>> The two nodes pctl-gpio-a and pctl-uart0 seem to be missing data. The
->>>> idea here is that you define nodes that says:
->>>>
->>>> * This node applies to these pin(s)/group(s).
->>>> * Select mux function X on those pins/groups and/or apply these pin
->>>> configuration options to those pins/groups.
->>>>
->>>> The examples above don't include any mux/config options, nor does the
->>>> binding say how to do specify them.
->>>>
->>>> The set of pin groups defined by this binding should correspond directly
->>>> to the set of pin groups that actually exist in HW. So, if you have 3
->>>> pin groups (A, B, C) in HW each of which has two mux functions (X, Y),
->>>> your DT binding should define just 3 pin groups (A, B, C), not 6 (A_X,
->>>> A_Y, B_X, B_Y, C_X, C_Y). In other words, the pin group name shouldn't
->>>> imply the mux function.
+On 7/3/2013 7:15 AM, Ming Lei wrote:
+> On Sat, Apr 27, 2013 at 5:32 AM, Rob Herring <robherring2@gmail.com> wrote:
+>> On 04/26/2013 03:31 PM, Laura Abbott wrote:
+>>> Currently, of_platform_device_create_pdata always sets the
+>>> coherent DMA mask to 32 bits. On ARM systems without CONFIG_ZONE_DMA,
+>>> arm_dma_limit gets set to ~0 or 0xFFFFFFFFFFFFFFFF on LPAE based
+>>> systems. Since arm_dma_limit represents the smallest dma_mask
+>>> on the system, the default of 32 bits prevents any dma_coherent
+>>> allocation from succeeding unless clients manually set the
+>>> dma mask first. Rather than make every client on an LPAE system set
+>>> the mask manually, account for the size of dma_addr_t when setting
+>>> the coherent mask.
 >>>
->>> Can we consider it as agreed now that this implementation is acceptable
->>> for the TB10x pin controller?
+>>> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
+>>> ---
+>>>   drivers/of/platform.c |    2 +-
+>>>   1 files changed, 1 insertions(+), 1 deletions(-)
+>>>
+>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>>> index 0970505..5f0ba94 100644
+>>> --- a/drivers/of/platform.c
+>>> +++ b/drivers/of/platform.c
+>>> @@ -214,7 +214,7 @@ struct platform_device *of_platform_device_create_pdata(
+>>>   #if defined(CONFIG_MICROBLAZE)
+>>>        dev->archdata.dma_mask = 0xffffffffUL;
+>>>   #endif
+>>> -     dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>>> +     dev->dev.coherent_dma_mask = DMA_BIT_MASK(sizeof(dma_addr_t) * 8);
 >>
->> There are two issues here:
->>
->> 1) What is a pin group:
->>
->> 1a) Must it solely represent a group of pins that actually exists in HW
->> (e.g. it's an RTL port, or a set of pins all controlled at once by a
->> single bit/field in a register)
->>
->> 1b) A SW-defined group of pins, simply because it's convenient to talk
->> about that set of pins at once, even though HW doesn't impose that those
->> pins are in a group in any way.
->>
->> Defining groups for either of those reasons is fine, although this is
->> the area where my preference and LinusW's differ.
->>
->> 2) Can groups represent just a set of pins, or can it also imply that a
->> particular mux function is selected on that group?
->>
->> I believe that both LinusW and I are in agreement that a group is simply
->> a list/set/group of pins. You select mux functions onto groups. A
->> groups's definition can't imply that a particular mux function is
->> selected onto it.
->>
->> If we don't follow this rule, then you end up with a combinatorial
->> explosion of groups; the cross-product of all possible groups of pins
->> vs. the mux function to select on them, rather than simply having a list
->> of groups of pins, which is a much smaller set/list.
->>
->> So, in the DT example above, I still believe that you need an extra
->> property that defines which mux function to select onto the specified
->> group. The group name can't imply this, so there needs to be some way of
->> specifying it.
-> 
-> In your opinion, would something in the lines of
-> 
-> pctl_spi1: pctl-spi1 {
-> 	abilis,pingrp = "spi1";
+>> This is going to change the mask from 32 to 64 bits on 64-bit powerpc
+>> and others possibly. Maybe it doesn't matter. I think it doesn't, but
+>> I'm not sure enough to apply for 3.10. So I'll queue it for 3.11.
+>
+> Without the patch, LPAE enabled board may not boot at all, but looks
+> it still isn't in -next tree.
+>
+> But I am wondering if it is a correct approach, because enabling LPAE
+> doesn't mean the I/O devices can support DMA to/from 64bit address, and
+> it is very probably devices can't do it at all.
+>
 
-So that defines a list of pins.
+The problem is the way the arm_dma_limit is set up, all dma allocations 
+are currently broken regardless of if the actual device supports 64-bit 
+addresses or not.
 
-> 	abilis,ioport = <4>;   /* spi1 is routed to port4 inside the
-> 				pin controller */
+> Another way is to always set arm_dma_limit as 0xFFFFFFFF when
+> CONFIG_ZONE_DMA is unset, and let driver override device's dma
+> mask if the device supports 64bit DMA.
+>
 
-I assume that defines the mux function value; the value that's
-programmed into the HW register to select which HW module's signals are
-routed out to the pins specified by abilis,pingrp.
+I previously asked about the arm_dma_limit and was told that the current 
+behavior is the correct approach (see 
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-April/032729.html 
+and 
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-April/032690.html) 
 
-> 	abilis,ioconf = <1>;   /* spi1 is available in configuration 1
-> 				of that port. */
 
-But I don't understand what that is. ...
+The point here is to set the mask to something reasonable such that 
+allocations can succeed by default. If devices can't use part of the 
+memory space they can adjust the limit accordingly.
 
-...
-> In future, this could even be extended to allow several alternative
-> configurations for a given function, e.g.
-> 
-> pctl_spi3: pctl-spi3 {
-> 	abilis,pingrp = "spi3";
-> 	abilis,ioport = <6>;
-> 	abilis,ioconf = <0 3>; /* spi3 is available in both
-> 				configurations 0 and 3. Depending on
-> 				what other functions are requested, the
-> 				pinctrl driver can choose either of the
-> 				two. */
+Thanks,
+Laura
 
-... especially if you're talking about "spi3 being available in multiple
-configurations". What's a configuration?
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
