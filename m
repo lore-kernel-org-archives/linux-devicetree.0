@@ -1,77 +1,156 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 4/9] clocksource: dw_apb_timer: use the eoi callback to clear pending interrupts
-Date: Sat, 6 Jul 2013 00:59:05 +0200
-Message-ID: <201307060059.06053.heiko@sntech.de>
-References: <201307060051.09716.heiko@sntech.de> <201307060053.36885.heiko@sntech.de>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH V4 4/4] video: exynos_dp: Use the generic PHY driver
+Date: Sat, 06 Jul 2013 01:04:23 +0200
+Message-ID: <1441230.DzaqAQ9HHT@flatron>
+References: <000d01ce7700$222a35a0$667ea0e0$@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201307060053.36885.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jamie Iles <jamie@jamieiles.com>, Dinh Nguyen <dinguyen@altera.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Ulrich Prinz <ulrich.prinz@googlemail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <000d01ce7700$222a35a0$667ea0e0$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, 'Tomi Valkeinen' <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, 'Hui Wang' <jason77.wang@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-this patch should have had a
+Hi Jingoo,
 
-=46rom: Ulrich Prinz <ulrich.prinz@googlemail.com>
-
-sorry for the mistake
-
-Am Samstag, 6. Juli 2013, 00:53:36 schrieb Heiko St=C3=BCbner:
-> Some timer variants have different mechanisms to clear a pending time=
-r
-> interrupt. Therefore don't hardcode the reading of the eoi register t=
-o
-> clear them, but instead use the already existing eoi callback for thi=
-s.
->=20
-> Signed-off-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
+On Tuesday 02 of July 2013 17:42:49 Jingoo Han wrote:
+> Use the generic PHY API instead of the platform callback to control
+> the DP PHY.
+> 
+> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
 > ---
->  drivers/clocksource/dw_apb_timer.c |   11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/clocksource/dw_apb_timer.c
-> b/drivers/clocksource/dw_apb_timer.c index bd45351..5f80a30 100644
-> --- a/drivers/clocksource/dw_apb_timer.c
-> +++ b/drivers/clocksource/dw_apb_timer.c
-> @@ -121,11 +121,14 @@ static irqreturn_t dw_apb_clockevent_irq(int ir=
-q,
-> void *data) return IRQ_HANDLED;
->  }
->=20
-> -static void apbt_enable_int(struct dw_apb_timer *timer)
-> +static void apbt_enable_int(struct dw_apb_clock_event_device *dw_ced=
-)
->  {
-> +	struct dw_apb_timer *timer =3D &dw_ced->timer;
->  	unsigned long ctrl =3D apbt_readl(timer, timer->reg_control);
-> +
->  	/* clear pending intr */
-> -	apbt_readl(timer, timer->reg_eoi);
-> +	if (dw_ced->eoi)
-> +		dw_ced->eoi(timer);
->  	ctrl &=3D ~APBTMR_CONTROL_INT;
->  	apbt_writel(timer, ctrl, timer->reg_control);
->  }
-> @@ -200,7 +203,7 @@ static void apbt_set_mode(enum clock_event_mode m=
-ode,
->  		break;
->=20
->  	case CLOCK_EVT_MODE_RESUME:
-> -		apbt_enable_int(timer);
-> +		apbt_enable_int(dw_ced);
->  		break;
+>  .../devicetree/bindings/video/exynos_dp.txt        |   23
+> +++++--------------- drivers/video/exynos/exynos_dp_core.c             
+> |   16 ++++++++++---- drivers/video/exynos/exynos_dp_core.h            
+>  |    2 ++
+>  3 files changed, 20 insertions(+), 21 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt
+> b/Documentation/devicetree/bindings/video/exynos_dp.txt index
+> 84f10c1..022f4b6 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_dp.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
+> @@ -1,17 +1,6 @@
+>  The Exynos display port interface should be configured based on
+>  the type of panel connected to it.
+> 
+> -We use two nodes:
+> -	-dp-controller node
+> -	-dptx-phy node(defined inside dp-controller node)
+> -
+> -For the DP-PHY initialization, we use the dptx-phy node.
+> -Required properties for dptx-phy:
+> -	-reg:
+> -		Base address of DP PHY register.
+> -	-samsung,enable-mask:
+> -		The bit-mask used to enable/disable DP PHY.
+> -
+
+I wonder if this part shouldn't stay here, just marked as deprecated, 
+because compatibility with old dtbs must be preserved (and rest of the 
+patch looks like it is).
+
+>  For the Panel initialization, we read data from dp-controller node.
+>  Required properties for dp-controller:
+>  	-compatible:
+> @@ -25,6 +14,10 @@ Required properties for dp-controller:
+>  		from common clock binding: handle to dp clock.
+>  	-clock-names:
+>  		from common clock binding: Shall be "dp".
+> +	-phys:
+> +		from general PHY binding: the phandle for the PHY device.
+> +	-phy-names:
+> +		from general PHY binding: Should be "dp".
+>  	-interrupt-parent:
+>  		phandle to Interrupt combiner node.
+>  	-samsung,color-space:
+> @@ -67,12 +60,8 @@ SOC specific portion:
+>  		interrupt-parent = <&combiner>;
+>  		clocks = <&clock 342>;
+>  		clock-names = "dp";
+> -
+> -		dptx-phy {
+> -			reg = <0x10040720>;
+> -			samsung,enable-mask = <1>;
+> -		};
+> -
+> +		phys = <&dp_phy>;
+> +		phy-names = "dp";
+>  	};
+> 
+>  Board Specific portion:
+> diff --git a/drivers/video/exynos/exynos_dp_core.c
+> b/drivers/video/exynos/exynos_dp_core.c index 05fed7d..5e1a715 100644
+> --- a/drivers/video/exynos/exynos_dp_core.c
+> +++ b/drivers/video/exynos/exynos_dp_core.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/delay.h>
+>  #include <linux/of.h>
+> +#include <linux/phy/phy.h>
+> 
+>  #include "exynos_dp_core.h"
+> 
+> @@ -960,8 +961,11 @@ static int exynos_dp_dt_parse_phydata(struct
+> exynos_dp_device *dp)
+> 
+>  	dp_phy_node = of_find_node_by_name(dp_phy_node, "dptx-phy");
+>  	if (!dp_phy_node) {
+> -		dev_err(dp->dev, "could not find dptx-phy node\n");
+> -		return -ENODEV;
+> +		dp->phy = devm_phy_get(dp->dev, "dp");
+> +		if (IS_ERR(dp->phy))
+> +			return PTR_ERR(dp->phy);
+> +		else
+> +			return 0;
 >  	}
->  }
-> @@ -325,7 +328,7 @@ void dw_apb_clockevent_register(struct
-> dw_apb_clock_event_device *dw_ced)
->=20
->  	apbt_writel(timer, 0, timer->reg_control);
->  	clockevents_register_device(&dw_ced->ced);
-> -	apbt_enable_int(timer);
-> +	apbt_enable_int(dw_ced);
->  }
->=20
->  /**
+> 
+>  	if (of_property_read_u32(dp_phy_node, "reg", &phy_base)) {
+> @@ -992,7 +996,9 @@ err:
+> 
+>  static void exynos_dp_phy_init(struct exynos_dp_device *dp)
+>  {
+> -	if (dp->phy_addr) {
+> +	if (dp->phy) {
+> +		phy_power_on(dp->phy);
+> +	} else if (dp->phy_addr) {
+>  		u32 reg;
+> 
+>  		reg = __raw_readl(dp->phy_addr);
+> @@ -1003,7 +1009,9 @@ static void exynos_dp_phy_init(struct
+> exynos_dp_device *dp)
+> 
+>  static void exynos_dp_phy_exit(struct exynos_dp_device *dp)
+>  {
+> -	if (dp->phy_addr) {
+> +	if (dp->phy) {
+> +		phy_power_off(dp->phy);
+> +	} else if (dp->phy_addr) {
+>  		u32 reg;
+> 
+>  		reg = __raw_readl(dp->phy_addr);
+> diff --git a/drivers/video/exynos/exynos_dp_core.h
+> b/drivers/video/exynos/exynos_dp_core.h index 56cfec8..87804b6 100644
+> --- a/drivers/video/exynos/exynos_dp_core.h
+> +++ b/drivers/video/exynos/exynos_dp_core.h
+> @@ -151,6 +151,8 @@ struct exynos_dp_device {
+>  	struct video_info	*video_info;
+>  	struct link_train	link_train;
+>  	struct work_struct	hotplug_work;
+> +
+
+nit: unnecessary blank line
+
+> +	struct phy		*phy;
+>  };
+> 
+>  /* exynos_dp_reg.c */
+
+Otherwise looks good.
+
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+
+Best regards,
+Tomasz
