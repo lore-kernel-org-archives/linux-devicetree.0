@@ -1,8 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 12/21] bus: mvebu-mbus: Remove name -> target,
- attribute mapping tables
-Date: Fri,  5 Jul 2013 18:39:23 -0300
-Message-ID: <1373060372-32357-13-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v6 18/21] ARM: mvebu: Add MBus to Armada 370/XP device tree
+Date: Fri,  5 Jul 2013 18:39:29 -0300
+Message-ID: <1373060372-32357-19-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1373060372-32357-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,267 +22,183 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+The Armada 370/XP SoC family has a completely configurable address
+space handled by the MBus controller.
 
-This tables were used together with the name-based MBus window
-creation API. Since that's has been removed, we can also remove
-the tables.
+This patch introduces the device tree layout of MBus, making the
+'soc' node as mbus-compatible.
+Since every peripheral/controller is a child of this 'soc' node,
+this makes all of them sit behind the mbus, thus describing the
+hardware accurately.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+A translation entry has been added for the internal-regs mapping.
+This can't be done in the common armada-370-xp.dtsi because A370
+and AXP have different addressing width.
+
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/bus/mvebu-mbus.c | 150 +++--------------------------------------------
- 1 file changed, 7 insertions(+), 143 deletions(-)
+ arch/arm/boot/dts/armada-370-db.dts              |  2 ++
+ arch/arm/boot/dts/armada-370-mirabox.dts         |  2 ++
+ arch/arm/boot/dts/armada-370-rd.dts              |  2 ++
+ arch/arm/boot/dts/armada-370-xp.dtsi             | 15 ++++++++++-----
+ arch/arm/boot/dts/armada-370.dtsi                |  4 ++--
+ arch/arm/boot/dts/armada-xp-db.dts               |  4 +---
+ arch/arm/boot/dts/armada-xp-gp.dts               |  4 +---
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |  4 +---
+ arch/arm/boot/dts/armada-xp.dtsi                 |  2 ++
+ 9 files changed, 23 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
-index db68436..8240bd7 100644
---- a/drivers/bus/mvebu-mbus.c
-+++ b/drivers/bus/mvebu-mbus.c
-@@ -97,33 +97,6 @@
+diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
+index 55b986c..5920b4e 100644
+--- a/arch/arm/boot/dts/armada-370-db.dts
++++ b/arch/arm/boot/dts/armada-370-db.dts
+@@ -30,6 +30,8 @@
+ 	};
  
- #define DOVE_DDR_BASE_CS_OFF(n) ((n) << 4)
+ 	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000>;
++
+ 		internal-regs {
+ 			serial@12000 {
+ 				clock-frequency = <200000000>;
+diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
+index 37530af..a4202b6 100644
+--- a/arch/arm/boot/dts/armada-370-mirabox.dts
++++ b/arch/arm/boot/dts/armada-370-mirabox.dts
+@@ -25,6 +25,8 @@
+ 	};
  
--struct mvebu_mbus_mapping {
--	const char *name;
--	u8 target;
--	u8 attr;
--	u8 attrmask;
--};
--
--/*
-- * Masks used for the 'attrmask' field of mvebu_mbus_mapping. They
-- * allow to get the real attribute value, discarding the special bits
-- * used to select a PCI MEM region or a PCI WA region. This allows the
-- * debugfs code to reverse-match the name of a device from its
-- * target/attr values.
-- *
-- * For all devices except PCI, all bits of 'attr' must be
-- * considered. For most SoCs, only bit 3 should be ignored (it allows
-- * to select between PCI MEM and PCI I/O). On Orion5x however, there
-- * is the special bit 5 to select a PCI WA region.
-- */
--#define MAPDEF_NOMASK       0xff
--#define MAPDEF_PCIMASK      0xf7
--#define MAPDEF_ORIONPCIMASK 0xd7
--
--/* Macro used to define one mvebu_mbus_mapping entry */
--#define MAPDEF(__n, __t, __a, __m) \
--	{ .name = __n, .target = __t, .attr = __a, .attrmask = __m }
--
- struct mvebu_mbus_state;
+ 	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000>;
++
+ 		internal-regs {
+ 			serial@12000 {
+ 				clock-frequency = <200000000>;
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index 7aa2171..dd0ba01 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -28,6 +28,8 @@
+ 	};
  
- struct mvebu_mbus_soc_data {
-@@ -133,7 +106,6 @@ struct mvebu_mbus_soc_data {
- 	void (*setup_cpu_target)(struct mvebu_mbus_state *s);
- 	int (*show_cpu_target)(struct mvebu_mbus_state *s,
- 			       struct seq_file *seq, void *v);
--	const struct mvebu_mbus_mapping *map;
- };
+ 	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000>;
++
+ 		internal-regs {
+ 			serial@12000 {
+ 				clock-frequency = <200000000>;
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index 90b1176..62639b4 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -18,6 +18,8 @@
  
- struct mvebu_mbus_state {
-@@ -428,8 +400,7 @@ static int mvebu_devs_debug_show(struct seq_file *seq, void *v)
- 		u64 wbase, wremap;
- 		u32 wsize;
- 		u8 wtarget, wattr;
--		int enabled, i;
--		const char *name;
-+		int enabled;
+ /include/ "skeleton64.dtsi"
  
- 		mvebu_mbus_read_window(mbus, win,
- 				       &enabled, &wbase, &wsize,
-@@ -440,18 +411,9 @@ static int mvebu_devs_debug_show(struct seq_file *seq, void *v)
- 			continue;
- 		}
++#define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
++
+ / {
+ 	model = "Marvell Armada 370 and XP SoC";
+ 	compatible = "marvell,armada-370-xp";
+@@ -38,18 +40,21 @@
+ 	};
  
--
--		for (i = 0; mbus->soc->map[i].name; i++)
--			if (mbus->soc->map[i].target == wtarget &&
--			    mbus->soc->map[i].attr ==
--			    (wattr & mbus->soc->map[i].attrmask))
--				break;
--
--		name = mbus->soc->map[i].name ?: "unknown";
--
--		seq_printf(seq, "[%02d] %016llx - %016llx : %s",
-+		seq_printf(seq, "[%02d] %016llx - %016llx : %04x:%04x\n",
- 			   win, (unsigned long long)wbase,
--			   (unsigned long long)(wbase + wsize), name);
-+			   (unsigned long long)(wbase + wsize), wtarget, wattr);
+ 	soc {
+-		#address-cells = <1>;
++		#address-cells = <2>;
+ 		#size-cells = <1>;
+-		compatible = "simple-bus";
++		controller = <&mbusc>;
+ 		interrupt-parent = <&mpic>;
+-		ranges = <0          0 0xd0000000 0x0100000 /* internal registers */
+-			  0xe0000000 0 0xe0000000 0x8100000 /* PCIe */>;
  
- 		if (win < mbus->soc->num_remappable_wins) {
- 			seq_printf(seq, " (remap %016llx)\n",
-@@ -576,45 +538,12 @@ mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
- 	mvebu_mbus_dram_info.num_cs = cs;
- }
+ 		internal-regs {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges;
++			ranges = <0 MBUS_ID(0xf0, 0x01) 0 0x100000>;
++
++			mbusc: mbus-controller@20000 {
++				compatible = "marvell,mbus-controller";
++				reg = <0x20000 0x100>, <0x20180 0x20>;
++			};
  
--static const struct mvebu_mbus_mapping armada_370_map[] = {
--	MAPDEF("bootrom",     1, 0xe0, MAPDEF_NOMASK),
--	MAPDEF("devbus-boot", 1, 0x2f, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs0",  1, 0x3e, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs1",  1, 0x3d, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs2",  1, 0x3b, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs3",  1, 0x37, MAPDEF_NOMASK),
--	MAPDEF("pcie0.0",     4, 0xe0, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.0",     8, 0xe0, MAPDEF_PCIMASK),
--	{},
--};
--
- static const struct mvebu_mbus_soc_data armada_370_mbus_data = {
- 	.num_wins            = 20,
- 	.num_remappable_wins = 8,
- 	.win_cfg_offset      = armada_370_xp_mbus_win_offset,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
--	.map                 = armada_370_map,
--};
--
--static const struct mvebu_mbus_mapping armada_xp_map[] = {
--	MAPDEF("bootrom",     1, 0x1d, MAPDEF_NOMASK),
--	MAPDEF("devbus-boot", 1, 0x2f, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs0",  1, 0x3e, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs1",  1, 0x3d, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs2",  1, 0x3b, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs3",  1, 0x37, MAPDEF_NOMASK),
--	MAPDEF("pcie0.0",     4, 0xe0, MAPDEF_PCIMASK),
--	MAPDEF("pcie0.1",     4, 0xd0, MAPDEF_PCIMASK),
--	MAPDEF("pcie0.2",     4, 0xb0, MAPDEF_PCIMASK),
--	MAPDEF("pcie0.3",     4, 0x70, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.0",     8, 0xe0, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.1",     8, 0xd0, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.2",     8, 0xb0, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.3",     8, 0x70, MAPDEF_PCIMASK),
--	MAPDEF("pcie2.0",     4, 0xf0, MAPDEF_PCIMASK),
--	MAPDEF("pcie3.0",     8, 0xf0, MAPDEF_PCIMASK),
--	{},
- };
+ 			mpic: interrupt-controller@20000 {
+ 				compatible = "marvell,mpic";
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index 08ec6e3..4b54e51 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -29,8 +29,8 @@
+ 	};
  
- static const struct mvebu_mbus_soc_data armada_xp_mbus_data = {
-@@ -623,15 +552,6 @@ static const struct mvebu_mbus_soc_data armada_xp_mbus_data = {
- 	.win_cfg_offset      = armada_370_xp_mbus_win_offset,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
--	.map                 = armada_xp_map,
--};
--
--static const struct mvebu_mbus_mapping kirkwood_map[] = {
--	MAPDEF("pcie0.0", 4, 0xe0, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.0", 4, 0xd0, MAPDEF_PCIMASK),
--	MAPDEF("sram",    3, 0x01, MAPDEF_NOMASK),
--	MAPDEF("nand",    1, 0x2f, MAPDEF_NOMASK),
--	{},
- };
+ 	soc {
+-		ranges = <0          0xd0000000 0x0100000 /* internal registers */
+-			  0xe0000000 0xe0000000 0x8100000 /* PCIe */>;
++		compatible = "marvell,armada370-mbus", "simple-bus";
++
+ 		internal-regs {
+ 			system-controller@18200 {
+ 				compatible = "marvell,armada-370-xp-system-controller";
+diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+index a9bd766..0d4ce54 100644
+--- a/arch/arm/boot/dts/armada-xp-db.dts
++++ b/arch/arm/boot/dts/armada-xp-db.dts
+@@ -30,9 +30,7 @@
+ 	};
  
- static const struct mvebu_mbus_soc_data kirkwood_mbus_data = {
-@@ -640,16 +560,6 @@ static const struct mvebu_mbus_soc_data kirkwood_mbus_data = {
- 	.win_cfg_offset      = orion_mbus_win_offset,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
--	.map                 = kirkwood_map,
--};
--
--static const struct mvebu_mbus_mapping dove_map[] = {
--	MAPDEF("pcie0.0",    0x4, 0xe0, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.0",    0x8, 0xe0, MAPDEF_PCIMASK),
--	MAPDEF("cesa",       0x3, 0x01, MAPDEF_NOMASK),
--	MAPDEF("bootrom",    0x1, 0xfd, MAPDEF_NOMASK),
--	MAPDEF("scratchpad", 0xd, 0x0, MAPDEF_NOMASK),
--	{},
- };
+ 	soc {
+-		ranges = <0          0 0xd0000000 0x100000	/* Internal registers 1MiB */
+-			  0xe0000000 0 0xe0000000 0x8100000     /* PCIe */
+-			  0xf0000000 0 0xf0000000 0x1000000>;	/* Device Bus, NOR 16MiB   */
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000>;
  
- static const struct mvebu_mbus_soc_data dove_mbus_data = {
-@@ -658,18 +568,6 @@ static const struct mvebu_mbus_soc_data dove_mbus_data = {
- 	.win_cfg_offset      = orion_mbus_win_offset,
- 	.setup_cpu_target    = mvebu_mbus_dove_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_dove,
--	.map                 = dove_map,
--};
--
--static const struct mvebu_mbus_mapping orion5x_map[] = {
--	MAPDEF("pcie0.0",     4, 0x51, MAPDEF_ORIONPCIMASK),
--	MAPDEF("pci0.0",      3, 0x51, MAPDEF_ORIONPCIMASK),
--	MAPDEF("devbus-boot", 1, 0x0f, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs0",  1, 0x1e, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs1",  1, 0x1d, MAPDEF_NOMASK),
--	MAPDEF("devbus-cs2",  1, 0x1b, MAPDEF_NOMASK),
--	MAPDEF("sram",        0, 0x00, MAPDEF_NOMASK),
--	{},
- };
+ 		internal-regs {
+ 			serial@12000 {
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index 54843e5..2fa9209 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -39,9 +39,7 @@
+ 	};
  
- /*
-@@ -682,7 +580,6 @@ static const struct mvebu_mbus_soc_data orion5x_4win_mbus_data = {
- 	.win_cfg_offset      = orion_mbus_win_offset,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
--	.map                 = orion5x_map,
- };
+ 	soc {
+-		ranges = <0          0 0xd0000000 0x100000  /* Internal registers 1MiB */
+-			  0xe0000000 0 0xe0000000 0x8100000 /* PCIe */
+-			  0xf0000000 0 0xf0000000 0x1000000 /* Device Bus, NOR 16MiB  */>;
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000>;
  
- static const struct mvebu_mbus_soc_data orion5x_2win_mbus_data = {
-@@ -691,21 +588,6 @@ static const struct mvebu_mbus_soc_data orion5x_2win_mbus_data = {
- 	.win_cfg_offset      = orion_mbus_win_offset,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
--	.map                 = orion5x_map,
--};
--
--static const struct mvebu_mbus_mapping mv78xx0_map[] = {
--	MAPDEF("pcie0.0", 4, 0xe0, MAPDEF_PCIMASK),
--	MAPDEF("pcie0.1", 4, 0xd0, MAPDEF_PCIMASK),
--	MAPDEF("pcie0.2", 4, 0xb0, MAPDEF_PCIMASK),
--	MAPDEF("pcie0.3", 4, 0x70, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.0", 8, 0xe0, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.1", 8, 0xd0, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.2", 8, 0xb0, MAPDEF_PCIMASK),
--	MAPDEF("pcie1.3", 8, 0x70, MAPDEF_PCIMASK),
--	MAPDEF("pcie2.0", 4, 0xf0, MAPDEF_PCIMASK),
--	MAPDEF("pcie3.0", 8, 0xf0, MAPDEF_PCIMASK),
--	{},
- };
+ 		internal-regs {
+ 			serial@12000 {
+diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+index d090264..a3e3a12 100644
+--- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
++++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+@@ -27,9 +27,7 @@
+ 	};
  
- static const struct mvebu_mbus_soc_data mv78xx0_mbus_data = {
-@@ -714,7 +596,6 @@ static const struct mvebu_mbus_soc_data mv78xx0_mbus_data = {
- 	.win_cfg_offset      = mv78xx0_mbus_win_offset,
- 	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
- 	.show_cpu_target     = mvebu_sdram_debug_show_orion,
--	.map                 = mv78xx0_map,
- };
+ 	soc {
+-		ranges = <0          0 0xd0000000 0x100000	/* Internal registers 1MiB */
+-			  0xe0000000 0 0xe0000000 0x8100000     /* PCIe */
+-			  0xf0000000 0 0xf0000000 0x8000000     /* Device Bus, NOR 128MiB   */>;
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000>;
  
- /*
-@@ -879,33 +760,16 @@ static int __init mbus_dt_setup_win(struct mvebu_mbus_state *mbus,
- 				    u32 base, u32 size,
- 				    u8 target, u8 attr)
- {
--	const struct mvebu_mbus_mapping *map = mbus->soc->map;
--	const char *name;
--	int i;
--
--	/* Search for a suitable window in the existing mappings */
--	for (i = 0; map[i].name; i++)
--		if (map[i].target == target &&
--		    map[i].attr == (attr & map[i].attrmask))
--			break;
--
--	name = map[i].name;
--	if (!name) {
--		pr_err("window 0x%x:0x%x is unknown, skipping\n",
--		       target, attr);
--		return -EINVAL;
--	}
--
- 	if (!mvebu_mbus_window_conflicts(mbus, base, size, target, attr)) {
--		pr_err("cannot add window '%s', conflicts with another window\n",
--		       name);
-+		pr_err("cannot add window '%04x:%04x', conflicts with another window\n",
-+		       target, attr);
- 		return -EBUSY;
- 	}
+ 		internal-regs {
+ 			serial@12000 {
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index 8c07bfe..8033824 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -27,6 +27,8 @@
+ 	};
  
- 	if (mvebu_mbus_alloc_window(mbus, base, size, MVEBU_MBUS_NO_REMAP,
- 				    target, attr)) {
--		pr_err("cannot add window '%s', too many windows\n",
--		       name);
-+		pr_err("cannot add window '%04x:%04x', too many windows\n",
-+		       target, attr);
- 		return -ENOMEM;
- 	}
- 	return 0;
+ 	soc {
++		compatible = "marvell,armadaxp-mbus", "simple-bus";
++
+ 		internal-regs {
+ 			L2: l2-cache {
+ 				compatible = "marvell,aurora-system-cache";
 -- 
 1.8.1.5
