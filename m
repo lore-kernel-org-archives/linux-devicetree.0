@@ -1,56 +1,60 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: Re: [RFC PATCH 01/13] misc: atmel_ssc: add device tree DMA support
-Date: Fri, 5 Jul 2013 09:16:30 +0200
-Message-ID: <CACQ1gAjNGsAWMwyL_9zEobKz=MEzgiA7Gqt=p4anuGhq2dLd_w@mail.gmail.com>
-References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
- <1372667978-4718-2-git-send-email-richard.genoud@gmail.com>
- <51D24299.9050209@atmel.com> <CACQ1gAgcc=j3kmcpjp8bbdHhxr_k=h8jJs6R_paJbPUMv74uGg@mail.gmail.com>
- <51D29927.80900@atmel.com> <CACQ1gAhnDk-qSt_5xrsMakXqGGDO5pEbA-9UDWCJG=AABDc+zg@mail.gmail.com>
- <CACQ1gAgPaRm3gxxJNgfj9bR565Q0+SNY3+EcjA_mrh1N+yPzSA@mail.gmail.com>
- <51D4CC94.3020908@atmel.com> <CACQ1gAio0ekQMgyfrLjTHmMPGJQoKoe61GreFQDN-iLjxbLQ0w@mail.gmail.com>
- <51D62074.9070303@atmel.com>
+From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Appended DTB files for multi-machine kernels
+Date: Fri, 5 Jul 2013 17:32:40 +0900
+Message-ID: <CANqRtoT+=CJrU2AjFwN67vrypQ1WR-8JeMyn1-mzb+tXWeAp2g@mail.gmail.com>
+References: <51D5A938.30607@gmail.com> <20130704171148.GJ27646@sirena.org.uk>
+ <201307042334.37161.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51D62074.9070303@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201307042334.37161.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sven Neumann <s.neumann-5g8ninUHluJWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/7/5 Bo Shen <voice.shen@atmel.com>:
-> Yes, I aware this issue.
-> Actually the system not hang, the resource all are occupied by the
-> interrupt. This because, we enable the interrupt, when once interrupt occur,
-> I try many methods to clear it, however we can not clear it. So, it
-> generates the interrupt all the time. It seems the system hang.
->
-> Temp solution: not enable the interrupt. use the following patch to disable
-> the interrupt.
-> ---8>---
-> diff --git a/sound/soc/atmel/atmel_ssc_dai.c
-> b/sound/soc/atmel/atmel_ssc_dai.c
-> index 0ecf356..bb53dea 100644
-> --- a/sound/soc/atmel/atmel_ssc_dai.c
-> +++ b/sound/soc/atmel/atmel_ssc_dai.c
-> @@ -649,7 +649,7 @@ static int atmel_ssc_prepare(struct snd_pcm_substream
-> *substream,
->         dma_params = ssc_p->dma_params[dir];
->
->         ssc_writel(ssc_p->ssc->regs, CR, dma_params->mask->ssc_enable);
-> -       ssc_writel(ssc_p->ssc->regs, IER, dma_params->mask->ssc_error);
-> +       ssc_writel(ssc_p->ssc->regs, IDR, dma_params->mask->ssc_error);
->
->         pr_debug("%s enabled SSC_SR=0x%08x\n",
->                         dir ? "receive" : "transmit",
-> ---<8---
->
-> BTW, I am checking this with our IP team, if find the real solution, I will
-> fix it.
+Hi Arnd,
 
-ok, I'll rebase my patches on that.
+On Fri, Jul 5, 2013 at 6:34 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 04 July 2013, Mark Brown wrote:
+>> On Thu, Jul 04, 2013 at 06:56:24PM +0200, Daniel Mack wrote:
+>>
+>> > Unless I missed some recent discussion, this case is not easy to handle.
+>> > Yes, I know that these kind of things should be handled by a
+>> > next-generation bootloader, but in our case, we want to avoid a loader
+>> > update of already shipped hardware by all means.
+>>
+>> There was some discussion about appending multiple DTBs recently.  I
+>> can't actually recall anything about it though so that's not an entirely
+>> helpful thing...
+>
+> Yes, it keeps coming up, I think by now everybody agreed it's a good
+> idea to extend the ATAGS compat mode, but so far nobody has implemented
+> it. Magnus Damm was very interested in this feature last year and
+> was planning to work on it, but I don't know how far he got.
 
-Thanks !
+Correct, I was and still am a bit interested in it. I did however
+never get around to write any code. My apologies if that stalled
+anyone.
 
-Best Regards,
-Richard
+With mach-shmobile we're now getting to a point where most of our
+boards are using DT_MACHINE and appended DTB instead of the MACHINE
+and mach-type. Because of that I feel that the moment has sort of
+passed for me.
+
+Regardless of this nearly all our boot loaders pass mach-type so it
+would be nice to match on that instead of the appended DTB.
+
+Thanks,
+
+/ magnus
