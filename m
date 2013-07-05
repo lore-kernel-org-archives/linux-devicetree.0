@@ -1,92 +1,65 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH V2 1/8] regulator: Introduce OMAP regulator to
- control PMIC over VC/VP
-Date: Fri, 5 Jul 2013 15:08:28 +0100
-Message-ID: <20130705140828.GA27646@sirena.org.uk>
-References: <1371849949-12649-1-git-send-email-nm@ti.com>
- <1371849949-12649-2-git-send-email-nm@ti.com>
- <20130704154105.GD27646@sirena.org.uk>
- <20130705135507.GA17439@kahuna>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/6] misc: sram: add ability to mark sram sections as
+ reserved
+Date: Fri, 5 Jul 2013 16:23:33 +0200
+Message-ID: <201307051623.33991.heiko@sntech.de>
+References: <201307051440.19428.heiko@sntech.de>
+ <201307051441.27605.heiko@sntech.de>
+ <CAOMZO5AHX0UpeKQh+faPT=MfCf53eo=kXigtOZd7iuKrz-sFeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="47uHu9eEG8RBDiQe"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130705135507.GA17439@kahuna>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@deeprootsystems.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>, Taras Kondratiuk <taras@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAOMZO5AHX0UpeKQh+faPT=MfCf53eo=kXigtOZd7iuKrz-sFeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---47uHu9eEG8RBDiQe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jul 05, 2013 at 08:55:07AM -0500, Nishanth Menon wrote:
-
-Please write in paragraphs, an enormous wall of unbroken text isn't
-helpful for legibility.
-
-> On 16:41-20130704, Mark Brown wrote:
-
-> > So, this still has the thing where all the data about the PMIC is
-> > replicated (but now in this driver).  It should be possible to pull all
-> > the above information except possibly the I2C timeout and perhaps the
-> > I2C address (if there's a separate control interface) from the standard
-> > regulator core data structures for the PMIC.  This would allow the
-> > driver to Just Work with any PMIC without needing to add it in two
-> > places.
-
-> option 1) we just bypass get_voltage/set_voltage to point through to
-> this function. result will be something similar to what we got here[1]
-
-I don't really know what you mean when you say "bypass get_voltage/set_voltage
-so it's kind of hard to comment...  the link you posted appears to be a
-link to the code I'm reviewing so it's not terribly enlightening.
-
-> Again, based on this discussion, it is wrong - and we already did implement
-> the *wrong* way in OMAP and the new code is supposed to throw away the
-> old code once all relevant platforms are converted to DT.
-> - now, we could improve this by passing rdev and slurp out required
->  data from regulator structures, but obviously, as you pointed out, it wont
->  be sufficient.
-> - In this solution, we will have existing regulator drivers supporting
-> additional data path. *but* that also means that existing regulator
-> drivers will need to be modified to handle multiple data path and "Just
-> Work" wont happen - so not really good other than screw up existing
-> regulator drivers with handling OMAP specific APIs in them.
-
-What makes you think that the existing regulator drivers need to be
-modified?  They already have all the data exported to the core (or
-should do)...  the only thing that's missing is the timeouts and it's
-not at all obvious why those need to be tuned per device.
-
-> option 2) make omap_pmic regulator use twl_regulator - regulator
-> chaining.
-
-Again I don't know what this is.
-
---47uHu9eEG8RBDiQe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR1tNYAAoJELSic+t+oim9yhQP/079dA+d6EDSqViNUz8r5j7M
-/RC/RLLjEXjJQ2cEqDjaOSjqaUPW98ynqakL7Pl7CNOB4fQjyIO2ClAiZ1TshMCu
-xJoSRAXDdalbH+Z7XsQC3qBVkzP9doEHf2vCm5JiMUlphSdm6fAtLigvz/PDd172
-fwEjb+oFoWWhy8Gd6TbesfuL8JglTxuEwZb7voMTFPbs3E3vrHqPr4pSAngHuHRt
-EUFCACUTvJ3EkW4HUBC9N29VMOi/I6iTBPbQBrqHCoF/KfysptLkG6eXqUv+/dMR
-tJXr9mH6eHbF24xXDnzztq/S4pIXb+nxsv41bUPdlBPgRPOi2ggwHihuBMWrXpIg
-tEmbqv66lHJWonSqJUI2lhLmiQKhJ909AaNyVHyTF5I32ZPW7J+0WQ/yd/rziMlX
-uUBZa60UUmjtMncyciSnEaje1LPzp+NyJS6Dij7AG0qYBIeSIjYCeU2xSuNeUTdj
-FmcWGJQohLyamJXowTmxxtcZ8uiTwXK7Y5rXIfH3PBSL1rN5HU4sp9hvMW8LWs0N
-tQW724OfnkRt70EdR6DrSiGq4HFKkqaAjatFzRf0QW+7vwxfLwp7YCqwEiaVoyLZ
-R95i9C9zHMnT3oerwiEMx1jhaMYzyGLJjL4fTak26UzRTpeoxBVXKpVlpryK7ubN
-UogTwCVs7QAG7rWNNWx7
-=lyOC
------END PGP SIGNATURE-----
-
---47uHu9eEG8RBDiQe--
+QW0gRnJlaXRhZywgNS4gSnVsaSAyMDEzLCAxNDo1NTo0MCBzY2hyaWViIEZhYmlvIEVzdGV2YW06
+Cj4gT24gRnJpLCBKdWwgNSwgMjAxMyBhdCA5OjQxIEFNLCBIZWlrbyBTdMO8Ym5lciA8aGVpa29A
+c250ZWNoLmRlPiB3cm90ZToKPiA+IFNvbWUgU29DcyBuZWVkIHBhcnRzIG9mIHRoZWlyIHNyYW0g
+Zm9yIHNwZWNpYWwgcHVycG9zZXMuIFNvIHdoaWxlIGJlaW5nCj4gPiBwYXJ0IG9mIHRoZSBwZXJp
+cGhhbCwgaXQgc2hvdWxkIG5vdCBiZSBwYXJ0IG9mIHRoZSBnZW5wb29sIGNvbnRyb2xsaW5nCj4g
+PiB0aGUgc3JhbS4KPiA+IAo+ID4gVGhyZWZvcmUgYWRkIGFuIG9wdGlvbiBtbWlvLXNyYW0tcmVz
+ZXJ2ZWQgdG8ga2VlcCBhcmJpdGFyeSBwb3J0aW9ucyBvZgo+ID4gdGhlIHNyYW0gZnJvbSBiZWlu
+ZyBwYXJ0IG9mIHRoZSBwb29sLgo+ID4gCj4gPiBTdWdnZXN0ZWQtYnk6IFJvYiBIZXJyaW5nIDxy
+b2JoZXJyaW5nMkBnbWFpbC5jb20+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8
+aGVpa29Ac250ZWNoLmRlPgo+ID4gVGVzdGVkLWJ5OiBVbHJpY2ggUHJpbnogPHVscmljaC5wcmlu
+ekBnb29nbGVtYWlsLmNvbT4KPiA+IC0tLQo+ID4gCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL21pc2Mvc3JhbS50eHQgfCAgICA4ICsrKwo+ID4gIGRyaXZlcnMvbWlzYy9z
+cmFtLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA4MAo+ID4gICsrKysrKysrKysr
+KysrKysrKysrKy0tIDIgZmlsZXMgY2hhbmdlZCwgODIgaW5zZXJ0aW9ucygrKSwgNgo+ID4gIGRl
+bGV0aW9ucygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21pc2Mvc3JhbS50eHQKPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL21pc2Mvc3JhbS50eHQgaW5kZXggNGQwYTAwZS4uZWFlMDgwZQo+ID4gMTAwNjQ0Cj4g
+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWlzYy9zcmFtLnR4dAo+
+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2Mvc3JhbS50eHQK
+PiA+IAo+ID4gQEAgLTgsOSArOCwxNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gIC0gcmVn
+IDogU1JBTSBpb21lbSBhZGRyZXNzIHJhbmdlCj4gPiAKPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVz
+Ogo+ID4gKwo+ID4gKy0gbW1pby1zcmFtLXJlc2VydmVkOiBvcmRlcmVkIGxpc3Qgb2YgcmVzZXJ2
+ZWQgY2h1bmtzIGluc2lkZSB0aGUgc3JhbQo+ID4gdGhhdCArICBzaG91bGQgbm90IGJlY29tZSBw
+YXJ0IG9mIHRoZSBnZW5hbGxvYyBwb29sLgo+ID4gKyAgRm9ybWF0IGlzIDxiYXNlIHNpemU+LCA8
+YmFzZSBzaXplPiwgLi4uOyB3aXRoIGJhc2UgYmVpbmcgcmVsYXRpdmUgdG8KPiA+IHRoZSArICBy
+ZWcgcHJvcGVydHkgYmFzZS4KPiAKPiBJc24ndCBpdCBhIHR5cG8/Cj4gCj4gSSB0aGluayB5b3Ug
+bWVhbnQ6Cj4gRm9ybWF0IGlzIDxiYXNlIHN0YXJ0PiwgPHJlc2VydmVkIHNpemU+LAoKbm8sIHRo
+ZSBpbnRlbmRlZCBmb3JtYXQgaXMgbGlrZQoKPDB4MCAweDEwMD4sIDwweDEwMDAgMHgxMDA+LCAu
+Li4KCmJhc2UgKyBzaXplLCBiYXNlICsgc2l6ZSwgYW5kIHNvIG9uCgoKPiAKPiA+ICsKPiA+IAo+
+ID4gIEV4YW1wbGU6Cj4gPiAgCj4gPiAgc3JhbTogc3JhbUA1YzAwMDAwMCB7Cj4gPiAgCj4gPiAg
+ICAgICAgIGNvbXBhdGlibGUgPSAibW1pby1zcmFtIjsKPiA+ICAgICAgICAgcmVnID0gPDB4NWMw
+MDAwMDAgMHg0MDAwMD47IC8qIDI1NiBLaUIgU1JBTSBhdCBhZGRyZXNzIDB4NWMwMDAwMDAKPiA+
+ICAgICAgICAgKi8KPiA+IAo+ID4gKyAgICAgICBtbWlvLXNyYW0tcmVzZXJ2ZWQgPSA8MHgwIDB4
+MTAwPjsgLyogcmVzZXJ2ZQo+ID4gMHg1YzAwMDAwMC0weDVjMDAwMTAwICovCj4KPiA+IAo+ID4g
+IH07CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZp
+Y2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxh
+YnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1
+c3MK
