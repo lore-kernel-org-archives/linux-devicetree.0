@@ -1,48 +1,73 @@
-From: Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Fri, 5 Jul 2013 09:50:20 +0100
-Message-ID: <20130705085020.GV13924@flint.arm.linux.org.uk>
-References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
- <20130702204255.2044c01b@armhf>
- <20130702191923.GD13924@flint.arm.linux.org.uk> <51D330AC.5060903@gmail.com>
- <20130702202548.GE13924@flint.arm.linux.org.uk>
- <CACxGe6uTv2yaTH-_JLa=vtgmXwq=++wz3=eDpkRr2GVbKaME1A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6uTv2yaTH-_JLa=vtgmXwq=++wz3=eDpkRr2GVbKaME1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 1/3] clk: exynos5250: Add G2D gate clock
+Date: Fri,  5 Jul 2013 14:12:27 +0530
+Message-ID: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org, mturquette@linaro.org, inki.dae@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 05, 2013 at 09:37:34AM +0100, Grant Likely wrote:
-> Alternatively, you can have the same effect with a property or set of
-> properties in the controller node that contains phandles to the
-> required devices. That would provide the driver with the same
-> information about which devices must be present.
+Adds gate clock for G2D IP for Exynos5250 SoC.
 
-How do you go from phandle to something-that-the-driver-for-that-device-
-has-setup?
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Mike Turquette <mturquette@linaro.org>
+---
+This patch depends on the following patch:
+http://thread.gmane.org/gmane.linux.kernel.samsung-soc/20581
+---
+ .../devicetree/bindings/clock/exynos5250-clock.txt |    1 +
+ drivers/clk/samsung/clk-exynos5250.c               |    5 ++++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
->From what I can see, you can go from phandle to OF node, but no further.
-
-I'm guessing we'd need some kind of "registry" for sub-drivers with
-these structures to register their devices OF node plus "shared" data
-so that other drivers can find it.  "shared" data might be a
-standardized operations struct or something similar to 'struct
-device_driver' but for componentised devices.
-
+diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+index 1a05761..7e88242 100644
+--- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
++++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+@@ -155,6 +155,7 @@ clock which they consume.
+   dp			342
+   mixer			343
+   hdmi			344
++  g2d			345
+ 
+ Example 1: An example of a clock controller node is listed below.
+ 
+diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
+index 6f767c5..3da0bdf 100644
+--- a/drivers/clk/samsung/clk-exynos5250.c
++++ b/drivers/clk/samsung/clk-exynos5250.c
+@@ -62,6 +62,7 @@
+ #define SRC_CDREX		0x20200
+ #define PLL_DIV2_SEL		0x20a24
+ #define GATE_IP_DISP1		0x10928
++#define GATE_IP_ACP		0x10000
+ 
+ /*
+  * Let each supported clock get a unique id. This id is used to lookup the clock
+@@ -99,7 +100,7 @@ enum exynos5250_clks {
+ 	spi2, i2s1, i2s2, pcm1, pcm2, pwm, spdif, ac97, hsi2c0, hsi2c1, hsi2c2,
+ 	hsi2c3, chipid, sysreg, pmu, cmu_top, cmu_core, cmu_mem, tzpc0, tzpc1,
+ 	tzpc2, tzpc3, tzpc4, tzpc5, tzpc6, tzpc7, tzpc8, tzpc9, hdmi_cec, mct,
+-	wdt, rtc, tmu, fimd1, mie1, dsim0, dp, mixer, hdmi,
++	wdt, rtc, tmu, fimd1, mie1, dsim0, dp, mixer, hdmi, g2d,
+ 
+ 	nr_clks,
+ };
+@@ -152,6 +153,7 @@ static __initdata unsigned long exynos5250_clk_regs[] = {
+ 	SRC_CDREX,
+ 	PLL_DIV2_SEL,
+ 	GATE_IP_DISP1,
++	GATE_IP_ACP,
+ };
+ 
+ /* list of all parent clock list */
+@@ -463,6 +465,7 @@ struct samsung_gate_clock exynos5250_gate_clks[] __initdata = {
+ 	GATE(dp, "dp", "aclk200", GATE_IP_DISP1, 4, 0, 0),
+ 	GATE(mixer, "mixer", "aclk200", GATE_IP_DISP1, 5, 0, 0),
+ 	GATE(hdmi, "hdmi", "aclk200", GATE_IP_DISP1, 6, 0, 0),
++	GATE(g2d, "g2d", "aclk200", GATE_IP_ACP, 3, 0, 0),
+ };
+ 
+ static __initdata struct of_device_id ext_clk_match[] = {
 -- 
-Russell King
+1.7.9.5
