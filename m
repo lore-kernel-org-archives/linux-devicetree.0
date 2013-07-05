@@ -1,13 +1,15 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3 6/6] ARM: rockchip: add smp bringup code
-Date: Fri, 5 Jul 2013 14:43:26 +0200
-Message-ID: <201307051443.27172.heiko@sntech.de>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/6] misc: sram: add ability to mark sram sections as
+ reserved
+Date: Fri, 5 Jul 2013 09:55:40 -0300
+Message-ID: <CAOMZO5AHX0UpeKQh+faPT=MfCf53eo=kXigtOZd7iuKrz-sFeA@mail.gmail.com>
 References: <201307051440.19428.heiko@sntech.de>
+ <201307051441.27605.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201307051440.19428.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <201307051441.27605.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,331 +20,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the necessary smp-operations and startup code to use
-additional cores on Rockchip SoCs.
-
-We currently hog the power management unit in the smp code, as it is
-necessary to control the power to the cpu core and nothing else is
-currently using it, so a generic implementation can be done later.
-
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm/mach-rockchip/Makefile   |    1 +
- arch/arm/mach-rockchip/core.h     |   22 ++++
- arch/arm/mach-rockchip/headsmp.S  |   32 ++++++
- arch/arm/mach-rockchip/platsmp.c  |  203 +++++++++++++++++++++++++++++++++++++
- arch/arm/mach-rockchip/rockchip.c |    2 +
- 5 files changed, 260 insertions(+)
- create mode 100644 arch/arm/mach-rockchip/core.h
- create mode 100644 arch/arm/mach-rockchip/headsmp.S
- create mode 100644 arch/arm/mach-rockchip/platsmp.c
-
-diff --git a/arch/arm/mach-rockchip/Makefile b/arch/arm/mach-rockchip/Makefile
-index 1547d4f..4377a14 100644
---- a/arch/arm/mach-rockchip/Makefile
-+++ b/arch/arm/mach-rockchip/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_ARCH_ROCKCHIP) += rockchip.o
-+obj-$(CONFIG_SMP) += headsmp.o platsmp.o
-diff --git a/arch/arm/mach-rockchip/core.h b/arch/arm/mach-rockchip/core.h
-new file mode 100644
-index 0000000..e2e7c9d
---- /dev/null
-+++ b/arch/arm/mach-rockchip/core.h
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright (c) 2013 MundoReader S.L.
-+ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+extern char rockchip_secondary_trampoline;
-+extern char rockchip_secondary_trampoline_end;
-+
-+extern unsigned long rockchip_boot_fn;
-+extern void rockchip_secondary_startup(void);
-+
-+extern struct smp_operations rockchip_smp_ops;
-diff --git a/arch/arm/mach-rockchip/headsmp.S b/arch/arm/mach-rockchip/headsmp.S
-new file mode 100644
-index 0000000..3dd72f7
---- /dev/null
-+++ b/arch/arm/mach-rockchip/headsmp.S
-@@ -0,0 +1,32 @@
-+/*
-+ * Copyright (c) 2013 MundoReader S.L.
-+ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/linkage.h>
-+#include <linux/init.h>
-+
-+	__CPUINIT
-+
-+ENTRY(rockchip_secondary_startup)
-+	bl	v7_invalidate_l1
-+	b	secondary_startup
-+ENDPROC(rockchip_secondary_startup)
-+
-+ENTRY(rockchip_secondary_trampoline)
-+	ldr	pc, 1f
-+ENDPROC(rockchip_secondary_trampoline)
-+	.globl	rockchip_boot_fn
-+rockchip_boot_fn:
-+1:	.space	4
-+
-+ENTRY(rockchip_secondary_trampoline_end)
-diff --git a/arch/arm/mach-rockchip/platsmp.c b/arch/arm/mach-rockchip/platsmp.c
-new file mode 100644
-index 0000000..4b8fadc
---- /dev/null
-+++ b/arch/arm/mach-rockchip/platsmp.c
-@@ -0,0 +1,203 @@
-+/*
-+ * Copyright (c) 2013 MundoReader S.L.
-+ * Author: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/smp.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#include <asm/cacheflush.h>
-+#include <asm/smp_scu.h>
-+#include <asm/smp_plat.h>
-+#include <asm/mach/map.h>
-+
-+#include "core.h"
-+
-+static void __iomem *scu_base_addr;
-+static void __iomem *sram_base_addr;
-+static int ncores;
-+
-+/*
-+ * temporary PMU handling
-+ */
-+
-+#define PMU_PWRDN_CON		0x08
-+#define PMU_PWRDN_ST		0x0c
-+
-+static void __iomem *pmu_base_addr;
-+
-+static inline bool pmu_power_domain_is_on(int pd)
-+{
-+	return !(readl_relaxed(pmu_base_addr + PMU_PWRDN_ST) & BIT(pd));
-+}
-+
-+static void pmu_set_power_domain(int pd, bool on)
-+{
-+	u32 val = readl_relaxed(pmu_base_addr + PMU_PWRDN_CON);
-+	if (on)
-+		val &= ~BIT(pd);
-+	else
-+		val |=  BIT(pd);
-+	writel(val, pmu_base_addr + PMU_PWRDN_CON);
-+
-+	while (pmu_power_domain_is_on(pd) != on) { }
-+}
-+
-+/*
-+ * Handling of CPU cores
-+ */
-+
-+static int __cpuinit rockchip_boot_secondary(unsigned int cpu,
-+					     struct task_struct *idle)
-+{
-+	if (!sram_base_addr || !pmu_base_addr) {
-+		pr_err("%s: sram or pmu missing for cpu boot\n", __func__);
-+		return -ENXIO;
-+	}
-+
-+	if (cpu >= ncores) {
-+		pr_err("%s: cpu %d outside maximum number of cpus %d\n",
-+							__func__, cpu, ncores);
-+		return -ENXIO;
-+	}
-+
-+	/* start the core */
-+	pmu_set_power_domain(0 + cpu, true);
-+
-+	return 0;
-+}
-+
-+/**
-+ * rockchip_smp_prepare_sram - populate necessary sram block
-+ * Starting cores execute the code residing at the start of the on-chip sram
-+ * after power-on. Therefore make sure, this sram region is reserved and
-+ * big enough. After this check, copy the trampoline code that directs the
-+ * core to the real startup code in ram into the sram-region.
-+ * @node: mmio-sram device node
-+ */
-+static int __init rockchip_smp_prepare_sram(struct device_node *node)
-+{
-+	unsigned int trampoline_sz = &rockchip_secondary_trampoline_end -
-+					    &rockchip_secondary_trampoline;
-+	const __be32 *reserved_list = NULL;
-+	int reserved_size;
-+	int rstart = -1;
-+	unsigned int rsize;
-+	unsigned int i;
-+
-+	reserved_list = of_get_property(node, "mmio-sram-reserved",
-+					&reserved_size);
-+	if (!reserved_list) {
-+		pr_err("%s: wrong number of arguments in mmio-sram-reserved\n",
-+		       __func__);
-+		return -ENOENT;
-+	}
-+
-+	reserved_size /= sizeof(*reserved_list);
-+	if (!reserved_size || reserved_size % 2) {
-+		pr_err("%s: wrong number of arguments in mmio-sram-reserved\n",
-+		       __func__);
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < reserved_size; i += 2) {
-+		/* get the next reserved block */
-+		rstart = be32_to_cpu(*reserved_list++);
-+		rsize = be32_to_cpu(*reserved_list++);
-+
-+		if (!rstart)
-+			break;
-+	}
-+
-+	if (rstart) {
-+		pr_err("%s: start of sram is not reserved from mmio-sram\n",
-+		       __func__);
-+		return -EINVAL;
-+	}
-+
-+	if (rsize < trampoline_sz) {
-+		pr_err("%s: reserved block with size 0x%x is to small for trampoline size 0x%x\n",
-+		       __func__, rsize, trampoline_sz);
-+		return -EINVAL;
-+	}
-+
-+	sram_base_addr = of_iomap(node, 0);
-+
-+	/* set the boot function for the sram code */
-+	rockchip_boot_fn = virt_to_phys(rockchip_secondary_startup);
-+
-+	/* copy the trampoline to sram, that runs during startup of the core */
-+	memcpy(sram_base_addr, &rockchip_secondary_trampoline, trampoline_sz);
-+	flush_cache_all();
-+	outer_clean_range(0, trampoline_sz);
-+
-+	dsb_sev();
-+
-+	return 0;
-+}
-+
-+static void __init rockchip_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	struct device_node *node;
-+	unsigned int i;
-+
-+	node = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
-+	if (!node) {
-+		pr_err("%s: missing scu\n", __func__);
-+		return;
-+	}
-+
-+	scu_base_addr = of_iomap(node, 0);
-+	if (!scu_base_addr) {
-+		pr_err("%s: could not map scu registers\n", __func__);
-+		return;
-+	}
-+
-+	node = of_find_compatible_node(NULL, NULL, "rockchip,rk3066-sram");
-+	if (!node) {
-+		pr_err("%s: could not find sram dt node\n", __func__);
-+		return;
-+	}
-+
-+	if (rockchip_smp_prepare_sram(node))
-+		return;
-+
-+	node = of_find_compatible_node(NULL, NULL, "rockchip,rk3066-pmu");
-+	if (!node) {
-+		pr_err("%s: could not find sram dt node\n", __func__);
-+		return;
-+	}
-+
-+	pmu_base_addr = of_iomap(node, 0);
-+
-+	/*
-+	 * While the number of cpus is gathered from dt, also get the number
-+	 * of cores from the scu to verify this value when booting the cores.
-+	 */
-+	ncores = scu_get_core_count(scu_base_addr);
-+
-+	scu_enable(scu_base_addr);
-+
-+	/* Make sure that all cores except the first are really off */
-+	for (i = 1; i < ncores; i++)
-+		pmu_set_power_domain(0 + i, false);
-+}
-+
-+struct smp_operations rockchip_smp_ops __initdata = {
-+	.smp_prepare_cpus	= rockchip_smp_prepare_cpus,
-+	.smp_boot_secondary	= rockchip_boot_secondary,
-+};
-diff --git a/arch/arm/mach-rockchip/rockchip.c b/arch/arm/mach-rockchip/rockchip.c
-index 724d2d8..a0c1f19 100644
---- a/arch/arm/mach-rockchip/rockchip.c
-+++ b/arch/arm/mach-rockchip/rockchip.c
-@@ -24,6 +24,7 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- #include <asm/hardware/cache-l2x0.h>
-+#include "core.h"
- 
- static void __init rockchip_timer_init(void)
- {
-@@ -46,6 +47,7 @@ static const char * const rockchip_board_dt_compat[] = {
- };
- 
- DT_MACHINE_START(ROCKCHIP_DT, "Rockchip Cortex-A9 (Device Tree)")
-+	.smp		= smp_ops(rockchip_smp_ops),
- 	.init_machine	= rockchip_dt_init,
- 	.init_time	= rockchip_timer_init,
- 	.dt_compat	= rockchip_board_dt_compat,
--- 
-1.7.10.4
+T24gRnJpLCBKdWwgNSwgMjAxMyBhdCA5OjQxIEFNLCBIZWlrbyBTdMO8Ym5lciA8aGVpa29Ac250
+ZWNoLmRlPiB3cm90ZToKPiBTb21lIFNvQ3MgbmVlZCBwYXJ0cyBvZiB0aGVpciBzcmFtIGZvciBz
+cGVjaWFsIHB1cnBvc2VzLiBTbyB3aGlsZSBiZWluZyBwYXJ0Cj4gb2YgdGhlIHBlcmlwaGFsLCBp
+dCBzaG91bGQgbm90IGJlIHBhcnQgb2YgdGhlIGdlbnBvb2wgY29udHJvbGxpbmcgdGhlIHNyYW0u
+Cj4KPiBUaHJlZm9yZSBhZGQgYW4gb3B0aW9uIG1taW8tc3JhbS1yZXNlcnZlZCB0byBrZWVwIGFy
+Yml0YXJ5IHBvcnRpb25zIG9mIHRoZQo+IHNyYW0gZnJvbSBiZWluZyBwYXJ0IG9mIHRoZSBwb29s
+Lgo+Cj4gU3VnZ2VzdGVkLWJ5OiBSb2IgSGVycmluZyA8cm9iaGVycmluZzJAZ21haWwuY29tPgo+
+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gVGVzdGVk
+LWJ5OiBVbHJpY2ggUHJpbnogPHVscmljaC5wcmluekBnb29nbGVtYWlsLmNvbT4KPiAtLS0KPiAg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2Mvc3JhbS50eHQgfCAgICA4ICsr
+Kwo+ICBkcml2ZXJzL21pc2Mvc3JhbS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+ODAgKysrKysrKysrKysrKysrKysrKysrLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA4MiBpbnNlcnRp
+b25zKCspLCA2IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9taXNjL3NyYW0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21pc2Mvc3JhbS50eHQKPiBpbmRleCA0ZDBhMDBlLi5lYWUwODBlIDEwMDY0NAo+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNjL3NyYW0udHh0Cj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2Mvc3JhbS50eHQKPiBA
+QCAtOCw5ICs4LDE3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4KPiAgLSByZWcgOiBTUkFNIGlv
+bWVtIGFkZHJlc3MgcmFuZ2UKPgo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsKPiArLSBtbWlv
+LXNyYW0tcmVzZXJ2ZWQ6IG9yZGVyZWQgbGlzdCBvZiByZXNlcnZlZCBjaHVua3MgaW5zaWRlIHRo
+ZSBzcmFtIHRoYXQKPiArICBzaG91bGQgbm90IGJlY29tZSBwYXJ0IG9mIHRoZSBnZW5hbGxvYyBw
+b29sLgo+ICsgIEZvcm1hdCBpcyA8YmFzZSBzaXplPiwgPGJhc2Ugc2l6ZT4sIC4uLjsgd2l0aCBi
+YXNlIGJlaW5nIHJlbGF0aXZlIHRvIHRoZQo+ICsgIHJlZyBwcm9wZXJ0eSBiYXNlLgoKSXNuJ3Qg
+aXQgYSB0eXBvPwoKSSB0aGluayB5b3UgbWVhbnQ6CkZvcm1hdCBpcyA8YmFzZSBzdGFydD4sIDxy
+ZXNlcnZlZCBzaXplPiwKCj4gKwo+ICBFeGFtcGxlOgo+Cj4gIHNyYW06IHNyYW1ANWMwMDAwMDAg
+ewo+ICAgICAgICAgY29tcGF0aWJsZSA9ICJtbWlvLXNyYW0iOwo+ICAgICAgICAgcmVnID0gPDB4
+NWMwMDAwMDAgMHg0MDAwMD47IC8qIDI1NiBLaUIgU1JBTSBhdCBhZGRyZXNzIDB4NWMwMDAwMDAg
+Ki8KPiArICAgICAgIG1taW8tc3JhbS1yZXNlcnZlZCA9IDwweDAgMHgxMDA+OyAvKiByZXNlcnZl
+IDB4NWMwMDAwMDAtMHg1YzAwMDEwMCAqLwo+ICB9OwpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRl
+dmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9y
+Zy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
