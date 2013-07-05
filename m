@@ -1,53 +1,56 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 6/9] clocksource: dw_apb_timer: quirk for inverted int mask
-Date: Sat, 6 Jul 2013 01:51:54 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1307060150030.32106@ionos.tec.linutronix.de>
-References: <201307060051.09716.heiko@sntech.de>
- <201307060054.35996.heiko@sntech.de>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 2/3] of/documentation: Update G2D documentation
+Date: Sat, 06 Jul 2013 01:52:48 +0200
+Message-ID: <4264635.Hmig5l0VLj@flatron>
+References: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org> <1373013749-14530-2-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-1376309650-1373068315=:32106"
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201307060054.35996.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?ISO-8859-15?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1373013749-14530-2-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, patches@linaro.org, mturquette@linaro.org, inki.dae@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Sachin,
 
---8323329-1376309650-1373068315=:32106
-Content-Type: TEXT/PLAIN; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Friday 05 of July 2013 14:12:28 Sachin Kamat wrote:
+> Exynos5250 G2D IP requires only the gate clock. Update the
+> binding documentation accordingly.
+> 
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> Cc: Inki Dae <inki.dae@samsung.com>
+> ---
+>  .../devicetree/bindings/gpu/samsung-g2d.txt        |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt index
+> 3f454ff..60ca631 100644
+> --- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> @@ -12,7 +12,9 @@ Required properties:
+>    - interrupts : G2D interrupt number to the CPU.
+>    - clocks : from common clock binding: handle to G2D clocks.
+>    - clock-names : from common clock binding: must contain "sclk_fimg2d"
+> and -		  "fimg2d", corresponding to entries in the clocks 
+property. +		
+>  "fimg2d" for S5PV210 & Exynos4 based SoCs and "fimg2d" for +		 
+> Exynos5250 SoC, corresponding to entries in the clocks
+> +		  property.
 
-On Sat, 6 Jul 2013, Heiko St=C3=BCbner wrote:
+I think this needs to be rephrased, because I can't get any sense from 
+this sentence.
 
-> Some timer variants use an inverted setting to mask the timer interrupt=
-.
-> Therefore add a quirk to handle these variants.
+Maybe something like:
 
-And by that add even more pointless conditionals into critical code
-pathes.
+- clock-names : names of clocks listed in clocks property, in the same 
+order, depending on SoC type:
+    - for S5PV210 and Exynos4 based SoCs : "fimg2d" and "sclk_fimg2d"
+    - for Exynos5250 SoC : "fimg2d".
 
+What do you think?
 
---8323329-1376309650-1373068315=:32106
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---8323329-1376309650-1373068315=:32106--
+Best regards,
+Tomasz
