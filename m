@@ -1,65 +1,77 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 5/9] clocksource: dw_apb_timer: quirk for variants without
- EOI register
-Date: Sat, 6 Jul 2013 00:58:51 +0200
-Message-ID: <201307060058.52177.heiko@sntech.de>
-References: <201307060051.09716.heiko@sntech.de>
- <201307060054.07784.heiko@sntech.de>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 4/9] clocksource: dw_apb_timer: use the eoi callback to clear pending interrupts
+Date: Sat, 6 Jul 2013 00:59:05 +0200
+Message-ID: <201307060059.06053.heiko@sntech.de>
+References: <201307060051.09716.heiko@sntech.de> <201307060053.36885.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201307060054.07784.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201307060053.36885.heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jamie Iles <jamie@jamieiles.com>, Dinh Nguyen <dinguyen@altera.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Ulrich Prinz <ulrich.prinz@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-dGhpcyBwYXRjaCBzaG91bGQgaGF2ZSBoYWQgYQoKRnJvbTogVWxyaWNoIFByaW56IDx1bHJpY2gu
-cHJpbnpAZ29vZ2xlbWFpbC5jb20+Cgpzb3JyeSBmb3IgdGhlIG1pc3Rha2UKCkFtIFNhbXN0YWcs
-IDYuIEp1bGkgMjAxMywgMDA6NTQ6MDcgc2NocmllYiBIZWlrbyBTdMO8Ym5lcjoKPiBTb21lIHZh
-cmlhbnRzIG9mIHRoZSBkd19hcGJfdGltZXIgZG9uJ3QgaGF2ZSBhbiBlb2kgcmVnaXN0ZXIgYnV0
-IGluc3RlYWQKPiBleHBlY3QgYSBvbmUgdG8gYmUgd3JpdHRlbiB0byB0aGUgaW50X3N0YXR1cyBy
-ZWdpc3RlciBhdCBlb2kgdGltZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBVbHJpY2ggUHJpbnogPHVs
-cmljaC5wcmluekBnb29nbGVtYWlsLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9jbG9ja3NvdXJjZS9k
-d19hcGJfdGltZXIuYyB8ICAgMTAgKysrKysrKysrLQo+ICBpbmNsdWRlL2xpbnV4L2R3X2FwYl90
-aW1lci5oICAgICAgIHwgICAgNSArKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlv
-bnMoKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9ja3NvdXJj
-ZS9kd19hcGJfdGltZXIuYwo+IGIvZHJpdmVycy9jbG9ja3NvdXJjZS9kd19hcGJfdGltZXIuYyBp
-bmRleCA1ZjgwYTMwLi4yM2NkN2M2IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2Uv
-ZHdfYXBiX3RpbWVyLmMKPiArKysgYi9kcml2ZXJzL2Nsb2Nrc291cmNlL2R3X2FwYl90aW1lci5j
-Cj4gQEAgLTEwNCw2ICsxMDQsMTEgQEAgc3RhdGljIHZvaWQgYXBidF9lb2koc3RydWN0IGR3X2Fw
-Yl90aW1lciAqdGltZXIpCj4gIAlhcGJ0X3JlYWRsKHRpbWVyLCB0aW1lci0+cmVnX2VvaSk7Cj4g
-IH0KPiAKPiArc3RhdGljIHZvaWQgYXBidF9lb2lfaW50X3N0YXR1cyhzdHJ1Y3QgZHdfYXBiX3Rp
-bWVyICp0aW1lcikKPiArewo+ICsJYXBidF93cml0ZWwodGltZXIsIDEsIHRpbWVyLT5yZWdfaW50
-X3N0YXR1cyk7Cj4gK30KPiArCj4gIHN0YXRpYyBpcnFyZXR1cm5fdCBkd19hcGJfY2xvY2tldmVu
-dF9pcnEoaW50IGlycSwgdm9pZCAqZGF0YSkKPiAgewo+ICAJc3RydWN0IGNsb2NrX2V2ZW50X2Rl
-dmljZSAqZXZ0ID0gZGF0YTsKPiBAQCAtMjg2LDcgKzI5MSwxMCBAQCBkd19hcGJfY2xvY2tldmVu
-dF9pbml0KGludCBjcHUsIGNvbnN0IGNoYXIgKm5hbWUsCj4gdW5zaWduZWQgcmF0aW5nLCBJUlFG
-X05PQkFMQU5DSU5HIHwKPiAgCQkJCQkgIElSUUZfRElTQUJMRUQ7Cj4gCj4gLQlkd19jZWQtPmVv
-aSA9IGFwYnRfZW9pOwo+ICsJaWYgKHF1aXJrcyAmIEFQQlRNUl9RVUlSS19OT19FT0kpCj4gKwkJ
-ZHdfY2VkLT5lb2kgPSBhcGJ0X2VvaV9pbnRfc3RhdHVzOwo+ICsJZWxzZQo+ICsJCWR3X2NlZC0+
-ZW9pID0gYXBidF9lb2k7Cj4gIAllcnIgPSBzZXR1cF9pcnEoaXJxLCAmZHdfY2VkLT5pcnFhY3Rp
-b24pOwo+ICAJaWYgKGVycikgewo+ICAJCXByX2VycigiZmFpbGVkIHRvIHJlcXVlc3QgdGltZXIg
-aXJxXG4iKTsKPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9kd19hcGJfdGltZXIuaCBiL2lu
-Y2x1ZGUvbGludXgvZHdfYXBiX3RpbWVyLmgKPiBpbmRleCA4MGY2Njg2Li5mYmU0YzZiIDEwMDY0
-NAo+IC0tLSBhL2luY2x1ZGUvbGludXgvZHdfYXBiX3RpbWVyLmgKPiArKysgYi9pbmNsdWRlL2xp
-bnV4L2R3X2FwYl90aW1lci5oCj4gQEAgLTI1LDYgKzI1LDExIEBACj4gICAqLwo+ICAjZGVmaW5l
-IEFQQlRNUl9RVUlSS182NEJJVF9DT1VOVEVSCUJJVCgwKQo+IAo+ICsvKiBUaGUgSVAgZG9lcyBu
-b3QgcHJvdmlkZSBhIGVuZC1vZi1pbnRlcnJ1cHQgcmVnaXN0ZXIgdG8gY2xlYXIgcGVuZGluZwo+
-ICsgKiBpbnRlcnJ1cHRzLCBidXQgcmVxdWlyZXMgdG8gd3JpdGUgYSAxIHRvIHRoZSBpbnRlcnJ1
-cHQtc3RhdHVzIHJlZ2lzdGVyLgo+ICsgKi8KPiArI2RlZmluZSBBUEJUTVJfUVVJUktfTk9fRU9J
-CQlCSVQoMSkKPiArCj4gIHN0cnVjdCBkd19hcGJfdGltZXIgewo+ICAJdm9pZCBfX2lvbWVtCQkJ
-CSpiYXNlOwo+ICAJdW5zaWduZWQgbG9uZwkJCQlmcmVxOwoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlz
-dApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFi
-cy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+this patch should have had a
+
+=46rom: Ulrich Prinz <ulrich.prinz@googlemail.com>
+
+sorry for the mistake
+
+Am Samstag, 6. Juli 2013, 00:53:36 schrieb Heiko St=C3=BCbner:
+> Some timer variants have different mechanisms to clear a pending time=
+r
+> interrupt. Therefore don't hardcode the reading of the eoi register t=
+o
+> clear them, but instead use the already existing eoi callback for thi=
+s.
+>=20
+> Signed-off-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
+> ---
+>  drivers/clocksource/dw_apb_timer.c |   11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/clocksource/dw_apb_timer.c
+> b/drivers/clocksource/dw_apb_timer.c index bd45351..5f80a30 100644
+> --- a/drivers/clocksource/dw_apb_timer.c
+> +++ b/drivers/clocksource/dw_apb_timer.c
+> @@ -121,11 +121,14 @@ static irqreturn_t dw_apb_clockevent_irq(int ir=
+q,
+> void *data) return IRQ_HANDLED;
+>  }
+>=20
+> -static void apbt_enable_int(struct dw_apb_timer *timer)
+> +static void apbt_enable_int(struct dw_apb_clock_event_device *dw_ced=
+)
+>  {
+> +	struct dw_apb_timer *timer =3D &dw_ced->timer;
+>  	unsigned long ctrl =3D apbt_readl(timer, timer->reg_control);
+> +
+>  	/* clear pending intr */
+> -	apbt_readl(timer, timer->reg_eoi);
+> +	if (dw_ced->eoi)
+> +		dw_ced->eoi(timer);
+>  	ctrl &=3D ~APBTMR_CONTROL_INT;
+>  	apbt_writel(timer, ctrl, timer->reg_control);
+>  }
+> @@ -200,7 +203,7 @@ static void apbt_set_mode(enum clock_event_mode m=
+ode,
+>  		break;
+>=20
+>  	case CLOCK_EVT_MODE_RESUME:
+> -		apbt_enable_int(timer);
+> +		apbt_enable_int(dw_ced);
+>  		break;
+>  	}
+>  }
+> @@ -325,7 +328,7 @@ void dw_apb_clockevent_register(struct
+> dw_apb_clock_event_device *dw_ced)
+>=20
+>  	apbt_writel(timer, 0, timer->reg_control);
+>  	clockevents_register_device(&dw_ced->ced);
+> -	apbt_enable_int(timer);
+> +	apbt_enable_int(dw_ced);
+>  }
+>=20
+>  /**
