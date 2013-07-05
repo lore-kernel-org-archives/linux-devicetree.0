@@ -1,15 +1,13 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] misc: sram: add ability to mark sram sections as
- reserved
-Date: Fri, 5 Jul 2013 09:55:40 -0300
-Message-ID: <CAOMZO5AHX0UpeKQh+faPT=MfCf53eo=kXigtOZd7iuKrz-sFeA@mail.gmail.com>
-References: <201307051440.19428.heiko@sntech.de>
- <201307051441.27605.heiko@sntech.de>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx27 phyCARD-S remove wrong I2C RTC
+Date: Fri,  5 Jul 2013 15:45:09 +0200
+Message-ID: <1373031909-16178-1-git-send-email-mpa@pengutronix.de>
+References: <1372782469.486055292@f129.mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201307051441.27605.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1372782469.486055292-UqtPC/xyY5Qedp2WBT/QOw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,39 +18,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdWwgNSwgMjAxMyBhdCA5OjQxIEFNLCBIZWlrbyBTdMO8Ym5lciA8aGVpa29Ac250
-ZWNoLmRlPiB3cm90ZToKPiBTb21lIFNvQ3MgbmVlZCBwYXJ0cyBvZiB0aGVpciBzcmFtIGZvciBz
-cGVjaWFsIHB1cnBvc2VzLiBTbyB3aGlsZSBiZWluZyBwYXJ0Cj4gb2YgdGhlIHBlcmlwaGFsLCBp
-dCBzaG91bGQgbm90IGJlIHBhcnQgb2YgdGhlIGdlbnBvb2wgY29udHJvbGxpbmcgdGhlIHNyYW0u
-Cj4KPiBUaHJlZm9yZSBhZGQgYW4gb3B0aW9uIG1taW8tc3JhbS1yZXNlcnZlZCB0byBrZWVwIGFy
-Yml0YXJ5IHBvcnRpb25zIG9mIHRoZQo+IHNyYW0gZnJvbSBiZWluZyBwYXJ0IG9mIHRoZSBwb29s
-Lgo+Cj4gU3VnZ2VzdGVkLWJ5OiBSb2IgSGVycmluZyA8cm9iaGVycmluZzJAZ21haWwuY29tPgo+
-IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gVGVzdGVk
-LWJ5OiBVbHJpY2ggUHJpbnogPHVscmljaC5wcmluekBnb29nbGVtYWlsLmNvbT4KPiAtLS0KPiAg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2Mvc3JhbS50eHQgfCAgICA4ICsr
-Kwo+ICBkcml2ZXJzL21pc2Mvc3JhbS5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
-ODAgKysrKysrKysrKysrKysrKysrKysrLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA4MiBpbnNlcnRp
-b25zKCspLCA2IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9taXNjL3NyYW0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21pc2Mvc3JhbS50eHQKPiBpbmRleCA0ZDBhMDBlLi5lYWUwODBlIDEwMDY0NAo+
-IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNjL3NyYW0udHh0Cj4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2Mvc3JhbS50eHQKPiBA
-QCAtOCw5ICs4LDE3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4KPiAgLSByZWcgOiBTUkFNIGlv
-bWVtIGFkZHJlc3MgcmFuZ2UKPgo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsKPiArLSBtbWlv
-LXNyYW0tcmVzZXJ2ZWQ6IG9yZGVyZWQgbGlzdCBvZiByZXNlcnZlZCBjaHVua3MgaW5zaWRlIHRo
-ZSBzcmFtIHRoYXQKPiArICBzaG91bGQgbm90IGJlY29tZSBwYXJ0IG9mIHRoZSBnZW5hbGxvYyBw
-b29sLgo+ICsgIEZvcm1hdCBpcyA8YmFzZSBzaXplPiwgPGJhc2Ugc2l6ZT4sIC4uLjsgd2l0aCBi
-YXNlIGJlaW5nIHJlbGF0aXZlIHRvIHRoZQo+ICsgIHJlZyBwcm9wZXJ0eSBiYXNlLgoKSXNuJ3Qg
-aXQgYSB0eXBvPwoKSSB0aGluayB5b3UgbWVhbnQ6CkZvcm1hdCBpcyA8YmFzZSBzdGFydD4sIDxy
-ZXNlcnZlZCBzaXplPiwKCj4gKwo+ICBFeGFtcGxlOgo+Cj4gIHNyYW06IHNyYW1ANWMwMDAwMDAg
-ewo+ICAgICAgICAgY29tcGF0aWJsZSA9ICJtbWlvLXNyYW0iOwo+ICAgICAgICAgcmVnID0gPDB4
-NWMwMDAwMDAgMHg0MDAwMD47IC8qIDI1NiBLaUIgU1JBTSBhdCBhZGRyZXNzIDB4NWMwMDAwMDAg
-Ki8KPiArICAgICAgIG1taW8tc3JhbS1yZXNlcnZlZCA9IDwweDAgMHgxMDA+OyAvKiByZXNlcnZl
-IDB4NWMwMDAwMDAtMHg1YzAwMDEwMCAqLwo+ICB9OwpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRl
-dmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9y
-Zy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Fixup of commit 7874d595b78e431f0f661d2fe47625649308a52e
+"ARM: dts: Add device tree support for phycard pca100".
+
+Remove wrong I2C RTC node.
+
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+
+Thanks, Alexander, you are right. I2C2 has no RTC.
+
+Regards,
+
+Markus
+
+ arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
+index ec52b6d..01ee807 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
+@@ -55,11 +55,6 @@
+ 		reg = <0x4a>;
+ 	};
+ 
+-	rtc@51 {
+-		compatible = "nxp,pcf8563";
+-		reg = <0x51>;
+-	};
+-
+ 	at24@52 {
+ 		compatible = "at,24c32";
+ 		pagesize = <32>;
+-- 
+1.8.2.1
