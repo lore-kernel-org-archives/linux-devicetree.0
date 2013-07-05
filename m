@@ -1,14 +1,17 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v6 00/21] MBus DT binding: PCIe strikes back
-Date: Fri, 5 Jul 2013 16:08:20 -0600
-Message-ID: <20130705220820.GA11787@obsidianresearch.com>
-References: <1373060372-32357-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH V3] of: Set the DMA mask to 64 bits when dma_addr_t is
+ 64-bits
+Date: Fri, 5 Jul 2013 23:19:27 +0100
+Message-ID: <20130705221927.GL24642@n2100.arm.linux.org.uk>
+References: <1367008266-1431-1-git-send-email-lauraa@codeaurora.org>
+ <517AF270.8040106@gmail.com>
+ <CACVXFVPfkqP+UyoGd-+QFRzndSam_DtU=utrBPYCPjQCGQ_F6g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1373060372-32357-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CACVXFVPfkqP+UyoGd-+QFRzndSam_DtU=utrBPYCPjQCGQ_F6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,50 +22,66 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Ming Lei <tom.leiming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 05, 2013 at 06:39:11PM -0300, Ezequiel Garcia wrote:
- 
-> 			ranges =
-> 			       <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000   /* Port 0.0 registers */
-> 				0x82000000 0 0x42000 MBUS_ID(0xf0, 0x01) 0x42000 0 0x00002000   /* Port 2.0 registers */
-> 				0x82000000 0 0x44000 MBUS_ID(0xf0, 0x01) 0x44000 0 0x00002000   /* Port 0.1 registers */
-> 				0x82000000 0 0x48000 MBUS_ID(0xf0, 0x01) 0x48000 0 0x00002000   /* Port 0.2 registers */
-> 				0x82000000 0 0x4c000 MBUS_ID(0xf0, 0x01) 0x4c000 0 0x00002000   /* Port 0.3 registers */
-> 				0x82000800 0 0xe0000000 MBUS_ID(0x04, 0xe8) 0xe0000000 0 0x08000000 /* Port 0.0 MEM */
-> 				0x81000800 0 0          MBUS_ID(0x04, 0xe0) 0xe8000000 0 0x00100000 /* Port 0.0 IO */>;
+On Wed, Jul 03, 2013 at 10:15:50PM +0800, Ming Lei wrote:
+> 
+> Without the patch, LPAE enabled board may not boot at all, but looks
+> it still isn't in -next tree.
+> 
+> But I am wondering if it is a correct approach, because enabling LPAE
+> doesn't mean the I/O devices can support DMA to/from 64bit address, and
+> it is very probably devices can't do it at all.
+> 
+> Another way is to always set arm_dma_limit as 0xFFFFFFFF when
+> CONFIG_ZONE_DMA is unset, and let driver override device's dma
+> mask if the device supports 64bit DMA.
 
-This is a good try, but this coding doesn't work...
+Okay, here's a teach-in on DMA masks, this is how it's supposed to work:
 
-Recall the long discussion that came up during the original
-development of this binding. The OF spec says this:
+1. The bus code which creates the devices sets a default mask appropriate
+   for the bus type.  For PCI, this is 32-bit, for ISA, it's 24-bit.
 
- In particular, the phys.hi fields of the child address spaces in the
- "ranges" property for PCI does not contain
- the same information as "reg" property entries within PCI nodes. The
- only information that is present in
- "ranges" phys.hi entries are the non-relocatable, prefetchable and
- the PCI address space bits for which the en-
- try applies. I.e., only the n, p and ss bits are present; the
- bbbbbbbb, ddddd, fff and rrrrrrrr fields are 0.
+2. Before performing DMA, drivers should query the capabilities of the
+   platform using dma_set_mask() for streaming transfers, and
+   dma_set_coherent_mask() for coherent transfers.  Note: the DMA API
+   specifies that a mask accepted by dma_set_mask() will also be
+   accepted by dma_set_coherent_mask() - in other words, it is
+   permissible _not_ to check the return value of dma_set_coherent_mask()
+   iff that same mask is currently in use via dma_set_mask().
 
- When an address is to be mapped through a PCI bus bridge node, the
- phys.hi value of the address to be mapped
- and the child field of a "ranges" entry should be masked so that only
- the ss bits are compared. I.e., the only
- portion of phys.hi that should participate in the range determination
- is the address space indicator (the ss bits).
+   (Side note: I have a patch in my tree which introduces
+   dma_set_mask_and_coherent() which sets both.)
 
-Which forbids (0x82000800 .. ..) from being in a ranges
+3. Drivers should attempt to set a mask appropriate for the device.
+   If the device can drive 32-bit addresses, it requests a 32-bit
+   mask.  If only 24-bit, a 24-bit mask.  If it wants to do more
+   than 32-bit, it should set a larger mask.
 
-I don't have an idea how to encode MBUS_ID in the PCI-E ranges :(
+   (See the "DMA addressing limitations" section of
+    Documentation/DMA-API-HOWTO.txt).
 
-Arnd? Didn't you have some idea?
+4. PCI drivers use this as part of a negotiation with the rest of the
+   system; you can plug a 64-bit capable PCI card into a 32-bit only
+   capable host, and it should work - the driver should try to
+   request the 64-bit mask first, if that succeeds then it can use
+   DMA to 64-bit addresses.  If it fails, then it should then try to
+   set a 32-bit mask.
 
-FWIW, I like removing the string tables from the driver, you could
-keep the fake MBUS-ID and retain that change by adding a
-marvell,target-id type property to the bridges...
+So, that's more or less what's currently "known" of DMA masks.  What a lot
+of ARM drivers do is totally ignore (3) and just assume that the platform
+code set the mask up appropriately.  This is an incorrect assumption, and
+it's something I'm slowly fixing where I have the knowledge.
 
-Jason
+What we shouldn't be relying upon is the default DMA mask being correct.
+
+Last point is - the device actually doing DMA should be the one which the
+DMA mask counts for above; if the device is just a user of DMA, then its
+DMA mask should not matter (if it does, it's likely because of x86/PCI
+assumptions made in the subsystem code) and actually should _not_ be set.
+In other words, the DMA engine probe function should set the DMA mask on
+the DMA controller, and you should do DMA mappings against the DMA
+controller's struct device, not against the IO peripheral's struct
+device.
