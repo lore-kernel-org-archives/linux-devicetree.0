@@ -1,51 +1,75 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Appended DTB files for multi-machine kernels
-Date: Fri, 05 Jul 2013 01:02:25 +0200
-Message-ID: <51D5FF01.3060104@gmail.com>
-References: <51D5A938.30607@gmail.com> <20130704171148.GJ27646@sirena.org.uk>
- <201307042334.37161.arnd@arndb.de>
+From: Alex Deucher <alexdeucher@gmail.com>
+Subject: Re: Best practice device tree design for display subsystems/DRM
+Date: Thu, 4 Jul 2013 20:50:25 -0400
+Message-ID: <CADnq5_Osq7WuGjwT8_kenebFe__GbcAPG13YDYP+yNt41AeQZA@mail.gmail.com>
+References: <CAMLZHHREVEdRuHaD0imRu4pUv15ZyWYF2J9WCBEw-frxBry-Lw@mail.gmail.com>
+	<20130702204255.2044c01b@armhf>
+	<20130702191923.GD13924@flint.arm.linux.org.uk>
+	<51D330AC.5060903@gmail.com>
+	<CAMLZHHTbkfxmzrSrAU586Ywxptk=4Njzb0_puWxhfBcmBB0BWQ@mail.gmail.com>
+	<51D348F5.2080205@gmail.com>
+	<00ae01ce77cb$524d57f0$f6e807d0$%dae@samsung.com>
+	<20130703090242.GM516@pengutronix.de>
+	<CAF6AEGuzwNJtuAWS29YvdZ1fiMGk5cuv24n4wxkKsDPT8FrDBw@mail.gmail.com>
+	<CAPM=9tygEFHWsOw4ZBr9GdF7-2OUcczrNKThHMJ=YQFU-Cbbug@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201307042334.37161.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sven Neumann <s.neumann-5g8ninUHluJWk0Htik3J/w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-Reply-To: <CAPM=9tygEFHWsOw4ZBr9GdF7-2OUcczrNKThHMJ=YQFU-Cbbug@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: Dave Airlie <airlied@gmail.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>, Daniel Drake <dsd@laptop.org>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Russell King <rmk@arm.linux.org.uk>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Thu, Jul 4, 2013 at 5:28 PM, Dave Airlie <airlied@gmail.com> wrote:
+>  >             ...
+>>>> Sorry but I'd like to say that this cannot be used commonly. Shouldn't you
+>>>> really consider Linux framebuffer or other subsystems? The above dtsi file
+>>>> is specific to DRM subsystem. And I think the dtsi file has no any
+>>>> dependency on certain subsystem so board dtsi file should be considered for
+>>>> all device drivers based on other subsystems: i.e., Linux framebuffer, DRM,
+>>>> and so no. So I *strongly* object to it. All we have to do is to keep the
+>>>> dtsi file as is, and to find other better way that can be used commonly in
+>>>> DRM.
+>>>
+>>> +1 for not encoding the projected usecase of the graphics subsystem into
+>>> the devicetree. Whether the two LCD controllers shall be used together
+>>> or separately should not affect the devicetree. devicetree is about
+>>> hardware description, not configuration.
+>>
+>> I do like the supernode idea, it would have avoided the ugly
+>> global-list-of-sub-devices in tilcdc (and probably some other
+>> drivers).
+>>
+>> As for projection of use-case, and whether it is something drm
+>> specific or not..  if there is a way to make it generic enough that it
+>> could work for fbdev, well I suppose that is nice.  Not a hard
+>> requirement in my mind, or at least it is a secondary priority
+>> compared to having a better way to having drm devices composed of
+>> sub-{devices,nodes,whatever}.
+>
+> I'm not following who has the requirement for exposing different
+> output device paths
+> as possibly one or two devices, so you could have a drm device for one
+> or the other,
+> or X could use a subset of devices.
+>
+> I'm not really sure how best to deal with that, we have had plans for
+> drm to actually
+> expose sub-groups of crtc/encoders/connectors to userspace via
+> different device nodes
+> for a while, its just never received the final push on how to configure it.
 
-On 04.07.2013 23:34, Arnd Bergmann wrote:
-> On Thursday 04 July 2013, Mark Brown wrote:
+David Herrmann is working on that as part of the GSoC render node project:
+http://dvdhrm.wordpress.com/2013/05/29/drm-render-and-modeset-nodes/
 
->> Another way of skinning this would be for either the kernel to contain
->> a set of machine ID to compatible string mappings or for the device
->> trees for the boards to have an additional properties giving the machine
->> IDs that the boards match.  The kernel could then look for multiple DTBs
->> appended to the image and try to pick one based on ATAGs.
-> 
-> IIRC there is actually an unused field in the dtb header that could
-> be used to match a board ID.
-
-While that would help many users, it doesn't cover our case where
-different board revisions require different DTBs to be loaded, depending
-on the supplied ATAG.
-
-I think I'll go for Nicolas Pitre's suggestion as first step. He's right
-that's it's a hack anyway, and we're just dealing with legacy systems
-here, and hence it might not even be worth caring too much about a
-proper solution.
-
-
-Thanks for all the answers,
-Daniel
+Alex
