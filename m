@@ -1,117 +1,52 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 00/21] MBus DT binding: PCIe strikes back
-Date: Sat, 6 Jul 2013 00:40:26 +0200
-Message-ID: <201307060040.27208.arnd@arndb.de>
-References: <1373060372-32357-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/9] clocksource: dw_apb_timer: support for timer variant used
+ in rk3188 SoCs
+Date: Sat, 6 Jul 2013 00:51:08 +0200
+Message-ID: <201307060051.09716.heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1373060372-32357-1-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 July 2013, Ezequiel Garcia wrote:
-> See the previous version of this patchset for further context:
-> 
-> http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg35753.html
-> 
-> This new proposal is an attempt to address some issues raised about the PCIe
-> 'fake' windows mapping present in the previous version.
-> 
-> Instead of defining a 'fake' MBUS_ID(0xf0, 0x02) region for the whole
-> PCIe memory and IO space, we use real target ID and attribute for the windows.
+The Rockchip rk3188 SoCs use a variant of the timer with some slight
+modifications. This series implements them as quirks for the dw_apb_timer.
 
-Hi Ezequiel,
+Tested on a rk3188 for the quirk handling and on a rk3066a to check that
+nothing broke.
 
-This looks really nice, and I is getting very close to where I think it
-needs to be headed. I'll have to do a more thorough review, but for now there
-is only one detail that I think you should change (we can argue about that):
+Heiko Stuebner (5):
+  clocksource: dw_apb_timer: infrastructure to handle quirks
+  clocksource: dw_apb_timer: flexible register addresses
+  clocksource: dw_apb_timer: quirk for variants with 64bit counter
+  clocksource: dw_apb_timer_of: add quirk handling
+  clocksource: dw_apb_timer: special variant for rockchip rk3188 timers
 
-> 		pcie-controller {
-> 			compatible = "marvell,armada-xp-pcie";
-> 			status = "okay";
-> 			device_type = "pci";
-> 
-> 			#address-cells = <3>;
-> 			#size-cells = <2>;
-> 
-> 			ranges =
-> 			       <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000   /* Port 0.0 registers */
-> 				0x82000000 0 0x42000 MBUS_ID(0xf0, 0x01) 0x42000 0 0x00002000   /* Port 2.0 registers */
-> 				0x82000000 0 0x44000 MBUS_ID(0xf0, 0x01) 0x44000 0 0x00002000   /* Port 0.1 registers */
-> 				0x82000000 0 0x48000 MBUS_ID(0xf0, 0x01) 0x48000 0 0x00002000   /* Port 0.2 registers */
-> 				0x82000000 0 0x4c000 MBUS_ID(0xf0, 0x01) 0x4c000 0 0x00002000   /* Port 0.3 registers */
-> 				0x82000800 0 0xe0000000 MBUS_ID(0x04, 0xe8) 0xe0000000 0 0x08000000 /* Port 0.0 MEM */
-> 				0x81000800 0 0          MBUS_ID(0x04, 0xe0) 0xe8000000 0 0x00100000 /* Port 0.0 IO */>;
+Ulrich Prinz (4):
+  clocksource: dw_apb_timer: use the eoi callback to clear pending interrupts
+  clocksource: dw_apb_timer: quirk for variants without EOI register
+  clocksource: dw_apb_timer: quirk for inverted int mask
+  clocksource: dw_apb_timer: quirk for inverted timer mode setting
 
->From all I can tell, this is a correct representation of the
-translation windows. The one change you made from what I suggested
-(either intentionally or because I didn't make myself clear enough)
-is that you keep encoding the aperture in the ranges property of
-the pcie node.
+ .../bindings/arm/rockchip/rk3188-timer.txt         |   20 +++
+ arch/x86/kernel/apb_timer.c                        |    4 +-
+ drivers/clocksource/dw_apb_timer.c                 |  166 +++++++++++++++-----
+ drivers/clocksource/dw_apb_timer_of.c              |   27 +++-
+ include/linux/dw_apb_timer.h                       |   34 +++-
+ 5 files changed, 198 insertions(+), 53 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/rk3188-timer.txt
 
-	0x82000800 0 0xe0000000 MBUS_ID(0x04, 0xe8) 0xe0000000 0 0x08000000 /* Port 0.0 MEM */
-			^^^^				^^^^		^^^
-
-This describes the intended setting of the aperture in the mbus, not
-the translation that is performed by the pcie-controller as I suggested.
-That would look like
-
-	0x82000800 0 0 MBUS_ID(0x04, 0xe8) 0 1 0 /* Port 0.0 MEM */
-
-iow the first 4GB of the 0x82000800 memory space get translated to 4GB
-at MBUS_ID(0x04, 0xe8), and the aperture is applied by translating a
-small section of that into host mmio space.
-
-The advantage of your approach is that you can keep the existing code
-that extracts the aperture (0xe0000000-0xe8000000) from the 
-pcie-controller node, and you don't have to find out the aperture
-from separate DT property or from looking at the remaining available
-address space in mbus.
-
-The disadvantage is that you have mbus policy spread out between the
-ranges properties of the mbus node and the pcie node, rather than
-having the pcie-controller node just describe the hardware capabilities.
-
-This is actually more of a problem for the I/O space, which is still not
-correctly represented:
-
-	0x81000800 0 0 MBUS_ID(0x04, 0xe0) 0xe8000000 0 0x00100000
-
-is not what the hardware does, the hardware probably has something
-like 
-
-	0x81000800 0 0 MBUS_ID(0x04, 0xe0) 0 1 0
-
-i.e. the PIO registers are at the start of the 4GB MBUS window and
-you want them to get mapped at 0xe8000000, but that is no business
-of the PCIe node. Since the addresses for I/O space are fixed (unlike
-memory space, which is sized dynamically per port), it would be
-straightforward to put the mappings into the mbus node:
-
-	MBUS_ID(0x04, 0xe0) 0x00000 0xe8000000 0x10000 
-	MBUS_ID(0x04, 0xe1) 0x10000 0xe8010000 0x10000
-	MBUS_ID(0x04, 0xe2) 0x20000 0xe8020000 0x10000
-
-Unfortunately, the number of mapping windows in mbus is very limited
-on Armada XP, so you'd run out of windows too fast by mapping them
-all at boot time. The options here are to either put them into the
-ranges property anyway but get the mbus driver to not map them by
-default, or to encode the policy in a different way. Note that the
-physical addresses do not actually have to be contiguous any more now,
-so one option would be for mbus to just fill the holes whenever
-the pcie driver needs an I/O space window, but there we get close
-to the "fully dynamic" model again.
-
-	Arnd
+-- 
+1.7.10.4
