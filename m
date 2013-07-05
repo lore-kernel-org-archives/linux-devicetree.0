@@ -1,84 +1,81 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 0/2] ARM: sunxi: Convert DTSI to new CPU bindings
-Date: Fri, 5 Jul 2013 11:19:46 +0100
-Message-ID: <20130705101946.GA5584@e102568-lin.cambridge.arm.com>
-References: <1372437844-16325-1-git-send-email-maxime.ripard@free-electrons.com>
- <20130628171532.GD30603@e102568-lin.cambridge.arm.com>
- <20130628200333.GA2756@lukather>
- <CAOesGMgsD+tK4+ywvLzsWd+mngrP7zGgSFn0naWjSsQLGaUn2Q@mail.gmail.com>
- <20130629193819.GD3353@n2100.arm.linux.org.uk>
- <20130630094846.GA27559@e102568-lin.cambridge.arm.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Best practice device tree design for display subsystems/DRM
+Date: Fri, 5 Jul 2013 11:41:27 +0100
+Message-ID: <CACxGe6s9YVUSVsvZgxxnFaooXMoHWRPRiUVf1yU+do94dxXCGg@mail.gmail.com>
+References: <20130703090242.GM516@pengutronix.de>
+ <20130703095248.GG13924@flint.arm.linux.org.uk>
+ <20130704083307.GH10414@pengutronix.de>
+ <20130704084052.GP13924@flint.arm.linux.org.uk>
+ <20130704085817.GZ516@pengutronix.de>
+ <20130704091131.GR13924@flint.arm.linux.org.uk>
+ <20130704093047.GJ10414@pengutronix.de> <51D54409.6020608@gmail.com>
+ <20130704100932.GL10414@pengutronix.de> <51D55555.3040403@gmail.com>
+ <20130705100750.GJ516@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130630094846.GA27559@e102568-lin.cambridge.arm.com>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Emilio Lopez <emilio@elopez.com.ar>, devicetree-discuss@lists.ozlabs.org, Mark Rutland <Mark.Rutland@arm.com>, nicolas.pitre@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130705100750.GJ516-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 30, 2013 at 10:48:46AM +0100, Lorenzo Pieralisi wrote:
-> On Sat, Jun 29, 2013 at 08:38:19PM +0100, Russell King - ARM Linux wrote:
-> > On Fri, Jun 28, 2013 at 01:05:42PM -0700, Olof Johansson wrote:
-> > > On Fri, Jun 28, 2013 at 1:03 PM, Maxime Ripard
-> > > <maxime.ripard@free-electrons.com> wrote:
-> > > > On Fri, Jun 28, 2013 at 06:15:32PM +0100, Lorenzo Pieralisi wrote:
-> > > >> The patch above should already be queued in next/dt right ?
-> > > >
-> > > > Indeed.
-> > > >
-> > > > Then why the latest patch of your patchset got in 3.10, while the
-> > > > patches actually fixing the DT it would have impacted were delayed to
-> > > > 3.11?
-> > > >
-> > > > (And why was it merged so late in the development cycle?)
-> > > 
-> > > This. So now we have to scramble because some device trees will
-> > > produce warnings at boot.
-> > > 
-> > > Russell, the alternative is to revert Lorenzo's patch for 3.10 (and
-> > > re-introduce it for 3.11). Do you have a preference?
-> > 
-> > Sorry but I really don't understand what all the fuss in this thread
-> > is about.
-> > 
-> > This thread seems to be saying that two development patches were
-> > merged, which were 7762/1 and 7763/1, and that 7764/1 is a fix?
-> > Are you sure about that, because that's not how they're described,
-> > and not how they look either.
-> 
-> As Olof's warning downgrade is being merged (thanks for that and apologies for
-> failing to explain patches dependencies properly and stable related issues),
-> 7764/1 won't apply cleanly anymore. Can you please drop it from the patch
-> system, I will update it and test it first thing tomorrow and send a
-> final version to the patch system.
+On Fri, Jul 5, 2013 at 11:07 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Again the difference between supernodes and graphs is that the supernode
+> approach does not contain information about what components are needed
+> to do something useful with the device. You simply have to wait until
+> *all* components are present which may never happen if you don't drivers
+> for all components of the device.
+> With the graph instead you can start doing something once you find a
+> link between a source and a sink, no matter if other links are still
+> missing.
 
-Patch 7779/1, replacing 7764/1 is in the patch system now, and is ready
-to get merged.
+I really think you're overstating your argument here. The whole point
+of a super node is that a *driver* can bind against it and a driver
+can be made intelligent enough to know which links are mandatory and
+which are optional (with the assumption that the data about which is
+which is encoded in the supernode). Graph vs. supernode vs some
+mixture of the two can all do exactly the same thing.
 
-Unfortunately cpu/cpus bindings documentation updates, following:
+What really matters is which approach best describes the hardware, and
+then the drivers can be designed based on that.
 
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-June/036735.html
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-May/033779.html
+> Another important point is that if you have a board with multiple i2c
+> encoder chips, how do you decide which one is connected to which LCDx
+> when all information you have is: "I need these x components", but have
+> no information how these components are connected to each other.
+> Fortunately I don't have hardware here which does something like this,
+> but it would also be possible to chain multiple encoder chips. This
+> could be described in a graph, but when all we have is a list of
+> components without connection information we would need board specific
+> code to handle the layout.
 
-were not pulled in the kernel. This is an issue since this means that
-we still have no reference in the kernel or wherever it has to be, to
-the final cpus/cpu bindings for ARM and ARM64 provided in the pull
-request link above (that has been reviewed to death and acknowledged).
+It is still absolutely true that i2c devices must have a node below
+the i2c bus, same for spi, same for MMIO. That doesn't change. It
+really isn't an option to have the subservient devices directly under
+the supernode. On that point the supernode pretty much must have
+phandles to those device nodes.
 
-It is a significant overhaul of cpu/cpus bindings standard for ARM/ARM64,
-covering all CPUs harking back to arm926 and beyond, and should be final.
+*However* there is absolutely nothing that says the subservient
+devices have to be bound to device drivers! It is perfectly fine for
+the supernode to go looking for a registered struct i2c_device (or
+whatever) and drive the device directly*. There are certainly cases
+where it wouldn't make sense to split a driver for what is effectively
+one device into two. But I digress.
 
-dts updates following that standard have already been pulled into 3.11
-through arm-soc.
+*You'll note that I said look for i2c_device here, and not
+device_node. The reason is that waiting for the i2c_device to appear
+gives a guarantee that the i2c bus is initialized. Looking for the
+device_node does not.
 
-IMHO the bindings contained in pull request above must be merged in the
-kernel asap, I would like to ask you please what should I do to get them in
-please. If we want to move bindings documentation elsewhere let's do it,
-as long as there is a published standard I am happy and will stop annoying
-you with this stuff.
-
-Thank you very much,
-Lorenzo
+g.
