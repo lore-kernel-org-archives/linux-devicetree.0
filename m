@@ -1,145 +1,84 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: Best practice device tree design for display subsystems/DRM
-Date: Fri, 5 Jul 2013 12:07:50 +0200
-Message-ID: <20130705100750.GJ516@pengutronix.de>
-References: <20130703090242.GM516@pengutronix.de>
-	<20130703095248.GG13924@flint.arm.linux.org.uk>
-	<20130704083307.GH10414@pengutronix.de>
-	<20130704084052.GP13924@flint.arm.linux.org.uk>
-	<20130704085817.GZ516@pengutronix.de>
-	<20130704091131.GR13924@flint.arm.linux.org.uk>
-	<20130704093047.GJ10414@pengutronix.de>
-	<51D54409.6020608@gmail.com>
-	<20130704100932.GL10414@pengutronix.de>
-	<51D55555.3040403@gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 0/2] ARM: sunxi: Convert DTSI to new CPU bindings
+Date: Fri, 5 Jul 2013 11:19:46 +0100
+Message-ID: <20130705101946.GA5584@e102568-lin.cambridge.arm.com>
+References: <1372437844-16325-1-git-send-email-maxime.ripard@free-electrons.com>
+ <20130628171532.GD30603@e102568-lin.cambridge.arm.com>
+ <20130628200333.GA2756@lukather>
+ <CAOesGMgsD+tK4+ywvLzsWd+mngrP7zGgSFn0naWjSsQLGaUn2Q@mail.gmail.com>
+ <20130629193819.GD3353@n2100.arm.linux.org.uk>
+ <20130630094846.GA27559@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130630094846.GA27559@e102568-lin.cambridge.arm.com>
 Content-Disposition: inline
-In-Reply-To: <51D55555.3040403@gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: 'Jean-Francois Moine' <moinejf@free.fr>, 'Daniel Drake' <dsd@laptop.org>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Russell King <rmk@arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Olof Johansson <olof@lixom.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Emilio Lopez <emilio@elopez.com.ar>, devicetree-discuss@lists.ozlabs.org, Mark Rutland <Mark.Rutland@arm.com>, nicolas.pitre@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 04, 2013 at 12:58:29PM +0200, Sebastian Hesselbarth wrote:
-> On 07/04/13 12:09, Sascha Hauer wrote:
-> >On Thu, Jul 04, 2013 at 11:44:41AM +0200, Sebastian Hesselbarth wrote:
-> >>On 07/04/13 11:30, Sascha Hauer wrote:
-> >>>On Thu, Jul 04, 2013 at 10:11:31AM +0100, Russell King wrote:
-> >>>>On Thu, Jul 04, 2013 at 10:58:17AM +0200, Sascha Hauer wrote:
-> >>>>>On Thu, Jul 04, 2013 at 09:40:52AM +0100, Russell King wrote:
-> >>>>>>Wrong.  Please read the example with the diagrams I gave.  Consider
-> >>>>>>what happens if you have two display devices connected to a single
-> >>>>>>output, one which fixes the allowable mode and one which _can_
-> >>>>>>reformat the selected mode.
-> >>>>>
-> >>>>>What you describe here is a forced clone mode. This could be described
-> >>>>>in the devicetree so that a driver wouldn't start before all connected
-> >>>>>displays (links) are present, but this should be limited to the affected
-> >>>>>path, not to the whole componentized device.
-> >>>>
-> >>>>Okay, to throw a recent argument back at you: so what in this scenario
-> >>>>if you have a driver for the fixed-mode device but not the other device?
-> >>>>
-> >>>>It's exactly the same problem which you were describing to Sebastian
-> >>>>just a moment ago with drivers missing from the supernode approach -
-> >>>>you can't start if one of those "forced clone" drivers is missing.
-> >>>
-> >>>Indeed, then you will see nothing on your display, but I rather make
-> >>>this setup a special case than the rather usual case that we do not
-> >>>have compiled in all drivers for all devices referenced in the
-> >>>supernode.
-> >>
-> >>The super-node links SoC internal devices that do not necessarily match
-> >>with the subsystem driver. You have one single DRM driver exploiting
-> >>several device nodes for a single video card.
-> >>
-> >>But you need one device node to hook the driver to.
-> >
-> >Currently on i.MX we use a platform_device for this purpose.
+On Sun, Jun 30, 2013 at 10:48:46AM +0100, Lorenzo Pieralisi wrote:
+> On Sat, Jun 29, 2013 at 08:38:19PM +0100, Russell King - ARM Linux wrote:
+> > On Fri, Jun 28, 2013 at 01:05:42PM -0700, Olof Johansson wrote:
+> > > On Fri, Jun 28, 2013 at 1:03 PM, Maxime Ripard
+> > > <maxime.ripard@free-electrons.com> wrote:
+> > > > On Fri, Jun 28, 2013 at 06:15:32PM +0100, Lorenzo Pieralisi wrote:
+> > > >> The patch above should already be queued in next/dt right ?
+> > > >
+> > > > Indeed.
+> > > >
+> > > > Then why the latest patch of your patchset got in 3.10, while the
+> > > > patches actually fixing the DT it would have impacted were delayed to
+> > > > 3.11?
+> > > >
+> > > > (And why was it merged so late in the development cycle?)
+> > > 
+> > > This. So now we have to scramble because some device trees will
+> > > produce warnings at boot.
+> > > 
+> > > Russell, the alternative is to revert Lorenzo's patch for 3.10 (and
+> > > re-introduce it for 3.11). Do you have a preference?
+> > 
+> > Sorry but I really don't understand what all the fuss in this thread
+> > is about.
+> > 
+> > This thread seems to be saying that two development patches were
+> > merged, which were 7762/1 and 7763/1, and that 7764/1 is a fix?
+> > Are you sure about that, because that's not how they're described,
+> > and not how they look either.
 > 
-> Sascha,
-> 
-> I have the impression that we are not that far away in our proposals.
-> 
-> The platform_device you are using on i.MX is what we have been referring
-> as the "super-node" during the discussion. I see device nodes as some
-> kind of platform_device - no all really end up in one as it depends on
-> the bus probing the nodes - but they are logical nodes that sometimes
-> 1:1 match the physical nodes (devices).
-> 
-> The remaining issue I see at least for Dove and the DRM driver that
-> will be compatible with Armada 510 and e.g. PXA2128 or Armada 610 is:
-> 
-> We cannot match the DRM driver with any of the devices_nodes in question
-> (a) using lcd-controller will always end-up in two DRM drivers on Dove
->     having two lcd controllers
-> (b) using display-controller will not work on other SoCs because it is
->     unique to Armada 510.
-> 
-> With (a) you could tell lcd1 to go to "slave-mode" as v4l2 does but that
-> will also lead to very SoC specific drivers. Moreover, you will also
-> have to tell lcd0 to be either stand-alone or master-mode. You need to
-> know weather to wait for DRM driver loaded on lcd1 (slave) to fail after
-> reading "slave-mode" property.
-> 
-> The super-node solves it easily and has a strong relation to a virtual
-> video card. The actual point-to-point links match v4l2 approach.
-> 
-> Even the v4l2 approach could be used to describe all possible
-> combinations we discussed. But I do not see the beauty of it as it will
-> make dealing with translation of device node to subsystem requirements
-> and even physical SoC IP a lot more complicated.
-> 
-> With v4l2 you will have to link
-> (=> denoting visible video stream, -> logical link)
-> 
-> the single card, single lcd-controller case:
-> (LCD0)->(HDMI)=>
-> 
-> the multiple card, single lcd-controller case:
-> (LCD0)->(DCON)->(HDMI)=> and
-> (LCD1)---+  +=>
-> 
-> and the single card, multiple lcd-controller case:
-> (LCD0)->(LCD1)->(DCON)->(HDMI)=>
+> As Olof's warning downgrade is being merged (thanks for that and apologies for
+> failing to explain patches dependencies properly and stable related issues),
+> 7764/1 won't apply cleanly anymore. Can you please drop it from the patch
+> system, I will update it and test it first thing tomorrow and send a
+> final version to the patch system.
 
-No, the link can spawn a graph. There is no need to build a chain only.
-You can't link LCD0 to LCD1, that makes no sense.
+Patch 7779/1, replacing 7764/1 is in the patch system now, and is ready
+to get merged.
 
-Again the difference between supernodes and graphs is that the supernode
-approach does not contain information about what components are needed
-to do something useful with the device. You simply have to wait until
-*all* components are present which may never happen if you don't drivers
-for all components of the device.
-With the graph instead you can start doing something once you find a
-link between a source and a sink, no matter if other links are still
-missing.
+Unfortunately cpu/cpus bindings documentation updates, following:
 
-Another important point is that if you have a board with multiple i2c
-encoder chips, how do you decide which one is connected to which LCDx
-when all information you have is: "I need these x components", but have
-no information how these components are connected to each other.
-Fortunately I don't have hardware here which does something like this,
-but it would also be possible to chain multiple encoder chips. This
-could be described in a graph, but when all we have is a list of
-components without connection information we would need board specific
-code to handle the layout.
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-June/036735.html
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-May/033779.html
 
-Sascha
+were not pulled in the kernel. This is an issue since this means that
+we still have no reference in the kernel or wherever it has to be, to
+the final cpus/cpu bindings for ARM and ARM64 provided in the pull
+request link above (that has been reviewed to death and acknowledged).
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+It is a significant overhaul of cpu/cpus bindings standard for ARM/ARM64,
+covering all CPUs harking back to arm926 and beyond, and should be final.
+
+dts updates following that standard have already been pulled into 3.11
+through arm-soc.
+
+IMHO the bindings contained in pull request above must be merged in the
+kernel asap, I would like to ask you please what should I do to get them in
+please. If we want to move bindings documentation elsewhere let's do it,
+as long as there is a published standard I am happy and will stop annoying
+you with this stuff.
+
+Thank you very much,
+Lorenzo
