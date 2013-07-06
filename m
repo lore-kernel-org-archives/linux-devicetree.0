@@ -1,19 +1,15 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH V3] of: Set the DMA mask to 64 bits when dma_addr_t is
- 64-bits
-Date: Sat, 6 Jul 2013 10:15:11 +0100
-Message-ID: <20130706091511.GN24642@n2100.arm.linux.org.uk>
-References: <1367008266-1431-1-git-send-email-lauraa@codeaurora.org>
- <517AF270.8040106@gmail.com>
- <CACVXFVPfkqP+UyoGd-+QFRzndSam_DtU=utrBPYCPjQCGQ_F6g@mail.gmail.com>
- <51D71F81.5090503@codeaurora.org>
- <CACVXFVNT3j5o9a+N9FDA07Si+cngqAZkcqh6YYOf3rHsMvRgRg@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv3 1/3] iio: Add Nuvoton NAU7802 ADC driver
+Date: Sat, 06 Jul 2013 11:24:04 +0100
+Message-ID: <51D7F044.9040205@kernel.org>
+References: <1372094699-3832-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <1372094699-3832-2-git-send-email-alexandre.belloni@free-electrons.com>
+ <51D53B72.6020309@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACVXFVNT3j5o9a+N9FDA07Si+cngqAZkcqh6YYOf3rHsMvRgRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <51D53B72.6020309-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,58 +20,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ming Lei <tom.leiming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jimwall@q.com, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 06, 2013 at 10:21:05AM +0800, Ming Lei wrote:
-> But please see below words in Documentation/DMA-API.txt:
+On 07/04/2013 10:08 AM, Lars-Peter Clausen wrote:
+> On 06/24/2013 07:24 PM, Alexandre Belloni wrote:
+>> The Nuvoton NAU7802 ADC is a 24-bit 2-channels I2C ADC, with adjustable
+>> gain and sampling rates.
+>>
+>> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > 
->            Further, the physical address of the memory must be within the
->            dma_mask of the device (the dma_mask represents a bit mask of the
->            addressable region for the device.  I.e., if the physical address of
->            the memory anded with the dma_mask is still equal to the physical
->            address, then the device can perform DMA to the memory).
+> Reviewed-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 > 
-> You may argue that the description is about dev->dma_mask, but the
-> usage should be same.
+Applied to the togreg branch of iio.git (with a few little tweaks).
+
+There was some fuzz that required manual fixing because of another driver merge so
+please check I didn't foul anything up with this or the other bits below.
+
+There were two trivial missing unlocks on error paths in the read_raw function that
+I've fixed up (Coccinelle found these for me - if you can I would always advise
+running sparse, coccicheck and ideally smatch before submitting patches).
+
+I fixed up the comments because if there is one thing I hate bothering
+with it is delightful patches that just fix this stuff. Much better
+to do it now given it took 20 secs ;)
+
+> One remark though. Multiline comments should be like
 > 
-> In fact, most of devices in ARM SoC(even with LPAE enabled) doesn't
-> support 64bit DMA, so I don't see the point that the default mask is set
-> as 64bit.
-
-There's another couple of issues there:
-
-(a) Linux assumes that physical memory starts at location zero.  There
-    are various places in the kernel that assume that this holds true:
-
-	max_dma_pfn = (dma_mask >> PAGE_SHIFT) + 1
-
-    One notable place is the block layer.  I've suggested to Santosh a
-    way to fix this but I need to help him a little more with it.
-
-(b) Device DMA addresses are a *separate* address space to the physical
-    address space.  Device DMA addresses are the addresses which need to
-    be programmed into the device to perform DMA to the identified
-    location.
-
-What (b) means is that if you are ending up with a 64-bit address to be
-programmed into a 32-bit only register, there is something very very
-wrong.  What this also means is that a 32-bit DMA mask should suffice,
-because if the DMA address results in a 32-bit address _for the DMA
-device_ then we are within its capabilities.
-
-In any case, the work around is not to set the DMA mask to be 64-bit.
-Think about it.  What if you have 8GB of physical memory in a LPAE
-system, but your DMA controllers can only be programmed with a 32-bit
-address?
-
-Lastly, think about what I said last night about most of the ARM drivers
-being rather buggy in that they do not call either dma_set_mask() or
-dma_set_coherent_mask().
-
-So, I think we're well past the point where we need to stop assuming that
-DMA masks somehow relate to physical addresses, and that they can be used
-to indicate a range of physical addresses starting at zero and extending
-up to and including the mask value.  To call such a thing a "mask" is
-absolutely absurd.
+> /*
+>  * foo
+>  * bar
+>  */
+> 
+> not
+> 
+> /* foo
+>  * bar
+>  */
+> 
+> But not need to resend the patch just for this
+> 
+> - Lars
+> 
