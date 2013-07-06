@@ -1,168 +1,59 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 2/3] ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
-Date: Sat, 06 Jul 2013 11:26:46 +0100
-Message-ID: <51D7F0E6.2000008@kernel.org>
-References: <1372094699-3832-1-git-send-email-alexandre.belloni@free-electrons.com> <1372094699-3832-3-git-send-email-alexandre.belloni@free-electrons.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v9 04/10] ASoC: fsl-ssi: Add support for
+	imx-pcm-fiq
+Date: Sat, 6 Jul 2013 19:13:23 +0200
+Message-ID: <20130706171323.GG16871@s25.your-server.de>
+References: <1371734429-6081-1-git-send-email-mpa@pengutronix.de>
+ <1371734429-6081-5-git-send-email-mpa@pengutronix.de>
+ <20130703160637.GQ27646@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1372094699-3832-3-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, jimwall@q.com, brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20130703160637.GQ27646@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/24/2013 06:24 PM, Alexandre Belloni wrote:
-> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> 
-> The ADCs connected to this bus have been experiencing some timeout
-> issues when using the iMX28 i2c controller. Switching back to bitbanging
-> solves this.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Hi Mark,
 
-As there are no disadvantages in taking the driver through IIO and these changes
-through the appropriate arch trees, I'd not propose to take these through IIO
-(even when the discussion is done) unless specifically asked to.
+On Wed, Jul 03, 2013 at 05:06:37PM +0100, Mark Brown wrote:
+> On Thu, Jun 20, 2013 at 03:20:23PM +0200, Markus Pargmann wrote:
+> 
+> > +	ssi_private->use_dma = !of_property_read_bool(np, "fsl,imx-fiq");
+> > +
+> 
+> This binding should be documented.  I'm not sure it really needs to be
+> a binding, though - is it not possible for the driver to just figure out
+> that DMA won't work automatically (for example by looking at the CODEC
+> in use)?  I'm not sure this is a good name either, it should be saying
+> why the FIQ is needed rather than saying that we should use the FIQ.
 
-Jonathan
-> ---
->  arch/arm/boot/dts/imx28-cfa10049.dts | 108 +++++++++++++++++++++--------------
->  1 file changed, 65 insertions(+), 43 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx28-cfa10049.dts b/arch/arm/boot/dts/imx28-cfa10049.dts
-> index 05ae549..d3758c2 100644
-> --- a/arch/arm/boot/dts/imx28-cfa10049.dts
-> +++ b/arch/arm/boot/dts/imx28-cfa10049.dts
-> @@ -139,6 +139,17 @@
->  					fsl,pull-up = <0>; /* 0 will enable the keeper */
->  				};
->  
-> +				i2c1_pins_cfa10049: i2c1@0 {
-> +					reg = <0>;
-> +					fsl,pinmux-ids = <
-> +						0x3103 /* MX28_PAD_PWM0__GPIO */
-> +						0x3113 /* MX28_PAD_PWM1__I2C1_SDA */
-> +					>;
-> +					fsl,drive-strength = <1>;
-> +					fsl,voltage = <1>;
-> +					fsl,pull-up = <1>;
-> +				};
-> +
->  				fiq_pins_cfa10049: fiq@0 {
->  					reg = <0>;
->  					fsl,pinmux-ids = <
-> @@ -199,49 +210,6 @@
->  				status = "okay";
->  			};
->  
-> -			i2c1: i2c@8005a000 {
-> -				pinctrl-names = "default";
-> -				pinctrl-0 = <&i2c1_pins_a>;
-> -				status = "okay";
-> -			};
-> -
-> -			i2cmux {
-> -				compatible = "i2c-mux-gpio";
-> -				#address-cells = <1>;
-> -				#size-cells = <0>;
-> -				mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
-> -				i2c-parent = <&i2c1>;
-> -
-> -				i2c@0 {
-> -					reg = <0>;
-> -				};
-> -
-> -				i2c@1 {
-> -					reg = <1>;
-> -				};
-> -
-> -				i2c@2 {
-> -					reg = <2>;
-> -				};
-> -
-> -				i2c@3 {
-> -					reg = <3>;
-> -					#address-cells = <1>;
-> -					#size-cells = <0>;
-> -
-> -					pca9555: pca9555@20 {
-> -						compatible = "nxp,pca9555";
-> -						interrupt-parent = <&gpio2>;
-> -						interrupts = <19 0x2>;
-> -						gpio-controller;
-> -						#gpio-cells = <2>;
-> -						interrupt-controller;
-> -						#interrupt-cells = <2>;
-> -						reg = <0x20>;
-> -					};
-> -				};
-> -			};
-> -
->  			usbphy1: usbphy@8007e000 {
->  				status = "okay";
->  			};
-> @@ -366,6 +334,60 @@
->  		rotary-encoder,relative-axis;
->  	};
->  
-> +	i2c1gpio: i2c@0 {
-> +		compatible = "i2c-gpio";
-> +		pinctrl-0 = <&i2c1_pins_cfa10049>;
-> +		pinctrl-names = "default";
-> +		gpios = <
-> +			&gpio3 17 0 /* sda */
-> +			&gpio3 16 0 /* scl */
-> +			 >;
-> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-> +	};
-> +
-> +	i2cmux {
-> +		compatible = "i2c-mux-gpio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
-> +		i2c-parent = <&i2c1gpio>;
-> +
-> +		i2c@0 {
-> +			reg = <0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@1 {
-> +			reg = <1>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@2 {
-> +			reg = <2>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		i2c@3 {
-> +			reg = <3>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			pca9555: pca9555@20 {
-> +				compatible = "nxp,pca9555";
-> +				interrupt-parent = <&gpio2>;
-> +				interrupts = <19 0x2>;
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <2>;
-> +				reg = <0x20>;
-> +			};
-> +		};
-> +	};
-> +
->  	backlight {
->  		compatible = "pwm-backlight";
->  		pwms = <&pwm 3 5000000>;
-> 
+I think fsl_ssi_startup is the first function in which we know which
+codec is connected to fsl-ssi. There we have access to the pcm runtime,
+which stores the codec used. But that is too late for the ssi setup.
+
+I could use of_find_compatible_node to search for the wm9712 codec, but
+that would assume that there is only one codec attached to the system.
+
+Perhaps "fsl,fiq-filter-codec-stream" is a better name for the binding?
+
+Regards,
+
+Markus
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
