@@ -1,16 +1,19 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gQVJNOiBkdHM6IGlteDI3IHBoeUNBUkQtUyByZW1vdmUg?=
- =?UTF-8?B?d3JvbmcgSTJDIFJUQw==?=
-Date: Sat, 06 Jul 2013 12:51:58 +0400
-Message-ID: <1373100718.107651915@f159.i.mail.ru>
-References: <1372782469.486055292@f129.mail.ru>
- <1373031909-16178-1-git-send-email-mpa@pengutronix.de>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH V3] of: Set the DMA mask to 64 bits when dma_addr_t is
+ 64-bits
+Date: Sat, 6 Jul 2013 10:15:11 +0100
+Message-ID: <20130706091511.GN24642@n2100.arm.linux.org.uk>
+References: <1367008266-1431-1-git-send-email-lauraa@codeaurora.org>
+ <517AF270.8040106@gmail.com>
+ <CACVXFVPfkqP+UyoGd-+QFRzndSam_DtU=utrBPYCPjQCGQ_F6g@mail.gmail.com>
+ <51D71F81.5090503@codeaurora.org>
+ <CACVXFVNT3j5o9a+N9FDA07Si+cngqAZkcqh6YYOf3rHsMvRgRg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1373031909-16178-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACVXFVNT3j5o9a+N9FDA07Si+cngqAZkcqh6YYOf3rHsMvRgRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,28 +24,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?UTF-8?B?TWFya3VzIFBhcmdtYW5u?= <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Ming Lei <tom.leiming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Fixup of commit 7874d595b78e431f0f661d2fe47625649308a52e
-> "ARM: dts: Add device tree support for phycard pca100".
+On Sat, Jul 06, 2013 at 10:21:05AM +0800, Ming Lei wrote:
+> But please see below words in Documentation/DMA-API.txt:
 > 
-> Remove wrong I2C RTC node.
+>            Further, the physical address of the memory must be within the
+>            dma_mask of the device (the dma_mask represents a bit mask of the
+>            addressable region for the device.  I.e., if the physical address of
+>            the memory anded with the dma_mask is still equal to the physical
+>            address, then the device can perform DMA to the memory).
 > 
-> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
+> You may argue that the description is about dev->dma_mask, but the
+> usage should be same.
 > 
-> Thanks, Alexander, you are right. I2C2 has no RTC.
-...
+> In fact, most of devices in ARM SoC(even with LPAE enabled) doesn't
+> support 64bit DMA, so I don't see the point that the default mask is set
+> as 64bit.
 
-There are a couple of comments on this file.
+There's another couple of issues there:
 
-I think that the OWIRE should be moved to the RDK.
+(a) Linux assumes that physical memory starts at location zero.  There
+    are various places in the kernel that assume that this holds true:
 
-ioexpander must contain "gpio-controller" at least, and for use it further,
-it is necessary to define the label for this node.
+	max_dma_pfn = (dma_mask >> PAGE_SHIFT) + 1
 
-Thanks.
+    One notable place is the block layer.  I've suggested to Santosh a
+    way to fix this but I need to help him a little more with it.
 
----
+(b) Device DMA addresses are a *separate* address space to the physical
+    address space.  Device DMA addresses are the addresses which need to
+    be programmed into the device to perform DMA to the identified
+    location.
+
+What (b) means is that if you are ending up with a 64-bit address to be
+programmed into a 32-bit only register, there is something very very
+wrong.  What this also means is that a 32-bit DMA mask should suffice,
+because if the DMA address results in a 32-bit address _for the DMA
+device_ then we are within its capabilities.
+
+In any case, the work around is not to set the DMA mask to be 64-bit.
+Think about it.  What if you have 8GB of physical memory in a LPAE
+system, but your DMA controllers can only be programmed with a 32-bit
+address?
+
+Lastly, think about what I said last night about most of the ARM drivers
+being rather buggy in that they do not call either dma_set_mask() or
+dma_set_coherent_mask().
+
+So, I think we're well past the point where we need to stop assuming that
+DMA masks somehow relate to physical addresses, and that they can be used
+to indicate a range of physical addresses starting at zero and extending
+up to and including the mask value.  To call such a thing a "mask" is
+absolutely absurd.
