@@ -1,66 +1,168 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 1/3] iio: Add Nuvoton NAU7802 ADC driver
-Date: Sat, 06 Jul 2013 11:24:04 +0100
-Message-ID: <51D7F044.9040205@kernel.org>
-References: <1372094699-3832-1-git-send-email-alexandre.belloni@free-electrons.com>
- <1372094699-3832-2-git-send-email-alexandre.belloni@free-electrons.com>
- <51D53B72.6020309@metafoo.de>
+Subject: Re: [PATCHv3 2/3] ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
+Date: Sat, 06 Jul 2013 11:26:46 +0100
+Message-ID: <51D7F0E6.2000008@kernel.org>
+References: <1372094699-3832-1-git-send-email-alexandre.belloni@free-electrons.com> <1372094699-3832-3-git-send-email-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51D53B72.6020309-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jimwall@q.com, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1372094699-3832-3-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, jimwall@q.com, brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/04/2013 10:08 AM, Lars-Peter Clausen wrote:
-> On 06/24/2013 07:24 PM, Alexandre Belloni wrote:
->> The Nuvoton NAU7802 ADC is a 24-bit 2-channels I2C ADC, with adjustable
->> gain and sampling rates.
->>
->> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On 06/24/2013 06:24 PM, Alexandre Belloni wrote:
+> From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > 
-> Reviewed-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> The ADCs connected to this bus have been experiencing some timeout
+> issues when using the iMX28 i2c controller. Switching back to bitbanging
+> solves this.
 > 
-Applied to the togreg branch of iio.git (with a few little tweaks).
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-There was some fuzz that required manual fixing because of another driver merge so
-please check I didn't foul anything up with this or the other bits below.
+As there are no disadvantages in taking the driver through IIO and these changes
+through the appropriate arch trees, I'd not propose to take these through IIO
+(even when the discussion is done) unless specifically asked to.
 
-There were two trivial missing unlocks on error paths in the read_raw function that
-I've fixed up (Coccinelle found these for me - if you can I would always advise
-running sparse, coccicheck and ideally smatch before submitting patches).
-
-I fixed up the comments because if there is one thing I hate bothering
-with it is delightful patches that just fix this stuff. Much better
-to do it now given it took 20 secs ;)
-
-> One remark though. Multiline comments should be like
+Jonathan
+> ---
+>  arch/arm/boot/dts/imx28-cfa10049.dts | 108 +++++++++++++++++++++--------------
+>  1 file changed, 65 insertions(+), 43 deletions(-)
 > 
-> /*
->  * foo
->  * bar
->  */
-> 
-> not
-> 
-> /* foo
->  * bar
->  */
-> 
-> But not need to resend the patch just for this
-> 
-> - Lars
+> diff --git a/arch/arm/boot/dts/imx28-cfa10049.dts b/arch/arm/boot/dts/imx28-cfa10049.dts
+> index 05ae549..d3758c2 100644
+> --- a/arch/arm/boot/dts/imx28-cfa10049.dts
+> +++ b/arch/arm/boot/dts/imx28-cfa10049.dts
+> @@ -139,6 +139,17 @@
+>  					fsl,pull-up = <0>; /* 0 will enable the keeper */
+>  				};
+>  
+> +				i2c1_pins_cfa10049: i2c1@0 {
+> +					reg = <0>;
+> +					fsl,pinmux-ids = <
+> +						0x3103 /* MX28_PAD_PWM0__GPIO */
+> +						0x3113 /* MX28_PAD_PWM1__I2C1_SDA */
+> +					>;
+> +					fsl,drive-strength = <1>;
+> +					fsl,voltage = <1>;
+> +					fsl,pull-up = <1>;
+> +				};
+> +
+>  				fiq_pins_cfa10049: fiq@0 {
+>  					reg = <0>;
+>  					fsl,pinmux-ids = <
+> @@ -199,49 +210,6 @@
+>  				status = "okay";
+>  			};
+>  
+> -			i2c1: i2c@8005a000 {
+> -				pinctrl-names = "default";
+> -				pinctrl-0 = <&i2c1_pins_a>;
+> -				status = "okay";
+> -			};
+> -
+> -			i2cmux {
+> -				compatible = "i2c-mux-gpio";
+> -				#address-cells = <1>;
+> -				#size-cells = <0>;
+> -				mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
+> -				i2c-parent = <&i2c1>;
+> -
+> -				i2c@0 {
+> -					reg = <0>;
+> -				};
+> -
+> -				i2c@1 {
+> -					reg = <1>;
+> -				};
+> -
+> -				i2c@2 {
+> -					reg = <2>;
+> -				};
+> -
+> -				i2c@3 {
+> -					reg = <3>;
+> -					#address-cells = <1>;
+> -					#size-cells = <0>;
+> -
+> -					pca9555: pca9555@20 {
+> -						compatible = "nxp,pca9555";
+> -						interrupt-parent = <&gpio2>;
+> -						interrupts = <19 0x2>;
+> -						gpio-controller;
+> -						#gpio-cells = <2>;
+> -						interrupt-controller;
+> -						#interrupt-cells = <2>;
+> -						reg = <0x20>;
+> -					};
+> -				};
+> -			};
+> -
+>  			usbphy1: usbphy@8007e000 {
+>  				status = "okay";
+>  			};
+> @@ -366,6 +334,60 @@
+>  		rotary-encoder,relative-axis;
+>  	};
+>  
+> +	i2c1gpio: i2c@0 {
+> +		compatible = "i2c-gpio";
+> +		pinctrl-0 = <&i2c1_pins_cfa10049>;
+> +		pinctrl-names = "default";
+> +		gpios = <
+> +			&gpio3 17 0 /* sda */
+> +			&gpio3 16 0 /* scl */
+> +			 >;
+> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+> +	};
+> +
+> +	i2cmux {
+> +		compatible = "i2c-mux-gpio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
+> +		i2c-parent = <&i2c1gpio>;
+> +
+> +		i2c@0 {
+> +			reg = <0>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		i2c@1 {
+> +			reg = <1>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		i2c@2 {
+> +			reg = <2>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		i2c@3 {
+> +			reg = <3>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			pca9555: pca9555@20 {
+> +				compatible = "nxp,pca9555";
+> +				interrupt-parent = <&gpio2>;
+> +				interrupts = <19 0x2>;
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <2>;
+> +				reg = <0x20>;
+> +			};
+> +		};
+> +	};
+> +
+>  	backlight {
+>  		compatible = "pwm-backlight";
+>  		pwms = <&pwm 3 5000000>;
 > 
