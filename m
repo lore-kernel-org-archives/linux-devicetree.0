@@ -1,85 +1,128 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 9/9] clocksource: dw_apb_timer: special variant for
- rockchip rk3188 timers
-Date: Sat, 6 Jul 2013 02:12:24 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1307060153110.32106@ionos.tec.linutronix.de>
-References: <201307060051.09716.heiko@sntech.de>
- <201307060056.29370.heiko@sntech.de>
+From: Ming Lei <tom.leiming@gmail.com>
+Subject: Re: [PATCH V3] of: Set the DMA mask to 64 bits when dma_addr_t is
+ 64-bits
+Date: Sat, 6 Jul 2013 10:21:05 +0800
+Message-ID: <CACVXFVNT3j5o9a+N9FDA07Si+cngqAZkcqh6YYOf3rHsMvRgRg@mail.gmail.com>
+References: <1367008266-1431-1-git-send-email-lauraa@codeaurora.org>
+ <517AF270.8040106@gmail.com>
+ <CACVXFVPfkqP+UyoGd-+QFRzndSam_DtU=utrBPYCPjQCGQ_F6g@mail.gmail.com>
+ <51D71F81.5090503@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-1635963963-1373069545=:32106"
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201307060056.29370.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?ISO-8859-15?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51D71F81.5090503@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laura Abbott <lauraa@codeaurora.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Sat, Jul 6, 2013 at 3:33 AM, Laura Abbott <lauraa@codeaurora.org> wrote:
+> On 7/3/2013 7:15 AM, Ming Lei wrote:
+>>
+>> On Sat, Apr 27, 2013 at 5:32 AM, Rob Herring <robherring2@gmail.com>
+>> wrote:
+>>>
+>>> On 04/26/2013 03:31 PM, Laura Abbott wrote:
+>>>>
+>>>> Currently, of_platform_device_create_pdata always sets the
+>>>> coherent DMA mask to 32 bits. On ARM systems without CONFIG_ZONE_DMA,
+>>>> arm_dma_limit gets set to ~0 or 0xFFFFFFFFFFFFFFFF on LPAE based
+>>>> systems. Since arm_dma_limit represents the smallest dma_mask
+>>>> on the system, the default of 32 bits prevents any dma_coherent
+>>>> allocation from succeeding unless clients manually set the
+>>>> dma mask first. Rather than make every client on an LPAE system set
+>>>> the mask manually, account for the size of dma_addr_t when setting
+>>>> the coherent mask.
+>>>>
+>>>> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
+>>>> ---
+>>>>   drivers/of/platform.c |    2 +-
+>>>>   1 files changed, 1 insertions(+), 1 deletions(-)
+>>>>
+>>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>>>> index 0970505..5f0ba94 100644
+>>>> --- a/drivers/of/platform.c
+>>>> +++ b/drivers/of/platform.c
+>>>> @@ -214,7 +214,7 @@ struct platform_device
+>>>> *of_platform_device_create_pdata(
+>>>>   #if defined(CONFIG_MICROBLAZE)
+>>>>        dev->archdata.dma_mask = 0xffffffffUL;
+>>>>   #endif
+>>>> -     dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>>>> +     dev->dev.coherent_dma_mask = DMA_BIT_MASK(sizeof(dma_addr_t) * 8);
+>>>
+>>>
+>>> This is going to change the mask from 32 to 64 bits on 64-bit powerpc
+>>> and others possibly. Maybe it doesn't matter. I think it doesn't, but
+>>> I'm not sure enough to apply for 3.10. So I'll queue it for 3.11.
+>>
+>>
+>> Without the patch, LPAE enabled board may not boot at all, but looks
+>> it still isn't in -next tree.
+>>
+>> But I am wondering if it is a correct approach, because enabling LPAE
+>> doesn't mean the I/O devices can support DMA to/from 64bit address, and
+>> it is very probably devices can't do it at all.
+>>
+>
+> The problem is the way the arm_dma_limit is set up, all dma allocations are
+> currently broken regardless of if the actual device supports 64-bit
+> addresses or not.
 
---8323329-1635963963-1373069545=:32106
-Content-Type: TEXT/PLAIN; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Yes, I know, and since arm_dma_limit becomes 0xFFFFFFFFFFFFFFFF
+now if LPAE is enabled and ZONE_DMA unset, so we have to set
+dev->coherent_dma_mask as so big, otherwise __dma_alloc() can't go
+ahead.
 
-On Sat, 6 Jul 2013, Heiko St=C3=BCbner wrote:
-> +	if (of_device_is_compatible(np, "rockchip,rk3188-dw-apb-timer-osc"))
-> +		*quirks |=3D APBTMR_QUIRK_64BIT_COUNTER | APBTMR_QUIRK_NO_EOI |
-> +			   APBTMR_QUIRK_INVERSE_INTMASK |
-> +			   APBTMR_QUIRK_INVERSE_PERIODIC;
+But please see below words in Documentation/DMA-API.txt:
 
-Brilliant. Next time we add
+           Further, the physical address of the memory must be within the
+           dma_mask of the device (the dma_mask represents a bit mask of the
+           addressable region for the device.  I.e., if the physical address of
+           the memory anded with the dma_mask is still equal to the physical
+           address, then the device can perform DMA to the memory).
 
-> +	if (of_device_is_compatible(np, "rockchip,rk3188-dw-apb-timer-osc2"))
-> +		*quirks |=3D APBTMR_QUIRK_64BIT_COUNTER | APBTMR_QUIRK_NO_EOI |
-> +			   APBTMR_QUIRK_INVERSE_INTMASK |
-> +			   APBTMR_QUIRK_INVERSE_PERIODIC | MORE_NONSENSE;
+You may argue that the description is about dev->dma_mask, but the
+usage should be same.
 
-Plus the extra conditionals all over the place
+In fact, most of devices in ARM SoC(even with LPAE enabled) doesn't
+support 64bit DMA, so I don't see the point that the default mask is set
+as 64bit.
 
-and a week later
+Also we might need to consider why ppc64 didn't do that previously.
 
-> +	if (of_device_is_compatible(np, "rockchip,rk3188-dw-apb-timer-osc3"))
-> +		*quirks |=3D ALLNONSENSE;
+>
+>
+>> Another way is to always set arm_dma_limit as 0xFFFFFFFF when
+>> CONFIG_ZONE_DMA is unset, and let driver override device's dma
+>> mask if the device supports 64bit DMA.
+>>
+>
+> I previously asked about the arm_dma_limit and was told that the current
+> behavior is the correct approach (see
+> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-April/032729.html
+> and
+> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-April/032690.html)
+>
+> The point here is to set the mask to something reasonable such that
 
+Looks the default 64bit mask isn't reasonable, is it?
 
-This has nothing to do with QUIRKS at all. QUIRKS are our last resort
-when we cannot deal with the problem in a sane way.
+> allocations can succeed by default. If devices can't use part of the memory
+> space they can adjust the limit accordingly.
 
-In this case this is simply the wrong aproach.
-
-We can deal with it in a sane way as I pointed out before and handle
-it as simple properties of the IP block. We have all mechanisms in
-place to handle such properties, device tree, platform data, static
-init structures. It's all there and we really do not need to plaster
-the code with random QUIRK conditionals.
-
-Did you ever consider the runtime penalty of this? Probably not,
-otherwise you would have spent time on speeding up that code by
-caching frequently accessed registers instead of reading them back
-over and over for no reason.
+No, device can't set the mask any more since any other value which is less
+than (u64)-1 can't succeed, and looks that is the current problem.
 
 Thanks,
-
-	tglx
-
---8323329-1635963963-1373069545=:32106
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---8323329-1635963963-1373069545=:32106--
+-- 
+Ming Lei
