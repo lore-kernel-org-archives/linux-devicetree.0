@@ -1,37 +1,200 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v9 08/10] ASoC: Add phycore-ac97-dt driver
-Date: Sun, 7 Jul 2013 10:16:30 -0300
-Message-ID: <CAOMZO5CLWfoQE-9srT8e2kLn3A=iHhk-TbXytV+pdZVaaHwoNg@mail.gmail.com>
-References: <1371734429-6081-1-git-send-email-mpa@pengutronix.de>
- <1371734429-6081-9-git-send-email-mpa@pengutronix.de>
- <20130703161727.GS27646@sirena.org.uk>
- <20130707071949.GH16871@s25.your-server.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/6] misc: sram: add ability to mark sram sections as
+ reserved
+Date: Sun, 7 Jul 2013 14:46:36 -0500
+Message-ID: <CAL_JsqJDDg5Z2sN+VLArDU3vox-fLCVynkPg7Pe0LJjksXaGkw@mail.gmail.com>
+References: <201307051440.19428.heiko@sntech.de>
+ <201307051441.27605.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20130707071949.GH16871@s25.your-server.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201307051441.27605.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Markus,
+On Fri, Jul 5, 2013 at 7:41 AM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+> Some SoCs need parts of their sram for special purposes. So while being p=
+art
+> of the periphal, it should not be part of the genpool controlling the sra=
+m.
 
-On Sun, Jul 7, 2013 at 4:19 AM, Markus Pargmann <mpa@pengutronix.de> wrote:
+s/periphal/peripheral/
 
-> There are no pinctrl driver for imx27(pca100) or imx35(pcm043). The
+>
+> Threfore add an option mmio-sram-reserved to keep arbitary portions of the
 
-For mx35 pinctrl driver is at drivers/pinctrl/pinctrl-imx35.c
+s/Threfore/Therefore/
+s/arbitary/arbitrary/
 
-Regards,
+> sram from being part of the pool.
+>
+> Suggested-by: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Tested-by: Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/misc/sram.txt |    8 +++
+>  drivers/misc/sram.c                             |   80 +++++++++++++++++=
+++++--
+>  2 files changed, 82 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentat=
+ion/devicetree/bindings/misc/sram.txt
+> index 4d0a00e..eae080e 100644
+> --- a/Documentation/devicetree/bindings/misc/sram.txt
+> +++ b/Documentation/devicetree/bindings/misc/sram.txt
+> @@ -8,9 +8,17 @@ Required properties:
+>
+>  - reg : SRAM iomem address range
+>
+> +Optional properties:
+> +
+> +- mmio-sram-reserved: ordered list of reserved chunks inside the sram th=
+at
+> +  should not become part of the genalloc pool.
 
-Fabio Estevam
+genalloc is linux specific. "should not be used by the OS" would be better.
+
+> +  Format is <base size>, <base size>, ...; with base being relative to t=
+he
+> +  reg property base.
+> +
+>  Example:
+>
+>  sram: sram@5c000000 {
+>         compatible =3D "mmio-sram";
+>         reg =3D <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c0000=
+00 */
+> +       mmio-sram-reserved =3D <0x0 0x100>; /* reserve 0x5c000000-0x5c000=
+100 */
+>  };
+> diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+> index afe66571..9131e4a 100644
+> --- a/drivers/misc/sram.c
+> +++ b/drivers/misc/sram.c
+> @@ -42,6 +42,13 @@ static int sram_probe(struct platform_device *pdev)
+>         struct sram_dev *sram;
+>         struct resource *res;
+>         unsigned long size;
+> +       const __be32 *reserved_list =3D NULL;
+> +       int reserved_size =3D 0;
+> +       unsigned int cur_start =3D 0;
+> +       unsigned int cur_size;
+> +       unsigned int rstart;
+> +       unsigned int rsize;
+
+Use one line for each type.
+
+> +       int i;
+>         int ret;
+>
+>         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> @@ -65,12 +72,73 @@ static int sram_probe(struct platform_device *pdev)
+>         if (!sram->pool)
+>                 return -ENOMEM;
+>
+> -       ret =3D gen_pool_add_virt(sram->pool, (unsigned long)virt_base,
+> -                               res->start, size, -1);
+> -       if (ret < 0) {
+> -               if (sram->clk)
+> -                       clk_disable_unprepare(sram->clk);
+> -               return ret;
+> +       if (pdev->dev.of_node) {
+> +               reserved_list =3D of_get_property(pdev->dev.of_node,
+> +                                               "mmio-sram-reserved",
+> +                                               &reserved_size);
+> +               if (reserved_list) {
+> +                       reserved_size /=3D sizeof(*reserved_list);
+> +                       if (!reserved_size || reserved_size % 2) {
+> +                               dev_warn(&pdev->dev, "wrong number of arg=
+uments in mmio-sram-reserved\n");
+> +                               reserved_list =3D NULL;
+> +                       }
+> +               }
+> +       }
+> +
+> +       if (!reserved_list)
+> +               reserved_size =3D 0;
+
+This can be moved to where you set reserved_list to NULL.
+
+> +
+> +       for (i =3D 0; i < (reserved_size + 2); i +=3D 2) {
+> +               if (i < reserved_size) {
+
+This loop is hard to follow. For example, it is not immediate obvious
+why you loop an extra time. I think it would be more straight forward
+to determine the free regions first and then do the allocations. This
+will require a kmalloc or fixed max number of regions, but would
+improve readability.
+
+Rob
+
+> +                       /* get the next reserved block */
+> +                       rstart =3D be32_to_cpu(*reserved_list++);
+> +                       rsize =3D be32_to_cpu(*reserved_list++);
+> +
+> +                       /* catch unsorted list entries */
+> +                       if (rstart < cur_start) {
+> +                               dev_err(&pdev->dev,
+> +                                       "unsorted reserved list (0x%x bef=
+ore current 0x%x)\n",
+> +                                       rstart, cur_start);
+> +                               if (sram->clk)
+> +                                       clk_disable_unprepare(sram->clk);
+> +                               return -EINVAL;
+> +                       }
+> +
+> +                       dev_dbg(&pdev->dev,
+> +                               "found reserved block 0x%x-0x%x\n",
+> +                               rstart, rstart + rsize);
+> +               } else {
+> +                       /* the last chunk extends to the end of the regio=
+n */
+> +                       rstart =3D size;
+> +                       rsize =3D 0;
+> +               }
+> +
+> +               /* current start is in a reserved block */
+> +               if (rstart <=3D cur_start) {
+> +                       cur_start =3D rstart + rsize;
+> +                       continue;
+> +               }
+> +
+> +               /*
+> +                * allocate the space between the current starting
+> +                * address and the following reserved block, or the
+> +                * end of the region.
+> +                */
+> +               cur_size =3D rstart - cur_start;
+> +
+> +               dev_dbg(&pdev->dev, "adding chunk 0x%x-0x%x\n",
+> +                       cur_start, cur_start + cur_size);
+> +               ret =3D gen_pool_add_virt(sram->pool,
+> +                               (unsigned long)virt_base + cur_start,
+> +                               res->start + cur_start, cur_size, -1);
+> +               if (ret < 0) {
+> +                       if (sram->clk)
+> +                               clk_disable_unprepare(sram->clk);
+> +                       return ret;
+> +               }
+> +
+> +               /* next allocation after this reserved block */
+> +               cur_start =3D rstart + rsize;
+>         }
+>
+>         platform_set_drvdata(pdev, sram);
+> --
+> 1.7.10.4
+>
