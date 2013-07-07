@@ -1,69 +1,103 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 9/9] clocksource: dw_apb_timer: special variant for
- rockchip rk3188 timers
-Date: Sat, 6 Jul 2013 23:00:30 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1307062233480.32106@ionos.tec.linutronix.de>
-References: <201307060051.09716.heiko@sntech.de>
- <201307060056.29370.heiko@sntech.de>
- <alpine.DEB.2.02.1307060153110.32106@ionos.tec.linutronix.de>
- <51D87E04.3060704@googlemail.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v9 08/10] ASoC: Add phycore-ac97-dt driver
+Date: Sun, 7 Jul 2013 09:19:49 +0200
+Message-ID: <20130707071949.GH16871@s25.your-server.de>
+References: <1371734429-6081-1-git-send-email-mpa@pengutronix.de>
+ <1371734429-6081-9-git-send-email-mpa@pengutronix.de>
+ <20130703161727.GS27646@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51D87E04.3060704-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ulrich Prinz <ulrich.prinz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130703161727.GS27646@sirena.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ulrich,
-
-On Sat, 6 Jul 2013, Ulrich Prinz wrote:
-
-> I got the message. With modifying the existing driver to support more
-> function pointers in its system struct and assigning them at the
-> beginning, and using them on runtime, these quirks are obsolete.
-
-Correct.
- 
-> Again, this is the first time I provide code to the kernel officially
-
-No problem. That's what code review is about. First post or not.
-
-> and I learned from others that I should try it by modifying not too much
-> code if not needed.
+On Wed, Jul 03, 2013 at 05:17:27PM +0100, Mark Brown wrote:
+> On Thu, Jun 20, 2013 at 03:20:27PM +0200, Markus Pargmann wrote:
 > 
-> Adding more function pointers to a system relevant structure, doubling
-> the number of functions and such didn't look non-invasive to me.
+> > Notes:
+> >     Changes in v9:
+> >      - Fix blank line at end of file.
+> >     
+> 
+> Please don't include enormous changelogs like this, they're just noise.
+> 
+> > +config SND_SOC_PHYCORE_AC97_DT
+> > +	bool "SoC Audio support for Phytec phyCORE (and phyCARD) boards (devicetree only)"
+> > +	depends on MACH_PCA100 || MACH_PCM043
+> 
+> Is there an actual dependency on the machine type?  This seems wrong for
+> a DT driver.
 
-Well, it always depends. If there is a single place to deal with some
-oddball hardware, a flag is often the simplest way to go.
+No, there is no dependency. Fixed.
 
-If you have to add 10 conditionals in several functions then in a
-first step converting the existing implementation into function
-pointer calls and then in the next step providing new implementations
-for your hardware is most of the time simpler and cleaner.
+> 
+> > +static struct snd_soc_ops imx_phycore_hifi_ops = {
+> > +};
+> > +
+> 
+> You shouldn't have this if there's nothing in it.
 
-> But, I totally agree with your argumentation and I even wanted to do it
-> in the way you explained in your replies. Just the courage was missing I
-> guess :)
+Removed.
 
-Gut feelings are often a better guidance than our self-doubting
-intellect. :)
+> 
+> > +static struct platform_device *imx_phycore_snd_device;
+> 
+> This shouldn't be a global, it should be in driver data.
 
-But don't worry. I had to learn it the hard way as well and I still
-trip over from time to time.
+Moved to driver data.
+
+> 
+> > +/*
+> > + * Pointer to AC97 reset functions for specific boards
+> > + */
+> > +#if IS_ENABLED(CONFIG_MACH_PCA100)
+> > +extern void pca100_ac97_cold_reset(struct snd_ac97 *ac97);
+> > +extern void pca100_ac97_warm_reset(struct snd_ac97 *ac97);
+> > +#else
+> > +static void pca100_ac97_cold_reset(struct snd_ac97 *ac97) { }
+> > +static void pca100_ac97_warm_reset(struct snd_ac97 *ac97) { }
+> > +#endif
+> 
+> > +	if (of_machine_is_compatible("phytec,imx27-pca100")) {
+> > +		phycore_ac97_reset = pca100_ac97_cold_reset;
+> > +		phycore_ac97_warm_reset = pca100_ac97_warm_reset;
+> > +	} else if (of_machine_is_compatible("phytec,imx35-pcm043")) {
+> > +		phycore_ac97_reset = pcm043_ac97_cold_reset;
+> > +		phycore_ac97_warm_reset = pcm043_ac97_warm_reset;
+> > +	} else {
+> > +		dev_err(&pdev->dev, "Failed to set AC97 reset functions, unknown board.\n");
+> > +		return -EINVAL;
+> > +	}
+> 
+> These functions have no reason to be anywhere except in the driver and
+> really you should just be specifying which pins to use there - ideally
+> via pinctrl but I don't think i.MX has adopted that yet.
+
+There are no pinctrl driver for imx27(pca100) or imx35(pcm043). The
+iomux/pad configure functions are defined inside mach-imx/ including
+their headers. Both reset functions have to configure iomux/pad before
+and after using gpio. So I think it's not possible to make the reset
+based on the gpio pins without the necessary iomux/pad configuration.
 
 Thanks,
 
-	tglx
+Markus
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
