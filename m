@@ -1,17 +1,13 @@
 From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx27 phyCARD-S remove wrong I2C RTC
-Date: Sun, 7 Jul 2013 12:44:52 +0200
-Message-ID: <20130707104452.GJ16871@s25.your-server.de>
-References: <1372782469.486055292@f129.mail.ru>
- <1373100718.107651915@f159.i.mail.ru>
- <20130707102207.GI16871@s25.your-server.de>
- <1373193101.622550139@f60.mail.ru>
+Subject: [PATCH 2/3] ARM: dts: imx27 phyCARD-S, move i2c1 and owire to rdk
+Date: Sun,  7 Jul 2013 15:13:30 +0200
+Message-ID: <1373202811-13825-3-git-send-email-mpa@pengutronix.de>
+References: <1373202811-13825-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1373193101.622550139-eIdt71DVXYQox3rIn2DAYQ@public.gmane.org>
+In-Reply-To: <1373202811-13825-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,50 +18,75 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 07, 2013 at 02:31:41PM +0400, Alexander Shiyan wrote:
-> > On Sat, Jul 06, 2013 at 12:51:58PM +0400, Alexander Shiyan wrote:
-> > > > Fixup of commit 7874d595b78e431f0f661d2fe47625649308a52e
-> > > > "ARM: dts: Add device tree support for phycard pca100".
-> > > > 
-> > > > Remove wrong I2C RTC node.
-> > > > 
-> > > > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > ---
-> > > > 
-> > > > Thanks, Alexander, you are right. I2C2 has no RTC.
-> > > ...
-> > > 
-> > > There are a couple of comments on this file.
-> > > 
-> > > I think that the OWIRE should be moved to the RDK.
-> > 
-> > I moved OWIRE and i2c1 to RDK. Both are not used on the SOM.
-> > 
-> > > ioexpander must contain "gpio-controller" at least, and for use it further,
-> > > it is necessary to define the label for this node.
-> > 
-> > I checked all I2C devices in the board schematics. There is actually no
-> > ioexpander. I don't know why it was added. I will send some I2C patches
-> > later.
-> 
-> Perhaps the chip is mounted on the camera module.
-> A similar IC is exist on PCM-970 camera addon device.
-> If so, the device should also be moved to RDK.
+Both buses are not used on the phyCARD-S module. This patch moves them
+to the rdk file. Remove ioexpander.
 
-Yes that's possible. But in that case I think the ioexpander should be
-removed from both dts files because the Phytec phyCARD-S RDK does not
-include a camera module.
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts | 13 +++++++++++++
+ arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts | 18 ------------------
+ 2 files changed, 13 insertions(+), 18 deletions(-)
 
-Regards,
-
-Markus
-
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
+index 390d8f2..0514b0a 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts
+@@ -41,6 +41,19 @@
+ 	status = "okay";
+ };
+ 
++&i2c1 {
++	status = "okay";
++
++	rtc@51 {
++		compatible = "nxp,pcf8563";
++		reg = <0x51>;
++	};
++};
++
++&owire {
++	status = "okay";
++};
++
+ &sdhci2 {
+ 	cd-gpios = <&gpio3 29 0>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
+index cdff8c7..c8d57d1 100644
+--- a/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
++++ b/arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts
+@@ -33,20 +33,6 @@
+ 	status = "okay";
+ };
+ 
+-&i2c1 {
+-	status = "okay";
+-
+-	ioexpander@41 {
+-		compatible = "nxp,pca9536";
+-		reg = <0x41>;
+-	};
+-
+-	rtc@51 {
+-		compatible = "nxp,pcf8563";
+-		reg = <0x51>;
+-	};
+-};
+-
+ &i2c2 {
+ 	status = "okay";
+ 
+@@ -56,7 +42,3 @@
+ 		reg = <0x52>;
+ 	};
+ };
+-
+-&owire {
+-	status = "okay";
+-};
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.8.2.1
