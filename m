@@ -1,39 +1,37 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 0/3] ARM: dts: imx27 phyCARD-S I2C devices
-Date: Sun,  7 Jul 2013 15:13:28 +0200
-Message-ID: <1373202811-13825-1-git-send-email-mpa@pengutronix.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v9 08/10] ASoC: Add phycore-ac97-dt driver
+Date: Sun, 7 Jul 2013 10:16:30 -0300
+Message-ID: <CAOMZO5CLWfoQE-9srT8e2kLn3A=iHhk-TbXytV+pdZVaaHwoNg@mail.gmail.com>
+References: <1371734429-6081-1-git-send-email-mpa@pengutronix.de>
+ <1371734429-6081-9-git-send-email-mpa@pengutronix.de>
+ <20130703161727.GS27646@sirena.org.uk>
+ <20130707071949.GH16871@s25.your-server.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130707071949.GH16871@s25.your-server.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Markus,
 
-here are some I2C device patches for phyCARD-S.
+On Sun, Jul 7, 2013 at 4:19 AM, Markus Pargmann <mpa@pengutronix.de> wrote:
+
+> There are no pinctrl driver for imx27(pca100) or imx35(pcm043). The
+
+For mx35 pinctrl driver is at drivers/pinctrl/pinctrl-imx35.c
 
 Regards,
 
-Markus
-
-
-Markus Pargmann (3):
-      ARM: dts: imx27 phyCARD-S SOM remove wrong i2c sensor
-      ARM: dts: imx27 phyCARD-S, move i2c1 and owire to rdk
-      ARM: dts: imx27 phyCARD-S, i2c ADC device node
-
- arch/arm/boot/dts/imx27-phytec-phycard-s-rdk.dts | 31 ++++++++++++++++++++++++
- arch/arm/boot/dts/imx27-phytec-phycard-s-som.dts | 23 ------------------
- 2 files changed, 31 insertions(+), 23 deletions(-)
+Fabio Estevam
