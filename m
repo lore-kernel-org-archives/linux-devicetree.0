@@ -1,95 +1,43 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/5] sound: sam9x5_wm8731: machine driver for
- at91sam9x5 wm8731 boards
-Date: Mon, 8 Jul 2013 16:07:21 +0100
-Message-ID: <20130708150721.GK27646@sirena.org.uk>
-References: <1373290193-25300-1-git-send-email-richard.genoud@gmail.com>
- <1373290193-25300-2-git-send-email-richard.genoud@gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 00/21] MBus DT binding: PCIe strikes back
+Date: Mon, 8 Jul 2013 16:52:25 -0300
+Message-ID: <20130708195224.GA2322@localhost>
+References: <1373060372-32357-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130706013547.3ce7280b@skate> <201307060138.36191.arnd@arndb.de>
+ <20130708164225.GA26618@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4271437288377211243=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1373290193-25300-2-git-send-email-richard.genoud@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Richard Genoud <richard.genoud@gmail.com>
-Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130708164225.GA26618-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============4271437288377211243==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Y/W7LeEItOXj90cO"
-Content-Disposition: inline
-
-
---Y/W7LeEItOXj90cO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jul 08, 2013 at 03:29:49PM +0200, Richard Genoud wrote:
-
-> + *		  Nicolas Ferre <nicolas.ferre@atmel.com>
-> + *
-> + * Based on sam9g20_wm8731.c by:
-> + * Sedji Gaouaou <sedji.gaouaou@atmel.com>
-
-The obvious question here is of course if we can use the same driver for
-both of them.
-
-> +	codec_dai->driver->playback.rates &= SNDRV_PCM_RATE_8000 |
-> +		SNDRV_PCM_RATE_32000 |
-> +		SNDRV_PCM_RATE_48000 |
-> +		SNDRV_PCM_RATE_96000;
-> +	codec_dai->driver->capture.rates &= SNDRV_PCM_RATE_8000 |
-> +		SNDRV_PCM_RATE_32000 |
-> +		SNDRV_PCM_RATE_48000 |
-> +		SNDRV_PCM_RATE_96000;
-
-You definitely shouldn't be fiddling with a driver's constant static
-data.  You want to be using snd_pcm_hw_constraint() APIs to set
-additional constraints intead.
-
---Y/W7LeEItOXj90cO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR2tWmAAoJELSic+t+oim9SigP/2mwYwTpQGPNkYf5YXgcIOT3
-Pvc/Q0MjIbEglKCTk5iydPoqZlr/649FXbyatcxwe6BMhvS7EHzZ7KlrGVDJdPBS
-7UjW0S7ZmhZGEHRVSX/osqYgJZtxFe2ONlamlp96pOO/8T+jyF73g4p1UETyEDkz
-76jdU77aP2V8J0+pQrBH+F8B/uNubGDXAV3ur3wuJvH/27fNDivQkFpG4yc7o07r
-GwBU4viaLYfTws+kLtGucgEsg551ZAXVwymraac6bMmeZW/oFgo1U/PRTlNvevio
-LRIDyg+jer2CJ4ajB9RO56lU+IEpCq+fhh9Q70Vf2CPVAZMOPpdf1flSURO1yFrc
-dW0nZ6tmH/AguGTc8Cnx3X1/9uJOuBEycC1z6d0ZuZjHvf7cgbxnLFMaX93eFS5y
-l1hQiDTG2GFfRIJPs0490vOuQ227hpKgofv8KyPolth7mpaSTcNGui8CvrPymJrv
-DLggcgUI3QMnRqeWkZulfdduIhNUZNbl0JnHpBF8jo4VBrVXMvrkIZpMjB2w5Px8
-v2SRWvzeqgT/hg6M/AxjYhLBESEFOic9PlmQX9G6C74Ee1qumX482vV6+0GnA+8j
-vJG3p+OKe0bgII8D6pxcAEW7ZTQinkYOCV3nI1qqueZyInwfJKub+iMKKB9IuwFG
-mhKXJJTp1y5ctR6ljC6T
-=WiwD
------END PGP SIGNATURE-----
-
---Y/W7LeEItOXj90cO--
-
-
---===============4271437288377211243==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4271437288377211243==--
+T24gTW9uLCBKdWwgMDgsIDIwMTMgYXQgMTA6NDI6MjVBTSAtMDYwMCwgSmFzb24gR3VudGhvcnBl
+IHdyb3RlOgo+IE9uIFNhdCwgSnVsIDA2LCAyMDEzIGF0IDAxOjM4OjM1QU0gKzAyMDAsIEFybmQg
+QmVyZ21hbm4gd3JvdGU6Cj4gPiBPbiBTYXR1cmRheSAwNiBKdWx5IDIwMTMsIFRob21hcyBQZXRh
+enpvbmkgd3JvdGU6Cj4gPiA+IEFybmQsIEphc29uLCBpZiB5b3UgY291bGQgY29uZmlybSB0aGF0
+IHlvdSBib3RoIGFncmVlIHdpdGggdGhpcyBEVAo+ID4gPiBiaW5kaW5nIHNvb24sIEV6ZXF1aWVs
+IGFuZCBJIHdvdWxkIHF1aWNrbHkgYWRhcHQgdGhlIGNvZGUgYWNjb3JkaW5nbHksCj4gPiA+IGFu
+ZCBob3BlZnVsbHkgY29udmVyZ2UgdG93YXJkcyBhIGZpbmFsIHBhdGNoIHNldC4KPiA+IAo+ID4g
+TG9va3MgYWxsIGdvb2QgZnJvbSB3aGF0IEkgY2FuIHRlbGwuCj4gCj4gSXQgYWxzbyBsb29rcyBm
+aW5lIHRvIG1lLgo+IAoKT2ssIGdyZWF0LiBJJ2xsIHNlZSBpZiBJIGNhbiByZXdvcmsgaXQgYW5k
+IHN1Ym1pdCBzb21ldGhpbmcgdG9kYXkuCgpTbywgYXMgZmFyIGFzIEkgY2FuIHRlbGwsIHRoYXQg
+d291bGQgYmUgdjcgYW5kIHdvdWxkIGJlIHJlYWR5IGZvcgppbmNsdXNpb24uCgpUaGFua3MgYSBs
+b3QhCi0tIApFemVxdWllbCBHYXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwg
+S2VybmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20K
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJl
+ZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9y
+ZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
