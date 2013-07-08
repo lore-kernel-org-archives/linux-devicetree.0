@@ -1,43 +1,49 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 00/21] MBus DT binding: PCIe strikes back
-Date: Mon, 8 Jul 2013 16:52:25 -0300
-Message-ID: <20130708195224.GA2322@localhost>
-References: <1373060372-32357-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130706013547.3ce7280b@skate> <201307060138.36191.arnd@arndb.de>
- <20130708164225.GA26618@obsidianresearch.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 4/4] ARM: reinsert ARCH_MULTI_V4 Kconfig option
+Date: Tue, 9 Jul 2013 01:03:27 +0200
+Message-ID: <201307090103.27296.arnd@arndb.de>
+References: <1372949142-8260-1-git-send-email-jonas.jensen@gmail.com>
+ <CACmBeS3Ges44HxOGZns+G=jQhSmGjVmZBir2_ZBXT1i2nrNQwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130708164225.GA26618-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACmBeS3Ges44HxOGZns+G=jQhSmGjVmZBir2_ZBXT1i2nrNQwg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonas Jensen <jonas.jensen@gmail.com>
+Cc: linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, arm@kernel.org, olof@lixom.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgMDgsIDIwMTMgYXQgMTA6NDI6MjVBTSAtMDYwMCwgSmFzb24gR3VudGhvcnBl
-IHdyb3RlOgo+IE9uIFNhdCwgSnVsIDA2LCAyMDEzIGF0IDAxOjM4OjM1QU0gKzAyMDAsIEFybmQg
-QmVyZ21hbm4gd3JvdGU6Cj4gPiBPbiBTYXR1cmRheSAwNiBKdWx5IDIwMTMsIFRob21hcyBQZXRh
-enpvbmkgd3JvdGU6Cj4gPiA+IEFybmQsIEphc29uLCBpZiB5b3UgY291bGQgY29uZmlybSB0aGF0
-IHlvdSBib3RoIGFncmVlIHdpdGggdGhpcyBEVAo+ID4gPiBiaW5kaW5nIHNvb24sIEV6ZXF1aWVs
-IGFuZCBJIHdvdWxkIHF1aWNrbHkgYWRhcHQgdGhlIGNvZGUgYWNjb3JkaW5nbHksCj4gPiA+IGFu
-ZCBob3BlZnVsbHkgY29udmVyZ2UgdG93YXJkcyBhIGZpbmFsIHBhdGNoIHNldC4KPiA+IAo+ID4g
-TG9va3MgYWxsIGdvb2QgZnJvbSB3aGF0IEkgY2FuIHRlbGwuCj4gCj4gSXQgYWxzbyBsb29rcyBm
-aW5lIHRvIG1lLgo+IAoKT2ssIGdyZWF0LiBJJ2xsIHNlZSBpZiBJIGNhbiByZXdvcmsgaXQgYW5k
-IHN1Ym1pdCBzb21ldGhpbmcgdG9kYXkuCgpTbywgYXMgZmFyIGFzIEkgY2FuIHRlbGwsIHRoYXQg
-d291bGQgYmUgdjcgYW5kIHdvdWxkIGJlIHJlYWR5IGZvcgppbmNsdXNpb24uCgpUaGFua3MgYSBs
-b3QhCi0tIApFemVxdWllbCBHYXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwg
-S2VybmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20K
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJl
-ZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9y
-ZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Monday 08 July 2013, Jonas Jensen wrote:
+> Arnd suggested removing one (or many) of the options:
+> 
+> CPU_ABRT_EV4T
+> CPU_CACHE_V4WT
+> CPU_COPY_V4WB
+> CPU_TLB_V4WBI
+> 
+> However boot is still broken after removing all including CPU_32v4T.
+> 
+> Selecting CPU_SA1100 instead, it boots normally and init works.
+> 
+> The idea is, If you can help figure out what exactly breaks boot, the
+> patch can be dropped.
+> 
+> From these tests, I have created two branches ( arch/arm/mm have
+> replacements for calls to no longer compiled in ):
+> 
+> http://code.google.com/p/linux-next-20130703-moxart/source/detail?r=a88f33ad22d3f9a31fe126f1c95568e5b2e8f32d&name=multi_V4_test_arm920t
+> http://code.google.com/p/linux-next-20130703-moxart/source/detail?r=9f4c21f1123a122c51792cd374217ce6e426e74a&name=multi_V4_test_sa1100
+
+It looks like you select CPU_ARM926T but change the entry for CPU_ARM920T
+instead, which would have no effect then.
+
+	Arnd
