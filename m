@@ -1,54 +1,125 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v9 08/10] ASoC: Add phycore-ac97-dt driver
-Date: Mon, 8 Jul 2013 09:19:24 +0200
-Message-ID: <20130708071924.GP16871@s25.your-server.de>
-References: <1371734429-6081-1-git-send-email-mpa@pengutronix.de>
- <1371734429-6081-9-git-send-email-mpa@pengutronix.de>
- <20130703161727.GS27646@sirena.org.uk>
- <20130707071949.GH16871@s25.your-server.de>
- <CAOMZO5CLWfoQE-9srT8e2kLn3A=iHhk-TbXytV+pdZVaaHwoNg@mail.gmail.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 2/4] ARM: OMAP5: clockdomain data: add init file for omap54xx
+Date: Mon, 8 Jul 2013 10:28:56 +0300
+Message-ID: <51DA6A38.8010503@ti.com>
+References: <1372322299-25046-1-git-send-email-t-kristo@ti.com> <1372322299-25046-3-git-send-email-t-kristo@ti.com> <20130628210351.14831.19618@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5CLWfoQE-9srT8e2kLn3A=iHhk-TbXytV+pdZVaaHwoNg@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130628210351.14831.19618@quantum>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+On 06/29/2013 12:03 AM, Mike Turquette wrote:
+> Quoting Tero Kristo (2013-06-27 01:38:17)
+>> cclock54xx_data.c now contains only init function and the clkdev mapping
+>> that is still needed by some drivers. Eventually most of this file can
+>> be removed, once a common location for the clk init can be found, and
+>> the clkdev mapping is no longer needed.
+>>
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>>   arch/arm/mach-omap2/cclock54xx_data.c |   80 +++++++++++++++++++++++++++++++++
+>>   1 file changed, 80 insertions(+)
+>>   create mode 100644 arch/arm/mach-omap2/cclock54xx_data.c
+>>
+>> diff --git a/arch/arm/mach-omap2/cclock54xx_data.c b/arch/arm/mach-omap2/cclock54xx_data.c
+>> new file mode 100644
+>
+> Why not drivers/clk/omap/clk-omap54xx.c?
 
-On Sun, Jul 07, 2013 at 10:16:30AM -0300, Fabio Estevam wrote:
-> Hi Markus,
-> 
-> On Sun, Jul 7, 2013 at 4:19 AM, Markus Pargmann <mpa@pengutronix.de> wrote:
-> 
-> > There are no pinctrl driver for imx27(pca100) or imx35(pcm043). The
-> 
-> For mx35 pinctrl driver is at drivers/pinctrl/pinctrl-imx35.c
-> 
+Hey Mike,
 
-Thank you.
+I can move this over in the next rev. I can do the same for the 
+cclock44xx_data.c file in the O4 series.
 
-I will create some pinctrl bindings for pcm043. But I am not sure what
-to do with pca100 reset functions.
+-Tero
 
-Regards,
+>
+> Regards,
+> Mike
+>
+>> index 0000000..f23f44e
+>> --- /dev/null
+>> +++ b/arch/arm/mach-omap2/cclock54xx_data.c
+>> @@ -0,0 +1,74 @@
+>> +/*
+>> + * OMAP54xx Clock data
+>> + *
+>> + * Copyright (C) 2013 Texas Instruments, Inc.
+>> + *
+>> + * Paul Walmsley (paul@pwsan.com)
+>> + * Rajendra Nayak (rnayak@ti.com)
+>> + * Benoit Cousson (b-cousson@ti.com)
+>> + * Mike Turquette (mturquette@linaro.org)
+>> + * Tero Kristo (t-kristo@ti.com)
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/list.h>
+>> +#include <linux/clkdev.h>
+>> +#include <linux/io.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/clk/omap.h>
+>> +
+>> +#include "soc.h"
+>> +#include "clock.h"
+>> +
+>> +#define OMAP5_DPLL_ABE_DEFFREQ                         98304000
+>> +
+>> +/*
+>> + * clkdev
+>> + */
+>> +static struct omap_dt_clk omap54xx_clks[] = {
+>> +       DT_CLK(NULL,    "timer_32k_ck", "sys_32k_ck"),
+>> +       DT_CLK("omap_timer.1",  "sys_ck",               "sys_clkin"),
+>> +       DT_CLK("omap_timer.2",  "sys_ck",               "sys_clkin"),
+>> +       DT_CLK("omap_timer.3",  "sys_ck",               "sys_clkin"),
+>> +       DT_CLK("omap_timer.4",  "sys_ck",               "sys_clkin"),
+>> +       DT_CLK("omap_timer.9",  "sys_ck",               "sys_clkin"),
+>> +       DT_CLK("omap_timer.10", "sys_ck",               "sys_clkin"),
+>> +       DT_CLK("omap_timer.11", "sys_ck",               "sys_clkin"),
+>> +       DT_CLK("omap_timer.5",  "sys_ck",               "dss_syc_gfclk_div"),
+>> +       DT_CLK("omap_timer.6",  "sys_ck",               "dss_syc_gfclk_div"),
+>> +       DT_CLK("omap_timer.7",  "sys_ck",               "dss_syc_gfclk_div"),
+>> +       DT_CLK("omap_timer.8",  "sys_ck",               "dss_syc_gfclk_div"),
+>> +};
+>> +
+>> +int __init omap5xxx_clk_init(void)
+>> +{
+>> +       struct clk *abe_dpll_ref, *sys_32k_ck, *abe_dpll;
+>> +       int rc;
+>> +
+>> +       /*
+>> +        * Must stay commented until all OMAP SoC drivers are
+>> +        * converted to runtime PM, or drivers may start crashing
+>> +        *
+>> +        * omap2_clk_disable_clkdm_control();
+>> +        */
+>> +       dt_omap_clk_init();
+>> +
+>> +       omap_dt_clocks_register(omap54xx_clks, ARRAY_SIZE(omap54xx_clks));
+>> +
+>> +       omap2_clk_disable_autoidle_all();
+>> +
+>> +       abe_dpll_ref = clk_get_sys(NULL, "abe_dpll_clk_mux");
+>> +       sys_32k_ck = clk_get_sys(NULL, "sys_32k_ck");
+>> +       rc = clk_set_parent(abe_dpll_ref, sys_32k_ck);
+>> +       abe_dpll = clk_get_sys(NULL, "dpll_abe_ck");
+>> +       if (!rc)
+>> +               rc = clk_set_rate(abe_dpll, OMAP5_DPLL_ABE_DEFFREQ);
+>> +       if (rc)
+>> +               pr_err("%s: failed to configure ABE DPLL!\n", __func__);
+>> +
+>> +       return 0;
+>> +}
+>> --
+>> 1.7.9.5
 
-Markus
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
