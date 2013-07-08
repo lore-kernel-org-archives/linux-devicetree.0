@@ -1,87 +1,33 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH v4 2/4] ARM: OMAP2+: cleaned-up DT support of various
- ECC schemes
-Date: Mon, 8 Jul 2013 04:37:36 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9E5014@DBDE04.ent.ti.com>
-References: <1372764757-29511-1-git-send-email-pekon@ti.com>
- <1372764757-29511-3-git-send-email-pekon@ti.com>
+From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Subject: Reference voltages for ADC channels
+Date: Mon, 8 Jul 2013 08:13:30 +0200
+Message-ID: <51DA588A.5050609@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1372764757-29511-3-git-send-email-pekon@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "olof@lixom.net" <olof@lixom.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "jp.francois@cynove.com" <jp.francois@cynove.com>, "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>, "tony@atomide.com" <tony@atomide.com>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> index 6a983c1..690070e 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> @@ -17,20 +17,42 @@ Required properties:
-> 
->  Optional properties:
-> 
-> - - nand-bus-width: 		Set this numeric value to 16 if the hardware
-> -				is wired that way. If not specified, a bus
-> -				width of 8 is assumed.
-> + - nand-bus-width: 		Determines data-width of the connected
-> device
-> +				x16 = "16"
-> +				x8  = "8" (default)
-> 
-> - - ti,nand-ecc-opt:		A string setting the ECC layout to use. One of:
-> 
-> -		"sw"		Software method (default)
-> -		"hw"		Hardware method
-> -		"hw-romcode"	gpmc hamming mode method & romcode
-> layout
-> -		"bch4"		4-bit BCH ecc code
-> -		"bch8"		8-bit BCH ecc code
-> + - ti,nand-ecc-opt:		Determines the ECC scheme used by driver.
-> +				It can be any of the following strings:
-> +
-> +	"hamming_code_sw"		1-bit Hamming ECC
-> +					- ECC calculation in software
-> +					- Error detection in software
-> +
-> +	"hamming_code_hw"		1-bit Hamming ECC
-> +					- ECC calculation in hardware
-> +					- Error detection in software
-> +
-> +	"hamming_code_hw_romcode"	1-bit Hamming ECC
-> +					- ECC calculation in hardware
-> +					- Error detection in software
-> +					- ECC layout compatible to ROM code
-> +
-> +	"bch8_hw_code_detection_sw"	8-bit BCH ECC
-> +					- ECC calculation in hardware
-> +					- Error detection in software
-> +					- depends on
-> CONFIG_MTD_NAND_ECC_BCH
-> +
-> +	"bch8_code_hw"             	8-bit BCH ECC
-> +					- ECC calculation in hardware
-> +					- Error detection in hardware
-> +					- depends on
-> CONFIG_MTD_NAND_OMAP_BCH
-> +					- requires <elm_id> to be specified
-> +
-> +
-> + - elm_id:			Specifies elm device node. This is required to
-> +				support some BCH ECC schemes mentioned
-> above.
-> 
-> - - elm_id:	Specifies elm device node. This is required to support BCH
-> - 		error correction using ELM module.
-> 
+Greetings,
 
-[Pekon] Requesting DT maintainers to please review the above 
-changes in values for 'nand-ecc-opt' property. And please ACK | NAK it.
+The other day at linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org we discussed the possibility of having ADC 
+channels voltage references moved to the DT [1].
 
-with regards, pekon
+In Freescale's i.MX28 and i.MX23, at least, the CPU has 16 ADC channels some of which 
+are dedicated to measure internal stuff, like CPU temperature and voltages. Some 
+channels have different fixed divisors and so different reference voltages.
+These reference voltages (in mV) are needed to calculate the scale to show through the 
+sysfs IIO interface, so that a user can easily compute the real measured voltage out 
+of the sampled data.
 
+The proposed DT entry also appears at [1].
+We would love to here opinions about it.
+
+[1] http://www.spinics.net/lists/linux-iio/msg08973.html
+
+Best regards,
+--
+Hector Palacios
