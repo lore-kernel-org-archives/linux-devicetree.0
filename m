@@ -1,33 +1,66 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: Reference voltages for ADC channels
-Date: Mon, 8 Jul 2013 08:13:30 +0200
-Message-ID: <51DA588A.5050609@digi.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 2/3] of/documentation: Update G2D documentation
+Date: Mon, 8 Jul 2013 12:06:28 +0530
+Message-ID: <CAK9yfHzG6ZPio9xytLoQpf0WCi9Fk3JnAXmsdjFGMiqGoYmXFA@mail.gmail.com>
+References: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
+	<1373013749-14530-2-git-send-email-sachin.kamat@linaro.org>
+	<4264635.Hmig5l0VLj@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <4264635.Hmig5l0VLj@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, patches@linaro.org, mturquette@linaro.org, inki.dae@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Greetings,
+Hi Tomasz,
 
-The other day at linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org we discussed the possibility of having ADC 
-channels voltage references moved to the DT [1].
+On 6 July 2013 05:22, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Sachin,
+>
+> On Friday 05 of July 2013 14:12:28 Sachin Kamat wrote:
+>> Exynos5250 G2D IP requires only the gate clock. Update the
+>> binding documentation accordingly.
+>>
+>> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+>> Cc: Inki Dae <inki.dae@samsung.com>
+>> ---
+>>  .../devicetree/bindings/gpu/samsung-g2d.txt        |    4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>> b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt index
+>> 3f454ff..60ca631 100644
+>> --- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>> @@ -12,7 +12,9 @@ Required properties:
+>>    - interrupts : G2D interrupt number to the CPU.
+>>    - clocks : from common clock binding: handle to G2D clocks.
+>>    - clock-names : from common clock binding: must contain "sclk_fimg2d"
+>> and -           "fimg2d", corresponding to entries in the clocks
+> property. +
+>>  "fimg2d" for S5PV210 & Exynos4 based SoCs and "fimg2d" for +
+>> Exynos5250 SoC, corresponding to entries in the clocks
+>> +               property.
+>
+> I think this needs to be rephrased, because I can't get any sense from
+> this sentence.
+>
+> Maybe something like:
+>
+> - clock-names : names of clocks listed in clocks property, in the same
+> order, depending on SoC type:
+>     - for S5PV210 and Exynos4 based SoCs : "fimg2d" and "sclk_fimg2d"
+>     - for Exynos5250 SoC : "fimg2d".
+>
+> What do you think?
 
-In Freescale's i.MX28 and i.MX23, at least, the CPU has 16 ADC channels some of which 
-are dedicated to measure internal stuff, like CPU temperature and voltages. Some 
-channels have different fixed divisors and so different reference voltages.
-These reference voltages (in mV) are needed to calculate the scale to show through the 
-sysfs IIO interface, so that a user can easily compute the real measured voltage out 
-of the sampled data.
+Sure. Will update and re-send.
 
-The proposed DT entry also appears at [1].
-We would love to here opinions about it.
+Thanks for the review.
 
-[1] http://www.spinics.net/lists/linux-iio/msg08973.html
 
-Best regards,
---
-Hector Palacios
+-- 
+With warm regards,
+Sachin
