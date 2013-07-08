@@ -1,32 +1,59 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: dts: imx27 phyCARD-S I2C devices
-Date: Mon, 8 Jul 2013 09:54:20 +0800
-Message-ID: <20130708015419.GC21594@S2101-09.ap.freescale.net>
-References: <1373202811-13825-1-git-send-email-mpa@pengutronix.de>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [RFC PATCH 08/13] sound: sam9x5_wm8731: machine driver for at91sam9x5
+ wm8731 boards
+Date: Mon, 8 Jul 2013 10:01:25 +0800
+Message-ID: <51DA1D75.2010503@atmel.com>
+References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com> <1372667978-4718-9-git-send-email-richard.genoud@gmail.com> <51D2472B.2010407@atmel.com> <CACQ1gAji8KkjXee8o=9jt8O38611LBJ95yXimxbfn1qLaLOcnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1373202811-13825-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACQ1gAji8KkjXee8o=9jt8O38611LBJ95yXimxbfn1qLaLOcnA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 07, 2013 at 03:13:28PM +0200, Markus Pargmann wrote:
-> Markus Pargmann (3):
->       ARM: dts: imx27 phyCARD-S SOM remove wrong i2c sensor
->       ARM: dts: imx27 phyCARD-S, move i2c1 and owire to rdk
->       ARM: dts: imx27 phyCARD-S, i2c ADC device node
+Hi Richard,
 
-All applied, thanks.
+On 7/5/2013 23:15, Richard Genoud wrote:
+>>> +       card->dev = &pdev->dev;
+>>> >>+       card->owner = THIS_MODULE;
+>>> >>+       card->dai_link = dai;
+>>> >>+       card->num_links = 1;
+>>> >>+       dai->name = "WM8731";
+>>> >>+       dai->stream_name = "WM8731 PCM";
+>>> >>+       dai->codec_dai_name = "wm8731-hifi";
+>>> >>+       dai->init = at91sam9x5ek_wm8731_init;
+>>> >>+       card->dapm_widgets = at91sam9x5ek_dapm_widgets;
+>>> >>+       card->num_dapm_widgets = ARRAY_SIZE(at91sam9x5ek_dapm_widgets);
+>> >
+>> >
+>> >Will keep these as snd_soc_card and snd_soc_dai_link structure separately?
+> I don't really understand what you mean here.
+> do you mean that something like that will more explicit ? :
+> +       card->dai_link[0].name = "WM8731";
+> +       card->dai_link[0].stream_name = "WM8731 PCM";
+> +       card->dai_link[0].codec_dai_name = "wm8731-hifi";
+> +       card->dai_link[0].init = at91sam9x5ek_wm8731_init;
+>
+
+I mean using structure to define snd_soc_card and snd_soc_dai_link, look 
+like:
+struct snd_soc_dai_link dai_link_name = {
+	.name = xxx,
+	.stream_name = xxx,
+	...
+};
+
+struct snd_soc_card card_name = {
+	.name = xxxx
+	.ower = THIS_MODULE,
+	.dai_link = &dai_link_name,
+	...
+};
+
+In this way, I think it will be more clear than put them in code.
+
+Best Regards,
+Bo Shen
