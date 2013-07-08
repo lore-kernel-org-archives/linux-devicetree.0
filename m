@@ -1,74 +1,72 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v1 4/4] spi/xilinx: Use of_property_read_u32 for reading value from node
-Date: Mon,  8 Jul 2013 15:29:17 +0200
-Message-ID: <95fea2ecead16435fc526b1d7f36a0a1ec1635ff.1373290150.git.michal.simek@xilinx.com>
-References: <ff70173bee5f9223ffea2b92b903b4e46ef8b323.1373290150.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-25853-1373290166-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ff70173bee5f9223ffea2b92b903b4e46ef8b323.1373290150.git.michal.simek@xilinx.com>
-In-Reply-To: <ff70173bee5f9223ffea2b92b903b4e46ef8b323.1373290150.git.michal.simek@xilinx.com>
-References: <ff70173bee5f9223ffea2b92b903b4e46ef8b323.1373290150.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Mark Brown <broonie@kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH v2 0/5] Sound support for at91sam9x5-wm8731
+	based boards
+Date: Mon,  8 Jul 2013 15:29:48 +0200
+Message-ID: <1373290193-25300-1-git-send-email-richard.genoud@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: alsa-devel@alsa-project.org, Richard Genoud <richard.genoud@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+Hi,
 
---=_mimegpg-monstr-desktop-25853-1373290166-0001
+This patchset add sound on the at91sam9x5ek board.
+It's based on Nicolas Ferre's work in the 2.6.39 atmel patch for sam9x5:
+https://github.com/linux4sam/linux-at91/commit/0aa157c9e71ccccf3abc30fa37eb5c95b392978d
 
-It simplifies driver probing.
-
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- drivers/spi/spi-xilinx.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/spi/spi-xilinx.c b/drivers/spi/spi-xilinx.c
-index a6bb5b0..07a7bca 100644
---- a/drivers/spi/spi-xilinx.c
-+++ b/drivers/spi/spi-xilinx.c
-@@ -372,17 +372,9 @@ static int xilinx_spi_probe(struct platform_device *pdev)
- 	if (pdata) {
- 		num_cs = pdata->num_chipselect;
- 		bits_per_word = pdata->bits_per_word;
--	}
--
--	if (pdev->dev.of_node) {
--		const __be32 *prop;
--		int len;
--
--		/* number of slave select bits is required */
--		prop = of_get_property(pdev->dev.of_node, "xlnx,num-ss-bits",
--				       &len);
--		if (prop && len >= sizeof(*prop))
--			num_cs = __be32_to_cpup(prop);
-+	} else {
-+		of_property_read_u32(pdev->dev.of_node, "xlnx,num-ss-bits",
-+					  &num_cs);
- 	}
-
- 	if (!num_cs) {
---
-1.8.2.3
+It needs Bo Chen's patchset on the generic dmaengine (topic/atmel branch
+on Mark's sound tree) and the SSC interrupts disabled (cf
+http://www.spinics.net/lists/arm-kernel/msg256901.html)
 
 
---=_mimegpg-monstr-desktop-25853-1373290166-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
+Tested on at91sam9g35ek.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+patches applies on next-20130708
 
-iEYEABECAAYFAlHavrYACgkQykllyylKDCGxigCfRH6KQw7Tc2/ASYsJ7FGEqP7H
-2BIAnjQIk6ka6XazUEvirggFiFTswbPh
-=cxyu
------END PGP SIGNATURE-----
+[I let the original signed-off from Nicolas and Uwe in place, I don't
+know if I should replace them by something like "originaly-signed-off-by"
+since the code has been changed.]
 
---=_mimegpg-monstr-desktop-25853-1373290166-0001--
+[Sorry if it's too late for 3.11]
+
+Changes from V1-RFC:
+ * drop patches on SSC since Bo Chen already did the work
+ * reorder patches to have the machine driver first
+ * drop code already handled by the ASoC framework
+ * drop unneeded SND_ATMEL_SOC_PDC config selection
+ * use static snd_soc_card and  snd_soc_dai_link structures.
+
+Best regards,
+Richard.
+
+Nicolas Ferre (1):
+  sound: sam9x5_wm8731: machine driver for at91sam9x5 wm8731 boards
+
+Richard Genoud (4):
+  ARM: AT91: DTS: sam9x5: add SSC DMA parameters
+  ARM: AT91: DTS: sam9x5ek: add WM8731 codec
+  ARM: AT91: DTS: sam9x5ek: add sound configuration
+  ARM: AT91: DTS: sam9x5ek: enable SSC
+
+ arch/arm/boot/dts/at91sam9x5.dtsi   |    3 +
+ arch/arm/boot/dts/at91sam9x5ek.dtsi |   27 +++++
+ sound/soc/atmel/Kconfig             |   10 ++
+ sound/soc/atmel/Makefile            |    2 +
+ sound/soc/atmel/sam9x5_wm8731.c     |  206 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 248 insertions(+)
+ create mode 100644 sound/soc/atmel/sam9x5_wm8731.c
+
+-- 
+1.7.10.4
