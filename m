@@ -1,39 +1,32 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 1/2] extcon: palmas: rename device tree binding matching
- with file name
-Date: Mon, 08 Jul 2013 10:34:29 +0900
-Message-ID: <51DA1725.3070403@samsung.com>
-References: <1373032792-29001-1-git-send-email-ldewangan@nvidia.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: dts: imx27 phyCARD-S I2C devices
+Date: Mon, 8 Jul 2013 09:54:20 +0800
+Message-ID: <20130708015419.GC21594@S2101-09.ap.freescale.net>
+References: <1373202811-13825-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1373032792-29001-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: myungjoo.ham@samsung.com, gregkh@linuxfoundation.org, kishon@ti.com, gg@slimlogic.co.uk, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1373202811-13825-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2013 10:59 PM, Laxman Dewangan wrote:
-> The driver name is extcon/extcon-palmas.c and hence renaming the
-> device tree binding document to extcon-palmas.txt.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
->  .../extcon/{extcon-twl.txt => extcon-palmas.txt}   |    0
->  1 files changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/extcon/{extcon-twl.txt => extcon-palmas.txt} (100%)
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-twl.txt b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/extcon/extcon-twl.txt
-> rename to Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-> 
+On Sun, Jul 07, 2013 at 03:13:28PM +0200, Markus Pargmann wrote:
+> Markus Pargmann (3):
+>       ARM: dts: imx27 phyCARD-S SOM remove wrong i2c sensor
+>       ARM: dts: imx27 phyCARD-S, move i2c1 and owire to rdk
+>       ARM: dts: imx27 phyCARD-S, i2c ADC device node
 
-Applied patch1 and patch2.
-
-You can check it on following git repo:
-- git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git (extcon-linus)
-
-Thanks,
-Chanwoo Choi
+All applied, thanks.
