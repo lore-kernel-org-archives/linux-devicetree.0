@@ -1,37 +1,88 @@
-From: Mark Jackson <mpfj-list@newflow.co.uk>
-Subject: Re: [PATCHv2] am33xx: cpsw: default to ethernet hwaddr from efuse
- if not defined in dt
-Date: Mon, 08 Jul 2013 13:42:04 +0100
-Message-ID: <51DAB39C.7090106@newflow.co.uk>
-References: <1358461134-13452-1-git-send-email-jacmet@sunsite.dk> <50F8DA3A.3090406@ti.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v3 07/13] ARM: dts: Add AK8975 device node for Exynos4412
+ TRATS2 board
+Date: Mon, 08 Jul 2013 14:52:51 +0200
+Message-ID: <51DAB623.1010404@samsung.com>
+References: <1372692155-17653-1-git-send-email-s.nawrocki@samsung.com>
+ <1372692155-17653-8-git-send-email-s.nawrocki@samsung.com>
+ <1491290.c836bFtNe2@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50F8DA3A.3090406@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: Peter Korsgaard <jacmet@sunsite.dk>, linux-omap@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, hvaibhav@ti.com, richardcochran@gmail.com, tony@atomide.com, michal.bachraty@gmail.com, michal.bachraty@streamunlimited.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1491290.c836bFtNe2@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: kgene.kim@samsung.com, t.figa@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, myungjoo.ham@samsung.com, m.szyprowski@samsung.com, phil.carmody@partner.samsung.com, j.anaszewski@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/01/13 05:14, Mugunthan V N wrote:
-> On 1/18/2013 3:48 AM, Peter Korsgaard wrote:
->> When booting with CONFIG_ARM_APPENDED_DTB (either because of using an old
->> U-Boot, not wanting the hassle of 2 files or when using Falcon fast boot
->> mode in U-Boot), nothing updates the ethernet hwaddr specified for the
->> CPSW slaves, causing the driver to use a random hwaddr, which is some times
->> troublesome.
+Hi Tomasz,
+
+On 07/06/2013 01:18 AM, Tomasz Figa wrote:
+> On Monday 01 of July 2013 17:22:29 Sylwester Nawrocki wrote:
+>> From: Jacek Anaszewski <j.anaszewski@samsung.com>
 >>
->> The am33xx has unique ethernet hwaddrs programmed in the efuse, so it makes
->> more sense to default to these rather than random ones. Add a fixup step
->> which adds mac-address dt properties using the efuse addresses if the DTB
->> didn't contain valid ones.
+>> This patch adds AK8975 magnetometer node and corresponding
+>> i2c-gpio bus node for TRATS2 board.
 >>
->> Signed-off-by: Peter Korsgaard <jacmet@sunsite.dk>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos4412-trats2.dts |   19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
 >>
+>> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts
+>> b/arch/arm/boot/dts/exynos4412-trats2.dts index 056b835..b9de3b5 100644
+>> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+>> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+>> @@ -19,6 +19,10 @@
+>>  	model = "Samsung Trats 2 based on Exynos4412";
+>>  	compatible = "samsung,trats2", "samsung,exynos4412";
+>>
+>> +	aliases {
+>> +		i2c8 = &i2c_ak8975;
+>> +	};
+>> +
+>>  	memory {
+>>  		reg =  <0x40000000 0x40000000>;
+>>  	};
+>> @@ -453,4 +457,19 @@
+>>  	serial@13830000 {
+>>  		status = "okay";
+>>  	};
+>> +
+>> +	i2c_ak8975: i2c-gpio@0 {
 > 
-> This implementation looks fine.
-> Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
+> I think this @0 is slightly incorrect here, as it seems like there is no 
+> reg property present inside the node and so the device isn't located at 
+> any address.
+> 
+> For logical indices like in this case I would rather use i2c-gpio-0 
+> instead.
 
-Tested-by: Mark Jackson <mpfj-list@newflow.co.uk>
+Indeed, using "-<N>" postfix sounds like a better alternative. I'll change
+it and repost the series after 3.11-rc1 is released.
 
+>> +		compatible = "i2c-gpio";
+>> +		gpios = <&gpy2 4 0>, <&gpy2 5 0>;
+>> +		i2c-gpio,delay-us = <2>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		status = "okay";
+>> +
+>> +		ak8975@0c {
+>> +			compatible = "asahi-kasei,ak8975";
+>> +			reg = <0x0c>;
+>> +			gpios = <&gpj0 7 0>;
+>> +		};
+>> +	};
+>>  };
+> 
+> Otherwise looks good.
+> 
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+
+--
+Thanks,
+Sylwester
