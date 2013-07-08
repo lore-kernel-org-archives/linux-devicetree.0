@@ -1,53 +1,73 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [alsa-devel] [PATCH v2 1/5] sound: sam9x5_wm8731: machine driver
- for at91sam9x5 wm8731 boards
-Date: Mon, 08 Jul 2013 16:39:17 +0200
-Message-ID: <51DACF15.9080303@metafoo.de>
-References: <1373290193-25300-1-git-send-email-richard.genoud@gmail.com> <1373290193-25300-2-git-send-email-richard.genoud@gmail.com>
+From: Olav Haugan <ohaugan@codeaurora.org>
+Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
+ binding
+Date: Mon, 08 Jul 2013 09:20:25 -0700
+Message-ID: <51DAE6C9.1000106@codeaurora.org>
+References: <20130408092535.GA17476@mudshark.cambridge.arm.com> <5162F87A.7070409@codeaurora.org> <20130410173732.GQ26992@mudshark.cambridge.arm.com> <5169C7D1.8070300@codeaurora.org> <20130415131341.GG9827@mudshark.cambridge.arm.com> <516D9602.2010404@codeaurora.org> <20130418190131.GA12344@mudshark.cambridge.arm.com> <5177113D.7060300@codeaurora.org> <20130424095501.GC21850@mudshark.cambridge.arm.com> <5189635A.8090504@codeaurora.org> <20130513090724.GA10369@alberich>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1373290193-25300-2-git-send-email-richard.genoud@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Genoud <richard.genoud@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20130513090724.GA10369@alberich>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andreas Herrmann <andreas.herrmann@calxeda.com>
+Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <will.deacon@arm.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "tzeng@codeaurora.org" <tzeng@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/2013 03:29 PM, Richard Genoud wrote:
-[...]
-> +/*
-> + * Logic for a wm8731 as connected on a at91sam9x5 based board.
-> + */
-> +static int at91sam9x5ek_wm8731_init(struct snd_soc_pcm_runtime *rtd)
-> +{
-[...]
-> +	codec_dai->driver->playback.rates &= SNDRV_PCM_RATE_8000 |
-> +		SNDRV_PCM_RATE_32000 |
-> +		SNDRV_PCM_RATE_48000 |
-> +		SNDRV_PCM_RATE_96000;
-> +	codec_dai->driver->capture.rates &= SNDRV_PCM_RATE_8000 |
-> +		SNDRV_PCM_RATE_32000 |
-> +		SNDRV_PCM_RATE_48000 |
-> +		SNDRV_PCM_RATE_96000;
+Hi Andreas,
 
-That's not right. The driver structure is shared between all instances of
-the codec, a single instance should not modify it. If you need to constrain
-the list of supported rates use snd_pcm_hw_constraint_list().
+On 5/13/2013 2:07 AM, Andreas Herrmann wrote:
+> On Tue, May 07, 2013 at 04:26:02PM -0400, Olav Haugan wrote:
+>>
+>>>>> If a master needs to be in two address spaces at once, then it will need to
+>>>>> attach it's StreamIDs to different domains. You can't place a single
+>>>>> StreamID in two address spaces (this is an architectural constraint).
+>>>>
+>>>> Yes, you would have a separate domain. I am just wondering how I would
+>>>> model this in DT using the bindings that you are proposing? How does it
+>>>> work? The bindings specify bus masters to StreamIDs. So if I call attach
+>>>> with the master device you will allocate a context bank and program the
+>>>> StreamIDs as specified in the DT. So now if I want to have another
+>>>> context bank associated with the same master device what do I do? I call
+>>>> into attach with a new domain but with the same master device but the
+>>>> master device is already attached to a context/domain.
+>>>
+>>> Why would you want to place a StreamID into two domains? That doesn't make
+>>> any sense and isn't even supported by the architecture (things like
+>>> conflicting SMR entries may not even be reported).
+>>
+>> I think you misunderstood me. I am talking about having for example 1
+>> master with two (2) context banks so that StreamID "1" goes to CB0 and
+>> StreamID "2" goes to CB1. This means that the master device is attached
+>> to two different domains. How do I model this with the the device tree
+>> bindings?
+> 
+> Hi Olav,
+> 
+> I think with the proposed device tree binding you can't model this.
+> 
+> Do we have such use cases already? Or what future use cases would
+> require this?
+> 
+> I can imagine of multiple contexts per device for stuff similar to
+> what PASID in PCI Express are used for.
+> 
+> But in such a case you probably want to have some configurable bits in
+> the StreamID (that should be set by an SMMU driver). And the DT
+> binding should contain the number of contexts that a master device can
+> support.
+> 
 
-> +
-> +	/* set the codec system clock for DAC and ADC */
-> +	ret = snd_soc_dai_set_sysclk(codec_dai, WM8731_SYSCLK_XTAL,
-> +				     MCLK_RATE, SND_SOC_CLOCK_IN);
-> +	if (ret < 0) {
-> +		dev_err(dev, "ASoC: Failed to set WM8731 SYSCLK: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* signal a DAPM event */
-> +	snd_soc_dapm_sync(dapm);
+Sorry for the late reply.
 
-This should not be necessary.
+The only real use case at this time for a master having more than 1 CB
+is for content protection I believe. I understand that this driver does
+not currently support content protection or anything related to security.
 
-> +	return 0;
-> +}
+Thanks,
+
+Olav Haugan
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
