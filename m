@@ -1,71 +1,47 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: Re: [RFC PATCH 08/13] sound: sam9x5_wm8731: machine driver for
- at91sam9x5 wm8731 boards
-Date: Mon, 8 Jul 2013 09:55:48 +0200
-Message-ID: <CACQ1gAjYOutkdn1J=HSY3i95TNU-WyJzTZPcb6QLykT53O3a2w@mail.gmail.com>
-References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
- <1372667978-4718-9-git-send-email-richard.genoud@gmail.com>
- <51D2472B.2010407@atmel.com> <CACQ1gAji8KkjXee8o=9jt8O38611LBJ95yXimxbfn1qLaLOcnA@mail.gmail.com>
- <51DA1D75.2010503@atmel.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of/platform: Staticize of_platform_device_create_pdata()
+Date: Mon,  8 Jul 2013 09:39:42 +0100
+Message-ID: <1373272782-31735-1-git-send-email-broonie@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51DA1D75.2010503@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/7/8 Bo Shen <voice.shen@atmel.com>:
-> Hi Richard,
->
->
-> On 7/5/2013 23:15, Richard Genoud wrote:
->>>>
->>>> +       card->dev = &pdev->dev;
->>>> >>+       card->owner = THIS_MODULE;
->>>> >>+       card->dai_link = dai;
->>>> >>+       card->num_links = 1;
->>>> >>+       dai->name = "WM8731";
->>>> >>+       dai->stream_name = "WM8731 PCM";
->>>> >>+       dai->codec_dai_name = "wm8731-hifi";
->>>> >>+       dai->init = at91sam9x5ek_wm8731_init;
->>>> >>+       card->dapm_widgets = at91sam9x5ek_dapm_widgets;
->>>> >>+       card->num_dapm_widgets =
->>>> >> ARRAY_SIZE(at91sam9x5ek_dapm_widgets);
->>>
->>> >
->>> >
->>> >Will keep these as snd_soc_card and snd_soc_dai_link structure
->>> > separately?
->>
->> I don't really understand what you mean here.
->> do you mean that something like that will more explicit ? :
->> +       card->dai_link[0].name = "WM8731";
->> +       card->dai_link[0].stream_name = "WM8731 PCM";
->> +       card->dai_link[0].codec_dai_name = "wm8731-hifi";
->> +       card->dai_link[0].init = at91sam9x5ek_wm8731_init;
->>
->
-> I mean using structure to define snd_soc_card and snd_soc_dai_link, look
-> like:
-> struct snd_soc_dai_link dai_link_name = {
->         .name = xxx,
->         .stream_name = xxx,
->         ...
-> };
->
-> struct snd_soc_card card_name = {
->         .name = xxxx
->         .ower = THIS_MODULE,
->         .dai_link = &dai_link_name,
->         ...
-> };
->
-> In this way, I think it will be more clear than put them in code.
+From: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-ok, got it !
+It is not used outside of this file so doesn't need to be in the global
+namespace.
 
-Thanks !
+Signed-off-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Richard.
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index e0a6514..b0d1ff8 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -196,7 +196,7 @@ EXPORT_SYMBOL(of_device_alloc);
+  * Returns pointer to created platform device, or NULL if a device was not
+  * registered.  Unavailable devices will not get registered.
+  */
+-struct platform_device *of_platform_device_create_pdata(
++static struct platform_device *of_platform_device_create_pdata(
+ 					struct device_node *np,
+ 					const char *bus_id,
+ 					void *platform_data,
+-- 
+1.8.3.2
