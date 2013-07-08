@@ -1,58 +1,71 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 3/3] mmc: omap_hsmmc: add PSTATE to debugfs regs_show.
-Date: Mon, 8 Jul 2013 10:52:21 +0300
-Message-ID: <20130708075213.GG16635@arwen.pp.htv.fi>
-References: <1365770307-19859-1-git-send-email-andreas.fenkart@streamunlimited.com>
- <1365770307-19859-4-git-send-email-andreas.fenkart@streamunlimited.com>
-Reply-To: <balbi@ti.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [RFC PATCH 08/13] sound: sam9x5_wm8731: machine driver for
+ at91sam9x5 wm8731 boards
+Date: Mon, 8 Jul 2013 09:55:48 +0200
+Message-ID: <CACQ1gAjYOutkdn1J=HSY3i95TNU-WyJzTZPcb6QLykT53O3a2w@mail.gmail.com>
+References: <1372667978-4718-1-git-send-email-richard.genoud@gmail.com>
+ <1372667978-4718-9-git-send-email-richard.genoud@gmail.com>
+ <51D2472B.2010407@atmel.com> <CACQ1gAji8KkjXee8o=9jt8O38611LBJ95yXimxbfn1qLaLOcnA@mail.gmail.com>
+ <51DA1D75.2010503@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="F4+N/OgRSdC8YnqX"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1365770307-19859-4-git-send-email-andreas.fenkart@streamunlimited.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Andreas Fenkart <andreas.fenkart@streamunlimited.com>
-Cc: tony@atomide.com, cjb@laptop.org, arnd@arndb.de, balajitk@ti.com, grant.likely@secretlab.ca, linux-mmc@vger.kernel.org, rob@landley.net, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, zonque@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51DA1D75.2010503@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
---F4+N/OgRSdC8YnqX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+2013/7/8 Bo Shen <voice.shen@atmel.com>:
+> Hi Richard,
+>
+>
+> On 7/5/2013 23:15, Richard Genoud wrote:
+>>>>
+>>>> +       card->dev = &pdev->dev;
+>>>> >>+       card->owner = THIS_MODULE;
+>>>> >>+       card->dai_link = dai;
+>>>> >>+       card->num_links = 1;
+>>>> >>+       dai->name = "WM8731";
+>>>> >>+       dai->stream_name = "WM8731 PCM";
+>>>> >>+       dai->codec_dai_name = "wm8731-hifi";
+>>>> >>+       dai->init = at91sam9x5ek_wm8731_init;
+>>>> >>+       card->dapm_widgets = at91sam9x5ek_dapm_widgets;
+>>>> >>+       card->num_dapm_widgets =
+>>>> >> ARRAY_SIZE(at91sam9x5ek_dapm_widgets);
+>>>
+>>> >
+>>> >
+>>> >Will keep these as snd_soc_card and snd_soc_dai_link structure
+>>> > separately?
+>>
+>> I don't really understand what you mean here.
+>> do you mean that something like that will more explicit ? :
+>> +       card->dai_link[0].name = "WM8731";
+>> +       card->dai_link[0].stream_name = "WM8731 PCM";
+>> +       card->dai_link[0].codec_dai_name = "wm8731-hifi";
+>> +       card->dai_link[0].init = at91sam9x5ek_wm8731_init;
+>>
+>
+> I mean using structure to define snd_soc_card and snd_soc_dai_link, look
+> like:
+> struct snd_soc_dai_link dai_link_name = {
+>         .name = xxx,
+>         .stream_name = xxx,
+>         ...
+> };
+>
+> struct snd_soc_card card_name = {
+>         .name = xxxx
+>         .ower = THIS_MODULE,
+>         .dai_link = &dai_link_name,
+>         ...
+> };
+>
+> In this way, I think it will be more clear than put them in code.
 
-On Fri, Apr 12, 2013 at 02:38:27PM +0200, Andreas Fenkart wrote:
-> PSTATE shows current state of data lines.
->=20
-> Signed-off-by: Andreas Fenkart <andreas.fenkart@streamunlimited.com>
+ok, got it !
 
-this looks useful
+Thanks !
 
-Reviewed-by: Felipe Balbi <balbi@ti.com>
-
---=20
-balbi
-
---F4+N/OgRSdC8YnqX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR2m+1AAoJEIaOsuA1yqREK0oP+wWYnaidkl1lXgxRxJUc8Flc
-OOjaRDqtvPxnl16WUwhbPdCyS0F1ySJzS8tS5gYaVjl+NXqp/4BvIwENXXkXIMyU
-Hr+gCnlyvzcV1RtwU3c4FbTQPSy5zuJzFhT44LaXm2YT2JJ4IjNPbFN6ZEUnmTpO
-xonaw7SZZbIrtKw/BrDfIr/wuC8RRWK4O3kcwMJ248znNlU7mv7rVOW/OAtmLvnn
-PYhScRqaPh/XtSTn7Fd69h0aP9vE65XQl1IdddmdvKIC2CAaZRJNuLd/9u3c4x6i
-S+D3OE6RagyXkxH9HrK5nubONNZu9CVxVGZ3zWl+UpeXaGwq1NC4ovgDtkJU9Tq/
-oJU36bRsKJWpCdrkTPgjxDUNYaDXFlbrvLuOuzv4SZ4JnQphb11yYLYnpX1MXDy4
-eBRwWMojvaE/UTD8OnCDqMWzfglQywQKbfMRG3INvnCJDZud3fzXfCx53oMHHhzC
-zC6E4sPkxnra/1M1yIzseWhNY1x7h0TC1KNoG5TxCcEuQIFESgneaKl3hG7M7rsb
-o7nVfgDdcLdVGPflSBtKJaCL/MH6RuckEE0kXaKjeDSSwOgkXNr8FxgZUGQlR3Lb
-Sl1Hnlln4WeL06s9hx7S5tX9x77ssxXsPqvFshyvZSe2MJB0c8fi8gC7QLoky5EV
-ef5evCEU7wumwHHW70iy
-=DkUi
------END PGP SIGNATURE-----
-
---F4+N/OgRSdC8YnqX--
+Richard.
