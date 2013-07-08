@@ -1,133 +1,88 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 4/4] ARM: DRA7: clockdomain data: add init file for dra7
-Date: Mon, 8 Jul 2013 10:29:28 +0300
-Message-ID: <51DA6A58.3080008@ti.com>
-References: <1372322299-25046-1-git-send-email-t-kristo@ti.com> <1372322299-25046-5-git-send-email-t-kristo@ti.com> <20130628210430.14831.99127@quantum>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/4] usb: gadget: s3c-hsotg: Allow driver instantiation
+ using device tree
+Date: Mon, 8 Jul 2013 10:41:33 +0300
+Message-ID: <20130708074133.GC16635@arwen.pp.htv.fi>
+References: <1372174706-5459-1-git-send-email-t.figa@samsung.com>
+ <1372174706-5459-2-git-send-email-t.figa@samsung.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130628210430.14831.99127@quantum>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, nm@ti.com, rnayak@ti.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/mixed; boundary="===============5524077590971762399=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1372174706-5459-2-git-send-email-t.figa@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: l.majewski@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-samsung-soc@vger.kernel.org, Thomas Abraham <thomas.abraham@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/29/2013 12:04 AM, Mike Turquette wrote:
-> Quoting Tero Kristo (2013-06-27 01:38:19)
->> cclock7xx_data.c now contains only init function and the clkdev mapping
->> that is still needed by some drivers. Eventually most of this file can
->> be removed, once a common location for the clk init can be found, and
->> the clkdev mapping is no longer needed.
->>
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   arch/arm/mach-omap2/cclock7xx_data.c |   93 ++++++++++++++++++++++++++++++++++
->>   1 file changed, 93 insertions(+)
->>   create mode 100644 arch/arm/mach-omap2/cclock7xx_data.c
->
-> Why not drivers/clk/omap/clk-dra7xx.c?
+--===============5524077590971762399==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="s9fJI615cBHmzTOP"
+Content-Disposition: inline
 
-Hi Mike,
+--s9fJI615cBHmzTOP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Same as O5, I can move this over in next rev.
+Hi,
 
--Tero
+On Tue, Jun 25, 2013 at 05:38:23PM +0200, Tomasz Figa wrote:
+> This patch adds OF match table to the driver to allow instantiating it
+> using device tree.
+>=20
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 
->
-> Regards,
-> Mike
->
->>
->> diff --git a/arch/arm/mach-omap2/cclock7xx_data.c b/arch/arm/mach-omap2/cclock7xx_data.c
->> new file mode 100644
->> index 0000000..dba528a
->> --- /dev/null
->> +++ b/arch/arm/mach-omap2/cclock7xx_data.c
->> @@ -0,0 +1,83 @@
->> +/*
->> + * DRA7xx Clock data
->> + *
->> + * Copyright (C) 2013 Texas Instruments, Inc.
->> + *
->> + * Paul Walmsley (paul@pwsan.com)
->> + * Rajendra Nayak (rnayak@ti.com)
->> + * Benoit Cousson (b-cousson@ti.com)
->> + * Mike Turquette (mturquette@linaro.org)
->> + * Tero Kristo (t-kristo@ti.com)
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/list.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/clkdev.h>
->> +#include <linux/io.h>
->> +#include <linux/clk/omap.h>
->> +
->> +#include "soc.h"
->> +#include "clock.h"
->> +
->> +#define DRA7_DPLL_ABE_DEFFREQ                  361267200
->> +#define DRA7_DPLL_GMAC_DEFFREQ                 1000000000
->> +
->> +/*
->> + * clkdev
->> + */
->> +
->> +static struct omap_dt_clk dra7xx_clks[] = {
->> +       DT_CLK(NULL,    "timer_32k_ck",         "sys_32k_ck"),
->> +       DT_CLK("4ae18000.timer",        "timer_sys_ck",         "sys_clkin2"),
->> +       DT_CLK("48032000.timer",        "timer_sys_ck",         "sys_clkin2"),
->> +       DT_CLK("48034000.timer",        "timer_sys_ck",         "sys_clkin2"),
->> +       DT_CLK("48036000.timer",        "timer_sys_ck",         "sys_clkin2"),
->> +       DT_CLK("4803e000.timer",        "timer_sys_ck",         "sys_clkin2"),
->> +       DT_CLK("48086000.timer",        "timer_sys_ck",         "sys_clkin2"),
->> +       DT_CLK("48088000.timer",        "timer_sys_ck",         "sys_clkin2"),
->> +       DT_CLK("48820000.timer",        "timer_sys_ck",         "timer_sys_clk_div"),
->> +       DT_CLK("48822000.timer",        "timer_sys_ck",         "timer_sys_clk_div"),
->> +       DT_CLK("48824000.timer",        "timer_sys_ck",         "timer_sys_clk_div"),
->> +       DT_CLK("48826000.timer",        "timer_sys_ck",         "timer_sys_clk_div"),
->> +       DT_CLK(NULL,       "sys_clkin",                    "sys_clkin1"),
->> +};
->> +
->> +int __init dra7xx_clk_init(void)
->> +{
->> +       struct clk *abe_dpll_mux, *sys_clkin2, *dpll_ck;
->> +       int rc;
->> +       /*
->> +        * Must stay commented until all OMAP SoC drivers are
->> +        * converted to runtime PM, or drivers may start crashing
->> +        *
->> +        * omap2_clk_disable_clkdm_control();
->> +        */
->> +
->> +       dt_omap_clk_init();
->> +
->> +       omap_dt_clocks_register(dra7xx_clks, ARRAY_SIZE(dra7xx_clks));
->> +
->> +       omap2_clk_disable_autoidle_all();
->> +
->> +       abe_dpll_mux = clk_get_sys(NULL, "abe_dpll_sys_clk_mux");
->> +       sys_clkin2 = clk_get_sys(NULL, "sys_clkin2");
->> +       dpll_ck = clk_get_sys(NULL, "dpll_abe_ck");
->> +
->> +       rc = clk_set_parent(abe_dpll_mux, sys_clkin2);
->> +       if (!rc)
->> +               rc = clk_set_rate(dpll_ck, DRA7_DPLL_ABE_DEFFREQ);
->> +       if (rc)
->> +               pr_err("%s: failed to configure ABE DPLL!\n", __func__);
->> +
->> +       dpll_ck = clk_get_sys(NULL, "dpll_gmac_ck");
->> +       rc = clk_set_rate(dpll_ck, DRA7_DPLL_GMAC_DEFFREQ);
->> +       if (rc)
->> +               pr_err("%s: failed to configure GMAC DPLL!\n", __func__);
->> +
->> +       return 0;
->> +}
->> --
->> 1.7.9.5
+I will take this one only, the others have no dependency on this.
 
+cheers
+
+--=20
+balbi
+
+--s9fJI615cBHmzTOP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR2m0tAAoJEIaOsuA1yqREmWcP/jKKIl361JXR6PQM5ORfbTia
++FU7DRMuXx3QFH7G4FnigfOJtq4FcgNMB/lj1H6qLwpXhcFKDS9nKV6+MxW6i9vw
+uEmJAUQEoGJ6Lx4YKAr//tFTfS/XrL1U107lFWRSvPS2ss4LUenLfr1H55IAYtkR
+zDQeJdQF74NsLoRSfPwLpess5Lc3g7odnigOvUK17Rz8tpJQi1ffLYzIy50298Ek
+YGhZDPwlsOQaIujgDM1S8oDHyWu9h4ZITNXA/eOuKlMppajqtr/WncsR78AofhJ5
+DREqK/m6brHeRUT3lERKOGSta67o8sPix5igPDo5dJ2vuemd0I6T2EdXcFuCLonH
+xLARrbm5nA429OMr/Rz1p/UATUDzHD9rmR7QVJ5FKGwG4lrYonRNjF0mFqPG4RXV
+yQvO0tzPC17i/OOF77LfX0vkIfQCsrVGMVpXj54gDs1iiZCENqQ3wcfELjZEnqP/
+oCTFExFuijGoMkZAQwxPVjHLyalw0z6wIiAW83AF57FSbRNcQjoAfPd+Qdo2IC68
+C8aQ6xt9CDB/711y12lKPN0bE8GEflTSuZWBhCL4dZcRA20fRZ5po1RltMtqWSWn
+33mfOpiKSqZteVAA0AZGTexC1liaNSS71s/cFRtOvQ+atRw+VgSrHNFgzi284+S/
+CrFM6IJ8yndy+di5qNuE
+=kdrh
+-----END PGP SIGNATURE-----
+
+--s9fJI615cBHmzTOP--
+
+
+--===============5524077590971762399==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5524077590971762399==--
