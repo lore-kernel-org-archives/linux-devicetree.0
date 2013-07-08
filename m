@@ -1,62 +1,77 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 4/5] ARM: AT91: DTS: sam9x5ek: add sound configuration
-Date: Mon,  8 Jul 2013 15:29:52 +0200
-Message-ID: <1373290193-25300-5-git-send-email-richard.genoud@gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v2 0/5] Sound support for at91sam9x5-wm8731 based boards
+Date: Mon, 8 Jul 2013 15:53:43 +0200
+Message-ID: <51DAC467.8060504@atmel.com>
 References: <1373290193-25300-1-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1373290193-25300-1-git-send-email-richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1373290193-25300-1-git-send-email-richard.genoud@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Genoud <richard.genoud@gmail.com>, Mark Brown <broonie@kernel.org>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Bo Shen <voice.shen@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-The sam9x5ek board has 2 jacks:
-headphone wired on RHPOUT/LHPOUT of the wm8731
-line in wired on LLINEIN/RLINEIN of the wm8731
+On 08/07/2013 15:29, Richard Genoud :
+> Hi,
+>
+> This patchset add sound on the at91sam9x5ek board.
+> It's based on Nicolas Ferre's work in the 2.6.39 atmel patch for sam9x5:
+> https://github.com/linux4sam/linux-at91/commit/0aa157c9e71ccccf3abc30fa37eb5c95b392978d
+>
+> It needs Bo Chen's patchset on the generic dmaengine (topic/atmel branch
+> on Mark's sound tree) and the SSC interrupts disabled (cf
+> http://www.spinics.net/lists/arm-kernel/msg256901.html)
+>
+>
+> Tested on at91sam9g35ek.
+>
+> patches applies on next-20130708
+>
+> [I let the original signed-off from Nicolas and Uwe in place, I don't
+> know if I should replace them by something like "originaly-signed-off-by"
+> since the code has been changed.]
 
-Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9x5ek.dtsi |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+I am happy to give my "signed-off" to this patch. I guess that Uwe's one 
+was more an integration signed-off when he imported the code to his git 
+tree.
 
-diff --git a/arch/arm/boot/dts/at91sam9x5ek.dtsi b/arch/arm/boot/dts/at91sam9x5ek.dtsi
-index e6fb309..bd0f7b8 100644
---- a/arch/arm/boot/dts/at91sam9x5ek.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5ek.dtsi
-@@ -109,4 +109,22 @@
- 			status = "okay";
- 		};
- 	};
-+
-+	sound {
-+		compatible = "atmel,sam9x5-audio-wm8731";
-+
-+		atmel,model = "wm8731 @ AT91SAM9X5EK";
-+
-+		atmel,audio-routing =
-+			"Headphone Jack", "RHPOUT",
-+			"Headphone Jack", "LHPOUT",
-+			"LLINEIN", "Line In Jack",
-+			"RLINEIN", "Line In Jack";
-+
-+		atmel,ssc-controller = <&ssc0>;
-+		atmel,audio-codec = <&wm8731>;
-+		atmel,format = "i2s";
-+		atmel,bitclock-master;
-+		atmel,frame-master;
-+	};
- };
+> [Sorry if it's too late for 3.11]
+
+Do not be sorry. Good work is always appreciated at any time!
+
+> Changes from V1-RFC:
+>   * drop patches on SSC since Bo Chen already did the work
+>   * reorder patches to have the machine driver first
+>   * drop code already handled by the ASoC framework
+>   * drop unneeded SND_ATMEL_SOC_PDC config selection
+>   * use static snd_soc_card and  snd_soc_dai_link structures.
+>
+> Best regards,
+> Richard.
+>
+> Nicolas Ferre (1):
+>    sound: sam9x5_wm8731: machine driver for at91sam9x5 wm8731 boards
+>
+> Richard Genoud (4):
+>    ARM: AT91: DTS: sam9x5: add SSC DMA parameters
+>    ARM: AT91: DTS: sam9x5ek: add WM8731 codec
+>    ARM: AT91: DTS: sam9x5ek: add sound configuration
+>    ARM: AT91: DTS: sam9x5ek: enable SSC
+
+Maybe we will have to split the series and let these DT patches go with 
+arm-soc.
+
+>   arch/arm/boot/dts/at91sam9x5.dtsi   |    3 +
+>   arch/arm/boot/dts/at91sam9x5ek.dtsi |   27 +++++
+>   sound/soc/atmel/Kconfig             |   10 ++
+>   sound/soc/atmel/Makefile            |    2 +
+>   sound/soc/atmel/sam9x5_wm8731.c     |  206 +++++++++++++++++++++++++++++++++++
+>   5 files changed, 248 insertions(+)
+>   create mode 100644 sound/soc/atmel/sam9x5_wm8731.c
+>
+
+Thanks, bye,
 -- 
-1.7.10.4
+Nicolas Ferre
