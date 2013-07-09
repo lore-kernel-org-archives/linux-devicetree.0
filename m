@@ -1,110 +1,41 @@
-From: Neil Zhang <zhangwm@marvell.com>
-Subject: [PATCH V3 2/3] clocksource: mmp: support CLOCKSOURCE OF DECLARE
-Date: Tue, 9 Jul 2013 14:42:45 +0800
-Message-ID: <1373352166-10064-3-git-send-email-zhangwm@marvell.com>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, haojian.zhuang@gmail.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Neil Zhang <zhangwm@marvell.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH v2 Resend 2/3] of/documentation: Update G2D documentation
+Date: Tue,  9 Jul 2013 11:59:15 +0530
+Message-ID: <1373351355-27444-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org, mturquette@linaro.org, tomasz.figa@gmail.com, Inki Dae <inki.dae@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-support CLOCKSOURCE OF DECLARE for mmp timer.
+Exynos5250 G2D IP requires only the gate clock. Update the
+binding documentation accordingly.
 
-Signed-off-by: Neil Zhang <zhangwm@marvell.com>
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Inki Dae <inki.dae@samsung.com>
 ---
- arch/arm/mach-mmp/mmp-dt.c  |    5 ++---
- arch/arm/mach-mmp/mmp2-dt.c |    3 +--
- arch/arm/mach-mmp/time.c    |   15 ++-------------
- 3 files changed, 5 insertions(+), 18 deletions(-)
+Updated the description of clock-names as suggested by Tomasz Figa.
+---
+ .../devicetree/bindings/gpu/samsung-g2d.txt        |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-mmp/mmp-dt.c b/arch/arm/mach-mmp/mmp-dt.c
-index 62c5adb..87ab5ff 100644
---- a/arch/arm/mach-mmp/mmp-dt.c
-+++ b/arch/arm/mach-mmp/mmp-dt.c
-@@ -20,7 +20,6 @@
- #include "common.h"
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+index 3f454ff..c4f358d 100644
+--- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
++++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+@@ -11,8 +11,11 @@ Required properties:
  
- extern void __init mmp_dt_irq_init(void);
--extern void __init mmp_dt_init_timer(void);
+   - interrupts : G2D interrupt number to the CPU.
+   - clocks : from common clock binding: handle to G2D clocks.
+-  - clock-names : from common clock binding: must contain "sclk_fimg2d" and
+-		  "fimg2d", corresponding to entries in the clocks property.
++  - clock-names : names of clocks listed in clocks property, in the same
++		  order, depending on SoC type:
++		  - for S5PV210 and Exynos4 based SoCs: "fimg2d" and
++		    "sclk_fimg2d"
++		  - for Exynos5250 SoC: "fimg2d".
  
- static const struct of_dev_auxdata pxa168_auxdata_lookup[] __initconst = {
- 	OF_DEV_AUXDATA("marvell,mmp-uart", 0xd4017000, "pxa2xx-uart.0", NULL),
-@@ -65,7 +64,7 @@ static const char *mmp_dt_board_compat[] __initdata = {
- DT_MACHINE_START(PXA168_DT, "Marvell PXA168 (Device Tree Support)")
- 	.map_io		= mmp_map_io,
- 	.init_irq	= mmp_dt_irq_init,
--	.init_time	= mmp_dt_init_timer,
-+	.init_time	= clocksource_of_init,
- 	.init_machine	= pxa168_dt_init,
- 	.dt_compat	= mmp_dt_board_compat,
- MACHINE_END
-@@ -73,7 +72,7 @@ MACHINE_END
- DT_MACHINE_START(PXA910_DT, "Marvell PXA910 (Device Tree Support)")
- 	.map_io		= mmp_map_io,
- 	.init_irq	= mmp_dt_irq_init,
--	.init_time	= mmp_dt_init_timer,
-+	.init_time	= clocksource_of_init,
- 	.init_machine	= pxa910_dt_init,
- 	.dt_compat	= mmp_dt_board_compat,
- MACHINE_END
-diff --git a/arch/arm/mach-mmp/mmp2-dt.c b/arch/arm/mach-mmp/mmp2-dt.c
-index 6523ecf..0ce46f1 100644
---- a/arch/arm/mach-mmp/mmp2-dt.c
-+++ b/arch/arm/mach-mmp/mmp2-dt.c
-@@ -22,7 +22,6 @@
- #include "common.h"
- 
- extern void __init mmp_dt_irq_init(void);
--extern void __init mmp_dt_init_timer(void);
- 
- static const struct of_dev_auxdata mmp2_auxdata_lookup[] __initconst = {
- 	OF_DEV_AUXDATA("marvell,mmp-uart", 0xd4030000, "pxa2xx-uart.0", NULL),
-@@ -50,7 +49,7 @@ static const char *mmp2_dt_board_compat[] __initdata = {
- DT_MACHINE_START(MMP2_DT, "Marvell MMP2 (Device Tree Support)")
- 	.map_io		= mmp_map_io,
- 	.init_irq	= mmp_dt_irq_init,
--	.init_time	= mmp_dt_init_timer,
-+	.init_time	= clocksource_of_init,
- 	.init_machine	= mmp2_dt_init,
- 	.dt_compat	= mmp2_dt_board_compat,
- MACHINE_END
-diff --git a/arch/arm/mach-mmp/time.c b/arch/arm/mach-mmp/time.c
-index 67e7d5c..8f5d612 100644
---- a/arch/arm/mach-mmp/time.c
-+++ b/arch/arm/mach-mmp/time.c
-@@ -207,22 +207,10 @@ void __init timer_init(int irq)
- }
- 
- #ifdef CONFIG_OF
--static struct of_device_id mmp_timer_dt_ids[] = {
--	{ .compatible = "marvell,mmp-timer", },
--	{}
--};
--
--void __init mmp_dt_init_timer(void)
-+static void __init mmp_of_init_timer(struct device_node *np)
- {
--	struct device_node *np;
- 	int irq, ret;
- 
--	np = of_find_matching_node(NULL, mmp_timer_dt_ids);
--	if (!np) {
--		ret = -ENODEV;
--		goto out;
--	}
--
- 	irq = irq_of_parse_and_map(np, 0);
- 	if (!irq) {
- 		ret = -EINVAL;
-@@ -238,4 +226,5 @@ void __init mmp_dt_init_timer(void)
- out:
- 	pr_err("Failed to get timer from device tree with error:%d\n", ret);
- }
-+CLOCKSOURCE_OF_DECLARE(mmp_timer, "marvell,mmp-timer", mmp_of_init_timer);
- #endif
+ Example:
+ 	g2d@12800000 {
 -- 
-1.7.4.1
+1.7.9.5
