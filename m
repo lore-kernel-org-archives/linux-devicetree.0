@@ -1,179 +1,71 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 4/4] extcon: palmas: Option to disable ID/VBUS detection based on platform
-Date: Tue, 9 Jul 2013 18:34:24 +0530
-Message-ID: <1373375064-12012-5-git-send-email-ldewangan@nvidia.com>
-References: <1373375064-12012-1-git-send-email-ldewangan@nvidia.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [PATCH v3 3/7] Documentation: DT: update atmel SSC with DMA binding
+Date: Tue, 9 Jul 2013 15:19:09 +0200
+Message-ID: <CACQ1gAg8WQTaz4XkXJCH+-bNU_U3s_1pgmQYoQR3v-KHOzzBTA@mail.gmail.com>
+References: <1373290193-25300-1-git-send-email-richard.genoud@gmail.com>
+ <1373372929-17800-1-git-send-email-richard.genoud@gmail.com> <1373372929-17800-4-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1373375064-12012-1-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1373372929-17800-4-git-send-email-richard.genoud@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com, myungjoo.ham@samsung.com
-Cc: devicetree-discuss@lists.ozlabs.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, gg@slimlogic.co.uk, Laxman Dewangan <ldewangan@nvidia.com>
+To: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Richard Genoud <richard.genoud@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Based on system design, platform needs to detect the VBUS or ID or
-both. Provide option to select this through platform data to
-disable part of cable detection through palmas-usb.
+2013/7/9 Richard Genoud <richard.genoud@gmail.com>:
+> As atmel-ssc can be used with DMA, the documentation should be updated.
+> Also, a configuration DMA example is given.
+>
+> Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
+> ---
+>  .../devicetree/bindings/misc/atmel-ssc.txt         |   24 ++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> index 38e51ad..96958ca 100644
+> --- a/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> +++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
+> @@ -6,10 +6,30 @@ Required properties:
+>         - atmel,at91sam9g45-ssc: support dma transfer
+>  - reg: Should contain SSC registers location and length
+>  - interrupts: Should contain SSC interrupt
+> +For dma transfer:
+> +- dmas: DMA specifier, consisting of a phandle to DMA controller node,
+> +  the memory interface and SSC DMA channel ID (for tx and rx).
+> +  See Documentation/devicetree/bindings/dma/atmel-dma.txt for details.
+> +- dma-names: Must be "tx", "rx".
+>
+> -Example:
+> +
+> +Examples:
+>  ssc0: ssc@fffbc000 {
+>         compatible = "atmel,at91rm9200-ssc";
+>         reg = <0xfffbc000 0x4000>;
+> -       interrupts = <14 4 5>;
+> +       interrupts = <14 IRQ_TYPE_LEVEL_HIGH 5>;
+maybe I should not use macro in the documentation (not sure if I should or not).
+>  };
+> +
+> +
+> +ssc0: ssc@f0010000 {
+> +      compatible = "atmel,at91sam9g45-ssc";
+> +      reg = <0xf0010000 0x4000>;
+> +      interrupts = <28 IRQ_TYPE_LEVEL_HIGH 5>;
+> +      dmas = <&dma0 1 AT91_DMA_CFG_PER_ID(13)>,
+> +            <&dma0 1 AT91_DMA_CFG_PER_ID(14)>;
+same here
+> +      dma-names = "tx", "rx";
+> +      pinctrl-names = "default";
+> +      pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
+> +      status = "disabled";
+> +};
+> +
+> --
+> 1.7.10.4
+>
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- .../devicetree/bindings/extcon/extcon-palmas.txt   |    2 +
- drivers/extcon/extcon-palmas.c                     |   65 +++++++++++++-------
- include/linux/mfd/palmas.h                         |    4 +
- 3 files changed, 48 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-index f110e75..8e593ec 100644
---- a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-+++ b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-@@ -6,6 +6,8 @@ Required Properties:
- 
- Optional Properties:
-  - ti,wakeup : To enable the wakeup comparator in probe
-+ - ti,disable-id-detection: Do not perform ID detection.
-+ - ti,disable-vbus-detection: Do not pwerform VBUS detection.
- 
- palmas-usb {
-        compatible = "ti,twl6035-usb", "ti,palmas-usb";
-diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
-index b2d64d4..e42046b 100644
---- a/drivers/extcon/extcon-palmas.c
-+++ b/drivers/extcon/extcon-palmas.c
-@@ -122,11 +122,14 @@ static void palmas_enable_irq(struct palmas_usb *palmas_usb)
- 		PALMAS_USB_ID_INT_EN_HI_SET_ID_GND |
- 		PALMAS_USB_ID_INT_EN_HI_SET_ID_FLOAT);
- 
--	palmas_vbus_irq_handler(palmas_usb->vbus_irq, palmas_usb);
-+	if (palmas_usb->enable_vbus_detection)
-+		palmas_vbus_irq_handler(palmas_usb->vbus_irq, palmas_usb);
- 
- 	/* cold plug for host mode needs this delay */
--	msleep(30);
--	palmas_id_irq_handler(palmas_usb->id_irq, palmas_usb);
-+	if (palmas_usb->enable_id_detection) {
-+		msleep(30);
-+		palmas_id_irq_handler(palmas_usb->id_irq, palmas_usb);
-+	}
- }
- 
- static int palmas_usb_probe(struct platform_device *pdev)
-@@ -144,6 +147,10 @@ static int palmas_usb_probe(struct platform_device *pdev)
- 			return -ENOMEM;
- 
- 		pdata->wakeup = of_property_read_bool(node, "ti,wakeup");
-+		pdata->disable_id_detection = of_property_read_bool(node,
-+						"ti,disable-id-detection");
-+		pdata->disable_vbus_detection = of_property_read_bool(node,
-+						"ti,disable-vbus-detection");
- 	} else if (!pdata) {
- 		return -EINVAL;
- 	}
-@@ -154,6 +161,8 @@ static int palmas_usb_probe(struct platform_device *pdev)
- 
- 	palmas->usb = palmas_usb;
- 	palmas_usb->palmas = palmas;
-+	palmas_usb->enable_vbus_detection = !pdata->disable_vbus_detection;
-+	palmas_usb->enable_id_detection =  !pdata->disable_id_detection;
- 
- 	palmas_usb->dev	 = &pdev->dev;
- 
-@@ -180,26 +189,32 @@ static int palmas_usb_probe(struct platform_device *pdev)
- 		return status;
- 	}
- 
--	status = devm_request_threaded_irq(palmas_usb->dev, palmas_usb->id_irq,
--			NULL, palmas_id_irq_handler,
--			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
--			IRQF_ONESHOT | IRQF_EARLY_RESUME,
--			"palmas_usb_id", palmas_usb);
--	if (status < 0) {
--		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
-+	if (palmas_usb->enable_id_detection) {
-+		status = devm_request_threaded_irq(palmas_usb->dev,
-+				palmas_usb->id_irq,
-+				NULL, palmas_id_irq_handler,
-+				IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
-+				IRQF_ONESHOT | IRQF_EARLY_RESUME,
-+				"palmas_usb_id", palmas_usb);
-+		if (status < 0) {
-+			dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
- 					palmas_usb->id_irq, status);
--		goto fail_extcon;
-+			goto fail_extcon;
-+		}
- 	}
- 
--	status = devm_request_threaded_irq(palmas_usb->dev,
--			palmas_usb->vbus_irq, NULL, palmas_vbus_irq_handler,
--			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
--			IRQF_ONESHOT | IRQF_EARLY_RESUME,
--			"palmas_usb_vbus", palmas_usb);
--	if (status < 0) {
--		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
-+	if (palmas_usb->enable_vbus_detection) {
-+		status = devm_request_threaded_irq(palmas_usb->dev,
-+				palmas_usb->vbus_irq, NULL,
-+				palmas_vbus_irq_handler,
-+				IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
-+				IRQF_ONESHOT | IRQF_EARLY_RESUME,
-+				"palmas_usb_vbus", palmas_usb);
-+		if (status < 0) {
-+			dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
- 					palmas_usb->vbus_irq, status);
--		goto fail_extcon;
-+			goto fail_extcon;
-+		}
- 	}
- 
- 	palmas_enable_irq(palmas_usb);
-@@ -227,8 +242,10 @@ static int palmas_usb_suspend(struct device *dev)
- 	struct palmas_usb *palmas_usb = dev_get_drvdata(dev);
- 
- 	if (device_may_wakeup(dev)) {
--		enable_irq_wake(palmas_usb->vbus_irq);
--		enable_irq_wake(palmas_usb->id_irq);
-+		if (palmas_usb->enable_vbus_detection)
-+			enable_irq_wake(palmas_usb->vbus_irq);
-+		if (palmas_usb->enable_id_detection)
-+			enable_irq_wake(palmas_usb->id_irq);
- 	}
- 	return 0;
- }
-@@ -238,8 +255,10 @@ static int palmas_usb_resume(struct device *dev)
- 	struct palmas_usb *palmas_usb = dev_get_drvdata(dev);
- 
- 	if (device_may_wakeup(dev)) {
--		disable_irq_wake(palmas_usb->vbus_irq);
--		disable_irq_wake(palmas_usb->id_irq);
-+		if (palmas_usb->enable_vbus_detection)
-+			disable_irq_wake(palmas_usb->vbus_irq);
-+		if (palmas_usb->enable_id_detection)
-+			disable_irq_wake(palmas_usb->id_irq);
- 	}
- 	return 0;
- };
-diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
-index 03c22ca..d9ef94c 100644
---- a/include/linux/mfd/palmas.h
-+++ b/include/linux/mfd/palmas.h
-@@ -204,6 +204,8 @@ struct palmas_pmic_platform_data {
- struct palmas_usb_platform_data {
- 	/* Do we enable the wakeup comparator on probe */
- 	int wakeup;
-+	bool disable_vbus_detection;
-+	bool disable_id_detection;
- };
- 
- struct palmas_resource_platform_data {
-@@ -377,6 +379,8 @@ struct palmas_usb {
- 	int vbus_irq;
- 
- 	enum palmas_usb_state linkstat;
-+	bool enable_vbus_detection;
-+	bool enable_id_detection;
- };
- 
- #define comparator_to_palmas(x) container_of((x), struct palmas_usb, comparator)
+
 -- 
-1.7.1.1
+for me, ck means con kolivas and not calvin klein... does it mean I'm a geek ?
