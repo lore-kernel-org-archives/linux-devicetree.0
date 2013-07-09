@@ -1,46 +1,47 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 4/7] ARM: AT91: DTS: sam9x5: add SSC DMA parameters
-Date: Tue,  9 Jul 2013 16:25:30 +0200
-Message-ID: <1373379933-32749-5-git-send-email-richard.genoud@gmail.com>
-References: <1373372929-17800-1-git-send-email-richard.genoud@gmail.com>
- <1373379933-32749-1-git-send-email-richard.genoud@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] of: match the compatible in the order set by the dts
+ file
+Date: Tue, 09 Jul 2013 08:27:00 -0600
+Message-ID: <51DC1DB4.3050802@wwwdotorg.org>
+References: <1373013818-11365-1-git-send-email-b32955@freescale.com> <20130709070541.GQ516@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1373379933-32749-1-git-send-email-richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130709070541.GQ516@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Huang Shijie <b32955@freescale.com>, grant.likely@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9x5.dtsi |    3 +++
- 1 file changed, 3 insertions(+)
+On 07/09/2013 01:05 AM, Sascha Hauer wrote:
+> On Fri, Jul 05, 2013 at 04:43:38PM +0800, Huang Shijie wrote:
+>> If we set the uart compatible in the dts file like this:
+>>    ------------------------------------------------------
+>>     compatible = "fsl,imx6q-uart", "fsl,imx21-uart";
+>>    ------------------------------------------------------
+>>
+>> and we set the uart compatible in the uart driver like this:
+>>    ------------------------------------------------------
+>> 	{ .compatible = "fsl,imx1-uart", ... },
+>> 	{ .compatible = "fsl,imx21-uart", ... },
+>> 	{ .compatible = "fsl,imx6q-uart", ... },
+>> 	{ /* sentinel */ }
+>>    ------------------------------------------------------
+>>
+>> the current code will match the "fsl,imx21-uart" in the end.
+>>
+>> Of course, this is not what we want. We want it to match the "fsl,imx6q-uart".
+>>
+>> This patch rewrites the match code, and make it to check the compatible
+>> in the order set by the DTS file.
+> 
+> Why don't you set the matching order in the driver the way you want it
+> to be, i.e.:
+> 
+> 	{ .compatible = "fsl,imx6q-uart", ... },
+> 	{ .compatible = "fsl,imx21-uart", ... },
+> 	{ .compatible = "fsl,imx1-uart", ... },
 
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 57d45f5..cf78ac0 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -542,6 +542,9 @@
- 				compatible = "atmel,at91sam9g45-ssc";
- 				reg = <0xf0010000 0x4000>;
- 				interrupts = <28 IRQ_TYPE_LEVEL_HIGH 5>;
-+				dmas = <&dma0 1 AT91_DMA_CFG_PER_ID(13)>,
-+				       <&dma0 1 AT91_DMA_CFG_PER_ID(14)>;
-+				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
- 				status = "disabled";
--- 
-1.7.10.4
+DT semantics are that earlier entries in the compatible property are
+supposed to be matched first, irrespective of how the driver is constructed.
