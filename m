@@ -1,49 +1,123 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V3 2/3] clocksource: mmp: support CLOCKSOURCE OF DECLARE
-Date: Tue, 9 Jul 2013 23:16:20 +0200
-Message-ID: <201307092316.20905.arnd@arndb.de>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
- <1373352166-10064-3-git-send-email-zhangwm@marvell.com>
- <20130709181434.76f6216d@skate>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 3/3] ARM: mmp: bring up pxa988 with device tree support
+Date: Wed, 10 Jul 2013 00:05:21 +0200
+Message-ID: <201307100005.21769.arnd@arndb.de>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com> <1373352166-10064-4-git-send-email-zhangwm@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130709181434.76f6216d@skate>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1373352166-10064-4-git-send-email-zhangwm@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Zhang <zhangwm@marvell.com>
+Cc: grant.likely@linaro.org, haojian.zhuang@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chao Xie <chao.xie@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 09 July 2013, Thomas Petazzoni wrote:
-> Dear Neil Zhang,
-> 
-> On Tue, 9 Jul 2013 14:42:45 +0800, Neil Zhang wrote:
-> > support CLOCKSOURCE OF DECLARE for mmp timer.
-> > 
-> > Signed-off-by: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  arch/arm/mach-mmp/mmp-dt.c  |    5 ++---
-> >  arch/arm/mach-mmp/mmp2-dt.c |    3 +--
-> >  arch/arm/mach-mmp/time.c    |   15 ++-------------
-> >  3 files changed, 5 insertions(+), 18 deletions(-)
-> 
-> Maybe it would be good to take this opportunity to move
-> arch/arm/mach-mmp/time.c into drivers/clocksource/.
+On Tuesday 09 July 2013, Neil Zhang wrote:
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		interrupt-parent = <&gic>;
+> +		ranges;
+> +
+> +		gic: interrupt-controller@d1dfe100 {
+> +			compatible = "arm,cortex-a9-gic";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <1>;
+> +			interrupt-controller;
+> +			reg = <0xd1dff000 0x1000>,
+> +			      <0xd1dfe100 0x0100>;
+> +		};
+> +
+> +		L2: l2-cache-controller@d1dfb000 {
+> +			compatible = "arm,pl310-cache";
+> +			reg = <0xd1dfb000 0x1000>;
+> +			arm,data-latency = <2 1 1>;
+> +			arm,tag-latency = <2 1 1>;
+> +			arm,pwr-dynamic-clk-gating;
+> +			arm,pwr-standby-mode;
+> +			cache-unified;
+> +			cache-level = <2>;
+> +		};
+> +
+> +		local-timer@d1dfe600 {
+> +			compatible = "arm,cortex-a9-twd-timer";
+> +			reg = <0xd1dfe600 0x20>;
+> +			interrupts = <1 13 0x304>;
+> +		};
+> +
+> +		axi@d4200000 {	/* AXI */
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0xd4200000 0xd4200000 0x00200000>;
+> +
+> +			intc: wakeupgen@d4282000 {
+> +				compatible = "marvell,mmp-intc";
+> +				reg = <0xd4282000 0x1000>;
+> +				marvell,intc-wakeup = <0x114 0x3
+> +						    0x144 0x3>;
+> +			};
+> +		};
 
-+1
+I am guessing that the structure does not actually reflect the hardware.
 
-Or we might want to have a more coordinated move of all clocksource
-drivers in arch/arm to drivers/clocksource now, as we have done for some
-other subsystems.
+Shouldn't AXI be the top-level bus, with the other stuff under it?
+
+> +
+> +
+> +			uart1: uart@d4017000 {
+> +				compatible = "marvell,mmp-uart";
+> +				reg = <0xd4017000 0x1000>;
+> +				interrupts = <0 27 0x4>;
+> +				status = "disabled";
+> +			};
+
+The uart node should be called "serial@d4017000" instead of "uart@d4017000".
+
+> diff --git a/arch/arm/mach-mmp/reset.c b/arch/arm/mach-mmp/reset.c
+> new file mode 100644
+> index 0000000..b90ec54
+> --- /dev/null
+> +++ b/arch/arm/mach-mmp/reset.c
+> @@ -0,0 +1,66 @@
+> +/*
+> + * linux/arch/arm/mach-mmp/reset.c
+
+I think this could just be part of the smp.c file.
+
+> + *
+> + * Author:	Neil Zhang <zhangwm@marvell.com>
+> + * Copyright:	(C) 2012 Marvell International Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/smp.h>
+> +
+> +#include <asm/io.h>
+> +#include <asm/cacheflush.h>
+> +#include <asm/mach/map.h>
+> +
+> +#include <mach/addr-map.h>
+> +
+> +#include "reset.h"
+> +
+> +#define PMU_CC2_AP			APMU_REG(0x0100)
+> +#define CIU_CA9_WARM_RESET_VECTOR	CIU_REG(0x00d8)
+
+You should not hardcode the addresses here, better find them from the device tree.
+> +
+> +#define CPU_CORE_RST(n)	(1 << ((n) * 4 + 16))
+> +#define CPU_DBG_RST(n)	(1 << ((n) * 4 + 18))
+> +#define CPU_WDOG_RST(n)	(1 << ((n) * 4 + 19))
+
+This should probably go into a reset controller driver, in drivers/reset/
 
 	Arnd
