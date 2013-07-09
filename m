@@ -1,68 +1,42 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [PATCH v2 1/5] sound: sam9x5_wm8731: machine driver for at91sam9x5
- wm8731 boards
-Date: Tue, 9 Jul 2013 16:37:36 +0800
-Message-ID: <51DBCBD0.8060901@atmel.com>
-References: <1373290193-25300-1-git-send-email-richard.genoud@gmail.com> <1373290193-25300-2-git-send-email-richard.genoud@gmail.com> <20130708150721.GK27646@sirena.org.uk> <CACQ1gAgJyTSdxAKK7uwG-ybE2ddC90podM3+tOAqQwZUspsU8Q@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH V6 0/4] Generic PHY driver for the Exynos SoC DP PHY
+Date: Tue, 09 Jul 2013 10:50:26 +0200
+Message-ID: <51DBCED2.7010102@samsung.com>
+References: <003d01ce7c7a$d04043d0$70c0cb70$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACQ1gAgJyTSdxAKK7uwG-ybE2ddC90podM3+tOAqQwZUspsU8Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Genoud <richard.genoud@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <003d01ce7c7a$d04043d0$70c0cb70$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, Hui Wang <jason77.wang@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+On 07/09/2013 10:03 AM, Jingoo Han wrote:
+> This patch series adds a simple driver for the Samsung Exynos SoC
+> series DP transmitter PHY, using the generic PHY framework [1].
+> Previously the DP PHY used an internal DT node to control the PHY
+> power enable bit.
+> 
+> These patches was tested on Exynos5250.
+> 
+> This PATCH v6 follows:
+>  * PATCH v5, sent on July, 8th 2013
+>  * PATCH v4, sent on July, 2nd 2013
+>  * PATCH v3, sent on July, 1st 2013
+>  * PATCH v2, sent on June, 28th 2013
+>  * PATCH v1, sent on June, 28th 2013
+> 
+> Changes between v5 and v6:
+>   * Re-based on git://gitorious.org/linuxphy/linuxphy.git
 
-On 7/9/2013 16:19, Richard Genoud wrote:
-> 2013/7/8 Mark Brown <broonie@kernel.org>:
->> On Mon, Jul 08, 2013 at 03:29:49PM +0200, Richard Genoud wrote:
->>
->>> + *             Nicolas Ferre <nicolas.ferre@atmel.com>
->>> + *
->>> + * Based on sam9g20_wm8731.c by:
->>> + * Sedji Gaouaou <sedji.gaouaou@atmel.com>
->>
->> The obvious question here is of course if we can use the same driver for
->> both of them.
-> I haven't got a g20 to test that, but that's the goal.
-> For now, g20 is still non-DT, so I think it's best to have a DT-only
-> driver like this one for the 9x5 family (9g15, 9g25, 9x25, 9g35,
-> 9x25).
-> When the g20 will move to DT completely, we can drop sam9g20_wm8731.c
-> and adjust sam9x5_wm8731.c (mainly master clock and widgets it seems)
+I'm not sure if we really need to keep the documentation of the
+original binding. Anyway, for the whole series, please feel free
+to ad my
 
-The at91sam9g20ek board can work in DT mode, and the sound has support 
-in DT mode already.
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-Sure, the mainly thing we need deal with is the master clock and 
-widgets. If put them together will make code ugly or need many many 
-#ifdef, I suggest to keep them separately.
-
-> By the way, maybe g45 could use that also (and SAMA5 ?)
-
-For g45ek board, it use AC97 interface, not the case.
-
->>
->>> +     codec_dai->driver->playback.rates &= SNDRV_PCM_RATE_8000 |
->>> +             SNDRV_PCM_RATE_32000 |
->>> +             SNDRV_PCM_RATE_48000 |
->>> +             SNDRV_PCM_RATE_96000;
->>> +     codec_dai->driver->capture.rates &= SNDRV_PCM_RATE_8000 |
->>> +             SNDRV_PCM_RATE_32000 |
->>> +             SNDRV_PCM_RATE_48000 |
->>> +             SNDRV_PCM_RATE_96000;
->>
->> You definitely shouldn't be fiddling with a driver's constant static
->> data.  You want to be using snd_pcm_hw_constraint() APIs to set
->> additional constraints intead.
-> Ok, I'll change that.
->
->
-> Thanks !
->
-
-Best Regards,
-Bo Shen
+--
+Thanks,
+Sylwester
