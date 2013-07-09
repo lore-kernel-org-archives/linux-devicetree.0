@@ -1,63 +1,54 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] of: match the compatible in the order set by the dts
- file
-Date: Tue, 09 Jul 2013 08:40:26 -0600
-Message-ID: <51DC20DA.7050802@wwwdotorg.org>
-References: <1373013818-11365-1-git-send-email-b32955@freescale.com> <20130709070541.GQ516@pengutronix.de> <51DBBFDA.70302@freescale.com> <20130709075124.GR516@pengutronix.de> <51DBC58D.90002@freescale.com> <CAL_JsqL4ABJCQXveSAMZKOiHwJi=w8zFYjg3DV7kqEEcCXQJcw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 0/7] Sound support for at91sam9x5-wm8731 based boards
+Date: Tue, 9 Jul 2013 15:42:37 +0100
+Message-ID: <20130709144237.GW27646@sirena.org.uk>
+References: <1373372929-17800-1-git-send-email-richard.genoud@gmail.com>
+ <1373379933-32749-1-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=GB2312
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Q75f2G+qywaASSYI"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL4ABJCQXveSAMZKOiHwJi=w8zFYjg3DV7kqEEcCXQJcw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1373379933-32749-1-git-send-email-richard.genoud@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Huang Shijie <b32955@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/09/2013 06:03 AM, Rob Herring wrote:
-> On Tue, Jul 9, 2013 at 3:10 AM, Huang Shijie <b32955@freescale.com> w=
-rote:
->> =D3=DA 2013=C4=EA07=D4=C209=C8=D5 15:51, Sascha Hauer =D0=B4=B5=C0:
->>
->>> On Tue, Jul 09, 2013 at 03:46:34PM +0800, Huang Shijie wrote:
->>>>
->>>> =D3=DA 2013=C4=EA07=D4=C209=C8=D5 15:05, Sascha Hauer =D0=B4=B5=C0=
-:
->>>>>
->>>>> Why don't you set the matching order in the driver the way you wa=
-nt it
->>>>> to be, i.e.:
->>>>>
->>>>>         { .compatible =3D "fsl,imx6q-uart", ... },
->>>>>         { .compatible =3D "fsl,imx21-uart", ... },
->>>>>         { .compatible =3D "fsl,imx1-uart", ... },
->>>>>
->>>> yes. i can set it like this.
->>>>
->>>> but this method looks like a ugly workaround.
->>>
->>> If a driver has different ways of supporting a single device, then
->>> putting the preferred or most feature rich on top doesn't look very=
- ugly
->>> to me.
->>
->> this method makes it much _coupled_ between the driver and the dts f=
-ile.
->>
->> IMHO, it's an unnecessary _burden_ to the driver programmer:
->>    he should puts the most feature compatible on the top.
->>
->> it's much graceful if we let the driver programmer be transparent ab=
-out
->> this.
->=20
-> The dts requires compatible strings to be most specific to least
-> specific. There is no reason that driver match tables should not be
-> the same and that is the assumption. Matching is not just based on
-> compatible properties and your patch does not handle the other cases.
 
-Well, that may be true, but the only way to guarantee that the DT
-compatible property is matched correctly is to match it in the order
-it's written. Forcing driver writers to write the of_match table in a
-particular order is quite a hack, and doesn't guarantee the correct
-match order in all cases, only typical cases.
+--Q75f2G+qywaASSYI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Jul 09, 2013 at 04:25:26PM +0200, Richard Genoud wrote:
+> [I've just seen that I forgot to cc Uwe to the cover letter, sorry for that.]
+
+This is the second or third copy of this patch set I've been sent
+*today*.  Worse, everything seems to be being sent in reply to the same
+thread increasing the nesting substantially.  Please slow down, it's
+flooding my mailbox and discouraging me from looking since it seems
+likely that there will just be another resend.
+
+--Q75f2G+qywaASSYI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR3CFaAAoJELSic+t+oim9NPIP/AgWbSl0FRTI1gKARl5PmTFM
++Q36+6LGhvMMMjkKUvXfyOeS833Z3RWs6Wc9rGJtPa7rSyqGOWSD42Mtyr/ZoVQ7
+KeVXEHlnCnCj43+JnUlbIJco+R3DnweFxQD+MnPpLKVWWgUeMOJ2ctHKgiHZR+FK
+ccFNhTl81GiB8uBH/bjWt0q7rTNm5Heusyrj7N7Ta7SYJDBht9EIM7SajDGOX1kx
+5kFYpvKDE6k4ISEgRvsTFft478xcyy1s6+sNpFi5OxSfozohfWK+LieeVm1eh0nK
+fxG1xBHBCgUtupnmH51PENjvAcv0KQVO1lqCIwaYLABBjYGl9XVSvbO+fotiqCOL
+5+PajSXjwtXEwa06CiyaYL14jXHEbDmLSncMXZi+mtA/q3BD/LFNOHnsyzMIKmV0
+7DnqM6o70it9F/fD6WtAsO3kUETCwA5czX3tx92W95rftpj9dXcqEHeR60y36wYR
+0tEsbhD/kS7WatmNESuGcTm9zzjFSkq7qNom4ZADC81l6tu7Mx3Z2Nn0+EayjsvA
+Vi5kgqVrgG5To4gfFZnCzkYc6hjnwAt6UtiIbTHK9Whn2AEYUFtHLF+nhuUpPuXu
+uuLu2cOZkpLfXOrTHljpGcJaqcNgykjS+VCTRgxRLB6PnzxeNb4kMx7U7APEpzmC
+v78YIhmgDASEgX9TlmhU
+=Nzdt
+-----END PGP SIGNATURE-----
+
+--Q75f2G+qywaASSYI--
