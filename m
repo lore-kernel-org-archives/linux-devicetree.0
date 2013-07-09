@@ -1,11 +1,17 @@
-From: Eric Holmberg <eholmber-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [RFC] Driver configuration using Device Tree
-Date: Tue, 09 Jul 2013 14:10:58 -0600
-Message-ID: <51DC6E52.3080102@codeaurora.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 11/22] PCI: mvebu: Adapt to the new device tree layout
+Date: Tue, 9 Jul 2013 17:22:03 -0300
+Message-ID: <20130709202201.GC2340@localhost>
+References: <1373388084-29520-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1373388084-29520-12-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130709182026.GJ11908@titan.lakedaemon.net>
+ <CAErSpo5uhDRWNnEvTewU=RnV7VW_em=PbvyQZh2PkEy8pCsGwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAErSpo5uhDRWNnEvTewU=RnV7VW_em=PbvyQZh2PkEy8pCsGwg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,179 +22,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: kramasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I am trying to determine if Device Tree is an appropriate use for =
-
-configuring drivers and would like to request comments.  We currently =
-
-use Device Tree in our Shared Memory Driver (SMD) that manages up to 64 =
-
-ports (where a port consists of an RX FIFO and a TX FIFO) between any =
-
-two processors and a pair of interrupts for each processor.  The shared =
-
-memory address and interrupt configuration is stored in Device Tree and =
-
-since this is hardware, this is considered an acceptable use.  However, =
-
-we also have two separate modules that use SMD and export devices to =
-
-userspace through either the TTY framework (SMD TTY) or through a =
-
-character device (SMD PKT).  For these drivers, the configuration has =
-
-less to do with hardware and more about which port to connect to in the =
-
-SMD driver and how to expose the port to userspace through a device =
-
-node.  This code is used in Linux-based phones.
-
-The DT configuration looks like this:
-         qcom,smdtty {
-                 compatible =3D "qcom,smdtty";
-
-                 qcom,smdtty-ds {
-                         qcom,smdtty-port-name =3D "DS";
-                         qcom,smdtty-edge =3D <0>;
-                         qcom,smdtty-dev-idx =3D <0>;
-                 };
-                 . . .
-                /* on the order of 10 more port config items */
-       };
-
-
-Question
---------
-Is there a concern that DT should only be used for hardware =
-
-configuration and that this "driver configuration" is not an acceptable =
-
-use?  If it is not acceptable, should I go back to using platform =
-
-devices (seems like a step backwards) or some other method such as =
-
-exporting a control channel to userspace that can be configured using an =
-
-IOCTL?
-
-
-More Detailed Background Information
-------------------------------------
-Here=92s a diagram showing the modules to help visualize the system.
-
-                   +-------------------------------+
-                   |                               |
-                   |    SMD Userspace Clients      |
-                   |                               |
-                   +-------------------------------+
-    User space              ^              ^
-  +-------------------------|--------------|----------------------+
-    Kernel space            +              +
-                      +--------------------------+
-                      | Linux Virtual File Sys   |
-                      |                          |
-                      +--------------------------+
-                            ^              ^
-                            |              |
-                            |        +---------------+
-                            |        |    Linux      |
-                            |        | TTY Framework |
-                            |        +---------------+
-                            |              ^
-                            |              |
-     +---------+            |              |               +---------+
-     |   DT    |      +-----------+  +-----------+         |   DT    |
-     |  Config |+---->|    SMD    |  |    SMD    |<-------+|  Config |
-     |         |      |    PKT    |  |    TTY    |         |         |
-     +---------+      +-----------+  +-----------+         +---------+
-                            |              |
-                            |              |
-                            v              |
-                            O <------------+
-                            |
-     +---------+            |
-     |   DT    |      +------------------------+
-     |  Config |+---->|          SMD           |
-     |         |      |                        |
-     +---------+      +------------------------+
-                         |             ^   |
-                         |             |   |
-                         |             |   |
-                         |             |   |
-                         |             |   |
-                         |             |   |
-                         v             |   |
-               +--------------------+  |   |Interrupts
-               |                    |  |   |
-               |  Shared Memory     |  |   |
-               |                    |  |   |
-               +---------+----------+  |   |
-                         |             |   |
-                         |             |   |
-                         |             |   |
-                         |             |   |
-                         |             |   |
-                         |             |   |
-                         v             |   v
-          +-----------------------------------+
-          |                                   |
-          |     Remote System (Modem, etc)    |
-          |                                   |
-          +-----------------------------------+
-
-Here=92s an example of our DT schema.  Each SMD channel is uniquely =
-
-identified in the system by the NAME:EDGE, so this is included in the =
-
-configuration along with the index or name of the device node to export =
-
-to userspace (either a TTY device for streaming-mode data or a character =
-
-device for packet-mode data).
-
-[Root level node]
-Required properties:
-	-compatible: should be "qcom,smdtty"
-
-[Second level nodes]
-qcom,smdtty-port-names
-Required properties:
-	-qcom,smdtty-port-name: the name that identifies the smd channel
-	-qcom,smdtty-edge: the smd edge (this is an enumeration that
-			identifies the local<->remote processor edge)
-	-qcom,smdtty-dev-idx: the device node index
-
-Example:
-
-         qcom,smdtty {
-                 compatible =3D "qcom,smdtty";
-
-                 qcom,smdtty-ds {
-                         qcom,smdtty-port-name =3D "DS";
-                         qcom,smdtty-edge =3D <0>;
-                         qcom,smdtty-dev-name =3D <0>;
-                 };
-
-                 qcom,smdtty-apps-fm {
-                         qcom,smdtty-port-name =3D "APPS_FM";
-                         qcom,smdtty-edge =3D <6>;
-                         qcom,smdtty-dev-name =3D <1>;
-                 };
-
-                 qcom,smdtty-gpsnmea {
-                         qcom,smdtty-port-name =3D "GPSNMEA";
-                         qcom,smdtty-edge =3D <0>;
-                         qcom,smdtty-dev-name =3D <27>;
-                 };
-         };
-
-Thanks,
-
-Eric Holmberg
--- =
-
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation.
+T24gVHVlLCBKdWwgMDksIDIwMTMgYXQgMTI6NTA6NDdQTSAtMDYwMCwgQmpvcm4gSGVsZ2FhcyB3
+cm90ZToKPiBPbiBUdWUsIEp1bCA5LCAyMDEzIGF0IDEyOjIwIFBNLCBKYXNvbiBDb29wZXIgPGph
+c29uQGxha2VkYWVtb24ubmV0PiB3cm90ZToKPiA+IE9uIFR1ZSwgSnVsIDA5LCAyMDEzIGF0IDAx
+OjQxOjEzUE0gLTAzMDAsIEV6ZXF1aWVsIEdhcmNpYSB3cm90ZToKPiA+PiBGcm9tOiBUaG9tYXMg
+UGV0YXp6b25pIDx0aG9tYXMucGV0YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+Pgo+ID4+
+IFRoZSBuZXcgZGV2aWNlIHRyZWUgbGF5b3V0IGVuY29kZXMgdGhlIHdpbmRvdydzIHRhcmdldCBJ
+RCBhbmQgYXR0cmlidXRlCj4gPj4gaW4gdGhlIFBDSWUgY29udHJvbGxlciBub2RlJ3MgcmFuZ2Vz
+IHByb3BlcnR5LiBUaGlzIGFsbG93cyB0byBwYXJzZQo+ID4+IHN1Y2ggZW50cmllcyB0byBvYnRh
+aW4gc3VjaCBpbmZvcm1hdGlvbiBhbmQgdXNlIHRoZSByZWNlbnRseSBpbnRyb2R1Y2VkCj4gPj4g
+TUJ1cyBBUEkgdG8gY3JlYXRlIHRoZSB3aW5kb3dzLCBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBjdXJy
+ZW50IG5hbWUgYmFzZWQKPiA+PiBzY2hlbWUuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBUaG9t
+YXMgUGV0YXp6b25pIDx0aG9tYXMucGV0YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+PiAt
+LS0KPiA+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL212ZWJ1LXBjaS50eHQgICAgICAg
+ICAgfCAxNDUgKysrKysrKysrKysrKysrKy0tLS0tCj4gPj4gIGRyaXZlcnMvcGNpL2hvc3QvcGNp
+LW12ZWJ1LmMgICAgICAgICAgICAgICAgICAgICAgIHwgMTEzICsrKysrKysrKysrLS0tLS0KPiA+
+PiAgMiBmaWxlcyBjaGFuZ2VkLCAxOTMgaW5zZXJ0aW9ucygrKSwgNjUgZGVsZXRpb25zKC0pCj4g
+Pgo+ID4gQWZ0ZXIgbXkgY29udmVyc2F0aW9uIHdpdGggdGdseCBhIGZldyBkYXlzIGFnbyBbMV0s
+IEknbSBldmVuIG1vcmUKPiA+IGluY2xpbmVkIHRvIHB1c2ggcGF0Y2hlcyBsaWtlIHRoaXMgdG8g
+dGhlIGNvcnJlY3QgbWFpbnRhaW5lcnMuICBIb3dldmVyLAo+ID4gbG9va2luZyBhdCBob3cgdGhp
+cyBwYXRjaCBmaXRzIGludG8gdGhlIHNlcmllcywgaXQgbWF5IGJlIGJldHRlciBpZiB3ZQo+ID4g
+dGFrZSBpdCB0aHJvdWdoIG12ZWJ1L2FybS1zb2Mgd2l0aCB5b3VyIEFjay4KPiA+Cj4gPiBJdCBk
+ZXBlbmRzIG9uIHRoZSBwYXRjaGVzIGJlZm9yZSBpdCwgYW5kIHRoZSBwYXRjaGVzIGFmdGVyIGl0
+IGRlcGVuZCBvbgo+ID4gaXQuICBVbmxlc3MgSSdtIHJlYWRpbmcgdGhpcyB3cm9uZywgSSB3b3Vs
+ZCBoYXZlIGEgYnJhbmNoIHRoYXQgeW91IHdvdWxkCj4gPiBwdWxsIGFuZCBiYXNlIHRoaXMgcGF0
+Y2ggb24sIHdoaWNoIEkgd291bGQgdGhlbiBwdWxsIGFuZCBiYXNlIHRoZSByZXN0Cj4gPiBvZiB0
+aGUgc2VyaWVzIG9uLiBSZXNodWZmbGluZyB0aGUgc2VyaWVzIHRvIGFsbGV2aWF0ZSB0aGlzIHdv
+dWxkbid0IHdvcmsKPiA+IGluIHRoaXMgY2FzZS4gOi0vCj4gPgo+ID4gQXJlIHlvdSBvayB3aXRo
+IHRoYXQ/ICAoZndpdywgdGhlIGNvZGUgY2hhbmdlcyBhcmUgaXNvbGF0ZWQgdG8KPiA+IHBjaS1t
+dmVidS5jKQo+IAo+IFllcCwgdGhhdCBtYWtlcyBzZW5zZSB0byBtZS4gIFdpdGggZGVwZW5kZW5j
+aWVzIGJvdGggd2F5cywgaXQganVzdAo+IHNlZW1zIG11Y2ggc2ltcGxlciB0byBoYXZlIHlvdSBw
+dXNoIGl0IHZpYSBtdmVidS9hcm0tc29jLgo+IAo+IEFja2VkLWJ5OiBCam9ybiBIZWxnYWFzIDxi
+aGVsZ2Fhc0Bnb29nbGUuY29tPgo+IAoKR3JlYXQsIFRoYW5rcyEKCkFybmQsIEphc29uIChHdW50
+aG9ycGUpOgoKU28sIGhvdyBkb2VzIHRoaXMgbG9vaz8gSWYgdGhlcmUgaXNuJ3QgYW55dGhpbmcg
+bGVmdCwgd291bGQgeW91IG1pbmQKYWNraW5nIHRoaXMgc28gSmFzb24gKENvb3BlcikgY2FuIHF1
+ZXVlIGl0IHNvbWV3aGVyZT8KClRoYW5rcyEKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxl
+Y3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0
+cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUt
+ZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
+by9kZXZpY2V0cmVlLWRpc2N1c3MK
