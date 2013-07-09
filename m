@@ -1,77 +1,38 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v3 3/7] Documentation: DT: update atmel SSC with DMA binding
-Date: Tue, 9 Jul 2013 15:20:38 +0200
-Message-ID: <51DC0E26.7080508@atmel.com>
-References: <1373290193-25300-1-git-send-email-richard.genoud@gmail.com> <1373372929-17800-1-git-send-email-richard.genoud@gmail.com> <1373372929-17800-4-git-send-email-richard.genoud@gmail.com> <CACQ1gAg8WQTaz4XkXJCH+-bNU_U3s_1pgmQYoQR3v-KHOzzBTA@mail.gmail.com>
+From: Graeme Gregory <gg@slimlogic.co.uk>
+Subject: Re: [PATCH 0/4] extcon: palmas: clean-up/fixes and suspend/resume
+ susupport.
+Date: Tue, 9 Jul 2013 14:17:07 +0100
+Message-ID: <20130709131707.GA2078@mint>
+References: <1373375064-12012-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACQ1gAg8WQTaz4XkXJCH+-bNU_U3s_1pgmQYoQR3v-KHOzzBTA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Genoud <richard.genoud@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1373375064-12012-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: cw00.choi@samsung.com, myungjoo.ham@samsung.com, devicetree-discuss@lists.ozlabs.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/07/2013 15:19, Richard Genoud :
-> 2013/7/9 Richard Genoud <richard.genoud@gmail.com>:
->> As atmel-ssc can be used with DMA, the documentation should be updated.
->> Also, a configuration DMA example is given.
->>
->> Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
->> ---
->>   .../devicetree/bindings/misc/atmel-ssc.txt         |   24 ++++++++++++++++++--
->>   1 file changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
->> index 38e51ad..96958ca 100644
->> --- a/Documentation/devicetree/bindings/misc/atmel-ssc.txt
->> +++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
->> @@ -6,10 +6,30 @@ Required properties:
->>          - atmel,at91sam9g45-ssc: support dma transfer
->>   - reg: Should contain SSC registers location and length
->>   - interrupts: Should contain SSC interrupt
->> +For dma transfer:
->> +- dmas: DMA specifier, consisting of a phandle to DMA controller node,
->> +  the memory interface and SSC DMA channel ID (for tx and rx).
->> +  See Documentation/devicetree/bindings/dma/atmel-dma.txt for details.
->> +- dma-names: Must be "tx", "rx".
->>
->> -Example:
->> +
->> +Examples:
->>   ssc0: ssc@fffbc000 {
->>          compatible = "atmel,at91rm9200-ssc";
->>          reg = <0xfffbc000 0x4000>;
->> -       interrupts = <14 4 5>;
->> +       interrupts = <14 IRQ_TYPE_LEVEL_HIGH 5>;
-> maybe I should not use macro in the documentation (not sure if I should or not).
+Whole series looks good to me.
 
-absolutely.
+Acked-by: Graeme Gregory <gg@slimlogic.co.uk>
 
->>   };
->> +
->> +
->> +ssc0: ssc@f0010000 {
->> +      compatible = "atmel,at91sam9g45-ssc";
->> +      reg = <0xf0010000 0x4000>;
->> +      interrupts = <28 IRQ_TYPE_LEVEL_HIGH 5>;
->> +      dmas = <&dma0 1 AT91_DMA_CFG_PER_ID(13)>,
->> +            <&dma0 1 AT91_DMA_CFG_PER_ID(14)>;
-> same here
->> +      dma-names = "tx", "rx";
->> +      pinctrl-names = "default";
->> +      pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
->> +      status = "disabled";
->> +};
->> +
->> --
->> 1.7.10.4
->>
->
->
->
-
-
--- 
-Nicolas Ferre
+On Tue, Jul 09, 2013 at 06:34:20PM +0530, Laxman Dewangan wrote:
+> This patch series does following:
+> - Remove unused member from extcon palmas structure.
+> - Fix to support of detecting cable properly with multiple insert/removal.
+> - Add support for suspend/resume functionlaity and wakup from suspend.
+> - Option to select/de-select the ID or VBUS detection.
+> 
+> Laxman Dewangan (4):
+>   extcon: palmas: remove unused member from palams_usb structure
+>   extcon: palmas: enable ID_GND and ID_FLOAT detection always
+>   extcon: palams: add support for suspend/resume
+>   extcon: palmas: Option to disable ID/VBUS detection based on platform
+> 
+>  .../devicetree/bindings/extcon/extcon-palmas.txt   |    2 +
+>  drivers/extcon/extcon-palmas.c                     |  111 ++++++++++++++------
+>  include/linux/mfd/palmas.h                         |    9 +-
+>  3 files changed, 86 insertions(+), 36 deletions(-)
+> 
