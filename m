@@ -1,78 +1,80 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of: match the compatible in the order set by the dts file
-Date: Tue, 9 Jul 2013 07:03:14 -0500
-Message-ID: <CAL_JsqL4ABJCQXveSAMZKOiHwJi=w8zFYjg3DV7kqEEcCXQJcw@mail.gmail.com>
-References: <1373013818-11365-1-git-send-email-b32955@freescale.com>
-	<20130709070541.GQ516@pengutronix.de>
-	<51DBBFDA.70302@freescale.com>
-	<20130709075124.GR516@pengutronix.de>
-	<51DBC58D.90002@freescale.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH v3 0/7] Sound support for at91sam9x5-wm8731 based boards
+Date: Tue,  9 Jul 2013 14:28:42 +0200
+Message-ID: <1373372929-17800-1-git-send-email-richard.genoud@gmail.com>
+References: <1373290193-25300-1-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=GB2312
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51DBC58D.90002@freescale.com>
+In-Reply-To: <1373290193-25300-1-git-send-email-richard.genoud@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Richard Genoud <richard.genoud@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 9, 2013 at 3:10 AM, Huang Shijie <b32955@freescale.com> wro=
-te:
-> =D3=DA 2013=C4=EA07=D4=C209=C8=D5 15:51, Sascha Hauer =D0=B4=B5=C0:
->
->> On Tue, Jul 09, 2013 at 03:46:34PM +0800, Huang Shijie wrote:
->>>
->>> =D3=DA 2013=C4=EA07=D4=C209=C8=D5 15:05, Sascha Hauer =D0=B4=B5=C0:
->>>>
->>>> Why don't you set the matching order in the driver the way you wan=
-t it
->>>> to be, i.e.:
->>>>
->>>>         { .compatible =3D "fsl,imx6q-uart", ... },
->>>>         { .compatible =3D "fsl,imx21-uart", ... },
->>>>         { .compatible =3D "fsl,imx1-uart", ... },
->>>>
->>> yes. i can set it like this.
->>>
->>> but this method looks like a ugly workaround.
->>
->> If a driver has different ways of supporting a single device, then
->> putting the preferred or most feature rich on top doesn't look very =
-ugly
->> to me.
->
-> this method makes it much _coupled_ between the driver and the dts fi=
-le.
->
-> IMHO, it's an unnecessary _burden_ to the driver programmer:
->    he should puts the most feature compatible on the top.
->
-> it's much graceful if we let the driver programmer be transparent abo=
-ut
-> this.
+Hi,
 
-The dts requires compatible strings to be most specific to least
-specific. There is no reason that driver match tables should not be
-the same and that is the assumption. Matching is not just based on
-compatible properties and your patch does not handle the other cases.
+This patchset add sound on the at91sam9x5ek board.
+It's based on Nicolas Ferre's work in the 2.6.39 atmel patch for sam9x5:
+https://github.com/linux4sam/linux-at91/commit/0aa157c9e71ccccf3abc30fa37eb5c95b392978d
 
-Rob
+It needs Bo Chen's patchset on the generic dmaengine (topic/atmel branch
+on Mark's sound tree) and the SSC interrupts disabled (cf
+http://www.spinics.net/lists/arm-kernel/msg256901.html)
+
+Outstanding issue:
+If this machine driver will support more SoCs maybe we should name it differently.
 
 
+It has been tested on at91sam9g35ek, and should work on g15, g25, x25 and x35 also.
 
->
->
-> thanks
-> Huang Shijie
->
->
->
->
->
->
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+patches applies on next-20130708
+
+[I let the original signed-off from Nicolas and Uwe in place, I don't
+know if I should replace them by something like "originaly-signed-off-by"
+since the code has been changed.]
+
+Changes from v2:
+ * Change atmel,sam9x5-audio-wm8731 to atmel,sam9x5-wm8731-audio for
+consistency with sam9g20 machine driver.
+ * Use the snd_pcm_hw_constraint() API as suggested by Mark and Lars-Peter.
+ * Remove the unnecessary snd_soc_dapm_sync() call as Lars-Peter suggested.
+ * Add documentation for machine driver DT binding.
+ * Update atmel-ssc DT binding documentation.
+ * Add GPL license instead of just the "GPL" word (hope that's ok !)
+
+Changes from v1-RFC:
+ * drop patches on SSC since Bo Chen already did the work
+ * reorder patches to have the machine driver first
+ * drop code already handled by the ASoC framework
+ * drop unneeded SND_ATMEL_SOC_PDC config selection
+ * use static snd_soc_card and  snd_soc_dai_link structures.
+
+Best regards,
+Richard.
+
+Nicolas Ferre (1):
+  sound: sam9x5_wm8731: machine driver for at91sam9x5 wm8731 boards
+
+Richard Genoud (6):
+  Documentation: DT: add sam9x5ek-wm8731 machine driver
+  Documentation: DT: update atmel SSC with DMA binding
+  ARM: AT91: DTS: sam9x5: add SSC DMA parameters
+  ARM: AT91: DTS: sam9x5ek: add WM8731 codec
+  ARM: AT91: DTS: sam9x5ek: add sound configuration
+  ARM: AT91: DTS: sam9x5ek: enable SSC
+
+ .../devicetree/bindings/misc/atmel-ssc.txt         |   24 +-
+ .../bindings/sound/atmel-sam9x5-wm8731-audio.txt   |   30 +++
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |    3 +
+ arch/arm/boot/dts/at91sam9x5ek.dtsi                |   27 +++
+ sound/soc/atmel/Kconfig                            |   10 +
+ sound/soc/atmel/Makefile                           |    2 +
+ sound/soc/atmel/sam9x5_wm8731.c                    |  238 ++++++++++++++++++++
+ 7 files changed, 332 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-sam9x5-wm8731-audio.txt
+ create mode 100644 sound/soc/atmel/sam9x5_wm8731.c
+
+-- 
+1.7.10.4
