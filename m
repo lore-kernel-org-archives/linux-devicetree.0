@@ -1,64 +1,41 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v1 4/4] spi/xilinx: Use of_property_read_u32 for reading
- value from node
-Date: Tue, 09 Jul 2013 07:26:27 +0200
-Message-ID: <51DB9F03.3050203@monstr.eu>
-References: <ff70173bee5f9223ffea2b92b903b4e46ef8b323.1373290150.git.michal.simek@xilinx.com> <95fea2ecead16435fc526b1d7f36a0a1ec1635ff.1373290150.git.michal.simek@xilinx.com> <20130708145119.GJ27646@sirena.org.uk>
-Reply-To: monstr@monstr.eu
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2ADBNTXABHNLMWRXRUPHV"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130708145119.GJ27646@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH v2 3/3] of/documentation: Update G2D documentation
+Date: Tue,  9 Jul 2013 11:42:44 +0530
+Message-ID: <1373350364-2952-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org, mturquette@linaro.org, tomasz.figa@gmail.com, Inki Dae <inki.dae@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2ADBNTXABHNLMWRXRUPHV
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Exynos5250 G2D IP requires only the gate clock. Update the
+binding documentation accordingly.
 
-Hi Mark,
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Inki Dae <inki.dae@samsung.com>
+---
+Updated the description of clock-names as suggested by Tomasz Figa.
+---
+ .../devicetree/bindings/gpu/samsung-g2d.txt        |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-On 07/08/2013 04:51 PM, Mark Brown wrote:
-> On Mon, Jul 08, 2013 at 03:29:17PM +0200, Michal Simek wrote:
->> It simplifies driver probing.
->=20
-> Applied, thanks.
-
-have you applied this patch?
-
-I can't see it in your topic/xilinx branch.
-https://git.kernel.org/cgit/linux/kernel/git/broonie/spi.git/log/?h=3Dtop=
-ic/xilinx
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
-------enig2ADBNTXABHNLMWRXRUPHV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlHbnwMACgkQykllyylKDCF6QQCeKJQsUUtv9HttOPbTCPBfMMCh
-lQwAoJOvLUhzLxVpaYcOm+CgnSDe3xQy
-=n7ld
------END PGP SIGNATURE-----
-
-------enig2ADBNTXABHNLMWRXRUPHV--
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+index 3f454ff..c4f358d 100644
+--- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
++++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+@@ -11,8 +11,11 @@ Required properties:
+ 
+   - interrupts : G2D interrupt number to the CPU.
+   - clocks : from common clock binding: handle to G2D clocks.
+-  - clock-names : from common clock binding: must contain "sclk_fimg2d" and
+-		  "fimg2d", corresponding to entries in the clocks property.
++  - clock-names : names of clocks listed in clocks property, in the same
++		  order, depending on SoC type:
++		  - for S5PV210 and Exynos4 based SoCs: "fimg2d" and
++		    "sclk_fimg2d"
++		  - for Exynos5250 SoC: "fimg2d".
+ 
+ Example:
+ 	g2d@12800000 {
+-- 
+1.7.9.5
