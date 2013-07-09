@@ -1,67 +1,85 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCHv3 1/3] iio: Add Nuvoton NAU7802 ADC driver
-Date: Tue, 09 Jul 2013 16:04:08 +0200
-Message-ID: <51DC1858.8010008@free-electrons.com>
-References: <1372094699-3832-1-git-send-email-alexandre.belloni@free-electrons.com> <1372094699-3832-2-git-send-email-alexandre.belloni@free-electrons.com> <51D53B72.6020309@metafoo.de> <51D7F044.9040205@kernel.org>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH v4 0/7] Sound support for at91sam9x5-wm8731 based boards
+Date: Tue,  9 Jul 2013 16:25:26 +0200
+Message-ID: <1373379933-32749-1-git-send-email-richard.genoud@gmail.com>
+References: <1373372929-17800-1-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51D7F044.9040205@kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Shawn Guo <shawn.guo@linaro.org>, Jonathan Cameron <jic23@cam.ac.uk>, jimwall@q.com, brian@crystalfontz.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1373372929-17800-1-git-send-email-richard.genoud@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Richard Genoud <richard.genoud@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+[I've just seen that I forgot to cc Uwe to the cover letter, sorry for that.]
 
-I don't actually see it in iio.git on kernel.org, am I doing something
-wrong ?
+Hi,
 
-On 06/07/2013 12:24, Jonathan Cameron wrote:
-> On 07/04/2013 10:08 AM, Lars-Peter Clausen wrote:
->> On 06/24/2013 07:24 PM, Alexandre Belloni wrote:
->>> The Nuvoton NAU7802 ADC is a 24-bit 2-channels I2C ADC, with adjustable
->>> gain and sampling rates.
->>>
->>> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
->>> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
->> Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
->>
-> Applied to the togreg branch of iio.git (with a few little tweaks).
->
-> There was some fuzz that required manual fixing because of another driver merge so
-> please check I didn't foul anything up with this or the other bits below.
->
-> There were two trivial missing unlocks on error paths in the read_raw function that
-> I've fixed up (Coccinelle found these for me - if you can I would always advise
-> running sparse, coccicheck and ideally smatch before submitting patches).
->
-> I fixed up the comments because if there is one thing I hate bothering
-> with it is delightful patches that just fix this stuff. Much better
-> to do it now given it took 20 secs ;)
->
->> One remark though. Multiline comments should be like
->>
->> /*
->>  * foo
->>  * bar
->>  */
->>
->> not
->>
->> /* foo
->>  * bar
->>  */
->>
->> But not need to resend the patch just for this
->>
->> - Lars
->>
+This patchset add sound on the at91sam9x5ek board.
+It's based on Nicolas Ferre's work in the 2.6.39 atmel patch for sam9x5:
+https://github.com/linux4sam/linux-at91/commit/0aa157c9e71ccccf3abc30fa37eb5c95b392978d
 
+It needs Bo Chen's patchset on the generic dmaengine (topic/atmel branch
+on Mark's sound tree) and the SSC interrupts disabled (cf
+http://www.spinics.net/lists/arm-kernel/msg256901.html)
+
+Outstanding issue:
+If this machine driver will support more SoCs maybe we should name it differently.
+
+
+It has been tested on at91sam9g35ek, and should work on g15, g25, x25 and x35 also.
+
+patches applies on next-20130708
+
+[I let the original signed-off from Nicolas and Uwe in place, I don't
+know if I should replace them by something like "originaly-signed-off-by"
+since the code has been changed.]
+
+Changes from v3:
+ * Remove the use of macros in device tree documentation.
+
+Changes from v2:
+ * Change atmel,sam9x5-audio-wm8731 to atmel,sam9x5-wm8731-audio for
+consistency with sam9g20 machine driver.
+ * Use the snd_pcm_hw_constraint() API as suggested by Mark and Lars-Peter.
+ * Remove the unnecessary snd_soc_dapm_sync() call as Lars-Peter suggested.
+ * Add documentation for machine driver DT binding.
+ * Update atmel-ssc DT binding documentation.
+ * Add GPL license instead of just the "GPL" word (hope that's ok !)
+
+Changes from v1-RFC:
+ * drop patches on SSC since Bo Chen already did the work
+ * reorder patches to have the machine driver first
+ * drop code already handled by the ASoC framework
+ * drop unneeded SND_ATMEL_SOC_PDC config selection
+ * use static snd_soc_card and  snd_soc_dai_link structures.
+
+Best regards,
+Richard.
+
+Nicolas Ferre (1):
+  sound: sam9x5_wm8731: machine driver for at91sam9x5 wm8731 boards
+
+Richard Genoud (6):
+  Documentation: DT: add sam9x5ek-wm8731 machine driver
+  Documentation: DT: update atmel SSC with DMA binding
+  ARM: AT91: DTS: sam9x5: add SSC DMA parameters
+  ARM: AT91: DTS: sam9x5ek: add WM8731 codec
+  ARM: AT91: DTS: sam9x5ek: add sound configuration
+  ARM: AT91: DTS: sam9x5ek: enable SSC
+
+ .../devicetree/bindings/misc/atmel-ssc.txt         |   20 +-
+ .../bindings/sound/atmel-sam9x5-wm8731-audio.txt   |   30 +++
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |    3 +
+ arch/arm/boot/dts/at91sam9x5ek.dtsi                |   27 +++
+ sound/soc/atmel/Kconfig                            |   10 +
+ sound/soc/atmel/Makefile                           |    2 +
+ sound/soc/atmel/sam9x5_wm8731.c                    |  238 ++++++++++++++++++++
+ 7 files changed, 329 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-sam9x5-wm8731-audio.txt
+ create mode 100644 sound/soc/atmel/sam9x5_wm8731.c
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
+1.7.10.4
