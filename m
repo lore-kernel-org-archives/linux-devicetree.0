@@ -1,53 +1,76 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v2 3/3] of/documentation: Update G2D documentation
-Date: Tue, 9 Jul 2013 12:11:17 +0530
-Message-ID: <CAK9yfHw-Ry0NTKhrbVApz6-7r4R1jhnh34+fFHmA3FPgvdyTWQ@mail.gmail.com>
-References: <1373350364-2952-1-git-send-email-sachin.kamat@linaro.org>
+From: Neil Zhang <zhangwm@marvell.com>
+Subject: [PATCH V3 0/3] bring up pxa988 with DT
+Date: Tue, 9 Jul 2013 14:42:43 +0800
+Message-ID: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1373350364-2952-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org, mturquette@linaro.org, tomasz.figa@gmail.com, Inki Dae <inki.dae@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@linaro.org, haojian.zhuang@gmail.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Neil Zhang <zhangwm@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9 July 2013 11:42, Sachin Kamat <sachin.kamat@linaro.org> wrote:
-> Exynos5250 G2D IP requires only the gate clock. Update the
-> binding documentation accordingly.
->
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> Cc: Inki Dae <inki.dae@samsung.com>
-> ---
-> Updated the description of clock-names as suggested by Tomasz Figa.
-> ---
->  .../devicetree/bindings/gpu/samsung-g2d.txt        |    7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> index 3f454ff..c4f358d 100644
-> --- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> @@ -11,8 +11,11 @@ Required properties:
->
->    - interrupts : G2D interrupt number to the CPU.
->    - clocks : from common clock binding: handle to G2D clocks.
-> -  - clock-names : from common clock binding: must contain "sclk_fimg2d" and
-> -                 "fimg2d", corresponding to entries in the clocks property.
-> +  - clock-names : names of clocks listed in clocks property, in the same
-> +                 order, depending on SoC type:
-> +                 - for S5PV210 and Exynos4 based SoCs: "fimg2d" and
-> +                   "sclk_fimg2d"
-> +                 - for Exynos5250 SoC: "fimg2d".
->
->  Example:
->         g2d@12800000 {
-> --
-> 1.7.9.5
->
+This patch is supposed to bring up pxa988 SMP.
 
-Please ignore this patch. Will re-send. Sorry for the noise.
+ChangeLog
+V3:
+1. change all Marvell prefix to 'marvell'
+2. Support CLOCKSOURCE for mmp timer
+3. Modify the bring up patch according to Arnd's comments.
+
+V2:
+1. use early_init call for handler init.
+2. Add sanity check for maximum core count.
+
+Neil Zhang (3):
+  dts: change Marvell prefix to 'marvell'
+  clocksource: mmp: support CLOCKSOURCE OF DECLARE
+  ARM: mmp: bring up pxa988 with device tree support
+
+ .../devicetree/bindings/arm/mrvl/intc.txt          |   16 +-
+ .../devicetree/bindings/arm/mrvl/mrvl.txt          |    6 +-
+ .../devicetree/bindings/arm/mrvl/timer.txt         |    4 +-
+ Documentation/devicetree/bindings/i2c/i2c-pxa.txt  |   14 +-
+ .../devicetree/bindings/mmc/sdhci-pxa.txt          |    8 +-
+ .../devicetree/bindings/rtc/sa1100-rtc.txt         |    4 +-
+ .../devicetree/bindings/serial/mrvl-serial.txt     |    2 +-
+ arch/arm/boot/dts/mmp2-brownstone.dts              |    2 +-
+ arch/arm/boot/dts/mmp2.dtsi                        |   56 +++---
+ arch/arm/boot/dts/pxa168-aspenite.dts              |    2 +-
+ arch/arm/boot/dts/pxa168.dtsi                      |   24 ++--
+ arch/arm/boot/dts/pxa2xx.dtsi                      |   16 +-
+ arch/arm/boot/dts/pxa3xx.dtsi                      |    2 +-
+ arch/arm/boot/dts/pxa910-dkb.dts                   |    2 +-
+ arch/arm/boot/dts/pxa910.dtsi                      |   27 ++--
+ .../dts/{pxa168-aspenite.dts => pxa988-dkb.dts}    |   12 +-
+ arch/arm/boot/dts/pxa988.dtsi                      |  190 ++++++++++++++++++++
+ arch/arm/mach-mmp/Kconfig                          |   18 ++
+ arch/arm/mach-mmp/Makefile                         |    1 +
+ arch/arm/mach-mmp/common.c                         |   11 +-
+ arch/arm/mach-mmp/common.h                         |    2 +
+ arch/arm/mach-mmp/headsmp.S                        |  104 +++++++++++
+ arch/arm/mach-mmp/include/mach/addr-map.h          |    6 +
+ arch/arm/mach-mmp/irq.c                            |   16 +-
+ arch/arm/mach-mmp/mmp-dt.c                         |   33 ++--
+ arch/arm/mach-mmp/mmp2-dt.c                        |   60 +++++-
+ arch/arm/mach-mmp/platsmp.c                        |  167 +++++++++++++++++
+ arch/arm/mach-mmp/reset.c                          |   66 +++++++
+ arch/arm/mach-mmp/reset.h                          |   29 +++
+ arch/arm/mach-mmp/time.c                           |   15 +--
+ arch/arm/mach-pxa/pxa-dt.c                         |   14 +-
+ drivers/clk/mmp/Makefile                           |    1 +
+ drivers/i2c/busses/i2c-pxa.c                       |   10 +-
+ drivers/mmc/host/sdhci-pxav2.c                     |    4 +-
+ drivers/mmc/host/sdhci-pxav3.c                     |    4 +-
+ drivers/rtc/rtc-sa1100.c                           |    4 +-
+ drivers/tty/serial/pxa.c                           |    4 +-
+ 37 files changed, 788 insertions(+), 168 deletions(-)
+ copy arch/arm/boot/dts/{pxa168-aspenite.dts => pxa988-dkb.dts} (74%)
+ create mode 100644 arch/arm/boot/dts/pxa988.dtsi
+ create mode 100644 arch/arm/mach-mmp/headsmp.S
+ create mode 100644 arch/arm/mach-mmp/platsmp.c
+ create mode 100644 arch/arm/mach-mmp/reset.c
+ create mode 100644 arch/arm/mach-mmp/reset.h
 
 -- 
-With warm regards,
-Sachin
+1.7.4.1
