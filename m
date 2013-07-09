@@ -1,17 +1,15 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 11/22] PCI: mvebu: Adapt to the new device tree layout
-Date: Tue, 9 Jul 2013 17:22:03 -0300
-Message-ID: <20130709202201.GC2340@localhost>
-References: <1373388084-29520-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1373388084-29520-12-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130709182026.GJ11908@titan.lakedaemon.net>
- <CAErSpo5uhDRWNnEvTewU=RnV7VW_em=PbvyQZh2PkEy8pCsGwg@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V3 2/3] clocksource: mmp: support CLOCKSOURCE OF DECLARE
+Date: Tue, 9 Jul 2013 23:16:20 +0200
+Message-ID: <201307092316.20905.arnd@arndb.de>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
+ <1373352166-10064-3-git-send-email-zhangwm@marvell.com>
+ <20130709181434.76f6216d@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAErSpo5uhDRWNnEvTewU=RnV7VW_em=PbvyQZh2PkEy8pCsGwg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20130709181434.76f6216d@skate>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,47 +20,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMDksIDIwMTMgYXQgMTI6NTA6NDdQTSAtMDYwMCwgQmpvcm4gSGVsZ2FhcyB3
-cm90ZToKPiBPbiBUdWUsIEp1bCA5LCAyMDEzIGF0IDEyOjIwIFBNLCBKYXNvbiBDb29wZXIgPGph
-c29uQGxha2VkYWVtb24ubmV0PiB3cm90ZToKPiA+IE9uIFR1ZSwgSnVsIDA5LCAyMDEzIGF0IDAx
-OjQxOjEzUE0gLTAzMDAsIEV6ZXF1aWVsIEdhcmNpYSB3cm90ZToKPiA+PiBGcm9tOiBUaG9tYXMg
-UGV0YXp6b25pIDx0aG9tYXMucGV0YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+Pgo+ID4+
-IFRoZSBuZXcgZGV2aWNlIHRyZWUgbGF5b3V0IGVuY29kZXMgdGhlIHdpbmRvdydzIHRhcmdldCBJ
-RCBhbmQgYXR0cmlidXRlCj4gPj4gaW4gdGhlIFBDSWUgY29udHJvbGxlciBub2RlJ3MgcmFuZ2Vz
-IHByb3BlcnR5LiBUaGlzIGFsbG93cyB0byBwYXJzZQo+ID4+IHN1Y2ggZW50cmllcyB0byBvYnRh
-aW4gc3VjaCBpbmZvcm1hdGlvbiBhbmQgdXNlIHRoZSByZWNlbnRseSBpbnRyb2R1Y2VkCj4gPj4g
-TUJ1cyBBUEkgdG8gY3JlYXRlIHRoZSB3aW5kb3dzLCBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBjdXJy
-ZW50IG5hbWUgYmFzZWQKPiA+PiBzY2hlbWUuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBUaG9t
-YXMgUGV0YXp6b25pIDx0aG9tYXMucGV0YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+PiAt
-LS0KPiA+PiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL212ZWJ1LXBjaS50eHQgICAgICAg
-ICAgfCAxNDUgKysrKysrKysrKysrKysrKy0tLS0tCj4gPj4gIGRyaXZlcnMvcGNpL2hvc3QvcGNp
-LW12ZWJ1LmMgICAgICAgICAgICAgICAgICAgICAgIHwgMTEzICsrKysrKysrKysrLS0tLS0KPiA+
-PiAgMiBmaWxlcyBjaGFuZ2VkLCAxOTMgaW5zZXJ0aW9ucygrKSwgNjUgZGVsZXRpb25zKC0pCj4g
-Pgo+ID4gQWZ0ZXIgbXkgY29udmVyc2F0aW9uIHdpdGggdGdseCBhIGZldyBkYXlzIGFnbyBbMV0s
-IEknbSBldmVuIG1vcmUKPiA+IGluY2xpbmVkIHRvIHB1c2ggcGF0Y2hlcyBsaWtlIHRoaXMgdG8g
-dGhlIGNvcnJlY3QgbWFpbnRhaW5lcnMuICBIb3dldmVyLAo+ID4gbG9va2luZyBhdCBob3cgdGhp
-cyBwYXRjaCBmaXRzIGludG8gdGhlIHNlcmllcywgaXQgbWF5IGJlIGJldHRlciBpZiB3ZQo+ID4g
-dGFrZSBpdCB0aHJvdWdoIG12ZWJ1L2FybS1zb2Mgd2l0aCB5b3VyIEFjay4KPiA+Cj4gPiBJdCBk
-ZXBlbmRzIG9uIHRoZSBwYXRjaGVzIGJlZm9yZSBpdCwgYW5kIHRoZSBwYXRjaGVzIGFmdGVyIGl0
-IGRlcGVuZCBvbgo+ID4gaXQuICBVbmxlc3MgSSdtIHJlYWRpbmcgdGhpcyB3cm9uZywgSSB3b3Vs
-ZCBoYXZlIGEgYnJhbmNoIHRoYXQgeW91IHdvdWxkCj4gPiBwdWxsIGFuZCBiYXNlIHRoaXMgcGF0
-Y2ggb24sIHdoaWNoIEkgd291bGQgdGhlbiBwdWxsIGFuZCBiYXNlIHRoZSByZXN0Cj4gPiBvZiB0
-aGUgc2VyaWVzIG9uLiBSZXNodWZmbGluZyB0aGUgc2VyaWVzIHRvIGFsbGV2aWF0ZSB0aGlzIHdv
-dWxkbid0IHdvcmsKPiA+IGluIHRoaXMgY2FzZS4gOi0vCj4gPgo+ID4gQXJlIHlvdSBvayB3aXRo
-IHRoYXQ/ICAoZndpdywgdGhlIGNvZGUgY2hhbmdlcyBhcmUgaXNvbGF0ZWQgdG8KPiA+IHBjaS1t
-dmVidS5jKQo+IAo+IFllcCwgdGhhdCBtYWtlcyBzZW5zZSB0byBtZS4gIFdpdGggZGVwZW5kZW5j
-aWVzIGJvdGggd2F5cywgaXQganVzdAo+IHNlZW1zIG11Y2ggc2ltcGxlciB0byBoYXZlIHlvdSBw
-dXNoIGl0IHZpYSBtdmVidS9hcm0tc29jLgo+IAo+IEFja2VkLWJ5OiBCam9ybiBIZWxnYWFzIDxi
-aGVsZ2Fhc0Bnb29nbGUuY29tPgo+IAoKR3JlYXQsIFRoYW5rcyEKCkFybmQsIEphc29uIChHdW50
-aG9ycGUpOgoKU28sIGhvdyBkb2VzIHRoaXMgbG9vaz8gSWYgdGhlcmUgaXNuJ3QgYW55dGhpbmcg
-bGVmdCwgd291bGQgeW91IG1pbmQKYWNraW5nIHRoaXMgc28gSmFzb24gKENvb3BlcikgY2FuIHF1
-ZXVlIGl0IHNvbWV3aGVyZT8KClRoYW5rcyEKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxl
-Y3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0
-cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUt
-ZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
-by9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Tuesday 09 July 2013, Thomas Petazzoni wrote:
+> Dear Neil Zhang,
+> 
+> On Tue, 9 Jul 2013 14:42:45 +0800, Neil Zhang wrote:
+> > support CLOCKSOURCE OF DECLARE for mmp timer.
+> > 
+> > Signed-off-by: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  arch/arm/mach-mmp/mmp-dt.c  |    5 ++---
+> >  arch/arm/mach-mmp/mmp2-dt.c |    3 +--
+> >  arch/arm/mach-mmp/time.c    |   15 ++-------------
+> >  3 files changed, 5 insertions(+), 18 deletions(-)
+> 
+> Maybe it would be good to take this opportunity to move
+> arch/arm/mach-mmp/time.c into drivers/clocksource/.
+
++1
+
+Or we might want to have a more coordinated move of all clocksource
+drivers in arch/arm to drivers/clocksource now, as we have done for some
+other subsystems.
+
+	Arnd
