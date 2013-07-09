@@ -1,42 +1,57 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH V6 0/4] Generic PHY driver for the Exynos SoC DP PHY
-Date: Tue, 09 Jul 2013 10:50:26 +0200
-Message-ID: <51DBCED2.7010102@samsung.com>
-References: <003d01ce7c7a$d04043d0$70c0cb70$@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v1 4/4] spi/xilinx: Use of_property_read_u32 for reading
+ value from node
+Date: Tue, 9 Jul 2013 10:14:16 +0100
+Message-ID: <20130709091416.GN27646@sirena.org.uk>
+References: <ff70173bee5f9223ffea2b92b903b4e46ef8b323.1373290150.git.michal.simek@xilinx.com>
+ <95fea2ecead16435fc526b1d7f36a0a1ec1635ff.1373290150.git.michal.simek@xilinx.com>
+ <20130708145119.GJ27646@sirena.org.uk>
+ <51DB9F03.3050203@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <003d01ce7c7a$d04043d0$70c0cb70$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, linux-media@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Felipe Balbi' <balbi@ti.com>, 'Tomasz Figa' <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, 'Inki Dae' <inki.dae@samsung.com>, 'Donghwa Lee' <dh09.lee@samsung.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Jean-Christophe PLAGNIOL-VILLARD' <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, Hui Wang <jason77.wang@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pRIGWEjU0Bw92Zdr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51DB9F03.3050203@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/09/2013 10:03 AM, Jingoo Han wrote:
-> This patch series adds a simple driver for the Samsung Exynos SoC
-> series DP transmitter PHY, using the generic PHY framework [1].
-> Previously the DP PHY used an internal DT node to control the PHY
-> power enable bit.
-> 
-> These patches was tested on Exynos5250.
-> 
-> This PATCH v6 follows:
->  * PATCH v5, sent on July, 8th 2013
->  * PATCH v4, sent on July, 2nd 2013
->  * PATCH v3, sent on July, 1st 2013
->  * PATCH v2, sent on June, 28th 2013
->  * PATCH v1, sent on June, 28th 2013
-> 
-> Changes between v5 and v6:
->   * Re-based on git://gitorious.org/linuxphy/linuxphy.git
 
-I'm not sure if we really need to keep the documentation of the
-original binding. Anyway, for the whole series, please feel free
-to ad my
+--pRIGWEjU0Bw92Zdr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+On Tue, Jul 09, 2013 at 07:26:27AM +0200, Michal Simek wrote:
+> On 07/08/2013 04:51 PM, Mark Brown wrote:
 
---
-Thanks,
-Sylwester
+> > Applied, thanks.
+
+> have you applied this patch?
+
+Yes, network is spotty here so pushes aren't working so well.
+
+--pRIGWEjU0Bw92Zdr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR29RfAAoJELSic+t+oim9dyQP/2zCV9M1s8C+KRDQjBOA1LBD
+8P4OR4DGZWoku0CZEBNbMR9bslleHcPo+8m7/5kFF3Bg7HPneiYPs8gIgGv1dicE
+zP93Y7MBM/EKrIecPRf1uomaIcqbgD0Q9nSqU8j3F1ERcoshFdNrnTcaJHI9Asxj
+Bh195itiyZeU1kK5jAqQrhh34ETT+rPJRe3Yu4CvPtjTESDJhVwzO7N4y7tL25JM
+iLMmcFQc+hXs/Xz8y0vqF2r+qfIOwZvAgC5LPZjJ4flU4urZ/9LM9cu5NkitzaFx
+rUPGv4NI2tjTKMuwW5jqcsUVniFf2t8mip+yeaDAQ7Pu5CkNRdATgWHAbPvEW/JT
+r4o7fg3jtCH8BbEoHl87lb9vKQebhaKSA4Wlot20IiNCa5sH1PiF1lIQ4Mq/Q8BS
+QF8LX/qYPXciPHU0BCamdUPeiVdE5bPgAKo+AJ+PGh//uN/YKWwERzDpNagAxY6d
+de5aVgEcSLLcybbXTcndQAKmNBAczMG2WT27OZtfibrN8skJCi6nHltTWrajEeHu
+A/jwF20gaNsA7a1SH6KQqS8Tmlap8SfXmGaR8KiZtUeK1UYrAjefRlrPJnksxAgs
+MJOacuFtVAeGHoKbxmA1Ub78oZO/iQeWAoxN98tMePSMUJ/uwSi6tcDrcrg8nNdf
+vhtrLC5EdLRHMPKcNhRn
+=ojdQ
+-----END PGP SIGNATURE-----
+
+--pRIGWEjU0Bw92Zdr--
