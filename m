@@ -1,13 +1,14 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mfd: DT bindings for the palmas family MFD
-Date: Wed, 10 Jul 2013 11:27:24 +0100
-Message-ID: <20130710102724.GC24508@sirena.org.uk>
-References: <1370261333-5121-1-git-send-email-j-keerthy@ti.com>
- <20130603141851.GG3370@gmail.com>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH] watchdog: dw: Enable OF support for DW watchdog timer.
+Date: Wed, 10 Jul 2013 11:41:01 +0100
+Message-ID: <20130710104101.GA3552@page>
+References: <1373411377-5170-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1117981669512644219=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130603141851.GG3370-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1373411377-5170-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,93 +19,62 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+To: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Dinh,
 
---===============1117981669512644219==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lMM8JwqTlfDpEaS6"
-Content-Disposition: inline
+On Tue, Jul 09, 2013 at 06:09:37PM -0500, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> 
+> Add device tree support to the DW watchdog timer.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> ---
+>  .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
+>  drivers/watchdog/dw_wdt.c                          |    7 +++++++
+>  2 files changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+>
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> index 2037669..f7eec38 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -343,12 +343,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id dw_wdt_of_match[] = {
+> +	{ .compatible = "snps,dw-wdt", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
+> +
+>  static struct platform_driver dw_wdt_driver = {
+>  	.probe		= dw_wdt_drv_probe,
+>  	.remove		= dw_wdt_drv_remove,
+>  	.driver		= {
+>  		.name	= "dw_wdt",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = dw_wdt_of_match,
 
+I think we want:
 
---lMM8JwqTlfDpEaS6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+		.of_match_table = of_match_ptr(dw_wdt_of_match),
 
-On Mon, Jun 03, 2013 at 03:18:51PM +0100, Lee Jones wrote:
-> On Mon, 03 Jun 2013, J Keerthy wrote:
+as the module doesn't have an OF dependency.
 
-> > +	       optional chip specific regulator fields :-
-> > +	       ti,warm-reset - maintain voltage during warm reset(boolean)
+Otherwise looks good to me.
 
-> Pushing the boat out a bit here, but is it possible to reuse
-> 'regulator-always-on' for this?
+Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
 
-This sounds more like "don't reset over reboot" than "never change the
-enable state".
+Thanks,
 
-> > +	       ti,roof-floor - control voltage selection by pin(boolean)
-
-> Is this the same as a GPIO regulator?
-
-> If so, you might not need to add superfluous vendor specific properties.
-
-Lots of regulators have the ability to do things like switch between
-programmable voltages based on GPIOs (enabling a fast change to a known
-voltage) - the roof-floor naming sounds like this.  Usually there's also
-register based element for selecting the voltage.
-
-> See: Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-
-> > +	       ti,sleep-mode - mode to adopt in pmic sleep 0 - off, 1 - auto,
-> > +	       2 - eco, 3 - forced pwm
-
-> I've seen lots of sleep-mode properties, can't we define a generic
-> one?
-
-We should make some of this more standard (at least things like
-voltages) but the whole concept of what sleep mode is is at best fuzzy.
-You typically need different selections for suspend to RAM and suspend
-to disk, plus often the suspend configuration is dynamic depending on
-what the system is doing since suspend is just CPU suspend not system
-suspend and there's also some changes that might happen depending on
-which wake sources are currently available.
-
---lMM8JwqTlfDpEaS6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR3TcEAAoJELSic+t+oim9e6YP/iYgEoPUxH/OaBtTO5O3hYid
-RZ/mIrqY68dIOBRQ50vRmLY1FlauXeQCRKTALvgX6yBlPjAuYhpJBnEIp9hxZqR9
-sZuSG8RBseeKJGxtswfwLWWes2fO9RTfT2a4cqvtc32fmzu0/0bAxKqz/CtHkKIj
-trGvd/RUFjBuZzPPuAZ+L4Cx8vX40NunK9jWsoR02NcH3Z06SOsa7ztYm7ORjvj+
-qdxD+y5/2mNdt211YQbwHSTTPcfyLJdlxrrJTxaUTfHYML+SvWEh//8OFFBKKdua
-s4Rwrf1X56aSalHKW0o1VnSsoDJmadMoc1GeOYsKrUZD5p8zW8BkMMYkjXyGkCSr
-CJ0M79o8IkXUolKoWUiX+S+lelO7I8j0iu0mzssJsC4Tf8+OJwtBAz6waPvuJlrN
-ez+fqsR3yEXSc5UuGRfzZFNYa1+SYcA8Ma4AITR+iwnGc9TOegBCI3NE9XvQZa/i
-VIGE9+M3OVYM+XxrNLjKkw4QD27dRz8/RExH7PgumC1liFU+Nvmainx2mqaomwXN
-Tl0WYaZEQ1Gu9pv7MHb/ywBbD93M7gzgD6jtOzYiGUogSE+HmbeediDblLtGvTbh
-Sfm9JVWRhlt7aLHNsx3YLKHvFmRuhY+48pJrZtNZBBtmcspeBDvXNqCY65eImVbW
-awRLEklN7Az8Ea6n0PYK
-=UQsC
------END PGP SIGNATURE-----
-
---lMM8JwqTlfDpEaS6--
-
---===============1117981669512644219==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1117981669512644219==--
+Jamie
