@@ -1,131 +1,33 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 2/4] extcon: palmas: enable ID_GND and ID_FLOAT detection
- always
-Date: Wed, 10 Jul 2013 11:15:54 +0900
-Message-ID: <51DCC3DA.3060402@samsung.com>
-References: <1373375064-12012-1-git-send-email-ldewangan@nvidia.com>
- <1373375064-12012-3-git-send-email-ldewangan@nvidia.com>
+From: Huang Shijie <b32955@freescale.com>
+Subject: Re: [PATCH] of: match the compatible in the order set by the dts
+ file
+Date: Wed, 10 Jul 2013 10:58:26 +0800
+Message-ID: <51DCCDD2.707@freescale.com>
+References: <1373013818-11365-1-git-send-email-b32955@freescale.com>	<20130709070541.GQ516@pengutronix.de>	<51DBBFDA.70302@freescale.com>	<20130709075124.GR516@pengutronix.de>	<51DBC58D.90002@freescale.com> <CAL_JsqL4ABJCQXveSAMZKOiHwJi=w8zFYjg3DV7kqEEcCXQJcw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1373375064-12012-3-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: myungjoo.ham@samsung.com, devicetree-discuss@lists.ozlabs.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, gg@slimlogic.co.uk
+Content-Type: text/plain; charset=GB2312
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL4ABJCQXveSAMZKOiHwJi=w8zFYjg3DV7kqEEcCXQJcw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laxman,
+=D3=DA 2013=C4=EA07=D4=C209=C8=D5 20:03, Rob Herring =D0=B4=B5=C0:
+> the same and that is the assumption. Matching is not just based on
+> compatible properties and your patch does not handle the other cases.
+Could you show a example of "the other cases"?
 
-On 07/09/2013 10:04 PM, Laxman Dewangan wrote:
-> When integrating driver with Tegra platform, it is found that
-> the ID pins get detected only once after booting system and
-> further removal and re-insert does not detect the ID pin.
-> 
-> Fixing this issue with enabling interrupt on ID_GND and ID_FLOAT
-> always  and clearing the status on LATCH register which actually
-> occurred.
-> 
-> Also if interrupt occurs with line status as zero then based on
-> previous status, set the cable state.
-> 
-> Add debug prints to display the cable state when any cable
-> insertion/removal happen.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
->  drivers/extcon/extcon-palmas.c |   24 +++++++++++-------------
->  1 files changed, 11 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
-> index b752a0a..587034b 100644
-> --- a/drivers/extcon/extcon-palmas.c
-> +++ b/drivers/extcon/extcon-palmas.c
-> @@ -57,6 +57,7 @@ static irqreturn_t palmas_vbus_irq_handler(int irq, void *_palmas_usb)
->  		if (palmas_usb->linkstat != PALMAS_USB_STATE_VBUS) {
->  			palmas_usb->linkstat = PALMAS_USB_STATE_VBUS;
->  			extcon_set_cable_state(&palmas_usb->edev, "USB", true);
-> +			dev_info(palmas_usb->dev, "USB cable state: TRUE\n");
+After this patch,
 
-I prfer following info message when USB cable is inserted.
-dev_info(palmas_usb->dev, "USB cable is attached\n");
+[1] the matching will first check the @match->type and @match->name,
+if we can match the @match->type or @match->name, return the match
+immediately.
+
+[2] If [1] fails, we will check the compatible properties.
 
 
->  		} else {
->  			dev_dbg(palmas_usb->dev,
->  				"Spurious connect event detected\n");
-> @@ -65,6 +66,7 @@ static irqreturn_t palmas_vbus_irq_handler(int irq, void *_palmas_usb)
->  		if (palmas_usb->linkstat == PALMAS_USB_STATE_VBUS) {
->  			palmas_usb->linkstat = PALMAS_USB_STATE_DISCONNECT;
->  			extcon_set_cable_state(&palmas_usb->edev, "USB", false);
-> +			dev_info(palmas_usb->dev, "USB cable state: FALSE\n");
 
-ditto.
-dev_info(palmas_usb->dev, "USB cable is detached\n");
-
->  		} else {
->  			dev_dbg(palmas_usb->dev,
->  				"Spurious disconnect event detected\n");
-> @@ -84,28 +86,23 @@ static irqreturn_t palmas_id_irq_handler(int irq, void *_palmas_usb)
->  
->  	if (set & PALMAS_USB_ID_INT_SRC_ID_GND) {
->  		palmas_write(palmas_usb->palmas, PALMAS_USB_OTG_BASE,
-> -			PALMAS_USB_ID_INT_EN_HI_SET,
-> -			PALMAS_USB_ID_INT_EN_HI_SET_ID_FLOAT);
-> -		palmas_write(palmas_usb->palmas, PALMAS_USB_OTG_BASE,
-> -			PALMAS_USB_ID_INT_EN_HI_CLR,
-> -			PALMAS_USB_ID_INT_EN_HI_CLR_ID_GND);
-> -		palmas_write(palmas_usb->palmas, PALMAS_USB_OTG_BASE,
->  			PALMAS_USB_ID_INT_LATCH_CLR,
->  			PALMAS_USB_ID_INT_EN_HI_CLR_ID_GND);
->  		palmas_usb->linkstat = PALMAS_USB_STATE_ID;
->  		extcon_set_cable_state(&palmas_usb->edev, "USB-HOST", true);
-> +		dev_info(palmas_usb->dev, "HOST cable state: TRUE\n");
-
-ditto.
-dev_info(palmas_usb->dev, "USB-HOST cable is attached\n");
-
->  	} else if (set & PALMAS_USB_ID_INT_SRC_ID_FLOAT) {
->  		palmas_write(palmas_usb->palmas, PALMAS_USB_OTG_BASE,
-> -			PALMAS_USB_ID_INT_EN_HI_SET,
-> -			PALMAS_USB_ID_INT_EN_HI_SET_ID_GND);
-> -		palmas_write(palmas_usb->palmas, PALMAS_USB_OTG_BASE,
-> -			PALMAS_USB_ID_INT_EN_HI_CLR,
-> -			PALMAS_USB_ID_INT_EN_HI_CLR_ID_FLOAT);
-> -		palmas_write(palmas_usb->palmas, PALMAS_USB_OTG_BASE,
->  			PALMAS_USB_ID_INT_LATCH_CLR,
->  			PALMAS_USB_ID_INT_EN_HI_CLR_ID_FLOAT);
->  		palmas_usb->linkstat = PALMAS_USB_STATE_DISCONNECT;
->  		extcon_set_cable_state(&palmas_usb->edev, "USB-HOST", false);
-> +		dev_info(palmas_usb->dev, "HOST cable state: FALSE\n");
-
-ditto.
-dev_info(palmas_usb->dev, "USB-HOST cable is detached\n");
-
-> +	} else if ((palmas_usb->linkstat == PALMAS_USB_STATE_ID) &&
-> +				(!(set & PALMAS_USB_ID_INT_SRC_ID_GND))) {
-> +		palmas_usb->linkstat = PALMAS_USB_STATE_DISCONNECT;
-> +		extcon_set_cable_state(&palmas_usb->edev, "USB-HOST", false);
-> +		dev_info(palmas_usb->dev, "HOST cable state: FALSE\n");
-
-dev_info(palmas_usb->dev, "USB-HOST cable is detached\n");
-
->  	}
->  
->  	return IRQ_HANDLED;
-> @@ -122,7 +119,8 @@ static void palmas_enable_irq(struct palmas_usb *palmas_usb)
->  
->  	palmas_write(palmas_usb->palmas, PALMAS_USB_OTG_BASE,
->  		PALMAS_USB_ID_INT_EN_HI_SET,
-> -		PALMAS_USB_ID_INT_EN_HI_SET_ID_GND);
-> +		PALMAS_USB_ID_INT_EN_HI_SET_ID_GND |
-> +		PALMAS_USB_ID_INT_EN_HI_SET_ID_FLOAT);
->  
->  	palmas_vbus_irq_handler(palmas_usb->vbus_irq, palmas_usb);
->  
-> 
-
-I you would modify info message, anything else is good.
-
-Thanks,
-Chanwoo Choi
+thanks
+Huang Shijie
