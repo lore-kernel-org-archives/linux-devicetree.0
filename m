@@ -1,68 +1,110 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 3/7] Documentation: DT: update atmel SSC with DMA
- binding
-Date: Wed, 10 Jul 2013 11:01:50 +0100
-Message-ID: <20130710100150.GB24508@sirena.org.uk>
-References: <1373372929-17800-1-git-send-email-richard.genoud@gmail.com>
- <1373379933-32749-1-git-send-email-richard.genoud@gmail.com>
- <1373379933-32749-4-git-send-email-richard.genoud@gmail.com>
- <20130709150543.GE27646@sirena.org.uk>
- <CACQ1gAhK2yN2uhewq8XGOidLCDfOhgRvzE1o0b1krK1DjYj-dA@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mfd: DT bindings for the palmas family MFD
+Date: Wed, 10 Jul 2013 11:27:24 +0100
+Message-ID: <20130710102724.GC24508@sirena.org.uk>
+References: <1370261333-5121-1-git-send-email-j-keerthy@ti.com>
+ <20130603141851.GG3370@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACQ1gAhK2yN2uhewq8XGOidLCDfOhgRvzE1o0b1krK1DjYj-dA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Genoud <richard.genoud@gmail.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/mixed; boundary="===============1117981669512644219=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130603141851.GG3370-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---NMuMz9nt05w80d4+
+--===============1117981669512644219==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lMM8JwqTlfDpEaS6"
+Content-Disposition: inline
+
+
+--lMM8JwqTlfDpEaS6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jul 10, 2013 at 11:48:27AM +0200, Richard Genoud wrote:
-> 2013/7/9 Mark Brown <broonie@kernel.org>:
+On Mon, Jun 03, 2013 at 03:18:51PM +0100, Lee Jones wrote:
+> On Mon, 03 Jun 2013, J Keerthy wrote:
 
-> > ...this first example is now invalid and should probably just be being
-> > extended with the new required properties.
+> > +	       optional chip specific regulator fields :-
+> > +	       ti,warm-reset - maintain voltage during warm reset(boolean)
 
-> Well, I have to rewrite that to make it clearer.
-> The thing is:
-> with "atmel,at91rm9200-ssc" the SSC doesn't work with DMA.
-> with "atmel,at91sam9g45-ssc", the SSC work ONLY with DMA.
+> Pushing the boat out a bit here, but is it possible to reuse
+> 'regulator-always-on' for this?
 
-> So the dmas/dma-names properties are only required for g45-ssc, and
-> useless for rm9200-ssc
+This sounds more like "don't reset over reboot" than "never change the
+enable state".
 
-> Maybe the best will be to write a paragraph for g45-ssc and another
-> for rm9200-ssc, even if there's some identical lines between them.
+> > +	       ti,roof-floor - control voltage selection by pin(boolean)
 
-OK, or just write a section "Required for devices with compatible X".
+> Is this the same as a GPIO regulator?
 
---NMuMz9nt05w80d4+
+> If so, you might not need to add superfluous vendor specific properties.
+
+Lots of regulators have the ability to do things like switch between
+programmable voltages based on GPIOs (enabling a fast change to a known
+voltage) - the roof-floor naming sounds like this.  Usually there's also
+register based element for selecting the voltage.
+
+> See: Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+
+> > +	       ti,sleep-mode - mode to adopt in pmic sleep 0 - off, 1 - auto,
+> > +	       2 - eco, 3 - forced pwm
+
+> I've seen lots of sleep-mode properties, can't we define a generic
+> one?
+
+We should make some of this more standard (at least things like
+voltages) but the whole concept of what sleep mode is is at best fuzzy.
+You typically need different selections for suspend to RAM and suspend
+to disk, plus often the suspend configuration is dynamic depending on
+what the system is doing since suspend is just CPU suspend not system
+suspend and there's also some changes that might happen depending on
+which wake sources are currently available.
+
+--lMM8JwqTlfDpEaS6
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.20 (GNU/Linux)
 
-iQIcBAEBAgAGBQJR3TEKAAoJELSic+t+oim9odEP/RMKCGZDVW7sSGCCgAb5HFUp
-MC+r2kRUQAC5SeYJNT+Q9Zb0DBF/grwJoUnZ4tvue6/EugMGlSAWA1kpCecAWdtT
-IXfGH5eiJUzn8Cu9pgJ0JiWh9rmyxoWfh6KkvvfQxLiMwL9M25Qp1SIePom2tOtY
-ZuhZRUVR5erUjagzTWz/vNwqs2oCGWWcImCJQX8r49dU9qweW05KCrEQoHVWpoS6
-3clP1gx9Bt+0RlIvS6jjn9y2ekKftjxnFBRcdKn0YXnLjbPBLHsuCg1GKKd7kN9Y
-/XjFM+EkOjOIKapEc6wmptaxU4o8Ibl2Z6Kuqby/myZqd7HocwiWzoFP2xWjZ8Br
-8mQJ/1PpQqo7V713Mx5KY6gdiEwCUIkStRim6a9UidFuciKv1bGY0Vfl5sKR91KA
-ohpoAytj995LlV6UR6z9n7H9pwyHlap+1TUbrS1j/UVwMDi2CjIq0EmE3W9A1UQ0
-Q+aNYWN7fwBjT1+rwz/6jfPfevlpfHFgYn/AmtwbhO47ePp3m2LSNNu9ElJsaBma
-AAR63xwQo/Zc8113K+aXu+QZ+HN3s671v35uoosyONXTIASSOxJ9y6z88kcB/bbv
-t7nvQ+tO6Ydv2rEICk0uexCNI4te1WY0h3wOcHsUi2Y1npREhRxydSZvEpcDo55C
-8CE/kT8ctsN6gwRMR4YL
-=Jb6i
+iQIcBAEBAgAGBQJR3TcEAAoJELSic+t+oim9e6YP/iYgEoPUxH/OaBtTO5O3hYid
+RZ/mIrqY68dIOBRQ50vRmLY1FlauXeQCRKTALvgX6yBlPjAuYhpJBnEIp9hxZqR9
+sZuSG8RBseeKJGxtswfwLWWes2fO9RTfT2a4cqvtc32fmzu0/0bAxKqz/CtHkKIj
+trGvd/RUFjBuZzPPuAZ+L4Cx8vX40NunK9jWsoR02NcH3Z06SOsa7ztYm7ORjvj+
+qdxD+y5/2mNdt211YQbwHSTTPcfyLJdlxrrJTxaUTfHYML+SvWEh//8OFFBKKdua
+s4Rwrf1X56aSalHKW0o1VnSsoDJmadMoc1GeOYsKrUZD5p8zW8BkMMYkjXyGkCSr
+CJ0M79o8IkXUolKoWUiX+S+lelO7I8j0iu0mzssJsC4Tf8+OJwtBAz6waPvuJlrN
+ez+fqsR3yEXSc5UuGRfzZFNYa1+SYcA8Ma4AITR+iwnGc9TOegBCI3NE9XvQZa/i
+VIGE9+M3OVYM+XxrNLjKkw4QD27dRz8/RExH7PgumC1liFU+Nvmainx2mqaomwXN
+Tl0WYaZEQ1Gu9pv7MHb/ywBbD93M7gzgD6jtOzYiGUogSE+HmbeediDblLtGvTbh
+Sfm9JVWRhlt7aLHNsx3YLKHvFmRuhY+48pJrZtNZBBtmcspeBDvXNqCY65eImVbW
+awRLEklN7Az8Ea6n0PYK
+=UQsC
 -----END PGP SIGNATURE-----
 
---NMuMz9nt05w80d4+--
+--lMM8JwqTlfDpEaS6--
+
+--===============1117981669512644219==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============1117981669512644219==--
