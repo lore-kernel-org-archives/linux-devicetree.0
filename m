@@ -1,205 +1,41 @@
 From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH V2 4/4] extcon: palmas: Option to disable ID/VBUS detection
- based on platform
-Date: Wed, 10 Jul 2013 15:55:52 +0900
-Message-ID: <51DD0578.6090804@samsung.com>
+Subject: Re: [PATCH V2 0/4] extcon: palmas: clean-up/fixes and suspend/resume
+ susupport
+Date: Wed, 10 Jul 2013 15:57:41 +0900
+Message-ID: <51DD05E5.6030102@samsung.com>
 References: <1373436959-32444-1-git-send-email-ldewangan@nvidia.com>
- <1373436959-32444-5-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1373436959-32444-5-git-send-email-ldewangan@nvidia.com>
+In-reply-to: <1373436959-32444-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: Laxman Dewangan <ldewangan@nvidia.com>
 Cc: myungjoo.ham@samsung.com, devicetree-discuss@lists.ozlabs.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, gg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Laxman, 
-
 On 07/10/2013 03:15 PM, Laxman Dewangan wrote:
-> Based on system design, platform needs to detect the VBUS or ID or
-> both. Provide option to select this through platform data to
-> disable part of cable detection through palmas-usb.
+> This patch series does following:
+> - Remove unused member from extcon palmas structure.
+> - Fix to support of detecting cable properly with multiple insert/removal.
+> - Add support for suspend/resume functionlaity and wakup from suspend.
+> - Option to select/de-select the ID or VBUS detection.
 > 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Acked-by: Graeme Gregory <gg@slimlogic.co.uk>
-> ---
-> No changes from V1.
+> Changes from V1:
+> - Correct the display message.
+> - Add ack from Graeme
 > 
->  .../devicetree/bindings/extcon/extcon-palmas.txt   |    2 +
->  drivers/extcon/extcon-palmas.c                     |   65 +++++++++++++-------
->  include/linux/mfd/palmas.h                         |    4 +
->  3 files changed, 48 insertions(+), 23 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-> index f110e75..8e593ec 100644
-> --- a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
-> @@ -6,6 +6,8 @@ Required Properties:
->  
->  Optional Properties:
->   - ti,wakeup : To enable the wakeup comparator in probe
-> + - ti,disable-id-detection: Do not perform ID detection.
-> + - ti,disable-vbus-detection: Do not pwerform VBUS detection.
-
-Fix typo.
-- pwerform -> perform
-
->  
->  palmas-usb {
->         compatible = "ti,twl6035-usb", "ti,palmas-usb";
-> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
-> index dc7ebf3..4747d11 100644
-> --- a/drivers/extcon/extcon-palmas.c
-> +++ b/drivers/extcon/extcon-palmas.c
-> @@ -122,11 +122,14 @@ static void palmas_enable_irq(struct palmas_usb *palmas_usb)
->  		PALMAS_USB_ID_INT_EN_HI_SET_ID_GND |
->  		PALMAS_USB_ID_INT_EN_HI_SET_ID_FLOAT);
->  
-> -	palmas_vbus_irq_handler(palmas_usb->vbus_irq, palmas_usb);
-> +	if (palmas_usb->enable_vbus_detection)
-> +		palmas_vbus_irq_handler(palmas_usb->vbus_irq, palmas_usb);
->  
->  	/* cold plug for host mode needs this delay */
-> -	msleep(30);
-> -	palmas_id_irq_handler(palmas_usb->id_irq, palmas_usb);
-> +	if (palmas_usb->enable_id_detection) {
-> +		msleep(30);
-> +		palmas_id_irq_handler(palmas_usb->id_irq, palmas_usb);
-> +	}
->  }
->  
->  static int palmas_usb_probe(struct platform_device *pdev)
-> @@ -144,6 +147,10 @@ static int palmas_usb_probe(struct platform_device *pdev)
->  			return -ENOMEM;
->  
->  		pdata->wakeup = of_property_read_bool(node, "ti,wakeup");
-> +		pdata->disable_id_detection = of_property_read_bool(node,
-> +						"ti,disable-id-detection");
-> +		pdata->disable_vbus_detection = of_property_read_bool(node,
-> +						"ti,disable-vbus-detection");
->  	} else if (!pdata) {
->  		return -EINVAL;
->  	}
-> @@ -154,6 +161,8 @@ static int palmas_usb_probe(struct platform_device *pdev)
->  
->  	palmas->usb = palmas_usb;
->  	palmas_usb->palmas = palmas;
-> +	palmas_usb->enable_vbus_detection = !pdata->disable_vbus_detection;
-> +	palmas_usb->enable_id_detection =  !pdata->disable_id_detection;
->  
->  	palmas_usb->dev	 = &pdev->dev;
->  
-> @@ -180,26 +189,32 @@ static int palmas_usb_probe(struct platform_device *pdev)
->  		return status;
->  	}
->  
-> -	status = devm_request_threaded_irq(palmas_usb->dev, palmas_usb->id_irq,
-> -			NULL, palmas_id_irq_handler,
-> -			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
-> -			IRQF_ONESHOT | IRQF_EARLY_RESUME,
-> -			"palmas_usb_id", palmas_usb);
-> -	if (status < 0) {
-> -		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
-> +	if (palmas_usb->enable_id_detection) {
-> +		status = devm_request_threaded_irq(palmas_usb->dev,
-> +				palmas_usb->id_irq,
-> +				NULL, palmas_id_irq_handler,
-> +				IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
-> +				IRQF_ONESHOT | IRQF_EARLY_RESUME,
-> +				"palmas_usb_id", palmas_usb);
-> +		if (status < 0) {
-> +			dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
->  					palmas_usb->id_irq, status);
-> -		goto fail_extcon;
-> +			goto fail_extcon;
-> +		}
->  	}
->  
-> -	status = devm_request_threaded_irq(palmas_usb->dev,
-> -			palmas_usb->vbus_irq, NULL, palmas_vbus_irq_handler,
-> -			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
-> -			IRQF_ONESHOT | IRQF_EARLY_RESUME,
-> -			"palmas_usb_vbus", palmas_usb);
-> -	if (status < 0) {
-> -		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
-> +	if (palmas_usb->enable_vbus_detection) {
-> +		status = devm_request_threaded_irq(palmas_usb->dev,
-> +				palmas_usb->vbus_irq, NULL,
-> +				palmas_vbus_irq_handler,
-> +				IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
-> +				IRQF_ONESHOT | IRQF_EARLY_RESUME,
-> +				"palmas_usb_vbus", palmas_usb);
-> +		if (status < 0) {
-> +			dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
->  					palmas_usb->vbus_irq, status);
-> -		goto fail_extcon;
-> +			goto fail_extcon;
-> +		}
->  	}
->  
->  	palmas_enable_irq(palmas_usb);
-> @@ -227,8 +242,10 @@ static int palmas_usb_suspend(struct device *dev)
->  	struct palmas_usb *palmas_usb = dev_get_drvdata(dev);
->  
->  	if (device_may_wakeup(dev)) {
-> -		enable_irq_wake(palmas_usb->vbus_irq);
-> -		enable_irq_wake(palmas_usb->id_irq);
-> +		if (palmas_usb->enable_vbus_detection)
-> +			enable_irq_wake(palmas_usb->vbus_irq);
-> +		if (palmas_usb->enable_id_detection)
-> +			enable_irq_wake(palmas_usb->id_irq);
->  	}
->  	return 0;
->  }
-> @@ -238,8 +255,10 @@ static int palmas_usb_resume(struct device *dev)
->  	struct palmas_usb *palmas_usb = dev_get_drvdata(dev);
->  
->  	if (device_may_wakeup(dev)) {
-> -		disable_irq_wake(palmas_usb->vbus_irq);
-> -		disable_irq_wake(palmas_usb->id_irq);
-> +		if (palmas_usb->enable_vbus_detection)
-> +			disable_irq_wake(palmas_usb->vbus_irq);
-> +		if (palmas_usb->enable_id_detection)
-> +			disable_irq_wake(palmas_usb->id_irq);
->  	}
->  	return 0;
->  };
-> diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
-> index 03c22ca..d9ef94c 100644
-> --- a/include/linux/mfd/palmas.h
-> +++ b/include/linux/mfd/palmas.h
-> @@ -204,6 +204,8 @@ struct palmas_pmic_platform_data {
->  struct palmas_usb_platform_data {
->  	/* Do we enable the wakeup comparator on probe */
->  	int wakeup;
-> +	bool disable_vbus_detection;
-> +	bool disable_id_detection;
->  };
->  
->  struct palmas_resource_platform_data {
-> @@ -377,6 +379,8 @@ struct palmas_usb {
->  	int vbus_irq;
->  
->  	enum palmas_usb_state linkstat;
-> +	bool enable_vbus_detection;
-> +	bool enable_id_detection;
->  };
->  
->  #define comparator_to_palmas(x) container_of((x), struct palmas_usb, comparator)
+> Laxman Dewangan (4):
+>   extcon: palmas: remove unused member from palams_usb structure
+>   extcon: palmas: enable ID_GND and ID_FLOAT detection always
+>   extcon: palams: add support for suspend/resume
+>   extcon: palmas: Option to disable ID/VBUS detection based on platform
 > 
 
-Should you define duplicate meaning variables in each other structure?
-- disable_vbus_detection - enable_vbus_detection
-- disable_id_detection - enable_id_detection
+Patch 1/2/3 is only applied on extcon-linus branch.
 
-I think that it isn' efficient code. I'd like you to simplify this patch
-by using only one variable instead of duplicate meaning variables.
+I replied about patch4.
 
-Cheers,
+Thanks,
 Chanwoo Choi
-
-
-
 
