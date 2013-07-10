@@ -1,87 +1,73 @@
-From: Haojian Zhuang <haojian.zhuang@gmail.com>
-Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
-Date: Wed, 10 Jul 2013 22:08:50 +0800
-Message-ID: <CAN1soZzMvront1-jcBW6-uRKNs0OZNGnmiOjKGZSM28bViB_8A@mail.gmail.com>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
-	<1373352166-10064-2-git-send-email-zhangwm@marvell.com>
-	<20130709124900.GG11908@titan.lakedaemon.net>
-	<CAN1soZxiOh6TpbUOCUzK8gNwmvjbT3ihkUWaw8tuZ7md+NVA2g@mail.gmail.com>
-	<20130710122433.GO11908@titan.lakedaemon.net>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 2/3] arm: atmel: at91sam9n12: add qt1070 support
+Date: Wed, 10 Jul 2013 16:38:35 +0200
+Message-ID: <20130710143835.GG18012@ns203013.ovh.net>
+References: <1373449869-5083-1-git-send-email-voice.shen@atmel.com>
+ <1373449869-5083-3-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130710122433.GO11908@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Neil Zhang <zhangwm@marvell.com>, Grant Likely <grant.likely@linaro.org>, Bergmann Arnd <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1373449869-5083-3-git-send-email-voice.shen@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, ludovic.desroches@atmel.com, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2013 at 8:24 PM, Jason Cooper <jason@lakedaemon.net> wrote:
-> On Wed, Jul 10, 2013 at 04:19:46PM +0800, Haojian Zhuang wrote:
->> On Tue, Jul 9, 2013 at 8:49 PM, Jason Cooper <jason@lakedaemon.net> wrote:
->> > Neil,
->> >
->> > On Tue, Jul 09, 2013 at 02:42:44PM +0800, Neil Zhang wrote:
->> >> The documented vendor prefix for Marvell is 'marvell', not 'mrvl', so
->> >> let's change it.
->> >>
->> >> Signed-off-by: Neil Zhang <zhangwm@marvell.com>
->> >> ---
->> >>  .../devicetree/bindings/arm/mrvl/intc.txt          |   16 +++---
->> >>  .../devicetree/bindings/arm/mrvl/mrvl.txt          |    6 +-
->> >>  .../devicetree/bindings/arm/mrvl/timer.txt         |    4 +-
->> >>  Documentation/devicetree/bindings/i2c/i2c-pxa.txt  |   14 +++---
->> >>  .../devicetree/bindings/mmc/sdhci-pxa.txt          |    8 ++--
->> >>  .../devicetree/bindings/rtc/sa1100-rtc.txt         |    4 +-
->> >>  .../devicetree/bindings/serial/mrvl-serial.txt     |    2 +-
->> >>  arch/arm/boot/dts/mmp2-brownstone.dts              |    2 +-
->> >>  arch/arm/boot/dts/mmp2.dtsi                        |   56 ++++++++++----------
->> >>  arch/arm/boot/dts/pxa168-aspenite.dts              |    2 +-
->> >>  arch/arm/boot/dts/pxa168.dtsi                      |   24 ++++----
->> >>  arch/arm/boot/dts/pxa2xx.dtsi                      |   16 +++---
->> >>  arch/arm/boot/dts/pxa3xx.dtsi                      |    2 +-
->> >>  arch/arm/boot/dts/pxa910-dkb.dts                   |    2 +-
->> >>  arch/arm/boot/dts/pxa910.dtsi                      |   27 +++++-----
->> >>  arch/arm/mach-mmp/irq.c                            |   16 +++---
->> >>  arch/arm/mach-mmp/mmp-dt.c                         |   28 +++++-----
->> >>  arch/arm/mach-mmp/mmp2-dt.c                        |   16 +++---
->> >>  arch/arm/mach-mmp/time.c                           |    2 +-
->> >>  arch/arm/mach-pxa/pxa-dt.c                         |   14 +++---
->> >>  drivers/i2c/busses/i2c-pxa.c                       |   10 ++--
->> >>  drivers/mmc/host/sdhci-pxav2.c                     |    4 +-
->> >>  drivers/mmc/host/sdhci-pxav3.c                     |    4 +-
->> >>  drivers/rtc/rtc-sa1100.c                           |    4 +-
->> >>  drivers/tty/serial/pxa.c                           |    4 +-
->> >>  25 files changed, 144 insertions(+), 143 deletions(-)
->> >
->> > I agree with the need to change, however, this has been in the binding
->> > documentation since v3.5.  I wish we had caught this when we decided
->> > against using stock ticker symbols (not all stock markets use
->> > alphabetical abbreviated names, not all companies are listed on any
->> > stock exchange).
->> >
->> > To do this properly, the drivers are going to have to be compatible with
->> > the old and the new names, and the binding docs updated to reflect the
->> > legacy name and the preferred name.
->> >
->>
->> It's better to only use the new names.
->
-> In the dts{i}, yes.  But we don't want to break systems in the field
-> with "mrvl,..." compatible strings.  Therefore, at least the drivers
-> need an extra compatible string to support "mrvl,...".
->
-> If it had just been since v3.9, it'd be different/simpler.  However,
-> several vendors have opted to use kernels newer than v3.5, which makes
-> this scenario a real possibility.
->
-> thx,
->
-> Jason.
+On 17:51 Wed 10 Jul     , Bo Shen wrote:
+> add qt1070 support on at91sam9n12ek board
+> 
+> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+> ---
+>  arch/arm/boot/dts/at91sam9n12ek.dts |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
+> index d59b70c..3acac62 100644
+> --- a/arch/arm/boot/dts/at91sam9n12ek.dts
+> +++ b/arch/arm/boot/dts/at91sam9n12ek.dts
+> @@ -40,6 +40,15 @@
+>  
+>  			i2c0: i2c@f8010000 {
+>  				status = "okay";
+> +
+> +				qt1070: keyboard@1b {
+> +					compatible = "qt1070";
+> +					reg = <0x1b>;
+> +					interrupt-parent = <&pioA>;
+> +					interrupts = <2 0x0>;
+use the macro
+> +					pinctrl-names = "default";
+> +					pinctrl-0 = <&pinctrl_qt1070_irq>;
+> +				};
+>  			};
+>  
+>  			i2c1: i2c@f8014000 {
+> @@ -66,6 +75,13 @@
+>  							<AT91_PIOA 7 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;	/* PA7 gpio CD pin pull up and deglitch */
+>  					};
+>  				};
+> +
+> +				qt1070 {
+> +					pinctrl_qt1070_irq: qt1070_irq {
+> +						atmel,pins =
+> +							<AT91_PIOA 2 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>; /* PA2 GPIO with pull up deglith */
+drop the comment as we use macro
+> +					};
+> +				};
+>  			};
+>  
+>  			spi0: spi@f0000000 {
+> -- 
 
-Is there any vendor using DT for this Marvell chip? I think the answer is no.
-Only Marvell guys are still moving to DT. They didn't deliver their kernel
-as reference. So there's no problem on this.
-
-Regards
-Haojian
+Best Regards,
+J.
