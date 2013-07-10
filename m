@@ -1,104 +1,102 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 3/4] extcon: palams: add support for suspend/resume
-Date: Wed, 10 Jul 2013 11:45:58 +0530
-Message-ID: <1373436959-32444-4-git-send-email-ldewangan@nvidia.com>
-References: <1373436959-32444-1-git-send-email-ldewangan@nvidia.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH v4 1/7] sound: sam9x5_wm8731: machine driver for at91sam9x5
+ wm8731 boards
+Date: Wed, 10 Jul 2013 14:11:48 +0800
+Message-ID: <51DCFB24.4080107@atmel.com>
+References: <1373372929-17800-1-git-send-email-richard.genoud@gmail.com> <1373379933-32749-1-git-send-email-richard.genoud@gmail.com> <1373379933-32749-2-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1373436959-32444-1-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1373379933-32749-2-git-send-email-richard.genoud@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com, myungjoo.ham@samsung.com
-Cc: devicetree-discuss@lists.ozlabs.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, gg@slimlogic.co.uk, Laxman Dewangan <ldewangan@nvidia.com>
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add suspend/resume callbacks and support for wakeup from
-suspend on USB HOST or USB Device cable insertion or removal.
+Hi Richard,
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Acked-by: Graeme Gregory <gg@slimlogic.co.uk>
----
-No changes from V1.
+On 7/9/2013 22:25, Richard Genoud wrote:
+[snip]
 
- drivers/extcon/extcon-palmas.c |   38 +++++++++++++++++++++++++++++++++++---
- 1 files changed, 35 insertions(+), 3 deletions(-)
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/kernel.h>
+> +#include <linux/clk.h>
+> +#include <linux/timer.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/i2c.h>
+> +
+> +#include <linux/atmel-ssc.h>
+> +
+> +#include <sound/core.h>
+> +#include <sound/pcm.h>
+> +#include <sound/pcm_params.h>
+> +#include <sound/soc.h>
+> +
+> +#include <asm/mach-types.h>
+> +#include <mach/hardware.h>
+> +#include <mach/gpio.h>
+> +
+> +#include "../codecs/wm8731.h"
+> +#include "atmel-pcm.h"
+> +#include "atmel_ssc_dai.h"
 
-diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
-index 33254d9..dc7ebf3 100644
---- a/drivers/extcon/extcon-palmas.c
-+++ b/drivers/extcon/extcon-palmas.c
-@@ -182,7 +182,8 @@ static int palmas_usb_probe(struct platform_device *pdev)
- 
- 	status = devm_request_threaded_irq(palmas_usb->dev, palmas_usb->id_irq,
- 			NULL, palmas_id_irq_handler,
--			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
-+			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
-+			IRQF_ONESHOT | IRQF_EARLY_RESUME,
- 			"palmas_usb_id", palmas_usb);
- 	if (status < 0) {
- 		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
-@@ -192,7 +193,8 @@ static int palmas_usb_probe(struct platform_device *pdev)
- 
- 	status = devm_request_threaded_irq(palmas_usb->dev,
- 			palmas_usb->vbus_irq, NULL, palmas_vbus_irq_handler,
--			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
-+			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
-+			IRQF_ONESHOT | IRQF_EARLY_RESUME,
- 			"palmas_usb_vbus", palmas_usb);
- 	if (status < 0) {
- 		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
-@@ -201,7 +203,7 @@ static int palmas_usb_probe(struct platform_device *pdev)
- 	}
- 
- 	palmas_enable_irq(palmas_usb);
--
-+	device_set_wakeup_capable(&pdev->dev, true);
- 	return 0;
- 
- fail_extcon:
-@@ -219,6 +221,35 @@ static int palmas_usb_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int palmas_usb_suspend(struct device *dev)
-+{
-+	struct palmas_usb *palmas_usb = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev)) {
-+		enable_irq_wake(palmas_usb->vbus_irq);
-+		enable_irq_wake(palmas_usb->id_irq);
-+	}
-+	return 0;
-+}
-+
-+static int palmas_usb_resume(struct device *dev)
-+{
-+	struct palmas_usb *palmas_usb = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev)) {
-+		disable_irq_wake(palmas_usb->vbus_irq);
-+		disable_irq_wake(palmas_usb->id_irq);
-+	}
-+	return 0;
-+};
-+#endif
-+
-+static const struct dev_pm_ops palmas_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(palmas_usb_suspend,
-+				palmas_usb_resume)
-+};
-+
- static struct of_device_id of_palmas_match_tbl[] = {
- 	{ .compatible = "ti,palmas-usb", },
- 	{ .compatible = "ti,twl6035-usb", },
-@@ -232,6 +263,7 @@ static struct platform_driver palmas_usb_driver = {
- 		.name = "palmas-usb",
- 		.of_match_table = of_palmas_match_tbl,
- 		.owner = THIS_MODULE,
-+		.pm = &palmas_pm_ops,
- 	},
- };
- 
--- 
-1.7.1.1
+I think some of the header file include is not needed. I keep them as 
+simple as following:
+---8>---
+#include <linux/clk.h>
+#include <linux/module.h>
+#include <linux/of.h>
+#include <linux/of_device.h>
+#include <linux/pinctrl/consumer.h>
+
+#include <sound/soc.h>
+
+#include "../codecs/wm8731.h"
+#include "atmel_ssc_dai.h"
+---<8---
+
+> +#define MCLK_RATE 12288000
+> +
+> +#define DRV_NAME "sam9x5-snd-wm8731"
+> +
+> +/*
+> + * Authorized rates are:
+> + * Rate = MCLK_RATE / (n * 2)
+> + * Where n is in [1..4095]
+> + * (cf register SSC_CMR)
+> + */
+> +static unsigned int rates[] = {
+> +	8000,
+> +	16000,
+> +	32000,
+> +	48000,
+> +	64000,
+> +	96000,
+> +};
+
+This is decided by the codec, while not ssc when ssc in slave mode.
+
+> +static struct snd_pcm_hw_constraint_list hw_rates = {
+> +	.count = ARRAY_SIZE(rates),
+> +	.list = rates,
+> +};
+> +
+
+[snip]
+
+> +
+> +	at91sam9x5ek_dai.dai_fmt = snd_soc_of_parse_daifmt(np, "atmel,");
+
+We can put this into at91sam9x5ek_dai directly, not need to parse it 
+then. example as following:
+---8>---
+.dai_fmt = SND_SOC_DAIFMT_I2S
+                 | SND_SOC_DAIFMT_NB_NF
+                 | SND_SOC_DAIFMT_CBM_CFM,
+---<8---
+
+Best Regards,
+Bo Shen
