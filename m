@@ -1,47 +1,33 @@
-From: Haojian Zhuang <haojian.zhuang@gmail.com>
-Subject: Re: [PATCH V3 2/3] clocksource: mmp: support CLOCKSOURCE OF DECLARE
-Date: Wed, 10 Jul 2013 13:58:39 +0800
-Message-ID: <CAN1soZyFztVR1XSw9bDS5JexK0Mdbpr6yevatVf+MnBohwCj1Q@mail.gmail.com>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
-	<1373352166-10064-3-git-send-email-zhangwm@marvell.com>
-	<20130709181434.76f6216d@skate>
-	<201307092316.20905.arnd@arndb.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 0/4] extcon: palmas: clean-up/fixes and suspend/resume susupport
+Date: Wed, 10 Jul 2013 11:45:55 +0530
+Message-ID: <1373436959-32444-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201307092316.20905.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Neil Zhang <zhangwm@marvell.com>, Grant Likely <grant.likely@linaro.org>, devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: cw00.choi@samsung.com, myungjoo.ham@samsung.com
+Cc: devicetree-discuss@lists.ozlabs.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, gg@slimlogic.co.uk, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2013 at 5:16 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 09 July 2013, Thomas Petazzoni wrote:
->> Dear Neil Zhang,
->>
->> On Tue, 9 Jul 2013 14:42:45 +0800, Neil Zhang wrote:
->> > support CLOCKSOURCE OF DECLARE for mmp timer.
->> >
->> > Signed-off-by: Neil Zhang <zhangwm@marvell.com>
->> > ---
->> >  arch/arm/mach-mmp/mmp-dt.c  |    5 ++---
->> >  arch/arm/mach-mmp/mmp2-dt.c |    3 +--
->> >  arch/arm/mach-mmp/time.c    |   15 ++-------------
->> >  3 files changed, 5 insertions(+), 18 deletions(-)
->>
->> Maybe it would be good to take this opportunity to move
->> arch/arm/mach-mmp/time.c into drivers/clocksource/.
->
-> +1
->
-> Or we might want to have a more coordinated move of all clocksource
-> drivers in arch/arm to drivers/clocksource now, as we have done for some
-> other subsystems.
->
->         Arnd
+This patch series does following:
+- Remove unused member from extcon palmas structure.
+- Fix to support of detecting cable properly with multiple insert/removal.
+- Add support for suspend/resume functionlaity and wakup from suspend.
+- Option to select/de-select the ID or VBUS detection.
 
-I already sent some patches on this. But I didn't get response yet. I'll rebase
-them and send them again. I hope that they could be merged in this cycle.
+Changes from V1:
+- Correct the display message.
+- Add ack from Graeme
 
-Regards
-Haojian
+Laxman Dewangan (4):
+  extcon: palmas: remove unused member from palams_usb structure
+  extcon: palmas: enable ID_GND and ID_FLOAT detection always
+  extcon: palams: add support for suspend/resume
+  extcon: palmas: Option to disable ID/VBUS detection based on platform
+
+ .../devicetree/bindings/extcon/extcon-palmas.txt   |    2 +
+ drivers/extcon/extcon-palmas.c                     |  111 ++++++++++++++------
+ include/linux/mfd/palmas.h                         |    9 +-
+ 3 files changed, 86 insertions(+), 36 deletions(-)
+
