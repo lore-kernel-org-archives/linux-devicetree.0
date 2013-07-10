@@ -1,108 +1,77 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: Fixed PHY Device Tree usage?
-Date: Wed, 10 Jul 2013 18:39:51 +0200
-Message-ID: <20130710183951.09a0bcea@skate>
-References: <20130709183312.6c4d052d@skate>
-	<CAGVrzcZ7ZLSDy5sTUR_XuSAUH=5q8ddiXx5n1y680WwGrdFfTw@mail.gmail.com>
-	<1733937.SiPWt3mDlH@lenovo>
-	<20130710182216.0dcfaaaf@skate>
-	<CAGVrzcbt302tTM3pprnhJz7YykUzcW=XSMCr_W=m1zWiVBX8kw@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/2] Input: Adding DT support for keyreset tuneables
+Date: Wed, 10 Jul 2013 09:52:47 -0700
+Message-ID: <20130710165247.GA22992@core.coreip.homeip.net>
+References: <1372349605-4500-1-git-send-email-mathieu.poirier@linaro.org>
+ <1372349605-4500-2-git-send-email-mathieu.poirier@linaro.org>
+ <20130627162820.GA12070@core.coreip.homeip.net>
+ <51CC7CD5.5090508@linaro.org>
+ <20130627182500.GB12961@core.coreip.homeip.net>
+ <51CC8786.1070200@linaro.org>
+ <20130628060945.GA17523@core.coreip.homeip.net>
+ <51CD8D4A.10207@linaro.org>
+ <20130710151457.D0B863E1168@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcbt302tTM3pprnhJz7YykUzcW=XSMCr_W=m1zWiVBX8kw@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>
-Cc: netdev <netdev@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory =?UTF-8?B?Q2zDqW1lbnQ=?= <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Lior Amsalem <alior@marvell.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, grant.likely@secretlab.ca, afleming@freescale.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130710151457.D0B863E1168@localhost>
+Sender: linux-input-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, kernel-team@android.com, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Florian Fainelli,
-
-On Wed, 10 Jul 2013 17:29:44 +0100, Florian Fainelli wrote:
-
-> > Should we have something like:
-> >
-> >         mdio-fixed {
-> >                 compatible = "generic,mdio-fixed";
-> >                 phy0: ethernet-phy@0 {
-> >                         ... all the properties you listed ...
-> >                         ... maybe the "id" property is not needed
-> >                             because of the phandle ...
+On Wed, Jul 10, 2013 at 04:14:57PM +0100, Grant Likely wrote:
+> On Fri, 28 Jun 2013 07:19:06 -0600, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
+> > On 13-06-28 12:09 AM, Dmitry Torokhov wrote:
+> > >>>> I do not agree.  We want the binding to be generic and not tied
+> > >>>> specifically to the keyreset functionality.  As such 'input-keyset' or
+> > >>>> 'input-keychord' are more appropriate.
+> > >>>
+> > >>> The binding is defined specifically for sysrq and specifically to
+> > >>> perform reset action.
+> > >>
+> > >> Yes for now but as the examples in the binding show, it is easy to
+> > >> envision how other drivers could use it.
+> > > 
+> > > I think you over-complicate things here. Unlike matrix-keypad binding,
+> > > where you have a common parsing code, here we have an individual driver.
+> > > I really do not see anyone else using such sequences or chords as such
+> > > processing should be done in userspace. Sysrq is quite an exception.
+> > 
+> > To be honest I don't have a very strong opinion on the binding.  I made
+> > it as generic as possible on the guidance of the DT people.  Let's see
+> > what they think of it.
 > 
-> In the "fixed-phy" terminology "id" is unfortunately ambiguous, the
-> driver internally uses "phy_id" which is nothing more than a PHY
-> address, but it also supports being assigned an "id" as in
-> Identification register 2 & 3. I was refering to the identification
-> register by "id".
-
-Hum, but your "id" property contained a string, so I'm not sure how it
-would fit in Identification register 2 and 3. Am I missing something
-obvious here? Maybe you wanted to have:
-
-	id = <0xdeadbeef>;
-
-which would make the "emulated" PHY return 0xdeadbeef as its PHY ID
-when reading those identification registers.
-
-> >                 };
-> >
-> >                 phy1: ethernet-phy@1 {
-> >                         ... all the properties you listed ...
-> >                         ... maybe the "id" property is not needed
-> >                             because of the phandle ...
-> >                 };
-> >         };
-> >
-> >         soc {
-> >                 ethernet@0 {
-> >                         phy = <&phy0>;
-> >                         ...
-> >                 };
-> >
-> >                 ethernet@1 {
-> >                         phy = <&phy1>;
-> >                         ...
-> >                 };
-> >         };
-> >
-> > or do you have in mind another representation?
+> Hi Mathieu,
 > 
-> Not really this is more or less what I had in mind. I am wondering
-> whether we should really declare the "mdio-fixed" node, or if we
-> should not rather make the following:
+> As per our conversation just now at Connect, the binding should probably
+> look like this:
 > 
-> - declare all PHY nodes in the system as sub nodes of their belonging
-> real hardware MDIO bus node
-> - flag specific PHY nodes as "fixed" with a "fixed-link" boolean for instance
-> - if we see that flag, make that specific PHY node bind to the
-> fixed-phy driver instead
+> Sysrq keyset binding:
+> 
+> The /chosen node can contain a linux,input-keyset-sysrq child node to
+> define a set of keys that will generate a sysrq when pressed together.
 
-So the fixed PHY driver is going to travel through *all* nodes of the
-DT, and whenever some random node has a "fixed" property, it's going to
-say it corresponds to a fixed PHY? That doesn't seem like a good idea.
+Hmm, we would have only one such node, /sysrq, or /linux,sysrq,
+whatever. The sysrq setting is system-wide and applicable to all
+devices. Given that it is used only on mobile, where there not that
+many input devices (a few keys and touchscreen) I do not believe we
+should consider adding per-device settings.
 
-So that's really what I was asking: how is the fixed PHY driver going
-to know which DT nodes to look at. Is it a platform_driver, where the
-corresponding DT node has sub-nodes? Is it something else? Or a
-specific compatible string?
+> 
+> Required properties:
+> keyset: array of keycodes
 
-> What do you think? I suspect someone might rightfully say that the
-> "fixed-mdio" is not a real piece of hardware and is just a software
-> concept. A PHY in the real world may very well have a fixed link
-> speed/duplex/pause settings on the other end.
+Please, let's call it 'key-reset-seq', because it is exactly the reset
+sequence. There won't be any additional sequences or chords as those
+should be handled in userspace, sysrq is a special case here.
 
-I agree that the mdio-fixed idea is clearly moving away from the
-hardware representation. But see my question above: we need a way of
-letting the fixed PHY driver know which DT nodes it should have a look
-at. And just saying "those nodes will have property 'foo' is not
-sufficient".
+> timeout-ms: duration keys must be pressed together in microseconds
+> before generating a sysrq
+> 
 
-Best regards,
+Thanks.
 
-Thomas
 -- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Dmitry
