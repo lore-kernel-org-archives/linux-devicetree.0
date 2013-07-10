@@ -1,59 +1,86 @@
-From: Daniel Drake <dsd@laptop.org>
-Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
-Date: Wed, 10 Jul 2013 08:41:03 -0600
-Message-ID: <CAMLZHHQre=juBmWJ2ZouLJGUW0owJd4GrOVur=ea2BPvMWjMbA@mail.gmail.com>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
-	<1373352166-10064-2-git-send-email-zhangwm@marvell.com>
-	<20130709124900.GG11908@titan.lakedaemon.net>
-	<175CCF5F49938B4D99B2E3EF7F558EBE3DBC97FA8F@SC-VEXCH4.marvell.com>
-	<20130710122023.GN11908@titan.lakedaemon.net>
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] watchdog: dw: Enable OF support for DW watchdog timer.
+Date: Wed, 10 Jul 2013 09:55:48 -0500
+Message-ID: <1373468148.8797.0.camel@linux-builds1>
+References: <1373411377-5170-1-git-send-email-dinguyen@altera.com>
+ <20130710104101.GA3552@page>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130710122023.GN11908@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Neil Zhang <zhangwm@marvell.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130710104101.GA3552@page>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2013 at 6:20 AM, Jason Cooper <jason@lakedaemon.net> wrote:
-> Please keep in mind that the DT is supposed to be tied to the hardware,
-> *not* the kernel.  iow, a dtb comes with a board, and the user/OS
-> upgrades the kernel as needed w/o upgrading or changing the dtb.
+On Wed, 2013-07-10 at 11:41 +0100, Jamie Iles wrote:
+> Hi Dinh,
+> 
+> On Tue, Jul 09, 2013 at 06:09:37PM -0500, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+> > From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> > 
+> > Add device tree support to the DW watchdog timer.
+> > 
+> > Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> > Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> > Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
+> > Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+> > Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
+> >  drivers/watchdog/dw_wdt.c                          |    7 +++++++
+> >  2 files changed, 23 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+> >
+> > diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> > index 2037669..f7eec38 100644
+> > --- a/drivers/watchdog/dw_wdt.c
+> > +++ b/drivers/watchdog/dw_wdt.c
+> > @@ -343,12 +343,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
+> >  	return 0;
+> >  }
+> >  
+> > +static const struct of_device_id dw_wdt_of_match[] = {
+> > +	{ .compatible = "snps,dw-wdt", },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
+> > +
+> >  static struct platform_driver dw_wdt_driver = {
+> >  	.probe		= dw_wdt_drv_probe,
+> >  	.remove		= dw_wdt_drv_remove,
+> >  	.driver		= {
+> >  		.name	= "dw_wdt",
+> >  		.owner	= THIS_MODULE,
+> > +		.of_match_table = dw_wdt_of_match,
+> 
+> I think we want:
+> 
+> 		.of_match_table = of_match_ptr(dw_wdt_of_match),
+> 
+> as the module doesn't have an OF dependency.
 
-Thank you for making this position clear to those trying to break
-compatibility...
+Thanks Jamie, I'll send a v2 with your Ack and comment.
 
-This will affect OLPC where the dtb comes from the firmware
-(OpenFirmware), which is similar to the dtb coming "with the board" as
-you describe. We run on Marvell SoCs.
-
-> So the question you need to ask yourself is: Are there any users (since
-> v3.5) that are doing this?  If so, they have "mrvl,..." compatible
-> strings in their dtbs.  You don't want to break their systems on kernel
-> upgrade, right?
-
-In the OLPC case, the devicetree currently exported from the firmware
-is unfortunately quite insufficient to boot mainline kernels. So we
-are currently in a state of flux where we must break firmware/OS
-compatibility in significant ways in order to support mainline
-kernels. We are heading in this direction despite the pains.
-
-Therefore right now its OK for us if we break compatibility during our
-in-flux major firmware/DT restructuring, as this patch does.
-
-However, once we have stabilised in the near future, it will no longer
-be possible to break compatibility like this.
-
-My vote would be to maintain the old names (in addition to the new) in
-case there are people that will be affected by this that haven't seen
-this thread. We were recently hit by another backwards-incompatible
-change in Marvell's Linux gpio drivers where the compatible strings
-recognised were changed (f87311743eaf85). This is not a big problem in
-our current state however it cost me about 3 hours of changelog
-skimming, glancing around in the code, and finally running a git
-bisect, before I managed to figure out why things had suddenly stopped
-working. That was irritating.
-
-Thanks
-Daniel
+Dinh
+> 
+> Otherwise looks good to me.
+> 
+> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+> 
+> Thanks,
+> 
+> Jamie
+> 
