@@ -1,85 +1,75 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
-Date: Wed, 10 Jul 2013 17:49:22 -0400
-Message-ID: <20130710214922.GQ11908@titan.lakedaemon.net>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
- <1373352166-10064-2-git-send-email-zhangwm@marvell.com>
- <20130709124900.GG11908@titan.lakedaemon.net>
- <CAHCPf3u=Zu2-4RsWzi17rB_FmStwcf-Pt_7oRzAEnxN_w=a7cA@mail.gmail.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 2/2] Input: Adding DT support for keyreset tuneables
+Date: Wed, 10 Jul 2013 22:50:26 +0100
+Message-ID: <CACxGe6s7b=qgUGM4-aZSaqVWFeD0hGeo2wVdSK1KSOGYbHUEsQ@mail.gmail.com>
+References: <1372349605-4500-1-git-send-email-mathieu.poirier@linaro.org>
+ <1372349605-4500-2-git-send-email-mathieu.poirier@linaro.org>
+ <20130627162820.GA12070@core.coreip.homeip.net> <51CC7CD5.5090508@linaro.org>
+ <20130627182500.GB12961@core.coreip.homeip.net> <51CC8786.1070200@linaro.org>
+ <20130628060945.GA17523@core.coreip.homeip.net> <51CD8D4A.10207@linaro.org>
+ <20130710151457.D0B863E1168@localhost> <20130710165247.GA22992@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHCPf3u=Zu2-4RsWzi17rB_FmStwcf-Pt_7oRzAEnxN_w=a7cA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Sealey <neko@bakuhatsu.net>
-Cc: Neil Zhang <zhangwm@marvell.com>, grant.likely@linaro.org, haojian.zhuang@gmail.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20130710165247.GA22992@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, John Stultz <john.stultz@linaro.org>, kernel-team@android.com, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2013 at 03:50:10PM -0500, Matt Sealey wrote:
-> On Tue, Jul 9, 2013 at 7:49 AM, Jason Cooper <jason@lakedaemon.net> wrote:
-> > Neil,
-> >
-> > I agree with the need to change, however, this has been in the binding
-> > documentation since v3.5.  I wish we had caught this when we decided
-> > against using stock ticker symbols (not all stock markets use
-> > alphabetical abbreviated names, not all companies are listed on any
-> > stock exchange).
-> 
-> Who decided that?
+On Wed, Jul 10, 2013 at 5:52 PM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Wed, Jul 10, 2013 at 04:14:57PM +0100, Grant Likely wrote:
+>> On Fri, 28 Jun 2013 07:19:06 -0600, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
+>> > On 13-06-28 12:09 AM, Dmitry Torokhov wrote:
+>> > >>>> I do not agree.  We want the binding to be generic and not tied
+>> > >>>> specifically to the keyreset functionality.  As such 'input-keyset' or
+>> > >>>> 'input-keychord' are more appropriate.
+>> > >>>
+>> > >>> The binding is defined specifically for sysrq and specifically to
+>> > >>> perform reset action.
+>> > >>
+>> > >> Yes for now but as the examples in the binding show, it is easy to
+>> > >> envision how other drivers could use it.
+>> > >
+>> > > I think you over-complicate things here. Unlike matrix-keypad binding,
+>> > > where you have a common parsing code, here we have an individual driver.
+>> > > I really do not see anyone else using such sequences or chords as such
+>> > > processing should be done in userspace. Sysrq is quite an exception.
+>> >
+>> > To be honest I don't have a very strong opinion on the binding.  I made
+>> > it as generic as possible on the guidance of the DT people.  Let's see
+>> > what they think of it.
+>>
+>> Hi Mathieu,
+>>
+>> As per our conversation just now at Connect, the binding should probably
+>> look like this:
+>>
+>> Sysrq keyset binding:
+>>
+>> The /chosen node can contain a linux,input-keyset-sysrq child node to
+>> define a set of keys that will generate a sysrq when pressed together.
+>
+> Hmm, we would have only one such node, /sysrq, or /linux,sysrq,
+> whatever. The sysrq setting is system-wide and applicable to all
+> devices. Given that it is used only on mobile, where there not that
+> many input devices (a few keys and touchscreen) I do not believe we
+> should consider adding per-device settings.
 
-Now you're going to make me dig ;-)  iirc, we were going the stock
-ticker route, but then noticed that powerpc dts files had been using
-"marvell,..." for a _long_ time.  How long?  I'll leave that as an
-exercise for the reader. :-P  Because we shared at least the ethernet
-driver with them, we decided to conform with what was already present in
-the kernel and use "marvell,..." for all of the dt bindings we were
-creating for kirkwood/dove/mvebu (and eventually orion5x, mv78xx0).
+It's in /chosen, that isn't per-device.
 
-As for who is 'we'?
+>> Required properties:
+>> keyset: array of keycodes
+>
+> Please, let's call it 'key-reset-seq', because it is exactly the reset
+> sequence. There won't be any additional sequences or chords as those
+> should be handled in userspace, sysrq is a special case here.
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2012-May/101337.html
+This is absolutely a linux-specific binding. It encodes the Linux
+keycodes, and generates a linux meaning. I'm usually all about
+carrying the OS-independent banner when defining DT bindings, but in
+this case the linux prefix and sysrq reference is completely
+appropriate.
 
-> You can't just "stop using stock ticker symbols" - FDT is inherently
-> based on the original OpenFirmware device tree and therefore any
-> existing bindings which are done on real OpenFirmware solutions where
-> using stock ticker symbols is entirely appropriate (although, these
-> days, not useful) is counter-productive.
-> 
-> If Marvell had originally had mrvl as their ticker, and used this in
-> OF DTs (and it is..), then mrvl it stays. In the case where new
-> devices are added with marvell, this is in this case wrong. You should
-> keep using the old one. A good example of this; Freescale. Nobody is
-> saying everyone should move to "freescale,imx-this" or
-> "freescale,vybrid-that" - it's fsl and it stays fsl for
-> backwards/forwards compatibility because things exist already.
-
-I agree, that's why I'm arguing for *maintaining* backwards
-compatibility.
-
-> Any new companies can have a long, descriptive name; a privilege of
-> being late to the party, you might say :)
-> 
-> Having an odd mix of mrvl and marvell or moving to marvell is just
-> completely obtuse, whether they had that stock ticker, will have it in
-> the future, it is how they're defined and you can't in good conscience
-> change the binding after devices ship with it.
-
-See above regarding the marvell ethernet driver and powerpc...
-
-> > To do this properly, the drivers are going to have to be compatible with
-> > the old and the new names, and the binding docs updated to reflect the
-> > legacy name and the preferred name.
-> 
-> Properly would be as above. You can stop using stock tickers for new
-> company names, but anything that has been defined in a device tree
-> before has to stay that way, and all the manufacturer prefixes to
-> device names should be the same. What you're proposing is purely
-> driver bloat and increasing the size of kernel.
-
-*I'm* not proposing to change the name, Neil is.  I'm proposing that
-*iff* they chose to do that, don't break sh*t along the way.
-
-thx,
-
-Jason.
+g.
