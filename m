@@ -1,101 +1,47 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] usb: phy: samsung-usb2: Toggle HSIC GPIO from device tree
-Date: Wed, 10 Jul 2013 08:25:34 +0300
-Message-ID: <20130710052534.GB15674@arwen.pp.htv.fi>
-References: <1373416455-30358-1-git-send-email-jwerner@chromium.org>
-Reply-To: <balbi@ti.com>
+From: Haojian Zhuang <haojian.zhuang@gmail.com>
+Subject: Re: [PATCH V3 2/3] clocksource: mmp: support CLOCKSOURCE OF DECLARE
+Date: Wed, 10 Jul 2013 13:58:39 +0800
+Message-ID: <CAN1soZyFztVR1XSw9bDS5JexK0Mdbpr6yevatVf+MnBohwCj1Q@mail.gmail.com>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
+	<1373352166-10064-3-git-send-email-zhangwm@marvell.com>
+	<20130709181434.76f6216d@skate>
+	<201307092316.20905.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1373416455-30358-1-git-send-email-jwerner@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Julius Werner <jwerner@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Vivek Gautam <gautam.vivek@samsung.com>, Praveen Paneri <p.paneri@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Tushar Behera <tushar.behera@linaro.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@chromium.org>, Vincent Palatin <vpalatin@chromium.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201307092316.20905.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Neil Zhang <zhangwm@marvell.com>, Grant Likely <grant.likely@linaro.org>, devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---cmJC7u66zC7hs+87
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 10, 2013 at 5:16 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 09 July 2013, Thomas Petazzoni wrote:
+>> Dear Neil Zhang,
+>>
+>> On Tue, 9 Jul 2013 14:42:45 +0800, Neil Zhang wrote:
+>> > support CLOCKSOURCE OF DECLARE for mmp timer.
+>> >
+>> > Signed-off-by: Neil Zhang <zhangwm@marvell.com>
+>> > ---
+>> >  arch/arm/mach-mmp/mmp-dt.c  |    5 ++---
+>> >  arch/arm/mach-mmp/mmp2-dt.c |    3 +--
+>> >  arch/arm/mach-mmp/time.c    |   15 ++-------------
+>> >  3 files changed, 5 insertions(+), 18 deletions(-)
+>>
+>> Maybe it would be good to take this opportunity to move
+>> arch/arm/mach-mmp/time.c into drivers/clocksource/.
+>
+> +1
+>
+> Or we might want to have a more coordinated move of all clocksource
+> drivers in arch/arm to drivers/clocksource now, as we have done for some
+> other subsystems.
+>
+>         Arnd
 
-On Tue, Jul 09, 2013 at 05:34:15PM -0700, Julius Werner wrote:
-> This patch adds support for a new 'samsung,hsic-reset-gpio' in the
-> device tree, which will be interpreted as an active-low reset pin during
-> PHY initialization when it exists. Useful for intergrated HSIC devices
-> like an SMSC 3503 hub. It is necessary to add this directly to the PHY
-> initialization to get the timing right, since resetting a HSIC device
-> after it has already been enumerated can confuse the USB stack.
->=20
-> Also fixes PHY semaphore code to make sure we always go through the
-> setup at least once, even if it was already turned on (e.g. by
-> firmware), and changes a spinlock to a mutex to allow sleeping in the
-> critical section.
->=20
-> Change-Id: Ieecac52c27daa7a17a7ed3b2863ddba3aeb8d16f
-> Signed-off-by: Julius Werner <jwerner@chromium.org>
-> ---
->  .../devicetree/bindings/usb/samsung-usbphy.txt     | 10 ++++++
->  drivers/usb/phy/phy-samsung-usb.c                  | 17 ++++++++++
->  drivers/usb/phy/phy-samsung-usb.h                  |  7 ++--
->  drivers/usb/phy/phy-samsung-usb2.c                 | 38 ++++++++++------=
-------
->  drivers/usb/phy/phy-samsung-usb3.c                 | 12 +++----
->  5 files changed, 55 insertions(+), 29 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/D=
-ocumentation/devicetree/bindings/usb/samsung-usbphy.txt
-> index 33fd354..82e2e16 100644
-> --- a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-> +++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-> @@ -31,6 +31,12 @@ Optional properties:
->  - ranges: allows valid translation between child's address space and par=
-ent's
->  	  address space.
-> =20
-> +- samsung,hsic-reset-gpio: an active low GPIO pin that resets a device
-> +			connected to the HSIC port. Useful for things like
-> +			an on-board SMSC3503 hub.
-> +- pinctrl-0: Pin control group containing the HSIC reset GPIO pin.
-> +- pinctrl-names: Should contain only one value - "default".
-> +
->  - The child node 'usbphy-sys' to the node 'usbphy' is for the system con=
-troller
->    interface for usb-phy. It should provide the following information req=
-uired by
->    usb-phy controller to control phy.
-> @@ -56,6 +62,10 @@ Example:
->  		clocks =3D <&clock 2>, <&clock 305>;
->  		clock-names =3D "xusbxti", "otg";
-> =20
-> +		samsung,hsic-reset-gpio =3D <&gpx2 4 1>;
+I already sent some patches on this. But I didn't get response yet. I'll rebase
+them and send them again. I hope that they could be merged in this cycle.
 
-looks like this should be modeled as a fixed-regulator ?
-
---=20
-balbi
-
---cmJC7u66zC7hs+87
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR3PBNAAoJEIaOsuA1yqREVrcP/3+ZoNfaRCHuCz4obAY3ncGl
-+FgaY3fuvJ1KJSXv/HzrnusggFfZ4btfeOrDRZCgDz26SAbjlQXZlgRU5Gy73G0I
-ygCZIiCrI6oYxqbDYakRT+j9sB44hRd3cFaRcKCdqdRWVmun2low4J2JjYmow9OU
-N8mYpvME4vm4AHxoOcCExgZBsdRyOUDD3k4IMHPRHITvN4sxAzDz/Dw8ykPZKCzw
-B4iItvKW4qdeLuV+y2Gyih7hD4bDiBcdln8GLXzuqgRA6zI0i1HI+nMNxJYZeRf2
-SjgzG68hNmnjxAlddwyQjbzDUgAIjFVMZyH/rP6tdzgSmJgP9reF/5UP+nilqt9t
-BWWgVSmcnMy08pxvExBRYEFLkq87G0coJpoYxrzLWuPMtOxnEubSlwt2GpH/92mx
-XLQl74NbIK9Zz1N/lyNZ3l5brV+Nc94eYc7kYr9LeWY0L/8zDXagk5n16PXCODVB
-trb0lnAQVkglBiuaLHvWcxuPNzLShTt01MgAAuQG3SR0SxWIw7xM9uFVgbL9brEV
-WRFm1xCyqg7gtoVkxhD4WJyCDJ6kuCdHfvvz72roF+lfbslgYE3rwaOLBiYaf8Io
-oAR9OB8BGweAZ3N7WibjqAuYt8ajGjC4HcUmmnyZMDMiHi/ugWy0HcQIus3zT5Wi
-Syy3jnFtel+UrFtOT4r3
-=kMEY
------END PGP SIGNATURE-----
-
---cmJC7u66zC7hs+87--
+Regards
+Haojian
