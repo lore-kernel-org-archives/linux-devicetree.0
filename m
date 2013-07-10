@@ -1,80 +1,32 @@
-From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] watchdog: dw: Enable OF support for DW watchdog timer.
-Date: Wed, 10 Jul 2013 11:41:01 +0100
-Message-ID: <20130710104101.GA3552@page>
-References: <1373411377-5170-1-git-send-email-dinguyen@altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1373411377-5170-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
-Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH 0/4] clk: Samsung: audss: Add support for Exynos5420
+Date: Wed, 10 Jul 2013 17:41:49 +0530
+Message-ID: <1373458313-18970-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com, mturquette@linaro.org, dianders@chromium.org, abrestic@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
+This patch set adds support for audio subsystem clks on Exynos5420. Exynos5420
+audio subsystem has a gate bit for ADMA controller and the some of parent clks
+for mout_i2s are also different from Exynos5250. So this patch adds provision
+for supporting both the platforms by passing the parent clk names through
+device tree.
 
-On Tue, Jul 09, 2013 at 06:09:37PM -0500, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> 
-> Add device tree support to the DW watchdog timer.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-> Cc: Viresh Kumar <viresh.kumar-qxv4g6HH51o@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-> Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-> ---
->  .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
->  drivers/watchdog/dw_wdt.c                          |    7 +++++++
->  2 files changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
->
-> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-> index 2037669..f7eec38 100644
-> --- a/drivers/watchdog/dw_wdt.c
-> +++ b/drivers/watchdog/dw_wdt.c
-> @@ -343,12 +343,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct of_device_id dw_wdt_of_match[] = {
-> +	{ .compatible = "snps,dw-wdt", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
-> +
->  static struct platform_driver dw_wdt_driver = {
->  	.probe		= dw_wdt_drv_probe,
->  	.remove		= dw_wdt_drv_remove,
->  	.driver		= {
->  		.name	= "dw_wdt",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = dw_wdt_of_match,
+Andrew Bresticker (3):
+  clk: exynos-audss: add support for Exynos 5420
+  clk: exynos-audss: allow input clocks to be specified in device tree
+  ARM: dts: exynos5420: add audio clock controller
 
-I think we want:
+Padmavathi Venna (1):
+  ARM: dts: Correct the /include entry on exynos5420 dtsi file
 
-		.of_match_table = of_match_ptr(dw_wdt_of_match),
+ .../devicetree/bindings/clock/clk-exynos-audss.txt |   38 +++++++++++++++++--
+ arch/arm/boot/dts/exynos5420.dtsi                  |   13 ++++++-
+ drivers/clk/samsung/clk-exynos-audss.c             |   36 ++++++++++++++++--
+ include/dt-bindings/clk/exynos-audss-clk.h         |    3 +-
+ 4 files changed, 80 insertions(+), 10 deletions(-)
 
-as the module doesn't have an OF dependency.
-
-Otherwise looks good to me.
-
-Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-
-Thanks,
-
-Jamie
+-- 
+1.7.4.4
