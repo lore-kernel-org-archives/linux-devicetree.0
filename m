@@ -1,55 +1,97 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: Re: [PATCH v4 3/7] Documentation: DT: update atmel SSC with DMA binding
-Date: Wed, 10 Jul 2013 11:48:27 +0200
-Message-ID: <CACQ1gAhK2yN2uhewq8XGOidLCDfOhgRvzE1o0b1krK1DjYj-dA@mail.gmail.com>
-References: <1373372929-17800-1-git-send-email-richard.genoud@gmail.com>
- <1373379933-32749-1-git-send-email-richard.genoud@gmail.com>
- <1373379933-32749-4-git-send-email-richard.genoud@gmail.com> <20130709150543.GE27646@sirena.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH V2 1/8] regulator: Introduce OMAP regulator to
+ control PMIC over VC/VP
+Date: Wed, 10 Jul 2013 10:19:52 +0100
+Message-ID: <20130710091952.GF3179@sirena.org.uk>
+References: <20130704154105.GD27646@sirena.org.uk>
+ <20130705135507.GA17439@kahuna>
+ <20130705140828.GA27646@sirena.org.uk>
+ <51D6DD3A.1030002@ti.com>
+ <20130705165235.GC27646@sirena.org.uk>
+ <51D70356.30707@ti.com>
+ <20130705174727.GF27646@sirena.org.uk>
+ <51DAF55C.5040502@ti.com>
+ <20130709152954.GF27646@sirena.org.uk>
+ <51DC3487.2080503@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130709150543.GE27646@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3yNHWXBV/QO9xKNm"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51DC3487.2080503@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@deeprootsystems.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>, Taras Kondratiuk <taras@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-2013/7/9 Mark Brown <broonie@kernel.org>:
-> On Tue, Jul 09, 2013 at 04:25:29PM +0200, Richard Genoud wrote:
->
->>  - reg: Should contain SSC registers location and length
->>  - interrupts: Should contain SSC interrupt
->> +For dma transfer:
->> +- dmas: DMA specifier, consisting of a phandle to DMA controller node,
->> +  the memory interface and SSC DMA channel ID (for tx and rx).
->> +  See Documentation/devicetree/bindings/dma/atmel-dma.txt for details.
->> +- dma-names: Must be "tx", "rx".
->
-> This is added as a required property so...
->
->> -Example:
->> +Examples:
->>  ssc0: ssc@fffbc000 {
->>       compatible = "atmel,at91rm9200-ssc";
->>       reg = <0xfffbc000 0x4000>;
->>       interrupts = <14 4 5>;
->>  };
->
-> ...this first example is now invalid and should probably just be being
-> extended with the new required properties.
 
-Well, I have to rewrite that to make it clearer.
-The thing is:
-with "atmel,at91rm9200-ssc" the SSC doesn't work with DMA.
-with "atmel,at91sam9g45-ssc", the SSC work ONLY with DMA.
+--3yNHWXBV/QO9xKNm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So the dmas/dma-names properties are only required for g45-ssc, and
-useless for rm9200-ssc
+On Tue, Jul 09, 2013 at 11:04:23AM -0500, Nishanth Menon wrote:
+> On 07/09/2013 10:29 AM, Mark Brown wrote:
 
-Maybe the best will be to write a paragraph for g45-ssc and another
-for rm9200-ssc, even if there's some identical lines between them.
+> >This seems like something we should be able to cope with by for example
+> >adding a bus for the custom PMIC interface or otherwise finding a way to
 
+> I had considered introducing a custom bus for custom PMIC interface,
+> but as you stated below, standard regulators will probably need some
+> custom monkeying around.
 
-Thanks !
+We should just be able to use the platform bus here.
 
-Richard.
+> >get to the data at runtime based on the compatible string.  This would
+> >need some custom code in the regulators but would have the advantage of
+> >keeping the data the same at least.  Hrm.
+
+> Ofcourse,this will be to add custom set/get_voltage implementation
+> using this "custom API" which we discussed was'nt that good an idea.
+
+No, if the regulator isn't being interacted with directly then it
+doesn't need to export any operations - just data.  The operations would
+come from the magic SoC hardware that controls the regulator.  The code
+in the drivers should be very small, if it isn't there's no point in
+doing this.
+
+> >>between PMICs? yep, twl4030 does 4mV/uSec, 6030 can do 6mV/uSec,
+> >>TPS62361 can do 32mV/uSec, TWL6035/37 does 0.220mV/uSec
+
+> >Those are ramp rates, they're not I2C I/O limits.  Ramp rates we already
+> >know about.  I think what you're saying here is that this latency value
+> >is actually about worst case ramp times?
+
+> Arrgh.. my bad. I confused ramp time with I2C transfer timeout
+> parameter. I know that I2C bus can be held[1] by PMIC as long as it
+> is busy. Some custom ASIC can do some weird stuff I suppose. I dont
+> seem to have clear data points in the sketchy TRMs for 6030/2 ,
+> 6035, 5030, for these other than to state it is i2c specification
+> compliant (/me grumbles). So, I just have emperical value which is a
+> bit conservative and seem to work on the devices.
+
+OK, no problem - like we said further up the thread I think adding
+something to get the data
+
+--3yNHWXBV/QO9xKNm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR3Sc1AAoJELSic+t+oim9LgcP/A9peqE0jmK5KWGZ6iw7kK0J
+8KEbz1Y2DU19fY0Bn6QNW4xbQv0hDbJcH/nGAx/QwvcoPHfLnwbCQJNmeiKfHWGH
+yFU76STMGLdDCC5vGSUrAayMQl4M2/3s+0jxYd1FVhRFoIfXYIC9QNl8oowQG5BR
+ilWKlWIlstwYVR/Vlwq7k4ovejxGL7Pwb2l0gnKsOYKh+ElAC4nPWSVk9R6biOa+
+uclgxbo58sAUZKQIR7oaS9+7UGtuYRl8JDJYtF81NdZnOIiTKzNl6KLrnEFgRxzJ
+Q9RhDybgn81dSH+iouml3Fj1p4jK6fqaDymeBuXGEdd5CWAVhrjzu/4F7S1S/43V
++kc9fBccC0Pn2ls3WzFKZ9HrJZYPhyY2NOBMcj69EyKNCLMFI2HXVPEwzc0AdMWn
+ea0CbyGin5Go8WMQHmpNfIL7f92QdhXVa6jl0NAZUAd6ZPfEcbqIFlqzoqM/O0Lp
+O+Y3nHK4Q63jCvxTygN1O/7fjauma7gxeq4PZqrF8mV4blKhCXMmAp/TtzLQPL0X
++VyYvcWIULXyfSrsz057Eqnsnwb9Mq8DI6qMem4COYM7TnV+rbGeiM9p2RGezBvo
+F2XGXgdGLBrVXUND24eVw6N2VXmXMgs3qkVWQZom8PKVNu8Dgmhy2E2dJa3Dbn8J
+AmZ6xaf87FMC0qX5S/fc
+=aaQ8
+-----END PGP SIGNATURE-----
+
+--3yNHWXBV/QO9xKNm--
