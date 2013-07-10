@@ -1,100 +1,102 @@
-From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv2] watchdog: dw: Enable OF support for DW watchdog timer.
-Date: Wed, 10 Jul 2013 10:14:57 -0500
-Message-ID: <1373469297-30082-1-git-send-email-dinguyen@altera.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: Fixed PHY Device Tree usage?
+Date: Wed, 10 Jul 2013 18:22:16 +0200
+Message-ID: <20130710182216.0dcfaaaf@skate>
+References: <20130709183312.6c4d052d@skate>
+	<CAGVrzcZ7ZLSDy5sTUR_XuSAUH=5q8ddiXx5n1y680WwGrdFfTw@mail.gmail.com>
+	<1733937.SiPWt3mDlH@lenovo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1733937.SiPWt3mDlH@lenovo>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: netdev <netdev@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory =?UTF-8?B?Q2zDqW1lbnQ=?= <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Lior Amsalem <alior@marvell.com>, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, afleming@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Dear Florian Fainelli,
 
-Add device tree support to the DW watchdog timer.
+On Tue, 09 Jul 2013 19:02:05 +0100, Florian Fainelli wrote:
 
-Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Reviewed-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+> > > We have a case of an hardware platform that uses the mvneta network
+> > > driver, but instead of the SoC being connected to a PHY, it's connected
+> > > directly to a switch, so my understanding is that there's no MDIO bus,
+> > > and we should have a kind of a "fake PHY" to make the mvneta driver
+> > > believe that the link is up, at a given speed.
+> > 
+> > Good timing, I was about to post questions/suggestions about how we
+> > should represent fixed PHYs in device tree.
 
-v2:
-- Use of_match_ptr() for of_match_table
----
- .../devicetree/bindings/watchdog/dw_wdt.txt        |   16 ++++++++++++++++
- drivers/watchdog/dw_wdt.c                          |    8 ++++++++
- 2 files changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
+Great.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-new file mode 100644
-index 0000000..29e150b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-@@ -0,0 +1,16 @@
-+Synopsys Designware Watchdog Timer
-+
-+Required Properties:
-+
-+- Compatiblity	: "snps,dw-wdt"
-+- reg		: Base address of the watchdog timer register.
-+
-+Example:
-+
-+	watchdog0: wd@ffd02000 {
-+		compatible = "snps,dw-wdt";
-+		reg = <0xffd02000 0x1000>;
-+		interrupts = <0 171 4>;
-+		clocks = <&per_base_clk>;
-+		status = "okay";
-+	};
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index 2037669..a720f9b 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -29,6 +29,7 @@
- #include <linux/miscdevice.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-+#include <linux/of.h>
- #include <linux/pm.h>
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
-@@ -343,12 +344,19 @@ static int dw_wdt_drv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id dw_wdt_of_match[] = {
-+	{ .compatible = "snps,dw-wdt", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, dw_wdt_of_match);
-+
- static struct platform_driver dw_wdt_driver = {
- 	.probe		= dw_wdt_drv_probe,
- 	.remove		= dw_wdt_drv_remove,
- 	.driver		= {
- 		.name	= "dw_wdt",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(dw_wdt_of_match),
- #ifdef CONFIG_PM
- 		.pm	= &dw_wdt_pm_ops,
- #endif /* CONFIG_PM */
+> > Well, it does not seem to be too far from the "hardware" reality to
+> > describe a link between a switch CPU port and an Ethernet MAC as a
+> > fixed PHY because that is what it really is in fact. Once you have a
+> > drivers for your switch you can start using this PHY along with its
+> > corresponding driver.
+
+Ok.
+
+> > There is a helper: of_phy_connect_fixed_link() in drivers/of/of_mdio.c
+> > is flagged as being a
+> > temporary solution for Freescale Ethernet drivers to move to something else,
+> > so I would like to discuss what the "something else should be".
+
+Yeah, I saw this helper function as well, and the comment you spotted.
+
+> > Here what I would like to see the new "fixed-link" phy node look like:
+> > 
+> > ethernet-phy@0 {
+> >      reg = <0>;
+> >      id = "deadbeef";
+> >      speed = <1000>;
+> >      full-duplex;
+> >      pause;
+> >      asym-pause;
+> > };
+> > 
+> > It has the same properties as the binding described in:
+> > Documentation/devicetree/bindings/net/fsl-tsec-phy.txt but expressed in a
+> > more explicit way instead of using an array of integers.
+
+And so the fixed-phy driver would look for what exactly in the Device
+Tree to find which fixed PHYs to create?
+
+Should we have something like:
+
+	mdio-fixed {
+		compatible = "generic,mdio-fixed";
+		phy0: ethernet-phy@0 {
+			... all the properties you listed ...
+			... maybe the "id" property is not needed
+			    because of the phandle ...
+		};
+
+		phy1: ethernet-phy@1 {
+			... all the properties you listed ...
+			... maybe the "id" property is not needed
+			    because of the phandle ...
+		};
+	};
+
+	soc {
+		ethernet@0 {
+			phy = <&phy0>;
+			...
+		};
+
+		ethernet@1 {
+			phy = <&phy1>;
+			...
+		};
+	};
+
+or do you have in mind another representation?
+
+Thomas
 -- 
-1.7.9.5
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
