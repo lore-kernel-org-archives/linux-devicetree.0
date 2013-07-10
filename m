@@ -1,101 +1,89 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
-Date: Wed, 10 Jul 2013 17:50:41 -0400
-Message-ID: <20130710215041.GR11908@titan.lakedaemon.net>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
- <1373352166-10064-2-git-send-email-zhangwm@marvell.com>
- <20130709124900.GG11908@titan.lakedaemon.net>
- <CAN1soZxiOh6TpbUOCUzK8gNwmvjbT3ihkUWaw8tuZ7md+NVA2g@mail.gmail.com>
- <20130710122433.GO11908@titan.lakedaemon.net>
- <CAN1soZzMvront1-jcBW6-uRKNs0OZNGnmiOjKGZSM28bViB_8A@mail.gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/2] Input: Adding DT support for keyreset tuneables
+Date: Wed, 10 Jul 2013 15:20:22 -0700
+Message-ID: <3572203.AkEVm8LFzu@dtor-d630.eng.vmware.com>
+References: <1372349605-4500-1-git-send-email-mathieu.poirier@linaro.org> <20130710165247.GA22992@core.coreip.homeip.net> <CACxGe6s7b=qgUGM4-aZSaqVWFeD0hGeo2wVdSK1KSOGYbHUEsQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAN1soZzMvront1-jcBW6-uRKNs0OZNGnmiOjKGZSM28bViB_8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6s7b=qgUGM4-aZSaqVWFeD0hGeo2wVdSK1KSOGYbHUEsQ@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, John Stultz <john.stultz@linaro.org>, kernel-team@android.com, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2013 at 10:08:50PM +0800, Haojian Zhuang wrote:
-> On Wed, Jul 10, 2013 at 8:24 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> > On Wed, Jul 10, 2013 at 04:19:46PM +0800, Haojian Zhuang wrote:
-> >> On Tue, Jul 9, 2013 at 8:49 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> >> > Neil,
-> >> >
-> >> > On Tue, Jul 09, 2013 at 02:42:44PM +0800, Neil Zhang wrote:
-> >> >> The documented vendor prefix for Marvell is 'marvell', not 'mrvl', so
-> >> >> let's change it.
-> >> >>
-> >> >> Signed-off-by: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> >> >> ---
-> >> >>  .../devicetree/bindings/arm/mrvl/intc.txt          |   16 +++---
-> >> >>  .../devicetree/bindings/arm/mrvl/mrvl.txt          |    6 +-
-> >> >>  .../devicetree/bindings/arm/mrvl/timer.txt         |    4 +-
-> >> >>  Documentation/devicetree/bindings/i2c/i2c-pxa.txt  |   14 +++---
-> >> >>  .../devicetree/bindings/mmc/sdhci-pxa.txt          |    8 ++--
-> >> >>  .../devicetree/bindings/rtc/sa1100-rtc.txt         |    4 +-
-> >> >>  .../devicetree/bindings/serial/mrvl-serial.txt     |    2 +-
-> >> >>  arch/arm/boot/dts/mmp2-brownstone.dts              |    2 +-
-> >> >>  arch/arm/boot/dts/mmp2.dtsi                        |   56 ++++++++++----------
-> >> >>  arch/arm/boot/dts/pxa168-aspenite.dts              |    2 +-
-> >> >>  arch/arm/boot/dts/pxa168.dtsi                      |   24 ++++----
-> >> >>  arch/arm/boot/dts/pxa2xx.dtsi                      |   16 +++---
-> >> >>  arch/arm/boot/dts/pxa3xx.dtsi                      |    2 +-
-> >> >>  arch/arm/boot/dts/pxa910-dkb.dts                   |    2 +-
-> >> >>  arch/arm/boot/dts/pxa910.dtsi                      |   27 +++++-----
-> >> >>  arch/arm/mach-mmp/irq.c                            |   16 +++---
-> >> >>  arch/arm/mach-mmp/mmp-dt.c                         |   28 +++++-----
-> >> >>  arch/arm/mach-mmp/mmp2-dt.c                        |   16 +++---
-> >> >>  arch/arm/mach-mmp/time.c                           |    2 +-
-> >> >>  arch/arm/mach-pxa/pxa-dt.c                         |   14 +++---
-> >> >>  drivers/i2c/busses/i2c-pxa.c                       |   10 ++--
-> >> >>  drivers/mmc/host/sdhci-pxav2.c                     |    4 +-
-> >> >>  drivers/mmc/host/sdhci-pxav3.c                     |    4 +-
-> >> >>  drivers/rtc/rtc-sa1100.c                           |    4 +-
-> >> >>  drivers/tty/serial/pxa.c                           |    4 +-
-> >> >>  25 files changed, 144 insertions(+), 143 deletions(-)
-> >> >
-> >> > I agree with the need to change, however, this has been in the binding
-> >> > documentation since v3.5.  I wish we had caught this when we decided
-> >> > against using stock ticker symbols (not all stock markets use
-> >> > alphabetical abbreviated names, not all companies are listed on any
-> >> > stock exchange).
-> >> >
-> >> > To do this properly, the drivers are going to have to be compatible with
-> >> > the old and the new names, and the binding docs updated to reflect the
-> >> > legacy name and the preferred name.
-> >> >
-> >>
-> >> It's better to only use the new names.
-> >
-> > In the dts{i}, yes.  But we don't want to break systems in the field
-> > with "mrvl,..." compatible strings.  Therefore, at least the drivers
-> > need an extra compatible string to support "mrvl,...".
-> >
-> > If it had just been since v3.9, it'd be different/simpler.  However,
-> > several vendors have opted to use kernels newer than v3.5, which makes
-> > this scenario a real possibility.
-> >
-> > thx,
-> >
-> > Jason.
+On Wednesday, July 10, 2013 10:50:26 PM Grant Likely wrote:
+> On Wed, Jul 10, 2013 at 5:52 PM, Dmitry Torokhov
 > 
-> Is there any vendor using DT for this Marvell chip? I think the answer is no.
+> <dmitry.torokhov@gmail.com> wrote:
+> > On Wed, Jul 10, 2013 at 04:14:57PM +0100, Grant Likely wrote:
+> >> On Fri, 28 Jun 2013 07:19:06 -0600, Mathieu Poirier 
+<mathieu.poirier@linaro.org> wrote:
+> >> > On 13-06-28 12:09 AM, Dmitry Torokhov wrote:
+> >> > >>>> I do not agree.  We want the binding to be generic and not tied
+> >> > >>>> specifically to the keyreset functionality.  As such
+> >> > >>>> 'input-keyset' or
+> >> > >>>> 'input-keychord' are more appropriate.
+> >> > >>> 
+> >> > >>> The binding is defined specifically for sysrq and specifically to
+> >> > >>> perform reset action.
+> >> > >> 
+> >> > >> Yes for now but as the examples in the binding show, it is easy to
+> >> > >> envision how other drivers could use it.
+> >> > > 
+> >> > > I think you over-complicate things here. Unlike matrix-keypad
+> >> > > binding,
+> >> > > where you have a common parsing code, here we have an individual
+> >> > > driver.
+> >> > > I really do not see anyone else using such sequences or chords as
+> >> > > such
+> >> > > processing should be done in userspace. Sysrq is quite an exception.
+> >> > 
+> >> > To be honest I don't have a very strong opinion on the binding.  I made
+> >> > it as generic as possible on the guidance of the DT people.  Let's see
+> >> > what they think of it.
+> >> 
+> >> Hi Mathieu,
+> >> 
+> >> As per our conversation just now at Connect, the binding should probably
+> >> look like this:
+> >> 
+> >> Sysrq keyset binding:
+> >> 
+> >> The /chosen node can contain a linux,input-keyset-sysrq child node to
+> >> define a set of keys that will generate a sysrq when pressed together.
+> > 
+> > Hmm, we would have only one such node, /sysrq, or /linux,sysrq,
+> > whatever. The sysrq setting is system-wide and applicable to all
+> > devices. Given that it is used only on mobile, where there not that
+> > many input devices (a few keys and touchscreen) I do not believe we
+> > should consider adding per-device settings.
+> 
+> It's in /chosen, that isn't per-device.
+> 
+> >> Required properties:
+> >> keyset: array of keycodes
+> > 
+> > Please, let's call it 'key-reset-seq', because it is exactly the reset
+> > sequence. There won't be any additional sequences or chords as those
+> > should be handled in userspace, sysrq is a special case here.
+> 
+> This is absolutely a linux-specific binding. It encodes the Linux
+> keycodes, and generates a linux meaning. I'm usually all about
+> carrying the OS-independent banner when defining DT bindings, but in
+> this case the linux prefix and sysrq reference is completely
+> appropriate.
 
-Well, Daniel Drake spoke up for OLPC.  Does that count?
+OK, I have no idea what "/chosen" actually means. What I am trying to say
+that there should be either "sysrq" or "linux,sysrq" node and that is what
+sysrq driver will be looking for.
 
-thx,
+The entire node is Linux-specific and therefore there is no point in
+marking only one of the properties (the key sequence) Linux-specific while
+leaving other ones generic.
 
-Jason.
+Thanks.
+
+-- 
+Dmitry
