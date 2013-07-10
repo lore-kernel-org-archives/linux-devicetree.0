@@ -1,92 +1,61 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
-Date: Wed, 10 Jul 2013 13:27:52 -0600
-Message-ID: <51DDB5B8.5060909@wwwdotorg.org>
-References: <20130618092516.GC18663@ab42.lan> <1371547751-13873-2-git-send-email-christian.ruppert@abilis.com> <51C23222.2060906@wwwdotorg.org> <20130626115051.GC7095@ab42.lan> <51CB279A.1090404@wwwdotorg.org> <20130705094859.GA27196@ab42.lan> <51D71337.6030409@wwwdotorg.org> <20130708130222.GA6402@ab42.lan>
+From: Matt Sealey <neko@bakuhatsu.net>
+Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
+Date: Wed, 10 Jul 2013 15:50:10 -0500
+Message-ID: <CAHCPf3u=Zu2-4RsWzi17rB_FmStwcf-Pt_7oRzAEnxN_w=a7cA@mail.gmail.com>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
+	<1373352166-10064-2-git-send-email-zhangwm@marvell.com>
+	<20130709124900.GG11908@titan.lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130708130222.GA6402@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130709124900.GG11908@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Neil Zhang <zhangwm@marvell.com>, grant.likely@linaro.org, haojian.zhuang@gmail.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/2013 07:02 AM, Christian Ruppert wrote:
-...
-> OK, a small drawing of our hardware should make this clear, let's take
-> an imaginary example of one port with 10 pins, one i2c interface, one
-> spi interface and one GPIO bank:
-> 
->               | mux N-1|
->               +........+
->               |        |  2
->               |        +--/-- i2c
->               |        |
->            10 |        |  4
->    Pins  --/--+ mux N  +--/-- spi
->               |        |
->               |        |  10
->               |        +--/-- GPIO
->               |        |
->               +........+
->               | mux N+1|
+On Tue, Jul 9, 2013 at 7:49 AM, Jason Cooper <jason@lakedaemon.net> wrote:
+> Neil,
 >
-> This example shows the mux N inside the pin controller. It controls
-> all pins associated to port N through a single register value M. Let's
-> assume the pins are configured as follows in function of the register
-> value:
-> 
->  pin      M=0       M=1     M=2      M=3
->   0      GPIO0   SPI_MISO  GPIO0   SPI_MISO
->   1      GPIO1   SPI_MOSI  GPIO1   SPI_MOSI
->   2      GPIO2    SPI_CK   GPIO2    SPI_CK
->   3      GPIO3    SPI_CS   GPIO3    SPI_CS
->   4      GPIO4    GPIO4    GPIO4    GPIO4
->   5      GPIO5    GPIO5    GPIO5    GPIO5
->   6      GPIO6    GPIO6    GPIO6    GPIO6
->   7      GPIO7    GPIO7    GPIO7    GPIO7
->   8      GPIO8    GPIO8   I2C_SDA  I2C_SDA
->   9      GPIO9    GPIO9   I2C_SCL  I2C_SCL
+> I agree with the need to change, however, this has been in the binding
+> documentation since v3.5.  I wish we had caught this when we decided
+> against using stock ticker symbols (not all stock markets use
+> alphabetical abbreviated names, not all companies are listed on any
+> stock exchange).
 
+Who decided that?
 
-In that scenario, in the language of Linux's pinctrl subsystem, what you
-have is:
+You can't just "stop using stock ticker symbols" - FDT is inherently
+based on the original OpenFirmware device tree and therefore any
+existing bindings which are done on real OpenFirmware solutions where
+using stock ticker symbols is entirely appropriate (although, these
+days, not useful) is counter-productive.
 
-10 pins, named 0..9
-1 pin group, named perhaps "mux N".
-4 different functions; values M==0, 1, 2, 3.
+If Marvell had originally had mrvl as their ticker, and used this in
+OF DTs (and it is..), then mrvl it stays. In the case where new
+devices are added with marvell, this is in this case wrong. You should
+keep using the old one. A good example of this; Freescale. Nobody is
+saying everyone should move to "freescale,imx-this" or
+"freescale,vybrid-that" - it's fsl and it stays fsl for
+backwards/forwards compatibility because things exist already.
 
-> We now have three pin groups defined, corresponding to the chip-side
-> ports of the pin controller:
-> GPIO = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-> SPI  = {0, 1, 2, 3}
-> I2C  = {8, 9}
+Any new companies can have a long, descriptive name; a privilege of
+being late to the party, you might say :)
 
-You would usually only define pin groups for the pin/ball/package side
-of the pinmux HW. IIRC, you're also wanting to define pin groups for the
-intra-chip side of the pinmux HW. However, you're not muxing functions
-onto those pingroups; they're just there to help with naming the
-GPIO<->pinmux mapping. You only mux functions onto the pin/ball/package
-side pins/pingroups.
+Having an odd mix of mrvl and marvell or moving to marvell is just
+completely obtuse, whether they had that stock ticker, will have it in
+the future, it is how they're defined and you can't in good conscience
+change the binding after devices ship with it.
 
+> To do this properly, the drivers are going to have to be compatible with
+> the old and the new names, and the binding docs updated to reflect the
+> legacy name and the preferred name.
 
-> abilis,pingrp now specifies one of the three pin groups. Note that I2C
->        and SPI can be requested independently in a completely orthogonal
->        manner: The information if I2C is reqired or not is confined to
->        the I2C request and does not leak into the SPI request as would
->        be the case if we configured the entire port at the same time.
+Properly would be as above. You can stop using stock tickers for new
+company names, but anything that has been defined in a device tree
+before has to stay that way, and all the manufacturer prefixes to
+device names should be the same. What you're proposing is purely
+driver bloat and increasing the size of kernel.
 
-The pingrp should represent the pin/ball/package side pins/groups. In
-this case, it should specify "N".
-
-> abilis,ioport specifies N.
-
-That is replaced be pingrp.
-
-> abilis,ioconf specifies M.
-
-That'd be better named "function" or something like that, in order to
-indicate that it specifies which function is mux'd onto the specified
-pin(s)/pingroup(s).
+--
+Matt Sealey <neko@bakuhatsu.net>
