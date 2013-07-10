@@ -1,33 +1,59 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 0/4] extcon: palmas: clean-up/fixes and suspend/resume susupport
-Date: Wed, 10 Jul 2013 11:45:55 +0530
-Message-ID: <1373436959-32444-1-git-send-email-ldewangan@nvidia.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2 1/4] extcon: palmas: remove unused member from palams_usb
+ structure
+Date: Wed, 10 Jul 2013 11:45:56 +0530
+Message-ID: <1373436959-32444-2-git-send-email-ldewangan@nvidia.com>
+References: <1373436959-32444-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: cw00.choi@samsung.com, myungjoo.ham@samsung.com
-Cc: devicetree-discuss@lists.ozlabs.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, gg@slimlogic.co.uk, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1373436959-32444-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series does following:
-- Remove unused member from extcon palmas structure.
-- Fix to support of detecting cable properly with multiple insert/removal.
-- Add support for suspend/resume functionlaity and wakup from suspend.
-- Option to select/de-select the ID or VBUS detection.
+Remove unused member vbus_enable and set_vbus_work from palmas_usb
+as these members are not used in drivers.
 
-Changes from V1:
-- Correct the display message.
-- Add ack from Graeme
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+---
+No changes from V1.
 
-Laxman Dewangan (4):
-  extcon: palmas: remove unused member from palams_usb structure
-  extcon: palmas: enable ID_GND and ID_FLOAT detection always
-  extcon: palams: add support for suspend/resume
-  extcon: palmas: Option to disable ID/VBUS detection based on platform
+ include/linux/mfd/palmas.h |    5 -----
+ 1 files changed, 0 insertions(+), 5 deletions(-)
 
- .../devicetree/bindings/extcon/extcon-palmas.txt   |    2 +
- drivers/extcon/extcon-palmas.c                     |  111 ++++++++++++++------
- include/linux/mfd/palmas.h                         |    9 +-
- 3 files changed, 86 insertions(+), 36 deletions(-)
-
+diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
+index 1a8dd7a..03c22ca 100644
+--- a/include/linux/mfd/palmas.h
++++ b/include/linux/mfd/palmas.h
+@@ -371,16 +371,11 @@ struct palmas_usb {
+ 
+ 	struct extcon_dev edev;
+ 
+-	/* used to set vbus, in atomic path */
+-	struct work_struct set_vbus_work;
+-
+ 	int id_otg_irq;
+ 	int id_irq;
+ 	int vbus_otg_irq;
+ 	int vbus_irq;
+ 
+-	int vbus_enable;
+-
+ 	enum palmas_usb_state linkstat;
+ };
+ 
+-- 
+1.7.1.1
