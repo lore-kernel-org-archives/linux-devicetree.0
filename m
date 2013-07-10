@@ -1,82 +1,59 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 1/3] arm: atmel: at91sam9n12: add pinctrl of TWI
-Date: Wed, 10 Jul 2013 16:39:23 +0200
-Message-ID: <20130710143923.GH18012@ns203013.ovh.net>
-References: <1373449869-5083-1-git-send-email-voice.shen@atmel.com>
- <1373449869-5083-2-git-send-email-voice.shen@atmel.com>
+From: Daniel Drake <dsd@laptop.org>
+Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
+Date: Wed, 10 Jul 2013 08:41:03 -0600
+Message-ID: <CAMLZHHQre=juBmWJ2ZouLJGUW0owJd4GrOVur=ea2BPvMWjMbA@mail.gmail.com>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
+	<1373352166-10064-2-git-send-email-zhangwm@marvell.com>
+	<20130709124900.GG11908@titan.lakedaemon.net>
+	<175CCF5F49938B4D99B2E3EF7F558EBE3DBC97FA8F@SC-VEXCH4.marvell.com>
+	<20130710122023.GN11908@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1373449869-5083-2-git-send-email-voice.shen@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: devicetree-discuss@lists.ozlabs.org, ludovic.desroches@atmel.com, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130710122023.GN11908@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Neil Zhang <zhangwm@marvell.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17:51 Wed 10 Jul     , Bo Shen wrote:
-> add pinctrl of TWI for at91sam9n12 SoC
-> 
-> Signed-off-by: Bo Shen <voice.shen@atmel.com>
-> ---
->  arch/arm/boot/dts/at91sam9n12.dtsi |   20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-> index bb7f564..3db62f6 100644
-> --- a/arch/arm/boot/dts/at91sam9n12.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-> @@ -291,6 +291,22 @@
->  					};
->  				};
->  
-> +				i2c0 {
-> +					pinctrl_i2c0: i2c0-0 {
-> +						atmel,pins =
-> +							<AT91_PIOA 30 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA30 periph A I2C0 data */
-> +							 AT91_PIOA 31 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PA31 periph A I2C0 clock */
-> +					};
-> +				};
-> +
-> +				i2c1 {
-> +					pinctrl_i2c1: i2c1-0 {
-> +						atmel,pins =
-> +							<AT91_PIOC 0 AT91_PERIPH_C AT91_PINCTRL_NONE	/* PC0 periph C I2C1 data */
-> +							 AT91_PIOC 1 AT91_PERIPH_C AT91_PINCTRL_NONE>;	/* PC1 periph C I2C1 clock */
-drop  the comment as we use macro
-> +					};
-> +				};
-> +
->  				tcb0 {
->  					pinctrl_tcb0_tclk0: tcb0_tclk0-0 {
->  						atmel,pins = <AT91_PIOA 24 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-> @@ -471,6 +487,8 @@
->  				dma-names = "tx", "rx";
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_i2c0>;
->  				status = "disabled";
->  			};
->  
-> @@ -483,6 +501,8 @@
->  				dma-names = "tx", "rx";
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_i2c1>;
->  				status = "disabled";
->  			};
->  
-> -- 
-> 1.7.9.5
-> 
+On Wed, Jul 10, 2013 at 6:20 AM, Jason Cooper <jason@lakedaemon.net> wrote:
+> Please keep in mind that the DT is supposed to be tied to the hardware,
+> *not* the kernel.  iow, a dtb comes with a board, and the user/OS
+> upgrades the kernel as needed w/o upgrading or changing the dtb.
+
+Thank you for making this position clear to those trying to break
+compatibility...
+
+This will affect OLPC where the dtb comes from the firmware
+(OpenFirmware), which is similar to the dtb coming "with the board" as
+you describe. We run on Marvell SoCs.
+
+> So the question you need to ask yourself is: Are there any users (since
+> v3.5) that are doing this?  If so, they have "mrvl,..." compatible
+> strings in their dtbs.  You don't want to break their systems on kernel
+> upgrade, right?
+
+In the OLPC case, the devicetree currently exported from the firmware
+is unfortunately quite insufficient to boot mainline kernels. So we
+are currently in a state of flux where we must break firmware/OS
+compatibility in significant ways in order to support mainline
+kernels. We are heading in this direction despite the pains.
+
+Therefore right now its OK for us if we break compatibility during our
+in-flux major firmware/DT restructuring, as this patch does.
+
+However, once we have stabilised in the near future, it will no longer
+be possible to break compatibility like this.
+
+My vote would be to maintain the old names (in addition to the new) in
+case there are people that will be affected by this that haven't seen
+this thread. We were recently hit by another backwards-incompatible
+change in Marvell's Linux gpio drivers where the compatible strings
+recognised were changed (f87311743eaf85). This is not a big problem in
+our current state however it cost me about 3 hours of changelog
+skimming, glancing around in the code, and finally running a git
+bisect, before I managed to figure out why things had suddenly stopped
+working. That was irritating.
+
+Thanks
+Daniel
