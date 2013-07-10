@@ -1,102 +1,205 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [PATCH v4 1/7] sound: sam9x5_wm8731: machine driver for at91sam9x5
- wm8731 boards
-Date: Wed, 10 Jul 2013 14:11:48 +0800
-Message-ID: <51DCFB24.4080107@atmel.com>
-References: <1373372929-17800-1-git-send-email-richard.genoud@gmail.com> <1373379933-32749-1-git-send-email-richard.genoud@gmail.com> <1373379933-32749-2-git-send-email-richard.genoud@gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH V2 4/4] extcon: palmas: Option to disable ID/VBUS detection
+ based on platform
+Date: Wed, 10 Jul 2013 15:55:52 +0900
+Message-ID: <51DD0578.6090804@samsung.com>
+References: <1373436959-32444-1-git-send-email-ldewangan@nvidia.com>
+ <1373436959-32444-5-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1373379933-32749-2-git-send-email-richard.genoud@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Genoud <richard.genoud@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig@pengutronix.de>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1373436959-32444-5-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: myungjoo.ham@samsung.com, devicetree-discuss@lists.ozlabs.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, gg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+Hi Laxman, 
 
-On 7/9/2013 22:25, Richard Genoud wrote:
-[snip]
+On 07/10/2013 03:15 PM, Laxman Dewangan wrote:
+> Based on system design, platform needs to detect the VBUS or ID or
+> both. Provide option to select this through platform data to
+> disable part of cable detection through palmas-usb.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Acked-by: Graeme Gregory <gg@slimlogic.co.uk>
+> ---
+> No changes from V1.
+> 
+>  .../devicetree/bindings/extcon/extcon-palmas.txt   |    2 +
+>  drivers/extcon/extcon-palmas.c                     |   65 +++++++++++++-------
+>  include/linux/mfd/palmas.h                         |    4 +
+>  3 files changed, 48 insertions(+), 23 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
+> index f110e75..8e593ec 100644
+> --- a/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
+> +++ b/Documentation/devicetree/bindings/extcon/extcon-palmas.txt
+> @@ -6,6 +6,8 @@ Required Properties:
+>  
+>  Optional Properties:
+>   - ti,wakeup : To enable the wakeup comparator in probe
+> + - ti,disable-id-detection: Do not perform ID detection.
+> + - ti,disable-vbus-detection: Do not pwerform VBUS detection.
 
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/kernel.h>
-> +#include <linux/clk.h>
-> +#include <linux/timer.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/i2c.h>
-> +
-> +#include <linux/atmel-ssc.h>
-> +
-> +#include <sound/core.h>
-> +#include <sound/pcm.h>
-> +#include <sound/pcm_params.h>
-> +#include <sound/soc.h>
-> +
-> +#include <asm/mach-types.h>
-> +#include <mach/hardware.h>
-> +#include <mach/gpio.h>
-> +
-> +#include "../codecs/wm8731.h"
-> +#include "atmel-pcm.h"
-> +#include "atmel_ssc_dai.h"
+Fix typo.
+- pwerform -> perform
 
-I think some of the header file include is not needed. I keep them as 
-simple as following:
----8>---
-#include <linux/clk.h>
-#include <linux/module.h>
-#include <linux/of.h>
-#include <linux/of_device.h>
-#include <linux/pinctrl/consumer.h>
+>  
+>  palmas-usb {
+>         compatible = "ti,twl6035-usb", "ti,palmas-usb";
+> diff --git a/drivers/extcon/extcon-palmas.c b/drivers/extcon/extcon-palmas.c
+> index dc7ebf3..4747d11 100644
+> --- a/drivers/extcon/extcon-palmas.c
+> +++ b/drivers/extcon/extcon-palmas.c
+> @@ -122,11 +122,14 @@ static void palmas_enable_irq(struct palmas_usb *palmas_usb)
+>  		PALMAS_USB_ID_INT_EN_HI_SET_ID_GND |
+>  		PALMAS_USB_ID_INT_EN_HI_SET_ID_FLOAT);
+>  
+> -	palmas_vbus_irq_handler(palmas_usb->vbus_irq, palmas_usb);
+> +	if (palmas_usb->enable_vbus_detection)
+> +		palmas_vbus_irq_handler(palmas_usb->vbus_irq, palmas_usb);
+>  
+>  	/* cold plug for host mode needs this delay */
+> -	msleep(30);
+> -	palmas_id_irq_handler(palmas_usb->id_irq, palmas_usb);
+> +	if (palmas_usb->enable_id_detection) {
+> +		msleep(30);
+> +		palmas_id_irq_handler(palmas_usb->id_irq, palmas_usb);
+> +	}
+>  }
+>  
+>  static int palmas_usb_probe(struct platform_device *pdev)
+> @@ -144,6 +147,10 @@ static int palmas_usb_probe(struct platform_device *pdev)
+>  			return -ENOMEM;
+>  
+>  		pdata->wakeup = of_property_read_bool(node, "ti,wakeup");
+> +		pdata->disable_id_detection = of_property_read_bool(node,
+> +						"ti,disable-id-detection");
+> +		pdata->disable_vbus_detection = of_property_read_bool(node,
+> +						"ti,disable-vbus-detection");
+>  	} else if (!pdata) {
+>  		return -EINVAL;
+>  	}
+> @@ -154,6 +161,8 @@ static int palmas_usb_probe(struct platform_device *pdev)
+>  
+>  	palmas->usb = palmas_usb;
+>  	palmas_usb->palmas = palmas;
+> +	palmas_usb->enable_vbus_detection = !pdata->disable_vbus_detection;
+> +	palmas_usb->enable_id_detection =  !pdata->disable_id_detection;
+>  
+>  	palmas_usb->dev	 = &pdev->dev;
+>  
+> @@ -180,26 +189,32 @@ static int palmas_usb_probe(struct platform_device *pdev)
+>  		return status;
+>  	}
+>  
+> -	status = devm_request_threaded_irq(palmas_usb->dev, palmas_usb->id_irq,
+> -			NULL, palmas_id_irq_handler,
+> -			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
+> -			IRQF_ONESHOT | IRQF_EARLY_RESUME,
+> -			"palmas_usb_id", palmas_usb);
+> -	if (status < 0) {
+> -		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
+> +	if (palmas_usb->enable_id_detection) {
+> +		status = devm_request_threaded_irq(palmas_usb->dev,
+> +				palmas_usb->id_irq,
+> +				NULL, palmas_id_irq_handler,
+> +				IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
+> +				IRQF_ONESHOT | IRQF_EARLY_RESUME,
+> +				"palmas_usb_id", palmas_usb);
+> +		if (status < 0) {
+> +			dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
+>  					palmas_usb->id_irq, status);
+> -		goto fail_extcon;
+> +			goto fail_extcon;
+> +		}
+>  	}
+>  
+> -	status = devm_request_threaded_irq(palmas_usb->dev,
+> -			palmas_usb->vbus_irq, NULL, palmas_vbus_irq_handler,
+> -			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
+> -			IRQF_ONESHOT | IRQF_EARLY_RESUME,
+> -			"palmas_usb_vbus", palmas_usb);
+> -	if (status < 0) {
+> -		dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
+> +	if (palmas_usb->enable_vbus_detection) {
+> +		status = devm_request_threaded_irq(palmas_usb->dev,
+> +				palmas_usb->vbus_irq, NULL,
+> +				palmas_vbus_irq_handler,
+> +				IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING |
+> +				IRQF_ONESHOT | IRQF_EARLY_RESUME,
+> +				"palmas_usb_vbus", palmas_usb);
+> +		if (status < 0) {
+> +			dev_err(&pdev->dev, "can't get IRQ %d, err %d\n",
+>  					palmas_usb->vbus_irq, status);
+> -		goto fail_extcon;
+> +			goto fail_extcon;
+> +		}
+>  	}
+>  
+>  	palmas_enable_irq(palmas_usb);
+> @@ -227,8 +242,10 @@ static int palmas_usb_suspend(struct device *dev)
+>  	struct palmas_usb *palmas_usb = dev_get_drvdata(dev);
+>  
+>  	if (device_may_wakeup(dev)) {
+> -		enable_irq_wake(palmas_usb->vbus_irq);
+> -		enable_irq_wake(palmas_usb->id_irq);
+> +		if (palmas_usb->enable_vbus_detection)
+> +			enable_irq_wake(palmas_usb->vbus_irq);
+> +		if (palmas_usb->enable_id_detection)
+> +			enable_irq_wake(palmas_usb->id_irq);
+>  	}
+>  	return 0;
+>  }
+> @@ -238,8 +255,10 @@ static int palmas_usb_resume(struct device *dev)
+>  	struct palmas_usb *palmas_usb = dev_get_drvdata(dev);
+>  
+>  	if (device_may_wakeup(dev)) {
+> -		disable_irq_wake(palmas_usb->vbus_irq);
+> -		disable_irq_wake(palmas_usb->id_irq);
+> +		if (palmas_usb->enable_vbus_detection)
+> +			disable_irq_wake(palmas_usb->vbus_irq);
+> +		if (palmas_usb->enable_id_detection)
+> +			disable_irq_wake(palmas_usb->id_irq);
+>  	}
+>  	return 0;
+>  };
+> diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
+> index 03c22ca..d9ef94c 100644
+> --- a/include/linux/mfd/palmas.h
+> +++ b/include/linux/mfd/palmas.h
+> @@ -204,6 +204,8 @@ struct palmas_pmic_platform_data {
+>  struct palmas_usb_platform_data {
+>  	/* Do we enable the wakeup comparator on probe */
+>  	int wakeup;
+> +	bool disable_vbus_detection;
+> +	bool disable_id_detection;
+>  };
+>  
+>  struct palmas_resource_platform_data {
+> @@ -377,6 +379,8 @@ struct palmas_usb {
+>  	int vbus_irq;
+>  
+>  	enum palmas_usb_state linkstat;
+> +	bool enable_vbus_detection;
+> +	bool enable_id_detection;
+>  };
+>  
+>  #define comparator_to_palmas(x) container_of((x), struct palmas_usb, comparator)
+> 
 
-#include <sound/soc.h>
+Should you define duplicate meaning variables in each other structure?
+- disable_vbus_detection - enable_vbus_detection
+- disable_id_detection - enable_id_detection
 
-#include "../codecs/wm8731.h"
-#include "atmel_ssc_dai.h"
----<8---
+I think that it isn' efficient code. I'd like you to simplify this patch
+by using only one variable instead of duplicate meaning variables.
 
-> +#define MCLK_RATE 12288000
-> +
-> +#define DRV_NAME "sam9x5-snd-wm8731"
-> +
-> +/*
-> + * Authorized rates are:
-> + * Rate = MCLK_RATE / (n * 2)
-> + * Where n is in [1..4095]
-> + * (cf register SSC_CMR)
-> + */
-> +static unsigned int rates[] = {
-> +	8000,
-> +	16000,
-> +	32000,
-> +	48000,
-> +	64000,
-> +	96000,
-> +};
+Cheers,
+Chanwoo Choi
 
-This is decided by the codec, while not ssc when ssc in slave mode.
 
-> +static struct snd_pcm_hw_constraint_list hw_rates = {
-> +	.count = ARRAY_SIZE(rates),
-> +	.list = rates,
-> +};
-> +
 
-[snip]
 
-> +
-> +	at91sam9x5ek_dai.dai_fmt = snd_soc_of_parse_daifmt(np, "atmel,");
-
-We can put this into at91sam9x5ek_dai directly, not need to parse it 
-then. example as following:
----8>---
-.dai_fmt = SND_SOC_DAIFMT_I2S
-                 | SND_SOC_DAIFMT_NB_NF
-                 | SND_SOC_DAIFMT_CBM_CFM,
----<8---
-
-Best Regards,
-Bo Shen
