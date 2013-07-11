@@ -1,61 +1,55 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 Resend 2/3] of/documentation: Update G2D documentation
-Date: Thu, 11 Jul 2013 12:24:13 +0200
-Message-ID: <1748068.8mvO9B4JjP@thinkpad>
-References: <1373351355-27444-1-git-send-email-sachin.kamat@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/4] MFD: Add TPS659038 documentation under Palmas
+Date: Thu, 11 Jul 2013 11:43:27 +0100
+Message-ID: <20130711104327.GE25601@gmail.com>
+References: <1371726289-10042-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1373351355-27444-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1371726289-10042-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: J Keerthy <j-keerthy@ti.com>
+Cc: linux-omap@vger.kernel.org, grant.likely@secretlab.ca, broonie@kernel.org, ldewangan@nvidia.com, sameo@linux.intel.com, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
+On Thu, 20 Jun 2013, J Keerthy wrote:
 
-On Tuesday 09 of July 2013 11:59:15 Sachin Kamat wrote:
-> Exynos5250 G2D IP requires only the gate clock. Update the
-> binding documentation accordingly.
-> 
-> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Add TPS659038 documentation under Palmas.
+>=20
+> Signed-off-by: J Keerthy <j-keerthy@ti.com>
+> Acked-by: Samuel Ortiz <sameo@linux.intel.com>
 > ---
-> Updated the description of clock-names as suggested by Tomasz Figa.
-> ---
->  .../devicetree/bindings/gpu/samsung-g2d.txt        |    7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt index
-> 3f454ff..c4f358d 100644
-> --- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> @@ -11,8 +11,11 @@ Required properties:
-> 
->    - interrupts : G2D interrupt number to the CPU.
->    - clocks : from common clock binding: handle to G2D clocks.
-> -  - clock-names : from common clock binding: must contain "sclk_fimg2d" and
-> -		  "fimg2d", corresponding to entries in the clocks property.
-> +  - clock-names : names of clocks listed in clocks property, in the same
-> +		  order, depending on SoC type:
-> +		  - for S5PV210 and Exynos4 based SoCs: "fimg2d" and
-> +		    "sclk_fimg2d"
-> +		  - for Exynos5250 SoC: "fimg2d".
+>  Documentation/devicetree/bindings/mfd/palmas.txt |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Docum=
+entation/devicetree/bindings/mfd/palmas.txt
+> index 7bcd59c..89cb773 100644
+> --- a/Documentation/devicetree/bindings/mfd/palmas.txt
+> +++ b/Documentation/devicetree/bindings/mfd/palmas.txt
+> @@ -5,6 +5,7 @@ twl6035 (palmas)
+>  twl6037 (palmas)
+>  tps65913 (palmas)
+>  tps65914 (palmas)
+> +tps659038
+> =20
+>  Required properties:
+>  - compatible : Should be from the list
+> @@ -14,6 +15,7 @@ Required properties:
+>    ti,tps65913
+>    ti,tps65914
+>    ti,tps80036
+> +  ti,tps659038
+>  and also the generic series names
+>    ti,palmas
+>  - interrupt-controller : palmas has its own internal IRQs
 
-This looks fine for me now.
+Applied.
 
-Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
-Best regards,
-Tomasz
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
