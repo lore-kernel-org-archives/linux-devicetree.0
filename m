@@ -1,99 +1,237 @@
-From: Neil Zhang <zhangwm@marvell.com>
-Subject: RE: [PATCH V3 3/3] ARM: mmp: bring up pxa988 with device tree support
-Date: Thu, 11 Jul 2013 04:35:16 -0700
-Message-ID: <175CCF5F49938B4D99B2E3EF7F558EBE3DBC97FE11@SC-VEXCH4.marvell.com>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
- <1373352166-10064-4-git-send-email-zhangwm@marvell.com>
- <201307100005.21769.arnd@arndb.de>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH RFC v3] media: OF: add video sync endpoint property
+Date: Thu, 11 Jul 2013 17:11:00 +0530
+Message-ID: <CA+V-a8uG1KLY-Vjj+0ix2=wV4r=k+tkJ4aDBCN+iN+JZ6my30w@mail.gmail.com>
+References: <1371913383-25088-1-git-send-email-prabhakar.csengg@gmail.com> <51D0548D.7020004@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201307100005.21769.arnd@arndb.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Chao Xie <cxie4@marvell.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51D0548D.7020004@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-QXJuZCwNCg0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQXJuZCBC
-ZXJnbWFubiBbbWFpbHRvOmFybmRAYXJuZGIuZGVdDQo+IFNlbnQ6IDIwMTPE6jfUwjEwyNUgNjow
-NQ0KPiBUbzogTmVpbCBaaGFuZw0KPiBDYzogZ3JhbnQubGlrZWx5QGxpbmFyby5vcmc7IGhhb2pp
-YW4uemh1YW5nQGdtYWlsLmNvbTsNCj4gZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZzsgQ2hhbyBYaWUNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAzLzNd
-IEFSTTogbW1wOiBicmluZyB1cCBweGE5ODggd2l0aCBkZXZpY2UgdHJlZQ0KPiBzdXBwb3J0DQo+
-IA0KPiBPbiBUdWVzZGF5IDA5IEp1bHkgMjAxMywgTmVpbCBaaGFuZyB3cm90ZToNCj4gPiArCXNv
-YyB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsNCj4gPiArCQkjYWRkcmVzcy1j
-ZWxscyA9IDwxPjsNCj4gPiArCQkjc2l6ZS1jZWxscyA9IDwxPjsNCj4gPiArCQlpbnRlcnJ1cHQt
-cGFyZW50ID0gPCZnaWM+Ow0KPiA+ICsJCXJhbmdlczsNCj4gPiArDQo+ID4gKwkJZ2ljOiBpbnRl
-cnJ1cHQtY29udHJvbGxlckBkMWRmZTEwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAiYXJtLGNv
-cnRleC1hOS1naWMiOw0KPiA+ICsJCQkjaW50ZXJydXB0LWNlbGxzID0gPDM+Ow0KPiA+ICsJCQkj
-YWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiArCQkJaW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+ID4g
-KwkJCXJlZyA9IDwweGQxZGZmMDAwIDB4MTAwMD4sDQo+ID4gKwkJCSAgICAgIDwweGQxZGZlMTAw
-IDB4MDEwMD47DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJTDI6IGwyLWNhY2hlLWNvbnRyb2xs
-ZXJAZDFkZmIwMDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gImFybSxwbDMxMC1jYWNoZSI7DQo+
-ID4gKwkJCXJlZyA9IDwweGQxZGZiMDAwIDB4MTAwMD47DQo+ID4gKwkJCWFybSxkYXRhLWxhdGVu
-Y3kgPSA8MiAxIDE+Ow0KPiA+ICsJCQlhcm0sdGFnLWxhdGVuY3kgPSA8MiAxIDE+Ow0KPiA+ICsJ
-CQlhcm0scHdyLWR5bmFtaWMtY2xrLWdhdGluZzsNCj4gPiArCQkJYXJtLHB3ci1zdGFuZGJ5LW1v
-ZGU7DQo+ID4gKwkJCWNhY2hlLXVuaWZpZWQ7DQo+ID4gKwkJCWNhY2hlLWxldmVsID0gPDI+Ow0K
-PiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCWxvY2FsLXRpbWVyQGQxZGZlNjAwIHsNCj4gPiArCQkJ
-Y29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE5LXR3ZC10aW1lciI7DQo+ID4gKwkJCXJlZyA9IDww
-eGQxZGZlNjAwIDB4MjA+Ow0KPiA+ICsJCQlpbnRlcnJ1cHRzID0gPDEgMTMgMHgzMDQ+Ow0KPiA+
-ICsJCX07DQo+ID4gKw0KPiA+ICsJCWF4aUBkNDIwMDAwMCB7CS8qIEFYSSAqLw0KPiA+ICsJCQlj
-b21wYXRpYmxlID0gInNpbXBsZS1idXMiOw0KPiA+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsN
-Cj4gPiArCQkJI3NpemUtY2VsbHMgPSA8MT47DQo+ID4gKwkJCXJhbmdlcyA9IDwweGQ0MjAwMDAw
-IDB4ZDQyMDAwMDAgMHgwMDIwMDAwMD47DQo+ID4gKw0KPiA+ICsJCQlpbnRjOiB3YWtldXBnZW5A
-ZDQyODIwMDAgew0KPiA+ICsJCQkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLG1tcC1pbnRjIjsNCj4g
-PiArCQkJCXJlZyA9IDwweGQ0MjgyMDAwIDB4MTAwMD47DQo+ID4gKwkJCQltYXJ2ZWxsLGludGMt
-d2FrZXVwID0gPDB4MTE0IDB4Mw0KPiA+ICsJCQkJCQkgICAgMHgxNDQgMHgzPjsNCj4gPiArCQkJ
-fTsNCj4gPiArCQl9Ow0KPiANCj4gSSBhbSBndWVzc2luZyB0aGF0IHRoZSBzdHJ1Y3R1cmUgZG9l
-cyBub3QgYWN0dWFsbHkgcmVmbGVjdCB0aGUgaGFyZHdhcmUuDQo+IA0KPiBTaG91bGRuJ3QgQVhJ
-IGJlIHRoZSB0b3AtbGV2ZWwgYnVzLCB3aXRoIHRoZSBvdGhlciBzdHVmZiB1bmRlciBpdD8NCj4g
-DQo+ID4gKw0KPiA+ICsNCj4gPiArCQkJdWFydDE6IHVhcnRAZDQwMTcwMDAgew0KPiA+ICsJCQkJ
-Y29tcGF0aWJsZSA9ICJtYXJ2ZWxsLG1tcC11YXJ0IjsNCj4gPiArCQkJCXJlZyA9IDwweGQ0MDE3
-MDAwIDB4MTAwMD47DQo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPDAgMjcgMHg0PjsNCj4gPiArCQkJ
-CXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKwkJCX07DQo+IA0KPiBUaGUgdWFydCBub2RlIHNo
-b3VsZCBiZSBjYWxsZWQgInNlcmlhbEBkNDAxNzAwMCIgaW5zdGVhZCBvZg0KPiAidWFydEBkNDAx
-NzAwMCIuDQoNClRoYW5rcyBmb3IgdGhlIGNhdGNoIQ0KDQo+IA0KPiA+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybS9tYWNoLW1tcC9yZXNldC5jIGIvYXJjaC9hcm0vbWFjaC1tbXAvcmVzZXQuYw0KPiBu
-ZXcNCj4gPiBmaWxlIG1vZGUgMTAwNjQ0IGluZGV4IDAwMDAwMDAuLmI5MGVjNTQNCj4gPiAtLS0g
-L2Rldi9udWxsDQo+ID4gKysrIGIvYXJjaC9hcm0vbWFjaC1tbXAvcmVzZXQuYw0KPiA+IEBAIC0w
-LDAgKzEsNjYgQEANCj4gPiArLyoNCj4gPiArICogbGludXgvYXJjaC9hcm0vbWFjaC1tbXAvcmVz
-ZXQuYw0KPiANCj4gSSB0aGluayB0aGlzIGNvdWxkIGp1c3QgYmUgcGFydCBvZiB0aGUgc21wLmMg
-ZmlsZS4NCg0KU29ycnksIGJ1dCB3aGljaCBzbXAuYyBkbyB5b3UgbWVhbj8NCg0KPiANCj4gPiAr
-ICoNCj4gPiArICogQXV0aG9yOglOZWlsIFpoYW5nIDx6aGFuZ3dtQG1hcnZlbGwuY29tPg0KPiA+
-ICsgKiBDb3B5cmlnaHQ6CShDKSAyMDEyIE1hcnZlbGwgSW50ZXJuYXRpb25hbCBMdGQuDQo+ID4g
-KyAqDQo+ID4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlz
-dHJpYnV0ZSBpdCBhbmQvb3INCj4gPiArIG1vZGlmeQ0KPiA+ICsgKiBpdCB1bmRlciB0aGUgdGVy
-bXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxpc2hlZA0KPiA+ICsg
-YnkNCj4gPiArICogdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbjsgZWl0aGVyIHZlcnNpb24g
-MiBvZiB0aGUgTGljZW5zZSwgb3INCj4gPiArICogKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIg
-dmVyc2lvbi4NCj4gPiArICovDQo+ID4gKw0KPiA+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+
-DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9zbXAuaD4NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxhc20v
-aW8uaD4NCj4gPiArI2luY2x1ZGUgPGFzbS9jYWNoZWZsdXNoLmg+DQo+ID4gKyNpbmNsdWRlIDxh
-c20vbWFjaC9tYXAuaD4NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxtYWNoL2FkZHItbWFwLmg+DQo+
-ID4gKw0KPiA+ICsjaW5jbHVkZSAicmVzZXQuaCINCj4gPiArDQo+ID4gKyNkZWZpbmUgUE1VX0ND
-Ml9BUAkJCUFQTVVfUkVHKDB4MDEwMCkNCj4gPiArI2RlZmluZSBDSVVfQ0E5X1dBUk1fUkVTRVRf
-VkVDVE9SCUNJVV9SRUcoMHgwMGQ4KQ0KPiANCj4gWW91IHNob3VsZCBub3QgaGFyZGNvZGUgdGhl
-IGFkZHJlc3NlcyBoZXJlLCBiZXR0ZXIgZmluZCB0aGVtIGZyb20gdGhlDQo+IGRldmljZSB0cmVl
-Lg0KDQpUaGFua3MgZm9yIHlvdXIgc3VnZ2VzdGlvbiwgd2Ugd2lsbCBjb25zaWRlciBpdC4NCg0K
-PiA+ICsNCj4gPiArI2RlZmluZSBDUFVfQ09SRV9SU1QobikJKDEgPDwgKChuKSAqIDQgKyAxNikp
-DQo+ID4gKyNkZWZpbmUgQ1BVX0RCR19SU1QobikJKDEgPDwgKChuKSAqIDQgKyAxOCkpDQo+ID4g
-KyNkZWZpbmUgQ1BVX1dET0dfUlNUKG4pCSgxIDw8ICgobikgKiA0ICsgMTkpKQ0KPiANCj4gVGhp
-cyBzaG91bGQgcHJvYmFibHkgZ28gaW50byBhIHJlc2V0IGNvbnRyb2xsZXIgZHJpdmVyLCBpbiBk
-cml2ZXJzL3Jlc2V0Lw0KPiANCg0KSXQgc2hvdWxkIG5vdCByZWxhdGVkIHRvIGRyaXZlcnMvcmVz
-ZXQvLg0KV2hhdCB0aGlzIGZpbGUgZG9lcyBpcyB0byBzZXQgcmVzZXQgaGFuZGxlciBmb3IgY29y
-ZSBib290dXAgb3IgcmVzZXQgZnJvbSBwb3dlciBkb3duIChzdXNwZW5kIG9yIEMyIHBvd2VyIGRv
-d24pLg0KDQo+IAlBcm5kDQoNCkJlc3QgUmVnYXJkcywNCk5laWwgWmhhbmcNCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Sylwester,
+
+Oops some how missed this mail, sorry for the late response.
+
+On Sun, Jun 30, 2013 at 9:23 PM, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
+> Hi,
+>
+>
+> On 06/22/2013 05:03 PM, Prabhakar Lad wrote:
+>>
+>> From: "Lad, Prabhakar"<prabhakar.csengg@gmail.com>
+>>
+>> This patch adds video sync properties as part of endpoint
+>> properties and also support to parse them in the parser.
+>>
+>> Signed-off-by: Lad, Prabhakar<prabhakar.csengg@gmail.com>
+>> Cc: Hans Verkuil<hans.verkuil@cisco.com>
+>> Cc: Laurent Pinchart<laurent.pinchart@ideasonboard.com>
+>> Cc: Mauro Carvalho Chehab<mchehab@redhat.com>
+>> Cc: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
+>> Cc: Sylwester Nawrocki<s.nawrocki@samsung.com>
+>> Cc: Sakari Ailus<sakari.ailus@iki.fi>
+>> Cc: Grant Likely<grant.likely@secretlab.ca>
+>> Cc: Rob Herring<rob.herring@calxeda.com>
+>> Cc: Rob Landley<rob@landley.net>
+>> Cc: devicetree-discuss@lists.ozlabs.org
+>> Cc: linux-doc@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: davinci-linux-open-source@linux.davincidsp.com
+>> Cc: Kyungmin Park<kyungmin.park@samsung.com>
+>
+>
+> Do you really need such a long Cc list here ? I think it would be better
+> to just add relevant e-mail addresses when sending the patch, otherwise
+> when this patch is applied in this form all those addresses are going to
+> be spammed with the patch management notifications, which might not be
+> what some ones are really interested in.
+>
+>
+Ok I'll take care of it in the next version.
+
+>> ---
+>>   This patch has 10 warnings for line over 80 characters
+>>   for which I think can be ignored.
+>>
+>>   RFC v2 https://patchwork.kernel.org/patch/2578091/
+>>   RFC V1 https://patchwork.kernel.org/patch/2572341/
+>>   Changes for v3:
+>>   1: Fixed review comments pointed by Laurent and Sylwester.
+>>
+>>   .../devicetree/bindings/media/video-interfaces.txt |    1 +
+>>   drivers/media/v4l2-core/v4l2-of.c                  |   20
+>> ++++++++++++++++++
+>>   include/dt-bindings/media/video-interfaces.h       |   17
+>> +++++++++++++++
+>>   include/media/v4l2-mediabus.h                      |   22
+>> +++++++++++---------
+>>   4 files changed, 50 insertions(+), 10 deletions(-)
+>>   create mode 100644 include/dt-bindings/media/video-interfaces.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt
+>> b/Documentation/devicetree/bindings/media/video-interfaces.txt
+>> index e022d2d..2081278 100644
+>> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+>> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+>> @@ -101,6 +101,7 @@ Optional endpoint properties
+>>     array contains only one entry.
+>>   - clock-noncontinuous: a boolean property to allow MIPI CSI-2
+>> non-continuous
+>>     clock mode.
+>> +- video-sync: property indicating to sync the video on a signal in RGB.
+>>
+>>
+>>   Example
+>> diff --git a/drivers/media/v4l2-core/v4l2-of.c
+>> b/drivers/media/v4l2-core/v4l2-of.c
+>> index aa59639..1a54530 100644
+>> --- a/drivers/media/v4l2-core/v4l2-of.c
+>> +++ b/drivers/media/v4l2-core/v4l2-of.c
+>> @@ -100,6 +100,26 @@ static void v4l2_of_parse_parallel_bus(const struct
+>> device_node *node,
+>>         if (!of_property_read_u32(node, "data-shift",&v))
+>>                 bus->data_shift = v;
+>>
+>> +       if (!of_property_read_u32(node, "video-sync",&v)) {
+>> +               switch (v) {
+>> +               case V4L2_MBUS_VIDEO_SEPARATE_SYNC:
+>> +                       flags |= V4L2_MBUS_VIDEO_SEPARATE_SYNC;
+>
+>
+> I'm not convinced all those video sync types is something that really
+> belongs
+> to the flags field. In my understanding this field is supposed to hold only
+> the _signal polarity_ information.
+>
+>
+Ok, so there should be a function say v4l2_of_parse_signal_polarity()
+to get the polarity alone then.
+
+>> +                       break;
+>> +               case V4L2_MBUS_VIDEO_COMPOSITE_SYNC:
+>> +                       flags |= V4L2_MBUS_VIDEO_COMPOSITE_SYNC;
+>> +                       break;
+>> +               case V4L2_MBUS_VIDEO_SYNC_ON_COMPOSITE:
+>> +                       flags |= V4L2_MBUS_VIDEO_SYNC_ON_COMPOSITE;
+>> +                       break;
+>> +               case V4L2_MBUS_VIDEO_SYNC_ON_GREEN:
+>> +                       flags |= V4L2_MBUS_VIDEO_SYNC_ON_GREEN;
+>> +                       break;
+>> +               case V4L2_MBUS_VIDEO_SYNC_ON_LUMINANCE:
+>> +                       flags |= V4L2_MBUS_VIDEO_SYNC_ON_LUMINANCE;
+>> +                       break;
+>> +               }
+>> +       }
+>> +
+>>         bus->flags = flags;
+>>
+>>   }
+>> diff --git a/include/dt-bindings/media/video-interfaces.h
+>> b/include/dt-bindings/media/video-interfaces.h
+>> new file mode 100644
+>> index 0000000..1a083dd
+>> --- /dev/null
+>> +++ b/include/dt-bindings/media/video-interfaces.h
+>> @@ -0,0 +1,17 @@
+>> +/*
+>> + * This header provides constants for video interface.
+>> + *
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_VIDEO_INTERFACES_H
+>> +#define _DT_BINDINGS_VIDEO_INTERFACES_H
+>> +
+>> +#define V4L2_MBUS_VIDEO_SEPARATE_SYNC          (1<<  2)
+>
+>
+> You should never be putting anything Linux specific in those dt-bindings
+> headers. It just happens now include/dt-bindings is a part of the Linux
+> kernel, but it could well be in some separate repository, or could be
+> a part of the DT bindings specification, which is only specific to the
+> hardware and doesn't depend on Linux OS at all. Thus V4L2_MBUS_ prefix
+> shouldn't be used here.
+>
+>
+Ok
+
+>> +#define V4L2_MBUS_VIDEO_COMPOSITE_SYNC         (1<<  3)
+>> +#define V4L2_MBUS_VIDEO_SYNC_ON_COMPOSITE      (1<<  4)
+>> +#define V4L2_MBUS_VIDEO_SYNC_ON_GREEN          (1<<  5)
+>> +#define V4L2_MBUS_VIDEO_SYNC_ON_LUMINANCE      (1<<  6)
+>> +
+>> +#define V4L2_MBUS_VIDEO_INTERFACES_END         6
+>> +
+>> +#endif
+>> diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
+>> index 83ae07e..a4676dd 100644
+>> --- a/include/media/v4l2-mediabus.h
+>> +++ b/include/media/v4l2-mediabus.h
+>> @@ -11,6 +11,8 @@
+>>   #ifndef V4L2_MEDIABUS_H
+>>   #define V4L2_MEDIABUS_H
+>>
+>> +#include<dt-bindings/media/video-interfaces.h>
+>> +
+>>   #include<linux/v4l2-mediabus.h>
+>>
+>>   /* Parallel flags */
+>> @@ -28,18 +30,18 @@
+>>    * V4L2_MBUS_[HV]SYNC* flags should be also used for specifying
+>>    * configuration of hardware that uses [HV]REF signals
+>>    */
+>> -#define V4L2_MBUS_HSYNC_ACTIVE_HIGH            (1<<  2)
+>> -#define V4L2_MBUS_HSYNC_ACTIVE_LOW             (1<<  3)
+>> -#define V4L2_MBUS_VSYNC_ACTIVE_HIGH            (1<<  4)
+>> -#define V4L2_MBUS_VSYNC_ACTIVE_LOW             (1<<  5)
+>> -#define V4L2_MBUS_PCLK_SAMPLE_RISING           (1<<  6)
+>> -#define V4L2_MBUS_PCLK_SAMPLE_FALLING          (1<<  7)
+>> -#define V4L2_MBUS_DATA_ACTIVE_HIGH             (1<<  8)
+>> -#define V4L2_MBUS_DATA_ACTIVE_LOW              (1<<  9)
+>> +#define V4L2_MBUS_HSYNC_ACTIVE_HIGH            (1<<
+>> (V4L2_MBUS_VIDEO_INTERFACES_END + 1))
+>
+>
+> No, please don't do that. We shouldn't combine the DT and Linux kernel
+> definitions like this.
+>
+>
+Ok.
+
+>> +#define V4L2_MBUS_HSYNC_ACTIVE_LOW             (1<<
+>> (V4L2_MBUS_VIDEO_INTERFACES_END + 2))
+>> +#define V4L2_MBUS_VSYNC_ACTIVE_HIGH            (1<<
+>> (V4L2_MBUS_VIDEO_INTERFACES_END + 3))
+>> +#define V4L2_MBUS_VSYNC_ACTIVE_LOW             (1<<
+>> (V4L2_MBUS_VIDEO_INTERFACES_END + 4))
+>> +#define V4L2_MBUS_PCLK_SAMPLE_RISING           (1<<
+>> (V4L2_MBUS_VIDEO_INTERFACES_END + 5))
+>> +#define V4L2_MBUS_PCLK_SAMPLE_FALLING          (1<<
+>> (V4L2_MBUS_VIDEO_INTERFACES_END + 6))
+>> +#define V4L2_MBUS_DATA_ACTIVE_HIGH             (1<<
+>> (V4L2_MBUS_VIDEO_INTERFACES_END + 7))
+>> +#define V4L2_MBUS_DATA_ACTIVE_LOW              (1<<
+>> (V4L2_MBUS_VIDEO_INTERFACES_END + 8))
+>>
+>>   /* FIELD = 0/1 - Field1 (odd)/Field2 (even) */
+>> -#define V4L2_MBUS_FIELD_EVEN_HIGH              (1<<  10)
+>> +#define V4L2_MBUS_FIELD_EVEN_HIGH              (1<<
+>> (V4L2_MBUS_VIDEO_INTERFACES_END + 9))
+>>   /* FIELD = 1/0 - Field1 (odd)/Field2 (even) */
+>> -#define V4L2_MBUS_FIELD_EVEN_LOW               (1<<  11)
+>> +#define V4L2_MBUS_FIELD_EVEN_LOW               (1<<
+>> (V4L2_MBUS_VIDEO_INTERFACES_END + 10))
+>
+>
+> Please see my review of your 'media: i2c: tvp7002: add OF support" patch.
+> AFAICS it should be sufficient to add only V4L2_MBUS_SOG_ACTIVE_{LOW,HIGH}
+> flags and 'sync-on-green-active' DT property.
+>
+Ok.
+
+Regards,
+--Prabhakar Lad
