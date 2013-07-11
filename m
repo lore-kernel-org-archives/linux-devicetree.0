@@ -1,74 +1,87 @@
-From: Ulrich Prinz <ulrich.prinz@googlemail.com>
-Subject: Re: [PATCH 9/9] clocksource: dw_apb_timer: special variant for rockchip
- rk3188 timers
-Date: Fri, 12 Jul 2013 00:44:29 +0200
-Message-ID: <51DF354D.6050401@googlemail.com>
-References: <201307060051.09716.heiko@sntech.de> <201307060056.29370.heiko@sntech.de> <alpine.DEB.2.02.1307060153110.32106@ionos.tec.linutronix.de> <51D87E04.3060704@googlemail.com> <alpine.DEB.2.02.1307062233480.32106@ionos.tec.linutronix.de>
+From: Haojian Zhuang <haojian.zhuang@gmail.com>
+Subject: Re: [PATCH V3 2/3] clocksource: mmp: support CLOCKSOURCE OF DECLARE
+Date: Fri, 12 Jul 2013 07:51:41 +0800
+Message-ID: <CAN1soZzkycTDc-U4h43LC6hSYS1v+UkG+C4k-+dYMxRL=t7Zbg@mail.gmail.com>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
+	<1373352166-10064-3-git-send-email-zhangwm@marvell.com>
+	<20130709181434.76f6216d@skate>
+	<201307092316.20905.arnd@arndb.de>
+	<CAN1soZyFztVR1XSw9bDS5JexK0Mdbpr6yevatVf+MnBohwCj1Q@mail.gmail.com>
+	<175CCF5F49938B4D99B2E3EF7F558EBE3DBC97FDFF@SC-VEXCH4.marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1307062233480.32106@ionos.tec.linutronix.de>
+In-Reply-To: <175CCF5F49938B4D99B2E3EF7F558EBE3DBC97FDFF@SC-VEXCH4.marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, John Stultz <john.stultz@linaro.org>, Jamie Iles <jamie@jamieiles.com>, Dinh Nguyen <dinguyen@altera.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+To: Neil Zhang <zhangwm@marvell.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey guys,
-
-according the dw_apb_timer I need your statement...
-
-Am 06.07.2013 23:00, schrieb Thomas Gleixner:
-> Ulrich,
-> 
-> On Sat, 6 Jul 2013, Ulrich Prinz wrote:
-> 
->> I got the message. With modifying the existing driver to support more
->> function pointers in its system struct and assigning them at the
->> beginning, and using them on runtime, these quirks are obsolete.
-> 
-> Correct.
->  
+On Thu, Jul 11, 2013 at 7:23 PM, Neil Zhang <zhangwm@marvell.com> wrote=
+:
+> Haojian,
+>
+>
+>> -----Original Message-----
+>> From: Haojian Zhuang [mailto:haojian.zhuang@gmail.com]
+>> Sent: 2013=E5=B9=B47=E6=9C=8810=E6=97=A5 13:59
+>> To: Arnd Bergmann
+>> Cc: Thomas Petazzoni; Neil Zhang; Grant Likely;
+>> devicetree-discuss@lists.ozlabs.org; linux-kernel@vger.kernel.org;
+>> linux-arm-kernel@lists.infradead.org
+>> Subject: Re: [PATCH V3 2/3] clocksource: mmp: support CLOCKSOURCE OF
+>> DECLARE
 >>
->> Adding more function pointers to a system relevant structure, doubling
->> the number of functions and such didn't look non-invasive to me.
-> 
-> Well, it always depends. If there is a single place to deal with some
-> oddball hardware, a flag is often the simplest way to go.
-> 
-> If you have to add 10 conditionals in several functions then in a
-> first step converting the existing implementation into function
-> pointer calls and then in the next step providing new implementations
-> for your hardware is most of the time simpler and cleaner.
-> 
->> But, I totally agree with your argumentation and I even wanted to do it
->> in the way you explained in your replies. Just the courage was missing I
->> guess :)
-> 
-> Gut feelings are often a better guidance than our self-doubting
-> intellect. :)
+>> On Wed, Jul 10, 2013 at 5:16 AM, Arnd Bergmann <arnd@arndb.de> wrote=
+:
+>> > On Tuesday 09 July 2013, Thomas Petazzoni wrote:
+>> >> Dear Neil Zhang,
+>> >>
+>> >> On Tue, 9 Jul 2013 14:42:45 +0800, Neil Zhang wrote:
+>> >> > support CLOCKSOURCE OF DECLARE for mmp timer.
+>> >> >
+>> >> > Signed-off-by: Neil Zhang <zhangwm@marvell.com>
+>> >> > ---
+>> >> >  arch/arm/mach-mmp/mmp-dt.c  |    5 ++---
+>> >> >  arch/arm/mach-mmp/mmp2-dt.c |    3 +--
+>> >> >  arch/arm/mach-mmp/time.c    |   15 ++-------------
+>> >> >  3 files changed, 5 insertions(+), 18 deletions(-)
+>> >>
+>> >> Maybe it would be good to take this opportunity to move
+>> >> arch/arm/mach-mmp/time.c into drivers/clocksource/.
+>> >
+>> > +1
+>> >
+>> > Or we might want to have a more coordinated move of all clocksourc=
+e
+>> > drivers in arch/arm to drivers/clocksource now, as we have done fo=
+r
+>> > some other subsystems.
+>> >
+>> >         Arnd
+>>
+>> I already sent some patches on this. But I didn't get response yet. =
+I'll rebase
+>> them and send them again. I hope that they could be merged in this c=
+ycle.
+>>
+>> Regards
+>> Haojian
+>
+> Will you submit a patch to move it by yourself or let me update the p=
+atch to
+> move it to drivers/clocksource in next version?
+>
+> Best Regards,
+> Neil Zhang
 
-You can look at my github repo for the new driver, rewriting the
-interface as discussed above:
-https://github.com/Astralix/linux-rockchip/blob/wip/dw_timer64/drivers/clocksource/dw_apb_timer.c
+Not one patch. There're a couples of patches. They are depandant each o=
+ther.
 
-Summary: It is a 90% rewrite of the complete dw_apb_timer.c and
-modifications of dw_apb_timer_of.c and dw_apb_timer.h and the related
-x86 drivers are needed.
-And after that the 64bit functionality is still not given as the
-existing structures do not take it. But for now scheduler doesn't
-support 64bit either, I guess.
-
-The drivers local struct stays, but instead of carrying pointers to
-registers it now consists of function pointers. This could be used to
-fit almost any kind of timer.
-
-I would really appreciate your comments. Sure I need to clean up a bit,
-but we're still testing. But before investing more time into that code I
-need you comment if I should continue or split to a separate driver for
-these kind of timers.
-
-Thanks for any comments
+I don't have time to rebase them in these two weeks. Go ahead to rebase=
+ all
+your patches on mine.
 
 Regards
-	Ulrich
+Haojian
