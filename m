@@ -1,81 +1,83 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [PATCH 1/3] arm: atmel: at91sam9n12: add pinctrl of TWI
-Date: Thu, 11 Jul 2013 09:17:52 +0800
-Message-ID: <51DE07C0.7060304@atmel.com>
-References: <1373449869-5083-1-git-send-email-voice.shen@atmel.com> <1373449869-5083-2-git-send-email-voice.shen@atmel.com> <20130710143923.GH18012@ns203013.ovh.net>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH V3] extcon: palmas: Option to disable ID/VBUS detection
+ based on platform
+Date: Thu, 11 Jul 2013 11:42:33 +0900
+Message-ID: <51DE1B99.6090403@samsung.com>
+References: <1373448546-7531-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130710143923.GH18012@ns203013.ovh.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, ludovic.desroches@atmel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1373448546-7531-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: myungjoo.ham@samsung.com, devicetree-discuss@lists.ozlabs.org, rob@landley.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, gg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi J,
+Hi Laxman,
 
-On 7/10/2013 22:39, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 17:51 Wed 10 Jul     , Bo Shen wrote:
->> add pinctrl of TWI for at91sam9n12 SoC
->>
->> Signed-off-by: Bo Shen <voice.shen@atmel.com>
->> ---
->>   arch/arm/boot/dts/at91sam9n12.dtsi |   20 ++++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
->> index bb7f564..3db62f6 100644
->> --- a/arch/arm/boot/dts/at91sam9n12.dtsi
->> +++ b/arch/arm/boot/dts/at91sam9n12.dtsi
->> @@ -291,6 +291,22 @@
->>   					};
->>   				};
->>
->> +				i2c0 {
->> +					pinctrl_i2c0: i2c0-0 {
->> +						atmel,pins =
->> +							<AT91_PIOA 30 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA30 periph A I2C0 data */
->> +							 AT91_PIOA 31 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PA31 periph A I2C0 clock */
->> +					};
->> +				};
->> +
->> +				i2c1 {
->> +					pinctrl_i2c1: i2c1-0 {
->> +						atmel,pins =
->> +							<AT91_PIOC 0 AT91_PERIPH_C AT91_PINCTRL_NONE	/* PC0 periph C I2C1 data */
->> +							 AT91_PIOC 1 AT91_PERIPH_C AT91_PINCTRL_NONE>;	/* PC1 periph C I2C1 clock */
-> drop  the comment as we use macro
+>  static int palmas_usb_probe(struct platform_device *pdev)
+> @@ -137,20 +140,26 @@ static int palmas_usb_probe(struct platform_device *pdev)
+>  	struct palmas_usb *palmas_usb;
+>  	int status;
+>  
+> -	if (node && !pdata) {
+> -		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> -
+> -		if (!pdata)
+> -			return -ENOMEM;
+> +	palmas_usb = devm_kzalloc(&pdev->dev, sizeof(*palmas_usb), GFP_KERNEL);
+> +	if (!palmas_usb)
+> +		return -ENOMEM;
+>  
+> -		pdata->wakeup = of_property_read_bool(node, "ti,wakeup");
+> +	if (node && !pdata) {
+> +		palmas_usb->wakeup = of_property_read_bool(node, "ti,wakeup");
+> +		palmas_usb->enable_id_detection = of_property_read_bool(node,
+> +						"ti,enable-id-detection");
+> +		palmas_usb->enable_vbus_detection = of_property_read_bool(node,
+> +						"ti,enable-vbus-detection");
+> +	} else if (pdata) {
+> +		palmas_usb->wakeup = pdata->wakeup;
+> +		palmas_usb->enable_id_detection = true;
+> +		palmas_usb->enable_vbus_detection = true;
+>  	} else if (!pdata) {
+> -		return -EINVAL;
+> +		palmas_usb->wakeup = true;
+> +		palmas_usb->enable_id_detection = true;
+> +		palmas_usb->enable_vbus_detection = true;
+>  	}
 
-Thanks, I will drop the comment.
+I think we could modify it as following patch to remove duplicate line.
+If you agree about below modification, I will apply your patch with following patch.
 
->> +					};
->> +				};
->> +
->>   				tcb0 {
->>   					pinctrl_tcb0_tclk0: tcb0_tclk0-0 {
->>   						atmel,pins = <AT91_PIOA 24 AT91_PERIPH_A AT91_PINCTRL_NONE>;
->> @@ -471,6 +487,8 @@
->>   				dma-names = "tx", "rx";
->>   				#address-cells = <1>;
->>   				#size-cells = <0>;
->> +				pinctrl-names = "default";
->> +				pinctrl-0 = <&pinctrl_i2c0>;
->>   				status = "disabled";
->>   			};
->>
->> @@ -483,6 +501,8 @@
->>   				dma-names = "tx", "rx";
->>   				#address-cells = <1>;
->>   				#size-cells = <0>;
->> +				pinctrl-names = "default";
->> +				pinctrl-0 = <&pinctrl_i2c1>;
->>   				status = "disabled";
->>   			};
->>
->> --
->> 1.7.9.5
->>
+index 5c218d2..56909cc 100644
+--- a/drivers/extcon/extcon-palmas.c
++++ b/drivers/extcon/extcon-palmas.c
+@@ -150,16 +150,14 @@ static int palmas_usb_probe(struct platform_device *pdev)
+                                                "ti,enable-id-detection");
+                palmas_usb->enable_vbus_detection = of_property_read_bool(node,
+                                                "ti,enable-vbus-detection");
+-       } else if (pdata) {
+-               palmas_usb->wakeup = pdata->wakeup;
+-               palmas_usb->enable_id_detection = true;
+-               palmas_usb->enable_vbus_detection = true;
+-       } else if (!pdata) {
++       } else {
+                palmas_usb->wakeup = true;
+                palmas_usb->enable_id_detection = true;
+                palmas_usb->enable_vbus_detection = true;
+-       }
+ 
++               if (pdata)
++                       palmas_usb->wakeup = pdata->wakeup;
++       }
+ 
+        palmas->usb = palmas_usb;
+        palmas_usb->palmas = palmas;
 
-Best Regards,
-Bo Shen
+
+Thanks,
+Chanwoo Choi
+
+
