@@ -1,45 +1,114 @@
-From: Julius Werner <jwerner@chromium.org>
-Subject: Re: [PATCH] usb: phy: samsung-usb2: Toggle HSIC GPIO from device tree
-Date: Thu, 11 Jul 2013 14:46:14 -0700
-Message-ID: <CAODwPW-=bo2BqcHopY32N76p6DDGNDmCrKFo1R4gEEZhsG-DYg@mail.gmail.com>
-References: <1373416455-30358-1-git-send-email-jwerner@chromium.org>
-	<000901ce7dc8$90a819b0$b1f84d10$@samsung.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v2 2/2] media: i2c: tvp7002: add OF support
+Date: Fri, 12 Jul 2013 00:04:38 +0200
+Message-ID: <51DF2BF6.30509@gmail.com>
+References: <1371923055-29623-1-git-send-email-prabhakar.csengg@gmail.com> <1371923055-29623-3-git-send-email-prabhakar.csengg@gmail.com> <51D05568.3090009@gmail.com> <CA+V-a8sW+D8trces5AXu__Lw9F7TO6fCcQW+LGZKRhA41uOEfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <000901ce7dc8$90a819b0$b1f84d10$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: Julius Werner <jwerner@chromium.org>, LKML <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Vivek Gautam <gautam.vivek@samsung.com>, Praveen Paneri <p.paneri@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Tushar Behera <tushar.behera@linaro.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Thomas Abraham <thomas.abraham@linaro.org>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8sW+D8trces5AXu__Lw9F7TO6fCcQW+LGZKRhA41uOEfw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jingoo,
+On 07/11/2013 07:09 PM, Prabhakar Lad wrote:
+[...]
+>>> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.tx=
+t
+>>> b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+>>> new file mode 100644
+>>> index 0000000..9daebe1
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+>>> @@ -0,0 +1,43 @@
+>>> +* Texas Instruments TV7002 video decoder
+>>> +
+[...]
+>>> +
+>>> +- ti,tvp7002-fid-polarity: Active-high Field ID polarity of the en=
+dpoint.
+>>
+>> I thought it was agreed 'field-even-active' would be used instead of
+>> this device specific property. Did you run into any issues with that=
+ ?
+>>
+>>
+> Argh I some how missed it out, sorry this should be 'field-even-activ=
+e'
 
-Yeah, I followed that discussion back then, but it seems to have
-stalled a little (at least the HSIC patches haven't been picked up in
-any kernel.org repo yet to my knowledge).
+OK.
 
-The problem is that I think these approaches cannot work reliably. I
-agree that it would be nice to control the HSIC device from its own
-driver, and have spent quite some time playing around with the
-usb/misc/usb3503.c driver to try to make this work... but there's a
-timing dependency here that you just can't model correctly with
-independent drivers.
+>> And include/media/tvp70002.h:
+>>
+>>   * fid_polarity:
+>>   *                      0 ->  the field ID output is set to logic 1=
+ for an
+>> odd
+>>   *                           field (field 1) and set to logic 0 for=
+ an even
+>>   *                           field (field 0).
+>>   *                      1 ->  operation with polarity inverted.
+>>
+>>
+>> Do you know if the chip automatically selects video sync source
+>> (sync-on-green
+>> vs. VSYNC/HSYNC) and there is no need to configure this on the analo=
+gue
+>> input
+>> side ? At least the driver seems to always select the default SOGIN_=
+1 input
+>> (TVP7002_IN_MUX_SEL_1 register is set only at initialization time).
+>>
+> Yes the driver is selecting the default SOGIN_1 input.
+>
+>> Or perhaps it just outputs on SOGOUT, VSOUT, HSOUT lines whatever is=
+ fed to
+>> its analogue inputs, and any further processing unit need to determi=
+ne what
+>> synchronization signal is present and should be used ?
+>>
+>
+> Yes that correct, there is a register (Sync Detect Status) which
+> detects the sync for you.
+>
+>> I suspect that we don't need, e.g. another endpoint node to specify =
+the
+>> configuration of the TVP7002 analogue input interface, that would co=
+ntain
+>> a property like video-sync.
+>>
+>>
+> If I understand correctly you mean if there are two tvp7002 devices c=
+onnected
+> we don=92t need to specify video-sync property, but my question how d=
+o we
+> specify this property in common then ?
 
-If the HSIC device is already active during boot (e.g. because it was
-used by firmware), there's always a chance that the USB stack will
-come up before the driver that resets it does. The device will be
-enumerated as normal, and when the other driver later pulls the reset
-signal the USB stack will not notice because there is no real
-disconnect detection on HSIC. Only when you eventually try to send
-another transfer to the device will you start to get timeouts, and the
-newly reset device will not be able to reenumerate because the host
-never asks it to.
+No, I thought about two port sub-nodes of a single device node, one for=
+ the
+TVP7002 video input and one for the output. But it seems there is no ne=
+ed
+for that, i.e. to specify the input configuration statically in the=20
+firmware.
+The chip detects the signals automatically, i.e. it uses whatever is=20
+available,
+and it allows querying the selection status at run time. What would rea=
+lly
+need to be configured statically in DT in that case then ? Some initial=
+=20
+video
+sync configuration ? I guess it could be well hard coded in the driver,=
+=20
+since
+the hardware does run time detection anyway.
 
-I really don't see how you could solve this without putting some kind
-of synchronization mechanism in the USB drivers. So this leaves
-ehci-s5p and phy-samsung-usb2 as the only possible places, and I chose
-the latter since all the host-side HSIC initialization is also there
-already. I think if you think of it as "reset whatever is on the other
-side of this PHY", it's okay to put it as an optional feature into the
-PHY driver.
+It there are real use cases I gues we could add video-sync property or=20
+similar,
+besides the existing signal polarity properties.
+
+--
+Thanks,
+Sylwester
