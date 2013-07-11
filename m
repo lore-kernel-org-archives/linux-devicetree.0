@@ -1,59 +1,63 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH v2 2/3] arm: atmel: at91sam9n12: add qt1070 support
-Date: Thu, 11 Jul 2013 11:30:45 +0800
-Message-ID: <1373513446-18215-3-git-send-email-voice.shen@atmel.com>
-References: <1373513446-18215-1-git-send-email-voice.shen@atmel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1373513446-18215-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: ludovic.desroches@atmel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Bo Shen <voice.shen@atmel.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH V3] extcon: palmas: Option to disable ID/VBUS detection
+ based on platform
+Date: Thu, 11 Jul 2013 13:30:41 +0900
+Message-ID: <51DE34F1.4010001@samsung.com>
+References: <1373448546-7531-1-git-send-email-ldewangan@nvidia.com>
+ <51DE1B99.6090403@samsung.com> <51DE219B.7000109@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <51DE219B.7000109@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kishon@ti.com" <kishon@ti.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-add qt1070 support on at91sam9n12ek board
+On 07/11/2013 12:08 PM, Laxman Dewangan wrote:
+> On Thursday 11 July 2013 08:12 AM, Chanwoo Choi wrote:
+>> Hi Laxman,
+>>
+>>>   static int palmas_usb_probe(struct platform_device *pdev)
+>>> @@ -137,20 +140,26 @@ static int palmas_usb_probe(struct platform_device *pdev)
+>>>       struct palmas_usb *palmas_usb;
+>>>       int status;
+>>>   -    if (node && !pdata) {
+>>> -        pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+>>> -
+>>> -        if (!pdata)
+>>> -            return -ENOMEM;
+>>> +    palmas_usb = devm_kzalloc(&pdev->dev, sizeof(*palmas_usb), GFP_KERNEL);
+>>> +    if (!palmas_usb)
+>>> +        return -ENOMEM;
+>>>   -        pdata->wakeup = of_property_read_bool(node, "ti,wakeup");
+>>> +    if (node && !pdata) {
+>>> +        palmas_usb->wakeup = of_property_read_bool(node, "ti,wakeup");
+>>> +        palmas_usb->enable_id_detection = of_property_read_bool(node,
+>>> +                        "ti,enable-id-detection");
+>>> +        palmas_usb->enable_vbus_detection = of_property_read_bool(node,
+>>> +                        "ti,enable-vbus-detection");
+>>> +    } else if (pdata) {
+>>> +        palmas_usb->wakeup = pdata->wakeup;
+>>> +        palmas_usb->enable_id_detection = true;
+>>> +        palmas_usb->enable_vbus_detection = true;
+>>>       } else if (!pdata) {
+>>> -        return -EINVAL;
+>>> +        palmas_usb->wakeup = true;
+>>> +        palmas_usb->enable_id_detection = true;
+>>> +        palmas_usb->enable_vbus_detection = true;
+>>>       }
+>> I think we could modify it as following patch to remove duplicate line.
+>> If you agree about below modification, I will apply your patch with following patch.
+>>
+> I am fine with this and this looks simple and straight.
+> 
+> I have seen some patches/discussion from TI to remove the platform data support at all and hence removing from here in future will be very simple.
+> 
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
+This patch is applied on extcon-linus branch.
 
----
-Changes in v2:
-  - using micro for interrupt trigger mode
+Thanks,
+Chanwoo Choi
 
- arch/arm/boot/dts/at91sam9n12ek.dts |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index d59b70c..7a95a28 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -40,6 +40,15 @@
- 
- 			i2c0: i2c@f8010000 {
- 				status = "okay";
-+
-+				qt1070: keyboard@1b {
-+					compatible = "qt1070";
-+					reg = <0x1b>;
-+					interrupt-parent = <&pioA>;
-+					interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&pinctrl_qt1070_irq>;
-+				};
- 			};
- 
- 			i2c1: i2c@f8014000 {
-@@ -66,6 +75,13 @@
- 							<AT91_PIOA 7 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;	/* PA7 gpio CD pin pull up and deglitch */
- 					};
- 				};
-+
-+				qt1070 {
-+					pinctrl_qt1070_irq: qt1070_irq {
-+						atmel,pins =
-+							<AT91_PIOA 2 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
-+					};
-+				};
- 			};
- 
- 			spi0: spi@f0000000 {
--- 
-1.7.9.5
