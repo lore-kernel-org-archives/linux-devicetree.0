@@ -1,52 +1,85 @@
-From: Keerthy <a0393675@ti.com>
-Subject: Re: [PATCH 1/4] MFD: Add TPS659038 documentation under Palmas
-Date: Thu, 11 Jul 2013 16:14:17 +0530
-Message-ID: <51DE8C81.9090009@ti.com>
-References: <1371726289-10042-1-git-send-email-j-keerthy@ti.com> <20130711104327.GE25601@gmail.com>
+From: Neil Zhang <zhangwm@marvell.com>
+Subject: RE: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
+Date: Thu, 11 Jul 2013 04:20:31 -0700
+Message-ID: <175CCF5F49938B4D99B2E3EF7F558EBE3DBC97FDFA@SC-VEXCH4.marvell.com>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
+ <1373352166-10064-2-git-send-email-zhangwm@marvell.com>
+ <20130709124900.GG11908@titan.lakedaemon.net>
+ <CAHCPf3u=Zu2-4RsWzi17rB_FmStwcf-Pt_7oRzAEnxN_w=a7cA@mail.gmail.com>
+ <20130710214922.GQ11908@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130711104327.GE25601@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: J Keerthy <j-keerthy@ti.com>, linux-omap@vger.kernel.org, grant.likely@secretlab.ca, broonie@kernel.org, ldewangan@nvidia.com, sameo@linux.intel.com, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gg@slimlogic.co.uk
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130710214922.GQ11908@titan.lakedaemon.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Matt Sealey <neko@bakuhatsu.net>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 11 July 2013 04:13 PM, Lee Jones wrote:
-> On Thu, 20 Jun 2013, J Keerthy wrote:
->
->> Add TPS659038 documentation under Palmas.
->>
->> Signed-off-by: J Keerthy <j-keerthy@ti.com>
->> Acked-by: Samuel Ortiz <sameo@linux.intel.com>
->> ---
->>   Documentation/devicetree/bindings/mfd/palmas.txt |    2 ++
->>   1 files changed, 2 insertions(+), 0 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
->> index 7bcd59c..89cb773 100644
->> --- a/Documentation/devicetree/bindings/mfd/palmas.txt
->> +++ b/Documentation/devicetree/bindings/mfd/palmas.txt
->> @@ -5,6 +5,7 @@ twl6035 (palmas)
->>   twl6037 (palmas)
->>   tps65913 (palmas)
->>   tps65914 (palmas)
->> +tps659038
->>   
->>   Required properties:
->>   - compatible : Should be from the list
->> @@ -14,6 +15,7 @@ Required properties:
->>     ti,tps65913
->>     ti,tps65914
->>     ti,tps80036
->> +  ti,tps659038
->>   and also the generic series names
->>     ti,palmas
->>   - interrupt-controller : palmas has its own internal IRQs
-> Applied.
-
-Thanks Lee Jones.
-
->
-
+QXJuZKOsDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYXNvbiBD
+b29wZXIgW21haWx0bzpqYXNvbkBsYWtlZGFlbW9uLm5ldF0NCj4gU2VudDogMjAxM8TqN9TCMTHI
+1SA1OjQ5DQo+IFRvOiBNYXR0IFNlYWxleQ0KPiBDYzogTmVpbCBaaGFuZzsgZ3JhbnQubGlrZWx5
+QGxpbmFyby5vcmc7IGhhb2ppYW4uemh1YW5nQGdtYWlsLmNvbTsNCj4gYXJuZEBhcm5kYi5kZTsg
+ZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIIFYzIDEvM10gZHRzOiBjaGFuZ2UgTWFydmVsbCBwcmVmaXggdG8gJ21h
+cnZlbGwnDQo+IA0KPiBPbiBXZWQsIEp1bCAxMCwgMjAxMyBhdCAwMzo1MDoxMFBNIC0wNTAwLCBN
+YXR0IFNlYWxleSB3cm90ZToNCj4gPiBPbiBUdWUsIEp1bCA5LCAyMDEzIGF0IDc6NDkgQU0sIEph
+c29uIENvb3BlciA8amFzb25AbGFrZWRhZW1vbi5uZXQ+DQo+IHdyb3RlOg0KPiA+ID4gTmVpbCwN
+Cj4gPiA+DQo+ID4gPiBJIGFncmVlIHdpdGggdGhlIG5lZWQgdG8gY2hhbmdlLCBob3dldmVyLCB0
+aGlzIGhhcyBiZWVuIGluIHRoZQ0KPiA+ID4gYmluZGluZyBkb2N1bWVudGF0aW9uIHNpbmNlIHYz
+LjUuICBJIHdpc2ggd2UgaGFkIGNhdWdodCB0aGlzIHdoZW4gd2UNCj4gPiA+IGRlY2lkZWQgYWdh
+aW5zdCB1c2luZyBzdG9jayB0aWNrZXIgc3ltYm9scyAobm90IGFsbCBzdG9jayBtYXJrZXRzDQo+
+ID4gPiB1c2UgYWxwaGFiZXRpY2FsIGFiYnJldmlhdGVkIG5hbWVzLCBub3QgYWxsIGNvbXBhbmll
+cyBhcmUgbGlzdGVkIG9uDQo+ID4gPiBhbnkgc3RvY2sgZXhjaGFuZ2UpLg0KPiA+DQo+ID4gV2hv
+IGRlY2lkZWQgdGhhdD8NCj4gDQo+IE5vdyB5b3UncmUgZ29pbmcgdG8gbWFrZSBtZSBkaWcgOy0p
+ICBpaXJjLCB3ZSB3ZXJlIGdvaW5nIHRoZSBzdG9jayB0aWNrZXINCj4gcm91dGUsIGJ1dCB0aGVu
+IG5vdGljZWQgdGhhdCBwb3dlcnBjIGR0cyBmaWxlcyBoYWQgYmVlbiB1c2luZyAibWFydmVsbCwu
+Li4iDQo+IGZvciBhIF9sb25nXyB0aW1lLiAgSG93IGxvbmc/ICBJJ2xsIGxlYXZlIHRoYXQgYXMg
+YW4gZXhlcmNpc2UgZm9yIHRoZQ0KPiByZWFkZXIuIDotUCAgQmVjYXVzZSB3ZSBzaGFyZWQgYXQg
+bGVhc3QgdGhlIGV0aGVybmV0IGRyaXZlciB3aXRoIHRoZW0sIHdlDQo+IGRlY2lkZWQgdG8gY29u
+Zm9ybSB3aXRoIHdoYXQgd2FzIGFscmVhZHkgcHJlc2VudCBpbiB0aGUga2VybmVsIGFuZCB1c2UN
+Cj4gIm1hcnZlbGwsLi4uIiBmb3IgYWxsIG9mIHRoZSBkdCBiaW5kaW5ncyB3ZSB3ZXJlIGNyZWF0
+aW5nIGZvcg0KPiBraXJrd29vZC9kb3ZlL212ZWJ1IChhbmQgZXZlbnR1YWxseSBvcmlvbjV4LCBt
+djc4eHgwKS4NCj4gDQo+IEFzIGZvciB3aG8gaXMgJ3dlJz8NCj4gDQo+IGh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1hcm0ta2VybmVsLzIwMTItTWF5LzEwMTMzNy5o
+dG0NCj4gbA0KPiANCj4gPiBZb3UgY2FuJ3QganVzdCAic3RvcCB1c2luZyBzdG9jayB0aWNrZXIg
+c3ltYm9scyIgLSBGRFQgaXMgaW5oZXJlbnRseQ0KPiA+IGJhc2VkIG9uIHRoZSBvcmlnaW5hbCBP
+cGVuRmlybXdhcmUgZGV2aWNlIHRyZWUgYW5kIHRoZXJlZm9yZSBhbnkNCj4gPiBleGlzdGluZyBi
+aW5kaW5ncyB3aGljaCBhcmUgZG9uZSBvbiByZWFsIE9wZW5GaXJtd2FyZSBzb2x1dGlvbnMgd2hl
+cmUNCj4gPiB1c2luZyBzdG9jayB0aWNrZXIgc3ltYm9scyBpcyBlbnRpcmVseSBhcHByb3ByaWF0
+ZSAoYWx0aG91Z2gsIHRoZXNlDQo+ID4gZGF5cywgbm90IHVzZWZ1bCkgaXMgY291bnRlci1wcm9k
+dWN0aXZlLg0KPiA+DQo+ID4gSWYgTWFydmVsbCBoYWQgb3JpZ2luYWxseSBoYWQgbXJ2bCBhcyB0
+aGVpciB0aWNrZXIsIGFuZCB1c2VkIHRoaXMgaW4NCj4gPiBPRiBEVHMgKGFuZCBpdCBpcy4uKSwg
+dGhlbiBtcnZsIGl0IHN0YXlzLiBJbiB0aGUgY2FzZSB3aGVyZSBuZXcNCj4gPiBkZXZpY2VzIGFy
+ZSBhZGRlZCB3aXRoIG1hcnZlbGwsIHRoaXMgaXMgaW4gdGhpcyBjYXNlIHdyb25nLiBZb3Ugc2hv
+dWxkDQo+ID4ga2VlcCB1c2luZyB0aGUgb2xkIG9uZS4gQSBnb29kIGV4YW1wbGUgb2YgdGhpczsg
+RnJlZXNjYWxlLiBOb2JvZHkgaXMNCj4gPiBzYXlpbmcgZXZlcnlvbmUgc2hvdWxkIG1vdmUgdG8g
+ImZyZWVzY2FsZSxpbXgtdGhpcyIgb3INCj4gPiAiZnJlZXNjYWxlLHZ5YnJpZC10aGF0IiAtIGl0
+J3MgZnNsIGFuZCBpdCBzdGF5cyBmc2wgZm9yDQo+ID4gYmFja3dhcmRzL2ZvcndhcmRzIGNvbXBh
+dGliaWxpdHkgYmVjYXVzZSB0aGluZ3MgZXhpc3QgYWxyZWFkeS4NCj4gDQo+IEkgYWdyZWUsIHRo
+YXQncyB3aHkgSSdtIGFyZ3VpbmcgZm9yICptYWludGFpbmluZyogYmFja3dhcmRzIGNvbXBhdGli
+aWxpdHkuDQo+IA0KPiA+IEFueSBuZXcgY29tcGFuaWVzIGNhbiBoYXZlIGEgbG9uZywgZGVzY3Jp
+cHRpdmUgbmFtZTsgYSBwcml2aWxlZ2Ugb2YNCj4gPiBiZWluZyBsYXRlIHRvIHRoZSBwYXJ0eSwg
+eW91IG1pZ2h0IHNheSA6KQ0KPiA+DQo+ID4gSGF2aW5nIGFuIG9kZCBtaXggb2YgbXJ2bCBhbmQg
+bWFydmVsbCBvciBtb3ZpbmcgdG8gbWFydmVsbCBpcyBqdXN0DQo+ID4gY29tcGxldGVseSBvYnR1
+c2UsIHdoZXRoZXIgdGhleSBoYWQgdGhhdCBzdG9jayB0aWNrZXIsIHdpbGwgaGF2ZSBpdCBpbg0K
+PiA+IHRoZSBmdXR1cmUsIGl0IGlzIGhvdyB0aGV5J3JlIGRlZmluZWQgYW5kIHlvdSBjYW4ndCBp
+biBnb29kIGNvbnNjaWVuY2UNCj4gPiBjaGFuZ2UgdGhlIGJpbmRpbmcgYWZ0ZXIgZGV2aWNlcyBz
+aGlwIHdpdGggaXQuDQo+IA0KPiBTZWUgYWJvdmUgcmVnYXJkaW5nIHRoZSBtYXJ2ZWxsIGV0aGVy
+bmV0IGRyaXZlciBhbmQgcG93ZXJwYy4uLg0KPiANCj4gPiA+IFRvIGRvIHRoaXMgcHJvcGVybHks
+IHRoZSBkcml2ZXJzIGFyZSBnb2luZyB0byBoYXZlIHRvIGJlIGNvbXBhdGlibGUNCj4gPiA+IHdp
+dGggdGhlIG9sZCBhbmQgdGhlIG5ldyBuYW1lcywgYW5kIHRoZSBiaW5kaW5nIGRvY3MgdXBkYXRl
+ZCB0bw0KPiA+ID4gcmVmbGVjdCB0aGUgbGVnYWN5IG5hbWUgYW5kIHRoZSBwcmVmZXJyZWQgbmFt
+ZS4NCj4gPg0KPiA+IFByb3Blcmx5IHdvdWxkIGJlIGFzIGFib3ZlLiBZb3UgY2FuIHN0b3AgdXNp
+bmcgc3RvY2sgdGlja2VycyBmb3IgbmV3DQo+ID4gY29tcGFueSBuYW1lcywgYnV0IGFueXRoaW5n
+IHRoYXQgaGFzIGJlZW4gZGVmaW5lZCBpbiBhIGRldmljZSB0cmVlDQo+ID4gYmVmb3JlIGhhcyB0
+byBzdGF5IHRoYXQgd2F5LCBhbmQgYWxsIHRoZSBtYW51ZmFjdHVyZXIgcHJlZml4ZXMgdG8NCj4g
+PiBkZXZpY2UgbmFtZXMgc2hvdWxkIGJlIHRoZSBzYW1lLiBXaGF0IHlvdSdyZSBwcm9wb3Npbmcg
+aXMgcHVyZWx5DQo+ID4gZHJpdmVyIGJsb2F0IGFuZCBpbmNyZWFzaW5nIHRoZSBzaXplIG9mIGtl
+cm5lbC4NCj4gDQo+ICpJJ20qIG5vdCBwcm9wb3NpbmcgdG8gY2hhbmdlIHRoZSBuYW1lLCBOZWls
+IGlzLiAgSSdtIHByb3Bvc2luZyB0aGF0DQo+ICppZmYqIHRoZXkgY2hvc2UgdG8gZG8gdGhhdCwg
+ZG9uJ3QgYnJlYWsgc2gqdCBhbG9uZyB0aGUgd2F5Lg0KPiANCg0KV2hhdCdzIHlvdXIgb3Bpbmlv
+bj8NCg0KPiB0aHgsDQo+IA0KPiBKYXNvbi4NCg0KQmVzdCBSZWdhcmRzLA0KTmVpbCBaaGFuZw0K
