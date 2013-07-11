@@ -1,380 +1,168 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] drivers: dma-contiguous: add initialization from
- device tree
-Date: Thu, 11 Jul 2013 15:56:41 +0100
-Message-ID: <CACxGe6uzau+g0gd=hkNYw1zdkfq18zt_m9OEaiJKR6=q1U4rag@mail.gmail.com>
-References: <1372254009-25307-1-git-send-email-m.szyprowski@samsung.com>
- <1372254009-25307-3-git-send-email-m.szyprowski@samsung.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
+Date: Thu, 11 Jul 2013 08:36:00 -0700
+Message-ID: <20130711153559.GB2198@dhcp-172-17-186-34.nvidia.com>
+References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1373553468-6564-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1372254009-25307-3-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1373553468-6564-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Boris BREZILLON <linux-arm@overkiz.com>, Tomasz Figa <t.figa@samsung.com>, Philip Avinash <avinashphilip@ti.com>, Tony Prisk <linux@prisktech.co.nz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pwm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
 
-Thanks for working on this. Comments below...
+--gj572EiMnwbLXET9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 26, 2013 at 2:40 PM, Marek Szyprowski
-<m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Add device tree support for contiguous memory regions defined in device
-> tree. Initialization is done in 2 steps. First, the contiguous memory is
-> reserved, what happens very early when only flattened device tree is
-> available. Then on device initialization the corresponding cma regions are
-> assigned to each device structure.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/contiguous-memory.txt      |   94 ++++++++++++++
->  arch/arm/boot/dts/skeleton.dtsi                    |    7 +-
->  drivers/base/dma-contiguous.c                      |  132 ++++++++++++++++++++
->  3 files changed, 232 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/contiguous-memory.txt
->
-> diff --git a/Documentation/devicetree/bindings/contiguous-memory.txt b/Documentation/devicetree/bindings/contiguous-memory.txt
+On Thu, Jul 11, 2013 at 04:37:48PM +0200, Laurent Pinchart wrote:
+[...]
+> diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Do=
+cumentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> index de0eaed..be09be4 100644
+> --- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+> @@ -4,9 +4,9 @@ Required properties:
+>  - compatible: should be "atmel,tcb-pwm"
+>  - #pwm-cells: Should be 3.  The first cell specifies the per-chip index
+>    of the PWM to use, the second cell is the period in nanoseconds and
+> -  bit 0 in the third cell is used to encode the polarity of PWM output.
+> -  Set bit 0 of the third cell in PWM specifier to 1 for inverse polarity=
+ &
+> -  set to 0 for normal polarity.
+> +  the third cell is used to encode the polarity of PWM output. Set the
+> +  PWM_POLARITY_NORMAL flag for normal polarity or the PWM_POLARITY_INVER=
+SED
+> +  flag for inverted polarity. PWM flags are defined in <dt-bindings/pwm/=
+pwm.h>.
+>  - tc-block: The Timer Counter block to use as a PWM chip.
+> =20
+>  Example:
+
+I'd prefer for the original text to stay in place and the reference to
+the dt-bindings/pwm/pwm.h file to go below that block. The reason is
+that perhaps somebody will look at an older version of a given DT (with
+the numerical value) and not have access to the include and therefore
+not know which flag was being set by just looking at the documentation.
+I'm also not sure about what the plans are with respect to shipping
+device trees in a separate repository and if they are, whether that
+repository would ship the includes as well.
+
+Another issue might be that people without access to recent versions of
+DTC won't be able to use the new #include feature, so keeping the
+documentation backwards compatible seems like a good idea.
+
+Perhaps the include file should even only be mentioned in the general
+PWM binding documentation.
+
+Perhaps Grant and Rob (Cc'ed) can comment on how they want to handle
+this.
+
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Docu=
+mentation/devicetree/bindings/pwm/pwm-samsung.txt
+> index ac67c68..bece18b 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+> @@ -24,8 +24,9 @@ Required properties:
+>       - phandle to PWM controller node
+>       - index of PWM channel (from 0 to 4)
+>       - PWM signal period in nanoseconds
+> -     - bitmask of optional PWM flags:
+> -        0x1 - invert PWM signal
+> +     - bitmask of optional PWM flags as defined in <dt-bindings/pwm/pwm.=
+h>:
+> +        PWM_POLARITY_NORMAL - normal polarity
+> +	PWM_POLARITY_INVERSED - inverted polarity
+
+This part mixes spaces and tabs for indentation. Please stick to spaces.
+
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentatio=
+n/devicetree/bindings/pwm/pwm.txt
+> index 06e6724..38c357a 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> @@ -43,13 +43,15 @@ because the name "backlight" would be used as fallbac=
+k anyway.
+>  pwm-specifier typically encodes the chip-relative PWM number and the PWM
+>  period in nanoseconds.
+> =20
+> -Optionally, the pwm-specifier can encode a number of flags in a third ce=
+ll:
+> -- bit 0: PWM signal polarity (0: normal polarity, 1: inverse polarity)
+> +Optionally, the pwm-specifier can encode a number of flags (defined in
+> +<dt-bindings/gpio/gpio.h>) in a third cell:
+> +- PWM_POLARITY_NORMAL: use the normal PWM signal polarity
+> +- PWM_POLARITY_INVERSED: invert the PWM signal polarity
+
+You'd have a hard time finding those in the GPIO header. =3D)
+
+> diff --git a/include/dt-bindings/pwm/pwm.h b/include/dt-bindings/pwm/pwm.h
 > new file mode 100644
-> index 0000000..a733df2
+> index 0000000..f82be30
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/contiguous-memory.txt
-> @@ -0,0 +1,94 @@
-> +*** Contiguous Memory binding ***
+> +++ b/include/dt-bindings/pwm/pwm.h
+> @@ -0,0 +1,15 @@
+> +/*
+> + * This header provides constants for most PWM bindings.
+> + *
+> + * Most PWM bindings can include a flags cell as part of the PWM specifi=
+er.
+> + * In most cases, the format of the flags cell uses the standard values
+> + * defined in this header.
+> + */
 > +
-> +The /chosen/contiguous-memory node provides runtime configuration of
-> +contiguous memory regions for Linux kernel. Such regions can be created
-> +for special usage by various device drivers. A good example are
-> +contiguous memory allocations or memory sharing with other operating
-> +system(s) on the same hardware board. Those special memory regions might
-> +depend on the selected board configuration and devices used on the target
-> +system.
+> +#ifndef _DT_BINDINGS_PWM_PWM_H
+> +#define _DT_BINDINGS_PWM_PWM_H
 > +
-> +Parameters for each memory region can be encoded into the device tree
-> +with the following convention:
+> +#define PWM_POLARITY_NORMAL			(0 << 0)
+> +#define PWM_POLARITY_INVERSED			(1 << 0)
 > +
-> +contiguous-memory {
-> +
-> +       (name): region@(base-address) {
-> +               reg = <(baseaddr) (size)>;
-> +               (linux,default-contiguous-region);
-> +               device = <&device_0 &device_1 ...>
-> +       };
-> +};
-
-Okay, I've gone and read all of the backlog on the 3 versions of the
-patch series, and I think I understand the issues. I actually think it
-was better off to have the regions specified as children of the memory
-node. I understand the argument about how would firmware know what
-size the kernel wants and that it would be better to have a kernel
-parameter to override the default. However, it is also reasonable for
-the kernel to be provided with a default amount of CMA based on the
-usage profile of the device. In that regard it is absolutely
-appropriate to put the CMA region data into the memory node. I don't
-think /chosen is the right place for that.
-
-> +
-> +name:          an name given to the defined region;
-
-In the above node example, "name:" is a label used for creating
-phandles. That information doesn't appear in the resulting .dtb
-output. The label is actually optional It should instead be:
-        [(label):] (name)@(address) { }
-
-> +base-address:  the base address of the defined region;
-> +size:          the size of the memory region (bytes);
-
-The reg property should follow the normal reg rules which are well
-defined. That also means that a memory region could have multiple reg
-entries if appropriate.
-
-> +linux,default-contiguous-region: property indicating that the region
-> +               is the default region for all contiguous memory
-> +               allocations, Linux specific (optional);
-> +device:                array of phandles to the client device nodes, which
-> +               will use the defined contiguous region.
-
-This is backwards compared to the way device references usually work.
-It would be more consistent for each device node to have a
-"dma-memory-region" property with phandles to one or more memory
-regions that it cares about.
-
-> +Each defined region must use unique name. It is optional to specify the
-> +base address, so if one wants to use autoconfiguration of the base
-> +address, he must specify the '0' as base address in the 'reg' property
-> +and assign ann uniqe name to such regions, following the convention:
-> +'region@0', 'region@1', 'region@2', ...
-
-Drop the use of 'region'. "name@0" is more typical. It would be
-appropriate to have compatible = "reserved-memory-region" in each of
-the reserved regions. That would avoid the problem of two regions
-based at the same address having a conflict in name.
-
-> +
-> +
-> +*** Example ***
-> +
-> +This example defines a memory configuration containing 2 contiguous
-> +regions for Linux kernel, one default of all device drivers (named
-> +contig_mem, autoconfigured at boot time, 64MiB) and one dedicated to the
-> +framebuffer device (named display_mem, placed at 0x78000000, 64MiB). The
-> +display_mem region is then assigned to fb@12300000, scaller@12500000 and
-> +codec@12600000 devices for contiguous memory allocation with Linux
-> +kernel drivers.
-> +
-> +The reason for creating a separate region for framebuffer device is to
-> +match the framebuffer base address to the one configured by bootloader,
-> +so once Linux kernel drivers starts no glitches on the displayed boot
-> +logo appears. Scaller and codec drivers should share the memory
-> +allocations with framebuffer driver.
-> +
-> +/ {
-> +       /* ... */
-> +
-> +       chosen {
-> +               bootargs = /* ... */
-> +
-> +               contiguous-memory {
-> +
-> +                       /*
-> +                        * global autoconfigured region
-> +                        * for contiguous allocations
-> +                        */
-> +                       contig_mem: region@0 {
-> +                               reg = <0x0 0x4000000>;
-> +                               linux,default-contiguous-region;
-> +                       };
-> +
-> +                       /*
-> +                        * special region for framebuffer and
-> +                        * multimedia processing devices
-> +                        */
-> +                       display_mem: region@78000000 {
-> +                               reg = <0x78000000 0x4000000>;
-> +                               device = <&fb0 &scaller &codec>;
-> +                       };
-> +               };
-> +       };
-> +
-> +       /* ... */
-> +
-> +       fb0: fb@12300000 {
-> +               status = "okay";
-> +       };
-> +       scaller: scaller@12500000 {
-> +               status = "okay";
-> +       };
-> +       codec: codec@12600000 {
-> +               status = "okay";
-> +       };
-> +};
-> diff --git a/arch/arm/boot/dts/skeleton.dtsi b/arch/arm/boot/dts/skeleton.dtsi
-> index b41d241..cadc3b9 100644
-> --- a/arch/arm/boot/dts/skeleton.dtsi
-> +++ b/arch/arm/boot/dts/skeleton.dtsi
-> @@ -7,7 +7,12 @@
->  / {
->         #address-cells = <1>;
->         #size-cells = <1>;
-> -       chosen { };
-> +       chosen {
-> +               contiguous-memory {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +               };
-> +       };
->         aliases { };
->         memory { device_type = "memory"; reg = <0 0>; };
->  };
-> diff --git a/drivers/base/dma-contiguous.c b/drivers/base/dma-contiguous.c
-> index 01fe743..ce5f5d1 100644
-> --- a/drivers/base/dma-contiguous.c
-> +++ b/drivers/base/dma-contiguous.c
-> @@ -24,6 +24,9 @@
->
->  #include <linux/memblock.h>
->  #include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/of_platform.h>
->  #include <linux/mm.h>
->  #include <linux/mutex.h>
->  #include <linux/page-isolation.h>
-> @@ -37,6 +40,7 @@ struct cma {
->         unsigned long   base_pfn;
->         unsigned long   count;
->         unsigned long   *bitmap;
-> +       char            full_name[32];
->  };
->
->  static DEFINE_MUTEX(cma_mutex);
-> @@ -133,6 +137,52 @@ static __init int cma_activate_area(struct cma *cma)
->         return 0;
->  }
->
-> +/*****************************************************************************/
-> +
-> +#ifdef CONFIG_OF
-> +int __init cma_fdt_scan(unsigned long node, const char *uname,
-> +                               int depth, void *data)
-> +{
-> +       static int level;
-> +       phys_addr_t base, size;
-> +       unsigned long len;
-> +       struct cma *cma;
-> +       __be32 *prop;
-> +       int ret;
-> +
-> +       if (depth == 1 && strcmp(uname, "chosen") == 0) {
-> +               level = depth;
-> +               return 0;
-> +       }
-> +
-> +       if (depth == 2 && strcmp(uname, "contiguous-memory") == 0) {
-> +               level = depth;
-> +               return 0;
-> +       }
-> +
-> +       if (level != 2 || depth != 3 || strncmp(uname, "region@", 7) != 0)
-> +               return 0;
-> +
-> +       prop = of_get_flat_dt_prop(node, "reg", &len);
-> +       if (!prop || (len != 2 * sizeof(unsigned long)))
-> +               return 0;
-> +
-> +       base = be32_to_cpu(prop[0]);
-> +       size = be32_to_cpu(prop[1]);
-> +
-> +       pr_info("Found %s, memory base %lx, size %ld MiB\n", uname,
-> +               (unsigned long)base, (unsigned long)size / SZ_1M);
-> +
-> +       ret = dma_contiguous_reserve_area(size, base, 0, &cma);
-> +       if (ret == 0) {
-> +               strcpy(cma->full_name, uname);
-> +               if (of_get_flat_dt_prop(node, "linux,default-contiguous-region", NULL))
-> +                       dma_contiguous_default_area = cma;
-> +       }
-> +       return 0;
-> +}
 > +#endif
-> +
->  /**
->   * dma_contiguous_reserve() - reserve area(s) for contiguous memory handling
->   * @limit: End address of the reserved memory (optional, 0 for any).
-> @@ -149,6 +199,10 @@ void __init dma_contiguous_reserve(phys_addr_t limit)
->
->         pr_debug("%s(limit %08lx)\n", __func__, (unsigned long)limit);
->
-> +#ifdef CONFIG_OF
-> +       of_scan_flat_dt(cma_fdt_scan, NULL);
-> +#endif
-> +
->         if (size_cmdline != -1) {
->                 sel_size = size_cmdline;
->         } else {
-> @@ -265,6 +319,80 @@ int __init dma_contiguous_add_device(struct device *dev, struct cma *cma)
->         return 0;
->  }
->
-> +#ifdef CONFIG_OF
-> +
-> +#define MAX_CMA_MAPS   64
-> +
-> +static struct cma_map {
-> +       struct cma *cma;
-> +       struct device_node *node;
-> +} cma_maps[MAX_CMA_MAPS];
-> +static unsigned cma_map_count;
-> +
-> +static void cma_assign_device_from_dt(struct device *dev)
-> +{
-> +       int i;
-> +       for (i = 0; i < cma_map_count; i++) {
-> +               if (cma_maps[i].node == dev->of_node) {
-> +                       dev_set_cma_area(dev, cma_maps[i].cma);
-> +                       pr_info("Assigned CMA %s to %s device\n",
-> +                               cma_maps[i].cma->full_name,
-> +                               dev_name(dev));
-> +               }
-> +       }
-> +}
-> +
-> +static int cma_device_init_notifier_call(struct notifier_block *nb,
-> +                                        unsigned long event, void *data)
-> +{
-> +       struct device *dev = data;
-> +       if (event == BUS_NOTIFY_ADD_DEVICE && dev->of_node)
-> +               cma_assign_device_from_dt(dev);
-> +       return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block cma_dev_init_nb = {
-> +       .notifier_call = cma_device_init_notifier_call,
-> +};
-> +
-> +void scan_cma_nodes(void)
-> +{
-> +       struct device_node *parent = of_find_node_by_path("/chosen/contiguous-memory");
-> +       struct device_node *child;
-> +
-> +       if (!parent)
-> +               return;
-> +
-> +       for_each_child_of_node(parent, child) {
-> +               struct cma *cma = NULL;
-> +               int i;
-> +
-> +               for (i = 0; i < cma_area_count; i++) {
-> +                       char *p = strrchr(child->full_name, '/') + 1;
-> +                       if (strcmp(p, cma_areas[i].full_name) == 0)
-> +                               cma = &cma_areas[i];
-> +               }
-> +               if (!cma)
-> +                       continue;
-> +
-> +               for (i = 0;; i++) {
-> +                       struct device_node *node;
-> +                       node = of_parse_phandle(child, "device", i);
-> +                       if (!node)
-> +                               break;
-> +
-> +                       if (cma_map_count < MAX_CMA_MAPS) {
-> +                               cma_maps[cma_map_count].cma = cma;
-> +                               cma_maps[cma_map_count].node = node;
-> +                               cma_map_count++;
-> +                       } else {
-> +                               pr_err("CMA error: too many devices defined\n");
-> +                       }
-> +               }
-> +       }
-> +}
-> +#endif
-> +
->  static int __init cma_init_reserved_areas(void)
->  {
->         int i;
-> @@ -275,6 +403,10 @@ static int __init cma_init_reserved_areas(void)
->                         return ret;
->         }
->
-> +#ifdef CONFIG_OF
-> +       scan_cma_nodes();
-> +       bus_register_notifier(&platform_bus_type, &cma_dev_init_nb);
-> +#endif
->         return 0;
->  }
->  core_initcall(cma_init_reserved_areas);
-> --
-> 1.7.9.5
->
+
+I think this should go into a patch separate from the DT changes above
+because they'll likely go in via different trees. Or maybe they won't,
+but it'd still be good to introduce the header first and only then
+change the DTS files.
+
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+[...]
+>  enum pwm_polarity {
+> -	PWM_POLARITY_NORMAL,
+> -	PWM_POLARITY_INVERSED,
+> +	PWM_POLARITY_NORMAL =3D 0,
+> +	PWM_POLARITY_INVERSED =3D 1,
+
+That's what the enum values will be by default, so there's no need to be
+explicit here.
+
+Thierry
+
+--gj572EiMnwbLXET9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR3tDfAAoJEN0jrNd/PrOh6tMP/12mmN+pajUf3ikGnJYeJHol
+0eZF7EWGFYP6lg+NWaUsc4GvFByvCgD53d71qpYYTMXbFqZX/lw31O6v+eOCt7XY
+WvVkJq+NvAtV6PcaFRr/UGoWLJZ4QvtT7rLcQsixvbl7e7B7mL4w3Ag7YZqrXCJV
+1qVEssmHJjNG99MrlSYutrTTrEqDodfprFHT/JtqWBPvihu0x+1u5P/cLSxfFDk+
+lUPCVdLtipHKKSo1eKMDytP0tqkWK108zxu7+B+johetRsV1vAHdChZ4dUkkyKDm
++ZrsEizNQ4EYfsM7e2m6Hta1ySMEhDtBvGna1IOnI5CW5OnC/p8EdytpfImBUDXl
+0zCMDfSFlCVwcqzYJ6XHI86ryvuEVg8p7TeNFLJEfhgNds6qXrXFjnadY/Gxx7qB
+RtKXIDSY0MiXGzXPIf1ES7MslRB3yR5uznu4Wu0TfB7cM/MhnflyoHk1LfoSKVs9
+jcx6mHgV24a5NpFmeGkdB8xgOVEhzhVcPtYA56K1icCBPI3xVsMzxRito+Guuic3
+sBtTiYGcgi6rVRnQSK53Ps1ngGaI8C8osyD5MQ5hxw7GkuXToDqfgKvFA3OFSTEz
+ENZZN9Jxkzn9PUeLH03oZatojOVB3nbb7fdaJrSeDBttdJjzyBqXi3njfRcUFK+x
+RruuYigIqd87+VkiHp44
+=VSBG
+-----END PGP SIGNATURE-----
+
+--gj572EiMnwbLXET9--
