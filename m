@@ -1,36 +1,48 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/4] MFD: Palmas: Check if irq is valid
-Date: Thu, 11 Jul 2013 12:25:31 +0100
-Message-ID: <20130711112531.GJ25601@gmail.com>
-References: <1371621470-22279-1-git-send-email-j-keerthy@ti.com>
- <1371621470-22279-2-git-send-email-j-keerthy@ti.com>
+From: Neil Zhang <zhangwm@marvell.com>
+Subject: RE: [PATCH V3 2/3] clocksource: mmp: support CLOCKSOURCE OF DECLARE
+Date: Thu, 11 Jul 2013 04:23:10 -0700
+Message-ID: <175CCF5F49938B4D99B2E3EF7F558EBE3DBC97FDFF@SC-VEXCH4.marvell.com>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
+	<1373352166-10064-3-git-send-email-zhangwm@marvell.com>
+	<20130709181434.76f6216d@skate>	<201307092316.20905.arnd@arndb.de>
+ <CAN1soZyFztVR1XSw9bDS5JexK0Mdbpr6yevatVf+MnBohwCj1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1371621470-22279-2-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <CAN1soZyFztVR1XSw9bDS5JexK0Mdbpr6yevatVf+MnBohwCj1Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: linux-omap@vger.kernel.org, broonie@kernel.org, ldewangan@nvidia.com, sameo@linux.intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gg@slimlogic.co.uk
+To: Haojian Zhuang <haojian.zhuang@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Jun 2013, Keerthy wrote:
-
-> From: J Keerthy <j-keerthy@ti.com>
->=20
-> Check if irq value obtained is valid. If it is not valid
-> then skip the irq request step and go ahead with the probe.
->=20
-> Signed-off-by: J Keerthy <j-keerthy@ti.com>
-> ---
->  drivers/mfd/palmas.c |    6 ++++++
->  1 files changed, 6 insertions(+), 0 deletions(-)
-
-Applied with Stephen and Mark's RB.
-
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+SGFvamlhbiwNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEhhb2pp
+YW4gWmh1YW5nIFttYWlsdG86aGFvamlhbi56aHVhbmdAZ21haWwuY29tXQ0KPiBTZW50OiAyMDEz
+xOo31MIxMMjVIDEzOjU5DQo+IFRvOiBBcm5kIEJlcmdtYW5uDQo+IENjOiBUaG9tYXMgUGV0YXp6
+b25pOyBOZWlsIFpoYW5nOyBHcmFudCBMaWtlbHk7DQo+IGRldmljZXRyZWUtZGlzY3Vzc0BsaXN0
+cy5vemxhYnMub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAyLzNd
+IGNsb2Nrc291cmNlOiBtbXA6IHN1cHBvcnQgQ0xPQ0tTT1VSQ0UgT0YNCj4gREVDTEFSRQ0KPiAN
+Cj4gT24gV2VkLCBKdWwgMTAsIDIwMTMgYXQgNToxNiBBTSwgQXJuZCBCZXJnbWFubiA8YXJuZEBh
+cm5kYi5kZT4gd3JvdGU6DQo+ID4gT24gVHVlc2RheSAwOSBKdWx5IDIwMTMsIFRob21hcyBQZXRh
+enpvbmkgd3JvdGU6DQo+ID4+IERlYXIgTmVpbCBaaGFuZywNCj4gPj4NCj4gPj4gT24gVHVlLCA5
+IEp1bCAyMDEzIDE0OjQyOjQ1ICswODAwLCBOZWlsIFpoYW5nIHdyb3RlOg0KPiA+PiA+IHN1cHBv
+cnQgQ0xPQ0tTT1VSQ0UgT0YgREVDTEFSRSBmb3IgbW1wIHRpbWVyLg0KPiA+PiA+DQo+ID4+ID4g
+U2lnbmVkLW9mZi1ieTogTmVpbCBaaGFuZyA8emhhbmd3bUBtYXJ2ZWxsLmNvbT4NCj4gPj4gPiAt
+LS0NCj4gPj4gPiAgYXJjaC9hcm0vbWFjaC1tbXAvbW1wLWR0LmMgIHwgICAgNSArKy0tLQ0KPiA+
+PiA+ICBhcmNoL2FybS9tYWNoLW1tcC9tbXAyLWR0LmMgfCAgICAzICstLQ0KPiA+PiA+ICBhcmNo
+L2FybS9tYWNoLW1tcC90aW1lLmMgICAgfCAgIDE1ICsrLS0tLS0tLS0tLS0tLQ0KPiA+PiA+ICAz
+IGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMTggZGVsZXRpb25zKC0pDQo+ID4+DQo+
+ID4+IE1heWJlIGl0IHdvdWxkIGJlIGdvb2QgdG8gdGFrZSB0aGlzIG9wcG9ydHVuaXR5IHRvIG1v
+dmUNCj4gPj4gYXJjaC9hcm0vbWFjaC1tbXAvdGltZS5jIGludG8gZHJpdmVycy9jbG9ja3NvdXJj
+ZS8uDQo+ID4NCj4gPiArMQ0KPiA+DQo+ID4gT3Igd2UgbWlnaHQgd2FudCB0byBoYXZlIGEgbW9y
+ZSBjb29yZGluYXRlZCBtb3ZlIG9mIGFsbCBjbG9ja3NvdXJjZQ0KPiA+IGRyaXZlcnMgaW4gYXJj
+aC9hcm0gdG8gZHJpdmVycy9jbG9ja3NvdXJjZSBub3csIGFzIHdlIGhhdmUgZG9uZSBmb3INCj4g
+PiBzb21lIG90aGVyIHN1YnN5c3RlbXMuDQo+ID4NCj4gPiAgICAgICAgIEFybmQNCj4gDQo+IEkg
+YWxyZWFkeSBzZW50IHNvbWUgcGF0Y2hlcyBvbiB0aGlzLiBCdXQgSSBkaWRuJ3QgZ2V0IHJlc3Bv
+bnNlIHlldC4gSSdsbCByZWJhc2UNCj4gdGhlbSBhbmQgc2VuZCB0aGVtIGFnYWluLiBJIGhvcGUg
+dGhhdCB0aGV5IGNvdWxkIGJlIG1lcmdlZCBpbiB0aGlzIGN5Y2xlLg0KPiANCj4gUmVnYXJkcw0K
+PiBIYW9qaWFuDQoNCldpbGwgeW91IHN1Ym1pdCBhIHBhdGNoIHRvIG1vdmUgaXQgYnkgeW91cnNl
+bGYgb3IgbGV0IG1lIHVwZGF0ZSB0aGUgcGF0Y2ggdG8gDQptb3ZlIGl0IHRvIGRyaXZlcnMvY2xv
+Y2tzb3VyY2UgaW4gbmV4dCB2ZXJzaW9uPw0KDQpCZXN0IFJlZ2FyZHMsDQpOZWlsIFpoYW5nDQo=
