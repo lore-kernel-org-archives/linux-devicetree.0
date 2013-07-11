@@ -1,93 +1,380 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH 0/5 v7][RFC] ASoC: simple-card DT support
-Date: Thu, 11 Jul 2013 16:57:21 +0200
-Message-ID: <51DEC7D1.3060001@gmail.com>
-References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
- <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
- <20130127035943.GJ4650@opensource.wolfsonmicro.com>
- <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
- <20130129014808.GC4748@opensource.wolfsonmicro.com>
- <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
- <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
- <5107FF97.1070601@wwwdotorg.org>
- <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
- <51097F0F.2030501@wwwdotorg.org>
- <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
- <5110349D.3050308@wwwdotorg.org>
- <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
- <87bobzrry6.wl%kuninori.morimoto.gx@renesas.com>
- <511963F8.5020107@wwwdotorg.org>
- <87bobqf5yq.wl%kuninori.morimoto.gx@renesas.com>
- <511C22E2.60701@wwwdotorg.org>
- <87obfnofsx.wl%kuninori.morimoto.gx@renesas.com>
- <511C6A1B.9000507@wwwdotorg.org>
- <874nhfv5mb.wl%kuninori.morimoto.gx@renesas.com>
- <8738wzuu9g.wl%kuninori.morimoto.gx@renesas.com>
- <87a9qsg4lp.wl%kuninori.morimoto.gx@renesas.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] drivers: dma-contiguous: add initialization from
+ device tree
+Date: Thu, 11 Jul 2013 15:56:41 +0100
+Message-ID: <CACxGe6uzau+g0gd=hkNYw1zdkfq18zt_m9OEaiJKR6=q1U4rag@mail.gmail.com>
+References: <1372254009-25307-1-git-send-email-m.szyprowski@samsung.com>
+ <1372254009-25307-3-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <87a9qsg4lp.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1372254009-25307-3-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kuninori,
+Hi Marek,
 
-On 25.02.2013 09:49, Kuninori Morimoto wrote:
-> 
-> Hi Mark, Stephen, Lars
-> 
-> These are v7 of simple-card DT support.
-> I well considered your comments/advices.
-> Then, I noticed that creating snd_soc_register_cpu() is better solution.
-> It is very basic/simple version at this point, and I added [RFC] on these patches.
-> I hope it is accepted by you, and updated to be more useful.
-> Now, snd_soc_codec, and snd_soc_cpu has .of_xlate_dai_name() callback.
-> 
-> Kuninori Morimoto (5):
->       ASoC: add snd_soc_register_cpu()
->       ASoC: add .of_xlate_dai_name on snd_soc_cpu_cpu/codec_driver
->       ASoC: simple-card: add Device Tree support
->       ASoC: ak4642: add .of_xlate_dai_name support
->       ASoC: fsi: add .of_xlate_dai_name support
+Thanks for working on this. Comments below...
 
-May I ask what happened to this approach and the patch set?
-
-
-Thanks,
-Daniel
-
-
-> 
->  Documentation/devicetree/bindings/sound/ak4642.txt |    5 +
->  .../devicetree/bindings/sound/renesas,fsi.txt      |    9 ++
->  .../devicetree/bindings/sound/simple-card.txt      |   75 +++++++++++
->  include/sound/soc.h                                |   33 +++++
->  sound/soc/codecs/ak4642.c                          |   11 ++
->  sound/soc/generic/simple-card.c                    |  139 +++++++++++++++++++-
->  sound/soc/sh/fsi.c                                 |   22 +++-
->  sound/soc/soc-core.c                               |  118 +++++++++++++++++
->  8 files changed, 405 insertions(+), 7 deletions(-)
-> 
-> 
-> 
-> 
-> Best regards
+On Wed, Jun 26, 2013 at 2:40 PM, Marek Szyprowski
+<m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Add device tree support for contiguous memory regions defined in device
+> tree. Initialization is done in 2 steps. First, the contiguous memory is
+> reserved, what happens very early when only flattened device tree is
+> available. Then on device initialization the corresponding cma regions are
+> assigned to each device structure.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
-> Kuninori Morimoto
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+>  .../devicetree/bindings/contiguous-memory.txt      |   94 ++++++++++++++
+>  arch/arm/boot/dts/skeleton.dtsi                    |    7 +-
+>  drivers/base/dma-contiguous.c                      |  132 ++++++++++++++++++++
+>  3 files changed, 232 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/contiguous-memory.txt
+>
+> diff --git a/Documentation/devicetree/bindings/contiguous-memory.txt b/Documentation/devicetree/bindings/contiguous-memory.txt
+> new file mode 100644
+> index 0000000..a733df2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/contiguous-memory.txt
+> @@ -0,0 +1,94 @@
+> +*** Contiguous Memory binding ***
+> +
+> +The /chosen/contiguous-memory node provides runtime configuration of
+> +contiguous memory regions for Linux kernel. Such regions can be created
+> +for special usage by various device drivers. A good example are
+> +contiguous memory allocations or memory sharing with other operating
+> +system(s) on the same hardware board. Those special memory regions might
+> +depend on the selected board configuration and devices used on the target
+> +system.
+> +
+> +Parameters for each memory region can be encoded into the device tree
+> +with the following convention:
+> +
+> +contiguous-memory {
+> +
+> +       (name): region@(base-address) {
+> +               reg = <(baseaddr) (size)>;
+> +               (linux,default-contiguous-region);
+> +               device = <&device_0 &device_1 ...>
+> +       };
+> +};
+
+Okay, I've gone and read all of the backlog on the 3 versions of the
+patch series, and I think I understand the issues. I actually think it
+was better off to have the regions specified as children of the memory
+node. I understand the argument about how would firmware know what
+size the kernel wants and that it would be better to have a kernel
+parameter to override the default. However, it is also reasonable for
+the kernel to be provided with a default amount of CMA based on the
+usage profile of the device. In that regard it is absolutely
+appropriate to put the CMA region data into the memory node. I don't
+think /chosen is the right place for that.
+
+> +
+> +name:          an name given to the defined region;
+
+In the above node example, "name:" is a label used for creating
+phandles. That information doesn't appear in the resulting .dtb
+output. The label is actually optional It should instead be:
+        [(label):] (name)@(address) { }
+
+> +base-address:  the base address of the defined region;
+> +size:          the size of the memory region (bytes);
+
+The reg property should follow the normal reg rules which are well
+defined. That also means that a memory region could have multiple reg
+entries if appropriate.
+
+> +linux,default-contiguous-region: property indicating that the region
+> +               is the default region for all contiguous memory
+> +               allocations, Linux specific (optional);
+> +device:                array of phandles to the client device nodes, which
+> +               will use the defined contiguous region.
+
+This is backwards compared to the way device references usually work.
+It would be more consistent for each device node to have a
+"dma-memory-region" property with phandles to one or more memory
+regions that it cares about.
+
+> +Each defined region must use unique name. It is optional to specify the
+> +base address, so if one wants to use autoconfiguration of the base
+> +address, he must specify the '0' as base address in the 'reg' property
+> +and assign ann uniqe name to such regions, following the convention:
+> +'region@0', 'region@1', 'region@2', ...
+
+Drop the use of 'region'. "name@0" is more typical. It would be
+appropriate to have compatible = "reserved-memory-region" in each of
+the reserved regions. That would avoid the problem of two regions
+based at the same address having a conflict in name.
+
+> +
+> +
+> +*** Example ***
+> +
+> +This example defines a memory configuration containing 2 contiguous
+> +regions for Linux kernel, one default of all device drivers (named
+> +contig_mem, autoconfigured at boot time, 64MiB) and one dedicated to the
+> +framebuffer device (named display_mem, placed at 0x78000000, 64MiB). The
+> +display_mem region is then assigned to fb@12300000, scaller@12500000 and
+> +codec@12600000 devices for contiguous memory allocation with Linux
+> +kernel drivers.
+> +
+> +The reason for creating a separate region for framebuffer device is to
+> +match the framebuffer base address to the one configured by bootloader,
+> +so once Linux kernel drivers starts no glitches on the displayed boot
+> +logo appears. Scaller and codec drivers should share the memory
+> +allocations with framebuffer driver.
+> +
+> +/ {
+> +       /* ... */
+> +
+> +       chosen {
+> +               bootargs = /* ... */
+> +
+> +               contiguous-memory {
+> +
+> +                       /*
+> +                        * global autoconfigured region
+> +                        * for contiguous allocations
+> +                        */
+> +                       contig_mem: region@0 {
+> +                               reg = <0x0 0x4000000>;
+> +                               linux,default-contiguous-region;
+> +                       };
+> +
+> +                       /*
+> +                        * special region for framebuffer and
+> +                        * multimedia processing devices
+> +                        */
+> +                       display_mem: region@78000000 {
+> +                               reg = <0x78000000 0x4000000>;
+> +                               device = <&fb0 &scaller &codec>;
+> +                       };
+> +               };
+> +       };
+> +
+> +       /* ... */
+> +
+> +       fb0: fb@12300000 {
+> +               status = "okay";
+> +       };
+> +       scaller: scaller@12500000 {
+> +               status = "okay";
+> +       };
+> +       codec: codec@12600000 {
+> +               status = "okay";
+> +       };
+> +};
+> diff --git a/arch/arm/boot/dts/skeleton.dtsi b/arch/arm/boot/dts/skeleton.dtsi
+> index b41d241..cadc3b9 100644
+> --- a/arch/arm/boot/dts/skeleton.dtsi
+> +++ b/arch/arm/boot/dts/skeleton.dtsi
+> @@ -7,7 +7,12 @@
+>  / {
+>         #address-cells = <1>;
+>         #size-cells = <1>;
+> -       chosen { };
+> +       chosen {
+> +               contiguous-memory {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +               };
+> +       };
+>         aliases { };
+>         memory { device_type = "memory"; reg = <0 0>; };
+>  };
+> diff --git a/drivers/base/dma-contiguous.c b/drivers/base/dma-contiguous.c
+> index 01fe743..ce5f5d1 100644
+> --- a/drivers/base/dma-contiguous.c
+> +++ b/drivers/base/dma-contiguous.c
+> @@ -24,6 +24,9 @@
+>
+>  #include <linux/memblock.h>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/mm.h>
+>  #include <linux/mutex.h>
+>  #include <linux/page-isolation.h>
+> @@ -37,6 +40,7 @@ struct cma {
+>         unsigned long   base_pfn;
+>         unsigned long   count;
+>         unsigned long   *bitmap;
+> +       char            full_name[32];
+>  };
+>
+>  static DEFINE_MUTEX(cma_mutex);
+> @@ -133,6 +137,52 @@ static __init int cma_activate_area(struct cma *cma)
+>         return 0;
+>  }
+>
+> +/*****************************************************************************/
+> +
+> +#ifdef CONFIG_OF
+> +int __init cma_fdt_scan(unsigned long node, const char *uname,
+> +                               int depth, void *data)
+> +{
+> +       static int level;
+> +       phys_addr_t base, size;
+> +       unsigned long len;
+> +       struct cma *cma;
+> +       __be32 *prop;
+> +       int ret;
+> +
+> +       if (depth == 1 && strcmp(uname, "chosen") == 0) {
+> +               level = depth;
+> +               return 0;
+> +       }
+> +
+> +       if (depth == 2 && strcmp(uname, "contiguous-memory") == 0) {
+> +               level = depth;
+> +               return 0;
+> +       }
+> +
+> +       if (level != 2 || depth != 3 || strncmp(uname, "region@", 7) != 0)
+> +               return 0;
+> +
+> +       prop = of_get_flat_dt_prop(node, "reg", &len);
+> +       if (!prop || (len != 2 * sizeof(unsigned long)))
+> +               return 0;
+> +
+> +       base = be32_to_cpu(prop[0]);
+> +       size = be32_to_cpu(prop[1]);
+> +
+> +       pr_info("Found %s, memory base %lx, size %ld MiB\n", uname,
+> +               (unsigned long)base, (unsigned long)size / SZ_1M);
+> +
+> +       ret = dma_contiguous_reserve_area(size, base, 0, &cma);
+> +       if (ret == 0) {
+> +               strcpy(cma->full_name, uname);
+> +               if (of_get_flat_dt_prop(node, "linux,default-contiguous-region", NULL))
+> +                       dma_contiguous_default_area = cma;
+> +       }
+> +       return 0;
+> +}
+> +#endif
+> +
+>  /**
+>   * dma_contiguous_reserve() - reserve area(s) for contiguous memory handling
+>   * @limit: End address of the reserved memory (optional, 0 for any).
+> @@ -149,6 +199,10 @@ void __init dma_contiguous_reserve(phys_addr_t limit)
+>
+>         pr_debug("%s(limit %08lx)\n", __func__, (unsigned long)limit);
+>
+> +#ifdef CONFIG_OF
+> +       of_scan_flat_dt(cma_fdt_scan, NULL);
+> +#endif
+> +
+>         if (size_cmdline != -1) {
+>                 sel_size = size_cmdline;
+>         } else {
+> @@ -265,6 +319,80 @@ int __init dma_contiguous_add_device(struct device *dev, struct cma *cma)
+>         return 0;
+>  }
+>
+> +#ifdef CONFIG_OF
+> +
+> +#define MAX_CMA_MAPS   64
+> +
+> +static struct cma_map {
+> +       struct cma *cma;
+> +       struct device_node *node;
+> +} cma_maps[MAX_CMA_MAPS];
+> +static unsigned cma_map_count;
+> +
+> +static void cma_assign_device_from_dt(struct device *dev)
+> +{
+> +       int i;
+> +       for (i = 0; i < cma_map_count; i++) {
+> +               if (cma_maps[i].node == dev->of_node) {
+> +                       dev_set_cma_area(dev, cma_maps[i].cma);
+> +                       pr_info("Assigned CMA %s to %s device\n",
+> +                               cma_maps[i].cma->full_name,
+> +                               dev_name(dev));
+> +               }
+> +       }
+> +}
+> +
+> +static int cma_device_init_notifier_call(struct notifier_block *nb,
+> +                                        unsigned long event, void *data)
+> +{
+> +       struct device *dev = data;
+> +       if (event == BUS_NOTIFY_ADD_DEVICE && dev->of_node)
+> +               cma_assign_device_from_dt(dev);
+> +       return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block cma_dev_init_nb = {
+> +       .notifier_call = cma_device_init_notifier_call,
+> +};
+> +
+> +void scan_cma_nodes(void)
+> +{
+> +       struct device_node *parent = of_find_node_by_path("/chosen/contiguous-memory");
+> +       struct device_node *child;
+> +
+> +       if (!parent)
+> +               return;
+> +
+> +       for_each_child_of_node(parent, child) {
+> +               struct cma *cma = NULL;
+> +               int i;
+> +
+> +               for (i = 0; i < cma_area_count; i++) {
+> +                       char *p = strrchr(child->full_name, '/') + 1;
+> +                       if (strcmp(p, cma_areas[i].full_name) == 0)
+> +                               cma = &cma_areas[i];
+> +               }
+> +               if (!cma)
+> +                       continue;
+> +
+> +               for (i = 0;; i++) {
+> +                       struct device_node *node;
+> +                       node = of_parse_phandle(child, "device", i);
+> +                       if (!node)
+> +                               break;
+> +
+> +                       if (cma_map_count < MAX_CMA_MAPS) {
+> +                               cma_maps[cma_map_count].cma = cma;
+> +                               cma_maps[cma_map_count].node = node;
+> +                               cma_map_count++;
+> +                       } else {
+> +                               pr_err("CMA error: too many devices defined\n");
+> +                       }
+> +               }
+> +       }
+> +}
+> +#endif
+> +
+>  static int __init cma_init_reserved_areas(void)
+>  {
+>         int i;
+> @@ -275,6 +403,10 @@ static int __init cma_init_reserved_areas(void)
+>                         return ret;
+>         }
+>
+> +#ifdef CONFIG_OF
+> +       scan_cma_nodes();
+> +       bus_register_notifier(&platform_bus_type, &cma_dev_init_nb);
+> +#endif
+>         return 0;
+>  }
+>  core_initcall(cma_init_reserved_areas);
+> --
+> 1.7.9.5
+>
