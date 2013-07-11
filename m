@@ -1,168 +1,92 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
-Date: Thu, 11 Jul 2013 08:36:00 -0700
-Message-ID: <20130711153559.GB2198@dhcp-172-17-186-34.nvidia.com>
-References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1373553468-6564-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH v5 0/7] Sound support for at91sam9x5-wm8731 based boards
+Date: Thu, 11 Jul 2013 18:15:52 +0200
+Message-ID: <1373559359-31607-1-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1373553468-6564-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Boris BREZILLON <linux-arm@overkiz.com>, Tomasz Figa <t.figa@samsung.com>, Philip Avinash <avinashphilip@ti.com>, Tony Prisk <linux@prisktech.co.nz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-pwm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Richard Genoud <richard.genoud@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---gj572EiMnwbLXET9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patchset add sound on the at91sam9x5ek board.
+It's based on Nicolas Ferre's work in the 2.6.39 atmel patch for sam9x5:
+https://github.com/linux4sam/linux-at91/commit/0aa157c9e71ccccf3abc30fa37eb5c95b392978d
 
-On Thu, Jul 11, 2013 at 04:37:48PM +0200, Laurent Pinchart wrote:
-[...]
-> diff --git a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt b/Do=
-cumentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> index de0eaed..be09be4 100644
-> --- a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> @@ -4,9 +4,9 @@ Required properties:
->  - compatible: should be "atmel,tcb-pwm"
->  - #pwm-cells: Should be 3.  The first cell specifies the per-chip index
->    of the PWM to use, the second cell is the period in nanoseconds and
-> -  bit 0 in the third cell is used to encode the polarity of PWM output.
-> -  Set bit 0 of the third cell in PWM specifier to 1 for inverse polarity=
- &
-> -  set to 0 for normal polarity.
-> +  the third cell is used to encode the polarity of PWM output. Set the
-> +  PWM_POLARITY_NORMAL flag for normal polarity or the PWM_POLARITY_INVER=
-SED
-> +  flag for inverted polarity. PWM flags are defined in <dt-bindings/pwm/=
-pwm.h>.
->  - tc-block: The Timer Counter block to use as a PWM chip.
-> =20
->  Example:
+It needs Bo Chen's patchset on the generic dmaengine (topic/atmel branch
+on Mark's sound tree) and the SSC interrupts disabled (cf
+http://www.spinics.net/lists/arm-kernel/msg256901.html)
 
-I'd prefer for the original text to stay in place and the reference to
-the dt-bindings/pwm/pwm.h file to go below that block. The reason is
-that perhaps somebody will look at an older version of a given DT (with
-the numerical value) and not have access to the include and therefore
-not know which flag was being set by just looking at the documentation.
-I'm also not sure about what the plans are with respect to shipping
-device trees in a separate repository and if they are, whether that
-repository would ship the includes as well.
+Outstanding issue:
+If this machine driver will support more SoCs maybe we should name it differently.
 
-Another issue might be that people without access to recent versions of
-DTC won't be able to use the new #include feature, so keeping the
-documentation backwards compatible seems like a good idea.
 
-Perhaps the include file should even only be mentioned in the general
-PWM binding documentation.
+It has been tested on at91sam9g35ek, and should work on g15, g25, x25 and x35 also.
 
-Perhaps Grant and Rob (Cc'ed) can comment on how they want to handle
-this.
+patches applies on next-20130711
 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Docu=
-mentation/devicetree/bindings/pwm/pwm-samsung.txt
-> index ac67c68..bece18b 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-> @@ -24,8 +24,9 @@ Required properties:
->       - phandle to PWM controller node
->       - index of PWM channel (from 0 to 4)
->       - PWM signal period in nanoseconds
-> -     - bitmask of optional PWM flags:
-> -        0x1 - invert PWM signal
-> +     - bitmask of optional PWM flags as defined in <dt-bindings/pwm/pwm.=
-h>:
-> +        PWM_POLARITY_NORMAL - normal polarity
-> +	PWM_POLARITY_INVERSED - inverted polarity
+[I let the original signed-off from Nicolas and Uwe in place, I don't
+know if I should replace them by something like "originaly-signed-off-by"
+since the code has been changed.]
 
-This part mixes spaces and tabs for indentation. Please stick to spaces.
+Changes from v4:
+ * Move the rates constraints into the codec
+ * Hard code the DAI format since it cannot be changed anyway (and
+remove the DT bindings accordingly)
+ * Add some consistency in the functions naming (sam9x5ek/at91sam9x5ek/sam9x5)
+ * Retrieve the SSC id from the SSC controller phandle
+ * Clarify the atmel-ssc.txt documentation
+ * Develop audio-routing documentation
+ * Tidy up the includes in the machine driver
 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentatio=
-n/devicetree/bindings/pwm/pwm.txt
-> index 06e6724..38c357a 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
-> @@ -43,13 +43,15 @@ because the name "backlight" would be used as fallbac=
-k anyway.
->  pwm-specifier typically encodes the chip-relative PWM number and the PWM
->  period in nanoseconds.
-> =20
-> -Optionally, the pwm-specifier can encode a number of flags in a third ce=
-ll:
-> -- bit 0: PWM signal polarity (0: normal polarity, 1: inverse polarity)
-> +Optionally, the pwm-specifier can encode a number of flags (defined in
-> +<dt-bindings/gpio/gpio.h>) in a third cell:
-> +- PWM_POLARITY_NORMAL: use the normal PWM signal polarity
-> +- PWM_POLARITY_INVERSED: invert the PWM signal polarity
+Changes from v3:
+ * Remove the use of macros in device tree documentation.
 
-You'd have a hard time finding those in the GPIO header. =3D)
+Changes from v2:
+ * Change atmel,sam9x5-audio-wm8731 to atmel,sam9x5-wm8731-audio for
+consistency with sam9g20 machine driver.
+ * Use the snd_pcm_hw_constraint() API as suggested by Mark and Lars-Peter.
+ * Remove the unnecessary snd_soc_dapm_sync() call as Lars-Peter suggested.
+ * Add documentation for machine driver DT binding.
+ * Update atmel-ssc DT binding documentation.
+ * Add GPL license instead of just the "GPL" word (hope that's ok !)
 
-> diff --git a/include/dt-bindings/pwm/pwm.h b/include/dt-bindings/pwm/pwm.h
-> new file mode 100644
-> index 0000000..f82be30
-> --- /dev/null
-> +++ b/include/dt-bindings/pwm/pwm.h
-> @@ -0,0 +1,15 @@
-> +/*
-> + * This header provides constants for most PWM bindings.
-> + *
-> + * Most PWM bindings can include a flags cell as part of the PWM specifi=
-er.
-> + * In most cases, the format of the flags cell uses the standard values
-> + * defined in this header.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_PWM_PWM_H
-> +#define _DT_BINDINGS_PWM_PWM_H
-> +
-> +#define PWM_POLARITY_NORMAL			(0 << 0)
-> +#define PWM_POLARITY_INVERSED			(1 << 0)
-> +
-> +#endif
+Changes from v1-RFC:
+ * drop patches on SSC since Bo Chen already did the work
+ * reorder patches to have the machine driver first
+ * drop code already handled by the ASoC framework
+ * drop unneeded SND_ATMEL_SOC_PDC config selection
+ * use static snd_soc_card and  snd_soc_dai_link structures.
 
-I think this should go into a patch separate from the DT changes above
-because they'll likely go in via different trees. Or maybe they won't,
-but it'd still be good to introduce the header first and only then
-change the DTS files.
+Best regards,
+Richard.
 
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-[...]
->  enum pwm_polarity {
-> -	PWM_POLARITY_NORMAL,
-> -	PWM_POLARITY_INVERSED,
-> +	PWM_POLARITY_NORMAL =3D 0,
-> +	PWM_POLARITY_INVERSED =3D 1,
+Nicolas Ferre (1):
+  sound: sam9x5_wm8731: machine driver for at91sam9x5 wm8731 boards
 
-That's what the enum values will be by default, so there's no need to be
-explicit here.
+Richard Genoud (6):
+  sound: codec: wm8731: add rates constraints
+  Documentation: DT: update atmel SSC with DMA binding
+  ARM: AT91: DTS: sam9x5: add SSC DMA parameters
+  ARM: AT91: DTS: sam9x5ek: add WM8731 codec
+  ARM: AT91: DTS: sam9x5ek: enable SSC
+  ARM: AT91: DTS: sam9x5ek: add sound configuration
 
-Thierry
+ .../devicetree/bindings/misc/atmel-ssc.txt         |   23 ++-
+ .../bindings/sound/atmel-sam9x5-wm8731-audio.txt   |   41 ++++
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |    3 +
+ arch/arm/boot/dts/at91sam9x5ek.dtsi                |   24 +++
+ sound/soc/atmel/Kconfig                            |   10 +
+ sound/soc/atmel/Makefile                           |    2 +
+ sound/soc/atmel/sam9x5_wm8731.c                    |  207 ++++++++++++++++++++
+ sound/soc/codecs/wm8731.c                          |   57 +++++-
+ 8 files changed, 363 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-sam9x5-wm8731-audio.txt
+ create mode 100644 sound/soc/atmel/sam9x5_wm8731.c
 
---gj572EiMnwbLXET9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR3tDfAAoJEN0jrNd/PrOh6tMP/12mmN+pajUf3ikGnJYeJHol
-0eZF7EWGFYP6lg+NWaUsc4GvFByvCgD53d71qpYYTMXbFqZX/lw31O6v+eOCt7XY
-WvVkJq+NvAtV6PcaFRr/UGoWLJZ4QvtT7rLcQsixvbl7e7B7mL4w3Ag7YZqrXCJV
-1qVEssmHJjNG99MrlSYutrTTrEqDodfprFHT/JtqWBPvihu0x+1u5P/cLSxfFDk+
-lUPCVdLtipHKKSo1eKMDytP0tqkWK108zxu7+B+johetRsV1vAHdChZ4dUkkyKDm
-+ZrsEizNQ4EYfsM7e2m6Hta1ySMEhDtBvGna1IOnI5CW5OnC/p8EdytpfImBUDXl
-0zCMDfSFlCVwcqzYJ6XHI86ryvuEVg8p7TeNFLJEfhgNds6qXrXFjnadY/Gxx7qB
-RtKXIDSY0MiXGzXPIf1ES7MslRB3yR5uznu4Wu0TfB7cM/MhnflyoHk1LfoSKVs9
-jcx6mHgV24a5NpFmeGkdB8xgOVEhzhVcPtYA56K1icCBPI3xVsMzxRito+Guuic3
-sBtTiYGcgi6rVRnQSK53Ps1ngGaI8C8osyD5MQ5hxw7GkuXToDqfgKvFA3OFSTEz
-ENZZN9Jxkzn9PUeLH03oZatojOVB3nbb7fdaJrSeDBttdJjzyBqXi3njfRcUFK+x
-RruuYigIqd87+VkiHp44
-=VSBG
------END PGP SIGNATURE-----
-
---gj572EiMnwbLXET9--
+-- 
+1.7.10.4
