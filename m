@@ -1,114 +1,74 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v2 2/2] media: i2c: tvp7002: add OF support
-Date: Fri, 12 Jul 2013 00:04:38 +0200
-Message-ID: <51DF2BF6.30509@gmail.com>
-References: <1371923055-29623-1-git-send-email-prabhakar.csengg@gmail.com> <1371923055-29623-3-git-send-email-prabhakar.csengg@gmail.com> <51D05568.3090009@gmail.com> <CA+V-a8sW+D8trces5AXu__Lw9F7TO6fCcQW+LGZKRhA41uOEfw@mail.gmail.com>
+From: Ulrich Prinz <ulrich.prinz@googlemail.com>
+Subject: Re: [PATCH 9/9] clocksource: dw_apb_timer: special variant for rockchip
+ rk3188 timers
+Date: Fri, 12 Jul 2013 00:44:29 +0200
+Message-ID: <51DF354D.6050401@googlemail.com>
+References: <201307060051.09716.heiko@sntech.de> <201307060056.29370.heiko@sntech.de> <alpine.DEB.2.02.1307060153110.32106@ionos.tec.linutronix.de> <51D87E04.3060704@googlemail.com> <alpine.DEB.2.02.1307062233480.32106@ionos.tec.linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+V-a8sW+D8trces5AXu__Lw9F7TO6fCcQW+LGZKRhA41uOEfw@mail.gmail.com>
+In-Reply-To: <alpine.DEB.2.02.1307062233480.32106@ionos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, John Stultz <john.stultz@linaro.org>, Jamie Iles <jamie@jamieiles.com>, Dinh Nguyen <dinguyen@altera.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/2013 07:09 PM, Prabhakar Lad wrote:
-[...]
->>> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.tx=
-t
->>> b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->>> new file mode 100644
->>> index 0000000..9daebe1
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->>> @@ -0,0 +1,43 @@
->>> +* Texas Instruments TV7002 video decoder
->>> +
-[...]
->>> +
->>> +- ti,tvp7002-fid-polarity: Active-high Field ID polarity of the en=
-dpoint.
->>
->> I thought it was agreed 'field-even-active' would be used instead of
->> this device specific property. Did you run into any issues with that=
- ?
->>
->>
-> Argh I some how missed it out, sorry this should be 'field-even-activ=
-e'
+Hey guys,
 
-OK.
+according the dw_apb_timer I need your statement...
 
->> And include/media/tvp70002.h:
+Am 06.07.2013 23:00, schrieb Thomas Gleixner:
+> Ulrich,
+> 
+> On Sat, 6 Jul 2013, Ulrich Prinz wrote:
+> 
+>> I got the message. With modifying the existing driver to support more
+>> function pointers in its system struct and assigning them at the
+>> beginning, and using them on runtime, these quirks are obsolete.
+> 
+> Correct.
+>  
 >>
->>   * fid_polarity:
->>   *                      0 ->  the field ID output is set to logic 1=
- for an
->> odd
->>   *                           field (field 1) and set to logic 0 for=
- an even
->>   *                           field (field 0).
->>   *                      1 ->  operation with polarity inverted.
->>
->>
->> Do you know if the chip automatically selects video sync source
->> (sync-on-green
->> vs. VSYNC/HSYNC) and there is no need to configure this on the analo=
-gue
->> input
->> side ? At least the driver seems to always select the default SOGIN_=
-1 input
->> (TVP7002_IN_MUX_SEL_1 register is set only at initialization time).
->>
-> Yes the driver is selecting the default SOGIN_1 input.
->
->> Or perhaps it just outputs on SOGOUT, VSOUT, HSOUT lines whatever is=
- fed to
->> its analogue inputs, and any further processing unit need to determi=
-ne what
->> synchronization signal is present and should be used ?
->>
->
-> Yes that correct, there is a register (Sync Detect Status) which
-> detects the sync for you.
->
->> I suspect that we don't need, e.g. another endpoint node to specify =
-the
->> configuration of the TVP7002 analogue input interface, that would co=
-ntain
->> a property like video-sync.
->>
->>
-> If I understand correctly you mean if there are two tvp7002 devices c=
-onnected
-> we don=92t need to specify video-sync property, but my question how d=
-o we
-> specify this property in common then ?
+>> Adding more function pointers to a system relevant structure, doubling
+>> the number of functions and such didn't look non-invasive to me.
+> 
+> Well, it always depends. If there is a single place to deal with some
+> oddball hardware, a flag is often the simplest way to go.
+> 
+> If you have to add 10 conditionals in several functions then in a
+> first step converting the existing implementation into function
+> pointer calls and then in the next step providing new implementations
+> for your hardware is most of the time simpler and cleaner.
+> 
+>> But, I totally agree with your argumentation and I even wanted to do it
+>> in the way you explained in your replies. Just the courage was missing I
+>> guess :)
+> 
+> Gut feelings are often a better guidance than our self-doubting
+> intellect. :)
 
-No, I thought about two port sub-nodes of a single device node, one for=
- the
-TVP7002 video input and one for the output. But it seems there is no ne=
-ed
-for that, i.e. to specify the input configuration statically in the=20
-firmware.
-The chip detects the signals automatically, i.e. it uses whatever is=20
-available,
-and it allows querying the selection status at run time. What would rea=
-lly
-need to be configured statically in DT in that case then ? Some initial=
-=20
-video
-sync configuration ? I guess it could be well hard coded in the driver,=
-=20
-since
-the hardware does run time detection anyway.
+You can look at my github repo for the new driver, rewriting the
+interface as discussed above:
+https://github.com/Astralix/linux-rockchip/blob/wip/dw_timer64/drivers/clocksource/dw_apb_timer.c
 
-It there are real use cases I gues we could add video-sync property or=20
-similar,
-besides the existing signal polarity properties.
+Summary: It is a 90% rewrite of the complete dw_apb_timer.c and
+modifications of dw_apb_timer_of.c and dw_apb_timer.h and the related
+x86 drivers are needed.
+And after that the 64bit functionality is still not given as the
+existing structures do not take it. But for now scheduler doesn't
+support 64bit either, I guess.
 
---
-Thanks,
-Sylwester
+The drivers local struct stays, but instead of carrying pointers to
+registers it now consists of function pointers. This could be used to
+fit almost any kind of timer.
+
+I would really appreciate your comments. Sure I need to clean up a bit,
+but we're still testing. But before investing more time into that code I
+need you comment if I should continue or split to a separate driver for
+these kind of timers.
+
+Thanks for any comments
+
+Regards
+	Ulrich
