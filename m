@@ -1,131 +1,73 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
-Date: Fri, 12 Jul 2013 10:24:42 -0700
-Message-ID: <20130712172441.GB9620@dhcp-172-17-186-34.nvidia.com>
-References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1373553468-6564-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <51DEEE15.7040801@wwwdotorg.org>
- <3211864.2dENa1E110@avalon>
- <51E01547.4030204@wwwdotorg.org>
+Subject: Re: [PATCH V2] pci: exynos: split into two parts such as Synopsys
+ part and Exynos part
+Date: Fri, 12 Jul 2013 10:31:02 -0700
+Message-ID: <20130712173101.GA9677@dhcp-172-17-186-34.nvidia.com>
+References: <001201ce7dfa$716b3370$54419a50$@samsung.com>
+ <51DFD3F3.9050704@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
-Return-path: <linux-omap-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51E01547.4030204@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, Philip Avinash <avinashphilip@ti.com>, Boris BREZILLON <linux-arm@overkiz.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <51DFD3F3.9050704@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Mohit KUMAR <Mohit.KUMAR@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 
---mxv5cy4qt+RJ9ypb
+--SLDf9lqlvOQaIe6s
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 12, 2013 at 08:40:07AM -0600, Stephen Warren wrote:
-> On 07/12/2013 04:41 AM, Laurent Pinchart wrote:
-> > Hi Stephen,
+On Fri, Jul 12, 2013 at 03:31:23PM +0530, Kishon Vijay Abraham I wrote:
+> Hi,
+>=20
+> On Thursday 11 July 2013 11:19 AM, Jingoo Han wrote:
 [...]
-> > What about splitting it in three patches that
-> >=20
-> > - add the include/dt-bindings/pwm/pwm.h header, and update include/linu=
-x/pwm.h=20
-> > and Documentation/devicetree/bindings/pwm/pwm.txt
-> >=20
-> > - update the rest of the documentation
-> >=20
-> > - update the .dts files
+> >  	/* set the number of lines as 4 */
+> > -	readl_rc(pp, dbi_base + PCIE_PORT_LINK_CONTROL, &val);
+> > +	dw_pcie_readl_rc(pp, dbi_base + PCIE_PORT_LINK_CONTROL, &val);
+> >  	val &=3D ~PORT_LINK_MODE_MASK;
+> >  	val |=3D PORT_LINK_MODE_4_LANES;
+> > -	writel_rc(pp, val, dbi_base + PCIE_PORT_LINK_CONTROL);
+> > +	dw_pcie_writel_rc(pp, val, dbi_base + PCIE_PORT_LINK_CONTROL);
 >=20
-> I think that sounds reasonable.
+> I guess here we need to make this configurable. In Jacinto6 this can be e=
+ither
+> single lane or double lane. Maybe we should have a dt property to specify=
+ the
+> number of lanes?
 
-Shouldn't the addition of include/dt-bindings/pwm/pwm.h be separate from
-its inclusion in include/linux/pwm.h so that it can be moved more easily
-(cherry-picked) to a separate repository?
-
-> >>> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> >>>
-> >>>  enum pwm_polarity {
-> >>>
-> >>> -	PWM_POLARITY_NORMAL,
-> >>> -	PWM_POLARITY_INVERSED,
-> >>> +	PWM_POLARITY_NORMAL =3D 0,
-> >>> +	PWM_POLARITY_INVERSED =3D 1,
-> >>>
-> >>>  };
-> >>
-> >> Rather than manually editing that to ensure the enum matches the DT bi=
-ndings
-> >> header, the whole point of making a separate <dt-bindings/...> directo=
-ry was
-> >> that drivers could include the binding header files directly to avoid =
-having
-> >> to duplicate the constant definitions. Can't <linux/pwm.h> include <dt-
-> >> bindings/pwm.h> and remove that enum?
-> >=20
-> > We could do that, but we would then need to modify all drivers to repla=
-ce=20
-> > enum_pwm_polarity with unsigned int. Thierry, what's your opinion on th=
-is ?
->=20
-> Or perhaps we could keep the enums around, but force the values to match
-> the DT constants:
->=20
-> enum pwm_polarity {
-> 	PWM_POLARITY_NORMAL =3D PWM_POLARITY_NORMAL,
-> 	PWM_POLARITY_INVERTED =3D PWM_POLARITY_INVERTED,
-> };
->=20
-> (although obviously you'd need to avoid the enum and DT constants having
-> the same name).
-
-I think I've seen stuff like the following done in a few header files to
-keep compatibility between enums and defines.
-
-	enum foo {
-		BAR,
-	#define BAR BAR
-		BAZ,
-	#define BAZ BAZ
-	};
-
-Which, as I understand it, won't work in this case because DTC can only
-cope with plain cpp files?
-
-> Although this brings up one point: let's say we support ACPI/.. bindings
-> in the future. The enum possibly can't match the binding values from
-> every different kind of binding definition (DT, ACPI, ...) so perhaps
-> rather than changing the enum definition in <linux/pwm.h>, what we
-> should be doing is mapping between the different name-spaces in whatever
-> of_xlate function exists for the PWM flags cell. That would be more
-> flexible.
-
-I'm not quite sure what exactly you are suggesting here. Can you
-elaborate?
+On Tegra we use nvidia,num-lanes to specify the lane count for each
+port. Perhaps standardizing on a generic num-lanes property would make
+sense? Cc'ing devicetree-discuss mailing list, maybe somebody can
+provide some guidance.
 
 Thierry
 
---mxv5cy4qt+RJ9ypb
+--SLDf9lqlvOQaIe6s
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iQIcBAEBAgAGBQJR4DvZAAoJEN0jrNd/PrOhZ9kQAJzl3t7DsDVvOC//YrQZ8Bny
-ag+GuEh+tJNlgs6ghLXTWfPTKp+Sj2iplkGC/nP7ornVO2Bu+tZbRUwAHlKiu0x3
-u+Sk/N/XdvM+ZhEy3PKNPrPWMaB1IS2Fm3Ok7uXJFuIRSUWwiS6k/Wuem0bhw2FV
-h0Pgz+m8RYefidZzGtFJWDSW/+Y1BiDeO9tGFUf/Nf+M7ekM8P5B54LO1Ln7dSdZ
-7K3ZpP5v8A0KnczHu7znsLARNtLW1meWl01u4MnHMuaXzysRNvBYndi/1jg/R2Gt
-ovQlIjiHwyWIqF3Ch50fSpDV+wLZelxTGFt6FslMPoOaXR1NXjymYr7PZr2H4abq
-isxoHC+6gnRHTdIdegxwb2tm2fzL2Knaebhy124Q1YnkTuIzUoMrrtQ6uBvvrcO/
-XaMtSzFcNgfBQOwACUI5jrsaGrJmU8LX1yV9JTDCFLHzhUpThz9YrIExA/i2TDdQ
-nKahbC9jrLOe9w47peDU/Xq5kGujPa0LZ5CGv5MA20Xuhlo/aQDL7AKVMoNV77ND
-ZeNhN5PLels7uR2S5LoIpvVQOfKd6Ju9FVUgifCZAXJCQDEPGRGLffF8/zMR44Sb
-QjKKlj96pX3foqUPgKyMR2T93dg4nOu8irOY7SPMbH2gBEIoCns5o0vMv+0ugtGn
-3sFTDcZL4LTFYPxWbbzn
-=hmW5
+iQIcBAEBAgAGBQJR4D1VAAoJEN0jrNd/PrOhb+8P/R9XTnmRnagQbeovzw36VZeY
+UFkIARUXseo9iQj6FHp+WjgQMwYV9PEe2r97NPOD2DAWTe/qIXJVfQdMBAUPjFgJ
+oueXtJIu9iG7QIKNxPI/tqTKVgQWkE+8FvxQfaH1oHZZ9ydMEn/WevP2f6jY+ZK8
+1YMCzaG6aem4QtHe6g2B56yHZafxOi59vYIVooGKmdMkyh25cnRVzm4/5K7aBV+Y
+s97UAbeeWc86qaXoTVkdIjyu57Pdv6fNqFeDRG8r3oSRMTRsgKQuUcy+rEUpGCaX
+wrATPfy82/jCAio0wKULPoxHxkoNFowf3pBl+fO/id0609Ul93OzbKWA+QavTHFq
+y9liN8BfRWA5FUjEzAelJPrxK3kc4HHTx55dsl9P71Tw4gMjwUJlD2NJrXmMcbzD
+JoJXXSGqAKVJFXp4+lp+O8KKmTvGNag8CpWsOIEgKIiJaaYNlvsMsM3OwyFq35GM
+9BoFUfB/X5eeHh1+jwr+ql7dcDnaLryoZQtLw8Ojx7NlRVivs/D8TKojxcOBfVtV
+CFm+hKjnly5yViBNwg4nwLxtfw7+7EYGuM4vSESPJspvCqUQQjZDA9/n01DDPlY1
+1Kc7BgPDV/Gx76A2Wt3qgsanJL2SrNzeRpPlC3sJwaNhID7XfIWNh43SLDWOeQT1
+d6feosqRes5b5GqnBe77
+=RM/u
 -----END PGP SIGNATURE-----
 
---mxv5cy4qt+RJ9ypb--
+--SLDf9lqlvOQaIe6s--
