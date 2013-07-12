@@ -1,77 +1,71 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH] usb: phy: samsung-usb2: Toggle HSIC GPIO from device tree
-Date: Fri, 12 Jul 2013 09:48:54 +0900
-Message-ID: <001701ce7e99$95b2c460$c1184d20$@samsung.com>
-References: <1373416455-30358-1-git-send-email-jwerner@chromium.org>
- <000901ce7dc8$90a819b0$b1f84d10$@samsung.com>
- <CAODwPW-=bo2BqcHopY32N76p6DDGNDmCrKFo1R4gEEZhsG-DYg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAODwPW-=bo2BqcHopY32N76p6DDGNDmCrKFo1R4gEEZhsG-DYg@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>, 'Dongjin Kim' <tobetter@gmail.com>
-Cc: 'Julius Werner' <jwerner@chromium.org>, 'LKML' <linux-kernel@vger.kernel.org>, 'Felipe Balbi' <balbi@ti.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Praveen Paneri' <p.paneri@samsung.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Tushar Behera' <tushar.behera@linaro.org>, 'Doug Anderson' <dianders@chromium.org>, 'Olof Johansson' <olofj@chromium.org>, 'Vincent Palatin' <vpalatin@chromium.org>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Fabio Estevam' <festevam@gmail.com>, 'Philipp Zabel' <p.zabel@pengutronix.de>, Yulgon Kim <yulgon.kim@samsung.com>, Jingoo Han <jg1.han@samsung.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH] MAINTAINERS: Remove Grant Likely
+Date: Fri, 12 Jul 2013 01:52:16 +0100
+Message-ID: <1373590336-14560-1-git-send-email-grant.likely@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net
+Cc: Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, July 12, 2013 6:46 AM, Julius Werner wrote:
-> 
-> Hi Jingoo,
-> 
-> Yeah, I followed that discussion back then, but it seems to have
-> stalled a little (at least the HSIC patches haven't been picked up in
-> any kernel.org repo yet to my knowledge).
-> 
-> The problem is that I think these approaches cannot work reliably. I
-> agree that it would be nice to control the HSIC device from its own
-> driver, and have spent quite some time playing around with the
-> usb/misc/usb3503.c driver to try to make this work... but there's a
-> timing dependency here that you just can't model correctly with
-> independent drivers.
-> 
-> If the HSIC device is already active during boot (e.g. because it was
-> used by firmware), there's always a chance that the USB stack will
-> come up before the driver that resets it does. The device will be
-> enumerated as normal, and when the other driver later pulls the reset
-> signal the USB stack will not notice because there is no real
-> disconnect detection on HSIC. Only when you eventually try to send
-> another transfer to the device will you start to get timeouts, and the
-> newly reset device will not be able to reenumerate because the host
-> never asks it to.
-> 
-> I really don't see how you could solve this without putting some kind
-> of synchronization mechanism in the USB drivers. So this leaves
-> ehci-s5p and phy-samsung-usb2 as the only possible places, and I chose
-> the latter since all the host-side HSIC initialization is also there
-> already. I think if you think of it as "reset whatever is on the other
-> side of this PHY", it's okay to put it as an optional feature into the
-> PHY driver.
+Unfortunately, I'm no longer to spend the time needed on maintainership.
+It is time for me to step aside and pass maintainership to other
+engineers. I'm not disappearing from Linux development, but it would be
+irresponsible for me to hold onto a job that I am unable to do.
 
-CC'ed Tomasz Figa, Dongjin Kim, Yulgon Kim
+GPIO and SPI are in good hands with Linus and Mark. Rob Herring has a
+really good grasp on the DT core code, and in the last week there have
+been several volunteers to create and maintain a DT bindings tree. You
+can expect to see an email about that hit the list shortly.
 
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+---
+ MAINTAINERS | 8 --------
+ 1 file changed, 8 deletions(-)
 
-Hi Tomasz, Dongjin,
-
-Julius Werner wants to put 'SMSC 3503 hub reset on Arndale board'
-to 'phy-samsung-usb*.c' files, because there is a timing dependency
-above mentioned.
-The following is the original patch sent by Julius Werner two day ago.
-(http://www.spinics.net/lists/linux-samsung-soc/msg20250.html)
-
-Previously, Olof mentioned that 'drivers/platform/arm/' would be used.
-(http://patches.linaro.org/16856/)
-
-Also, another way was mentioned by Fabio Estevam, using 
-'drivers/reset/gpio-reset.c' which is not merged yet.
-(http://permalink.gmane.org/gmane.linux.drivers.devicetree/36830)
-
-I think that 'phy-samsung-usb*.c' files are not a good place.
-However, Julius Werner's comment looks reasonable enough.
-
-If you have a comment, please feel free to share it. :)
-Thank you.
-
-Best regards,
-Jingoo Han
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 250dc97..339fcdd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3564,10 +3564,8 @@ F:	drivers/isdn/gigaset/
+ F:	include/uapi/linux/gigaset_dev.h
+ 
+ GPIO SUBSYSTEM
+-M:	Grant Likely <grant.likely@linaro.org>
+ M:	Linus Walleij <linus.walleij@linaro.org>
+ S:	Maintained
+-T:	git git://git.secretlab.ca/git/linux-2.6.git
+ F:	Documentation/gpio.txt
+ F:	drivers/gpio/
+ F:	include/linux/gpio*
+@@ -4411,8 +4409,6 @@ F:	drivers/irqchip/
+ 
+ IRQ DOMAINS (IRQ NUMBER MAPPING LIBRARY)
+ M:	Benjamin Herrenschmidt <benh@kernel.crashing.org>
+-M:	Grant Likely <grant.likely@linaro.org>
+-T:	git git://git.secretlab.ca/git/linux-2.6.git irqdomain/next
+ S:	Maintained
+ F:	Documentation/IRQ-domain.txt
+ F:	include/linux/irqdomain.h
+@@ -5945,11 +5941,8 @@ F:	Documentation/i2c/busses/i2c-ocores
+ F:	drivers/i2c/busses/i2c-ocores.c
+ 
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE
+-M:	Grant Likely <grant.likely@linaro.org>
+ M:	Rob Herring <rob.herring@calxeda.com>
+ L:	devicetree-discuss@lists.ozlabs.org (moderated for non-subscribers)
+-W:	http://fdt.secretlab.ca
+-T:	git git://git.secretlab.ca/git/linux-2.6.git
+ S:	Maintained
+ F:	Documentation/devicetree
+ F:	drivers/of
+@@ -7623,7 +7616,6 @@ F:	drivers/clk/spear/
+ 
+ SPI SUBSYSTEM
+ M:	Mark Brown <broonie@kernel.org>
+-M:	Grant Likely <grant.likely@linaro.org>
+ L:	spi-devel-general@lists.sourceforge.net
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
+ Q:	http://patchwork.kernel.org/project/spi-devel-general/list/
+-- 
+1.8.1.2
