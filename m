@@ -1,54 +1,115 @@
-From: Daniel Drake <dsd@laptop.org>
-Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
-Date: Fri, 12 Jul 2013 09:10:49 -0600
-Message-ID: <CAMLZHHQGZvDssY-YxQ3ZW8FYhpG-H1-VbokOid33socRSPrMNw@mail.gmail.com>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
-	<1373352166-10064-2-git-send-email-zhangwm@marvell.com>
-	<20130709124900.GG11908@titan.lakedaemon.net>
-	<CAN1soZxiOh6TpbUOCUzK8gNwmvjbT3ihkUWaw8tuZ7md+NVA2g@mail.gmail.com>
-	<20130710122433.GO11908@titan.lakedaemon.net>
-	<CAN1soZzMvront1-jcBW6-uRKNs0OZNGnmiOjKGZSM28bViB_8A@mail.gmail.com>
-	<20130710215041.GR11908@titan.lakedaemon.net>
-	<CAN1soZzuiukY9qASFNcH0k=zH8=uT=71bKejPss44FCzNy=X-A@mail.gmail.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH RFC 0/8] MPC512x DMA slave s/g support, OF DMA lookup
+Date: Fri, 12 Jul 2013 17:26:13 +0200
+Message-ID: <1373642781-32631-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAN1soZzuiukY9qASFNcH0k=zH8=uT=71bKejPss44FCzNy=X-A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Bergmann Arnd <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Neil Zhang <zhangwm@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 11, 2013 at 5:54 PM, Haojian Zhuang
-<haojian.zhuang@gmail.com> wrote:
->> Well, Daniel Drake spoke up for OLPC.  Does that count?
->
-> We don't know they used DT on Marvell MMP2/MMP3. So they don't have DTS file
-> in kernel, we could use both old name & new name in driver.
+blurb is below the stats
 
-You are listed as one of the MMP maintainers in the MAINTAINERS file
-and I have sent you several patches in the few 3 weeks which make
-OLPC's usage of MMP + DT pretty obvious. As a maintainer I believe you
-are supposed to review the patches too. hint hint ;)
+Alexander Popov (1):
+  powerpc: mpc512x_dma: add support for data transfers between memory
+    and i/o memory
 
-My request to avoid breaking compatibility actually comes as a
-two-prong request.
+Gerhard Sittig (6):
+  dma: mpc512x: fix start condition in execute()
+  dma: mpc512x: support 'terminate all' control request
+  dts: mpc512x: prepare for preprocessor support
+  dma: mpc512x: use symbolic specifiers for DMA channels
+  dma: mpc512x: register for device tree channel lookup
+  HACK mmc: mxcmmc: enable clocks for the MPC512x
 
-I would prefer to see these compatible properties stay the same as it
-seems like changing them has little purpose/benefit - and there *will*
-become a later point where changing them causes major breakage.
+Lars-Peter Clausen (1):
+  dma: of: Add common xlate function for matching by channel id
 
-At the same time I see that there have been recent efforts to remove
-MMP2 platform code and make it entirely DT-driven, which could also
-generate some compatibility concerns. However, such movements are much
-appreciated and I think they will become increasingly necessary as we
-bring up the devices on the MMP3 SoC to a fuller extent, so please
-continue :) I would not want to discourage you from breaking
-compatibility when *that* type of work needs to be done.
+ .../devicetree/bindings/dma/mpc512x-dma.txt        |   55 ++++++
+ arch/powerpc/boot/dts/ac14xx.dts                   |    2 +-
+ arch/powerpc/boot/dts/include/dt-bindings          |    1 +
+ arch/powerpc/boot/dts/mpc5121.dtsi                 |    7 +-
+ arch/powerpc/boot/dts/mpc5121ads.dts               |    2 +-
+ arch/powerpc/boot/dts/pdm360ng.dts                 |    2 +-
+ drivers/dma/mpc512x_dma.c                          |  181 +++++++++++++++++++-
+ drivers/dma/of-dma.c                               |   47 +++++
+ drivers/mmc/host/mxcmmc.c                          |   41 +++--
+ include/dt-bindings/dma/mpc512x-dma.h              |   21 +++
+ include/linux/of_dma.h                             |    4 +
+ 11 files changed, 336 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+ create mode 120000 arch/powerpc/boot/dts/include/dt-bindings
+ create mode 100644 include/dt-bindings/dma/mpc512x-dma.h
 
 
-So: breaking compatibility is actually OK from my standpoint, but only
-for now (while we stabilise), and I would advise/appreciate that it
-only be done in cases where there is a clear purpose and benefit.
+this series
+- introduces slave s/g support (that's support for DMA transfers which
+  involve peripherals in contrast to mem-to-mem transfers)
+- adds device tree based lookup support for DMA channels
+- combines floating patches and related feedback which already covered
+  several aspects of what the suggested LPB driver needs, to demonstrate
+  how integration might be done
 
-Daniel
+
+Alexander, I'd suggest that you pickup this series and
+- squash part 2 (start condition) and optionally part 3 (terminate all)
+  into part 1 (your slave s/g introduction)
+- drop part 8 (SD card demo) as it was already NAKed and will be
+  obsolete with correct COMMON_CLK support, but was useful during test
+  to have one more DMA client on the MPC512x platform
+- put your SCLPC support on top of the then OF capable DMA driver
+- please leave the preprocessor support for DTS files separate from the
+  DMA related DTS part, as it will be part of another series as well
+  (clocks) or might get picked up separately for its being useful or
+  even a dependency in other ways (GPIOs, interrupts)
+
+Lars, there is a checkpatch warning about a line longer than 80
+characters in the common xlate part -- I didn't dare to change your
+submission, and the part included here is verbatim from your patchwork
+2331091 (original submission) and 2555701 (resend), is there a followup
+which you can provide or point us to?
+
+Arnd, this version addresses your concerns in Anatolij's earlier
+submissions:
+- the DMA controller really maps peripheral requesters 1:1 to DMA
+  channels, there's no other mapping or flexibility involved
+- OF registration in the DMA controller's driver now is non-fatal for
+  compatibility with older device trees
+- the device tree binding is documented (even if it's in line with the
+  generic DMA binding, being explicit is good, I guess)
+
+Vinod, would you take these DMA related patches when Alexander's updated
+version has passed review?  That's what I understood from Lars so far.
+
+
+the series is based on v3.10, each step in the series was build-tested,
+the series' result including the mxcmmc hack was run-tested with the
+commands below, moving 170MB of data and using DMA during transfers, the
+numbers translate to 1.6MB/s throughput for the SD card and some 62.5KB
+per DMA IRQ on average (does this help verify plausibility?)
+
+  $ find /media/mmcblk0p1/ -type f | xargs time wc
+    ...
+    532086   3032411 173164032 total
+  real    1m 47.41s
+  user    0m 8.08s
+  sys     0m 1.69s
+  $ grep -i dma /proc/interrupts 
+   65:       2716      IPIC Level     mpc512x_dma
+  $ grep -i mmc /proc/interrupts 
+   20:       5489      IPIC Level     mxc-mmc
+
+-- 
+1.7.10.4
