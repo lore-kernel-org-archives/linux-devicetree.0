@@ -1,49 +1,39 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: Re: Reference voltages for ADC channels
-Date: Fri, 12 Jul 2013 15:14:25 +0200
-Message-ID: <51E00131.7080909@digi.com>
-References: <51DA588A.5050609@digi.com>
+From: Mark Jackson <mpfj-list@newflow.co.uk>
+Subject: Re: [PATCHv2] am33xx: cpsw: default to ethernet hwaddr from efuse
+ if not defined in dt
+Date: Fri, 12 Jul 2013 15:33:59 +0100
+Message-ID: <51E013D7.7060301@newflow.co.uk>
+References: <1358461134-13452-1-git-send-email-jacmet@sunsite.dk> <50F8DA3A.3090406@ti.com> <51DAB39C.7090106@newflow.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51DA588A.5050609-i7dp0qKlBMg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <51DAB39C.7090106@newflow.co.uk>
+Sender: netdev-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: Peter Korsgaard <jacmet@sunsite.dk>, linux-omap@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, hvaibhav@ti.com, richardcochran@gmail.com, tony@atomide.com, michal.bachraty@gmail.com, michal.bachraty@streamunlimited.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 08/07/13 13:42, Mark Jackson wrote:
+> On 18/01/13 05:14, Mugunthan V N wrote:
+>> On 1/18/2013 3:48 AM, Peter Korsgaard wrote:
+>>> When booting with CONFIG_ARM_APPENDED_DTB (either because of using an old
+>>> U-Boot, not wanting the hassle of 2 files or when using Falcon fast boot
+>>> mode in U-Boot), nothing updates the ethernet hwaddr specified for the
+>>> CPSW slaves, causing the driver to use a random hwaddr, which is some times
+>>> troublesome.
+>>>
+>>> The am33xx has unique ethernet hwaddrs programmed in the efuse, so it makes
+>>> more sense to default to these rather than random ones. Add a fixup step
+>>> which adds mac-address dt properties using the efuse addresses if the DTB
+>>> didn't contain valid ones.
+>>>
+>>> Signed-off-by: Peter Korsgaard <jacmet@sunsite.dk>
+>>>
+>>
+>> This implementation looks fine.
+>> Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
+> 
+> Tested-by: Mark Jackson <mpfj-list@newflow.co.uk>
 
-On 07/08/2013 08:13 AM, Hector Palacios wrote:
-> Greetings,
->
-> The other day at linux-iio-u79uwXL29TY76Z2rM5mHXA-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org we=
- discussed the
-> possibility of having ADC channels voltage references moved to the DT=
- [1].
->
-> In Freescale's i.MX28 and i.MX23, at least, the CPU has 16 ADC channe=
-ls some of which
-> are dedicated to measure internal stuff, like CPU temperature and vol=
-tages. Some
-> channels have different fixed divisors and so different reference vol=
-tages.
-> These reference voltages (in mV) are needed to calculate the scale to=
- show through the
-> sysfs IIO interface, so that a user can easily compute the real measu=
-red voltage out
-> of the sampled data.
->
-> The proposed DT entry also appears at [1].
-> We would love to here opinions about it.
->
-> [1] http://www.spinics.net/lists/linux-iio/msg08973.html
-
-Any opinion about the suggestion of moving ADC reference voltages into =
-the device tree?
-
-Thanks
---=20
-H=E9ctor Palacios
+Is this ever going to be put into the mainline code ?
