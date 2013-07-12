@@ -1,83 +1,49 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: Fixed PHY Device Tree usage?
-Date: Fri, 12 Jul 2013 15:04:49 +0200
-Message-ID: <20130712150449.4077feb4@skate>
-References: <20130709183312.6c4d052d@skate>
-	<CAGVrzcZ7ZLSDy5sTUR_XuSAUH=5q8ddiXx5n1y680WwGrdFfTw@mail.gmail.com>
-	<1733937.SiPWt3mDlH@lenovo>
-	<20130710182216.0dcfaaaf@skate>
-	<CAGVrzcbt302tTM3pprnhJz7YykUzcW=XSMCr_W=m1zWiVBX8kw@mail.gmail.com>
-	<20130710183951.09a0bcea@skate>
-	<CAGVrzcasmv6KvEN+okkcQA9CHjCtuRqcd=AvKLiFbPXiyS-P=w@mail.gmail.com>
-	<20130712135612.0f230c1d@skate>
-	<CAGVrzcax7gWCbdDKLdDjQDV_fOsShh+VZ9ODKO2KUBPm-zQgpQ@mail.gmail.com>
+From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Subject: Re: Reference voltages for ADC channels
+Date: Fri, 12 Jul 2013 15:14:25 +0200
+Message-ID: <51E00131.7080909@digi.com>
+References: <51DA588A.5050609@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcax7gWCbdDKLdDjQDV_fOsShh+VZ9ODKO2KUBPm-zQgpQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>
-Cc: netdev <netdev@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory =?UTF-8?B?Q2zDqW1lbnQ=?= <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Lior Amsalem <alior@marvell.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely" <grant.likely@secretlab.ca>, afleming@freescale.com
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51DA588A.5050609-i7dp0qKlBMg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Florian Fainelli,
+Hello,
 
-On Fri, 12 Jul 2013 13:05:59 +0100, Florian Fainelli wrote:
+On 07/08/2013 08:13 AM, Hector Palacios wrote:
+> Greetings,
+>
+> The other day at linux-iio-u79uwXL29TY76Z2rM5mHXA-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org we=
+ discussed the
+> possibility of having ADC channels voltage references moved to the DT=
+ [1].
+>
+> In Freescale's i.MX28 and i.MX23, at least, the CPU has 16 ADC channe=
+ls some of which
+> are dedicated to measure internal stuff, like CPU temperature and vol=
+tages. Some
+> channels have different fixed divisors and so different reference vol=
+tages.
+> These reference voltages (in mV) are needed to calculate the scale to=
+ show through the
+> sysfs IIO interface, so that a user can easily compute the real measu=
+red voltage out
+> of the sampled data.
+>
+> The proposed DT entry also appears at [1].
+> We would love to here opinions about it.
+>
+> [1] http://www.spinics.net/lists/linux-iio/msg08973.html
 
-> I am talking about scanning the MDIO bus DT nodes, not the entire DT.
-> That job is already done by of_mdiobus_probe() to register PHY
-> devices, so having a central point where the knowledge of how to treat
-> PHY deivces could be here I guess.
+Any opinion about the suggestion of moving ADC reference voltages into =
+the device tree?
 
-So, I guess your idea is to call of_mdiobus_register() from
-drivers/net/phy/fixed.c:fixed_mdio_bus_init(). But then, what DT node
-will you be passing to of_mdiobus_register() ? As a reminder, this
-function takes as a second argument the DT node that contains the
-various PHYs as sub-nodes.
-
-In all the other PHY drivers, the MDIO bus node as a compatible string,
-so the usual platform_driver/platform_device mechanism kicks in, and
-calls the ->probe() function, passing the DT node of the MDIO bus,
-which is then used by the PHY driver ->probe() function as the second
-argument of of_mdiobus_register().
-
-But the fixed.c PHY driver is not a platform_driver, and in our
-discussion, we mentioned that it wouldn't make sense to have a
-compatible string for the fixed MDIO bus DT node.
-
-So I'm still unsure *which* DT node you'll pass as the second argument
-of of_mdiobus_register() :-)
-
-
-> Well either we go with some specific compatible property like
-> "ethernet-phy-fixed" for instance, or we simply add a boolean property
-> to the node, so a fixed PHY would either look like this:
-> 
-> phy {
->          compatible = "linux,ethernet-phy-fixed";
->          speed = <1000>;
->          duplex = <1>;
->          pause;
->          asym-pause;
-> };
-> 
-> or respectively, something like this:
-> 
-> phy {
->          fixed;
->          speed = <1000>;
->          duplex = <1>;
->          pause;
->          asym-pause;
-> };
-
-Yeah, that's fine, I have no problem with the internal properties of
-the PHY nodes themselves. My question is really the one described above.
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Thanks
+--=20
+H=E9ctor Palacios
