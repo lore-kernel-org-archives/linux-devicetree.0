@@ -1,170 +1,92 @@
-From: mathieu.poirier@linaro.org
-Subject: [PATCH v3] Input: sysrq - DT binding for key sequences
-Date: Fri, 12 Jul 2013 03:56:02 -0600
-Message-ID: <1373622962-16534-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: grant.likely@linaro.org, dmitry.torokhov@gmail.com
-Cc: devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, linux-input@vger.kernel.org, kernel-team@android.com, mathieu.poirier@linaro.org
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH] usb: phy: samsung-usb2: Toggle HSIC GPIO from device tree
+Date: Fri, 12 Jul 2013 12:34:25 +0200
+Message-ID: <2736758.WIzxm4p4Im@thinkpad>
+References: <1373416455-30358-1-git-send-email-jwerner@chromium.org> <CAODwPW-=bo2BqcHopY32N76p6DDGNDmCrKFo1R4gEEZhsG-DYg@mail.gmail.com> <001701ce7e99$95b2c460$c1184d20$@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <001701ce7e99$95b2c460$c1184d20$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: 'Dongjin Kim' <tobetter@gmail.com>, 'Julius Werner' <jwerner@chromium.org>, 'LKML' <linux-kernel@vger.kernel.org>, 'Felipe Balbi' <balbi@ti.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Praveen Paneri' <p.paneri@samsung.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Tushar Behera' <tushar.behera@linaro.org>, 'Doug Anderson' <dianders@chromium.org>, 'Olof Johansson' <olofj@chromium.org>, 'Vincent Palatin' <vpalatin@chromium.org>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Fabio Estevam' <festevam@gmail.com>, 'Philipp Zabel' <p.zabel@pengutronix.de>, Yulgon Kim <yulgon.kim@samsung.com>, s.nawrocki@samsung.com, grant.likely@linaro.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
+Hi,
 
-Adding a simple device tree binding for the specification of key sequences.
-Definition of the keys found in the sequence are located in
-'include/uapi/linux/input.h'.
+On Friday 12 of July 2013 09:48:54 Jingoo Han wrote:
+> On Friday, July 12, 2013 6:46 AM, Julius Werner wrote:
+> > Hi Jingoo,
+> > 
+> > Yeah, I followed that discussion back then, but it seems to have
+> > stalled a little (at least the HSIC patches haven't been picked up in
+> > any kernel.org repo yet to my knowledge).
+> > 
+> > The problem is that I think these approaches cannot work reliably. I
+> > agree that it would be nice to control the HSIC device from its own
+> > driver, and have spent quite some time playing around with the
+> > usb/misc/usb3503.c driver to try to make this work... but there's a
+> > timing dependency here that you just can't model correctly with
+> > independent drivers.
+> > 
+> > If the HSIC device is already active during boot (e.g. because it was
+> > used by firmware), there's always a chance that the USB stack will
+> > come up before the driver that resets it does. The device will be
+> > enumerated as normal, and when the other driver later pulls the reset
+> > signal the USB stack will not notice because there is no real
+> > disconnect detection on HSIC. Only when you eventually try to send
+> > another transfer to the device will you start to get timeouts, and the
+> > newly reset device will not be able to reenumerate because the host
+> > never asks it to.
+> > 
+> > I really don't see how you could solve this without putting some kind
+> > of synchronization mechanism in the USB drivers. So this leaves
+> > ehci-s5p and phy-samsung-usb2 as the only possible places, and I chose
+> > the latter since all the host-side HSIC initialization is also there
+> > already. I think if you think of it as "reset whatever is on the other
+> > side of this PHY", it's okay to put it as an optional feature into the
+> > PHY driver.
+> 
+> CC'ed Tomasz Figa, Dongjin Kim, Yulgon Kim
+> 
+> 
+> Hi Tomasz, Dongjin,
+> 
+> Julius Werner wants to put 'SMSC 3503 hub reset on Arndale board'
+> to 'phy-samsung-usb*.c' files, because there is a timing dependency
+> above mentioned.
+> The following is the original patch sent by Julius Werner two day ago.
+> (http://www.spinics.net/lists/linux-samsung-soc/msg20250.html)
 
-For the sysrq driver, holding the sequence of keys down for a specific amount of time
-will reset the system.
+Well, I think this is simply broken. Following are the reasons why I think so:
+ a) you can use the smsc3503 chip on any USB/HSIC controller and with any 
+USB/HSIC PHY, so you would have to add such reset GPIO to _every_ PHY or 
+controller driver,
+ b) you might want to use other USB/HSIC hubs like this one that requires some 
+initialization sequence, other than just toggling a GPIO, so you would have to 
+add cases for all of those hubs or other chips in _every_ PHY or controller 
+driver.
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
-changes for v3:
-  - Simplified binding definition.
-  - Renamed binding and moved to chosen.
----
- .../devicetree/bindings/input/input-reset.txt      | 34 +++++++++++++
- drivers/tty/sysrq.c                                | 58 ++++++++++++++++++++++
- 2 files changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/input-reset.txt
+> Previously, Olof mentioned that 'drivers/platform/arm/' would be used.
+> (http://patches.linaro.org/16856/)
+> 
+> Also, another way was mentioned by Fabio Estevam, using
+> 'drivers/reset/gpio-reset.c' which is not merged yet.
+> (http://permalink.gmane.org/gmane.linux.drivers.devicetree/36830)
+> 
+> I think that 'phy-samsung-usb*.c' files are not a good place.
+> However, Julius Werner's comment looks reasonable enough.
 
-diff --git a/Documentation/devicetree/bindings/input/input-reset.txt b/Documentation/devicetree/bindings/input/input-reset.txt
-new file mode 100644
-index 0000000..79504af
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/input-reset.txt
-@@ -0,0 +1,34 @@
-+Input: sysrq reset sequence
-+
-+A simple binding to represent a set of keys as described in
-+include/uapi/linux/input.h.  This is to communicate a
-+sequence of keys to the sysrq driver.  Upon holding the keys
-+for a specified amount of time (if specified) the system is
-+sync'ed and reset.
-+
-+Key sequences are global to the system but all the keys in a
-+set must be coming from the same input device.
-+
-+The /chosen node should contain a 'linux,sysrq-reset-seq' child
-+node to define a set of keys.
-+
-+Required property:
-+sysrq-reset-seq: array of keycodes
-+
-+Optional property:
-+timeout-ms: duration keys must be pressed together in microseconds
-+before generating a sysrq
-+
-+Example:
-+
-+ chosen {
-+                linux,sysrq-reset-seq {
-+                        keyset = <0x03
-+                                  0x04
-+                                  0x0a>;
-+                        timeout-ms = <3000>;
-+                };
-+         };
-+
-+Would represent KEY_2, KEY_3 and KEY_9.
-+
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index b51c154..4b77adf 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -44,6 +44,7 @@
- #include <linux/uaccess.h>
- #include <linux/moduleparam.h>
- #include <linux/jiffies.h>
-+#include <linux/of.h>
- 
- #include <asm/ptrace.h>
- #include <asm/irq_regs.h>
-@@ -671,6 +672,54 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
- 	}
- }
- 
-+static void sysrq_of_get_keyreset_config(void)
-+{
-+	unsigned short key;
-+	struct device_node *np;
-+	const struct property *prop;
-+	const __be32 *val;
-+	int count, i;
-+
-+	np = of_find_node_by_path("/chosen");
-+	if (!np)
-+		goto out;
-+
-+	np = of_find_node_by_name(np, "linux,sysrq-reset-seq");
-+	if (!np) {
-+		pr_debug("No sysrq node found");
-+		goto out;
-+	}
-+
-+	prop = of_find_property(np, "keyset", NULL);
-+	if (!prop || !prop->value) {
-+		pr_err("Invalid input keyset");
-+		goto out;
-+	}
-+
-+	count = prop->length / sizeof(u32);
-+	val = prop->value;
-+
-+	if (count > SYSRQ_KEY_RESET_MAX)
-+		count = SYSRQ_KEY_RESET_MAX;
-+
-+	/* reset in case a __weak definition was present */
-+	sysrq_reset_seq_len = 0;
-+
-+	for (i = 0; i < count; i++) {
-+		key = (unsigned short)be32_to_cpup(val++);
-+		if (key == KEY_RESERVED || key > KEY_MAX)
-+			break;
-+
-+		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
-+	}
-+
-+	/* get reset timeout if any */
-+	of_property_read_u32(np, "timeout-ms", &sysrq_reset_downtime_ms);
-+
-+ out:
-+	;
-+}
-+
- static void sysrq_reinject_alt_sysrq(struct work_struct *work)
- {
- 	struct sysrq_state *sysrq =
-@@ -688,6 +737,7 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
- 		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
- 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
- 
-+
- 		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
- 		input_inject_event(handle, EV_KEY, alt_code, 0);
- 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
-@@ -903,6 +953,7 @@ static inline void sysrq_register_handler(void)
- 	int error;
- 	int i;
- 
-+	/* first check if a __weak interface was instantiated */
- 	for (i = 0; i < ARRAY_SIZE(sysrq_reset_seq); i++) {
- 		key = platform_sysrq_reset_seq[i];
- 		if (key == KEY_RESERVED || key > KEY_MAX)
-@@ -911,6 +962,13 @@ static inline void sysrq_register_handler(void)
- 		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
- 	}
- 
-+	/*
-+	 * DT configuration takes precedence over anything
-+	 * that would have been defined via the __weak
-+	 * interface
-+	 */
-+	sysrq_of_get_keyreset_config();
-+
- 	error = input_register_handler(&sysrq_handler);
- 	if (error)
- 		pr_err("Failed to register input handler, error %d", error);
--- 
-1.8.1.2
+I can see this problem almost equivalent to the problem with on-board WLAN 
+adapters connected using SDIO. Those adapters require some kind of power on 
+sequence before they can be enumerated using standard MMC/SDIO mechanisms and 
+so does this USB/HSIC hub.
 
+So basically this is a thing that we should consider on a more generic level, 
+not just for this particular single chip.
+
+CCing some extra people to increase chance of getting more opinions on this.
+
+Best regards,
+Tomasz
