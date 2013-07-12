@@ -1,71 +1,61 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH] MAINTAINERS: Remove Grant Likely
-Date: Fri, 12 Jul 2013 01:52:16 +0100
-Message-ID: <1373590336-14560-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net
-Cc: Grant Likely <grant.likely@linaro.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH RFC v3] media: OF: add video sync endpoint property
+Date: Fri, 12 Jul 2013 09:59:54 +0530
+Message-ID: <CA+V-a8sxnMkdgrqD=GWYx-7K8UviOKNtvxfw=TMOUWaLWrks=g@mail.gmail.com>
+References: <1371913383-25088-1-git-send-email-prabhakar.csengg@gmail.com>
+ <51D0548D.7020004@gmail.com> <CA+V-a8uG1KLY-Vjj+0ix2=wV4r=k+tkJ4aDBCN+iN+JZ6my30w@mail.gmail.com>
+ <51DF206E.9010301@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51DF206E.9010301@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Unfortunately, I'm no longer to spend the time needed on maintainership.
-It is time for me to step aside and pass maintainership to other
-engineers. I'm not disappearing from Linux development, but it would be
-irresponsible for me to hold onto a job that I am unable to do.
+Hi Sylwester,
 
-GPIO and SPI are in good hands with Linus and Mark. Rob Herring has a
-really good grasp on the DT core code, and in the last week there have
-been several volunteers to create and maintain a DT bindings tree. You
-can expect to see an email about that hit the list shortly.
+On Fri, Jul 12, 2013 at 2:45 AM, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
+> On 07/11/2013 01:41 PM, Prabhakar Lad wrote:
+> [...]
+>
+>>>> diff --git a/drivers/media/v4l2-core/v4l2-of.c
+>>>> b/drivers/media/v4l2-core/v4l2-of.c
+>>>> index aa59639..1a54530 100644
+>>>> --- a/drivers/media/v4l2-core/v4l2-of.c
+>>>> +++ b/drivers/media/v4l2-core/v4l2-of.c
+>>>> @@ -100,6 +100,26 @@ static void v4l2_of_parse_parallel_bus(const struct
+>>>> device_node *node,
+>>>>          if (!of_property_read_u32(node, "data-shift",&v))
+>>>>                  bus->data_shift = v;
+>>>>
+>>>> +       if (!of_property_read_u32(node, "video-sync",&v)) {
+>>>> +               switch (v) {
+>>>> +               case V4L2_MBUS_VIDEO_SEPARATE_SYNC:
+>>>> +                       flags |= V4L2_MBUS_VIDEO_SEPARATE_SYNC;
+>>>
+>>>
+>>>
+>>> I'm not convinced all those video sync types is something that really
+>>> belongs
+>>> to the flags field. In my understanding this field is supposed to hold
+>>> only
+>>> the _signal polarity_ information.
+>>>
+>>>
+>> Ok, so there should be a function say v4l2_of_parse_signal_polarity()
+>> to get the polarity alone then.
+>
+>
+> I don't think this is required, I would just extend
+> v4l2_of_parse_parallel_bus()
+> function to also handle sync-on-green-active property.
+>
+If that is the case than I have to add a member say 'signal_polarity'
+in struct v4l2_of_bus_parallel and assign the polarity to it.
+Let me know if you are OK with it.
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
----
- MAINTAINERS | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 250dc97..339fcdd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3564,10 +3564,8 @@ F:	drivers/isdn/gigaset/
- F:	include/uapi/linux/gigaset_dev.h
- 
- GPIO SUBSYSTEM
--M:	Grant Likely <grant.likely@linaro.org>
- M:	Linus Walleij <linus.walleij@linaro.org>
- S:	Maintained
--T:	git git://git.secretlab.ca/git/linux-2.6.git
- F:	Documentation/gpio.txt
- F:	drivers/gpio/
- F:	include/linux/gpio*
-@@ -4411,8 +4409,6 @@ F:	drivers/irqchip/
- 
- IRQ DOMAINS (IRQ NUMBER MAPPING LIBRARY)
- M:	Benjamin Herrenschmidt <benh@kernel.crashing.org>
--M:	Grant Likely <grant.likely@linaro.org>
--T:	git git://git.secretlab.ca/git/linux-2.6.git irqdomain/next
- S:	Maintained
- F:	Documentation/IRQ-domain.txt
- F:	include/linux/irqdomain.h
-@@ -5945,11 +5941,8 @@ F:	Documentation/i2c/busses/i2c-ocores
- F:	drivers/i2c/busses/i2c-ocores.c
- 
- OPEN FIRMWARE AND FLATTENED DEVICE TREE
--M:	Grant Likely <grant.likely@linaro.org>
- M:	Rob Herring <rob.herring@calxeda.com>
- L:	devicetree-discuss@lists.ozlabs.org (moderated for non-subscribers)
--W:	http://fdt.secretlab.ca
--T:	git git://git.secretlab.ca/git/linux-2.6.git
- S:	Maintained
- F:	Documentation/devicetree
- F:	drivers/of
-@@ -7623,7 +7616,6 @@ F:	drivers/clk/spear/
- 
- SPI SUBSYSTEM
- M:	Mark Brown <broonie@kernel.org>
--M:	Grant Likely <grant.likely@linaro.org>
- L:	spi-devel-general@lists.sourceforge.net
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
- Q:	http://patchwork.kernel.org/project/spi-devel-general/list/
--- 
-1.8.1.2
+Regards,
+--Prabhakar Lad
