@@ -1,7 +1,7 @@
 From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH RFC 2/8] dma: mpc512x: fix start condition in execute()
-Date: Fri, 12 Jul 2013 17:26:15 +0200
-Message-ID: <1373642781-32631-3-git-send-email-gsi@denx.de>
+Subject: [PATCH RFC 3/8] dma: mpc512x: support 'terminate all' control request
+Date: Fri, 12 Jul 2013 17:26:16 +0200
+Message-ID: <1373642781-32631-4-git-send-email-gsi@denx.de>
 References: <1373642781-32631-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,32 +22,46 @@ To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR
 Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-adjust the conditions how submitted DMA jobs get started: memory transfers
-need to get initiated by an explicit software request, all transfers which
-involve peripherals need to reference the external requester line
+implement the TERMINATE_ALL request in the device_control() callback
+of the DMA engine driver for the MPC512x DMA controller
+
+reword variable initialization to better follow the code path and to
+avoid artificial diffs later on (this style change vanishes when this
+patch gets squashed with the device_control() routine's introduction)
 
 Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
 ---
- drivers/dma/mpc512x_dma.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/mpc512x_dma.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/mpc512x_dma.c b/drivers/dma/mpc512x_dma.c
-index f90b717..df10a48 100644
+index df10a48..0053ff8 100644
 --- a/drivers/dma/mpc512x_dma.c
 +++ b/drivers/dma/mpc512x_dma.c
-@@ -272,10 +272,12 @@ static void mpc_dma_execute(struct mpc_dma_chan *mchan)
- 		mdma->tcd[cid].e_sg = 1;
+@@ -748,11 +748,22 @@ static struct dma_async_tx_descriptor *mpc_dma_prep_slave_sg(
+ static int mpc_dma_device_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
+ 				  unsigned long arg)
+ {
+-	struct mpc_dma_chan *mchan = dma_chan_to_mpc_dma_chan(chan);
+-	struct dma_slave_config *cfg = (void *)arg;
++	struct mpc_dma_chan *mchan;
++	struct mpc_dma *mdma;
++	struct dma_slave_config *cfg;
  
- 	switch (cid) {
--	case 26:
-+	default:
-+		/* peripherals involved, use external request */
- 		out_8(&mdma->regs->dmaserq, cid);
- 		break;
- 	case 32:
-+		/* memory transfer, software provided start signal */
- 		out_8(&mdma->regs->dmassrt, cid);
- 		break;
- 	}
++	mchan = dma_chan_to_mpc_dma_chan(chan);
+ 	switch (cmd) {
++	case DMA_TERMINATE_ALL:
++		/* disable channel requests */
++		mdma = dma_chan_to_mpc_dma(chan);
++		out_8(&mdma->regs->dmacerq, chan->chan_id);
++		list_splice_tail_init(&mchan->prepared, &mchan->free);
++		list_splice_tail_init(&mchan->queued, &mchan->free);
++		list_splice_tail_init(&mchan->active, &mchan->free);
++		return 0;
+ 	case DMA_SLAVE_CONFIG:
++		cfg = (void *)arg;
+ 		if (cfg->src_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES &&
+ 		    cfg->dst_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
+ 			return -EINVAL;
 -- 
 1.7.10.4
