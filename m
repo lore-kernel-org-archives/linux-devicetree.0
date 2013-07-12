@@ -1,316 +1,131 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH] iio: add APDS9300 ambilent light sensor driver
-Date: Fri, 12 Jul 2013 19:04:32 +0200
-Message-ID: <51E03720.1010806@metafoo.de>
-References: <1373461729-11261-1-git-send-email-x0199363@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
+Date: Fri, 12 Jul 2013 10:24:42 -0700
+Message-ID: <20130712172441.GB9620@dhcp-172-17-186-34.nvidia.com>
+References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1373553468-6564-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <51DEEE15.7040801@wwwdotorg.org>
+ <3211864.2dENa1E110@avalon>
+ <51E01547.4030204@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1373461729-11261-1-git-send-email-x0199363@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksandr Kravchenko <x0199363@ti.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, jic23@cam.ac.uk, pmeerw@pmeerw.net, holler@ahsoftware.de, srinivas.pandruvada@intel.com, devicetree-discuss@lists.ozlabs.org, Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51E01547.4030204@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, Philip Avinash <avinashphilip@ti.com>, Boris BREZILLON <linux-arm@overkiz.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/10/2013 03:08 PM, Oleksandr Kravchenko wrote:
-> From: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
-> 
-> This patch adds IIO driver for APDS9300 ambilent light sensor (ALS).
 
-s/ambilent/ambient/
+--mxv5cy4qt+RJ9ypb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> http://www.avagotech.com/docs/AV02-1077EN
-> 
-> The driver allows to read raw data from ADC registers or calculate
-> lux value. It also can handle threshold inrerrupt.
-
-s/inrerrupt/interrupt/
-
-The patch looks very good in general, a couple of comment inline.
-
-> 
-> Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
-> ---
->  .../devicetree/bindings/iio/light/apds9300.txt     |   22 +
->  drivers/iio/light/Kconfig                          |   10 +
->  drivers/iio/light/Makefile                         |    1 +
->  drivers/iio/light/apds9300.c                       |  528 ++++++++++++++++++++
->  4 files changed, 561 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/apds9300.txt
->  create mode 100644 drivers/iio/light/apds9300.c
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/apds9300.txt b/Documentation/devicetree/bindings/iio/light/apds9300.txt
-> new file mode 100644
-> index 0000000..d6f66c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/apds9300.txt
-> @@ -0,0 +1,22 @@
-> +* Avago APDS9300 ambient light sensor
-> +
-> +http://www.avagotech.com/docs/AV02-1077EN
-> +
-> +Required properties:
-> +
-> +  - compatible : should be "avago,apds9300"
-
-You should also add the avago vendor prefix to
-Documentation/devicetree/bindings/vendor-prefixes.txt. Preferably in a
-separate patch.
-
-> +  - reg : the I2C address of the sensor
-> +
-> +Optional properties:
-> +
-> +  - interrupt-parent : should be the phandle for the interrupt controller
-> +  - interrupts : interrupt mapping for GPIO IRQ
-> +
-> +Example:
-> +
-> +apds9300@39 {
-> +	compatible = "avago,apds9300";
-> +	reg = <0x39>;
-> +	interrupt-parent = <&gpio2>;
-> +	interrupts = <29 8>;
-> +};
-> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-> index 5ef1a39..08a6742 100644
-> --- a/drivers/iio/light/Kconfig
-> +++ b/drivers/iio/light/Kconfig
-> @@ -52,6 +52,16 @@ config VCNL4000
->  	 To compile this driver as a module, choose M here: the
->  	 module will be called vcnl4000.
->  
-> +config APDS9300
-> +	tristate "APDS9300 ambient light sensor"
-> +	depends on I2C
-> +	help
-> +	 Say Y here if you want to build a driver for the Avago APDS9300
-> +	 ambient light sensor.
-> +
-> +	 To compile this driver as a module, choose M here: the
-> +	 module will be called apds9300.
-> +
-
-Keeps this in alphabetical order
-
->  config HID_SENSOR_ALS
->  	depends on HID_SENSOR_HUB
->  	select IIO_BUFFER
-> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-> index 040d9c7..da58e12 100644
-> --- a/drivers/iio/light/Makefile
-> +++ b/drivers/iio/light/Makefile
-> @@ -6,4 +6,5 @@ obj-$(CONFIG_ADJD_S311)		+= adjd_s311.o
->  obj-$(CONFIG_SENSORS_LM3533)	+= lm3533-als.o
->  obj-$(CONFIG_SENSORS_TSL2563)	+= tsl2563.o
->  obj-$(CONFIG_VCNL4000)		+= vcnl4000.o
-> +obj-$(CONFIG_APDS9300)		+= apds9300.o
-
-Same here
-
->  obj-$(CONFIG_HID_SENSOR_ALS)	+= hid-sensor-als.o
-> diff --git a/drivers/iio/light/apds9300.c b/drivers/iio/light/apds9300.c
-> new file mode 100644
-> index 0000000..2275ecc
-> --- /dev/null
-> +++ b/drivers/iio/light/apds9300.c
-> @@ -0,0 +1,528 @@
-> +/*
-> + * apds9300.c - IIO driver for Avago APDS9300 ambient light sensor
-> + *
-> + * Copyright 2013 Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
-> + *
-> + * This file is subject to the terms and conditions of version 2 of
-> + * the GNU General Public License.  See the file COPYING in the main
-> + * directory of this archive for more details.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/pm.h>
-> +#include <linux/i2c.h>
-> +#include <linux/err.h>
-> +#include <linux/mutex.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-
-No device driver should ever need to include irq.h
-
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/events.h>
-> +
+On Fri, Jul 12, 2013 at 08:40:07AM -0600, Stephen Warren wrote:
+> On 07/12/2013 04:41 AM, Laurent Pinchart wrote:
+> > Hi Stephen,
 [...]
-> +
-> +static unsigned long als_calculate_lux(u16 ch0, u16 ch1)
-> +{
-> +	unsigned long lux, tmp;
-> +	u64 tmp64;
-> +
-> +	/* avoid division by zero */
-> +	if (ch0 == 0)
-> +		return 0;
-> +
-> +	tmp = ch1 * 100 / ch0;
-> +	if (tmp <= 52) {
-> +		/*
-> +		 * Variable tmp64 need to avoid overflow of this part of lux
-> +		 * calculation formula.
-> +		 */
+> > What about splitting it in three patches that
+> >=20
+> > - add the include/dt-bindings/pwm/pwm.h header, and update include/linu=
+x/pwm.h=20
+> > and Documentation/devicetree/bindings/pwm/pwm.txt
+> >=20
+> > - update the rest of the documentation
+> >=20
+> > - update the .dts files
+>=20
+> I think that sounds reasonable.
 
-If you want to avoid the overflow you have to do the math as 64bit math. As
-it is right now it will do 32bit math and only store the result in a 64 bit
-variable.
+Shouldn't the addition of include/dt-bindings/pwm/pwm.h be separate from
+its inclusion in include/linux/pwm.h so that it can be moved more easily
+(cherry-picked) to a separate repository?
 
-> +		tmp64 = ch0 * lux_ratio[tmp] * 5930 / 1000;
-> +		lux = 3150 * ch0 - (unsigned long)tmp64;
-> +	}
-> +	else if (tmp <= 65)
-> +		lux = 2290 * ch0 - 2910 * ch1;
-> +	else if (tmp <= 80)
-> +		lux = 1570 * ch0 - 1800 * ch1;
-> +	else if (tmp <= 130)
-> +		lux = 338 * ch0 - 260 * ch1;
-> +	else
-> +		lux = 0;
-> +
-> +	return lux / 100000;
-> +}
-> +
-[...]
-> +static int als_get_adc_val(struct als_data *data, int adc_number)
-> +{
-> +	int ret;
-> +	u8 flags = ALS_CMD | ALS_WORD;
-> +
-> +	if (!data->power_state)
-> +		return -EAGAIN;
+> >>> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> >>>
+> >>>  enum pwm_polarity {
+> >>>
+> >>> -	PWM_POLARITY_NORMAL,
+> >>> -	PWM_POLARITY_INVERSED,
+> >>> +	PWM_POLARITY_NORMAL =3D 0,
+> >>> +	PWM_POLARITY_INVERSED =3D 1,
+> >>>
+> >>>  };
+> >>
+> >> Rather than manually editing that to ensure the enum matches the DT bi=
+ndings
+> >> header, the whole point of making a separate <dt-bindings/...> directo=
+ry was
+> >> that drivers could include the binding header files directly to avoid =
+having
+> >> to duplicate the constant definitions. Can't <linux/pwm.h> include <dt-
+> >> bindings/pwm.h> and remove that enum?
+> >=20
+> > We could do that, but we would then need to modify all drivers to repla=
+ce=20
+> > enum_pwm_polarity with unsigned int. Thierry, what's your opinion on th=
+is ?
+>=20
+> Or perhaps we could keep the enums around, but force the values to match
+> the DT constants:
+>=20
+> enum pwm_polarity {
+> 	PWM_POLARITY_NORMAL =3D PWM_POLARITY_NORMAL,
+> 	PWM_POLARITY_INVERTED =3D PWM_POLARITY_INVERTED,
+> };
+>=20
+> (although obviously you'd need to avoid the enum and DT constants having
+> the same name).
 
-EAGAIN is probably not the right error code, maybe EBUSY or ENODEV.
+I think I've seen stuff like the following done in a few header files to
+keep compatibility between enums and defines.
 
-> +
-> +	/* Select ADC0 or ADC1 data register */
-> +	flags |= adc_number ? ALS_DATA1LOW : ALS_DATA0LOW;
-> +
-> +	ret = i2c_smbus_read_word_data(data->client, flags);
-> +	if (ret < 0)
-> +		dev_err(&data->client->dev,
-> +				"failed to read ADC%d value\n", adc_number);
-> +
-> +	return ret;
-> +}
-> +
-[...]
+	enum foo {
+		BAR,
+	#define BAR BAR
+		BAZ,
+	#define BAZ BAZ
+	};
 
-> +static irqreturn_t als_interrupt_handler(int irq, void *private)
-> +{
-> +	struct iio_dev *dev_info = private;
-> +	struct als_data *data = iio_priv(dev_info);
-> +
-> +	iio_push_event(dev_info,
-> +			IIO_UNMOD_EVENT_CODE(IIO_INTENSITY, 0,
-> +				IIO_EV_TYPE_THRESH,
-> +				IIO_EV_DIR_FALLING),
-> +			iio_get_time_ns());
+Which, as I understand it, won't work in this case because DTC can only
+cope with plain cpp files?
 
-In the event mask you specify support for both falling and rising threshold
-events, yet the only event ever triggered is a falling event.
+> Although this brings up one point: let's say we support ACPI/.. bindings
+> in the future. The enum possibly can't match the binding values from
+> every different kind of binding definition (DT, ACPI, ...) so perhaps
+> rather than changing the enum definition in <linux/pwm.h>, what we
+> should be doing is mapping between the different name-spaces in whatever
+> of_xlate function exists for the PWM flags cell. That would be more
+> flexible.
 
-> +
-> +	als_clear_intr(data);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/* Probe/remove functions */
+I'm not quite sure what exactly you are suggesting here. Can you
+elaborate?
 
-I don't think we need the comment to know that als_probe is the probe
-function ;)
+Thierry
 
-> +
-> +static int als_probe(struct i2c_client *client, const struct i2c_device_id *id)
-> +{
-> +	struct als_data *data;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = iio_device_alloc(sizeof(*data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	data = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-> +	data->client = client;
-> +
-> +	ret = als_chip_init(data);
-> +	if (ret < 0)
-> +		goto err;
-> +
-> +	mutex_init(&data->mutex);
-> +
-> +	indio_dev->dev.parent = &client->dev;
-> +	indio_dev->channels = als_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(als_channels);
-> +	indio_dev->name = ALS_DRV_NAME;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	if (client->irq)
-> +		indio_dev->info = &als_info;
-> +	else
-> +		indio_dev->info = &als_info_no_irq;
-> +
-> +	if (client->irq) {
-> +		ret = devm_request_threaded_irq(&client->dev, client->irq,
-> +				NULL, als_interrupt_handler,
-> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> +				ALS_IRQ_NAME, indio_dev);
+--mxv5cy4qt+RJ9ypb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-This is a bit racy, you access memory in the irq handler that is freed
-before the irq is freed.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
 
-> +		if (ret) {
-> +			dev_err(&client->dev, "irq request error %d\n", -ret);
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret < 0)
-> +		goto err;
-> +
-> +	dev_info(&client->dev, "ambient light sensor\n");
+iQIcBAEBAgAGBQJR4DvZAAoJEN0jrNd/PrOhZ9kQAJzl3t7DsDVvOC//YrQZ8Bny
+ag+GuEh+tJNlgs6ghLXTWfPTKp+Sj2iplkGC/nP7ornVO2Bu+tZbRUwAHlKiu0x3
+u+Sk/N/XdvM+ZhEy3PKNPrPWMaB1IS2Fm3Ok7uXJFuIRSUWwiS6k/Wuem0bhw2FV
+h0Pgz+m8RYefidZzGtFJWDSW/+Y1BiDeO9tGFUf/Nf+M7ekM8P5B54LO1Ln7dSdZ
+7K3ZpP5v8A0KnczHu7znsLARNtLW1meWl01u4MnHMuaXzysRNvBYndi/1jg/R2Gt
+ovQlIjiHwyWIqF3Ch50fSpDV+wLZelxTGFt6FslMPoOaXR1NXjymYr7PZr2H4abq
+isxoHC+6gnRHTdIdegxwb2tm2fzL2Knaebhy124Q1YnkTuIzUoMrrtQ6uBvvrcO/
+XaMtSzFcNgfBQOwACUI5jrsaGrJmU8LX1yV9JTDCFLHzhUpThz9YrIExA/i2TDdQ
+nKahbC9jrLOe9w47peDU/Xq5kGujPa0LZ5CGv5MA20Xuhlo/aQDL7AKVMoNV77ND
+ZeNhN5PLels7uR2S5LoIpvVQOfKd6Ju9FVUgifCZAXJCQDEPGRGLffF8/zMR44Sb
+QjKKlj96pX3foqUPgKyMR2T93dg4nOu8irOY7SPMbH2gBEIoCns5o0vMv+0ugtGn
+3sFTDcZL4LTFYPxWbbzn
+=hmW5
+-----END PGP SIGNATURE-----
 
-This line is just noise in the bootlog, please remove it.
-
-> +
-> +	return 0;
-> +
-> +err:
-> +	/* Ensure that power off in case of error */
-> +	als_set_power_state(data, 0);
-> +	iio_device_free(indio_dev);
-> +	return ret;
-> +}
-> +
-> +static int als_remove(struct i2c_client *client)
-> +{
-> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> +	struct als_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	iio_device_unregister(indio_dev);
-> +
-> +	/* Ensure that power off and interrupts are disabled */
-> +	ret = als_set_intr_state(data, 0);
-> +	if (!ret)
-> +		ret = als_set_power_state(data, 0);
-> +
-> +	iio_device_free(indio_dev);
-> +
-> +	return ret;
-
-The remove callback must always return 0.
-
-> +}
-[...]
+--mxv5cy4qt+RJ9ypb--
