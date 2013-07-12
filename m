@@ -1,115 +1,100 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
-Date: Fri, 12 Jul 2013 13:01:01 +0200
-Message-ID: <2172485.AZTjvkLGcM@avalon>
-References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20130711193245.GB17212@dhcp-172-17-186-34.nvidia.com> <51DF1054.9000207@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 1/7] sound: codec: wm8731: add rates constraints
+Date: Fri, 12 Jul 2013 12:45:51 +0100
+Message-ID: <20130712114551.GD24508@sirena.org.uk>
+References: <1373559359-31607-1-git-send-email-richard.genoud@gmail.com>
+ <1373559359-31607-2-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51DF1054.9000207@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-pwm@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-omap@vger.kernel.org, Philip Avinash <avinashphilip@ti.com>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <linux-arm@overkiz.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============8099376701255645190=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1373559359-31607-2-git-send-email-richard.genoud@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Thursday 11 July 2013 14:06:44 Stephen Warren wrote:
-> On 07/11/2013 01:32 PM, Thierry Reding wrote:
-> > On Thu, Jul 11, 2013 at 11:50:48AM -0600, Stephen Warren wrote:
-> >> On 07/11/2013 09:36 AM, Thierry Reding wrote:
-> >>> On Thu, Jul 11, 2013 at 04:37:48PM +0200, Laurent Pinchart
-> >>> wrote: [...]
-> >>> 
-> >>>> diff --git
-> >>>> a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> >>>> b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> >>>> index de0eaed..be09be4 100644 ---
-> >>>> a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> >>>> +++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
-> >>>> @@ -4,9 +4,9 @@ Required properties: - compatible: should be
-> >>>> "atmel,tcb-pwm" - #pwm-cells: Should be 3.  The first cell
-> >>>> specifies the per-chip index of the PWM to use, the second
-> >>>> cell is the period in nanoseconds and -  bit 0 in the third
-> >>>> cell is used to encode the polarity of PWM output. -  Set bit
-> >>>> 0 of the third cell in PWM specifier to 1 for inverse
-> >>>> polarity & -  set to 0 for normal polarity. +  the third cell
-> >>>> is used to encode the polarity of PWM output. Set the +
-> >>>> PWM_POLARITY_NORMAL flag for normal polarity or the
-> >>>> PWM_POLARITY_INVERSED +  flag for inverted polarity. PWM
-> >>>> flags are defined in <dt-bindings/pwm/pwm.h>. - tc-block: The
-> >>>> Timer Counter block to use as a PWM chip.
-> >>> 
-> >>>> Example:
-> >>> I'd prefer for the original text to stay in place and the reference to
-> >>> the dt-bindings/pwm/pwm.h file to go below that block.
-> >> 
-> >> I disagree here. The whole point of creating header files for the
-> >> constants in binding definitions was so that you wouldn't have to
-> >> duplicate all the values into the binding definitions. Rather, you'd
-> >> simply say "see <dt-bindings/xxx.h>".
-> > 
-> > But that's not something that this patch solves.
-> 
-> Well, if the comments I made on the patch re: that <linux/pwm.h> should
-> simply #include <dt-bindings/pwm/pwm.h> instead of duplicating the
-> constants, then yet this patch will solve that. There will be a single place
-> where the constants are defined.
+--===============8099376701255645190==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sk6NRVTC9kZ6Mrgo"
+Content-Disposition: inline
 
-As explained in another reply, this would require replacing the enum with an 
-unsigned int. I can write a patch if we agree on this.
 
-> > And it could be solved even in the absence of the header file defining the
-> > symbolic constants. If all the standard flags that dt-bindings/pwm/pwm.txt
-> > now specifies were to be listed in pwm.txt (they actually are) then
-> > referring to that document as the canonical source works equally well.
-> 
-> If that's all the happens, then there will still be duplication
-> between pwm.txt and <linux/pwm.h>.
+--sk6NRVTC9kZ6Mrgo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I've explicitly mentioned the flags in individual DT bindings to ease adding 
-new flags in the future. At the moment the defined flags are either all 
-supported or not used at all by drivers. If we later add a new flag supported 
-by a subset of drivers only the driver bindings should list supported flags 
-for each driver.
+On Thu, Jul 11, 2013 at 06:15:53PM +0200, Richard Genoud wrote:
 
-I'm fine with removing the explicit mentions of individual flags right now and 
-adding it back when needed if you think that's better.
+Please always try to use commit logs that look like normal commit logs
+for the subsystem.
 
-> > If we can take both of the above for granted, then sure, let's refer to
-> > the header from within the generic pwm.txt file and add a reference to
-> > that in bindings for drivers that use the standard flags.
-> > 
-> >>> Another issue might be that people without access to recent versions of
-> >>> DTC won't be able to use the new #include feature, so keeping the
-> >>> documentation backwards compatible seems like a good idea.
-> >> 
-> >> The dtc source tree is duplicated into the kernel source tree, so that
-> >> isn't an issue for now.
-> >> 
-> >> Besides, the dtc version is an entirely unrelated issue to how the
-> >> documentation is written.
-> > 
-> > Well, not really. If the documentation specifies the binding in a way that
-> > the DTC can't handle that's still a problem. People will end up with a DTS
-> > that their DTC can't compile. I guess that can be resolved by adding a
-> > note to the upstream device tree repository about the minimum required
-> > version of DTC.
-> 
-> Yes, the separate repository would obviously require a version of dtc that's
-> able to compile the files there; i.e. a version equivalent to what's already
-> in the kernel tree (upstream 1.4.0 specifically).
-> 
-> Again, right now, all of the binding docs, the *.dts files, and the dtc
-> required to use them are part of the kernel; a single package, so there's no
-> scope for issues re: using dtc features that aren't supported. If those
-> components get separated later, obviously there will be a requirement to
-> install a specific version of dtc to use with the separated *.dts and
-> binding files.
+>  	switch (freq) {
+> -	case 11289600:
+>  	case 12000000:
+> +		wm8731->constraints = &wm8731_constraints_12000000;
+> +		break;
+>  	case 12288000:
+> -	case 16934400:
+>  	case 18432000:
+> -		wm8731->sysclk = freq;
+> +		wm8731->constraints = &wm8731_constraints_12288000_18432000;
+> +		break;
+> +	case 16934400:
+> +	case 11289600:
+> +		wm8731->constraints = &wm8731_constraints_11289600_16934400;
+>  		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
 
--- 
-Regards,
+This isn't going to work with systems which have a variable clock as the
+input to the CODEC.  If it's imposing constraints the driver needs to
+allow setting the clock to zero as a way of removing constraints (and
+any existing drivers should be updated to do this if needed).
 
-Laurent Pinchart
+--sk6NRVTC9kZ6Mrgo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR3+xsAAoJELSic+t+oim9p04P/0T8lf/1EpIj0VFoJQC5LNYD
+Pq43japEzv4UhvM0/rrUBE7H5uaNeI1A5vcJNLv42ETeeuTL6/X7GuyzvN3db/IE
+oGZOHq8AUS1J1CxnfXRazCdKtu5vl51CwYOHdJlyH4NeWpFZXLk1JODP5YsLfzE3
+Kl/42XF004Qc0Qnsv95v0fdw4oCh/ymbdSlQ0+cpfFHwJ7XHh1ctYdeH3hf4RvjG
+S35eQphj7y/LW6jbrBOo2kMr0mm8PyJf5l70yGoFvoXkOpjk22Rjp1C+67eDxQui
+ZlwoY/Spxg4zkr2Wc5td8+tOh0d3elM9R01sowpSy4tgn0tY3u2CJz/2yeXgOkNI
+cmTx5Rib9/SJwhG6VvQ5I653D9+cM6SbG9sEOvqoypQR+KzI+ELlg4SPV/Fiv9jX
+91wIusF7t6DZwK2p9OQAy7YkvLGg5exRt8WQXNeWedrf7e7ezyiwxd+kZqJ/BkEc
+5p5jDi7DcST8fINE5wJV70dE+vd0Kmks4FvitwMQf9ypWVIw0zIFe3EGX+WsPf7s
+rNDihtCWUnssUp4UQRW1hMy4a8bLRdFPL0/FmNZjwt5H4ueEab5j/AoM9WIw3ICV
+w0APgcOfCsE52CJ9L+BNJ9k5xWN9EATtBPC7yofsfo4A4EDn96MAuhJB3VFYGk+F
+A1kJpJlKr5oPWdNaRuTC
+=UTvu
+-----END PGP SIGNATURE-----
+
+--sk6NRVTC9kZ6Mrgo--
+
+
+--===============8099376701255645190==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8099376701255645190==--
