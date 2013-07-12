@@ -1,118 +1,75 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH RFC 8/8] HACK mmc: mxcmmc: enable clocks for the MPC512x
-Date: Fri, 12 Jul 2013 17:26:21 +0200
-Message-ID: <1373642781-32631-9-git-send-email-gsi@denx.de>
-References: <1373642781-32631-1-git-send-email-gsi@denx.de>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
+Date: Fri, 12 Jul 2013 11:57:33 -0400
+Message-ID: <20130712155733.GZ11908@titan.lakedaemon.net>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
+ <1373352166-10064-2-git-send-email-zhangwm@marvell.com>
+ <20130709124900.GG11908@titan.lakedaemon.net>
+ <CAN1soZxiOh6TpbUOCUzK8gNwmvjbT3ihkUWaw8tuZ7md+NVA2g@mail.gmail.com>
+ <20130710122433.GO11908@titan.lakedaemon.net>
+ <CAN1soZzMvront1-jcBW6-uRKNs0OZNGnmiOjKGZSM28bViB_8A@mail.gmail.com>
+ <20130710215041.GR11908@titan.lakedaemon.net>
+ <CAN1soZzuiukY9qASFNcH0k=zH8=uT=71bKejPss44FCzNy=X-A@mail.gmail.com>
+ <CAMLZHHQGZvDssY-YxQ3ZW8FYhpG-H1-VbokOid33socRSPrMNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1373642781-32631-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Alexander Popov <a13xp0p0v88@gmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Gerhard Sittig <gsi@denx.de>, Dan Williams <djbw@fb.com>, Anatolij Gustschin <agust@denx.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMLZHHQGZvDssY-YxQ3ZW8FYhpG-H1-VbokOid33socRSPrMNw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Drake <dsd@laptop.org>
+Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, Bergmann Arnd <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Neil Zhang <zhangwm@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Q&D HACK to enable SD card support without correct COMMON_CLK support,
-best viewed with 'git diff -w -b', NOT acceptable for mainline (NAKed)
+On Fri, Jul 12, 2013 at 09:10:49AM -0600, Daniel Drake wrote:
+> On Thu, Jul 11, 2013 at 5:54 PM, Haojian Zhuang
+> <haojian.zhuang@gmail.com> wrote:
+> >> Well, Daniel Drake spoke up for OLPC.  Does that count?
+> >
+> > We don't know they used DT on Marvell MMP2/MMP3. So they don't have DTS file
+> > in kernel, we could use both old name & new name in driver.
+> 
+> You are listed as one of the MMP maintainers in the MAINTAINERS file
+> and I have sent you several patches in the few 3 weeks which make
+> OLPC's usage of MMP + DT pretty obvious. As a maintainer I believe you
+> are supposed to review the patches too. hint hint ;)
+> 
+> My request to avoid breaking compatibility actually comes as a
+> two-prong request.
+> 
+> I would prefer to see these compatible properties stay the same as it
+> seems like changing them has little purpose/benefit - and there *will*
+> become a later point where changing them causes major breakage.
 
-Signed-off-by: Gerhard Sittig <gsi@denx.de>
----
- drivers/mmc/host/mxcmmc.c |   41 +++++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 14 deletions(-)
+I agree with both of you :)  It needs to stabilise quickly, but since
+the first inception of Marvell compatible strings was in the mv643xx_eth
+driver for powerpc (long before ARM thought it was cool), and they used
+"marvell,...", I think we should stick with that.
 
-diff --git a/drivers/mmc/host/mxcmmc.c b/drivers/mmc/host/mxcmmc.c
-index d503635..b9d21cc 100644
---- a/drivers/mmc/host/mxcmmc.c
-+++ b/drivers/mmc/host/mxcmmc.c
-@@ -1121,20 +1121,29 @@ static int mxcmci_probe(struct platform_device *pdev)
- 	host->res = r;
- 	host->irq = irq;
- 
--	host->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
--	if (IS_ERR(host->clk_ipg)) {
--		ret = PTR_ERR(host->clk_ipg);
--		goto out_iounmap;
--	}
-+	if (!is_mpc512x_mmc(host)) {
-+		host->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
-+		if (IS_ERR(host->clk_ipg)) {
-+			ret = PTR_ERR(host->clk_ipg);
-+			goto out_iounmap;
-+		}
- 
--	host->clk_per = devm_clk_get(&pdev->dev, "per");
--	if (IS_ERR(host->clk_per)) {
--		ret = PTR_ERR(host->clk_per);
--		goto out_iounmap;
-+		host->clk_per = devm_clk_get(&pdev->dev, "per");
-+		if (IS_ERR(host->clk_per)) {
-+			ret = PTR_ERR(host->clk_per);
-+			goto out_iounmap;
-+		}
-+	} else {
-+		host->clk_per = devm_clk_get(&pdev->dev, "sdhc_clk");
-+		if (IS_ERR(host->clk_per)) {
-+			ret = PTR_ERR(host->clk_per);
-+			goto out_iounmap;
-+		}
- 	}
- 
- 	clk_prepare_enable(host->clk_per);
--	clk_prepare_enable(host->clk_ipg);
-+	if (host->clk_ipg)
-+		clk_prepare_enable(host->clk_ipg);
- 
- 	mxcmci_softreset(host);
- 
-@@ -1204,7 +1213,8 @@ out_free_dma:
- 		dma_release_channel(host->dma);
- out_clk_put:
- 	clk_disable_unprepare(host->clk_per);
--	clk_disable_unprepare(host->clk_ipg);
-+	if (host->clk_ipg)
-+		clk_disable_unprepare(host->clk_ipg);
- out_iounmap:
- 	iounmap(host->base);
- out_free:
-@@ -1236,7 +1246,8 @@ static int mxcmci_remove(struct platform_device *pdev)
- 		dma_release_channel(host->dma);
- 
- 	clk_disable_unprepare(host->clk_per);
--	clk_disable_unprepare(host->clk_ipg);
-+	if (host->clk_ipg)
-+		clk_disable_unprepare(host->clk_ipg);
- 
- 	release_mem_region(host->res->start, resource_size(host->res));
- 
-@@ -1255,7 +1266,8 @@ static int mxcmci_suspend(struct device *dev)
- 	if (mmc)
- 		ret = mmc_suspend_host(mmc);
- 	clk_disable_unprepare(host->clk_per);
--	clk_disable_unprepare(host->clk_ipg);
-+	if (host->clk_ipg)
-+		clk_disable_unprepare(host->clk_ipg);
- 
- 	return ret;
- }
-@@ -1267,7 +1279,8 @@ static int mxcmci_resume(struct device *dev)
- 	int ret = 0;
- 
- 	clk_prepare_enable(host->clk_per);
--	clk_prepare_enable(host->clk_ipg);
-+	if (host->clk_ipg)
-+		clk_prepare_enable(host->clk_ipg);
- 	if (mmc)
- 		ret = mmc_resume_host(mmc);
- 
--- 
-1.7.10.4
+Which means doing as Haojian now realizes, and having both strings in
+the relevant drivers.
+
+This also means we should do a patch for stable v3.5+ appending the
+"mrvl,..." string to the drivers that had it removed improperly, as
+Daniel discovered.  Daniel, since you are probably most familiar (and
+most able to test ;-) ), would you mind putting that patch together?
+
+So we don't have to keep it around forever, we could do as Arnd has
+suggested in the past (for an entirely different problem):
+
+	/* assuming it goes in for v3.12 */
+	if (WARN_ON(of_device_is_compatible(dev, "mrvl,..."))) {
+		dev_info(&dev->dev, "compatible string \"mrvl,...\" being removed in v3.15\n");
+		BUG_ON(LINUX_VERSION_CODE >= KERNEL_VERSION(3,15,0));
+	}
+
+* I can't find where Arnd's suggestion was, so this hack is completely
+my own.
+
+Keep in mind, the above hack is just a suggestion, it makes my skin
+crawl just looking at it... I'm open to other ideas.  Or, not doing it
+at all.
+
+thx,
+
+Jason.
