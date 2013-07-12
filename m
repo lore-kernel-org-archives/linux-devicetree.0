@@ -1,62 +1,79 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] usb: phy: samsung-usb2: Toggle HSIC GPIO from device tree
-Date: Fri, 12 Jul 2013 09:57:34 +0300
-Message-ID: <20130712065734.GE31802@arwen.pp.htv.fi>
-References: <1373416455-30358-1-git-send-email-jwerner@chromium.org>
- <20130710052534.GB15674@arwen.pp.htv.fi>
- <CAODwPW9dmwpXeyBeVER9azsh2uW3NXLTbDtz3mJaXrvSwb6opg@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Oleksandr Kozaruk <oleksandr.kozaruk-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 0/2] TWL6030, TWL6032 GPADC driver
+Date: Fri, 12 Jul 2013 10:18:00 +0300
+Message-ID: <1373613482-28390-1-git-send-email-oleksandr.kozaruk@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAODwPW9dmwpXeyBeVER9azsh2uW3NXLTbDtz3mJaXrvSwb6opg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Julius Werner <jwerner@chromium.org>
-Cc: balbi@ti.com, LKML <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Vivek Gautam <gautam.vivek@samsung.com>, Praveen Paneri <p.paneri@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Tushar Behera <tushar.behera@linaro.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@chromium.org>, Vincent Palatin <vpalatin@chromium.org>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, milo.kim-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---+jhVVhN62yS6hEJ8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi,
+v3 - fixed compiler warning
+v2 - the driver put in drivers/iio, and
+converted using iio facilities as suggested by Graeme.
 
-On Wed, Jul 10, 2013 at 10:42:27AM -0700, Julius Werner wrote:
-> Hi Felipe,
->=20
-> This is intended to pull down a reset signal line, not to switch power
-> to the device. I could implement that with the regulator framework
-> too, but I think that would just be confusing and harder to understand
-> without providing any benefit. It's really just a plain old GPIO.
+TWL603[02] GPADC is used to measure battery voltage,
+battery temperature, battery presence ID, and could
+be used to measure twl603[02] die temperature.
+This is used on TI blaze, blaze tablet platforms.
 
-alright, in that case how about using drivers/reset/ ?
+The TWL6030/TWL6032 is a PMIC that has a GPADC with 17/19
+channels respectively. Some channels have current
+source and are used for measuring voltage drop
+on resistive load for detecting battery ID resistance,
+or measuring voltage drop on NTC resistors for external
+temperature measurements, other channels measure voltage,
+(i.e. battery voltage), and have inbuilt voltage dividers,
+thus, capable to scale voltage. Some channels are dedicated
+for measuring die temperature.
 
---=20
-balbi
+Some channels could be calibrated in 2 points, having
+offsets from ideal values in trim registers.
 
---+jhVVhN62yS6hEJ8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The difference between GPADC in TWL6030 and TWL6032:
+- 10 bit vs 12 bit ADC;
+- 17 vs 19 channels;
+- channels have different purpose(i. e. battery voltage
+  channel 8 vs channel 18);
+- trim values are interpreted differently.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+The driver exports function returning converted value for
+requested channels.
 
-iQIcBAEBAgAGBQJR36jeAAoJEIaOsuA1yqREPkgP/isbYeG4jRaimYMNBWfhFKpI
-9ZA3AWoO9oYP9W8iFd0Ss4xnbDpUzp2iKlyux+7D2brMmUihwforDJjGYhGs70P7
-KW3bO1JuUyvjGc2T+Zu/RsRdwfOr/m0YaRvVIuRs5BtvB1qPVpdGi3TLD758+stV
-tRW+UX30KARKnClQXnTrnXeeArd2Wie7IOI05c2+y9PK6/RCWgENsC3qZQxxTQZR
-mDBUxe+Xtna7ZM7xGvBcKrrMUlc/796LJP8DKK5j5of4FaKOWcP8aZN4o9d1Fez4
-CdB7rv8BJcu/Pa6VUjl3VRvo+My7cnhvAnWxobclyPVoj1hkXU4o5KMH4ydH0WnQ
-hx0YKm4Kf/5k2LZRUhFnUE6KujR7R7AJrcOlNyfvJ3EKdbllWESuls+umMIRfvlT
-CLun+XMGMqk8AqkUD/orYKJC1LsDCTtyRfXPFTvleAuR2/v2zusv/XBfjOTyp5LA
-wNGEoWt1/QY8SoKfIOSNcYNLHVJJAf3/E+neCKwBaqQOW8HDJzx+oXVRIORaJUVD
-VvRBDEt07S4/q5lCaKhTouliCyEDOolh8CXVc0/GovQfYv6eheddfgj4gPbwUFR3
-TWfrUImfuJzmZeggbPb271lMrPaMyC80IWb03s83q9Q9CDOr6/OiE3DboWZvx31/
-+8mbayC5LH6iUxbCSbRb
-=rrdx
------END PGP SIGNATURE-----
+Sysfs entries are added to start and read conversion result
+in millivolts for chosen channel.
 
---+jhVVhN62yS6hEJ8--
+The driver is derived from git://git.omapzoom.org/kernel/omap.git
+The original driver's authors and contributors are Balaji T K,
+Graeme Gregory, Ambresh K, Girish S Ghongdemath.
+
+The changes to the original driver:
+- device tree adaptation;
+- drop ioctl support - never been used;
+- unified measurement method for both devices;
+- get rid of "if (device == X)" code style to data driven;
+- drop polling end of conversion and use interrupt instead;
+- iio framework is used
+
+Tested with on blaze tablet 2 with OMAP4430(twl6030), and
+OMAP4470(twl6032) SOMs.
+
+The patches were tested against 3.10-rc7
+
+Oleksandr Kozaruk (2):
+  ARM: dts: twl: Add GPADC data to device tree
+  iio: twl6030-gpadc: TWL6030, TWL6032 GPADC driver
+
+ arch/arm/boot/dts/twl6030.dtsi  |    6 +
+ drivers/iio/adc/Kconfig         |    8 +
+ drivers/iio/adc/Makefile        |    1 +
+ drivers/iio/adc/twl6030-gpadc.c | 1019 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 1034 insertions(+)
+ create mode 100644 drivers/iio/adc/twl6030-gpadc.c
+
+-- 
+1.7.9.5
