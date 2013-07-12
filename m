@@ -1,75 +1,57 @@
-From: Jason Cooper <jason@lakedaemon.net>
+From: Daniel Drake <dsd@laptop.org>
 Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
-Date: Fri, 12 Jul 2013 11:57:33 -0400
-Message-ID: <20130712155733.GZ11908@titan.lakedaemon.net>
+Date: Fri, 12 Jul 2013 10:05:45 -0600
+Message-ID: <CAMLZHHRrrHpSkNbabP9ALKBXemUw07=VmB6kBoD+4u05HQwQ_Q@mail.gmail.com>
 References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
- <1373352166-10064-2-git-send-email-zhangwm@marvell.com>
- <20130709124900.GG11908@titan.lakedaemon.net>
- <CAN1soZxiOh6TpbUOCUzK8gNwmvjbT3ihkUWaw8tuZ7md+NVA2g@mail.gmail.com>
- <20130710122433.GO11908@titan.lakedaemon.net>
- <CAN1soZzMvront1-jcBW6-uRKNs0OZNGnmiOjKGZSM28bViB_8A@mail.gmail.com>
- <20130710215041.GR11908@titan.lakedaemon.net>
- <CAN1soZzuiukY9qASFNcH0k=zH8=uT=71bKejPss44FCzNy=X-A@mail.gmail.com>
- <CAMLZHHQGZvDssY-YxQ3ZW8FYhpG-H1-VbokOid33socRSPrMNw@mail.gmail.com>
+	<1373352166-10064-2-git-send-email-zhangwm@marvell.com>
+	<20130709124900.GG11908@titan.lakedaemon.net>
+	<CAN1soZxiOh6TpbUOCUzK8gNwmvjbT3ihkUWaw8tuZ7md+NVA2g@mail.gmail.com>
+	<20130710122433.GO11908@titan.lakedaemon.net>
+	<CAN1soZzMvront1-jcBW6-uRKNs0OZNGnmiOjKGZSM28bViB_8A@mail.gmail.com>
+	<20130710215041.GR11908@titan.lakedaemon.net>
+	<CAN1soZzuiukY9qASFNcH0k=zH8=uT=71bKejPss44FCzNy=X-A@mail.gmail.com>
+	<CAMLZHHQGZvDssY-YxQ3ZW8FYhpG-H1-VbokOid33socRSPrMNw@mail.gmail.com>
+	<20130712155733.GZ11908@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMLZHHQGZvDssY-YxQ3ZW8FYhpG-H1-VbokOid33socRSPrMNw@mail.gmail.com>
+In-Reply-To: <20130712155733.GZ11908@titan.lakedaemon.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Drake <dsd@laptop.org>
+To: Jason Cooper <jason@lakedaemon.net>
 Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, Bergmann Arnd <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Neil Zhang <zhangwm@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 12, 2013 at 09:10:49AM -0600, Daniel Drake wrote:
-> On Thu, Jul 11, 2013 at 5:54 PM, Haojian Zhuang
-> <haojian.zhuang@gmail.com> wrote:
-> >> Well, Daniel Drake spoke up for OLPC.  Does that count?
-> >
-> > We don't know they used DT on Marvell MMP2/MMP3. So they don't have DTS file
-> > in kernel, we could use both old name & new name in driver.
-> 
-> You are listed as one of the MMP maintainers in the MAINTAINERS file
-> and I have sent you several patches in the few 3 weeks which make
-> OLPC's usage of MMP + DT pretty obvious. As a maintainer I believe you
-> are supposed to review the patches too. hint hint ;)
-> 
-> My request to avoid breaking compatibility actually comes as a
-> two-prong request.
-> 
-> I would prefer to see these compatible properties stay the same as it
-> seems like changing them has little purpose/benefit - and there *will*
-> become a later point where changing them causes major breakage.
+On Fri, Jul 12, 2013 at 9:57 AM, Jason Cooper <jason@lakedaemon.net> wrote:
+> This also means we should do a patch for stable v3.5+ appending the
+> "mrvl,..." string to the drivers that had it removed improperly, as
+> Daniel discovered.  Daniel, since you are probably most familiar (and
+> most able to test ;-) ), would you mind putting that patch together?
 
-I agree with both of you :)  It needs to stabilise quickly, but since
-the first inception of Marvell compatible strings was in the mv643xx_eth
-driver for powerpc (long before ARM thought it was cool), and they used
-"marvell,...", I think we should stick with that.
+I will look at that. There was another case of a quiet mrvl->marvell
+conversion that bit us around a year ago as well, so I will dig that
+up too for consideration.
 
-Which means doing as Haojian now realizes, and having both strings in
-the relevant drivers.
+> So we don't have to keep it around forever, we could do as Arnd has
+> suggested in the past (for an entirely different problem):
+>
+>         /* assuming it goes in for v3.12 */
+>         if (WARN_ON(of_device_is_compatible(dev, "mrvl,..."))) {
+>                 dev_info(&dev->dev, "compatible string \"mrvl,...\" being removed in v3.15\n");
+>                 BUG_ON(LINUX_VERSION_CODE >= KERNEL_VERSION(3,15,0));
+>         }
+>
+> * I can't find where Arnd's suggestion was, so this hack is completely
+> my own.
+>
+> Keep in mind, the above hack is just a suggestion, it makes my skin
+> crawl just looking at it... I'm open to other ideas.  Or, not doing it
+> at all.
 
-This also means we should do a patch for stable v3.5+ appending the
-"mrvl,..." string to the drivers that had it removed improperly, as
-Daniel discovered.  Daniel, since you are probably most familiar (and
-most able to test ;-) ), would you mind putting that patch together?
+A new OpenFirmware or dtb file would want to keep the old mrvl
+compatible string around in order to have compatibility with old
+kernels. So I think that hack would have to be extended to "if device
+is compatible with mrvl, but not marvell, then warn". And that seems
+so ugly that my vote would be to avoid it. Especially while we don't
+know of existing users who have a requirement of stability.
 
-So we don't have to keep it around forever, we could do as Arnd has
-suggested in the past (for an entirely different problem):
-
-	/* assuming it goes in for v3.12 */
-	if (WARN_ON(of_device_is_compatible(dev, "mrvl,..."))) {
-		dev_info(&dev->dev, "compatible string \"mrvl,...\" being removed in v3.15\n");
-		BUG_ON(LINUX_VERSION_CODE >= KERNEL_VERSION(3,15,0));
-	}
-
-* I can't find where Arnd's suggestion was, so this hack is completely
-my own.
-
-Keep in mind, the above hack is just a suggestion, it makes my skin
-crawl just looking at it... I'm open to other ideas.  Or, not doing it
-at all.
-
-thx,
-
-Jason.
+Daniel
