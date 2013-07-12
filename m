@@ -1,15 +1,12 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
-Date: Fri, 12 Jul 2013 08:40:07 -0600
-Message-ID: <51E01547.4030204@wwwdotorg.org>
-References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1373553468-6564-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <51DEEE15.7040801@wwwdotorg.org> <3211864.2dENa1E110@avalon>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] regulator: pfuze100: add pfuze100 regulator driver
+Date: Fri, 12 Jul 2013 15:40:37 +0100
+Message-ID: <20130712144037.GJ24508@sirena.org.uk>
+References: <1373604855-17714-1-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2179986935098560423=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <3211864.2dENa1E110@avalon>
+In-Reply-To: <1373604855-17714-1-git-send-email-b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,83 +17,114 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <linux-arm-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/12/2013 04:41 AM, Laurent Pinchart wrote:
-> Hi Stephen,
-> 
-> On Thursday 11 July 2013 11:40:37 Stephen Warren wrote:
->> On 07/11/2013 08:37 AM, Laurent Pinchart wrote:
->>> Define PWM_POLARITY_NORMAL and PWM_POLARITY_INVERTED macros in
->>> include/dt-bindings/pwm/pwm.h to be used by device tree sources.
->>>
->>>  Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt |  6 +++---
->>>  Documentation/devicetree/bindings/pwm/pwm-samsung.txt   |  5 +++--
->>>  Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt  |  5 +++--
->>>  Documentation/devicetree/bindings/pwm/pwm.txt           |  8 +++++---
->>>  Documentation/devicetree/bindings/pwm/vt8500-pwm.txt    |  5 +++--
->>>  arch/arm/boot/dts/am335x-evm.dts                        |  3 ++-
->>>  arch/arm/boot/dts/am335x-evmsk.dts                      |  3 ++-
->>>  arch/arm/boot/dts/wm8850-w70v2.dts                      |  3 ++-
->>>  include/dt-bindings/pwm/pwm.h                           | 15 ++++++++++++
->>>  include/linux/pwm.h                                     |  4 ++--
->>
->> I think this needs to be separate patches; at least the new pwm.h should
->> be introduced separately to the board-specific *.dts edits, and perhaps
->> further split up?
-> 
-> What about splitting it in three patches that
-> 
-> - add the include/dt-bindings/pwm/pwm.h header, and update include/linux/pwm.h 
-> and Documentation/devicetree/bindings/pwm/pwm.txt
-> 
-> - update the rest of the documentation
-> 
-> - update the .dts files
 
-I think that sounds reasonable.
+--===============2179986935098560423==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="o9mtL5OVI48+DSkO"
+Content-Disposition: inline
 
->> That way, the one patch that introduces <dt-bindings/pwm.h> would be
->> available to be merged into any other tree that wanted to take patches
->> to use the new defines.
->>
->>> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
->>>
->>>  enum pwm_polarity {
->>>
->>> -	PWM_POLARITY_NORMAL,
->>> -	PWM_POLARITY_INVERSED,
->>> +	PWM_POLARITY_NORMAL = 0,
->>> +	PWM_POLARITY_INVERSED = 1,
->>>
->>>  };
->>
->> Rather than manually editing that to ensure the enum matches the DT bindings
->> header, the whole point of making a separate <dt-bindings/...> directory was
->> that drivers could include the binding header files directly to avoid having
->> to duplicate the constant definitions. Can't <linux/pwm.h> include <dt-
->> bindings/pwm.h> and remove that enum?
-> 
-> We could do that, but we would then need to modify all drivers to replace 
-> enum_pwm_polarity with unsigned int. Thierry, what's your opinion on this ?
 
-Or perhaps we could keep the enums around, but force the values to match
-the DT constants:
+--o9mtL5OVI48+DSkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-enum pwm_polarity {
-	PWM_POLARITY_NORMAL = PWM_POLARITY_NORMAL,
-	PWM_POLARITY_INVERTED = PWM_POLARITY_INVERTED,
-};
+On Fri, Jul 12, 2013 at 12:54:15PM +0800, Robin Gong wrote:
+> Add pfuze100 regulator driver.
 
-(although obviously you'd need to avoid the enum and DT constants having
-the same name).
+This looks mostly good.  A few small issues below but nothing major.
 
-Although this brings up one point: let's say we support ACPI/.. bindings
-in the future. The enum possibly can't match the binding values from
-every different kind of binding definition (DT, ACPI, ...) so perhaps
-rather than changing the enum definition in <linux/pwm.h>, what we
-should be doing is mapping between the different name-spaces in whatever
-of_xlate function exists for the PWM flags cell. That would be more
-flexible.
+> +enum pfuze_id {
+> +	PFUZE_ID_PFUZE100,
+> +	PFUZE_ID_INVALID,
+> +};
+> +struct pfuze_chip {
+
+Missing blank line here - there are a few other small coding style
+things, checkpatch should help.
+
+> +static struct regulator_ops pfuze100_ldo_regulator_ops;
+> +static struct regulator_ops pfuze100_fixed_regulator_ops;
+> +static struct regulator_ops pfuze100_sw_regulator_ops;
+> +static struct regulator_ops pfuze100_swb_regulator_ops;
+
+Better to just reorder things so that no forward declaration is needed.
+
+> +static const int pfuze100_swbst[] = {
+> +	5000000, 5050000, 5100000, 5150000,
+> +};
+
+This looks like a linear map, the steps are all 50mV?
+
+> +	num_regulators = pfuze_get_num_regulators_dt(&client->dev);
+> +	if (num_regulators <= 0 && pdata)
+> +		num_regulators = pdata->num_regulators;
+> +	if (num_regulators <= 0) {
+> +		dev_err(&client->dev, "no platform data,please add it!\n");
+> +		ret = -EINVAL;
+> +		return ret;
+
+You should just register all the regulators rather than only registering
+those that the user explicitly selects.  This allows users to inpect the
+current configuration and simplifies the code - for example you don't
+need to count the DT nodes and you can just have a simple array in the
+platform data (see how wm831x does this for an example).
+
+> +		/* SW2~SW4 high bit check and modify the voltage value table */
+> +		if (i > PFUZE100_SW1C && i < PFUZE100_SWBST) {
+> +			regmap_read(pfuze_chip->regmap, PFUZE100_SW2VOL +
+> +					(i - PFUZE100_SW2) * 7, &val);
+> +			if (val & 0x40) {
+> +				pfuze100_regulators[id].desc.min_uV = 800000;
+> +				pfuze100_regulators[id].desc.uV_step = 50000;
+> +			}
+> +		}
+
+You should really be doing this on a copy of the regulators table rather
+than on the table itself.
+
+> +	for (i = 0; i < pfuze_chip->num_regulators; i++)
+> +		regulator_unregister(pfuze_chip->regulators[i]);
+> +	kfree(pfuze_chip);
+
+Use devm_kzalloc().
+
+--o9mtL5OVI48+DSkO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR4BViAAoJELSic+t+oim9vNEP/3batZMGIYpsUfgzHKX2XMB4
+KP9X1TkR++c8/B2OLHO53kIRu9bAQZ+2uNZrwOogl4w1OQLAL0ziNeNBzIcs7BUe
+zkAjrgkSveG3M6e/WBjx4fVxAnvfM5p3Ymy5stwxdnrUeX/G4pRB0eFBkXdtqbws
+kouDTsZnFjLc4jMGu0ZJbFJYhGKX52D1FyjrmftRexvAt9VC812KQ0Ysl0L+Z1Il
+JnKR90oKoFALvBIWHGSA7A0muo5M/l4c80ZSFeLjhvtYv1BE/ppPQdCZXk7UcOJo
+PF9sxeijg+v87oUpOROGXHFgOXwhwLFBy5l/IIxHNuUPysPnYroK+UreYF+MrQiV
+pQeZ5wtKnf0SRFXrUFqTQpDQsgnWcQj86GYkowPS9qUv2SBKspAdsZP0zgzCUSs4
+9HjW1K/tZR3PK1xF29r5bC9FrQNIAXvBzvutlPvxTMMvwGBiDrFWLEbzXqBLLi1f
+dC7UF82UNxlOmp/sj/iw+Uljg8VRFcY/k3f1VCNw1Jw+XjJPtjY/aVjYfc/w6soG
+DK6Sh47/rEentR6HebUmlxr9hG0h6GGfgev1e32jynR8VLgxWBPoFBc3S8GJTB6Y
+j4RNwPlgqy6RtRzEaG/UVihFr0CFmitsshbwFVUvBbRky/5QZNhXoj3Dd8OgZPQD
+pMidxTcj1GUH6SI77353
+=QY+C
+-----END PGP SIGNATURE-----
+
+--o9mtL5OVI48+DSkO--
+
+--===============2179986935098560423==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2179986935098560423==--
