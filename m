@@ -1,128 +1,150 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
-Date: Fri, 12 Jul 2013 11:40:44 -0600
-Message-ID: <51E03F9C.2060903@wwwdotorg.org>
-References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1373553468-6564-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <51DEEE15.7040801@wwwdotorg.org> <3211864.2dENa1E110@avalon> <51E01547.4030204@wwwdotorg.org> <20130712172441.GB9620@dhcp-172-17-186-34.nvidia.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: DT binding review for Armada display subsystem
+Date: Fri, 12 Jul 2013 20:39:52 +0200
+Message-ID: <20130712203952.6b7aa927@armhf>
+References: <20130712164428.AC3D2FAAE9@dev.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130712172441.GB9620@dhcp-172-17-186-34.nvidia.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, Philip Avinash <avinashphilip@ti.com>, Boris BREZILLON <linux-arm@overkiz.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130712164428.AC3D2FAAE9@dev.laptop.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Drake <dsd@laptop.org>
+Cc: devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, grant.likely@secretlab.ca, rmk@arm.linux.org.uk, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/12/2013 11:24 AM, Thierry Reding wrote:
-> On Fri, Jul 12, 2013 at 08:40:07AM -0600, Stephen Warren wrote:
->> On 07/12/2013 04:41 AM, Laurent Pinchart wrote:
->>> Hi Stephen,
-> [...]
->>> What about splitting it in three patches that
->>> 
->>> - add the include/dt-bindings/pwm/pwm.h header, and update
->>> include/linux/pwm.h and
->>> Documentation/devicetree/bindings/pwm/pwm.txt
->>> 
->>> - update the rest of the documentation
->>> 
->>> - update the .dts files
->> 
->> I think that sounds reasonable.
-> 
-> Shouldn't the addition of include/dt-bindings/pwm/pwm.h be separate
-> from its inclusion in include/linux/pwm.h so that it can be moved
-> more easily (cherry-picked) to a separate repository?
-
-I'm fine with that being another separate patch. However, I doubt
-cherry-picking is an issue here; when the separate DT repo is created,
-it seems likely that someone will simply copy the latest files from
-the latest Linux kernel in order to populate the tree. cherry-picking
-probably won't work because:
-
-a) I doubt that the DT binding/header additions have always been kept
-separate from kernel code changes in all of Linux's history.
-
-b) I wouldn't be remotely surprised if the layout of the new repo was
-entirely different to the kernel source tree layout, so direct
-cherry-pick wouldn't work.
-
-c) Not having a common git history would make adding a kernel remote
-into the DT repo rather odd.
-
-(b) and (c)  would at leat require some kind of git filter operation
-rather than cherry-pick, and this issue could be solve in that filter
-definition.
-
->>>>> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
->>>>> 
->>>>> enum pwm_polarity {
->>>>> 
->>>>> -	PWM_POLARITY_NORMAL, -	PWM_POLARITY_INVERSED, +
->>>>> PWM_POLARITY_NORMAL = 0, +	PWM_POLARITY_INVERSED = 1,
->>>>> 
->>>>> };
->>>> 
->>>> Rather than manually editing that to ensure the enum matches
->>>> the DT bindings header, the whole point of making a separate
->>>> <dt-bindings/...> directory was that drivers could include
->>>> the binding header files directly to avoid having to
->>>> duplicate the constant definitions. Can't <linux/pwm.h>
->>>> include <dt- bindings/pwm.h> and remove that enum?
->>> 
->>> We could do that, but we would then need to modify all drivers
->>> to replace enum_pwm_polarity with unsigned int. Thierry, what's
->>> your opinion on this ?
->> 
->> Or perhaps we could keep the enums around, but force the values
->> to match the DT constants:
->> 
->> enum pwm_polarity { PWM_POLARITY_NORMAL = PWM_POLARITY_NORMAL, 
->> PWM_POLARITY_INVERTED = PWM_POLARITY_INVERTED, };
->> 
->> (although obviously you'd need to avoid the enum and DT constants
->> having the same name).
-> 
-> I think I've seen stuff like the following done in a few header
-> files to keep compatibility between enums and defines.
-> 
-> enum foo { BAR, #define BAR BAR BAZ, #define BAZ BAZ };
-> 
-> Which, as I understand it, won't work in this case because DTC can
-> only cope with plain cpp files?
-
-Yeah, dtc doesn't understand "enum", so you can't include an enum
-definition in a DT file. You have to share simple #define headers
-between DT and kernel code.
-
->> Although this brings up one point: let's say we support ACPI/..
->> bindings in the future. The enum possibly can't match the binding
->> values from every different kind of binding definition (DT, ACPI,
->> ...) so perhaps rather than changing the enum definition in
->> <linux/pwm.h>, what we should be doing is mapping between the
->> different name-spaces in whatever of_xlate function exists for
->> the PWM flags cell. That would be more flexible.
-> 
-> I'm not quite sure what exactly you are suggesting here. Can you 
-> elaborate?
-
-Suppose ACPI (or whatever else) starts representing PWM devices.
-Suppose the author isn't aware that DT exists, represents PWM devices
-and/or has already defined some PWM-related flags. So, ACPI picks bit
-5 in some data value to represent inverted, rather than bit 0. Then,
-there is no way that all of [ (a) DT binding PWM flags (b) ACPI PWM
-flags (c) Linux's enum foo ] can use the same values. Hence, some
-mapping is required between them.
-
-The typical way to do this is to define an "of_xlate" function which
-converts from DT cell values to Linux-internal representation.
-Presumably if we added an ACPI parser, there'd be some equivalent for
-that.
-
-So, what I'm arguing for is that of_pwm_simple_xlate() (or any other
-custom xlate function) should include both <dt-bindings/pwm/pwm.h> and
-<linux/pwm.h>, and contain explicit code to convert between the two
-name-spaces of flags definitions. Since those two name-spaces
-currently are 100% identical, presumably if the code is written in the
-right way, the compiler will actually just optimize it all away...
-
+T24gRnJpLCAxMiBKdWwgMjAxMyAxMjo0NDoyOCAtMDQwMCAoRURUKQpEYW5pZWwgRHJha2UgPGRz
+ZEBsYXB0b3Aub3JnPiB3cm90ZToKCj4gSGksCj4gCj4gQmFzZWQgb24gdGhlIG91dGNvbWVzIG9m
+IHRoZSAiQmVzdCBwcmFjdGljZSBkZXZpY2UgdHJlZSBkZXNpZ24gZm9yIGRpc3BsYXkKPiBzdWJz
+eXN0ZW1zIiBkaXNjdXNzaW9uIEkgaGF2ZSBkcmFmdGVkIGEgRFQgYmluZGluZy4gQ29tbWVudHMg
+bXVjaCBhcHByZWNpYXRlZC4KPiAKPiBBdCBhIGhpZ2ggbGV2ZWwsIGl0IHVzZXMgYSAic3VwZXIg
+bm9kZSIgYXMgc29tZXRoaW5nIGZvciB0aGUgZHJpdmVyIHRvIGJpbmQKPiB0bywgbmVlZGVkIGJl
+Y2F1c2UgdGhlcmUgaXMgbm8gY2xlYXIgb25lIGRldmljZSB0aGF0IGNvbnRyb2xzIGFsbCB0aGUK
+PiBvdGhlcnMsIGFuZCBhbHNvIHRvIGRpc3Rpbmd1aXNoIGJldHdlZW4gdGhlIEFybWFkYSA1MTAg
+cG9zc2libGUgdXNlIGNhc2VzCj4gb2YgaGF2aW5nIG9uZSB2aWRlbyBjYXJkIHdpdGggdHdvIG91
+dHB1dHMsIG9yIHR3byBpbmRlcGVuZGVudCB2aWRlbyBjYXJkcy4KPiBJdCB1c2VzIG5vZGUtdG8t
+bm9kZSBsaW5raW5nIGJleW9uZCB0aGF0IHBvaW50LCBWNEwyIHN0eWxlLgo+IAo+IEkgaGF2ZSBz
+b21lIHF1ZXN0aW9ucyBzdGlsbDoKPiAKPiAxLiBXaGF0IG5hbWVzIGRvZXMgdGhlIEFybWFkYSA1
+MTAgZGF0YXNoZWV0IGdpdmUgdG8gdGhlIGNvbXBvbmVudHM/IEJlbG93Cj4gICAgSSByZW5hbWVk
+IHRoZSAiTENEIGNvbnRyb2xsZXJzIiAod2hpY2ggZG9uJ3QgY29udHJvbCBMQ0RzIG9uIGFueSBv
+ZiB0aGUKPiAgICBjdXJyZW50IHRhcmdldCBoYXJkd2FyZSkgdG8gImRpc3BsYXkgY29udHJvbGxl
+cnMiLiBGb3Igd2hhdCB3ZSB3ZXJlCj4gICAgcHJldmlvdXNseSByZWZlcnJpbmcgdG8gYXMgRENP
+TiwgSSByZW5hbWVkIHRvICJvdXRwdXQgc2VsZWN0b3IiLiBJIHdvdWxkCj4gICAgbGlrZSB0byBt
+YXRjaCB0aGUgZG9jcy4KPiAKPiAgICBBY3R1YWxseSB0aGUgb3V0cHV0IHNlbGVjdG9yIGlzIG5v
+dCBtZW50aW9uZWQgYXMgcGVyIFNlYmFzdGlhbidzCj4gICAgc3VnZ2VzdGlvbiwgYnV0IEkgYmVs
+aWV2ZSBpdCB3b3VsZCBmaXQgaW4gdGhlIGJlbG93IGRlc2lnbiBvbmNlIHRoZSBmaXJzdAo+ICAg
+IHVzZXIgY29tZXMgYWxvbmcgKGUuZy4gaXQgd291bGQgc2xvdCBpbiB0aGUgZ3JhcGggYmV0d2Vl
+biBkY29uMCBhbmQgdGRhOTl4KS4KPiAKPiAyLiBPbiB0aGF0IHRvcGljLCB3aGF0IG5hbWVzIGRv
+ZXMgdGhlIEFybWFkYSA1MTAgZGF0YXNoZWV0IGdpdmUgdG8gdGhlCj4gICAgYXZhaWxhYmxlIGNs
+b2Nrcz8gTGV0cyBtYWtlIHRoZW0gbWF0Y2ggdGhlIGRvY3MuCj4gCj4gMy4gV2hhdCBpcyB0aGUg
+InJlbW90ZSIgcHJvcGVydHkgaW4gdGhlIHZpZGVvIGludGVyZmFjZXMgYmluZGluZz8gRG9lc24n
+dAo+ICAgIHNlZW0gdG8gYmUgZG9jdW1lbnRlZC4gQnV0IEkgdGhpbmsgSSBjb3BpZWQgaXRzIHVz
+YWdlIHN0eWxlIGJlbG93LgoKSGkgRGFuaWVsLAoKVGhlIEFybWFkYSA1MTAgc3BlYyBpczoKCmh0
+dHA6Ly93d3cubWFydmVsbC5jb20vYXBwbGljYXRpb24tcHJvY2Vzc29ycy9hcm1hZGEtNTAwL2Fz
+c2V0cy9Bcm1hZGEtNTEwLUZ1bmN0aW9uYWwtU3BlYy5wZGYKCj4gTWFydmVsbCBBcm1hZGEgRGlz
+cGxheSBTdWJzeXN0ZW0KPiAKPiBEZXNpZ24gY29uc2lkZXJhdGlvbnMKPiAtLS0tLS0tLS0tLS0t
+LS0tLS0tLS0KPiAKPiBUaGUgZGlzcGxheSBkZXZpY2UgdGhhdCBlbWVyZ2VzIGZyb20gdGhpcyBz
+dWJzeXN0ZW0gaXMgcXVpdGUgaGVhdmlseQo+IGNvbXBvbmVudGl6ZWQgYW5kIHRoZSBmb3JtYXRp
+b24gb2YgdGhlIGNvbXBvc2l0ZSBkZXZpY2Ugd2lsbCB2YXJ5IGJ5IFNvQyBhbmQKPiBieSBib2Fy
+ZC4gVGhlIERUIGJpbmRpbmcgaXMgZGVzaWduZWQgd2l0aCB0aGlzIGZsZXhpYmlsaXR5IGluIG1p
+bmQuCj4gCj4gRm9yIGV4YW1wbGUsIHRoZXJlIGFyZSAyIGRpc3BsYXkgY29udHJvbGxlcnMgb24g
+dGhlIEFybWFkYSA1MTAuCj4gVGhleSBjb3VsZCBsZWdpdGFtZXRlbHkgYmUgdXNlZCB0byBmb3Jt
+IHR3byBpbmRlcGVuZGVudCB2aWRlbyBjYXJkcywgb3IKPiB0aGV5IGNvdWxkIGJlIGNvbWJpbmVk
+IGludG8gYSBzaW5nbGUgdmlkZW8gY2FyZCB3aXRoIHR3byBvdXRwdXRzLCBkZXBlbmRpbmcKPiBv
+biBib2FyZCB3aXJpbmcgYW5kIHVzZSBjYXNlLgo+IAo+IEFzIHRoZXJlIGlzIG5vIGNsZWFyIGNv
+bXBvbmVudCB0aGF0IGNvbnRyb2xzIHRoZSBvdGhlciBjb21wb25lbnRzLCBlc3BlY2lhbGx5Cj4g
+d2hlbiB3ZSB3aXNoIHRvIGNvbWJpbmUgdGhlIHR3byBkaXNwbGF5IGNvbnRyb2xsZXJzIGludG8g
+b25lIHZpcnR1YWwgZGV2aWNlLCB3ZQo+IGRlZmluZSBhIHRvcC1sZXZlbCAic3VwZXIgbm9kZSIg
+dGhhdCBkZXNjcmliZXMgdGhlIGJhc2ljIGNvbXBvc2l0aW9uIG9mIHRoZQo+IG92ZXJhbGwgZGlz
+cGxheSBkZXZpY2UuIFRoYXQgbm9kZSB1c2VzIHBoYW5kbGVzIHRvIGRlZmluZSB0aGUgc3RhcnQg
+b2YgdGhlCj4gZ3JhcGggb2YgZGlzcGxheSBjb21wb25lbnRzLgo+IAo+IEluIHRoZSBiaW5kaW5n
+cyBmb3IgdGhlIGluZGl2aWR1YWwgZGlzcGxheSBjb21wb25lbnRzLCBwaGFuZGxlIHByb3BlcnRp
+ZXMKPiBhcmUgdXNlZCB0byByZXByZXNlbnQgZGlyZWN0LCBmaXhlZCBsaW5rcyB0byBvdGhlciBj
+b21wb25lbnRzLiBXZSB1c2UgdGhlCj4gcG9ydC9lbmRwb2ludCBhYnN0cmFjdGlvbiBmcm9tIGJp
+bmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0IHRvCj4gcmVwcmVzZW50IHRoZXNlIGxp
+bmtzLgo+IAo+IAo+IGRpc3BsYXkgc3VwZXIgbm9kZQo+IC0tLS0tLS0tLS0tLS0tLS0tLQo+IAo+
+IFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIC0gY29tcGF0aWJsZTogIm1hcnZlbGwsYXJtYWRhLWRp
+c3BsYXkiCj4gIC0gbWFydmVsbCx2aWRlby1kZXZpY2VzIDogTGlzdCBvZiBwaGFuZGxlcyB0byB0
+aGUgZGlzcGxheSBjb250cm9sbGVycyB0aGF0Cj4gICAgZm9ybSB0aGlzIGNvbXBvc2l0ZSBkZXZp
+Y2UuCj4gCj4gT3B0aW9uYWwgcHJvcGVydGllczsKPiAgLSByZWc6IE1lbW9yeSBhZGRyZXNzIGFu
+ZCBzaXplIG9mIGEgUkFNIGFsbG9jYXRpb24gZGVzaWduYXRlZCBhcyBncmFwaGljcwo+ICAgIG1l
+bW9yeQo+ICAtIGxpbnV4LHZpZGVvLW1lbW9yeS1zaXplOiBJZiByZWcgaXMgbm90IHByb3ZpZGVk
+LCB0aGlzIHByb3BlcnR5IGRlZmluZXMKPiAgICBob3cgbXVjaCBtZW1vcnkgdG8gY3V0IG91dCBv
+ZiByZWd1bGFyIGF2YWlsYWJsZSBSQU0gdG8gYmUgdXNlZCBhcyBncmFwaGljcwo+ICAgIG1lbW9y
+eS4KPiAKPiAKPiBkaXNwbGF5LWNvbnRyb2xsZXIgbm9kZQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tCj4gCj4gUmVxdWlyZWQgcHJvcGVydGllczoKPiAgLSBjb21wYXRpYmxlOiAibWFydmVsbCxh
+cm1hZGEtNTEwLWRpc3BsYXkiLCAibWFydmVsbCxtbXAyLWRpc3BsYXkiIG9yCj4gICAibWFydmVs
+bCxtbXAzLWRpc3BsYXkiCj4gIC0gcmVnOiBSZWdpc3RlciBzcGFjZSBmb3IgdGhpcyBkaXNwbGF5
+IGNvbnRyb2xsZXIKPiAgLSBjbG9ja3M6IExpc3Qgb2YgY2xvY2tzIGF2YWlsYWJsZSB0byB0aGlz
+IGRldmljZS4gRnJvbSBjb21tb24gY2xvY2sgYmluZGluZy4KPiAgLSBjbG9jay1uYW1lczogTmFt
+ZXMgb2YgdGhlIGdpdmVuIGNsb2NrcyAoc2VlIGJlbG93KQo+ICAtIHBvcnRzOiBGcm9tIHZpZGVv
+IGludGVyZmFjZSBiaW5kaW5nCj4gCj4gVmFsaWQgY2xvY2sgbmFtZXMgZm9yIEFybWFkYSA1MTA6
+IGV4dGNsazAgZXh0Y2xrMSBheGkgcGxsCj4gCj4gVmFsaWQgY2xvY2sgbmFtZXMgZm9yIE1NUDI6
+IGxjZDEgbGNkMiBheGkgaGRtaQo+IAo+IFZhbGlkIGNsb2NrIG5hbWVzIGZvciBNTVAzOiBsY2Qx
+IGxjZDIgYXhpIGhkbWkgZHNpIGx2ZHMKPiAKPiAKPiBFeGFtcGxlOgo+IAo+ICAgICBkaXNwbGF5
+IHsKPiDDgsKgIMOCwqAgICBjb21wYXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLWRpc3BsYXkiOwo+
+IMOCwqAgw4LCoCDDgsKgIHJlZyA9IDwwIDB4M2YwMDAwMDAgMHgxMDAwMDAwPjsgLyogdmlkZW8t
+bWVtIGhvbGUgKi8KPiDDgsKgIMOCwqAgw4LCoCBtYXJ2ZWxsLHZpZGVvLWRldmljZXMgPSA8JmRj
+b24wPjsKPiDDgsKgIMOCwqAgfTsKPiAKPiAgICAgZGNvbjA6IGRpc3BsYXktY29udHJvbGxlckAy
+MDAwMCB7Cj4gICAgICAgY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGFybWFkYS01MTAtZGlzcGxheS1j
+b250cm9sbGVyIjsKPiDDgsKgIMOCwqAgw4LCoCByZWcgPSA8MHgyMDAwMCAweDEwMDA+Owo+IMOC
+wqAgw4LCoCDDgsKgIGludGVycnVwdHMgPSA8NDc+Owo+IMOCwqAgw4LCoCDDgsKgIGNsb2NrcyA9
+IDwmZXh0X2NsazA+Owo+IMOCwqAgw4LCoCDDgsKgIGNsb2NrLW5hbWVzID0gImV4dGNsazAiOwo+
+IAo+ICAgICAgIHBvcnQgewo+ICAgICAgICAgZGNvbjBfMTogZW5kcG9pbnQgewo+ICAgICAgICAg
+ICByZW1vdGUgPSA8JnRkYTk5OHg+Owo+ICAgICAgICAgfTsKPiAgICAgICB9Owo+ICAgICB9Owo+
+IAo+ICAgICAmaTJjMCB7Cj4gw4LCoCDDgsKgICAgdGRhOTk4eDogaGRtaS10cmFuc21pdHRlckA2
+MCB7Cj4gw4LCoCDDgsKgIMOCwqAgICBjb21wYXRpYmxlID0gIm54cCx0ZGExOTk4OCI7Cj4gw4LC
+oCDDgsKgIMOCwqAgw4LCoCByZWcgPSA8MHg2MD47Cj4gICAgICAgICBwb3J0IHsKPiAgICAgICAg
+ICAgdGRhOTk4eF8xOiBlbmRwb2ludCB7Cj4gICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0g
+PCZkY29uMF8xPjsKPiAgICAgICAgICAgfTsKPiAgICAgICAgIH07Cj4gw4LCoCDDgsKgIMOCwqAg
+fTsKPiAgICAgfTsKClNvbWUgcmVtYXJrczoKCi0gSSB0aGluayBpdCBpcyBiZXR0ZXIgdG8ga2Vl
+cCB0aGUgbmFtZXMgJ2xjZCcgZm9yIHRoZSBtZW1vcnkgdG8gZHVtYiBwYW5lbAogIHN1Yi1kZXZp
+Y2VzIGFuZCAnZGNvbicgZm9yIHRoZSBkdW1iIHBhbmVsIHRvIExDRC9WR0Egc3ViLWRldmljZSwg
+YXMKICBuYW1lZCBpbiB0aGUgc3BlYy4KCi0gdGhlIHBoYW5kbGVzIHRvIHRoZSBjbG9ja3MgZG9l
+cyBub3QgdGVsbCBob3cgdGhlIGNsb2NrIG1heSBiZSBzZXQgYnkKICB0aGUgZHJpdmVyIChpdCBp
+cyBhbiBhcnJheSBpbmRleCBpbiB0aGUgNTEwKS4KCi0gSSBkb24ndCBzZWUgdGhlIHVzZSBvZiB0
+aGUgcGhhbmRsZXMgaW4gdGhlIGxlYXZlcyAoZGNvbiBhbmQgdGRhOTk4eCkuCgpXZWxsLCBoZXJl
+IGlzIGhvdyBJIGZlZWwgdGhlIERUczoKCi0gZm9yIHRoZSBDdWJveCAob25lIExDRCwgdGhlIERD
+T04gaXMgbm90IHVzZWQsIFREQTk5OHggZm9yIEhETUkvRFZJCiAgb3V0cHV0KToKCgl2aWRlbyB7
+CgkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGFybWFkYS12aWRlbyI7CgkJbWFydmVsbCx2aWRlby1k
+ZXZpY2VzID0gPCZsY2QwPgkJLyogb25seSBvbmUgZGV2aWNlICovCgl9OwoKCS8qIHRoZSBMQ0Qg
+cmVnIGFuZCBpbnRlcnJ1cHRzIGFyZSBkZXNjcmliZWQgaW4gZG92ZS5kdHNpICovCgoJJmxjZDAg
+ewoJCXN0YXR1cyA9ICJva2F5IjsKCQljbG9ja3MgPSA8JmNvcmVfY2xrIDM+LCA8JmxjZGNsaz4s
+IDwmc2k1MzUxIDA+OwoJCW1hcnZlbGwsY2xvY2stdHlwZSA9IDwwPiwgPDI+LCA8Mz47CS8qIGhv
+dyB0byBzZXQgdGhlIGNsb2NrICovCgkJbWFydmVsbCxjb25uZWN0b3ItdHlwZSA9IDwxMT47CQkv
+KiBIRE1JQSAqLwoJCW1hcnZlbGwsZXh0ZXJuYWwtZW5jb2RlciA9IDwmdGRhOTk4eD47Cgl9OwoK
+CSZpMmMwIHsKCQlzaTUzNTE6IGNsb2NrLWdlbmVyYXRvciB7CgkJCS4uLgoJCX07CgkJdGRhOTk4
+eDogaGRtaS1lbmNvZGVyIHsKCQkJY29tcGF0aWJsZSA9ICJueHAsdGRhOTk4eCI7CgkJCXJlZyA9
+IDwweDcwPjsKCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzA+OwoJCQlpbnRlcnJ1cHRzID0g
+PDI3IDI+OwkJLyogZmFsbGluZyBlZGdlICovCgkJfTsKCX07CgotIGZvciBzb21lIHRhYmxldCBi
+YXNlZCBvbiB0aGUgQXJtYWRhIDUxMCB3aXRoIGEgTENEIGFuZCBhIFZHQSBjb25uZWN0b3I6CgoJ
+dmlkZW8gewoJCWNvbXBhdGlibGUgPSAibWFydmVsbCxhcm1hZGEtdmlkZW8iOwoJCW1hcnZlbGws
+dmlkZW8tZGV2aWNlcyA9IDwmbGNkMD4sIDwmbGNkMT4sIDwmZGNvbj4KCX07CgoJLyogdGhlIExD
+RHMgcmVnIGFuZCBpbnRlcnJ1cHRzIGFyZSBkZXNjcmliZWQgaW4gZG92ZS5kdHNpICovCgoJJmxj
+ZDAgewkJCQkJCS8qIExDRCAqLwoJCXN0YXR1cyA9ICJva2F5IjsKCQljbG9ja3MgPSA8JmxjZGNs
+az47CQkJLyogb25seSB0aGUgTENEIGNsb2NrICovCgkJbWFydmVsbCxjbG9jay10eXBlID0gPDI+
+OwoJCW1hcnZlbGwsY29ubmVjdG9yLXR5cGUgPSA8Nz47CQkvKiBMVkRTICovCgkJZGlzcGxheS10
+aW1pbmdzIHsKCQkJbW9kZSB7CgkJCQloYWN0aXZlID0gPDE5MjA+OwoJCQkJdmFjdGl2ZSA9IDwx
+MDgwPjsKCQkJCWhmcm9udC1wb3JjaCA9IDw4OD47CgkJCQloc3luYy1sZW4gPSA8NDQ+OwoJCQkJ
+aGJhY2stcG9yY2ggPSA8MTQ4PjsKCQkJCXZmcm9udC1wb3JjaCA9IDw0PjsKCQkJCXZzeW5jLWxl
+biA9IDw1PjsKCQkJCXZiYWNrLXBvcmNoID0gPDM2PjsKCQkJCWNsb2NrID0gPDE0ODUwMD47CgkJ
+CX07CgkJfTsKCX07CgkmbGNkMSB7CQkJCQkJLyogVkdBICovCgkJc3RhdHVzID0gIm9rYXkiOwoJ
+CWNsb2NrcyA9IDwmY29yZV9jbGsgMz4sIDwmbGNkY2xrPjsJLyogb25seSB0aGUgQVhJIGFuZCBM
+Q0QgY2xvY2tzICovCgkJbWFydmVsbCxjbG9jay10eXBlID0gPDA+LCA8Mj47CQkvKiBob3cgdG8g
+c2V0IHRoZSBjbG9jayAqLwoJCW1hcnZlbGwscG9ydC10eXBlID0gPDE+OwkJLyogVkdBICovCgkJ
+CS8qIHRoZXJlIG1heSBiZSBzb21lIGV4dGVybmFsIGVuY29kZXIgdG8gaGFuZGxlIERBQyAqLwoJ
+fTsKCgkvKiB0aGUgRENPTiByZWcgYW5kIGludGVycnVwdHMgYXJlIGRlc2NyaWJlZCBpbiBkb3Zl
+LmR0c2kgKi8KCgkmZGNvbiB7IHN0YXR1cyA9ICJva2F5IjsgfTsKCi0tIApLZW4gYXIgYydoZW50
+YcOxCXwJICAgICAgKiogQnJlaXpoIGhhIExpbnV4IGF0YXYhICoqCkplZgkJfAkJaHR0cDovL21v
+aW5lamYuZnJlZS5mci8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
