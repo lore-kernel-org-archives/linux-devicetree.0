@@ -1,92 +1,81 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH] usb: phy: samsung-usb2: Toggle HSIC GPIO from device tree
-Date: Fri, 12 Jul 2013 12:34:25 +0200
-Message-ID: <2736758.WIzxm4p4Im@thinkpad>
-References: <1373416455-30358-1-git-send-email-jwerner@chromium.org> <CAODwPW-=bo2BqcHopY32N76p6DDGNDmCrKFo1R4gEEZhsG-DYg@mail.gmail.com> <001701ce7e99$95b2c460$c1184d20$@samsung.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
+Date: Fri, 12 Jul 2013 12:41:57 +0200
+Message-ID: <3211864.2dENa1E110@avalon>
+References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1373553468-6564-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <51DEEE15.7040801@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <001701ce7e99$95b2c460$c1184d20$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Dongjin Kim' <tobetter@gmail.com>, 'Julius Werner' <jwerner@chromium.org>, 'LKML' <linux-kernel@vger.kernel.org>, 'Felipe Balbi' <balbi@ti.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Praveen Paneri' <p.paneri@samsung.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Tushar Behera' <tushar.behera@linaro.org>, 'Doug Anderson' <dianders@chromium.org>, 'Olof Johansson' <olofj@chromium.org>, 'Vincent Palatin' <vpalatin@chromium.org>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Fabio Estevam' <festevam@gmail.com>, 'Philipp Zabel' <p.zabel@pengutronix.de>, Yulgon Kim <yulgon.kim@samsung.com>, s.nawrocki@samsung.com, grant.likely@linaro.org, arnd@arndb.de
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51DEEE15.7040801@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, Philip Avinash <avinashphilip@ti.com>, Boris BREZILLON <linux-arm@overkiz.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Stephen,
 
-On Friday 12 of July 2013 09:48:54 Jingoo Han wrote:
-> On Friday, July 12, 2013 6:46 AM, Julius Werner wrote:
-> > Hi Jingoo,
+On Thursday 11 July 2013 11:40:37 Stephen Warren wrote:
+> On 07/11/2013 08:37 AM, Laurent Pinchart wrote:
+> > Define PWM_POLARITY_NORMAL and PWM_POLARITY_INVERTED macros in
+> > include/dt-bindings/pwm/pwm.h to be used by device tree sources.
 > > 
-> > Yeah, I followed that discussion back then, but it seems to have
-> > stalled a little (at least the HSIC patches haven't been picked up in
-> > any kernel.org repo yet to my knowledge).
+> >  Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt |  6 +++---
+> >  Documentation/devicetree/bindings/pwm/pwm-samsung.txt   |  5 +++--
+> >  Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt  |  5 +++--
+> >  Documentation/devicetree/bindings/pwm/pwm.txt           |  8 +++++---
+> >  Documentation/devicetree/bindings/pwm/vt8500-pwm.txt    |  5 +++--
+> >  arch/arm/boot/dts/am335x-evm.dts                        |  3 ++-
+> >  arch/arm/boot/dts/am335x-evmsk.dts                      |  3 ++-
+> >  arch/arm/boot/dts/wm8850-w70v2.dts                      |  3 ++-
+> >  include/dt-bindings/pwm/pwm.h                           | 15 ++++++++++++
+> >  include/linux/pwm.h                                     |  4 ++--
+> 
+> I think this needs to be separate patches; at least the new pwm.h should
+> be introduced separately to the board-specific *.dts edits, and perhaps
+> further split up?
+
+What about splitting it in three patches that
+
+- add the include/dt-bindings/pwm/pwm.h header, and update include/linux/pwm.h 
+and Documentation/devicetree/bindings/pwm/pwm.txt
+
+- update the rest of the documentation
+
+- update the .dts files
+
+> That way, the one patch that introduces <dt-bindings/pwm.h> would be
+> available to be merged into any other tree that wanted to take patches
+> to use the new defines.
+> 
+> > diff --git a/include/linux/pwm.h b/include/linux/pwm.h
 > > 
-> > The problem is that I think these approaches cannot work reliably. I
-> > agree that it would be nice to control the HSIC device from its own
-> > driver, and have spent quite some time playing around with the
-> > usb/misc/usb3503.c driver to try to make this work... but there's a
-> > timing dependency here that you just can't model correctly with
-> > independent drivers.
+> >  enum pwm_polarity {
 > > 
-> > If the HSIC device is already active during boot (e.g. because it was
-> > used by firmware), there's always a chance that the USB stack will
-> > come up before the driver that resets it does. The device will be
-> > enumerated as normal, and when the other driver later pulls the reset
-> > signal the USB stack will not notice because there is no real
-> > disconnect detection on HSIC. Only when you eventually try to send
-> > another transfer to the device will you start to get timeouts, and the
-> > newly reset device will not be able to reenumerate because the host
-> > never asks it to.
+> > -	PWM_POLARITY_NORMAL,
+> > -	PWM_POLARITY_INVERSED,
+> > +	PWM_POLARITY_NORMAL = 0,
+> > +	PWM_POLARITY_INVERSED = 1,
 > > 
-> > I really don't see how you could solve this without putting some kind
-> > of synchronization mechanism in the USB drivers. So this leaves
-> > ehci-s5p and phy-samsung-usb2 as the only possible places, and I chose
-> > the latter since all the host-side HSIC initialization is also there
-> > already. I think if you think of it as "reset whatever is on the other
-> > side of this PHY", it's okay to put it as an optional feature into the
-> > PHY driver.
+> >  };
 > 
-> CC'ed Tomasz Figa, Dongjin Kim, Yulgon Kim
-> 
-> 
-> Hi Tomasz, Dongjin,
-> 
-> Julius Werner wants to put 'SMSC 3503 hub reset on Arndale board'
-> to 'phy-samsung-usb*.c' files, because there is a timing dependency
-> above mentioned.
-> The following is the original patch sent by Julius Werner two day ago.
-> (http://www.spinics.net/lists/linux-samsung-soc/msg20250.html)
+> Rather than manually editing that to ensure the enum matches the DT bindings
+> header, the whole point of making a separate <dt-bindings/...> directory was
+> that drivers could include the binding header files directly to avoid having
+> to duplicate the constant definitions. Can't <linux/pwm.h> include <dt-
+> bindings/pwm.h> and remove that enum?
 
-Well, I think this is simply broken. Following are the reasons why I think so:
- a) you can use the smsc3503 chip on any USB/HSIC controller and with any 
-USB/HSIC PHY, so you would have to add such reset GPIO to _every_ PHY or 
-controller driver,
- b) you might want to use other USB/HSIC hubs like this one that requires some 
-initialization sequence, other than just toggling a GPIO, so you would have to 
-add cases for all of those hubs or other chips in _every_ PHY or controller 
-driver.
+We could do that, but we would then need to modify all drivers to replace 
+enum_pwm_polarity with unsigned int. Thierry, what's your opinion on this ?
 
-> Previously, Olof mentioned that 'drivers/platform/arm/' would be used.
-> (http://patches.linaro.org/16856/)
-> 
-> Also, another way was mentioned by Fabio Estevam, using
-> 'drivers/reset/gpio-reset.c' which is not merged yet.
-> (http://permalink.gmane.org/gmane.linux.drivers.devicetree/36830)
-> 
-> I think that 'phy-samsung-usb*.c' files are not a good place.
-> However, Julius Werner's comment looks reasonable enough.
+Replying to a comment from another e-mail, I know that the above change to 
+include/linux/pwm.h is not strictly needed as the enum values are already 
+correct. The point of specifying the enum values explicitly was to hint that 
+the values matter and should not be changed. A comment in the source would 
+probably be more appropriate though.
 
-I can see this problem almost equivalent to the problem with on-board WLAN 
-adapters connected using SDIO. Those adapters require some kind of power on 
-sequence before they can be enumerated using standard MMC/SDIO mechanisms and 
-so does this USB/HSIC hub.
+-- 
+Regards,
 
-So basically this is a thing that we should consider on a more generic level, 
-not just for this particular single chip.
+Laurent Pinchart
 
-CCing some extra people to increase chance of getting more opinions on this.
-
-Best regards,
-Tomasz
