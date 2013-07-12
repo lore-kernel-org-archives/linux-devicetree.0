@@ -1,60 +1,62 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v3 0/6] ARM: davinci: da850: add ethernet driver DT support
-Date: Fri, 12 Jul 2013 12:21:20 +0530
-Message-ID: <51DFA768.9090703@ti.com>
-References: <1371999607-6483-1-git-send-email-prabhakar.csengg@gmail.com>
- <CA+V-a8t-sTPAK+D5869X0_ZCdrmK0B+eRaowk9hMYwXMw09NqA@mail.gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] usb: phy: samsung-usb2: Toggle HSIC GPIO from device tree
+Date: Fri, 12 Jul 2013 09:57:34 +0300
+Message-ID: <20130712065734.GE31802@arwen.pp.htv.fi>
+References: <1373416455-30358-1-git-send-email-jwerner@chromium.org>
+ <20130710052534.GB15674@arwen.pp.htv.fi>
+ <CAODwPW9dmwpXeyBeVER9azsh2uW3NXLTbDtz3mJaXrvSwb6opg@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+V-a8t-sTPAK+D5869X0_ZCdrmK0B+eRaowk9hMYwXMw09NqA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: netdev@vger.kernel.org, DLOS <davinci-linux-open-source@linux.davincidsp.com>, devicetree-discuss@lists.ozlabs.org, LAK <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAODwPW9dmwpXeyBeVER9azsh2uW3NXLTbDtz3mJaXrvSwb6opg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Julius Werner <jwerner@chromium.org>
+Cc: balbi@ti.com, LKML <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Vivek Gautam <gautam.vivek@samsung.com>, Praveen Paneri <p.paneri@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Tushar Behera <tushar.behera@linaro.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@chromium.org>, Vincent Palatin <vpalatin@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7/11/2013 10:42 PM, Prabhakar Lad wrote:
-> Hi Sekhar,
-> 
-> On Sun, Jun 23, 2013 at 8:30 PM, Prabhakar Lad
-> <prabhakar.csengg@gmail.com> wrote:
->> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
->>
->> This patch set enables Ethernet support through device tree model.
->> This patch set enables mii interface only and is being tested to boot via
->> rootfs. The rmii phy is present on the i2c gpio expander chip (UI board)
->> for which yet support needs to be added, once the DT support for the chip
->> is enabled, enabling rmii will be subsequnet patch.
->>
->> Changes for v2:
->> 1: Enabled mdio device.
->> 2: Fixed clock lookup.
->>
->> Changes for v3:
->> 1: Fixed review comments pointed out by Sekhar.
->>
->> Lad, Prabhakar (6):
->>   ARM: davinci: da8xx: fix clock lookup for mdio device
->>   ARM: davinci: da850: add DT node for mdio device
->>   ARM: davinci: da850: add OF_DEV_AUXDATA entry for mdio.
->>   ARM: davinci: da850: add DT node for eth0.
->>   ARM: davinci: da850: add OF_DEV_AUXDATA entry for eth0.
->>   ARM: davinci: da850: configure system configuration chip(CFGCHIP3)
->>     for emac
->>
-> gentle ping..
+--+jhVVhN62yS6hEJ8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I haven't been able to get to reviewing patches meant for v3.12 yet.
-Most probably will happen next week.
+Hi,
 
-Thanks,
-Sekhar
+On Wed, Jul 10, 2013 at 10:42:27AM -0700, Julius Werner wrote:
+> Hi Felipe,
+>=20
+> This is intended to pull down a reset signal line, not to switch power
+> to the device. I could implement that with the regulator framework
+> too, but I think that would just be confusing and harder to understand
+> without providing any benefit. It's really just a plain old GPIO.
+
+alright, in that case how about using drivers/reset/ ?
+
+--=20
+balbi
+
+--+jhVVhN62yS6hEJ8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR36jeAAoJEIaOsuA1yqREPkgP/isbYeG4jRaimYMNBWfhFKpI
+9ZA3AWoO9oYP9W8iFd0Ss4xnbDpUzp2iKlyux+7D2brMmUihwforDJjGYhGs70P7
+KW3bO1JuUyvjGc2T+Zu/RsRdwfOr/m0YaRvVIuRs5BtvB1qPVpdGi3TLD758+stV
+tRW+UX30KARKnClQXnTrnXeeArd2Wie7IOI05c2+y9PK6/RCWgENsC3qZQxxTQZR
+mDBUxe+Xtna7ZM7xGvBcKrrMUlc/796LJP8DKK5j5of4FaKOWcP8aZN4o9d1Fez4
+CdB7rv8BJcu/Pa6VUjl3VRvo+My7cnhvAnWxobclyPVoj1hkXU4o5KMH4ydH0WnQ
+hx0YKm4Kf/5k2LZRUhFnUE6KujR7R7AJrcOlNyfvJ3EKdbllWESuls+umMIRfvlT
+CLun+XMGMqk8AqkUD/orYKJC1LsDCTtyRfXPFTvleAuR2/v2zusv/XBfjOTyp5LA
+wNGEoWt1/QY8SoKfIOSNcYNLHVJJAf3/E+neCKwBaqQOW8HDJzx+oXVRIORaJUVD
+VvRBDEt07S4/q5lCaKhTouliCyEDOolh8CXVc0/GovQfYv6eheddfgj4gPbwUFR3
+TWfrUImfuJzmZeggbPb271lMrPaMyC80IWb03s83q9Q9CDOr6/OiE3DboWZvx31/
++8mbayC5LH6iUxbCSbRb
+=rrdx
+-----END PGP SIGNATURE-----
+
+--+jhVVhN62yS6hEJ8--
