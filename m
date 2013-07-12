@@ -1,111 +1,101 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 2/7] sound: sam9x5_wm8731: machine driver for
- at91sam9x5 wm8731 boards
-Date: Fri, 12 Jul 2013 12:49:26 +0100
-Message-ID: <20130712114926.GE24508@sirena.org.uk>
-References: <1373559359-31607-1-git-send-email-richard.genoud@gmail.com>
- <1373559359-31607-3-git-send-email-richard.genoud@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: Fixed PHY Device Tree usage?
+Date: Fri, 12 Jul 2013 13:56:12 +0200
+Message-ID: <20130712135612.0f230c1d@skate>
+References: <20130709183312.6c4d052d@skate>
+	<CAGVrzcZ7ZLSDy5sTUR_XuSAUH=5q8ddiXx5n1y680WwGrdFfTw@mail.gmail.com>
+	<1733937.SiPWt3mDlH@lenovo>
+	<20130710182216.0dcfaaaf@skate>
+	<CAGVrzcbt302tTM3pprnhJz7YykUzcW=XSMCr_W=m1zWiVBX8kw@mail.gmail.com>
+	<20130710183951.09a0bcea@skate>
+	<CAGVrzcasmv6KvEN+okkcQA9CHjCtuRqcd=AvKLiFbPXiyS-P=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4026600190450522290=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1373559359-31607-3-git-send-email-richard.genoud@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Richard Genoud <richard.genoud@gmail.com>
-Cc: alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcasmv6KvEN+okkcQA9CHjCtuRqcd=AvKLiFbPXiyS-P=w@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: netdev <netdev@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory =?UTF-8?B?Q2zDqW1lbnQ=?= <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Lior Amsalem <alior@marvell.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely" <grant.likely@secretlab.ca>, afleming@freescale.com
 List-Id: devicetree@vger.kernel.org
 
+Dear Florian Fainelli,
 
---===============4026600190450522290==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Fr7jhMP26BSURKlp"
-Content-Disposition: inline
+On Wed, 10 Jul 2013 18:23:30 +0100, Florian Fainelli wrote:
 
+> >> - declare all PHY nodes in the system as sub nodes of their belonging
+> >> real hardware MDIO bus node
+> >> - flag specific PHY nodes as "fixed" with a "fixed-link" boolean for instance
+> >> - if we see that flag, make that specific PHY node bind to the
+> >> fixed-phy driver instead
+> >
+> > So the fixed PHY driver is going to travel through *all* nodes of the
+> > DT, and whenever some random node has a "fixed" property, it's going to
+> > say it corresponds to a fixed PHY? That doesn't seem like a good idea.
+> 
+> Why not? Since we are already have to scan the entire MDIO bus we are
+> attached to, when we encounter such a PHY node with the special
+> "fixed" properties, we just call fixed_phy_add() with the right
+> parameters and voila. Which is also the reason why I was suggesting to
+> put the "fixed" PHY nodes as sub-nodes of the real MDIO node such that
+> we have this logic only in one place.
 
---Fr7jhMP26BSURKlp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm still not sure to understand you here. Scanning the *entire* DT
+tree and consider all nodes having a property named "fixed" as fixed
+PHYs is definitely not acceptable. So I suppose you have a different
+idea, but I'm still not getting it. Where in the DT would the fixed PHY
+driver start looking for fixed PHYs ?
 
-On Thu, Jul 11, 2013 at 06:15:54PM +0200, Richard Genoud wrote:
-> From: Nicolas Ferre <nicolas.ferre@atmel.com>
->=20
-> Description of the Asoc machine driver for an at91sam9x5 based board
+> > So that's really what I was asking: how is the fixed PHY driver going
+> > to know which DT nodes to look at. Is it a platform_driver, where the
+> > corresponding DT node has sub-nodes? Is it something else? Or a
+> > specific compatible string?
+> 
+> Without DT at play here, the usual way to register a fixed PHY is:
+> 
+> 1) make your arch code or whatever runs before the fixed MDIO bus
+> probing to call fixed_phy_add() with the expected parameters
+> 2) when your ethernet driver probes its PHY devices, format the phy
+> name to be bound to the fixed bus with the expected address by then
+> the fixed MDIO bus would have already been probed and would find the
+> fixed PHY nodes because of the first step
+> 3) call of_phy_connect() from your driver to attach to the fixed PHY
 
-ASoC.
+Right, but that's still doesn't answer the question of how the fixed
+PHY driver discovers from the DT which PHYs to instantiate.
 
-> +sam9x5 pins:
-> + * LOUT
-> + * ROUT
-> + * LHPOUT
-> + * RHPOUT
-> + * LLINEIN
-> + * RLINEIN
-> + * MICIN
+For example, we would probably have something:
 
-These aren't pins on the CPU, they're pins on the CODEC, and you should
-be adding this to the binding document for the CODEC and referring to
-that rather than having them in each individual binding document.  This
-also helps if any new variants are added (not that this is likely for
-the WM8731).
+	phys {
+		phy0: phy@0 {
+			... PHY properties ...
+		};
+		phy1: phy@1 {
+			... PHY properties ...
+		};
+	};
 
-> +static struct sam9x5_drvdata sam9x5_priv;
+	soc {
+		ethernet@0 {
+			compatible = "...";
+			...
+			phy = <&phy0>;
+		};
+		ethernet@1 {
+			compatible = "...";
+			...
+			phy = <&phy1>;
+		};
+	};
 
-Why is this a global static?
+How will the fixed PHY driver know that it should instantiate
+phy@0 and phy@1 as PHY devices?
+	
+Thanks,
 
-> +	ret =3D snd_soc_register_card(&snd_soc_sam9x5);
-> +	if (ret) {
-> +		dev_err(&pdev->dev,
-> +			"ASoC: Platform device allocation failed\n");
-> +		goto out_put_audio;
-> +	}
-
-> +	platform_set_drvdata(pdev, &snd_soc_sam9x5);
-
-It should be being dynamically allocated and retrieved as driver data
-when needed.
-
---Fr7jhMP26BSURKlp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR3+1DAAoJELSic+t+oim95AsP/3bXnAukXiiPnuv0mi3StyaL
-W8nMl6B317eWWb981owyWrrFJfRGa62wI+S/6Tj00A3Dc8EbZoCGBV1yCwvCj7aD
-hJQJ8JTgVojDPWPAOa/OTtwnatkfguLh/n4jCUAztMDGT4aF3VEJ+Go5X216ECgx
-UMbaXx7VSbK639oVjwI9FrSN/vE/59pB/s/jJ3VpmKVqvYfcnZRo6BH1K7YaF4zK
-n4Vh8H+QQwMdtEA1PwbUR+MMZN7UwxorfPrhiI8DdaGr8HgAUPVBxEzZb7NSuH2G
-kbN/l2Iat+TOTQ3FYb+tPdWXQWYP2R+uRbL8M6YesUlNL8AMfdfSJoiU994Qq2F+
-BHcDKVDpvoiZQEp1nbjJgtx9Vfrf5kTq68oagsfxMYF4TjipB+PxjP+0stcGSfic
-T8ouZ0ABEsggHaZyRcNYbGKQOHpYiYYj66BqRCI6pk8L3LsSw/zKQrV524zFZT2C
-WFe+bzM6pXe+mHFUIVwSCB4FtlLCSPRheuYbR728av65LZVySRM16Zh9Z+qqXkMa
-6KUZ1sMB9FOsaTyM+L1g4LfulfrUVk6TtlO9Lhf8m6NohzuWuyhIPFi4sFgUWrFP
-VsljSXyc2LJsmU9mBBMejSpVjwm+nfoJ3cKMYY773qWLeYVl5nUGZDD/2jKArso9
-msrtfWYlGCLBRhJvzQaM
-=fz1S
------END PGP SIGNATURE-----
-
---Fr7jhMP26BSURKlp--
-
-
---===============4026600190450522290==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4026600190450522290==--
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
