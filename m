@@ -1,130 +1,94 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] regulator: pfuze100: add pfuze100 regulator driver
-Date: Fri, 12 Jul 2013 15:40:37 +0100
-Message-ID: <20130712144037.GJ24508@sirena.org.uk>
-References: <1373604855-17714-1-git-send-email-b38343@freescale.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
+Date: Fri, 12 Jul 2013 08:42:41 -0600
+Message-ID: <51E015E1.2090906@wwwdotorg.org>
+References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20130711193245.GB17212@dhcp-172-17-186-34.nvidia.com> <51DF1054.9000207@wwwdotorg.org> <2172485.AZTjvkLGcM@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2179986935098560423=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1373604855-17714-1-git-send-email-b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <2172485.AZTjvkLGcM@avalon>
+Sender: linux-omap-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-pwm@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-omap@vger.kernel.org, Philip Avinash <avinashphilip@ti.com>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <linux-arm@overkiz.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/12/2013 05:01 AM, Laurent Pinchart wrote:
+> Hi,
+> 
+> On Thursday 11 July 2013 14:06:44 Stephen Warren wrote:
+>> On 07/11/2013 01:32 PM, Thierry Reding wrote:
+>>> On Thu, Jul 11, 2013 at 11:50:48AM -0600, Stephen Warren wrote:
+>>>> On 07/11/2013 09:36 AM, Thierry Reding wrote:
+>>>>> On Thu, Jul 11, 2013 at 04:37:48PM +0200, Laurent Pinchart
+>>>>> wrote: [...]
+>>>>>
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+>>>>>> b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+>>>>>> index de0eaed..be09be4 100644 ---
+>>>>>> a/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/pwm/atmel-tcb-pwm.txt
+>>>>>> @@ -4,9 +4,9 @@ Required properties: - compatible: should be
+>>>>>> "atmel,tcb-pwm" - #pwm-cells: Should be 3.  The first cell
+>>>>>> specifies the per-chip index of the PWM to use, the second
+>>>>>> cell is the period in nanoseconds and -  bit 0 in the third
+>>>>>> cell is used to encode the polarity of PWM output. -  Set bit
+>>>>>> 0 of the third cell in PWM specifier to 1 for inverse
+>>>>>> polarity & -  set to 0 for normal polarity. +  the third cell
+>>>>>> is used to encode the polarity of PWM output. Set the +
+>>>>>> PWM_POLARITY_NORMAL flag for normal polarity or the
+>>>>>> PWM_POLARITY_INVERSED +  flag for inverted polarity. PWM
+>>>>>> flags are defined in <dt-bindings/pwm/pwm.h>. - tc-block: The
+>>>>>> Timer Counter block to use as a PWM chip.
+>>>>>
+>>>>>> Example:
+>>>>> I'd prefer for the original text to stay in place and the reference to
+>>>>> the dt-bindings/pwm/pwm.h file to go below that block.
+>>>>
+>>>> I disagree here. The whole point of creating header files for the
+>>>> constants in binding definitions was so that you wouldn't have to
+>>>> duplicate all the values into the binding definitions. Rather, you'd
+>>>> simply say "see <dt-bindings/xxx.h>".
+>>>
+>>> But that's not something that this patch solves.
+>>
+>> Well, if the comments I made on the patch re: that <linux/pwm.h> should
+>> simply #include <dt-bindings/pwm/pwm.h> instead of duplicating the
+>> constants, then yet this patch will solve that. There will be a single place
+>> where the constants are defined.
+> 
+> As explained in another reply, this would require replacing the enum with an 
+> unsigned int. I can write a patch if we agree on this.
+> 
+>>> And it could be solved even in the absence of the header file defining the
+>>> symbolic constants. If all the standard flags that dt-bindings/pwm/pwm.txt
+>>> now specifies were to be listed in pwm.txt (they actually are) then
+>>> referring to that document as the canonical source works equally well.
+>>
+>> If that's all the happens, then there will still be duplication
+>> between pwm.txt and <linux/pwm.h>.
+> 
+> I've explicitly mentioned the flags in individual DT bindings to ease adding 
+> new flags in the future. At the moment the defined flags are either all 
+> supported or not used at all by drivers. If we later add a new flag supported 
+> by a subset of drivers only the driver bindings should list supported flags 
+> for each driver.
+> 
+> I'm fine with removing the explicit mentions of individual flags right now and 
+> adding it back when needed if you think that's better.
 
---===============2179986935098560423==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="o9mtL5OVI48+DSkO"
-Content-Disposition: inline
+I think the values for any common system-wide flags should be defined
+once in some system-wide place, and the values for any HW-specific
+values should be defined only in the documentation for that specific HW.
+You could try and avoid conflicts by either:
 
+a) Allocating system-wide flags from bit 0 up, and HW-specific flags
+from bit 31 down.
 
---o9mtL5OVI48+DSkO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+or:
 
-On Fri, Jul 12, 2013 at 12:54:15PM +0800, Robin Gong wrote:
-> Add pfuze100 regulator driver.
-
-This looks mostly good.  A few small issues below but nothing major.
-
-> +enum pfuze_id {
-> +	PFUZE_ID_PFUZE100,
-> +	PFUZE_ID_INVALID,
-> +};
-> +struct pfuze_chip {
-
-Missing blank line here - there are a few other small coding style
-things, checkpatch should help.
-
-> +static struct regulator_ops pfuze100_ldo_regulator_ops;
-> +static struct regulator_ops pfuze100_fixed_regulator_ops;
-> +static struct regulator_ops pfuze100_sw_regulator_ops;
-> +static struct regulator_ops pfuze100_swb_regulator_ops;
-
-Better to just reorder things so that no forward declaration is needed.
-
-> +static const int pfuze100_swbst[] = {
-> +	5000000, 5050000, 5100000, 5150000,
-> +};
-
-This looks like a linear map, the steps are all 50mV?
-
-> +	num_regulators = pfuze_get_num_regulators_dt(&client->dev);
-> +	if (num_regulators <= 0 && pdata)
-> +		num_regulators = pdata->num_regulators;
-> +	if (num_regulators <= 0) {
-> +		dev_err(&client->dev, "no platform data,please add it!\n");
-> +		ret = -EINVAL;
-> +		return ret;
-
-You should just register all the regulators rather than only registering
-those that the user explicitly selects.  This allows users to inpect the
-current configuration and simplifies the code - for example you don't
-need to count the DT nodes and you can just have a simple array in the
-platform data (see how wm831x does this for an example).
-
-> +		/* SW2~SW4 high bit check and modify the voltage value table */
-> +		if (i > PFUZE100_SW1C && i < PFUZE100_SWBST) {
-> +			regmap_read(pfuze_chip->regmap, PFUZE100_SW2VOL +
-> +					(i - PFUZE100_SW2) * 7, &val);
-> +			if (val & 0x40) {
-> +				pfuze100_regulators[id].desc.min_uV = 800000;
-> +				pfuze100_regulators[id].desc.uV_step = 50000;
-> +			}
-> +		}
-
-You should really be doing this on a copy of the regulators table rather
-than on the table itself.
-
-> +	for (i = 0; i < pfuze_chip->num_regulators; i++)
-> +		regulator_unregister(pfuze_chip->regulators[i]);
-> +	kfree(pfuze_chip);
-
-Use devm_kzalloc().
-
---o9mtL5OVI48+DSkO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR4BViAAoJELSic+t+oim9vNEP/3batZMGIYpsUfgzHKX2XMB4
-KP9X1TkR++c8/B2OLHO53kIRu9bAQZ+2uNZrwOogl4w1OQLAL0ziNeNBzIcs7BUe
-zkAjrgkSveG3M6e/WBjx4fVxAnvfM5p3Ymy5stwxdnrUeX/G4pRB0eFBkXdtqbws
-kouDTsZnFjLc4jMGu0ZJbFJYhGKX52D1FyjrmftRexvAt9VC812KQ0Ysl0L+Z1Il
-JnKR90oKoFALvBIWHGSA7A0muo5M/l4c80ZSFeLjhvtYv1BE/ppPQdCZXk7UcOJo
-PF9sxeijg+v87oUpOROGXHFgOXwhwLFBy5l/IIxHNuUPysPnYroK+UreYF+MrQiV
-pQeZ5wtKnf0SRFXrUFqTQpDQsgnWcQj86GYkowPS9qUv2SBKspAdsZP0zgzCUSs4
-9HjW1K/tZR3PK1xF29r5bC9FrQNIAXvBzvutlPvxTMMvwGBiDrFWLEbzXqBLLi1f
-dC7UF82UNxlOmp/sj/iw+Uljg8VRFcY/k3f1VCNw1Jw+XjJPtjY/aVjYfc/w6soG
-DK6Sh47/rEentR6HebUmlxr9hG0h6GGfgev1e32jynR8VLgxWBPoFBc3S8GJTB6Y
-j4RNwPlgqy6RtRzEaG/UVihFr0CFmitsshbwFVUvBbRky/5QZNhXoj3Dd8OgZPQD
-pMidxTcj1GUH6SI77353
-=QY+C
------END PGP SIGNATURE-----
-
---o9mtL5OVI48+DSkO--
-
---===============2179986935098560423==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2179986935098560423==--
+b) Using 1 cell for standard flags, and a separate cell for any
+HW-specific flags. Drivers can quite easily adapt to adding extra cells
+to #pwm-cells, thus making adding a HW-specific cell later
+backwards-compatible.
