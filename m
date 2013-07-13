@@ -1,59 +1,51 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: DT binding review for Armada display subsystem
-Date: Sat, 13 Jul 2013 22:02:36 +0100
-Message-ID: <20130713210236.GP24642@n2100.arm.linux.org.uk>
-References: <20130712164428.AC3D2FAAE9@dev.laptop.org>
- <20130712203952.6b7aa927@armhf>
- <CAMLZHHT1oAvOLe3JgQqMqLNXEr0NGrdtgELtF_djbqLFceHtiQ@mail.gmail.com>
- <20130713103516.38a55b0b@armhf> <51E13272.5040903@gmail.com>
- <20130713111239.GM24642@n2100.arm.linux.org.uk> <51E1921A.3070207@gmail.com>
- <51E1BBF1.1020009@gmail.com>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH v5 0/4] mtd:nand:omap2: clean-up of supported ECC schemes
+Date: Sat, 13 Jul 2013 21:13:16 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9E7FDB@DBDE04.ent.ti.com>
+References: <1373748891-7779-1-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51E1BBF1.1020009-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1373748891-7779-1-git-send-email-pekon@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "dedekind1@gmail.com" <dedekind1@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>, "N, Mugunthan V" <mugunthanvnm@ti.com>
+Cc: "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "avinashphilipk@gmail.com" <avinashphilipk@gmail.com>, "Balbi, Felipe" <balbi@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 13, 2013 at 10:43:29PM +0200, Sylwester Nawrocki wrote:
-> I wasn't aware of it, thanks. I've seen a patch from Jiada Wang, it seems
-> they're working on v4 with clock object reference counting. Presumably we
-> need both clk_get() to be taking reference on the module and reference
-> counted clk free, e.g. in cases where clock provider is a hot-pluggable
-> device. It might be too paranoid though, I haven't seen hardware
-> configurations where a clock source could be unplugged safely when whole
-> system is running.
+> 
+> Changes v4 -> v5
+> - Rebased to linux-next
+> IMPORTANT: Need to revert commit fb1585b, [PATCH 2/4] part of previous
+> version
+> 	http://lists.infradead.org/pipermail/linux-mtd/2013-July/047441.html
+> 
+> - Swapped PATCH-1 & PATCH-2 to maintain bisectibility & compilation
+> dependency
+> 	http://lists.infradead.org/pipermail/linux-mtd/2013-July/047461.html
+> 
+> - PATCH-2: re-ordered call to is_elm_present() for later updates ELM driver
+> 	- dropped changes in include/linux/platform_data/elm.h (not
+> needed)
+> - PATCH-3: re-ordered call to is_elm_present() for later updates ELM driver
+> - Re-formated patch description (replaced tabs with white-spaces)
+> 
 
-I'm not going to accept refcounting being thrown into clk_get().  The
-clkdev API already has refcounting, as much as it needs to.  It just
-needs people to use the hooks that I provided back in 2008 when I
-created the clkdev API for doing _precisely_ this job.
+Hi Olof, Arnd,
 
-Have a read through these commits, which backup my statement above:
+I have re-submitted patch with minor updates and re-ordered PATCH-1 & 2
+to preserve bisectibility. And there is no comment | objection from
+maintainers about the DT bindings. So request you to please Ack | Review
+this series for it to be picked by Artem | David Woodhouse in MTD tree.
 
-0318e693d3a56836632bf1a2cfdafb7f34bcc703 - initial commit of the clkdev API
-d72fbdf01fc77628c0b837d0dd2fd564fa26ede6 - converting Integrator to clkdev API
+Also please revert commit fb1585b in linux-next, as its left-over piece of
+same series v4.
 
-and it will show you how to do refcounting.  The common clk API just
-needs to stop defining __clk_get() and __clk_put() to be an empty
-function and implement them appropriately for it's clk implementation,
-like they were always meant to be.
+- This series is the base for further clean-up of omap2-nand driver, hence
+its important for it to be up-streamed for future work.
 
-__clk_get() and __clk_put() are the clk-implementation specific parts
-of the clkdev API, because the clkdev API is utterly divorsed from the
-internals of what a 'struct clk' actually is.  clkdev just treats a
-'struct clk' as a completely opaque type and never bothers poking
-about inside it.
+
+with regards, pekon
+
+
