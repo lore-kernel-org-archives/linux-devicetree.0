@@ -1,109 +1,166 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: Re: [PATCH RFC 5/8] dma: mpc512x: use symbolic specifiers for DMA
- channels
-Date: Sat, 13 Jul 2013 16:14:43 +0200
-Message-ID: <20130713141443.GJ2615@book.gsilab.sittig.org>
-References: <1373642781-32631-1-git-send-email-gsi@denx.de>
- <1373642781-32631-6-git-send-email-gsi@denx.de>
- <201307130917.08904.arnd@arndb.de>
+From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: Re: DT binding review for Armada display subsystem
+Date: Sat, 13 Jul 2013 08:25:15 -0600
+Message-ID: <CAMLZHHSrX2T+pU3RosmjS3EggV3mX_J8D2OJD52sww_n6Y7B+A@mail.gmail.com>
+References: <20130712164428.AC3D2FAAE9@dev.laptop.org>
+ <20130712203952.6b7aa927@armhf>
+ <CAMLZHHT1oAvOLe3JgQqMqLNXEr0NGrdtgELtF_djbqLFceHtiQ@mail.gmail.com>
+ <20130713103516.38a55b0b@armhf>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <201307130917.08904.arnd@arndb.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vinod.koul@intel.com>, devicetree-discuss@lists.ozlabs.org, Alexander Popov <a13xp0p0v88@gmail.com>, Dan Williams <djbw@fb.com>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130713103516.38a55b0b@armhf>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[ MPC8308 knowledge required, see below ]
+On Sat, Jul 13, 2013 at 2:35 AM, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org> wrote:
+> I use my Cubox for daily jobs as a desktop computer. My kernel is a DT
+> driven 3.10.0. The dove-drm, tda998x and si5351 (clock) are kernel
+> modules. I set 3 clocks in the DT for the LCD0: lcdclk, axi and extclk0
+> (si5351). Normally, the external clock is used, but, sometimes, the
+> si5351 module is not yet initialized when the drm driver starts. So,
+> for 1920x1080p, it uses the lcdclk which sets the LCD clock to 133333
+> (400000/3) instead of 148500. As a result, display and sound still work
+> correctly on my TV set thru HDMI.
+>
+> So, it would be nice to have 2 usable clocks per LCD, until we find a
+> good way to initialize the modules in the right order at startup time.
 
-On Sat, Jul 13, 2013 at 09:17 +0200, Arnd Bergmann wrote:
-> 
-> On Friday 12 July 2013, Gerhard Sittig wrote:
-> > +++ b/include/dt-bindings/dma/mpc512x-dma.h
-> > @@ -0,0 +1,21 @@
-> > +/*
-> > + * This header file provides symbolic specifiers for DMA channels
-> > + * within the MPC512x SoC's DMA controller.  Since requester lines
-> > + * directly map to channel numbers and no additional flexibility
-> > + * is involved, DMA channels can be considered directly associated
-> > + * with individual peripherals.
-> > + *
-> > + * This header file gets shared among DT bindings which provide
-> > + * hardware specs, and driver code which implements supporting logic.
-> > + */
-> > +
-> > +#ifndef _DT_BINDINGS_DMA_MPC512x_DMA_H
-> > +#define _DT_BINDINGS_DMA_MPC512x_DMA_H
-> > +
-> > +#define MPC512x_DMACHAN_SCLPC          26
-> > +#define MPC512x_DMACHAN_SDHC           30
-> > +#define MPC512x_DMACHAN_MDDRC          32
-> > +
-> > +#define MPC512x_DMACHAN_MAX            64
-> > +
-> 
-> I think these should not be in the header and should not bve part of the
-> binding either. They are specific to an SoC that happens to be using this
-> DMA controller but would be completely different for any other SoC with
-> the same DMA engine. These belong into the dma descriptors of the slave
-> drivers and don't need symbolic names.
+Having multiple usable clocks is implemented in the patch I referred
+you to. However it doesn't solve the "better clock turns up after
+initializing the driver" problem, which seems like a tricky one.
 
-Thank you for the feedback.
+Maybe the best solution is to defer probe until all DT-defined clocks
+become available. That means that whoever compiles the kernel must
+take care to not forget to build the clock drivers for all the clocks
+referenced in this part of the DT, but perhaps that is a reasonable
+thing to require.
 
-OK, so not adding the dt-bindings header leads to no change in
-the DTS nodes, which in turn collapses 5/8 into something local
-to the .c driver source (introduce an enum and replace a few
-magic numbers with names), and obsoletes 4/8 as a prerequisite.
-This will further reduce the patch set's size.
+On the other hand, this problem acts in support of a simpler approach
+mentioned by Sebastian: developers figure out what the best clock is
+for each CRTC on each board, and the DT only specifies that one clock.
+The driver uses that clock if it is available and defers probe if it
+is not.
 
-Your feedback made me re-visit the driver source and notice that
-it is shared among the MPC512x as well as the MPC8308 hardware.
-The latter only has 16 channels, and appears to _not_ have its
-channels dedicated to peripherals.  It's even uncertain to me
-whether it can cope with peripherals at all and how so.
+> Back to the specific case of the Cubox with new ideas.
+>
+> The Cubox is based on the Armada 510 (Dove), so, all the hardware must
+> be described in dove.dtsi. This includes the LCDs and DCON/IRE, the
+> possible clocks and the (static) v4l2 links:
 
-I scanned chapter 12 (DMA controller) in the MPC8308 reference
-manual (rev 0 as of 2010-04) several times and could not find any
-hint about peripherals, request lines, or anything else related
-to flow control.  Searching in the whole RM won't give a hint
-either.  Does this suggest that the MPC8308 DMA controller's
-channels are "free" in their assignment to transfer tasks?  Or
-are they "memory transfers only"?  Or do they happily accept any
-XLB address (internal and external RAM, IMMR and IP bus space)
-but don't apply flow control, i.e. expect either peripherals to
-already hold the RX data, or peripherals to keep up with being
-fed random amounts of TX data?  I tend to read the doc as the
-latter.
+As a sidenote, I think we have concluded that we are not going to
+interact with the armada 510 DCON in any way at the moment. The driver
+will not have code that touches it, and the DT will not mention it.
+The first person who actually needs to use the DCON will have the
+responsibility for doing that work. Nevertheless it makes sense for us
+to pick a DT design where we know that the DCON could be slotted in
+later.
 
-Can somebody with MPC8308 knowledge confirm my suspicion that the
-MPC8308 DMA channels aren't associated with peripherals, and thus
-always need the software initiated start condition (_if_ they are
-used for data transfer to/from peripherals)?  Can somebody with
-access to an MPC8308 based board test later versions of the
-series, to verify we don't break DMA operation on that platform?
+>         lcd0: lcd-controller@820000 {
+>                 compatible = "marvell,dove-lcd0";
+>                 reg = <0x820000 0x1c8>;
+>                 interrupts = <47>;
+>                 clocks = <&core_clk 3>, <&lcdclk>;
+>                 clock-names = "axi", "lcdclk";
+>                 marvell-output = <&dcon 0>;
+>                 status = "disabled";
+>         };
+>
+>         lcd1: lcd-controller@810000 {
+>                 compatible = "marvell,dove-lcd1";
+>                 reg = <0x810000 0x1c8>;
+>                 interrupts = <46>;
+>                 clocks = <&core_clk 3>, <&lcdclk>;
+>                 clock-names = "axi", "lcdclk";
+>                 marvell-output = <&dcon 1>;
+>                 status = "disabled";
+>         };
+>
+>         /* display controller and image rotation engine */
+>         dcon: display-controller@830000 {
+>                 compatible = "marvell,dove-dcon";
+>                 reg = <0x830000 0xc4>,                  /* DCON */
+>                       <0x831000 0x8c>;                  /* IRE */
+>                 interrupts = <45>;
+>                 marvell-input = <&lcd0>, <&lcd1>;
+>                 status = "disabled";
+>         };
 
-Regardless of whether MPC8308 can't handle peripheral access, or
-doesn't differ from memory transfers there, the patch series
-needs an update.  Part 1/8 in its current form is either wrong or
-incomplete, works for MPC512x but not for all hardware that this
-driver is responsible for.
+I guess the IRE falls into the same category as the DCON - we won't
+implement it for now, but knowing where it might fit in is useful.
 
+Why would you put it in the same node as the DCON though? It has its
+own separate register space and additionally it is a component shared
+with the MMP boards (whereas the DCON is not).
 
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
+> The specific Cubox hardware (tda998x and si5351) is described in
+> dove-cubox.dts, with the new clocks and the v4l2 link dcon0 <--> tda998x.
+>
+>         &i2c0 {
+>                 si5351: clock-generator {
+>                         ...
+>                 };
+>                 tda998x: hdmi-encoder {
+>                         compatible = "nxp,tda998x";
+>                         reg = <0x70>;
+>                         interrupt-parent = <&gpio0>;
+>                         interrupts = <27 2>;            /* falling edge */
+>                         marvell-input = <&dcon 0>;
+>                 };
+>         };
+>         &lcd0 {
+>                 status = "okay";
+>                 clocks = <&si5351 0>;
+>                 clock-names = "extclk0";
+>         };
+>         &dcon {
+>                 status = "okay";
+>                 marvell-output = <&tda998x>, 0;         /* no connector on port B */
+>         };
+
+So now you are taking an approach equivalent to the v4l2 standard
+"video interfaces" binding, which is the concept of representing a
+connection graph via phandles. This means that our two proposals are
+equivalent yet I proposed using a standard interface and you proposed
+inventing your own, again without explaining why you don't like the
+standard interface.
+
+> Then, about the software, the drm driver may not need to know anything
+> more (it scans the DT for the LCDs and gets all the subdevices thanks
+> to the v4l2 links):
+>
+>         video {
+>                 compatible = "marvell,armada-video";
+>         };
+>
+> For some boards / other SoCs, there may be independant drm devices. In
+> this case, there would be descriptions as:
+>
+>         video0 {
+>                 compatible = "marvell,armada-video0";
+>                 marvell,video-devices = <&lcd0>;
+>         };
+>         video1 {
+>                 compatible = "marvell,armada-video1";
+>                 marvell,video-devices = <&lcd1>;
+>         };
+
+This bit differs from my proposal, but I'm not sure what the benefit
+of your design is. In my design, the two above use cases are
+represented cleanly using the same DT abstraction (same compatible
+string, same required properties, etc). In your design, the two use
+cases call for something quite different as shown above.
+
+Daniel
