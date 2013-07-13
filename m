@@ -1,97 +1,53 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: Fixed PHY Device Tree usage?
-Date: Sat, 13 Jul 2013 01:29:39 +0200
-Message-ID: <51E09163.8050206@openwrt.org>
-References: <20130709183312.6c4d052d@skate> <CAGVrzcZ7ZLSDy5sTUR_XuSAUH=5q8ddiXx5n1y680WwGrdFfTw@mail.gmail.com> <1733937.SiPWt3mDlH@lenovo> <20130710182216.0dcfaaaf@skate> <CAGVrzcbt302tTM3pprnhJz7YykUzcW=XSMCr_W=m1zWiVBX8kw@mail.gmail.com> <20130710183951.09a0bcea@skate> <CAGVrzcasmv6KvEN+okkcQA9CHjCtuRqcd=AvKLiFbPXiyS-P=w@mail.gmail.com> <CACxGe6tzMhjH8nxJ1Ezrc43DqCmv-pWRW2NsXa=fP-6Fh_t5PA@mail.gmail.com>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
+Date: Sat, 13 Jul 2013 08:35:03 +0800
+Message-ID: <CAN1soZzQz8PaHOwNf-Ec6G=ahhx_P8gaaX4fQnpX-Mqrepk_7g@mail.gmail.com>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
+ <1373352166-10064-2-git-send-email-zhangwm@marvell.com>
+ <20130709124900.GG11908@titan.lakedaemon.net>
+ <CAN1soZxiOh6TpbUOCUzK8gNwmvjbT3ihkUWaw8tuZ7md+NVA2g@mail.gmail.com>
+ <20130710122433.GO11908@titan.lakedaemon.net>
+ <CAN1soZzMvront1-jcBW6-uRKNs0OZNGnmiOjKGZSM28bViB_8A@mail.gmail.com>
+ <20130710215041.GR11908@titan.lakedaemon.net>
+ <CAN1soZzuiukY9qASFNcH0k=zH8=uT=71bKejPss44FCzNy=X-A@mail.gmail.com>
+ <CAMLZHHQGZvDssY-YxQ3ZW8FYhpG-H1-VbokOid33socRSPrMNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6tzMhjH8nxJ1Ezrc43DqCmv-pWRW2NsXa=fP-6Fh_t5PA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, netdev <netdev@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, =?ISO-8859-1?Q?Gregory_Cl=E9ment?= <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Lior Amsalem <alior@marvell.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Andy Fleming <afleming@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAMLZHHQGZvDssY-YxQ3ZW8FYhpG-H1-VbokOid33socRSPrMNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 13/07/2013 00:44, Grant Likely a =E9crit :
-> On Wed, Jul 10, 2013 at 6:23 PM, Florian Fainelli <florian@openwrt.or=
-g> wrote:
->> Hello Thomas,
+On Fri, Jul 12, 2013 at 11:10 PM, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Jul 11, 2013 at 5:54 PM, Haojian Zhuang
+> <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> Well, Daniel Drake spoke up for OLPC.  Does that count?
 >>
->> 2013/7/10 Thomas Petazzoni <thomas.petazzoni@free-electrons.com>:
->>> Dear Florian Fainelli,
->>>
->>> On Wed, 10 Jul 2013 17:29:44 +0100, Florian Fainelli wrote:
->> [snip]
->>
->>>
->>>>>                  };
->>>>>
->>>>>                  phy1: ethernet-phy@1 {
->>>>>                          ... all the properties you listed ...
->>>>>                          ... maybe the "id" property is not neede=
-d
->>>>>                              because of the phandle ...
->>>>>                  };
->>>>>          };
->>>>>
->>>>>          soc {
->>>>>                  ethernet@0 {
->>>>>                          phy =3D <&phy0>;
->>>>>                          ...
->>>>>                  };
->>>>>
->>>>>                  ethernet@1 {
->>>>>                          phy =3D <&phy1>;
->>>>>                          ...
->>>>>                  };
->>>>>          };
->>>>>
->>>>> or do you have in mind another representation?
->>>>
->>>> Not really this is more or less what I had in mind. I am wondering
->>>> whether we should really declare the "mdio-fixed" node, or if we
->>>> should not rather make the following:
->>>>
->>>> - declare all PHY nodes in the system as sub nodes of their belong=
-ing
->>>> real hardware MDIO bus node
->>>> - flag specific PHY nodes as "fixed" with a "fixed-link" boolean f=
-or instance
->>>> - if we see that flag, make that specific PHY node bind to the
->>>> fixed-phy driver instead
->>>
->>> So the fixed PHY driver is going to travel through *all* nodes of t=
-he
->>> DT, and whenever some random node has a "fixed" property, it's goin=
-g to
->>> say it corresponds to a fixed PHY? That doesn't seem like a good id=
-ea.
->>
->> Why not? Since we are already have to scan the entire MDIO bus we ar=
-e
->> attached to, when we encounter such a PHY node with the special
->> "fixed" properties, we just call fixed_phy_add() with the right
->> parameters and voila. Which is also the reason why I was suggesting =
-to
->> put the "fixed" PHY nodes as sub-nodes of the real MDIO node such th=
-at
->> we have this logic only in one place.
+>> We don't know they used DT on Marvell MMP2/MMP3. So they don't have DTS file
+>> in kernel, we could use both old name & new name in driver.
 >
-> Hi Florian,
+> You are listed as one of the MMP maintainers in the MAINTAINERS file
+> and I have sent you several patches in the few 3 weeks which make
+> OLPC's usage of MMP + DT pretty obvious. As a maintainer I believe you
+> are supposed to review the patches too. hint hint ;)
 >
-> I think this discussion is going in the wrong direction. The concept
-> of a dummy phy is really a Linux kernel internal detail. Creating som=
-e
-> kind of dummy MDIO bus node does not describe the hardware. There is
-> already support in the kernel for Ethernet MACs connected directly to
-> a switch or other device. It is far better to describe how the MAC
-> needs to be configured than to invent a non-existent phy. Search for
-> "fixed-link" in the kernel tree to see how it is used.
 
-Errm, fixed-link is deprecated according to the comment which parses it=
-=2E=20
-In fact, the code parsing this special property does not parse all the=20
-integers representing the fixed-link. But fair enough, if that is the=20
-way to go, then let's stick with it.
+These patches couldn't be applied. Since we're moving irq drivers from arch
+directories to irq directories.
+
+When the irq patches are applied, you can rebase your patches.
+
+Regards
+Haojian
