@@ -1,275 +1,186 @@
-From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: DT binding review for Armada display subsystem
-Date: Sat, 13 Jul 2013 12:56:50 +0200
-Message-ID: <51E13272.5040903@gmail.com>
-References: <20130712164428.AC3D2FAAE9@dev.laptop.org>
- <20130712203952.6b7aa927@armhf>
- <CAMLZHHT1oAvOLe3JgQqMqLNXEr0NGrdtgELtF_djbqLFceHtiQ@mail.gmail.com>
- <20130713103516.38a55b0b@armhf>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130713103516.38a55b0b@armhf>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: [PATCH v2] media: i2c: adv7343: add OF support
+Date: Sat, 13 Jul 2013 16:42:39 +0530
+Message-ID: <1373713959-31066-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: LMML <linux-media@vger.kernel.org>
+Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, LDOC <linux-doc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/13/2013 10:35 AM, Jean-Francois Moine wrote:
-> On Fri, 12 Jul 2013 13:00:23 -0600 Daniel Drake<dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>  wrote:
->> On Fri, Jul 12, 2013 at 12:39 PM, Jean-Francois Moine<moinejf-GANU6spQydw@public.gmane.org>  wrote:
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 
->>> - the phandles to the clocks does not tell how the clock may be set by
->>>    the driver (it is an array index in the 510).
->>
->> In the other threads on clock selection, we decided that that exact
->> information on how to select a clock (i.e. register bits/values) must
->> be in the driver, not in the DT. What was suggested there is a
->> well-documented scheme for clock naming, so the driver knows which
->> clock is which. That is defined in the proposed DT binding though the
->> "valid clock names" part. For an example driver implementation of this
->> you can see my patch "armada_drm clock selection - try 2".
->
-> OK.
->
-> Sorry to go back to this thread.
->
-> I use my Cubox for daily jobs as a desktop computer. My kernel is a DT
-> driven 3.10.0. The dove-drm, tda998x and si5351 (clock) are kernel
-> modules. I set 3 clocks in the DT for the LCD0: lcdclk, axi and extclk0
+add OF support for the adv7343 driver.
 
-Hmm, a bit off topic question, does it work when the si5351 module gets
-removed ? I can't see anything preventing clock provider module from being
-removed why any of its clocks is used and clk_unregister() function is
-currently unimplemented.
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+---
+ Changes for v2:
+ 1: Fixed naming of properties.
+ 
+ .../devicetree/bindings/media/i2c/adv7343.txt      |   54 ++++++++++++++++
+ drivers/media/i2c/adv7343.c                        |   65 +++++++++++++++++++-
+ 2 files changed, 118 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7343.txt
 
-> (si5351). Normally, the external clock is used, but, sometimes, the
-> si5351 module is not yet initialized when the drm driver starts. So,
-> for 1920x1080p, it uses the lcdclk which sets the LCD clock to 133333
-> (400000/3) instead of 148500. As a result, display and sound still work
-> correctly on my TV set thru HDMI.
->
-> So, it would be nice to have 2 usable clocks per LCD, until we find a
-> good way to initialize the modules in the right order at startup time.
+diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+new file mode 100644
+index 0000000..1d2e854
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+@@ -0,0 +1,54 @@
++* Analog Devices adv7343 video encoder
++
++The ADV7343 are high speed, digital-to-analog video encoders in a 64-lead LQFP
++package. Six high speed, 3.3 V, 11-bit video DACs provide support for composite
++(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in standard
++definition (SD), enhanced definition (ED), or high definition (HD) video
++formats.
++
++Required Properties :
++- compatible: Must be "ad,adv7343"
++
++Optional Properties :
++- ad,adv7343-power-mode-sleep-mode: on enable the current consumption is
++				     reduced to micro ampere level. All DACs and
++				     the internal PLL circuit are disabled.
++- ad,adv7343-power-mode-pll-ctrl: PLL and oversampling control. This control
++				   allows internal PLL 1 circuit to be powered
++				   down and the oversampling to beswitched off.
++- ad,adv7343-power-mode-dac-1: power on/off DAC 1, 0 = OFF and 1 = ON.
++- ad,adv7343-power-mode-dac-2: power on/off DAC 2, 0 = OFF and 1 = ON.
++- ad,adv7343-power-mode-dac-3: power on/off DAC 3, 0 = OFF and 1 = ON.
++- ad,adv7343-power-mode-dac-4: power on/off DAC 4, 0 = OFF and 1 = ON.
++- ad,adv7343-power-mode-dac-5: power on/off DAC 5, 0 = OFF and 1 = ON.
++- ad,adv7343-power-mode-dac-6: power on/off DAC 6, 0 = OFF and 1 = ON.
++- ad,adv7343-sd-config-dac-out-1: Configure SD DAC Output 1.
++- ad,adv7343-sd-config-dac-out-2: Configure SD DAC Output 2.
++
++Example:
++
++i2c0@1c22000 {
++	...
++	...
++
++	adv7343@2a {
++		compatible = "ad,adv7343";
++		reg = <0x2a>;
++
++		port {
++			adv7343_1: endpoint {
++					ad,adv7343-power-mode-sleep-mode;
++					ad,adv7343-power-mode-pll-ctrl;
++					ad,adv7343-power-mode-dac-1;
++					ad,adv7343-power-mode-dac-2;
++					ad,adv7343-power-mode-dac-3;
++					ad,adv7343-power-mode-dac-4;
++					ad,adv7343-power-mode-dac-5;
++					ad,adv7343-power-mode-dac-6;
++					ad,adv7343-sd-config-dac-out-1;
++					ad,adv7343-sd-config-dac-out-2;
++			};
++		};
++	};
++	...
++};
+diff --git a/drivers/media/i2c/adv7343.c b/drivers/media/i2c/adv7343.c
+index 7606218..22ee6f4 100644
+--- a/drivers/media/i2c/adv7343.c
++++ b/drivers/media/i2c/adv7343.c
+@@ -29,6 +29,7 @@
+ #include <media/adv7343.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ctrls.h>
++#include <media/v4l2-of.h>
+ 
+ #include "adv7343_regs.h"
+ 
+@@ -398,6 +399,59 @@ static int adv7343_initialize(struct v4l2_subdev *sd)
+ 	return err;
+ }
+ 
++static struct adv7343_platform_data *
++adv7343_get_pdata(struct i2c_client *client)
++{
++	struct adv7343_platform_data *pdata;
++	struct device_node *np;
++
++	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
++		return client->dev.platform_data;
++
++	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++	if (!np)
++		return NULL;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(struct adv7343_platform_data),
++			     GFP_KERNEL);
++	if (!pdata)
++		goto done;
++
++	pdata->mode_config.sleep_mode =
++		of_property_read_bool(np, "ad,adv7343-power-mode-sleep-mode");
++
++	pdata->mode_config.pll_control =
++		of_property_read_bool(np, "ad,adv7343-power-mode-pll-ctrl");
++
++	pdata->mode_config.dac_1 =
++		of_property_read_bool(np, "ad,adv7343-power-mode-dac-1");
++
++	pdata->mode_config.dac_2 =
++		of_property_read_bool(np, "ad,adv7343-power-mode-dac-2");
++
++	pdata->mode_config.dac_3 =
++		of_property_read_bool(np, "ad,adv7343-power-mode-dac-3");
++
++	pdata->mode_config.dac_4 =
++		of_property_read_bool(np, "ad,adv7343-power-mode-dac-4");
++
++	pdata->mode_config.dac_5 =
++		of_property_read_bool(np, "ad,adv7343-power-mode-dac-5");
++
++	pdata->mode_config.dac_6 =
++		of_property_read_bool(np, "ad,adv7343-power-mode-dac-6");
++
++	pdata->sd_config.sd_dac_out1 =
++		of_property_read_bool(np, "ad,adv7343-sd-config-dac-out-1");
++
++	pdata->sd_config.sd_dac_out2 =
++		of_property_read_bool(np, "ad,adv7343-sd-config-dac-out-2");
++
++done:
++	of_node_put(np);
++	return pdata;
++}
++
+ static int adv7343_probe(struct i2c_client *client,
+ 				const struct i2c_device_id *id)
+ {
+@@ -416,7 +470,7 @@ static int adv7343_probe(struct i2c_client *client,
+ 		return -ENOMEM;
+ 
+ 	/* Copy board specific information here */
+-	state->pdata = client->dev.platform_data;
++	state->pdata = adv7343_get_pdata(client);
+ 
+ 	state->reg00	= 0x80;
+ 	state->reg01	= 0x00;
+@@ -476,8 +530,17 @@ static const struct i2c_device_id adv7343_id[] = {
+ 
+ MODULE_DEVICE_TABLE(i2c, adv7343_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id adv7343_of_match[] = {
++	{.compatible = "ad,adv7343", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, adv7343_of_match);
++#endif
++
+ static struct i2c_driver adv7343_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(adv7343_of_match),
+ 		.owner	= THIS_MODULE,
+ 		.name	= "adv7343",
+ 	},
+-- 
+1.7.9.5
 
-Doesn't deferred probing help here ?
-
->>> - I don't see the use of the phandles in the leaves (dcon and tda998x).
->>
->> That is defined by the video interfaces common binding. I'm not
->> immediately aware of the use, but the ability to easily traverse the
->> graph in both directions seems like a requirement that could easily
->> emerge from somewhere.
->
-> OK, but I am not convinced...
->
->>> Well, here is how I feel the DTs:
->>>
->>> - for the Cubox (one LCD, the DCON is not used, TDA998x for HDMI/DVI
->>>    output):
->>
->> That is the same as my proposal except you have decided to use direct
->> phandle properties instead of using the common video interfaces
->> binding (which is just a slightly more detailed way of describing such
->> links). In the "best practices" thread, the suggestion was raised
->> multiple times of doing what v4l2 does, so thats why I decided to
->> explore this here.
->>
->>> - for some tablet based on the Armada 510 with a LCD and a VGA connector:
->>>
->>>          video {
->>>                  compatible = "marvell,armada-video";
->>>                  marvell,video-devices =<&lcd0>,<&lcd1>,<&dcon>
->>>          };
->>
->> This proposal is slightly different because it does not describe the
->> relationship between the LCD controllers and the DCON. Focusing
->> specifically on LCD1, which would be connected to a DAC via a phandle
->> property in your proposal. The interconnectivity between the
->> components represented as a graph (and in the v4l2 way, which includes
->> my proposal) would be:
->>
->> LCD1 --- DCON --- DAC
->>
->> However your phandle properties would "suggest" that LCD1 is directly
->> connected to the DAC. The driver would have to have special knowledge
->> that the DCON sits right in the middle. Maybe that is not an issue, as
->> it is obviously OK for the driver to have *some* knowledge about how
->> the hardware works :)
->>
->> I don't think we have a full consensus on whether we want to go the
->> "v4l2 way" here. But I figured that would be a good thing to propose
->> in a first iteration to have a clearer idea of what the result would
->> look like. It sounds like you are not overly keen on it, I would be
->> interested to hear exactly why.
->
-> I think this is because I was focused on the software and not on the
-> hardware.
->
-> Back to the specific case of the Cubox with new ideas.
->
-> The Cubox is based on the Armada 510 (Dove), so, all the hardware must
-> be described in dove.dtsi. This includes the LCDs and DCON/IRE, the
-> possible clocks and the (static) v4l2 links:
->
-> 	lcd0: lcd-controller@820000 {
-> 		compatible = "marvell,dove-lcd0";
-[...]
-> 	};
->
-> 	lcd1: lcd-controller@810000 {
-> 		compatible = "marvell,dove-lcd1";
-[...]
-> 	};
-
-Using different compatible strings to indicate multiple instances of same
-hardware doesn't seem right. Unless LCD0, LCD1 are really different pieces
-of hardware incompatible with each other I think it would be more correct
-to use same compatible property and DT node aliases, similarly as is now
-done with e.g. I2C busses:
-
-	aliases {
-		lcd0 = &lcd_0;	
-		lcd1 = &lcd_1;	
-	};
-
-  	lcd_0: lcd-controller@820000 {
-  		compatible = "marvell,dove-lcd";
-		...
-  	};
-
-
-  	lcd_1: lcd-controller@820000 {
-  		compatible = "marvell,dove-lcd";
-		...
-  	};
-
-
-> 	/* display controller and image rotation engine */
-> 	dcon: display-controller@830000 {
-> 		compatible = "marvell,dove-dcon";
-> 		reg =<0x830000 0xc4>,			/* DCON */
-> 		<0x831000 0x8c>;			/* IRE */
-> 		interrupts =<45>;
-> 		marvell-input =<&lcd0>,<&lcd1>;
-> 		status = "disabled";
-> 	};
->
-> The specific Cubox hardware (tda998x and si5351) is described in
-> dove-cubox.dts, with the new clocks and the v4l2 link dcon0<-->  tda998x.
->
-> 	&i2c0 {
-> 		si5351: clock-generator {
-> 			...
-> 		};
-> 		tda998x: hdmi-encoder {
-> 			compatible = "nxp,tda998x";
-> 			reg =<0x70>;
-> 			interrupt-parent =<&gpio0>;
-> 			interrupts =<27 2>;		/* falling edge */
-> 			marvell-input =<&dcon 0>;
-> 		};
-> 	};
-> 	&lcd0 {
-> 		status = "okay";
-> 		clocks =<&si5351 0>;
-> 		clock-names = "extclk0";
-> 	};
-> 	&dcon {
-> 		status = "okay";
-> 		marvell-output =<&tda998x>, 0;		/* no connector on port B */
-
-Hmm, was this custom binding intended or did you mean rather something
-like:
-
-  	&i2c0 {
-  		si5351: clock-generator {
-  			...
-  		};
-  		tda998x: hdmi-encoder {
-  			compatible = "nxp,tda998x";
-  			reg =<0x70>;
-  			interrupt-parent =<&gpio0>;
-  			interrupts =<27 2>;		/* falling edge */
-  			marvell-input =<&dcon 0>;
-
-			port@I {
-				reg = <I>; /* input (or reg omitted completely) */
-				endpoint {
-					remote-endpoint = <&dcon>;
-				};
-			}
-  		};
-  	};
-  	&lcd0 {
-  		status = "okay";
-  		clocks =<&si5351 0>;
-  		clock-names = "extclk0";
-  	};
-  	&dcon {
-  		status = "okay";
-			
-		port@A {
-			reg = <A>; /* port A */
-			endpoint {
-				remote-endpoint = <&tda998x>;
-			};
-		}
-		/* no connector on port B */
-  	};
-
-I think it should be tried to use common binding for common problems,
-then a common parser library could be used, instead of repeating similar
-code in each driver.
-
-> 	};
->
-> Then, about the software, the drm driver may not need to know anything
-> more (it scans the DT for the LCDs and gets all the subdevices thanks
-> to the v4l2 links):
->
-> 	video {
-> 		compatible = "marvell,armada-video";
-> 	};
->
-> For some boards / other SoCs, there may be independant drm devices. In
-> this case, there would be descriptions as:
->
-> 	video0 {
-> 		compatible = "marvell,armada-video0";
-> 		marvell,video-devices =<&lcd0>;
-> 	};
-> 	video1 {
-> 		compatible = "marvell,armada-video1";
-> 		marvell,video-devices =<&lcd1>;
-> 	};
->
-> About the LCD clocks, the drm driver may choose itself one of the
-> clocks declared in the DT. If a clock should not be used, if should be
-> zeroed in the board specific DT:
->
-> 	&lcd0 {
-> 		status = "okay";
-> 		clocks = 0, 0,<&si5351 0>;
-> 		clock-names = "axi", "lcdclk", "extclk0";
-> 	};
-
-Hmm, not sure how that could work. IIUC there should be same number
-of cells used in the clocks property for each clock specifier (clocks
-provider's node #clock-cells), so &si5351 cell would need to be at
-offset 4. Maybe there is some convention to specify null phandles but
-I'm not aware of it.
-
---
-Regards,
-Sylwester
