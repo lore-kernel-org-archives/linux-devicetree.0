@@ -1,136 +1,275 @@
-From: Jean-Francois Moine <moinejf@free.fr>
+From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: DT binding review for Armada display subsystem
-Date: Sat, 13 Jul 2013 10:35:16 +0200
-Message-ID: <20130713103516.38a55b0b@armhf>
+Date: Sat, 13 Jul 2013 12:56:50 +0200
+Message-ID: <51E13272.5040903@gmail.com>
 References: <20130712164428.AC3D2FAAE9@dev.laptop.org>
  <20130712203952.6b7aa927@armhf>
  <CAMLZHHT1oAvOLe3JgQqMqLNXEr0NGrdtgELtF_djbqLFceHtiQ@mail.gmail.com>
+ <20130713103516.38a55b0b@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMLZHHT1oAvOLe3JgQqMqLNXEr0NGrdtgELtF_djbqLFceHtiQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Drake <dsd@laptop.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, dri-devel@lists.freedesktop.org, Grant Likely <grant.likely@secretlab.ca>, Russell King <rmk@arm.linux.org.uk>, s.hauer@pengutronix.de, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130713103516.38a55b0b@armhf>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAxMiBKdWwgMjAxMyAxMzowMDoyMyAtMDYwMApEYW5pZWwgRHJha2UgPGRzZEBsYXB0
-b3Aub3JnPiB3cm90ZToKCj4gT24gRnJpLCBKdWwgMTIsIDIwMTMgYXQgMTI6MzkgUE0sIEplYW4t
-RnJhbmNvaXMgTW9pbmUgPG1vaW5lamZAZnJlZS5mcj4gd3JvdGU6Cj4gPiAtIHRoZSBwaGFuZGxl
-cyB0byB0aGUgY2xvY2tzIGRvZXMgbm90IHRlbGwgaG93IHRoZSBjbG9jayBtYXkgYmUgc2V0IGJ5
-Cj4gPiAgIHRoZSBkcml2ZXIgKGl0IGlzIGFuIGFycmF5IGluZGV4IGluIHRoZSA1MTApLiAgCj4g
-Cj4gSW4gdGhlIG90aGVyIHRocmVhZHMgb24gY2xvY2sgc2VsZWN0aW9uLCB3ZSBkZWNpZGVkIHRo
-YXQgdGhhdCBleGFjdAo+IGluZm9ybWF0aW9uIG9uIGhvdyB0byBzZWxlY3QgYSBjbG9jayAoaS5l
-LiByZWdpc3RlciBiaXRzL3ZhbHVlcykgbXVzdAo+IGJlIGluIHRoZSBkcml2ZXIsIG5vdCBpbiB0
-aGUgRFQuIFdoYXQgd2FzIHN1Z2dlc3RlZCB0aGVyZSBpcyBhCj4gd2VsbC1kb2N1bWVudGVkIHNj
-aGVtZSBmb3IgY2xvY2sgbmFtaW5nLCBzbyB0aGUgZHJpdmVyIGtub3dzIHdoaWNoCj4gY2xvY2sg
-aXMgd2hpY2guIFRoYXQgaXMgZGVmaW5lZCBpbiB0aGUgcHJvcG9zZWQgRFQgYmluZGluZyB0aG91
-Z2ggdGhlCj4gInZhbGlkIGNsb2NrIG5hbWVzIiBwYXJ0LiBGb3IgYW4gZXhhbXBsZSBkcml2ZXIg
-aW1wbGVtZW50YXRpb24gb2YgdGhpcwo+IHlvdSBjYW4gc2VlIG15IHBhdGNoICJhcm1hZGFfZHJt
-IGNsb2NrIHNlbGVjdGlvbiAtIHRyeSAyIi4KCk9LLgoKU29ycnkgdG8gZ28gYmFjayB0byB0aGlz
-IHRocmVhZC4KCkkgdXNlIG15IEN1Ym94IGZvciBkYWlseSBqb2JzIGFzIGEgZGVza3RvcCBjb21w
-dXRlci4gTXkga2VybmVsIGlzIGEgRFQKZHJpdmVuIDMuMTAuMC4gVGhlIGRvdmUtZHJtLCB0ZGE5
-OTh4IGFuZCBzaTUzNTEgKGNsb2NrKSBhcmUga2VybmVsCm1vZHVsZXMuIEkgc2V0IDMgY2xvY2tz
-IGluIHRoZSBEVCBmb3IgdGhlIExDRDA6IGxjZGNsaywgYXhpIGFuZCBleHRjbGswCihzaTUzNTEp
-LiBOb3JtYWxseSwgdGhlIGV4dGVybmFsIGNsb2NrIGlzIHVzZWQsIGJ1dCwgc29tZXRpbWVzLCB0
-aGUKc2k1MzUxIG1vZHVsZSBpcyBub3QgeWV0IGluaXRpYWxpemVkIHdoZW4gdGhlIGRybSBkcml2
-ZXIgc3RhcnRzLiBTbywKZm9yIDE5MjB4MTA4MHAsIGl0IHVzZXMgdGhlIGxjZGNsayB3aGljaCBz
-ZXRzIHRoZSBMQ0QgY2xvY2sgdG8gMTMzMzMzCig0MDAwMDAvMykgaW5zdGVhZCBvZiAxNDg1MDAu
-IEFzIGEgcmVzdWx0LCBkaXNwbGF5IGFuZCBzb3VuZCBzdGlsbCB3b3JrCmNvcnJlY3RseSBvbiBt
-eSBUViBzZXQgdGhydSBIRE1JLgoKU28sIGl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSAyIHVzYWJs
-ZSBjbG9ja3MgcGVyIExDRCwgdW50aWwgd2UgZmluZCBhCmdvb2Qgd2F5IHRvIGluaXRpYWxpemUg
-dGhlIG1vZHVsZXMgaW4gdGhlIHJpZ2h0IG9yZGVyIGF0IHN0YXJ0dXAgdGltZS4KCj4gPiAtIEkg
-ZG9uJ3Qgc2VlIHRoZSB1c2Ugb2YgdGhlIHBoYW5kbGVzIGluIHRoZSBsZWF2ZXMgKGRjb24gYW5k
-IHRkYTk5OHgpLiAgCj4gCj4gVGhhdCBpcyBkZWZpbmVkIGJ5IHRoZSB2aWRlbyBpbnRlcmZhY2Vz
-IGNvbW1vbiBiaW5kaW5nLiBJJ20gbm90Cj4gaW1tZWRpYXRlbHkgYXdhcmUgb2YgdGhlIHVzZSwg
-YnV0IHRoZSBhYmlsaXR5IHRvIGVhc2lseSB0cmF2ZXJzZSB0aGUKPiBncmFwaCBpbiBib3RoIGRp
-cmVjdGlvbnMgc2VlbXMgbGlrZSBhIHJlcXVpcmVtZW50IHRoYXQgY291bGQgZWFzaWx5Cj4gZW1l
-cmdlIGZyb20gc29tZXdoZXJlLgoKT0ssIGJ1dCBJIGFtIG5vdCBjb252aW5jZWQuLi4KCj4gPiBX
-ZWxsLCBoZXJlIGlzIGhvdyBJIGZlZWwgdGhlIERUczoKPiA+Cj4gPiAtIGZvciB0aGUgQ3Vib3gg
-KG9uZSBMQ0QsIHRoZSBEQ09OIGlzIG5vdCB1c2VkLCBUREE5OTh4IGZvciBIRE1JL0RWSQo+ID4g
-ICBvdXRwdXQpOiAgCj4gCj4gVGhhdCBpcyB0aGUgc2FtZSBhcyBteSBwcm9wb3NhbCBleGNlcHQg
-eW91IGhhdmUgZGVjaWRlZCB0byB1c2UgZGlyZWN0Cj4gcGhhbmRsZSBwcm9wZXJ0aWVzIGluc3Rl
-YWQgb2YgdXNpbmcgdGhlIGNvbW1vbiB2aWRlbyBpbnRlcmZhY2VzCj4gYmluZGluZyAod2hpY2gg
-aXMganVzdCBhIHNsaWdodGx5IG1vcmUgZGV0YWlsZWQgd2F5IG9mIGRlc2NyaWJpbmcgc3VjaAo+
-IGxpbmtzKS4gSW4gdGhlICJiZXN0IHByYWN0aWNlcyIgdGhyZWFkLCB0aGUgc3VnZ2VzdGlvbiB3
-YXMgcmFpc2VkCj4gbXVsdGlwbGUgdGltZXMgb2YgZG9pbmcgd2hhdCB2NGwyIGRvZXMsIHNvIHRo
-YXRzIHdoeSBJIGRlY2lkZWQgdG8KPiBleHBsb3JlIHRoaXMgaGVyZS4KPiAKPiA+IC0gZm9yIHNv
-bWUgdGFibGV0IGJhc2VkIG9uIHRoZSBBcm1hZGEgNTEwIHdpdGggYSBMQ0QgYW5kIGEgVkdBIGNv
-bm5lY3RvcjoKPiA+Cj4gPiAgICAgICAgIHZpZGVvIHsKPiA+ICAgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLXZpZGVvIjsKPiA+ICAgICAgICAgICAgICAgICBtYXJ2
-ZWxsLHZpZGVvLWRldmljZXMgPSA8JmxjZDA+LCA8JmxjZDE+LCA8JmRjb24+Cj4gPiAgICAgICAg
-IH07ICAKPiAKPiBUaGlzIHByb3Bvc2FsIGlzIHNsaWdodGx5IGRpZmZlcmVudCBiZWNhdXNlIGl0
-IGRvZXMgbm90IGRlc2NyaWJlIHRoZQo+IHJlbGF0aW9uc2hpcCBiZXR3ZWVuIHRoZSBMQ0QgY29u
-dHJvbGxlcnMgYW5kIHRoZSBEQ09OLiBGb2N1c2luZwo+IHNwZWNpZmljYWxseSBvbiBMQ0QxLCB3
-aGljaCB3b3VsZCBiZSBjb25uZWN0ZWQgdG8gYSBEQUMgdmlhIGEgcGhhbmRsZQo+IHByb3BlcnR5
-IGluIHlvdXIgcHJvcG9zYWwuIFRoZSBpbnRlcmNvbm5lY3Rpdml0eSBiZXR3ZWVuIHRoZQo+IGNv
-bXBvbmVudHMgcmVwcmVzZW50ZWQgYXMgYSBncmFwaCAoYW5kIGluIHRoZSB2NGwyIHdheSwgd2hp
-Y2ggaW5jbHVkZXMKPiBteSBwcm9wb3NhbCkgd291bGQgYmU6Cj4gCj4gTENEMSAtLS0gRENPTiAt
-LS0gREFDCj4gCj4gSG93ZXZlciB5b3VyIHBoYW5kbGUgcHJvcGVydGllcyB3b3VsZCAic3VnZ2Vz
-dCIgdGhhdCBMQ0QxIGlzIGRpcmVjdGx5Cj4gY29ubmVjdGVkIHRvIHRoZSBEQUMuIFRoZSBkcml2
-ZXIgd291bGQgaGF2ZSB0byBoYXZlIHNwZWNpYWwga25vd2xlZGdlCj4gdGhhdCB0aGUgRENPTiBz
-aXRzIHJpZ2h0IGluIHRoZSBtaWRkbGUuIE1heWJlIHRoYXQgaXMgbm90IGFuIGlzc3VlLCBhcwo+
-IGl0IGlzIG9idmlvdXNseSBPSyBmb3IgdGhlIGRyaXZlciB0byBoYXZlICpzb21lKiBrbm93bGVk
-Z2UgYWJvdXQgaG93Cj4gdGhlIGhhcmR3YXJlIHdvcmtzIDopCj4gCj4gSSBkb24ndCB0aGluayB3
-ZSBoYXZlIGEgZnVsbCBjb25zZW5zdXMgb24gd2hldGhlciB3ZSB3YW50IHRvIGdvIHRoZQo+ICJ2
-NGwyIHdheSIgaGVyZS4gQnV0IEkgZmlndXJlZCB0aGF0IHdvdWxkIGJlIGEgZ29vZCB0aGluZyB0
-byBwcm9wb3NlCj4gaW4gYSBmaXJzdCBpdGVyYXRpb24gdG8gaGF2ZSBhIGNsZWFyZXIgaWRlYSBv
-ZiB3aGF0IHRoZSByZXN1bHQgd291bGQKPiBsb29rIGxpa2UuIEl0IHNvdW5kcyBsaWtlIHlvdSBh
-cmUgbm90IG92ZXJseSBrZWVuIG9uIGl0LCBJIHdvdWxkIGJlCj4gaW50ZXJlc3RlZCB0byBoZWFy
-IGV4YWN0bHkgd2h5LgoKSSB0aGluayB0aGlzIGlzIGJlY2F1c2UgSSB3YXMgZm9jdXNlZCBvbiB0
-aGUgc29mdHdhcmUgYW5kIG5vdCBvbiB0aGUKaGFyZHdhcmUuCgpCYWNrIHRvIHRoZSBzcGVjaWZp
-YyBjYXNlIG9mIHRoZSBDdWJveCB3aXRoIG5ldyBpZGVhcy4KClRoZSBDdWJveCBpcyBiYXNlZCBv
-biB0aGUgQXJtYWRhIDUxMCAoRG92ZSksIHNvLCBhbGwgdGhlIGhhcmR3YXJlIG11c3QKYmUgZGVz
-Y3JpYmVkIGluIGRvdmUuZHRzaS4gVGhpcyBpbmNsdWRlcyB0aGUgTENEcyBhbmQgRENPTi9JUkUs
-IHRoZQpwb3NzaWJsZSBjbG9ja3MgYW5kIHRoZSAoc3RhdGljKSB2NGwyIGxpbmtzOgoKCWxjZDA6
-IGxjZC1jb250cm9sbGVyQDgyMDAwMCB7CgkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGRvdmUtbGNk
-MCI7CgkJcmVnID0gPDB4ODIwMDAwIDB4MWM4PjsKCQlpbnRlcnJ1cHRzID0gPDQ3PjsKCQljbG9j
-a3MgPSA8JmNvcmVfY2xrIDM+LCA8JmxjZGNsaz47CgkJY2xvY2stbmFtZXMgPSAiYXhpIiwgImxj
-ZGNsayI7CgkJbWFydmVsbC1vdXRwdXQgPSA8JmRjb24gMD47CgkJc3RhdHVzID0gImRpc2FibGVk
-IjsKCX07CgoJbGNkMTogbGNkLWNvbnRyb2xsZXJAODEwMDAwIHsKCQljb21wYXRpYmxlID0gIm1h
-cnZlbGwsZG92ZS1sY2QxIjsKCQlyZWcgPSA8MHg4MTAwMDAgMHgxYzg+OwoJCWludGVycnVwdHMg
-PSA8NDY+OwoJCWNsb2NrcyA9IDwmY29yZV9jbGsgMz4sIDwmbGNkY2xrPjsKCQljbG9jay1uYW1l
-cyA9ICJheGkiLCAibGNkY2xrIjsKCQltYXJ2ZWxsLW91dHB1dCA9IDwmZGNvbiAxPjsKCQlzdGF0
-dXMgPSAiZGlzYWJsZWQiOwoJfTsKCgkvKiBkaXNwbGF5IGNvbnRyb2xsZXIgYW5kIGltYWdlIHJv
-dGF0aW9uIGVuZ2luZSAqLwoJZGNvbjogZGlzcGxheS1jb250cm9sbGVyQDgzMDAwMCB7CgkJY29t
-cGF0aWJsZSA9ICJtYXJ2ZWxsLGRvdmUtZGNvbiI7CgkJcmVnID0gPDB4ODMwMDAwIDB4YzQ+LAkJ
-CS8qIERDT04gKi8KCQkgICAgICA8MHg4MzEwMDAgMHg4Yz47CQkJLyogSVJFICovCgkJaW50ZXJy
-dXB0cyA9IDw0NT47CgkJbWFydmVsbC1pbnB1dCA9IDwmbGNkMD4sIDwmbGNkMT47CgkJc3RhdHVz
-ID0gImRpc2FibGVkIjsKCX07CgpUaGUgc3BlY2lmaWMgQ3Vib3ggaGFyZHdhcmUgKHRkYTk5OHgg
-YW5kIHNpNTM1MSkgaXMgZGVzY3JpYmVkIGluCmRvdmUtY3Vib3guZHRzLCB3aXRoIHRoZSBuZXcg
-Y2xvY2tzIGFuZCB0aGUgdjRsMiBsaW5rIGRjb24wIDwtLT4gdGRhOTk4eC4KCgkmaTJjMCB7CgkJ
-c2k1MzUxOiBjbG9jay1nZW5lcmF0b3IgewoJCQkuLi4KCQl9OwoJCXRkYTk5OHg6IGhkbWktZW5j
-b2RlciB7CgkJCWNvbXBhdGlibGUgPSAibnhwLHRkYTk5OHgiOwoJCQlyZWcgPSA8MHg3MD47CgkJ
-CWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW8wPjsKCQkJaW50ZXJydXB0cyA9IDwyNyAyPjsJCS8q
-IGZhbGxpbmcgZWRnZSAqLwoJCQltYXJ2ZWxsLWlucHV0ID0gPCZkY29uIDA+OwoJCX07Cgl9OwoJ
-JmxjZDAgewoJCXN0YXR1cyA9ICJva2F5IjsKCQljbG9ja3MgPSA8JnNpNTM1MSAwPjsKCQljbG9j
-ay1uYW1lcyA9ICJleHRjbGswIjsKCX07CgkmZGNvbiB7CgkJc3RhdHVzID0gIm9rYXkiOwoJCW1h
-cnZlbGwtb3V0cHV0ID0gPCZ0ZGE5OTh4PiwgMDsJCS8qIG5vIGNvbm5lY3RvciBvbiBwb3J0IEIg
-Ki8KCX07CgpUaGVuLCBhYm91dCB0aGUgc29mdHdhcmUsIHRoZSBkcm0gZHJpdmVyIG1heSBub3Qg
-bmVlZCB0byBrbm93IGFueXRoaW5nCm1vcmUgKGl0IHNjYW5zIHRoZSBEVCBmb3IgdGhlIExDRHMg
-YW5kIGdldHMgYWxsIHRoZSBzdWJkZXZpY2VzIHRoYW5rcwp0byB0aGUgdjRsMiBsaW5rcyk6CgoJ
-dmlkZW8gewoJCWNvbXBhdGlibGUgPSAibWFydmVsbCxhcm1hZGEtdmlkZW8iOwoJfTsKCkZvciBz
-b21lIGJvYXJkcyAvIG90aGVyIFNvQ3MsIHRoZXJlIG1heSBiZSBpbmRlcGVuZGFudCBkcm0gZGV2
-aWNlcy4gSW4KdGhpcyBjYXNlLCB0aGVyZSB3b3VsZCBiZSBkZXNjcmlwdGlvbnMgYXM6CgoJdmlk
-ZW8wIHsKCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLXZpZGVvMCI7CgkJbWFydmVsbCx2
-aWRlby1kZXZpY2VzID0gPCZsY2QwPjsKCX07Cgl2aWRlbzEgewoJCWNvbXBhdGlibGUgPSAibWFy
-dmVsbCxhcm1hZGEtdmlkZW8xIjsKCQltYXJ2ZWxsLHZpZGVvLWRldmljZXMgPSA8JmxjZDE+OwoJ
-fTsKCkFib3V0IHRoZSBMQ0QgY2xvY2tzLCB0aGUgZHJtIGRyaXZlciBtYXkgY2hvb3NlIGl0c2Vs
-ZiBvbmUgb2YgdGhlCmNsb2NrcyBkZWNsYXJlZCBpbiB0aGUgRFQuIElmIGEgY2xvY2sgc2hvdWxk
-IG5vdCBiZSB1c2VkLCBpZiBzaG91bGQgYmUKemVyb2VkIGluIHRoZSBib2FyZCBzcGVjaWZpYyBE
-VDoKCgkmbGNkMCB7CgkJc3RhdHVzID0gIm9rYXkiOwoJCWNsb2NrcyA9IDAsIDAsIDwmc2k1MzUx
-IDA+OwoJCWNsb2NrLW5hbWVzID0gImF4aSIsICJsY2RjbGsiLCAiZXh0Y2xrMCI7Cgl9OwoKLS0g
-CktlbiBhciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemggaGEgTGludXggYXRhdiEgKioKSmVm
-CQl8CQlodHRwOi8vbW9pbmVqZi5mcmVlLmZyLwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 07/13/2013 10:35 AM, Jean-Francois Moine wrote:
+> On Fri, 12 Jul 2013 13:00:23 -0600 Daniel Drake<dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>  wrote:
+>> On Fri, Jul 12, 2013 at 12:39 PM, Jean-Francois Moine<moinejf-GANU6spQydw@public.gmane.org>  wrote:
+
+>>> - the phandles to the clocks does not tell how the clock may be set by
+>>>    the driver (it is an array index in the 510).
+>>
+>> In the other threads on clock selection, we decided that that exact
+>> information on how to select a clock (i.e. register bits/values) must
+>> be in the driver, not in the DT. What was suggested there is a
+>> well-documented scheme for clock naming, so the driver knows which
+>> clock is which. That is defined in the proposed DT binding though the
+>> "valid clock names" part. For an example driver implementation of this
+>> you can see my patch "armada_drm clock selection - try 2".
+>
+> OK.
+>
+> Sorry to go back to this thread.
+>
+> I use my Cubox for daily jobs as a desktop computer. My kernel is a DT
+> driven 3.10.0. The dove-drm, tda998x and si5351 (clock) are kernel
+> modules. I set 3 clocks in the DT for the LCD0: lcdclk, axi and extclk0
+
+Hmm, a bit off topic question, does it work when the si5351 module gets
+removed ? I can't see anything preventing clock provider module from being
+removed why any of its clocks is used and clk_unregister() function is
+currently unimplemented.
+
+> (si5351). Normally, the external clock is used, but, sometimes, the
+> si5351 module is not yet initialized when the drm driver starts. So,
+> for 1920x1080p, it uses the lcdclk which sets the LCD clock to 133333
+> (400000/3) instead of 148500. As a result, display and sound still work
+> correctly on my TV set thru HDMI.
+>
+> So, it would be nice to have 2 usable clocks per LCD, until we find a
+> good way to initialize the modules in the right order at startup time.
+
+Doesn't deferred probing help here ?
+
+>>> - I don't see the use of the phandles in the leaves (dcon and tda998x).
+>>
+>> That is defined by the video interfaces common binding. I'm not
+>> immediately aware of the use, but the ability to easily traverse the
+>> graph in both directions seems like a requirement that could easily
+>> emerge from somewhere.
+>
+> OK, but I am not convinced...
+>
+>>> Well, here is how I feel the DTs:
+>>>
+>>> - for the Cubox (one LCD, the DCON is not used, TDA998x for HDMI/DVI
+>>>    output):
+>>
+>> That is the same as my proposal except you have decided to use direct
+>> phandle properties instead of using the common video interfaces
+>> binding (which is just a slightly more detailed way of describing such
+>> links). In the "best practices" thread, the suggestion was raised
+>> multiple times of doing what v4l2 does, so thats why I decided to
+>> explore this here.
+>>
+>>> - for some tablet based on the Armada 510 with a LCD and a VGA connector:
+>>>
+>>>          video {
+>>>                  compatible = "marvell,armada-video";
+>>>                  marvell,video-devices =<&lcd0>,<&lcd1>,<&dcon>
+>>>          };
+>>
+>> This proposal is slightly different because it does not describe the
+>> relationship between the LCD controllers and the DCON. Focusing
+>> specifically on LCD1, which would be connected to a DAC via a phandle
+>> property in your proposal. The interconnectivity between the
+>> components represented as a graph (and in the v4l2 way, which includes
+>> my proposal) would be:
+>>
+>> LCD1 --- DCON --- DAC
+>>
+>> However your phandle properties would "suggest" that LCD1 is directly
+>> connected to the DAC. The driver would have to have special knowledge
+>> that the DCON sits right in the middle. Maybe that is not an issue, as
+>> it is obviously OK for the driver to have *some* knowledge about how
+>> the hardware works :)
+>>
+>> I don't think we have a full consensus on whether we want to go the
+>> "v4l2 way" here. But I figured that would be a good thing to propose
+>> in a first iteration to have a clearer idea of what the result would
+>> look like. It sounds like you are not overly keen on it, I would be
+>> interested to hear exactly why.
+>
+> I think this is because I was focused on the software and not on the
+> hardware.
+>
+> Back to the specific case of the Cubox with new ideas.
+>
+> The Cubox is based on the Armada 510 (Dove), so, all the hardware must
+> be described in dove.dtsi. This includes the LCDs and DCON/IRE, the
+> possible clocks and the (static) v4l2 links:
+>
+> 	lcd0: lcd-controller@820000 {
+> 		compatible = "marvell,dove-lcd0";
+[...]
+> 	};
+>
+> 	lcd1: lcd-controller@810000 {
+> 		compatible = "marvell,dove-lcd1";
+[...]
+> 	};
+
+Using different compatible strings to indicate multiple instances of same
+hardware doesn't seem right. Unless LCD0, LCD1 are really different pieces
+of hardware incompatible with each other I think it would be more correct
+to use same compatible property and DT node aliases, similarly as is now
+done with e.g. I2C busses:
+
+	aliases {
+		lcd0 = &lcd_0;	
+		lcd1 = &lcd_1;	
+	};
+
+  	lcd_0: lcd-controller@820000 {
+  		compatible = "marvell,dove-lcd";
+		...
+  	};
+
+
+  	lcd_1: lcd-controller@820000 {
+  		compatible = "marvell,dove-lcd";
+		...
+  	};
+
+
+> 	/* display controller and image rotation engine */
+> 	dcon: display-controller@830000 {
+> 		compatible = "marvell,dove-dcon";
+> 		reg =<0x830000 0xc4>,			/* DCON */
+> 		<0x831000 0x8c>;			/* IRE */
+> 		interrupts =<45>;
+> 		marvell-input =<&lcd0>,<&lcd1>;
+> 		status = "disabled";
+> 	};
+>
+> The specific Cubox hardware (tda998x and si5351) is described in
+> dove-cubox.dts, with the new clocks and the v4l2 link dcon0<-->  tda998x.
+>
+> 	&i2c0 {
+> 		si5351: clock-generator {
+> 			...
+> 		};
+> 		tda998x: hdmi-encoder {
+> 			compatible = "nxp,tda998x";
+> 			reg =<0x70>;
+> 			interrupt-parent =<&gpio0>;
+> 			interrupts =<27 2>;		/* falling edge */
+> 			marvell-input =<&dcon 0>;
+> 		};
+> 	};
+> 	&lcd0 {
+> 		status = "okay";
+> 		clocks =<&si5351 0>;
+> 		clock-names = "extclk0";
+> 	};
+> 	&dcon {
+> 		status = "okay";
+> 		marvell-output =<&tda998x>, 0;		/* no connector on port B */
+
+Hmm, was this custom binding intended or did you mean rather something
+like:
+
+  	&i2c0 {
+  		si5351: clock-generator {
+  			...
+  		};
+  		tda998x: hdmi-encoder {
+  			compatible = "nxp,tda998x";
+  			reg =<0x70>;
+  			interrupt-parent =<&gpio0>;
+  			interrupts =<27 2>;		/* falling edge */
+  			marvell-input =<&dcon 0>;
+
+			port@I {
+				reg = <I>; /* input (or reg omitted completely) */
+				endpoint {
+					remote-endpoint = <&dcon>;
+				};
+			}
+  		};
+  	};
+  	&lcd0 {
+  		status = "okay";
+  		clocks =<&si5351 0>;
+  		clock-names = "extclk0";
+  	};
+  	&dcon {
+  		status = "okay";
+			
+		port@A {
+			reg = <A>; /* port A */
+			endpoint {
+				remote-endpoint = <&tda998x>;
+			};
+		}
+		/* no connector on port B */
+  	};
+
+I think it should be tried to use common binding for common problems,
+then a common parser library could be used, instead of repeating similar
+code in each driver.
+
+> 	};
+>
+> Then, about the software, the drm driver may not need to know anything
+> more (it scans the DT for the LCDs and gets all the subdevices thanks
+> to the v4l2 links):
+>
+> 	video {
+> 		compatible = "marvell,armada-video";
+> 	};
+>
+> For some boards / other SoCs, there may be independant drm devices. In
+> this case, there would be descriptions as:
+>
+> 	video0 {
+> 		compatible = "marvell,armada-video0";
+> 		marvell,video-devices =<&lcd0>;
+> 	};
+> 	video1 {
+> 		compatible = "marvell,armada-video1";
+> 		marvell,video-devices =<&lcd1>;
+> 	};
+>
+> About the LCD clocks, the drm driver may choose itself one of the
+> clocks declared in the DT. If a clock should not be used, if should be
+> zeroed in the board specific DT:
+>
+> 	&lcd0 {
+> 		status = "okay";
+> 		clocks = 0, 0,<&si5351 0>;
+> 		clock-names = "axi", "lcdclk", "extclk0";
+> 	};
+
+Hmm, not sure how that could work. IIUC there should be same number
+of cells used in the clocks property for each clock specifier (clocks
+provider's node #clock-cells), so &si5351 cell would need to be at
+offset 4. Maybe there is some convention to specify null phandles but
+I'm not aware of it.
+
+--
+Regards,
+Sylwester
