@@ -1,52 +1,65 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
-Date: Sat, 13 Jul 2013 08:30:59 -0600
-Message-ID: <CAMLZHHSDu+zgumVtWeU8yGiJ8Wmp3TQJbEc6u54LziOC5oXPeQ@mail.gmail.com>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
- <1373352166-10064-2-git-send-email-zhangwm@marvell.com>
- <20130709124900.GG11908@titan.lakedaemon.net>
- <CAN1soZxiOh6TpbUOCUzK8gNwmvjbT3ihkUWaw8tuZ7md+NVA2g@mail.gmail.com>
- <20130710122433.GO11908@titan.lakedaemon.net>
- <CAN1soZzMvront1-jcBW6-uRKNs0OZNGnmiOjKGZSM28bViB_8A@mail.gmail.com>
- <20130710215041.GR11908@titan.lakedaemon.net>
- <CAN1soZzuiukY9qASFNcH0k=zH8=uT=71bKejPss44FCzNy=X-A@mail.gmail.com>
- <CAMLZHHQGZvDssY-YxQ3ZW8FYhpG-H1-VbokOid33socRSPrMNw@mail.gmail.com>
- <CAN1soZzQz8PaHOwNf-Ec6G=ahhx_P8gaaX4fQnpX-Mqrepk_7g@mail.gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: Fixed PHY Device Tree usage?
+Date: Sat, 13 Jul 2013 19:02:06 +0200
+Message-ID: <20130713190206.2a617983@skate>
+References: <20130709183312.6c4d052d@skate>
+	<CAGVrzcZ7ZLSDy5sTUR_XuSAUH=5q8ddiXx5n1y680WwGrdFfTw@mail.gmail.com>
+	<1733937.SiPWt3mDlH@lenovo>
+	<20130710182216.0dcfaaaf@skate>
+	<CAGVrzcbt302tTM3pprnhJz7YykUzcW=XSMCr_W=m1zWiVBX8kw@mail.gmail.com>
+	<20130710183951.09a0bcea@skate>
+	<CAGVrzcasmv6KvEN+okkcQA9CHjCtuRqcd=AvKLiFbPXiyS-P=w@mail.gmail.com>
+	<CACxGe6tzMhjH8nxJ1Ezrc43DqCmv-pWRW2NsXa=fP-6Fh_t5PA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAN1soZzQz8PaHOwNf-Ec6G=ahhx_P8gaaX4fQnpX-Mqrepk_7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6tzMhjH8nxJ1Ezrc43DqCmv-pWRW2NsXa=fP-6Fh_t5PA@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Florian Fainelli <florian@openwrt.org>, netdev <netdev@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory =?UTF-8?B?Q2zDqW1lbnQ=?= <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Lior Amsalem <alior@marvell.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Andy Fleming <afleming@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 12, 2013 at 6:35 PM, Haojian Zhuang
-<haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> These patches couldn't be applied. Since we're moving irq drivers from arch
-> directories to irq directories.
+Dear Grant Likely,
 
-It does not seem in line with the collaborative manner of kernel
-development to block my patches for a whole month because they
-conflict with your own private patches which do not exist for anyone
-else (at least I searched and couldn't find them).
+On Fri, 12 Jul 2013 23:44:21 +0100, Grant Likely wrote:
 
-Please, either post your patches immediately (I will help review), or
-review mine and figure out how to handle any conflict with your own
-work afterwards.
+> I think this discussion is going in the wrong direction. The concept
+> of a dummy phy is really a Linux kernel internal detail. Creating some
+> kind of dummy MDIO bus node does not describe the hardware.
 
-> When the irq patches are applied, you can rebase your patches.
+This is exactly what I was suggesting in my original e-mail of this
+thread, see http://marc.info/?l=linux-netdev&m=137338762627063&w=2 :
 
-2 of the pending patches don't touch the irq stuff anyway.
+"""
+One option is to implement a Device Tree binding for the fixed PHY
+driver (the exact DT binding would have to be discussed), but I'm
+wondering whether describing a fixed PHY in the DT is actually correct,
+because describing a fixed PHy is not really describing the hardware,
+the hardware is actually a switch.
+"""
 
-Daniel
+> There is
+> already support in the kernel for Ethernet MACs connected directly to
+> a switch or other device. It is far better to describe how the MAC
+> needs to be configured than to invent a non-existent phy. Search for
+> "fixed-link" in the kernel tree to see how it is used.
+
+As Florian pointed out, the of_phy_connect_fixed_link() comment
+indicates:
+
+ * This function is a temporary stop-gap and will be removed soon.  It is
+ * only to support the fs_enet, ucc_geth and gianfar Ethernet drivers. Do
+ * not call this function from new drivers.
+
+Also, it would probably be good to have a few more helpers to make
+parsing the "phy" and "fixed-link" property easier for network drivers.
+
+Thanks for your feedback,
+
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
