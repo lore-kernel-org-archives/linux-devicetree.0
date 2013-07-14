@@ -1,77 +1,78 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] [ATTEND] Handling of devicetree bindings
-Date: Sun, 14 Jul 2013 11:13:31 -0700
-Message-ID: <20130714181331.GC26513@roeck-us.net>
-References: <20130713192647.GA3798@katana> <20130713204927.GA1124@roeck-us.net>
- <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ@mail.gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH RFC v3] media: OF: add video sync endpoint property
+Date: Sun, 14 Jul 2013 21:23:31 +0200
+Message-ID: <51E2FAB3.3060409@gmail.com>
+References: <1371913383-25088-1-git-send-email-prabhakar.csengg@gmail.com> <51D0548D.7020004@gmail.com> <CA+V-a8uG1KLY-Vjj+0ix2=wV4r=k+tkJ4aDBCN+iN+JZ6my30w@mail.gmail.com> <51DF206E.9010301@gmail.com> <CA+V-a8sxnMkdgrqD=GWYx-7K8UviOKNtvxfw=TMOUWaLWrks=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, ksummit-2013-discuss-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8sxnMkdgrqD=GWYx-7K8UviOKNtvxfw=TMOUWaLWrks=g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 14, 2013 at 01:46:45AM +0200, Linus Walleij wrote:
-> On Sat, Jul 13, 2013 at 10:49 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> > On Sat, Jul 13, 2013 at 08:26:47PM +0100, Wolfram Sang wrote:
-> 
-> >> I think the KS would be a good opportunity to present the status quo,
-> >> show some rules of thumb and finally discuss if we can improve the
-> >> process even further. E.g., should first the bindings be accepted, then
-> >> the driver? What could be the process if the need for a generic binding
-> >> arises? And spreading the word, so at least the basic issues are
-> >> understood by most maintainers.
-> >>
-> > Sounds like a good idea, but I think you'll need some deadline. When reviewing
-> > hwmon drivers I usually wait for a couple of weeks if there is any feedback
-> > from devicetree-discuss before I accept bindings, but what should I do
-> > if there is no feedback ? Holding the driver hostage doesn't seem like a good
-> > idea either.
-> 
-> Nobody rarely say anything on devicetree-discuss. And if something is
-> said it will usually be about syntax rather than semantics. And if it's
-> semantics, it's usually a subsystem or arch maintainer saying it.
-> 
-> I've been ranting a bit about this recently, and one of the problems with
-> device tree now being driven by the Linux community (basically - it used
-> to be a IEEE thing at one point in the past) is that as the bindings are
-> merged by the subsystem maintainers, they alone get to decide when
-> they are finished.
-> 
-> They are all in Documentation/devicetree/bindings/* so theoretically
-> we could have a dedicated maintainer for it, but that requires someone
-> to step up :-/
-> 
-> I wonder if some subsystem maintainers who are more used to things
-> like ACPI or PCI where someone else has already done the thinking
-> and written a large (non-perfect, mind you) specification even think that
-> reviewing hardware descriptions is their problem at all?
-> 
-> Maybe some just consider this "some documentation", think it has been
-> defined by someone who thought it over and merge it without looking
-> closely.
-> 
-For my part I do have a close look, but I don't really know if my understanding
-of acceptable properties matches the understanding of the devicetree community.
-Devicetree is supposed to describe the hardware, but in many cases there is
-an overlap between hardware description and configuration and/or use. Where is
-the boundary ?
+Hi Prabhakar,
 
-My approach is to accept properties which would otherwise require platform data.
-Is that acceptable ? How can I know if devicetree-discuss is mostly silent on
-such matters, as you point out ?
+On 07/12/2013 06:29 AM, Prabhakar Lad wrote:
+> On Fri, Jul 12, 2013 at 2:45 AM, Sylwester Nawrocki
+> <sylvester.nawrocki@gmail.com>  wrote:
+>> On 07/11/2013 01:41 PM, Prabhakar Lad wrote:
+>> [...]
+>>
+>>>>> diff --git a/drivers/media/v4l2-core/v4l2-of.c
+>>>>> b/drivers/media/v4l2-core/v4l2-of.c
+>>>>> index aa59639..1a54530 100644
+>>>>> --- a/drivers/media/v4l2-core/v4l2-of.c
+>>>>> +++ b/drivers/media/v4l2-core/v4l2-of.c
+>>>>> @@ -100,6 +100,26 @@ static void v4l2_of_parse_parallel_bus(const struct
+>>>>> device_node *node,
+>>>>>           if (!of_property_read_u32(node, "data-shift",&v))
+>>>>>                   bus->data_shift = v;
+>>>>>
+>>>>> +       if (!of_property_read_u32(node, "video-sync",&v)) {
+>>>>> +               switch (v) {
+>>>>> +               case V4L2_MBUS_VIDEO_SEPARATE_SYNC:
+>>>>> +                       flags |= V4L2_MBUS_VIDEO_SEPARATE_SYNC;
+>>>>
+>>>>
+>>>>
+>>>> I'm not convinced all those video sync types is something that really
+>>>> belongs
+>>>> to the flags field. In my understanding this field is supposed to hold
+>>>> only
+>>>> the _signal polarity_ information.
+>>>>
+>>>>
+>>> Ok, so there should be a function say v4l2_of_parse_signal_polarity()
+>>> to get the polarity alone then.
+>>
+>>
+>> I don't think this is required, I would just extend
+>> v4l2_of_parse_parallel_bus()
+>> function to also handle sync-on-green-active property.
+>>
+> If that is the case than I have to add a member say 'signal_polarity'
+> in struct v4l2_of_bus_parallel and assign the polarity to it.
+> Let me know if you are OK with it.
 
-Guenter
+It probably would have been sensible to do something like this, however 
+I can't
+see any advantage at the moment. struct v4l2_of_bus_parallel::flags 
+currently
+holds all the polarity flags. Let's just add relevant macros for 
+sync-on-green
+and store them in the flags field, as is done with the others.
+Those V4L2_MUS_* flags are used by soc-camera to negotiate the 
+capabilities,
+so I would rather not split them further without good reason, even though
+struct v4l2_mbus_config::flags is used in those negotiation routines, 
+rather
+than struct v4l2_of_bus_parallel::flags.
+
+--
+Thanks,
+Sylwester
+
+
