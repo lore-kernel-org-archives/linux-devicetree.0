@@ -1,119 +1,214 @@
 From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v2 2/2] media: i2c: tvp7002: add OF support
-Date: Sun, 14 Jul 2013 21:42:58 +0200
-Message-ID: <51E2FF42.2090507@gmail.com>
-References: <1371923055-29623-1-git-send-email-prabhakar.csengg@gmail.com> <1371923055-29623-3-git-send-email-prabhakar.csengg@gmail.com> <51D05568.3090009@gmail.com> <CA+V-a8sW+D8trces5AXu__Lw9F7TO6fCcQW+LGZKRhA41uOEfw@mail.gmail.com> <51DF2BF6.30509@gmail.com> <CA+V-a8u0G6m+VoSc4FPmDxEYmE_vQaL7zu3fUFk3iVKnOywnRA@mail.gmail.com>
+Subject: Re: [PATCH v2] media: i2c: adv7343: add OF support
+Date: Sun, 14 Jul 2013 22:33:08 +0200
+Message-ID: <51E30B04.8090009@gmail.com>
+References: <1373713959-31066-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+V-a8u0G6m+VoSc4FPmDxEYmE_vQaL7zu3fUFk3iVKnOywnRA@mail.gmail.com>
+In-Reply-To: <1373713959-31066-1-git-send-email-prabhakar.csengg@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
+Cc: LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Prabhakar,
 
-On 07/12/2013 06:43 AM, Prabhakar Lad wrote:
-> On Fri, Jul 12, 2013 at 3:34 AM, Sylwester Nawrocki
-> <sylvester.nawrocki@gmail.com>  wrote:
->> On 07/11/2013 07:09 PM, Prabhakar Lad wrote:
-[...]
->>>> And include/media/tvp70002.h:
->>>>
->>>>    * fid_polarity:
->>>>    *                      0 ->   the field ID output is set to log=
-ic 1 for
->>>> an
->>>> odd
->>>>    *                           field (field 1) and set to logic 0 =
-for an
->>>> even
->>>>    *                           field (field 0).
->>>>    *                      1 ->   operation with polarity inverted.
->>>>
->>>>
->>>> Do you know if the chip automatically selects video sync source
->>>> (sync-on-green
->>>> vs. VSYNC/HSYNC) and there is no need to configure this on the ana=
-logue
->>>> input
->>>> side ? At least the driver seems to always select the default SOGI=
-N_1
->>>> input
->>>> (TVP7002_IN_MUX_SEL_1 register is set only at initialization time)=
-=2E
->>>>
->>> Yes the driver is selecting the default SOGIN_1 input.
->>>
->>>> Or perhaps it just outputs on SOGOUT, VSOUT, HSOUT lines whatever =
-is fed
->>>> to
->>>> its analogue inputs, and any further processing unit need to deter=
-mine
->>>> what
->>>> synchronization signal is present and should be used ?
->>>>
->>>
->>> Yes that correct, there is a register (Sync Detect Status) which
->>> detects the sync for you.
->>>
->>>> I suspect that we don't need, e.g. another endpoint node to specif=
-y the
->>>> configuration of the TVP7002 analogue input interface, that would =
-contain
->>>> a property like video-sync.
->>>>
->>>>
->>> If I understand correctly you mean if there are two tvp7002 devices
->>> connected
->>> we don=92t need to specify video-sync property, but my question how=
- do we
->>> specify this property in common then ?
->>
->>
->> No, I thought about two port sub-nodes of a single device node, one =
-for the
->> TVP7002 video input and one for the output. But it seems there is no=
- need
->> for that, i.e. to specify the input configuration statically in the
->> firmware.
->> The chip detects the signals automatically, i.e. it uses whatever is
->> available,
->> and it allows querying the selection status at run time. What would =
-really
->> need to be configured statically in DT in that case then ? Some init=
-ial
->> video
->> sync configuration ? I guess it could be well hard coded in the driv=
-er,
->> since
->> the hardware does run time detection anyway.
->>
-> Yes the chip detects the signal automatically, What I want to configu=
-re in
-> the DT case is say if SOG signal is detected, I want to invert the po=
-larity
-> of it this is what I am trying to set in DT case whether to invert or=
- not.
-> 0 =3D Normal operation (default)
-> 1 =3D SOG output polarity inverted
+On 07/13/2013 01:12 PM, Prabhakar Lad wrote:
+> From: "Lad, Prabhakar"<prabhakar.csengg@gmail.com>
 >
-> Something similar to fid_polarity.
+> add OF support for the adv7343 driver.
+>
+> Signed-off-by: Lad, Prabhakar<prabhakar.csengg@gmail.com>
+> ---
+>   Changes for v2:
+>   1: Fixed naming of properties.
+>
+>   .../devicetree/bindings/media/i2c/adv7343.txt      |   54 ++++++++++++++++
+>   drivers/media/i2c/adv7343.c                        |   65 +++++++++++++++++++-
+>   2 files changed, 118 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7343.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+> new file mode 100644
+> index 0000000..1d2e854
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+> @@ -0,0 +1,54 @@
+> +* Analog Devices adv7343 video encoder
+> +
+> +The ADV7343 are high speed, digital-to-analog video encoders in a 64-lead LQFP
+> +package. Six high speed, 3.3 V, 11-bit video DACs provide support for composite
+> +(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in standard
+> +definition (SD), enhanced definition (ED), or high definition (HD) video
+> +formats.
+> +
+> +Required Properties :
+> +- compatible: Must be "ad,adv7343"
 
-Then as I suggested earlier, let's just add 'sync-on-green-active' DT
-property for that. I wouldn't expect the DT properties to be directly
-replacing your driver platform_data members. Saying in the binding that
-this is a normal operation and that is an inverted one is not very usef=
-ul
-in general, as you would need to dig in the binding's description what
-"normal" exactly means. sync-on-green-active =3D <1>; seems much more
-explicit than, e.g. sync-on-green-inverted. By looking at the
-sync-on-green-active property each device driver would determine whethe=
-r
-it means normal or inverted operation for its device.
+Please have a look at Documentation/devicetree/bindings/vendor-prefixes.txt.
+'ad' is a vendor prefix reserved for "Avionic Design GmbH".
+For "Analog Devices, Inc." 'adi' should be used.
+
+If I would have to draft a new DT binding proposal checklist checking
+vendor-prefixes.txt would certainly be one of the first steps.
+
+> +Optional Properties :
+> +- ad,adv7343-power-mode-sleep-mode: on enable the current consumption is
+> +				     reduced to micro ampere level. All DACs and
+> +				     the internal PLL circuit are disabled.
+> +- ad,adv7343-power-mode-pll-ctrl: PLL and oversampling control. This control
+> +				   allows internal PLL 1 circuit to be powered
+> +				   down and the oversampling to beswitched off.
+> +- ad,adv7343-power-mode-dac-1: power on/off DAC 1, 0 = OFF and 1 = ON.
+> +- ad,adv7343-power-mode-dac-2: power on/off DAC 2, 0 = OFF and 1 = ON.
+> +- ad,adv7343-power-mode-dac-3: power on/off DAC 3, 0 = OFF and 1 = ON.
+> +- ad,adv7343-power-mode-dac-4: power on/off DAC 4, 0 = OFF and 1 = ON.
+> +- ad,adv7343-power-mode-dac-5: power on/off DAC 5, 0 = OFF and 1 = ON.
+> +- ad,adv7343-power-mode-dac-6: power on/off DAC 6, 0 = OFF and 1 = ON.
+> +- ad,adv7343-sd-config-dac-out-1: Configure SD DAC Output 1.
+> +- ad,adv7343-sd-config-dac-out-2: Configure SD DAC Output 2.
+
+All these properties look more like hardware configuration, rather than
+hardware description. So at first sight I would say none of these properties
+is suitable for the device tree.
+
+sleep mode and pll ctrl should likely only have default values in the 
+driver.
+sleep-mode disables all DAC, while power-mode-dac-? does power on/off
+(enables / disables?) individual DACs. How those properties interact, 
+what's
+going on here exactly ? :)
+
+That said, how about only leaving the properties indicating which DACs
+(including SD DACs) should be enabled ? E.g.
+
+adi,dac-enable - an array indicating which DACs are enabled, in order
+  		DAC1...DAC6, 1 to enable DAC, 0 to disable.
+
+adi,sd-dac-enable - an array indicating which SD DACs are enabled, in order
+  		DAC1...DAC2, 1 to enable SD DAC, 0 to disable.
+
+Please note you don't need ",adv7343-" prefix in each single property
+for that device.
+
+> +Example:
+> +
+> +i2c0@1c22000 {
+> +	...
+> +	...
+> +
+> +	adv7343@2a {
+> +		compatible = "ad,adv7343";
+> +		reg =<0x2a>;
+> +
+> +		port {
+> +			adv7343_1: endpoint {
+> +					ad,adv7343-power-mode-sleep-mode;
+> +					ad,adv7343-power-mode-pll-ctrl;
+> +					ad,adv7343-power-mode-dac-1;
+> +					ad,adv7343-power-mode-dac-2;
+> +					ad,adv7343-power-mode-dac-3;
+> +					ad,adv7343-power-mode-dac-4;
+> +					ad,adv7343-power-mode-dac-5;
+> +					ad,adv7343-power-mode-dac-6;
+
+Then this would have become:
+					adi,dac-enable = <1 1 1 1 1 1>;	
+
+But I would put some disabled DACs in the example as well:
+
+					/* Use DAC1..3, DAC6 */
+					adi,dac-enable = <1 1 1 0 0 1>;
+
+> +					ad,adv7343-sd-config-dac-out-1;
+> +					ad,adv7343-sd-config-dac-out-2;
+
+And this:	
+					adi,sd-dac-enable = <1 1>;	
+
+> +			};
+> +		};
+> +	};
+> +	...
+> +};
+> diff --git a/drivers/media/i2c/adv7343.c b/drivers/media/i2c/adv7343.c
+> index 7606218..22ee6f4 100644
+> --- a/drivers/media/i2c/adv7343.c
+> +++ b/drivers/media/i2c/adv7343.c
+> @@ -29,6 +29,7 @@
+>   #include<media/adv7343.h>
+>   #include<media/v4l2-device.h>
+>   #include<media/v4l2-ctrls.h>
+> +#include<media/v4l2-of.h>
+>
+>   #include "adv7343_regs.h"
+>
+> @@ -398,6 +399,59 @@ static int adv7343_initialize(struct v4l2_subdev *sd)
+>   	return err;
+>   }
+>
+> +static struct adv7343_platform_data *
+> +adv7343_get_pdata(struct i2c_client *client)
+> +{
+> +	struct adv7343_platform_data *pdata;
+> +	struct device_node *np;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
+> +		return client->dev.platform_data;
+> +
+> +	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> +	if (!np)
+> +		return NULL;
+> +
+> +	pdata = devm_kzalloc(&client->dev, sizeof(struct adv7343_platform_data),
+> +			     GFP_KERNEL);
+> +	if (!pdata)
+> +		goto done;
+> +
+> +	pdata->mode_config.sleep_mode =
+> +		of_property_read_bool(np, "ad,adv7343-power-mode-sleep-mode");
+> +
+> +	pdata->mode_config.pll_control =
+> +		of_property_read_bool(np, "ad,adv7343-power-mode-pll-ctrl");
+> +
+> +	pdata->mode_config.dac_1 =
+> +		of_property_read_bool(np, "ad,adv7343-power-mode-dac-1");
+> +
+> +	pdata->mode_config.dac_2 =
+> +		of_property_read_bool(np, "ad,adv7343-power-mode-dac-2");
+> +
+> +	pdata->mode_config.dac_3 =
+> +		of_property_read_bool(np, "ad,adv7343-power-mode-dac-3");
+> +
+> +	pdata->mode_config.dac_4 =
+> +		of_property_read_bool(np, "ad,adv7343-power-mode-dac-4");
+> +
+> +	pdata->mode_config.dac_5 =
+> +		of_property_read_bool(np, "ad,adv7343-power-mode-dac-5");
+> +
+> +	pdata->mode_config.dac_6 =
+> +		of_property_read_bool(np, "ad,adv7343-power-mode-dac-6");
+> +
+> +	pdata->sd_config.sd_dac_out1 =
+> +		of_property_read_bool(np, "ad,adv7343-sd-config-dac-out-1");
+> +
+> +	pdata->sd_config.sd_dac_out2 =
+> +		of_property_read_bool(np, "ad,adv7343-sd-config-dac-out-2");
+
+This doesn't look very impressive. IMHO changing 
+pdata->mode_config.{dac,sd_dac}
+to an array type could simplify this code a little. But you could as 
+well use
+of_property_read_u32_array() and assign each element to corresponding
+mode_config.(sd_)dac field.
+
+> +done:
+> +	of_node_put(np);
+> +	return pdata;
+> +}
+> +
 
 --
 Thanks,
