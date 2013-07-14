@@ -1,54 +1,120 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
-Date: Sun, 14 Jul 2013 21:29:43 +0200
-Message-ID: <201307142129.43271.arnd@arndb.de>
-References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
- <20130710214922.GQ11908@titan.lakedaemon.net>
- <175CCF5F49938B4D99B2E3EF7F558EBE3DBC97FDFA@SC-VEXCH4.marvell.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v2 2/2] media: i2c: tvp7002: add OF support
+Date: Sun, 14 Jul 2013 21:42:58 +0200
+Message-ID: <51E2FF42.2090507@gmail.com>
+References: <1371923055-29623-1-git-send-email-prabhakar.csengg@gmail.com> <1371923055-29623-3-git-send-email-prabhakar.csengg@gmail.com> <51D05568.3090009@gmail.com> <CA+V-a8sW+D8trces5AXu__Lw9F7TO6fCcQW+LGZKRhA41uOEfw@mail.gmail.com> <51DF2BF6.30509@gmail.com> <CA+V-a8u0G6m+VoSc4FPmDxEYmE_vQaL7zu3fUFk3iVKnOywnRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <175CCF5F49938B4D99B2E3EF7F558EBE3DBC97FDFA@SC-VEXCH4.marvell.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Zhang <zhangwm@marvell.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, Matt Sealey <neko@bakuhatsu.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8u0G6m+VoSc4FPmDxEYmE_vQaL7zu3fUFk3iVKnOywnRA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 11 July 2013, Neil Zhang wrote:
-> > > > To do this properly, the drivers are going to have to be compatible
-> > > > with the old and the new names, and the binding docs updated to
-> > > > reflect the legacy name and the preferred name.
-> > >
-> > > Properly would be as above. You can stop using stock tickers for new
-> > > company names, but anything that has been defined in a device tree
-> > > before has to stay that way, and all the manufacturer prefixes to
-> > > device names should be the same. What you're proposing is purely
-> > > driver bloat and increasing the size of kernel.
-> > 
-> > *I'm* not proposing to change the name, Neil is.  I'm proposing that
-> > iff they chose to do that, don't break sh*t along the way.
-> > 
-> 
-> What's your opinion?
+Hi Prabhakar,
 
-We discussed the topic of fixing bad bindings vs. keeping backwards
-compatibility during last week's Linaro Connect.
+On 07/12/2013 06:43 AM, Prabhakar Lad wrote:
+> On Fri, Jul 12, 2013 at 3:34 AM, Sylwester Nawrocki
+> <sylvester.nawrocki@gmail.com>  wrote:
+>> On 07/11/2013 07:09 PM, Prabhakar Lad wrote:
+[...]
+>>>> And include/media/tvp70002.h:
+>>>>
+>>>>    * fid_polarity:
+>>>>    *                      0 ->   the field ID output is set to log=
+ic 1 for
+>>>> an
+>>>> odd
+>>>>    *                           field (field 1) and set to logic 0 =
+for an
+>>>> even
+>>>>    *                           field (field 0).
+>>>>    *                      1 ->   operation with polarity inverted.
+>>>>
+>>>>
+>>>> Do you know if the chip automatically selects video sync source
+>>>> (sync-on-green
+>>>> vs. VSYNC/HSYNC) and there is no need to configure this on the ana=
+logue
+>>>> input
+>>>> side ? At least the driver seems to always select the default SOGI=
+N_1
+>>>> input
+>>>> (TVP7002_IN_MUX_SEL_1 register is set only at initialization time)=
+=2E
+>>>>
+>>> Yes the driver is selecting the default SOGIN_1 input.
+>>>
+>>>> Or perhaps it just outputs on SOGOUT, VSOUT, HSOUT lines whatever =
+is fed
+>>>> to
+>>>> its analogue inputs, and any further processing unit need to deter=
+mine
+>>>> what
+>>>> synchronization signal is present and should be used ?
+>>>>
+>>>
+>>> Yes that correct, there is a register (Sync Detect Status) which
+>>> detects the sync for you.
+>>>
+>>>> I suspect that we don't need, e.g. another endpoint node to specif=
+y the
+>>>> configuration of the TVP7002 analogue input interface, that would =
+contain
+>>>> a property like video-sync.
+>>>>
+>>>>
+>>> If I understand correctly you mean if there are two tvp7002 devices
+>>> connected
+>>> we don=92t need to specify video-sync property, but my question how=
+ do we
+>>> specify this property in common then ?
+>>
+>>
+>> No, I thought about two port sub-nodes of a single device node, one =
+for the
+>> TVP7002 video input and one for the output. But it seems there is no=
+ need
+>> for that, i.e. to specify the input configuration statically in the
+>> firmware.
+>> The chip detects the signals automatically, i.e. it uses whatever is
+>> available,
+>> and it allows querying the selection status at run time. What would =
+really
+>> need to be configured statically in DT in that case then ? Some init=
+ial
+>> video
+>> sync configuration ? I guess it could be well hard coded in the driv=
+er,
+>> since
+>> the hardware does run time detection anyway.
+>>
+> Yes the chip detects the signal automatically, What I want to configu=
+re in
+> the DT case is say if SOG signal is detected, I want to invert the po=
+larity
+> of it this is what I am trying to set in DT case whether to invert or=
+ not.
+> 0 =3D Normal operation (default)
+> 1 =3D SOG output polarity inverted
+>
+> Something similar to fid_polarity.
 
-The main outcome was that we need to have a better review for new bindings
-getting merged to avoid this situation in the future, but the general
-consensus seems that bindings that are already in use but were never
-reviewed properly (which should have caught this) should be changed.
-We will likely establish an annotation in the binding soon to mark those
-that can not be changed as opposed to those that are not considered stable
-yet.
+Then as I suggested earlier, let's just add 'sync-on-green-active' DT
+property for that. I wouldn't expect the DT properties to be directly
+replacing your driver platform_data members. Saying in the binding that
+this is a normal operation and that is an inverted one is not very usef=
+ul
+in general, as you would need to dig in the binding's description what
+"normal" exactly means. sync-on-green-active =3D <1>; seems much more
+explicit than, e.g. sync-on-green-inverted. By looking at the
+sync-on-green-active property each device driver would determine whethe=
+r
+it means normal or inverted operation for its device.
 
-	Arnd
+--
+Thanks,
+Sylwester
