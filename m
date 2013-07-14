@@ -1,162 +1,77 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH RFC v2 4/5] dma: mpc512x: register for device tree channel
- lookup
-Date: Sun, 14 Jul 2013 14:02:00 +0200
-Message-ID: <1373803321-11628-5-git-send-email-gsi@denx.de>
-References: <1373642781-32631-1-git-send-email-gsi@denx.de>
- <1373803321-11628-1-git-send-email-gsi@denx.de>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] [ATTEND] Handling of devicetree bindings
+Date: Sun, 14 Jul 2013 11:13:31 -0700
+Message-ID: <20130714181331.GC26513@roeck-us.net>
+References: <20130713192647.GA3798@katana> <20130713204927.GA1124@roeck-us.net>
+ <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1373803321-11628-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Alexander Popov <a13xp0p0v88@gmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Gerhard Sittig <gsi@denx.de>, Dan Williams <djbw@fb.com>, Anatolij Gustschin <agust@denx.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, ksummit-2013-discuss-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-register the controller for device tree based lookup of DMA channels
-(non-fatal for backwards compatibility with older device trees), provide
-the '#dma-cells' property in the shared mpc5121.dtsi file, and introduce
-a bindings document for the MPC512x DMA controller
+On Sun, Jul 14, 2013 at 01:46:45AM +0200, Linus Walleij wrote:
+> On Sat, Jul 13, 2013 at 10:49 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> > On Sat, Jul 13, 2013 at 08:26:47PM +0100, Wolfram Sang wrote:
+> 
+> >> I think the KS would be a good opportunity to present the status quo,
+> >> show some rules of thumb and finally discuss if we can improve the
+> >> process even further. E.g., should first the bindings be accepted, then
+> >> the driver? What could be the process if the need for a generic binding
+> >> arises? And spreading the word, so at least the basic issues are
+> >> understood by most maintainers.
+> >>
+> > Sounds like a good idea, but I think you'll need some deadline. When reviewing
+> > hwmon drivers I usually wait for a couple of weeks if there is any feedback
+> > from devicetree-discuss before I accept bindings, but what should I do
+> > if there is no feedback ? Holding the driver hostage doesn't seem like a good
+> > idea either.
+> 
+> Nobody rarely say anything on devicetree-discuss. And if something is
+> said it will usually be about syntax rather than semantics. And if it's
+> semantics, it's usually a subsystem or arch maintainer saying it.
+> 
+> I've been ranting a bit about this recently, and one of the problems with
+> device tree now being driven by the Linux community (basically - it used
+> to be a IEEE thing at one point in the past) is that as the bindings are
+> merged by the subsystem maintainers, they alone get to decide when
+> they are finished.
+> 
+> They are all in Documentation/devicetree/bindings/* so theoretically
+> we could have a dedicated maintainer for it, but that requires someone
+> to step up :-/
+> 
+> I wonder if some subsystem maintainers who are more used to things
+> like ACPI or PCI where someone else has already done the thinking
+> and written a large (non-perfect, mind you) specification even think that
+> reviewing hardware descriptions is their problem at all?
+> 
+> Maybe some just consider this "some documentation", think it has been
+> defined by someone who thought it over and merge it without looking
+> closely.
+> 
+For my part I do have a close look, but I don't really know if my understanding
+of acceptable properties matches the understanding of the devicetree community.
+Devicetree is supposed to describe the hardware, but in many cases there is
+an overlap between hardware description and configuration and/or use. Where is
+the boundary ?
 
-Signed-off-by: Gerhard Sittig <gsi@denx.de>
----
- .../devicetree/bindings/dma/mpc512x-dma.txt        |   55 ++++++++++++++++++++
- arch/powerpc/boot/dts/mpc5121.dtsi                 |    1 +
- drivers/dma/mpc512x_dma.c                          |   21 ++++++--
- 3 files changed, 74 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+My approach is to accept properties which would otherwise require platform data.
+Is that acceptable ? How can I know if devicetree-discuss is mostly silent on
+such matters, as you point out ?
 
-diff --git a/Documentation/devicetree/bindings/dma/mpc512x-dma.txt b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-new file mode 100644
-index 0000000..a4867d5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-@@ -0,0 +1,55 @@
-+* Freescale MPC512x DMA Controller
-+
-+The DMA controller in the Freescale MPC512x SoC can move blocks of
-+memory contents between memory and peripherals or memory to memory.
-+
-+Refer to the "Generic DMA Controller and DMA request bindings" description
-+in the dma.txt file for a more detailled discussion of the binding.  The
-+MPC512x DMA engine binding follows the common scheme, but doesn't provide
-+support for the optional channels and requests counters (those values are
-+derived from the detected hardware features) and has a fixed client
-+specifier length of 1 integer cell (the value is the DMA channel, since
-+the DMA controller uses a fixed assignment of request lines per channel).
-+
-+
-+DMA controller node properties:
-+
-+Required properties:
-+- compatible:		should be "fsl,mpc5121-dma"
-+- reg:			address and size of the DMA controller's register set
-+- interrupts:		interrupt spec for the DMA controller
-+
-+Optional properties:
-+- #dma-cells:		must be <1>, describes the number of integer cells
-+			needed to specify the 'dmas' property in client nodes,
-+			strongly recommended since common client helper code
-+			uses this property
-+
-+Example:
-+
-+	dma0: dma@14000 {
-+		compatible = "fsl,mpc5121-dma";
-+		reg = <0x14000 0x1800>;
-+		interrupts = <65 0x8>;
-+		#dma-cells = <1>;
-+	};
-+
-+
-+Client node properties:
-+
-+Required properties:
-+- dmas:			list of DMA specifiers, consisting each of a handle
-+			for the DMA controller and integer cells to specify
-+			the channel used within the DMA controller
-+- dma-names:		list of identifier strings for the DMA specifiers,
-+			client device driver code uses these strings to
-+			have DMA channels looked up at the controller
-+
-+Example:
-+
-+	sdhc@1500 {
-+		compatible = "fsl,mpc5121-sdhc";
-+		/* ... */
-+		dmas = <&dma0 30>;
-+		dma-names = "rx-tx";
-+	};
-diff --git a/arch/powerpc/boot/dts/mpc5121.dtsi b/arch/powerpc/boot/dts/mpc5121.dtsi
-index bd14c00..eb0058f 100644
---- a/arch/powerpc/boot/dts/mpc5121.dtsi
-+++ b/arch/powerpc/boot/dts/mpc5121.dtsi
-@@ -390,6 +390,7 @@
- 			compatible = "fsl,mpc5121-dma";
- 			reg = <0x14000 0x1800>;
- 			interrupts = <65 0x8>;
-+			#dma-cells = <1>;
- 		};
- 	};
- 
-diff --git a/drivers/dma/mpc512x_dma.c b/drivers/dma/mpc512x_dma.c
-index 55e6a87..84fd07b 100644
---- a/drivers/dma/mpc512x_dma.c
-+++ b/drivers/dma/mpc512x_dma.c
-@@ -36,6 +36,7 @@
- #include <linux/io.h>
- #include <linux/slab.h>
- #include <linux/of_device.h>
-+#include <linux/of_dma.h>
- #include <linux/of_platform.h>
- 
- #include <linux/random.h>
-@@ -959,11 +960,23 @@ static int mpc_dma_probe(struct platform_device *op)
- 	/* Register DMA engine */
- 	dev_set_drvdata(dev, mdma);
- 	retval = dma_async_device_register(dma);
--	if (retval) {
--		devm_free_irq(dev, mdma->irq, mdma);
--		irq_dispose_mapping(mdma->irq);
-+	if (retval)
-+		goto out_irq;
-+
-+	/* register with OF helpers for DMA lookups (nonfatal) */
-+	if (dev->of_node) {
-+		retval = of_dma_controller_register(dev->of_node,
-+						    of_dma_xlate_by_chan_id,
-+						    mdma);
-+		if (retval)
-+			dev_warn(dev, "could not register for OF lookup\n");
- 	}
- 
-+	return 0;
-+
-+out_irq:
-+	devm_free_irq(dev, mdma->irq, mdma);
-+	irq_dispose_mapping(mdma->irq);
- 	return retval;
- }
- 
-@@ -972,6 +985,8 @@ static int mpc_dma_remove(struct platform_device *op)
- 	struct device *dev = &op->dev;
- 	struct mpc_dma *mdma = dev_get_drvdata(dev);
- 
-+	if (dev->of_node)
-+		of_dma_controller_free(dev->of_node);
- 	dma_async_device_unregister(&mdma->dma);
- 	devm_free_irq(dev, mdma->irq, mdma);
- 	irq_dispose_mapping(mdma->irq);
--- 
-1.7.10.4
+Guenter
