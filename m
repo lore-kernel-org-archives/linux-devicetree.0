@@ -1,31 +1,59 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v2] regulator: pfuze100: add pfuze100 regulator driver
-Date: Mon, 15 Jul 2013 14:49:51 +0800
-Message-ID: <20130715064949.GA11486@S2101-09.ap.freescale.net>
-References: <1373604855-17714-1-git-send-email-b38343@freescale.com>
- <20130715012233.GA2730@S2101-09.ap.freescale.net>
- <20130715064037.GA4722@Robin-OptiPlex-780>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] [ATTEND] Handling of devicetree bindings
+Date: Mon, 15 Jul 2013 10:36:22 +0200
+Message-ID: <CACRpkdanQz+Tb-c+-3hRVKhCEBHtxm1toFw7mwyeMmSuVq+sfQ@mail.gmail.com>
+References: <20130713192647.GA3798@katana> <20130713204927.GA1124@roeck-us.net>
+ <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ@mail.gmail.com>
+ <20130714181331.GC26513@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130715064037.GA4722@Robin-OptiPlex-780>
-Sender: linux-doc-owner@vger.kernel.org
-To: Robin Gong <b38343@freescale.com>
-Cc: linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, lgirdwood@gmail.com, broonie@kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, rob@landley.net
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130714181331.GC26513-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, ksummit-2013-discuss-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2013 at 02:40:39PM +0800, Robin Gong wrote:
-> > > +static const struct of_device_id pfuze_dt_ids[] = {
-> > > +	{ .compatible = "fsl,pfuze100", .data = (void *)PFUZE_ID_PFUZE100},
-> > 
-> > You do not use .data in the driver at all, and can just drop it.
-> >
-> good catch. .driver_data  of i2c_device_id and .data of of_device_id are two different ways to let driver know which chip used now by DTS or not. I should use them to know which chip used now ,although I can know by reading chipid register. 
-> 
+On Sun, Jul 14, 2013 at 8:13 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On Sun, Jul 14, 2013 at 01:46:45AM +0200, Linus Walleij wrote:>> Maybe some just consider this "some documentation", think it has been
+>> defined by someone who thought it over and merge it without looking
+>> closely.
+>>
+> For my part I do have a close look, but I don't really know if my understanding
+> of acceptable properties matches the understanding of the devicetree community.
+> Devicetree is supposed to describe the hardware, but in many cases there is
+> an overlap between hardware description and configuration and/or use. Where is
+> the boundary ?
 
-If you can figure out the chip ID from hardware, it should be used as
-the preference over compatible and .driver_data.
+Well this is what we need everyone to know so I guess this confirms the
+need to bring it up at the kernel summit...
 
-Shawn
+> My approach is to accept properties which would otherwise require platform data.
+> Is that acceptable ?
 
+In most cases yes, but there are some paradigms about it, and nothing
+linux-specific should be encoded in it, except for a few "linux-*"
+bindings.
+
+> How can I know if devicetree-discuss is mostly silent on
+> such matters, as you point out ?
+
+Right now it feels like everyone developing these drivers think it is very
+convenient that the Linux subsystem maintainers do all the reviewing
+and deciding, so they can then later take the blame for it if they merged
+something bad.
+
+I feel just as ambivalent about it as you do :-/
+
+Yours,
+Linus Walleij
