@@ -1,178 +1,127 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [RFC PATCH 1/3] of: provide a binding for the 'fixed-link' property
-Date: Mon, 15 Jul 2013 16:50:15 +0100
-Message-ID: <CAGVrzcZU-3VS87RgrCrcSuoQd+aU3XRX-QerToT1uvRemtcQDQ@mail.gmail.com>
-References: <1373902450-11857-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6] usb: dwc3: use extcon fwrk to receive
+ connect/disconnect
+Date: Mon, 15 Jul 2013 18:51:06 +0300
+Message-ID: <20130715155106.GE32035@arwen.pp.htv.fi>
+References: <1373902742-9495-1-git-send-email-kishon@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kA1LkgxZ0NN7Mz3A"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1373902742-9495-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Thomas,
+--kA1LkgxZ0NN7Mz3A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-2013/7/15 Thomas Petazzoni <thomas.petazzoni@free-electrons.com>:
-> Some Ethernet MACs have a "fixed link", and are not connected to a
-> normal MDIO-managed PHY device. For those situations, a Device Tree
-> binding allows to describe a "fixed link", as a "fixed-link" property
-> of the Ethernet device Device Tree node.
->
-> This patch adds:
->
->  * A documentation for the Device Tree property "fixed-link".
->
->  * A of_phy_register_fixed_link() OF helper, which provided an OF node
->    that contains a "fixed-link" property, registers the corresponding
->    fixed PHY.
->
->  * Removes the warning on the of_phy_connect_fixed_link() that says
->    new drivers should not use it, since Grant Likely indicated that
->    this "fixed-link" property is indeed the way to go.
-
-Some minor nitpicks below. Other than that:
-
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-
-Reviewed-by: Florian Fainelli <florian@openwrt.org>
-
+On Mon, Jul 15, 2013 at 09:09:02PM +0530, Kishon Vijay Abraham I wrote:
+> Modified dwc3-omap to receive connect and disconnect notification using
+> extcon framework. Also did the necessary cleanups required after
+> adapting to extcon framework.
+>=20
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/net/fixed-link.txt         | 26 ++++++++++++++++
->  drivers/of/of_mdio.c                               | 36 +++++++++++++++++++---
->  include/linux/of_mdio.h                            | 10 ++++++
->  3 files changed, 68 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/fixed-link.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
-> new file mode 100644
-> index 0000000..25a009a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/fixed-link.txt
-> @@ -0,0 +1,26 @@
-> +Fixed link Device Tree binding
-> +------------------------------
+> This patch should be applied after all of the extcon patchset will be app=
+lied
+> because this patch has dependency of extcon patch related to DT.
+> http://goo.gl/Tu3qW
+>=20
+> Changes from v5:
+> * rebased to 3.11-rc1
+> Changes from v4:
+> * checked the return values of extcon_register_interest and print an error
+> message. Note that I dint do return since there might be cases where
+> one of USB (device mode) or USB-HOST (host mode) might succeed.
+> * Added depends on of EXTCON in usb_dwc3. Only some platforms might
+> be using EXTCON, but inorder to avoid compilation errors, added
+> depends on
+> Changes from v3:
+> * did #include of of_extcon.h after Chanwoo resent the patch separating
+> extcon-class.c from of_extcon.c
+> Changes from v2:
+> * updated the Documentation with dwc3 dt binding information.
+> * used of_extcon_get_extcon_dev to get extcon device from device tree dat=
+a.
+> Changes from v1:
+> * regulator enable/disable is now done here instead of palmas-usb as some=
+ users
+> of palmas-usb wont need regulator.
+>  Documentation/devicetree/bindings/usb/omap-usb.txt |    5 +
+>  drivers/usb/dwc3/Kconfig                           |    1 +
+>  drivers/usb/dwc3/dwc3-omap.c                       |  125 ++++++++++++++=
++++---
+>  3 files changed, 112 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documen=
+tation/devicetree/bindings/usb/omap-usb.txt
+> index 57e71f6..9088ab0 100644
+> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+> @@ -53,6 +53,11 @@ OMAP DWC3 GLUE
+>     It should be set to "1" for HW mode and "2" for SW mode.
+>   - ranges: the child address space are mapped 1:1 onto the parent addres=
+s space
+> =20
+> +Optional Properties:
+> + - extcon : phandle for the extcon device omap dwc3 uses to detect
+> +   connect/disconnect events.
+> + - vbus-supply : phandle to the regulator device tree node if needed.
 > +
-> +Some Ethernet MACs have a "fixed link", and are not connected to a
-> +normal MDIO-managed PHY device. For those situations, a Device Tree
-> +binding allows to describe a "fixed link".
+>  Sub-nodes:
+>  The dwc3 core should be added as subnode to omap dwc3 glue.
+>  - dwc3 :
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 757aa18..08a9fab 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -1,6 +1,7 @@
+>  config USB_DWC3
+>  	tristate "DesignWare USB3 DRD Core Support"
+>  	depends on (USB || USB_GADGET) && GENERIC_HARDIRQS
+> +	depends on EXTCON
 
-You could also add the following:
+can you rebase this on top of 'testing' branch. I have a patch there
+which give glue layers their own Kconfig symbols. If you do that, I can
+queue this patch myself for v3.12, unless we have dependencies on other
+patches which aren't in mainline, in which case, I'd ask to simply
+remove this Kconfig change for now.
 
-"this might be the case when using an Ethernet switch whose management
-interface is not accessible using the MDIO bus, or for specific PHYs
-where the control path of the PHY might be separated from its data
-path".
+--=20
+balbi
 
-> +
-> +Such a fixed link situation is described within an Ethernet device
-> +Device Tree node using a 'fixed-link' property, composed of 5
-> +elements:
-> +
-> + 1. A fake PHY ID, which must be unique accross all fixed-link PHYs in
-> +    the system.
+--kA1LkgxZ0NN7Mz3A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-You might want to detail that will be used to fake PHY identification
-registers 2 & 3.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> + 2. The duplex (1 for full-duplex, 0 for half-duplex)
-> + 3. The speed (10, 100, 1000)
-> + 4. The pause setting (1 for enabled, 0 for disabled)
-> + 5. The asym pause setting (1 for enabled, 0 for disabled)
-> +
-> +Example:
-> +
-> +ethernet@0 {
-> +       ...
-> +       fixed-link = <1 1 1000 0 0>;
-> +       ...
-> +};
-> +
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index d5a57a9..66d5591 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -14,6 +14,7 @@
->  #include <linux/netdevice.h>
->  #include <linux/err.h>
->  #include <linux/phy.h>
-> +#include <linux/phy_fixed.h>
->  #include <linux/of.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_mdio.h>
-> @@ -215,10 +216,6 @@ EXPORT_SYMBOL(of_phy_connect);
->   * @dev: pointer to net_device claiming the phy
->   * @hndlr: Link state callback for the network device
->   * @iface: PHY data interface type
-> - *
-> - * This function is a temporary stop-gap and will be removed soon.  It is
-> - * only to support the fs_enet, ucc_geth and gianfar Ethernet drivers.  Do
-> - * not call this function from new drivers.
->   */
->  struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
->                                              void (*hndlr)(struct net_device *),
-> @@ -247,3 +244,34 @@ struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
->         return IS_ERR(phy) ? NULL : phy;
->  }
->  EXPORT_SYMBOL(of_phy_connect_fixed_link);
-> +
-> +#if defined(CONFIG_FIXED_PHY)
-> +/**
-> + * of_phy_register_fixed_link - Parse fixed-link property and register a dummy phy
-> + * @np: pointer to the OF device node that contains the "fixed-link"
-> + * property for which a dummy phy should be registered.
-> + */
-> +#define FIXED_LINK_PROPERTIES_COUNT 5
-> +int of_phy_register_fixed_link(struct device_node *np)
-> +{
-> +       struct fixed_phy_status status = {};
-> +       u32 fixed_link_props[FIXED_LINK_PROPERTIES_COUNT];
-> +       int ret;
-> +
-> +       ret = of_property_read_u32_array(np, "fixed-link",
-> +                                        fixed_link_props,
-> +                                        FIXED_LINK_PROPERTIES_COUNT);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       status.link       = 1;
-> +       status.duplex     = fixed_link_props[1];
-> +       status.speed      = fixed_link_props[2];
-> +       status.pause      = fixed_link_props[3];
-> +       status.asym_pause = fixed_link_props[4];
-> +
-> +       return fixed_phy_add(PHY_POLL, fixed_link_props[0],
-> +                            &status);
-> +}
-> +EXPORT_SYMBOL(of_phy_register_fixed_link);
-> +#endif
-> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-> index 8163107..bf6efea 100644
-> --- a/include/linux/of_mdio.h
-> +++ b/include/linux/of_mdio.h
-> @@ -57,4 +57,14 @@ static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
->  }
->  #endif /* CONFIG_OF */
->
-> +#if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
-> +extern int of_phy_register_fixed_link(struct device_node *np);
-> +#else
-> +static inline int of_phy_register_fixed_link(struct device_node *np)
-> +{
-> +       return -ENOSYS;
-> +}
-> +#endif
-> +
-> +
->  #endif /* __LINUX_OF_MDIO_H */
-> --
-> 1.8.1.2
->
+iQIcBAEBAgAGBQJR5BpqAAoJEIaOsuA1yqREuDYQAJk5fv6gsEqrDbmGu3Z7WK1V
+KkzVGoMNOEmu1Wwxtn4F6vUaiKeXSWikgvFfJsQhukRXweiKnZvKS9Aatx4Q+/iQ
+sNr9marv4mSNn+mIxIPm1bmc9rlECFdjg47aA78xr8qc/pWz0xY5LCtU7MFe2aG8
+i47fuHltHMq4Ed4qTGMMPcyx/6z5MdHW/KaFcwgVssPEW84euVzTbCEhIDHrP/A6
+b1IS8Dhn7MhzCXSOqLGiC2/SJJf4mx6sBrT+FKE1KSlasu1btz2lPWL31j0Uu6j1
+GCjFMAd6p++kLevv9dGdS2HAxXVylVIfdQ9Z+g/e24DykfkJXRMoJTGi9LxHK6Dg
+gnlG+aQpAaFNrLB2NYAuYboYqkVXdDPHyT+rnSX+afcpNYWy8LQApxBPlRFRArsB
+yG4KxhJfboOid7054PVfOEpbcs2tnqrTwpRsAkF/q1rqpxSIPiAzqqyaIphEdSL9
+FVW+SYmkr/pVuluxJVuioSb0hwC9P4ReoiyB0L/XtFp5H6mUmR/N+TL/xMSKu56Q
+Jc7BPMmZ7ILdM18DI//74OknDOVtNbYO907xFXA7K9JEy/Mg/72XT+H3inPcWhfF
+xcB7KhauXMjYDE0KmCmBbtLKwrBx9KAHVfXoEOgEnt6m5xN+lLu+fu8UwmHrcpVC
+J1ClLrKcLYY92T1RhKTa
+=sP/d
+-----END PGP SIGNATURE-----
 
-
-
+--kA1LkgxZ0NN7Mz3A--
 --
-Florian
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
