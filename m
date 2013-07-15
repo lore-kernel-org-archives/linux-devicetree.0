@@ -1,17 +1,13 @@
-From: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] [ATTEND] Handling of devicetree bindings
-Date: Mon, 15 Jul 2013 11:41:57 -0700
-Message-ID: <20130715184157.GB17220@kroah.com>
-References: <20130713192647.GA3798@katana> <20130713204927.GA1124@roeck-us.net>
- <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ@mail.gmail.com>
- <20130715165620.GA29040@kroah.com>
- <20130715170600.GW11538@sirena.org.uk>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v1 01/24] spi: mpc512x: prepare clocks before enabling them
+Date: Mon, 15 Jul 2013 20:47:30 +0200
+Message-ID: <1373914074-20889-2-git-send-email-gsi@denx.de>
+References: <1373914074-20889-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130715170600.GW11538-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1373914074-20889-1-git-send-email-gsi-ynQEQJNshbs@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,32 +18,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Cc: ksummit-2013-discuss-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2013 at 06:06:00PM +0100, Mark Brown wrote:
-> On Mon, Jul 15, 2013 at 09:56:20AM -0700, Greg KH wrote:
-> 
-> > How about a hint for subsystem maintainers as to what exactly we should
-> > be looking for with these bindings?  I for one have no idea what is
-> > "right" vs. "wrong" with them, so a document explaining this would be
-> > good to have.
-> 
-> > Or if we already have it, a pointer to it perhaps?
-> 
-> At the minute it's about at the level of saying that if you're not sure
-> or don't know you should get the devicetree-discuss mailing list to
-> review it.  Ideally someone would write that document, though I wouldn't
-> hold my breath and there is a bunch of convention involved.
+clocks need to get prepared before they can get enabled,
+fix the MPC512x PSC SPI master's initialization
 
-So, what should I, as a subsystem maintainer, do if I get a patch with a
-binding in it?  Wait some random amount of time before I can just apply
-it because no one on the mailing list said anything about it?  Trust the
-developer who wrote it?  Or just reject them all?
+Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+---
+ drivers/spi/spi-mpc512x-psc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-What do you advise?
-
-thanks,
-
-greg k-h
+diff --git a/drivers/spi/spi-mpc512x-psc.c b/drivers/spi/spi-mpc512x-psc.c
+index 29fce6a..76b20ea 100644
+--- a/drivers/spi/spi-mpc512x-psc.c
++++ b/drivers/spi/spi-mpc512x-psc.c
+@@ -395,7 +395,7 @@ static int mpc512x_psc_spi_port_config(struct spi_master *master,
+ 
+ 	sprintf(name, "psc%d_mclk", master->bus_num);
+ 	spiclk = clk_get(&master->dev, name);
+-	clk_enable(spiclk);
++	clk_prepare_enable(spiclk);
+ 	mps->mclk = clk_get_rate(spiclk);
+ 	clk_put(spiclk);
+ 
+-- 
+1.7.10.4
