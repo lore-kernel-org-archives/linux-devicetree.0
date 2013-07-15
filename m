@@ -1,15 +1,14 @@
-From: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+From: Mark Brown <broonie-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Subject: Re: [Ksummit-2013-discuss] [ATTEND] Handling of devicetree bindings
-Date: Mon, 15 Jul 2013 09:56:20 -0700
-Message-ID: <20130715165620.GA29040@kroah.com>
+Date: Mon, 15 Jul 2013 18:06:00 +0100
+Message-ID: <20130715170600.GW11538@sirena.org.uk>
 References: <20130713192647.GA3798@katana> <20130713204927.GA1124@roeck-us.net>
  <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ@mail.gmail.com>
+ <20130715165620.GA29040@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1285241774921717738=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20130715165620.GA29040-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,60 +19,68 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, ksummit-2013-discuss-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+To: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Cc: ksummit-2013-discuss-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 14, 2013 at 01:46:45AM +0200, Linus Walleij wrote:
-> On Sat, Jul 13, 2013 at 10:49 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> > On Sat, Jul 13, 2013 at 08:26:47PM +0100, Wolfram Sang wrote:
-> 
-> >> I think the KS would be a good opportunity to present the status quo,
-> >> show some rules of thumb and finally discuss if we can improve the
-> >> process even further. E.g., should first the bindings be accepted, then
-> >> the driver? What could be the process if the need for a generic binding
-> >> arises? And spreading the word, so at least the basic issues are
-> >> understood by most maintainers.
-> >>
-> > Sounds like a good idea, but I think you'll need some deadline. When reviewing
-> > hwmon drivers I usually wait for a couple of weeks if there is any feedback
-> > from devicetree-discuss before I accept bindings, but what should I do
-> > if there is no feedback ? Holding the driver hostage doesn't seem like a good
-> > idea either.
-> 
-> Nobody rarely say anything on devicetree-discuss. And if something is
-> said it will usually be about syntax rather than semantics. And if it's
-> semantics, it's usually a subsystem or arch maintainer saying it.
-> 
-> I've been ranting a bit about this recently, and one of the problems with
-> device tree now being driven by the Linux community (basically - it used
-> to be a IEEE thing at one point in the past) is that as the bindings are
-> merged by the subsystem maintainers, they alone get to decide when
-> they are finished.
-> 
-> They are all in Documentation/devicetree/bindings/* so theoretically
-> we could have a dedicated maintainer for it, but that requires someone
-> to step up :-/
-> 
-> I wonder if some subsystem maintainers who are more used to things
-> like ACPI or PCI where someone else has already done the thinking
-> and written a large (non-perfect, mind you) specification even think that
-> reviewing hardware descriptions is their problem at all?
-> 
-> Maybe some just consider this "some documentation", think it has been
-> defined by someone who thought it over and merge it without looking
-> closely.
-> 
-> There have been discussions on improving the situation recently,
-> so maybe someone has a few words to add?
 
-How about a hint for subsystem maintainers as to what exactly we should
-be looking for with these bindings?  I for one have no idea what is
-"right" vs. "wrong" with them, so a document explaining this would be
-good to have.
+--===============1285241774921717738==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Cf1qy2gtPj5yoBMh"
+Content-Disposition: inline
 
-Or if we already have it, a pointer to it perhaps?
 
-thanks,
+--Cf1qy2gtPj5yoBMh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-greg k-h
+On Mon, Jul 15, 2013 at 09:56:20AM -0700, Greg KH wrote:
+
+> How about a hint for subsystem maintainers as to what exactly we should
+> be looking for with these bindings?  I for one have no idea what is
+> "right" vs. "wrong" with them, so a document explaining this would be
+> good to have.
+
+> Or if we already have it, a pointer to it perhaps?
+
+At the minute it's about at the level of saying that if you're not sure
+or don't know you should get the devicetree-discuss mailing list to
+review it.  Ideally someone would write that document, though I wouldn't
+hold my breath and there is a bunch of convention involved.
+
+--Cf1qy2gtPj5yoBMh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR5Cv1AAoJELSic+t+oim94twP/03LfDsyj5QxZk8ENgKaXtFz
+BQyKjXRvYLTGjYgDHQLBzLynJl8wjxjEK7bWEGArBjPKmRT1grXWEKa1pRXASNnt
+An5XHExXKQqsQezNrJ0Ehd2vEcO0HLMfmDUlGXIVeRYTE0mDnzrA7g2a4IamujoM
+arTd4TmZP88+eQC9A9Ae4/CRkxgus4X1u/IoCZLYFdrHXDKGO82/oZPemU38rFOW
+ndZ8tL+/bG10HC06rIm8jgAYn5PbWlEBPMaWsy7nhvfigxEzyLsbu81+yW5b2xry
+Ip04CXjnUfO7ItBMp7fhty/Rf408okPXNAh9C+IY28Uhk8ZBxA4rGN9mTT4iVXsZ
+MFaG3zSX1UBTECzlnFwdQwk9HrIEsi1z+MhQHI+l8i6m8iNPenZ0zhLxhlh58TT1
+Km/+ujPKXSieIYqCeEpX25IB9JswdVyw4nH82tazfFZ8jynK3An6yLCNANDDFS+B
+egR/P7T1YDWqWRE1ip/IHL24l4TByGJkf++lI3mONF/1vXBjeQbnYDjUTj8eiSDL
+KZBl/kYTrLsISF7Q5Jr0QxuwGrCcpVPsAXdHUE62LN7Gc8X0QStL1mEBVOUhI5/B
+J/Fxk1lG6mvCv6037Zsy5CMdZcfthoD7a+oVdGMOa9I9ZwPhg/4DfW9raxcDBW7a
+1xrb561f15mjW8bDAsL7
+=oR1I
+-----END PGP SIGNATURE-----
+
+--Cf1qy2gtPj5yoBMh--
+
+--===============1285241774921717738==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============1285241774921717738==--
