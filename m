@@ -1,63 +1,106 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: Re: [PATCH v5 2/7] sound: sam9x5_wm8731: machine driver for
- at91sam9x5 wm8731 boards
-Date: Mon, 15 Jul 2013 16:59:21 +0200
-Message-ID: <CACQ1gAiJ8ww-gYfcUsux00DmpWUpfqyzzqfxZjWZSaObgsz29g@mail.gmail.com>
-References: <1373559359-31607-1-git-send-email-richard.genoud@gmail.com>
- <1373559359-31607-3-git-send-email-richard.genoud@gmail.com> <20130712114926.GE24508@sirena.org.uk>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [RESEND PATCH v7 08/22] bus: mvebu-mbus: Introduce device tree binding
+Date: Mon, 15 Jul 2013 11:57:37 -0300
+Message-ID: <1373900271-4722-9-git-send-email-ezequiel.garcia@free-electrons.com>
+References: <1373900271-4722-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130712114926.GE24508@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1373900271-4722-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/7/12 Mark Brown <broonie@kernel.org>:
-> On Thu, Jul 11, 2013 at 06:15:54PM +0200, Richard Genoud wrote:
->> From: Nicolas Ferre <nicolas.ferre@atmel.com>
->>
->> Description of the Asoc machine driver for an at91sam9x5 based board
->
-> ASoC.
->
->> +sam9x5 pins:
->> + * LOUT
->> + * ROUT
->> + * LHPOUT
->> + * RHPOUT
->> + * LLINEIN
->> + * RLINEIN
->> + * MICIN
->
-> These aren't pins on the CPU, they're pins on the CODEC, and you should
-> be adding this to the binding document for the CODEC and referring to
-> that rather than having them in each individual binding document.  This
-> also helps if any new variants are added (not that this is likely for
-> the WM8731).
-ok, I'll move that
+This patch adds the most fundamental device-tree initialization.
+We only introduce what's required to be able to probe the mvebu-mbus
+driver from the DT. Follow-up patches will extend the device tree binding,
+allowing to describe static address decoding windows.
 
->
->> +static struct sam9x5_drvdata sam9x5_priv;
->
-> Why is this a global static?
->
->> +     ret = snd_soc_register_card(&snd_soc_sam9x5);
->> +     if (ret) {
->> +             dev_err(&pdev->dev,
->> +                     "ASoC: Platform device allocation failed\n");
->> +             goto out_put_audio;
->> +     }
->
->> +     platform_set_drvdata(pdev, &snd_soc_sam9x5);
->
-> It should be being dynamically allocated and retrieved as driver data
-> when needed.
-ok.
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/bus/mvebu-mbus.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mbus.h     |  1 +
+ 2 files changed, 50 insertions(+)
 
-Thanks !
-
-
+diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
+index 1b17954..44a07c4 100644
+--- a/drivers/bus/mvebu-mbus.c
++++ b/drivers/bus/mvebu-mbus.c
+@@ -900,3 +900,52 @@ int __init mvebu_mbus_init(const char *soc, phys_addr_t mbuswins_phys_base,
+ 			sdramwins_phys_base,
+ 			sdramwins_size);
+ }
++
++#ifdef CONFIG_OF
++int __init mvebu_mbus_dt_init(void)
++{
++	struct resource mbuswins_res, sdramwins_res;
++	struct device_node *np, *controller;
++	const struct of_device_id *of_id;
++	const __be32 *prop;
++	int ret;
++
++	np = of_find_matching_node(NULL, of_mvebu_mbus_ids);
++	if (!np) {
++		pr_err("could not find a matching SoC family\n");
++		return -ENODEV;
++	}
++
++	of_id = of_match_node(of_mvebu_mbus_ids, np);
++	mbus_state.soc = of_id->data;
++
++	prop = of_get_property(np, "controller", NULL);
++	if (!prop) {
++		pr_err("required 'controller' property missing\n");
++		return -EINVAL;
++	}
++
++	controller = of_find_node_by_phandle(be32_to_cpup(prop));
++	if (!controller) {
++		pr_err("could not find an 'mbus-controller' node\n");
++		return -ENODEV;
++	}
++
++	if (of_address_to_resource(controller, 0, &mbuswins_res)) {
++		pr_err("cannot get MBUS register address\n");
++		return -EINVAL;
++	}
++
++	if (of_address_to_resource(controller, 1, &sdramwins_res)) {
++		pr_err("cannot get SDRAM register address\n");
++		return -EINVAL;
++	}
++
++	ret = mvebu_mbus_common_init(&mbus_state,
++				     mbuswins_res.start,
++				     resource_size(&mbuswins_res),
++				     sdramwins_res.start,
++				     resource_size(&sdramwins_res));
++	return ret;
++}
++#endif
+diff --git a/include/linux/mbus.h b/include/linux/mbus.h
+index 9245b66..eadefd6 100644
+--- a/include/linux/mbus.h
++++ b/include/linux/mbus.h
+@@ -74,5 +74,6 @@ int mvebu_mbus_del_window(phys_addr_t base, size_t size);
+ int mvebu_mbus_init(const char *soc, phys_addr_t mbus_phys_base,
+ 		    size_t mbus_size, phys_addr_t sdram_phys_base,
+ 		    size_t sdram_size);
++int mvebu_mbus_dt_init(void);
+ 
+ #endif /* __LINUX_MBUS_H */
 -- 
-for me, ck means con kolivas and not calvin klein... does it mean I'm a geek ?
+1.8.1.5
