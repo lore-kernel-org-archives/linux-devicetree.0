@@ -1,31 +1,63 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] iio: twl6030-gpadc: TWL6030, TWL6032 GPADC driver
-Date: Mon, 15 Jul 2013 13:33:53 +0200
-Message-ID: <51E3DE21.9060105@metafoo.de>
-References: <1373613482-28390-1-git-send-email-oleksandr.kozaruk@ti.com> <1373613482-28390-3-git-send-email-oleksandr.kozaruk@ti.com>,<51E05F6C.1060506@metafoo.de> <2A7ABDFCE21540479A5AEB0244A684D5E3D067@DNCE04.ent.ti.com>
+From: Srikanth Thokala <srikanth.thokala@xilinx.com>
+Subject: [PATCH RFC] trafgen: xilinx:
+Date: Mon, 15 Jul 2013 17:09:47 +0530
+Message-ID: <1af83c15-509f-4f64-b1ed-36e8b84b7777@CO9EHSMHS011.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2A7ABDFCE21540479A5AEB0244A684D5E3D067-bXo5r3zvlxeIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Kozaruk, Oleksandr" <oleksandr.kozaruk-l0cyMroinI0@public.gmane.org>
-Cc: "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Nayak, Rajendra" <rnayak-l0cyMroinI0@public.gmane.org>, "Ujfalusi, Peter" <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, "jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org" <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org" <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>, "Kim, Milo" <Milo.Kim-l0cyMroinI0@public.gmane.org>, "Krishnamoorthy, Balaji T" <balajitk-l0cyMroinI0@public.gmane.org>, "gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org" <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-dis>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de, gregkh@linuxfoundation.org, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@linaro.org
+Cc: Michal Simek <michal.simek@xilinx.com>, Srikanth Thokala <sthokal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2013 01:09 PM, Kozaruk, Oleksandr wrote:
-[...]
-> 
->>> +     ret = devm_request_threaded_irq(dev, irq, NULL,
->>> +                                     twl6030_gpadc_irq_handler,
->>> +                                     IRQF_ONESHOT, "twl6030_gpadc", gpadc);
->>
->> You access memory in the interrupt handler which is freed before the interrupt
->> handler is freed.
-> Thanks for pointing this. devm_* will free memory for irq after the driver
-> is removed and memory for the device is freed. I took me awhile to understand
-> this. Is there going to be something like devm_iio_device_alloc? whould it be helpfull?
-> 
+Hi All,
 
-Yes, I think it certainly makes sense to add a devm_iio_device_alloc(), care
-to send a patch?
+This is the driver for Xilinx AXI Traffic Generator IP. The
+AXI Traffic Generator IP is a core that stresses the AXI4 
+interconnect and other AXI4 peripherals in the system.
+It generates a wide variety of AXI4 transactions based on
+the core programming.
+
+For more details of this IP, please refer:
+http://www.xilinx.com/support/documentation/ip_documentation/
+axi_traffic_gen/v1_0/pg125-axi-traffic-gen.pdf
+
+The architecture of the core is broadly separated into a master
+and slave block, each of which contains the write block and
+read block. Other support functions are provided by the
+control registers and three internal RAMs - Master RAM (8KB), 
+Command RAM(8KB), Parameter RAM(2KB). The initialisation sequence
+includes programming Command RAM with commands, data into 
+Master RAM (optional Parameter RAM programming) and then 
+enable master logic using control register interface.
+This sequence generates traffic to cores connected in the
+h/w design. It can be interconnect or cores attached via the
+interconnect.  The commands programmed selects the specific
+core to stress.
+
+The driver for this IP is designed to be a module with 
+sysfs interface.  All the control registers and internal
+RAMs can be accessed through sysfs interface. Internal
+RAMs are designed to be sysfs files with BIN attributes.
+
+Is sysfs the proper interface for this driver? If you 
+guys feel there is an other framework where my driver
+perfectly fits into, please suggest and provide your
+inputs.
+
+Thanks,
+Srikanth.
+
+Srikanth Thokala (1):
+  trafgen: xilinx: add axi traffic generator driver
+
+ .../devicetree/bindings/misc/xilinx-axitrafgen.txt |   21 +
+ drivers/misc/Kconfig                               |   13 +
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/xilinx_trafgen.c                      | 1160 ++++++++++++++++++++
+ 4 files changed, 1195 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/xilinx-axitrafgen.txt
+ create mode 100644 drivers/misc/xilinx_trafgen.c
+
+-- 
+1.7.4
