@@ -1,39 +1,36 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH] iio: add APDS9300 ambilent light sensor driver
-Date: Mon, 15 Jul 2013 14:35:23 +0200
-Message-ID: <51E3EC8B.3090601@metafoo.de>
-References: <1373461729-11261-1-git-send-email-x0199363@ti.com> <51E03720.1010806@metafoo.de> <CAGH3drqEPxW=QwadCLj=ZOQe0gp_c7mdSiNQnq1_-BMKL9CgJw@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v5 0/2] ARM: dts: Add USB host support for Beagle-xm
+Date: Mon, 15 Jul 2013 16:20:21 +0300
+Message-ID: <51E3F715.9070103@ti.com>
+References: <1371732374-27191-1-git-send-email-rogerq@ti.com>
+ <B7CE1C39EBFBA0428A012975D4B2FC830B72CECA@DNCE05.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAGH3drqEPxW=QwadCLj=ZOQe0gp_c7mdSiNQnq1_-BMKL9CgJw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
-Cc: Oleksandr Kravchenko <x0199363@ti.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, jic23@cam.ac.uk, pmeerw@pmeerw.net, holler@ahsoftware.de, srinivas.pandruvada@intel.com, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <B7CE1C39EBFBA0428A012975D4B2FC830B72CECA@DNCE05.ent.ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: benoit.cousson@linaro.org
+Cc: "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2013 02:27 PM, Oleksandr Kravchenko wrote:
-> Thank you for review! But I don't completely understand one of your comment:
-> 
->>> +static int als_probe(struct i2c_client *client, const struct i2c_device_id *id)
-> [...]
->>> +     if (client->irq) {
->>> +             ret = devm_request_threaded_irq(&client->dev, client->irq,
->>> +                             NULL, als_interrupt_handler,
->>> +                             IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->>> +                             ALS_IRQ_NAME, indio_dev);
->>
->> This is a bit racy, you access memory in the irq handler that is freed
->> before the irq is freed.
-> 
-> Do you mean than that indio_dev may be used in interrupt handler after
-> iio_device_free(indio_dev) called in als_remove() function?
-> 
-> If so, can I use disable_irq() in als_remove() before iio_device_free()
-> to avoid this problem?
-> 
+Hi Benoit,
 
-Just add a devm_iio_device_alloc() and use that, instead of trying to bodch
-around the issue.
+On 06/20/2013 05:11 PM, Cousson, Benoit wrote:
+> Thanks Roger,
+> 
+> I'll take them for 3.12. I was already late for my 3.11 pull request.
 
+Please disregard these patches. I'll send a new version based on the reset-gpio
+driver.
+
+cheers,
+-roger
