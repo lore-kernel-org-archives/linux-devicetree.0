@@ -1,103 +1,63 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [RESEND PATCH v7 07/22] bus: mvebu-mbus: Factor out initialization
- details
-Date: Mon, 15 Jul 2013 11:57:36 -0300
-Message-ID: <1373900271-4722-8-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1373900271-4722-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [PATCH v5 2/7] sound: sam9x5_wm8731: machine driver for
+ at91sam9x5 wm8731 boards
+Date: Mon, 15 Jul 2013 16:59:21 +0200
+Message-ID: <CACQ1gAiJ8ww-gYfcUsux00DmpWUpfqyzzqfxZjWZSaObgsz29g@mail.gmail.com>
+References: <1373559359-31607-1-git-send-email-richard.genoud@gmail.com>
+ <1373559359-31607-3-git-send-email-richard.genoud@gmail.com> <20130712114926.GE24508@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1373900271-4722-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130712114926.GE24508@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-We introduce a common initialization function mvebu_mbus_common_init()
-that will be used by both legacy and device-tree initialization code.
-This patch is an intermediate step, which will allow to introduce the
-DT binding for this driver in a less intrusive way.
+2013/7/12 Mark Brown <broonie@kernel.org>:
+> On Thu, Jul 11, 2013 at 06:15:54PM +0200, Richard Genoud wrote:
+>> From: Nicolas Ferre <nicolas.ferre@atmel.com>
+>>
+>> Description of the Asoc machine driver for an at91sam9x5 based board
+>
+> ASoC.
+>
+>> +sam9x5 pins:
+>> + * LOUT
+>> + * ROUT
+>> + * LHPOUT
+>> + * RHPOUT
+>> + * LLINEIN
+>> + * RLINEIN
+>> + * MICIN
+>
+> These aren't pins on the CPU, they're pins on the CODEC, and you should
+> be adding this to the binding document for the CODEC and referring to
+> that rather than having them in each individual binding document.  This
+> also helps if any new variants are added (not that this is likely for
+> the WM8731).
+ok, I'll move that
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/bus/mvebu-mbus.c | 47 ++++++++++++++++++++++++++++++-----------------
- 1 file changed, 30 insertions(+), 17 deletions(-)
+>
+>> +static struct sam9x5_drvdata sam9x5_priv;
+>
+> Why is this a global static?
+>
+>> +     ret = snd_soc_register_card(&snd_soc_sam9x5);
+>> +     if (ret) {
+>> +             dev_err(&pdev->dev,
+>> +                     "ASoC: Platform device allocation failed\n");
+>> +             goto out_put_audio;
+>> +     }
+>
+>> +     platform_set_drvdata(pdev, &snd_soc_sam9x5);
+>
+> It should be being dynamically allocated and retrieved as driver data
+> when needed.
+ok.
 
-diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
-index 827468a..1b17954 100644
---- a/drivers/bus/mvebu-mbus.c
-+++ b/drivers/bus/mvebu-mbus.c
-@@ -847,26 +847,14 @@ static __init int mvebu_mbus_debugfs_init(void)
- }
- fs_initcall(mvebu_mbus_debugfs_init);
- 
--int __init mvebu_mbus_init(const char *soc, phys_addr_t mbuswins_phys_base,
--			   size_t mbuswins_size,
--			   phys_addr_t sdramwins_phys_base,
--			   size_t sdramwins_size)
-+static int __init mvebu_mbus_common_init(struct mvebu_mbus_state *mbus,
-+					 phys_addr_t mbuswins_phys_base,
-+					 size_t mbuswins_size,
-+					 phys_addr_t sdramwins_phys_base,
-+					 size_t sdramwins_size)
- {
--	struct mvebu_mbus_state *mbus = &mbus_state;
--	const struct of_device_id *of_id;
- 	int win;
- 
--	for (of_id = of_mvebu_mbus_ids; of_id->compatible; of_id++)
--		if (!strcmp(of_id->compatible, soc))
--			break;
--
--	if (!of_id->compatible) {
--		pr_err("could not find a matching SoC family\n");
--		return -ENODEV;
--	}
--
--	mbus->soc = of_id->data;
--
- 	mbus->mbuswins_base = ioremap(mbuswins_phys_base, mbuswins_size);
- 	if (!mbus->mbuswins_base)
- 		return -ENOMEM;
-@@ -887,3 +875,28 @@ int __init mvebu_mbus_init(const char *soc, phys_addr_t mbuswins_phys_base,
- 
- 	return 0;
- }
-+
-+int __init mvebu_mbus_init(const char *soc, phys_addr_t mbuswins_phys_base,
-+			   size_t mbuswins_size,
-+			   phys_addr_t sdramwins_phys_base,
-+			   size_t sdramwins_size)
-+{
-+	const struct of_device_id *of_id;
-+
-+	for (of_id = of_mvebu_mbus_ids; of_id->compatible; of_id++)
-+		if (!strcmp(of_id->compatible, soc))
-+			break;
-+
-+	if (!of_id->compatible) {
-+		pr_err("could not find a matching SoC family\n");
-+		return -ENODEV;
-+	}
-+
-+	mbus_state.soc = of_id->data;
-+
-+	return mvebu_mbus_common_init(&mbus_state,
-+			mbuswins_phys_base,
-+			mbuswins_size,
-+			sdramwins_phys_base,
-+			sdramwins_size);
-+}
+Thanks !
+
+
 -- 
-1.8.1.5
+for me, ck means con kolivas and not calvin klein... does it mean I'm a geek ?
