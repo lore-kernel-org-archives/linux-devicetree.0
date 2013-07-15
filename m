@@ -1,73 +1,124 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v3 1/2] DMA: Freescale: Add new 8-channel DMA engine
- device tree nodes
-Date: Mon, 15 Jul 2013 12:57:05 -0500
-Message-ID: <1373911025.8183.308@snotra>
-References: <1373884499-24079-1-git-send-email-hongbo.zhang@freescale.com>
-	<1373884499-24079-2-git-send-email-hongbo.zhang@freescale.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH V2 2/5] of: move documentation of of_parse_phandle_with_args
+Date: Mon, 15 Jul 2013 12:40:26 -0600
+Message-ID: <1373913629-32179-2-git-send-email-swarren@wwwdotorg.org>
+References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; delsp=Yes; format=Flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1373884499-24079-2-git-send-email-hongbo.zhang@freescale.com>
-	(from hongbo.zhang@freescale.com on Mon Jul 15 05:34:58 2013)
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, vakul@freescale.com, Hongbo Zhang <hongbo.zhang@freescale.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1373913629-32179-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2013 05:34:58 AM, hongbo.zhang@freescale.com wrote:
-> From: Hongbo Zhang <hongbo.zhang@freescale.com>
-> 
-> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this  
-> patch add
-> the device tree nodes for them.
-> 
-> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
-> ---
->  .../devicetree/bindings/powerpc/fsl/dma.txt        |    8 +-
->  arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   90  
-> ++++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   90  
-> ++++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
->  4 files changed, 187 insertions(+), 5 deletions(-)
->  create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
->  create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt  
-> b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> index 2a4b4bc..8ee5732 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-> @@ -76,10 +76,10 @@ Freescale PowerPC 85xx/86xx have on chip general  
-> purpose DMA controllers.
-> 
->  Required properties:
-> 
-> -- compatible        : compatible list, contains 2 entries, first is
-> +- compatible        : compatible list, contains 3 entries, first is
->  		 "fsl,CHIP-dma", where CHIP is the processor
->  		 (mpc8540, mpc8540, etc.) and the second is
-> -		 "fsl,eloplus-dma"
-> +		 "fsl,eloplus-dma", the third is "fsl,elo3-dma"
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-The new device tree nodes have only one compatible in the list, not  
-three.  And if you were to both fsl,eloplus-dma and fsl,elo3-dma on the  
-same node, fsl,elo3-dma should come first.
+Commit bd69f73 "of: Create function for counting number of phandles in
+a property" renamed of_parse_phandle_with_args(), and created a wrapper
+function that implemented the original name. However, the documentation
+of the original function was not moved, leaving it apparently documenting
+the newly renamed function.
 
->  - reg               : <registers mapping for DMA general status reg>
->  - cell-index        : controller index.  0 for controller @ 0x21000,
->                                           1 for controller @ 0xc000
-> @@ -100,7 +100,7 @@ Example:
->  	dma@21300 {
->  		#address-cells = <1>;
->  		#size-cells = <1>;
-> -		compatible = "fsl,mpc8540-dma", "fsl,eloplus-dma";
-> +		compatible = "fsl,mpc8540-dma", "fsl,eloplus-dma",  
-> "fsl,elo3-dma";
+Move the documentation so that it is adjacent to the function it
+documents.
 
-In addition to the above issue about ordering, mpc8540 does not have  
-elo3.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/of/base.c | 64 +++++++++++++++++++++++++++----------------------------
+ 1 file changed, 32 insertions(+), 32 deletions(-)
 
--Scott
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 5c54279..23e7073 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1104,38 +1104,6 @@ struct device_node *of_parse_phandle(const struct device_node *np,
+ }
+ EXPORT_SYMBOL(of_parse_phandle);
+ 
+-/**
+- * of_parse_phandle_with_args() - Find a node pointed by phandle in a list
+- * @np:		pointer to a device tree node containing a list
+- * @list_name:	property name that contains a list
+- * @cells_name:	property name that specifies phandles' arguments count
+- * @index:	index of a phandle to parse out
+- * @out_args:	optional pointer to output arguments structure (will be filled)
+- *
+- * This function is useful to parse lists of phandles and their arguments.
+- * Returns 0 on success and fills out_args, on error returns appropriate
+- * errno value.
+- *
+- * Caller is responsible to call of_node_put() on the returned out_args->node
+- * pointer.
+- *
+- * Example:
+- *
+- * phandle1: node1 {
+- * 	#list-cells = <2>;
+- * }
+- *
+- * phandle2: node2 {
+- * 	#list-cells = <1>;
+- * }
+- *
+- * node3 {
+- * 	list = <&phandle1 1 2 &phandle2 3>;
+- * }
+- *
+- * To get a device_node of the `node2' node you may call this:
+- * of_parse_phandle_with_args(node3, "list", "#list-cells", 1, &args);
+- */
+ static int __of_parse_phandle_with_args(const struct device_node *np,
+ 					const char *list_name,
+ 					const char *cells_name, int index,
+@@ -1238,6 +1206,38 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
+ 	return rc;
+ }
+ 
++/**
++ * of_parse_phandle_with_args() - Find a node pointed by phandle in a list
++ * @np:		pointer to a device tree node containing a list
++ * @list_name:	property name that contains a list
++ * @cells_name:	property name that specifies phandles' arguments count
++ * @index:	index of a phandle to parse out
++ * @out_args:	optional pointer to output arguments structure (will be filled)
++ *
++ * This function is useful to parse lists of phandles and their arguments.
++ * Returns 0 on success and fills out_args, on error returns appropriate
++ * errno value.
++ *
++ * Caller is responsible to call of_node_put() on the returned out_args->node
++ * pointer.
++ *
++ * Example:
++ *
++ * phandle1: node1 {
++ * 	#list-cells = <2>;
++ * }
++ *
++ * phandle2: node2 {
++ * 	#list-cells = <1>;
++ * }
++ *
++ * node3 {
++ * 	list = <&phandle1 1 2 &phandle2 3>;
++ * }
++ *
++ * To get a device_node of the `node2' node you may call this:
++ * of_parse_phandle_with_args(node3, "list", "#list-cells", 1, &args);
++ */
+ int of_parse_phandle_with_args(const struct device_node *np, const char *list_name,
+ 				const char *cells_name, int index,
+ 				struct of_phandle_args *out_args)
+-- 
+1.8.1.5
