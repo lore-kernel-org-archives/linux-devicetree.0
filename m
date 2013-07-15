@@ -1,72 +1,62 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: DT binding review for Armada display subsystem
-Date: Mon, 15 Jul 2013 23:09:00 +0200
-Message-ID: <20130715210900.GT14452@pengutronix.de>
-References: <20130712164428.AC3D2FAAE9@dev.laptop.org>
-	<CAMLZHHRvWFrxxjr0sF0NRqvz+K1wB9Mb_OGG-8tx36A2rk-SNQ@mail.gmail.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v1 15/24] serial: mpc512x: OF clock lookup, use the 'mclk' name
+Date: Mon, 15 Jul 2013 23:46:01 +0200
+Message-ID: <1373924770-22599-1-git-send-email-gsi@denx.de>
+References: <1373914074-20889-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAMLZHHRvWFrxxjr0sF0NRqvz+K1wB9Mb_OGG-8tx36A2rk-SNQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: Daniel Drake <dsd@laptop.org>
-Cc: =?iso-8859-15?Q?Jean-Fran=E7ois?= Moine <moinejf@free.fr>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, dri-devel@lists.freedesktop.org, Russell King <rmk@arm.linux.org.uk>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1373914074-20889-1-git-send-email-gsi-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2013 at 02:23:30PM -0600, Daniel Drake wrote:
-> On Fri, Jul 12, 2013 at 10:44 AM, Daniel Drake <dsd@laptop.org> wrote:
-> > Based on the outcomes of the "Best practice device tree design for display
-> > subsystems" discussion I have drafted a DT binding. Comments much appreciated.
-> >
-> > At a high level, it uses a "super node" as something for the driver to bind
-> > to, needed because there is no clear one device that controls all the
-> > others, and also to distinguish between the Armada 510 possible use cases
-> > of having one video card with two outputs, or two independent video cards.
-> > It uses node-to-node linking beyond that point, V4L2 style.
-> 
-> As this hasn't been shot down very far, I've started to implement the
-> driver side of this binding. I have already run into a couple of
-> little problems.
-> 
-> First, interrupts. In the dt binding, each "lcd controller" node
-> defines which interrupt it listens to, and in the armada 510 case
-> there are indeed 2 interrupts (47 and 46, one for each LCD
-> controller). And remember that the drm driver itself binds to the
-> super-node.
-> 
-> Looking at drm_irq_install(), it looks like DRM only supports 1
-> interrupt line per drm_device.
+with device tree based clock lookup, the MCLK name no longer
+depends on the PSC index
 
-You don't have to call drm_irq_install(). Both the exynos and i.MX
-driver do without it and at least the i.MX driver uses multiple irqs per
-drm_device.
+Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+---
+ drivers/tty/serial/mpc52xx_uart.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-> 
-> Secondly, devm. I understand from the "best practices" thread that we
-> want to have exactly one platform_device which corresponds to the
-> "super node", and all of the individual display controller components
-> will be represented by DT nodes but *without* their own
-> platform_device.
-
-A super node approach doesn't mean that there's only one platform
-device. You can still have a platform device for each component. The
-super node should rather be seen as a node which contains phandles
-to the different components..
-
-Sascha
-
+diff --git a/drivers/tty/serial/mpc52xx_uart.c b/drivers/tty/serial/mpc52xx_uart.c
+index 53c1093..221fb89 100644
+--- a/drivers/tty/serial/mpc52xx_uart.c
++++ b/drivers/tty/serial/mpc52xx_uart.c
+@@ -619,21 +619,17 @@ static irqreturn_t mpc512x_psc_handle_irq(struct uart_port *port)
+ static int mpc512x_psc_clock(struct uart_port *port, int enable)
+ {
+ 	struct clk *psc_clk;
+-	int psc_num;
+-	char clk_name[10];
+ 
+ 	if (uart_console(port))
+ 		return 0;
+ 
+-	psc_num = (port->mapbase & 0xf00) >> 8;
+-	snprintf(clk_name, sizeof(clk_name), "psc%d_mclk", psc_num);
+-	psc_clk = clk_get(port->dev, clk_name);
++	psc_clk = clk_get(port->dev, "mclk");
+ 	if (IS_ERR(psc_clk)) {
+ 		dev_err(port->dev, "Failed to get PSC clock entry!\n");
+ 		return -ENODEV;
+ 	}
+ 
+-	dev_dbg(port->dev, "%s %sable\n", clk_name, enable ? "en" : "dis");
++	dev_dbg(port->dev, "mclk %sable\n", enable ? "en" : "dis");
+ 
+ 	if (enable)
+ 		clk_prepare_enable(psc_clk);
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.10.4
