@@ -1,165 +1,306 @@
-From: mathieu.poirier@linaro.org
-Subject: [PATCH v4] Input: sysrq - DT binding for key sequence
-Date: Mon, 15 Jul 2013 09:36:38 -0600
-Message-ID: <1373902598-10062-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: grant.likely@linaro.org, dmitry.torokhov@gmail.com
-Cc: devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, linux-input@vger.kernel.org, kernel-team@android.com, mathieu.poirier@linaro.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v6] usb: dwc3: use extcon fwrk to receive connect/disconnect
+Date: Mon, 15 Jul 2013 21:09:02 +0530
+Message-ID: <1373902742-9495-1-git-send-email-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com, cw00.choi@samsung.com, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: kishon@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, gregkh@linuxfoundation.org, benoit.cousson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
+Modified dwc3-omap to receive connect and disconnect notification using
+extcon framework. Also did the necessary cleanups required after
+adapting to extcon framework.
 
-Adding a simple device tree binding for the specification of key sequences.
-Definition of the keys found in the sequence are located in
-'include/uapi/linux/input.h'.
-
-For the sysrq driver, holding the sequence of keys down for a specific amount of time
-will reset the system.
-
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Acked-by: Felipe Balbi <balbi@ti.com>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 ---
-changes for v4:
-  - Moved seach of reset sequence nodes to a single call.
----
- .../devicetree/bindings/input/input-reset.txt      | 34 ++++++++++++++
- drivers/tty/sysrq.c                                | 54 ++++++++++++++++++++++
- 2 files changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/input-reset.txt
+This patch should be applied after all of the extcon patchset will be applied
+because this patch has dependency of extcon patch related to DT.
+http://goo.gl/Tu3qW
 
-diff --git a/Documentation/devicetree/bindings/input/input-reset.txt b/Documentation/devicetree/bindings/input/input-reset.txt
-new file mode 100644
-index 0000000..79504af
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/input-reset.txt
-@@ -0,0 +1,34 @@
-+Input: sysrq reset sequence
-+
-+A simple binding to represent a set of keys as described in
-+include/uapi/linux/input.h.  This is to communicate a
-+sequence of keys to the sysrq driver.  Upon holding the keys
-+for a specified amount of time (if specified) the system is
-+sync'ed and reset.
-+
-+Key sequences are global to the system but all the keys in a
-+set must be coming from the same input device.
-+
-+The /chosen node should contain a 'linux,sysrq-reset-seq' child
-+node to define a set of keys.
-+
-+Required property:
-+sysrq-reset-seq: array of keycodes
-+
-+Optional property:
-+timeout-ms: duration keys must be pressed together in microseconds
-+before generating a sysrq
-+
-+Example:
-+
-+ chosen {
-+                linux,sysrq-reset-seq {
-+                        keyset = <0x03
-+                                  0x04
-+                                  0x0a>;
-+                        timeout-ms = <3000>;
-+                };
-+         };
-+
-+Would represent KEY_2, KEY_3 and KEY_9.
-+
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index b51c154..01a8729 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -44,6 +44,7 @@
- #include <linux/uaccess.h>
- #include <linux/moduleparam.h>
- #include <linux/jiffies.h>
-+#include <linux/of.h>
+Changes from v5:
+* rebased to 3.11-rc1
+Changes from v4:
+* checked the return values of extcon_register_interest and print an error
+message. Note that I dint do return since there might be cases where
+one of USB (device mode) or USB-HOST (host mode) might succeed.
+* Added depends on of EXTCON in usb_dwc3. Only some platforms might
+be using EXTCON, but inorder to avoid compilation errors, added
+depends on
+Changes from v3:
+* did #include of of_extcon.h after Chanwoo resent the patch separating
+extcon-class.c from of_extcon.c
+Changes from v2:
+* updated the Documentation with dwc3 dt binding information.
+* used of_extcon_get_extcon_dev to get extcon device from device tree data.
+Changes from v1:
+* regulator enable/disable is now done here instead of palmas-usb as some users
+of palmas-usb wont need regulator.
+ Documentation/devicetree/bindings/usb/omap-usb.txt |    5 +
+ drivers/usb/dwc3/Kconfig                           |    1 +
+ drivers/usb/dwc3/dwc3-omap.c                       |  125 +++++++++++++++++---
+ 3 files changed, 112 insertions(+), 19 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
+index 57e71f6..9088ab0 100644
+--- a/Documentation/devicetree/bindings/usb/omap-usb.txt
++++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+@@ -53,6 +53,11 @@ OMAP DWC3 GLUE
+    It should be set to "1" for HW mode and "2" for SW mode.
+  - ranges: the child address space are mapped 1:1 onto the parent address space
  
- #include <asm/ptrace.h>
- #include <asm/irq_regs.h>
-@@ -671,6 +672,50 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
- 	}
++Optional Properties:
++ - extcon : phandle for the extcon device omap dwc3 uses to detect
++   connect/disconnect events.
++ - vbus-supply : phandle to the regulator device tree node if needed.
++
+ Sub-nodes:
+ The dwc3 core should be added as subnode to omap dwc3 glue.
+ - dwc3 :
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 757aa18..08a9fab 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -1,6 +1,7 @@
+ config USB_DWC3
+ 	tristate "DesignWare USB3 DRD Core Support"
+ 	depends on (USB || USB_GADGET) && GENERIC_HARDIRQS
++	depends on EXTCON
+ 	select USB_XHCI_PLATFORM if USB_SUPPORT && USB_XHCI_HCD
+ 	help
+ 	  Say Y or M here if your system has a Dual Role SuperSpeed
+diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
+index 077f110..b26c2a4 100644
+--- a/drivers/usb/dwc3/dwc3-omap.c
++++ b/drivers/usb/dwc3/dwc3-omap.c
+@@ -43,13 +43,15 @@
+ #include <linux/spinlock.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/dwc3-omap.h>
+-#include <linux/usb/dwc3-omap.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/ioport.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
++#include <linux/extcon.h>
++#include <linux/extcon/of_extcon.h>
++#include <linux/regulator/consumer.h>
+ 
+ #include <linux/usb/otg.h>
+ 
+@@ -155,9 +157,21 @@ struct dwc3_omap {
+ 	u32			revision;
+ 
+ 	u32			dma_status:1;
++
++	struct extcon_specific_cable_nb extcon_vbus_dev;
++	struct extcon_specific_cable_nb extcon_id_dev;
++	struct notifier_block	vbus_nb;
++	struct notifier_block	id_nb;
++
++	struct regulator	*vbus_reg;
+ };
+ 
+-static struct dwc3_omap		*_omap;
++enum omap_dwc3_vbus_id_status {
++	OMAP_DWC3_ID_FLOAT,
++	OMAP_DWC3_ID_GROUND,
++	OMAP_DWC3_VBUS_OFF,
++	OMAP_DWC3_VBUS_VALID,
++};
+ 
+ static inline u32 dwc3_omap_readl(void __iomem *base, u32 offset)
+ {
+@@ -221,18 +235,24 @@ static void dwc3_omap_write_irq0_set(struct dwc3_omap *omap, u32 value)
+ 						omap->irq0_offset, value);
  }
  
-+static void sysrq_of_get_keyreset_config(void)
+-int dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status status)
++static void dwc3_omap_set_mailbox(struct dwc3_omap *omap,
++	enum omap_dwc3_vbus_id_status status)
+ {
+-	u32			val;
+-	struct dwc3_omap	*omap = _omap;
+-
+-	if (!omap)
+-		return -EPROBE_DEFER;
++	int	ret;
++	u32	val;
+ 
+ 	switch (status) {
+ 	case OMAP_DWC3_ID_GROUND:
+ 		dev_dbg(omap->dev, "ID GND\n");
+ 
++		if (omap->vbus_reg) {
++			ret = regulator_enable(omap->vbus_reg);
++			if (ret) {
++				dev_dbg(omap->dev, "regulator enable failed\n");
++				return;
++			}
++		}
++
+ 		val = dwc3_omap_read_utmi_status(omap);
+ 		val &= ~(USBOTGSS_UTMI_OTG_STATUS_IDDIG
+ 				| USBOTGSS_UTMI_OTG_STATUS_VBUSVALID
+@@ -255,6 +275,9 @@ int dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status status)
+ 		break;
+ 
+ 	case OMAP_DWC3_ID_FLOAT:
++		if (omap->vbus_reg)
++			regulator_disable(omap->vbus_reg);
++
+ 	case OMAP_DWC3_VBUS_OFF:
+ 		dev_dbg(omap->dev, "VBUS Disconnect\n");
+ 
+@@ -268,12 +291,9 @@ int dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status status)
+ 		break;
+ 
+ 	default:
+-		dev_dbg(omap->dev, "ID float\n");
++		dev_dbg(omap->dev, "invalid state\n");
+ 	}
+-
+-	return 0;
+ }
+-EXPORT_SYMBOL_GPL(dwc3_omap_mailbox);
+ 
+ static irqreturn_t dwc3_omap_interrupt(int irq, void *_omap)
+ {
+@@ -366,6 +386,32 @@ static void dwc3_omap_disable_irqs(struct dwc3_omap *omap)
+ 
+ static u64 dwc3_omap_dma_mask = DMA_BIT_MASK(32);
+ 
++static int dwc3_omap_id_notifier(struct notifier_block *nb,
++	unsigned long event, void *ptr)
 +{
-+	unsigned short key;
-+	struct device_node *np;
-+	const struct property *prop;
-+	const __be32 *val;
-+	int count, i;
++	struct dwc3_omap *omap = container_of(nb, struct dwc3_omap, id_nb);
 +
-+	np = of_find_node_by_path("/chosen/linux,sysrq-reset-seq");
-+	if (!np) {
-+		pr_debug("No sysrq node found");
-+		goto out;
-+	}
++	if (event)
++		dwc3_omap_set_mailbox(omap, OMAP_DWC3_ID_GROUND);
++	else
++		dwc3_omap_set_mailbox(omap, OMAP_DWC3_ID_FLOAT);
 +
-+	prop = of_find_property(np, "keyset", NULL);
-+	if (!prop || !prop->value) {
-+		pr_err("Invalid input keyset");
-+		goto out;
-+	}
-+
-+	count = prop->length / sizeof(u32);
-+	val = prop->value;
-+
-+	if (count > SYSRQ_KEY_RESET_MAX)
-+		count = SYSRQ_KEY_RESET_MAX;
-+
-+	/* reset in case a __weak definition was present */
-+	sysrq_reset_seq_len = 0;
-+
-+	for (i = 0; i < count; i++) {
-+		key = (unsigned short)be32_to_cpup(val++);
-+		if (key == KEY_RESERVED || key > KEY_MAX)
-+			break;
-+
-+		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
-+	}
-+
-+	/* get reset timeout if any */
-+	of_property_read_u32(np, "timeout-ms", &sysrq_reset_downtime_ms);
-+
-+ out:
-+	;
++	return NOTIFY_DONE;
 +}
 +
- static void sysrq_reinject_alt_sysrq(struct work_struct *work)
- {
- 	struct sysrq_state *sysrq =
-@@ -688,6 +733,7 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
- 		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
- 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
- 
++static int dwc3_omap_vbus_notifier(struct notifier_block *nb,
++	unsigned long event, void *ptr)
++{
++	struct dwc3_omap *omap = container_of(nb, struct dwc3_omap, vbus_nb);
 +
- 		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
- 		input_inject_event(handle, EV_KEY, alt_code, 0);
- 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
-@@ -903,6 +949,7 @@ static inline void sysrq_register_handler(void)
- 	int error;
- 	int i;
++	if (event)
++		dwc3_omap_set_mailbox(omap, OMAP_DWC3_VBUS_VALID);
++	else
++		dwc3_omap_set_mailbox(omap, OMAP_DWC3_VBUS_OFF);
++
++	return NOTIFY_DONE;
++}
++
+ static int dwc3_omap_probe(struct platform_device *pdev)
+ {
+ 	struct device_node	*node = pdev->dev.of_node;
+@@ -373,6 +419,8 @@ static int dwc3_omap_probe(struct platform_device *pdev)
+ 	struct dwc3_omap	*omap;
+ 	struct resource		*res;
+ 	struct device		*dev = &pdev->dev;
++	struct extcon_dev	*edev;
++	struct regulator	*vbus_reg = NULL;
  
-+	/* first check if a __weak interface was instantiated */
- 	for (i = 0; i < ARRAY_SIZE(sysrq_reset_seq); i++) {
- 		key = platform_sysrq_reset_seq[i];
- 		if (key == KEY_RESERVED || key > KEY_MAX)
-@@ -911,6 +958,13 @@ static inline void sysrq_register_handler(void)
- 		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
+ 	int			ret = -ENOMEM;
+ 	int			irq;
+@@ -415,19 +463,22 @@ static int dwc3_omap_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  	}
  
-+	/*
-+	 * DT configuration takes precedence over anything
-+	 * that would have been defined via the __weak
-+	 * interface
-+	 */
-+	sysrq_of_get_keyreset_config();
++	if (of_property_read_bool(node, "vbus-supply")) {
++		vbus_reg = devm_regulator_get(dev, "vbus");
++		if (IS_ERR(vbus_reg)) {
++			dev_err(dev, "vbus init failed\n");
++			return PTR_ERR(vbus_reg);
++		}
++	}
 +
- 	error = input_register_handler(&sysrq_handler);
- 	if (error)
- 		pr_err("Failed to register input handler, error %d", error);
+ 	spin_lock_init(&omap->lock);
+ 
+ 	omap->dev	= dev;
+ 	omap->irq	= irq;
+ 	omap->base	= base;
++	omap->vbus_reg	= vbus_reg;
+ 	dev->dma_mask	= &dwc3_omap_dma_mask;
+ 
+-	/*
+-	 * REVISIT if we ever have two instances of the wrapper, we will be
+-	 * in big trouble
+-	 */
+-	_omap	= omap;
+-
+ 	pm_runtime_enable(dev);
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0) {
+@@ -502,14 +553,46 @@ static int dwc3_omap_probe(struct platform_device *pdev)
+ 
+ 	dwc3_omap_enable_irqs(omap);
+ 
++	if (of_property_read_bool(node, "extcon")) {
++		edev = of_extcon_get_extcon_dev(dev, 0);
++		if (IS_ERR(edev)) {
++			dev_vdbg(dev, "couldn't get extcon device\n");
++			ret = PTR_ERR(edev);
++			goto err2;
++		}
++
++		omap->vbus_nb.notifier_call = dwc3_omap_vbus_notifier;
++		ret = extcon_register_interest(&omap->extcon_vbus_dev,
++			edev->name, "USB", &omap->vbus_nb);
++		if (ret < 0)
++			dev_vdbg(dev, "failed to register notifier for USB\n");
++		omap->id_nb.notifier_call = dwc3_omap_id_notifier;
++		ret = extcon_register_interest(&omap->extcon_id_dev, edev->name,
++					 "USB-HOST", &omap->id_nb);
++		if (ret < 0)
++			dev_vdbg(dev,
++				"failed to register notifier for USB-HOST\n");
++
++		if (extcon_get_cable_state(edev, "USB") == true)
++			dwc3_omap_set_mailbox(omap, OMAP_DWC3_VBUS_VALID);
++		if (extcon_get_cable_state(edev, "USB-HOST") == true)
++			dwc3_omap_set_mailbox(omap, OMAP_DWC3_ID_GROUND);
++	}
++
+ 	ret = of_platform_populate(node, NULL, NULL, dev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to create dwc3 core\n");
+-		goto err2;
++		goto err3;
+ 	}
+ 
+ 	return 0;
+ 
++err3:
++	if (omap->extcon_vbus_dev.edev)
++		extcon_unregister_interest(&omap->extcon_vbus_dev);
++	if (omap->extcon_id_dev.edev)
++		extcon_unregister_interest(&omap->extcon_id_dev);
++
+ err2:
+ 	dwc3_omap_disable_irqs(omap);
+ 
+@@ -526,6 +609,10 @@ static int dwc3_omap_remove(struct platform_device *pdev)
+ {
+ 	struct dwc3_omap	*omap = platform_get_drvdata(pdev);
+ 
++	if (omap->extcon_vbus_dev.edev)
++		extcon_unregister_interest(&omap->extcon_vbus_dev);
++	if (omap->extcon_id_dev.edev)
++		extcon_unregister_interest(&omap->extcon_id_dev);
+ 	dwc3_omap_disable_irqs(omap);
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
 -- 
-1.8.1.2
-
+1.7.10.4
