@@ -1,103 +1,165 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [RFC PATCH 3/3] net: mvneta: add support for fixed links
-Date: Mon, 15 Jul 2013 17:34:10 +0200
-Message-ID: <1373902450-11857-4-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1373902450-11857-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1373902450-11857-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <florian@openwrt.org>
-Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+From: mathieu.poirier@linaro.org
+Subject: [PATCH v4] Input: sysrq - DT binding for key sequence
+Date: Mon, 15 Jul 2013 09:36:38 -0600
+Message-ID: <1373902598-10062-1-git-send-email-mathieu.poirier@linaro.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: grant.likely@linaro.org, dmitry.torokhov@gmail.com
+Cc: devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, linux-input@vger.kernel.org, kernel-team@android.com, mathieu.poirier@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Following the introduction of of_phy_register_fixed_link(), this patch
-introduces fixed link support in the mvneta driver, for Marvell Armada
-370/XP SOCs.
+From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Adding a simple device tree binding for the specification of key sequences.
+Definition of the keys found in the sequence are located in
+'include/uapi/linux/input.h'.
+
+For the sysrq driver, holding the sequence of keys down for a specific amount of time
+will reset the system.
+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- .../bindings/net/marvell-armada-370-neta.txt       | 24 +++++++++++++++++++---
- drivers/net/ethernet/marvell/mvneta.c              | 18 +++++++++++-----
- 2 files changed, 34 insertions(+), 8 deletions(-)
+changes for v4:
+  - Moved seach of reset sequence nodes to a single call.
+---
+ .../devicetree/bindings/input/input-reset.txt      | 34 ++++++++++++++
+ drivers/tty/sysrq.c                                | 54 ++++++++++++++++++++++
+ 2 files changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/input-reset.txt
 
-diff --git a/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt b/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
-index 859a6fa..31e61c0 100644
---- a/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
-+++ b/Documentation/devicetree/bindings/net/marvell-armada-370-neta.txt
-@@ -4,13 +4,21 @@ Required properties:
- - compatible: should be "marvell,armada-370-neta".
- - reg: address and length of the register set for the device.
- - interrupts: interrupt for the device
--- phy: A phandle to a phy node defining the PHY address (as the reg
--  property, a single integer).
- - phy-mode: The interface between the SoC and the PHY (a string that
-   of_get_phy_mode() can understand)
- - clocks: a pointer to the reference clock for this device.
+diff --git a/Documentation/devicetree/bindings/input/input-reset.txt b/Documentation/devicetree/bindings/input/input-reset.txt
+new file mode 100644
+index 0000000..79504af
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/input-reset.txt
+@@ -0,0 +1,34 @@
++Input: sysrq reset sequence
++
++A simple binding to represent a set of keys as described in
++include/uapi/linux/input.h.  This is to communicate a
++sequence of keys to the sysrq driver.  Upon holding the keys
++for a specified amount of time (if specified) the system is
++sync'ed and reset.
++
++Key sequences are global to the system but all the keys in a
++set must be coming from the same input device.
++
++The /chosen node should contain a 'linux,sysrq-reset-seq' child
++node to define a set of keys.
++
++Required property:
++sysrq-reset-seq: array of keycodes
++
++Optional property:
++timeout-ms: duration keys must be pressed together in microseconds
++before generating a sysrq
++
++Example:
++
++ chosen {
++                linux,sysrq-reset-seq {
++                        keyset = <0x03
++                                  0x04
++                                  0x0a>;
++                        timeout-ms = <3000>;
++                };
++         };
++
++Would represent KEY_2, KEY_3 and KEY_9.
++
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index b51c154..01a8729 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -44,6 +44,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/moduleparam.h>
+ #include <linux/jiffies.h>
++#include <linux/of.h>
  
--Example:
-+Optional properties:
-+
-+- phy: A phandle to a phy node defining the PHY address (as the reg
-+  property, a single integer). Note: if this property isn't present,
-+  then fixed link is assumed, and the 'fixed-link' property is
-+  mandatory.
-+- fixed-link: A 5 elements array that describe a fixed link, see
-+  fixed-link.txt for details. Note: if a 'phy' property is present,
-+  this 'fixed-link' property is ignored.
-+
-+Examples:
+ #include <asm/ptrace.h>
+ #include <asm/irq_regs.h>
+@@ -671,6 +672,50 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
+ 	}
+ }
  
- ethernet@d0070000 {
- 	compatible = "marvell,armada-370-neta";
-@@ -21,3 +29,13 @@ ethernet@d0070000 {
- 	phy = <&phy0>;
- 	phy-mode = "rgmii-id";
- };
++static void sysrq_of_get_keyreset_config(void)
++{
++	unsigned short key;
++	struct device_node *np;
++	const struct property *prop;
++	const __be32 *val;
++	int count, i;
 +
-+ethernet@d0070000 {
-+	compatible = "marvell,armada-370-neta";
-+	reg = <0xd0070000 0x2500>;
-+	interrupts = <8>;
-+	clocks = <&gate_clk 4>;
-+	status = "okay";
-+	fixed-link = <1 1 1000 0 0>;
-+	phy-mode = "rgmii-id";
-+};
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index 712779f..0bd1590 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -2349,8 +2349,12 @@ static int mvneta_mdio_probe(struct mvneta_port *pp)
++	np = of_find_node_by_path("/chosen/linux,sysrq-reset-seq");
++	if (!np) {
++		pr_debug("No sysrq node found");
++		goto out;
++	}
++
++	prop = of_find_property(np, "keyset", NULL);
++	if (!prop || !prop->value) {
++		pr_err("Invalid input keyset");
++		goto out;
++	}
++
++	count = prop->length / sizeof(u32);
++	val = prop->value;
++
++	if (count > SYSRQ_KEY_RESET_MAX)
++		count = SYSRQ_KEY_RESET_MAX;
++
++	/* reset in case a __weak definition was present */
++	sysrq_reset_seq_len = 0;
++
++	for (i = 0; i < count; i++) {
++		key = (unsigned short)be32_to_cpup(val++);
++		if (key == KEY_RESERVED || key > KEY_MAX)
++			break;
++
++		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
++	}
++
++	/* get reset timeout if any */
++	of_property_read_u32(np, "timeout-ms", &sysrq_reset_downtime_ms);
++
++ out:
++	;
++}
++
+ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
  {
- 	struct phy_device *phy_dev;
+ 	struct sysrq_state *sysrq =
+@@ -688,6 +733,7 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+ 		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
+ 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
  
--	phy_dev = of_phy_connect(pp->dev, pp->phy_node, mvneta_adjust_link, 0,
--				 pp->phy_interface);
-+	if (pp->phy_node)
-+		phy_dev = of_phy_connect(pp->dev, pp->phy_node, mvneta_adjust_link, 0,
-+					 pp->phy_interface);
-+	else
-+		phy_dev = of_phy_connect_fixed_link(pp->dev, mvneta_adjust_link,
-+						    pp->phy_interface);
- 	if (!phy_dev) {
- 		netdev_err(pp->dev, "could not find the PHY\n");
- 		return -ENODEV;
-@@ -2708,9 +2712,13 @@ static int mvneta_probe(struct platform_device *pdev)
++
+ 		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
+ 		input_inject_event(handle, EV_KEY, alt_code, 0);
+ 		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
+@@ -903,6 +949,7 @@ static inline void sysrq_register_handler(void)
+ 	int error;
+ 	int i;
  
- 	phy_node = of_parse_phandle(dn, "phy", 0);
- 	if (!phy_node) {
--		dev_err(&pdev->dev, "no associated PHY\n");
--		err = -ENODEV;
--		goto err_free_irq;
-+		/* No 'phy' found, see if we have a 'fixed-link'
-+		 * property */
-+		err = of_phy_register_fixed_link(dn);
-+		if (err < 0) {
-+			dev_err(&pdev->dev, "no 'phy' or 'fixed-link' properties\n");
-+			goto err_free_irq;
-+		}
++	/* first check if a __weak interface was instantiated */
+ 	for (i = 0; i < ARRAY_SIZE(sysrq_reset_seq); i++) {
+ 		key = platform_sysrq_reset_seq[i];
+ 		if (key == KEY_RESERVED || key > KEY_MAX)
+@@ -911,6 +958,13 @@ static inline void sysrq_register_handler(void)
+ 		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
  	}
  
- 	phy_mode = of_get_phy_mode(dn);
++	/*
++	 * DT configuration takes precedence over anything
++	 * that would have been defined via the __weak
++	 * interface
++	 */
++	sysrq_of_get_keyreset_config();
++
+ 	error = input_register_handler(&sysrq_handler);
+ 	if (error)
+ 		pr_err("Failed to register input handler, error %d", error);
 -- 
 1.8.1.2
+
