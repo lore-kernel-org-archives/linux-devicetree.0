@@ -1,197 +1,81 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v1 12/24] net: can: mscan: make mpc512x code use common clock
-Date: Mon, 15 Jul 2013 20:47:41 +0200
-Message-ID: <1373914074-20889-13-git-send-email-gsi@denx.de>
-References: <1373914074-20889-1-git-send-email-gsi@denx.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH V2 3/5] of: introduce of_parse_phandle_with_fixed_args
+Date: Mon, 15 Jul 2013 22:59:20 +0400
+Message-ID: <51E44688.3050805@cogentembedded.com>
+References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
+ <1373913629-32179-3-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1373914074-20889-1-git-send-email-gsi-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1373913629-32179-3-git-send-email-swarren@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Stephen Warren <swarren@nvidia.com>, Shiraz Hashim <shiraz.hashim@st.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-gpio@vger.kernel.org, Haojian Zhuang <haojian.zhuang@linaro.org>, Jingchang Lu <b35083@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-extend the mscan(4) driver with alternative support for the COMMON_CLK
-approach which is an option in the MPC512x platform, keep the existing
-clock support implementation in place since the driver is shared with
-other MPC5xxx SoCs which don't have common clock support
+On 07/15/2013 10:40 PM, Stephen Warren wrote:
 
-one byproduct of this change is that the CAN driver no longer needs to
-access the SoC's clock control registers, which shall be the domain of
-the platform's clock driver
+> From: Stephen Warren <swarren@nvidia.com>
 
-Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
----
- drivers/net/can/mscan/mpc5xxx_can.c |  139 +++++++++++++++++++++++++++++++++++
- 1 file changed, 139 insertions(+)
+> This is identical to of_parse_phandle_with_args(), except that the
+> number of argument cells is fixed, rather than being parsed out of the
+> node referenced by each phandle.
 
-diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/mpc5xxx_can.c
-index bc422ba..dd26ab6 100644
---- a/drivers/net/can/mscan/mpc5xxx_can.c
-+++ b/drivers/net/can/mscan/mpc5xxx_can.c
-@@ -108,6 +108,143 @@ static u32 mpc52xx_can_get_clock(struct platform_device *ofdev,
- #endif /* CONFIG_PPC_MPC52xx */
- 
- #ifdef CONFIG_PPC_MPC512x
-+
-+#if IS_ENABLED(CONFIG_COMMON_CLK)
-+
-+static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
-+				 const char *clock_source, int *mscan_clksrc)
-+{
-+	struct device_node *np;
-+	u32 clockdiv;
-+	enum {
-+		CLK_FROM_AUTO,
-+		CLK_FROM_IPS,
-+		CLK_FROM_SYS,
-+		CLK_FROM_REF,
-+	} clk_from;
-+	struct clk *clk_in, *clk_can;
-+	unsigned long freq_calc;
-+
-+	/* the caller passed in the clock source spec that was read from
-+	 * the device tree, get the optional clock divider as well
-+	 */
-+	np = ofdev->dev.of_node;
-+	clockdiv = 1;
-+	of_property_read_u32(np, "fsl,mscan-clock-divider", &clockdiv);
-+	dev_dbg(&ofdev->dev, "device tree specs: clk src[%s] div[%d]\n",
-+		clock_source ? clock_source : "<NULL>", clockdiv);
-+
-+	/* when clock-source is 'ip', the CANCTL1[CLKSRC] bit needs to
-+	 * get set, and the 'ips' clock is the input to the MSCAN
-+	 * component
-+	 *
-+	 * for clock-source values of 'ref' or 'sys' the CANCTL1[CLKSRC]
-+	 * bit needs to get cleared, an optional clock-divider may have
-+	 * been specified (the default value is 1), the appropriate
-+	 * MSCAN related MCLK is the input to the MSCAN component
-+	 *
-+	 * in the absence of a clock-source spec, first an optimal clock
-+	 * gets determined based on the 'sys' clock, if that fails the
-+	 * 'ref' clock is used
-+	 */
-+	clk_from = CLK_FROM_AUTO;
-+	if (clock_source) {
-+		/* interpret the device tree's spec for the clock source */
-+		if (!strcmp(clock_source, "ip"))
-+			clk_from = CLK_FROM_IPS;
-+		else if (!strcmp(clock_source, "sys"))
-+			clk_from = CLK_FROM_SYS;
-+		else if (!strcmp(clock_source, "ref"))
-+			clk_from = CLK_FROM_REF;
-+		else
-+			goto err_invalid;
-+		dev_dbg(&ofdev->dev, "got a clk source spec[%d]\n", clk_from);
-+	}
-+	if (clk_from == CLK_FROM_AUTO) {
-+		/* no spec so far, try the 'sys' clock; round to the
-+		 * next MHz and see if we can get a multiple of 16MHz
-+		 */
-+		dev_dbg(&ofdev->dev, "no clk source spec, trying SYS\n");
-+		clk_in = clk_get(&ofdev->dev, "sys");
-+		if (IS_ERR(clk_in))
-+			goto err_notavail;
-+		freq_calc = clk_get_rate(clk_in);
-+		freq_calc +=  499999;
-+		freq_calc /= 1000000;
-+		freq_calc *= 1000000;
-+		if ((freq_calc % 16000000) == 0) {
-+			clk_from = CLK_FROM_SYS;
-+			clockdiv = freq_calc / 16000000;
-+			dev_dbg(&ofdev->dev,
-+				"clk fit, sys[%lu] div[%d] freq[%lu]\n",
-+				freq_calc, clockdiv, freq_calc / clockdiv);
-+		}
-+	}
-+	if (clk_from == CLK_FROM_AUTO) {
-+		/* no spec so far, use the 'ref' clock */
-+		dev_dbg(&ofdev->dev, "no clk source spec, trying REF\n");
-+		clk_in = clk_get(&ofdev->dev, "ref");
-+		if (IS_ERR(clk_in))
-+			goto err_notavail;
-+		clk_from = CLK_FROM_REF;
-+		freq_calc = clk_get_rate(clk_in);
-+		dev_dbg(&ofdev->dev,
-+			"clk fit, ref[%lu] (no div) freq[%lu]\n",
-+			freq_calc, freq_calc);
-+	}
-+
-+	/* select IPS or MCLK as the MSCAN input (returned to the caller),
-+	 * setup the MCLK mux source and rate if applicable, apply the
-+	 * optionally specified or derived above divider, and determine
-+	 * the actual resulting clock rate to return to the caller
-+	 */
-+	switch (clk_from) {
-+	case CLK_FROM_IPS:
-+		clk_can = clk_get(&ofdev->dev, "ips");
-+		if (IS_ERR(clk_can))
-+			goto err_notavail;
-+		clk_prepare_enable(clk_can);
-+		freq_calc = clk_get_rate(clk_can);
-+		*mscan_clksrc = MSCAN_CLKSRC_IPS;
-+		dev_dbg(&ofdev->dev, "clk from IPS, clksrc[%d] freq[%lu]\n",
-+			*mscan_clksrc, freq_calc);
-+		break;
-+	case CLK_FROM_SYS:
-+	case CLK_FROM_REF:
-+		clk_can = clk_get(&ofdev->dev, "mclk");
-+		if (IS_ERR(clk_can))
-+			goto err_notavail;
-+		clk_prepare_enable(clk_can);
-+		if (clk_from == CLK_FROM_SYS)
-+			clk_in = clk_get(&ofdev->dev, "sys");
-+		if (clk_from == CLK_FROM_REF)
-+			clk_in = clk_get(&ofdev->dev, "ref");
-+		if (IS_ERR(clk_in))
-+			goto err_notavail;
-+		clk_set_parent(clk_can, clk_in);
-+		freq_calc = clk_get_rate(clk_in);
-+		freq_calc /= clockdiv;
-+		clk_set_rate(clk_can, freq_calc);
-+		freq_calc = clk_get_rate(clk_can);
-+		*mscan_clksrc = MSCAN_CLKSRC_BUS;
-+		dev_dbg(&ofdev->dev, "clk from MCLK, clksrc[%d] freq[%lu]\n",
-+			*mscan_clksrc, freq_calc);
-+		break;
-+	default:
-+		goto err_invalid;
-+	}
-+
-+	return freq_calc;
-+
-+err_invalid:
-+	dev_err(&ofdev->dev, "invalid clock source specification\n");
-+	return 0;
-+
-+err_notavail:
-+	dev_err(&ofdev->dev, "cannot acquire or setup clock source\n");
-+	return 0;
-+}
-+#else	/* COMMON_CLK */
- struct mpc512x_clockctl {
- 	u32 spmr;		/* System PLL Mode Reg */
- 	u32 sccr[2];		/* System Clk Ctrl Reg 1 & 2 */
-@@ -238,6 +375,8 @@ exit_put:
- 	of_node_put(np_clock);
- 	return freq;
- }
-+#endif	/* COMMON_CLK */
-+
- #else /* !CONFIG_PPC_MPC512x */
- static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
- 				 const char *clock_name, int *mscan_clksrc)
--- 
-1.7.10.4
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> ---
+>   drivers/of/base.c  | 67 ++++++++++++++++++++++++++++++++++++++++++++++--------
+>   include/linux/of.h | 10 ++++++++
+>   2 files changed, 68 insertions(+), 9 deletions(-)
+
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 23e7073..ad799d9 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1106,7 +1106,8 @@ EXPORT_SYMBOL(of_parse_phandle);
+>
+>   static int __of_parse_phandle_with_args(const struct device_node *np,
+>   					const char *list_name,
+> -					const char *cells_name, int index,
+> +					const char *cells_name,
+> +					int cells_count, int index,
+
+    The correct grammar would be 'cell_name' and 'cell_count' I think.
+
+>   					struct of_phandle_args *out_args)
+>   {
+>   	const __be32 *list, *list_end;
+> @@ -1142,12 +1143,17 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
+>   					 np->full_name);
+>   				goto err;
+>   			}
+> -			if (of_property_read_u32(node, cells_name, &count)) {
+> -				pr_err("%s: could not get %s for %s\n",
+> -					 np->full_name, cells_name,
+> -					 node->full_name);
+> -				goto err;
+> -			}
+> +
+> +			if (cells_name) {
+> +				if (of_property_read_u32(node, cells_name,
+> +							 &count)) {
+> +					pr_err("%s: could not get %s for %s\n",
+> +						np->full_name, cells_name,
+> +						node->full_name);
+> +					goto err;
+> +				}
+> +			} else
+> +				count = cells_count;
+
+    According to Documentation/CodingStyle chapter 3, both arms of the 
+*if* statment should have {} if oe arm has it.
+
+WBR, Sergei
