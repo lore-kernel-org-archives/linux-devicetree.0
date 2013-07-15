@@ -1,66 +1,72 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Ksummit-2013-discuss] [ATTEND] Handling of devicetree bindings
-Date: Mon, 15 Jul 2013 23:07:36 +0200
-Message-ID: <CACRpkdaEswVPNqwQkMjsNWutCpOQxgMeGwsgemsF4SSZxXMocQ@mail.gmail.com>
-References: <20130713192647.GA3798@katana> <20130713204927.GA1124@roeck-us.net>
- <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ@mail.gmail.com>
- <20130714181331.GC26513@roeck-us.net>
- <CACRpkdanQz+Tb-c+-3hRVKhCEBHtxm1toFw7mwyeMmSuVq+sfQ@mail.gmail.com>
- <20130715082915.5142547a@lwn.net>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: DT binding review for Armada display subsystem
+Date: Mon, 15 Jul 2013 23:09:00 +0200
+Message-ID: <20130715210900.GT14452@pengutronix.de>
+References: <20130712164428.AC3D2FAAE9@dev.laptop.org>
+	<CAMLZHHRvWFrxxjr0sF0NRqvz+K1wB9Mb_OGG-8tx36A2rk-SNQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130715082915.5142547a-T1hC0tSOHrs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, ksummit-2013-discuss-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAMLZHHRvWFrxxjr0sF0NRqvz+K1wB9Mb_OGG-8tx36A2rk-SNQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: Daniel Drake <dsd@laptop.org>
+Cc: =?iso-8859-15?Q?Jean-Fran=E7ois?= Moine <moinejf@free.fr>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, dri-devel@lists.freedesktop.org, Russell King <rmk@arm.linux.org.uk>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2013 at 4:29 PM, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org> wrote:
+On Mon, Jul 15, 2013 at 02:23:30PM -0600, Daniel Drake wrote:
+> On Fri, Jul 12, 2013 at 10:44 AM, Daniel Drake <dsd@laptop.org> wrote:
+> > Based on the outcomes of the "Best practice device tree design for display
+> > subsystems" discussion I have drafted a DT binding. Comments much appreciated.
+> >
+> > At a high level, it uses a "super node" as something for the driver to bind
+> > to, needed because there is no clear one device that controls all the
+> > others, and also to distinguish between the Armada 510 possible use cases
+> > of having one video card with two outputs, or two independent video cards.
+> > It uses node-to-node linking beyond that point, V4L2 style.
+> 
+> As this hasn't been shot down very far, I've started to implement the
+> driver side of this binding. I have already run into a couple of
+> little problems.
+> 
+> First, interrupts. In the dt binding, each "lcd controller" node
+> defines which interrupt it listens to, and in the armada 510 case
+> there are indeed 2 interrupts (47 and 46, one for each LCD
+> controller). And remember that the drm driver itself binds to the
+> super-node.
+> 
+> Looking at drm_irq_install(), it looks like DRM only supports 1
+> interrupt line per drm_device.
 
-> Do we need a kernel summit discussion, or do we just need a good
-> document?  Or, to phrase the question another way, are we lacking a
-> consensus among the clueful regarding how device tree bindings should be
-> designed, or are we simply lacking education?
+You don't have to call drm_irq_install(). Both the exynos and i.MX
+driver do without it and at least the i.MX driver uses multiple irqs per
+drm_device.
 
-I think both. I fear some maintainers do not know enough about
-the subject to know if a binding should be rejected.
+> 
+> Secondly, devm. I understand from the "best practices" thread that we
+> want to have exactly one platform_device which corresponds to the
+> "super node", and all of the individual display controller components
+> will be represented by DT nodes but *without* their own
+> platform_device.
 
-We have for example:
-Documentation/devicetree/usage-model.txt
+A super node approach doesn't mean that there's only one platform
+device. You can still have a platform device for each component. The
+super node should rather be seen as a node which contains phandles
+to the different components..
 
-But this does not at all qualify anyone to judge (dredd) the
-validity of some new $binding. It's not kerneldoc, where
-everything is pretty easy to understand, it is way more
-complex.
+Sascha
 
-It looks simple to begin with: registers, IRQs, compatible
-strings ... then all of a sudden: how many #foo-cells should
-this have?  0, 1 or 4? foo: bar@12345 {} what naming
-convention should be used here? What is an alias? Basically
-you have to know it all to properly review that.
-
-The recent discussions about clock bindings is a good
-example. Or the fact that we do not have common
-pin control binings because it was simply too hard
-to get people to agree: I got the committe work dumped
-in my knee and I did a bad job at it too. :-(
-
-Part of the problem with both major hardware description
-languages (ACPI and devicetree) is that the developers using
-either variant appear to be clueless of the other. What makes
-devicetree more dangerous than ACPI is that the kernel
-maintainers define it, it is not being given from the outside.
-
-Yours,
-Linus Walleij
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
