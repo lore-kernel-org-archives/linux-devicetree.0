@@ -1,64 +1,43 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v1 15/24] serial: mpc512x: OF clock lookup, use the
- 'mclk' name
-Date: Mon, 15 Jul 2013 23:54:23 +0200
-Message-ID: <20130715215423.GU14452@pengutronix.de>
-References: <1373914074-20889-1-git-send-email-gsi@denx.de>
- <1373924770-22599-1-git-send-email-gsi@denx.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 5/5] ARM: remove #gpio-ranges-cells property
+Date: Mon, 15 Jul 2013 17:02:29 -0600
+Message-ID: <51E47F85.4050905@wwwdotorg.org>
+References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
+ <1373913629-32179-5-git-send-email-swarren@wwwdotorg.org>
+ <51E44ED9.9020807@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <1373924770-22599-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Gerhard Sittig <gsi@denx.de>
-Cc: Mike Turquette <mturquette@linaro.org>, Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51E44ED9.9020807-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2013 at 11:46:01PM +0200, Gerhard Sittig wrote:
-> with device tree based clock lookup, the MCLK name no longer
-> depends on the PSC index
+On 07/15/2013 01:34 PM, Rob Herring wrote:
+> On 07/15/2013 01:40 PM, Stephen Warren wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> This property is no longer required by the GPIO binding. Remove it.
 > 
-> Signed-off-by: Gerhard Sittig <gsi@denx.de>
-> ---
->  drivers/tty/serial/mpc52xx_uart.c |    8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/mpc52xx_uart.c b/drivers/tty/serial/mpc52xx_uart.c
-> index 53c1093..221fb89 100644
-> --- a/drivers/tty/serial/mpc52xx_uart.c
-> +++ b/drivers/tty/serial/mpc52xx_uart.c
-> @@ -619,21 +619,17 @@ static irqreturn_t mpc512x_psc_handle_irq(struct uart_port *port)
->  static int mpc512x_psc_clock(struct uart_port *port, int enable)
->  {
->  	struct clk *psc_clk;
-> -	int psc_num;
-> -	char clk_name[10];
->  
->  	if (uart_console(port))
->  		return 0;
->  
-> -	psc_num = (port->mapbase & 0xf00) >> 8;
-> -	snprintf(clk_name, sizeof(clk_name), "psc%d_mclk", psc_num);
-> -	psc_clk = clk_get(port->dev, clk_name);
-> +	psc_clk = clk_get(port->dev, "mclk");
+> Won't this break compatibility with older kernel? It is one thing to
+> deprecate, but removal is another. If the relevant maintainers don't
+> care, then I guess it is fine.
 
-Same comment applies here as Mark made to the spi driver.
+Yes.
 
-Sascha
+I had originally hoped this could sneak in late for 3.11, but I suppose
+it's too late now. vf610.dtsi is a new file in 3.11 so has no legacy to
+protect.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Admittedly, the #gpio-cells property was added into the SPEAr files in 3.10.
