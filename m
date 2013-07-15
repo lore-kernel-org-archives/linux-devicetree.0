@@ -1,49 +1,35 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v2 2/2] media: i2c: tvp7002: add OF support
-Date: Mon, 15 Jul 2013 22:39:06 +0530
-Message-ID: <CA+V-a8tCTVzyE0YWjYexuXMD1QYHJa-OTmwZq7rVpdfn-262iA@mail.gmail.com>
-References: <1371923055-29623-1-git-send-email-prabhakar.csengg@gmail.com>
- <1371923055-29623-3-git-send-email-prabhakar.csengg@gmail.com>
- <51D05568.3090009@gmail.com> <CA+V-a8sW+D8trces5AXu__Lw9F7TO6fCcQW+LGZKRhA41uOEfw@mail.gmail.com>
- <51DF2BF6.30509@gmail.com> <CA+V-a8u0G6m+VoSc4FPmDxEYmE_vQaL7zu3fUFk3iVKnOywnRA@mail.gmail.com>
- <51E2FF42.2090507@gmail.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH V2 1/2] DMA: Freescale: Add new 8-channel DMA engine
+ device tree nodes
+Date: Mon, 15 Jul 2013 12:12:17 -0500
+Message-ID: <1373908337.8183.301@snotra>
+References: <1373005626-20726-1-git-send-email-hongbo.zhang@freescale.com>
+	<1373005626-20726-2-git-send-email-hongbo.zhang@freescale.com>
+	<6482CAC0-9C6A-4A1E-B158-28D2E1BB2CCE@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <51E2FF42.2090507@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"; delsp=Yes; format=Flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6482CAC0-9C6A-4A1E-B158-28D2E1BB2CCE@kernel.crashing.org>
+	(from galak@kernel.crashing.org on Mon Jul 15 08:35:07 2013)
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@kernel.crashing.org>
+Cc: "<hongbo.zhang@freescale.com>" <hongbo.zhang@freescale.com>, vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, vakul@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On 07/15/2013 08:35:07 AM, Kumar Gala wrote:
+> 
+> On Jul 5, 2013, at 1:27 AM, <hongbo.zhang@freescale.com>  
+> <hongbo.zhang@freescale.com> wrote:
+> 
+> > +dma0: dma@100300 {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +	compatible = "fsl,elo3-dma";
+> 
+> why does this require a new compatible?
 
-On Mon, Jul 15, 2013 at 1:12 AM, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> Hi Prabhakar,
->
-[Snip]
->> Something similar to fid_polarity.
->
->
-> Then as I suggested earlier, let's just add 'sync-on-green-active' DT
-> property for that. I wouldn't expect the DT properties to be directly
-> replacing your driver platform_data members. Saying in the binding that
-> this is a normal operation and that is an inverted one is not very useful
-> in general, as you would need to dig in the binding's description what
-> "normal" exactly means. sync-on-green-active = <1>; seems much more
-> explicit than, e.g. sync-on-green-inverted. By looking at the
-> sync-on-green-active property each device driver would determine whether
-> it means normal or inverted operation for its device.
->
-Ok so I'll add 'sync-on-green-active' property and parse it in
-v4l2_of_parse_parallel_bus()
-and add it as part of flags. and define the following flags in mediabus.h
+The binding has changed -- there is now a second reg entry.
 
-V4L2_MBUS_VIDEO_SOG_ACTIVE_{HIGH,LOW}.
-
-Hope you are OK with it.
-
---
-Regards,
-Prabhakar Lad
+-Scott
