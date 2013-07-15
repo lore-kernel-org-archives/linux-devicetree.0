@@ -1,43 +1,106 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 5/5] ARM: remove #gpio-ranges-cells property
-Date: Mon, 15 Jul 2013 17:02:29 -0600
-Message-ID: <51E47F85.4050905@wwwdotorg.org>
-References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
- <1373913629-32179-5-git-send-email-swarren@wwwdotorg.org>
- <51E44ED9.9020807@gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v6] usb: dwc3: use extcon fwrk to receive connect/disconnect
+Date: Tue, 16 Jul 2013 08:03:56 +0900
+Message-ID: <51E47FDC.1020202@samsung.com>
+References: <1373902742-9495-1-git-send-email-kishon@ti.com>
+ <20130715155106.GE32035@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51E44ED9.9020807-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20130715155106.GE32035@arwen.pp.htv.fi>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, myungjoo.ham@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, gregkh@linuxfoundation.org, benoit.cousson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2013 01:34 PM, Rob Herring wrote:
-> On 07/15/2013 01:40 PM, Stephen Warren wrote:
->> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 07/16/2013 12:51 AM, Felipe Balbi wrote:
+> On Mon, Jul 15, 2013 at 09:09:02PM +0530, Kishon Vijay Abraham I wrote:
+>> Modified dwc3-omap to receive connect and disconnect notification using
+>> extcon framework. Also did the necessary cleanups required after
+>> adapting to extcon framework.
 >>
->> This property is no longer required by the GPIO binding. Remove it.
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> Acked-by: Felipe Balbi <balbi@ti.com>
+>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>> This patch should be applied after all of the extcon patchset will be applied
+>> because this patch has dependency of extcon patch related to DT.
+>> http://goo.gl/Tu3qW
+>>
+>> Changes from v5:
+>> * rebased to 3.11-rc1
+>> Changes from v4:
+>> * checked the return values of extcon_register_interest and print an error
+>> message. Note that I dint do return since there might be cases where
+>> one of USB (device mode) or USB-HOST (host mode) might succeed.
+>> * Added depends on of EXTCON in usb_dwc3. Only some platforms might
+>> be using EXTCON, but inorder to avoid compilation errors, added
+>> depends on
+>> Changes from v3:
+>> * did #include of of_extcon.h after Chanwoo resent the patch separating
+>> extcon-class.c from of_extcon.c
+>> Changes from v2:
+>> * updated the Documentation with dwc3 dt binding information.
+>> * used of_extcon_get_extcon_dev to get extcon device from device tree data.
+>> Changes from v1:
+>> * regulator enable/disable is now done here instead of palmas-usb as some users
+>> of palmas-usb wont need regulator.
+>>  Documentation/devicetree/bindings/usb/omap-usb.txt |    5 +
+>>  drivers/usb/dwc3/Kconfig                           |    1 +
+>>  drivers/usb/dwc3/dwc3-omap.c                       |  125 +++++++++++++++++---
+>>  3 files changed, 112 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>> index 57e71f6..9088ab0 100644
+>> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
+>> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>> @@ -53,6 +53,11 @@ OMAP DWC3 GLUE
+>>     It should be set to "1" for HW mode and "2" for SW mode.
+>>   - ranges: the child address space are mapped 1:1 onto the parent address space
+>>  
+>> +Optional Properties:
+>> + - extcon : phandle for the extcon device omap dwc3 uses to detect
+>> +   connect/disconnect events.
+>> + - vbus-supply : phandle to the regulator device tree node if needed.
+>> +
+>>  Sub-nodes:
+>>  The dwc3 core should be added as subnode to omap dwc3 glue.
+>>  - dwc3 :
+>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>> index 757aa18..08a9fab 100644
+>> --- a/drivers/usb/dwc3/Kconfig
+>> +++ b/drivers/usb/dwc3/Kconfig
+>> @@ -1,6 +1,7 @@
+>>  config USB_DWC3
+>>  	tristate "DesignWare USB3 DRD Core Support"
+>>  	depends on (USB || USB_GADGET) && GENERIC_HARDIRQS
+>> +	depends on EXTCON
 > 
-> Won't this break compatibility with older kernel? It is one thing to
-> deprecate, but removal is another. If the relevant maintainers don't
-> care, then I guess it is fine.
+> can you rebase this on top of 'testing' branch. I have a patch there
+> which give glue layers their own Kconfig symbols. If you do that, I can
+> queue this patch myself for v3.12, unless we have dependencies on other
+> patches which aren't in mainline, in which case, I'd ask to simply
+> remove this Kconfig change for now.
+> 
 
-Yes.
+Dear Felipe and Kishon,
 
-I had originally hoped this could sneak in late for 3.11, but I suppose
-it's too late now. vf610.dtsi is a new file in 3.11 so has no legacy to
-protect.
+We have some confusion about applying this patch.
 
-Admittedly, the #gpio-cells property was added into the SPEAr files in 3.10.
+I already applied this patch on extcon-next branch for v3.12. This patch has the dependency on below extcon patch.
+[PATCH] usb: dwc3: use extcon fwrk to receive connect/disconnect
+- http://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git/commit/?h=extcon-next&id=68517aac722c8c3e0c153b3ede40aace25cb66fa
+[PATCH] extcon: Add an API to get extcon device from dt node
+- http://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git/commit/?h=extcon-next&id=cb28faede03de7abe82336c3648771a01f5fe225
+
+If Felipe would apply this patch usb.git for v3.12, I think you should include extcon patch together.
+[PATCH] extcon: Add an API to get extcon device from dt node
+- http://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git/commit/?h=extcon-next&id=cb28faede03de7abe82336c3648771a01f5fe225
+
+The dependency related to patch cause this confusion.
+What is your opinion?
+
+Thanks,
+Chanwoo Choi
+
