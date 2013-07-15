@@ -1,91 +1,72 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] regulator: pfuze100: add pfuze100 regulator driver
-Date: Mon, 15 Jul 2013 16:09:28 +0100
-Message-ID: <20130715150928.GI11538@sirena.org.uk>
-References: <1373604855-17714-1-git-send-email-b38343@freescale.com>
- <20130712144037.GJ24508@sirena.org.uk>
- <20130712161511.GA21203@Robin-OptiPlex-780>
+Subject: Re: [PATCH v5 1/7] sound: codec: wm8731: add rates constraints
+Date: Mon, 15 Jul 2013 16:22:28 +0100
+Message-ID: <20130715152228.GJ11538@sirena.org.uk>
+References: <1373559359-31607-1-git-send-email-richard.genoud@gmail.com>
+ <1373559359-31607-2-git-send-email-richard.genoud@gmail.com>
+ <20130712114551.GD24508@sirena.org.uk>
+ <CACQ1gAhmp-i7vzPKuTMxqs9Ytjynz9NTvrQk9R08U9Fo-cVzMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4LwthZj+AV2mq5CX"
-Return-path: <linux-doc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="SBT+cnFS/G3NVgv4"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130712161511.GA21203@Robin-OptiPlex-780>
-Sender: linux-doc-owner@vger.kernel.org
-To: Robin Gong <b38343@freescale.com>
-Cc: linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, lgirdwood@gmail.com, shawn.guo@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, rob@landley.net
+In-Reply-To: <CACQ1gAhmp-i7vzPKuTMxqs9Ytjynz9NTvrQk9R08U9Fo-cVzMg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 
---4LwthZj+AV2mq5CX
+--SBT+cnFS/G3NVgv4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, Jul 13, 2013 at 12:15:12AM +0800, Robin Gong wrote:
+On Mon, Jul 15, 2013 at 04:53:46PM +0200, Richard Genoud wrote:
+> 2013/7/12 Mark Brown <broonie@kernel.org>:
 
-Please fix your mail program to word wrap between paragraphs.
+> > This isn't going to work with systems which have a variable clock as the
+> > input to the CODEC.  If it's imposing constraints the driver needs to
+> > allow setting the clock to zero as a way of removing constraints (and
+> > any existing drivers should be updated to do this if needed).
 
-> On Fri, Jul 12, 2013 at 03:40:37PM +0100, Mark Brown wrote:
+> Maybe I'm wrong, but I didn't find any system using variable clock
+> with this codec.
 
-> > > +static const int pfuze100_swbst[] = {
-> > > +	5000000, 5050000, 5100000, 5150000,
-> > > +};
+The driver should be written with that possibility in mind even if there
+were no users; it only takes a couple of lines of code.
 
-> > This looks like a linear map, the steps are all 50mV?
+> The sam9g20ek (soc/atmel/sam9g20_wm8731.c) is not using a crystal, but
+> it's using a fixed clock anyway.
+> But there's soc/pxa/corgi.c and soc/pxa/poodle.c that puzzle me.
+> They seems to use a crystal, but they are setting a different sysclk
+> depending on the rate.
+> That seems wrong, but as I'm a newbie in ASoC...
 
-> Yes, but the swbst regulator share the same define type with the vsnvs
-> regulator, and the later voltage table is not linear, so I use
-> volt_table in swbst regulator . I don't want to  add another regulator
-> type for this.
+Note that the CPU is clock master for those - it's going to be
+outputting a clock based on the sample rate selected automatically.
+These boards would be broken by your change as it stands.
 
-You should do so; it's not hard.
-
-> > You should just register all the regulators rather than only registering
-> > those that the user explicitly selects.  This allows users to inpect the
-> > current configuration and simplifies the code - for example you don't
-> > need to count the DT nodes and you can just have a simple array in the
-> > platform data (see how wm831x does this for an example).
-
-> Yes, it will simplifies the code, but sometimes we will not use all
-> the regulators on boards, in this case, Is it better that only
-> register the available regulators?
-
-It's better to have everything, that way the framework can do things
-like power down unused regualtors that got left enabled.
-
-> > You should really be doing this on a copy of the regulators table rather
-> > than on the table itself.
-
-> everyone of the four regulators(SW2~SW4) has two different linear
-> voltage table which decided by the specific bit(one regulator ,one
-> different bit) . So  will modify the voltage table dynamically before
-> regulator register. I think this way is more simple , although looks
-> little weird and uncomfortable.
-
-You're missing the point here.  You shouldn't be modifying global data
-(which should be marked as const) at all, you should be working on a
-copy of it if it needs modifying.
-
---4LwthZj+AV2mq5CX
+--SBT+cnFS/G3NVgv4
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.20 (GNU/Linux)
 
-iQIcBAEBAgAGBQJR5BClAAoJELSic+t+oim9mV0P/RzMvdKJZf9ShSrVbMD/voMd
-NjzL+U56WlO+pcWnK+g8UcImz1mNvQ8RXBQvCrpCgDZbEPAKzbyfholgAzXnB9BH
-OvOaivUX6M1sjxQe+7qNi0kUt+T2GuB9YJHw51g4KxRzD2nkdu/IzDD19cHWC5GE
-lxTSO+5P+Cw7XomMweg+iG5p1ivHBbFEv4vaiqDY9Y2Avv2hLvp6dAjeMoCZjqFe
-o8hxvMsF+R/xLyQEojwW0dNESJBYFJZws3i5hjCWANaUTZEHVNzoUvDTZKY+P7wd
-dpnp3qgGSNGMPbGlY5IaeLYWLid9KDaySSNACxderUl4n7dT76wiJ4Dyt8pdXuxZ
-xXiaE4PKabn95VXLCw0r/Gh+4hrCPjuhVZZY8MTg7QAR025l0PWm8RN3kyNPetDI
-DP6U7bnH9N9R8G4o5U0cCU/GeiWkHrbcEZ2FJaTS15kX7RRyOajJZWKzCLumhEDF
-l3Nx3xtBwAcXXnitvNzHusPaUX6/rpd4cbGwf2v+TpX3EV3TVymNT6AMaW2FrZMw
-4JfLoCE0jkHLSyZMpdcvj2Xv/GByXPOP/MuLH9YeHWLJjz6oAXnFe3AnnpLKeVmg
-7IwnqxzQfuMF+VAIYdLIFndB9/35IYhNOeKdkGWs5bTz/ii5FM4m8Pgk1QQDzkIv
-orQb6BmowYMEsWM8aR0M
-=dHUS
+iQIcBAEBAgAGBQJR5BOxAAoJELSic+t+oim9mKYP/3FqVkMHE7LlCZvs78y1TbuF
+yFKdyZvXODyi/OI6I3Znyb8oNk+zwuaf+GI0dq4L2ON+Zl+Z9xRknjRLocP0nR/D
+QMQjowH6Dt903ENbmYnRTJLyMow3AHp25s2HtM4rTesJPY+Xq8XU9JPU0eL5UVfd
+zQ4VL3ctfJZk3b24NP96i+euTWvZdZ970J+8tNaqFi0+z9aAGN2lkRr/OI0sXtoT
+356PZsfcrxKOmF5KQqB73Zrt7U03JoiZicc8SfOv1RuZAUmr5fpCei6OH7Rxo9+B
+IovW/Vmu9dDV7cfgaGauFIEwcSgjyxA+bXM1WxiEVUfLirCxGyaMYh/c7QHG0c1D
+fi65o+y5uH/OUiWDciFqnCfea2uQDq3imnplMM8nF0DDyeLiz44NCNG8PPl0Dhl4
+VcTwRE0Tdel0XY+Fv1nBtcT8+NviQuizS7n1MfepWjpql9L8JBAoCF9zyzjS/7BN
+ErIqW+HT0mqPEBgq7Arvsdd1n94w3BYpps7g8aV6EJMnN24MYibaZIcrC4MZMB/o
+N6WKIYv5C7Bi00+gedZ4SCkLIesJL9L09oVM8kJFz1LFYHzLpMQoHqpdGvD703TV
+wHCKcDFukTBnyC/wz67qkqgQzy8RcY56sLuTpj44j2kA+LFVRUdaJChZ7OHzoun2
+5dvRqIzZg/hCXtUo8W9G
+=L2ww
 -----END PGP SIGNATURE-----
 
---4LwthZj+AV2mq5CX--
+--SBT+cnFS/G3NVgv4--
