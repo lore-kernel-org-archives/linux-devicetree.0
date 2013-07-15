@@ -1,11 +1,13 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH V2 1/5] gpio: clean up gpio-ranges documentation
-Date: Mon, 15 Jul 2013 12:40:25 -0600
-Message-ID: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
+Subject: [PATCH V2 5/5] ARM: remove #gpio-ranges-cells property
+Date: Mon, 15 Jul 2013 12:40:29 -0600
+Message-ID: <1373913629-32179-5-git-send-email-swarren@wwwdotorg.org>
+References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1373913629-32179-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,95 +24,88 @@ List-Id: devicetree@vger.kernel.org
 
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-This change makes documentation of the the gpio-ranges property shorter
-and more succinct, more consistent with the style of the rest of the
-document, and not mention Linux-specifics such as the API
-pinctrl_request_gpio(); DT binding documents should be OS independant
-where at all possible.
-
-This change also removes any mention of the #gpio-range-cells property.
-Such properties are useful when one node references a second node, and
-that second node dictates the format of the reference. However, that is
-not the case here; the definition of gpio-ranges itself always dictates
-its format entirely, and hence the value #gpio-range-cells must always
-be 3, and hence there is no point requiring any referenced node to
-include this property.
+This property is no longer required by the GPIO binding. Remove it.
 
 Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
-Patches 2-6 need to be applied in the same branch, since they all build
-upon each-other.
----
- Documentation/devicetree/bindings/gpio/gpio.txt | 48 ++++++++++++-------------
- 1 file changed, 23 insertions(+), 25 deletions(-)
+This should presumably be applied along with the previous changes
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index d933af3..b262378 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -75,23 +75,29 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
- 		gpio-controller;
- 	};
+v2: Squash spear and mxc changes into a single patch; there's no
+need to keep vf610.dtsi separate now that this series will go into
+v3.12 or later, and that file is part of v3.11-rc1.
+---
+ arch/arm/boot/dts/spear1310.dtsi | 1 -
+ arch/arm/boot/dts/spear1340.dtsi | 1 -
+ arch/arm/boot/dts/spear310.dtsi  | 1 -
+ arch/arm/boot/dts/spear320.dtsi  | 2 --
+ arch/arm/boot/dts/vf610.dtsi     | 1 -
+ 5 files changed, 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/spear1310.dtsi b/arch/arm/boot/dts/spear1310.dtsi
+index 122ae94..90e99b5 100644
+--- a/arch/arm/boot/dts/spear1310.dtsi
++++ b/arch/arm/boot/dts/spear1310.dtsi
+@@ -89,7 +89,6 @@
+ 		pinmux: pinmux@e0700000 {
+ 			compatible = "st,spear1310-pinmux";
+ 			reg = <0xe0700000 0x1000>;
+-			#gpio-range-cells = <3>;
+ 		};
  
--2.1) gpio-controller and pinctrl subsystem
--------------------------------------------
-+2.1) gpio- and pin-controller interaction
-+-----------------------------------------
+ 		apb {
+diff --git a/arch/arm/boot/dts/spear1340.dtsi b/arch/arm/boot/dts/spear1340.dtsi
+index 54d128d..5003013 100644
+--- a/arch/arm/boot/dts/spear1340.dtsi
++++ b/arch/arm/boot/dts/spear1340.dtsi
+@@ -63,7 +63,6 @@
+ 		pinmux: pinmux@e0700000 {
+ 			compatible = "st,spear1340-pinmux";
+ 			reg = <0xe0700000 0x1000>;
+-			#gpio-range-cells = <3>;
+ 		};
  
--gpio-controller on a SOC might be tightly coupled with the pinctrl
--subsystem, in the sense that the pins can be used by other functions
--together with optional gpio feature.
-+Some or all of the GPIOs provided by a GPIO controller may be routed to pins
-+on the package via a pin controller. This allows muxing those pins between
-+GPIO and other functions.
+ 		pwm: pwm@e0180000 {
+diff --git a/arch/arm/boot/dts/spear310.dtsi b/arch/arm/boot/dts/spear310.dtsi
+index 9537208..1e1318e 100644
+--- a/arch/arm/boot/dts/spear310.dtsi
++++ b/arch/arm/boot/dts/spear310.dtsi
+@@ -25,7 +25,6 @@
+ 		pinmux: pinmux@b4000000 {
+ 			compatible = "st,spear310-pinmux";
+ 			reg = <0xb4000000 0x1000>;
+-			#gpio-range-cells = <3>;
+ 		};
  
--While the pin allocation is totally managed by the pin ctrl subsystem,
--gpio (under gpiolib) is still maintained by gpio drivers. It may happen
--that different pin ranges in a SoC is managed by different gpio drivers.
-+It is useful to represent which GPIOs correspond to which pins on which pin
-+controllers. The gpio-ranges property described below represents this, and
-+contains information strucutres as follows:
+ 		fsmc: flash@44000000 {
+diff --git a/arch/arm/boot/dts/spear320.dtsi b/arch/arm/boot/dts/spear320.dtsi
+index ffea342..f630d0c 100644
+--- a/arch/arm/boot/dts/spear320.dtsi
++++ b/arch/arm/boot/dts/spear320.dtsi
+@@ -1,4 +1,3 @@
+-/*
+  * DTS file for SPEAr320 SoC
+  *
+  * Copyright 2012 Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+@@ -24,7 +23,6 @@
+ 		pinmux: pinmux@b3000000 {
+ 			compatible = "st,spear320-pinmux";
+ 			reg = <0xb3000000 0x1000>;
+-			#gpio-range-cells = <3>;
+ 		};
  
--This makes it logical to let gpio drivers announce their pin ranges to
--the pin ctrl subsystem and call 'pinctrl_request_gpio' in order to
--request the corresponding pin before any gpio usage.
-+	gpio-range-list ::= <single-gpio-range> [gpio-range-list]
-+	single-gpio-range ::=
-+			<pinctrl-phandle> <gpio-base> <pinctrl-base> <count>
-+	gpio-phandle : phandle to pin controller node.
-+	gpio-base : Base GPIO ID in the GPIO controller
-+	pinctrl-base : Base pinctrl pin ID in the pin controller
-+	count : The number of GPIOs/pins in this range
+ 		clcd@90000000 {
+diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
+index e1eb7da..8577780 100644
+--- a/arch/arm/boot/dts/vf610.dtsi
++++ b/arch/arm/boot/dts/vf610.dtsi
+@@ -162,7 +162,6 @@
+ 			iomuxc: iomuxc@40048000 {
+ 				compatible = "fsl,vf610-iomuxc";
+ 				reg = <0x40048000 0x1000>;
+-				#gpio-range-cells = <3>;
  
--For this, the gpio controller can use a pinctrl phandle and pins to
--announce the pinrange to the pin ctrl subsystem. For example,
-+The "pin controller node" mentioned above must conform to the bindings
-+described in ../pinctrl/pinctrl-bindings.txt.
-+
-+Example:
+ 				/* functions and groups pins */
  
- 	qe_pio_e: gpio-controller@1460 {
- 		#gpio-cells = <2>;
-@@ -99,16 +105,8 @@ announce the pinrange to the pin ctrl subsystem. For example,
- 		reg = <0x1460 0x18>;
- 		gpio-controller;
- 		gpio-ranges = <&pinctrl1 0 20 10>, <&pinctrl2 10 50 20>;
-+	};
- 
--    }
--
--where,
--   &pinctrl1 and &pinctrl2 is the phandle to the pinctrl DT node.
--
--   Next values specify the base pin and number of pins for the range
--   handled by 'qe_pio_e' gpio. In the given example from base pin 20 to
--   pin 29 under pinctrl1 with gpio offset 0 and pin 50 to pin 69 under
--   pinctrl2 with gpio offset 10 is handled by this gpio controller.
--
--The pinctrl node must have "#gpio-range-cells" property to show number of
--arguments to pass with phandle from gpio controllers node.
-+Here, a single GPIO controller has GPIOs 0..9 routed to pin controller
-+pinctrl1's pins 20..29, and GPIOs 10..19 routed to pin controller pinctrl2's
-+pins 50..59.
 -- 
 1.8.1.5
