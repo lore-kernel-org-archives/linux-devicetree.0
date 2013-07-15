@@ -1,13 +1,17 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH V2 5/5] ARM: remove #gpio-ranges-cells property
-Date: Mon, 15 Jul 2013 12:40:29 -0600
-Message-ID: <1373913629-32179-5-git-send-email-swarren@wwwdotorg.org>
-References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
+From: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] [ATTEND] Handling of devicetree bindings
+Date: Mon, 15 Jul 2013 11:41:57 -0700
+Message-ID: <20130715184157.GB17220@kroah.com>
+References: <20130713192647.GA3798@katana> <20130713204927.GA1124@roeck-us.net>
+ <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ@mail.gmail.com>
+ <20130715165620.GA29040@kroah.com>
+ <20130715170600.GW11538@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1373913629-32179-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130715170600.GW11538-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,94 +22,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Brown <broonie-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Cc: ksummit-2013-discuss-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Mon, Jul 15, 2013 at 06:06:00PM +0100, Mark Brown wrote:
+> On Mon, Jul 15, 2013 at 09:56:20AM -0700, Greg KH wrote:
+> 
+> > How about a hint for subsystem maintainers as to what exactly we should
+> > be looking for with these bindings?  I for one have no idea what is
+> > "right" vs. "wrong" with them, so a document explaining this would be
+> > good to have.
+> 
+> > Or if we already have it, a pointer to it perhaps?
+> 
+> At the minute it's about at the level of saying that if you're not sure
+> or don't know you should get the devicetree-discuss mailing list to
+> review it.  Ideally someone would write that document, though I wouldn't
+> hold my breath and there is a bunch of convention involved.
 
-This property is no longer required by the GPIO binding. Remove it.
+So, what should I, as a subsystem maintainer, do if I get a patch with a
+binding in it?  Wait some random amount of time before I can just apply
+it because no one on the mailing list said anything about it?  Trust the
+developer who wrote it?  Or just reject them all?
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-This should presumably be applied along with the previous changes
+What do you advise?
 
-v2: Squash spear and mxc changes into a single patch; there's no
-need to keep vf610.dtsi separate now that this series will go into
-v3.12 or later, and that file is part of v3.11-rc1.
----
- arch/arm/boot/dts/spear1310.dtsi | 1 -
- arch/arm/boot/dts/spear1340.dtsi | 1 -
- arch/arm/boot/dts/spear310.dtsi  | 1 -
- arch/arm/boot/dts/spear320.dtsi  | 2 --
- arch/arm/boot/dts/vf610.dtsi     | 1 -
- 5 files changed, 6 deletions(-)
+thanks,
 
-diff --git a/arch/arm/boot/dts/spear1310.dtsi b/arch/arm/boot/dts/spear1310.dtsi
-index 122ae94..90e99b5 100644
---- a/arch/arm/boot/dts/spear1310.dtsi
-+++ b/arch/arm/boot/dts/spear1310.dtsi
-@@ -89,7 +89,6 @@
- 		pinmux: pinmux@e0700000 {
- 			compatible = "st,spear1310-pinmux";
- 			reg = <0xe0700000 0x1000>;
--			#gpio-range-cells = <3>;
- 		};
- 
- 		apb {
-diff --git a/arch/arm/boot/dts/spear1340.dtsi b/arch/arm/boot/dts/spear1340.dtsi
-index 54d128d..5003013 100644
---- a/arch/arm/boot/dts/spear1340.dtsi
-+++ b/arch/arm/boot/dts/spear1340.dtsi
-@@ -63,7 +63,6 @@
- 		pinmux: pinmux@e0700000 {
- 			compatible = "st,spear1340-pinmux";
- 			reg = <0xe0700000 0x1000>;
--			#gpio-range-cells = <3>;
- 		};
- 
- 		pwm: pwm@e0180000 {
-diff --git a/arch/arm/boot/dts/spear310.dtsi b/arch/arm/boot/dts/spear310.dtsi
-index 9537208..1e1318e 100644
---- a/arch/arm/boot/dts/spear310.dtsi
-+++ b/arch/arm/boot/dts/spear310.dtsi
-@@ -25,7 +25,6 @@
- 		pinmux: pinmux@b4000000 {
- 			compatible = "st,spear310-pinmux";
- 			reg = <0xb4000000 0x1000>;
--			#gpio-range-cells = <3>;
- 		};
- 
- 		fsmc: flash@44000000 {
-diff --git a/arch/arm/boot/dts/spear320.dtsi b/arch/arm/boot/dts/spear320.dtsi
-index ffea342..f630d0c 100644
---- a/arch/arm/boot/dts/spear320.dtsi
-+++ b/arch/arm/boot/dts/spear320.dtsi
-@@ -1,4 +1,3 @@
--/*
-  * DTS file for SPEAr320 SoC
-  *
-  * Copyright 2012 Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-@@ -24,7 +23,6 @@
- 		pinmux: pinmux@b3000000 {
- 			compatible = "st,spear320-pinmux";
- 			reg = <0xb3000000 0x1000>;
--			#gpio-range-cells = <3>;
- 		};
- 
- 		clcd@90000000 {
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index e1eb7da..8577780 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -162,7 +162,6 @@
- 			iomuxc: iomuxc@40048000 {
- 				compatible = "fsl,vf610-iomuxc";
- 				reg = <0x40048000 0x1000>;
--				#gpio-range-cells = <3>;
- 
- 				/* functions and groups pins */
- 
--- 
-1.8.1.5
+greg k-h
