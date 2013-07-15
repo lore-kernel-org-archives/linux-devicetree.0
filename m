@@ -1,260 +1,348 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] iio: twl6030-gpadc: TWL6030, TWL6032 GPADC driver
-Date: Mon, 15 Jul 2013 14:56:18 +0300
-Message-ID: <51E3E362.6090903@ti.com>
-References: <1373613482-28390-1-git-send-email-oleksandr.kozaruk@ti.com> <1373613482-28390-3-git-send-email-oleksandr.kozaruk@ti.com> <51E05F6C.1060506@metafoo.de>
+From: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+Subject: Re: [PATCH] iio: add APDS9300 ambilent light sensor driver
+Date: Mon, 15 Jul 2013 15:27:16 +0300
+Message-ID: <CAGH3drqEPxW=QwadCLj=ZOQe0gp_c7mdSiNQnq1_-BMKL9CgJw@mail.gmail.com>
+References: <1373461729-11261-1-git-send-email-x0199363@ti.com>
+	<51E03720.1010806@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51E05F6C.1060506-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Oleksandr Kozaruk <oleksandr.kozaruk-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, milo.kim-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51E03720.1010806@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Oleksandr Kravchenko <x0199363@ti.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, jic23@cam.ac.uk, pmeerw@pmeerw.net, holler@ahsoftware.de, srinivas.pandruvada@intel.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+Thank you for review! But I don't completely understand one of your comment:
 
-I have a question regarding this patch and IIO in general
-- Does IIO provide sync mechanism with system wide suspend/resume or 
-this should be handled by each driver itself?
-
-What if during system suspend iio_read_channel_raw() (or any other 
-consumer API) will be called after gpadc driver have been suspended 
-already? (I did some investigation and seems it's possible - Am I right?)
-
-If no, could "info_exist_lock" be reused for such purposes?
-
-Regards,
--grygorii
-
-
-On 07/12/2013 10:56 PM, Lars-Peter Clausen wrote:
+>> +static int als_probe(struct i2c_client *client, const struct i2c_device_id *id)
+[...]
+>> +     if (client->irq) {
+>> +             ret = devm_request_threaded_irq(&client->dev, client->irq,
+>> +                             NULL, als_interrupt_handler,
+>> +                             IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>> +                             ALS_IRQ_NAME, indio_dev);
 >
-> A couple of comments inline.
->
-> On 07/12/2013 09:18 AM, Oleksandr Kozaruk wrote:
->> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->> index ab0767e6..87d699e 100644
->> --- a/drivers/iio/adc/Kconfig
->> +++ b/drivers/iio/adc/Kconfig
->> @@ -157,4 +157,12 @@ config VIPERBOARD_ADC
->>         Say yes here to access the ADC part of the Nano River
->>         Technologies Viperboard.
+> This is a bit racy, you access memory in the irq handler that is freed
+> before the irq is freed.
+
+Do you mean than that indio_dev may be used in interrupt handler after
+iio_device_free(indio_dev) called in als_remove() function?
+
+If so, can I use disable_irq() in als_remove() before iio_device_free()
+to avoid this problem?
+
+On Fri, Jul 12, 2013 at 8:04 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
+> On 07/10/2013 03:08 PM, Oleksandr Kravchenko wrote:
+>> From: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
 >>
->> +config TWL6030_GPADC
->> +    tristate "TWL6030 GPADC (General Purpose A/D Convertor) Support"
->> +    depends on TWL4030_CORE
->> +    default n
->> +    help
->> +      Say yes here if you want support for the TWL6030 General Purpose
->> +      A/D Convertor.
->> +
+>> This patch adds IIO driver for APDS9300 ambilent light sensor (ALS).
 >
-> Keep it in alphabetical order
+> s/ambilent/ambient/
 >
->>   endmenu
->> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
->> index 0a825be..8b05633 100644
->> --- a/drivers/iio/adc/Makefile
->> +++ b/drivers/iio/adc/Makefile
->> @@ -17,3 +17,4 @@ obj-$(CONFIG_MAX1363) += max1363.o
->>   obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
->>   obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
->>   obj-$(CONFIG_VIPERBOARD_ADC) += viperboard_adc.o
->> +obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
+>> http://www.avagotech.com/docs/AV02-1077EN
+>>
+>> The driver allows to read raw data from ADC registers or calculate
+>> lux value. It also can handle threshold inrerrupt.
 >
-> Same here.
+> s/inrerrupt/interrupt/
 >
->> diff --git a/drivers/iio/adc/twl6030-gpadc.c
->> b/drivers/iio/adc/twl6030-gpadc.c
+> The patch looks very good in general, a couple of comment inline.
+>
+>>
+>> Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+>> ---
+>>  .../devicetree/bindings/iio/light/apds9300.txt     |   22 +
+>>  drivers/iio/light/Kconfig                          |   10 +
+>>  drivers/iio/light/Makefile                         |    1 +
+>>  drivers/iio/light/apds9300.c                       |  528 ++++++++++++++++++++
+>>  4 files changed, 561 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/light/apds9300.txt
+>>  create mode 100644 drivers/iio/light/apds9300.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/light/apds9300.txt b/Documentation/devicetree/bindings/iio/light/apds9300.txt
 >> new file mode 100644
->> index 0000000..6ceb789
+>> index 0000000..d6f66c7
 >> --- /dev/null
->> +++ b/drivers/iio/adc/twl6030-gpadc.c
->> @@ -0,0 +1,1019 @@
+>> +++ b/Documentation/devicetree/bindings/iio/light/apds9300.txt
+>> @@ -0,0 +1,22 @@
+>> +* Avago APDS9300 ambient light sensor
+>> +
+>> +http://www.avagotech.com/docs/AV02-1077EN
+>> +
+>> +Required properties:
+>> +
+>> +  - compatible : should be "avago,apds9300"
+>
+> You should also add the avago vendor prefix to
+> Documentation/devicetree/bindings/vendor-prefixes.txt. Preferably in a
+> separate patch.
+>
+>> +  - reg : the I2C address of the sensor
+>> +
+>> +Optional properties:
+>> +
+>> +  - interrupt-parent : should be the phandle for the interrupt controller
+>> +  - interrupts : interrupt mapping for GPIO IRQ
+>> +
+>> +Example:
+>> +
+>> +apds9300@39 {
+>> +     compatible = "avago,apds9300";
+>> +     reg = <0x39>;
+>> +     interrupt-parent = <&gpio2>;
+>> +     interrupts = <29 8>;
+>> +};
+>> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+>> index 5ef1a39..08a6742 100644
+>> --- a/drivers/iio/light/Kconfig
+>> +++ b/drivers/iio/light/Kconfig
+>> @@ -52,6 +52,16 @@ config VCNL4000
+>>        To compile this driver as a module, choose M here: the
+>>        module will be called vcnl4000.
+>>
+>> +config APDS9300
+>> +     tristate "APDS9300 ambient light sensor"
+>> +     depends on I2C
+>> +     help
+>> +      Say Y here if you want to build a driver for the Avago APDS9300
+>> +      ambient light sensor.
+>> +
+>> +      To compile this driver as a module, choose M here: the
+>> +      module will be called apds9300.
+>> +
+>
+> Keeps this in alphabetical order
+>
+>>  config HID_SENSOR_ALS
+>>       depends on HID_SENSOR_HUB
+>>       select IIO_BUFFER
+>> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+>> index 040d9c7..da58e12 100644
+>> --- a/drivers/iio/light/Makefile
+>> +++ b/drivers/iio/light/Makefile
+>> @@ -6,4 +6,5 @@ obj-$(CONFIG_ADJD_S311)               += adjd_s311.o
+>>  obj-$(CONFIG_SENSORS_LM3533) += lm3533-als.o
+>>  obj-$(CONFIG_SENSORS_TSL2563)        += tsl2563.o
+>>  obj-$(CONFIG_VCNL4000)               += vcnl4000.o
+>> +obj-$(CONFIG_APDS9300)               += apds9300.o
+>
+> Same here
+>
+>>  obj-$(CONFIG_HID_SENSOR_ALS) += hid-sensor-als.o
+>> diff --git a/drivers/iio/light/apds9300.c b/drivers/iio/light/apds9300.c
+>> new file mode 100644
+>> index 0000000..2275ecc
+>> --- /dev/null
+>> +++ b/drivers/iio/light/apds9300.c
+>> @@ -0,0 +1,528 @@
+>> +/*
+>> + * apds9300.c - IIO driver for Avago APDS9300 ambient light sensor
+>> + *
+>> + * Copyright 2013 Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+>> + *
+>> + * This file is subject to the terms and conditions of version 2 of
+>> + * the GNU General Public License.  See the file COPYING in the main
+>> + * directory of this archive for more details.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/pm.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/err.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/irq.h>
+>
+> No device driver should ever need to include irq.h
+>
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/iio/sysfs.h>
+>> +#include <linux/iio/events.h>
+>> +
 > [...]
->> +static u8 twl6032_channel_to_reg(int channel)
+>> +
+>> +static unsigned long als_calculate_lux(u16 ch0, u16 ch1)
 >> +{
->> +    return TWL6032_GPADC_GPCH0_LSB;
+>> +     unsigned long lux, tmp;
+>> +     u64 tmp64;
+>> +
+>> +     /* avoid division by zero */
+>> +     if (ch0 == 0)
+>> +             return 0;
+>> +
+>> +     tmp = ch1 * 100 / ch0;
+>> +     if (tmp <= 52) {
+>> +             /*
+>> +              * Variable tmp64 need to avoid overflow of this part of lux
+>> +              * calculation formula.
+>> +              */
 >
-> There is more than one channel, isn't there?
+> If you want to avoid the overflow you have to do the math as 64bit math. As
+> it is right now it will do 32bit math and only store the result in a 64 bit
+> variable.
 >
-> [...]
->  > +static int twl6030_gpadc_read_raw(struct iio_dev *indio_dev,
->  > +                 const struct iio_chan_spec *chan,
->  > +                 int *val, int *val2, long mask)
->  > +{
->  > +    struct twl6030_gpadc_data *gpadc = iio_priv(indio_dev);
->  > +    int ret = -EINVAL;
->  > +
->  > +    mutex_lock(&gpadc->lock);
->  > +
->  > +    ret = gpadc->pdata->start_conversion(chan->channel);
->  > +    if (ret) {
->  > +        dev_err(gpadc->dev, "failed to start conversion\n");
->  > +        goto err;
->  > +    }
->  > +    /* wait for conversion to complete */
->  > +    wait_for_completion_interruptible_timeout(&gpadc->irq_complete,
->  > +                        msecs_to_jiffies(5000));
->
-> wait_for_completion_interruptible_timeout() can return either a negative
-> error code if it was interrupted, 0 if it timed out, or a positive value
-> if it was successfully completed. You need to handle all three cases.
-> Have a look at other existing drivers to see how to do this properly.
->
->  > +
->  > +    switch (mask) {
->  > +    case IIO_CHAN_INFO_RAW:
->  > +        ret = twl6030_gpadc_get_raw(gpadc, chan->channel, val);
->  > +        ret = ret ? -EIO : IIO_VAL_INT;
->  > +        break;
->  > +
->  > +    case IIO_CHAN_INFO_PROCESSED:
->  > +        ret = twl6030_gpadc_get_processed(gpadc, chan->channel, val);
->  > +        ret = ret ? -EIO : IIO_VAL_INT;
->  > +        break;
->  > +
->  > +    default:
->  > +        break;
->  > +    }
->  > +err:
->  > +    mutex_unlock(&gpadc->lock);
->  > +
->  > +    return ret;
->  > +}
->
+>> +             tmp64 = ch0 * lux_ratio[tmp] * 5930 / 1000;
+>> +             lux = 3150 * ch0 - (unsigned long)tmp64;
+>> +     }
+>> +     else if (tmp <= 65)
+>> +             lux = 2290 * ch0 - 2910 * ch1;
+>> +     else if (tmp <= 80)
+>> +             lux = 1570 * ch0 - 1800 * ch1;
+>> +     else if (tmp <= 130)
+>> +             lux = 338 * ch0 - 260 * ch1;
+>> +     else
+>> +             lux = 0;
+>> +
+>> +     return lux / 100000;
 >> +}
 >> +
 > [...]
->> +static int twl6030_gpadc_probe(struct platform_device *pdev)
+>> +static int als_get_adc_val(struct als_data *data, int adc_number)
 >> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct twl6030_gpadc_data *gpadc;
->> +    const struct twl6030_gpadc_platform_data *pdata;
->> +    const struct of_device_id *match;
->> +    struct iio_dev *indio_dev;
->> +    int irq;
->> +    int ret = 0;
+>> +     int ret;
+>> +     u8 flags = ALS_CMD | ALS_WORD;
 >> +
->> +    match = of_match_device(of_match_ptr(of_twl6030_match_tbl), dev);
->> +    pdata = match ? match->data : dev->platform_data;
->> +
->> +    if (!pdata)
->> +        return -EINVAL;
->> +
->> +    indio_dev = iio_device_alloc(sizeof(struct twl6030_gpadc_data));
+>> +     if (!data->power_state)
+>> +             return -EAGAIN;
 >
-> sizeof(*gpadc)
+> EAGAIN is probably not the right error code, maybe EBUSY or ENODEV.
 >
->> +    if (!indio_dev) {
->> +        dev_err(dev, "failed allocating iio device\n");
->> +        ret = -ENOMEM;
->> +    }
 >> +
->> +    gpadc = iio_priv(indio_dev);
+>> +     /* Select ADC0 or ADC1 data register */
+>> +     flags |= adc_number ? ALS_DATA1LOW : ALS_DATA0LOW;
 >> +
->> +    gpadc->twl6030_cal_tbl = devm_kzalloc(dev,
->> +                    sizeof(struct twl6030_chnl_calib) *
->> +                    pdata->nchannels, GFP_KERNEL);
->> +    if (!gpadc->twl6030_cal_tbl)
->> +        goto err;
+>> +     ret = i2c_smbus_read_word_data(data->client, flags);
+>> +     if (ret < 0)
+>> +             dev_err(&data->client->dev,
+>> +                             "failed to read ADC%d value\n", adc_number);
 >> +
->> +    gpadc->dev = dev;
->> +    gpadc->pdata = pdata;
+>> +     return ret;
+>> +}
 >> +
->> +    platform_set_drvdata(pdev, indio_dev);
->> +    mutex_init(&gpadc->lock);
->> +    init_completion(&gpadc->irq_complete);
->> +
->> +    ret = pdata->calibrate(gpadc);
->> +    if (ret < 0) {
->> +        dev_err(&pdev->dev, "failed to read calibration registers\n");
->> +        goto err;
->> +    }
->> +
->> +    irq = platform_get_irq(pdev, 0);
->> +    if (irq < 0) {
->> +        dev_err(&pdev->dev, "failed to get irq\n");
->> +        goto err;
->> +    }
->> +
->> +    ret = devm_request_threaded_irq(dev, irq, NULL,
->> +                    twl6030_gpadc_irq_handler,
->> +                    IRQF_ONESHOT, "twl6030_gpadc", gpadc);
+> [...]
 >
-> You access memory in the interrupt handler which is freed before the
-> interrupt handler is freed.
+>> +static irqreturn_t als_interrupt_handler(int irq, void *private)
+>> +{
+>> +     struct iio_dev *dev_info = private;
+>> +     struct als_data *data = iio_priv(dev_info);
+>> +
+>> +     iio_push_event(dev_info,
+>> +                     IIO_UNMOD_EVENT_CODE(IIO_INTENSITY, 0,
+>> +                             IIO_EV_TYPE_THRESH,
+>> +                             IIO_EV_DIR_FALLING),
+>> +                     iio_get_time_ns());
 >
->> +    if (ret) {
->> +        dev_dbg(&pdev->dev, "could not request irq\n");
->> +        goto err;
->> +    }
+> In the event mask you specify support for both falling and rising threshold
+> events, yet the only event ever triggered is a falling event.
+>
 >> +
->> +    ret = twl6030_gpadc_enable_irq(TWL6030_GPADC_RT_SW1_EOC_MASK);
->> +    if (ret < 0) {
->> +        dev_err(&pdev->dev, "failed to enable GPADC interrupt\n");
->> +        goto err;
->> +    }
->> +    ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, TWL6030_GPADCS,
->> +                    TWL6030_REG_TOGGLE1);
->> +    if (ret < 0) {
->> +        dev_err(&pdev->dev, "failed to enable GPADC module\n");
->> +        goto err;
->> +    }
+>> +     als_clear_intr(data);
 >> +
->> +    indio_dev->name = DRIVER_NAME;
->> +    indio_dev->dev.parent = dev;
->> +    indio_dev->info = &twl6030_gpadc_iio_info;
->> +    indio_dev->modes = INDIO_DIRECT_MODE;
->> +    indio_dev->channels = pdata->iio_channels;
->> +    indio_dev->num_channels = pdata->nchannels;
+>> +     return IRQ_HANDLED;
+>> +}
 >> +
->> +    ret = iio_device_register(indio_dev);
->> +    if (ret)
->> +        goto err;
+>> +/* Probe/remove functions */
+>
+> I don't think we need the comment to know that als_probe is the probe
+> function ;)
+>
 >> +
->> +    return ret;
+>> +static int als_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>> +{
+>> +     struct als_data *data;
+>> +     struct iio_dev *indio_dev;
+>> +     int ret;
+>> +
+>> +     indio_dev = iio_device_alloc(sizeof(*data));
+>> +     if (!indio_dev)
+>> +             return -ENOMEM;
+>> +
+>> +     data = iio_priv(indio_dev);
+>> +     i2c_set_clientdata(client, indio_dev);
+>> +     data->client = client;
+>> +
+>> +     ret = als_chip_init(data);
+>> +     if (ret < 0)
+>> +             goto err;
+>> +
+>> +     mutex_init(&data->mutex);
+>> +
+>> +     indio_dev->dev.parent = &client->dev;
+>> +     indio_dev->channels = als_channels;
+>> +     indio_dev->num_channels = ARRAY_SIZE(als_channels);
+>> +     indio_dev->name = ALS_DRV_NAME;
+>> +     indio_dev->modes = INDIO_DIRECT_MODE;
+>> +
+>> +     if (client->irq)
+>> +             indio_dev->info = &als_info;
+>> +     else
+>> +             indio_dev->info = &als_info_no_irq;
+>> +
+>> +     if (client->irq) {
+>> +             ret = devm_request_threaded_irq(&client->dev, client->irq,
+>> +                             NULL, als_interrupt_handler,
+>> +                             IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+>> +                             ALS_IRQ_NAME, indio_dev);
+>
+> This is a bit racy, you access memory in the irq handler that is freed
+> before the irq is freed.
+>
+>> +             if (ret) {
+>> +                     dev_err(&client->dev, "irq request error %d\n", -ret);
+>> +                     goto err;
+>> +             }
+>> +     }
+>> +
+>> +     ret = iio_device_register(indio_dev);
+>> +     if (ret < 0)
+>> +             goto err;
+>> +
+>> +     dev_info(&client->dev, "ambient light sensor\n");
+>
+> This line is just noise in the bootlog, please remove it.
+>
+>> +
+>> +     return 0;
+>> +
 >> +err:
->> +    iio_device_free(indio_dev);
->> +    return ret;
+>> +     /* Ensure that power off in case of error */
+>> +     als_set_power_state(data, 0);
+>> +     iio_device_free(indio_dev);
+>> +     return ret;
 >> +}
 >> +
-> [...]
->> +static int twl6030_gpadc_suspend(struct device *pdev)
+>> +static int als_remove(struct i2c_client *client)
 >> +{
->> +    int ret;
+>> +     struct iio_dev *indio_dev = i2c_get_clientdata(client);
+>> +     struct als_data *data = iio_priv(indio_dev);
+>> +     int ret;
 >> +
->> +    ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, TWL6030_GPADCR,
->> +                TWL6030_REG_TOGGLE1);
->> +    if (ret)
->> +        dev_err(pdev, "error reseting GPADC (%d)!\n", ret);
+>> +     iio_device_unregister(indio_dev);
 >> +
->> +    return 0;
->> +};
+>> +     /* Ensure that power off and interrupts are disabled */
+>> +     ret = als_set_intr_state(data, 0);
+>> +     if (!ret)
+>> +             ret = als_set_power_state(data, 0);
 >> +
->> +static int twl6030_gpadc_resume(struct device *pdev)
->> +{
->> +    int ret;
+>> +     iio_device_free(indio_dev);
 >> +
->> +    ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, TWL6030_GPADCS,
->> +                TWL6030_REG_TOGGLE1);
->> +    if (ret)
->> +        dev_err(pdev, "error setting GPADC (%d)!\n", ret);
->> +
->> +    return 0;
->> +};
->> +
->> +static const struct dev_pm_ops twl6030_gpadc_pm_ops = {
->> +    .suspend = twl6030_gpadc_suspend,
->> +    .resume = twl6030_gpadc_resume,
->> +};
+>> +     return ret;
 >
-> SIMPLE_DEV_PM_OPS?
+> The remove callback must always return 0.
 >
+>> +}
 > [...]
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
+
+
+-- 
+Oleksandr Kravchenko
+GlobalLogic
+P +380633213187
+P +380994930248
+www.globallogic.com
+
+http://www.globallogic.com/email_disclaimer.txt
