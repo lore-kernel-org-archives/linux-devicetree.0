@@ -1,67 +1,49 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 4/4] ARM: OMAP2+: Provide alias to USB PHY clock
-Date: Tue, 16 Jul 2013 06:43:50 -0700
-Message-ID: <20130716134350.GD7656@atomide.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
- <1371571487-14389-5-git-send-email-rogerq@ti.com>
- <51E40199.9070906@ti.com>
- <20130716123256.GY7656@atomide.com>
- <51E54D0D.3030200@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 00/10] Orion Watchdog fixes
+Date: Tue, 16 Jul 2013 09:44:22 -0400
+Message-ID: <20130716134422.GE12062@titan.lakedaemon.net>
+References: <1373931163-12670-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130716065952.GA25043@lunn.ch> <20130716092059.237ea729@skate>
+ <20130716073101.GB25043@lunn.ch> <20130716121432.GA2317@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <51E54D0D.3030200@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: benoit.cousson@linaro.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>
+In-Reply-To: <20130716121432.GA2317@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [130716 06:45]:
-> On 07/16/2013 03:32 PM, Tony Lindgren wrote:
-> > * Roger Quadros <rogerq@ti.com> [130715 07:11]:
-> >> Hi Tony,
-> >>
-> >> On 06/18/2013 07:04 PM, Roger Quadros wrote:
-> >>> Till the OMAP clocks are correctly defined in device tree, use
-> >>> this temporary hack to provide clock alias to the USB PHY clocks.
-> >>>
-> >>> Without this, USB Host & Ethernet will not be functional with
-> >>> device tree boots on Panda and uEVM.
-> >>
-> >> Looks like this one got missed out.
-> >>
-> >> USB host no longer works on Panda with DT boot.
-> >> Could you please queue this for next 3.11-rc? Thanks.
-> > 
-> > OK thanks for checking, applying into omap-for-v3.11/fixes.
-> 
-> Thanks.
-> 
-> > 
-> > Looks like I also have some pending the .dts changes in
-> > omap-for-v3.11/dt branch:
-> > 
-> > 4cf2198b1e3cee47a1cccbb500b67782c36615d5 ARM: dts: omap3-beagle-xm: Add USB host supprot for Rev. Ax/Bx
-> > 9bc44515819a00c0ffaf751ad497ddf275089ede ARM: dts: omap3-beagle-xm: Add USB Host support
-> > fd65d7df4598c1d2ad27d664c719611a1a070edc ARM: dts: omap3-beagle: Make USB host pin naming consistent
-> 
-> Please disregard those. They are old versions.
+On Tue, Jul 16, 2013 at 09:14:33AM -0300, Ezequiel Garcia wrote:
+> On the other side, I'm much interested in knowing if you are OK with
+> breaking the watchdog DT compatibility. If you NACK this, then I'll
+> start preparing a different watchdog driver for 370/XP, since I don't
+> want to extend a driver that is a bit dirty.
 
-OK, poof that branch is now gone.
- 
-> Benoit had agreed to take the newer version of those for 3.12.
-> 
-> Please pick this one to get usb host working on 3.11 with DT.
-> 
-> http://www.spinics.net/lists/arm-kernel/msg253612.html
-> 
-> > 39ea891d9da6ae1824bc9f689db3f306f5ce0724 ARM: dts: omap4-panda: Add USB Host support
-> 
-> This one is already in through Benoit.
+Apparently there is some agreement that the bindings are still in flux
+and that they need to be for a bit longer in order to hammer out
+problems such as this.
 
-It's best that Benoit queue all those to avoid more confusion :)
+Arnd and Olof both mentioned that something (a doc, and email?) is
+forthcoming about marking some bindings as stable.  Whatever form that
+takes, this one wouldn't get the stable marking yet. ;-)
 
-Regards,
+Oh, and one more nit.  The work 'fix' triggers a whole bunch of "get on
+this right away, does it need to go to stable?  Has anyone confirmed it?
+Which commit caused the regression? etc."  Although I hate the word, I
+think 'refactoring' is much more appropriate description for this series.
 
-Tony
+thx,
+
+Jason.
