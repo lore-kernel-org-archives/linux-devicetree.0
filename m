@@ -1,16 +1,13 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Tue, 16 Jul 2013 12:10:58 +0800
-Message-ID: <20130716041056.GA30067@S2101-09.ap.freescale.net>
-References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
- <20130716015038.GD28375@S2101-09.ap.freescale.net>
- <51E4BF98.8030604@wwwdotorg.org>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v1 16/24] clk: mpc512x: remove now obsolete clkdev registration
+Date: Tue, 16 Jul 2013 08:05:04 +0200
+Message-ID: <1373954707-23909-1-git-send-email-gsi@denx.de>
+References: <1373914074-20889-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51E4BF98.8030604-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1373914074-20889-1-git-send-email-gsi-ynQEQJNshbs@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,40 +18,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2013 at 09:35:52PM -0600, Stephen Warren wrote:
-> > It's a little bit late to register gpio-reset driver at module_init
-> > time, because gpio-reset provides reset control via gpio for other
-> > devices which are mostly probed at module_init time too.  And it
-> > becomes even worse, when the gpio comes from IO expander on I2C bus,
-> > e.g. pca953x.  In that case, gpio-reset needs to be ready before I2C
-> > bus driver which is generally ready at subsys_initcall time.  Let's
-> > register gpio-reset driver in arch_initcall() to have it ready early
-> > enough.
-> 
-> There's no need for the reset driver to be registered before its users;
-> the users of the reset GPIO will simply have their probe deferred until
-> the reset controller is available, and then everything will work out
-> just fine.
-> 
-> > The defer probe mechanism is not used here, because a reset controller
-> > driver should be reasonably registered early than other devices.  More
-> > importantly, defer probe doe not help in some nasty cases, e.g. the
-> > gpio-pca953x device itself needs a reset from gpio-reset driver to start
-> > working.
-> 
-> That should work fine with deferred probe.
+after the PSC drivers for UART and SPI mode got converted to device tree
+based clock lookup, the former MCLK name which depends on the PSC index
+isn't needed any longer -- remove the clk_register_clkdev() invocation
 
-I should probably rework the commit log.  But I do not see a problem
-to register gpio-reset driver a little bit earlier.  On the other hand,
-if we reply on deferred probe, many drivers probe could be deferred.
-For example, on my system, the gpio-pca953x on I2C bus works as a GPIO
-controller and provides resets to many board level components.
-Deferring probe of gpio-pca953x on I2C bus means every single probe of
-all these components gets deferred.  IMO, this situation should be
-reasonably avoided.
+Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+---
+ arch/powerpc/platforms/512x/clock-commonclk.c |   10 ----------
+ 1 file changed, 10 deletions(-)
 
-Shawn
+diff --git a/arch/powerpc/platforms/512x/clock-commonclk.c b/arch/powerpc/platforms/512x/clock-commonclk.c
+index f31f895..31707b5 100644
+--- a/arch/powerpc/platforms/512x/clock-commonclk.c
++++ b/arch/powerpc/platforms/512x/clock-commonclk.c
+@@ -529,16 +529,6 @@ static void mpc512x_clk_setup_mclk(struct mclk_setup_data *entry)
+ 				entry->name_mclk,
+ 				entry->name_mux1, 1, 1);
+ 	}
+-
+-	/*
+-	 * without this "clock device" registration, "simple" lookups in
+-	 * the SPI master initialization and serial port setup will fail
+-	 *
+-	 * those drivers need to get adjusted to lookup their required
+-	 * clocks from OF specs, before this clkdev registration becomes
+-	 * obsolete
+-	 */
+-	clk_register_clkdev(clks[clks_idx_pub], entry->name_mclk, NULL);
+ }
+ 
+ static void mpc512x_clk_setup_mclks(struct mclk_setup_data *table, size_t count)
+-- 
+1.7.10.4
