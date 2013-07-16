@@ -1,16 +1,17 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 00/10] Orion Watchdog fixes
-Date: Tue, 16 Jul 2013 09:14:33 -0300
-Message-ID: <20130716121432.GA2317@localhost>
-References: <1373931163-12670-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130716065952.GA25043@lunn.ch> <20130716092059.237ea729@skate>
- <20130716073101.GB25043@lunn.ch>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Tue, 16 Jul 2013 20:15:39 +0800
+Message-ID: <20130716121537.GK28375@S2101-09.ap.freescale.net>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+ <20130716015038.GD28375@S2101-09.ap.freescale.net>
+ <20130716065130.GB30067@S2101-09.ap.freescale.net>
+ <1373968279.4327.13.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130716073101.GB25043-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1373968279.4327.13.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,43 +22,14 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhvbWFzLCBBbmRyZXc6CgpUaGFua3MgZm9yIGxvb2tpbmcgYXQgdGhpcyEKCk9uIFR1ZSwg
-SnVsIDE2LCAyMDEzIGF0IDA5OjMxOjAxQU0gKzAyMDAsIEFuZHJldyBMdW5uIHdyb3RlOgo+IE9u
-IFR1ZSwgSnVsIDE2LCAyMDEzIGF0IDA5OjIwOjU5QU0gKzAyMDAsIFRob21hcyBQZXRhenpvbmkg
-d3JvdGU6Cj4gPiAKPiA+IE9uIFR1ZSwgMTYgSnVsIDIwMTMgMDg6NTk6NTIgKzAyMDAsIEFuZHJl
-dyBMdW5uIHdyb3RlOgo+ID4gCj4gPiA+IE1heWJlIGknbSBtaXNzaW5nIHNvbWV0aGluZyBoZXJl
-LiBZb3UgYXJlIG1ha2luZyB1c2Ugb2YKPiA+ID4gb3Jpb25fdGltZXJfY3RybF9jbHJzZXQoKSBm
-cm9tIHRpbWUtb3Jpb24uYy4gSG93IHdpbGwgdGhpcyB3b3JrIG9uCj4gPiA+IDM3MC9YUCB3aGlj
-aCBoYXMgYSBkaWZmZXJlbnQgY2xvY2tzb3VyY2UgZHJpdmVyPwo+ID4gCj4gPiBJICp0aGluayog
-dGhlIGlkZWEgaXMgdGhhdCB0aGUgQXJtYWRhIDM3MC9YUCBkcml2ZXIgd2lsbCBleHBvc2UgdGhl
-Cj4gPiBzYW1lIGZ1bmN0aW9uLCBzbyBmcm9tIHRoZSBwb2ludCBvZiB2aWV3IG9mIHRoZSB3YXRj
-aGRvZyBkcml2ZXIsIGl0Cj4gPiB3aWxsIGp1c3Qgd29yay4KCkluZGVlZCB0aGF0IHdhcyBvbmUg
-b2YgdGhlIGlkZWFzLiBBcyBUaG9tYXMgc2FpZCwgdGhpcyB3YXMganVzdApwcmVwYXJhdGlvbiB3
-b3JrLgoKPiAKPiBUaGF0IHdhcyB3aGF0IGkgd2FzIHRoaW5raW5nIHdvdWxkIGhhcHBlbi4gQW5k
-IHRoZW4gaSBzdGFydGVkIHRvCj4gd29uZGVyIGhvdyB3ZWxsIHRoZSBrZXJuZWwgbGlua2VyIGRl
-YWxzIHdpdGggbXVsdGlwbGUgZGVmaW5pdGlvbnMgb2YKPiB0aGUgc2FtZSBzeW1ib2wuIERvdmUg
-YW5kIDM3MC9YUCBjYW4gZW5kIHVwIGluIHRoZSBzYW1lIGtlcm5lbC4gU28gd2UKPiBuZWVkIHRv
-IGhhdmUgYm90aCBvcmlvbi10aW1lciBhbmQgdGhlIDM3MC9YUCB0aW1lciBpbiB0aGUgc2FtZSBr
-ZXJuZWwsCj4gc28gd2UgZW5kIHVwIHdpdGggdGhlIHNhbWUgc3ltYm9sIGluIHRoZSBrZXJuZWwg
-dHdpY2UuLi4KPiAKClllYWgsIHdlbGwuLi4gSSB3YXNuJ3Qgc3VyZSBhYm91dCB1c2luZyB0aGUg
-c2FtZSBuYW1lLCBzbyBhbm90aGVyIGFwcHJvYWNoCndvdWxkIGJlIGFkZGluZyBhIG5ldyBjb21w
-YXRpYmxlIHRvIHRoZSBkcml2ZXIgYW5kIHRoZW4gbWFrZSBpdCB1c2UgdGhlCmFwcHJvcHJpYXRl
-IGZ1bmN0aW9uIGluIHRoZSAzNzAvWFAgY2xvY2tzb3VyY2UgZHJpdmVyICh3aXRoIGEgZGlmZmVy
-ZW50IG5hbWUpLgoKQW5kLCB5ZXQgYW5vdGhlciBhcHByb2FjaCwgaXMgd2hhdCBTZWJhc3RpYW4g
-anVzdCBzYWlkLCBhbHRob3VnaCBJJ20Kbm90IHN1cmUgSSB1bmRlcnN0b29kIGl0IDopLiBJbiBh
-bnkgY2FzZSwgd2UgaGF2ZSBhbHJlYWR5IHNldmVyYWwgc29sdXRpb25zLAp3aGljaCBpcyB3aHkg
-SSdtIG5vdCB0b28gd29ycmllZCBhYm91dCB0aGlzIHBhcnRpY3VsYXIgaXNzdWUuCgpPbiB0aGUg
-b3RoZXIgc2lkZSwgSSdtIG11Y2ggaW50ZXJlc3RlZCBpbiBrbm93aW5nIGlmIHlvdSBhcmUgT0sg
-d2l0aApicmVha2luZyB0aGUgd2F0Y2hkb2cgRFQgY29tcGF0aWJpbGl0eS4gSWYgeW91IE5BQ0sg
-dGhpcywgdGhlbiBJJ2xsCnN0YXJ0IHByZXBhcmluZyBhIGRpZmZlcmVudCB3YXRjaGRvZyBkcml2
-ZXIgZm9yIDM3MC9YUCwgc2luY2UgSSBkb24ndAp3YW50IHRvIGV4dGVuZCBhIGRyaXZlciB0aGF0
-IGlzIGEgYml0IGRpcnR5LgoKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxlY3Ryb25zCkVt
-YmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0cDovL2ZyZWUt
-ZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0Bs
-aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0
-cmVlLWRpc2N1c3MK
+On Tue, Jul 16, 2013 at 11:51:19AM +0200, Philipp Zabel wrote:
+> Looks good to me. I can squash it into the original patch and resend if
+> you like.
+
+Yes, please.  Thanks.
+
+Shawn
