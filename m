@@ -1,75 +1,63 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: imx-sgtl5000: fix error return code
- in imx_sgtl5000_probe()
-Date: Tue, 16 Jul 2013 14:51:49 +0100
-Message-ID: <20130716135149.GM22506@sirena.org.uk>
-References: <CAPgLHd-cXmWwMq8DMhXbOhykZvnMzxb4HHZ-5ayNnkPU1fqfQQ@mail.gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 00/10] Orion Watchdog fixes
+Date: Tue, 16 Jul 2013 11:04:36 -0300
+Message-ID: <20130716140435.GA23904@localhost>
+References: <1373931163-12670-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130716065952.GA25043@lunn.ch> <20130716092059.237ea729@skate>
+ <20130716073101.GB25043@lunn.ch> <20130716121432.GA2317@localhost>
+ <20130716134422.GE12062@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8641771946592445011=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAPgLHd-cXmWwMq8DMhXbOhykZvnMzxb4HHZ-5ayNnkPU1fqfQQ@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: fabio.estevam@freescale.com, alsa-devel@alsa-project.org, tiwai@suse.de, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, lgirdwood@gmail.com, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, wfp5p@virginia.edu, grant.likely@linaro.org, shawn.guo@linaro.org, LW@KARO-electronics.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130716134422.GE12062-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============8641771946592445011==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9ToWwKEyhugL+MAz"
-Content-Disposition: inline
-
-
---9ToWwKEyhugL+MAz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jul 16, 2013 at 08:05:07PM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->=20
-> Fix to return a negative error code from the error handling
-> case instead of 0, as done elsewhere in this function.
-
-Applied, thanks.
-
---9ToWwKEyhugL+MAz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR5U/yAAoJELSic+t+oim9YNYQAIh5smhf1bjLdc/sMFmic1jE
-YWbNcOC9ypSY+HDmQqm/nz0h2Mk/zjzGrZyDNCI0ce6Llv0SuTI8fCVg7IZauCWv
-y8+ect573u9Hs+lU5JtYi9RWEyl5KsS0cBEBeg6LiOR/eEBYB1ecvKnLS/ZTRWde
-6Qf8xC+B/Nu+/kyPU6vdxEG3IRsmq59pfBJQzDuJGrhoeYK04ibX+sKB0ORjWq2k
-rm7AX+uys9+/CUWmRWRTUoDtW7nyZUIbmil/GB3KmOEiJk0fe7aIOW7DHqETXOI+
-cbA/Vk61yW8dDYx1yURaiJ3W/jUZrvolaYfN3pae4j7qIa6W2R3uof2S8CEA40u+
-xykyMqIOq5THtdUSk6tnAtClYksECfWJws14xQ1iGGBjX+ZP6J1XGyNDTxJPoyzr
-cXFyB4Mcd/68W7C5dJlzKtvUScrFy+pTxRha3WtTPF6MDxNdgPUtAJcVjMm+4J+q
-jyKIzy6WXu8BY/gEXWcYfbaRtiPBCCZl7HCwp+dNQPhcMmYeA72nox+BArT2weXA
-c5NlNuSVRo0nREocLka50p0kbkCuMsR5EbA6czcSs0Ct3GQBuvTmyAV9YypKMLdf
-Dznesa7oVZ5hhb6iCICfZoir1Euvkdp/LGvX7tXrBJEH8bmiqIYPAqVpBkCg8pMO
-+DULGmMk8MS+Hcp+6H4X
-=JRGW
------END PGP SIGNATURE-----
-
---9ToWwKEyhugL+MAz--
-
---===============8641771946592445011==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8641771946592445011==--
+T24gVHVlLCBKdWwgMTYsIDIwMTMgYXQgMDk6NDQ6MjJBTSAtMDQwMCwgSmFzb24gQ29vcGVyIHdy
+b3RlOgo+IE9uIFR1ZSwgSnVsIDE2LCAyMDEzIGF0IDA5OjE0OjMzQU0gLTAzMDAsIEV6ZXF1aWVs
+IEdhcmNpYSB3cm90ZToKPiA+IE9uIHRoZSBvdGhlciBzaWRlLCBJJ20gbXVjaCBpbnRlcmVzdGVk
+IGluIGtub3dpbmcgaWYgeW91IGFyZSBPSyB3aXRoCj4gPiBicmVha2luZyB0aGUgd2F0Y2hkb2cg
+RFQgY29tcGF0aWJpbGl0eS4gSWYgeW91IE5BQ0sgdGhpcywgdGhlbiBJJ2xsCj4gPiBzdGFydCBw
+cmVwYXJpbmcgYSBkaWZmZXJlbnQgd2F0Y2hkb2cgZHJpdmVyIGZvciAzNzAvWFAsIHNpbmNlIEkg
+ZG9uJ3QKPiA+IHdhbnQgdG8gZXh0ZW5kIGEgZHJpdmVyIHRoYXQgaXMgYSBiaXQgZGlydHkuCj4g
+Cj4gQXBwYXJlbnRseSB0aGVyZSBpcyBzb21lIGFncmVlbWVudCB0aGF0IHRoZSBiaW5kaW5ncyBh
+cmUgc3RpbGwgaW4gZmx1eAo+IGFuZCB0aGF0IHRoZXkgbmVlZCB0byBiZSBmb3IgYSBiaXQgbG9u
+Z2VyIGluIG9yZGVyIHRvIGhhbW1lciBvdXQKPiBwcm9ibGVtcyBzdWNoIGFzIHRoaXMuCj4gCj4g
+QXJuZCBhbmQgT2xvZiBib3RoIG1lbnRpb25lZCB0aGF0IHNvbWV0aGluZyAoYSBkb2MsIGFuZCBl
+bWFpbD8pIGlzCj4gZm9ydGhjb21pbmcgYWJvdXQgbWFya2luZyBzb21lIGJpbmRpbmdzIGFzIHN0
+YWJsZS4gIFdoYXRldmVyIGZvcm0gdGhhdAo+IHRha2VzLCB0aGlzIG9uZSB3b3VsZG4ndCBnZXQg
+dGhlIHN0YWJsZSBtYXJraW5nIHlldC4gOy0pCj4gCgpZdXAsIHRoYXQncyBteSB1bmRlcnN0YW5k
+aW5nIGFzIHdlbGwuIEJ1dCBvbiB0aGUgb3RoZXIgc2lkZSwgSSBkb24ndAp3YW50IHRvIGJyZWFr
+IHBvc3NpYmxlIHVzZXJzIG91dCB0aGVyZS4KClNvLCBqdXN0IHRvIGNoZWNrLCB5b3Ugc2F5IGl0
+J3MgZWFybHkgZW5vdWdoIHRvIHNhZmVseSBkbyBzdWNoIGNoYW5nZT8KCkluIHRoYXQgY2FzZSwg
+SSdsbCBleHRlbmQgdGhpcyBwYXRjaHNldCB0byBpbmNsdWRlIEFybWFkYSAzNzAvWFAgc3VwcG9y
+dAphbmQgcG9zdCBpdCBhcyBzb29uIGFzIFNlYmFzdGlhbidzIGNsb2Nrc291cmNlIHN0dWZmIGdl
+dHMgaW4uCgo+IE9oLCBhbmQgb25lIG1vcmUgbml0LiAgVGhlIHdvcmsgJ2ZpeCcgdHJpZ2dlcnMg
+YSB3aG9sZSBidW5jaCBvZiAiZ2V0IG9uCj4gdGhpcyByaWdodCBhd2F5LCBkb2VzIGl0IG5lZWQg
+dG8gZ28gdG8gc3RhYmxlPyAgSGFzIGFueW9uZSBjb25maXJtZWQgaXQ/Cj4gV2hpY2ggY29tbWl0
+IGNhdXNlZCB0aGUgcmVncmVzc2lvbj8gZXRjLiIgIEFsdGhvdWdoIEkgaGF0ZSB0aGUgd29yZCwg
+SQo+IHRoaW5rICdyZWZhY3RvcmluZycgaXMgbXVjaCBtb3JlIGFwcHJvcHJpYXRlIGRlc2NyaXB0
+aW9uIGZvciB0aGlzIHNlcmllcy4KPiAKCk9oLCBnb29kIG9ic2VydmF0aW9uLiBJIHdyb3RlIHRo
+ZSBjb3ZlciBsZXR0ZXIgYXQgOCBQTSwgYWZ0ZXIgdGVuIGxvbmcKaG91cnMgKCopIG9mIGhhY2tp
+bmcgYW5kIHNtYXNoaW5nIHRoaXMgaW50byBzb21ldGhpbmcgZWFzeSB0byByZXZpZXcsCmFuZCB0
+aGF0J3MgdGhlIGJlc3QgdGl0bGUgSSBjb3VsZCBjb21lIHVwIHdpdGguIEknbGwgY2hhbmdlIGl0
+IG9uIHYyLgoKVGhhbmtzLAoKKCopIHllcywgSSBoYXZlIGFub3RoZXIgcGFpciBvZiBleWVzLCBp
+biBjYXNlIHRoZXNlIHdlYXIgb3V0LgotLSAKRXplcXVpZWwgR2FyY8OtYSwgRnJlZSBFbGVjdHJv
+bnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBFbmdpbmVlcmluZwpodHRwOi8v
+ZnJlZS1lbGVjdHJvbnMuY29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNj
+dXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2Rl
+dmljZXRyZWUtZGlzY3Vzcwo=
