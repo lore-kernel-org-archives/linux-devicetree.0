@@ -1,133 +1,84 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH v1 20/24] fs_enet: OF clock lookup (non-fatal),
- prepare and enable
-Date: Tue, 16 Jul 2013 08:05:55 +0200
-Message-ID: <1373954759-23947-1-git-send-email-gsi@denx.de>
-References: <1373914074-20889-1-git-send-email-gsi@denx.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Tue, 16 Jul 2013 14:51:33 +0800
+Message-ID: <20130716065130.GB30067@S2101-09.ap.freescale.net>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+ <20130716015038.GD28375@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1373914074-20889-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130716015038.GD28375-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-device tree based clock lookup, must prepare clocks before enabling
-them, unprepare after disable, error check in the clock setup, remove
-the pre-enable workaround in the MPC512x platform's clock driver
+On Tue, Jul 16, 2013 at 09:50:42AM +0800, Shawn Guo wrote:
+> Hi Philipp,
+> 
+> On Thu, May 30, 2013 at 11:09:00AM +0200, Philipp Zabel wrote:
+> > This driver implements a reset controller device that toggle a gpio
+> > connected to a reset pin of a peripheral IC. The delay between assertion
+> > and de-assertion of the reset signal can be configured via device tree.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> I see this patch is very useful, as GPIOs are widely used to reset
+> components/devices on board.  But I do not find the patch in v3.11-rc1.
+> What's your plan about it?
+> 
+> Also, I'm wondering if we should register the driver a little bit
+> early.  Please see the following patch.  If it makes sense to you,
+> I can send the patch to you, or you can just quash it into yours.
 
-this change implements non-fatal clock lookup since not all platforms
-provide device tree specs for clocks, but failure to enable a specified
-clock is considered fatal
+And here is another change request.
 
-Signed-off-by: Gerhard Sittig <gsi@denx.de>
+Shawn
+
+----8<---------------
+
+>From 822a0c4fb7c99b371844ba7e957affcaa8cb1cfe Mon Sep 17 00:00:00 2001
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Sun, 14 Jul 2013 20:28:05 +0800
+Subject: [PATCH] ENGR00269945: reset: handle cansleep case in gpio-reset
+
+Some gpio reset may be backed by a gpio that can sleep, e.g. pca953x
+gpio output.  For such gpio, gpio_set_value_cansleep() should be
+called.  Otherwise, the WARN_ON(chip->can_sleep) in gpiod_set_value()
+will be hit.  Add a gpio_cansleep() check to handle cansleep gpio.
+
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/powerpc/platforms/512x/clock-commonclk.c      |    1 -
- .../net/ethernet/freescale/fs_enet/fs_enet-main.c  |   27 +++++++++++++++++++-
- include/linux/fs_enet_pd.h                         |    3 +++
- 3 files changed, 29 insertions(+), 2 deletions(-)
+ drivers/reset/gpio-reset.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/512x/clock-commonclk.c b/arch/powerpc/platforms/512x/clock-commonclk.c
-index 29c51a5..31d0cf3 100644
---- a/arch/powerpc/platforms/512x/clock-commonclk.c
-+++ b/arch/powerpc/platforms/512x/clock-commonclk.c
-@@ -692,7 +692,6 @@ static void mpc512x_clk_setup_clock_tree(int busfreq)
- 	clk_prepare_enable(clks[MPC512x_CLK_LPC]);	/* boot media */
- 	/* some are not yet acquired by their respective drivers */
- 	clk_prepare_enable(clks[MPC512x_CLK_PSC3_MCLK]);/* serial console */
--	clk_prepare_enable(clks[MPC512x_CLK_FEC]);	/* network, NFS */
- 	/*
- 	 * some have their individual clock subtree with separate clock
- 	 * items and their individual enable counters, yet share a
-diff --git a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-index 8de53a1..df92e12 100644
---- a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-+++ b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-@@ -1020,6 +1020,21 @@ static int fs_enet_probe(struct platform_device *ofdev)
- 		fpi->cp_command = *data;
- 	}
+diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
+index 5d2515a..4f372f9 100644
+--- a/drivers/reset/gpio-reset.c
++++ b/drivers/reset/gpio-reset.c
+@@ -32,7 +32,10 @@ static void gpio_reset_set(struct reset_controller_dev *rcdev, int asserted)
+ 	if (drvdata->active_low)
+ 		value = !value;
  
-+	/* make clock lookup non-fatal (the driver is shared among platforms),
-+	 * but require enable to succeed when a clock was specified/found
-+	 */
-+	fpi->clk_per = clk_get(&ofdev->dev, "per");
-+	if (IS_ERR(fpi->clk_per))
-+		fpi->clk_per = NULL;
-+	if (fpi->clk_per) {
-+		int err;
-+		err = clk_prepare_enable(fpi->clk_per);
-+		if (err) {
-+			ret = err;
-+			goto out_clk_put;
-+		}
-+	}
-+
- 	fpi->rx_ring = 32;
- 	fpi->tx_ring = 32;
- 	fpi->rx_copybreak = 240;
-@@ -1028,7 +1043,7 @@ static int fs_enet_probe(struct platform_device *ofdev)
- 	fpi->phy_node = of_parse_phandle(ofdev->dev.of_node, "phy-handle", 0);
- 	if ((!fpi->phy_node) && (!of_get_property(ofdev->dev.of_node, "fixed-link",
- 						  NULL)))
--		goto out_free_fpi;
-+		goto out_clk_dis;
- 
- 	if (of_device_is_compatible(ofdev->dev.of_node, "fsl,mpc5125-fec")) {
- 		phy_connection_type = of_get_property(ofdev->dev.of_node,
-@@ -1108,6 +1123,12 @@ out_free_dev:
- 	free_netdev(ndev);
- out_put:
- 	of_node_put(fpi->phy_node);
-+out_clk_dis:
-+	if (fpi->clk_per)
-+		clk_disable_unprepare(fpi->clk_per);
-+out_clk_put:
-+	if (fpi->clk_per)
-+		clk_put(fpi->clk_per);
- out_free_fpi:
- 	kfree(fpi);
- 	return ret;
-@@ -1124,6 +1145,10 @@ static int fs_enet_remove(struct platform_device *ofdev)
- 	fep->ops->cleanup_data(ndev);
- 	dev_set_drvdata(fep->dev, NULL);
- 	of_node_put(fep->fpi->phy_node);
-+	if (fep->fpi->clk_per) {
-+		clk_disable_unprepare(fep->fpi->clk_per);
-+		clk_put(fep->fpi->clk_per);
-+	}
- 	free_netdev(ndev);
- 	return 0;
+-	gpio_set_value(drvdata->gpio, value);
++	if (gpio_cansleep(drvdata->gpio))
++		gpio_set_value_cansleep(drvdata->gpio, value);
++	else
++		gpio_set_value(drvdata->gpio, value);
  }
-diff --git a/include/linux/fs_enet_pd.h b/include/linux/fs_enet_pd.h
-index 51b7934..a978d0d 100644
---- a/include/linux/fs_enet_pd.h
-+++ b/include/linux/fs_enet_pd.h
-@@ -16,6 +16,7 @@
- #ifndef FS_ENET_PD_H
- #define FS_ENET_PD_H
  
-+#include <linux/clk.h>
- #include <linux/string.h>
- #include <linux/of_mdio.h>
- #include <asm/types.h>
-@@ -142,6 +143,8 @@ struct fs_platform_info {
- 
- 	int use_rmii;		/* use RMII mode 	       */
- 	int has_phy;            /* if the network is phy container as well...*/
-+
-+	struct clk *clk_per;	/* 'per' clock for register access */
- };
- struct fs_mii_fec_platform_info {
- 	u32 irq[32];
+ static int gpio_reset(struct reset_controller_dev *rcdev, unsigned long id)
 -- 
-1.7.10.4
+1.7.9.5
