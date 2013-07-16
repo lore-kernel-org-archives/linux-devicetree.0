@@ -1,86 +1,119 @@
-From: Alexander Popov <a13xp0p0v88@gmail.com>
-Subject: Re: [PATCH RFC v2 0/5] MPC512x DMA slave s/g support, OF DMA lookup
-Date: Tue, 16 Jul 2013 13:27:23 +0400
-Message-ID: <CAF0T0X4jtO6MStWEs3B=9pCv76LfAGyE7W3JL+Xg2T46gvuomQ@mail.gmail.com>
-References: <1373642781-32631-1-git-send-email-gsi@denx.de>
- <1373803321-11628-1-git-send-email-gsi@denx.de>
+From: Gerlando Falauto <gerlando.falauto@keymile.com>
+Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
+ translation
+Date: Tue, 16 Jul 2013 11:37:30 +0200
+Message-ID: <51E5145A.90404@keymile.com>
+References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1373803321-11628-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Gerhard Sittig <gsi@denx.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, devicetree-discuss@lists.ozlabs.org, Dan Williams <djbw@fb.com>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "Longchamp,
+ Valentin" <Valentin.Longchamp@keymile.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello everyone!
+Hi Ezequiel,
 
-Hello Gerhard!
-Thanks for your work.
+apologies in advance for commenting on an already-merged patch.
 
-2013/7/14 Gerhard Sittig <gsi@denx.de>:
-> known issues:
-> - currently encoded constraints do work for SD card and LPB test suite
->   (all known DMA clients ATM), but will need more tuning or support for
->   automatic adjustment for transfers of arbitrary length
+On 06/18/2013 05:31 PM, Ezequiel Garcia wrote:
+> Although the internal register window size is 1 MiB, the previous
+> ranges translation for the internal register space had a size of
+> 0x4000000. This was done to allow the crypto and nand node to access
+> the corresponding 'sram' and 'nand' decoding windows.
+>
+> In order to describe the hardware more accurately, we declare the
+> real 1 MiB internal register space in the ranges, and add a translation
+> entry for the nand node to access the 'nand' window.
+>
+> This commit will make future improvements on the MBus DT binding easier.
+>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+> Tested on Plathome Openblocks A6 board.
+>
+>   arch/arm/boot/dts/kirkwood.dtsi | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+> index 8a1e3bb..910fabc 100644
+> --- a/arch/arm/boot/dts/kirkwood.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood.dtsi
+> @@ -38,7 +38,8 @@
+>
+>   	ocp@f1000000 {
+>   		compatible = "simple-bus";
+> -		ranges = <0x00000000 0xf1000000 0x4000000
+> +		ranges = <0x00000000 0xf1000000 0x0100000
+> +		          0xf4000000 0xf4000000 0x0000400
+>   		          0xf5000000 0xf5000000 0x0000400>;
 
-NBYTES of data is read from / written to DMA client's port in one burst
-after DMA controller receives service request from that DMA client.
+Apart from "consistency" with the following range (0xf5000000) used by 
+the crypto node, is there any reason why you did not do something like 
+this instead (which Valentin suggested, but I will take the blame for):
 
-Different DMA clients want different NBYTES:
-SCLPC wants 4 and SD card wants 64, other clients might want something
-different.
-So having default case with magic number 64 is totally wrong.
+-		ranges = <0x00000000 0xf1000000 0x4000000
++		ranges = <0x00000000 0xf1000000 0x0100000
++		          0x03000000 0xf4000000 0x0000400
+   		          0xf5000000 0xf5000000 0x0000400>;
 
-What if we simply remove it from [PATCH RFC v2 2/5]:
+This would keep a consistent addressing within the child device bus, and 
+avoid a later incosistency between the "unit-address" and the first 
+"reg" address:
 
-               len = sg_dma_len(sg);
+>   		#address-cells = <1>;
+>   		#size-cells = <1>;
+> @@ -171,7 +172,7 @@
+ >   		nand@3000000 {
+		     ^^^^^^^
+ >   			#address-cells = <1>;
+ >   			#size-cells = <1>;
+ >   			cle = <0>;
+>   			ale = <1>;
+>   			bank-width = <1>;
+>   			compatible = "marvell,orion-nand";
+> -			reg = <0x3000000 0x400>;
+> +			reg = <0xf4000000 0x400>;
+				^^^^^^^^^
+>   			chip-delay = <25>;
+>   			/* set partition map and/or chip-delay in board dts */
+>   			clocks = <&gate_clk 7>;
+>
 
-               if (mchan->tcd_nunits)
-                       tcd->nbytes = mchan->tcd_nunits * 4;
--               else
--                       tcd->nbytes = 64;
+I guess the same could be done for the third range and for the crypto 
+node as well:
 
-               if (!IS_ALIGNED(len, tcd->nbytes))
-                       return NULL;
+-		ranges = <0x00000000 0xf1000000 0x4000000
+-  		          0xf5000000 0xf5000000 0x0000400>;
++		ranges = <0x00000000 0xf1000000 0x0100000
++		          0x03000000 0xf4000000 0x0000400
++		          0x04000000 0xf5000000 0x0000400>;
 
-and make SD card driver use fields
-src_addr_width, dst_addr_width and src_maxburst / dst_maxburst
-of dma_slave_config which is a part of standard API (dmaengine.h):
+		crypto@30000 {
+			compatible = "marvell,orion-crypto";
+			reg = <0x30000 0x10000>,
+-			      <0xf5000000 0x800>;
++			      <0x04000000 0x800>;
+			reg-names = "regs", "sram";
+			interrupts = <22>;
+			clocks = <&gate_clk 17>;
+			status = "okay";
+		};
 
-#define DEFAULT_WORDS_PER_TRANSFER    16
-...
+Does the above make sense?
+Or would that clash with your latest mvebu-mbus device tree binding?
+(Which, BTW, I have not quite understood yet).
 
-struct dma_slave_config dma_conf = {};
-...
-
-if (dma_conf.direction = DMA_MEM_TO_DEV) {
-        dma_conf.dst_maxburst = DEFAULT_WORDS_PER_TRANSFER;
-} else {
-        dma_conf.src_maxburst = DEFAULT_WORDS_PER_TRANSFER;
-}
-
-dma_conf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-dma_conf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-...
-
-if (dma_dev->device_control(chan, DMA_SLAVE_CONFIG,
-                (unsigned long)&dma_conf)) {
-        goto err_dma_prep;
-}
-
-This code for SD card driver would be very similar to the code from
-SCLPC driver.
-
-Best regards,
-Alexander
+Thank you,
+Gerlando
