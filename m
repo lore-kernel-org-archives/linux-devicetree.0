@@ -1,16 +1,17 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH 05/10] watchdog: orion: Add a memory resource for RSTOUT
  register
-Date: Tue, 16 Jul 2013 16:04:15 +0200
-Message-ID: <20130716140415.GB19448@lunn.ch>
+Date: Tue, 16 Jul 2013 11:18:51 -0300
+Message-ID: <20130716141850.GB23904@localhost>
 References: <1373931163-12670-1-git-send-email-ezequiel.garcia@free-electrons.com>
  <1373931163-12670-6-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130716140415.GB19448@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1373931163-12670-6-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20130716140415.GB19448-g2DYL2Zd6BY@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,143 +22,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2013 at 08:32:38PM -0300, Ezequiel Garcia wrote:
-> Instead of accessing the RSTOUT register directly, this commit
-> adds a platform memory resource to map this register into the driver.
-
-Hi Ezequiel
-
-Have you looked at:
-
-arch/arm/mach-mvebu/system-controller.c
-
-It is also using this register. Are we going to have a similar problem
-as the TIMER_CTRL register, which you refactered in an earlier patch?
-
-"marvell,orion-system-controller" is not actually used yet, but once
-kirkwood moves into mach-mvebu, it will start using it.
-
-Andrew
-
-
-> 
-> Note that by adding a required 2nd-cell for the reg property,
-> this change breaks the device-tree binding compatibility.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm/mach-kirkwood/include/mach/bridge-regs.h |  1 +
->  arch/arm/mach-orion5x/include/mach/bridge-regs.h  |  1 +
->  arch/arm/plat-orion/common.c                      | 10 ++++++----
->  drivers/watchdog/orion_wdt.c                      | 18 ++++++++++--------
->  4 files changed, 18 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm/mach-kirkwood/include/mach/bridge-regs.h b/arch/arm/mach-kirkwood/include/mach/bridge-regs.h
-> index c3f361d..dead75a 100644
-> --- a/arch/arm/mach-kirkwood/include/mach/bridge-regs.h
-> +++ b/arch/arm/mach-kirkwood/include/mach/bridge-regs.h
-> @@ -21,6 +21,7 @@
->  #define CPU_RESET		0x00000002
->  
->  #define RSTOUTn_MASK		(BRIDGE_VIRT_BASE + 0x0108)
-> +#define RSTOUT_PHYS_BASE	(BRIDGE_PHYS_BASE + 0x0108)
->  #define WDT_RESET_OUT_EN	0x00000002
->  #define SOFT_RESET_OUT_EN	0x00000004
->  
-> diff --git a/arch/arm/mach-orion5x/include/mach/bridge-regs.h b/arch/arm/mach-orion5x/include/mach/bridge-regs.h
-> index aa35de3..ccd91c9 100644
-> --- a/arch/arm/mach-orion5x/include/mach/bridge-regs.h
-> +++ b/arch/arm/mach-orion5x/include/mach/bridge-regs.h
-> @@ -18,6 +18,7 @@
->  #define CPU_CTRL		(ORION5X_BRIDGE_VIRT_BASE + 0x104)
->  
->  #define RSTOUTn_MASK		(ORION5X_BRIDGE_VIRT_BASE + 0x108)
-> +#define RSTOUT_PHYS_BASE	(ORION5X_BRIDGE_PHYS_BASE + 0x108)
->  #define WDT_RESET_OUT_EN	0x0002
->  
->  #define CPU_SOFT_RESET		(ORION5X_BRIDGE_VIRT_BASE + 0x10c)
-> diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
-> index 77fac6c..37924f8 100644
-> --- a/arch/arm/plat-orion/common.c
-> +++ b/arch/arm/plat-orion/common.c
-> @@ -594,14 +594,16 @@ void __init orion_spi_1_init(unsigned long mapbase)
->  /*****************************************************************************
->   * Watchdog
->   ****************************************************************************/
-> -static struct resource orion_wdt_resource =
-> -		DEFINE_RES_MEM(WDT_PHYS_BASE, 0x04);
-> +static struct resource orion_wdt_resource[] = {
-> +		DEFINE_RES_MEM(WDT_PHYS_BASE, 0x04),
-> +		DEFINE_RES_MEM(RSTOUT_PHYS_BASE, 0x04)
-> +};
->  
->  static struct platform_device orion_wdt_device = {
->  	.name		= "orion_wdt",
->  	.id		= -1,
-> -	.num_resources	= 1,
-> -	.resource	= &orion_wdt_resource,
-> +	.num_resources	= ARRAY_SIZE(orion_wdt_resource),
-> +	.resource	= orion_wdt_resource,
->  };
->  
->  void __init orion_wdt_init(void)
-> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-> index 01bcf53..3c9b3d2 100644
-> --- a/drivers/watchdog/orion_wdt.c
-> +++ b/drivers/watchdog/orion_wdt.c
-> @@ -43,6 +43,7 @@ static unsigned int wdt_max_duration;	/* (seconds) */
->  static struct clk *clk;
->  static unsigned int wdt_tclk;
->  static void __iomem *wdt_reg;
-> +static void __iomem *rstout_reg;
->  static DEFINE_SPINLOCK(wdt_lock);
->  
->  static int orion_wdt_ping(struct watchdog_device *wdt_dev)
-> @@ -74,9 +75,7 @@ static int orion_wdt_start(struct watchdog_device *wdt_dev)
->  	orion_timer_ctrl_clrset(0, WDT_EN);
->  
->  	/* Enable reset on watchdog */
-> -	reg = readl(RSTOUTn_MASK);
-> -	reg |= WDT_RESET_OUT_EN;
-> -	writel(reg, RSTOUTn_MASK);
-> +	writel(readl(rstout_reg) | WDT_RESET_OUT_EN, rstout_reg);
->  
->  	spin_unlock(&wdt_lock);
->  	return 0;
-> @@ -84,14 +83,10 @@ static int orion_wdt_start(struct watchdog_device *wdt_dev)
->  
->  static int orion_wdt_stop(struct watchdog_device *wdt_dev)
->  {
-> -	u32 reg;
-> -
->  	spin_lock(&wdt_lock);
->  
->  	/* Disable reset on watchdog */
-> -	reg = readl(RSTOUTn_MASK);
-> -	reg &= ~WDT_RESET_OUT_EN;
-> -	writel(reg, RSTOUTn_MASK);
-> +	writel(readl(rstout_reg) & ~WDT_RESET_OUT_EN, rstout_reg);
->  
->  	/* Disable watchdog timer */
->  	orion_timer_ctrl_clrset(WDT_EN, 0);
-> @@ -158,6 +153,13 @@ static int orion_wdt_probe(struct platform_device *pdev)
->  	if (!wdt_reg)
->  		return -ENOMEM;
->  
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (!res)
-> +		return -ENODEV;
-> +	rstout_reg = devm_ioremap(&pdev->dev, res->start, resource_size(res));
-> +	if (!rstout_reg)
-> +		return -ENOMEM;
-> +
->  	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
->  
->  	orion_wdt.timeout = wdt_max_duration;
-> -- 
-> 1.8.1.5
-> 
+QW5kcmV3LAoKT24gVHVlLCBKdWwgMTYsIDIwMTMgYXQgMDQ6MDQ6MTVQTSArMDIwMCwgQW5kcmV3
+IEx1bm4gd3JvdGU6Cj4gT24gTW9uLCBKdWwgMTUsIDIwMTMgYXQgMDg6MzI6MzhQTSAtMDMwMCwg
+RXplcXVpZWwgR2FyY2lhIHdyb3RlOgo+ID4gSW5zdGVhZCBvZiBhY2Nlc3NpbmcgdGhlIFJTVE9V
+VCByZWdpc3RlciBkaXJlY3RseSwgdGhpcyBjb21taXQKPiA+IGFkZHMgYSBwbGF0Zm9ybSBtZW1v
+cnkgcmVzb3VyY2UgdG8gbWFwIHRoaXMgcmVnaXN0ZXIgaW50byB0aGUgZHJpdmVyLgo+IAo+IAo+
+IEhhdmUgeW91IGxvb2tlZCBhdDoKPiAKPiBhcmNoL2FybS9tYWNoLW12ZWJ1L3N5c3RlbS1jb250
+cm9sbGVyLmMKPiAKCk1tbS4uLiBJIHNhdyB0aGUgdXNlIG9mIHRoZSBSU1RPVVQgcmVnaXN0ZXIg
+aW4ga2lya3dvb2RfcmVzdGFydCgpCmJ1dCB3YXNuJ3Qgc3VyZSB3aG8gc2hvdWxkIGJlIHRoZSBy
+ZWFsICdvd25lcicgb2YgdGhpcyByZWdpc3Rlci4KCj4gSXQgaXMgYWxzbyB1c2luZyB0aGlzIHJl
+Z2lzdGVyLiBBcmUgd2UgZ29pbmcgdG8gaGF2ZSBhIHNpbWlsYXIgcHJvYmxlbQo+IGFzIHRoZSBU
+SU1FUl9DVFJMIHJlZ2lzdGVyLCB3aGljaCB5b3UgcmVmYWN0ZXJlZCBpbiBhbiBlYXJsaWVyIHBh
+dGNoPwo+IAoKUHJvYmFibHkuCgo+ICJtYXJ2ZWxsLG9yaW9uLXN5c3RlbS1jb250cm9sbGVyIiBp
+cyBub3QgYWN0dWFsbHkgdXNlZCB5ZXQsIGJ1dCBvbmNlCj4ga2lya3dvb2QgbW92ZXMgaW50byBt
+YWNoLW12ZWJ1LCBpdCB3aWxsIHN0YXJ0IHVzaW5nIGl0Lgo+IAoKSSBndWVzcyBzby4gV2Ugc2hv
+dWxkIHRha2UgdGhhdCBpbnRvIGFjY291bnQgKm5vdyouIExldCBtZSB0aGluayBhYm91dAppdCBh
+bmQgc2VlIGlmIEkgY2FuIGhhdmUgc29tZXRoaW5nIHNhbmUgZm9yIHYyLgoKVGhhbmtzIQotLSAK
+RXplcXVpZWwgR2FyY8OtYSwgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBh
+bmQgQW5kcm9pZCBFbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3Vz
+cyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6
+Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
