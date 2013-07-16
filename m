@@ -1,189 +1,150 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH v1 24/24] net: can: mscan: remove MPC512x non-COMMON_CLK code
- path
-Date: Tue, 16 Jul 2013 10:45:40 +0200
-Message-ID: <1373964341-25228-4-git-send-email-gsi@denx.de>
-References: <1373914074-20889-1-git-send-email-gsi@denx.de>
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
+Date: Tue, 16 Jul 2013 10:47:56 +0200
+Message-ID: <20130716084755.GB10914@ab42.lan>
+References: <20130618092516.GC18663@ab42.lan>
+ <1371547751-13873-2-git-send-email-christian.ruppert@abilis.com>
+ <51C23222.2060906@wwwdotorg.org>
+ <20130626115051.GC7095@ab42.lan>
+ <51CB279A.1090404@wwwdotorg.org>
+ <20130705094859.GA27196@ab42.lan>
+ <51D71337.6030409@wwwdotorg.org>
+ <20130708130222.GA6402@ab42.lan>
+ <51DDB5B8.5060909@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1373914074-20889-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51DDB5B8.5060909@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-transition to the COMMON_CLK framework has completed for the MPC512x
-platform, remove the now obsolete code path of the mpc5xxx mscan
-driver which accessed clock control module registers directly
+On Wed, Jul 10, 2013 at 01:27:52PM -0600, Stephen Warren wrote:
+> On 07/08/2013 07:02 AM, Christian Ruppert wrote:
+> ...
+> > OK, a small drawing of our hardware should make this clear, let's t=
+ake
+> > an imaginary example of one port with 10 pins, one i2c interface, o=
+ne
+> > spi interface and one GPIO bank:
+> >=20
+> >               | mux N-1|
+> >               +........+
+> >               |        |  2
+> >               |        +--/-- i2c
+> >               |        |
+> >            10 |        |  4
+> >    Pins  --/--+ mux N  +--/-- spi
+> >               |        |
+> >               |        |  10
+> >               |        +--/-- GPIO
+> >               |        |
+> >               +........+
+> >               | mux N+1|
+> >
+> > This example shows the mux N inside the pin controller. It controls
+> > all pins associated to port N through a single register value M. Le=
+t's
+> > assume the pins are configured as follows in function of the regist=
+er
+> > value:
+> >=20
+> >  pin      M=3D0       M=3D1     M=3D2      M=3D3
+> >   0      GPIO0   SPI_MISO  GPIO0   SPI_MISO
+> >   1      GPIO1   SPI_MOSI  GPIO1   SPI_MOSI
+> >   2      GPIO2    SPI_CK   GPIO2    SPI_CK
+> >   3      GPIO3    SPI_CS   GPIO3    SPI_CS
+> >   4      GPIO4    GPIO4    GPIO4    GPIO4
+> >   5      GPIO5    GPIO5    GPIO5    GPIO5
+> >   6      GPIO6    GPIO6    GPIO6    GPIO6
+> >   7      GPIO7    GPIO7    GPIO7    GPIO7
+> >   8      GPIO8    GPIO8   I2C_SDA  I2C_SDA
+> >   9      GPIO9    GPIO9   I2C_SCL  I2C_SCL
+>=20
+>=20
+> In that scenario, in the language of Linux's pinctrl subsystem, what =
+you
+> have is:
+>=20
+> 10 pins, named 0..9
+> 1 pin group, named perhaps "mux N".
+> 4 different functions; values M=3D=3D0, 1, 2, 3.
+>=20
+> > We now have three pin groups defined, corresponding to the chip-sid=
+e
+> > ports of the pin controller:
+> > GPIO =3D {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+> > SPI  =3D {0, 1, 2, 3}
+> > I2C  =3D {8, 9}
+>=20
+> You would usually only define pin groups for the pin/ball/package sid=
+e
+> of the pinmux HW. IIRC, you're also wanting to define pin groups for =
+the
+> intra-chip side of the pinmux HW. However, you're not muxing function=
+s
+> onto those pingroups; they're just there to help with naming the
+> GPIO<->pinmux mapping. You only mux functions onto the pin/ball/packa=
+ge
+> side pins/pingroups.
 
-Signed-off-by: Gerhard Sittig <gsi@denx.de>
----
- drivers/net/can/mscan/mpc5xxx_can.c |  136 -----------------------------------
- 1 file changed, 136 deletions(-)
+Well, the GPIO<->pinmux mapping is not the only reason for defining
+these groups wrt. the chip-side of the pin controller. The other reason=
+s
+are:
+  - Make different interfaces on the same MUX orthogonal wrt. each
+    other, i.e. make it possible to request one independently of the
+    other. In the example above, SPI and I2C can be requested completel=
+y
+    independently and the pin controller driver decides which mode to
+    use.
+  - Make pin allocation more fine-grained (in the example above, only
+    pins 0-4 are "allocated" in case SPI is requested). This makes
+    GPIO<->interface pin conflict management more natural.
+    BTW: When managing conflicts between hardware interfaces and GPIOs,
+    this scheme actually leads to _less_ pin groups than if we defined
+    one group at the pin side and four different modes:
+    chip-side groups: GPIO, SPI, I2C
+                      =3D> 3 groups.
+    pin-side groups:  MUX_N, GPIOS_M0, GPIOS_M1, GPIOS_M2, GPIOS_M3
+                      in our special case MUX_N and GPIOS_M0 are the
+                      same.
+                      =3D> 4 groups (or 5 in the general case).
+    It is true that GPIO_Mx don't need to be named but they need to be
+    defined inside the driver nevertheless.
 
-diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/mpc5xxx_can.c
-index dd26ab6..cf5e4cfc 100644
---- a/drivers/net/can/mscan/mpc5xxx_can.c
-+++ b/drivers/net/can/mscan/mpc5xxx_can.c
-@@ -108,9 +108,6 @@ static u32 mpc52xx_can_get_clock(struct platform_device *ofdev,
- #endif /* CONFIG_PPC_MPC52xx */
- 
- #ifdef CONFIG_PPC_MPC512x
--
--#if IS_ENABLED(CONFIG_COMMON_CLK)
--
- static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
- 				 const char *clock_source, int *mscan_clksrc)
- {
-@@ -244,139 +241,6 @@ err_notavail:
- 	dev_err(&ofdev->dev, "cannot acquire or setup clock source\n");
- 	return 0;
- }
--#else	/* COMMON_CLK */
--struct mpc512x_clockctl {
--	u32 spmr;		/* System PLL Mode Reg */
--	u32 sccr[2];		/* System Clk Ctrl Reg 1 & 2 */
--	u32 scfr1;		/* System Clk Freq Reg 1 */
--	u32 scfr2;		/* System Clk Freq Reg 2 */
--	u32 reserved;
--	u32 bcr;		/* Bread Crumb Reg */
--	u32 pccr[12];		/* PSC Clk Ctrl Reg 0-11 */
--	u32 spccr;		/* SPDIF Clk Ctrl Reg */
--	u32 cccr;		/* CFM Clk Ctrl Reg */
--	u32 dccr;		/* DIU Clk Cnfg Reg */
--	u32 mccr[4];		/* MSCAN Clk Ctrl Reg 1-3 */
--};
--
--static struct of_device_id mpc512x_clock_ids[] = {
--	{ .compatible = "fsl,mpc5121-clock", },
--	{}
--};
--
--static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
--				 const char *clock_name, int *mscan_clksrc)
--{
--	struct mpc512x_clockctl __iomem *clockctl;
--	struct device_node *np_clock;
--	struct clk *sys_clk, *ref_clk;
--	int plen, clockidx, clocksrc = -1;
--	u32 sys_freq, val, clockdiv = 1, freq = 0;
--	const u32 *pval;
--
--	np_clock = of_find_matching_node(NULL, mpc512x_clock_ids);
--	if (!np_clock) {
--		dev_err(&ofdev->dev, "couldn't find clock node\n");
--		return 0;
--	}
--	clockctl = of_iomap(np_clock, 0);
--	if (!clockctl) {
--		dev_err(&ofdev->dev, "couldn't map clock registers\n");
--		goto exit_put;
--	}
--
--	/* Determine the MSCAN device index from the peripheral's
--	 * physical address. Register address offsets against the
--	 * IMMR base are:  0x1300, 0x1380, 0x2300, 0x2380
--	 */
--	pval = of_get_property(ofdev->dev.of_node, "reg", &plen);
--	BUG_ON(!pval || plen < sizeof(*pval));
--	clockidx = (*pval & 0x80) ? 1 : 0;
--	if (*pval & 0x2000)
--		clockidx += 2;
--
--	/*
--	 * Clock source and divider selection: 3 different clock sources
--	 * can be selected: "ip", "ref" or "sys". For the latter two, a
--	 * clock divider can be defined as well. If the clock source is
--	 * not specified by the device tree, we first try to find an
--	 * optimal CAN source clock based on the system clock. If that
--	 * is not posslible, the reference clock will be used.
--	 */
--	if (clock_name && !strcmp(clock_name, "ip")) {
--		*mscan_clksrc = MSCAN_CLKSRC_IPS;
--		freq = mpc5xxx_get_bus_frequency(ofdev->dev.of_node);
--	} else {
--		*mscan_clksrc = MSCAN_CLKSRC_BUS;
--
--		pval = of_get_property(ofdev->dev.of_node,
--				       "fsl,mscan-clock-divider", &plen);
--		if (pval && plen == sizeof(*pval))
--			clockdiv = *pval;
--		if (!clockdiv)
--			clockdiv = 1;
--
--		if (!clock_name || !strcmp(clock_name, "sys")) {
--			sys_clk = clk_get(&ofdev->dev, "sys_clk");
--			if (IS_ERR(sys_clk)) {
--				dev_err(&ofdev->dev, "couldn't get sys_clk\n");
--				goto exit_unmap;
--			}
--			/* Get and round up/down sys clock rate */
--			sys_freq = 1000000 *
--				((clk_get_rate(sys_clk) + 499999) / 1000000);
--
--			if (!clock_name) {
--				/* A multiple of 16 MHz would be optimal */
--				if ((sys_freq % 16000000) == 0) {
--					clocksrc = 0;
--					clockdiv = sys_freq / 16000000;
--					freq = sys_freq / clockdiv;
--				}
--			} else {
--				clocksrc = 0;
--				freq = sys_freq / clockdiv;
--			}
--		}
--
--		if (clocksrc < 0) {
--			ref_clk = clk_get(&ofdev->dev, "ref_clk");
--			if (IS_ERR(ref_clk)) {
--				dev_err(&ofdev->dev, "couldn't get ref_clk\n");
--				goto exit_unmap;
--			}
--			clocksrc = 1;
--			freq = clk_get_rate(ref_clk) / clockdiv;
--		}
--	}
--
--	/* Disable clock */
--	out_be32(&clockctl->mccr[clockidx], 0x0);
--	if (clocksrc >= 0) {
--		/* Set source and divider */
--		val = (clocksrc << 14) | ((clockdiv - 1) << 17);
--		out_be32(&clockctl->mccr[clockidx], val);
--		/* Enable clock */
--		out_be32(&clockctl->mccr[clockidx], val | 0x10000);
--	}
--
--	/* Enable MSCAN clock domain */
--	val = in_be32(&clockctl->sccr[1]);
--	if (!(val & (1 << 25)))
--		out_be32(&clockctl->sccr[1], val | (1 << 25));
--
--	dev_dbg(&ofdev->dev, "using '%s' with frequency divider %d\n",
--		*mscan_clksrc == MSCAN_CLKSRC_IPS ? "ips_clk" :
--		clocksrc == 1 ? "ref_clk" : "sys_clk", clockdiv);
--
--exit_unmap:
--	iounmap(clockctl);
--exit_put:
--	of_node_put(np_clock);
--	return freq;
--}
--#endif	/* COMMON_CLK */
--
- #else /* !CONFIG_PPC_MPC512x */
- static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
- 				 const char *clock_name, int *mscan_clksrc)
--- 
-1.7.10.4
+> > abilis,pingrp now specifies one of the three pin groups. Note that =
+I2C
+> >        and SPI can be requested independently in a completely ortho=
+gonal
+> >        manner: The information if I2C is reqired or not is confined=
+ to
+> >        the I2C request and does not leak into the SPI request as wo=
+uld
+> >        be the case if we configured the entire port at the same tim=
+e.
+>=20
+> The pingrp should represent the pin/ball/package side pins/groups. In
+> this case, it should specify "N".
+>=20
+> > abilis,ioport specifies N.
+>=20
+> That is replaced be pingrp.
+>=20
+> > abilis,ioconf specifies M.
+>=20
+> That'd be better named "function" or something like that, in order to
+> indicate that it specifies which function is mux'd onto the specified
+> pin(s)/pingroup(s).
+
+--=20
+  Christian Ruppert              ,          <christian.ruppert@abilis.c=
+om>
+                                /|
+  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
+leuri
+                             _// | bilis Systems   CH-1228 Plan-les-Oua=
+tes
