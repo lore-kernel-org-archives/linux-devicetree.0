@@ -1,25 +1,49 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH] ASoC: imx-sgtl5000: fix error return code in
- imx_sgtl5000_probe()
-Date: Tue, 16 Jul 2013 20:27:57 +0800
-Message-ID: <20130716122755.GL28375@S2101-09.ap.freescale.net>
-References: <CAPgLHd-cXmWwMq8DMhXbOhykZvnMzxb4HHZ-5ayNnkPU1fqfQQ@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 4/4] ARM: OMAP2+: Provide alias to USB PHY clock
+Date: Tue, 16 Jul 2013 05:32:56 -0700
+Message-ID: <20130716123256.GY7656@atomide.com>
+References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
+ <1371571487-14389-5-git-send-email-rogerq@ti.com>
+ <51E40199.9070906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPgLHd-cXmWwMq8DMhXbOhykZvnMzxb4HHZ-5ayNnkPU1fqfQQ@mail.gmail.com>
+In-Reply-To: <51E40199.9070906@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, rob.herring@calxeda.com, fabio.estevam@freescale.com, wfp5p@virginia.edu, LW@KARO-electronics.de, yongjun_wei@trendmicro.com.cn, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: benoit.cousson@linaro.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2013 at 08:05:07PM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+* Roger Quadros <rogerq@ti.com> [130715 07:11]:
+> Hi Tony,
 > 
-> Fix to return a negative error code from the error handling
-> case instead of 0, as done elsewhere in this function.
+> On 06/18/2013 07:04 PM, Roger Quadros wrote:
+> > Till the OMAP clocks are correctly defined in device tree, use
+> > this temporary hack to provide clock alias to the USB PHY clocks.
+> > 
+> > Without this, USB Host & Ethernet will not be functional with
+> > device tree boots on Panda and uEVM.
 > 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> Looks like this one got missed out.
+> 
+> USB host no longer works on Panda with DT boot.
+> Could you please queue this for next 3.11-rc? Thanks.
 
-Acked-by: Shawn Guo <shawn.guo@linaro.org>
+OK thanks for checking, applying into omap-for-v3.11/fixes.
+
+Looks like I also have some pending the .dts changes in
+omap-for-v3.11/dt branch:
+
+4cf2198b1e3cee47a1cccbb500b67782c36615d5 ARM: dts: omap3-beagle-xm: Add USB host supprot for Rev. Ax/Bx
+9bc44515819a00c0ffaf751ad497ddf275089ede ARM: dts: omap3-beagle-xm: Add USB Host support
+fd65d7df4598c1d2ad27d664c719611a1a070edc ARM: dts: omap3-beagle: Make USB host pin naming consistent
+39ea891d9da6ae1824bc9f689db3f306f5ce0724 ARM: dts: omap4-panda: Add USB Host support
+
+Those should get merged as fixes, right? Can you please
+check and see if they're still OK or if we also need
+something else?
+
+Regards,
+
+Tony
