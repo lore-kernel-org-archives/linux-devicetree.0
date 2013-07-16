@@ -1,150 +1,86 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
-Date: Tue, 16 Jul 2013 10:47:56 +0200
-Message-ID: <20130716084755.GB10914@ab42.lan>
-References: <20130618092516.GC18663@ab42.lan>
- <1371547751-13873-2-git-send-email-christian.ruppert@abilis.com>
- <51C23222.2060906@wwwdotorg.org>
- <20130626115051.GC7095@ab42.lan>
- <51CB279A.1090404@wwwdotorg.org>
- <20130705094859.GA27196@ab42.lan>
- <51D71337.6030409@wwwdotorg.org>
- <20130708130222.GA6402@ab42.lan>
- <51DDB5B8.5060909@wwwdotorg.org>
+From: Alexander Popov <a13xp0p0v88@gmail.com>
+Subject: Re: [PATCH RFC v2 0/5] MPC512x DMA slave s/g support, OF DMA lookup
+Date: Tue, 16 Jul 2013 13:27:23 +0400
+Message-ID: <CAF0T0X4jtO6MStWEs3B=9pCv76LfAGyE7W3JL+Xg2T46gvuomQ@mail.gmail.com>
+References: <1373642781-32631-1-git-send-email-gsi@denx.de>
+ <1373803321-11628-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51DDB5B8.5060909@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1373803321-11628-1-git-send-email-gsi@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Gerhard Sittig <gsi@denx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, devicetree-discuss@lists.ozlabs.org, Dan Williams <djbw@fb.com>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 10, 2013 at 01:27:52PM -0600, Stephen Warren wrote:
-> On 07/08/2013 07:02 AM, Christian Ruppert wrote:
-> ...
-> > OK, a small drawing of our hardware should make this clear, let's t=
-ake
-> > an imaginary example of one port with 10 pins, one i2c interface, o=
-ne
-> > spi interface and one GPIO bank:
-> >=20
-> >               | mux N-1|
-> >               +........+
-> >               |        |  2
-> >               |        +--/-- i2c
-> >               |        |
-> >            10 |        |  4
-> >    Pins  --/--+ mux N  +--/-- spi
-> >               |        |
-> >               |        |  10
-> >               |        +--/-- GPIO
-> >               |        |
-> >               +........+
-> >               | mux N+1|
-> >
-> > This example shows the mux N inside the pin controller. It controls
-> > all pins associated to port N through a single register value M. Le=
-t's
-> > assume the pins are configured as follows in function of the regist=
-er
-> > value:
-> >=20
-> >  pin      M=3D0       M=3D1     M=3D2      M=3D3
-> >   0      GPIO0   SPI_MISO  GPIO0   SPI_MISO
-> >   1      GPIO1   SPI_MOSI  GPIO1   SPI_MOSI
-> >   2      GPIO2    SPI_CK   GPIO2    SPI_CK
-> >   3      GPIO3    SPI_CS   GPIO3    SPI_CS
-> >   4      GPIO4    GPIO4    GPIO4    GPIO4
-> >   5      GPIO5    GPIO5    GPIO5    GPIO5
-> >   6      GPIO6    GPIO6    GPIO6    GPIO6
-> >   7      GPIO7    GPIO7    GPIO7    GPIO7
-> >   8      GPIO8    GPIO8   I2C_SDA  I2C_SDA
-> >   9      GPIO9    GPIO9   I2C_SCL  I2C_SCL
->=20
->=20
-> In that scenario, in the language of Linux's pinctrl subsystem, what =
-you
-> have is:
->=20
-> 10 pins, named 0..9
-> 1 pin group, named perhaps "mux N".
-> 4 different functions; values M=3D=3D0, 1, 2, 3.
->=20
-> > We now have three pin groups defined, corresponding to the chip-sid=
-e
-> > ports of the pin controller:
-> > GPIO =3D {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-> > SPI  =3D {0, 1, 2, 3}
-> > I2C  =3D {8, 9}
->=20
-> You would usually only define pin groups for the pin/ball/package sid=
-e
-> of the pinmux HW. IIRC, you're also wanting to define pin groups for =
-the
-> intra-chip side of the pinmux HW. However, you're not muxing function=
-s
-> onto those pingroups; they're just there to help with naming the
-> GPIO<->pinmux mapping. You only mux functions onto the pin/ball/packa=
-ge
-> side pins/pingroups.
+Hello everyone!
 
-Well, the GPIO<->pinmux mapping is not the only reason for defining
-these groups wrt. the chip-side of the pin controller. The other reason=
-s
-are:
-  - Make different interfaces on the same MUX orthogonal wrt. each
-    other, i.e. make it possible to request one independently of the
-    other. In the example above, SPI and I2C can be requested completel=
-y
-    independently and the pin controller driver decides which mode to
-    use.
-  - Make pin allocation more fine-grained (in the example above, only
-    pins 0-4 are "allocated" in case SPI is requested). This makes
-    GPIO<->interface pin conflict management more natural.
-    BTW: When managing conflicts between hardware interfaces and GPIOs,
-    this scheme actually leads to _less_ pin groups than if we defined
-    one group at the pin side and four different modes:
-    chip-side groups: GPIO, SPI, I2C
-                      =3D> 3 groups.
-    pin-side groups:  MUX_N, GPIOS_M0, GPIOS_M1, GPIOS_M2, GPIOS_M3
-                      in our special case MUX_N and GPIOS_M0 are the
-                      same.
-                      =3D> 4 groups (or 5 in the general case).
-    It is true that GPIO_Mx don't need to be named but they need to be
-    defined inside the driver nevertheless.
+Hello Gerhard!
+Thanks for your work.
 
-> > abilis,pingrp now specifies one of the three pin groups. Note that =
-I2C
-> >        and SPI can be requested independently in a completely ortho=
-gonal
-> >        manner: The information if I2C is reqired or not is confined=
- to
-> >        the I2C request and does not leak into the SPI request as wo=
-uld
-> >        be the case if we configured the entire port at the same tim=
-e.
->=20
-> The pingrp should represent the pin/ball/package side pins/groups. In
-> this case, it should specify "N".
->=20
-> > abilis,ioport specifies N.
->=20
-> That is replaced be pingrp.
->=20
-> > abilis,ioconf specifies M.
->=20
-> That'd be better named "function" or something like that, in order to
-> indicate that it specifies which function is mux'd onto the specified
-> pin(s)/pingroup(s).
+2013/7/14 Gerhard Sittig <gsi@denx.de>:
+> known issues:
+> - currently encoded constraints do work for SD card and LPB test suite
+>   (all known DMA clients ATM), but will need more tuning or support for
+>   automatic adjustment for transfers of arbitrary length
 
---=20
-  Christian Ruppert              ,          <christian.ruppert@abilis.c=
-om>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
-leuri
-                             _// | bilis Systems   CH-1228 Plan-les-Oua=
-tes
+NBYTES of data is read from / written to DMA client's port in one burst
+after DMA controller receives service request from that DMA client.
+
+Different DMA clients want different NBYTES:
+SCLPC wants 4 and SD card wants 64, other clients might want something
+different.
+So having default case with magic number 64 is totally wrong.
+
+What if we simply remove it from [PATCH RFC v2 2/5]:
+
+               len = sg_dma_len(sg);
+
+               if (mchan->tcd_nunits)
+                       tcd->nbytes = mchan->tcd_nunits * 4;
+-               else
+-                       tcd->nbytes = 64;
+
+               if (!IS_ALIGNED(len, tcd->nbytes))
+                       return NULL;
+
+and make SD card driver use fields
+src_addr_width, dst_addr_width and src_maxburst / dst_maxburst
+of dma_slave_config which is a part of standard API (dmaengine.h):
+
+#define DEFAULT_WORDS_PER_TRANSFER    16
+...
+
+struct dma_slave_config dma_conf = {};
+...
+
+if (dma_conf.direction = DMA_MEM_TO_DEV) {
+        dma_conf.dst_maxburst = DEFAULT_WORDS_PER_TRANSFER;
+} else {
+        dma_conf.src_maxburst = DEFAULT_WORDS_PER_TRANSFER;
+}
+
+dma_conf.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+dma_conf.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+...
+
+if (dma_dev->device_control(chan, DMA_SLAVE_CONFIG,
+                (unsigned long)&dma_conf)) {
+        goto err_dma_prep;
+}
+
+This code for SD card driver would be very similar to the code from
+SCLPC driver.
+
+Best regards,
+Alexander
