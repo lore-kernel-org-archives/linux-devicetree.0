@@ -1,81 +1,130 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH RFC v2 2/5] dma: mpc512x: add support for peripheral
- transfers
-Date: Tue, 16 Jul 2013 12:37:33 +0200
-Message-ID: <51E5226D.9050100@metafoo.de>
-References: <1373642781-32631-1-git-send-email-gsi@denx.de>
- <1373803321-11628-1-git-send-email-gsi@denx.de>
- <1373803321-11628-3-git-send-email-gsi@denx.de>
+From: Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [RFC PATCH v4 03/18] Documentation: devicetree: arm: cpus/cpu
+ nodes bindings updates
+Date: Tue, 16 Jul 2013 12:25:26 +0100
+Message-ID: <20130716112520.GA3428@localhost.localdomain>
+References: <1368804061-4421-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1368804061-4421-4-git-send-email-lorenzo.pieralisi@arm.com>
+ <CAL_JsqLANi5UoVyRMsa6XoQ+_KnmTQDfTz++shEh-dZ3FQGZaQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1373803321-11628-3-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Gerhard Sittig <gsi@denx.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, devicetree-discuss@lists.ozlabs.org, Alexander Popov <a13xp0p0v88@gmail.com>, Dan Williams <djbw@fb.com>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLANi5UoVyRMsa6XoQ+_KnmTQDfTz++shEh-dZ3FQGZaQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, Grant Likely <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Sekhar Nori <nsekhar@ti.com>, devicetree-discuss@l
 List-Id: devicetree@vger.kernel.org
 
-On 07/14/2013 02:01 PM, Gerhard Sittig wrote:
-> From: Alexander Popov <a13xp0p0v88@gmail.com>
+On Fri, Jul 12, 2013 at 09:47:17AM -0500, Rob Herring wrote:
+> On Fri, May 17, 2013 at 10:20 AM, Lorenzo Pieralisi
+> <lorenzo.pieralisi@arm.com> wrote:
+> > In order to extend the current cpu nodes bindings to newer CPUs
+> > inclusive of AArch64 and to update support for older ARM CPUs this
+> > patch updates device tree documentation for the cpu nodes bindings.
 > 
-> introduce support for slave s/g transfer preparation and the associated
-> device control callback in the MPC512x DMA controller driver, which adds
-> support for data transfers between memory and peripheral I/O to the
-> previously supported mem-to-mem transfers
+> Sorry for the long delay on this, but I'm still not happy with the binding here.
 > 
-> refuse to prepare chunked transfers (transfers with more than one part)
-> as long as proper support for scatter/gather is lacking
+> > Main changes:
+> >     - adds 64-bit bindings
+> >     - define usage of #address-cells
+> >     - define 32/64 dts compatibility settings
+> >     - defines behaviour on pre and post v7 uniprocessor systems
+> >     - adds ARM 11MPcore specific reg property definition
+> >
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/cpus.txt | 459 ++++++++++++++++++++++---
+> >  1 file changed, 412 insertions(+), 47 deletions(-)
 > 
-> keep MPC8308 operational by always starting transfers from software,
-> this SoC appears to not have request lines for flow control when
-> peripherals are involved in transfers
-
-I had a look at the current driver and it seems that any channel can be used
-for memcpy operation not only the MDDRC channel. Since the dmaengine API
-will just pick one of the currently free channels when performing a memcpy
-operation I think this patch breaks memcpy operations. You probably need to
-register two dma controllers, one for memcpy operations one for slave
-operations, that way you can ensure that only the MDDRC channel is used for
-memcpy operations.
-
+> [snip]
 > 
-> [ introduction of slave s/g preparation and device control ]
-> Signed-off-by: Alexander Popov <a13xp0p0v88@gmail.com>
-> [ execute() start condition, mpc8308 compat, terminate all, s/g length check, reworded commit msg ]
-> Signed-off-by: Gerhard Sittig <gsi@denx.de>
-> ---
-[...]
-> +
-> +static int mpc_dma_device_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
-> +				  unsigned long arg)
-> +{
-> +	struct mpc_dma_chan *mchan;
-> +	struct mpc_dma *mdma;
-> +	struct dma_slave_config *cfg;
-> +
-> +	mchan = dma_chan_to_mpc_dma_chan(chan);
-> +	switch (cmd) {
-> +	case DMA_TERMINATE_ALL:
-> +		/* disable channel requests */
-> +		mdma = dma_chan_to_mpc_dma(chan);
-> +		out_8(&mdma->regs->dmacerq, chan->chan_id);
-> +		list_splice_tail_init(&mchan->prepared, &mchan->free);
-> +		list_splice_tail_init(&mchan->queued, &mchan->free);
-> +		list_splice_tail_init(&mchan->active, &mchan->free);
+> > +                       # On ARM v8 64-bit systems, where the reg property
+> > +                         size can be 1 or 2 cells (as defined by cpus node's
+> > +                         #address-cells property), this property is
+> > +                         required and matches:
+> > +
+> > +                         - On systems running the OS in AArch32:
+> 
+> The DTS cannot change based on 32-bit or 64-bit OS.
+> 
+> > +
+> > +                           * If the cpus node's #address-cells value is 2:
+> > +
+> > +                             The first reg cell must be set to 0.
+> > +
+> > +                             The second reg cell bits [23:0] must be set to
+> > +                             bits [23:0] of MPIDR_EL1.
+> > +
+> > +                             All other bits in the reg cells must be set to 0.
+> > +
+> > +                           * If the cpus node's #address-cells value is 1:
+> > +
+> > +                             Bits [23:0] in the reg cell must be set to
+> > +                             bits [23:0] in MPIDR_EL1.
+> > +
+> > +                             All other bits in the reg cell must be 0.
+> > +
+> > +                         - On systems running the OS in AArch64:
+> > +
+> > +                           * If the cpus node's #address-cells value is 2:
+> > +
+> > +                             The first reg cell bits [7:0] must be set to
+> > +                             bits [39:32] of MPIDR_EL1.
+> > +
+> > +                             The second reg cell bits [23:0] must be set to
+> > +                             bits [23:0] of MPIDR_EL1.
+> > +
+> > +                             All other bits in the reg cells must be set to 0.
+> > +
+> > +                           * If the cpus node's #address-cells value is 1:
+> > +
+> > +                             MPIDR_EL1[63:32] is 0 on all processors in the
+> > +                             system.
+> 
+> Your logic is backwards here. If the MPIDR_EL1[63:32] is 0, then
+> #address-cells can be 1. You could say the upper bits are ignored and
+> treated as 0. However, you should simplify all this and just mandate
+> that #address-cells must be 2 for ARMv8 or more generally must match
+> the size of the MPIDR. If we want to boot a 32-bit kernel, then the
+> kernel will have to adapt to support this.
 
-This probably need locking.
+I'd support this, opting for a clean split.
 
-> +		return 0;
-[...]
-> +}
-> +
+Strictly speaking, it should be this:
+
+AArch64-capable hardware: #address-cells = 2
+non-AArch64-capable hardware: #address-cells = 1
+
+The only time it is valid to have #address-cells = 1 on AArch64-capable
+hardware is in an AArch32 virtual machine (in which case, the DT anyway
+describes the VM and not the real hardware).
+
+
+However, due to the awkwardness of defining precisely what "AArch64-
+capable hardware" means in a world containing firmware and hypervisors,
+it might be better (if slightly less correct) to go with:
+
+v8 hardware: #address-cells must be 2
+<=v7 hardware: #address-cells must be 1
+
+
+If the firmware boots an AArch32 payload natively on AArch64-capable
+v8 hardware, it's the firmware's job to ensure that non-addressable
+CPUs are properly quiesced and shut down, otherwise the setup is
+pretty broken -- DT can't solve that one, nor can Linux, so we shouldn't
+try.  Linux just needs to discard the non-addressable CPUs and maybe
+print out a warning.
+
+
+Cheers
+---Dave
