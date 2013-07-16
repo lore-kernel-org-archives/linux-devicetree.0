@@ -1,50 +1,75 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
-Date: Mon, 15 Jul 2013 21:39:31 -0600
-Message-ID: <51E4C073.4020407@wwwdotorg.org>
-References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <2172485.AZTjvkLGcM@avalon> <51E015E1.2090906@wwwdotorg.org> <2883016.87pKJk9n0R@avalon>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Mon, 15 Jul 2013 21:35:52 -0600
+Message-ID: <51E4BF98.8030604@wwwdotorg.org>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+ <20130716015038.GD28375@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <2883016.87pKJk9n0R@avalon>
-Sender: linux-omap-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-pwm@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-omap@vger.kernel.org, Philip Avinash <avinashphilip@ti.com>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <linux-arm@overkiz.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130716015038.GD28375-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2013 07:10 PM, Laurent Pinchart wrote:
-> On Friday 12 July 2013 08:42:41 Stephen Warren wrote:
-...
->> I think the values for any common system-wide flags should be defined
->> once in some system-wide place, and the values for any HW-specific
->> values should be defined only in the documentation for that specific HW.
->> You could try and avoid conflicts by either:
->>
->> a) Allocating system-wide flags from bit 0 up, and HW-specific flags
->> from bit 31 down.
->>
->> or:
->>
->> b) Using 1 cell for standard flags, and a separate cell for any
->> HW-specific flags. Drivers can quite easily adapt to adding extra cells
->> to #pwm-cells, thus making adding a HW-specific cell later
->> backwards-compatible.
+On 07/15/2013 07:50 PM, Shawn Guo wrote:
+> Hi Philipp,
 > 
-> I wasn't referring to HW-specific flags, but rather to system-wide flags that 
-> might not be supported by all drivers. If we later add new system-wide flags I 
-> think the individual DT bindings should explicitly document which flags they 
-> support.
+> On Thu, May 30, 2013 at 11:09:00AM +0200, Philipp Zabel wrote:
+>> This driver implements a reset controller device that toggle a gpio
+>> connected to a reset pin of a peripheral IC. The delay between assertion
+>> and de-assertion of the reset signal can be configured via device tree.
+>>
+>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> I see this patch is very useful, as GPIOs are widely used to reset
+> components/devices on board.  But I do not find the patch in v3.11-rc1.
+> What's your plan about it?
+> 
+> Also, I'm wondering if we should register the driver a little bit
+> early.  Please see the following patch.  If it makes sense to you,
+> I can send the patch to you, or you can just quash it into yours.
+> 
+> Shawn
+> 
+> ---8<--------
+> 
+> From 2f8ce9e5d6525b98f3828b707458e83fabb39d50 Mon Sep 17 00:00:00 2001
+> From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Date: Sun, 14 Jul 2013 20:41:00 +0800
+> Subject: [PATCH] ENGR00269945: reset: register gpio-reset driver in
+>  arch_initcall
+> 
+> It's a little bit late to register gpio-reset driver at module_init
+> time, because gpio-reset provides reset control via gpio for other
+> devices which are mostly probed at module_init time too.  And it
+> becomes even worse, when the gpio comes from IO expander on I2C bus,
+> e.g. pca953x.  In that case, gpio-reset needs to be ready before I2C
+> bus driver which is generally ready at subsys_initcall time.  Let's
+> register gpio-reset driver in arch_initcall() to have it ready early
+> enough.
 
-Shouldn't all system-wide flags be supported by all HW, perhaps being
-implemented by the core subsystem rather than individual drivers to
-ensure that? Consider the case of the GPIO active-low flag which is
-actually implemented in SW, hence can work with any GPIO controller.
+There's no need for the reset driver to be registered before its users;
+the users of the reset GPIO will simply have their probe deferred until
+the reset controller is available, and then everything will work out
+just fine.
 
-Perhaps that's not possible in all cases, in which case, yes, it does
-make sense to define which of the common flags a particular HW module
-supports.
+> The defer probe mechanism is not used here, because a reset controller
+> driver should be reasonably registered early than other devices.  More
+> importantly, defer probe doe not help in some nasty cases, e.g. the
+> gpio-pca953x device itself needs a reset from gpio-reset driver to start
+> working.
 
-But then there's a problem where people assume that the common flags are
-always available, and somewhere they aren't... Care is needed in the
-choice of which common flags to define and/or how they're used.
+That should work fine with deferred probe.
