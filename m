@@ -1,49 +1,68 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 4/4] ARM: OMAP2+: Provide alias to USB PHY clock
-Date: Tue, 16 Jul 2013 05:32:56 -0700
-Message-ID: <20130716123256.GY7656@atomide.com>
-References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
- <1371571487-14389-5-git-send-email-rogerq@ti.com>
- <51E40199.9070906@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 1/2] ASoC: tlv320aic3x: Add compatible strings
+	for specific devices
+Date: Tue, 16 Jul 2013 13:42:09 +0100
+Message-ID: <1373978530-23027-1-git-send-email-broonie@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51E40199.9070906@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: benoit.cousson@linaro.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linaro-kernel@lists.linaro.org, alsa-devel@alsa-project.org, Mark Brown <broonie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [130715 07:11]:
-> Hi Tony,
-> 
-> On 06/18/2013 07:04 PM, Roger Quadros wrote:
-> > Till the OMAP clocks are correctly defined in device tree, use
-> > this temporary hack to provide clock alias to the USB PHY clocks.
-> > 
-> > Without this, USB Host & Ethernet will not be functional with
-> > device tree boots on Panda and uEVM.
-> 
-> Looks like this one got missed out.
-> 
-> USB host no longer works on Panda with DT boot.
-> Could you please queue this for next 3.11-rc? Thanks.
+From: Mark Brown <broonie@linaro.org>
 
-OK thanks for checking, applying into omap-for-v3.11/fixes.
+The driver supports a range of devices but currently doesn't allow those
+device names to be used for enumeration on DT. Add the currently listed
+I2C IDs as compatible strings.
 
-Looks like I also have some pending the .dts changes in
-omap-for-v3.11/dt branch:
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ Documentation/devicetree/bindings/sound/tlv320aic3x.txt | 8 +++++++-
+ sound/soc/codecs/tlv320aic3x.c                          | 2 ++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-4cf2198b1e3cee47a1cccbb500b67782c36615d5 ARM: dts: omap3-beagle-xm: Add USB host supprot for Rev. Ax/Bx
-9bc44515819a00c0ffaf751ad497ddf275089ede ARM: dts: omap3-beagle-xm: Add USB Host support
-fd65d7df4598c1d2ad27d664c719611a1a070edc ARM: dts: omap3-beagle: Make USB host pin naming consistent
-39ea891d9da6ae1824bc9f689db3f306f5ce0724 ARM: dts: omap4-panda: Add USB Host support
-
-Those should get merged as fixes, right? Can you please
-check and see if they're still OK or if we also need
-something else?
-
-Regards,
-
-Tony
+diff --git a/Documentation/devicetree/bindings/sound/tlv320aic3x.txt b/Documentation/devicetree/bindings/sound/tlv320aic3x.txt
+index f47c3f5..26f65f9 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320aic3x.txt
++++ b/Documentation/devicetree/bindings/sound/tlv320aic3x.txt
+@@ -3,7 +3,13 @@ Texas Instruments - tlv320aic3x Codec module
+ The tlv320aic3x serial control bus communicates through I2C protocols
+ 
+ Required properties:
+-- compatible - "string" -  "ti,tlv320aic3x"
++
++- compatible - "string" - One of:
++    "ti,tlv320aic3x" - Generic TLV320AIC3x device
++    "ti,tlv320aic33" - TLV320AIC33
++    "ti,tlv320aic3007" - TLV320AIC3007
++
++
+ - reg - <int> -  I2C slave address
+ 
+ 
+diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
+index e5b9268..c9bb760 100644
+--- a/sound/soc/codecs/tlv320aic3x.c
++++ b/sound/soc/codecs/tlv320aic3x.c
+@@ -1582,6 +1582,8 @@ static int aic3x_i2c_remove(struct i2c_client *client)
+ #if defined(CONFIG_OF)
+ static const struct of_device_id tlv320aic3x_of_match[] = {
+ 	{ .compatible = "ti,tlv320aic3x", },
++	{ .compatible = "ti,tlv320aic33" },
++	{ .compatible = "ti,tlv320aic3007" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, tlv320aic3x_of_match);
+-- 
+1.8.3.2
