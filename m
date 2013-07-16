@@ -1,15 +1,16 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/10] Orion Watchdog fixes
-Date: Tue, 16 Jul 2013 09:48:56 +0200
-Message-ID: <13fe673f255.2784.107cef0f820c2f5d7b7f41463071c310@gmail.com>
-References: <1373931163-12670-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130716065952.GA25043@lunn.ch> <20130716092059.237ea729@skate>
- <20130716073101.GB25043@lunn.ch>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] drivers: dma-contiguous: add initialization from
+ device tree
+Date: Tue, 16 Jul 2013 10:42:38 +0200
+Message-ID: <51E5077E.8070900@samsung.com>
+References: <1372254009-25307-1-git-send-email-m.szyprowski@samsung.com>
+ <1372254009-25307-3-git-send-email-m.szyprowski@samsung.com>
+ <CACxGe6uzau+g0gd=hkNYw1zdkfq18zt_m9OEaiJKR6=q1U4rag@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130716073101.GB25043-g2DYL2Zd6BY@public.gmane.org>
+In-reply-to: <CACxGe6uzau+g0gd=hkNYw1zdkfq18zt_m9OEaiJKR6=q1U4rag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,41 +21,126 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Andrew, Thomas,
+Hello Grant,
 
-In the discussion about orion clocksource Russell was proposing a generic 
-thread-safe write. That puts a single lock around all those writes. Of 
-course, it will also blocked by totally unrelated thread-safe register 
-accesses but should prevent us from having dozens of locks and solves the 
-symbol issue.
-
-Sebastian
-
-
-
-On July 16, 2013 9:31:01 AM Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
-> On Tue, Jul 16, 2013 at 09:20:59AM +0200, Thomas Petazzoni wrote:
-> > Dear Andrew Lunn,
-> > On Tue, 16 Jul 2013 08:59:52 +0200, Andrew Lunn wrote:
-> > > Maybe i'm missing something here. You are making use of
-> > > orion_timer_ctrl_clrset() from time-orion.c. How will this work on
-> > > 370/XP which has a different clocksource driver?
-> > I *think* the idea is that the Armada 370/XP driver will expose the
-> > same function, so from the point of view of the watchdog driver, it
-> > will just work.
+On 7/11/2013 4:56 PM, Grant Likely wrote:
+> Hi Marek,
 >
-> Hi Thomas
+> Thanks for working on this. Comments below...
 >
-> That was what i was thinking would happen. And then i started to
-> wonder how well the kernel linker deals with multiple definitions of
-> the same symbol. Dove and 370/XP can end up in the same kernel. So we
-> need to have both orion-timer and the 370/XP timer in the same kernel,
-> so we end up with the same symbol in the kernel twice...
+> On Wed, Jun 26, 2013 at 2:40 PM, Marek Szyprowski
+> <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> > Add device tree support for contiguous memory regions defined in device
+> > tree. Initialization is done in 2 steps. First, the contiguous memory is
+> > reserved, what happens very early when only flattened device tree is
+> > available. Then on device initialization the corresponding cma regions are
+> > assigned to each device structure.
+> >
+> > Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/contiguous-memory.txt      |   94 ++++++++++++++
+> >  arch/arm/boot/dts/skeleton.dtsi                    |    7 +-
+> >  drivers/base/dma-contiguous.c                      |  132 ++++++++++++++++++++
+> >  3 files changed, 232 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/contiguous-memory.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/contiguous-memory.txt b/Documentation/devicetree/bindings/contiguous-memory.txt
+> > new file mode 100644
+> > index 0000000..a733df2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/contiguous-memory.txt
+> > @@ -0,0 +1,94 @@
+> > +*** Contiguous Memory binding ***
+> > +
+> > +The /chosen/contiguous-memory node provides runtime configuration of
+> > +contiguous memory regions for Linux kernel. Such regions can be created
+> > +for special usage by various device drivers. A good example are
+> > +contiguous memory allocations or memory sharing with other operating
+> > +system(s) on the same hardware board. Those special memory regions might
+> > +depend on the selected board configuration and devices used on the target
+> > +system.
+> > +
+> > +Parameters for each memory region can be encoded into the device tree
+> > +with the following convention:
+> > +
+> > +contiguous-memory {
+> > +
+> > +       (name): region@(base-address) {
+> > +               reg = <(baseaddr) (size)>;
+> > +               (linux,default-contiguous-region);
+> > +               device = <&device_0 &device_1 ...>
+> > +       };
+> > +};
 >
-> Lets wait for Ezequiel to answer.
+> Okay, I've gone and read all of the backlog on the 3 versions of the
+> patch series, and I think I understand the issues. I actually think it
+> was better off to have the regions specified as children of the memory
+> node. I understand the argument about how would firmware know what
+> size the kernel wants and that it would be better to have a kernel
+> parameter to override the default. However, it is also reasonable for
+> the kernel to be provided with a default amount of CMA based on the
+> usage profile of the device. In that regard it is absolutely
+> appropriate to put the CMA region data into the memory node. I don't
+> think /chosen is the right place for that.
+
+Thanks for your comments! I will prepare a new version, which will use
+/memory node as it was in the first version. I hope that with Your ack
+such version can be finally merged.
+
+> > +
+> > +name:          an name given to the defined region;
 >
->    Andrew
+> In the above node example, "name:" is a label used for creating
+> phandles. That information doesn't appear in the resulting .dtb
+> output. The label is actually optional It should instead be:
+>          [(label):] (name)@(address) { }
+>
+> > +base-address:  the base address of the defined region;
+> > +size:          the size of the memory region (bytes);
+>
+> The reg property should follow the normal reg rules which are well
+> defined. That also means that a memory region could have multiple reg
+> entries if appropriate.
+
+Well, I'm not sure if it really makes sense to support multiple reg 
+entries.
+I also wonder how to provide entries for LPAE systems. They are 32-bit 
+systems,
+but physical addresses can be up to 36bit. How to specify them in device 
+tree?
+
+> > +linux,default-contiguous-region: property indicating that the region
+> > +               is the default region for all contiguous memory
+> > +               allocations, Linux specific (optional);
+> > +device:                array of phandles to the client device nodes, which
+> > +               will use the defined contiguous region.
+>
+> This is backwards compared to the way device references usually work.
+> It would be more consistent for each device node to have a
+> "dma-memory-region" property with phandles to one or more memory
+> regions that it cares about.
+>
+> > +Each defined region must use unique name. It is optional to specify the
+> > +base address, so if one wants to use autoconfiguration of the base
+> > +address, he must specify the '0' as base address in the 'reg' property
+> > +and assign ann uniqe name to such regions, following the convention:
+> > +'region@0', 'region@1', 'region@2', ...
+>
+> Drop the use of 'region'. "name@0" is more typical. It would be
+> appropriate to have compatible = "reserved-memory-region" in each of
+> the reserved regions. That would avoid the problem of two regions
+> based at the same address having a conflict in name.
+
+Ok.
+
+ > ...
+
+Best regards
+-- 
+Marek Szyprowski
+Samsung R&D Institute Poland
