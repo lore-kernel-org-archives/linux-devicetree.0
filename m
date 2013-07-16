@@ -1,14 +1,16 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] ASoC: tlv320aic3x: List tlv320aic3106 as a supported
- device
-Date: Tue, 16 Jul 2013 13:42:10 +0100
-Message-ID: <1373978530-23027-2-git-send-email-broonie@kernel.org>
-References: <1373978530-23027-1-git-send-email-broonie@kernel.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
+ translation
+Date: Tue, 16 Jul 2013 09:56:02 -0300
+Message-ID: <20130716125531.GD2317@localhost>
+References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <51E5145A.90404@keymile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1373978530-23027-1-git-send-email-broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51E5145A.90404-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,52 +21,71 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Longchamp,
+ Valentin" <Valentin.Longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Currently there is no specific handling for it but the tlv320aic3106 is
-supported using this driver.
-
-Signed-off-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/sound/tlv320aic3x.txt | 1 +
- sound/soc/codecs/tlv320aic3x.c                          | 2 ++
- 2 files changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/tlv320aic3x.txt b/Documentation/devicetree/bindings/sound/tlv320aic3x.txt
-index 26f65f9..705a6b1 100644
---- a/Documentation/devicetree/bindings/sound/tlv320aic3x.txt
-+++ b/Documentation/devicetree/bindings/sound/tlv320aic3x.txt
-@@ -8,6 +8,7 @@ Required properties:
-     "ti,tlv320aic3x" - Generic TLV320AIC3x device
-     "ti,tlv320aic33" - TLV320AIC33
-     "ti,tlv320aic3007" - TLV320AIC3007
-+    "ti,tlv320aic3106" - TLV320AIC3106
- 
- 
- - reg - <int> -  I2C slave address
-diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
-index c9bb760..cad4fb1 100644
---- a/sound/soc/codecs/tlv320aic3x.c
-+++ b/sound/soc/codecs/tlv320aic3x.c
-@@ -1492,6 +1492,7 @@ static const struct i2c_device_id aic3x_i2c_id[] = {
- 	{ "tlv320aic3x", AIC3X_MODEL_3X },
- 	{ "tlv320aic33", AIC3X_MODEL_33 },
- 	{ "tlv320aic3007", AIC3X_MODEL_3007 },
-+	{ "tlv320aic3106", AIC3X_MODEL_3X },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, aic3x_i2c_id);
-@@ -1584,6 +1585,7 @@ static const struct of_device_id tlv320aic3x_of_match[] = {
- 	{ .compatible = "ti,tlv320aic3x", },
- 	{ .compatible = "ti,tlv320aic33" },
- 	{ .compatible = "ti,tlv320aic3007" },
-+	{ .compatible = "ti,tlv320aic3106" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, tlv320aic3x_of_match);
--- 
-1.8.3.2
+SGkgR2VybGFuZG8sCgpPbiBUdWUsIEp1bCAxNiwgMjAxMyBhdCAxMTozNzozMEFNICswMjAwLCBH
+ZXJsYW5kbyBGYWxhdXRvIHdyb3RlOgo+IAo+IGFwb2xvZ2llcyBpbiBhZHZhbmNlIGZvciBjb21t
+ZW50aW5nIG9uIGFuIGFscmVhZHktbWVyZ2VkIHBhdGNoLgoKU3VyZSwgbm8gcHJvYmxlbS4KCj4g
+Cj4gT24gMDYvMTgvMjAxMyAwNTozMSBQTSwgRXplcXVpZWwgR2FyY2lhIHdyb3RlOgo+ID4gQWx0
+aG91Z2ggdGhlIGludGVybmFsIHJlZ2lzdGVyIHdpbmRvdyBzaXplIGlzIDEgTWlCLCB0aGUgcHJl
+dmlvdXMKPiA+IHJhbmdlcyB0cmFuc2xhdGlvbiBmb3IgdGhlIGludGVybmFsIHJlZ2lzdGVyIHNw
+YWNlIGhhZCBhIHNpemUgb2YKPiA+IDB4NDAwMDAwMC4gVGhpcyB3YXMgZG9uZSB0byBhbGxvdyB0
+aGUgY3J5cHRvIGFuZCBuYW5kIG5vZGUgdG8gYWNjZXNzCj4gPiB0aGUgY29ycmVzcG9uZGluZyAn
+c3JhbScgYW5kICduYW5kJyBkZWNvZGluZyB3aW5kb3dzLgo+ID4KPiA+IEluIG9yZGVyIHRvIGRl
+c2NyaWJlIHRoZSBoYXJkd2FyZSBtb3JlIGFjY3VyYXRlbHksIHdlIGRlY2xhcmUgdGhlCj4gPiBy
+ZWFsIDEgTWlCIGludGVybmFsIHJlZ2lzdGVyIHNwYWNlIGluIHRoZSByYW5nZXMsIGFuZCBhZGQg
+YSB0cmFuc2xhdGlvbgo+ID4gZW50cnkgZm9yIHRoZSBuYW5kIG5vZGUgdG8gYWNjZXNzIHRoZSAn
+bmFuZCcgd2luZG93Lgo+ID4KPiA+IFRoaXMgY29tbWl0IHdpbGwgbWFrZSBmdXR1cmUgaW1wcm92
+ZW1lbnRzIG9uIHRoZSBNQnVzIERUIGJpbmRpbmcgZWFzaWVyLgo+ID4KPiA+IFNpZ25lZC1vZmYt
+Ynk6IEV6ZXF1aWVsIEdhcmNpYSA8ZXplcXVpZWwuZ2FyY2lhLXdpMSs1NVNjSlV0S0ViNTcvM2ZK
+VE5CUFIxbEg0Q1Y4QHB1YmxpYy5nbWFuZS5vcmc+Cj4gPiAtLS0KPiA+IFRlc3RlZCBvbiBQbGF0
+aG9tZSBPcGVuYmxvY2tzIEE2IGJvYXJkLgo+ID4KPiA+ICAgYXJjaC9hcm0vYm9vdC9kdHMva2ly
+a3dvb2QuZHRzaSB8IDUgKysrLS0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygr
+KSwgMiBkZWxldGlvbnMoLSkKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
+a2lya3dvb2QuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2tpcmt3b29kLmR0c2kKPiA+IGluZGV4
+IDhhMWUzYmIuLjkxMGZhYmMgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9raXJr
+d29vZC5kdHNpCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9raXJrd29vZC5kdHNpCj4gPiBA
+QCAtMzgsNyArMzgsOCBAQAo+ID4KPiA+ICAgCW9jcEBmMTAwMDAwMCB7Cj4gPiAgIAkJY29tcGF0
+aWJsZSA9ICJzaW1wbGUtYnVzIjsKPiA+IC0JCXJhbmdlcyA9IDwweDAwMDAwMDAwIDB4ZjEwMDAw
+MDAgMHg0MDAwMDAwCj4gPiArCQlyYW5nZXMgPSA8MHgwMDAwMDAwMCAweGYxMDAwMDAwIDB4MDEw
+MDAwMAo+ID4gKwkJICAgICAgICAgIDB4ZjQwMDAwMDAgMHhmNDAwMDAwMCAweDAwMDA0MDAKPiA+
+ICAgCQkgICAgICAgICAgMHhmNTAwMDAwMCAweGY1MDAwMDAwIDB4MDAwMDQwMD47Cj4gCj4gQXBh
+cnQgZnJvbSAiY29uc2lzdGVuY3kiIHdpdGggdGhlIGZvbGxvd2luZyByYW5nZSAoMHhmNTAwMDAw
+MCkgdXNlZCBieSAKPiB0aGUgY3J5cHRvIG5vZGUsIGlzIHRoZXJlIGFueSByZWFzb24gd2h5IHlv
+dSBkaWQgbm90IGRvIHNvbWV0aGluZyBsaWtlIAo+IHRoaXMgaW5zdGVhZCAod2hpY2ggVmFsZW50
+aW4gc3VnZ2VzdGVkLCBidXQgSSB3aWxsIHRha2UgdGhlIGJsYW1lIGZvcik6Cj4gCgpJJ20gbm90
+IHN1cmUgdGhlIHJlYXNvbiBpcyAiY29uc2lzdGVuY3kgd2l0aCB0aGUgY3J5cHRvIG5vZGUiLgpU
+aGVyZSdzIGFuIE1CdXMgd2luZG93IGF0IDB4ZjQwMDAwMDAgZm9yIE5BTkQsIGFuZCB0aGF0IGlz
+IHdoYXQgaXMgZGVzY3JpYmVkCmluIHRoZSBzbmlwcGV0IGFib3ZlOyBhbmQgdGhpcyBpcyBhIGJl
+dHRlciByZWFzb24uCgpUaGF0IHNhaWQsIHRlY2huaWNhbGx5IHNwZWFraW5nLCB5b3UgY2FuIGhh
+dmUgYW55IHRyYW5zbGF0aW9uIHNjaGVtZSB5b3Ugd2FudCwKYXMgbG9uZyBhcyBpdCBlbmRzIHVw
+IGluIDB4ZjQwMDAwMDAuCgo+IC0JCXJhbmdlcyA9IDwweDAwMDAwMDAwIDB4ZjEwMDAwMDAgMHg0
+MDAwMDAwCj4gKwkJcmFuZ2VzID0gPDB4MDAwMDAwMDAgMHhmMTAwMDAwMCAweDAxMDAwMDAKPiAr
+CQkgICAgICAgICAgMHgwMzAwMDAwMCAweGY0MDAwMDAwIDB4MDAwMDQwMAo+ICAgIAkJICAgICAg
+ICAgIDB4ZjUwMDAwMDAgMHhmNTAwMDAwMCAweDAwMDA0MDA+Owo+IAo+IFRoaXMgd291bGQga2Vl
+cCBhIGNvbnNpc3RlbnQgYWRkcmVzc2luZyB3aXRoaW4gdGhlIGNoaWxkIGRldmljZSBidXMsIGFu
+ZCAKCkNvdWxkIHlvdSBleHBsYWluIGhvdyB0aGlzICJrZWVwcyBhIGNvbnNpc3RlbnQgYWRkcmVz
+c2luZyI/CkZyYW5rbHksIEkgZG9uJ3QgdW5kZXJzdGFuZCB3aHkgeW91IGNob29zZSAweDMwMDAw
+MDAgLi4uIGFtIEkgbWlzc2luZyBzb21ldGhpbmc/CgpBbHNvLCBzcGVha2luZyBvZiAiZGV2aWNl
+IGJ1cyIgdGhpcyBuYW5kIG5vZGUgc2hvdWxkIGJlIGJlaGluZCBhIGRldmljZWJ1cyBub2RlLgoK
+CQlyYW5nZXMgPSA8TUJVU19JRCgweGYwLCAweDAxKSAwIDAgMHhmMTAwMDAwMCAweDEwMDAwMCAg
+IC8qIGludGVybmFsLXJlZ3MgKi8KCQkJICBNQlVTX0lEKDB4MDEsIDB4MmYpIDAgMCAweGY0MDAw
+MDAwIDB4NDAwPjsKCgkJZGV2YnVzIHsKCQkJc3RhdHVzID0gIm9rYXkiOwoJCQlyYW5nZXMgPSA8
+MCBNQlVTX0lEKDB4MDEsIDB4MmYpIDAgMHg0MDA+OwoKCQkJLyogbmFuZCAqLwoJCQluYW5kIHsK
+CQkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxvcmlvbi1uYW5kIjsKCQkJCXJlZyA9IDwwIDB4NDAw
+PjsKCQkJfTsKCQl9OwoKKG5vdGljZSB0aGlzIHdpbGwgYWxsb3cgeW91IHRvIHJlbG9jYXRlIHRo
+ZSBiYXNlIGFkZHJlc3Mgb2YgdGhlIE5BTkQgd2luZG93cwplYXNpbHkgaWYgaXQgY29uZmxpY3Rz
+IHdpdGggeW91ciBQQ0llIG5lZWRzKS4KCj4gYXZvaWQgYSBsYXRlciBpbmNvc2lzdGVuY3kgYmV0
+d2VlbiB0aGUgInVuaXQtYWRkcmVzcyIgYW5kIHRoZSBmaXJzdCAKPiAicmVnIiBhZGRyZXNzOgo+
+IAo+ID4gICAJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gICAJCSNzaXplLWNlbGxzID0gPDE+
+Owo+ID4gQEAgLTE3MSw3ICsxNzIsNyBAQAo+ICA+ICAgCQluYW5kQDMwMDAwMDAgewo+IAkJICAg
+ICBeXl5eXl5eCgpPaCwgdGhpcyBzaG91bGQgYmUgZml4ZWQuIEkganVzdCBtaXNzZWQgaXQsIGFu
+ZCBub2JvZHkgbm90aWNlZCBlaXRoZXIuCgotLSAKRXplcXVpZWwgR2FyY8OtYSwgRnJlZSBFbGVj
+dHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBFbmdpbmVlcmluZwpodHRw
+Oi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1k
+aXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZv
+L2RldmljZXRyZWUtZGlzY3Vzcwo=
