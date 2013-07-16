@@ -1,35 +1,104 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH -next] ARM: edma: remove duplicated include from edma.c
-Date: Tue, 16 Jul 2013 20:57:44 +0530
-Message-ID: <51E56670.6020802@ti.com>
-References: <CAPgLHd_j_JmDOsGSwLO_eBZnWteMzLVKJa93fY2iaSe31Ozo_w@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Tue, 16 Jul 2013 09:45:43 -0600
+Message-ID: <51E56AA7.7020103@wwwdotorg.org>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+ <20130716015038.GD28375@S2101-09.ap.freescale.net>
+ <51E4BF98.8030604@wwwdotorg.org>
+ <20130716041056.GA30067@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPgLHd_j_JmDOsGSwLO_eBZnWteMzLVKJa93fY2iaSe31Ozo_w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: linux@arm.linux.org.uk, arnd@arndb.de, Joel Fernandes <joelf@ti.com>, devicetree-discuss@lists.ozlabs.org, yongjun_wei@trendmicro.com.cn, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, prabhakar.csengg@gmail.com, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130716041056.GA30067-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/26/2013 7:28 AM, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On 07/15/2013 10:10 PM, Shawn Guo wrote:
+> On Mon, Jul 15, 2013 at 09:35:52PM -0600, Stephen Warren wrote:
+>>> It's a little bit late to register gpio-reset driver at module_init
+>>> time, because gpio-reset provides reset control via gpio for other
+>>> devices which are mostly probed at module_init time too.  And it
+>>> becomes even worse, when the gpio comes from IO expander on I2C bus,
+>>> e.g. pca953x.  In that case, gpio-reset needs to be ready before I2C
+>>> bus driver which is generally ready at subsys_initcall time.  Let's
+>>> register gpio-reset driver in arch_initcall() to have it ready early
+>>> enough.
+>>
+>> There's no need for the reset driver to be registered before its users;
+>> the users of the reset GPIO will simply have their probe deferred until
+>> the reset controller is available, and then everything will work out
+>> just fine.
+>>
+>>> The defer probe mechanism is not used here, because a reset controller
+>>> driver should be reasonably registered early than other devices.  More
+>>> importantly, defer probe doe not help in some nasty cases, e.g. the
+>>> gpio-pca953x device itself needs a reset from gpio-reset driver to start
+>>> working.
+>>
+>> That should work fine with deferred probe.
 > 
-> Remove duplicated include.
-> 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> I should probably rework the commit log.  But I do not see a problem
+> to register gpio-reset driver a little bit earlier. 
 
-Sending this for inclusion in v3.11-rc2. This is technically a clean-up,
-but this is still -rc1, so lets see.
+Registering the driver earlier won't cause any bugs. However, it's not
+the correct approach.
 
-Thanks,
-Sekhar
+Deferred probe /is/ the approach for assuring correct dependencies
+between drivers. It works and should be used. There are not enough
+initcall levels to play games using initcalls and solve all the issues,
+and the ordering requirements vary board-to-board. Deferred probe at
+runtime handles this without having to manually place all the drivers
+into specific initcall levels, and dynamically adjusts to board
+differences, since it all happens automatically at run-time.
+
+Consider a SoC that has:
+
+* An external PMIC, which the CPU has to communicate with to enable
+power to all SoC components outside the CPU and a single I2C instance
+dedicated to communicating with the PMIC.
+* An on-SoC reset controller (for on-SoC) modules that resets other
+on-SoC I2C controllers
+* An on-SoC I2C controller which communicates with a GPIO expander
+* One of the GPIOs on that expander is the reset GPIO for some other
+device connected by I2C
+
+What initcall levels are you going to use for all the drivers
+(PM-related I2C, PMIC, on-SoC reset controller, secondary I2C
+controller, GPIO expander IC, GPIO-reset "device", the final device
+affected by the GPIO reset controller).
+
+Now wonder whether that same order is going to be suitable for every
+single other board. That's quite unlikely...
+
+ On the other hand,
+> if we reply on deferred probe, many drivers probe could be deferred.
+> For example, on my system, the gpio-pca953x on I2C bus works as a GPIO
+> controller and provides resets to many board level components.
+> Deferring probe of gpio-pca953x on I2C bus means every single probe of
+> all these components gets deferred.  IMO, this situation should be
+> reasonably avoided.
+
+Yes, deferred probe will happen. If we want to solve that, I believe we
+need a more generic solution specifically targeted at that, rather that
+playing games with initcalls.
+
+(It'd be nice if each DT node declared all its resources in a way the DT
+core could parse them and determine the dependency graph itself, without
+having to write code in all drivers to extract that information from DT.
+This would need a standardized resource representation in DT, and as
+such would mean throwing out all the bindings and starting again...
+Perhaps some parallel set of properties could be invented to hint at the
+order, but still fall back to deferred probe where that information was
+missing or inaccurate.)
