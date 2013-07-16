@@ -1,16 +1,18 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
- translation
-Date: Tue, 16 Jul 2013 09:56:02 -0300
-Message-ID: <20130716125531.GD2317@localhost>
-References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <51E5145A.90404@keymile.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Tue, 16 Jul 2013 20:56:48 +0800
+Message-ID: <20130716125646.GM28375@S2101-09.ap.freescale.net>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+ <20130716015038.GD28375@S2101-09.ap.freescale.net>
+ <51E4BF98.8030604@wwwdotorg.org>
+ <20130716041056.GA30067@S2101-09.ap.freescale.net>
+ <1373968166.4327.11.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <51E5145A.90404-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1373968166.4327.11.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,71 +23,18 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Longchamp,
- Valentin" <Valentin.Longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VybGFuZG8sCgpPbiBUdWUsIEp1bCAxNiwgMjAxMyBhdCAxMTozNzozMEFNICswMjAwLCBH
-ZXJsYW5kbyBGYWxhdXRvIHdyb3RlOgo+IAo+IGFwb2xvZ2llcyBpbiBhZHZhbmNlIGZvciBjb21t
-ZW50aW5nIG9uIGFuIGFscmVhZHktbWVyZ2VkIHBhdGNoLgoKU3VyZSwgbm8gcHJvYmxlbS4KCj4g
-Cj4gT24gMDYvMTgvMjAxMyAwNTozMSBQTSwgRXplcXVpZWwgR2FyY2lhIHdyb3RlOgo+ID4gQWx0
-aG91Z2ggdGhlIGludGVybmFsIHJlZ2lzdGVyIHdpbmRvdyBzaXplIGlzIDEgTWlCLCB0aGUgcHJl
-dmlvdXMKPiA+IHJhbmdlcyB0cmFuc2xhdGlvbiBmb3IgdGhlIGludGVybmFsIHJlZ2lzdGVyIHNw
-YWNlIGhhZCBhIHNpemUgb2YKPiA+IDB4NDAwMDAwMC4gVGhpcyB3YXMgZG9uZSB0byBhbGxvdyB0
-aGUgY3J5cHRvIGFuZCBuYW5kIG5vZGUgdG8gYWNjZXNzCj4gPiB0aGUgY29ycmVzcG9uZGluZyAn
-c3JhbScgYW5kICduYW5kJyBkZWNvZGluZyB3aW5kb3dzLgo+ID4KPiA+IEluIG9yZGVyIHRvIGRl
-c2NyaWJlIHRoZSBoYXJkd2FyZSBtb3JlIGFjY3VyYXRlbHksIHdlIGRlY2xhcmUgdGhlCj4gPiBy
-ZWFsIDEgTWlCIGludGVybmFsIHJlZ2lzdGVyIHNwYWNlIGluIHRoZSByYW5nZXMsIGFuZCBhZGQg
-YSB0cmFuc2xhdGlvbgo+ID4gZW50cnkgZm9yIHRoZSBuYW5kIG5vZGUgdG8gYWNjZXNzIHRoZSAn
-bmFuZCcgd2luZG93Lgo+ID4KPiA+IFRoaXMgY29tbWl0IHdpbGwgbWFrZSBmdXR1cmUgaW1wcm92
-ZW1lbnRzIG9uIHRoZSBNQnVzIERUIGJpbmRpbmcgZWFzaWVyLgo+ID4KPiA+IFNpZ25lZC1vZmYt
-Ynk6IEV6ZXF1aWVsIEdhcmNpYSA8ZXplcXVpZWwuZ2FyY2lhLXdpMSs1NVNjSlV0S0ViNTcvM2ZK
-VE5CUFIxbEg0Q1Y4QHB1YmxpYy5nbWFuZS5vcmc+Cj4gPiAtLS0KPiA+IFRlc3RlZCBvbiBQbGF0
-aG9tZSBPcGVuYmxvY2tzIEE2IGJvYXJkLgo+ID4KPiA+ICAgYXJjaC9hcm0vYm9vdC9kdHMva2ly
-a3dvb2QuZHRzaSB8IDUgKysrLS0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygr
-KSwgMiBkZWxldGlvbnMoLSkKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-a2lya3dvb2QuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2tpcmt3b29kLmR0c2kKPiA+IGluZGV4
-IDhhMWUzYmIuLjkxMGZhYmMgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9raXJr
-d29vZC5kdHNpCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9raXJrd29vZC5kdHNpCj4gPiBA
-QCAtMzgsNyArMzgsOCBAQAo+ID4KPiA+ICAgCW9jcEBmMTAwMDAwMCB7Cj4gPiAgIAkJY29tcGF0
-aWJsZSA9ICJzaW1wbGUtYnVzIjsKPiA+IC0JCXJhbmdlcyA9IDwweDAwMDAwMDAwIDB4ZjEwMDAw
-MDAgMHg0MDAwMDAwCj4gPiArCQlyYW5nZXMgPSA8MHgwMDAwMDAwMCAweGYxMDAwMDAwIDB4MDEw
-MDAwMAo+ID4gKwkJICAgICAgICAgIDB4ZjQwMDAwMDAgMHhmNDAwMDAwMCAweDAwMDA0MDAKPiA+
-ICAgCQkgICAgICAgICAgMHhmNTAwMDAwMCAweGY1MDAwMDAwIDB4MDAwMDQwMD47Cj4gCj4gQXBh
-cnQgZnJvbSAiY29uc2lzdGVuY3kiIHdpdGggdGhlIGZvbGxvd2luZyByYW5nZSAoMHhmNTAwMDAw
-MCkgdXNlZCBieSAKPiB0aGUgY3J5cHRvIG5vZGUsIGlzIHRoZXJlIGFueSByZWFzb24gd2h5IHlv
-dSBkaWQgbm90IGRvIHNvbWV0aGluZyBsaWtlIAo+IHRoaXMgaW5zdGVhZCAod2hpY2ggVmFsZW50
-aW4gc3VnZ2VzdGVkLCBidXQgSSB3aWxsIHRha2UgdGhlIGJsYW1lIGZvcik6Cj4gCgpJJ20gbm90
-IHN1cmUgdGhlIHJlYXNvbiBpcyAiY29uc2lzdGVuY3kgd2l0aCB0aGUgY3J5cHRvIG5vZGUiLgpU
-aGVyZSdzIGFuIE1CdXMgd2luZG93IGF0IDB4ZjQwMDAwMDAgZm9yIE5BTkQsIGFuZCB0aGF0IGlz
-IHdoYXQgaXMgZGVzY3JpYmVkCmluIHRoZSBzbmlwcGV0IGFib3ZlOyBhbmQgdGhpcyBpcyBhIGJl
-dHRlciByZWFzb24uCgpUaGF0IHNhaWQsIHRlY2huaWNhbGx5IHNwZWFraW5nLCB5b3UgY2FuIGhh
-dmUgYW55IHRyYW5zbGF0aW9uIHNjaGVtZSB5b3Ugd2FudCwKYXMgbG9uZyBhcyBpdCBlbmRzIHVw
-IGluIDB4ZjQwMDAwMDAuCgo+IC0JCXJhbmdlcyA9IDwweDAwMDAwMDAwIDB4ZjEwMDAwMDAgMHg0
-MDAwMDAwCj4gKwkJcmFuZ2VzID0gPDB4MDAwMDAwMDAgMHhmMTAwMDAwMCAweDAxMDAwMDAKPiAr
-CQkgICAgICAgICAgMHgwMzAwMDAwMCAweGY0MDAwMDAwIDB4MDAwMDQwMAo+ICAgIAkJICAgICAg
-ICAgIDB4ZjUwMDAwMDAgMHhmNTAwMDAwMCAweDAwMDA0MDA+Owo+IAo+IFRoaXMgd291bGQga2Vl
-cCBhIGNvbnNpc3RlbnQgYWRkcmVzc2luZyB3aXRoaW4gdGhlIGNoaWxkIGRldmljZSBidXMsIGFu
-ZCAKCkNvdWxkIHlvdSBleHBsYWluIGhvdyB0aGlzICJrZWVwcyBhIGNvbnNpc3RlbnQgYWRkcmVz
-c2luZyI/CkZyYW5rbHksIEkgZG9uJ3QgdW5kZXJzdGFuZCB3aHkgeW91IGNob29zZSAweDMwMDAw
-MDAgLi4uIGFtIEkgbWlzc2luZyBzb21ldGhpbmc/CgpBbHNvLCBzcGVha2luZyBvZiAiZGV2aWNl
-IGJ1cyIgdGhpcyBuYW5kIG5vZGUgc2hvdWxkIGJlIGJlaGluZCBhIGRldmljZWJ1cyBub2RlLgoK
-CQlyYW5nZXMgPSA8TUJVU19JRCgweGYwLCAweDAxKSAwIDAgMHhmMTAwMDAwMCAweDEwMDAwMCAg
-IC8qIGludGVybmFsLXJlZ3MgKi8KCQkJICBNQlVTX0lEKDB4MDEsIDB4MmYpIDAgMCAweGY0MDAw
-MDAwIDB4NDAwPjsKCgkJZGV2YnVzIHsKCQkJc3RhdHVzID0gIm9rYXkiOwoJCQlyYW5nZXMgPSA8
-MCBNQlVTX0lEKDB4MDEsIDB4MmYpIDAgMHg0MDA+OwoKCQkJLyogbmFuZCAqLwoJCQluYW5kIHsK
-CQkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxvcmlvbi1uYW5kIjsKCQkJCXJlZyA9IDwwIDB4NDAw
-PjsKCQkJfTsKCQl9OwoKKG5vdGljZSB0aGlzIHdpbGwgYWxsb3cgeW91IHRvIHJlbG9jYXRlIHRo
-ZSBiYXNlIGFkZHJlc3Mgb2YgdGhlIE5BTkQgd2luZG93cwplYXNpbHkgaWYgaXQgY29uZmxpY3Rz
-IHdpdGggeW91ciBQQ0llIG5lZWRzKS4KCj4gYXZvaWQgYSBsYXRlciBpbmNvc2lzdGVuY3kgYmV0
-d2VlbiB0aGUgInVuaXQtYWRkcmVzcyIgYW5kIHRoZSBmaXJzdCAKPiAicmVnIiBhZGRyZXNzOgo+
-IAo+ID4gICAJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gICAJCSNzaXplLWNlbGxzID0gPDE+
-Owo+ID4gQEAgLTE3MSw3ICsxNzIsNyBAQAo+ICA+ICAgCQluYW5kQDMwMDAwMDAgewo+IAkJICAg
-ICBeXl5eXl5eCgpPaCwgdGhpcyBzaG91bGQgYmUgZml4ZWQuIEkganVzdCBtaXNzZWQgaXQsIGFu
-ZCBub2JvZHkgbm90aWNlZCBlaXRoZXIuCgotLSAKRXplcXVpZWwgR2FyY8OtYSwgRnJlZSBFbGVj
-dHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBFbmdpbmVlcmluZwpodHRw
-Oi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1k
-aXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZv
-L2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Tue, Jul 16, 2013 at 11:49:26AM +0200, Philipp Zabel wrote:
+> so you want to have gpio-reset probed at arch_initcall time and you have
+> gpio-pca953x probed at subsys_initcall time. Won't then all gpio-reset
+> devices that use gpios on pca953x to reset other peripherals need to be
+> deferred?
+
+Yes, they will be deferred, but they will be probed and ready at
+subsys_initcall time when gpio-pca953x probes.  This is still good since
+most of component device drivers probes at module_init time.
+
+Shawn
