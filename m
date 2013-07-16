@@ -1,98 +1,179 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Tue, 16 Jul 2013 09:50:42 +0800
-Message-ID: <20130716015038.GD28375@S2101-09.ap.freescale.net>
-References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v4] Input: sysrq - DT binding for key sequence
+Date: Mon, 15 Jul 2013 21:43:41 -0500
+Message-ID: <51E4B35D.8020000@gmail.com>
+References: <1373902598-10062-1-git-send-email-mathieu.poirier@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1369904940-716-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1373902598-10062-1-git-send-email-mathieu.poirier@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: mathieu.poirier@linaro.org
+Cc: grant.likely@linaro.org, dmitry.torokhov@gmail.com, kernel-team@android.com, devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-
-On Thu, May 30, 2013 at 11:09:00AM +0200, Philipp Zabel wrote:
-> This driver implements a reset controller device that toggle a gpio
-> connected to a reset pin of a peripheral IC. The delay between assertion
-> and de-assertion of the reset signal can be configured via device tree.
+On 07/15/2013 10:36 AM, mathieu.poirier@linaro.org wrote:
+> From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
 > 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Adding a simple device tree binding for the specification of key sequences.
+> Definition of the keys found in the sequence are located in
+> 'include/uapi/linux/input.h'.
+> 
+> For the sysrq driver, holding the sequence of keys down for a specific amount of time
+> will reset the system.
+> 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+> changes for v4:
+>   - Moved seach of reset sequence nodes to a single call.
+> ---
+>  .../devicetree/bindings/input/input-reset.txt      | 34 ++++++++++++++
+>  drivers/tty/sysrq.c                                | 54 ++++++++++++++++++++++
+>  2 files changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/input-reset.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/input-reset.txt b/Documentation/devicetree/bindings/input/input-reset.txt
+> new file mode 100644
+> index 0000000..79504af
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/input-reset.txt
+> @@ -0,0 +1,34 @@
+> +Input: sysrq reset sequence
+> +
+> +A simple binding to represent a set of keys as described in
+> +include/uapi/linux/input.h.  This is to communicate a
+> +sequence of keys to the sysrq driver.  Upon holding the keys
+> +for a specified amount of time (if specified) the system is
+> +sync'ed and reset.
+> +
+> +Key sequences are global to the system but all the keys in a
+> +set must be coming from the same input device.
+> +
+> +The /chosen node should contain a 'linux,sysrq-reset-seq' child
+> +node to define a set of keys.
+> +
+> +Required property:
+> +sysrq-reset-seq: array of keycodes
+> +
+> +Optional property:
+> +timeout-ms: duration keys must be pressed together in microseconds
 
-I see this patch is very useful, as GPIOs are widely used to reset
-components/devices on board.  But I do not find the patch in v3.11-rc1.
-What's your plan about it?
+milliseconds (ms) or microseconds (us)?
 
-Also, I'm wondering if we should register the driver a little bit
-early.  Please see the following patch.  If it makes sense to you,
-I can send the patch to you, or you can just quash it into yours.
+> +before generating a sysrq
+> +
+> +Example:
+> +
+> + chosen {
+> +                linux,sysrq-reset-seq {
+> +                        keyset = <0x03
+> +                                  0x04
+> +                                  0x0a>;
+> +                        timeout-ms = <3000>;
+> +                };
+> +         };
+> +
+> +Would represent KEY_2, KEY_3 and KEY_9.
+> +
+> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> index b51c154..01a8729 100644
+> --- a/drivers/tty/sysrq.c
+> +++ b/drivers/tty/sysrq.c
+> @@ -44,6 +44,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/moduleparam.h>
+>  #include <linux/jiffies.h>
+> +#include <linux/of.h>
+>  
+>  #include <asm/ptrace.h>
+>  #include <asm/irq_regs.h>
+> @@ -671,6 +672,50 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
+>  	}
+>  }
+>  
+> +static void sysrq_of_get_keyreset_config(void)
+> +{
+> +	unsigned short key;
+> +	struct device_node *np;
+> +	const struct property *prop;
+> +	const __be32 *val;
+> +	int count, i;
+> +
+> +	np = of_find_node_by_path("/chosen/linux,sysrq-reset-seq");
+> +	if (!np) {
+> +		pr_debug("No sysrq node found");
+> +		goto out;
+> +	}
+> +
+> +	prop = of_find_property(np, "keyset", NULL);
+> +	if (!prop || !prop->value) {
+> +		pr_err("Invalid input keyset");
+> +		goto out;
+> +	}
+> +
+> +	count = prop->length / sizeof(u32);
+> +	val = prop->value;
 
-Shawn
+None of the existing helpers to retrieve property arrays doesn't work here?
 
----8<--------
+> +
+> +	if (count > SYSRQ_KEY_RESET_MAX)
+> +		count = SYSRQ_KEY_RESET_MAX;
+> +
+> +	/* reset in case a __weak definition was present */
+> +	sysrq_reset_seq_len = 0;
+> +
+> +	for (i = 0; i < count; i++) {
+> +		key = (unsigned short)be32_to_cpup(val++);
+> +		if (key == KEY_RESERVED || key > KEY_MAX)
+> +			break;
+> +
+> +		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
+> +	}
+> +
+> +	/* get reset timeout if any */
+> +	of_property_read_u32(np, "timeout-ms", &sysrq_reset_downtime_ms);
+> +
+> + out:
+> +	;
+> +}
+> +
+>  static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+>  {
+>  	struct sysrq_state *sysrq =
+> @@ -688,6 +733,7 @@ static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+>  		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 1);
+>  		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
+>  
+> +
 
->From 2f8ce9e5d6525b98f3828b707458e83fabb39d50 Mon Sep 17 00:00:00 2001
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Sun, 14 Jul 2013 20:41:00 +0800
-Subject: [PATCH] ENGR00269945: reset: register gpio-reset driver in
- arch_initcall
+spurious ws change
 
-It's a little bit late to register gpio-reset driver at module_init
-time, because gpio-reset provides reset control via gpio for other
-devices which are mostly probed at module_init time too.  And it
-becomes even worse, when the gpio comes from IO expander on I2C bus,
-e.g. pca953x.  In that case, gpio-reset needs to be ready before I2C
-bus driver which is generally ready at subsys_initcall time.  Let's
-register gpio-reset driver in arch_initcall() to have it ready early
-enough.
+>  		input_inject_event(handle, EV_KEY, KEY_SYSRQ, 0);
+>  		input_inject_event(handle, EV_KEY, alt_code, 0);
+>  		input_inject_event(handle, EV_SYN, SYN_REPORT, 1);
+> @@ -903,6 +949,7 @@ static inline void sysrq_register_handler(void)
+>  	int error;
+>  	int i;
+>  
+> +	/* first check if a __weak interface was instantiated */
+>  	for (i = 0; i < ARRAY_SIZE(sysrq_reset_seq); i++) {
+>  		key = platform_sysrq_reset_seq[i];
+>  		if (key == KEY_RESERVED || key > KEY_MAX)
+> @@ -911,6 +958,13 @@ static inline void sysrq_register_handler(void)
+>  		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
+>  	}
+>  
+> +	/*
+> +	 * DT configuration takes precedence over anything
+> +	 * that would have been defined via the __weak
+> +	 * interface
+> +	 */
+> +	sysrq_of_get_keyreset_config();
+> +
+>  	error = input_register_handler(&sysrq_handler);
+>  	if (error)
+>  		pr_err("Failed to register input handler, error %d", error);
+> 
 
-The defer probe mechanism is not used here, because a reset controller
-driver should be reasonably registered early than other devices.  More
-importantly, defer probe doe not help in some nasty cases, e.g. the
-gpio-pca953x device itself needs a reset from gpio-reset driver to start
-working.
-
-Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/reset/gpio-reset.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
-index 4f372f9..a7f214f 100644
---- a/drivers/reset/gpio-reset.c
-+++ b/drivers/reset/gpio-reset.c
-@@ -168,7 +168,17 @@ static struct platform_driver gpio_reset_driver = {
- 	},
- };
- 
--module_platform_driver(gpio_reset_driver);
-+static int __init gpio_reset_init(void)
-+{
-+	return platform_driver_register(&gpio_reset_driver);
-+}
-+arch_initcall(gpio_reset_init);
-+
-+static void __exit gpio_reset_exit(void)
-+{
-+	platform_driver_unregister(&gpio_reset_driver);
-+}
-+module_exit(gpio_reset_exit);
- 
- MODULE_AUTHOR("Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
- MODULE_DESCRIPTION("gpio reset controller");
--- 
-1.7.9.5
