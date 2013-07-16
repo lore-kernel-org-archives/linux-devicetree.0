@@ -1,77 +1,95 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: [PATCH RFC v4] media: OF: add "sync-on-green-active" property
-Date: Tue, 16 Jul 2013 22:49:23 +0530
-Message-ID: <1373995163-9412-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: LMML <linux-media@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
-Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RESEND 1/2] ARM: mmp: Add compatible entries for OLPC XO
+ laptops
+Date: Tue, 16 Jul 2013 14:06:05 -0400 (EDT)
+Message-ID: <20130716180605.A63C7FAAF3@dev.laptop.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, pgf-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Add compatible entries to enable booting of OLPC XO-1.75 (MMP2) and
+OLPC XO-4 (MMP3).
 
-This patch adds 'sync-on-green-active' property as part
-of endpoint property.
-
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Signed-off-by: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
 ---
-  Changes for v4:
-  1: Fixed review comments pointed by Sylwester.
-  
-  Changes for v3:
-  1: Fixed review comments pointed by Laurent and Sylwester.
+ Documentation/devicetree/bindings/arm/mrvl/intc.txt | 4 ++--
+ Documentation/devicetree/bindings/arm/mrvl/mrvl.txt | 8 ++++++++
+ arch/arm/mach-mmp/irq.c                             | 1 +
+ arch/arm/mach-mmp/mmp2-dt.c                         | 2 ++
+ 4 files changed, 13 insertions(+), 2 deletions(-)
 
-  RFC v2 https://patchwork.kernel.org/patch/2578091/
-  
-  RFC V1 https://patchwork.kernel.org/patch/2572341/
-  
- .../devicetree/bindings/media/video-interfaces.txt |    3 +++
- drivers/media/v4l2-core/v4l2-of.c                  |    4 ++++
- include/media/v4l2-mediabus.h                      |    2 ++
- 3 files changed, 9 insertions(+)
+Resending after 1 month with no response.
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index e022d2d..5186c7e 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -101,6 +101,9 @@ Optional endpoint properties
-   array contains only one entry.
- - clock-noncontinuous: a boolean property to allow MIPI CSI-2 non-continuous
-   clock mode.
-+- sync-on-green-active: polarity field when video synchronization is
-+  Sync-On-Green. When set the driver determines whether it's a normal operation
-+  or inverted operation.
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+index 8b53273..3554fb9 100644
+--- a/Documentation/devicetree/bindings/arm/mrvl/intc.txt
++++ b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+@@ -1,8 +1,8 @@
+ * Marvell MMP Interrupt controller
  
- 
- Example
-diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
-index aa59639..5c4c9f0 100644
---- a/drivers/media/v4l2-core/v4l2-of.c
-+++ b/drivers/media/v4l2-core/v4l2-of.c
-@@ -100,6 +100,10 @@ static void v4l2_of_parse_parallel_bus(const struct device_node *node,
- 	if (!of_property_read_u32(node, "data-shift", &v))
- 		bus->data_shift = v;
- 
-+	if (!of_property_read_u32(node, "sync-on-green-active", &v))
-+		flags |= v ? V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH :
-+			V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW;
+ Required properties:
+-- compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
+-  "mrvl,mmp2-mux-intc"
++- compatible : One of: mrvl,mmp-intc mrvl,mmp2-intc mrvl,mmp3-intc
++  mrvl,mmp2-mux-intc
+ - reg : Address and length of the register set of the interrupt controller.
+   If the interrupt controller is intc, address and length means the range
+   of the whold interrupt controller. If the interrupt controller is mux-intc,
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+index 117d741..236e884 100644
+--- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
++++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+@@ -12,3 +12,11 @@ Required root node properties:
+ MMP2 Brownstone Board
+ Required root node properties:
+ 	- compatible = "mrvl,mmp2-brownstone";
 +
- 	bus->flags = flags;
++OLPC XO-1.75 (CL2) based on MMP2
++Required root node properties:
++	- compatible = "olpc,xo-1.75";
++
++OLPC XO-4 (CL4) based on MMP3
++Required root node properties:
++	- compatible = "olpc,xo-cl4";
+diff --git a/arch/arm/mach-mmp/irq.c b/arch/arm/mach-mmp/irq.c
+index 3c71246..d60b85a 100644
+--- a/arch/arm/mach-mmp/irq.c
++++ b/arch/arm/mach-mmp/irq.c
+@@ -329,6 +329,7 @@ void __init mmp2_init_icu(void)
+ static const struct of_device_id intc_ids[] __initconst = {
+ 	{ .compatible = "mrvl,mmp-intc", .data = &mmp_conf },
+ 	{ .compatible = "mrvl,mmp2-intc", .data = &mmp2_conf },
++	{ .compatible = "mrvl,mmp3-intc", .data = &mmp2_conf },
+ 	{}
+ };
  
- }
-diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
-index 83ae07e..d47eb81 100644
---- a/include/media/v4l2-mediabus.h
-+++ b/include/media/v4l2-mediabus.h
-@@ -40,6 +40,8 @@
- #define V4L2_MBUS_FIELD_EVEN_HIGH		(1 << 10)
- /* FIELD = 1/0 - Field1 (odd)/Field2 (even) */
- #define V4L2_MBUS_FIELD_EVEN_LOW		(1 << 11)
-+#define V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH	(1 << 12)
-+#define V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW		(1 << 13)
+diff --git a/arch/arm/mach-mmp/mmp2-dt.c b/arch/arm/mach-mmp/mmp2-dt.c
+index 4ac2567..e67bd9f 100644
+--- a/arch/arm/mach-mmp/mmp2-dt.c
++++ b/arch/arm/mach-mmp/mmp2-dt.c
+@@ -44,6 +44,8 @@ static void __init mmp2_dt_init(void)
  
- /* Serial flags */
- /* How many lanes the client can use */
+ static const char *mmp2_dt_board_compat[] __initdata = {
+ 	"mrvl,mmp2-brownstone",
++	"olpc,xo-1.75",
++	"olpc,xo-cl4",
+ 	NULL,
+ };
+ 
 -- 
-1.7.9.5
-
+1.8.1.4
