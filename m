@@ -1,144 +1,98 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
-Date: Tue, 16 Jul 2013 03:16:48 +0200
-Message-ID: <6105968.TjP9HSeA1l@avalon>
-References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20130712172441.GB9620@dhcp-172-17-186-34.nvidia.com> <51E03F9C.2060903@wwwdotorg.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Tue, 16 Jul 2013 09:50:42 +0800
+Message-ID: <20130716015038.GD28375@S2101-09.ap.freescale.net>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51E03F9C.2060903@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org, Philip Avinash <avinashphilip@ti.com>, Boris BREZILLON <linux-arm@overkiz.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1369904940-716-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Philipp,
 
-On Friday 12 July 2013 11:40:44 Stephen Warren wrote:
-> On 07/12/2013 11:24 AM, Thierry Reding wrote:
-> > On Fri, Jul 12, 2013 at 08:40:07AM -0600, Stephen Warren wrote:
-> >> On 07/12/2013 04:41 AM, Laurent Pinchart wrote:
-> >>> Hi Stephen,
-> > 
-> > [...]
-> > 
-> >>> What about splitting it in three patches that
-> >>> 
-> >>> - add the include/dt-bindings/pwm/pwm.h header, and update
-> >>> include/linux/pwm.h and
-> >>> Documentation/devicetree/bindings/pwm/pwm.txt
-> >>> 
-> >>> - update the rest of the documentation
-> >>> 
-> >>> - update the .dts files
-> >> 
-> >> I think that sounds reasonable.
-> > 
-> > Shouldn't the addition of include/dt-bindings/pwm/pwm.h be separate from
-> > its inclusion in include/linux/pwm.h so that it can be moved more easily
-> > (cherry-picked) to a separate repository?
+On Thu, May 30, 2013 at 11:09:00AM +0200, Philipp Zabel wrote:
+> This driver implements a reset controller device that toggle a gpio
+> connected to a reset pin of a peripheral IC. The delay between assertion
+> and de-assertion of the reset signal can be configured via device tree.
 > 
-> I'm fine with that being another separate patch. However, I doubt cherry-
-> picking is an issue here; when the separate DT repo is created, it seems
-> likely that someone will simply copy the latest files from the latest Linux
-> kernel in order to populate the tree. cherry-picking probably won't work
-> because:
-> 
-> a) I doubt that the DT binding/header additions have always been kept
-> separate from kernel code changes in all of Linux's history.
-> 
-> b) I wouldn't be remotely surprised if the layout of the new repo was
-> entirely different to the kernel source tree layout, so direct cherry-pick
-> wouldn't work.
-> 
-> c) Not having a common git history would make adding a kernel remote into
-> the DT repo rather odd.
-> 
-> (b) and (c)  would at leat require some kind of git filter operation rather
-> than cherry-pick, and this issue could be solve in that filter definition.
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-I agree with the reasoning, so I'll implement the patch split scheme described 
-above unless someone objects.
+I see this patch is very useful, as GPIOs are widely used to reset
+components/devices on board.  But I do not find the patch in v3.11-rc1.
+What's your plan about it?
 
-> >>>>> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> >>>>> 
-> >>>>> enum pwm_polarity {
-> >>>>> 
-> >>>>> -	PWM_POLARITY_NORMAL, -	PWM_POLARITY_INVERSED, +
-> >>>>> PWM_POLARITY_NORMAL = 0, +	PWM_POLARITY_INVERSED = 1,
-> >>>>> 
-> >>>>> };
-> >>>> 
-> >>>> Rather than manually editing that to ensure the enum matches the DT
-> >>>> bindings header, the whole point of making a separate <dt-bindings/...>
-> >>>> directory was that drivers could include the binding header files
-> >>>> directly to avoid having to duplicate the constant definitions. Can't
-> >>>> <linux/pwm.h> include <dt- bindings/pwm.h> and remove that enum?
-> >>> 
-> >>> We could do that, but we would then need to modify all drivers to
-> >>> replace enum_pwm_polarity with unsigned int. Thierry, what's your
-> >>> opinion on this ?
-> >> 
-> >> Or perhaps we could keep the enums around, but force the values to match
-> >> the DT constants:
-> >> 
-> >> enum pwm_polarity { PWM_POLARITY_NORMAL = PWM_POLARITY_NORMAL,
-> >> PWM_POLARITY_INVERTED = PWM_POLARITY_INVERTED, };
-> >> 
-> >> (although obviously you'd need to avoid the enum and DT constants having
-> >> the same name).
-> > 
-> > I think I've seen stuff like the following done in a few header files to
-> > keep compatibility between enums and defines.
-> > 
-> > enum foo { BAR, #define BAR BAR BAZ, #define BAZ BAZ };
-> > 
-> > Which, as I understand it, won't work in this case because DTC can only
-> > cope with plain cpp files?
-> 
-> Yeah, dtc doesn't understand "enum", so you can't include an enum definition
-> in a DT file. You have to share simple #define headers between DT and kernel
-> code.
-> 
-> >> Although this brings up one point: let's say we support ACPI/..
-> >> bindings in the future. The enum possibly can't match the binding
-> >> values from every different kind of binding definition (DT, ACPI,
-> >> ...) so perhaps rather than changing the enum definition in
-> >> <linux/pwm.h>, what we should be doing is mapping between the
-> >> different name-spaces in whatever of_xlate function exists for
-> >> the PWM flags cell. That would be more flexible.
-> > 
-> > I'm not quite sure what exactly you are suggesting here. Can you
-> > elaborate?
-> 
-> Suppose ACPI (or whatever else) starts representing PWM devices. Suppose the
-> author isn't aware that DT exists, represents PWM devices and/or has already
-> defined some PWM-related flags. So, ACPI picks bit 5 in some data value to
-> represent inverted, rather than bit 0. Then, there is no way that all of [
-> (a) DT binding PWM flags (b) ACPI PWM flags (c) Linux's enum foo ] can use
-> the same values. Hence, some mapping is required between them.
-> 
-> The typical way to do this is to define an "of_xlate" function which
-> converts from DT cell values to Linux-internal representation. Presumably if
-> we added an ACPI parser, there'd be some equivalent for that.
-> 
-> So, what I'm arguing for is that of_pwm_simple_xlate() (or any other custom
-> xlate function) should include both <dt-bindings/pwm/pwm.h> and
-> <linux/pwm.h>, and contain explicit code to convert between the two name-
-> spaces of flags definitions. Since those two name-spaces currently are 100%
-> identical, presumably if the code is written in the right way, the compiler
-> will actually just optimize it all away...
+Also, I'm wondering if we should register the driver a little bit
+early.  Please see the following patch.  If it makes sense to you,
+I can send the patch to you, or you can just quash it into yours.
 
-If ACPI (or any other source of device information) uses different numerical 
-values for the flags we will need an xlate function. In the DT case we're 
-designing bindings so we're free to pick the numerical values currently used 
-by the kernel, and even use the same symbolic names. I'm however fine with 
-renamed the #define's in dt-bindings/pwm/pwm.h. Does anyone have a preference 
-regarding the names I should use ?
+Shawn
 
+---8<--------
+
+>From 2f8ce9e5d6525b98f3828b707458e83fabb39d50 Mon Sep 17 00:00:00 2001
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Sun, 14 Jul 2013 20:41:00 +0800
+Subject: [PATCH] ENGR00269945: reset: register gpio-reset driver in
+ arch_initcall
+
+It's a little bit late to register gpio-reset driver at module_init
+time, because gpio-reset provides reset control via gpio for other
+devices which are mostly probed at module_init time too.  And it
+becomes even worse, when the gpio comes from IO expander on I2C bus,
+e.g. pca953x.  In that case, gpio-reset needs to be ready before I2C
+bus driver which is generally ready at subsys_initcall time.  Let's
+register gpio-reset driver in arch_initcall() to have it ready early
+enough.
+
+The defer probe mechanism is not used here, because a reset controller
+driver should be reasonably registered early than other devices.  More
+importantly, defer probe doe not help in some nasty cases, e.g. the
+gpio-pca953x device itself needs a reset from gpio-reset driver to start
+working.
+
+Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/reset/gpio-reset.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
+index 4f372f9..a7f214f 100644
+--- a/drivers/reset/gpio-reset.c
++++ b/drivers/reset/gpio-reset.c
+@@ -168,7 +168,17 @@ static struct platform_driver gpio_reset_driver = {
+ 	},
+ };
+ 
+-module_platform_driver(gpio_reset_driver);
++static int __init gpio_reset_init(void)
++{
++	return platform_driver_register(&gpio_reset_driver);
++}
++arch_initcall(gpio_reset_init);
++
++static void __exit gpio_reset_exit(void)
++{
++	platform_driver_unregister(&gpio_reset_driver);
++}
++module_exit(gpio_reset_exit);
+ 
+ MODULE_AUTHOR("Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
+ MODULE_DESCRIPTION("gpio reset controller");
 -- 
-Regards,
-
-Laurent Pinchart
-
+1.7.9.5
