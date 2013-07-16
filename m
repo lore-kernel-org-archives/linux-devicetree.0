@@ -1,300 +1,148 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH RESEND 2/2] clk: mmp: add support for DT-defined clocks
-Date: Tue, 16 Jul 2013 14:11:19 -0400 (EDT)
-Message-ID: <20130716181119.46C08FAAF3@dev.laptop.org>
+From: Gerlando Falauto <gerlando.falauto@keymile.com>
+Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
+ translation
+Date: Tue, 16 Jul 2013 20:51:37 +0200
+Message-ID: <51E59639.3000207@keymile.com>
+References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <51E5145A.90404@keymile.com> <20130716125531.GD2317@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, pgf-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130716125531.GD2317@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "Longchamp,
+ Valentin" <Valentin.Longchamp@keymile.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support to the existing mmp clock drivers for clocks to be defined
-in the device tree. This will be used on OLPC MMP2/MMP3-based laptops.
+Hi Ezequiel,
 
-If clock info cannot be found in the device tree, we fall back to the
-static clock initialization already present.
+On 07/16/2013 02:56 PM, Ezequiel Garcia wrote:
+> Hi Gerlando,
+>
+> On Tue, Jul 16, 2013 at 11:37:30AM +0200, Gerlando Falauto wrote:
+>>
+>> apologies in advance for commenting on an already-merged patch.
+>
+> Sure, no problem.
+>
+>>
+>> On 06/18/2013 05:31 PM, Ezequiel Garcia wrote:
+>>> Although the internal register window size is 1 MiB, the previous
+>>> ranges translation for the internal register space had a size of
+>>> 0x4000000. This was done to allow the crypto and nand node to access
+>>> the corresponding 'sram' and 'nand' decoding windows.
+>>>
+>>> In order to describe the hardware more accurately, we declare the
+>>> real 1 MiB internal register space in the ranges, and add a translation
+>>> entry for the nand node to access the 'nand' window.
+>>>
+>>> This commit will make future improvements on the MBus DT binding easier.
+>>>
+>>> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>> Tested on Plathome Openblocks A6 board.
+>>>
+>>>    arch/arm/boot/dts/kirkwood.dtsi | 5 +++--
+>>>    1 file changed, 3 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+>>> index 8a1e3bb..910fabc 100644
+>>> --- a/arch/arm/boot/dts/kirkwood.dtsi
+>>> +++ b/arch/arm/boot/dts/kirkwood.dtsi
+>>> @@ -38,7 +38,8 @@
+>>>
+>>>    	ocp@f1000000 {
+>>>    		compatible = "simple-bus";
+>>> -		ranges = <0x00000000 0xf1000000 0x4000000
+>>> +		ranges = <0x00000000 0xf1000000 0x0100000
+>>> +		          0xf4000000 0xf4000000 0x0000400
+>>>    		          0xf5000000 0xf5000000 0x0000400>;
+>>
+>> Apart from "consistency" with the following range (0xf5000000) used by
+>> the crypto node, is there any reason why you did not do something like
+>> this instead (which Valentin suggested, but I will take the blame for):
+>>
+>
+> I'm not sure the reason is "consistency with the crypto node".
+> There's an MBus window at 0xf4000000 for NAND, and that is what is described
+> in the snippet above; and this is a better reason.
+>
+> That said, technically speaking, you can have any translation scheme you want,
+> as long as it ends up in 0xf4000000.
+>
+>> -		ranges = <0x00000000 0xf1000000 0x4000000
+>> +		ranges = <0x00000000 0xf1000000 0x0100000
+>> +		          0x03000000 0xf4000000 0x0000400
+>>     		          0xf5000000 0xf5000000 0x0000400>;
+>>
+>> This would keep a consistent addressing within the child device bus, and
+>
+> Could you explain how this "keeps a consistent addressing"?
+> Frankly, I don't understand why you choose 0x3000000 ... am I missing something?
 
-Signed-off-by: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/clock/mmp-apbc.txt         | 30 ++++++++++
- .../devicetree/bindings/clock/mmp-apmu.txt         | 30 ++++++++++
- drivers/clk/mmp/clk-apbc.c                         | 66 +++++++++++++++++++++-
- drivers/clk/mmp/clk-apmu.c                         | 37 +++++++++++-
- drivers/clk/mmp/clk-mmp2.c                         | 19 ++++++-
- 5 files changed, 179 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/mmp-apbc.txt
- create mode 100644 Documentation/devicetree/bindings/clock/mmp-apmu.txt
+Actually, the only one missing something here is myself, as I do not 
+quite have the full picture :-)
+Mine was a bit of a "reverse allocation" -- we know we must end up at 
+0xf4000000. Since all the addresses are shifted by 0xf1000000, here 
+comes 0x03000000... But please see my last question further down.
 
-Resending after a month without review.
+>
+> Also, speaking of "device bus" this nand node should be behind a devicebus node.
+>
+> 		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000   /* internal-regs */
+> 			  MBUS_ID(0x01, 0x2f) 0 0 0xf4000000 0x400>;
+>
+> 		devbus {
+> 			status = "okay";
+> 			ranges = <0 MBUS_ID(0x01, 0x2f) 0 0x400>;
+>
+> 			/* nand */
+> 			nand {
+> 				compatible = "marvell,orion-nand";
+> 				reg = <0 0x400>;
+> 			};
+> 		};
 
-diff --git a/Documentation/devicetree/bindings/clock/mmp-apbc.txt b/Documentation/devicetree/bindings/clock/mmp-apbc.txt
-new file mode 100644
-index 0000000..88e1253
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/mmp-apbc.txt
-@@ -0,0 +1,30 @@
-+* Clock bindings for Marvell MMP Advanced Peripheral Bus clock
-+
-+Parent apb-clock node
-+=====================
-+Required properties:
-+- reg: Address and length of the APB clock unit registers
-+
-+
-+Child peripheral clock nodes
-+============================
-+Required properties:
-+- compatible : shall be "marvell,mmp-apb-clock"
-+- #clock-cells : from common clock binding; shall be set to 1
-+- clocks : parent clock, from common clock binding
-+- clock-output-names : Array of clock names, from common clock binding
-+- reg : Array of control register offsets into APB clock unit register space
-+
-+
-+Example:
-+apbc: apb-clock {
-+	reg = <0xd4015000 0x1000>;
-+
-+	twsi-clocks {
-+		compatible = "marvell,mmp-apb-clock";
-+		#clock-cells = <1>;
-+		clocks = <&vctvxo-clock>;
-+		clock-output-names = "TWSI0", "TWSI1";
-+		reg = <0x04 0x08>;
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/clock/mmp-apmu.txt b/Documentation/devicetree/bindings/clock/mmp-apmu.txt
-new file mode 100644
-index 0000000..18bb0f9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/mmp-apmu.txt
-@@ -0,0 +1,30 @@
-+* Clock bindings for Marvell MMP Application Subsystem Power Management Unit
-+
-+Parent apmu-clock node
-+=====================
-+Required properties:
-+- reg: Address and length of the CPU Subsystem PMU registers
-+
-+
-+Child peripheral clock nodes
-+============================
-+Required properties:
-+- compatible : shall be "marvell,mmp-apmu-clock"
-+- #clock-cells : from common clock binding; shall be set to 0
-+- clocks : parent clock, from common clock binding
-+- reg : Control register offsets into parent register space
-+- enable-mask : The bits to be set in the register to enable the clock, or
-+                cleared to disable.
-+
-+Example:
-+apmu-clock {
-+	reg = <0xd4282800 0x1000>;
-+
-+	usb-clock {
-+		compatible = "marvell,mmp-apmu-clock";
-+		#clock-cells = <0>;
-+		clocks = <&usb_pll>;
-+		reg = <0x5c>;
-+		enable-mask = <0x09>;
-+	};
-+};
-diff --git a/drivers/clk/mmp/clk-apbc.c b/drivers/clk/mmp/clk-apbc.c
-index 89a146a..d53bc79 100644
---- a/drivers/clk/mmp/clk-apbc.c
-+++ b/drivers/clk/mmp/clk-apbc.c
-@@ -15,6 +15,8 @@
- #include <linux/err.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
- 
- #include "clk.h"
- 
-@@ -129,8 +131,70 @@ struct clk *mmp_clk_register_apbc(const char *name, const char *parent_name,
- 	apbc->hw.init = &init;
- 
- 	clk = clk_register(NULL, &apbc->hw);
--	if (IS_ERR(clk))
-+	if (WARN_ON(IS_ERR(clk)))
- 		kfree(apbc);
- 
- 	return clk;
- }
-+
-+static void __init mmp_apbc_dt_init(struct device_node *node)
-+{
-+	struct device_node *parent = of_get_parent(node);
-+	const __be32 *regs;
-+	struct clk *clk;
-+	int rc;
-+	int len;
-+	int num_clocks;
-+	int clock_num;
-+	void __iomem *baseaddr;
-+	const char *clock_name;
-+	const char *parent_name;
-+	struct clk **clks;
-+	struct clk_onecell_data *clk_data;
-+
-+	regs = of_get_property(node, "reg", &len);
-+	if (WARN_ON(!regs || (len % sizeof(__be32) != 0)))
-+		return;
-+	num_clocks = len / sizeof(__be32);
-+
-+	baseaddr = of_iomap(parent, 0);
-+	of_node_put(parent);
-+	if (WARN_ON(!baseaddr))
-+		return;
-+
-+	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
-+	if (WARN_ON(!clk_data))
-+		goto err_clk_data;
-+
-+	clks = kzalloc(num_clocks * sizeof(*clks), GFP_KERNEL);
-+	if (WARN_ON(!clks))
-+		goto err_clks;
-+
-+	clock_name = of_get_property(node, "clock-output-names", NULL);
-+	parent_name = of_clk_get_parent_name(node, 0);
-+
-+	for (clock_num = 0; clock_num < num_clocks; clock_num++) {
-+		void __iomem *clock_addr;
-+		clock_addr = baseaddr + be32_to_cpup(regs + clock_num);
-+
-+		clk = mmp_clk_register_apbc(clock_name, parent_name,
-+					    clock_addr, 10, 0);
-+		if (IS_ERR(clk))
-+			return;
-+		clock_name += strlen(clock_name) + 1;
-+		clks[clock_num] = clk;
-+	}
-+
-+	clk_data->clk_num = num_clocks;
-+	clk_data->clks = clks;
-+	rc = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
-+	WARN_ON(rc);
-+	return;
-+
-+err_clks:
-+	kfree(clk_data);
-+err_clk_data:
-+	iounmap(baseaddr);
-+
-+}
-+CLK_OF_DECLARE(mmp2_apbc, "marvell,mmp-apb-clock", mmp_apbc_dt_init);
-diff --git a/drivers/clk/mmp/clk-apmu.c b/drivers/clk/mmp/clk-apmu.c
-index 4f4d8c5..dfcecc9 100644
---- a/drivers/clk/mmp/clk-apmu.c
-+++ b/drivers/clk/mmp/clk-apmu.c
-@@ -15,6 +15,8 @@
- #include <linux/err.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
- 
- #include "clk.h"
- 
-@@ -22,7 +24,6 @@
- struct clk_apmu {
- 	struct clk_hw   hw;
- 	void __iomem    *base;
--	u32		rst_mask;
- 	u32		enable_mask;
- };
- 
-@@ -85,3 +86,37 @@ struct clk *mmp_clk_register_apmu(const char *name, const char *parent_name,
- 
- 	return clk;
- }
-+
-+static void __init mmp_apmu_dt_init(struct device_node *node)
-+{
-+	struct device_node *parent = of_get_parent(node);
-+	const char *clk_name = node->name;
-+	void __iomem *baseaddr;
-+	struct clk *clk;
-+	u32 reg;
-+	u32 enable_mask;
-+	int rc;
-+
-+	rc = of_property_read_u32(node, "reg", &reg);
-+	if (WARN_ON(rc))
-+		return;
-+
-+	rc = of_property_read_u32(node, "enable-mask", &enable_mask);
-+	if (WARN_ON(rc))
-+		return;
-+
-+	baseaddr = of_iomap(parent, 0);
-+	of_node_put(parent);
-+	if (WARN_ON(!baseaddr))
-+		return;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+	clk = mmp_clk_register_apmu(clk_name, of_clk_get_parent_name(node, 0),
-+				    baseaddr + reg, enable_mask);
-+	if (WARN_ON(IS_ERR(clk)))
-+		return;
-+
-+	rc = of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	WARN_ON(rc);
-+}
-+CLK_OF_DECLARE(mmp2_apmu, "marvell,mmp-apmu-clock", mmp_apmu_dt_init);
-diff --git a/drivers/clk/mmp/clk-mmp2.c b/drivers/clk/mmp/clk-mmp2.c
-index cb1b0b6..774193b 100644
---- a/drivers/clk/mmp/clk-mmp2.c
-+++ b/drivers/clk/mmp/clk-mmp2.c
-@@ -15,6 +15,7 @@
- #include <linux/io.h>
- #include <linux/delay.h>
- #include <linux/err.h>
-+#include <linux/of.h>
- 
- #include <mach/addr-map.h>
- 
-@@ -73,7 +74,7 @@ static const char *sdh_parent[] = {"pll1_4", "pll2", "usb_pll", "pll1"};
- static const char *disp_parent[] = {"pll1", "pll1_16", "pll2", "vctcxo"};
- static const char *ccic_parent[] = {"pll1_2", "pll1_16", "vctcxo"};
- 
--void __init mmp2_clk_init(void)
-+static void __init mmp2_clk_init_static(void)
- {
- 	struct clk *clk;
- 	struct clk *vctcxo;
-@@ -445,3 +446,19 @@ void __init mmp2_clk_init(void)
- 				apmu_base + APMU_CCIC1, 0x300);
- 	clk_register_clkdev(clk, "sphyclk", "mmp-ccic.1");
- }
-+
-+void __init mmp2_clk_init(void)
-+{
-+	struct device_node *node;
-+
-+	/* The presence of the ABP clock node in the device tree indicates
-+	 * that we should use the DT for clock setup. */
-+	node = of_find_compatible_node(NULL, NULL, "marvell,mmp-apb-clock");
-+	if (node) {
-+		of_node_put(node);
-+		of_clk_init(NULL);
-+	} else {
-+		/* Fallback to static setup */
-+		mmp2_clk_init_static();
-+	}
-+}
--- 
-1.8.1.4
+I believe that makes a lot more sense this way... I guess this feature 
+(device bus) requires your latest set of patches, right? (either v7 as 
+you posted yesterday or your tree at 
+git://github.com/MISL-EBU-System-SW/mainline-public.git/marvell-mvebu-mbus-v7)
+
+> (notice this will allow you to relocate the base address of the NAND windows
+> easily if it conflicts with your PCIe needs).
+
+I sort of had the impression I could do already do that somehow, though 
+I am not quite sure anymore...
+
+>> avoid a later incosistency between the "unit-address" and the first
+>> "reg" address:
+>>
+>>>    		#address-cells = <1>;
+>>>    		#size-cells = <1>;
+>>> @@ -171,7 +172,7 @@
+>>   >   		nand@3000000 {
+>> 		     ^^^^^^^
+>
+> Oh, this should be fixed. I just missed it, and nobody noticed either.
+>
+
+So, in the end, you think it's OK to have a set of nodes with "relative" 
+addresses (gpio@10140, serial@12000 etc...) and some with "absolute" 
+addresses (nand@0xf4000000, where the ranges property does a 0-offset 
+translation)?
+Even though I understand this is just some transitional state, and it 
+will all be fixed like your example above, once we get the rest of the 
+rework merged (mbus/devbus).
+
+Thanks a lot for your patience!
+Gerlando
