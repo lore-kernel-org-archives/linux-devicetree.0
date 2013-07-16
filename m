@@ -1,130 +1,82 @@
 From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH v1 17/24] serial: mpc512x: setup the PSC FIFO clock as well
-Date: Tue, 16 Jul 2013 08:05:05 +0200
-Message-ID: <1373954707-23909-2-git-send-email-gsi@denx.de>
+Subject: [PATCH v1 19/24] USB: fsl-mph-dr-of: OF clock lookup,
+ prepare and enable
+Date: Tue, 16 Jul 2013 08:05:07 +0200
+Message-ID: <1373954707-23909-4-git-send-email-gsi@denx.de>
 References: <1373914074-20889-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1373914074-20889-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-prepare and enable the FIFO clock upon PSC FIFO initialization, disable
-and unprepare the FIFO clock upon PSC FIFO uninitialization, remove the
-pre-enable workaround from the platform's clock driver
+device tree based clock lookup in the MPC512x initialization (lookup
+'per' for register access), add error check in the clock setup, must
+prepare clocks before they can get enabled, unprepare after disable
 
 Signed-off-by: Gerhard Sittig <gsi@denx.de>
 ---
- arch/powerpc/platforms/512x/clock-commonclk.c |    2 --
- drivers/tty/serial/mpc52xx_uart.c             |   47 +++++++++++++++++++++----
- 2 files changed, 41 insertions(+), 8 deletions(-)
+ drivers/usb/host/fsl-mph-dr-of.c |   24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
-diff --git a/arch/powerpc/platforms/512x/clock-commonclk.c b/arch/powerpc/platforms/512x/clock-commonclk.c
-index 31707b5..2c6da07 100644
---- a/arch/powerpc/platforms/512x/clock-commonclk.c
-+++ b/arch/powerpc/platforms/512x/clock-commonclk.c
-@@ -690,8 +690,6 @@ static void mpc512x_clk_setup_clock_tree(int busfreq)
- 	clk_prepare_enable(clks[MPC512x_CLK_MEM]);	/* SRAM */
- 	clk_prepare_enable(clks[MPC512x_CLK_IPS]);	/* SoC periph */
- 	clk_prepare_enable(clks[MPC512x_CLK_LPC]);	/* boot media */
--	/* some are required yet no dependencies were declared */
--	clk_prepare_enable(clks[MPC512x_CLK_PSC_FIFO]);
- 	/* some are not yet acquired by their respective drivers */
- 	clk_prepare_enable(clks[MPC512x_CLK_PSC3_MCLK]);/* serial console */
- 	clk_prepare_enable(clks[MPC512x_CLK_FEC]);	/* network, NFS */
-diff --git a/drivers/tty/serial/mpc52xx_uart.c b/drivers/tty/serial/mpc52xx_uart.c
-index 221fb89..e67d4c0 100644
---- a/drivers/tty/serial/mpc52xx_uart.c
-+++ b/drivers/tty/serial/mpc52xx_uart.c
-@@ -567,35 +567,70 @@ static unsigned int mpc512x_psc_set_baudrate(struct uart_port *port,
- static int __init mpc512x_psc_fifoc_init(void)
+diff --git a/drivers/usb/host/fsl-mph-dr-of.c b/drivers/usb/host/fsl-mph-dr-of.c
+index 11e0b79..eb564f3 100644
+--- a/drivers/usb/host/fsl-mph-dr-of.c
++++ b/drivers/usb/host/fsl-mph-dr-of.c
+@@ -260,25 +260,19 @@ int fsl_usb2_mpc5121_init(struct platform_device *pdev)
  {
- 	struct device_node *np;
-+	struct clk *clk;
- 
- 	np = of_find_compatible_node(NULL, NULL,
- 				     "fsl,mpc5121-psc-fifo");
- 	if (!np) {
- 		pr_err("%s: Can't find FIFOC node\n", __func__);
+ 	struct fsl_usb2_platform_data *pdata = pdev->dev.platform_data;
+ 	struct clk *clk;
+-	char clk_name[10];
+-	int base, clk_num;
+-
+-	base = pdev->resource->start & 0xf000;
+-	if (base == 0x3000)
+-		clk_num = 1;
+-	else if (base == 0x4000)
+-		clk_num = 2;
+-	else
 -		return -ENODEV;
-+		goto out_err;
++	int err;
+ 
+-	snprintf(clk_name, sizeof(clk_name), "usb%d_clk", clk_num);
+-	clk = clk_get(&pdev->dev, clk_name);
++	clk = clk_get(&pdev->dev, "per");
+ 	if (IS_ERR(clk)) {
+ 		dev_err(&pdev->dev, "failed to get clk\n");
+ 		return PTR_ERR(clk);
+ 	}
+-
+-	clk_enable(clk);
++	err = clk_prepare_enable(clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable clk\n");
++		clk_put(clk);
++		return err;
 +	}
-+
-+	clk = of_clk_get_by_name(np, "per");
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: Can't lookup FIFO clock\n", __func__);
-+		goto out_ofnode_put;
-+	}
-+	if (clk_prepare_enable(clk)) {
-+		pr_err("%s: Can't enable FIFO clock\n", __func__);
-+		goto out_clk_put;
- 	}
+ 	pdata->clk = clk;
  
- 	psc_fifoc = of_iomap(np, 0);
- 	if (!psc_fifoc) {
- 		pr_err("%s: Can't map FIFOC\n", __func__);
--		of_node_put(np);
--		return -ENODEV;
-+		goto out_clk_disable;
- 	}
+ 	if (pdata->phy_mode == FSL_USB2_PHY_UTMI_WIDE) {
+@@ -303,7 +297,7 @@ static void fsl_usb2_mpc5121_exit(struct platform_device *pdev)
+ 	pdata->regs = NULL;
  
- 	psc_fifoc_irq = irq_of_parse_and_map(np, 0);
--	of_node_put(np);
- 	if (psc_fifoc_irq == 0) {
- 		pr_err("%s: Can't get FIFOC irq\n", __func__);
--		iounmap(psc_fifoc);
--		return -ENODEV;
-+		goto out_unmap;
+ 	if (pdata->clk) {
+-		clk_disable(pdata->clk);
++		clk_disable_unprepare(pdata->clk);
+ 		clk_put(pdata->clk);
  	}
- 
-+	clk_put(clk);
-+	of_node_put(np);
- 	return 0;
-+
-+out_unmap:
-+	iounmap(psc_fifoc);
-+out_clk_disable:
-+	clk_disable_unprepare(clk);
-+out_clk_put:
-+	clk_put(clk);
-+out_ofnode_put:
-+	of_node_put(np);
-+out_err:
-+	return -ENODEV;
  }
- 
- static void __exit mpc512x_psc_fifoc_uninit(void)
- {
-+	struct device_node *np;
-+	struct clk *clk;
-+
- 	iounmap(psc_fifoc);
-+
-+	/* disable the clock, errors are not fatal */
-+	np = of_find_compatible_node(NULL, NULL, "fsl,mpc5121-psc-fifo");
-+	if (np) {
-+		clk = of_clk_get_by_name(np, "per");
-+		if (!IS_ERR(clk)) {
-+			clk_disable_unprepare(clk);
-+			clk_put(clk);
-+		}
-+		of_node_put(np);
-+	}
- }
- 
- /* 512x specific interrupt handler. The caller holds the port lock */
 -- 
 1.7.10.4
