@@ -1,69 +1,57 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 06/10] watchdog: orion: Update device-tree binding
- documentation
-Date: Tue, 16 Jul 2013 09:24:30 -0400
-Message-ID: <20130716132430.GD12062@titan.lakedaemon.net>
-References: <1373931163-12670-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1373931163-12670-7-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 4/4] ARM: OMAP2+: Provide alias to USB PHY clock
+Date: Tue, 16 Jul 2013 16:39:25 +0300
+Message-ID: <51E54D0D.3030200@ti.com>
+References: <1371571487-14389-1-git-send-email-rogerq@ti.com> <1371571487-14389-5-git-send-email-rogerq@ti.com> <51E40199.9070906@ti.com> <20130716123256.GY7656@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1373931163-12670-7-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130716123256.GY7656@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, benoit.cousson@linaro.org
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 15, 2013 at 08:32:39PM -0300, Ezequiel Garcia wrote:
-> Now that the 'reg' property meaning has been changed,
-> this commit updates the deivce-tree binding documentation.
+On 07/16/2013 03:32 PM, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [130715 07:11]:
+>> Hi Tony,
+>>
+>> On 06/18/2013 07:04 PM, Roger Quadros wrote:
+>>> Till the OMAP clocks are correctly defined in device tree, use
+>>> this temporary hack to provide clock alias to the USB PHY clocks.
+>>>
+>>> Without this, USB Host & Ethernet will not be functional with
+>>> device tree boots on Panda and uEVM.
+>>
+>> Looks like this one got missed out.
+>>
+>> USB host no longer works on Panda with DT boot.
+>> Could you please queue this for next 3.11-rc? Thanks.
+> 
+> OK thanks for checking, applying into omap-for-v3.11/fixes.
 
-nit. s/deivce/device/
+Thanks.
 
 > 
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/watchdog/orion-wdt.txt | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+> Looks like I also have some pending the .dts changes in
+> omap-for-v3.11/dt branch:
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-> index 5dc8d30..48a71fc 100644
-> --- a/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/orion-wdt.txt
-> @@ -3,7 +3,8 @@
->  Required Properties:
->  
->  - Compatibility : "marvell,orion-wdt"
-> -- reg		: Address of the timer registers
-> +- reg		: First cell contains the register for the watchdog counter.
-> +		  Second cell contains the register for the RSTOUT mask.
->  
->  Optional properties:
->  
-> @@ -11,9 +12,10 @@ Optional properties:
->  
->  Example:
->  
-> -	wdt@20300 {
-> +	wdt@20324 {
->  		compatible = "marvell,orion-wdt";
-> -		reg = <0x20300 0x28>;
-> +		reg = <0x20324 0x4
-> +		       0x20108 0x4>;
->  		timeout-sec = <10>;
->  		status = "okay";
->  	};
-> -- 
-> 1.8.1.5
-> 
+> 4cf2198b1e3cee47a1cccbb500b67782c36615d5 ARM: dts: omap3-beagle-xm: Add USB host supprot for Rev. Ax/Bx
+> 9bc44515819a00c0ffaf751ad497ddf275089ede ARM: dts: omap3-beagle-xm: Add USB Host support
+> fd65d7df4598c1d2ad27d664c719611a1a070edc ARM: dts: omap3-beagle: Make USB host pin naming consistent
+
+Please disregard those. They are old versions.
+
+Benoit had agreed to take the newer version of those for 3.12.
+
+Please pick this one to get usb host working on 3.11 with DT.
+
+http://www.spinics.net/lists/arm-kernel/msg253612.html
+
+> 39ea891d9da6ae1824bc9f689db3f306f5ce0724 ARM: dts: omap4-panda: Add USB Host support
+
+This one is already in through Benoit.
+
+cheers,
+-roger
