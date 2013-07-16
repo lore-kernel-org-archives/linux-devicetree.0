@@ -1,1099 +1,1858 @@
-From: Oleksandr Kozaruk <oleksandr.kozaruk@ti.com>
-Subject: [PATCH v4 2/2] iio: twl6030-gpadc: TWL6030, TWL6032 GPADC driver
-Date: Tue, 16 Jul 2013 14:35:00 +0300
-Message-ID: <1373974500-23609-2-git-send-email-oleksandr.kozaruk@ti.com>
-References: <1373974500-23609-1-git-send-email-oleksandr.kozaruk@ti.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH] tty: serial: Add initial MSM UART High Speed Lite driver
+Date: Tue, 16 Jul 2013 14:46:28 +0300
+Message-ID: <1373975188.2657.15.camel@iivanov-dev>
+References: <1372669910-24409-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1373974500-23609-1-git-send-email-oleksandr.kozaruk@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, benoit.cousson@linaro.org, rnayak@ti.com, peter.ujfalusi@ti.com, kishon@ti.com, jic23@cam.ac.uk, grant.likely@linaro.org, rob.herring@calxeda.com, lars@metafoo.de, sameo@linux.intel.com, ch.naveen@samsung.com, poeschel@lemonage.de, milo.kim@ti.com, balajitk@ti.com, gg@slimlogic.co.uk
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1372669910-24409-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org
+Cc: grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, jslaby@suse.cz, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mrana@codeaurora.org, sambley@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-The GPADC is general purpose ADC found on TWL6030, and TWL6032 PMIC,
-known also as Phoenix and PhoenixLite.
 
-The TWL6030 and TWL6032 have GPADC with 17 and 19 channels
-respectively. Some channels have current source and are used for
-measuring voltage drop on resistive load for detecting battery ID
-resistance, or measuring voltage drop on NTC resistors for external
-temperature measurements. Some channels measure voltage, (i.e. battery
-voltage), and have voltage dividers, thus, capable to scale voltage.
-Some channels are dedicated for measuring die temperature.
+Hi Greg, 
 
-Some channels are calibrated in 2 points, having offsets from ideal
-values kept in trim registers. This is used to correct measurements.
+On Mon, 2013-07-01 at 12:11 +0300, Ivan T. Ivanov wrote:
+> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> 
+> This is a tty driver with console support for Qualcomm's UART
+> controllers found in the MSM8974 chipsets. Driver is completely
+> based on implementation found in codeaurora.org msm_serial_hs_lite
+> with Android dependences removed. Other changes include, moved to
+> device managed resources and few cleanups.
+> 
+> Driver functionality was tested in LEGACY_HSUART mode.
+> 
 
-The differences between GPADC in TWL6030 and TWL6032:
-- 10 bit vs 12 bit ADC;
-- 17 vs 19 channels;
-- channels have different purpose(i.e. battery voltage
-  channel 8 vs channel 18);
-- trim values are interpreted differently.
+Please, could you take a look at this driver. It have been 
+tested on these new Snapdragon 8074 based DragonBoards. 
 
-Based on the driver patched from Balaji TK, Graeme Gregory, Ambresh K,
-Girish S Ghongdemath.
+If there is something that I have to fix or improve in 
+the code please let me know.
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
-Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
-Signed-off-by: Oleksandr Kozaruk <oleksandr.kozaruk@ti.com>
----
- drivers/iio/adc/Kconfig         |   14 +
- drivers/iio/adc/Makefile        |    1 +
- drivers/iio/adc/twl6030-gpadc.c | 1008 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1023 insertions(+)
- create mode 100644 drivers/iio/adc/twl6030-gpadc.c
+Regards,
+Ivan
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index ab0767e6..3172461 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -150,6 +150,20 @@ config TI_AM335X_ADC
- 	  Say yes here to build support for Texas Instruments ADC
- 	  driver which is also a MFD client.
- 
-+config TWL6030_GPADC
-+	tristate "TWL6030 GPADC (General Purpose A/D Converter) Support"
-+	depends on TWL4030_CORE
-+	default n
-+	help
-+	  Say yes here if you want support for the TWL6030/TWL6032 General
-+	  Purpose A/D Converter. This will add support for battery type
-+	  detection, battery voltage and temperature measurement, die
-+	  temperature measurement, system supply voltage, audio accessory,
-+	  USB ID detection.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called twl6030-gpadc.
-+
- config VIPERBOARD_ADC
- 	tristate "Viperboard ADC support"
- 	depends on MFD_VIPERBOARD && USB
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 0a825be..996ba09 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -16,4 +16,5 @@ obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
- obj-$(CONFIG_MAX1363) += max1363.o
- obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
- obj-$(CONFIG_TI_AM335X_ADC) += ti_am335x_adc.o
-+obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
- obj-$(CONFIG_VIPERBOARD_ADC) += viperboard_adc.o
-diff --git a/drivers/iio/adc/twl6030-gpadc.c b/drivers/iio/adc/twl6030-gpadc.c
-new file mode 100644
-index 0000000..658f35b
---- /dev/null
-+++ b/drivers/iio/adc/twl6030-gpadc.c
-@@ -0,0 +1,1008 @@
-+/*
-+ * TWL6030 GPADC module driver
-+ *
-+ * Copyright (C) 2009-2013 Texas Instruments Inc.
-+ * Nishant Kamat <nskamat@ti.com>
-+ * Balaji T K <balajitk@ti.com>
-+ * Graeme Gregory <gg@slimlogic.co.uk>
-+ * Girish S Ghongdemath <girishsg@ti.com>
-+ * Ambresh K <ambresh@ti.com>
-+ * Oleksandr Kozaruk <oleksandr.kozaruk@ti.com
-+ *
-+ * Based on twl4030-madc.c
-+ * Copyright (C) 2008 Nokia Corporation
-+ * Mikko Ylinen <mikko.k.ylinen@nokia.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-+ * 02110-1301 USA
-+ *
-+ */
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/i2c/twl.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+
-+#define DRIVER_NAME		"twl6030_gpadc"
-+
-+#define TWL6030_GPADC_MAX_CHANNELS 17
-+#define TWL6032_GPADC_MAX_CHANNELS 19
-+
-+#define TWL6030_GPADC_CTRL_P1			0x05
-+
-+#define TWL6032_GPADC_GPSELECT_ISB		0x07
-+#define TWL6032_GPADC_CTRL_P1			0x08
-+
-+#define TWL6032_GPADC_GPCH0_LSB			0x0d
-+#define TWL6032_GPADC_GPCH0_MSB			0x0e
-+
-+#define TWL6030_GPADC_CTRL_P1_SP1		BIT(3)
-+
-+#define TWL6030_GPADC_GPCH0_LSB			(0x29)
-+
-+#define TWL6030_GPADC_RT_SW1_EOC_MASK		BIT(5)
-+
-+#define TWL6030_GPADC_TRIM1			0xCD
-+
-+#define TWL6030_REG_TOGGLE1			0x90
-+#define TWL6030_GPADCS				BIT(1)
-+#define TWL6030_GPADCR				BIT(0)
-+
-+/**
-+ * struct twl6030_chnl_calib - channel calibration
-+ * @gain:		slope coefficient for ideal curve
-+ * @gain_error:		gain error
-+ * @offset_error:	offset of the real curve
-+ */
-+struct twl6030_chnl_calib {
-+	s32 gain;
-+	s32 gain_error;
-+	s32 offset_error;
-+};
-+
-+/**
-+ * struct twl6030_ideal_code - GPADC calibration parameters
-+ * GPADC is calibrated in two points: close to the beginning and
-+ * to the and of the measurable input range
-+ *
-+ * @code1:	ideal code for the input at the beginning
-+ * @code2:	ideal code for at the end of the range
-+ * @volt1:	voltage input at the beginning(low voltage)
-+ * @volt2:	voltage input at the end(high voltage)
-+ */
-+struct twl6030_ideal_code {
-+	u16 code1;
-+	u16 code2;
-+	u16 volt1;
-+	u16 volt2;
-+};
-+
-+struct twl6030_gpadc_data;
-+
-+/**
-+ * struct twl6030_gpadc_platform_data - platform specific data
-+ * @nchannels:		number of GPADC channels
-+ * @iio_channels:	iio channels
-+ * @twl6030_ideal:	pointer to calibration parameters
-+ * @start_conversion:	pointer to ADC start conversion function
-+ * @channel_to_reg	pointer to ADC function to convert channel to
-+ * 			register address for reading conversion result
-+ * @calibrate:		pointer to calibration function
-+ */
-+struct twl6030_gpadc_platform_data {
-+	const int nchannels;
-+	const struct iio_chan_spec *iio_channels;
-+	const struct twl6030_ideal_code *ideal;
-+	int (*start_conversion)(int channel);
-+	u8 (*channel_to_reg)(int channel);
-+	int (*calibrate)(struct twl6030_gpadc_data *gpadc);
-+};
-+
-+/**
-+ * struct twl6030_gpadc_data - GPADC data
-+ * @dev:		device pointer
-+ * @lock:		mutual exclusion lock for the structure
-+ * @irq_complete:	completion to signal end of conversion
-+ * @twl6030_cal_tbl:	pointer to calibration data for each
-+ * 			channel with gain error and offset
-+ * @pdata:		pointer to device specific data
-+ */
-+struct twl6030_gpadc_data {
-+	struct device	*dev;
-+	struct mutex	lock;
-+	struct completion	irq_complete;
-+	struct twl6030_chnl_calib	*twl6030_cal_tbl;
-+	const struct twl6030_gpadc_platform_data *pdata;
-+};
-+
-+/*
-+ * channels 11, 12, 13, 15 and 16 have no calibration data
-+ * calibration offset is same for channels 1, 3, 4, 5
-+ *
-+ * The data is taken from GPADC_TRIM registers description.
-+ * GPADC_TRIM registers keeps difference between the code measured
-+ * at volt1 and volt2 input voltages and corresponding code1 and code2
-+ */
-+static const struct twl6030_ideal_code
-+	twl6030_ideal[TWL6030_GPADC_MAX_CHANNELS] = {
-+	[0] = { /* ch 0, external, battery type, resistor value */
-+		.code1 = 116,
-+		.code2 = 745,
-+		.volt1 = 141,
-+		.volt2 = 910,
-+	},
-+	[1] = { /* ch 1, external, battery temperature, NTC resistor value */
-+		.code1 = 82,
-+		.code2 = 900,
-+		.volt1 = 100,
-+		.volt2 = 1100,
-+	},
-+	[2] = { /* ch 2, external, audio accessory/general purpose */
-+		.code1 = 55,
-+		.code2 = 818,
-+		.volt1 = 101,
-+		.volt2 = 1499,
-+	},
-+	[3] = { /* ch 3, external, general purpose */
-+		.code1 = 82,
-+		.code2 = 900,
-+		.volt1 = 100,
-+		.volt2 = 1100,
-+	},
-+	[4] = { /* ch 4, external, temperature measurement/general purpose */
-+		.code1 = 82,
-+		.code2 = 900,
-+		.volt1 = 100,
-+		.volt2 = 1100,
-+	},
-+	[5] = { /* ch 5, external, general purpose */
-+		.code1 = 82,
-+		.code2 = 900,
-+		.volt1 = 100,
-+		.volt2 = 1100,
-+	},
-+	[6] = { /* ch 6, external, general purpose */
-+		.code1 = 82,
-+		.code2 = 900,
-+		.volt1 = 100,
-+		.volt2 = 1100,
-+	},
-+	[7] = { /* ch 7, internal, main battery */
-+		.code1 = 614,
-+		.code2 = 941,
-+		.volt1 = 3001,
-+		.volt2 = 4599,
-+	},
-+	[8] = { /* ch 8, internal, backup battery */
-+		.code1 = 82,
-+		.code2 = 688,
-+		.volt1 = 501,
-+		.volt2 = 4203,
-+	},
-+	[9] = { /* ch 9, internal, external charger input */
-+		.code1 = 182,
-+		.code2 = 818,
-+		.volt1 = 2001,
-+		.volt2 = 8996,
-+	},
-+	[10] = { /* ch 10, internal, VBUS */
-+		.code1 = 149,
-+		.code2 = 818,
-+		.volt1 = 1001,
-+		.volt2 = 5497,
-+	},
-+	[11] = {},	/* ch 11, internal, VBUS charging current */
-+	[12] = {},	/* ch 12, internal, Die temperature */
-+	[13] = {},	/* ch 13, internal, Die temperature */
-+	[14] = { /* ch 14, internal, USB ID line */
-+		.code1 = 48,
-+		.code2 = 714,
-+		.volt1 = 323,
-+		.volt2 = 4800,
-+	},
-+	[15] = {},	/* ch 15, internal, test network */
-+	[16] = {},	/* ch 16, internal, test network */
-+};
-+
-+static const struct twl6030_ideal_code
-+			twl6032_ideal[TWL6032_GPADC_MAX_CHANNELS] = {
-+	[0] = { /* ch 0, external, battery type, resistor value */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 440,
-+		.volt2 = 1000,
-+	},
-+	[1] = { /* ch 1, external, battery temperature, NTC resistor value */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 440,
-+		.volt2 = 1000,
-+	},
-+	[2] = { /* ch 2, external, audio accessory/general purpose */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 660,
-+		.volt2 = 1500,
-+	},
-+	[3] = { /* ch 3, external, temperature with external diode/general
-+								purpose */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 440,
-+		.volt2 = 1000,
-+	},
-+	[4] = { /* ch 4, external, temperature measurement/general purpose */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 440,
-+		.volt2 = 1000,
-+	},
-+	[5] = { /* ch 5, external, general purpose */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 440,
-+		.volt2 = 1000,
-+	},
-+	[6] = { /* ch 6, external, general purpose */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 440,
-+		.volt2 = 1000,
-+	},
-+	[7] = { /* ch7, internal, system supply */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 2200,
-+		.volt2 = 5000,
-+	},
-+	[8] = { /* ch8, internal, backup battery */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 2200,
-+		.volt2 = 5000,
-+	},
-+	[9] = { /* ch 9, internal, external charger input */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 3960,
-+		.volt2 = 9000,
-+	},
-+	[10] = { /* ch10, internal, VBUS */
-+		.code1 = 150,
-+		.code2 = 751,
-+		.volt1 = 1000,
-+		.volt2 = 5000,
-+	},
-+	[11] = { /* ch 11, internal, VBUS DC-DC output current */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 660,
-+		.volt2 = 1500,
-+	},
-+	[12] = { /* ch 12, internal, Die temperature */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 440,
-+		.volt2 = 1000,
-+	},
-+	[13] = { /* ch 13, internal, Die temperature */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 440,
-+		.volt2 = 1000,
-+	},
-+	[14] = { /* ch 14, internal, USB ID line */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 2420,
-+		.volt2 = 5500,
-+	},
-+	[15] = {},	/* ch 15, internal, test network */
-+	[16] = {},	/* ch 16, internal, test network */
-+	[17] = {},	/* ch 17, internal, battery charging current */
-+	[18] = { /* ch 18, internal, battery voltage */
-+		.code1 = 1441,
-+		.code2 = 3276,
-+		.volt1 = 2200,
-+		.volt2 = 5000,
-+	},
-+};
-+
-+static inline int twl6030_gpadc_write(u8 reg, u8 val)
-+{
-+	return twl_i2c_write_u8(TWL6030_MODULE_GPADC, val, reg);
-+}
-+
-+static inline int twl6030_gpadc_read(u8 reg, u8 *val)
-+{
-+
-+	return twl_i2c_read(TWL6030_MODULE_GPADC, val, reg, 2);
-+}
-+
-+static int twl6030_gpadc_enable_irq(u8 mask)
-+{
-+	int ret;
-+
-+	ret = twl6030_interrupt_unmask(mask, REG_INT_MSK_LINE_B);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = twl6030_interrupt_unmask(mask, REG_INT_MSK_STS_B);
-+
-+	return ret;
-+}
-+
-+static void twl6030_gpadc_disable_irq(u8 mask)
-+{
-+	twl6030_interrupt_mask(mask, REG_INT_MSK_LINE_B);
-+	twl6030_interrupt_mask(mask, REG_INT_MSK_STS_B);
-+}
-+
-+static irqreturn_t twl6030_gpadc_irq_handler(int irq, void *_gpadc)
-+{
-+	struct twl6030_gpadc_data *gpadc = _gpadc;
-+
-+	complete(&gpadc->irq_complete);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int twl6030_start_conversion(int channel)
-+{
-+	return twl6030_gpadc_write(TWL6030_GPADC_CTRL_P1,
-+					TWL6030_GPADC_CTRL_P1_SP1);
-+}
-+
-+static int twl6032_start_conversion(int channel)
-+{
-+	int ret;
-+
-+	ret = twl6030_gpadc_write(TWL6032_GPADC_GPSELECT_ISB, channel);
-+	if (ret)
-+		return ret;
-+
-+	return twl6030_gpadc_write(TWL6032_GPADC_CTRL_P1,
-+						TWL6030_GPADC_CTRL_P1_SP1);
-+}
-+
-+static u8 twl6030_channel_to_reg(int channel)
-+{
-+	return TWL6030_GPADC_GPCH0_LSB + 2 * channel;
-+}
-+
-+static u8 twl6032_channel_to_reg(int channel)
-+{
-+	/*
-+	 * for any prior chosen channel, when the conversion is ready
-+	 * the result is avalable in GPCH0_LSB, GPCH0_MSB.
-+	 */
-+
-+	return TWL6032_GPADC_GPCH0_LSB;
-+}
-+
-+static int twl6030_gpadc_get_raw(struct twl6030_gpadc_data *gpadc,
-+		int channel, int *res)
-+{
-+	u8 reg = gpadc->pdata->channel_to_reg(channel);
-+	__le16 val;
-+	int ret;
-+
-+	ret = twl6030_gpadc_read(reg, (u8 *)&val);
-+	if (ret) {
-+		dev_dbg(gpadc->dev, "unable to read register 0x%X\n", reg);
-+		return ret;
-+	}
-+
-+	*res = le16_to_cpup(&val);
-+
-+	return ret;
-+}
-+
-+static int twl6030_gpadc_get_processed(struct twl6030_gpadc_data *gpadc,
-+		int channel, int *val)
-+{
-+	int raw_code;
-+	int corrected_code;
-+	int channel_value;
-+	int ret;
-+
-+	ret = twl6030_gpadc_get_raw(gpadc, channel, &raw_code);
-+	if (ret)
-+		return ret;
-+
-+	corrected_code = ((raw_code * 1000) -
-+		gpadc->twl6030_cal_tbl[channel].offset_error) /
-+		gpadc->twl6030_cal_tbl[channel].gain_error;
-+
-+	channel_value = corrected_code *
-+			gpadc->twl6030_cal_tbl[channel].gain;
-+
-+	/* Shift back into mV range */
-+	channel_value /= 1000;
-+
-+	dev_dbg(gpadc->dev, "GPADC raw code: %d", raw_code);
-+	dev_dbg(gpadc->dev, "GPADC corrected code: %d", corrected_code);
-+	dev_dbg(gpadc->dev, "GPADC value: %d", channel_value);
-+
-+	*val = channel_value;
-+
-+	return ret;
-+}
-+
-+static int twl6030_gpadc_read_raw(struct iio_dev *indio_dev,
-+			     const struct iio_chan_spec *chan,
-+			     int *val, int *val2, long mask)
-+{
-+	struct twl6030_gpadc_data *gpadc = iio_priv(indio_dev);
-+	int ret = -EINVAL;
-+	long timeout;
-+
-+	mutex_lock(&gpadc->lock);
-+
-+	ret = gpadc->pdata->start_conversion(chan->channel);
-+	if (ret) {
-+		dev_err(gpadc->dev, "failed to start conversion\n");
-+		goto err;
-+	}
-+	/* wait for conversion to complete */
-+	timeout = wait_for_completion_interruptible_timeout(
-+				&gpadc->irq_complete, msecs_to_jiffies(5000));
-+	if (!timeout)
-+		return -ETIMEDOUT;
-+	else if (timeout < 0)
-+		return EINTR;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = twl6030_gpadc_get_raw(gpadc, chan->channel, val);
-+		ret = ret ? -EIO : IIO_VAL_INT;
-+		break;
-+
-+	case IIO_CHAN_INFO_PROCESSED:
-+		ret = twl6030_gpadc_get_processed(gpadc, chan->channel, val);
-+		ret = ret ? -EIO : IIO_VAL_INT;
-+		break;
-+
-+	default:
-+		break;
-+	}
-+err:
-+	mutex_unlock(&gpadc->lock);
-+
-+	return ret;
-+}
-+
-+/*
-+ * The GPADC channels are calibrated using a two point calibration method.
-+ * The channels measured with two known values: volt1 and volt2, and
-+ * ideal corresponding output codes are known: code1, code2.
-+ * The difference(d1, d2) between ideal and measured codes stored in trim
-+ * registers.
-+ * The goal is to find offset and gain of the real curve for each calibrated
-+ * channel.
-+ * gain: k = 1 + ((d2 - d1) / (x2 - x1))
-+ * offset: b = d1 + (k - 1) * x1
-+ */
-+static void twl6030_calibrate_channel(struct twl6030_gpadc_data *gpadc,
-+					int channel, int d1, int d2)
-+{
-+	int b, k, gain, x1, x2;
-+	const struct twl6030_ideal_code *ideal = gpadc->pdata->ideal;
-+
-+	/* Gain */
-+	gain = ((ideal[channel].volt2 - ideal[channel].volt1) * 1000) /
-+		(ideal[channel].code2 - ideal[channel].code1);
-+
-+	x1 = ideal[channel].code1;
-+	x2 = ideal[channel].code2;
-+
-+	/* k - real curve gain */
-+	k = 1000 + (((d2 - d1) * 1000) / (x2 - x1));
-+
-+	/* b - offset of the real curve gain */
-+	b = (d1 * 1000) - (k - 1000) * x1;
-+
-+	gpadc->twl6030_cal_tbl[channel].gain = gain;
-+	gpadc->twl6030_cal_tbl[channel].gain_error = k;
-+	gpadc->twl6030_cal_tbl[channel].offset_error = b;
-+
-+	dev_dbg(gpadc->dev, "GPADC d1   for Chn: %d = %d\n", channel, d1);
-+	dev_dbg(gpadc->dev, "GPADC d2   for Chn: %d = %d\n", channel, d2);
-+	dev_dbg(gpadc->dev, "GPADC x1   for Chn: %d = %d\n", channel, x1);
-+	dev_dbg(gpadc->dev, "GPADC x2   for Chn: %d = %d\n", channel, x2);
-+	dev_dbg(gpadc->dev, "GPADC Gain for Chn: %d = %d\n", channel, gain);
-+	dev_dbg(gpadc->dev, "GPADC k    for Chn: %d = %d\n", channel, k);
-+	dev_dbg(gpadc->dev, "GPADC b    for Chn: %d = %d\n", channel, b);
-+}
-+
-+static inline int twl6030_gpadc_get_trim_offset(s8 d)
-+{
-+	/*
-+	 * XXX NOTE!
-+	 * bit 0 - sign, bit 7 - reserved, 6..1 - trim value
-+	 * though, the documentation states that trim value
-+	 * is absolute value, the correct conversion results are
-+	 * obtained if the value is interpreted as 2's complement.
-+	 */
-+	__u32 temp = ((d & 0x7f) >> 1) | ((d & 1) << 6);
-+
-+	return sign_extend32(temp, 6);
-+}
-+
-+static int twl6030_calibration(struct twl6030_gpadc_data *gpadc)
-+{
-+	int ret;
-+	int chn;
-+	u8 trim_regs[TWL6030_GPADC_MAX_CHANNELS];
-+	s8 d1, d2;
-+
-+	/*
-+	 * for calibration two measurements have been performed at
-+	 * factory, for some channels, during the production test and
-+	 * have been stored in registers. This two stored values are
-+	 * used to correct the measurements. The values represent
-+	 * offsets for the given input from the output on ideal curve.
-+	 */
-+	ret = twl_i2c_read(TWL6030_MODULE_ID2, trim_regs,
-+			TWL6030_GPADC_TRIM1, 16);
-+	if (ret < 0) {
-+		dev_err(gpadc->dev, "calibration failed\n");
-+		return ret;
-+	}
-+
-+	for (chn = 0; chn < TWL6030_GPADC_MAX_CHANNELS; chn++) {
-+
-+		switch (chn) {
-+		case 0:
-+			d1 = trim_regs[0];
-+			d2 = trim_regs[1];
-+			break;
-+		case 1:
-+		case 3:
-+		case 4:
-+		case 5:
-+		case 6:
-+			d1 = trim_regs[4];
-+			d2 = trim_regs[5];
-+			break;
-+		case 2:
-+			d1 = trim_regs[12];
-+			d2 = trim_regs[13];
-+			break;
-+		case 7:
-+			d1 = trim_regs[6];
-+			d2 = trim_regs[7];
-+			break;
-+		case 8:
-+			d1 = trim_regs[2];
-+			d2 = trim_regs[3];
-+			break;
-+		case 9:
-+			d1 = trim_regs[8];
-+			d2 = trim_regs[9];
-+			break;
-+		case 10:
-+			d1 = trim_regs[10];
-+			d2 = trim_regs[11];
-+			break;
-+		case 14:
-+			d1 = trim_regs[14];
-+			d2 = trim_regs[15];
-+			break;
-+		default:
-+			continue;
-+		}
-+
-+		d1 = twl6030_gpadc_get_trim_offset(d1);
-+		d2 = twl6030_gpadc_get_trim_offset(d2);
-+
-+		twl6030_calibrate_channel(gpadc, chn, d1, d2);
-+	}
-+
-+	return 0;
-+}
-+
-+static int twl6032_calibration(struct twl6030_gpadc_data *gpadc)
-+{
-+	int chn, d1 = 0, d2 = 0, temp;
-+	u8 trim_regs[17];
-+	int ret;
-+
-+	ret = twl_i2c_read(TWL6030_MODULE_ID2, trim_regs + 1,
-+			TWL6030_GPADC_TRIM1, 16);
-+	if (ret < 0) {
-+		dev_err(gpadc->dev, "calibration failed\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Loop to calculate the value needed for returning voltages from
-+	 * GPADC not values.
-+	 *
-+	 * gain is calculated to 3 decimal places fixed point.
-+	 */
-+	for (chn = 0; chn < TWL6032_GPADC_MAX_CHANNELS; chn++) {
-+
-+		switch (chn) {
-+		case 0:
-+		case 1:
-+		case 2:
-+		case 3:
-+		case 4:
-+		case 5:
-+		case 6:
-+		case 11:
-+		case 12:
-+		case 13:
-+		case 14:
-+			/* D1 */
-+			d1 = (trim_regs[3] & 0x1F) << 2;
-+			d1 |= (trim_regs[1] & 0x06) >> 1;
-+			if (trim_regs[1] & 0x01)
-+				d1 = -d1;
-+
-+			/* D2 */
-+			d2 = (trim_regs[4] & 0x3F) << 2;
-+			d2 |= (trim_regs[2] & 0x06) >> 1;
-+			if (trim_regs[2] & 0x01)
-+				d2 = -d2;
-+			break;
-+		case 8:
-+			/* D1 */
-+			temp = (trim_regs[3] & 0x1F) << 2;
-+			temp |= (trim_regs[1] & 0x06) >> 1;
-+			if (trim_regs[1] & 0x01)
-+				temp = -temp;
-+
-+			d1 = (trim_regs[8] & 0x18) << 1;
-+			d1 |= (trim_regs[7] & 0x1E) >> 1;
-+			if (trim_regs[7] & 0x01)
-+				d1 = -d1;
-+
-+			d1 += temp;
-+
-+			/* D2 */
-+			temp = (trim_regs[4] & 0x3F) << 2;
-+			temp |= (trim_regs[2] & 0x06) >> 1;
-+			if (trim_regs[2] & 0x01)
-+				temp = -temp;
-+
-+			d2 = (trim_regs[10] & 0x1F) << 2;
-+			d2 |= (trim_regs[8] & 0x06) >> 1;
-+			if (trim_regs[8] & 0x01)
-+				d2 = -d2;
-+
-+			d2 += temp;
-+			break;
-+		case 9:
-+			/* D1 */
-+			temp = (trim_regs[3] & 0x1F) << 2;
-+			temp |= (trim_regs[1] & 0x06) >> 1;
-+			if (trim_regs[1] & 0x01)
-+				temp = -temp;
-+
-+			d1 = (trim_regs[14] & 0x18) << 1;
-+			d1 |= (trim_regs[12] & 0x1E) >> 1;
-+			if (trim_regs[12] & 0x01)
-+				d1 = -d1;
-+
-+			d1 += temp;
-+
-+			/* D2 */
-+			temp = (trim_regs[4] & 0x3F) << 2;
-+			temp |= (trim_regs[2] & 0x06) >> 1;
-+			if (trim_regs[2] & 0x01)
-+				temp = -temp;
-+
-+			d2 = (trim_regs[16] & 0x1F) << 2;
-+			d2 |= (trim_regs[14] & 0x06) >> 1;
-+			if (trim_regs[14] & 0x01)
-+				d2 = -d2;
-+
-+			d2 += temp;
-+		case 10:
-+			/* D1 */
-+			d1 = (trim_regs[11] & 0x0F) << 3;
-+			d1 |= (trim_regs[9] & 0x0E) >> 1;
-+			if (trim_regs[9] & 0x01)
-+				d1 = -d1;
-+
-+			/* D2 */
-+			d2 = (trim_regs[15] & 0x0F) << 3;
-+			d2 |= (trim_regs[13] & 0x0E) >> 1;
-+			if (trim_regs[13] & 0x01)
-+				d2 = -d2;
-+			break;
-+		case 7:
-+		case 18:
-+			/* D1 */
-+			temp = (trim_regs[3] & 0x1F) << 2;
-+			temp |= (trim_regs[1] & 0x06) >> 1;
-+			if (trim_regs[1] & 0x01)
-+				temp = -temp;
-+
-+			d1 = (trim_regs[5] & 0x7E) >> 1;
-+			if (trim_regs[5] & 0x01)
-+				d1 = -d1;
-+
-+			d1 += temp;
-+
-+			/* D2 */
-+			temp = (trim_regs[4] & 0x3F) << 2;
-+			temp |= (trim_regs[2] & 0x06) >> 1;
-+			if (trim_regs[2] & 0x01)
-+				temp = -temp;
-+
-+			d2 = (trim_regs[6] & 0xFE) >> 1;
-+			if (trim_regs[6] & 0x01)
-+				d2 = -d2;
-+
-+			d2 += temp;
-+			break;
-+		default:
-+			/* No data for other channels */
-+			continue;
-+		}
-+
-+		twl6030_calibrate_channel(gpadc, chn, d1, d2);
-+	}
-+
-+	return 0;
-+}
-+
-+#define TWL6030_GPADC_CHAN(chn, chan_info) {		\
-+	.type = IIO_VOLTAGE,				\
-+	.channel = chn,					\
-+	.info_mask = BIT(chan_info),			\
-+	.info_mask_separate = BIT(chan_info), 		\
-+	.indexed = 1,					\
-+}
-+
-+/* internal test network channel */
-+#define TWL6030_GPADC_TEST_CHAN(chn, chan_info) {	\
-+	.type = IIO_VOLTAGE,				\
-+	.channel = chn,					\
-+	.info_mask = BIT(chan_info),			\
-+	.indexed = 1,					\
-+}
-+
-+static const struct iio_chan_spec twl6030_gpadc_iio_channels[] = {
-+	TWL6030_GPADC_CHAN(0, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(1, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(2, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(3, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(4, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(5, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(6, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(7, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(8, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(9, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(10, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(11, IIO_CHAN_INFO_RAW),
-+	TWL6030_GPADC_CHAN(12, IIO_CHAN_INFO_RAW),
-+	TWL6030_GPADC_CHAN(13, IIO_CHAN_INFO_RAW),
-+	TWL6030_GPADC_CHAN(14, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_TEST_CHAN(15, IIO_CHAN_INFO_RAW),
-+	TWL6030_GPADC_TEST_CHAN(16, IIO_CHAN_INFO_RAW),
-+};
-+
-+static const struct iio_chan_spec twl6032_gpadc_iio_channels[] = {
-+	TWL6030_GPADC_CHAN(0, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(1, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(2, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(3, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(4, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(5, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(6, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(7, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(8, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(9, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(10, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(11, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(12, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(13, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_CHAN(14, IIO_CHAN_INFO_PROCESSED),
-+	TWL6030_GPADC_TEST_CHAN(15, IIO_CHAN_INFO_RAW),
-+	TWL6030_GPADC_TEST_CHAN(16, IIO_CHAN_INFO_RAW),
-+	TWL6030_GPADC_CHAN(17, IIO_CHAN_INFO_RAW),
-+	TWL6030_GPADC_CHAN(18, IIO_CHAN_INFO_PROCESSED),
-+};
-+
-+static const struct iio_info twl6030_gpadc_iio_info = {
-+	.read_raw = &twl6030_gpadc_read_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+static const struct twl6030_gpadc_platform_data twl6030_pdata = {
-+	.iio_channels = twl6030_gpadc_iio_channels,
-+	.nchannels = TWL6030_GPADC_MAX_CHANNELS,
-+	.ideal = twl6030_ideal,
-+	.start_conversion = twl6030_start_conversion,
-+	.channel_to_reg = twl6030_channel_to_reg,
-+	.calibrate = twl6030_calibration,
-+};
-+
-+static const struct twl6030_gpadc_platform_data twl6032_pdata = {
-+	.iio_channels = twl6032_gpadc_iio_channels,
-+	.nchannels = TWL6032_GPADC_MAX_CHANNELS,
-+	.ideal = twl6032_ideal,
-+	.start_conversion = twl6032_start_conversion,
-+	.channel_to_reg = twl6032_channel_to_reg,
-+	.calibrate = twl6032_calibration,
-+};
-+
-+static const struct of_device_id of_twl6030_match_tbl[] = {
-+	{
-+		.compatible = "ti,twl6030_gpadc",
-+		.data = &twl6030_pdata,
-+	},
-+	{
-+		.compatible = "ti,twl6032_gpadc",
-+		.data = &twl6032_pdata,
-+	},
-+	{ /* end */ }
-+};
-+
-+static int twl6030_gpadc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct twl6030_gpadc_data *gpadc;
-+	const struct twl6030_gpadc_platform_data *pdata;
-+	const struct of_device_id *match;
-+	struct iio_dev *indio_dev;
-+	int irq;
-+	int ret;
-+
-+	match = of_match_device(of_match_ptr(of_twl6030_match_tbl), dev);
-+	pdata = match ? match->data : dev->platform_data;
-+
-+	if (!pdata)
-+		return -EINVAL;
-+
-+	indio_dev = iio_device_alloc(sizeof(*gpadc));
-+	if (!indio_dev) {
-+		dev_err(dev, "failed allocating iio device\n");
-+		ret = -ENOMEM;
-+	}
-+
-+	gpadc = iio_priv(indio_dev);
-+
-+	gpadc->twl6030_cal_tbl = devm_kzalloc(dev,
-+					sizeof(struct twl6030_chnl_calib) *
-+					pdata->nchannels, GFP_KERNEL);
-+	if (!gpadc->twl6030_cal_tbl)
-+		goto err_free_device;
-+
-+	gpadc->dev = dev;
-+	gpadc->pdata = pdata;
-+
-+	platform_set_drvdata(pdev, indio_dev);
-+	mutex_init(&gpadc->lock);
-+	init_completion(&gpadc->irq_complete);
-+
-+	ret = pdata->calibrate(gpadc);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to read calibration registers\n");
-+		goto err_free_device;
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "failed to get irq\n");
-+		goto err_free_device;
-+	}
-+
-+	ret = request_threaded_irq(irq, NULL, twl6030_gpadc_irq_handler,
-+				IRQF_ONESHOT, "twl6030_gpadc", gpadc);
-+	if (ret) {
-+		dev_dbg(&pdev->dev, "could not request irq\n");
-+		goto err_free_device;
-+	}
-+
-+	ret = twl6030_gpadc_enable_irq(TWL6030_GPADC_RT_SW1_EOC_MASK);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to enable GPADC interrupt\n");
-+		goto err_free_irq;
-+	}
-+
-+	ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, TWL6030_GPADCS,
-+					TWL6030_REG_TOGGLE1);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to enable GPADC module\n");
-+		goto err_free_irq;
-+	}
-+
-+	indio_dev->name = DRIVER_NAME;
-+	indio_dev->dev.parent = dev;
-+	indio_dev->info = &twl6030_gpadc_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = pdata->iio_channels;
-+	indio_dev->num_channels = pdata->nchannels;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret)
-+		goto err_free_irq;
-+
-+	return ret;
-+
-+err_free_irq:
-+	free_irq(irq, indio_dev);
-+err_free_device:
-+	iio_device_free(indio_dev);
-+
-+	return ret;
-+}
-+
-+static int twl6030_gpadc_remove(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+
-+	twl6030_gpadc_disable_irq(TWL6030_GPADC_RT_SW1_EOC_MASK);
-+	free_irq(platform_get_irq(pdev, 0), indio_dev);
-+	iio_device_unregister(indio_dev);
-+	iio_device_free(indio_dev);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int twl6030_gpadc_suspend(struct device *pdev)
-+{
-+	int ret;
-+
-+	ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, TWL6030_GPADCR,
-+				TWL6030_REG_TOGGLE1);
-+	if (ret)
-+		dev_err(pdev, "error reseting GPADC (%d)!\n", ret);
-+
-+	return 0;
-+};
-+
-+static int twl6030_gpadc_resume(struct device *pdev)
-+{
-+	int ret;
-+
-+	ret = twl_i2c_write_u8(TWL6030_MODULE_ID1, TWL6030_GPADCS,
-+				TWL6030_REG_TOGGLE1);
-+	if (ret)
-+		dev_err(pdev, "error setting GPADC (%d)!\n", ret);
-+
-+	return 0;
-+};
-+#endif
-+
-+SIMPLE_DEV_PM_OPS(twl6030_gpadc_pm_ops, twl6030_gpadc_suspend,
-+					twl6030_gpadc_resume);
-+
-+static struct platform_driver twl6030_gpadc_driver = {
-+	.probe		= twl6030_gpadc_probe,
-+	.remove		= twl6030_gpadc_remove,
-+	.driver		= {
-+		.name	= DRIVER_NAME,
-+		.owner	= THIS_MODULE,
-+		.pm	= &twl6030_gpadc_pm_ops,
-+		.of_match_table = of_twl6030_match_tbl,
-+	},
-+};
-+
-+module_platform_driver(twl6030_gpadc_driver);
-+
-+MODULE_ALIAS("platform: " DRIVER_NAME);
-+MODULE_AUTHOR("Texas Instruments Inc.");
-+MODULE_DESCRIPTION("twl6030 ADC driver");
-+MODULE_LICENSE("GPL");
--- 
-1.8.1.2
+
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> ---
+>  .../bindings/tty/serial/msm_serial_hsl.txt         |   52 +
+>  drivers/tty/serial/Kconfig                         |   18 +
+>  drivers/tty/serial/Makefile                        |    1 +
+>  drivers/tty/serial/msm_serial_hsl.c                | 1399 ++++++++++++++++++++
+>  drivers/tty/serial/msm_serial_hsl.h                |  294 ++++
+>  5 files changed, 1764 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/tty/serial/msm_serial_hsl.txt
+>  create mode 100644 drivers/tty/serial/msm_serial_hsl.c
+>  create mode 100644 drivers/tty/serial/msm_serial_hsl.h
+> 
+> diff --git a/Documentation/devicetree/bindings/tty/serial/msm_serial_hsl.txt b/Documentation/devicetree/bindings/tty/serial/msm_serial_hsl.txt
+> new file mode 100644
+> index 0000000..972552f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/tty/serial/msm_serial_hsl.txt
+> @@ -0,0 +1,52 @@
+> +* Qualcomm MSM HSUART Lite
+> +
+> +Required properties:
+> +- compatible :
+> +	"qcom,msm-lsuart-v14" to be used for UARTDM Core v1.4
+> +
+> +- reg :
+> +	offset and length of the register set for both the device,
+> +	UART core and GBSI core
+> +
+> +- reg-names :
+> +	"uart_mem" to be used as name of the UART core
+> +	"gbsi_mem" to be used as name of the GBSI core
+> +
+> +The registers for the "qcom,msm-lsuart-v14" device have specify
+> +UART core block. GSBI reg is optional if specified driver will use
+> +GSBI specific functionality.
+> +
+> +- interrupts : interrupts for UART core
+> +
+> +- clocks : Must contain an entry for each entry in clock-names.
+> +
+> +- clock-names : Must include the following entries:
+> +  "core_clk" - mandatory
+> +  "iface_clk" - optional
+> +
+> +For details see:
+> +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Example:
+> +
+> +	serial@f991e000 {
+> +		compatible = "qcom,msm-lsuart-v14";
+> +		reg = <0xf991e000 0x1000>;
+> +		reg-names = "uart_mem";
+> +		interrupts = <0 108 0>;
+> +		clocks = <&blsp1_uart2_apps_cxc>, <&blsp1_ahb_cxc>;
+> +		clock-names = "core_clk", "iface_clk";
+> +	};
+> +
+> +Aliases :
+> +An alias may be optionally used to bind the UART device to a TTY device
+> +(ttyHSL<alias_num>) with a given alias number. Aliases are of the form
+> +uart<n> where <n> is an integer representing the alias number to use.
+> +On systems with multiple UART devices present, an alias may optionally be
+> +defined for such devices. The alias value should be from 0 to 255.
+> +
+> +Example:
+> +
+> +	aliases {
+> +		uart4 = &uart7; // This device will be enumerated as ttyHSL4
+> +	};
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 7e7006f..4482bc7 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -1046,6 +1046,24 @@ config SERIAL_MSM_HS
+>  	  Choose M here to compile it as a module. The module will be
+>  	  called msm_serial_hs.
+>  
+> +config SERIAL_MSM_HSL
+> +	tristate "MSM High speed serial lite mode driver"
+> +	depends on ARM && ARCH_MSM
+> +	select SERIAL_CORE
+> +	default n
+> +	help
+> +	  Select this module to enable MSM high speed lite mode driver
+> +	  for UART controllers found in MSM8974 SoC's
+> +
+> +	  Choose M here to compile it as a module. The module will be
+> +	  called msm_serial_hsl.
+> +
+> +config SERIAL_MSM_HSL_CONSOLE
+> +	bool "MSM High speed serial lite mode console support"
+> +	depends on SERIAL_MSM_HSL=y
+> +	select SERIAL_CORE_CONSOLE
+> +	default n
+> +
+>  config SERIAL_VT8500
+>  	bool "VIA VT8500 on-chip serial port support"
+>  	depends on ARCH_VT8500
+> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+> index eedfec4..86c023b 100644
+> --- a/drivers/tty/serial/Makefile
+> +++ b/drivers/tty/serial/Makefile
+> @@ -58,6 +58,7 @@ obj-$(CONFIG_SERIAL_ATMEL) += atmel_serial.o
+>  obj-$(CONFIG_SERIAL_UARTLITE) += uartlite.o
+>  obj-$(CONFIG_SERIAL_MSM) += msm_serial.o
+>  obj-$(CONFIG_SERIAL_MSM_HS) += msm_serial_hs.o
+> +obj-$(CONFIG_SERIAL_MSM_HSL) += msm_serial_hsl.o
+>  obj-$(CONFIG_SERIAL_NETX) += netx-serial.o
+>  obj-$(CONFIG_SERIAL_OF_PLATFORM) += of_serial.o
+>  obj-$(CONFIG_SERIAL_OF_PLATFORM_NWPSERIAL) += nwpserial.o
+> diff --git a/drivers/tty/serial/msm_serial_hsl.c b/drivers/tty/serial/msm_serial_hsl.c
+> new file mode 100644
+> index 0000000..56c15a8
+> --- /dev/null
+> +++ b/drivers/tty/serial/msm_serial_hsl.c
+> @@ -0,0 +1,1399 @@
+> +/*
+> + * drivers/tty/serial/msm_serial_hsl.c - driver for serial device and console
+> + *
+> + * Copyright (C) 2007 Google, Inc.
+> + * Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +/* Acknowledgements:
+> + * This file is based on msm_serial.c, originally
+> + * Written by Robert Love <rlove@google.com>  */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/console.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/module.h>
+> +#include <linux/nmi.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/serial_core.h>
+> +#include <linux/tty.h>
+> +#include <linux/tty_flip.h>
+> +
+> +#include "msm_serial_hsl.h"
+> +
+> +/*
+> + * There are 3 different kind of UART Core available on MSM.
+> + * High Speed UART (i.e. Legacy HSUART), GSBI based HSUART
+> + * and BSLP based HSUART.
+> + */
+> +enum uart_core_type {
+> +	LEGACY_HSUART,
+> +	GSBI_HSUART,
+> +	BLSP_HSUART,
+> +};
+> +
+> +/*
+> + * @uart: uart port instance
+> + * @name: name of the port
+> + * @clk: reference to core clock
+> + * @pclk: reference to interface clock
+> + * @imr: shadow interrupt mask register
+> + * @mapped_gsbi: GSBI contol memory
+> + * @old_snap_state: How many data still left in the FIFO
+> + * @tx_timeout - transmit timout ~600x the character transmit time
+> + * @uart_type - see enum uart_core_type
+> + * @regmap - Register map based on controller version
+> + * It is mainly required where same UART is used across different processor.
+> + * Make sure that Clock driver for platform support setting clock rate to zero.
+> + */
+> +struct msm_hsl_port {
+> +	struct uart_port	uart;
+> +	char			name[16];
+> +	struct clk		*clk;
+> +	struct clk		*pclk;
+> +	struct dentry		*loopback_dir;
+> +	unsigned int		imr;
+> +	unsigned int		*mapped_gsbi;
+> +	unsigned int		old_snap_state;
+> +	int			tx_timeout;
+> +	enum uart_core_type	uart_type;
+> +	const unsigned int	*regmap;
+> +};
+> +
+> +#define UARTDM_VERSION_11_13	0
+> +#define UARTDM_VERSION_14	1
+> +#define UART_NR			3
+> +
+> +#define to_hsl_port(p)		(container_of(p, struct msm_hsl_port, uart))
+> +#define is_console(port)	((port)->cons && \
+> +				(port)->cons->index == (port)->line)
+> +
+> +static const unsigned int regmap[][UARTDM_LAST] = {
+> +	[UARTDM_VERSION_11_13] = {
+> +		[UARTDM_MR1] = UARTDM_MR1_ADDR,
+> +		[UARTDM_MR2] = UARTDM_MR2_ADDR,
+> +		[UARTDM_IMR] = UARTDM_IMR_ADDR,
+> +		[UARTDM_SR] = UARTDM_SR_ADDR,
+> +		[UARTDM_CR] = UARTDM_CR_ADDR,
+> +		[UARTDM_CSR] = UARTDM_CSR_ADDR,
+> +		[UARTDM_IPR] = UARTDM_IPR_ADDR,
+> +		[UARTDM_ISR] = UARTDM_ISR_ADDR,
+> +		[UARTDM_RX_TOTAL_SNAP] = UARTDM_RX_TOTAL_SNAP_ADDR,
+> +		[UARTDM_TFWR] = UARTDM_TFWR_ADDR,
+> +		[UARTDM_RFWR] = UARTDM_RFWR_ADDR,
+> +		[UARTDM_RF] = UARTDM_RF_ADDR,
+> +		[UARTDM_TF] = UARTDM_TF_ADDR,
+> +		[UARTDM_MISR] = UARTDM_MISR_ADDR,
+> +		[UARTDM_DMRX] = UARTDM_DMRX_ADDR,
+> +		[UARTDM_NCF_TX] = UARTDM_NCF_TX_ADDR,
+> +		[UARTDM_DMEN] = UARTDM_DMEN_ADDR,
+> +		[UARTDM_TXFS] = UARTDM_TXFS_ADDR,
+> +		[UARTDM_RXFS] = UARTDM_RXFS_ADDR,
+> +	},
+> +	[UARTDM_VERSION_14] = {
+> +		[UARTDM_MR1] = UARTDM_MR1_ADDR,
+> +		[UARTDM_MR2] = UARTDM_MR2_ADDR,
+> +		[UARTDM_IMR] = UARTDM_IMR_ADDR_V14,
+> +		[UARTDM_SR] = UARTDM_SR_ADDR_V14,
+> +		[UARTDM_CR] = UARTDM_CR_ADDR_V14,
+> +		[UARTDM_CSR] = UARTDM_CSR_ADDR_V14,
+> +		[UARTDM_IPR] = UARTDM_IPR_ADDR,
+> +		[UARTDM_ISR] = UARTDM_ISR_ADDR_V14,
+> +		[UARTDM_RX_TOTAL_SNAP] = UARTDM_RX_TOTAL_SNAP_ADDR_V14,
+> +		[UARTDM_TFWR] = UARTDM_TFWR_ADDR,
+> +		[UARTDM_RFWR] = UARTDM_RFWR_ADDR,
+> +		[UARTDM_RF] = UARTDM_RF_ADDR_V14,
+> +		[UARTDM_TF] = UARTDM_TF_ADDR_V14,
+> +		[UARTDM_MISR] = UARTDM_MISR_ADDR_V14,
+> +		[UARTDM_DMRX] = UARTDM_DMRX_ADDR,
+> +		[UARTDM_NCF_TX] = UARTDM_NCF_TX_ADDR,
+> +		[UARTDM_DMEN] = UARTDM_DMEN_ADDR,
+> +		[UARTDM_TXFS] = UARTDM_TXFS_ADDR,
+> +		[UARTDM_RXFS] = UARTDM_RXFS_ADDR,
+> +	},
+> +};
+> +
+> +/*
+> + * get_console_state - check the per-port serial console state.
+> + * @port: uart_port structure describing the port
+> + *
+> + * Return the state of serial console availability on port.
+> + * return 1: If serial console is enabled on particular UART port.
+> + * return 0: If serial console is disabled on particular UART port.
+> + */
+> +static int get_console_state(struct uart_port *port)
+> +{
+> +#ifdef CONFIG_SERIAL_MSM_HSL_CONSOLE
+> +	if (is_console(port) && (port->cons->flags & CON_ENABLED))
+> +		return 1;
+> +	else
+> +		return 0;
+> +#else
+> +	return -ENODEV;
+> +#endif
+> +}
+> +
+> +static inline void msm_hsl_write(struct uart_port *port,
+> +				 unsigned int val, unsigned int off)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +
+> +	iowrite32(val, port->membase + hslp->regmap[off]);
+> +}
+> +
+> +static inline unsigned int msm_hsl_read(struct uart_port *port,
+> +					unsigned int off)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +
+> +	return ioread32(port->membase + hslp->regmap[off]);
+> +}
+> +
+> +static unsigned int msm_serial_hsl_has_gsbi(struct uart_port *port)
+> +{
+> +	return (to_hsl_port(port)->uart_type == GSBI_HSUART);
+> +}
+> +
+> +/*
+> + * set_gsbi_uart_func_mode: Check the currently used GSBI UART mode
+> + * and set the new required GSBI UART Mode if it is different.
+> + * @port: uart port
+> + */
+> +static void set_gsbi_uart_func_mode(struct uart_port *port)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +	unsigned int set_mode = GSBI_PROTOCOL_I2C_UART;
+> +	unsigned int cur_mode;
+> +
+> +	if (hslp->pclk)
+> +		clk_prepare_enable(hslp->pclk);
+> +
+> +	/* Read current used GSBI UART Mode and set only if it is different. */
+> +	cur_mode = ioread32(hslp->mapped_gsbi + GSBI_CONTROL_ADDR);
+> +	if ((cur_mode & GSBI_PROTOCOL_CODE_MASK) != set_mode)
+> +		/*
+> +		 * Programmed GSBI based UART protocol mode i.e. I2C/UART
+> +		 * Shared Mode or UART Mode.
+> +		 */
+> +		iowrite32(set_mode, hslp->mapped_gsbi + GSBI_CONTROL_ADDR);
+> +
+> +	if (hslp->pclk)
+> +		clk_disable_unprepare(hslp->pclk);
+> +}
+> +
+> +static int msm_hsl_clock_enable(struct uart_port *port, int enable)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +	int ret = 0;
+> +
+> +	if (enable) {
+> +		ret = clk_prepare_enable(hslp->clk);
+> +		if (ret)
+> +			return ret;
+> +		if (hslp->pclk) {
+> +			ret = clk_prepare_enable(hslp->pclk);
+> +			if (ret)
+> +				clk_disable_unprepare(hslp->clk);
+> +		}
+> +	} else {
+> +		clk_disable_unprepare(hslp->clk);
+> +		if (hslp->pclk)
+> +			clk_disable_unprepare(hslp->pclk);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int msm_hsl_loopback_set(void *data, u64 val)
+> +{
+> +	struct msm_hsl_port *hslp = data;
+> +	struct uart_port *port = &(hslp->uart);
+> +	unsigned long flags;
+> +	int ret = 0;
+> +
+> +	ret = clk_set_rate(hslp->clk, port->uartclk);
+> +	if (!ret)
+> +		msm_hsl_clock_enable(port, 1);
+> +	else
+> +		return -EINVAL;
+> +
+> +	if (val) {
+> +		spin_lock_irqsave(&port->lock, flags);
+> +		ret = msm_hsl_read(port, UARTDM_MR2);
+> +		ret |= UARTDM_MR2_LOOP_MODE_BMSK;
+> +		msm_hsl_write(port, ret, UARTDM_MR2);
+> +		spin_unlock_irqrestore(&port->lock, flags);
+> +	} else {
+> +		spin_lock_irqsave(&port->lock, flags);
+> +		ret = msm_hsl_read(port, UARTDM_MR2);
+> +		ret &= ~UARTDM_MR2_LOOP_MODE_BMSK;
+> +		msm_hsl_write(port, ret, UARTDM_MR2);
+> +		spin_unlock_irqrestore(&port->lock, flags);
+> +	}
+> +
+> +	msm_hsl_clock_enable(port, 0);
+> +	return 0;
+> +}
+> +
+> +static int msm_hsl_loopback_get(void *data, u64 *val)
+> +{
+> +	struct msm_hsl_port *hslp = data;
+> +	struct uart_port *port = &hslp->uart;
+> +	unsigned long flags;
+> +	int ret = 0;
+> +
+> +	ret = clk_set_rate(hslp->clk, port->uartclk);
+> +	if (!ret)
+> +		msm_hsl_clock_enable(port, 1);
+> +	else
+> +		return -EINVAL;
+> +
+> +	spin_lock_irqsave(&port->lock, flags);
+> +	ret = msm_hsl_read(port, UARTDM_MR2);
+> +	spin_unlock_irqrestore(&port->lock, flags);
+> +	msm_hsl_clock_enable(port, 0);
+> +
+> +	*val = (ret & UARTDM_MR2_LOOP_MODE_BMSK) ? 1 : 0;
+> +	return 0;
+> +}
+> +
+> +static void msm_hsl_stop_tx(struct uart_port *port)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +
+> +	hslp->imr &= ~UARTDM_ISR_TXLEV_BMSK;
+> +	msm_hsl_write(port, hslp->imr, UARTDM_IMR);
+> +}
+> +
+> +static void msm_hsl_start_tx(struct uart_port *port)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +
+> +	hslp->imr |= UARTDM_ISR_TXLEV_BMSK;
+> +	msm_hsl_write(port, hslp->imr, UARTDM_IMR);
+> +}
+> +
+> +static void msm_hsl_stop_rx(struct uart_port *port)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +
+> +	hslp->imr &= ~(UARTDM_ISR_RXLEV_BMSK | UARTDM_ISR_RXSTALE_BMSK);
+> +	msm_hsl_write(port, hslp->imr, UARTDM_IMR);
+> +}
+> +
+> +static void msm_hsl_enable_ms(struct uart_port *port)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +
+> +	hslp->imr |= UARTDM_ISR_DELTA_CTS_BMSK;
+> +	msm_hsl_write(port, hslp->imr, UARTDM_IMR);
+> +}
+> +
+> +static void msm_hsl_handle_rx(struct uart_port *port, unsigned int misr)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +	struct tty_port *tty = &port->state->port;
+> +	unsigned int sr;
+> +	int count = 0;
+> +
+> +	/*
+> +	 * Handle overrun. My understanding of the hardware is that overrun
+> +	 * is not tied to the RX buffer, so we handle the case out of band.
+> +	 */
+> +	sr = msm_hsl_read(port, UARTDM_SR);
+> +	if (sr & UARTDM_SR_OVERRUN_BMSK) {
+> +		port->icount.overrun++;
+> +		tty_insert_flip_char(tty, 0, TTY_OVERRUN);
+> +		msm_hsl_write(port, RESET_ERROR_STATUS, UARTDM_CR);
+> +	}
+> +
+> +	if (misr & UARTDM_ISR_RXSTALE_BMSK) {
+> +		count = msm_hsl_read(port, UARTDM_RX_TOTAL_SNAP) -
+> +				     hslp->old_snap_state;
+> +		hslp->old_snap_state = 0;
+> +	} else {
+> +		count = 4 * (msm_hsl_read(port, UARTDM_RFWR));
+> +		hslp->old_snap_state += count;
+> +	}
+> +
+> +	/* and now the main RX loop */
+> +	while (count > 0) {
+> +		unsigned int c;
+> +		char flag = TTY_NORMAL;
+> +
+> +		sr = msm_hsl_read(port, UARTDM_SR);
+> +		if ((sr & UARTDM_SR_RXRDY_BMSK) == 0) {
+> +			hslp->old_snap_state -= count;
+> +			break;
+> +		}
+> +		c = msm_hsl_read(port, UARTDM_RF);
+> +		if (sr & UARTDM_SR_RX_BREAK_BMSK) {
+> +			port->icount.brk++;
+> +			if (uart_handle_break(port))
+> +				continue;
+> +		} else if (sr & UARTDM_SR_PAR_FRAME_BMSK) {
+> +			port->icount.frame++;
+> +		} else {
+> +			port->icount.rx++;
+> +		}
+> +
+> +		/* Mask conditions we're ignorning. */
+> +		sr &= port->read_status_mask;
+> +		if (sr & UARTDM_SR_RX_BREAK_BMSK)
+> +			flag = TTY_BREAK;
+> +		else if (sr & UARTDM_SR_PAR_FRAME_BMSK)
+> +			flag = TTY_FRAME;
+> +
+> +		/* TODO: handle sysrq */
+> +		/* if (!uart_handle_sysrq_char(port, c)) */
+> +		tty_insert_flip_string(tty, (char *)&c,
+> +				       (count > 4) ? 4 : count);
+> +		count -= 4;
+> +	}
+> +
+> +	tty_flip_buffer_push(tty);
+> +}
+> +
+> +static void msm_hsl_dump_regs(struct uart_port *port)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +	unsigned int sr, isr, mr1, mr2, ncf, txfs, rxfs, con_state;
+> +
+> +	sr = msm_hsl_read(port, UARTDM_SR);
+> +	isr = msm_hsl_read(port, UARTDM_ISR);
+> +	mr1 = msm_hsl_read(port, UARTDM_MR1);
+> +	mr2 = msm_hsl_read(port, UARTDM_MR2);
+> +	ncf = msm_hsl_read(port, UARTDM_NCF_TX);
+> +	txfs = msm_hsl_read(port, UARTDM_TXFS);
+> +	rxfs = msm_hsl_read(port, UARTDM_RXFS);
+> +	con_state = get_console_state(port);
+> +
+> +	pr_info("Timeout: %d uS\n", hslp->tx_timeout);
+> +	pr_info("SR:  %08x\n", sr);
+> +	pr_info("ISR: %08x\n", isr);
+> +	pr_info("MR1: %08x\n", mr1);
+> +	pr_info("MR2: %08x\n", mr2);
+> +	pr_info("NCF: %08x\n", ncf);
+> +	pr_info("TXFS: %08x\n", txfs);
+> +	pr_info("RXFS: %08x\n", rxfs);
+> +	pr_info("Console state: %d\n", con_state);
+> +}
+> +
+> +/*
+> + *  Wait for transmitter & holding register to empty
+> + *  Derived from msm_hsl_wait_for_xmitr in 8250 serial driver by Russell King
+> + */
+> +static void msm_hsl_wait_for_xmitr(struct uart_port *port)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +	int count = 0;
+> +	int sr;
+> +	int isr;
+> +
+> +	sr = msm_hsl_read(port, UARTDM_SR);
+> +	if (sr & UARTDM_SR_TXEMT_BMSK)
+> +		return;
+> +
+> +	do {
+> +		isr = msm_hsl_read(port, UARTDM_ISR);
+> +		sr = msm_hsl_read(port, UARTDM_SR);
+> +
+> +		if ((isr & UARTDM_ISR_TX_READY_BMSK) ||
+> +		    (sr & UARTDM_SR_TXEMT_BMSK))
+> +			break;
+> +
+> +		udelay(1);
+> +		touch_nmi_watchdog();
+> +		cpu_relax();
+> +
+> +		if (++count == hslp->tx_timeout) {
+> +			msm_hsl_dump_regs(port);
+> +			panic("MSM HSL msm_hsl_wait_for_xmitr is stuck!");
+> +		}
+> +
+> +	} while (true);
+> +
+> +	msm_hsl_write(port, CLEAR_TX_READY, UARTDM_CR);
+> +
+> +}
+> +
+> +static void msm_hsl_handle_tx(struct uart_port *port)
+> +{
+> +	struct circ_buf *xmit = &port->state->xmit;
+> +	unsigned int tf_pointer = 0;
+> +	int sent_tx;
+> +	int tx_count;
+> +	int x;
+> +	int sr;
+> +
+> +	tx_count = uart_circ_chars_pending(xmit);
+> +
+> +	if (tx_count > (UART_XMIT_SIZE - xmit->tail))
+> +		tx_count = UART_XMIT_SIZE - xmit->tail;
+> +	if (tx_count >= port->fifosize)
+> +		tx_count = port->fifosize;
+> +
+> +	/* Handle x_char */
+> +	if (port->x_char) {
+> +		msm_hsl_wait_for_xmitr(port);
+> +		msm_hsl_write(port, tx_count + 1, UARTDM_NCF_TX);
+> +		msm_hsl_read(port, UARTDM_NCF_TX);
+> +		msm_hsl_write(port, port->x_char, UARTDM_TF);
+> +		port->icount.tx++;
+> +		port->x_char = 0;
+> +	} else if (tx_count) {
+> +		msm_hsl_wait_for_xmitr(port);
+> +		msm_hsl_write(port, tx_count, UARTDM_NCF_TX);
+> +		msm_hsl_read(port, UARTDM_NCF_TX);
+> +	}
+> +	if (!tx_count) {
+> +		msm_hsl_stop_tx(port);
+> +		return;
+> +	}
+> +
+> +	while (tf_pointer < tx_count) {
+> +		sr = msm_hsl_read(port, UARTDM_SR);
+> +		if (!(sr & UARTDM_SR_TXRDY_BMSK))
+> +			continue;
+> +		switch (tx_count - tf_pointer) {
+> +		case 1:
+> +			x = xmit->buf[xmit->tail];
+> +			port->icount.tx++;
+> +			break;
+> +		case 2:
+> +			x = xmit->buf[xmit->tail]
+> +			    | xmit->buf[xmit->tail + 1] << 8;
+> +			port->icount.tx += 2;
+> +			break;
+> +		case 3:
+> +			x = xmit->buf[xmit->tail]
+> +			    | xmit->buf[xmit->tail + 1] << 8
+> +			    | xmit->buf[xmit->tail + 2] << 16;
+> +			port->icount.tx += 3;
+> +			break;
+> +		default:
+> +			x = *((int *)&(xmit->buf[xmit->tail]));
+> +			port->icount.tx += 4;
+> +			break;
+> +		}
+> +		msm_hsl_write(port, x, UARTDM_TF);
+> +		xmit->tail = ((tx_count - tf_pointer < 4) ?
+> +			      (tx_count - tf_pointer + xmit->tail) :
+> +			      (xmit->tail + 4)) & (UART_XMIT_SIZE - 1);
+> +		tf_pointer += 4;
+> +		sent_tx = 1;
+> +	}
+> +
+> +	if (uart_circ_empty(xmit))
+> +		msm_hsl_stop_tx(port);
+> +
+> +	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+> +		uart_write_wakeup(port);
+> +
+> +}
+> +
+> +static void msm_hsl_handle_delta_cts(struct uart_port *port)
+> +{
+> +	msm_hsl_write(port, RESET_CTS, UARTDM_CR);
+> +	port->icount.cts++;
+> +	wake_up_interruptible(&port->state->port.delta_msr_wait);
+> +}
+> +
+> +static irqreturn_t msm_hsl_irq(int irq, void *dev_id)
+> +{
+> +	struct uart_port *port = dev_id;
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +	unsigned int misr;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&port->lock, flags);
+> +	misr = msm_hsl_read(port, UARTDM_MISR);
+> +	/* disable interrupt */
+> +	msm_hsl_write(port, 0, UARTDM_IMR);
+> +
+> +	if (misr & (UARTDM_ISR_RXSTALE_BMSK | UARTDM_ISR_RXLEV_BMSK)) {
+> +		msm_hsl_handle_rx(port, misr);
+> +		if (misr & (UARTDM_ISR_RXSTALE_BMSK))
+> +			msm_hsl_write(port, RESET_STALE_INT,
+> +				      UARTDM_CR);
+> +		msm_hsl_write(port, 6500, UARTDM_DMRX);
+> +		msm_hsl_write(port, STALE_EVENT_ENABLE, UARTDM_CR);
+> +	}
+> +	if (misr & UARTDM_ISR_TXLEV_BMSK)
+> +		msm_hsl_handle_tx(port);
+> +
+> +	if (misr & UARTDM_ISR_DELTA_CTS_BMSK)
+> +		msm_hsl_handle_delta_cts(port);
+> +
+> +	/* restore interrupt */
+> +	msm_hsl_write(port, hslp->imr, UARTDM_IMR);
+> +	spin_unlock_irqrestore(&port->lock, flags);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static unsigned int msm_hsl_tx_empty(struct uart_port *port)
+> +{
+> +	unsigned int ret;
+> +
+> +	ret = msm_hsl_read(port, UARTDM_SR);
+> +	ret &= UARTDM_SR_TXEMT_BMSK;
+> +
+> +	if (ret)
+> +		ret = TIOCSER_TEMT;
+> +
+> +	return ret;
+> +}
+> +
+> +static void msm_hsl_reset(struct uart_port *port)
+> +{
+> +	/* reset everything */
+> +	msm_hsl_write(port, RESET_RX, UARTDM_CR);
+> +	msm_hsl_write(port, RESET_TX, UARTDM_CR);
+> +	msm_hsl_write(port, RESET_ERROR_STATUS, UARTDM_CR);
+> +	msm_hsl_write(port, RESET_BREAK_INT, UARTDM_CR);
+> +	msm_hsl_write(port, RESET_CTS, UARTDM_CR);
+> +	msm_hsl_write(port, RFR_LOW, UARTDM_CR);
+> +}
+> +
+> +static unsigned int msm_hsl_get_mctrl(struct uart_port *port)
+> +{
+> +	return TIOCM_CAR | TIOCM_CTS | TIOCM_DSR | TIOCM_RTS;
+> +}
+> +
+> +static void msm_hsl_set_mctrl(struct uart_port *port, unsigned int mctrl)
+> +{
+> +	unsigned int mr;
+> +	unsigned int loop_mode;
+> +
+> +	mr = msm_hsl_read(port, UARTDM_MR1);
+> +
+> +	if (!(mctrl & TIOCM_RTS)) {
+> +		mr &= ~UARTDM_MR1_RX_RDY_CTL_BMSK;
+> +		msm_hsl_write(port, mr, UARTDM_MR1);
+> +		msm_hsl_write(port, RFR_HIGH, UARTDM_CR);
+> +	} else {
+> +		mr |= UARTDM_MR1_RX_RDY_CTL_BMSK;
+> +		msm_hsl_write(port, mr, UARTDM_MR1);
+> +	}
+> +
+> +	loop_mode = TIOCM_LOOP & mctrl;
+> +	if (loop_mode) {
+> +		mr = msm_hsl_read(port, UARTDM_MR2);
+> +		mr |= UARTDM_MR2_LOOP_MODE_BMSK;
+> +		msm_hsl_write(port, mr, UARTDM_MR2);
+> +
+> +		/* Reset TX */
+> +		msm_hsl_reset(port);
+> +
+> +		/* Turn on Uart Receiver & Transmitter */
+> +		msm_hsl_write(port, UARTDM_CR_RX_EN_BMSK | UARTDM_CR_TX_EN_BMSK,
+> +			      UARTDM_CR);
+> +	}
+> +}
+> +
+> +static void msm_hsl_break_ctl(struct uart_port *port, int break_ctl)
+> +{
+> +
+> +	if (break_ctl)
+> +		msm_hsl_write(port, START_BREAK, UARTDM_CR);
+> +	else
+> +		msm_hsl_write(port, STOP_BREAK, UARTDM_CR);
+> +}
+> +
+> +/*
+> + * msm_hsl_set_baud_rate: set requested baud rate
+> + * @port: uart port
+> + * @baud: baud rate to set (in bps)
+> + */
+> +static void msm_hsl_set_baud_rate(struct uart_port *port, unsigned int baud)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +	unsigned int baud_code, rxstale, watermark;
+> +	unsigned int data;
+> +
+> +	switch (baud) {
+> +	case 300:
+> +		baud_code = 0x00;
+> +		rxstale = 1;
+> +		break;
+> +	case 600:
+> +		baud_code = 0x11;
+> +		rxstale = 1;
+> +		break;
+> +	case 1200:
+> +		baud_code = 0x22;
+> +		rxstale = 1;
+> +		break;
+> +	case 2400:
+> +		baud_code = 0x33;
+> +		rxstale = 1;
+> +		break;
+> +	case 4800:
+> +		baud_code = 0x44;
+> +		rxstale = 1;
+> +		break;
+> +	case 9600:
+> +		baud_code = 0x55;
+> +		rxstale = 2;
+> +		break;
+> +	case 14400:
+> +		baud_code = 0x66;
+> +		rxstale = 3;
+> +		break;
+> +	case 19200:
+> +		baud_code = 0x77;
+> +		rxstale = 4;
+> +		break;
+> +	case 28800:
+> +		baud_code = 0x88;
+> +		rxstale = 6;
+> +		break;
+> +	case 38400:
+> +		baud_code = 0x99;
+> +		rxstale = 8;
+> +		break;
+> +	case 57600:
+> +		baud_code = 0xaa;
+> +		rxstale = 16;
+> +		break;
+> +	case 115200:
+> +		baud_code = 0xcc;
+> +		rxstale = 31;
+> +		break;
+> +	case 230400:
+> +		baud_code = 0xee;
+> +		rxstale = 31;
+> +		break;
+> +	case 460800:
+> +		baud_code = 0xff;
+> +		rxstale = 31;
+> +		break;
+> +	default:		/*115200 baud rate */
+> +		baud_code = 0xcc;
+> +		rxstale = 31;
+> +		break;
+> +	}
+> +
+> +	msm_hsl_write(port, baud_code, UARTDM_CSR);
+> +
+> +	/*
+> +	 * uart baud rate depends on CSR and MND Values
+> +	 * we are updating CSR before and then calling
+> +	 * clk_set_rate which updates MND Values. Hence
+> +	 * dsb requires here.
+> +	 */
+> +	mb();
+> +
+> +	/*
+> +	 * Check requested baud rate and for higher baud rate than 460800,
+> +	 * calculate required uart clock frequency and set the same.
+> +	 */
+> +	if (baud > 460800)
+> +		port->uartclk = baud * 16;
+> +	else
+> +		port->uartclk = 7372800;
+> +
+> +	if (clk_set_rate(hslp->clk, port->uartclk)) {
+> +		WARN_ON(1);
+> +		return;
+> +	}
+> +
+> +	/* Set timeout to be ~600x the character transmit time */
+> +	hslp->tx_timeout = (1000000000 / baud) * 6;
+> +
+> +	/* RX stale watermark */
+> +	watermark = UARTDM_IPR_STALE_LSB_BMSK & rxstale;
+> +	watermark |= UARTDM_IPR_STALE_TIMEOUT_MSB_BMSK & (rxstale << 2);
+> +	msm_hsl_write(port, watermark, UARTDM_IPR);
+> +
+> +	/* Set RX watermark
+> +	 * Configure Rx Watermark as 3/4 size of Rx FIFO.
+> +	 * RFWR register takes value in Words for UARTDM Core
+> +	 * whereas it is consider to be in Bytes for UART Core.
+> +	 * Hence configuring Rx Watermark as 48 Words.
+> +	 */
+> +	watermark = (port->fifosize * 3) / 4;
+> +	msm_hsl_write(port, watermark, UARTDM_RFWR);
+> +
+> +	/* set TX watermark */
+> +	msm_hsl_write(port, 0, UARTDM_TFWR);
+> +
+> +	msm_hsl_write(port, CR_PROTECTION_EN, UARTDM_CR);
+> +	msm_hsl_reset(port);
+> +
+> +	data = UARTDM_CR_TX_EN_BMSK;
+> +	data |= UARTDM_CR_RX_EN_BMSK;
+> +	/* enable TX & RX */
+> +	msm_hsl_write(port, data, UARTDM_CR);
+> +
+> +	msm_hsl_write(port, RESET_STALE_INT, UARTDM_CR);
+> +	/* turn on RX and CTS interrupts */
+> +	hslp->imr = UARTDM_ISR_RXSTALE_BMSK | UARTDM_ISR_DELTA_CTS_BMSK |
+> +		    UARTDM_ISR_RXLEV_BMSK;
+> +	msm_hsl_write(port, hslp->imr, UARTDM_IMR);
+> +	msm_hsl_write(port, 6500, UARTDM_DMRX);
+> +	msm_hsl_write(port, STALE_EVENT_ENABLE, UARTDM_CR);
+> +}
+> +
+> +static int msm_hsl_startup(struct uart_port *port)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +	unsigned int data, rfr_level;
+> +	int ret;
+> +	unsigned long flags;
+> +
+> +	snprintf(hslp->name, sizeof(hslp->name),
+> +		 "msm_serial_hsl%d", port->line);
+> +
+> +	if (!(is_console(port)) || (!port->cons) ||
+> +	    (port->cons && (!(port->cons->flags & CON_ENABLED)))) {
+> +
+> +		if (msm_serial_hsl_has_gsbi(port))
+> +			set_gsbi_uart_func_mode(port);
+> +	}
+> +
+> +	/*
+> +	 * Set RFR Level as 3/4 of UARTDM FIFO Size
+> +	 * i.e. 48 Words = 192 bytes as Rx FIFO is 64 words ( 256 bytes).
+> +	 */
+> +	if (port->fifosize > 48)
+> +		rfr_level = port->fifosize - 16;
+> +	else
+> +		rfr_level = port->fifosize;
+> +
+> +	spin_lock_irqsave(&port->lock, flags);
+> +
+> +	/* set automatic RFR level */
+> +	data = msm_hsl_read(port, UARTDM_MR1);
+> +	data &= ~UARTDM_MR1_AUTO_RFR_LEVEL1_BMSK;
+> +	data &= ~UARTDM_MR1_AUTO_RFR_LEVEL0_BMSK;
+> +	data |= UARTDM_MR1_AUTO_RFR_LEVEL1_BMSK & (rfr_level << 2);
+> +	data |= UARTDM_MR1_AUTO_RFR_LEVEL0_BMSK & rfr_level;
+> +	msm_hsl_write(port, data, UARTDM_MR1);
+> +	spin_unlock_irqrestore(&port->lock, flags);
+> +
+> +	ret = request_irq(port->irq, msm_hsl_irq, IRQF_TRIGGER_HIGH,
+> +			  hslp->name, port);
+> +	if (ret)
+> +		dev_err(port->dev, "Failed to request irq\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static void msm_hsl_shutdown(struct uart_port *port)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +
+> +	hslp->imr = 0;
+> +	/* disable interrupts */
+> +	msm_hsl_write(port, 0, UARTDM_IMR);
+> +
+> +	free_irq(port->irq, port);
+> +}
+> +
+> +static void msm_hsl_set_termios(struct uart_port *port,
+> +				struct ktermios *termios, struct ktermios *old)
+> +{
+> +	unsigned int baud, mr;
+> +	unsigned long flags;
+> +
+> +	if (!termios->c_cflag)
+> +		return;
+> +
+> +	/*
+> +	 * Calculate and set baud rate
+> +	 * 300 is the minimum and 4 Mbps is the maximum baud rate
+> +	 * supported by driver.
+> +	 */
+> +	baud = uart_get_baud_rate(port, termios, old, 200, 4000000);
+> +
+> +	/*
+> +	 * Due to non-availability of 3.2 Mbps baud rate as standard baud rate
+> +	 * with TTY/serial core. Map 200 BAUD to 3.2 Mbps
+> +	 */
+> +	if (baud == 200)
+> +		baud = 3200000;
+> +
+> +	spin_lock_irqsave(&port->lock, flags);
+> +
+> +	msm_hsl_set_baud_rate(port, baud);
+> +
+> +	/* calculate parity */
+> +	mr = msm_hsl_read(port, UARTDM_MR2);
+> +	mr &= ~UARTDM_MR2_PARITY_MODE_BMSK;
+> +	if (termios->c_cflag & PARENB) {
+> +		if (termios->c_cflag & PARODD)
+> +			mr |= ODD_PARITY;
+> +		else if (termios->c_cflag & CMSPAR)
+> +			mr |= SPACE_PARITY;
+> +		else
+> +			mr |= EVEN_PARITY;
+> +	}
+> +
+> +	/* calculate bits per char */
+> +	mr &= ~UARTDM_MR2_BITS_PER_CHAR_BMSK;
+> +	switch (termios->c_cflag & CSIZE) {
+> +	case CS5:
+> +		mr |= FIVE_BPC;
+> +		break;
+> +	case CS6:
+> +		mr |= SIX_BPC;
+> +		break;
+> +	case CS7:
+> +		mr |= SEVEN_BPC;
+> +		break;
+> +	case CS8:
+> +	default:
+> +		mr |= EIGHT_BPC;
+> +		break;
+> +	}
+> +
+> +	/* calculate stop bits */
+> +	mr &= ~(STOP_BIT_ONE | STOP_BIT_TWO);
+> +	if (termios->c_cflag & CSTOPB)
+> +		mr |= STOP_BIT_TWO;
+> +	else
+> +		mr |= STOP_BIT_ONE;
+> +
+> +	/* set parity, bits per char, and stop bit */
+> +	msm_hsl_write(port, mr, UARTDM_MR2);
+> +
+> +	/* calculate and set hardware flow control */
+> +	mr = msm_hsl_read(port, UARTDM_MR1);
+> +	mr &= ~(UARTDM_MR1_CTS_CTL_BMSK | UARTDM_MR1_RX_RDY_CTL_BMSK);
+> +	if (termios->c_cflag & CRTSCTS) {
+> +		mr |= UARTDM_MR1_CTS_CTL_BMSK;
+> +		mr |= UARTDM_MR1_RX_RDY_CTL_BMSK;
+> +	}
+> +	msm_hsl_write(port, mr, UARTDM_MR1);
+> +
+> +	/* Configure status bits to ignore based on termio flags. */
+> +	port->read_status_mask = 0;
+> +	if (termios->c_iflag & INPCK)
+> +		port->read_status_mask |= UARTDM_SR_PAR_FRAME_BMSK;
+> +	if (termios->c_iflag & (BRKINT | PARMRK))
+> +		port->read_status_mask |= UARTDM_SR_RX_BREAK_BMSK;
+> +
+> +	uart_update_timeout(port, termios->c_cflag, baud);
+> +
+> +	spin_unlock_irqrestore(&port->lock, flags);
+> +}
+> +
+> +static const char *msm_hsl_type(struct uart_port *port)
+> +{
+> +	return "MSM";
+> +}
+> +
+> +static void msm_hsl_release_port(struct uart_port *port)
+> +{
+> +}
+> +
+> +static int msm_hsl_request_port(struct uart_port *port)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void msm_hsl_config_port(struct uart_port *port, int flags)
+> +{
+> +	if (flags & UART_CONFIG_TYPE)
+> +		port->type = PORT_MSM;
+> +
+> +	/* Configure required GSBI based UART protocol. */
+> +	if (msm_serial_hsl_has_gsbi(port))
+> +		set_gsbi_uart_func_mode(port);
+> +}
+> +
+> +static int msm_hsl_verify_port(struct uart_port *port,
+> +			       struct serial_struct *ser)
+> +{
+> +	if (ser->type != PORT_UNKNOWN && ser->type != PORT_MSM)
+> +		return -EINVAL;
+> +	if (port->irq != ser->irq)
+> +		return -EINVAL;
+> +	return 0;
+> +}
+> +
+> +static void msm_hsl_power(struct uart_port *port, unsigned int state,
+> +			  unsigned int oldstate)
+> +{
+> +	struct msm_hsl_port *hslp = to_hsl_port(port);
+> +	int ret;
+> +
+> +	switch (state) {
+> +	case UART_PM_STATE_ON:
+> +		ret = clk_set_rate(hslp->clk, port->uartclk);
+> +		if (ret)
+> +			dev_err(port->dev, "Can't change rate to %u\n",
+> +				port->uartclk);
+> +		msm_hsl_clock_enable(port, 1);
+> +		break;
+> +	case UART_PM_STATE_OFF:
+> +		msm_hsl_clock_enable(port, 0);
+> +		break;
+> +	default:
+> +		dev_err(port->dev, "Unknown PM state %d\n", state);
+> +	}
+> +}
+> +
+> +static struct uart_ops msm_hsl_uart_pops = {
+> +	.tx_empty	= msm_hsl_tx_empty,
+> +	.set_mctrl	= msm_hsl_set_mctrl,
+> +	.get_mctrl	= msm_hsl_get_mctrl,
+> +	.stop_tx	= msm_hsl_stop_tx,
+> +	.start_tx	= msm_hsl_start_tx,
+> +	.stop_rx	= msm_hsl_stop_rx,
+> +	.enable_ms	= msm_hsl_enable_ms,
+> +	.break_ctl	= msm_hsl_break_ctl,
+> +	.startup	= msm_hsl_startup,
+> +	.shutdown	= msm_hsl_shutdown,
+> +	.set_termios	= msm_hsl_set_termios,
+> +	.type		= msm_hsl_type,
+> +	.release_port	= msm_hsl_release_port,
+> +	.request_port	= msm_hsl_request_port,
+> +	.config_port	= msm_hsl_config_port,
+> +	.verify_port	= msm_hsl_verify_port,
+> +	.pm		= msm_hsl_power,
+> +};
+> +
+> +#ifdef CONFIG_SERIAL_MSM_HSL_CONSOLE
+> +
+> +static struct msm_hsl_port *msm_hsl_uart_ports[UART_NR];
+> +
+> +static void msm_hsl_console_putchar(struct uart_port *port, int ch)
+> +{
+> +	msm_hsl_wait_for_xmitr(port);
+> +	msm_hsl_write(port, 1, UARTDM_NCF_TX);
+> +	/*
+> +	 * Dummy read to add 1 AHB clock delay to fix UART hardware bug.
+> +	 * Bug: Delay required on TX-transfer-init. after writing to
+> +	 * NO_CHARS_FOR_TX register.
+> +	 */
+> +	msm_hsl_read(port, UARTDM_SR);
+> +	msm_hsl_write(port, ch, UARTDM_TF);
+> +}
+> +
+> +static void msm_hsl_console_write(struct console *co, const char *s,
+> +				  unsigned int count)
+> +{
+> +	struct uart_port *port;
+> +	struct msm_hsl_port *hslp;
+> +	int locked;
+> +
+> +	BUG_ON(co->index < 0 || co->index >= UART_NR);
+> +
+> +	hslp = msm_hsl_uart_ports[co->index];
+> +	port = &hslp->uart;
+> +
+> +	/* not pretty, but we can end up here via various convoluted paths */
+> +	if (port->sysrq || oops_in_progress)
+> +		locked = spin_trylock(&port->lock);
+> +	else {
+> +		locked = 1;
+> +		spin_lock(&port->lock);
+> +	}
+> +	msm_hsl_write(port, 0, UARTDM_IMR);
+> +	uart_console_write(port, s, count, msm_hsl_console_putchar);
+> +	msm_hsl_write(port, hslp->imr, UARTDM_IMR);
+> +	if (locked == 1)
+> +		spin_unlock(&port->lock);
+> +}
+> +
+> +static int msm_hsl_console_setup(struct console *co, char *options)
+> +{
+> +	struct uart_port *port;
+> +	int baud = 0, flow, bits, parity, mr2;
+> +	int ret;
+> +
+> +	if (co->index >= UART_NR || co->index < 0)
+> +		return -ENXIO;
+> +
+> +	port = &msm_hsl_uart_ports[co->index]->uart;
+> +
+> +	if (!port->membase)
+> +		return -ENXIO;
+> +
+> +	port->cons = co;
+> +
+> +	pm_runtime_get_noresume(port->dev);
+> +
+> +#ifndef CONFIG_PM_RUNTIME
+> +	msm_hsl_clock_enable(port, 1);
+> +#endif
+> +	pm_runtime_resume(port->dev);
+> +
+> +	if (options)
+> +		uart_parse_options(options, &baud, &parity, &bits, &flow);
+> +
+> +	bits = 8;
+> +	parity = 'n';
+> +	flow = 'n';
+> +	msm_hsl_write(port, UARTDM_MR2_BITS_PER_CHAR_8 |
+> +		      STOP_BIT_ONE, UARTDM_MR2);	/* 8N1 */
+> +
+> +	if (baud < 300 || baud > 115200)
+> +		baud = 115200;
+> +
+> +	msm_hsl_set_baud_rate(port, baud);
+> +
+> +	ret = uart_set_options(port, co, baud, parity, bits, flow);
+> +
+> +	mr2 = msm_hsl_read(port, UARTDM_MR2);
+> +	mr2 |= UARTDM_MR2_RX_ERROR_CHAR_OFF;
+> +	mr2 |= UARTDM_MR2_RX_BREAK_ZERO_CHAR_OFF;
+> +	msm_hsl_write(port, mr2, UARTDM_MR2);
+> +
+> +	msm_hsl_reset(port);
+> +	/* Enable transmitter */
+> +	msm_hsl_write(port, CR_PROTECTION_EN, UARTDM_CR);
+> +	msm_hsl_write(port, UARTDM_CR_TX_EN_BMSK, UARTDM_CR);
+> +
+> +	msm_hsl_write(port, 1, UARTDM_NCF_TX);
+> +	msm_hsl_read(port, UARTDM_NCF_TX);
+> +
+> +	dev_dbg(port->dev, "Console setup on port #%d\n", port->line);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct uart_driver msm_hsl_uart_driver;
+> +
+> +static struct console msm_hsl_console = {
+> +	.name = "ttyHSL",
+> +	.write = msm_hsl_console_write,
+> +	.device = uart_console_device,
+> +	.setup = msm_hsl_console_setup,
+> +	.flags = CON_PRINTBUFFER,
+> +	.index = -1,
+> +	.data = &msm_hsl_uart_driver,
+> +};
+> +
+> +#define MSM_HSL_CONSOLE	(&msm_hsl_console)
+> +
+> +#else
+> +#define MSM_HSL_CONSOLE	NULL
+> +#endif
+> +
+> +static struct uart_driver msm_hsl_uart_driver = {
+> +	.owner = THIS_MODULE,
+> +	.driver_name = "msm_serial_hsl",
+> +	.dev_name = "ttyHSL",
+> +	.nr = UART_NR,
+> +	.cons = MSM_HSL_CONSOLE,
+> +};
+> +
+> +static struct dentry *debug_base;
+> +
+> +DEFINE_SIMPLE_ATTRIBUTE(loopback_enable_fops, msm_hsl_loopback_get,
+> +			msm_hsl_loopback_set, "%llu\n");
+> +/*
+> + * msm_serial_hsl debugfs node: <debugfs_root>/msm_serial_hsl/loopback.<id>
+> + * writing 1 turns on internal loopback mode in HW. Useful for automation
+> + * test scripts.
+> + * writing 0 disables the internal loopback mode. Default is disabled.
+> + */
+> +static void msm_hsl_debugfs_init(struct msm_hsl_port *hslp, int id)
+> +{
+> +	char node_name[15];
+> +
+> +	snprintf(node_name, sizeof(node_name), "loopback.%d", id);
+> +	hslp->loopback_dir = debugfs_create_file(node_name,
+> +						 S_IRUGO | S_IWUSR,
+> +						 debug_base, hslp,
+> +						 &loopback_enable_fops);
+> +}
+> +
+> +static atomic_t msm_serial_hsl_next_id = ATOMIC_INIT(0);
+> +
+> +static struct of_device_id msm_hsl_match_table[] = {
+> +	{.compatible = "qcom,msm-lsuart-v14"},
+> +	{ /* Sentinel */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, msm_hsl_match_table);
+> +
+> +static int msm_serial_hsl_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct msm_hsl_port *hslp;
+> +	struct resource *mem;
+> +	struct uart_port *port;
+> +	const struct of_device_id *match;
+> +	u32 line;
+> +	int ret;
+> +
+> +	if (pdev->id == -1)
+> +		pdev->id = atomic_inc_return(&msm_serial_hsl_next_id) - 1;
+> +
+> +	line = pdev->id;
+> +
+> +	/* Use line number from device tree alias if present */
+> +	if (!node)
+> +		return -EINVAL;
+> +
+> +	ret = of_alias_get_id(node, "serial");
+> +	if (ret >= 0)
+> +		line = ret;
+> +
+> +	if (line < 0 || line >= UART_NR)
+> +		return -ENXIO;
+> +
+> +	pr_info("detected port #%d (ttyHSL%d)\n", pdev->id, line);
+> +
+> +	hslp = devm_kzalloc(&pdev->dev, sizeof(*hslp), GFP_KERNEL);
+> +	if (!hslp)
+> +		return -ENOMEM;
+> +
+> +	port = &hslp->uart;
+> +	port->dev = &pdev->dev;
+> +	port->uartclk = 7372800;
+> +	port->iotype = UPIO_MEM;
+> +	port->ops = &msm_hsl_uart_pops;
+> +	port->flags = UPF_BOOT_AUTOCONF;
+> +	port->fifosize = 64;
+> +	port->line = line;
+> +
+> +	hslp->clk = devm_clk_get(&pdev->dev, "core_clk");
+> +	if (IS_ERR(hslp->clk)) {
+> +		ret = PTR_ERR(hslp->clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Error getting core clk\n");
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Interface clock is not required by all UART configurations.
+> +	 * GSBI UART and BLSP UART needs interface clock but Legacy UART
+> +	 * do not require interface clock. Hence, do not fail probe with
+> +	 * iface of_clk_get_by_name failure.
+> +	 */
+> +	hslp->pclk = devm_clk_get(&pdev->dev, "iface_clk");
+> +	if (IS_ERR(hslp->pclk)) {
+> +		ret = PTR_ERR(hslp->pclk);
+> +		if (ret == -EPROBE_DEFER)
+> +			return ret;
+> +		else
+> +			hslp->pclk = NULL;
+> +	}
+> +
+> +	hslp->uart_type = LEGACY_HSUART;
+> +
+> +	match = of_match_device(msm_hsl_match_table, &pdev->dev);
+> +	if (!match) {
+> +		hslp->regmap = regmap[UARTDM_VERSION_11_13];
+> +	} else {
+> +		hslp->regmap = regmap[UARTDM_VERSION_14];
+> +		/*
+> +		 * BLSP based UART configuration is available with
+> +		 * UARTDM v14 Revision. Hence set uart_type as UART_BLSP.
+> +		 */
+> +		hslp->uart_type = BLSP_HSUART;
+> +	}
+> +
+> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "gbsi_mem");
+> +	if (mem) {
+> +		hslp->mapped_gsbi = devm_request_and_ioremap(&pdev->dev, mem);
+> +		if (!hslp->mapped_gsbi)
+> +			dev_warn(&pdev->dev, "GSBI region already claimed\n");
+> +		else
+> +			hslp->uart_type = GSBI_HSUART;
+> +	}
+> +
+> +	mem = platform_get_resource_byname(pdev, IORESOURCE_MEM, "uart_mem");
+> +	if (!mem) {
+> +		dev_err(&pdev->dev, "Getting UART mem failed\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	port->mapbase = mem->start;
+> +
+> +	port->irq = platform_get_irq(pdev, 0);
+> +	if ((int)port->irq < 0) {
+> +		dev_err(&pdev->dev, "Getting irq failed\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	port->membase = devm_request_and_ioremap(&pdev->dev, mem);
+> +	if (!port->membase) {
+> +		dev_err(&pdev->dev, "UART region already claimed\n");
+> +		return -EADDRNOTAVAIL;
+> +	}
+> +
+> +	device_set_wakeup_capable(&pdev->dev, 1);
+> +	platform_set_drvdata(pdev, port);
+> +	pm_runtime_enable(port->dev);
+> +#ifdef CONFIG_SERIAL_MSM_HSL_CONSOLE
+> +	msm_hsl_uart_ports[line] = hslp;
+> +#endif
+> +	msm_hsl_debugfs_init(hslp, hslp->uart.line);
+> +
+> +	/* Temporarily increase the refcount on the GSBI clock to avoid a race
+> +	 * condition with the earlyprintk handover mechanism.
+> +	 */
+> +	if (hslp->pclk)
+> +		clk_prepare_enable(hslp->pclk);
+> +	ret = uart_add_one_port(&msm_hsl_uart_driver, port);
+> +	if (hslp->pclk)
+> +		clk_disable_unprepare(hslp->pclk);
+> +
+> +	if (!ret)
+> +		platform_set_drvdata(pdev, hslp);
+> +
+> +	return ret;
+> +}
+> +
+> +static int msm_serial_hsl_remove(struct platform_device *pdev)
+> +{
+> +	struct msm_hsl_port *hslp = platform_get_drvdata(pdev);
+> +	struct uart_port *port;
+> +
+> +	port = &hslp->uart;
+> +
+> +	pm_runtime_put_sync(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	device_set_wakeup_capable(&pdev->dev, 0);
+> +	platform_set_drvdata(pdev, NULL);
+> +
+> +	uart_remove_one_port(&msm_hsl_uart_driver, port);
+> +
+> +	debugfs_remove(hslp->loopback_dir);
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM
+> +static int msm_serial_hsl_suspend(struct device *dev)
+> +{
+> +	struct msm_hsl_port *hslp = dev_get_drvdata(dev);
+> +	struct uart_port *port;
+> +
+> +	port = &hslp->uart;
+> +
+> +	if (port)
+> +		return 0;
+> +
+> +	if (is_console(port))
+> +		msm_hsl_clock_enable(port, 0);
+> +
+> +	uart_suspend_port(&msm_hsl_uart_driver, port);
+> +	if (device_may_wakeup(dev))
+> +		enable_irq_wake(port->irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int msm_serial_hsl_resume(struct device *dev)
+> +{
+> +	struct msm_hsl_port *hslp = dev_get_drvdata(dev);
+> +	struct uart_port *port;
+> +
+> +	port = &hslp->uart;
+> +
+> +	if (!port)
+> +		return 0;
+> +
+> +	uart_resume_port(&msm_hsl_uart_driver, port);
+> +	if (device_may_wakeup(dev))
+> +		disable_irq_wake(port->irq);
+> +
+> +	if (is_console(port))
+> +		msm_hsl_clock_enable(port, 1);
+> +
+> +	return 0;
+> +}
+> +#else
+> +#define msm_serial_hsl_suspend NULL
+> +#define msm_serial_hsl_resume NULL
+> +#endif
+> +
+> +static int msm_hsl_runtime_suspend(struct device *dev)
+> +{
+> +	struct msm_hsl_port *hslp = dev_get_drvdata(dev);
+> +	struct uart_port *port;
+> +
+> +	port = &hslp->uart;
+> +
+> +	dev_dbg(dev, "pm_runtime: suspending\n");
+> +	msm_hsl_clock_enable(port, 0);
+> +	return 0;
+> +}
+> +
+> +static int msm_hsl_runtime_resume(struct device *dev)
+> +{
+> +	struct msm_hsl_port *hslp = dev_get_drvdata(dev);
+> +	struct uart_port *port;
+> +
+> +	port = &hslp->uart;
+> +
+> +	dev_dbg(dev, "pm_runtime: resuming\n");
+> +	msm_hsl_clock_enable(port, 1);
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops msm_hsl_dev_pm_ops = {
+> +	.suspend = msm_serial_hsl_suspend,
+> +	.resume = msm_serial_hsl_resume,
+> +	.runtime_suspend = msm_hsl_runtime_suspend,
+> +	.runtime_resume = msm_hsl_runtime_resume,
+> +};
+> +
+> +static struct platform_driver msm_hsl_platform_driver = {
+> +	.probe = msm_serial_hsl_probe,
+> +	.remove = msm_serial_hsl_remove,
+> +	.driver = {
+> +		   .name = "msm_serial_hsl",
+> +		   .owner = THIS_MODULE,
+> +		   .pm = &msm_hsl_dev_pm_ops,
+> +		   .of_match_table = msm_hsl_match_table,
+> +	},
+> +};
+> +
+> +static int __init msm_serial_hsl_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = uart_register_driver(&msm_hsl_uart_driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	debug_base = debugfs_create_dir("msm_serial_hsl", NULL);
+> +	if (IS_ERR_OR_NULL(debug_base))
+> +		pr_err("Cannot create debugfs dir\n");
+> +
+> +	ret = platform_driver_register(&msm_hsl_platform_driver);
+> +	if (ret)
+> +		uart_unregister_driver(&msm_hsl_uart_driver);
+> +
+> +	pr_debug("Driver initialized\n");
+> +	return ret;
+> +}
+> +
+> +static void __exit msm_serial_hsl_exit(void)
+> +{
+> +	debugfs_remove_recursive(debug_base);
+> +#ifdef CONFIG_SERIAL_MSM_HSL_CONSOLE
+> +	unregister_console(&msm_hsl_console);
+> +#endif
+> +	platform_driver_unregister(&msm_hsl_platform_driver);
+> +	uart_unregister_driver(&msm_hsl_uart_driver);
+> +}
+> +
+> +module_init(msm_serial_hsl_init);
+> +module_exit(msm_serial_hsl_exit);
+> +
+> +MODULE_DESCRIPTION("Driver for MSM HSUART UART serial device");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/tty/serial/msm_serial_hsl.h b/drivers/tty/serial/msm_serial_hsl.h
+> new file mode 100644
+> index 0000000..beb97d4
+> --- /dev/null
+> +++ b/drivers/tty/serial/msm_serial_hsl.h
+> @@ -0,0 +1,294 @@
+> +/* drivers/tty/serial/msm_serial_hsl.h
+> + *
+> + * Copyright (c) 2007-2009, 2012-2013,The Linux Foundation. All rights reserved.
+> + *
+> + * All source code in this file is licensed under the following license
+> + * except where indicated.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+> + * See the GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, you can find it at http://www.fsf.org
+> + */
+> +
+> +#ifndef MSM_SERIAL_HSL_H
+> +#define MSM_SERIAL_HSL_H
+> +
+> +#define GSBI_CONTROL_ADDR              0x0
+> +#define GSBI_PROTOCOL_CODE_MASK        0x30
+> +#define GSBI_PROTOCOL_I2C_UART         0x60
+> +#define GSBI_PROTOCOL_UART             0x40
+> +#define GSBI_PROTOCOL_IDLE             0x0
+> +
+> +#define TCSR_ADM_1_A_CRCI_MUX_SEL      0x78
+> +#define TCSR_ADM_1_B_CRCI_MUX_SEL      0x7c
+> +#define ADM1_CRCI_GSBI6_RX_SEL         0x800
+> +#define ADM1_CRCI_GSBI6_TX_SEL         0x400
+> +
+> +enum msm_hsl_regs {
+> +	UARTDM_MR1,
+> +	UARTDM_MR2,
+> +	UARTDM_IMR,
+> +	UARTDM_SR,
+> +	UARTDM_CR,
+> +	UARTDM_CSR,
+> +	UARTDM_IPR,
+> +	UARTDM_ISR,
+> +	UARTDM_RX_TOTAL_SNAP,
+> +	UARTDM_RFWR,
+> +	UARTDM_TFWR,
+> +	UARTDM_RF,
+> +	UARTDM_TF,
+> +	UARTDM_MISR,
+> +	UARTDM_DMRX,
+> +	UARTDM_NCF_TX,
+> +	UARTDM_DMEN,
+> +	UARTDM_BCR,
+> +	UARTDM_TXFS,
+> +	UARTDM_RXFS,
+> +	UARTDM_LAST,
+> +};
+> +
+> +#define UARTDM_MR1_ADDR 0x0
+> +#define UARTDM_MR2_ADDR 0x4
+> +
+> +/* Backward Compatability Register for UARTDM Core v1.4 */
+> +#define UARTDM_BCR_ADDR	0xc8
+> +
+> +/*
+> + * UARTDM Core v1.4 STALE_IRQ_EMPTY bit defination
+> + * Stale interrupt will fire if bit is set when RX-FIFO is empty
+> + */
+> +#define UARTDM_BCR_STALE_IRQ_EMPTY	0x2
+> +
+> +/* TRANSFER_CONTROL Register for UARTDM Core v1.4 */
+> +#define UARTDM_RX_TRANS_CTRL_ADDR      0xcc
+> +
+> +/* TRANSFER_CONTROL Register bits */
+> +#define RX_STALE_AUTO_RE_EN		0x1
+> +#define RX_TRANS_AUTO_RE_ACTIVATE	0x2
+> +#define RX_DMRX_CYCLIC_EN		0x4
+> +
+> +/* write only register */
+> +#define UARTDM_IPR_ADDR 0x18
+> +#define UARTDM_TFWR_ADDR 0x1c
+> +#define UARTDM_RFWR_ADDR 0x20
+> +#define UARTDM_HCR_ADDR 0x24
+> +#define UARTDM_DMRX_ADDR 0x34
+> +#define UARTDM_DMEN_ADDR 0x3c
+> +
+> +/* UART_DM_NO_CHARS_FOR_TX */
+> +#define UARTDM_NCF_TX_ADDR 0x40
+> +
+> +#define UARTDM_BADR_ADDR 0x44
+> +
+> +#define UARTDM_SIM_CFG_ADDR 0x80
+> +
+> +/* Read Only register */
+> +#define UARTDM_TXFS_ADDR 0x4c
+> +#define UARTDM_RXFS_ADDR 0x50
+> +
+> +/* Register field Mask Mapping */
+> +#define UARTDM_SR_RX_BREAK_BMSK	        BIT(6)
+> +#define UARTDM_SR_PAR_FRAME_BMSK	BIT(5)
+> +#define UARTDM_SR_OVERRUN_BMSK		BIT(4)
+> +#define UARTDM_SR_TXEMT_BMSK		BIT(3)
+> +#define UARTDM_SR_TXRDY_BMSK		BIT(2)
+> +#define UARTDM_SR_RXRDY_BMSK		BIT(0)
+> +
+> +#define UARTDM_CR_TX_DISABLE_BMSK	BIT(3)
+> +#define UARTDM_CR_RX_DISABLE_BMSK	BIT(1)
+> +#define UARTDM_CR_TX_EN_BMSK		BIT(2)
+> +#define UARTDM_CR_RX_EN_BMSK		BIT(0)
+> +
+> +/* UARTDM_CR channel_comman bit value (register field is bits 8:4) */
+> +#define RESET_RX		0x10
+> +#define RESET_TX		0x20
+> +#define RESET_ERROR_STATUS	0x30
+> +#define RESET_BREAK_INT		0x40
+> +#define START_BREAK		0x50
+> +#define STOP_BREAK		0x60
+> +#define RESET_CTS		0x70
+> +#define RESET_STALE_INT		0x80
+> +#define RFR_LOW			0xD0
+> +#define RFR_HIGH		0xE0
+> +#define CR_PROTECTION_EN	0x100
+> +#define STALE_EVENT_ENABLE	0x500
+> +#define STALE_EVENT_DISABLE	0x600
+> +#define FORCE_STALE_EVENT	0x400
+> +#define CLEAR_TX_READY		0x300
+> +#define RESET_TX_ERROR		0x800
+> +#define RESET_TX_DONE		0x810
+> +
+> +/*
+> + * UARTDM_CR BAM IFC comman bit value
+> + * for UARTDM Core v1.4
+> + */
+> +#define START_RX_BAM_IFC	0x850
+> +#define START_TX_BAM_IFC	0x860
+> +
+> +#define UARTDM_MR1_AUTO_RFR_LEVEL1_BMSK 0xffffff00
+> +#define UARTDM_MR1_AUTO_RFR_LEVEL0_BMSK 0x3f
+> +#define UARTDM_MR1_CTS_CTL_BMSK 0x40
+> +#define UARTDM_MR1_RX_RDY_CTL_BMSK 0x80
+> +
+> +/*
+> + * UARTDM Core v1.4 MR2_RFR_CTS_LOOP bitmask
+> + * Enables internal loopback between RFR_N of
+> + * RX channel and CTS_N of TX channel.
+> + */
+> +#define UARTDM_MR2_RFR_CTS_LOOP_MODE_BMSK	0x400
+> +
+> +#define UARTDM_MR2_LOOP_MODE_BMSK		0x80
+> +#define UARTDM_MR2_ERROR_MODE_BMSK		0x40
+> +#define UARTDM_MR2_BITS_PER_CHAR_BMSK		0x30
+> +#define UARTDM_MR2_RX_ZERO_CHAR_OFF		0x100
+> +#define UARTDM_MR2_RX_ERROR_CHAR_OFF		0x200
+> +#define UARTDM_MR2_RX_BREAK_ZERO_CHAR_OFF	0x100
+> +
+> +#define UARTDM_MR2_BITS_PER_CHAR_8	(0x3 << 4)
+> +
+> +/* bits per character configuration */
+> +#define FIVE_BPC  (0 << 4)
+> +#define SIX_BPC   (1 << 4)
+> +#define SEVEN_BPC (2 << 4)
+> +#define EIGHT_BPC (3 << 4)
+> +
+> +#define UARTDM_MR2_STOP_BIT_LEN_BMSK 0xc
+> +#define STOP_BIT_ONE (1 << 2)
+> +#define STOP_BIT_TWO (3 << 2)
+> +
+> +#define UARTDM_MR2_PARITY_MODE_BMSK 0x3
+> +
+> +/* Parity configuration */
+> +#define NO_PARITY 0x0
+> +#define EVEN_PARITY 0x2
+> +#define ODD_PARITY 0x1
+> +#define SPACE_PARITY 0x3
+> +
+> +#define UARTDM_IPR_STALE_TIMEOUT_MSB_BMSK 0xffffff80
+> +#define UARTDM_IPR_STALE_LSB_BMSK 0x1f
+> +
+> +/* These can be used for both ISR and IMR register */
+> +#define UARTDM_ISR_TX_READY_BMSK	BIT(7)
+> +#define UARTDM_ISR_CURRENT_CTS_BMSK	BIT(6)
+> +#define UARTDM_ISR_DELTA_CTS_BMSK	BIT(5)
+> +#define UARTDM_ISR_RXLEV_BMSK		BIT(4)
+> +#define UARTDM_ISR_RXSTALE_BMSK		BIT(3)
+> +#define UARTDM_ISR_RXBREAK_BMSK		BIT(2)
+> +#define UARTDM_ISR_RXHUNT_BMSK		BIT(1)
+> +#define UARTDM_ISR_TXLEV_BMSK		BIT(0)
+> +
+> +/* Field definitions for UART_DM_DMEN*/
+> +#define UARTDM_TX_DM_EN_BMSK 0x1
+> +#define UARTDM_RX_DM_EN_BMSK 0x2
+> +
+> +/*
+> + * UARTDM Core v1.4 bitmask
+> + * Bitmasks for enabling Rx and Tx BAM Interface
+> + */
+> +#define UARTDM_TX_BAM_ENABLE_BMSK 0x4
+> +#define UARTDM_RX_BAM_ENABLE_BMSK 0x8
+> +
+> +/*
+> + * Some of the BLSP Based UART Core(v14) existing register offsets
+> + * are different compare to GSBI based UART Core(v13)
+> + * Hence add the changed register offsets for UART Core v14
+> + */
+> +
+> +/* write only register */
+> +#define UARTDM_CSR_ADDR_V14    0xa0
+> +
+> +/* write only register */
+> +#define UARTDM_TF_ADDR_V14   0x100
+> +#define UARTDM_TF2_ADDR_V14  0x104
+> +#define UARTDM_TF3_ADDR_V14  0x108
+> +#define UARTDM_TF4_ADDR_V14  0x10c
+> +#define UARTDM_TF5_ADDR_V14  0x110
+> +#define UARTDM_TF6_ADDR_V14  0x114
+> +#define UARTDM_TF7_ADDR_V14  0x118
+> +#define UARTDM_TF8_ADDR_V14  0x11c
+> +#define UARTDM_TF9_ADDR_V14  0x120
+> +#define UARTDM_TF10_ADDR_V14 0x124
+> +#define UARTDM_TF11_ADDR_V14 0x128
+> +#define UARTDM_TF12_ADDR_V14 0x12c
+> +#define UARTDM_TF13_ADDR_V14 0x130
+> +#define UARTDM_TF14_ADDR_V14 0x134
+> +#define UARTDM_TF15_ADDR_V14 0x138
+> +#define UARTDM_TF16_ADDR_V14 0x13c
+> +
+> +/* write only register */
+> +#define UARTDM_CR_ADDR_V14 0xa8
+> +/* write only register */
+> +#define UARTDM_IMR_ADDR_V14 0xb0
+> +#define UARTDM_IRDA_ADDR_V14 0xb8
+> +
+> +/* Read Only register */
+> +#define UARTDM_SR_ADDR_V14 0xa4
+> +
+> +/* Read Only register */
+> +#define UARTDM_RF_ADDR_V14   0x140
+> +#define UARTDM_RF2_ADDR_V14  0x144
+> +#define UARTDM_RF3_ADDR_V14  0x148
+> +#define UARTDM_RF4_ADDR_V14  0x14c
+> +#define UARTDM_RF5_ADDR_V14  0x150
+> +#define UARTDM_RF6_ADDR_V14  0x154
+> +#define UARTDM_RF7_ADDR_V14  0x158
+> +#define UARTDM_RF8_ADDR_V14  0x15c
+> +#define UARTDM_RF9_ADDR_V14  0x160
+> +#define UARTDM_RF10_ADDR_V14 0x164
+> +#define UARTDM_RF11_ADDR_V14 0x168
+> +#define UARTDM_RF12_ADDR_V14 0x16c
+> +#define UARTDM_RF13_ADDR_V14 0x170
+> +#define UARTDM_RF14_ADDR_V14 0x174
+> +#define UARTDM_RF15_ADDR_V14 0x178
+> +#define UARTDM_RF16_ADDR_V14 0x17c
+> +
+> +/* Read Only register */
+> +#define UARTDM_MISR_ADDR_V14 0xac
+> +
+> +/* Read Only register */
+> +#define UARTDM_ISR_ADDR_V14 0xb4
+> +#define UARTDM_RX_TOTAL_SNAP_ADDR_V14 0xbc
+> +
+> +/* Register offsets for UART Core v13 */
+> +
+> +/* write only register */
+> +#define UARTDM_CSR_ADDR    0x8
+> +
+> +/* write only register */
+> +#define UARTDM_TF_ADDR   0x70
+> +#define UARTDM_TF2_ADDR  0x74
+> +#define UARTDM_TF3_ADDR  0x78
+> +#define UARTDM_TF4_ADDR  0x7c
+> +
+> +/* write only register */
+> +#define UARTDM_CR_ADDR 0x10
+> +/* write only register */
+> +#define UARTDM_IMR_ADDR 0x14
+> +#define UARTDM_IRDA_ADDR 0x38
+> +
+> +/* Read Only register */
+> +#define UARTDM_SR_ADDR 0x8
+> +
+> +/* Read Only register */
+> +#define UARTDM_RF_ADDR   0x70
+> +#define UARTDM_RF2_ADDR  0x74
+> +#define UARTDM_RF3_ADDR  0x78
+> +#define UARTDM_RF4_ADDR  0x7c
+> +
+> +/* Read Only register */
+> +#define UARTDM_MISR_ADDR 0x10
+> +
+> +/* Read Only register */
+> +#define UARTDM_ISR_ADDR 0x14
+> +#define UARTDM_RX_TOTAL_SNAP_ADDR 0x38
+> +
+> +#endif /* MSM_SERIAL_HSL_H */
+
+
