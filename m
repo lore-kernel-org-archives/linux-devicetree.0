@@ -1,16 +1,15 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Tue, 16 Jul 2013 09:45:43 -0600
-Message-ID: <51E56AA7.7020103@wwwdotorg.org>
+Date: Tue, 16 Jul 2013 09:47:02 -0600
+Message-ID: <51E56AF6.30506@wwwdotorg.org>
 References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
  <20130716015038.GD28375@S2101-09.ap.freescale.net>
- <51E4BF98.8030604@wwwdotorg.org>
- <20130716041056.GA30067@S2101-09.ap.freescale.net>
+ <20130716065130.GB30067@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130716041056.GA30067-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <20130716065130.GB30067-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,80 +24,38 @@ To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/15/2013 10:10 PM, Shawn Guo wrote:
-> On Mon, Jul 15, 2013 at 09:35:52PM -0600, Stephen Warren wrote:
->>> It's a little bit late to register gpio-reset driver at module_init
->>> time, because gpio-reset provides reset control via gpio for other
->>> devices which are mostly probed at module_init time too.  And it
->>> becomes even worse, when the gpio comes from IO expander on I2C bus,
->>> e.g. pca953x.  In that case, gpio-reset needs to be ready before I2C
->>> bus driver which is generally ready at subsys_initcall time.  Let's
->>> register gpio-reset driver in arch_initcall() to have it ready early
->>> enough.
+On 07/16/2013 12:51 AM, Shawn Guo wrote:
+> On Tue, Jul 16, 2013 at 09:50:42AM +0800, Shawn Guo wrote:
+>> Hi Philipp,
 >>
->> There's no need for the reset driver to be registered before its users;
->> the users of the reset GPIO will simply have their probe deferred until
->> the reset controller is available, and then everything will work out
->> just fine.
+>> On Thu, May 30, 2013 at 11:09:00AM +0200, Philipp Zabel wrote:
+>>> This driver implements a reset controller device that toggle a gpio
+>>> connected to a reset pin of a peripheral IC. The delay between assertion
+>>> and de-assertion of the reset signal can be configured via device tree.
+>>>
+>>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >>
->>> The defer probe mechanism is not used here, because a reset controller
->>> driver should be reasonably registered early than other devices.  More
->>> importantly, defer probe doe not help in some nasty cases, e.g. the
->>> gpio-pca953x device itself needs a reset from gpio-reset driver to start
->>> working.
+>> I see this patch is very useful, as GPIOs are widely used to reset
+>> components/devices on board.  But I do not find the patch in v3.11-rc1.
+>> What's your plan about it?
 >>
->> That should work fine with deferred probe.
+>> Also, I'm wondering if we should register the driver a little bit
+>> early.  Please see the following patch.  If it makes sense to you,
+>> I can send the patch to you, or you can just quash it into yours.
 > 
-> I should probably rework the commit log.  But I do not see a problem
-> to register gpio-reset driver a little bit earlier. 
+> And here is another change request.
 
-Registering the driver earlier won't cause any bugs. However, it's not
-the correct approach.
+> diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
 
-Deferred probe /is/ the approach for assuring correct dependencies
-between drivers. It works and should be used. There are not enough
-initcall levels to play games using initcalls and solve all the issues,
-and the ordering requirements vary board-to-board. Deferred probe at
-runtime handles this without having to manually place all the drivers
-into specific initcall levels, and dynamically adjusts to board
-differences, since it all happens automatically at run-time.
+> -	gpio_set_value(drvdata->gpio, value);
+> +	if (gpio_cansleep(drvdata->gpio))
+> +		gpio_set_value_cansleep(drvdata->gpio, value);
+> +	else
+> +		gpio_set_value(drvdata->gpio, value);
 
-Consider a SoC that has:
-
-* An external PMIC, which the CPU has to communicate with to enable
-power to all SoC components outside the CPU and a single I2C instance
-dedicated to communicating with the PMIC.
-* An on-SoC reset controller (for on-SoC) modules that resets other
-on-SoC I2C controllers
-* An on-SoC I2C controller which communicates with a GPIO expander
-* One of the GPIOs on that expander is the reset GPIO for some other
-device connected by I2C
-
-What initcall levels are you going to use for all the drivers
-(PM-related I2C, PMIC, on-SoC reset controller, secondary I2C
-controller, GPIO expander IC, GPIO-reset "device", the final device
-affected by the GPIO reset controller).
-
-Now wonder whether that same order is going to be suitable for every
-single other board. That's quite unlikely...
-
- On the other hand,
-> if we reply on deferred probe, many drivers probe could be deferred.
-> For example, on my system, the gpio-pca953x on I2C bus works as a GPIO
-> controller and provides resets to many board level components.
-> Deferring probe of gpio-pca953x on I2C bus means every single probe of
-> all these components gets deferred.  IMO, this situation should be
-> reasonably avoided.
-
-Yes, deferred probe will happen. If we want to solve that, I believe we
-need a more generic solution specifically targeted at that, rather that
-playing games with initcalls.
-
-(It'd be nice if each DT node declared all its resources in a way the DT
-core could parse them and determine the dependency graph itself, without
-having to write code in all drivers to extract that information from DT.
-This would need a standardized resource representation in DT, and as
-such would mean throwing out all the bindings and starting again...
-Perhaps some parallel set of properties could be invented to hint at the
-order, but still fall back to deferred probe where that information was
-missing or inaccurate.)
+That's not right. Calling gpio_set_value() v.s.
+gpio_set_value_cansleep() should be based on the properties of the
+calling context, not the GPIO being controlled. In other words, if it's
+permissible to call gpio_set_value_cansleep() at this point in the code,
+simply always call that, and remove the conditional logic.
