@@ -1,49 +1,75 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 00/10] Orion Watchdog fixes
-Date: Tue, 16 Jul 2013 09:44:22 -0400
-Message-ID: <20130716134422.GE12062@titan.lakedaemon.net>
-References: <1373931163-12670-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130716065952.GA25043@lunn.ch> <20130716092059.237ea729@skate>
- <20130716073101.GB25043@lunn.ch> <20130716121432.GA2317@localhost>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: imx-sgtl5000: fix error return code
+ in imx_sgtl5000_probe()
+Date: Tue, 16 Jul 2013 14:51:49 +0100
+Message-ID: <20130716135149.GM22506@sirena.org.uk>
+References: <CAPgLHd-cXmWwMq8DMhXbOhykZvnMzxb4HHZ-5ayNnkPU1fqfQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130716121432.GA2317@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============8641771946592445011=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAPgLHd-cXmWwMq8DMhXbOhykZvnMzxb4HHZ-5ayNnkPU1fqfQQ@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: fabio.estevam@freescale.com, alsa-devel@alsa-project.org, tiwai@suse.de, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, lgirdwood@gmail.com, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, wfp5p@virginia.edu, grant.likely@linaro.org, shawn.guo@linaro.org, LW@KARO-electronics.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2013 at 09:14:33AM -0300, Ezequiel Garcia wrote:
-> On the other side, I'm much interested in knowing if you are OK with
-> breaking the watchdog DT compatibility. If you NACK this, then I'll
-> start preparing a different watchdog driver for 370/XP, since I don't
-> want to extend a driver that is a bit dirty.
 
-Apparently there is some agreement that the bindings are still in flux
-and that they need to be for a bit longer in order to hammer out
-problems such as this.
+--===============8641771946592445011==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9ToWwKEyhugL+MAz"
+Content-Disposition: inline
 
-Arnd and Olof both mentioned that something (a doc, and email?) is
-forthcoming about marking some bindings as stable.  Whatever form that
-takes, this one wouldn't get the stable marking yet. ;-)
 
-Oh, and one more nit.  The work 'fix' triggers a whole bunch of "get on
-this right away, does it need to go to stable?  Has anyone confirmed it?
-Which commit caused the regression? etc."  Although I hate the word, I
-think 'refactoring' is much more appropriate description for this series.
+--9ToWwKEyhugL+MAz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thx,
+On Tue, Jul 16, 2013 at 08:05:07PM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>=20
+> Fix to return a negative error code from the error handling
+> case instead of 0, as done elsewhere in this function.
 
-Jason.
+Applied, thanks.
+
+--9ToWwKEyhugL+MAz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR5U/yAAoJELSic+t+oim9YNYQAIh5smhf1bjLdc/sMFmic1jE
+YWbNcOC9ypSY+HDmQqm/nz0h2Mk/zjzGrZyDNCI0ce6Llv0SuTI8fCVg7IZauCWv
+y8+ect573u9Hs+lU5JtYi9RWEyl5KsS0cBEBeg6LiOR/eEBYB1ecvKnLS/ZTRWde
+6Qf8xC+B/Nu+/kyPU6vdxEG3IRsmq59pfBJQzDuJGrhoeYK04ibX+sKB0ORjWq2k
+rm7AX+uys9+/CUWmRWRTUoDtW7nyZUIbmil/GB3KmOEiJk0fe7aIOW7DHqETXOI+
+cbA/Vk61yW8dDYx1yURaiJ3W/jUZrvolaYfN3pae4j7qIa6W2R3uof2S8CEA40u+
+xykyMqIOq5THtdUSk6tnAtClYksECfWJws14xQ1iGGBjX+ZP6J1XGyNDTxJPoyzr
+cXFyB4Mcd/68W7C5dJlzKtvUScrFy+pTxRha3WtTPF6MDxNdgPUtAJcVjMm+4J+q
+jyKIzy6WXu8BY/gEXWcYfbaRtiPBCCZl7HCwp+dNQPhcMmYeA72nox+BArT2weXA
+c5NlNuSVRo0nREocLka50p0kbkCuMsR5EbA6czcSs0Ct3GQBuvTmyAV9YypKMLdf
+Dznesa7oVZ5hhb6iCICfZoir1Euvkdp/LGvX7tXrBJEH8bmiqIYPAqVpBkCg8pMO
++DULGmMk8MS+Hcp+6H4X
+=JRGW
+-----END PGP SIGNATURE-----
+
+--9ToWwKEyhugL+MAz--
+
+--===============8641771946592445011==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8641771946592445011==--
