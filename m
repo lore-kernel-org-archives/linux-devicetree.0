@@ -1,85 +1,81 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Tue, 16 Jul 2013 11:59:18 +0200
-Message-ID: <1373968758.4327.17.camel@pizza.hi.pengutronix.de>
-References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
- <20130716015038.GD28375@S2101-09.ap.freescale.net>
- <51E4BF98.8030604@wwwdotorg.org>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH RFC v2 2/5] dma: mpc512x: add support for peripheral
+ transfers
+Date: Tue, 16 Jul 2013 12:37:33 +0200
+Message-ID: <51E5226D.9050100@metafoo.de>
+References: <1373642781-32631-1-git-send-email-gsi@denx.de>
+ <1373803321-11628-1-git-send-email-gsi@denx.de>
+ <1373803321-11628-3-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51E4BF98.8030604-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1373803321-11628-3-git-send-email-gsi@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Gerhard Sittig <gsi@denx.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, devicetree-discuss@lists.ozlabs.org, Alexander Popov <a13xp0p0v88@gmail.com>, Dan Williams <djbw@fb.com>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-Am Montag, den 15.07.2013, 21:35 -0600 schrieb Stephen Warren:
-> On 07/15/2013 07:50 PM, Shawn Guo wrote:
-> > Hi Philipp,
-> > 
-> > On Thu, May 30, 2013 at 11:09:00AM +0200, Philipp Zabel wrote:
-> >> This driver implements a reset controller device that toggle a gpio
-> >> connected to a reset pin of a peripheral IC. The delay between assertion
-> >> and de-assertion of the reset signal can be configured via device tree.
-> >>
-> >> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > 
-> > I see this patch is very useful, as GPIOs are widely used to reset
-> > components/devices on board.  But I do not find the patch in v3.11-rc1.
-> > What's your plan about it?
-> > 
-> > Also, I'm wondering if we should register the driver a little bit
-> > early.  Please see the following patch.  If it makes sense to you,
-> > I can send the patch to you, or you can just quash it into yours.
-> > 
-> > Shawn
-> > 
-> > ---8<--------
-> > 
-> > From 2f8ce9e5d6525b98f3828b707458e83fabb39d50 Mon Sep 17 00:00:00 2001
-> > From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Date: Sun, 14 Jul 2013 20:41:00 +0800
-> > Subject: [PATCH] ENGR00269945: reset: register gpio-reset driver in
-> >  arch_initcall
-> > 
-> > It's a little bit late to register gpio-reset driver at module_init
-> > time, because gpio-reset provides reset control via gpio for other
-> > devices which are mostly probed at module_init time too.  And it
-> > becomes even worse, when the gpio comes from IO expander on I2C bus,
-> > e.g. pca953x.  In that case, gpio-reset needs to be ready before I2C
-> > bus driver which is generally ready at subsys_initcall time.  Let's
-> > register gpio-reset driver in arch_initcall() to have it ready early
-> > enough.
+On 07/14/2013 02:01 PM, Gerhard Sittig wrote:
+> From: Alexander Popov <a13xp0p0v88@gmail.com>
 > 
-> There's no need for the reset driver to be registered before its users;
-> the users of the reset GPIO will simply have their probe deferred until
-> the reset controller is available, and then everything will work out
-> just fine.
+> introduce support for slave s/g transfer preparation and the associated
+> device control callback in the MPC512x DMA controller driver, which adds
+> support for data transfers between memory and peripheral I/O to the
+> previously supported mem-to-mem transfers
 > 
-> > The defer probe mechanism is not used here, because a reset controller
-> > driver should be reasonably registered early than other devices.  More
-> > importantly, defer probe doe not help in some nasty cases, e.g. the
-> > gpio-pca953x device itself needs a reset from gpio-reset driver to start
-> > working.
+> refuse to prepare chunked transfers (transfers with more than one part)
+> as long as proper support for scatter/gather is lacking
 > 
-> That should work fine with deferred probe.
+> keep MPC8308 operational by always starting transfers from software,
+> this SoC appears to not have request lines for flow control when
+> peripherals are involved in transfers
 
-Deferred probing is fine, but it'd be nice to keep the probe deferral
-loops to a minimum where possible and/or reasonable.
+I had a look at the current driver and it seems that any channel can be used
+for memcpy operation not only the MDDRC channel. Since the dmaengine API
+will just pick one of the currently free channels when performing a memcpy
+operation I think this patch breaks memcpy operations. You probably need to
+register two dma controllers, one for memcpy operations one for slave
+operations, that way you can ensure that only the MDDRC channel is used for
+memcpy operations.
 
-regards
-Philipp
+> 
+> [ introduction of slave s/g preparation and device control ]
+> Signed-off-by: Alexander Popov <a13xp0p0v88@gmail.com>
+> [ execute() start condition, mpc8308 compat, terminate all, s/g length check, reworded commit msg ]
+> Signed-off-by: Gerhard Sittig <gsi@denx.de>
+> ---
+[...]
+> +
+> +static int mpc_dma_device_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
+> +				  unsigned long arg)
+> +{
+> +	struct mpc_dma_chan *mchan;
+> +	struct mpc_dma *mdma;
+> +	struct dma_slave_config *cfg;
+> +
+> +	mchan = dma_chan_to_mpc_dma_chan(chan);
+> +	switch (cmd) {
+> +	case DMA_TERMINATE_ALL:
+> +		/* disable channel requests */
+> +		mdma = dma_chan_to_mpc_dma(chan);
+> +		out_8(&mdma->regs->dmacerq, chan->chan_id);
+> +		list_splice_tail_init(&mchan->prepared, &mchan->free);
+> +		list_splice_tail_init(&mchan->queued, &mchan->free);
+> +		list_splice_tail_init(&mchan->active, &mchan->free);
+
+This probably need locking.
+
+> +		return 0;
+[...]
+> +}
+> +
