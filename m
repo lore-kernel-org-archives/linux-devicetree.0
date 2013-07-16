@@ -1,40 +1,48 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Tue, 16 Jul 2013 20:56:48 +0800
-Message-ID: <20130716125646.GM28375@S2101-09.ap.freescale.net>
-References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
- <20130716015038.GD28375@S2101-09.ap.freescale.net>
- <51E4BF98.8030604@wwwdotorg.org>
- <20130716041056.GA30067@S2101-09.ap.freescale.net>
- <1373968166.4327.11.camel@pizza.hi.pengutronix.de>
+From: "Arend van Spriel" <arend@broadcom.com>
+Subject: Re: [PATCH v2 4/4] ARM: OMAP2+: Provide alias to USB PHY clock
+Date: Tue, 16 Jul 2013 15:12:50 +0200
+Message-ID: <51E546D2.6000100@broadcom.com>
+References: <1371571487-14389-1-git-send-email-rogerq@ti.com>
+ <1371571487-14389-5-git-send-email-rogerq@ti.com>
+ <51E40199.9070906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain;
+ charset=iso-8859-1;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1373968166.4327.11.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51E40199.9070906@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, benoit.cousson@linaro.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Balbi, Felipe" <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2013 at 11:49:26AM +0200, Philipp Zabel wrote:
-> so you want to have gpio-reset probed at arch_initcall time and you have
-> gpio-pca953x probed at subsys_initcall time. Won't then all gpio-reset
-> devices that use gpios on pca953x to reset other peripherals need to be
-> deferred?
+On 07/15/2013 04:05 PM, Roger Quadros wrote:
+> Hi Tony,
+>
+> On 06/18/2013 07:04 PM, Roger Quadros wrote:
+>> Till the OMAP clocks are correctly defined in device tree, use
+>> this temporary hack to provide clock alias to the USB PHY clocks.
+>>
+>> Without this, USB Host & Ethernet will not be functional with
+>> device tree boots on Panda and uEVM.
+>
+> Looks like this one got missed out.
 
-Yes, they will be deferred, but they will be probed and ready at
-subsys_initcall time when gpio-pca953x probes.  This is still good since
-most of component device drivers probes at module_init time.
+Could it be because you promised to resend it (see [1]). I was upgrading 
+our test stuff to 3.11-rc1 and made a DT appended image. Boot went fine, 
+but no USB/ethernet. Should I pickup all four patches?
 
-Shawn
+Regards,
+Arend
+
+[1] http://mid.gmane.org/51C2EC5F.8050703@ti.com
+
+> USB host no longer works on Panda with DT boot.
+> Could you please queue this for next 3.11-rc? Thanks.
+>
+> cheers,
+> -roger
+>
+
+
