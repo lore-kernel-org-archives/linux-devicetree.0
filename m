@@ -1,143 +1,82 @@
-From: mathieu.poirier@linaro.org
-Subject: [PATCH v5] Input: sysrq - DT binding for key sequence
-Date: Wed, 17 Jul 2013 08:34:57 -0600
-Message-ID: <1374071697-30166-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: grant.likely@linaro.org, dmitry.torokhov@gmail.com
-Cc: devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, linux-input@vger.kernel.org, kernel-team@android.com, mathieu.poirier@linaro.org
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [RFC PATCH v2 11/15] cpufreq: kirkwood-cpufreq: remove device
+ tree parsing for cpu nodes
+Date: Wed, 17 Jul 2013 16:43:55 +0200
+Message-ID: <20130717144355.GE1026@lunn.ch>
+References: <1374069984-20567-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+ <1374069984-20567-12-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1374069984-20567-12-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep.KarkadaNagesha@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Gregory Clement <gregory.clement@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
+On Wed, Jul 17, 2013 at 03:06:20PM +0100, Sudeep.KarkadaNagesha@arm.com wrote:
+> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> 
+> Now that the cpu device registration initialises the of_node(if available)
+> appropriately for all the cpus, parsing here is redundant.
+> 
+> This patch removes all DT parsing and uses cpu->of_node instead.
+> 
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> ---
+>  drivers/cpufreq/kirkwood-cpufreq.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/kirkwood-cpufreq.c b/drivers/cpufreq/kirkwood-cpufreq.c
+> index c233ea6..18aa3eb 100644
+> --- a/drivers/cpufreq/kirkwood-cpufreq.c
+> +++ b/drivers/cpufreq/kirkwood-cpufreq.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/module.h>
+>  #include <linux/clk.h>
+>  #include <linux/clk-provider.h>
+> +#include <linux/cpu.h>
+>  #include <linux/cpufreq.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> @@ -165,6 +166,7 @@ static struct cpufreq_driver kirkwood_cpufreq_driver = {
+>  static int kirkwood_cpufreq_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np;
+> +	struct device *cpu_dev;
+>  	struct resource *res;
+>  	int err;
+>  
+> @@ -175,9 +177,17 @@ static int kirkwood_cpufreq_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv.base))
+>  		return PTR_ERR(priv.base);
+>  
+> -	np = of_find_node_by_path("/cpus/cpu@0");
+> -	if (!np)
+> +	cpu_dev = get_cpu_device(0);
+> +	if (!cpu_dev) {
+> +		dev_err(&pdev->dev, "failed to get cpu device\n");
+>  		return -ENODEV;
+> +	}
+> +
+> +	np = of_node_get(cpu_dev->of_node);
+> +	if (!np) {
+> +		dev_err(&pdev->dev, "failed to get cpu device node\n");
+> +		return -ENODEV;
+> +	}
 
-Adding a simple device tree binding for the specification of key sequences.
-Definition of the keys found in the sequence are located in
-'include/uapi/linux/input.h'.
+Hi Sudeep
 
-For the sysrq driver, holding the sequence of keys down for a specific amount of time
-will reset the system.
+Are we not going a bit backwards here? You are replacing two lines
+with 10 lines.
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
-changes for v5:
-  - Corrected error in binding definition.
-  - Using helper macro to fetch the key sequence.
-  - Removing white space.
----
- .../devicetree/bindings/input/input-reset.txt      | 34 ++++++++++++++++++++
- drivers/tty/sysrq.c                                | 37 ++++++++++++++++++++++
- 2 files changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/input-reset.txt
+How about putting these 10 lines into some helper,
+of_get_cpu_device()?  It would be useful for spear, kirkwood and
+imx6q, and maybe others.
 
-diff --git a/Documentation/devicetree/bindings/input/input-reset.txt b/Documentation/devicetree/bindings/input/input-reset.txt
-new file mode 100644
-index 0000000..c69390c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/input-reset.txt
-@@ -0,0 +1,34 @@
-+Input: sysrq reset sequence
-+
-+A simple binding to represent a set of keys as described in
-+include/uapi/linux/input.h.  This is to communicate a
-+sequence of keys to the sysrq driver.  Upon holding the keys
-+for a specified amount of time (if specified) the system is
-+sync'ed and reset.
-+
-+Key sequences are global to the system but all the keys in a
-+set must be coming from the same input device.
-+
-+The /chosen node should contain a 'linux,sysrq-reset-seq' child
-+node to define a set of keys.
-+
-+Required property:
-+sysrq-reset-seq: array of keycodes
-+
-+Optional property:
-+timeout-ms: duration keys must be pressed together in milliseconds
-+before generating a sysrq
-+
-+Example:
-+
-+ chosen {
-+                linux,sysrq-reset-seq {
-+                        keyset = <0x03
-+                                  0x04
-+                                  0x0a>;
-+                        timeout-ms = <3000>;
-+                };
-+         };
-+
-+Would represent KEY_2, KEY_3 and KEY_9.
-+
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index b51c154..ed8f00f 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -44,6 +44,7 @@
- #include <linux/uaccess.h>
- #include <linux/moduleparam.h>
- #include <linux/jiffies.h>
-+#include <linux/of.h>
- 
- #include <asm/ptrace.h>
- #include <asm/irq_regs.h>
-@@ -671,6 +672,34 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
- 	}
- }
- 
-+static void sysrq_of_get_keyreset_config(void)
-+{
-+	u32 key;
-+	struct device_node *np;
-+	struct property *prop;
-+	const __be32 *p;
-+
-+	np = of_find_node_by_path("/chosen/linux,sysrq-reset-seq");
-+	if (!np) {
-+		pr_debug("No sysrq node found");
-+		return;
-+	}
-+
-+	/* reset in case a __weak definition was present */
-+	sysrq_reset_seq_len = 0;
-+
-+	of_property_for_each_u32(np, "keyset", prop, p, key) {
-+		if ((key == KEY_RESERVED || key > KEY_MAX) ||
-+			(sysrq_reset_seq_len == SYSRQ_KEY_RESET_MAX))
-+			break;
-+
-+		sysrq_reset_seq[sysrq_reset_seq_len++] = (unsigned short)key;
-+	}
-+
-+	/* get reset timeout if any */
-+	of_property_read_u32(np, "timeout-ms", &sysrq_reset_downtime_ms);
-+}
-+
- static void sysrq_reinject_alt_sysrq(struct work_struct *work)
- {
- 	struct sysrq_state *sysrq =
-@@ -903,6 +932,7 @@ static inline void sysrq_register_handler(void)
- 	int error;
- 	int i;
- 
-+	/* first check if a __weak interface was instantiated */
- 	for (i = 0; i < ARRAY_SIZE(sysrq_reset_seq); i++) {
- 		key = platform_sysrq_reset_seq[i];
- 		if (key == KEY_RESERVED || key > KEY_MAX)
-@@ -911,6 +941,13 @@ static inline void sysrq_register_handler(void)
- 		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
- 	}
- 
-+	/*
-+	 * DT configuration takes precedence over anything
-+	 * that would have been defined via the __weak
-+	 * interface
-+	 */
-+	sysrq_of_get_keyreset_config();
-+
- 	error = input_register_handler(&sysrq_handler);
- 	if (error)
- 		pr_err("Failed to register input handler, error %d", error);
--- 
-1.8.1.2
-
+    Thanks
+	Andrew
