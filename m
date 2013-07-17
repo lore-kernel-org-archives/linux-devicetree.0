@@ -1,82 +1,85 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC PATCH v2 11/15] cpufreq: kirkwood-cpufreq: remove device
- tree parsing for cpu nodes
-Date: Wed, 17 Jul 2013 16:43:55 +0200
-Message-ID: <20130717144355.GE1026@lunn.ch>
-References: <1374069984-20567-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <1374069984-20567-12-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v3 2/2] iio: twl6030-gpadc: TWL6030, TWL6032 GPADC driver
+Date: Wed, 17 Jul 2013 16:47:14 +0200
+Message-ID: <51E6AE72.2060008@metafoo.de>
+References: <1373613482-28390-1-git-send-email-oleksandr.kozaruk@ti.com> <1373613482-28390-3-git-send-email-oleksandr.kozaruk@ti.com>,<51E05F6C.1060506@metafoo.de> <2A7ABDFCE21540479A5AEB0244A684D5E3D067@DNCE04.ent.ti.com> <51E3DE21.9060105@metafoo.de> <51E6A015.8040705@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1374069984-20567-12-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+In-Reply-To: <51E6A015.8040705@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep.KarkadaNagesha@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Gregory Clement <gregory.clement@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>
+To: Oleksandr Kozaruk <oleksandr.kozaruk@ti.com>
+Cc: "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "Nayak, Rajendra" <rnayak@ti.com>, "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, "jic23@cam.ac.uk" <jic23@cam.ac.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "ch.naveen@samsung.com" <ch.naveen@samsung.com>, "poeschel@lemonage.de" <poeschel@lemonage.de>, "Kim, Milo" <Milo.Kim@ti.com>, "Krishnamoorthy, Balaji T" <balajitk@ti.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-dis>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 17, 2013 at 03:06:20PM +0100, Sudeep.KarkadaNagesha@arm.com wrote:
-> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+On 07/17/2013 03:45 PM, Oleksandr Kozaruk wrote:
+> On Mon, Jul 15, 2013 at 01:33:53PM +0200, Lars-Peter Clausen wrote:
+>> On 07/15/2013 01:09 PM, Kozaruk, Oleksandr wrote:
+>> [...]
+>> >
+>> >>> +     ret = devm_request_threaded_irq(dev, irq, NULL,
+>> >>> + twl6030_gpadc_irq_handler,
+>> >>> + IRQF_ONESHOT, "twl6030_gpadc", gpadc);
+>> >>
+>> >> You access memory in the interrupt handler which is freed before the
+> interrupt
+>> >> handler is freed.
+>> > Thanks for pointing this. devm_* will free memory for irq after the driver
+>> > is removed and memory for the device is freed. I took me awhile to
+> understand
+>> > this. Is there going to be something like devm_iio_device_alloc? whould
+> it be helpfull?
+>> >
+>>
+>> Yes, I think it certainly makes sense to add a devm_iio_device_alloc(), care
+>> to send a patch?
 > 
-> Now that the cpu device registration initialises the of_node(if available)
-> appropriately for all the cpus, parsing here is redundant.
+> Anything like this? (of course it's not a patch)
 > 
-> This patch removes all DT parsing and uses cpu->of_node instead.
+
+No. I think you can for example use devm_regulator_get() as a template. But
+instead of regulator_get() and regulator_put() use iio_device_alloc() and
+iio_device_free().
+
+> struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
+> {
+>     struct iio_dev *indio_dev;
+>     size_t alloc_size;
 > 
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
-> ---
->  drivers/cpufreq/kirkwood-cpufreq.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
+>     alloc_size = sizeof(struct iio_dev);
+>     if (sizeof_priv) {
+>         alloc_size = ALIGN(alloc_size, IIO_ALIGN);
+>         alloc_size += sizeof_priv;
+>     }
+>     /* ensure 32-byte alignment of whole construct ? */
+>     alloc_size += IIO_ALIGN - 1;
 > 
-> diff --git a/drivers/cpufreq/kirkwood-cpufreq.c b/drivers/cpufreq/kirkwood-cpufreq.c
-> index c233ea6..18aa3eb 100644
-> --- a/drivers/cpufreq/kirkwood-cpufreq.c
-> +++ b/drivers/cpufreq/kirkwood-cpufreq.c
-> @@ -13,6 +13,7 @@
->  #include <linux/module.h>
->  #include <linux/clk.h>
->  #include <linux/clk-provider.h>
-> +#include <linux/cpu.h>
->  #include <linux/cpufreq.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> @@ -165,6 +166,7 @@ static struct cpufreq_driver kirkwood_cpufreq_driver = {
->  static int kirkwood_cpufreq_probe(struct platform_device *pdev)
->  {
->  	struct device_node *np;
-> +	struct device *cpu_dev;
->  	struct resource *res;
->  	int err;
->  
-> @@ -175,9 +177,17 @@ static int kirkwood_cpufreq_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv.base))
->  		return PTR_ERR(priv.base);
->  
-> -	np = of_find_node_by_path("/cpus/cpu@0");
-> -	if (!np)
-> +	cpu_dev = get_cpu_device(0);
-> +	if (!cpu_dev) {
-> +		dev_err(&pdev->dev, "failed to get cpu device\n");
->  		return -ENODEV;
-> +	}
-> +
-> +	np = of_node_get(cpu_dev->of_node);
-> +	if (!np) {
-> +		dev_err(&pdev->dev, "failed to get cpu device node\n");
-> +		return -ENODEV;
-> +	}
-
-Hi Sudeep
-
-Are we not going a bit backwards here? You are replacing two lines
-with 10 lines.
-
-How about putting these 10 lines into some helper,
-of_get_cpu_device()?  It would be useful for spear, kirkwood and
-imx6q, and maybe others.
-
-    Thanks
-	Andrew
+>     indio_dev = devm_kzalloc(dev, alloc_size, GFP_KERNEL);
+>     if (indio_dev) {
+>         indio_dev->dev.groups = indio_dev->groups;
+>         indio_dev->dev.type = &iio_device_type;
+>         indio_dev->dev.bus = &iio_bus_type;
+>         device_initialize(&indio_dev->dev);
+>         dev_set_drvdata(&indio_dev->dev, (void *)indio_dev);
+>         mutex_init(&indio_dev->mlock);
+>         mutex_init(&indio_dev->info_exist_lock);
+>         INIT_LIST_HEAD(&indio_dev->channel_attr_list);
+> 
+>         indio_dev->id = ida_simple_get(&iio_ida, 0, 0, GFP_KERNEL);
+>         if (indio_dev->id < 0) {
+>             /* cannot use a dev_err as the name isn't available */
+>             printk(KERN_ERR "Failed to get id\n");
+>             kfree(dev);
+>             return NULL;
+>         }
+>         dev_set_name(&indio_dev->dev, "iio:device%d", indio_dev->id);
+>         INIT_LIST_HEAD(&indio_dev->buffer_list);
+>     }
+> 
+>     return indio_dev;
+> }
+> EXPORT_SYMBOL(devm_iio_device_alloc);
+> 
+> Regards,
+> OK
