@@ -1,61 +1,109 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH] msm_serial: add missing iounmap() on error in
- msm_request_port()
-Date: Wed, 17 Jul 2013 14:28:42 +0300
-Message-ID: <1374060522.2657.30.camel@iivanov-dev>
-References: <CAPgLHd_LGRtkqcPbm=snHOsFOzX6vfafw3EnZtcJmDGCHKHq=Q@mail.gmail.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH 0/3] ARM: OMAP2+: omap_device: add dynamic pinctrl handling
+Date: Wed, 17 Jul 2013 14:41:49 +0300
+Message-ID: <1374061312-25469-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd_LGRtkqcPbm=snHOsFOzX6vfafw3EnZtcJmDGCHKHq=Q@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: davidb@codeaurora.org, dwalker@fifo99.com, bryanh@codeaurora.org, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@linaro.org>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-07-17 at 13:34 +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> 
-> Add the missing iounmap() before return from msm_request_port()
-> in the error handling case.
-> 
+Hi Tony, Kevin
 
-Reviewed-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+This patch series introduces dynamic pinctrl handling in OMAP device framework
+in the same way as it was before switching to DT. 
+This allow OMAP devices driver's developers to simply add dynamic pinctrl
+handling for "default", "active", "idle", "sleep" PIN states in their drivers
+by modifying DT definitions only - no modifications in drivers code are not needed.
+
+Tested on OMAP4 SDP(Tablet2) board using omap4-sdp.dts
+- UART3/4 autoidle
+- suspend, by adding some fake "sleep" pin state
+- wake up (PRCM) IRQ generation by ading call to omap44xx_prm_reconfigure_io_chain()
+  right after each call to pinctrl_pm_select_xx() API.
+
+UART3(console) reg dumps:
+- active 
+ 0x4A100140(RTS/CTS) - 0x00000118
+ 0x4A100140(TX/RX) - 0x00000100
+- idle
+ 0x4A100140(RTS/CTS) - 0x00000118
+ 0x4A100144(TX/RX) - 0x00004100
+
+UART4 reg dumps:
+- active 
+ 0x4A10015C(TX/RX) - 0x00000100
+- idle
+ 0x4A10015C(TX/RX) - 0x00004100
+
+Debugfs:
+# cat sys/kernel/debug/pinctrl/4a100040.pinmux/pinmux-pins
+[snip]
+pin 128 (4a100140.0): 48020000.serial (GPIO UNCLAIMED) function pinmux_uart3_pins group pinmux_uart3_pins
+pin 129 (4a100142.0): 48020000.serial (GPIO UNCLAIMED) function pinmux_uart3_pins group pinmux_uart3_pins
+pin 130 (4a100144.0): 48020000.serial (GPIO UNCLAIMED) function pinmux_uart3_pins_active group pinmux_uart3_pins_active
+pin 131 (4a100146.0): 48020000.serial (GPIO UNCLAIMED) function pinmux_uart3_pins group pinmux_uart3_pins
+[snip]
+pin 142 (4a10015c.0): 4806e000.serial (GPIO UNCLAIMED) function pinmux_uart4_pins_idle group pinmux_uart4_pins_idle
+pin 143 (4a10015e.0): 4806e000.serial (GPIO UNCLAIMED) function pinmux_uart4_pins group pinmux_uart4_pins
+
+Changes since RFC:
+- _od_resume_noirq() fixed - "idle" state was not selected on resume
+- description updated
+
+RFC: https://lkml.org/lkml/2013/6/21/309
+
+Based on v3.11-rc1 plus patch series from Tony Lindgren
+"[PATCH 0/4] improved support for runtime muxing for pinctrl"
+http://www.spinics.net/lists/arm-kernel/msg258827.html:
+
+fd7937b drivers: Add pinctrl handling for dynamic pin states
+479246b pinctrl: Add support for additional dynamic states
+c9f37e8 pinctrl: Allow pinctrl to have multiple active states
+756f10b pinctrl: Remove duplicate code in pinctrl_pm_select_state functions
+ad81f05 Linux 3.11-rc1
+
+Related discussions:
+- drivers: pinctrl sleep and idle states in the core
+ http://lists.infradead.org/pipermail/linux-arm-kernel/2013-June/173514.html
+- [PATCH] drivers: pinctrl: add active state to core
+ http://marc.info/?l=linux-kernel&m=137094012703340&w=2
+- [PATCH] pinctrl: document the pinctrl PM states
+ https://lkml.org/lkml/2013/6/11/501
+- [3/3] i2c: nomadik: use pinctrl PM helpers
+ https://patchwork.kernel.org/patch/2670291/
+- mmc: omap_hsmmc: Remux pins to support SDIO interrupt and PM runtime
+ https://patchwork.kernel.org/patch/2690191/
+- [PATCH 00/11] drivers: Add Pinctrl PM support
+ https://lkml.org/lkml/2013/5/31/210
+
+
+Grygorii Strashko (3):
+  pinctrl: rollback check for !dev->pins in pinctrl_pm_select*() APIs
+  ARM: OMAP2+: omap_device: add pinctrl handling
+  ARM: dts: omap4-sdp: add dynamic pin states for uart3/4
+
+ arch/arm/boot/dts/omap4-sdp.dts   |   34 +++++++++++++++++++++++++++----
+ arch/arm/mach-omap2/omap_device.c |   40 +++++++++++++++++++++++++++++++------
+ drivers/pinctrl/core.c            |   12 +++++++++++
+ 3 files changed, 76 insertions(+), 10 deletions(-)
 
 Regards,
-Ivan
+-grygorii
 
-
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> ---
->  drivers/tty/serial/msm_serial.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-> index 2c6cfb3..0b38b28 100644
-> --- a/drivers/tty/serial/msm_serial.c
-> +++ b/drivers/tty/serial/msm_serial.c
-> @@ -637,7 +637,7 @@ static int msm_request_port(struct uart_port *port)
->  		if (!request_mem_region(gsbi_resource->start, size,
->  						 "msm_serial")) {
->  			ret = -EBUSY;
-> -			goto fail_release_port;
-> +			goto fail_release_port_membase;
->  		}
->  
->  		msm_port->gsbi_base = ioremap(gsbi_resource->start, size);
-> @@ -651,6 +651,8 @@ static int msm_request_port(struct uart_port *port)
->  
->  fail_release_gsbi:
->  	release_mem_region(gsbi_resource->start, size);
-> +fail_release_port_membase:
-> +	iounmap(port->membase);
->  fail_release_port:
->  	release_mem_region(port->mapbase, size);
->  	return ret;
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-serial" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CC: Linus Walleij <linus.walleij@linaro.org>
+CC: Stephen Warren <swarren@wwwdotorg.org>
+CC: Roger Quadros <rogerq@ti.com>
+-- 
+1.7.9.5
