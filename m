@@ -1,62 +1,65 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [RFC PATCH v5 1/1] drivers: mfd: vexpress: add Serial Power
- Controller (SPC) support
-Date: Tue, 16 Jul 2013 19:32:48 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1307161917580.14924@syhkavp.arg>
-References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com> <1373990743-23106-2-git-send-email-lorenzo.pieralisi@arm.com> <51E5A785.1040805@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 5/5] ARM: remove #gpio-ranges-cells property
+Date: Tue, 16 Jul 2013 20:50:01 -0500
+Message-ID: <CAL_JsqJ7CYUieGbvAZtQDEYsUKdM3yYBHSu871jUqOLeASc08g@mail.gmail.com>
+References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
+ <1373913629-32179-5-git-send-email-swarren@wwwdotorg.org>
+ <51E44ED9.9020807@gmail.com> <51E47F85.4050905@wwwdotorg.org>
+ <51E5D78F.8060400@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51E5A785.1040805@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Jon Medhurst <tixy@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Achin Gupta <achin.gupta@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51E5D78F.8060400-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Jul 2013, Rob Herring wrote:
+On Tue, Jul 16, 2013 at 6:30 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 07/15/2013 05:02 PM, Stephen Warren wrote:
+>> On 07/15/2013 01:34 PM, Rob Herring wrote:
+>>> On 07/15/2013 01:40 PM, Stephen Warren wrote:
+>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>
+>>>> This property is no longer required by the GPIO binding. Remove it.
+>>>
+>>> Won't this break compatibility with older kernel? It is one thing to
+>>> deprecate, but removal is another. If the relevant maintainers don't
+>>> care, then I guess it is fine.
+>>
+>> Yes.
+>>
+>> I had originally hoped this could sneak in late for 3.11, but I suppose
+>> it's too late now. vf610.dtsi is a new file in 3.11 so has no legacy to
+>> protect.
+>>
+>> Admittedly, the #gpio-cells property was added into the SPEAr files in 3.10.
+>
+> One more thought here:
+>
+> I know DT bindings are supposed to evolve so that a new kernel will
+> support arbitrary old DTs. I'll call that backwards-compatibility for
+> the DT parsing code.
 
-> On 07/16/2013 11:05 AM, Lorenzo Pieralisi wrote:
-> > The TC2 versatile express core tile integrates a logic block that provides the
-> > interface between the dual cluster test-chip and the M3 microcontroller that
-> > carries out power management. The logic block, called Serial Power Controller
-> > (SPC), contains several memory mapped registers to control among other things
-> > low-power states, wake-up irqs and per-CPU jump addresses registers.
-> > 
-> > This patch provides a driver that enables run-time control of features
-> > implemented by the SPC power management control logic.
-> > 
-> > The SPC control logic is required to be programmed very early in the boot
-> > process to reset secondary CPUs on the TC2 testchip, set-up jump addresses and
-> > wake-up IRQs for power management. Hence, waiting for core changes to be
-> > made in the device core code to enable early registration of platform
-> > devices, the driver puts in place an early init scheme that allows kernel
-> > drivers to initialize the SPC driver directly from the components requiring
-> > it, if their initialization routine is called before the driver init
-> > function by the boot process.
-> > 
-> > Device tree bindings documentation for the SPC component is provided with
-> > the patchset.
-> 
-> Just curious, wouldn't a TC2 PSCI implementation eliminate the need for
-> most/all of this code?
+That is the more common case.
 
-There is a PSCI equivalent for the above already, in the sense that 
-there is a simple MCPM backend that bypass most of the MCPM race 
-avoidance code paths and simply calls into PSCI instead.  But not all 
-the world is going to be PSCI, and therefore we need to ensure good 
-support for non-PSCI platforms as well.
+> However, this situation is the reverse; this patch would prevent a new
+> DT running on an older kernel. I'll call that forwards-compatibility.
+> I'm not sure if the intent is to support this or not? It's certainly the
+> first I explicitly thought about compatibility in this direction...
 
-This is why TC2 supports both, and this also ensure that the PSCI 
-implementation, which won't be part of the kernel and therefore unlikely 
-to get the same level of scrutiny, is properly implemented and doesn't 
-introduce any regression when compared to the non PSCI case.
+So you would be okay if your computer stopped booting a kernel after a
+BIOS update? It's the same deal. It's both forwards and backwards
+compatibility that is needed.
 
-Remember that TC2 is multi-cluster which means that the PSCI 
-implementation has to carry the same amount of complexity as the whole 
-in-kernel MCPM layer and that doesn't make me overly confident it is 
-going to always be right.
-
-All this to say that we do need this code despite PSCI availability.
-
-
-Nicolas
+Rob
