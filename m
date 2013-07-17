@@ -1,16 +1,11 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 5/5] ARM: remove #gpio-ranges-cells property
-Date: Tue, 16 Jul 2013 20:50:01 -0500
-Message-ID: <CAL_JsqJ7CYUieGbvAZtQDEYsUKdM3yYBHSu871jUqOLeASc08g@mail.gmail.com>
-References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
- <1373913629-32179-5-git-send-email-swarren@wwwdotorg.org>
- <51E44ED9.9020807@gmail.com> <51E47F85.4050905@wwwdotorg.org>
- <51E5D78F.8060400@wwwdotorg.org>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH -next] mtd: orion_nand: convert to use devm_* APIs
+Date: Wed, 17 Jul 2013 10:09:10 +0800
+Message-ID: <CAPgLHd8upcmfnQqHAWnqP7YBVYDVyoYKQ3WCh3c5+uY-EKr1jg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51E5D78F.8060400-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,45 +16,86 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org
+Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2013 at 6:30 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 07/15/2013 05:02 PM, Stephen Warren wrote:
->> On 07/15/2013 01:34 PM, Rob Herring wrote:
->>> On 07/15/2013 01:40 PM, Stephen Warren wrote:
->>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>
->>>> This property is no longer required by the GPIO binding. Remove it.
->>>
->>> Won't this break compatibility with older kernel? It is one thing to
->>> deprecate, but removal is another. If the relevant maintainers don't
->>> care, then I guess it is fine.
->>
->> Yes.
->>
->> I had originally hoped this could sneak in late for 3.11, but I suppose
->> it's too late now. vf610.dtsi is a new file in 3.11 so has no legacy to
->> protect.
->>
->> Admittedly, the #gpio-cells property was added into the SPEAr files in 3.10.
->
-> One more thought here:
->
-> I know DT bindings are supposed to evolve so that a new kernel will
-> support arbitrary old DTs. I'll call that backwards-compatibility for
-> the DT parsing code.
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-That is the more common case.
+Convert to use devm_* APIs to avoid resources leak on error handling case.
 
-> However, this situation is the reverse; this patch would prevent a new
-> DT running on an older kernel. I'll call that forwards-compatibility.
-> I'm not sure if the intent is to support this or not? It's certainly the
-> first I explicitly thought about compatibility in this direction...
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+---
+ drivers/mtd/nand/orion_nand.c | 29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
 
-So you would be okay if your computer stopped booting a kernel after a
-BIOS update? It's the same deal. It's both forwards and backwards
-compatibility that is needed.
-
-Rob
+diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
+index 46f308d..ce711b4 100644
+--- a/drivers/mtd/nand/orion_nand.c
++++ b/drivers/mtd/nand/orion_nand.c
+@@ -85,25 +85,23 @@ static int __init orion_nand_probe(struct platform_device *pdev)
+ 	int ret = 0;
+ 	u32 val = 0;
+ 
+-	nc = kzalloc(sizeof(struct nand_chip) + sizeof(struct mtd_info), GFP_KERNEL);
++	nc = devm_kzalloc(&pdev->dev,
++			  sizeof(struct nand_chip) + sizeof(struct mtd_info),
++			  GFP_KERNEL);
+ 	if (!nc) {
+ 		printk(KERN_ERR "orion_nand: failed to allocate device structure.\n");
+-		ret = -ENOMEM;
+-		goto no_res;
++		return -ENOMEM;
+ 	}
+ 	mtd = (struct mtd_info *)(nc + 1);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		ret = -ENODEV;
+-		goto no_res;
+-	}
++	if (!res)
++		return -ENODEV;
+ 
+-	io_base = ioremap(res->start, resource_size(res));
++	io_base = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+ 	if (!io_base) {
+ 		printk(KERN_ERR "orion_nand: ioremap failed\n");
+-		ret = -EIO;
+-		goto no_res;
++		return -EIO;
+ 	}
+ 
+ 	if (pdev->dev.of_node) {
+@@ -111,8 +109,7 @@ static int __init orion_nand_probe(struct platform_device *pdev)
+ 					GFP_KERNEL);
+ 		if (!board) {
+ 			printk(KERN_ERR "orion_nand: failed to allocate board structure.\n");
+-			ret = -ENOMEM;
+-			goto no_res;
++			return -ENOMEM;
+ 		}
+ 		if (!of_property_read_u32(pdev->dev.of_node, "cle", &val))
+ 			board->cle = (u8)val;
+@@ -186,10 +183,6 @@ no_dev:
+ 		clk_disable_unprepare(clk);
+ 		clk_put(clk);
+ 	}
+-	iounmap(io_base);
+-no_res:
+-	kfree(nc);
+-
+ 	return ret;
+ }
+ 
+@@ -201,10 +194,6 @@ static int orion_nand_remove(struct platform_device *pdev)
+ 
+ 	nand_release(mtd);
+ 
+-	iounmap(nc->IO_ADDR_W);
+-
+-	kfree(nc);
+-
+ 	clk = clk_get(&pdev->dev, NULL);
+ 	if (!IS_ERR(clk)) {
+ 		clk_disable_unprepare(clk);
