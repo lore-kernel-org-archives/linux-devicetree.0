@@ -1,98 +1,108 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v3] media: i2c: tvp7002: add OF support
-Date: Wed, 17 Jul 2013 22:54:32 +0530
-Message-ID: <CA+V-a8uKHymsWw1mZMH==Q6--F23y_xnFKtZDVB5r12K3=5zyQ@mail.gmail.com>
-References: <1374078016-17122-1-git-send-email-prabhakar.csengg@gmail.com> <51E6C8D8.4010303@samsung.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v9 1/8] drivers: phy: add generic PHY framework
+Date: Wed, 17 Jul 2013 10:25:10 -0700
+Message-ID: <20130717172510.GB17093@kroah.com>
+References: <1372247257-30186-1-git-send-email-kishon@ti.com>
+ <1372247257-30186-2-git-send-email-kishon@ti.com>
+ <20130717062944.GA24968@kroah.com>
+ <51E664CB.8050906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51E6C8D8.4010303@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: LMML <linux-media@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51E664CB.8050906@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, arnd@arndb.de, swarren@nvidia.com, sylvester.nawrocki@gmail.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, akpm@linux-foundation.org, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, benoit.cousson@linaro.org, mchehab@redhat.com, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, balajitk@ti.com, george.cherian@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On Wed, Jul 17, 2013 at 03:02:59PM +0530, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Wednesday 17 July 2013 11:59 AM, Greg KH wrote:
+> > On Wed, Jun 26, 2013 at 05:17:29PM +0530, Kishon Vijay Abraham I wrote:
+> >> +menuconfig GENERIC_PHY
+> >> +	tristate "PHY Subsystem"
+> >> +	help
+> >> +	  Generic PHY support.
+> >> +
+> >> +	  This framework is designed to provide a generic interface for PHY
+> >> +	  devices present in the kernel. This layer will have the generic
+> >> +	  API by which phy drivers can create PHY using the phy framework and
+> >> +	  phy users can obtain reference to the PHY.
+> > 
+> > Shouldn't this be something that other drivers select?  How will anyone
+> > know if they need this or not?
+> 
+> All the PHY drivers should go here. So only if *GENERIC_PHY* is enabled those
+> PHY drivers can be selected like in [1].
+> The PHY consumer driver should ideally use *depends on* in their Kconfig.
+> 
+> [1] ->
+> http://archive.arm.linux.org.uk/lurker/message/20130628.134308.4a8f7668.ca.html
 
-Thanks for the quick review.
+No, switch it around the other way.  How would I even _know_ that I need
+to enable the generic PHY subsystem in the first place?  How can I
+determine that I need this for my hardware?  You need to give hints to
+someone who doesn't even know what a PHY is, otherwise they will always
+disable it and move on.
 
-On Wed, Jul 17, 2013 at 10:09 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> On 07/17/2013 06:20 PM, Prabhakar Lad wrote:
->> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
->>
->> add OF support for the tvp7002 driver.
->>
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->> ---
->>  This patch depends on https://patchwork.kernel.org/patch/2828800/
->>
->>  Changes for v3:
->>  1: Fixed review comments pointed by Sylwester.
->>
->>  .../devicetree/bindings/media/i2c/tvp7002.txt      |   43 +++++++++++++
->>  drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
->>  2 files changed, 103 insertions(+), 7 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->> new file mode 100644
->> index 0000000..744125f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->> @@ -0,0 +1,43 @@
->> +* Texas Instruments TV7002 video decoder
->> +
->> +The TVP7002 device supports digitizing of video and graphics signal in RGB and
->> +YPbPr color space.
->> +
->> +Required Properties :
->> +- compatible : Must be "ti,tvp7002"
->> +
->> +- hsync-active: HSYNC Polarity configuration for endpoint.
->> +
->> +- vsync-active: VSYNC Polarity configuration for endpoint.
->
-> I woudn't refer to "endpoint" here, perhaps to the specific hardware
-> bus instead ? So it is clear what part of the device it refers to ?
->
-OK, I'll refer to bus instead.
+> >> --- /dev/null
+> >> +++ b/drivers/phy/phy-core.c
+> >> @@ -0,0 +1,544 @@
+> >> +/*
+> >> + * phy-core.c  --  Generic Phy framework.
+> >> + *
+> >> + * Copyright (C) 2013 Texas Instruments
+> >> + *
+> >> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
+> >> + *
+> >> + * This program is free software; you can redistribute  it and/or modify it
+> >> + * under  the terms of  the GNU General  Public License as published by the
+> >> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> >> + * option) any later version.
+> > 
+> > You really mean "any later version" (I have to ask)?
+> 
+> That was copied from somewhere :-s
 
->> +- pclk-sample: Clock polarity of the endpoint.
->
-> This description is not very useful, my feeling is that this property
-> is better described in video-interfaces.txt.
->
-agreed its just a one liner, and below I have mentioned a link
-to video-interfaces.txt for better understanding of this generic
-properties.
+So, is that what you really mean to have for this code?
 
->> +- sync-on-green-active: Active state of Sync-on-green signal property of the
->> +  endpoint, 0/1 for normal/inverted operation respectively.
->> +
->> +- field-even-active: Active-high Field ID polarity of the endpoint.
->
-> I find it hard to understand what this property is about exactly.
-> Not sure if you need to repeat detailed description of the signal
-> polarity properties. Perhaps its sufficient to list which properties
-> are relevant for this device, but I'm not opposed to having
-> supplementary description here. I would just make it more specific
-> to the TVP7002 chip.
+> >> + * This program is distributed in the hope that it will be useful,
+> >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >> + * GNU General Public License for more details.
+> >> + *
+> >> + * You should have received a copy of the GNU General Public License
+> >> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> > 
+> > Are these two paragraphs needed?  This isn't a "program", and they got a
+> > copy of the GPL already with the kernel.
+> 
+> hmm.. I can remove that.
+> > 
+> >> +static struct class *phy_class;
+> > 
+> > Why do you need a class?
+> 
+> Wanted to group all the PHY drivers to be used by different subsystems
+> (SATA/USB/PCIE/HDMI/VIDEO) into a single entity. There were some comments in my
+> initial version [3] on using a bus_type instead of class but then it was
+> decided to go with class itself.
+> 
+> [3] -> http://lkml.indiana.edu/hypermail/linux/kernel/1302.2/01389.html
 
-How about the below description ?
+Ok, but what does the class usage get you?
 
-Active-high Field ID output polarity control. Under normal operation, the
-field ID output is set to logic 1 for an odd field (field 1)
-and set to logic 0 for an even field (field 0).
-0 = Normal operation (default)
-1 = FID output polarity inverted
+> > When modifying/adding new sysfs stuff, you need a Documentation/ABI/
+> > entry as well.
+> 
+> I'm not actually adding any new sysfs entry other than what a *class_create*
+> must have created. Do I need to add one for that?
 
-> Also please note that only 'compatible' property is required, all
-> other are optional. And it probably makes sense to specify what are
-> default values for each property when it is not specified.
->
-Agreed I'll add them to optional list, and mention their default values too.
+If you are not creating anything in sysfs at all, why use the driver
+model?  (hint, I think you need to do something here to justify it...)
 
---
-Regards,
-Prabhakar Lad
+thanks,
+
+greg k-h
