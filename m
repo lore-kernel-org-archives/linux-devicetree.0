@@ -1,51 +1,88 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Wed, 17 Jul 2013 11:43:15 +0800
-Message-ID: <20130717034314.GB4541@S2101-09.ap.freescale.net>
-References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
- <20130716015038.GD28375@S2101-09.ap.freescale.net>
- <20130716065130.GB30067@S2101-09.ap.freescale.net>
- <51E56AF6.30506@wwwdotorg.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V5 1/3] pci: Add PCIe driver for Samsung Exynos
+Date: Wed, 17 Jul 2013 07:07:49 +0200
+Message-ID: <20130717050748.GD11359@mithrandir>
+References: <000b01ce6839$0f0455d0$2d0d0170$@samsung.com>
+ <000001ce68d7$ca762200$5f626600$@samsung.com>
+ <20130614105310.GA19060@manwe>
+ <3309315.fJN6KWK0oA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LKTjZJSUETSlgu2t"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51E56AF6.30506-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <3309315.fJN6KWK0oA@wuerfel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jingoo Han <jg1.han@samsung.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2013 at 09:47:02AM -0600, Stephen Warren wrote:
-> > diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
-> 
-> > -	gpio_set_value(drvdata->gpio, value);
-> > +	if (gpio_cansleep(drvdata->gpio))
-> > +		gpio_set_value_cansleep(drvdata->gpio, value);
-> > +	else
-> > +		gpio_set_value(drvdata->gpio, value);
-> 
-> That's not right. Calling gpio_set_value() v.s.
-> gpio_set_value_cansleep() should be based on the properties of the
-> calling context, not the GPIO being controlled. In other words, if it's
-> permissible to call gpio_set_value_cansleep() at this point in the code,
-> simply always call that, and remove the conditional logic.
 
-Ah, yes.  I was confused by the API gpio_cansleep().  Which API we
-should call depends on the calling context.  And the context should
-come from the gpio-reset client device driver.  IOW, we have no idea
-what the context is in gpio-reset driver.  To start with something
-simple, we may want to define the gpio-reset as a sleepable interface
-and always call gpio_set_value_cansleep() in there.
+--LKTjZJSUETSlgu2t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shawn
+On Fri, Jun 14, 2013 at 02:38:49PM +0200, Arnd Bergmann wrote:
+> On Friday 14 June 2013 12:53:11 Thierry Reding wrote:
+> >=20
+> > I think the biggest missing piece is pci_common_exit(), the counterpart
+> > of pci_common_init(), to cleanup a host bridge on ARM. I haven't looked
+> > in detail at the other architectures, but I suspect there must be some
+> > code to call when a host bridge is removed.
+> >=20
+> > Looking at drivers/pci/remove.c, it seems like pci_remove_root_bus()
+> > might be what we're looking at. It isn't exported so it can't be used by
+> > modules, but that can be changed. Is that how a host bridge is typically
+> > removed from the system?
+>=20
+> It's fairly new to have host bridges in loadable modules, so I'm pretty
+> sure it's not supported by the core yet, but it also doesn't seem hard
+> to do. I think you are right with regard to pci_remove_root_bus,
+> and Bjorn might be able to provide more information.
+>=20
+> Ideally we should be able to load and unload the pci host driver
+> in a loop indefinitely without crashing or exposing any races
+> or leaks, but I would not bet on that working without bugs in the
+> core, since that goes beyond the normal pci (device) hotplug case.
+
+I've done some preliminary testing on Tegra using sysfs to unbind and
+rebind the device from and to the driver. Some code needs to be added
+for this to work, but it doesn't crash and PCI even continues to work
+after unbinding and rebinding (tested using gigabit ethernet).
+
+However I haven't looked for leaks yet, and I'm pretty sure some more
+code is required to undo some of what pci_common_init() does on ARM.
+Looking more closely, I think most (if not all) remaining leaks could
+be fixed by keeping the list of pci_sys_data structures around and
+cleaning them up properly.
+
+Given the experimental nature of this I don't want to make that part of
+the driver for 3.12 and I've opted to just disable any means of removing
+the driver for now. But I do want to get back to this after the driver
+has been merged.
+
+Thierry
+
+--LKTjZJSUETSlgu2t
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR5iakAAoJEN0jrNd/PrOhDWUQAKhSWJclEidsxp4PORW1YVAU
+zobh2Xrtt4Wqv21HeeEg/J8YBklf52eMQd6xzZM0S6QbBC+l7oWXKe5DSHoqEDBP
+8MkYoblEku9/otQ2KLesQabgVTysq5gA6jXwOba6Gxs9Gsx2HFETu0r1M0CDhpkZ
+8ro5MG06LhLEsNmSu7mE+723VX8PeTLINxpI8O0KRjR2Gb6grayeiQzV2s5TUgYh
+izbtnyxJV9rSW27GoUHDjMZew4k/uFjvSPO6yN7PTiuMXVFYV/3wL+k6X7rpMkS2
+PxoQy9a4RbS5u8UV2CQyfx+y/cNLvplLalFeVRCAQdZJ8ft8ncU4dinT15asP0NP
+uuRL+JOwzTvSURqTaPNFpDjVvxsPehJaxlun9ImZukBCmYRstJGJTZGxrjn3LDNc
+WUgoYPF4OcY2fO1Va7H8Z5QDZMaWKm9hjYjWCRYDjbT6u7WdD+eMz09mRMnKBUAy
+pKlLpNCClSJGByKL0qMXeSwmK5MaJtXrMbqbSs6oqcwzL2ML2GY+qs1mFM+23ZRq
+OKPzy0pTd48HtoA+8eP2t9d7jlPgZUJUXcqcpgaganfyEEIExlj4kF+kDUEFv3dw
+VBUpraqvZW6qxUIR1Pb/sIGCIVRzeCTz+/gCWfk7E6FwG1oCqANJHe6jhB91QtGy
+YULcNLf3zoC1RucOahmR
+=AEQR
+-----END PGP SIGNATURE-----
+
+--LKTjZJSUETSlgu2t--
