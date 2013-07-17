@@ -1,24 +1,33 @@
-From: Daniel Drake <dsd@laptop.org>
-Subject: Re: [PATCH -next] Input: olpc_apsp - remove redundant dev_err call in olpc_apsp_probe()
-Date: Wed, 17 Jul 2013 07:00:10 -0600
-Message-ID: <CAMLZHHTWBRvTuFzUHBT=H_ex_aOExiuCf0fzuFnF-fdYoAharQ@mail.gmail.com>
-References: <CAPgLHd-tOWoxE-qYOkX_HcQRaUsifn0MQH=i+2KDARLKAxz2KA@mail.gmail.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
+Date: Wed, 17 Jul 2013 14:29:46 +0100
+Message-ID: <1374067786.3146.123.camel@hornet>
+References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
+	 <1374052705.3146.86.camel@hornet>
+	 <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd-tOWoxE-qYOkX_HcQRaUsifn0MQH=i+2KDARLKAxz2KA@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Grant Likely <grant.likely@linaro.org>, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-input@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2013 at 11:31 PM, Wei Yongjun <weiyj.lk@gmail.com> wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->
-> There is a error message within devm_ioremap_resource
-> already, so remove the dev_err call to avoid redundant
-> error message.
->
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On Wed, 2013-07-17 at 13:33 +0100, Nicolas Pitre wrote:
+> If this is really miscelaneous code that really doesn't fit=20
+> anywhere else, it should rather go into drivers/misc/ as a last resor=
+t.
 
-Acked-by: Daniel Drake <dsd@laptop.org>
+Interestingly enough drivers/misc was my first choice for all the
+vexpress stuff, but it wasn't received well...
+
+Anyway, the SPC driver as it is now seem to be a "power management
+system driver". Maybe a relevant directory would be in place? Wouldn't
+PSCI belong there as well? (there are two psci.c files in arch/arm and
+arch/arm64, surprisingly similar ones ;-)
+
+The bottom line is: today it is not an MFD driver.
+
+Pawe=C5=82
