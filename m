@@ -1,18 +1,20 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Wed, 17 Jul 2013 10:57:08 -0600
-Message-ID: <51E6CCE4.20705@wwwdotorg.org>
-References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
- <20130716015038.GD28375@S2101-09.ap.freescale.net>
- <51E4BF98.8030604@wwwdotorg.org>
- <20130716041056.GA30067@S2101-09.ap.freescale.net>
- <51E56AA7.7020103@wwwdotorg.org>
- <20130717030246.GA4541@S2101-09.ap.freescale.net>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
+Date: Wed, 17 Jul 2013 18:00:39 +0100
+Message-ID: <20130717170038.GP24642@n2100.arm.linux.org.uk>
+References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1374052705.3146.86.camel@hornet>
+ <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg>
+ <1374067786.3146.123.camel@hornet>
+ <alpine.LFD.2.03.1307171014510.14924@syhkavp.arg>
+ <1374070811.3146.124.camel@hornet>
+ <alpine.LFD.2.03.1307171148160.14924@syhkavp.arg>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130717030246.GA4541-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.03.1307171148160.14924-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,33 +25,21 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <Achin.Gupta-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/16/2013 09:02 PM, Shawn Guo wrote:
-> On Tue, Jul 16, 2013 at 09:45:43AM -0600, Stephen Warren wrote:
->> Registering the driver earlier won't cause any bugs. However, it's not
->> the correct approach.
->>
->> Deferred probe /is/ the approach for assuring correct dependencies
->> between drivers. It works and should be used. There are not enough
->> initcall levels to play games using initcalls and solve all the issues,
->> and the ordering requirements vary board-to-board. Deferred probe at
->> runtime handles this without having to manually place all the drivers
->> into specific initcall levels, and dynamically adjusts to board
->> differences, since it all happens automatically at run-time.
-> 
-> I do not quite follow the argument here.  I agree with you that
-> deferred probe is the approach to solve dependencies.  But it does not
-> necessarily mean that initcall can not be used to help it save some
-> nasty or nested deferring.  Deferred probe and initcalls are not two
-> mutually exclusive mechanisms but two which can help each other.
+On Wed, Jul 17, 2013 at 11:57:55AM -0400, Nicolas Pitre wrote:
+> The sanest location at this point might simply be 
+> drivers/platform/vexpress_spc.c or drivers/platform/vexpress/spc.c 
+> depending on whether or not more such driver glue is expected in the 
+> vexpress future.  No point putting "arm" in the path, especially if this 
+> is later reused on arm64.
 
-My understanding is that deferred probe was implemented specifically to
-avoid having to, or allowing, the use of initcall levels to determine
-probe order.
+You wouldn't be making that argument if it were arch/arm64 and arch/arm32 -
+you'd probably be arguing that "arm" made perfect sense.
 
-However, if someone closely associated with the implementation of
-deferred probe (e.g. Grant, or a device core maintainer) is willing to
-step up and say I'm wrong, I'll drop my objection.
+Don't get too hung up on names please, it's really not worth the time
+and effort being soo pedantic, and being soo pedantic leads to "pointless
+churn" when someone comes along and wants to pedantically change the
+names because it no longer matches the users.
