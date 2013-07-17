@@ -1,23 +1,37 @@
-From: Jonas Jensen <jonas.jensen@gmail.com>
-Subject: Re: [PATCH v3 2/4] ARM: mach-moxart: add MOXA ART device tree files
-Date: Wed, 17 Jul 2013 11:04:10 +0200
-Message-ID: <CACmBeS0LHqm8=4hM4VaDCBZZEP9-er7rP+SfJ7GnpgiGvJm+2Q@mail.gmail.com>
-References: <1371040448-28742-3-git-send-email-jonas.jensen@gmail.com>
-	<1372949115-8190-1-git-send-email-jonas.jensen@gmail.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
+Date: Wed, 17 Jul 2013 10:18:25 +0100
+Message-ID: <1374052705.3146.86.camel@hornet>
+References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1372949115-8190-1-git-send-email-jonas.jensen@gmail.com>
+In-Reply-To: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, arm@kernel.org, arnd@arndb.de, olof@lixom.net, Jonas Jensen <jonas.jensen@gmail.com>
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Just as a reminder, I intend to update this set with some minor changes:
+On Tue, 2013-07-16 at 17:05 +0100, Lorenzo Pieralisi wrote:
+> /drivers/mfd is probably not the right place for this code as it stan=
+ds (but
+> probably will be when the entire driver, with DVFS and config interfa=
+ce, is
+> complete).
 
-1. remove devicetree bindings for drivers, I will mail those out separately
-2. a devicetree node for DMA was added
-3. GPIO numbers are now in DT aswell
+Not that it really matters now, but my vexpress-sysreg rework will -
+most likely - leave only skeleton in the MFD (registering mfd_cells) an=
+d
+other stuff is going to be spread all around. Then I'm planning to move
+the remaining of the vexpress-specific initialization to
+drivers/platform/arm/vexpress.c, so maybe sticking vexpress-spc.c to
+this (non-existing yet) directory would be the right thing to do?
 
-Best regards,
-Jonas
+Other than that:
+
+Acked-by: Pawel Moll <pawel.moll@arm.com>
+
+Thanks!
+
+Pawe=C5=82
