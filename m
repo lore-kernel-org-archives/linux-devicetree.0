@@ -1,52 +1,109 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 0/2] regulator: palmas-pmic: doc: update device tree
- bindings
-Date: Wed, 17 Jul 2013 11:06:24 +0100
-Message-ID: <20130717100624.GJ22506@sirena.org.uk>
-References: <20130716161939.GR22506@sirena.org.uk>
- <1373992870-20725-1-git-send-email-nm@ti.com>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH RFC v2 2/5] dma: mpc512x: add support for peripheral
+ transfers
+Date: Wed, 17 Jul 2013 12:42:34 +0200
+Message-ID: <20130717104234.GJ7080@book.gsilab.sittig.org>
+References: <1373642781-32631-1-git-send-email-gsi@denx.de>
+ <1373803321-11628-1-git-send-email-gsi@denx.de>
+ <1373803321-11628-3-git-send-email-gsi@denx.de>
+ <51E5226D.9050100@metafoo.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ch6x/diZ8cQC324S"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1373992870-20725-1-git-send-email-nm@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Graeme Gregory <gg@slimlogic.co.uk>, J Keerthy <j-keerthy@ti.com>, Laxman Dewangan <ldewangan@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <51E5226D.9050100-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 16, 2013 at 12:37 +0200, Lars-Peter Clausen wrote:
+> 
+> On 07/14/2013 02:01 PM, Gerhard Sittig wrote:
+> > From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > 
+> > introduce support for slave s/g transfer preparation and the associated
+> > device control callback in the MPC512x DMA controller driver, which adds
+> > support for data transfers between memory and peripheral I/O to the
+> > previously supported mem-to-mem transfers
+> > 
+> > refuse to prepare chunked transfers (transfers with more than one part)
+> > as long as proper support for scatter/gather is lacking
+> > 
+> > keep MPC8308 operational by always starting transfers from software,
+> > this SoC appears to not have request lines for flow control when
+> > peripherals are involved in transfers
+> 
+> I had a look at the current driver and it seems that any channel can be used
+> for memcpy operation not only the MDDRC channel. Since the dmaengine API
+> will just pick one of the currently free channels when performing a memcpy
+> operation I think this patch breaks memcpy operations. You probably need to
+> register two dma controllers, one for memcpy operations one for slave
+> operations, that way you can ensure that only the MDDRC channel is used for
+> memcpy operations.
 
---ch6x/diZ8cQC324S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+OK, so the need for explicit start in software or external
+request by the peripheral remains, but the condition for the
+choice is different.  It might become a flag attached to the DMA
+channel, that gets setup in the prep routines (memory and slave
+access each use their own prep calls) and gets evaluated in
+execute.  Something like "will access memory", or "will access
+peripheral" (the latter may be preferrable since slave support is
+the new feature).
 
-On Tue, Jul 16, 2013 at 11:41:08AM -0500, Nishanth Menon wrote:
-> We seem to have a few missing updates to device tree bindings with the
-> latest set of changes getting merged in.
+This assumes that the non-MDDRC channels can get used for memory
+transfers as well, which your description of the the former use
+suggests, when slave support was absent.
 
-Applied both, thanks.
+Making the MDDRC channel preferrable for memcpy operations is
+orthogonal to that.
 
---ch6x/diZ8cQC324S
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> > 
+> > [ introduction of slave s/g preparation and device control ]
+> > Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > [ execute() start condition, mpc8308 compat, terminate all, s/g length check, reworded commit msg ]
+> > Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+> > ---
+> [...]
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
 
-iQIcBAEBAgAGBQJR5mydAAoJELSic+t+oim9uI0P/ju9mHU6RSsiI13NGEKWuJFS
-Bbtz3T1qCxjyT7baEqfADUWtRA76LQxbx/Xo8eTm30AHNi7l3j0VctXW4ndfYrka
-NxFU0VDGUpTKjb879R3JQtqr8X3AoV0ElHuiTElNpz4+Xrg0IcIzAMGNFTJ98+CA
-JQMrDlY4+KQ1ANnz4Am8y/jLwfI3ZJ3Gyh/HC5xKJo+kuU8QZLw/04MxDketBndt
-p4Ekx5c95dSC9RVJPrBHXs2zy456uF0CDufyhBT7XvZ3DaE9D6czOb9kITUZXNxf
-FndrNNBfIXCzpCfNndqv8BAcZcu9IM1NkVeJWN8HTyeu63aOFMA10H149VmIi0Rw
-vrlrsT0uRqTqsHDhb34MX/xI6yunETRn+t5MzHdg/oNUlESn6GiDy7PcrGy9vvmQ
-dn0STP7WtH4gNfJ+YXL4Dkvbvc5Yj2A4GovJKCPtSA+uRTuYJIoh0DcOUaJU3aNa
-HpdX2KcjOnVS5Dg2qqOWaQ2H/GskRqwQ2MCmCR/Okpd+6/eMNwMJ3mJTQWX+SkYY
-AwM3J7iMXW0qJblMdO7YXqbdIbAd9w8ao1XMa3qpZ8tGPtzucNhw1i7YMb2P8ue/
-DB8HC57Bqa6z77l9oo/ZCGW0Xhj+bdkJKs/dJHYF/W4KH57QX+FxskPp3onHQl3e
-DmB6kixtB/mf+KMH+sgs
-=UhAE
------END PGP SIGNATURE-----
+> > +
+> > +static int mpc_dma_device_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
+> > +				  unsigned long arg)
+> > +{
+> > +	struct mpc_dma_chan *mchan;
+> > +	struct mpc_dma *mdma;
+> > +	struct dma_slave_config *cfg;
+> > +
+> > +	mchan = dma_chan_to_mpc_dma_chan(chan);
+> > +	switch (cmd) {
+> > +	case DMA_TERMINATE_ALL:
+> > +		/* disable channel requests */
+> > +		mdma = dma_chan_to_mpc_dma(chan);
+> > +		out_8(&mdma->regs->dmacerq, chan->chan_id);
+> > +		list_splice_tail_init(&mchan->prepared, &mchan->free);
+> > +		list_splice_tail_init(&mchan->queued, &mchan->free);
+> > +		list_splice_tail_init(&mchan->active, &mchan->free);
+> 
+> This probably need locking.
 
---ch6x/diZ8cQC324S--
+Ah, yes.  It needs to grab the same lock as all the other list
+manipulations in the driver's source.
+
+
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
