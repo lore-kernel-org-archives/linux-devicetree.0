@@ -1,13 +1,17 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
-Date: Tue, 16 Jul 2013 23:26:49 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1307162323530.14924@syhkavp.arg>
-References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Wed, 17 Jul 2013 11:43:15 +0800
+Message-ID: <20130717034314.GB4541@S2101-09.ap.freescale.net>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+ <20130716015038.GD28375@S2101-09.ap.freescale.net>
+ <20130716065130.GB30067@S2101-09.ap.freescale.net>
+ <51E56AF6.30506@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1373990743-23106-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51E56AF6.30506-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,54 +22,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <achin.gupta-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Jul 2013, Lorenzo Pieralisi wrote:
+On Tue, Jul 16, 2013 at 09:47:02AM -0600, Stephen Warren wrote:
+> > diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
+> 
+> > -	gpio_set_value(drvdata->gpio, value);
+> > +	if (gpio_cansleep(drvdata->gpio))
+> > +		gpio_set_value_cansleep(drvdata->gpio, value);
+> > +	else
+> > +		gpio_set_value(drvdata->gpio, value);
+> 
+> That's not right. Calling gpio_set_value() v.s.
+> gpio_set_value_cansleep() should be based on the properties of the
+> calling context, not the GPIO being controlled. In other words, if it's
+> permissible to call gpio_set_value_cansleep() at this point in the code,
+> simply always call that, and remove the conditional logic.
 
-> Hello,
-> 
-> version v5 of VExpress SPC driver, please read on the changelog for major
-> changes and explanations.
-> 
-> The probing scheme is unchanged, since after trying the early platform
-> devices approach it appeared that the end result was no better than the
-> current one. The only clean solution relies either on changing how
-> secondaries are brought up in the kernel (later than now) or enable
-> early platform device registration through DT. Please check this
-> thread for the related discussion:
-> 
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-June/036542.html
-> 
-> The interface was adapted to regmap and again reverted to old driver for
-> the following reasons:
-> 
-> - Power down registers locking is hairy and requires arch spinlocks in
->   the MCPM back end to work properly, normal spinlocks cannot be used
-> - Regmap adds unnecessary code to manage SPC since it is just a bunch of
->   registers used to control power management flags, the overhead is just
->   not worth it (talking about power down registers, not the vexpress config
->   interface)
-> - The locking scheme behind regmap requires all registers in the map
->   to be protected with the same lock, which is not exactly what we want
->   here
-> - Given the reasons above, adding a regmap interface buys us nothing from
->   a driver readability and maintainability perspective (again just talking
->   about the power interface, a few registers) because for the SPC it would
->   simply not be used
-> 
-> /drivers/mfd is probably not the right place for this code as it stands (but
-> probably will be when the entire driver, with DVFS and config interface, is
-> complete).
-> 
-> Thank you for the review in advance,
-> Lorenzo
+Ah, yes.  I was confused by the API gpio_cansleep().  Which API we
+should call depends on the calling context.  And the context should
+come from the gpio-reset client device driver.  IOW, we have no idea
+what the context is in gpio-reset driver.  To start with something
+simple, we may want to define the gpio-reset as a sleepable interface
+and always call gpio_set_value_cansleep() in there.
 
-I've integrated this patch in my MCPM backend for TC2 patch series.
-
-ACKs from concerned/interested people would be appreciated so I could 
-send this for ARM-SOC inclusion right away.
-
-
-Nicolas
+Shawn
