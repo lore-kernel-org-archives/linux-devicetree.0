@@ -1,199 +1,156 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: [PATCH v3] media: i2c: tvp7002: add OF support
-Date: Wed, 17 Jul 2013 21:50:16 +0530
-Message-ID: <1374078016-17122-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: LMML <linux-media@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
-Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+From: "R, Durgadoss" <durgadoss.r@intel.com>
+Subject: RE: [lm-sensors] [RESEND PATCH V1 3/9] thermal: thermal_core: allow
+	binding with limits on bind_params
+Date: Wed, 17 Jul 2013 16:25:11 +0000
+Message-ID: <4D68720C2E767A4AA6A8796D42C8EB59CED41F@BGSMSX101.gar.corp.intel.com>
+References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com>
+ <1374074248-31690-4-git-send-email-eduardo.valentin@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1374074248-31690-4-git-send-email-eduardo.valentin@ti.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: "wni@nvidia.com" <wni@nvidia.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "Zhang, Rui" <rui.zhang@intel.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+> -----Original Message-----
+> From: lm-sensors-bounces@lm-sensors.org [mailto:lm-sensors-bounces@lm-
+> sensors.org] On Behalf Of Eduardo Valentin
+> Sent: Wednesday, July 17, 2013 8:47 PM
+> To: devicetree-discuss@lists.ozlabs.org
+> Cc: wni@nvidia.com; linux-pm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> lm-sensors@lm-sensors.org; Eduardo Valentin; Zhang, Rui;
+> l.stach@pengutronix.de
+> Subject: [lm-sensors] [RESEND PATCH V1 3/9] thermal: thermal_core: allow
+> binding with limits on bind_params
+> 
+> When registering a thermal zone device using platform information
+> via bind_params, the thermal framework will always perform the
+> cdev binding using the lowest and highest limits (THERMAL_NO_LIMIT).
+> 
+> This patch changes the data structures so that it is possible
+> to inform what are the desired limits for each trip point
+> inside a bind_param. The way the binding is performed is also
+> changed so that it uses the new data structure.
+> 
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
 
-add OF support for the tvp7002 driver.
+This patch looks good to me.
+Acked-by: Durgadoss R <durgadoss.r@intel.com>
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
----
- This patch depends on https://patchwork.kernel.org/patch/2828800/
- 
- Changes for v3:
- 1: Fixed review comments pointed by Sylwester.
- 
- .../devicetree/bindings/media/i2c/tvp7002.txt      |   43 +++++++++++++
- drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
- 2 files changed, 103 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+Thanks,
+Durga
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-new file mode 100644
-index 0000000..744125f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-@@ -0,0 +1,43 @@
-+* Texas Instruments TV7002 video decoder
-+
-+The TVP7002 device supports digitizing of video and graphics signal in RGB and
-+YPbPr color space.
-+
-+Required Properties :
-+- compatible : Must be "ti,tvp7002"
-+
-+- hsync-active: HSYNC Polarity configuration for endpoint.
-+
-+- vsync-active: VSYNC Polarity configuration for endpoint.
-+
-+- pclk-sample: Clock polarity of the endpoint.
-+
-+- sync-on-green-active: Active state of Sync-on-green signal property of the
-+  endpoint, 0/1 for normal/inverted operation respectively.
-+
-+- field-even-active: Active-high Field ID polarity of the endpoint.
-+
-+For further reading of port node refer Documentation/devicetree/bindings/media/
-+video-interfaces.txt.
-+
-+Example:
-+
-+	i2c0@1c22000 {
-+		...
-+		...
-+		tvp7002@5c {
-+			compatible = "ti,tvp7002";
-+			reg = <0x5c>;
-+
-+			port {
-+				tvp7002_1: endpoint {
-+					hsync-active = <1>;
-+					vsync-active = <1>;
-+					pclk-sample = <0>;
-+					sync-on-green-active = <1>;
-+					field-even-active = <0>;
-+				};
-+			};
-+		};
-+		...
-+	};
-diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
-index f6b1f3f..24a08fa 100644
---- a/drivers/media/i2c/tvp7002.c
-+++ b/drivers/media/i2c/tvp7002.c
-@@ -35,6 +35,8 @@
- #include <media/v4l2-device.h>
- #include <media/v4l2-common.h>
- #include <media/v4l2-ctrls.h>
-+#include <media/v4l2-of.h>
-+
- #include "tvp7002_reg.h"
- 
- MODULE_DESCRIPTION("TI TVP7002 Video and Graphics Digitizer driver");
-@@ -943,6 +945,48 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
- 	.pad = &tvp7002_pad_ops,
- };
- 
-+static struct tvp7002_config *
-+tvp7002_get_pdata(struct i2c_client *client)
-+{
-+	struct v4l2_of_endpoint bus_cfg;
-+	struct tvp7002_config *pdata;
-+	struct device_node *endpoint;
-+	unsigned int flags;
-+
-+	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-+		return client->dev.platform_data;
-+
-+	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-+	if (!endpoint)
-+		return NULL;
-+
-+	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		goto done;
-+
-+	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
-+	flags = bus_cfg.bus.parallel.flags;
-+
-+	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-+		pdata->hs_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-+		pdata->vs_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-+		pdata->clk_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_FIELD_EVEN_HIGH)
-+		pdata->fid_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH)
-+		pdata->sog_polarity = 1;
-+
-+done:
-+	of_node_put(endpoint);
-+	return pdata;
-+}
-+
- /*
-  * tvp7002_probe - Probe a TVP7002 device
-  * @c: ptr to i2c_client struct
-@@ -954,32 +998,32 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
-  */
- static int tvp7002_probe(struct i2c_client *c, const struct i2c_device_id *id)
- {
-+	struct tvp7002_config *pdata = tvp7002_get_pdata(c);
- 	struct v4l2_subdev *sd;
- 	struct tvp7002 *device;
- 	struct v4l2_dv_timings timings;
- 	int polarity_a;
- 	int polarity_b;
- 	u8 revision;
--
- 	int error;
- 
-+	if (pdata == NULL) {
-+		dev_err(&c->dev, "No platform data\n");
-+		return -EINVAL;
-+	}
-+
- 	/* Check if the adapter supports the needed features */
- 	if (!i2c_check_functionality(c->adapter,
- 		I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
- 		return -EIO;
- 
--	if (!c->dev.platform_data) {
--		v4l_err(c, "No platform data!!\n");
--		return -ENODEV;
--	}
--
- 	device = devm_kzalloc(&c->dev, sizeof(struct tvp7002), GFP_KERNEL);
- 
- 	if (!device)
- 		return -ENOMEM;
- 
- 	sd = &device->sd;
--	device->pdata = c->dev.platform_data;
-+	device->pdata = pdata;
- 	device->current_timings = tvp7002_timings;
- 
- 	/* Tell v4l2 the device is ready */
-@@ -1084,9 +1128,18 @@ static const struct i2c_device_id tvp7002_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, tvp7002_id);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id tvp7002_of_match[] = {
-+	{ .compatible = "ti,tvp7002", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, tvp7002_of_match);
-+#endif
-+
- /* I2C driver data */
- static struct i2c_driver tvp7002_driver = {
- 	.driver = {
-+		.of_match_table = of_match_ptr(tvp7002_of_match),
- 		.owner = THIS_MODULE,
- 		.name = TVP7002_MODULE_NAME,
- 	},
--- 
-1.7.9.5
-
+> ---
+>  Documentation/thermal/sysfs-api.txt |  7 +++++++
+>  drivers/thermal/thermal_core.c      | 19 +++++++++++++++----
+>  include/linux/thermal.h             | 10 ++++++++++
+>  3 files changed, 32 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/thermal/sysfs-api.txt
+> b/Documentation/thermal/sysfs-api.txt
+> index a71bd5b..2ad50e7 100644
+> --- a/Documentation/thermal/sysfs-api.txt
+> +++ b/Documentation/thermal/sysfs-api.txt
+> @@ -134,6 +134,13 @@ temperature) and throttle appropriate devices.
+>                 this thermal zone and cdev, for a particular trip point.
+>                 If nth bit is set, then the cdev and thermal zone are bound
+>                 for trip point n.
+> +    .limits: This is an array of cooling state limits. Must have exactly
+> +         2 * thermal_zone.number_of_trip_points. It is an array consisting
+> +         of tuples <lower-state upper-state> of state limits. Each trip
+> +         will be associated with one state limit tuple when binding.
+> +         A NULL pointer means <THERMAL_NO_LIMITS THERMAL_NO_LIMITS>
+> +         on all trips. These limits are used when binding a cdev to a
+> +         trip point.
+>      .match: This call back returns success(0) if the 'tz and cdev' need to
+>  	    be bound, as per platform data.
+>  1.4.2 struct thermal_zone_params
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 247528b..096c8be 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -202,14 +202,23 @@ static void print_bind_err_msg(struct
+> thermal_zone_device *tz,
+>  }
+> 
+>  static void __bind(struct thermal_zone_device *tz, int mask,
+> -			struct thermal_cooling_device *cdev)
+> +			struct thermal_cooling_device *cdev,
+> +			unsigned long *limits)
+>  {
+>  	int i, ret;
+> 
+>  	for (i = 0; i < tz->trips; i++) {
+>  		if (mask & (1 << i)) {
+> +			unsigned long upper, lower;
+> +
+> +			upper = THERMAL_NO_LIMIT;
+> +			lower = THERMAL_NO_LIMIT;
+> +			if (limits) {
+> +				lower = limits[i * 2];
+> +				upper = limits[i * 2 + 1];
+> +			}
+>  			ret = thermal_zone_bind_cooling_device(tz, i, cdev,
+> -					THERMAL_NO_LIMIT,
+> THERMAL_NO_LIMIT);
+> +							       upper, lower);
+>  			if (ret)
+>  				print_bind_err_msg(tz, cdev, ret);
+>  		}
+> @@ -254,7 +263,8 @@ static void bind_cdev(struct thermal_cooling_device
+> *cdev)
+>  			if (tzp->tbp[i].match(pos, cdev))
+>  				continue;
+>  			tzp->tbp[i].cdev = cdev;
+> -			__bind(pos, tzp->tbp[i].trip_mask, cdev);
+> +			__bind(pos, tzp->tbp[i].trip_mask, cdev,
+> +			       tzp->tbp[i].binding_limits);
+>  		}
+>  	}
+> 
+> @@ -292,7 +302,8 @@ static void bind_tz(struct thermal_zone_device *tz)
+>  			if (tzp->tbp[i].match(tz, pos))
+>  				continue;
+>  			tzp->tbp[i].cdev = pos;
+> -			__bind(tz, tzp->tbp[i].trip_mask, pos);
+> +			__bind(tz, tzp->tbp[i].trip_mask, pos,
+> +			       tzp->tbp[i].binding_limits);
+>  		}
+>  	}
+>  exit:
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index a386a1c..39575eb 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -207,6 +207,16 @@ struct thermal_bind_params {
+>  	 * See Documentation/thermal/sysfs-api.txt for more information.
+>  	 */
+>  	int trip_mask;
+> +
+> +	/*
+> +	 * This is an array of cooling state limits. Must have exactly
+> +	 * 2 * thermal_zone.number_of_trip_points. It is an array consisting
+> +	 * of tuples <lower-state upper-state> of state limits. Each trip
+> +	 * will be associated with one state limit tuple when binding.
+> +	 * A NULL pointer means <THERMAL_NO_LIMITS THERMAL_NO_LIMITS>
+> +	 * on all trips.
+> +	 */
+> +	unsigned long *binding_limits;
+>  	int (*match) (struct thermal_zone_device *tz,
+>  			struct thermal_cooling_device *cdev);
+>  };
+> --
+> 1.8.2.1.342.gfa7285d
+> 
+> 
+> _______________________________________________
+> lm-sensors mailing list
+> lm-sensors@lm-sensors.org
+> http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
