@@ -1,140 +1,78 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [lm-sensors] [RESEND PATCH V1 0/9] thermal: introduce DT thermal
- zone build
-Date: Wed, 17 Jul 2013 15:09:42 -0700
-Message-ID: <20130717220942.GB990@roeck-us.net>
-References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
+Date: Wed, 17 Jul 2013 18:22:46 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1307171758591.14924@syhkavp.arg>
+References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1374052705.3146.86.camel@hornet>
+ <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg>
+ <1374067786.3146.123.camel@hornet>
+ <alpine.LFD.2.03.1307171014510.14924@syhkavp.arg>
+ <1374070811.3146.124.camel@hornet>
+ <alpine.LFD.2.03.1307171148160.14924@syhkavp.arg>
+ <20130717170038.GP24642@n2100.arm.linux.org.uk>
+ <alpine.LFD.2.03.1307171416490.14924@syhkavp.arg>
+ <20130717212343.GC19864@zurbaran>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, l.stach@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130717212343.GC19864@zurbaran>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <Achin.Gupta-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 17, 2013 at 11:17:19AM -0400, Eduardo Valentin wrote:
-> Hello all,
-> 
-> As you noticed, I am working in a way to represent thermal data
-> using device tree [1]. Essentially, this should be a way to say
-> what to do with a sensor and how to associate (cooling) actions
-> with it.
-> 
-Seems to me that goes way beyond the supposed scope of devicetree data.
-Devicetree data is supposed to describe hardware, not its configuration or use.
-This is clearly a use case.
+On Wed, 17 Jul 2013, Samuel Ortiz wrote:
 
-Guenter
+> On Wed, Jul 17, 2013 at 02:29:02PM -0400, Nicolas Pitre wrote:
+> > At this point I don't really care about the name.  I just want the damn 
+> > thing merged upstream.  But after several iterations to either fit one 
+> > or another maintainers taste, each rework ends up in that maintainer 
+> > saying: "Now that you've reworked the code, I still don't like it since 
+> > this no longer fits in my subsystem tree."
+> FWIW, we asked Pawel to rework the sysreg and config parts of the
+> vexpress driver, make it an actual MFD driver, and spread the remaining
+> bits of the code into their respective subsystems. I don't think
+> this is an eccentric requirement.
 
-> The motivation to create such infrastructure is:
-> (i) - to reuse the existing temperature sensor code base;
-> (ii) - have a way to easily describe thermal data across different
-> boards for the same sensor. Say you have an i2c temp sensor,
-> which is placed close to your battery on board A but on
-> board B, another instance of this same senor is placed
-> close to your display, for instance.
-> 
-> This series introduces then a DT parser. The data expected in
-> DT must contain the needed properties to build a thermal zone
-> out of the desired sensor. All properties are documented and
-> they are derived from the existing requirements of current
-> thermal API.
-> 
-> In order to perform a binding with cooling devices,
-> the new thermal zone built using DT nodes will use
-> the existing thermal API that uses binding parameters. This is
-> the current proposed way to register thermal zones with platform
-> information, written by Durga.
-> 
-> There are some virtual concepts that are pushed to device tree,
-> I know. But I believe using device tree to do this makes sense
-> because we are still describing the HW and how they are related
-> to each other. Things like cooling devices are not represented
-> in device tree though, as I believe that will cause a lot of
-> confusion with real devices (as already does).
-> 
-> So the series is short but I think it makes sense to describe
-> how it is organized, as it touches several places. First four
-> patches are a preparation for this parser. There is a change
-> on cpufreq-cpu0, so that it knows now how to load its
-> corresponding cooling device. There is a change on thermal_core
-> to split its hwmon code, because I think we may need to improve
-> this code base when we start to integrate better with hwmon
-> temperature sensors. Then, another needed preparation is to
-> improve the bind_params, so that we are able to bind with
-> upper and lower limits. The remaining patches are the changes
-> with the proposed DT parser. A part from the DT thermal zone
-> builder itself (patch 05), I also changed the ti-soc-thermal
-> driver to use this new API and the omap4430 bandgap DT node,
-> as an example (this has been tested on panda omap4430); and also changed
-> the hwmon drivers lm75 and tmp102 to have the option to build
-> a thermal zone using DT. I haven't touched any dts file using
-> lm75 or tmp102 because this should come on a need basis.
-> 
-> I believe this code is pretty usable the way it is, but might
-> need to be revisited, in case the enhancement proposed by Durga
-> get in. This is because representing virtual thermal zones
-> built out of several sensors may need a different representation
-> in DT.
-> 
-> [1] - RFC of this work:
-> http://comments.gmane.org/gmane.linux.power-management.general/35874
-> 
-> Changes from RFC:
-> - Added a way to load cpufreq cooling device out of DT
-> - Added a way to bind with upper and lower limits using bind_params
-> - Added a way to specify upper and lower binding limits on DT
-> - Added DT thermal builder support to lm75 and tmp102 hwmon drivers
-> - Changed ERANGE to EDOM
-> - Added thermal constants for zone type and bind limit, so that
->   dts file could be more readable
-> 
-> Tested on panda omap4430 (3.11-rc1 with minor changes for getting cpufreq working)
-> 
-> BR,
-> 
-> Eduardo Valentin (9):
->   cpufreq: cpufreq-cpu0: add dt node parsing for 'needs-cooling'
->   thermal: hwmon: move hwmon support to single file
->   thermal: thermal_core: allow binding with limits on bind_params
->   arm: dts: flag omap4430 with needs-cooling for cpu node
->   thermal: introduce device tree parser
->   thermal: ti-soc-thermal: use thermal DT infrastructure
->   arm: dts: add omap4430 thermal data
->   hwmon: lm75: expose to thermal fw via DT nodes
->   hwmon: tmp102: expose to thermal fw via DT nodes
-> 
->  .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   |   3 +
->  .../devicetree/bindings/thermal/thermal.txt        | 133 ++++++
->  Documentation/thermal/sysfs-api.txt                |   7 +
->  arch/arm/boot/dts/omap443x.dtsi                    |  32 +-
->  drivers/cpufreq/cpufreq-cpu0.c                     |   8 +
->  drivers/hwmon/lm75.c                               |  29 ++
->  drivers/hwmon/tmp102.c                             |  25 ++
->  drivers/thermal/Kconfig                            |  22 +
->  drivers/thermal/Makefile                           |   4 +
->  drivers/thermal/thermal_core.c                     | 274 +-----------
->  drivers/thermal/thermal_dt.c                       | 458 +++++++++++++++++++++
->  drivers/thermal/thermal_hwmon.c                    | 269 ++++++++++++
->  drivers/thermal/thermal_hwmon.h                    |  49 +++
->  drivers/thermal/ti-soc-thermal/ti-thermal-common.c |  46 ++-
->  include/dt-bindings/thermal/thermal.h              |  27 ++
->  include/linux/thermal.h                            |  13 +
->  16 files changed, 1129 insertions(+), 270 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
->  create mode 100644 drivers/thermal/thermal_dt.c
->  create mode 100644 drivers/thermal/thermal_hwmon.c
->  create mode 100644 drivers/thermal/thermal_hwmon.h
->  create mode 100644 include/dt-bindings/thermal/thermal.h
-> 
-> -- 
-> 1.8.2.1.342.gfa7285d
-> 
-> 
-> _______________________________________________
-> lm-sensors mailing list
-> lm-sensors@lm-sensors.org
-> http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
-> 
+I agree.  However the code that Lorenzo just posted can't be deprived 
+of any more sysreg/config parts.  They are simply nonexistent.
+
+Even the larger code you reviewed before is completely useless without 
+_additional_ drivers to go on top which are indeed waiting after this 
+code to be merged before they are submitted to their respective 
+subsystems.
+
+And those additional drivers are way more interesting than this dumb 
+register access arbitrator.  Because this is fundamentally the only 
+thing it does.
+
+> > In fact what we'd need at this point is 
+> > drivers/code_that_no_subsystem_maintainers_wants/.  
+> Which is what some people think drivers/mfd/ is...
+
+Does mfd still stand for "Multi Function Device"?
+
+> I don't mind merging Lorenzo's SPC driver as it is if he can explain to
+> me how it will eventually evolve into an actual MFD driver. If that's
+> not the case, I don't see how I could justify merging it through the
+> MFD tree.
+
+Maybe the misunderstanding is about what actually is a MFD driver.
+Given your persisting reluctance, I may only conclude that this is 
+indeed not a MFD driver after all.
+
+So I'll follow existing precedents in the kernel and move Lorenzo's code 
+to drivers/platform/vexpress/.
+
+
+Nicolas
