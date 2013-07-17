@@ -1,108 +1,96 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v9 1/8] drivers: phy: add generic PHY framework
-Date: Wed, 17 Jul 2013 10:25:10 -0700
-Message-ID: <20130717172510.GB17093@kroah.com>
-References: <1372247257-30186-1-git-send-email-kishon@ti.com>
- <1372247257-30186-2-git-send-email-kishon@ti.com>
- <20130717062944.GA24968@kroah.com>
- <51E664CB.8050906@ti.com>
+From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: Re: DT binding review for Armada display subsystem
+Date: Wed, 17 Jul 2013 11:50:11 -0600
+Message-ID: <CAMLZHHSFW9o280yTURrBnvrEGWFi-a7Q2yQWsCh7X5kEWbZNyw@mail.gmail.com>
+References: <20130712164428.AC3D2FAAE9@dev.laptop.org>
+ <CAMLZHHRvWFrxxjr0sF0NRqvz+K1wB9Mb_OGG-8tx36A2rk-SNQ@mail.gmail.com>
+ <20130715210900.GT14452@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51E664CB.8050906@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, arnd@arndb.de, swarren@nvidia.com, sylvester.nawrocki@gmail.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, akpm@linux-foundation.org, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, benoit.cousson@linaro.org, mchehab@redhat.com, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, balajitk@ti.com, george.cherian@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130715210900.GT14452-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: =?ISO-8859-1?Q?Jean=2DFran=E7ois_Moine?= <moinejf-GANU6spQydw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 17, 2013 at 03:02:59PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Wednesday 17 July 2013 11:59 AM, Greg KH wrote:
-> > On Wed, Jun 26, 2013 at 05:17:29PM +0530, Kishon Vijay Abraham I wrote:
-> >> +menuconfig GENERIC_PHY
-> >> +	tristate "PHY Subsystem"
-> >> +	help
-> >> +	  Generic PHY support.
-> >> +
-> >> +	  This framework is designed to provide a generic interface for PHY
-> >> +	  devices present in the kernel. This layer will have the generic
-> >> +	  API by which phy drivers can create PHY using the phy framework and
-> >> +	  phy users can obtain reference to the PHY.
-> > 
-> > Shouldn't this be something that other drivers select?  How will anyone
-> > know if they need this or not?
-> 
-> All the PHY drivers should go here. So only if *GENERIC_PHY* is enabled those
-> PHY drivers can be selected like in [1].
-> The PHY consumer driver should ideally use *depends on* in their Kconfig.
-> 
-> [1] ->
-> http://archive.arm.linux.org.uk/lurker/message/20130628.134308.4a8f7668.ca.html
+On Mon, Jul 15, 2013 at 3:09 PM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> You don't have to call drm_irq_install(). Both the exynos and i.MX
+> driver do without it and at least the i.MX driver uses multiple irqs per
+> drm_device.
 
-No, switch it around the other way.  How would I even _know_ that I need
-to enable the generic PHY subsystem in the first place?  How can I
-determine that I need this for my hardware?  You need to give hints to
-someone who doesn't even know what a PHY is, otherwise they will always
-disable it and move on.
+Good point, thanks. That unblocks that item.
 
-> >> --- /dev/null
-> >> +++ b/drivers/phy/phy-core.c
-> >> @@ -0,0 +1,544 @@
-> >> +/*
-> >> + * phy-core.c  --  Generic Phy framework.
-> >> + *
-> >> + * Copyright (C) 2013 Texas Instruments
-> >> + *
-> >> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> >> + *
-> >> + * This program is free software; you can redistribute  it and/or modify it
-> >> + * under  the terms of  the GNU General  Public License as published by the
-> >> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> >> + * option) any later version.
-> > 
-> > You really mean "any later version" (I have to ask)?
-> 
-> That was copied from somewhere :-s
+>> Secondly, devm. I understand from the "best practices" thread that we
+>> want to have exactly one platform_device which corresponds to the
+>> "super node", and all of the individual display controller components
+>> will be represented by DT nodes but *without* their own
+>> platform_device.
+>
+> A super node approach doesn't mean that there's only one platform
+> device. You can still have a platform device for each component.
 
-So, is that what you really mean to have for this code?
+Yes. As noted, this was simply a preference that seemed to emerge in
+the previous discussion. If in practice it causes too many headaches,
+maybe we will change our minds. For now devm is the only issue I have
+seen; I am avoiding devm where it is no longer possible under this
+design.
 
-> >> + * This program is distributed in the hope that it will be useful,
-> >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >> + * GNU General Public License for more details.
-> >> + *
-> >> + * You should have received a copy of the GNU General Public License
-> >> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> > 
-> > Are these two paragraphs needed?  This isn't a "program", and they got a
-> > copy of the GPL already with the kernel.
-> 
-> hmm.. I can remove that.
-> > 
-> >> +static struct class *phy_class;
-> > 
-> > Why do you need a class?
-> 
-> Wanted to group all the PHY drivers to be used by different subsystems
-> (SATA/USB/PCIE/HDMI/VIDEO) into a single entity. There were some comments in my
-> initial version [3] on using a bus_type instead of class but then it was
-> decided to go with class itself.
-> 
-> [3] -> http://lkml.indiana.edu/hypermail/linux/kernel/1302.2/01389.html
+The goal of getting this driver working properly on OLPC XO seems to
+be a twisty path that presents a new issue at every turn. In the above
+work I am trying to first implement the DT binding for Armada
+510/cubox, as that is what the current code is aimed at.
 
-Ok, but what does the class usage get you?
+I am now facing a problem with i2c/TDA998x which Russell already noted:
 
-> > When modifying/adding new sysfs stuff, you need a Documentation/ABI/
-> > entry as well.
-> 
-> I'm not actually adding any new sysfs entry other than what a *class_create*
-> must have created. Do I need to add one for that?
+http://lists.freedesktop.org/archives/dri-devel/2013-June/039632.html
+   What *can't* be done without a rewrite of the DRM slave encoder backend
+   is to have the TDA998x I2C device provided by DT.  There are mumblings
+   about redoing the slave encoder API, hopefully this will be fixed there.
 
-If you are not creating anything in sysfs at all, why use the driver
-model?  (hint, I think you need to do something here to justify it...)
+This is because the existing DRM/encoder system works something like this:
+1. i2c driver (e.g. tda998x_drv) registers as an i2c_driver via
+drm_i2c_encoder_register()
+2. The drm driver (i.e. armada) later has to know that it is expecting
+a tda998x instance. It calls drm_i2c_encoder_init() to set this up.
 
-thanks,
+drm_i2c_encoder init requires:
+ 1. The i2c_adapter in question. In a DT world, we could get this from
+finding the parent node of the tda998x node (this is the i2c bus
+master), and then using i2c_for_each_dev to find the first i2c adapter
+instance that has the same of_node.
+ 2. i2c_board_info - basically the address of the device on the i2c
+bus. This is basically the way of instantiating i2c devices from
+platform data. Not the DT way :(
 
-greg k-h
+In a DT world the i2c driver would be instantiated from a node in the
+DT, which already includes the info that would come in i2c_board_info.
+Then later it would have to be linked to a DRM slave/encoder, perhaps
+when the DRM device finds the of_node corresponding to it.
+
+So I think the next step is fixing up DRM, as Russell hinted. Unless
+someone sees another acceptable option that doesn't break our DT
+design.
+
+I am going away for 3-4 weeks now, so you won't be hearing for me for
+a while. Just in case someone else wants to pick up the task in the
+mean time, here is my work in progress. I'm still reading and
+learning, so please don't do any detailed reviews yet :)
+
+http://dev.laptop.org/~dsd/20130717/0001-dove-clk-dt-wip.patch
+
+It includes the previous clock selection patch as this stuff is quite
+closely bound with DT support.
+
+Thanks
+Daniel
