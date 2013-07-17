@@ -1,17 +1,18 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 5/5] ARM: remove #gpio-ranges-cells property
-Date: Tue, 16 Jul 2013 20:58:19 -0600
-Message-ID: <51E6084B.30500@wwwdotorg.org>
-References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
- <1373913629-32179-5-git-send-email-swarren@wwwdotorg.org>
- <51E44ED9.9020807@gmail.com> <51E47F85.4050905@wwwdotorg.org>
- <51E5D78F.8060400@wwwdotorg.org>
- <CAL_JsqJ7CYUieGbvAZtQDEYsUKdM3yYBHSu871jUqOLeASc08g@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Wed, 17 Jul 2013 11:02:48 +0800
+Message-ID: <20130717030246.GA4541@S2101-09.ap.freescale.net>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+ <20130716015038.GD28375@S2101-09.ap.freescale.net>
+ <51E4BF98.8030604@wwwdotorg.org>
+ <20130716041056.GA30067@S2101-09.ap.freescale.net>
+ <51E56AA7.7020103@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAL_JsqJ7CYUieGbvAZtQDEYsUKdM3yYBHSu871jUqOLeASc08g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51E56AA7.7020103-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,51 +23,26 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/16/2013 07:50 PM, Rob Herring wrote:
-> On Tue, Jul 16, 2013 at 6:30 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 07/15/2013 05:02 PM, Stephen Warren wrote:
->>> On 07/15/2013 01:34 PM, Rob Herring wrote:
->>>> On 07/15/2013 01:40 PM, Stephen Warren wrote:
->>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>>>
->>>>> This property is no longer required by the GPIO binding. Remove it.
->>>>
->>>> Won't this break compatibility with older kernel? It is one thing to
->>>> deprecate, but removal is another. If the relevant maintainers don't
->>>> care, then I guess it is fine.
->>>
->>> Yes.
->>>
->>> I had originally hoped this could sneak in late for 3.11, but I suppose
->>> it's too late now. vf610.dtsi is a new file in 3.11 so has no legacy to
->>> protect.
->>>
->>> Admittedly, the #gpio-cells property was added into the SPEAr files in 3.10.
->>
->> One more thought here:
->>
->> I know DT bindings are supposed to evolve so that a new kernel will
->> support arbitrary old DTs. I'll call that backwards-compatibility for
->> the DT parsing code.
+On Tue, Jul 16, 2013 at 09:45:43AM -0600, Stephen Warren wrote:
+> Registering the driver earlier won't cause any bugs. However, it's not
+> the correct approach.
 > 
-> That is the more common case.
-> 
->> However, this situation is the reverse; this patch would prevent a new
->> DT running on an older kernel. I'll call that forwards-compatibility.
->> I'm not sure if the intent is to support this or not? It's certainly the
->> first I explicitly thought about compatibility in this direction...
-> 
-> So you would be okay if your computer stopped booting a kernel after a
-> BIOS update? It's the same deal. It's both forwards and backwards
-> compatibility that is needed.
+> Deferred probe /is/ the approach for assuring correct dependencies
+> between drivers. It works and should be used. There are not enough
+> initcall levels to play games using initcalls and solve all the issues,
+> and the ordering requirements vary board-to-board. Deferred probe at
+> runtime handles this without having to manually place all the drivers
+> into specific initcall levels, and dynamically adjusts to board
+> differences, since it all happens automatically at run-time.
 
-I would strongly hope the BIOS/bootloader/... would have nothing to do
-with the DT content. There's a reason that Grant asserted early on that
-DTBs shouldn't be part of the BIOS/bootloader, but rather stored
-separately, so the DTB could be updated without updating firmware, just
-like the kernel. And I see no real problem with a new DTB requiring a
-new kernel or even vice-versa to be honest.
+I do not quite follow the argument here.  I agree with you that
+deferred probe is the approach to solve dependencies.  But it does not
+necessarily mean that initcall can not be used to help it save some
+nasty or nested deferring.  Deferred probe and initcalls are not two
+mutually exclusive mechanisms but two which can help each other.
+
+Shawn
