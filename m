@@ -1,46 +1,136 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] ARM: dts: twl: Add GPADC data to device tree
-Date: Wed, 17 Jul 2013 16:48:34 +0200
-Message-ID: <51E6AEC2.3050308@metafoo.de>
-References: <1374059564-6872-1-git-send-email-oleksandr.kozaruk@ti.com> <1374059564-6872-2-git-send-email-oleksandr.kozaruk@ti.com> <51E6AB54.103@cogentembedded.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH v2 01/15] of: add support for retrieving cpu node
+ for a given logical cpu index
+Date: Wed, 17 Jul 2013 09:50:49 -0500
+Message-ID: <51E6AF49.20403@gmail.com>
+References: <1374069984-20567-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1374069984-20567-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51E6AB54.103-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Oleksandr Kozaruk <oleksandr.kozaruk-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, milo.kim-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1374069984-20567-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep.KarkadaNagesha@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Gregory Clement <gregory.clement@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Grant Likely <grant.likely@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 07/17/2013 04:33 PM, Sergei Shtylyov wrote:
-> Hello.
+On 07/17/2013 09:06 AM, Sudeep.KarkadaNagesha@arm.com wrote:
+> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 > 
-> On 17-07-2013 15:12, Oleksandr Kozaruk wrote:
+> Currently different drivers requiring to access cpu device node are
+> parsing the device tree themselves. Since the ordering in the DT need
+> not match the logical cpu ordering, the parsing logic needs to consider
+> that. However, this has resulted in lots of code duplication and in some
+> cases even incorrect logic.
 > 
->> GPADC is the general purpose ADC present on twl6030.
->> The dt data is interrupt used to trigger end of ADC
->> conversion.
+> It's better to consolidate them by adding support for getting cpu
+> device node for a given logical cpu index in DT core library. However
+> logical to physical index mapping can be architecture specific.
 > 
->> Signed-off-by: Oleksandr Kozaruk <oleksandr.kozaruk-l0cyMroinI0@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/twl6030.dtsi | 6 ++++++
->>   1 file changed, 6 insertions(+)
+> This patch adds of_get_cpu_node to retrieve a cpu device node for a
+> given logical cpu index. The default matching of the physical id to the
+> logical cpu index can be overridden by architecture specific code.
 > 
->> diff --git a/arch/arm/boot/dts/twl6030.dtsi b/arch/arm/boot/dts/twl6030.dtsi
->> index 2e3bd31..322aa8e 100644
->> --- a/arch/arm/boot/dts/twl6030.dtsi
->> +++ b/arch/arm/boot/dts/twl6030.dtsi
->> @@ -103,4 +103,10 @@
->>           compatible = "ti,twl6030-pwmled";
->>           #pwm-cells = <2>;
->>       };
->> +
->> +    adc: twl6030_gpadc {
+> It is recommended to use these helper function only in pre-SMP/early
+> initialisation stages to retrieve CPU device node pointers in logical
+> ordering. Once the cpu devices are registered, it can be retrieved easily
+> from cpu device of_node which avoids unnecessary parsing and matching.
 > 
->    I was talking about the device name, not label. The "twl6030_gpadc" part.
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 
-The compatible property should also be: 'twl6030-gpadc' instead of
-'twl6030_gpadc' and you need to add documentation for it.
+One comment below, but otherwise for patches 1-4, 8 and 9:
 
-- Lars
+Acked-by: Rob Herring <rob.herring@calxeda.com>
+
+Also, patch 3 needs to come before patch 2 or the matching will be wrong
+if patch 3 is not applied.
+
+> ---
+>  drivers/of/base.c  | 66 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of.h |  5 +++++
+>  2 files changed, 71 insertions(+)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 5c54279..363b8f9 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -230,6 +230,72 @@ const void *of_get_property(const struct device_node *np, const char *name,
+>  }
+>  EXPORT_SYMBOL(of_get_property);
+>  
+> +/*
+> + * arch_match_cpu_phys_id - Match the given logical CPU and physical id
+> + *
+> + * @cpu: logical index of a cpu
+> + * @phys_id: physical identifier of a cpu
+> + *
+> + * CPU logical to physical index mapping is architecure specific.
+> + * However this __weak function provides a default match of physical
+> + * id to logical cpu index.
+> + *
+> + * Returns 1 if the physical identifier and the logical index correspond
+> + * to the same cpu, 0 otherwise.
+> + */
+> +int __weak arch_match_cpu_phys_id(int cpu, u64 phys_id)
+> +{
+> +	return (u32)phys_id == cpu;
+> +}
+> +
+> +/**
+> + * of_get_cpu_node - Get device node associated with the given logical CPU
+> + *
+> + * @cpu: CPU number(logical index) for which device node is required
+> + *
+> + * The main purpose of this function is to retrieve the device node for the
+> + * given logical CPU index. It should be used to intialise the of_node in
+> + * cpu device. Once of_node in cpu device is populated, all the further
+> + * references can use that instead.
+> + *
+> + * CPU logical to physical index mapping is architecure specific and is built
+> + * before booting secondary cores. This function uses arch_match_cpu_phys_id
+> + * which can be overridden by architecture specific implementation.
+> + *
+> + * Returns a node pointer for the logical cpu if found, else NULL.
+> + */
+> +struct device_node *of_get_cpu_node(int cpu)
+> +{
+> +	struct device_node *cpun, *cpus;
+> +	const u32 *cell;
+> +	u64 hwid;
+> +	int ac, prop_len;
+> +
+> +	cpus = of_find_node_by_path("/cpus");
+> +	if (WARN(!cpus, "Missing cpus node, bailing out\n"))
+
+What happens on a system with no /cpus nodes? Seems like this is another
+case of adding new warnings to existing working systems.
+
+I'd replace all the WARN's with a single pr_warn on any errors below.
+For missing /cpus, I would just silently return.
+
+Rob
+
+> +		return NULL;
+> +
+> +	if (WARN_ON(of_property_read_u32(cpus, "#address-cells", &ac)))
+> +		ac = of_n_addr_cells(cpus);
+> +
+> +	for_each_child_of_node(cpus, cpun) {
+> +		if (of_node_cmp(cpun->type, "cpu"))
+> +			continue;
+> +		cell = of_get_property(cpun, "reg", &prop_len);
+> +		if (WARN(!cell, "%s: missing reg property\n", cpun->full_name))
+> +			continue;
+> +
+> +		while (prop_len) {
+> +			hwid = of_read_number(cell, ac);
+> +			prop_len -= ac;
+> +			if (arch_match_cpu_phys_id(cpu, hwid))
+> +				return cpun;
+> +		}
+> +	}
+> +
+> +	return NULL;
+> +}
+
