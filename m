@@ -1,55 +1,99 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
-Date: Wed, 17 Jul 2013 11:57:55 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1307171148160.14924@syhkavp.arg>
-References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com> <1374052705.3146.86.camel@hornet> <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg> <1374067786.3146.123.camel@hornet> <alpine.LFD.2.03.1307171014510.14924@syhkavp.arg>
- <1374070811.3146.124.camel@hornet>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC FINAL v5] media: OF: add "sync-on-green-active" property
+Date: Wed, 17 Jul 2013 18:20:37 +0200
+Message-ID: <51E6C455.5080907@samsung.com>
+References: <1374076022-10960-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1374070811.3146.124.camel@hornet>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1374076022-10960-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Jul 2013, Pawel Moll wrote:
-
-> On Wed, 2013-07-17 at 15:16 +0100, Nicolas Pitre wrote:
-> > On Wed, 17 Jul 2013, Pawel Moll wrote:
-> > 
-> > > On Wed, 2013-07-17 at 13:33 +0100, Nicolas Pitre wrote:
-> > > > If this is really miscelaneous code that really doesn't fit 
-> > > > anywhere else, it should rather go into drivers/misc/ as a last resort.
-> > > 
-> > > Interestingly enough drivers/misc was my first choice for all the
-> > > vexpress stuff, but it wasn't received well...
-> > > 
-> > > Anyway, the SPC driver as it is now seem to be a "power management
-> > > system driver". Maybe a relevant directory would be in place? Wouldn't
-> > > PSCI belong there as well? (there are two psci.c files in arch/arm and
-> > > arch/arm64, surprisingly similar ones ;-)
-> > > 
-> > > The bottom line is: today it is not an MFD driver.
-> > 
-> > But we know it will, right?  So better  save some churn by storing the 
-> > initial code where it would end up anyway once complete.
+On 07/17/2013 05:47 PM, Prabhakar Lad wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 > 
-> Not in that form, no. The code living in mfd will just register
-> mfd_cells while "functional" parts are going to live elsewhere. This is
-> how I understand what Samuel asked me to do and that's what is happening
-> to vexpress-sysreg now.
+> This patch adds 'sync-on-green-active' property as part
+> of endpoint property.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-A drivers/pm/ or drivers/power/ could be created, but that implies sort 
-of a more defined subsystem with a common API and the SPC code doesn't 
-fit that as it is only providing services to actual drivers on top of 
-it.
+Thanks Prabhakar, it looks good to me.
+Just a side note, the 'From' tag above isn't needed. It wasn't
+added automatically, was it ?
+Unless there are comments from others I think this patch should
+be merged together with the users of this new property.
 
-The sanest location at this point might simply be 
-drivers/platform/vexpress_spc.c or drivers/platform/vexpress/spc.c 
-depending on whether or not more such driver glue is expected in the 
-vexpress future.  No point putting "arm" in the path, especially if this 
-is later reused on arm64.
+Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
+Regards,
+Sylwester
+> ---
+>   Changes for v5:
+>   1: Changed description for sync-on-green-active property in
+>      documentation file as suggested by Sylwester.
+>   
+>   Changes for v4:
+>   1: Fixed review comments pointed by Sylwester.
+> 
+>   Changes for v3:
+>   1: Fixed review comments pointed by Laurent and Sylwester.
+> 
+>   RFC v2 https://patchwork.kernel.org/patch/2578091/
+> 
+>   RFC V1 https://patchwork.kernel.org/patch/2572341/
+> 
+>  .../devicetree/bindings/media/video-interfaces.txt |    2 ++
+>  drivers/media/v4l2-core/v4l2-of.c                  |    4 ++++
+>  include/media/v4l2-mediabus.h                      |    2 ++
+>  3 files changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index e022d2d..ce719f8 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -88,6 +88,8 @@ Optional endpoint properties
+>  - field-even-active: field signal level during the even field data transmission.
+>  - pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
+>    signal.
+> +- sync-on-green-active: active state of Sync-on-green (SoG) signal, 0/1 for
+> +  LOW/HIGH respectively.
+>  - data-lanes: an array of physical data lane indexes. Position of an entry
+>    determines the logical lane number, while the value of an entry indicates
+>    physical lane, e.g. for 2-lane MIPI CSI-2 bus we could have
+> diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
+> index aa59639..5c4c9f0 100644
+> --- a/drivers/media/v4l2-core/v4l2-of.c
+> +++ b/drivers/media/v4l2-core/v4l2-of.c
+> @@ -100,6 +100,10 @@ static void v4l2_of_parse_parallel_bus(const struct device_node *node,
+>  	if (!of_property_read_u32(node, "data-shift", &v))
+>  		bus->data_shift = v;
+>  
+> +	if (!of_property_read_u32(node, "sync-on-green-active", &v))
+> +		flags |= v ? V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH :
+> +			V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW;
+> +
+>  	bus->flags = flags;
+>  
+>  }
+> diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
+> index 83ae07e..d47eb81 100644
+> --- a/include/media/v4l2-mediabus.h
+> +++ b/include/media/v4l2-mediabus.h
+> @@ -40,6 +40,8 @@
+>  #define V4L2_MBUS_FIELD_EVEN_HIGH		(1 << 10)
+>  /* FIELD = 1/0 - Field1 (odd)/Field2 (even) */
+>  #define V4L2_MBUS_FIELD_EVEN_LOW		(1 << 11)
+> +#define V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH	(1 << 12)
+> +#define V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW		(1 << 13)
+>  
+>  /* Serial flags */
+>  /* How many lanes the client can use */
+> 
 
-Nicolas
+-- 
+Sylwester Nawrocki
+Samsung R&D Institute Poland
