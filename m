@@ -1,132 +1,76 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: [PATCH 6/9] thermal: ti-soc-thermal: use thermal DT infrastructure
-Date: Wed, 17 Jul 2013 11:02:49 -0400
-Message-ID: <1374073374-30946-14-git-send-email-eduardo.valentin@ti.com>
-References: <1374073374-30946-1-git-send-email-eduardo.valentin@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [patch] spi/xilinx: signedness issue checking platform_get_irq()
+Date: Wed, 17 Jul 2013 16:05:38 +0100
+Message-ID: <20130717150538.GT22506@sirena.org.uk>
+References: <20130717122638.GB4851@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1374073374-30946-1-git-send-email-eduardo.valentin@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: wni@nvidia.com, l.stach@pengutronix.de, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, lm-sensors@lm-sensors.org, Eduardo Valentin <eduardo.valentin@ti.com>, Zhang Rui <rui.zhang@intel.com>
+Content-Type: multipart/mixed; boundary="===============3633910165665569191=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130717122638.GB4851-mgFCXtclrQlZLf2FXnZxJA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch improves the ti-soc-thermal driver by adding the
-support to build the thermal zones based on DT nodes.
 
-The driver will have two options now to build the thermal
-zones. The first option is the zones originally coded
-in this driver. So, the driver behavior will be same
-if there is no DT node describing the zones. The second
-option, when it is found a DT node with thermal data,
-will used the common infrastructure to build the thermal
-zone and bind its cooling devices.
+--===============3633910165665569191==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VB8cwN2oRT/o81UX"
+Content-Disposition: inline
 
-In case the driver loads thermal data using the legacy
-mode, this driver still adds to the system
-a cpufreq cooling device. Loading the thermal data from
-DT, the driver assumes someone else will add the cpufreq
-cooling device, like the cpufreq driver.
 
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
----
- drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 46 +++++++++++++++++-----
- 1 file changed, 36 insertions(+), 10 deletions(-)
+--VB8cwN2oRT/o81UX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-index 4c5f55c37..de4e138 100644
---- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-@@ -31,6 +31,7 @@
- #include <linux/cpufreq.h>
- #include <linux/cpumask.h>
- #include <linux/cpu_cooling.h>
-+#include <linux/of.h>
- 
- #include "ti-thermal.h"
- #include "ti-bandgap.h"
-@@ -75,11 +76,10 @@ static inline int ti_thermal_hotspot_temperature(int t, int s, int c)
- 
- /* thermal zone ops */
- /* Get temperature callback function for thermal zone*/
--static inline int ti_thermal_get_temp(struct thermal_zone_device *thermal,
--				      unsigned long *temp)
-+static inline int __ti_thermal_get_temp(void *devdata, unsigned long *temp)
- {
- 	struct thermal_zone_device *pcb_tz = NULL;
--	struct ti_thermal_data *data = thermal->devdata;
-+	struct ti_thermal_data *data = devdata;
- 	struct ti_bandgap *bgp;
- 	const struct ti_temp_sensor *s;
- 	int ret, tmp, slope, constant;
-@@ -117,6 +117,14 @@ static inline int ti_thermal_get_temp(struct thermal_zone_device *thermal,
- 	return ret;
- }
- 
-+static inline int ti_thermal_get_temp(struct thermal_zone_device *thermal,
-+				      unsigned long *temp)
-+{
-+	struct ti_thermal_data *data = thermal->devdata;
-+
-+	return __ti_thermal_get_temp(data, temp);
-+}
-+
- /* Bind callback functions for thermal zone */
- static int ti_thermal_bind(struct thermal_zone_device *thermal,
- 			   struct thermal_cooling_device *cdev)
-@@ -302,17 +310,27 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
- 	if (!data)
- 		return -EINVAL;
- 
--	/* Create thermal zone */
--	data->ti_thermal = thermal_zone_device_register(domain,
-+	/* in case this is specified by DT */
-+	if (of_find_node_by_name(bgp->dev->of_node, "thermal_zone")) {
-+		data->ti_thermal = thermal_zone_of_device_register(bgp->dev,
-+						data, __ti_thermal_get_temp);
-+		if (IS_ERR(data->ti_thermal)) {
-+			dev_err(bgp->dev, "failed to build of thermal zone\n");
-+			return PTR_ERR(data->ti_thermal);
-+		}
-+	} else {
-+		/* Create thermal zone */
-+		data->ti_thermal = thermal_zone_device_register(domain,
- 				OMAP_TRIP_NUMBER, 0, data, &ti_thermal_ops,
- 				NULL, FAST_TEMP_MONITORING_RATE,
- 				FAST_TEMP_MONITORING_RATE);
--	if (IS_ERR(data->ti_thermal)) {
--		dev_err(bgp->dev, "thermal zone device is NULL\n");
--		return PTR_ERR(data->ti_thermal);
-+		if (IS_ERR(data->ti_thermal)) {
-+			dev_err(bgp->dev, "thermal zone device is NULL\n");
-+			return PTR_ERR(data->ti_thermal);
-+		}
-+		data->ti_thermal->polling_delay = FAST_TEMP_MONITORING_RATE;
-+		ti_bandgap_set_sensor_data(bgp, id, data);
- 	}
--	data->ti_thermal->polling_delay = FAST_TEMP_MONITORING_RATE;
--	ti_bandgap_set_sensor_data(bgp, id, data);
- 
- 	return 0;
- }
-@@ -343,6 +361,14 @@ int ti_thermal_register_cpu_cooling(struct ti_bandgap *bgp, int id)
- {
- 	struct ti_thermal_data *data;
- 
-+	/*
-+	 * We are assuming here that if one deploys the zone
-+	 * using DT, then it must be aware that the cooling device
-+	 * loading has to happen via cpufreq driver.
-+	 */
-+	if (of_find_node_by_name(bgp->dev->of_node, "thermal_zone"))
-+		return 0;
-+
- 	data = ti_bandgap_get_sensor_data(bgp, id);
- 	if (!data || IS_ERR(data))
- 		data = ti_thermal_build_data(bgp, id);
--- 
-1.8.2.1.342.gfa7285d
+On Wed, Jul 17, 2013 at 03:26:38PM +0300, Dan Carpenter wrote:
+> "xspi->irq" is unsigned int so it's never less than zero.  I have added
+> a cast.
+
+Why is this better than changing irq to a signed type?
+
+--VB8cwN2oRT/o81UX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR5rK/AAoJELSic+t+oim9yC4P/jzZrli1NzhT08IAou2U5EeH
+TXWx/qwCESDWJXrrhfPGf3GV/csuJGgMJpIKP8yzB/TNQZhMe442mR2cdjwzHF8A
+a9p2MmnksKrH9kJ8T81OQcITiMH0Wt1/N3UVlNwdTSQlK970GCNbY9udixSETT4c
+MJhx91jXLg5t6qFixjQAmVnc0gxDFzEbHkfWPov92rmXDCLukFp8d7l7Ss/I/a/+
+wy4/owCP13f227qgXlYgxCYW7qvm5e5rN98PnHpsBvreKqQxU4Axd0J7oZOx8YhS
+D/0/AXWW6bwg11Szux9/8s+udYKVwd/Khb1KnoXFkikCutjDrvqJ5vhow9GKDqcZ
+5UkDYjcmzt9hxRe20Z8bJxhjeKTetEtkXooUOIWTTGpx8gIVFgcQ5WAqT5NyE++D
+r845x+XGioOo5/xixCx5qoo1QgvTs4AS//7W6OmzJmnOKwyZQjLb7wObXQVgkSTP
+oNBhd7k1LhfEj+Wwgy6Odj+7wEwDc02rJbaxVroST+ksS2tD4OmTxr7GUoHs7fEs
+V1umtT4UKFp19jb9hToMhKgi3an2FQzIuplmAWtzcN+vBq4WT+XApwVIN9ZZ2lUj
+1pPD/c+/5tA2sEy/cbvlxG4U8ExkXwLTAjgs3RwFVblqWat3WgORub3gkf+oHDIV
+D5A9bvXvZEXe3cm4mxkq
+=dhmT
+-----END PGP SIGNATURE-----
+
+--VB8cwN2oRT/o81UX--
+
+--===============3633910165665569191==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3633910165665569191==--
