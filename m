@@ -1,53 +1,98 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [patch v2] spi/xilinx: signedness issue checking
- platform_get_irq()
-Date: Wed, 17 Jul 2013 18:20:30 +0100
-Message-ID: <20130717172030.GW22506@sirena.org.uk>
-References: <20130717150538.GT22506@sirena.org.uk>
- <20130717153448.GA963@elgon.mountain>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3] media: i2c: tvp7002: add OF support
+Date: Wed, 17 Jul 2013 22:54:32 +0530
+Message-ID: <CA+V-a8uKHymsWw1mZMH==Q6--F23y_xnFKtZDVB5r12K3=5zyQ@mail.gmail.com>
+References: <1374078016-17122-1-git-send-email-prabhakar.csengg@gmail.com> <51E6C8D8.4010303@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rTHIjeKG9uUlSyhr"
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130717153448.GA963@elgon.mountain>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-spi@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51E6C8D8.4010303@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: LMML <linux-media@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylwester,
 
---rTHIjeKG9uUlSyhr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for the quick review.
 
-On Wed, Jul 17, 2013 at 06:34:48PM +0300, Dan Carpenter wrote:
-> In xilinx_spi_probe() we use xspi->irq to store negative error codes so
-> it has to be signed.  We weren't going to use the upper bit any way so
-> this is fine.
+On Wed, Jul 17, 2013 at 10:09 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> On 07/17/2013 06:20 PM, Prabhakar Lad wrote:
+>> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>>
+>> add OF support for the tvp7002 driver.
+>>
+>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>> ---
+>>  This patch depends on https://patchwork.kernel.org/patch/2828800/
+>>
+>>  Changes for v3:
+>>  1: Fixed review comments pointed by Sylwester.
+>>
+>>  .../devicetree/bindings/media/i2c/tvp7002.txt      |   43 +++++++++++++
+>>  drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
+>>  2 files changed, 103 insertions(+), 7 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+>> new file mode 100644
+>> index 0000000..744125f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+>> @@ -0,0 +1,43 @@
+>> +* Texas Instruments TV7002 video decoder
+>> +
+>> +The TVP7002 device supports digitizing of video and graphics signal in RGB and
+>> +YPbPr color space.
+>> +
+>> +Required Properties :
+>> +- compatible : Must be "ti,tvp7002"
+>> +
+>> +- hsync-active: HSYNC Polarity configuration for endpoint.
+>> +
+>> +- vsync-active: VSYNC Polarity configuration for endpoint.
+>
+> I woudn't refer to "endpoint" here, perhaps to the specific hardware
+> bus instead ? So it is clear what part of the device it refers to ?
+>
+OK, I'll refer to bus instead.
 
-Applied, thanks.
+>> +- pclk-sample: Clock polarity of the endpoint.
+>
+> This description is not very useful, my feeling is that this property
+> is better described in video-interfaces.txt.
+>
+agreed its just a one liner, and below I have mentioned a link
+to video-interfaces.txt for better understanding of this generic
+properties.
 
---rTHIjeKG9uUlSyhr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>> +- sync-on-green-active: Active state of Sync-on-green signal property of the
+>> +  endpoint, 0/1 for normal/inverted operation respectively.
+>> +
+>> +- field-even-active: Active-high Field ID polarity of the endpoint.
+>
+> I find it hard to understand what this property is about exactly.
+> Not sure if you need to repeat detailed description of the signal
+> polarity properties. Perhaps its sufficient to list which properties
+> are relevant for this device, but I'm not opposed to having
+> supplementary description here. I would just make it more specific
+> to the TVP7002 chip.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
+How about the below description ?
 
-iQIcBAEBAgAGBQJR5tJbAAoJELSic+t+oim90vwP/1CH/ZrKb01iUQCqXGsvPCAv
-nno3xY+lIuNPzf84Q3h8c2kBn1fZvpgL1IXAhs4DGxjoP/2IZqR+gYzsG7wWZN18
-ev86Uv+x3gzbK0pJ0gh17wAMr5DtL5tLFyCPnkndAZ0Wwfl1SXn6RQ6gd7WcKNE4
-S+YDG/VhNoN6wV+NDqKNNV5QUxztzjk4yvm1HGQatAk2pXyH89SdEpAtd9j3Wt8U
-n8hWlCACtD1JZ8xdX82pVORdRfQ45nEDPqNLNskpqsnIp/PXdp7Yjedtr0Pm2EG1
-f2Rv/DJ7kH9VDvn2fOKaJrScJKSxOz0jhyEmm/hGyQNKHfgDpJbDBNLvLFhyXcgO
-HFeaWR1xmQ4xp9qgR73kuOpAoi1FwrrIpq5wy9Mp4FbvKIOhTwg9JVYMb/a04CUL
-YOHWpClLNodV6CkFgPXjNH1FbkzE/hudVUq9Z4CJnRkEV+fUNoitlKsV8AMfR82A
-DKGLiTwg49ZT5pm3zrOR/DV7f3eVJlaPv8zEu8Oy2dHjHaRfsuiYCtkw9YelDj4I
-yVQ8+m3JaMGH9MWhphQgHevO10LWYQcL0ZY24uj7cMBGEmudLU768mEvpCi3qnZN
-+B/WExrXJ6+KqCoZqWT4U+R3okixBO++3vkBdptLjXGGrnVLJ72DgMwOfZwJ1xOL
-sZVYJ0R8CS96URlCUMMf
-=LzuP
------END PGP SIGNATURE-----
+Active-high Field ID output polarity control. Under normal operation, the
+field ID output is set to logic 1 for an odd field (field 1)
+and set to logic 0 for an even field (field 0).
+0 = Normal operation (default)
+1 = FID output polarity inverted
 
---rTHIjeKG9uUlSyhr--
+> Also please note that only 'compatible' property is required, all
+> other are optional. And it probably makes sense to specify what are
+> default values for each property when it is not specified.
+>
+Agreed I'll add them to optional list, and mention their default values too.
+
+--
+Regards,
+Prabhakar Lad
