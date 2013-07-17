@@ -1,290 +1,84 @@
-From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [PATCH v2 11/42] ARM: at91: add PMC clk device tree binding doc.
-Date: Wed, 17 Jul 2013 15:55:41 +0200
-Message-ID: <1374069341-14216-1-git-send-email-b.brezillon@overkiz.com>
-References: <1374068069-13496-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1374068069-13496-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Boris BREZILLON <b.brezillon@overkiz.com>
+From: Sudeep.KarkadaNagesha@arm.com
+Subject: [RFC PATCH v2 00/15] DT/core: update cpu device of_node
+Date: Wed, 17 Jul 2013 15:06:09 +0100
+Message-ID: <1374069984-20567-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <cpufreq-owner@vger.kernel.org>
+Sender: cpufreq-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Gregory Clement <gregory.clement@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This is the documentation of the dt bindings used by at91 clks.
+From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 
-Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
----
- .../devicetree/bindings/clock/at91-clock.txt       |  262 ++++++++++++++++++++
- 1 file changed, 262 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/at91-clock.txt
+As more and more information is getting added into the cpu node, the number
+of drivers needing to parse the device tree for CPU nodes are increasing.
+Most of the time, the information needed from the cpu node is preferred
+in the logical CPU order. Hence many drivers first parse and search the
+CPU node, match them to logical index if needed and then search for the
+required property inside a particular cpu node. Some of them assume the
+logical and physical CPU ordering to be same which is incorrect.
 
-diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
-new file mode 100644
-index 0000000..ca98783
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
-@@ -0,0 +1,262 @@
-+Device Tree Clock bindings for arch-at91
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be one of the following:
-+	"atmel,at91rm9200-clk-main":
-+		at91 main oscillator
-+
-+	"atmel,at91rm9200-clk-master" or
-+	"atmel,at91sam9x5-clk-master":
-+		at91 master clock
-+
-+	"atmel,at91sam9x5-clk-peripheral" or
-+	"atmel,at91rm9200-clk-peripheral":
-+		at91 peripheral clocks
-+
-+	"atmel,at91rm9200-clk-pll" or
-+	"atmel,at91sam9g45-clk-pll" or
-+	"atmel,at91sam9g20-clk-pllb" or
-+	"atmel,sama5d3-clk-pll":
-+		at91 pll clocks
-+
-+	"atmel,at91sam9x5-clk-plldiv":
-+		at91 plla divisor
-+
-+	"atmel,at91rm9200-clk-programmable" or
-+	"atmel,at91sam9g45-clk-programmable" or
-+	"atmel,at91sam9x5-clk-programmable":
-+		at91 programmable clocks
-+
-+	"atmel,at91sam9x5-clk-smd":
-+		at91 SMD (Soft Modem) clock
-+
-+	"atmel,at91rm9200-clk-system":
-+		at91 system clocks
-+
-+	"atmel,at91rm9200-clk-usb" or
-+	"atmel,at91sam9x5-clk-usb":
-+		at91 usb clock
-+
-+	"atmel,at91sam9x5-clk-utmi":
-+		at91 utmi clock
-+
-+
-+Required properties for main clock:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks (optional if clock-frequency is provided) : shall be the slow clock
-+	phandle. This clock is used to compute the main clock rate if
-+	"clock-frequency" is not provided.
-+- clock-frequency: the main oscillator frequency.Prefer the use of
-+	"clock-frequency" over automatic clock rate computation.
-+
-+For example:
-+	main: mainck {
-+		compatible = "atmel,at91rm9200-clk-main";
-+		#clock-cells = <0>;
-+		clocks = <&ck32k>;
-+		clock-frequency = <18432000>;
-+	};
-+
-+Required properties for master clock:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the master clock sources (see atmel datasheet) phandles.
-+	e.g. "<&ck32k>, <&main>, <&plla>, <&pllb>".
-+- characteristics : device tree node describing master clock characteristics.
-+	You can find these characteristics in atmel's SoC datasheets.
-+	* output : minimum and maximum clock frequency (two u32 fields).
-+		e.g. output = <0 133000000>; <=> 0 to 133MHz.
-+	* divisors : master clock divisors table (four u32 fields).
-+		0 <=> reserved value.
-+		e.g. divisors = <1 2 4 6>;
-+	* have-div3-pres : some SoC use the reserved value 7 in the PRES field
-+		as CLOCK_DIV3 (e.g sam9x5).
-+
-+For example:
-+	mck: mck {
-+		compatible = "atmel,at91rm9200-clk-master";
-+		#clock-cells = <0>;
-+		characteristics = {
-+			output = <0 133000000>;
-+			divisors = <1 2 4 0>;
-+		};
-+	};
-+
-+Required properties for peripheral clocks:
-+- #clock-cells : from common clock binding; shall be set to 1. The second cell
-+	is used to encode the peripheral id. Peripheral ids are defined in
-+	atmel's SoC datasheets.
-+- clocks : shall be the master clock phandle.
-+	e.g. clocks = <&mck>;
-+- name@id: device tree node describing a specific system clock.
-+	* id: peripheral id.
-+	* default-divisor (optional, only available for
-+	  "atmel,at91sam9x5-clk-peripheral"): sam9x5 and sama5d3 SoC provides
-+	  configurable peripheral clock divisor. If you define this property
-+	  (u32), the default divisor will be applied when enabling
-+	  peripheral clock. If not provided the peripheral clock is not divided.
-+
-+For example:
-+	periph: periphck {
-+		compatible = "atmel,at91sam9x5-clk-peripheral";
-+		#clock-cells = <1>;
-+		clocks = <&mck>;
-+
-+		pioA_clk@1 {
-+			id = <1>;
-+			default-divisor = <1>;
-+		};
-+
-+		pioB_clk@2 {
-+			id = <2>;
-+			default-divisor = <2>;
-+		};
-+	};
-+
-+
-+Required properties for pll clocks:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the main clock phandle.
-+- id : pll id
-+	* 0 <=> plla
-+	* 1 <=> pllb
-+- characteristics : device tree node describing pll clock characteristics.
-+	You can find these characteristics in atmel's SoC datasheets.
-+	* input : minimum and maximum source clock frequency (two u32 fields).
-+		e.g. input = <1 32000000>; <=> 1 to 32MHz.
-+	* output : output frequency ranges.
-+	* out: out field value for output frequency ranges.
-+	* icpll (not available on some SoC): icpll field value for output
-+		frequency ranges.
-+
-+For example:
-+	plla: pllack {
-+		compatible = "atmel,at91sam9g45-clk-pll";
-+		#clock-cells = <0>;
-+		clocks = <&main>;
-+		id = <0>;
-+		input = <2000000 32000000>;
-+		output = <74500000 800000000
-+			  69500000 750000000
-+			  64500000 700000000
-+			  59500000 650000000
-+			  54500000 600000000
-+			  49500000 550000000
-+			  44500000 500000000
-+			  40000000 450000000>;
-+		out = <0 1 2 3 0 1 2 3>;
-+		icpll = <0 0 0 0 1 1 1 1>;
-+	};
-+
-+Required properties for plldiv clocks:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the plla clock phandle.
-+
-+For example:
-+	plladiv: plladivck {
-+		compatible = "atmel,at91sam9x5-clk-plldiv";
-+		#clock-cells = <0>;
-+		clocks = <&plla>;
-+	};
-+
-+Required properties for programmable clocks:
-+- #clock-cells : from common clock binding; shall be set to 1. The second cell
-+	is used to encode the programmable clock id.
-+	Peripheral ids are in atmel's SoC
-+	datasheets.
-+- clocks : shall be the programmable clock source phandles.
-+	e.g. clocks = <&clk32k>, <&main>, <&plla>, <&pllb>;
-+- name@id: device tree node describing a specific prog clock.
-+	* id: programmable clock id (register offset from  PCKx register).
-+
-+For example:
-+	prog: progck {
-+		compatible = "atmel,at91sam9g45-clk-programmable";
-+		#clock-cells = <1>;
-+		clocks = <&clk32k>, <&main>, <&plladiv>, <&utmi>, <&mck>;
-+
-+		prog0@0 {
-+			id = <0>;
-+		};
-+
-+		prog1@1 {
-+			id = <1>;
-+		};
-+	};
-+
-+
-+Required properties for smd clock:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the smd clock source phandles.
-+	e.g. clocks = <&plladiv>, <&utmi>;
-+
-+For example:
-+	smd: smdck {
-+		compatible = "atmel,at91sam9x5-clk-smd";
-+		#clock-cells = <0>;
-+		clocks = <&plladiv>, <&utmi>;
-+	};
-+
-+Required properties for system clocks:
-+- #clock-cells : from common clock binding; shall be set to 1. The second cell
-+	is used to encode the system clock id (bit used in SCER/SCDR register).
-+- name@id: device tree node describing a specific system clock.
-+	* id: system clock id (bit position in SCER/SCDR/SCSR registers).
-+
-+For example:
-+	system: systemck {
-+		compatible = "atmel,at91rm9200-clk-system";
-+		#clock-cells = <1>;
-+
-+		ddrck@2 {
-+			id = <2>;
-+		};
-+
-+		uhpck@6 {
-+			id = <6>;
-+		};
-+
-+		udpck@7 {
-+			id = <7>;
-+		};
-+	};
-+
-+
-+Required properties for usb clock:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the smd clock source phandles.
-+	e.g. clocks = <&pllb>;
-+- divisors (only available for "atmel,at91rm9200-clk-usb"):
-+	usb clock divisor table.
-+	e.g. divisors = <1 2 4 0>;
-+- usbs0-unused (only available for "atmel,at91sam9x5-clk-usb"):
-+	Some SoC (sam9n12) use usb source 0 to disable the usb clock.
-+
-+For example:
-+	usb: usbck {
-+		compatible = "atmel,at91sam9x5-clk-usb";
-+		#clock-cells = <0>;
-+		clocks = <&plladiv>, <&utmi>;
-+	};
-+
-+	usb: usbck {
-+		compatible = "atmel,at91rm9200-clk-usb";
-+		#clock-cells = <0>;
-+		clocks = <&pllb>;
-+		divisors = <1 2 4 0>;
-+	};
-+
-+
-+Required properties for utmi clock:
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clocks : shall be the main clock source phandle.
-+
-+For example:
-+	utmi: utmick {
-+		compatible = "atmel,at91sam9x5-clk-utmi";
-+		#clock-cells = <0>;
-+		clocks = <&main>;
-+	};
--- 
-1.7.9.5
+This patch series initialises the of_node in all the cpu devices when
+registering the CPU device.
+1. This avoids different drivers having to parse the cpu nodes to obtain
+   different attributes like operating points, latency,...etc.
+2. This handles different physical and logical cpu ordering which is not
+   the case in current code.
+3. Also all the cpu nodes will have their of_node initialised correctly.
+   Currently different drivers assign them partially and incorrectly.
+4. Removes all the reduntant parsing in various drivers.
+
+Changes v1->v2:
+1. Moved most of arch_of_get_cpu_node to OF/DT core as of_get_cpu_node
+   adding a provision for architecture specific hooks for matching
+   logical and physical ids.
+2. Extended removal of DT cpu node parsing to PPC cpufreq drivers
+3. Added Acks from Viresh and Shawn
+
+Regards,
+Sudeep
+
+Sudeep KarkadaNagesha (15):
+  of: add support for retrieving cpu node for a given logical cpu index
+  driver/core: cpu: initialize of_node in cpu's device struture
+  ARM: DT/kernel: define ARM specific arch_match_cpu_phys_id
+  ARM: topology: remove hwid/MPIDR dependency from cpu_capacity
+  ARM: mvebu: remove device tree parsing for cpu nodes
+  drivers/bus: arm-cci: avoid parsing DT for cpu device nodes
+  cpufreq: imx6q-cpufreq: remove device tree parsing for cpu nodes
+  cpufreq: cpufreq-cpu0: remove device tree parsing for cpu nodes
+  cpufreq: highbank-cpufreq: remove device tree parsing for cpu nodes
+  cpufreq: spear-cpufreq: remove device tree parsing for cpu nodes
+  cpufreq: kirkwood-cpufreq: remove device tree parsing for cpu nodes
+  cpufreq: arm_big_little: remove device tree parsing for cpu nodes
+  cpufreq: maple-cpufreq: remove device tree parsing for cpu nodes
+  cpufreq: pmac64-cpufreq: remove device tree parsing for cpu nodes
+  cpufreq: pmac32-cpufreq: remove device tree parsing for cpu nodes
+
+ arch/arm/kernel/devtree.c           |  5 +++
+ arch/arm/kernel/topology.c          | 61 +++++++++++----------------------=
+-
+ arch/arm/mach-imx/mach-imx6q.c      |  3 +-
+ arch/arm/mach-mvebu/platsmp.c       | 52 ++++++++++++++---------------
+ drivers/base/cpu.c                  |  2 ++
+ drivers/bus/arm-cci.c               | 28 ++++------------
+ drivers/cpufreq/arm_big_little_dt.c | 39 ++++++++++------------
+ drivers/cpufreq/cpufreq-cpu0.c      | 23 +++----------
+ drivers/cpufreq/highbank-cpufreq.c  | 18 ++++------
+ drivers/cpufreq/imx6q-cpufreq.c     |  4 +--
+ drivers/cpufreq/kirkwood-cpufreq.c  | 14 ++++++--
+ drivers/cpufreq/maple-cpufreq.c     | 23 ++++---------
+ drivers/cpufreq/pmac32-cpufreq.c    | 11 ++++++-
+ drivers/cpufreq/pmac64-cpufreq.c    | 54 ++++++++++--------------------
+ drivers/cpufreq/spear-cpufreq.c     | 10 +++++-
+ drivers/of/base.c                   | 66 +++++++++++++++++++++++++++++++++=
+++++
+ include/linux/of.h                  |  5 +++
+ 17 files changed, 213 insertions(+), 205 deletions(-)
+
+--=20
+1.8.1.2
+
+
