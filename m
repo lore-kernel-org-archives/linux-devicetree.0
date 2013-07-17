@@ -1,51 +1,72 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v4] Input: sysrq - DT binding for key sequence
-Date: Tue, 16 Jul 2013 21:17:51 -0500
-Message-ID: <CAL_JsqJQguAy8-nzQZS2obu6SG=yrfJvEn2y5_i3k7qZbM-_Vg@mail.gmail.com>
-References: <1373902598-10062-1-git-send-email-mathieu.poirier@linaro.org>
-	<51E4B35D.8020000@gmail.com>
-	<CANLsYkzgHqnuDq46JEJH713jrnD8rAAG_2wLbKJCAOGLpw+e4g@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 5/5] ARM: remove #gpio-ranges-cells property
+Date: Tue, 16 Jul 2013 20:58:19 -0600
+Message-ID: <51E6084B.30500@wwwdotorg.org>
+References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
+ <1373913629-32179-5-git-send-email-swarren@wwwdotorg.org>
+ <51E44ED9.9020807@gmail.com> <51E47F85.4050905@wwwdotorg.org>
+ <51E5D78F.8060400@wwwdotorg.org>
+ <CAL_JsqJ7CYUieGbvAZtQDEYsUKdM3yYBHSu871jUqOLeASc08g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkzgHqnuDq46JEJH713jrnD8rAAG_2wLbKJCAOGLpw+e4g@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kernel-team@android.com, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, John Stultz <john.stultz@linaro.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAL_JsqJ7CYUieGbvAZtQDEYsUKdM3yYBHSu871jUqOLeASc08g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2013 at 5:24 PM, Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
->
->
-> On 15 July 2013 20:43, Rob Herring <robherring2@gmail.com> wrote:
+On 07/16/2013 07:50 PM, Rob Herring wrote:
+> On Tue, Jul 16, 2013 at 6:30 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 07/15/2013 05:02 PM, Stephen Warren wrote:
+>>> On 07/15/2013 01:34 PM, Rob Herring wrote:
+>>>> On 07/15/2013 01:40 PM, Stephen Warren wrote:
+>>>>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>>>
+>>>>> This property is no longer required by the GPIO binding. Remove it.
+>>>>
+>>>> Won't this break compatibility with older kernel? It is one thing to
+>>>> deprecate, but removal is another. If the relevant maintainers don't
+>>>> care, then I guess it is fine.
+>>>
+>>> Yes.
+>>>
+>>> I had originally hoped this could sneak in late for 3.11, but I suppose
+>>> it's too late now. vf610.dtsi is a new file in 3.11 so has no legacy to
+>>> protect.
+>>>
+>>> Admittedly, the #gpio-cells property was added into the SPEAr files in 3.10.
 >>
->> On 07/15/2013 10:36 AM, mathieu.poirier@linaro.org wrote:
->> > From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
->> >
-
-[snip]
-
->> > +     prop = of_find_property(np, "keyset", NULL);
->> > +     if (!prop || !prop->value) {
->> > +             pr_err("Invalid input keyset");
->> > +             goto out;
->> > +     }
->> > +
->> > +     count = prop->length / sizeof(u32);
->> > +     val = prop->value;
+>> One more thought here:
 >>
->> None of the existing helpers to retrieve property arrays doesn't work
->> here?
->
->
-> The problem here is that we never know how long the sequence will be.  As
-> such the 'of_property_read_uXY_array' functions won't work.  Or maybe you're
-> referring to another set of helpers... If so, please clarify.
+>> I know DT bindings are supposed to evolve so that a new kernel will
+>> support arbitrary old DTs. I'll call that backwards-compatibility for
+>> the DT parsing code.
+> 
+> That is the more common case.
+> 
+>> However, this situation is the reverse; this patch would prevent a new
+>> DT running on an older kernel. I'll call that forwards-compatibility.
+>> I'm not sure if the intent is to support this or not? It's certainly the
+>> first I explicitly thought about compatibility in this direction...
+> 
+> So you would be okay if your computer stopped booting a kernel after a
+> BIOS update? It's the same deal. It's both forwards and backwards
+> compatibility that is needed.
 
-What about of_property_for_each_u32? Or we should make
-of_property_read_uXY_array work with arrays that can be less than some
-max size.
-
-Rob
+I would strongly hope the BIOS/bootloader/... would have nothing to do
+with the DT content. There's a reason that Grant asserted early on that
+DTBs shouldn't be part of the BIOS/bootloader, but rather stored
+separately, so the DTB could be updated without updating firmware, just
+like the kernel. And I see no real problem with a new DTB requiring a
+new kernel or even vice-versa to be honest.
