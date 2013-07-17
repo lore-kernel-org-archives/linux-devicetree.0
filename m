@@ -1,44 +1,68 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] msm_serial: add missing iounmap() on error in msm_request_port()
-Date: Wed, 17 Jul 2013 13:34:09 +0800
-Message-ID: <CAPgLHd_LGRtkqcPbm=snHOsFOzX6vfafw3EnZtcJmDGCHKHq=Q@mail.gmail.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v9 1/8] drivers: phy: add generic PHY framework
+Date: Tue, 16 Jul 2013 23:29:44 -0700
+Message-ID: <20130717062944.GA24968@kroah.com>
+References: <1372247257-30186-1-git-send-email-kishon@ti.com>
+ <1372247257-30186-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: davidb@codeaurora.org, dwalker@fifo99.com, bryanh@codeaurora.org, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1372247257-30186-2-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, arnd@arndb.de, swarren@nvidia.com, sylvester.nawrocki@gmail.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, akpm@linux-foundation.org, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, benoit.cousson@linaro.org, mchehab@redhat.com, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, balajitk@ti.com, george.cherian@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On Wed, Jun 26, 2013 at 05:17:29PM +0530, Kishon Vijay Abraham I wrote:
+> +menuconfig GENERIC_PHY
+> +	tristate "PHY Subsystem"
+> +	help
+> +	  Generic PHY support.
+> +
+> +	  This framework is designed to provide a generic interface for PHY
+> +	  devices present in the kernel. This layer will have the generic
+> +	  API by which phy drivers can create PHY using the phy framework and
+> +	  phy users can obtain reference to the PHY.
 
-Add the missing iounmap() before return from msm_request_port()
-in the error handling case.
+Shouldn't this be something that other drivers select?  How will anyone
+know if they need this or not?
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/tty/serial/msm_serial.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> --- /dev/null
+> +++ b/drivers/phy/phy-core.c
+> @@ -0,0 +1,544 @@
+> +/*
+> + * phy-core.c  --  Generic Phy framework.
+> + *
+> + * Copyright (C) 2013 Texas Instruments
+> + *
+> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General  Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
 
-diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-index 2c6cfb3..0b38b28 100644
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -637,7 +637,7 @@ static int msm_request_port(struct uart_port *port)
- 		if (!request_mem_region(gsbi_resource->start, size,
- 						 "msm_serial")) {
- 			ret = -EBUSY;
--			goto fail_release_port;
-+			goto fail_release_port_membase;
- 		}
- 
- 		msm_port->gsbi_base = ioremap(gsbi_resource->start, size);
-@@ -651,6 +651,8 @@ static int msm_request_port(struct uart_port *port)
- 
- fail_release_gsbi:
- 	release_mem_region(gsbi_resource->start, size);
-+fail_release_port_membase:
-+	iounmap(port->membase);
- fail_release_port:
- 	release_mem_region(port->mapbase, size);
- 	return ret;
+You really mean "any later version" (I have to ask)?
+
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Are these two paragraphs needed?  This isn't a "program", and they got a
+copy of the GPL already with the kernel.
+
+> +static struct class *phy_class;
+
+Why do you need a class?
+
+When modifying/adding new sysfs stuff, you need a Documentation/ABI/
+entry as well.
+
+thanks,
+
+greg k-h
