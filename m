@@ -1,48 +1,80 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
-Date: Wed, 17 Jul 2013 14:29:02 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1307171416490.14924@syhkavp.arg>
-References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com> <1374052705.3146.86.camel@hornet> <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg> <1374067786.3146.123.camel@hornet> <alpine.LFD.2.03.1307171014510.14924@syhkavp.arg>
- <1374070811.3146.124.camel@hornet> <alpine.LFD.2.03.1307171148160.14924@syhkavp.arg> <20130717170038.GP24642@n2100.arm.linux.org.uk>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: DT binding review for Armada display subsystem
+Date: Wed, 17 Jul 2013 20:30:14 +0200
+Message-ID: <20130717203014.339cd37c@armhf>
+References: <20130712164428.AC3D2FAAE9@dev.laptop.org>
+ <CAMLZHHRvWFrxxjr0sF0NRqvz+K1wB9Mb_OGG-8tx36A2rk-SNQ@mail.gmail.com>
+ <20130715210900.GT14452@pengutronix.de>
+ <CAMLZHHSFW9o280yTURrBnvrEGWFi-a7Q2yQWsCh7X5kEWbZNyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130717170038.GP24642@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Pawel Moll <pawel.moll@arm.com>, Jon Medhurst <tixy@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Olof Johansson <olof@lixom.net>, Achin Gupta <Achin.Gupta@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMLZHHSFW9o280yTURrBnvrEGWFi-a7Q2yQWsCh7X5kEWbZNyw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Drake <dsd@laptop.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, dri-devel@lists.freedesktop.org, Russell King <rmk@arm.linux.org.uk>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Jul 2013, Russell King - ARM Linux wrote:
-
-> On Wed, Jul 17, 2013 at 11:57:55AM -0400, Nicolas Pitre wrote:
-> > The sanest location at this point might simply be 
-> > drivers/platform/vexpress_spc.c or drivers/platform/vexpress/spc.c 
-> > depending on whether or not more such driver glue is expected in the 
-> > vexpress future.  No point putting "arm" in the path, especially if this 
-> > is later reused on arm64.
-> 
-> You wouldn't be making that argument if it were arch/arm64 and arch/arm32 -
-> you'd probably be arguing that "arm" made perfect sense.
-
-Well... in a sense: yes.  But in the end, having per arch directories 
-under drivers/ is silly.  We already have per arch directories under 
-arch/already.
-
-> Don't get too hung up on names please, it's really not worth the time
-> and effort being soo pedantic, and being soo pedantic leads to "pointless
-> churn" when someone comes along and wants to pedantically change the
-> names because it no longer matches the users.
-
-At this point I don't really care about the name.  I just want the damn 
-thing merged upstream.  But after several iterations to either fit one 
-or another maintainers taste, each rework ends up in that maintainer 
-saying: "Now that you've reworked the code, I still don't like it since 
-this no longer fits in my subsystem tree."
-
-In fact what we'd need at this point is 
-drivers/code_that_no_subsystem_maintainers_wants/.  This is becoming 
-overly ridiculous.
-
-
-Nicolas
+T24gV2VkLCAxNyBKdWwgMjAxMyAxMTo1MDoxMSAtMDYwMApEYW5pZWwgRHJha2UgPGRzZEBsYXB0
+b3Aub3JnPiB3cm90ZToKCj4gSSBhbSBub3cgZmFjaW5nIGEgcHJvYmxlbSB3aXRoIGkyYy9UREE5
+OTh4IHdoaWNoIFJ1c3NlbGwgYWxyZWFkeSBub3RlZDoKPiAKPiBodHRwOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL2FyY2hpdmVzL2RyaS1kZXZlbC8yMDEzLUp1bmUvMDM5NjMyLmh0bWwKPiAgICBX
+aGF0ICpjYW4ndCogYmUgZG9uZSB3aXRob3V0IGEgcmV3cml0ZSBvZiB0aGUgRFJNIHNsYXZlIGVu
+Y29kZXIgYmFja2VuZAo+ICAgIGlzIHRvIGhhdmUgdGhlIFREQTk5OHggSTJDIGRldmljZSBwcm92
+aWRlZCBieSBEVC4gIFRoZXJlIGFyZSBtdW1ibGluZ3MKPiAgICBhYm91dCByZWRvaW5nIHRoZSBz
+bGF2ZSBlbmNvZGVyIEFQSSwgaG9wZWZ1bGx5IHRoaXMgd2lsbCBiZSBmaXhlZCB0aGVyZS4KPiAK
+PiBUaGlzIGlzIGJlY2F1c2UgdGhlIGV4aXN0aW5nIERSTS9lbmNvZGVyIHN5c3RlbSB3b3JrcyBz
+b21ldGhpbmcgbGlrZSB0aGlzOgo+IDEuIGkyYyBkcml2ZXIgKGUuZy4gdGRhOTk4eF9kcnYpIHJl
+Z2lzdGVycyBhcyBhbiBpMmNfZHJpdmVyIHZpYQo+IGRybV9pMmNfZW5jb2Rlcl9yZWdpc3Rlcigp
+Cj4gMi4gVGhlIGRybSBkcml2ZXIgKGkuZS4gYXJtYWRhKSBsYXRlciBoYXMgdG8ga25vdyB0aGF0
+IGl0IGlzIGV4cGVjdGluZwo+IGEgdGRhOTk4eCBpbnN0YW5jZS4gSXQgY2FsbHMgZHJtX2kyY19l
+bmNvZGVyX2luaXQoKSB0byBzZXQgdGhpcyB1cC4KPiAKPiBkcm1faTJjX2VuY29kZXIgaW5pdCBy
+ZXF1aXJlczoKPiAgMS4gVGhlIGkyY19hZGFwdGVyIGluIHF1ZXN0aW9uLiBJbiBhIERUIHdvcmxk
+LCB3ZSBjb3VsZCBnZXQgdGhpcyBmcm9tCj4gZmluZGluZyB0aGUgcGFyZW50IG5vZGUgb2YgdGhl
+IHRkYTk5OHggbm9kZSAodGhpcyBpcyB0aGUgaTJjIGJ1cwo+IG1hc3RlciksIGFuZCB0aGVuIHVz
+aW5nIGkyY19mb3JfZWFjaF9kZXYgdG8gZmluZCB0aGUgZmlyc3QgaTJjIGFkYXB0ZXIKPiBpbnN0
+YW5jZSB0aGF0IGhhcyB0aGUgc2FtZSBvZl9ub2RlLgo+ICAyLiBpMmNfYm9hcmRfaW5mbyAtIGJh
+c2ljYWxseSB0aGUgYWRkcmVzcyBvZiB0aGUgZGV2aWNlIG9uIHRoZSBpMmMKPiBidXMuIFRoaXMg
+aXMgYmFzaWNhbGx5IHRoZSB3YXkgb2YgaW5zdGFudGlhdGluZyBpMmMgZGV2aWNlcyBmcm9tCj4g
+cGxhdGZvcm0gZGF0YS4gTm90IHRoZSBEVCB3YXkgOigKPiAKPiBJbiBhIERUIHdvcmxkIHRoZSBp
+MmMgZHJpdmVyIHdvdWxkIGJlIGluc3RhbnRpYXRlZCBmcm9tIGEgbm9kZSBpbiB0aGUKPiBEVCwg
+d2hpY2ggYWxyZWFkeSBpbmNsdWRlcyB0aGUgaW5mbyB0aGF0IHdvdWxkIGNvbWUgaW4gaTJjX2Jv
+YXJkX2luZm8uCj4gVGhlbiBsYXRlciBpdCB3b3VsZCBoYXZlIHRvIGJlIGxpbmtlZCB0byBhIERS
+TSBzbGF2ZS9lbmNvZGVyLCBwZXJoYXBzCj4gd2hlbiB0aGUgRFJNIGRldmljZSBmaW5kcyB0aGUg
+b2Zfbm9kZSBjb3JyZXNwb25kaW5nIHRvIGl0Lgo+IAo+IFNvIEkgdGhpbmsgdGhlIG5leHQgc3Rl
+cCBpcyBmaXhpbmcgdXAgRFJNLCBhcyBSdXNzZWxsIGhpbnRlZC4gVW5sZXNzCj4gc29tZW9uZSBz
+ZWVzIGFub3RoZXIgYWNjZXB0YWJsZSBvcHRpb24gdGhhdCBkb2Vzbid0IGJyZWFrIG91ciBEVAo+
+IGRlc2lnbi4KCkhpIERhbmllbCwKCkkgZG9uJ3Qgc2VlIHRoZSBwcm9ibGVtIHdpdGggdGhlIFRE
+QTk5OHguCgpJbmRlZWQsIGl0IG5lZWRzIHNvbWUgZW5oYW5jZW1lbnQgdG8gaGFuZGxlIHRoZSBE
+VCwgYnV0IGFsc28sIHRoZQpmdW5jdGlvbiBkcm1faTJjX2VuY29kZXJfaW5pdCgpIGlzIG5vdCB1
+c2FibGUgaW4gdGhlIERUIGNhc2UgKHRoaXMKZnVuY3Rpb24gbG9hZHMgdGhlIG1vZHVsZSwgd2hp
+bGUgdGhlIG1vZHVsZSBtdXN0IGJlIGxvYWRlZCBieSB0aGUgRFQKZm9yIGl0IGdldHMgYWxsIHBh
+cmFtZXRlcnMgLSBpMmMgYWRkcmVzcyBhbmQgaXJxKS4KCkhlcmUgaXMgdGhlIHNpbXBsZSBzb2x1
+dGlvbiBJIHVzZToKCi0gdGhlIHRkYTk5OHggaXMgZGVjbGFyZWQgaW4gdGhlIERULCBzbyB0aGUg
+bW9kdWxlIGlzIGxvYWRlZCBhdCBzeXN0ZW0KICBzdGFydHVwIHRpbWUuCgotIGl0cyBwcm9iZSBm
+dW5jdGlvbiBpcyB2b2lkLgoKLSB3aGVuIHRoZSBjb25uZWN0b3Igb2YgdGhlIGRybSBkcml2ZXIg
+c2NhbnMgdGhlIERULCBpdCBmaW5kcyB0aGUKICBwaGFuZGxlIHRvIHRoZSB0ZGE5OTh4LgoKLSBp
+ZiAvIGFmdGVyIHRoZSB0ZGE5OTh4IGlzIGxvYWRlZCwgdGhlIGNvbm5lY3RvciBjYWxscyB0aGUg
+ZnVuY3Rpb24KICBlbmNvZGVyX2luaXQoKSBvZiB0aGUgdGRhOTk4eCAoYW5kIGFsc28gaW5jcmVt
+ZW50IHRoZSByZWZlcmVuY2UKICBjb3VudGVyIG9mIHRoZSB0ZGE5OTh4IG1vZHVsZSB0byBhdm9p
+ZCB0aGlzIGxhc3Qgb25lIHRvIGJlIHVubG9hZGVkKS4KCi0gdGhlIGZ1bmN0aW9uIGVuY29kZXJf
+aW5pdCgpIG9mIHRoZSB0ZGE5OTh4IHNjYW5zIHRoZSBEVCBhbmQgaXQgaGFzIGFsbAogIGVsZW1l
+bnRzIHRvIHJ1bi4KClRoaXMgd29ya2luZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHRpY2xjZCBk
+cml2ZXI6IGNhbGxpbmcKZHJtX2kyY19lbmNvZGVyX2luaXQoKSBqdXN0IHByZXZlbnRzIHRoZSB0
+ZGE5OTh4IHRvIHVzZSB0aGUgaXJxICh0aGUKaTJjIGFkZHJlc3MgaXMgaGFyZCBjb2RlZCwgdGhl
+IGRpc3BsYXkgY29ubmVjdC9kaXNjb25uZWN0IGV2ZW50IGlzCmRldGVjdGVkIGJ5IHBvbGxpbmcg
+YW5kIHJlYWRpbmcgdGhlIEVESUQgaXMgc3luY2hyb25vdXMpLgoKLS0gCktlbiBhciBjJ2hlbnRh
+w7EJfAkgICAgICAqKiBCcmVpemggaGEgTGludXggYXRhdiEgKioKSmVmCQl8CQlodHRwOi8vbW9p
+bmVqZi5mcmVlLmZyLwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
