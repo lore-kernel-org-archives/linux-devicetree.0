@@ -1,14 +1,19 @@
 From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
-Date: Wed, 17 Jul 2013 23:07:00 +0200
-Message-ID: <20130717210700.GA19864@zurbaran>
+Date: Wed, 17 Jul 2013 23:10:21 +0200
+Message-ID: <20130717211021.GB19864@zurbaran>
 References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1374052705.3146.86.camel@hornet>
+ <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg>
+ <1374067786.3146.123.camel@hornet>
+ <alpine.LFD.2.03.1307171014510.14924@syhkavp.arg>
+ <1374070811.3146.124.camel@hornet>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1373990743-23106-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1374070811.3146.124.camel@hornet>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,52 +24,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <achin.gupta-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <Achin.Gupta-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+Hi Pawel,
 
-On Tue, Jul 16, 2013 at 05:05:42PM +0100, Lorenzo Pieralisi wrote:
-> Hello,
+On Wed, Jul 17, 2013 at 03:20:11PM +0100, Pawel Moll wrote:
+> On Wed, 2013-07-17 at 15:16 +0100, Nicolas Pitre wrote:
+> > On Wed, 17 Jul 2013, Pawel Moll wrote:
+> > 
+> > > On Wed, 2013-07-17 at 13:33 +0100, Nicolas Pitre wrote:
+> > > > If this is really miscelaneous code that really doesn't fit 
+> > > > anywhere else, it should rather go into drivers/misc/ as a last resort.
+> > > 
+> > > Interestingly enough drivers/misc was my first choice for all the
+> > > vexpress stuff, but it wasn't received well...
+> > > 
+> > > Anyway, the SPC driver as it is now seem to be a "power management
+> > > system driver". Maybe a relevant directory would be in place? Wouldn't
+> > > PSCI belong there as well? (there are two psci.c files in arch/arm and
+> > > arch/arm64, surprisingly similar ones ;-)
+> > > 
+> > > The bottom line is: today it is not an MFD driver.
+> > 
+> > But we know it will, right?  So better  save some churn by storing the 
+> > initial code where it would end up anyway once complete.
 > 
-> version v5 of VExpress SPC driver, please read on the changelog for major
-> changes and explanations.
-> 
-> The probing scheme is unchanged, since after trying the early platform
-> devices approach it appeared that the end result was no better than the
-> current one. The only clean solution relies either on changing how
-> secondaries are brought up in the kernel (later than now) or enable
-> early platform device registration through DT. Please check this
-> thread for the related discussion:
-> 
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-June/036542.html
-> 
-> The interface was adapted to regmap and again reverted to old driver for
-> the following reasons:
-> 
-> - Power down registers locking is hairy and requires arch spinlocks in
->   the MCPM back end to work properly, normal spinlocks cannot be used
-> - Regmap adds unnecessary code to manage SPC since it is just a bunch of
->   registers used to control power management flags, the overhead is just
->   not worth it (talking about power down registers, not the vexpress config
->   interface)
-> - The locking scheme behind regmap requires all registers in the map
->   to be protected with the same lock, which is not exactly what we want
->   here
-> - Given the reasons above, adding a regmap interface buys us nothing from
->   a driver readability and maintainability perspective (again just talking
->   about the power interface, a few registers) because for the SPC it would
->   simply not be used
-> 
-> /drivers/mfd is probably not the right place for this code as it stands (but
-> probably will be when the entire driver, with DVFS and config interface, is
-> complete).
-Could you please elaborate on how will the SPC driver extend into an MFD
-driver?
+> Not in that form, no. The code living in mfd will just register
+> mfd_cells while "functional" parts are going to live elsewhere. This is
+> how I understand what Samuel asked me to do and that's what is happening
+> to vexpress-sysreg now.
+Very good, I'll happily apply such changes.
+If I understand the IP correctly, the SPC driver will stay as a set of
+runtime APIs for controlling the SPC features. If that's the case, then
+misc sounds like a more appropriate place for this driver.
+drivers/power/ really is for power supplies and charging drivers.
 
 Cheers,
-Samuel.
+Samuel. 
 
 -- 
 Intel Open Source Technology Centre
