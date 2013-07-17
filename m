@@ -1,78 +1,48 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/2] pwm: Add PWM polarity flag macros for DT
-Date: Wed, 17 Jul 2013 11:20:23 -0700
-Message-ID: <20130717182021.GA24079@dhcp-172-17-186-34.nvidia.com>
-References: <1373553468-6564-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <2883016.87pKJk9n0R@avalon>
- <51E4C073.4020407@wwwdotorg.org>
- <2989497.8E7gzkcamn@avalon>
- <51E6D037.3020706@wwwdotorg.org>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
+Date: Wed, 17 Jul 2013 14:29:02 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1307171416490.14924@syhkavp.arg>
+References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com> <1374052705.3146.86.camel@hornet> <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg> <1374067786.3146.123.camel@hornet> <alpine.LFD.2.03.1307171014510.14924@syhkavp.arg>
+ <1374070811.3146.124.camel@hornet> <alpine.LFD.2.03.1307171148160.14924@syhkavp.arg> <20130717170038.GP24642@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51E6D037.3020706@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-pwm@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-omap@vger.kernel.org, Philip Avinash <avinashphilip@ti.com>, Grant Likely <grant.likely@linaro.org>, Boris BREZILLON <linux-arm@overkiz.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130717170038.GP24642@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Pawel Moll <pawel.moll@arm.com>, Jon Medhurst <tixy@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Olof Johansson <olof@lixom.net>, Achin Gupta <Achin.Gupta@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 17 Jul 2013, Russell King - ARM Linux wrote:
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, Jul 17, 2013 at 11:57:55AM -0400, Nicolas Pitre wrote:
+> > The sanest location at this point might simply be 
+> > drivers/platform/vexpress_spc.c or drivers/platform/vexpress/spc.c 
+> > depending on whether or not more such driver glue is expected in the 
+> > vexpress future.  No point putting "arm" in the path, especially if this 
+> > is later reused on arm64.
+> 
+> You wouldn't be making that argument if it were arch/arm64 and arch/arm32 -
+> you'd probably be arguing that "arm" made perfect sense.
 
-On Wed, Jul 17, 2013 at 11:11:19AM -0600, Stephen Warren wrote:
-> On 07/17/2013 05:00 AM, Laurent Pinchart wrote:
-> > On Monday 15 July 2013 21:39:31 Stephen Warren wrote:
-> ...
-> >> But then there's a problem where people assume that the common flags a=
-re
-> >> always available, and somewhere they aren't... Care is needed in the
-> >> choice of which common flags to define and/or how they're used.
-> >=20
-> > Exactly. That's why I think listing the supported common flags in indiv=
-idual=20
-> > bindings makes sense when some of the flags are not supported by all de=
-vices.=20
-> > As the only PWM flags currently used are common to all PWM devices I ca=
-n leave=20
-> > this out now. I have no strong preference, I'll follow your opinion on =
-this.
->=20
-> Yes, I guess separating the concept of defining common flags and which
-> devices use them is good. And then indeed individual devices need to
-> define which of the common flags they support. I'd still like to see the
-> *definition* of those common flags in some central place (i.e. pwm.txt
-> or a header that defines constants for it), and the other device
-> bindings simply reference that for the actual definitions.
+Well... in a sense: yes.  But in the end, having per arch directories 
+under drivers/ is silly.  We already have per arch directories under 
+arch/already.
 
-That sounds reasonable to me.
+> Don't get too hung up on names please, it's really not worth the time
+> and effort being soo pedantic, and being soo pedantic leads to "pointless
+> churn" when someone comes along and wants to pedantically change the
+> names because it no longer matches the users.
 
-Thierry
+At this point I don't really care about the name.  I just want the damn 
+thing merged upstream.  But after several iterations to either fit one 
+or another maintainers taste, each rework ends up in that maintainer 
+saying: "Now that you've reworked the code, I still don't like it since 
+this no longer fits in my subsystem tree."
 
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+In fact what we'd need at this point is 
+drivers/code_that_no_subsystem_maintainers_wants/.  This is becoming 
+overly ridiculous.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
 
-iQIcBAEBAgAGBQJR5uBlAAoJEN0jrNd/PrOh97QP/1xi4cp9qXADN5RzJzjIh0Qn
-rAtMQCp2NggBKz0p3yueGufLiS1izARSOb13uDJUWeFsikVyhGYng8i3ZRrlaoVA
-ktBoZf5CuSGmqKyURzIBEjc1nxAj4V9H0pKrpinj2XsDBKcVsmjjVHzQRu/tDnXk
-J5GKDgdl2wTwTHmg/9zrYVcuJsOuCPNm2YsGcAaR/7dL9fNHTgfhsrqTANXU+Y7Y
-M1IdG3etDvFrGlDTTnYXtYpDnr49VOuGL3KrFeYaFeQIVAKN+kDbGe2WR2F3O22E
-lDek6DW4hNRgLKdJIwSGIcEDw8AzcKpKHicn3DNvQQtnzzLJ4vNShJzIDfxlj0qg
-ptoOjnz1MB2dsyShOI0z8PvWdhseMndQ5wpXveeJjZ5Ck46USCl3NaysTtmZPYjd
-saabdM/E85g5HQZ79sggqg0st2P3l5TsEFFJ8Ie41ysf6kp8ofXYG8H/OiaAapKz
-hysfTGj6tgtY9jorIO3YdkZX59ALQikfFjawUzFQ4onYcXLymkyHUQI4i20k/wVo
-VQ1SIWbZ8aofbA5kqvdNH/ZSMl8uMgRLrUtd1EPx0scS6F1mf9GvQ/S6q0PKdQGM
-k0yxqk0YWkFtnzM/ccrpI5g29I6mnXiOUTlFSM3V12JAW4+kh6lF7V+m2tRWft3+
-aCEjtkBeqFwvYE+oJezc
-=+FHU
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
+Nicolas
