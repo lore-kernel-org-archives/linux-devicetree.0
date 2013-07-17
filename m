@@ -1,68 +1,74 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v9 1/8] drivers: phy: add generic PHY framework
-Date: Tue, 16 Jul 2013 23:29:44 -0700
-Message-ID: <20130717062944.GA24968@kroah.com>
-References: <1372247257-30186-1-git-send-email-kishon@ti.com>
- <1372247257-30186-2-git-send-email-kishon@ti.com>
+From: Gerlando Falauto <gerlando.falauto@keymile.com>
+Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
+ translation
+Date: Wed, 17 Jul 2013 08:35:38 +0200
+Message-ID: <51E63B3A.2010807@keymile.com>
+References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <51E5145A.90404@keymile.com> <20130716125531.GD2317@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1372247257-30186-2-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, arnd@arndb.de, swarren@nvidia.com, sylvester.nawrocki@gmail.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, akpm@linux-foundation.org, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, benoit.cousson@linaro.org, mchehab@redhat.com, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, balajitk@ti.com, george.cherian@ti.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130716125531.GD2317@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "Longchamp,
+ Valentin" <Valentin.Longchamp@keymile.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 26, 2013 at 05:17:29PM +0530, Kishon Vijay Abraham I wrote:
-> +menuconfig GENERIC_PHY
-> +	tristate "PHY Subsystem"
-> +	help
-> +	  Generic PHY support.
-> +
-> +	  This framework is designed to provide a generic interface for PHY
-> +	  devices present in the kernel. This layer will have the generic
-> +	  API by which phy drivers can create PHY using the phy framework and
-> +	  phy users can obtain reference to the PHY.
+Hi Ezequiel,
 
-Shouldn't this be something that other drivers select?  How will anyone
-know if they need this or not?
+On 07/16/2013 02:56 PM, Ezequiel Garcia wrote:
+[...]
+> Also, speaking of "device bus" this nand node should be behind a devicebus node.
+>
+> 		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000   /* internal-regs */
+> 			  MBUS_ID(0x01, 0x2f) 0 0 0xf4000000 0x400>;
+>
+> 		devbus {
+> 			status = "okay";
+> 			ranges = <0 MBUS_ID(0x01, 0x2f) 0 0x400>;
+>
+> 			/* nand */
+> 			nand {
+> 				compatible = "marvell,orion-nand";
+> 				reg = <0 0x400>;
+> 			};
+> 		};
+>
+> (notice this will allow you to relocate the base address of the NAND windows
+> easily if it conflicts with your PCIe needs).
 
-> --- /dev/null
-> +++ b/drivers/phy/phy-core.c
-> @@ -0,0 +1,544 @@
-> +/*
-> + * phy-core.c  --  Generic Phy framework.
-> + *
-> + * Copyright (C) 2013 Texas Instruments
-> + *
-> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> + *
-> + * This program is free software; you can redistribute  it and/or modify it
-> + * under  the terms of  the GNU General  Public License as published by the
-> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> + * option) any later version.
+I am MAYBE slowly starting to understand this whole mbus rework.
+Just one remark though: don't you think it would make sense to add 
+something like:
 
-You really mean "any later version" (I have to ask)?
+#define MBUS_ID_INTERNAL_REGS	MBUS_ID(0xf0, 0x01)
+#define MBUS_ID_NAND		MBUS_ID(0x01, 0x2f)
 
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+I personally have a hard time reading numeric values for 
+GPIO_ACTIVE_LOW/GPIO_ACTIVE_HIGH.
 
-Are these two paragraphs needed?  This isn't a "program", and they got a
-copy of the GPL already with the kernel.
+Thanks,
+Gerlando
 
-> +static struct class *phy_class;
-
-Why do you need a class?
-
-When modifying/adding new sysfs stuff, you need a Documentation/ABI/
-entry as well.
-
-thanks,
-
-greg k-h
+>
+>> avoid a later incosistency between the "unit-address" and the first
+>> "reg" address:
+>>
+>>>    		#address-cells = <1>;
+>>>    		#size-cells = <1>;
+>>> @@ -171,7 +172,7 @@
+>>   >   		nand@3000000 {
+>> 		     ^^^^^^^
+>
+> Oh, this should be fixed. I just missed it, and nobody noticed either.
+>
