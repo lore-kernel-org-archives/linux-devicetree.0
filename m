@@ -1,101 +1,51 @@
-From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH -next] mtd: orion_nand: convert to use devm_* APIs
-Date: Wed, 17 Jul 2013 10:09:10 +0800
-Message-ID: <CAPgLHd8upcmfnQqHAWnqP7YBVYDVyoYKQ3WCh3c5+uY-EKr1jg@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v4] Input: sysrq - DT binding for key sequence
+Date: Tue, 16 Jul 2013 21:17:51 -0500
+Message-ID: <CAL_JsqJQguAy8-nzQZS2obu6SG=yrfJvEn2y5_i3k7qZbM-_Vg@mail.gmail.com>
+References: <1373902598-10062-1-git-send-email-mathieu.poirier@linaro.org>
+	<51E4B35D.8020000@gmail.com>
+	<CANLsYkzgHqnuDq46JEJH713jrnD8rAAG_2wLbKJCAOGLpw+e4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org
-Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CANLsYkzgHqnuDq46JEJH713jrnD8rAAG_2wLbKJCAOGLpw+e4g@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kernel-team@android.com, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, John Stultz <john.stultz@linaro.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+On Tue, Jul 16, 2013 at 5:24 PM, Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
+>
+>
+>
+> On 15 July 2013 20:43, Rob Herring <robherring2@gmail.com> wrote:
+>>
+>> On 07/15/2013 10:36 AM, mathieu.poirier@linaro.org wrote:
+>> > From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
+>> >
 
-Convert to use devm_* APIs to avoid resources leak on error handling case.
+[snip]
 
-Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
----
- drivers/mtd/nand/orion_nand.c | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+>> > +     prop = of_find_property(np, "keyset", NULL);
+>> > +     if (!prop || !prop->value) {
+>> > +             pr_err("Invalid input keyset");
+>> > +             goto out;
+>> > +     }
+>> > +
+>> > +     count = prop->length / sizeof(u32);
+>> > +     val = prop->value;
+>>
+>> None of the existing helpers to retrieve property arrays doesn't work
+>> here?
+>
+>
+> The problem here is that we never know how long the sequence will be.  As
+> such the 'of_property_read_uXY_array' functions won't work.  Or maybe you're
+> referring to another set of helpers... If so, please clarify.
 
-diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
-index 46f308d..ce711b4 100644
---- a/drivers/mtd/nand/orion_nand.c
-+++ b/drivers/mtd/nand/orion_nand.c
-@@ -85,25 +85,23 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 	int ret = 0;
- 	u32 val = 0;
- 
--	nc = kzalloc(sizeof(struct nand_chip) + sizeof(struct mtd_info), GFP_KERNEL);
-+	nc = devm_kzalloc(&pdev->dev,
-+			  sizeof(struct nand_chip) + sizeof(struct mtd_info),
-+			  GFP_KERNEL);
- 	if (!nc) {
- 		printk(KERN_ERR "orion_nand: failed to allocate device structure.\n");
--		ret = -ENOMEM;
--		goto no_res;
-+		return -ENOMEM;
- 	}
- 	mtd = (struct mtd_info *)(nc + 1);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		ret = -ENODEV;
--		goto no_res;
--	}
-+	if (!res)
-+		return -ENODEV;
- 
--	io_base = ioremap(res->start, resource_size(res));
-+	io_base = devm_ioremap(&pdev->dev, res->start, resource_size(res));
- 	if (!io_base) {
- 		printk(KERN_ERR "orion_nand: ioremap failed\n");
--		ret = -EIO;
--		goto no_res;
-+		return -EIO;
- 	}
- 
- 	if (pdev->dev.of_node) {
-@@ -111,8 +109,7 @@ static int __init orion_nand_probe(struct platform_device *pdev)
- 					GFP_KERNEL);
- 		if (!board) {
- 			printk(KERN_ERR "orion_nand: failed to allocate board structure.\n");
--			ret = -ENOMEM;
--			goto no_res;
-+			return -ENOMEM;
- 		}
- 		if (!of_property_read_u32(pdev->dev.of_node, "cle", &val))
- 			board->cle = (u8)val;
-@@ -186,10 +183,6 @@ no_dev:
- 		clk_disable_unprepare(clk);
- 		clk_put(clk);
- 	}
--	iounmap(io_base);
--no_res:
--	kfree(nc);
--
- 	return ret;
- }
- 
-@@ -201,10 +194,6 @@ static int orion_nand_remove(struct platform_device *pdev)
- 
- 	nand_release(mtd);
- 
--	iounmap(nc->IO_ADDR_W);
--
--	kfree(nc);
--
- 	clk = clk_get(&pdev->dev, NULL);
- 	if (!IS_ERR(clk)) {
- 		clk_disable_unprepare(clk);
+What about of_property_for_each_u32? Or we should make
+of_property_read_uXY_array work with arrays that can be less than some
+max size.
+
+Rob
