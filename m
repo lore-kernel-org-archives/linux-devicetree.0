@@ -1,72 +1,64 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
-Date: Wed, 17 Jul 2013 23:23:43 +0200
-Message-ID: <20130717212343.GC19864@zurbaran>
-References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1374052705.3146.86.camel@hornet>
- <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg>
- <1374067786.3146.123.camel@hornet>
- <alpine.LFD.2.03.1307171014510.14924@syhkavp.arg>
- <1374070811.3146.124.camel@hornet>
- <alpine.LFD.2.03.1307171148160.14924@syhkavp.arg>
- <20130717170038.GP24642@n2100.arm.linux.org.uk>
- <alpine.LFD.2.03.1307171416490.14924@syhkavp.arg>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Wed, 17 Jul 2013 23:38:36 +0200
+Message-ID: <20130717213836.GA13324@amd.pavel.ucw.cz>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+ <20130716015038.GD28375@S2101-09.ap.freescale.net>
+ <51E4BF98.8030604@wwwdotorg.org>
+ <20130716041056.GA30067@S2101-09.ap.freescale.net>
+ <51E56AA7.7020103@wwwdotorg.org>
+ <20130717030246.GA4541@S2101-09.ap.freescale.net>
+ <51E6CCE4.20705@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.03.1307171416490.14924@syhkavp.arg>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jon Medhurst <tixy@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Olof Johansson <olof@lixom.net>, Achin Gupta <Achin.Gupta@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <51E6CCE4.20705@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J. Wysocki" <rjw@sisk.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
-
-On Wed, Jul 17, 2013 at 02:29:02PM -0400, Nicolas Pitre wrote:
-> On Wed, 17 Jul 2013, Russell King - ARM Linux wrote:
-> 
-> > On Wed, Jul 17, 2013 at 11:57:55AM -0400, Nicolas Pitre wrote:
-> > > The sanest location at this point might simply be 
-> > > drivers/platform/vexpress_spc.c or drivers/platform/vexpress/spc.c 
-> > > depending on whether or not more such driver glue is expected in the 
-> > > vexpress future.  No point putting "arm" in the path, especially if this 
-> > > is later reused on arm64.
+On Wed 2013-07-17 10:57:08, Stephen Warren wrote:
+> On 07/16/2013 09:02 PM, Shawn Guo wrote:
+> > On Tue, Jul 16, 2013 at 09:45:43AM -0600, Stephen Warren wrote:
+> >> Registering the driver earlier won't cause any bugs. However, it's not
+> >> the correct approach.
+> >>
+> >> Deferred probe /is/ the approach for assuring correct dependencies
+> >> between drivers. It works and should be used. There are not enough
+> >> initcall levels to play games using initcalls and solve all the issues,
+> >> and the ordering requirements vary board-to-board. Deferred probe at
+> >> runtime handles this without having to manually place all the drivers
+> >> into specific initcall levels, and dynamically adjusts to board
+> >> differences, since it all happens automatically at run-time.
 > > 
-> > You wouldn't be making that argument if it were arch/arm64 and arch/arm32 -
-> > you'd probably be arguing that "arm" made perfect sense.
+> > I do not quite follow the argument here.  I agree with you that
+> > deferred probe is the approach to solve dependencies.  But it does not
+> > necessarily mean that initcall can not be used to help it save some
+> > nasty or nested deferring.  Deferred probe and initcalls are not two
+> > mutually exclusive mechanisms but two which can help each other.
 > 
-> Well... in a sense: yes.  But in the end, having per arch directories 
-> under drivers/ is silly.  We already have per arch directories under 
-> arch/already.
+> My understanding is that deferred probe was implemented specifically to
+> avoid having to, or allowing, the use of initcall levels to determine
+> probe order.
 > 
-> > Don't get too hung up on names please, it's really not worth the time
-> > and effort being soo pedantic, and being soo pedantic leads to "pointless
-> > churn" when someone comes along and wants to pedantically change the
-> > names because it no longer matches the users.
-> 
-> At this point I don't really care about the name.  I just want the damn 
-> thing merged upstream.  But after several iterations to either fit one 
-> or another maintainers taste, each rework ends up in that maintainer 
-> saying: "Now that you've reworked the code, I still don't like it since 
-> this no longer fits in my subsystem tree."
-FWIW, we asked Pawel to rework the sysreg and config parts of the
-vexpress driver, make it an actual MFD driver, and spread the remaining
-bits of the code into their respective subsystems. I don't think
-this is an eccentric requirement.
+> However, if someone closely associated with the implementation of
+> deferred probe (e.g. Grant, or a device core maintainer) is willing to
+> step up and say I'm wrong, I'll drop my objection.
 
-
-> In fact what we'd need at this point is 
-> drivers/code_that_no_subsystem_maintainers_wants/.  
-Which is what some people think drivers/mfd/ is...
-I don't mind merging Lorenzo's SPC driver as it is if he can explain to
-me how it will eventually evolve into an actual MFD driver. If that's
-not the case, I don't see how I could justify merging it through the
-MFD tree.
-
-Cheers,
-Samuel.
-
+AFAIR, defered probing is known to be a "hack" by its authors. We
+should still try to get initcall levels right...
+								Pavel
 -- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
