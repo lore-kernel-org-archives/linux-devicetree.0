@@ -1,92 +1,86 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH -next] mtd: orion_nand: convert to use devm_* APIs
-Date: Wed, 17 Jul 2013 09:45:33 +0200
-Message-ID: <20130717074533.GA1026@lunn.ch>
-References: <CAPgLHd8upcmfnQqHAWnqP7YBVYDVyoYKQ3WCh3c5+uY-EKr1jg@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] iio: at91: Use different prescal, startup mask in
+ MR for different IP
+Date: Wed, 17 Jul 2013 10:23:17 +0200
+Message-ID: <51E65475.4010109@atmel.com>
+References: <1373789069-11604-1-git-send-email-josh.wu@atmel.com> <1373789069-11604-3-git-send-email-josh.wu@atmel.com> <20130715125815.GC2962@lukather> <51E505EA.4060502@atmel.com> <51E50864.6020904@atmel.com> <20130716133003.7c208cdf@skate> <51E5990A.4050709@kernel.org> <20130716211706.39665234@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAPgLHd8upcmfnQqHAWnqP7YBVYDVyoYKQ3WCh3c5+uY-EKr1jg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: andrew@lunn.ch, artem.bityutskiy@linux.intel.com, devicetree-discuss@lists.ozlabs.org, jg1.han@samsung.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, wfp5p@virginia.edu, linux-mtd@lists.infradead.org, grant.likely@linaro.org, dwmw2@infradead.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130716211706.39665234@skate>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 17, 2013 at 10:09:10AM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> 
-> Convert to use devm_* APIs to avoid resources leak on error handling case.
-> 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> ---
->  drivers/mtd/nand/orion_nand.c | 29 +++++++++--------------------
->  1 file changed, 9 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
-> index 46f308d..ce711b4 100644
-> --- a/drivers/mtd/nand/orion_nand.c
-> +++ b/drivers/mtd/nand/orion_nand.c
-> @@ -85,25 +85,23 @@ static int __init orion_nand_probe(struct platform_device *pdev)
->  	int ret = 0;
->  	u32 val = 0;
->  
-> -	nc = kzalloc(sizeof(struct nand_chip) + sizeof(struct mtd_info), GFP_KERNEL);
-> +	nc = devm_kzalloc(&pdev->dev,
-> +			  sizeof(struct nand_chip) + sizeof(struct mtd_info),
-> +			  GFP_KERNEL);
->  	if (!nc) {
->  		printk(KERN_ERR "orion_nand: failed to allocate device structure.\n");
-> -		ret = -ENOMEM;
-> -		goto no_res;
-> +		return -ENOMEM;
->  	}
->  	mtd = (struct mtd_info *)(nc + 1);
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (!res) {
-> -		ret = -ENODEV;
-> -		goto no_res;
-> -	}
-> +	if (!res)
-> +		return -ENODEV;
->  
-> -	io_base = ioremap(res->start, resource_size(res));
-> +	io_base = devm_ioremap(&pdev->dev, res->start, resource_size(res));
->  	if (!io_base) {
->  		printk(KERN_ERR "orion_nand: ioremap failed\n");
-> -		ret = -EIO;
-> -		goto no_res;
-> +		return -EIO;
+On 16/07/2013 21:17, Thomas Petazzoni :
+> Dear Jonathan Cameron,
+>
+> On Tue, 16 Jul 2013 20:03:38 +0100, Jonathan Cameron wrote:
+>
+>> On 07/16/2013 12:30 PM, Thomas Petazzoni wrote:
+>>> I've asked exactly this question last week at Linaro Connect during the
+>>> ARM SoC consolidation panel/discussion, where Grant Likely, Arnd
+>>> Bergmann, Olof and others were answering Device Tree related questions.
+>>>
+>>> My question, which precisely had the at91-adc DT binding in mind was
+>>> precisely whether we should use different compatible properties to
+>>> identify different revisions of an IP block and let the driver handle
+>>> those differences, or whether the DT binding should provide sufficient
+>>> properties (register offsets, bit numbers, etc.) to make the driver
+>>> independent of the IP revisions. And clearly, the answer was that
+>>> different compatible properties should be used to identify the
+>>> different versions of the IP block, and the driver should abstract out
+>>> the differences. I.e, was has been done for at91-adc is completely the
+>>> opposite of the best practices for Device Tree on ARM.
+>>>
+>>> See
+>>> http://www.youtube.com/watch?v=zF_AXLgkFy4&feature=player_detailpage#t=1581s
+>>> where I ask exactly this question, and get answers from Olof Johansson
+>>> and Grant Likely. They clearly say that the solution of having separate
+>>> compatible properties and a driver that handles the differences is the
+>>> way to go. So the way at91-adc (and possibly other at91 drivers) is
+>>> using the Device Tree is wrong, there should have been multiple
+>>> compatible properties. It's a shame because this is something we did say
+>>> when we submitted at91-adc and during the reviews, but the maintainer
+>>> wasn't listening to our comments...
+>>>
+>>
+>> Thanks for getting some clarity on this Thomas.  So I'll ask the somewhat obvious
+>> question - how do we unwind from where we are to where we want to be wrt to the
+>> bindings?
+>
+> During Linaro Connect last week, there was some discussion about
+> marking DT bindings as unstable for a little while, once they get
+> reviewed by a group of DT "experts" that mark them as stable. Until
+> they are stable, the kernel does not offer any ABI guarantees, and we
+> are free to change the DT bindings as needed.
+>
+> Now, since this unstable/stable thing is not in place at the moment,
+> deciding whether to break or not existing bindings is something to be
+> decided by the maintainer of this platform, judging what is the best
+> option depending on whether there are already many users of the DT for
+> this platform or not, for example.
 
-Hi Wei
+I didn't had in mind that the current discussion about the addition of 
+some properties could cast doubt on the entire at91-adc binding!
 
-Thanks for working on this.
+The binding itself has several drawbacks and is kind of over engineered, 
+I agree with that. Some register offsets in particular have nothing to 
+do in a DT binding.
+On the other hand, some values are highly dependent on the SoC process 
+itself and can't be stored in the driver because it would require to 
+change the driver for each new SoC, depending on the electrical 
+characteristics.
+In conclusion, we have to be cautious with this binding and make sure 
+that we don't throw the baby out with the bath water.
 
-The above code can be further simplified:
+Moreover, at the time we are just beginning to be comfortable with DT on 
+AT91 and beginning to overcome the difficulty of converting our 
+platforms, I see this new step on the path to "mainline + DT stable" as 
+another slowdown.
 
-        res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-        io_base = devm_ioremap_resource(&pdev->dev, res);
-        if (IS_ERR(io_base))
-                return PTR_ERR(io_base); 
-
-
-While you are editing this file, it would be nice to replace all the
-printk() statements with dev_err(), dev_info() etc. Please do that as
-a separate patch.
-
-Thanks
-	Andrew
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Bye,
+-- 
+Nicolas Ferre
