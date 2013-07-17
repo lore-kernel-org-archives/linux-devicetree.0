@@ -1,13 +1,17 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/9] ARM: dts: omap5-uevm: update SMPS9 settings
-Date: Wed, 17 Jul 2013 11:45:31 -0500
-Message-ID: <1374079538-19548-3-git-send-email-nm@ti.com>
-References: <1374079538-19548-1-git-send-email-nm@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 01/24] spi: mpc512x: prepare clocks before enabling them
+Date: Wed, 17 Jul 2013 17:53:00 +0100
+Message-ID: <20130717165300.GU22506@sirena.org.uk>
+References: <1373914074-20889-1-git-send-email-gsi@denx.de>
+ <1373914074-20889-2-git-send-email-gsi@denx.de>
+ <20130715201734.GF11538@sirena.org.uk>
+ <20130717112229.GK7080@book.gsilab.sittig.org>
+ <20130717120758.GR22506@sirena.org.uk>
+ <20130717142628.GN7080@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============2752121799077332732=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1374079538-19548-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20130717142628.GN7080-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,30 +22,103 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Y29tbWl0IGUwMGMyN2VmM2I0YzIzZTM5ZDBhNzdiN2M4ZTViZTQ0YzI4MDAxYzcKKEFSTTogZHRz
-OiBPTUFQNTogQWRkIFBhbG1hcyBNRkQgbm9kZSBhbmQgcmVndWxhdG9yIG5vZGVzKQppbnRyb2R1
-Y2VkIHJlZ3VsYXRvciBlbnRyaWVzIGZvciBPTUFQNXVFVk0uCgpIb3dldmVyLCBUaGUgcmVndWxh
-dG9yIGluZm9ybWF0aW9uIGlzIGJhc2VkIG9uIGFuIG9sZGVyIHRlbXBvcmFyeQpwcmUtcHJvZHVj
-dGlvbiBib2FyZCB2YXJpYW50IGFuZCBkb2VzIG5vdCByZWZsZWN0IHByb2R1Y3Rpb24gYm9hcmQK
-NzUwLTI2MjgtWFhYIGJvYXJkcy4KClNNUFM5IHN1cHBsaWVzIFRXTDYwNDAgb3ZlciBWRERBXzJ2
-MV9BVUQuIFRoaXMgcmVndWxhdG9yIG5lZWRzIHRvIGJlCmVuYWJsZWQgb25seSB3aGVuIGF1ZGlv
-IGlzIGFjdGl2ZS4gU2luY2UgaXQgZG9lcyBub3QgY29tZSBhY3RpdmUgYnkKZGVmYXVsdCwgaXQg
-ZG9lcyBub3QgcmVxdWlyZSAiYWx3YXlzLW9uIiBvciAiYm9vdC1vbiIuCgpSZXBvcnRlZC1ieTog
-TWFyYyBKw7x0dG5lciA8bS1qdWV0dG5lckB0aS5jb20+ClNpZ25lZC1vZmYtYnk6IE5pc2hhbnRo
-IE1lbm9uIDxubUB0aS5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvb21hcDUtdWV2bS5kdHMg
-fCAgICAyIC0tCiAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9h
-cmNoL2FybS9ib290L2R0cy9vbWFwNS11ZXZtLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXA1
-LXVldm0uZHRzCmluZGV4IGI0MzBiOGYuLjY3MDlmMWUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL29tYXA1LXVldm0uZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXA1LXVldm0u
-ZHRzCkBAIC0zMzEsOCArMzMxLDYgQEAKIAkJCQkJcmVndWxhdG9yLW5hbWUgPSAic21wczkiOwog
-CQkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwyMTAwMDAwPjsKIAkJCQkJcmVndWxhdG9y
-LW1heC1taWNyb3ZvbHQgPSA8MjEwMDAwMD47Ci0JCQkJCXJlZ3VsYXRvci1hbHdheXMtb247Ci0J
-CQkJCXJlZ3VsYXRvci1ib290LW9uOwogCQkJCQl0aSxzbXBzLXJhbmdlID0gPDB4ODA+OwogCQkJ
-CX07CiAKLS0gCjEuNy45LjUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNj
-dXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2Rl
-dmljZXRyZWUtZGlzY3Vzcwo=
+
+--===============2752121799077332732==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="f8uTbadvzI+nQOZu"
+Content-Disposition: inline
+
+
+--f8uTbadvzI+nQOZu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jul 17, 2013 at 04:26:28PM +0200, Gerhard Sittig wrote:
+> On Wed, Jul 17, 2013 at 13:07 +0100, Mark Brown wrote:
+
+> > This is a pretty long e-mail.  It'd probably have taken less time to
+> > fix the issues than to reply to the e-mail...  but anyway.
+
+> Not quite.  Please consider that careful submission is as
+> expensive as thorough review is, and that a lot of work is done
+> before v1 gets submitted, which you may not always notice from
+> looking at a concentrated series that may no longer suggest how
+> much it took to get there (especially when prepared carefully).
+
+This is rather undermined the more time and effort gets spent pushing
+back against doing trival fixes, of course...  besides, the issues here
+are all really simple to fix and test.  It's not a major or risky
+rewrite of the driver or anything like that - most of this can be tested
+by just probing the driver.
+
+> As mentioned before I did not question the need to fix issues as
+> they get identified.  I just asked whether reworking the serial
+
+OK, so send patches then.
+
+> The initial COMMON_CLK implementation in part 09/24 registers
+> clkdev items for compatibility during migration.  The string
+> isn't greppable since it's constructed by the preprocessor in the
+> MCLK data setup, see the MCLK_SETUP_DATA_PSC() macro.
+
+Ugh, right - it didn't show up in searches due to being hidden by the
+macro.
+
+> Now let me see how I can improve the SPI driver with regard to
+> overall clock handling and beyond mere operation by coincidence
+> in the absence of errors.  But please understand that I don't
+> want to stall the common clock support for a whole platform just
+> because some of the drivers it needs to touch to keep them
+> operational have other issues that weren't addressed yet, while
+> these issues aren't introduced with the series but preceed it.
+
+Again, you're not being asked to implement substantial new functionality
+here.  From my point of view I can't test this at all so I'm looking at
+code that's obviously not good for the standard clock API and wondering
+if it even works or how robust it's going to be going forward as the
+common clock code changes which makes me relucatant to say it'll be OK.
+
+The fact that you're switching over to use generic code is itself a
+reason to make sure that the API usage is sane, dodgy API usage against
+open coded clock implementations is less risky than against the common
+code.
+
+--f8uTbadvzI+nQOZu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR5svpAAoJELSic+t+oim95O4P/0GKvCN3rMBcGCdIdB5/KPxx
+A43nsGEJGLvzrJ8MPuK8/lNxre1tPbh40B53pRk4cnccquxJUzTqVRcMrIKwzMy3
+B/HUKswbjMzViSt2j2JBCMsof3BSNXgtGuvMLMZMLSG16EJEa0JCuHPbBMNEiRZl
+CGO0vXDwCyl8//UXzLth8WjSuVsdelflRTYzooU15fCeA6ruDIz03E9vAA1/ZiOR
+jMrcfQ277drHlO+mysw8S3dDyOhneNh6pNUVrOmY4cHVHZUSaYfGFTjpdfyFFwCg
+i3rPPHBdr+8au/XnsyQy5aKWsSMlQWOjsZRw5XBXCvq3DHUCbZ2m7eCl7++cEabz
+YB79eIpH0dt/LRmld8h1FWP+zGI2T6lg0AKriZpxc1mGJ81u7qM3NB1yHx34e0A3
+JH7tknO3BJrLqJ7GdgFINXVBASSNjg8lfGzdmE7kGyZWZk4EfeW71Ss5REsF8/Ga
+v6zKOPK8lYfJWLrkS8XRZ63Alhs9C3k7FVhoA7+PijItFQGptfaAxaCOPAtdMhc9
+R9zIw7Oc41g92vWo7M6y2VoxfCEzktUxCTCmSrgYMP/fpOJckzXJl+0SNc1XlN9Z
+E388Y6zWL969yFZ3JPWdXWORxcPmHcvq6bku5Vro5tdvEV1IhOMREy+KfJMFAkZC
+LEjSZU6BuDm6dmezbivw
+=Z1pg
+-----END PGP SIGNATURE-----
+
+--f8uTbadvzI+nQOZu--
+
+--===============2752121799077332732==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2752121799077332732==--
