@@ -1,33 +1,66 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
-Date: Wed, 17 Jul 2013 14:29:46 +0100
-Message-ID: <1374067786.3146.123.camel@hornet>
-References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
-	 <1374052705.3146.86.camel@hornet>
-	 <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg>
+From: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH V3 1/3] dts: change Marvell prefix to 'marvell'
+Date: Wed, 17 Jul 2013 06:37:57 -0700
+Message-ID: <175CCF5F49938B4D99B2E3EF7F558EBE3DBCDAF7C4@SC-VEXCH4.marvell.com>
+References: <1373352166-10064-1-git-send-email-zhangwm@marvell.com>
+ <20130710214922.GQ11908@titan.lakedaemon.net>
+ <175CCF5F49938B4D99B2E3EF7F558EBE3DBC97FDFA@SC-VEXCH4.marvell.com>
+ <201307142129.43271.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201307142129.43271.arnd-r2nGTMty4D4@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2013-07-17 at 13:33 +0100, Nicolas Pitre wrote:
-> If this is really miscelaneous code that really doesn't fit=20
-> anywhere else, it should rather go into drivers/misc/ as a last resor=
-t.
-
-Interestingly enough drivers/misc was my first choice for all the
-vexpress stuff, but it wasn't received well...
-
-Anyway, the SPC driver as it is now seem to be a "power management
-system driver". Maybe a relevant directory would be in place? Wouldn't
-PSCI belong there as well? (there are two psci.c files in arch/arm and
-arch/arm64, surprisingly similar ones ;-)
-
-The bottom line is: today it is not an MFD driver.
-
-Pawe=C5=82
+QXJuZA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFybmQgQmVyZ21h
+bm4gW21haWx0bzphcm5kQGFybmRiLmRlXQ0KPiBTZW50OiAyMDEzxOo31MIxNcjVIDM6MzANCj4g
+VG86IE5laWwgWmhhbmcNCj4gQ2M6IEphc29uIENvb3BlcjsgTWF0dCBTZWFsZXk7IGdyYW50Lmxp
+a2VseUBsaW5hcm8ub3JnOw0KPiBoYW9qaWFuLnpodWFuZ0BnbWFpbC5jb207IGRldmljZXRyZWUt
+ZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQ
+QVRDSCBWMyAxLzNdIGR0czogY2hhbmdlIE1hcnZlbGwgcHJlZml4IHRvICdtYXJ2ZWxsJw0KPiAN
+Cj4gT24gVGh1cnNkYXkgMTEgSnVseSAyMDEzLCBOZWlsIFpoYW5nIHdyb3RlOg0KPiA+ID4gPiA+
+IFRvIGRvIHRoaXMgcHJvcGVybHksIHRoZSBkcml2ZXJzIGFyZSBnb2luZyB0byBoYXZlIHRvIGJl
+DQo+ID4gPiA+ID4gY29tcGF0aWJsZSB3aXRoIHRoZSBvbGQgYW5kIHRoZSBuZXcgbmFtZXMsIGFu
+ZCB0aGUgYmluZGluZyBkb2NzDQo+ID4gPiA+ID4gdXBkYXRlZCB0byByZWZsZWN0IHRoZSBsZWdh
+Y3kgbmFtZSBhbmQgdGhlIHByZWZlcnJlZCBuYW1lLg0KPiA+ID4gPg0KPiA+ID4gPiBQcm9wZXJs
+eSB3b3VsZCBiZSBhcyBhYm92ZS4gWW91IGNhbiBzdG9wIHVzaW5nIHN0b2NrIHRpY2tlcnMgZm9y
+DQo+ID4gPiA+IG5ldyBjb21wYW55IG5hbWVzLCBidXQgYW55dGhpbmcgdGhhdCBoYXMgYmVlbiBk
+ZWZpbmVkIGluIGEgZGV2aWNlDQo+ID4gPiA+IHRyZWUgYmVmb3JlIGhhcyB0byBzdGF5IHRoYXQg
+d2F5LCBhbmQgYWxsIHRoZSBtYW51ZmFjdHVyZXINCj4gPiA+ID4gcHJlZml4ZXMgdG8gZGV2aWNl
+IG5hbWVzIHNob3VsZCBiZSB0aGUgc2FtZS4gV2hhdCB5b3UncmUgcHJvcG9zaW5nDQo+ID4gPiA+
+IGlzIHB1cmVseSBkcml2ZXIgYmxvYXQgYW5kIGluY3JlYXNpbmcgdGhlIHNpemUgb2Yga2VybmVs
+Lg0KPiA+ID4NCj4gPiA+ICpJJ20qIG5vdCBwcm9wb3NpbmcgdG8gY2hhbmdlIHRoZSBuYW1lLCBO
+ZWlsIGlzLiAgSSdtIHByb3Bvc2luZyB0aGF0DQo+ID4gPiBpZmYgdGhleSBjaG9zZSB0byBkbyB0
+aGF0LCBkb24ndCBicmVhayBzaCp0IGFsb25nIHRoZSB3YXkuDQo+ID4gPg0KPiA+DQo+ID4gV2hh
+dCdzIHlvdXIgb3Bpbmlvbj8NCj4gDQo+IFdlIGRpc2N1c3NlZCB0aGUgdG9waWMgb2YgZml4aW5n
+IGJhZCBiaW5kaW5ncyB2cy4ga2VlcGluZyBiYWNrd2FyZHMgY29tcGF0aWJpbGl0eQ0KPiBkdXJp
+bmcgbGFzdCB3ZWVrJ3MgTGluYXJvIENvbm5lY3QuDQo+IA0KPiBUaGUgbWFpbiBvdXRjb21lIHdh
+cyB0aGF0IHdlIG5lZWQgdG8gaGF2ZSBhIGJldHRlciByZXZpZXcgZm9yIG5ldyBiaW5kaW5ncw0K
+PiBnZXR0aW5nIG1lcmdlZCB0byBhdm9pZCB0aGlzIHNpdHVhdGlvbiBpbiB0aGUgZnV0dXJlLCBi
+dXQgdGhlIGdlbmVyYWwgY29uc2Vuc3VzDQo+IHNlZW1zIHRoYXQgYmluZGluZ3MgdGhhdCBhcmUg
+YWxyZWFkeSBpbiB1c2UgYnV0IHdlcmUgbmV2ZXIgcmV2aWV3ZWQgcHJvcGVybHkNCj4gKHdoaWNo
+IHNob3VsZCBoYXZlIGNhdWdodCB0aGlzKSBzaG91bGQgYmUgY2hhbmdlZC4NCg0KU28gd291bGQg
+eW91IG1pbmQgaWYgSSBsZWF2ZSBpdCB0aGVyZSAoZGlzY2FyZCB0aGlzIHBhdGNoKSBhbmQgc3Rp
+bGwgdXNlIHRoZSBjdXJyZW50ICdtdnJsJyBwcmVmaXggZm9yIHRoaXMgcGF0Y2ggc2V0Lg0KDQo+
+IFdlIHdpbGwgbGlrZWx5IGVzdGFibGlzaCBhbiBhbm5vdGF0aW9uIGluIHRoZSBiaW5kaW5nIHNv
+b24gdG8gbWFyayB0aG9zZSB0aGF0IGNhbg0KPiBub3QgYmUgY2hhbmdlZCBhcyBvcHBvc2VkIHRv
+IHRob3NlIHRoYXQgYXJlIG5vdCBjb25zaWRlcmVkIHN0YWJsZSB5ZXQuDQo+IA0KPiAJQXJuZA0K
+DQoNCkJlc3QgUmVnYXJkcywNCk5laWwgWmhhbmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2
+aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3Jn
+L2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
