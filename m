@@ -1,75 +1,67 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
-Date: Thu, 18 Jul 2013 00:47:29 +0200
-Message-ID: <20130717224729.GA20652@zurbaran>
-References: <1374052705.3146.86.camel@hornet>
- <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg>
- <1374067786.3146.123.camel@hornet>
- <alpine.LFD.2.03.1307171014510.14924@syhkavp.arg>
- <1374070811.3146.124.camel@hornet>
- <alpine.LFD.2.03.1307171148160.14924@syhkavp.arg>
- <20130717170038.GP24642@n2100.arm.linux.org.uk>
- <alpine.LFD.2.03.1307171416490.14924@syhkavp.arg>
- <20130717212343.GC19864@zurbaran>
- <alpine.LFD.2.03.1307171758591.14924@syhkavp.arg>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.03.1307171758591.14924@syhkavp.arg>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jon Medhurst <tixy@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Olof Johansson <olof@lixom.net>, Achin Gupta <Achin.Gupta@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 1/4] pwm: Add PWM polarity flag macro for DT
+Date: Thu, 18 Jul 2013 00:54:21 +0200
+Message-ID: <1374101664-21112-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1374101664-21112-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1374101664-21112-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <linux-arm@overkiz.com>, Shawn Guo <shawn.guo@linaro.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 17, 2013 at 06:22:46PM -0400, Nicolas Pitre wrote:
-> On Wed, 17 Jul 2013, Samuel Ortiz wrote:
-> 
-> > On Wed, Jul 17, 2013 at 02:29:02PM -0400, Nicolas Pitre wrote:
-> > > At this point I don't really care about the name.  I just want the damn 
-> > > thing merged upstream.  But after several iterations to either fit one 
-> > > or another maintainers taste, each rework ends up in that maintainer 
-> > > saying: "Now that you've reworked the code, I still don't like it since 
-> > > this no longer fits in my subsystem tree."
-> > FWIW, we asked Pawel to rework the sysreg and config parts of the
-> > vexpress driver, make it an actual MFD driver, and spread the remaining
-> > bits of the code into their respective subsystems. I don't think
-> > this is an eccentric requirement.
-> 
-> I agree.  However the code that Lorenzo just posted can't be deprived 
-> of any more sysreg/config parts.  
-Yes, and I appreciate Lorenzo's effort here.
+Define a PWM_POLARITY_INVERTED macro in include/dt-bindings/pwm/pwm.h to
+be used by device tree sources.
 
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ Documentation/devicetree/bindings/pwm/pwm.txt |  7 ++++---
+ include/dt-bindings/pwm/pwm.h                 | 14 ++++++++++++++
+ 2 files changed, 18 insertions(+), 3 deletions(-)
+ create mode 100644 include/dt-bindings/pwm/pwm.h
 
-> Even the larger code you reviewed before is completely useless without 
-> _additional_ drivers to go on top which are indeed waiting after this 
-> code to be merged before they are submitted to their respective 
-> subsystems.
-Right. And merging this code in the right place is exactly what we're
-doing here.
-
+diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
+index 06e6724..8556263 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+@@ -43,13 +43,14 @@ because the name "backlight" would be used as fallback anyway.
+ pwm-specifier typically encodes the chip-relative PWM number and the PWM
+ period in nanoseconds.
  
-> And those additional drivers are way more interesting than this dumb 
-> register access arbitrator.  
-Yes, they're a lot smarter hence the requirement to have them live into
-their respective subsystems where the right maintainer can provide
-relevant reviews on them.
-
-> > I don't mind merging Lorenzo's SPC driver as it is if he can explain to
-> > me how it will eventually evolve into an actual MFD driver. If that's
-> > not the case, I don't see how I could justify merging it through the
-> > MFD tree.
-> 
-> Maybe the misunderstanding is about what actually is a MFD driver.
-That's possible. I agree it should be documented properly.
-
-> So I'll follow existing precedents in the kernel and move Lorenzo's code 
-> to drivers/platform/vexpress/.
-Thanks for that.
-
-Cheers,
-Samuel.
-
+-Optionally, the pwm-specifier can encode a number of flags in a third cell:
+-- bit 0: PWM signal polarity (0: normal polarity, 1: inverse polarity)
++Optionally, the pwm-specifier can encode a number of flags (defined in
++<dt-bindings/pwm/pwm.h>) in a third cell:
++- PWM_POLARITY_INVERTED: invert the PWM signal polarity
+ 
+ Example with optional PWM specifier for inverse polarity
+ 
+ 	bl: backlight {
+-		pwms = <&pwm 0 5000000 1>;
++		pwms = <&pwm 0 5000000 PWM_POLARITY_INVERTED>;
+ 		pwm-names = "backlight";
+ 	};
+ 
+diff --git a/include/dt-bindings/pwm/pwm.h b/include/dt-bindings/pwm/pwm.h
+new file mode 100644
+index 0000000..96f49e8
+--- /dev/null
++++ b/include/dt-bindings/pwm/pwm.h
+@@ -0,0 +1,14 @@
++/*
++ * This header provides constants for most PWM bindings.
++ *
++ * Most PWM bindings can include a flags cell as part of the PWM specifier.
++ * In most cases, the format of the flags cell uses the standard values
++ * defined in this header.
++ */
++
++#ifndef _DT_BINDINGS_PWM_PWM_H
++#define _DT_BINDINGS_PWM_PWM_H
++
++#define PWM_POLARITY_INVERTED			(1 << 0)
++
++#endif
 -- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+1.8.1.5
+
