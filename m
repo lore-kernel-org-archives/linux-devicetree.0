@@ -1,109 +1,51 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH RFC v2 2/5] dma: mpc512x: add support for peripheral
- transfers
-Date: Wed, 17 Jul 2013 12:42:34 +0200
-Message-ID: <20130717104234.GJ7080@book.gsilab.sittig.org>
-References: <1373642781-32631-1-git-send-email-gsi@denx.de>
- <1373803321-11628-1-git-send-email-gsi@denx.de>
- <1373803321-11628-3-git-send-email-gsi@denx.de>
- <51E5226D.9050100@metafoo.de>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
+Date: Wed, 17 Jul 2013 11:44:17 +0100
+Message-ID: <20130717104416.GA1896@e102568-lin.cambridge.arm.com>
+References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1374052705.3146.86.camel@hornet>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1374052705.3146.86.camel@hornet>
 Content-Disposition: inline
-In-Reply-To: <51E5226D.9050100-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Moll <Pawel.Moll@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Samuel Ortiz <sameo@linux.intel.com>, Olof Johansson <olof@lixom.net>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 16, 2013 at 12:37 +0200, Lars-Peter Clausen wrote:
+On Wed, Jul 17, 2013 at 10:18:25AM +0100, Pawel Moll wrote:
+> On Tue, 2013-07-16 at 17:05 +0100, Lorenzo Pieralisi wrote:
+> > /drivers/mfd is probably not the right place for this code as it stands (but
+> > probably will be when the entire driver, with DVFS and config interface, is
+> > complete).
 > 
-> On 07/14/2013 02:01 PM, Gerhard Sittig wrote:
-> > From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > introduce support for slave s/g transfer preparation and the associated
-> > device control callback in the MPC512x DMA controller driver, which adds
-> > support for data transfers between memory and peripheral I/O to the
-> > previously supported mem-to-mem transfers
-> > 
-> > refuse to prepare chunked transfers (transfers with more than one part)
-> > as long as proper support for scatter/gather is lacking
-> > 
-> > keep MPC8308 operational by always starting transfers from software,
-> > this SoC appears to not have request lines for flow control when
-> > peripherals are involved in transfers
+> Not that it really matters now, but my vexpress-sysreg rework will -
+> most likely - leave only skeleton in the MFD (registering mfd_cells) and
+> other stuff is going to be spread all around. Then I'm planning to move
+> the remaining of the vexpress-specific initialization to
+> drivers/platform/arm/vexpress.c, so maybe sticking vexpress-spc.c to
+> this (non-existing yet) directory would be the right thing to do?
+
+Done. I do not think there is a point in splitting the patch to create
+the dir and make infrastructure, so I squashed everything in the
+original patch. I have not added any maintainer for that dir/file, I
+guess it can wait till you finish the rework so that you can add
+yourself there.
+
+If that's all I need to change I do not even think that reposting is
+necessary.
+
+It does matter though, since it implies changes on who is in charge of
+ack/nack'ing this code, if it is no more an mfd matter.
+
+I will wait to check all interested/concerned parties opinions, that are
+always welcome.
+
+> Other than that:
 > 
-> I had a look at the current driver and it seems that any channel can be used
-> for memcpy operation not only the MDDRC channel. Since the dmaengine API
-> will just pick one of the currently free channels when performing a memcpy
-> operation I think this patch breaks memcpy operations. You probably need to
-> register two dma controllers, one for memcpy operations one for slave
-> operations, that way you can ensure that only the MDDRC channel is used for
-> memcpy operations.
+> Acked-by: Pawel Moll <pawel.moll@arm.com>
 
-OK, so the need for explicit start in software or external
-request by the peripheral remains, but the condition for the
-choice is different.  It might become a flag attached to the DMA
-channel, that gets setup in the prep routines (memory and slave
-access each use their own prep calls) and gets evaluated in
-execute.  Something like "will access memory", or "will access
-peripheral" (the latter may be preferrable since slave support is
-the new feature).
-
-This assumes that the non-MDDRC channels can get used for memory
-transfers as well, which your description of the the former use
-suggests, when slave support was absent.
-
-Making the MDDRC channel preferrable for memcpy operations is
-orthogonal to that.
-
-> > 
-> > [ introduction of slave s/g preparation and device control ]
-> > Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > [ execute() start condition, mpc8308 compat, terminate all, s/g length check, reworded commit msg ]
-> > Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-> > ---
-> [...]
-
-
-> > +
-> > +static int mpc_dma_device_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
-> > +				  unsigned long arg)
-> > +{
-> > +	struct mpc_dma_chan *mchan;
-> > +	struct mpc_dma *mdma;
-> > +	struct dma_slave_config *cfg;
-> > +
-> > +	mchan = dma_chan_to_mpc_dma_chan(chan);
-> > +	switch (cmd) {
-> > +	case DMA_TERMINATE_ALL:
-> > +		/* disable channel requests */
-> > +		mdma = dma_chan_to_mpc_dma(chan);
-> > +		out_8(&mdma->regs->dmacerq, chan->chan_id);
-> > +		list_splice_tail_init(&mchan->prepared, &mchan->free);
-> > +		list_splice_tail_init(&mchan->queued, &mchan->free);
-> > +		list_splice_tail_init(&mchan->active, &mchan->free);
-> 
-> This probably need locking.
-
-Ah, yes.  It needs to grab the same lock as all the other list
-manipulations in the driver's source.
-
-
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+Thank you !!!
+Lorenzo
