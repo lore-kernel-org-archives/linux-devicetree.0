@@ -1,68 +1,71 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+From: Samuel Ortiz <sameo@linux.intel.com>
 Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
-Date: Wed, 17 Jul 2013 23:10:21 +0200
-Message-ID: <20130717211021.GB19864@zurbaran>
+Date: Wed, 17 Jul 2013 23:23:43 +0200
+Message-ID: <20130717212343.GC19864@zurbaran>
 References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
  <1374052705.3146.86.camel@hornet>
  <alpine.LFD.2.03.1307170825240.14924@syhkavp.arg>
  <1374067786.3146.123.camel@hornet>
  <alpine.LFD.2.03.1307171014510.14924@syhkavp.arg>
  <1374070811.3146.124.camel@hornet>
+ <alpine.LFD.2.03.1307171148160.14924@syhkavp.arg>
+ <20130717170038.GP24642@n2100.arm.linux.org.uk>
+ <alpine.LFD.2.03.1307171416490.14924@syhkavp.arg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1374070811.3146.124.camel@hornet>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <Achin.Gupta-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.03.1307171416490.14924@syhkavp.arg>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Jon Medhurst <tixy@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Olof Johansson <olof@lixom.net>, Achin Gupta <Achin.Gupta@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pawel,
+Hi Nicolas,
 
-On Wed, Jul 17, 2013 at 03:20:11PM +0100, Pawel Moll wrote:
-> On Wed, 2013-07-17 at 15:16 +0100, Nicolas Pitre wrote:
-> > On Wed, 17 Jul 2013, Pawel Moll wrote:
-> > 
-> > > On Wed, 2013-07-17 at 13:33 +0100, Nicolas Pitre wrote:
-> > > > If this is really miscelaneous code that really doesn't fit 
-> > > > anywhere else, it should rather go into drivers/misc/ as a last resort.
-> > > 
-> > > Interestingly enough drivers/misc was my first choice for all the
-> > > vexpress stuff, but it wasn't received well...
-> > > 
-> > > Anyway, the SPC driver as it is now seem to be a "power management
-> > > system driver". Maybe a relevant directory would be in place? Wouldn't
-> > > PSCI belong there as well? (there are two psci.c files in arch/arm and
-> > > arch/arm64, surprisingly similar ones ;-)
-> > > 
-> > > The bottom line is: today it is not an MFD driver.
-> > 
-> > But we know it will, right?  So better  save some churn by storing the 
-> > initial code where it would end up anyway once complete.
+On Wed, Jul 17, 2013 at 02:29:02PM -0400, Nicolas Pitre wrote:
+> On Wed, 17 Jul 2013, Russell King - ARM Linux wrote:
 > 
-> Not in that form, no. The code living in mfd will just register
-> mfd_cells while "functional" parts are going to live elsewhere. This is
-> how I understand what Samuel asked me to do and that's what is happening
-> to vexpress-sysreg now.
-Very good, I'll happily apply such changes.
-If I understand the IP correctly, the SPC driver will stay as a set of
-runtime APIs for controlling the SPC features. If that's the case, then
-misc sounds like a more appropriate place for this driver.
-drivers/power/ really is for power supplies and charging drivers.
+> > On Wed, Jul 17, 2013 at 11:57:55AM -0400, Nicolas Pitre wrote:
+> > > The sanest location at this point might simply be 
+> > > drivers/platform/vexpress_spc.c or drivers/platform/vexpress/spc.c 
+> > > depending on whether or not more such driver glue is expected in the 
+> > > vexpress future.  No point putting "arm" in the path, especially if this 
+> > > is later reused on arm64.
+> > 
+> > You wouldn't be making that argument if it were arch/arm64 and arch/arm32 -
+> > you'd probably be arguing that "arm" made perfect sense.
+> 
+> Well... in a sense: yes.  But in the end, having per arch directories 
+> under drivers/ is silly.  We already have per arch directories under 
+> arch/already.
+> 
+> > Don't get too hung up on names please, it's really not worth the time
+> > and effort being soo pedantic, and being soo pedantic leads to "pointless
+> > churn" when someone comes along and wants to pedantically change the
+> > names because it no longer matches the users.
+> 
+> At this point I don't really care about the name.  I just want the damn 
+> thing merged upstream.  But after several iterations to either fit one 
+> or another maintainers taste, each rework ends up in that maintainer 
+> saying: "Now that you've reworked the code, I still don't like it since 
+> this no longer fits in my subsystem tree."
+FWIW, we asked Pawel to rework the sysreg and config parts of the
+vexpress driver, make it an actual MFD driver, and spread the remaining
+bits of the code into their respective subsystems. I don't think
+this is an eccentric requirement.
+
+
+> In fact what we'd need at this point is 
+> drivers/code_that_no_subsystem_maintainers_wants/.  
+Which is what some people think drivers/mfd/ is...
+I don't mind merging Lorenzo's SPC driver as it is if he can explain to
+me how it will eventually evolve into an actual MFD driver. If that's
+not the case, I don't see how I could justify merging it through the
+MFD tree.
 
 Cheers,
-Samuel. 
+Samuel.
 
 -- 
 Intel Open Source Technology Centre
