@@ -1,45 +1,125 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [lm-sensors] [RESEND PATCH V1 0/9] thermal: introduce DT thermal
- zone build
-Date: Thu, 18 Jul 2013 11:18:05 -0600
-Message-ID: <51E8234D.1020607@wwwdotorg.org>
-References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com> <20130717220942.GB990@roeck-us.net> <51E7F341.8020508@ti.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: [PATCH v2 14/24] serial: mpc512x: setup the PSC FIFO clock as well
+Date: Thu, 18 Jul 2013 19:00:45 +0200
+Message-ID: <1374166855-7280-15-git-send-email-gsi@denx.de>
+References: <1373914074-20889-1-git-send-email-gsi@denx.de>
+ <1374166855-7280-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <51E7F341.8020508@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, l.stach@pengutronix.de
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1374166855-7280-1-git-send-email-gsi@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2013 07:53 AM, Eduardo Valentin wrote:
-> Hello Guenter,
-> 
-> On 17-07-2013 18:09, Guenter Roeck wrote:
->> On Wed, Jul 17, 2013 at 11:17:19AM -0400, Eduardo Valentin
->> wrote:
->>> Hello all,
->>> 
->>> As you noticed, I am working in a way to represent thermal
->>> data using device tree [1]. Essentially, this should be a way
->>> to say what to do with a sensor and how to associate (cooling)
->>> actions with it.
->>> 
->> Seems to me that goes way beyond the supposed scope of devicetree
->> data. Devicetree data is supposed to describe hardware, not its
->> configuration or use. This is clearly a use case.
-> 
-> Thanks for rising your voice here. It is important to know what
-> hwmon ppl think about this.
+prepare and enable the FIFO clock upon PSC FIFO initialization,
+disable and unprepare the FIFO clock upon PSC FIFO uninitialization,
+remove the pre-enable workaround from the platform's clock driver
 
-I meant to find time to read Guenter's original email where he
-initially objected to putting data into DT, and determine exactly what
-was being objected to. I still haven't:-( However, the arguments that
-Eduardo stated in his email do make sense to me; I agree that
-temperature limits really are a description of HW. Details of which
-cooling methods to invoke when certain temperature limits are reached
-is also part of the HW/system design, and hence I would tend to agree
-that they're appropriate to include in DT. Anyway, that's just my 2
-cents on the matter:-)
+Signed-off-by: Gerhard Sittig <gsi@denx.de>
+---
+ arch/powerpc/platforms/512x/clock-commonclk.c |    2 --
+ drivers/tty/serial/mpc52xx_uart.c             |   39 +++++++++++++++++++++----
+ 2 files changed, 33 insertions(+), 8 deletions(-)
+
+diff --git a/arch/powerpc/platforms/512x/clock-commonclk.c b/arch/powerpc/platforms/512x/clock-commonclk.c
+index b822469..99d197d 100644
+--- a/arch/powerpc/platforms/512x/clock-commonclk.c
++++ b/arch/powerpc/platforms/512x/clock-commonclk.c
+@@ -689,8 +689,6 @@ static void mpc512x_clk_setup_clock_tree(int busfreq)
+ 	clk_prepare_enable(clks[MPC512x_CLK_MEM]);	/* SRAM */
+ 	clk_prepare_enable(clks[MPC512x_CLK_IPS]);	/* SoC periph */
+ 	clk_prepare_enable(clks[MPC512x_CLK_LPC]);	/* boot media */
+-	/* some are required yet no dependencies were declared */
+-	clk_prepare_enable(clks[MPC512x_CLK_PSC_FIFO]);
+ 	/* some are not yet acquired by their respective drivers */
+ 	clk_prepare_enable(clks[MPC512x_CLK_PSC3_MCLK]);/* serial console */
+ 	clk_prepare_enable(clks[MPC512x_CLK_FEC]);	/* network, NFS */
+diff --git a/drivers/tty/serial/mpc52xx_uart.c b/drivers/tty/serial/mpc52xx_uart.c
+index 8643dcf..3fdadf9 100644
+--- a/drivers/tty/serial/mpc52xx_uart.c
++++ b/drivers/tty/serial/mpc52xx_uart.c
+@@ -421,6 +421,7 @@ struct psc_fifoc {
+ 
+ static struct psc_fifoc __iomem *psc_fifoc;
+ static unsigned int psc_fifoc_irq;
++static struct clk *psc_fifoc_clk;
+ 
+ static void mpc512x_psc_fifo_init(struct uart_port *port)
+ {
+@@ -574,30 +575,56 @@ static int __init mpc512x_psc_fifoc_init(void)
+ 				     "fsl,mpc5121-psc-fifo");
+ 	if (!np) {
+ 		pr_err("%s: Can't find FIFOC node\n", __func__);
+-		return -ENODEV;
++		goto out_err;
++	}
++
++	psc_fifoc_clk = of_clk_get_by_name(np, "per");
++	if (IS_ERR(psc_fifoc_clk)) {
++		pr_err("%s: Can't lookup FIFO clock\n", __func__);
++		goto out_ofnode_put;
++	}
++	if (clk_prepare_enable(psc_fifoc_clk)) {
++		pr_err("%s: Can't enable FIFO clock\n", __func__);
++		goto out_clk_put;
+ 	}
+ 
+ 	psc_fifoc = of_iomap(np, 0);
+ 	if (!psc_fifoc) {
+ 		pr_err("%s: Can't map FIFOC\n", __func__);
+-		of_node_put(np);
+-		return -ENODEV;
++		goto out_clk_disable;
+ 	}
+ 
+ 	psc_fifoc_irq = irq_of_parse_and_map(np, 0);
+-	of_node_put(np);
+ 	if (psc_fifoc_irq == 0) {
+ 		pr_err("%s: Can't get FIFOC irq\n", __func__);
+-		iounmap(psc_fifoc);
+-		return -ENODEV;
++		goto out_unmap;
+ 	}
+ 
++	of_node_put(np);
+ 	return 0;
++
++out_unmap:
++	iounmap(psc_fifoc);
++out_clk_disable:
++	clk_disable_unprepare(psc_fifoc_clk);
++out_clk_put:
++	clk_put(psc_fifoc_clk);
++out_ofnode_put:
++	of_node_put(np);
++out_err:
++	return -ENODEV;
+ }
+ 
+ static void __exit mpc512x_psc_fifoc_uninit(void)
+ {
+ 	iounmap(psc_fifoc);
++
++	/* disable the clock, errors are not fatal */
++	if (psc_fifoc_clk && !IS_ERR(psc_fifoc_clk)) {
++		clk_disable_unprepare(psc_fifoc_clk);
++		clk_put(psc_fifoc_clk);
++		psc_fifoc_clk = NULL;
++	}
+ }
+ 
+ /* 512x specific interrupt handler. The caller holds the port lock */
+-- 
+1.7.10.4
