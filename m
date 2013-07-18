@@ -1,184 +1,121 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] Documentation: dt: bindings: TI WiLink modules
-Date: Thu, 18 Jul 2013 01:58:17 +0200
-Message-ID: <1698879.DLaB5pbe5M@avalon>
-References: <1372149330-24335-1-git-send-email-coelho@ti.com> <1372425670.21065.61.camel@cumari.coelho.fi> <1372682370.21065.68.camel@cumari.coelho.fi>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH V2 5/5] ARM: remove #gpio-ranges-cells property
+Date: Thu, 18 Jul 2013 03:35:16 +0200
+Message-ID: <1425430.efevqzjIZK@avalon>
+References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
+ <1373913629-32179-5-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1372682370.21065.68.camel@cumari.coelho.fi>
-Sender: linux-doc-owner@vger.kernel.org
-To: Luciano Coelho <coelho@ti.com>
-Cc: mturquette@linaro.org, Mark Rutland <mark.rutland@arm.com>, balbi@ti.com, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-arm@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1373913629-32179-5-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Luciano,
+Hi Stephen,
 
-On Monday 01 July 2013 15:39:30 Luciano Coelho wrote:
-> On Fri, 2013-06-28 at 16:21 +0300, Luciano Coelho wrote:
-> > On Fri, 2013-06-28 at 15:18 +0300, Felipe Balbi wrote:
-> > > On Fri, Jun 28, 2013 at 03:13:52PM +0300, Luciano Coelho wrote:
-> > > > On Fri, 2013-06-28 at 14:41 +0300, Felipe Balbi wrote:
-> > > > > On Fri, Jun 28, 2013 at 02:22:11PM +0300, Luciano Coelho wrote:
-> > > > > > On Fri, 2013-06-28 at 13:31 +0300, Luciano Coelho wrote:
-> > > > > > > (fixed Mike's address)
-> > > > > > > 
-> > > > > > > On Fri, 2013-06-28 at 11:21 +0100, Mark Rutland wrote:
-> > > > > > > > On Fri, Jun 28, 2013 at 10:53:35AM +0100, Luciano Coelho 
-wrote:
-> > > > > > > > > On Fri, 2013-06-28 at 10:38 +0100, Mark Rutland wrote:
-> > > > > > > > > > On Tue, Jun 25, 2013 at 09:35:30AM +0100, Luciano Coelho 
-wrote:
-> > > > > > > > > > > +Optional properties:
-> > > > > > > > > > > +--------------------
-> > > > > > > > > > > +
-> > > > > > > > > > > +- refclock: the internal WLAN reference clock frequency
-> > > > > > > > > > > (required for
-> > > > > > > > > > > +  WiLink6 and WiLink7; not used for WiLink8).  Must be
-> > > > > > > > > > > one of the
-> > > > > > > > > > > +  following:
-> > > > > > > > > > > +	0 = 19.2 MHz
-> > > > > > > > > > > +	1 = 26.0 MHz
-> > > > > > > > > > > +	2 = 38.4 MHz
-> > > > > > > > > > > +	3 = 52.0 MHz
-> > > > > > > > > > > +	4 = 38.4 MHz, XTAL
-> > > > > > > > > > > +	5 = 26.0 MHz, XTAL
-> > > > > > > > > > > +
-> > > > > > > > > > > +- tcxoclock: the internal WLAN TCXO clock frequency
-> > > > > > > > > > > (required for
-> > > > > > > > > > > +  WiLink7 not used for WiLink6 and WiLink8).  Must be
-> > > > > > > > > > > one of the
-> > > > > > > > > > > +  following:
-> > > > > > > > > > > +	0 = 19.200 MHz
-> > > > > > > > > > > +	1 = 26.000 MHz
-> > > > > > > > > > > +	2 = 38.400 MHz
-> > > > > > > > > > > +	3 = 52.000 MHz
-> > > > > > > > > > > +	4 = 16.368 MHz
-> > > > > > > > > > > +	5 = 32.736 MHz
-> > > > > > > > > > > +	6 = 16.800 MHz
-> > > > > > > > > > > +	7 = 33.600 MHz
-> > > > > > > > > > 
-> > > > > > > > > > This looks suspiciously like what we have the common clock
-> > > > > > > > > > bindings for:
-> > > > > > > > > > 
-> > > > > > > > > > refclk {
-> > > > > > > > > > 
-> > > > > > > > > > 	compatible = "fixed-clock";
-> > > > > > > > > > 	#clock-cells = <0>;
-> > > > > > > > > > 	clock-frequency = <19200000>;
-> > > > > > > > > > 
-> > > > > > > > > > }
-> > > > > > > > > > 
-> > > > > > > > > > wilink {
-> > > > > > > > > > 
-> > > > > > > > > > 	compatible = "ti,wilink7";
-> > > > > > > > > > 	interrupt-parent = <&some_interrupt_controller>;
-> > > > > > > > > > 	interrupts = <0 1 1>;
-> > > > > > > > > > 	clocks = <&refclk>, <&refclk>;
-> > > > > > > > > > 	clock-names = "refclk", "txoclk";
-> > > > > > > > > > 
-> > > > > > > > > > };
-> > > > > > > > > > 
-> > > > > > > > > > Could you not use them?
-> > > > > > > > > 
-> > > > > > > > > Hmmm... this actually does look good.  But these are
-> > > > > > > > > internal clocks in the modules, they cannot be accessed from
-> > > > > > > > > outside.  Does it make sense to register them with the clock
-> > > > > > > > > framework?
-> > > > > > > > 
-> > > > > > > > Given we already have a common way of describing clocks, I
-> > > > > > > > think it makes sense to use it -- people already understand
-> > > > > > > > the common bindings, and it's less code to add add to the
-> > > > > > > > kernel. I don't think the fact these clocks are internal
-> > > > > > > > should prevent us from describing them as we would an external
-> > > > > > > > clock.
-> > > > > > > 
-> > > > > > > Yes, I agree with you.  Thanks for the suggestion! I think it
-> > > > > > > will look much better.  And now that I dug a bit more into the
-> > > > > > > code, I can see that there are only structs being populated, so
-> > > > > > > there shouldn't be any other side-effects.
-> > > > > > 
-> > > > > > Hmmm, one thing that escaped me.  Besides the frequency, I also
-> > > > > > need a boolean that tells if the clock is XTAL or not.  I can't
-> > > > > > figure out how to pass this if I use the generic clock framework. 
-> > > > > > Any suggestions?
-> > > > > 
-> > > > > Could you use clock-output-names for that ?
-> > > > > 
-> > > > > XTAL clock:
-> > > > > 
-> > > > > refclk {
-> > > > > 
-> > > > > 	compatible = "fixed-clock";
-> > > > > 	#clock cells = <0>;
-> > > > > 	clock-frequency = <19200000>;
-> > > > > 	clock-output-names = "xtal";
-> > > > > 
-> > > > > };
-> > > > > 
-> > > > > non-XTAL clock:
-> > > > > 
-> > > > > refclk {
-> > > > > 
-> > > > > 	compatible = "fixed-clock";
-> > > > > 	#clock cells = <0>;
-> > > > > 	clock-frequency = <19200000>;
-> > > > > 	clock-output-names = "osc"; /* any better name ? */
-> > > > > 
-> > > > > };
-> > > > 
-> > > > This starts looking a bit hacky.  Using the output name as a flag is
-> > > > not very pretty.
-> > > > 
-> > > > I think it would be better to have a separate flag for it in the wlan
-> > > > node.  Like an optional "refclock-xtal" boolean or something.  The
-> > > > downside of this is that we would be adding information about the
-> > > > clock details in the wilink node. :(
-> > > > 
-> > > > OTOH, we could add a flag to the generic clock binding? A new optional
-> > > > boolean that tells whether the clock is XTAL or not:
-> > > > 
-> > > > refclk {
-> > > > 
-> > > > 	compatible = "fixed-clock";
-> > > > 	#clock cells = <0>;
-> > > > 	clock-frequency = <19200000>;
-> > > > 	clock-xtal;
-> > > > 
-> > > > };
-> > > > 
-> > > > Do you think that would make sense?
-> > > 
-> > > sure, that looks alright to me. Surely there are other devices out there
-> > > who want to know if the clock comes from a crystal or not ?!?
-> > 
-> > Mike, what do you think about this idea? If it sounds okay to you, I can
-> > cook up a patch adding this flag.
+On Monday 15 July 2013 12:40:29 Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> Hmmm... I started implementing this whole thing, but using these clocks
-> as "fixed-clock"s is not so straightforward.  The problem is that I
-> would need to register my driver as a clock provider and add the OF
-> match for "fixed-clock".
+> This property is no longer required by the GPIO binding. Remove it.
 > 
-> If I do that, all the other "fixed-clock" nodes would be passed to my
-> driver too, which is wrong.  Or, the platform should register the
-> "fixed-clock" match, but this would be wrong too, since it would find
-> *my* fixed-clocks.
-> 
-> The only thing I can come up with is to make a small clock driver (maybe
-> even inside the WiLink module itself) that registers a new type of
-> clock, "ti,wilink-clock" or something.  But this would really be
-> overkill, wouldn't it?
-> 
-> Any other ideas?
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> This should presumably be applied along with the previous changes
 
-One possibility would be to just call clk_get_rate() on the clock from the 
-WiLink driver, which would return the fixed frequency specified in DT, and 
-configure the WiLink hardware accordingly. This might be a bit hackish though.
+The mach-shmobile tree includes patches for v3.12 that will add the #gpio-
+ranges-cells to several .dtsi files. I can get that fixed locally (most 
+probably through a rebase), could you please ping me when this series will be 
+accepted for upstream merge ?
 
+> v2: Squash spear and mxc changes into a single patch; there's no
+> need to keep vf610.dtsi separate now that this series will go into
+> v3.12 or later, and that file is part of v3.11-rc1.
+> ---
+>  arch/arm/boot/dts/spear1310.dtsi | 1 -
+>  arch/arm/boot/dts/spear1340.dtsi | 1 -
+>  arch/arm/boot/dts/spear310.dtsi  | 1 -
+>  arch/arm/boot/dts/spear320.dtsi  | 2 --
+>  arch/arm/boot/dts/vf610.dtsi     | 1 -
+>  5 files changed, 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/spear1310.dtsi
+> b/arch/arm/boot/dts/spear1310.dtsi index 122ae94..90e99b5 100644
+> --- a/arch/arm/boot/dts/spear1310.dtsi
+> +++ b/arch/arm/boot/dts/spear1310.dtsi
+> @@ -89,7 +89,6 @@
+>  		pinmux: pinmux@e0700000 {
+>  			compatible = "st,spear1310-pinmux";
+>  			reg = <0xe0700000 0x1000>;
+> -			#gpio-range-cells = <3>;
+>  		};
+> 
+>  		apb {
+> diff --git a/arch/arm/boot/dts/spear1340.dtsi
+> b/arch/arm/boot/dts/spear1340.dtsi index 54d128d..5003013 100644
+> --- a/arch/arm/boot/dts/spear1340.dtsi
+> +++ b/arch/arm/boot/dts/spear1340.dtsi
+> @@ -63,7 +63,6 @@
+>  		pinmux: pinmux@e0700000 {
+>  			compatible = "st,spear1340-pinmux";
+>  			reg = <0xe0700000 0x1000>;
+> -			#gpio-range-cells = <3>;
+>  		};
+> 
+>  		pwm: pwm@e0180000 {
+> diff --git a/arch/arm/boot/dts/spear310.dtsi
+> b/arch/arm/boot/dts/spear310.dtsi index 9537208..1e1318e 100644
+> --- a/arch/arm/boot/dts/spear310.dtsi
+> +++ b/arch/arm/boot/dts/spear310.dtsi
+> @@ -25,7 +25,6 @@
+>  		pinmux: pinmux@b4000000 {
+>  			compatible = "st,spear310-pinmux";
+>  			reg = <0xb4000000 0x1000>;
+> -			#gpio-range-cells = <3>;
+>  		};
+> 
+>  		fsmc: flash@44000000 {
+> diff --git a/arch/arm/boot/dts/spear320.dtsi
+> b/arch/arm/boot/dts/spear320.dtsi index ffea342..f630d0c 100644
+> --- a/arch/arm/boot/dts/spear320.dtsi
+> +++ b/arch/arm/boot/dts/spear320.dtsi
+> @@ -1,4 +1,3 @@
+> -/*
+>   * DTS file for SPEAr320 SoC
+>   *
+>   * Copyright 2012 Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> @@ -24,7 +23,6 @@
+>  		pinmux: pinmux@b3000000 {
+>  			compatible = "st,spear320-pinmux";
+>  			reg = <0xb3000000 0x1000>;
+> -			#gpio-range-cells = <3>;
+>  		};
+> 
+>  		clcd@90000000 {
+> diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
+> index e1eb7da..8577780 100644
+> --- a/arch/arm/boot/dts/vf610.dtsi
+> +++ b/arch/arm/boot/dts/vf610.dtsi
+> @@ -162,7 +162,6 @@
+>  			iomuxc: iomuxc@40048000 {
+>  				compatible = "fsl,vf610-iomuxc";
+>  				reg = <0x40048000 0x1000>;
+> -				#gpio-range-cells = <3>;
+> 
+>  				/* functions and groups pins */
 -- 
 Regards,
 
 Laurent Pinchart
-
