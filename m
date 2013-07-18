@@ -1,75 +1,104 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/3] dmaengine: add dma_get_slave_sg_limits()
-Date: Thu, 18 Jul 2013 18:08:25 +0100
-Message-ID: <20130718170825.GZ21614@n2100.arm.linux.org.uk>
-References: <1374166001-31340-1-git-send-email-joelf@ti.com> <1374166001-31340-2-git-send-email-joelf@ti.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: [PATCH v2 08/24] dts: mpc512x: add clock related device tree specs
+Date: Thu, 18 Jul 2013 19:00:39 +0200
+Message-ID: <1374166855-7280-9-git-send-email-gsi@denx.de>
+References: <1373914074-20889-1-git-send-email-gsi@denx.de>
+ <1374166855-7280-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1374166001-31340-2-git-send-email-joelf@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Joel Fernandes <joelf@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, Balaji TK <balajitk@ti.com>, Gururaja Hebbar <gururaja.hebbar@ti.com>, Chris Ball <cjb@laptop.org>, Jason Kridner <jkridner@beagleboard.org>, Mark Jackson <mpfj-list@newflow.co.uk>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>Linux
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1374166855-7280-1-git-send-email-gsi@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2013 at 11:46:39AM -0500, Joel Fernandes wrote:
-> The API is optionally implemented by dmaengine drivers and when
-> unimplemented will return a NULL pointer. A client driver using
-> this API provides the required dma channel, address width, and
-> burst size of the transfer. dma_get_slave_sg_limits() returns an
-> SG limits structure with the maximum number and size of SG segments
-> that the given channel can handle.
+this addresses the clock driver aka provider's side of clocks
+- prepare for future '<&clks ID>' phandle references for device tree
+  based clock lookup in client drivers
+- introduce a 'clocks' subtree with an 'osc' node for the crystal
+  or oscillator SoC input (fixed frequency)
+- provide default values with 33MHz oscillator frequency in the
+  common include (the 66MHz IPS bus already was there), add
+  override values for the ifm AC14xx board which deviates from
+  the reference design (25MHz xtal, 80MHz IPS bus)
 
-Please look at what's already in struct device:
+Signed-off-by: Gerhard Sittig <gsi@denx.de>
+---
+ arch/powerpc/boot/dts/ac14xx.dts   |    7 +++++++
+ arch/powerpc/boot/dts/mpc5121.dtsi |   15 ++++++++++++++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
-struct device {
-...
-        struct device_dma_parameters *dma_parms;
-...
-};
-
-This provides:
-
-struct device_dma_parameters {
-        /*
-         * a low level driver may set these to teach IOMMU code about
-         * sg limitations.
-         */
-        unsigned int max_segment_size;
-        unsigned long segment_boundary_mask;
-};
-
-Now, these are helpfully accessed via:
-
-dma_get_max_seg_size(dev)
-dma_set_max_seg_size(dev)
-dma_get_seg_boundary(dev)
-dma_set_seg_boundary(dev, mask)
-
-Drivers already use these to work out how to construct the scatterlist
-before passing it to the DMA API, which means that they should also be
-used when creating a scatterlist for the DMA engine (think about it -
-you have to use the DMA API to map the buffers for the DMA engine too.)
-
-So, we already have two properties defined on a per-device basis: the
-maximum size of a scatterlist segment, and the boundary over which any
-segment must not cross.
-
-The former ties up with your max_seg_len() property, though arguably it
-may depend on the DMA engine access size.  The problem with implementing
-this new API though is that the subsystems (such as SCSI) which already
-use dma_get_max_seg_size() will be at odds with what is possible via the
-DMA engine.
-
-I strongly suggest using the infrastructure at device level and not
-implementing some private DMA engine API to convey this information.
-
-As for the maximum number of scatterlist entries, really that's a bug in
-the DMA engine implementations if they can't accept arbitary lengths.
-I've created DMA engine drivers for implementations where you have to
-program each segment individually, ones which can have the current and
-next segments, as well as those which can walk a list.  Provided you get
-informed of a transfer being completed, there really is no reason for a
-DMA engine driver to limit the number of scatterlist entries that it
-will accept.
+diff --git a/arch/powerpc/boot/dts/ac14xx.dts b/arch/powerpc/boot/dts/ac14xx.dts
+index a543c40..a1b8837 100644
+--- a/arch/powerpc/boot/dts/ac14xx.dts
++++ b/arch/powerpc/boot/dts/ac14xx.dts
+@@ -139,7 +139,14 @@
+ 		};
+ 	};
+ 
++	clocks {
++		osc {
++			clock-frequency = <25000000>;
++		};
++	};
++
+ 	soc@80000000 {
++		bus-frequency = <80000000>;	/* 80 MHz ips bus */
+ 
+ 		clock@f00 {
+ 			compatible = "fsl,mpc5121rev2-clock", "fsl,mpc5121-clock";
+diff --git a/arch/powerpc/boot/dts/mpc5121.dtsi b/arch/powerpc/boot/dts/mpc5121.dtsi
+index bd14c00..8f4cba0 100644
+--- a/arch/powerpc/boot/dts/mpc5121.dtsi
++++ b/arch/powerpc/boot/dts/mpc5121.dtsi
+@@ -9,6 +9,8 @@
+  * option) any later version.
+  */
+ 
++#include <dt-bindings/clock/mpc512x-clock.h>
++
+ /dts-v1/;
+ 
+ / {
+@@ -73,6 +75,16 @@
+ 		ranges = <0x0 0x0 0xfc000000 0x04000000>;
+ 	};
+ 
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		osc {
++			compatible = "fsl,mpc512x-osc", "fixed-clock";
++			clock-frequency = <33000000>;
++		};
++	};
++
+ 	soc@80000000 {
+ 		compatible = "fsl,mpc5121-immr";
+ 		#address-cells = <1>;
+@@ -118,9 +130,10 @@
+ 		};
+ 
+ 		/* Clock control */
+-		clock@f00 {
++		clks: clock@f00 {
+ 			compatible = "fsl,mpc5121-clock";
+ 			reg = <0xf00 0x100>;
++			#clock-cells = <1>;
+ 		};
+ 
+ 		/* Power Management Controller */
+-- 
+1.7.10.4
