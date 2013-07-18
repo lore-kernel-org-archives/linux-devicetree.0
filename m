@@ -1,79 +1,60 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/3] misc: Add crossbar driver
-Date: Thu, 18 Jul 2013 21:25:04 +0300
-Message-ID: <20130718182504.GA7497@arwen.pp.htv.fi>
-References: <1374165830-6367-1-git-send-email-r.sricharan@ti.com>
- <1374165830-6367-2-git-send-email-r.sricharan@ti.com>
-Reply-To: <balbi@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH v2 11/15] cpufreq: kirkwood-cpufreq: remove device
+ tree parsing for cpu nodes
+Date: Thu, 18 Jul 2013 13:30:55 -0500
+Message-ID: <51E8345F.30608@gmail.com>
+References: <1374069984-20567-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1374069984-20567-12-git-send-email-Sudeep.KarkadaNagesha@arm.com> <20130717144355.GE1026@lunn.ch> <51E7A63F.7020207@arm.com> <51E7BFFA.8010101@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1374165830-6367-2-git-send-email-r.sricharan@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, tony@atomide.com, linux@arm.linux.org.uk, nm@ti.com, rnayak@ti.com, balbi@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51E7BFFA.8010101@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Viresh Kumar <viresh.kumar@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 07/18/2013 05:14 AM, Sudeep KarkadaNagesha wrote:
+> On 18/07/13 09:24, Sudeep KarkadaNagesha wrote:
+>> On 17/07/13 15:43, Andrew Lunn wrote:
+>>> On Wed, Jul 17, 2013 at 03:06:20PM +0100, Sudeep.KarkadaNagesha@arm.com wrote:
+>>>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>>>
+> [...]
 
-Hi,
+>>> Are we not going a bit backwards here? You are replacing two lines
+>>> with 10 lines.
+>>>
+>>> How about putting these 10 lines into some helper,
+>>> of_get_cpu_device()?  It would be useful for spear, kirkwood and
+>>> imx6q, and maybe others.
+>>>
+>> Yes I realised that after making changes to this and pmac32 drivers. I
+>> have already made those changes in v3. I am waiting for more response
+>> before posting them.
+>>
+> I thought of placing this helper in include/linux/of_device.h but I see:
+> #include <linux/of_platform.h> /* temporary until merge */
+> 
+> Does this mean of_platform.h and of_device.h will be merged ?
 
-On Thu, Jul 18, 2013 at 10:13:48PM +0530, Sricharan R wrote:
-> Some socs have a large number of interrupts/dma requests to service
-> the needs of its many peripherals and subsystems. All of the
-> requests lines from the subsystems are not needed at the same
-> time, so they have to be muxed to the controllers appropriately.
-> In such places a interrupt/dma controllers are preceded by an
-> IRQ/DMA CROSSBAR that provides flexibility in muxing the device
-> requests to the controller inputs.
->=20
-> The Peripheral irq/dma requests are connected to one crossbar's input
-> and the output of the crossbar is connected to controller's input
-> line. On POR, there are some mappings which are done by default.
-> Those peripherals which do not have a mapping on POR, should be configured
-> to route its requests using the crossbar.
->=20
-> The drivers identifies every controller's crossbar as individual devices.
-> The mappings can be specified from the DT crossbar nodes and those gets m=
-apped
-> during the crossbar device's probe. The mappings can also be specified by=
- adding
-> the crossbar lines to the peripheral device nodes and map it with
-> crossbar_map/unmap apis.
->=20
-> Signed-off-by: Sricharan R <r.sricharan@ti.com>
+No, I think that was probably to avoid adding includes of of_platform.h
+for 100's of files. Maybe things are cleaned up enough to remove this line.
 
-why isn't this done under pinctrl ? If all it does is mux DMA and IRQ
-request lines, it should be written as a pinctrl driver no ?
+> If so, which will be the final merged one ? I would like to avoid
+> changing all the header file inclusions later in users of this new helper.
 
---=20
-balbi
+of_device.h is the right place.
 
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Rob
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR6DMAAAoJEIaOsuA1yqREgo8P/0I6lAle/+b+V/gKoAi+ZUWF
-NjNF5+d52UZEEReo7aLygZIqiuOT7ujEFRzCELyO6CGcnrpudep1d9swGIbGkst+
-L3epIt5GC1ZG1ohaSBo9fksJUlhsBhAOeXPnGYRFTw+mgSo9Y+lNpekCHQwVydRy
-DLY12zYQlbFxVL9eur0p60AWi90NeyzgiCVoS/AJkT7r6tMFJXYJoiCjwqF0P/04
-z2ek/HdVeJJpLJv8zW7i9xrlsSqtQwa+FauxHzlXAmkQ7SuTUbApDM431JaT/7fZ
-rzTnM/HVix1nW+fL/WQssTn5VJbtBgPb3eud353rvLPZthJJvi0mDuUbH7N0l9VJ
-JE/H1Ow0hSz4Ea5hoxXlWqMBL5rzLx4MgGB8d/5zvEYUUM6cHcJpYM2urM2LYgId
-HY4nvPuCwzVyb5q1ejMowyOb3YM3THB/ZSDvOXIl7lr7gJIeusqmdQLm2yhilexd
-7cLY4DjzRntI0SF1JK+bEjjm8klK4x31neGHRtO+LzE4c3zUD1vr1+Fnlbz88JYK
-Txdc3O5df9ULkX6VaXCMKUdOofRfb7cKx9bi99uuw8Nrd7+aAQ7zRfxDMTLZl9JQ
-qX5mfCX31Dusf3wCb+xg/kU8i/B4gsd/gPdCe1PzJvtl3dGW9rMEm2YNMA39xV5E
-kra5dfRkS/94XqjP1fxO
-=NZ5K
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
+> 
+> Regards,
+> Sudeep
+> 
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
