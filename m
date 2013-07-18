@@ -1,77 +1,59 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
-Date: Thu, 18 Jul 2013 13:54:18 -0600
-Message-ID: <51E847EA.9060302@wwwdotorg.org>
-References: <1371547751-13873-2-git-send-email-christian.ruppert@abilis.com> <51C23222.2060906@wwwdotorg.org> <20130626115051.GC7095@ab42.lan> <51CB279A.1090404@wwwdotorg.org> <20130705094859.GA27196@ab42.lan> <51D71337.6030409@wwwdotorg.org> <20130708130222.GA6402@ab42.lan> <51DDB5B8.5060909@wwwdotorg.org> <20130716084755.GB10914@ab42.lan> <51E56EF3.5040506@wwwdotorg.org> <20130718160700.GA14482@ab42.lan>
+From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 1/3] ARM: msm: dts: Fix the gpio register address for msm8960
+Date: Thu, 18 Jul 2013 13:07:13 -0700
+Message-ID: <1374178035-19943-2-git-send-email-davidb@codeaurora.org>
+References: <1374178035-19943-1-git-send-email-davidb@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130718160700.GA14482@ab42.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1374178035-19943-1-git-send-email-davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2013 10:07 AM, Christian Ruppert wrote:
-...
-> Well, perhaps my definition of "inside"/"outside" pins was not quite
-> clear: The pin groups define the set of (kernel internal) pin numbers of
-> "outside" pins which are used by pin controller to map a given
-> interface. Inside pins are not numbered and the inside interfaces are
-> only used to determine which outside pins are part of the same group
-> (namely those for which the pin controller hardware provides a mux
-> connection to the same inside interface):
-> 
->                        4
->                 4  /|--/-- SPI
->    PINS[0..3] --/--||  4
->                    \|--/-- GPIO[0..3]
-> 
->                    4
->    PINS[4..7] -----/------ GPIO[4..7]
-> 
->                        2
->                 2  /|--/-- I2C
->    PINS[8..9] --/--||  2
->                    \|--/-- GPIO[8..9]
-> 
-> Pins 0..3 are in the SPI group because on the "inside" they can be muxed
-> to the SPI interface.
-> Pins 8..9 are in the I2C group because on the "inside" they can be muxed
-> to the I2C interface.
-> Pins 0..9 are in the GPIO group because on the "inside" they can be
-> muxed to the GPIO controller.
-> 
-> All pin numbers are relative to the "outside", however, or conflict
-> management would not be possible. I hope this is more understandable
-> than my previous explanations.
-> Both muxes are controlled by the same register. In our overly simplistic
-> example this is not strictly necessary but in reality you might have pin
-> conflicts between the different interfaces.
+From: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Same register, or same field/bits in that register?
+Fix the the gpio reg address for the device tree entry.
 
-If it's the same field/bits, I would expect to see the following pin groups:
+Signed-off-by: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ arch/arm/boot/dts/msm8960-cdp.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-1) PINS[0..3], PINS[8..9]
-2) PINS[4..7]
-
-... since those are the things that are independently muxable.
-Otherwise, I'd expect to see the following groups:
-
-1) PINS[0..3]
-2) PINS[4..7]
-3) PINS[8..9]
-
-> After the discussion we had so far I'm not so sure if extending the
-> pinctrl system with this kind of features is a very good idea.
-
-That makes things simple:-)
-
-One thing I still don't understand; in a previous mail, you'd mentioned
-3 DT properties for configuring the pinmux; one represented the pin
-group, one represented the mux function that was selected for that pin
-group, and there was a third ("config"?) property. I still don't
-understand that third property. I only see pins/pingroups and mux
-functions in the diagram I quoted above.
+diff --git a/arch/arm/boot/dts/msm8960-cdp.dts b/arch/arm/boot/dts/msm8960-cdp.dts
+index db2060c..9c1167b0 100644
+--- a/arch/arm/boot/dts/msm8960-cdp.dts
++++ b/arch/arm/boot/dts/msm8960-cdp.dts
+@@ -26,7 +26,7 @@
+ 		cpu-offset = <0x80000>;
+ 	};
+ 
+-	msmgpio: gpio@fd510000 {
++	msmgpio: gpio@800000 {
+ 		compatible = "qcom,msm-gpio";
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+@@ -34,7 +34,7 @@
+ 		interrupts = <0 32 0x4>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+-		reg = <0xfd510000 0x4000>;
++		reg = <0x800000 0x4000>;
+ 	};
+ 
+ 	serial@16440000 {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
