@@ -1,86 +1,84 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 05/24] clk: wrap I/O access for improved portability
-Date: Thu, 18 Jul 2013 11:08:00 +0100
-Message-ID: <20130718100800.GF22506@sirena.org.uk>
-References: <1373914074-20889-1-git-send-email-gsi@denx.de>
- <1373914074-20889-6-git-send-email-gsi@denx.de>
- <20130715193829.GS14452@pengutronix.de>
- <20130718070402.GO7080@book.gsilab.sittig.org>
- <20130718080657.GI10380@pengutronix.de>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Subject: Re: [RFC PATCH v2 11/15] cpufreq: kirkwood-cpufreq: remove device
+ tree parsing for cpu nodes
+Date: Thu, 18 Jul 2013 11:14:18 +0100
+Message-ID: <51E7BFFA.8010101@arm.com>
+References: <1374069984-20567-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1374069984-20567-12-git-send-email-Sudeep.KarkadaNagesha@arm.com> <20130717144355.GE1026@lunn.ch> <51E7A63F.7020207@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5871342441967195697=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130718080657.GI10380-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <51E7A63F.7020207@arm.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Gregory Clement <gregory.clement@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
+On 18/07/13 09:24, Sudeep KarkadaNagesha wrote:
+> On 17/07/13 15:43, Andrew Lunn wrote:
+>> On Wed, Jul 17, 2013 at 03:06:20PM +0100, Sudeep.KarkadaNagesha@arm.com wrote:
+>>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>>
+[...]
+>>> diff --git a/drivers/cpufreq/kirkwood-cpufreq.c b/drivers/cpufreq/kirkwood-cpufreq.c
+>>> index c233ea6..18aa3eb 100644
+>>> --- a/drivers/cpufreq/kirkwood-cpufreq.c
+>>> +++ b/drivers/cpufreq/kirkwood-cpufreq.c
+>>> @@ -13,6 +13,7 @@
+>>>  #include <linux/module.h>
+>>>  #include <linux/clk.h>
+>>>  #include <linux/clk-provider.h>
+>>> +#include <linux/cpu.h>
+>>>  #include <linux/cpufreq.h>
+>>>  #include <linux/of.h>
+>>>  #include <linux/platform_device.h>
+>>> @@ -165,6 +166,7 @@ static struct cpufreq_driver kirkwood_cpufreq_driver = {
+>>>  static int kirkwood_cpufreq_probe(struct platform_device *pdev)
+>>>  {
+>>>  	struct device_node *np;
+>>> +	struct device *cpu_dev;
+>>>  	struct resource *res;
+>>>  	int err;
+>>>  
+>>> @@ -175,9 +177,17 @@ static int kirkwood_cpufreq_probe(struct platform_device *pdev)
+>>>  	if (IS_ERR(priv.base))
+>>>  		return PTR_ERR(priv.base);
+>>>  
+>>> -	np = of_find_node_by_path("/cpus/cpu@0");
+>>> -	if (!np)
+>>> +	cpu_dev = get_cpu_device(0);
+>>> +	if (!cpu_dev) {
+>>> +		dev_err(&pdev->dev, "failed to get cpu device\n");
+>>>  		return -ENODEV;
+>>> +	}
+>>> +
+>>> +	np = of_node_get(cpu_dev->of_node);
+>>> +	if (!np) {
+>>> +		dev_err(&pdev->dev, "failed to get cpu device node\n");
+>>> +		return -ENODEV;
+>>> +	}
+>>
+>> Hi Sudeep
+>>
+>> Are we not going a bit backwards here? You are replacing two lines
+>> with 10 lines.
+>>
+>> How about putting these 10 lines into some helper,
+>> of_get_cpu_device()?  It would be useful for spear, kirkwood and
+>> imx6q, and maybe others.
+>>
+> Yes I realised that after making changes to this and pmac32 drivers. I
+> have already made those changes in v3. I am waiting for more response
+> before posting them.
+> 
+I thought of placing this helper in include/linux/of_device.h but I see:
+#include <linux/of_platform.h> /* temporary until merge */
 
---===============5871342441967195697==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="a2GlHqZBJuVUxZ2A"
-Content-Disposition: inline
+Does this mean of_platform.h and of_device.h will be merged ?
+If so, which will be the final merged one ? I would like to avoid
+changing all the header file inclusions later in users of this new helper.
+
+Regards,
+Sudeep
 
 
---a2GlHqZBJuVUxZ2A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jul 18, 2013 at 10:06:57AM +0200, Sascha Hauer wrote:
-
-> I think regmap has the potential to solve a number of issues like the
-> hardcoded readl/writel in the common clock blocks, issues with i2c
-> clocks and your endianess issue. The biggest question probably is how
-> to get there without putting too much of a burden on you. It's probably
-> not an option to convert all users to regmap, so it seems additional
-> functions like clk_register_gate_regmap are better to handle.
-
-That's basically what regulator does.  There's versions of the ops that
-all the drivers can use.
-
---a2GlHqZBJuVUxZ2A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR5759AAoJELSic+t+oim9FpgQAJLTChS7UMhyGs/rcPs/r8AD
-gXQ/CSLkgtcqhrjoojWTn7/TPA/IwCBD+e8b/W6qkBaWdqiSOuOGBsuBBob2z0Mb
-N6oI//Nwi5k2pbMvDrJP8CWuvtWGDVnKwWAMpHO1ykPHFVsgtOwtROcqXHtVupSU
-HvnmOiP8hrZIB63PSUyEozC9Uniag25wDm+EtduFS3YXfphlmux3Yc1bg3fKB8ar
-m3ai0u9Fhtd3A8ovYAfKxg+Ws4gRn8o/9kkyLErJxR7fU58dGfUULjyIdVFp3FFY
-TqeBnVYoPI9/cv2EZPM+89aQgYyvrW/2H43cmKFYmRR7NfjJLC50FUBIqkaoueUU
-uOKsQLvjeuOYcsvKOJqmNOXabeEYrtln10Lc8qVorSOS6Rgmwj7i0ocFNTRlJIB0
-wusnYSMjo2jIt+17ZAmFF3MGT7i3yTkHFASrz4moK0EkZAJe2LzOnC7HBAHu3v0V
-wmNnzG/o9/j3a0X5iqSQIPuIOiqe4uUJNuPxCi38xUcv+EqQ0E3v6GbTIYac46fa
-veJKQZFsXUWQRCkopBdVCsQzCJCW8Msp49Xfj1tLBenddP8Qpw1IuBeVjhzojVT6
-3rGUOFLnODvJ/UaW+6fszKaPDOLfWL8t6T7Qz8Get2Di9skRjxJSWYx53Cqe/bq/
-Xj7MGMHN2gjABv147L7m
-=fuLU
------END PGP SIGNATURE-----
-
---a2GlHqZBJuVUxZ2A--
-
---===============5871342441967195697==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============5871342441967195697==--
