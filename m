@@ -1,189 +1,86 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] iio: twl6030-gpadc: TWL6030, TWL6032 GPADC driver
-Date: Thu, 18 Jul 2013 11:48:10 +0200
-Message-ID: <51E7B9DA.9040803@metafoo.de>
-References: <1374059564-6872-1-git-send-email-oleksandr.kozaruk@ti.com> <1374059564-6872-3-git-send-email-oleksandr.kozaruk@ti.com> <51E6DCB5.3070302@metafoo.de> <CAPb7_muAzO-jRqgcm89fcKT-hTLq38Aj2p0WAWjGjN9DoQUwPg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 05/24] clk: wrap I/O access for improved portability
+Date: Thu, 18 Jul 2013 11:08:00 +0100
+Message-ID: <20130718100800.GF22506@sirena.org.uk>
+References: <1373914074-20889-1-git-send-email-gsi@denx.de>
+ <1373914074-20889-6-git-send-email-gsi@denx.de>
+ <20130715193829.GS14452@pengutronix.de>
+ <20130718070402.GO7080@book.gsilab.sittig.org>
+ <20130718080657.GI10380@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPb7_muAzO-jRqgcm89fcKT-hTLq38Aj2p0WAWjGjN9DoQUwPg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksandr Kozaruk <oleksandr.kozaruk-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, milo.kim-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============5871342441967195697=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130718080657.GI10380-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2013 10:36 AM, Oleksandr Kozaruk wrote:
-> Hello Lars,
-> 
-> On Wed, Jul 17, 2013 at 9:04 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
->>> +static int twl6032_calibration(struct twl6030_gpadc_data *gpadc)
->>> +{
->>> +     int chn, d1 = 0, d2 = 0, temp;
->>> +     u8 trim_regs[17];
->>> +     int ret;
->>> +
->>> +     ret = twl_i2c_read(TWL6030_MODULE_ID2, trim_regs + 1,
->>> +                     TWL6030_GPADC_TRIM1, 16);
->>> +     if (ret < 0) {
->>> +             dev_err(gpadc->dev, "calibration failed\n");
->>> +             return ret;
->>> +     }
->>> +
->>> +     /*
->>> +      * Loop to calculate the value needed for returning voltages from
->>> +      * GPADC not values.
->>> +      *
->>> +      * gain is calculated to 3 decimal places fixed point.
->>> +      */
->>> +     for (chn = 0; chn < TWL6032_GPADC_MAX_CHANNELS; chn++) {
->>> +
->>> +             switch (chn) {
->>> +             case 0:
->>> +             case 1:
->>> +             case 2:
->>> +             case 3:
->>> +             case 4:
->>> +             case 5:
->>> +             case 6:
->>> +             case 11:
->>> +             case 12:
->>> +             case 13:
->>> +             case 14:
->>> +                     /* D1 */
->>> +                     d1 = (trim_regs[3] & 0x1F) << 2;
->>> +                     d1 |= (trim_regs[1] & 0x06) >> 1;
->>> +                     if (trim_regs[1] & 0x01)
->>> +                             d1 = -d1;
->>> +
->>> +                     /* D2 */
->>> +                     d2 = (trim_regs[4] & 0x3F) << 2;
->>> +                     d2 |= (trim_regs[2] & 0x06) >> 1;
->>> +                     if (trim_regs[2] & 0x01)
->>> +                             d2 = -d2;
->>> +                     break;
->>> +             case 8:
->>> +                     /* D1 */
->>> +                     temp = (trim_regs[3] & 0x1F) << 2;
->>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
->>> +                     if (trim_regs[1] & 0x01)
->>> +                             temp = -temp;
->>> +
->>> +                     d1 = (trim_regs[8] & 0x18) << 1;
->>> +                     d1 |= (trim_regs[7] & 0x1E) >> 1;
->>> +                     if (trim_regs[7] & 0x01)
->>> +                             d1 = -d1;
->>> +
->>> +                     d1 += temp;
->>> +
->>> +                     /* D2 */
->>> +                     temp = (trim_regs[4] & 0x3F) << 2;
->>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
->>> +                     if (trim_regs[2] & 0x01)
->>> +                             temp = -temp;
->>> +
->>> +                     d2 = (trim_regs[10] & 0x1F) << 2;
->>> +                     d2 |= (trim_regs[8] & 0x06) >> 1;
->>> +                     if (trim_regs[8] & 0x01)
->>> +                             d2 = -d2;
->>> +
->>> +                     d2 += temp;
->>> +                     break;
->>> +             case 9:
->>> +                     /* D1 */
->>> +                     temp = (trim_regs[3] & 0x1F) << 2;
->>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
->>> +                     if (trim_regs[1] & 0x01)
->>> +                             temp = -temp;
->>> +
->>> +                     d1 = (trim_regs[14] & 0x18) << 1;
->>> +                     d1 |= (trim_regs[12] & 0x1E) >> 1;
->>> +                     if (trim_regs[12] & 0x01)
->>> +                             d1 = -d1;
->>> +
->>> +                     d1 += temp;
->>> +
->>> +                     /* D2 */
->>> +                     temp = (trim_regs[4] & 0x3F) << 2;
->>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
->>> +                     if (trim_regs[2] & 0x01)
->>> +                             temp = -temp;
->>> +
->>> +                     d2 = (trim_regs[16] & 0x1F) << 2;
->>> +                     d2 |= (trim_regs[14] & 0x06) >> 1;
->>> +                     if (trim_regs[14] & 0x01)
->>> +                             d2 = -d2;
->>> +
->>> +                     d2 += temp;
->>> +             case 10:
->>> +                     /* D1 */
->>> +                     d1 = (trim_regs[11] & 0x0F) << 3;
->>> +                     d1 |= (trim_regs[9] & 0x0E) >> 1;
->>> +                     if (trim_regs[9] & 0x01)
->>> +                             d1 = -d1;
->>> +
->>> +                     /* D2 */
->>> +                     d2 = (trim_regs[15] & 0x0F) << 3;
->>> +                     d2 |= (trim_regs[13] & 0x0E) >> 1;
->>> +                     if (trim_regs[13] & 0x01)
->>> +                             d2 = -d2;
->>> +                     break;
->>> +             case 7:
->>> +             case 18:
->>> +                     /* D1 */
->>> +                     temp = (trim_regs[3] & 0x1F) << 2;
->>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
->>> +                     if (trim_regs[1] & 0x01)
->>> +                             temp = -temp;
->>> +
->>> +                     d1 = (trim_regs[5] & 0x7E) >> 1;
->>> +                     if (trim_regs[5] & 0x01)
->>> +                             d1 = -d1;
->>> +.
->>> +                     d1 += temp;
->>> +
->>> +                     /* D2 */
->>> +                     temp = (trim_regs[4] & 0x3F) << 2;
->>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
->>> +                     if (trim_regs[2] & 0x01)
->>> +                             temp = -temp;
->>> +
->>> +                     d2 = (trim_regs[6] & 0xFE) >> 1;
->>> +                     if (trim_regs[6] & 0x01)
->>> +                             d2 = -d2;
->>> +
->>> +                     d2 += temp;
->>> +                     break;
->>
->>
->> There is quite a bit of copy paste in here. Putting the bit swizziling into
->> a helper function should also improbe legibility.
-> 
-> Trimming bits are scattered randomly between registers and in
-> different bit positions.
-> I don't see any commonalities, that could be generalized. as Graeme
-> said about it "it's a bane of my life".
 
-The pattern is pretty regular though, how about:
+--===============5871342441967195697==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="a2GlHqZBJuVUxZ2A"
+Content-Disposition: inline
 
 
-int twl6032_get_trim_value(u8 *trim_regs, unsigned int reg0,
-	unsigned int reg1, unsigned int mask0, unsigned int mask1,
-	unsigned int shift0)
-{
-	int val;
+--a2GlHqZBJuVUxZ2A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	val = (trim_regs[reg0] & mask0) << shift0;
-	val |= (trim_regs[reg1] & mask1) >> 1;
-	if (trim_regs[reg1] & 0x01)
-		val = -val;
+On Thu, Jul 18, 2013 at 10:06:57AM +0200, Sascha Hauer wrote:
 
-	return val;
-}
+> I think regmap has the potential to solve a number of issues like the
+> hardcoded readl/writel in the common clock blocks, issues with i2c
+> clocks and your endianess issue. The biggest question probably is how
+> to get there without putting too much of a burden on you. It's probably
+> not an option to convert all users to regmap, so it seems additional
+> functions like clk_register_gate_regmap are better to handle.
 
-and then
+That's basically what regulator does.  There's versions of the ops that
+all the drivers can use.
 
-	d1 = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
-	d2 = twl6032_get_trim_value(trim_regs, 4, 2, 0x3f, 0x06, 2);
+--a2GlHqZBJuVUxZ2A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-and so on.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR5759AAoJELSic+t+oim9FpgQAJLTChS7UMhyGs/rcPs/r8AD
+gXQ/CSLkgtcqhrjoojWTn7/TPA/IwCBD+e8b/W6qkBaWdqiSOuOGBsuBBob2z0Mb
+N6oI//Nwi5k2pbMvDrJP8CWuvtWGDVnKwWAMpHO1ykPHFVsgtOwtROcqXHtVupSU
+HvnmOiP8hrZIB63PSUyEozC9Uniag25wDm+EtduFS3YXfphlmux3Yc1bg3fKB8ar
+m3ai0u9Fhtd3A8ovYAfKxg+Ws4gRn8o/9kkyLErJxR7fU58dGfUULjyIdVFp3FFY
+TqeBnVYoPI9/cv2EZPM+89aQgYyvrW/2H43cmKFYmRR7NfjJLC50FUBIqkaoueUU
+uOKsQLvjeuOYcsvKOJqmNOXabeEYrtln10Lc8qVorSOS6Rgmwj7i0ocFNTRlJIB0
+wusnYSMjo2jIt+17ZAmFF3MGT7i3yTkHFASrz4moK0EkZAJe2LzOnC7HBAHu3v0V
+wmNnzG/o9/j3a0X5iqSQIPuIOiqe4uUJNuPxCi38xUcv+EqQ0E3v6GbTIYac46fa
+veJKQZFsXUWQRCkopBdVCsQzCJCW8Msp49Xfj1tLBenddP8Qpw1IuBeVjhzojVT6
+3rGUOFLnODvJ/UaW+6fszKaPDOLfWL8t6T7Qz8Get2Di9skRjxJSWYx53Cqe/bq/
+Xj7MGMHN2gjABv147L7m
+=fuLU
+-----END PGP SIGNATURE-----
+
+--a2GlHqZBJuVUxZ2A--
+
+--===============5871342441967195697==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5871342441967195697==--
