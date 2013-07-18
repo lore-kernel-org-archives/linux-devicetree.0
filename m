@@ -1,91 +1,130 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH v5 0/1] drivers: mfd: Versatile Express SPC support
-Date: Thu, 18 Jul 2013 10:28:09 +0100
-Message-ID: <20130718092809.GA29977@e102568-lin.cambridge.arm.com>
-References: <1373990743-23106-1-git-send-email-lorenzo.pieralisi@arm.com>
- <20130717210700.GA19864@zurbaran>
+From: Oleksandr Kravchenko <x0199363@ti.com>
+Subject: [PATCH 1/3] iio: core: implement devm_iio_device_alloc/devm_iio_device_free
+Date: Thu, 18 Jul 2013 12:44:42 +0300
+Message-ID: <1374140685-20549-1-git-send-email-x0199363@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130717210700.GA19864@zurbaran>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <Achin.Gupta-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, jic23@cam.ac.uk, pmeerw@pmeerw.net, holler@ahsoftware.de, srinivas.pandruvada@intel.com, devicetree-discuss@lists.ozlabs.org, grygorii.strashko@ti.com, Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Samuel,
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-On Wed, Jul 17, 2013 at 10:07:00PM +0100, Samuel Ortiz wrote:
-> Hi Lorenzo,
-> 
-> On Tue, Jul 16, 2013 at 05:05:42PM +0100, Lorenzo Pieralisi wrote:
-> > Hello,
-> > 
-> > version v5 of VExpress SPC driver, please read on the changelog for major
-> > changes and explanations.
-> > 
-> > The probing scheme is unchanged, since after trying the early platform
-> > devices approach it appeared that the end result was no better than the
-> > current one. The only clean solution relies either on changing how
-> > secondaries are brought up in the kernel (later than now) or enable
-> > early platform device registration through DT. Please check this
-> > thread for the related discussion:
-> > 
-> > https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-June/036542.html
-> > 
-> > The interface was adapted to regmap and again reverted to old driver for
-> > the following reasons:
-> > 
-> > - Power down registers locking is hairy and requires arch spinlocks in
-> >   the MCPM back end to work properly, normal spinlocks cannot be used
-> > - Regmap adds unnecessary code to manage SPC since it is just a bunch of
-> >   registers used to control power management flags, the overhead is just
-> >   not worth it (talking about power down registers, not the vexpress config
-> >   interface)
-> > - The locking scheme behind regmap requires all registers in the map
-> >   to be protected with the same lock, which is not exactly what we want
-> >   here
-> > - Given the reasons above, adding a regmap interface buys us nothing from
-> >   a driver readability and maintainability perspective (again just talking
-> >   about the power interface, a few registers) because for the SPC it would
-> >   simply not be used
-> > 
-> > /drivers/mfd is probably not the right place for this code as it stands (but
-> > probably will be when the entire driver, with DVFS and config interface, is
-> > complete).
-> Could you please elaborate on how will the SPC driver extend into an MFD
-> driver?
+Add a resource managed devm_iio_device_alloc()/devm_iio_device_free()
+to automatically clean up any allocations made by IIO drivers,
+thus leading to simplified IIO drivers code.
 
-Reading through the thread I noticed Nico explained details properly, I
-was about to mention a possible solution to the directory issue but I am
-pretty sure that what he did will turn out for the best.
+In addition, this will allow IIO drivers to use other devm_*() API
+(like devm_request_irq) and don't care about the race between
+iio_device_free() and the release of resources by Device core
+during driver removing.
 
-Usually, or better, historically, these pieces of code that program
-PMICs lived in arch/arm/mach-* directories and that's something we could
-have done as well (create a static mapping and write some functions to
-peek and poke a few registers), but we thought that it was not the proper
-way to go.
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+[o.v.kravchenko@globallogic.com: fix return value ib devm_iio_device_alloc
+in case if devres_alloc failed, remove unused variable "rc"]
+Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+Tested-by: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+---
+ drivers/iio/industrialio-core.c |   47 +++++++++++++++++++++++++++++++++++++++
+ include/linux/iio/iio.h         |   25 +++++++++++++++++++++
+ 2 files changed, 72 insertions(+)
 
-On top of that, the SPC is part of a component whose register space maps
-disparate functions (config interface for voltage, clocks, energy probes,
-frequency scaling and power states management) and basically that's the
-reason we struggled to partition it properly (with further complexity
-implied by the way requests - config and frequency scaling - have to be
-serialized).
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index e145931..d56d122 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -912,6 +912,53 @@ void iio_device_free(struct iio_dev *dev)
+ }
+ EXPORT_SYMBOL(iio_device_free);
+ 
++static void devm_iio_device_release(struct device *dev, void *res)
++{
++	iio_device_free(*(struct iio_dev **)res);
++}
++
++static int devm_iio_device_match(struct device *dev, void *res, void *data)
++{
++	struct iio_dev **r = res;
++	if (!r || !*r) {
++		WARN_ON(!r || !*r);
++		return 0;
++	}
++	return *r == data;
++}
++
++struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
++{
++	struct iio_dev **ptr, *iio_dev;
++
++	ptr = devres_alloc(devm_iio_device_release, sizeof(*ptr),
++			   GFP_KERNEL);
++	if (!ptr)
++		return NULL;
++
++	/* use raw alloc_dr for kmalloc caller tracing */
++	iio_dev = iio_device_alloc(sizeof_priv);
++	if (iio_dev) {
++		*ptr = iio_dev;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return iio_dev;
++}
++EXPORT_SYMBOL_GPL(devm_iio_device_alloc);
++
++void devm_iio_device_free(struct device *dev, struct iio_dev *iio_dev)
++{
++	int rc;
++
++	rc = devres_release(dev, devm_iio_device_release,
++			    devm_iio_device_match, iio_dev);
++	WARN_ON(rc);
++}
++EXPORT_SYMBOL_GPL(devm_iio_device_free);
++
+ /**
+  * iio_chrdev_open() - chrdev file open for buffer access and ioctls
+  **/
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 8d171f4..f1d99f6 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -532,6 +532,31 @@ static inline struct iio_dev *iio_priv_to_dev(void *priv)
+ void iio_device_free(struct iio_dev *indio_dev);
+ 
+ /**
++ * devm_iio_device_alloc - Resource-managed iio_device_alloc()
++ * @dev: 		Device to allocate iio_dev for
++ * @sizeof_priv: 	Space to allocate for private structure.
++ *
++ * Managed iio_device_alloc.  iio_dev allocated with this function is
++ * automatically freed on driver detach.
++ *
++ * If an iio_dev allocated with this function needs to be freed separately,
++ * devm_iio_device_free() must be used.
++ *
++ * RETURNS:
++ * Pointer to allocated iio_dev on success, NULL on failure.
++ */
++struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv);
++
++/**
++ * devm_iio_device_free - Resource-managed iio_device_free()
++ * @dev:		Device this iio_dev belongs to
++ * @indio_dev: 		the iio_dev associated with the device
++ *
++ * Free indio_dev allocated with devm_iio_device_alloc().
++ */
++void devm_iio_device_free(struct device *dev, struct iio_dev *iio_dev);
++
++/**
+  * iio_buffer_enabled() - helper function to test if the buffer is enabled
+  * @indio_dev:		IIO device structure for device
+  **/
+-- 
+1.7.9.5
 
-I hope the end result is reasonable, and overall I think it was a debate
-that was worth having.
-
-Thank you,
-Lorenzo
