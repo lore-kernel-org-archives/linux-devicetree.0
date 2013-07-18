@@ -1,200 +1,73 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] of: Export of_irq_count for using in modules
-Date: Thu, 18 Jul 2013 09:02:53 +0200
-Message-ID: <51E7931D.80801@monstr.eu>
-References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
- <20130530201714.GE19834@game.jcrosoft.org> <51A85BEE.4000009@monstr.eu>
- <20130531110045.GF19834@game.jcrosoft.org> <51A8AC4B.906@monstr.eu>
- <20130531151601.GG19834@game.jcrosoft.org> <51A8D3A3.5030200@monstr.eu>
- <20130606082941.GH19834@game.jcrosoft.org> <51B04AA9.4070803@monstr.eu>
- <20130606144929.GI19834@game.jcrosoft.org>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Gerhard Sittig <gsi@denx.de>
+Subject: Re: [PATCH v1 05/24] clk: wrap I/O access for improved portability
+Date: Thu, 18 Jul 2013 09:04:02 +0200
+Message-ID: <20130718070402.GO7080@book.gsilab.sittig.org>
+References: <1373914074-20889-1-git-send-email-gsi@denx.de>
+ <1373914074-20889-6-git-send-email-gsi@denx.de>
+ <20130715193829.GS14452@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3753705885409238291=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130606144929.GI19834-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <20130715193829.GS14452@pengutronix.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Mike Turquette <mturquette@linaro.org>, Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============3753705885409238291==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2LHULNEERAAQPVTTJAXXJ"
+On Mon, Jul 15, 2013 at 21:38 +0200, Sascha Hauer wrote:
+> 
+> On Mon, Jul 15, 2013 at 08:47:34PM +0200, Gerhard Sittig wrote:
+> > diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
+> > index 6d55eb2..2c07061 100644
+> > --- a/drivers/clk/clk-divider.c
+> > +++ b/drivers/clk/clk-divider.c
+> > @@ -104,7 +104,7 @@ static unsigned long clk_divider_recalc_rate(struct clk_hw *hw,
+> >  	struct clk_divider *divider = to_clk_divider(hw);
+> >  	unsigned int div, val;
+> >  
+> > -	val = readl(divider->reg) >> divider->shift;
+> > +	val = clk_readl(divider->reg) >> divider->shift;
+> >  	val &= div_mask(divider);
+> 
+> Would it be an option to use regmap for the generic dividers/muxes
+> instead? This should be suitable for ppc and also for people who want to
+> use the generic clocks on i2c devices.
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2LHULNEERAAQPVTTJAXXJ
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Some other thought crossed my mind regarding access to clock
+control registers that reside behind some communication channel
+like I2C:
 
-On 06/06/2013 04:49 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 10:39 Thu 06 Jun     , Michal Simek wrote:
->> On 06/06/2013 10:29 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>> On 18:45 Fri 31 May     , Michal Simek wrote:
->>>> On 05/31/2013 05:16 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>>>> On 15:57 Fri 31 May     , Michal Simek wrote:
->>>>>> On 05/31/2013 01:00 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>>>>>> On 10:14 Fri 31 May     , Michal Simek wrote:
->>>>>>>> Hi Jean-Christophe,
->>>>>>>>
->>>>>>>> On 05/30/2013 10:17 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>>>>>>>> On 15:49 Thu 30 May     , Michal Simek wrote:
->>>>>>>>>> Export of_irq_count for modules.
->>>>>>>>>
->>>>>>>>> can you explain why do you need to call of_irq_count
->>>>>>>>
->>>>>>>> I need to count number of irq written in the DTS node.
->>>>>>>> It is not fixed size that's why I need to proper way how to
->>>>>>>> find it out.
->>>>>>>>
->>>>>>>> I am using this loop.
->>>>>>>> 	count =3D of_irq_count(pdev->dev.of_node);
->>>>>>>> 	/* Alloc IRQ based on DTS to be sure that no other driver will =
-use it */
->>>>>>>> 	while (count--) {
->>>>>>>> 		tmp->irq =3D irq_of_parse_and_map(pdev->dev.of_node, count);
->>>>>>>> 		dev_info(&pdev->dev, "%d: Alloc irq: %d\n", count, tmp->irq);
->>>>>>>> 		ret =3D request_irq(tmp->irq, zynq_remoteproc_interrupt, 0,
->>>>>>>> 					dev_name(&pdev->dev), &pdev->dev);
->>>>>>>> 		if (ret) {
->>>>>>>> 			...
->>>>>>>> 		}
->>>>>>>> 	}
->>>>>>>>
->>>>>>>> But of course if you think that this is incorrect to export it
->>>>>>>> I can use what it is in of_irq_count body
->>>>>>>> 368 int of_irq_count(struct device_node *dev)
->>>>>>>> 369 {
->>>>>>>> 370         int nr =3D 0;
->>>>>>>> 371
->>>>>>>> 372         while (of_irq_to_resource(dev, nr, NULL))
->>>>>>>> 373                 nr++;
->>>>>>>> 374
->>>>>>>> 375         return nr;
->>>>>>>> 376 }
->>>>>>>>
->>>>>>>> Because of_irq_to_resource is exported for modules.
->>>>>>>> Or is there any better way how to loop over all interrupts in DT=
- node?
->>>>>>>
->>>>>>> can just explain me why you need to call irq_of_parse_and_map in =
-your driver?
->>>>>>>
->>>>>>> as the irq will be provided in the resources normally
->>>>>>
->>>>>> It is quite a long time I have written this driver on v3.1 or 3.3.=
+The common clock API assumes (it's part of the contract) that
+there are potentially expensive operations like get, put, prepare
+and unprepare, as well as swift and non-blocking operations like
+enable and disable.
 
->>>>>> But is this better?
->>>>>>
->>>>>> 	struct resource *res;
->>>>>> 	int i =3D 0;
->>>>>> 	do {
->>>>>> 		res =3D platform_get_resource(pdev, IORESOURCE_IRQ, i++);
->>>>>> 		if (res)
->>>>>> 			do something
->>>>>> 	} while(res);
->>>>>>
->>>>>> Also what about of_irq_to_resource()? Is it deprecated and all dri=
-vers
->>>>>> shouldn't use it?
->>>>>>
->>>>>> I have no problem to rewrite the driver to use platform_get_resour=
-ce.
->>>>> yeah it's better but be aware there is a but in DT that I'm working=
- on to fix
->>>>> if you use irq that are registered by a pdev this will not work
->>>>>
->>>>> I hope to fix it for 3.11
->>>>> and already send an RFC that fix it
->>>>
->>>> ok. good to know. Btw: Let's return to my origin point why not to
->>>> export of_irq_count for modules?
->>>> Or opposite question if platform_get_resource is correct way
->>>> why to export of_irq_to_resource for modules?
->>>
->>> for old ppc drivers that are not converted yet to pdev
->>>
->>> if you can do so just use pdev resource I should have fix the pb or i=
-rq_domain
->>> hopefully for 3.11
->>
->> ok. It means it is currently deprecated.
->> I just wanted to be sure that I understand it correctly.
->>
->> I have changed my drivers not to use this function and using resources=
- as
->> we discussed.
->>
->> btw: I have sent one email to device-tree ML about describing missing
->> connection between cpu and the first interrupt controller.
->> Can you please look at it and comment it?
->> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-May/033955.=
-html
->=20
-> for the record as discussed with Grant I'm preparing to add a new prope=
-rty
-> to handle interrupts so you will never have to use "interrupt-parent" a=
-ny more
-> and just do this
->=20
-> interrupt-lines =3D <&aic 5 0 &pioA 4>
->=20
-> it will be more like gpio and will allow to have irq from different
-> interrupt-parent in the same node
->=20
-> but wait a few I'll be really back next week as I'm half off this week
+Would the regmap abstraction hide the potentially blocking nature
+of a register access (I understand that you can implement "local"
+as well as "remote" register sets by this mechanism)?  Or could
+you still meet the assumptions or requirements of the common
+clock API?
 
-Any update on this?
-
-Thanks,
-Michal
+It might as well be the responsibility of the clock driver's
+implementor to arrange for the availability of non-blocking
+enable/disable operations, just as it is today.  Such that
+expensive register access need not be forbidden in general.
 
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
-------enig2LHULNEERAAQPVTTJAXXJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlHnkx4ACgkQykllyylKDCEbswCeJhO0WmJ9jAFsveJtUkE7OtfI
-3JUAoJdSmBgwRfQ22IggVEUSh81Rn6Ss
-=KXJG
------END PGP SIGNATURE-----
-
-------enig2LHULNEERAAQPVTTJAXXJ--
-
---===============3753705885409238291==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3753705885409238291==--
+virtually yours
+Gerhard Sittig
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office@denx.de
