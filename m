@@ -1,73 +1,82 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2 18/24] i2c: mpc: OF clock lookup for MPC512x
-Date: Thu, 18 Jul 2013 21:33:24 +0100
-Message-ID: <20130718203324.GB24642@n2100.arm.linux.org.uk>
-References: <1374166855-7280-1-git-send-email-gsi@denx.de>
- <1374178858-8683-4-git-send-email-gsi@denx.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 01/24] spi: mpc512x: cleanup clock API use
+Date: Thu, 18 Jul 2013 21:49:56 +0100
+Message-ID: <20130718204956.GU22506@sirena.org.uk>
+References: <1373914074-20889-1-git-send-email-gsi@denx.de>
+ <1374166855-7280-1-git-send-email-gsi@denx.de>
+ <1374166855-7280-2-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <1374178858-8683-4-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Gerhard Sittig <gsi@denx.de>
-Cc: Mike Turquette <mturquette@linaro.org>, Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: multipart/mixed; boundary="===============1522009034397247544=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1374166855-7280-2-git-send-email-gsi-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2013 at 10:20:52PM +0200, Gerhard Sittig wrote:
-> +	/* enable clock for the I2C peripheral (non fatal) */
-> +	clk = of_clk_get_by_name(node, "per");
-> +	if (!IS_ERR(clk)) {
-> +		clk_prepare_enable(clk);
-> +		clk_put(clk);
-> +	}
-> +
 
-This kind of hacked up approach to the clk API is exactly the thing I
-really don't like seeing.  I don't know what it is... is the clk API
-somehow difficult to use or what's the problem with doing stuff correctly?
+--===============1522009034397247544==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UsIKHTtpqa9hxcvF"
+Content-Disposition: inline
 
-1. Get the clock in your probe function.
-2. Prepare it at the appropriate time.
-3. Enable it appropriately.  (or if you want to combine 2 and 3, use
-   clk_prepare_enable().)
-4. Ensure that enables/disables and prepares/unprepares are appropriately
-   balanced.
-5. 'put' the clock in your remove function.
 
-Certainly do not get-enable-put a clock.  You're supposed to hold on to
-the clock all the time that you're actually using it.
+--UsIKHTtpqa9hxcvF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Final point - if you want to make it non-fatal, don't play games like:
+On Thu, Jul 18, 2013 at 07:00:32PM +0200, Gerhard Sittig wrote:
 
-	clk = clk_get(whatever);
-	if (IS_ERR(clk))
-		clk = NULL;
+> +	psc_num = master->bus_num;
+> +	snprintf(clk_name, sizeof(clk_name), "psc%d_mclk", psc_num);
+> +	mps->clk_mclk = clk_get(dev, clk_name);
+> +	if (IS_ERR(mps->clk_mclk))
+> +		goto free_irq;
 
-	...
-	if (clk)
-		clk_prepare(clk);
+Should be using devm_clk_get().
 
-Do this instead:
+--UsIKHTtpqa9hxcvF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-	clk = clk_get(whatever);
-	...
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
-	if (!IS_ERR(clk))
-		clk_prepare(clk);
-etc.
+iQIcBAEBAgAGBQJR6FTxAAoJELSic+t+oim9NNcP/A9TP2KECJIULm9OaazmNXl4
+Ckij+jj4rK31RPK+1Hx/2hfRPl/Z+RJ7Q0LStXV/CYMskBTH86L5TWKI9r4bmFuf
+2DpClmSuzsHVMZazAigcG0uVqbUST49AWvmPKCrgL4h0RVLxQFvb2A4AMqamZfpN
+e6YkKRl0vgg5Zm1wlML9qmU1nBCMwvmxZ49IaWzv1pua+EG6BI1bBqn0FoOpI5rC
+0C/b7Z8FDEVjkDl3+fG4d6A6tO18mtEbMXpYLuzwANCkSX8vPHGDA6CxHIOBo0m+
+0Dalsm/eLEIXzkYu+2fzGDSiiOZkETVdk0ywJgC3ufi3tvJUX2JLBWzVDuELV5ZD
+6apqWKwapVZxBHt3Zdn0LOiSS4GYLl85qKraJMpTjNpVlo5J0wZ32h0ZJ14Q3Npa
+5B/A+GZv9d0DS2u5Ef1fu0qztX8reXZqxy3iYVn3edz/Qcgav0GEOnTEZvWQDL4n
+FrhOrKP07bOgfg/CbDz80D8S1aReprvfbKE2zsP4iMtWXsezWbeIkSSiuJWmO+80
+4cRIea/Ct1JuPKi946Va4uLbgD6rd58NcGJ0cCPzQMLAtQJwa4Libh3xrDB94tsU
+5sHZVExmFKVqpv/tAcIbmbMvZH5RWEVow+jQxRD33yu1/+yJIrQvvtZcC5nZOaNp
+nl3zY6ZTZnKUfAyeVrLL
+=gM5y
+-----END PGP SIGNATURE-----
 
-(And on this subject, I'm considering whether to make a change to the
-clk API where clk_prepare() and clk_enable() return zero when passed
-an error pointer - this means drivers with optional clocks don't have
-to burden themselves with these kinds of checks.)
+--UsIKHTtpqa9hxcvF--
+
+--===============1522009034397247544==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============1522009034397247544==--
