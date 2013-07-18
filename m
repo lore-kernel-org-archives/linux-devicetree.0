@@ -1,60 +1,61 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [lm-sensors] [RESEND PATCH V1 0/9] thermal: introduce DT thermal
- zone build
-Date: Thu, 18 Jul 2013 14:21:08 -0700
-Message-ID: <20130718212108.GC4110@roeck-us.net>
-References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com>
- <20130717220942.GB990@roeck-us.net>
- <51E7F341.8020508@ti.com>
- <51E8234D.1020607@wwwdotorg.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Thu, 18 Jul 2013 15:50:09 -0700
+Message-ID: <CACxGe6usaesdKTb8eVtB3SxdOUzJVbE+4X4J5mfKDmD6oiyQsQ@mail.gmail.com>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+ <20130716015038.GD28375@S2101-09.ap.freescale.net>
+ <51E4BF98.8030604@wwwdotorg.org>
+ <20130716041056.GA30067@S2101-09.ap.freescale.net>
+ <51E56AA7.7020103@wwwdotorg.org>
+ <20130717030246.GA4541@S2101-09.ap.freescale.net>
+ <51E6CCE4.20705@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51E8234D.1020607@wwwdotorg.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, l.stach@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51E6CCE4.20705-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2013 at 11:18:05AM -0600, Stephen Warren wrote:
-> On 07/18/2013 07:53 AM, Eduardo Valentin wrote:
-> > Hello Guenter,
-> > 
-> > On 17-07-2013 18:09, Guenter Roeck wrote:
-> >> On Wed, Jul 17, 2013 at 11:17:19AM -0400, Eduardo Valentin
-> >> wrote:
-> >>> Hello all,
-> >>> 
-> >>> As you noticed, I am working in a way to represent thermal
-> >>> data using device tree [1]. Essentially, this should be a way
-> >>> to say what to do with a sensor and how to associate (cooling)
-> >>> actions with it.
-> >>> 
-> >> Seems to me that goes way beyond the supposed scope of devicetree
-> >> data. Devicetree data is supposed to describe hardware, not its
-> >> configuration or use. This is clearly a use case.
-> > 
-> > Thanks for rising your voice here. It is important to know what
-> > hwmon ppl think about this.
-> 
-> I meant to find time to read Guenter's original email where he
-> initially objected to putting data into DT, and determine exactly what
-> was being objected to. I still haven't:-( However, the arguments that
-> Eduardo stated in his email do make sense to me; I agree that
-> temperature limits really are a description of HW. Details of which
-> cooling methods to invoke when certain temperature limits are reached
-> is also part of the HW/system design, and hence I would tend to agree
-> that they're appropriate to include in DT. Anyway, that's just my 2
-> cents on the matter:-)
+On Wed, Jul 17, 2013 at 9:57 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 07/16/2013 09:02 PM, Shawn Guo wrote:
+>> On Tue, Jul 16, 2013 at 09:45:43AM -0600, Stephen Warren wrote:
+>>> Registering the driver earlier won't cause any bugs. However, it's not
+>>> the correct approach.
+>>>
+>>> Deferred probe /is/ the approach for assuring correct dependencies
+>>> between drivers. It works and should be used. There are not enough
+>>> initcall levels to play games using initcalls and solve all the issues,
+>>> and the ordering requirements vary board-to-board. Deferred probe at
+>>> runtime handles this without having to manually place all the drivers
+>>> into specific initcall levels, and dynamically adjusts to board
+>>> differences, since it all happens automatically at run-time.
+>>
+>> I do not quite follow the argument here.  I agree with you that
+>> deferred probe is the approach to solve dependencies.  But it does not
+>> necessarily mean that initcall can not be used to help it save some
+>> nasty or nested deferring.  Deferred probe and initcalls are not two
+>> mutually exclusive mechanisms but two which can help each other.
+>
+> My understanding is that deferred probe was implemented specifically to
+> avoid having to, or allowing, the use of initcall levels to determine
+> probe order.
 
-Many systems have multiple profiles for various use cases (high performance,
-low power etc), and limits are different based on the use case. If that means
-you are going to have multiple devicetree variants based on the profile,
-I would argue that you crossed the line. With thermal profiles it gets even more
-complicated, as those parameters may be played around with and changed
-multiple times to find the best settings to achieve optimal cooling.
-Does this describe hardware ? I don't think so, but, as I mentioned before,
-maybe I am wrong.
+Correct. Futzing around with initcalls may optimize particular use
+cases, but it isn't complete. I've been pushing for all drivers to use
+module_initcall() unless there is a very strong reason to do
+otherwise. Premature optimization (without measuring time consumed) is
+not a strong justification.
 
-Guenter
+g.
