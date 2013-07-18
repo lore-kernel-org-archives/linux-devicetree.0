@@ -1,17 +1,15 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: Kirkwood: Fix the internal register ranges
- translation
-Date: Thu, 18 Jul 2013 11:05:51 -0300
-Message-ID: <20130718140550.GA3364@localhost>
-References: <1371569479-31498-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <51E5145A.90404@keymile.com> <20130716125531.GD2317@localhost>
- <51E59639.3000207@keymile.com>
+From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+Subject: Re: =?GB2312?B?u9i4tDogQWJvdXQgb21hcDIgbW1jIGhvc3QgIGNsb3NlIHRvbw==?=
+ =?GB2312?B?IGxvbmcgaXJxIGluIGlycWFjdGlvbi4=?=
+Date: Thu, 18 Jul 2013 20:14:41 +0530
+Message-ID: <51E7FF59.3030000@ti.com>
+References: <201307181052572266628@gmail.com>
+ <2013071816435162919513@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51E59639.3000207-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <2013071816435162919513-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,62 +20,126 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "Longchamp,
- Valentin" <Valentin.Longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: majianpeng <majianpeng-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, cjb <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-R2VybGFuZG8sCgpPbiBUdWUsIEp1bCAxNiwgMjAxMyBhdCAwODo1MTozN1BNICswMjAwLCBHZXJs
-YW5kbyBGYWxhdXRvIHdyb3RlOgpbLi4uXQo+ID4KPiA+IEFsc28sIHNwZWFraW5nIG9mICJkZXZp
-Y2UgYnVzIiB0aGlzIG5hbmQgbm9kZSBzaG91bGQgYmUgYmVoaW5kIGEgZGV2aWNlYnVzIG5vZGUu
-Cj4gPgo+ID4gCQlyYW5nZXMgPSA8TUJVU19JRCgweGYwLCAweDAxKSAwIDAgMHhmMTAwMDAwMCAw
-eDEwMDAwMCAgIC8qIGludGVybmFsLXJlZ3MgKi8KPiA+IAkJCSAgTUJVU19JRCgweDAxLCAweDJm
-KSAwIDAgMHhmNDAwMDAwMCAweDQwMD47Cj4gPgo+ID4gCQlkZXZidXMgewo+ID4gCQkJc3RhdHVz
-ID0gIm9rYXkiOwo+ID4gCQkJcmFuZ2VzID0gPDAgTUJVU19JRCgweDAxLCAweDJmKSAwIDB4NDAw
-PjsKPiA+Cj4gPiAJCQkvKiBuYW5kICovCj4gPiAJCQluYW5kIHsKPiA+IAkJCQljb21wYXRpYmxl
-ID0gIm1hcnZlbGwsb3Jpb24tbmFuZCI7Cj4gPiAJCQkJcmVnID0gPDAgMHg0MDA+Owo+ID4gCQkJ
-fTsKPiA+IAkJfTsKPiAKPiBJIGJlbGlldmUgdGhhdCBtYWtlcyBhIGxvdCBtb3JlIHNlbnNlIHRo
-aXMgd2F5Li4uIEkgZ3Vlc3MgdGhpcyBmZWF0dXJlIAo+IChkZXZpY2UgYnVzKSByZXF1aXJlcyB5
-b3VyIGxhdGVzdCBzZXQgb2YgcGF0Y2hlcywgcmlnaHQ/IChlaXRoZXIgdjcgYXMgCj4geW91IHBv
-c3RlZCB5ZXN0ZXJkYXkgb3IgeW91ciB0cmVlIGF0IAo+IGdpdDovL2dpdGh1Yi5jb20vTUlTTC1F
-QlUtU3lzdGVtLVNXL21haW5saW5lLXB1YmxpYy5naXQvbWFydmVsbC1tdmVidS1tYnVzLXY3KQo+
-IAoKTm8sIG5vdCByZWFsbHkuIFRoZSBkZXZpY2UtYnVzIGRyaXZlciBpcyBhbHJlYWR5IG1lcmdl
-ZCwgc28gd2Ugb25seSBuZWVkCnRvIHVzZSBpdCwgYW5kIG1heWJlIGV4dGVuZCBpdCBhIGJpdCB0
-byBzdXBwb3J0IGtpcmt3b29kIChpbiBjYXNlIGl0J3MKbmVlZGVkKS4gWW91IGNhbiBzZWUgaW46
-CgogIGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS14cC1vcGVuYmxvY2tzLWF4My00LmR0cwoKZm9y
-IGFuIGV4YW1wbGUuCgpJIHdvdWxkIHByZWZlciB0aGF0IHRvIGJlIGRvbmUgKmFmdGVyKiB0aGUg
-TUJ1cyBpcyBhY2NlcHRlZC4uLgpidXQgdGhhdCdzIGp1c3QgYSBwZXJzb25hbCBwcmVmZXJlbmNl
-LgoKPiA+IChub3RpY2UgdGhpcyB3aWxsIGFsbG93IHlvdSB0byByZWxvY2F0ZSB0aGUgYmFzZSBh
-ZGRyZXNzIG9mIHRoZSBOQU5EIHdpbmRvd3MKPiA+IGVhc2lseSBpZiBpdCBjb25mbGljdHMgd2l0
-aCB5b3VyIFBDSWUgbmVlZHMpLgo+IAo+IEkgc29ydCBvZiBoYWQgdGhlIGltcHJlc3Npb24gSSBj
-b3VsZCBkbyBhbHJlYWR5IGRvIHRoYXQgc29tZWhvdywgdGhvdWdoIAo+IEkgYW0gbm90IHF1aXRl
-IHN1cmUgYW55bW9yZS4uLgo+IAoKV2VsbCwgeW91IGNhbiBkbyBpdCBieSBwYXRjaGluZyBhbmQg
-cmUtYnVpbGRpbmcgdGhlIGtlcm5lbCBhcyB0aGUKTUJ1cyB3aW5kb3dzIGFyZSBjcmVhdGVkIGZy
-b20gQy1maWxlcy4KCldpdGggdGhlIE1CdXMgRFQgYmluZGluZywgYWxsIHlvdSBuZWVkIGlzIHRv
-IGNoYW5nZSB0aGUgRFQuCgo+ID4+IGF2b2lkIGEgbGF0ZXIgaW5jb3Npc3RlbmN5IGJldHdlZW4g
-dGhlICJ1bml0LWFkZHJlc3MiIGFuZCB0aGUgZmlyc3QKPiA+PiAicmVnIiBhZGRyZXNzOgo+ID4+
-Cj4gPj4+ICAgIAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4+ICAgIAkJI3NpemUtY2VsbHMg
-PSA8MT47Cj4gPj4+IEBAIC0xNzEsNyArMTcyLDcgQEAKPiA+PiAgID4gICAJCW5hbmRAMzAwMDAw
-MCB7Cj4gPj4gCQkgICAgIF5eXl5eXl4KPiA+Cj4gPiBPaCwgdGhpcyBzaG91bGQgYmUgZml4ZWQu
-IEkganVzdCBtaXNzZWQgaXQsIGFuZCBub2JvZHkgbm90aWNlZCBlaXRoZXIuCj4gPgo+IAo+IFNv
-LCBpbiB0aGUgZW5kLCB5b3UgdGhpbmsgaXQncyBPSyB0byBoYXZlIGEgc2V0IG9mIG5vZGVzIHdp
-dGggInJlbGF0aXZlIiAKPiBhZGRyZXNzZXMgKGdwaW9AMTAxNDAsIHNlcmlhbEAxMjAwMCBldGMu
-Li4pIGFuZCBzb21lIHdpdGggImFic29sdXRlIiAKPiBhZGRyZXNzZXMgKG5hbmRAMHhmNDAwMDAw
-MCwgd2hlcmUgdGhlIHJhbmdlcyBwcm9wZXJ0eSBkb2VzIGEgMC1vZmZzZXQgCj4gdHJhbnNsYXRp
-b24pPwo+IEV2ZW4gdGhvdWdoIEkgdW5kZXJzdGFuZCB0aGlzIGlzIGp1c3Qgc29tZSB0cmFuc2l0
-aW9uYWwgc3RhdGUsIGFuZCBpdCAKPiB3aWxsIGFsbCBiZSBmaXhlZCBsaWtlIHlvdXIgZXhhbXBs
-ZSBhYm92ZSwgb25jZSB3ZSBnZXQgdGhlIHJlc3Qgb2YgdGhlIAo+IHJld29yayBtZXJnZWQgKG1i
-dXMvZGV2YnVzKS4KCk1tbS4uIEkgc2VlIHlvdXIgcG9pbnQuIEluIHRoZSBlbmQsIGl0J3MganVz
-dCBhcyB5b3Ugc2F5LCB0aGUgY3VycmVudCBzdGF0ZQppcyBvbmx5IHRyYW5zaXRpb25hbC4gVGhl
-cmUncyBubyB3YXkgdG8gaGF2ZSBhIHByb3BlciBEVCB3aXRob3V0IHRoZSBNQnVzIERUCmJpbmRp
-bmcuCgpUaGUgcmVhc29uIGZvciB0aGlzIG1lc3MgaXMgdGhhdCB0aGUgY3VycmVudCBsYXlvdXQg
-bWl4ZXMgdGhlIGFjdHVhbAphZGRyZXNzIHNwYWNlLiBGZWVsIGZyZWUgdG8gdGFrZSBhIGxvb2sg
-YXQgdGhlIGxhdGVzdCBNQnVzIHNlcmllcyBhbmQKdHJ5IHRvIGFkZCBNQnVzIERUIGJpbmRpbmcg
-Zm9yIEtpcmt3b29kLgoKSWYgeW91IGRvLCBkb24ndCBoZXNpdGF0ZSBpbiBhc2tpbmcgYXMgbWFu
-eSBxdWVzdGlvbnMgYXMgeW91IG5lZWQgYW5kL29yCnBvc3RpbmcgUkZDcyBmb3IgdXMgdG8gbG9v
-ayBhdC4KCi0tIApFemVxdWllbCBHYXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51
-eCwgS2VybmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5j
-b20KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNl
-dHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJz
-Lm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNz
-Cg==
+On Thursday 18 July 2013 02:13 PM, majianpeng wrote:
+>> Hi all,
+>> 	Now i worked on omp2 and met a probelm which someplace close_irq for 3.6second.
+>> The kernel version is 2.6.37. I used trace to find in irq_action:omap_hsmmc_irq.
+>> This problem occured by removed the sdcard when there are io operations.
+>>
+>> I found the read problem is in omap_hsmmc_reset_controller_fsm.
+>> In omap_hsmmc_reset_controller_fsm:
+>>> static inline void omap_hsmmc_reset_controller_fsm(struct omap_hsmmc_host *host,
+>>>                                                    unsigned long bit)
+>>> {
+>>>         unsigned long i = 0;
+>>>         unsigned long limit = (loops_per_jiffy *
+>>>                                 msecs_to_jiffies(MMC_TIMEOUT_MS));
+>>
+>>>         OMAP_HSMMC_WRITE(host->base, SYSCTL,
+>>>                          OMAP_HSMMC_READ(host->base, SYSCTL) | bit);
+>>
+>>>         /*
+>>>          * OMAP4 ES2 and greater has an updated reset logic.
+>>>          * Monitor a 0->1 transition first
+>>>          */
+>>>         if (mmc_slot(host).features & HSMMC_HAS_UPDATED_RESET) {
+>>>                 while ((!(OMAP_HSMMC_READ(host->base, SYSCTL) & bit))
+>>>                                        && (i++ < limit))
+>>>                         cpu_relax();
+>>         }
+>> In func, it used loops_per_jiffy  in order to avoid do many time exceed MMC_TIMEOUT_MS.
+>> In face oops_per_jiify is like:
+>> while(i++ < loops_per_jiffy)
+>> 	cpu_relax();
+>> But actually, it used as follow:
+>>> while ((!(OMAP_HSMMC_READ(host->base, SYSCTL) & bit))
+>>>                                       && (i++ < limit))
+>> it add some operations like: read regisger, &, &&.
+>> So the time may exceed MMC_TIMEOUT_MS.
+>> I used those code to test and found it's ok:
+>> for (i = 0 ; i < 10; i++){
+>> 	if (!(OMAP_HSMMC_READ(host->base, SYSCTL) & bit))
+>> 		  break;
+>> 	j = limit/10;
+>> 	while(j--)
+>> 		cpu_relax();
+>> }
+>>
+>> Using this the problom can't occur.
+>> Am i missing something?
+>>
+>> Thanks!
+>> Jianpeng Ma
+> I do more test and found more interesting things
+> 
+> static inline void omap_hsmmc_reset_controller_fsm(struct omap_hsmmc_host *host,
+>                                                     unsigned long bit)
+> {
+>        
+> 
+>          /*
+>           * OMAP4 ES2 and greater has an updated reset logic.
+>           * Monitor a 0->1 transition first
+>           */
+>          if (mmc_slot(host).features & HSMMC_HAS_UPDATED_RESET) {
+>>                 while ((!(OMAP_HSMMC_READ(host->base, SYSCTL) & bit))
+>>                                         && (i++ < limit))
+>>                         cpu_relax();
+> 	I modify above code as:
+> 				while ((!(OMAP_HSMMC_READ(host->base, SYSCTL) & bit)) {
+> 							i++;cpu_relax();
+> 				}
+>   When the problem occur, it  can't return from while.That's mean  the transition was already oocured befroe while.
+> So it can't monitor a 0->1 transition.
+
+Hi,
+
+Which OMAP SoC are you testing on (OMAP4 ES2+ ? )
+
+Can you try the below inlined patch
+
+diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+index eccedc7..7dbc83f 100644
+--- a/drivers/mmc/host/omap_hsmmc.c
++++ b/drivers/mmc/host/omap_hsmmc.c
+@@ -973,10 +973,9 @@ static inline void omap_hsmmc_dbg_report_irq(struct omap_hsmmc_host *host,
+ static inline void omap_hsmmc_reset_controller_fsm(struct omap_hsmmc_host *host,
+ 						   unsigned long bit)
+ {
+-	unsigned long i = 0;
+-	unsigned long limit = (loops_per_jiffy *
+-				msecs_to_jiffies(MMC_TIMEOUT_MS));
++	unsigned long timeout;
+
++	timeout = jiffies + msecs_to_jiffies(MMC_TIMEOUT_MS);
+ 	OMAP_HSMMC_WRITE(host->base, SYSCTL,
+ 			 OMAP_HSMMC_READ(host->base, SYSCTL) | bit);
+
+@@ -985,14 +984,14 @@ static inline void omap_hsmmc_reset_controller_fsm(struct omap_hsmmc_host *host,
+ 	 * Monitor a 0->1 transition first
+ 	 */
+ 	if (mmc_slot(host).features & HSMMC_HAS_UPDATED_RESET) {
+-		while ((!(OMAP_HSMMC_READ(host->base, SYSCTL) & bit))
+-					&& (i++ < limit))
++		while ((!(OMAP_HSMMC_READ(host->base, SYSCTL) & bit)) &&
++			time_before(jiffies, timeout))
+ 			cpu_relax();
+ 	}
+-	i = 0;
+
++	timeout = jiffies + msecs_to_jiffies(MMC_TIMEOUT_MS);
+ 	while ((OMAP_HSMMC_READ(host->base, SYSCTL) & bit) &&
+-		(i++ < limit))
++		time_before(jiffies, timeout))
+ 		cpu_relax();
+
+ 	if (OMAP_HSMMC_READ(host->base, SYSCTL) & bit)
+-- 
+> 
+> Thanks!
+> Jianpeng Ma
+> 
