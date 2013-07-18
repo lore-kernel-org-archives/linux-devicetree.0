@@ -1,125 +1,168 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 6/6] mtd: ofpart: add compatible check for child nodes
-Date: Thu, 18 Jul 2013 10:28:58 +0200
-Message-ID: <20130718082858.GF16015@ns203013.ovh.net>
-References: <1372845034-5579-1-git-send-email-josh.wu@atmel.com>
- <1372845034-5579-7-git-send-email-josh.wu@atmel.com>
- <CAN8TOE_YfnQ5hK=xO28tH2h39Fb3KcVBFGM=XAFLHnRb0DFO3A@mail.gmail.com>
+From: Oleksandr Kozaruk <oleksandr.kozaruk@ti.com>
+Subject: Re: [PATCH v5 2/2] iio: twl6030-gpadc: TWL6030, TWL6032 GPADC driver
+Date: Thu, 18 Jul 2013 11:36:42 +0300
+Message-ID: <CAPb7_muAzO-jRqgcm89fcKT-hTLq38Aj2p0WAWjGjN9DoQUwPg@mail.gmail.com>
+References: <1374059564-6872-1-git-send-email-oleksandr.kozaruk@ti.com>
+	<1374059564-6872-3-git-send-email-oleksandr.kozaruk@ti.com>
+	<51E6DCB5.3070302@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAN8TOE_YfnQ5hK=xO28tH2h39Fb3KcVBFGM=XAFLHnRb0DFO3A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>, Rob Herring <rob.herring@calxeda.com>
-Cc: sergei.shtylyov@cogentembedded.com, dedekind1@gmail.com, devicetree-discuss@lists.ozlabs.org, Josh Wu <josh.wu@atmel.com>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51E6DCB5.3070302@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: tony@atomide.com, benoit.cousson@linaro.org, rnayak@ti.com, peter.ujfalusi@ti.com, kishon@ti.com, jic23@cam.ac.uk, grant.likely@linaro.org, rob.herring@calxeda.com, sameo@linux.intel.com, ch.naveen@samsung.com, poeschel@lemonage.de, milo.kim@ti.com, balajitk@ti.com, gg@slimlogic.co.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 00:14 Thu 18 Jul     , Brian Norris wrote:
-> Adding device tree list, keeping patch context
-> 
-> On Wed, Jul 3, 2013 at 2:50 AM, Josh Wu <josh.wu@atmel.com> wrote:
-> > In case that the nand device will support some features like Nand Flash
-> > Controller, we want to make the sub feature as a sub node of nand device.
-> >
-> > Use such organization it is easy to enable/disable feature, also it is back
-> > compatible and more readable.
-> >
-> > If the sub-node has a compatible property then it is a driver not partition.
-> >
-> > Signed-off-by: Josh Wu <josh.wu@atmel.com>
-> 
-> I just came back to this patch series. I think this patch might be
-> deserving of a review by the device-tree mailing list. (It also
-> doesn't deserve to die in MTD purgatory.)
-> 
-> BTW, it looks good to me, so:
-> 
-> Acked-by: Brian Norris <computersforpeace@gmail.com>
-Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Hello Lars,
 
-Rob can take a look on it
+On Wed, Jul 17, 2013 at 9:04 PM, Lars-Peter Clausen <lars@metafoo.de> wrote:
+>> +static int twl6032_calibration(struct twl6030_gpadc_data *gpadc)
+>> +{
+>> +     int chn, d1 = 0, d2 = 0, temp;
+>> +     u8 trim_regs[17];
+>> +     int ret;
+>> +
+>> +     ret = twl_i2c_read(TWL6030_MODULE_ID2, trim_regs + 1,
+>> +                     TWL6030_GPADC_TRIM1, 16);
+>> +     if (ret < 0) {
+>> +             dev_err(gpadc->dev, "calibration failed\n");
+>> +             return ret;
+>> +     }
+>> +
+>> +     /*
+>> +      * Loop to calculate the value needed for returning voltages from
+>> +      * GPADC not values.
+>> +      *
+>> +      * gain is calculated to 3 decimal places fixed point.
+>> +      */
+>> +     for (chn = 0; chn < TWL6032_GPADC_MAX_CHANNELS; chn++) {
+>> +
+>> +             switch (chn) {
+>> +             case 0:
+>> +             case 1:
+>> +             case 2:
+>> +             case 3:
+>> +             case 4:
+>> +             case 5:
+>> +             case 6:
+>> +             case 11:
+>> +             case 12:
+>> +             case 13:
+>> +             case 14:
+>> +                     /* D1 */
+>> +                     d1 = (trim_regs[3] & 0x1F) << 2;
+>> +                     d1 |= (trim_regs[1] & 0x06) >> 1;
+>> +                     if (trim_regs[1] & 0x01)
+>> +                             d1 = -d1;
+>> +
+>> +                     /* D2 */
+>> +                     d2 = (trim_regs[4] & 0x3F) << 2;
+>> +                     d2 |= (trim_regs[2] & 0x06) >> 1;
+>> +                     if (trim_regs[2] & 0x01)
+>> +                             d2 = -d2;
+>> +                     break;
+>> +             case 8:
+>> +                     /* D1 */
+>> +                     temp = (trim_regs[3] & 0x1F) << 2;
+>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
+>> +                     if (trim_regs[1] & 0x01)
+>> +                             temp = -temp;
+>> +
+>> +                     d1 = (trim_regs[8] & 0x18) << 1;
+>> +                     d1 |= (trim_regs[7] & 0x1E) >> 1;
+>> +                     if (trim_regs[7] & 0x01)
+>> +                             d1 = -d1;
+>> +
+>> +                     d1 += temp;
+>> +
+>> +                     /* D2 */
+>> +                     temp = (trim_regs[4] & 0x3F) << 2;
+>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
+>> +                     if (trim_regs[2] & 0x01)
+>> +                             temp = -temp;
+>> +
+>> +                     d2 = (trim_regs[10] & 0x1F) << 2;
+>> +                     d2 |= (trim_regs[8] & 0x06) >> 1;
+>> +                     if (trim_regs[8] & 0x01)
+>> +                             d2 = -d2;
+>> +
+>> +                     d2 += temp;
+>> +                     break;
+>> +             case 9:
+>> +                     /* D1 */
+>> +                     temp = (trim_regs[3] & 0x1F) << 2;
+>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
+>> +                     if (trim_regs[1] & 0x01)
+>> +                             temp = -temp;
+>> +
+>> +                     d1 = (trim_regs[14] & 0x18) << 1;
+>> +                     d1 |= (trim_regs[12] & 0x1E) >> 1;
+>> +                     if (trim_regs[12] & 0x01)
+>> +                             d1 = -d1;
+>> +
+>> +                     d1 += temp;
+>> +
+>> +                     /* D2 */
+>> +                     temp = (trim_regs[4] & 0x3F) << 2;
+>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
+>> +                     if (trim_regs[2] & 0x01)
+>> +                             temp = -temp;
+>> +
+>> +                     d2 = (trim_regs[16] & 0x1F) << 2;
+>> +                     d2 |= (trim_regs[14] & 0x06) >> 1;
+>> +                     if (trim_regs[14] & 0x01)
+>> +                             d2 = -d2;
+>> +
+>> +                     d2 += temp;
+>> +             case 10:
+>> +                     /* D1 */
+>> +                     d1 = (trim_regs[11] & 0x0F) << 3;
+>> +                     d1 |= (trim_regs[9] & 0x0E) >> 1;
+>> +                     if (trim_regs[9] & 0x01)
+>> +                             d1 = -d1;
+>> +
+>> +                     /* D2 */
+>> +                     d2 = (trim_regs[15] & 0x0F) << 3;
+>> +                     d2 |= (trim_regs[13] & 0x0E) >> 1;
+>> +                     if (trim_regs[13] & 0x01)
+>> +                             d2 = -d2;
+>> +                     break;
+>> +             case 7:
+>> +             case 18:
+>> +                     /* D1 */
+>> +                     temp = (trim_regs[3] & 0x1F) << 2;
+>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
+>> +                     if (trim_regs[1] & 0x01)
+>> +                             temp = -temp;
+>> +
+>> +                     d1 = (trim_regs[5] & 0x7E) >> 1;
+>> +                     if (trim_regs[5] & 0x01)
+>> +                             d1 = -d1;
+>> +.
+>> +                     d1 += temp;
+>> +
+>> +                     /* D2 */
+>> +                     temp = (trim_regs[4] & 0x3F) << 2;
+>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
+>> +                     if (trim_regs[2] & 0x01)
+>> +                             temp = -temp;
+>> +
+>> +                     d2 = (trim_regs[6] & 0xFE) >> 1;
+>> +                     if (trim_regs[6] & 0x01)
+>> +                             d2 = -d2;
+>> +
+>> +                     d2 += temp;
+>> +                     break;
+>
+>
+> There is quite a bit of copy paste in here. Putting the bit swizziling into
+> a helper function should also improbe legibility.
 
-Best Regards,
-J.
-> 
-> Thanks,
-> Brian
-> 
-> > ---
-> > v3 --> v4:
-> >   - remove the 'len' parameter, just use NULL.
-> >   - refine the commit message.
-> >   - also add a NOTE in devicetree/bindings/mtd/partition.txt.
-> >
-> >  .../devicetree/bindings/mtd/partition.txt          |    1 +
-> >  drivers/mtd/ofpart.c                               |   13 ++++++++++++-
-> >  2 files changed, 13 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
-> > index 9315ac9..8e5557d 100644
-> > --- a/Documentation/devicetree/bindings/mtd/partition.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/partition.txt
-> > @@ -4,6 +4,7 @@ Partitions can be represented by sub-nodes of an mtd device. This can be used
-> >  on platforms which have strong conventions about which portions of a flash are
-> >  used for what purposes, but which don't use an on-flash partition table such
-> >  as RedBoot.
-> > +NOTE: if the sub-node has a compatible string, then it is not a partition.
-> >
-> >  #address-cells & #size-cells must both be present in the mtd device. There are
-> >  two valid values for both:
-> > diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
-> > index 553d6d6..30fcea1 100644
-> > --- a/drivers/mtd/ofpart.c
-> > +++ b/drivers/mtd/ofpart.c
-> > @@ -20,6 +20,10 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/mtd/partitions.h>
-> >
-> > +static bool node_has_compatible(struct device_node *pp)
-> > +{
-> > +       return of_get_property(pp, "compatible", NULL);
-> > +}
-> >  static int parse_ofpart_partitions(struct mtd_info *master,
-> >                                    struct mtd_partition **pparts,
-> >                                    struct mtd_part_parser_data *data)
-> > @@ -40,8 +44,12 @@ static int parse_ofpart_partitions(struct mtd_info *master,
-> >         /* First count the subnodes */
-> >         pp = NULL;
-> >         nr_parts = 0;
-> > -       while ((pp = of_get_next_child(node, pp)))
-> > +       while ((pp = of_get_next_child(node, pp))) {
-> > +               if (node_has_compatible(pp))
-> > +                       continue;
-> > +
-> >                 nr_parts++;
-> > +       }
-> >
-> >         if (nr_parts == 0)
-> >                 return 0;
-> > @@ -57,6 +65,9 @@ static int parse_ofpart_partitions(struct mtd_info *master,
-> >                 int len;
-> >                 int a_cells, s_cells;
-> >
-> > +               if (node_has_compatible(pp))
-> > +                       continue;
-> > +
-> >                 reg = of_get_property(pp, "reg", &len);
-> >                 if (!reg) {
-> >                         nr_parts--;
-> > --
-> > 1.7.9.5
-> >
+Trimming bits are scattered randomly between registers and in
+different bit positions.
+I don't see any commonalities, that could be generalized. as Graeme
+said about it "it's a bane of my life".
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Regards,
+OK.
