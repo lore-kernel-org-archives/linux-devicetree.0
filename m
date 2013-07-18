@@ -1,59 +1,49 @@
-From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 1/3] ARM: msm: dts: Fix the gpio register address for msm8960
-Date: Thu, 18 Jul 2013 13:07:13 -0700
-Message-ID: <1374178035-19943-2-git-send-email-davidb@codeaurora.org>
-References: <1374178035-19943-1-git-send-email-davidb@codeaurora.org>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: [PATCH v2 15/24] net: can: mscan: add a comment on reg to idx mapping
+Date: Thu, 18 Jul 2013 22:20:49 +0200
+Message-ID: <1374178858-8683-1-git-send-email-gsi@denx.de>
+References: <1374166855-7280-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1374178035-19943-1-git-send-email-davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1374166855-7280-1-git-send-email-gsi@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+add a comment about the magic of deriving an MSCAN component index
+from the peripheral's physical address / register offset
 
-Fix the the gpio reg address for the device tree entry.
-
-Signed-off-by: Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Gerhard Sittig <gsi@denx.de>
 ---
- arch/arm/boot/dts/msm8960-cdp.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/can/mscan/mpc5xxx_can.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/msm8960-cdp.dts b/arch/arm/boot/dts/msm8960-cdp.dts
-index db2060c..9c1167b0 100644
---- a/arch/arm/boot/dts/msm8960-cdp.dts
-+++ b/arch/arm/boot/dts/msm8960-cdp.dts
-@@ -26,7 +26,7 @@
- 		cpu-offset = <0x80000>;
- 	};
+diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/mpc5xxx_can.c
+index 5b0ee8e..bc422ba 100644
+--- a/drivers/net/can/mscan/mpc5xxx_can.c
++++ b/drivers/net/can/mscan/mpc5xxx_can.c
+@@ -148,7 +148,10 @@ static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
+ 		goto exit_put;
+ 	}
  
--	msmgpio: gpio@fd510000 {
-+	msmgpio: gpio@800000 {
- 		compatible = "qcom,msm-gpio";
- 		gpio-controller;
- 		#gpio-cells = <2>;
-@@ -34,7 +34,7 @@
- 		interrupts = <0 32 0x4>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
--		reg = <0xfd510000 0x4000>;
-+		reg = <0x800000 0x4000>;
- 	};
- 
- 	serial@16440000 {
+-	/* Determine the MSCAN device index from the physical address */
++	/* Determine the MSCAN device index from the peripheral's
++	 * physical address. Register address offsets against the
++	 * IMMR base are:  0x1300, 0x1380, 0x2300, 0x2380
++	 */
+ 	pval = of_get_property(ofdev->dev.of_node, "reg", &plen);
+ 	BUG_ON(!pval || plen < sizeof(*pval));
+ 	clockidx = (*pval & 0x80) ? 1 : 0;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.10.4
