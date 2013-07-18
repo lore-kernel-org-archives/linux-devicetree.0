@@ -1,78 +1,89 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/3] ARM: OMAP2+: omap_device: add pinctrl handling
-Date: Thu, 18 Jul 2013 01:14:06 -0700
-Message-ID: <20130718081405.GS7656@atomide.com>
-References: <1374061312-25469-1-git-send-email-grygorii.strashko@ti.com>
- <1374061312-25469-3-git-send-email-grygorii.strashko@ti.com>
- <20130717153838.GJ7656@atomide.com>
- <51E6CCB6.2000907@ti.com>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Subject: Re: [RFC PATCH v2 11/15] cpufreq: kirkwood-cpufreq: remove device
+ tree parsing for cpu nodes
+Date: Thu, 18 Jul 2013 09:24:31 +0100
+Message-ID: <51E7A63F.7020207@arm.com>
+References: <1374069984-20567-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1374069984-20567-12-git-send-email-Sudeep.KarkadaNagesha@arm.com> <20130717144355.GE1026@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51E6CCB6.2000907@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Kevin Hilman <khilman@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <20130717144355.GE1026@lunn.ch>
+Sender: cpufreq-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Gregory Clement <gregory.clement@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakeda>
 List-Id: devicetree@vger.kernel.org
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [130717 10:11]:
-> On 07/17/2013 06:38 PM, Tony Lindgren wrote:
-> >* Grygorii Strashko <grygorii.strashko@ti.com> [130717 04:49]:
-> >>Before switching to DT pinctrl states of OMAP IPs have been handled by hwmod
-> >>framework. After switching to DT-boot the pinctrl handling was dropped from
-> >>hwmod framework and, as it was recommended, OMAP IP's drivers have to be updated
-> >>to handle pinctrl states by itself using pinctrl_pm_select_xx() helpers
-> >>(see http://lists.infradead.org/pipermail/linux-arm-kernel/2013-June/173514.html)
-> >>
-> >>But this is not right for OMAP2+ SoC where real IPs state is controlled
-> >>by omap_device core which enables/disables modules & clocks actually.
-> >
-> >I'm not convinced we should try to handle this in a generic way
-> >as only some devices need dynamic remuxing of some pins.
-> >
-> >>For example, if OMAP I2C driver will handle pinctrl state during system wide
-> >>suspend the following issue may occure:
-> >>- suspend_noirq - I2C device can be still active because of PM auto-suspend
-> >>   |-_od_suspend_noirq
-> >>      |- omap_i2c_suspend_noirq
-> >>         |- PINs state set to SLEEP
-> >>   |- pm_generic_runtime_suspend
-> >>      |- omap_i2c_runtime_suspend()
-> >>         |- PINs state set to IDLE  <--- *oops* PINs state is IDLE and not SLEEP
-> >>   |- omap_device_idle()
-> >>      |- omap_hwmod_idle()
-> >>         |- _idle()
-> >>            |- disbale module (sysc&clocks)
-> >
-> >And in this example you are assuming that you need separate idle and
-> >sleep states, which is not true at least for most cases I've seen.
+On 17/07/13 15:43, Andrew Lunn wrote:
+> On Wed, Jul 17, 2013 at 03:06:20PM +0100, Sudeep.KarkadaNagesha@arm.com wrote:
+>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>
+>> Now that the cpu device registration initialises the of_node(if available)
+>> appropriately for all the cpus, parsing here is redundant.
+>>
+>> This patch removes all DT parsing and uses cpu->of_node instead.
+>>
+>> Cc: Andrew Lunn <andrew@lunn.ch>
+>> Cc: Jason Cooper <jason@lakedaemon.net>
+>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>> ---
+>>  drivers/cpufreq/kirkwood-cpufreq.c | 14 ++++++++++++--
+>>  1 file changed, 12 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/cpufreq/kirkwood-cpufreq.c b/drivers/cpufreq/kirkwood-cpufreq.c
+>> index c233ea6..18aa3eb 100644
+>> --- a/drivers/cpufreq/kirkwood-cpufreq.c
+>> +++ b/drivers/cpufreq/kirkwood-cpufreq.c
+>> @@ -13,6 +13,7 @@
+>>  #include <linux/module.h>
+>>  #include <linux/clk.h>
+>>  #include <linux/clk-provider.h>
+>> +#include <linux/cpu.h>
+>>  #include <linux/cpufreq.h>
+>>  #include <linux/of.h>
+>>  #include <linux/platform_device.h>
+>> @@ -165,6 +166,7 @@ static struct cpufreq_driver kirkwood_cpufreq_driver = {
+>>  static int kirkwood_cpufreq_probe(struct platform_device *pdev)
+>>  {
+>>  	struct device_node *np;
+>> +	struct device *cpu_dev;
+>>  	struct resource *res;
+>>  	int err;
+>>  
+>> @@ -175,9 +177,17 @@ static int kirkwood_cpufreq_probe(struct platform_device *pdev)
+>>  	if (IS_ERR(priv.base))
+>>  		return PTR_ERR(priv.base);
+>>  
+>> -	np = of_find_node_by_path("/cpus/cpu@0");
+>> -	if (!np)
+>> +	cpu_dev = get_cpu_device(0);
+>> +	if (!cpu_dev) {
+>> +		dev_err(&pdev->dev, "failed to get cpu device\n");
+>>  		return -ENODEV;
+>> +	}
+>> +
+>> +	np = of_node_get(cpu_dev->of_node);
+>> +	if (!np) {
+>> +		dev_err(&pdev->dev, "failed to get cpu device node\n");
+>> +		return -ENODEV;
+>> +	}
 > 
-> I don't need both states (at least right now) :), but
-> - if any OMAP2+ driver will have two states defined: "idle" and "sleep"
-> - and if it will try to manage them from drivers callbacks only using
->   pure calls to pinctrl_pm_select_xx() helpers
+> Hi Sudeep
 > 
-> the "idle" state will be selected during suspend and *not* "sleep".
-
-But the drivers have separate calls for runtime PM and suspend/resume?
-
-> >It is possible that am33xx needs separate idle and sleep states, but
-> >most likely only for some pins. For omap[345] we can get away with
-> >just the default state for most cases.
-> >
+> Are we not going a bit backwards here? You are replacing two lines
+> with 10 lines.
 > 
+> How about putting these 10 lines into some helper,
+> of_get_cpu_device()?  It would be useful for spear, kirkwood and
+> imx6q, and maybe others.
 > 
-> In case, if only "default" state is defined for device - nothing will
->  be done by OMAP device framework for it (I mean any call to
-> pinctrl_pm_select_xx() will do nothing - it just checks that there is
-> no state and returns 0).
-
-If we want to automate something, it should be done at Linux generic
-level rather than at omap "bus" level. That sort of relates to drivers
-needing to know when they've lost context too, which should be
-implemented in Linux generic way.
+Yes I realised that after making changes to this and pmac32 drivers. I
+have already made those changes in v3. I am waiting for more response
+before posting them.
 
 Regards,
+Sudeep
 
-Tony
+
+
