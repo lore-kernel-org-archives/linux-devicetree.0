@@ -1,83 +1,77 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 2/3] ARM: dts: DRA: Add crossbar device binding
-Date: Thu, 18 Jul 2013 14:04:38 -0500
-Message-ID: <51E83C46.3040000@ti.com>
-References: <1374165830-6367-1-git-send-email-r.sricharan@ti.com> <1374165830-6367-3-git-send-email-r.sricharan@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
+Date: Thu, 18 Jul 2013 13:54:18 -0600
+Message-ID: <51E847EA.9060302@wwwdotorg.org>
+References: <1371547751-13873-2-git-send-email-christian.ruppert@abilis.com> <51C23222.2060906@wwwdotorg.org> <20130626115051.GC7095@ab42.lan> <51CB279A.1090404@wwwdotorg.org> <20130705094859.GA27196@ab42.lan> <51D71337.6030409@wwwdotorg.org> <20130708130222.GA6402@ab42.lan> <51DDB5B8.5060909@wwwdotorg.org> <20130716084755.GB10914@ab42.lan> <51E56EF3.5040506@wwwdotorg.org> <20130718160700.GA14482@ab42.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1374165830-6367-3-git-send-email-r.sricharan@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, tony@atomide.com, linux@arm.linux.org.uk, rnayak@ti.com, balbi@ti.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130718160700.GA14482@ab42.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2013 11:43 AM, Sricharan R wrote:
-> This adds the irq/dma crossbar device nodes.
->
-> There is a IRQ and DMA crossbar device in the soc, which
-> maps the irq/dma requests from the peripherals to the
-> mpu/dsp/ipu/eve interrupt and sdma/edma controller's inputs.
-> The Peripheral irq/dma requests are connected to only one crossbar
-> input and the output of the crossbar is connected to only one
-> controller's input line. On POR, there are some mappings which
-> are done by default. Those peripherals which do not have a
-> mapping on POR, should be configured to route its requests
-> using the crossbar control registers.
->
+On 07/18/2013 10:07 AM, Christian Ruppert wrote:
+...
+> Well, perhaps my definition of "inside"/"outside" pins was not quite
+> clear: The pin groups define the set of (kernel internal) pin numbers of
+> "outside" pins which are used by pin controller to map a given
+> interface. Inside pins are not numbered and the inside interfaces are
+> only used to determine which outside pins are part of the same group
+> (namely those for which the pin controller hardware provides a mux
+> connection to the same inside interface):
+> 
+>                        4
+>                 4  /|--/-- SPI
+>    PINS[0..3] --/--||  4
+>                    \|--/-- GPIO[0..3]
+> 
+>                    4
+>    PINS[4..7] -----/------ GPIO[4..7]
+> 
+>                        2
+>                 2  /|--/-- I2C
+>    PINS[8..9] --/--||  2
+>                    \|--/-- GPIO[8..9]
+> 
+> Pins 0..3 are in the SPI group because on the "inside" they can be muxed
+> to the SPI interface.
+> Pins 8..9 are in the I2C group because on the "inside" they can be muxed
+> to the I2C interface.
+> Pins 0..9 are in the GPIO group because on the "inside" they can be
+> muxed to the GPIO controller.
+> 
+> All pin numbers are relative to the "outside", however, or conflict
+> management would not be possible. I hope this is more understandable
+> than my previous explanations.
+> Both muxes are controlled by the same register. In our overly simplistic
+> example this is not strictly necessary but in reality you might have pin
+> conflicts between the different interfaces.
 
-What is POR? Plan on Record? I supppose, we just love our TLA?
+Same register, or same field/bits in that register?
 
-> The irq/dma mapping for some peripherals are
-> added with the crossbar nodes here.
->
-> Signed-off-by: Sricharan R <r.sricharan@ti.com>
-> ---
->   arch/arm/boot/dts/dra7.dtsi |   19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index a5d9350..e6208b4 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -85,6 +85,25 @@
->   		ranges;
->   		ti,hwmods = "l3_main_1", "l3_main_2";
->
-> +		crossbar_mpu: mpuirq@4a002a48 {
-> +			compatible = "crossbar";
-> +			crossbar-name = "mpu-irq";
-> +			reg = <0x4a002a48 0x0130>;
-> +			reg-width = <16>;
-> +			crossbar-lines = "mpu-irq", "rtc-ss-alarm", <0x9f 0xd9 0x12c>,
-> +					 "mpu-irq", "mcasp3-arevt", <0x9e 0x96 0x12a>,
-> +					 "mpu-irq", "mcasp3-axevt", <0x9d 0x97 0x128>;
+If it's the same field/bits, I would expect to see the following pin groups:
 
-a) I'd like to use UART10. oh, let me guess: we dont map all cross bar 
-options here.. just "certain ones"
-b) I like to use random 6 uarts out of the available 10 uarts on the fly.
-c) I'd like to use IRQCROSS bar such that i use all the hardware block 
-instances that dont have default GIC IRQ mapping.
+1) PINS[0..3], PINS[8..9]
+2) PINS[4..7]
 
+... since those are the things that are independently muxable.
+Otherwise, I'd expect to see the following groups:
 
-> +		};
-> +
-> +		crossbar_dma: dmareq@4a002b78 {
-> +			compatible = "crossbar";
-> +			crossbar-name = "dma-req";
-> +			reg = <0x4a002b78 0x0100>;
-> +			reg-width = <16>;
-> +			crossbar-lines = "dma-req", "mcasp3-rx", <0x7e 0x84 0xfc>,
-> +					 "dma-req", "mcasp3-tx", <0x7d 0x85 0xfa>;
-> +		};
-> +
->   		counter32k: counter@4ae04000 {
->   			compatible = "ti,omap-counter32k";
->   			reg = <0x4ae04000 0x40>;
->
+1) PINS[0..3]
+2) PINS[4..7]
+3) PINS[8..9]
 
+> After the discussion we had so far I'm not so sure if extending the
+> pinctrl system with this kind of features is a very good idea.
 
--- 
-Regards,
-Nishanth Menon
+That makes things simple:-)
+
+One thing I still don't understand; in a previous mail, you'd mentioned
+3 DT properties for configuring the pinmux; one represented the pin
+group, one represented the mux function that was selected for that pin
+group, and there was a third ("config"?) property. I still don't
+understand that third property. I only see pins/pingroups and mux
+functions in the diagram I quoted above.
