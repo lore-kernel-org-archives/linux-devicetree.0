@@ -1,126 +1,118 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: Re: [RESEND PATCH V1 8/9] hwmon: lm75: expose to thermal fw via DT
- nodes
-Date: Thu, 18 Jul 2013 13:33:17 +0800
-Message-ID: <51E77E1D.3000306@nvidia.com>
-References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com> <1374074248-31690-9-git-send-email-eduardo.valentin@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v9 1/8] drivers: phy: add generic PHY framework
+Date: Thu, 18 Jul 2013 11:33:17 +0530
+Message-ID: <51E78525.9000802@ti.com>
+References: <1372247257-30186-1-git-send-email-kishon@ti.com> <1372247257-30186-2-git-send-email-kishon@ti.com> <20130717062944.GA24968@kroah.com> <51E664CB.8050906@ti.com> <20130717172510.GB17093@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1374074248-31690-9-git-send-email-eduardo.valentin@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130717172510.GB17093@kroah.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, arnd@arndb.de, swarren@nvidia.com, sylvester.nawrocki@gmail.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, akpm@linux-foundation.org, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, benoit.cousson@linaro.org, mchehab@redhat.com, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, balajitk@ti.com, george.cherian@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/17/2013 11:17 PM, Eduardo Valentin wrote:
-> This patch adds to lm75 temperature sensor the possibility
-> to expose itself as thermal zone device, registered on the
-> thermal framework.
+Hi,
+
+On Wednesday 17 July 2013 10:55 PM, Greg KH wrote:
+> On Wed, Jul 17, 2013 at 03:02:59PM +0530, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Wednesday 17 July 2013 11:59 AM, Greg KH wrote:
+>>> On Wed, Jun 26, 2013 at 05:17:29PM +0530, Kishon Vijay Abraham I wrote:
+>>>> +menuconfig GENERIC_PHY
+>>>> +	tristate "PHY Subsystem"
+>>>> +	help
+>>>> +	  Generic PHY support.
+>>>> +
+>>>> +	  This framework is designed to provide a generic interface for PHY
+>>>> +	  devices present in the kernel. This layer will have the generic
+>>>> +	  API by which phy drivers can create PHY using the phy framework and
+>>>> +	  phy users can obtain reference to the PHY.
+>>>
+>>> Shouldn't this be something that other drivers select?  How will anyone
+>>> know if they need this or not?
+>>
+>> All the PHY drivers should go here. So only if *GENERIC_PHY* is enabled those
+>> PHY drivers can be selected like in [1].
+>> The PHY consumer driver should ideally use *depends on* in their Kconfig.
+>>
+>> [1] ->
+>> http://archive.arm.linux.org.uk/lurker/message/20130628.134308.4a8f7668.ca.html
 > 
-> The thermal zone is built only if a device tree node
-> describing a thermal zone for this sensor is present
-> inside the lm75 DT node. Otherwise, the driver behavior
-> will be the same.
+> No, switch it around the other way.  How would I even _know_ that I need
+> to enable the generic PHY subsystem in the first place?  How can I
+> determine that I need this for my hardware?  You need to give hints to
+> someone who doesn't even know what a PHY is, otherwise they will always
+> disable it and move on.
 > 
-> Cc: Jean Delvare <khali@linux-fr.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: lm-sensors@lm-sensors.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
-> ---
->  drivers/hwmon/lm75.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+>>>> --- /dev/null
+>>>> +++ b/drivers/phy/phy-core.c
+>>>> @@ -0,0 +1,544 @@
+>>>> +/*
+>>>> + * phy-core.c  --  Generic Phy framework.
+>>>> + *
+>>>> + * Copyright (C) 2013 Texas Instruments
+>>>> + *
+>>>> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> + *
+>>>> + * This program is free software; you can redistribute  it and/or modify it
+>>>> + * under  the terms of  the GNU General  Public License as published by the
+>>>> + * Free Software Foundation;  either version 2 of the  License, or (at your
+>>>> + * option) any later version.
+>>>
+>>> You really mean "any later version" (I have to ask)?
+>>
+>> That was copied from somewhere :-s
 > 
-> diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
-> index c03b490..0aa5e28 100644
-> --- a/drivers/hwmon/lm75.c
-> +++ b/drivers/hwmon/lm75.c
-> @@ -27,6 +27,8 @@
->  #include <linux/hwmon-sysfs.h>
->  #include <linux/err.h>
->  #include <linux/mutex.h>
-> +#include <linux/thermal.h>
-> +#include <linux/of.h>
->  #include "lm75.h"
->  
->  
-> @@ -70,6 +72,7 @@ static const u8 LM75_REG_TEMP[3] = {
->  /* Each client has this additional data */
->  struct lm75_data {
->  	struct device		*hwmon_dev;
-> +	struct thermal_zone_device	*tz;
->  	struct mutex		update_lock;
->  	u8			orig_conf;
->  	u8			resolution;	/* In bits, between 9 and 12 */
-> @@ -92,6 +95,19 @@ static struct lm75_data *lm75_update_device(struct device *dev);
->  
->  /* sysfs attributes for hwmon */
->  
-> +static int lm75_read_temp(void *dev, unsigned long *temp)
-> +{
-> +	struct lm75_data *data = lm75_update_device(dev);
-> +
-> +	if (IS_ERR(data))
-> +		return PTR_ERR(data);
-> +
-> +	*temp = ((data->temp[0] >> (16 - data->resolution)) * 1000) >>
-> +			(data->resolution - 8);
-> +
-> +	return 0;
-> +}
-> +
->  static ssize_t show_temp(struct device *dev, struct device_attribute *da,
->  			 char *buf)
->  {
-> @@ -271,11 +287,23 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  		goto exit_remove;
->  	}
->  
-> +	if (of_find_node_by_name(client->dev.of_node, "thermal_zone")) {
-> +		data->tz = thermal_zone_of_device_register(&client->dev,
-> +							   &client->dev,
-> +							   lm75_read_temp);
+> So, is that what you really mean to have for this code?
 
-Hi, Eduardo
-I have two questions:
-1. As we know, after register to the thermal framework, it will have
-duplicate hwmon devices. I think lm-sensor maintainer would not like this.
-How about to add a flag to indicate it, which I talk about with
-Durgadoss in your [RFC 1/4]patch.
-
-2. I'm also trying to use your codes on lm90. The LM90 serial has more
-then one sensors in one chip, local sensor, remote sensor and may have
-remote2 sensor, so it mean there may have more than one thermal_zone
-under the lm90 device node, will you consider it?
-
-Thanks.
-Wei.
-
-> +		if (IS_ERR(data->tz)) {
-> +			status = PTR_ERR(data->tz);
-> +			goto exit_hwmon;
-> +		}
-> +	}
-> +
->  	dev_info(&client->dev, "%s: sensor '%s'\n",
->  		 dev_name(data->hwmon_dev), client->name);
->  
->  	return 0;
->  
-> +exit_hwmon:
-> +	hwmon_device_unregister(data->hwmon_dev);
->  exit_remove:
->  	sysfs_remove_group(&client->dev.kobj, &lm75_group);
->  	return status;
-> @@ -285,6 +313,7 @@ static int lm75_remove(struct i2c_client *client)
->  {
->  	struct lm75_data *data = i2c_get_clientdata(client);
->  
-> +	thermal_zone_device_unregister(data->tz);
->  	hwmon_device_unregister(data->hwmon_dev);
->  	sysfs_remove_group(&client->dev.kobj, &lm75_group);
->  	lm75_write_value(client, LM75_REG_CONF, data->orig_conf);
+indeed.
 > 
+>>>> + * This program is distributed in the hope that it will be useful,
+>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>> + * GNU General Public License for more details.
+>>>> + *
+>>>> + * You should have received a copy of the GNU General Public License
+>>>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>>>
+>>> Are these two paragraphs needed?  This isn't a "program", and they got a
+>>> copy of the GPL already with the kernel.
+>>
+>> hmm.. I can remove that.
+>>>
+>>>> +static struct class *phy_class;
+>>>
+>>> Why do you need a class?
+>>
+>> Wanted to group all the PHY drivers to be used by different subsystems
+>> (SATA/USB/PCIE/HDMI/VIDEO) into a single entity. There were some comments in my
+>> initial version [3] on using a bus_type instead of class but then it was
+>> decided to go with class itself.
+>>
+>> [3] -> http://lkml.indiana.edu/hypermail/linux/kernel/1302.2/01389.html
+> 
+> Ok, but what does the class usage get you?
 
+hmm.. actually I use class only to iterate through the list of devices in *phy*
+class which could very well be implemented using list. Just that I wont have a
+/sys/class/phy/ entry to find the list of phys added in the system. I dont
+think I want to add any other stuff to expose to the user space at this point
+of time.
+> 
+>>> When modifying/adding new sysfs stuff, you need a Documentation/ABI/
+>>> entry as well.
+>>
+>> I'm not actually adding any new sysfs entry other than what a *class_create*
+>> must have created. Do I need to add one for that?
+> 
+> If you are not creating anything in sysfs at all, why use the driver
+> model?  (hint, I think you need to do something here to justify it...)
+
+Well.. it helps me to use pm_runtime to enable clocks utilizing the
+parent-child relationship.
+
+Thanks
+Kishon
