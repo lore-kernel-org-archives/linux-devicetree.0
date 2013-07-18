@@ -1,102 +1,75 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v2 07/24] dts: mpc512x: introduce dt-bindings/clock/ header
-Date: Thu, 18 Jul 2013 19:00:38 +0200
-Message-ID: <1374166855-7280-8-git-send-email-gsi@denx.de>
-References: <1373914074-20889-1-git-send-email-gsi@denx.de>
- <1374166855-7280-1-git-send-email-gsi@denx.de>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 1/3] dmaengine: add dma_get_slave_sg_limits()
+Date: Thu, 18 Jul 2013 18:08:25 +0100
+Message-ID: <20130718170825.GZ21614@n2100.arm.linux.org.uk>
+References: <1374166001-31340-1-git-send-email-joelf@ti.com> <1374166001-31340-2-git-send-email-joelf@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1374166855-7280-1-git-send-email-gsi-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1374166001-31340-2-git-send-email-joelf@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Joel Fernandes <joelf@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, Balaji TK <balajitk@ti.com>, Gururaja Hebbar <gururaja.hebbar@ti.com>, Chris Ball <cjb@laptop.org>, Jason Kridner <jkridner@beagleboard.org>, Mark Jackson <mpfj-list@newflow.co.uk>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>Linux
 List-Id: devicetree@vger.kernel.org
 
-introduce a dt-bindings/ header file for MPC512x clocks,
-providing symbolic identifiers for those SoC clocks which
-clients will reference from their device tree nodes
+On Thu, Jul 18, 2013 at 11:46:39AM -0500, Joel Fernandes wrote:
+> The API is optionally implemented by dmaengine drivers and when
+> unimplemented will return a NULL pointer. A client driver using
+> this API provides the required dma channel, address width, and
+> burst size of the transfer. dma_get_slave_sg_limits() returns an
+> SG limits structure with the maximum number and size of SG segments
+> that the given channel can handle.
 
-Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
----
- include/dt-bindings/clock/mpc512x-clock.h |   59 +++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 include/dt-bindings/clock/mpc512x-clock.h
+Please look at what's already in struct device:
 
-diff --git a/include/dt-bindings/clock/mpc512x-clock.h b/include/dt-bindings/clock/mpc512x-clock.h
-new file mode 100644
-index 0000000..46c560e
---- /dev/null
-+++ b/include/dt-bindings/clock/mpc512x-clock.h
-@@ -0,0 +1,59 @@
-+/*
-+ * This header provides constants for MPC512x clock specs in DT bindings.
-+ *
-+ * Unfortunately the clock number declaration cannot be an enum but
-+ * needs to be a list of #define directives since when referenced from
-+ * within DTS files they need to get resolved "at compile time".
-+ */
-+
-+#ifndef _DT_BINDINGS_CLOCK_MPC512x_CLOCK_H
-+#define _DT_BINDINGS_CLOCK_MPC512x_CLOCK_H
-+
-+#define MPC512x_CLK_DUMMY		0
-+#define MPC512x_CLK_REF			1
-+#define MPC512x_CLK_SYS			2
-+#define MPC512x_CLK_DIU			3
-+#define MPC512x_CLK_VIU			4
-+#define MPC512x_CLK_CSB			5
-+#define MPC512x_CLK_E300		6
-+#define MPC512x_CLK_IPS			7
-+#define MPC512x_CLK_FEC			8
-+#define MPC512x_CLK_SATA		9
-+#define MPC512x_CLK_PATA		10
-+#define MPC512x_CLK_NFC			11
-+#define MPC512x_CLK_LPC			12
-+#define MPC512x_CLK_MBX_BUS		13
-+#define MPC512x_CLK_MBX			14
-+#define MPC512x_CLK_MBX_3D		15
-+#define MPC512x_CLK_AXE			16
-+#define MPC512x_CLK_USB1		17
-+#define MPC512x_CLK_USB2		18
-+#define MPC512x_CLK_I2C			19
-+#define MPC512x_CLK_MSCAN0_MCLK		20
-+#define MPC512x_CLK_MSCAN1_MCLK		21
-+#define MPC512x_CLK_MSCAN2_MCLK		22
-+#define MPC512x_CLK_MSCAN3_MCLK		23
-+#define MPC512x_CLK_SDHC		24
-+#define MPC512x_CLK_PCI			25
-+#define MPC512x_CLK_PSC_MCLK_IN		26
-+#define MPC512x_CLK_SPDIF_TX		27
-+#define MPC512x_CLK_SPDIF_RX		28
-+#define MPC512x_CLK_SPDIF_MCLK		29
-+#define MPC512x_CLK_AC97		30
-+#define MPC512x_CLK_PSC0_MCLK		31
-+#define MPC512x_CLK_PSC1_MCLK		32
-+#define MPC512x_CLK_PSC2_MCLK		33
-+#define MPC512x_CLK_PSC3_MCLK		34
-+#define MPC512x_CLK_PSC4_MCLK		35
-+#define MPC512x_CLK_PSC5_MCLK		36
-+#define MPC512x_CLK_PSC6_MCLK		37
-+#define MPC512x_CLK_PSC7_MCLK		38
-+#define MPC512x_CLK_PSC8_MCLK		39
-+#define MPC512x_CLK_PSC9_MCLK		40
-+#define MPC512x_CLK_PSC10_MCLK		41
-+#define MPC512x_CLK_PSC11_MCLK		42
-+#define MPC512x_CLK_PSC_FIFO		43
-+
-+#define MPC512x_CLK_LAST_PUBLIC		43
-+
-+#endif
--- 
-1.7.10.4
+struct device {
+...
+        struct device_dma_parameters *dma_parms;
+...
+};
+
+This provides:
+
+struct device_dma_parameters {
+        /*
+         * a low level driver may set these to teach IOMMU code about
+         * sg limitations.
+         */
+        unsigned int max_segment_size;
+        unsigned long segment_boundary_mask;
+};
+
+Now, these are helpfully accessed via:
+
+dma_get_max_seg_size(dev)
+dma_set_max_seg_size(dev)
+dma_get_seg_boundary(dev)
+dma_set_seg_boundary(dev, mask)
+
+Drivers already use these to work out how to construct the scatterlist
+before passing it to the DMA API, which means that they should also be
+used when creating a scatterlist for the DMA engine (think about it -
+you have to use the DMA API to map the buffers for the DMA engine too.)
+
+So, we already have two properties defined on a per-device basis: the
+maximum size of a scatterlist segment, and the boundary over which any
+segment must not cross.
+
+The former ties up with your max_seg_len() property, though arguably it
+may depend on the DMA engine access size.  The problem with implementing
+this new API though is that the subsystems (such as SCSI) which already
+use dma_get_max_seg_size() will be at odds with what is possible via the
+DMA engine.
+
+I strongly suggest using the infrastructure at device level and not
+implementing some private DMA engine API to convey this information.
+
+As for the maximum number of scatterlist entries, really that's a bug in
+the DMA engine implementations if they can't accept arbitary lengths.
+I've created DMA engine drivers for implementations where you have to
+program each segment individually, ones which can have the current and
+next segments, as well as those which can walk a list.  Provided you get
+informed of a transfer being completed, there really is no reason for a
+DMA engine driver to limit the number of scatterlist entries that it
+will accept.
