@@ -1,87 +1,211 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
-Date: Thu, 18 Jul 2013 08:49:54 -0700
-Message-ID: <20130718154954.GA31961@kroah.com>
-References: <1374129984-765-1-git-send-email-kishon@ti.com>
- <1374129984-765-2-git-send-email-kishon@ti.com>
- <20130718072004.GA16720@kroah.com>
- <51E7AE88.3050007@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51E7AE88.3050007@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: kyungmin.park@samsung.com, balbi@ti.com, jg1.han@samsung.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, tony@atomide.com, arnd@arndb.de, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, linux-fbdev@vger.kernel.org, akpm@linux-foundation.org, balajitk@ti.com, george.cherian@ti.com, nsekhar@ti.com
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Subject: [PATCH v4] media: i2c: tvp7002: add OF support
+Date: Thu, 18 Jul 2013 21:24:26 +0530
+Message-ID: <1374162866-14981-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: LMML <linux-media@vger.kernel.org>
+Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2013 at 02:29:52PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Thursday 18 July 2013 12:50 PM, Greg KH wrote:
-> > On Thu, Jul 18, 2013 at 12:16:10PM +0530, Kishon Vijay Abraham I wrote:
-> >> +struct phy_provider *__of_phy_provider_register(struct device *dev,
-> >> +	struct module *owner, struct phy * (*of_xlate)(struct device *dev,
-> >> +	struct of_phandle_args *args));
-> >> +struct phy_provider *__devm_of_phy_provider_register(struct device *dev,
-> >> +	struct module *owner, struct phy * (*of_xlate)(struct device *dev,
-> >> +	struct of_phandle_args *args))
-> >> +
-> >> +__of_phy_provider_register and __devm_of_phy_provider_register can be used to
-> >> +register the phy_provider and it takes device, owner and of_xlate as
-> >> +arguments. For the dt boot case, all PHY providers should use one of the above
-> >> +2 APIs to register the PHY provider.
-> > 
-> > Why do you have __ for the prefix of a public function?  Is that really
-> > the way that OF handles this type of thing?
-> 
-> I have a macro of_phy_provider_register/devm_of_phy_provider_register that
-> calls these functions and should be used by the PHY drivers. Probably I should
-> make a mention of it in the Documentation.
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 
-Yes, mention those as you never want to be calling __* functions
-directly, right?
+add OF support for the tvp7002 driver.
 
-> >> +	ret = dev_set_name(&phy->dev, "%s.%d", dev_name(dev), id);
-> > 
-> > Your naming is odd, no "phy" anywhere in it?  You rely on the sender to
-> > never send a duplicate name.id pair?  Why not create your own ids based
-> > on the number of phys in the system, like almost all other classes and
-> > subsystems do?
-> 
-> hmm.. some PHY drivers use the id they provide to perform some of their
-> internal operation as in [1] (This is used only if a single PHY provider
-> implements multiple PHYS). Probably I'll add an option like PLATFORM_DEVID_AUTO
-> to give the PHY drivers an option to use auto id.
-> 
-> [1] ->
-> http://archive.arm.linux.org.uk/lurker/message/20130628.134308.4a8f7668.ca.html
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+---
+ This patch depends on https://patchwork.kernel.org/patch/2828800/
+ 
+ Changes for v4:
+ 1: Improved descrition of end point properties.
 
-No, who cares about the id?  No one outside of the phy core ever should,
-because you pass back the only pointer that they really do care about,
-if they need to do anything with the device.  Use that, and then you can
-rip out all of the "search for a phy by a string" logic, as that's not
-needed either.  Just stick to the pointer, it's easier, and safer that
-way.
+ Changes for v3:
+ 1: Fixed review comments pointed by Sylwester.
 
-> >> +static inline int phy_pm_runtime_get(struct phy *phy)
-> >> +{
-> >> +	if (WARN(IS_ERR(phy), "Invalid PHY reference\n"))
-> >> +		return -EINVAL;
-> > 
-> > Why would phy ever not be valid and a error pointer?  And why dump the
-> > stack if that happens, that seems really extreme.
-> 
-> hmm.. there might be cases where the same controller in one soc needs PHY
-> control and in some other soc does not need PHY control. In such cases, we
-> might get error pointer here.
-> I'll change WARN to dev_err.
+ .../devicetree/bindings/media/i2c/tvp7002.txt      |   53 ++++++++++++++++
+ drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
+ 2 files changed, 113 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
 
-I still don't understand.  You have control over the code that calls
-these functions, just ensure that they pass in a valid pointer, it's
-that simple.  Or am I missing something?
-
-thanks,
-
-greg k-h
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+new file mode 100644
+index 0000000..1d00935
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+@@ -0,0 +1,53 @@
++* Texas Instruments TV7002 video decoder
++
++The TVP7002 device supports digitizing of video and graphics signal in RGB and
++YPbPr color space.
++
++Required Properties :
++- compatible : Must be "ti,tvp7002"
++
++Optional Properties:
++- hsync-active: HSYNC Polarity configuration for the bus. Default value when
++  this property is not specified is <0>.
++
++- vsync-active: VSYNC Polarity configuration for the bus. Default value when
++  this property is not specified is <0>.
++
++- pclk-sample: Clock polarity of the bus. Default value when this property is
++  not specified is <0>.
++
++- sync-on-green-active: Active state of Sync-on-green signal property of the
++  endpoint.
++  0 = Normal Operation (Default)
++  1 = Inverted operation
++
++- field-even-active: Active-high Field ID output polarity control of the bus.
++  Under normal operation, the field ID output is set to logic 1 for an odd field
++  (field 1)and set to logic 0 for an even field (field 0).
++  0 = Normal operation (default)
++  1 = FID output polarity inverted
++
++For further reading of port node refer Documentation/devicetree/bindings/media/
++video-interfaces.txt.
++
++Example:
++
++	i2c0@1c22000 {
++		...
++		...
++		tvp7002@5c {
++			compatible = "ti,tvp7002";
++			reg = <0x5c>;
++
++			port {
++				tvp7002_1: endpoint {
++					hsync-active = <1>;
++					vsync-active = <1>;
++					pclk-sample = <0>;
++					sync-on-green-active = <1>;
++					field-even-active = <0>;
++				};
++			};
++		};
++		...
++	};
+diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
+index f6b1f3f..24a08fa 100644
+--- a/drivers/media/i2c/tvp7002.c
++++ b/drivers/media/i2c/tvp7002.c
+@@ -35,6 +35,8 @@
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-common.h>
+ #include <media/v4l2-ctrls.h>
++#include <media/v4l2-of.h>
++
+ #include "tvp7002_reg.h"
+ 
+ MODULE_DESCRIPTION("TI TVP7002 Video and Graphics Digitizer driver");
+@@ -943,6 +945,48 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
+ 	.pad = &tvp7002_pad_ops,
+ };
+ 
++static struct tvp7002_config *
++tvp7002_get_pdata(struct i2c_client *client)
++{
++	struct v4l2_of_endpoint bus_cfg;
++	struct tvp7002_config *pdata;
++	struct device_node *endpoint;
++	unsigned int flags;
++
++	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
++		return client->dev.platform_data;
++
++	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++	if (!endpoint)
++		return NULL;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		goto done;
++
++	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
++	flags = bus_cfg.bus.parallel.flags;
++
++	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++		pdata->hs_polarity = 1;
++
++	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++		pdata->vs_polarity = 1;
++
++	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++		pdata->clk_polarity = 1;
++
++	if (flags & V4L2_MBUS_FIELD_EVEN_HIGH)
++		pdata->fid_polarity = 1;
++
++	if (flags & V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH)
++		pdata->sog_polarity = 1;
++
++done:
++	of_node_put(endpoint);
++	return pdata;
++}
++
+ /*
+  * tvp7002_probe - Probe a TVP7002 device
+  * @c: ptr to i2c_client struct
+@@ -954,32 +998,32 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
+  */
+ static int tvp7002_probe(struct i2c_client *c, const struct i2c_device_id *id)
+ {
++	struct tvp7002_config *pdata = tvp7002_get_pdata(c);
+ 	struct v4l2_subdev *sd;
+ 	struct tvp7002 *device;
+ 	struct v4l2_dv_timings timings;
+ 	int polarity_a;
+ 	int polarity_b;
+ 	u8 revision;
+-
+ 	int error;
+ 
++	if (pdata == NULL) {
++		dev_err(&c->dev, "No platform data\n");
++		return -EINVAL;
++	}
++
+ 	/* Check if the adapter supports the needed features */
+ 	if (!i2c_check_functionality(c->adapter,
+ 		I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
+ 		return -EIO;
+ 
+-	if (!c->dev.platform_data) {
+-		v4l_err(c, "No platform data!!\n");
+-		return -ENODEV;
+-	}
+-
+ 	device = devm_kzalloc(&c->dev, sizeof(struct tvp7002), GFP_KERNEL);
+ 
+ 	if (!device)
+ 		return -ENOMEM;
+ 
+ 	sd = &device->sd;
+-	device->pdata = c->dev.platform_data;
++	device->pdata = pdata;
+ 	device->current_timings = tvp7002_timings;
+ 
+ 	/* Tell v4l2 the device is ready */
+@@ -1084,9 +1128,18 @@ static const struct i2c_device_id tvp7002_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, tvp7002_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id tvp7002_of_match[] = {
++	{ .compatible = "ti,tvp7002", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, tvp7002_of_match);
++#endif
++
+ /* I2C driver data */
+ static struct i2c_driver tvp7002_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(tvp7002_of_match),
+ 		.owner = THIS_MODULE,
+ 		.name = TVP7002_MODULE_NAME,
+ 	},
+-- 
+1.7.9.5
