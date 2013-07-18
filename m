@@ -1,71 +1,200 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 04/15] ARM: OMAP: USB: Add phy binding information
-Date: Thu, 18 Jul 2013 00:02:20 -0700
-Message-ID: <20130718070219.GM7656@atomide.com>
-References: <1374129984-765-1-git-send-email-kishon@ti.com>
- <1374129984-765-5-git-send-email-kishon@ti.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] of: Export of_irq_count for using in modules
+Date: Thu, 18 Jul 2013 09:02:53 +0200
+Message-ID: <51E7931D.80801@monstr.eu>
+References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
+ <20130530201714.GE19834@game.jcrosoft.org> <51A85BEE.4000009@monstr.eu>
+ <20130531110045.GF19834@game.jcrosoft.org> <51A8AC4B.906@monstr.eu>
+ <20130531151601.GG19834@game.jcrosoft.org> <51A8D3A3.5030200@monstr.eu>
+ <20130606082941.GH19834@game.jcrosoft.org> <51B04AA9.4070803@monstr.eu>
+ <20130606144929.GI19834@game.jcrosoft.org>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1374129984-765-5-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============3753705885409238291=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130606144929.GI19834-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [130717 23:53]:
-> In order for controllers to get PHY in case of non dt boot, the phy
-> binding information (phy device name) should be added in the platform
-> data of the controller.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/mach-omap2/usb-musb.c |    3 +++
->  include/linux/usb/musb.h       |    3 +++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/mach-omap2/usb-musb.c b/arch/arm/mach-omap2/usb-musb.c
-> index 8c4de27..6aa7cbf 100644
-> --- a/arch/arm/mach-omap2/usb-musb.c
-> +++ b/arch/arm/mach-omap2/usb-musb.c
-> @@ -85,6 +85,9 @@ void __init usb_musb_init(struct omap_musb_board_data *musb_board_data)
->  	musb_plat.mode = board_data->mode;
->  	musb_plat.extvbus = board_data->extvbus;
->  
-> +	if (cpu_is_omap34xx())
-> +		musb_plat.phy_label = "twl4030";
-> +
->  	if (soc_is_am35xx()) {
->  		oh_name = "am35x_otg_hs";
->  		name = "musb-am35x";
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============3753705885409238291==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2LHULNEERAAQPVTTJAXXJ"
 
-I don't think there's a USB PHY on non-twl4030 chips, so this should
-be OK:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2LHULNEERAAQPVTTJAXXJ
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+On 06/06/2013 04:49 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 10:39 Thu 06 Jun     , Michal Simek wrote:
+>> On 06/06/2013 10:29 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>> On 18:45 Fri 31 May     , Michal Simek wrote:
+>>>> On 05/31/2013 05:16 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>>>> On 15:57 Fri 31 May     , Michal Simek wrote:
+>>>>>> On 05/31/2013 01:00 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>>>>>> On 10:14 Fri 31 May     , Michal Simek wrote:
+>>>>>>>> Hi Jean-Christophe,
+>>>>>>>>
+>>>>>>>> On 05/30/2013 10:17 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>>>>>>>> On 15:49 Thu 30 May     , Michal Simek wrote:
+>>>>>>>>>> Export of_irq_count for modules.
+>>>>>>>>>
+>>>>>>>>> can you explain why do you need to call of_irq_count
+>>>>>>>>
+>>>>>>>> I need to count number of irq written in the DTS node.
+>>>>>>>> It is not fixed size that's why I need to proper way how to
+>>>>>>>> find it out.
+>>>>>>>>
+>>>>>>>> I am using this loop.
+>>>>>>>> 	count =3D of_irq_count(pdev->dev.of_node);
+>>>>>>>> 	/* Alloc IRQ based on DTS to be sure that no other driver will =
+use it */
+>>>>>>>> 	while (count--) {
+>>>>>>>> 		tmp->irq =3D irq_of_parse_and_map(pdev->dev.of_node, count);
+>>>>>>>> 		dev_info(&pdev->dev, "%d: Alloc irq: %d\n", count, tmp->irq);
+>>>>>>>> 		ret =3D request_irq(tmp->irq, zynq_remoteproc_interrupt, 0,
+>>>>>>>> 					dev_name(&pdev->dev), &pdev->dev);
+>>>>>>>> 		if (ret) {
+>>>>>>>> 			...
+>>>>>>>> 		}
+>>>>>>>> 	}
+>>>>>>>>
+>>>>>>>> But of course if you think that this is incorrect to export it
+>>>>>>>> I can use what it is in of_irq_count body
+>>>>>>>> 368 int of_irq_count(struct device_node *dev)
+>>>>>>>> 369 {
+>>>>>>>> 370         int nr =3D 0;
+>>>>>>>> 371
+>>>>>>>> 372         while (of_irq_to_resource(dev, nr, NULL))
+>>>>>>>> 373                 nr++;
+>>>>>>>> 374
+>>>>>>>> 375         return nr;
+>>>>>>>> 376 }
+>>>>>>>>
+>>>>>>>> Because of_irq_to_resource is exported for modules.
+>>>>>>>> Or is there any better way how to loop over all interrupts in DT=
+ node?
+>>>>>>>
+>>>>>>> can just explain me why you need to call irq_of_parse_and_map in =
+your driver?
+>>>>>>>
+>>>>>>> as the irq will be provided in the resources normally
+>>>>>>
+>>>>>> It is quite a long time I have written this driver on v3.1 or 3.3.=
+
+>>>>>> But is this better?
+>>>>>>
+>>>>>> 	struct resource *res;
+>>>>>> 	int i =3D 0;
+>>>>>> 	do {
+>>>>>> 		res =3D platform_get_resource(pdev, IORESOURCE_IRQ, i++);
+>>>>>> 		if (res)
+>>>>>> 			do something
+>>>>>> 	} while(res);
+>>>>>>
+>>>>>> Also what about of_irq_to_resource()? Is it deprecated and all dri=
+vers
+>>>>>> shouldn't use it?
+>>>>>>
+>>>>>> I have no problem to rewrite the driver to use platform_get_resour=
+ce.
+>>>>> yeah it's better but be aware there is a but in DT that I'm working=
+ on to fix
+>>>>> if you use irq that are registered by a pdev this will not work
+>>>>>
+>>>>> I hope to fix it for 3.11
+>>>>> and already send an RFC that fix it
+>>>>
+>>>> ok. good to know. Btw: Let's return to my origin point why not to
+>>>> export of_irq_count for modules?
+>>>> Or opposite question if platform_get_resource is correct way
+>>>> why to export of_irq_to_resource for modules?
+>>>
+>>> for old ppc drivers that are not converted yet to pdev
+>>>
+>>> if you can do so just use pdev resource I should have fix the pb or i=
+rq_domain
+>>> hopefully for 3.11
+>>
+>> ok. It means it is currently deprecated.
+>> I just wanted to be sure that I understand it correctly.
+>>
+>> I have changed my drivers not to use this function and using resources=
+ as
+>> we discussed.
+>>
+>> btw: I have sent one email to device-tree ML about describing missing
+>> connection between cpu and the first interrupt controller.
+>> Can you please look at it and comment it?
+>> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-May/033955.=
+html
+>=20
+> for the record as discussed with Grant I'm preparing to add a new prope=
+rty
+> to handle interrupts so you will never have to use "interrupt-parent" a=
+ny more
+> and just do this
+>=20
+> interrupt-lines =3D <&aic 5 0 &pioA 4>
+>=20
+> it will be more like gpio and will allow to have irq from different
+> interrupt-parent in the same node
+>=20
+> but wait a few I'll be really back next week as I'm half off this week
+
+Any update on this?
+
+Thanks,
+Michal
 
 
-> diff --git a/include/linux/usb/musb.h b/include/linux/usb/musb.h
-> index 053c268..596f8c8 100644
-> --- a/include/linux/usb/musb.h
-> +++ b/include/linux/usb/musb.h
-> @@ -104,6 +104,9 @@ struct musb_hdrc_platform_data {
->  	/* for clk_get() */
->  	const char	*clock;
->  
-> +	/* phy label */
-> +	const char	*phy_label;
-> +
->  	/* (HOST or OTG) switch VBUS on/off */
->  	int		(*set_vbus)(struct device *dev, int is_on);
->  
-> -- 
-> 1.7.10.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+------enig2LHULNEERAAQPVTTJAXXJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlHnkx4ACgkQykllyylKDCEbswCeJhO0WmJ9jAFsveJtUkE7OtfI
+3JUAoJdSmBgwRfQ22IggVEUSh81Rn6Ss
+=KXJG
+-----END PGP SIGNATURE-----
+
+------enig2LHULNEERAAQPVTTJAXXJ--
+
+--===============3753705885409238291==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3753705885409238291==--
