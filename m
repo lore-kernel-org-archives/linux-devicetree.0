@@ -1,7 +1,7 @@
 From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: [PATCH v2 1/5] iio: mxs-lradc: change the realbits to 12
-Date: Fri, 19 Jul 2013 11:13:24 +0200
-Message-ID: <1374225208-28940-2-git-send-email-hector.palacios@digi.com>
+Subject: [PATCH v2 5/5] iio: mxs-lradc: add write_raw function to modify scale
+Date: Fri, 19 Jul 2013 11:13:28 +0200
+Message-ID: <1374225208-28940-6-git-send-email-hector.palacios@digi.com>
 References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,55 +12,105 @@ To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, hector.palacios-i7dp0qKlBMg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The LRADC virtual channels have an 18 bit field to store the sum of up
-to 2^5 accumulated samples. The read_raw function however only operates
-over a single sample (12 bit resolution).
-In order to use this field for scaling operations, we need it to be the
-exact resolution value of the LRADC.
-Besides, the driver was using an 18 bit mask (LRADC_CH_VALUE_MASK) to
-report touch coordinates to userland. A 12 bit mask should be used instead
-or else the touch libraries will expect a coordinates range between 0
-and 0x3ffff (18 bits), instead of between 0 and 0xfff (12 bits).
+Added write_raw function to manipulate the optional divider_by_two
+through the scaling attribute out of the available scales.
 
 Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
 ---
- drivers/staging/iio/adc/mxs-lradc.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/staging/iio/adc/mxs-lradc.c | 55 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 54 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/staging/iio/adc/mxs-lradc.c b/drivers/staging/iio/adc/mxs-lradc.c
-index d92c97a..91282dc 100644
+index c929733..286cde2 100644
 --- a/drivers/staging/iio/adc/mxs-lradc.c
 +++ b/drivers/staging/iio/adc/mxs-lradc.c
-@@ -225,6 +225,9 @@ struct mxs_lradc {
- #define	LRADC_CTRL4_LRADCSELECT_MASK(n)		(0xf << ((n) * 4))
- #define	LRADC_CTRL4_LRADCSELECT_OFFSET(n)	((n) * 4)
+@@ -144,6 +144,7 @@ struct mxs_lradc {
  
-+#define LRADC_RESOLUTION			12
-+#define LRADC_SINGLE_SAMPLE_MASK		((1 << LRADC_RESOLUTION) - 1)
-+
- /*
-  * Raw I/O operations
-  */
-@@ -547,9 +550,10 @@ static int mxs_lradc_ts_register(struct mxs_lradc *lradc)
- 	__set_bit(EV_ABS, input->evbit);
- 	__set_bit(EV_KEY, input->evbit);
- 	__set_bit(BTN_TOUCH, input->keybit);
--	input_set_abs_params(input, ABS_X, 0, LRADC_CH_VALUE_MASK, 0, 0);
--	input_set_abs_params(input, ABS_Y, 0, LRADC_CH_VALUE_MASK, 0, 0);
--	input_set_abs_params(input, ABS_PRESSURE, 0, LRADC_CH_VALUE_MASK, 0, 0);
-+	input_set_abs_params(input, ABS_X, 0, LRADC_SINGLE_SAMPLE_MASK, 0, 0);
-+	input_set_abs_params(input, ABS_Y, 0, LRADC_SINGLE_SAMPLE_MASK, 0, 0);
-+	input_set_abs_params(input, ABS_PRESSURE, 0, LRADC_SINGLE_SAMPLE_MASK,
-+			     0, 0);
+ 	uint32_t		vref_mv[LRADC_MAX_TOTAL_CHANS];
+ 	unsigned int		scale_avail[LRADC_MAX_TOTAL_CHANS][2][2];
++	unsigned int		is_divided[LRADC_MAX_TOTAL_CHANS];
  
- 	lradc->ts_input = input;
- 	input_set_drvdata(input, lradc);
-@@ -821,7 +825,7 @@ static const struct iio_buffer_setup_ops mxs_lradc_buffer_ops = {
- 	.channel = (idx),					\
- 	.scan_type = {						\
- 		.sign = 'u',					\
--		.realbits = 18,					\
-+		.realbits = LRADC_RESOLUTION,			\
- 		.storagebits = 32,				\
- 	},							\
+ 	/*
+ 	 * Touchscreen LRADC channels receives a private slot in the CTRL4
+@@ -202,6 +203,7 @@ struct mxs_lradc {
+ #define	LRADC_CTRL1_LRADC_IRQ_OFFSET		0
+ 
+ #define	LRADC_CTRL2				0x20
++#define	LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET	24
+ #define	LRADC_CTRL2_TEMPSENSE_PWD		(1 << 15)
+ 
+ #define	LRADC_STATUS				0x40
+@@ -310,7 +312,8 @@ static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
+ 		break;
+ 	case IIO_CHAN_INFO_SCALE:
+ 		*val = lradc->vref_mv[chan->channel];
+-		*val2 = chan->scan_type.realbits;
++		*val2 = chan->scan_type.realbits -
++			lradc->is_divided[chan->channel];
+ 		ret = IIO_VAL_FRACTIONAL_LOG2;
+ 		break;
+ 	default:
+@@ -323,6 +326,54 @@ static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
+ 	return ret;
  }
+ 
++static int mxs_lradc_write_raw(struct iio_dev *iio_dev,
++			       const struct iio_chan_spec *chan,
++			       int val, int val2, long m)
++{
++	struct mxs_lradc *lradc = iio_priv(iio_dev);
++	int ret;
++
++	ret = mutex_trylock(&lradc->lock);
++	if (!ret)
++		return -EBUSY;
++
++	switch (m) {
++	case IIO_CHAN_INFO_SCALE:
++		ret = -EINVAL;
++		if (val == lradc->scale_avail[chan->channel][0][0] &&
++		    val2 == lradc->scale_avail[chan->channel][0][1]) {
++			/* [0] -> divider by two disabled */
++			writel(1 << LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET,
++			       lradc->base + LRADC_CTRL2 + STMP_OFFSET_REG_CLR);
++			lradc->is_divided[chan->channel] = 0;
++			ret = 0;
++		} else if (val == lradc->scale_avail[chan->channel][1][0] &&
++			   val2 == lradc->scale_avail[chan->channel][1][1]) {
++			/* [1] -> divider by two enabled */
++			writel(1 << LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET,
++			       lradc->base + LRADC_CTRL2 + STMP_OFFSET_REG_SET);
++			lradc->is_divided[chan->channel] = 1;
++			ret = 0;
++		}
++
++		break;
++	default:
++		ret = -EINVAL;
++		break;
++	}
++
++	mutex_unlock(&lradc->lock);
++
++	return ret;
++}
++
++static int mxs_lradc_write_raw_get_fmt(struct iio_dev *iio_dev,
++				       const struct iio_chan_spec *chan,
++				       long m)
++{
++	return IIO_VAL_INT_PLUS_NANO;
++}
++
+ static ssize_t mxs_lradc_show_scale_available_ch(struct device *dev,
+ 		struct device_attribute *attr,
+ 		char *buf,
+@@ -400,6 +451,8 @@ static const struct attribute_group mxs_lradc_attribute_group = {
+ static const struct iio_info mxs_lradc_iio_info = {
+ 	.driver_module		= THIS_MODULE,
+ 	.read_raw		= mxs_lradc_read_raw,
++	.write_raw		= mxs_lradc_write_raw,
++	.write_raw_get_fmt	= &mxs_lradc_write_raw_get_fmt,
+ 	.attrs			= &mxs_lradc_attribute_group,
+ };
+ 
