@@ -1,59 +1,85 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] iio: mxs-lradc: add scale attribute to channels
-Date: Fri, 19 Jul 2013 17:44:49 +0200
-Message-ID: <51E95EF1.4040503@digi.com>
-References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <1374225208-28940-4-git-send-email-hector.palacios@digi.com> <201307191630.17149.marex@denx.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
+Date: Fri, 19 Jul 2013 09:54:29 -0600
+Message-ID: <51E96135.9090108@wwwdotorg.org>
+References: <1374129984-765-1-git-send-email-kishon@ti.com> <1374129984-765-2-git-send-email-kishon@ti.com> <20130718072004.GA16720@kroah.com> <51E7AE88.3050007@ti.com> <20130718154954.GA31961@kroah.com> <51E8D086.809@ti.com> <20130719054311.GA14638@kroah.com> <51E8D4E0.8060200@ti.com> <20130719062941.GA23611@kroah.com> <51E8DE51.1060404@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201307191630.17149.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51E8DE51.1060404@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, nsekhar@ti.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, grant.likely@linaro.org, linux-media@vger.kernel.org, george.cherian@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, akpm@linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Marek,
-
-On 07/19/2013 04:30 PM, Marek Vasut wrote:
->> @@ -228,39 +230,12 @@ struct mxs_lradc {
->>   #define LRADC_RESOLUTION			12
->>   #define LRADC_SINGLE_SAMPLE_MASK		((1 << LRADC_RESOLUTION) - 1)
+On 07/19/2013 12:36 AM, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Friday 19 July 2013 11:59 AM, Greg KH wrote:
+>> On Fri, Jul 19, 2013 at 11:25:44AM +0530, Kishon Vijay Abraham I wrote:
+>>> Hi,
+>>>
+>>> On Friday 19 July 2013 11:13 AM, Greg KH wrote:
+>>>> On Fri, Jul 19, 2013 at 11:07:10AM +0530, Kishon Vijay Abraham I wrote:
+>>>>>>>>> +	ret = dev_set_name(&phy->dev, "%s.%d", dev_name(dev), id);
+>>>>>>>>
+>>>>>>>> Your naming is odd, no "phy" anywhere in it?  You rely on the sender to
+>>>>>>>> never send a duplicate name.id pair?  Why not create your own ids based
+>>>>>>>> on the number of phys in the system, like almost all other classes and
+>>>>>>>> subsystems do?
+>>>>>>>
+>>>>>>> hmm.. some PHY drivers use the id they provide to perform some of their
+>>>>>>> internal operation as in [1] (This is used only if a single PHY provider
+>>>>>>> implements multiple PHYS). Probably I'll add an option like PLATFORM_DEVID_AUTO
+>>>>>>> to give the PHY drivers an option to use auto id.
+>>>>>>>
+>>>>>>> [1] ->
+>>>>>>> http://archive.arm.linux.org.uk/lurker/message/20130628.134308.4a8f7668.ca.html
+>>>>>>
+>>>>>> No, who cares about the id?  No one outside of the phy core ever should,
+>>>>>> because you pass back the only pointer that they really do care about,
+>>>>>> if they need to do anything with the device.  Use that, and then you can
+>>>>>
+>>>>> hmm.. ok.
+>>>>>
+>>>>>> rip out all of the "search for a phy by a string" logic, as that's not
+>>>>>
+>>>>> Actually this is needed for non-dt boot case. In the case of dt boot, we use a
+>>>>> phandle by which the controller can get a reference to the phy. But in the case
+>>>>> of non-dt boot, the controller can get a reference to the phy only by label.
+>>>>
+>>>> I don't understand.  They registered the phy, and got back a pointer to
+>>>> it.  Why can't they save it in their local structure to use it again
+>>>> later if needed?  They should never have to "ask" for the device, as the
+>>>
+>>> One is a *PHY provider* driver which is a driver for some PHY device. This will
+>>> use phy_create to create the phy.
+>>> The other is a *PHY consumer* driver which might be any controller driver (can
+>>> be USB/SATA/PCIE). The PHY consumer will use phy_get to get a reference to the
+>>> phy (by *phandle* in the case of dt boot and *label* in the case of non-dt boot).
+>>>> device id might be unknown if there are multiple devices in the system.
+>>>
+>>> I agree with you on the device id part. That need not be known to the PHY driver.
 >>
->> -/*
->> - * Raw I/O operations
->> - */
->> -static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
->> +static int mxs_lradc_read_single(struct iio_dev *iio_dev,
->>   			const struct iio_chan_spec *chan,
->>   			int *val, int *val2, long m)
->>   {
->>   	struct mxs_lradc *lradc = iio_priv(iio_dev);
->>   	int ret;
->> -	unsigned long mask;
->> -
->> -	if (m != IIO_CHAN_INFO_RAW)
->> -		return -EINVAL;
->> -
->> -	/* Check for invalid channel */
->> -	if (chan->channel > LRADC_MAX_TOTAL_CHANS)
->> -		return -EINVAL;
->
-> This was already resolved, so this patch won't apply I'm afraid.
+>> How does a consumer know which "label" to use in a non-dt system if
+>> there are multiple PHYs in the system?
+> 
+> That should be passed using platform data.
 
-You mean the 'unsigned long mask', right?  Yeah, I think I had resolved that one 
-before submitting, but looks like I didn't.
-The other check is not resolved afaik. We agreed to remove it, but on a different patch.
+I don't think that's right. That's just like passing clock names in
+platform data, which I believe is frowned upon.
 
-> Otherwise:
->
-> Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->
->
-> Marek Vasut
->
+Instead, why not take the approach that e.g. regulators have taken? Each
+driver defines the names of the objects that it requires. There is a
+table (registered by a board file) that has lookup key (device name,
+regulator name), and the output is the regulator device (or global
+regulator name).
 
+This is almost the same way that DT works, except that in DT, the table
+is represented as properties in the DT. The DT binding defines the names
+of those properties, or the strings that must be in the foo-names
+properties, just like a driver in non-DT Linux is going to define the
+names it expects to be provided with.
 
-Best regards,
---
-Hector Palacios
+That way, you don't need platform data to define the names.
