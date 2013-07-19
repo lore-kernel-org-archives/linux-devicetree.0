@@ -1,31 +1,96 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] iio: mxs-lradc: add write_raw function to modify
- scale
-Date: Fri, 19 Jul 2013 19:21:43 +0200
-Message-ID: <51E975A7.2050400@free-electrons.com>
-References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <1374225208-28940-6-git-send-email-hector.palacios@digi.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3] regulator: pfuze100: add pfuze100 regulator driver
+Date: Fri, 19 Jul 2013 18:30:47 +0100
+Message-ID: <20130719173047.GQ9858@sirena.org.uk>
+References: <1374228891-8341-1-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1374225208-28940-6-git-send-email-hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KHqYxKoy+XnO4RVf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1374228891-8341-1-git-send-email-b38343@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Gong <b38343@freescale.com>
+Cc: grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, lgirdwood@gmail.com, shawn.guo@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/07/2013 11:13, Hector Palacios wrote:
-> Added write_raw function to manipulate the optional divider_by_two
-> through the scaling attribute out of the available scales.
->
-> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
 
-Looks good to me:
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+--KHqYxKoy+XnO4RVf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jul 19, 2013 at 06:14:51PM +0800, Robin Gong wrote:
 
+> Add pfuze100 regulator driver.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Looks good, there's some minor issues below but they should be small.
+
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -158,6 +158,13 @@ config REGULATOR_MC13892
+>  	  Say y here to support the regulators found on the Freescale MC13892
+>  	  PMIC.
+> =20
+> +config REGULATOR_PFUZE100
+> +	tristate "Support regulators on Freescale PFUZE100 PMIC"
+> +	depends on I2C
+> +	help
+> +	  Say y here to support the regulators found on the Freescale PFUZE100
+> +	  PMIC.
+> +
+
+Please keep this and the Makefile sorted - if there's issues merging
+then please use my topic/kconfig as a base.
+
+> +		if (val & 0x40)
+> +			ramp_delay =3D 50000 / (4 * ramp_delay);
+> +		else
+> +			ramp_delay =3D 25000 / (2 * ramp_delay);
+> +		if (id <=3D PFUZE100_SW1C)
+> +			ramp_delay =3D 25000 / (2 * ramp_delay);
+
+This is a bit confusing as there's a cumalaitve modification applied to
+ramp_delay in the case that id is less than SW1C but it's not obvious
+that this is intentional given the calculations.  Please change this to
+make it clearer what the intended logic is (assuming it's not buggy) -
+something like if ... else if ... else for example.
+
+> +	ret =3D regmap_read(pfuze_chip->regmap, PFUZE100_REVID, &value);
+> +	if (ret)
+> +		return ret;
+> +	dev_info(pfuze_chip->dev,
+> +		 "Full lay: %x ,Metal lay: %x\n",
+> +		 (value & 0xf0) >> 4, value & 0x0f);
+
+The space should be after not before the comma in the displayed string.
+
+> +	dev_info(pfuze_chip->dev, "FAB: %x , FIN: %x\n",
+> +		 (value & 0xc) >> 2, value & 0x3);
+
+Only a space after the , for normal formatting.  ie both should look
+like "%x, bar".
+
+--KHqYxKoy+XnO4RVf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR6XfEAAoJELSic+t+oim9Z1EQAJbPInvtryaU/DY6YXwBwVbP
+GalzxmXOQbP/HkvG951ynukLABHYa0v1qja52S2bLyc/CCKjVMPebBkxRFLsD1Ql
+nnMUVYKoi5iCOD0Ak8W6UqpSbFHyMHDtgMQpmJEc97um7B6noI3MgE/7gLjPgfXa
+CJLJon8Kgqbk3tgso2Isj2uXdbSfLRDSqD8K64aNxGElKXAmHsxzkhPJXv03As6D
+FB6bRXzcG/NamvV5OpVbJekGB5CALbOw3AZmg4Wo2tcJBZeZMr5UDXmYoJpBtAtY
+BRH71Qy5FFPzR8EwHsjlwI2oNkvJzZTynPpLRiByTNq4ABaTejwjXnQHlEoVOr/7
+PpvvSom/dm0PVyRtfM+3kVG14RMht9cqZcE+ui9VAj60DI1gbvgloFYlpDVSg3g1
+MH/BLKTjzrd/wHlvtGykTA9rzRAsPLIiZwKdeyby8Xw94hRxkeW/xlgf/TTALofO
+OZLIbEfxMAU8GzOFMyCZOZFJtk6aikRh3jMzSjoskJWdoJadxC8bDp27Z3DK4YHv
+vHvznpe8wJTsScP/skQObHLNvmG9WsjChEV4ddWmxQz1jYPSVvJEnWMDbuvuVeXo
+AN9ZwvRDxca7kDgZt1o1RWz7N9Dzsrq8Ex9+Y5FZZAMLyBHGX2FozEpNZsE+vPx5
+bYBdoy6829rUzcxiKAOw
+=MAH0
+-----END PGP SIGNATURE-----
+
+--KHqYxKoy+XnO4RVf--
