@@ -1,107 +1,62 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH RESEND 1/2] ARM: mmp: Add compatible entries for OLPC XO
- laptops
-Date: Fri, 19 Jul 2013 18:25:36 +0200
-Message-ID: <20130719162536.GH16015@ns203013.ovh.net>
-References: <20130716180605.A63C7FAAF3@dev.laptop.org>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/4] dra7: I2C/MCSPI/UART pin control datas
+Date: Fri, 19 Jul 2013 11:31:15 -0500
+Message-ID: <51E969D3.2080804@ti.com>
+References: <1374251050-10033-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130716180605.A63C7FAAF3@dev.laptop.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Drake <dsd@laptop.org>
-Cc: eric.y.miao@gmail.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, haojian.zhuang@gmail.com, pgf@laptop.org, olof@lixom.net, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1374251050-10033-1-git-send-email-sourav.poddar-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14:06 Tue 16 Jul     , Daniel Drake wrote:
-> Add compatible entries to enable booting of OLPC XO-1.75 (MMP2) and
-> OLPC XO-4 (MMP3).
-> 
-> Signed-off-by: Chris Ball <cjb@laptop.org>
-> Signed-off-by: Daniel Drake <dsd@laptop.org>
-> ---
->  Documentation/devicetree/bindings/arm/mrvl/intc.txt | 4 ++--
->  Documentation/devicetree/bindings/arm/mrvl/mrvl.txt | 8 ++++++++
->  arch/arm/mach-mmp/irq.c                             | 1 +
->  arch/arm/mach-mmp/mmp2-dt.c                         | 2 ++
->  4 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> Resending after 1 month with no response.
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-> index 8b53273..3554fb9 100644
-> --- a/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-> +++ b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
-> @@ -1,8 +1,8 @@
->  * Marvell MMP Interrupt controller
->  
->  Required properties:
-> -- compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
-> -  "mrvl,mmp2-mux-intc"
-> +- compatible : One of: mrvl,mmp-intc mrvl,mmp2-intc mrvl,mmp3-intc
-> +  mrvl,mmp2-mux-intc
->  - reg : Address and length of the register set of the interrupt controller.
->    If the interrupt controller is intc, address and length means the range
->    of the whold interrupt controller. If the interrupt controller is mux-intc,
-> diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> index 117d741..236e884 100644
-> --- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> +++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> @@ -12,3 +12,11 @@ Required root node properties:
->  MMP2 Brownstone Board
->  Required root node properties:
->  	- compatible = "mrvl,mmp2-brownstone";
-> +
-> +OLPC XO-1.75 (CL2) based on MMP2
-> +Required root node properties:
-> +	- compatible = "olpc,xo-1.75";
-> +
-> +OLPC XO-4 (CL4) based on MMP3
-> +Required root node properties:
-> +	- compatible = "olpc,xo-cl4";
-documentation not consistnt with code
+On 07/19/2013 11:24 AM, Sourav Poddar wrote:
+> These series add support for I2C/MCSPI/UART pin control datas.
+>
+> The series is done on top of Rajendra Nayak series[1](posted to the list),
+> which has basic dt boot enable for dra7.
+> These patches has been tested, along with I2C and UART patches from
+> wolfram sang patch series[2].
+>
+>
+> [1]: http://www.spinics.net/lists/linux-omap/msg93535.html
+> [2]: https://lkml.org/lkml/2013/7/10/335
+>
+> Sourav Poddar (4):
+>    arm: dts: omap5-evm: Add I2c pinctrl data
+>    arm: dts: omap5-evm: Add I2c pinctrl data
+>    arm: dts: dra7-evm: Add SPI pinctrl data
+>    arm: dts: dra7-evm: Add UART pinctrl data
+>
+>   arch/arm/boot/dts/dra7-evm.dts |  123 ++++++++++++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/dra7.dtsi    |   15 +++++
+>   2 files changed, 138 insertions(+), 0 deletions(-)
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+DRA7 DTS is not merged yet, If I am not mistaken.
+Ref[1] [2]
+So why not squash these to [2]?
 
-Best Regards,
-J.
-> diff --git a/arch/arm/mach-mmp/irq.c b/arch/arm/mach-mmp/irq.c
-> index 3c71246..d60b85a 100644
-> --- a/arch/arm/mach-mmp/irq.c
-> +++ b/arch/arm/mach-mmp/irq.c
-> @@ -329,6 +329,7 @@ void __init mmp2_init_icu(void)
->  static const struct of_device_id intc_ids[] __initconst = {
->  	{ .compatible = "mrvl,mmp-intc", .data = &mmp_conf },
->  	{ .compatible = "mrvl,mmp2-intc", .data = &mmp2_conf },
-> +	{ .compatible = "mrvl,mmp3-intc", .data = &mmp2_conf },
->  	{}
->  };
->  
-> diff --git a/arch/arm/mach-mmp/mmp2-dt.c b/arch/arm/mach-mmp/mmp2-dt.c
-> index 4ac2567..e67bd9f 100644
-> --- a/arch/arm/mach-mmp/mmp2-dt.c
-> +++ b/arch/arm/mach-mmp/mmp2-dt.c
-> @@ -44,6 +44,8 @@ static void __init mmp2_dt_init(void)
->  
->  static const char *mmp2_dt_board_compat[] __initdata = {
->  	"mrvl,mmp2-brownstone",
-> +	"olpc,xo-1.75",
-> +	"olpc,xo-cl4",
->  	NULL,
->  };
->  
-> -- 
-> 1.8.1.4
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+[1] http://marc.info/?t=137335517900001&r=1&w=2
+[2] http://marc.info/?l=linux-arm-kernel&m=137335590702349&w=2
+
+
+-- 
+Regards,
+Nishanth Menon
