@@ -1,14 +1,14 @@
 From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] iio: mxs-lradc: add scale attribute to channels
-Date: Fri, 19 Jul 2013 18:14:15 +0200
-Message-ID: <201307191814.15491.marex@denx.de>
-References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <201307191630.17149.marex@denx.de> <51E95EF1.4040503@digi.com>
+Subject: Re: [PATCH v2 5/5] iio: mxs-lradc: add write_raw function to modify scale
+Date: Fri, 19 Jul 2013 18:17:26 +0200
+Message-ID: <201307191817.27102.marex@denx.de>
+References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <201307191639.01240.marex@denx.de> <51E95BEC.5080703@digi.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51E95EF1.4040503-i7dp0qKlBMg@public.gmane.org>
+In-Reply-To: <51E95BEC.5080703-i7dp0qKlBMg@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
 Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
@@ -18,43 +18,164 @@ Dear Hector Palacios,
 
 > Dear Marek,
 > 
-> On 07/19/2013 04:30 PM, Marek Vasut wrote:
-> >> @@ -228,39 +230,12 @@ struct mxs_lradc {
-> >> 
-> >>   #define LRADC_RESOLUTION			12
-> >>   #define LRADC_SINGLE_SAMPLE_MASK		((1 << LRADC_RESOLUTION) - 1)
-> >> 
-> >> -/*
-> >> - * Raw I/O operations
-> >> - */
-> >> -static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
-> >> +static int mxs_lradc_read_single(struct iio_dev *iio_dev,
-> >> 
-> >>   			const struct iio_chan_spec *chan,
-> >>   			int *val, int *val2, long m)
-> >>   
-> >>   {
-> >>   
-> >>   	struct mxs_lradc *lradc = iio_priv(iio_dev);
-> >>   	int ret;
-> >> 
-> >> -	unsigned long mask;
-> >> -
-> >> -	if (m != IIO_CHAN_INFO_RAW)
-> >> -		return -EINVAL;
-> >> -
-> >> -	/* Check for invalid channel */
-> >> -	if (chan->channel > LRADC_MAX_TOTAL_CHANS)
-> >> -		return -EINVAL;
+> On 07/19/2013 04:39 PM, Marek Vasut wrote:
+> > Dear Hector Palacios,
 > > 
-> > This was already resolved, so this patch won't apply I'm afraid.
+> >> Added write_raw function to manipulate the optional divider_by_two
+> >> through the scaling attribute out of the available scales.
+> >> 
+> >> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+> >> ---
+> >> 
+> >>   drivers/staging/iio/adc/mxs-lradc.c | 55
+> >> 
+> >> ++++++++++++++++++++++++++++++++++++- 1 file changed, 54 insertions(+),
+> >> 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/staging/iio/adc/mxs-lradc.c
+> >> b/drivers/staging/iio/adc/mxs-lradc.c index c929733..286cde2 100644
+> >> --- a/drivers/staging/iio/adc/mxs-lradc.c
+> >> +++ b/drivers/staging/iio/adc/mxs-lradc.c
+> >> @@ -144,6 +144,7 @@ struct mxs_lradc {
+> >> 
+> >>   	uint32_t		vref_mv[LRADC_MAX_TOTAL_CHANS];
+> >>   	unsigned int		scale_avail[LRADC_MAX_TOTAL_CHANS][2][2];
+> >> 
+> >> +	unsigned int		is_divided[LRADC_MAX_TOTAL_CHANS];
+> > 
+> > Why not use bitfield ? ;-)
 > 
-> You mean the 'unsigned long mask', right?  Yeah, I think I had resolved
-> that one before submitting, but looks like I didn't.
-> The other check is not resolved afaik. We agreed to remove it, but on a
-> different patch.
+> This is used in some math below and an unsigned int looked more
+> appropriate:
+> 
+> 	case IIO_CHAN_INFO_SCALE:
+> 		*val = lradc->vref_mv[chan->channel];
+> 		*val2 = chan->scan_type.realbits -
+> 			lradc->is_divided[chan->channel];
+> 		ret = IIO_VAL_FRACTIONAL_LOG2;
+> 		break;
 
-I mean the other check, yeah. A patch removing that should be applied already.
+Oh ok.
 
-Best regards,
-Marek Vasut
+> >>   	/*
+> >>   	
+> >>   	 * Touchscreen LRADC channels receives a private slot in the CTRL4
+> >> 
+> >> @@ -202,6 +203,7 @@ struct mxs_lradc {
+> >> 
+> >>   #define	LRADC_CTRL1_LRADC_IRQ_OFFSET		0
+> >>   
+> >>   #define	LRADC_CTRL2				0x20
+> >> 
+> >> +#define	LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET	24
+> >> 
+> >>   #define	LRADC_CTRL2_TEMPSENSE_PWD		(1 << 15)
+> >>   
+> >>   #define	LRADC_STATUS				0x40
+> >> 
+> >> @@ -310,7 +312,8 @@ static int mxs_lradc_read_raw(struct iio_dev
+> >> *iio_dev,
+> >> 
+> >>   		break;
+> >>   	
+> >>   	case IIO_CHAN_INFO_SCALE:
+> >>   		*val = lradc->vref_mv[chan->channel];
+> >> 
+> >> -		*val2 = chan->scan_type.realbits;
+> >> +		*val2 = chan->scan_type.realbits -
+> >> +			lradc->is_divided[chan->channel];
+> >> 
+> >>   		ret = IIO_VAL_FRACTIONAL_LOG2;
+> >>   		break;
+> >>   	
+> >>   	default:
+> >> @@ -323,6 +326,54 @@ static int mxs_lradc_read_raw(struct iio_dev
+> >> *iio_dev,
+> >> 
+> >>   	return ret;
+> >>   
+> >>   }
+> >> 
+> >> +static int mxs_lradc_write_raw(struct iio_dev *iio_dev,
+> >> +			       const struct iio_chan_spec *chan,
+> >> +			       int val, int val2, long m)
+> >> +{
+> >> +	struct mxs_lradc *lradc = iio_priv(iio_dev);
+> >> +	int ret;
+> >> +
+> >> +	ret = mutex_trylock(&lradc->lock);
+> >> +	if (!ret)
+> >> +		return -EBUSY;
+> >> +
+> >> +	switch (m) {
+> >> +	case IIO_CHAN_INFO_SCALE:
+> >> +		ret = -EINVAL;
+> >> +		if (val == lradc->scale_avail[chan->channel][0][0] &&
+> >> +		    val2 == lradc->scale_avail[chan->channel][0][1]) {
+> >> +			/* [0] -> divider by two disabled */
+> > 
+> > This comment is confusing, you use [0] in different dimensions of the
+> > array. So is the stuff below.
+> > 
+> > Still, how does this even work, can you show me and example how to set
+> > the divider from userland ? Sorry, I'm a bit confused with this
+> > 3D-business here, even if the comment in previous patch made it a bit
+> > clearer. Actually you can use some #define to specify if you're
+> > accessing div/2 or div/1 portion of the array to make it more readable.
+> > 
+> > Like ... scale_avail[chan->channel][LRADC_DIV_BY_2][LRADC_DECIMAL_PART]
+> > ... would by nice.
+> 
+> Agreed.
+> 
+> How it works:
+> # cd /sys/devices/80000000.apb/80040000.apbx/80050000.lradc/iio:device0
+> 
+> Here you have three entries per channel:
+> in_voltageX_raw		-> the sample raw value
+> in_voltageX_scale	-> the scale to multiply the raw value to get the 
+voltage
+> in mV in_voltageX_scale_available -> lists the available scales of the
+> channel
+> 
+> For example for channel 0:
+> 
+> # cat in_voltage0_scale_available
+> 0.451660156 0.903320312	(two scales available, first with divider by two
+> disabled, second with divider by two enabled)
+> 
+> # cat in_voltage0_scale
+> 0.451660156			(divider by two is currently disabled)
+> 
+> # cat in_voltage0_raw		(shows measured value)
+> 1000
+> 
+> If you multiply the value by the scale you get: 1000 * 0.451660156 = 451.6
+> mV
+> 
+> # echo 0.903320312 > in_voltage0_scale	(enables the divider by two)
+
+Ok, so I have to remember this value : '0.903320312' in case I want to enable 
+divide-by-two functionality? Hmmmm ... why would this interface not work:
+
+echo 2 > in_voltage0_scale
+
+or 
+
+echo 1 > in_voltage0_scale
+
+?
+
+> # cat in_voltage0_raw		(shows measured value)
+> 500
+> 
+> Voltage at channel is the same but now measured value is applying the scale
+> so it shows half the value than before. Now if you multiply: 500 *
+> 0.903320312 = 451.6 mV (the same voltage but you now have a bigger scale
+> and can measure up to 3.7V).
+> 
+> Other channels (like 10 on the MX28) will show different scales because of
+> fixed predividers.
+> The multi-dimension array is needed to store the big decimal number.
+
+Yes, understood. Thanks for the explanation, it really helped!
