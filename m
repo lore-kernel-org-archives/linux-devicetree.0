@@ -1,137 +1,66 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 18/24] i2c: mpc: OF clock lookup for MPC512x
-Date: Fri, 19 Jul 2013 10:42:52 +0200
-Message-ID: <20130719084252.GP7080@book.gsilab.sittig.org>
-References: <1374166855-7280-1-git-send-email-gsi@denx.de>
- <1374178858-8683-4-git-send-email-gsi@denx.de>
- <20130718203324.GB24642@n2100.arm.linux.org.uk>
+From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Subject: [PATCH v2 1/5] iio: mxs-lradc: change the realbits to 12
+Date: Fri, 19 Jul 2013 11:13:24 +0200
+Message-ID: <1374225208-28940-2-git-send-email-hector.palacios@digi.com>
+References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130718203324.GB24642-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1374225208-28940-1-git-send-email-hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, hector.palacios-i7dp0qKlBMg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2013 at 21:33 +0100, Russell King - ARM Linux wrote:
-> 
-> On Thu, Jul 18, 2013 at 10:20:52PM +0200, Gerhard Sittig wrote:
-> > +	/* enable clock for the I2C peripheral (non fatal) */
-> > +	clk = of_clk_get_by_name(node, "per");
-> > +	if (!IS_ERR(clk)) {
-> > +		clk_prepare_enable(clk);
-> > +		clk_put(clk);
-> > +	}
-> > +
-> 
-> This kind of hacked up approach to the clk API is exactly the thing I
-> really don't like seeing.  I don't know what it is... is the clk API
-> somehow difficult to use or what's the problem with doing stuff correctly?
-> 
-> 1. Get the clock in your probe function.
-> 2. Prepare it at the appropriate time.
-> 3. Enable it appropriately.  (or if you want to combine 2 and 3, use
->    clk_prepare_enable().)
-> 4. Ensure that enables/disables and prepares/unprepares are appropriately
->    balanced.
-> 5. 'put' the clock in your remove function.
-> 
-> Certainly do not get-enable-put a clock.  You're supposed to hold on to
-> the clock all the time that you're actually using it.
+The LRADC virtual channels have an 18 bit field to store the sum of up
+to 2^5 accumulated samples. The read_raw function however only operates
+over a single sample (12 bit resolution).
+In order to use this field for scaling operations, we need it to be the
+exact resolution value of the LRADC.
+Besides, the driver was using an 18 bit mask (LRADC_CH_VALUE_MASK) to
+report touch coordinates to userland. A 12 bit mask should be used instead
+or else the touch libraries will expect a coordinates range between 0
+and 0x3ffff (18 bits), instead of between 0 and 0xfff (12 bits).
 
-Russel, thank you for the feedback!  I agree that your outline of
-steps to take is simple and should not be a problem to do.
+Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+---
+ drivers/staging/iio/adc/mxs-lradc.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-I noticed that I kept looking at the wrong spot in the driver,
-hooked up to some setup routine which lacks a counter part.  You
-made me re-visit the drivers and find better locations to hook up
-to (probe and remove).  Part of my sloppiness with immediate put
-after enable was caused by put being a NOP at the moment, and the
-assumption that clocks without references but in the enabled
-state won't go away.  But I saw your recent message as well about
-how clocks shall get reference counted and keep their provider's
-module loaded.
-
-I've queued an update to the I2C, ethernet, and PCI drivers,
-which addresses your concerns.  I2C and ethernet clock handling
-will become correctly balanced, while PCI won't since the
-existing driver already lacks a remove() routine.  These changes
-will be part of v3 of the series.
-
-Mark, Greg, v2 of the series already addresses the above concerns
-for the serial communication with the PSC hardware (UART and
-SPI).  See how 01/24 and 02/24 became much more complex than in
-v1, yet should result in appropriate clock handling in these
-drivers.
-
-In the very minute I wanted to send out v3, I received feedback
-on the CAN driver manipulation from Marc.  Apparently it suffers
-from the same problem (my blindness to locate the best spot for
-resource release), but CAN shall be the last driver in the series
-which is not acceptable yet.
-
-
-> Final point - if you want to make it non-fatal, don't play games like:
-> 
-> 	clk = clk_get(whatever);
-> 	if (IS_ERR(clk))
-> 		clk = NULL;
-> 
-> 	...
-> 	if (clk)
-> 		clk_prepare(clk);
-> 
-> Do this instead:
-> 
-> 	clk = clk_get(whatever);
-> 	...
-> 
-> 	if (!IS_ERR(clk))
-> 		clk_prepare(clk);
-> etc.
-
-You saw this in the ethernet driver, right?  This "interesting"
-style of "normalization to NULL" in the setup path was meant to
-simplify the cleanup path, but that point has become obsolete by
-now.  Your example doesn't reflect that 'clk' was a more complex
-to access member in the driver's private data.
-
-It seems that doing the setup in steps with a local variable, to
-only store the reference when all steps were successful, cleans
-up the release code paths.
-
-Immediately putting the clock and not having stored the reference
-when enable failed is one more instruction before jumping to the
-bailout label, but eliminates the pain of tracking get and enable
-separately, and needing two labels for disable and put (you
-cannot disable a clock that wasn't enabled).
-
-As mentioned, both the I2C driver you responded to as well as the
-ethernet driver you reference here got adjusted.  v3 will get
-sent when I could address the remaining CAN driver issue.
-
-
-> (And on this subject, I'm considering whether to make a change to the
-> clk API where clk_prepare() and clk_enable() return zero when passed
-> an error pointer - this means drivers with optional clocks don't have
-> to burden themselves with these kinds of checks.)
-
-
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+diff --git a/drivers/staging/iio/adc/mxs-lradc.c b/drivers/staging/iio/adc/mxs-lradc.c
+index d92c97a..91282dc 100644
+--- a/drivers/staging/iio/adc/mxs-lradc.c
++++ b/drivers/staging/iio/adc/mxs-lradc.c
+@@ -225,6 +225,9 @@ struct mxs_lradc {
+ #define	LRADC_CTRL4_LRADCSELECT_MASK(n)		(0xf << ((n) * 4))
+ #define	LRADC_CTRL4_LRADCSELECT_OFFSET(n)	((n) * 4)
+ 
++#define LRADC_RESOLUTION			12
++#define LRADC_SINGLE_SAMPLE_MASK		((1 << LRADC_RESOLUTION) - 1)
++
+ /*
+  * Raw I/O operations
+  */
+@@ -547,9 +550,10 @@ static int mxs_lradc_ts_register(struct mxs_lradc *lradc)
+ 	__set_bit(EV_ABS, input->evbit);
+ 	__set_bit(EV_KEY, input->evbit);
+ 	__set_bit(BTN_TOUCH, input->keybit);
+-	input_set_abs_params(input, ABS_X, 0, LRADC_CH_VALUE_MASK, 0, 0);
+-	input_set_abs_params(input, ABS_Y, 0, LRADC_CH_VALUE_MASK, 0, 0);
+-	input_set_abs_params(input, ABS_PRESSURE, 0, LRADC_CH_VALUE_MASK, 0, 0);
++	input_set_abs_params(input, ABS_X, 0, LRADC_SINGLE_SAMPLE_MASK, 0, 0);
++	input_set_abs_params(input, ABS_Y, 0, LRADC_SINGLE_SAMPLE_MASK, 0, 0);
++	input_set_abs_params(input, ABS_PRESSURE, 0, LRADC_SINGLE_SAMPLE_MASK,
++			     0, 0);
+ 
+ 	lradc->ts_input = input;
+ 	input_set_drvdata(input, lradc);
+@@ -821,7 +825,7 @@ static const struct iio_buffer_setup_ops mxs_lradc_buffer_ops = {
+ 	.channel = (idx),					\
+ 	.scan_type = {						\
+ 		.sign = 'u',					\
+-		.realbits = 18,					\
++		.realbits = LRADC_RESOLUTION,			\
+ 		.storagebits = 32,				\
+ 	},							\
+ }
