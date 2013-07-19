@@ -1,109 +1,93 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [lm-sensors] [RESEND PATCH V1 0/9] thermal: introduce DT thermal
- zone build
-Date: Fri, 19 Jul 2013 14:56:19 -0400
-Message-ID: <51E98BD3.8000307@ti.com>
-References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com> <20130717220942.GB990@roeck-us.net> <51E7F341.8020508@ti.com> <20130718211154.GB4110@roeck-us.net> <51E9413C.2080007@ti.com> <51E98941.2090306@wwwdotorg.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] iio: mxs-lradc: add write_raw function to modify
+ scale
+Date: Fri, 19 Jul 2013 21:23:05 +0100
+Message-ID: <51E9A029.3000008@kernel.org>
+References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com>
+ <201307191639.01240.marex@denx.de> <51E95BEC.5080703@digi.com>
+ <201307191817.27102.marex@denx.de> <51E967D8.8020001@digi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="----enig2EJNRIGLQXUVRFXKOPBFB"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <51E98941.2090306@wwwdotorg.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, l.stach@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51E967D8.8020001-i7dp0qKlBMg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-------enig2EJNRIGLQXUVRFXKOPBFB
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 19-07-2013 14:45, Stephen Warren wrote:
-> On 07/19/2013 07:38 AM, Eduardo Valentin wrote:
->> On 18-07-2013 17:11, Guenter Roeck wrote:
->>> On Thu, Jul 18, 2013 at 09:53:05AM -0400, Eduardo Valentin
->>> wrote:
->>>> Hello Guenter,
->>>>
->>>> On 17-07-2013 18:09, Guenter Roeck wrote:
->>>>> On Wed, Jul 17, 2013 at 11:17:19AM -0400, Eduardo Valentin
->>>>> wrote:
->>>>>> Hello all,
->>>>>>
->>>>>> As you noticed, I am working in a way to represent thermal
->>>>>> data using device tree [1]. Essentially, this should be a
->>>>>> way to say what to do with a sensor and how to associate
->>>>>> (cooling) actions with it.
->>>>>>
->>>>> Seems to me that goes way beyond the supposed scope of
->>>>> devicetree data. Devicetree data is supposed to describe
->>>>> hardware, not its configuration or use. This is clearly a use
->>>>> case.
->>>>
->>>> Thanks for rising your voice here. It is important to know what
->>>> hwmon ppl think about this.
->>>>
->>> Sorry, I don't know what ppl stands for.
+On 07/19/2013 05:22 PM, Hector Palacios wrote:
+> Dear Marek,
+> 
+> On 07/19/2013 06:17 PM, Marek Vasut wrote:
+>>> Here you have three entries per channel:
+>>> in_voltageX_raw        -> the sample raw value
+>>> in_voltageX_scale    -> the scale to multiply the raw value to get the
+>> voltage
+>>> in mV in_voltageX_scale_available -> lists the available scales of the
+>>> channel
 >>>
->>>>>
->>>>> Guenter
->>>>
->>>> As your answers to the series are giving same argument, I chose
->>>> to answer on patch 0. I would be happier if you could elaborate
->>>> a bit more on your concern, specially if you take hwmon cap
->>>> here, and give your view with that perspective.
->>>>
->>>> I also considered that this work could be abusing of DT
->>>> purposes. But let me explain why I still think it makes sense
->>>> to have it.
->>>>
->>> Ultimately, you are making my point here. If you considered it,
->>> did you ask devicetree experts for an opinion ? Did you discuss
->>> the subject on the devicetree-discuss mailing list ? If so, what
->>> was the result ?
+>>> For example for channel 0:
+>>>
+>>> # cat in_voltage0_scale_available
+>>> 0.451660156 0.903320312    (two scales available, first with divider by two
+>>> disabled, second with divider by two enabled)
+>>>
+>>> # cat in_voltage0_scale
+>>> 0.451660156            (divider by two is currently disabled)
+>>>
+>>> # cat in_voltage0_raw        (shows measured value)
+>>> 1000
+>>>
+>>> If you multiply the value by the scale you get: 1000 * 0.451660156 = 451.6
+>>> mV
+>>>
+>>> # echo 0.903320312 > in_voltage0_scale    (enables the divider by two)
 >>
->> Although I have asked, I didn't get any feedback.=20
->> https://lkml.org/lkml/2013/4/11/760
+>> Ok, so I have to remember this value : '0.903320312' in case I want to enable
+>> divide-by-two functionality?
+> 
+> No you don't. That's why there is a 'in_voltage_scale_available' that lists the available values.
+> 
+>> Hmmmm ... why would this interface not work:
+>> echo 2 > in_voltage0_scale
 >>
->> But now I am requesting feedback in a formal (patch) way.
+>> or
 >>
->> Consider this patch series as official request for (devicetree
->> experts and everyone involved) opinions.
->=20
-> I might suggest (a) sending the email "To" the DT maintainer, rather
-> than just CC'ing him, (b) perhaps start a new thread just to present
-> the proposed DT binding, and get feedback on that. A thread with a new
-> subject like "[RFC] DT binding for thermal zones" might get more
-> attention than a patch submission; the subject line of this patch
-> doesn't stand much (since it implies to me it's more about build
-> issues than DT bindings even though it does mention DT).
->=20
+>> echo 1 > in_voltage0_scale
+> 
+> An easy thing like that is what I first submitted, but it was rejected and I was told to use the scale_available
+> descriptor instead, which is the common interface the rest of drivers use.
 
-OK. I will do that.  Sounds reasonable. Resending this series as RFC
-again, but now addressed to DT folks.
+This comes down to allowing us to have one generic predictable interface (which sometimes
+ends up looking uggly!).  The key thing is that if you are outputing using the _raw
+sysfs interfaces, the aim is to avoid doing nasty maths in kernel to get to 'standard' units such as mV.
 
->=20
+Hence that scale attribute tells you what to apply to the value.  If you just wanted it
+to be 1 or 2 then the in_voltage0_raw value would have to be a long and nasty
+decimal.  Now we do have the option of in_voltage0_calibscale which would be applied
+internally to the value but it really isn't for this purpose (it's for devices with a 'trim'
+control) and you'd still have scale set to 0.903320312 or similar. Although they have
+meaning obviously, in this case 1 and 2 are little more than 'magic' numbers.
 
+Note that when things are quite, I'm at least in theory working on a cleaner interface
+for these 'available' attributes that would also provide in kernel access for IIO consumers.
+Basically this will be another callback to get either the 'range' of pseudo continuous
+variables or the 'available' set for parameters like this.
 
---=20
-You have got to be excited about what you are doing. (L. Lamport)
+Being lazy I'm happy to let someone else clean this corner up if they like? *looks hopeful*
 
-Eduardo Valentin
-
-
-------enig2EJNRIGLQXUVRFXKOPBFB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlHpi9MACgkQCXcVR3XQvP0SygD9E4+vYpXP4fXBPyphBsmiXA7P
-uJGfRTR/JxqVNuAe2WgBAMNH4RaYCQfr2IiTGC+HIvlpbyv0jviLDXFxBrDbo4QS
-=vAfR
------END PGP SIGNATURE-----
-
-------enig2EJNRIGLQXUVRFXKOPBFB--
+Jonathan
+> 
+> Best regards,
+> -- 
+> Hector Palacios
