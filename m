@@ -1,112 +1,34 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] iio: lps331ap: Add support for DT
-Date: Fri, 19 Jul 2013 15:43:13 +0200
-Message-ID: <51E94271.4020206@samsung.com>
-References: <1372767338-13179-1-git-send-email-l.czerwinski@samsung.com> <1372767338-13179-5-git-send-email-l.czerwinski@samsung.com> <20130716132204.GG3125@lukather>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] iio: mxs-lradc: change the realbits to 12
+Date: Fri, 19 Jul 2013 15:56:46 +0200
+Message-ID: <201307191556.46857.marex@denx.de>
+References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <1374225208-28940-2-git-send-email-hector.palacios@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130716132204.GG3125@lukather>
+In-Reply-To: <1374225208-28940-2-git-send-email-hector.palacios-i7dp0qKlBMg@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/16/2013 03:22 PM, Maxime Ripard wrote:
+Dear Hector Palacios,
 
-Hi Maxime,
+> The LRADC virtual channels have an 18 bit field to store the sum of up
+> to 2^5 accumulated samples. The read_raw function however only operates
+> over a single sample (12 bit resolution).
+> In order to use this field for scaling operations, we need it to be the
+> exact resolution value of the LRADC.
+> Besides, the driver was using an 18 bit mask (LRADC_CH_VALUE_MASK) to
+> report touch coordinates to userland. A 12 bit mask should be used instead
+> or else the touch libraries will expect a coordinates range between 0
+> and 0x3ffff (18 bits), instead of between 0 and 0xfff (12 bits).
+> 
+> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
 
-> Hi Jacek,
->
-> I find myself needing these bindings as well, so I'm definitely
-> interested by your patches.
->
-> On Tue, Jul 02, 2013 at 02:15:38PM +0200, Lukasz Czerwinski wrote:
->> From: Jacek Anaszewski<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> This patch adds DT support for the lps331ap barometer
->> sensor.
->>
->> Signed-off-by: Jacek Anaszewski<j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Kyungmin Park<kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>   .../bindings/iio/pressure/st_pressure.txt          |   41 ++++++++++++++++++++
->>   drivers/iio/pressure/st_pressure_i2c.c             |    9 +++++
->>   drivers/iio/pressure/st_pressure_spi.c             |    9 +++++
->>   3 files changed, 59 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/iio/pressure/st_pressure.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/pressure/st_pressure.txt b/Documentation/devicetree/bindings/iio/pressure/st_pressure.txt
->> new file mode 100644
->> index 0000000..73a4b7d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/pressure/st_pressure.txt
->> @@ -0,0 +1,41 @@
->> +* STMicroelectronics LPS331AP barometer sensor
->> +
->> +Required properties:
->> +
->> +  - compatible : should be "lps331ap"
->> +  - reg : the I2C address of the barometer
->> +
->> +Optional properties:
->> +
->> +  - drdy-int-pin : redirect DRDY on pin INT1 (1) or pin INT2 (2) (u8)
->> +  - interrupt-parent : phandle to the interrupt map subnode
->> +  - interrupts : interrupt mapping for LPS331AP interrupt sources:
->> +		2 sources: 0 - INT1, 1 - INT2
->
-> Maybe you could use interrupts-names here, instead of requiring to
-> hardcode the interrupt index.
+Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
- From what I've figured out in order to obtain the interrupt id
-by name the function
-
-platform_get_irq_by_name(struct platform_device *dev, const char *name)
-
-has to be exploited. Unfortunately required platform_device structure
-is not available in the struct i2c_client that is passed to the
-probe function of an i2c driver. The interrupt-names property would be 
-indeed neater here, if only it was usable from i2c driver.
-
-> Plus, I guess that it's assuming that you
-> can only use INT2 when you already use INT1?
-
-As I see now the binding documentation file I submitted is confusing.
-I fixed it in the second version of the patch. Currently description
-of the interrupt map elements is as follows:
-
-0 - data ready interrupt
-1 - threshold interrupt
-
-which means that you can use INT2 even though you don't use INT1.
-This is the case I have on my board - I have only INT2 pin of
-lps331ap device routed to the CPU. I define interrupt map
-with only one element with index 0 (which means that I want
-it to act as a data ready interrupt) and I assign 2 to the
-drdy-int-pin property which instructs the driver to configure
-data ready interrupt on the INT2 pin.
-
->> +  - irq-map : irq sub-node defining interrupt map
->> +	      (all properties listed below are required):
->> +      - #interrupt-cells : should be 1
->> +      - #address-cells : should be 0
->> +      - #size-cells : should be 0
->> +      - interrupt-map : table of entries consisting of three child elements:
->> +	  - unit_interrupt_specifier - 0 : INT1, 1 : INT2
->> +	  - interrupt parent phandle
->> +	  - parent unit interrupt specifier consisiting of two elements:
->> +	      - index of the interrupt within the controller
->> +	      - flags : should be 0
->
-> I don't really get why it's needed. Isn't that redundant with the
-> interrupt parent and the interrupt number already defined by
-> interrupt-parent and interrupts in the top node?
-
-I'm aware that this adds much noise but I couldn't have found
-other solution which would allow to define more than one interrupts
-for the i2c device.
-
-Thanks,
-Jacek
+Best regards,
+Marek Vasut
