@@ -1,410 +1,696 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH] ASoC: atmel: add wm8904 based audio machine
-	driver
-Date: Fri, 19 Jul 2013 17:42:57 +0800
-Message-ID: <1374226977-10188-1-git-send-email-voice.shen@atmel.com>
+From: Robin Gong <b38343@freescale.com>
+Subject: [PATCH v3] regulator: pfuze100: add pfuze100 regulator driver
+Date: Fri, 19 Jul 2013 18:14:51 +0800
+Message-ID: <1374228891-8341-1-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, linux-sound@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: broonie@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, lgirdwood@gmail.com, shawn.guo@linaro.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add wm8904 based audio machine driver for Atmel EK board
+Add pfuze100 regulator driver.
 
-The following ek board based on it
-  - at91sam9n12ek
-  - sama5d3xek (d31, d33, d34, d35)
-
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
+Signed-off-by: Robin Gong <b38343@freescale.com>
 ---
-This patch is only for Atmel SoC with wm8904 codec machine driver
-only, temp no change for dts file, as there are many changes to dts
-file in mailing list for atmel SoC now, so hold on for dts change,
-after that will send the dts file patches
+ .../devicetree/bindings/regulator/pfuze100.txt     |  113 +++++
+ drivers/regulator/Kconfig                          |    7 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/pfuze100-regulator.c             |  461 ++++++++++++++++++++
+ include/linux/regulator/pfuze100.h                 |   44 ++
+ 5 files changed, 626 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/pfuze100.txt
+ create mode 100644 drivers/regulator/pfuze100-regulator.c
+ create mode 100644 include/linux/regulator/pfuze100.h
 
-Change in v2:
-  - Update the binding doc, add widgets describe of codec and board
-  - set sysclk after set pll
-  - using bias level trasition to decide enable/disable clock
-  - return real error code instead of return -1
-
-Todo:
-  - After the at91 clock move to common clock framework, then rework
-    the clock in this driver
----
- .../devicetree/bindings/sound/atmel-wm8904.txt     |   55 +++++
- sound/soc/atmel/Kconfig                            |   10 +
- sound/soc/atmel/Makefile                           |    2 +
- sound/soc/atmel/atmel_wm8904.c                     |  254 ++++++++++++++++++++
- 4 files changed, 321 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/atmel-wm8904.txt
- create mode 100644 sound/soc/atmel/atmel_wm8904.c
-
-diff --git a/Documentation/devicetree/bindings/sound/atmel-wm8904.txt b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
+diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
 new file mode 100644
-index 0000000..8bbe50c
+index 0000000..22e1a48
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/atmel-wm8904.txt
-@@ -0,0 +1,55 @@
-+Atmel ASoC driver with wm8904 audio codec complex
++++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+@@ -0,0 +1,113 @@
++PFUZE100 family of regulators
 +
 +Required properties:
-+  - compatible: "atmel,asoc-wm8904"
-+  - atmel,model: The user-visible name of this sound complex.
-+  - atmel,audio-routing: A list of the connections between audio components.
-+    Each entry is a pair of strings, the first being the connection's sink,
-+    the second being the connection's source. Valid names for sources and
-+    sinks are the WM8904's pins, and the jacks on the board:
++- compatible: "fsl,pfuze100"
++- reg: I2C slave address
++- regulators: This is the list of child nodes that specify the regulator
++  initialization data for defined regulators. Please refer to below doc
++  Documentation/devicetree/bindings/regulator/regulator.txt.
 +
-+    WM8904 pins:
++  The valid names for regulators are:
++  sw1ab,sw1c,sw2,sw3a,sw3b,sw4,swbst,vsnvs,vrefddr,vgen1~vgen6
 +
-+    * IN1L
-+    * IN1R
-+    * IN2L
-+    * IN2R
-+    * IN3L
-+    * IN3R
-+    * HPOUTL
-+    * HPOUTR
-+    * LINEOUTL
-+    * LINEOUTR
-+    * MICBIAS
-+
-+    Board connectors:
-+
-+    * Headphone Jack
-+    * Line In Jack
-+    * Mic
-+
-+  - atmel,ssc-controller: The phandle of the SSC controller
-+  - atmel,audio-codec: The phandle of the WM8904 audio codec
-+
-+Optional properties:
-+  - pinctrl-names, pinctrl-0: Please refer to pinctrl-bindings.txt
++Each regulator is defined using the standard binding for regulators.
 +
 +Example:
-+sound {
-+	compatible = "atmel,asoc-wm8904";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pck0_as_mck>;
 +
-+	atmel,model = "wm8904 @ AT91SAM9N12EK";
++	pmic: pfuze100@08 {
++		compatible = "fsl,pfuze100";
++		reg = <0x08>;
 +
-+	atmel,audio-routing =
-+		"Headphone Jack", "HPOUTL",
-+		"Headphone Jack", "HPOUTR",
-+		"IN2L", "Line In Jack",
-+		"IN2R", "Line In Jack",
-+		"Mic", "MICBIAS",
-+		"IN1L", "Mic";
++		regulators {
++			sw1a_reg: sw1ab {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
 +
-+	atmel,ssc-controller = <&ssc0>;
-+	atmel,audio-codec = <&wm8904>;
-+};
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index 1c0b185..986323b 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -33,6 +33,16 @@ config SND_AT91_SOC_SAM9G20_WM8731
- 	  Say Y if you want to add support for SoC audio on WM8731-based
- 	  AT91sam9g20 evaluation board.
++			sw1c_reg: sw1c {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3a {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3b_reg: sw3b {
++				regulator-min-microvolt = <400000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen1_reg: vgen1 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen2_reg: vgen2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen3_reg: vgen3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			vgen4_reg: vgen4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vgen5 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vgen6 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++		};
++	};
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index f1e6ad9..f913172 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -158,6 +158,13 @@ config REGULATOR_MC13892
+ 	  Say y here to support the regulators found on the Freescale MC13892
+ 	  PMIC.
  
-+config SND_ATMEL_SOC_WM8904
-+	tristate "Atmel ASoC driver for boards using WM8904 codec"
-+	depends on ARCH_AT91 && ATMEL_SSC && SND_ATMEL_SOC
-+	select SND_ATMEL_SOC_SSC
-+	select SND_ATMEL_SOC_DMA
-+	select SND_SOC_WM8904
++config REGULATOR_PFUZE100
++	tristate "Support regulators on Freescale PFUZE100 PMIC"
++	depends on I2C
 +	help
-+	  Say Y if you want to add support for Atmel ASoC driver for boards using
-+	  WM8904 codec.
++	  Say y here to support the regulators found on the Freescale PFUZE100
++	  PMIC.
 +
- config SND_AT91_SOC_AFEB9260
- 	tristate "SoC Audio support for AFEB9260 board"
- 	depends on ARCH_AT91 && ATMEL_SSC && ARCH_AT91 && MACH_AFEB9260 && SND_ATMEL_SOC
-diff --git a/sound/soc/atmel/Makefile b/sound/soc/atmel/Makefile
-index 41967cc..922d4da 100644
---- a/sound/soc/atmel/Makefile
-+++ b/sound/soc/atmel/Makefile
-@@ -11,6 +11,8 @@ obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel_ssc_dai.o
+ config REGULATOR_ISL6271A
+ 	tristate "Intersil ISL6271A Power regulator"
+ 	depends on I2C
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index ba4a3cf..68cc298 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -72,6 +72,7 @@ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-ldo.o
+ obj-$(CONFIG_REGULATOR_WM8350) += wm8350-regulator.o
+ obj-$(CONFIG_REGULATOR_WM8400) += wm8400-regulator.o
+ obj-$(CONFIG_REGULATOR_WM8994) += wm8994-regulator.o
++obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
  
- # AT91 Machine Support
- snd-soc-sam9g20-wm8731-objs := sam9g20_wm8731.o
-+snd-atmel-soc-wm8904-objs := atmel_wm8904.o
  
- obj-$(CONFIG_SND_AT91_SOC_SAM9G20_WM8731) += snd-soc-sam9g20-wm8731.o
-+obj-$(CONFIG_SND_ATMEL_SOC_WM8904) += snd-atmel-soc-wm8904.o
- obj-$(CONFIG_SND_AT91_SOC_AFEB9260) += snd-soc-afeb9260.o
-diff --git a/sound/soc/atmel/atmel_wm8904.c b/sound/soc/atmel/atmel_wm8904.c
+ ccflags-$(CONFIG_REGULATOR_DEBUG) += -DDEBUG
+diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
 new file mode 100644
-index 0000000..7222380
+index 0000000..3f7e866
 --- /dev/null
-+++ b/sound/soc/atmel/atmel_wm8904.c
-@@ -0,0 +1,254 @@
++++ b/drivers/regulator/pfuze100-regulator.c
+@@ -0,0 +1,461 @@
 +/*
-+ * atmel_wm8904 - Atmel ASoC driver for boards with WM8904 codec.
++ * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
 + *
-+ * Copyright (C) 2012 Atmel
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + *
-+ * Author: Bo Shen <voice.shen@atmel.com>
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + *
-+ * GPLv2 or later
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 + */
-+
-+#include <linux/clk.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/err.h>
 +#include <linux/of.h>
 +#include <linux/of_device.h>
-+#include <linux/pinctrl/consumer.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/pfuze100.h>
++#include <linux/i2c.h>
++#include <linux/slab.h>
++#include <linux/regmap.h>
 +
-+#include <sound/soc.h>
 +
-+#include "../codecs/wm8904.h"
-+#include "atmel_ssc_dai.h"
++#define PFUZE_NUMREGS		128
++#define PFUZE100_VOL_OFFSET	0
++#define PFUZE100_STANDBY_OFFSET	1
++#define PFUZE100_MODE_OFFSET	3
++#define PFUZE100_CONF_OFFSET	4
 +
-+#define MCLK_RATE 32768
++#define PFUZE100_DEVICEID	0x0
++#define PFUZE100_REVID		0x3
++#define PFUZE100_FABID		0x3
 +
-+static struct clk *mclk;
++#define PFUZE100_SW1ABVOL	0x20
++#define PFUZE100_SW1CVOL	0x2e
++#define PFUZE100_SW2VOL		0x35
++#define PFUZE100_SW3AVOL	0x3c
++#define PFUZE100_SW3BVOL	0x43
++#define PFUZE100_SW4VOL		0x4a
++#define PFUZE100_SWBSTCON1	0x66
++#define PFUZE100_VREFDDRCON	0x6a
++#define PFUZE100_VSNVSVOL	0x6b
++#define PFUZE100_VGEN1VOL	0x6c
++#define PFUZE100_VGEN2VOL	0x6d
++#define PFUZE100_VGEN3VOL	0x6e
++#define PFUZE100_VGEN4VOL	0x6f
++#define PFUZE100_VGEN5VOL	0x70
++#define PFUZE100_VGEN6VOL	0x71
 +
-+static const struct snd_soc_dapm_widget atmel_asoc_wm8904_dapm_widgets[] = {
-+	SND_SOC_DAPM_HP("Headphone Jack", NULL),
-+	SND_SOC_DAPM_MIC("Mic", NULL),
-+	SND_SOC_DAPM_LINE("Line In Jack", NULL),
++struct pfuze_regulator {
++	struct regulator_desc desc;
++	unsigned char stby_reg;
++	unsigned char stby_mask;
 +};
 +
-+static int atmel_asoc_wm8904_hw_params(struct snd_pcm_substream *substream,
-+		struct snd_pcm_hw_params *params)
++struct pfuze_chip {
++	struct regmap *regmap;
++	struct device *dev;
++	struct pfuze_regulator regulator_descs[PFUZE100_MAX_REGULATOR];
++	struct regulator_dev *regulators[PFUZE100_MAX_REGULATOR];
++};
++
++static const int pfuze100_swbst[] = {
++	5000000, 5050000, 5100000, 5150000,
++};
++
++static const int pfuze100_vsnvs[] = {
++	1000000, 1100000, 1200000, 1300000, 1500000, 1800000, 3000000,
++};
++
++static const struct i2c_device_id pfuze_device_id[] = {
++	{.name = "pfuze100"},
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, pfuze_device_id);
++
++static const struct of_device_id pfuze_dt_ids[] = {
++	{ .compatible = "fsl,pfuze100" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, pfuze_dt_ids);
++
++static int pfuze100_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
 +{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
++	struct pfuze_chip *pfuze100 = rdev_get_drvdata(rdev);
++	int id = rdev->desc->id;
++	unsigned int val, ramp_bits, reg;
 +	int ret;
 +
-+	ret = snd_soc_dai_set_pll(codec_dai, WM8904_FLL_MCLK, WM8904_FLL_MCLK,
-+		32768, params_rate(params) * 256);
-+	if (ret < 0) {
-+		pr_err("%s - failed to set wm8904 codec PLL.", __func__);
-+		return ret;
++	if (id < PFUZE100_SWBST) {
++		if (id == PFUZE100_SW1AB)
++			reg = PFUZE100_SW1ABVOL;
++		else
++			reg = PFUZE100_SW1CVOL + (id - PFUZE100_SW1C) * 7;
++		regmap_read(pfuze100->regmap, reg, &val);
++
++		if (val & 0x40)
++			ramp_delay = 50000 / (4 * ramp_delay);
++		else
++			ramp_delay = 25000 / (2 * ramp_delay);
++		if (id <= PFUZE100_SW1C)
++			ramp_delay = 25000 / (2 * ramp_delay);
++		ramp_bits = (ramp_delay >> 1) - (ramp_delay >> 3);
++		ret = regmap_update_bits(pfuze100->regmap, reg + 4 , 0xc0,
++				ramp_bits << 6);
++		if (ret < 0)
++			dev_err(pfuze100->dev, "ramp failed, err %d\nr", ret);
++	} else
++		ret = -EACCES;
++
++	return ret;
++}
++
++static struct regulator_ops pfuze100_ldo_regulator_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.list_voltage = regulator_list_voltage_linear,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++};
++
++static struct regulator_ops pfuze100_fixed_regulator_ops = {
++	.list_voltage = regulator_list_voltage_linear,
++};
++
++static struct regulator_ops pfuze100_sw_regulator_ops = {
++	.list_voltage = regulator_list_voltage_linear,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_time_sel = regulator_set_voltage_time_sel,
++	.set_ramp_delay = pfuze100_set_ramp_delay,
++};
++
++static struct regulator_ops pfuze100_swb_regulator_ops = {
++	.list_voltage = regulator_list_voltage_table,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++
++};
++
++#define PFUZE100_FIXED_REG(_name, base, voltage)	\
++{	\
++	[PFUZE100_ ## _name] = {	\
++		.desc = {	\
++			.name = #_name,	\
++			.n_voltages = 1,	\
++			.ops = &pfuze100_fixed_regulator_ops,	\
++			.type = REGULATOR_VOLTAGE,	\
++			.id = PFUZE100_ ## _name,	\
++			.owner = THIS_MODULE,	\
++			.min_uV = (voltage),	\
++			.enable_reg = (base),	\
++			.enable_mask = 0x10,	\
++		},	\
++	}	\
++}
++
++#define PFUZE100_SW_REG(_name, base, min, max, step)	\
++{	\
++	[PFUZE100_ ## _name] = {	\
++		.desc = {	\
++			.name = #_name,\
++			.n_voltages = ((max) - (min)) / (step) + 1,	\
++			.ops = &pfuze100_sw_regulator_ops,	\
++			.type = REGULATOR_VOLTAGE,	\
++			.id = PFUZE100_ ## _name,	\
++			.owner = THIS_MODULE,	\
++			.min_uV = (min),	\
++			.uV_step = (step),	\
++			.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
++			.vsel_mask = 0x3f,	\
++		},	\
++		.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
++		.stby_mask = 0x3f,	\
++	}	\
++}
++
++#define PFUZE100_SWB_REG(_name, base, mask, voltages)	\
++{	\
++	[PFUZE100_ ## _name] = {	\
++		.desc = {	\
++			.name = #_name,	\
++			.n_voltages = ARRAY_SIZE(voltages),	\
++			.ops = &pfuze100_swb_regulator_ops,	\
++			.type = REGULATOR_VOLTAGE,	\
++			.id = PFUZE100_ ## _name,	\
++			.owner = THIS_MODULE,	\
++			.volt_table = voltages,	\
++			.vsel_reg = (base),	\
++			.vsel_mask = (mask),	\
++		},	\
++	}	\
++}
++
++#define PFUZE100_VGEN_REG(_name, base, min, max, step)	\
++{	\
++	[PFUZE100_ ## _name] = {	\
++		.desc = {	\
++			.name = #_name,	\
++			.n_voltages = ((max) - (min)) / (step) + 1,	\
++			.ops = &pfuze100_ldo_regulator_ops,	\
++			.type = REGULATOR_VOLTAGE,	\
++			.id = PFUZE100_ ## _name,	\
++			.owner = THIS_MODULE,	\
++			.min_uV = (min),	\
++			.uV_step = (step),	\
++			.vsel_reg = (base),	\
++			.vsel_mask = 0xf,	\
++			.enable_reg = (base),	\
++			.enable_mask = 0x10,	\
++		},	\
++		.stby_reg = (base),	\
++		.stby_mask = 0x20,	\
++	}	\
++}
++
++static struct pfuze_regulator pfuze100_regulators[] = {
++	PFUZE100_SW_REG(SW1AB, PFUZE100_SW1ABVOL, 300000, 1875000, 25000),
++	PFUZE100_SW_REG(SW1C, PFUZE100_SW1CVOL, 300000, 1875000, 25000),
++	PFUZE100_SW_REG(SW2, PFUZE100_SW2VOL, 400000, 1975000, 25000),
++	PFUZE100_SW_REG(SW3A, PFUZE100_SW3AVOL, 400000, 1975000, 25000),
++	PFUZE100_SW_REG(SW3B, PFUZE100_SW3BVOL, 400000, 1975000, 25000),
++	PFUZE100_SW_REG(SW4, PFUZE100_SW4VOL, 400000, 1975000, 25000),
++	PFUZE100_SWB_REG(SWBST, PFUZE100_SWBSTCON1, 0x3 , pfuze100_swbst),
++	PFUZE100_SWB_REG(VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
++	PFUZE100_FIXED_REG(VREFDDR, PFUZE100_VREFDDRCON, 750000),
++	PFUZE100_VGEN_REG(VGEN1, PFUZE100_VGEN1VOL, 800000, 1550000, 50000),
++	PFUZE100_VGEN_REG(VGEN2, PFUZE100_VGEN2VOL, 800000, 1550000, 50000),
++	PFUZE100_VGEN_REG(VGEN3, PFUZE100_VGEN3VOL, 1800000, 3300000, 100000),
++	PFUZE100_VGEN_REG(VGEN4, PFUZE100_VGEN4VOL, 1800000, 3300000, 100000),
++	PFUZE100_VGEN_REG(VGEN5, PFUZE100_VGEN5VOL, 1800000, 3300000, 100000),
++	PFUZE100_VGEN_REG(VGEN6, PFUZE100_VGEN6VOL, 1800000, 3300000, 100000),
++};
++
++#ifdef CONFIG_OF
++static struct of_regulator_match pfuze100_matches[] = {
++	{ .name = "sw1ab",	},
++	{ .name = "sw1c",	},
++	{ .name = "sw2",	},
++	{ .name = "sw3a",	},
++	{ .name = "sw3b",	},
++	{ .name = "sw4",	},
++	{ .name = "swbst",	},
++	{ .name = "vsnvs",	},
++	{ .name = "vrefddr",	},
++	{ .name = "vgen1",	},
++	{ .name = "vgen2",	},
++	{ .name = "vgen3",	},
++	{ .name = "vgen4",	},
++	{ .name = "vgen5",	},
++	{ .name = "vgen6",	},
++};
++
++static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
++{
++	struct device *dev = chip->dev;
++	struct device_node *parent;
++	int ret;
++
++	of_node_get(dev->parent->of_node);
++	parent = of_find_node_by_name(dev->parent->of_node, "regulators");
++	if (!parent) {
++		dev_err(dev, "regulators node not found\n");
++		return -EINVAL;
 +	}
 +
-+	/*
-+	 * As here wm8904 use FLL output as its system clock
-+	 * so calling set_sysclk won't care freq parameter
-+	 * then we pass 0
-+	 */
-+	ret = snd_soc_dai_set_sysclk(codec_dai, WM8904_CLK_FLL,
-+			0, SND_SOC_CLOCK_IN);
++	ret = of_regulator_match(dev, parent, pfuze100_matches,
++				 ARRAY_SIZE(pfuze100_matches));
++
++	of_node_put(dev->parent->of_node);
 +	if (ret < 0) {
-+		pr_err("%s -failed to set wm8904 SYSCLK\n", __func__);
++		dev_err(dev, "Error parsing regulator init data: %d\n",
++			ret);
 +		return ret;
 +	}
 +
 +	return 0;
 +}
 +
-+static struct snd_soc_ops atmel_asoc_wm8904_ops = {
-+	.hw_params = atmel_asoc_wm8904_hw_params,
++static inline struct regulator_init_data *match_init_data(int index)
++{
++	return pfuze100_matches[index].init_data;
++}
++
++static inline struct device_node *match_of_node(int index)
++{
++	return pfuze100_matches[index].of_node;
++}
++#else
++static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
++{
++	return NULL;
++}
++
++static inline struct regulator_init_data *match_init_data(int index)
++{
++	return NULL;
++}
++
++static inline struct device_node *match_of_node(int index)
++{
++	return NULL;
++}
++#endif
++
++static int pfuze_identify(struct pfuze_chip *pfuze_chip)
++{
++	unsigned int value;
++	int ret;
++
++	ret = regmap_read(pfuze_chip->regmap, PFUZE100_DEVICEID, &value);
++	if (ret)
++		return ret;
++
++	if (value & 0x0f) {
++		dev_warn(pfuze_chip->dev, "Illegal ID: %x\n", value);
++		return -ENODEV;
++	}
++
++	ret = regmap_read(pfuze_chip->regmap, PFUZE100_REVID, &value);
++	if (ret)
++		return ret;
++	dev_info(pfuze_chip->dev,
++		 "Full lay: %x ,Metal lay: %x\n",
++		 (value & 0xf0) >> 4, value & 0x0f);
++
++	ret = regmap_read(pfuze_chip->regmap, PFUZE100_FABID, &value);
++	if (ret)
++		return ret;
++	dev_info(pfuze_chip->dev, "FAB: %x , FIN: %x\n",
++		 (value & 0xc) >> 2, value & 0x3);
++
++	return 0;
++}
++
++static struct regmap_config pfuze_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = PFUZE_NUMREGS,
++	.cache_type = REGCACHE_RBTREE,
 +};
 +
-+static int atmel_set_bias_level(struct snd_soc_card *card,
-+		struct snd_soc_dapm_context *dapm,
-+		enum snd_soc_bias_level level)
++static int pfuze100_regulator_probe(struct i2c_client *client,
++				    const struct i2c_device_id *id)
 +{
-+	if (dapm->bias_level == SND_SOC_BIAS_STANDBY) {
-+		switch (level) {
-+		case SND_SOC_BIAS_PREPARE:
-+			clk_prepare_enable(mclk);
-+			break;
-+		case SND_SOC_BIAS_OFF:
-+			clk_disable_unprepare(mclk);
-+			break;
-+		default:
-+			break;
++	struct pfuze_chip *pfuze_chip;
++	struct pfuze_regulator_platform_data *pdata =
++	    dev_get_platdata(&client->dev);
++	struct regulator_config config = { };
++	int i, ret;
++
++	pfuze_chip = devm_kzalloc(&client->dev, sizeof(*pfuze_chip),
++			GFP_KERNEL);
++	if (!pfuze_chip)
++		return -ENOMEM;
++
++	dev_set_drvdata(&client->dev, pfuze_chip);
++
++	memcpy(pfuze_chip->regulator_descs, pfuze100_regulators,
++		sizeof(pfuze_chip->regulator_descs));
++
++	pfuze_chip->dev = &client->dev;
++
++	pfuze_chip->regmap = devm_regmap_init_i2c(client, &pfuze_regmap_config);
++	if (IS_ERR(pfuze_chip->regmap)) {
++		ret = PTR_ERR(pfuze_chip->regmap);
++		dev_err(&client->dev,
++			"regmap allocation failed with err %d\n", ret);
++		return ret;
++	}
++
++	ret = pfuze_identify(pfuze_chip);
++	if (ret) {
++		dev_err(&client->dev, "unrecognized pfuze chip ID!\n");
++		return ret;
++	}
++
++	ret = pfuze_parse_regulators_dt(pfuze_chip);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < PFUZE100_MAX_REGULATOR; i++) {
++		struct regulator_init_data *init_data;
++		int val;
++
++		if (pdata)
++			init_data = pdata->init_data[i];
++		else
++			init_data = match_init_data(i);
++
++		/* SW2~SW4 high bit check and modify the voltage value table */
++		if (i > PFUZE100_SW1C && i < PFUZE100_SWBST) {
++			regmap_read(pfuze_chip->regmap, PFUZE100_SW2VOL +
++					(i - PFUZE100_SW2) * 7, &val);
++			if (val & 0x40) {
++				pfuze_chip->regulator_descs[i].desc.min_uV
++				= 800000;
++				pfuze_chip->regulator_descs[i].desc.uV_step
++				= 50000;
++			}
++		}
++
++		config.dev = &client->dev;
++		config.init_data = init_data;
++		config.driver_data = pfuze_chip;
++		config.of_node = match_of_node(i);
++
++		pfuze_chip->regulators[i] = regulator_register(&pfuze_chip
++			->regulator_descs[i].desc, &config);
++		if (IS_ERR(pfuze_chip->regulators[i])) {
++			dev_err(&client->dev, "register regulator%s failed\n",
++				pfuze100_regulators[i].desc.name);
++			ret = PTR_ERR(pfuze_chip->regulators[i]);
++			while (--i >= 0)
++				regulator_unregister(pfuze_chip->regulators[i]);
++			return ret;
 +		}
 +	}
 +
 +	return 0;
-+};
++}
 +
-+static struct snd_soc_dai_link atmel_asoc_wm8904_dailink = {
-+	.name = "WM8904",
-+	.stream_name = "WM8904 PCM",
-+	.codec_dai_name = "wm8904-hifi",
-+	.dai_fmt = SND_SOC_DAIFMT_I2S
-+		| SND_SOC_DAIFMT_NB_NF
-+		| SND_SOC_DAIFMT_CBM_CFM,
-+	.ops = &atmel_asoc_wm8904_ops,
-+};
-+
-+static struct snd_soc_card atmel_asoc_wm8904_card = {
-+	.name = "atmel_asoc_wm8904",
-+	.owner = THIS_MODULE,
-+	.set_bias_level = atmel_set_bias_level,
-+	.dai_link = &atmel_asoc_wm8904_dailink,
-+	.num_links = 1,
-+	.dapm_widgets = atmel_asoc_wm8904_dapm_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(atmel_asoc_wm8904_dapm_widgets),
-+	.fully_routed = true,
-+};
-+
-+static int atmel_asoc_wm8904_dt_init(struct platform_device *pdev)
++static int pfuze100_regulator_remove(struct i2c_client *client)
 +{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *codec_np, *cpu_np;
-+	struct snd_soc_card *card = &atmel_asoc_wm8904_card;
-+	struct snd_soc_dai_link *dailink = &atmel_asoc_wm8904_dailink;
-+	int ret;
++	int i;
++	struct pfuze_chip *pfuze_chip = dev_get_drvdata(&client->dev);
 +
-+	if (!np) {
-+		dev_err(&pdev->dev, "only device tree supported\n");
-+		return -EINVAL;
-+	}
++	for (i = 0; i < PFUZE100_MAX_REGULATOR; i++)
++		regulator_unregister(pfuze_chip->regulators[i]);
 +
-+	ret = snd_soc_of_parse_card_name(card, "atmel,model");
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to parse card name\n");
-+		return ret;
-+	}
-+
-+	ret = snd_soc_of_parse_audio_routing(card, "atmel,audio-routing");
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to parse audio routing\n");
-+		return ret;
-+	}
-+
-+	cpu_np = of_parse_phandle(np, "atmel,ssc-controller", 0);
-+	if (!cpu_np) {
-+		dev_err(&pdev->dev, "failed to get dai and pcm info\n");
-+		ret = -EINVAL;
-+		return ret;
-+	}
-+	dailink->cpu_of_node = cpu_np;
-+	dailink->platform_of_node = cpu_np;
-+	of_node_put(cpu_np);
-+
-+	codec_np = of_parse_phandle(np, "atmel,audio-codec", 0);
-+	if (!codec_np) {
-+		dev_err(&pdev->dev, "failed to get codec info\n");
-+		ret = -EINVAL;
-+		return ret;
-+	}
-+	dailink->codec_of_node = codec_np;
-+	of_node_put(codec_np);
++	devm_kfree(&client->dev, pfuze_chip);
 +
 +	return 0;
 +}
 +
-+static int atmel_asoc_wm8904_probe(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = &atmel_asoc_wm8904_card;
-+	struct snd_soc_dai_link *dailink = &atmel_asoc_wm8904_dailink;
-+	struct clk *clk_src;
-+	struct pinctrl *pinctrl;
-+	int id, ret;
-+
-+	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
-+	if (IS_ERR(pinctrl)) {
-+		dev_err(&pdev->dev, "failed to request pinctrl\n");
-+		return PTR_ERR(pinctrl);
-+	}
-+
-+	card->dev = &pdev->dev;
-+	ret = atmel_asoc_wm8904_dt_init(pdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to init dt info\n");
-+		return ret;
-+	}
-+
-+	id = of_alias_get_id((struct device_node *)dailink->cpu_of_node, "ssc");
-+	ret = atmel_ssc_set_audio(id);
-+	if (ret != 0) {
-+		dev_err(&pdev->dev, "failed to set SSC %d for audio\n", id);
-+		return ret;
-+	}
-+
-+	mclk = clk_get(NULL, "pck0");
-+	if (IS_ERR(mclk)) {
-+		dev_err(&pdev->dev, "failed to get pck0\n");
-+		ret = PTR_ERR(mclk);
-+		goto err_set_audio;
-+	}
-+
-+	clk_src = clk_get(NULL, "clk32k");
-+	if (IS_ERR(clk_src)) {
-+		dev_err(&pdev->dev, "failed to get clk32k\n");
-+		ret = PTR_ERR(clk_src);
-+		goto err_set_audio;
-+	}
-+
-+	ret = clk_set_parent(mclk, clk_src);
-+	clk_put(clk_src);
-+	if (ret != 0) {
-+		dev_err(&pdev->dev, "failed to set MCLK parent\n");
-+		goto err_set_audio;
-+	}
-+
-+	dev_info(&pdev->dev, "setting pck0 to %dHz\n", MCLK_RATE);
-+	clk_set_rate(mclk, MCLK_RATE);
-+
-+	ret = snd_soc_register_card(card);
-+	if (ret) {
-+		dev_err(&pdev->dev, "snd_soc_register_card failed\n");
-+		goto err_set_audio;
-+	}
-+
-+	return 0;
-+
-+err_set_audio:
-+	atmel_ssc_put_audio(id);
-+	return ret;
-+}
-+
-+static int atmel_asoc_wm8904_remove(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = platform_get_drvdata(pdev);
-+	struct snd_soc_dai_link *dailink = &atmel_asoc_wm8904_dailink;
-+	int id;
-+
-+	id = of_alias_get_id((struct device_node *)dailink->cpu_of_node, "ssc");
-+
-+	snd_soc_unregister_card(card);
-+	atmel_ssc_put_audio(id);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id atmel_asoc_wm8904_dt_ids[] = {
-+	{ .compatible = "atmel,asoc-wm8904", },
-+	{ }
-+};
-+#endif
-+
-+static struct platform_driver atmel_asoc_wm8904_driver = {
++static struct i2c_driver pfuze_driver = {
++	.id_table = pfuze_device_id,
 +	.driver = {
-+		.name = "atmel-wm8904-audio",
++		.name = "pfuze100-regulator",
 +		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(atmel_asoc_wm8904_dt_ids),
++		.of_match_table = pfuze_dt_ids,
 +	},
-+	.probe = atmel_asoc_wm8904_probe,
-+	.remove = atmel_asoc_wm8904_remove,
++	.probe = pfuze100_regulator_probe,
++	.remove = pfuze100_regulator_remove,
++};
++module_i2c_driver(pfuze_driver);
++
++MODULE_AUTHOR("Robin Gong <b38343@freescale.com>");
++MODULE_DESCRIPTION("Regulator Driver for Freescale PFUZE100 PMIC");
++MODULE_ALIAS("pfuze100-regulator");
+diff --git a/include/linux/regulator/pfuze100.h b/include/linux/regulator/pfuze100.h
+new file mode 100644
+index 0000000..65d550b
+--- /dev/null
++++ b/include/linux/regulator/pfuze100.h
+@@ -0,0 +1,44 @@
++/*
++ * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program; if not, write to the Free Software Foundation, Inc.,
++ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
++ */
++#ifndef __LINUX_REG_PFUZE100_H
++#define __LINUX_REG_PFUZE100_H
++
++#define PFUZE100_SW1AB		0
++#define PFUZE100_SW1C		1
++#define PFUZE100_SW2		2
++#define PFUZE100_SW3A		3
++#define PFUZE100_SW3B		4
++#define PFUZE100_SW4		5
++#define PFUZE100_SWBST		6
++#define PFUZE100_VSNVS		7
++#define PFUZE100_VREFDDR	8
++#define PFUZE100_VGEN1		9
++#define PFUZE100_VGEN2		10
++#define PFUZE100_VGEN3		11
++#define PFUZE100_VGEN4		12
++#define PFUZE100_VGEN5		13
++#define PFUZE100_VGEN6		14
++#define PFUZE100_MAX_REGULATOR	15
++
++struct regulator_init_data;
++
++struct pfuze_regulator_platform_data {
++	struct regulator_init_data *init_data[PFUZE100_MAX_REGULATOR];
 +};
 +
-+module_platform_driver(atmel_asoc_wm8904_driver);
-+
-+/* Module information */
-+MODULE_AUTHOR("Bo Shen <voice.shen@atmel.com>");
-+MODULE_DESCRIPTION("ALSA SoC machine driver for Atmel EK with WM8904 codec");
-+MODULE_LICENSE("GPL");
++#endif /* __LINUX_REG_PFUZE100_H */
 -- 
-1.7.9.5
+1.7.5.4
+
+
