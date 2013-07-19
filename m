@@ -1,259 +1,137 @@
-From: Oleksandr Kozaruk <oleksandr.kozaruk-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] iio: twl6030-gpadc: TWL6030, TWL6032 GPADC driver
-Date: Fri, 19 Jul 2013 11:35:41 +0300
-Message-ID: <CAPb7_ms36YnT2VVkhngCEonwihtgHSMWO0uQQxsr58rUCgRPLA@mail.gmail.com>
-References: <1374059564-6872-1-git-send-email-oleksandr.kozaruk@ti.com>
-	<1374059564-6872-3-git-send-email-oleksandr.kozaruk@ti.com>
-	<51E6DCB5.3070302@metafoo.de>
-	<CAPb7_muAzO-jRqgcm89fcKT-hTLq38Aj2p0WAWjGjN9DoQUwPg@mail.gmail.com>
-	<51E7B9DA.9040803@metafoo.de>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 18/24] i2c: mpc: OF clock lookup for MPC512x
+Date: Fri, 19 Jul 2013 10:42:52 +0200
+Message-ID: <20130719084252.GP7080@book.gsilab.sittig.org>
+References: <1374166855-7280-1-git-send-email-gsi@denx.de>
+ <1374178858-8683-4-git-send-email-gsi@denx.de>
+ <20130718203324.GB24642@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51E7B9DA.9040803-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, milo.kim-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130718203324.GB24642-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lars,
+On Thu, Jul 18, 2013 at 21:33 +0100, Russell King - ARM Linux wrote:
+> 
+> On Thu, Jul 18, 2013 at 10:20:52PM +0200, Gerhard Sittig wrote:
+> > +	/* enable clock for the I2C peripheral (non fatal) */
+> > +	clk = of_clk_get_by_name(node, "per");
+> > +	if (!IS_ERR(clk)) {
+> > +		clk_prepare_enable(clk);
+> > +		clk_put(clk);
+> > +	}
+> > +
+> 
+> This kind of hacked up approach to the clk API is exactly the thing I
+> really don't like seeing.  I don't know what it is... is the clk API
+> somehow difficult to use or what's the problem with doing stuff correctly?
+> 
+> 1. Get the clock in your probe function.
+> 2. Prepare it at the appropriate time.
+> 3. Enable it appropriately.  (or if you want to combine 2 and 3, use
+>    clk_prepare_enable().)
+> 4. Ensure that enables/disables and prepares/unprepares are appropriately
+>    balanced.
+> 5. 'put' the clock in your remove function.
+> 
+> Certainly do not get-enable-put a clock.  You're supposed to hold on to
+> the clock all the time that you're actually using it.
 
-On Thu, Jul 18, 2013 at 12:48 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
-> On 07/18/2013 10:36 AM, Oleksandr Kozaruk wrote:
->> Hello Lars,
->>
->> On Wed, Jul 17, 2013 at 9:04 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
->>>> +static int twl6032_calibration(struct twl6030_gpadc_data *gpadc)
->>>> +{
->>>> +     int chn, d1 = 0, d2 = 0, temp;
->>>> +     u8 trim_regs[17];
->>>> +     int ret;
->>>> +
->>>> +     ret = twl_i2c_read(TWL6030_MODULE_ID2, trim_regs + 1,
->>>> +                     TWL6030_GPADC_TRIM1, 16);
->>>> +     if (ret < 0) {
->>>> +             dev_err(gpadc->dev, "calibration failed\n");
->>>> +             return ret;
->>>> +     }
->>>> +
->>>> +     /*
->>>> +      * Loop to calculate the value needed for returning voltages from
->>>> +      * GPADC not values.
->>>> +      *
->>>> +      * gain is calculated to 3 decimal places fixed point.
->>>> +      */
->>>> +     for (chn = 0; chn < TWL6032_GPADC_MAX_CHANNELS; chn++) {
->>>> +
->>>> +             switch (chn) {
->>>> +             case 0:
->>>> +             case 1:
->>>> +             case 2:
->>>> +             case 3:
->>>> +             case 4:
->>>> +             case 5:
->>>> +             case 6:
->>>> +             case 11:
->>>> +             case 12:
->>>> +             case 13:
->>>> +             case 14:
->>>> +                     /* D1 */
->>>> +                     d1 = (trim_regs[3] & 0x1F) << 2;
->>>> +                     d1 |= (trim_regs[1] & 0x06) >> 1;
->>>> +                     if (trim_regs[1] & 0x01)
->>>> +                             d1 = -d1;
->>>> +
->>>> +                     /* D2 */
->>>> +                     d2 = (trim_regs[4] & 0x3F) << 2;
->>>> +                     d2 |= (trim_regs[2] & 0x06) >> 1;
->>>> +                     if (trim_regs[2] & 0x01)
->>>> +                             d2 = -d2;
->>>> +                     break;
->>>> +             case 8:
->>>> +                     /* D1 */
->>>> +                     temp = (trim_regs[3] & 0x1F) << 2;
->>>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
->>>> +                     if (trim_regs[1] & 0x01)
->>>> +                             temp = -temp;
->>>> +
->>>> +                     d1 = (trim_regs[8] & 0x18) << 1;
->>>> +                     d1 |= (trim_regs[7] & 0x1E) >> 1;
->>>> +                     if (trim_regs[7] & 0x01)
->>>> +                             d1 = -d1;
->>>> +
->>>> +                     d1 += temp;
->>>> +
->>>> +                     /* D2 */
->>>> +                     temp = (trim_regs[4] & 0x3F) << 2;
->>>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
->>>> +                     if (trim_regs[2] & 0x01)
->>>> +                             temp = -temp;
->>>> +
->>>> +                     d2 = (trim_regs[10] & 0x1F) << 2;
->>>> +                     d2 |= (trim_regs[8] & 0x06) >> 1;
->>>> +                     if (trim_regs[8] & 0x01)
->>>> +                             d2 = -d2;
->>>> +
->>>> +                     d2 += temp;
->>>> +                     break;
->>>> +             case 9:
->>>> +                     /* D1 */
->>>> +                     temp = (trim_regs[3] & 0x1F) << 2;
->>>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
->>>> +                     if (trim_regs[1] & 0x01)
->>>> +                             temp = -temp;
->>>> +
->>>> +                     d1 = (trim_regs[14] & 0x18) << 1;
->>>> +                     d1 |= (trim_regs[12] & 0x1E) >> 1;
->>>> +                     if (trim_regs[12] & 0x01)
->>>> +                             d1 = -d1;
->>>> +
->>>> +                     d1 += temp;
->>>> +
->>>> +                     /* D2 */
->>>> +                     temp = (trim_regs[4] & 0x3F) << 2;
->>>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
->>>> +                     if (trim_regs[2] & 0x01)
->>>> +                             temp = -temp;
->>>> +
->>>> +                     d2 = (trim_regs[16] & 0x1F) << 2;
->>>> +                     d2 |= (trim_regs[14] & 0x06) >> 1;
->>>> +                     if (trim_regs[14] & 0x01)
->>>> +                             d2 = -d2;
->>>> +
->>>> +                     d2 += temp;
->>>> +             case 10:
->>>> +                     /* D1 */
->>>> +                     d1 = (trim_regs[11] & 0x0F) << 3;
->>>> +                     d1 |= (trim_regs[9] & 0x0E) >> 1;
->>>> +                     if (trim_regs[9] & 0x01)
->>>> +                             d1 = -d1;
->>>> +
->>>> +                     /* D2 */
->>>> +                     d2 = (trim_regs[15] & 0x0F) << 3;
->>>> +                     d2 |= (trim_regs[13] & 0x0E) >> 1;
->>>> +                     if (trim_regs[13] & 0x01)
->>>> +                             d2 = -d2;
->>>> +                     break;
->>>> +             case 7:
->>>> +             case 18:
->>>> +                     /* D1 */
->>>> +                     temp = (trim_regs[3] & 0x1F) << 2;
->>>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
->>>> +                     if (trim_regs[1] & 0x01)
->>>> +                             temp = -temp;
->>>> +
->>>> +                     d1 = (trim_regs[5] & 0x7E) >> 1;
->>>> +                     if (trim_regs[5] & 0x01)
->>>> +                             d1 = -d1;
->>>> +.
->>>> +                     d1 += temp;
->>>> +
->>>> +                     /* D2 */
->>>> +                     temp = (trim_regs[4] & 0x3F) << 2;
->>>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
->>>> +                     if (trim_regs[2] & 0x01)
->>>> +                             temp = -temp;
->>>> +
->>>> +                     d2 = (trim_regs[6] & 0xFE) >> 1;
->>>> +                     if (trim_regs[6] & 0x01)
->>>> +                             d2 = -d2;
->>>> +
->>>> +                     d2 += temp;
->>>> +                     break;
->>>
->>>
->>> There is quite a bit of copy paste in here. Putting the bit swizziling into
->>> a helper function should also improbe legibility.
->>
->> Trimming bits are scattered randomly between registers and in
->> different bit positions.
->> I don't see any commonalities, that could be generalized. as Graeme
->> said about it "it's a bane of my life".
->
-> The pattern is pretty regular though, how about:
->
->
-> int twl6032_get_trim_value(u8 *trim_regs, unsigned int reg0,
->         unsigned int reg1, unsigned int mask0, unsigned int mask1,
->         unsigned int shift0)
-> {
->         int val;
->
->         val = (trim_regs[reg0] & mask0) << shift0;
->         val |= (trim_regs[reg1] & mask1) >> 1;
->         if (trim_regs[reg1] & 0x01)
->                 val = -val;
->
->         return val;
-> }
->
-> and then
->
->         d1 = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
->         d2 = twl6032_get_trim_value(trim_regs, 4, 2, 0x3f, 0x06, 2);
->
-> and so on.
+Russel, thank you for the feedback!  I agree that your outline of
+steps to take is simple and should not be a problem to do.
 
-Thank you. I think legibility is better now, I even found a bug - in
-case 9 'break' was missing.
-Though it is not without special case for channels 7, 18:
-	for (chn = 0; chn < TWL6032_GPADC_MAX_CHANNELS; chn++) {
+I noticed that I kept looking at the wrong spot in the driver,
+hooked up to some setup routine which lacks a counter part.  You
+made me re-visit the drivers and find better locations to hook up
+to (probe and remove).  Part of my sloppiness with immediate put
+after enable was caused by put being a NOP at the moment, and the
+assumption that clocks without references but in the enabled
+state won't go away.  But I saw your recent message as well about
+how clocks shall get reference counted and keep their provider's
+module loaded.
 
-		switch (chn) {
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 11:
-		case 12:
-		case 13:
-		case 14:
-			d1 = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
-			d2 = twl6032_get_trim_value(trim_regs, 4, 2, 0x3f, 0x06, 2);
-			break;
-		case 8:
-			temp = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
-			d1 = temp + twl6032_get_trim_value(trim_regs, 8, 7, 0x18, 0x1E, 1);
+I've queued an update to the I2C, ethernet, and PCI drivers,
+which addresses your concerns.  I2C and ethernet clock handling
+will become correctly balanced, while PCI won't since the
+existing driver already lacks a remove() routine.  These changes
+will be part of v3 of the series.
 
-			temp = twl6032_get_trim_value(trim_regs, 4, 2, 0x3F, 0x06, 2);
-			d2 = temp + twl6032_get_trim_value(trim_regs, 10, 8, 0x1F, 0x06, 2);
-			break;
-		case 9:
-			temp = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
-			d1 = temp + twl6032_get_trim_value(trim_regs, 14, 12, 0x18, 0x1E, 1);
+Mark, Greg, v2 of the series already addresses the above concerns
+for the serial communication with the PSC hardware (UART and
+SPI).  See how 01/24 and 02/24 became much more complex than in
+v1, yet should result in appropriate clock handling in these
+drivers.
 
-			temp = twl6032_get_trim_value(trim_regs, 4, 2, 0x3f, 0x06, 2);
-			d2 = temp + twl6032_get_trim_value(trim_regs, 16, 14, 0x1F, 0x06, 1);
-			break;
-		case 10:
-			d1 = twl6032_get_trim_value(trim_regs, 11, 9, 0x0f, 0x0E, 3);
-			d2 = twl6032_get_trim_value(trim_regs, 15, 13, 0x0f, 0x0E, 3);
-			break;
-		case 7:
-		case 18:
-			temp = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
+In the very minute I wanted to send out v3, I received feedback
+on the CAN driver manipulation from Marc.  Apparently it suffers
+from the same problem (my blindness to locate the best spot for
+resource release), but CAN shall be the last driver in the series
+which is not acceptable yet.
 
-			d1 = (trim_regs[5] & 0x7E) >> 1;
-			if (trim_regs[5] & 0x01)
-				d1 = -d1;
-			d1 += temp;
 
-			temp = twl6032_get_trim_value(trim_regs, 4, 2, 0x3f, 0x06, 2);
+> Final point - if you want to make it non-fatal, don't play games like:
+> 
+> 	clk = clk_get(whatever);
+> 	if (IS_ERR(clk))
+> 		clk = NULL;
+> 
+> 	...
+> 	if (clk)
+> 		clk_prepare(clk);
+> 
+> Do this instead:
+> 
+> 	clk = clk_get(whatever);
+> 	...
+> 
+> 	if (!IS_ERR(clk))
+> 		clk_prepare(clk);
+> etc.
 
-			d2 = (trim_regs[6] & 0xFE) >> 1;
-			if (trim_regs[6] & 0x01)
-				d2 = -d2;
+You saw this in the ethernet driver, right?  This "interesting"
+style of "normalization to NULL" in the setup path was meant to
+simplify the cleanup path, but that point has become obsolete by
+now.  Your example doesn't reflect that 'clk' was a more complex
+to access member in the driver's private data.
 
-			d2 += temp;
-			break;
-		default:
-			/* No data for other channels */
-			continue;
-		}
+It seems that doing the setup in steps with a local variable, to
+only store the reference when all steps were successful, cleans
+up the release code paths.
 
+Immediately putting the clock and not having stored the reference
+when enable failed is one more instruction before jumping to the
+bailout label, but eliminates the pain of tracking get and enable
+separately, and needing two labels for disable and put (you
+cannot disable a clock that wasn't enabled).
+
+As mentioned, both the I2C driver you responded to as well as the
+ethernet driver you reference here got adjusted.  v3 will get
+sent when I could address the remaining CAN driver issue.
+
+
+> (And on this subject, I'm considering whether to make a change to the
+> clk API where clk_prepare() and clk_enable() return zero when passed
+> an error pointer - this means drivers with optional clocks don't have
+> to burden themselves with these kinds of checks.)
+
+
+virtually yours
+Gerhard Sittig
 -- 
-Regards,
-Oleksandr Kozaruk
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
