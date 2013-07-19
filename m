@@ -1,193 +1,259 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: Re: [RESEND PATCH V1 8/9] hwmon: lm75: expose to thermal fw via DT
- nodes
-Date: Fri, 19 Jul 2013 15:43:29 +0800
-Message-ID: <51E8EE21.1070803@nvidia.com>
-References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com> <1374074248-31690-9-git-send-email-eduardo.valentin@ti.com> <51E77E1D.3000306@nvidia.com> <51E7E9A1.3040800@ti.com>
+From: Oleksandr Kozaruk <oleksandr.kozaruk-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] iio: twl6030-gpadc: TWL6030, TWL6032 GPADC driver
+Date: Fri, 19 Jul 2013 11:35:41 +0300
+Message-ID: <CAPb7_ms36YnT2VVkhngCEonwihtgHSMWO0uQQxsr58rUCgRPLA@mail.gmail.com>
+References: <1374059564-6872-1-git-send-email-oleksandr.kozaruk@ti.com>
+	<1374059564-6872-3-git-send-email-oleksandr.kozaruk@ti.com>
+	<51E6DCB5.3070302@metafoo.de>
+	<CAPb7_muAzO-jRqgcm89fcKT-hTLq38Aj2p0WAWjGjN9DoQUwPg@mail.gmail.com>
+	<51E7B9DA.9040803@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51E7E9A1.3040800@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51E7B9DA.9040803-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, milo.kim-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2013 09:12 PM, Eduardo Valentin wrote:
-> * PGP Signed: 07/18/2013 at 06:12:01 AM
-> 
-> Hi Wei,
-> 
-> 
-> On 18-07-2013 01:33, Wei Ni wrote:
->> On 07/17/2013 11:17 PM, Eduardo Valentin wrote:
->>> This patch adds to lm75 temperature sensor the possibility
->>> to expose itself as thermal zone device, registered on the
->>> thermal framework.
+Hello Lars,
+
+On Thu, Jul 18, 2013 at 12:48 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+> On 07/18/2013 10:36 AM, Oleksandr Kozaruk wrote:
+>> Hello Lars,
+>>
+>> On Wed, Jul 17, 2013 at 9:04 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>>>> +static int twl6032_calibration(struct twl6030_gpadc_data *gpadc)
+>>>> +{
+>>>> +     int chn, d1 = 0, d2 = 0, temp;
+>>>> +     u8 trim_regs[17];
+>>>> +     int ret;
+>>>> +
+>>>> +     ret = twl_i2c_read(TWL6030_MODULE_ID2, trim_regs + 1,
+>>>> +                     TWL6030_GPADC_TRIM1, 16);
+>>>> +     if (ret < 0) {
+>>>> +             dev_err(gpadc->dev, "calibration failed\n");
+>>>> +             return ret;
+>>>> +     }
+>>>> +
+>>>> +     /*
+>>>> +      * Loop to calculate the value needed for returning voltages from
+>>>> +      * GPADC not values.
+>>>> +      *
+>>>> +      * gain is calculated to 3 decimal places fixed point.
+>>>> +      */
+>>>> +     for (chn = 0; chn < TWL6032_GPADC_MAX_CHANNELS; chn++) {
+>>>> +
+>>>> +             switch (chn) {
+>>>> +             case 0:
+>>>> +             case 1:
+>>>> +             case 2:
+>>>> +             case 3:
+>>>> +             case 4:
+>>>> +             case 5:
+>>>> +             case 6:
+>>>> +             case 11:
+>>>> +             case 12:
+>>>> +             case 13:
+>>>> +             case 14:
+>>>> +                     /* D1 */
+>>>> +                     d1 = (trim_regs[3] & 0x1F) << 2;
+>>>> +                     d1 |= (trim_regs[1] & 0x06) >> 1;
+>>>> +                     if (trim_regs[1] & 0x01)
+>>>> +                             d1 = -d1;
+>>>> +
+>>>> +                     /* D2 */
+>>>> +                     d2 = (trim_regs[4] & 0x3F) << 2;
+>>>> +                     d2 |= (trim_regs[2] & 0x06) >> 1;
+>>>> +                     if (trim_regs[2] & 0x01)
+>>>> +                             d2 = -d2;
+>>>> +                     break;
+>>>> +             case 8:
+>>>> +                     /* D1 */
+>>>> +                     temp = (trim_regs[3] & 0x1F) << 2;
+>>>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
+>>>> +                     if (trim_regs[1] & 0x01)
+>>>> +                             temp = -temp;
+>>>> +
+>>>> +                     d1 = (trim_regs[8] & 0x18) << 1;
+>>>> +                     d1 |= (trim_regs[7] & 0x1E) >> 1;
+>>>> +                     if (trim_regs[7] & 0x01)
+>>>> +                             d1 = -d1;
+>>>> +
+>>>> +                     d1 += temp;
+>>>> +
+>>>> +                     /* D2 */
+>>>> +                     temp = (trim_regs[4] & 0x3F) << 2;
+>>>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
+>>>> +                     if (trim_regs[2] & 0x01)
+>>>> +                             temp = -temp;
+>>>> +
+>>>> +                     d2 = (trim_regs[10] & 0x1F) << 2;
+>>>> +                     d2 |= (trim_regs[8] & 0x06) >> 1;
+>>>> +                     if (trim_regs[8] & 0x01)
+>>>> +                             d2 = -d2;
+>>>> +
+>>>> +                     d2 += temp;
+>>>> +                     break;
+>>>> +             case 9:
+>>>> +                     /* D1 */
+>>>> +                     temp = (trim_regs[3] & 0x1F) << 2;
+>>>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
+>>>> +                     if (trim_regs[1] & 0x01)
+>>>> +                             temp = -temp;
+>>>> +
+>>>> +                     d1 = (trim_regs[14] & 0x18) << 1;
+>>>> +                     d1 |= (trim_regs[12] & 0x1E) >> 1;
+>>>> +                     if (trim_regs[12] & 0x01)
+>>>> +                             d1 = -d1;
+>>>> +
+>>>> +                     d1 += temp;
+>>>> +
+>>>> +                     /* D2 */
+>>>> +                     temp = (trim_regs[4] & 0x3F) << 2;
+>>>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
+>>>> +                     if (trim_regs[2] & 0x01)
+>>>> +                             temp = -temp;
+>>>> +
+>>>> +                     d2 = (trim_regs[16] & 0x1F) << 2;
+>>>> +                     d2 |= (trim_regs[14] & 0x06) >> 1;
+>>>> +                     if (trim_regs[14] & 0x01)
+>>>> +                             d2 = -d2;
+>>>> +
+>>>> +                     d2 += temp;
+>>>> +             case 10:
+>>>> +                     /* D1 */
+>>>> +                     d1 = (trim_regs[11] & 0x0F) << 3;
+>>>> +                     d1 |= (trim_regs[9] & 0x0E) >> 1;
+>>>> +                     if (trim_regs[9] & 0x01)
+>>>> +                             d1 = -d1;
+>>>> +
+>>>> +                     /* D2 */
+>>>> +                     d2 = (trim_regs[15] & 0x0F) << 3;
+>>>> +                     d2 |= (trim_regs[13] & 0x0E) >> 1;
+>>>> +                     if (trim_regs[13] & 0x01)
+>>>> +                             d2 = -d2;
+>>>> +                     break;
+>>>> +             case 7:
+>>>> +             case 18:
+>>>> +                     /* D1 */
+>>>> +                     temp = (trim_regs[3] & 0x1F) << 2;
+>>>> +                     temp |= (trim_regs[1] & 0x06) >> 1;
+>>>> +                     if (trim_regs[1] & 0x01)
+>>>> +                             temp = -temp;
+>>>> +
+>>>> +                     d1 = (trim_regs[5] & 0x7E) >> 1;
+>>>> +                     if (trim_regs[5] & 0x01)
+>>>> +                             d1 = -d1;
+>>>> +.
+>>>> +                     d1 += temp;
+>>>> +
+>>>> +                     /* D2 */
+>>>> +                     temp = (trim_regs[4] & 0x3F) << 2;
+>>>> +                     temp |= (trim_regs[2] & 0x06) >> 1;
+>>>> +                     if (trim_regs[2] & 0x01)
+>>>> +                             temp = -temp;
+>>>> +
+>>>> +                     d2 = (trim_regs[6] & 0xFE) >> 1;
+>>>> +                     if (trim_regs[6] & 0x01)
+>>>> +                             d2 = -d2;
+>>>> +
+>>>> +                     d2 += temp;
+>>>> +                     break;
 >>>
->>> The thermal zone is built only if a device tree node
->>> describing a thermal zone for this sensor is present
->>> inside the lm75 DT node. Otherwise, the driver behavior
->>> will be the same.
 >>>
->>> Cc: Jean Delvare <khali@linux-fr.org>
->>> Cc: Guenter Roeck <linux@roeck-us.net>
->>> Cc: lm-sensors@lm-sensors.org
->>> Cc: linux-kernel@vger.kernel.org
->>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
->>> ---
->>>  drivers/hwmon/lm75.c | 29 +++++++++++++++++++++++++++++
->>>  1 file changed, 29 insertions(+)
->>>
->>> diff --git a/drivers/hwmon/lm75.c b/drivers/hwmon/lm75.c
->>> index c03b490..0aa5e28 100644
->>> --- a/drivers/hwmon/lm75.c
->>> +++ b/drivers/hwmon/lm75.c
->>> @@ -27,6 +27,8 @@
->>>  #include <linux/hwmon-sysfs.h>
->>>  #include <linux/err.h>
->>>  #include <linux/mutex.h>
->>> +#include <linux/thermal.h>
->>> +#include <linux/of.h>
->>>  #include "lm75.h"
->>>  
->>>  
->>> @@ -70,6 +72,7 @@ static const u8 LM75_REG_TEMP[3] = {
->>>  /* Each client has this additional data */
->>>  struct lm75_data {
->>>  	struct device		*hwmon_dev;
->>> +	struct thermal_zone_device	*tz;
->>>  	struct mutex		update_lock;
->>>  	u8			orig_conf;
->>>  	u8			resolution;	/* In bits, between 9 and 12 */
->>> @@ -92,6 +95,19 @@ static struct lm75_data *lm75_update_device(struct device *dev);
->>>  
->>>  /* sysfs attributes for hwmon */
->>>  
->>> +static int lm75_read_temp(void *dev, unsigned long *temp)
->>> +{
->>> +	struct lm75_data *data = lm75_update_device(dev);
->>> +
->>> +	if (IS_ERR(data))
->>> +		return PTR_ERR(data);
->>> +
->>> +	*temp = ((data->temp[0] >> (16 - data->resolution)) * 1000) >>
->>> +			(data->resolution - 8);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>>  static ssize_t show_temp(struct device *dev, struct device_attribute *da,
->>>  			 char *buf)
->>>  {
->>> @@ -271,11 +287,23 @@ lm75_probe(struct i2c_client *client, const struct i2c_device_id *id)
->>>  		goto exit_remove;
->>>  	}
->>>  
->>> +	if (of_find_node_by_name(client->dev.of_node, "thermal_zone")) {
->>> +		data->tz = thermal_zone_of_device_register(&client->dev,
->>> +							   &client->dev,
->>> +							   lm75_read_temp);
+>>> There is quite a bit of copy paste in here. Putting the bit swizziling into
+>>> a helper function should also improbe legibility.
 >>
->> Hi, Eduardo
->> I have two questions:
->> 1. As we know, after register to the thermal framework, it will have
->> duplicate hwmon devices. I think lm-sensor maintainer would not like this.
-> 
-> Yes I noticed. You have always the option to disable the
-> CONFIG_THERMAL_HWMON in your build.
+>> Trimming bits are scattered randomly between registers and in
+>> different bit positions.
+>> I don't see any commonalities, that could be generalized. as Graeme
+>> said about it "it's a bane of my life".
+>
+> The pattern is pretty regular though, how about:
+>
+>
+> int twl6032_get_trim_value(u8 *trim_regs, unsigned int reg0,
+>         unsigned int reg1, unsigned int mask0, unsigned int mask1,
+>         unsigned int shift0)
+> {
+>         int val;
+>
+>         val = (trim_regs[reg0] & mask0) << shift0;
+>         val |= (trim_regs[reg1] & mask1) >> 1;
+>         if (trim_regs[reg1] & 0x01)
+>                 val = -val;
+>
+>         return val;
+> }
+>
+> and then
+>
+>         d1 = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
+>         d2 = twl6032_get_trim_value(trim_regs, 4, 2, 0x3f, 0x06, 2);
+>
+> and so on.
 
-Yes, we can disable this config, but it will disable all hwmon interface
-which registered by the thermal fw, it may affect other driver.
+Thank you. I think legibility is better now, I even found a bug - in
+case 9 'break' was missing.
+Though it is not without special case for channels 7, 18:
+	for (chn = 0; chn < TWL6032_GPADC_MAX_CHANNELS; chn++) {
 
-> 
->> How about to add a flag to indicate it, which I talk about with
->> Durgadoss in your [RFC 1/4]patch.
-> 
-> This would be very much appreciated, but I don't think this is a blocker
-> for this series. We can of course include this patch on it. Having a
-> flag to control this thermal fw to hwmon interface is actually a good idea.
+		switch (chn) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+			d1 = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
+			d2 = twl6032_get_trim_value(trim_regs, 4, 2, 0x3f, 0x06, 2);
+			break;
+		case 8:
+			temp = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
+			d1 = temp + twl6032_get_trim_value(trim_regs, 8, 7, 0x18, 0x1E, 1);
 
-Ok, I think I can post it as a separate patches.
+			temp = twl6032_get_trim_value(trim_regs, 4, 2, 0x3F, 0x06, 2);
+			d2 = temp + twl6032_get_trim_value(trim_regs, 10, 8, 0x1F, 0x06, 2);
+			break;
+		case 9:
+			temp = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
+			d1 = temp + twl6032_get_trim_value(trim_regs, 14, 12, 0x18, 0x1E, 1);
 
-> 
->>
->> 2. I'm also trying to use your codes on lm90. The LM90 serial has more
->> then one sensors in one chip, local sensor, remote sensor and may have
->> remote2 sensor, so it mean there may have more than one thermal_zone
->> under the lm90 device node, will you consider it?
->>
-> 
-> I haven't looked lm90 source code. How do you map it? Do you probe each
-> sensor or do you probe 1 device and expose 3 sensors?
+			temp = twl6032_get_trim_value(trim_regs, 4, 2, 0x3f, 0x06, 2);
+			d2 = temp + twl6032_get_trim_value(trim_regs, 16, 14, 0x1F, 0x06, 1);
+			break;
+		case 10:
+			d1 = twl6032_get_trim_value(trim_regs, 11, 9, 0x0f, 0x0E, 3);
+			d2 = twl6032_get_trim_value(trim_regs, 15, 13, 0x0f, 0x0E, 3);
+			break;
+		case 7:
+		case 18:
+			temp = twl6032_get_trim_value(trim_regs, 3, 1, 0x1f, 0x06, 2);
 
-lm90.c is the driver for all LM90 register compatible chips, it probe 1
-device, and normally it can expose local and remote sensor, and for
-max669x chip, it also expose remote2 sensor.
+			d1 = (trim_regs[5] & 0x7E) >> 1;
+			if (trim_regs[5] & 0x01)
+				d1 = -d1;
+			d1 += temp;
 
-> 
-> In first case, you can still reuse what is in this series.
-> 
-> Later case, we need to change it slightly.
-> 
-> That is the case which is pretty similar on OMAP5 for instance, where
-> the device has three sensors. This patch series does not cover for this
-> case. But it can be simply modified to get around it.
-> 
-> We would need to allow more than one 'thermal_zone' nodes inside a
-> single device. But then we would need to have a way to determine which
-> sensor goes to which zone too.
+			temp = twl6032_get_trim_value(trim_regs, 4, 2, 0x3f, 0x06, 2);
 
-Yes, agreed, we need a way to determine it.
-I have tentative suggestions, how about following:
-lm90 {
-  ...
-  thermal_zone@0 {
-    type = "local_sensor";
-    ...
-  }
-  thermal_zone@1 {
-    type = "remote_sensor";
-  }
-}
-And in the driver's probe routine, we can parse the thermal_zone node,
-and pass it to thermal_zone_of_device_register() with the right .get_temp().
+			d2 = (trim_regs[6] & 0xFE) >> 1;
+			if (trim_regs[6] & 0x01)
+				d2 = -d2;
 
-Wei.
+			d2 += temp;
+			break;
+		default:
+			/* No data for other channels */
+			continue;
+		}
 
-> 
-> 
->> Thanks.
->> Wei.
->>
->>> +		if (IS_ERR(data->tz)) {
->>> +			status = PTR_ERR(data->tz);
->>> +			goto exit_hwmon;
->>> +		}
->>> +	}
->>> +
->>>  	dev_info(&client->dev, "%s: sensor '%s'\n",
->>>  		 dev_name(data->hwmon_dev), client->name);
->>>  
->>>  	return 0;
->>>  
->>> +exit_hwmon:
->>> +	hwmon_device_unregister(data->hwmon_dev);
->>>  exit_remove:
->>>  	sysfs_remove_group(&client->dev.kobj, &lm75_group);
->>>  	return status;
->>> @@ -285,6 +313,7 @@ static int lm75_remove(struct i2c_client *client)
->>>  {
->>>  	struct lm75_data *data = i2c_get_clientdata(client);
->>>  
->>> +	thermal_zone_device_unregister(data->tz);
->>>  	hwmon_device_unregister(data->hwmon_dev);
->>>  	sysfs_remove_group(&client->dev.kobj, &lm75_group);
->>>  	lm75_write_value(client, LM75_REG_CONF, data->orig_conf);
->>>
->>
->>
->>
-> 
-> 
+-- 
+Regards,
+Oleksandr Kozaruk
