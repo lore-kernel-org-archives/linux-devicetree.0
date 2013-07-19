@@ -1,696 +1,246 @@
-From: Robin Gong <b38343@freescale.com>
-Subject: [PATCH v3] regulator: pfuze100: add pfuze100 regulator driver
-Date: Fri, 19 Jul 2013 18:14:51 +0800
-Message-ID: <1374228891-8341-1-git-send-email-b38343@freescale.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 16/24] net: can: mscan: make mpc512x code use common
+ clock
+Date: Fri, 19 Jul 2013 12:46:05 +0200
+Message-ID: <51E918ED.80002@pengutronix.de>
+References: <1374166855-7280-1-git-send-email-gsi@denx.de>
+ <1374178858-8683-2-git-send-email-gsi@denx.de>
+ <51E8EC17.9060703@pengutronix.de>
+ <20130719094143.GQ7080@book.gsilab.sittig.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: broonie@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, lgirdwood@gmail.com, shawn.guo@linaro.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0963188977306663956=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130719094143.GQ7080-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Detlev Zundel <dzu-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pfuze100 regulator driver.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============0963188977306663956==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2MFHMOWXWVOUNSMEVKKAA"
 
-Signed-off-by: Robin Gong <b38343@freescale.com>
----
- .../devicetree/bindings/regulator/pfuze100.txt     |  113 +++++
- drivers/regulator/Kconfig                          |    7 +
- drivers/regulator/Makefile                         |    1 +
- drivers/regulator/pfuze100-regulator.c             |  461 ++++++++++++++++++++
- include/linux/regulator/pfuze100.h                 |   44 ++
- 5 files changed, 626 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/pfuze100.txt
- create mode 100644 drivers/regulator/pfuze100-regulator.c
- create mode 100644 include/linux/regulator/pfuze100.h
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2MFHMOWXWVOUNSMEVKKAA
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-new file mode 100644
-index 0000000..22e1a48
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-@@ -0,0 +1,113 @@
-+PFUZE100 family of regulators
-+
-+Required properties:
-+- compatible: "fsl,pfuze100"
-+- reg: I2C slave address
-+- regulators: This is the list of child nodes that specify the regulator
-+  initialization data for defined regulators. Please refer to below doc
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+  The valid names for regulators are:
-+  sw1ab,sw1c,sw2,sw3a,sw3b,sw4,swbst,vsnvs,vrefddr,vgen1~vgen6
-+
-+Each regulator is defined using the standard binding for regulators.
-+
-+Example:
-+
-+	pmic: pfuze100@08 {
-+		compatible = "fsl,pfuze100";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1ab {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw1c_reg: sw1c {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3a {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3b_reg: sw3b {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw4_reg: sw4 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vgen1 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen2_reg: vgen2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3_reg: vgen3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vgen4_reg: vgen4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vgen5 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vgen6 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index f1e6ad9..f913172 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -158,6 +158,13 @@ config REGULATOR_MC13892
- 	  Say y here to support the regulators found on the Freescale MC13892
- 	  PMIC.
- 
-+config REGULATOR_PFUZE100
-+	tristate "Support regulators on Freescale PFUZE100 PMIC"
-+	depends on I2C
-+	help
-+	  Say y here to support the regulators found on the Freescale PFUZE100
-+	  PMIC.
-+
- config REGULATOR_ISL6271A
- 	tristate "Intersil ISL6271A Power regulator"
- 	depends on I2C
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index ba4a3cf..68cc298 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -72,6 +72,7 @@ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-ldo.o
- obj-$(CONFIG_REGULATOR_WM8350) += wm8350-regulator.o
- obj-$(CONFIG_REGULATOR_WM8400) += wm8400-regulator.o
- obj-$(CONFIG_REGULATOR_WM8994) += wm8994-regulator.o
-+obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
- 
- 
- ccflags-$(CONFIG_REGULATOR_DEBUG) += -DDEBUG
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-new file mode 100644
-index 0000000..3f7e866
---- /dev/null
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -0,0 +1,461 @@
-+/*
-+ * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
-+ */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/pfuze100.h>
-+#include <linux/i2c.h>
-+#include <linux/slab.h>
-+#include <linux/regmap.h>
-+
-+
-+#define PFUZE_NUMREGS		128
-+#define PFUZE100_VOL_OFFSET	0
-+#define PFUZE100_STANDBY_OFFSET	1
-+#define PFUZE100_MODE_OFFSET	3
-+#define PFUZE100_CONF_OFFSET	4
-+
-+#define PFUZE100_DEVICEID	0x0
-+#define PFUZE100_REVID		0x3
-+#define PFUZE100_FABID		0x3
-+
-+#define PFUZE100_SW1ABVOL	0x20
-+#define PFUZE100_SW1CVOL	0x2e
-+#define PFUZE100_SW2VOL		0x35
-+#define PFUZE100_SW3AVOL	0x3c
-+#define PFUZE100_SW3BVOL	0x43
-+#define PFUZE100_SW4VOL		0x4a
-+#define PFUZE100_SWBSTCON1	0x66
-+#define PFUZE100_VREFDDRCON	0x6a
-+#define PFUZE100_VSNVSVOL	0x6b
-+#define PFUZE100_VGEN1VOL	0x6c
-+#define PFUZE100_VGEN2VOL	0x6d
-+#define PFUZE100_VGEN3VOL	0x6e
-+#define PFUZE100_VGEN4VOL	0x6f
-+#define PFUZE100_VGEN5VOL	0x70
-+#define PFUZE100_VGEN6VOL	0x71
-+
-+struct pfuze_regulator {
-+	struct regulator_desc desc;
-+	unsigned char stby_reg;
-+	unsigned char stby_mask;
-+};
-+
-+struct pfuze_chip {
-+	struct regmap *regmap;
-+	struct device *dev;
-+	struct pfuze_regulator regulator_descs[PFUZE100_MAX_REGULATOR];
-+	struct regulator_dev *regulators[PFUZE100_MAX_REGULATOR];
-+};
-+
-+static const int pfuze100_swbst[] = {
-+	5000000, 5050000, 5100000, 5150000,
-+};
-+
-+static const int pfuze100_vsnvs[] = {
-+	1000000, 1100000, 1200000, 1300000, 1500000, 1800000, 3000000,
-+};
-+
-+static const struct i2c_device_id pfuze_device_id[] = {
-+	{.name = "pfuze100"},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, pfuze_device_id);
-+
-+static const struct of_device_id pfuze_dt_ids[] = {
-+	{ .compatible = "fsl,pfuze100" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, pfuze_dt_ids);
-+
-+static int pfuze100_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
-+{
-+	struct pfuze_chip *pfuze100 = rdev_get_drvdata(rdev);
-+	int id = rdev->desc->id;
-+	unsigned int val, ramp_bits, reg;
-+	int ret;
-+
-+	if (id < PFUZE100_SWBST) {
-+		if (id == PFUZE100_SW1AB)
-+			reg = PFUZE100_SW1ABVOL;
-+		else
-+			reg = PFUZE100_SW1CVOL + (id - PFUZE100_SW1C) * 7;
-+		regmap_read(pfuze100->regmap, reg, &val);
-+
-+		if (val & 0x40)
-+			ramp_delay = 50000 / (4 * ramp_delay);
-+		else
-+			ramp_delay = 25000 / (2 * ramp_delay);
-+		if (id <= PFUZE100_SW1C)
-+			ramp_delay = 25000 / (2 * ramp_delay);
-+		ramp_bits = (ramp_delay >> 1) - (ramp_delay >> 3);
-+		ret = regmap_update_bits(pfuze100->regmap, reg + 4 , 0xc0,
-+				ramp_bits << 6);
-+		if (ret < 0)
-+			dev_err(pfuze100->dev, "ramp failed, err %d\nr", ret);
-+	} else
-+		ret = -EACCES;
-+
-+	return ret;
-+}
-+
-+static struct regulator_ops pfuze100_ldo_regulator_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_linear,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+};
-+
-+static struct regulator_ops pfuze100_fixed_regulator_ops = {
-+	.list_voltage = regulator_list_voltage_linear,
-+};
-+
-+static struct regulator_ops pfuze100_sw_regulator_ops = {
-+	.list_voltage = regulator_list_voltage_linear,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.set_ramp_delay = pfuze100_set_ramp_delay,
-+};
-+
-+static struct regulator_ops pfuze100_swb_regulator_ops = {
-+	.list_voltage = regulator_list_voltage_table,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+
-+};
-+
-+#define PFUZE100_FIXED_REG(_name, base, voltage)	\
-+{	\
-+	[PFUZE100_ ## _name] = {	\
-+		.desc = {	\
-+			.name = #_name,	\
-+			.n_voltages = 1,	\
-+			.ops = &pfuze100_fixed_regulator_ops,	\
-+			.type = REGULATOR_VOLTAGE,	\
-+			.id = PFUZE100_ ## _name,	\
-+			.owner = THIS_MODULE,	\
-+			.min_uV = (voltage),	\
-+			.enable_reg = (base),	\
-+			.enable_mask = 0x10,	\
-+		},	\
-+	}	\
-+}
-+
-+#define PFUZE100_SW_REG(_name, base, min, max, step)	\
-+{	\
-+	[PFUZE100_ ## _name] = {	\
-+		.desc = {	\
-+			.name = #_name,\
-+			.n_voltages = ((max) - (min)) / (step) + 1,	\
-+			.ops = &pfuze100_sw_regulator_ops,	\
-+			.type = REGULATOR_VOLTAGE,	\
-+			.id = PFUZE100_ ## _name,	\
-+			.owner = THIS_MODULE,	\
-+			.min_uV = (min),	\
-+			.uV_step = (step),	\
-+			.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
-+			.vsel_mask = 0x3f,	\
-+		},	\
-+		.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
-+		.stby_mask = 0x3f,	\
-+	}	\
-+}
-+
-+#define PFUZE100_SWB_REG(_name, base, mask, voltages)	\
-+{	\
-+	[PFUZE100_ ## _name] = {	\
-+		.desc = {	\
-+			.name = #_name,	\
-+			.n_voltages = ARRAY_SIZE(voltages),	\
-+			.ops = &pfuze100_swb_regulator_ops,	\
-+			.type = REGULATOR_VOLTAGE,	\
-+			.id = PFUZE100_ ## _name,	\
-+			.owner = THIS_MODULE,	\
-+			.volt_table = voltages,	\
-+			.vsel_reg = (base),	\
-+			.vsel_mask = (mask),	\
-+		},	\
-+	}	\
-+}
-+
-+#define PFUZE100_VGEN_REG(_name, base, min, max, step)	\
-+{	\
-+	[PFUZE100_ ## _name] = {	\
-+		.desc = {	\
-+			.name = #_name,	\
-+			.n_voltages = ((max) - (min)) / (step) + 1,	\
-+			.ops = &pfuze100_ldo_regulator_ops,	\
-+			.type = REGULATOR_VOLTAGE,	\
-+			.id = PFUZE100_ ## _name,	\
-+			.owner = THIS_MODULE,	\
-+			.min_uV = (min),	\
-+			.uV_step = (step),	\
-+			.vsel_reg = (base),	\
-+			.vsel_mask = 0xf,	\
-+			.enable_reg = (base),	\
-+			.enable_mask = 0x10,	\
-+		},	\
-+		.stby_reg = (base),	\
-+		.stby_mask = 0x20,	\
-+	}	\
-+}
-+
-+static struct pfuze_regulator pfuze100_regulators[] = {
-+	PFUZE100_SW_REG(SW1AB, PFUZE100_SW1ABVOL, 300000, 1875000, 25000),
-+	PFUZE100_SW_REG(SW1C, PFUZE100_SW1CVOL, 300000, 1875000, 25000),
-+	PFUZE100_SW_REG(SW2, PFUZE100_SW2VOL, 400000, 1975000, 25000),
-+	PFUZE100_SW_REG(SW3A, PFUZE100_SW3AVOL, 400000, 1975000, 25000),
-+	PFUZE100_SW_REG(SW3B, PFUZE100_SW3BVOL, 400000, 1975000, 25000),
-+	PFUZE100_SW_REG(SW4, PFUZE100_SW4VOL, 400000, 1975000, 25000),
-+	PFUZE100_SWB_REG(SWBST, PFUZE100_SWBSTCON1, 0x3 , pfuze100_swbst),
-+	PFUZE100_SWB_REG(VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
-+	PFUZE100_FIXED_REG(VREFDDR, PFUZE100_VREFDDRCON, 750000),
-+	PFUZE100_VGEN_REG(VGEN1, PFUZE100_VGEN1VOL, 800000, 1550000, 50000),
-+	PFUZE100_VGEN_REG(VGEN2, PFUZE100_VGEN2VOL, 800000, 1550000, 50000),
-+	PFUZE100_VGEN_REG(VGEN3, PFUZE100_VGEN3VOL, 1800000, 3300000, 100000),
-+	PFUZE100_VGEN_REG(VGEN4, PFUZE100_VGEN4VOL, 1800000, 3300000, 100000),
-+	PFUZE100_VGEN_REG(VGEN5, PFUZE100_VGEN5VOL, 1800000, 3300000, 100000),
-+	PFUZE100_VGEN_REG(VGEN6, PFUZE100_VGEN6VOL, 1800000, 3300000, 100000),
-+};
-+
-+#ifdef CONFIG_OF
-+static struct of_regulator_match pfuze100_matches[] = {
-+	{ .name = "sw1ab",	},
-+	{ .name = "sw1c",	},
-+	{ .name = "sw2",	},
-+	{ .name = "sw3a",	},
-+	{ .name = "sw3b",	},
-+	{ .name = "sw4",	},
-+	{ .name = "swbst",	},
-+	{ .name = "vsnvs",	},
-+	{ .name = "vrefddr",	},
-+	{ .name = "vgen1",	},
-+	{ .name = "vgen2",	},
-+	{ .name = "vgen3",	},
-+	{ .name = "vgen4",	},
-+	{ .name = "vgen5",	},
-+	{ .name = "vgen6",	},
-+};
-+
-+static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
-+{
-+	struct device *dev = chip->dev;
-+	struct device_node *parent;
-+	int ret;
-+
-+	of_node_get(dev->parent->of_node);
-+	parent = of_find_node_by_name(dev->parent->of_node, "regulators");
-+	if (!parent) {
-+		dev_err(dev, "regulators node not found\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_regulator_match(dev, parent, pfuze100_matches,
-+				 ARRAY_SIZE(pfuze100_matches));
-+
-+	of_node_put(dev->parent->of_node);
-+	if (ret < 0) {
-+		dev_err(dev, "Error parsing regulator init data: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static inline struct regulator_init_data *match_init_data(int index)
-+{
-+	return pfuze100_matches[index].init_data;
-+}
-+
-+static inline struct device_node *match_of_node(int index)
-+{
-+	return pfuze100_matches[index].of_node;
-+}
-+#else
-+static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
-+{
-+	return NULL;
-+}
-+
-+static inline struct regulator_init_data *match_init_data(int index)
-+{
-+	return NULL;
-+}
-+
-+static inline struct device_node *match_of_node(int index)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+static int pfuze_identify(struct pfuze_chip *pfuze_chip)
-+{
-+	unsigned int value;
-+	int ret;
-+
-+	ret = regmap_read(pfuze_chip->regmap, PFUZE100_DEVICEID, &value);
-+	if (ret)
-+		return ret;
-+
-+	if (value & 0x0f) {
-+		dev_warn(pfuze_chip->dev, "Illegal ID: %x\n", value);
-+		return -ENODEV;
-+	}
-+
-+	ret = regmap_read(pfuze_chip->regmap, PFUZE100_REVID, &value);
-+	if (ret)
-+		return ret;
-+	dev_info(pfuze_chip->dev,
-+		 "Full lay: %x ,Metal lay: %x\n",
-+		 (value & 0xf0) >> 4, value & 0x0f);
-+
-+	ret = regmap_read(pfuze_chip->regmap, PFUZE100_FABID, &value);
-+	if (ret)
-+		return ret;
-+	dev_info(pfuze_chip->dev, "FAB: %x , FIN: %x\n",
-+		 (value & 0xc) >> 2, value & 0x3);
-+
-+	return 0;
-+}
-+
-+static struct regmap_config pfuze_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = PFUZE_NUMREGS,
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static int pfuze100_regulator_probe(struct i2c_client *client,
-+				    const struct i2c_device_id *id)
-+{
-+	struct pfuze_chip *pfuze_chip;
-+	struct pfuze_regulator_platform_data *pdata =
-+	    dev_get_platdata(&client->dev);
-+	struct regulator_config config = { };
-+	int i, ret;
-+
-+	pfuze_chip = devm_kzalloc(&client->dev, sizeof(*pfuze_chip),
-+			GFP_KERNEL);
-+	if (!pfuze_chip)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&client->dev, pfuze_chip);
-+
-+	memcpy(pfuze_chip->regulator_descs, pfuze100_regulators,
-+		sizeof(pfuze_chip->regulator_descs));
-+
-+	pfuze_chip->dev = &client->dev;
-+
-+	pfuze_chip->regmap = devm_regmap_init_i2c(client, &pfuze_regmap_config);
-+	if (IS_ERR(pfuze_chip->regmap)) {
-+		ret = PTR_ERR(pfuze_chip->regmap);
-+		dev_err(&client->dev,
-+			"regmap allocation failed with err %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = pfuze_identify(pfuze_chip);
-+	if (ret) {
-+		dev_err(&client->dev, "unrecognized pfuze chip ID!\n");
-+		return ret;
-+	}
-+
-+	ret = pfuze_parse_regulators_dt(pfuze_chip);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < PFUZE100_MAX_REGULATOR; i++) {
-+		struct regulator_init_data *init_data;
-+		int val;
-+
-+		if (pdata)
-+			init_data = pdata->init_data[i];
-+		else
-+			init_data = match_init_data(i);
-+
-+		/* SW2~SW4 high bit check and modify the voltage value table */
-+		if (i > PFUZE100_SW1C && i < PFUZE100_SWBST) {
-+			regmap_read(pfuze_chip->regmap, PFUZE100_SW2VOL +
-+					(i - PFUZE100_SW2) * 7, &val);
-+			if (val & 0x40) {
-+				pfuze_chip->regulator_descs[i].desc.min_uV
-+				= 800000;
-+				pfuze_chip->regulator_descs[i].desc.uV_step
-+				= 50000;
-+			}
-+		}
-+
-+		config.dev = &client->dev;
-+		config.init_data = init_data;
-+		config.driver_data = pfuze_chip;
-+		config.of_node = match_of_node(i);
-+
-+		pfuze_chip->regulators[i] = regulator_register(&pfuze_chip
-+			->regulator_descs[i].desc, &config);
-+		if (IS_ERR(pfuze_chip->regulators[i])) {
-+			dev_err(&client->dev, "register regulator%s failed\n",
-+				pfuze100_regulators[i].desc.name);
-+			ret = PTR_ERR(pfuze_chip->regulators[i]);
-+			while (--i >= 0)
-+				regulator_unregister(pfuze_chip->regulators[i]);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int pfuze100_regulator_remove(struct i2c_client *client)
-+{
-+	int i;
-+	struct pfuze_chip *pfuze_chip = dev_get_drvdata(&client->dev);
-+
-+	for (i = 0; i < PFUZE100_MAX_REGULATOR; i++)
-+		regulator_unregister(pfuze_chip->regulators[i]);
-+
-+	devm_kfree(&client->dev, pfuze_chip);
-+
-+	return 0;
-+}
-+
-+static struct i2c_driver pfuze_driver = {
-+	.id_table = pfuze_device_id,
-+	.driver = {
-+		.name = "pfuze100-regulator",
-+		.owner = THIS_MODULE,
-+		.of_match_table = pfuze_dt_ids,
-+	},
-+	.probe = pfuze100_regulator_probe,
-+	.remove = pfuze100_regulator_remove,
-+};
-+module_i2c_driver(pfuze_driver);
-+
-+MODULE_AUTHOR("Robin Gong <b38343@freescale.com>");
-+MODULE_DESCRIPTION("Regulator Driver for Freescale PFUZE100 PMIC");
-+MODULE_ALIAS("pfuze100-regulator");
-diff --git a/include/linux/regulator/pfuze100.h b/include/linux/regulator/pfuze100.h
-new file mode 100644
-index 0000000..65d550b
---- /dev/null
-+++ b/include/linux/regulator/pfuze100.h
-@@ -0,0 +1,44 @@
-+/*
-+ * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along
-+ * with this program; if not, write to the Free Software Foundation, Inc.,
-+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-+ */
-+#ifndef __LINUX_REG_PFUZE100_H
-+#define __LINUX_REG_PFUZE100_H
-+
-+#define PFUZE100_SW1AB		0
-+#define PFUZE100_SW1C		1
-+#define PFUZE100_SW2		2
-+#define PFUZE100_SW3A		3
-+#define PFUZE100_SW3B		4
-+#define PFUZE100_SW4		5
-+#define PFUZE100_SWBST		6
-+#define PFUZE100_VSNVS		7
-+#define PFUZE100_VREFDDR	8
-+#define PFUZE100_VGEN1		9
-+#define PFUZE100_VGEN2		10
-+#define PFUZE100_VGEN3		11
-+#define PFUZE100_VGEN4		12
-+#define PFUZE100_VGEN5		13
-+#define PFUZE100_VGEN6		14
-+#define PFUZE100_MAX_REGULATOR	15
-+
-+struct regulator_init_data;
-+
-+struct pfuze_regulator_platform_data {
-+	struct regulator_init_data *init_data[PFUZE100_MAX_REGULATOR];
-+};
-+
-+#endif /* __LINUX_REG_PFUZE100_H */
--- 
-1.7.5.4
+On 07/19/2013 11:41 AM, Gerhard Sittig wrote:
+> On Fri, Jul 19, 2013 at 09:34 +0200, Marc Kleine-Budde wrote:
+>>
+>> On 07/18/2013 10:20 PM, Gerhard Sittig wrote:
+>>> extend the mscan(4) driver with alternative support for the COMMON_CL=
+K
+>>> approach which is an option in the MPC512x platform, keep the existin=
+g
+>>> clock support implementation in place since the driver is shared with=
+
+>>> other MPC5xxx SoCs which don't have common clock support
+>>>
+>>> one byproduct of this change is that the CAN driver no longer needs t=
+o
+>>> access the SoC's clock control registers, which shall be the domain o=
+f
+>>> the platform's clock driver
+>>>
+>>> Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+>>> ---
+>>>  drivers/net/can/mscan/mpc5xxx_can.c |  139 +++++++++++++++++++++++++=
+++++++++++
+>>>  1 file changed, 139 insertions(+)
+>>>
+>>> diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/ms=
+can/mpc5xxx_can.c
+>>> index bc422ba..dd26ab6 100644
+>>> --- a/drivers/net/can/mscan/mpc5xxx_can.c
+>>> +++ b/drivers/net/can/mscan/mpc5xxx_can.c
+>>> @@ -108,6 +108,143 @@ static u32 mpc52xx_can_get_clock(struct platfor=
+m_device *ofdev,
+>>>  #endif /* CONFIG_PPC_MPC52xx */
+>>> =20
+>>>  #ifdef CONFIG_PPC_MPC512x
+>>> +
+>>> +#if IS_ENABLED(CONFIG_COMMON_CLK)
+>>> +
+>>> +static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
+>>> +				 const char *clock_source, int *mscan_clksrc)
+>>> +{
+>>> +	struct device_node *np;
+>>> +	u32 clockdiv;
+>>> +	enum {
+>>> +		CLK_FROM_AUTO,
+>>> +		CLK_FROM_IPS,
+>>> +		CLK_FROM_SYS,
+>>> +		CLK_FROM_REF,
+>>> +	} clk_from;
+>>> +	struct clk *clk_in, *clk_can;
+>>> +	unsigned long freq_calc;
+>>> +
+>>> +	/* the caller passed in the clock source spec that was read from
+>>> +	 * the device tree, get the optional clock divider as well
+>>> +	 */
+>>> +	np =3D ofdev->dev.of_node;
+>>> +	clockdiv =3D 1;
+>>> +	of_property_read_u32(np, "fsl,mscan-clock-divider", &clockdiv);
+>>> +	dev_dbg(&ofdev->dev, "device tree specs: clk src[%s] div[%d]\n",
+>>> +		clock_source ? clock_source : "<NULL>", clockdiv);
+>>> +
+>>> +	/* when clock-source is 'ip', the CANCTL1[CLKSRC] bit needs to
+>>> +	 * get set, and the 'ips' clock is the input to the MSCAN
+>>> +	 * component
+>>> +	 *
+>>> +	 * for clock-source values of 'ref' or 'sys' the CANCTL1[CLKSRC]
+>>> +	 * bit needs to get cleared, an optional clock-divider may have
+>>> +	 * been specified (the default value is 1), the appropriate
+>>> +	 * MSCAN related MCLK is the input to the MSCAN component
+>>> +	 *
+>>> +	 * in the absence of a clock-source spec, first an optimal clock
+>>> +	 * gets determined based on the 'sys' clock, if that fails the
+>>> +	 * 'ref' clock is used
+>>> +	 */
+>>> +	clk_from =3D CLK_FROM_AUTO;
+>>> +	if (clock_source) {
+>>> +		/* interpret the device tree's spec for the clock source */
+>>> +		if (!strcmp(clock_source, "ip"))
+>>> +			clk_from =3D CLK_FROM_IPS;
+>>> +		else if (!strcmp(clock_source, "sys"))
+>>> +			clk_from =3D CLK_FROM_SYS;
+>>> +		else if (!strcmp(clock_source, "ref"))
+>>> +			clk_from =3D CLK_FROM_REF;
+>>> +		else
+>>> +			goto err_invalid;
+>>> +		dev_dbg(&ofdev->dev, "got a clk source spec[%d]\n", clk_from);
+>>> +	}
+>>> +	if (clk_from =3D=3D CLK_FROM_AUTO) {
+>>> +		/* no spec so far, try the 'sys' clock; round to the
+>>> +		 * next MHz and see if we can get a multiple of 16MHz
+>>> +		 */
+>>> +		dev_dbg(&ofdev->dev, "no clk source spec, trying SYS\n");
+>>> +		clk_in =3D clk_get(&ofdev->dev, "sys");
+>>> +		if (IS_ERR(clk_in))
+>>> +			goto err_notavail;
+>>> +		freq_calc =3D clk_get_rate(clk_in);
+>>> +		freq_calc +=3D  499999;
+>>> +		freq_calc /=3D 1000000;
+>>> +		freq_calc *=3D 1000000;
+>>> +		if ((freq_calc % 16000000) =3D=3D 0) {
+>>> +			clk_from =3D CLK_FROM_SYS;
+>>> +			clockdiv =3D freq_calc / 16000000;
+>>> +			dev_dbg(&ofdev->dev,
+>>> +				"clk fit, sys[%lu] div[%d] freq[%lu]\n",
+>>> +				freq_calc, clockdiv, freq_calc / clockdiv);
+>>> +		}
+>>> +	}
+>>> +	if (clk_from =3D=3D CLK_FROM_AUTO) {
+>>> +		/* no spec so far, use the 'ref' clock */
+>>> +		dev_dbg(&ofdev->dev, "no clk source spec, trying REF\n");
+>>> +		clk_in =3D clk_get(&ofdev->dev, "ref");
+>>> +		if (IS_ERR(clk_in))
+>>> +			goto err_notavail;
+>>> +		clk_from =3D CLK_FROM_REF;
+>>> +		freq_calc =3D clk_get_rate(clk_in);
+>>> +		dev_dbg(&ofdev->dev,
+>>> +			"clk fit, ref[%lu] (no div) freq[%lu]\n",
+>>> +			freq_calc, freq_calc);
+>>> +	}
+>>> +
+>>> +	/* select IPS or MCLK as the MSCAN input (returned to the caller),
+>>> +	 * setup the MCLK mux source and rate if applicable, apply the
+>>> +	 * optionally specified or derived above divider, and determine
+>>> +	 * the actual resulting clock rate to return to the caller
+>>> +	 */
+>>> +	switch (clk_from) {
+>>> +	case CLK_FROM_IPS:
+>>> +		clk_can =3D clk_get(&ofdev->dev, "ips");
+>>> +		if (IS_ERR(clk_can))
+>>> +			goto err_notavail;
+>>> +		clk_prepare_enable(clk_can);
+>>
+>> Where is the corresponding clk_disable_unprepare()?a
+>=20
+> It's missing, as I could not find the counterpart of the
+> .get_clock() callback where the get and prepare/enable was added
+> to.  And it appears that neither are enable errors checked for.
+> This patch clearly needs an update as well, but already should be
+> the last part of the series in a currently inacceptable state.
+>=20
+> This .get_clock() routine is supposed to determine the clock
+> source, setup the desired rate and return the actual rate.  The
+> callback's API is rather limited in that it does communicate
+> clock rate values, but cannot access a location to store handles
+> to.
+
+I think the API is sufficient, the ofdev links via drv data to the
+netdev
+(http://lxr.free-electrons.com/source/drivers/net/can/mscan/mpc5xxx_can.c=
+#L305)
+and you get from the netdev to the mscan_priv
+(http://lxr.free-electrons.com/source/drivers/net/can/mscan/mpc5xxx_can.c=
+#L281).
+
+BTW: You should prepare_enable the clock in the ndo_open() callback,
+i.e. mscan_open() and disable_unprepare in mscan_close(). Doing this you
+maximize the power saving effect by not powering the mscan IP core if
+the CAN device is not up.
+
+> Are the introduction of a .put_clock() callback and passing the
+> 'priv' handle to both get and put routines acceptable?  As this
+> would hook up clock handling to probe() and remove() just as
+> memory mapping gets approached.
+
+I think an additional priv parameter is not needed. get_ and put_clock()
+in probe() and remove() is good, but put the
+prepare_enable()/disable_unprepare() in open()/close().
+
+> Below is a patch on top of the CAN related patch in v2 of the
+> series.  If this approach is acceptable (maybe modulo how the
+> "unused" warnings get silenced), I'll fold it into the
+> introduction of common clock support in the mscan(4) driver.
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
+------enig2MFHMOWXWVOUNSMEVKKAA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlHpGO0ACgkQjTAFq1RaXHP2zwCglcDFzmxlHJr/0vPHSj4Kfk58
+WYsAnRMHd/NUwmccIuGX+27S3j8U6dPJ
+=THt+
+-----END PGP SIGNATURE-----
+
+------enig2MFHMOWXWVOUNSMEVKKAA--
+
+--===============0963188977306663956==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0963188977306663956==--
