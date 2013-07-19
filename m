@@ -1,62 +1,69 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/4] dra7: I2C/MCSPI/UART pin control datas
-Date: Fri, 19 Jul 2013 11:31:15 -0500
-Message-ID: <51E969D3.2080804@ti.com>
-References: <1374251050-10033-1-git-send-email-sourav.poddar@ti.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] iio: mxs-lradc: add scale attribute to channels
+Date: Fri, 19 Jul 2013 19:06:09 +0200
+Message-ID: <51E97201.4010508@free-electrons.com>
+References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <1374225208-28940-4-git-send-email-hector.palacios@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1374251050-10033-1-git-send-email-sourav.poddar-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1374225208-28940-4-git-send-email-hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/19/2013 11:24 AM, Sourav Poddar wrote:
-> These series add support for I2C/MCSPI/UART pin control datas.
->
-> The series is done on top of Rajendra Nayak series[1](posted to the list),
-> which has basic dt boot enable for dra7.
-> These patches has been tested, along with I2C and UART patches from
-> wolfram sang patch series[2].
->
->
-> [1]: http://www.spinics.net/lists/linux-omap/msg93535.html
-> [2]: https://lkml.org/lkml/2013/7/10/335
->
-> Sourav Poddar (4):
->    arm: dts: omap5-evm: Add I2c pinctrl data
->    arm: dts: omap5-evm: Add I2c pinctrl data
->    arm: dts: dra7-evm: Add SPI pinctrl data
->    arm: dts: dra7-evm: Add UART pinctrl data
->
->   arch/arm/boot/dts/dra7-evm.dts |  123 ++++++++++++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/dra7.dtsi    |   15 +++++
->   2 files changed, 138 insertions(+), 0 deletions(-)
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-DRA7 DTS is not merged yet, If I am not mistaken.
-Ref[1] [2]
-So why not squash these to [2]?
+Hi Hector,
 
-[1] http://marc.info/?t=137335517900001&r=1&w=2
-[2] http://marc.info/?l=linux-arm-kernel&m=137335590702349&w=2
+On 19/07/2013 11:13, Hector Palacios wrote:
+> Some LRADC channels have fixed pre-dividers and all have an optional
+> divider by two which allows a maximum input voltage of VDDIO - 50mV.
+>
+> This patch
+>  - adds the scaling info flag to all channels
+>  - grabs the max reference voltage per channel from DT
+>    (where the fixed pre-dividers apply)
+>  - allows to read the scaling attribute (computed from the Vref)
+>
+> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>.
+> ---
+>  drivers/staging/iio/adc/mxs-lradc.c | 81 ++++++++++++++++++++++++-------------
+>  1 file changed, 52 insertions(+), 29 deletions(-)
+>
+> diff --git a/drivers/staging/iio/adc/mxs-lradc.c b/drivers/staging/iio/adc/mxs-lradc.c
+> index 91282dc..99e5790 100644
+> --- a/drivers/staging/iio/adc/mxs-lradc.c
+> +++ b/drivers/staging/iio/adc/mxs-lradc.c
+> @@ -141,6 +141,8 @@ struct mxs_lradc {
+>  
+>  	struct completion	completion;
+>  
+> +	uint32_t		vref_mv[LRADC_MAX_TOTAL_CHANS];
+> +
+>  	/*
+>  	 * Touchscreen LRADC channels receives a private slot in the CTRL4
+>  	 * register, the slot #7. Therefore only 7 slots instead of 8 in the
+> @@ -228,39 +230,12 @@ struct mxs_lradc {
+>  #define LRADC_RESOLUTION			12
+>  #define LRADC_SINGLE_SAMPLE_MASK		((1 << LRADC_RESOLUTION) - 1)
+>  
+> -/*
+> - * Raw I/O operations
+> - */
+> -static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
+> +static int mxs_lradc_read_single(struct iio_dev *iio_dev,
+>  			const struct iio_chan_spec *chan,
+>  			int *val, int *val2, long m)
+You don't need val2 and m in that function, I woud suggest no passing
+those. Also, in my patch, I was passing channel->chan as an int but I
+don't see any drawbacks of passing a pointer to the struct iio_chan_spec.
 
+As a note, I'm waiting for your patch to get included so that we won't
+get any conflicts.
+
+Regards,
 
 -- 
-Regards,
-Nishanth Menon
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
