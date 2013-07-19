@@ -1,172 +1,106 @@
-From: Ruslan Bilovol <ruslan.bilovol@ti.com>
-Subject: [PATCH] arm: dts: twl6030: typical connection to omap4 as a separate dtsi file
-Date: Fri, 19 Jul 2013 15:10:14 +0300
-Message-ID: <1374235814-17834-1-git-send-email-ruslan.bilovol@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: benoit.cousson@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, nm@ti.com
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [lm-sensors] [RESEND PATCH V1 0/9] thermal: introduce DT thermal
+ zone build
+Date: Fri, 19 Jul 2013 09:03:43 -0400
+Message-ID: <51E9392F.8060604@ti.com>
+References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com> <20130717220942.GB990@roeck-us.net> <51E7F341.8020508@ti.com> <51E8234D.1020607@wwwdotorg.org> <20130718212108.GC4110@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="----enig2BIREBRJXPSEJHVPFLJRW"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20130718212108.GC4110@roeck-us.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Eduardo Valentin <eduardo.valentin@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-The OMAP4 SoC family uses specially-designed
-PMIC (power management IC) companion chip for power
-management needs: TWL6030/TWL6032.
-Therefore there is a typical connection of PMIC to OMAP4
-so we can figure it out into separate .dtsi file
-and do not duplicate over board-specific files.
+------enig2BIREBRJXPSEJHVPFLJRW
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Tested on OMAP4 SDP board and compile-tested for Panda board
+On 18-07-2013 17:21, Guenter Roeck wrote:
+> On Thu, Jul 18, 2013 at 11:18:05AM -0600, Stephen Warren wrote:
+>> On 07/18/2013 07:53 AM, Eduardo Valentin wrote:
+>>> Hello Guenter,
+>>>
+>>> On 17-07-2013 18:09, Guenter Roeck wrote:
+>>>> On Wed, Jul 17, 2013 at 11:17:19AM -0400, Eduardo Valentin
+>>>> wrote:
+>>>>> Hello all,
+>>>>>
+>>>>> As you noticed, I am working in a way to represent thermal
+>>>>> data using device tree [1]. Essentially, this should be a way
+>>>>> to say what to do with a sensor and how to associate (cooling)
+>>>>> actions with it.
+>>>>>
+>>>> Seems to me that goes way beyond the supposed scope of devicetree
+>>>> data. Devicetree data is supposed to describe hardware, not its
+>>>> configuration or use. This is clearly a use case.
+>>>
+>>> Thanks for rising your voice here. It is important to know what
+>>> hwmon ppl think about this.
+>>
+>> I meant to find time to read Guenter's original email where he
+>> initially objected to putting data into DT, and determine exactly what=
 
-Signed-off-by: Ruslan Bilovol <ruslan.bilovol@ti.com>
----
- arch/arm/boot/dts/omap4-panda-common.dtsi |   21 +---------------
- arch/arm/boot/dts/omap4-sdp.dts           |   21 +---------------
- arch/arm/boot/dts/twl6030_omap4.dtsi      |   38 +++++++++++++++++++++++++++++
- 3 files changed, 40 insertions(+), 40 deletions(-)
- create mode 100644 arch/arm/boot/dts/twl6030_omap4.dtsi
+>> was being objected to. I still haven't:-( However, the arguments that
+>> Eduardo stated in his email do make sense to me; I agree that
+>> temperature limits really are a description of HW. Details of which
+>> cooling methods to invoke when certain temperature limits are reached
+>> is also part of the HW/system design, and hence I would tend to agree
+>> that they're appropriate to include in DT. Anyway, that's just my 2
+>> cents on the matter:-)
+>=20
+> Many systems have multiple profiles for various use cases (high perform=
+ance,
+> low power etc), and limits are different based on the use case. If that=
+ means
+> you are going to have multiple devicetree variants based on the profile=
+,
 
-diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-index faa95b5..d796302 100644
---- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-+++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-@@ -109,23 +109,9 @@
- 	};
- };
- 
--&omap4_pmx_wkup {
--	pinctrl-names = "default";
--	pinctrl-0 = <
--			&twl6030_wkup_pins
--	>;
--
--	twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
--		pinctrl-single,pins = <
--			0x14 (PIN_OUTPUT | MUX_MODE2)		/* fref_clk0_out.sys_drm_msecure */
--		>;
--	};
--};
--
- &omap4_pmx_core {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <
--			&twl6030_pins
- 			&twl6040_pins
- 			&mcpdm_pins
- 			&mcbsp1_pins
-@@ -134,12 +120,6 @@
- 			&hsusbb1_pins
- 	>;
- 
--	twl6030_pins: pinmux_twl6030_pins {
--		pinctrl-single,pins = <
--			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* sys_nirq1.sys_nirq1 */
--		>;
--	};
--
- 	twl6040_pins: pinmux_twl6040_pins {
- 		pinctrl-single,pins = <
- 			0xe0 (PIN_OUTPUT | MUX_MODE3)	/* hdq_sio.gpio_127 */
-@@ -265,6 +245,7 @@
- };
- 
- #include "twl6030.dtsi"
-+#include "twl6030_omap4.dtsi"
- 
- &i2c2 {
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 7951b4e..91030c3 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -142,23 +142,9 @@
- 	};
- };
- 
--&omap4_pmx_wkup {
--	pinctrl-names = "default";
--	pinctrl-0 = <
--			&twl6030_wkup_pins
--	>;
--
--	twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
--		pinctrl-single,pins = <
--			0x14 (PIN_OUTPUT | MUX_MODE2)		/* fref_clk0_out.sys_drm_msecure */
--		>;
--	};
--};
--
- &omap4_pmx_core {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <
--			&twl6030_pins
- 			&twl6040_pins
- 			&mcpdm_pins
- 			&dmic_pins
-@@ -193,12 +179,6 @@
- 		>;
- 	};
- 
--	twl6030_pins: pinmux_twl6030_pins {
--		pinctrl-single,pins = <
--			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* sys_nirq1.sys_nirq1 */
--		>;
--	};
--
- 	twl6040_pins: pinmux_twl6040_pins {
- 		pinctrl-single,pins = <
- 			0xe0 (PIN_OUTPUT | MUX_MODE3)		/* hdq_sio.gpio_127 */
-@@ -337,6 +317,7 @@
- };
- 
- #include "twl6030.dtsi"
-+#include "twl6030_omap4.dtsi"
- 
- &i2c2 {
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/twl6030_omap4.dtsi b/arch/arm/boot/dts/twl6030_omap4.dtsi
-new file mode 100644
-index 0000000..a4fa570
---- /dev/null
-+++ b/arch/arm/boot/dts/twl6030_omap4.dtsi
-@@ -0,0 +1,38 @@
-+/*
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+&twl {
-+	/*
-+	 * On most OMAP4 platforms, the twl6030 IRQ line is connected
-+	 * to the SYS_NIRQ1 line on OMAP and the twl6030 MSECURE line is
-+	 * connected to the fref_clk0_out.sys_drm_msecure line.
-+	 * Therefore, configure the defaults for the SYS_NIRQ1 and
-+	 * fref_clk0_out.sys_drm_msecure pins here.
-+	 */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&twl6030_pins
-+		&twl6030_wkup_pins
-+	>;
-+};
-+
-+&omap4_pmx_wkup {
-+	twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
-+		pinctrl-single,pins = <
-+			0x14 (PIN_OUTPUT | MUX_MODE2)		/* fref_clk0_out.sys_drm_msecure */
-+		>;
-+	};
-+};
-+
-+&omap4_pmx_core {
-+	twl6030_pins: pinmux_twl6030_pins {
-+		pinctrl-single,pins = <
-+			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* sys_nirq1.sys_nirq1 */
-+		>;
-+	};
-+};
--- 
-1.7.9.5
+No, definitely this patch series is *not* about mapping multiples
+profiles for various use cases on device tree! This series is about
+mapping *hw thermal limits* on device tree.
 
+> I would argue that you crossed the line. With thermal profiles it gets =
+even more
+> complicated, as those parameters may be played around with and changed
+> multiple times to find the best settings to achieve optimal cooling.
+> Does this describe hardware ? I don't think so, but, as I mentioned bef=
+ore,
+> maybe I am wrong.
+
+
+Again, this is about describing points and actions to avoid your hw
+degradation. May be also useful to avoid end user harm.
+
+This series is not about describing performance profiles.
+
+>=20
+> Guenter
+>=20
+>=20
+
+
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
+
+Eduardo Valentin
+
+
+------enig2BIREBRJXPSEJHVPFLJRW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlHpOTYACgkQCXcVR3XQvP1NHgEA7ywKtUv4uynaz3d9jz+0loXf
+OwksdKtQvXKOf0aiKVwA/j63Xo1FE8uul74h3pYRfysJDOdE0AtatjHl4P3MI+zP
+=bzLm
+-----END PGP SIGNATURE-----
+
+------enig2BIREBRJXPSEJHVPFLJRW--
