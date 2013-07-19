@@ -1,41 +1,47 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: Re: [PATCH 1/3] misc: Add crossbar driver
-Date: Fri, 19 Jul 2013 16:18:31 +0530
-Message-ID: <51E9197F.7010608@ti.com>
-References: <1374165830-6367-1-git-send-email-r.sricharan@ti.com> <1374165830-6367-2-git-send-email-r.sricharan@ti.com> <51E83A4F.5080904@ti.com> <51E87C98.5030001@ti.com> <20130719071728.GX7656@atomide.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 0/4] Add PWM polarity flag macro for DT
+Date: Fri, 19 Jul 2013 13:29:13 +0200
+Message-ID: <10033310.z2U2FSCElN@avalon>
+References: <1374101664-21112-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <51E81E1C.20708@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130719071728.GX7656@atomide.com>
+In-Reply-To: <51E81E1C.20708@wwwdotorg.org>
 Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Nishanth Menon <nm@ti.com>, balbi@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>
+To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <linux-arm@overkiz.com>, Shawn Guo <shawn.guo@linaro.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 19 July 2013 12:47 PM, Tony Lindgren wrote:
->> On Thursday 18 July 2013 02:56 PM, Nishanth Menon wrote:
->>
->> Since the cross-bar is not limited t0 IRQ lines and applicable for
->> DMA request lines as well, making it IRQ chip doesn't make sense. Its
->> not typical pin control functionality either but at least that framework
->> is much closer to consider as an option.
->>
->> Actually its more of setting up the IRQ and DMA pins maps once
->> at boot for a given SOC based on chosen configuration by the
->> board. So I am leaning towards pinctrl as well. Just haven't
->> thought enough about whether thats the best approach.
->>
->> CC'ing Linus W and Tony L whether we can use pinctrl framework
->> for such an IP and if yes how ;-).
-> If it really muxes signals then using pinctrl seems logical.
-> Especially if the registers are in the SCM block.
->
-> It might be already possible to handle it already with
-> pinctrl-single,bits for the muxing part.
- I also thought of using the pinctrl itself.
- But then i wanted  to have the error handling as well,
- hence did this.
+Hi Stephen,
 
+On Thursday 18 July 2013 10:55:56 Stephen Warren wrote:
+> On 07/17/2013 04:54 PM, Laurent Pinchart wrote:
+> > Hello,
+> > 
+> > Here's a small patch set that replaces PWM polarity numerical constants
+> > with macros in DT.
+> 
+> The series,
+> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> 
+> I'm (very very) slightly hesitant about patch 3/4, since it's moving towards
+> all PWMs having to use the same specifier format, whereas specifiers are at
+> least potentially binding-specific, not device-type-specific. However,
+> consistency is good; there's no need to do something different just for the
+> heck of it. Equally, there's nothing actually stopping a new binding from
+> defining its own format rather than simply deferring to pwm.txt if it
+> absolutely has to, so I think this will turn out fine.
+
+Exactly, that's why I don't think it's an issue. pwm.txt defines a common 
+format, individual bindings are free to use it or not.
+
+Thierry, if you're fine with the patches, could you take them in your tree 
+with Stephen's Reviewed-by, or should I report them and send you a pull 
+request ?
+
+-- 
 Regards,
- Sricharan
+
+Laurent Pinchart
+
