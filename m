@@ -1,73 +1,42 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH] of/irq: init struct resource to 0 in of_irq_to_resource()
-Date: Fri, 19 Jul 2013 08:57:29 +0200
-Message-ID: <51E8E359.2030908@linutronix.de>
-References: <1374143050-25848-1-git-send-email-bigeasy@linutronix.de>
- <51E8A937.9030109@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/3] misc: Add crossbar driver
+Date: Fri, 19 Jul 2013 00:17:29 -0700
+Message-ID: <20130719071728.GX7656@atomide.com>
+References: <1374165830-6367-1-git-send-email-r.sricharan@ti.com>
+ <1374165830-6367-2-git-send-email-r.sricharan@ti.com>
+ <51E83A4F.5080904@ti.com>
+ <51E87C98.5030001@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51E8A937.9030109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51E87C98.5030001@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, balbi@ti.com, Sricharan R <r.sricharan@ti.com>, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/19/2013 04:49 AM, Rob Herring wrote:
-> On 07/18/2013 05:24 AM, Sebastian Andrzej Siewior wrote:
->> It almost does not matter because most users use only the ->start member
->> of the struct. However if this struct is passed to a platform device
->> which is then added via platform_device_add() then the ->parent member is
->> also used.
+> On Thursday 18 July 2013 02:56 PM, Nishanth Menon wrote:
 > 
-> Most users don't use the resource struct at all. The ones that do, all
-> seem to do a memset beforehand. So I think current behavior is correct.
-
-Seriously? That is your argument here? Most users use memset()
-beforehand and that makes it correct? Now look at this: you pass a
-pointer to fill out a struct and you don't do it properly.
-
-There is of_address_to_resource() which does a memset() why is okay
-here use memset()?
-
+> Since the cross-bar is not limited t0 IRQ lines and applicable for
+> DMA request lines as well, making it IRQ chip doesn't make sense. Its
+> not typical pin control functionality either but at least that framework
+> is much closer to consider as an option.
 > 
-> There are some occurrences that pass a resource in, but then don't
-> actually use the resource. Those we should fix.
-
-
-
+> Actually its more of setting up the IRQ and DMA pins maps once
+> at boot for a given SOC based on chosen configuration by the
+> board. So I am leaning towards pinctrl as well. Just haven't
+> thought enough about whether thats the best approach.
 > 
-> Rob
-> 
->>
->> Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
->> ---
->>  drivers/of/irq.c | 1 +
->>  1 file changed, 1 insearch/powerpc/sysdev/mv64x60_dev.crtion(+)
->>
->> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
->> index a3c1c5a..e0a72fb 100644
->> --- a/drivers/of/irq.c
->> +++ b/drivers/of/irq.c
->> @@ -345,6 +345,7 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
->>  	if (r && irq) {
->>  		const char *name = NULL;
->>  
->> +		memset(r, 0, sizeof(*r));
->>  		/*
->>  		 * Get optional "interrupts-names" property to add a name
->>  		 * to the resource.
->>
-> 
+> CC'ing Linus W and Tony L whether we can use pinctrl framework
+> for such an IP and if yes how ;-).
 
-Sebastian
+If it really muxes signals then using pinctrl seems logical.
+Especially if the registers are in the SCM block.
+
+It might be already possible to handle it already with
+pinctrl-single,bits for the muxing part.
+
+Regards,
+
+Tony
