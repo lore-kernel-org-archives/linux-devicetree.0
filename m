@@ -1,169 +1,152 @@
 From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] iio: mxs-lradc: add scale attribute to channels
-Date: Fri, 19 Jul 2013 16:30:16 +0200
-Message-ID: <201307191630.17149.marex@denx.de>
-References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <1374225208-28940-4-git-send-email-hector.palacios@digi.com>
+Subject: Re: [PATCH v2 5/5] iio: mxs-lradc: add write_raw function to modify
+ scale
+Date: Fri, 19 Jul 2013 16:39:01 +0200
+Message-ID: <201307191639.01240.marex@denx.de>
+References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com>
+ <1374225208-28940-6-git-send-email-hector.palacios@digi.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1374225208-28940-4-git-send-email-hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1374225208-28940-6-git-send-email-hector.palacios-i7dp0qKlBMg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Dear Hector Palacios,
 
-> Some LRADC channels have fixed pre-dividers and all have an optional
-> divider by two which allows a maximum input voltage of VDDIO - 50mV.
+> Added write_raw function to manipulate the optional divider_by_two
+> through the scaling attribute out of the available scales.
 > 
-> This patch
->  - adds the scaling info flag to all channels
->  - grabs the max reference voltage per channel from DT
->    (where the fixed pre-dividers apply)
->  - allows to read the scaling attribute (computed from the Vref)
-> 
-> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>.
+> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
 > ---
->  drivers/staging/iio/adc/mxs-lradc.c | 81
-> ++++++++++++++++++++++++------------- 1 file changed, 52 insertions(+), 29
-> deletions(-)
+>  drivers/staging/iio/adc/mxs-lradc.c | 55
+> ++++++++++++++++++++++++++++++++++++- 1 file changed, 54 insertions(+), 1
+> deletion(-)
 > 
 > diff --git a/drivers/staging/iio/adc/mxs-lradc.c
-> b/drivers/staging/iio/adc/mxs-lradc.c index 91282dc..99e5790 100644
+> b/drivers/staging/iio/adc/mxs-lradc.c index c929733..286cde2 100644
 > --- a/drivers/staging/iio/adc/mxs-lradc.c
 > +++ b/drivers/staging/iio/adc/mxs-lradc.c
-> @@ -141,6 +141,8 @@ struct mxs_lradc {
+> @@ -144,6 +144,7 @@ struct mxs_lradc {
 > 
->  	struct completion	completion;
-> 
-> +	uint32_t		vref_mv[LRADC_MAX_TOTAL_CHANS];
-> +
+>  	uint32_t		vref_mv[LRADC_MAX_TOTAL_CHANS];
+>  	unsigned int		scale_avail[LRADC_MAX_TOTAL_CHANS][2][2];
+> +	unsigned int		is_divided[LRADC_MAX_TOTAL_CHANS];
+
+Why not use bitfield ? ;-)
+
 >  	/*
 >  	 * Touchscreen LRADC channels receives a private slot in the CTRL4
->  	 * register, the slot #7. Therefore only 7 slots instead of 8 in the
-> @@ -228,39 +230,12 @@ struct mxs_lradc {
->  #define LRADC_RESOLUTION			12
->  #define LRADC_SINGLE_SAMPLE_MASK		((1 << LRADC_RESOLUTION) - 1)
+> @@ -202,6 +203,7 @@ struct mxs_lradc {
+>  #define	LRADC_CTRL1_LRADC_IRQ_OFFSET		0
 > 
-> -/*
-> - * Raw I/O operations
-> - */
-> -static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
-> +static int mxs_lradc_read_single(struct iio_dev *iio_dev,
->  			const struct iio_chan_spec *chan,
->  			int *val, int *val2, long m)
->  {
->  	struct mxs_lradc *lradc = iio_priv(iio_dev);
->  	int ret;
-> -	unsigned long mask;
-> -
-> -	if (m != IIO_CHAN_INFO_RAW)
-> -		return -EINVAL;
-> -
-> -	/* Check for invalid channel */
-> -	if (chan->channel > LRADC_MAX_TOTAL_CHANS)
-> -		return -EINVAL;
-
-This was already resolved, so this patch won't apply I'm afraid.
-
-> -	/* Validate the channel if it doesn't intersect with reserved chans. */
-> -	bitmap_set(&mask, chan->channel, 1);
-> -	ret = iio_validate_scan_mask_onehot(iio_dev, &mask);
-> -	if (ret)
-> -		return -EINVAL;
-> -
-> -	/*
-> -	 * See if there is no buffered operation in progess. If there is, simply
-> -	 * bail out. This can be improved to support both buffered and raw IO at
-> -	 * the same time, yet the code becomes horribly complicated. Therefore I
-> -	 * applied KISS principle here.
-> -	 */
-> -	ret = mutex_trylock(&lradc->lock);
-> -	if (!ret)
-> -		return -EBUSY;
+>  #define	LRADC_CTRL2				0x20
+> +#define	LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET	24
+>  #define	LRADC_CTRL2_TEMPSENSE_PWD		(1 << 15)
 > 
->  	INIT_COMPLETION(lradc->completion);
+>  #define	LRADC_STATUS				0x40
+> @@ -310,7 +312,8 @@ static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
+>  		break;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		*val = lradc->vref_mv[chan->channel];
+> -		*val2 = chan->scan_type.realbits;
+> +		*val2 = chan->scan_type.realbits -
+> +			lradc->is_divided[chan->channel];
+>  		ret = IIO_VAL_FRACTIONAL_LOG2;
+>  		break;
+>  	default:
+> @@ -323,6 +326,54 @@ static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
+>  	return ret;
+>  }
 > 
-> @@ -300,6 +275,47 @@ err:
->  	writel(LRADC_CTRL1_LRADC_IRQ_EN(0),
->  		lradc->base + LRADC_CTRL1 + STMP_OFFSET_REG_CLR);
-> 
-> +	return ret;
-> +}
-> +
-> +/*
-> + * Raw I/O operations
-> + */
-> +static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
-> +			const struct iio_chan_spec *chan,
-> +			int *val, int *val2, long m)
+> +static int mxs_lradc_write_raw(struct iio_dev *iio_dev,
+> +			       const struct iio_chan_spec *chan,
+> +			       int val, int val2, long m)
 > +{
 > +	struct mxs_lradc *lradc = iio_priv(iio_dev);
 > +	int ret;
 > +
-> +	/*
-> +	 * See if there is no buffered operation in progress. If there is, 
-simply
-> +	 * bail out. This can be improved to support both buffered and raw IO at
-> +	 * the same time, yet the code becomes horribly complicated. Therefore I
-> +	 * applied KISS principle here.
-> +	 */
 > +	ret = mutex_trylock(&lradc->lock);
 > +	if (!ret)
 > +		return -EBUSY;
 > +
-> +	/* Check for invalid channel */
-> +	if (chan->channel > LRADC_MAX_TOTAL_CHANS)
-> +		ret = -EINVAL;
-> +
 > +	switch (m) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = mxs_lradc_read_single(iio_dev, chan, val, val2, m);
-> +		break;
 > +	case IIO_CHAN_INFO_SCALE:
-> +		*val = lradc->vref_mv[chan->channel];
-> +		*val2 = chan->scan_type.realbits;
-> +		ret = IIO_VAL_FRACTIONAL_LOG2;
+> +		ret = -EINVAL;
+> +		if (val == lradc->scale_avail[chan->channel][0][0] &&
+> +		    val2 == lradc->scale_avail[chan->channel][0][1]) {
+> +			/* [0] -> divider by two disabled */
+
+This comment is confusing, you use [0] in different dimensions of the array. So 
+is the stuff below.
+
+Still, how does this even work, can you show me and example how to set the 
+divider from userland ? Sorry, I'm a bit confused with this 3D-business here, 
+even if the comment in previous patch made it a bit clearer. Actually you can 
+use some #define to specify if you're accessing div/2 or div/1 portion of the 
+array to make it more readable.
+
+Like ... scale_avail[chan->channel][LRADC_DIV_BY_2][LRADC_DECIMAL_PART] ... 
+would by nice.
+
+> +			writel(1 << LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET,
+> +			       lradc->base + LRADC_CTRL2 + STMP_OFFSET_REG_CLR);
+> +			lradc->is_divided[chan->channel] = 0;
+> +			ret = 0;
+> +		} else if (val == lradc->scale_avail[chan->channel][1][0] &&
+> +			   val2 == lradc->scale_avail[chan->channel][1][1]) {
+> +			/* [1] -> divider by two enabled */
+> +			writel(1 << LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET,
+> +			       lradc->base + LRADC_CTRL2 + STMP_OFFSET_REG_SET);
+> +			lradc->is_divided[chan->channel] = 1;
+> +			ret = 0;
+> +		}
+> +
 > +		break;
 > +	default:
 > +		ret = -EINVAL;
 > +		break;
 > +	}
 > +
->  	mutex_unlock(&lradc->lock);
-> 
->  	return ret;
-> @@ -821,7 +837,8 @@ static const struct iio_buffer_setup_ops
-> mxs_lradc_buffer_ops = { .type = (chan_type),					
-\
->  	.indexed = 1,						\
->  	.scan_index = (idx),					\
-> -	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |		\
-> +			      BIT(IIO_CHAN_INFO_SCALE),		\
->  	.channel = (idx),					\
->  	.scan_type = {						\
->  		.sign = 'u',					\
-> @@ -960,6 +977,12 @@ static int mxs_lradc_probe(struct platform_device
-> *pdev) goto err_addr;
->  	}
-> 
-> +	/* Grab Vref array from DT */
-> +	ret = of_property_read_u32_array(node, "fsl,vref", lradc->vref_mv,
-> +					 LRADC_MAX_TOTAL_CHANS);
-> +	if (ret)
-> +		goto err_addr;
+> +	mutex_unlock(&lradc->lock);
 > +
->  	platform_set_drvdata(pdev, iio);
-> 
->  	init_completion(&lradc->completion);
+> +	return ret;
+> +}
+> +
+> +static int mxs_lradc_write_raw_get_fmt(struct iio_dev *iio_dev,
+> +				       const struct iio_chan_spec *chan,
+> +				       long m)
+> +{
+> +	return IIO_VAL_INT_PLUS_NANO;
+> +}
+> +
+>  static ssize_t mxs_lradc_show_scale_available_ch(struct device *dev,
+>  		struct device_attribute *attr,
+>  		char *buf,
+> @@ -400,6 +451,8 @@ static const struct attribute_group
+> mxs_lradc_attribute_group = { static const struct iio_info
+> mxs_lradc_iio_info = {
+>  	.driver_module		= THIS_MODULE,
+>  	.read_raw		= mxs_lradc_read_raw,
+> +	.write_raw		= mxs_lradc_write_raw,
+> +	.write_raw_get_fmt	= &mxs_lradc_write_raw_get_fmt,
 
-Otherwise:
+Is this & needed here ?
 
-Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>  	.attrs			= &mxs_lradc_attribute_group,
+>  };
 
-
+Best regards,
 Marek Vasut
