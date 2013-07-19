@@ -1,50 +1,184 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] ARM: dts: add reference voltage property for MXS LRADC
-Date: Fri, 19 Jul 2013 15:58:16 +0200
-Message-ID: <201307191558.17158.marex@denx.de>
-References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <1374225208-28940-3-git-send-email-hector.palacios@digi.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] arm: dts: twl6030: typical connection to omap4 as a separate
+ dtsi file
+Date: Fri, 19 Jul 2013 09:10:56 -0500
+Message-ID: <51E948F0.4070307@ti.com>
+References: <1374235814-17834-1-git-send-email-ruslan.bilovol@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1374225208-28940-3-git-send-email-hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1374235814-17834-1-git-send-email-ruslan.bilovol@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ruslan Bilovol <ruslan.bilovol@ti.com>
+Cc: benoit.cousson@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Hector Palacios,
-
-> Some LRADC channels have fixed pre-dividers so they can measure
-> different voltages at full scale. The reference voltage allows to
-> expose a scaling attribute through the IIO sysfs so that a user can
-> compute the real voltage out of a measured sample value.
-> 
-> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+On 07/19/2013 07:10 AM, Ruslan Bilovol wrote:
+> The OMAP4 SoC family uses specially-designed
+> PMIC (power management IC) companion chip for power
+> management needs: TWL6030/TWL6032.
+> Therefore there is a typical connection of PMIC to OMAP4
+> so we can figure it out into separate .dtsi file
+> and do not duplicate over board-specific files.
+>
+> Tested on OMAP4 SDP board and compile-tested for Panda board
+>
+> Signed-off-by: Ruslan Bilovol <ruslan.bilovol@ti.com>
 > ---
->  Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt | 9
-> ++++++++- arch/arm/boot/dts/imx23.dtsi                                   
-> | 4 ++++ arch/arm/boot/dts/imx28.dtsi                                    |
-> 4 ++++ 3 files changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt index
-> 4688205..6ec485c 100644
-> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
-> @@ -1,9 +1,12 @@
->  * Freescale i.MX28 LRADC device driver
-> 
->  Required properties:
-> -- compatible: Should be "fsl,imx28-lradc"
-> +- compatible: "fsl,imx28-lradc", "fsl,imx23-lradc"
+>   arch/arm/boot/dts/omap4-panda-common.dtsi |   21 +---------------
+>   arch/arm/boot/dts/omap4-sdp.dts           |   21 +---------------
+>   arch/arm/boot/dts/twl6030_omap4.dtsi      |   38 +++++++++++++++++++++++++++++
+arch/arm/boot/dts/omap4-var-som.dts ?
 
-This is a separate fix, but I think it's not that important to rework the whole 
-patchset because of it.
+>   3 files changed, 40 insertions(+), 40 deletions(-)
+>   create mode 100644 arch/arm/boot/dts/twl6030_omap4.dtsi
+>
+> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+> index faa95b5..d796302 100644
+> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+> @@ -109,23 +109,9 @@
+>   	};
+>   };
+>
+> -&omap4_pmx_wkup {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <
+> -			&twl6030_wkup_pins
+> -	>;
+> -
+> -	twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
+> -		pinctrl-single,pins = <
+> -			0x14 (PIN_OUTPUT | MUX_MODE2)		/* fref_clk0_out.sys_drm_msecure */
+> -		>;
+> -	};
+> -};
+> -
+>   &omap4_pmx_core {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <
+> -			&twl6030_pins
+>   			&twl6040_pins
+>   			&mcpdm_pins
+>   			&mcbsp1_pins
+> @@ -134,12 +120,6 @@
+>   			&hsusbb1_pins
+>   	>;
+>
+> -	twl6030_pins: pinmux_twl6030_pins {
+> -		pinctrl-single,pins = <
+> -			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* sys_nirq1.sys_nirq1 */
+> -		>;
+> -	};
+> -
+>   	twl6040_pins: pinmux_twl6040_pins {
+>   		pinctrl-single,pins = <
+>   			0xe0 (PIN_OUTPUT | MUX_MODE3)	/* hdq_sio.gpio_127 */
+> @@ -265,6 +245,7 @@
+>   };
+>
+>   #include "twl6030.dtsi"
+> +#include "twl6030_omap4.dtsi"
+>
+>   &i2c2 {
+>   	pinctrl-names = "default";
+> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+> index 7951b4e..91030c3 100644
+> --- a/arch/arm/boot/dts/omap4-sdp.dts
+> +++ b/arch/arm/boot/dts/omap4-sdp.dts
+> @@ -142,23 +142,9 @@
+>   	};
+>   };
+>
+> -&omap4_pmx_wkup {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <
+> -			&twl6030_wkup_pins
+> -	>;
+> -
+> -	twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
+> -		pinctrl-single,pins = <
+> -			0x14 (PIN_OUTPUT | MUX_MODE2)		/* fref_clk0_out.sys_drm_msecure */
+> -		>;
+> -	};
+> -};
+> -
+>   &omap4_pmx_core {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <
+> -			&twl6030_pins
+>   			&twl6040_pins
+>   			&mcpdm_pins
+>   			&dmic_pins
+> @@ -193,12 +179,6 @@
+>   		>;
+>   	};
+>
+> -	twl6030_pins: pinmux_twl6030_pins {
+> -		pinctrl-single,pins = <
+> -			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* sys_nirq1.sys_nirq1 */
+> -		>;
+> -	};
+> -
+>   	twl6040_pins: pinmux_twl6040_pins {
+>   		pinctrl-single,pins = <
+>   			0xe0 (PIN_OUTPUT | MUX_MODE3)		/* hdq_sio.gpio_127 */
+> @@ -337,6 +317,7 @@
+>   };
+>
+>   #include "twl6030.dtsi"
+> +#include "twl6030_omap4.dtsi"
+>
+>   &i2c2 {
+>   	pinctrl-names = "default";
+> diff --git a/arch/arm/boot/dts/twl6030_omap4.dtsi b/arch/arm/boot/dts/twl6030_omap4.dtsi
+> new file mode 100644
+> index 0000000..a4fa570
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/twl6030_omap4.dtsi
+> @@ -0,0 +1,38 @@
+> +/*
+> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +&twl {
+> +	/*
+> +	 * On most OMAP4 platforms, the twl6030 IRQ line is connected
+> +	 * to the SYS_NIRQ1 line on OMAP and the twl6030 MSECURE line is
+> +	 * connected to the fref_clk0_out.sys_drm_msecure line.
+> +	 * Therefore, configure the defaults for the SYS_NIRQ1 and
+> +	 * fref_clk0_out.sys_drm_msecure pins here.
+> +	 */
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <
+> +		&twl6030_pins
+> +		&twl6030_wkup_pins
+> +	>;
+> +};
+> +
+> +&omap4_pmx_wkup {
+> +	twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
+> +		pinctrl-single,pins = <
+> +			0x14 (PIN_OUTPUT | MUX_MODE2)		/* fref_clk0_out.sys_drm_msecure */
+> +		>;
+> +	};
+> +};
+> +
+> +&omap4_pmx_core {
+> +	twl6030_pins: pinmux_twl6030_pins {
+> +		pinctrl-single,pins = <
+> +			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* sys_nirq1.sys_nirq1 */
+> +		>;
+> +	};
+> +};
+>
 
-Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
-Best regards,
-Marek Vasut
+-- 
+Regards,
+Nishanth Menon
