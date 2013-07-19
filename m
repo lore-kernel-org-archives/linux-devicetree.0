@@ -1,202 +1,56 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] iio: mxs-lradc: add write_raw function to modify
- scale
-Date: Fri, 19 Jul 2013 21:32:00 +0100
-Message-ID: <51E9A240.3000108@kernel.org>
-References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <1374225208-28940-6-git-send-email-hector.palacios@digi.com> <201307191639.01240.marex@denx.de> <51E95BEC.5080703@digi.com>
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: Re: [PATCH 0/2] ARM: bcm281xx: Board specific reboot code
+Date: Fri, 19 Jul 2013 16:33:37 -0700
+Message-ID: <51E9CCD1.60903@broadcom.com>
+References: <1372453018-5830-1-git-send-email-markus.mayer@linaro.org>
+ <CAPdLdq=0k56kX01easzTb11AUo=Ew+DCrmMpq8=2ruEJEuMF3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51E95BEC.5080703-i7dp0qKlBMg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPdLdq=0k56kX01easzTb11AUo=Ew+DCrmMpq8=2ruEJEuMF3Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Mayer <markus.mayer@linaro.org>
+Cc: Device Tree List <devicetree-discuss@lists.ozlabs.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/19/2013 04:31 PM, Hector Palacios wrote:
-> Dear Marek,
-> 
-> On 07/19/2013 04:39 PM, Marek Vasut wrote:
->> Dear Hector Palacios,
+On 13-06-28 02:00 PM, Markus Mayer wrote:
+> Adding Christian who got dropped from the Cc list.
+>
+> -Markus
+>
+> On 28 June 2013 13:56, Markus Mayer <markus.mayer@linaro.org> wrote:
+>> This patch series adds reboot code and related device tree bindings needed
+>> for the bcm281xx family.
 >>
->>> Added write_raw function to manipulate the optional divider_by_two
->>> through the scaling attribute out of the available scales.
->>>
->>> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
->>> ---
->>>   drivers/staging/iio/adc/mxs-lradc.c | 55
->>> ++++++++++++++++++++++++++++++++++++- 1 file changed, 54 insertions(+), 1
->>> deletion(-)
->>>
->>> diff --git a/drivers/staging/iio/adc/mxs-lradc.c
->>> b/drivers/staging/iio/adc/mxs-lradc.c index c929733..286cde2 100644
->>> --- a/drivers/staging/iio/adc/mxs-lradc.c
->>> +++ b/drivers/staging/iio/adc/mxs-lradc.c
->>> @@ -144,6 +144,7 @@ struct mxs_lradc {
->>>
->>>       uint32_t        vref_mv[LRADC_MAX_TOTAL_CHANS];
->>>       unsigned int        scale_avail[LRADC_MAX_TOTAL_CHANS][2][2];
->>> +    unsigned int        is_divided[LRADC_MAX_TOTAL_CHANS];
+>> Markus Mayer (2):
+>>    ARM: bcm281xx: Board specific reboot code
+>>    ARM: bcm281xx: DT changes for reboot code
 >>
->> Why not use bitfield ? ;-)
-> 
-> This is used in some math below and an unsigned int looked more appropriate:
-> 
->     case IIO_CHAN_INFO_SCALE:
->         *val = lradc->vref_mv[chan->channel];
->         *val2 = chan->scan_type.realbits -
->             lradc->is_divided[chan->channel];
->         ret = IIO_VAL_FRACTIONAL_LOG2;
->         break;
-> 
+>>   .../devicetree/bindings/arm/bcm/bcm,kona-wdt.txt   |   15 ++++++
+>>   arch/arm/boot/dts/bcm11351.dtsi                    |    7 ++-
+>>   arch/arm/mach-bcm/Makefile                         |    4 +-
+>>   arch/arm/mach-bcm/board_bcm.c                      |   20 ++++++--
+>>   arch/arm/mach-bcm/kona.c                           |   54 ++++++++++++++++++++
+>>   arch/arm/mach-bcm/kona.h                           |   15 ++++++
+>>   6 files changed, 109 insertions(+), 6 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm,kona-wdt.txt
+>>   create mode 100644 arch/arm/mach-bcm/kona.c
+>>   create mode 100644 arch/arm/mach-bcm/kona.h
 >>
->>>       /*
->>>        * Touchscreen LRADC channels receives a private slot in the CTRL4
->>> @@ -202,6 +203,7 @@ struct mxs_lradc {
->>>   #define    LRADC_CTRL1_LRADC_IRQ_OFFSET        0
->>>
->>>   #define    LRADC_CTRL2                0x20
->>> +#define    LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET    24
->>>   #define    LRADC_CTRL2_TEMPSENSE_PWD        (1 << 15)
->>>
->>>   #define    LRADC_STATUS                0x40
->>> @@ -310,7 +312,8 @@ static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
->>>           break;
->>>       case IIO_CHAN_INFO_SCALE:
->>>           *val = lradc->vref_mv[chan->channel];
->>> -        *val2 = chan->scan_type.realbits;
->>> +        *val2 = chan->scan_type.realbits -
->>> +            lradc->is_divided[chan->channel];
->>>           ret = IIO_VAL_FRACTIONAL_LOG2;
->>>           break;
->>>       default:
->>> @@ -323,6 +326,54 @@ static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
->>>       return ret;
->>>   }
->>>
->>> +static int mxs_lradc_write_raw(struct iio_dev *iio_dev,
->>> +                   const struct iio_chan_spec *chan,
->>> +                   int val, int val2, long m)
->>> +{
->>> +    struct mxs_lradc *lradc = iio_priv(iio_dev);
->>> +    int ret;
->>> +
->>> +    ret = mutex_trylock(&lradc->lock);
->>> +    if (!ret)
->>> +        return -EBUSY;
->>> +
->>> +    switch (m) {
->>> +    case IIO_CHAN_INFO_SCALE:
->>> +        ret = -EINVAL;
->>> +        if (val == lradc->scale_avail[chan->channel][0][0] &&
->>> +            val2 == lradc->scale_avail[chan->channel][0][1]) {
->>> +            /* [0] -> divider by two disabled */
+>> --
+>> 1.7.9.5
 >>
->> This comment is confusing, you use [0] in different dimensions of the array. So
->> is the stuff below.
 >>
->> Still, how does this even work, can you show me and example how to set the
->> divider from userland ? Sorry, I'm a bit confused with this 3D-business here,
->> even if the comment in previous patch made it a bit clearer. Actually you can
->> use some #define to specify if you're accessing div/2 or div/1 portion of the
->> array to make it more readable.
->>
->> Like ... scale_avail[chan->channel][LRADC_DIV_BY_2][LRADC_DECIMAL_PART] ...
->> would by nice.
-> 
-> Agreed.
-Could even make the int + nano part a structure then you could have
-scale_avail[chan->channel][LRADC_DIV_BY_2].integer / .nano
+Pulled into bcm tree branch for-3.12/dt
 
-might not be worth the hassel though for the slight gain in readability.
-
-I'm happy either way.
-> 
-> How it works:
-> # cd /sys/devices/80000000.apb/80040000.apbx/80050000.lradc/iio:device0
-> 
-> Here you have three entries per channel:
-> in_voltageX_raw        -> the sample raw value
-> in_voltageX_scale    -> the scale to multiply the raw value to get the voltage in mV
-> in_voltageX_scale_available -> lists the available scales of the channel
-> 
-> For example for channel 0:
-> 
-> # cat in_voltage0_scale_available
-> 0.451660156 0.903320312    (two scales available, first with divider by two disabled, second with divider by two enabled)
-> 
-> # cat in_voltage0_scale
-> 0.451660156            (divider by two is currently disabled)
-> 
-> # cat in_voltage0_raw        (shows measured value)
-> 1000
-> 
-> If you multiply the value by the scale you get: 1000 * 0.451660156 = 451.6 mV
-> 
-> # echo 0.903320312 > in_voltage0_scale    (enables the divider by two)
-> 
-> # cat in_voltage0_raw        (shows measured value)
-> 500
-> 
-> Voltage at channel is the same but now measured value is applying the scale so it shows half the value than before. Now
-> if you multiply: 500 * 0.903320312 = 451.6 mV (the same voltage but you now have a bigger scale and can measure up to
-> 3.7V).
-> 
-> Other channels (like 10 on the MX28) will show different scales because of fixed predividers.
-> The multi-dimension array is needed to store the big decimal number.
-> 
->>> +            writel(1 << LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET,
->>> +                   lradc->base + LRADC_CTRL2 + STMP_OFFSET_REG_CLR);
->>> +            lradc->is_divided[chan->channel] = 0;
->>> +            ret = 0;
->>> +        } else if (val == lradc->scale_avail[chan->channel][1][0] &&
->>> +               val2 == lradc->scale_avail[chan->channel][1][1]) {
->>> +            /* [1] -> divider by two enabled */
->>> +            writel(1 << LRADC_CTRL2_DIVIDE_BY_TWO_OFFSET,
->>> +                   lradc->base + LRADC_CTRL2 + STMP_OFFSET_REG_SET);
->>> +            lradc->is_divided[chan->channel] = 1;
->>> +            ret = 0;
->>> +        }
->>> +
->>> +        break;
->>> +    default:
->>> +        ret = -EINVAL;
->>> +        break;
->>> +    }
->>> +
->>> +    mutex_unlock(&lradc->lock);
->>> +
->>> +    return ret;
->>> +}
->>> +
->>> +static int mxs_lradc_write_raw_get_fmt(struct iio_dev *iio_dev,
->>> +                       const struct iio_chan_spec *chan,
->>> +                       long m)
->>> +{
->>> +    return IIO_VAL_INT_PLUS_NANO;
->>> +}
->>> +
->>>   static ssize_t mxs_lradc_show_scale_available_ch(struct device *dev,
->>>           struct device_attribute *attr,
->>>           char *buf,
->>> @@ -400,6 +451,8 @@ static const struct attribute_group
->>> mxs_lradc_attribute_group = { static const struct iio_info
->>> mxs_lradc_iio_info = {
->>>       .driver_module        = THIS_MODULE,
->>>       .read_raw        = mxs_lradc_read_raw,
->>> +    .write_raw        = mxs_lradc_write_raw,
->>> +    .write_raw_get_fmt    = &mxs_lradc_write_raw_get_fmt,
->>
->> Is this & needed here ?
-> 
-> No it isn't.
-> Thanks.
-> 
-> Best regards,
-> -- 
-> Hector Palacios
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  thanks,
+    csd
