@@ -1,82 +1,107 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCH 4/4] arm: dts: dra7-evm: Add UART pinctrl data
-Date: Fri, 19 Jul 2013 21:54:10 +0530
-Message-ID: <1374251050-10033-5-git-send-email-sourav.poddar@ti.com>
-References: <1374251050-10033-1-git-send-email-sourav.poddar@ti.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH RESEND 1/2] ARM: mmp: Add compatible entries for OLPC XO
+ laptops
+Date: Fri, 19 Jul 2013 18:25:36 +0200
+Message-ID: <20130719162536.GH16015@ns203013.ovh.net>
+References: <20130716180605.A63C7FAAF3@dev.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1374251050-10033-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, benoit.cousson@linaro.org
-Cc: balbi@ti.com, rnayak@ti.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sourav Poddar <sourav.poddar@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130716180605.A63C7FAAF3@dev.laptop.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Drake <dsd@laptop.org>
+Cc: eric.y.miao@gmail.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, haojian.zhuang@gmail.com, pgf@laptop.org, olof@lixom.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add pin control datas for uart1, uart2 and uart3.
+On 14:06 Tue 16 Jul     , Daniel Drake wrote:
+> Add compatible entries to enable booting of OLPC XO-1.75 (MMP2) and
+> OLPC XO-4 (MMP3).
+> 
+> Signed-off-by: Chris Ball <cjb@laptop.org>
+> Signed-off-by: Daniel Drake <dsd@laptop.org>
+> ---
+>  Documentation/devicetree/bindings/arm/mrvl/intc.txt | 4 ++--
+>  Documentation/devicetree/bindings/arm/mrvl/mrvl.txt | 8 ++++++++
+>  arch/arm/mach-mmp/irq.c                             | 1 +
+>  arch/arm/mach-mmp/mmp2-dt.c                         | 2 ++
+>  4 files changed, 13 insertions(+), 2 deletions(-)
+> 
+> Resending after 1 month with no response.
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/mrvl/intc.txt b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> index 8b53273..3554fb9 100644
+> --- a/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> +++ b/Documentation/devicetree/bindings/arm/mrvl/intc.txt
+> @@ -1,8 +1,8 @@
+>  * Marvell MMP Interrupt controller
+>  
+>  Required properties:
+> -- compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
+> -  "mrvl,mmp2-mux-intc"
+> +- compatible : One of: mrvl,mmp-intc mrvl,mmp2-intc mrvl,mmp3-intc
+> +  mrvl,mmp2-mux-intc
+>  - reg : Address and length of the register set of the interrupt controller.
+>    If the interrupt controller is intc, address and length means the range
+>    of the whold interrupt controller. If the interrupt controller is mux-intc,
+> diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> index 117d741..236e884 100644
+> --- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> +++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+> @@ -12,3 +12,11 @@ Required root node properties:
+>  MMP2 Brownstone Board
+>  Required root node properties:
+>  	- compatible = "mrvl,mmp2-brownstone";
+> +
+> +OLPC XO-1.75 (CL2) based on MMP2
+> +Required root node properties:
+> +	- compatible = "olpc,xo-1.75";
+> +
+> +OLPC XO-4 (CL4) based on MMP3
+> +Required root node properties:
+> +	- compatible = "olpc,xo-cl4";
+documentation not consistnt with code
 
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
----
- arch/arm/boot/dts/dra7-evm.dts |   43 ++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 43 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index d8b0da9..8f3be53 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -61,6 +61,31 @@
- 			0x3cc 0xe0000	/* spi2_cs0 */
- 		>;
- 	};
-+
-+	uart1_pins: pinmux_uart1_pins {
-+		pinctrl-single,pins = <
-+			0x3e0 0xe0000	/* uart1_rxd */
-+			0x3e4 0xe0000	/* uart1_txd */
-+			0x3e8 0x60003	/* uart1_ctsn */
-+			0x3ec 0x60003	/* uart1_rtsn */
-+		>;
-+	};
-+
-+	uart2_pins: pinmux_uart2_pins {
-+		pinctrl-single,pins = <
-+			0x3f0 0x60000 /* uart2_rxd */
-+			0x3f4 0x60000 /* uart2_txd */
-+			0x3f8 0x60000 /* uart2_ctsn */
-+			0x3fc 0x60000 /* uart2_rtsn */
-+		>;
-+	};
-+
-+	uart3_pins: pinmux_uart3_pins {
-+		pinctrl-single,pins = <
-+			0x248 0xc0000 /* uart3_rxd */
-+			0x24c 0xc0000 /* uart3_txd */
-+		>;
-+	};
- };
- 
- &i2c1 {
-@@ -98,3 +123,21 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mcspi2_pins>;
- };
-+
-+&uart1 {
-+	status = "okay";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&uart1_pins>;
-+};
-+
-+&uart2 {
-+        status = "okay";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&uart2_pins>;
-+};
-+
-+&uart3 {
-+        status = "okay";
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&uart3_pins>;
-+};
--- 
-1.7.1
-
+Best Regards,
+J.
+> diff --git a/arch/arm/mach-mmp/irq.c b/arch/arm/mach-mmp/irq.c
+> index 3c71246..d60b85a 100644
+> --- a/arch/arm/mach-mmp/irq.c
+> +++ b/arch/arm/mach-mmp/irq.c
+> @@ -329,6 +329,7 @@ void __init mmp2_init_icu(void)
+>  static const struct of_device_id intc_ids[] __initconst = {
+>  	{ .compatible = "mrvl,mmp-intc", .data = &mmp_conf },
+>  	{ .compatible = "mrvl,mmp2-intc", .data = &mmp2_conf },
+> +	{ .compatible = "mrvl,mmp3-intc", .data = &mmp2_conf },
+>  	{}
+>  };
+>  
+> diff --git a/arch/arm/mach-mmp/mmp2-dt.c b/arch/arm/mach-mmp/mmp2-dt.c
+> index 4ac2567..e67bd9f 100644
+> --- a/arch/arm/mach-mmp/mmp2-dt.c
+> +++ b/arch/arm/mach-mmp/mmp2-dt.c
+> @@ -44,6 +44,8 @@ static void __init mmp2_dt_init(void)
+>  
+>  static const char *mmp2_dt_board_compat[] __initdata = {
+>  	"mrvl,mmp2-brownstone",
+> +	"olpc,xo-1.75",
+> +	"olpc,xo-cl4",
+>  	NULL,
+>  };
+>  
+> -- 
+> 1.8.1.4
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
