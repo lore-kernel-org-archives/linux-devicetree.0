@@ -1,184 +1,169 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] arm: dts: twl6030: typical connection to omap4 as a separate
- dtsi file
-Date: Fri, 19 Jul 2013 09:10:56 -0500
-Message-ID: <51E948F0.4070307@ti.com>
-References: <1374235814-17834-1-git-send-email-ruslan.bilovol@ti.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] iio: mxs-lradc: add scale attribute to channels
+Date: Fri, 19 Jul 2013 16:30:16 +0200
+Message-ID: <201307191630.17149.marex@denx.de>
+References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <1374225208-28940-4-git-send-email-hector.palacios@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1374235814-17834-1-git-send-email-ruslan.bilovol@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ruslan Bilovol <ruslan.bilovol@ti.com>
-Cc: benoit.cousson@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1374225208-28940-4-git-send-email-hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/19/2013 07:10 AM, Ruslan Bilovol wrote:
-> The OMAP4 SoC family uses specially-designed
-> PMIC (power management IC) companion chip for power
-> management needs: TWL6030/TWL6032.
-> Therefore there is a typical connection of PMIC to OMAP4
-> so we can figure it out into separate .dtsi file
-> and do not duplicate over board-specific files.
->
-> Tested on OMAP4 SDP board and compile-tested for Panda board
->
-> Signed-off-by: Ruslan Bilovol <ruslan.bilovol@ti.com>
+Dear Hector Palacios,
+
+> Some LRADC channels have fixed pre-dividers and all have an optional
+> divider by two which allows a maximum input voltage of VDDIO - 50mV.
+> 
+> This patch
+>  - adds the scaling info flag to all channels
+>  - grabs the max reference voltage per channel from DT
+>    (where the fixed pre-dividers apply)
+>  - allows to read the scaling attribute (computed from the Vref)
+> 
+> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>.
 > ---
->   arch/arm/boot/dts/omap4-panda-common.dtsi |   21 +---------------
->   arch/arm/boot/dts/omap4-sdp.dts           |   21 +---------------
->   arch/arm/boot/dts/twl6030_omap4.dtsi      |   38 +++++++++++++++++++++++++++++
-arch/arm/boot/dts/omap4-var-som.dts ?
+>  drivers/staging/iio/adc/mxs-lradc.c | 81
+> ++++++++++++++++++++++++------------- 1 file changed, 52 insertions(+), 29
+> deletions(-)
+> 
+> diff --git a/drivers/staging/iio/adc/mxs-lradc.c
+> b/drivers/staging/iio/adc/mxs-lradc.c index 91282dc..99e5790 100644
+> --- a/drivers/staging/iio/adc/mxs-lradc.c
+> +++ b/drivers/staging/iio/adc/mxs-lradc.c
+> @@ -141,6 +141,8 @@ struct mxs_lradc {
+> 
+>  	struct completion	completion;
+> 
+> +	uint32_t		vref_mv[LRADC_MAX_TOTAL_CHANS];
+> +
+>  	/*
+>  	 * Touchscreen LRADC channels receives a private slot in the CTRL4
+>  	 * register, the slot #7. Therefore only 7 slots instead of 8 in the
+> @@ -228,39 +230,12 @@ struct mxs_lradc {
+>  #define LRADC_RESOLUTION			12
+>  #define LRADC_SINGLE_SAMPLE_MASK		((1 << LRADC_RESOLUTION) - 1)
+> 
+> -/*
+> - * Raw I/O operations
+> - */
+> -static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
+> +static int mxs_lradc_read_single(struct iio_dev *iio_dev,
+>  			const struct iio_chan_spec *chan,
+>  			int *val, int *val2, long m)
+>  {
+>  	struct mxs_lradc *lradc = iio_priv(iio_dev);
+>  	int ret;
+> -	unsigned long mask;
+> -
+> -	if (m != IIO_CHAN_INFO_RAW)
+> -		return -EINVAL;
+> -
+> -	/* Check for invalid channel */
+> -	if (chan->channel > LRADC_MAX_TOTAL_CHANS)
+> -		return -EINVAL;
 
->   3 files changed, 40 insertions(+), 40 deletions(-)
->   create mode 100644 arch/arm/boot/dts/twl6030_omap4.dtsi
->
-> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> index faa95b5..d796302 100644
-> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> @@ -109,23 +109,9 @@
->   	};
->   };
->
-> -&omap4_pmx_wkup {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <
-> -			&twl6030_wkup_pins
-> -	>;
+This was already resolved, so this patch won't apply I'm afraid.
+
+> -	/* Validate the channel if it doesn't intersect with reserved chans. */
+> -	bitmap_set(&mask, chan->channel, 1);
+> -	ret = iio_validate_scan_mask_onehot(iio_dev, &mask);
+> -	if (ret)
+> -		return -EINVAL;
 > -
-> -	twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
-> -		pinctrl-single,pins = <
-> -			0x14 (PIN_OUTPUT | MUX_MODE2)		/* fref_clk0_out.sys_drm_msecure */
-> -		>;
-> -	};
-> -};
-> -
->   &omap4_pmx_core {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <
-> -			&twl6030_pins
->   			&twl6040_pins
->   			&mcpdm_pins
->   			&mcbsp1_pins
-> @@ -134,12 +120,6 @@
->   			&hsusbb1_pins
->   	>;
->
-> -	twl6030_pins: pinmux_twl6030_pins {
-> -		pinctrl-single,pins = <
-> -			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* sys_nirq1.sys_nirq1 */
-> -		>;
-> -	};
-> -
->   	twl6040_pins: pinmux_twl6040_pins {
->   		pinctrl-single,pins = <
->   			0xe0 (PIN_OUTPUT | MUX_MODE3)	/* hdq_sio.gpio_127 */
-> @@ -265,6 +245,7 @@
->   };
->
->   #include "twl6030.dtsi"
-> +#include "twl6030_omap4.dtsi"
->
->   &i2c2 {
->   	pinctrl-names = "default";
-> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-> index 7951b4e..91030c3 100644
-> --- a/arch/arm/boot/dts/omap4-sdp.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp.dts
-> @@ -142,23 +142,9 @@
->   	};
->   };
->
-> -&omap4_pmx_wkup {
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <
-> -			&twl6030_wkup_pins
-> -	>;
-> -
-> -	twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
-> -		pinctrl-single,pins = <
-> -			0x14 (PIN_OUTPUT | MUX_MODE2)		/* fref_clk0_out.sys_drm_msecure */
-> -		>;
-> -	};
-> -};
-> -
->   &omap4_pmx_core {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <
-> -			&twl6030_pins
->   			&twl6040_pins
->   			&mcpdm_pins
->   			&dmic_pins
-> @@ -193,12 +179,6 @@
->   		>;
->   	};
->
-> -	twl6030_pins: pinmux_twl6030_pins {
-> -		pinctrl-single,pins = <
-> -			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* sys_nirq1.sys_nirq1 */
-> -		>;
-> -	};
-> -
->   	twl6040_pins: pinmux_twl6040_pins {
->   		pinctrl-single,pins = <
->   			0xe0 (PIN_OUTPUT | MUX_MODE3)		/* hdq_sio.gpio_127 */
-> @@ -337,6 +317,7 @@
->   };
->
->   #include "twl6030.dtsi"
-> +#include "twl6030_omap4.dtsi"
->
->   &i2c2 {
->   	pinctrl-names = "default";
-> diff --git a/arch/arm/boot/dts/twl6030_omap4.dtsi b/arch/arm/boot/dts/twl6030_omap4.dtsi
-> new file mode 100644
-> index 0000000..a4fa570
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/twl6030_omap4.dtsi
-> @@ -0,0 +1,38 @@
+> -	/*
+> -	 * See if there is no buffered operation in progess. If there is, simply
+> -	 * bail out. This can be improved to support both buffered and raw IO at
+> -	 * the same time, yet the code becomes horribly complicated. Therefore I
+> -	 * applied KISS principle here.
+> -	 */
+> -	ret = mutex_trylock(&lradc->lock);
+> -	if (!ret)
+> -		return -EBUSY;
+> 
+>  	INIT_COMPLETION(lradc->completion);
+> 
+> @@ -300,6 +275,47 @@ err:
+>  	writel(LRADC_CTRL1_LRADC_IRQ_EN(0),
+>  		lradc->base + LRADC_CTRL1 + STMP_OFFSET_REG_CLR);
+> 
+> +	return ret;
+> +}
+> +
 > +/*
-> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+> + * Raw I/O operations
 > + */
+> +static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
+> +			const struct iio_chan_spec *chan,
+> +			int *val, int *val2, long m)
+> +{
+> +	struct mxs_lradc *lradc = iio_priv(iio_dev);
+> +	int ret;
 > +
-> +&twl {
 > +	/*
-> +	 * On most OMAP4 platforms, the twl6030 IRQ line is connected
-> +	 * to the SYS_NIRQ1 line on OMAP and the twl6030 MSECURE line is
-> +	 * connected to the fref_clk0_out.sys_drm_msecure line.
-> +	 * Therefore, configure the defaults for the SYS_NIRQ1 and
-> +	 * fref_clk0_out.sys_drm_msecure pins here.
+> +	 * See if there is no buffered operation in progress. If there is, 
+simply
+> +	 * bail out. This can be improved to support both buffered and raw IO at
+> +	 * the same time, yet the code becomes horribly complicated. Therefore I
+> +	 * applied KISS principle here.
 > +	 */
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <
-> +		&twl6030_pins
-> +		&twl6030_wkup_pins
-> +	>;
-> +};
+> +	ret = mutex_trylock(&lradc->lock);
+> +	if (!ret)
+> +		return -EBUSY;
 > +
-> +&omap4_pmx_wkup {
-> +	twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
-> +		pinctrl-single,pins = <
-> +			0x14 (PIN_OUTPUT | MUX_MODE2)		/* fref_clk0_out.sys_drm_msecure */
-> +		>;
-> +	};
-> +};
+> +	/* Check for invalid channel */
+> +	if (chan->channel > LRADC_MAX_TOTAL_CHANS)
+> +		ret = -EINVAL;
 > +
-> +&omap4_pmx_core {
-> +	twl6030_pins: pinmux_twl6030_pins {
-> +		pinctrl-single,pins = <
-> +			0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)	/* sys_nirq1.sys_nirq1 */
-> +		>;
-> +	};
-> +};
->
+> +	switch (m) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret = mxs_lradc_read_single(iio_dev, chan, val, val2, m);
+> +		break;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = lradc->vref_mv[chan->channel];
+> +		*val2 = chan->scan_type.realbits;
+> +		ret = IIO_VAL_FRACTIONAL_LOG2;
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+>  	mutex_unlock(&lradc->lock);
+> 
+>  	return ret;
+> @@ -821,7 +837,8 @@ static const struct iio_buffer_setup_ops
+> mxs_lradc_buffer_ops = { .type = (chan_type),					
+\
+>  	.indexed = 1,						\
+>  	.scan_index = (idx),					\
+> -	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |		\
+> +			      BIT(IIO_CHAN_INFO_SCALE),		\
+>  	.channel = (idx),					\
+>  	.scan_type = {						\
+>  		.sign = 'u',					\
+> @@ -960,6 +977,12 @@ static int mxs_lradc_probe(struct platform_device
+> *pdev) goto err_addr;
+>  	}
+> 
+> +	/* Grab Vref array from DT */
+> +	ret = of_property_read_u32_array(node, "fsl,vref", lradc->vref_mv,
+> +					 LRADC_MAX_TOTAL_CHANS);
+> +	if (ret)
+> +		goto err_addr;
+> +
+>  	platform_set_drvdata(pdev, iio);
+> 
+>  	init_completion(&lradc->completion);
+
+Otherwise:
+
+Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 
 
--- 
-Regards,
-Nishanth Menon
+Marek Vasut
