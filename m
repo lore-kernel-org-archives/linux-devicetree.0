@@ -1,112 +1,59 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Fri, 19 Jul 2013 09:45:20 -0600
-Message-ID: <51E95F10.5070006@wwwdotorg.org>
-References: <20130716015038.GD28375@S2101-09.ap.freescale.net>
- <51E4BF98.8030604@wwwdotorg.org>
- <20130716041056.GA30067@S2101-09.ap.freescale.net>
- <51E56AA7.7020103@wwwdotorg.org>
- <20130717030246.GA4541@S2101-09.ap.freescale.net>
- <51E6CCE4.20705@wwwdotorg.org> <20130717213836.GA13324@amd.pavel.ucw.cz>
- <51E719A6.6070105@wwwdotorg.org> <20130718112555.GB1021@amd.pavel.ucw.cz>
- <CAOesGMgi0j_mPyeBLVHb_QW+DwtAPoFY697eQO3-yp9tnP1vmA@mail.gmail.com>
- <20130719032328.GB20889@S2101-09.ap.freescale.net>
+From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] iio: mxs-lradc: add scale attribute to channels
+Date: Fri, 19 Jul 2013 17:44:49 +0200
+Message-ID: <51E95EF1.4040503@digi.com>
+References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <1374225208-28940-4-git-send-email-hector.palacios@digi.com> <201307191630.17149.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130719032328.GB20889-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201307191630.17149.marex-ynQEQJNshbs@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2013 09:23 PM, Shawn Guo wrote:
-> On Thu, Jul 18, 2013 at 11:45:29AM -0700, Olof Johansson wrote:
-...
->> You're spending an awful lot of energy arguing over this, but nobody
->> has actually shown data of how much deferral is happening -- and that
->> it's a real problem. Until someone does so there's no reason to change
->> it from the default module init level at all, I'd say.
-> 
-> On imx6qdl-sabreauto board, there are 3 MAX7310 units as IO expanders to
-> output 3 x 8 = 24 GPIOs.  18 of them are used for resets, enables and
-> pin steering for various peripherals on the board.
-> 
->   BACKLITE_ON
->   SAT_SHUTDN_B
->   CPU_PER_RST_B
->   MAIN_PER_RST_B
->   IPOD_RST_B
->   MLB_RST_B
->   SSI_STEERING
->   GPS_RST_B
->   
->   GPS_PWREN
->   VIDEO_ADC_PWRDN_B
->   ENET_CAN1_STEER
->   EIMD30_BTUART3_STEER
->   CAN_STBY
->   CAN_EN
->   USB_H1_PWR
->   
->   USB_OTG_PWR_ON
->   SAT_RST_B
->   NAND_BT_WIFI_STEER
-> 
-> Most of these GPIOs need to set up properly at client device driver's
-> probe stage - module_init() time.  So if we have all these service
-> providers resets/enables/steering API registered at module_init() too,
-> the probes of all these client device drivers stand a good chance to be
-> deferred.
+Dear Marek,
 
-That sounds like it /could/ well be an issue. Do you have all that
-actually hooked up through device tree so you can demonstrate the amount
-of deferred probing that /actually/ happens though?
+On 07/19/2013 04:30 PM, Marek Vasut wrote:
+>> @@ -228,39 +230,12 @@ struct mxs_lradc {
+>>   #define LRADC_RESOLUTION			12
+>>   #define LRADC_SINGLE_SAMPLE_MASK		((1 << LRADC_RESOLUTION) - 1)
+>>
+>> -/*
+>> - * Raw I/O operations
+>> - */
+>> -static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
+>> +static int mxs_lradc_read_single(struct iio_dev *iio_dev,
+>>   			const struct iio_chan_spec *chan,
+>>   			int *val, int *val2, long m)
+>>   {
+>>   	struct mxs_lradc *lradc = iio_priv(iio_dev);
+>>   	int ret;
+>> -	unsigned long mask;
+>> -
+>> -	if (m != IIO_CHAN_INFO_RAW)
+>> -		return -EINVAL;
+>> -
+>> -	/* Check for invalid channel */
+>> -	if (chan->channel > LRADC_MAX_TOTAL_CHANS)
+>> -		return -EINVAL;
+>
+> This was already resolved, so this patch won't apply I'm afraid.
 
-In order to push the probe order in the right direction, I would
-personally prefer to see some kind of explicit hinting or outright
-representation of probe order in the DT.
+You mean the 'unsigned long mask', right?  Yeah, I think I had resolved that one 
+before submitting, but looks like I didn't.
+The other check is not resolved afaik. We agreed to remove it, but on a different patch.
 
-If we fiddle with initcall levels to do this, (a) it won't always work;
-what may be optimal for one board/SoC may not be optimal for another,
-and with multi-platform kernels, we have to take a broader view, (b) the
-only beneficiary is Linux; if we add information to DT for this, every
-OS could benefit in the same way.
+> Otherwise:
+>
+> Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>
+>
+> Marek Vasut
+>
 
-My view is that when one HW object depends on another (e.g. it's reset
-by some other module, sends an interrupt to another module, is affected
-by a pin controller module, etc.), that really is a HW issue, and hence
-is appropriate to represent in device tree.
 
-In fact, we already do represent the dependencies in device tree; e.g. a
-foo-gpios/foo-reset/... property already indicates this. The issue is
-that there's no standard naming/structure across all types of DT binding
-(GPIO, reset, ...), and hence the only way to parse these dependencies
-is to do exactly what deferred probe is doing; try probing each driver,
-which then encompasses all device-specific and subsystem-specific naming
-and DT structure in its actions, and if it fails, then defer probe.
-
-If we had some explicit information re: dependencies in the DT, in an
-entirely standard format, perhaps the device core or similar could parse
-this and not even attempt probe until the relevant devices had completed
-probe. If the information turned out to be bogus (e.g. loops, missing
-drivers), we could always fall back to pure deferred probe later in the
-boot sequence.
-
-Or perhaps we should revisit whether DT node order should be defined as
-having a guaranteed influence on probe order. We could enforce that the
-source order has no influence, but then run a post-processing tool that
-finds all the dependencies from the phandles in the DT, and then
-re-sorts the DTB to get the probing order right? That would probably
-require every single driver to be module_initcall, or to ignore driver
-registration order and only probe devices in the order they appear in DT.
+Best regards,
+--
+Hector Palacios
