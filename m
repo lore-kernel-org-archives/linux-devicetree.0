@@ -1,84 +1,108 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Fri, 19 Jul 2013 11:23:30 +0800
-Message-ID: <20130719032328.GB20889@S2101-09.ap.freescale.net>
-References: <20130716015038.GD28375@S2101-09.ap.freescale.net>
- <51E4BF98.8030604@wwwdotorg.org>
- <20130716041056.GA30067@S2101-09.ap.freescale.net>
- <51E56AA7.7020103@wwwdotorg.org>
- <20130717030246.GA4541@S2101-09.ap.freescale.net>
- <51E6CCE4.20705@wwwdotorg.org>
- <20130717213836.GA13324@amd.pavel.ucw.cz>
- <51E719A6.6070105@wwwdotorg.org>
- <20130718112555.GB1021@amd.pavel.ucw.cz>
- <CAOesGMgi0j_mPyeBLVHb_QW+DwtAPoFY697eQO3-yp9tnP1vmA@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
+Date: Fri, 19 Jul 2013 11:07:10 +0530
+Message-ID: <51E8D086.809@ti.com>
+References: <1374129984-765-1-git-send-email-kishon@ti.com>
+ <1374129984-765-2-git-send-email-kishon@ti.com>
+ <20130718072004.GA16720@kroah.com> <51E7AE88.3050007@ti.com>
+ <20130718154954.GA31961@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMgi0j_mPyeBLVHb_QW+DwtAPoFY697eQO3-yp9tnP1vmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130718154954.GA31961@kroah.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, grant.likely@linaro.org, linux-media@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, akpm@linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2013 at 11:45:29AM -0700, Olof Johansson wrote:
-> Hi,
-> 
-> On Thu, Jul 18, 2013 at 4:25 AM, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org> wrote:
-> 
-> > It sound to me like keeping ammount of -EPROBE_DEFER to minimum is
-> > still preferred.
-> 
-> Hand-crafting initcall level ordering of various drivers and subsystem
-> is probably an even greater evil though. We've done it in the past,
-> but now that we have deferred probe we have the option of not having
-> to do it every time, such as this.
-> 
-> You're spending an awful lot of energy arguing over this, but nobody
-> has actually shown data of how much deferral is happening -- and that
-> it's a real problem. Until someone does so there's no reason to change
-> it from the default module init level at all, I'd say.
+Hi,
 
-On imx6qdl-sabreauto board, there are 3 MAX7310 units as IO expanders to
-output 3 x 8 = 24 GPIOs.  18 of them are used for resets, enables and
-pin steering for various peripherals on the board.
+On Thursday 18 July 2013 09:19 PM, Greg KH wrote:
+> On Thu, Jul 18, 2013 at 02:29:52PM +0530, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Thursday 18 July 2013 12:50 PM, Greg KH wrote:
+>>> On Thu, Jul 18, 2013 at 12:16:10PM +0530, Kishon Vijay Abraham I wrote:
+>>>> +struct phy_provider *__of_phy_provider_register(struct device *dev,
+>>>> +	struct module *owner, struct phy * (*of_xlate)(struct device *dev,
+>>>> +	struct of_phandle_args *args));
+>>>> +struct phy_provider *__devm_of_phy_provider_register(struct device *dev,
+>>>> +	struct module *owner, struct phy * (*of_xlate)(struct device *dev,
+>>>> +	struct of_phandle_args *args))
+>>>> +
+>>>> +__of_phy_provider_register and __devm_of_phy_provider_register can be used to
+>>>> +register the phy_provider and it takes device, owner and of_xlate as
+>>>> +arguments. For the dt boot case, all PHY providers should use one of the above
+>>>> +2 APIs to register the PHY provider.
+>>>
+>>> Why do you have __ for the prefix of a public function?  Is that really
+>>> the way that OF handles this type of thing?
+>>
+>> I have a macro of_phy_provider_register/devm_of_phy_provider_register that
+>> calls these functions and should be used by the PHY drivers. Probably I should
+>> make a mention of it in the Documentation.
+> 
+> Yes, mention those as you never want to be calling __* functions
+> directly, right?
 
-  BACKLITE_ON
-  SAT_SHUTDN_B
-  CPU_PER_RST_B
-  MAIN_PER_RST_B
-  IPOD_RST_B
-  MLB_RST_B
-  SSI_STEERING
-  GPS_RST_B
-  
-  GPS_PWREN
-  VIDEO_ADC_PWRDN_B
-  ENET_CAN1_STEER
-  EIMD30_BTUART3_STEER
-  CAN_STBY
-  CAN_EN
-  USB_H1_PWR
-  
-  USB_OTG_PWR_ON
-  SAT_RST_B
-  NAND_BT_WIFI_STEER
+correct.
+> 
+>>>> +	ret = dev_set_name(&phy->dev, "%s.%d", dev_name(dev), id);
+>>>
+>>> Your naming is odd, no "phy" anywhere in it?  You rely on the sender to
+>>> never send a duplicate name.id pair?  Why not create your own ids based
+>>> on the number of phys in the system, like almost all other classes and
+>>> subsystems do?
+>>
+>> hmm.. some PHY drivers use the id they provide to perform some of their
+>> internal operation as in [1] (This is used only if a single PHY provider
+>> implements multiple PHYS). Probably I'll add an option like PLATFORM_DEVID_AUTO
+>> to give the PHY drivers an option to use auto id.
+>>
+>> [1] ->
+>> http://archive.arm.linux.org.uk/lurker/message/20130628.134308.4a8f7668.ca.html
+> 
+> No, who cares about the id?  No one outside of the phy core ever should,
+> because you pass back the only pointer that they really do care about,
+> if they need to do anything with the device.  Use that, and then you can
 
-Most of these GPIOs need to set up properly at client device driver's
-probe stage - module_init() time.  So if we have all these service
-providers resets/enables/steering API registered at module_init() too,
-the probes of all these client device drivers stand a good chance to be
-deferred.
+hmm.. ok.
 
-Shawn
+> rip out all of the "search for a phy by a string" logic, as that's not
+
+Actually this is needed for non-dt boot case. In the case of dt boot, we use a
+phandle by which the controller can get a reference to the phy. But in the case
+of non-dt boot, the controller can get a reference to the phy only by label.
+> needed either.  Just stick to the pointer, it's easier, and safer that
+> way.
+> 
+>>>> +static inline int phy_pm_runtime_get(struct phy *phy)
+>>>> +{
+>>>> +	if (WARN(IS_ERR(phy), "Invalid PHY reference\n"))
+>>>> +		return -EINVAL;
+>>>
+>>> Why would phy ever not be valid and a error pointer?  And why dump the
+>>> stack if that happens, that seems really extreme.
+>>
+>> hmm.. there might be cases where the same controller in one soc needs PHY
+>> control and in some other soc does not need PHY control. In such cases, we
+>> might get error pointer here.
+>> I'll change WARN to dev_err.
+> 
+> I still don't understand.  You have control over the code that calls
+> these functions, just ensure that they pass in a valid pointer, it's
+> that simple.  Or am I missing something?
+
+You are right. Valid pointer check can be done in controller code as well.
+
+Thanks
+Kishon
