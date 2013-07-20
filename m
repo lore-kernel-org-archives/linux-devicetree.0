@@ -1,50 +1,60 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of: match the compatible in the order set by the dts file
-Date: Sat, 20 Jul 2013 06:44:39 +0100
-Message-ID: <20130720054439.308B33E13F0@localhost>
-References: <1373013818-11365-1-git-send-email-b32955@freescale.com> <20130709070541.GQ516@pengutronix.de> <51DBBFDA.70302@freescale.com> <20130709075124.GR516@pengutronix.de> <51DBC58D.90002@freescale.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] of/irq: Avoid calling list_first_entry() for empty list
+Date: Sat, 20 Jul 2013 06:35:18 +0100
+Message-ID: <20130720053519.41B773E170B@localhost>
+References: <1371973807.23555.1.camel@phoenix>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51DBC58D.90002@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Huang Shijie <b32955@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1371973807.23555.1.camel@phoenix>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Jul 2013 16:10:53 +0800, Huang Shijie <b32955@freescale.com> =
-wrote:
-> =E4=BA=8E 2013=E5=B9=B407=E6=9C=8809=E6=97=A5 15:51, Sascha Hauer =E5=
-=86=99=E9=81=93:
-> > On Tue, Jul 09, 2013 at 03:46:34PM +0800, Huang Shijie wrote:
-> >> =E4=BA=8E 2013=E5=B9=B407=E6=9C=8809=E6=97=A5 15:05, Sascha Hauer =
-=E5=86=99=E9=81=93:
-> >>> Why don't you set the matching order in the driver the way you wa=
-nt it
-> >>> to be, i.e.:
-> >>>
-> >>> 	{ .compatible =3D "fsl,imx6q-uart", ... },
-> >>> 	{ .compatible =3D "fsl,imx21-uart", ... },
-> >>> 	{ .compatible =3D "fsl,imx1-uart", ... },
-> >>>
-> >> yes. i can set it like this.
-> >>
-> >> but this method looks like a ugly workaround.
-> > If a driver has different ways of supporting a single device, then
-> > putting the preferred or most feature rich on top doesn't look very=
- ugly
-> > to me.
-> this method makes it much _coupled_ between the driver and the dts fi=
-le.
->=20
-> IMHO, it's an unnecessary _burden_ to the driver programmer:
->     he should puts the most feature compatible on the top.
->=20
-> it's much graceful if we let the driver programmer be transparent abo=
-ut=20
-> this.
+On Sun, 23 Jun 2013 15:50:07 +0800, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org> wrote:
+> list_first_entry() expects the list is not empty, we need to check if list is
+> empty before calling list_first_entry(). Thus use list_first_entry_or_null()
+> instead of list_first_entry().
+> 
+> Signed-off-by: Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>
 
-Absolutely true. Applied, thanks.
+Applied, thanks.
 
 g.
+
+> ---
+>  drivers/of/irq.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index a3c1c5a..5c645c7 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -482,8 +482,9 @@ void __init of_irq_init(const struct of_device_id *matches)
+>  		}
+>  
+>  		/* Get the next pending parent that might have children */
+> -		desc = list_first_entry(&intc_parent_list, typeof(*desc), list);
+> -		if (list_empty(&intc_parent_list) || !desc) {
+> +		desc = list_first_entry_or_null(&intc_parent_list,
+> +						typeof(*desc), list);
+> +		if (!desc) {
+>  			pr_err("of_irq_init: children remain, but no parents\n");
+>  			break;
+>  		}
+> -- 
+> 1.8.1.2
+> 
+> 
+> 
