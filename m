@@ -1,60 +1,49 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of/irq: Avoid calling list_first_entry() for empty list
-Date: Sat, 20 Jul 2013 06:35:18 +0100
-Message-ID: <20130720053519.41B773E170B@localhost>
-References: <1371973807.23555.1.camel@phoenix>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: [PATCH 2/3] MAINTAINERS: Change device tree mailing list
+Date: Fri, 19 Jul 2013 20:19:47 -0700
+Message-ID: <1374290388-19308-2-git-send-email-grant.likely@linaro.org>
+References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1371973807.23555.1.camel@phoenix>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.org>, devicetree-discuss@lists.ozlabs.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 23 Jun 2013 15:50:07 +0800, Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org> wrote:
-> list_first_entry() expects the list is not empty, we need to check if list is
-> empty before calling list_first_entry(). Thus use list_first_entry_or_null()
-> instead of list_first_entry().
-> 
-> Signed-off-by: Axel Lin <axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org>
+New list on vger.kernel.org. The old list was a pain to moderate.
 
-Applied, thanks.
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.org>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org
+---
+ MAINTAINERS | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-g.
-
-> ---
->  drivers/of/irq.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index a3c1c5a..5c645c7 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -482,8 +482,9 @@ void __init of_irq_init(const struct of_device_id *matches)
->  		}
->  
->  		/* Get the next pending parent that might have children */
-> -		desc = list_first_entry(&intc_parent_list, typeof(*desc), list);
-> -		if (list_empty(&intc_parent_list) || !desc) {
-> +		desc = list_first_entry_or_null(&intc_parent_list,
-> +						typeof(*desc), list);
-> +		if (!desc) {
->  			pr_err("of_irq_init: children remain, but no parents\n");
->  			break;
->  		}
-> -- 
-> 1.8.1.2
-> 
-> 
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 844d7e8..bc286e4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5882,7 +5882,7 @@ OMAP DEVICE TREE SUPPORT
+ M:	Beno=C3=AEt Cousson <b-cousson@ti.com>
+ M:	Tony Lindgren <tony@atomide.com>
+ L:	linux-omap@vger.kernel.org
+-L:	devicetree-discuss@lists.ozlabs.org (moderated for non-subscribers)
++L:	devicetree@vger.kernel.org
+ S:	Maintained
+ F:	arch/arm/boot/dts/*omap*
+ F:	arch/arm/boot/dts/*am3*
+@@ -6046,7 +6046,7 @@ F:	drivers/i2c/busses/i2c-ocores.c
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE
+ M:	Grant Likely <grant.likely@linaro.org>
+ M:	Rob Herring <rob.herring@calxeda.com>
+-L:	devicetree-discuss@lists.ozlabs.org (moderated for non-subscribers)
++L:	devicetree@vger.kernel.org
+ W:	http://fdt.secretlab.ca
+ T:	git git://git.secretlab.ca/git/linux-2.6.git
+ S:	Maintained
+--=20
+1.8.1.2
