@@ -1,104 +1,97 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RESEND PATCH v7 00/22] MBus DT binding: The return of PCIe
-Date: Sat, 20 Jul 2013 15:54:44 -0300
-Message-ID: <20130720185443.GB21460@localhost>
-References: <1373900271-4722-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130720165855.GB26625@lunn.ch> <20130720173847.GC26625@lunn.ch>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] iio: mxs-lradc: add write_raw function to modify scale
+Date: Sat, 20 Jul 2013 21:00:09 +0200
+Message-ID: <201307202100.09749.marex@denx.de>
+References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <51E967D8.8020001@digi.com> <51E9A029.3000008@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130720173847.GC26625-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51E9A029.3000008-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QW5kcmV3LAoKT24gU2F0LCBKdWwgMjAsIDIwMTMgYXQgMDc6Mzg6NDdQTSArMDIwMCwgQW5kcmV3
-IEx1bm4gd3JvdGU6Cj4gT24gU2F0LCBKdWwgMjAsIDIwMTMgYXQgMDY6NTg6NTVQTSArMDIwMCwg
-QW5kcmV3IEx1bm4gd3JvdGU6Cj4gPiBPbiBNb24sIEp1bCAxNSwgMjAxMyBhdCAxMTo1NzoyOUFN
-IC0wMzAwLCBFemVxdWllbCBHYXJjaWEgd3JvdGU6Cj4gPiA+IEhlcmUncyB0aGUgbmV3IE1CdXMg
-RFQgYmluZGluZywgaW1wbGVtZW50aW5nIHRoZSBjaGFuZ2VzIHByb3Bvc2VkCj4gPiA+IGJ5IFRo
-b21hcyB3aGVuIHdlIGRpc2N1c3NlZCB0aGUgcHJldmlvdXMgcGF0Y2hzZXQ6Cj4gPiA+IAo+ID4g
-PiAgIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2cyNTcxNzAuaHRt
-bAo+ID4gPiAKPiA+ID4gQXMgZmFyIGFzIEkga25vdywgdGhpcyByb3VuZCBmaXhlcyAqYWxsKiB0
-aGUgY29uY2VybnMgcmFpc2VkIGluIHRoZSBwYXN0Cj4gPiA+IGFuZCB0aGVyZWZvcmUgSSdkIGxp
-a2UgdG8gZ2V0IEFja2VkLWJ5J3MgZnJvbSBhbGwgdGhlIHBhcnRpZXMgaW52b2x2ZWQKPiA+ID4g
-b24gdGhlIHJlc3BlY3RpdmUgcGF0Y2hlcywgYW5kIHBhcnRpY3VsYXJseSBmb3IgdGhlIERUIGJp
-bmRpbmcuCj4gPiA+IAo+ID4gPiBJZiB0aGVyZSdzIGFueXRoaW5nIGxlZnQgdG8gcmV2aWV3LCB3
-ZSdsbCBiZSBnbGFkIHRvIGZpeCBpdCBxdWlja2x5LAo+ID4gPiBzbyBkb24ndCBoZXNpdGF0ZSBp
-biBwcm92aWRpbmcgeW91ciBmZWVkYmFjayEKPiA+ID4gCj4gPiA+IEknbSBzdXJlIG1hbnkgb2Yg
-eW91IGFyZSBkeWluZyB0byB0ZXN0IHRoaXMgbmV3IE1CdXMgdGhpbmcsIHNvIHRvIG1ha2UKPiA+
-ID4gaXQgZWFzaWVyIGZvciB0aG9zZSBjb3VyYWdlb3VzIGVub3VnaCwgSSd2ZSBwdXNoZWQgYSBw
-dWJsaWMgYnJhbmNoOgo+ID4gPiAKPiA+ID4gICBodHRwczovL2dpdGh1Yi5jb20vTUlTTC1FQlUt
-U3lzdGVtLVNXL21haW5saW5lLXB1YmxpYy90cmVlL21hcnZlbGwtbXZlYnUtbWJ1cy12Nwo+ID4g
-Cj4gPiBJIGp1c3QgdHJpZWQgdGhpcyBpbiBteSBLaXJrd29vZCBRTkFQLgo+ID4gCj4gPiBVbmNv
-bXByZXNzaW5nIExpbnV4Li4uIGRvbmUsIGJvb3RpbmcgdGhlIGtlcm5lbC4KPiA+IEJvb3Rpbmcg
-TGludXggb24gcGh5c2ljYWwgQ1BVIDB4MAo+ID4gTGludXggdmVyc2lvbiAzLjExLjAtcmMxLTAw
-MDIyLWc0NGU4YzM5IChsdW5uQGxvbmRvLmx1bm4uY2gpIChnY2MgdmVyc2lvbiA0LjMuNDMKPiA+
-IENQVTogRmVyb2Nlb24gODhGUjEzMSBbNTYyNTEzMTFdIHJldmlzaW9uIDEgKEFSTXY1VEUpLCBj
-cj0wMDA1Mzk3Nwo+ID4gQ1BVOiBWSVZUIGRhdGEgY2FjaGUsIFZJVlQgaW5zdHJ1Y3Rpb24gY2Fj
-aGUKPiA+IE1hY2hpbmU6IE1hcnZlbGwgS2lya3dvb2QgKEZsYXR0ZW5lZCBEZXZpY2UgVHJlZSks
-IG1vZGVsOiBRTkFQIFRTMjE5IGZhbWlseQo+ID4gYm9vdGNvbnNvbGUgW2Vhcmx5Y29uMF0gZW5h
-YmxlZAo+ID4gTWVtb3J5IHBvbGljeTogRUNDIGRpc2FibGVkLCBEYXRhIGNhY2hlIHdyaXRlYmFj
-awo+ID4gQnVpbHQgMSB6b25lbGlzdHMgaW4gWm9uZSBvcmRlciwgbW9iaWxpdHkgZ3JvdXBpbmcg
-b24uICBUb3RhbCBwYWdlczogMTMwMDQ4Cj4gPiBLZXJuZWwgY29tbWFuZCBsaW5lOiByb290PS9k
-ZXYvc2RhMiBjb25zb2xlPXR0eVMwLDExNTIwMCBlYXJseXByaW50awo+ID4gUElEIGhhc2ggdGFi
-bGUgZW50cmllczogMjA0OCAob3JkZXI6IDEsIDgxOTIgYnl0ZXMpCj4gPiBEZW50cnkgY2FjaGUg
-aGFzaCB0YWJsZSBlbnRyaWVzOiA2NTUzNiAob3JkZXI6IDYsIDI2MjE0NCBieXRlcykKPiA+IElu
-b2RlLWNhY2hlIGhhc2ggdGFibGUgZW50cmllczogMzI3NjggKG9yZGVyOiA1LCAxMzEwNzIgYnl0
-ZXMpCj4gPiBNZW1vcnk6IDUxMzI2OEsvNTI0Mjg4SyBhdmFpbGFibGUgKDQyNDdLIGtlcm5lbCBj
-b2RlLCAyNDFLIHJ3ZGF0YSwgMTE0OEsgcm9kYXRhKQo+ID4gVmlydHVhbCBrZXJuZWwgbWVtb3J5
-IGxheW91dDoKPiA+ICAgICB2ZWN0b3IgIDogMHhmZmZmMDAwMCAtIDB4ZmZmZjEwMDAgICAoICAg
-NCBrQikKPiA+ICAgICBmaXhtYXAgIDogMHhmZmYwMDAwMCAtIDB4ZmZmZTAwMDAgICAoIDg5NiBr
-QikKPiA+ICAgICB2bWFsbG9jIDogMHhlMDgwMDAwMCAtIDB4ZmYwMDAwMDAgICAoIDQ4OCBNQikK
-PiA+ICAgICBsb3dtZW0gIDogMHhjMDAwMDAwMCAtIDB4ZTAwMDAwMDAgICAoIDUxMiBNQikKPiA+
-ICAgICBtb2R1bGVzIDogMHhiZjAwMDAwMCAtIDB4YzAwMDAwMDAgICAoICAxNiBNQikKPiA+ICAg
-ICAgIC50ZXh0IDogMHhjMDAwODAwMCAtIDB4YzA1NGQwNTAgICAoNTM5NyBrQikKPiA+ICAgICAg
-IC5pbml0IDogMHhjMDU0ZTAwMCAtIDB4YzA1NzY1MjAgICAoIDE2MiBrQikKPiA+ICAgICAgIC5k
-YXRhIDogMHhjMDU3ODAwMCAtIDB4YzA1YjQ0MjAgICAoIDI0MiBrQikKPiA+ICAgICAgICAuYnNz
-IDogMHhjMDViNDQyMCAtIDB4YzA2NGUxMDQgICAoIDYxNiBrQikKPiA+IFNMVUI6IEhXYWxpZ249
-MzIsIE9yZGVyPTAtMywgTWluT2JqZWN0cz0wLCBDUFVzPTEsIE5vZGVzPTEKPiA+IFByZWVtcHRp
-YmxlIGhpZXJhcmNoaWNhbCBSQ1UgaW1wbGVtZW50YXRpb24uCj4gPiBOUl9JUlFTOjExNAo+ID4g
-c2NoZWRfY2xvY2s6IDMyIGJpdHMgYXQgMjAwTUh6LCByZXNvbHV0aW9uIDVucywgd3JhcHMgZXZl
-cnkgMjE0NzRtcwo+ID4gQ29uc29sZTogY29sb3VyIGR1bW15IGRldmljZSA4MHgzMAo+ID4gQ2Fs
-aWJyYXRpbmcgZGVsYXkgbG9vcC4uLiAxNTg3LjYwIEJvZ29NSVBTIChscGo9NzkzODA0OCkKPiA+
-IHBpZF9tYXg6IGRlZmF1bHQ6IDMyNzY4IG1pbmltdW06IDMwMQo+ID4gTW91bnQtY2FjaGUgaGFz
-aCB0YWJsZSBlbnRyaWVzOiA1MTIKPiA+IENQVTogVGVzdGluZyB3cml0ZSBidWZmZXIgY29oZXJl
-bmN5OiBvawo+ID4gU2V0dGluZyB1cCBzdGF0aWMgaWRlbnRpdHkgbWFwIGZvciAweGMwNDBlODg4
-IC0gMHhjMDQwZThjNAo+ID4gcGluY3RybCBjb3JlOiBpbml0aWFsaXplZCBwaW5jdHJsIHN1YnN5
-c3RlbQo+ID4gcmVndWxhdG9yLWR1bW15OiBubyBwYXJhbWV0ZXJzCj4gPiBORVQ6IFJlZ2lzdGVy
-ZWQgcHJvdG9jb2wgZmFtaWx5IDE2Cj4gPiBETUE6IHByZWFsbG9jYXRlZCAyNTYgS2lCIHBvb2wg
-Zm9yIGF0b21pYyBjb2hlcmVudCBhbGxvY2F0aW9ucwo+ID4gS2lya3dvb2Q6IE1WODhGNjI4Mi1S
-ZXYtQTAsIFRDTEs9MjAwMDAwMDAwLgo+ID4gRmVyb2Nlb24gTDI6IEVuYWJsaW5nIEwyCj4gPiBG
-ZXJvY2VvbiBMMjogQ2FjaGUgc3VwcG9ydCBpbml0aWFsaXNlZC4KPiA+IGJpbzogY3JlYXRlIHNs
-YWIgPGJpby0wPiBhdCAwClsuLi5dCj4gPiBtdmVidS1wY2llIHBjaWUtY29udHJvbGxlci4xOiBQ
-Q0llMC4wOiBjYW5ub3QgZ2V0IHRndC9hdHRyIGZvciBtZW0gd2luZG93Cj4gPiBtdmVidS1wY2ll
-IHBjaWUtY29udHJvbGxlci4xOiBQQ0llMS4wOiBjYW5ub3QgZ2V0IHRndC9hdHRyIGZvciBtZW0g
-d2luZG93ClsuLi5dCj4gCj4gQW55IGlkZWFzPwo+IAoKVGhlIHBhdGNoc2V0IHdvcmtzIG9ubHkg
-Zm9yIEFybWFkYSAzNzAgYW5kIEFybWFkYSBYUCBTb0MsIG5vdCBmb3IgS2lya3dvb2QuCkZvciBz
-b21lIHJlYXNvbiBJIHdhcyBjb21wbGV0ZWx5IHN1cmUgdGhlcmUgd2Fzbid0IGFueSBEVC1lbmFi
-bGVkIEtpcmt3b29kCmJvYXJkcyB3aXRoIFBDSWUgc3VwcG9ydC4KCkkgYXBvbG9naXplIGZvciBu
-b3Qgbm90aWNpbmcgdGhpcyBiZWZvcmUhCgpNeSBwbGFuIHdhcyB0byBnZXQgdGhpcyBwYXRjaHNl
-dCBhY2tlZC9tZXJnZWQgYW5kIHRoZW4gYWRkIE1CdXMgRFQgdG8gS2lya3dvb2QuClRoZSByZWFz
-b24gZm9yIHRoaXMgaXMgdGhhdCBpdCdzIGEgc2ltcGxlIGNoYW5nZSwgYnV0IHByb2JhYmx5ICp2
-ZXJ5KiBpbnRydXNpdmUKb24gdGhlIERUUyBmaWxlcy4KT2YgY291cnNlLCB0aGlzIHBsYW4gd2Fz
-IGJhc2VkIG9uIHRoZSBhc3N1bXB0aW9uIHRoYXQgdGhlIHdhc24ndCBicmVha2luZwphbnl0aGlu
-Zy4KCkhvd2V2ZXIsIG5vdyBJIGd1ZXNzIHRoZXJlJ3Mgbm8gb3RoZXIgc29sdXRpb24gdGhhbiBh
-ZGRpbmcgS2lya3dvb2QgdG8gdGhlCnBhdGNoc2V0LiBTbyB1bmxlc3MgYW55b25lIGhhcyBhbnkg
-YmV0dGVyIGlkZWEsIEknbGwgYmUgc2VuZGluZyBhIHY4LgoKVGhhbmtzIGFnYWluIGZvciB0aGUg
-dGVzdCEKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4
-LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNv
-bQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0
-cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMu
-b3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Dear Jonathan Cameron,
+
+> On 07/19/2013 05:22 PM, Hector Palacios wrote:
+> > Dear Marek,
+> > 
+> > On 07/19/2013 06:17 PM, Marek Vasut wrote:
+> >>> Here you have three entries per channel:
+> >>> in_voltageX_raw        -> the sample raw value
+> >>> in_voltageX_scale    -> the scale to multiply the raw value to get the
+> >> 
+> >> voltage
+> >> 
+> >>> in mV in_voltageX_scale_available -> lists the available scales of the
+> >>> channel
+> >>> 
+> >>> For example for channel 0:
+> >>> 
+> >>> # cat in_voltage0_scale_available
+> >>> 0.451660156 0.903320312    (two scales available, first with divider by
+> >>> two disabled, second with divider by two enabled)
+> >>> 
+> >>> # cat in_voltage0_scale
+> >>> 0.451660156            (divider by two is currently disabled)
+> >>> 
+> >>> # cat in_voltage0_raw        (shows measured value)
+> >>> 1000
+> >>> 
+> >>> If you multiply the value by the scale you get: 1000 * 0.451660156 =
+> >>> 451.6 mV
+> >>> 
+> >>> # echo 0.903320312 > in_voltage0_scale    (enables the divider by two)
+> >> 
+> >> Ok, so I have to remember this value : '0.903320312' in case I want to
+> >> enable divide-by-two functionality?
+> > 
+> > No you don't. That's why there is a 'in_voltage_scale_available' that
+> > lists the available values.
+> > 
+> >> Hmmmm ... why would this interface not work:
+> >> echo 2 > in_voltage0_scale
+> >> 
+> >> or
+> >> 
+> >> echo 1 > in_voltage0_scale
+> > 
+> > An easy thing like that is what I first submitted, but it was rejected
+> > and I was told to use the scale_available descriptor instead, which is
+> > the common interface the rest of drivers use.
+> 
+> This comes down to allowing us to have one generic predictable interface
+> (which sometimes ends up looking uggly!).  The key thing is that if you
+> are outputing using the _raw sysfs interfaces, the aim is to avoid doing
+> nasty maths in kernel to get to 'standard' units such as mV.
+
+OK, understood.
+
+> Hence that scale attribute tells you what to apply to the value.  If you
+> just wanted it to be 1 or 2 then the in_voltage0_raw value would have to
+> be a long and nasty decimal.  Now we do have the option of
+> in_voltage0_calibscale which would be applied internally to the value but
+> it really isn't for this purpose (it's for devices with a 'trim' control)
+> and you'd still have scale set to 0.903320312 or similar. Although they
+> have meaning obviously, in this case 1 and 2 are little more than 'magic'
+> numbers.
+> 
+> Note that when things are quite, I'm at least in theory working on a
+> cleaner interface for these 'available' attributes that would also provide
+> in kernel access for IIO consumers. Basically this will be another
+> callback to get either the 'range' of pseudo continuous variables or the
+> 'available' set for parameters like this.
+
+Thanks for the explanation!
+
+> Being lazy I'm happy to let someone else clean this corner up if they like?
+> *looks hopeful*
+
+Please don't look at me, I already am fully loaded with fixing my mess all 
+around ;-/
+
+Best regards,
+Marek Vasut
