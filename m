@@ -1,74 +1,53 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC] Driver configuration using Device Tree
-Date: Sat, 20 Jul 2013 07:02:14 +0100
-Message-ID: <20130720060214.A7E853E16F1@localhost>
-References: <51DC6E52.3080102@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51DC6E52.3080102-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Eric Holmberg <eholmber-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: kramasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: The future of DT binding maintainership
+Date: Sat, 20 Jul 2013 04:46:47 +0100
+Message-ID: <20130720034647.2B7B43E14BF@localhost>
+References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <w.sang@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 09 Jul 2013 14:10:58 -0600, Eric Holmberg <eholmber-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> I am trying to determine if Device Tree is an appropriate use for 
-> configuring drivers and would like to request comments.  We currently 
-> use Device Tree in our Shared Memory Driver (SMD) that manages up to 64 
-> ports (where a port consists of an RX FIFO and a TX FIFO) between any 
-> two processors and a pair of interrupts for each processor.  The shared 
-> memory address and interrupt configuration is stored in Device Tree and 
-> since this is hardware, this is considered an acceptable use.  However, 
-> we also have two separate modules that use SMD and export devices to 
-> userspace through either the TTY framework (SMD TTY) or through a 
-> character device (SMD PKT).  For these drivers, the configuration has 
-> less to do with hardware and more about which port to connect to in the 
-> SMD driver and how to expose the port to userspace through a device 
-> node.  This code is used in Linux-based phones.
-> 
-> The DT configuration looks like this:
->          qcom,smdtty {
->                  compatible = "qcom,smdtty";
-> 
->                  qcom,smdtty-ds {
->                          qcom,smdtty-port-name = "DS";
->                          qcom,smdtty-edge = <0>;
->                          qcom,smdtty-dev-idx = <0>;
->                  };
->                  . . .
->                 /* on the order of 10 more port config items */
->        };
-> 
-> 
-> Question
-> --------
-> Is there a concern that DT should only be used for hardware 
-> configuration and that this "driver configuration" is not an acceptable 
-> use?  If it is not acceptable, should I go back to using platform 
-> devices (seems like a step backwards) or some other method such as 
-> exporting a control channel to userspace that can be configured using an 
-> IOCTL?
+A number of us had a face-to-face meeting in Dublin last week to talk
+about DT maintainership and the fact that it simply isn't working right
+now. Neither Rob nor I can keep up with the load and there are a lot of
+poorly designed bindings appearing in the tree.
 
-It still is a reasonable leap to say that the DT contains the known-sane
-configuration settings that are needed by the platform. It may not be
-/strictly/ a hardware description, but it is a description of the usage
-model of the platform.
+Device tree binding maintainership needs to be split off to a separate
+group, and we've started with a few people willing to help, Pawel Moll,
+Mark Rutland, Stephen Warren and Ian Campbell.
 
-I would however say that you only want that configuration to appear once
-in the system. If, say, the linux host sets up and configures the SMD
-regions, then I would like to see the remote systems dynamically
-receiving the configuration from the linux host instead of having a
-separate configuration file.
+(BTW, even though I've already sent a patch adding that group
+MAINTAINERS, this is not set in stone. Anyone else wanting to help
+maintain should volunteer)
+
+Another thing discussed is that we need to start validating DT schema
+with an extension to dtc. Tomasz Figa has volunteered to do this work
+and has support from his employer to spend time on it. What I'm hoping
+to have is that the DT schema will get checked as part of the dts build
+process so that any DT file that doesn't match the documented schema
+will get flagged, and that the schema files will be human readable and
+will double as documentation.
+
+There is not yet any process for binding maintainership. We talked about
+a few ideas, but they really need to be hashed out here on the mailing
+list. A couple of the questions:
+
+- How are bindings allowed to be merged? Through subsystem trees, or
+  only through the bindings tree?
+  - Through the bindings tree is more work but it will provide more
+    control.
+  - Through subsystem trees means drivers and bindings get merged
+    together.
+  - If we have a schema tool that reports errors on missing or
+    unapproved schema, then spliting the driver from the binding won't
+    matter that much.
+- Do we need to differentiate between 'staging' and 'stable' bindings?
+- What is the schedule for splitting the bindings and .dts files out of
+  the kernel?
+  - Ian Campbell is maintaining a DT bindings and .dts mirror tree which
+    should eventually become the 'master' for merging DT bindings.
 
 g.
