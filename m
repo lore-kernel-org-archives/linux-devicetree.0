@@ -1,53 +1,49 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: add vendor prefix for Qualcomm Atheros, Inc.
-Date: Sat, 20 Jul 2013 06:06:42 +0100
-Message-ID: <20130720050642.59D853E1681@localhost>
-References: <1367398434-9230-1-git-send-email-juhosg@openwrt.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] DT: add vendor prefixes for hisilicon
+Date: Sat, 20 Jul 2013 06:25:37 +0100
+Message-ID: <20130720052537.5BB403E16CD@localhost>
+References: <1371445499-27265-1-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1367398434-9230-1-git-send-email-juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Luis R. Rodriguez" <rodrigue-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1371445499-27265-1-git-send-email-zhangfei.gao@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  1 May 2013 10:53:54 +0200, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
-> This prefix will be used in various compatible properties
-> for the devices from Qualcomm Atheros, Inc.
-> 
-> Cc: Luis R. Rodriguez <rodrigue-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-> Signed-off-by: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+On Mon, 17 Jun 2013 13:04:59 +0800, Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 
-Applied, thanks
+Applied.
 
 g.
 
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
 >  1 file changed, 1 insertion(+)
 > 
 > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 19e1ef7..20559cd 100644
+> index 6931c43..e18f3ad 100644
 > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
 > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -40,6 +40,7 @@ nxp	NXP Semiconductors
->  onnn	ON Semiconductor Corp.
->  picochip	Picochip Ltd
->  powervr	PowerVR (deprecated, use img)
-> +qca	Qualcomm Atheros, Inc.
->  qcom	Qualcomm, Inc.
->  ramtron	Ramtron International
->  realtek Realtek Semiconductor Corp.
+> @@ -25,6 +25,7 @@ est	ESTeem Wireless Modems
+>  fsl	Freescale Semiconductor
+>  GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>  gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+> +hisilicon	Hisilicon Limited.
+>  hp	Hewlett Packard
+>  ibm	International Business Machines (IBM)
+>  idt	Integrated Device Technologies, Inc.
 > -- 
-> 1.7.10
+> 1.7.9.5
 > 
