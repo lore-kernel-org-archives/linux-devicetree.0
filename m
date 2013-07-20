@@ -1,45 +1,140 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v2] of: Specify initrd location using 64-bit
-Date: Sat, 20 Jul 2013 06:39:45 +0100
-Message-ID: <20130720053945.C7AC63E0C52@localhost>
-References: <1372702835-5333-1-git-send-email-santosh.shilimkar@ti.com> <51D1F5E2.6070609@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <51D1F5E2.6070609@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Rob Herring <robherring2@gmail.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, James Hogan <james.hogan@imgtec.com>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, x86@kernel.org, arm@kernel.org, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Nicolas
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] OF: make of_property_for_each_{u32|string}() use
+ parameters if OF is not enabled
+Date: Sat, 20 Jul 2013 06:28:09 +0100
+Message-ID: <20130720052809.3F0573E16E7@localhost>
+References: <1371137331-4652-1-git-send-email-bigeasy@linutronix.de>
+ <20130615140018.572793E0A2E@localhost> <20130617144813.GA10582@linutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============4204231246154384897=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130617144813.GA10582-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 01 Jul 2013 16:34:26 -0500, Rob Herring <robherring2@gmail.com> wrote:
-> On 07/01/2013 01:20 PM, Santosh Shilimkar wrote:
-> > On some PAE architectures, the entire range of physical memory could reside
-> > outside the 32-bit limit.  These systems need the ability to specify the
-> > initrd location using 64-bit numbers.
-> > 
-> > This patch globally modifies the early_init_dt_setup_initrd_arch() function to
-> > use 64-bit numbers instead of the current unsigned long.
-> > 
-> > There has been quite a bit of debate about whether to use u64 or phys_addr_t.
-> > It was concluded to stick to u64 to be consistent with rest of the device
-> > tree code. As summarized by Geert, "The address to load the initrd is decided
-> > by the bootloader/user and set at that point later in time. The dtb should not
-> > be tied to the kernel you are booting"
-> 
-> That was quoting me. Otherwise:
-> 
-> Acked-by: Rob Herring <rob.herring@calxeda.com>
-> 
-> Unless Grant feels compelled to pick this up for 3.11, I think it has to
-> wait for 3.12.
+--===============4204231246154384897==
+Content-Type: text/plain
 
-Nope, 3.12 is fine. Applied.
+On Mon, 17 Jun 2013 16:48:13 +0200, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
+> I am getting a few
+> |warning: unused variable ‘p’ [-Wunused-variable]
+> |warning: unused variable ‘prop’ [-Wunused-variable]
+> 
+> in the case where CONFIG_OF is not defined and the parameters are only
+> used in the loop macro.
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+
+Applied, thanks
 
 g.
+
+
+> ---
+> 
+> I also made that change for of_property_for_each_string().
+> 
+>  include/linux/of.h | 39 ++++++++++++++++++++++++---------------
+>  1 file changed, 24 insertions(+), 15 deletions(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 1fd08ca..90a8811 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -323,12 +323,6 @@ extern int of_detach_node(struct device_node *);
+>   */
+>  const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
+>  			       u32 *pu);
+> -#define of_property_for_each_u32(np, propname, prop, p, u)	\
+> -	for (prop = of_find_property(np, propname, NULL),	\
+> -		p = of_prop_next_u32(prop, NULL, &u);		\
+> -		p;						\
+> -		p = of_prop_next_u32(prop, p, &u))
+> -
+>  /*
+>   * struct property *prop;
+>   * const char *s;
+> @@ -337,11 +331,6 @@ const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
+>   *         printk("String value: %s\n", s);
+>   */
+>  const char *of_prop_next_string(struct property *prop, const char *cur);
+> -#define of_property_for_each_string(np, propname, prop, s)	\
+> -	for (prop = of_find_property(np, propname, NULL),	\
+> -		s = of_prop_next_string(prop, NULL);		\
+> -		s;						\
+> -		s = of_prop_next_string(prop, s))
+>  
+>  #else /* CONFIG_OF */
+>  
+> @@ -505,12 +494,20 @@ static inline int of_machine_is_compatible(const char *compat)
+>  	return 0;
+>  }
+>  
+> +static inline const __be32 *of_prop_next_u32(struct property *prop,
+> +		const __be32 *cur, u32 *pu)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline const char *of_prop_next_string(struct property *prop,
+> +		const char *cur)
+> +{
+> +	return NULL;
+> +}
+> +
+>  #define of_match_ptr(_ptr)	NULL
+>  #define of_match_node(_matches, _node)	NULL
+> -#define of_property_for_each_u32(np, propname, prop, p, u) \
+> -	while (0)
+> -#define of_property_for_each_string(np, propname, prop, s) \
+> -	while (0)
+>  #endif /* CONFIG_OF */
+>  
+>  #ifndef of_node_to_nid
+> @@ -559,6 +556,18 @@ static inline int of_property_read_u32(const struct device_node *np,
+>  	return of_property_read_u32_array(np, propname, out_value, 1);
+>  }
+>  
+> +#define of_property_for_each_u32(np, propname, prop, p, u)	\
+> +	for (prop = of_find_property(np, propname, NULL),	\
+> +		p = of_prop_next_u32(prop, NULL, &u);		\
+> +		p;						\
+> +		p = of_prop_next_u32(prop, p, &u))
+> +
+> +#define of_property_for_each_string(np, propname, prop, s)	\
+> +	for (prop = of_find_property(np, propname, NULL),	\
+> +		s = of_prop_next_string(prop, NULL);		\
+> +		s;						\
+> +		s = of_prop_next_string(prop, s))
+> +
+>  #if defined(CONFIG_PROC_FS) && defined(CONFIG_PROC_DEVICETREE)
+>  extern void proc_device_tree_add_node(struct device_node *, struct proc_dir_entry *);
+>  extern void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop);
+> -- 
+> 1.8.3.1
+> 
+
+
+--===============4204231246154384897==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4204231246154384897==--
