@@ -1,38 +1,50 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 0/2] PM / OPP: updates to enable sharing OPPs info
-Date: Sat, 20 Jul 2013 06:09:43 +0100
-Message-ID: <20130720050943.5EB853E169C@localhost>
-References: <1367406679-21603-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <519B45C3.8050700@arm.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <519B45C3.8050700@arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Landley <rob@landley.net>, "Rafael J. Wysocki" <rjw@sisk.pl>, Shawn Guo <shawn.guo@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH] of: match the compatible in the order set by the dts file
+Date: Sat, 20 Jul 2013 06:44:39 +0100
+Message-ID: <20130720054439.308B33E13F0@localhost>
+References: <1373013818-11365-1-git-send-email-b32955@freescale.com> <20130709070541.GQ516@pengutronix.de> <51DBBFDA.70302@freescale.com> <20130709075124.GR516@pengutronix.de> <51DBC58D.90002@freescale.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51DBC58D.90002@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Huang Shijie <b32955@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 May 2013 11:00:35 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com> wrote:
-> Hi Rob, Grant,
-> 
-> On 01/05/13 12:11, Sudeep KarkadaNagesha wrote:
-> > From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
-> > 
-> > These are couple of updates to existing PM/OPP library to support
-> > sharing of OPPs between different device nodes.
-> > 
-> > Currently all the cpu nodes are parsed until the OPPs are found. This
-> > is essential to support cpuhotplug without having to replicate OPP
-> > information in all the cpu nodes.
-> > 
-> > However in systems with multiple cpu power domain, its better to have
-> > OPP entry for each cpu. To avoid replication, phandle can be specified
-> > to the node which contains the full OPP information.
-> > 
-> Is proposed option of phandle for OPP acceptable to avoid replication ?
-> Any suggestions to proceed on this ? This is needed to support CPU
-> hotplug on big LITTLE system where current methods like parsing all the
-> nodes or just CPU0 node will not work.
+On Tue, 9 Jul 2013 16:10:53 +0800, Huang Shijie <b32955@freescale.com> =
+wrote:
+> =E4=BA=8E 2013=E5=B9=B407=E6=9C=8809=E6=97=A5 15:51, Sascha Hauer =E5=
+=86=99=E9=81=93:
+> > On Tue, Jul 09, 2013 at 03:46:34PM +0800, Huang Shijie wrote:
+> >> =E4=BA=8E 2013=E5=B9=B407=E6=9C=8809=E6=97=A5 15:05, Sascha Hauer =
+=E5=86=99=E9=81=93:
+> >>> Why don't you set the matching order in the driver the way you wa=
+nt it
+> >>> to be, i.e.:
+> >>>
+> >>> 	{ .compatible =3D "fsl,imx6q-uart", ... },
+> >>> 	{ .compatible =3D "fsl,imx21-uart", ... },
+> >>> 	{ .compatible =3D "fsl,imx1-uart", ... },
+> >>>
+> >> yes. i can set it like this.
+> >>
+> >> but this method looks like a ugly workaround.
+> > If a driver has different ways of supporting a single device, then
+> > putting the preferred or most feature rich on top doesn't look very=
+ ugly
+> > to me.
+> this method makes it much _coupled_ between the driver and the dts fi=
+le.
+>=20
+> IMHO, it's an unnecessary _burden_ to the driver programmer:
+>     he should puts the most feature compatible on the top.
+>=20
+> it's much graceful if we let the driver programmer be transparent abo=
+ut=20
+> this.
 
-Looks fine to me.
+Absolutely true. Applied, thanks.
 
 g.
-
