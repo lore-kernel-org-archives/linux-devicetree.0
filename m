@@ -1,97 +1,56 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] iio: mxs-lradc: add write_raw function to modify scale
-Date: Sat, 20 Jul 2013 21:00:09 +0200
-Message-ID: <201307202100.09749.marex@denx.de>
-References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <51E967D8.8020001@digi.com> <51E9A029.3000008@kernel.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: New device tree mailing list
+Date: Sat, 20 Jul 2013 20:18:54 +0100
+Message-ID: <CACxGe6v=sKb7acuEB3__sxdeq_7hnMLnwJxfPwiLxSPMfgo1oQ@mail.gmail.com>
+References: <CACxGe6t1MNMcL=0U9Cu7MOvPx-PCkWFf5iWGPZ=eAXSz-uuqEA@mail.gmail.com>
+ <1374283779.2059.19.camel@joe-AO722>
+ <CACRpkdZ=THRiyrDqwDR7NT97EpFCT474mjG8_S1_mEM0rJ1oEg@mail.gmail.com>
+ <20130720170047.GB1877@marklar.spinoli.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51E9A029.3000008-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130720170047.GB1877-+o3RUvwP9FWmwd5QzNGvFEB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Hank Leininger <hlein-ucc6eYpBSSFhl2p70BpVqQ@public.gmane.org>
+Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Jonathan Cameron,
+On Sat, Jul 20, 2013 at 6:00 PM, Hank Leininger <hlein-ucc6eYpBSSFhl2p70BpVqQ@public.gmane.org> wrote:
+> On Sat, Jul 20, 2013 at 06:28:19PM +0200, Linus Walleij wrote:
+>> Hi MARC list archive folks,
+>>
+>> could you please start archiving the following recently addes VGER lists
+>> at marc.info:
+>>
+>> These go into the "Linux" folder:
+>> linux-gpio: http://vger.kernel.org/vger-lists.html#linux-gpio
+>> linux-spi: http://vger.kernel.org/vger-lists.html#linux-spi
+>>
+>> This one goes into "Development" or "Misc" I guess:
+>> devicetree: http://vger.kernel.org/vger-lists.html#devicetree
+>
+> Sure, I've just subscribed us to all three.  They'll show in 'Misc' once
+> some traffic comes in, and then I'll (have to remember to) move them.
+>
+> I realize MARC didn't carry the old/original devicetree-discuss list at
+> ozlabs.  I'm pulling down the archives from that list now.  Should I
+> import them as 'devicetree-discuss' (historically accurate) or as
+> 'devicetree' (so they will appear seamless in MARC w/the new vger list's
+> traffic)?
 
-> On 07/19/2013 05:22 PM, Hector Palacios wrote:
-> > Dear Marek,
-> > 
-> > On 07/19/2013 06:17 PM, Marek Vasut wrote:
-> >>> Here you have three entries per channel:
-> >>> in_voltageX_raw        -> the sample raw value
-> >>> in_voltageX_scale    -> the scale to multiply the raw value to get the
-> >> 
-> >> voltage
-> >> 
-> >>> in mV in_voltageX_scale_available -> lists the available scales of the
-> >>> channel
-> >>> 
-> >>> For example for channel 0:
-> >>> 
-> >>> # cat in_voltage0_scale_available
-> >>> 0.451660156 0.903320312    (two scales available, first with divider by
-> >>> two disabled, second with divider by two enabled)
-> >>> 
-> >>> # cat in_voltage0_scale
-> >>> 0.451660156            (divider by two is currently disabled)
-> >>> 
-> >>> # cat in_voltage0_raw        (shows measured value)
-> >>> 1000
-> >>> 
-> >>> If you multiply the value by the scale you get: 1000 * 0.451660156 =
-> >>> 451.6 mV
-> >>> 
-> >>> # echo 0.903320312 > in_voltage0_scale    (enables the divider by two)
-> >> 
-> >> Ok, so I have to remember this value : '0.903320312' in case I want to
-> >> enable divide-by-two functionality?
-> > 
-> > No you don't. That's why there is a 'in_voltage_scale_available' that
-> > lists the available values.
-> > 
-> >> Hmmmm ... why would this interface not work:
-> >> echo 2 > in_voltage0_scale
-> >> 
-> >> or
-> >> 
-> >> echo 1 > in_voltage0_scale
-> > 
-> > An easy thing like that is what I first submitted, but it was rejected
-> > and I was told to use the scale_available descriptor instead, which is
-> > the common interface the rest of drivers use.
-> 
-> This comes down to allowing us to have one generic predictable interface
-> (which sometimes ends up looking uggly!).  The key thing is that if you
-> are outputing using the _raw sysfs interfaces, the aim is to avoid doing
-> nasty maths in kernel to get to 'standard' units such as mV.
+As long as it doesn't cause any problems with duplicate messages for
+the next short little while, I would merge the two archives.
 
-OK, understood.
+Thanks Hank.
 
-> Hence that scale attribute tells you what to apply to the value.  If you
-> just wanted it to be 1 or 2 then the in_voltage0_raw value would have to
-> be a long and nasty decimal.  Now we do have the option of
-> in_voltage0_calibscale which would be applied internally to the value but
-> it really isn't for this purpose (it's for devices with a 'trim' control)
-> and you'd still have scale set to 0.903320312 or similar. Although they
-> have meaning obviously, in this case 1 and 2 are little more than 'magic'
-> numbers.
-> 
-> Note that when things are quite, I'm at least in theory working on a
-> cleaner interface for these 'available' attributes that would also provide
-> in kernel access for IIO consumers. Basically this will be another
-> callback to get either the 'range' of pseudo continuous variables or the
-> 'available' set for parameters like this.
-
-Thanks for the explanation!
-
-> Being lazy I'm happy to let someone else clean this corner up if they like?
-> *looks hopeful*
-
-Please don't look at me, I already am fully loaded with fixing my mess all 
-around ;-/
-
-Best regards,
-Marek Vasut
+g.
