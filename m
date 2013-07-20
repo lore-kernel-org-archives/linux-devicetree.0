@@ -1,41 +1,46 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Reusing DTSI files across trees with differing numbers of address-cells
-Date: Sat, 20 Jul 2013 06:03:04 +0100
-Message-ID: <20130720050304.CF0F93E167A@localhost>
-References: <517B0B20.3000305@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <517B0B20.3000305@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stepan Moskovchenko <stepanm@codeaurora.org>, devicetree-discuss@lists.ozlabs.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [Ksummit-2013-discuss] [ATTEND] Handling of devicetree bindings
+Date: Sat, 20 Jul 2013 06:51:08 +0100
+Message-ID: <20130720055108.7480A3E1663@localhost>
+References: <20130713192647.GA3798@katana> <20130713204927.GA1124@roeck-us.net>
+ <CACRpkdaJ5podVCrb7XuhhGF0Oco+eLrFH0EVGZM0MBbGP9m7WQ@mail.gmail.com>
+ <20130714181331.GC26513@roeck-us.net>
+ <CACRpkdanQz+Tb-c+-3hRVKhCEBHtxm1toFw7mwyeMmSuVq+sfQ@mail.gmail.com>
+ <20130715082915.5142547a@lwn.net>
+ <CACRpkdaEswVPNqwQkMjsNWutCpOQxgMeGwsgemsF4SSZxXMocQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdaEswVPNqwQkMjsNWutCpOQxgMeGwsgemsF4SSZxXMocQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, ksummit-2013-discuss-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Apr 2013 16:17:52 -0700, Stepan Moskovchenko <stepanm@codeaurora.org> wrote:
+On Mon, 15 Jul 2013 23:07:36 +0200, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Jul 15, 2013 at 4:29 PM, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org> wrote:
 > 
-> Hello. I am creating a DTS file for an ARM (Qualcomm MSM) target which 
-> supports LPAE, meaning that the target is capable of addressing memory 
-> beyond the standard 4GB boundary. To account for the fact that the 
-> memory node can contain reg addresses that exceed 32 bits, I am setting 
-> #address-cells and #size-cells to 2 at the top level of my tree, since 
-> this is what the kernel will use when parsing the memory node.
+> > Do we need a kernel summit discussion, or do we just need a good
+> > document?  Or, to phrase the question another way, are we lacking a
+> > consensus among the clueful regarding how device tree bindings should be
+> > designed, or are we simply lacking education?
 > 
-> However, my internal tree contains multiple DTSI files with definitions 
-> for some hardware blocks that are used across multiple MSM targets, 
-> including ones that have #address-cells and #size-cells set to 1 at the 
-> top level, I would like to re-use some of these files in the tree for my 
-> LPAE-based target. Additionally, most MSM I/O devices are declared at 
-> the top level of the tree, rather than on a dedicated simple-bus.
-> 
-> To allow reuse of common hardware block definitions, I am considering 
-> moving all the MSM memory-mapped I/O devices to a dedicated /soc node 
-> (per the Power spec), declaring this node as a simple-bus with 
-> #address-cells and #size-cells of 1, and using the ranges property to 
-> map this bus into the top-level address space. Since MSM I/O devices are 
-> located at addresses below 4GB, I believe it is okay to keep them on a 
-> simple-bus with #address-cells=1.
-> 
-> Does this seem like a reasonable approach?
+> I think both. I fear some maintainers do not know enough about
+> the subject to know if a binding should be rejected.
 
-Yes.
+I think that it would make more sense to be a topic at an ARM
+maintainers summit with the output being a *short* guidance statement
+for all maintainers stating who is responsible for approving and merging
+new bindings.
 
 g.
