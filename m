@@ -1,74 +1,119 @@
-From: Hank Leininger <hlein@marc.info>
-Subject: Re: New device tree mailing list
-Date: Sat, 20 Jul 2013 13:00:47 -0400
-Message-ID: <20130720170047.GB1877@marklar.spinoli.org>
-References: <CACxGe6t1MNMcL=0U9Cu7MOvPx-PCkWFf5iWGPZ=eAXSz-uuqEA@mail.gmail.com>
- <1374283779.2059.19.camel@joe-AO722>
- <CACRpkdZ=THRiyrDqwDR7NT97EpFCT474mjG8_S1_mEM0rJ1oEg@mail.gmail.com>
-Reply-To: Hank Leininger <hlein@marc.info>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [RESEND PATCH v7 00/22] MBus DT binding: The return of PCIe
+Date: Sat, 20 Jul 2013 19:38:47 +0200
+Message-ID: <20130720173847.GC26625@lunn.ch>
+References: <1373900271-4722-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130720165855.GB26625@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZ=THRiyrDqwDR7NT97EpFCT474mjG8_S1_mEM0rJ1oEg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Joe Perches <joe@perches.com>
+In-Reply-To: <20130720165855.GB26625@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Jul 20, 2013 at 06:58:55PM +0200, Andrew Lunn wrote:
+> On Mon, Jul 15, 2013 at 11:57:29AM -0300, Ezequiel Garcia wrote:
+> > Here's the new MBus DT binding, implementing the changes proposed
+> > by Thomas when we discussed the previous patchset:
+> > 
+> >   http://www.spinics.net/lists/arm-kernel/msg257170.html
+> > 
+> > As far as I know, this round fixes *all* the concerns raised in the past
+> > and therefore I'd like to get Acked-by's from all the parties involved
+> > on the respective patches, and particularly for the DT binding.
+> > 
+> > If there's anything left to review, we'll be glad to fix it quickly,
+> > so don't hesitate in providing your feedback!
+> > 
+> > I'm sure many of you are dying to test this new MBus thing, so to make
+> > it easier for those courageous enough, I've pushed a public branch:
+> > 
+> >   https://github.com/MISL-EBU-System-SW/mainline-public/tree/marvell-mvebu-mbus-v7
+> 
+> Hi Ezequiel
+> 
+> I just tried this in my Kirkwood QNAP.
+> 
+> Uncompressing Linux... done, booting the kernel.
+> Booting Linux on physical CPU 0x0
+> Linux version 3.11.0-rc1-00022-g44e8c39 (lunn@londo.lunn.ch) (gcc version 4.3.43
+> CPU: Feroceon 88FR131 [56251311] revision 1 (ARMv5TE), cr=00053977
+> CPU: VIVT data cache, VIVT instruction cache
+> Machine: Marvell Kirkwood (Flattened Device Tree), model: QNAP TS219 family
+> bootconsole [earlycon0] enabled
+> Memory policy: ECC disabled, Data cache writeback
+> Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 130048
+> Kernel command line: root=/dev/sda2 console=ttyS0,115200 earlyprintk
+> PID hash table entries: 2048 (order: 1, 8192 bytes)
+> Dentry cache hash table entries: 65536 (order: 6, 262144 bytes)
+> Inode-cache hash table entries: 32768 (order: 5, 131072 bytes)
+> Memory: 513268K/524288K available (4247K kernel code, 241K rwdata, 1148K rodata)
+> Virtual kernel memory layout:
+>     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+>     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+>     vmalloc : 0xe0800000 - 0xff000000   ( 488 MB)
+>     lowmem  : 0xc0000000 - 0xe0000000   ( 512 MB)
+>     modules : 0xbf000000 - 0xc0000000   (  16 MB)
+>       .text : 0xc0008000 - 0xc054d050   (5397 kB)
+>       .init : 0xc054e000 - 0xc0576520   ( 162 kB)
+>       .data : 0xc0578000 - 0xc05b4420   ( 242 kB)
+>        .bss : 0xc05b4420 - 0xc064e104   ( 616 kB)
+> SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+> Preemptible hierarchical RCU implementation.
+> NR_IRQS:114
+> sched_clock: 32 bits at 200MHz, resolution 5ns, wraps every 21474ms
+> Console: colour dummy device 80x30
+> Calibrating delay loop... 1587.60 BogoMIPS (lpj=7938048)
+> pid_max: default: 32768 minimum: 301
+> Mount-cache hash table entries: 512
+> CPU: Testing write buffer coherency: ok
+> Setting up static identity map for 0xc040e888 - 0xc040e8c4
+> pinctrl core: initialized pinctrl subsystem
+> regulator-dummy: no parameters
+> NET: Registered protocol family 16
+> DMA: preallocated 256 KiB pool for atomic coherent allocations
+> Kirkwood: MV88F6282-Rev-A0, TCLK=200000000.
+> Feroceon L2: Enabling L2
+> Feroceon L2: Cache support initialised.
+> bio: create slab <bio-0> at 0
+> mvebu-pcie pcie-controller.1: PCIe0.0: cannot get tgt/attr for mem window
+> mvebu-pcie pcie-controller.1: PCIe1.0: cannot get tgt/attr for mem window
 
---mxv5cy4qt+RJ9ypb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Ezequiel
 
-On Sat, Jul 20, 2013 at 06:28:19PM +0200, Linus Walleij wrote:
-> Hi MARC list archive folks,
->=20
-> could you please start archiving the following recently addes VGER lists
-> at marc.info:
->=20
-> These go into the "Linux" folder:
-> linux-gpio: http://vger.kernel.org/vger-lists.html#linux-gpio
-> linux-spi: http://vger.kernel.org/vger-lists.html#linux-spi
->=20
-> This one goes into "Development" or "Misc" I guess:
-> devicetree: http://vger.kernel.org/vger-lists.html#devicetree
+I just put some debug into mvebu_get_tgt_attr():
 
-Sure, I've just subscribed us to all three.  They'll show in 'Misc' once
-some traffic comes in, and then I'll (have to remember to) move them.
+slot 0, PCI_SLOT(devfn) 1
+type 512, rtype 512
+slot 0, PCI_SLOT(devfn) 1
+type 512, rtype 512
+slot 0, PCI_SLOT(devfn) 1
+type 512, rtype 512
+slot 0, PCI_SLOT(devfn) 1
+type 512, rtype 256
+mvebu-pcie pcie-controller.1: PCIe0.0: cannot get tgt/attr for mem window -2
+slot 0, PCI_SLOT(devfn) 2
+type 512, rtype 512
+slot 0, PCI_SLOT(devfn) 2
+type 512, rtype 512
+slot 0, PCI_SLOT(devfn) 2
+type 512, rtype 512
+slot 0, PCI_SLOT(devfn) 2
+type 512, rtype 256
 
-I realize MARC didn't carry the old/original devicetree-discuss list at
-ozlabs.  I'm pulling down the archives from that list now.  Should I
-import them as 'devicetree-discuss' (historically accurate) or as
-'devicetree' (so they will appear seamless in MARC w/the new vger list's
-traffic)?
+Any ideas?
 
-AFAIK vger doesn't keep copies of old messages, but if any list-members
-have mailspools of past traffic for linux-gpio and/or linux-spi, please
-contact me directly and I'll import them.
-
-Thanks,
-
---=20
-
-Hank Leininger <hlein@marc.info>
-3C2A 4EEE ED36 D136 18F2  1B30 47A8 D14B E13E 9C6A
-
---mxv5cy4qt+RJ9ypb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEVAwUBUerCP0eo0UvhPpxqAQgn6Af/VpSN+leFyqxx/T9qzmdkarAHSO8oohky
-0RO/xWNfi92sDFCc4vnKyntKYo1KCagKzE74i7WBOFgiShME9Io+MruKCdOote2U
-RMUL4CuyEomjtJEZiiPg27Y/tjWx5MzxqObWRGwbMxgD8ZODvdhyE7b7caSI5T5h
-TPdS55e4AFBx/pfNVAqs1RkeLuS/hP/7F7g2bqg6ciJf5QJmglODdll8HEhjETMZ
-lwz2U6+Y751pRWEvhCnR7m/wYBTcRLlQzh2Vs+cdd3n7UZ3asrWcVHa3IYfmqi6k
-Rle8WOGL5jr4Q8+btsncdUvGunboAy5nC6c555Ce+Rk53Yh1JSJytw==
-=0zkX
------END PGP SIGNATURE-----
-
---mxv5cy4qt+RJ9ypb--
+    Thanks
+	Andrew
