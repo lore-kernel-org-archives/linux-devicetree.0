@@ -1,119 +1,104 @@
-From: Andrew Lunn <andrew@lunn.ch>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [RESEND PATCH v7 00/22] MBus DT binding: The return of PCIe
-Date: Sat, 20 Jul 2013 19:38:47 +0200
-Message-ID: <20130720173847.GC26625@lunn.ch>
+Date: Sat, 20 Jul 2013 15:36:30 -0300
+Message-ID: <20130720183629.GA21460@localhost>
 References: <1373900271-4722-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130720165855.GB26625@lunn.ch>
+ <20130720165855.GB26625@lunn.ch> <20130720173847.GC26625@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130720165855.GB26625@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+In-Reply-To: <20130720173847.GC26625-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 20, 2013 at 06:58:55PM +0200, Andrew Lunn wrote:
-> On Mon, Jul 15, 2013 at 11:57:29AM -0300, Ezequiel Garcia wrote:
-> > Here's the new MBus DT binding, implementing the changes proposed
-> > by Thomas when we discussed the previous patchset:
-> > 
-> >   http://www.spinics.net/lists/arm-kernel/msg257170.html
-> > 
-> > As far as I know, this round fixes *all* the concerns raised in the past
-> > and therefore I'd like to get Acked-by's from all the parties involved
-> > on the respective patches, and particularly for the DT binding.
-> > 
-> > If there's anything left to review, we'll be glad to fix it quickly,
-> > so don't hesitate in providing your feedback!
-> > 
-> > I'm sure many of you are dying to test this new MBus thing, so to make
-> > it easier for those courageous enough, I've pushed a public branch:
-> > 
-> >   https://github.com/MISL-EBU-System-SW/mainline-public/tree/marvell-mvebu-mbus-v7
-> 
-> Hi Ezequiel
-> 
-> I just tried this in my Kirkwood QNAP.
-> 
-> Uncompressing Linux... done, booting the kernel.
-> Booting Linux on physical CPU 0x0
-> Linux version 3.11.0-rc1-00022-g44e8c39 (lunn@londo.lunn.ch) (gcc version 4.3.43
-> CPU: Feroceon 88FR131 [56251311] revision 1 (ARMv5TE), cr=00053977
-> CPU: VIVT data cache, VIVT instruction cache
-> Machine: Marvell Kirkwood (Flattened Device Tree), model: QNAP TS219 family
-> bootconsole [earlycon0] enabled
-> Memory policy: ECC disabled, Data cache writeback
-> Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 130048
-> Kernel command line: root=/dev/sda2 console=ttyS0,115200 earlyprintk
-> PID hash table entries: 2048 (order: 1, 8192 bytes)
-> Dentry cache hash table entries: 65536 (order: 6, 262144 bytes)
-> Inode-cache hash table entries: 32768 (order: 5, 131072 bytes)
-> Memory: 513268K/524288K available (4247K kernel code, 241K rwdata, 1148K rodata)
-> Virtual kernel memory layout:
->     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
->     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
->     vmalloc : 0xe0800000 - 0xff000000   ( 488 MB)
->     lowmem  : 0xc0000000 - 0xe0000000   ( 512 MB)
->     modules : 0xbf000000 - 0xc0000000   (  16 MB)
->       .text : 0xc0008000 - 0xc054d050   (5397 kB)
->       .init : 0xc054e000 - 0xc0576520   ( 162 kB)
->       .data : 0xc0578000 - 0xc05b4420   ( 242 kB)
->        .bss : 0xc05b4420 - 0xc064e104   ( 616 kB)
-> SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
-> Preemptible hierarchical RCU implementation.
-> NR_IRQS:114
-> sched_clock: 32 bits at 200MHz, resolution 5ns, wraps every 21474ms
-> Console: colour dummy device 80x30
-> Calibrating delay loop... 1587.60 BogoMIPS (lpj=7938048)
-> pid_max: default: 32768 minimum: 301
-> Mount-cache hash table entries: 512
-> CPU: Testing write buffer coherency: ok
-> Setting up static identity map for 0xc040e888 - 0xc040e8c4
-> pinctrl core: initialized pinctrl subsystem
-> regulator-dummy: no parameters
-> NET: Registered protocol family 16
-> DMA: preallocated 256 KiB pool for atomic coherent allocations
-> Kirkwood: MV88F6282-Rev-A0, TCLK=200000000.
-> Feroceon L2: Enabling L2
-> Feroceon L2: Cache support initialised.
-> bio: create slab <bio-0> at 0
-> mvebu-pcie pcie-controller.1: PCIe0.0: cannot get tgt/attr for mem window
-> mvebu-pcie pcie-controller.1: PCIe1.0: cannot get tgt/attr for mem window
-
-Hi Ezequiel
-
-I just put some debug into mvebu_get_tgt_attr():
-
-slot 0, PCI_SLOT(devfn) 1
-type 512, rtype 512
-slot 0, PCI_SLOT(devfn) 1
-type 512, rtype 512
-slot 0, PCI_SLOT(devfn) 1
-type 512, rtype 512
-slot 0, PCI_SLOT(devfn) 1
-type 512, rtype 256
-mvebu-pcie pcie-controller.1: PCIe0.0: cannot get tgt/attr for mem window -2
-slot 0, PCI_SLOT(devfn) 2
-type 512, rtype 512
-slot 0, PCI_SLOT(devfn) 2
-type 512, rtype 512
-slot 0, PCI_SLOT(devfn) 2
-type 512, rtype 512
-slot 0, PCI_SLOT(devfn) 2
-type 512, rtype 256
-
-Any ideas?
-
-    Thanks
-	Andrew
+QW5kcmV3LAoKT24gU2F0LCBKdWwgMjAsIDIwMTMgYXQgMDc6Mzg6NDdQTSArMDIwMCwgQW5kcmV3
+IEx1bm4gd3JvdGU6Cj4gT24gU2F0LCBKdWwgMjAsIDIwMTMgYXQgMDY6NTg6NTVQTSArMDIwMCwg
+QW5kcmV3IEx1bm4gd3JvdGU6Cj4gPiBPbiBNb24sIEp1bCAxNSwgMjAxMyBhdCAxMTo1NzoyOUFN
+IC0wMzAwLCBFemVxdWllbCBHYXJjaWEgd3JvdGU6Cj4gPiA+IEhlcmUncyB0aGUgbmV3IE1CdXMg
+RFQgYmluZGluZywgaW1wbGVtZW50aW5nIHRoZSBjaGFuZ2VzIHByb3Bvc2VkCj4gPiA+IGJ5IFRo
+b21hcyB3aGVuIHdlIGRpc2N1c3NlZCB0aGUgcHJldmlvdXMgcGF0Y2hzZXQ6Cj4gPiA+IAo+ID4g
+PiAgIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2cyNTcxNzAuaHRt
+bAo+ID4gPiAKPiA+ID4gQXMgZmFyIGFzIEkga25vdywgdGhpcyByb3VuZCBmaXhlcyAqYWxsKiB0
+aGUgY29uY2VybnMgcmFpc2VkIGluIHRoZSBwYXN0Cj4gPiA+IGFuZCB0aGVyZWZvcmUgSSdkIGxp
+a2UgdG8gZ2V0IEFja2VkLWJ5J3MgZnJvbSBhbGwgdGhlIHBhcnRpZXMgaW52b2x2ZWQKPiA+ID4g
+b24gdGhlIHJlc3BlY3RpdmUgcGF0Y2hlcywgYW5kIHBhcnRpY3VsYXJseSBmb3IgdGhlIERUIGJp
+bmRpbmcuCj4gPiA+IAo+ID4gPiBJZiB0aGVyZSdzIGFueXRoaW5nIGxlZnQgdG8gcmV2aWV3LCB3
+ZSdsbCBiZSBnbGFkIHRvIGZpeCBpdCBxdWlja2x5LAo+ID4gPiBzbyBkb24ndCBoZXNpdGF0ZSBp
+biBwcm92aWRpbmcgeW91ciBmZWVkYmFjayEKPiA+ID4gCj4gPiA+IEknbSBzdXJlIG1hbnkgb2Yg
+eW91IGFyZSBkeWluZyB0byB0ZXN0IHRoaXMgbmV3IE1CdXMgdGhpbmcsIHNvIHRvIG1ha2UKPiA+
+ID4gaXQgZWFzaWVyIGZvciB0aG9zZSBjb3VyYWdlb3VzIGVub3VnaCwgSSd2ZSBwdXNoZWQgYSBw
+dWJsaWMgYnJhbmNoOgo+ID4gPiAKPiA+ID4gICBodHRwczovL2dpdGh1Yi5jb20vTUlTTC1FQlUt
+U3lzdGVtLVNXL21haW5saW5lLXB1YmxpYy90cmVlL21hcnZlbGwtbXZlYnUtbWJ1cy12Nwo+ID4g
+Cj4gPiBIaSBFemVxdWllbAo+ID4gCj4gPiBJIGp1c3QgdHJpZWQgdGhpcyBpbiBteSBLaXJrd29v
+ZCBRTkFQLgo+ID4gCj4gPiBVbmNvbXByZXNzaW5nIExpbnV4Li4uIGRvbmUsIGJvb3RpbmcgdGhl
+IGtlcm5lbC4KPiA+IEJvb3RpbmcgTGludXggb24gcGh5c2ljYWwgQ1BVIDB4MAo+ID4gTGludXgg
+dmVyc2lvbiAzLjExLjAtcmMxLTAwMDIyLWc0NGU4YzM5IChsdW5uQGxvbmRvLmx1bm4uY2gpIChn
+Y2MgdmVyc2lvbiA0LjMuNDMKPiA+IENQVTogRmVyb2Nlb24gODhGUjEzMSBbNTYyNTEzMTFdIHJl
+dmlzaW9uIDEgKEFSTXY1VEUpLCBjcj0wMDA1Mzk3Nwo+ID4gQ1BVOiBWSVZUIGRhdGEgY2FjaGUs
+IFZJVlQgaW5zdHJ1Y3Rpb24gY2FjaGUKPiA+IE1hY2hpbmU6IE1hcnZlbGwgS2lya3dvb2QgKEZs
+YXR0ZW5lZCBEZXZpY2UgVHJlZSksIG1vZGVsOiBRTkFQIFRTMjE5IGZhbWlseQo+ID4gYm9vdGNv
+bnNvbGUgW2Vhcmx5Y29uMF0gZW5hYmxlZAo+ID4gTWVtb3J5IHBvbGljeTogRUNDIGRpc2FibGVk
+LCBEYXRhIGNhY2hlIHdyaXRlYmFjawo+ID4gQnVpbHQgMSB6b25lbGlzdHMgaW4gWm9uZSBvcmRl
+ciwgbW9iaWxpdHkgZ3JvdXBpbmcgb24uICBUb3RhbCBwYWdlczogMTMwMDQ4Cj4gPiBLZXJuZWwg
+Y29tbWFuZCBsaW5lOiByb290PS9kZXYvc2RhMiBjb25zb2xlPXR0eVMwLDExNTIwMCBlYXJseXBy
+aW50awo+ID4gUElEIGhhc2ggdGFibGUgZW50cmllczogMjA0OCAob3JkZXI6IDEsIDgxOTIgYnl0
+ZXMpCj4gPiBEZW50cnkgY2FjaGUgaGFzaCB0YWJsZSBlbnRyaWVzOiA2NTUzNiAob3JkZXI6IDYs
+IDI2MjE0NCBieXRlcykKPiA+IElub2RlLWNhY2hlIGhhc2ggdGFibGUgZW50cmllczogMzI3Njgg
+KG9yZGVyOiA1LCAxMzEwNzIgYnl0ZXMpCj4gPiBNZW1vcnk6IDUxMzI2OEsvNTI0Mjg4SyBhdmFp
+bGFibGUgKDQyNDdLIGtlcm5lbCBjb2RlLCAyNDFLIHJ3ZGF0YSwgMTE0OEsgcm9kYXRhKQo+ID4g
+VmlydHVhbCBrZXJuZWwgbWVtb3J5IGxheW91dDoKPiA+ICAgICB2ZWN0b3IgIDogMHhmZmZmMDAw
+MCAtIDB4ZmZmZjEwMDAgICAoICAgNCBrQikKPiA+ICAgICBmaXhtYXAgIDogMHhmZmYwMDAwMCAt
+IDB4ZmZmZTAwMDAgICAoIDg5NiBrQikKPiA+ICAgICB2bWFsbG9jIDogMHhlMDgwMDAwMCAtIDB4
+ZmYwMDAwMDAgICAoIDQ4OCBNQikKPiA+ICAgICBsb3dtZW0gIDogMHhjMDAwMDAwMCAtIDB4ZTAw
+MDAwMDAgICAoIDUxMiBNQikKPiA+ICAgICBtb2R1bGVzIDogMHhiZjAwMDAwMCAtIDB4YzAwMDAw
+MDAgICAoICAxNiBNQikKPiA+ICAgICAgIC50ZXh0IDogMHhjMDAwODAwMCAtIDB4YzA1NGQwNTAg
+ICAoNTM5NyBrQikKPiA+ICAgICAgIC5pbml0IDogMHhjMDU0ZTAwMCAtIDB4YzA1NzY1MjAgICAo
+IDE2MiBrQikKPiA+ICAgICAgIC5kYXRhIDogMHhjMDU3ODAwMCAtIDB4YzA1YjQ0MjAgICAoIDI0
+MiBrQikKPiA+ICAgICAgICAuYnNzIDogMHhjMDViNDQyMCAtIDB4YzA2NGUxMDQgICAoIDYxNiBr
+QikKPiA+IFNMVUI6IEhXYWxpZ249MzIsIE9yZGVyPTAtMywgTWluT2JqZWN0cz0wLCBDUFVzPTEs
+IE5vZGVzPTEKPiA+IFByZWVtcHRpYmxlIGhpZXJhcmNoaWNhbCBSQ1UgaW1wbGVtZW50YXRpb24u
+Cj4gPiBOUl9JUlFTOjExNAo+ID4gc2NoZWRfY2xvY2s6IDMyIGJpdHMgYXQgMjAwTUh6LCByZXNv
+bHV0aW9uIDVucywgd3JhcHMgZXZlcnkgMjE0NzRtcwo+ID4gQ29uc29sZTogY29sb3VyIGR1bW15
+IGRldmljZSA4MHgzMAo+ID4gQ2FsaWJyYXRpbmcgZGVsYXkgbG9vcC4uLiAxNTg3LjYwIEJvZ29N
+SVBTIChscGo9NzkzODA0OCkKPiA+IHBpZF9tYXg6IGRlZmF1bHQ6IDMyNzY4IG1pbmltdW06IDMw
+MQo+ID4gTW91bnQtY2FjaGUgaGFzaCB0YWJsZSBlbnRyaWVzOiA1MTIKPiA+IENQVTogVGVzdGlu
+ZyB3cml0ZSBidWZmZXIgY29oZXJlbmN5OiBvawo+ID4gU2V0dGluZyB1cCBzdGF0aWMgaWRlbnRp
+dHkgbWFwIGZvciAweGMwNDBlODg4IC0gMHhjMDQwZThjNAo+ID4gcGluY3RybCBjb3JlOiBpbml0
+aWFsaXplZCBwaW5jdHJsIHN1YnN5c3RlbQo+ID4gcmVndWxhdG9yLWR1bW15OiBubyBwYXJhbWV0
+ZXJzCj4gPiBORVQ6IFJlZ2lzdGVyZWQgcHJvdG9jb2wgZmFtaWx5IDE2Cj4gPiBETUE6IHByZWFs
+bG9jYXRlZCAyNTYgS2lCIHBvb2wgZm9yIGF0b21pYyBjb2hlcmVudCBhbGxvY2F0aW9ucwo+ID4g
+S2lya3dvb2Q6IE1WODhGNjI4Mi1SZXYtQTAsIFRDTEs9MjAwMDAwMDAwLgo+ID4gRmVyb2Nlb24g
+TDI6IEVuYWJsaW5nIEwyCj4gPiBGZXJvY2VvbiBMMjogQ2FjaGUgc3VwcG9ydCBpbml0aWFsaXNl
+ZC4KPiA+IGJpbzogY3JlYXRlIHNsYWIgPGJpby0wPiBhdCAwCj4gPiBtdmVidS1wY2llIHBjaWUt
+Y29udHJvbGxlci4xOiBQQ0llMC4wOiBjYW5ub3QgZ2V0IHRndC9hdHRyIGZvciBtZW0gd2luZG93
+Cj4gPiBtdmVidS1wY2llIHBjaWUtY29udHJvbGxlci4xOiBQQ0llMS4wOiBjYW5ub3QgZ2V0IHRn
+dC9hdHRyIGZvciBtZW0gd2luZG93Cj4gCj4gSGkgRXplcXVpZWwKPiAKPiBJIGp1c3QgcHV0IHNv
+bWUgZGVidWcgaW50byBtdmVidV9nZXRfdGd0X2F0dHIoKToKPiAKPiBzbG90IDAsIFBDSV9TTE9U
+KGRldmZuKSAxCj4gdHlwZSA1MTIsIHJ0eXBlIDUxMgo+IHNsb3QgMCwgUENJX1NMT1QoZGV2Zm4p
+IDEKPiB0eXBlIDUxMiwgcnR5cGUgNTEyCj4gc2xvdCAwLCBQQ0lfU0xPVChkZXZmbikgMQo+IHR5
+cGUgNTEyLCBydHlwZSA1MTIKPiBzbG90IDAsIFBDSV9TTE9UKGRldmZuKSAxCj4gdHlwZSA1MTIs
+IHJ0eXBlIDI1Ngo+IG12ZWJ1LXBjaWUgcGNpZS1jb250cm9sbGVyLjE6IFBDSWUwLjA6IGNhbm5v
+dCBnZXQgdGd0L2F0dHIgZm9yIG1lbSB3aW5kb3cgLTIKPiBzbG90IDAsIFBDSV9TTE9UKGRldmZu
+KSAyCj4gdHlwZSA1MTIsIHJ0eXBlIDUxMgo+IHNsb3QgMCwgUENJX1NMT1QoZGV2Zm4pIDIKPiB0
+eXBlIDUxMiwgcnR5cGUgNTEyCj4gc2xvdCAwLCBQQ0lfU0xPVChkZXZmbikgMgo+IHR5cGUgNTEy
+LCBydHlwZSA1MTIKPiBzbG90IDAsIFBDSV9TTE9UKGRldmZuKSAyCj4gdHlwZSA1MTIsIHJ0eXBl
+IDI1Ngo+IAo+IEFueSBpZGVhcz8KPiAKClRoYW5rcyBhIGxvdCBmb3IgdGVzdGluZyB0aGlzISBJ
+J2xsIHRha2UgYSBsb29rIGFuZCBsZXQgeW91IGtub3cuLi4KCi0tIApFemVxdWllbCBHYXJjw61h
+LCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRyb2lkIEVuZ2lu
+ZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApk
+ZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5v
+cmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
