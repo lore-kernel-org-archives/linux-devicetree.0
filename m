@@ -1,41 +1,41 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/irq: init struct resource to 0 in of_irq_to_resource()
-Date: Sat, 20 Jul 2013 06:55:05 +0100
-Message-ID: <20130720055506.01FE53E16BA@localhost>
-References: <1374143050-25848-1-git-send-email-bigeasy@linutronix.de>
- <51E8A937.9030109@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51E8A937.9030109-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: Reusing DTSI files across trees with differing numbers of address-cells
+Date: Sat, 20 Jul 2013 06:03:04 +0100
+Message-ID: <20130720050304.CF0F93E167A@localhost>
+References: <517B0B20.3000305@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <517B0B20.3000305@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stepan Moskovchenko <stepanm@codeaurora.org>, devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Jul 2013 21:49:27 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 07/18/2013 05:24 AM, Sebastian Andrzej Siewior wrote:
-> > It almost does not matter because most users use only the ->start member
-> > of the struct. However if this struct is passed to a platform device
-> > which is then added via platform_device_add() then the ->parent member is
-> > also used.
+On Fri, 26 Apr 2013 16:17:52 -0700, Stepan Moskovchenko <stepanm@codeaurora.org> wrote:
 > 
-> Most users don't use the resource struct at all. The ones that do, all
-> seem to do a memset beforehand. So I think current behavior is correct.
+> Hello. I am creating a DTS file for an ARM (Qualcomm MSM) target which 
+> supports LPAE, meaning that the target is capable of addressing memory 
+> beyond the standard 4GB boundary. To account for the fact that the 
+> memory node can contain reg addresses that exceed 32 bits, I am setting 
+> #address-cells and #size-cells to 2 at the top level of my tree, since 
+> this is what the kernel will use when parsing the memory node.
 > 
-> There are some occurrences that pass a resource in, but then don't
-> actually use the resource. Those we should fix.
+> However, my internal tree contains multiple DTSI files with definitions 
+> for some hardware blocks that are used across multiple MSM targets, 
+> including ones that have #address-cells and #size-cells set to 1 at the 
+> top level, I would like to re-use some of these files in the tree for my 
+> LPAE-based target. Additionally, most MSM I/O devices are declared at 
+> the top level of the tree, rather than on a dedicated simple-bus.
+> 
+> To allow reuse of common hardware block definitions, I am considering 
+> moving all the MSM memory-mapped I/O devices to a dedicated /soc node 
+> (per the Power spec), declaring this node as a simple-bus with 
+> #address-cells and #size-cells of 1, and using the ranges property to 
+> map this bus into the top-level address space. Since MSM I/O devices are 
+> located at addresses below 4GB, I believe it is okay to keep them on a 
+> simple-bus with #address-cells=1.
+> 
+> Does this seem like a reasonable approach?
 
-It's a reasonable safeguard though. I'm going to apply it.
+Yes.
 
 g.
