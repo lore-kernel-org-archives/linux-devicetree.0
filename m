@@ -1,84 +1,71 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
-Date: Fri, 19 Jul 2013 16:50:55 -0700
-Message-ID: <20130719235055.GB11498@kroah.com>
-References: <1374129984-765-1-git-send-email-kishon@ti.com>
- <1374129984-765-2-git-send-email-kishon@ti.com>
- <20130718072004.GA16720@kroah.com>
- <51E7AE88.3050007@ti.com>
- <20130718154954.GA31961@kroah.com>
- <51E8D086.809@ti.com>
- <20130719054311.GA14638@kroah.com>
- <51E8D4E0.8060200@ti.com>
- <20130719062941.GA23611@kroah.com>
- <51E8DE51.1060404@ti.com>
+From: Gong Yibin-B38343 <B38343@freescale.com>
+Subject: RE: [PATCH v3] regulator: pfuze100: add pfuze100 regulator driver
+Date: Sat, 20 Jul 2013 00:08:32 +0000
+Message-ID: <95EEB29E288F544BAED903CDEA0C4C060110C4CA@039-SN1MPN1-005.039d.mgd.msft.net>
+References: <1374228891-8341-1-git-send-email-b38343@freescale.com>
+ <20130719173047.GQ9858@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51E8DE51.1060404@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: kyungmin.park@samsung.com, balbi@ti.com, jg1.han@samsung.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, tony@atomide.com, arnd@arndb.de, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, linux-fbdev@vger.kernel.org, akpm@linux-foundation.org, balajitk@ti.com, george.cherian@ti.com, nsekhar@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130719173047.GQ9858@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 19, 2013 at 12:06:01PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Friday 19 July 2013 11:59 AM, Greg KH wrote:
-> > On Fri, Jul 19, 2013 at 11:25:44AM +0530, Kishon Vijay Abraham I wrote:
-> >> Hi,
-> >>
-> >> On Friday 19 July 2013 11:13 AM, Greg KH wrote:
-> >>> On Fri, Jul 19, 2013 at 11:07:10AM +0530, Kishon Vijay Abraham I wrote:
-> >>>>>>>> +	ret = dev_set_name(&phy->dev, "%s.%d", dev_name(dev), id);
-> >>>>>>>
-> >>>>>>> Your naming is odd, no "phy" anywhere in it?  You rely on the sender to
-> >>>>>>> never send a duplicate name.id pair?  Why not create your own ids based
-> >>>>>>> on the number of phys in the system, like almost all other classes and
-> >>>>>>> subsystems do?
-> >>>>>>
-> >>>>>> hmm.. some PHY drivers use the id they provide to perform some of their
-> >>>>>> internal operation as in [1] (This is used only if a single PHY provider
-> >>>>>> implements multiple PHYS). Probably I'll add an option like PLATFORM_DEVID_AUTO
-> >>>>>> to give the PHY drivers an option to use auto id.
-> >>>>>>
-> >>>>>> [1] ->
-> >>>>>> http://archive.arm.linux.org.uk/lurker/message/20130628.134308.4a8f7668.ca.html
-> >>>>>
-> >>>>> No, who cares about the id?  No one outside of the phy core ever should,
-> >>>>> because you pass back the only pointer that they really do care about,
-> >>>>> if they need to do anything with the device.  Use that, and then you can
-> >>>>
-> >>>> hmm.. ok.
-> >>>>
-> >>>>> rip out all of the "search for a phy by a string" logic, as that's not
-> >>>>
-> >>>> Actually this is needed for non-dt boot case. In the case of dt boot, we use a
-> >>>> phandle by which the controller can get a reference to the phy. But in the case
-> >>>> of non-dt boot, the controller can get a reference to the phy only by label.
-> >>>
-> >>> I don't understand.  They registered the phy, and got back a pointer to
-> >>> it.  Why can't they save it in their local structure to use it again
-> >>> later if needed?  They should never have to "ask" for the device, as the
-> >>
-> >> One is a *PHY provider* driver which is a driver for some PHY device. This will
-> >> use phy_create to create the phy.
-> >> The other is a *PHY consumer* driver which might be any controller driver (can
-> >> be USB/SATA/PCIE). The PHY consumer will use phy_get to get a reference to the
-> >> phy (by *phandle* in the case of dt boot and *label* in the case of non-dt boot).
-> >>> device id might be unknown if there are multiple devices in the system.
-> >>
-> >> I agree with you on the device id part. That need not be known to the PHY driver.
-> > 
-> > How does a consumer know which "label" to use in a non-dt system if
-> > there are multiple PHYs in the system?
-> 
-> That should be passed using platform data.
+Thanks Mark, I will send V4. 
 
-Ick, don't pass strings around, pass pointers.  If you have platform
-data you can get to, then put the pointer there, don't use a "name".
+-----Original Message-----
+From: Mark Brown [mailto:broonie@kernel.org] 
+Sent: Saturday, July 20, 2013 1:31 AM
+To: Gong Yibin-B38343
+Cc: grant.likely@linaro.org; rob.herring@calxeda.com; rob@landley.net; lgirdwood@gmail.com; shawn.guo@linaro.org; devicetree-discuss@lists.ozlabs.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] regulator: pfuze100: add pfuze100 regulator driver
 
-thanks,
+On Fri, Jul 19, 2013 at 06:14:51PM +0800, Robin Gong wrote:
 
-greg k-h
+> Add pfuze100 regulator driver.
+
+Looks good, there's some minor issues below but they should be small.
+
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -158,6 +158,13 @@ config REGULATOR_MC13892
+>  	  Say y here to support the regulators found on the Freescale MC13892
+>  	  PMIC.
+>  
+> +config REGULATOR_PFUZE100
+> +	tristate "Support regulators on Freescale PFUZE100 PMIC"
+> +	depends on I2C
+> +	help
+> +	  Say y here to support the regulators found on the Freescale PFUZE100
+> +	  PMIC.
+> +
+
+Please keep this and the Makefile sorted - if there's issues merging then please use my topic/kconfig as a base.
+
+> +		if (val & 0x40)
+> +			ramp_delay = 50000 / (4 * ramp_delay);
+> +		else
+> +			ramp_delay = 25000 / (2 * ramp_delay);
+> +		if (id <= PFUZE100_SW1C)
+> +			ramp_delay = 25000 / (2 * ramp_delay);
+
+This is a bit confusing as there's a cumalaitve modification applied to ramp_delay in the case that id is less than SW1C but it's not obvious that this is intentional given the calculations.  Please change this to make it clearer what the intended logic is (assuming it's not buggy) - something like if ... else if ... else for example.
+
+> +	ret = regmap_read(pfuze_chip->regmap, PFUZE100_REVID, &value);
+> +	if (ret)
+> +		return ret;
+> +	dev_info(pfuze_chip->dev,
+> +		 "Full lay: %x ,Metal lay: %x\n",
+> +		 (value & 0xf0) >> 4, value & 0x0f);
+
+The space should be after not before the comma in the displayed string.
+
+> +	dev_info(pfuze_chip->dev, "FAB: %x , FIN: %x\n",
+> +		 (value & 0xc) >> 2, value & 0x3);
+
+Only a space after the , for normal formatting.  ie both should look like "%x, bar".
+
