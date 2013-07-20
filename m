@@ -1,78 +1,38 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
-Date: Fri, 19 Jul 2013 20:19:48 -0700
-Message-ID: <1374290388-19308-3-git-send-email-grant.likely@linaro.org>
-References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1374290388-19308-1-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 0/2] PM / OPP: updates to enable sharing OPPs info
+Date: Sat, 20 Jul 2013 06:09:43 +0100
+Message-ID: <20130720050943.5EB853E169C@localhost>
+References: <1367406679-21603-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <519B45C3.8050700@arm.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <519B45C3.8050700@arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Landley <rob@landley.net>, "Rafael J. Wysocki" <rjw@sisk.pl>, Shawn Guo <shawn.guo@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Device tree bindings require a lot more attention than they used to.
-We've got a group of volunteers willing to take over maintaining
-bindings. This patch adds them to the MAINTAINERS file.
+On Tue, 21 May 2013 11:00:35 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com> wrote:
+> Hi Rob, Grant,
+> 
+> On 01/05/13 12:11, Sudeep KarkadaNagesha wrote:
+> > From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> > 
+> > These are couple of updates to existing PM/OPP library to support
+> > sharing of OPPs between different device nodes.
+> > 
+> > Currently all the cpu nodes are parsed until the OPPs are found. This
+> > is essential to support cpuhotplug without having to replicate OPP
+> > information in all the cpu nodes.
+> > 
+> > However in systems with multiple cpu power domain, its better to have
+> > OPP entry for each cpu. To avoid replication, phandle can be specified
+> > to the node which contains the full OPP information.
+> > 
+> Is proposed option of phandle for OPP acceptable to avoid replication ?
+> Any suggestions to proceed on this ? This is needed to support CPU
+> hotplug on big LITTLE system where current methods like parsing all the
+> nodes or just CPU0 node will not work.
 
-This group still needs to work out a process for maintainership and how
-they are going to work together. I recommend that they set up a shared
-tree on git.kernel.org that they each have commit access to similar to
-the tip tree or the arm-soc tree, but it is up to them.
+Looks fine to me.
 
-Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- MAINTAINERS | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+g.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bc286e4..12c95d5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6050,13 +6050,24 @@ L:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
- W:	http://fdt.secretlab.ca
- T:	git git://git.secretlab.ca/git/linux-2.6.git
- S:	Maintained
--F:	Documentation/devicetree
- F:	drivers/of
- F:	include/linux/of*.h
- F:	scripts/dtc
- K:	of_get_property
- K:	of_match_table
- 
-+OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-+M:	Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-+M:	Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-+M:	Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-+M:	Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-+L:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	Documentation/devicetree
-+F:	arch/*/boot/dts
-+F:	arch/*/
-+F:	include/dt-bindings
-+
- OPENRISC ARCHITECTURE
- M:	Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
- W:	http://openrisc.net
--- 
-1.8.1.2
