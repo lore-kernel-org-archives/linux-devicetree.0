@@ -1,77 +1,139 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: Re: [PATCH v2] of: Add more stubs for non-OF builds
-Date: Sat, 20 Jul 2013 16:32:43 +0400
-Message-ID: <20130720163243.5b921a1bd8301ad6eaaeeb05@mail.ru>
-References: <1371566362-9334-1-git-send-email-shc_work@mail.ru>
- <20130720053111.CA86E3E16F4@localhost>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 1/3] iio: core: implement devm_iio_device_alloc/devm_iio_device_free
+Date: Sat, 20 Jul 2013 15:05:10 +0200
+Message-ID: <51EA8B06.3080005@metafoo.de>
+References: <1374142766-29736-1-git-send-email-x0199363@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130720053111.CA86E3E16F4@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1374142766-29736-1-git-send-email-x0199363@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Oleksandr Kravchenko <x0199363@ti.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, jic23@cam.ac.uk, pmeerw@pmeerw.net, holler@ahsoftware.de, srinivas.pandruvada@intel.com, devicetree-discuss@lists.ozlabs.org, grygorii.strashko@ti.com, Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 20 Jul 2013 06:31:11 +0100
-Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On 07/18/2013 12:19 PM, Oleksandr Kravchenko wrote:
+> From: Grygorii Strashko <grygorii.strashko@ti.com>
+>
+> Add a resource managed devm_iio_device_alloc()/devm_iio_device_free()
+> to automatically clean up any allocations made by IIO drivers,
+> thus leading to simplified IIO drivers code.
+>
+> In addition, this will allow IIO drivers to use other devm_*() API
+> (like devm_request_irq) and don't care about the race between
+> iio_device_free() and the release of resources by Device core
+> during driver removing.
+>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> [o.v.kravchenko@globallogic.com: fix return value ib devm_iio_device_alloc
+> in case if devres_alloc failed, remove unused variable "rc"]
+> Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+> Tested-by: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
 
-> On Tue, 18 Jun 2013 18:39:22 +0400, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
-> > Patch adds of_get_next_child and of_get_next_available_child
-> > stubs for non-OF builds.
-> > 
-> > Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-> > ---
-> >  include/linux/of.h | 16 ++++++++++++++--
-> >  1 file changed, 14 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/linux/of.h b/include/linux/of.h
-> > index 1fd08ca..c086c1a 100644
-> > --- a/include/linux/of.h
-> > +++ b/include/linux/of.h
-> > @@ -366,8 +366,17 @@ static inline bool of_have_populated_dt(void)
-> >  	return false;
-> >  }
-> >  
-> > -#define for_each_child_of_node(parent, child) \
-> > -	while (0)
-> > +static inline struct device_node *of_get_next_child(
-> > +	const struct device_node *node, struct device_node *prev)
-> > +{
-> > +	return NULL;
-> > +}
-> > +
-> > +static inline struct device_node *of_get_next_available_child(
-> > +	const struct device_node *node, struct device_node *prev)
-> > +{
-> > +	return NULL;
-> > +}
-> >  
-> >  static inline struct device_node *of_get_child_by_name(
-> >  					const struct device_node *node,
-> > @@ -376,6 +385,9 @@ static inline struct device_node *of_get_child_by_name(
-> >  	return NULL;
-> >  }
-> >  
-> > +#define for_each_child_of_node(parent, child) \
-> > +	while (0)
-> > +
-> 
-> Why is the for_each_child_of_node() getting moved?
+Very nice, thanks for taking care of this.
 
-Please forget this patch, this is no longer needed.
-A move was to preserve the sort order for "OF" and "non-OF".
-Thanks.
+Reviewed-by: Lars-Peter Clausen <lars@metafoo.de>
 
--- 
-Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+
+> ---
+>   drivers/iio/industrialio-core.c |   47 +++++++++++++++++++++++++++++++++++++++
+>   include/linux/iio/iio.h         |   25 +++++++++++++++++++++
+>   2 files changed, 72 insertions(+)
+>
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index e145931..d56d122 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -912,6 +912,53 @@ void iio_device_free(struct iio_dev *dev)
+>   }
+>   EXPORT_SYMBOL(iio_device_free);
+>
+> +static void devm_iio_device_release(struct device *dev, void *res)
+> +{
+> +	iio_device_free(*(struct iio_dev **)res);
+> +}
+> +
+> +static int devm_iio_device_match(struct device *dev, void *res, void *data)
+> +{
+> +	struct iio_dev **r = res;
+> +	if (!r || !*r) {
+> +		WARN_ON(!r || !*r);
+> +		return 0;
+> +	}
+> +	return *r == data;
+> +}
+> +
+> +struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv)
+> +{
+> +	struct iio_dev **ptr, *iio_dev;
+> +
+> +	ptr = devres_alloc(devm_iio_device_release, sizeof(*ptr),
+> +			   GFP_KERNEL);
+> +	if (!ptr)
+> +		return NULL;
+> +
+> +	/* use raw alloc_dr for kmalloc caller tracing */
+> +	iio_dev = iio_device_alloc(sizeof_priv);
+> +	if (iio_dev) {
+> +		*ptr = iio_dev;
+> +		devres_add(dev, ptr);
+> +	} else {
+> +		devres_free(ptr);
+> +	}
+> +
+> +	return iio_dev;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_iio_device_alloc);
+> +
+> +void devm_iio_device_free(struct device *dev, struct iio_dev *iio_dev)
+> +{
+> +	int rc;
+> +
+> +	rc = devres_release(dev, devm_iio_device_release,
+> +			    devm_iio_device_match, iio_dev);
+> +	WARN_ON(rc);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_iio_device_free);
+> +
+>   /**
+>    * iio_chrdev_open() - chrdev file open for buffer access and ioctls
+>    **/
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index 8d171f4..f1d99f6 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -532,6 +532,31 @@ static inline struct iio_dev *iio_priv_to_dev(void *priv)
+>   void iio_device_free(struct iio_dev *indio_dev);
+>
+>   /**
+> + * devm_iio_device_alloc - Resource-managed iio_device_alloc()
+> + * @dev: 		Device to allocate iio_dev for
+> + * @sizeof_priv: 	Space to allocate for private structure.
+> + *
+> + * Managed iio_device_alloc.  iio_dev allocated with this function is
+> + * automatically freed on driver detach.
+> + *
+> + * If an iio_dev allocated with this function needs to be freed separately,
+> + * devm_iio_device_free() must be used.
+> + *
+> + * RETURNS:
+> + * Pointer to allocated iio_dev on success, NULL on failure.
+> + */
+> +struct iio_dev *devm_iio_device_alloc(struct device *dev, int sizeof_priv);
+> +
+> +/**
+> + * devm_iio_device_free - Resource-managed iio_device_free()
+> + * @dev:		Device this iio_dev belongs to
+> + * @indio_dev: 		the iio_dev associated with the device
+> + *
+> + * Free indio_dev allocated with devm_iio_device_alloc().
+> + */
+> +void devm_iio_device_free(struct device *dev, struct iio_dev *iio_dev);
+> +
+> +/**
+>    * iio_buffer_enabled() - helper function to test if the buffer is enabled
+>    * @indio_dev:		IIO device structure for device
+>    **/
+>
+
