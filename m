@@ -1,57 +1,129 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
-Date: Sat, 20 Jul 2013 19:59:10 -0700
-Message-ID: <20130721025910.GA23043@kroah.com>
-References: <20130720220006.GA7977@kroah.com>
- <Pine.LNX.4.44L0.1307202223430.8250-100000@netrider.rowland.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: match the compatible in the order set by the dts file
+Date: Sun, 21 Jul 2013 08:35:34 +0200
+Message-ID: <20130721063531.GA16516@mithrandir>
+References: <1373013818-11365-1-git-send-email-b32955@freescale.com>
+ <20130709070541.GQ516@pengutronix.de>
+ <51DBBFDA.70302@freescale.com>
+ <20130709075124.GR516@pengutronix.de>
+ <51DBC58D.90002@freescale.com>
+ <20130720054439.308B33E13F0@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1307202223430.8250-100000@netrider.rowland.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, kyungmin.park@samsung.com, balbi@ti.com, jg1.han@samsung.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, tony@atomide.com, arnd@arndb.de, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, linux-fbdev@vger.kernel.org, akpm@linux-foundation.org, balajitk@ti.com, george.cherian@ti.com, nsekhar@ti.com
+Content-Type: multipart/mixed; boundary="===============8497567377868540900=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130720054439.308B33E13F0@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 20, 2013 at 10:32:26PM -0400, Alan Stern wrote:
-> On Sat, 20 Jul 2013, Greg KH wrote:
-> 
-> > > >>That should be passed using platform data.
-> > > >
-> > > >Ick, don't pass strings around, pass pointers.  If you have platform
-> > > >data you can get to, then put the pointer there, don't use a "name".
-> > > 
-> > > I don't think I understood you here :-s We wont have phy pointer
-> > > when we create the device for the controller no?(it'll be done in
-> > > board file). Probably I'm missing something.
-> > 
-> > Why will you not have that pointer?  You can't rely on the "name" as the
-> > device id will not match up, so you should be able to rely on the
-> > pointer being in the structure that the board sets up, right?
-> > 
-> > Don't use names, especially as ids can, and will, change, that is going
-> > to cause big problems.  Use pointers, this is C, we are supposed to be
-> > doing that :)
-> 
-> Kishon, I think what Greg means is this:  The name you are using must
-> be stored somewhere in a data structure constructed by the board file,
-> right?  Or at least, associated with some data structure somehow.  
-> Otherwise the platform code wouldn't know which PHY hardware
-> corresponded to a particular name.
-> 
-> Greg's suggestion is that you store the address of that data structure 
-> in the platform data instead of storing the name string.  Have the 
-> consumer pass the data structure's address when it calls phy_create, 
-> instead of passing the name.  Then you don't have to worry about two 
-> PHYs accidentally ending up with the same name or any other similar 
-> problems.
 
-Close, but the issue is that whatever returns from phy_create() should
-then be used, no need to call any "find" functions, as you can just use
-the pointer that phy_create() returns.  Much like all other class api
-functions in the kernel work.
+--===============8497567377868540900==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
+Content-Disposition: inline
 
-thanks,
 
-greg k-h
+--tKW2IUtsqtDRztdT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Jul 20, 2013 at 06:44:39AM +0100, Grant Likely wrote:
+> On Tue, 9 Jul 2013 16:10:53 +0800, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wr=
+ote:
+> > =E4=BA=8E 2013=E5=B9=B407=E6=9C=8809=E6=97=A5 15:51, Sascha Hauer =E5=
+=86=99=E9=81=93:
+> > > On Tue, Jul 09, 2013 at 03:46:34PM +0800, Huang Shijie wrote:
+> > >> =E4=BA=8E 2013=E5=B9=B407=E6=9C=8809=E6=97=A5 15:05, Sascha Hauer =
+=E5=86=99=E9=81=93:
+> > >>> Why don't you set the matching order in the driver the way you want=
+ it
+> > >>> to be, i.e.:
+> > >>>
+> > >>> 	{ .compatible =3D "fsl,imx6q-uart", ... },
+> > >>> 	{ .compatible =3D "fsl,imx21-uart", ... },
+> > >>> 	{ .compatible =3D "fsl,imx1-uart", ... },
+> > >>>
+> > >> yes. i can set it like this.
+> > >>
+> > >> but this method looks like a ugly workaround.
+> > > If a driver has different ways of supporting a single device, then
+> > > putting the preferred or most feature rich on top doesn't look very u=
+gly
+> > > to me.
+> > this method makes it much _coupled_ between the driver and the dts file.
+> >=20
+> > IMHO, it's an unnecessary _burden_ to the driver programmer:
+> >     he should puts the most feature compatible on the top.
+> >=20
+> > it's much graceful if we let the driver programmer be transparent about=
+=20
+> > this.
+>=20
+> Absolutely true. Applied, thanks.
+
+I don't think this will work. The patch looks very similar to one that I
+posted about a year ago (commit 107a84e "of: match by compatible
+property first"). The problem it was trying to address was exactly the
+same. However the patch caused regressions on SPARC and had to be
+reverted in commit bc51b0c "Revert "of: match by compatible property
+first"".
+
+The revert commit quotes Rob having a fix for this, and I remember that
+I pinged him about it occasionally, but I suspect that those must have
+fallen through the cracks.
+
+Grant, before applying this patch we should make sure that it doesn't
+cause a regression again, so perhaps asking Meelis Roos (mentioned in
+the revert commit) to test would be good. I have a strong feeling that
+this patch will break in the same way than mine did a year ago, because
+it looks too similar and doesn't handle the compatible & name
+combination that Rob mentioned.
+
+Thierry
+
+--tKW2IUtsqtDRztdT
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR64EzAAoJEN0jrNd/PrOhUTYP/im+mJwerQCqIngwmkWkfEvs
+cbyQ9HYr/mmNaMkFSBfRJ8oTFT6srbfPR3us7bkk//OCGjX9tJmZN8N9TX7QNIPi
+eO/MPS0asNoBC+38WyIFH3fJe4McN4Q1kWQpkRsf/RdkCU1/YlO7ecqS0710fe5a
+qcVEYk4ouAgflfA2IlY+wYcLOrd6CmWbMF1EBa9q5/tEOxyruy7XiSu3GMzrkkt6
+u0peEvNbi6NWK4gcztHZxS2A6c39V56OTCJaNUl/CeedgpVlfvdOQiKX85Jrbvar
+urtq9Vsb1Zb4vSCZtBgF+lssZkwctRd4MHeSjLUpjwLq4ux9WCrLqZ3JyrzUvIrC
+A6Z8aPECzm80V2yQellHNeQ8eYCVgBl5ts8Yu+wirJC7F8Kxlxc4o1fG/DkR8FYe
+RTw3BKcnuQiSUN0XlvXTyKVSIJgfTPaRBNDNKEfTlAicNWEJekW8hOZoVTEj7RAZ
+SjGV4Ju9FXG+JeBonUBTNnqT90AlusakcBbvB+TqWd1oicOVjYSwq5aSjJe7eBF4
+HS3WFjZLGE5ERvYt7FxJpenjB6lITd8LGcy3x21MGOKW1laTWPoXOOZnNfPzq+fO
+ZRR41a0V3jF+Hitg9RVwTKuC9K4oMXFfkqAMZ6Fgs2exjWSlm9Kkf0of7BUSdmt0
+464UhbRh74NId4ltslee
+=S00a
+-----END PGP SIGNATURE-----
+
+--tKW2IUtsqtDRztdT--
+
+--===============8497567377868540900==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============8497567377868540900==--
