@@ -1,14 +1,16 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH] of: provide of_platform_unpopulate()
-Date: Sun, 21 Jul 2013 21:47:44 +0200
-Message-ID: <51EC3AE0.5020107@linutronix.de>
-References: <1374257691-31981-1-git-send-email-bigeasy@linutronix.de>
- <51EBF33A.4050207@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: match the compatible in the order set by the dts file
+Date: Sun, 21 Jul 2013 15:45:13 -0500
+Message-ID: <51EC4859.5000007@gmail.com>
+References: <1373013818-11365-1-git-send-email-b32955@freescale.com>
+ <20130709070541.GQ516@pengutronix.de> <51DBBFDA.70302@freescale.com>
+ <20130709075124.GR516@pengutronix.de> <51DBC58D.90002@freescale.com>
+ <20130720054439.308B33E13F0@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51EBF33A.4050207-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20130720054439.308B33E13F0@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,37 +21,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/2013 04:42 PM, Rob Herring wrote:
-> Wouldn't the correct fix be to call insert_resource somehow?
-
-Yes unless there was a reason this wasn't done in the first place.
-
-> The problem
-> I have is that while of_platform_populate is all about parsing the DT
-> and creating devices, the removal side has nothing to do with DT. So
-> this should not be in the DT code. I think the core device code should
-> be able to handle removal if the device creation side is done correctly.
-
-If there is no need to use the special removal function (in case we add
-insert_ressource) then yes. What about a pointer in
-of_platform_populate()'s comment referring to the removal function?
-
-> 
-> It looks to me like of_device_add either needs to call
-> platform_device_add rather than device_add. I think the device name
-> setting in platform_device_add should be a nop. If not, a check that the
-> name is already set could be added.
-
-It does actually the same thing as platform_device_add except the
-"dynamic device id" and the resource insert if I remember correctly. If
-you guys prefer the platdorm_device_add() path including
-insert_ressource() I can try this.
-
-> 
-> Rob
-
-Sebastian
+T24gU2F0LCBKdWwgMjAsIDIwMTMgYXQgMTI6NDQgQU0sIEdyYW50IExpa2VseSA8Z3JhbnQubGlr
+ZWx5QGxpbmFyby5vcmc+Cndyb3RlOgo+IE9uIFR1ZSwgOSBKdWwgMjAxMyAxNjoxMDo1MyArMDgw
+MCwgSHVhbmcgU2hpamllIDxiMzI5NTVAZnJlZXNjYWxlLmNvbT4gd3JvdGU6Cj4+IOS6jiAyMDEz
+5bm0MDfmnIgwOeaXpSAxNTo1MSwgU2FzY2hhIEhhdWVyIOWGmemBkzoKPj4gPiBPbiBUdWUsIEp1
+bCAwOSwgMjAxMyBhdCAwMzo0NjozNFBNICswODAwLCBIdWFuZyBTaGlqaWUgd3JvdGU6Cj4+ID4+
+IOS6jiAyMDEz5bm0MDfmnIgwOeaXpSAxNTowNSwgU2FzY2hhIEhhdWVyIOWGmemBkzoKPj4gPj4+
+IFdoeSBkb24ndCB5b3Ugc2V0IHRoZSBtYXRjaGluZyBvcmRlciBpbiB0aGUgZHJpdmVyIHRoZSB3
+YXkgeW91IHdhbnQgaXQKPj4gPj4+IHRvIGJlLCBpLmUuOgo+PiA+Pj4KPj4gPj4+ICAgeyAuY29t
+cGF0aWJsZSA9ICJmc2wsaW14NnEtdWFydCIsIC4uLiB9LAo+PiA+Pj4gICB7IC5jb21wYXRpYmxl
+ID0gImZzbCxpbXgyMS11YXJ0IiwgLi4uIH0sCj4+ID4+PiAgIHsgLmNvbXBhdGlibGUgPSAiZnNs
+LGlteDEtdWFydCIsIC4uLiB9LAo+PiA+Pj4KPj4gPj4geWVzLiBpIGNhbiBzZXQgaXQgbGlrZSB0
+aGlzLgo+PiA+Pgo+PiA+PiBidXQgdGhpcyBtZXRob2QgbG9va3MgbGlrZSBhIHVnbHkgd29ya2Fy
+b3VuZC4KPj4gPiBJZiBhIGRyaXZlciBoYXMgZGlmZmVyZW50IHdheXMgb2Ygc3VwcG9ydGluZyBh
+IHNpbmdsZSBkZXZpY2UsIHRoZW4KPj4gPiBwdXR0aW5nIHRoZSBwcmVmZXJyZWQgb3IgbW9zdCBm
+ZWF0dXJlIHJpY2ggb24gdG9wIGRvZXNuJ3QgbG9vayB2ZXJ5IHVnbHkKPj4gPiB0byBtZS4KPj4g
+dGhpcyBtZXRob2QgbWFrZXMgaXQgbXVjaCBfY291cGxlZF8gYmV0d2VlbiB0aGUgZHJpdmVyIGFu
+ZCB0aGUgZHRzIGZpbGUuCj4+Cj4+IElNSE8sIGl0J3MgYW4gdW5uZWNlc3NhcnkgX2J1cmRlbl8g
+dG8gdGhlIGRyaXZlciBwcm9ncmFtbWVyOgo+PiAgICAgaGUgc2hvdWxkIHB1dHMgdGhlIG1vc3Qg
+ZmVhdHVyZSBjb21wYXRpYmxlIG9uIHRoZSB0b3AuCj4+Cj4+IGl0J3MgbXVjaCBncmFjZWZ1bCBp
+ZiB3ZSBsZXQgdGhlIGRyaXZlciBwcm9ncmFtbWVyIGJlIHRyYW5zcGFyZW50IGFib3V0Cj4+IHRo
+aXMuCj4KPiBBYnNvbHV0ZWx5IHRydWUuIEFwcGxpZWQsIHRoYW5rcy4KCldlIGNhbiBkZWJhdGUg
+d2hldGhlciB0aGUgZHJpdmVyIG9yZGVyIG1hdHRlcnMgb3Igbm90LCBidXQgZWl0aGVyIHdheQpJ
+J20gbm90IHN1cmUgdGhpcyBwYXRjaCBkb2VzIHRoZSByaWdodCB0aGluZy4gSXQgZG9lc24ndCBy
+ZWFsbHkgbG9vawpjb3JyZWN0IHRvIG1lLCBidXQgSSBoYXZlbid0IGR1ZyBpbnRvIGl0LgoKV2Un
+dmUgYWxyZWFkeSB0cmllZCB0byBmaXggbWF0Y2hpbmcgYW5kIHJldmVydGVkIHRoZSBmaXggb25j
+ZSBiZWZvcmUKKGNvbW1pdCBiZWxvdykuIFNvIHRoaXMgcGF0Y2ggbmVlZHMgY2FyZWZ1bCByZXZp
+ZXcgYW5kIHRob3VnaHQgYWJvdXQKY2FzZXMgd2hlcmUgdGhlIG5hbWUgYW5kL29yIHR5cGUgaXMg
+dXNlZCB0byBtYXRjaC4KCmNvbW1pdCBiYzUxYjBjMjJjZWJmNWMzMTFhNmYxODk1ZmNjYTlmNzhl
+ZmQwNDc4CkF1dGhvcjogTGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4LWZvdW5kYXRpb24u
+b3JnPgpEYXRlOiAgIFR1ZSBKdWwgMTAgMTI6NDk6MzIgMjAxMiAtMDcwMAoKICAgIFJldmVydCAi
+b2Y6IG1hdGNoIGJ5IGNvbXBhdGlibGUgcHJvcGVydHkgZmlyc3QiCgogICAgVGhpcyByZXZlcnRz
+IGNvbW1pdCAxMDdhODRlNjFjZGQzNDA2Yzg0MmEwZTRiZTdlZmZmZDNhMDVkYmE2LgoKICAgIE1l
+ZWxpcyBSb29zIHJlcG9ydHMgYSByZWdyZXNzaW9uIHNpbmNlIDMuNS1yYzUgdGhhdCBzdG9wcyBT
+dW4gRmlyZSBWMTAwCiAgICBhbmQgU3VuIE5ldHJhIFgxIHNwYXJjNjQgbWFjaGluZXMgZnJvbSBi
+b290aW5nLCBoYW5naW5nIGFmdGVyIGVuYWJsaW5nCiAgICBzZXJpYWwgY29uc29sZS4gIEhlIGJp
+c2VjdGVkIGl0IHRvIGNvbW1pdCAxMDdhODRlNjFjZGQuCgogICAgUm9iIEhlcnJpbmcgZXhwbGFp
+bnM6CiAgICAgIlRoZSBwcm9ibGVtIGlzIG1hdGNoIGNvbWJpbmF0aW9ucyBvZiBjb21wYXRpYmxl
+IHBsdXMgbmFtZSBhbmQvb3IgdHlwZQogICAgICBmYWlsIHRvIG1hdGNoIGNvcnJlY3RseS4gIEkg
+aGF2ZSBhIGZpeCBmb3IgdGhpcywgYnV0IGdpdmVuIGhvdyBsYXRlIGl0CiAgICAgIGlzIGZvciAz
+LjUgSSB0aGluayBpdCBpcyBiZXN0IHRvIHJldmVydCB0aGlzIGZvciBub3cuICBUaGVyZSBjb3Vs
+ZCBiZQogICAgICBvdGhlciBjYXNlcyB0aGF0IHJlbHkgb24gdGhlIGN1cnJlbnQgYWx0aG91Z2gg
+d3JvbmcgYmVoYXZpb3IuICBJIHdpbGwKICAgICAgcG9zdCBhbiB1cGRhdGVkIHZlcnNpb24gZm9y
+IDMuNi4iCgogICAgQmlzZWN0ZWQtYW5kLXJlcG9ydGVkLWJ5OiBNZWVsaXMgUm9vcyA8bXJvb3NA
+bGludXguZWU+CiAgICBSZXF1ZXN0ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4
+ZWRhLmNvbT4KICAgIENjOiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAYXZpb25pYy1k
+ZXNpZ24uZGU+CiAgICBDYzogR3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAc2VjcmV0bGFiLmNh
+PgogICAgU2lnbmVkLW9mZi1ieTogTGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4LWZvdW5k
+YXRpb24ub3JnPgoKClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vz
+c0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZp
+Y2V0cmVlLWRpc2N1c3MK
