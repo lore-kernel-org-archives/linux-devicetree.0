@@ -1,78 +1,67 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: match the compatible in the order set by the dts file
-Date: Sun, 21 Jul 2013 15:45:13 -0500
-Message-ID: <51EC4859.5000007@gmail.com>
-References: <1373013818-11365-1-git-send-email-b32955@freescale.com>
- <20130709070541.GQ516@pengutronix.de> <51DBBFDA.70302@freescale.com>
- <20130709075124.GR516@pengutronix.de> <51DBC58D.90002@freescale.com>
- <20130720054439.308B33E13F0@localhost>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of: provide of_platform_unpopulate()
+Date: Sun, 21 Jul 2013 15:48:08 -0500
+Message-ID: <51EC4908.4040504@gmail.com>
+References: <1374257691-31981-1-git-send-email-bigeasy@linutronix.de> <51EBF33A.4050207@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130720054439.308B33E13F0@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51EBF33A.4050207@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, George Cherian <george.cherian@ti.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-omap@vger.kernel.org, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBKdWwgMjAsIDIwMTMgYXQgMTI6NDQgQU0sIEdyYW50IExpa2VseSA8Z3JhbnQubGlr
-ZWx5QGxpbmFyby5vcmc+Cndyb3RlOgo+IE9uIFR1ZSwgOSBKdWwgMjAxMyAxNjoxMDo1MyArMDgw
-MCwgSHVhbmcgU2hpamllIDxiMzI5NTVAZnJlZXNjYWxlLmNvbT4gd3JvdGU6Cj4+IOS6jiAyMDEz
-5bm0MDfmnIgwOeaXpSAxNTo1MSwgU2FzY2hhIEhhdWVyIOWGmemBkzoKPj4gPiBPbiBUdWUsIEp1
-bCAwOSwgMjAxMyBhdCAwMzo0NjozNFBNICswODAwLCBIdWFuZyBTaGlqaWUgd3JvdGU6Cj4+ID4+
-IOS6jiAyMDEz5bm0MDfmnIgwOeaXpSAxNTowNSwgU2FzY2hhIEhhdWVyIOWGmemBkzoKPj4gPj4+
-IFdoeSBkb24ndCB5b3Ugc2V0IHRoZSBtYXRjaGluZyBvcmRlciBpbiB0aGUgZHJpdmVyIHRoZSB3
-YXkgeW91IHdhbnQgaXQKPj4gPj4+IHRvIGJlLCBpLmUuOgo+PiA+Pj4KPj4gPj4+ICAgeyAuY29t
-cGF0aWJsZSA9ICJmc2wsaW14NnEtdWFydCIsIC4uLiB9LAo+PiA+Pj4gICB7IC5jb21wYXRpYmxl
-ID0gImZzbCxpbXgyMS11YXJ0IiwgLi4uIH0sCj4+ID4+PiAgIHsgLmNvbXBhdGlibGUgPSAiZnNs
-LGlteDEtdWFydCIsIC4uLiB9LAo+PiA+Pj4KPj4gPj4geWVzLiBpIGNhbiBzZXQgaXQgbGlrZSB0
-aGlzLgo+PiA+Pgo+PiA+PiBidXQgdGhpcyBtZXRob2QgbG9va3MgbGlrZSBhIHVnbHkgd29ya2Fy
-b3VuZC4KPj4gPiBJZiBhIGRyaXZlciBoYXMgZGlmZmVyZW50IHdheXMgb2Ygc3VwcG9ydGluZyBh
-IHNpbmdsZSBkZXZpY2UsIHRoZW4KPj4gPiBwdXR0aW5nIHRoZSBwcmVmZXJyZWQgb3IgbW9zdCBm
-ZWF0dXJlIHJpY2ggb24gdG9wIGRvZXNuJ3QgbG9vayB2ZXJ5IHVnbHkKPj4gPiB0byBtZS4KPj4g
-dGhpcyBtZXRob2QgbWFrZXMgaXQgbXVjaCBfY291cGxlZF8gYmV0d2VlbiB0aGUgZHJpdmVyIGFu
-ZCB0aGUgZHRzIGZpbGUuCj4+Cj4+IElNSE8sIGl0J3MgYW4gdW5uZWNlc3NhcnkgX2J1cmRlbl8g
-dG8gdGhlIGRyaXZlciBwcm9ncmFtbWVyOgo+PiAgICAgaGUgc2hvdWxkIHB1dHMgdGhlIG1vc3Qg
-ZmVhdHVyZSBjb21wYXRpYmxlIG9uIHRoZSB0b3AuCj4+Cj4+IGl0J3MgbXVjaCBncmFjZWZ1bCBp
-ZiB3ZSBsZXQgdGhlIGRyaXZlciBwcm9ncmFtbWVyIGJlIHRyYW5zcGFyZW50IGFib3V0Cj4+IHRo
-aXMuCj4KPiBBYnNvbHV0ZWx5IHRydWUuIEFwcGxpZWQsIHRoYW5rcy4KCldlIGNhbiBkZWJhdGUg
-d2hldGhlciB0aGUgZHJpdmVyIG9yZGVyIG1hdHRlcnMgb3Igbm90LCBidXQgZWl0aGVyIHdheQpJ
-J20gbm90IHN1cmUgdGhpcyBwYXRjaCBkb2VzIHRoZSByaWdodCB0aGluZy4gSXQgZG9lc24ndCBy
-ZWFsbHkgbG9vawpjb3JyZWN0IHRvIG1lLCBidXQgSSBoYXZlbid0IGR1ZyBpbnRvIGl0LgoKV2Un
-dmUgYWxyZWFkeSB0cmllZCB0byBmaXggbWF0Y2hpbmcgYW5kIHJldmVydGVkIHRoZSBmaXggb25j
-ZSBiZWZvcmUKKGNvbW1pdCBiZWxvdykuIFNvIHRoaXMgcGF0Y2ggbmVlZHMgY2FyZWZ1bCByZXZp
-ZXcgYW5kIHRob3VnaHQgYWJvdXQKY2FzZXMgd2hlcmUgdGhlIG5hbWUgYW5kL29yIHR5cGUgaXMg
-dXNlZCB0byBtYXRjaC4KCmNvbW1pdCBiYzUxYjBjMjJjZWJmNWMzMTFhNmYxODk1ZmNjYTlmNzhl
-ZmQwNDc4CkF1dGhvcjogTGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4LWZvdW5kYXRpb24u
-b3JnPgpEYXRlOiAgIFR1ZSBKdWwgMTAgMTI6NDk6MzIgMjAxMiAtMDcwMAoKICAgIFJldmVydCAi
-b2Y6IG1hdGNoIGJ5IGNvbXBhdGlibGUgcHJvcGVydHkgZmlyc3QiCgogICAgVGhpcyByZXZlcnRz
-IGNvbW1pdCAxMDdhODRlNjFjZGQzNDA2Yzg0MmEwZTRiZTdlZmZmZDNhMDVkYmE2LgoKICAgIE1l
-ZWxpcyBSb29zIHJlcG9ydHMgYSByZWdyZXNzaW9uIHNpbmNlIDMuNS1yYzUgdGhhdCBzdG9wcyBT
-dW4gRmlyZSBWMTAwCiAgICBhbmQgU3VuIE5ldHJhIFgxIHNwYXJjNjQgbWFjaGluZXMgZnJvbSBi
-b290aW5nLCBoYW5naW5nIGFmdGVyIGVuYWJsaW5nCiAgICBzZXJpYWwgY29uc29sZS4gIEhlIGJp
-c2VjdGVkIGl0IHRvIGNvbW1pdCAxMDdhODRlNjFjZGQuCgogICAgUm9iIEhlcnJpbmcgZXhwbGFp
-bnM6CiAgICAgIlRoZSBwcm9ibGVtIGlzIG1hdGNoIGNvbWJpbmF0aW9ucyBvZiBjb21wYXRpYmxl
-IHBsdXMgbmFtZSBhbmQvb3IgdHlwZQogICAgICBmYWlsIHRvIG1hdGNoIGNvcnJlY3RseS4gIEkg
-aGF2ZSBhIGZpeCBmb3IgdGhpcywgYnV0IGdpdmVuIGhvdyBsYXRlIGl0CiAgICAgIGlzIGZvciAz
-LjUgSSB0aGluayBpdCBpcyBiZXN0IHRvIHJldmVydCB0aGlzIGZvciBub3cuICBUaGVyZSBjb3Vs
-ZCBiZQogICAgICBvdGhlciBjYXNlcyB0aGF0IHJlbHkgb24gdGhlIGN1cnJlbnQgYWx0aG91Z2gg
-d3JvbmcgYmVoYXZpb3IuICBJIHdpbGwKICAgICAgcG9zdCBhbiB1cGRhdGVkIHZlcnNpb24gZm9y
-IDMuNi4iCgogICAgQmlzZWN0ZWQtYW5kLXJlcG9ydGVkLWJ5OiBNZWVsaXMgUm9vcyA8bXJvb3NA
-bGludXguZWU+CiAgICBSZXF1ZXN0ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4
-ZWRhLmNvbT4KICAgIENjOiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAYXZpb25pYy1k
-ZXNpZ24uZGU+CiAgICBDYzogR3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAc2VjcmV0bGFiLmNh
-PgogICAgU2lnbmVkLW9mZi1ieTogTGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4LWZvdW5k
-YXRpb24ub3JnPgoKClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vz
-c0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZp
-Y2V0cmVlLWRpc2N1c3MK
+On 07/21/2013 09:42 AM, Rob Herring wrote:
+> On 07/19/2013 01:14 PM, Sebastian Andrzej Siewior wrote:
+>> So I called of_platform_populate() on a device to get each child device
+>> probed and on rmmod and I need to reverse its doing. After a quick grep
+>> I did what others did as well and rmmod ended in:
+>>
+>> | Unable to handle kernel NULL pointer dereference at virtual address 00000018
+>> | PC is at release_resource+0x18/0x80
+>> | Process rmmod (pid: 2005, stack limit = 0xedc30238)
+>> | [<c003add0>] (release_resource+0x18/0x80) from [<c0300e08>] (platform_device_del+0x78/0xac)
+>> | [<c0300e08>] (platform_device_del+0x78/0xac) from [<c0301358>] (platform_device_unregister+0xc/0x18)
+>>
+>> The problem is that platform_device_del() "releases" each ressource in its
+>> tree. This does not work on platform_devices created by OF becuase they
+>> were never added via insert_resource(). As a consequence old->parent in
+>> __release_resource() is NULL and we explode while accessing ->child.
+>> So I either I do something completly wrong _or_ nobody here tested the
+>> rmmod path of their driver.
+> 
+> Wouldn't the correct fix be to call insert_resource somehow? The problem
+> I have is that while of_platform_populate is all about parsing the DT
+> and creating devices, the removal side has nothing to do with DT. So
+> this should not be in the DT code. I think the core device code should
+> be able to handle removal if the device creation side is done correctly.
+> 
+> It looks to me like of_device_add either needs to call
+> platform_device_add rather than device_add. I think the device name
+> setting in platform_device_add should be a nop. If not, a check that the
+> name is already set could be added.
+> 
+
+BTW, it looks like Grant has attempted this already:
+
+commit 02bbde7849e68e193cefaa1885fe0df0f03c9fcd
+Author: Grant Likely <grant.likely@secretlab.ca>
+Date:   Sun Feb 17 20:03:27 2013 +0000
+
+    Revert "of: use platform_device_add"
+
+    This reverts commit aac73f34542bc7ae4317928d2eabfeb21d247323. That
+    commit causes two kinds of breakage; it breaks registration of AMBA
+    devices when one of the parent nodes already contains overlapping
+    resource regions, and it breaks calls to request_region() by device
+    drivers in certain conditions where there are overlapping memory
+    regions. Both of these problems can probably be fixed, but it is better
+    to back out the commit and get a proper fix designed before trying
+again.
+
+    Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+
+
+Rob
