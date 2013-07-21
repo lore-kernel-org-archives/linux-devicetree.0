@@ -1,146 +1,90 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [lm-sensors] [RESEND PATCH V1 0/9] thermal: introduce DT thermal
- zone build
-Date: Sun, 21 Jul 2013 04:08:07 -0700
-Message-ID: <20130721110807.GC24303@roeck-us.net>
-References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com>
- <20130717220942.GB990@roeck-us.net> <51E7F341.8020508@ti.com>
- <51E8234D.1020607@wwwdotorg.org>
- <20130718212108.GC4110@roeck-us.net>
- <51E98A07.4050402@wwwdotorg.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
+Date: Sun, 21 Jul 2013 16:37:33 +0530
+Message-ID: <51EBC0F5.70601@ti.com>
+References: <20130720220006.GA7977@kroah.com> <Pine.LNX.4.44L0.1307202223430.8250-100000@netrider.rowland.org> <20130721025910.GA23043@kroah.com> <3839600.WiC1OLF35o@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51E98A07.4050402-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <3839600.WiC1OLF35o@flatron>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, kyungmin.park@samsung.com, balbi@ti.com, jg1.han@samsung.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, tony@atomide.com, arnd@arndb.de, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, linux-fbdev@vger.kernel.org, akpm@linux-foundation.org, balajitk@ti.com, george.cherian@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 19, 2013 at 12:48:39PM -0600, Stephen Warren wrote:
-> On 07/18/2013 03:21 PM, Guenter Roeck wrote:
-> > On Thu, Jul 18, 2013 at 11:18:05AM -0600, Stephen Warren wrote:
-> >> On 07/18/2013 07:53 AM, Eduardo Valentin wrote:
-> >>> Hello Guenter,
-> >>>
-> >>> On 17-07-2013 18:09, Guenter Roeck wrote:
-> >>>> On Wed, Jul 17, 2013 at 11:17:19AM -0400, Eduardo Valentin
-> >>>> wrote:
-> >>>>> Hello all,
-> >>>>>
-> >>>>> As you noticed, I am working in a way to represent thermal
-> >>>>> data using device tree [1]. Essentially, this should be a way
-> >>>>> to say what to do with a sensor and how to associate (cooling)
-> >>>>> actions with it.
-> >>>>>
-> >>>> Seems to me that goes way beyond the supposed scope of devicetree
-> >>>> data. Devicetree data is supposed to describe hardware, not its
-> >>>> configuration or use. This is clearly a use case.
-> >>>
-> >>> Thanks for rising your voice here. It is important to know what
-> >>> hwmon ppl think about this.
-> >>
-> >> I meant to find time to read Guenter's original email where he
-> >> initially objected to putting data into DT, and determine exactly what
-> >> was being objected to. I still haven't:-( However, the arguments that
-> >> Eduardo stated in his email do make sense to me; I agree that
-> >> temperature limits really are a description of HW. Details of which
-> >> cooling methods to invoke when certain temperature limits are reached
-> >> is also part of the HW/system design, and hence I would tend to agree
-> >> that they're appropriate to include in DT. Anyway, that's just my 2
-> >> cents on the matter:-)
-> > 
-> > Many systems have multiple profiles for various use cases (high performance,
-> > low power etc), and limits are different based on the use case. If that means
-> > you are going to have multiple devicetree variants based on the profile,
-> > I would argue that you crossed the line.
-> 
-> Yes, I can see that argument. However, a counter-point:
-> 
-> * I believe we do need a DT binding to describe the absolute thermal
-> limits of a system, for safety/correctness of system operation.
-> 
-> * We need to define a syntax/schema to represent that.
-> 
-> * If we then want to implement additional profiles with stricter limits,
-> do we really want to invent a different syntax/schema to represent
-> those? Representing them in the same way seems like good use of the
-> design, mind-share, etc.
-> 
-> * Perhaps that doesn't mean that the additional profiles have to be in
-> DT though; just that we somehow make any other representation of those
-> profiles as close to the DT representation in syntax/structure as we
-> can, to get maximum re-use.
-> 
-> > With thermal profiles it gets even more
-> > complicated, as those parameters may be played around with and changed
-> > multiple times to find the best settings to achieve optimal cooling.
-> 
-> To me, that sounds more like fixing a bug in the initial data, rather
-> than something which fundamentally affects how the data should be
-> represented.
-> 
+Hi,
 
-For me, a bug in devicetree data would be if a wrong gpio pin is assigned ... if
-a wrong clock frequency is specified, or a wrong clock input. I would not expect
-a clock rate or pin assignment to be played around with to find the optimal
-setting. Either it works or it doesn't.
+On Sunday 21 July 2013 04:01 PM, Tomasz Figa wrote:
+> Hi,
+>
+> On Saturday 20 of July 2013 19:59:10 Greg KH wrote:
+>> On Sat, Jul 20, 2013 at 10:32:26PM -0400, Alan Stern wrote:
+>>> On Sat, 20 Jul 2013, Greg KH wrote:
+>>>>>>> That should be passed using platform data.
+>>>>>>
+>>>>>> Ick, don't pass strings around, pass pointers.  If you have
+>>>>>> platform
+>>>>>> data you can get to, then put the pointer there, don't use a
+>>>>>> "name".
+>>>>>
+>>>>> I don't think I understood you here :-s We wont have phy pointer
+>>>>> when we create the device for the controller no?(it'll be done in
+>>>>> board file). Probably I'm missing something.
+>>>>
+>>>> Why will you not have that pointer?  You can't rely on the "name" as
+>>>> the device id will not match up, so you should be able to rely on
+>>>> the pointer being in the structure that the board sets up, right?
+>>>>
+>>>> Don't use names, especially as ids can, and will, change, that is
+>>>> going
+>>>> to cause big problems.  Use pointers, this is C, we are supposed to
+>>>> be
+>>>> doing that :)
+>>>
+>>> Kishon, I think what Greg means is this:  The name you are using must
+>>> be stored somewhere in a data structure constructed by the board file,
+>>> right?  Or at least, associated with some data structure somehow.
+>>> Otherwise the platform code wouldn't know which PHY hardware
+>>> corresponded to a particular name.
+>>>
+>>> Greg's suggestion is that you store the address of that data structure
+>>> in the platform data instead of storing the name string.  Have the
+>>> consumer pass the data structure's address when it calls phy_create,
+>>> instead of passing the name.  Then you don't have to worry about two
+>>> PHYs accidentally ending up with the same name or any other similar
+>>> problems.
+>>
+>> Close, but the issue is that whatever returns from phy_create() should
+>> then be used, no need to call any "find" functions, as you can just use
+>> the pointer that phy_create() returns.  Much like all other class api
+>> functions in the kernel work.
+>
+> I think there is a confusion here about who registers the PHYs.
+>
+> All platform code does is registering a platform/i2c/whatever device,
+> which causes a driver (located in drivers/phy/) to be instantiated. Such
+> drivers call phy_create(), usually in their probe() callbacks, so
+> platform_code has no way (and should have no way, for the sake of
+> layering) to get what phy_create() returns.
 
-Note that we don't really talk about pure thermal limits here. We are talking
-about association between thermal sensors and cooling devices, which is much
-more abstract and not as well defined as clock pin assignments. In many case,
-more than one cooling device exists, and there is no well defined means to cool
-the system. It may be cooled with a fan, or by reducing the CPU clock speed.
-There may be multiple fans interacting with each other, and not all may be
-present at all times. There may be secondary cooling options if primary cooling
-fails (eg reduce CPU speed or increase speed of a secondary fan if a primary fan
-fails).
+right.
+>
+> IMHO we need a lookup method for PHYs, just like for clocks, regulators,
+> PWMs or even i2c busses because there are complex cases when passing just
+> a name using platform data will not work. I would second what Stephen said
+> [1] and define a structure doing things in a DT-like way.
+>
+> Example;
+>
+> [platform code]
+>
+> static const struct phy_lookup my_phy_lookup[] = {
+> 	PHY_LOOKUP("s3c-hsotg.0", "otg", "samsung-usbphy.1", "phy.2"),
 
-Yes, I understand you need a means to describe thermal profiles. Putting one of
-those into DT and declaring it to be the "absolute thermal limit", however, is
-really just asking for putting other thermal profiles into DT as well ..
-if you want a different thermal profile, just load a different devicetree, and
-possibly make it configurable in BIOS/ROMMON. Of course you can declare that not
-to be "intentional", but what do you think would happen in the real world ?
-Do you really think anyone would bother putting one profile into DT and others
-into some other database ? Not really, especially if the kernel would not even
-support reading that other database. And if it would, you would not need the
-DT data in the first place.
+The only problem here is that if *PLATFORM_DEVID_AUTO* is used while 
+creating the device, the ids in the device name would change and 
+PHY_LOOKUP wont be useful.
 
-This is completely different to the intended use of devicetree information.
-An instance of devicetree data should be tied to a specific piece of hardware.
-Changing it may enable or disable pieces of that hardware, but change its
-operation, as in "optimize for performance" or "optimize for low power
-consumption" ? Yes, again, I understand you are saying that this is not the
-_intent_, but that is what it enables.
-
-Other but related subject .. from a thermal / hwmon driver's perspective, if
-such a driver supports thermal subsystem, it should just register itself as
-thermal sensor device, because that is what it is. If and how it is tied to
-cooling devices should be part of the thermal subsystem and be decided there.
-I don't think it is necessary for a thermal sensor to read devicetree data
-in order to determine if it is supposed to register as thermal device or not.
-That _is_ configuration and does not describe hardware - the mere fact that
-a thermal sensor exists in the system already identifies it as thermal sensor
-device, not anything in devicetree data. This would be similar to, say, a clock
-device. A clock is a clock, and registers itself with the clock subsystem even
-if there is no consumer. Sure, its interconnection with clock consumers would
-be determined by devicetree data, but that is a different subject. So, even if
-devicetree maintainers accept your definition of thermal profiles as hardware,
-I think your approach is still wrong, and a thermal sensor device should
-register itself as thermal device independently of its association with
-cooling devices.
-
-Thanks,
-Guenter
+Thanks
+Kishon
