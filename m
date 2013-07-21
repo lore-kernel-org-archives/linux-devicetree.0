@@ -1,81 +1,48 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
-Date: Sun, 21 Jul 2013 08:48:08 -0700
-Message-ID: <20130721154808.GH16598@kroah.com>
-References: <20130720220006.GA7977@kroah.com>
- <Pine.LNX.4.44L0.1307202223430.8250-100000@netrider.rowland.org>
- <20130721025910.GA23043@kroah.com>
- <20130721102248.GE29785@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3] misc: Add crossbar driver
+Date: Sun, 21 Jul 2013 18:33:57 +0200
+Message-ID: <CACRpkdYdLBzFnzB1xGOPoVt-j11UciPwYiy_c3i+xYY9UOngEw@mail.gmail.com>
+References: <1374165830-6367-1-git-send-email-r.sricharan@ti.com>
+	<1374165830-6367-2-git-send-email-r.sricharan@ti.com>
+	<20130718182504.GA7497@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130721102248.GE29785@pengutronix.de>
+In-Reply-To: <20130718182504.GA7497@arwen.pp.htv.fi>
 Sender: linux-doc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Kishon Vijay Abraham I <kishon@ti.com>, kyungmin.park@samsung.com, balbi@ti.com, jg1.han@samsung.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, tony@atomide.com, arnd@arndb.de, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, linux-fbdev@vger.kernel.org, akpm@linux-foundation.org, balajitk@ti.com, george.cherian@ti.com, nsekhar@ti.com
+To: Felipe Balbi <balbi@ti.com>
+Cc: Sricharan R <r.sricharan@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, ext Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Nishanth Menon <nm@ti.com>, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 21, 2013 at 12:22:48PM +0200, Sascha Hauer wrote:
-> On Sat, Jul 20, 2013 at 07:59:10PM -0700, Greg KH wrote:
-> > On Sat, Jul 20, 2013 at 10:32:26PM -0400, Alan Stern wrote:
-> > > On Sat, 20 Jul 2013, Greg KH wrote:
-> > > 
-> > > > > >>That should be passed using platform data.
-> > > > > >
-> > > > > >Ick, don't pass strings around, pass pointers.  If you have platform
-> > > > > >data you can get to, then put the pointer there, don't use a "name".
-> > > > > 
-> > > > > I don't think I understood you here :-s We wont have phy pointer
-> > > > > when we create the device for the controller no?(it'll be done in
-> > > > > board file). Probably I'm missing something.
-> > > > 
-> > > > Why will you not have that pointer?  You can't rely on the "name" as the
-> > > > device id will not match up, so you should be able to rely on the
-> > > > pointer being in the structure that the board sets up, right?
-> > > > 
-> > > > Don't use names, especially as ids can, and will, change, that is going
-> > > > to cause big problems.  Use pointers, this is C, we are supposed to be
-> > > > doing that :)
-> > > 
-> > > Kishon, I think what Greg means is this:  The name you are using must
-> > > be stored somewhere in a data structure constructed by the board file,
-> > > right?  Or at least, associated with some data structure somehow.  
-> > > Otherwise the platform code wouldn't know which PHY hardware
-> > > corresponded to a particular name.
-> > > 
-> > > Greg's suggestion is that you store the address of that data structure 
-> > > in the platform data instead of storing the name string.  Have the 
-> > > consumer pass the data structure's address when it calls phy_create, 
-> > > instead of passing the name.  Then you don't have to worry about two 
-> > > PHYs accidentally ending up with the same name or any other similar 
-> > > problems.
-> > 
-> > Close, but the issue is that whatever returns from phy_create() should
-> > then be used, no need to call any "find" functions, as you can just use
-> > the pointer that phy_create() returns.  Much like all other class api
-> > functions in the kernel work.
-> 
-> I think the problem here is to connect two from the bus structure
-> completely independent devices. Several frameworks (ASoC, soc-camera)
-> had this problem and this wasn't solved until the advent of devicetrees
-> and their phandles.
-> phy_create might be called from the probe function of some i2c device
-> (the phy device) and the resulting pointer is then needed in some other
-> platform devices (the user of the phy) probe function.
-> The best solution we have right now is implemented in the clk framework
-> which uses a string matching of the device names in clk_get() (at least
-> in the non-dt case).
+On Thu, Jul 18, 2013 at 8:25 PM, Felipe Balbi <balbi@ti.com> wrote:
 
-I would argue that clocks are wrong here as well, as others have already
-pointed out.
+>> The Peripheral irq/dma requests are connected to one crossbar's input
+>> and the output of the crossbar is connected to controller's input
+>> line. On POR, there are some mappings which are done by default.
+>> Those peripherals which do not have a mapping on POR, should be configured
+>> to route its requests using the crossbar.
+(...)
+> why isn't this done under pinctrl ? If all it does is mux DMA and IRQ
+> request lines, it should be written as a pinctrl driver no ?
 
-What's wrong with the platform_data structure, why can't that be used
-for this?
+Actually I was thinking about this at one time when designing pinctrl,
+"what if we face the problem of arbitrary signal multiplexing?"
 
-Or, if not, we can always add pointers to the platform device structure,
-or even the main 'struct device' as well, that's what it is there for.
+However pin control is named for what it does and also controls
+things like the electrical properties of pins, biasing and so on which
+is ill applicable here.
 
-thanks,
+I would rather say that the pin multiplexing portions of pin control
+could be rewritten to use a more generic component dealing with
+arbitrary line multiplexing, i.e. something under /lib and maybe then
+move over some generic concepts such as the function to group
+mapping.
 
-greg k-h
+The same concept as found here is found in the muxes used by
+drivers/dma/amba-pl08x.c back-ends on ARM reference hardware
+which is also multiplexing DMA signals. In that case we have done
+platform-specific hooks and implemented this in the per-machine
+platform code.
+
+Yours,
+Linus Walleij
