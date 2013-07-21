@@ -1,86 +1,88 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
-Date: Sun, 21 Jul 2013 13:56:07 -0500
-Message-ID: <51EC2EC7.6010001@gmail.com>
-References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
- <1374290388-19308-3-git-send-email-grant.likely@linaro.org>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
+Date: Sun, 21 Jul 2013 15:22:21 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1307211453450.19133-100000@netrider.rowland.org>
+References: <51EC170E.3080201@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1374290388-19308-3-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51EC170E.3080201@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, Kishon Vijay Abraham I <kishon@ti.com>, kyungmin.park@samsung.com, balbi@ti.com, jg1.han@samsung.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, tony@atomide.com, arnd@arndb.de, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, linux-fbdev@vger.kernel.org, akpm@linux-foundation.org, balajitk@ti.com, george.cherian@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/19/2013 10:19 PM, Grant Likely wrote:
-> Device tree bindings require a lot more attention than they used to.
-> We've got a group of volunteers willing to take over maintaining
-> bindings. This patch adds them to the MAINTAINERS file.
-> 
-> This group still needs to work out a process for maintainership and how
-> they are going to work together. I recommend that they set up a shared
-> tree on git.kernel.org that they each have commit access to similar to
-> the tip tree or the arm-soc tree, but it is up to them.
-> 
-> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  MAINTAINERS | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bc286e4..12c95d5 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6050,13 +6050,24 @@ L:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  W:	http://fdt.secretlab.ca
->  T:	git git://git.secretlab.ca/git/linux-2.6.git
->  S:	Maintained
-> -F:	Documentation/devicetree
->  F:	drivers/of
->  F:	include/linux/of*.h
->  F:	scripts/dtc
->  K:	of_get_property
->  K:	of_match_table
->  
-> +OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> +M:	Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> +M:	Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> +M:	Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> +M:	Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+On Sun, 21 Jul 2013, Sylwester Nawrocki wrote:
 
-You can add me. I was not intending to step down.
-
-What about creating an email alias for the group instead?
-
-Rob
-
-> +L:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +S:	Maintained
-> +F:	Documentation/devicetree
-> +F:	arch/*/boot/dts
-> +F:	arch/*/
-> +F:	include/dt-bindings
-> +
->  OPENRISC ARCHITECTURE
->  M:	Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>
->  W:	http://openrisc.net
+> > What's wrong with the platform_data structure, why can't that be used
+> > for this?
 > 
+> At the point the platform data of some driver is initialized, e.g. in
+> board setup code the PHY pointer is not known, since the PHY supplier
+> driver has not initialized yet.  Even though we wanted to pass pointer
+> to a PHY through some notifier call, it would have been not clear
+> which PHY user driver should match on such notifier.  A single PHY
+> supplier driver can create M PHY objects and this needs to be mapped
+> to N PHY user drivers.  This mapping needs to be defined somewhere by
+> the system integrator.  It works well with device tree, but except that
+> there seems to be no other reliable infrastructure in the kernel to
+> define links/dependencies between devices, since device identifiers are
+> not known in advance in all cases.
+> 
+> What Tomasz proposed seems currently most reasonable to me for non-dt.
+> 
+> > Or, if not, we can always add pointers to the platform device structure,
+> > or even the main 'struct device' as well, that's what it is there for.
+> 
+> Still we would need to solve a problem which platform device structure
+> gets which PHY pointer.
+
+Can you explain the issues in more detail?  I don't fully understand 
+the situation.
+
+Here's what I think I know:
+
+	The PHY and the controller it is attached to are both physical
+	devices.
+
+	The connection between them is hardwired by the system
+	manufacturer and cannot be changed by software.
+
+	PHYs are generally described by fixed system-specific board
+	files or by Device Tree information.  Are they ever discovered
+	dynamically?
+
+	Is the same true for the controllers attached to the PHYs?
+	If not -- if both a PHY and a controller are discovered 
+	dynamically -- how does the kernel know whether they are 
+	connected to each other?
+
+	The kernel needs to know which controller is attached to which
+	PHY.  Currently this information is represented by name or ID
+	strings embedded in platform data.
+
+	The PHY's driver (the supplier) uses the platform data to 
+	construct a platform_device structure that represents the PHY.  
+	Until this is done, the controller's driver (the client) cannot 
+	use the PHY.
+
+	Since there is no parent-child relation between the PHY and the 
+	controller, there is no guarantee that the PHY's driver will be
+	ready when the controller's driver wants to use it.  A deferred
+	probe may be needed.
+
+	The issue (or one of the issues) in this discussion is that 
+	Greg does not like the idea of using names or IDs to associate
+	PHYs with controllers, because they are too prone to
+	duplications or other errors.  Pointers are more reliable.
+
+	But pointers to what?  Since the only data known to be 
+	available to both the PHY driver and controller driver is the
+	platform data, the obvious answer is a pointer to platform data
+	(either for the PHY or for the controller, or maybe both).
+
+Probably some of the details above are wrong; please indicate where I
+have gone astray.  Also, I'm not clear about the role played by various 
+APIs.  For example, where does phy_create() fit into this picture?
+
+Alan Stern
