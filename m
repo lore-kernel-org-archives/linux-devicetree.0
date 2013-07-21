@@ -1,98 +1,74 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [lm-sensors] [RESEND PATCH V1 0/9] thermal: introduce DT thermal
- zone build
-Date: Sun, 21 Jul 2013 03:14:37 -0700
-Message-ID: <20130721101437.GB24303@roeck-us.net>
-References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com>
- <20130717220942.GB990@roeck-us.net> <51E7F341.8020508@ti.com>
- <20130718211154.GB4110@roeck-us.net> <51E9413C.2080007@ti.com>
- <51E98941.2090306@wwwdotorg.org> <51E98BD3.8000307@ti.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
+Date: Sun, 21 Jul 2013 12:22:48 +0200
+Message-ID: <20130721102248.GE29785@pengutronix.de>
+References: <20130720220006.GA7977@kroah.com>
+ <Pine.LNX.4.44L0.1307202223430.8250-100000@netrider.rowland.org>
+ <20130721025910.GA23043@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51E98BD3.8000307-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Eduardo Valentin <eduardo.valentin-l0cyMroinI0@public.gmane.org>
-Cc: wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <20130721025910.GA23043@kroah.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>, Kishon Vijay Abraham I <kishon@ti.com>, kyungmin.park@samsung.com, balbi@ti.com, jg1.han@samsung.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, tony@atomide.com, arnd@arndb.de, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, linux-fbdev@vger.kernel.org, akpm@linux-foundation.org, balajitk@ti.com, george.cherian@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 19, 2013 at 02:56:19PM -0400, Eduardo Valentin wrote:
-> On 19-07-2013 14:45, Stephen Warren wrote:
-> > On 07/19/2013 07:38 AM, Eduardo Valentin wrote:
-> >> On 18-07-2013 17:11, Guenter Roeck wrote:
-> >>> On Thu, Jul 18, 2013 at 09:53:05AM -0400, Eduardo Valentin
-> >>> wrote:
-> >>>> Hello Guenter,
-> >>>>
-> >>>> On 17-07-2013 18:09, Guenter Roeck wrote:
-> >>>>> On Wed, Jul 17, 2013 at 11:17:19AM -0400, Eduardo Valentin
-> >>>>> wrote:
-> >>>>>> Hello all,
-> >>>>>>
-> >>>>>> As you noticed, I am working in a way to represent thermal
-> >>>>>> data using device tree [1]. Essentially, this should be a
-> >>>>>> way to say what to do with a sensor and how to associate
-> >>>>>> (cooling) actions with it.
-> >>>>>>
-> >>>>> Seems to me that goes way beyond the supposed scope of
-> >>>>> devicetree data. Devicetree data is supposed to describe
-> >>>>> hardware, not its configuration or use. This is clearly a use
-> >>>>> case.
-> >>>>
-> >>>> Thanks for rising your voice here. It is important to know what
-> >>>> hwmon ppl think about this.
-> >>>>
-> >>> Sorry, I don't know what ppl stands for.
-> >>>
-> >>>>>
-> >>>>> Guenter
-> >>>>
-> >>>> As your answers to the series are giving same argument, I chose
-> >>>> to answer on patch 0. I would be happier if you could elaborate
-> >>>> a bit more on your concern, specially if you take hwmon cap
-> >>>> here, and give your view with that perspective.
-> >>>>
-> >>>> I also considered that this work could be abusing of DT
-> >>>> purposes. But let me explain why I still think it makes sense
-> >>>> to have it.
-> >>>>
-> >>> Ultimately, you are making my point here. If you considered it,
-> >>> did you ask devicetree experts for an opinion ? Did you discuss
-> >>> the subject on the devicetree-discuss mailing list ? If so, what
-> >>> was the result ?
-> >>
-> >> Although I have asked, I didn't get any feedback. 
-> >> https://lkml.org/lkml/2013/4/11/760
-> >>
-> >> But now I am requesting feedback in a formal (patch) way.
-> >>
-> >> Consider this patch series as official request for (devicetree
-> >> experts and everyone involved) opinions.
+On Sat, Jul 20, 2013 at 07:59:10PM -0700, Greg KH wrote:
+> On Sat, Jul 20, 2013 at 10:32:26PM -0400, Alan Stern wrote:
+> > On Sat, 20 Jul 2013, Greg KH wrote:
 > > 
-> > I might suggest (a) sending the email "To" the DT maintainer, rather
-> > than just CC'ing him, (b) perhaps start a new thread just to present
-> > the proposed DT binding, and get feedback on that. A thread with a new
-> > subject like "[RFC] DT binding for thermal zones" might get more
-> > attention than a patch submission; the subject line of this patch
-> > doesn't stand much (since it implies to me it's more about build
-> > issues than DT bindings even though it does mention DT).
+> > > > >>That should be passed using platform data.
+> > > > >
+> > > > >Ick, don't pass strings around, pass pointers.  If you have platform
+> > > > >data you can get to, then put the pointer there, don't use a "name".
+> > > > 
+> > > > I don't think I understood you here :-s We wont have phy pointer
+> > > > when we create the device for the controller no?(it'll be done in
+> > > > board file). Probably I'm missing something.
+> > > 
+> > > Why will you not have that pointer?  You can't rely on the "name" as the
+> > > device id will not match up, so you should be able to rely on the
+> > > pointer being in the structure that the board sets up, right?
+> > > 
+> > > Don't use names, especially as ids can, and will, change, that is going
+> > > to cause big problems.  Use pointers, this is C, we are supposed to be
+> > > doing that :)
 > > 
+> > Kishon, I think what Greg means is this:  The name you are using must
+> > be stored somewhere in a data structure constructed by the board file,
+> > right?  Or at least, associated with some data structure somehow.  
+> > Otherwise the platform code wouldn't know which PHY hardware
+> > corresponded to a particular name.
+> > 
+> > Greg's suggestion is that you store the address of that data structure 
+> > in the platform data instead of storing the name string.  Have the 
+> > consumer pass the data structure's address when it calls phy_create, 
+> > instead of passing the name.  Then you don't have to worry about two 
+> > PHYs accidentally ending up with the same name or any other similar 
+> > problems.
 > 
-> OK. I will do that.  Sounds reasonable. Resending this series as RFC
-> again, but now addressed to DT folks.
-> 
-It might help to not just send the series, but to start a thread to discuss
-the proposed bindings.
+> Close, but the issue is that whatever returns from phy_create() should
+> then be used, no need to call any "find" functions, as you can just use
+> the pointer that phy_create() returns.  Much like all other class api
+> functions in the kernel work.
 
-Guenter
+I think the problem here is to connect two from the bus structure
+completely independent devices. Several frameworks (ASoC, soc-camera)
+had this problem and this wasn't solved until the advent of devicetrees
+and their phandles.
+phy_create might be called from the probe function of some i2c device
+(the phy device) and the resulting pointer is then needed in some other
+platform devices (the user of the phy) probe function.
+The best solution we have right now is implemented in the clk framework
+which uses a string matching of the device names in clk_get() (at least
+in the non-dt case).
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
