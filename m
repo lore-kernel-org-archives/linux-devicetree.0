@@ -1,46 +1,137 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [RESEND PATCH v7 00/22] MBus DT binding: The return of PCIe
-Date: Sun, 21 Jul 2013 17:27:00 +0200
-Message-ID: <20130721172700.6bd14e58@skate>
-References: <1373900271-4722-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130720165855.GB26625@lunn.ch> <20130720173847.GC26625@lunn.ch>
- <20130720185443.GB21460@localhost> <20130720194559.GA27517@lunn.ch>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
+Date: Sun, 21 Jul 2013 08:46:53 -0700
+Message-ID: <20130721154653.GG16598@kroah.com>
+References: <20130720220006.GA7977@kroah.com>
+ <3839600.WiC1OLF35o@flatron>
+ <51EBC0F5.70601@ti.com>
+ <9748041.Qq1fWJBg6D@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130720194559.GA27517@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Lior Amsalem <alior@marvell.com>, Grant Likely <grant.likely@secretlab.ca>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <9748041.Qq1fWJBg6D@flatron>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew Lunn,
+On Sun, Jul 21, 2013 at 01:12:07PM +0200, Tomasz Figa wrote:
+> On Sunday 21 of July 2013 16:37:33 Kishon Vijay Abraham I wrote:
+> > Hi,
+> > 
+> > On Sunday 21 July 2013 04:01 PM, Tomasz Figa wrote:
+> > > Hi,
+> > > 
+> > > On Saturday 20 of July 2013 19:59:10 Greg KH wrote:
+> > >> On Sat, Jul 20, 2013 at 10:32:26PM -0400, Alan Stern wrote:
+> > >>> On Sat, 20 Jul 2013, Greg KH wrote:
+> > >>>>>>> That should be passed using platform data.
+> > >>>>>> 
+> > >>>>>> Ick, don't pass strings around, pass pointers.  If you have
+> > >>>>>> platform
+> > >>>>>> data you can get to, then put the pointer there, don't use a
+> > >>>>>> "name".
+> > >>>>> 
+> > >>>>> I don't think I understood you here :-s We wont have phy pointer
+> > >>>>> when we create the device for the controller no?(it'll be done in
+> > >>>>> board file). Probably I'm missing something.
+> > >>>> 
+> > >>>> Why will you not have that pointer?  You can't rely on the "name"
+> > >>>> as
+> > >>>> the device id will not match up, so you should be able to rely on
+> > >>>> the pointer being in the structure that the board sets up, right?
+> > >>>> 
+> > >>>> Don't use names, especially as ids can, and will, change, that is
+> > >>>> going
+> > >>>> to cause big problems.  Use pointers, this is C, we are supposed to
+> > >>>> be
+> > >>>> doing that :)
+> > >>> 
+> > >>> Kishon, I think what Greg means is this:  The name you are using
+> > >>> must
+> > >>> be stored somewhere in a data structure constructed by the board
+> > >>> file,
+> > >>> right?  Or at least, associated with some data structure somehow.
+> > >>> Otherwise the platform code wouldn't know which PHY hardware
+> > >>> corresponded to a particular name.
+> > >>> 
+> > >>> Greg's suggestion is that you store the address of that data
+> > >>> structure
+> > >>> in the platform data instead of storing the name string.  Have the
+> > >>> consumer pass the data structure's address when it calls phy_create,
+> > >>> instead of passing the name.  Then you don't have to worry about two
+> > >>> PHYs accidentally ending up with the same name or any other similar
+> > >>> problems.
+> > >> 
+> > >> Close, but the issue is that whatever returns from phy_create()
+> > >> should
+> > >> then be used, no need to call any "find" functions, as you can just
+> > >> use
+> > >> the pointer that phy_create() returns.  Much like all other class api
+> > >> functions in the kernel work.
+> > > 
+> > > I think there is a confusion here about who registers the PHYs.
+> > > 
+> > > All platform code does is registering a platform/i2c/whatever device,
+> > > which causes a driver (located in drivers/phy/) to be instantiated.
+> > > Such drivers call phy_create(), usually in their probe() callbacks,
+> > > so platform_code has no way (and should have no way, for the sake of
+> > > layering) to get what phy_create() returns.
 
-On Sat, 20 Jul 2013 21:45:59 +0200, Andrew Lunn wrote:
-> > The patchset works only for Armada 370 and Armada XP SoC, not for Kirkwood.
-> > For some reason I was completely sure there wasn't any DT-enabled Kirkwood
-> > boards with PCIe support.
+Why not put pointers in the platform data structure that can hold these
+pointers?  I thought that is why we created those structures in the
+first place.  If not, what are they there for?
+
+> > > IMHO we need a lookup method for PHYs, just like for clocks,
+> > > regulators, PWMs or even i2c busses because there are complex cases
+> > > when passing just a name using platform data will not work. I would
+> > > second what Stephen said [1] and define a structure doing things in a
+> > > DT-like way.
+> > > 
+> > > Example;
+> > > 
+> > > [platform code]
+> > > 
+> > > static const struct phy_lookup my_phy_lookup[] = {
+> > > 
+> > > 	PHY_LOOKUP("s3c-hsotg.0", "otg", "samsung-usbphy.1", "phy.2"),
+> > 
+> > The only problem here is that if *PLATFORM_DEVID_AUTO* is used while
+> > creating the device, the ids in the device name would change and
+> > PHY_LOOKUP wont be useful.
 > 
-> I had a quick look at Dove and Orion5x. It looks like there are none
-> with PCIe support. So only Kirkwood is broken.
+> I don't think this is a problem. All the existing lookup methods already 
+> use ID to identify devices (see regulators, clkdev, PWMs, i2c, ...). You 
+> can simply add a requirement that the ID must be assigned manually, 
+> without using PLATFORM_DEVID_AUTO to use PHY lookup.
 
-There are some Dove and Orion5x with PCIe support, but none of them are
-using the new PCIe driver yet.
+And I'm saying that this idea, of using a specific name and id, is
+frought with fragility and will break in the future in various ways when
+devices get added to systems, making these strings constantly have to be
+kept up to date with different board configurations.
 
-Best regards,
+People, NEVER, hardcode something like an id.  The fact that this
+happens today with the clock code, doesn't make it right, it makes the
+clock code wrong.  Others have already said that this is wrong there as
+well, as systems change and dynamic ids get used more and more.
 
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Let's not repeat the same mistakes of the past just because we refuse to
+learn from them...
+
+So again, the "find a phy by a string" functions should be removed, the
+device id should be automatically created by the phy core just to make
+things unique in sysfs, and no driver code should _ever_ be reliant on
+the number that is being created, and the pointer to the phy structure
+should be used everywhere instead.
+
+With those types of changes, I will consider merging this subsystem, but
+without them, sorry, I will not.
+
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
