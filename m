@@ -1,118 +1,52 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
-Date: Mon, 22 Jul 2013 10:44:39 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1307221028440.1495-100000@iolanthe.rowland.org>
-References: <51ECDE5E.3050104@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v2] of: Specify initrd location using 64-bit
+Date: Mon, 22 Jul 2013 10:50:02 -0400
+Message-ID: <51ED469A.9000801@ti.com>
+References: <1372702835-5333-1-git-send-email-santosh.shilimkar@ti.com> <51D1F5E2.6070609@gmail.com> <20130720053945.C7AC63E0C52@localhost>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51ECDE5E.3050104-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20130720053945.C7AC63E0C52@localhost>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robherring2@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, James Hogan <james.hogan@imgtec.com>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Jonas Bonn <jonas@southpole.se>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, x86@kernel.org, arm@kernel.org, Chris Zankel <chris@zankel.net>, Max
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Jul 2013, Kishon Vijay Abraham I wrote:
-
-> > 	The PHY and the controller it is attached to are both physical
-> > 	devices.
-> > 
-> > 	The connection between them is hardwired by the system
-> > 	manufacturer and cannot be changed by software.
-> > 
-> > 	PHYs are generally described by fixed system-specific board
-> > 	files or by Device Tree information.  Are they ever discovered
-> > 	dynamically?
+On Saturday 20 July 2013 01:39 AM, Grant Likely wrote:
+> On Mon, 01 Jul 2013 16:34:26 -0500, Rob Herring <robherring2@gmail.com> wrote:
+>> On 07/01/2013 01:20 PM, Santosh Shilimkar wrote:
+>>> On some PAE architectures, the entire range of physical memory could reside
+>>> outside the 32-bit limit.  These systems need the ability to specify the
+>>> initrd location using 64-bit numbers.
+>>>
+>>> This patch globally modifies the early_init_dt_setup_initrd_arch() function to
+>>> use 64-bit numbers instead of the current unsigned long.
+>>>
+>>> There has been quite a bit of debate about whether to use u64 or phys_addr_t.
+>>> It was concluded to stick to u64 to be consistent with rest of the device
+>>> tree code. As summarized by Geert, "The address to load the initrd is decided
+>>> by the bootloader/user and set at that point later in time. The dtb should not
+>>> be tied to the kernel you are booting"
+>>
+>> That was quoting me. Otherwise:
+>>
+>> Acked-by: Rob Herring <rob.herring@calxeda.com>
+>>
+>> Unless Grant feels compelled to pick this up for 3.11, I think it has to
+>> wait for 3.12.
 > 
-> No. They are created just like any other platform devices are created.
-
-Okay.  Are PHYs _always_ platform devices?
-
-> > 	Is the same true for the controllers attached to the PHYs?
-> > 	If not -- if both a PHY and a controller are discovered 
-> > 	dynamically -- how does the kernel know whether they are 
-> > 	connected to each other?
+> Nope, 3.12 is fine. Applied.
 > 
-> No differences here. Both PHY and controller will have dt information or hwmod
-> data using which platform devices will be created.
-> > 
-> > 	The kernel needs to know which controller is attached to which
-> > 	PHY.  Currently this information is represented by name or ID
-> > 	strings embedded in platform data.
-> 
-> right. It's embedded in the platform data of the controller.
+Thanks Grant.
 
-It must also be embedded in the PHY's platform data somehow.  
-Otherwise, how would the kernel know which PHY to use?
-
-> > 	The PHY's driver (the supplier) uses the platform data to 
-> > 	construct a platform_device structure that represents the PHY.  
-> 
-> Currently the driver assigns static labels (corresponding to the label used in
-> the platform data of the controller).
-> > 	Until this is done, the controller's driver (the client) cannot 
-> > 	use the PHY.
-> 
-> right.
-> > 
-> > 	Since there is no parent-child relation between the PHY and the 
-> > 	controller, there is no guarantee that the PHY's driver will be
-> > 	ready when the controller's driver wants to use it.  A deferred
-> > 	probe may be needed.
-> 
-> right.
-> > 
-> > 	The issue (or one of the issues) in this discussion is that 
-> > 	Greg does not like the idea of using names or IDs to associate
-> > 	PHYs with controllers, because they are too prone to
-> > 	duplications or other errors.  Pointers are more reliable.
-> > 
-> > 	But pointers to what?  Since the only data known to be 
-> > 	available to both the PHY driver and controller driver is the
-> > 	platform data, the obvious answer is a pointer to platform data
-> > 	(either for the PHY or for the controller, or maybe both).
-> 
-> hmm.. it's not going to be simple though as the platform device for the PHY and
-> controller can be created in entirely different places. e.g., in some cases the
-> PHY device is a child of some mfd core device (the device will be created in
-> drivers/mfd) and the controller driver (usually) is created in board file. I
-> guess then we have to come up with something to share a pointer in two
-> different files.
-
-The ability for two different source files to share a pointer to a data 
-item defined in a third source file has been around since long before 
-the C language was invented.  :-)
-
-In this case, it doesn't matter where the platform_device structures 
-are created or where the driver source code is.  Let's take a simple 
-example.  Suppose the system design includes a PHY named "foo".  Then 
-the board file could contain:
-
-struct phy_info { ... } phy_foo;
-EXPORT_SYMBOL_GPL(phy_foo);
-
-and a header file would contain:
-
-extern struct phy_info phy_foo;
-
-The PHY supplier could then call phy_create(&phy_foo), and the PHY 
-client could call phy_find(&phy_foo).  Or something like that; make up 
-your own structure tags and function names.
-
-It's still possible to have conflicts, but now two PHYs with the same 
-name (or a misspelled name somewhere) will cause an error at link time.
-
-> > Probably some of the details above are wrong; please indicate where I
-> > have gone astray.  Also, I'm not clear about the role played by various 
-> > APIs.  For example, where does phy_create() fit into this picture?
-> 
-> phy_create is the API by which the PHY's driver (the supplier) hook into the
-> PHY framework. It's like the controller driver will always interact with the
-> PHY driver through the PHY framework.
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Santosh
