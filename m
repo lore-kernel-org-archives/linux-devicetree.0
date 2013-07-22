@@ -1,70 +1,52 @@
-From: "Kim, Milo" <Milo.Kim@ti.com>
-Subject: RE: [PATCH 1/3] mfd: add LP3943 MFD driver
-Date: Mon, 22 Jul 2013 01:19:18 +0000
-Message-ID: <A874F61F95741C4A9BA573A70FE3998F82E8317C@DQHE06.ent.ti.com>
-References: <A874F61F95741C4A9BA573A70FE3998F82E815C3@DQHE06.ent.ti.com>
- <CACRpkdYF=ZDqqoU6Kq4cwgaufUjpQmX+dxUexqcvb=KiqDdBoQ@mail.gmail.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH 1/1] of/documentation: Fix a typo in exynos5250-clock.txt
+Date: Mon, 22 Jul 2013 10:51:54 +0900
+Message-ID: <0ab501ce867e$0adadd40$209097c0$%kim@samsung.com>
+References: <1373012281-26433-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYF=ZDqqoU6Kq4cwgaufUjpQmX+dxUexqcvb=KiqDdBoQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1373012281-26433-1-git-send-email-sachin.kamat@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: mturquette@linaro.org, grant.likely@linaro.org, rob@landley.net, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-> This needs to be reviewed by the devicetree people.
-> Please break out the bindings separately and include
-> devicetree@vger.kernel.org on that review.
-
-OK, thanks.
- 
-> > +++ b/Documentation/devicetree/bindings/mfd/lp3943.txt
-> > @@ -0,0 +1,23 @@
-> > +Bindings for TI/National Semiconductor LP3943 Driver
-> > +
-> > +Required properties:
-> > +  - compatible: "ti,lp3943"
-> > +  - reg: 7bit I2C slave address. 0x60 ~ 0x67
-> > +
-> > +Optional properties:
-> > +  - ti,pwm0, ti,pwm1: Output channel definition for PWM port 0 and 1
-> > +                      0 = invalid, 1 = LED0, 2 = LED 1, ... 16 =
-> > +LED15
-> > +
-> > +Datasheet
-> > +  http://www.ti.com/lit/ds/snvs256b/snvs256b.pdf
-> > +
-> > +Application note: How to use LP3943 as a GPIO expander and PWM
-> > +generator
-> > +  http://www.ti.com/lit/an/snva287a/snva287a.pdf
+Sachin Kamat wrote:
 > 
-> Do we usually put these things into bindings?
-
-Actually I want to put this information in the driver document, but
-I've not found which part is the best place for the MFD documentation.
-
-> > +Example:
-> > +
-> > +       lp3943@60 {
-> > +               compatible = "ti,lp3943";
-> > +               reg = <0x60>;
-> > +               pwm1 = /bits/ 8 <2>;    /* use LED1 output as PWM #1 */
-> > +       };
+> The clocks should be numbered sequentially as they are represented as
+> enum values in the clock driver.
 > 
-> OK so there is a way to state which lines are used for PWM.
+> Typo introduced by commit 17d4caccef ("clk: exynos5250: register
+> display block gate clocks to common clock framework")
 > 
-> I think you should also specify which lines are used for GPIO, and which
-> lines are used for LEDs.
->
-> And I'd like the masks to be passed to each subdriver, so we can avoid the
-> scenario where one and the same line gets used for GPIO, LED and PWM at the
-> same time.
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>  .../devicetree/bindings/clock/exynos5250-clock.txt |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> index 781a627..1a05761 100644
+> --- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> @@ -154,7 +154,7 @@ clock which they consume.
+>    dsim0			341
+>    dp			342
+>    mixer			343
+> -  hdmi			345
+> +  hdmi			344
+> 
+>  Example 1: An example of a clock controller node is listed below.
+> 
+> --
+> 1.7.9.5
 
-Good idea. This is my missing point - I was writing the LP3943 DT is only used for the definition of the platform data.
-Thanks.
+Looks OK to me.
 
-Regards,
-Milo
+Mike, do you want me to take into the samsung tree?
+
+Thanks,
+Kukjin
