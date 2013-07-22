@@ -1,7 +1,7 @@
 From: Chanho Park <chanho61.park@samsung.com>
-Subject: [PATCH 2/3] drm/exynos: add dt-binding documentation for rotator
-Date: Mon, 22 Jul 2013 15:49:26 +0900
-Message-ID: <1374475767-30085-3-git-send-email-chanho61.park@samsung.com>
+Subject: [PATCH 3/3] dts: ARM: add a rotator node for exynos4
+Date: Mon, 22 Jul 2013 15:49:27 +0900
+Message-ID: <1374475767-30085-4-git-send-email-chanho61.park@samsung.com>
 References: <1374475767-30085-1-git-send-email-chanho61.park@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-reply-to: <1374475767-30085-1-git-send-email-chanho61.park@samsung.com>
@@ -10,35 +10,25 @@ To: inki.dae@samsung.com, kgene.kim@samsung.com
 Cc: jy0922.shim@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Chanho Park <chanho61.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a dt-binding document for exynos rotator. It describes which
-nodes should be defined to use the rotator.
+This patch adds a device node of rotator for exynos4 platform. It has proper
+register and clock information. It also has limit table to get restrictions of
+the image size.
 
 Signed-off-by: Chanho Park <chanho61.park@samsung.com>
 Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 ---
- .../bindings/drm/exynos/samsung-rotator.txt        |   35 ++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt
+ arch/arm/boot/dts/exynos4.dtsi |   23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt b/Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt
-new file mode 100644
-index 0000000..6b1d704
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt
-@@ -0,0 +1,35 @@
-+* Samsung Image Rotator
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 3f94fe8..7d7dcef 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -398,4 +398,27 @@
+ 		samsung,power-domain = <&pd_lcd0>;
+ 		status = "disabled";
+ 	};
 +
-+Required properties:
-+  - compatible : value should be the "samsung,exynos4210".
-+  - reg : Physical base address of the IP registers and length of memory
-+	  mapped region.
-+  - interrupts : interrupt number to the CPU.
-+  - clocks : clock number of exynos4 rotator clock.
-+  - clocks : clock name of rotator
-+  - status : "okay" or "disabled"
-+  - limit table for image formats : min_w/min_h/max_w/max_h for min/max of image
-+
-+Example:
 +	rotator: rotator@12810000 {
 +		compatible = "samsung,exynos4210-rotator";
 +		reg = <0x12810000 0x1000>;
@@ -61,5 +51,6 @@ index 0000000..6b1d704
 +			align = <2>;
 +		};
 +	};
+ };
 -- 
 1.7.9.5
