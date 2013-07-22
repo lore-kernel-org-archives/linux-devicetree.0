@@ -1,45 +1,55 @@
-From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH v3 07/31] fs_enet: silence a build warning (unused variable)
-Date: Mon, 22 Jul 2013 14:14:34 +0200
-Message-ID: <1374495298-22019-8-git-send-email-gsi@denx.de>
-References: <1374166855-7280-1-git-send-email-gsi@denx.de>
- <1374495298-22019-1-git-send-email-gsi@denx.de>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: Re: [PATCH 0/4] dra7: I2C/MCSPI/UART pin control datas
+Date: Mon, 22 Jul 2013 17:51:40 +0530
+Message-ID: <51ED23D4.50005@ti.com>
+References: <1374251050-10033-1-git-send-email-sourav.poddar@ti.com> <51E969D3.2080804@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1374495298-22019-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51E969D3.2080804@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: tony@atomide.com, benoit.cousson@linaro.org, balbi@ti.com, rnayak@ti.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-
-Signed-off-by: Gerhard Sittig <gsi@denx.de>
----
- drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c |    1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-index 8de53a1..c04eb3a 100644
---- a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-+++ b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-@@ -583,7 +583,6 @@ static struct sk_buff *tx_skb_align_workaround(struct net_device *dev,
- 					       struct sk_buff *skb)
- {
- 	struct sk_buff *new_skb;
--	struct fs_enet_private *fep = netdev_priv(dev);
- 
- 	/* Alloc new skb */
- 	new_skb = netdev_alloc_skb(dev, skb->len + 4);
--- 
-1.7.10.4
+On Friday 19 July 2013 10:01 PM, Nishanth Menon wrote:
+> On 07/19/2013 11:24 AM, Sourav Poddar wrote:
+>> These series add support for I2C/MCSPI/UART pin control datas.
+>>
+>> The series is done on top of Rajendra Nayak series[1](posted to the 
+>> list),
+>> which has basic dt boot enable for dra7.
+>> These patches has been tested, along with I2C and UART patches from
+>> wolfram sang patch series[2].
+>>
+>>
+>> [1]: http://www.spinics.net/lists/linux-omap/msg93535.html
+>> [2]: https://lkml.org/lkml/2013/7/10/335
+>>
+>> Sourav Poddar (4):
+>>    arm: dts: omap5-evm: Add I2c pinctrl data
+>>    arm: dts: omap5-evm: Add I2c pinctrl data
+>>    arm: dts: dra7-evm: Add SPI pinctrl data
+>>    arm: dts: dra7-evm: Add UART pinctrl data
+>>
+>>   arch/arm/boot/dts/dra7-evm.dts |  123 
+>> ++++++++++++++++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/dra7.dtsi    |   15 +++++
+>>   2 files changed, 138 insertions(+), 0 deletions(-)
+>>
+>> -- 
+>> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+> DRA7 DTS is not merged yet, If I am not mistaken.
+> Ref[1] [2]
+> So why not squash these to [2]?
+>
+> [1] http://marc.info/?t=137335517900001&r=1&w=2
+> [2] http://marc.info/?l=linux-arm-kernel&m=137335590702349&w=2
+>
+>
+Yes, its not merged.
+We can squash these series.
