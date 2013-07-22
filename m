@@ -1,142 +1,160 @@
 From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH v3 23/31] serial: mpc512x: setup the PSC FIFO clock as well
-Date: Mon, 22 Jul 2013 14:14:50 +0200
-Message-ID: <1374495298-22019-24-git-send-email-gsi@denx.de>
+Subject: [PATCH v3 13/31] clk: wrap I/O access for improved portability
+Date: Mon, 22 Jul 2013 14:14:40 +0200
+Message-ID: <1374495298-22019-14-git-send-email-gsi@denx.de>
 References: <1374166855-7280-1-git-send-email-gsi@denx.de>
  <1374495298-22019-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 In-Reply-To: <1374495298-22019-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-prepare and enable the FIFO clock upon PSC FIFO initialization,
-check for and propagage errors when enabling the PSC FIFO clock,
-disable and unprepare the FIFO clock upon PSC FIFO uninitialization,
-remove the pre-enable workaround from the platform's clock driver
+the common clock drivers were motivated/initiated by ARM development
+and apparently assume little endian peripherals
 
-devm_{get,put}_clk() doesn't apply here, as the SoC provides a
-single FIFO component which is shared among several PSC components,
-thus the FIFO isn't associated with a device (while the PSCs are)
+wrap register/peripherals access in the common code (div, gate, mux)
+in preparation of adding COMMON_CLK support for other platforms
 
 Signed-off-by: Gerhard Sittig <gsi@denx.de>
 ---
- arch/powerpc/platforms/512x/clock-commonclk.c |    2 --
- drivers/tty/serial/mpc52xx_uart.c             |   46 +++++++++++++++++++++----
- 2 files changed, 40 insertions(+), 8 deletions(-)
+ drivers/clk/clk-divider.c    |    6 +++---
+ drivers/clk/clk-gate.c       |    6 +++---
+ drivers/clk/clk-mux.c        |    6 +++---
+ include/linux/clk-provider.h |   17 +++++++++++++++++
+ 4 files changed, 26 insertions(+), 9 deletions(-)
 
-diff --git a/arch/powerpc/platforms/512x/clock-commonclk.c b/arch/powerpc/platforms/512x/clock-commonclk.c
-index a860ded..53f772b 100644
---- a/arch/powerpc/platforms/512x/clock-commonclk.c
-+++ b/arch/powerpc/platforms/512x/clock-commonclk.c
-@@ -698,8 +698,6 @@ static void mpc512x_clk_setup_clock_tree(int busfreq)
- 	clk_prepare_enable(clks[MPC512x_CLK_MEM]);	/* SRAM */
- 	clk_prepare_enable(clks[MPC512x_CLK_IPS]);	/* SoC periph */
- 	clk_prepare_enable(clks[MPC512x_CLK_LPC]);	/* boot media */
--	/* some are required yet no dependencies were declared */
--	clk_prepare_enable(clks[MPC512x_CLK_PSC_FIFO]);
- 	/* some are not yet acquired by their respective drivers */
- 	clk_prepare_enable(clks[MPC512x_CLK_PSC3_MCLK]);/* serial console */
- 	clk_prepare_enable(clks[MPC512x_CLK_DIU]);	/* display */
-diff --git a/drivers/tty/serial/mpc52xx_uart.c b/drivers/tty/serial/mpc52xx_uart.c
-index 04dc564..23eef91 100644
---- a/drivers/tty/serial/mpc52xx_uart.c
-+++ b/drivers/tty/serial/mpc52xx_uart.c
-@@ -421,6 +421,7 @@ struct psc_fifoc {
+diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
+index 6d55eb2..2c07061 100644
+--- a/drivers/clk/clk-divider.c
++++ b/drivers/clk/clk-divider.c
+@@ -104,7 +104,7 @@ static unsigned long clk_divider_recalc_rate(struct clk_hw *hw,
+ 	struct clk_divider *divider = to_clk_divider(hw);
+ 	unsigned int div, val;
  
- static struct psc_fifoc __iomem *psc_fifoc;
- static unsigned int psc_fifoc_irq;
-+static struct clk *psc_fifoc_clk;
+-	val = readl(divider->reg) >> divider->shift;
++	val = clk_readl(divider->reg) >> divider->shift;
+ 	val &= div_mask(divider);
  
- static void mpc512x_psc_fifo_init(struct uart_port *port)
- {
-@@ -568,36 +569,69 @@ static unsigned int mpc512x_psc_set_baudrate(struct uart_port *port,
- /* Init PSC FIFO Controller */
- static int __init mpc512x_psc_fifoc_init(void)
- {
-+	int err;
- 	struct device_node *np;
-+	struct clk *clk;
-+
-+	/* default error code, potentially overwritten by clock calls */
-+	err = -ENODEV;
+ 	div = _get_div(divider, val);
+@@ -230,11 +230,11 @@ static int clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	if (divider->flags & CLK_DIVIDER_HIWORD_MASK) {
+ 		val = div_mask(divider) << (divider->shift + 16);
+ 	} else {
+-		val = readl(divider->reg);
++		val = clk_readl(divider->reg);
+ 		val &= ~(div_mask(divider) << divider->shift);
+ 	}
+ 	val |= value << divider->shift;
+-	writel(val, divider->reg);
++	clk_writel(val, divider->reg);
  
- 	np = of_find_compatible_node(NULL, NULL,
- 				     "fsl,mpc5121-psc-fifo");
- 	if (!np) {
- 		pr_err("%s: Can't find FIFOC node\n", __func__);
--		return -ENODEV;
-+		goto out_err;
+ 	if (divider->lock)
+ 		spin_unlock_irqrestore(divider->lock, flags);
+diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
+index 790306e..b7fbd96 100644
+--- a/drivers/clk/clk-gate.c
++++ b/drivers/clk/clk-gate.c
+@@ -58,7 +58,7 @@ static void clk_gate_endisable(struct clk_hw *hw, int enable)
+ 		if (set)
+ 			reg |= BIT(gate->bit_idx);
+ 	} else {
+-		reg = readl(gate->reg);
++		reg = clk_readl(gate->reg);
+ 
+ 		if (set)
+ 			reg |= BIT(gate->bit_idx);
+@@ -66,7 +66,7 @@ static void clk_gate_endisable(struct clk_hw *hw, int enable)
+ 			reg &= ~BIT(gate->bit_idx);
  	}
  
-+	clk = of_clk_get_by_name(np, "per");
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: Can't lookup FIFO clock\n", __func__);
-+		err = PTR_ERR(clk);
-+		goto out_ofnode_put;
-+	}
-+	if (clk_prepare_enable(clk)) {
-+		pr_err("%s: Can't enable FIFO clock\n", __func__);
-+		clk_put(clk);
-+		goto out_ofnode_put;
-+	}
-+	psc_fifoc_clk = clk;
-+
- 	psc_fifoc = of_iomap(np, 0);
- 	if (!psc_fifoc) {
- 		pr_err("%s: Can't map FIFOC\n", __func__);
--		of_node_put(np);
--		return -ENODEV;
-+		goto out_clk_disable;
+-	writel(reg, gate->reg);
++	clk_writel(reg, gate->reg);
+ 
+ 	if (gate->lock)
+ 		spin_unlock_irqrestore(gate->lock, flags);
+@@ -89,7 +89,7 @@ static int clk_gate_is_enabled(struct clk_hw *hw)
+ 	u32 reg;
+ 	struct clk_gate *gate = to_clk_gate(hw);
+ 
+-	reg = readl(gate->reg);
++	reg = clk_readl(gate->reg);
+ 
+ 	/* if a set bit disables this clk, flip it before masking */
+ 	if (gate->flags & CLK_GATE_SET_TO_DISABLE)
+diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
+index 614444c..02ef506 100644
+--- a/drivers/clk/clk-mux.c
++++ b/drivers/clk/clk-mux.c
+@@ -42,7 +42,7 @@ static u8 clk_mux_get_parent(struct clk_hw *hw)
+ 	 * OTOH, pmd_trace_clk_mux_ck uses a separate bit for each clock, so
+ 	 * val = 0x4 really means "bit 2, index starts at bit 0"
+ 	 */
+-	val = readl(mux->reg) >> mux->shift;
++	val = clk_readl(mux->reg) >> mux->shift;
+ 	val &= mux->mask;
+ 
+ 	if (mux->table) {
+@@ -89,11 +89,11 @@ static int clk_mux_set_parent(struct clk_hw *hw, u8 index)
+ 	if (mux->flags & CLK_MUX_HIWORD_MASK) {
+ 		val = mux->mask << (mux->shift + 16);
+ 	} else {
+-		val = readl(mux->reg);
++		val = clk_readl(mux->reg);
+ 		val &= ~(mux->mask << mux->shift);
  	}
+ 	val |= index << mux->shift;
+-	writel(val, mux->reg);
++	clk_writel(val, mux->reg);
  
- 	psc_fifoc_irq = irq_of_parse_and_map(np, 0);
--	of_node_put(np);
- 	if (psc_fifoc_irq == 0) {
- 		pr_err("%s: Can't get FIFOC irq\n", __func__);
--		iounmap(psc_fifoc);
--		return -ENODEV;
-+		goto out_unmap;
- 	}
+ 	if (mux->lock)
+ 		spin_unlock_irqrestore(mux->lock, flags);
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 1ec14a7..c4f7799 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -12,6 +12,7 @@
+ #define __LINUX_CLK_PROVIDER_H
  
-+	of_node_put(np);
- 	return 0;
+ #include <linux/clk.h>
++#include <linux/io.h>
+ 
+ #ifdef CONFIG_COMMON_CLK
+ 
+@@ -490,5 +491,21 @@ static inline const char *of_clk_get_parent_name(struct device_node *np,
+ #define of_clk_init(matches) \
+ 	{ while (0); }
+ #endif /* CONFIG_OF */
 +
-+out_unmap:
-+	iounmap(psc_fifoc);
-+out_clk_disable:
-+	clk_disable_unprepare(psc_fifoc_clk);
-+	clk_put(psc_fifoc_clk);
-+out_ofnode_put:
-+	of_node_put(np);
-+out_err:
-+	return err;
- }
- 
- static void __exit mpc512x_psc_fifoc_uninit(void)
- {
- 	iounmap(psc_fifoc);
++/*
++ * wrap access to peripherals in accessor routines
++ * for improved portability across platforms
++ */
 +
-+	/* disable the clock, errors are not fatal */
-+	if (psc_fifoc_clk) {
-+		clk_disable_unprepare(psc_fifoc_clk);
-+		clk_put(psc_fifoc_clk);
-+		psc_fifoc_clk = NULL;
-+	}
- }
- 
- /* 512x specific interrupt handler. The caller holds the port lock */
++static inline u32 clk_readl(u32 __iomem *reg)
++{
++	return readl(reg);
++}
++
++static inline void clk_writel(u32 val, u32 __iomem *reg)
++{
++	writel(val, reg);
++}
++
+ #endif /* CONFIG_COMMON_CLK */
+ #endif /* CLK_PROVIDER_H */
 -- 
 1.7.10.4
