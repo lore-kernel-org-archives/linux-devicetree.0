@@ -1,188 +1,81 @@
 From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/3] drm/exynos: add device tree support for rotator
-Date: Mon, 22 Jul 2013 21:32:07 +0200
-Message-ID: <1944640.dQgavdmLbq@flatron>
-References: <1374475767-30085-1-git-send-email-chanho61.park@samsung.com> <1374475767-30085-2-git-send-email-chanho61.park@samsung.com>
+Subject: Re: [PATCH 2/4] clk: exynos-audss: allow input clocks to be specified in device tree
+Date: Mon, 22 Jul 2013 21:42:31 +0200
+Message-ID: <5824726.DGbrnrmYE0@flatron>
+References: <1373458313-18970-1-git-send-email-padma.v@samsung.com> <1610421.OFFn8rqlxt@amdc1227> <20130722181530.7598.73318@quantum>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1374475767-30085-2-git-send-email-chanho61.park@samsung.com>
+In-Reply-To: <20130722181530.7598.73318@quantum>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanho Park <chanho61.park@samsung.com>
-Cc: inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+To: Mike Turquette <mturquette@linaro.org>, sylvester.nawrocki@gmail.com
+Cc: Tomasz Figa <t.figa@samsung.com>, Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com, dianders@chromium.org, abrestic@chromium.org, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday 22 of July 2013 15:49:25 Chanho Park wrote:
-> The exynos4 platform is only dt-based since 3.10, we should convert
-> driver data and ids to dt-based parsing methods. The rotator driver has
-> a limit table to get size limit. The minimum size of RGB888 format is 8
-> x 8 and maximum size is 8K x 8K. The other format, YCbCr420 2-Plane has
-> 32 x 32 min size and 32K x 32K max size. Each format should be multiple
-> of 'align' value.
+On Monday 22 of July 2013 11:15:30 Mike Turquette wrote:
+> Quoting Tomasz Figa (2013-07-22 09:28:47)
 > 
-> Signed-off-by: Chanho Park <chanho61.park@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_rotator.c |  110
-> +++++++++++++++++++-------- 1 file changed, 80 insertions(+), 30
-> deletions(-)
+> > Hi Padmavathi, Andrew,
+> > 
+> > On Wednesday 10 of July 2013 17:41:51 Padmavathi Venna wrote:
+> > > From: Andrew Bresticker <abrestic@chromium.org>
+> > > 
+> > > This allows the input clocks to the Exynos AudioSS block to be
+> > > specified via device-tree bindings.  Default names will be used
+> > > when an input clock is not given.  This will be useful when adding
+> > > support for the Exynos5420 where the audio bus clock is called
+> > > "sclk_maudio0" instead of "sclk_audio0".
+> > > 
+> > > Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> > > Reviewed-on: https://gerrit.chromium.org/gerrit/57833
+> > > Reviewed-by: Simon Glass <sjg@chromium.org>
+> > > ---
+> > > 
+> > >  .../devicetree/bindings/clock/clk-exynos-audss.txt |   31
+> > > 
+> > > ++++++++++++++++++- drivers/clk/samsung/clk-exynos-audss.c          
+> > >   |> > 
+> > >   28 +++++++++++++++-- 2 files changed, 53 insertions(+), 6
+> > >   deletions(-)
+> > 
+> > Well, this is basically how it should be done, but in current state of
+> > clock core I can see a problem: can we really rely on the order of
+> > clock initialization? I mean, we can't defer initialization of
+> > particular clock controller until all external clocks it needs are
+> > available, because there is no probing involved here.
 > 
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_rotator.c
-> b/drivers/gpu/drm/exynos/exynos_drm_rotator.c index 427640a..b353a10
-> 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_rotator.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_rotator.c
-> @@ -96,7 +96,7 @@ struct rot_context {
->  	struct resource	*regs_res;
->  	void __iomem	*regs;
->  	struct clk	*clock;
-> -	struct rot_limit_table	*limit_tbl;
-> +	struct rot_limit_table	limit_tbl;
->  	int	irq;
->  	int	cur_buf_id[EXYNOS_DRM_OPS_MAX];
->  	bool	suspended;
-> @@ -167,7 +167,7 @@ static irqreturn_t rotator_irq_handler(int irq, void
-> *arg) static void rotator_align_size(struct rot_context *rot, u32 fmt,
-> u32 *hsize, u32 *vsize)
->  {
-> -	struct rot_limit_table *limit_tbl = rot->limit_tbl;
-> +	struct rot_limit_table *limit_tbl = &rot->limit_tbl;
->  	struct rot_limit *limit;
->  	u32 mask, val;
-> 
-> @@ -632,6 +632,72 @@ static int rotator_ippdrv_start(struct device *dev,
-> enum drm_exynos_ipp_cmd cmd) return 0;
->  }
-> 
-> +static const struct of_device_id exynos_rotator_match[] = {
-> +	{
-> +		.compatible = "samsung,exynos4210-rotator",
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, exynos_rotator_match);
-> +
-> +static int rotator_parse_dt_tbl(struct device_node *np, struct
-> rot_limit *rlim) +{
-> +	int ret;
-> +
-> +	ret = of_property_read_u32(np, "min_w", &rlim->min_w);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_property_read_u32(np, "min_h", &rlim->min_h);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_property_read_u32(np, "max_w", &rlim->max_w);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_property_read_u32(np, "max_h", &rlim->max_h);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_property_read_u32(np, "align", &rlim->align);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static int rotator_parse_dt(struct device *dev, struct rot_context
-> *rot) +{
-> +	struct device_node *ycbcr_node, *rgb888_node;
-> +	int ret;
-> +
-> +	ycbcr_node = of_get_child_by_name(dev->of_node, "ycbcr420_2p");
-> +	if (!ycbcr_node) {
-> +		dev_err(dev, "can't find ycbcr420_2p node\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	rgb888_node = of_get_child_by_name(dev->of_node, "rgb888");
-> +	if (!rgb888_node) {
-> +		dev_err(dev, "can't find rgb888 node\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = rotator_parse_dt_tbl(ycbcr_node, &rot-
->limit_tbl.ycbcr420_2p);
-> +	if (ret) {
-> +		dev_err(dev, "failed to parse ycbcr420 data\n");
-> +		return ret;
-> +	}
-> +	ret = rotator_parse_dt_tbl(rgb888_node, &rot->limit_tbl.rgb888);
-> +	if (ret) {
-> +		dev_err(dev, "failed to parse rgb888 data\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int rotator_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -639,14 +705,23 @@ static int rotator_probe(struct platform_device
-> *pdev) struct exynos_drm_ippdrv *ippdrv;
->  	int ret;
-> 
-> +	if (!dev->of_node) {
-> +		dev_err(dev, "Cannot find device tree node\n");
-> +		return -ENODEV;
-> +	}
-> +
->  	rot = devm_kzalloc(dev, sizeof(*rot), GFP_KERNEL);
->  	if (!rot) {
->  		dev_err(dev, "failed to allocate rot\n");
->  		return -ENOMEM;
->  	}
-> 
-> -	rot->limit_tbl = (struct rot_limit_table *)
-> -				platform_get_device_id(pdev)->driver_data;
-> +	ret = rotator_parse_dt(dev, rot);
-> +	if (ret) {
-> +		dev_err(dev, "failed parse dt info\n");
-> +		devm_kfree(dev, rot);
-> +		return ret;
-> +	}
-> 
->  	rot->regs_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	rot->regs = devm_ioremap_resource(dev, rot->regs_res);
-> @@ -718,31 +793,6 @@ static int rotator_remove(struct platform_device
-> *pdev) return 0;
->  }
-> 
-> -static struct rot_limit_table rot_limit_tbl = {
-> -	.ycbcr420_2p = {
-> -		.min_w = 32,
-> -		.min_h = 32,
-> -		.max_w = SZ_32K,
-> -		.max_h = SZ_32K,
-> -		.align = 3,
-> -	},
-> -	.rgb888 = {
-> -		.min_w = 8,
-> -		.min_h = 8,
-> -		.max_w = SZ_8K,
-> -		.max_h = SZ_8K,
-> -		.align = 2,
-> -	},
-> -};
-> -
-> -static struct platform_device_id rotator_driver_ids[] = {
-> -	{
-> -		.name		= "exynos-rot",
-> -		.driver_data	= (unsigned long)&rot_limit_tbl,
-> -	},
-> -	{},
-> -};
-> -
+> The clock core allows registering clocks even if their parents are not
+> yet registered. I test this path with some dummy clocks every so often
+> to make sure the re-parenting operation are completed successfully after
+> the parents eventually are registered.
 
-I would keep these driver data here and just point to them from match_data 
-of OF match table, as suggested in other replies.
+Sure it does, but this patch is about something different. It adds device 
+tree based lookup (of_clk_get_by_name()) of external clocks (as opposed to 
+existing lookup by name), which will fail if provider pointed by phandle 
+is not registered yet.
+
+> This feature was not used in practice until recently with the advent of
+> multiple clock controllers getting registered and DT description of
+> clocks / clock controllers that may be "out of order". If you find any
+> bugs please let me know ;-)
+
+I will send you a bunch of patches sorting out issues I found in 
+clk_set_rate() path, but give me some time to prepare them :).
+
+As for multiple clock controllers, this is going to be funny. I have 
+discussed this a bit with Sylwester and we managed to find some design 
+issues that I think must be solved:
+
+a) What about multiple controllers with identical clock names? Imagine two 
+PMICs that can also generate 32 KHz clocks, both having them named 
+"clk32k". Am I right saying that this won't work with current code?
+
+b) What are the rules of using clock-output-names property (and what 
+should be used in non-DT case)? I can imagine using it to assign platform-
+specific names of clock outputs of extra clock controllers (this would 
+help in the above case of "clk32k"), but currently it seems like it is 
+optional to use it in clock drivers and the meaning is provider-specific.
 
 Best regards,
 Tomasz
