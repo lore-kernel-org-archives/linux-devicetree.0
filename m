@@ -1,79 +1,44 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 0/5] Memory mapped architected timers
-Date: Mon, 22 Jul 2013 18:08:17 +0100
-Message-ID: <20130722170817.GB4833@e106331-lin.cambridge.arm.com>
-References: <1374191972-18015-1-git-send-email-sboyd@codeaurora.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
+Date: Mon, 22 Jul 2013 10:29:08 -0700
+Message-ID: <CAOesGMjdH6x9U0+6f6TC8Q=sCbO38aNedqTpHBe5cpLG79r3eA@mail.gmail.com>
+References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
+	<1374290388-19308-3-git-send-email-grant.likely@linaro.org>
+	<CAOesGMhaAy93J=Q1STZUHHA-SbH+WXCVuUn0ef14_18du2dk6w@mail.gmail.com>
+	<1374366577.1940.10.camel@joe-AO722>
+	<CACxGe6tqisx19LP=5gPyF1iuBKedTLp0yK+WgmqG5Cf+a95Taw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1374191972-18015-1-git-send-email-sboyd@codeaurora.org>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6tqisx19LP=5gPyF1iuBKedTLp0yK+WgmqG5Cf+a95Taw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Joe Perches <joe@perches.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Sun, Jul 21, 2013 at 2:46 AM, Grant Likely <grant.likely@linaro.org> wrote:
+> On Sun, Jul 21, 2013 at 1:29 AM, Joe Perches <joe@perches.com> wrote:
+>> On Sat, 2013-07-20 at 17:17 -0700, Olof Johansson wrote:
+>>> On Fri, Jul 19, 2013 at 8:19 PM, Grant Likely <grant.likely@linaro.org> wrote:
+>>> > Device tree bindings require a lot more attention than they used to.
+>>> > We've got a group of volunteers willing to take over maintaining
+>>> > bindings. This patch adds them to the MAINTAINERS file.
+>> []
+>>> > diff --git a/MAINTAINERS b/MAINTAINERS
+>> []
+>>> > +OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+>> []
+>>> > +F:     arch/*/
+>> []
+>>> This seems a bit broad.
+>>
+>> Yep, that's every file anywhere under arch.
+>
+> yeah, that was a c/p mistake. I'll drop that line before committing.
 
-On Fri, Jul 19, 2013 at 12:59:27AM +0100, Stephen Boyd wrote:
-> This patchset adds support for memory mapped architected timers. We
-> don't have any other global broadcast timer in our system, so we use the
-> mmio timer during low power modes. The first patch changes the register
-> accessor to an enum per Thomas' request. The second patch is the binding.
-> The next two patches lay some groundwork so that the last patch is simpler.
-> The final patch adds support for mmio timers.
-> 
-> Patches are based on v3.11-rc1.
+Ok, with that:
 
-Be aware that as of v3.11-rc2 this doesn't cleanly apply, as the
-__cpuinit removal broke the final patch's context in a couple of places.
-It would be nice to get rid of the new cpuinit additions too...
+Acked-by: Olof Johansson <olof@lixom.net>
 
-With that cleaned up locally, I've gave this a spin on tc2 and a
-Foundation model to test the cp15/system timers, hotplugging CPUs and
-running a basic test (`time sleep 5`). That all seems to work.
 
-Unfortunately I have no way of testing the memory-mapped timer support,
-but I trust you've tested that locally.
-
-For the series:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
-Mark.
-
-> 
-> Updates since v3:
->  * Rebased onto v3.11-rc1
->  * New patch to use compiler warnings instead of BUILD_BUG_ON()
-> 
-> Updates since v2:
->  * Rebased onto v3.10-rc1
-> 
-> Updates since v1:
->  * Assigned counter reading function and commented why for arm64
->  * Updated DT binding to replace frame-id with frame-number and use status
->    property
-> 
-> 
-> Stephen Boyd (5):
->   clocksource: arch_timer: Make register accessors less error-prone
->   Documentation: Add memory mapped ARM architected timer binding
->   clocksource: arch_timer: Pass clock event to set_mode callback
->   clocksource: arch_timer: Push the read/write wrappers deeper
->   clocksource: arch_timer: Add support for memory mapped timers
-> 
->  .../devicetree/bindings/arm/arch_timer.txt         |  59 ++-
->  arch/arm/include/asm/arch_timer.h                  |  14 +-
->  arch/arm64/include/asm/arch_timer.h                |  23 +-
->  drivers/clocksource/arm_arch_timer.c               | 446 +++++++++++++++++----
->  include/clocksource/arm_arch_timer.h               |  10 +-
->  5 files changed, 455 insertions(+), 97 deletions(-)
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
-> 
+-Olof
