@@ -1,28 +1,65 @@
-From: Sathya Prakash M R <sathyap@ti.com>
-Subject: [PATCH 0/2] Add DSS nodes for AM43x
-Date: Mon, 22 Jul 2013 11:33:15 +0530
-Message-ID: <1374472997-9653-1-git-send-email-sathyap@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, a-kishore@ti.com, devicetree-discuss@lists.ozlabs.org
-Cc: afzal@ti.com, Sathya Prakash M R <sathyap@ti.com>
+From: Chanho Park <chanho61.park@samsung.com>
+Subject: [PATCH 2/3] drm/exynos: add dt-binding documentation for rotator
+Date: Mon, 22 Jul 2013 15:49:26 +0900
+Message-ID: <1374475767-30085-3-git-send-email-chanho61.park@samsung.com>
+References: <1374475767-30085-1-git-send-email-chanho61.park@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1374475767-30085-1-git-send-email-chanho61.park@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: inki.dae@samsung.com, kgene.kim@samsung.com
+Cc: jy0922.shim@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Chanho Park <chanho61.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-DSS support for AM437x is added in this patch series.
-Patch #1 adds the hwmod entries and
-patch #2 adds the DT entry.
+This patch adds a dt-binding document for exynos rotator. It describes which
+nodes should be defined to use the rotator.
 
-Sathya Prakash M R (2):
-  ARM: OMAP2+: AM43x - Add DSS hwmod
-  ARM: DTS: AM43x: Add DSS node
+Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ .../bindings/drm/exynos/samsung-rotator.txt        |   35 ++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt
 
- arch/arm/boot/dts/am4372.dtsi              |   27 +++++++++
- arch/arm/mach-omap2/omap_hwmod_33xx_data.c |   85 ++++++++++++++++++++++++++++
- arch/arm/mach-omap2/prcm43xx.h             |    1 +
- 3 files changed, 113 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt b/Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt
+new file mode 100644
+index 0000000..6b1d704
+--- /dev/null
++++ b/Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt
+@@ -0,0 +1,35 @@
++* Samsung Image Rotator
++
++Required properties:
++  - compatible : value should be the "samsung,exynos4210".
++  - reg : Physical base address of the IP registers and length of memory
++	  mapped region.
++  - interrupts : interrupt number to the CPU.
++  - clocks : clock number of exynos4 rotator clock.
++  - clocks : clock name of rotator
++  - status : "okay" or "disabled"
++  - limit table for image formats : min_w/min_h/max_w/max_h for min/max of image
++
++Example:
++	rotator: rotator@12810000 {
++		compatible = "samsung,exynos4210-rotator";
++		reg = <0x12810000 0x1000>;
++		interrupts = <0 83 0>;
++		clocks = <&clock 278>;
++		clock-names = "rotator";
++		status = "disabled";
++		ycbcr420_2p {
++			min_w = <32>;
++			min_h = <32>;
++			max_w = <32768>;
++			max_h = <32768>;
++			align = <3>;
++		};
++		rgb888 {
++			min_w = <8>;
++			min_h = <8>;
++			max_w = <8192>;
++			max_h = <8192>;
++			align = <2>;
++		};
++	};
 -- 
 1.7.9.5
-
