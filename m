@@ -1,72 +1,142 @@
 From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH v3 12/31] powerpc: mpc512x: array decl for MCLK registers in
- CCM
-Date: Mon, 22 Jul 2013 14:14:39 +0200
-Message-ID: <1374495298-22019-13-git-send-email-gsi@denx.de>
+Subject: [PATCH v3 23/31] serial: mpc512x: setup the PSC FIFO clock as well
+Date: Mon, 22 Jul 2013 14:14:50 +0200
+Message-ID: <1374495298-22019-24-git-send-email-gsi@denx.de>
 References: <1374166855-7280-1-git-send-email-gsi@denx.de>
  <1374495298-22019-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1374495298-22019-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-reword the clock control module's registers declaration such that the
-MCLK related registers form an array and get indexed by PSC number
+prepare and enable the FIFO clock upon PSC FIFO initialization,
+check for and propagage errors when enabling the PSC FIFO clock,
+disable and unprepare the FIFO clock upon PSC FIFO uninitialization,
+remove the pre-enable workaround from the platform's clock driver
 
-this change is in preparation to COMMON_CLK support for the MPC512x
-platform, the changed declaration remains neutral to existing code since
-the PSC and MSCAN CCR fields declared here aren't referenced anywhere
+devm_{get,put}_clk() doesn't apply here, as the SoC provides a
+single FIFO component which is shared among several PSC components,
+thus the FIFO isn't associated with a device (while the PSCs are)
 
 Signed-off-by: Gerhard Sittig <gsi@denx.de>
 ---
- arch/powerpc/include/asm/mpc5121.h |   18 ++----------------
- 1 file changed, 2 insertions(+), 16 deletions(-)
+ arch/powerpc/platforms/512x/clock-commonclk.c |    2 --
+ drivers/tty/serial/mpc52xx_uart.c             |   46 +++++++++++++++++++++----
+ 2 files changed, 40 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/mpc5121.h b/arch/powerpc/include/asm/mpc5121.h
-index 8ae133e..887d3d6 100644
---- a/arch/powerpc/include/asm/mpc5121.h
-+++ b/arch/powerpc/include/asm/mpc5121.h
-@@ -32,25 +32,11 @@ struct mpc512x_ccm {
- 	u32	scfr2;	/* System Clock Frequency Register 2 */
- 	u32	scfr2s;	/* System Clock Frequency Shadow Register 2 */
- 	u32	bcr;	/* Bread Crumb Register */
--	u32	p0ccr;	/* PSC0 Clock Control Register */
--	u32	p1ccr;	/* PSC1 CCR */
--	u32	p2ccr;	/* PSC2 CCR */
--	u32	p3ccr;	/* PSC3 CCR */
--	u32	p4ccr;	/* PSC4 CCR */
--	u32	p5ccr;	/* PSC5 CCR */
--	u32	p6ccr;	/* PSC6 CCR */
--	u32	p7ccr;	/* PSC7 CCR */
--	u32	p8ccr;	/* PSC8 CCR */
--	u32	p9ccr;	/* PSC9 CCR */
--	u32	p10ccr;	/* PSC10 CCR */
--	u32	p11ccr;	/* PSC11 CCR */
-+	u32	psc_ccr[12];	/* PSC Clock Control Registers */
- 	u32	spccr;	/* SPDIF Clock Control Register */
- 	u32	cccr;	/* CFM Clock Control Register */
- 	u32	dccr;	/* DIU Clock Control Register */
--	u32	m1ccr;	/* MSCAN1 CCR */
--	u32	m2ccr;	/* MSCAN2 CCR */
--	u32	m3ccr;	/* MSCAN3 CCR */
--	u32	m4ccr;	/* MSCAN4 CCR */
-+	u32	mscan_ccr[4];	/* MSCAN Clock Control Registers */
- 	u8	res[0x98]; /* Reserved */
- };
+diff --git a/arch/powerpc/platforms/512x/clock-commonclk.c b/arch/powerpc/platforms/512x/clock-commonclk.c
+index a860ded..53f772b 100644
+--- a/arch/powerpc/platforms/512x/clock-commonclk.c
++++ b/arch/powerpc/platforms/512x/clock-commonclk.c
+@@ -698,8 +698,6 @@ static void mpc512x_clk_setup_clock_tree(int busfreq)
+ 	clk_prepare_enable(clks[MPC512x_CLK_MEM]);	/* SRAM */
+ 	clk_prepare_enable(clks[MPC512x_CLK_IPS]);	/* SoC periph */
+ 	clk_prepare_enable(clks[MPC512x_CLK_LPC]);	/* boot media */
+-	/* some are required yet no dependencies were declared */
+-	clk_prepare_enable(clks[MPC512x_CLK_PSC_FIFO]);
+ 	/* some are not yet acquired by their respective drivers */
+ 	clk_prepare_enable(clks[MPC512x_CLK_PSC3_MCLK]);/* serial console */
+ 	clk_prepare_enable(clks[MPC512x_CLK_DIU]);	/* display */
+diff --git a/drivers/tty/serial/mpc52xx_uart.c b/drivers/tty/serial/mpc52xx_uart.c
+index 04dc564..23eef91 100644
+--- a/drivers/tty/serial/mpc52xx_uart.c
++++ b/drivers/tty/serial/mpc52xx_uart.c
+@@ -421,6 +421,7 @@ struct psc_fifoc {
  
+ static struct psc_fifoc __iomem *psc_fifoc;
+ static unsigned int psc_fifoc_irq;
++static struct clk *psc_fifoc_clk;
+ 
+ static void mpc512x_psc_fifo_init(struct uart_port *port)
+ {
+@@ -568,36 +569,69 @@ static unsigned int mpc512x_psc_set_baudrate(struct uart_port *port,
+ /* Init PSC FIFO Controller */
+ static int __init mpc512x_psc_fifoc_init(void)
+ {
++	int err;
+ 	struct device_node *np;
++	struct clk *clk;
++
++	/* default error code, potentially overwritten by clock calls */
++	err = -ENODEV;
+ 
+ 	np = of_find_compatible_node(NULL, NULL,
+ 				     "fsl,mpc5121-psc-fifo");
+ 	if (!np) {
+ 		pr_err("%s: Can't find FIFOC node\n", __func__);
+-		return -ENODEV;
++		goto out_err;
+ 	}
+ 
++	clk = of_clk_get_by_name(np, "per");
++	if (IS_ERR(clk)) {
++		pr_err("%s: Can't lookup FIFO clock\n", __func__);
++		err = PTR_ERR(clk);
++		goto out_ofnode_put;
++	}
++	if (clk_prepare_enable(clk)) {
++		pr_err("%s: Can't enable FIFO clock\n", __func__);
++		clk_put(clk);
++		goto out_ofnode_put;
++	}
++	psc_fifoc_clk = clk;
++
+ 	psc_fifoc = of_iomap(np, 0);
+ 	if (!psc_fifoc) {
+ 		pr_err("%s: Can't map FIFOC\n", __func__);
+-		of_node_put(np);
+-		return -ENODEV;
++		goto out_clk_disable;
+ 	}
+ 
+ 	psc_fifoc_irq = irq_of_parse_and_map(np, 0);
+-	of_node_put(np);
+ 	if (psc_fifoc_irq == 0) {
+ 		pr_err("%s: Can't get FIFOC irq\n", __func__);
+-		iounmap(psc_fifoc);
+-		return -ENODEV;
++		goto out_unmap;
+ 	}
+ 
++	of_node_put(np);
+ 	return 0;
++
++out_unmap:
++	iounmap(psc_fifoc);
++out_clk_disable:
++	clk_disable_unprepare(psc_fifoc_clk);
++	clk_put(psc_fifoc_clk);
++out_ofnode_put:
++	of_node_put(np);
++out_err:
++	return err;
+ }
+ 
+ static void __exit mpc512x_psc_fifoc_uninit(void)
+ {
+ 	iounmap(psc_fifoc);
++
++	/* disable the clock, errors are not fatal */
++	if (psc_fifoc_clk) {
++		clk_disable_unprepare(psc_fifoc_clk);
++		clk_put(psc_fifoc_clk);
++		psc_fifoc_clk = NULL;
++	}
+ }
+ 
+ /* 512x specific interrupt handler. The caller holds the port lock */
 -- 
 1.7.10.4
