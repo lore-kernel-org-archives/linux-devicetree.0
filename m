@@ -1,51 +1,76 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/4] pinctrl: single: omap: Add SoC specific module for
- wake-up events
-Date: Tue, 23 Jul 2013 00:06:12 +0200
-Message-ID: <CACRpkdathAjMtTGXz9U7EhsNEqdRCtxFuwQ2SFb=k8HEUewpAQ@mail.gmail.com>
-References: <20130607203936.16513.57494.stgit@localhost>
-	<20130607205044.16513.27675.stgit@localhost>
+Subject: Re: [PATCH V2 1/5] gpio: clean up gpio-ranges documentation
+Date: Tue, 23 Jul 2013 00:31:45 +0200
+Message-ID: <CACRpkdYsZ0aMnANPpTiGuD1U23PCqyvVGS7vOOnOQUks5KSk9g@mail.gmail.com>
+References: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130607205044.16513.27675.stgit@localhost>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1373913629-32179-1-git-send-email-swarren@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Stephen Warren <swarren@nvidia.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Shiraz Hashim <shiraz.hashim@st.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Jingchang Lu <b35083@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 7, 2013 at 10:50 PM, Tony Lindgren <tony@atomide.com> wrote:
+On Mon, Jul 15, 2013 at 8:40 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
 
-> For wake-up events from deeper idle modes we need to check the
-> configured padconf registers for the wake-up bit and then call
-> the related interrupt handler.
+> This change makes documentation of the the gpio-ranges property shorter
+> and more succinct, more consistent with the style of the rest of the
+> document, and not mention Linux-specifics such as the API
+> pinctrl_request_gpio(); DT binding documents should be OS independant
+> where at all possible.
+
+This is all good.
+
+> This change also removes any mention of the #gpio-range-cells property.
+> Such properties are useful when one node references a second node, and
+> that second node dictates the format of the reference. However, that is
+> not the case here; the definition of gpio-ranges itself always dictates
+> its format entirely, and hence the value #gpio-range-cells must always
+> be 3, and hence there is no point requiring any referenced node to
+> include this property.
 >
-> Done in collaboration with Roger Quadros <rogerq@ti.com>.
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+
+Can this mention the newly introduced Backus-Naur Form
+description of the ranges.
+
+> ---
+> Patches 2-6 need to be applied in the same branch, since they all build
+> upon each-other.
+> ---
+
+Still waiting for the OF maintainers to ACK so can't apply this. :-(
+
+> +It is useful to represent which GPIOs correspond to which pins on which pin
+> +controllers. The gpio-ranges property described below represents this, and
+> +contains information strucutres as follows:
+
+speling of strucutres
+
+Should you mention that this is given in BNF?
+Or is that implicit for all bindings?
+
 >
-> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-(...)
-> +                       pcsoi->gpio = r->gpio;
-
-This "gpio" member appear to be used nowhere, which is probably
-related to what I was saying about custom GPIO interfaces doing
-pinconf, but I could be wrong...
-
-> +/*
-> + * Note that omap2430 has 8-bit padconf registers and uses
-> + * the plain pinctrl-single binding.
-> + */
-> +static const struct of_device_id pcs_omap_of_match[] = {
-> +       { .compatible = "ti,omap3-padconf", },
-> +       { .compatible = "ti,omap4-padconf", },
-> +       { .compatible = "ti,omap5-padconf", },
-> +       {}
-> +};
-
-Goes into some binding document?
+> -This makes it logical to let gpio drivers announce their pin ranges to
+> -the pin ctrl subsystem and call 'pinctrl_request_gpio' in order to
+> -request the corresponding pin before any gpio usage.
+> +       gpio-range-list ::= <single-gpio-range> [gpio-range-list]
+> +       single-gpio-range ::=
+> +                       <pinctrl-phandle> <gpio-base> <pinctrl-base> <count>
+> +       gpio-phandle : phandle to pin controller node.
+> +       gpio-base : Base GPIO ID in the GPIO controller
+> +       pinctrl-base : Base pinctrl pin ID in the pin controller
+> +       count : The number of GPIOs/pins in this range
 
 Yours,
 Linus Walleij
