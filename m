@@ -1,49 +1,70 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Request for linux-gpio list creation
-Date: Mon, 22 Jul 2013 01:55:58 +0100
-Message-ID: <CACxGe6vq6PC4MBpnYLeG5=YhGtAAUjH7u+OupLyK=qvvor8QDA@mail.gmail.com>
-References: <CACxGe6vYaUZWyQvfcunS4fyU8FbWp9SYcMgynCbF6vMZrZE9eg@mail.gmail.com>
- <20130719.172053.696548478284617885.davem@davemloft.net>
- <CACxGe6u6Y6=rpmEkQXNXO1_OnL4mXo+nFRBMa3ULchXpTXxffQ@mail.gmail.com>
- <20130719.221055.377131019320521810.davem@davemloft.net>
+From: "Kim, Milo" <Milo.Kim@ti.com>
+Subject: RE: [PATCH 1/3] mfd: add LP3943 MFD driver
+Date: Mon, 22 Jul 2013 01:19:18 +0000
+Message-ID: <A874F61F95741C4A9BA573A70FE3998F82E8317C@DQHE06.ent.ti.com>
+References: <A874F61F95741C4A9BA573A70FE3998F82E815C3@DQHE06.ent.ti.com>
+ <CACRpkdYF=ZDqqoU6Kq4cwgaufUjpQmX+dxUexqcvb=KiqDdBoQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130719.221055.377131019320521810.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, postmaster-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYF=ZDqqoU6Kq4cwgaufUjpQmX+dxUexqcvb=KiqDdBoQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 20, 2013 at 6:10 AM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
-> From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Date: Fri, 19 Jul 2013 18:15:34 -0700
+> This needs to be reviewed by the devicetree people.
+> Please break out the bindings separately and include
+> devicetree@vger.kernel.org on that review.
+
+OK, thanks.
+ 
+> > +++ b/Documentation/devicetree/bindings/mfd/lp3943.txt
+> > @@ -0,0 +1,23 @@
+> > +Bindings for TI/National Semiconductor LP3943 Driver
+> > +
+> > +Required properties:
+> > +  - compatible: "ti,lp3943"
+> > +  - reg: 7bit I2C slave address. 0x60 ~ 0x67
+> > +
+> > +Optional properties:
+> > +  - ti,pwm0, ti,pwm1: Output channel definition for PWM port 0 and 1
+> > +                      0 = invalid, 1 = LED0, 2 = LED 1, ... 16 =
+> > +LED15
+> > +
+> > +Datasheet
+> > +  http://www.ti.com/lit/ds/snvs256b/snvs256b.pdf
+> > +
+> > +Application note: How to use LP3943 as a GPIO expander and PWM
+> > +generator
+> > +  http://www.ti.com/lit/an/snva287a/snva287a.pdf
+> 
+> Do we usually put these things into bindings?
+
+Actually I want to put this information in the driver document, but
+I've not found which part is the best place for the MFD documentation.
+
+> > +Example:
+> > +
+> > +       lp3943@60 {
+> > +               compatible = "ti,lp3943";
+> > +               reg = <0x60>;
+> > +               pwm1 = /bits/ 8 <2>;    /* use LED1 output as PWM #1 */
+> > +       };
+> 
+> OK so there is a way to state which lines are used for PWM.
+> 
+> I think you should also specify which lines are used for GPIO, and which
+> lines are used for LEDs.
 >
->> What is the best way to transfer a membership list over? Can I import
->> a list, or do I need to tell everyone to register on the new list?
->
-> I really prefer that everyone manually subscribes to the new list.
->
-> If they don't learn how to subscribe successfully, I'll have to
-> manually remove them later when they want to leave.
+> And I'd like the masks to be passed to each subdriver, so we can avoid the
+> scenario where one and the same line gets used for GPIO, LED and PWM at the
+> same time.
 
-Okay, thanks.
+Good idea. This is my missing point - I was writing the LP3943 DT is only used for the definition of the platform data.
+Thanks.
 
-Alright everyone, you heard the man. Subscribe to the new list:
-
-devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-Stephen, can you please shut down the old list? Preferably with an
-error message that tells posters where the new list is?
-
-g.
+Regards,
+Milo
