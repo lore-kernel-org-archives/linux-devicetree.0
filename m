@@ -1,175 +1,59 @@
 From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH v3 11/31] net: can: mscan: improve clock API use
-Date: Mon, 22 Jul 2013 14:14:38 +0200
-Message-ID: <1374495298-22019-12-git-send-email-gsi@denx.de>
+Subject: [PATCH v3 20/31] spi: mpc512x: remove now obsolete clock lookup name
+Date: Mon, 22 Jul 2013 14:14:47 +0200
+Message-ID: <1374495298-22019-21-git-send-email-gsi@denx.de>
 References: <1374166855-7280-1-git-send-email-gsi@denx.de>
  <1374495298-22019-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1374495298-22019-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-the .get_clock() callback is run from probe() and might allocate
-resources, introduce a .put_clock() callback that is run from remove()
-to undo any allocation activities
-
-use devm_get_clk() upon lookup (for SYS and REF) to have the clocks put
-upon driver unload
-
-assume that resources get prepared but not necessarily enabled in the
-setup phase, make the open() and close() callbacks of the CAN network
-device enable and disable a previously acquired and prepared clock
-
-store pointers to data structures upon successful allocation already
-instead of deferral until complete setup, such that subroutines in the
-setup sequence may access those data structures as well to track their
-resource acquisition
-
-since clock allocation remains optional, the release callback as well as
-the enable/disable calls in open/close are optional as well
+after device tree based clock lookup became available, the peripheral
+driver need no longer construct clock names which include the PSC index,
+remove the "psc%d_mclk" template and unconditionally use "mclk"
 
 Signed-off-by: Gerhard Sittig <gsi@denx.de>
 ---
- drivers/net/can/mscan/mpc5xxx_can.c |   18 ++++++++++++------
- drivers/net/can/mscan/mscan.c       |    9 +++++++++
- drivers/net/can/mscan/mscan.h       |    2 ++
- 3 files changed, 23 insertions(+), 6 deletions(-)
+ drivers/spi/spi-mpc512x-psc.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/mpc5xxx_can.c
-index bc422ba..e59b3a3 100644
---- a/drivers/net/can/mscan/mpc5xxx_can.c
-+++ b/drivers/net/can/mscan/mpc5xxx_can.c
-@@ -40,6 +40,7 @@ struct mpc5xxx_can_data {
- 	unsigned int type;
- 	u32 (*get_clock)(struct platform_device *ofdev, const char *clock_name,
- 			 int *mscan_clksrc);
-+	void (*put_clock)(struct platform_device *ofdev);
- };
+diff --git a/drivers/spi/spi-mpc512x-psc.c b/drivers/spi/spi-mpc512x-psc.c
+index 823e5e0..1a4a983 100644
+--- a/drivers/spi/spi-mpc512x-psc.c
++++ b/drivers/spi/spi-mpc512x-psc.c
+@@ -474,8 +474,6 @@ static int mpc512x_psc_spi_do_probe(struct device *dev, u32 regaddr,
+ 	struct spi_master *master;
+ 	int ret;
+ 	void *tempp;
+-	int psc_num;
+-	char clk_name[16];
+ 	struct clk *clk;
  
- #ifdef CONFIG_PPC_MPC52xx
-@@ -180,7 +181,7 @@ static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
- 			clockdiv = 1;
+ 	master = spi_alloc_master(dev, sizeof *mps);
+@@ -519,9 +517,7 @@ static int mpc512x_psc_spi_do_probe(struct device *dev, u32 regaddr,
+ 		goto free_master;
+ 	init_completion(&mps->txisrdone);
  
- 		if (!clock_name || !strcmp(clock_name, "sys")) {
--			sys_clk = clk_get(&ofdev->dev, "sys_clk");
-+			sys_clk = devm_clk_get(&ofdev->dev, "sys_clk");
- 			if (IS_ERR(sys_clk)) {
- 				dev_err(&ofdev->dev, "couldn't get sys_clk\n");
- 				goto exit_unmap;
-@@ -203,7 +204,7 @@ static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
- 		}
- 
- 		if (clocksrc < 0) {
--			ref_clk = clk_get(&ofdev->dev, "ref_clk");
-+			ref_clk = devm_clk_get(&ofdev->dev, "ref_clk");
- 			if (IS_ERR(ref_clk)) {
- 				dev_err(&ofdev->dev, "couldn't get ref_clk\n");
- 				goto exit_unmap;
-@@ -280,6 +281,8 @@ static int mpc5xxx_can_probe(struct platform_device *ofdev)
- 	dev = alloc_mscandev();
- 	if (!dev)
- 		goto exit_dispose_irq;
-+	platform_set_drvdata(ofdev, dev);
-+	SET_NETDEV_DEV(dev, &ofdev->dev);
- 
- 	priv = netdev_priv(dev);
- 	priv->reg_base = base;
-@@ -296,8 +299,6 @@ static int mpc5xxx_can_probe(struct platform_device *ofdev)
- 		goto exit_free_mscan;
- 	}
- 
--	SET_NETDEV_DEV(dev, &ofdev->dev);
--
- 	err = register_mscandev(dev, mscan_clksrc);
- 	if (err) {
- 		dev_err(&ofdev->dev, "registering %s failed (err=%d)\n",
-@@ -305,8 +306,6 @@ static int mpc5xxx_can_probe(struct platform_device *ofdev)
- 		goto exit_free_mscan;
- 	}
- 
--	platform_set_drvdata(ofdev, dev);
--
- 	dev_info(&ofdev->dev, "MSCAN at 0x%p, irq %d, clock %d Hz\n",
- 		 priv->reg_base, dev->irq, priv->can.clock.freq);
- 
-@@ -324,10 +323,17 @@ exit_unmap_mem:
- 
- static int mpc5xxx_can_remove(struct platform_device *ofdev)
- {
-+	const struct of_device_id *match;
-+	const struct mpc5xxx_can_data *data;
- 	struct net_device *dev = platform_get_drvdata(ofdev);
- 	struct mscan_priv *priv = netdev_priv(dev);
- 
-+	match = of_match_device(mpc5xxx_can_table, &ofdev->dev);
-+	data = match ? match->data : NULL;
-+
- 	unregister_mscandev(dev);
-+	if (data && data->put_clock)
-+		data->put_clock(ofdev);
- 	iounmap(priv->reg_base);
- 	irq_dispose_mapping(dev->irq);
- 	free_candev(dev);
-diff --git a/drivers/net/can/mscan/mscan.c b/drivers/net/can/mscan/mscan.c
-index e6b4095..1c08ffe 100644
---- a/drivers/net/can/mscan/mscan.c
-+++ b/drivers/net/can/mscan/mscan.c
-@@ -573,6 +573,12 @@ static int mscan_open(struct net_device *dev)
- 	struct mscan_priv *priv = netdev_priv(dev);
- 	struct mscan_regs __iomem *regs = priv->reg_base;
- 
-+	if (priv->clk_can) {
-+		ret = clk_enable(priv->clk_can);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/* common open */
- 	ret = open_candev(dev);
- 	if (ret)
-@@ -621,6 +627,9 @@ static int mscan_close(struct net_device *dev)
- 	close_candev(dev);
- 	free_irq(dev->irq, dev);
- 
-+	if (priv->clk_can)
-+		clk_disable(priv->clk_can);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/net/can/mscan/mscan.h b/drivers/net/can/mscan/mscan.h
-index af2ed8b..f32e190 100644
---- a/drivers/net/can/mscan/mscan.h
-+++ b/drivers/net/can/mscan/mscan.h
-@@ -21,6 +21,7 @@
- #ifndef __MSCAN_H__
- #define __MSCAN_H__
- 
-+#include <linux/clk.h>
- #include <linux/types.h>
- 
- /* MSCAN control register 0 (CANCTL0) bits */
-@@ -283,6 +284,7 @@ struct mscan_priv {
- 	unsigned int type; 	/* MSCAN type variants */
- 	unsigned long flags;
- 	void __iomem *reg_base;	/* ioremap'ed address to registers */
-+	struct clk *clk_can;	/* clock for registers or bitrates */
- 	u8 shadow_statflg;
- 	u8 shadow_canrier;
- 	u8 cur_pri;
+-	psc_num = master->bus_num;
+-	snprintf(clk_name, sizeof(clk_name), "psc%d_mclk", psc_num);
+-	clk = devm_clk_get(dev, clk_name);
++	clk = devm_clk_get(dev, "mclk");
+ 	if (IS_ERR(clk))
+ 		goto free_irq;
+ 	ret = clk_prepare_enable(clk);
 -- 
 1.7.10.4
