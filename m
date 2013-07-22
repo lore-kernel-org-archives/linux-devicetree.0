@@ -1,101 +1,78 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:2684 "EHLO
-	hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751350Ab3G3Kw5 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 30 Jul 2013 06:52:57 -0400
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH] pinctrl: tegra: add valid function name on DT document
-Date: Tue, 30 Jul 2013 16:34:21 +0530
-Message-ID: <1375182261-30946-1-git-send-email-ldewangan@nvidia.com>
+Received: from relay1.mentorg.com ([192.94.38.131]:63840 "EHLO
+	relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754133Ab3GVGhP convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 22 Jul 2013 02:37:15 -0400
+Received: from svr-orw-fem-01.mgc.mentorg.com ([147.34.98.93])
+	by relay1.mentorg.com with esmtp
+	id 1V19kA-0002W1-Lz from Alison_Chaiken@mentor.com
+	for devicetree@vger.kernel.org; Sun, 21 Jul 2013 23:37:14 -0700
+From: "Chaiken, Alison" <Alison_Chaiken@mentor.com>
+Subject: Re: [Ksummit-2013-discuss] [ATTEND] Handling of devicetree bindings
+Date: Mon, 22 Jul 2013 06:37:13 +0000
+Message-ID: <60BA5429A0E1584BA3633194F6F993B502B12F40@NA-MBX-03.mgc.mentorg.com>
+References: <60BA5429A0E1584BA3633194F6F993B502AF6D65@NA-MBX-03.mgc.mentorg.com>,<1374425637.15077.8.camel@shinybook.infradead.org>,<60BA5429A0E1584BA3633194F6F993B502B10DBC@NA-MBX-03.mgc.mentorg.com>
+In-Reply-To: <60BA5429A0E1584BA3633194F6F993B502B10DBC@NA-MBX-03.mgc.mentorg.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: swarren@wwwdotorg.org
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, linus.walleij@linaro.org, linux-doc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add valid property name for the property "nvidia,function" in
-DT binding document of Tegra pincontrol.
+I commented:
+>> Assuredly if in a kernel update a driver adds new features which are
+>> enabled by new properties described in the device-tree, updating both
+>> the kernel and the device-tree at the same time makes sense?
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- .../bindings/pinctrl/nvidia,tegra114-pinmux.txt    |   10 ++++++++++
- .../bindings/pinctrl/nvidia,tegra20-pinmux.txt     |   11 +++++++++++
- .../bindings/pinctrl/nvidia,tegra30-pinmux.txt     |   11 +++++++++++
- 3 files changed, 32 insertions(+), 0 deletions(-)
+David Woodhouse [dwmw2@infradead.org] inquired:
+> the old kernel's driver simply didn't *use* the
+> feature which was already (optionally) present. The later kernel *does*
+> use the feature, and thus it needs to be described properly?
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra114-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra114-pinmux.txt
-index e204d00..b28bdee 100644
---- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra114-pinmux.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra114-pinmux.txt
-@@ -69,6 +69,16 @@ Valid values for pin and group names are:
-     gpio_w2_aud_pw2, gpio_w3_aud_pw3, usb_vbus_en0_pn4, usb_vbus_en1_pn5,
-     sdmmc3_clk_lb_in_pee5, sdmmc3_clk_lb_out_pee4, reset_out_n.
- 
-+The valid names for the nvidia,functions are:
-+    blink, cec, cldvfs, clk12, cpu, dap, dap1, dap2, dev3, displaya,
-+    displaya_alt, displayb, dtv, emc_dll, extperiph1, extperiph2,
-+    extperiph3, gmi, gmi_alt, hda, hsi, i2c1, i2c2, i2c3, i2c4, i2cpwr,
-+    i2s0, i2s1, i2s2, i2s3, i2s4, irda, kbc, nand, nand_alt, owr, pmi,
-+    pwm0, pwm1, pwm2, pwm3, pwron, reset_out_n, rsvd1, rsvd2, rsvd3,
-+    rsvd4, sdmmc1, sdmmc2, sdmmc3, sdmmc4, soc, spdif, spi1, spi2, spi3,
-+    spi4, spi5, spi6, sysclk, trace, uarta, uartb, uartc, uartd, ulpi,
-+    usb, vgp1, vgp2, vgp3, vgp4, vgp5, vgp6, vi, vi_alt1, vi_alt3
-+
-   drive groups:
- 
-     These all support nvidia,pull-down-strength, nvidia,pull-up-strength,
-diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.txt
-index 683fde9..ba6f2c4 100644
---- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.txt
-@@ -82,6 +82,7 @@ Valid values for pin and group names are:
-     spdo, spia, spib, spic, spid, spie, spif, spig, spih, uaa, uab, uac, uad,
-     uca, ucb, uda.
- 
-+
-   tristate groups:
- 
-     These only support nvidia,pull.
-@@ -103,6 +104,16 @@ Valid values for pin and group names are:
-     drive_gma, drive_gmb, drive_gmc, drive_gmd, drive_gme, drive_owr,
-     drive_uda.
- 
-+The valid names for the nvidia,functions are:
-+    ahb_clk, apb_clk, audio_sync, crt, dap1, dap2, dap3, dap4, dap5,
-+    displaya, displayb, emc_test0_dll, emc_test1_dll, gmi, gmi_int,
-+    hdmi, i2cp, i2c1, i2c2, i2c3, ide, irda, kbc, mio, mipi_hs, nand,
-+    osc, owr, pcie, plla_out, pllc_out1, pllm_out1, pllp_out2, pllp_out3,
-+    pllp_out4, pwm, pwr_intr, pwr_on, rsvd1, rsvd2, rsvd3, rsvd4, rtck,
-+    sdio1, sdio2, sdio3, sdio4, sflash, spdif, spi1, spi2, spi2_alt,
-+    spi3, spi4, trace, twc, uarta, uartb, uartc, uartd, uarte, ulpi,
-+    vi, vi_sensor_clk, xio
-+
- Example:
- 
- 	pinctrl@70000000 {
-diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.txt
-index 6f426ed..909d491 100644
---- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.txt
-@@ -80,6 +80,17 @@ Valid values for pin and group names are:
-     clk1_req_pee2, hdmi_cec_pee3, clk_32k_in, core_pwr_req, cpu_pwr_req, owr,
-     pwr_int_n.
- 
-+The valid names for the nvidia,functions are:
-+    blink, cec, clk_12m_out, clk_32k_in, core_pwr_req, cpu_pwr_req, crt,
-+    dap, ddr, dev3, displaya, displayb, dtv, extperiph1, extperiph2,
-+    extperiph3, gmi, gmi_alt, hda, hdcp, hdmi, hsi, i2c1, i2c2, i2c3,
-+    i2c4, i2cpwr, i2s0, i2s1, i2s2, i2s3, i2s4, invalid, kbc, mio, nand,
-+    nand_alt, owr, pcie, pwm0, pwm1, pwm2, pwm3, pwr_int_n, rsvd1, rsvd2,
-+    rsvd3, rsvd4, rtck, sata, sdmmc1, sdmmc2, sdmmc3, sdmmc4, spdif, spi1,
-+    spi2, spi2_alt, spi3, spi4, spi5, spi6, sysclk, test, trace, uarta,
-+    uartb, uartc, uartd, uarte, ulpi, vgp1, vgp2, vgp3, vgp4, vgp5, vgp6,
-+    vi, vi_alt1, vi_alt2, vi_alt3
-+
-   drive groups:
- 
-     These all support nvidia,pull-down-strength, nvidia,pull-up-strength,
--- 
-1.7.1.1
+Precisely.   This case cames up frequently, as a board often (in principle) supports some new standards for which there is yet no available test peripheral.   Without hardware to test, no one creates a driver.    When there is no driver, no one creates DTS bindings.
+
+> If so, that means the initial device-tree binding was *WRONG*. It
+> omitted the description of this hardware feature, purely because the
+> Linux driver at the time didn't happen to use it. Violating the cardinal
+> rule that the device-tree description of the hardware SHALL NOT be
+> dependent on any OS-specifics.
+
+I take your point.    Ideally, a set of include files for a new board should be feature-complete , with more or less one DT node for every connector  on the board, whether or not there exists anything to plug in. Then the top-level board file would simply indicate the values of abstract properties and set status "okay" for hardware in-use.
+
+Linus Walleij agrees:
+# Varying parameters is not as big a thing as altering
+# bindings. I should have been clear on this - altering a device
+# tree to fit a board is fine. But altering device tree *bindings*
+# is a sin.
+
+Tomasz Figa explains:
+@ - bindings should enter staging state after being introduced,
+@ - from time to time a binding review meeting should take place (on IRC
+@possibly) and discuss which of introduced staging bindings are ready to
+@enter stable state,
+@ - in stable state such binding would be considered an ABI.
+
+In other words, David. Linus and Tomasz are suggesting that once a set of bindings has entered the stable branch, they are carved in stone equivalent to the way the "Thou Shalt not Break Userspace" commandment underlies the kernel's sysfs ABI.    Ideally,a kernel and device-tree binary that are part of a product release will be part of the stable branch.
+
+The concept of having arch-level DTSI files that are included only by ISA-level DTSI files that are included only by CPU-level DTSI files might help this process.    When all the DT source is moved to a new repo and the directories are refactored, these all these most fundamental files can be put into stable branch.    The directory hierarchy then will make it clearer which files and associated bindings are part of stable ABI and are harder to modify.   And Documentation can express the idea that the DTB is the device-tree ABI towards the kernel and should be stable.
+
+David continues:
+> The older driver which doesn't use the optional feature should still work � just without
+> *using* that feature, of course.
+> If you ever encounter a scenario where you can't just use the latest
+> device-tree, and an older kernel requires that you ship a contemporary
+> device-tree to match it, then something has gone *catastrophically*
+> wrong.
+
+What can go catastrophically wrong is that the full functionality of a new driver will require new flexibility in some parameter that earlier implementations had assumed was invariant.    The new driver will want to read the parameter from the DTB that earlier implementations set in a driver's private data, or in a local include file, or even by a fuse.  Admittedly this example illustrates a newer driver requiring a newer DTB, not an older kernel requiring an older DTB.   Hopefully having a hierarchy of files will mean that only board-level files tend to get stuck in staging while those at higher levels would be patched rarely.
+
+David continues:
+> I think it's definitely worth having a session on device-tree bindings,
+> to ensure that this subject is properly understood.
+
+I hope that we will have an open discussion in Edinburgh that attendees who are not part of Kernel Summit may attend.   Pantelis Antoniou had mentioned a possible ELCE BoF session.
+
+-- Alison
 
