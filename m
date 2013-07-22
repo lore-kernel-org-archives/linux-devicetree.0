@@ -1,415 +1,310 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH] net: Add MOXA ART SoCs ethernet driver
-Date: Mon, 22 Jul 2013 12:09:34 +0100
-Message-ID: <CAGVrzcYdisg5AXMBa5q74GPz7ckWeoXJ9H5di2CGN41VyZ_4vw@mail.gmail.com>
-References: <1374140806-12485-1-git-send-email-jonas.jensen@gmail.com>
+From: Gerhard Sittig <gsi@denx.de>
+Subject: [PATCH v3 00/31] add COMMON_CLK support for PowerPC MPC512x
+Date: Mon, 22 Jul 2013 14:14:27 +0200
+Message-ID: <1374495298-22019-1-git-send-email-gsi@denx.de>
+References: <1374166855-7280-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1374140806-12485-1-git-send-email-jonas.jensen@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jonas Jensen <jonas.jensen@gmail.com>
-Cc: netdev <netdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, arm@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1374166855-7280-1-git-send-email-gsi@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Jonas,
+this series
+- fixes several drivers that are used in the MPC512x platform (UART,
+  SPI, ethernet, PCI, USB, CAN, NAND flash, video capture) in how they
+  handle clocks (appropriately acquire and setup them, hold references
+  during use, release clocks after use)
+- introduces support for the common clock framework (CCF, COMMON_CLK
+  Kconfig option) in the PowerPC based MPC512x platform, which brings
+  device tree based clock lookup as well
 
-A bunch of comments inline.
+although the series does touch several subsystems -- tty (serial), spi,
+net (can, fs_enet), mtd (nfc), usb, i2c, media (viu), and dts -- all of
+the patches are strictly clock related
 
-2013/7/18 Jonas Jensen <jonas.jensen@gmail.com>:
-> The MOXA UC-711X hardware(s) has an ethernet controller that seem to be
-> developed internally. The IC used is "RTL8201CP".
->
-> Since there is no public documentation, this driver is mostly the one
-> published by MOXA that has been heavily cleaned up / ported from linux 2.6.9.
->
-> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
-> ---
->
-> Notes:
->     Applies to next-20130716
->
->  .../devicetree/bindings/net/moxa,moxart-mac.txt    |  25 +
->  drivers/net/ethernet/Kconfig                       |   1 +
->  drivers/net/ethernet/Makefile                      |   1 +
->  drivers/net/ethernet/moxa/Kconfig                  |  30 ++
->  drivers/net/ethernet/moxa/Makefile                 |   6 +
->  drivers/net/ethernet/moxa/moxart_ether.c           | 544 +++++++++++++++++++++
->  drivers/net/ethernet/moxa/moxart_ether.h           | 525 ++++++++++++++++++++
->  7 files changed, 1132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
->  create mode 100644 drivers/net/ethernet/moxa/Kconfig
->  create mode 100644 drivers/net/ethernet/moxa/Makefile
->  create mode 100644 drivers/net/ethernet/moxa/moxart_ether.c
->  create mode 100644 drivers/net/ethernet/moxa/moxart_ether.h
->
-> diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt b/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-> new file mode 100644
-> index 0000000..12e12a5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-> @@ -0,0 +1,25 @@
-> +MOXA ART Ethernet Controller
-> +
-> +Required properties:
-> +
-> +- compatible : Should be "moxa,moxart-mac"
-> +- reg : Should contain registers location and length
-> +  index 0 : main register
-> +  index 1 : mac address (stored on flash)
+it appears most appropriate to take this series through either the clk
+or the powerpc trees after it has passed review and other subsystem
+maintainers ACKed the clock setup related driver modifications
 
-That is kind of unusual, since the MAC register is within the range of
-the MAC base register, just read the MAC from the base register and
-use that to fill in dev->dev_addr in your ndo_open() callback.
+the series passes 'checkpatch.pl --strict' except for one warning which
+cannot get resolved, since that either breaks compilation (the data type
+is preset by the clk-provider.h API) or requires a cast which shadows
+real mismatches:
 
-[snip]
+  WARNING: static const char * array should probably be static const char * const
+  #436: FILE: arch/powerpc/platforms/512x/clock-commonclk.c:335:
+  +static const char *parent_names_mux0[] = {
 
-> +static void moxart_mac_setup_desc_ring(struct net_device *ndev)
-> +{
-> +       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
-> +       struct tx_desc_t *txdesc;
-> +       struct rx_desc_t *rxdesc;
-> +       unsigned char *virtbuf;
-> +       unsigned int phybuf;
-> +       int i;
-> +
-> +       virtbuf = priv->virt_tx_buf_baseaddr;
-> +       phybuf = priv->phy_tx_buf_baseaddr;
-> +       for (i = 0; i < TX_DESC_NUM; i++,
-> +               virtbuf += TX_BUF_SIZE, phybuf += TX_BUF_SIZE) {
-> +               txdesc = &priv->virt_tx_desc_baseaddr[i];
-> +               memset(txdesc, 0, sizeof(struct tx_desc_t));
-> +               txdesc->txdes2.phy_tx_buf_baseaddr = phybuf;
-> +               txdesc->txdes2.virt_tx_buf_baseaddr = virtbuf;
-> +       }
-> +       priv->virt_tx_desc_baseaddr[TX_DESC_NUM - 1].txdes1.ubit.edotr = 1;
-> +       priv->tx_desc_now = 0;
-> +
-> +       virtbuf = priv->virt_rx_buf_baseaddr;
-> +       phybuf = priv->phy_rx_buf_baseaddr;
-> +       for (i = 0; i < RX_DESC_NUM; i++,
-> +               virtbuf += RX_BUF_SIZE, phybuf += RX_BUF_SIZE) {
-> +               rxdesc = &priv->virt_rx_desc_baseaddr[i];
-> +               memset(rxdesc, 0, sizeof(struct rx_desc_t));
-> +               rxdesc->rxdes0.ubit.rx_dma_own = 1;
-> +               rxdesc->rxdes1.ubit.rx_buf_size = RX_BUF_SIZE;
-> +               rxdesc->rxdes2.phy_rx_buf_baseaddr = phybuf;
-> +               rxdesc->rxdes2.virt_rx_buf_baseaddr = virtbuf;
-> +       }
+  total: 0 errors, 1 warnings, 0 checks, 845 lines checked
 
-Your RX path is supposed to be preallocating SKBs, create a DMA
-mapping for them and then only SKB refilling would then happen when
-you process a SKB in your RX handler. I do not see you doing it here.
+each step in the series was build and run tested (with a display that is
+attached to the DIU as well as SPI, with an SPI attached NOR flash, with
+multiple UART ports such that one is not the boot console, with EEPROMs
+attached to I2C, with an SD card, booting from network)
 
-> +       priv->virt_rx_desc_baseaddr[RX_DESC_NUM - 1].rxdes1.ubit.edorr = 1;
-> +       priv->rx_desc_now = 0;
-> +
-> +       /* reset the MAC controler TX/RX desciptor base address */
-> +       writel(priv->phy_tx_desc_baseaddr, priv->base + TXR_BADR_REG_OFFSET);
-> +       writel(priv->phy_rx_desc_baseaddr, priv->base + RXR_BADR_REG_OFFSET);
-> +}
-> +
-> +static int moxart_mac_open(struct net_device *ndev)
-> +{
-> +       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
-> +
-> +       if (!is_valid_ether_addr(ndev->dev_addr))
-> +               return -EADDRNOTAVAIL;
-> +
-> +       spin_lock_irq(&priv->txlock);
-> +       moxart_mac_reset(ndev);
-> +       moxart_update_mac_address(ndev);
-> +       moxart_mac_setup_desc_ring(ndev);
-> +       moxart_mac_enable(ndev);
-> +       spin_unlock_irq(&priv->txlock);
 
-Unless you did not properly disable interrupts at the MAC level,
-taking a spinlock here does not seem to be required at all since the
-various steps you call are done in the correct order.
+changes in v3:
+- rebase the series against v3.11-rc2
+- re-ordered the series to first address all general clock handling
+  concerns in existing drivers, before introducing common clock support
+  in the platform's clock driver
+- slightly rework the SPI (01/31), UART (02/31), and PSC FIFO (23/31)
+  clock handling in comparison to v2 which introduced those fixes
+  (devm_{get,put}_clk() calls, fewer goto labels in error paths)
+- fix and improve clock handling (balance allocation and release of
+  clocks, check for errors during setup) in all of the other drivers
+  which this series has touched before in naive ways: USB (03/31), NAND
+  flash (04/31), video capture (05/31), I2C (06/31), ethernet (08/31),
+  PCI (09/31), CAN (11/31)
+- silence a build warning in the ethernet driver (07/31)
+- eliminate all PPC_CLOCK references, use 'per' clock names for NAND
+  flash (25/31) and VIU (26/31) as well
+- unbreak CAN operation for the period between introducing common clock
+  support in the platform's clock driver and introducing common clock
+  support in the CAN peripheral driver as well as providing clock specs
+  in the device tree (provide clkdev aliases for SYS and REF)
+- improve common clock support for CAN (devm_{get,put}_clk() calls,
+  check enable() errors, keep a reference to used clocks, disable and
+  put clocks after use)
+- reworded several commit messages to better reflect the kind of change
+  and because fixes were applied before adding common infrastructure
+  support
+- point to individual numbered patches of the series in the list of
+  changes for v2 as well
 
-> +       netif_start_queue(ndev);
-> +
-> +       netdev_dbg(ndev, "%s: IMR=0x%x, MACCR=0x%x\n",
-> +                  __func__, readl(priv->base + IMR_REG_OFFSET),
-> +                  readl(priv->base + MACCR_REG_OFFSET));
-> +
-> +       return 0;
-> +}
-> +
-> +static int moxart_mac_stop(struct net_device *ndev)
-> +{
-> +       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
-> +
-> +       netif_stop_queue(ndev);
-> +       spin_lock_irq(&priv->txlock);
-> +
-> +       /* disable all interrupts */
-> +       writel(0, priv->base + IMR_REG_OFFSET);
-> +
-> +       /* disable all functions */
-> +       writel(0, priv->base + MACCR_REG_OFFSET);
-> +
-> +       spin_unlock_irq(&priv->txlock);
+changes in v2:
+- cleanup of the UART (02/24) and SPI (01/24) clock handling before the
+  introduction of common clock support for the platform, as incomplete
+  clock handling becomes fatal or more dangerous later (which in turn
+  changes the context of the "device tree lookup only" followup patch
+  later)
+- reordered the sequence of patches to keep the serial communication
+  related parts together (UART, SPI, and PSC FIFO changes after common
+  clock support was introduced, which have become 11-14/24 now)
+- updated commit messages for the clock API use cleanup in the serial
+  communication drivers, updated comments and reworded commit messages
+  in the core clock driver to expand on the pre-enable workaround and
+  clkdev registration (09/24)
+- keep a reference to the PSC FIFO clock during use instead of looking
+  up the clock again in the uninit() routine (14/24)
+- remove the clkdev.h header file inclusion directive with the removal
+  of the clkdev registration call (13/24)
 
-Same here, the serialisation is not required here once you have
-disabled the interrupts at the MAC level. You should also free the RX
-buffers and the potentially remaining transmit SKBs.
 
-> +
-> +       return 0;
-> +}
-> +
-> +static void moxart_mac_recv(struct work_struct *ptr)
-> +{
-> +       struct net_device *ndev = (struct net_device *) ptr;
-> +       struct moxart_mac_priv_t *priv = netdev_priv((struct net_device *)ptr);
-> +       struct rx_desc_t *rxdesc;
-> +       struct sk_buff *skb;
-> +       unsigned int ui, len;
-> +       int rxnow = priv->rx_desc_now;
-> +       int loops = RX_DESC_NUM;
+Gerhard Sittig (31):
+  spi: mpc512x: cleanup clock API use
+  serial: mpc512x: cleanup clock API use
+  USB: fsl-mph-dr-of: cleanup clock API use
+  mtd: mpc5121_nfc: cleanup clock API use
+  [media] fsl-viu: cleanup clock API use
+  i2c: mpc: cleanup clock API use
+  fs_enet: silence a build warning (unused variable)
+  fs_enet: cleanup clock API use
+  powerpc/fsl-pci: improve clock API use
+  net: can: mscan: add a comment on reg to idx mapping
+  net: can: mscan: improve clock API use
+  powerpc: mpc512x: array decl for MCLK registers in CCM
+  clk: wrap I/O access for improved portability
+  dts: mpc512x: prepare for preprocessor support
+  dts: mpc512x: introduce dt-bindings/clock/ header
+  dts: mpc512x: add clock related device tree specs
+  clk: mpc512x: introduce COMMON_CLK for MPC512x
+  dts: mpc512x: add clock specs for client lookups
+  clk: mpc512x: don't pre-enable FEC and I2C clocks
+  spi: mpc512x: remove now obsolete clock lookup name
+  serial: mpc512x: remove now obsolete clock lookup name
+  clk: mpc512x: remove clkdev registration (uart, spi)
+  serial: mpc512x: setup the PSC FIFO clock as well
+  USB: fsl-mph-dr-of: remove now obsolete clock lookup name
+  mtd: mpc5121_nfc: remove now obsolete clock lookup name
+  [media] fsl-viu: remove now obsolete clock lookup name
+  net: can: mscan: add common clock support for  mpc512x
+  powerpc/mpc512x: improve DIU related clock setup
+  clk: mpc512x: switch to COMMON_CLK, remove PPC_CLOCK
+  net: can: mscan: remove non-common_clock code for MPC512x
+  clk: mpc512x: remove clkdev registration (sys/ref, header)
 
-This screams to me: implement NAPI. You are doing all of the
-processing in an interrupt handler, which runs in hard IRQ context,
-this is bad for latency. This very specific function won't change that
-much once you convert it to NAPI.
+ arch/powerpc/boot/dts/ac14xx.dts                   |    9 +-
+ arch/powerpc/boot/dts/include/dt-bindings          |    1 +
+ arch/powerpc/boot/dts/mpc5121.dtsi                 |   94 ++-
+ arch/powerpc/boot/dts/mpc5121ads.dts               |    2 +-
+ arch/powerpc/boot/dts/pdm360ng.dts                 |    2 +-
+ arch/powerpc/include/asm/mpc5121.h                 |   18 +-
+ arch/powerpc/platforms/512x/Kconfig                |    2 +-
+ arch/powerpc/platforms/512x/Makefile               |    3 +-
+ arch/powerpc/platforms/512x/clock-commonclk.c      |  761 ++++++++++++++++++++
+ arch/powerpc/platforms/512x/clock.c                |  753 -------------------
+ arch/powerpc/platforms/512x/mpc512x_shared.c       |  165 +++--
+ arch/powerpc/sysdev/fsl_pci.c                      |   23 +
+ drivers/clk/clk-divider.c                          |    6 +-
+ drivers/clk/clk-gate.c                             |    6 +-
+ drivers/clk/clk-mux.c                              |    6 +-
+ drivers/i2c/busses/i2c-mpc.c                       |   28 +
+ drivers/media/platform/fsl-viu.c                   |   26 +-
+ drivers/mtd/nand/mpc5121_nfc.c                     |   20 +-
+ drivers/net/can/mscan/mpc5xxx_can.c                |  271 ++++---
+ drivers/net/can/mscan/mscan.c                      |    9 +
+ drivers/net/can/mscan/mscan.h                      |    2 +
+ .../net/ethernet/freescale/fs_enet/fs_enet-main.c  |   26 +-
+ drivers/spi/spi-mpc512x-psc.c                      |   48 +-
+ drivers/tty/serial/mpc52xx_uart.c                  |  144 +++-
+ drivers/usb/host/fsl-mph-dr-of.c                   |   26 +-
+ include/dt-bindings/clock/mpc512x-clock.h          |   59 ++
+ include/linux/clk-provider.h                       |   33 +
+ include/linux/fs_enet_pd.h                         |    3 +
+ 28 files changed, 1493 insertions(+), 1053 deletions(-)
+ create mode 120000 arch/powerpc/boot/dts/include/dt-bindings
+ create mode 100644 arch/powerpc/platforms/512x/clock-commonclk.c
+ delete mode 100644 arch/powerpc/platforms/512x/clock.c
+ create mode 100644 include/dt-bindings/clock/mpc512x-clock.h
 
-> +
-> +repeat_recv:
-> +       rxdesc = &priv->virt_rx_desc_baseaddr[rxnow];
-> +       ui = rxdesc->rxdes0.ui;
-> +
-> +       if (ui & RXDMA_OWN)
-> +               return;
-> +
-> +       if (ui & (RX_ERR | CRC_ERR | FTL | RUNT | RX_ODD_NB)) {
-> +               netdev_err(ndev, "%s: packet error\n", __func__);
-> +               priv->stats.rx_dropped++;
-> +               priv->stats.rx_errors++;
-> +               goto recv_finish;
-> +       }
-> +
-> +       len = ui & RFL_MASK;
-> +
-> +       if (len > RX_BUF_SIZE)
-> +               len = RX_BUF_SIZE;
-> +
-> +       skb = dev_alloc_skb(len + 2);
 
-You should use netdev_alloc_skb_ip_align() here.
+# uname -srm
+Linux 3.11.0-rc2-00031-ge72cd55 ppc
+# cat /sys/kernel/debug/clk/clk_summary
+   clock                        enable_cnt  prepare_cnt  rate
+---------------------------------------------------------------------
+ ac97                           0           0            24567000
+ spdif_rx_in                    0           0            0
+ spdif_tx_in                    0           0            0
+ psc_mclk_in                    0           0            25000000
+ dummy                          1           1            0
+ osc                            1           1            25000000
+    ref                         1           1            25000000
+       sys                      10          10           320000000
+          spdif-mux0            0           0            320000000
+             spdif-en0          0           0            320000000
+                spdif_mclk_div  0           0            80000000
+                   spdif_mclk_out 0           0            80000000
+                      spdif_mclk 0           0            80000000
+          mscan3-mux0           1           1            320000000
+             mscan3-en0         1           1            320000000
+                mscan3_mclk_div 1           1            80000000
+                   mscan3_mclk_out 1           1            80000000
+                      mscan3_mclk 1           1            80000000
+          mscan2-mux0           1           1            320000000
+             mscan2-en0         1           1            320000000
+                mscan2_mclk_div 1           1            80000000
+                   mscan2_mclk_out 1           1            80000000
+                      mscan2_mclk 1           1            80000000
+          mscan1-mux0           1           1            320000000
+             mscan1-en0         1           1            320000000
+                mscan1_mclk_div 1           1            16000000
+                   mscan1_mclk_out 1           1            16000000
+                      mscan1_mclk 1           2            16000000
+          mscan0-mux0           1           1            320000000
+             mscan0-en0         1           1            320000000
+                mscan0_mclk_div 1           1            16000000
+                   mscan0_mclk_out 1           1            16000000
+                      mscan0_mclk 1           2            16000000
+          psc11-mux0            0           0            320000000
+             psc11-en0          0           0            320000000
+                psc11_mclk_div  0           0            80000000
+                   psc11_mclk_out 0           0            80000000
+                      psc11_mclk 0           0            80000000
+          psc10-mux0            0           0            320000000
+             psc10-en0          0           0            320000000
+                psc10_mclk_div  0           0            80000000
+                   psc10_mclk_out 0           0            80000000
+                      psc10_mclk 0           0            80000000
+          psc9-mux0             0           0            320000000
+             psc9-en0           0           0            320000000
+                psc9_mclk_div   0           0            80000000
+                   psc9_mclk_out 0           0            80000000
+                      psc9_mclk 0           0            80000000
+          psc8-mux0             0           0            320000000
+             psc8-en0           0           0            320000000
+                psc8_mclk_div   0           0            80000000
+                   psc8_mclk_out 0           0            80000000
+                      psc8_mclk 0           0            80000000
+          psc7-mux0             1           1            320000000
+             psc7-en0           1           1            320000000
+                psc7_mclk_div   1           1            80000000
+                   psc7_mclk_out 1           1            80000000
+                      psc7_mclk 1           1            80000000
+          psc6-mux0             0           0            320000000
+             psc6-en0           0           0            320000000
+                psc6_mclk_div   0           0            80000000
+                   psc6_mclk_out 0           0            80000000
+                      psc6_mclk 0           0            80000000
+          psc5-mux0             1           1            320000000
+             psc5-en0           1           1            320000000
+                psc5_mclk_div   1           1            80000000
+                   psc5_mclk_out 1           1            80000000
+                      psc5_mclk 1           1            80000000
+          psc4-mux0             1           1            320000000
+             psc4-en0           1           1            320000000
+                psc4_mclk_div   1           1            80000000
+                   psc4_mclk_out 1           1            80000000
+                      psc4_mclk 1           1            80000000
+          psc3-mux0             1           1            320000000
+             psc3-en0           1           1            320000000
+                psc3_mclk_div   1           1            80000000
+                   psc3_mclk_out 1           1            80000000
+                      psc3_mclk 2           2            80000000
+          psc2-mux0             0           0            320000000
+             psc2-en0           0           0            320000000
+                psc2_mclk_div   0           0            80000000
+                   psc2_mclk_out 0           0            80000000
+                      psc2_mclk 0           0            80000000
+          psc1-mux0             0           0            320000000
+             psc1-en0           0           0            320000000
+                psc1_mclk_div   0           0            80000000
+                   psc1_mclk_out 0           0            80000000
+                      psc1_mclk 0           0            80000000
+          psc0-mux0             0           0            320000000
+             psc0-en0           0           0            320000000
+                psc0_mclk_div   0           0            80000000
+                   psc0_mclk_out 0           0            80000000
+                      psc0_mclk 0           0            80000000
+          ddr-ug                1           1            160000000
+             ddr                1           1            160000000
+          csb                   4           4            160000000
+             viu                0           0            160000000
+             iim                0           0            160000000
+             usb2               0           0            160000000
+             usb1               0           0            160000000
+             axe                0           0            160000000
+             pci-ug             0           0            26666666
+                pci             0           0            26666666
+             mbx-bus-ug         0           0            80000000
+                mbx-bus         0           0            80000000
+                mbx-ug          0           0            80000000
+                   mbx          0           0            80000000
+                   mbx-3d-ug    0           0            80000000
+                      mbx-3d    0           0            80000000
+             e300               1           1            400000000
+             diu-x4             1           1            640000000
+                diu-ug          1           1            2509803
+                   diu          2           2            2509803
+             sdhc-x4            1           1            640000000
+                sdhc-ug         1           1            53333333
+                   sdhc-2       0           0            53333333
+                   sdhc         1           1            53333333
+             ips                7           7            80000000
+                i2c             3           3            80000000
+                mem             1           1            80000000
+                fec             1           1            80000000
+                sata            0           0            80000000
+                psc-fifo        1           1            80000000
+                pata            0           0            80000000
+                lpc-ug          1           1            40000000
+                   lpc          1           1            40000000
+                nfc-ug          0           0            40000000
+                   nfc          0           0            40000000
 
-> +       if (skb == NULL) {
-> +               netdev_err(ndev, "%s: dev_alloc_skb failed\n", __func__);
-> +               priv->stats.rx_dropped++;
-> +               goto recv_finish;
-> +       }
-> +
-> +       skb_reserve(skb, 2);
-
-And remove this.
-
-> +       skb->dev = ndev;
-
-eth_type_trans() already does this for you.
-
-> +       memcpy(skb_put(skb, len), rxdesc->rxdes2.virt_rx_buf_baseaddr, len);
-
-You should use a dma_unmap_single() operation here.
-
-> +       netif_rx(skb);
-> +       skb->protocol = eth_type_trans(skb, ndev);
-
-I think these two steps are inverted, you should first call eth_type_trans().
-
-> +       ndev->last_rx = jiffies;
-> +       priv->stats.rx_packets++;
-> +       priv->stats.rx_bytes += len;
-> +       if (ui & MULTICAST_RXDES0)
-> +               priv->stats.multicast++;
-> +
-> +recv_finish:
-> +       rxdesc->rxdes0.ui = RXDMA_OWN;
-> +       rxnow++;
-> +       rxnow &= RX_DESC_NUM_MASK;
-> +       priv->rx_desc_now = rxnow;
-> +       if (loops-- > 0)
-> +               goto repeat_recv;
-
-Better code this with a while() loop directly, using gotos here is
-silly and I believe this might be bad for your CPU branch predictor as
-well.
-
-> +}
-> +
-> +static irqreturn_t moxart_mac_interrupt(int irq, void *dev_id)
-> +{
-> +       struct net_device *ndev = (struct net_device *) dev_id;
-> +       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
-> +       unsigned int ists = readl(priv->base + ISR_REG_OFFSET);
-> +
-> +       if (ists & RPKT_FINISH)
-> +               moxart_mac_recv((void *) ndev);
-
-Unnecessary void * casting here.
-
-> +
-> +       return IRQ_HANDLED;
-> +}
-> +
-> +static int moxart_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-> +{
-> +       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
-> +       struct tx_desc_t *txdesc;
-> +       int len;
-> +       int txnow = priv->tx_desc_now;
-> +
-> +       spin_lock_irq(&priv->txlock);
-> +       txdesc = &priv->virt_tx_desc_baseaddr[txnow];
-> +       if (txdesc->txdes0.ubit.tx_dma_own) {
-> +               netdev_err(ndev, "%s: no TX space for packet\n", __func__);
-> +               priv->stats.tx_dropped++;
-> +               goto xmit_final;
-> +       }
-
-You should return NETDEV_TX_BUSY here if there are no TX descriptors available.
-
-> +
-> +       len = skb->len > TX_BUF_SIZE ? TX_BUF_SIZE : skb->len;
-> +       memcpy(txdesc->txdes2.virt_tx_buf_baseaddr, skb->data, len);
-
-This looks wrong, you should get a TX descriptor for this SKB, and
-then perform a DMA mapping of skb->data for skb->len to that specific
-TX descriptor address and set the transmit descriptor control words as
-you do below.
-
-> +
-> +       if (skb->len < ETH_ZLEN) {
-> +               memset(&txdesc->txdes2.virt_tx_buf_baseaddr[skb->len],
-> +                      0, ETH_ZLEN - skb->len);
-> +               len = ETH_ZLEN;
-> +       }
-> +
-> +       txdesc->txdes1.ubit.lts = 1;
-> +       txdesc->txdes1.ubit.fts = 1;
-> +       txdesc->txdes1.ubit.tx2_fic = 0;
-> +       txdesc->txdes1.ubit.tx_ic = 0;
-> +       txdesc->txdes1.ubit.tx_buf_size = len;
-> +       txdesc->txdes0.ui = TXDMA_OWN;
-> +
-> +       /* start to send packet */
-> +       writel(0xffffffff, priv->base + TXPD_REG_OFFSET);
-> +
-> +       txnow++;
-> +       txnow &= TX_DESC_NUM_MASK;
-> +       priv->tx_desc_now = txnow;
-> +       ndev->trans_start = jiffies;
-> +       priv->stats.tx_packets++;
-> +       priv->stats.tx_bytes += len;
-
-Incrementing statistics must happen in the transmit completion
-handler. At this point there is no guarantee that the hardware really
-processed your packet (your DMA engine could signal an error like no
-carrier or anything like that).
-
-> +
-> +xmit_final:
-> +       spin_unlock_irq(&priv->txlock);
-> +       dev_kfree_skb_any(skb);
-
-This looks wrong, transmit buffer reclaim should happen once
-transmission is complete. Your interrupt handler do not handle the
-XPKT_FINISH_M bit which seems to indicate transmit completion of
-buffers.
-
-[snip]
-
-> +
-> +static int moxart_mac_probe(struct platform_device *pdev)
-> +{
-> +       struct device *p_dev = &pdev->dev;
-> +       struct device_node *node = p_dev->of_node;
-> +       struct net_device *ndev;
-> +       struct moxart_mac_priv_t *priv;
-> +       struct resource *res;
-> +       unsigned int irq;
-> +       void *tmp;
-> +
-> +       ndev = alloc_etherdev(sizeof(struct moxart_mac_priv_t));
-> +       if (!ndev)
-> +               return -ENOMEM;
-> +
-> +       irq = irq_of_parse_and_map(node, 0);
-> +
-> +       priv = netdev_priv(ndev);
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       ndev->base_addr = res->start;
-> +       priv->base = devm_ioremap_resource(p_dev, res);
-> +       if (IS_ERR(priv->base)) {
-> +               dev_err(p_dev, "%s: devm_ioremap_resource res_mac failed\n",
-> +                       __func__);
-> +               goto init_fail;
-> +       }
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +
-> +       /* the flash driver (physmap_of) requests the same region
-> +        * so use ioremap instead of devm_ioremap_resource
-> +        */
-> +       priv->flash_base = ioremap(res->start, resource_size(res));
-> +       if (IS_ERR(priv->flash_base)) {
-> +               dev_err(p_dev, "%s: devm_ioremap_resource res_flash failed\n",
-> +                       __func__);
-> +               goto init_fail;
-> +       }
-
-As stated above from the Device Tree binding documentation, this is
-unnecessary, since you have a get_mac() function.
-
-> +
-> +       spin_lock_init(&priv->txlock);
-> +
-> +       tmp = dma_alloc_coherent(NULL, sizeof(struct tx_desc_t) * TX_DESC_NUM,
-> +                                (dma_addr_t *) &priv->phy_tx_desc_baseaddr,
-> +                                GFP_DMA | GFP_KERNEL);
-> +       priv->virt_tx_desc_baseaddr = (struct tx_desc_t *) tmp;
-> +       if (priv->virt_tx_desc_baseaddr == NULL ||
-> +           (priv->phy_tx_desc_baseaddr & 0x0f)) {
-> +               netdev_err(ndev, "TX descriptor alloc failed\n");
-> +               goto init_fail;
-> +       }
-> +
-> +       tmp = dma_alloc_coherent(NULL, sizeof(struct rx_desc_t) * RX_DESC_NUM,
-> +                                (dma_addr_t *)&priv->phy_rx_desc_baseaddr,
-> +                                GFP_DMA | GFP_KERNEL);
-> +       priv->virt_rx_desc_baseaddr = (struct rx_desc_t *) tmp;
-> +       if (priv->virt_rx_desc_baseaddr == NULL ||
-> +           (priv->phy_rx_desc_baseaddr & 0x0f)) {
-> +               netdev_err(ndev, "RX descriptor alloc failed\n");
-> +               goto init_fail;
-> +       }
-> +
-> +       tmp = dma_alloc_coherent(NULL, TX_BUF_SIZE * TX_DESC_NUM,
-> +                                (dma_addr_t *)&priv->phy_tx_buf_baseaddr,
-> +                                GFP_DMA | GFP_KERNEL);
-> +       priv->virt_tx_buf_baseaddr = (unsigned char *) tmp;
-> +       if (priv->virt_tx_buf_baseaddr == NULL ||
-> +           (priv->phy_tx_buf_baseaddr & 0x03)) {
-> +               netdev_err(ndev, "TX buffer alloc failed\n");
-> +               goto init_fail;
-> +       }
-> +
-> +       tmp = dma_alloc_coherent(NULL, RX_BUF_SIZE * RX_DESC_NUM,
-> +                                (dma_addr_t *)&priv->phy_rx_buf_baseaddr,
-> +                                GFP_DMA | GFP_KERNEL);
-> +       priv->virt_rx_buf_baseaddr = (unsigned char *) tmp;
-> +       if (priv->virt_rx_buf_baseaddr == NULL ||
-> +           (priv->phy_rx_buf_baseaddr & 0x03)) {
-> +               netdev_err(ndev, "RX buffer alloc failed\n");
-> +               goto init_fail;
-> +       }
-
-This pool of buffers looks unnecessary, as stated above, you should
-rather perform DMA map_single/unmap_single operations instead.
---
-Florian
+-- 
+1.7.10.4
