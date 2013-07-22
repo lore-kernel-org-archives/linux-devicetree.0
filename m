@@ -1,52 +1,85 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 1/1] of/documentation: Fix a typo in exynos5250-clock.txt
-Date: Mon, 22 Jul 2013 10:51:54 +0900
-Message-ID: <0ab501ce867e$0adadd40$209097c0$%kim@samsung.com>
-References: <1373012281-26433-1-git-send-email-sachin.kamat@linaro.org>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
+Date: Mon, 22 Jul 2013 11:27:27 +1000
+Message-ID: <20130722012727.GA6806@voom.fritz.box>
+References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
+ <1374290388-19308-3-git-send-email-grant.likely@linaro.org>
+ <CACRpkdb2bPQOD2CBzbF0K33mZZwKwGSCO6B4djesVd5DR-Z1tA@mail.gmail.com>
+ <E1V0txk-0007v7-0J@jdl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1373012281-26433-1-git-send-email-sachin.kamat@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: mturquette@linaro.org, grant.likely@linaro.org, rob@landley.net, patches@linaro.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <E1V0txk-0007v7-0J@jdl.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Loeliger <jdl@jdl.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Sachin Kamat wrote:
-> 
-> The clocks should be numbered sequentially as they are represented as
-> enum values in the clock driver.
-> 
-> Typo introduced by commit 17d4caccef ("clk: exynos5250: register
-> display block gate clocks to common clock framework")
-> 
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> ---
->  .../devicetree/bindings/clock/exynos5250-clock.txt |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-> b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-> index 781a627..1a05761 100644
-> --- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-> @@ -154,7 +154,7 @@ clock which they consume.
->    dsim0			341
->    dp			342
->    mixer			343
-> -  hdmi			345
-> +  hdmi			344
-> 
->  Example 1: An example of a clock controller node is listed below.
-> 
-> --
-> 1.7.9.5
 
-Looks OK to me.
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Mike, do you want me to take into the samsung tree?
+On Sun, Jul 21, 2013 at 08:46:11AM -0500, Jon Loeliger wrote:
+> > On Sat, Jul 20, 2013 at 5:19 AM, Grant Likely <grant.likely@linaro.org>=
+ wrote
+> > :
+> >=20
+> > > Device tree bindings require a lot more attention than they used to.
+> > > We've got a group of volunteers willing to take over maintaining
+> > > bindings. This patch adds them to the MAINTAINERS file.
+> > >
+> > > This group still needs to work out a process for maintainership and h=
+ow
+> > > they are going to work together. I recommend that they set up a shared
+> > > tree on git.kernel.org that they each have commit access to similar to
+> > > the tip tree or the arm-soc tree, but it is up to them.
+> > >
+> > > Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> > > Cc: Pawel Moll <pawel.moll@arm.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Stephen Warren <swarren@wwwdotorg.org>
+> > > Cc: Ian Campbell <ian.campbell@citrix.com>
+> > > Cc: Rob Herring <rob.herring@calxeda.com>
+> > > Cc: Olof Johansson <olof@lixom.net>
+> > > Cc: devicetree-discuss@lists.ozlabs.org
+> > > Cc: devicetree@vger.kernel.org
+> >=20
+> > Excellent move.
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+> Perhaps it is time to also place the official repo
+> of the Device Tree Compiler on git,kernel.org as well?
 
-Thanks,
-Kukjin
+Sounds good to me.
+
+Now that I'm no longer at IBM, and don't have the associated
+complications with their Legal department, I'd rather like to resume
+having direct commit access to the master dtc tree.  So if we could
+get Jon and myself, at least, push access to a tree on git.kernel.org,
+that would be nice.
+
+(Fwiw, I do have a personal dtc branch tree on github at
+https://github.com/dgibson/dtc).
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.13 (GNU/Linux)
+
+iEYEARECAAYFAlHsin8ACgkQaILKxv3ab8bMgwCgi79Rh0F6GxowYhF2laS3UPKS
+4xAAnjmguvbg+UvmeRneTvoKnoMe549T
+=AYzK
+-----END PGP SIGNATURE-----
+
+--n8g4imXOkfNTN/H1--
