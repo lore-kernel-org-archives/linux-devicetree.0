@@ -1,40 +1,44 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
-Date: Mon, 22 Jul 2013 15:31:16 -0500
-Message-ID: <51ED9694.9060303@gmail.com>
-References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org> <1374290388-19308-3-git-send-email-grant.likely@linaro.org> <51EC2EC7.6010001@gmail.com> <CACxGe6sGdkMuLFs3K_ERKot+ryTArs6qTiwpXNe+LyoAQ8HGDw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/4] pinctrl: single: Prepare for supporting SoC specific features
+Date: Mon, 22 Jul 2013 23:15:52 +0200
+Message-ID: <CACRpkdapXZO003xhRCVg5sfQCfJUPMzunui5u6npmht-2hP7Tg@mail.gmail.com>
+References: <20130607203936.16513.57494.stgit@localhost>
+	<20130607205037.16513.84242.stgit@localhost>
+	<CAN1soZzLYpiakcgPR7mBOC7_mLFW=mZwOG98Dq6JpO+JHUW=cw@mail.gmail.com>
+	<20130608152732.GR3331@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6sGdkMuLFs3K_ERKot+ryTArs6qTiwpXNe+LyoAQ8HGDw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130608152732.GR3331@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/2013 07:35 PM, Grant Likely wrote:
-> On Sun, Jul 21, 2013 at 7:56 PM, Rob Herring <robherring2@gmail.com> wrote:
->> On 07/19/2013 10:19 PM, Grant Likely wrote:
->>> +OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
->>> +M:   Pawel Moll <pawel.moll@arm.com>
->>> +M:   Mark Rutland <mark.rutland@arm.com>
->>> +M:   Stephen Warren <swarren@wwwdotorg.org>
->>> +M:   Ian Campbell <ian.campbell@citrix.com>
->>
->> You can add me. I was not intending to step down.
-> 
-> Done.
-> 
->> What about creating an email alias for the group instead?
-> 
-> Would that be any different from the mailing list address?
+On Sat, Jun 8, 2013 at 5:27 PM, Tony Lindgren <tony@atomide.com> wrote:
 
-My own selfish desire is to easily separate emails for DT bindings and
-DT core code. I suppose I could do that with a suffix on my email address.
+> Subject: [PATCH] pinctrl: single: Prepare for supporting SoC specific features
+>
+> Let's replace is_pinconf with flags and add struct pcs_soc so we
+> can support also other features like pin wake-up events. Let's
+> export the probe so the SoC specific modules can pass their
+> SoC specific data to pinctrl-single if needed.
 
-It seems to work well for arm-soc where you have a group of maintainers
-and don't necessarily know who is actively maintaining things. Not sure
-if we want to timeshare like that, but it would give us the flexibility.
+I don't quite understand this motivation. Can this be more verbose and
+include a bit about the mechanics?
 
-Rob
+- Why is this necessary? For example, pinctrl-single already supports
+ generic pinconf, and we can surely add a PIN_CONFIG_WAKEUP
+ to include/linux/pinctrl/pinconf-generic.h.
+
+- Also: how does this cooperate with irq_set_wake()? If a pin is
+ set to GPIO it is often backed by a GPIO driver (which is calling
+ pinctrl_request_gpio() etc), maybe we should just add a
+ pinctrl_set_wake() then that the irqchip portions of the GPIO drivers
+ can call down to so the pinctrl driver sets this bit if need be?
+
+I think this needs some more thought, especially the latter
+concern.
+
+Yours,
+Linus Walleij
