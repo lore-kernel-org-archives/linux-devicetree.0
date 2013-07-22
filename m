@@ -1,186 +1,118 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: RFC: device thermal limits represented in device tree nodes
-Date: Mon, 22 Jul 2013 10:19:46 -0400
-Message-ID: <51ED3F82.5040702@ti.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
+Date: Mon, 22 Jul 2013 10:44:39 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1307221028440.1495-100000@iolanthe.rowland.org>
+References: <51ECDE5E.3050104@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="----enig2PNFQQMCWODEPWMXRIUUC"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Guenter Roeck <linux@roeck-us.net>, Stephen Warren <swarren@wwwdotorg.org>, Durgadoss R <durgadoss.r@intel.com>, "Zhang, Rui" <rui.zhang@intel.com>, Wei Ni <wni@nvidia.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, eduardo.valentin@ti.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51ECDE5E.3050104-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-------enig2PNFQQMCWODEPWMXRIUUC
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Mon, 22 Jul 2013, Kishon Vijay Abraham I wrote:
 
-Hello Grant and Rob,
+> > 	The PHY and the controller it is attached to are both physical
+> > 	devices.
+> > 
+> > 	The connection between them is hardwired by the system
+> > 	manufacturer and cannot be changed by software.
+> > 
+> > 	PHYs are generally described by fixed system-specific board
+> > 	files or by Device Tree information.  Are they ever discovered
+> > 	dynamically?
+> 
+> No. They are created just like any other platform devices are created.
 
-I am writing this email to you specifically to ask your technical
-assessment with respect to representing device thermal limits as device
-tree nodes. I am proposing to introduce device tree nodes to describe
-these limits as thermal zones, their composition and their relations
-with cooling devices and other thermal zones (thermal data).
+Okay.  Are PHYs _always_ platform devices?
 
-As you should know, device thermal limits are part of hardware
-specification. Considering your board layout, mechanics, power
-dissipation and composition of ICs, etc, that will impose thermal
-requirements on your system, and infringing these limits can lead to
-device damage, device life time reduction or even end user harm. Thus,
-the thermal data help to describe the hardware limits and what needs to
-be done if those limits are crosses, as part of your board design and
-non-functional requirements. Obviously that is very dependent on your
-hardware, and not all of them will have these non-functional
-requirements. Besides, describing these limits has *nothing* to do with
-how you actually find these limits.
+> > 	Is the same true for the controllers attached to the PHYs?
+> > 	If not -- if both a PHY and a controller are discovered 
+> > 	dynamically -- how does the kernel know whether they are 
+> > 	connected to each other?
+> 
+> No differences here. Both PHY and controller will have dt information or hwmod
+> data using which platform devices will be created.
+> > 
+> > 	The kernel needs to know which controller is attached to which
+> > 	PHY.  Currently this information is represented by name or ID
+> > 	strings embedded in platform data.
+> 
+> right. It's embedded in the platform data of the controller.
 
-In any case, there is a need to properly represent these requirements
-and I am proposing to have this representation in device tree. There
-were already couple of counter-arguments claiming this is actually about
-configuration and performance profile description. But I still stand
-against these two readings of this proposal and again state that if one
-interprets it as configuration or performance profile, that is a
-mis-understanding [0]. Let me state it clear (again [1]), my proposal is
-to describe hardware thermal limits, because these limits are part of a
-hardware specification; representing in device tree would not infringe
-the original purpose of this data structure  ("The Device Tree is a data
-structure for describing hardware."[2]).
+It must also be embedded in the PHY's platform data somehow.  
+Otherwise, how would the kernel know which PHY to use?
 
-Before I explain my proposal, I want to highlight also that these data
-is represented elsewhere already and it is reused across different OS's.
-Thermal data is described using ACPI [3] and operating systems
-ACPI-aware do support the interpretation of thermal data. Linux is one
-example of such systems (I believe I do not need to enlist here all
-systems supporting ACPI). On the other hand, not all systems have ACPI
-or are specified to use ACPI.  Thus, here is another reason to represent
-properly thermal data, so that we can scale across systems.
+> > 	The PHY's driver (the supplier) uses the platform data to 
+> > 	construct a platform_device structure that represents the PHY.  
+> 
+> Currently the driver assigns static labels (corresponding to the label used in
+> the platform data of the controller).
+> > 	Until this is done, the controller's driver (the client) cannot 
+> > 	use the PHY.
+> 
+> right.
+> > 
+> > 	Since there is no parent-child relation between the PHY and the 
+> > 	controller, there is no guarantee that the PHY's driver will be
+> > 	ready when the controller's driver wants to use it.  A deferred
+> > 	probe may be needed.
+> 
+> right.
+> > 
+> > 	The issue (or one of the issues) in this discussion is that 
+> > 	Greg does not like the idea of using names or IDs to associate
+> > 	PHYs with controllers, because they are too prone to
+> > 	duplications or other errors.  Pointers are more reliable.
+> > 
+> > 	But pointers to what?  Since the only data known to be 
+> > 	available to both the PHY driver and controller driver is the
+> > 	platform data, the obvious answer is a pointer to platform data
+> > 	(either for the PHY or for the controller, or maybe both).
+> 
+> hmm.. it's not going to be simple though as the platform device for the PHY and
+> controller can be created in entirely different places. e.g., in some cases the
+> PHY device is a child of some mfd core device (the device will be created in
+> drivers/mfd) and the controller driver (usually) is created in board file. I
+> guess then we have to come up with something to share a pointer in two
+> different files.
 
-In the specific case of Linux, the common thermal concepts between ACPI
-systems and non-ACPI systems have been represented in the thermal
-framework (CONFIG_THERMAL). Today, on ACPI systems, thermal data is
-fetched from bootloader with help from the common ACPI parser. For
-non-ACPI systems, the thermal data is actually coded as part of device
-drivers.
+The ability for two different source files to share a pointer to a data 
+item defined in a third source file has been around since long before 
+the C language was invented.  :-)
 
-So, to the point, a brief explanation of my proposal goes as follows:
-i   - trip points: a node to describe a point in the temperature domain
-in which the system has to take an action. This node describes just the
-point, not the action. Properties here are temperature, hysteresis, and
-type (critical, hot, passive, active, etc).
-ii  - binding parameters: the bind_param node is a node to describe how
-actions (cooling devices) get assigned to trip points. Cooling devices
-are expected to be loaded in the target system. Properties here are:
-cooling device name, weight, trip_mask and limits.
-iii - thermal zones: the thermal_zone node is the node containing all
-the required info for describing a thermal zone with hardware thermal
-limitation, including its bindings with cooling devices. Properties here
-are:  type, passive_delay, polling_delay, governor. The thermal_zone
-node must contain, apart from its own properties, one node containing
-trip nodes and one node containing all the zone bind parameters.
+In this case, it doesn't matter where the platform_device structures 
+are created or where the driver source code is.  Let's take a simple 
+example.  Suppose the system design includes a PHY named "foo".  Then 
+the board file could contain:
 
-Here is an example (on OMAP4430):
-thermal_zone {
-	type =3D "CPU";
-	mask =3D <0x03>; /* trips writability */
-	passive_delay =3D <250>; /* milliseconds */
-	polling_delay =3D <1000>; /* milliseconds */
-	governor =3D "step_wise";
-	trips {
-		alert@100000{
-			temperature =3D <100000>; /* milliCelsius
-			hysteresis =3D <2000>; /* milliCelsius */
-			type =3D <THERMAL_TRIP_PASSIVE>;
-		};
-		crit@125000{
-			temperature =3D <125000>; /* milliCelsius
-			hysteresis =3D <2000>; /* milliCelsius */
-			type =3D <THERMAL_TRIP_CRITICAL>;
-		};
-	};
-	bind_params {
-		action@0{
-			cooling_device =3D "thermal-cpufreq";
-			weight =3D <100>; /* percentage */
-			mask =3D <0x01>;
-			/* no limits, using defaults */
-		};
-	};
-};
+struct phy_info { ... } phy_foo;
+EXPORT_SYMBOL_GPL(phy_foo);
 
-In this current proposal, a 'thermal_zone' node would be embedded inside
-a temperature sensor node, for simplicity. But other possible builds
-could embedded them in the device with thermal limits (CPU nodes, for
-instance) or they could be not embedded in any specific node.
+and a header file would contain:
 
-A full documented description can be found here [4]. Also a branch
-containing:
-(a) needed changes in order to have this DT parser;
-(b) the DT parser with documentation
-(c) examples on how drivers could be changes to use the parser
-can be found in my branch here [5]. I wrote the thermal DT parser to
-build thermal zones with the thermal framework API. However, if one does
-not want to do that, it can simple do not include a CONFIG_THERMAL_OF=3Dy=
+extern struct phy_info phy_foo;
 
-in her/his build, and the calls will be translated to nops, and the
-device tree thermal data can be parsed to somewhere else interested
-(other subsystem or even user land). A TODO on this implementation is
-that it still lacks the representation of thermal zones composed by
-several sensors. However, I believe it is better to take an incremental
-approach here.  This series can already be used to improve most of the
-existing platform thermal drivers (most are CPU thermal drivers) and to
-reuse the existing code of some hwmon sensors to build thermal zones for
-board thermal requirements.
+The PHY supplier could then call phy_create(&phy_foo), and the PHY 
+client could call phy_find(&phy_foo).  Or something like that; make up 
+your own structure tags and function names.
 
-I have already posted a patch series with this proposal on [6], that
-contains a reference for the original RFC. But looks like my messages
-got moderated on device tree mailing list. Obviously, within PM forum,
-feedback was quite positive. However, we cannot proceed without proper
-assessment of other subsystems. lm-sensors  folks (Guenter) seam to be
-strongly against this series, as there is a fear that this may introduce
-a mis-usage of DT. I still believe this is needed for  hardware
-description, and thus not a infringement on DT purposes.
+It's still possible to have conflicts, but now two PHYs with the same 
+name (or a misspelled name somewhere) will cause an error at link time.
 
-Please let me know your thoughts on this topic and apologize me if my
-previous messages on this topic did not reach you (hope they reach now).
+> > Probably some of the details above are wrong; please indicate where I
+> > have gone astray.  Also, I'm not clear about the role played by various 
+> > APIs.  For example, where does phy_create() fit into this picture?
+> 
+> phy_create is the API by which the PHY's driver (the supplier) hook into the
+> PHY framework. It's like the controller driver will always interact with the
+> PHY driver through the PHY framework.
 
-All best,
+Alan Stern
 
-Eduardo Valentin
-
-[0] - https://lkml.org/lkml/2013/7/17/621
-[1] - https://lkml.org/lkml/2013/7/18/279
-[2] - www.devicetree.org
-[3] - http://www.acpi.info/
-[4] -
-https://git.kernel.org/cgit/linux/kernel/git/evalenti/linux.git/diff/Docu=
-mentation/devicetree/bindings/thermal/thermal.txt?h=3Dthermal_work/therma=
-l_core/dt_parser&id=3D405bf0b51457ed055a082af2653d7ce757bc2e91
-[5] -
-https://git.kernel.org/cgit/linux/kernel/git/evalenti/linux.git/log/?h=3D=
-thermal_work/thermal_core/dt_parser
-[6] - https://lkml.org/lkml/2013/7/17/923
-
-
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
-------enig2PNFQQMCWODEPWMXRIUUC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlHtP4gACgkQCXcVR3XQvP1y2AD/c8kTeOpdhBoGIf4ZeLiNr8XZ
-dV8mn1D42TOXBYoFVHkBANvhqYIPI1imJbGg1Laf+kHD6umvcYw/rvcOTJBD/PqQ
-=cUC9
------END PGP SIGNATURE-----
-
-------enig2PNFQQMCWODEPWMXRIUUC--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
