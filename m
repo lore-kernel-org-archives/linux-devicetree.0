@@ -1,63 +1,63 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: RE: [PATCH 1/1] of/documentation: Fix a typo in exynos5250-clock.txt
-Date: Mon, 22 Jul 2013 10:24:59 +0530
-Message-ID: <CAK9yfHySzy620riyCBHKUVH8O7v74GrtgDrjVn4yd8KYKT0zSA@mail.gmail.com>
-References: <1373012281-26433-1-git-send-email-sachin.kamat@linaro.org>
-	<0ab501ce867e$0adadd40$209097c0$%kim@samsung.com>
-	<20130722044254.5453.82900@quantum>
+From: <hongbo.zhang@freescale.com>
+Subject: [PATCH v4 0/3] DMA: Freescale: Add support for 8-channel DMA engine
+Date: Mon, 22 Jul 2013 13:55:37 +0800
+Message-ID: <1374472540-21177-1-git-send-email-hongbo.zhang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130722044254.5453.82900@quantum>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@linaro.org, rob@landley.net, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
+Cc: Hongbo Zhang <hongbo.zhang@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, vakul@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On 22 July 2013 10:12, Mike Turquette <mturquette@linaro.org> wrote:
-> Quoting Kukjin Kim (2013-07-21 18:51:54)
->> Sachin Kamat wrote:
->> >
->> > The clocks should be numbered sequentially as they are represented as
->> > enum values in the clock driver.
->> >
->> > Typo introduced by commit 17d4caccef ("clk: exynos5250: register
->> > display block gate clocks to common clock framework")
->> >
->> > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
->> > ---
->> >  .../devicetree/bindings/clock/exynos5250-clock.txt |    2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
->> > b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
->> > index 781a627..1a05761 100644
->> > --- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
->> > +++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
->> > @@ -154,7 +154,7 @@ clock which they consume.
->> >    dsim0                      341
->> >    dp                 342
->> >    mixer                      343
->> > -  hdmi                       345
->> > +  hdmi                       344
->> >
->> >  Example 1: An example of a clock controller node is listed below.
->> >
->> > --
->> > 1.7.9.5
->>
->> Looks OK to me.
->>
->> Mike, do you want me to take into the samsung tree?
->
-> I've pulled this into clk-next.
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
 
-Thanks Mike.
-Please also consider the following patch series:
+Hi Vinod, Dan, Scott and Leo, please have a look at these V2 patches.
 
-http://comments.gmane.org/gmane.linux.kernel.samsung-soc/20829
-http://comments.gmane.org/gmane.linux.kernel.samsung-soc/20582
+Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch set
+adds support this DMA engine.
+
+V3->V4 changes:
+- introduce new patch [1/3] to revise the legacy dma binding document
+- and then add new paragraph to describe new dt node binding in [2/3]
+- rebase to latest kernel v3.11-rc1
+
+V2->V3 changes:
+- edit Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+- edit text string in Kconfig and the driver files, using "elo series" to
+  mention all the current "elo*"
+
+V1->V2 changes:
+- removed the codes handling the register dgsr1, since it isn't used corrently
+- renamed the DMA DT compatible to "fsl,elo3-dma"
+- renamed the new dts files to "elo3-dma-<n>.dtsi"
+
+Hongbo Zhang (3):
+  DMA: Freescale: revise device tree binding document
+  DMA: Freescale: Add new 8-channel DMA engine device tree nodes
+  DMA: Freescale: update driver to support 8-channel DMA engine
+
+ .../devicetree/bindings/powerpc/fsl/dma.txt        |  122 +++++++++++++++-----
+ arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
+ arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   81 +++++++++++++
+ arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   81 +++++++++++++
+ arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
+ drivers/dma/Kconfig                                |    9 +-
+ drivers/dma/fsldma.c                               |    9 +-
+ drivers/dma/fsldma.h                               |    2 +-
+ 8 files changed, 274 insertions(+), 38 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+ create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
 
 -- 
-With warm regards,
-Sachin
+1.7.9.5
