@@ -1,44 +1,25 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 2/4] clk: exynos-audss: allow input clocks to be specified
- in device tree
-Date: Mon, 22 Jul 2013 18:28:47 +0200
-Message-ID: <1610421.OFFn8rqlxt@amdc1227>
-References: <1373458313-18970-1-git-send-email-padma.v@samsung.com>
- <1373458313-18970-3-git-send-email-padma.v@samsung.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
+Date: Mon, 22 Jul 2013 17:50:51 +0100
+Message-ID: <1374511851.3609.10.camel@hornet>
+References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
+	 <1374290388-19308-3-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1373458313-18970-3-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com, mturquette@linaro.org, dianders@chromium.org, abrestic@chromium.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1374290388-19308-3-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Padmavathi, Andrew,
+On Sat, 2013-07-20 at 04:19 +0100, Grant Likely wrote:
+> +F:	include/dt-bindings
 
-On Wednesday 10 of July 2013 17:41:51 Padmavathi Venna wrote:
-> From: Andrew Bresticker <abrestic@chromium.org>
-> 
-> This allows the input clocks to the Exynos AudioSS block to be specified
-> via device-tree bindings.  Default names will be used when an input clock
-> is not given.  This will be useful when adding support for the
-> Exynos5420 where the audio bus clock is called "sclk_maudio0" instead of
-> "sclk_audio0".
-> 
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> Reviewed-on: https://gerrit.chromium.org/gerrit/57833
-> Reviewed-by: Simon Glass <sjg@chromium.org>
-> ---
->  .../devicetree/bindings/clock/clk-exynos-audss.txt |   31
-> ++++++++++++++++++- drivers/clk/samsung/clk-exynos-audss.c             |
->   28 +++++++++++++++-- 2 files changed, 53 insertions(+), 6 deletions(-)
+One thing we didn't finish talking about was the question if this
+directory is supposed to contain *.dtsi files as well? The obvious
+problem I have is a vexpress motherboard being (well, actually not bein
+right now) shared between arch/arm/boot/dts and arch/arm64/boot/dts.
 
-Well, this is basically how it should be done, but in current state of 
-clock core I can see a problem: can we really rely on the order of clock 
-initialization? I mean, we can't defer initialization of particular clock 
-controller until all external clocks it needs are available, because there 
-is no probing involved here.
-
-Best regards,
-Tomasz
+Pawel
