@@ -1,44 +1,72 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] media: i2c: adv7343: make the platform data members
-	as array
-Date: Mon, 22 Jul 2013 15:07:16 +0530
-Message-ID: <51ECFD4C.8020407@ti.com>
-References: <1374301266-26726-1-git-send-email-prabhakar.csengg@gmail.com>
-	<1374301266-26726-2-git-send-email-prabhakar.csengg@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [patch] ASoC: core: double free in
+	snd_soc_add_platform()
+Date: Mon, 22 Jul 2013 11:00:18 +0100
+Message-ID: <20130722100018.GN9858@sirena.org.uk>
+References: <20130722065654.GC14617@longonot.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1374301266-26726-2-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============3018151216132972195=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130722065654.GC14617@longonot.mountain>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 20 July 2013 11:51 AM, Lad, Prabhakar wrote:
-> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> This patch makes the platform data members as array wherever
-> possible, so as this makes easier while collecting the data
-> in DT case and read the entire array at once.
-> 
-> This patch also makes appropriate changes to board-da850-evm.c
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 
-For the board-da850-evm.c change:
+--===============3018151216132972195==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="p5BJhDJf0owydRUK"
+Content-Disposition: inline
 
-Acked-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 
-Thanks,
-Sekhar
+--p5BJhDJf0owydRUK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jul 22, 2013 at 09:56:54AM +0300, Dan Carpenter wrote:
+> There are three callers for this function, and none of them want it to
+> free platform for them.  It leads to a double free.
+
+Applied, thanks.
+
+--p5BJhDJf0owydRUK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR7QKvAAoJELSic+t+oim9woUP/A/YBClxti83BTcOQrmDTVIy
+vfyJ9Ora0Pzi57ohvA0y+5QyMhng3chYPzf3lONWnO7qmAoV3lt565Z2/6UNJU43
+HFye2yhm5KH44+ondrwmXkEf2hoKwzLl2uTW1sSZhNZ5XxkSJ+zKsj4PlZ7ZsnVt
+fbgPLU1OrFmi6Z1e9ZPwVLIKn7O/4OqR3Fl6H+749dBa2nd0uVS3C32raOdYzift
+xjmOP6j+Av0n6a0qxq5S0JfwvPKmYiD4lh6hbTYORq70+kYXQyme98HSuP5oxCSK
+f1ma3se/o3FLbiZbZqVEJz7t4aiHoX724ydATuSTL2q4Y2Zb0m67HHiwXhDcTSqe
+BGNhVspe1fv2JXRS1bdtSW774ol2Hjsn8KDd4Ci9A2ibNkKy/v5eVgQe+6nGy0EG
+y5U/cbw2cPZDXHWZwLZ8s9vHZ9fFnQeqtPo0Eupi7auBL0/9AiZH2hZhXzA2NfW9
+gyZEtS1z8SFhUQXuOrXQRvVFoJyE62J61ZfunUOyzxiXuiLMwVJ0CQO+DDumWN2o
+TM87oDy3jEuuSBeXpS6VCQT5ZdEIELqIaVgYOZY53Mst7opIdFQTQupKyETvTDDG
+KkXM061GqGyvQpaiBTc1PKV6nASaCmnQcbjSa4OqNo8QGCsQhURa8cR/3ebvfRBL
+m57+cRDCYwGO3ovJJoEM
+=QA6p
+-----END PGP SIGNATURE-----
+
+--p5BJhDJf0owydRUK--
+
+--===============3018151216132972195==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3018151216132972195==--
