@@ -1,43 +1,49 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
-Date: Mon, 22 Jul 2013 01:36:37 +0100
-Message-ID: <CACxGe6tJedLnM6FmvuQWTpGNFsefTn14cbnBMoWnr1gfA0seoQ@mail.gmail.com>
-References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
- <1374290388-19308-3-git-send-email-grant.likely@linaro.org>
- <CAOesGMhaAy93J=Q1STZUHHA-SbH+WXCVuUn0ef14_18du2dk6w@mail.gmail.com>
- <1374366577.1940.10.camel@joe-AO722> <CACxGe6tqisx19LP=5gPyF1iuBKedTLp0yK+WgmqG5Cf+a95Taw@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Request for linux-gpio list creation
+Date: Mon, 22 Jul 2013 01:55:58 +0100
+Message-ID: <CACxGe6vq6PC4MBpnYLeG5=YhGtAAUjH7u+OupLyK=qvvor8QDA@mail.gmail.com>
+References: <CACxGe6vYaUZWyQvfcunS4fyU8FbWp9SYcMgynCbF6vMZrZE9eg@mail.gmail.com>
+ <20130719.172053.696548478284617885.davem@davemloft.net>
+ <CACxGe6u6Y6=rpmEkQXNXO1_OnL4mXo+nFRBMa3ULchXpTXxffQ@mail.gmail.com>
+ <20130719.221055.377131019320521810.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6tqisx19LP=5gPyF1iuBKedTLp0yK+WgmqG5Cf+a95Taw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130719.221055.377131019320521810.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, postmaster-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 21, 2013 at 10:46 AM, Grant Likely <grant.likely@linaro.org> wrote:
-> On Sun, Jul 21, 2013 at 1:29 AM, Joe Perches <joe@perches.com> wrote:
->> On Sat, 2013-07-20 at 17:17 -0700, Olof Johansson wrote:
->>> On Fri, Jul 19, 2013 at 8:19 PM, Grant Likely <grant.likely@linaro.org> wrote:
->>> > Device tree bindings require a lot more attention than they used to.
->>> > We've got a group of volunteers willing to take over maintaining
->>> > bindings. This patch adds them to the MAINTAINERS file.
->> []
->>> > diff --git a/MAINTAINERS b/MAINTAINERS
->> []
->>> > +OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
->> []
->>> > +F:     arch/*/
->> []
->>> This seems a bit broad.
->>
->> Yep, that's every file anywhere under arch.
+On Sat, Jul 20, 2013 at 6:10 AM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+> From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Date: Fri, 19 Jul 2013 18:15:34 -0700
 >
-> yeah, that was a c/p mistake. I'll drop that line before committing.
+>> What is the best way to transfer a membership list over? Can I import
+>> a list, or do I need to tell everyone to register on the new list?
+>
+> I really prefer that everyone manually subscribes to the new list.
+>
+> If they don't learn how to subscribe successfully, I'll have to
+> manually remove them later when they want to leave.
 
-In fact, if things go well with the schema tool, it would be possible
-to leave out the .dts files entirely as far as binding review goes.
-The binding would be the important part and the .dts files would be
-checked against that. That's something for the future though.
+Okay, thanks.
+
+Alright everyone, you heard the man. Subscribe to the new list:
+
+devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+Stephen, can you please shut down the old list? Preferably with an
+error message that tells posters where the new list is?
 
 g.
