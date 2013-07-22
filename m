@@ -1,158 +1,64 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 2/3] drm/exynos: add dt-binding documentation for rotator
-Date: Mon, 22 Jul 2013 16:00:22 +0200
-Message-ID: <51ED3AF6.3090004@samsung.com>
-References: <1374475767-30085-1-git-send-email-chanho61.park@samsung.com>
- <1374475767-30085-3-git-send-email-chanho61.park@samsung.com>
- <20130722084817.GA18731@e106331-lin.cambridge.arm.com>
- <026001ce86d8$2963d730$7c2b8590$%dae@samsung.com>
- <1374497212.4456.4.camel@weser.hi.pengutronix.de>
- <027201ce86df$cd883d90$6898b8b0$%dae@samsung.com>
+From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Subject: [PATCH v3 0/5] iio: mxs-lradc: add support to optional divider_by_two
+Date: Mon, 22 Jul 2013 16:03:58 +0200
+Message-ID: <1374501843-19651-1-git-send-email-hector.palacios@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <027201ce86df$cd883d90$6898b8b0$%dae@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, 'Chanho Park' <chanho61.park@samsung.com>
-Cc: 'Lucas Stach' <l.stach@pengutronix.de>, 'Mark Rutland' <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, hector.palacios-i7dp0qKlBMg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/22/2013 03:31 PM, Inki Dae wrote:
->> ---Original Message-----
->> > From: linux-samsung-soc-owner@vger.kernel.org [mailto:linux-samsung-soc-
->> > owner@vger.kernel.org] On Behalf Of Lucas Stach
->> > Sent: Monday, July 22, 2013 9:47 PM
->> > To: Inki Dae
->> > Cc: 'Mark Rutland'; 'Chanho Park'; linux-samsung-soc@vger.kernel.org;
->> > devicetree-discuss@lists.ozlabs.org; sw0312.kim@samsung.com; dri-
->> > devel@lists.freedesktop.org; kyungmin.park@samsung.com;
->> > kgene.kim@samsung.com; linux-arm-kernel@lists.infradead.org
->> > Subject: Re: [PATCH 2/3] drm/exynos: add dt-binding documentation for
->> > rotator
->> > 
->> > Am Montag, den 22.07.2013, 21:37 +0900 schrieb Inki Dae:
->>> > >
->>>> > > > -----Original Message-----
->>>> > > > From: Mark Rutland [mailto:mark.rutland@arm.com]
->>>> > > > Sent: Monday, July 22, 2013 5:48 PM
->>>> > > > To: Chanho Park
->>>> > > > Cc: inki.dae@samsung.com; kgene.kim@samsung.com; linux-samsung-
->>>> > > > soc@vger.kernel.org; jy0922.shim@samsung.com; devicetree-
->>>> > > > discuss@lists.ozlabs.org; sw0312.kim@samsung.com; dri-
->>>> > > > devel@lists.freedesktop.org; kyungmin.park@samsung.com; linux-arm-
->>>> > > > kernel@lists.infradead.org
->>>> > > > Subject: Re: [PATCH 2/3] drm/exynos: add dt-binding documentation for
->>>> > > > rotator
->>>> > > >
->>>> > > > On Mon, Jul 22, 2013 at 07:49:26AM +0100, Chanho Park wrote:
->>>>> > > > > This patch adds a dt-binding document for exynos rotator. It
->> > describes
->>>> > > > which
->>>>> > > > > nodes should be defined to use the rotator.
->>>>> > > > >
->>>>> > > > > Signed-off-by: Chanho Park <chanho61.park@samsung.com>
->>>>> > > > > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>>> > > > > ---
->>>>> > > > >  .../bindings/drm/exynos/samsung-rotator.txt        |   35
->>>> > > > ++++++++++++++++++++
->>>>> > > > >  1 file changed, 35 insertions(+)
->>>>> > > > >  create mode 100644
->>>> > > > Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt
->>>>> > > > >
->>>>> > > > > diff --git a/Documentation/devicetree/bindings/drm/exynos/samsung-
->>>> > > > rotator.txt b/Documentation/devicetree/bindings/drm/exynos/samsung-
->>>> > > > rotator.txt
->>>>> > > > > new file mode 100644
->>>>> > > > > index 0000000..6b1d704
->>>>> > > > > --- /dev/null
->>>>> > > > > +++ b/Documentation/devicetree/bindings/drm/exynos/samsung-
->> > rotator.txt
->>>>> > > > > @@ -0,0 +1,35 @@
->>>>> > > > > +* Samsung Image Rotator
->>>>> > > > > +
->>>>> > > > > +Required properties:
->>>>> > > > > +  - compatible : value should be the "samsung,exynos4210".
->>> > >
->>> > > Please, add more compatible strings for other SoC.
->>> > >
->>>>> > > > > +  - reg : Physical base address of the IP registers and length of
->>>> > > > memory
->>>>> > > > > +	  mapped region.
->>>>> > > > > +  - interrupts : interrupt number to the CPU.
->>>>> > > > > +  - clocks : clock number of exynos4 rotator clock.
->>>>> > > > > +  - clocks : clock name of rotator
->>>> > > >
->>>> > > > clock-names?
->>>> > > >
->>>>> > > > > +  - status : "okay" or "disabled"
->>>>> > > > > +  - limit table for image formats : min_w/min_h/max_w/max_h for
->> > min/max
->>>> > > > of image
->>>> > > >
->>>> > > > Limit table? This doesn't seem to be a well-defined binding, and it
->>>> > > > seems like a relatively generic thing to describe.
->>>> > > >
->>>>> > > > > +
->>>>> > > > > +Example:
->>>>> > > > > +	rotator: rotator@12810000 {
->>>>> > > > > +		compatible = "samsung,exynos4210-rotator";
->>>>> > > > > +		reg = <0x12810000 0x1000>;
->>>>> > > > > +		interrupts = <0 83 0>;
->>>>> > > > > +		clocks = <&clock 278>;
->>>>> > > > > +		clock-names = "rotator";
->>>>> > > > > +		status = "disabled";
->>>>> > > > > +		ycbcr420_2p {
->>>> > > >
->>>> > > > Which names are allowed for these subnodes?
->>>> > > >
->>>>> > > > > +			min_w = <32>;
->>>>> > > > > +			min_h = <32>;
->>>>> > > > > +			max_w = <32768>;
->>>>> > > > > +			max_h = <32768>;
->>>>> > > > > +			align = <3>;
->>>> > > >
->>>> > > > min-width, min-height, max-width, max-height? What units are they in?
->>>> > > >
->>>> > > > What does alignment specify exactly?
->>>> > > >
->>>> > > > Are these a configurable part of the rotator hardware, or are these
->>>> > > > values always the same?
->>> > >
->>> > > Right, that seems like configurable part. At least, min_w/h and max_w/h
->> > can
->>> > > be different values according to SoC and pixel formats so they should be
->>> > > described enough in this dt-binding document file.
->>> > >
->> > Is there really this much configurability? Could each of those values be
->> > a different on different SoCs
-> Not much but Yes. Rotator devices of Exynos SoC support various pixel formats; RGB888, RGB565, YUV422, YUV420-2Plane, and YUV420-3Plane, and each of these pixel formats could be different limitation to minimum and maximum sizes.
-> For example, the below shows the limitation to Rotator device of Exynos4412 SoC according to pixel formats,
->          Image format          Minimum size          Maximum size
->           RGB888                    8x8                     8kx8k
->           RGB565                    16x16                  16kx16k
->           YUV422                    16x16                  16kx16k
->           YUV420 2-Plane         32x32                  32kx32k(in case of Y components)
->           YUV420 3-Plane         64x32                  32kx32k(in case of Y components)
-> 
-> And, I guess those limitations are slightly different according to Exynos SoC versions as long as I know.
-> 
-> Thanks,
-> Inki Dae
-> 
->> > , or could you just extract those values
->> > from the SoC/rotator hardware version and thus the DT compatible string?
+Greetings,
 
-My gut feeling is that those constraints could be well defined 
-in the driver as static data and selected by the compatible property. 
-Defining this in Device Tree may easily get out of control, when the 
-limits become dependant on more parameters.
+This is v3 of the patchset that adds support to the optional 
+divider_by_two of LRADC channels.
 
-Whether devices should be described in much detail in DT rather than
-using multiple compatible strings had been discussed multiple times, 
-for instance please see thread [1].
+Changes in v3:
+- Fix merge conflict with previous existing patch.
+- Fix ampersand in function callback assignment.
+- Removed unused parameters of function to read single sample.
+- Ennumeration for two-dimensional array of scale (with divider
+  by two disabled or enabled), for improved readability.
+- Created struct with integer and nano parts of the scale 
+  attribute, for improved readability.
 
-Regards,
-Sylwester
+Changes in v2:
+- Fix the sample mask passed by the touchscreen driver to the input
+  subsytem, to be 12 bits.
+- Move the reference voltages to the Device Tree.
+- Rebased to avoid conflict with Marek Vasut's prior patch.
+- Use IIO_DEVICE_ATTR() macro for adding scale_available property to
+  all channels.
+- Make 'is_divided' unsigned int.
 
-[1] http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg36691.html
+Notes:
+- Other fixes were discussed in v1 but they were not part of this
+  patchset changes, and should be handled in a separate patch.
+- The 64bit math to calculate the integer and decimal parts of the
+  scaling attribute is a bit unreadable but used in other similar
+  drivers like ad7791, ad7793, and ad7192. If it is to be changed
+  it should be done in parallel with these, in a different patch.
+
+The first patch changes the realbits to 12. The 
+second adds the channels reference voltages to the DT.
+The following add the scale read operation, scale_available read 
+operation, and scale write operation.
+
+This was tested on a custom i.MX28 platform.
+Could someone please test on an i.MX23?
+
+
+Hector Palacios (5):
+  iio: mxs-lradc: change the realbits to 12
+  ARM: dts: add reference voltage property for MXS LRADC
+  iio: mxs-lradc: add scale attribute to channels
+  iio: mxs-lradc: add scale_available file to channels
+  iio: mxs-lradc: add write_raw function to modify scale
+
+ .../bindings/staging/iio/adc/mxs-lradc.txt         |   9 +-
+ arch/arm/boot/dts/imx23.dtsi                       |   4 +
+ arch/arm/boot/dts/imx28.dtsi                       |   4 +
+ drivers/staging/iio/adc/mxs-lradc.c                | 255 ++++++++++++++++++---
+ 4 files changed, 242 insertions(+), 30 deletions(-)
