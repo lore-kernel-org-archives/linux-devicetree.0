@@ -1,59 +1,72 @@
 From: Gerhard Sittig <gsi@denx.de>
-Subject: [PATCH v3 20/31] spi: mpc512x: remove now obsolete clock lookup name
-Date: Mon, 22 Jul 2013 14:14:47 +0200
-Message-ID: <1374495298-22019-21-git-send-email-gsi@denx.de>
+Subject: [PATCH v3 12/31] powerpc: mpc512x: array decl for MCLK registers in
+ CCM
+Date: Mon, 22 Jul 2013 14:14:39 +0200
+Message-ID: <1374495298-22019-13-git-send-email-gsi@denx.de>
 References: <1374166855-7280-1-git-send-email-gsi@denx.de>
  <1374495298-22019-1-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 In-Reply-To: <1374495298-22019-1-git-send-email-gsi@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-after device tree based clock lookup became available, the peripheral
-driver need no longer construct clock names which include the PSC index,
-remove the "psc%d_mclk" template and unconditionally use "mclk"
+reword the clock control module's registers declaration such that the
+MCLK related registers form an array and get indexed by PSC number
+
+this change is in preparation to COMMON_CLK support for the MPC512x
+platform, the changed declaration remains neutral to existing code since
+the PSC and MSCAN CCR fields declared here aren't referenced anywhere
 
 Signed-off-by: Gerhard Sittig <gsi@denx.de>
 ---
- drivers/spi/spi-mpc512x-psc.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/powerpc/include/asm/mpc5121.h |   18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/spi/spi-mpc512x-psc.c b/drivers/spi/spi-mpc512x-psc.c
-index 823e5e0..1a4a983 100644
---- a/drivers/spi/spi-mpc512x-psc.c
-+++ b/drivers/spi/spi-mpc512x-psc.c
-@@ -474,8 +474,6 @@ static int mpc512x_psc_spi_do_probe(struct device *dev, u32 regaddr,
- 	struct spi_master *master;
- 	int ret;
- 	void *tempp;
--	int psc_num;
--	char clk_name[16];
- 	struct clk *clk;
+diff --git a/arch/powerpc/include/asm/mpc5121.h b/arch/powerpc/include/asm/mpc5121.h
+index 8ae133e..887d3d6 100644
+--- a/arch/powerpc/include/asm/mpc5121.h
++++ b/arch/powerpc/include/asm/mpc5121.h
+@@ -32,25 +32,11 @@ struct mpc512x_ccm {
+ 	u32	scfr2;	/* System Clock Frequency Register 2 */
+ 	u32	scfr2s;	/* System Clock Frequency Shadow Register 2 */
+ 	u32	bcr;	/* Bread Crumb Register */
+-	u32	p0ccr;	/* PSC0 Clock Control Register */
+-	u32	p1ccr;	/* PSC1 CCR */
+-	u32	p2ccr;	/* PSC2 CCR */
+-	u32	p3ccr;	/* PSC3 CCR */
+-	u32	p4ccr;	/* PSC4 CCR */
+-	u32	p5ccr;	/* PSC5 CCR */
+-	u32	p6ccr;	/* PSC6 CCR */
+-	u32	p7ccr;	/* PSC7 CCR */
+-	u32	p8ccr;	/* PSC8 CCR */
+-	u32	p9ccr;	/* PSC9 CCR */
+-	u32	p10ccr;	/* PSC10 CCR */
+-	u32	p11ccr;	/* PSC11 CCR */
++	u32	psc_ccr[12];	/* PSC Clock Control Registers */
+ 	u32	spccr;	/* SPDIF Clock Control Register */
+ 	u32	cccr;	/* CFM Clock Control Register */
+ 	u32	dccr;	/* DIU Clock Control Register */
+-	u32	m1ccr;	/* MSCAN1 CCR */
+-	u32	m2ccr;	/* MSCAN2 CCR */
+-	u32	m3ccr;	/* MSCAN3 CCR */
+-	u32	m4ccr;	/* MSCAN4 CCR */
++	u32	mscan_ccr[4];	/* MSCAN Clock Control Registers */
+ 	u8	res[0x98]; /* Reserved */
+ };
  
- 	master = spi_alloc_master(dev, sizeof *mps);
-@@ -519,9 +517,7 @@ static int mpc512x_psc_spi_do_probe(struct device *dev, u32 regaddr,
- 		goto free_master;
- 	init_completion(&mps->txisrdone);
- 
--	psc_num = master->bus_num;
--	snprintf(clk_name, sizeof(clk_name), "psc%d_mclk", psc_num);
--	clk = devm_clk_get(dev, clk_name);
-+	clk = devm_clk_get(dev, "mclk");
- 	if (IS_ERR(clk))
- 		goto free_irq;
- 	ret = clk_prepare_enable(clk);
 -- 
 1.7.10.4
