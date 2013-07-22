@@ -1,318 +1,149 @@
-From: <hongbo.zhang@freescale.com>
-Subject: [PATCH v4 2/3] DMA: Freescale: Add new 8-channel DMA engine device tree nodes
-Date: Mon, 22 Jul 2013 13:55:39 +0800
-Message-ID: <1374472540-21177-3-git-send-email-hongbo.zhang@freescale.com>
-References: <1374472540-21177-1-git-send-email-hongbo.zhang@freescale.com>
+From: Sathya Prakash M R <sathyap@ti.com>
+Subject: [PATCH 1/2] ARM: OMAP2+: AM43x - Add DSS hwmod
+Date: Mon, 22 Jul 2013 11:33:16 +0530
+Message-ID: <1374472997-9653-2-git-send-email-sathyap@ti.com>
+References: <1374472997-9653-1-git-send-email-sathyap@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1374472540-21177-1-git-send-email-hongbo.zhang@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, vakul@freescale.com, Hongbo Zhang <hongbo.zhang@freescale.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1374472997-9653-1-git-send-email-sathyap@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, a-kishore@ti.com, devicetree-discuss@lists.ozlabs.org
+Cc: afzal@ti.com, Sathya Prakash M R <sathyap@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
+Add DSS hwmod struct for AM43x SOC.
 
-Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch add
-the device tree nodes for them.
-
-Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+Signed-off-by: Sathya Prakash M R <sathyap@ti.com>
 ---
- .../devicetree/bindings/powerpc/fsl/dma.txt        |   66 ++++++++++++++++
- arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
- arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   81 ++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   81 ++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
- 5 files changed, 232 insertions(+), 4 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
- create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+This is based on below patch series which is yet to be merged
+http://permalink.gmane.org/gmane.linux.ports.arm.omap/100892
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-index 0650171..aa44e3c 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-@@ -138,6 +138,72 @@ Example:
- 		};
- 	};
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c |   85 ++++++++++++++++++++++++++++
+ arch/arm/mach-omap2/prcm43xx.h             |    1 +
+ 2 files changed, 86 insertions(+)
+
+diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+index 319780e..a1884ce 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
+@@ -1937,6 +1937,55 @@ static struct omap_hwmod am43xx_spi4_hwmod = {
+ 	.dev_attr	= &mcspi_attrib,
+ };
  
-+** Freescale ELO3 DMA Controller
-+   This is ELOPLUS controller with 8 channels.
-+   Used in Freescale new Txxx and Bxxx series chips, such as:
-+   t4240, b4860, t1040
++/* Display sub system - DSS */
 +
-+Required properties:
++static struct omap_hwmod_dma_info am43xx_dss_sdma_chs[] = {
++	{ .name = "dispc", .dma_req = 5 },
++	{ .dma_req = -1 }
 +
-+- compatible        : should be "fsl,elo3-dma"
-+- reg               : <registers mapping for DMA general status reg>
-+- ranges            : physical address range of DMA controller channels
-+
-+- DMA channel nodes:
-+        - compatible        : should be "fsl,eloplus-dma-channel"
-+        - reg               : <registers mapping for channel>
-+        - interrupts        : <interrupt mapping for DMA channel IRQ>
-+        - interrupt-parent  : optional, if needed for interrupt mapping
-+
-+Example:
-+dma@100300 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "fsl,elo3-dma";
-+	reg = <0x100300 0x4 0x100600 0x4>;
-+	ranges = <0x0 0x100100 0x500>;
-+	dma-channel@0 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x0 0x80>;
-+		interrupts = <28 2 0 0>;
-+	};
-+	dma-channel@80 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x80 0x80>;
-+		interrupts = <29 2 0 0>;
-+	};
-+	dma-channel@100 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x100 0x80>;
-+		interrupts = <30 2 0 0>;
-+	};
-+	dma-channel@180 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x180 0x80>;
-+		interrupts = <31 2 0 0>;
-+	};
-+	dma-channel@300 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x300 0x80>;
-+		interrupts = <76 2 0 0>;
-+	};
-+	dma-channel@380 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x380 0x80>;
-+		interrupts = <77 2 0 0>;
-+	};
-+	dma-channel@400 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x400 0x80>;
-+		interrupts = <78 2 0 0>;
-+	};
-+	dma-channel@480 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x480 0x80>;
-+		interrupts = <79 2 0 0>;
-+	};
++static struct omap_hwmod am43xx_dss_core_hwmod = {
++	.name		= "dss_core",
++	.class		= &omap2_dss_hwmod_class,
++	.clkdm_name	= "dss_clkdm",
++	.main_clk	= "disp_clk",
++	.sdma_reqs	= am43xx_dss_sdma_chs,
++	.prcm = {
++		.omap4 = {
++			.clkctrl_offs = AM43XX_CM_PER_DSS_CLKCTRL_OFFSET,
++			.modulemode   = MODULEMODE_SWCTRL,
++		},
++	},
 +};
 +
- Note on DMA channel compatible properties: The compatible property must say
- "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
- driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
-diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-index 7399154..ea53ea1 100644
---- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-@@ -223,13 +223,13 @@
- 		reg = <0xe2000 0x1000>;
- 	};
- 
--/include/ "qoriq-dma-0.dtsi"
-+/include/ "elo3-dma-0.dtsi"
- 	dma@100300 {
- 		fsl,iommu-parent = <&pamu0>;
- 		fsl,liodn-reg = <&guts 0x580>; /* DMA1LIODNR */
- 	};
- 
--/include/ "qoriq-dma-1.dtsi"
-+/include/ "elo3-dma-1.dtsi"
- 	dma@101300 {
- 		fsl,iommu-parent = <&pamu0>;
- 		fsl,liodn-reg = <&guts 0x584>; /* DMA2LIODNR */
-diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-new file mode 100644
-index 0000000..bc8dc29
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-@@ -0,0 +1,81 @@
-+/*
-+ * QorIQ DMA device tree stub [ controller @ offset 0x100000 ]
-+ *
-+ * Copyright 2011-2013 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *       notice, this list of conditions and the following disclaimer in the
-+ *       documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *       names of its contributors may be used to endorse or promote products
-+ *       derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
++/* display controller -dispc*/
 +
-+dma0: dma@100300 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "fsl,elo3-dma";
-+	reg = <0x100300 0x4 0x100600 0x4>;
-+	ranges = <0x0 0x100100 0x500>;
-+	dma-channel@0 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x0 0x80>;
-+		interrupts = <28 2 0 0>;
-+	};
-+	dma-channel@80 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x80 0x80>;
-+		interrupts = <29 2 0 0>;
-+	};
-+	dma-channel@100 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x100 0x80>;
-+		interrupts = <30 2 0 0>;
-+	};
-+	dma-channel@180 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x180 0x80>;
-+		interrupts = <31 2 0 0>;
-+	};
-+	dma-channel@300 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x300 0x80>;
-+		interrupts = <76 2 0 0>;
-+	};
-+	dma-channel@380 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x380 0x80>;
-+		interrupts = <77 2 0 0>;
-+	};
-+	dma-channel@400 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x400 0x80>;
-+		interrupts = <78 2 0 0>;
-+	};
-+	dma-channel@480 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x480 0x80>;
-+		interrupts = <79 2 0 0>;
-+	};
++static struct omap_hwmod am43xx_dss_dispc_hwmod = {
++	.name		= "dss_dispc",
++	.class		= &omap3_dispc_hwmod_class,
++	.clkdm_name	= "dss_clkdm",
++	.main_clk	= "disp_clk",
++	.prcm = {
++		.omap4 = {
++			.clkctrl_offs = AM43XX_CM_PER_DSS_CLKCTRL_OFFSET,
++			.modulemode   = MODULEMODE_SWCTRL,
++		},
 +};
-diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-new file mode 100644
-index 0000000..06b38ff
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-@@ -0,0 +1,81 @@
-+/*
-+ * QorIQ DMA device tree stub [ controller @ offset 0x101000 ]
-+ *
-+ * Copyright 2011-2013 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *       notice, this list of conditions and the following disclaimer in the
-+ *       documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *       names of its contributors may be used to endorse or promote products
-+ *       derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
 +
-+dma1: dma@101300 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "fsl,elo3-dma";
-+	reg = <0x101300 0x4 0x101600 0x4>;
-+	ranges = <0x0 0x101100 0x500>;
-+	dma-channel@0 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x0 0x80>;
-+		interrupts = <32 2 0 0>;
-+	};
-+	dma-channel@80 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x80 0x80>;
-+		interrupts = <33 2 0 0>;
-+	};
-+	dma-channel@100 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x100 0x80>;
-+		interrupts = <34 2 0 0>;
-+	};
-+	dma-channel@180 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x180 0x80>;
-+		interrupts = <35 2 0 0>;
-+	};
-+	dma-channel@300 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x300 0x80>;
-+		interrupts = <80 2 0 0>;
-+	};
-+	dma-channel@380 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x380 0x80>;
-+		interrupts = <81 2 0 0>;
-+	};
-+	dma-channel@400 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x400 0x80>;
-+		interrupts = <82 2 0 0>;
-+	};
-+	dma-channel@480 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x480 0x80>;
-+		interrupts = <83 2 0 0>;
-+	};
++/*RFBI*/
++
++static struct omap_hwmod am43xx_dss_rfbi_hwmod = {
++	.name		= "dss_rfbi",
++	.class		= &omap2_rfbi_hwmod_class,
++	.clkdm_name	= "dss_clkdm",
++	.main_clk	= "disp_clk",
++	.prcm = {
++		.omap4 = {
++			.clkctrl_offs = AM43XX_CM_PER_DSS_CLKCTRL_OFFSET,
++			.modulemode   = MODULEMODE_SWCTRL,
++		},
 +};
-diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-index bd611a9..ec95c60 100644
---- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-@@ -387,8 +387,8 @@
- 		reg	   = <0xea000 0x4000>;
- 	};
++
++
+ /*
+  * Interfaces
+  */
+@@ -2874,6 +2923,38 @@ static struct omap_hwmod_ocp_if am43xx_l3_main__pruss = {
+ 	.user		= OCP_USER_MPU,
+ };
  
--/include/ "qoriq-dma-0.dtsi"
--/include/ "qoriq-dma-1.dtsi"
-+/include/ "elo3-dma-0.dtsi"
-+/include/ "elo3-dma-1.dtsi"
++/* DSS -> L3 Main */
++static struct omap_hwmod_ocp_if am43xx_dss__l3_main = {
++	.master		= &am43xx_dss_core_hwmod,
++	.slave		= &am33xx_l3_main_hwmod,
++	.clk		= "disp_clk"
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
++/* L4-ls -> DSS */
++static struct omap_hwmod_ocp_if am43xx_l4_ls__dss = {
++	.master		= &am33xx_l4_ls_hwmod,
++	.slave		= &am43xx_dss_core_hwmod,
++	.clk		= "l4ls_gclk",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
++/* L4_ls -> dss_dispc */
++static struct omap_hwmod_ocp_if am43xx_l4_ls__dss_dispc = {
++	.master		= &am33xx_l4_ls_hwmod,
++	.slave		= &am43xx_dss_dispc_hwmod,
++	.clk		= "l4ls_gclk",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
++/* L4_ls -> dss_rfbi */
++static struct omap_hwmod_ocp_if am43xx_l4_ls__dss_rfbi = {
++	.master		= &am33xx_l4_ls_hwmod,
++	.slave		= &am43xx_dss_rfbi_hwmod,
++	.clk		= "l4ls_gclk",
++	.user		= OCP_USER_MPU | OCP_USER_SDMA,
++};
++
+ #define CLKCTRL(oh, clkctrl) ((oh).prcm.omap4.clkctrl_offs = (clkctrl))
  
- /include/ "qoriq-espi-0.dtsi"
- 	spi@110000 {
+ static void am43xx_hwmod_clkctrl(void)
+@@ -3109,6 +3190,10 @@ static struct omap_hwmod_ocp_if *am43xx_hwmod_ocp_ifs[] __initdata = {
+ 	&am43xx_l4_ls__mcspi3,
+ 	&am43xx_l4_ls__mcspi4,
+ 	&am43xx_l3_main__pruss,
++	&am43xx_dss__l3_main,
++	&am43xx_l4_ls__dss,
++	&am43xx_l4_ls__dss_dispc,
++	&am43xx_l4_ls__dss_rfbi,
+ 	NULL,
+ };
+ 
+diff --git a/arch/arm/mach-omap2/prcm43xx.h b/arch/arm/mach-omap2/prcm43xx.h
+index 0d05278..4dfd9be 100644
+--- a/arch/arm/mach-omap2/prcm43xx.h
++++ b/arch/arm/mach-omap2/prcm43xx.h
+@@ -144,5 +144,6 @@
+ #define	AM43XX_CM_PER_SPI2_CLKCTRL_OFFSET		0x0510
+ #define	AM43XX_CM_PER_SPI3_CLKCTRL_OFFSET		0x0518
+ #define	AM43XX_CM_PER_SPI4_CLKCTRL_OFFSET		0x0520
++#define	AM43XX_CM_PER_DSS_CLKCTRL_OFFSET		0x0a00
+ 
+ #endif
 -- 
 1.7.9.5
+
