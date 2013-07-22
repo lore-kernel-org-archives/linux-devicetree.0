@@ -1,57 +1,317 @@
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: Re: [PATCH 0/2] PM / OPP: updates to enable sharing OPPs info
-Date: Mon, 22 Jul 2013 13:56:34 +0100
-Message-ID: <51ED2C02.3040202@arm.com>
-References: <1367406679-21603-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <519B45C3.8050700@arm.com> <20130720050943.5EB853E169C@localhost>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v3 27/31] net: can: mscan: add common clock support for
+ mpc512x
+Date: Mon, 22 Jul 2013 15:04:52 +0200
+Message-ID: <51ED2DF4.2090606@pengutronix.de>
+References: <1374166855-7280-1-git-send-email-gsi@denx.de>
+ <1374495298-22019-1-git-send-email-gsi@denx.de>
+ <1374495298-22019-28-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20130720050943.5EB853E169C@localhost>
-Sender: linux-pm-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Sudeep.KarkadaNagesha@arm.com, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Landley <rob@landley.net>, "Rafael J. Wysocki" <rjw@sisk.pl>, Shawn Guo <shawn.guo@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, mturquette@linaro.org
+Content-Type: multipart/mixed; boundary="===============5727804824845963479=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1374495298-22019-28-git-send-email-gsi@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gerhard Sittig <gsi@denx.de>
+Cc: Mike Turquette <mturquette@linaro.org>, Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, David Woodhouse <dwmw2@infradead.org>, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Wolfgang Grandegger <wg@grandegger.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============5727804824845963479==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2PJXSIVVFEOIDGCPHBDEN"
 
-On 20/07/13 06:09, Grant Likely wrote:
-> On Tue, 21 May 2013 11:00:35 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com> wrote:
->> Hi Rob, Grant,
->>
->> On 01/05/13 12:11, Sudeep KarkadaNagesha wrote:
->>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
->>>
->>> These are couple of updates to existing PM/OPP library to support
->>> sharing of OPPs between different device nodes.
->>>
->>> Currently all the cpu nodes are parsed until the OPPs are found. This
->>> is essential to support cpuhotplug without having to replicate OPP
->>> information in all the cpu nodes.
->>>
->>> However in systems with multiple cpu power domain, its better to have
->>> OPP entry for each cpu. To avoid replication, phandle can be specified
->>> to the node which contains the full OPP information.
->>>
->> Is proposed option of phandle for OPP acceptable to avoid replication ?
->> Any suggestions to proceed on this ? This is needed to support CPU
->> hotplug on big LITTLE system where current methods like parsing all the
->> nodes or just CPU0 node will not work.
-> 
-> Looks fine to me.
-Hi Grant,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2PJXSIVVFEOIDGCPHBDEN
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the response.
+On 07/22/2013 02:14 PM, Gerhard Sittig wrote:
+> implement a .get_clock() callback for the MPC512x platform which uses
+> the common clock infrastructure (eliminating direct access to the clock=
 
-However I had a thought after seeing recent patch series by Mike[1]
-Since the OPPs are usually associated with clocks, and multiple devices
-sharing clocks will point to same clock node in DT, clk node is more
-logical place to specify the OPPs. IMO this will be good alignment for
-the consolidation effort by Mike. One issue with this approach is
-backward compatibility(using old DT)
+> control registers from within the CAN network driver), and provide the
+> corresponding .put_clock() callback to release resources after use
+>=20
+> keep the previous implementation of MPC512x support in place during
+> migration, since common clock support is optional
+>=20
+> this change is neutral to the MPC5200 platform
+>=20
+> Signed-off-by: Gerhard Sittig <gsi@denx.de>
+> ---
+>  drivers/net/can/mscan/mpc5xxx_can.c |  169 +++++++++++++++++++++++++++=
+++++++++
+>  1 file changed, 169 insertions(+)
+>=20
+> diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/msca=
+n/mpc5xxx_can.c
+> index e59b3a3..4897929 100644
+> --- a/drivers/net/can/mscan/mpc5xxx_can.c
+> +++ b/drivers/net/can/mscan/mpc5xxx_can.c
+> @@ -109,6 +109,167 @@ static u32 mpc52xx_can_get_clock(struct platform_=
+device *ofdev,
+>  #endif /* CONFIG_PPC_MPC52xx */
+> =20
+>  #ifdef CONFIG_PPC_MPC512x
+> +
+> +#if IS_ENABLED(CONFIG_COMMON_CLK)
+> +
+> +static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
+> +				 const char *clock_source, int *mscan_clksrc)
+> +{
+> +	struct device_node *np;
+> +	u32 clockdiv;
+> +	enum {
+> +		CLK_FROM_AUTO,
+> +		CLK_FROM_IPS,
+> +		CLK_FROM_SYS,
+> +		CLK_FROM_REF,
+> +	} clk_from;
+> +	struct clk *clk_in, *clk_can;
+> +	unsigned long freq_calc;
+> +	struct mscan_priv *priv;
+> +
+> +	/* the caller passed in the clock source spec that was read from
+> +	 * the device tree, get the optional clock divider as well
+> +	 */
+> +	np =3D ofdev->dev.of_node;
+> +	clockdiv =3D 1;
+> +	of_property_read_u32(np, "fsl,mscan-clock-divider", &clockdiv);
+> +	dev_dbg(&ofdev->dev, "device tree specs: clk src[%s] div[%d]\n",
+> +		clock_source ? clock_source : "<NULL>", clockdiv);
+> +
+> +	/* when clock-source is 'ip', the CANCTL1[CLKSRC] bit needs to
+> +	 * get set, and the 'ips' clock is the input to the MSCAN
+> +	 * component
+> +	 *
+> +	 * for clock-source values of 'ref' or 'sys' the CANCTL1[CLKSRC]
+> +	 * bit needs to get cleared, an optional clock-divider may have
+> +	 * been specified (the default value is 1), the appropriate
+> +	 * MSCAN related MCLK is the input to the MSCAN component
+> +	 *
+> +	 * in the absence of a clock-source spec, first an optimal clock
+> +	 * gets determined based on the 'sys' clock, if that fails the
+> +	 * 'ref' clock is used
+> +	 */
+> +	clk_from =3D CLK_FROM_AUTO;
+> +	if (clock_source) {
+> +		/* interpret the device tree's spec for the clock source */
+> +		if (!strcmp(clock_source, "ip"))
+> +			clk_from =3D CLK_FROM_IPS;
+> +		else if (!strcmp(clock_source, "sys"))
+> +			clk_from =3D CLK_FROM_SYS;
+> +		else if (!strcmp(clock_source, "ref"))
+> +			clk_from =3D CLK_FROM_REF;
+> +		else
+> +			goto err_invalid;
+> +		dev_dbg(&ofdev->dev, "got a clk source spec[%d]\n", clk_from);
+> +	}
+> +	if (clk_from =3D=3D CLK_FROM_AUTO) {
+> +		/* no spec so far, try the 'sys' clock; round to the
+> +		 * next MHz and see if we can get a multiple of 16MHz
+> +		 */
+> +		dev_dbg(&ofdev->dev, "no clk source spec, trying SYS\n");
+> +		clk_in =3D devm_clk_get(&ofdev->dev, "sys");
+> +		if (IS_ERR(clk_in))
+> +			goto err_notavail;
+> +		freq_calc =3D clk_get_rate(clk_in);
+> +		freq_calc +=3D  499999;
+> +		freq_calc /=3D 1000000;
+> +		freq_calc *=3D 1000000;
+> +		if ((freq_calc % 16000000) =3D=3D 0) {
+> +			clk_from =3D CLK_FROM_SYS;
+> +			clockdiv =3D freq_calc / 16000000;
+> +			dev_dbg(&ofdev->dev,
+> +				"clk fit, sys[%lu] div[%d] freq[%lu]\n",
+> +				freq_calc, clockdiv, freq_calc / clockdiv);
+> +		}
+> +	}
+> +	if (clk_from =3D=3D CLK_FROM_AUTO) {
+> +		/* no spec so far, use the 'ref' clock */
+> +		dev_dbg(&ofdev->dev, "no clk source spec, trying REF\n");
+> +		clk_in =3D devm_clk_get(&ofdev->dev, "ref");
+> +		if (IS_ERR(clk_in))
+> +			goto err_notavail;
+> +		clk_from =3D CLK_FROM_REF;
+> +		freq_calc =3D clk_get_rate(clk_in);
+> +		dev_dbg(&ofdev->dev,
+> +			"clk fit, ref[%lu] (no div) freq[%lu]\n",
+> +			freq_calc, freq_calc);
+> +	}
+> +
+> +	/* select IPS or MCLK as the MSCAN input (returned to the caller),
+> +	 * setup the MCLK mux source and rate if applicable, apply the
+> +	 * optionally specified or derived above divider, and determine
+> +	 * the actual resulting clock rate to return to the caller
+> +	 */
+> +	switch (clk_from) {
+> +	case CLK_FROM_IPS:
+> +		clk_can =3D devm_clk_get(&ofdev->dev, "ips");
+> +		if (IS_ERR(clk_can))
+> +			goto err_notavail;
+> +		if (clk_prepare(clk_can)) {
 
-Regards,
-Sudeep
+I would just call prepare_enable in the main mscan driver, then we don't
+need a special "clock is prepared but not enabled" contract.
 
-[1]
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/182231.html
+> +			devm_clk_put(&ofdev->dev, clk_can);
 
+not needed, as this driver instance will fail, doesn't it?
+
+> +			goto err_notavail;
+> +		}
+> +		priv =3D netdev_priv(dev_get_drvdata(&ofdev->dev));
+> +		priv->clk_can =3D clk_can;
+> +		freq_calc =3D clk_get_rate(clk_can);
+> +		*mscan_clksrc =3D MSCAN_CLKSRC_IPS;
+> +		dev_dbg(&ofdev->dev, "clk from IPS, clksrc[%d] freq[%lu]\n",
+> +			*mscan_clksrc, freq_calc);
+> +		break;
+> +	case CLK_FROM_SYS:
+> +	case CLK_FROM_REF:
+> +		clk_can =3D devm_clk_get(&ofdev->dev, "mclk");
+> +		if (IS_ERR(clk_can))
+> +			goto err_notavail;
+> +		if (clk_prepare(clk_can)) {
+> +			devm_clk_put(&ofdev->dev, clk_can);
+
+same here
+
+> +			goto err_notavail;
+> +		}
+> +		priv =3D netdev_priv(dev_get_drvdata(&ofdev->dev));
+> +		priv->clk_can =3D clk_can;
+> +		if (clk_from =3D=3D CLK_FROM_SYS)
+> +			clk_in =3D devm_clk_get(&ofdev->dev, "sys");
+> +		if (clk_from =3D=3D CLK_FROM_REF)
+> +			clk_in =3D devm_clk_get(&ofdev->dev, "ref");
+> +		if (IS_ERR(clk_in))
+> +			goto err_notavail;
+> +		clk_set_parent(clk_can, clk_in);
+> +		freq_calc =3D clk_get_rate(clk_in);
+> +		freq_calc /=3D clockdiv;
+> +		clk_set_rate(clk_can, freq_calc);
+> +		freq_calc =3D clk_get_rate(clk_can);
+> +		*mscan_clksrc =3D MSCAN_CLKSRC_BUS;
+> +		dev_dbg(&ofdev->dev, "clk from MCLK, clksrc[%d] freq[%lu]\n",
+> +			*mscan_clksrc, freq_calc);
+> +		break;
+> +	default:
+> +		goto err_invalid;
+> +	}
+> +
+> +	return freq_calc;
+> +
+> +err_invalid:
+> +	dev_err(&ofdev->dev, "invalid clock source specification\n");
+> +	return 0;
+
+return 0 in case of error? Please add a comment what this 0 means here.
+> +
+> +err_notavail:
+> +	dev_err(&ofdev->dev, "cannot acquire or setup clock source\n");
+> +	return 0;
+> +}
+> +
+> +static void mpc512x_can_put_clock(struct platform_device *ofdev)
+> +{
+> +	struct mscan_priv *priv;
+> +
+> +	priv =3D netdev_priv(dev_get_drvdata(&ofdev->dev));
+> +	if (priv->clk_can) {
+> +		clk_unprepare(priv->clk_can);
+> +		devm_clk_put(&ofdev->dev, priv->clk_can);
+
+devm_clk_put can be removed, it's called automatically.
+
+> +	}
+> +}
+> +
+> +#else	/* COMMON_CLK */
+> +
+>  struct mpc512x_clockctl {
+>  	u32 spmr;		/* System PLL Mode Reg */
+>  	u32 sccr[2];		/* System Clk Ctrl Reg 1 & 2 */
+> @@ -239,12 +400,18 @@ exit_put:
+>  	of_node_put(np_clock);
+>  	return freq;
+>  }
+> +
+> +#define mpc512x_can_put_clock NULL
+> +
+> +#endif	/* COMMON_CLK */
+> +
+>  #else /* !CONFIG_PPC_MPC512x */
+>  static u32 mpc512x_can_get_clock(struct platform_device *ofdev,
+>  				 const char *clock_name, int *mscan_clksrc)
+>  {
+>  	return 0;
+>  }
+> +#define mpc512x_can_put_clock NULL
+>  #endif /* CONFIG_PPC_MPC512x */
+> =20
+>  static const struct of_device_id mpc5xxx_can_table[];
+> @@ -386,11 +553,13 @@ static int mpc5xxx_can_resume(struct platform_dev=
+ice *ofdev)
+>  static const struct mpc5xxx_can_data mpc5200_can_data =3D {
+>  	.type =3D MSCAN_TYPE_MPC5200,
+>  	.get_clock =3D mpc52xx_can_get_clock,
+> +	/* .put_clock not applicable */
+>  };
+> =20
+>  static const struct mpc5xxx_can_data mpc5121_can_data =3D {
+>  	.type =3D MSCAN_TYPE_MPC5121,
+>  	.get_clock =3D mpc512x_can_get_clock,
+> +	.put_clock =3D mpc512x_can_put_clock,
+>  };
+> =20
+>  static const struct of_device_id mpc5xxx_can_table[] =3D {
+>=20
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+------enig2PJXSIVVFEOIDGCPHBDEN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlHtLfQACgkQjTAFq1RaXHOLogCeOS8hW9jKqkkOFy7uYqKidses
+ocUAn2iEi3xZa5CRPJhL/7kEFVwGMrHT
+=5Mb7
+-----END PGP SIGNATURE-----
+
+------enig2PJXSIVVFEOIDGCPHBDEN--
+
+
+--===============5727804824845963479==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5727804824845963479==--
