@@ -1,66 +1,126 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] iio: mxs-lradc: add scale attribute to channels
-Date: Mon, 22 Jul 2013 09:22:07 +0200
-Message-ID: <51ECDD9F.4080506@digi.com>
-References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <201307191630.17149.marex@denx.de> <51E95EF1.4040503@digi.com> <201307191814.15491.marex@denx.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
+Date: Mon, 22 Jul 2013 12:55:18 +0530
+Message-ID: <51ECDE5E.3050104@ti.com>
+References: <Pine.LNX.4.44L0.1307211453450.19133-100000@netrider.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201307191814.15491.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <Pine.LNX.4.44L0.1307211453450.19133-100000@netrider.rowland.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, grant.likely@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-media@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, Sascha Hauer <s.hauer@pengutronix.de>, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, akpm@linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+Hi,
 
-On 07/19/2013 06:14 PM, Marek Vasut wrote:
-> Dear Hector Palacios,
->
->> Dear Marek,
+On Monday 22 July 2013 12:52 AM, Alan Stern wrote:
+> On Sun, 21 Jul 2013, Sylwester Nawrocki wrote:
+> 
+>>> What's wrong with the platform_data structure, why can't that be used
+>>> for this?
 >>
->> On 07/19/2013 04:30 PM, Marek Vasut wrote:
->>>> @@ -228,39 +230,12 @@ struct mxs_lradc {
->>>>
->>>>    #define LRADC_RESOLUTION			12
->>>>    #define LRADC_SINGLE_SAMPLE_MASK		((1 << LRADC_RESOLUTION) - 1)
->>>>
->>>> -/*
->>>> - * Raw I/O operations
->>>> - */
->>>> -static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
->>>> +static int mxs_lradc_read_single(struct iio_dev *iio_dev,
->>>>
->>>>    			const struct iio_chan_spec *chan,
->>>>    			int *val, int *val2, long m)
->>>>
->>>>    {
->>>>
->>>>    	struct mxs_lradc *lradc = iio_priv(iio_dev);
->>>>    	int ret;
->>>>
->>>> -	unsigned long mask;
->>>> -
->>>> -	if (m != IIO_CHAN_INFO_RAW)
->>>> -		return -EINVAL;
->>>> -
->>>> -	/* Check for invalid channel */
->>>> -	if (chan->channel > LRADC_MAX_TOTAL_CHANS)
->>>> -		return -EINVAL;
->>>
->>> This was already resolved, so this patch won't apply I'm afraid.
+>> At the point the platform data of some driver is initialized, e.g. in
+>> board setup code the PHY pointer is not known, since the PHY supplier
+>> driver has not initialized yet.  Even though we wanted to pass pointer
+>> to a PHY through some notifier call, it would have been not clear
+>> which PHY user driver should match on such notifier.  A single PHY
+>> supplier driver can create M PHY objects and this needs to be mapped
+>> to N PHY user drivers.  This mapping needs to be defined somewhere by
+>> the system integrator.  It works well with device tree, but except that
+>> there seems to be no other reliable infrastructure in the kernel to
+>> define links/dependencies between devices, since device identifiers are
+>> not known in advance in all cases.
 >>
->> You mean the 'unsigned long mask', right?  Yeah, I think I had resolved
->> that one before submitting, but looks like I didn't.
->> The other check is not resolved afaik. We agreed to remove it, but on a
->> different patch.
->
-> I mean the other check, yeah. A patch removing that should be applied already.
+>> What Tomasz proposed seems currently most reasonable to me for non-dt.
+>>
+>>> Or, if not, we can always add pointers to the platform device structure,
+>>> or even the main 'struct device' as well, that's what it is there for.
+>>
+>> Still we would need to solve a problem which platform device structure
+>> gets which PHY pointer.
+> 
+> Can you explain the issues in more detail?  I don't fully understand 
+> the situation.
+> 
+> Here's what I think I know:
+> 
+> 	The PHY and the controller it is attached to are both physical
+> 	devices.
+> 
+> 	The connection between them is hardwired by the system
+> 	manufacturer and cannot be changed by software.
+> 
+> 	PHYs are generally described by fixed system-specific board
+> 	files or by Device Tree information.  Are they ever discovered
+> 	dynamically?
 
-Where exactly? It's not fixed in Jonathan's fixes-togreg branch, at least.
-Did you fixed it?
+No. They are created just like any other platform devices are created.
+> 
+> 	Is the same true for the controllers attached to the PHYs?
+> 	If not -- if both a PHY and a controller are discovered 
+> 	dynamically -- how does the kernel know whether they are 
+> 	connected to each other?
 
-Best regards,
---
-Hector Palacios
+No differences here. Both PHY and controller will have dt information or hwmod
+data using which platform devices will be created.
+> 
+> 	The kernel needs to know which controller is attached to which
+> 	PHY.  Currently this information is represented by name or ID
+> 	strings embedded in platform data.
+
+right. It's embedded in the platform data of the controller.
+> 
+> 	The PHY's driver (the supplier) uses the platform data to 
+> 	construct a platform_device structure that represents the PHY.  
+
+Currently the driver assigns static labels (corresponding to the label used in
+the platform data of the controller).
+> 	Until this is done, the controller's driver (the client) cannot 
+> 	use the PHY.
+
+right.
+> 
+> 	Since there is no parent-child relation between the PHY and the 
+> 	controller, there is no guarantee that the PHY's driver will be
+> 	ready when the controller's driver wants to use it.  A deferred
+> 	probe may be needed.
+
+right.
+> 
+> 	The issue (or one of the issues) in this discussion is that 
+> 	Greg does not like the idea of using names or IDs to associate
+> 	PHYs with controllers, because they are too prone to
+> 	duplications or other errors.  Pointers are more reliable.
+> 
+> 	But pointers to what?  Since the only data known to be 
+> 	available to both the PHY driver and controller driver is the
+> 	platform data, the obvious answer is a pointer to platform data
+> 	(either for the PHY or for the controller, or maybe both).
+
+hmm.. it's not going to be simple though as the platform device for the PHY and
+controller can be created in entirely different places. e.g., in some cases the
+PHY device is a child of some mfd core device (the device will be created in
+drivers/mfd) and the controller driver (usually) is created in board file. I
+guess then we have to come up with something to share a pointer in two
+different files.
+> 
+> Probably some of the details above are wrong; please indicate where I
+> have gone astray.  Also, I'm not clear about the role played by various 
+> APIs.  For example, where does phy_create() fit into this picture?
+
+phy_create is the API by which the PHY's driver (the supplier) hook into the
+PHY framework. It's like the controller driver will always interact with the
+PHY driver through the PHY framework.
+
+Thanks
+Kishon
