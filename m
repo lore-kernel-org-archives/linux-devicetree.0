@@ -1,728 +1,415 @@
-From: Robin Gong <b38343@freescale.com>
-Subject: Re: [PATCH v4] regulator: pfuze100: add pfuze100 regulator driver
-Date: Mon, 22 Jul 2013 18:39:36 +0800
-Message-ID: <20130722103935.GA14838@Robin-OptiPlex-780>
-References: <1374398247-11384-1-git-send-email-b38343@freescale.com>
- <20130722091058.GI20271@S2101-09.ap.freescale.net>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: Re: [PATCH] net: Add MOXA ART SoCs ethernet driver
+Date: Mon, 22 Jul 2013 12:09:34 +0100
+Message-ID: <CAGVrzcYdisg5AXMBa5q74GPz7ckWeoXJ9H5di2CGN41VyZ_4vw@mail.gmail.com>
+References: <1374140806-12485-1-git-send-email-jonas.jensen@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130722091058.GI20271@S2101-09.ap.freescale.net>
+In-Reply-To: <1374140806-12485-1-git-send-email-jonas.jensen@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: broonie@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, lgirdwood@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jonas Jensen <jonas.jensen@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2013 at 05:11:00PM +0800, Shawn Guo wrote:
-> On Sun, Jul 21, 2013 at 05:17:27PM +0800, Robin Gong wrote:
-> > Add pfuze100 regulator driver.
-> > 
-> > Signed-off-by: Robin Gong <b38343@freescale.com>
-> > ---
-> >  .../devicetree/bindings/regulator/pfuze100.txt     |  113 +++++
-> >  drivers/regulator/Kconfig                          |    7 +
-> >  drivers/regulator/Makefile                         |    1 +
-> >  drivers/regulator/pfuze100-regulator.c             |  462 ++++++++++++++++++++
-> >  include/linux/regulator/pfuze100.h                 |   44 ++
-> >  5 files changed, 627 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/regulator/pfuze100.txt
-> >  create mode 100644 drivers/regulator/pfuze100-regulator.c
-> >  create mode 100644 include/linux/regulator/pfuze100.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-> > new file mode 100644
-> > index 0000000..22e1a48
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-> > @@ -0,0 +1,113 @@
-> > +PFUZE100 family of regulators
-> > +
-> > +Required properties:
-> > +- compatible: "fsl,pfuze100"
-> > +- reg: I2C slave address
-> > +- regulators: This is the list of child nodes that specify the regulator
-> > +  initialization data for defined regulators. Please refer to below doc
-> > +  Documentation/devicetree/bindings/regulator/regulator.txt.
-> 
-> "regulators" is not a property but a sub-node.
-> 
-> > +
-> > +  The valid names for regulators are:
-> > +  sw1ab,sw1c,sw2,sw3a,sw3b,sw4,swbst,vsnvs,vrefddr,vgen1~vgen6
-> > +
-> > +Each regulator is defined using the standard binding for regulators.
-> > +
-> > +Example:
-> > +
-> > +	pmic: pfuze100@08 {
-> > +		compatible = "fsl,pfuze100";
-> > +		reg = <0x08>;
-> > +
-> > +		regulators {
-> > +			sw1a_reg: sw1ab {
-> > +				regulator-min-microvolt = <300000>;
-> > +				regulator-max-microvolt = <1875000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +				regulator-ramp-delay = <6250>;
-> > +			};
-> > +
-> > +			sw1c_reg: sw1c {
-> > +				regulator-min-microvolt = <300000>;
-> > +				regulator-max-microvolt = <1875000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			sw2_reg: sw2 {
-> > +				regulator-min-microvolt = <800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			sw3a_reg: sw3a {
-> > +				regulator-min-microvolt = <400000>;
-> > +				regulator-max-microvolt = <1975000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			sw3b_reg: sw3b {
-> > +				regulator-min-microvolt = <400000>;
-> > +				regulator-max-microvolt = <1975000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			sw4_reg: sw4 {
-> > +				regulator-min-microvolt = <800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +			};
-> > +
-> > +			swbst_reg: swbst {
-> > +				regulator-min-microvolt = <5000000>;
-> > +				regulator-max-microvolt = <5150000>;
-> > +			};
-> > +
-> > +			snvs_reg: vsnvs {
-> > +				regulator-min-microvolt = <1000000>;
-> > +				regulator-max-microvolt = <3000000>;
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			vref_reg: vrefddr {
-> > +				regulator-boot-on;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			vgen1_reg: vgen1 {
-> > +				regulator-min-microvolt = <800000>;
-> > +				regulator-max-microvolt = <1550000>;
-> > +			};
-> > +
-> > +			vgen2_reg: vgen2 {
-> > +				regulator-min-microvolt = <800000>;
-> > +				regulator-max-microvolt = <1550000>;
-> > +			};
-> > +
-> > +			vgen3_reg: vgen3 {
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +			};
-> > +
-> > +			vgen4_reg: vgen4 {
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			vgen5_reg: vgen5 {
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-always-on;
-> > +			};
-> > +
-> > +			vgen6_reg: vgen6 {
-> > +				regulator-min-microvolt = <1800000>;
-> > +				regulator-max-microvolt = <3300000>;
-> > +				regulator-always-on;
-> > +			};
-> > +		};
-> > +	};
-> > diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-> > index f1e6ad9..f913172 100644
-> > --- a/drivers/regulator/Kconfig
-> > +++ b/drivers/regulator/Kconfig
-> > @@ -158,6 +158,13 @@ config REGULATOR_MC13892
-> >  	  Say y here to support the regulators found on the Freescale MC13892
-> >  	  PMIC.
-> >  
-> > +config REGULATOR_PFUZE100
-> > +	tristate "Support regulators on Freescale PFUZE100 PMIC"
-> > +	depends on I2C
-> > +	help
-> > +	  Say y here to support the regulators found on the Freescale PFUZE100
-> > +	  PMIC.
-> > +
-> >  config REGULATOR_ISL6271A
-> >  	tristate "Intersil ISL6271A Power regulator"
-> >  	depends on I2C
-> > diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-> > index ba4a3cf..ad62524 100644
-> > --- a/drivers/regulator/Makefile
-> > +++ b/drivers/regulator/Makefile
-> > @@ -45,6 +45,7 @@ obj-$(CONFIG_REGULATOR_MAX77693) += max77693.o
-> >  obj-$(CONFIG_REGULATOR_MC13783) += mc13783-regulator.o
-> >  obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
-> >  obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
-> > +obj-$(CONFIG_REGULATOR_PFUZE100) += pfuze100-regulator.o
-> >  obj-$(CONFIG_REGULATOR_PALMAS) += palmas-regulator.o
-> >  obj-$(CONFIG_REGULATOR_TPS51632) += tps51632-regulator.o
-> >  obj-$(CONFIG_REGULATOR_PCAP) += pcap-regulator.o
-> > diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-> > new file mode 100644
-> > index 0000000..fd259ef
-> > --- /dev/null
-> > +++ b/drivers/regulator/pfuze100-regulator.c
-> > @@ -0,0 +1,462 @@
-> > +/*
-> > + * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License
-> > + * along with this program; if not, write to the Free Software
-> > + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
-> > + */
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/init.h>
-> > +#include <linux/err.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/regulator/of_regulator.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regulator/driver.h>
-> > +#include <linux/regulator/machine.h>
-> > +#include <linux/regulator/pfuze100.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/regmap.h>
-> > +
-> > +
-> 
-> One blank line.
-> 
-> > +#define PFUZE_NUMREGS		128
-> > +#define PFUZE100_VOL_OFFSET	0
-> > +#define PFUZE100_STANDBY_OFFSET	1
-> > +#define PFUZE100_MODE_OFFSET	3
-> > +#define PFUZE100_CONF_OFFSET	4
-> > +
-> > +#define PFUZE100_DEVICEID	0x0
-> > +#define PFUZE100_REVID		0x3
-> > +#define PFUZE100_FABID		0x3
-> > +
-> > +#define PFUZE100_SW1ABVOL	0x20
-> > +#define PFUZE100_SW1CVOL	0x2e
-> > +#define PFUZE100_SW2VOL		0x35
-> > +#define PFUZE100_SW3AVOL	0x3c
-> > +#define PFUZE100_SW3BVOL	0x43
-> > +#define PFUZE100_SW4VOL		0x4a
-> > +#define PFUZE100_SWBSTCON1	0x66
-> > +#define PFUZE100_VREFDDRCON	0x6a
-> > +#define PFUZE100_VSNVSVOL	0x6b
-> > +#define PFUZE100_VGEN1VOL	0x6c
-> > +#define PFUZE100_VGEN2VOL	0x6d
-> > +#define PFUZE100_VGEN3VOL	0x6e
-> > +#define PFUZE100_VGEN4VOL	0x6f
-> > +#define PFUZE100_VGEN5VOL	0x70
-> > +#define PFUZE100_VGEN6VOL	0x71
-> > +
-> > +struct pfuze_regulator {
-> > +	struct regulator_desc desc;
-> > +	unsigned char stby_reg;
-> > +	unsigned char stby_mask;
-> > +};
-> > +
-> > +struct pfuze_chip {
-> > +	struct regmap *regmap;
-> > +	struct device *dev;
-> > +	struct pfuze_regulator regulator_descs[PFUZE100_MAX_REGULATOR];
-> > +	struct regulator_dev *regulators[PFUZE100_MAX_REGULATOR];
-> > +};
-> > +
-> > +static const int pfuze100_swbst[] = {
-> > +	5000000, 5050000, 5100000, 5150000,
-> > +};
-> > +
-> > +static const int pfuze100_vsnvs[] = {
-> > +	1000000, 1100000, 1200000, 1300000, 1500000, 1800000, 3000000,
-> > +};
-> > +
-> > +static const struct i2c_device_id pfuze_device_id[] = {
-> > +	{.name = "pfuze100"},
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(i2c, pfuze_device_id);
-> > +
-> > +static const struct of_device_id pfuze_dt_ids[] = {
-> > +	{ .compatible = "fsl,pfuze100" },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, pfuze_dt_ids);
-> > +
-> > +static int pfuze100_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
-> > +{
-> > +	struct pfuze_chip *pfuze100 = rdev_get_drvdata(rdev);
-> > +	int id = rdev->desc->id;
-> > +	unsigned int val, ramp_bits, reg;
-> > +	int ret;
-> > +
-> > +	if (id < PFUZE100_SWBST) {
-> > +		if (id == PFUZE100_SW1AB)
-> > +			reg = PFUZE100_SW1ABVOL;
-> > +		else
-> > +			reg = PFUZE100_SW1CVOL + (id - PFUZE100_SW1C) * 7;
-> > +		regmap_read(pfuze100->regmap, reg, &val);
-> > +
-> > +		if (id <= PFUZE100_SW1C)
-> > +			ramp_delay = 25000 / (2 * ramp_delay);
-> > +		else if (val & 0x40)
-> > +			ramp_delay = 50000 / (4 * ramp_delay);
-> > +		else
-> > +			ramp_delay = 25000 / (2 * ramp_delay);
-> > +
-> > +		ramp_bits = (ramp_delay >> 1) - (ramp_delay >> 3);
-> > +		ret = regmap_update_bits(pfuze100->regmap, reg + 4 , 0xc0,
-> > +				ramp_bits << 6);
-> > +		if (ret < 0)
-> > +			dev_err(pfuze100->dev, "ramp failed, err %d\n", ret);
-> > +	} else
-> > +		ret = -EACCES;
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static struct regulator_ops pfuze100_ldo_regulator_ops = {
-> > +	.enable = regulator_enable_regmap,
-> > +	.disable = regulator_disable_regmap,
-> > +	.is_enabled = regulator_is_enabled_regmap,
-> > +	.list_voltage = regulator_list_voltage_linear,
-> > +	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-> > +	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-> > +};
-> > +
-> > +static struct regulator_ops pfuze100_fixed_regulator_ops = {
-> > +	.list_voltage = regulator_list_voltage_linear,
-> > +};
-> > +
-> > +static struct regulator_ops pfuze100_sw_regulator_ops = {
-> > +	.list_voltage = regulator_list_voltage_linear,
-> > +	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-> > +	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-> > +	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-> > +	.set_ramp_delay = pfuze100_set_ramp_delay,
-> > +};
-> > +
-> > +static struct regulator_ops pfuze100_swb_regulator_ops = {
-> > +	.list_voltage = regulator_list_voltage_table,
-> > +	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-> > +	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-> > +
-> > +};
-> > +
-> > +#define PFUZE100_FIXED_REG(_name, base, voltage)	\
-> > +{	\
-> > +	[PFUZE100_ ## _name] = {	\
-> > +		.desc = {	\
-> > +			.name = #_name,	\
-> > +			.n_voltages = 1,	\
-> > +			.ops = &pfuze100_fixed_regulator_ops,	\
-> > +			.type = REGULATOR_VOLTAGE,	\
-> > +			.id = PFUZE100_ ## _name,	\
-> > +			.owner = THIS_MODULE,	\
-> > +			.min_uV = (voltage),	\
-> > +			.enable_reg = (base),	\
-> > +			.enable_mask = 0x10,	\
-> > +		},	\
-> > +	}	\
-> > +}
-> > +
-> > +#define PFUZE100_SW_REG(_name, base, min, max, step)	\
-> > +{	\
-> > +	[PFUZE100_ ## _name] = {	\
-> > +		.desc = {	\
-> > +			.name = #_name,\
-> > +			.n_voltages = ((max) - (min)) / (step) + 1,	\
-> > +			.ops = &pfuze100_sw_regulator_ops,	\
-> > +			.type = REGULATOR_VOLTAGE,	\
-> > +			.id = PFUZE100_ ## _name,	\
-> > +			.owner = THIS_MODULE,	\
-> > +			.min_uV = (min),	\
-> > +			.uV_step = (step),	\
-> > +			.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
-> > +			.vsel_mask = 0x3f,	\
-> > +		},	\
-> > +		.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
-> > +		.stby_mask = 0x3f,	\
-> > +	}	\
-> > +}
-> > +
-> > +#define PFUZE100_SWB_REG(_name, base, mask, voltages)	\
-> > +{	\
-> > +	[PFUZE100_ ## _name] = {	\
-> > +		.desc = {	\
-> > +			.name = #_name,	\
-> > +			.n_voltages = ARRAY_SIZE(voltages),	\
-> > +			.ops = &pfuze100_swb_regulator_ops,	\
-> > +			.type = REGULATOR_VOLTAGE,	\
-> > +			.id = PFUZE100_ ## _name,	\
-> > +			.owner = THIS_MODULE,	\
-> > +			.volt_table = voltages,	\
-> > +			.vsel_reg = (base),	\
-> > +			.vsel_mask = (mask),	\
-> > +		},	\
-> > +	}	\
-> > +}
-> > +
-> > +#define PFUZE100_VGEN_REG(_name, base, min, max, step)	\
-> > +{	\
-> > +	[PFUZE100_ ## _name] = {	\
-> > +		.desc = {	\
-> > +			.name = #_name,	\
-> > +			.n_voltages = ((max) - (min)) / (step) + 1,	\
-> > +			.ops = &pfuze100_ldo_regulator_ops,	\
-> > +			.type = REGULATOR_VOLTAGE,	\
-> > +			.id = PFUZE100_ ## _name,	\
-> > +			.owner = THIS_MODULE,	\
-> > +			.min_uV = (min),	\
-> > +			.uV_step = (step),	\
-> > +			.vsel_reg = (base),	\
-> > +			.vsel_mask = 0xf,	\
-> > +			.enable_reg = (base),	\
-> > +			.enable_mask = 0x10,	\
-> > +		},	\
-> > +		.stby_reg = (base),	\
-> > +		.stby_mask = 0x20,	\
-> > +	}	\
-> > +}
-> > +
-> > +static struct pfuze_regulator pfuze100_regulators[] = {
-> > +	PFUZE100_SW_REG(SW1AB, PFUZE100_SW1ABVOL, 300000, 1875000, 25000),
-> > +	PFUZE100_SW_REG(SW1C, PFUZE100_SW1CVOL, 300000, 1875000, 25000),
-> > +	PFUZE100_SW_REG(SW2, PFUZE100_SW2VOL, 400000, 1975000, 25000),
-> > +	PFUZE100_SW_REG(SW3A, PFUZE100_SW3AVOL, 400000, 1975000, 25000),
-> > +	PFUZE100_SW_REG(SW3B, PFUZE100_SW3BVOL, 400000, 1975000, 25000),
-> > +	PFUZE100_SW_REG(SW4, PFUZE100_SW4VOL, 400000, 1975000, 25000),
-> > +	PFUZE100_SWB_REG(SWBST, PFUZE100_SWBSTCON1, 0x3 , pfuze100_swbst),
-> > +	PFUZE100_SWB_REG(VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
-> > +	PFUZE100_FIXED_REG(VREFDDR, PFUZE100_VREFDDRCON, 750000),
-> > +	PFUZE100_VGEN_REG(VGEN1, PFUZE100_VGEN1VOL, 800000, 1550000, 50000),
-> > +	PFUZE100_VGEN_REG(VGEN2, PFUZE100_VGEN2VOL, 800000, 1550000, 50000),
-> > +	PFUZE100_VGEN_REG(VGEN3, PFUZE100_VGEN3VOL, 1800000, 3300000, 100000),
-> > +	PFUZE100_VGEN_REG(VGEN4, PFUZE100_VGEN4VOL, 1800000, 3300000, 100000),
-> > +	PFUZE100_VGEN_REG(VGEN5, PFUZE100_VGEN5VOL, 1800000, 3300000, 100000),
-> > +	PFUZE100_VGEN_REG(VGEN6, PFUZE100_VGEN6VOL, 1800000, 3300000, 100000),
-> > +};
-> > +
-> > +#ifdef CONFIG_OF
-> > +static struct of_regulator_match pfuze100_matches[] = {
-> > +	{ .name = "sw1ab",	},
-> > +	{ .name = "sw1c",	},
-> > +	{ .name = "sw2",	},
-> > +	{ .name = "sw3a",	},
-> > +	{ .name = "sw3b",	},
-> > +	{ .name = "sw4",	},
-> > +	{ .name = "swbst",	},
-> > +	{ .name = "vsnvs",	},
-> > +	{ .name = "vrefddr",	},
-> > +	{ .name = "vgen1",	},
-> > +	{ .name = "vgen2",	},
-> > +	{ .name = "vgen3",	},
-> > +	{ .name = "vgen4",	},
-> > +	{ .name = "vgen5",	},
-> > +	{ .name = "vgen6",	},
-> > +};
-> > +
-> > +static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
-> > +{
-> > +	struct device *dev = chip->dev;
-> > +	struct device_node *parent;
-> > +	int ret;
-> > +
-> > +	of_node_get(dev->parent->of_node);
-> > +	parent = of_find_node_by_name(dev->parent->of_node, "regulators");
-> > +	if (!parent) {
-> > +		dev_err(dev, "regulators node not found\n");
-> > +		return -EINVAL;
-> 
-> So you leave dev->parent->of_node unbalanced.
-> 
-Seems of_find_node_by_name will of_node_put the parent node.
-> > +	}
-> > +
-> > +	ret = of_regulator_match(dev, parent, pfuze100_matches,
-> > +				 ARRAY_SIZE(pfuze100_matches));
-> > +
-> > +	of_node_put(dev->parent->of_node);
-> 
-> This could be move before of_regulator_match(), right?
-> 
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "Error parsing regulator init data: %d\n",
-> > +			ret);
-> > +		return ret;
-> > +	}
-> > +
-> 
-> The kernel doc of function of_find_node_by_name() suggests you need a
-> of_node_put() call to put the node you get from there.
-> 
-Good point, should modify of_node_put(dev->parent->of_node) to 
-of_node_put(parent).
-> > +	return 0;
-> > +}
-> > +
-> > +static inline struct regulator_init_data *match_init_data(int index)
-> > +{
-> > +	return pfuze100_matches[index].init_data;
-> > +}
-> > +
-> > +static inline struct device_node *match_of_node(int index)
-> > +{
-> > +	return pfuze100_matches[index].of_node;
-> > +}
-> > +#else
-> > +static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
-> > +{
-> > +	return NULL;
-> > +}
-> > +
-> > +static inline struct regulator_init_data *match_init_data(int index)
-> > +{
-> > +	return NULL;
-> > +}
-> > +
-> > +static inline struct device_node *match_of_node(int index)
-> > +{
-> > +	return NULL;
-> > +}
-> > +#endif
-> > +
-> > +static int pfuze_identify(struct pfuze_chip *pfuze_chip)
-> > +{
-> > +	unsigned int value;
-> > +	int ret;
-> > +
-> > +	ret = regmap_read(pfuze_chip->regmap, PFUZE100_DEVICEID, &value);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (value & 0x0f) {
-> > +		dev_warn(pfuze_chip->dev, "Illegal ID: %x\n", value);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	ret = regmap_read(pfuze_chip->regmap, PFUZE100_REVID, &value);
-> > +	if (ret)
-> > +		return ret;
-> > +	dev_info(pfuze_chip->dev,
-> > +		 "Full lay: %x, Metal lay: %x\n",
-> > +		 (value & 0xf0) >> 4, value & 0x0f);
-> > +
-> > +	ret = regmap_read(pfuze_chip->regmap, PFUZE100_FABID, &value);
-> > +	if (ret)
-> > +		return ret;
-> > +	dev_info(pfuze_chip->dev, "FAB: %x, FIN: %x\n",
-> > +		 (value & 0xc) >> 2, value & 0x3);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static struct regmap_config pfuze_regmap_config = {
-> > +	.reg_bits = 8,
-> > +	.val_bits = 8,
-> > +	.max_register = PFUZE_NUMREGS,
-> > +	.cache_type = REGCACHE_RBTREE,
-> > +};
-> > +
-> > +static int pfuze100_regulator_probe(struct i2c_client *client,
-> > +				    const struct i2c_device_id *id)
-> > +{
-> > +	struct pfuze_chip *pfuze_chip;
-> > +	struct pfuze_regulator_platform_data *pdata =
-> > +	    dev_get_platdata(&client->dev);
-> > +	struct regulator_config config = { };
-> > +	int i, ret;
-> > +
-> > +	pfuze_chip = devm_kzalloc(&client->dev, sizeof(*pfuze_chip),
-> > +			GFP_KERNEL);
-> > +	if (!pfuze_chip)
-> > +		return -ENOMEM;
-> > +
-> > +	dev_set_drvdata(&client->dev, pfuze_chip);
-> > +
-> > +	memcpy(pfuze_chip->regulator_descs, pfuze100_regulators,
-> > +		sizeof(pfuze_chip->regulator_descs));
-> > +
-> > +	pfuze_chip->dev = &client->dev;
-> > +
-> > +	pfuze_chip->regmap = devm_regmap_init_i2c(client, &pfuze_regmap_config);
-> > +	if (IS_ERR(pfuze_chip->regmap)) {
-> > +		ret = PTR_ERR(pfuze_chip->regmap);
-> > +		dev_err(&client->dev,
-> > +			"regmap allocation failed with err %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = pfuze_identify(pfuze_chip);
-> > +	if (ret) {
-> > +		dev_err(&client->dev, "unrecognized pfuze chip ID!\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = pfuze_parse_regulators_dt(pfuze_chip);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	for (i = 0; i < PFUZE100_MAX_REGULATOR; i++) {
-> > +		struct regulator_init_data *init_data;
-> > +		int val;
-> > +
-> > +		if (pdata)
-> > +			init_data = pdata->init_data[i];
-> > +		else
-> > +			init_data = match_init_data(i);
-> > +
-> > +		/* SW2~SW4 high bit check and modify the voltage value table */
-> > +		if (i > PFUZE100_SW1C && i < PFUZE100_SWBST) {
-> > +			regmap_read(pfuze_chip->regmap, PFUZE100_SW2VOL +
-> > +					(i - PFUZE100_SW2) * 7, &val);
-> > +			if (val & 0x40) {
-> > +				pfuze_chip->regulator_descs[i].desc.min_uV
-> > +				= 800000;
-> > +				pfuze_chip->regulator_descs[i].desc.uV_step
-> > +				= 50000;
-> > +			}
-> > +		}
-> > +
-> > +		config.dev = &client->dev;
-> > +		config.init_data = init_data;
-> > +		config.driver_data = pfuze_chip;
-> > +		config.of_node = match_of_node(i);
-> > +
-> > +		pfuze_chip->regulators[i] = regulator_register(&pfuze_chip
-> > +			->regulator_descs[i].desc, &config);
-> > +		if (IS_ERR(pfuze_chip->regulators[i])) {
-> > +			dev_err(&client->dev, "register regulator%s failed\n",
-> > +				pfuze100_regulators[i].desc.name);
-> > +			ret = PTR_ERR(pfuze_chip->regulators[i]);
-> > +			while (--i >= 0)
-> > +				regulator_unregister(pfuze_chip->regulators[i]);
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pfuze100_regulator_remove(struct i2c_client *client)
-> > +{
-> > +	int i;
-> > +	struct pfuze_chip *pfuze_chip = dev_get_drvdata(&client->dev);
-> > +
-> > +	for (i = 0; i < PFUZE100_MAX_REGULATOR; i++)
-> > +		regulator_unregister(pfuze_chip->regulators[i]);
-> > +
-> > +	devm_kfree(&client->dev, pfuze_chip);
-> 
-> This is not needed.
-> 
-> Shawn
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static struct i2c_driver pfuze_driver = {
-> > +	.id_table = pfuze_device_id,
-> > +	.driver = {
-> > +		.name = "pfuze100-regulator",
-> > +		.owner = THIS_MODULE,
-> > +		.of_match_table = pfuze_dt_ids,
-> > +	},
-> > +	.probe = pfuze100_regulator_probe,
-> > +	.remove = pfuze100_regulator_remove,
-> > +};
-> > +module_i2c_driver(pfuze_driver);
-> > +
-> > +MODULE_AUTHOR("Robin Gong <b38343@freescale.com>");
-> > +MODULE_DESCRIPTION("Regulator Driver for Freescale PFUZE100 PMIC");
-> > +MODULE_ALIAS("pfuze100-regulator");
-> > diff --git a/include/linux/regulator/pfuze100.h b/include/linux/regulator/pfuze100.h
-> > new file mode 100644
-> > index 0000000..65d550b
-> > --- /dev/null
-> > +++ b/include/linux/regulator/pfuze100.h
-> > @@ -0,0 +1,44 @@
-> > +/*
-> > + * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along
-> > + * with this program; if not, write to the Free Software Foundation, Inc.,
-> > + * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-> > + */
-> > +#ifndef __LINUX_REG_PFUZE100_H
-> > +#define __LINUX_REG_PFUZE100_H
-> > +
-> > +#define PFUZE100_SW1AB		0
-> > +#define PFUZE100_SW1C		1
-> > +#define PFUZE100_SW2		2
-> > +#define PFUZE100_SW3A		3
-> > +#define PFUZE100_SW3B		4
-> > +#define PFUZE100_SW4		5
-> > +#define PFUZE100_SWBST		6
-> > +#define PFUZE100_VSNVS		7
-> > +#define PFUZE100_VREFDDR	8
-> > +#define PFUZE100_VGEN1		9
-> > +#define PFUZE100_VGEN2		10
-> > +#define PFUZE100_VGEN3		11
-> > +#define PFUZE100_VGEN4		12
-> > +#define PFUZE100_VGEN5		13
-> > +#define PFUZE100_VGEN6		14
-> > +#define PFUZE100_MAX_REGULATOR	15
-> > +
-> > +struct regulator_init_data;
-> > +
-> > +struct pfuze_regulator_platform_data {
-> > +	struct regulator_init_data *init_data[PFUZE100_MAX_REGULATOR];
-> > +};
-> > +
-> > +#endif /* __LINUX_REG_PFUZE100_H */
-> > -- 
-> > 1.7.5.4
-> > 
-> > 
+Hello Jonas,
 
+A bunch of comments inline.
+
+2013/7/18 Jonas Jensen <jonas.jensen@gmail.com>:
+> The MOXA UC-711X hardware(s) has an ethernet controller that seem to be
+> developed internally. The IC used is "RTL8201CP".
+>
+> Since there is no public documentation, this driver is mostly the one
+> published by MOXA that has been heavily cleaned up / ported from linux 2.6.9.
+>
+> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
+> ---
+>
+> Notes:
+>     Applies to next-20130716
+>
+>  .../devicetree/bindings/net/moxa,moxart-mac.txt    |  25 +
+>  drivers/net/ethernet/Kconfig                       |   1 +
+>  drivers/net/ethernet/Makefile                      |   1 +
+>  drivers/net/ethernet/moxa/Kconfig                  |  30 ++
+>  drivers/net/ethernet/moxa/Makefile                 |   6 +
+>  drivers/net/ethernet/moxa/moxart_ether.c           | 544 +++++++++++++++++++++
+>  drivers/net/ethernet/moxa/moxart_ether.h           | 525 ++++++++++++++++++++
+>  7 files changed, 1132 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
+>  create mode 100644 drivers/net/ethernet/moxa/Kconfig
+>  create mode 100644 drivers/net/ethernet/moxa/Makefile
+>  create mode 100644 drivers/net/ethernet/moxa/moxart_ether.c
+>  create mode 100644 drivers/net/ethernet/moxa/moxart_ether.h
+>
+> diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt b/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
+> new file mode 100644
+> index 0000000..12e12a5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
+> @@ -0,0 +1,25 @@
+> +MOXA ART Ethernet Controller
+> +
+> +Required properties:
+> +
+> +- compatible : Should be "moxa,moxart-mac"
+> +- reg : Should contain registers location and length
+> +  index 0 : main register
+> +  index 1 : mac address (stored on flash)
+
+That is kind of unusual, since the MAC register is within the range of
+the MAC base register, just read the MAC from the base register and
+use that to fill in dev->dev_addr in your ndo_open() callback.
+
+[snip]
+
+> +static void moxart_mac_setup_desc_ring(struct net_device *ndev)
+> +{
+> +       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
+> +       struct tx_desc_t *txdesc;
+> +       struct rx_desc_t *rxdesc;
+> +       unsigned char *virtbuf;
+> +       unsigned int phybuf;
+> +       int i;
+> +
+> +       virtbuf = priv->virt_tx_buf_baseaddr;
+> +       phybuf = priv->phy_tx_buf_baseaddr;
+> +       for (i = 0; i < TX_DESC_NUM; i++,
+> +               virtbuf += TX_BUF_SIZE, phybuf += TX_BUF_SIZE) {
+> +               txdesc = &priv->virt_tx_desc_baseaddr[i];
+> +               memset(txdesc, 0, sizeof(struct tx_desc_t));
+> +               txdesc->txdes2.phy_tx_buf_baseaddr = phybuf;
+> +               txdesc->txdes2.virt_tx_buf_baseaddr = virtbuf;
+> +       }
+> +       priv->virt_tx_desc_baseaddr[TX_DESC_NUM - 1].txdes1.ubit.edotr = 1;
+> +       priv->tx_desc_now = 0;
+> +
+> +       virtbuf = priv->virt_rx_buf_baseaddr;
+> +       phybuf = priv->phy_rx_buf_baseaddr;
+> +       for (i = 0; i < RX_DESC_NUM; i++,
+> +               virtbuf += RX_BUF_SIZE, phybuf += RX_BUF_SIZE) {
+> +               rxdesc = &priv->virt_rx_desc_baseaddr[i];
+> +               memset(rxdesc, 0, sizeof(struct rx_desc_t));
+> +               rxdesc->rxdes0.ubit.rx_dma_own = 1;
+> +               rxdesc->rxdes1.ubit.rx_buf_size = RX_BUF_SIZE;
+> +               rxdesc->rxdes2.phy_rx_buf_baseaddr = phybuf;
+> +               rxdesc->rxdes2.virt_rx_buf_baseaddr = virtbuf;
+> +       }
+
+Your RX path is supposed to be preallocating SKBs, create a DMA
+mapping for them and then only SKB refilling would then happen when
+you process a SKB in your RX handler. I do not see you doing it here.
+
+> +       priv->virt_rx_desc_baseaddr[RX_DESC_NUM - 1].rxdes1.ubit.edorr = 1;
+> +       priv->rx_desc_now = 0;
+> +
+> +       /* reset the MAC controler TX/RX desciptor base address */
+> +       writel(priv->phy_tx_desc_baseaddr, priv->base + TXR_BADR_REG_OFFSET);
+> +       writel(priv->phy_rx_desc_baseaddr, priv->base + RXR_BADR_REG_OFFSET);
+> +}
+> +
+> +static int moxart_mac_open(struct net_device *ndev)
+> +{
+> +       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
+> +
+> +       if (!is_valid_ether_addr(ndev->dev_addr))
+> +               return -EADDRNOTAVAIL;
+> +
+> +       spin_lock_irq(&priv->txlock);
+> +       moxart_mac_reset(ndev);
+> +       moxart_update_mac_address(ndev);
+> +       moxart_mac_setup_desc_ring(ndev);
+> +       moxart_mac_enable(ndev);
+> +       spin_unlock_irq(&priv->txlock);
+
+Unless you did not properly disable interrupts at the MAC level,
+taking a spinlock here does not seem to be required at all since the
+various steps you call are done in the correct order.
+
+> +       netif_start_queue(ndev);
+> +
+> +       netdev_dbg(ndev, "%s: IMR=0x%x, MACCR=0x%x\n",
+> +                  __func__, readl(priv->base + IMR_REG_OFFSET),
+> +                  readl(priv->base + MACCR_REG_OFFSET));
+> +
+> +       return 0;
+> +}
+> +
+> +static int moxart_mac_stop(struct net_device *ndev)
+> +{
+> +       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
+> +
+> +       netif_stop_queue(ndev);
+> +       spin_lock_irq(&priv->txlock);
+> +
+> +       /* disable all interrupts */
+> +       writel(0, priv->base + IMR_REG_OFFSET);
+> +
+> +       /* disable all functions */
+> +       writel(0, priv->base + MACCR_REG_OFFSET);
+> +
+> +       spin_unlock_irq(&priv->txlock);
+
+Same here, the serialisation is not required here once you have
+disabled the interrupts at the MAC level. You should also free the RX
+buffers and the potentially remaining transmit SKBs.
+
+> +
+> +       return 0;
+> +}
+> +
+> +static void moxart_mac_recv(struct work_struct *ptr)
+> +{
+> +       struct net_device *ndev = (struct net_device *) ptr;
+> +       struct moxart_mac_priv_t *priv = netdev_priv((struct net_device *)ptr);
+> +       struct rx_desc_t *rxdesc;
+> +       struct sk_buff *skb;
+> +       unsigned int ui, len;
+> +       int rxnow = priv->rx_desc_now;
+> +       int loops = RX_DESC_NUM;
+
+This screams to me: implement NAPI. You are doing all of the
+processing in an interrupt handler, which runs in hard IRQ context,
+this is bad for latency. This very specific function won't change that
+much once you convert it to NAPI.
+
+> +
+> +repeat_recv:
+> +       rxdesc = &priv->virt_rx_desc_baseaddr[rxnow];
+> +       ui = rxdesc->rxdes0.ui;
+> +
+> +       if (ui & RXDMA_OWN)
+> +               return;
+> +
+> +       if (ui & (RX_ERR | CRC_ERR | FTL | RUNT | RX_ODD_NB)) {
+> +               netdev_err(ndev, "%s: packet error\n", __func__);
+> +               priv->stats.rx_dropped++;
+> +               priv->stats.rx_errors++;
+> +               goto recv_finish;
+> +       }
+> +
+> +       len = ui & RFL_MASK;
+> +
+> +       if (len > RX_BUF_SIZE)
+> +               len = RX_BUF_SIZE;
+> +
+> +       skb = dev_alloc_skb(len + 2);
+
+You should use netdev_alloc_skb_ip_align() here.
+
+> +       if (skb == NULL) {
+> +               netdev_err(ndev, "%s: dev_alloc_skb failed\n", __func__);
+> +               priv->stats.rx_dropped++;
+> +               goto recv_finish;
+> +       }
+> +
+> +       skb_reserve(skb, 2);
+
+And remove this.
+
+> +       skb->dev = ndev;
+
+eth_type_trans() already does this for you.
+
+> +       memcpy(skb_put(skb, len), rxdesc->rxdes2.virt_rx_buf_baseaddr, len);
+
+You should use a dma_unmap_single() operation here.
+
+> +       netif_rx(skb);
+> +       skb->protocol = eth_type_trans(skb, ndev);
+
+I think these two steps are inverted, you should first call eth_type_trans().
+
+> +       ndev->last_rx = jiffies;
+> +       priv->stats.rx_packets++;
+> +       priv->stats.rx_bytes += len;
+> +       if (ui & MULTICAST_RXDES0)
+> +               priv->stats.multicast++;
+> +
+> +recv_finish:
+> +       rxdesc->rxdes0.ui = RXDMA_OWN;
+> +       rxnow++;
+> +       rxnow &= RX_DESC_NUM_MASK;
+> +       priv->rx_desc_now = rxnow;
+> +       if (loops-- > 0)
+> +               goto repeat_recv;
+
+Better code this with a while() loop directly, using gotos here is
+silly and I believe this might be bad for your CPU branch predictor as
+well.
+
+> +}
+> +
+> +static irqreturn_t moxart_mac_interrupt(int irq, void *dev_id)
+> +{
+> +       struct net_device *ndev = (struct net_device *) dev_id;
+> +       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
+> +       unsigned int ists = readl(priv->base + ISR_REG_OFFSET);
+> +
+> +       if (ists & RPKT_FINISH)
+> +               moxart_mac_recv((void *) ndev);
+
+Unnecessary void * casting here.
+
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int moxart_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+> +{
+> +       struct moxart_mac_priv_t *priv = netdev_priv(ndev);
+> +       struct tx_desc_t *txdesc;
+> +       int len;
+> +       int txnow = priv->tx_desc_now;
+> +
+> +       spin_lock_irq(&priv->txlock);
+> +       txdesc = &priv->virt_tx_desc_baseaddr[txnow];
+> +       if (txdesc->txdes0.ubit.tx_dma_own) {
+> +               netdev_err(ndev, "%s: no TX space for packet\n", __func__);
+> +               priv->stats.tx_dropped++;
+> +               goto xmit_final;
+> +       }
+
+You should return NETDEV_TX_BUSY here if there are no TX descriptors available.
+
+> +
+> +       len = skb->len > TX_BUF_SIZE ? TX_BUF_SIZE : skb->len;
+> +       memcpy(txdesc->txdes2.virt_tx_buf_baseaddr, skb->data, len);
+
+This looks wrong, you should get a TX descriptor for this SKB, and
+then perform a DMA mapping of skb->data for skb->len to that specific
+TX descriptor address and set the transmit descriptor control words as
+you do below.
+
+> +
+> +       if (skb->len < ETH_ZLEN) {
+> +               memset(&txdesc->txdes2.virt_tx_buf_baseaddr[skb->len],
+> +                      0, ETH_ZLEN - skb->len);
+> +               len = ETH_ZLEN;
+> +       }
+> +
+> +       txdesc->txdes1.ubit.lts = 1;
+> +       txdesc->txdes1.ubit.fts = 1;
+> +       txdesc->txdes1.ubit.tx2_fic = 0;
+> +       txdesc->txdes1.ubit.tx_ic = 0;
+> +       txdesc->txdes1.ubit.tx_buf_size = len;
+> +       txdesc->txdes0.ui = TXDMA_OWN;
+> +
+> +       /* start to send packet */
+> +       writel(0xffffffff, priv->base + TXPD_REG_OFFSET);
+> +
+> +       txnow++;
+> +       txnow &= TX_DESC_NUM_MASK;
+> +       priv->tx_desc_now = txnow;
+> +       ndev->trans_start = jiffies;
+> +       priv->stats.tx_packets++;
+> +       priv->stats.tx_bytes += len;
+
+Incrementing statistics must happen in the transmit completion
+handler. At this point there is no guarantee that the hardware really
+processed your packet (your DMA engine could signal an error like no
+carrier or anything like that).
+
+> +
+> +xmit_final:
+> +       spin_unlock_irq(&priv->txlock);
+> +       dev_kfree_skb_any(skb);
+
+This looks wrong, transmit buffer reclaim should happen once
+transmission is complete. Your interrupt handler do not handle the
+XPKT_FINISH_M bit which seems to indicate transmit completion of
+buffers.
+
+[snip]
+
+> +
+> +static int moxart_mac_probe(struct platform_device *pdev)
+> +{
+> +       struct device *p_dev = &pdev->dev;
+> +       struct device_node *node = p_dev->of_node;
+> +       struct net_device *ndev;
+> +       struct moxart_mac_priv_t *priv;
+> +       struct resource *res;
+> +       unsigned int irq;
+> +       void *tmp;
+> +
+> +       ndev = alloc_etherdev(sizeof(struct moxart_mac_priv_t));
+> +       if (!ndev)
+> +               return -ENOMEM;
+> +
+> +       irq = irq_of_parse_and_map(node, 0);
+> +
+> +       priv = netdev_priv(ndev);
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       ndev->base_addr = res->start;
+> +       priv->base = devm_ioremap_resource(p_dev, res);
+> +       if (IS_ERR(priv->base)) {
+> +               dev_err(p_dev, "%s: devm_ioremap_resource res_mac failed\n",
+> +                       __func__);
+> +               goto init_fail;
+> +       }
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +
+> +       /* the flash driver (physmap_of) requests the same region
+> +        * so use ioremap instead of devm_ioremap_resource
+> +        */
+> +       priv->flash_base = ioremap(res->start, resource_size(res));
+> +       if (IS_ERR(priv->flash_base)) {
+> +               dev_err(p_dev, "%s: devm_ioremap_resource res_flash failed\n",
+> +                       __func__);
+> +               goto init_fail;
+> +       }
+
+As stated above from the Device Tree binding documentation, this is
+unnecessary, since you have a get_mac() function.
+
+> +
+> +       spin_lock_init(&priv->txlock);
+> +
+> +       tmp = dma_alloc_coherent(NULL, sizeof(struct tx_desc_t) * TX_DESC_NUM,
+> +                                (dma_addr_t *) &priv->phy_tx_desc_baseaddr,
+> +                                GFP_DMA | GFP_KERNEL);
+> +       priv->virt_tx_desc_baseaddr = (struct tx_desc_t *) tmp;
+> +       if (priv->virt_tx_desc_baseaddr == NULL ||
+> +           (priv->phy_tx_desc_baseaddr & 0x0f)) {
+> +               netdev_err(ndev, "TX descriptor alloc failed\n");
+> +               goto init_fail;
+> +       }
+> +
+> +       tmp = dma_alloc_coherent(NULL, sizeof(struct rx_desc_t) * RX_DESC_NUM,
+> +                                (dma_addr_t *)&priv->phy_rx_desc_baseaddr,
+> +                                GFP_DMA | GFP_KERNEL);
+> +       priv->virt_rx_desc_baseaddr = (struct rx_desc_t *) tmp;
+> +       if (priv->virt_rx_desc_baseaddr == NULL ||
+> +           (priv->phy_rx_desc_baseaddr & 0x0f)) {
+> +               netdev_err(ndev, "RX descriptor alloc failed\n");
+> +               goto init_fail;
+> +       }
+> +
+> +       tmp = dma_alloc_coherent(NULL, TX_BUF_SIZE * TX_DESC_NUM,
+> +                                (dma_addr_t *)&priv->phy_tx_buf_baseaddr,
+> +                                GFP_DMA | GFP_KERNEL);
+> +       priv->virt_tx_buf_baseaddr = (unsigned char *) tmp;
+> +       if (priv->virt_tx_buf_baseaddr == NULL ||
+> +           (priv->phy_tx_buf_baseaddr & 0x03)) {
+> +               netdev_err(ndev, "TX buffer alloc failed\n");
+> +               goto init_fail;
+> +       }
+> +
+> +       tmp = dma_alloc_coherent(NULL, RX_BUF_SIZE * RX_DESC_NUM,
+> +                                (dma_addr_t *)&priv->phy_rx_buf_baseaddr,
+> +                                GFP_DMA | GFP_KERNEL);
+> +       priv->virt_rx_buf_baseaddr = (unsigned char *) tmp;
+> +       if (priv->virt_rx_buf_baseaddr == NULL ||
+> +           (priv->phy_rx_buf_baseaddr & 0x03)) {
+> +               netdev_err(ndev, "RX buffer alloc failed\n");
+> +               goto init_fail;
+> +       }
+
+This pool of buffers looks unnecessary, as stated above, you should
+rather perform DMA map_single/unmap_single operations instead.
+--
+Florian
