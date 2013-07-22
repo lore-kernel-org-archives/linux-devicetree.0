@@ -1,92 +1,38 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v3 11/31] net: can: mscan: improve clock API use
-Date: Mon, 22 Jul 2013 14:31:21 +0200
-Message-ID: <51ED2619.5040107@pengutronix.de>
-References: <1374166855-7280-1-git-send-email-gsi@denx.de>
- <1374495298-22019-1-git-send-email-gsi@denx.de>
- <1374495298-22019-12-git-send-email-gsi@denx.de>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v4] regulator: pfuze100: add pfuze100 regulator driver
+Date: Mon, 22 Jul 2013 20:46:49 +0800
+Message-ID: <20130722124647.GK20271@S2101-09.ap.freescale.net>
+References: <1374398247-11384-1-git-send-email-b38343@freescale.com>
+ <20130722091058.GI20271@S2101-09.ap.freescale.net>
+ <20130722103935.GA14838@Robin-OptiPlex-780>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7614988948278517588=="
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1374495298-22019-12-git-send-email-gsi@denx.de>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Gerhard Sittig <gsi@denx.de>
-Cc: Mike Turquette <mturquette@linaro.org>, Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, David Woodhouse <dwmw2@infradead.org>, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Wolfgang Grandegger <wg@grandegger.com>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130722103935.GA14838@Robin-OptiPlex-780>
+Sender: linux-doc-owner@vger.kernel.org
+To: Robin Gong <b38343@freescale.com>
+Cc: broonie@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, lgirdwood@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============7614988948278517588==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2OWONUNAQPXCRQRQQQQVW"
+On Mon, Jul 22, 2013 at 06:39:36PM +0800, Robin Gong wrote:
+> > > +static int pfuze_parse_regulators_dt(struct pfuze_chip *chip)
+> > > +{
+> > > +	struct device *dev = chip->dev;
+> > > +	struct device_node *parent;
+> > > +	int ret;
+> > > +
+> > > +	of_node_get(dev->parent->of_node);
+> > > +	parent = of_find_node_by_name(dev->parent->of_node, "regulators");
+> > > +	if (!parent) {
+> > > +		dev_err(dev, "regulators node not found\n");
+> > > +		return -EINVAL;
+> > 
+> > So you leave dev->parent->of_node unbalanced.
+> > 
+> Seems of_find_node_by_name will of_node_put the parent node.
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2OWONUNAQPXCRQRQQQQVW
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Ah, yes.  I missed that.
 
-On 07/22/2013 02:14 PM, Gerhard Sittig wrote:
-> the .get_clock() callback is run from probe() and might allocate
-> resources, introduce a .put_clock() callback that is run from remove()
-> to undo any allocation activities
+Shawn
 
-looks good
-
-> use devm_get_clk() upon lookup (for SYS and REF) to have the clocks put=
-
-> upon driver unload
-
-fine
-
-> assume that resources get prepared but not necessarily enabled in the
-> setup phase, make the open() and close() callbacks of the CAN network
-> device enable and disable a previously acquired and prepared clock
-
-I think you should call prepare_enable and disable_unprepare in the
-open/close functions.
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
-------enig2OWONUNAQPXCRQRQQQQVW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlHtJhkACgkQjTAFq1RaXHNfdQCfQM1L9doSuBU/M0j2iJ/JQE8u
-8VkAoIVcTKHIkeH6+hyiPryhO5GVRclX
-=C0Sd
------END PGP SIGNATURE-----
-
-------enig2OWONUNAQPXCRQRQQQQVW--
-
---===============7614988948278517588==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linuxppc-dev mailing list
-Linuxppc-dev@lists.ozlabs.org
-https://lists.ozlabs.org/listinfo/linuxppc-dev
---===============7614988948278517588==--
