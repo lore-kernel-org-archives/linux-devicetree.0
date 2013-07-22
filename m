@@ -1,60 +1,101 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH 2/4] clk: exynos-audss: allow input clocks to be specified in
- device tree
-Date: Mon, 22 Jul 2013 11:15:30 -0700
-Message-ID: <20130722181530.7598.73318@quantum>
-References: <1373458313-18970-1-git-send-email-padma.v@samsung.com>
- <1373458313-18970-3-git-send-email-padma.v@samsung.com>
- <1610421.OFFn8rqlxt@amdc1227>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] ARM: dts: add reference voltage property for MXS
+ LRADC
+Date: Mon, 22 Jul 2013 20:34:47 +0200
+Message-ID: <51ED7B47.2090104@metafoo.de>
+References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com> <1374501843-19651-3-git-send-email-hector.palacios@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1610421.OFFn8rqlxt@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>, Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com, dianders@chromium.org, abrestic@chromium.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1374501843-19651-3-git-send-email-hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tomasz Figa (2013-07-22 09:28:47)
-> Hi Padmavathi, Andrew,
-> 
-> On Wednesday 10 of July 2013 17:41:51 Padmavathi Venna wrote:
-> > From: Andrew Bresticker <abrestic@chromium.org>
-> > 
-> > This allows the input clocks to the Exynos AudioSS block to be specified
-> > via device-tree bindings.  Default names will be used when an input clock
-> > is not given.  This will be useful when adding support for the
-> > Exynos5420 where the audio bus clock is called "sclk_maudio0" instead of
-> > "sclk_audio0".
-> > 
-> > Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> > Reviewed-on: https://gerrit.chromium.org/gerrit/57833
-> > Reviewed-by: Simon Glass <sjg@chromium.org>
-> > ---
-> >  .../devicetree/bindings/clock/clk-exynos-audss.txt |   31
-> > ++++++++++++++++++- drivers/clk/samsung/clk-exynos-audss.c             |
-> >   28 +++++++++++++++-- 2 files changed, 53 insertions(+), 6 deletions(-)
-> 
-> Well, this is basically how it should be done, but in current state of 
-> clock core I can see a problem: can we really rely on the order of clock 
-> initialization? I mean, we can't defer initialization of particular clock 
-> controller until all external clocks it needs are available, because there 
-> is no probing involved here.
+On 07/22/2013 04:04 PM, Hector Palacios wrote:
+> Some LRADC channels have fixed pre-dividers so they can measure
+> different voltages at full scale. The reference voltage allows to
+> expose a scaling attribute through the IIO sysfs so that a user can
+> compute the real voltage out of a measured sample value.
 
-The clock core allows registering clocks even if their parents are not
-yet registered. I test this path with some dummy clocks every so often
-to make sure the re-parenting operation are completed successfully after
-the parents eventually are registered.
+I've said before that I'm not convinced that this is the right way to implement 
+this. And considering what Thomas said here 
+http://www.mail-archive.com/devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg36691.html I 
+guess I'm not alone with that opinion.
 
-This feature was not used in practice until recently with the advent of
-multiple clock controllers getting registered and DT description of
-clocks / clock controllers that may be "out of order". If you find any
-bugs please let me know ;-)
+- Lars
 
-Regards,
-Mike
-
-> 
-> Best regards,
-> Tomasz
+>
+> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+> Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>   Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt | 9 ++++++++-
+>   arch/arm/boot/dts/imx23.dtsi                                    | 4 ++++
+>   arch/arm/boot/dts/imx28.dtsi                                    | 4 ++++
+>   3 files changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> index 4688205..6ec485c 100644
+> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> @@ -1,9 +1,12 @@
+>   * Freescale i.MX28 LRADC device driver
+>
+>   Required properties:
+> -- compatible: Should be "fsl,imx28-lradc"
+> +- compatible: "fsl,imx28-lradc", "fsl,imx23-lradc"
+>   - reg: Address and length of the register set for the device
+>   - interrupts: Should contain the LRADC interrupts
+> +- fsl,vref: Reference voltage (in mV) for each LRADC channel. This is the
+> +	    maximum voltage that can be measured at full scale in each channel
+> +	    considering fixed pre-dividers.
+>
+>   Optional properties:
+>   - fsl,lradc-touchscreen-wires: Number of wires used to connect the touchscreen
+> @@ -18,4 +21,8 @@ Examples:
+>   		reg = <0x80050000 0x2000>;
+>   		interrupts = <10 14 15 16 17 18 19
+>   				20 21 22 23 24 25>;
+> +		fsl,vref = <1850 1850 1850 1850
+> +			    1850 1850 1850 7400
+> +			    1850 1850 3700 1850
+> +			    3700 1850 1850 7400>
+>   	};
+> diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+> index 587ceef..e212902 100644
+> --- a/arch/arm/boot/dts/imx23.dtsi
+> +++ b/arch/arm/boot/dts/imx23.dtsi
+> @@ -430,6 +430,10 @@
+>   				compatible = "fsl,imx23-lradc";
+>   				reg = <0x80050000 0x2000>;
+>   				interrupts = <36 37 38 39 40 41 42 43 44>;
+> +				fsl,vref = <1850 1850 1850 1850
+> +					    1850 1850 3700 7400
+> +					    1850 1850 1850 1850
+> +					    1850 1850 1850 7400>;
+>   				status = "disabled";
+>   			};
+>
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> index 6a8acb0..c1b3724 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -865,6 +865,10 @@
+>   				reg = <0x80050000 0x2000>;
+>   				interrupts = <10 14 15 16 17 18 19
+>   						20 21 22 23 24 25>;
+> +				fsl,vref = <1850 1850 1850 1850
+> +					    1850 1850 1850 7400
+> +					    1850 1850 3700 1850
+> +					    3700 1850 1850 7400>;
+>   				status = "disabled";
+>   			};
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
