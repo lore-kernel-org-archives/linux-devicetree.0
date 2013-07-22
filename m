@@ -1,85 +1,86 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from fallback8.mail.ru ([94.100.176.136]:33716 "EHLO
-	fallback8.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750848Ab3G3LL7 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 30 Jul 2013 07:11:59 -0400
-Received: from smtp46.i.mail.ru (smtp46.i.mail.ru [94.100.177.106])
-	by fallback8.mail.ru (mPOP.Fallback_MX) with ESMTP id 31FB136AA364
-	for <devicetree@vger.kernel.org>; Tue, 30 Jul 2013 15:06:16 +0400 (MSK)
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH v2 1/4] mtd: nand: gpio: Determine bus width automatically
-Date: Tue, 30 Jul 2013 15:05:24 +0400
-Message-Id: <1375182325-30003-1-git-send-email-shc_work@mail.ru>
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:36846 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932388Ab3GVVqg (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 22 Jul 2013 17:46:36 -0400
+Date: Mon, 22 Jul 2013 14:46:47 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [lm-sensors] [RESEND PATCH V1 0/9] thermal: introduce DT thermal
+ zone build
+Message-ID: <20130722214647.GA15765@roeck-us.net>
+References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com>
+ <20130717220942.GB990@roeck-us.net>
+ <51E7F341.8020508@ti.com>
+ <51E8234D.1020607@wwwdotorg.org>
+ <20130718212108.GC4110@roeck-us.net>
+ <51E98A07.4050402@wwwdotorg.org>
+ <20130721110807.GC24303@roeck-us.net>
+ <51ED8B6F.6020700@wwwdotorg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51ED8B6F.6020700@wwwdotorg.org>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Alexander Shiyan <shc_work@mail.ru>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, l.stach@pengutronix.de
 List-ID: <devicetree@vger.kernel.org>
 
-This patch provide automatically determine of NAND bus width if
-"bank-width" parameter is ommited.
-Patch depends on "mtd: nand: fix NAND_BUSWIDTH_AUTO for x16 devices".
+On Mon, Jul 22, 2013 at 12:43:43PM -0700, Stephen Warren wrote:
+> On 07/21/2013 04:08 AM, Guenter Roeck wrote:
+> > ... [a bunch of good points re: why DT shouldn't describe thermal
+> > profiles]
+> 
+> Yes, lots of good arguments there.
+> 
+> So, where/how in your opinion should thermal profiles be defined, and
+> how should they get into the kernel? The nice thing about DT is that
+> it's a single place that describes the platform, with a well-defined
+> method of getting that information into the kernel. What alternatives exist?
+> 
+Excellent but quite different question. Quite frankly, I would love to be able
+to use DT to describe a platform and its configuration and use instead of just
+its hardware. Just like with thermal data, it would be great if I could use
+devicetree information to describe limits for hwmon devices and configuration
+information for all kinds of devices. This would simplify my life a lot.
+Unfortunately, that is not how it works, so one ends up with pre-configuring
+devices on ROMMON or secondary methods such as sensors.conf for hwmon devices.
+Sure, that all works, but for embedded devices it means I have to re-build the
+root file system each time a limit is changed. It _would_ be much simpler to
+just be able to change the limit(s) in devicetree data and be done.
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
----
- .../devicetree/bindings/mtd/gpio-control-nand.txt         |  4 ++--
- drivers/mtd/nand/gpio.c                                   | 15 ++++++++++-----
- 2 files changed, 12 insertions(+), 7 deletions(-)
+So, no, I don't have a good other solution. I have seen attempts to implement a
+user-space 'parallel' devicetree, or the above mentioned sensors.conf file, but
+nothing comprehensive. If you find a good generic solution, let me know.
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-index 36ef07d..2ac14d8 100644
---- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-@@ -15,8 +15,8 @@ Required properties:
-   optional gpio and may be set to 0 if not present.
- 
- Optional properties:
--- bank-width : Width (in bytes) of the device.  If not present, the width
--  defaults to 1 byte.
-+- bank-width : Width (in bytes) of the device. If not present, the bus width
-+  of the device is determined automatically.
- - chip-delay : chip dependent delay for transferring data from array to
-   read registers (tR).  If not present then a default of 20us is used.
- - gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
-diff --git a/drivers/mtd/nand/gpio.c b/drivers/mtd/nand/gpio.c
-index 800a1cc..674a790 100644
---- a/drivers/mtd/nand/gpio.c
-+++ b/drivers/mtd/nand/gpio.c
-@@ -116,7 +116,8 @@ static int gpio_nand_get_config_of(const struct device *dev,
- 			dev_err(dev, "invalid bank-width %u\n", val);
- 			return -EINVAL;
- 		}
--	}
-+	} else
-+		plat->options |= NAND_BUSWIDTH_AUTO;
- 
- 	plat->gpio_rdy = of_get_gpio(dev->of_node, 0);
- 	plat->gpio_nce = of_get_gpio(dev->of_node, 1);
-@@ -223,6 +224,14 @@ static int gpio_nand_probe(struct platform_device *pdev)
- 	if (IS_ERR(chip->IO_ADDR_R))
- 		return PTR_ERR(chip->IO_ADDR_R);
- 
-+	ret = gpio_nand_get_config(&pdev->dev, &gpiomtd->plat);
-+	if (ret)
-+		return ret;
-+
-+	if (resource_size(res) < 2)
-+		gpiomtd->plat.options &= ~(NAND_BUSWIDTH_16 |
-+					   NAND_BUSWIDTH_AUTO);
-+
- 	res = gpio_nand_get_io_sync(pdev);
- 	if (res) {
- 		gpiomtd->io_sync = devm_ioremap_resource(&pdev->dev, res);
-@@ -230,10 +239,6 @@ static int gpio_nand_probe(struct platform_device *pdev)
- 			return PTR_ERR(gpiomtd->io_sync);
- 	}
- 
--	ret = gpio_nand_get_config(&pdev->dev, &gpiomtd->plat);
--	if (ret)
--		return ret;
--
- 	ret = devm_gpio_request(&pdev->dev, gpiomtd->plat.gpio_nce, "NAND NCE");
- 	if (ret)
- 		return ret;
--- 
-1.8.1.5
+Note that ACPI is an attempt to do that, but its scope is not limited to
+describing the hardware, and it is not available on non-Intel embedded systems.
+Also, it is typically controlled by another entity in a company (the BIOS
+engineers), who tend to be highly resistive to changes. Modifying ACPI
+data tends to be way more difficult than modifying devicetree data.
 
+> > Other but related subject .. from a thermal / hwmon driver's perspective, if
+> > such a driver supports thermal subsystem, it should just register itself as
+> > thermal sensor device, because that is what it is. If and how it is tied to
+> > cooling devices should be part of the thermal subsystem and be decided there.
+> 
+> For audio, we have individual DT nodes that represent individual
+> audio-related components such as audio controllers, audio CODECs, etc.
+> We also have a "virtual" node that describes how those components
+> interact and create a complete sound card. Would it make sense to do
+> something similar with thermal sensors and cooling devices; represent
+> them all individually, have them register themselves with the
+> thermal/hwmon subsystem as you describe, but then have another "system
+> level" node that describes how the system designer intended them to
+> interact?
+> 
+For device registration itself, definitely. An instance of a sensor driver
+should not have to know how (or if) it is used by the system, just like a gpio
+driver does not have to know if and how the gpio pins it provides are used.
+
+Binding is the tricky question here, as it is all virtual and, as you said
+yourself, describes the interaction and thus use of the various sensors and
+cooling devices to accomplish the ultimate goal of keeping the system in an
+acceptable temperature range. Hopefully you'll get an answer from the
+devicetree experts if your intended devicetree usage of it is acceptable.
+
+Guenter
