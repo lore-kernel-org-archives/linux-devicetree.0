@@ -1,147 +1,57 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 2/3] drm/exynos: add dt-binding documentation for rotator
-Date: Mon, 22 Jul 2013 14:46:52 +0200
-Message-ID: <1374497212.4456.4.camel@weser.hi.pengutronix.de>
-References: <1374475767-30085-1-git-send-email-chanho61.park@samsung.com>
-	 <1374475767-30085-3-git-send-email-chanho61.park@samsung.com>
-	 <20130722084817.GA18731@e106331-lin.cambridge.arm.com>
-	 <026001ce86d8$2963d730$7c2b8590$%dae@samsung.com>
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Subject: Re: [PATCH 0/2] PM / OPP: updates to enable sharing OPPs info
+Date: Mon, 22 Jul 2013 13:56:34 +0100
+Message-ID: <51ED2C02.3040202@arm.com>
+References: <1367406679-21603-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <519B45C3.8050700@arm.com> <20130720050943.5EB853E169C@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <026001ce86d8$2963d730$7c2b8590$%dae@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: 'Mark Rutland' <mark.rutland@arm.com>, 'Chanho Park' <chanho61.park@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20130720050943.5EB853E169C@localhost>
+Sender: linux-pm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Sudeep.KarkadaNagesha@arm.com, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Landley <rob@landley.net>, "Rafael J. Wysocki" <rjw@sisk.pl>, Shawn Guo <shawn.guo@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, mturquette@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 22.07.2013, 21:37 +0900 schrieb Inki Dae:
-> 
-> > -----Original Message-----
-> > From: Mark Rutland [mailto:mark.rutland@arm.com]
-> > Sent: Monday, July 22, 2013 5:48 PM
-> > To: Chanho Park
-> > Cc: inki.dae@samsung.com; kgene.kim@samsung.com; linux-samsung-
-> > soc@vger.kernel.org; jy0922.shim@samsung.com; devicetree-
-> > discuss@lists.ozlabs.org; sw0312.kim@samsung.com; dri-
-> > devel@lists.freedesktop.org; kyungmin.park@samsung.com; linux-arm-
-> > kernel@lists.infradead.org
-> > Subject: Re: [PATCH 2/3] drm/exynos: add dt-binding documentation for
-> > rotator
-> > 
-> > On Mon, Jul 22, 2013 at 07:49:26AM +0100, Chanho Park wrote:
-> > > This patch adds a dt-binding document for exynos rotator. It describes
-> > which
-> > > nodes should be defined to use the rotator.
-> > >
-> > > Signed-off-by: Chanho Park <chanho61.park@samsung.com>
-> > > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> > > ---
-> > >  .../bindings/drm/exynos/samsung-rotator.txt        |   35
-> > ++++++++++++++++++++
-> > >  1 file changed, 35 insertions(+)
-> > >  create mode 100644
-> > Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/drm/exynos/samsung-
-> > rotator.txt b/Documentation/devicetree/bindings/drm/exynos/samsung-
-> > rotator.txt
-> > > new file mode 100644
-> > > index 0000000..6b1d704
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/drm/exynos/samsung-rotator.txt
-> > > @@ -0,0 +1,35 @@
-> > > +* Samsung Image Rotator
-> > > +
-> > > +Required properties:
-> > > +  - compatible : value should be the "samsung,exynos4210".
-> 
-> Please, add more compatible strings for other SoC.
-> 
-> > > +  - reg : Physical base address of the IP registers and length of
-> > memory
-> > > +	  mapped region.
-> > > +  - interrupts : interrupt number to the CPU.
-> > > +  - clocks : clock number of exynos4 rotator clock.
-> > > +  - clocks : clock name of rotator
-> > 
-> > clock-names?
-> > 
-> > > +  - status : "okay" or "disabled"
-> > > +  - limit table for image formats : min_w/min_h/max_w/max_h for min/max
-> > of image
-> > 
-> > Limit table? This doesn't seem to be a well-defined binding, and it
-> > seems like a relatively generic thing to describe.
-> > 
-> > > +
-> > > +Example:
-> > > +	rotator: rotator@12810000 {
-> > > +		compatible = "samsung,exynos4210-rotator";
-> > > +		reg = <0x12810000 0x1000>;
-> > > +		interrupts = <0 83 0>;
-> > > +		clocks = <&clock 278>;
-> > > +		clock-names = "rotator";
-> > > +		status = "disabled";
-> > > +		ycbcr420_2p {
-> > 
-> > Which names are allowed for these subnodes?
-> > 
-> > > +			min_w = <32>;
-> > > +			min_h = <32>;
-> > > +			max_w = <32768>;
-> > > +			max_h = <32768>;
-> > > +			align = <3>;
-> > 
-> > min-width, min-height, max-width, max-height? What units are they in?
-> > 
-> > What does alignment specify exactly?
-> > 
-> > Are these a configurable part of the rotator hardware, or are these
-> > values always the same?
-> 
-> Right, that seems like configurable part. At least, min_w/h and max_w/h can
-> be different values according to SoC and pixel formats so they should be
-> described enough in this dt-binding document file.
-> 
-Is there really this much configurability? Could each of those values be
-a different on different SoCs, or could you just extract those values
-from the SoC/rotator hardware version and thus the DT compatible string?
 
+On 20/07/13 06:09, Grant Likely wrote:
+> On Tue, 21 May 2013 11:00:35 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com> wrote:
+>> Hi Rob, Grant,
+>>
+>> On 01/05/13 12:11, Sudeep KarkadaNagesha wrote:
+>>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>>
+>>> These are couple of updates to existing PM/OPP library to support
+>>> sharing of OPPs between different device nodes.
+>>>
+>>> Currently all the cpu nodes are parsed until the OPPs are found. This
+>>> is essential to support cpuhotplug without having to replicate OPP
+>>> information in all the cpu nodes.
+>>>
+>>> However in systems with multiple cpu power domain, its better to have
+>>> OPP entry for each cpu. To avoid replication, phandle can be specified
+>>> to the node which contains the full OPP information.
+>>>
+>> Is proposed option of phandle for OPP acceptable to avoid replication ?
+>> Any suggestions to proceed on this ? This is needed to support CPU
+>> hotplug on big LITTLE system where current methods like parsing all the
+>> nodes or just CPU0 node will not work.
 > 
-> > If thery're always the same, there's no need to
-> > describe in in the devicetree.
-> > 
-> > Thanks,
-> > Mark.
-> > 
-> > > +		};
-> > > +		rgb888 {
-> > > +			min_w = <8>;
-> > > +			min_h = <8>;
-> > > +			max_w = <8192>;
-> > > +			max_h = <8192>;
-> > > +			align = <2>;
-> > > +		};
-> > > +	};
-> > > --
-> > > 1.7.9.5
-> > >
-> > >
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > >
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Looks fine to me.
+Hi Grant,
 
--- 
-Pengutronix e.K.                           | Lucas Stach                 |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-5076 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks for the response.
+
+However I had a thought after seeing recent patch series by Mike[1]
+Since the OPPs are usually associated with clocks, and multiple devices
+sharing clocks will point to same clock node in DT, clk node is more
+logical place to specify the OPPs. IMO this will be good alignment for
+the consolidation effort by Mike. One issue with this approach is
+backward compatibility(using old DT)
+
+Regards,
+Sudeep
+
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/182231.html
+
