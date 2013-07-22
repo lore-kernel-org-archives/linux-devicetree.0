@@ -1,56 +1,63 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ozlabs.org ([203.10.76.45]:50261 "EHLO ozlabs.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1753054Ab3GYCvf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 24 Jul 2013 22:51:35 -0400
-Date: Thu, 25 Jul 2013 12:51:22 +1000
-From: Anton Blanchard <anton@samba.org>
-Subject: [PATCH] powerpc: Feed entire flattened device tree into the random
- pool
-Message-ID: <20130725125122.78accf44@kryten>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Received: from service87.mimecast.com ([91.220.42.44]:47928 "EHLO
+	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754699Ab3GVNBL convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 22 Jul 2013 09:01:11 -0400
+Message-ID: <51ED2D27.2030904@arm.com>
+Date: Mon, 22 Jul 2013 14:01:27 +0100
+From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/2] PM / OPP: updates to enable sharing OPPs info
+References: <1367406679-21603-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <519B45C3.8050700@arm.com> <20130720050943.5EB853E169C@localhost>
+In-Reply-To: <20130720050943.5EB853E169C@localhost>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Landley <rob@landley.net>, "Rafael J. Wysocki" <rjw@sisk.pl>, Shawn Guo <shawn.guo@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, mturquette@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
+(sorry with new DT mailing list address this time)
+On 20/07/13 06:09, Grant Likely wrote:
+> On Tue, 21 May 2013 11:00:35 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com> wrote:
+>> Hi Rob, Grant,
+>>
+>> On 01/05/13 12:11, Sudeep KarkadaNagesha wrote:
+>>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>>
+>>> These are couple of updates to existing PM/OPP library to support
+>>> sharing of OPPs between different device nodes.
+>>>
+>>> Currently all the cpu nodes are parsed until the OPPs are found. This
+>>> is essential to support cpuhotplug without having to replicate OPP
+>>> information in all the cpu nodes.
+>>>
+>>> However in systems with multiple cpu power domain, its better to have
+>>> OPP entry for each cpu. To avoid replication, phandle can be specified
+>>> to the node which contains the full OPP information.
+>>>
+>> Is proposed option of phandle for OPP acceptable to avoid replication ?
+>> Any suggestions to proceed on this ? This is needed to support CPU
+>> hotplug on big LITTLE system where current methods like parsing all the
+>> nodes or just CPU0 node will not work.
+> 
+> Looks fine to me.
+> 
+Hi Grant,
 
-We feed the entire DMI table into the random pool to provide
-better random data during early boot, so do the same with the
-flattened device tree.
+Thanks for the response.
 
-Signed-off-by: Anton Blanchard <anton@samba.org>
----
+However I had a thought after seeing recent patch series by Mike[1]
+Since the OPPs are usually associated with clocks, and multiple devices
+sharing clocks will point to same clock node in DT, clk node is more
+logical place to specify the OPPs. IMO this will be good alignment for
+the consolidation effort by Mike. One issue with this approach is
+backward compatibility(using old DT)
 
-It might be worth doing this somewhere common, but the only place
-I could find (unflatten_device_tree) is almost certainly too
-early in the boot process.
+Regards,
+Sudeep
 
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index 63d051f..6914851 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -35,6 +35,7 @@
- #include <linux/percpu.h>
- #include <linux/memblock.h>
- #include <linux/of_platform.h>
-+#include <linux/random.h>
- #include <asm/io.h>
- #include <asm/paca.h>
- #include <asm/prom.h>
-@@ -752,3 +753,13 @@ void arch_setup_pdev_archdata(struct platform_device *pdev)
- 	pdev->dev.dma_mask = &pdev->archdata.dma_mask;
-  	set_dma_ops(&pdev->dev, &dma_direct_ops);
- }
-+
-+/* Feed entire flattened device tree into the random pool */
-+static int __init add_fdt_randomness(void)
-+{
-+	add_device_randomness(initial_boot_params,
-+			      initial_boot_params->totalsize);
-+
-+	return 0;
-+}
-+core_initcall(add_fdt_randomness);
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/182231.html
+
+
