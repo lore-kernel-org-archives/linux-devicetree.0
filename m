@@ -1,82 +1,45 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] iio: mxs-lradc: add scale attribute to channels
-Date: Mon, 22 Jul 2013 09:46:22 +0200
-Message-ID: <51ECE34E.7050904@digi.com>
-References: <1374225208-28940-1-git-send-email-hector.palacios@digi.com> <201307191814.15491.marex@denx.de> <51ECDD9F.4080506@digi.com> <201307220942.08990.marex@denx.de>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Mon, 22 Jul 2013 15:47:35 +0800
+Message-ID: <20130722074733.GA20271@S2101-09.ap.freescale.net>
+References: <20130716041056.GA30067@S2101-09.ap.freescale.net>
+ <51E56AA7.7020103@wwwdotorg.org>
+ <20130717030246.GA4541@S2101-09.ap.freescale.net>
+ <51E6CCE4.20705@wwwdotorg.org>
+ <20130717213836.GA13324@amd.pavel.ucw.cz>
+ <51E719A6.6070105@wwwdotorg.org>
+ <20130718112555.GB1021@amd.pavel.ucw.cz>
+ <CAOesGMgi0j_mPyeBLVHb_QW+DwtAPoFY697eQO3-yp9tnP1vmA@mail.gmail.com>
+ <20130719032328.GB20889@S2101-09.ap.freescale.net>
+ <51E95F10.5070006@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201307220942.08990.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <51E95F10.5070006@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@denx.de>, Sascha Hauer <s.hauer@pengutronix.de>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J. Wysocki" <rjw@sisk.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+On Fri, Jul 19, 2013 at 09:45:20AM -0600, Stephen Warren wrote:
+> That sounds like it /could/ well be an issue. Do you have all that
+> actually hooked up through device tree so you can demonstrate the amount
+> of deferred probing that /actually/ happens though?
+> 
+> In order to push the probe order in the right direction, I would
+> personally prefer to see some kind of explicit hinting or outright
+> representation of probe order in the DT.
 
-On 07/22/2013 09:42 AM, Marek Vasut wrote:
-> Dear Hector Palacios,
->
->> Hi Marek,
->>
->> On 07/19/2013 06:14 PM, Marek Vasut wrote:
->>> Dear Hector Palacios,
->>>
->>>> Dear Marek,
->>>>
->>>> On 07/19/2013 04:30 PM, Marek Vasut wrote:
->>>>>> @@ -228,39 +230,12 @@ struct mxs_lradc {
->>>>>>
->>>>>>     #define LRADC_RESOLUTION			12
->>>>>>     #define LRADC_SINGLE_SAMPLE_MASK		((1 << LRADC_RESOLUTION)
-> - 1)
->>>>>>
->>>>>> -/*
->>>>>> - * Raw I/O operations
->>>>>> - */
->>>>>> -static int mxs_lradc_read_raw(struct iio_dev *iio_dev,
->>>>>> +static int mxs_lradc_read_single(struct iio_dev *iio_dev,
->>>>>>
->>>>>>     			const struct iio_chan_spec *chan,
->>>>>>     			int *val, int *val2, long m)
->>>>>>
->>>>>>     {
->>>>>>
->>>>>>     	struct mxs_lradc *lradc = iio_priv(iio_dev);
->>>>>>     	int ret;
->>>>>>
->>>>>> -	unsigned long mask;
->>>>>> -
->>>>>> -	if (m != IIO_CHAN_INFO_RAW)
->>>>>> -		return -EINVAL;
->>>>>> -
->>>>>> -	/* Check for invalid channel */
->>>>>> -	if (chan->channel > LRADC_MAX_TOTAL_CHANS)
->>>>>> -		return -EINVAL;
->>>>>
->>>>> This was already resolved, so this patch won't apply I'm afraid.
->>>>
->>>> You mean the 'unsigned long mask', right?  Yeah, I think I had resolved
->>>> that one before submitting, but looks like I didn't.
->>>> The other check is not resolved afaik. We agreed to remove it, but on a
->>>> different patch.
->>>
->>> I mean the other check, yeah. A patch removing that should be applied
->>> already.
->>
->> Where exactly? It's not fixed in Jonathan's fixes-togreg branch, at least.
->> Did you fixed it?
->
-> I use linux-next [1], should be it.
->
-> http://git.kernel.org/cgit/linux/kernel/git/next/linux-
-> next.git/log/drivers/staging/iio/adc/mxs-lradc.c
+I do not have a kernel supporting all those devices yet.
 
-That is removing the unsigned long mask, but not the check for invalid channel.
-I'm taking care of the unsigned long mask but an additional patch is needed to remove 
-the check for invalid channel.
-
-Best regards,
---
-Hector Palacios
+Shawn
