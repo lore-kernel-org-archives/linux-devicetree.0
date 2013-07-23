@@ -1,8 +1,8 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mailout4.samsung.com ([203.254.224.34]:38531 "EHLO
+Received: from mailout4.samsung.com ([203.254.224.34]:14644 "EHLO
 	mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755195Ab3GWIm0 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 23 Jul 2013 04:42:26 -0400
+	with ESMTP id S1753937Ab3GWHAd (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 23 Jul 2013 03:00:33 -0400
 From: Jingoo Han <jg1.han@samsung.com>
 References: <002801ce8376$a807dbf0$f81793d0$@samsung.com>
  <51ED49D6.9050209@ti.com> <000701ce8741$fe47deb0$fad79c10$@samsung.com>
@@ -10,8 +10,8 @@ References: <002801ce8376$a807dbf0$f81793d0$@samsung.com>
 In-reply-to: <51EE22DF.6090902@ti.com>
 Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys part
  and Exynos part
-Date: Tue, 23 Jul 2013 17:42:23 +0900
-Message-id: <001401ce8780$8d8461f0$a88d25d0$@samsung.com>
+Date: Tue, 23 Jul 2013 16:00:31 +0900
+Message-id: <001301ce8772$522dfc50$f689f4f0$@samsung.com>
 MIME-version: 1.0
 Content-type: text/plain; charset=us-ascii
 Content-transfer-encoding: 7bit
@@ -47,9 +47,15 @@ On Tuesday, July 23, 2013 3:30 PM, Kishon Vijay Abraham I wrote:
 > >>> +
 > >>> +	pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
 > >>> +				resource_size(&pp->cfg));
-
-[.....]
-
+> >>
+> >> Why is configuraion space divided into two?
+> >
+> > Sorry, I don't know the exact reason. :(
+> > Pratyush Anand may know about this.
+> > Pratyush Anand, could you answer the question?
+> >
+> > Also, if you find some problems, please let me know.
+> >
 > >
 > >> Why should it be same as dbi_base?
 > >> AFAIK, jacinto6 has a dedicated configuration/io/memory space that is entirely
@@ -76,62 +82,20 @@ On Tuesday, July 23, 2013 3:30 PM, Kishon Vijay Abraham I wrote:
 > for all platforms) but modify the pcie-designware.c to use different address
 > space for dbi_base. In your case, you'll duplicate the address space for
 > dbi_base and configuration space.
+
+I cannot understand fully what you said.
+Please, give a pseudo code.
+
+> 
+> Also I have one more query.
+> In your dt binding, your pci address and cpu address is the same. But the pci
+> address should start at 0x00000000 and end at 0xffffffff (for 32bit). Shouldn't
+> the cpu address map to something within this range of pci address?
 > 
 
-I will map 'pp->dbi_base' as below:
-Also, I referenced SPEAr PCIe patches made by Pratyush Anand.
-(http://permalink.gmane.org/gmane.linux.kernel.pci/18400)
-(http://permalink.gmane.org/gmane.linux.kernel.pci/18403)
-
-
-1. The different addresses between dbi_base and configuration space
-    : SPEAr PCIe, OMAP PCIe
-      'pp->dbi_base' value is come from DT binding, then, 'pp->dbi_base' will
-       be mapped in spear_pcie_probe() in pci-spear.c
-
-(arch/arm/boot/dts/spear13xx.dtsi)
-		pcie0@b1000000 {
-			reg = <0xb1000000 0x2000      <-- dbi register
-				 0xb1002000 0x7fdfff   <-- elbi register
-
-(drivers/pci/host/pci-spear.c)
-static int __init spear_pcie_probe(struct platform_device *pdev)
-{
-	struct resource *dbi_base;
-	struct resource *elbi_base;
-
-	dbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-	pp->dbi_base = devm_ioremap_resource(&pdev->dev, dbi_base);
-
-	elbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-	spear_pcie->elbi_base = devm_ioremap_resource(&pdev->dev, elbi_base);
-
-
-
-2. The same addresses between dbi_base and configuration space
-    : Exynos PCIe
-      'pp->dbi_base' will be mapped in dw_pcie_host_init() of pcie-designware.c.
-
-(drivers/pci/host/pcie-exynos.c)
-static int __init exynos_pcie_probe(struct platform_device *pdev)
-{
-	struct resource *elbi_base;
-
-	elbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-	exynos_pcie->elbi_base = devm_ioremap_resource(&pdev->dev, elbi_base);
-
-(drivers/pci/host/pcie-designware.c)
-int dw_pcie_host_init(struct pcie_port *pp)
-{
-	if (!pp->dbi_base) {
-		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
-						resource_size(&pp->cfg));
-		if (!pp->dbi_base) {
-			dev_err(pp->dev, "error with ioremap\n");
-			return -ENOMEM;
-		}
-	}
-
+Sorry, I cannot answer it exactly.
+DT binding was confirmed by Arnd Bergmann.
+He will answer it exactly.
 
 Best regards,
 Jingoo Han
