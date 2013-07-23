@@ -1,103 +1,57 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from metis.ext.pengutronix.de ([92.198.50.35]:58164 "EHLO
+Received: from metis.ext.pengutronix.de ([92.198.50.35]:41235 "EHLO
 	metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758024Ab3G2RBN (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 13:01:13 -0400
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v3 5/6] Documentation: Add device tree bindings for DA9063 PMIC
-Date: Mon, 29 Jul 2013 19:00:46 +0200
-Message-Id: <1375117247-6376-6-git-send-email-p.zabel@pengutronix.de>
-In-Reply-To: <1375117247-6376-1-git-send-email-p.zabel@pengutronix.de>
-References: <1375117247-6376-1-git-send-email-p.zabel@pengutronix.de>
+	with ESMTP id S933926Ab3GWWSQ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 23 Jul 2013 18:18:16 -0400
+Date: Wed, 24 Jul 2013 00:18:08 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 2/4] net: smsc911x: add a reset GPIO DT binding
+Message-ID: <20130723221808.GA7727@pengutronix.de>
+References: <1374595924-12338-1-git-send-email-g.liakhovetski@gmx.de>
+ <1374595924-12338-3-git-send-email-g.liakhovetski@gmx.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1374595924-12338-3-git-send-email-g.liakhovetski@gmx.de>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Krystian Garbaciak <krystian.garbaciak@diasemi.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Steve Glendinning <steve.glendinning@shawell.net>, netdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds device tree binding documentation for the Dialog Semiconductors
-DA9063 PMIC and its regulator nodes.
+On Tue, Jul 23, 2013 at 06:12:02PM +0200, Guennadi Liakhovetski wrote:
+> Add a new DT property to specify a reset GPIO.
+> 
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/net/smsc911x.txt |    1 +
+>  drivers/net/ethernet/smsc/smsc911x.c               |   11 +++++++++++
+>  2 files changed, 12 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/smsc911x.txt b/Documentation/devicetree/bindings/net/smsc911x.txt
+> index adb5b57..2bf32be 100644
+> --- a/Documentation/devicetree/bindings/net/smsc911x.txt
+> +++ b/Documentation/devicetree/bindings/net/smsc911x.txt
+> @@ -23,6 +23,7 @@ Optional properties:
+>    external PHY
+>  - smsc,save-mac-address : Indicates that mac address needs to be saved
+>    before resetting the controller
+> +- smsc,reset-gpios : a GPIO binding to take the controller out of reset
+>  - local-mac-address : 6 bytes, mac address
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/mfd/da9063-i2c.txt         | 68 ++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/da9063-i2c.txt
+BTW there's also:
 
-diff --git a/Documentation/devicetree/bindings/mfd/da9063-i2c.txt b/Documentation/devicetree/bindings/mfd/da9063-i2c.txt
-new file mode 100644
-index 0000000..776b662
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/da9063-i2c.txt
-@@ -0,0 +1,68 @@
-+* Dialog DA9063 Power Management Integrated Circuit (PMIC)
-+
-+Required properties:
-+- compatible : Should be "dialog,da9063"
-+- interrupt-parent : phandle pointing to the interrupt controller
-+- interrupts : interrupt number and flags in interrupt-parent
-+  for the chip IRQ line. Interrupt bindings are documented here:
-+  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+Sub-nodes:
-+- regulators : Contain the regulator nodes. The DA9063 regulators are
-+  bound using their names as listed below:
-+
-+    bcore1     : regulator BCORE1
-+    bcore2     : regulator BCORE2
-+    bpro       : regulator BPRO
-+    bmem       : regulator BMEM
-+    bio        : regulator BIO
-+    bperi      : regulator BPERI
-+    ldo1       : regulator LDO1
-+    ldo2       : regulator LDO4
-+    ldo3       : regulator LDO3
-+    ldo4       : regulator LDO4
-+    ldo5       : regulator LDO5
-+    ldo6       : regulator LDO6
-+    ldo7       : regulator LDO7
-+    ldo8       : regulator LDO8
-+    ldo9       : regulator LDO9
-+    ldo10      : regulator LDO10
-+    ldo11      : regulator LDO11
-+
-+  The PMIC can also be configured to merge both bcore1/2 into a single
-+  supply and to merge bmem and bio into a single supply. In this case,
-+  the following regulators are bound instead of bcore1/2 and bpro/bmem:
-+
-+    bcores-merged   : merged regulators BCORE1, BCORE2
-+    bmem-bio-merged : merged regulators BMEM, BIO
-+
-+  See Documentation/devicetree/bindings/regulator/regulator.txt for
-+  binding details of individual regulator device nodes.
-+
-+
-+Examples:
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	pmic@58 {
-+		compatible = "dialog,da9063";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <17 0x8>; /* active-low GPIO4_17 */
-+
-+		regulators {
-+			bcore1 {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1570000>;
-+			};
-+
-+			bcore2 {
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1570000>;
-+			};
-+
-+			/* ... */
-+		};
-+	};
-+};
+[PATCH v10] reset: Add driver for gpio-controlled reset pins
+
+http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg36900.html
+
+which may be a generic way to handle device resets. Not mainline yet,
+though.
+
+Sascha
+
 -- 
-1.8.3.2
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
