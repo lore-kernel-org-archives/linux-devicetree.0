@@ -1,62 +1,48 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
-Date: Tue, 23 Jul 2013 18:14:27 +0100
-Message-ID: <1374599667.25700.92.camel@hornet>
-References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
-	 <1374290388-19308-3-git-send-email-grant.likely@linaro.org>
-	 <1374511851.3609.10.camel@hornet> <51ED9018.1020003@gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH v8 00/28] MBus DT binding for Armada 370/XP and Kirkwood
+Date: Tue, 23 Jul 2013 14:35:00 -0300
+Message-ID: <20130723173459.GA11373@localhost>
+References: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <CAOesGMh5GjCkaGX1O1VdkQUKdM8z0XPEc08OFPjJcGgP6s9nRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51ED9018.1020003@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMh5GjCkaGX1O1VdkQUKdM8z0XPEc08OFPjJcGgP6s9nRw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, valentin.longchamp@keymile.com, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, gerlando.falauto@keymile.com, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-07-22 at 21:03 +0100, Rob Herring wrote:
-> On 07/22/2013 11:50 AM, Pawel Moll wrote:
-> > On Sat, 2013-07-20 at 04:19 +0100, Grant Likely wrote:
-> >> +F:	include/dt-bindings
-> >=20
-> > One thing we didn't finish talking about was the question if this
-> > directory is supposed to contain *.dtsi files as well? The obvious
-> > problem I have is a vexpress motherboard being (well, actually not =
-bein
-> > right now) shared between arch/arm/boot/dts and arch/arm64/boot/dts=
-=2E
->=20
-> Please no.=20
-
-No as in: no don't put *.dtsi files into include/dt-bindings; or: no, d=
-o
-not duplicate the motherboard file?
-
-It you meant the latter, this is exactly what I wanted to say: I don't
-want to do that, but there's no way of avoiding it right now.
-
-> When we move dts files out of the kernel,=20
-
-And when would this happen? Don't get me wrong, I'm in favour of doing
-this as well (I really don't want to push all 15-or-so DTSes for all th=
-e
-different models and SMMs I have into the kernel)
-
-> we will still need
-> to copy dt-bindings into the kernel. Also, I think we should move all
-> dts files out of arch subdirs and arrange by vendor or soc family. I'=
-m
-> sure there are some cases that structure doesn't fit well, but there =
-is
-> very little in a dts tied to a cpu architecture.
-
-I couldn't agree more. So:
-
-<root>/include/dt-bindings/vendor/*?
-<root>/dts/vendor/*?
-<root>/of/vendor/*?
-<root>/dt/vendor/*?
-<root>/drivers/of/vendor/*?
-
-Pawe=C5=82
+T2xvZiwKCk9uIFR1ZSwgSnVsIDIzLCAyMDEzIGF0IDEwOjEwOjMxQU0gLTA3MDAsIE9sb2YgSm9o
+YW5zc29uIHdyb3RlOgo+IE9uIFR1ZSwgSnVsIDIzLCAyMDEzIGF0IDY6MzEgQU0sIEV6ZXF1aWVs
+IEdhcmNpYQo+IDxlemVxdWllbC5nYXJjaWFAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKPiA+
+IEFmdGVyIEFuZHJldyBMdW5uIHJlcG9ydGVkIFsxXSB0aGlzIHdvcmsgbmVlZCB0byB0YWtlIGFj
+Y291bnQgb2YgS2lya3dvb2QKPiA+IHRvIHByZXZlbnQgYnJlYWtpbmcgUENJZSBvbiBzdWNoIHBs
+YXRmb3JtLCBoZXJlJ3MgYSBuZXcgdmVyc2lvbiBhZGRpbmcKPiA+IE1CdXMgRFQgYmluZGluZyBm
+b3IgS2lya3dvb2QgYW5kIGluIHBhcnRpY3VsYXIgdXNpbmcgaXQgdG8gZGVjbGFyZSBQQ0llCj4g
+PiBwcm9wZXJseS4KPiAKPiBUaGlzIGlzIGEgcHJpbWUgZXhhbXBsZSBvZiBzb21lb25lIHNlbmRp
+bmcgYSB3aG9sZSBwYXRjaCBzZXJpZXMgdG8gdGhlCj4gZGV2aWNldHJlZSBtYWlsaW5nIGxpc3Qs
+IHdoZW4gb25seSB0aGUgYmluZGluZ3MgdXBkYXRlcyBzaG91bGQgZ28KPiB0aGVyZS4gVGhlcmUg
+YXJlIGEgbG90IG9mIHJlYWRlcnMgb2YgdGhlIGRldmljZXRyZWUgbGlzdHMgdGhhdCBjYW4ndAo+
+IGtlZXAgdXAgd2l0aCB0aGUgdm9sdW1lIG9mIGVtYWlsIGR1ZSB0byB0aGlzIHJlYXNvbi4KPiAK
+PiBTbywgd2hpbGUgSSdtIGNvbW1lbnRpbmcgb24geW91ciBlbWFpbCwgdGhpcyBnb2VzIGZvciBl
+dmVyeWJvZHkKPiBtYWlsaW5nIHRvIHRoaXMgbGlzdCAoYW5kIEkgZXhwZWN0IHRvIHJlcGVhdCBt
+eXNlbGYgYSBmZXcgdGltZXMgaW4gdGhlCj4gd2Vla3MgYW5kIG1vbnRocyBhaGVhZCk6IERvIG5v
+dCBwb3N0IHRoZSBkcml2ZXIgdXBkYXRlcyB0byB0aGUKPiBkZXZpY2V0cmVlIGxpc3QsIG9ubHkg
+dGhlIGJpbmRpbmdzIHVwZGF0ZXMuCj4gCgpPa2V5LCBnb3QgaXQuIFdvbid0IGhhcHBlbiBhZ2Fp
+bi4KClRoYW5rcyBmb3IgdGhlIG5vdGljZSwKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxl
+Y3Ryb25zCkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0
+cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
