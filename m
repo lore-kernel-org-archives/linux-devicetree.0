@@ -1,8 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH v8 10/28] bus: mvebu-mbus: Add new API for the PCIe memory and
- IO aperture
-Date: Tue, 23 Jul 2013 10:31:14 -0300
-Message-ID: <1374586292-4941-11-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v8 20/28] ARM: mvebu: Add MBus to Armada 370/XP device tree
+Date: Tue, 23 Jul 2013 10:31:24 -0300
+Message-ID: <1374586292-4941-21-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,155 +21,183 @@ To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, valentin.longchamp@keymile.com, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, gerlando.falauto@keymile.com, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-We add two optional properties to the MBus DT binding, to encode
-the PCIe memory and IO aperture. This allows such information to
-be retrieved by -for instance- the pci driver to allocate the
-MBus decoding windows.
+The Armada 370/XP SoC family has a completely configurable address
+space handled by the MBus controller.
 
-Correspondingly, and in order to retrieve this information,
-we add two new APIs.
+This patch introduces the device tree layout of MBus, making the
+'soc' node as mbus-compatible.
+Since every peripheral/controller is a child of this 'soc' node,
+this makes all of them sit behind the mbus, thus describing the
+hardware accurately.
+
+A translation entry has been added for the internal-regs mapping.
+This can't be done in the common armada-370-xp.dtsi because A370
+and AXP have different addressing width.
 
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
 ---
- .../devicetree/bindings/bus/mvebu-mbus.txt         | 14 +++++++
- drivers/bus/mvebu-mbus.c                           | 49 ++++++++++++++++++++++
- include/linux/mbus.h                               |  4 ++
- 3 files changed, 67 insertions(+)
+ arch/arm/boot/dts/armada-370-db.dts              |  2 ++
+ arch/arm/boot/dts/armada-370-mirabox.dts         |  2 ++
+ arch/arm/boot/dts/armada-370-rd.dts              |  2 ++
+ arch/arm/boot/dts/armada-370-xp.dtsi             | 15 ++++++++++-----
+ arch/arm/boot/dts/armada-370.dtsi                |  4 ++--
+ arch/arm/boot/dts/armada-xp-db.dts               |  4 +---
+ arch/arm/boot/dts/armada-xp-gp.dts               |  4 +---
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |  4 +---
+ arch/arm/boot/dts/armada-xp.dtsi                 |  2 ++
+ 9 files changed, 23 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/bus/mvebu-mbus.txt b/Documentation/devicetree/bindings/bus/mvebu-mbus.txt
-index cce863f..960186f 100644
---- a/Documentation/devicetree/bindings/bus/mvebu-mbus.txt
-+++ b/Documentation/devicetree/bindings/bus/mvebu-mbus.txt
-@@ -20,6 +20,18 @@ Required properties:
- 		 registers that control the MBus, which is typically contained
- 		 within the internal register window (see below).
+diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
+index 55b986c..5920b4e 100644
+--- a/arch/arm/boot/dts/armada-370-db.dts
++++ b/arch/arm/boot/dts/armada-370-db.dts
+@@ -30,6 +30,8 @@
+ 	};
  
-+Optional properties:
+ 	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000>;
 +
-+- pcie-mem-aperture:	This optional property contains the aperture for
-+			the memory region of the PCIe driver.
-+			If it's defined, it must encode the base address and
-+			size for the address decoding windows allocated for
-+			the PCIe memory region.
-+
-+- pcie-io-aperture:	Just as explained for the above property, this
-+			optional property contains the aperture for the
-+			I/O region of the PCIe driver.
-+
- * Marvell MBus controller
+ 		internal-regs {
+ 			serial@12000 {
+ 				clock-frequency = <200000000>;
+diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
+index 37530af..a4202b6 100644
+--- a/arch/arm/boot/dts/armada-370-mirabox.dts
++++ b/arch/arm/boot/dts/armada-370-mirabox.dts
+@@ -25,6 +25,8 @@
+ 	};
  
- Required properties:
-@@ -38,6 +50,8 @@ Example:
- 		#address-cells = <2>;
+ 	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000>;
++
+ 		internal-regs {
+ 			serial@12000 {
+ 				clock-frequency = <200000000>;
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index 7aa2171..dd0ba01 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -28,6 +28,8 @@
+ 	};
+ 
+ 	soc {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000>;
++
+ 		internal-regs {
+ 			serial@12000 {
+ 				clock-frequency = <200000000>;
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index 90b1176..62639b4 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -18,6 +18,8 @@
+ 
+ /include/ "skeleton64.dtsi"
+ 
++#define MBUS_ID(target,attributes) (((target) << 24) | ((attributes) << 16))
++
+ / {
+ 	model = "Marvell Armada 370 and XP SoC";
+ 	compatible = "marvell,armada-370-xp";
+@@ -38,18 +40,21 @@
+ 	};
+ 
+ 	soc {
+-		#address-cells = <1>;
++		#address-cells = <2>;
  		#size-cells = <1>;
- 		controller = <&mbusc>;
-+		pcie-mem-aperture = <0xe0000000 0x8000000>;
-+		pcie-io-aperture  = <0xe8000000 0x100000>;
+-		compatible = "simple-bus";
++		controller = <&mbusc>;
+ 		interrupt-parent = <&mpic>;
+-		ranges = <0          0 0xd0000000 0x0100000 /* internal registers */
+-			  0xe0000000 0 0xe0000000 0x8100000 /* PCIe */>;
  
  		internal-regs {
  			compatible = "simple-bus";
-diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
-index 78b8c04..929fed1 100644
---- a/drivers/bus/mvebu-mbus.c
-+++ b/drivers/bus/mvebu-mbus.c
-@@ -142,6 +142,8 @@ struct mvebu_mbus_state {
- 	struct dentry *debugfs_root;
- 	struct dentry *debugfs_sdram;
- 	struct dentry *debugfs_devs;
-+	struct resource pcie_mem_aperture;
-+	struct resource pcie_io_aperture;
- 	const struct mvebu_mbus_soc_data *soc;
- 	int hw_io_coherency;
- };
-@@ -821,6 +823,20 @@ int mvebu_mbus_del_window(phys_addr_t base, size_t size)
- 	return 0;
- }
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges;
++			ranges = <0 MBUS_ID(0xf0, 0x01) 0 0x100000>;
++
++			mbusc: mbus-controller@20000 {
++				compatible = "marvell,mbus-controller";
++				reg = <0x20000 0x100>, <0x20180 0x20>;
++			};
  
-+void mvebu_mbus_get_pcie_mem_aperture(struct resource *res)
-+{
-+	if (!res)
-+		return;
-+	*res = mbus_state.pcie_mem_aperture;
-+}
-+
-+void mvebu_mbus_get_pcie_io_aperture(struct resource *res)
-+{
-+	if (!res)
-+		return;
-+	*res = mbus_state.pcie_io_aperture;
-+}
-+
- static __init int mvebu_mbus_debugfs_init(void)
- {
- 	struct mvebu_mbus_state *s = &mbus_state;
-@@ -1023,6 +1039,35 @@ static int __init mbus_dt_setup(struct mvebu_mbus_state *mbus,
- 	return 0;
- }
+ 			mpic: interrupt-controller@20000 {
+ 				compatible = "marvell,mpic";
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index 08ec6e3..4b54e51 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -29,8 +29,8 @@
+ 	};
  
-+static void __init mvebu_mbus_get_pcie_resources(struct device_node *np,
-+						 struct resource *mem,
-+						 struct resource *io)
-+{
-+	u32 reg[2];
-+	int ret;
+ 	soc {
+-		ranges = <0          0xd0000000 0x0100000 /* internal registers */
+-			  0xe0000000 0xe0000000 0x8100000 /* PCIe */>;
++		compatible = "marvell,armada370-mbus", "simple-bus";
 +
-+	/*
-+	 * These are optional, so we clear them and they'll
-+	 * be zero if they are missing from the DT.
-+	 */
-+	memset(mem, 0, sizeof(struct resource));
-+	memset(io, 0, sizeof(struct resource));
-+
-+	ret = of_property_read_u32_array(np, "pcie-mem-aperture", reg, ARRAY_SIZE(reg));
-+	if (!ret) {
-+		mem->start = reg[0];
-+		mem->end = mem->start + reg[1];
-+		mem->flags = IORESOURCE_MEM;
-+	}
-+
-+	ret = of_property_read_u32_array(np, "pcie-io-aperture", reg, ARRAY_SIZE(reg));
-+	if (!ret) {
-+		io->start = reg[0];
-+		io->end = io->start + reg[1];
-+		io->flags = IORESOURCE_IO;
-+	}
-+}
-+
- int __init mvebu_mbus_dt_init(void)
- {
- 	struct resource mbuswins_res, sdramwins_res;
-@@ -1062,6 +1107,10 @@ int __init mvebu_mbus_dt_init(void)
- 		return -EINVAL;
- 	}
+ 		internal-regs {
+ 			system-controller@18200 {
+ 				compatible = "marvell,armada-370-xp-system-controller";
+diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+index a9bd766..0d4ce54 100644
+--- a/arch/arm/boot/dts/armada-xp-db.dts
++++ b/arch/arm/boot/dts/armada-xp-db.dts
+@@ -30,9 +30,7 @@
+ 	};
  
-+	/* Get optional pcie-{mem,io}-aperture properties */
-+	mvebu_mbus_get_pcie_resources(np, &mbus_state.pcie_mem_aperture,
-+					  &mbus_state.pcie_io_aperture);
-+
- 	ret = mvebu_mbus_common_init(&mbus_state,
- 				     mbuswins_res.start,
- 				     resource_size(&mbuswins_res),
-diff --git a/include/linux/mbus.h b/include/linux/mbus.h
-index eadefd6..650bc15 100644
---- a/include/linux/mbus.h
-+++ b/include/linux/mbus.h
-@@ -11,6 +11,8 @@
- #ifndef __LINUX_MBUS_H
- #define __LINUX_MBUS_H
+ 	soc {
+-		ranges = <0          0 0xd0000000 0x100000	/* Internal registers 1MiB */
+-			  0xe0000000 0 0xe0000000 0x8100000     /* PCIe */
+-			  0xf0000000 0 0xf0000000 0x1000000>;	/* Device Bus, NOR 16MiB   */
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000>;
  
-+struct resource;
-+
- struct mbus_dram_target_info
- {
- 	/*
-@@ -59,6 +61,8 @@ static inline const struct mbus_dram_target_info *mv_mbus_dram_info(void)
- }
- #endif
+ 		internal-regs {
+ 			serial@12000 {
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index 54843e5..2fa9209 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -39,9 +39,7 @@
+ 	};
  
-+void mvebu_mbus_get_pcie_mem_aperture(struct resource *res);
-+void mvebu_mbus_get_pcie_io_aperture(struct resource *res);
- int mvebu_mbus_add_window_remap_flags(const char *devname, phys_addr_t base,
- 				      size_t size, phys_addr_t remap,
- 				      unsigned int flags);
+ 	soc {
+-		ranges = <0          0 0xd0000000 0x100000  /* Internal registers 1MiB */
+-			  0xe0000000 0 0xe0000000 0x8100000 /* PCIe */
+-			  0xf0000000 0 0xf0000000 0x1000000 /* Device Bus, NOR 16MiB  */>;
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000>;
+ 
+ 		internal-regs {
+ 			serial@12000 {
+diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+index d090264..a3e3a12 100644
+--- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
++++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+@@ -27,9 +27,7 @@
+ 	};
+ 
+ 	soc {
+-		ranges = <0          0 0xd0000000 0x100000	/* Internal registers 1MiB */
+-			  0xe0000000 0 0xe0000000 0x8100000     /* PCIe */
+-			  0xf0000000 0 0xf0000000 0x8000000     /* Device Bus, NOR 128MiB   */>;
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000>;
+ 
+ 		internal-regs {
+ 			serial@12000 {
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index 8c07bfe..8033824 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -27,6 +27,8 @@
+ 	};
+ 
+ 	soc {
++		compatible = "marvell,armadaxp-mbus", "simple-bus";
++
+ 		internal-regs {
+ 			L2: l2-cache {
+ 				compatible = "marvell,aurora-system-cache";
 -- 
 1.8.1.5
