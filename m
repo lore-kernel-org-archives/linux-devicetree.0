@@ -1,12 +1,13 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH v8 02/28] bus: mvebu-mbus: Add new API for window creation
-Date: Tue, 23 Jul 2013 10:31:06 -0300
-Message-ID: <1374586292-4941-3-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v8 00/28] MBus DT binding for Armada 370/XP and Kirkwood
+Date: Tue, 23 Jul 2013 17:24:06 +0200
+Message-ID: <20130723152406.GH6846@lunn.ch>
 References: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
 In-Reply-To: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -17,98 +18,22 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, valentin.longchamp@keymile.com, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, gerlando.falauto@keymile.com, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, valentin.longchamp@keymile.com, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, gerlando.falauto@keymile.com, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+On Tue, Jul 23, 2013 at 10:31:04AM -0300, Ezequiel Garcia wrote:
+> After Andrew Lunn reported [1] this work need to take account of Kirkwood
+> to prevent breaking PCIe on such platform, here's a new version adding
+> MBus DT binding for Kirkwood and in particular using it to declare PCIe
+> properly.
 
-We add an API to create MBus address decoding windows from the target
-ID and attribute. This function will be used later and deprecate the
-current name based scheme.
+Hi Ezequiel
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- drivers/bus/mvebu-mbus.c | 33 +++++++++++++++++++++++++--------
- include/linux/mbus.h     |  6 ++++++
- 2 files changed, 31 insertions(+), 8 deletions(-)
+I boot tested on my Kirkwood QNAP. Both DT and legacy style. Both boot
+O.K. My device does not actually have any PCI devices on the bus, so
+it is not too good a test. But at least the regression is gone.
 
-diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
-index 33c6947..827468a 100644
---- a/drivers/bus/mvebu-mbus.c
-+++ b/drivers/bus/mvebu-mbus.c
-@@ -748,6 +748,22 @@ static const struct of_device_id of_mvebu_mbus_ids[] = {
- /*
-  * Public API of the driver
-  */
-+int mvebu_mbus_add_window_remap_by_id(unsigned int target,
-+				      unsigned int attribute,
-+				      phys_addr_t base, size_t size,
-+				      phys_addr_t remap)
-+{
-+	struct mvebu_mbus_state *s = &mbus_state;
-+
-+	if (!mvebu_mbus_window_conflicts(s, base, size, target, attribute)) {
-+		pr_err("cannot add window '%x:%x', conflicts with another window\n",
-+		       target, attribute);
-+		return -EINVAL;
-+	}
-+
-+	return mvebu_mbus_alloc_window(s, base, size, remap, target, attribute);
-+}
-+
- int mvebu_mbus_add_window_remap_flags(const char *devname, phys_addr_t base,
- 				      size_t size, phys_addr_t remap,
- 				      unsigned int flags)
-@@ -776,14 +792,8 @@ int mvebu_mbus_add_window_remap_flags(const char *devname, phys_addr_t base,
- 	else if (flags == MVEBU_MBUS_PCI_WA)
- 		attr |= 0x28;
- 
--	if (!mvebu_mbus_window_conflicts(s, base, size, target, attr)) {
--		pr_err("cannot add window '%s', conflicts with another window\n",
--		       devname);
--		return -EINVAL;
--	}
--
--	return mvebu_mbus_alloc_window(s, base, size, remap, target, attr);
--
-+	return mvebu_mbus_add_window_remap_by_id(target, attr, base,
-+						 size, remap);
- }
- 
- int mvebu_mbus_add_window(const char *devname, phys_addr_t base, size_t size)
-@@ -792,6 +802,13 @@ int mvebu_mbus_add_window(const char *devname, phys_addr_t base, size_t size)
- 						 MVEBU_MBUS_NO_REMAP, 0);
- }
- 
-+int mvebu_mbus_add_window_by_id(unsigned int target, unsigned int attribute,
-+				phys_addr_t base, size_t size)
-+{
-+	return mvebu_mbus_add_window_remap_by_id(target, attribute, base,
-+						 size, MVEBU_MBUS_NO_REMAP);
-+}
-+
- int mvebu_mbus_del_window(phys_addr_t base, size_t size)
- {
- 	int win;
-diff --git a/include/linux/mbus.h b/include/linux/mbus.h
-index dba482e..9245b66 100644
---- a/include/linux/mbus.h
-+++ b/include/linux/mbus.h
-@@ -62,8 +62,14 @@ static inline const struct mbus_dram_target_info *mv_mbus_dram_info(void)
- int mvebu_mbus_add_window_remap_flags(const char *devname, phys_addr_t base,
- 				      size_t size, phys_addr_t remap,
- 				      unsigned int flags);
-+int mvebu_mbus_add_window_remap_by_id(unsigned int target,
-+				      unsigned int attribute,
-+				      phys_addr_t base, size_t size,
-+				      phys_addr_t remap);
- int mvebu_mbus_add_window(const char *devname, phys_addr_t base,
- 			  size_t size);
-+int mvebu_mbus_add_window_by_id(unsigned int target, unsigned int attribute,
-+				phys_addr_t base, size_t size);
- int mvebu_mbus_del_window(phys_addr_t base, size_t size);
- int mvebu_mbus_init(const char *soc, phys_addr_t mbus_phys_base,
- 		    size_t mbus_size, phys_addr_t sdram_phys_base,
--- 
-1.8.1.5
+Tested-by: Andrew Lunn <andrew@lunn.ch>
+
+	   Andrew
