@@ -1,15 +1,13 @@
 From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH v8 00/28] MBus DT binding for Armada 370/XP and Kirkwood
-Date: Tue, 23 Jul 2013 12:36:47 -0300
-Message-ID: <20130723153645.GA5296@localhost>
+Subject: [PATCH v8 03/28] ARM: kirkwood: Move to ID based MBus window creation
+Date: Tue, 23 Jul 2013 10:31:07 -0300
+Message-ID: <1374586292-4941-4-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130723152406.GH6846@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130723152406.GH6846@lunn.ch>
+In-Reply-To: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,28 +17,121 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, valentin.longchamp@keymile.com, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, gerlando.falauto@keymile.com, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, valentin.longchamp@keymile.com, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, gerlando.falauto@keymile.com, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMjMsIDIwMTMgYXQgMDU6MjQ6MDZQTSArMDIwMCwgQW5kcmV3IEx1bm4gd3Jv
-dGU6Cj4gT24gVHVlLCBKdWwgMjMsIDIwMTMgYXQgMTA6MzE6MDRBTSAtMDMwMCwgRXplcXVpZWwg
-R2FyY2lhIHdyb3RlOgo+ID4gQWZ0ZXIgQW5kcmV3IEx1bm4gcmVwb3J0ZWQgWzFdIHRoaXMgd29y
-ayBuZWVkIHRvIHRha2UgYWNjb3VudCBvZiBLaXJrd29vZAo+ID4gdG8gcHJldmVudCBicmVha2lu
-ZyBQQ0llIG9uIHN1Y2ggcGxhdGZvcm0sIGhlcmUncyBhIG5ldyB2ZXJzaW9uIGFkZGluZwo+ID4g
-TUJ1cyBEVCBiaW5kaW5nIGZvciBLaXJrd29vZCBhbmQgaW4gcGFydGljdWxhciB1c2luZyBpdCB0
-byBkZWNsYXJlIFBDSWUKPiA+IHByb3Blcmx5Lgo+IAo+IEhpIEV6ZXF1aWVsCj4gCj4gSSBib290
-IHRlc3RlZCBvbiBteSBLaXJrd29vZCBRTkFQLiBCb3RoIERUIGFuZCBsZWdhY3kgc3R5bGUuIEJv
-dGggYm9vdAo+IE8uSy4gTXkgZGV2aWNlIGRvZXMgbm90IGFjdHVhbGx5IGhhdmUgYW55IFBDSSBk
-ZXZpY2VzIG9uIHRoZSBidXMsIHNvCj4gaXQgaXMgbm90IHRvbyBnb29kIGEgdGVzdC4gQnV0IGF0
-IGxlYXN0IHRoZSByZWdyZXNzaW9uIGlzIGdvbmUuCj4gCj4gVGVzdGVkLWJ5OiBBbmRyZXcgTHVu
-biA8YW5kcmV3QGx1bm4uY2g+Cj4gCgpHb29kIQoKSHVnZSB0aGFua3MgZm9yIHRoZSB0ZXN0IQoK
-SmFzb246IEhvdyBhYm91dCBwaWNraW5nIHRoaXMgdXA/IEFzIEkgYWxyZWFkeSBzYWlkLCBJIHRo
-aW5rIGl0J3MgYmV0dGVyCnRvIGhhdmUgdGhpcyBtZXJnZWQgc29vbmVyIHRoYW4gbGF0ZXIsIGFu
-ZCBnZXQgcGVvcGxlIHRvIHN0YXJ0IHVzaW5nIGl0LgoKSSdtIHJlYWR5IHRvIGZpeCBhdCBvbmNl
-IHdoYXRldmVyIGlzc3VlcyBtaWdodCBhcHBlYXIuCi0tIApFemVxdWllbCBHYXJjw61hLCBGcmVl
-IEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5n
-Cmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+
+With the introduction of the ID based MBus API, it's better
+to switch to use it instead of the current name based scheme.
+
+This will allow to deprecate the name based API, once every
+user is removed.
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+---
+ arch/arm/mach-kirkwood/common.c | 18 ++++++++++++++----
+ arch/arm/mach-kirkwood/pcie.c   | 40 ++++++++++++++++++++++++----------------
+ 2 files changed, 38 insertions(+), 20 deletions(-)
+
+diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
+index e9238b5..165e751 100644
+--- a/arch/arm/mach-kirkwood/common.c
++++ b/arch/arm/mach-kirkwood/common.c
+@@ -37,6 +37,12 @@
+ #include <linux/platform_data/dma-mv_xor.h>
+ #include "common.h"
+ 
++/* These can go away once Kirkwood uses the mvebu-mbus DT binding */
++#define KIRKWOOD_MBUS_NAND_TARGET 0x01
++#define KIRKWOOD_MBUS_NAND_ATTR   0x2f
++#define KIRKWOOD_MBUS_SRAM_TARGET 0x03
++#define KIRKWOOD_MBUS_SRAM_ATTR   0x01
++
+ /*****************************************************************************
+  * I/O Address Mapping
+  ****************************************************************************/
+@@ -672,10 +678,14 @@ char * __init kirkwood_id(void)
+ 
+ void __init kirkwood_setup_wins(void)
+ {
+-	mvebu_mbus_add_window("nand", KIRKWOOD_NAND_MEM_PHYS_BASE,
+-			      KIRKWOOD_NAND_MEM_SIZE);
+-	mvebu_mbus_add_window("sram", KIRKWOOD_SRAM_PHYS_BASE,
+-			      KIRKWOOD_SRAM_SIZE);
++	mvebu_mbus_add_window_by_id(KIRKWOOD_MBUS_NAND_TARGET,
++				    KIRKWOOD_MBUS_NAND_ATTR,
++				    KIRKWOOD_NAND_MEM_PHYS_BASE,
++				    KIRKWOOD_NAND_MEM_SIZE);
++	mvebu_mbus_add_window_by_id(KIRKWOOD_MBUS_SRAM_TARGET,
++				    KIRKWOOD_MBUS_SRAM_ATTR,
++				    KIRKWOOD_SRAM_PHYS_BASE,
++				    KIRKWOOD_SRAM_SIZE);
+ }
+ 
+ void __init kirkwood_l2_init(void)
+diff --git a/arch/arm/mach-kirkwood/pcie.c b/arch/arm/mach-kirkwood/pcie.c
+index ddcb09f..12d86f3 100644
+--- a/arch/arm/mach-kirkwood/pcie.c
++++ b/arch/arm/mach-kirkwood/pcie.c
+@@ -20,6 +20,16 @@
+ #include <mach/bridge-regs.h>
+ #include "common.h"
+ 
++/* These can go away once Kirkwood uses the mvebu-mbus DT binding */
++#define KIRKWOOD_MBUS_PCIE0_MEM_TARGET    0x4
++#define KIRKWOOD_MBUS_PCIE0_MEM_ATTR      0xe8
++#define KIRKWOOD_MBUS_PCIE0_IO_TARGET     0x4
++#define KIRKWOOD_MBUS_PCIE0_IO_ATTR       0xe0
++#define KIRKWOOD_MBUS_PCIE1_MEM_TARGET    0x4
++#define KIRKWOOD_MBUS_PCIE1_MEM_ATTR      0xd8
++#define KIRKWOOD_MBUS_PCIE1_IO_TARGET     0x4
++#define KIRKWOOD_MBUS_PCIE1_IO_ATTR       0xd0
++
+ static void kirkwood_enable_pcie_clk(const char *port)
+ {
+ 	struct clk *clk;
+@@ -254,26 +264,24 @@ static void __init add_pcie_port(int index, void __iomem *base)
+ 
+ void __init kirkwood_pcie_init(unsigned int portmask)
+ {
+-	mvebu_mbus_add_window_remap_flags("pcie0.0",
++	mvebu_mbus_add_window_remap_by_id(KIRKWOOD_MBUS_PCIE0_IO_TARGET,
++					  KIRKWOOD_MBUS_PCIE0_IO_ATTR,
+ 					  KIRKWOOD_PCIE_IO_PHYS_BASE,
+ 					  KIRKWOOD_PCIE_IO_SIZE,
+-					  KIRKWOOD_PCIE_IO_BUS_BASE,
+-					  MVEBU_MBUS_PCI_IO);
+-	mvebu_mbus_add_window_remap_flags("pcie0.0",
+-					  KIRKWOOD_PCIE_MEM_PHYS_BASE,
+-					  KIRKWOOD_PCIE_MEM_SIZE,
+-					  MVEBU_MBUS_NO_REMAP,
+-					  MVEBU_MBUS_PCI_MEM);
+-	mvebu_mbus_add_window_remap_flags("pcie1.0",
++					  KIRKWOOD_PCIE_IO_BUS_BASE);
++	mvebu_mbus_add_window_by_id(KIRKWOOD_MBUS_PCIE0_MEM_TARGET,
++				    KIRKWOOD_MBUS_PCIE0_MEM_ATTR,
++				    KIRKWOOD_PCIE_MEM_PHYS_BASE,
++				    KIRKWOOD_PCIE_MEM_SIZE);
++	mvebu_mbus_add_window_remap_by_id(KIRKWOOD_MBUS_PCIE1_IO_TARGET,
++					  KIRKWOOD_MBUS_PCIE1_IO_ATTR,
+ 					  KIRKWOOD_PCIE1_IO_PHYS_BASE,
+ 					  KIRKWOOD_PCIE1_IO_SIZE,
+-					  KIRKWOOD_PCIE1_IO_BUS_BASE,
+-					  MVEBU_MBUS_PCI_IO);
+-	mvebu_mbus_add_window_remap_flags("pcie1.0",
+-					  KIRKWOOD_PCIE1_MEM_PHYS_BASE,
+-					  KIRKWOOD_PCIE1_MEM_SIZE,
+-					  MVEBU_MBUS_NO_REMAP,
+-					  MVEBU_MBUS_PCI_MEM);
++					  KIRKWOOD_PCIE1_IO_BUS_BASE);
++	mvebu_mbus_add_window_by_id(KIRKWOOD_MBUS_PCIE1_MEM_TARGET,
++				    KIRKWOOD_MBUS_PCIE1_MEM_ATTR,
++				    KIRKWOOD_PCIE1_MEM_PHYS_BASE,
++				    KIRKWOOD_PCIE1_MEM_SIZE);
+ 
+ 	vga_base = KIRKWOOD_PCIE_MEM_PHYS_BASE;
+ 
+-- 
+1.8.1.5
