@@ -1,49 +1,34 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <51EECF1A.40404@gmail.com>
-Date: Tue, 23 Jul 2013 13:44:42 -0500
-From: Rob Herring <robherring2@gmail.com>
 MIME-Version: 1.0
+In-Reply-To: <E1V1Nm3-000740-TB@jdl.com>
+References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
+	<1374290388-19308-3-git-send-email-grant.likely@linaro.org>
+	<51EC2EC7.6010001@gmail.com>
+	<CACxGe6sGdkMuLFs3K_ERKot+ryTArs6qTiwpXNe+LyoAQ8HGDw@mail.gmail.com>
+	<51ED9694.9060303@gmail.com>
+	<E1V1Nm3-000740-TB@jdl.com>
+Date: Mon, 22 Jul 2013 22:27:23 -0500
+Message-ID: <CAL_JsqK0SVS+odf-7ZW6ETS7W8q4ZW1i9WQUGOJuG2Jmyph+-A@mail.gmail.com>
 Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
-References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>   <1374290388-19308-3-git-send-email-grant.likely@linaro.org>   <1374511851.3609.10.camel@hornet> <51ED9018.1020003@gmail.com>  <1374599667.25700.92.camel@hornet> <51EEC49A.4080909@wwwdotorg.org> <1374602957.6623.142.camel@hastur.hellion.org.uk>
-In-Reply-To: <1374602957.6623.142.camel@hastur.hellion.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-To: Ian Campbell <ian.campbell@citrix.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <pawel.moll@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+To: Jon Loeliger <jdl@jdl.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 07/23/2013 01:09 PM, Ian Campbell wrote:
-> On Tue, 2013-07-23 at 10:59 -0700, Stephen Warren wrote:
-> 
->> I think the solution is to introduce some new shared/common location for
->> shared/common *.dtsi files, into the kernel tree, in the interim.
+On Mon, Jul 22, 2013 at 4:36 PM, Jon Loeliger <jdl@jdl.com> wrote:
 >>
->> When *.dts move out of the kernel, this common location can simply be
->> consumed as part of the DT tree re-organization.
->>
->> Or perhaps, we could move *.dts around in the kernel to match the
->> proposed DT tree structure before that point in time?
-> 
-> FWIW I can easily handle any transformation as part of the automated
-> extraction into the device-tree.git. If it can expressed as a sed script
-> then so much the better, e.g. the current rules are
-> http://xenbits.xen.org/gitweb/?p=people/ianc/device-tree-rebasing.git;a=blob;f=scripts/rewrite-paths.sed;h=f7a157d1b486bac058f50e42cf7bedc8630e54ff;hb=HEAD.
-> If it gets too complicated for sed I can always switch to something
-> else.
-> 
-> I'm already pending a complete rebuild of the export to add in the
-> Documentation/devicetree/bindings sub tree but since it takes an age to
-> run I was waiting for the output of this conversation before kicking
-> that off.
+>> My own selfish desire is to easily separate emails for DT bindings and
+>> DT core code. I suppose I could do that with a suffix on my email address.
+>
+> And I've had the reverse problem:  Sorting out the DTC
+> and libfdt patches from the noise. :-)
 
-I'd doubt we could completely script this with a generic rule without a
-bunch of manual transformations. So I think either restructuring in the
-kernel or when we move them out of the kernel makes more sense. We know
-the problem is coming, but it is not yet a major, pressing issue.
+Noise to you is rock-n-roll to me. ;) It's only going to get harder if
+lots of email to devicetree-discuss was getting dropped waiting for
+moderator approval.
 
-OTOH, you could see how far you get by putting dts files in directories
-by their board level compatible string vendor and put any include files
-where ever they are included from. Of course, that is just my proposed
-layout. I haven't heard any opinions on that layout.
+Yours is the harder problem since there is not really a way to use
+kernel MAINTAINERS for dtc. Perhaps the kernel maintainer for dtc
+could be "Send Your Patch Upstream <nobody@nowhere.com>".
 
 Rob
