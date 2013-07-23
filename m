@@ -1,157 +1,45 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH v8 21/28] ARM: mvebu: Add BootROM to Armada 370/XP device tree
-Date: Tue, 23 Jul 2013 10:31:25 -0300
-Message-ID: <1374586292-4941-22-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: The future of DT binding maintainership
+Date: Tue, 23 Jul 2013 08:52:40 -0700
+Message-ID: <51EEA6C8.6090604@wwwdotorg.org>
+References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com> <20130720034647.2B7B43E14BF@localhost>,<2962401.WRRoYlXkRr@flatron> <60BA5429A0E1584BA3633194F6F993B502B21362@NA-MBX-03.mgc.mentorg.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, valentin.longchamp@keymile.com, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, gerlando.falauto@keymile.com, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <60BA5429A0E1584BA3633194F6F993B502B21362@NA-MBX-03.mgc.mentorg.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Chaiken, Alison" <Alison_Chaiken@mentor.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Wolfram Sang <w.sang@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to access the SoC BootROM, we need to declare a mapping
-(through a ranges property). The mbus driver will use this property
-to allocate a suitable address decoding window.
+On 07/22/2013 12:59 PM, Chaiken, Alison wrote:
+> Grant Likely wrote:
+>> Another thing discussed is that we need to start validating DT schema with an extension to dtc.
+> 
+> Is there a schema out there in the wild that exemplifies what you mean?
+> 
+>> Tomasz Figa has volunteered to do this work and has support from his employer
+> 
+> That's great news.
+> 
+>> to have is that the DT schema will get checked as part of the dts build
+>> process so that any DT file that doesn't match the documented schema
+>> will get flagged, and that the schema files will be human readable and
+>> will double as documentation.
+> 
+> No doubt DTS files are already the best documentation available for many targets.
 
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
----
- arch/arm/boot/dts/armada-370-db.dts              | 3 ++-
- arch/arm/boot/dts/armada-370-mirabox.dts         | 3 ++-
- arch/arm/boot/dts/armada-370-rd.dts              | 3 ++-
- arch/arm/boot/dts/armada-370.dtsi                | 5 +++++
- arch/arm/boot/dts/armada-xp-db.dts               | 3 ++-
- arch/arm/boot/dts/armada-xp-gp.dts               | 3 ++-
- arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts | 3 ++-
- arch/arm/boot/dts/armada-xp.dtsi                 | 5 +++++
- 8 files changed, 22 insertions(+), 6 deletions(-)
+A nit here:
 
-diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
-index 5920b4e..90ce29d 100644
---- a/arch/arm/boot/dts/armada-370-db.dts
-+++ b/arch/arm/boot/dts/armada-370-db.dts
-@@ -30,7 +30,8 @@
- 	};
- 
- 	soc {
--		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000>;
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000
-+			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
- 
- 		internal-regs {
- 			serial@12000 {
-diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
-index a4202b6..19341d2 100644
---- a/arch/arm/boot/dts/armada-370-mirabox.dts
-+++ b/arch/arm/boot/dts/armada-370-mirabox.dts
-@@ -25,7 +25,8 @@
- 	};
- 
- 	soc {
--		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000>;
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000
-+			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
- 
- 		internal-regs {
- 			serial@12000 {
-diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
-index dd0ba01..0b3acf3 100644
---- a/arch/arm/boot/dts/armada-370-rd.dts
-+++ b/arch/arm/boot/dts/armada-370-rd.dts
-@@ -28,7 +28,8 @@
- 	};
- 
- 	soc {
--		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000>;
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0xd0000000 0x100000
-+			  MBUS_ID(0x01, 0xe0) 0 0xfff00000 0x100000>;
- 
- 		internal-regs {
- 			serial@12000 {
-diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index 4b54e51..bd21d49 100644
---- a/arch/arm/boot/dts/armada-370.dtsi
-+++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -31,6 +31,11 @@
- 	soc {
- 		compatible = "marvell,armada370-mbus", "simple-bus";
- 
-+		bootrom {
-+			compatible = "marvell,bootrom";
-+			reg = <MBUS_ID(0x01, 0xe0) 0 0x100000>;
-+		};
-+
- 		internal-regs {
- 			system-controller@18200 {
- 				compatible = "marvell,armada-370-xp-system-controller";
-diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
-index 0d4ce54..857f272 100644
---- a/arch/arm/boot/dts/armada-xp-db.dts
-+++ b/arch/arm/boot/dts/armada-xp-db.dts
-@@ -30,7 +30,8 @@
- 	};
- 
- 	soc {
--		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000>;
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
- 
- 		internal-regs {
- 			serial@12000 {
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 2fa9209..934dc46 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -39,7 +39,8 @@
- 	};
- 
- 	soc {
--		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000>;
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
- 
- 		internal-regs {
- 			serial@12000 {
-diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-index a3e3a12..1700f6f 100644
---- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-+++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-@@ -27,7 +27,8 @@
- 	};
- 
- 	soc {
--		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000>;
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xd0000000 0x100000
-+			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
- 
- 		internal-regs {
- 			serial@12000 {
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index 8033824..7ba99ce 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -29,6 +29,11 @@
- 	soc {
- 		compatible = "marvell,armadaxp-mbus", "simple-bus";
- 
-+		bootrom {
-+			compatible = "marvell,bootrom";
-+			reg = <MBUS_ID(0x01, 0x1d) 0 0x100000>;
-+		};
-+
- 		internal-regs {
- 			L2: l2-cache {
- 				compatible = "marvell,aurora-system-cache";
--- 
-1.8.1.5
+The DTS files document what HW modules are present on a board, and
+various associated parameters.
+
+The bindings describe the format of those DTS files.
+
+The validation here is ensuring that the DTS files are actually written
+in a format that matches what the binding definition requires.
+
+So, the issue isn't really documentation of the HW, but rather
+documentation of the required DT format, and validating that the DTS
+matches that.
