@@ -1,54 +1,75 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
-Date: Tue, 23 Jul 2013 11:04:53 +0530
-Message-ID: <51EE15FD.2010205@ti.com>
-References: <Pine.LNX.4.44L0.1307211453450.19133-100000@netrider.rowland.org>
- <51ECDE5E.3050104@ti.com> <20130722150458.GA18181@kroah.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 1/3] dmaengine: add dma_get_slave_sg_limits()
+Date: Tue, 23 Jul 2013 08:41:40 +0200
+Message-ID: <51EE25A4.7000609@metafoo.de>
+References: <1374166001-31340-1-git-send-email-joelf@ti.com>
+	<1374166001-31340-2-git-send-email-joelf@ti.com>
+	<20130718161658.GW16653@intel.com> <51EDA80F.7060606@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130722150458.GA18181@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, Alan Stern <stern@rowland.harvard.edu>, grant.likely@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-media@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, Sascha Hauer <s.hauer@pengutronix.de>, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, akpm@linux-foundation.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <51EDA80F.7060606-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Joel Fernandes <joelf-l0cyMroinI0@public.gmane.org>
+Cc: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>, Benoit Cousson <benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Balaji TK <balajitk-l0cyMroinI0@public.gmane.org>, Mark Jackson <mpfj-list-2FZW7xY0fHgqdlJmJB21zg@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Monday 22 July 2013 08:34 PM, Greg KH wrote:
-> On Mon, Jul 22, 2013 at 12:55:18PM +0530, Kishon Vijay Abraham I wrote:
->>> 	The issue (or one of the issues) in this discussion is that 
->>> 	Greg does not like the idea of using names or IDs to associate
->>> 	PHYs with controllers, because they are too prone to
->>> 	duplications or other errors.  Pointers are more reliable.
+On 07/22/2013 11:45 PM, Joel Fernandes wrote:
+> On 07/18/2013 11:16 AM, Vinod Koul wrote:> On Thu, Jul 18, 2013 at
+> 11:46:39AM -0500, Joel Fernandes wrote:
+>>> From: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
 >>>
->>> 	But pointers to what?  Since the only data known to be 
->>> 	available to both the PHY driver and controller driver is the
->>> 	platform data, the obvious answer is a pointer to platform data
->>> 	(either for the PHY or for the controller, or maybe both).
+>>> Add a dmaengine API to retrieve slave SG transfer limits.
+>>>
+>>> The API is optionally implemented by dmaengine drivers and when
+>>> unimplemented will return a NULL pointer. A client driver using
+>>> this API provides the required dma channel, address width, and
+>>> burst size of the transfer. dma_get_slave_sg_limits() returns an
+>>> SG limits structure with the maximum number and size of SG segments
+>>> that the given channel can handle.
+>> Hi Joel,
 >>
->> hmm.. it's not going to be simple though as the platform device for the PHY and
->> controller can be created in entirely different places. e.g., in some cases the
->> PHY device is a child of some mfd core device (the device will be created in
->> drivers/mfd) and the controller driver (usually) is created in board file. I
->> guess then we have to come up with something to share a pointer in two
->> different files.
-> 
-> What's wrong with using the platform_data structure that is unique to
-> all boards (see include/platform_data/ for examples)?  Isn't that what
-> this structure is there for?
+>> I have already resurrected this and generalized the API to get the slave
+>> capablities.
+>> https://lkml.org/lkml/2013/7/15/147
+>
+> Hi Vinod,
+>
+> get_caps and get_sg_limits are 2 different things, looks like this was
+> already discussed earlier, and this patch series is a separate API that
+> adds support for SG limits.
+>
+> Infact, you can already see here that he changed the name of the
+> function from caps to dma_get_slave_sg_limits:
+> http://linux.davincidsp.com/pipermail/davinci-linux-open-source/2013-March/026601.html
+>
 
-Alright. I got some ideas from Alan Stern. I'll use it with platform_data and
-repost the series.
+And it was changed back, since we need to provide more information than just 
+the sg limits. So the name didn't fit anymore. The dma_get_slave_caps() API 
+patch was based on the dma_get_slave_sg_limits() patch.
 
-Thanks
-Kishon
+> Considering this, what is the way forward? Can this patch series be
+> merged as it is a different API as discussed above?
+>
+> Summarizing:
+> * get_caps API cannot be used for this same purpose, as get_caps is done
+> _before_ the DMA channel can be configured from what it looks like:
+> * get_sg_limits, on the other hand is supposed to already have the
+> parameters required for configuring the DMA channel before hand.
+>
+> Are there any other changes to the get_sg_limits series you would like
+> before it can be applied? Any other suggestions?
+
+If you need to calculate the limit based on a certain configuration I'd suggest 
+to add a optional dma_slave_config parameter to the dma_slave_get_caps() function.
+
+- Lars
