@@ -1,195 +1,225 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH 1/3] of: provide a binding for the 'fixed-link'
- property
-Date: Tue, 23 Jul 2013 12:22:59 +0100
-Message-ID: <20130723112259.GE4833@e106331-lin.cambridge.arm.com>
-References: <1373902450-11857-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH/RFC v4 09/15] DMA: shdma: support referencing specific
+ DMACs within a multiplexer in DT
+Date: Tue, 23 Jul 2013 13:32:21 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1307231328390.19465@axis700.grange>
+References: <1374576609-27748-1-git-send-email-g.liakhovetski@gmx.de>
+ <1374576609-27748-10-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <florian@openwrt.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1374576609-27748-10-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Vinod Koul <vinod.koul@intel.com>, linux-sh@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree-discuss@lists.ozlabs.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+This is the only patch in the series, non-trivially touching 
+Documentation/devicetree/bindings, let's cc it to devicetree mailing 
+lists.
 
-On Mon, Jul 15, 2013 at 04:34:08PM +0100, Thomas Petazzoni wrote:
-> Some Ethernet MACs have a "fixed link", and are not connected to a
-> normal MDIO-managed PHY device. For those situations, a Device Tree
-> binding allows to describe a "fixed link", as a "fixed-link" property
-> of the Ethernet device Device Tree node.
+Thanks
+Guennadi
+
+On Tue, 23 Jul 2013, Guennadi Liakhovetski wrote:
+
+> Currently shdma DT nodes have to be placed under a multiplexer node. DMA
+> slave DT nodes then use that multiplexer's phandle in their "dmas"
+> properties. However, sometimes it can be necessary to let DMA slaves only
+> use a specific DMAC instance. In this case it would be logical to just use
+> the respective phandle in that slave's "dmas" property. For this to work
+> the referenced DMAC has to register a struct of_dma instance, which isn't
+> presently done. Instead the driver currently only registers one struct
+> of_dma for the multiplexer. This patch adds support for such
+> configurations. To enable this option a "#dma-cells" property also must be
+> added to the respective DMAC DT node.
 > 
-> This patch adds:
-> 
->  * A documentation for the Device Tree property "fixed-link".
-> 
->  * A of_phy_register_fixed_link() OF helper, which provided an OF node
->    that contains a "fixed-link" property, registers the corresponding
->    fixed PHY.
-> 
->  * Removes the warning on the of_phy_connect_fixed_link() that says
->    new drivers should not use it, since Grant Likely indicated that
->    this "fixed-link" property is indeed the way to go.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 > ---
->  .../devicetree/bindings/net/fixed-link.txt         | 26 ++++++++++++++++
->  drivers/of/of_mdio.c                               | 36 +++++++++++++++++++---
->  include/linux/of_mdio.h                            | 10 ++++++
->  3 files changed, 68 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/fixed-link.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
-> new file mode 100644
-> index 0000000..25a009a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/fixed-link.txt
-> @@ -0,0 +1,26 @@
-> +Fixed link Device Tree binding
-> +------------------------------
+> As mentioned in the cover letter patch, this is an RFC. We are certain,
+> that we want to be able to reference specific DMACs within multiplexers.
+> However, with the current implementation this cannot work, because single
+> DMAC DT nodes don't have of_dma objects associated with them, currently
+> there is only one such object per multiplexer. The proposal is to
+> implement such direct referencing by adding a "#dma-cells" property to
+> respective DT nodes, in which case an of_dma object will be allocated for
+> them too.
+> 
+>  Documentation/devicetree/bindings/dma/shdma.txt |   16 ++++++
+>  drivers/dma/sh/shdma.h                          |    7 +++
+>  drivers/dma/sh/shdmac.c                         |   66 +++++++++++++++++++++++
+>  3 files changed, 89 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/shdma.txt b/Documentation/devicetree/bindings/dma/shdma.txt
+> index 6b015d6..aeed9b8 100644
+> --- a/Documentation/devicetree/bindings/dma/shdma.txt
+> +++ b/Documentation/devicetree/bindings/dma/shdma.txt
+> @@ -27,6 +27,22 @@ Required properties:
+>  		"renesas,shdma-r8a7740" for the DMACs (not RTDMAC) on r8a7740
+>  		"renesas,shdma-sh73a0" for the DMACs on sh73a0
+>  
+> +Optional properties:
+> +- #dma-cells:	this property is only needed in one specific case: if DMA slaves
+> +		have to be able to request channels specifically from this DMAC,
+> +		not from anyone from the multiplexer. In such a case the board
+> +		.dts file can contain code, similar to this:
 > +
-> +Some Ethernet MACs have a "fixed link", and are not connected to a
-> +normal MDIO-managed PHY device. For those situations, a Device Tree
-> +binding allows to describe a "fixed link".
-
-Are partictular MACs fixed link, or can some either be either fixed link
-or wired to an MDIO-managed PHY? i.e. can we assume a given MAC is
-fixed-link from its compatible string?
-
-> +
-> +Such a fixed link situation is described within an Ethernet device
-> +Device Tree node using a 'fixed-link' property, composed of 5
-> +elements:
-
-I'm not sure grouping these values together is the best way of handling
-this. It's rather opaque, and inflexible for future extension.
-
-> +
-> + 1. A fake PHY ID, which must be unique accross all fixed-link PHYs in
-> +    the system.
-
-Is there any reason this couldn't be allocated dynamically within the
-kernel as needed? I don't see why an arbitrary unique value should be a
-dt binding requirement; it seems like a leak of Linux implementation
-details.
-
-> + 2. The duplex (1 for full-duplex, 0 for half-duplex)
-
-Will this change for a given MAC?
-
-Could we not have a boolean property for each of these, and require one
-to be present?
-
-Possibly fixed-link-full-duplex / fix-link-half-duplex?
-
-> + 3. The speed (10, 100, 1000)
-
-fixed-link-speed?
-
-> + 4. The pause setting (1 for enabled, 0 for disabled)
-> + 5. The asym pause setting (1 for enabled, 0 for disabled)
-
-Boolean properties for both of these?
-
-Thanks,
-Mark.
-
-> +
-> +Example:
-> +
-> +ethernet@0 {
-> +	...
-> +	fixed-link = <1 1 1000 0 0>;
-> +	...
+> +&dma1 {
+> +	#dma-cells = <1>;
 > +};
 > +
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index d5a57a9..66d5591 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -14,6 +14,7 @@
->  #include <linux/netdevice.h>
->  #include <linux/err.h>
->  #include <linux/phy.h>
-> +#include <linux/phy_fixed.h>
->  #include <linux/of.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_mdio.h>
-> @@ -215,10 +216,6 @@ EXPORT_SYMBOL(of_phy_connect);
->   * @dev: pointer to net_device claiming the phy
->   * @hndlr: Link state callback for the network device
->   * @iface: PHY data interface type
-> - *
-> - * This function is a temporary stop-gap and will be removed soon.  It is
-> - * only to support the fs_enet, ucc_geth and gianfar Ethernet drivers.  Do
-> - * not call this function from new drivers.
->   */
->  struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
->  					     void (*hndlr)(struct net_device *),
-> @@ -247,3 +244,34 @@ struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
->  	return IS_ERR(phy) ? NULL : phy;
->  }
->  EXPORT_SYMBOL(of_phy_connect_fixed_link);
+> +&mmc0 {
+> +	dmas = <&dma1 0xd1
+> +		&dma1 0xd2>;
+> +	dma-names = "tx", "rx";
+> +};
 > +
-> +#if defined(CONFIG_FIXED_PHY)
-> +/**
-> + * of_phy_register_fixed_link - Parse fixed-link property and register a dummy phy
-> + * @np: pointer to the OF device node that contains the "fixed-link"
-> + * property for which a dummy phy should be registered.
-> + */
-> +#define FIXED_LINK_PROPERTIES_COUNT 5
-> +int of_phy_register_fixed_link(struct device_node *np)
-> +{
-> +	struct fixed_phy_status status = {};
-> +	u32 fixed_link_props[FIXED_LINK_PROPERTIES_COUNT];
-> +	int ret;
-> +
-> +	ret = of_property_read_u32_array(np, "fixed-link",
-> +					 fixed_link_props,
-> +					 FIXED_LINK_PROPERTIES_COUNT);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	status.link       = 1;
-> +	status.duplex     = fixed_link_props[1];
-> +	status.speed      = fixed_link_props[2];
-> +	status.pause      = fixed_link_props[3];
-> +	status.asym_pause = fixed_link_props[4];
-> +
-> +	return fixed_phy_add(PHY_POLL, fixed_link_props[0],
-> +			     &status);
-> +}
-> +EXPORT_SYMBOL(of_phy_register_fixed_link);
-> +#endif
-> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-> index 8163107..bf6efea 100644
-> --- a/include/linux/of_mdio.h
-> +++ b/include/linux/of_mdio.h
-> @@ -57,4 +57,14 @@ static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
->  }
->  #endif /* CONFIG_OF */
+>  Example:
+>  	dmac: dma-mux0 {
+>  		compatible = "renesas,shdma-mux";
+> diff --git a/drivers/dma/sh/shdma.h b/drivers/dma/sh/shdma.h
+> index 8394424..991316f 100644
+> --- a/drivers/dma/sh/shdma.h
+> +++ b/drivers/dma/sh/shdma.h
+> @@ -23,6 +23,7 @@
+>  #define SH_DMAE_TCR_MAX 0x00FFFFFF	/* 16MB */
 >  
-> +#if defined(CONFIG_OF) && defined(CONFIG_FIXED_PHY)
-> +extern int of_phy_register_fixed_link(struct device_node *np);
-> +#else
-> +static inline int of_phy_register_fixed_link(struct device_node *np)
+>  struct device;
+> +struct device_node;
+>  
+>  struct sh_dmae_chan {
+>  	struct shdma_chan shdma_chan;
+> @@ -33,6 +34,11 @@ struct sh_dmae_chan {
+>  	int pm_error;
+>  };
+>  
+> +struct sh_dmae_filter_info {
+> +	u32			hw_req;
+> +	struct device_node	*of_node;
+> +};
+> +
+>  struct sh_dmae_device {
+>  	struct shdma_dev shdma_dev;
+>  	struct sh_dmae_chan *chan[SH_DMAE_MAX_CHANNELS];
+> @@ -42,6 +48,7 @@ struct sh_dmae_device {
+>  	void __iomem *dmars;
+>  	unsigned int chcr_offset;
+>  	u32 chcr_ie_bit;
+> +	struct sh_dmae_filter_info filter_info;
+>  };
+>  
+>  struct sh_dmae_regs {
+> diff --git a/drivers/dma/sh/shdmac.c b/drivers/dma/sh/shdmac.c
+> index 9ee3c28..fcaed8d 100644
+> --- a/drivers/dma/sh/shdmac.c
+> +++ b/drivers/dma/sh/shdmac.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_dma.h>
+>  #include <linux/slab.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/dmaengine.h>
+> @@ -665,6 +666,63 @@ static const struct shdma_ops sh_dmae_shdma_ops = {
+>  	.get_partial = sh_dmae_get_partial,
+>  };
+>  
+> +static bool sh_dmae_chan_filter(struct dma_chan *chan, void *arg)
 > +{
-> +	return -ENOSYS;
+> +	struct sh_dmae_filter_info *info = arg;
+> +	struct shdma_chan *schan = to_shdma_chan(chan);
+> +	int match = info->hw_req;
+> +
+> +	if (match < 0)
+> +		/* No slave requested - arbitrary channel */
+> +		return true;
+> +
+> +	dev_dbg(schan->dev, "%s(): trying %s for 0x%x\n", __func__,
+> +		info->of_node->full_name, match);
+> +
+> +	if (schan->dev->of_node != info->of_node)
+> +		return false;
+> +
+> +	return !sh_dmae_set_slave(schan, match, true);
 > +}
-> +#endif
 > +
+> +static struct dma_chan *sh_dmae_of_xlate(struct of_phandle_args *dma_spec,
+> +					 struct of_dma *ofdma)
+> +{
+> +	struct sh_dmae_filter_info *info = ofdma->of_dma_data;
+> +	u32 id = dma_spec->args[0];
+> +	dma_cap_mask_t mask;
+> +	struct dma_chan *chan;
 > +
->  #endif /* __LINUX_OF_MDIO_H */
+> +	if (dma_spec->args_count != 1)
+> +		return NULL;
+> +
+> +	dma_cap_zero(mask);
+> +	/* Only slave DMA channels can be allocated via DT */
+> +	dma_cap_set(DMA_SLAVE, mask);
+> +
+> +	info->hw_req = id;
+> +	info->of_node = dma_spec->np;
+> +
+> +	chan = dma_request_channel(mask, sh_dmae_chan_filter, info);
+> +	if (chan)
+> +		to_shdma_chan(chan)->hw_req = id;
+> +
+> +	return chan;
+> +}
+> +
+> +static int sh_dmae_of_add(struct device *dev, struct sh_dmae_device *shdev)
+> +{
+> +	u32 cells;
+> +	int ret = of_property_read_u32(dev->of_node, "#dma-cells", &cells);
+> +
+> +	dev_dbg(dev, "%s(): %u (%d)\n", __func__, cells, ret);
+> +	if (ret < 0 || !cells)
+> +		return 0;
+> +
+> +	return of_dma_controller_register(dev->of_node,
+> +					  sh_dmae_of_xlate, &shdev->filter_info);
+> +}
+> +
+>  static const struct of_device_id sh_dmae_of_match[] = {
+>  	{.compatible = "renesas,shdma-r8a73a4", .data = r8a73a4_shdma_devid,},
+>  	{.compatible = "renesas,shdma-r8a7740", .data = r8a7740_shdma_devid,},
+> @@ -845,6 +903,10 @@ static int sh_dmae_probe(struct platform_device *pdev)
+>  		} while (irq_cnt < pdata->channel_num && chanirq_res);
+>  	}
+>  
+> +	err = sh_dmae_of_add(&pdev->dev, shdev);
+> +	if (err < 0)
+> +		goto of_add_err;
+> +
+>  	/* Create DMA Channel */
+>  	for (i = 0; i < irq_cnt; i++) {
+>  		err = sh_dmae_chan_probe(shdev, i, chan_irq[i], chan_flag[i]);
+> @@ -869,6 +931,8 @@ edmadevreg:
+>  	pm_runtime_get(&pdev->dev);
+>  
+>  chan_probe_err:
+> +	of_dma_controller_free(pdev->dev.of_node);
+> +of_add_err:
+>  	sh_dmae_chan_remove(shdev);
+>  
+>  #if defined(CONFIG_CPU_SH4) || defined(CONFIG_ARCH_SHMOBILE)
+> @@ -895,6 +959,8 @@ static int sh_dmae_remove(struct platform_device *pdev)
+>  	struct sh_dmae_device *shdev = platform_get_drvdata(pdev);
+>  	struct dma_device *dma_dev = &shdev->shdma_dev.dma_dev;
+>  
+> +	of_dma_controller_free(pdev->dev.of_node);
+> +
+>  	dma_async_device_unregister(dma_dev);
+>  
+>  	spin_lock_irq(&sh_dmae_lock);
 > -- 
-> 1.8.1.2
+> 1.7.2.5
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
