@@ -1,58 +1,139 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from moutng.kundenserver.de ([212.227.126.171]:50553 "EHLO
-	moutng.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753961Ab3GXVDY (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 24 Jul 2013 17:03:24 -0400
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys part and Exynos part
-Date: Wed, 24 Jul 2013 23:02:40 +0200
-References: <002801ce8376$a807dbf0$f81793d0$@samsung.com> <51EE22DF.6090902@ti.com> <001301ce8772$522dfc50$f689f4f0$@samsung.com>
-In-Reply-To: <001301ce8772$522dfc50$f689f4f0$@samsung.com>
-MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Message-Id: <201307242302.40934.arnd@arndb.de>
+Received: from mailout4.samsung.com ([203.254.224.34]:38531 "EHLO
+	mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755195Ab3GWIm0 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 23 Jul 2013 04:42:26 -0400
+From: Jingoo Han <jg1.han@samsung.com>
+References: <002801ce8376$a807dbf0$f81793d0$@samsung.com>
+ <51ED49D6.9050209@ti.com> <000701ce8741$fe47deb0$fad79c10$@samsung.com>
+ <51EE22DF.6090902@ti.com>
+In-reply-to: <51EE22DF.6090902@ti.com>
+Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys part
+ and Exynos part
+Date: Tue, 23 Jul 2013 17:42:23 +0900
+Message-id: <001401ce8780$8d8461f0$a88d25d0$@samsung.com>
+MIME-version: 1.0
+Content-type: text/plain; charset=us-ascii
+Content-transfer-encoding: 7bit
+Content-language: ko
 Sender: devicetree-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>
+Cc: 'Pratyush Anand' <pratyush.anand@st.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tuesday 23 July 2013, Jingoo Han wrote:
-> > 
-> > Also I have one more query.
-> > In your dt binding, your pci address and cpu address is the same. But the pci
-> > address should start at 0x00000000 and end at 0xffffffff (for 32bit). Shouldn't
-> > the cpu address map to something within this range of pci address?
+On Tuesday, July 23, 2013 3:30 PM, Kishon Vijay Abraham I wrote:
+> On Tuesday 23 July 2013 06:44 AM, Jingoo Han wrote:
+> > On Tuesday, July 23, 2013 12:04 AM, Kishon Vijay Abraham I wrote:
+> >> On Thursday 18 July 2013 10:51 AM, Jingoo Han wrote:
+> >>> Exynos PCIe IP consists of Synopsys specific part and Exynos
+> >>> specific part. Only core block is a Synopsys designware part;
+> >>> other parts are Exynos specific.
+> >>> Also, the Synopsys designware part can be shared with other
+> >>> platforms; thus, it can be split two parts such as Synopsys
+> >>> designware part and Exynos specific part.
+> >>
+> >> some more queries and comments..
+> >
+> .
+> .
+> <snip>
+> .
+> .
+> >>> +			of_pci_range_to_resource(&range, np, &pp->cfg);
+> >>> +			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
+> >>> +			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
+> >>> +		}
+> >>> +	}
+> >>> +
+> >>> +	pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
+> >>> +				resource_size(&pp->cfg));
 
-The size is limited by the window available (e.g. 0x80000000-0x8FFFFFFF), it can
-never be the full 4GB on a 32 bit non-LPAE system. If you only care about memory
-space here (in practice you want at least also config space) that means you could
-either have an identity map
+[.....]
 
-	<0x82000000 0 0x80000000 0x80000000 0 0x1fffffff>;
+> >
+> >> Why should it be same as dbi_base?
+> >> AFAIK, jacinto6 has a dedicated configuration/io/memory space that is entirely
+> >> different from dbi_base.
+> >
+> > According to the Synopsys designware PCIe datasheet,
+> > in chapter 5.1.1 Register Space Layout,
+> > 'Port Logic Registers' are placed between (config space 0x0 + 0x700)
+> > and (config space 0x0 + 0xFFF).
+> > 'dbi_base' is used for reading/writing 'Port Logic Registers'.
+> > Exynos are using 'dbi_base' like this. Thus, the base addresses of
+> > both 'dbi_base' and configuration/io/memory space are same.
+> >
+> > Just now, I looked at Spear PCIe driver.
+> > However, in the case of Spear, the base address of configuration/io/memory
+> > space is defined as 0x80000000. The base address of 'Port Logic Registers'
+> > is defined as 0xb1000000.
+> > I think that the situation of 'jacinto6' is similar with Spear, right?
+> >
+> > Then, I will move pp->dbi_base mapping code from pcie-designware.c
+> > to pci-exynos.c.
+> 
+> I think you need not move this to exynos (since registers in dbi_base is common
+> for all platforms) but modify the pcie-designware.c to use different address
+> space for dbi_base. In your case, you'll duplicate the address space for
+> dbi_base and configuration space.
+> 
 
-or use bus address 0
+I will map 'pp->dbi_base' as below:
+Also, I referenced SPEAr PCIe patches made by Pratyush Anand.
+(http://permalink.gmane.org/gmane.linux.kernel.pci/18400)
+(http://permalink.gmane.org/gmane.linux.kernel.pci/18403)
 
-	<0x82000000 0 0 0x80000000 0 0x1fffffff>;
 
-but the length is always limited by the upstream bus.
+1. The different addresses between dbi_base and configuration space
+    : SPEAr PCIe, OMAP PCIe
+      'pp->dbi_base' value is come from DT binding, then, 'pp->dbi_base' will
+       be mapped in spear_pcie_probe() in pci-spear.c
 
-> Sorry, I cannot answer it exactly.
-> DT binding was confirmed by Arnd Bergmann.
-> He will answer it exactly.
+(arch/arm/boot/dts/spear13xx.dtsi)
+		pcie0@b1000000 {
+			reg = <0xb1000000 0x2000      <-- dbi register
+				 0xb1002000 0x7fdfff   <-- elbi register
 
-Normally you want the pci and cpu addresses to be the same, i.e. identity mapped.
-This simplifies PCI bus master DMA as it ensures that there is no aliasing between
-PCI memory space and RAM addresses visible to the host.
+(drivers/pci/host/pci-spear.c)
+static int __init spear_pcie_probe(struct platform_device *pdev)
+{
+	struct resource *dbi_base;
+	struct resource *elbi_base;
 
-If you know that there is never any RAM at CPU address 0, you can also make the
-PCI memory space be mapped from bus address 0, which has the advantage of allowing
-access to low PCI addresses, e.g. for legacy VGA output using the 0xa0000-0xbffff
-range, but it's less common. In particular on x86 there is always an identity
-mapping.
+	dbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	pp->dbi_base = devm_ioremap_resource(&pdev->dev, dbi_base);
 
-The driver should be able to handle any mapping that can be described by the binding
-and is physically possible to be programmed into the translation windows.
+	elbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+	spear_pcie->elbi_base = devm_ioremap_resource(&pdev->dev, elbi_base);
 
-	Arnd
+
+
+2. The same addresses between dbi_base and configuration space
+    : Exynos PCIe
+      'pp->dbi_base' will be mapped in dw_pcie_host_init() of pcie-designware.c.
+
+(drivers/pci/host/pcie-exynos.c)
+static int __init exynos_pcie_probe(struct platform_device *pdev)
+{
+	struct resource *elbi_base;
+
+	elbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	exynos_pcie->elbi_base = devm_ioremap_resource(&pdev->dev, elbi_base);
+
+(drivers/pci/host/pcie-designware.c)
+int dw_pcie_host_init(struct pcie_port *pp)
+{
+	if (!pp->dbi_base) {
+		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
+						resource_size(&pp->cfg));
+		if (!pp->dbi_base) {
+			dev_err(pp->dev, "error with ioremap\n");
+			return -ENOMEM;
+		}
+	}
+
+
+Best regards,
+Jingoo Han
+
+
