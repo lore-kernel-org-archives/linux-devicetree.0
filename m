@@ -1,35 +1,92 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from aserp1040.oracle.com ([141.146.126.69]:44138 "EHLO
-	aserp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755970Ab3GYQmZ (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 12:42:25 -0400
-Date: Thu, 25 Jul 2013 19:40:17 +0300
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch] ASoC: adau1701: type bug with ADAU1707_CLKDIV_UNSET
-Message-ID: <20130725164016.GA4027@elgon.mountain>
+Return-Path: <swarren@wwwdotorg.org>
+Message-ID: <51EEDF3F.9040905@wwwdotorg.org>
+Date: Tue, 23 Jul 2013 12:53:35 -0700
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Sender: devicetree-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Daniel Mack <zonque@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, device-drivers-devel@blackfin.uclinux.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
+References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>    <1374290388-19308-3-git-send-email-grant.likely@linaro.org>    <1374511851.3609.10.camel@hornet> <51ED9018.1020003@gmail.com>   <1374599667.25700.92.camel@hornet> <51EEC49A.4080909@wwwdotorg.org>  <1374602957.6623.142.camel@hastur.hellion.org.uk>  <51EECF1A.40404@gmail.com> <1374605732.6623.162.camel@hastur.hellion.org.uk>
+In-Reply-To: <1374605732.6623.162.camel@hastur.hellion.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+To: Ian Campbell <ian.campbell@citrix.com>
+Cc: Rob Herring <robherring2@gmail.com>, Pawel Moll <pawel.moll@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-ADAU1707_CLKDIV_UNSET is always compared against an unsigned int and
-not an unsigned long.  The current tests are always false.
+On 07/23/2013 11:55 AM, Ian Campbell wrote:
+> On Tue, 2013-07-23 at 13:44 -0500, Rob Herring wrote:
+>> On 07/23/2013 01:09 PM, Ian Campbell wrote:
+>>> On Tue, 2013-07-23 at 10:59 -0700, Stephen Warren wrote:
+>>>
+>>>> I think the solution is to introduce some new shared/common location for
+>>>> shared/common *.dtsi files, into the kernel tree, in the interim.
+>>>>
+>>>> When *.dts move out of the kernel, this common location can simply be
+>>>> consumed as part of the DT tree re-organization.
+>>>>
+>>>> Or perhaps, we could move *.dts around in the kernel to match the
+>>>> proposed DT tree structure before that point in time?
+>>>
+>>> FWIW I can easily handle any transformation as part of the automated
+>>> extraction into the device-tree.git. If it can expressed as a sed script
+>>> then so much the better, e.g. the current rules are
+>>> http://xenbits.xen.org/gitweb/?p=people/ianc/device-tree-rebasing.git;a=blob;f=scripts/rewrite-paths.sed;h=f7a157d1b486bac058f50e42cf7bedc8630e54ff;hb=HEAD.
+>>> If it gets too complicated for sed I can always switch to something
+>>> else.
+>>>
+>>> I'm already pending a complete rebuild of the export to add in the
+>>> Documentation/devicetree/bindings sub tree but since it takes an age to
+>>> run I was waiting for the output of this conversation before kicking
+>>> that off.
+>>
+>> I'd doubt we could completely script this with a generic rule without a
+>> bunch of manual transformations.
+> 
+> Right. The advantage of scripting, even if that script is just a big
+> long list of manual rules, is that we can preserve the history from
+> linux.git in device-tree.git, so git annotate etc say something useful.
+> 
+> But if I'm going to write a big long list of such rules I'd like to only
+> do the bulk of the work once, so we need to decide on the layout first.
+> 
+>>  So I think either restructuring in the
+>> kernel or when we move them out of the kernel makes more sense. We know
+>> the problem is coming, but it is not yet a major, pressing issue.
+>>
+>> OTOH, you could see how far you get by putting dts files in directories
+>> by their board level compatible string vendor and put any include files
+>> where ever they are included from. Of course, that is just my proposed
+>> layout. I haven't heard any opinions on that layout.
+> 
+> I don't really have a strong opinion on the layout myself, I'm happy to
+> implement whatever works for people.
+> 
+> The board level compatible string vendor is the top-level compatible,
+> right? e.g.:
+>         / {
+>                 model = "Calxeda Highbank";
+>                 compatible = "calxeda,highbank";
+> "calxeda,highbank" in this case. So you propose s|,|/| on that so the
+> file ends up in calxeda/highbank.dts?
+> 
+> For the included ecx-common.dtsi I think you are proposing to find all
+> the files which include it and then find the
+> deepest-common-subdirectory? In this case the other include is
+> ecx-2000.dts which is compatible calxeda,ecx-2000
+> (->calxeda/ecx2000.dts) so the common subdir is calxeda and dtsi would
+> become calxeda/ecs-2000.dtsi. That works, I should probably have picked
+> an example which didn't rely on files you are so involved with in case
+> there is a selection bias at work ;-)
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+That layout sounds pretty reasonable. Are all those patches underneath
+dt/ or is calxeda/ a top-level directory?
 
-diff --git a/sound/soc/codecs/adau1701.c b/sound/soc/codecs/adau1701.c
-index 44d8a95..2c10252 100644
---- a/sound/soc/codecs/adau1701.c
-+++ b/sound/soc/codecs/adau1701.c
-@@ -91,7 +91,7 @@
- #define ADAU1701_OSCIPOW_OPD		0x04
- #define ADAU1701_DACSET_DACINIT		1
- 
--#define ADAU1707_CLKDIV_UNSET		(-1UL)
-+#define ADAU1707_CLKDIV_UNSET		(-1U)
- 
- #define ADAU1701_FIRMWARE "adau1701.bin"
- 
+I guess that means that common files like skeleton.dtsi will simply end
+up at the top-level (or in "top-level" dt/). That's probably fine.
+
+I'd like the filenames to stay the same; to some degree I consider that
+part of the DT ABI. At least for Tegra, and I think most/many other SoCs
+follow this scheme..., we have named the files ${soc}-${board}.dts, and
+made sure that the ${soc} and ${board} values match U-Boot's values, so
+U-Boot can just "load mmc 0:1 ${soc}-${board}.dts" and hence use the
+exact same U-Boot script for all Tegra boards (and potentially for any
+board that defines ${soc} and ${board}, and doing that is easy).
