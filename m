@@ -1,44 +1,62 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v8 00/28] MBus DT binding for Armada 370/XP and Kirkwood
-Date: Tue, 23 Jul 2013 10:10:31 -0700
-Message-ID: <CAOesGMh5GjCkaGX1O1VdkQUKdM8z0XPEc08OFPjJcGgP6s9nRw@mail.gmail.com>
-References: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Pawel Moll <pawel.moll@arm.com>
+Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
+Date: Tue, 23 Jul 2013 18:14:27 +0100
+Message-ID: <1374599667.25700.92.camel@hornet>
+References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>
+	 <1374290388-19308-3-git-send-email-grant.likely@linaro.org>
+	 <1374511851.3609.10.camel@hornet> <51ED9018.1020003@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, valentin.longchamp@keymile.com, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, gerlando.falauto@keymile.com, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51ED9018.1020003@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2013 at 6:31 AM, Ezequiel Garcia
-<ezequiel.garcia@free-electrons.com> wrote:
-> After Andrew Lunn reported [1] this work need to take account of Kirkwood
-> to prevent breaking PCIe on such platform, here's a new version adding
-> MBus DT binding for Kirkwood and in particular using it to declare PCIe
-> properly.
+On Mon, 2013-07-22 at 21:03 +0100, Rob Herring wrote:
+> On 07/22/2013 11:50 AM, Pawel Moll wrote:
+> > On Sat, 2013-07-20 at 04:19 +0100, Grant Likely wrote:
+> >> +F:	include/dt-bindings
+> >=20
+> > One thing we didn't finish talking about was the question if this
+> > directory is supposed to contain *.dtsi files as well? The obvious
+> > problem I have is a vexpress motherboard being (well, actually not =
+bein
+> > right now) shared between arch/arm/boot/dts and arch/arm64/boot/dts=
+=2E
+>=20
+> Please no.=20
 
-Ezequiel,
+No as in: no don't put *.dtsi files into include/dt-bindings; or: no, d=
+o
+not duplicate the motherboard file?
 
-This is a prime example of someone sending a whole patch series to the
-devicetree mailing list, when only the bindings updates should go
-there. There are a lot of readers of the devicetree lists that can't
-keep up with the volume of email due to this reason.
+It you meant the latter, this is exactly what I wanted to say: I don't
+want to do that, but there's no way of avoiding it right now.
 
-So, while I'm commenting on your email, this goes for everybody
-mailing to this list (and I expect to repeat myself a few times in the
-weeks and months ahead): Do not post the driver updates to the
-devicetree list, only the bindings updates.
+> When we move dts files out of the kernel,=20
 
+And when would this happen? Don't get me wrong, I'm in favour of doing
+this as well (I really don't want to push all 15-or-so DTSes for all th=
+e
+different models and SMMs I have into the kernel)
 
--Olof
+> we will still need
+> to copy dt-bindings into the kernel. Also, I think we should move all
+> dts files out of arch subdirs and arrange by vendor or soc family. I'=
+m
+> sure there are some cases that structure doesn't fit well, but there =
+is
+> very little in a dts tied to a cpu architecture.
+
+I couldn't agree more. So:
+
+<root>/include/dt-bindings/vendor/*?
+<root>/dts/vendor/*?
+<root>/of/vendor/*?
+<root>/dt/vendor/*?
+<root>/drivers/of/vendor/*?
+
+Pawe=C5=82
