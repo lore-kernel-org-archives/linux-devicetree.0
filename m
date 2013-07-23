@@ -1,129 +1,89 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH v8 06/28] ARM: dove: Move to ID based window creation
-Date: Tue, 23 Jul 2013 10:31:10 -0300
-Message-ID: <1374586292-4941-7-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 0/4] Add PWM polarity flag macro for DT
+Date: Tue, 23 Jul 2013 08:37:49 -0700
+Message-ID: <20130723153748.GC2066@dhcp-172-17-186-34.nvidia.com>
+References: <1374101664-21112-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <51E81E1C.20708@wwwdotorg.org>
+ <10033310.z2U2FSCElN@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, valentin.longchamp@keymile.com, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, gerlando.falauto@keymile.com, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8NvZYKFJsRX2Djef"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <10033310.z2U2FSCElN@avalon>
+Sender: linux-omap-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <linux-arm@overkiz.com>, Shawn Guo <shawn.guo@linaro.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 
-With the introduction of the ID based MBus API, it's better
-to switch to use it instead of the current name based scheme.
+--8NvZYKFJsRX2Djef
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This will allow to deprecate the name based API, once every
-user is removed.
+On Fri, Jul 19, 2013 at 01:29:13PM +0200, Laurent Pinchart wrote:
+> Hi Stephen,
+>=20
+> On Thursday 18 July 2013 10:55:56 Stephen Warren wrote:
+> > On 07/17/2013 04:54 PM, Laurent Pinchart wrote:
+> > > Hello,
+> > >=20
+> > > Here's a small patch set that replaces PWM polarity numerical constan=
+ts
+> > > with macros in DT.
+> >=20
+> > The series,
+> > Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> >=20
+> > I'm (very very) slightly hesitant about patch 3/4, since it's moving to=
+wards
+> > all PWMs having to use the same specifier format, whereas specifiers ar=
+e at
+> > least potentially binding-specific, not device-type-specific. However,
+> > consistency is good; there's no need to do something different just for=
+ the
+> > heck of it. Equally, there's nothing actually stopping a new binding fr=
+om
+> > defining its own format rather than simply deferring to pwm.txt if it
+> > absolutely has to, so I think this will turn out fine.
+>=20
+> Exactly, that's why I don't think it's an issue. pwm.txt defines a common=
+=20
+> format, individual bindings are free to use it or not.
+>=20
+> Thierry, if you're fine with the patches, could you take them in your tre=
+e=20
+> with Stephen's Reviewed-by, or should I report them and send you a pull=
+=20
+> request ?
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- arch/arm/mach-dove/common.c | 68 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 45 insertions(+), 23 deletions(-)
+They look good to me. I'll take them into my tree and add Stephen's
+Reviwed-by. It might take me another week, though, as I'm currently
+rather busy with other things.
 
-diff --git a/arch/arm/mach-dove/common.c b/arch/arm/mach-dove/common.c
-index 00247c7..bc22056 100644
---- a/arch/arm/mach-dove/common.c
-+++ b/arch/arm/mach-dove/common.c
-@@ -27,6 +27,22 @@
- #include <plat/time.h>
- #include "common.h"
- 
-+/* These can go away once Dove uses the mvebu-mbus DT binding */
-+#define DOVE_MBUS_PCIE0_MEM_TARGET    0x4
-+#define DOVE_MBUS_PCIE0_MEM_ATTR      0xe8
-+#define DOVE_MBUS_PCIE0_IO_TARGET     0x4
-+#define DOVE_MBUS_PCIE0_IO_ATTR       0xe0
-+#define DOVE_MBUS_PCIE1_MEM_TARGET    0x8
-+#define DOVE_MBUS_PCIE1_MEM_ATTR      0xe8
-+#define DOVE_MBUS_PCIE1_IO_TARGET     0x8
-+#define DOVE_MBUS_PCIE1_IO_ATTR       0xe0
-+#define DOVE_MBUS_CESA_TARGET         0x3
-+#define DOVE_MBUS_CESA_ATTR           0x1
-+#define DOVE_MBUS_BOOTROM_TARGET      0x1
-+#define DOVE_MBUS_BOOTROM_ATTR        0xfd
-+#define DOVE_MBUS_SCRATCHPAD_TARGET   0xd
-+#define DOVE_MBUS_SCRATCHPAD_ATTR     0x0
-+
- /*****************************************************************************
-  * I/O Address Mapping
-  ****************************************************************************/
-@@ -332,34 +348,40 @@ void __init dove_setup_cpu_wins(void)
- {
- 	/*
- 	 * The PCIe windows will no longer be statically allocated
--	 * here once Dove is migrated to the pci-mvebu driver.
-+	 * here once Dove is migrated to the pci-mvebu driver. The
-+	 * non-PCIe windows will no longer be created here once Dove
-+	 * fully moves to DT.
- 	 */
--	mvebu_mbus_add_window_remap_flags("pcie0.0",
-+	mvebu_mbus_add_window_remap_by_id(DOVE_MBUS_PCIE0_IO_TARGET,
-+					  DOVE_MBUS_PCIE0_IO_ATTR,
- 					  DOVE_PCIE0_IO_PHYS_BASE,
- 					  DOVE_PCIE0_IO_SIZE,
--					  DOVE_PCIE0_IO_BUS_BASE,
--					  MVEBU_MBUS_PCI_IO);
--	mvebu_mbus_add_window_remap_flags("pcie1.0",
-+					  DOVE_PCIE0_IO_BUS_BASE);
-+	mvebu_mbus_add_window_remap_by_id(DOVE_MBUS_PCIE1_IO_TARGET,
-+					  DOVE_MBUS_PCIE1_IO_ATTR,
- 					  DOVE_PCIE1_IO_PHYS_BASE,
- 					  DOVE_PCIE1_IO_SIZE,
--					  DOVE_PCIE1_IO_BUS_BASE,
--					  MVEBU_MBUS_PCI_IO);
--	mvebu_mbus_add_window_remap_flags("pcie0.0",
--					  DOVE_PCIE0_MEM_PHYS_BASE,
--					  DOVE_PCIE0_MEM_SIZE,
--					  MVEBU_MBUS_NO_REMAP,
--					  MVEBU_MBUS_PCI_MEM);
--	mvebu_mbus_add_window_remap_flags("pcie1.0",
--					  DOVE_PCIE1_MEM_PHYS_BASE,
--					  DOVE_PCIE1_MEM_SIZE,
--					  MVEBU_MBUS_NO_REMAP,
--					  MVEBU_MBUS_PCI_MEM);
--	mvebu_mbus_add_window("cesa", DOVE_CESA_PHYS_BASE,
--			      DOVE_CESA_SIZE);
--	mvebu_mbus_add_window("bootrom", DOVE_BOOTROM_PHYS_BASE,
--			      DOVE_BOOTROM_SIZE);
--	mvebu_mbus_add_window("scratchpad", DOVE_SCRATCHPAD_PHYS_BASE,
--			      DOVE_SCRATCHPAD_SIZE);
-+					  DOVE_PCIE1_IO_BUS_BASE);
-+	mvebu_mbus_add_window_by_id(DOVE_MBUS_PCIE0_MEM_TARGET,
-+				    DOVE_MBUS_PCIE0_MEM_ATTR,
-+				    DOVE_PCIE0_MEM_PHYS_BASE,
-+				    DOVE_PCIE0_MEM_SIZE);
-+	mvebu_mbus_add_window_by_id(DOVE_MBUS_PCIE1_MEM_TARGET,
-+				    DOVE_MBUS_PCIE1_MEM_ATTR,
-+				    DOVE_PCIE1_MEM_PHYS_BASE,
-+				    DOVE_PCIE1_MEM_SIZE);
-+	mvebu_mbus_add_window_by_id(DOVE_MBUS_CESA_TARGET,
-+				    DOVE_MBUS_CESA_ATTR,
-+				    DOVE_CESA_PHYS_BASE,
-+				    DOVE_CESA_SIZE);
-+	mvebu_mbus_add_window_by_id(DOVE_MBUS_BOOTROM_TARGET,
-+				    DOVE_MBUS_BOOTROM_ATTR,
-+				    DOVE_BOOTROM_PHYS_BASE,
-+				    DOVE_BOOTROM_SIZE);
-+	mvebu_mbus_add_window_by_id(DOVE_MBUS_SCRATCHPAD_TARGET,
-+				    DOVE_MBUS_SCRATCHPAD_ATTR,
-+				    DOVE_SCRATCHPAD_PHYS_BASE,
-+				    DOVE_SCRATCHPAD_SIZE);
- }
- 
- void __init dove_init(void)
--- 
-1.8.1.5
+Thierry
+
+--8NvZYKFJsRX2Djef
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR7qNMAAoJEN0jrNd/PrOhadoP/1Zy5D/e2IWjPEIb81W7pXax
+w9miYMx8jARl4x4OhdQmWqT36F9Ne/b3Auk1qNBNUrDESjazDtAWfxN6WrwO80IE
+sORDvyK0G75HLRByjR3kwtoM8Hs+F9jR8wYN7ptiYhqAdQBdlSTF1nAOX77EBMGj
+/Vqrf0Dr9+gGt2n3AWSShV8MG54Sa/SU8tGoO+4pfvywuK2Wu4s0ApRz6yUZ7gX4
+9wHHw4OF6nn6feyF6Yo56nFsgmis7MOfXDt3UJem1qoXNPykREpWL/UJxTvN/0fY
+CIBDrAQgtuAwTTGpceVzK+DAIi5O4ZYj1kxn0McaEyl+rf1ieXPS3EnsY0zPaOaV
+Q/PntIArP67nRYDBJzJTsZ352ldULfE+oU8izvk33GxDwIdEMUCcBGBGM8MkU4iB
+wbIZ/ZG83bsH1zieppQU841UZVlgvNo2wVEiPMfUDWZSqtTjygrOth3o1EjGtsPE
+QMT8iF3VoK74Fq0Bl44l3d7YZYoUmQK5zYmeDnPgSh58n9udPPlObBIaX8EY5x9Y
+Uxr459Z7n9hR+5TQRwMoIf2ZNT7b9VRlnUum6XRBMb0xmvRm/9jjw+wbhDSbSQdA
+Xg/lf3UIdoeR0dcvEQg/02C+xQTSoWXqf9QPwTU88eNMWyJY8IvMwKm3U0RSfqfV
+eAebYYwZURBeNqBtyrD9
+=s7ML
+-----END PGP SIGNATURE-----
+
+--8NvZYKFJsRX2Djef--
