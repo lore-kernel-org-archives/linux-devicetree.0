@@ -1,96 +1,90 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] iio: mxs-lradc: add scale_available file to channels
-Date: Tue, 23 Jul 2013 09:00:13 +0200
-Message-ID: <51EE29FD.5070901@digi.com>
-References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com> <1374501843-19651-5-git-send-email-hector.palacios@digi.com> <201307230036.42046.marex@denx.de>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv4 00/33] ARM: OMAP: clock conversion to DT
+Date: Tue, 23 Jul 2013 10:19:55 +0300
+Message-ID: <1374564028-11352-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201307230036.42046.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, paul@pwsan.com, khilman@linaro.org, tony@atomide.com, mturquette@linaro.org, nm@ti.com, rnayak@ti.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Marek,
+Hi,
 
-On 07/23/2013 12:36 AM, Marek Vasut wrote:
-> Dear Hector Palacios,
->
->> Adds in_voltageX_scale_available file for every channel to read
->> the different available scales.
->> There are two scales per channel:
->>   [0] = divider_by_two disabled (default)
->>   [1] = divider_by_two enabled
->> The scale is a struct made of integer and nano parts to build
->> a long decimal number.
->>
->> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
->> ---
->
-> [...]
->
->> @@ -1008,6 +1098,26 @@ static int mxs_lradc_probe(struct platform_device
->> *pdev) if (ret)
->>   		goto err_trig;
->>
->> +	/* Populate available ADC input ranges */
->> +	for (i = 0; i < LRADC_MAX_TOTAL_CHANS; i++) {
->> +		for (s = 0; s < ARRAY_SIZE(lradc->scale_avail[i]); s++) {
->> +			/*
->> +			 * [s=0] = optional divider by two disabled (default)
->> +			 * [s=1] = optional divider by two enabled
->> +			 *
->> +			 * The scale is calculated by doing:
->> +			 *   Vref >> (realbits - s)
->> +			 * which multiplies by two on the second component
->> +			 * of the array.
->> +			 */
->> +			scale_uv = ((u64)lradc->vref_mv[i] * 100000000) >>
->> +				   (iio->channels[i].scan_type.realbits - s);
->
-> Thinking about this, this is basically
->
->              vref_mv[CHANNEL] * 100 000 000
-> scale_uv = --------------------------------
->                        2^(12 - s)
->
-> Where s can be either 0 or 1.
->
-> Why do you multiply it by 100000000 I don't quite understand, but maybe it's
-> fully obvious. It should be documented though.
+Changes compared to previous version:
 
-I copied Michael Hennerich in CC who was the author of this math in
-  drivers/iio/adc/ad7793.c
-  drivers/staging/iio/adc/ad7192.c
-which I copied. Maybe he can explain. It looks like it is just a question of having a 
-intermediate large enough number to later do the do_div operation, rather than having 
-a meaningful figure.
+- Clock init files moved from mach-omap2/ to drivers/clk/omap/
+- AM33xx support added [patches 15-20]
+- OMAP3 support added [patches 21-29]
+- DRA7 APLL support added (thanks Keerthy) [patches 30-33]
 
->> +			lradc->scale_avail[i][s].nano =
->> +					do_div(scale_uv, 100000000) * 10;
->
-> Are we not loosing precission here?
+Test branch on top of 3.11-rc1 available here:
 
-Yes, but the do_div is modifying the scale_uv parameter with the integer part so I 
-guess it might be somewhat justified.
-As I said before, I tried to do my own math without success so I just copied what was 
-in other drivers.
+git://gitorious.org/~kristo/omap-pm/omap-pm-work.git
+branch: mainline-3.11-rc1-omap-dt-clks
 
->
->> +			lradc->scale_avail[i][s].integer = scale_uv;
->> +		}
->> +	}
->> +
->>   	/* Configure the hardware. */
->>   	mxs_lradc_hw_init(lradc);
->
-> Best regards,
-> Marek Vasut
->
+Testing done:
 
+- boot + suspend tested on OMAP3 beagle C4 (omap3530)
+- boot + suspend tested on OMAP4 panda ES (omap4460)
+- boot tested on beagle bone (am335x)
 
-Best regards,
---
-Hector Palacios
+A boot test was also executed for DRA7 and OMAP5 on a separate branch
+(mainline does not have OMAP5 / DRA7 support so far.)
+
+TODO:
+- Add AM35xx support (OMAP3 derivative, AM35xx only clock nodes missing)
+
+Overall diffstat added just for fun:
+
+ arch/arm/boot/dts/am33xx-clocks.dtsi               |  663 ++++
+ arch/arm/boot/dts/am33xx.dtsi                      |    7 +
+ arch/arm/boot/dts/dra7xx-clocks.dtsi               | 2113 ++++++++++++
+ arch/arm/boot/dts/omap3.dtsi                       |    7 +
+ arch/arm/boot/dts/omap3430es1-clocks.dtsi          |  166 +
+ arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi    |  240 ++
+ arch/arm/boot/dts/omap34xx.dtsi                    |    9 +
+ .../omap36xx-am35xx-omap3430es2plus-clocks.dtsi    |  214 ++
+ arch/arm/boot/dts/omap36xx-clocks.dtsi             |   97 +
+ .../boot/dts/omap36xx-omap3430es2plus-clocks.dtsi  |  185 +
+ arch/arm/boot/dts/omap36xx.dtsi                    |   10 +
+ arch/arm/boot/dts/omap3xxx-clocks.dtsi             | 1594 +++++++++
+ arch/arm/boot/dts/omap443x-clocks.dtsi             |   17 +
+ arch/arm/boot/dts/omap443x.dtsi                    |    8 +
+ arch/arm/boot/dts/omap4460.dtsi                    |    8 +
+ arch/arm/boot/dts/omap446x-clocks.dtsi             |   27 +
+ arch/arm/boot/dts/omap44xx-clocks.dtsi             | 1654 +++++++++
+ arch/arm/boot/dts/omap54xx-clocks.dtsi             | 1416 ++++++++
+ arch/arm/mach-omap2/Makefile                       |    5 +-
+ arch/arm/mach-omap2/cclock33xx_data.c              | 1059 ------
+ arch/arm/mach-omap2/cclock3xxx_data.c              | 3641 --------------------
+ arch/arm/mach-omap2/cclock44xx_data.c              | 1730 ----------
+ arch/arm/mach-omap2/clock.c                        |    6 +
+ arch/arm/mach-omap2/clock.h                        |  163 +-
+ arch/arm/mach-omap2/clock3xxx.h                    |    7 +-
+ arch/arm/mach-omap2/io.c                           |    7 +-
+ arch/arm/mach-omap2/omap_hwmod.c                   |    5 +-
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk-divider.c                          |    6 +-
+ drivers/clk/clk-fixed-factor.c                     |    6 +-
+ drivers/clk/clk-gate.c                             |    8 +-
+ drivers/clk/clk-mux.c                              |    6 +-
+ drivers/clk/clkdev.c                               |   32 +
+ drivers/clk/omap/Makefile                          |    4 +
+ drivers/clk/omap/apll.c                            |  213 ++
+ drivers/clk/omap/autoidle.c                        |  130 +
+ drivers/clk/omap/clk-33xx.c                        |   85 +
+ drivers/clk/omap/clk-3xxx.c                        |  171 +
+ drivers/clk/omap/clk-44xx.c                        |  118 +
+ drivers/clk/omap/clk-54xx.c                        |   58 +
+ drivers/clk/omap/clk-7xx.c                         |   67 +
+ drivers/clk/omap/clk.c                             |   84 +
+ drivers/clk/omap/dpll.c                            |  387 +++
+ drivers/clk/omap/gate.c                            |  166 +
+ drivers/clk/omap/interface.c                       |  110 +
+ include/linux/clk/omap.h                           |  223 ++
+ 46 files changed, 10327 insertions(+), 6606 deletions(-)
+
+-Tero
+
