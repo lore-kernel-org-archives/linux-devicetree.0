@@ -1,60 +1,541 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] ARM: kirkwood: enable S/PDIF
-Date: Tue, 23 Jul 2013 14:36:55 +0100
-Message-ID: <20130723133655.GV24642@n2100.arm.linux.org.uk>
-References: <20130723102320.56bc4555@armhf>
- <20130723084347.GP24642@n2100.arm.linux.org.uk>
- <20130723130622.GB9858@sirena.org.uk> <51EE8158.4050300@gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v8 28/28] ARM: kirkwood: Relocate PCIe device tree nodes
+Date: Tue, 23 Jul 2013 10:31:32 -0300
+Message-ID: <1374586292-4941-29-git-send-email-ezequiel.garcia@free-electrons.com>
+References: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <51EE8158.4050300@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jean-Francois Moine <moinejf@free.fr>, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, valentin.longchamp@keymile.com, Grant Likely <grant.likely@secretlab.ca>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Lior Amsalem <alior@marvell.com>, gerlando.falauto@keymile.com, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 23, 2013 at 03:12:56PM +0200, Sebastian Hesselbarth wrote:
-> On 07/23/13 15:06, Mark Brown wrote:
->> On Tue, Jul 23, 2013 at 09:43:47AM +0100, Russell King - ARM Linux wrote:
->>> On Tue, Jul 23, 2013 at 10:23:20AM +0200, Jean-Francois Moine wrote:
->>>> This patch enables S/PDIF.
->>
->>>> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
->>
->>> I'm not submitting my patch to do this because:
->>
->>> (a) we don't know what effect this has on other hardware.
->>
->> This patch will do absolutely nothing unless it's used in a machine
->> driver which connects a S/PDIF CODEC to it.  I see no reason not to
->> apply it, someone with hardware with more complex needs can always build
->> on it later.
->>
->
-> Mark,
->
-> the mask that is changed in the patch is what will be written
-> into i2s controller's registers. So, if there is no S/PDIF in that  
-> specific controller that bit can possibly have a different meaning.
-> Also, enabling both I2S playback and SPDIF playback can cause the
-> controller to behave differently.
+Now that mbus has been added to the device tree, it's possible to
+move the PCIe nodes out of the ocp node, placing it directly
+below the mbus. This is a more accurate representation of the hardware.
 
-Right, so the SPDIF output on Dove isn't multiplexed, so I was wrong on
-that _for_ _dove_, but that may not necessarily be the case for the
-Kirkwood SoCs - the pin may be multiplexed there.
+Moving the PCIe nodes, we now need to introduce an extra cell to
+encode the window target ID and attribute. Since this depends on
+the PCIe port, we split the ranges translation entries, to
+correspond to each MBus window.
 
-However, Dove does have two I2S/SPDIF controllers which are otherwise
-identical, apart from one having SPDIF support and the other not.
-Setting the SPDIF enable bit on the one without is unspecified what
-the behaviour would be, so it should not be set.
+In addition, we encode the PCIe memory and I/O apertures in the MBus
+node, according to the MBus DT binding specification. The choice made
+is 0xe0000000-0xf0000000 for memory space, and 0xf200000-0xf2100000 for
+I/O space. These apertures can be changed in each per-board DT file.
+
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+---
+ arch/arm/boot/dts/kirkwood-6281.dtsi               |  66 ++++++-------
+ arch/arm/boot/dts/kirkwood-6282.dtsi               | 102 +++++++++++----------
+ arch/arm/boot/dts/kirkwood-db-88f6281.dts          |   3 +-
+ arch/arm/boot/dts/kirkwood-db-88f6282.dts          |   3 +-
+ arch/arm/boot/dts/kirkwood-db.dtsi                 |   8 --
+ arch/arm/boot/dts/kirkwood-iconnect.dts            |  19 ++--
+ arch/arm/boot/dts/kirkwood-mplcec4.dts             |  19 ++--
+ .../boot/dts/kirkwood-netgear_readynas_duo_v2.dts  |  19 ++--
+ arch/arm/boot/dts/kirkwood-nsa310.dts              |  19 ++--
+ arch/arm/boot/dts/kirkwood-ts219-6282.dts          |  19 ++--
+ arch/arm/boot/dts/kirkwood-ts219.dtsi              |  17 ++--
+ arch/arm/boot/dts/kirkwood.dtsi                    |   5 +-
+ 12 files changed, 163 insertions(+), 136 deletions(-)
+
+diff --git a/arch/arm/boot/dts/kirkwood-6281.dtsi b/arch/arm/boot/dts/kirkwood-6281.dtsi
+index 1e5bef0..650ef30 100644
+--- a/arch/arm/boot/dts/kirkwood-6281.dtsi
++++ b/arch/arm/boot/dts/kirkwood-6281.dtsi
+@@ -1,4 +1,39 @@
+ / {
++	mbus {
++		pcie-controller {
++			compatible = "marvell,kirkwood-pcie";
++			status = "disabled";
++			device_type = "pci";
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++
++			bus-range = <0x00 0xff>;
++
++			ranges =
++			       <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000
++				0x82000000 0x1 0     MBUS_ID(0x04, 0xe8) 0       1 0 /* Port 0.0 MEM */
++				0x81000000 0x1 0     MBUS_ID(0x04, 0xe0) 0       1 0 /* Port 0.0 IO  */>;
++
++			pcie@1,0 {
++				device_type = "pci";
++				assigned-addresses = <0x82000800 0 0x00040000 0 0x2000>;
++				reg = <0x0800 0 0 0 0>;
++				#address-cells = <3>;
++				#size-cells = <2>;
++				#interrupt-cells = <1>;
++				ranges = <0x82000000 0 0 0x82000000 0x1 0 1 0
++					  0x81000000 0 0 0x81000000 0x1 0 1 0>;
++				interrupt-map-mask = <0 0 0 0>;
++				interrupt-map = <0 0 0 0 &intc 9>;
++				marvell,pcie-port = <0>;
++				marvell,pcie-lane = <0>;
++				clocks = <&gate_clk 2>;
++				status = "disabled";
++			};
++		};
++	};
++
+ 	ocp@f1000000 {
+ 		pinctrl: pinctrl@10000 {
+ 			compatible = "marvell,88f6281-pinctrl";
+@@ -41,37 +76,6 @@
+ 			};
+ 		};
+ 
+-		pcie-controller {
+-			compatible = "marvell,kirkwood-pcie";
+-			status = "disabled";
+-			device_type = "pci";
+-
+-			#address-cells = <3>;
+-			#size-cells = <2>;
+-
+-			bus-range = <0x00 0xff>;
+-
+-			ranges = <0x82000000 0 0x00040000 0x00040000 0 0x00002000   /* Port 0.0 registers */
+-				  0x82000000 0 0xe0000000 0xe0000000 0 0x08000000   /* non-prefetchable memory */
+-			          0x81000000 0 0          0xe8000000 0 0x00100000>; /* downstream I/O */
+-
+-			pcie@1,0 {
+-				device_type = "pci";
+-				assigned-addresses = <0x82000800 0 0x00040000 0 0x2000>;
+-				reg = <0x0800 0 0 0 0>;
+-				#address-cells = <3>;
+-				#size-cells = <2>;
+-				#interrupt-cells = <1>;
+-				ranges;
+-				interrupt-map-mask = <0 0 0 0>;
+-				interrupt-map = <0 0 0 0 &intc 9>;
+-				marvell,pcie-port = <0>;
+-				marvell,pcie-lane = <0>;
+-				clocks = <&gate_clk 2>;
+-				status = "disabled";
+-			};
+-		};
+-
+ 		rtc@10300 {
+ 			compatible = "marvell,kirkwood-rtc", "marvell,orion-rtc";
+ 			reg = <0x10300 0x20>;
+diff --git a/arch/arm/boot/dts/kirkwood-6282.dtsi b/arch/arm/boot/dts/kirkwood-6282.dtsi
+index a63a111..3933a33 100644
+--- a/arch/arm/boot/dts/kirkwood-6282.dtsi
++++ b/arch/arm/boot/dts/kirkwood-6282.dtsi
+@@ -1,4 +1,59 @@
+ / {
++	mbus {
++		pcie-controller {
++			compatible = "marvell,kirkwood-pcie";
++			status = "disabled";
++			device_type = "pci";
++
++			#address-cells = <3>;
++			#size-cells = <2>;
++
++			bus-range = <0x00 0xff>;
++
++			ranges =
++			       <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000
++			        0x82000000 0 0x44000 MBUS_ID(0xf0, 0x01) 0x44000 0 0x00002000
++				0x82000000 0 0x80000 MBUS_ID(0xf0, 0x01) 0x80000 0 0x00002000
++				0x82000000 0x1 0     MBUS_ID(0x04, 0xe8) 0       1 0 /* Port 0.0 MEM */
++				0x81000000 0x1 0     MBUS_ID(0x04, 0xe0) 0       1 0 /* Port 0.0 IO  */
++				0x82000000 0x2 0     MBUS_ID(0x04, 0xd8) 0       1 0 /* Port 1.0 MEM */
++				0x81000000 0x2 0     MBUS_ID(0x04, 0xd0) 0       1 0 /* Port 1.0 IO  */>;
++
++			pcie@1,0 {
++				device_type = "pci";
++				assigned-addresses = <0x82000800 0 0x00040000 0 0x2000>;
++				reg = <0x0800 0 0 0 0>;
++				#address-cells = <3>;
++				#size-cells = <2>;
++				#interrupt-cells = <1>;
++				ranges = <0x82000000 0 0 0x82000000 0x1 0 1 0
++					  0x81000000 0 0 0x81000000 0x1 0 1 0>;
++				interrupt-map-mask = <0 0 0 0>;
++				interrupt-map = <0 0 0 0 &intc 9>;
++				marvell,pcie-port = <0>;
++				marvell,pcie-lane = <0>;
++				clocks = <&gate_clk 2>;
++				status = "disabled";
++			};
++
++			pcie@2,0 {
++				device_type = "pci";
++				assigned-addresses = <0x82001000 0 0x00044000 0 0x2000>;
++				reg = <0x1000 0 0 0 0>;
++				#address-cells = <3>;
++				#size-cells = <2>;
++				#interrupt-cells = <1>;
++				ranges = <0x82000000 0 0 0x82000000 0x2 0 1 0
++					  0x81000000 0 0 0x81000000 0x2 0 1 0>;
++				interrupt-map-mask = <0 0 0 0>;
++				interrupt-map = <0 0 0 0 &intc 10>;
++				marvell,pcie-port = <1>;
++				marvell,pcie-lane = <0>;
++				clocks = <&gate_clk 18>;
++				status = "disabled";
++			};
++		};
++	};
+ 	ocp@f1000000 {
+ 
+ 		pinctrl: pinctrl@10000 {
+@@ -94,52 +149,5 @@
+ 			status = "disabled";
+ 		};
+ 
+-		pcie-controller {
+-			compatible = "marvell,kirkwood-pcie";
+-			status = "disabled";
+-			device_type = "pci";
+-
+-			#address-cells = <3>;
+-			#size-cells = <2>;
+-
+-			bus-range = <0x00 0xff>;
+-
+-			ranges = <0x82000000 0 0x00040000 0x00040000 0 0x00002000   /* Port 0.0 registers */
+-			          0x82000000 0 0x00044000 0x00044000 0 0x00002000   /* Port 1.0 registers */
+-				  0x82000000 0 0xe0000000 0xe0000000 0 0x08000000   /* non-prefetchable memory */
+-			          0x81000000 0 0          0xe8000000 0 0x00100000>; /* downstream I/O */
+-
+-			pcie@1,0 {
+-				device_type = "pci";
+-				assigned-addresses = <0x82000800 0 0x00040000 0 0x2000>;
+-				reg = <0x0800 0 0 0 0>;
+-				#address-cells = <3>;
+-				#size-cells = <2>;
+-				#interrupt-cells = <1>;
+-				ranges;
+-				interrupt-map-mask = <0 0 0 0>;
+-				interrupt-map = <0 0 0 0 &intc 9>;
+-				marvell,pcie-port = <0>;
+-				marvell,pcie-lane = <0>;
+-				clocks = <&gate_clk 2>;
+-				status = "disabled";
+-			};
+-
+-			pcie@2,0 {
+-				device_type = "pci";
+-				assigned-addresses = <0x82001000 0 0x00044000 0 0x2000>;
+-				reg = <0x1000 0 0 0 0>;
+-				#address-cells = <3>;
+-				#size-cells = <2>;
+-				#interrupt-cells = <1>;
+-				ranges;
+-				interrupt-map-mask = <0 0 0 0>;
+-				interrupt-map = <0 0 0 0 &intc 10>;
+-				marvell,pcie-port = <1>;
+-				marvell,pcie-lane = <0>;
+-				clocks = <&gate_clk 18>;
+-				status = "disabled";
+-			};
+-		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/kirkwood-db-88f6281.dts b/arch/arm/boot/dts/kirkwood-db-88f6281.dts
+index f420cbe..72c4b0a 100644
+--- a/arch/arm/boot/dts/kirkwood-db-88f6281.dts
++++ b/arch/arm/boot/dts/kirkwood-db-88f6281.dts
+@@ -18,7 +18,8 @@
+ 	model = "Marvell DB-88F6281-BP Development Board";
+ 	compatible = "marvell,db-88f6281-bp", "marvell,kirkwood-88f6281", "marvell,kirkwood";
+ 
+-	ocp@f1000000 {
++	mbus {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000>;
+ 		pcie-controller {
+ 			status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/kirkwood-db-88f6282.dts b/arch/arm/boot/dts/kirkwood-db-88f6282.dts
+index c5df866..36c411d 100644
+--- a/arch/arm/boot/dts/kirkwood-db-88f6282.dts
++++ b/arch/arm/boot/dts/kirkwood-db-88f6282.dts
+@@ -18,7 +18,8 @@
+ 	model = "Marvell DB-88F6282-BP Development Board";
+ 	compatible = "marvell,db-88f6282-bp", "marvell,kirkwood-88f6282", "marvell,kirkwood";
+ 
+-	ocp@f1000000 {
++	mbus {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000>;
+ 		pcie-controller {
+ 			status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/kirkwood-db.dtsi b/arch/arm/boot/dts/kirkwood-db.dtsi
+index 29bd98e..45c1bf7 100644
+--- a/arch/arm/boot/dts/kirkwood-db.dtsi
++++ b/arch/arm/boot/dts/kirkwood-db.dtsi
+@@ -77,13 +77,5 @@
+ 			cd-gpios = <&gpio1 6 0>;
+ 			status = "okay";
+ 		};
+-
+-		pcie-controller {
+-			status = "okay";
+-
+-			pcie@1,0 {
+-				status = "okay";
+-			};
+-		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/kirkwood-iconnect.dts b/arch/arm/boot/dts/kirkwood-iconnect.dts
+index 1a98487..8314118 100644
+--- a/arch/arm/boot/dts/kirkwood-iconnect.dts
++++ b/arch/arm/boot/dts/kirkwood-iconnect.dts
+@@ -18,6 +18,17 @@
+ 		linux,initrd-end   = <0x4800000>;
+ 	};
+ 
++	mbus {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000>;
++		pcie-controller {
++			status = "okay";
++
++			pcie@1,0 {
++				status = "okay";
++			};
++		};
++	};
++
+ 	ocp@f1000000 {
+ 		pinctrl: pinctrl@10000 {
+ 			pmx_button_reset: pmx-button-reset {
+@@ -101,14 +112,6 @@
+ 				reg = <0x980000 0x1f400000>;
+ 			};
+ 		};
+-
+-		pcie-controller {
+-			status = "okay";
+-
+-			pcie@1,0 {
+-				status = "okay";
+-			};
+-		};
+ 	};
+ 
+ 	gpio-leds {
+diff --git a/arch/arm/boot/dts/kirkwood-mplcec4.dts b/arch/arm/boot/dts/kirkwood-mplcec4.dts
+index 382ad99..21f1954 100644
+--- a/arch/arm/boot/dts/kirkwood-mplcec4.dts
++++ b/arch/arm/boot/dts/kirkwood-mplcec4.dts
+@@ -16,6 +16,17 @@
+                 bootargs = "console=ttyS0,115200n8 earlyprintk";
+         };
+ 
++	mbus {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000>;
++		pcie-controller {
++			status = "okay";
++
++			pcie@1,0 {
++				status = "okay";
++			};
++		};
++	};
++
+ 	ocp@f1000000 {
+ 		pinctrl: pinctrl@10000 {
+ 			pmx_led_health: pmx-led-health {
+@@ -134,14 +145,6 @@
+ 			cd-gpios = <&gpio1 15 1>;
+ 			/* No WP GPIO */
+ 		};
+-
+-		pcie-controller {
+-			status = "okay";
+-
+-			pcie@1,0 {
+-				status = "okay";
+-			};
+-		};
+ 	};
+ 
+ 	gpio-leds {
+diff --git a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
+index 8be68bd..84ff31c 100644
+--- a/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
++++ b/arch/arm/boot/dts/kirkwood-netgear_readynas_duo_v2.dts
+@@ -16,6 +16,17 @@
+ 		bootargs = "console=ttyS0,115200n8 earlyprintk";
+ 	};
+ 
++	mbus {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000>;
++		pcie-controller {
++			status = "okay";
++
++			pcie@1,0 {
++				status = "okay";
++			};
++		};
++	};
++
+ 	ocp@f1000000 {
+ 		pinctrl: pinctrl@10000 {
+ 			pmx_button_power: pmx-button-power {
+@@ -101,14 +112,6 @@
+ 			status = "okay";
+ 			nr-ports = <2>;
+ 		};
+-
+-		pcie-controller {
+-			status = "okay";
+-
+-			pcie@1,0 {
+-				status = "okay";
+-			};
+-		};
+ 	};
+ 
+ 	gpio-leds {
+diff --git a/arch/arm/boot/dts/kirkwood-nsa310.dts b/arch/arm/boot/dts/kirkwood-nsa310.dts
+index 8fd683c..bd7f05f 100644
+--- a/arch/arm/boot/dts/kirkwood-nsa310.dts
++++ b/arch/arm/boot/dts/kirkwood-nsa310.dts
+@@ -16,6 +16,17 @@
+ 		bootargs = "console=ttyS0,115200";
+ 	};
+ 
++	mbus {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000>;
++		pcie-controller {
++			status = "okay";
++
++			pcie@1,0 {
++				status = "okay";
++			};
++		};
++	};
++
+ 	ocp@f1000000 {
+ 		pinctrl: pinctrl@10000 {
+ 			pinctrl-0 = <&pmx_unknown>;
+@@ -162,14 +173,6 @@
+ 				reg = <0x5040000 0x2fc0000>;
+ 			};
+ 		};
+-
+-		pcie-controller {
+-			status = "okay";
+-
+-			pcie@1,0 {
+-				status = "okay";
+-			};
+-		};
+ 	};
+ 
+ 	gpio_keys {
+diff --git a/arch/arm/boot/dts/kirkwood-ts219-6282.dts b/arch/arm/boot/dts/kirkwood-ts219-6282.dts
+index 7d6cc86..04f6fe1 100644
+--- a/arch/arm/boot/dts/kirkwood-ts219-6282.dts
++++ b/arch/arm/boot/dts/kirkwood-ts219-6282.dts
+@@ -5,6 +5,17 @@
+ #include "kirkwood-ts219.dtsi"
+ 
+ / {
++	mbus {
++		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000>;
++		pcie-controller {
++			status = "okay";
++
++			pcie@2,0 {
++				status = "okay";
++			};
++		};
++	};
++
+ 	ocp@f1000000 {
+ 		pinctrl: pinctrl@10000 {
+ 
+@@ -30,14 +41,6 @@
+ 				marvell,function = "gpio";
+ 			};
+ 		};
+-		pcie-controller {
+-			status = "okay";
+-
+-			pcie@2,0 {
+-				status = "okay";
+-			};
+-		};
+-
+ 	};
+ 
+ 	gpio_keys {
+diff --git a/arch/arm/boot/dts/kirkwood-ts219.dtsi b/arch/arm/boot/dts/kirkwood-ts219.dtsi
+index 0c9a94c..7019cf6 100644
+--- a/arch/arm/boot/dts/kirkwood-ts219.dtsi
++++ b/arch/arm/boot/dts/kirkwood-ts219.dtsi
+@@ -11,6 +11,16 @@
+ 		bootargs = "console=ttyS0,115200n8";
+ 	};
+ 
++	mbus {
++		pcie-controller {
++			status = "okay";
++
++			pcie@1,0 {
++				status = "okay";
++			};
++		};
++	};
++
+ 	ocp@f1000000 {
+ 		i2c@11000 {
+ 			status = "okay";
+@@ -87,12 +97,5 @@
+ 			status = "okay";
+ 			nr-ports = <2>;
+ 		};
+-		pcie-controller {
+-			status = "okay";
+-
+-			pcie@1,0 {
+-				status = "okay";
+-			};
+-		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+index 5003c83..70f414d 100644
+--- a/arch/arm/boot/dts/kirkwood.dtsi
++++ b/arch/arm/boot/dts/kirkwood.dtsi
+@@ -32,13 +32,16 @@
+ 
+ 	mbus {
+ 		compatible = "marvell,kirkwood-mbus", "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <1>;
+ 		controller = <&mbusc>;
++		pcie-mem-aperture = <0xe0000000 0x10000000>; /* 256 MiB memory space */
++		pcie-io-aperture  = <0xf2000000 0x100000>;   /*   1 MiB    I/O space */
+ 	};
+ 
+ 	ocp@f1000000 {
+ 		compatible = "simple-bus";
+ 		ranges = <0x00000000 0xf1000000 0x0100000
+-		          0xe0000000 0xe0000000 0x8100000 /* PCIE */
+ 		          0xf4000000 0xf4000000 0x0000400
+ 		          0xf5000000 0xf5000000 0x0000400>;
+ 		#address-cells = <1>;
+-- 
+1.8.1.5
