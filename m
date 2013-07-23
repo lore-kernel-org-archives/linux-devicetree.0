@@ -1,49 +1,65 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db9lp0249.outbound.messaging.microsoft.com ([213.199.154.249]:22047
-	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750876Ab3GXGVv (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 24 Jul 2013 02:21:51 -0400
-From: <hongbo.zhang@freescale.com>
-Subject: [PATCH v5 4/4] DMA: Freescale: eliminate a compiling warning
-Date: Wed, 24 Jul 2013 14:21:09 +0800
-Message-ID: <1374646870-5162-5-git-send-email-hongbo.zhang@freescale.com>
-In-Reply-To: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
-References: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
+Received: from mail-ob0-f169.google.com ([209.85.214.169]:42581 "EHLO
+	mail-ob0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756989Ab3GWXCz (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 23 Jul 2013 19:02:55 -0400
+Received: by mail-ob0-f169.google.com with SMTP id up14so11611508obb.14
+        for <devicetree@vger.kernel.org>; Tue, 23 Jul 2013 16:02:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+From: Grant Likely <grant.likely@linaro.org>
+Date: Wed, 24 Jul 2013 00:02:34 +0100
+Message-ID: <CACxGe6uW=6yh0xSS+WBWfqSwTzDQzjyb3heXArWs-yhB1n1fsw@mail.gmail.com>
+Subject: [GIT PULL] devicetree and maintainers changes for v3.11-rc2
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
+Hi Linus,
 
-The variable cookie is initialized in a list_for_each_entry loop, if(unlikely)
-the list is empty, this variable will be used uninitialized, so we get a gcc
-compiling warning about this. This patch fixes this defect by setting an
-initial value to the varialble cookie.
+Please pull the following tag.
 
-Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
----
- drivers/dma/fsldma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+g.
 
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 16a9a48..14d68a4 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -406,7 +406,7 @@ static dma_cookie_t fsl_dma_tx_submit(struct dma_async_tx_descriptor *tx)
- 	struct fsl_desc_sw *desc = tx_to_fsl_desc(tx);
- 	struct fsl_desc_sw *child;
- 	unsigned long flags;
--	dma_cookie_t cookie;
-+	dma_cookie_t cookie = 0;
- 
- 	spin_lock_irqsave(&chan->desc_lock, flags);
- 
--- 
-1.7.9.5
+The following changes since commit 3b2f64d00c46e1e4e9bd0bb9bb12619adac27a4b:
 
+  Linux 3.11-rc2 (2013-07-21 12:05:29 -0700)
 
+are available in the git repository at:
 
+  git://git.secretlab.ca/git/linux tags/devicetree-for-linus
+
+for you to fetch changes up to cf9e2368655d86cd800e4d9fe65a407b39d29373:
+
+  of/irq: init struct resource to 0 in of_irq_to_resource()
+(2013-07-22 19:40:38 +0100)
+
+----------------------------------------------------------------
+Device tree bug fixes and maintainership updates for v3.11-rc2
+
+This branch contains a couple of minor bug fixes and several changes to
+the MAINTAINERS file regarding the subsystems I've been involved with.
+
+----------------------------------------------------------------
+Axel Lin (1):
+      of/irq: Avoid calling list_first_entry() for empty list
+
+Gabor Juhos (1):
+      of: add vendor prefix for Qualcomm Atheros, Inc.
+
+Grant Likely (4):
+      MAINTAINERS: Remove Grant Likely
+      MAINTAINERS: Change device tree mailing list
+      MAINTAINERS: Refactor device tree maintainership
+      MAINTAINERS: Fix incorrect status tag
+
+Sebastian Andrzej Siewior (1):
+      of/irq: init struct resource to 0 in of_irq_to_resource()
+
+Zhangfei Gao (1):
+      of: add vendor prefixes for hisilicon
+
+ .../devicetree/bindings/vendor-prefixes.txt        |  2 ++
+ MAINTAINERS                                        | 30 +++++++++++++---------
+ drivers/of/irq.c                                   |  6 +++--
+ 3 files changed, 24 insertions(+), 14 deletions(-)
