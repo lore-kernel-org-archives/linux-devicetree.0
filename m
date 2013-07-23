@@ -1,7 +1,7 @@
-Return-Path: <swarren@wwwdotorg.org>
-Message-ID: <51EEDF3F.9040905@wwwdotorg.org>
-Date: Tue, 23 Jul 2013 12:53:35 -0700
-From: Stephen Warren <swarren@wwwdotorg.org>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <51EED94C.9070500@gmail.com>
+Date: Tue, 23 Jul 2013 14:28:12 -0500
+From: Rob Herring <robherring2@gmail.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
 References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org>    <1374290388-19308-3-git-send-email-grant.likely@linaro.org>    <1374511851.3609.10.camel@hornet> <51ED9018.1020003@gmail.com>   <1374599667.25700.92.camel@hornet> <51EEC49A.4080909@wwwdotorg.org>  <1374602957.6623.142.camel@hastur.hellion.org.uk>  <51EECF1A.40404@gmail.com> <1374605732.6623.162.camel@hastur.hellion.org.uk>
@@ -9,10 +9,10 @@ In-Reply-To: <1374605732.6623.162.camel@hastur.hellion.org.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 To: Ian Campbell <ian.campbell@citrix.com>
-Cc: Rob Herring <robherring2@gmail.com>, Pawel Moll <pawel.moll@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Pawel Moll <pawel.moll@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 07/23/2013 11:55 AM, Ian Campbell wrote:
+On 07/23/2013 01:55 PM, Ian Campbell wrote:
 > On Tue, 2013-07-23 at 13:44 -0500, Rob Herring wrote:
 >> On 07/23/2013 01:09 PM, Ian Campbell wrote:
 >>> On Tue, 2013-07-23 at 10:59 -0700, Stephen Warren wrote:
@@ -67,7 +67,11 @@ On 07/23/2013 11:55 AM, Ian Campbell wrote:
 >                 compatible = "calxeda,highbank";
 > "calxeda,highbank" in this case. So you propose s|,|/| on that so the
 > file ends up in calxeda/highbank.dts?
-> 
+
+Well, I was thinking just taking the vendor name and keep the existing
+filename, but getting some consistency in filenames would probably be
+good as well.
+
 > For the included ecx-common.dtsi I think you are proposing to find all
 > the files which include it and then find the
 > deepest-common-subdirectory? In this case the other include is
@@ -77,16 +81,11 @@ On 07/23/2013 11:55 AM, Ian Campbell wrote:
 > an example which didn't rely on files you are so involved with in case
 > there is a selection bias at work ;-)
 
-That layout sounds pretty reasonable. Are all those patches underneath
-dt/ or is calxeda/ a top-level directory?
+Yes, Calxeda stuff is obviously a simple example, but I don't think we
+have any/many examples of includes across SOC vendors. Where things
+breakdown are 3rd party boards. Do those go in the board or SOC vendor
+directory? I'd vote for SOC vendor dir to keep the include structure
+simple. That may still have issue if there are includes for
+daughterboards which support multiple vendors' SOCs.
 
-I guess that means that common files like skeleton.dtsi will simply end
-up at the top-level (or in "top-level" dt/). That's probably fine.
-
-I'd like the filenames to stay the same; to some degree I consider that
-part of the DT ABI. At least for Tegra, and I think most/many other SoCs
-follow this scheme..., we have named the files ${soc}-${board}.dts, and
-made sure that the ${soc} and ${board} values match U-Boot's values, so
-U-Boot can just "load mmc 0:1 ${soc}-${board}.dts" and hence use the
-exact same U-Boot script for all Tegra boards (and potentially for any
-board that defines ${soc} and ${board}, and doing that is easy).
+Rob
