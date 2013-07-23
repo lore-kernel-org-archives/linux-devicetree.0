@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH v8 03/28] ARM: kirkwood: Move to ID based MBus window creation
-Date: Tue, 23 Jul 2013 10:31:07 -0300
-Message-ID: <1374586292-4941-4-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v8 06/28] ARM: dove: Move to ID based window creation
+Date: Tue, 23 Jul 2013 10:31:10 -0300
+Message-ID: <1374586292-4941-7-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -31,107 +31,99 @@ user is removed.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- arch/arm/mach-kirkwood/common.c | 18 ++++++++++++++----
- arch/arm/mach-kirkwood/pcie.c   | 40 ++++++++++++++++++++++++----------------
- 2 files changed, 38 insertions(+), 20 deletions(-)
+ arch/arm/mach-dove/common.c | 68 ++++++++++++++++++++++++++++++---------------
+ 1 file changed, 45 insertions(+), 23 deletions(-)
 
-diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-index e9238b5..165e751 100644
---- a/arch/arm/mach-kirkwood/common.c
-+++ b/arch/arm/mach-kirkwood/common.c
-@@ -37,6 +37,12 @@
- #include <linux/platform_data/dma-mv_xor.h>
+diff --git a/arch/arm/mach-dove/common.c b/arch/arm/mach-dove/common.c
+index 00247c7..bc22056 100644
+--- a/arch/arm/mach-dove/common.c
++++ b/arch/arm/mach-dove/common.c
+@@ -27,6 +27,22 @@
+ #include <plat/time.h>
  #include "common.h"
  
-+/* These can go away once Kirkwood uses the mvebu-mbus DT binding */
-+#define KIRKWOOD_MBUS_NAND_TARGET 0x01
-+#define KIRKWOOD_MBUS_NAND_ATTR   0x2f
-+#define KIRKWOOD_MBUS_SRAM_TARGET 0x03
-+#define KIRKWOOD_MBUS_SRAM_ATTR   0x01
++/* These can go away once Dove uses the mvebu-mbus DT binding */
++#define DOVE_MBUS_PCIE0_MEM_TARGET    0x4
++#define DOVE_MBUS_PCIE0_MEM_ATTR      0xe8
++#define DOVE_MBUS_PCIE0_IO_TARGET     0x4
++#define DOVE_MBUS_PCIE0_IO_ATTR       0xe0
++#define DOVE_MBUS_PCIE1_MEM_TARGET    0x8
++#define DOVE_MBUS_PCIE1_MEM_ATTR      0xe8
++#define DOVE_MBUS_PCIE1_IO_TARGET     0x8
++#define DOVE_MBUS_PCIE1_IO_ATTR       0xe0
++#define DOVE_MBUS_CESA_TARGET         0x3
++#define DOVE_MBUS_CESA_ATTR           0x1
++#define DOVE_MBUS_BOOTROM_TARGET      0x1
++#define DOVE_MBUS_BOOTROM_ATTR        0xfd
++#define DOVE_MBUS_SCRATCHPAD_TARGET   0xd
++#define DOVE_MBUS_SCRATCHPAD_ATTR     0x0
 +
  /*****************************************************************************
   * I/O Address Mapping
   ****************************************************************************/
-@@ -672,10 +678,14 @@ char * __init kirkwood_id(void)
- 
- void __init kirkwood_setup_wins(void)
+@@ -332,34 +348,40 @@ void __init dove_setup_cpu_wins(void)
  {
--	mvebu_mbus_add_window("nand", KIRKWOOD_NAND_MEM_PHYS_BASE,
--			      KIRKWOOD_NAND_MEM_SIZE);
--	mvebu_mbus_add_window("sram", KIRKWOOD_SRAM_PHYS_BASE,
--			      KIRKWOOD_SRAM_SIZE);
-+	mvebu_mbus_add_window_by_id(KIRKWOOD_MBUS_NAND_TARGET,
-+				    KIRKWOOD_MBUS_NAND_ATTR,
-+				    KIRKWOOD_NAND_MEM_PHYS_BASE,
-+				    KIRKWOOD_NAND_MEM_SIZE);
-+	mvebu_mbus_add_window_by_id(KIRKWOOD_MBUS_SRAM_TARGET,
-+				    KIRKWOOD_MBUS_SRAM_ATTR,
-+				    KIRKWOOD_SRAM_PHYS_BASE,
-+				    KIRKWOOD_SRAM_SIZE);
+ 	/*
+ 	 * The PCIe windows will no longer be statically allocated
+-	 * here once Dove is migrated to the pci-mvebu driver.
++	 * here once Dove is migrated to the pci-mvebu driver. The
++	 * non-PCIe windows will no longer be created here once Dove
++	 * fully moves to DT.
+ 	 */
+-	mvebu_mbus_add_window_remap_flags("pcie0.0",
++	mvebu_mbus_add_window_remap_by_id(DOVE_MBUS_PCIE0_IO_TARGET,
++					  DOVE_MBUS_PCIE0_IO_ATTR,
+ 					  DOVE_PCIE0_IO_PHYS_BASE,
+ 					  DOVE_PCIE0_IO_SIZE,
+-					  DOVE_PCIE0_IO_BUS_BASE,
+-					  MVEBU_MBUS_PCI_IO);
+-	mvebu_mbus_add_window_remap_flags("pcie1.0",
++					  DOVE_PCIE0_IO_BUS_BASE);
++	mvebu_mbus_add_window_remap_by_id(DOVE_MBUS_PCIE1_IO_TARGET,
++					  DOVE_MBUS_PCIE1_IO_ATTR,
+ 					  DOVE_PCIE1_IO_PHYS_BASE,
+ 					  DOVE_PCIE1_IO_SIZE,
+-					  DOVE_PCIE1_IO_BUS_BASE,
+-					  MVEBU_MBUS_PCI_IO);
+-	mvebu_mbus_add_window_remap_flags("pcie0.0",
+-					  DOVE_PCIE0_MEM_PHYS_BASE,
+-					  DOVE_PCIE0_MEM_SIZE,
+-					  MVEBU_MBUS_NO_REMAP,
+-					  MVEBU_MBUS_PCI_MEM);
+-	mvebu_mbus_add_window_remap_flags("pcie1.0",
+-					  DOVE_PCIE1_MEM_PHYS_BASE,
+-					  DOVE_PCIE1_MEM_SIZE,
+-					  MVEBU_MBUS_NO_REMAP,
+-					  MVEBU_MBUS_PCI_MEM);
+-	mvebu_mbus_add_window("cesa", DOVE_CESA_PHYS_BASE,
+-			      DOVE_CESA_SIZE);
+-	mvebu_mbus_add_window("bootrom", DOVE_BOOTROM_PHYS_BASE,
+-			      DOVE_BOOTROM_SIZE);
+-	mvebu_mbus_add_window("scratchpad", DOVE_SCRATCHPAD_PHYS_BASE,
+-			      DOVE_SCRATCHPAD_SIZE);
++					  DOVE_PCIE1_IO_BUS_BASE);
++	mvebu_mbus_add_window_by_id(DOVE_MBUS_PCIE0_MEM_TARGET,
++				    DOVE_MBUS_PCIE0_MEM_ATTR,
++				    DOVE_PCIE0_MEM_PHYS_BASE,
++				    DOVE_PCIE0_MEM_SIZE);
++	mvebu_mbus_add_window_by_id(DOVE_MBUS_PCIE1_MEM_TARGET,
++				    DOVE_MBUS_PCIE1_MEM_ATTR,
++				    DOVE_PCIE1_MEM_PHYS_BASE,
++				    DOVE_PCIE1_MEM_SIZE);
++	mvebu_mbus_add_window_by_id(DOVE_MBUS_CESA_TARGET,
++				    DOVE_MBUS_CESA_ATTR,
++				    DOVE_CESA_PHYS_BASE,
++				    DOVE_CESA_SIZE);
++	mvebu_mbus_add_window_by_id(DOVE_MBUS_BOOTROM_TARGET,
++				    DOVE_MBUS_BOOTROM_ATTR,
++				    DOVE_BOOTROM_PHYS_BASE,
++				    DOVE_BOOTROM_SIZE);
++	mvebu_mbus_add_window_by_id(DOVE_MBUS_SCRATCHPAD_TARGET,
++				    DOVE_MBUS_SCRATCHPAD_ATTR,
++				    DOVE_SCRATCHPAD_PHYS_BASE,
++				    DOVE_SCRATCHPAD_SIZE);
  }
  
- void __init kirkwood_l2_init(void)
-diff --git a/arch/arm/mach-kirkwood/pcie.c b/arch/arm/mach-kirkwood/pcie.c
-index ddcb09f..12d86f3 100644
---- a/arch/arm/mach-kirkwood/pcie.c
-+++ b/arch/arm/mach-kirkwood/pcie.c
-@@ -20,6 +20,16 @@
- #include <mach/bridge-regs.h>
- #include "common.h"
- 
-+/* These can go away once Kirkwood uses the mvebu-mbus DT binding */
-+#define KIRKWOOD_MBUS_PCIE0_MEM_TARGET    0x4
-+#define KIRKWOOD_MBUS_PCIE0_MEM_ATTR      0xe8
-+#define KIRKWOOD_MBUS_PCIE0_IO_TARGET     0x4
-+#define KIRKWOOD_MBUS_PCIE0_IO_ATTR       0xe0
-+#define KIRKWOOD_MBUS_PCIE1_MEM_TARGET    0x4
-+#define KIRKWOOD_MBUS_PCIE1_MEM_ATTR      0xd8
-+#define KIRKWOOD_MBUS_PCIE1_IO_TARGET     0x4
-+#define KIRKWOOD_MBUS_PCIE1_IO_ATTR       0xd0
-+
- static void kirkwood_enable_pcie_clk(const char *port)
- {
- 	struct clk *clk;
-@@ -254,26 +264,24 @@ static void __init add_pcie_port(int index, void __iomem *base)
- 
- void __init kirkwood_pcie_init(unsigned int portmask)
- {
--	mvebu_mbus_add_window_remap_flags("pcie0.0",
-+	mvebu_mbus_add_window_remap_by_id(KIRKWOOD_MBUS_PCIE0_IO_TARGET,
-+					  KIRKWOOD_MBUS_PCIE0_IO_ATTR,
- 					  KIRKWOOD_PCIE_IO_PHYS_BASE,
- 					  KIRKWOOD_PCIE_IO_SIZE,
--					  KIRKWOOD_PCIE_IO_BUS_BASE,
--					  MVEBU_MBUS_PCI_IO);
--	mvebu_mbus_add_window_remap_flags("pcie0.0",
--					  KIRKWOOD_PCIE_MEM_PHYS_BASE,
--					  KIRKWOOD_PCIE_MEM_SIZE,
--					  MVEBU_MBUS_NO_REMAP,
--					  MVEBU_MBUS_PCI_MEM);
--	mvebu_mbus_add_window_remap_flags("pcie1.0",
-+					  KIRKWOOD_PCIE_IO_BUS_BASE);
-+	mvebu_mbus_add_window_by_id(KIRKWOOD_MBUS_PCIE0_MEM_TARGET,
-+				    KIRKWOOD_MBUS_PCIE0_MEM_ATTR,
-+				    KIRKWOOD_PCIE_MEM_PHYS_BASE,
-+				    KIRKWOOD_PCIE_MEM_SIZE);
-+	mvebu_mbus_add_window_remap_by_id(KIRKWOOD_MBUS_PCIE1_IO_TARGET,
-+					  KIRKWOOD_MBUS_PCIE1_IO_ATTR,
- 					  KIRKWOOD_PCIE1_IO_PHYS_BASE,
- 					  KIRKWOOD_PCIE1_IO_SIZE,
--					  KIRKWOOD_PCIE1_IO_BUS_BASE,
--					  MVEBU_MBUS_PCI_IO);
--	mvebu_mbus_add_window_remap_flags("pcie1.0",
--					  KIRKWOOD_PCIE1_MEM_PHYS_BASE,
--					  KIRKWOOD_PCIE1_MEM_SIZE,
--					  MVEBU_MBUS_NO_REMAP,
--					  MVEBU_MBUS_PCI_MEM);
-+					  KIRKWOOD_PCIE1_IO_BUS_BASE);
-+	mvebu_mbus_add_window_by_id(KIRKWOOD_MBUS_PCIE1_MEM_TARGET,
-+				    KIRKWOOD_MBUS_PCIE1_MEM_ATTR,
-+				    KIRKWOOD_PCIE1_MEM_PHYS_BASE,
-+				    KIRKWOOD_PCIE1_MEM_SIZE);
- 
- 	vga_base = KIRKWOOD_PCIE_MEM_PHYS_BASE;
- 
+ void __init dove_init(void)
 -- 
 1.8.1.5
