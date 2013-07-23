@@ -1,8 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH v8 16/28] bus: mvebu-mbus: Factorize Armada 370/XP data
- structures
-Date: Tue, 23 Jul 2013 10:31:20 -0300
-Message-ID: <1374586292-4941-17-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v8 02/28] bus: mvebu-mbus: Add new API for window creation
+Date: Tue, 23 Jul 2013 10:31:06 -0300
+Message-ID: <1374586292-4941-3-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1374586292-4941-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,47 +23,92 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 
-These structures were only different in the mapping tables.
-Now that those tables have been removed, it doesn't make any sense
-to keep different structures.
+We add an API to create MBus address decoding windows from the target
+ID and attribute. This function will be used later and deprecate the
+current name based scheme.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- drivers/bus/mvebu-mbus.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/bus/mvebu-mbus.c | 33 +++++++++++++++++++++++++--------
+ include/linux/mbus.h     |  6 ++++++
+ 2 files changed, 31 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
-index 26af145..19ab6ff 100644
+index 33c6947..827468a 100644
 --- a/drivers/bus/mvebu-mbus.c
 +++ b/drivers/bus/mvebu-mbus.c
-@@ -536,15 +536,7 @@ mvebu_mbus_dove_setup_cpu_target(struct mvebu_mbus_state *mbus)
- 	mvebu_mbus_dram_info.num_cs = cs;
+@@ -748,6 +748,22 @@ static const struct of_device_id of_mvebu_mbus_ids[] = {
+ /*
+  * Public API of the driver
+  */
++int mvebu_mbus_add_window_remap_by_id(unsigned int target,
++				      unsigned int attribute,
++				      phys_addr_t base, size_t size,
++				      phys_addr_t remap)
++{
++	struct mvebu_mbus_state *s = &mbus_state;
++
++	if (!mvebu_mbus_window_conflicts(s, base, size, target, attribute)) {
++		pr_err("cannot add window '%x:%x', conflicts with another window\n",
++		       target, attribute);
++		return -EINVAL;
++	}
++
++	return mvebu_mbus_alloc_window(s, base, size, remap, target, attribute);
++}
++
+ int mvebu_mbus_add_window_remap_flags(const char *devname, phys_addr_t base,
+ 				      size_t size, phys_addr_t remap,
+ 				      unsigned int flags)
+@@ -776,14 +792,8 @@ int mvebu_mbus_add_window_remap_flags(const char *devname, phys_addr_t base,
+ 	else if (flags == MVEBU_MBUS_PCI_WA)
+ 		attr |= 0x28;
+ 
+-	if (!mvebu_mbus_window_conflicts(s, base, size, target, attr)) {
+-		pr_err("cannot add window '%s', conflicts with another window\n",
+-		       devname);
+-		return -EINVAL;
+-	}
+-
+-	return mvebu_mbus_alloc_window(s, base, size, remap, target, attr);
+-
++	return mvebu_mbus_add_window_remap_by_id(target, attr, base,
++						 size, remap);
  }
  
--static const struct mvebu_mbus_soc_data armada_370_mbus_data = {
--	.num_wins            = 20,
--	.num_remappable_wins = 8,
--	.win_cfg_offset      = armada_370_xp_mbus_win_offset,
--	.setup_cpu_target    = mvebu_mbus_default_setup_cpu_target,
--	.show_cpu_target     = mvebu_sdram_debug_show_orion,
--};
--
--static const struct mvebu_mbus_soc_data armada_xp_mbus_data = {
-+static const struct mvebu_mbus_soc_data armada_370_xp_mbus_data = {
- 	.num_wins            = 20,
- 	.num_remappable_wins = 8,
- 	.win_cfg_offset      = armada_370_xp_mbus_win_offset,
-@@ -604,9 +596,9 @@ static const struct mvebu_mbus_soc_data mv78xx0_mbus_data = {
-  */
- static const struct of_device_id of_mvebu_mbus_ids[] = {
- 	{ .compatible = "marvell,armada370-mbus",
--	  .data = &armada_370_mbus_data, },
-+	  .data = &armada_370_xp_mbus_data, },
- 	{ .compatible = "marvell,armadaxp-mbus",
--	  .data = &armada_xp_mbus_data, },
-+	  .data = &armada_370_xp_mbus_data, },
- 	{ .compatible = "marvell,kirkwood-mbus",
- 	  .data = &kirkwood_mbus_data, },
- 	{ .compatible = "marvell,dove-mbus",
+ int mvebu_mbus_add_window(const char *devname, phys_addr_t base, size_t size)
+@@ -792,6 +802,13 @@ int mvebu_mbus_add_window(const char *devname, phys_addr_t base, size_t size)
+ 						 MVEBU_MBUS_NO_REMAP, 0);
+ }
+ 
++int mvebu_mbus_add_window_by_id(unsigned int target, unsigned int attribute,
++				phys_addr_t base, size_t size)
++{
++	return mvebu_mbus_add_window_remap_by_id(target, attribute, base,
++						 size, MVEBU_MBUS_NO_REMAP);
++}
++
+ int mvebu_mbus_del_window(phys_addr_t base, size_t size)
+ {
+ 	int win;
+diff --git a/include/linux/mbus.h b/include/linux/mbus.h
+index dba482e..9245b66 100644
+--- a/include/linux/mbus.h
++++ b/include/linux/mbus.h
+@@ -62,8 +62,14 @@ static inline const struct mbus_dram_target_info *mv_mbus_dram_info(void)
+ int mvebu_mbus_add_window_remap_flags(const char *devname, phys_addr_t base,
+ 				      size_t size, phys_addr_t remap,
+ 				      unsigned int flags);
++int mvebu_mbus_add_window_remap_by_id(unsigned int target,
++				      unsigned int attribute,
++				      phys_addr_t base, size_t size,
++				      phys_addr_t remap);
+ int mvebu_mbus_add_window(const char *devname, phys_addr_t base,
+ 			  size_t size);
++int mvebu_mbus_add_window_by_id(unsigned int target, unsigned int attribute,
++				phys_addr_t base, size_t size);
+ int mvebu_mbus_del_window(phys_addr_t base, size_t size);
+ int mvebu_mbus_init(const char *soc, phys_addr_t mbus_phys_base,
+ 		    size_t mbus_size, phys_addr_t sdram_phys_base,
 -- 
 1.8.1.5
