@@ -1,81 +1,67 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtpfb2-g21.free.fr ([212.27.42.10]:37020 "EHLO
-	smtpfb2-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754948Ab3GYJNu convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 05:13:50 -0400
-Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
-	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 6BE18D19C6E
-	for <devicetree@vger.kernel.org>; Thu, 25 Jul 2013 11:13:47 +0200 (CEST)
-Date: Thu, 25 Jul 2013 11:13:14 +0200
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH 1/4] ASoc: kirkwood: change the pcm/dma stream data pointer
-Message-ID: <20130725111314.66b811bc@armhf>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Received: from metis.ext.pengutronix.de ([92.198.50.35]:56715 "EHLO
+	metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752380Ab3GXJKI (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 24 Jul 2013 05:10:08 -0400
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: [RFC 2/2] mmc: host: allow setting index via devicetree
+Date: Wed, 24 Jul 2013 11:09:33 +0200
+Message-Id: <1374656973-16250-3-git-send-email-s.trumtrar@pengutronix.de>
+In-Reply-To: <1374656973-16250-1-git-send-email-s.trumtrar@pengutronix.de>
+References: <1374656973-16250-1-git-send-email-s.trumtrar@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Russell King <rmk+kernel@arm.linux.org.uk>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: Chris Ball <cjb@laptop.org>, devicetree@vger.kernel.org, kernel@pengutronix.de, Steffen Trumtrar <s.trumtrar@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-In the kirkwood pcm/dma driver, the private stream related data pointer
-was hold in the platform drvdata.
-As this pointer may be used by other parts of the audio subsystem,
-this patch uses the substream runtime private data pointer instead.
+As with gpio, uart and others, allow specifying the host index via the
+aliases-node in the devicetree.
 
-Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+On embedded devices, there is often a combination of removable (e.g.
+SD card) and non-removable mmc devices (e.g. eMMC).
+Therefore the mmcblk name_idx might change depending on
+	- host of removable device
+	- removable card present or not
+
+This makes it difficult to hard code the root device, if it is on the
+non-removable device. E.g. if SD card is present eMMC will be mmcblk1,
+if SD card is not present at boot, eMMC will be mmcblk0.
+
+To match the host index with the mmcblk, allow setting the index via
+an alias node.
+
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 ---
- sound/soc/kirkwood/kirkwood-dma.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/mmc/core/host.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/kirkwood/kirkwood-dma.c b/sound/soc/kirkwood/kirkwood-dma.c
-index a9f1453..cef5277 100644
---- a/sound/soc/kirkwood/kirkwood-dma.c
-+++ b/sound/soc/kirkwood/kirkwood-dma.c
-@@ -127,10 +127,9 @@ static int kirkwood_dma_open(struct snd_pcm_substream *substream)
- 	int err;
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct snd_soc_pcm_runtime *soc_runtime = substream->private_data;
--	struct snd_soc_platform *platform = soc_runtime->platform;
- 	struct snd_soc_dai *cpu_dai = soc_runtime->cpu_dai;
- 	struct kirkwood_dma_data *priv;
--	struct kirkwood_dma_priv *prdata = snd_soc_platform_get_drvdata(platform);
-+	struct kirkwood_dma_priv *prdata = runtime->private_data;
- 	const struct mbus_dram_target_info *dram;
- 	unsigned long addr;
- 
-@@ -171,7 +170,7 @@ static int kirkwood_dma_open(struct snd_pcm_substream *substream)
- 			return -EBUSY;
- 		}
- 
--		snd_soc_platform_set_drvdata(platform, prdata);
-+		runtime->private_data = prdata;
- 
- 		/*
- 		 * Enable Error interrupts. We're only ack'ing them but
-@@ -199,8 +198,7 @@ static int kirkwood_dma_close(struct snd_pcm_substream *substream)
+diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+index 6fb6f77..640228f 100644
+--- a/drivers/mmc/core/host.c
++++ b/drivers/mmc/core/host.c
+@@ -450,16 +450,21 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
  {
- 	struct snd_soc_pcm_runtime *soc_runtime = substream->private_data;
- 	struct snd_soc_dai *cpu_dai = soc_runtime->cpu_dai;
--	struct snd_soc_platform *platform = soc_runtime->platform;
--	struct kirkwood_dma_priv *prdata = snd_soc_platform_get_drvdata(platform);
-+	struct kirkwood_dma_priv *prdata = substream->runtime->private_data;
- 	struct kirkwood_dma_data *priv;
+ 	int err;
+ 	struct mmc_host *host;
++	int alias_id;
  
- 	priv = snd_soc_dai_get_dma_data(cpu_dai, substream);
-@@ -217,7 +215,7 @@ static int kirkwood_dma_close(struct snd_pcm_substream *substream)
- 		writel(0, priv->io + KIRKWOOD_ERR_MASK);
- 		free_irq(priv->irq, prdata);
- 		kfree(prdata);
--		snd_soc_platform_set_drvdata(platform, NULL);
-+		substream->runtime->private_data = NULL;
- 	}
+ 	host = kzalloc(sizeof(struct mmc_host) + extra, GFP_KERNEL);
+ 	if (!host)
+ 		return NULL;
  
- 	return 0;
++	alias_id = of_alias_get_id(dev->of_node, "mmc");
++	if (alias_id < 0)
++		alias_id = 0;
++
+ 	/* scanning will be enabled when we're ready */
+ 	host->rescan_disable = 1;
+ 	idr_preload(GFP_KERNEL);
+ 	spin_lock(&mmc_host_lock);
+-	err = idr_alloc(&mmc_host_idr, host, 0, 0, GFP_NOWAIT);
++	err = idr_alloc(&mmc_host_idr, host, alias_id, 0, GFP_NOWAIT);
+ 	if (err >= 0)
+ 		host->index = err;
+ 	spin_unlock(&mmc_host_lock);
 -- 
 1.8.3.2
 
-
-
--- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
