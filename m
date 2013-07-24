@@ -1,211 +1,86 @@
-From: Gururaja Hebbar <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [Patch V2 3/4] rtc: omap: add rtc wakeup support to alarm events
-Date: Wed, 24 Jul 2013 18:44:56 +0530
-Message-ID: <51EFD350.4030500@ti.com>
-References: <1372841225-18813-1-git-send-email-gururaja.hebbar@ti.com>
-	<1372841225-18813-4-git-send-email-gururaja.hebbar@ti.com>
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: Re: [PATCH 1/4] mtd: nand: gpio: Determine bus width automatically
+Date: Wed, 24 Jul 2013 17:28:04 +0400
+Message-ID: <20130724172804.373309617f46b6e66a1085c0@mail.ru>
+References: <1374582499-31823-1-git-send-email-shc_work@mail.ru>
+ <CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1372841225-18813-4-git-send-email-gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, benoit.cousson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: linux-mtd@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On Tue, 23 Jul 2013 23:42:08 -0700
+Brian Norris <computersforpeace@gmail.com> wrote:
 
-On 7/3/2013 2:17 PM, Hebbar Gururaja wrote:
-> On some platforms (like AM33xx), a special register (RTC_IRQWAKEEN)
-> is available to enable Alarm Wakeup feature. This register needs to be
-> properly handled for the rtcwake to work properly.
->
-> Platforms using such IP should set "ti,am3352-rtc" in rtc device dt
-> compatibility node.
+> On Tue, Jul 23, 2013 at 5:28 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
+> > This patch provide automatically determine of bus width. If resource size,
+> > supplied to the driver more than 1 byte, the NAND_BUSWIDTH_AUTO option
+> > will be used in the MTD core.
+> 
+> I presume this depends on the bugfix I sent for NAND_BUSWIDTH_AUTO /
+> nand_set_defaults()? That's worth noting (as I am right now), for
+> whenever someone gets around to merging this.
 
-I just checked that the 1st patch in this series is pulled in and this
-patch [3/4] is not pulled . If you do not have any comments, can you 
-pull this one also. I have already got Acks from Sekhar & Kevin for the 
-same.
+OK.
 
-Thanks & regards
-Gururaja
+[...]
+> > diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> > index 36ef07d..287b8b8 100644
+> > --- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> > @@ -8,15 +8,14 @@ Required properties:
+> >  - compatible : "gpio-control-nand"
+> >  - reg : should specify localbus chip select and size used for the chip.  The
+> >    resource describes the data bus connected to the NAND flash and all accesses
+> > -  are made in native endianness.
+> > +  are made in native endianness. Bus width of the device is determined
+> > +  automatically if size > 1. If size = 1, 8 bit bus width will be used.
+> >  - #address-cells, #size-cells : Must be present if the device has sub-nodes
+> >    representing partitions.
+> >  - gpios : specifies the gpio pins to control the NAND device.  nwp is an
+> >    optional gpio and may be set to 0 if not present.
+> >
+> >  Optional properties:
+> > -- bank-width : Width (in bytes) of the device.  If not present, the width
+> > -  defaults to 1 byte.
+> 
+> Do you really want to remove this property entirely? I'm not sure what
+> the policy is on this. And it may still be useful to leave in the
+> documentation, since older drivers (and potentially non-Linux OS?) may
+> still need the property. Maybe you can mark it as optional, and that
+> it may be ignored entirely.
 
->
-> Signed-off-by: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-> Acked-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> Changes in V2:
-> 	- Coding style corrections (use lower case for hex numbers)
-> 	- use "[AM/am]3352" instead of "[AM/am]335x" to keep the all
-> 	  usages in sync.
-> 	- Use index defined for struct members so they remain in sync
->
-> :100644 100644 b47aa41... 5a0f02d... M	Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> :100644 100644 761919d... c2e18fe... M	drivers/rtc/rtc-omap.c
->   Documentation/devicetree/bindings/rtc/rtc-omap.txt |    6 +-
->   drivers/rtc/rtc-omap.c                             |   60 +++++++++++++++++---
->   2 files changed, 57 insertions(+), 9 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> index b47aa41..5a0f02d 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> @@ -1,7 +1,11 @@
->   TI Real Time Clock
->
->   Required properties:
-> -- compatible: "ti,da830-rtc"
-> +- compatible:
-> +	- "ti,da830-rtc"  - for RTC IP used similar to that on DA8xx SoC family.
-> +	- "ti,am3352-rtc" - for RTC IP used similar to that on AM335x SoC family.
-> +			    This RTC IP has special WAKE-EN Register to enable
-> +			    Wakeup generation for event Alarm.
->   - reg: Address range of rtc register set
->   - interrupts: rtc timer, alarm interrupts in order
->   - interrupt-parent: phandle for the interrupt controller
-> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-> index 761919d..c2e18fe 100644
-> --- a/drivers/rtc/rtc-omap.c
-> +++ b/drivers/rtc/rtc-omap.c
-> @@ -72,6 +72,8 @@
->   #define OMAP_RTC_KICK0_REG		0x6c
->   #define OMAP_RTC_KICK1_REG		0x70
->
-> +#define OMAP_RTC_IRQWAKEEN		0x7c
-> +
->   /* OMAP_RTC_CTRL_REG bit fields: */
->   #define OMAP_RTC_CTRL_SPLIT		(1<<7)
->   #define OMAP_RTC_CTRL_DISABLE		(1<<6)
-> @@ -96,12 +98,21 @@
->   #define OMAP_RTC_INTERRUPTS_IT_ALARM    (1<<3)
->   #define OMAP_RTC_INTERRUPTS_IT_TIMER    (1<<2)
->
-> +/* OMAP_RTC_IRQWAKEEN bit fields: */
-> +#define OMAP_RTC_IRQWAKEEN_ALARM_WAKEEN    (1<<1)
-> +
->   /* OMAP_RTC_KICKER values */
->   #define	KICK0_VALUE			0x83e70b13
->   #define	KICK1_VALUE			0x95a4f1e0
->
->   #define	OMAP_RTC_HAS_KICKER		0x1
->
-> +/*
-> + * Few RTC IP revisions has special WAKE-EN Register to enable Wakeup
-> + * generation for event Alarm.
-> + */
-> +#define	OMAP_RTC_HAS_IRQWAKEEN		0x2
-> +
->   static void __iomem	*rtc_base;
->
->   #define rtc_read(addr)		readb(rtc_base + (addr))
-> @@ -301,12 +312,18 @@ static struct rtc_class_ops omap_rtc_ops = {
->   static int omap_rtc_alarm;
->   static int omap_rtc_timer;
->
-> -#define	OMAP_RTC_DATA_DA830_IDX	1
-> +#define	OMAP_RTC_DATA_AM3352_IDX	1
-> +#define	OMAP_RTC_DATA_DA830_IDX		2
->
->   static struct platform_device_id omap_rtc_devtype[] = {
->   	{
->   		.name	= DRIVER_NAME,
-> -	}, {
-> +	},
-> +	[OMAP_RTC_DATA_AM3352_IDX] = {
-> +		.name	= "am3352-rtc",
-> +		.driver_data = OMAP_RTC_HAS_KICKER | OMAP_RTC_HAS_IRQWAKEEN,
-> +	},
-> +	[OMAP_RTC_DATA_DA830_IDX] = {
->   		.name	= "da830-rtc",
->   		.driver_data = OMAP_RTC_HAS_KICKER,
->   	},
-> @@ -318,6 +335,9 @@ static const struct of_device_id omap_rtc_of_match[] = {
->   	{	.compatible	= "ti,da830-rtc",
->   		.data		= &omap_rtc_devtype[OMAP_RTC_DATA_DA830_IDX],
->   	},
-> +	{	.compatible	= "ti,am3352-rtc",
-> +		.data		= &omap_rtc_devtype[OMAP_RTC_DATA_AM3352_IDX],
-> +	},
->   	{},
->   };
->   MODULE_DEVICE_TABLE(of, omap_rtc_of_match);
-> @@ -466,16 +486,28 @@ static u8 irqstat;
->
->   static int omap_rtc_suspend(struct device *dev)
->   {
-> +	u8 irqwake_stat;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	const struct platform_device_id *id_entry =
-> +					platform_get_device_id(pdev);
-> +
->   	irqstat = rtc_read(OMAP_RTC_INTERRUPTS_REG);
->
->   	/* FIXME the RTC alarm is not currently acting as a wakeup event
-> -	 * source, and in fact this enable() call is just saving a flag
-> -	 * that's never used...
-> +	 * source on some platforms, and in fact this enable() call is just
-> +	 * saving a flag that's never used...
->   	 */
-> -	if (device_may_wakeup(dev))
-> +	if (device_may_wakeup(dev)) {
->   		enable_irq_wake(omap_rtc_alarm);
-> -	else
-> +
-> +		if (id_entry->driver_data & OMAP_RTC_HAS_IRQWAKEEN) {
-> +			irqwake_stat = rtc_read(OMAP_RTC_IRQWAKEEN);
-> +			irqwake_stat |= OMAP_RTC_IRQWAKEEN_ALARM_WAKEEN;
-> +			rtc_write(irqwake_stat, OMAP_RTC_IRQWAKEEN);
-> +		}
-> +	} else {
->   		rtc_write(0, OMAP_RTC_INTERRUPTS_REG);
-> +	}
->
->   	/* Disable the clock/module */
->   	pm_runtime_put_sync(dev);
-> @@ -485,13 +517,25 @@ static int omap_rtc_suspend(struct device *dev)
->
->   static int omap_rtc_resume(struct device *dev)
->   {
-> +	u8 irqwake_stat;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	const struct platform_device_id *id_entry =
-> +				platform_get_device_id(pdev);
-> +
->   	/* Enable the clock/module so that we can access the registers */
->   	pm_runtime_get_sync(dev);
->
-> -	if (device_may_wakeup(dev))
-> +	if (device_may_wakeup(dev)) {
->   		disable_irq_wake(omap_rtc_alarm);
-> -	else
-> +
-> +		if (id_entry->driver_data & OMAP_RTC_HAS_IRQWAKEEN) {
-> +			irqwake_stat = rtc_read(OMAP_RTC_IRQWAKEEN);
-> +			irqwake_stat &= ~OMAP_RTC_IRQWAKEEN_ALARM_WAKEEN;
-> +			rtc_write(irqwake_stat, OMAP_RTC_IRQWAKEEN);
-> +		}
-> +	} else {
->   		rtc_write(irqstat, OMAP_RTC_INTERRUPTS_REG);
-> +	}
->   	return 0;
->   }
->   #endif
->
+I redid it, I'll do option "bank-width" optional.
+
+[...]
+> > +       if (of_find_property(dev->of_node, "bank-width", NULL))
+> > +               dev_notice(dev, "Property \"bank-width\" is deprecated");
+> 
+> If you don't totally kill this property (per my comments above), then
+> you probably don't want this message either. It's probably safe to
+> just ignore the property, if we can reliably auto-detect it instead.
+
+What do you say about such changes in the patch 4/4?
+Thanks.
+
+[...]
+
+-- 
+Alexander Shiyan <shc_work@mail.ru>
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
