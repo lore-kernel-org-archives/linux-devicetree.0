@@ -1,153 +1,55 @@
-From: mathieu.poirier@linaro.org
-Subject: [RESEND PATCH v5] Input: sysrq - DT binding for key sequence
-Date: Wed, 24 Jul 2013 16:16:38 -0600
-Message-ID: <1374704198-8327-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: grant.likely@linaro.org, dmitry.torokhov@gmail.com
-Cc: devicetree-discuss@lists.ozlabs.org, john.stultz@linaro.org, linux-input@vger.kernel.org, kernel-team@android.com, mathieu.poirier@linaro.org
+From: "Markus Mayer" <markus.mayer@linaro.org>
+Subject: [PATCH v2 0/2] ARM: bcm281xx: Board specific reboot code
+Date: Wed, 24 Jul 2013 16:35:21 -0700
+Message-ID: <1374708923-11956-1-git-send-email-markus.mayer@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Device Tree List <devicetree@vger.kernel.org>
+Cc: Christian Daudt <csd@broadcom.com>, Markus Mayer <markus.mayer@linaro.org>, Device Tree List <devicetree-discuss@lists.ozlabs.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-I haven't heard back from anyone after making the last modifications
-a week ago.  If it's all good with you Rob, please ack it so that 
-Dmitry can pick it up on his side.
+This is a slightly reworked version of the reboot code posted earlier.
+It has been rebased on 3.11-rc1.
 
-Thanks,
-Mathieu.
+The original patches are here:
 
->From 37318cb3c6339747f4e96e09f07f732a395a5ae1 Mon Sep 17 00:00:00 2001
-From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
-Date: Wed, 10 Jul 2013 09:53:35 -0600
-Subject: [RESEND PATCH v5] Input: sysrq - DT binding for key sequence
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-June/180814.html
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-June/180817.html
 
-Adding a simple device tree binding for the specification of key sequences.
-Definition of the keys found in the sequence are located in
-'include/uapi/linux/input.h'.
+Changes since v1 include:
+  - change vendor prefix for watchdog from "bcm," to "brcm,"
+  - change bcm_kona_restart() to use enum reboot_mode as first parameter
+  - error checking to catch unmapped watchdog or missing DT entry
+  - removal of unused #define
+  - formatting changes
+  - additional comments in code
 
-For the sysrq driver, holding the sequence of keys down for a specific amount of time
-will reset the system.
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
-changes for v5:
-  - Corrected error in binding definition.
-  - Using helper macro to fetch the key sequence.
-  - Removing white space.
----
- .../devicetree/bindings/input/input-reset.txt      | 34 ++++++++++++++++++++
- drivers/tty/sysrq.c                                | 37 ++++++++++++++++++++++
- 2 files changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/input-reset.txt
+Markus Mayer (2):
+  ARM: bcm281xx: Board specific reboot code
+  ARM: bcm281xx: DT changes for reboot code
 
-diff --git a/Documentation/devicetree/bindings/input/input-reset.txt b/Documentation/devicetree/bindings/input/input-reset.txt
-new file mode 100644
-index 0000000..c69390c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/input-reset.txt
-@@ -0,0 +1,34 @@
-+Input: sysrq reset sequence
-+
-+A simple binding to represent a set of keys as described in
-+include/uapi/linux/input.h.  This is to communicate a
-+sequence of keys to the sysrq driver.  Upon holding the keys
-+for a specified amount of time (if specified) the system is
-+sync'ed and reset.
-+
-+Key sequences are global to the system but all the keys in a
-+set must be coming from the same input device.
-+
-+The /chosen node should contain a 'linux,sysrq-reset-seq' child
-+node to define a set of keys.
-+
-+Required property:
-+sysrq-reset-seq: array of keycodes
-+
-+Optional property:
-+timeout-ms: duration keys must be pressed together in milliseconds
-+before generating a sysrq
-+
-+Example:
-+
-+ chosen {
-+                linux,sysrq-reset-seq {
-+                        keyset = <0x03
-+                                  0x04
-+                                  0x0a>;
-+                        timeout-ms = <3000>;
-+                };
-+         };
-+
-+Would represent KEY_2, KEY_3 and KEY_9.
-+
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index b51c154..ed8f00f 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -44,6 +44,7 @@
- #include <linux/uaccess.h>
- #include <linux/moduleparam.h>
- #include <linux/jiffies.h>
-+#include <linux/of.h>
- 
- #include <asm/ptrace.h>
- #include <asm/irq_regs.h>
-@@ -671,6 +672,34 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
- 	}
- }
- 
-+static void sysrq_of_get_keyreset_config(void)
-+{
-+	u32 key;
-+	struct device_node *np;
-+	struct property *prop;
-+	const __be32 *p;
-+
-+	np = of_find_node_by_path("/chosen/linux,sysrq-reset-seq");
-+	if (!np) {
-+		pr_debug("No sysrq node found");
-+		return;
-+	}
-+
-+	/* reset in case a __weak definition was present */
-+	sysrq_reset_seq_len = 0;
-+
-+	of_property_for_each_u32(np, "keyset", prop, p, key) {
-+		if ((key == KEY_RESERVED || key > KEY_MAX) ||
-+			(sysrq_reset_seq_len == SYSRQ_KEY_RESET_MAX))
-+			break;
-+
-+		sysrq_reset_seq[sysrq_reset_seq_len++] = (unsigned short)key;
-+	}
-+
-+	/* get reset timeout if any */
-+	of_property_read_u32(np, "timeout-ms", &sysrq_reset_downtime_ms);
-+}
-+
- static void sysrq_reinject_alt_sysrq(struct work_struct *work)
- {
- 	struct sysrq_state *sysrq =
-@@ -903,6 +932,7 @@ static inline void sysrq_register_handler(void)
- 	int error;
- 	int i;
- 
-+	/* first check if a __weak interface was instantiated */
- 	for (i = 0; i < ARRAY_SIZE(sysrq_reset_seq); i++) {
- 		key = platform_sysrq_reset_seq[i];
- 		if (key == KEY_RESERVED || key > KEY_MAX)
-@@ -911,6 +941,13 @@ static inline void sysrq_register_handler(void)
- 		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
- 	}
- 
-+	/*
-+	 * DT configuration takes precedence over anything
-+	 * that would have been defined via the __weak
-+	 * interface
-+	 */
-+	sysrq_of_get_keyreset_config();
-+
- 	error = input_register_handler(&sysrq_handler);
- 	if (error)
- 		pr_err("Failed to register input handler, error %d", error);
+ .../devicetree/bindings/arm/bcm/bcm,kona-wdt.txt   |   15 +++++
+ arch/arm/boot/dts/bcm11351.dtsi                    |    7 ++-
+ arch/arm/mach-bcm/Makefile                         |    4 +-
+ arch/arm/mach-bcm/board_bcm.c                      |   20 +++++-
+ arch/arm/mach-bcm/kona.c                           |   65 ++++++++++++++++++++
+ arch/arm/mach-bcm/kona.h                           |   17 +++++
+ 6 files changed, 122 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm,kona-wdt.txt
+ create mode 100644 arch/arm/mach-bcm/kona.c
+ create mode 100644 arch/arm/mach-bcm/kona.h
+
 -- 
-1.8.1.2
-
+1.7.9.5
