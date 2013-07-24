@@ -1,66 +1,57 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4] regulator: pfuze100: add pfuze100 regulator driver
-Date: Wed, 24 Jul 2013 15:39:31 +0100
-Message-ID: <20130724143931.GJ9858@sirena.org.uk>
-References: <1374398247-11384-1-git-send-email-b38343@freescale.com>
- <20130724083041.GC4332@pengutronix.de>
- <20130724094228.GY9858@sirena.org.uk>
- <20130724095145.GE4332@pengutronix.de>
+From: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Subject: Re: [PATCH] HID: i2c-hid: add DT bindings
+Date: Wed, 24 Jul 2013 17:39:23 +0200
+Message-ID: <CAN+gG=HA0wM=O-w_GRUtJJmGjwufmL52wTwhvLO6VLV9oPLmiA@mail.gmail.com>
+References: <1371109835-30796-1-git-send-email-benjamin.tissoires@redhat.com>
+	<alpine.LNX.2.00.1306181151030.6750@pobox.suse.cz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y/C4Z0ZQWa14ewtO"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130724095145.GE4332@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Robin Gong <b38343@freescale.com>, shawn.guo@linaro.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, lgirdwood@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <alpine.LNX.2.00.1306181151030.6750@pobox.suse.cz>
+Sender: linux-input-owner@vger.kernel.org
+To: Jiri Kosina <jkosina@suse.cz>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-input <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 18, 2013 at 11:51 AM, Jiri Kosina <jkosina@suse.cz> wrote:
+> On Thu, 13 Jun 2013, Benjamin Tissoires wrote:
+>
+>> Add device tree based support for HID over I2C devices.
+>>
+>> Tested on an Odroid-X board with a Synaptics touchpad.
+>>
+>> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>> ---
+>>
+>> Hi guys,
+>>
+>> well, as the commit message says, this is the DT binding for HID over I2C.
+>> I honestly don't know if it will be used besides me, but it may help others
+>> with a DT based board.
+>> As the spec is for ACPI only, I had no specifications regarding the DT names. So
+>> these names can be changed if you think they are bad.
+>>
+>> I also created a new bindings directory in the devicetree doc to reflect the
+>> split we have between input and hid. However, if the DT experts prefer having
+>> it under input, I'm fine with that.
+>>
+>> Cheers,
+>> Benjamin
+>>
+>>  .../devicetree/bindings/hid/hid-over-i2c.txt       | 28 ++++++++++++++
+>>  drivers/hid/i2c-hid/i2c-hid.c                      | 44 +++++++++++++++++++++-
+>>  include/linux/i2c/i2c-hid.h                        |  3 +-
+>>  3 files changed, 73 insertions(+), 2 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/hid/hid-over-i2c.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/hid/hid-over-i2c.txt b/Documentation/devicetree/bindings/hid/hid-over-i2c.txt
+>
+> DT folks, any objections to this, please?
+>
+> If not, I'd like to apply this for 3.11 into my tree.
+>
 
---y/C4Z0ZQWa14ewtO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+DT folks, ping???
 
-On Wed, Jul 24, 2013 at 11:51:45AM +0200, Steffen Trumtrar wrote:
-> On Wed, Jul 24, 2013 at 10:42:28AM +0100, Mark Brown wrote:
-
-> > >  static struct regulator_ops pfuze100_fixed_regulator_ops = {
-> > > 	.list_voltage = regulator_list_voltage_linear,
-> > > +	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-> > >  };
-
-> > This doesn't make much sense, you're adding a set voltage operation to a
-> > fixed voltage regulator...
-
-> Hm, okay, sounds reasonable. But if I don't, VREFDDR isn't registered because
-> _regulator_do_set_voltage returns with -EINVAL.
-> So, I probably just fixed a symptom and not the cause.
-
-Yes, the obvious question is why we're trying to set a voltage on a
-regulator which can't change voltage.  Usually this is a result of
-setting a constraint that tries to force the voltage.
-
---y/C4Z0ZQWa14ewtO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR7+cgAAoJELSic+t+oim9ElUP/juGJDGofhINfhGRYY0cB/3O
-4852+UyhdHtjl3vRVGPgp1tqzFApYRzYgGdhg5w20k2tHz4OuUxmcsQGqSDtnNTD
-zyvv3NMmkWpjK5qE+ZYAMPfACQlWYJPWrdHgJBt+O9fZGsPkwzDePHyVEAQzTLxI
-9SXn8tvumXbDqV3KIbBddNzbpwvVh0PQzPtYnhyr+5lOh29nXX6G11gKWQuMNQtc
-d4S+m8w/Li3SpIPwGcJwK6Ym8nZsFz9L/huLKPi+sEH0gN6QanepEbkVR2046cFh
-FTYdtr0ugH2HahiYou0yFWmaWH9qbS0hqUeYwcQs3Chq1qDgkoOI1SGixXzNzawn
-dgc5DuNMqj9FDiSCJtie248zJbQbctxw7CCsyBmINRzzzAc9xtaWonfV8glteGZn
-nvZmjXa+WZQj1t+Ow93VqcKam+I5F1GgSiKY0fs50PXdFYJkRlFv5KqPPQcY1ZsN
-uiHTqkPWZ/8a6eRr1Ku5bOODX+0h6NdVfZOij/+oxFVQ2OlcSG9sXQrgMjc2kgMp
-fXmTTpMRdrgieYkZcwlkc0dZXU0fyJ9FJtRYfsZIIID1moWmnaUtjnUR8kfZSiDr
-jkcSlhJfoZ9XDR537eCCA9tXZ8uBArIQ3oJjyji7s/3XZe6Ib07e9yhtswHtglYX
-oKO53R8qFnBMZbtFqvLc
-=CLTb
------END PGP SIGNATURE-----
-
---y/C4Z0ZQWa14ewtO--
+Cheers,
+Benjamin
