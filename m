@@ -1,46 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pa0-f45.google.com ([209.85.220.45]:65264 "EHLO
-	mail-pa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751683Ab3GYEPJ (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 00:15:09 -0400
-Received: by mail-pa0-f45.google.com with SMTP id bg4so1487951pad.32
-        for <devicetree@vger.kernel.org>; Wed, 24 Jul 2013 21:15:09 -0700 (PDT)
+Received: from mail-pb0-f41.google.com ([209.85.160.41]:62720 "EHLO
+	mail-pb0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751474Ab3GYEPI (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 00:15:08 -0400
+Received: by mail-pb0-f41.google.com with SMTP id rp16so237674pbb.14
+        for <devicetree@vger.kernel.org>; Wed, 24 Jul 2013 21:15:07 -0700 (PDT)
 From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: The future of DT binding maintainership
-In-Reply-To: <51EEA75E.3050008@wwwdotorg.org>
-References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com> <1925583.R0td2pS6as@flatron> <E1V1Nkn-00072x-Df@jdl.com> <1687020.5ErE9ecltl@flatron> <51EEA75E.3050008@wwwdotorg.org>
-Date: Wed, 24 Jul 2013 21:28:47 +0100
-Message-Id: <20130724202847.2BD753E14AB@localhost>
+In-Reply-To: <E1V1Nkn-00072x-Df@jdl.com>
+References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com> <2962401.WRRoYlXkRr@flatron> <60BA5429A0E1584BA3633194F6F993B502B21362@NA-MBX-03.mgc.mentorg.com> <1925583.R0td2pS6as@flatron> <E1V1Nkn-00072x-Df@jdl.com>
+Date: Wed, 24 Jul 2013 21:26:16 +0100
+Message-Id: <20130724202617.049E33E13AF@localhost>
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Jon Loeliger <jdl@jdl.com>, "Chaiken, Alison" <Alison_Chaiken@mentor.com>, Wolfram Sang <w.sang@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Jon Loeliger <jdl@jdl.com>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: "Chaiken, Alison" <Alison_Chaiken@mentor.com>, Wolfram Sang <w.sang@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, 23 Jul 2013 08:55:10 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 07/22/2013 02:57 PM, Tomasz Figa wrote:
-> > On Monday 22 of July 2013 16:34:49 Jon Loeliger wrote:
+On Mon, 22 Jul 2013 16:34:49 -0500, Jon Loeliger <jdl@jdl.com> wrote:
 > 
-> >>> My idea is to implement compile time verification in dtc, so I guess it
-> >>> will be more like the latter. Since dts is what dtc can already parse,
-> >>> my plan is to keep the schemas in spirit to dts, just
-> >>> modifying/extending it to allow specifying bindings with them, rather
-> >>> than static values.
+> > > Is there a schema out there in the wild that exemplifies what you mean?
+> > 
+> > Not really. The format of schemas is currently in design stage. I'm 
+> > currently rethinking some details of what I have in my mind. Give me some 
+> > more time and I will post an RFC to the ML with all that written down.
 > 
-> > Things start to become fun when you get to bindings like regulators or 
-> > clocks, when part of the binding is defined on generic level (-supply, 
-> > clocks, clock-names properties) and remaining part is specific to device 
-> > (XXX in XXX-supply, count and order of clocks and clock-names, strings 
-> > allowed in clock-names property). This kind of inheritance is likely to be 
-> > the biggest troublemaker.
+> ...and...
 > 
-> It's good you mentioned inheritance here. I believe that's one of the
-> key things. For example, the Tegra GPIO controller's binding is-a
-> GPIO-controller, and is-an interrupt-controller, and I imagine any
-> successful DT schema definition would very explicitly include that
-> information. Likewise, other nodes may be is-a GPIO-client (many times,
-> each parameterized with the property name that defines which GPIO you're
-> talking abot), and also may be is-an interrupt-client (with a similar
-> comment), etc.
+> > > The schema-check idea reminds me of the W3C HTML validators:
+> > > 
+> > >       http://validator.w3.org/
+> > > 
+> > > Since device-tree source looks a bit like XML (or maybe more like JSON),
+> > > will be the schemas be similar in spirit to DTDs, and is it helpful to
+> > > think of the validator in this spirit?   Or will the checker be more
+> > > like "gcc -Wall", since it will be invoked by a compiler?
+> > 
+> > My idea is to implement compile time verification in dtc, so I guess it 
+> > will be more like the latter. Since dts is what dtc can already parse, my 
+> > plan is to keep the schemas in spirit to dts, just modifying/extending it 
+> > to allow specifying bindings with them, rather than static values.
+> > 
+> > Best regards,
+> > Tomasz
+> 
+> It is possible to add some-damn XML DTD parsing and
 
-+1
+/me runs screaming.
 
+g.
