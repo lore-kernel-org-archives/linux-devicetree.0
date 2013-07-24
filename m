@@ -1,230 +1,77 @@
-From: <dinguyen@altera.com>
-Subject: [PATCH 1/2] ARM: dts: Change dw-apb-timer-osc and dw-apb-timer-sp to
- just dw-apb-timer
-Date: Wed, 24 Jul 2013 22:43:16 -0500
-Message-ID: <1374723797-22169-1-git-send-email-dinguyen@altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dinh.linux@gmail.com
-Cc: Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@denx.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, John Stultz <john.stultz@linaro.org>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Jamie Iles <jamie@jamieiles.com>, Dinh Nguyen <dinguyen@altera.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] of: provide of_platform_unpopulate()
+Date: Wed, 24 Jul 2013 15:19:58 +0100
+Message-ID: <20130724141958.9156F3E0A24@localhost>
+References: <1374257691-31981-1-git-send-email-bigeasy@linutronix.de> <51EBF33A.4050207@gmail.com> <51EC4908.4040504@gmail.com> <CACxGe6sqv2Wsp26MWqqs9W_eWO3tjs-+2z3z8fC=2fe-BjJvkA@mail.gmail.com> <51EDA117.10605@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51EDA117.10605@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Rob Herring <rob.herring@calxeda.com>, Kishon Vijay Abraham I <kishon@ti.com>, George Cherian <george.cherian@ti.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@altera.com>
+On Mon, 22 Jul 2013 16:16:07 -0500, Rob Herring <robherring2@gmail.com> wrote:
+> On 07/21/2013 06:44 PM, Grant Likely wrote:
+> > On Sun, Jul 21, 2013 at 9:48 PM, Rob Herring <robherring2@gmail.com> wrote:
+> >> On 07/21/2013 09:42 AM, Rob Herring wrote:
+> >>> On 07/19/2013 01:14 PM, Sebastian Andrzej Siewior wrote:
+> >>>> So I called of_platform_populate() on a device to get each child device
+> >>>> probed and on rmmod and I need to reverse its doing. After a quick grep
+> >>>> I did what others did as well and rmmod ended in:
+> >>>>
+> >>>> | Unable to handle kernel NULL pointer dereference at virtual address 00000018
+> >>>> | PC is at release_resource+0x18/0x80
+> >>>> | Process rmmod (pid: 2005, stack limit = 0xedc30238)
+> >>>> | [<c003add0>] (release_resource+0x18/0x80) from [<c0300e08>] (platform_device_del+0x78/0xac)
+> >>>> | [<c0300e08>] (platform_device_del+0x78/0xac) from [<c0301358>] (platform_device_unregister+0xc/0x18)
+> >>>>
+> >>>> The problem is that platform_device_del() "releases" each ressource in its
+> >>>> tree. This does not work on platform_devices created by OF becuase they
+> >>>> were never added via insert_resource(). As a consequence old->parent in
+> >>>> __release_resource() is NULL and we explode while accessing ->child.
+> >>>> So I either I do something completly wrong _or_ nobody here tested the
+> >>>> rmmod path of their driver.
+> >>>
+> >>> Wouldn't the correct fix be to call insert_resource somehow? The problem
+> >>> I have is that while of_platform_populate is all about parsing the DT
+> >>> and creating devices, the removal side has nothing to do with DT. So
+> >>> this should not be in the DT code. I think the core device code should
+> >>> be able to handle removal if the device creation side is done correctly.
+> >>>
+> >>> It looks to me like of_device_add either needs to call
+> >>> platform_device_add rather than device_add. I think the device name
+> >>> setting in platform_device_add should be a nop. If not, a check that the
+> >>> name is already set could be added.
+> >>>
+> >>
+> >> BTW, it looks like Grant has attempted this already:
+> > 
+> > Yup, things broke badly. Unfortunately the of_platform_device and
+> > platform_device history doesn't treat resources in the same way. I
+> > would like to merge the code, but I haven't been able to figure out a
+> > clean way to do it. Looks like we do need the unpopulate function.
+> 
+> Was there more breakage than imx6 and amba devices? Your first version
+> had a fallback case for powerpc. Couldn't we do just allow that for more
+> than just powerpc? I'd much rather see some work-around within the core
+> DT code with a warning to prevent more proliferation than putting this
+> into drivers.
 
-"dw-apb-timer-osc" and "dw-apb-timer-sp" are the same implementation of the
-DW APB timer, just fed by different clocks.
+It's tricky stuff. I've not figured out a solution I'm happy with.
+Trying to figure out when to apply a work around is hard because the
+resource reservation makes assumptions about the memory range layout
+that doesn't match the assumptions made by device tree code.
 
-Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-CC: Rob Herring <rob.herring@calxeda.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-CC: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>
-CC: Jamie Iles <jamie@jamieiles.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Pavel Machek <pavel@denx.de>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- Documentation/devicetree/bindings/rtc/dw-apb.txt |   21 +++----------------
- arch/arm/boot/dts/rk3066a.dtsi                   |    6 +++---
- arch/arm/boot/dts/socfpga.dtsi                   |   24 +++++++++++-----------
- arch/arm/boot/dts/socfpga_cyclone5.dts           |    8 ++++----
- arch/arm/boot/dts/socfpga_vt.dts                 |    8 ++++----
- 5 files changed, 26 insertions(+), 41 deletions(-)
+One /possible/ option is to not add the resources to the devices at all
+when the device is registered and instead resolve them right at bind
+time. Jean Christophe proposed doing this already to solve a different
+problem; obtaining resources that require other drivers to be probed
+first. If the resources are resolved at .probe() time, then the resource
+registration problem should also go away.
 
-diff --git a/Documentation/devicetree/bindings/rtc/dw-apb.txt b/Documentation/devicetree/bindings/rtc/dw-apb.txt
-index eb2327b..0a1020e 100644
---- a/Documentation/devicetree/bindings/rtc/dw-apb.txt
-+++ b/Documentation/devicetree/bindings/rtc/dw-apb.txt
-@@ -1,7 +1,7 @@
- * Designware APB timer
- 
- Required properties:
--- compatible: "snps,dw-apb-timer-sp" or "snps,dw-apb-timer-osc"
-+- compatible: "snps,dw-apb-timer"
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - interrupts: IRQ line for the timer.
-@@ -20,23 +20,8 @@ systems may use one.
- 
- 
- Example:
--
--		timer1: timer@ffc09000 {
--				compatible = "snps,dw-apb-timer-sp";
--				interrupts = <0 168 4>;
--				clock-frequency = <200000000>;
--				reg = <0xffc09000 0x1000>;
--			};
--
--		timer2: timer@ffd00000 {
--				compatible = "snps,dw-apb-timer-osc";
--				interrupts = <0 169 4>;
--				clock-frequency = <200000000>;
--				reg = <0xffd00000 0x1000>;
--			};
--
--		timer3: timer@ffe00000 {
--				compatible = "snps,dw-apb-timer-osc";
-+		timer1: timer@ffe00000 {
-+				compatible = "snps,dw-apb-timer";
- 				interrupts = <0 170 4>;
- 				reg = <0xffe00000 0x1000>;
- 				clocks = <&timer_clk>, <&timer_pclk>;
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index 56bfac9..2dff468 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -71,7 +71,7 @@
- 		};
- 
- 		timer@20038000 {
--			compatible = "snps,dw-apb-timer-osc";
-+			compatible = "snps,dw-apb-timer";
- 			reg = <0x20038000 0x100>;
- 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_gates1 0>, <&clk_gates7 7>;
-@@ -79,7 +79,7 @@
- 		};
- 
- 		timer@2003a000 {
--			compatible = "snps,dw-apb-timer-osc";
-+			compatible = "snps,dw-apb-timer";
- 			reg = <0x2003a000 0x100>;
- 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_gates1 1>, <&clk_gates7 8>;
-@@ -87,7 +87,7 @@
- 		};
- 
- 		timer@2000e000 {
--			compatible = "snps,dw-apb-timer-osc";
-+			compatible = "snps,dw-apb-timer";
- 			reg = <0x2000e000 0x100>;
- 			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk_gates1 2>, <&clk_gates7 9>;
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 93ee655..4e8291b 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -26,10 +26,6 @@
- 		ethernet1 = &gmac1;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
--		timer0 = &timer0;
--		timer1 = &timer1;
--		timer2 = &timer2;
--		timer3 = &timer3;
- 	};
- 
- 	cpus {
-@@ -486,28 +482,32 @@
- 			interrupts = <1 13 0xf04>;
- 		};
- 
--		timer0: timer0@ffc08000 {
--			compatible = "snps,dw-apb-timer-sp";
-+		timer0: timer@ffc08000 {
-+			compatible = "snps,dw-apb-timer";
- 			interrupts = <0 167 4>;
- 			reg = <0xffc08000 0x1000>;
-+			clocks = <&osc>;
- 		};
- 
--		timer1: timer1@ffc09000 {
--			compatible = "snps,dw-apb-timer-sp";
-+		timer1: timer@ffc09000 {
-+			compatible = "snps,dw-apb-timer";
- 			interrupts = <0 168 4>;
- 			reg = <0xffc09000 0x1000>;
-+			clocks = <&osc>;
- 		};
- 
--		timer2: timer2@ffd00000 {
--			compatible = "snps,dw-apb-timer-osc";
-+		timer2: timer@ffd00000 {
-+			compatible = "snps,dw-apb-timer";
- 			interrupts = <0 169 4>;
- 			reg = <0xffd00000 0x1000>;
-+			clocks = <&l4_sp_clk>;
- 		};
- 
--		timer3: timer3@ffd01000 {
--			compatible = "snps,dw-apb-timer-osc";
-+		timer3: timer@ffd01000 {
-+			compatible = "snps,dw-apb-timer";
- 			interrupts = <0 170 4>;
- 			reg = <0xffd01000 0x1000>;
-+			clocks = <&l4_sp_clk>;
- 		};
- 
- 		uart0: serial0@ffc02000 {
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dts b/arch/arm/boot/dts/socfpga_cyclone5.dts
-index 102c4d8..54b8483 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5.dts
-@@ -67,19 +67,19 @@
- 			};
- 		};
- 
--		timer0@ffc08000 {
-+		timer@ffc08000 {
- 			clock-frequency = <100000000>;
- 		};
- 
--		timer1@ffc09000 {
-+		timer@ffc09000 {
- 			clock-frequency = <100000000>;
- 		};
- 
--		timer2@ffd00000 {
-+		timer@ffd00000 {
- 			clock-frequency = <25000000>;
- 		};
- 
--		timer3@ffd01000 {
-+		timer@ffd01000 {
- 			clock-frequency = <25000000>;
- 		};
- 
-diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
-index d93deb0..6a1d8b7 100644
---- a/arch/arm/boot/dts/socfpga_vt.dts
-+++ b/arch/arm/boot/dts/socfpga_vt.dts
-@@ -58,19 +58,19 @@
- 			};
- 		};
- 
--		timer0@ffc08000 {
-+		timer@ffc08000 {
- 			clock-frequency = <7000000>;
- 		};
- 
--		timer1@ffc09000 {
-+		timer@ffc09000 {
- 			clock-frequency = <7000000>;
- 		};
- 
--		timer2@ffd00000 {
-+		timer@ffd00000 {
- 			clock-frequency = <7000000>;
- 		};
- 
--		timer3@ffd01000 {
-+		timer@ffd01000 {
- 			clock-frequency = <7000000>;
- 		};
- 
--- 
-1.7.9.5
+The downside to that approach is that it makes each deferred probe more
+expensive; potentially a *lot* more expensive depending on how much work
+the xlate functions have to do. It would be worth prototyping though to
+see how well it works.
+
+g.
