@@ -1,77 +1,34 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of: provide of_platform_unpopulate()
-Date: Wed, 24 Jul 2013 15:19:58 +0100
-Message-ID: <20130724141958.9156F3E0A24@localhost>
-References: <1374257691-31981-1-git-send-email-bigeasy@linutronix.de> <51EBF33A.4050207@gmail.com> <51EC4908.4040504@gmail.com> <CACxGe6sqv2Wsp26MWqqs9W_eWO3tjs-+2z3z8fC=2fe-BjJvkA@mail.gmail.com> <51EDA117.10605@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51EDA117.10605@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Rob Herring <rob.herring@calxeda.com>, Kishon Vijay Abraham I <kishon@ti.com>, George Cherian <george.cherian@ti.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Roger Quadros <rogerq@ti.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: New device tree mailing list
+Date: Wed, 24 Jul 2013 20:25:46 +0100
+Message-ID: <20130724192546.726F93E0FF8@localhost>
+References: <CACxGe6t1MNMcL=0U9Cu7MOvPx-PCkWFf5iWGPZ=eAXSz-uuqEA@mail.gmail.com> <1374283779.2059.19.camel@joe-AO722>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1374283779.2059.19.camel@joe-AO722>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Jul 2013 16:16:07 -0500, Rob Herring <robherring2@gmail.com> wrote:
-> On 07/21/2013 06:44 PM, Grant Likely wrote:
-> > On Sun, Jul 21, 2013 at 9:48 PM, Rob Herring <robherring2@gmail.com> wrote:
-> >> On 07/21/2013 09:42 AM, Rob Herring wrote:
-> >>> On 07/19/2013 01:14 PM, Sebastian Andrzej Siewior wrote:
-> >>>> So I called of_platform_populate() on a device to get each child device
-> >>>> probed and on rmmod and I need to reverse its doing. After a quick grep
-> >>>> I did what others did as well and rmmod ended in:
-> >>>>
-> >>>> | Unable to handle kernel NULL pointer dereference at virtual address 00000018
-> >>>> | PC is at release_resource+0x18/0x80
-> >>>> | Process rmmod (pid: 2005, stack limit = 0xedc30238)
-> >>>> | [<c003add0>] (release_resource+0x18/0x80) from [<c0300e08>] (platform_device_del+0x78/0xac)
-> >>>> | [<c0300e08>] (platform_device_del+0x78/0xac) from [<c0301358>] (platform_device_unregister+0xc/0x18)
-> >>>>
-> >>>> The problem is that platform_device_del() "releases" each ressource in its
-> >>>> tree. This does not work on platform_devices created by OF becuase they
-> >>>> were never added via insert_resource(). As a consequence old->parent in
-> >>>> __release_resource() is NULL and we explode while accessing ->child.
-> >>>> So I either I do something completly wrong _or_ nobody here tested the
-> >>>> rmmod path of their driver.
-> >>>
-> >>> Wouldn't the correct fix be to call insert_resource somehow? The problem
-> >>> I have is that while of_platform_populate is all about parsing the DT
-> >>> and creating devices, the removal side has nothing to do with DT. So
-> >>> this should not be in the DT code. I think the core device code should
-> >>> be able to handle removal if the device creation side is done correctly.
-> >>>
-> >>> It looks to me like of_device_add either needs to call
-> >>> platform_device_add rather than device_add. I think the device name
-> >>> setting in platform_device_add should be a nop. If not, a check that the
-> >>> name is already set could be added.
-> >>>
-> >>
-> >> BTW, it looks like Grant has attempted this already:
+On Fri, 19 Jul 2013 18:29:39 -0700, Joe Perches <joe@perches.com> wrote:
+> On Fri, 2013-07-19 at 18:23 -0700, Grant Likely wrote:
+> > The ozlabs devicetree list was requiring too much work to moderate, so
+> > I'm closing down that list and replacing it with a list on
+> > vger.kernel.org.
 > > 
-> > Yup, things broke badly. Unfortunately the of_platform_device and
-> > platform_device history doesn't treat resources in the same way. I
-> > would like to merge the code, but I haven't been able to figure out a
-> > clean way to do it. Looks like we do need the unpopulate function.
+> > http://vger.kernel.org/vger-lists.html#devicetree
 > 
-> Was there more breakage than imx6 and amba devices? Your first version
-> had a fallback case for powerpc. Couldn't we do just allow that for more
-> than just powerpc? I'd much rather see some work-around within the core
-> DT code with a warning to prevent more proliferation than putting this
-> into drivers.
+> Hey Grant.
+> 
+> Can you also please setup an email archive?
+> Something like gmane or equivalent.
 
-It's tricky stuff. I've not figured out a solution I'm happy with.
-Trying to figure out when to apply a work around is hard because the
-resource reservation makes assumptions about the memory range layout
-that doesn't match the assumptions made by device tree code.
+MARC is set up now.
 
-One /possible/ option is to not add the resources to the devices at all
-when the device is registered and instead resolve them right at bind
-time. Jean Christophe proposed doing this already to solve a different
-problem; obtaining resources that require other drivers to be probed
-first. If the resources are resolved at .probe() time, then the resource
-registration problem should also go away.
+> Maybe a patchwork entry too?
 
-The downside to that approach is that it makes each deferred probe more
-expensive; potentially a *lot* more expensive depending on how much work
-the xlate functions have to do. It would be worth prototyping though to
-see how well it works.
+I'm not going to do a patchwork on this list since both Linux kernel and
+dtc patches arrive here. Although if the bindings maintainers decide
+they want one, then they can set one up.
 
 g.
