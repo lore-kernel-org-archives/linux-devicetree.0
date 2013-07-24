@@ -1,112 +1,56 @@
-From: Richard Zhao <rizhao@nvidia.com>
-Subject: [PATCH 4/9] spi: tegra20-slink: move to generic dma DT binding
-Date: Wed, 24 Jul 2013 12:09:57 +0800
-Message-ID: <1374639002-16753-5-git-send-email-rizhao@nvidia.com>
-References: <1374639002-16753-1-git-send-email-rizhao@nvidia.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH] ARM: dts: Add basic dts for Exynos4412-based Trats 2 board
+Date: Wed, 24 Jul 2013 13:38:23 +0900
+Message-ID: <0e0d01ce8827$a155f430$e401dc90$%kim@samsung.com>
+References: <1371653357-1389-1-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1374639002-16753-1-git-send-email-rizhao@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, swarren@wwwdotorg.org, vinod.koul@intel.com, djbw@fb.com, broonie@kernel.org, gregkh@linuxfoundation.org, lgirdwood@gmail.com, rizhao@nvidia.com, linuxzsc@gmail.com, ldewangan@nvidia.com, dev@lynxeye.de
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1371653357-1389-1-git-send-email-t.figa@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <t.figa@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, 'Olof Johansson' <olof@lixom.net>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Marek Szyprowski' <m.szyprowski@samsung.com>, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Kyungmin Park' <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-- driver: remove use of nvidia,dma-request-selector
-	  use dma_request_slave_channel to request channel
-- if dmas/dma-names are missing, it still supports cpu based transfer
-- update binding doc and specify dmas/dma-names properties as optional
+Tomasz Figa wrote:
+> 
+> This patch introduces device tree sources for Samsung Trats 2 board
+> based on Exynos4412 SoC.
+> 
+> Currently support includes:
+>  - eMMC,
+>  - main PMIC (max77686),
+>  - serial ports,
+>  - GPIO keys,
+>  - touchscreen.
+> 
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  arch/arm/boot/dts/Makefile              |   1 +
+>  arch/arm/boot/dts/exynos4412-trats2.dts | 456
+> ++++++++++++++++++++++++++++++++
+>  2 files changed, 457 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/exynos4412-trats2.dts
+> 
+Looks good to me, applied.
 
-Signed-off-by: Richard Zhao <rizhao@nvidia.com>
----
- .../devicetree/bindings/spi/nvidia,tegra20-slink.txt     | 10 +++++++---
- drivers/spi/spi-tegra20-slink.c                          | 16 +++++-----------
- 2 files changed, 12 insertions(+), 14 deletions(-)
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 1357510..8cdc7cc 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -53,6 +53,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+>  	exynos4412-odroidx.dtb \
+>  	exynos4412-smdk4412.dtb \
+>  	exynos4412-origen.dtb \
+> +	exynos4412-trats2.dtb \
+>  	exynos5250-arndale.dtb \
+>  	exynos5440-sd5v1.dtb \
+>  	exynos5250-smdk5250.dtb \
 
-diff --git a/Documentation/devicetree/bindings/spi/nvidia,tegra20-slink.txt b/Documentation/devicetree/bindings/spi/nvidia,tegra20-slink.txt
-index eefe15e..ae43bd1 100644
---- a/Documentation/devicetree/bindings/spi/nvidia,tegra20-slink.txt
-+++ b/Documentation/devicetree/bindings/spi/nvidia,tegra20-slink.txt
-@@ -4,8 +4,11 @@ Required properties:
- - compatible : should be "nvidia,tegra20-slink", "nvidia,tegra30-slink".
- - reg: Should contain SLINK registers location and length.
- - interrupts: Should contain SLINK interrupts.
--- nvidia,dma-request-selector : The Tegra DMA controller's phandle and
--  request selector for this SLINK controller.
-+
-+Optional properties:
-+- dmas : The Tegra DMA controller's phandle and request selector for
-+  this SLINK controller.
-+- dma-names : Should be "rx-tx".
- 
- Recommended properties:
- - spi-max-frequency: Definition as per
-@@ -17,7 +20,8 @@ spi@7000d600 {
- 	compatible = "nvidia,tegra20-slink";
- 	reg = <0x7000d600 0x200>;
- 	interrupts = <0 82 0x04>;
--	nvidia,dma-request-selector = <&apbdma 16>;
-+	dmas = <&apbdma 16>;
-+	dma-names = "rx-tx";
- 	spi-max-frequency = <25000000>;
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
-index 80490cc..278fb04 100644
---- a/drivers/spi/spi-tegra20-slink.c
-+++ b/drivers/spi/spi-tegra20-slink.c
-@@ -170,7 +170,7 @@ struct tegra_slink_data {
- 	void __iomem				*base;
- 	phys_addr_t				phys;
- 	unsigned				irq;
--	int					dma_req_sel;
-+	bool					use_dma;
- 	u32					spi_max_frequency;
- 	u32					cur_speed;
- 
-@@ -629,11 +629,8 @@ static int tegra_slink_init_dma_param(struct tegra_slink_data *tspi,
- 	dma_addr_t dma_phys;
- 	int ret;
- 	struct dma_slave_config dma_sconfig;
--	dma_cap_mask_t mask;
- 
--	dma_cap_zero(mask);
--	dma_cap_set(DMA_SLAVE, mask);
--	dma_chan = dma_request_channel(mask, NULL, NULL);
-+	dma_chan = dma_request_slave_channel(tspi->dev, "rx-tx");
- 	if (!dma_chan) {
- 		dev_err(tspi->dev,
- 			"Dma channel is not available, will try later\n");
-@@ -648,7 +645,6 @@ static int tegra_slink_init_dma_param(struct tegra_slink_data *tspi,
- 		return -ENOMEM;
- 	}
- 
--	dma_sconfig.slave_id = tspi->dma_req_sel;
- 	if (dma_to_memory) {
- 		dma_sconfig.src_addr = tspi->phys + SLINK_RX_FIFO;
- 		dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-@@ -1034,11 +1030,9 @@ static irqreturn_t tegra_slink_isr(int irq, void *context_data)
- static void tegra_slink_parse_dt(struct tegra_slink_data *tspi)
- {
- 	struct device_node *np = tspi->dev->of_node;
--	u32 of_dma[2];
- 
--	if (of_property_read_u32_array(np, "nvidia,dma-request-selector",
--				of_dma, 2) >= 0)
--		tspi->dma_req_sel = of_dma[1];
-+	if (of_find_property(np, "dmas", NULL))
-+		tspi->use_dma = true;
- 
- 	if (of_property_read_u32(np, "spi-max-frequency",
- 					&tspi->spi_max_frequency))
-@@ -1132,7 +1126,7 @@ static int tegra_slink_probe(struct platform_device *pdev)
- 	tspi->max_buf_size = SLINK_FIFO_DEPTH << 2;
- 	tspi->dma_buf_size = DEFAULT_SPI_DMA_BUF_LEN;
- 
--	if (tspi->dma_req_sel) {
-+	if (tspi->use_dma) {
- 		ret = tegra_slink_init_dma_param(tspi, true);
- 		if (ret < 0) {
- 			dev_err(&pdev->dev, "RxDma Init failed, err %d\n", ret);
--- 
-1.8.1.5
+BTW, I put some dtbs in wrong order :( I need to sort out...
+
+Thanks,
+Kukjin
