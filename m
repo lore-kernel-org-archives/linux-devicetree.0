@@ -1,78 +1,125 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from relay1.mentorg.com ([192.94.38.131]:63840 "EHLO
-	relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754133Ab3GVGhP convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 22 Jul 2013 02:37:15 -0400
-Received: from svr-orw-fem-01.mgc.mentorg.com ([147.34.98.93])
-	by relay1.mentorg.com with esmtp
-	id 1V19kA-0002W1-Lz from Alison_Chaiken@mentor.com
-	for devicetree@vger.kernel.org; Sun, 21 Jul 2013 23:37:14 -0700
-From: "Chaiken, Alison" <Alison_Chaiken@mentor.com>
-Subject: Re: [Ksummit-2013-discuss] [ATTEND] Handling of devicetree bindings
-Date: Mon, 22 Jul 2013 06:37:13 +0000
-Message-ID: <60BA5429A0E1584BA3633194F6F993B502B12F40@NA-MBX-03.mgc.mentorg.com>
-References: <60BA5429A0E1584BA3633194F6F993B502AF6D65@NA-MBX-03.mgc.mentorg.com>,<1374425637.15077.8.camel@shinybook.infradead.org>,<60BA5429A0E1584BA3633194F6F993B502B10DBC@NA-MBX-03.mgc.mentorg.com>
-In-Reply-To: <60BA5429A0E1584BA3633194F6F993B502B10DBC@NA-MBX-03.mgc.mentorg.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+Received: from ch1ehsobe004.messaging.microsoft.com ([216.32.181.184]:8686
+	"EHLO ch1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751803Ab3GXGVb (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Wed, 24 Jul 2013 02:21:31 -0400
+From: <hongbo.zhang@freescale.com>
+Subject: [PATCH v5 1/4] DMA: Freescale: revise device tree binding document
+Date: Wed, 24 Jul 2013 14:21:06 +0800
+Message-ID: <1374646870-5162-2-git-send-email-hongbo.zhang@freescale.com>
+In-Reply-To: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
+References: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
 MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
 List-ID: <devicetree@vger.kernel.org>
 
-I commented:
->> Assuredly if in a kernel update a driver adds new features which are
->> enabled by new properties described in the device-tree, updating both
->> the kernel and the device-tree at the same time makes sense?
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
 
-David Woodhouse [dwmw2@infradead.org] inquired:
-> the old kernel's driver simply didn't *use* the
-> feature which was already (optionally) present. The later kernel *does*
-> use the feature, and thus it needs to be described properly?
+This patch updates the discription of each type of DMA controller and its
+channels, it is preparation for adding another new DMA controller binding, it
+also fixes some defects of indent for text alignment at the same time.
 
-Precisely.   This case cames up frequently, as a board often (in principle) supports some new standards for which there is yet no available test peripheral.   Without hardware to test, no one creates a driver.    When there is no driver, no one creates DTS bindings.
+Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+---
+ .../devicetree/bindings/powerpc/fsl/dma.txt        |   52 +++++++++-----------
+ 1 file changed, 24 insertions(+), 28 deletions(-)
 
-> If so, that means the initial device-tree binding was *WRONG*. It
-> omitted the description of this hardware feature, purely because the
-> Linux driver at the time didn't happen to use it. Violating the cardinal
-> rule that the device-tree description of the hardware SHALL NOT be
-> dependent on any OS-specifics.
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+index 2a4b4bc..ed703d9 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+@@ -1,33 +1,31 @@
+-* Freescale 83xx DMA Controller
++* Freescale DMA Controllers
+ 
+-Freescale PowerPC 83xx have on chip general purpose DMA controllers.
++** Freescale Elo DMA Controller
++   This is a little-endian DMA controller, used in Freescale mpc83xx series
++   chips such as mpc8315, mpc8349, mpc8379 etc.
+ 
+ Required properties:
+ 
+-- compatible        : compatible list, contains 2 entries, first is
+-		 "fsl,CHIP-dma", where CHIP is the processor
+-		 (mpc8349, mpc8360, etc.) and the second is
+-		 "fsl,elo-dma"
++- compatible        : must include "fsl,elo-dma", and a "fsl,CHIP-dma" is
++                      optional, where CHIP is the processor name.
+ - reg               : <registers mapping for DMA general status reg>
+-- ranges		: Should be defined as specified in 1) to describe the
+-		  DMA controller channels.
++- ranges            : describes the mapping between the address space of the
++                      DMA channels and the address space of the DMA controller.
+ - cell-index        : controller index.  0 for controller @ 0x8100
+ - interrupts        : <interrupt mapping for DMA IRQ>
+ - interrupt-parent  : optional, if needed for interrupt mapping
+ 
+-
+ - DMA channel nodes:
+-        - compatible        : compatible list, contains 2 entries, first is
+-			 "fsl,CHIP-dma-channel", where CHIP is the processor
+-			 (mpc8349, mpc8350, etc.) and the second is
+-			 "fsl,elo-dma-channel". However, see note below.
++        - compatible        : must include "fsl,elo-dma-channel", and a
++                              "fsl,CHIP-dma-channel" is optional, where CHIP is
++                              the processor name, However, see note below.
+         - reg               : <registers mapping for channel>
+         - cell-index        : dma channel index starts at 0.
+ 
+ Optional properties:
+         - interrupts        : <interrupt mapping for DMA channel IRQ>
+-			  (on 83xx this is expected to be identical to
+-			   the interrupts property of the parent node)
++                              (on 83xx this is expected to be identical to
++                              the interrupts property of the parent node)
+         - interrupt-parent  : optional, if needed for interrupt mapping
+ 
+ Example:
+@@ -70,27 +68,25 @@ Example:
+ 		};
+ 	};
+ 
+-* Freescale 85xx/86xx DMA Controller
+-
+-Freescale PowerPC 85xx/86xx have on chip general purpose DMA controllers.
++** Freescale EloPlus DMA Controller
++   This is DMA controller with extended addresses and chaining, mainly used in
++   Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as mpc8540, mpc8641
++   p4080, bsc9131 etc.
+ 
+ Required properties:
+ 
+-- compatible        : compatible list, contains 2 entries, first is
+-		 "fsl,CHIP-dma", where CHIP is the processor
+-		 (mpc8540, mpc8540, etc.) and the second is
+-		 "fsl,eloplus-dma"
++- compatible        : must include "fsl,eloplus-dma", and a "fsl,CHIP-dma" is
++                      optional, where CHIP is the processor name.
+ - reg               : <registers mapping for DMA general status reg>
+ - cell-index        : controller index.  0 for controller @ 0x21000,
+                                          1 for controller @ 0xc000
+-- ranges		: Should be defined as specified in 1) to describe the
+-		  DMA controller channels.
++- ranges            : describes the mapping between the address space of the
++                      DMA channels and the address space of the DMA controller
+ 
+ - DMA channel nodes:
+-        - compatible        : compatible list, contains 2 entries, first is
+-			 "fsl,CHIP-dma-channel", where CHIP is the processor
+-			 (mpc8540, mpc8560, etc.) and the second is
+-			 "fsl,eloplus-dma-channel". However, see note below.
++        - compatible        : must include "fsl,eloplus-dma-channel", and a
++                              "fsl,CHIP-dma-channel" is optional, where CHIP is
++                              the processor name, However, see note below.
+         - cell-index        : dma channel index starts at 0.
+         - reg               : <registers mapping for channel>
+         - interrupts        : <interrupt mapping for DMA channel IRQ>
+-- 
+1.7.9.5
 
-I take your point.    Ideally, a set of include files for a new board should be feature-complete , with more or less one DT node for every connector  on the board, whether or not there exists anything to plug in. Then the top-level board file would simply indicate the values of abstract properties and set status "okay" for hardware in-use.
 
-Linus Walleij agrees:
-# Varying parameters is not as big a thing as altering
-# bindings. I should have been clear on this - altering a device
-# tree to fit a board is fine. But altering device tree *bindings*
-# is a sin.
-
-Tomasz Figa explains:
-@ - bindings should enter staging state after being introduced,
-@ - from time to time a binding review meeting should take place (on IRC
-@possibly) and discuss which of introduced staging bindings are ready to
-@enter stable state,
-@ - in stable state such binding would be considered an ABI.
-
-In other words, David. Linus and Tomasz are suggesting that once a set of bindings has entered the stable branch, they are carved in stone equivalent to the way the "Thou Shalt not Break Userspace" commandment underlies the kernel's sysfs ABI.    Ideally,a kernel and device-tree binary that are part of a product release will be part of the stable branch.
-
-The concept of having arch-level DTSI files that are included only by ISA-level DTSI files that are included only by CPU-level DTSI files might help this process.    When all the DT source is moved to a new repo and the directories are refactored, these all these most fundamental files can be put into stable branch.    The directory hierarchy then will make it clearer which files and associated bindings are part of stable ABI and are harder to modify.   And Documentation can express the idea that the DTB is the device-tree ABI towards the kernel and should be stable.
-
-David continues:
-> The older driver which doesn't use the optional feature should still work � just without
-> *using* that feature, of course.
-> If you ever encounter a scenario where you can't just use the latest
-> device-tree, and an older kernel requires that you ship a contemporary
-> device-tree to match it, then something has gone *catastrophically*
-> wrong.
-
-What can go catastrophically wrong is that the full functionality of a new driver will require new flexibility in some parameter that earlier implementations had assumed was invariant.    The new driver will want to read the parameter from the DTB that earlier implementations set in a driver's private data, or in a local include file, or even by a fuse.  Admittedly this example illustrates a newer driver requiring a newer DTB, not an older kernel requiring an older DTB.   Hopefully having a hierarchy of files will mean that only board-level files tend to get stuck in staging while those at higher levels would be patched rarely.
-
-David continues:
-> I think it's definitely worth having a session on device-tree bindings,
-> to ensure that this subject is properly understood.
-
-I hope that we will have an open discussion in Edinburgh that attendees who are not part of Kernel Summit may attend.   Pantelis Antoniou had mentioned a possible ELCE BoF session.
-
--- Alison
 
