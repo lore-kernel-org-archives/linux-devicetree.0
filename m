@@ -1,66 +1,46 @@
-MIME-Version: 1.0
-In-Reply-To: <20130720034647.2B7B43E14BF@localhost>
-References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com>
-	<20130720034647.2B7B43E14BF@localhost>
-Date: Thu, 25 Jul 2013 15:17:03 -0500
-Message-ID: <CAL_JsqKhAbULAhQrYJ1hrY-NC+tL0wXAw8FXk0JVMLoMAJPv_w@mail.gmail.com>
+Return-Path: <devicetree-owner@vger.kernel.org>
+Received: from mail-pa0-f45.google.com ([209.85.220.45]:65264 "EHLO
+	mail-pa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751683Ab3GYEPJ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 00:15:09 -0400
+Received: by mail-pa0-f45.google.com with SMTP id bg4so1487951pad.32
+        for <devicetree@vger.kernel.org>; Wed, 24 Jul 2013 21:15:09 -0700 (PDT)
+From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: The future of DT binding maintainership
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Rob Herring <rob.herring@calxeda.com>
+In-Reply-To: <51EEA75E.3050008@wwwdotorg.org>
+References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com> <1925583.R0td2pS6as@flatron> <E1V1Nkn-00072x-Df@jdl.com> <1687020.5ErE9ecltl@flatron> <51EEA75E.3050008@wwwdotorg.org>
+Date: Wed, 24 Jul 2013 21:28:47 +0100
+Message-Id: <20130724202847.2BD753E14AB@localhost>
+Sender: devicetree-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Jon Loeliger <jdl@jdl.com>, "Chaiken, Alison" <Alison_Chaiken@mentor.com>, Wolfram Sang <w.sang@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 07/19/2013 10:46 PM, Grant Likely wrote:
-> A number of us had a face-to-face meeting in Dublin last week to talk
-> about DT maintainership and the fact that it simply isn't working right
-> now. Neither Rob nor I can keep up with the load and there are a lot of
-> poorly designed bindings appearing in the tree.
->
-> Device tree binding maintainership needs to be split off to a separate
-> group, and we've started with a few people willing to help, Pawel Moll,
-> Mark Rutland, Stephen Warren and Ian Campbell.
+On Tue, 23 Jul 2013 08:55:10 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 07/22/2013 02:57 PM, Tomasz Figa wrote:
+> > On Monday 22 of July 2013 16:34:49 Jon Loeliger wrote:
+> 
+> >>> My idea is to implement compile time verification in dtc, so I guess it
+> >>> will be more like the latter. Since dts is what dtc can already parse,
+> >>> my plan is to keep the schemas in spirit to dts, just
+> >>> modifying/extending it to allow specifying bindings with them, rather
+> >>> than static values.
+> 
+> > Things start to become fun when you get to bindings like regulators or 
+> > clocks, when part of the binding is defined on generic level (-supply, 
+> > clocks, clock-names properties) and remaining part is specific to device 
+> > (XXX in XXX-supply, count and order of clocks and clock-names, strings 
+> > allowed in clock-names property). This kind of inheritance is likely to be 
+> > the biggest troublemaker.
+> 
+> It's good you mentioned inheritance here. I believe that's one of the
+> key things. For example, the Tegra GPIO controller's binding is-a
+> GPIO-controller, and is-an interrupt-controller, and I imagine any
+> successful DT schema definition would very explicitly include that
+> information. Likewise, other nodes may be is-a GPIO-client (many times,
+> each parameterized with the property name that defines which GPIO you're
+> talking abot), and also may be is-an interrupt-client (with a similar
+> comment), etc.
 
-Well, I never said I was stepping down from the binding side.
->
-> (BTW, even though I've already sent a patch adding that group
-> MAINTAINERS, this is not set in stone. Anyone else wanting to help
-> maintain should volunteer)
->
-> Another thing discussed is that we need to start validating DT schema
-> with an extension to dtc. Tomasz Figa has volunteered to do this work
-> and has support from his employer to spend time on it. What I'm hoping
-> to have is that the DT schema will get checked as part of the dts build
-> process so that any DT file that doesn't match the documented schema
-> will get flagged, and that the schema files will be human readable and
-> will double as documentation.
->
-> There is not yet any process for binding maintainership. We talked about
-> a few ideas, but they really need to be hashed out here on the mailing
-> list. A couple of the questions:
->
-> - How are bindings allowed to be merged? Through subsystem trees, or
->   only through the bindings tree?
->   - Through the bindings tree is more work but it will provide more
->     control.
++1
 
-This is my preference, but then we have the problem that the kernel
-changes get merged and the
->   - Through subsystem trees means drivers and bindings get merged
->     together.
->   - If we have a schema tool that reports errors on missing or
->     unapproved schema, then spliting the driver from the binding won't
->     matter that much.
-> - Do we need to differentiate between 'staging' and 'stable' bindings?
-> - What is the schedule for splitting the bindings and .dts files out of
->   the kernel?
->   - Ian Campbell is maintaining a DT bindings and .dts mirror tree which
->     should eventually become the 'master' for merging DT bindings.
->
-> g.
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
->
