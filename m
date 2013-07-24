@@ -1,41 +1,52 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 1/3] misc: Add crossbar driver
-Date: Wed, 24 Jul 2013 14:59:27 -0400
-Message-ID: <51F0240F.3050507@ti.com>
-References: <1374165830-6367-1-git-send-email-r.sricharan@ti.com> <1374165830-6367-2-git-send-email-r.sricharan@ti.com> <51E83A4F.5080904@ti.com> <CACRpkdY3nQaWimTwB-Zt-8+Q_KZr8a0rpB1SUQq=AuoG4bAYnQ@mail.gmail.com> <51ED2385.60108@ti.com> <51ED5C66.1010407@ti.com> <51EFFBE1.4090505@ti.com> <51F0031B.1050307@ti.com> <51F00530.9090703@ti.com> <51F02069.3050207@ti.com> <51F0223E.4050008@ti.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 0/5] Memory mapped architected timers
+Date: Wed, 24 Jul 2013 13:32:53 -0700
+Message-ID: <20130724203253.GE27761@codeaurora.org>
+References: <1374191972-18015-1-git-send-email-sboyd@codeaurora.org>
+ <20130722170817.GB4833@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51F0223E.4050008@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Sricharan R <r.sricharan@ti.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, ext Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rajendra Nayak <rnayak@ti.com>, Felipe Balbi <balbi@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130722170817.GB4833@e106331-lin.cambridge.arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 24 July 2013 02:51 PM, Nishanth Menon wrote:
-> On 07/24/2013 01:43 PM, Sricharan R wrote:
->> On Wednesday 24 July 2013 10:17 PM, Nishanth Menon wrote:
->>> On 07/24/2013 11:38 AM, Santosh Shilimkar wrote:
->>>> On Wednesday 24 July 2013 12:08 PM, Nishanth Menon wrote:
->>>>> That said, maybe a intermediate pinctrl approach might be more pragmatic and less theoretically flexible.
->>>>> an option might be to "statically allocate" default number of interrupts to a domain - example:
->>>>> * GIC IRQ 72->78 allotted to UARTs
->>>>> * pinctrl mapping provided for those but only 6 can be used (rest are marked status="disabled" as default) at any given time (choice of pinctrl option determines GIC interrupt line to use)
->>>>> * All modules will have a pinctrl definition to have a mapping - to avoid bootloader overriding default cross bar setting in ways un-expected by kernel.
->>>>>
->>>>> Does that sound fair trade off?
->>>> This sounds better. That way we can get all the devices in the DT at least.
->>>
->>> Fair enough - if Linus and Tony are still ok with this approach to the problem, seeing a patch series with the effect would be beneficial.
->>>
->>   Ok, i will use this idea of certain number interrupts to groups.
->> Yes on DRA7XX, we have about 160 gic lines and 320 irq crossbar device inputs contending for it.
->> 1:2 and fully arbitrary.  But will we be really exhausting them ?
->>
-> Depends on how we allocate :). The default arbitary allocation can be made more logical in your series ofcourse :).
+On 07/22, Mark Rutland wrote:
+> Hi Stephen,
 > 
-I would just most logical peripherals rather than providing every single
-IP connected to cross bar. Otherwise we will end up wth hwmod like
-scenario where now started removing the unused stuff because of
-maintenance and loc issues ;-)
+> On Fri, Jul 19, 2013 at 12:59:27AM +0100, Stephen Boyd wrote:
+> > This patchset adds support for memory mapped architected timers. We
+> > don't have any other global broadcast timer in our system, so we use the
+> > mmio timer during low power modes. The first patch changes the register
+> > accessor to an enum per Thomas' request. The second patch is the binding.
+> > The next two patches lay some groundwork so that the last patch is simpler.
+> > The final patch adds support for mmio timers.
+> > 
+> > Patches are based on v3.11-rc1.
+> 
+> Be aware that as of v3.11-rc2 this doesn't cleanly apply, as the
+> __cpuinit removal broke the final patch's context in a couple of places.
+> It would be nice to get rid of the new cpuinit additions too...
+> 
+> With that cleaned up locally, I've gave this a spin on tc2 and a
+> Foundation model to test the cp15/system timers, hotplugging CPUs and
+> running a basic test (`time sleep 5`). That all seems to work.
+> 
+> Unfortunately I have no way of testing the memory-mapped timer support,
+> but I trust you've tested that locally.
+> 
+> For the series:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> 
+
+Thanks Mark.
+
+Daniel, can you pick up these patches please?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
