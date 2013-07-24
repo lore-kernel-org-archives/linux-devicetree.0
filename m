@@ -1,112 +1,65 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from co1ehsobe004.messaging.microsoft.com ([216.32.180.187]:46086
-	"EHLO co1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1758520Ab3GZK1n (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Fri, 26 Jul 2013 06:27:43 -0400
-From: <hongbo.zhang@freescale.com>
-Subject: [PATCH v6 3/3] DMA: Freescale: update driver to support 8-channel DMA engine
-Date: Fri, 26 Jul 2013 18:27:16 +0800
-Message-ID: <1374834436-7149-4-git-send-email-hongbo.zhang@freescale.com>
-In-Reply-To: <1374834436-7149-1-git-send-email-hongbo.zhang@freescale.com>
-References: <1374834436-7149-1-git-send-email-hongbo.zhang@freescale.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from metis.ext.pengutronix.de ([92.198.50.35]:56704 "EHLO
+	metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751758Ab3GXJKA (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 24 Jul 2013 05:10:00 -0400
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: [RFC 1/2] mmc: block: allow setting name_idx via devicetree
+Date: Wed, 24 Jul 2013 11:09:32 +0200
+Message-Id: <1374656973-16250-2-git-send-email-s.trumtrar@pengutronix.de>
+In-Reply-To: <1374656973-16250-1-git-send-email-s.trumtrar@pengutronix.de>
+References: <1374656973-16250-1-git-send-email-s.trumtrar@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
-To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
+To: linux-mmc@vger.kernel.org
+Cc: Chris Ball <cjb@laptop.org>, devicetree@vger.kernel.org, kernel@pengutronix.de, Steffen Trumtrar <s.trumtrar@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
+As with gpio, uart and others, allow specifying the name_idx via the
+aliases-node in the devicetree.
 
-This patch adds support to 8-channel DMA engine, thus the driver works for both
-the new 8-channel and the legacy 4-channel DMA engines.
+On embedded devices, there is often a combination of removable (e.g.
+SD card) and non-removable mmc devices (e.g. eMMC).
+Therefore the name_idx might change depending on
+	- host of removable device
+	- removable card present or not
 
-Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+This makes it difficult to hard code the root device, if it is on the
+non-removable device. E.g. if SD card is present eMMC will be mmcblk1,
+if SD card is not present at boot, eMMC will be mmcblk0.
+
+If the aliases-node is not found, the driver will act as before.
+
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+
 ---
- drivers/dma/Kconfig  |    9 +++++----
- drivers/dma/fsldma.c |    9 ++++++---
- drivers/dma/fsldma.h |    2 +-
- 3 files changed, 12 insertions(+), 8 deletions(-)
+ drivers/mmc/card/block.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 6825957..3979c65 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -89,14 +89,15 @@ config AT_HDMAC
- 	  Support the Atmel AHB DMA controller.
+diff --git a/drivers/mmc/card/block.c b/drivers/mmc/card/block.c
+index cd0b7f4..5853c59 100644
+--- a/drivers/mmc/card/block.c
++++ b/drivers/mmc/card/block.c
+@@ -35,6 +35,7 @@
+ #include <linux/capability.h>
+ #include <linux/compat.h>
+ #include <linux/pm_runtime.h>
++#include <linux/of.h>
  
- config FSL_DMA
--	tristate "Freescale Elo and Elo Plus DMA support"
-+	tristate "Freescale Elo series DMA support"
- 	depends on FSL_SOC
- 	select DMA_ENGINE
- 	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
- 	---help---
--	  Enable support for the Freescale Elo and Elo Plus DMA controllers.
--	  The Elo is the DMA controller on some 82xx and 83xx parts, and the
--	  Elo Plus is the DMA controller on 85xx and 86xx parts.
-+	  Enable support for the Freescale Elo series DMA controllers.
-+	  The Elo is the DMA controller on some mpc82xx and mpc83xx parts, the
-+	  EloPlus is on mpc85xx and mpc86xx and Pxxx parts, and the Elo3 is on
-+	  some Txxx and Bxxx parts.
- 
- config MPC512X_DMA
- 	tristate "Freescale MPC512x built-in DMA engine support"
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 49e8fbd..16a9a48 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -1261,7 +1261,9 @@ static int fsl_dma_chan_probe(struct fsldma_device *fdev,
- 	WARN_ON(fdev->feature != chan->feature);
- 
- 	chan->dev = fdev->dev;
--	chan->id = ((res.start - 0x100) & 0xfff) >> 7;
-+	chan->id = (res.start & 0xfff) < 0x300 ?
-+		   ((res.start - 0x100) & 0xfff) >> 7 :
-+		   ((res.start - 0x200) & 0xfff) >> 7;
- 	if (chan->id >= FSL_DMA_MAX_CHANS_PER_DEVICE) {
- 		dev_err(fdev->dev, "too many channels for device\n");
- 		err = -EINVAL;
-@@ -1434,6 +1436,7 @@ static int fsldma_of_remove(struct platform_device *op)
- }
- 
- static const struct of_device_id fsldma_of_ids[] = {
-+	{ .compatible = "fsl,elo3-dma", },
- 	{ .compatible = "fsl,eloplus-dma", },
- 	{ .compatible = "fsl,elo-dma", },
- 	{}
-@@ -1455,7 +1458,7 @@ static struct platform_driver fsldma_of_driver = {
- 
- static __init int fsldma_init(void)
- {
--	pr_info("Freescale Elo / Elo Plus DMA driver\n");
-+	pr_info("Freescale Elo series DMA driver\n");
- 	return platform_driver_register(&fsldma_of_driver);
- }
- 
-@@ -1467,5 +1470,5 @@ static void __exit fsldma_exit(void)
- subsys_initcall(fsldma_init);
- module_exit(fsldma_exit);
- 
--MODULE_DESCRIPTION("Freescale Elo / Elo Plus DMA driver");
-+MODULE_DESCRIPTION("Freescale Elo series DMA driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index f5c3879..1ffc244 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -112,7 +112,7 @@ struct fsldma_chan_regs {
- };
- 
- struct fsldma_chan;
--#define FSL_DMA_MAX_CHANS_PER_DEVICE 4
-+#define FSL_DMA_MAX_CHANS_PER_DEVICE 8
- 
- struct fsldma_device {
- 	void __iomem *regs;	/* DGSR register base */
+ #include <linux/mmc/ioctl.h>
+ #include <linux/mmc/card.h>
+@@ -2005,7 +2006,11 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
+ 	 * index anymore so we keep track of a name index.
+ 	 */
+ 	if (!subname) {
+-		md->name_idx = find_first_zero_bit(name_use, max_devices);
++		ret = of_alias_get_id(card->host->parent->of_node, "mmc");
++		if (ret < 0)
++			md->name_idx = find_first_zero_bit(name_use, max_devices);
++		else
++			md->name_idx = ret;
+ 		__set_bit(md->name_idx, name_use);
+ 	} else
+ 		md->name_idx = ((struct mmc_blk_data *)
 -- 
-1.7.9.5
-
-
+1.8.3.2
 
