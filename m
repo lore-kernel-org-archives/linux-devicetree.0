@@ -1,86 +1,201 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: Re: [PATCH 1/4] mtd: nand: gpio: Determine bus width automatically
-Date: Wed, 24 Jul 2013 17:28:04 +0400
-Message-ID: <20130724172804.373309617f46b6e66a1085c0@mail.ru>
-References: <1374582499-31823-1-git-send-email-shc_work@mail.ru>
- <CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCHv4 00/33] ARM: OMAP: clock conversion to DT
+Date: Wed, 24 Jul 2013 17:16:52 +0300
+Message-ID: <51EFE1D4.8090307@ti.com>
+References: <1374564028-11352-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-mtd@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Content-Type: multipart/mixed;
+	boundary="------------000004030206050807050103"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1374564028-11352-1-git-send-email-t-kristo@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, khilman@linaro.org, tony@atomide.com, mturquette@linaro.org, nm@ti.com, rnayak@ti.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Jul 2013 23:42:08 -0700
-Brian Norris <computersforpeace@gmail.com> wrote:
+--------------000004030206050807050103
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 
-> On Tue, Jul 23, 2013 at 5:28 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
-> > This patch provide automatically determine of bus width. If resource size,
-> > supplied to the driver more than 1 byte, the NAND_BUSWIDTH_AUTO option
-> > will be used in the MTD core.
+On 07/23/2013 10:19 AM, Tero Kristo wrote:
+> Hi,
 > 
-> I presume this depends on the bugfix I sent for NAND_BUSWIDTH_AUTO /
-> nand_set_defaults()? That's worth noting (as I am right now), for
-> whenever someone gets around to merging this.
-
-OK.
-
-[...]
-> > diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> > index 36ef07d..287b8b8 100644
-> > --- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
-> > @@ -8,15 +8,14 @@ Required properties:
-> >  - compatible : "gpio-control-nand"
-> >  - reg : should specify localbus chip select and size used for the chip.  The
-> >    resource describes the data bus connected to the NAND flash and all accesses
-> > -  are made in native endianness.
-> > +  are made in native endianness. Bus width of the device is determined
-> > +  automatically if size > 1. If size = 1, 8 bit bus width will be used.
-> >  - #address-cells, #size-cells : Must be present if the device has sub-nodes
-> >    representing partitions.
-> >  - gpios : specifies the gpio pins to control the NAND device.  nwp is an
-> >    optional gpio and may be set to 0 if not present.
-> >
-> >  Optional properties:
-> > -- bank-width : Width (in bytes) of the device.  If not present, the width
-> > -  defaults to 1 byte.
+> Changes compared to previous version:
 > 
-> Do you really want to remove this property entirely? I'm not sure what
-> the policy is on this. And it may still be useful to leave in the
-> documentation, since older drivers (and potentially non-Linux OS?) may
-> still need the property. Maybe you can mark it as optional, and that
-> it may be ignored entirely.
-
-I redid it, I'll do option "bank-width" optional.
-
-[...]
-> > +       if (of_find_property(dev->of_node, "bank-width", NULL))
-> > +               dev_notice(dev, "Property \"bank-width\" is deprecated");
+> - Clock init files moved from mach-omap2/ to drivers/clk/omap/
+> - AM33xx support added [patches 15-20]
+> - OMAP3 support added [patches 21-29]
+> - DRA7 APLL support added (thanks Keerthy) [patches 30-33]
 > 
-> If you don't totally kill this property (per my comments above), then
-> you probably don't want this message either. It's probably safe to
-> just ignore the property, if we can reliably auto-detect it instead.
+> Test branch on top of 3.11-rc1 available here:
+> 
+> git://gitorious.org/~kristo/omap-pm/omap-pm-work.git
+> branch: mainline-3.11-rc1-omap-dt-clks
+> 
+> Testing done:
+> 
+> - boot + suspend tested on OMAP3 beagle C4 (omap3530)
+> - boot + suspend tested on OMAP4 panda ES (omap4460)
+> - boot tested on beagle bone (am335x)
+> 
+> A boot test was also executed for DRA7 and OMAP5 on a separate branch
+> (mainline does not have OMAP5 / DRA7 support so far.)
 
-What do you say about such changes in the patch 4/4?
-Thanks.
+Thanks to your hints, I was able to get this to work with 3.11-rc1 on omap5 uevm
+using the following 3 patches. Please include them in your series. Thanks.
 
-[...]
+cheers,
+-roger
 
+--------------000004030206050807050103
+Content-Type: text/x-patch;
+	name="0001-ARM-dts-OMAP5-Provide-clock-tree-data.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename="0001-ARM-dts-OMAP5-Provide-clock-tree-data.patch"
+
+>From f7e38deadead5f584c9de4f2f19bb5ab50a2641d Mon Sep 17 00:00:00 2001
+From: Roger Quadros <rogerq@ti.com>
+Date: Wed, 24 Jul 2013 17:02:56 +0300
+Subject: [PATCH 1/3] ARM: dts: OMAP5: Provide clock tree data
+
+Include the clock tree data for OMAP5
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm/boot/dts/omap5.dtsi |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index e643620..bc31022 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -45,6 +45,13 @@
+ 		};
+ 	};
+ 
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		/include/ "omap54xx-clocks.dtsi"
++	};
++
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		/* PPI secure/nonsecure IRQ */
 -- 
-Alexander Shiyan <shc_work@mail.ru>
+1.7.4.1
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+--------------000004030206050807050103
+Content-Type: text/x-patch;
+	name="0002-CLK-omap5-Call-clock-init-function-at-boot.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename="0002-CLK-omap5-Call-clock-init-function-at-boot.patch"
+
+>From 810920058782e4d51c0aab5694fc7cffc53e9758 Mon Sep 17 00:00:00 2001
+From: Roger Quadros <rogerq@ti.com>
+Date: Wed, 24 Jul 2013 17:05:00 +0300
+Subject: [PATCH 2/3] CLK: omap5: Call clock init function at boot
+
+omap5xxx_clk_init() needs to be called at boot.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm/mach-omap2/io.c |    1 +
+ include/linux/clk/omap.h |    2 ++
+ 2 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/io.c b/arch/arm/mach-omap2/io.c
+index f3b7876..7d42e26 100644
+--- a/arch/arm/mach-omap2/io.c
++++ b/arch/arm/mach-omap2/io.c
+@@ -653,6 +653,7 @@ void __init omap5_init_early(void)
+ 	omap54xx_clockdomains_init();
+ 	omap54xx_hwmod_init();
+ 	omap_hwmod_init_postsetup();
++	omap_clk_init = omap5xxx_clk_init;
+ }
+ #endif
+ 
+diff --git a/include/linux/clk/omap.h b/include/linux/clk/omap.h
+index 0d70cd1..4b82485 100644
+--- a/include/linux/clk/omap.h
++++ b/include/linux/clk/omap.h
+@@ -197,6 +197,8 @@ void omap2_clk_enable_init_clocks(const char **clk_names, u8 num_clocks);
+ 
+ void omap3_clk_lock_dpll5(void);
+ 
++int omap5xxx_clk_init(void);
++
+ extern const struct clk_hw_omap_ops clkhwops_omap3_dpll;
+ extern const struct clk_hw_omap_ops clkhwops_omap4_dpllmx;
+ extern const struct clk_hw_omap_ops clkhwops_omap3430es2_dss_usbhost_wait;
+-- 
+1.7.4.1
+
+
+--------------000004030206050807050103
+Content-Type: text/x-patch;
+	name="0003-CLK-omap5-Initialize-USB_DPLL-at-boot.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename="0003-CLK-omap5-Initialize-USB_DPLL-at-boot.patch"
+
+>From 8836bc00aea3c97206244c3f8a66e2726c835854 Mon Sep 17 00:00:00 2001
+From: Roger Quadros <rogerq@ti.com>
+Date: Wed, 24 Jul 2013 16:30:55 +0300
+Subject: [PATCH 3/3] CLK: omap5: Initialize USB_DPLL at boot
+
+USB_DPLL must be initialized and locked at boot so that
+USB modules can work.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ drivers/clk/omap/clk-54xx.c |   13 ++++++++++++-
+ 1 files changed, 12 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/clk/omap/clk-54xx.c b/drivers/clk/omap/clk-54xx.c
+index ade0481..a0b3c14 100644
+--- a/drivers/clk/omap/clk-54xx.c
++++ b/drivers/clk/omap/clk-54xx.c
+@@ -19,6 +19,12 @@
+ 
+ #define OMAP5_DPLL_ABE_DEFFREQ				98304000
+ 
++/*
++ * OMAP543x TRM, section "3.6.3.9.5 DPLL_USB Preferred Settings"
++ * states it must be at 960MHz
++ */
++#define OMAP5_DPLL_USB_DEFFREQ				960000000
++
+ static struct omap_dt_clk omap54xx_clks[] = {
+ 	DT_CLK(NULL, "timer_32k_ck", "sys_32k_ck"),
+ 	DT_CLK("omap_timer.1", "sys_ck", "sys_clkin"),
+@@ -37,7 +43,7 @@ static struct omap_dt_clk omap54xx_clks[] = {
+ int __init omap5xxx_clk_init(void)
+ {
+ 	int rc;
+-	struct clk *abe_dpll_ref, *abe_dpll, *sys_32k_ck;
++	struct clk *abe_dpll_ref, *abe_dpll, *sys_32k_ck, *usb_dpll;
+ 
+ 	dt_omap_clk_init();
+ 
+@@ -54,5 +60,10 @@ int __init omap5xxx_clk_init(void)
+ 	if (rc)
+ 		pr_err("%s: failed to configure ABE DPLL!\n", __func__);
+ 
++	usb_dpll = clk_get_sys(NULL, "dpll_usb_ck");
++	rc = clk_set_rate(usb_dpll, OMAP5_DPLL_USB_DEFFREQ);
++	if (rc)
++		pr_err("%s: failed to configure USB DPLL!\n", __func__);
++
+ 	return 0;
+ }
+-- 
+1.7.4.1
+
+
+--------------000004030206050807050103--
