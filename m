@@ -1,212 +1,172 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from perceval.ideasonboard.com ([95.142.166.194]:32853 "EHLO
+Received: from perceval.ideasonboard.com ([95.142.166.194]:34539 "EHLO
 	perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756633Ab3G2SiO (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 14:38:14 -0400
+	with ESMTP id S1757419Ab3GYW0u (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 18:26:50 -0400
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 3/3] gpio: pcf857x: Add OF support
-Date: Mon, 29 Jul 2013 20:39:05 +0200
-Message-Id: <1375123145-31648-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-In-Reply-To: <1375123145-31648-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1375123145-31648-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH] pwm: renesas-tpu: Add DT support
+Date: Fri, 26 Jul 2013 00:27:41 +0200
+Message-Id: <1374791261-9850-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-pwm@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add DT bindings for the pcf857x-compatible chips and parse the device
-tree node in the driver.
+Specify DT bindings for the TPU PWM controller and add OF support to the
+driver.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 69 ++++++++++++++++++++++
- drivers/gpio/gpio-pcf857x.c                        | 57 +++++++++++++++---
- 2 files changed, 117 insertions(+), 9 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+ .../devicetree/bindings/pwm/renesas,tpu-pwm.txt    | 28 +++++++++++++++
+ drivers/pwm/pwm-renesas-tpu.c                      | 41 ++++++++++++++++++----
+ 2 files changed, 62 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+This patch depends on the "[PATCH v2 0/4] Add PWM polarity flag macro for DT"
+series that is scheduled for merge in the PWM tree, and should thus go in via
+the same tree.
+
+The code has been tested on an Armadillo800EVA with additional platform patches
+that I'm going to submit next.
+
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
 new file mode 100644
-index 0000000..575b05e
+index 0000000..b067e84
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-@@ -0,0 +1,69 @@
-+* PCF857x-compatible I/O expanders
-+
-+The PCF857x-compatible chips have "quasi-bidirectional" I/O pins that can be
-+driven high by a pull-up current source or driven low to ground. This combines
-+the direction and output level into a single bit per pin, which can't be read
-+back. We can't actually know at initialization time whether a pin is configured
-+(a) as output and driving the signal low/high, or (b) as input and reporting a
-+low/high value, without knowing the last value written since the chip came out
-+of reset (if any). The only reliable solution for setting up pin direction is
-+thus to do it explicitly.
++++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
+@@ -0,0 +1,28 @@
++* Renesas R-Car Timer Pulse Unit PWM Controller
 +
 +Required Properties:
 +
 +  - compatible: should be one of the following.
-+    - "maxim,max7328": For the Maxim MAX7378
-+    - "maxim,max7329": For the Maxim MAX7329
-+    - "nxp,pca8574": For the NXP PCA8574
-+    - "nxp,pca8575": For the NXP PCA8575
-+    - "nxp,pca9670": For the NXP PCA9670
-+    - "nxp,pca9671": For the NXP PCA9671
-+    - "nxp,pca9672": For the NXP PCA9672
-+    - "nxp,pca9673": For the NXP PCA9673
-+    - "nxp,pca9674": For the NXP PCA9674
-+    - "nxp,pca9675": For the NXP PCA9675
-+    - "nxp,pcf8574": For the NXP PCF8574
-+    - "nxp,pcf8574a": For the NXP PCF8574A
-+    - "nxp,pcf8575": For the NXP PCF8575
-+    - "ti,tca9554": For the TI TCA9554
++    - "renesas,tpu-r8a73a4": for R8A77A4 (R-Mobile APE6) compatible PWM controller.
++    - "renesas,tpu-r8a7740": for R8A7740 (R-Mobile A1) compatible PWM controller.
++    - "renesas,tpu-r8a7790": for R8A7790 (R-Car H2) compatible PWM controller.
++    - "renesas,tpu-sh7372": for SH7372 (SH-Mobile AP4) compatible PWM controller.
++    - "renesas,tpu": for generic R-Car TPU PWM controller.
 +
-+  - reg: I2C slave address.
++  - reg: Base address and length of each memory resource used by the PWM
++    controller hardware module.
 +
-+  - gpio-controller: Marks the device node as a gpio controller.
-+  - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
-+    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
-+    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
++  - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
++    the cells format. The only third cell flag supported by this binding is
++    PWM_POLARITY_INVERTED.
 +
-+Optional Properties:
++Please refer to pwm.txt in this directory for details of the common PWM bindings
++used by client devices.
 +
-+  - pins-initial-state: Bitmask that specifies the initial state of each pin.
-+  When a bit is set to zero, the corresponding pin will be initialized to the
-+  input (pulled-up) state. When the  bit is set to one, the pin will be
-+  initialized the the low-level output state. If the property is not specified
-+  all pins will be initialized to the input state.
++Example: R8A7740 (R-Car A1) TPU controller node
 +
-+  The I/O expander can detect input state changes, and thus optionally act as
-+  an interrupt controller. When interrupts support is desired all the following
-+  properties must be set. For more information please see the interrupt
-+  controller device tree bindings documentation available at
-+  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
-+
-+  - interrupt-controller: Identifies the node as an interrupt controller.
-+  - #interrupt-cells: Number of cells to encode an interrupt source, shall be 2.
-+  - interrupt-parent: phandle of the parent interrupt controller.
-+  - interrupts: Interrupt specifier for the controllers interrupt.
-+
-+
-+Please refer to gpio.txt in this directory for details of the common GPIO
-+bindings used by client devices.
-+
-+Example: PCF8575 I/O expander node
-+
-+	pcf8575: gpio@20 {
-+		compatible = "nxp,pcf8575";
-+		reg = <0x20>;
-+		interrupt-parent = <&irqpin2>;
-+		interrupts = <3 0>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
++	tpu: pwm@e6600000 {
++		compatible = "renesas,tpu-r8a7740", "renesas,tpu";
++		reg = <0xe6600000 0x100>;
++		#pwm-cells = <3>;
 +	};
-diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
-index 070e81f..50a90f1 100644
---- a/drivers/gpio/gpio-pcf857x.c
-+++ b/drivers/gpio/gpio-pcf857x.c
-@@ -26,6 +26,8 @@
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
+diff --git a/drivers/pwm/pwm-renesas-tpu.c b/drivers/pwm/pwm-renesas-tpu.c
+index 2600892..3eeffff 100644
+--- a/drivers/pwm/pwm-renesas-tpu.c
++++ b/drivers/pwm/pwm-renesas-tpu.c
+@@ -20,6 +20,7 @@
+ #include <linux/ioport.h>
  #include <linux/module.h>
+ #include <linux/mutex.h>
 +#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/workqueue.h>
-@@ -50,6 +52,27 @@ static const struct i2c_device_id pcf857x_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, pcf857x_id);
+ #include <linux/platform_data/pwm-renesas-tpu.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+@@ -86,7 +87,7 @@ struct tpu_pwm_device {
  
-+#ifdef CONFIG_OF
-+static const struct of_device_id pcf857x_of_table[] = {
-+	{ .compatible = "nxp,pcf8574", .data = (void *)8 },
-+	{ .compatible = "nxp,pcf8574a", .data = (void *)8 },
-+	{ .compatible = "nxp,pca8574", .data = (void *)8 },
-+	{ .compatible = "nxp,pca9670", .data = (void *)8 },
-+	{ .compatible = "nxp,pca9672", .data = (void *)8 },
-+	{ .compatible = "nxp,pca9674", .data = (void *)8 },
-+	{ .compatible = "nxp,pcf8575", .data = (void *)16 },
-+	{ .compatible = "nxp,pca8575", .data = (void *)16 },
-+	{ .compatible = "nxp,pca9671", .data = (void *)16 },
-+	{ .compatible = "nxp,pca9673", .data = (void *)16 },
-+	{ .compatible = "nxp,pca9675", .data = (void *)16 },
-+	{ .compatible = "maxim,max7328", .data = (void *)8 },
-+	{ .compatible = "maxim,max7329", .data = (void *)8 },
-+	{ .compatible = "ti,tca9554", .data = (void *)8 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, pcf857x_of_table);
-+#endif
+ struct tpu_device {
+ 	struct platform_device *pdev;
+-	struct tpu_pwm_platform_data *pdata;
++	enum pwm_polarity polarities[TPU_CHANNEL_MAX];
+ 	struct pwm_chip chip;
+ 	spinlock_t lock;
+ 
+@@ -228,8 +229,7 @@ static int tpu_pwm_request(struct pwm_chip *chip, struct pwm_device *_pwm)
+ 
+ 	pwm->tpu = tpu;
+ 	pwm->channel = _pwm->hwpwm;
+-	pwm->polarity = tpu->pdata ? tpu->pdata->channels[pwm->channel].polarity
+-		      : PWM_POLARITY_NORMAL;
++	pwm->polarity = tpu->polarities[pwm->channel];
+ 	pwm->prescaler = 0;
+ 	pwm->period = 0;
+ 	pwm->duty = 0;
+@@ -388,6 +388,16 @@ static const struct pwm_ops tpu_pwm_ops = {
+  * Probe and remove
+  */
+ 
++static void tpu_parse_pdata(struct tpu_device *tpu)
++{
++	struct tpu_pwm_platform_data *pdata = tpu->pdev->dev.platform_data;
++	unsigned int i;
 +
- /*
-  * The pcf857x, pca857x, and pca967x chips only expose one read and one
-  * write register.  Writing a "one" bit (to match the reset state) lets
-@@ -257,14 +280,29 @@ fail:
- static int pcf857x_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
++	for (i = 0; i < ARRAY_SIZE(tpu->polarities); ++i)
++		tpu->polarities[i] = pdata ? pdata->channels[i].polarity
++				   : PWM_POLARITY_NORMAL;
++}
++
+ static int tpu_probe(struct platform_device *pdev)
  {
--	struct pcf857x_platform_data	*pdata;
-+	struct pcf857x_platform_data	*pdata = client->dev.platform_data;
-+	struct device_node		*np = client->dev.of_node;
- 	struct pcf857x			*gpio;
-+	unsigned int			n_latch = 0;
-+	unsigned int			ngpio;
- 	int				status;
+ 	struct tpu_device *tpu;
+@@ -400,7 +410,11 @@ static int tpu_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
  
--	pdata = client->dev.platform_data;
--	if (!pdata) {
+-	tpu->pdata = pdev->dev.platform_data;
++	spin_lock_init(&tpu->lock);
++	tpu->pdev = pdev;
++
++	/* Initialize device configuration from platform data. */
++	tpu_parse_pdata(tpu);
+ 
+ 	/* Map memory, get clock and pin control. */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -422,11 +436,10 @@ static int tpu_probe(struct platform_device *pdev)
+ 	/* Initialize and register the device. */
+ 	platform_set_drvdata(pdev, tpu);
+ 
+-	spin_lock_init(&tpu->lock);
+-	tpu->pdev = pdev;
+-
+ 	tpu->chip.dev = &pdev->dev;
+ 	tpu->chip.ops = &tpu_pwm_ops;
++	tpu->chip.of_xlate = of_pwm_xlate_with_flags;
++	tpu->chip.of_pwm_n_cells = 3;
+ 	tpu->chip.base = -1;
+ 	tpu->chip.npwm = TPU_CHANNEL_MAX;
+ 
+@@ -457,12 +470,26 @@ static int tpu_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
 +#ifdef CONFIG_OF
-+	if (np) {
-+		const struct of_device_id *of_id;
++static const struct of_device_id tpu_of_table[] = {
++	{ .compatible = "renesas,tpu-r8a73a4", },
++	{ .compatible = "renesas,tpu-r8a7740", },
++	{ .compatible = "renesas,tpu-r8a7790", },
++	{ .compatible = "renesas,tpu-sh7372", },
++	{ .compatible = "renesas,tpu", },
++	{ },
++};
 +
-+		of_id = of_match_device(pcf857x_of_table, &client->dev);
-+		ngpio = (unsigned int)of_id->data;
-+	} else
++MODULE_DEVICE_TABLE(of, tpu_of_table);
 +#endif
-+		ngpio = id->driver_data;
 +
-+	if (pdata)
-+		n_latch = pdata->n_latch;
-+	else if (IS_ENABLED(CONFIG_OF) && np)
-+		of_property_read_u32(np, "pins-initial-state", &n_latch);
-+	else
- 		dev_dbg(&client->dev, "no platform data\n");
--	}
- 
- 	/* Allocate, initialize, and register this gpio_chip. */
- 	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
-@@ -282,7 +320,7 @@ static int pcf857x_probe(struct i2c_client *client,
- 	gpio->chip.set			= pcf857x_set;
- 	gpio->chip.direction_input	= pcf857x_input;
- 	gpio->chip.direction_output	= pcf857x_output;
--	gpio->chip.ngpio		= id->driver_data;
-+	gpio->chip.ngpio		= ngpio;
- 
- 	/* enable gpio_to_irq() if platform has settings */
- 	if (client->irq) {
-@@ -357,11 +395,11 @@ static int pcf857x_probe(struct i2c_client *client,
- 	 * may cause transient glitching since it can't know the last value
- 	 * written (some pins may need to be driven low).
- 	 *
--	 * Using pdata->n_latch avoids that trouble.  When left initialized
--	 * to zero, our software copy of the "latch" then matches the chip's
--	 * all-ones reset state.  Otherwise it flags pins to be driven low.
-+	 * Using n_latch avoids that trouble.  When left initialized to zero,
-+	 * our software copy of the "latch" then matches the chip's all-ones
-+	 * reset state.  Otherwise it flags pins to be driven low.
- 	 */
--	gpio->out = pdata ? ~pdata->n_latch : ~0;
-+	gpio->out = ~n_latch;
- 	gpio->status = gpio->out;
- 
- 	status = gpiochip_add(&gpio->chip);
-@@ -423,6 +461,7 @@ static struct i2c_driver pcf857x_driver = {
- 	.driver = {
- 		.name	= "pcf857x",
+ static struct platform_driver tpu_driver = {
+ 	.probe		= tpu_probe,
+ 	.remove		= tpu_remove,
+ 	.driver		= {
+ 		.name	= "renesas-tpu-pwm",
  		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(pcf857x_of_table),
- 	},
- 	.probe	= pcf857x_probe,
- 	.remove	= pcf857x_remove,
++		.of_match_table = of_match_ptr(tpu_of_table),
+ 	}
+ };
+ 
 -- 
-1.8.1.5
+Regards,
+
+Laurent Pinchart
 
