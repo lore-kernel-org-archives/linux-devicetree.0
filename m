@@ -1,133 +1,66 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-ve0-f177.google.com ([209.85.128.177]:33364 "EHLO
-	mail-ve0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752163Ab3GXGwi (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 24 Jul 2013 02:52:38 -0400
-Received: by mail-ve0-f177.google.com with SMTP id cz10so6730099veb.36
-        for <devicetree@vger.kernel.org>; Tue, 23 Jul 2013 23:52:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
-References: <1374582499-31823-1-git-send-email-shc_work@mail.ru>
-	<CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
-Date: Tue, 23 Jul 2013 23:52:37 -0700
-Message-ID: <CAN8TOE99_FszeOo_sJMf-SXAjKkhjQzxfthjC+grZjbSMttiAQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] mtd: nand: gpio: Determine bus width automatically
-From: Brian Norris <computersforpeace@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Sender: devicetree-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, devicetree@vger.kernel.org
+In-Reply-To: <20130720034647.2B7B43E14BF@localhost>
+References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com>
+	<20130720034647.2B7B43E14BF@localhost>
+Date: Thu, 25 Jul 2013 15:17:03 -0500
+Message-ID: <CAL_JsqKhAbULAhQrYJ1hrY-NC+tL0wXAw8FXk0JVMLoMAJPv_w@mail.gmail.com>
+Subject: Re: The future of DT binding maintainership
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, Tomasz Figa <tomasz.figa@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Rob Herring <rob.herring@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Resending to the new DT mailing list. (Guys, this isn't advertised
-very well, and your MAINTAINERS patch hasn't been applied to Linus'
-tree yet. Why the rapid transition?)
+On 07/19/2013 10:46 PM, Grant Likely wrote:
+> A number of us had a face-to-face meeting in Dublin last week to talk
+> about DT maintainership and the fact that it simply isn't working right
+> now. Neither Rob nor I can keep up with the load and there are a lot of
+> poorly designed bindings appearing in the tree.
+>
+> Device tree binding maintainership needs to be split off to a separate
+> group, and we've started with a few people willing to help, Pawel Moll,
+> Mark Rutland, Stephen Warren and Ian Campbell.
 
-On Tue, Jul 23, 2013 at 11:42 PM, Brian Norris
-<computersforpeace@gmail.com> wrote:
-> On Tue, Jul 23, 2013 at 5:28 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
->> This patch provide automatically determine of bus width. If resource size,
->> supplied to the driver more than 1 byte, the NAND_BUSWIDTH_AUTO option
->> will be used in the MTD core.
+Well, I never said I was stepping down from the binding side.
 >
-> I presume this depends on the bugfix I sent for NAND_BUSWIDTH_AUTO /
-> nand_set_defaults()? That's worth noting (as I am right now), for
-> whenever someone gets around to merging this.
+> (BTW, even though I've already sent a patch adding that group
+> MAINTAINERS, this is not set in stone. Anyone else wanting to help
+> maintain should volunteer)
 >
->> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
->> ---
->>  .../devicetree/bindings/mtd/gpio-control-nand.txt  |  5 ++---
+> Another thing discussed is that we need to start validating DT schema
+> with an extension to dtc. Tomasz Figa has volunteered to do this work
+> and has support from his employer to spend time on it. What I'm hoping
+> to have is that the DT schema will get checked as part of the dts build
+> process so that any DT file that doesn't match the documented schema
+> will get flagged, and that the schema files will be human readable and
+> will double as documentation.
 >
-> Considering the changes in device-tree bindings, it's good to CC the
-> device-tree list, I believe.
+> There is not yet any process for binding maintainership. We talked about
+> a few ideas, but they really need to be hashed out here on the mailing
+> list. A couple of the questions:
 >
->>  drivers/mtd/nand/gpio.c                            | 23 +++++++++++-----------
->>  2 files changed, 13 insertions(+), 15 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
->> index 36ef07d..287b8b8 100644
->> --- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
->> +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
->> @@ -8,15 +8,14 @@ Required properties:
->>  - compatible : "gpio-control-nand"
->>  - reg : should specify localbus chip select and size used for the chip.  The
->>    resource describes the data bus connected to the NAND flash and all accesses
->> -  are made in native endianness.
->> +  are made in native endianness. Bus width of the device is determined
->> +  automatically if size > 1. If size = 1, 8 bit bus width will be used.
->>  - #address-cells, #size-cells : Must be present if the device has sub-nodes
->>    representing partitions.
->>  - gpios : specifies the gpio pins to control the NAND device.  nwp is an
->>    optional gpio and may be set to 0 if not present.
->>
->>  Optional properties:
->> -- bank-width : Width (in bytes) of the device.  If not present, the width
->> -  defaults to 1 byte.
+> - How are bindings allowed to be merged? Through subsystem trees, or
+>   only through the bindings tree?
+>   - Through the bindings tree is more work but it will provide more
+>     control.
+
+This is my preference, but then we have the problem that the kernel
+changes get merged and the
+>   - Through subsystem trees means drivers and bindings get merged
+>     together.
+>   - If we have a schema tool that reports errors on missing or
+>     unapproved schema, then spliting the driver from the binding won't
+>     matter that much.
+> - Do we need to differentiate between 'staging' and 'stable' bindings?
+> - What is the schedule for splitting the bindings and .dts files out of
+>   the kernel?
+>   - Ian Campbell is maintaining a DT bindings and .dts mirror tree which
+>     should eventually become the 'master' for merging DT bindings.
 >
-> Do you really want to remove this property entirely? I'm not sure what
-> the policy is on this. And it may still be useful to leave in the
-> documentation, since older drivers (and potentially non-Linux OS?) may
-> still need the property. Maybe you can mark it as optional, and that
-> it may be ignored entirely.
+> g.
 >
->>  - chip-delay : chip dependent delay for transferring data from array to
->>    read registers (tR).  If not present then a default of 20us is used.
->>  - gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
->> diff --git a/drivers/mtd/nand/gpio.c b/drivers/mtd/nand/gpio.c
->> index 800a1cc..f144b80 100644
->> --- a/drivers/mtd/nand/gpio.c
->> +++ b/drivers/mtd/nand/gpio.c
->> @@ -109,14 +109,9 @@ static int gpio_nand_get_config_of(const struct device *dev,
->>         if (!dev->of_node)
->>                 return -ENODEV;
->>
->> -       if (!of_property_read_u32(dev->of_node, "bank-width", &val)) {
->> -               if (val == 2) {
->> -                       plat->options |= NAND_BUSWIDTH_16;
->> -               } else if (val != 1) {
->> -                       dev_err(dev, "invalid bank-width %u\n", val);
->> -                       return -EINVAL;
->> -               }
->> -       }
->> +       /* Deprecated since 3.11-rc2 */
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
 >
-> I doubt this patch will be included in 3.11-rc2 :) This is material
-> for the next merge window.
->
->> +       if (of_find_property(dev->of_node, "bank-width", NULL))
->> +               dev_notice(dev, "Property \"bank-width\" is deprecated");
->
-> If you don't totally kill this property (per my comments above), then
-> you probably don't want this message either. It's probably safe to
-> just ignore the property, if we can reliably auto-detect it instead.
->
->>         plat->gpio_rdy = of_get_gpio(dev->of_node, 0);
->>         plat->gpio_nce = of_get_gpio(dev->of_node, 1);
->> @@ -223,6 +218,14 @@ static int gpio_nand_probe(struct platform_device *pdev)
->>         if (IS_ERR(chip->IO_ADDR_R))
->>                 return PTR_ERR(chip->IO_ADDR_R);
->>
->> +       ret = gpio_nand_get_config(&pdev->dev, &gpiomtd->plat);
->> +       if (ret)
->> +               return ret;
->> +
->> +       gpiomtd->plat.options &= ~(NAND_BUSWIDTH_16 | NAND_BUSWIDTH_AUTO);
->> +       if (resource_size(res) > 1)
->> +               gpiomtd->plat.options |= NAND_BUSWIDTH_AUTO;
->> +
->>         res = gpio_nand_get_io_sync(pdev);
->>         if (res) {
->>                 gpiomtd->io_sync = devm_ioremap_resource(&pdev->dev, res);
->> @@ -230,10 +233,6 @@ static int gpio_nand_probe(struct platform_device *pdev)
->>                         return PTR_ERR(gpiomtd->io_sync);
->>         }
->>
->> -       ret = gpio_nand_get_config(&pdev->dev, &gpiomtd->plat);
->> -       if (ret)
->> -               return ret;
->> -
->>         ret = devm_gpio_request(&pdev->dev, gpiomtd->plat.gpio_nce, "NAND NCE");
->>         if (ret)
->>                 return ret;
->
-> Brian
