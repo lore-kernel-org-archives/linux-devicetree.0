@@ -1,12 +1,15 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp5-g21.free.fr ([212.27.42.5]:52750 "EHLO smtp5-g21.free.fr"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757907Ab3GYSka convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 14:40:30 -0400
-Date: Thu, 25 Jul 2013 20:40:37 +0200
+Received: from smtpfb2-g21.free.fr ([212.27.42.10]:37201 "EHLO
+	smtpfb2-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753142Ab3GYJPa convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 05:15:30 -0400
+Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
+	by smtpfb2-g21.free.fr (Postfix) with ESMTP id DF0BDD1B0FC
+	for <devicetree@vger.kernel.org>; Thu, 25 Jul 2013 11:15:26 +0200 (CEST)
+Date: Thu, 25 Jul 2013 11:14:59 +0200
 From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH 4/4 v2] ASoc: kirkwood: add DT support
-Message-ID: <20130725204037.6ffc62d5@armhf>
+Subject: [PATCH 4/4] ASoc: kirkwood: add DT support
+Message-ID: <20130725111459.145a4aa4@armhf>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
@@ -20,12 +23,9 @@ machines as the Armada 88AP510 (Dove).
 
 Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
 ---
-v2
-	fix compilation error
----
- Documentation/devicetree/bindings/sound/kirkwood-i2s.txt | 29 ++++++++++++++++++
- sound/soc/kirkwood/kirkwood-i2s.c                        | 35 +++++++++++++++-------
- 2 files changed, 53 insertions(+), 11 deletions(-)
+ .../devicetree/bindings/sound/kirkwood-i2s.txt     | 29 ++++++++++++++++++
+ sound/soc/kirkwood/kirkwood-i2s.c                  | 34 +++++++++++++++-------
+ 2 files changed, 52 insertions(+), 11 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/sound/kirkwood-i2s.txt
 
 diff --git a/Documentation/devicetree/bindings/sound/kirkwood-i2s.txt b/Documentation/devicetree/bindings/sound/kirkwood-i2s.txt
@@ -63,10 +63,10 @@ index 0000000..015a769
 +	clocks = <&gate_clk 13>;
 +	clock-names = "internal";
 +};
-diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/home/jef/kernel/sound/soc/kirkwood/kirkwood-i2s.c.new
-index a1037e2..26c2f74 100644
+diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
+index 3517784..fbe5150 100644
 --- a/sound/soc/kirkwood/kirkwood-i2s.c
-+++ b/home/jef/kernel/sound/soc/kirkwood/kirkwood-i2s.c.new
++++ b/sound/soc/kirkwood/kirkwood-i2s.c
 @@ -12,7 +12,6 @@
  
  #include <linux/init.h>
@@ -84,15 +84,7 @@ index a1037e2..26c2f74 100644
  #include "kirkwood.h"
  
  #define DRV_NAME	"kirkwood-i2s"
-@@ -477,6 +478,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
- 	struct snd_soc_dai_driver *soc_dai = &kirkwood_i2s_dai;
- 	struct kirkwood_dma_data *priv;
- 	struct resource *mem;
-+	struct device_node *np = pdev->dev.of_node;
- 	int err;
- 
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-@@ -497,16 +499,18 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+@@ -497,16 +498,18 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
  		return -ENXIO;
  	}
  
@@ -119,7 +111,7 @@ index a1037e2..26c2f74 100644
  		return PTR_ERR(priv->clk);
  	}
  
-@@ -514,7 +518,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+@@ -514,7 +517,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
  	if (err < 0)
  		return err;
  
@@ -128,7 +120,7 @@ index a1037e2..26c2f74 100644
  	if (!IS_ERR(priv->extclk)) {
  		if (priv->extclk == priv->clk) {
  			clk_put(priv->extclk);
-@@ -531,7 +535,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+@@ -531,7 +534,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
  	priv->ctl_rec = KIRKWOOD_RECCTL_SIZE_24;
  
  	/* Select the burst size */
@@ -137,7 +129,7 @@ index a1037e2..26c2f74 100644
  		priv->ctl_play |= KIRKWOOD_PLAYCTL_BURST_32;
  		priv->ctl_rec |= KIRKWOOD_RECCTL_BURST_32;
  	} else {
-@@ -557,12 +561,21 @@ fail:
+@@ -556,12 +559,21 @@ fail:
  	return err;
  }
  
