@@ -1,69 +1,63 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp5-g21.free.fr ([212.27.42.5]:41949 "EHLO smtp5-g21.free.fr"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752149Ab3GZJJF convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 05:09:05 -0400
-Date: Fri, 26 Jul 2013 11:09:13 +0200
-From: Jean-Francois Moine <moinejf@free.fr>
+Received: from caramon.arm.linux.org.uk ([78.32.30.218]:38603 "EHLO
+	caramon.arm.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755514Ab3GYXFw (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 19:05:52 -0400
+Date: Fri, 26 Jul 2013 00:05:33 +0100
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Subject: Re: [PATCH 4/4] ASoc: kirkwood: add DT support
-Message-ID: <20130726110913.0a193918@armhf>
-In-Reply-To: <20130725230533.GH24642@n2100.arm.linux.org.uk>
-References: <20130725111459.145a4aa4@armhf>
-	<20130725191905.GR9858@sirena.org.uk>
-	<20130725230533.GH24642@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Message-ID: <20130725230533.GH24642@n2100.arm.linux.org.uk>
+References: <20130725111459.145a4aa4@armhf> <20130725191905.GR9858@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20130725191905.GR9858@sirena.org.uk>
 Sender: devicetree-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Jean-Francois Moine <moinejf@free.fr>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, 26 Jul 2013 00:05:33 +0100
-Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
-
-> On Thu, Jul 25, 2013 at 08:19:05PM +0100, Mark Brown wrote:
-> > On Thu, Jul 25, 2013 at 11:14:59AM +0200, Jean-Francois Moine wrote:
-	[snip]
-> > > -	priv->clk = devm_clk_get(&pdev->dev, NULL);
-> > > +	priv->clk = devm_clk_get(&pdev->dev, "internal");
-> > >  	if (IS_ERR(priv->clk)) {
-> > > -		dev_err(&pdev->dev, "no clock\n");
-> > > +		dev_err(&pdev->dev, "no internal clock\n");
-> > >  		return PTR_ERR(priv->clk);
-> > >  	}
-> > 
-> > Does the code providing it already name the clock?  If not are updates
-> > needed to do that?
-
-I don't know. I will reset the clock name to NULL when no DT, so it
-will be compatible.
-
-> > > -	priv->extclk = clk_get(&pdev->dev, "extclk");
-> > > +	priv->extclk = clk_get(&pdev->dev, "external");
-> > 
-> > Is the clock actually called extclk in the datasheet and so on?  If so
-> > it seems better to stick with that name.  Do any boards need updates for
-> > the new name?
+On Thu, Jul 25, 2013 at 08:19:05PM +0100, Mark Brown wrote:
+> On Thu, Jul 25, 2013 at 11:14:59AM +0200, Jean-Francois Moine wrote:
 > 
-> "AU_EXTCLK" is the exact name (pasted out of the documentation).
-> I don't see any purpose to this name changing.
-
-On Tue, Jul 23, 2013 at 02:59:06PM +0200, Sebastian Hesselbarth wrote:
-> As Sascha Hauer pointed out, clocks should be distinguished by names
-> (clock-names property) instead of position and then use
-> devm_clk_get(&pdev->dev, "internal") and
-> devm_clk_get(&pdev->dev, "external") respectively.  
+> > +	if (np) {
+> > +		priv->burst = 128;		/* might be 32 or 128 */
+> > +	} else if (data) {
 > 
-> This will possibly also require to update platform_data and legacy
-> users of kirkwood-i2s or have different setup functions for non-DT
-> and DT.  
+> When you posted this before I queried how and why the value might vary -
+> I see the code is the same and I don't recall a reply.
 
-The A510 documentation uses the names "DCO PLL" for the internal clock
-and "AU_EXTCLK" for the external clock. So, what about "dcopll" and
-"extclk"?
+This is the DMA burst size, and can be either 32 or 128 bytes according
+to the docs.  Everyone seems to pass this as 128 bytes in their platform
+data to date, which I guess is why its ended up being hard coded as 128.
 
+However, whether it needs to be configurable or not is debatable - obviously
+the hardware allows it, but that doesn't mean it has to be exposed.  If
+ALSA has some kind of way of specifying a "low latency" mode where 128
+byte vs 32 byte fetches would make a significant difference, then it may
+be something to look at.
 
--- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+I'll retract my previous comment on this (about it being a DT property) -
+given what it does, it isn't describing the hardware capabilities as I
+first thought it was.
+
+> > -	priv->clk = devm_clk_get(&pdev->dev, NULL);
+> > +	priv->clk = devm_clk_get(&pdev->dev, "internal");
+> >  	if (IS_ERR(priv->clk)) {
+> > -		dev_err(&pdev->dev, "no clock\n");
+> > +		dev_err(&pdev->dev, "no internal clock\n");
+> >  		return PTR_ERR(priv->clk);
+> >  	}
+> 
+> Does the code providing it already name the clock?  If not are updates
+> needed to do that?
+> 
+> > -	priv->extclk = clk_get(&pdev->dev, "extclk");
+> > +	priv->extclk = clk_get(&pdev->dev, "external");
+> 
+> Is the clock actually called extclk in the datasheet and so on?  If so
+> it seems better to stick with that name.  Do any boards need updates for
+> the new name?
+
+"AU_EXTCLK" is the exact name (pasted out of the documentation).
+I don't see any purpose to this name changing.
