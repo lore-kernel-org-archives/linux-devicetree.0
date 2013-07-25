@@ -1,149 +1,141 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: The future of DT binding maintainership
-Date: Wed, 24 Jul 2013 15:11:12 +0100
-Message-ID: <20130724141112.464623E09C5@localhost>
-References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com> <20130720034647.2B7B43E14BF@localhost> <2962401.WRRoYlXkRr@flatron>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2962401.WRRoYlXkRr@flatron>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>
+From: Oleksandr Kozaruk <oleksandr.kozaruk@ti.com>
+Subject: Re: [PATCH v6 2/2] iio: twl6030-gpadc: TWL6030, TWL6032 GPADC driver
+Date: Thu, 25 Jul 2013 09:08:48 +0300
+Message-ID: <20130725060848.GA16521@uglx0158319>
+References: <1374226039-16943-1-git-send-email-oleksandr.kozaruk@ti.com>
+ <1374226039-16943-3-git-send-email-oleksandr.kozaruk@ti.com>
+ <51EA69DE.4080908@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <51EA69DE.4080908@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: milo.kim@ti.com, lars@metafoo.de, sameo@linux.intel.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, poeschel@lemonage.de, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, kishon@ti.com, peter.ujfalusi@ti.com, linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, jic23@cam.ac.uk, grant.likely@linaro.org, benoit.cousson@linaro.org, gg@slimlogic.co.uk, ch.naveen@samsung.com, linux-arm-kernel@lists.infradead.org, balajitk@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 20 Jul 2013 15:49:21 +0200, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On Saturday 20 of July 2013 04:46:47 Grant Likely wrote:
-> > A number of us had a face-to-face meeting in Dublin last week to talk
-> > about DT maintainership and the fact that it simply isn't working right
-> > now. Neither Rob nor I can keep up with the load and there are a lot of
-> > poorly designed bindings appearing in the tree.
-> > 
-> > Device tree binding maintainership needs to be split off to a separate
-> > group, and we've started with a few people willing to help, Pawel Moll,
-> > Mark Rutland, Stephen Warren and Ian Campbell.
-> > 
-> > (BTW, even though I've already sent a patch adding that group
-> > MAINTAINERS, this is not set in stone. Anyone else wanting to help
-> > maintain should volunteer)
-> > 
-> > Another thing discussed is that we need to start validating DT schema
-> > with an extension to dtc. Tomasz Figa has volunteered to do this work
-> > and has support from his employer to spend time on it. What I'm hoping
-> > to have is that the DT schema will get checked as part of the dts build
-> > process so that any DT file that doesn't match the documented schema
-> > will get flagged, and that the schema files will be human readable and
-> > will double as documentation.
-> > 
-> > There is not yet any process for binding maintainership. We talked about
-> > a few ideas, but they really need to be hashed out here on the mailing
-> > list. A couple of the questions:
-> > 
-> > - How are bindings allowed to be merged? Through subsystem trees, or
-> >   only through the bindings tree?
-> >   - Through the bindings tree is more work but it will provide more
-> >     control.
-> >   - Through subsystem trees means drivers and bindings get merged
-> >     together.
-> >   - If we have a schema tool that reports errors on missing or
-> >     unapproved schema, then spliting the driver from the binding won't
-> >     matter that much.
-> > - Do we need to differentiate between 'staging' and 'stable' bindings?
-> > - What is the schedule for splitting the bindings and .dts files out of
-> >   the kernel?
-> >   - Ian Campbell is maintaining a DT bindings and .dts mirror tree which
-> > should eventually become the 'master' for merging DT bindings.
+On Sat, Jul 20, 2013 at 11:43:42AM +0100, Jonathan Cameron wrote:
+> On 07/19/2013 10:27 AM, Oleksandr Kozaruk wrote:
+> > The GPADC is general purpose ADC found on TWL6030, and TWL6032 PMIC,
+> > known also as Phoenix and PhoenixLite.
+> >
+> > The TWL6030 and TWL6032 have GPADC with 17 and 19 channels
+> > respectively. Some channels have current source and are used for
+> > measuring voltage drop on resistive load for detecting battery ID
+> > resistance, or measuring voltage drop on NTC resistors for external
+> > temperature measurements. Some channels measure voltage, (i.e. battery
+> > voltage), and have voltage dividers, thus, capable to scale voltage.
+> > Some channels are dedicated for measuring die temperature.
+> >
+> > Some channels are calibrated in 2 points, having offsets from ideal
+> > values kept in trim registers. This is used to correct measurements.
+> >
+> > The differences between GPADC in TWL6030 and TWL6032:
+> > - 10 bit vs 12 bit ADC;
+> > - 17 vs 19 channels;
+> > - channels have different purpose(i.e. battery voltage
+> >   channel 8 vs channel 18);
+> > - trim values are interpreted differently.
+> >
+> > Based on the driver patched from Balaji TK, Graeme Gregory, Ambresh K,
+> > Girish S Ghongdemath.
+> >
+> > Signed-off-by: Balaji T K <balajitk@ti.com>
+> > Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
+> > Signed-off-by: Oleksandr Kozaruk <oleksandr.kozaruk@ti.com>
+> A few little bits and bobs inline.
 > 
-> I remember getting to a conclusion that:
->  - bindings should enter staging state after being introduced,
->  - from time to time a binding review meeting should take place (on IRC 
-> possibly) and discuss which of introduced staging bindings are ready to 
-> enter stable state,
->  - in stable state such binding would be considered an ABI.
-> 
-> From remaining questions I remember:
->  - How should we mark bindings as staging and stable? (i.e. 
-> documentation/schema files in different folders or something else?)
+> My only major query is about the lack of info for the temperature
+> channels.  How do you convert these to useful real world units?
 
-I think having a different folder for staged bindings is going to be the
-most managable. The other option would be a tag in the file indicating
-that it is stable, but I suspect that will require more work in the long
-run. At least with a staging directory you can tell at a glance which
-bindings are in draft form. Any bindings used from the staging directory
-should trigger a warning from DTC, but we probably want to consolidate
-all 'staging' binding warnings into a single message so that dtc output
-doesn't get too chatty.
+On blaze tablet platform(OMAP 4) temperature channels were used by
+thermal framework and battery driver.
+Thermal was using channel 4 [1]
 
-Once a binding is moved into the stable directory, only backwards
-compatible changes should be allowed.
+Here is the comment from the driver:
 
->  - Should we also split parts of dts/dtsi using staging bindings from 
-> those using stable ones? (This could mean including stable dts/dtsi file 
-> from inside unstable one, which would allow having a stable dts with basic 
-> functionality that could be extended over the time after validating 
-> staging bindings used in unstable part.)
+* NTC termistor (NCP15WB473F) schematic connection for OMAP4460 board:
+*
+*          [Vref]
+*            |
+*            $ (Rpu)
+*            |
+*            +----+-----------[Vin]
+*            |    |
+*           [Rt]  $ (Rpd)
+*            |    |
+*           -------- (ground)
+*
+* NTC termistor resistanse (Rt, k) calculated from following formula:
+*
+* Rt = Rpd * Rpu * Vin / (Rpd * (Vref - Vin) - Rpu * Vin)
+*
+* where       Vref (GPADC_VREF4) - reference voltage, Vref = 1250 mV;
+*                     Vin (GPADC_IN4) - measuring voltage, Vin = 0...1250 mV;
+*                     Rpu (R1041) - pullup resistor, Rpu = 10 k;
+*                     Rpd (R1043) - pulldown resistor, Rpd = 220 k;
+*
+* Pcb temp sensor temperature (t, C) calculated from following formula:
+*
+* t = 1 / (ln(Rt / Rt0) / B + 1 / T0) - 273
+*
+* where       Rt0 - NTC termistor resistance at 25 C, Rt0 = 47 k;
+*                     B - specific constant, B = 4131 K;
+*                     T0 - temperature, T0 = 298 K
+[..]
 
-Good question. Need to try it out and see how it works from a
-maintainership standpoint.
+And then there is a table for conversion:
+/*
+ * Temperature values in degrees celsius,
+ * voltage values from 156 to 1191 milli volts
+*/
+static s8 mvolt_to_temp[] = {
+               125, 125, 125, 124, 124, 124, 124, 123, 123, 123, 122, 122,
+               122, 122, 121, 121, 121, 121, 120, 120, 120, 120, 119, 119,
+[..]
 
-> As for my part, I'm now looking into existing infrastructure inside of dtc 
-> to get some hints that would allow me to design the initial schema syntax 
-> in a most dtc-friendly way. Give me a bit more time and I will then write 
-> down everything I have and post to the ML to start a discussion.
+The battery driver was using channel 1, dedicated for measuring battery
+temperature.
+static void twl6030_bci_battery_work(struct work_struct *work)
+{
+[..]
+	for (temp = 0; temp < di->platform_data->tblsize; temp++) {
+		if (adc_code >= di->platform_data->
+				battery_tmp_tbl[temp])
+			break;
+	}
 
-I think for any given schema, it should probably have the following
-elements or sections:
+	/* first 2 values are for negative temperature */
+	di->temp_C = (temp - 2) * 10; * /* in tenths of degree Celsius */
+	[..]
+}
+static int omap4_batt_table[] = {
+/* adc code for temperature in degree C */
+	929, 925, /* -2 ,-1 */
+	920, 917, 912, 908, 904, 899, 895, 890, 885, 880, /* 00 - 09 */
+	875, 869, 864, 858, 853, 847, 841, 835, 829, 823, /* 10 - 19 */
+[..]
+	591, 583, 575, 567, 559, 551, 543, 535, 527, 519, /* 50 - 59 */
+	511, 504, 496 /* 60 - 62 */
+};
 
-1) A set of properties/characteristics to match against.
-  - The most likely case here will be entries in the compatible
-    property, but there are a few device_type and name matches that will
-    need to be supported
-2) a set of required/optional properties and child nodes
-3) a set of 'inhereted' schema.
-  - for example, the vast majority of device bindings will want to
-    inherit from the common 'reg' and 'interrupts' definitions.
-  - Another example: a gpio controller will want to inherit the generic
-    gpio controller schema.
+So, one driver was using millivolts and the other ADC code,
+Though converting to millivolts and the to temperature, seems,
+to be redundant, as code can be converted to temperature.
+If I recollect correctly the previous driver version was using just
+ADC code.
 
-I wouldn't get to hung up about trying to reuse the same file format as
-the .dts files. Most of the bindings are going to be very flat in
-nature, and schemas need to be expresive in a different way from the
-.dts files themselves.
+Regards,
+Sasha.
 
-We'll want to have an easy way to define trivial bindings. There are a
-lot of devices that only define a new 'compatible' string, but they
-don't actually require anything more than reg and interrupts. Can we
-maybe have a schema file that lists trivial bindings?
-
-There will need to be a way to describe cross-schema interactions. For
-example, consider the gpio-leds binding and the gpio controller binding.
-The gpio-controller node needs to have inherited the gpio controller
-schema. Similarly, the gpio-leds schema will need the gpio-consumer
-binding, but it will also need to verify that the gpio-controller
-conforms to the gpio controller schema.
-
-Here's a really rough draft at a few schema files. This is /not/ a
-really good syntax yet. One problematic part is figuring out how to
-dereference values from other nodes.
-
-core-reg.dtschema:
-	required: reg = <[%address% %size%]*> // '*' indicates one or more tuples
-	%address%: size = parent.#address-cells * 4;
-	%size%: size = parent.#size-cells * 4;
-
-core-interrupt.dtschema:
-	required: interrupts = <[%intspec%]*>
-	%intspec%: size = %interrupt-parent%:#interrupt-cells;
-	optional: interrupt-parent = <%interrupt-phandle%> // need a way to search up the tree
-
-core-interrupt-controller.dtschema:
-	required: interrupt-controller;
-	required: #interrupt-cells = <num>;
-	%intspec%: size = interrupt-parent:#interrupt-cells;
-
-arm-gic.dtschema:
-	match: compatible = ".*arm,{cortex-{a15,a9,a7},arm11mp}-gic.*"
-	inherit-required: core-reg;
-	inherit-required: core-interrupt-controller;
-	inherit-optional: core-interrupt;
-	required: #interrupt-cells = <3>;
-
-g.
+[1] http://git.omapzoom.org/?p=kernel/omap.git;a=blob;f=drivers/staging/thermal_framework/sensor/thermistor_sensor.c;h=828d8010579b55ec4a122c49a2e5b547b1e41e63;hb=decb3fd22223ddf207e0118d0d558459acc7094e
