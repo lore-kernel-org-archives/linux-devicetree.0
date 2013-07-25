@@ -1,19 +1,39 @@
-Return-Path: <jdl@jdl.com>
-Message-Id: <E1V1Nm3-000740-TB@jdl.com>
-Subject: Re: [PATCH 3/3] MAINTAINERS: Refactor device tree maintainership
-In-reply-to: <51ED9694.9060303@gmail.com>
-References: <1374290388-19308-1-git-send-email-grant.likely@linaro.org> <1374290388-19308-3-git-send-email-grant.likely@linaro.org> <51EC2EC7.6010001@gmail.com> <CACxGe6sGdkMuLFs3K_ERKot+ryTArs6qTiwpXNe+LyoAQ8HGDw@mail.gmail.com> <51ED9694.9060303@gmail.com>
-Date: Mon, 22 Jul 2013 16:36:07 -0500
-From: Jon Loeliger <jdl@jdl.com>
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>
+Return-Path: <devicetree-owner@vger.kernel.org>
+Received: from ozlabs.org ([203.10.76.45]:43939 "EHLO ozlabs.org"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753484Ab3GYDRV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 24 Jul 2013 23:17:21 -0400
+Date: Thu, 25 Jul 2013 13:17:18 +1000
+From: Michael Ellerman <michael@ellerman.id.au>
+Subject: Re: [PATCH] powerpc: Feed entire flattened device tree into the
+ random pool
+Message-ID: <20130725031717.GB15673@concordia>
+References: <20130725125122.78accf44@kryten>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20130725125122.78accf44@kryten>
+Sender: devicetree-owner@vger.kernel.org
+To: Anton Blanchard <anton@samba.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
+On Thu, Jul 25, 2013 at 12:51:22PM +1000, Anton Blanchard wrote:
 > 
-> My own selfish desire is to easily separate emails for DT bindings and
-> DT core code. I suppose I could do that with a suffix on my email address.
+> We feed the entire DMI table into the random pool to provide
+> better random data during early boot, so do the same with the
+> flattened device tree.
+> 
+> Signed-off-by: Anton Blanchard <anton@samba.org>
+> ---
+> 
+> It might be worth doing this somewhere common, but the only place
+> I could find (unflatten_device_tree) is almost certainly too
+> early in the boot process.
 
-And I've had the reverse problem:  Sorting out the DTC
-and libfdt patches from the noise. :-)
+Nice.
 
-jdl
+But why not put the initcall in drivers/of/fdt.c, that way it's not
+early but it's still common ?
+
+cheers
