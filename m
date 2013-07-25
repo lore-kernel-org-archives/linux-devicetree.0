@@ -1,50 +1,171 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: The future of DT binding maintainership
-Date: Thu, 25 Jul 2013 10:46:13 -0700
-Message-ID: <51F16465.3030708@wwwdotorg.org>
-References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com> <20130720034647.2B7B43E14BF@localhost> <2962401.WRRoYlXkRr@flatron> <20130724141112.464623E09C5@localhost>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v5 3/3] Documentation: Add documentation for APM X-Gene
+ clock binding
+Date: Thu, 25 Jul 2013 13:59:53 -0700
+Message-ID: <20130725205953.7598.15913@quantum>
+References: <1372269371-22992-1-git-send-email-lho@apm.com>
+ <1372269371-22992-2-git-send-email-lho@apm.com>
+ <1372269371-22992-3-git-send-email-lho@apm.com>
+ <1372269371-22992-4-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130724141112.464623E09C5@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Wolfram Sang <w.sang@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1372269371-22992-4-git-send-email-lho@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mark.rutland@arm.com
+Cc: fkan@apm.com, Catalin.Marinas@arm.com, devicetree-discuss@lists.ozlabs.org, Loc Ho <lho@apm.com>, ksankaran@apm.com, vkale@apm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/24/2013 07:11 AM, Grant Likely wrote:
-> On Sat, 20 Jul 2013 15:49:21 +0200, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-...
->> From remaining questions I remember:
->>  - How should we mark bindings as staging and stable? (i.e. 
->> documentation/schema files in different folders or something else?)
+Quoting Loc Ho (2013-06-26 10:56:11)
+> Documentation: Add documentation for APM X-Gene clock binding with PLL and
+> device clocks.
 > 
-> I think having a different folder for staged bindings is going to be the
-> most managable. The other option would be a tag in the file indicating
-> that it is stable, but I suspect that will require more work in the long
-> run. At least with a staging directory you can tell at a glance which
-> bindings are in draft form. Any bindings used from the staging directory
-> should trigger a warning from DTC, but we probably want to consolidate
-> all 'staging' binding warnings into a single message so that dtc output
-> doesn't get too chatty.
+> Signed-off-by: Loc Ho <lho@apm.com>
+> Signed-off-by: Kumar Sankaran <ksankaran@apm.com>
+> Signed-off-by: Vinayak Kale <vkale@apm.com>
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> ---
+>  Documentation/devicetree/bindings/clock/xgene.txt |  111 +++++++++++++++++++++
+>  1 files changed, 111 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/xgene.txt
 > 
-> Once a binding is moved into the stable directory, only backwards
-> compatible changes should be allowed.
+> diff --git a/Documentation/devicetree/bindings/clock/xgene.txt b/Documentation/devicetree/bindings/clock/xgene.txt
+> new file mode 100644
+> index 0000000..1c4ef77
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/xgene.txt
+> @@ -0,0 +1,111 @@
+> +Device Tree Clock bindings for APM X-Gene
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible : shall be one of the following:
+> +       "apm,xgene-socpll-clock" - for a X-Gene SoC PLL clock
+> +       "apm,xgene-pcppll-clock" - for a X-Gene PCP PLL clock
+> +       "apm,xgene-device-clock" - for a X-Gene device clock
+> +
+> +Required properties for SoC or PCP PLL clocks:
+> +- reg : shall be the physical PLL register address for the pll clock.
+> +- clocks : shall be the input parent clock phandle for the clock. This should
+> +       be the reference clock.
+> +- #clock-cells : shall be set to 1.
+> +- clock-output-names : shall be the name of the PLL referenced by derive
+> +  clock.
+> +Optional properties for PLL clocks:
+> +- clock-names : shall be the name of the PLL. If missing, use the device name.
+> +
+> +Required properties for device clocks:
+> +- reg : shall be a list of address and length pairs describing the CSR
+> +         reset and/or the divider. Either may be omitted, but at least
+> +         one must be present.
+> + - reg-names : shall be a string list describing the reg resource. This
+> +               may include "csr-reg" and/or "div-reg". If this property
+> +               is not present, the reg property is assumed to describe
+> +               only "csr-reg".
 
-Is the following scenario useful to consider
+Where is reg-names used? I see it used in your DTS but I don't see
+clk-xgene.c doing anything with it.
 
-* A minimal DT binding is initially created to represent the most basic
-features of a device. This graduates quickly to being marked stable.
+> +- clocks : shall be the input parent clock phandle for the clock.
+> +- #clock-cells : shall be set to 1.
+> +- clock-output-names : shall be the name of the device referenced.
+> +Optional properties for device clocks:
+> +- clock-names : shall be the name of the device clock. If missing, use the
+> +                device name.
+> +- csr-offset : Offset to the CSR reset register from the reset address base.
+> +               Default is 0.
+> +- csr-mask : CSR reset mask bit. Default is 0xF.
+> +- enable-offset : Offset to the enable register from the reset address base.
+> +                  Default is 0x8.
+> +- enable-mask : CSR enable mask bit. Default is 0xF.
+> +- divider-offset : Offset to the divider CSR register from the divider base.
+> +                   Default is 0x0.
+> +- divider-width : Width of the divider register. Default is 0.
+> +- divider-shift : Bit shift of the divider register. Default is 0.
 
-* The full feature-set of the device needs to be exposed later. This
-involves making backwards-compatible changes to the binding. Those
-changes may initially be very tentative, since they're more complex.
+There is a general push to not have register-level details in DT. How
+many clocks do you think you'll end up defining in the future? If you
+have a lot then this binding could grow fairly large.
 
-This implies to me that we either need to mark specific properties or
-parts of a binding as stable, and part as tentative. Does using separate
-directories for this make sense, or should we put markup into the
-binding definition itself?
+Regards,
+Mike
 
-I suppose we could consider bindings/tentative/foo/bar.txt as
-automatically inheriting-from/extending bindings/stable/foo/bar.txt.
+> +
+> +For example:
+> +
+> +       pcppll: pcppll@17000100 {
+> +               compatible = "apm,xgene-pcppll-clock";
+> +               #clock-cells = <1>;
+> +               clocks = <&refclk 0>;
+> +               clock-names = "pcppll";
+> +               reg = <0x0 0x17000100 0x0 0x1000>;
+> +               clock-output-names = "pcppll";
+> +               type = <0>;
+> +       };
+> +
+> +       socpll: socpll@17000120 {
+> +               compatible = "apm,xgene-socpll-clock";
+> +               #clock-cells = <1>;
+> +               clocks = <&refclk 0>;
+> +               clock-names = "socpll";
+> +               reg = <0x0 0x17000120 0x0 0x1000>;
+> +               clock-output-names = "socpll";
+> +               type = <1>;
+> +       };
+> +
+> +       qmlclk: qmlclk {
+> +               compatible = "apm,xgene-device-clock";
+> +               #clock-cells = <1>;
+> +               clocks = <&socplldiv2 0>;
+> +               clock-names = "qmlclk";
+> +               reg = <0x0 0x1703C000 0x0 0x1000>;
+> +               reg-name = "csr-reg";
+> +               clock-output-names = "qmlclk";
+> +       };
+> +
+> +       ethclk: ethclk {
+> +               compatible = "apm,xgene-device-clock";
+> +               #clock-cells = <1>;
+> +               clocks = <&socplldiv2 0>;
+> +               clock-names = "ethclk";
+> +               reg = <0x0 0x17000000 0x0 0x1000>;
+> +               reg-names = "div-reg";
+> +               divider-offset = <0x238>;
+> +               divider-width = <0x9>;
+> +               divider-shift = <0x0>;
+> +               clock-output-names = "ethclk";
+> +       };
+> +
+> +       apbclk: apbclk {
+> +               compatible = "apm,xgene-device-clock";
+> +               #clock-cells = <1>;
+> +               clocks = <&ahbclk 0>;
+> +               clock-names = "apbclk";
+> +               reg = <0x0 0x1F2AC000 0x0 0x1000
+> +                       0x0 0x1F2AC000 0x0 0x1000>;
+> +               reg-names = "csr-reg", "div-reg";
+> +               csr-offset = <0x0>;
+> +               csr-mask = <0x200>;
+> +               enable-offset = <0x8>;
+> +               enable-mask = <0x200>;
+> +               divider-offset = <0x10>;
+> +               divider-width = <0x2>;
+> +               divider-shift = <0x0>;
+> +               flags = <0x8>;
+> +               clock-output-names = "apbclk";
+> +       };
+> +
+> -- 
+> 1.5.5
