@@ -1,61 +1,68 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ozlabs.org ([203.10.76.45]:57248 "EHLO ozlabs.org"
+Received: from ozlabs.org ([203.10.76.45]:47081 "EHLO ozlabs.org"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751106Ab3GYEwC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 25 Jul 2013 00:52:02 -0400
-Date: Thu, 25 Jul 2013 14:42:34 +1000
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH] of: Feed entire flattened device tree into the random
- pool
-Message-ID: <20130725044234.GI6806@voom.fritz.box>
+	id S1751295Ab3GYEap (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Thu, 25 Jul 2013 00:30:45 -0400
+Date: Thu, 25 Jul 2013 14:30:31 +1000
+From: Anton Blanchard <anton@samba.org>
+Subject: [PATCH] of: Feed entire flattened device tree into the random pool
+Message-ID: <20130725143031.16af0a96@kryten>
+In-Reply-To: <20130725031717.GB15673@concordia>
 References: <20130725125122.78accf44@kryten>
- <20130725031717.GB15673@concordia>
- <20130725143031.16af0a96@kryten>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zgY/UHCnsaNnNXRx"
-Content-Disposition: inline
-In-Reply-To: <20130725143031.16af0a96@kryten>
+	<20130725031717.GB15673@concordia>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Anton Blanchard <anton@samba.org>
-Cc: Michael Ellerman <michael@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+To: Michael Ellerman <michael@ellerman.id.au>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
 
---zgY/UHCnsaNnNXRx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Michael,
 
-On Thu, Jul 25, 2013 at 02:30:31PM +1000, Anton Blanchard wrote:
->=20
-> Hi Michael,
->=20
-> > But why not put the initcall in drivers/of/fdt.c, that way it's not
-> > early but it's still common ?
->=20
-> Good idea! How does this look? So long as it happens before
-> module_init(rand_initialize) we should be good.
+> But why not put the initcall in drivers/of/fdt.c, that way it's not
+> early but it's still common ?
 
-This must be some strange new meaning of the word "random" of which I
-was not previously aware.  But I guess it's marginally better than
-nothing.
+Good idea! How does this look? So long as it happens before
+module_init(rand_initialize) we should be good.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Anton
+--
 
---zgY/UHCnsaNnNXRx
-Content-Type: application/pgp-signature
+We feed the entire DMI table into the random pool to provide
+better random data during early boot, so do the same with the
+flattened device tree.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.13 (GNU/Linux)
+Signed-off-by: Anton Blanchard <anton@samba.org>
+---
 
-iEYEARECAAYFAlHwrLoACgkQaILKxv3ab8YdSACeKo/ceJ1WkLo3FlDg9wN/Ayza
-1zQAnAynlR5xJs+CnvhoUuoLeuYkcS2h
-=VU3b
------END PGP SIGNATURE-----
+v2: move to drivers/of/fdt.c as suggested by Michael Ellerman
 
---zgY/UHCnsaNnNXRx--
+Index: b/drivers/of/fdt.c
+===================================================================
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -17,6 +17,7 @@
+ #include <linux/string.h>
+ #include <linux/errno.h>
+ #include <linux/slab.h>
++#include <linux/random.h>
+ 
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #ifdef CONFIG_PPC
+@@ -714,3 +715,14 @@ void __init unflatten_device_tree(void)
+ }
+ 
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
++
++/* Feed entire flattened device tree into the random pool */
++static int __init add_fdt_randomness(void)
++{
++	if (initial_boot_params)
++		add_device_randomness(initial_boot_params,
++				      initial_boot_params->totalsize);
++
++	return 0;
++}
++core_initcall(add_fdt_randomness);
