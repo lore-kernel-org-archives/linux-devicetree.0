@@ -1,35 +1,76 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from perceval.ideasonboard.com ([95.142.166.194]:32850 "EHLO
-	perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756552Ab3G2SiM (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 14:38:12 -0400
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 0/3] pcf857x: Add OF support
-Date: Mon, 29 Jul 2013 20:39:02 +0200
-Message-Id: <1375123145-31648-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Received: from co9ehsobe003.messaging.microsoft.com ([207.46.163.26]:24701
+	"EHLO co9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753642Ab3GYCqX (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Wed, 24 Jul 2013 22:46:23 -0400
+Message-ID: <51F09189.9010602@freescale.com>
+Date: Thu, 25 Jul 2013 10:46:33 +0800
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v5 4/4] DMA: Freescale: eliminate a compiling warning
+References: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com> <1374646870-5162-5-git-send-email-hongbo.zhang@freescale.com> <1374694411.15592.63@snotra>
+In-Reply-To: <1374694411.15592.63@snotra>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Scott Wood <scottwood@freescale.com>
+Cc: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
+On 07/25/2013 03:33 AM, Scott Wood wrote:
+> On 07/24/2013 01:21:09 AM, hongbo.zhang@freescale.com wrote:
+>> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+>>
+>> The variable cookie is initialized in a list_for_each_entry loop, 
+>> if(unlikely)
+>> the list is empty, this variable will be used uninitialized, so we 
+>> get a gcc
+>> compiling warning about this. This patch fixes this defect by setting an
+>> initial value to the varialble cookie.
+>>
+>> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+>> ---
+>>  drivers/dma/fsldma.c |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+>> index 16a9a48..14d68a4 100644
+>> --- a/drivers/dma/fsldma.c
+>> +++ b/drivers/dma/fsldma.c
+>> @@ -406,7 +406,7 @@ static dma_cookie_t fsl_dma_tx_submit(struct 
+>> dma_async_tx_descriptor *tx)
+>>      struct fsl_desc_sw *desc = tx_to_fsl_desc(tx);
+>>      struct fsl_desc_sw *child;
+>>      unsigned long flags;
+>> -    dma_cookie_t cookie;
+>> +    dma_cookie_t cookie = 0;
+>>
+>>      spin_lock_irqsave(&chan->desc_lock, flags);
+>
+> This patch is unrelated to the rest of the patch series...
+>
+> What are the semantics of this function if there are multiple entries 
+> in the list?  Returning the last cookie seems a bit odd.
+>
+> Is zero the proper error value?  include/linux/dmaengine.h suggests 
+> that cookies should be < 0 to indicate error.
+I found this compiling warning since the beginning of this work, it is 
+better somebody fixes it sooner or later, so I take it at last.
+Yes it was a bit hard to define the initial value, I saw the 
+dmaengine.h, and I searched all the other DMA drivers with initial value 
+before making the decision:
+drivers/dma/mv_xor.c:    dma_cookie_t cookie = 0;
+drivers/dma/sh/shdma-base.c:    dma_cookie_t cookie = 0;
+drivers/dma/mmp_pdma.c:    dma_cookie_t cookie = -EBUSY;
+drivers/dma/ppc4xx/adma.c:    dma_cookie_t cookie = 0;
+drivers/dma/iop-adma.c:    dma_cookie_t cookie = 0;
+most of them using 0, and only one negative value, it seems better? but 
+-EBUSY isn't  so accurate I think.
+My thought is to drop this in the next iteration, and back to this after 
+the first 3 get merged.
+>
+> -Scott
 
-Here's a small series of patches that add OF support to the pcf857x driver.
-The first two patches prepare the driver for the third one that introduces DT
-bindings and parses the device tree node.
 
-Laurent Pinchart (3):
-  gpio: pcf857x: Sort headers alphabetically
-  gpio: pcf857x: Remove pdata argument to pcf857x_irq_domain_init()
-  gpio: pcf857x: Add OF support
-
- .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 69 +++++++++++++++++++++
- drivers/gpio/gpio-pcf857x.c                        | 70 +++++++++++++++++-----
- 2 files changed, 123 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-
--- 
-Regards,
-
-Laurent Pinchart
 
