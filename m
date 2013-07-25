@@ -1,12 +1,15 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp5-g21.free.fr ([212.27.42.5]:50089 "EHLO smtp5-g21.free.fr"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1758067Ab3GYSjs convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 14:39:48 -0400
-Date: Thu, 25 Jul 2013 20:39:53 +0200
+Received: from smtpfb1-g21.free.fr ([212.27.42.9]:37076 "EHLO
+	smtpfb1-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755076Ab3GYJO6 convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 05:14:58 -0400
+Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
+	by smtpfb1-g21.free.fr (Postfix) with ESMTP id DBAA72DEE3
+	for <devicetree@vger.kernel.org>; Thu, 25 Jul 2013 11:14:54 +0200 (CEST)
+Date: Thu, 25 Jul 2013 11:14:28 +0200
 From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH 3/4 v2] ASoc: kirkwood: merge kirkwood-i2c and kirkwood-dma
-Message-ID: <20130725203953.301e2585@armhf>
+Subject: [PATCH 3/4] ASoc: kirkwood: merge kirkwood-i2c and kirkwood-dma
+Message-ID: <20130725111428.419ee278@armhf>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
@@ -20,18 +23,15 @@ module.
 
 Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
 ---
-v2
-	- fix compilation error
----
  arch/arm/mach-kirkwood/common.c      |  6 ------
  sound/soc/kirkwood/Kconfig           |  5 -----
  sound/soc/kirkwood/Makefile          |  4 +---
  sound/soc/kirkwood/kirkwood-dma.c    | 30 +-----------------------------
- sound/soc/kirkwood/kirkwood-i2s.c    |  6 ++++++
+ sound/soc/kirkwood/kirkwood-i2s.c    |  5 +++++
  sound/soc/kirkwood/kirkwood-openrd.c |  2 +-
  sound/soc/kirkwood/kirkwood-t5325.c  |  2 +-
  sound/soc/kirkwood/kirkwood.h        |  1 +
- 8 files changed, 11 insertions(+), 45 deletions(-)
+ 8 files changed, 10 insertions(+), 45 deletions(-)
 
 diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
 index e9238b5..fd02f1b 100644
@@ -148,7 +148,7 @@ index d3e50af..3517784 100644
  	snd_soc_unregister_component(&pdev->dev);
  
  	if (!IS_ERR(priv->extclk)) {
-@@ -544,6 +545,11 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+@@ -544,6 +545,10 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
  		dev_err(&pdev->dev, "snd_soc_register_component failed\n");
  		goto fail;
  	}
@@ -156,7 +156,6 @@ index d3e50af..3517784 100644
 +	if (err) {
 +		dev_err(&pdev->dev, "snd_soc_register_platform failed\n");
 +		goto fail;
-+	}
  	return 0;
  
  fail:
