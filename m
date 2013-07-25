@@ -1,61 +1,101 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:60014 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756249Ab3GYTLH (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 15:11:07 -0400
-Date: Thu, 25 Jul 2013 20:10:59 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130725191059.GO9858@sirena.org.uk>
-References: <20130725111357.7c976963@armhf>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="R/XXzwRD6iKUjf7i"
-Content-Disposition: inline
-In-Reply-To: <20130725111357.7c976963@armhf>
-Subject: Re: [PATCH 2/4] ASoc: kirkwood: simplify probe error
+Received: from smtpfb1-g21.free.fr ([212.27.42.9]:37013 "EHLO
+	smtpfb1-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753142Ab3GYJO3 convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 05:14:29 -0400
+Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
+	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 1439D2CC54
+	for <devicetree@vger.kernel.org>; Thu, 25 Jul 2013 11:14:24 +0200 (CEST)
+Date: Thu, 25 Jul 2013 11:13:57 +0200
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH 2/4] ASoc: kirkwood: simplify probe error
+Message-ID: <20130725111357.7c976963@armhf>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Russell King <rmk+kernel@arm.linux.org.uk>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Russell King <rmk+kernel@arm.linux.org.uk>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+The function kirkwood_i2s_dev_remove() may be used when probe fails.
 
---R/XXzwRD6iKUjf7i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+---
+ sound/soc/kirkwood/kirkwood-i2s.c | 44 +++++++++++++++++++--------------------
+ 1 file changed, 21 insertions(+), 23 deletions(-)
 
-On Thu, Jul 25, 2013 at 11:13:57AM +0200, Jean-Francois Moine wrote:
-> The function kirkwood_i2s_dev_remove() may be used when probe fails.
+diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
+index 4c9dad3..d3e50af 100644
+--- a/sound/soc/kirkwood/kirkwood-i2s.c
++++ b/sound/soc/kirkwood/kirkwood-i2s.c
+@@ -455,6 +455,21 @@ static const struct snd_soc_component_driver kirkwood_i2s_component = {
+ 	.name		= DRV_NAME,
+ };
+ 
++static int kirkwood_i2s_dev_remove(struct platform_device *pdev)
++{
++	struct kirkwood_dma_data *priv = dev_get_drvdata(&pdev->dev);
++
++	snd_soc_unregister_component(&pdev->dev);
++
++	if (!IS_ERR(priv->extclk)) {
++		clk_disable_unprepare(priv->extclk);
++		clk_put(priv->extclk);
++	}
++	clk_disable_unprepare(priv->clk);
++
++	return 0;
++}
++
+ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+ {
+ 	struct kirkwood_asoc_platform_data *data = pdev->dev.platform_data;
+@@ -525,34 +540,17 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+ 
+ 	err = snd_soc_register_component(&pdev->dev, &kirkwood_i2s_component,
+ 					 soc_dai, 1);
+-	if (!err)
+-		return 0;
+-	dev_err(&pdev->dev, "snd_soc_register_component failed\n");
+-
+-	if (!IS_ERR(priv->extclk)) {
+-		clk_disable_unprepare(priv->extclk);
+-		clk_put(priv->extclk);
++	if (err) {
++		dev_err(&pdev->dev, "snd_soc_register_component failed\n");
++		goto fail;
+ 	}
+-	clk_disable_unprepare(priv->clk);
++	return 0;
+ 
++fail:
++	kirkwood_i2s_dev_remove(pdev);
+ 	return err;
+ }
+ 
+-static int kirkwood_i2s_dev_remove(struct platform_device *pdev)
+-{
+-	struct kirkwood_dma_data *priv = dev_get_drvdata(&pdev->dev);
+-
+-	snd_soc_unregister_component(&pdev->dev);
+-
+-	if (!IS_ERR(priv->extclk)) {
+-		clk_disable_unprepare(priv->extclk);
+-		clk_put(priv->extclk);
+-	}
+-	clk_disable_unprepare(priv->clk);
+-
+-	return 0;
+-}
+-
+ static struct platform_driver kirkwood_i2s_driver = {
+ 	.probe  = kirkwood_i2s_dev_probe,
+ 	.remove = kirkwood_i2s_dev_remove,
+-- 
+1.8.3.2
 
-This seems fine but doesn't apply against current code but otherwise
-seems fine.
 
-> +	if (!IS_ERR(priv->extclk)) {
-> +		clk_disable_unprepare(priv->extclk);
-> +		clk_put(priv->extclk);
-> +	}
 
-Could use devm_clk_get() for extclk.
-
---R/XXzwRD6iKUjf7i
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR8XhAAAoJELSic+t+oim9KYYP/j95q2OJ5ln4rd8L3tjyAzfM
-rWsJN/Z5ZzCPd2jYY72gO1dzZoe8iQ/HS+BB+UkP5zFIPi3qveR7GN5rAQYawDEK
-G7DeZwgZfEONfa0YRA97j++pRpW2GLhi6eY1gxpSGPnRNkFElZ+Y86C3c0oBkjmf
-1JGCpGwAj0Y89zcUDcBve8FlLM9M8l6qaXjB6UWPwenFPPaKGvfIoWyIGpt3Q1kd
-FIGWRxG4MjkZMIPDnFIW5t75F0nequfZrElQmbfcqfuUAl5d1dqoyZdyjHEN5O5H
-hQ2LJmqkxCi+2kGMr9a81RedKPcy+y/BkwwSY6NytAtXfYrADrebfiYuU2VY17wL
-dz2P6TctSkdDv6cAKYlBDT2Ds2QnyrdjEyE+iqRzdyFqMCuQO8x/FAERugUWEGTN
-b0p9HBysGpBzqjrDygBkUcsS/4Sd48SAM0rm5OfwmFmiD9c0ArRvga43b60wB3dA
-NjtKSaNhDSudn2NIksflX13qTSo9QgcxJ/Tqszo96X7dFO7lTyjPx5q/CYTgBgDG
-Pm09m3+728k66oAh3X70xmofYAIoxywkaaKqzH6/zm+uSGCy7CY8F99ihQdf2ule
-yBQhybcxJ8ptD+6D+l4OyURVIg27nsVtu7FbfHFJN17+ydt6cB7JLs2lKabdSWZg
-aUu8MUZ5nlyy93+0l1dB
-=IVlb
------END PGP SIGNATURE-----
-
---R/XXzwRD6iKUjf7i--
+-- 
+Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
