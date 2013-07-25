@@ -1,63 +1,75 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from caramon.arm.linux.org.uk ([78.32.30.218]:38603 "EHLO
-	caramon.arm.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755514Ab3GYXFw (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 19:05:52 -0400
-Date: Fri, 26 Jul 2013 00:05:33 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 4/4] ASoc: kirkwood: add DT support
-Message-ID: <20130725230533.GH24642@n2100.arm.linux.org.uk>
-References: <20130725111459.145a4aa4@armhf> <20130725191905.GR9858@sirena.org.uk>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:33825 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756674Ab3GYTTZ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 15:19:25 -0400
+Date: Thu, 25 Jul 2013 20:19:05 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130725191905.GR9858@sirena.org.uk>
+References: <20130725111459.145a4aa4@armhf>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ljwjD4eUwP//fgul"
 Content-Disposition: inline
-In-Reply-To: <20130725191905.GR9858@sirena.org.uk>
+In-Reply-To: <20130725111459.145a4aa4@armhf>
+Subject: Re: [PATCH 4/4] ASoc: kirkwood: add DT support
 Sender: devicetree-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Jean-Francois Moine <moinejf@free.fr>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Russell King <rmk+kernel@arm.linux.org.uk>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Jul 25, 2013 at 08:19:05PM +0100, Mark Brown wrote:
-> On Thu, Jul 25, 2013 at 11:14:59AM +0200, Jean-Francois Moine wrote:
-> 
-> > +	if (np) {
-> > +		priv->burst = 128;		/* might be 32 or 128 */
-> > +	} else if (data) {
-> 
-> When you posted this before I queried how and why the value might vary -
-> I see the code is the same and I don't recall a reply.
 
-This is the DMA burst size, and can be either 32 or 128 bytes according
-to the docs.  Everyone seems to pass this as 128 bytes in their platform
-data to date, which I guess is why its ended up being hard coded as 128.
+--ljwjD4eUwP//fgul
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-However, whether it needs to be configurable or not is debatable - obviously
-the hardware allows it, but that doesn't mean it has to be exposed.  If
-ALSA has some kind of way of specifying a "low latency" mode where 128
-byte vs 32 byte fetches would make a significant difference, then it may
-be something to look at.
+On Thu, Jul 25, 2013 at 11:14:59AM +0200, Jean-Francois Moine wrote:
 
-I'll retract my previous comment on this (about it being a DT property) -
-given what it does, it isn't describing the hardware capabilities as I
-first thought it was.
+> +	if (np) {
+> +		priv->burst = 128;		/* might be 32 or 128 */
+> +	} else if (data) {
 
-> > -	priv->clk = devm_clk_get(&pdev->dev, NULL);
-> > +	priv->clk = devm_clk_get(&pdev->dev, "internal");
-> >  	if (IS_ERR(priv->clk)) {
-> > -		dev_err(&pdev->dev, "no clock\n");
-> > +		dev_err(&pdev->dev, "no internal clock\n");
-> >  		return PTR_ERR(priv->clk);
-> >  	}
-> 
-> Does the code providing it already name the clock?  If not are updates
-> needed to do that?
-> 
-> > -	priv->extclk = clk_get(&pdev->dev, "extclk");
-> > +	priv->extclk = clk_get(&pdev->dev, "external");
-> 
-> Is the clock actually called extclk in the datasheet and so on?  If so
-> it seems better to stick with that name.  Do any boards need updates for
-> the new name?
+When you posted this before I queried how and why the value might vary -
+I see the code is the same and I don't recall a reply.
 
-"AU_EXTCLK" is the exact name (pasted out of the documentation).
-I don't see any purpose to this name changing.
+> -	priv->clk = devm_clk_get(&pdev->dev, NULL);
+> +	priv->clk = devm_clk_get(&pdev->dev, "internal");
+>  	if (IS_ERR(priv->clk)) {
+> -		dev_err(&pdev->dev, "no clock\n");
+> +		dev_err(&pdev->dev, "no internal clock\n");
+>  		return PTR_ERR(priv->clk);
+>  	}
+
+Does the code providing it already name the clock?  If not are updates
+needed to do that?
+
+> -	priv->extclk = clk_get(&pdev->dev, "extclk");
+> +	priv->extclk = clk_get(&pdev->dev, "external");
+
+Is the clock actually called extclk in the datasheet and so on?  If so
+it seems better to stick with that name.  Do any boards need updates for
+the new name?
+
+--ljwjD4eUwP//fgul
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR8XolAAoJELSic+t+oim9V58P/1UNcnn+z1B+jlsAmpiBFQ09
+f70LNDBBcE99XhF5Bn6Kl1pgtuZhnS4JIGkM3MI8yay5/S6L7KXcgmZEhX1zgnWG
+pQf9nN94kGCHy7TExzTzFLXWGMa4MeT7DEczvsdMzJOQSQ24WRcXSoEacmjdresX
+Jkq50zMl11ozYR9PlAvlHPA88jqKBBTaLVMp9f681c9c0kwHAKEuqDL8x9L+zDkR
+Mwkg3+5XhqB+TbEFnQ2A+dXvglvtDiEQLtJXp04Ds0t+mfoJPKftfy7gAkJyKMr+
+6xalKd+iABVFnytHw/Sq6DI/bBXyYtRCi5+NlDQodaIohxTb+QD3nO1AYNmSfOcZ
+CgB692c8lsIMAv1jCdK2DYMnm59cgiE/xPNnTfNNrxDHJs8H8aMBF1DJQIb/7SbZ
+aGmYV31TylBQEgyYQIGR6gQIpwHW0c1bEAcWrr9KfG8WTTDGinlaCcdXnJR5nVtq
+7w4XbWCraXB9vU48YBYXyz21GcxKBRfe4EWoLp++OlllPJnFN9YuBhqZXi45p8dc
+rBt89L8oFXwteSRLXcoMNzV4aXt2m+MOPEb9YQJysF7dwMeG423c0tSeGLy8TNrj
+XVyp0lbCgbFFjwCGLfmJWGZ7Drzx0Ugrg3HrEIzCufw4KO2PZHh6cVuxb+K7VsF6
+wbsnADjmiNspjLUv7AGY
+=uKcT
+-----END PGP SIGNATURE-----
+
+--ljwjD4eUwP//fgul--
