@@ -1,64 +1,35 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v3 9/9] of/documentation: update with clock information for
- exynos hdmi subsystem
-Date: Thu, 25 Jul 2013 13:04:37 +0530
-Message-ID: <1374737677-3215-10-git-send-email-rahul.sharma@samsung.com>
-References: <1374737677-3215-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1374737677-3215-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, seanpaul@chromium.org, l.stach@pengutronix.de, tomasz.figa@gmail.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, grant.likely@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: David Lang <david@lang.hm>
+Subject: Re: The future of DT binding maintainership
+Date: Thu, 25 Jul 2013 00:47:08 -0700 (PDT)
+Message-ID: <alpine.DEB.2.02.1307250043080.24195@nftneq.ynat.uz>
+References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com> <20130720034647.2B7B43E14BF@localhost> <2962401.WRRoYlXkRr@flatron> <20130724141112.464623E09C5@localhost>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130724141112.464623E09C5@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Wolfram Sang <w.sang@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding information about clocks to the binding documentation
-for exynos mixer and hdmi.
+On Wed, 24 Jul 2013, Grant Likely wrote:
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- Documentation/devicetree/bindings/video/exynos_hdmi.txt  |   14 +++++++++++++-
- Documentation/devicetree/bindings/video/exynos_mixer.txt |    4 ++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+> I wouldn't get to hung up about trying to reuse the same file format as
+> the .dts files. Most of the bindings are going to be very flat in
+> nature, and schemas need to be expresive in a different way from the
+> .dts files themselves.
+>
+> We'll want to have an easy way to define trivial bindings. There are a
+> lot of devices that only define a new 'compatible' string, but they
+> don't actually require anything more than reg and interrupts. Can we
+> maybe have a schema file that lists trivial bindings?
 
-diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-index 323983b..94aaa7d 100644
---- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-+++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-@@ -12,7 +12,19 @@ Required properties:
- 	a) phandle of the gpio controller node.
- 	b) pin number within the gpio controller.
- 	c) optional flags and pull up/down.
--
-+- clocks: list of clock IDs from SoC clock driver.
-+	a) hdmi: It is required for gate operation on aclk_200_disp1 clock
-+		which clocks the display1 block.
-+	b) sclk_hdmi: It is required for gate operation on sclk_hdmi clock
-+		which clocks hdmi IP.
-+	c) sclk_pixel: Parent for mux mout_hdmi.
-+	d) sclk_hdmiphy: Parent for mux mout_hdmi.
-+	e) mout_hdmi: It is required by the driver to switch between the 2
-+		parents i.e. sclk_pixel and sclk_hdmiphy. If hdmiphy is stable
-+		after configuration, parent is set to sclk_hdmiphy else
-+		sclk_pixel.
-+- clock-names: aliases as per driver requirements for above clock IDs:
-+	"hdmi", "sclk_hdmi", "sclk_pixel", "sclk_hdmiphy" and "mout_hdmi".
- Example:
- 
- 	hdmi {
-diff --git a/Documentation/devicetree/bindings/video/exynos_mixer.txt b/Documentation/devicetree/bindings/video/exynos_mixer.txt
-index 3334b0a..94b40b6 100644
---- a/Documentation/devicetree/bindings/video/exynos_mixer.txt
-+++ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
-@@ -10,6 +10,10 @@ Required properties:
- - reg: physical base address of the mixer and length of memory mapped
- 	region.
- - interrupts: interrupt number to the cpu.
-+- clocks: list of clock IDs from SoC clock driver.
-+	a) mixer: It is required for gate operation on aclk_200_disp1 clock
-+		which clocks the display1 block.
-+	b) sclk_hdmi: Parent for mux mout_mixer.
- 
- Example:
- 
--- 
-1.7.10.4
+It sounds like a log of the bindings will really consist of something similar to 
+"take this other binding definition and change these values"
+
+I think that figuring out a good way to handle this (and make sure that when 
+people change one binding, they can know what other bindings they are changing 
+through the dependancies) is at least as important as figuring out the formal 
+schemas and multiple inheritance issues.
+
+David Lang
