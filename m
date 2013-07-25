@@ -1,66 +1,66 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:36532 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756456Ab3GYR5N (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 13:57:13 -0400
-Date: Thu, 25 Jul 2013 18:56:42 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130725175642.GJ9858@sirena.org.uk>
-References: <1374762668-5037-1-git-send-email-broonie@kernel.org>
- <20130725154627.GA22291@e106331-lin.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RBYxkammHF1d4YNT"
-Content-Disposition: inline
-In-Reply-To: <20130725154627.GA22291@e106331-lin.cambridge.arm.com>
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:59934 "EHLO
+	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1756402Ab3GYPqk (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Thu, 25 Jul 2013 11:46:40 -0400
+Date: Thu, 25 Jul 2013 16:46:27 +0100
+From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH] ASoC: wm8994: Add clock bindings to the device tree
-Sender: devicetree-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "patches@opensource.wolfsonmicro.com" <patches@opensource.wolfsonmicro.com>
-List-ID: <devicetree@vger.kernel.org>
-
-
---RBYxkammHF1d4YNT
+Message-ID: <20130725154627.GA22291@e106331-lin.cambridge.arm.com>
+References: <1374762668-5037-1-git-send-email-broonie@kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1374762668-5037-1-git-send-email-broonie@kernel.org>
+Content-Language: en-US
+Sender: devicetree-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "patches@opensource.wolfsonmicro.com" <patches@opensource.wolfsonmicro.com>, Mark Brown <broonie@linaro.org>
+List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Jul 25, 2013 at 04:46:27PM +0100, Mark Rutland wrote:
+On Thu, Jul 25, 2013 at 03:31:08PM +0100, Mark Brown wrote:
+> From: Mark Brown <broonie@linaro.org>
+> 
+> Due to the variable availability of the clock API there is no code in the
+> driver to use these at present, for the time being the machine drivers
+> will need to handle requesting clocks.
+> 
+> Signed-off-by: Mark Brown <broonie@linaro.org>
 
-> Do these two clock inputs exist for all of wm1811, wm8994, and wm8958?
+Do these two clock inputs exist for all of wm1811, wm8994, and wm8958?
 
-Yes.
+If I've read the context correctly, these are optional. Does this mean
+that if not listed that an OS can assume they are already configured and
+active? It would be nice to document that.
 
-> If I've read the context correctly, these are optional. Does this mean
-> that if not listed that an OS can assume they are already configured and
-> active? It would be nice to document that.
+Otherwise, this looks sensible:
 
-The clocks are both optional but even if they were assumed to be present
-they aren't usable without knowing the rate which can vary widely.  It
-is possible that the system may be able to infer their presence and
-rates from other information such as the audio system integration
-compatible string but that's out of scope for this and doesn't seem like
-a particularly good idea to encorage anyway.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
---RBYxkammHF1d4YNT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks,
+Mark.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR8WbWAAoJELSic+t+oim9WeUP/1ZFCpEbAufNgGHf5565/PUg
-AfdBgJRnEaEHTh3d5LKHV/0tj3xUG1uVSgK1cD+bBsKRMQbKb+E9hffaRuVGTuDy
-Yvicah1uPTDId+Wv6GMlkE4rDwsmOASRnlt6e85eC2qayyTDACoDL7NkwqOY1wUe
-MS6NHNVS2EelxXNvXgk+IXHRGoAtxx3ULGyOz7k7S/jGCgn3+/f0Hxn3QKAPD4YU
-J8Fdab04Okm+LmOMKKXKINDPxD7s9PlKF5DNLNGE2sxl7NCKOCfVExrQnTIimOw0
-EWYKQeuBHZB1No2XLhgN0ntSEgGXAG0BDhMPLZ9a/IwajYgGAsDbi/Z8VbQdIQoG
-p4rvY3koItNqsPE0qlvX5vCkdoqmb1nxhKpVk2VWBVBMWb6dE0dEjf9Wo8Y1iNrg
-AR+rzgXYrJyQIrdcHAgUPIJnczwZqPkL+kM1hF30DQzSnvMeYS2Q3z3S9+ZLFAh7
-EiIVa7hy+b/+ZcnQRBba6abWMxv882LVsEEpRrCKo1efV/YtXB9WcUlDXYZCqdCg
-xJqYi5/qlmAXazYoxRWGjRwYwqikIC+QFScqqofvVuArctGOVEbzCozl7UTQYIiO
-TagR6peZt4LCxn+Km/qExdhPzCFSZn1OejvMBjiJrNrC3D/IpyB6gLE7ucYa+8ya
-WeV/Cj3R0aMeLNzzpwVQ
-=T5Gq
------END PGP SIGNATURE-----
-
---RBYxkammHF1d4YNT--
+> ---
+>  Documentation/devicetree/bindings/sound/wm8994.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/wm8994.txt b/Documentation/devicetree/bindings/sound/wm8994.txt
+> index f2f3e80..e045e90 100644
+> --- a/Documentation/devicetree/bindings/sound/wm8994.txt
+> +++ b/Documentation/devicetree/bindings/sound/wm8994.txt
+> @@ -32,6 +32,10 @@ Optional properties:
+>      The second cell is the flags, encoded as the trigger masks from
+>      Documentation/devicetree/bindings/interrupts.txt
+>  
+> +  - clocks : A list of up to two phandle and clock specifier pairs
+> +  - clock-names : A list of clock names sorted in the same order as clocks.
+> +                  Valid clock names are "MCLK1" and "MCLK2".
+> +
+>    - wlf,gpio-cfg : A list of GPIO configuration register values. If absent,
+>      no configuration of these registers is performed. If any value is
+>      over 0xffff then the register will be left as default. If present 11
+> -- 
+> 1.8.3.2
+> 
+> 
