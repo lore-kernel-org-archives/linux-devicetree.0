@@ -1,53 +1,85 @@
-From: Haojian Zhuang <haojian.zhuang@gmail.com>
-Subject: Re: [PATCH RESEND 1/2] clk: mmp: use global clock lock
-Date: Fri, 26 Jul 2013 10:42:45 +0800
-Message-ID: <CAN1soZw7_3X5pdvp2M-Wp69=7Cr9bp4DDD0qMps4XT6u1s_9mQ@mail.gmail.com>
-References: <20130716181029.C08D8FAAF3@dev.laptop.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 1/3] clk: exynos5250: Add G2D gate clock
+Date: Fri, 26 Jul 2013 14:18:46 +0530
+Message-ID: <CAK9yfHwdte8XPey-uM=hy1z7ryFSOzEZspLBz7po3c2ktXvAyw@mail.gmail.com>
+References: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130716181029.C08D8FAAF3@dev.laptop.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Drake <dsd@laptop.org>
-Cc: Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, pgf@laptop.org, Miao Eric <eric.y.miao@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org, mturquette@linaro.org, inki.dae@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 17, 2013 at 2:10 AM, Daniel Drake <dsd@laptop.org> wrote:
-> The mmp platform shares a lock between different clock types, and all
-> clocks are currently initialized by static bindings.
+On 5 July 2013 14:12, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> Adds gate clock for G2D IP for Exynos5250 SoC.
 >
-> Move this static/private lock into global context so that it can
-> easily be shared by clocks that will be defined by the device tree in
-> followup patches.
->
-> Signed-off-by: Daniel Drake <dsd@laptop.org>
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> Cc: Mike Turquette <mturquette@linaro.org>
 > ---
->  drivers/clk/mmp/Makefile   |   2 +-
->  drivers/clk/mmp/clk-apbc.c |  38 +++++----------
->  drivers/clk/mmp/clk-apmu.c |  20 ++------
->  drivers/clk/mmp/clk-mmp2.c | 116 ++++++++++++++++++++++-----------------------
->  drivers/clk/mmp/clk.h      |   8 ++--
->  drivers/clk/mmp/common.c   |  13 +++++
->  6 files changed, 92 insertions(+), 105 deletions(-)
->  create mode 100644 drivers/clk/mmp/common.c
+> This patch depends on the following patch:
+> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/20581
+> ---
+>  .../devicetree/bindings/clock/exynos5250-clock.txt |    1 +
+>  drivers/clk/samsung/clk-exynos5250.c               |    5 ++++-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
 >
-> Resending after a month without review.
+> diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> index 1a05761..7e88242 100644
+> --- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> @@ -155,6 +155,7 @@ clock which they consume.
+>    dp                   342
+>    mixer                        343
+>    hdmi                 344
+> +  g2d                  345
+>
+>  Example 1: An example of a clock controller node is listed below.
+>
+> diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
+> index 6f767c5..3da0bdf 100644
+> --- a/drivers/clk/samsung/clk-exynos5250.c
+> +++ b/drivers/clk/samsung/clk-exynos5250.c
+> @@ -62,6 +62,7 @@
+>  #define SRC_CDREX              0x20200
+>  #define PLL_DIV2_SEL           0x20a24
+>  #define GATE_IP_DISP1          0x10928
+> +#define GATE_IP_ACP            0x10000
+>
+>  /*
+>   * Let each supported clock get a unique id. This id is used to lookup the clock
+> @@ -99,7 +100,7 @@ enum exynos5250_clks {
+>         spi2, i2s1, i2s2, pcm1, pcm2, pwm, spdif, ac97, hsi2c0, hsi2c1, hsi2c2,
+>         hsi2c3, chipid, sysreg, pmu, cmu_top, cmu_core, cmu_mem, tzpc0, tzpc1,
+>         tzpc2, tzpc3, tzpc4, tzpc5, tzpc6, tzpc7, tzpc8, tzpc9, hdmi_cec, mct,
+> -       wdt, rtc, tmu, fimd1, mie1, dsim0, dp, mixer, hdmi,
+> +       wdt, rtc, tmu, fimd1, mie1, dsim0, dp, mixer, hdmi, g2d,
+>
+>         nr_clks,
+>  };
+> @@ -152,6 +153,7 @@ static __initdata unsigned long exynos5250_clk_regs[] = {
+>         SRC_CDREX,
+>         PLL_DIV2_SEL,
+>         GATE_IP_DISP1,
+> +       GATE_IP_ACP,
+>  };
+>
+>  /* list of all parent clock list */
+> @@ -463,6 +465,7 @@ struct samsung_gate_clock exynos5250_gate_clks[] __initdata = {
+>         GATE(dp, "dp", "aclk200", GATE_IP_DISP1, 4, 0, 0),
+>         GATE(mixer, "mixer", "aclk200", GATE_IP_DISP1, 5, 0, 0),
+>         GATE(hdmi, "hdmi", "aclk200", GATE_IP_DISP1, 6, 0, 0),
+> +       GATE(g2d, "g2d", "aclk200", GATE_IP_ACP, 3, 0, 0),
+>  };
+>
+>  static __initdata struct of_device_id ext_clk_match[] = {
+> --
+> 1.7.9.5
 >
 
-Currently lock is defined in pxa910, pxa168 & mmp2 clock driver. Only
-one of these driver
-could be active in real system. So I can't see any benefit to use the
-shared clock lock among
-these three drivers.
+Ping Mike.
 
-Regards
-Haojian
+-- 
+With warm regards,
+Sachin
