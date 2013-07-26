@@ -1,32 +1,43 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-gg0-f180.google.com ([209.85.161.180]:36862 "EHLO
-	mail-gg0-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752526Ab3G2Qzg (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 12:55:36 -0400
-Date: Mon, 29 Jul 2013 12:55:30 -0400
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 1/5] sata, highbank: fix ordering of SGPIO signals
-Message-ID: <20130729165530.GG22605@mtj.dyndns.org>
-References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
+Received: from smtp121.dfw.emailsrvr.com ([67.192.241.121]:49701 "EHLO
+	smtp121.dfw.emailsrvr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932380Ab3GZPWU (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 11:22:20 -0400
+From: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Subject: [PATCH 1/5] sata, highbank: fix ordering of SGPIO signals
+Date: Fri, 26 Jul 2013 10:11:54 -0500
+Message-Id: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Cc: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
+To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
+Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jul 26, 2013 at 10:11:54AM -0500, Mark Langsdorf wrote:
-> The ACTIVITY and ERROR signals were reversed in the original commit.
-> Fix that.
+The ACTIVITY and ERROR signals were reversed in the original commit.
+Fix that.
 
-And what's the implication of this change?  Does this change the
-behavior of the driver?  If so, how?  If not, why not?  *Please* be
-more descriptive in patch descriptions and explain *why* the changes
-are being made.
+Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
+---
+ drivers/ata/sata_highbank.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks.
-
+diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
+index d047d92..e9a4f46 100644
+--- a/drivers/ata/sata_highbank.c
++++ b/drivers/ata/sata_highbank.c
+@@ -86,11 +86,11 @@ struct ecx_plat_data {
+ 
+ #define SGPIO_SIGNALS			3
+ #define ECX_ACTIVITY_BITS		0x300000
+-#define ECX_ACTIVITY_SHIFT		2
++#define ECX_ACTIVITY_SHIFT		0
+ #define ECX_LOCATE_BITS			0x80000
+ #define ECX_LOCATE_SHIFT		1
+ #define ECX_FAULT_BITS			0x400000
+-#define ECX_FAULT_SHIFT			0
++#define ECX_FAULT_SHIFT			2
+ static inline int sgpio_bit_shift(struct ecx_plat_data *pdata, u32 port,
+ 				u32 shift)
+ {
 -- 
-tejun
+1.8.1.2
+
