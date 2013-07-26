@@ -1,46 +1,54 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from metis.ext.pengutronix.de ([92.198.50.35]:56693 "EHLO
-	metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751232Ab3GXJJx (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 24 Jul 2013 05:09:53 -0400
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [RFC 0/2] Set mmc(blk)X with DT alias
-Date: Wed, 24 Jul 2013 11:09:31 +0200
-Message-Id: <1374656973-16250-1-git-send-email-s.trumtrar@pengutronix.de>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:35731 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759369Ab3GZQDJ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 12:03:09 -0400
+Date: Fri, 26 Jul 2013 17:02:53 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130726160253.GQ9858@sirena.org.uk>
+References: <20130725164016.GA4027@elgon.mountain>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cgcPEDKc2RK7mT+z"
+Content-Disposition: inline
+In-Reply-To: <20130725164016.GA4027@elgon.mountain>
+Subject: Re: [patch] ASoC: adau1701: type bug with ADAU1707_CLKDIV_UNSET
 Sender: devicetree-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: Chris Ball <cjb@laptop.org>, devicetree@vger.kernel.org, kernel@pengutronix.de, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Daniel Mack <zonque@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, device-drivers-devel@blackfin.uclinux.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi!
 
-Embedded devices often use multiple SD/MMC devices as boot/rootfs disks.
-Some of them are removable, some not. If the removable cards are not
-present, but are probed before the non-removable ones, the indexing
-scheme changes. This makes it harder to hard-code the rootfs in the
-cmdline.
+--cgcPEDKc2RK7mT+z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-First solution I came up with was the alias-node in DT.
-I guess my implementation is pretty hacky and ugly, but you can get lost
-pretty fast in the whole mmc stack.
-For example, the second patch should use "card->host->index" instead of parsing
-the alias again, I guess. I'm not sure why it currently doesn't though.
+On Thu, Jul 25, 2013 at 07:40:17PM +0300, Dan Carpenter wrote:
+> ADAU1707_CLKDIV_UNSET is always compared against an unsigned int and
+> not an unsigned long.  The current tests are always false.
 
-So, if there is a better place or solution to specify a reliable ordering
-of mmc devices, please let me hear it.
+Applied, thanks.
 
-Thanks,
-Steffen
+--cgcPEDKc2RK7mT+z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
-Steffen Trumtrar (2):
-  mmc: block: allow setting name_idx via devicetree
-  mmc: host: allow setting index via devicetree
+iQIcBAEBAgAGBQJR8p2qAAoJELSic+t+oim9IXwP/1+9FOHIzan33tzY8IeACcaw
+JkVUzc1oa2ZuQ/UXECm/wyS0MU1CeZVIKNIk+FFsGlu+0oBuySv87Z41/wH68mGG
+iWcg7LbKLmQeUM95yr3Gpjwodu1XwnPcSG4grdtMx/uyHpbiSfem32GT3uMupntc
+sXCrHgryTLhngJ1OwvZTQ1fmEApP6WHGdPFsI4VaosW2rzDa737GCn6JpRaEq7Gx
+CN6d2Y2xBWDV9rS67d9Y0Htv5DSmiqW1MaikgCT0eIemxuLedM9RYWWExMaUmiMx
+4oVOd5BMeQTMUsx2brjrh9LqSIq5p8iaz7CyhMpwWKLmW9PzhVsNR/hM8JUVAwLn
+rynFS6t5jQWXmWPnhQkHyDlt6FS7lidOuLqpypatLCwTql1IU2hTI7pnij7AcCoF
+C7CZS0cmwAVCJEmOL5pynJRKSGiMbpqJwM/TMrJPan8sxR4L7u7lhC1RFD5MioAT
+zNebnGjfnRvlphnYSP9kOEfKc8UirkVfjlytPciKOL870+zwkp655MQxCEzBRvCk
+XpPPsFoessOKAwRb6WU8FIuZcR8q6kbfz7IhNTnzsS+CiqezWZdW1K234XpM/Hjl
+pTcIBw/SbC17c3enolL6KkFa1debq96Wy3d70rDfcOGPFxe6KJhjU3CL+awHdEgP
+PxaV3HCGuwh9KCjlj47O
+=cikR
+-----END PGP SIGNATURE-----
 
- drivers/mmc/card/block.c | 7 ++++++-
- drivers/mmc/core/host.c  | 7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
-
--- 
-1.8.3.2
-
+--cgcPEDKc2RK7mT+z--
