@@ -1,86 +1,122 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pb0-f46.google.com ([209.85.160.46]:36846 "EHLO
-	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932388Ab3GVVqg (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 22 Jul 2013 17:46:36 -0400
-Date: Mon, 22 Jul 2013 14:46:47 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [lm-sensors] [RESEND PATCH V1 0/9] thermal: introduce DT thermal
- zone build
-Message-ID: <20130722214647.GA15765@roeck-us.net>
-References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com>
- <20130717220942.GB990@roeck-us.net>
- <51E7F341.8020508@ti.com>
- <51E8234D.1020607@wwwdotorg.org>
- <20130718212108.GC4110@roeck-us.net>
- <51E98A07.4050402@wwwdotorg.org>
- <20130721110807.GC24303@roeck-us.net>
- <51ED8B6F.6020700@wwwdotorg.org>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <51F2C128.7030905@gmail.com>
+Date: Fri, 26 Jul 2013 13:34:16 -0500
+From: Rob Herring <robherring2@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <51ED8B6F.6020700@wwwdotorg.org>
-Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, wni@nvidia.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org, l.stach@pengutronix.de
+Subject: Re: [PATCH 5/5] sata, highbank: send extra clock cycles in SGPIO
+ patterns
+References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com> <1374851518-4802-5-git-send-email-mark.langsdorf@calxeda.com> <20130726162606.GE3528@e106331-lin.cambridge.arm.com>
+In-Reply-To: <20130726162606.GE3528@e106331-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jul 22, 2013 at 12:43:43PM -0700, Stephen Warren wrote:
-> On 07/21/2013 04:08 AM, Guenter Roeck wrote:
-> > ... [a bunch of good points re: why DT shouldn't describe thermal
-> > profiles]
+On 07/26/2013 11:26 AM, Mark Rutland wrote:
+> On Fri, Jul 26, 2013 at 04:11:58PM +0100, Mark Langsdorf wrote:
+>> Some SGPIO PICs don't follow the standard very well and expect a
+>> certain number of clock cycles or port frames in each SGPIO pattern.
+>> Add two optional parameters in the DTB that can provide the number of
+>> extra clock cycles to be sent before and after each SGPIO pattern.
+>> Read those parameters from the DTB and send the extra clock cycles.
 > 
-> Yes, lots of good arguments there.
+> Is this likely to be very variable, or something we can device based on
+> a compatible string?
+
+We have a sample size of 2 to base it on, so there is no way to know.
+One slave requires some extra clocks and one doesn't.
+
+The compatible string is based on the SOC block. These properties are
+based on the board design.
+
+Rob
+
 > 
-> So, where/how in your opinion should thermal profiles be defined, and
-> how should they get into the kernel? The nice thing about DT is that
-> it's a single place that describes the platform, with a well-defined
-> method of getting that information into the kernel. What alternatives exist?
+>>
+>> Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
+>> ---
+>>  Documentation/devicetree/bindings/ata/sata_highbank.txt |  4 ++++
+>>  drivers/ata/sata_highbank.c                             | 16 +++++++++++++---
+>>  2 files changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
+>> index d692e9e..a05eb92 100644
+>> --- a/Documentation/devicetree/bindings/ata/sata_highbank.txt
+>> +++ b/Documentation/devicetree/bindings/ata/sata_highbank.txt
+>> @@ -22,6 +22,10 @@ Optional properties:
+>>  			SGPIO bitstream.
+>>  - calxeda,tx-atten  : a u8 array that contains TX attenuation override
+>>  			codes, one per port.
+>> +- calxeda,pre-clocks : a u32 that indicates the number of additional clock
+>> +			cycles to transmit before sending an SGPIO pattern
+>> +- calxeda,post-clocks: a u32 that indicates the number of additional clock
+>> +			cycles to transmit after sending an SGPIO pattern
+>>  
+>>  Example:
+>>          sata@ffe08000 {
+>> diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
+>> index 4c8444f..0ca27fe 100644
+>> --- a/drivers/ata/sata_highbank.c
+>> +++ b/drivers/ata/sata_highbank.c
+>> @@ -82,9 +82,11 @@ static DEFINE_SPINLOCK(sgpio_lock);
+>>  #define SGPIO_PINS			3
+>>  #define SGPIO_PORTS			8
+>>  
+>> -/* can be cast as an ahci_host_priv for compatibility with most functions */
+>>  struct ecx_plat_data {
+>>  	u32		n_ports;
+>> +	/* number of extra clocks that the SGPIO PIC controller expects */
+>> +	u32		pre_clocks;
+>> +	u32		post_clocks;
+>>  	unsigned	sgpio_gpio[SGPIO_PINS];
+>>  	u32		sgpio_pattern;
+>>  	u32		port_to_sgpio[SGPIO_PORTS];
+>> @@ -144,7 +146,7 @@ static ssize_t ecx_transmit_led_message(struct ata_port *ap, u32 state,
+>>  	struct ecx_plat_data *pdata = (struct ecx_plat_data *) hpriv->plat_data;
+>>  	struct ahci_port_priv *pp = ap->private_data;
+>>  	unsigned long flags;
+>> -	int pmp, i;
+>> +	int pmp, i, patt_len;
+>>  	struct ahci_em_priv *emp;
+>>  	u32 sgpio_out;
+>>  
+>> @@ -161,6 +163,9 @@ static ssize_t ecx_transmit_led_message(struct ata_port *ap, u32 state,
+>>  	spin_lock_irqsave(&sgpio_lock, flags);
+>>  	ecx_parse_sgpio(pdata, ap->port_no, state);
+>>  	sgpio_out = pdata->sgpio_pattern;
+>> +	for (i = 0; i < pdata->pre_clocks; i++)
+>> +		ecx_led_cycle_clock(pdata);
+>> +
+>>  	gpio_set_value(pdata->sgpio_gpio[SLOAD], 1);
+>>  	ecx_led_cycle_clock(pdata);
+>>  	gpio_set_value(pdata->sgpio_gpio[SLOAD], 0);
+>> @@ -168,11 +173,14 @@ static ssize_t ecx_transmit_led_message(struct ata_port *ap, u32 state,
+>>  	 * bit-bang out the SGPIO pattern, by consuming a bit and then
+>>  	 * clocking it out.
+>>  	 */
+>> -	for (i = 0; i < (SGPIO_SIGNALS * pdata->n_ports); i++) {
+>> +	patt_len = SGPIO_SIGNALS * pdata->n_ports;
+>> +	for (i = 0; i < patt_len; i++) {
+>>  		gpio_set_value(pdata->sgpio_gpio[SDATA], sgpio_out & 1);
+>>  		sgpio_out >>= 1;
+>>  		ecx_led_cycle_clock(pdata);
+>>  	}
+>> +	for (i = 0; i < pdata->post_clocks; i++)
+>> +		ecx_led_cycle_clock(pdata);
+>>  
+>>  	/* save off new led state for port/slot */
+>>  	emp->led_state = state;
+>> @@ -207,6 +215,8 @@ static void highbank_set_em_messages(struct device *dev,
+>>  	of_property_read_u32_array(np, "calxeda,led-order",
+>>  						pdata->port_to_sgpio,
+>>  						pdata->n_ports);
+>> +	of_property_read_u32(np, "calxeda,pre-clocks", &pdata->pre_clocks);
+>> +	of_property_read_u32(np, "calxeda,post-clocks", &pdata->post_clocks);
 > 
-Excellent but quite different question. Quite frankly, I would love to be able
-to use DT to describe a platform and its configuration and use instead of just
-its hardware. Just like with thermal data, it would be great if I could use
-devicetree information to describe limits for hwmon devices and configuration
-information for all kinds of devices. This would simplify my life a lot.
-Unfortunately, that is not how it works, so one ends up with pre-configuring
-devices on ROMMON or secondary methods such as sensors.conf for hwmon devices.
-Sure, that all works, but for embedded devices it means I have to re-build the
-root file system each time a limit is changed. It _would_ be much simpler to
-just be able to change the limit(s) in devicetree data and be done.
-
-So, no, I don't have a good other solution. I have seen attempts to implement a
-user-space 'parallel' devicetree, or the above mentioned sensors.conf file, but
-nothing comprehensive. If you find a good generic solution, let me know.
-
-Note that ACPI is an attempt to do that, but its scope is not limited to
-describing the hardware, and it is not available on non-Intel embedded systems.
-Also, it is typically controlled by another entity in a company (the BIOS
-engineers), who tend to be highly resistive to changes. Modifying ACPI
-data tends to be way more difficult than modifying devicetree data.
-
-> > Other but related subject .. from a thermal / hwmon driver's perspective, if
-> > such a driver supports thermal subsystem, it should just register itself as
-> > thermal sensor device, because that is what it is. If and how it is tied to
-> > cooling devices should be part of the thermal subsystem and be decided there.
+> Are the pdata values initialised anywhere if those dt properties aren't
+> present? It's not clear from the patch context.
 > 
-> For audio, we have individual DT nodes that represent individual
-> audio-related components such as audio controllers, audio CODECs, etc.
-> We also have a "virtual" node that describes how those components
-> interact and create a complete sound card. Would it make sense to do
-> something similar with thermal sensors and cooling devices; represent
-> them all individually, have them register themselves with the
-> thermal/hwmon subsystem as you describe, but then have another "system
-> level" node that describes how the system designer intended them to
-> interact?
+> Thanks,
+> Mark.
 > 
-For device registration itself, definitely. An instance of a sensor driver
-should not have to know how (or if) it is used by the system, just like a gpio
-driver does not have to know if and how the gpio pins it provides are used.
-
-Binding is the tricky question here, as it is all virtual and, as you said
-yourself, describes the interaction and thus use of the various sensors and
-cooling devices to accomplish the ultimate goal of keeping the system in an
-acceptable temperature range. Hopefully you'll get an answer from the
-devicetree experts if your intended devicetree usage of it is acceptable.
-
-Guenter
