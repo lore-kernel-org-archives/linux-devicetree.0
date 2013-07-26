@@ -1,78 +1,39 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:48959 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758080Ab3GZLGB (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 07:06:01 -0400
-Date: Fri, 26 Jul 2013 12:05:54 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130726110554.GB9858@sirena.org.uk>
-References: <20130725111459.145a4aa4@armhf>
- <20130725191905.GR9858@sirena.org.uk>
- <20130725230533.GH24642@n2100.arm.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Mq/g1DrVwLsuPImC"
-Content-Disposition: inline
-In-Reply-To: <20130725230533.GH24642@n2100.arm.linux.org.uk>
+Received: from smtp2-g21.free.fr ([212.27.42.2]:51155 "EHLO smtp2-g21.free.fr"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752425Ab3GZJtk convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 05:49:40 -0400
+Date: Fri, 26 Jul 2013 11:49:46 +0200
+From: Jean-Francois Moine <moinejf@free.fr>
 Subject: Re: [PATCH 4/4] ASoc: kirkwood: add DT support
+Message-ID: <20130726114946.1945bc1a@armhf>
+In-Reply-To: <20130726092156.GK24642@n2100.arm.linux.org.uk>
+References: <20130725111459.145a4aa4@armhf>
+	<20130725191905.GR9858@sirena.org.uk>
+	<20130725230533.GH24642@n2100.arm.linux.org.uk>
+	<20130726110913.0a193918@armhf>
+	<20130726092156.GK24642@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Jean-Francois Moine <moinejf@free.fr>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+On Fri, 26 Jul 2013 10:21:56 +0100
+Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
 
---Mq/g1DrVwLsuPImC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Fri, Jul 26, 2013 at 11:09:13AM +0200, Jean-Francois Moine wrote:
+> > The A510 documentation uses the names "DCO PLL" for the internal clock
+> > and "AU_EXTCLK" for the external clock. So, what about "dcopll" and
+> > "extclk"?
+> 
+> Stop naming them according to their source.  Their _consumer_ names
+> not _source_ names.
 
-On Fri, Jul 26, 2013 at 12:05:33AM +0100, Russell King - ARM Linux wrote:
-> On Thu, Jul 25, 2013 at 08:19:05PM +0100, Mark Brown wrote:
-> > On Thu, Jul 25, 2013 at 11:14:59AM +0200, Jean-Francois Moine wrote:
+I have no preference. What do you propose?
 
-> > > +	if (np) {
-> > > +		priv->burst = 128;		/* might be 32 or 128 */
-> > > +	} else if (data) {
-
-> > When you posted this before I queried how and why the value might vary -
-> > I see the code is the same and I don't recall a reply.
-
-> This is the DMA burst size, and can be either 32 or 128 bytes according
-> to the docs.  Everyone seems to pass this as 128 bytes in their platform
-> data to date, which I guess is why its ended up being hard coded as 128.
-
-OK.
-
-> However, whether it needs to be configurable or not is debatable - obviously
-> the hardware allows it, but that doesn't mean it has to be exposed.  If
-> ALSA has some kind of way of specifying a "low latency" mode where 128
-> byte vs 32 byte fetches would make a significant difference, then it may
-> be something to look at.
-
-This sort of configuration would normally be keyed off the period size
-and so vary at runtime depending on what the application does when it
-opens a stream.  Sounds like something someone can worry about if they
-have the requirement.
-
---Mq/g1DrVwLsuPImC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR8lgOAAoJELSic+t+oim9NTcQAJAY3wv0YQcp5ZNk3jkW2BO/
-aKMHDaysqtwbhoAASzJhVG9WWbld9L+DoevxqhH9lo05+0gA0JOxs7BHG7sLDFqI
-kvERZ2ZZ4GZ2bySUFhSx09Da89Vi4KEaWwpgF8TUQu72q7JWWj59Q1uEf38XpdHL
-j3Hr7p2XynbFFsJy3XoMZ1RTuZUGdpkpHRaenPhOojy1pPiseslr/RwAnZSXKuma
-DVCH9veV9QIKAbVVdC6sRXdidff32JN/pjMcIpTxot5cvwJHMNrzWh2u9SwrqIoE
-8x+x5DIRK8ZTAHidKpL+iMYWfvR3dPQxI5VIaWOhbpWEK/zI2H1gMkVS79BAFG4d
-pOsYLiDmxuWu7ym4OkHOfEuGgjxeRNoSRfOHRnwa6GXZykNhhnU3hxMDc7CbFuKR
-DxAOdiUpqpeysjH0bx7+kR/08YHVkGa5WEwkCFDcWK/Bm/I38Bv94N3qzUn/VmsS
-nsbUPc7Hkdd/PD7SSvBqR8tQdtXQ7vl7kzw+AVoW6pbUGHV4sFTVj973MIvWxbLF
-vE+6ZMNnsI4HRxMOxEhGIaFtzBW9RjTkuLzm4tdcZJQMLZbUJXLZlTlITGLjbRH1
-qLtk+ltJfKPpF5Ietu36HZQueuNBZJf+6Et/tfRVCfX4qLnM/Ok2TMnF5P7V/hCD
-aF7W/WYZWm59Nza5eTie
-=jF6/
------END PGP SIGNATURE-----
-
---Mq/g1DrVwLsuPImC--
+-- 
+Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
