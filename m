@@ -1,69 +1,41 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from service87.mimecast.com ([91.220.42.44]:53285 "EHLO
-	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756457Ab3G3SAY (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 30 Jul 2013 14:00:24 -0400
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: [RFC PATCH 2/2] PM / OPP: check for existing OPP list when initialising from device tree
-Date: Tue, 30 Jul 2013 19:00:17 +0100
-Message-Id: <1375207217-4433-3-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-In-Reply-To: <1375207217-4433-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-References: <1375207217-4433-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Received: from smtp121.dfw.emailsrvr.com ([67.192.241.121]:36538 "EHLO
+	smtp121.dfw.emailsrvr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932370Ab3GZPWS (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 11:22:18 -0400
+From: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Subject: [PATCH 2/5] sata highbank: enable 64-bit DMA mask when using LPAE
+Date: Fri, 26 Jul 2013 10:11:55 -0500
+Message-Id: <1374851518-4802-2-git-send-email-mark.langsdorf@calxeda.com>
+In-Reply-To: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
+References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
 Sender: devicetree-owner@vger.kernel.org
-To: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sudeep.KarkadaNagesha@arm.com, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>
+To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
+Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+From: Rob Herring <rob.herring@calxeda.com>
 
-CPUs are registered as devices and their OPPs can be initialised from
-the device tree. Whenever CPUs can be hotplugged out, the corresponding
-cpu devices are not removed. As a result all their OPPs remain intact
-even when they are offlined.
-
-But when they are hotplugged back-in, the cpufreq along with other cpu
-related subsystem gets re-initialised. Since its almost same as secondary
-cpu being brought up, no special consideration is taken in the hotplug
-path. This may result in cpufreq trying to initialise the OPPs again though
-the cpu device already contains the OPPs.
-
-This patch checks if there exist an OPP list associated with the device,
-before attempting to initialise it.
-
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Nishanth Menon <nm@ti.com>
-Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
 ---
- drivers/base/power/opp.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/ata/sata_highbank.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
-index 9ac3c93..8a9d138 100644
---- a/drivers/base/power/opp.c
-+++ b/drivers/base/power/opp.c
-@@ -708,9 +708,15 @@ int of_init_opp_table(struct device *dev)
- {
- =09const struct property *prop;
- =09struct device_node *opp_node;
-+=09struct device_opp *dev_opp;
- =09const __be32 *val;
- =09int nr;
-=20
-+=09/* Check for existing list for 'dev' */
-+=09dev_opp =3D find_device_opp(dev);
-+=09if (!IS_ERR(dev_opp))
-+=09=09return -EEXIST; /* Device OPP already initialized */
+diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
+index e9a4f46..8b40025 100644
+--- a/drivers/ata/sata_highbank.c
++++ b/drivers/ata/sata_highbank.c
+@@ -479,6 +479,9 @@ static int ahci_highbank_probe(struct platform_device *pdev)
+ 	if (hpriv->cap & HOST_CAP_PMP)
+ 		pi.flags |= ATA_FLAG_PMP;
+ 
++	if (hpriv->cap & HOST_CAP_64)
++		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
 +
- =09opp_node =3D of_parse_phandle(dev->of_node,
- =09=09=09=09=09"operating-points-phandle", 0);
- =09if (!opp_node) /* if no OPP phandle, search for OPPs in current node */
---=20
+ 	/* CAP.NP sometimes indicate the index of the last enabled
+ 	 * port, at other times, that of the last possible port, so
+ 	 * determining the maximum port number requires looking at
+-- 
 1.8.1.2
-
 
