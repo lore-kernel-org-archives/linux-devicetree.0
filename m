@@ -1,50 +1,91 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v11] reset: Add driver for gpio-controlled reset pins
-Date: Fri, 26 Jul 2013 13:15:06 -0700
-Message-ID: <51F2D8CA.4010601@codeaurora.org>
-References: <1374834384-8071-1-git-send-email-p.zabel@pengutronix.de>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 1/3] clk: exynos5250: Add G2D gate clock
+Date: Fri, 26 Jul 2013 13:18:00 -0700
+Message-ID: <20130726201800.7598.54329@quantum>
+References: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1374834384-8071-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org, inki.dae@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/13 03:26, Philipp Zabel wrote:
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +
-> +struct gpio_reset_data {
-> +	struct reset_controller_dev rcdev;
-> +	unsigned int gpio;
-> +	bool active_low;
-> +	s32 delay_us;
+Quoting Sachin Kamat (2013-07-05 01:42:27)
+> Adds gate clock for G2D IP for Exynos5250 SoC.
+> 
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> Cc: Mike Turquette <mturquette@linaro.org>
 
-Maybe I missed it, why is this signed? Do we plan to have negative time
-delays?
+I've taken patch #1 into clk-next.
 
->
-> +
-> +static struct reset_control_ops gpio_reset_ops = {
+> ---
+> This patch depends on the following patch:
+> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/20581
 
-const?
+I think I've gotten all three series you sent out, can you confirm?
+http://thread.gmane.org/gmane.linux.kernel.samsung-soc/20581
+http://comments.gmane.org/gmane.linux.kernel.samsung-soc/20829
+http://comments.gmane.org/gmane.linux.kernel.samsung-soc/20582
 
-> +	.reset = gpio_reset,
-> +	.assert = gpio_reset_assert,
-> +	.deassert = gpio_reset_deassert,
-> +};
->
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Regards,
+Mike
+
+> ---
+>  .../devicetree/bindings/clock/exynos5250-clock.txt |    1 +
+>  drivers/clk/samsung/clk-exynos5250.c               |    5 ++++-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> index 1a05761..7e88242 100644
+> --- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+> @@ -155,6 +155,7 @@ clock which they consume.
+>    dp                   342
+>    mixer                        343
+>    hdmi                 344
+> +  g2d                  345
+>  
+>  Example 1: An example of a clock controller node is listed below.
+>  
+> diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
+> index 6f767c5..3da0bdf 100644
+> --- a/drivers/clk/samsung/clk-exynos5250.c
+> +++ b/drivers/clk/samsung/clk-exynos5250.c
+> @@ -62,6 +62,7 @@
+>  #define SRC_CDREX              0x20200
+>  #define PLL_DIV2_SEL           0x20a24
+>  #define GATE_IP_DISP1          0x10928
+> +#define GATE_IP_ACP            0x10000
+>  
+>  /*
+>   * Let each supported clock get a unique id. This id is used to lookup the clock
+> @@ -99,7 +100,7 @@ enum exynos5250_clks {
+>         spi2, i2s1, i2s2, pcm1, pcm2, pwm, spdif, ac97, hsi2c0, hsi2c1, hsi2c2,
+>         hsi2c3, chipid, sysreg, pmu, cmu_top, cmu_core, cmu_mem, tzpc0, tzpc1,
+>         tzpc2, tzpc3, tzpc4, tzpc5, tzpc6, tzpc7, tzpc8, tzpc9, hdmi_cec, mct,
+> -       wdt, rtc, tmu, fimd1, mie1, dsim0, dp, mixer, hdmi,
+> +       wdt, rtc, tmu, fimd1, mie1, dsim0, dp, mixer, hdmi, g2d,
+>  
+>         nr_clks,
+>  };
+> @@ -152,6 +153,7 @@ static __initdata unsigned long exynos5250_clk_regs[] = {
+>         SRC_CDREX,
+>         PLL_DIV2_SEL,
+>         GATE_IP_DISP1,
+> +       GATE_IP_ACP,
+>  };
+>  
+>  /* list of all parent clock list */
+> @@ -463,6 +465,7 @@ struct samsung_gate_clock exynos5250_gate_clks[] __initdata = {
+>         GATE(dp, "dp", "aclk200", GATE_IP_DISP1, 4, 0, 0),
+>         GATE(mixer, "mixer", "aclk200", GATE_IP_DISP1, 5, 0, 0),
+>         GATE(hdmi, "hdmi", "aclk200", GATE_IP_DISP1, 6, 0, 0),
+> +       GATE(g2d, "g2d", "aclk200", GATE_IP_ACP, 3, 0, 0),
+>  };
+>  
+>  static __initdata struct of_device_id ext_clk_match[] = {
+> -- 
+> 1.7.9.5
