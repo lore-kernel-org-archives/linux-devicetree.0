@@ -1,71 +1,38 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v11] reset: Add driver for gpio-controlled reset pins
-Date: Fri, 26 Jul 2013 23:30:01 +0200
-Message-ID: <51F2EA59.8010908@gmail.com>
-References: <1374834384-8071-1-git-send-email-p.zabel@pengutronix.de>
- <51F2E4A7.1040200@codethink.co.uk>
+From: David Brown <davidb@codeaurora.org>
+Subject: Re: [PATCH v2] tty: serial: Add initial MSM UART High Speed Lite
+ driver
+Date: Fri, 26 Jul 2013 14:50:23 -0700
+Message-ID: <20130726215023.GA1470@codeaurora.org>
+References: <1374476749-12763-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51F2E4A7.1040200@codethink.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Arnd Bergmann <arnd@arndb.de>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1374476749-12763-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: gregkh@linuxfoundation.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, jslaby@suse.cz, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mrana@codeaurora.org, sambley@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/2013 11:05 PM, Ben Dooks wrote:
-> On 26/07/13 11:26, Philipp Zabel wrote:
->> This driver implements a reset controller device that toggle a gpio
->> connected to a reset pin of a peripheral IC. The delay between assertion
->> and de-assertion of the reset signal can be configured via device tree.
->>
->> Signed-off-by: Philipp Zabel<p.zabel@pengutronix.de>
->> Reviewed-by: Stephen Warren<swarren@nvidia.com>
+On Mon, Jul 22, 2013 at 10:05:48AM +0300, Ivan T. Ivanov wrote:
+>From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 >
-> [snip]
+>This is a tty driver with console support for Qualcomm's UART
+>controllers found in the MSM8974 chipsets. Driver is completely
+>based on implementation found in codeaurora.org msm_serial_hs_lite
+>with Android dependences removed. Other changes include, moved to
+>device managed resources and few cleanups.
 >
->> +static struct of_device_id gpio_reset_dt_ids[] = {
->> + { .compatible = "gpio-reset" },
->> + { }
->> +};
->
-> I think you need the following:
-> MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids);
+>Driver functionality was tested in LEGACY_HSUART and BLSP_HSUART mode.
 
-It's already there, at bottom of the file. But if I'm not mistaken
-the common practice is to keep it together with the actual array
-definition. At least that's the case with, e.g. EXPORT_SYMBOL*.
+Ivan, do we need this driver with the fixes Stephen Boyd posted that
+are supposed to fix the problems with the existing msm_serial.c
+driver?  If a single driver can correctly support both devices, that
+seems like a better solution to me.
 
->> +static struct platform_driver gpio_reset_driver = {
->> + .probe = gpio_reset_probe,
->> + .remove = gpio_reset_remove,
->> + .driver = {
->> + .name = "gpio-reset",
->> + .owner = THIS_MODULE,
->> + .of_match_table = of_match_ptr(gpio_reset_dt_ids),
->> + },
->> +};
->> +
->> +module_platform_driver(gpio_reset_driver);
->> +
->> +MODULE_AUTHOR("Philipp Zabel<p.zabel@pengutronix.de>");
->> +MODULE_DESCRIPTION("gpio reset controller");
+David
 
-nit: shouldn't gpio be capitalized ?
-
->> +MODULE_LICENSE("GPL");
->> +MODULE_ALIAS("platform:gpio-reset");
->> +MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids);
-
---
-Regards,
-Sylwester
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
