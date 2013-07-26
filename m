@@ -1,206 +1,230 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 1/2] pinctrl: pinconf_generic: add utility functions for add map/configs
-Date: Fri, 26 Jul 2013 15:45:53 +0530
-Message-ID: <1374833754-19659-2-git-send-email-ldewangan@nvidia.com>
-References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v4] media: i2c: tvp7002: add OF support
+Date: Fri, 26 Jul 2013 12:09:20 +0200
+Message-ID: <51F24AD0.1050808@xs4all.nl>
+References: <1374162866-14981-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, linus.walleij@linaro.org
-Cc: rob.herring@calxeda.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, swarren@nvidia.com, devicetree@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1374162866-14981-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some of pincontrol driver needs the utility function to create map
-list. The utility function needed for adding mux, configs etc.
+Hi Prabhakar,
 
-In place of duplicating this in each driver, add the common utility
-function in pin_conf and use from device specific driver. This will
-reduce the duplicating of code across drivers.
+On 07/18/2013 05:54 PM, Lad, Prabhakar wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+> 
+> add OF support for the tvp7002 driver.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> ---
+>  This patch depends on https://patchwork.kernel.org/patch/2828800/
+>  
+>  Changes for v4:
+>  1: Improved descrition of end point properties.
+> 
+>  Changes for v3:
+>  1: Fixed review comments pointed by Sylwester.
+> 
+>  .../devicetree/bindings/media/i2c/tvp7002.txt      |   53 ++++++++++++++++
+>  drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
+>  2 files changed, 113 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> new file mode 100644
+> index 0000000..1d00935
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> @@ -0,0 +1,53 @@
+> +* Texas Instruments TV7002 video decoder
+> +
+> +The TVP7002 device supports digitizing of video and graphics signal in RGB and
+> +YPbPr color space.
+> +
+> +Required Properties :
+> +- compatible : Must be "ti,tvp7002"
+> +
+> +Optional Properties:
+> +- hsync-active: HSYNC Polarity configuration for the bus. Default value when
+> +  this property is not specified is <0>.
+> +
+> +- vsync-active: VSYNC Polarity configuration for the bus. Default value when
+> +  this property is not specified is <0>.
+> +
+> +- pclk-sample: Clock polarity of the bus. Default value when this property is
+> +  not specified is <0>.
+> +
+> +- sync-on-green-active: Active state of Sync-on-green signal property of the
+> +  endpoint.
+> +  0 = Normal Operation (Default)
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- drivers/pinctrl/pinconf-generic.c       |  105 +++++++++++++++++++++++++++++++
- include/linux/pinctrl/pinconf-generic.h |   52 +++++++++++++++
- 2 files changed, 157 insertions(+), 0 deletions(-)
+I would extend this a little bit:
 
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index 8594f03..d9eae95 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -236,4 +236,109 @@ out:
- 	kfree(cfg);
- 	return ret;
- }
-+
-+int pinconf_generic_reserve_map(struct device *dev,
-+		struct pinctrl_map **map, unsigned *reserved_maps,
-+		unsigned *num_maps, unsigned reserve)
-+{
-+	unsigned old_num = *reserved_maps;
-+	unsigned new_num = *num_maps + reserve;
-+	struct pinctrl_map *new_map;
-+
-+	if (old_num >= new_num)
-+		return 0;
-+
-+	new_map = krealloc(*map, sizeof(*new_map) * new_num, GFP_KERNEL);
-+	if (!new_map) {
-+		dev_err(dev, "krealloc(map) failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	memset(new_map + old_num, 0, (new_num - old_num) * sizeof(*new_map));
-+
-+	*map = new_map;
-+	*reserved_maps = new_num;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pinconf_generic_reserve_map);
-+
-+int pinconf_generic_add_map_mux(struct pinctrl_map **map,
-+		unsigned *reserved_maps, unsigned *num_maps,
-+		const char *group, const char *function)
-+{
-+	if (WARN_ON(*num_maps == *reserved_maps))
-+		return -ENOSPC;
-+
-+	(*map)[*num_maps].type = PIN_MAP_TYPE_MUX_GROUP;
-+	(*map)[*num_maps].data.mux.group = group;
-+	(*map)[*num_maps].data.mux.function = function;
-+	(*num_maps)++;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pinconf_generic_add_map_mux);
-+
-+int pinconf_generic_add_map_configs(struct device *dev,
-+		struct pinctrl_map **map, unsigned *reserved_maps,
-+		unsigned *num_maps, const char *group,
-+		unsigned long *configs, unsigned num_configs)
-+{
-+	unsigned long *dup_configs;
-+
-+	if (WARN_ON(*num_maps == *reserved_maps))
-+		return -ENOSPC;
-+
-+	dup_configs = kmemdup(configs, num_configs * sizeof(*dup_configs),
-+			      GFP_KERNEL);
-+	if (!dup_configs) {
-+		dev_err(dev, "kmemdup(configs) failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	(*map)[*num_maps].type = PIN_MAP_TYPE_CONFIGS_GROUP;
-+	(*map)[*num_maps].data.configs.group_or_pin = group;
-+	(*map)[*num_maps].data.configs.configs = dup_configs;
-+	(*map)[*num_maps].data.configs.num_configs = num_configs;
-+	(*num_maps)++;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pinconf_generic_add_map_configs);
-+
-+int pinconf_generic_add_config(struct device *dev, unsigned long **configs,
-+		      unsigned *num_configs, unsigned long config)
-+{
-+	unsigned old_num = *num_configs;
-+	unsigned new_num = old_num + 1;
-+	unsigned long *new_configs;
-+
-+	new_configs = krealloc(*configs, sizeof(*new_configs) * new_num,
-+			       GFP_KERNEL);
-+	if (!new_configs) {
-+		dev_err(dev, "krealloc(configs) failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	new_configs[old_num] = config;
-+
-+	*configs = new_configs;
-+	*num_configs = new_num;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pinconf_generic_add_config);
-+
-+void pinconf_generic_dt_free_map(struct pinctrl_dev *pctldev,
-+		      struct pinctrl_map *map, unsigned num_maps)
-+{
-+	int i;
-+
-+	for (i = 0; i < num_maps; i++)
-+		if (map[i].type == PIN_MAP_TYPE_CONFIGS_GROUP)
-+			kfree(map[i].data.configs.configs);
-+
-+	kfree(map);
-+}
-+EXPORT_SYMBOL_GPL(pinconf_generic_dt_free_map);
-+
- #endif
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index bf7e989..694ea5c 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -137,6 +137,58 @@ static inline unsigned long pinconf_to_config_packed(enum pin_config_param param
- 	return PIN_CONF_PACKED(param, argument);
- }
- 
-+int pinconf_generic_reserve_map(struct device *dev,
-+		struct pinctrl_map **map, unsigned *reserved_maps,
-+		unsigned *num_maps, unsigned reserve);
-+
-+int pinconf_generic_add_map_mux(struct pinctrl_map **map,
-+		unsigned *reserved_maps, unsigned *num_maps,
-+		const char *group, const char *function);
-+
-+int pinconf_generic_add_map_configs(struct device *dev,
-+		struct pinctrl_map **map, unsigned *reserved_maps,
-+		unsigned *num_maps, const char *group,
-+		unsigned long *configs, unsigned num_configs);
-+
-+int pinconf_generic_add_config(struct device *dev, unsigned long **configs,
-+		unsigned *num_configs, unsigned long config);
-+
-+void pinconf_generic_dt_free_map(struct pinctrl_dev *pctldev,
-+		struct pinctrl_map *map, unsigned num_maps);
-+#else
-+static inline int pinconf_generic_reserve_map(struct device *dev,
-+		struct pinctrl_map **map, unsigned *reserved_maps,
-+		unsigned *num_maps, unsigned reserve)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int pinconf_generic_add_map_mux(struct pinctrl_map **map,
-+		unsigned *reserved_maps, unsigned *num_maps,
-+		const char *group, const char *function)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int pinconf_generic_add_map_configs(struct device *dev,
-+		struct pinctrl_map **map, unsigned *reserved_maps,
-+		unsigned *num_maps, const char *group,
-+		unsigned long *configs, unsigned num_configs)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int pinconf_generic_add_config(struct device *dev,
-+		unsigned long **configs, unsigned *num_configs,
-+		unsigned long config)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline void pinconf_generic_dt_free_map(struct pinctrl_dev *pctldev,
-+		struct pinctrl_map *map, unsigned num_maps)
-+{
-+}
- #endif /* CONFIG_GENERIC_PINCONF */
- 
- #endif /* __LINUX_PINCTRL_PINCONF_GENERIC_H */
--- 
-1.7.1.1
+  0 = Normal Operation (Active Low, Default)
+
+> +  1 = Inverted operation
+> +
+> +- field-even-active: Active-high Field ID output polarity control of the bus.
+> +  Under normal operation, the field ID output is set to logic 1 for an odd field
+> +  (field 1)and set to logic 0 for an even field (field 0).
+
+Add space before 'and'.
+
+> +  0 = Normal operation (default)
+> +  1 = FID output polarity inverted
+> +
+> +For further reading of port node refer Documentation/devicetree/bindings/media/
+> +video-interfaces.txt.
+> +
+> +Example:
+> +
+> +	i2c0@1c22000 {
+> +		...
+> +		...
+> +		tvp7002@5c {
+> +			compatible = "ti,tvp7002";
+> +			reg = <0x5c>;
+> +
+> +			port {
+> +				tvp7002_1: endpoint {
+> +					hsync-active = <1>;
+> +					vsync-active = <1>;
+> +					pclk-sample = <0>;
+> +					sync-on-green-active = <1>;
+> +					field-even-active = <0>;
+> +				};
+> +			};
+> +		};
+> +		...
+> +	};
+> diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
+> index f6b1f3f..24a08fa 100644
+> --- a/drivers/media/i2c/tvp7002.c
+> +++ b/drivers/media/i2c/tvp7002.c
+> @@ -35,6 +35,8 @@
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-common.h>
+>  #include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-of.h>
+> +
+>  #include "tvp7002_reg.h"
+>  
+>  MODULE_DESCRIPTION("TI TVP7002 Video and Graphics Digitizer driver");
+> @@ -943,6 +945,48 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
+>  	.pad = &tvp7002_pad_ops,
+>  };
+>  
+> +static struct tvp7002_config *
+> +tvp7002_get_pdata(struct i2c_client *client)
+> +{
+> +	struct v4l2_of_endpoint bus_cfg;
+> +	struct tvp7002_config *pdata;
+> +	struct device_node *endpoint;
+> +	unsigned int flags;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
+> +		return client->dev.platform_data;
+> +
+> +	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> +	if (!endpoint)
+> +		return NULL;
+> +
+> +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		goto done;
+> +
+> +	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
+> +	flags = bus_cfg.bus.parallel.flags;
+> +
+> +	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> +		pdata->hs_polarity = 1;
+> +
+> +	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
+> +		pdata->vs_polarity = 1;
+> +
+> +	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> +		pdata->clk_polarity = 1;
+> +
+> +	if (flags & V4L2_MBUS_FIELD_EVEN_HIGH)
+> +		pdata->fid_polarity = 1;
+> +
+> +	if (flags & V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH)
+> +		pdata->sog_polarity = 1;
+> +
+> +done:
+> +	of_node_put(endpoint);
+> +	return pdata;
+> +}
+> +
+>  /*
+>   * tvp7002_probe - Probe a TVP7002 device
+>   * @c: ptr to i2c_client struct
+> @@ -954,32 +998,32 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
+>   */
+>  static int tvp7002_probe(struct i2c_client *c, const struct i2c_device_id *id)
+>  {
+> +	struct tvp7002_config *pdata = tvp7002_get_pdata(c);
+>  	struct v4l2_subdev *sd;
+>  	struct tvp7002 *device;
+>  	struct v4l2_dv_timings timings;
+>  	int polarity_a;
+>  	int polarity_b;
+>  	u8 revision;
+> -
+>  	int error;
+>  
+> +	if (pdata == NULL) {
+> +		dev_err(&c->dev, "No platform data\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	/* Check if the adapter supports the needed features */
+>  	if (!i2c_check_functionality(c->adapter,
+>  		I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
+>  		return -EIO;
+>  
+> -	if (!c->dev.platform_data) {
+> -		v4l_err(c, "No platform data!!\n");
+> -		return -ENODEV;
+> -	}
+> -
+>  	device = devm_kzalloc(&c->dev, sizeof(struct tvp7002), GFP_KERNEL);
+>  
+>  	if (!device)
+>  		return -ENOMEM;
+>  
+>  	sd = &device->sd;
+> -	device->pdata = c->dev.platform_data;
+> +	device->pdata = pdata;
+>  	device->current_timings = tvp7002_timings;
+>  
+>  	/* Tell v4l2 the device is ready */
+> @@ -1084,9 +1128,18 @@ static const struct i2c_device_id tvp7002_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, tvp7002_id);
+>  
+> +#if IS_ENABLED(CONFIG_OF)
+> +static const struct of_device_id tvp7002_of_match[] = {
+> +	{ .compatible = "ti,tvp7002", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, tvp7002_of_match);
+> +#endif
+> +
+>  /* I2C driver data */
+>  static struct i2c_driver tvp7002_driver = {
+>  	.driver = {
+> +		.of_match_table = of_match_ptr(tvp7002_of_match),
+>  		.owner = THIS_MODULE,
+>  		.name = TVP7002_MODULE_NAME,
+>  	},
+> 
+
+Regards,
+
+	Hans
