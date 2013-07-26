@@ -1,54 +1,51 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:35731 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759369Ab3GZQDJ (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 12:03:09 -0400
-Date: Fri, 26 Jul 2013 17:02:53 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130726160253.GQ9858@sirena.org.uk>
-References: <20130725164016.GA4027@elgon.mountain>
+Received: from mail-ea0-f178.google.com ([209.85.215.178]:60574 "EHLO
+	mail-ea0-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757384Ab3GZPyI (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 11:54:08 -0400
+Message-ID: <51F29B9A.5080103@gmail.com>
+Date: Fri, 26 Jul 2013 17:54:02 +0200
+From: Daniel Mack <zonque@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cgcPEDKc2RK7mT+z"
-Content-Disposition: inline
+Subject: Re: [alsa-devel] [patch] ASoC: adau1701: type bug with ADAU1707_CLKDIV_UNSET
+References: <20130725164016.GA4027@elgon.mountain>
 In-Reply-To: <20130725164016.GA4027@elgon.mountain>
-Subject: Re: [patch] ASoC: adau1701: type bug with ADAU1707_CLKDIV_UNSET
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Daniel Mack <zonque@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, device-drivers-devel@blackfin.uclinux.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
+Cc: Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, kernel-janitors@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, device-drivers-devel@blackfin.uclinux.org, Grant Likely <grant.likely@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-
---cgcPEDKc2RK7mT+z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jul 25, 2013 at 07:40:17PM +0300, Dan Carpenter wrote:
+On 25.07.2013 18:40, Dan Carpenter wrote:
 > ADAU1707_CLKDIV_UNSET is always compared against an unsigned int and
 > not an unsigned long.  The current tests are always false.
 
-Applied, thanks.
+Well, in my case, sizeof(unsigned int) equals sizeof(unsigned long), so
+it didn't hit me. But it should be fixed of course, thanks for catching.
 
---cgcPEDKc2RK7mT+z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
+Acked-by: Daniel Mack <zonque@gmail.com>
 
-iQIcBAEBAgAGBQJR8p2qAAoJELSic+t+oim9IXwP/1+9FOHIzan33tzY8IeACcaw
-JkVUzc1oa2ZuQ/UXECm/wyS0MU1CeZVIKNIk+FFsGlu+0oBuySv87Z41/wH68mGG
-iWcg7LbKLmQeUM95yr3Gpjwodu1XwnPcSG4grdtMx/uyHpbiSfem32GT3uMupntc
-sXCrHgryTLhngJ1OwvZTQ1fmEApP6WHGdPFsI4VaosW2rzDa737GCn6JpRaEq7Gx
-CN6d2Y2xBWDV9rS67d9Y0Htv5DSmiqW1MaikgCT0eIemxuLedM9RYWWExMaUmiMx
-4oVOd5BMeQTMUsx2brjrh9LqSIq5p8iaz7CyhMpwWKLmW9PzhVsNR/hM8JUVAwLn
-rynFS6t5jQWXmWPnhQkHyDlt6FS7lidOuLqpypatLCwTql1IU2hTI7pnij7AcCoF
-C7CZS0cmwAVCJEmOL5pynJRKSGiMbpqJwM/TMrJPan8sxR4L7u7lhC1RFD5MioAT
-zNebnGjfnRvlphnYSP9kOEfKc8UirkVfjlytPciKOL870+zwkp655MQxCEzBRvCk
-XpPPsFoessOKAwRb6WU8FIuZcR8q6kbfz7IhNTnzsS+CiqezWZdW1K234XpM/Hjl
-pTcIBw/SbC17c3enolL6KkFa1debq96Wy3d70rDfcOGPFxe6KJhjU3CL+awHdEgP
-PxaV3HCGuwh9KCjlj47O
-=cikR
------END PGP SIGNATURE-----
 
---cgcPEDKc2RK7mT+z--
+> 
+> diff --git a/sound/soc/codecs/adau1701.c b/sound/soc/codecs/adau1701.c
+> index 44d8a95..2c10252 100644
+> --- a/sound/soc/codecs/adau1701.c
+> +++ b/sound/soc/codecs/adau1701.c
+> @@ -91,7 +91,7 @@
+>  #define ADAU1701_OSCIPOW_OPD		0x04
+>  #define ADAU1701_DACSET_DACINIT		1
+>  
+> -#define ADAU1707_CLKDIV_UNSET		(-1UL)
+> +#define ADAU1707_CLKDIV_UNSET		(-1U)
+>  
+>  #define ADAU1701_FIRMWARE "adau1701.bin"
+>  
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+> 
+
