@@ -1,56 +1,81 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Fri, 26 Jul 2013 12:26:37 +0200
-Message-ID: <1374834397.4013.15.camel@pizza.hi.pengutronix.de>
-References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
- <20130716015038.GD28375@S2101-09.ap.freescale.net>
- <51E4BF98.8030604@wwwdotorg.org>
- <20130716041056.GA30067@S2101-09.ap.freescale.net>
- <51E56AA7.7020103@wwwdotorg.org>
- <20130717030246.GA4541@S2101-09.ap.freescale.net>
- <51E6CCE4.20705@wwwdotorg.org> <20130717213836.GA13324@amd.pavel.ucw.cz>
- <51E719A6.6070105@wwwdotorg.org> <20130718112555.GB1021@amd.pavel.ucw.cz>
- <CAOesGMgi0j_mPyeBLVHb_QW+DwtAPoFY697eQO3-yp9tnP1vmA@mail.gmail.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [LINUX PATCH RFC v2] trafgen: xilinx: add axi traffic generator
+ driver
+Date: Fri, 26 Jul 2013 14:22:37 +0200
+Message-ID: <51F26A0D.40302@monstr.eu>
+References: <477a2d56-a6f9-455f-b5c7-740ae9e9ba8e@CO1EHSMHS024.ehs.local>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOesGMgi0j_mPyeBLVHb_QW+DwtAPoFY697eQO3-yp9tnP1vmA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Len Brown <len.brown@intel.com>, Stephen Warren <swarren@wwwdotorg.org>, Pavel Machek <pavel@denx.de>, Sascha Hauer <s.hauer@pengutronix.de>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J.
- Wysocki" <rjw@sisk.pl>, Shawn Guo <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="SBtxg3PXtpPiecSBPAI8dSlKUT1hLrI3d"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <477a2d56-a6f9-455f-b5c7-740ae9e9ba8e@CO1EHSMHS024.ehs.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: Srikanth Thokala <srikanth.thokala@xilinx.com>, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@linaro.org, Michal Simek <michal.simek@xilinx.com>, Srikanth Thokala <sthokal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 18.07.2013, 11:45 -0700 schrieb Olof Johansson:
-> Hi,
-> 
-> On Thu, Jul 18, 2013 at 4:25 AM, Pavel Machek <pavel@denx.de> wrote:
-> 
-> > It sound to me like keeping ammount of -EPROBE_DEFER to minimum is
-> > still preferred.
-> 
-> Hand-crafting initcall level ordering of various drivers and subsystem
-> is probably an even greater evil though. We've done it in the past,
-> but now that we have deferred probe we have the option of not having
-> to do it every time, such as this.
-> 
-> You're spending an awful lot of energy arguing over this, but nobody
-> has actually shown data of how much deferral is happening -- and that
-> it's a real problem. Until someone does so there's no reason to change
-> it from the default module init level at all, I'd say.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--SBtxg3PXtpPiecSBPAI8dSlKUT1hLrI3d
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Alright, I've backed out the arch_initcall change and resent the patch.
-If you are fine with that, I'll send you a pull request for this and the
-"reset: allow drivers to request probe deferral" patch.
+Hi Greg and Arnd,
 
-regards
-Philipp
+On 07/20/2013 05:01 PM, Srikanth Thokala wrote:
+> This is the driver for AXI Traffic Generator IP. The AXI
+> Traffic Generator IP is a core that stresses the AXI4
+> interconnect and other AXI4 peripherals in the system.
+> It generates a wide variety of AXI4 transactions based on
+> the core programming.
+>=20
+> Architecture of the core is broadly separated into a master
+> and slave block, each of which contains the write block and
+> read block. Other support functions are provided by the
+> control registers and three internal RAMs - Master RAM,
+> Command RAM, Parameter RAM. The initialisation sequence
+> includes programming Command RAM with commands, data into
+> Master RAM (optional Parameter RAM programming) and then
+> enable master logic using control register interface.
+> This sequence generates traffic to cores connected in the
+> h/w design.
+>=20
+> The driver for this IP is designed to be a module with
+> sysfs interface.  All the control registers and internal
+> RAMs can be accessed through sysfs interface.
+>=20
+> Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> v2: Documented sysfs functions
+
+Do you have any concern about this patch?
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--SBtxg3PXtpPiecSBPAI8dSlKUT1hLrI3d
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlHyag0ACgkQykllyylKDCHI0gCdFnD2oGgbQJa+edIN74pOcnRE
+5JcAn1w1Q9kI7u/8jydL04I+C0/vj739
+=6YRt
+-----END PGP SIGNATURE-----
+
+--SBtxg3PXtpPiecSBPAI8dSlKUT1hLrI3d--
