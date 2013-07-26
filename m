@@ -1,115 +1,41 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:36563 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756379Ab3GZPkT (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 11:40:19 -0400
-Message-ID: <51F2985F.60202@wwwdotorg.org>
-Date: Fri, 26 Jul 2013 09:40:15 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from seldrel01.sonyericsson.com ([212.209.106.2]:5494 "EHLO
+	seldrel01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1755909Ab3GZXYS convert rfc822-to-8bit
+	(ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 26 Jul 2013 19:24:18 -0400
+From: "Bird, Tim" <Tim.Bird@sonymobile.com>
+Date: Sat, 27 Jul 2013 01:21:20 +0200
+Subject: RE: pinctrl and device-tree support in qcom drivers
+Message-ID: <E12ED16DF2DF754897A674F2B0E8F6C446AFF250CE@seldmbx01.corpusers.net>
+References: <E12ED16DF2DF754897A674F2B0E8F6C446AFF250C9@seldmbx01.corpusers.net>,<CACRpkdZgyP1547td+XfjaUJXPEWjzTPyDV2BSjBBkWSSqYYJCQ@mail.gmail.com>
+ <E12ED16DF2DF754897A674F2B0E8F6C446AFF250CA@seldmbx01.corpusers.net>,<51F2B221.5000806@codeaurora.org>
+In-Reply-To: <51F2B221.5000806@codeaurora.org>
+Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 MIME-Version: 1.0
-Subject: Re: [PATCH] drivers/rtc/rtc-palmas.c: support for backup battery
- charging
-References: <1374755343-32573-1-git-send-email-ldewangan@nvidia.com>
-In-Reply-To: <1374755343-32573-1-git-send-email-ldewangan@nvidia.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: akpm@linux-foundation.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, gg@slimlogic.co.uk, kishon@ti.com, Stephen Warren <swarren@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>
+To: hanumant <hanumant@codeaurora.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?iso-8859-1?Q?=22Andersson=2C_Bj=F6rn=22?= <Bjorn.Andersson@sonymobile.com>, David Brown <davidb@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-(CC'ing the new DT binding maintainers and mailing list on this reply,
-hence quoting the whole of the DT binding)
+On Friday, July 26, 2013 10:30 AM, hanumant [hanumant@codeaurora.org] wrote:
+>On 7/25/2013 3:56 PM, Bird, Tim wrote:
+>David can advise on the i2c-qup driver support from Qualcomm.
+>But when that does happen it will use the pinctrl framework to manage
+>the i2c bus lines.
+OK.  Let me know if there's anything I can do to help.
 
-On 07/25/2013 06:29 AM, Laxman Dewangan wrote:
-> Palmas series device like TPS65913, TPS80036 supports the backup battery
-> for powering the RTC when no other energy source is available.
-> 
-> The backup battery is optional, connected to the VBACKUP pin, and can be
-> nonrechargeable or rechargeable. The rechargeable battery can be charged
-> from the system supply using the backup battery charger.
-> 
-> Add support for enabling charging of this backup battery.  Also add the DT
-> binding document and the new properties to have this support.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
->  .../devicetree/bindings/rtc/rtc-palmas.txt         |   28 ++++++++++++++
->  drivers/rtc/rtc-palmas.c                           |   39 ++++++++++++++++++++
->  2 files changed, 67 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-palmas.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-palmas.txt b/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
-> new file mode 100644
-> index 0000000..e4b6910
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
-> @@ -0,0 +1,28 @@
-> +Palmas RTC controller bindings
-> +
-> +Required properties:
-> +- compatible:
-> +  - "ti,palams-rtc" for palma series of the RTC controller
-> +- interrupt-parent: Parent interrupt device, must be handle of palams node.
-> +- interrupts: Interrupt number of RTC submodule on device.
-> +
-> +Optional properties:
-> +- ti,back-bat-chg-enable: The palmas series device like TPS65913 or TPS80036
-> +	supports the battery backup for powering the RTC when main battery is
-> +	removed or in very low power state. This flag will enable the backup
-> +	battery charging.
-> +- ti,back-bat-chg-current: Configure charging current. Device supports the
-> +	charging current as < 100mA or >100mA.
+>
+>I will try to push through the pinctrl patch as quickly as possible.
+>Right now as Linus mentioned, its waiting for his review.
 
-Does the HW support just two options; less-than or greater-than 100mA?
-If so, a Boolean property here might be better. The code below certainly
-implies this.
+Thanks.
 
-Given there's only 1 battery, I think "back-" is redundant in the
-property names. Since that shortens the names a bit, I'd suggest
-spelling everything out in full, perhaps:
+>For your vibrator module, do you only rely on the i2c bus lines or
+>do you also need some pins as reset or interrupt line?
 
-battery-charge-enable
-battery-charge-low-current
-
-Both Boolean.
-
-> +Example:
-> +	palmas: tps65913@58 {
-> +		:::::::::::
-
-"..." is probably more common than lots of colons, or you could just
-delete this line.
-
-> +		palmas_rtc: rtc {
-> +			compatible = "ti,palmas-rtc";
-> +			interrupt-parent = <&palmas>;
-> +			interrupts = <8 0>;
-> +			ti,back-bat-chg-enable;
-> +			ti,back-bat-chg-current = <100>;
-> +		};
-> +		:::::::::::
-> +	};
-
-> diff --git a/drivers/rtc/rtc-palmas.c b/drivers/rtc/rtc-palmas.c
-
-> @@ -238,6 +238,19 @@ static int palmas_rtc_probe(struct platform_device *pdev)
-
-> +		ret = of_property_read_u32(pdev->dev.of_node,
-> +					"ti,back-bat-chg-current", &pval);
-> +		if (!ret)
-> +			bb_charging_current = pval;
-
-Do you need to validate that pval is one of the legal values?
-
-> @@ -254,6 +267,32 @@ static int palmas_rtc_probe(struct platform_device *pdev)
->  	palmas_rtc->dev = &pdev->dev;
->  	platform_set_drvdata(pdev, palmas_rtc);
->  
-> +	if (enable_bb_charging) {
-> +		unsigned reg = 0;
-> +
-> +		if (bb_charging_current < 100)
-> +			reg |= PALMAS_BACKUP_BATTERY_CTRL_BBS_BBC_LOW_ICHRG;
-
-This implies that a Boolean property would be a better representation of HW.
+It only relies on the i2c bus lines.  So, once the other stuff is
+in place, it should drop right in.
+ -- Tim
