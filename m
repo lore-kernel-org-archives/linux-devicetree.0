@@ -1,60 +1,134 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:60101 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755325Ab3GZQf6 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 12:35:58 -0400
-Date: Fri, 26 Jul 2013 17:35:28 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130726163528.GS9858@sirena.org.uk>
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:49830 "EHLO
+	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1756785Ab3GZPxE (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Fri, 26 Jul 2013 11:53:04 -0400
+Date: Fri, 26 Jul 2013 16:52:57 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] drivers/rtc/rtc-palmas.c: support for backup battery
+ charging
+Message-ID: <20130726155257.GB3528@e106331-lin.cambridge.arm.com>
 References: <1374755343-32573-1-git-send-email-ldewangan@nvidia.com>
  <51F2985F.60202@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OwXA+KufQS8ol7Xv"
-Content-Disposition: inline
-In-Reply-To: <51F2985F.60202@wwwdotorg.org>
-Subject: Re: [PATCH] drivers/rtc/rtc-palmas.c: support for backup battery
- charging
-Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, akpm@linux-foundation.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, gg@slimlogic.co.uk, kishon@ti.com, Stephen Warren <swarren@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>
-List-ID: <devicetree@vger.kernel.org>
-
-
---OwXA+KufQS8ol7Xv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <51F2985F.60202@wwwdotorg.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, Stephen Warren <swarren@nvidia.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>
+List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jul 26, 2013 at 09:40:15AM -0600, Stephen Warren wrote:
+On Fri, Jul 26, 2013 at 04:40:15PM +0100, Stephen Warren wrote:
+> (CC'ing the new DT binding maintainers and mailing list on this reply,
+> hence quoting the whole of the DT binding)
 
+Thanks Stephen.
+
+> 
+> On 07/25/2013 06:29 AM, Laxman Dewangan wrote:
+> > Palmas series device like TPS65913, TPS80036 supports the backup battery
+> > for powering the RTC when no other energy source is available.
+> > 
+> > The backup battery is optional, connected to the VBACKUP pin, and can be
+> > nonrechargeable or rechargeable. The rechargeable battery can be charged
+> > from the system supply using the backup battery charger.
+> > 
+> > Add support for enabling charging of this backup battery.  Also add the DT
+> > binding document and the new properties to have this support.
+> > 
+> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> > ---
+> >  .../devicetree/bindings/rtc/rtc-palmas.txt         |   28 ++++++++++++++
+> >  drivers/rtc/rtc-palmas.c                           |   39 ++++++++++++++++++++
+> >  2 files changed, 67 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-palmas.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/rtc-palmas.txt b/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
+> > new file mode 100644
+> > index 0000000..e4b6910
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
+> > @@ -0,0 +1,28 @@
+> > +Palmas RTC controller bindings
+> > +
+> > +Required properties:
+> > +- compatible:
+> > +  - "ti,palams-rtc" for palma series of the RTC controller
+> > +- interrupt-parent: Parent interrupt device, must be handle of palams node.
+> > +- interrupts: Interrupt number of RTC submodule on device.
+> > +
+> > +Optional properties:
+> > +- ti,back-bat-chg-enable: The palmas series device like TPS65913 or TPS80036
+> > +	supports the battery backup for powering the RTC when main battery is
+> > +	removed or in very low power state. This flag will enable the backup
+> > +	battery charging.
+
+Perhaps "ti,has-rechargeable-battery" would be better, as this describes
+the hardware rather than an intent relating to it.
+
+> > +- ti,back-bat-chg-current: Configure charging current. Device supports the
+> > +	charging current as < 100mA or >100mA.
+
+Are either of these values unsafe or unsupported in some configurations?
+
+> 
+> Does the HW support just two options; less-than or greater-than 100mA?
+> If so, a Boolean property here might be better. The code below certainly
+> implies this.
+> 
 > Given there's only 1 battery, I think "back-" is redundant in the
 > property names. Since that shortens the names a bit, I'd suggest
 > spelling everything out in full, perhaps:
+> 
+> battery-charge-enable
+> battery-charge-low-current
+> 
+> Both Boolean.
+> 
+> > +Example:
+> > +	palmas: tps65913@58 {
+> > +		:::::::::::
+> 
+> "..." is probably more common than lots of colons, or you could just
+> delete this line.
+> 
+> > +		palmas_rtc: rtc {
+> > +			compatible = "ti,palmas-rtc";
+> > +			interrupt-parent = <&palmas>;
+> > +			interrupts = <8 0>;
+> > +			ti,back-bat-chg-enable;
+> > +			ti,back-bat-chg-current = <100>;
+> > +		};
+> > +		:::::::::::
+> > +	};
+> 
+> > diff --git a/drivers/rtc/rtc-palmas.c b/drivers/rtc/rtc-palmas.c
+> 
+> > @@ -238,6 +238,19 @@ static int palmas_rtc_probe(struct platform_device *pdev)
+> 
+> > +		ret = of_property_read_u32(pdev->dev.of_node,
+> > +					"ti,back-bat-chg-current", &pval);
+> > +		if (!ret)
+> > +			bb_charging_current = pval;
+> 
+> Do you need to validate that pval is one of the legal values?
+> 
+> > @@ -254,6 +267,32 @@ static int palmas_rtc_probe(struct platform_device *pdev)
+> >  	palmas_rtc->dev = &pdev->dev;
+> >  	platform_set_drvdata(pdev, palmas_rtc);
+> >  
+> > +	if (enable_bb_charging) {
+> > +		unsigned reg = 0;
+> > +
+> > +		if (bb_charging_current < 100)
+> > +			reg |= PALMAS_BACKUP_BATTERY_CTRL_BBS_BBC_LOW_ICHRG;
+> 
+> This implies that a Boolean property would be a better representation of HW.
+> 
 
-Isn't there an integrated charger on the PMIC?  If there is then it's
-useful to identify which is being talked about (even if it should be
-relatively obvious).
+Otherwise, +1 to Stephen's comments.
 
---OwXA+KufQS8ol7Xv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR8qVNAAoJELSic+t+oim9OD0P/jwcu1Kn8OG4dhN4NX1S44xG
-1s/yXTl4jVmPkKy7M1x+tkzoJk0m4Qkb40QIv5QlI89Ni2mu0sJUKo+ATF8Gb2NT
-+O7dDe/Ho2V0BdwkbT7dc8N7EvQTdTTq0YscwsqIZjOmYJ5qzWKrurcbHIlQAVte
-TwLFPHgIU/6TsapdD56eVckss9oeYaqWdmxa34bt8nM2tacvqjX3Z/ZfkTJrRr75
-FyEzVokphF5BX60ZBsWNqJt39juyRogL+yxA41FJ1JZT83H4gWrJBqlCE3w+0ht8
-rogD5q7Yoq9uRCDBeoxjxjXks6xUrwUkYI/JU6CYvjMh4Cn7FgclXciyxhS9Kl3K
-1A94mIhpt0oaCFezy4CqHKKrTyAZQiX0EW0clINUrsPD5SdKWMVBCkl1GPFLOkB8
-V1kZfXFZgvf79c+DYOfy+ENHvwPZ9rvmIHTO8SmrQqKtDNPI2dLYAh8GDZlgzr/E
-mT3706XxLT5GPY++Y4cZ9avB//PDiLjp8Gmg0dNoUCpyEucTqINd+b8Pp62ElRHz
-sdeEhXhz2ZqPGVlhm/Zxi1kfpmFayqoHvscj6ZrWR3NEphZpcAc2IVNrxfrE5TsA
-vN2oc9s8y0eDFsknw2juECwoT8t5u2sdaflLO7K3G8NjmyxNSTT9MnCOKNj6JGof
-morhUEPTCPPVnj1g7wA0
-=naha
------END PGP SIGNATURE-----
-
---OwXA+KufQS8ol7Xv--
+Thanks,
+Mark.
