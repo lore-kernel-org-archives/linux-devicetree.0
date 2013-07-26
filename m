@@ -1,125 +1,61 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ch1ehsobe004.messaging.microsoft.com ([216.32.181.184]:8686
-	"EHLO ch1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751803Ab3GXGVb (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 24 Jul 2013 02:21:31 -0400
-From: <hongbo.zhang@freescale.com>
-Subject: [PATCH v5 1/4] DMA: Freescale: revise device tree binding document
-Date: Wed, 24 Jul 2013 14:21:06 +0800
-Message-ID: <1374646870-5162-2-git-send-email-hongbo.zhang@freescale.com>
-In-Reply-To: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
-References: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:58697 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756558Ab3GZKdA (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 06:33:00 -0400
+Date: Fri, 26 Jul 2013 11:32:50 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130726103250.GX9858@sirena.org.uk>
+References: <20130725111357.7c976963@armhf>
+ <20130725191059.GO9858@sirena.org.uk>
+ <20130726082818.480d2a02@armhf>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="x9eD2RskteXOQWXz"
+Content-Disposition: inline
+In-Reply-To: <20130726082818.480d2a02@armhf>
+Subject: Re: [PATCH 2/4] ASoc: kirkwood: simplify probe error
 Sender: devicetree-owner@vger.kernel.org
-To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Russell King <rmk+kernel@arm.linux.org.uk>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
 
-This patch updates the discription of each type of DMA controller and its
-channels, it is preparation for adding another new DMA controller binding, it
-also fixes some defects of indent for text alignment at the same time.
+--x9eD2RskteXOQWXz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
----
- .../devicetree/bindings/powerpc/fsl/dma.txt        |   52 +++++++++-----------
- 1 file changed, 24 insertions(+), 28 deletions(-)
+On Fri, Jul 26, 2013 at 08:28:18AM +0200, Jean-Francois Moine wrote:
+> Mark Brown <broonie@kernel.org> wrote:
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-index 2a4b4bc..ed703d9 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-@@ -1,33 +1,31 @@
--* Freescale 83xx DMA Controller
-+* Freescale DMA Controllers
- 
--Freescale PowerPC 83xx have on chip general purpose DMA controllers.
-+** Freescale Elo DMA Controller
-+   This is a little-endian DMA controller, used in Freescale mpc83xx series
-+   chips such as mpc8315, mpc8349, mpc8379 etc.
- 
- Required properties:
- 
--- compatible        : compatible list, contains 2 entries, first is
--		 "fsl,CHIP-dma", where CHIP is the processor
--		 (mpc8349, mpc8360, etc.) and the second is
--		 "fsl,elo-dma"
-+- compatible        : must include "fsl,elo-dma", and a "fsl,CHIP-dma" is
-+                      optional, where CHIP is the processor name.
- - reg               : <registers mapping for DMA general status reg>
--- ranges		: Should be defined as specified in 1) to describe the
--		  DMA controller channels.
-+- ranges            : describes the mapping between the address space of the
-+                      DMA channels and the address space of the DMA controller.
- - cell-index        : controller index.  0 for controller @ 0x8100
- - interrupts        : <interrupt mapping for DMA IRQ>
- - interrupt-parent  : optional, if needed for interrupt mapping
- 
--
- - DMA channel nodes:
--        - compatible        : compatible list, contains 2 entries, first is
--			 "fsl,CHIP-dma-channel", where CHIP is the processor
--			 (mpc8349, mpc8350, etc.) and the second is
--			 "fsl,elo-dma-channel". However, see note below.
-+        - compatible        : must include "fsl,elo-dma-channel", and a
-+                              "fsl,CHIP-dma-channel" is optional, where CHIP is
-+                              the processor name, However, see note below.
-         - reg               : <registers mapping for channel>
-         - cell-index        : dma channel index starts at 0.
- 
- Optional properties:
-         - interrupts        : <interrupt mapping for DMA channel IRQ>
--			  (on 83xx this is expected to be identical to
--			   the interrupts property of the parent node)
-+                              (on 83xx this is expected to be identical to
-+                              the interrupts property of the parent node)
-         - interrupt-parent  : optional, if needed for interrupt mapping
- 
- Example:
-@@ -70,27 +68,25 @@ Example:
- 		};
- 	};
- 
--* Freescale 85xx/86xx DMA Controller
--
--Freescale PowerPC 85xx/86xx have on chip general purpose DMA controllers.
-+** Freescale EloPlus DMA Controller
-+   This is DMA controller with extended addresses and chaining, mainly used in
-+   Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as mpc8540, mpc8641
-+   p4080, bsc9131 etc.
- 
- Required properties:
- 
--- compatible        : compatible list, contains 2 entries, first is
--		 "fsl,CHIP-dma", where CHIP is the processor
--		 (mpc8540, mpc8540, etc.) and the second is
--		 "fsl,eloplus-dma"
-+- compatible        : must include "fsl,eloplus-dma", and a "fsl,CHIP-dma" is
-+                      optional, where CHIP is the processor name.
- - reg               : <registers mapping for DMA general status reg>
- - cell-index        : controller index.  0 for controller @ 0x21000,
-                                          1 for controller @ 0xc000
--- ranges		: Should be defined as specified in 1) to describe the
--		  DMA controller channels.
-+- ranges            : describes the mapping between the address space of the
-+                      DMA channels and the address space of the DMA controller
- 
- - DMA channel nodes:
--        - compatible        : compatible list, contains 2 entries, first is
--			 "fsl,CHIP-dma-channel", where CHIP is the processor
--			 (mpc8540, mpc8560, etc.) and the second is
--			 "fsl,eloplus-dma-channel". However, see note below.
-+        - compatible        : must include "fsl,eloplus-dma-channel", and a
-+                              "fsl,CHIP-dma-channel" is optional, where CHIP is
-+                              the processor name, However, see note below.
-         - cell-index        : dma channel index starts at 0.
-         - reg               : <registers mapping for channel>
-         - interrupts        : <interrupt mapping for DMA channel IRQ>
--- 
-1.7.9.5
+> > This seems fine but doesn't apply against current code but otherwise
+> > seems fine.
 
+> My base is 3.11-rc2.
 
+Always submit against where the code will be applied - -next in this
+case.
 
+--x9eD2RskteXOQWXz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR8lBPAAoJELSic+t+oim9zmkP/iAVMMZdWXAVm7B+SvNMPfqG
+Iwa7wsV6m83cXPzGisvS4rIIL1ygbtZBnfoKYJE8uq+QDgFd/lBGQlGYkBkbWhYt
+EqhXkHT47Be9b9CmfOI0tfe29WJbk1goubqz/no5Nb3fpuOBxtmUVdiEo5cHyFcf
+Y/1iYIVwafYN5lJLHa5B7C1aOkPDhVN0GkMdWQDBnVnNwA66MXbNjuvz5+BwRoij
+c7JpI2PHDtDjYypNu6cRaMBHKo2+BR+dTz4X4bKVXFfuFGCX6YsXk2SiXgAEEzqs
+6OBQ+bZ9iDdYFRI1zFwe1SI20Xtofn3vph4SrqQP/FmH1kWCGoNap3pReRQb5/ZT
+jo9ryNwORUKY7O3iEp+bcwmqlp+vPsfMXI1v+pF6PCQ6RScrgjNAhZeXOTIX6xiV
+TGbYWDtE90THit0nVscvJWhRzOq6T0TszJgZP8oY9bAe2IhptIyJ5aMtgRYlFbZp
+ZAlh3YU+tORHiR8wVwsak0ygSQXssb1zVpoqdR64Q7p2OriR35etnbgkE4aMjRdC
+5rH0FuSJw+8+hTdPHihWtiScFdpHfKLr4D/LtbeRJ8R4UXXYynvyPjiHpvSfr+ad
+x2A0riLmmhfBIH/Fob3kEvCMBLSYqQbvVgg1ApkNfv3erXXykAG59Rw/ci6XYtP/
+R6TrfBpPf9PUQjLDIXy7
+=X1z7
+-----END PGP SIGNATURE-----
+
+--x9eD2RskteXOQWXz--
