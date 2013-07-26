@@ -1,70 +1,49 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:46509 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756108Ab3GZWnL (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 18:43:11 -0400
-Date: Fri, 26 Jul 2013 23:42:44 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130726224244.GZ9858@sirena.org.uk>
-References: <1374781320-10793-1-git-send-email-vpalatin@chromium.org>
- <20130725200343.GV9858@sirena.org.uk>
- <2074197.ld4vucf8Ke@flatron>
+Received: from mail-bk0-f49.google.com ([209.85.214.49]:48612 "EHLO
+	mail-bk0-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933149Ab3GZUyR (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 16:54:17 -0400
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH] regulator: read low power states configuration from device tree
+Date: Fri, 26 Jul 2013 22:54:10 +0200
+Message-ID: <2074197.ld4vucf8Ke@flatron>
+In-Reply-To: <20130725200343.GV9858@sirena.org.uk>
+References: <1374781320-10793-1-git-send-email-vpalatin@chromium.org> <20130725200343.GV9858@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8cD+samFMzS4KXm7"
-Content-Disposition: inline
-In-Reply-To: <2074197.ld4vucf8Ke@flatron>
-Subject: Re: [PATCH] regulator: read low power states configuration from
- device tree
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
+To: Mark Brown <broonie@kernel.org>
 Cc: Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Olof Johansson <olofj@chromium.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+On Thursday 25 of July 2013 21:03:43 Mark Brown wrote:
+> On Thu, Jul 25, 2013 at 12:42:00PM -0700, Vincent Palatin wrote:
+> > +- regulator-suspend-disk-microvolt: voltage applied when entering S2D
+> > +- regulator-suspend-disk-disabled: turn off when entering S2D
+> > +- regulator-suspend-mem-microvolt: voltage applied when entering S2M
+> > +- regulator-suspend-mem-disabled: turn off when entering S2M
+> > +- regulator-suspend-standby-microvolt: voltage applied when entering
+> > standby +- regulator-suspend-standby-disabled: turn off when entering
+> > standby
+> The reason this isn't in device tree at the minute is that suspend to
+> disk and suspend to RAM are somewhat Linux specific concepts and the
+> whole thing gets more and more dynamic as time moves forwards with the
+> suspend state for practical systems depending on the instantaneous
+> device state prior to entering suspend and the bits that are fixed often
+> involving sequencing elements and so on which get fixed in hardware
+> and/or bootloader.  Do you have practical systems where this is needed?
 
---8cD+samFMzS4KXm7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We do have such boards at Samsung. Actually I made a similar patch for our 
+internal tree.
 
-On Fri, Jul 26, 2013 at 10:54:10PM +0200, Tomasz Figa wrote:
+> It's also not clear to me hat the -disabled properties make sense; if we
+> have properties for the state when enabled I'd expect them to allow
+> things to be marked as enabled or disabled (with don't touch as the
+> default).
 
-> > The reason this isn't in device tree at the minute is that suspend to
-> > disk and suspend to RAM are somewhat Linux specific concepts and the
-> > whole thing gets more and more dynamic as time moves forwards with the
-> > suspend state for practical systems depending on the instantaneous
-> > device state prior to entering suspend and the bits that are fixed often
-> > involving sequencing elements and so on which get fixed in hardware
-> > and/or bootloader.  Do you have practical systems where this is needed?
++1
 
-> We do have such boards at Samsung. Actually I made a similar patch for ou=
-r=20
-> internal tree.
+Best regards,
+Tomasz
 
-Do you have more details on what exactly is happening with this stuff
-and why it isn't dynamic.  Like I say suspend to disk seems relatively
-easy but suspend to RAM gets a bit tricky these days.
-
---8cD+samFMzS4KXm7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR8vthAAoJELSic+t+oim9id0QAJFrll9BBgzfSoputIYQb/3W
-rCTzGWSC0rwXfInrbIHqRvzUZz8sK3wTsnSF6KXMkAxGEWF7Lecv8XZvUkxhaPtb
-i1g5/9qVri7pZTuAeAq49+CjdSSPdSpOrfzdDmegIGzuqI2koE+DRcavD2/GI+sK
-cPMUqLneapkn9ydElFgE4sfsXj+2H9/NT/eb3tTBEEMWfILQt6A3HuGtkoMbLIRp
-vKbeogA/hS1Z1dn4rjYRfj//IJfkvdkXm4zSlrXfJm+CmpOlJ92y2FtYizk/2HMi
-sanE8jhhkRMUQes7tZyublUEpom6GX6WySbolETMkTj+xkElAVDgbMUfu5gO6G3C
-p0qtY2On1LnLHvvK7GOLyE47kNUbp/AFcMAzlpeZiCfdPgXuklztEtnBG0LmoOmU
-RMU+pls/EAFDHpn41aT4exOUbIavj3t7/5wZ9kLK8Coiq416Vljfa7jBDQ5D+qVE
-fJ+0TBrKjyvGYqHtY3UNnyxSIf2Ad0jayJzk2g/4ViMzxwNv7EljVTFLWtOl0MMH
-Ng1IkF+IZzrctZktFlgMPKn31WJUl3WKhKjTMk7aLuk1D5tBJP5LDusIDjMyllYb
-74nIV3X0CW2hVS2hKfYYdVddDDVa7XKRT55b+IxK/hpra9EkMIGmD0KsHcOKpt7x
-zzoDuCZAjbzxwzEsKV6t
-=sGal
------END PGP SIGNATURE-----
-
---8cD+samFMzS4KXm7--
