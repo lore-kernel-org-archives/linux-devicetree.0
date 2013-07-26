@@ -1,227 +1,82 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-wi0-f173.google.com ([209.85.212.173]:61615 "EHLO
-	mail-wi0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932101Ab3GVQa5 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 22 Jul 2013 12:30:57 -0400
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:37738 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757148Ab3GZK7C (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 06:59:02 -0400
+Date: Fri, 26 Jul 2013 11:58:31 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130726105831.GA9858@sirena.org.uk>
+References: <20130725111428.419ee278@armhf>
+ <20130725191604.GQ9858@sirena.org.uk>
+ <20130725225816.GG24642@n2100.arm.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <CAB=otbR-n7f=O3+YTPnfO6wRWz2aEcUnbjHoD746GsNgFW3tzQ@mail.gmail.com>
-References: <1374235814-17834-1-git-send-email-ruslan.bilovol@ti.com>
-	<51E948F0.4070307@ti.com>
-	<CAB=otbR-n7f=O3+YTPnfO6wRWz2aEcUnbjHoD746GsNgFW3tzQ@mail.gmail.com>
-Date: Mon, 22 Jul 2013 19:30:55 +0300
-Message-ID: <CAB=otbSCzM8U=tJBseeA0MXcmrnp7v_9mj7=hq0=nRUGhYm2mA@mail.gmail.com>
-Subject: Re: [PATCH] arm: dts: twl6030: typical connection to omap4 as a
- separate dtsi file
-From: Ruslan Bilovol <ruslan.bilovol@ti.com>
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="nGKiHl1eSywcUu0Z"
+Content-Disposition: inline
+In-Reply-To: <20130725225816.GG24642@n2100.arm.linux.org.uk>
+Subject: Re: [PATCH 3/4] ASoc: kirkwood: merge kirkwood-i2c and kirkwood-dma
 Sender: devicetree-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: benoit.cousson@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, uri.y@variscite.com
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Jean-Francois Moine <moinejf@free.fr>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Also CCing correct devicetree list that was changed recently
 
-On Mon, Jul 22, 2013 at 7:24 PM, Ruslan Bilovol <ruslan.bilovol@ti.com> wrote:
-> Hi Nishanth,
->
-> On Fri, Jul 19, 2013 at 5:10 PM, Nishanth Menon <nm@ti.com> wrote:
->>
->> On 07/19/2013 07:10 AM, Ruslan Bilovol wrote:
->>>
->>> The OMAP4 SoC family uses specially-designed
->>> PMIC (power management IC) companion chip for power
->>> management needs: TWL6030/TWL6032.
->>> Therefore there is a typical connection of PMIC to OMAP4
->>> so we can figure it out into separate .dtsi file
->>> and do not duplicate over board-specific files.
->>>
->>> Tested on OMAP4 SDP board and compile-tested for Panda board
->>>
->>> Signed-off-by: Ruslan Bilovol <ruslan.bilovol@ti.com>
->>> ---
->>>   arch/arm/boot/dts/omap4-panda-common.dtsi |   21 +---------------
->>>   arch/arm/boot/dts/omap4-sdp.dts           |   21 +---------------
->>>   arch/arm/boot/dts/twl6030_omap4.dtsi      |   38
->>> +++++++++++++++++++++++++++++
->>
->> arch/arm/boot/dts/omap4-var-som.dts ?
->
-> There is no muxing for TWL6030 in that file at all, so I didn't add it.
-> Moreover, that file seems to be not maintained since added (just
-> generic fixes or framework changes that came to all other files)
-> Second thing - I do not have schematics and HW for verification.
-> But if somebody from Variscite can confirm that omap4 is typically
-> connected to PMIC, I'm happy to add it as separate patch.
-> So I CCed Uri Yosef who is original author of the omap4-var-som.dts
->
-> Regards,
-> Ruslan
->
->>
->>>   3 files changed, 40 insertions(+), 40 deletions(-)
->>>   create mode 100644 arch/arm/boot/dts/twl6030_omap4.dtsi
->>>
->>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi
->>> b/arch/arm/boot/dts/omap4-panda-common.dtsi
->>> index faa95b5..d796302 100644
->>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
->>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
->>> @@ -109,23 +109,9 @@
->>>         };
->>>   };
->>>
->>> -&omap4_pmx_wkup {
->>> -       pinctrl-names = "default";
->>> -       pinctrl-0 = <
->>> -                       &twl6030_wkup_pins
->>> -       >;
->>> -
->>> -       twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
->>> -               pinctrl-single,pins = <
->>> -                       0x14 (PIN_OUTPUT | MUX_MODE2)           /*
->>> fref_clk0_out.sys_drm_msecure */
->>> -               >;
->>> -       };
->>> -};
->>> -
->>>   &omap4_pmx_core {
->>>         pinctrl-names = "default";
->>>         pinctrl-0 = <
->>> -                       &twl6030_pins
->>>                         &twl6040_pins
->>>                         &mcpdm_pins
->>>                         &mcbsp1_pins
->>> @@ -134,12 +120,6 @@
->>>                         &hsusbb1_pins
->>>         >;
->>>
->>> -       twl6030_pins: pinmux_twl6030_pins {
->>> -               pinctrl-single,pins = <
->>> -                       0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)
->>> /* sys_nirq1.sys_nirq1 */
->>> -               >;
->>> -       };
->>> -
->>>         twl6040_pins: pinmux_twl6040_pins {
->>>                 pinctrl-single,pins = <
->>>                         0xe0 (PIN_OUTPUT | MUX_MODE3)   /*
->>> hdq_sio.gpio_127 */
->>> @@ -265,6 +245,7 @@
->>>   };
->>>
->>>   #include "twl6030.dtsi"
->>> +#include "twl6030_omap4.dtsi"
->>>
->>>   &i2c2 {
->>>         pinctrl-names = "default";
->>> diff --git a/arch/arm/boot/dts/omap4-sdp.dts
->>> b/arch/arm/boot/dts/omap4-sdp.dts
->>> index 7951b4e..91030c3 100644
->>> --- a/arch/arm/boot/dts/omap4-sdp.dts
->>> +++ b/arch/arm/boot/dts/omap4-sdp.dts
->>> @@ -142,23 +142,9 @@
->>>         };
->>>   };
->>>
->>> -&omap4_pmx_wkup {
->>> -       pinctrl-names = "default";
->>> -       pinctrl-0 = <
->>> -                       &twl6030_wkup_pins
->>> -       >;
->>> -
->>> -       twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
->>> -               pinctrl-single,pins = <
->>> -                       0x14 (PIN_OUTPUT | MUX_MODE2)           /*
->>> fref_clk0_out.sys_drm_msecure */
->>> -               >;
->>> -       };
->>> -};
->>> -
->>>   &omap4_pmx_core {
->>>         pinctrl-names = "default";
->>>         pinctrl-0 = <
->>> -                       &twl6030_pins
->>>                         &twl6040_pins
->>>                         &mcpdm_pins
->>>                         &dmic_pins
->>> @@ -193,12 +179,6 @@
->>>                 >;
->>>         };
->>>
->>> -       twl6030_pins: pinmux_twl6030_pins {
->>> -               pinctrl-single,pins = <
->>> -                       0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)
->>> /* sys_nirq1.sys_nirq1 */
->>> -               >;
->>> -       };
->>> -
->>>         twl6040_pins: pinmux_twl6040_pins {
->>>                 pinctrl-single,pins = <
->>>                         0xe0 (PIN_OUTPUT | MUX_MODE3)           /*
->>> hdq_sio.gpio_127 */
->>> @@ -337,6 +317,7 @@
->>>   };
->>>
->>>   #include "twl6030.dtsi"
->>> +#include "twl6030_omap4.dtsi"
->>>
->>>   &i2c2 {
->>>         pinctrl-names = "default";
->>> diff --git a/arch/arm/boot/dts/twl6030_omap4.dtsi
->>> b/arch/arm/boot/dts/twl6030_omap4.dtsi
->>> new file mode 100644
->>> index 0000000..a4fa570
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/twl6030_omap4.dtsi
->>> @@ -0,0 +1,38 @@
->>> +/*
->>> + * Copyright (C) 2013 Texas Instruments Incorporated -
->>> http://www.ti.com/
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + */
->>> +
->>> +&twl {
->>> +       /*
->>> +        * On most OMAP4 platforms, the twl6030 IRQ line is connected
->>> +        * to the SYS_NIRQ1 line on OMAP and the twl6030 MSECURE line is
->>> +        * connected to the fref_clk0_out.sys_drm_msecure line.
->>> +        * Therefore, configure the defaults for the SYS_NIRQ1 and
->>> +        * fref_clk0_out.sys_drm_msecure pins here.
->>> +        */
->>> +       pinctrl-names = "default";
->>> +       pinctrl-0 = <
->>> +               &twl6030_pins
->>> +               &twl6030_wkup_pins
->>> +       >;
->>> +};
->>> +
->>> +&omap4_pmx_wkup {
->>> +       twl6030_wkup_pins: pinmux_twl6030_wkup_pins {
->>> +               pinctrl-single,pins = <
->>> +                       0x14 (PIN_OUTPUT | MUX_MODE2)           /*
->>> fref_clk0_out.sys_drm_msecure */
->>> +               >;
->>> +       };
->>> +};
->>> +
->>> +&omap4_pmx_core {
->>> +       twl6030_pins: pinmux_twl6030_pins {
->>> +               pinctrl-single,pins = <
->>> +                       0x15e (WAKEUP_EN | PIN_INPUT_PULLUP | MUX_MODE0)
->>> /* sys_nirq1.sys_nirq1 */
->>> +               >;
->>> +       };
->>> +};
->>>
->>
->>
->> --
->> Regards,
->> Nishanth Menon
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--nGKiHl1eSywcUu0Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Jul 25, 2013 at 11:58:16PM +0100, Russell King - ARM Linux wrote:
+> On Thu, Jul 25, 2013 at 08:16:04PM +0100, Mark Brown wrote:
+
+> > This seems mostly fine, though it may be best to keep kirkwood-dma as a
+> > separate module for the benefit of the S/PDIF support when it gets added
+> > - I had a look at the implementation Russell has and it looks like it
+> > can be added as a separate interface.
+
+> You wouldn't want I2S and SPDIF to be separate modules though - they're
+> the same hardware but different output stream formatters attached to the
+> DMA FIFO output.  Don't forget the requirements concerning the simultaneous
+> use of I2S and SPDIF - these "output formatters" must both be enabled and
+> disabled in unison when concurrent use is required - both bits must be
+> set or cleared together with a single register write.
+
+OK, I knew they both needed to know about each other and to share some
+stuff but I figured it was reasonable to compile out the S/PDIF support
+if only using I2S or similar - so long as they're coupled at runtime it
+should be fine.
+
+> > Should the name be done as dev_name() for the interface (I don't know if
+> > there is ever more than one)?
+
+> Getting away from "kirkwood-i2s" would be sensible, because it may not be
+> just "i2s" in this hardware block.  The documentation calls this an "audio
+> controller" but I guess "kirkwood-pcm" would be a reasonable compromise,
+> even though it has a separate AC'97 block which could also be construed
+> as being "pcm".
+
+I was thinking just pick a name at runtime based on what was doing the
+instantiation which would avoid hard coding anything in the DMA driver.
+
+--nGKiHl1eSywcUu0Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR8lZUAAoJELSic+t+oim9EkAP/iXAJ6qaN8lVBm4Jvq0uZqO6
+dn8feNjZc472gdpbFDctl4dGu1TIqPzyOYBLhQof7yui71Z0QURMtIWXeYovDUfh
+Z5nG+/N5YSZfm0W5HDbM1sDNk3Y8fIeF8jTUpZ+JVboplBMBk36O9L/KRb/zARYu
+CVc+MWVd8s3g9XPM+EodQ8YbsC6Gdm9pm+ixpllPJ3zK3Ed83gonJ5unByWLHMwX
+qkSmw+3/ceEtv+1kYLVSOeh4TDkYTH4MB0Hs5VxvA0JMIv12ztcEarR3A8zrW6MS
+8tsg1XvJc/uQkeKYQCa3o8vkHMIyb9WRSCETylIzxfrq3X79HdbPxSvHGeGnl4Tf
+/Xs160V0dT1QrQX56QGsOipQNULJPks5QlVuk4jeqsmtS7oxIbeUXvmn9WbOo+r8
+h4jcqUtWBW0zrr+vlJ6d3IGumDaDpN+v2OFiXhDXuKCBvYe6AnjQjkiT2LKrk/Eq
+b6OPGUflsYpBOLNshEWjhD8uvDZ5RB4IUu4q91lsgAE4E2UC8LRt7+kmW9cFnipF
+66tShXKvSWVoIBAQ0Hagkp9kFpCJScco4LFekhg2/x73I7zD2AyE6jSc6tusvBq7
+BrLZeSe/fMY3PhFvy1g8GDaGnm/FBOpzGbjyhrihE33nSyREZiWRqnkDri1w0T/y
+wk8uFpFxhW6wiggxPxVy
+=jYt7
+-----END PGP SIGNATURE-----
+
+--nGKiHl1eSywcUu0Z--
