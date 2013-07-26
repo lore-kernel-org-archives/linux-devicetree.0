@@ -1,104 +1,129 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
-Date: Fri, 26 Jul 2013 10:05:14 -0600
-Message-ID: <51F29E3A.6060202@wwwdotorg.org>
-References: <20130626115051.GC7095@ab42.lan> <51CB279A.1090404@wwwdotorg.org> <20130705094859.GA27196@ab42.lan> <51D71337.6030409@wwwdotorg.org> <20130708130222.GA6402@ab42.lan> <51DDB5B8.5060909@wwwdotorg.org> <20130716084755.GB10914@ab42.lan> <51E56EF3.5040506@wwwdotorg.org> <20130718160700.GA14482@ab42.lan> <51E847EA.9060302@wwwdotorg.org> <20130726094228.GA3232@ab42.lan>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] iio: mxs-lradc: add scale_available file to channels
+Date: Fri, 26 Jul 2013 17:13:02 +0100
+Message-ID: <d838f30e-30ca-49ca-a9f3-ebf4e523c7eb@email.android.com>
+References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com> <1374501843-19651-5-git-send-email-hector.palacios@digi.com> <51EE4300.7070802@metafoo.de> <51EE8445.6070603@digi.com> <51F276D8.9090906@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130726094228.GA3232@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51F276D8.9090906-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/2013 03:42 AM, Christian Ruppert wrote:
-> On Thu, Jul 18, 2013 at 01:54:18PM -0600, Stephen Warren wrote:
->> On 07/18/2013 10:07 AM, Christian Ruppert wrote:
->> ...
->>> Well, perhaps my definition of "inside"/"outside" pins was not quite
->>> clear: The pin groups define the set of (kernel internal) pin numbers of
->>> "outside" pins which are used by pin controller to map a given
->>> interface. Inside pins are not numbered and the inside interfaces are
->>> only used to determine which outside pins are part of the same group
->>> (namely those for which the pin controller hardware provides a mux
->>> connection to the same inside interface):
->>>
->>>                        4
->>>                 4  /|--/-- SPI
->>>    PINS[0..3] --/--||  4
->>>                    \|--/-- GPIO[0..3]
->>>
->>>                    4
->>>    PINS[4..7] -----/------ GPIO[4..7]
->>>
->>>                        2
->>>                 2  /|--/-- I2C
->>>    PINS[8..9] --/--||  2
->>>                    \|--/-- GPIO[8..9]
->>>
->>> Pins 0..3 are in the SPI group because on the "inside" they can be muxed
->>> to the SPI interface.
->>> Pins 8..9 are in the I2C group because on the "inside" they can be muxed
->>> to the I2C interface.
->>> Pins 0..9 are in the GPIO group because on the "inside" they can be
->>> muxed to the GPIO controller.
->>>
->>> All pin numbers are relative to the "outside", however, or conflict
->>> management would not be possible. I hope this is more understandable
->>> than my previous explanations.
->>> Both muxes are controlled by the same register. In our overly simplistic
->>> example this is not strictly necessary but in reality you might have pin
->>> conflicts between the different interfaces.
->>
->> Same register, or same field/bits in that register?
->>
->> If it's the same field/bits, I would expect to see the following pin groups:
->>
->> 1) PINS[0..3], PINS[8..9]
->> 2) PINS[4..7]
->>
->> ... since those are the things that are independently muxable.
->> Otherwise, I'd expect to see the following groups:
->>
->> 1) PINS[0..3]
->> 2) PINS[4..7]
->> 3) PINS[8..9]
->>
->>> After the discussion we had so far I'm not so sure if extending the
->>> pinctrl system with this kind of features is a very good idea.
->>
->> That makes things simple:-)
->>
->> One thing I still don't understand; in a previous mail, you'd mentioned
->> 3 DT properties for configuring the pinmux; one represented the pin
->> group, one represented the mux function that was selected for that pin
->> group, and there was a third ("config"?) property. I still don't
->> understand that third property. I only see pins/pingroups and mux
->> functions in the diagram I quoted above.
-> 
-> In my proposal, pin groups represent interfaces instead of ports: All
-> three pin groups are configured through the same bit field in the same
-> register but they represent _logically_ independent functionalities.
 
-Oh, that's a pretty "coupled" HW design!
 
-I would suggest having a single pin group for all 10 pins (since that's
-what HW really has). I imagine with that HW design, there's very little
-potential for any kind of dynamic pin-muxing, since it would affect
-multiple unrelated HW modules (I2C, SPI), and hence the co-ordination
-required for dynamic muxing would make it impractical. As such I would
-also specify the pinctrl configuration as a "hog" in the pin controller,
-since each configuration bit affects multiple other devices, so it
-doesn't make logical sense to try to specify the pinctrl configuration
-anywhere other than the pin controller.
+Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>On 23/07/2013 15:25, Hector Palacios wrote:
+>> Dear Lars,
+>>
+>> On 07/23/2013 10:46 AM, Lars-Peter Clausen wrote:
+>>> On 07/22/2013 04:04 PM, Hector Palacios wrote:
+>>> [...]
+>>>>
+>>>> +static ssize_t mxs_lradc_show_scale_available_ch(struct device
+>*dev,
+>>>> +        struct device_attribute *attr,
+>>>> +        char *buf,
+>>>> +        int ch)
+>>>> +{
+>>>> +    struct iio_dev *iio = dev_to_iio_dev(dev);
+>>>> +    struct mxs_lradc *lradc = iio_priv(iio);
+>>>> +    int i, len = 0;
+>>>> +
+>>>> +    for (i = 0; i < ARRAY_SIZE(lradc->scale_avail[ch]); i++)
+>>>> +        len += sprintf(buf + len, "%d.%09u ",
+>>>> +                   lradc->scale_avail[ch][i].integer,
+>>>> +                   lradc->scale_avail[ch][i].nano);
+>>>> +
+>>>> +    len += sprintf(buf + len, "\n");
+>>>> +
+>>>> +    return len;
+>>>> +}
+>>>> +
+>>>> +static ssize_t mxs_lradc_show_scale_available(struct device *dev,
+>>>> +        struct device_attribute *attr,
+>>>> +        char *buf)
+>>>> +{
+>>>> +    struct iio_dev_attr *iio_attr = to_iio_dev_attr(attr);
+>>>> +
+>>>> +    return mxs_lradc_show_scale_available_ch(dev, attr, buf,
+>>>> +                         iio_attr->address);
+>>>> +}
+>>>> +
+>>>> +#define SHOW_SCALE_AVAILABLE_ATTR(ch)                    \
+>>>> +static IIO_DEVICE_ATTR(in_voltage##ch##_scale_available, S_IRUGO, 
+>  \
+>>>> +               mxs_lradc_show_scale_available, NULL, ch)
+>>>> +
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(0);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(1);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(2);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(3);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(4);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(5);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(6);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(7);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(8);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(9);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(10);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(11);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(12);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(13);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(14);
+>>>> +SHOW_SCALE_AVAILABLE_ATTR(15);
+>>>> +
+>>>> +static struct attribute *mxs_lradc_attributes[] = {
+>>>> +    &iio_dev_attr_in_voltage0_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage1_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage2_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage3_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage4_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage5_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage6_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage7_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage8_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage9_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage10_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage11_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage12_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage13_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage14_scale_available.dev_attr.attr,
+>>>> +    &iio_dev_attr_in_voltage15_scale_available.dev_attr.attr,
+>>>> +    NULL
+>>>> +};
+>>>
+>>> This should really be using the iio_chan_spec_ext_info
+>>> infrastructure. Bonus
+>>> points for factoring out the common code used to calculate and
+>>> display the
+>>> scales.
+>>
+>> I perfectly understand. Sadly, I don't currently have the time and
+>> expertise to try to work this out the proper way. It already took
+>much
+>> longer than expected to have this driver toggle a divider flag.
+>>
+>> I'd appreciate if anyone wishes to complete this job.
+>> @Alexander, please feel free to submit your other temp patch without
+>> waiting for this one.
+>>
+>
+>Maybe, we can get the patch set as is and do further clean up later.
+>Anyway, that driver is still in staging, right ?
+>
+>As said, I'm willing to propose something for the scale calculation.
 
-> The three DT properties are:
-> 
-> 1. interface (which pins are we actually interested in when requesting
->    this)
-> 2. port (which bit field/register is used to configure this)
-> 3. configuration of that port (which mux function(s) in that bit
->    field/register are possible to make the interface available)
+My thoughts exactly. Long term plans include generic handling of available attributes for the whole of IIO.
 
+It will take me a little while to catch up my backlog though!
+
+Jonathan
+
+
+
+-- 
+Sent from my Android phone with K-9 Mail. Please excuse my brevity.
