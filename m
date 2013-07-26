@@ -1,37 +1,29 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:50353 "EHLO
-	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1757043Ab3GZQ0N (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Fri, 26 Jul 2013 12:26:13 -0400
-Date: Fri, 26 Jul 2013 17:26:06 +0100
-From: Mark Rutland <mark.rutland@arm.com>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <51F29A4D.6010307@gmail.com>
+Date: Fri, 26 Jul 2013 10:48:29 -0500
+From: Rob Herring <robherring2@gmail.com>
+MIME-Version: 1.0
 Subject: Re: [PATCH 5/5] sata, highbank: send extra clock cycles in SGPIO
  patterns
-Message-ID: <20130726162606.GE3528@e106331-lin.cambridge.arm.com>
-References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
- <1374851518-4802-5-git-send-email-mark.langsdorf@calxeda.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com> <1374851518-4802-5-git-send-email-mark.langsdorf@calxeda.com>
 In-Reply-To: <1374851518-4802-5-git-send-email-mark.langsdorf@calxeda.com>
-Sender: devicetree-owner@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 To: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Cc: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jul 26, 2013 at 04:11:58PM +0100, Mark Langsdorf wrote:
+On 07/26/2013 10:11 AM, Mark Langsdorf wrote:
 > Some SGPIO PICs don't follow the standard very well and expect a
 > certain number of clock cycles or port frames in each SGPIO pattern.
 > Add two optional parameters in the DTB that can provide the number of
 > extra clock cycles to be sent before and after each SGPIO pattern.
 > Read those parameters from the DTB and send the extra clock cycles.
-
-Is this likely to be very variable, or something we can device based on
-a compatible string?
-
 > 
 > Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
+
+Acked-by: Rob Herring <rob.herring@calxeda.com>
+
 > ---
 >  Documentation/devicetree/bindings/ata/sata_highbank.txt |  4 ++++
 >  drivers/ata/sata_highbank.c                             | 16 +++++++++++++---
@@ -110,9 +102,7 @@ a compatible string?
 >  						pdata->n_ports);
 > +	of_property_read_u32(np, "calxeda,pre-clocks", &pdata->pre_clocks);
 > +	of_property_read_u32(np, "calxeda,post-clocks", &pdata->post_clocks);
-
-Are the pdata values initialised anywhere if those dt properties aren't
-present? It's not clear from the patch context.
-
-Thanks,
-Mark.
+>  
+>  	/* store em_loc */
+>  	hpriv->em_loc = 0;
+> 
