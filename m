@@ -1,162 +1,82 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp.codeaurora.org ([198.145.11.231]:43496 "EHLO
-	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758587Ab3GaAFd (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 30 Jul 2013 20:05:33 -0400
-From: Abhimanyu Kapur <abhimany@codeaurora.org>
-Subject: [PATCH] drivers: power: reset: add msm restart support
-Date: Tue, 30 Jul 2013 17:05:28 -0700
-Message-Id: <1375229128-32226-1-git-send-email-abhimany@codeaurora.org>
+Received: from mail-qe0-f52.google.com ([209.85.128.52]:63712 "EHLO
+	mail-qe0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756502Ab3GZAcY (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 20:32:24 -0400
+Received: by mail-qe0-f52.google.com with SMTP id cz11so621551qeb.11
+        for <devicetree@vger.kernel.org>; Thu, 25 Jul 2013 17:32:23 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <3356224.pISrcKET7X@amdc1227>
+References: <1374658699-3961-1-git-send-email-l.krishna@samsung.com>
+	<1374658699-3961-2-git-send-email-l.krishna@samsung.com>
+	<3356224.pISrcKET7X@amdc1227>
+Date: Thu, 25 Jul 2013 17:32:23 -0700
+Message-ID: <CAD=FV=U+S__hkbtWDAb5Ezkw0jJ6-tJLFKQPx4KpbvqHfFJnAg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] watchdog: s3c2410_wdt: parse watchdog dt node to read
+ PMU registers adresses
+From: Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Anton Vorontsov <anton@enomsg.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Wim Van Sebroeck <wim@iguana.be>, devicetree@vger.kernel.org, Olof Johansson <olof@lixom.net>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for restart and poweroff functionality present on MSM
-chipsets with the MPM2 ps-hold hardware.
+Tomasz,
 
-Signed-off-by: Abhimanyu Kapur <abhimany@codeaurora.org>
----
- .../bindings/power_supply/msm-poweroff.txt         | 17 +++++
- drivers/power/reset/Kconfig                        |  6 ++
- drivers/power/reset/Makefile                       |  1 +
- drivers/power/reset/msm-poweroff.c                 | 75 ++++++++++++++++++++++
- 4 files changed, 99 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power_supply/msm-poweroff.txt
- create mode 100644 drivers/power/reset/msm-poweroff.c
+On Thu, Jul 25, 2013 at 3:27 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+> Hi Leela,
+>
+> On Wednesday 24 of July 2013 15:08:17 Leela Krishna Amudala wrote:
+>> This patch parses the watchdog node to read pmu wdt sys registers
+>> addresses and do mask/unmask enable/disable of WDT in probe and s2r
+>> scenarios.
+>>
+>> Reviewed-by: Doug Anderson <dianders@chromium.org>
+>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+>> ---
+>>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   14 ++++-
+>>  drivers/watchdog/s3c2410_wdt.c                     |   56
+>> ++++++++++++++++++++ 2 files changed, 69 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>> b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt index
+>> 2aa486c..4c798e3 100644
+>> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>> @@ -7,8 +7,20 @@ occurred.
+>>  Required properties:
+>>  - compatible : should be "samsung,s3c2410-wdt"
+>>  - reg : base physical address of the controller and length of memory
+>> mapped -      region.
+>> +     region and the optional (addresses and length of memory mapped regions
+>> +     of) PMU registers for masking/unmasking WDT.
+>>  - interrupts : interrupt number to the cpu.
+>
+> I don't think PMU registers should be passed like this, even if USB PHY
+> driver currently does it - it needs to be fixed. Every time you are mapping
+> a single 4-byte register, you are creating new mapping for the whole page
+> (4K) containing it. In addition, this makes the WDT driver map IO memory
+> that does not belong to the IP block it handles, which is not nice.
+>
+> I would suggest looking into regmap helpers to implement a driver for the
+> PMU that can share PMU registers with interested drivers.
 
-diff --git a/Documentation/devicetree/bindings/power_supply/msm-poweroff.txt b/Documentation/devicetree/bindings/power_supply/msm-poweroff.txt
-new file mode 100644
-index 0000000..ce44ad3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power_supply/msm-poweroff.txt
-@@ -0,0 +1,17 @@
-+MSM Restart Driver
-+
-+A power supply hold (ps-hold) bit is set to power the msm chipsets.
-+Clearing that bit allows us to restart/poweroff. The difference
-+between poweroff and restart is determined by unique power manager IC
-+settings.
-+
-+Required Properties:
-+-compatible: "qcom,pshold"
-+-reg: Specifies the physical address of the ps-hold register
-+
-+Example:
-+
-+	restart@fc4ab000 {
-+		compatible = "qcom,pshold";
-+		reg = <0xfc4ab000 0x4>;
-+	};
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index 349e9ae..e7bcf1d 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -14,6 +14,12 @@ config POWER_RESET_GPIO
- 	  If your board needs a GPIO high/low to power down, say Y and
- 	  create a binding in your devicetree.
- 
-+config POWER_RESET_MSM
-+	bool "Qualcomm MSM power-off driver"
-+	depends on POWER_RESET && ARCH_MSM
-+	help
-+	  Power off and restart support for Qualcomm boards.
-+
- config POWER_RESET_QNAP
- 	bool "QNAP power-off driver"
- 	depends on OF_GPIO && POWER_RESET && PLAT_ORION
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 372807f..b82288e 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
-+obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
- obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
- obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
- obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
-diff --git a/drivers/power/reset/msm-poweroff.c b/drivers/power/reset/msm-poweroff.c
-new file mode 100644
-index 0000000..c461fe4
---- /dev/null
-+++ b/drivers/power/reset/msm-poweroff.c
-@@ -0,0 +1,75 @@
-+/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/reboot.h>
-+
-+#include <asm/system_misc.h>
-+
-+static void __iomem *msm_ps_hold;
-+
-+static void do_msm_restart(enum reboot_mode reboot_mode, const char *cmd)
-+{
-+	writel(0, msm_ps_hold);
-+	mdelay(10000);
-+}
-+
-+static void do_msm_poweroff(void)
-+{
-+	/* TODO: Add poweroff capability */
-+
-+	do_msm_restart(REBOOT_HARD, NULL);
-+}
-+
-+static int msm_restart_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *mem;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	msm_ps_hold = devm_ioremap_resource(dev, mem);
-+	if (IS_ERR(msm_ps_hold))
-+		return PTR_ERR(msm_ps_hold);
-+
-+	pm_power_off = do_msm_poweroff;
-+	arm_pm_restart = do_msm_restart;
-+	return 0;
-+}
-+
-+static const struct of_device_id of_msm_restart_match[] = {
-+	{ .compatible = "qcom,pshold", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, of_msm_restart_match);
-+
-+static struct platform_driver msm_restart_driver = {
-+	.probe = msm_restart_probe,
-+	.driver = {
-+		.name = "msm-restart",
-+		.of_match_table = of_match_ptr(of_msm_restart_match),
-+	},
-+};
-+
-+static int __init msm_restart_init(void)
-+{
-+	return platform_driver_register(&msm_restart_driver);
-+}
-+device_initcall(msm_restart_init);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+We've done this in some other drivers as well.  I remember someone
+suggested that this was fine when I posted the change to the ADC
+driver for something similar.
 
+Do you really think it's worth adding a level of abstraction here?
+The argument I remember in the past was that it was fine as long as
+the register itself was used only by this driver.
+
+If we want to do as you say, we'll have to figure out whether you want
+to create a new generic interface for this or reuse an existing one.
+You could kinda think of these bits as enabling power, so you could
+use the regulator framework.  ...but that framework often gets abused.
+
+Olof: I think I got your advice when I did the ADC work.  Do you have
+any advice here?
+
+Thanks!
+
+-Doug
