@@ -1,118 +1,157 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] iio: mxs-lradc: add scale_available file to channels
-Date: Fri, 26 Jul 2013 15:17:12 +0200
-Message-ID: <51F276D8.9090906@free-electrons.com>
-References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com> <1374501843-19651-5-git-send-email-hector.palacios@digi.com> <51EE4300.7070802@metafoo.de> <51EE8445.6070603@digi.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [RESEND PATCH V1 1/9] cpufreq: cpufreq-cpu0: add dt node parsing
+ for 'needs-cooling'
+Date: Fri, 26 Jul 2013 09:27:10 -0400
+Message-ID: <51F2792E.2060301@ti.com>
+References: <1374074248-31690-1-git-send-email-eduardo.valentin@ti.com> <1374074248-31690-2-git-send-email-eduardo.valentin@ti.com> <36180776.zbN9qNcjis@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51EE8445.6070603-i7dp0qKlBMg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="e5RuxGNAJE5XqC7EoHja7LRJ5mviribGX"
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <36180776.zbN9qNcjis@vostro.rjw.lan>
+Sender: cpufreq-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, devicetree-discuss@lists.ozlabs.org, wni@nvidia.com, l.stach@pengutronix.de, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, lm-sensors@lm-sensors.org, Viresh Kumar <viresh.kumar@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, cpufreq@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/07/2013 15:25, Hector Palacios wrote:
-> Dear Lars,
->
-> On 07/23/2013 10:46 AM, Lars-Peter Clausen wrote:
->> On 07/22/2013 04:04 PM, Hector Palacios wrote:
->> [...]
->>>
->>> +static ssize_t mxs_lradc_show_scale_available_ch(struct device *dev,
->>> +        struct device_attribute *attr,
->>> +        char *buf,
->>> +        int ch)
->>> +{
->>> +    struct iio_dev *iio = dev_to_iio_dev(dev);
->>> +    struct mxs_lradc *lradc = iio_priv(iio);
->>> +    int i, len = 0;
->>> +
->>> +    for (i = 0; i < ARRAY_SIZE(lradc->scale_avail[ch]); i++)
->>> +        len += sprintf(buf + len, "%d.%09u ",
->>> +                   lradc->scale_avail[ch][i].integer,
->>> +                   lradc->scale_avail[ch][i].nano);
->>> +
->>> +    len += sprintf(buf + len, "\n");
->>> +
->>> +    return len;
->>> +}
->>> +
->>> +static ssize_t mxs_lradc_show_scale_available(struct device *dev,
->>> +        struct device_attribute *attr,
->>> +        char *buf)
->>> +{
->>> +    struct iio_dev_attr *iio_attr = to_iio_dev_attr(attr);
->>> +
->>> +    return mxs_lradc_show_scale_available_ch(dev, attr, buf,
->>> +                         iio_attr->address);
->>> +}
->>> +
->>> +#define SHOW_SCALE_AVAILABLE_ATTR(ch)                    \
->>> +static IIO_DEVICE_ATTR(in_voltage##ch##_scale_available, S_IRUGO,    \
->>> +               mxs_lradc_show_scale_available, NULL, ch)
->>> +
->>> +SHOW_SCALE_AVAILABLE_ATTR(0);
->>> +SHOW_SCALE_AVAILABLE_ATTR(1);
->>> +SHOW_SCALE_AVAILABLE_ATTR(2);
->>> +SHOW_SCALE_AVAILABLE_ATTR(3);
->>> +SHOW_SCALE_AVAILABLE_ATTR(4);
->>> +SHOW_SCALE_AVAILABLE_ATTR(5);
->>> +SHOW_SCALE_AVAILABLE_ATTR(6);
->>> +SHOW_SCALE_AVAILABLE_ATTR(7);
->>> +SHOW_SCALE_AVAILABLE_ATTR(8);
->>> +SHOW_SCALE_AVAILABLE_ATTR(9);
->>> +SHOW_SCALE_AVAILABLE_ATTR(10);
->>> +SHOW_SCALE_AVAILABLE_ATTR(11);
->>> +SHOW_SCALE_AVAILABLE_ATTR(12);
->>> +SHOW_SCALE_AVAILABLE_ATTR(13);
->>> +SHOW_SCALE_AVAILABLE_ATTR(14);
->>> +SHOW_SCALE_AVAILABLE_ATTR(15);
->>> +
->>> +static struct attribute *mxs_lradc_attributes[] = {
->>> +    &iio_dev_attr_in_voltage0_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage1_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage2_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage3_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage4_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage5_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage6_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage7_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage8_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage9_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage10_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage11_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage12_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage13_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage14_scale_available.dev_attr.attr,
->>> +    &iio_dev_attr_in_voltage15_scale_available.dev_attr.attr,
->>> +    NULL
->>> +};
+--e5RuxGNAJE5XqC7EoHja7LRJ5mviribGX
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On 25-07-2013 19:28, Rafael J. Wysocki wrote:
+> On Wednesday, July 17, 2013 11:17:20 AM Eduardo Valentin wrote:
+>> This patch changes the cpufreq-cpu0 driver to consider if
+>> a cpu needs cooling (with cpufreq). In case the cooling is needed,
+>> it can be flagged at the cpu0 device tree node, with the boolean
+>> property 'needs-cooling'.
 >>
->> This should really be using the iio_chan_spec_ext_info
->> infrastructure. Bonus
->> points for factoring out the common code used to calculate and
->> display the
->> scales.
->
-> I perfectly understand. Sadly, I don't currently have the time and
-> expertise to try to work this out the proper way. It already took much
-> longer than expected to have this driver toggle a divider flag.
->
-> I'd appreciate if anyone wishes to complete this job.
-> @Alexander, please feel free to submit your other temp patch without
-> waiting for this one.
->
+>> In case this boolean is present, the driver will
+>> load a cpufreq cooling device in the system. The cpufreq-cpu0
+>> driver is not interested in determining how the system should
+>> be using the cooling device. The driver is responsible
+>> only of loading the cooling device.
+>>
+>> Describing how the cooling device will be used can be
+>> accomplished by setting up a thermal zone that references
+>> and is composed by the cpufreq cooling device.
+>>
+>> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+>=20
+> FWIW, this change is fine by me, but I guess it should be handled along=
+ with
+> the entire series.
 
-Maybe, we can get the patch set as is and do further clean up later.
-Anyway, that driver is still in staging, right ?
+Raphael, thanks for your review.
 
-As said, I'm willing to propose something for the scale calculation.
+Yeah, this change must be handled along with the other changes in this
+series. There is still ongoing discussion in DT mailing list with
+respect to thermal bindings. Thus, for now, this patch is on hold.
+
+>=20
+>> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: cpufreq@vger.kernel.org
+>> Cc: linux-pm@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: devicetree-discuss@lists.ozlabs.org
+>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt | 3 +++
+>>  drivers/cpufreq/cpufreq-cpu0.c                             | 8 ++++++=
+++
+>>  2 files changed, 11 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.tx=
+t b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+>> index 051f764..e8ff916 100644
+>> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+>> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+>> @@ -15,6 +15,8 @@ Optional properties:
+>>  - clock-latency: Specify the possible maximum transition latency for =
+clock,
+>>    in unit of nanoseconds.
+>>  - voltage-tolerance: Specify the CPU voltage tolerance in percentage.=
+
+>> +- needs-cooling: The generic cpu cooling (freq clipping) is loaded by=
+ the
+>> +generic cpufreq-cpu0 driver in case the device tree node has this boo=
+lean.
+>> =20
+>>  Examples:
+>> =20
+>> @@ -33,6 +35,7 @@ cpus {
+>>  			198000  850000
+>>  		>;
+>>  		clock-latency =3D <61036>; /* two CLK32 periods */
+>> +		needs-cooling;
+>>  	};
+>> =20
+>>  	cpu@1 {
+>> diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-=
+cpu0.c
+>> index ad1fde2..4a8747a 100644
+>> --- a/drivers/cpufreq/cpufreq-cpu0.c
+>> +++ b/drivers/cpufreq/cpufreq-cpu0.c
+>> @@ -20,6 +20,9 @@
+>>  #include <linux/platform_device.h>
+>>  #include <linux/regulator/consumer.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/thermal.h>
+>> +#include <linux/cpu_cooling.h>
+>> +#include <linux/cpumask.h>
+>> =20
+>>  static unsigned int transition_latency;
+>>  static unsigned int voltage_tolerance; /* in percentage */
+>> @@ -28,6 +31,7 @@ static struct device *cpu_dev;
+>>  static struct clk *cpu_clk;
+>>  static struct regulator *cpu_reg;
+>>  static struct cpufreq_frequency_table *freq_table;
+>> +static struct thermal_cooling_device *cdev;
+>> =20
+>>  static int cpu0_verify_speed(struct cpufreq_policy *policy)
+>>  {
+>> @@ -268,6 +272,9 @@ static int cpu0_cpufreq_probe(struct platform_devi=
+ce *pdev)
+>>  		goto out_free_table;
+>>  	}
+>> =20
+>> +	if (of_property_read_bool(np, "needs-cooling"))
+>> +		cdev =3D cpufreq_cooling_register(cpu_present_mask);
+>> +
+>>  	of_node_put(np);
+>>  	of_node_put(parent);
+>>  	return 0;
+>> @@ -283,6 +290,7 @@ out_put_parent:
+>> =20
+>>  static int cpu0_cpufreq_remove(struct platform_device *pdev)
+>>  {
+>> +	cpufreq_cooling_unregister(cdev);
+>>  	cpufreq_unregister_driver(&cpu0_cpufreq_driver);
+>>  	opp_free_cpufreq_table(cpu_dev, &freq_table);
+>> =20
+>>
 
 
+--=20
+You have got to be excited about what you are doing. (L. Lamport)
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Eduardo Valentin
+
+
+--e5RuxGNAJE5XqC7EoHja7LRJ5mviribGX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlHyeTEACgkQCXcVR3XQvP2YKwD8D8GXupOvyy+jcynhYLxoYaBx
+FIXrgeG5Dfxug/t9nI4BAOB6ErkWo5qIKUzOebHmcPLGPeDcU4JUHkMxvRdkxEBN
+=nW/X
+-----END PGP SIGNATURE-----
+
+--e5RuxGNAJE5XqC7EoHja7LRJ5mviribGX--
