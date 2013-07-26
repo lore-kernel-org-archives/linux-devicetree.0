@@ -1,230 +1,288 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4] media: i2c: tvp7002: add OF support
-Date: Fri, 26 Jul 2013 12:09:20 +0200
-Message-ID: <51F24AD0.1050808@xs4all.nl>
-References: <1374162866-14981-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v11] reset: Add driver for gpio-controlled reset pins
+Date: Fri, 26 Jul 2013 12:26:24 +0200
+Message-ID: <1374834384-8071-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1374162866-14981-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+This driver implements a reset controller device that toggle a gpio
+connected to a reset pin of a peripheral IC. The delay between assertion
+and de-assertion of the reset signal can be configured via device tree.
 
-On 07/18/2013 05:54 PM, Lad, Prabhakar wrote:
-> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-> 
-> add OF support for the tvp7002 driver.
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> ---
->  This patch depends on https://patchwork.kernel.org/patch/2828800/
->  
->  Changes for v4:
->  1: Improved descrition of end point properties.
-> 
->  Changes for v3:
->  1: Fixed review comments pointed by Sylwester.
-> 
->  .../devicetree/bindings/media/i2c/tvp7002.txt      |   53 ++++++++++++++++
->  drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
->  2 files changed, 113 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-> new file mode 100644
-> index 0000000..1d00935
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-> @@ -0,0 +1,53 @@
-> +* Texas Instruments TV7002 video decoder
-> +
-> +The TVP7002 device supports digitizing of video and graphics signal in RGB and
-> +YPbPr color space.
-> +
-> +Required Properties :
-> +- compatible : Must be "ti,tvp7002"
-> +
-> +Optional Properties:
-> +- hsync-active: HSYNC Polarity configuration for the bus. Default value when
-> +  this property is not specified is <0>.
-> +
-> +- vsync-active: VSYNC Polarity configuration for the bus. Default value when
-> +  this property is not specified is <0>.
-> +
-> +- pclk-sample: Clock polarity of the bus. Default value when this property is
-> +  not specified is <0>.
-> +
-> +- sync-on-green-active: Active state of Sync-on-green signal property of the
-> +  endpoint.
-> +  0 = Normal Operation (Default)
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
+---
+Changes since v10:
+ - Backed out the arch_initcall change again, use module_platform_driver
+---
+ .../devicetree/bindings/reset/gpio-reset.txt       |  35 +++++
+ drivers/reset/Kconfig                              |  11 ++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/gpio-reset.c                         | 174 +++++++++++++++++++++
+ 4 files changed, 221 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/gpio-reset.txt
+ create mode 100644 drivers/reset/gpio-reset.c
 
-I would extend this a little bit:
-
-  0 = Normal Operation (Active Low, Default)
-
-> +  1 = Inverted operation
-> +
-> +- field-even-active: Active-high Field ID output polarity control of the bus.
-> +  Under normal operation, the field ID output is set to logic 1 for an odd field
-> +  (field 1)and set to logic 0 for an even field (field 0).
-
-Add space before 'and'.
-
-> +  0 = Normal operation (default)
-> +  1 = FID output polarity inverted
-> +
-> +For further reading of port node refer Documentation/devicetree/bindings/media/
-> +video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	i2c0@1c22000 {
-> +		...
-> +		...
-> +		tvp7002@5c {
-> +			compatible = "ti,tvp7002";
-> +			reg = <0x5c>;
-> +
-> +			port {
-> +				tvp7002_1: endpoint {
-> +					hsync-active = <1>;
-> +					vsync-active = <1>;
-> +					pclk-sample = <0>;
-> +					sync-on-green-active = <1>;
-> +					field-even-active = <0>;
-> +				};
-> +			};
-> +		};
-> +		...
-> +	};
-> diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
-> index f6b1f3f..24a08fa 100644
-> --- a/drivers/media/i2c/tvp7002.c
-> +++ b/drivers/media/i2c/tvp7002.c
-> @@ -35,6 +35,8 @@
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-common.h>
->  #include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-of.h>
-> +
->  #include "tvp7002_reg.h"
->  
->  MODULE_DESCRIPTION("TI TVP7002 Video and Graphics Digitizer driver");
-> @@ -943,6 +945,48 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
->  	.pad = &tvp7002_pad_ops,
->  };
->  
-> +static struct tvp7002_config *
-> +tvp7002_get_pdata(struct i2c_client *client)
-> +{
-> +	struct v4l2_of_endpoint bus_cfg;
-> +	struct tvp7002_config *pdata;
-> +	struct device_node *endpoint;
-> +	unsigned int flags;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-> +		return client->dev.platform_data;
-> +
-> +	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> +	if (!endpoint)
-> +		return NULL;
-> +
-> +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		goto done;
-> +
-> +	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
-> +	flags = bus_cfg.bus.parallel.flags;
-> +
-> +	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-> +		pdata->hs_polarity = 1;
-> +
-> +	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-> +		pdata->vs_polarity = 1;
-> +
-> +	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-> +		pdata->clk_polarity = 1;
-> +
-> +	if (flags & V4L2_MBUS_FIELD_EVEN_HIGH)
-> +		pdata->fid_polarity = 1;
-> +
-> +	if (flags & V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH)
-> +		pdata->sog_polarity = 1;
-> +
-> +done:
-> +	of_node_put(endpoint);
-> +	return pdata;
-> +}
-> +
->  /*
->   * tvp7002_probe - Probe a TVP7002 device
->   * @c: ptr to i2c_client struct
-> @@ -954,32 +998,32 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
->   */
->  static int tvp7002_probe(struct i2c_client *c, const struct i2c_device_id *id)
->  {
-> +	struct tvp7002_config *pdata = tvp7002_get_pdata(c);
->  	struct v4l2_subdev *sd;
->  	struct tvp7002 *device;
->  	struct v4l2_dv_timings timings;
->  	int polarity_a;
->  	int polarity_b;
->  	u8 revision;
-> -
->  	int error;
->  
-> +	if (pdata == NULL) {
-> +		dev_err(&c->dev, "No platform data\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	/* Check if the adapter supports the needed features */
->  	if (!i2c_check_functionality(c->adapter,
->  		I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
->  		return -EIO;
->  
-> -	if (!c->dev.platform_data) {
-> -		v4l_err(c, "No platform data!!\n");
-> -		return -ENODEV;
-> -	}
-> -
->  	device = devm_kzalloc(&c->dev, sizeof(struct tvp7002), GFP_KERNEL);
->  
->  	if (!device)
->  		return -ENOMEM;
->  
->  	sd = &device->sd;
-> -	device->pdata = c->dev.platform_data;
-> +	device->pdata = pdata;
->  	device->current_timings = tvp7002_timings;
->  
->  	/* Tell v4l2 the device is ready */
-> @@ -1084,9 +1128,18 @@ static const struct i2c_device_id tvp7002_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, tvp7002_id);
->  
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id tvp7002_of_match[] = {
-> +	{ .compatible = "ti,tvp7002", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, tvp7002_of_match);
-> +#endif
-> +
->  /* I2C driver data */
->  static struct i2c_driver tvp7002_driver = {
->  	.driver = {
-> +		.of_match_table = of_match_ptr(tvp7002_of_match),
->  		.owner = THIS_MODULE,
->  		.name = TVP7002_MODULE_NAME,
->  	},
-> 
-
-Regards,
-
-	Hans
+diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+new file mode 100644
+index 0000000..bca5348
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+@@ -0,0 +1,35 @@
++GPIO reset controller
++=====================
++
++A GPIO reset controller controls a single GPIO that is connected to the reset
++pin of a peripheral IC. Please also refer to reset.txt in this directory for
++common reset controller binding usage.
++
++Required properties:
++- compatible: Should be "gpio-reset"
++- reset-gpios: A gpio used as reset line. The gpio specifier for this property
++               depends on the gpio controller that provides the gpio.
++- #reset-cells: 0, see below
++
++Optional properties:
++- reset-delay-us: delay in microseconds. The gpio reset line will be asserted for
++                  this duration to reset.
++- initially-in-reset: boolean. If not set, the initial state should be a
++                      deasserted reset line. If this property exists, the
++                      reset line should be kept in reset.
++
++example:
++
++sii902x_reset: gpio-reset {
++	compatible = "gpio-reset";
++	reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
++	reset-delay-us = <10000>;
++	initially-in-reset;
++	#reset-cells = <0>;
++};
++
++/* Device with nRESET pin connected to GPIO5_0 */
++sii902x@39 {
++	/* ... */
++	resets = <&sii902x_reset>; /* active-low GPIO5_0, 10 ms delay */
++};
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index c9d04f7..1a862df 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -11,3 +11,14 @@ menuconfig RESET_CONTROLLER
+ 	  via GPIOs or SoC-internal reset controller modules.
+ 
+ 	  If unsure, say no.
++
++if RESET_CONTROLLER
++
++config RESET_GPIO
++	tristate "GPIO reset controller support"
++	depends on GPIOLIB && OF
++	help
++	  This driver provides support for reset lines that are controlled
++	  directly by GPIOs.
++
++endif
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 1e2d83f..b854f20 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_RESET_CONTROLLER) += core.o
++obj-$(CONFIG_RESET_GPIO) += gpio-reset.o
+diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
+new file mode 100644
+index 0000000..a49d8fc
+--- /dev/null
++++ b/drivers/reset/gpio-reset.c
+@@ -0,0 +1,174 @@
++/*
++ * GPIO Reset Controller driver
++ *
++ * Copyright 2013 Philipp Zabel, Pengutronix
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/gpio.h>
++#include <linux/module.h>
++#include <linux/of_gpio.h>
++#include <linux/platform_device.h>
++#include <linux/reset-controller.h>
++
++struct gpio_reset_data {
++	struct reset_controller_dev rcdev;
++	unsigned int gpio;
++	bool active_low;
++	s32 delay_us;
++};
++
++static void gpio_reset_set(struct reset_controller_dev *rcdev, int asserted)
++{
++	struct gpio_reset_data *drvdata = container_of(rcdev,
++			struct gpio_reset_data, rcdev);
++	int value = asserted;
++
++	if (drvdata->active_low)
++		value = !value;
++
++	gpio_set_value_cansleep(drvdata->gpio, value);
++}
++
++static int gpio_reset(struct reset_controller_dev *rcdev, unsigned long id)
++{
++	struct gpio_reset_data *drvdata = container_of(rcdev,
++			struct gpio_reset_data, rcdev);
++
++	if (drvdata->delay_us < 0)
++		return -ENOSYS;
++
++	gpio_reset_set(rcdev, 1);
++	udelay(drvdata->delay_us);
++	gpio_reset_set(rcdev, 0);
++
++	return 0;
++}
++
++static int gpio_reset_assert(struct reset_controller_dev *rcdev,
++		unsigned long id)
++{
++	gpio_reset_set(rcdev, 1);
++
++	return 0;
++}
++
++static int gpio_reset_deassert(struct reset_controller_dev *rcdev,
++		unsigned long id)
++{
++	gpio_reset_set(rcdev, 0);
++
++	return 0;
++}
++
++static struct reset_control_ops gpio_reset_ops = {
++	.reset = gpio_reset,
++	.assert = gpio_reset_assert,
++	.deassert = gpio_reset_deassert,
++};
++
++static int of_gpio_reset_xlate(struct reset_controller_dev *rcdev,
++			       const struct of_phandle_args *reset_spec)
++{
++	if (WARN_ON(reset_spec->args_count != 0))
++		return -EINVAL;
++
++	return 0;
++}
++
++static int gpio_reset_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct gpio_reset_data *drvdata;
++	enum of_gpio_flags flags;
++	unsigned long gpio_flags;
++	bool initially_in_reset;
++	int ret;
++
++	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
++	if (drvdata == NULL)
++		return -ENOMEM;
++
++	if (of_gpio_named_count(np, "reset-gpios") != 1) {
++		dev_err(&pdev->dev,
++			"reset-gpios property missing, or not a single gpio\n");
++		return -EINVAL;
++	}
++
++	drvdata->gpio = of_get_named_gpio_flags(np, "reset-gpios", 0, &flags);
++	if (drvdata->gpio == -EPROBE_DEFER) {
++		return drvdata->gpio;
++	} else if (!gpio_is_valid(drvdata->gpio)) {
++		dev_err(&pdev->dev, "invalid reset gpio: %d\n", drvdata->gpio);
++		return drvdata->gpio;
++	}
++
++	drvdata->active_low = flags & OF_GPIO_ACTIVE_LOW;
++
++	ret = of_property_read_u32(np, "reset-delay-us", &drvdata->delay_us);
++	if (ret < 0)
++		drvdata->delay_us = -1;
++	else if (drvdata->delay_us < 0)
++		dev_warn(&pdev->dev, "reset delay too high\n");
++
++	initially_in_reset = of_property_read_bool(np, "initially-in-reset");
++	if (drvdata->active_low ^ initially_in_reset)
++		gpio_flags = GPIOF_OUT_INIT_HIGH;
++	else
++		gpio_flags = GPIOF_OUT_INIT_LOW;
++
++	ret = devm_gpio_request_one(&pdev->dev, drvdata->gpio, gpio_flags, NULL);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to request gpio %d: %d\n",
++			drvdata->gpio, ret);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, drvdata);
++
++	drvdata->rcdev.of_node = np;
++	drvdata->rcdev.owner = THIS_MODULE;
++	drvdata->rcdev.nr_resets = 1;
++	drvdata->rcdev.ops = &gpio_reset_ops;
++	drvdata->rcdev.of_xlate = of_gpio_reset_xlate;
++	reset_controller_register(&drvdata->rcdev);
++
++	return 0;
++}
++
++static int gpio_reset_remove(struct platform_device *pdev)
++{
++	struct gpio_reset_data *drvdata = platform_get_drvdata(pdev);
++
++	reset_controller_unregister(&drvdata->rcdev);
++
++	return 0;
++}
++
++static struct of_device_id gpio_reset_dt_ids[] = {
++	{ .compatible = "gpio-reset" },
++	{ }
++};
++
++static struct platform_driver gpio_reset_driver = {
++	.probe = gpio_reset_probe,
++	.remove = gpio_reset_remove,
++	.driver = {
++		.name = "gpio-reset",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(gpio_reset_dt_ids),
++	},
++};
++
++module_platform_driver(gpio_reset_driver);
++
++MODULE_AUTHOR("Philipp Zabel <p.zabel@pengutronix.de>");
++MODULE_DESCRIPTION("gpio reset controller");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:gpio-reset");
++MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids);
+-- 
+1.8.3.2
