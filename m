@@ -1,57 +1,72 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] pinctrl: palmas: add pincontrol driver
-Date: Fri, 26 Jul 2013 17:41:22 +0100
-Message-ID: <20130726164122.GT9858@sirena.org.uk>
-References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com>
- <1374833754-19659-3-git-send-email-ldewangan@nvidia.com>
+From: Nicolas Pitre <nico@fluxnic.net>
+Subject: Re: Appended DTB files for multi-machine kernels
+Date: Fri, 26 Jul 2013 12:44:23 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1307261233330.15022@syhkavp.arg>
+References: <51D5A938.30607@gmail.com>
+ <alpine.LFD.2.03.1307041322070.18597@syhkavp.arg> <51F2A014.7000209@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fVqowPMy9d9Ku1/g"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1374833754-19659-3-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: grant.likely@linaro.org, linus.walleij@linaro.org, rob.herring@calxeda.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, swarren@nvidia.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <51F2A014.7000209@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: stigge@antcom.de, Stephen Warren <swarren@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Sven Neumann <s.neumann@raumfeld.com>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 26 Jul 2013, Daniel Mack wrote:
 
---fVqowPMy9d9Ku1/g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On 04.07.2013 19:28, Nicolas Pitre wrote:
+> > On Thu, 4 Jul 2013, Daniel Mack wrote:
+> >> In short, devices that have been deployed in quantities come in three
+> >> hardware variants, which all boot with a unique machine-id. We ship
+> >> kernel images that have board support for all three machine types, and
+> >> do minor fixups to platform data of some drivers at runtime, depending
+> >> on the board revision number (passed in via ATAGs).
+> >>
+> 
+> > What you describe above more or less fits the definition of what I 
+> > called the "impedance matcher".  However it doesn't need to be part of 
+> > the kernel at all.  But you should make it into a separate binary.
+> > 
+> > Please have a look at the bottom of this post for a more comprehensive 
+> > description: http://article.gmane.org/gmane.linux.ports.arm.kernel/242929
+> 
+> FWIW, I gave that approach a try today for a PXA based hardware
+> platform, and in fact it seems to work very well. Thanks again for
+> sharing the idea.
+> 
+> In case anyone is interested, the repository is here:
+> 
+>   https://github.com/zonque/pxa-impedance-matcher
+> 
+> As the README says, it's completely specific to my use case, but maybe
+> anyone can use the code base to spin a different version for a different
+> board.
 
-On Fri, Jul 26, 2013 at 03:45:54PM +0530, Laxman Dewangan wrote:
+That looks nice, but I'd suggest going a step further if possible.
 
-> +pins: gpio0_id, gpio1_vbus_det_led1_pwm1, gpio2_regen_led2_pwm2, gpio3_chrg_det,
-> +	gpio4_sysen1, gpio5_clk32kgaudio_usb_psel, gpio6_sysen2,
-> +	gpio7_msecure_pwrhold, gpio8_sim1rsti, gpio9_low_vbat,
-> +	gpio10_wireless_chrg1, gpio11_rcm, gpio12_sim2rsto, gpio13, gpio14,
-> +	gpio15_sim2rsti, vac, powergood_usb_psel, nreswarm, pwrdown,
-> +	gpadc_start, reset_in, nsleep, enable1, enable2, int.
+If you could load the kernel zImage independently with a separate load 
+command in u-boot, then people could update their kernel only without 
+having to relink with this shim.  The load address for that zImage can 
+be totally arbitrary as longas it is known to be the same from within 
+this shim and in the u-boot script.
 
-Would it not be easier to just name the GPIOs gpioN rather than using
-the full names with the possible functions?
+Also, more related to your code, you apparently link and load it to run 
+at 0xa0008000.  This is also where the zImage code is going to 
+decompress the final kernel image after it has relocated itself.  I'm 
+afraid the DTBs you point to might be overwritten at that point since 
+zImage is not aware of them (in fact I'm surprized this works at all as 
+you say).  If I were you I'd use 0xa1000000 instead (and make sure the 
+initrd is out of the way as well if you have one).
 
---fVqowPMy9d9Ku1/g
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR8qauAAoJELSic+t+oim9i2IP+gK8XCjkUG7Z8hMXhIGNn1zg
-5JmP1sT9/aSJtfzkWGW9ndqlSoTr7u5P1H0pOT9maRF9W9yNZ5W5S42TJQvMMGMz
-EsZ2OsWOGTK1iyw5JeMtRLFZ2XmzFyz3AZ3nvMlcp4mtype7tO+fkgZnbMx4MHup
-UyR3aWXXVvu/tIujgHB3IYE0zt/AKD5p7btp51K4nws0cm4se+kp74We8EsOMXBg
-nkw9UDoFFDAoFPMia9KKimZPk+uk85PyGPkiLtihX+U+rd1R5AqYn7MuEOlUi1vE
-1hd4ZXkFihHThYTX8FKgW+C4nHzVzzrExZKmniWgEtRdZDPLQffpejfRHSoAMTqB
-DqCwzhdj+E+TUpF+Zed4v5SI/LJfVzT7jTtmRx9/M1x0rMvBI2GXHL/65NJ07dW2
-CjFSJxPV+PLmZmg6xnu/fCUxS3EemjohDWiA95SpQZtLLIFFJhOk01BlWVPBsxAF
-VDyqR+VGw7pU6E/65CDIJXKfLCF5bnqUDFy+UEzj+eaV9dk8lQx/0+D7VI+UwWyk
-0fVa7a6B/8AXURgQt63nYrogNgBIGz5ICcu1SDFqFaxY3U4xvntr5YXZD6Mw/Utu
-n7i6/d0YeCvpQ3q2d0d/kRX+k8C9TGoAS9ym2n2qYM2ZxvZS+PY1vkbAxPcp3n5j
-+VBZWD1yv739wFhjF78v
-=T9ys
------END PGP SIGNATURE-----
-
---fVqowPMy9d9Ku1/g--
+Nicolas
