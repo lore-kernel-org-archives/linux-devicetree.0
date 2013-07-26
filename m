@@ -1,64 +1,44 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:42501 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759310Ab3GZPz5 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 11:55:57 -0400
-Date: Fri, 26 Jul 2013 16:55:30 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130726155530.GP9858@sirena.org.uk>
-References: <1374762668-5037-1-git-send-email-broonie@kernel.org>
- <51F298C0.1090801@wwwdotorg.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PL/1/I+J7REATLnn"
-Content-Disposition: inline
-In-Reply-To: <51F298C0.1090801@wwwdotorg.org>
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:49866 "EHLO
+	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1757340Ab3GZPyT (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Fri, 26 Jul 2013 11:54:19 -0400
+Date: Fri, 26 Jul 2013 16:54:09 +0100
+From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH] ASoC: wm8994: Add clock bindings to the device tree
-Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com
-List-ID: <devicetree@vger.kernel.org>
-
-
---PL/1/I+J7REATLnn
+Message-ID: <20130726155409.GC3528@e106331-lin.cambridge.arm.com>
+References: <1374762668-5037-1-git-send-email-broonie@kernel.org>
+ <20130725154627.GA22291@e106331-lin.cambridge.arm.com>
+ <20130725175642.GJ9858@sirena.org.uk>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20130725175642.GJ9858@sirena.org.uk>
+Sender: devicetree-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "patches@opensource.wolfsonmicro.com" <patches@opensource.wolfsonmicro.com>
+List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jul 26, 2013 at 09:41:52AM -0600, Stephen Warren wrote:
-> On 07/25/2013 08:31 AM, Mark Brown wrote:
+On Thu, Jul 25, 2013 at 06:56:42PM +0100, Mark Brown wrote:
+> On Thu, Jul 25, 2013 at 04:46:27PM +0100, Mark Rutland wrote:
+> 
+> > Do these two clock inputs exist for all of wm1811, wm8994, and wm8958?
+> 
+> Yes.
+> 
+> > If I've read the context correctly, these are optional. Does this mean
+> > that if not listed that an OS can assume they are already configured and
+> > active? It would be nice to document that.
+> 
+> The clocks are both optional but even if they were assumed to be present
+> they aren't usable without knowing the rate which can vary widely.  It
+> is possible that the system may be able to infer their presence and
+> rates from other information such as the audio system integration
+> compatible string but that's out of scope for this and doesn't seem like
+> a particularly good idea to encorage anyway.
 
-> > Due to the variable availability of the clock API there is no code in the
-> > driver to use these at present, for the time being the machine drivers
-> > will need to handle requesting clocks.
+Ok, that sounds sensible.
 
-> Presumably before considering any/most CODEC bindings complete, we need
-> to make a similar change?
-
-Yeah, ideally.  I was going to go through the ones I know about at some
-point.  On the other hand it's not really a big deal given how far off
-we are being able to rely on the clock API and we still need to work out
-what to do with hooking the audio buses in too.
-
---PL/1/I+J7REATLnn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR8pvvAAoJELSic+t+oim9zG4QAJI6UyvaBNbcnfpk/hv1Ot4w
-KOkO3QWYcAWKvDxOGLzfZys6MYRze//ElbpL+728u/mjgiiuqlIhQ3xM3y5dnOY9
-rQxnwQdYC/mIShe6G46a6ROGTdTQ3O8SQQhE8fM8i8D5fLAk397S3i+ijGXv0crw
-dGMEBvewE+HDqbTCNHl8WUn2uwQmTgNr4t4BlJVYOajjaeYAys/CkxWJG+kwhnrR
-myOo/ijhkctDYtPauifL/yP8SjMdlAGxgMyAth/27E2xQgTwFd7prZ2HPkhAN7LI
-TFODnLRy0BEuiiDmBx/RKOL1Ru1XrrhCNd2Kop6CQviL8VrcqtTdraceP0Cu+PCU
-yMqVEUbwKBph24wKoe5YCuEJ2jxXn9e6N0bnlUug3xrOljfiV9E8ZwP/D8Y17l/a
-d1sxpGaAKt4docqE/c39HXty7wDwsQu7VV5VrlawPRf71OgED71Hmjn3832cOqCC
-Vst1+fH57kMsB778Z8Iw/xRX5AbAeFa6kKccEgGXBdM2xmyDm8bSiDBDRPZaElET
-ulMzl2DK8D1MXYBMMs/C0qdSJ/dB/PjZNzXOHQEI761iI18swTl6pok2gOdlv6YP
-ULPP6RdOHX3HqAMlgNn3cJ0Mx5Ewqtbf+vRqlETHme8FagMBxdsNZja9Zcp/JDcZ
-L3zfWDuuvnPTe8Q0IQIq
-=G5On
------END PGP SIGNATURE-----
-
---PL/1/I+J7REATLnn--
+Thanks,
+Mark.
