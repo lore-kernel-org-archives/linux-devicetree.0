@@ -1,116 +1,125 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate03.nvidia.com ([216.228.121.140]:12358 "EHLO
-	hqemgate03.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755047Ab3GVFPm (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 22 Jul 2013 01:15:42 -0400
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V3] gpio: palmas: add dt support
-Date: Mon, 22 Jul 2013 10:42:57 +0530
-Message-ID: <1374469977-8805-1-git-send-email-ldewangan@nvidia.com>
+Received: from co1ehsobe002.messaging.microsoft.com ([216.32.180.185]:24451
+	"EHLO co1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1758206Ab3GZK1j (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Fri, 26 Jul 2013 06:27:39 -0400
+From: <hongbo.zhang@freescale.com>
+Subject: [PATCH v6 1/3] DMA: Freescale: revise device tree binding document
+Date: Fri, 26 Jul 2013 18:27:14 +0800
+Message-ID: <1374834436-7149-2-git-send-email-hongbo.zhang@freescale.com>
+In-Reply-To: <1374834436-7149-1-git-send-email-hongbo.zhang@freescale.com>
+References: <1374834436-7149-1-git-send-email-hongbo.zhang@freescale.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, kishon@ti.com, j-keerthy@ti.com, gg@slimlogic.co.uk, swarren@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
+To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add of_device_id table for Palma GPIO to be enable the
-driver from DT file.
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
 
-The driver can be registered from DT file as:
-	palmas: tps65913@58 {
-		:::::::::::
-		palmas_gpio: palmas_gpio {
-			compatible = "ti,palmas-gpio";
-			gpio-controller;
-			#gpio-cells = <2>;
-		};
-	};
+This patch updates the discription of each type of DMA controller and its
+channels, it is preparation for adding another new DMA controller binding, it
+also fixes some defects of indent for text alignment at the same time.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
 ---
-Long back, I sent the similar patch but it was paused due to the DT binding.
-http://lkml.indiana.edu/hypermail/linux/kernel/1304.2/00261.html
+ .../devicetree/bindings/powerpc/fsl/dma.txt        |   52 +++++++++-----------
+ 1 file changed, 24 insertions(+), 28 deletions(-)
 
-Now, PMIC DT binding is already finalised and as per mfd binding, we can
-go ahead with similar approach for gpios. pmic and other palams sub devices
-are already following the same approach.
-
-Sending 3rd version of the change which is same as per code is related but
-adding devicetree binding document for gpio also at this time.
-
-Reposting to include devicetree@vger.kernel.org.
-
-
- .../devicetree/bindings/gpio/gpio-palmas.txt       |   25 ++++++++++++++++++++
- drivers/gpio/gpio-palmas.c                         |   12 ++++++++-
- 2 files changed, 36 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-palmas.txt
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-palmas.txt b/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
-new file mode 100644
-index 0000000..207eb29
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
-@@ -0,0 +1,25 @@
-+Palmas GPIO controller bindings
-+
-+Required properties:
-+- compatible:
-+  - "ti,palams-gpio" for palma series of the GPIO controller
-+  - "ti,tps80036-gpio" for Palma series device TPS80036.
-+  - "ti,tps65913-gpio" for palma series device TPS65913.
-+  - "ti,tps65914-gpio" for palma series device TPS65914.
-+- #gpio-cells : Should be two.
-+  - first cell is the gpio pin number
-+  - second cell is used to specify optional parameters (unused)
-+- gpio-controller : Marks the device node as a GPIO controller.
-+
-+Note: This gpio node will be sub node of palmas node.
-+
-+Example:
-+	palmas: tps65913@58 {
-+		:::::::::::
-+		palmas_gpio: palmas_gpio {
-+			compatible = "ti,palmas-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+		:::::::::::
-+	};
-diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
-index e3a4e56..09360c4 100644
---- a/drivers/gpio/gpio-palmas.c
-+++ b/drivers/gpio/gpio-palmas.c
-@@ -134,7 +134,7 @@ static int palmas_gpio_probe(struct platform_device *pdev)
- 	palmas_gpio->gpio_chip.get	= palmas_gpio_get;
- 	palmas_gpio->gpio_chip.dev = &pdev->dev;
- #ifdef CONFIG_OF_GPIO
--	palmas_gpio->gpio_chip.of_node = palmas->dev->of_node;
-+	palmas_gpio->gpio_chip.of_node = pdev->dev.of_node;
- #endif
- 	palmas_pdata = dev_get_platdata(palmas->dev);
- 	if (palmas_pdata && palmas_pdata->gpio_base)
-@@ -159,9 +159,19 @@ static int palmas_gpio_remove(struct platform_device *pdev)
- 	return gpiochip_remove(&palmas_gpio->gpio_chip);
- }
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+index 2a4b4bc..ed703d9 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+@@ -1,33 +1,31 @@
+-* Freescale 83xx DMA Controller
++* Freescale DMA Controllers
  
-+static struct of_device_id of_palmas_gpio_match[] = {
-+	{ .compatible = "ti,palmas-gpio"},
-+	{ .compatible = "ti,tps65913-gpio"},
-+	{ .compatible = "ti,tps65914-gpio"},
-+	{ .compatible = "ti,tps80036-gpio"},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, of_palmas_gpio_match);
-+
- static struct platform_driver palmas_gpio_driver = {
- 	.driver.name	= "palmas-gpio",
- 	.driver.owner	= THIS_MODULE,
-+	.driver.of_match_table = of_palmas_gpio_match,
- 	.probe		= palmas_gpio_probe,
- 	.remove		= palmas_gpio_remove,
- };
+-Freescale PowerPC 83xx have on chip general purpose DMA controllers.
++** Freescale Elo DMA Controller
++   This is a little-endian DMA controller, used in Freescale mpc83xx series
++   chips such as mpc8315, mpc8349, mpc8379 etc.
+ 
+ Required properties:
+ 
+-- compatible        : compatible list, contains 2 entries, first is
+-		 "fsl,CHIP-dma", where CHIP is the processor
+-		 (mpc8349, mpc8360, etc.) and the second is
+-		 "fsl,elo-dma"
++- compatible        : must include "fsl,elo-dma", and a "fsl,CHIP-dma" is
++                      optional, where CHIP is the processor name.
+ - reg               : <registers mapping for DMA general status reg>
+-- ranges		: Should be defined as specified in 1) to describe the
+-		  DMA controller channels.
++- ranges            : describes the mapping between the address space of the
++                      DMA channels and the address space of the DMA controller.
+ - cell-index        : controller index.  0 for controller @ 0x8100
+ - interrupts        : <interrupt mapping for DMA IRQ>
+ - interrupt-parent  : optional, if needed for interrupt mapping
+ 
+-
+ - DMA channel nodes:
+-        - compatible        : compatible list, contains 2 entries, first is
+-			 "fsl,CHIP-dma-channel", where CHIP is the processor
+-			 (mpc8349, mpc8350, etc.) and the second is
+-			 "fsl,elo-dma-channel". However, see note below.
++        - compatible        : must include "fsl,elo-dma-channel", and a
++                              "fsl,CHIP-dma-channel" is optional, where CHIP is
++                              the processor name, However, see note below.
+         - reg               : <registers mapping for channel>
+         - cell-index        : dma channel index starts at 0.
+ 
+ Optional properties:
+         - interrupts        : <interrupt mapping for DMA channel IRQ>
+-			  (on 83xx this is expected to be identical to
+-			   the interrupts property of the parent node)
++                              (on 83xx this is expected to be identical to
++                              the interrupts property of the parent node)
+         - interrupt-parent  : optional, if needed for interrupt mapping
+ 
+ Example:
+@@ -70,27 +68,25 @@ Example:
+ 		};
+ 	};
+ 
+-* Freescale 85xx/86xx DMA Controller
+-
+-Freescale PowerPC 85xx/86xx have on chip general purpose DMA controllers.
++** Freescale EloPlus DMA Controller
++   This is DMA controller with extended addresses and chaining, mainly used in
++   Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as mpc8540, mpc8641
++   p4080, bsc9131 etc.
+ 
+ Required properties:
+ 
+-- compatible        : compatible list, contains 2 entries, first is
+-		 "fsl,CHIP-dma", where CHIP is the processor
+-		 (mpc8540, mpc8540, etc.) and the second is
+-		 "fsl,eloplus-dma"
++- compatible        : must include "fsl,eloplus-dma", and a "fsl,CHIP-dma" is
++                      optional, where CHIP is the processor name.
+ - reg               : <registers mapping for DMA general status reg>
+ - cell-index        : controller index.  0 for controller @ 0x21000,
+                                          1 for controller @ 0xc000
+-- ranges		: Should be defined as specified in 1) to describe the
+-		  DMA controller channels.
++- ranges            : describes the mapping between the address space of the
++                      DMA channels and the address space of the DMA controller
+ 
+ - DMA channel nodes:
+-        - compatible        : compatible list, contains 2 entries, first is
+-			 "fsl,CHIP-dma-channel", where CHIP is the processor
+-			 (mpc8540, mpc8560, etc.) and the second is
+-			 "fsl,eloplus-dma-channel". However, see note below.
++        - compatible        : must include "fsl,eloplus-dma-channel", and a
++                              "fsl,CHIP-dma-channel" is optional, where CHIP is
++                              the processor name, However, see note below.
+         - cell-index        : dma channel index starts at 0.
+         - reg               : <registers mapping for channel>
+         - interrupts        : <interrupt mapping for DMA channel IRQ>
 -- 
-1.7.1.1
+1.7.9.5
+
+
 
