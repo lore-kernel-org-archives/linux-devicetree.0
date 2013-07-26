@@ -1,38 +1,40 @@
-From: David Brown <davidb@codeaurora.org>
-Subject: Re: [PATCH v2] tty: serial: Add initial MSM UART High Speed Lite
- driver
-Date: Fri, 26 Jul 2013 14:50:23 -0700
-Message-ID: <20130726215023.GA1470@codeaurora.org>
-References: <1374476749-12763-1-git-send-email-iivanov@mm-sol.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3] pinctrl: rollback check for !dev->pins in
+ pinctrl_pm_select*() APIs
+Date: Sat, 27 Jul 2013 01:22:37 +0200
+Message-ID: <CACRpkdYZOFYNXDwMr6om=3Fuj9z3DnaXYHQ_3B-xfTk9dsWdnQ@mail.gmail.com>
+References: <1374061312-25469-1-git-send-email-grygorii.strashko@ti.com>
+	<1374061312-25469-2-git-send-email-grygorii.strashko@ti.com>
+	<20130717154038.GK7656@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1374476749-12763-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: gregkh@linuxfoundation.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, jslaby@suse.cz, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mrana@codeaurora.org, sambley@codeaurora.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130717154038.GK7656@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Kevin Hilman <khilman@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2013 at 10:05:48AM +0300, Ivan T. Ivanov wrote:
->From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+On Wed, Jul 17, 2013 at 5:40 PM, Tony Lindgren <tony@atomide.com> wrote:
+> * Grygorii Strashko <grygorii.strashko@ti.com> [130717 04:49]:
+>> The pinctrl support in Device core assumed to be optional - so, It's
+>> valid case, when there are no definition for default device's pinctrl
+>> states in DT at all ("default", "active", "idle", "sleep").
+>> And in this case dev->pins == NULL and pinctrl_pm_select*() API
+>> should return 0 always.
+>>
+>> Now the checks for !dev->pins have been removed from
+>> pinctrl_pm_select*() API mistakenly by the patch
+>> pinctrl: Remove duplicate code in pinctrl_pm_select_state functions
+>> http://www.spinics.net/lists/arm-kernel/msg258829.html
+>>
+>> Hence, rollback these checks in in pinctrl_pm_select*() APIs.
 >
->This is a tty driver with console support for Qualcomm's UART
->controllers found in the MSM8974 chipsets. Driver is completely
->based on implementation found in codeaurora.org msm_serial_hs_lite
->with Android dependences removed. Other changes include, moved to
->device managed resources and few cleanups.
->
->Driver functionality was tested in LEGACY_HSUART and BLSP_HSUART mode.
+> Thanks, it's best that I fold this fix into my patch as it has not
+> been committed yet.
 
-Ivan, do we need this driver with the fixes Stephen Boyd posted that
-are supposed to fix the problems with the existing msm_serial.c
-driver?  If a single driver can correctly support both devices, that
-seems like a better solution to me.
+I think I've applied the correct v2 version,
+please check that linux-next is in good shape...
 
-David
-
--- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Yours,
+Linus Walleij
