@@ -1,85 +1,47 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 1/3] clk: exynos5250: Add G2D gate clock
-Date: Fri, 26 Jul 2013 14:18:46 +0530
-Message-ID: <CAK9yfHwdte8XPey-uM=hy1z7ryFSOzEZspLBz7po3c2ktXvAyw@mail.gmail.com>
-References: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] ARM: dts: add reference voltage property for MXS
+ LRADC
+Date: Fri, 26 Jul 2013 11:23:23 +0200
+Message-ID: <51F2400B.1060701@free-electrons.com>
+References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com> <1374501843-19651-3-git-send-email-hector.palacios@digi.com> <51ED7B47.2090104@metafoo.de> <201307230006.53434.marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org, mturquette@linaro.org, inki.dae@samsung.com
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201307230006.53434.marex-ynQEQJNshbs@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5 July 2013 14:12, Sachin Kamat <sachin.kamat@linaro.org> wrote:
-> Adds gate clock for G2D IP for Exynos5250 SoC.
+On 23/07/2013 00:06, Marek Vasut wrote:
+> Dear Lars-Peter Clausen,
 >
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> Cc: Mike Turquette <mturquette@linaro.org>
-> ---
-> This patch depends on the following patch:
-> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/20581
-> ---
->  .../devicetree/bindings/clock/exynos5250-clock.txt |    1 +
->  drivers/clk/samsung/clk-exynos5250.c               |    5 ++++-
->  2 files changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-> index 1a05761..7e88242 100644
-> --- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
-> @@ -155,6 +155,7 @@ clock which they consume.
->    dp                   342
->    mixer                        343
->    hdmi                 344
-> +  g2d                  345
->
->  Example 1: An example of a clock controller node is listed below.
->
-> diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
-> index 6f767c5..3da0bdf 100644
-> --- a/drivers/clk/samsung/clk-exynos5250.c
-> +++ b/drivers/clk/samsung/clk-exynos5250.c
-> @@ -62,6 +62,7 @@
->  #define SRC_CDREX              0x20200
->  #define PLL_DIV2_SEL           0x20a24
->  #define GATE_IP_DISP1          0x10928
-> +#define GATE_IP_ACP            0x10000
->
->  /*
->   * Let each supported clock get a unique id. This id is used to lookup the clock
-> @@ -99,7 +100,7 @@ enum exynos5250_clks {
->         spi2, i2s1, i2s2, pcm1, pcm2, pwm, spdif, ac97, hsi2c0, hsi2c1, hsi2c2,
->         hsi2c3, chipid, sysreg, pmu, cmu_top, cmu_core, cmu_mem, tzpc0, tzpc1,
->         tzpc2, tzpc3, tzpc4, tzpc5, tzpc6, tzpc7, tzpc8, tzpc9, hdmi_cec, mct,
-> -       wdt, rtc, tmu, fimd1, mie1, dsim0, dp, mixer, hdmi,
-> +       wdt, rtc, tmu, fimd1, mie1, dsim0, dp, mixer, hdmi, g2d,
->
->         nr_clks,
->  };
-> @@ -152,6 +153,7 @@ static __initdata unsigned long exynos5250_clk_regs[] = {
->         SRC_CDREX,
->         PLL_DIV2_SEL,
->         GATE_IP_DISP1,
-> +       GATE_IP_ACP,
->  };
->
->  /* list of all parent clock list */
-> @@ -463,6 +465,7 @@ struct samsung_gate_clock exynos5250_gate_clks[] __initdata = {
->         GATE(dp, "dp", "aclk200", GATE_IP_DISP1, 4, 0, 0),
->         GATE(mixer, "mixer", "aclk200", GATE_IP_DISP1, 5, 0, 0),
->         GATE(hdmi, "hdmi", "aclk200", GATE_IP_DISP1, 6, 0, 0),
-> +       GATE(g2d, "g2d", "aclk200", GATE_IP_ACP, 3, 0, 0),
->  };
->
->  static __initdata struct of_device_id ext_clk_match[] = {
-> --
-> 1.7.9.5
->
+>> On 07/22/2013 04:04 PM, Hector Palacios wrote:
+>>> Some LRADC channels have fixed pre-dividers so they can measure
+>>> different voltages at full scale. The reference voltage allows to
+>>> expose a scaling attribute through the IIO sysfs so that a user can
+>>> compute the real voltage out of a measured sample value.
+>> I've said before that I'm not convinced that this is the right way to
+>> implement this. And considering what Thomas said here
+>> http://www.mail-archive.com/devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg36691.ht
+>> ml I guess I'm not alone with that opinion.
+>>
+>> - Lars
+> He's talking about different versions of the IP block, this is the same IP 
+> block, just connected to different inputs.
 
-Ping Mike.
+I don't have any strong opinion on that and I'm certainly not an expert
+but thinking about that, I feel this is different from the discussion
+Thomas had. Those are reference voltages and describe how the IP block
+is connected whereas what Thomas was describing is supporting multiple
+versions of an IP block by describing heaps of registers in the DT. It
+may look ugly here because you have a lot of channels but I find that
+quite acceptable.
+
+Regards,
 
 -- 
-With warm regards,
-Sachin
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
