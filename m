@@ -1,82 +1,64 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:37738 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757148Ab3GZK7C (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 06:59:02 -0400
-Date: Fri, 26 Jul 2013 11:58:31 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130726105831.GA9858@sirena.org.uk>
-References: <20130725111428.419ee278@armhf>
- <20130725191604.GQ9858@sirena.org.uk>
- <20130725225816.GG24642@n2100.arm.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nGKiHl1eSywcUu0Z"
-Content-Disposition: inline
-In-Reply-To: <20130725225816.GG24642@n2100.arm.linux.org.uk>
+Received: from smtp2-g21.free.fr ([212.27.42.2]:58359 "EHLO smtp2-g21.free.fr"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752149Ab3GZHio convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 03:38:44 -0400
+Date: Fri, 26 Jul 2013 09:38:50 +0200
+From: Jean-Francois Moine <moinejf@free.fr>
 Subject: Re: [PATCH 3/4] ASoc: kirkwood: merge kirkwood-i2c and kirkwood-dma
+Message-ID: <20130726093850.2d2cd45c@armhf>
+In-Reply-To: <20130725225816.GG24642@n2100.arm.linux.org.uk>
+References: <20130725111428.419ee278@armhf>
+	<20130725191604.GQ9858@sirena.org.uk>
+	<20130725225816.GG24642@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Jean-Francois Moine <moinejf@free.fr>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+On Thu, 25 Jul 2013 23:58:16 +0100
+Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
 
---nGKiHl1eSywcUu0Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jul 25, 2013 at 11:58:16PM +0100, Russell King - ARM Linux wrote:
 > On Thu, Jul 25, 2013 at 08:16:04PM +0100, Mark Brown wrote:
-
+> > On Thu, Jul 25, 2013 at 11:14:28AM +0200, Jean-Francois Moine wrote:
+> > > To avoid the declaration of a 'kirkwood-pcm-audio' device in the DT,
+> > > this patch merges the kirkwood-i2c and kirkwood-dma drivers into one
+> > > module.
+> > 
 > > This seems mostly fine, though it may be best to keep kirkwood-dma as a
 > > separate module for the benefit of the S/PDIF support when it gets added
 > > - I had a look at the implementation Russell has and it looks like it
 > > can be added as a separate interface.
-
+> 
 > You wouldn't want I2S and SPDIF to be separate modules though - they're
 > the same hardware but different output stream formatters attached to the
 > DMA FIFO output.  Don't forget the requirements concerning the simultaneous
 > use of I2S and SPDIF - these "output formatters" must both be enabled and
 > disabled in unison when concurrent use is required - both bits must be
 > set or cleared together with a single register write.
-
-OK, I knew they both needed to know about each other and to share some
-stuff but I figured it was reasonable to compile out the S/PDIF support
-if only using I2S or similar - so long as they're coupled at runtime it
-should be fine.
-
+> 
+> > > -	.platform_name = "kirkwood-pcm-audio",
+> > > +	.platform_name = "kirkwood-i2s",
+> > 
 > > Should the name be done as dev_name() for the interface (I don't know if
 > > there is ever more than one)?
-
+> 
 > Getting away from "kirkwood-i2s" would be sensible, because it may not be
 > just "i2s" in this hardware block.  The documentation calls this an "audio
 > controller" but I guess "kirkwood-pcm" would be a reasonable compromise,
 > even though it has a separate AC'97 block which could also be construed
 > as being "pcm".
+> 
+> The AC'97 block uses a separate peripheral DMA controller and so wouldn't
+> make use of kirkwood-dma.c either.
 
-I was thinking just pick a name at runtime based on what was doing the
-instantiation which would avoid hard coding anything in the DMA driver.
+As the kirkwood audio subsystem is used in the other mvebu machines,
+the name of the module kirkwood-i2s/kirkwood-dma could be
+"mvebu-pcm-audio".
 
---nGKiHl1eSywcUu0Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR8lZUAAoJELSic+t+oim9EkAP/iXAJ6qaN8lVBm4Jvq0uZqO6
-dn8feNjZc472gdpbFDctl4dGu1TIqPzyOYBLhQof7yui71Z0QURMtIWXeYovDUfh
-Z5nG+/N5YSZfm0W5HDbM1sDNk3Y8fIeF8jTUpZ+JVboplBMBk36O9L/KRb/zARYu
-CVc+MWVd8s3g9XPM+EodQ8YbsC6Gdm9pm+ixpllPJ3zK3Ed83gonJ5unByWLHMwX
-qkSmw+3/ceEtv+1kYLVSOeh4TDkYTH4MB0Hs5VxvA0JMIv12ztcEarR3A8zrW6MS
-8tsg1XvJc/uQkeKYQCa3o8vkHMIyb9WRSCETylIzxfrq3X79HdbPxSvHGeGnl4Tf
-/Xs160V0dT1QrQX56QGsOipQNULJPks5QlVuk4jeqsmtS7oxIbeUXvmn9WbOo+r8
-h4jcqUtWBW0zrr+vlJ6d3IGumDaDpN+v2OFiXhDXuKCBvYe6AnjQjkiT2LKrk/Eq
-b6OPGUflsYpBOLNshEWjhD8uvDZ5RB4IUu4q91lsgAE4E2UC8LRt7+kmW9cFnipF
-66tShXKvSWVoIBAQ0Hagkp9kFpCJScco4LFekhg2/x73I7zD2AyE6jSc6tusvBq7
-BrLZeSe/fMY3PhFvy1g8GDaGnm/FBOpzGbjyhrihE33nSyREZiWRqnkDri1w0T/y
-wk8uFpFxhW6wiggxPxVy
-=jYt7
------END PGP SIGNATURE-----
-
---nGKiHl1eSywcUu0Z--
+-- 
+Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
