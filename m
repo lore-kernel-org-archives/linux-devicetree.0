@@ -1,30 +1,47 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:57980 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751900Ab3GZUFa (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 16:05:30 -0400
-Message-ID: <51F2D686.4090104@wwwdotorg.org>
-Date: Fri, 26 Jul 2013 14:05:26 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from am1ehsobe003.messaging.microsoft.com ([213.199.154.206]:46296
+	"EHLO am1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751704Ab3GZTjD (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Fri, 26 Jul 2013 15:39:03 -0400
+From: <dinguyen@altera.com>
+Subject: [PATCH] of: add vendor prefix for Altera Corp.
+Date: Fri, 26 Jul 2013 14:39:00 -0500
+Message-ID: <1374867540-9477-1-git-send-email-dinguyen@altera.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] of: add vendor prefix for Altera Corp.
-References: <1374867540-9477-1-git-send-email-dinguyen@altera.com>
-In-Reply-To: <1374867540-9477-1-git-send-email-dinguyen@altera.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: dinguyen@altera.com
-Cc: dinh.linux@gmail.com, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Olof Johansson <olof@lixom.net>
+To: dinh.linux@gmail.com
+Cc: Dinh Nguyen <dinguyen@altera.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 07/26/2013 01:39 PM, dinguyen@altera.com wrote:
+From: Dinh Nguyen <dinguyen@altera.com>
 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Ian Campbell <ian.campbell@citrix.com>
+Cc: devicetree@vger.kernel.org
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 file changed, 1 insertion(+)
 
-> +altr	Altera Corp.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 366ce9b..ea95767 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -7,6 +7,7 @@ ad	Avionic Design GmbH
+ adi	Analog Devices, Inc.
+ aeroflexgaisler	Aeroflex Gaisler AB
+ ak	Asahi Kasei Corp.
++altr	Altera Corp.
+ amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
+ apm	Applied Micro Circuits Corporation (APM)
+ arm	ARM Ltd.
+-- 
+1.7.9.5
 
-In the context of Marvel(?) wanting to change between a longer and
-stock-ticker vendor name, there was some discussion re: whether we had
-decided not to use stock tickers any more. Is there still consensus that
-we should? If so, I have no problem with this patch, but I wanted to
-make sure everyone was on the same page.
+
