@@ -1,72 +1,104 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 2/8] ASoC: Samsung: I2S: Add quirks as driver data in
- I2S
-Date: Fri, 26 Jul 2013 16:25:51 +0100
-Message-ID: <20130726152551.GM9858@sirena.org.uk>
-References: <1374845812-7803-1-git-send-email-padma.v@samsung.com>
- <1374845812-7803-3-git-send-email-padma.v@samsung.com>
- <20130726145319.GI9858@sirena.org.uk>
- <1417636.4d7IlsSAyI@amdc1227>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
+Date: Fri, 26 Jul 2013 10:05:14 -0600
+Message-ID: <51F29E3A.6060202@wwwdotorg.org>
+References: <20130626115051.GC7095@ab42.lan> <51CB279A.1090404@wwwdotorg.org> <20130705094859.GA27196@ab42.lan> <51D71337.6030409@wwwdotorg.org> <20130708130222.GA6402@ab42.lan> <51DDB5B8.5060909@wwwdotorg.org> <20130716084755.GB10914@ab42.lan> <51E56EF3.5040506@wwwdotorg.org> <20130718160700.GA14482@ab42.lan> <51E847EA.9060302@wwwdotorg.org> <20130726094228.GA3232@ab42.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oFPc/E1qo/d29t+k"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1417636.4d7IlsSAyI@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com, kgene.kim@samsung.com, abrestic@chromium.org, tomasz.figa@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130726094228.GA3232@ab42.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+On 07/26/2013 03:42 AM, Christian Ruppert wrote:
+> On Thu, Jul 18, 2013 at 01:54:18PM -0600, Stephen Warren wrote:
+>> On 07/18/2013 10:07 AM, Christian Ruppert wrote:
+>> ...
+>>> Well, perhaps my definition of "inside"/"outside" pins was not quite
+>>> clear: The pin groups define the set of (kernel internal) pin numbers of
+>>> "outside" pins which are used by pin controller to map a given
+>>> interface. Inside pins are not numbered and the inside interfaces are
+>>> only used to determine which outside pins are part of the same group
+>>> (namely those for which the pin controller hardware provides a mux
+>>> connection to the same inside interface):
+>>>
+>>>                        4
+>>>                 4  /|--/-- SPI
+>>>    PINS[0..3] --/--||  4
+>>>                    \|--/-- GPIO[0..3]
+>>>
+>>>                    4
+>>>    PINS[4..7] -----/------ GPIO[4..7]
+>>>
+>>>                        2
+>>>                 2  /|--/-- I2C
+>>>    PINS[8..9] --/--||  2
+>>>                    \|--/-- GPIO[8..9]
+>>>
+>>> Pins 0..3 are in the SPI group because on the "inside" they can be muxed
+>>> to the SPI interface.
+>>> Pins 8..9 are in the I2C group because on the "inside" they can be muxed
+>>> to the I2C interface.
+>>> Pins 0..9 are in the GPIO group because on the "inside" they can be
+>>> muxed to the GPIO controller.
+>>>
+>>> All pin numbers are relative to the "outside", however, or conflict
+>>> management would not be possible. I hope this is more understandable
+>>> than my previous explanations.
+>>> Both muxes are controlled by the same register. In our overly simplistic
+>>> example this is not strictly necessary but in reality you might have pin
+>>> conflicts between the different interfaces.
+>>
+>> Same register, or same field/bits in that register?
+>>
+>> If it's the same field/bits, I would expect to see the following pin groups:
+>>
+>> 1) PINS[0..3], PINS[8..9]
+>> 2) PINS[4..7]
+>>
+>> ... since those are the things that are independently muxable.
+>> Otherwise, I'd expect to see the following groups:
+>>
+>> 1) PINS[0..3]
+>> 2) PINS[4..7]
+>> 3) PINS[8..9]
+>>
+>>> After the discussion we had so far I'm not so sure if extending the
+>>> pinctrl system with this kind of features is a very good idea.
+>>
+>> That makes things simple:-)
+>>
+>> One thing I still don't understand; in a previous mail, you'd mentioned
+>> 3 DT properties for configuring the pinmux; one represented the pin
+>> group, one represented the mux function that was selected for that pin
+>> group, and there was a third ("config"?) property. I still don't
+>> understand that third property. I only see pins/pingroups and mux
+>> functions in the diagram I quoted above.
+> 
+> In my proposal, pin groups represent interfaces instead of ports: All
+> three pin groups are configured through the same bit field in the same
+> register but they represent _logically_ independent functionalities.
 
---oFPc/E1qo/d29t+k
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oh, that's a pretty "coupled" HW design!
 
-On Fri, Jul 26, 2013 at 05:02:46PM +0200, Tomasz Figa wrote:
+I would suggest having a single pin group for all 10 pins (since that's
+what HW really has). I imagine with that HW design, there's very little
+potential for any kind of dynamic pin-muxing, since it would affect
+multiple unrelated HW modules (I2C, SPI), and hence the co-ordination
+required for dynamic muxing would make it impractical. As such I would
+also specify the pinctrl configuration as a "hog" in the pin controller,
+since each configuration bit affects multiple other devices, so it
+doesn't make logical sense to try to specify the pinctrl configuration
+anywhere other than the pin controller.
 
-> IMHO this SoC-based identification looks much better, especially consider=
-ing=20
-> the fact that IP version isn't something easily determinable, as even the=
-=20
-> documentation can sometimes be not really clear about that.
+> The three DT properties are:
+> 
+> 1. interface (which pins are we actually interested in when requesting
+>    this)
+> 2. port (which bit field/register is used to configure this)
+> 3. configuration of that port (which mux function(s) in that bit
+>    field/register are possible to make the interface available)
 
-Yeah, it's not terribly clever either way.  We've been using the version
-numbers in audio for a long time partly because it is documented
-sometimes and partly because most of the SoCs tend to have one fully
-featured controller and a bunch of secondary controllers on older IP
-revisions.
-
-> However the s3c6410-i2sv4 string looks a bit unfortunate. AFAIK there wer=
-e=20
-> two types of I2S IPs on S3C6410 - normal I2S and I2S multichannel. What=
-=20
-> about having a compatible like s3c6410-i2s-multi?
-
-It was explicitly identified as I2Sv4 in the S3C6410 datasheet so no
-real issue there.
-
---oFPc/E1qo/d29t+k
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR8pT8AAoJELSic+t+oim9YysP/ij8xU0g4F62uouFxbfckuN5
-FlWJImrMBRtnc0V8vp6Xa6Yxz7OIc7Sw6q9WRKrGHwqRCJb5PR0w0dfUT2LeLEGb
-OwynZPSlwLsVTguXuunXyG0inhhB10sniVM1Hh5i7JfFZ2D0lP1pXzfUUiNJ/WKp
-dicVbCd10ITIXSMOmR6AWKppvvoQMPEKKY7EV818GtrVKGmWcSoX2/xNchjjitdj
-9kCBxA/cCKaPxUHbiocbT08L1N8WegEerMu1g10IhbN35W8Xwo7f5m+iC82GNCjl
-Q2v156+to4PvKwWmru5HTqzQXrgbLW94eOGJIUFffk6ujJqucYLc1CxbAWbqxzPe
-cTIsfyJXqdHPixnAbZyLd7HwVHPr1ydfJyqXs7bdT+lPd7SZGDLR0jXGEcbDLgZj
-T2lXdIbu5aYBtq5oZqTpqi9TER4lYPaxlpn+lm7Q7LpGcsxi2LhbyYzXSkvh0YKI
-l9NxOlnVR/WCDiuL5ys1sEhTr3ZUX0Cb1tZq+ZmJYpbRlfBAxAsYMU/G6BwrBeUi
-KtJSMm/iXHrlVslWpfZDT6fMebFVEwG0B+gLcG/7C26Us753WZZEhUW9SwYCecqy
-NuDjxfw4/+d1sfNw5Vkk555iMlpdY47Y8/vzl3PuKP1Y9lnnIE9Ha5+OMR0VzaUh
-2cjw+YbnlY1w15ZGUXci
-=gMHw
------END PGP SIGNATURE-----
-
---oFPc/E1qo/d29t+k--
