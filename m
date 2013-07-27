@@ -1,35 +1,201 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 2/2] pinctrl: palmas: add pincontrol driver
-Date: Sat, 27 Jul 2013 15:53:27 +0530
-Message-ID: <51F39F9F.5020607@nvidia.com>
-References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com> <1374833754-19659-3-git-send-email-ldewangan@nvidia.com> <20130726164122.GT9858@sirena.org.uk>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH v10 4/7] ASoC: fsl-ssi: Add support for imx-pcm-fiq
+Date: Sat, 27 Jul 2013 13:31:53 +0200
+Message-ID: <1374924716-23475-5-git-send-email-mpa@pengutronix.de>
+References: <1374924716-23475-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130726164122.GT9858@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1374924716-23475-1-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Timur Tabi <timur@tabi.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 July 2013 10:11 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Fri, Jul 26, 2013 at 03:45:54PM +0530, Laxman Dewangan wrote:
->
->> +pins: gpio0_id, gpio1_vbus_det_led1_pwm1, gpio2_regen_led2_pwm2, gpio3_chrg_det,
->> +	gpio4_sysen1, gpio5_clk32kgaudio_usb_psel, gpio6_sysen2,
->> +	gpio7_msecure_pwrhold, gpio8_sim1rsti, gpio9_low_vbat,
->> +	gpio10_wireless_chrg1, gpio11_rcm, gpio12_sim2rsto, gpio13, gpio14,
->> +	gpio15_sim2rsti, vac, powergood_usb_psel, nreswarm, pwrdown,
->> +	gpadc_start, reset_in, nsleep, enable1, enable2, int.
-> Would it not be easier to just name the GPIOs gpioN rather than using
-> the full names with the possible functions?
->
+Add support for non-dma pcm for imx platforms with imx-pcm-fiq support.
+Instead of imx-pcm-audio, in this case imx-pcm-fiq-audio device is added
+and the SIER flags are set differently.
 
-I took the name approach as what we have on Tegra.
-But I think I can put the name of the pins same as what we have in 
-datasheet. So pin name will be exact same as what we have in datasheet. 
-That will be easy to interpret.
+We need imx-pcm-fiq for some boards that use an incompatible codec.
+imx-pcm-fiq handles those codecs differently and allows to operate with
+them. DMA is not possible because some data sent by the codecs, e.g.
+wm9712, is not in the datastream. Also some data is mixed up in the
+fifos, so that we need to sort them out manually.
 
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+Tested-by: Shawn Guo <shawn.guo@linaro.org>
+---
+ .../devicetree/bindings/sound/fsl,ssi.txt          |  4 ++
+ sound/soc/fsl/fsl_ssi.c                            | 79 ++++++++++++++++++----
+ 2 files changed, 71 insertions(+), 12 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/fsl,ssi.txt b/Documentation/devicetree/bindings/sound/fsl,ssi.txt
+index 5ff76c9..e45cbce 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,ssi.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,ssi.txt
+@@ -47,6 +47,10 @@ Optional properties:
+ - codec-handle:     Phandle to a 'codec' node that defines an audio
+                     codec connected to this SSI.  This node is typically
+                     a child of an I2C or other control node.
++- fsl,fiq-stream-filter: Bool property. Disabled DMA and use FIQ instead to
++		    filter the codec stream. This is necessary for some boards
++		    where an incompatible codec is connected to this SSI, e.g.
++		    on pca100 and pcm043.
+ 
+ Child 'codec' node required properties:
+ - compatible:       Compatible list, contains the name of the codec
+diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
+index 4d78df7..8b075ef 100644
+--- a/sound/soc/fsl/fsl_ssi.c
++++ b/sound/soc/fsl/fsl_ssi.c
+@@ -8,6 +8,26 @@
+  * This file is licensed under the terms of the GNU General Public License
+  * version 2.  This program is licensed "as is" without any warranty of any
+  * kind, whether express or implied.
++ *
++ *
++ * Some notes why imx-pcm-fiq is used instead of DMA on some boards:
++ *
++ * The i.MX SSI core has some nasty limitations in AC97 mode. While most
++ * sane processor vendors have a FIFO per AC97 slot, the i.MX has only
++ * one FIFO which combines all valid receive slots. We cannot even select
++ * which slots we want to receive. The WM9712 with which this driver
++ * was developed with always sends GPIO status data in slot 12 which
++ * we receive in our (PCM-) data stream. The only chance we have is to
++ * manually skip this data in the FIQ handler. With sampling rates different
++ * from 48000Hz not every frame has valid receive data, so the ratio
++ * between pcm data and GPIO status data changes. Our FIQ handler is not
++ * able to handle this, hence this driver only works with 48000Hz sampling
++ * rate.
++ * Reading and writing AC97 registers is another challenge. The core
++ * provides us status bits when the read register is updated with *another*
++ * value. When we read the same register two times (and the register still
++ * contains the same value) these status bits are not set. We work
++ * around this by not polling these bits but only wait a fixed delay.
+  */
+ 
+ #include <linux/init.h>
+@@ -121,11 +141,13 @@ struct fsl_ssi_private {
+ 
+ 	bool new_binding;
+ 	bool ssi_on_imx;
++	bool use_dma;
+ 	struct clk *clk;
+ 	struct snd_dmaengine_dai_dma_data dma_params_tx;
+ 	struct snd_dmaengine_dai_dma_data dma_params_rx;
+ 	struct imx_dma_data filter_data_tx;
+ 	struct imx_dma_data filter_data_rx;
++	struct imx_pcm_fiq_params fiq_params;
+ 
+ 	struct {
+ 		unsigned int rfrc;
+@@ -355,7 +377,12 @@ static int fsl_ssi_startup(struct snd_pcm_substream *substream,
+ 		 */
+ 
+ 		/* Enable the interrupts and DMA requests */
+-		write_ssi(SIER_FLAGS, &ssi->sier);
++		if (ssi_private->use_dma)
++			write_ssi(SIER_FLAGS, &ssi->sier);
++		else
++			write_ssi(CCSR_SSI_SIER_TIE | CCSR_SSI_SIER_TFE0_EN |
++					CCSR_SSI_SIER_RIE |
++					CCSR_SSI_SIER_RFF0_EN, &ssi->sier);
+ 
+ 		/*
+ 		 * Set the watermark for transmit FIFI 0 and receive FIFO 0. We
+@@ -543,7 +570,7 @@ static int fsl_ssi_dai_probe(struct snd_soc_dai *dai)
+ {
+ 	struct fsl_ssi_private *ssi_private = snd_soc_dai_get_drvdata(dai);
+ 
+-	if (ssi_private->ssi_on_imx) {
++	if (ssi_private->ssi_on_imx && ssi_private->use_dma) {
+ 		dai->playback_dma_data = &ssi_private->dma_params_tx;
+ 		dai->capture_dma_data = &ssi_private->dma_params_rx;
+ 	}
+@@ -683,6 +710,9 @@ static int fsl_ssi_probe(struct platform_device *pdev)
+ 
+ 	strcpy(ssi_private->name, p);
+ 
++	ssi_private->use_dma = !of_property_read_bool(np,
++			"fsl,fiq-stream-filter");
++
+ 	/* Initialize this copy of the CPU DAI driver structure */
+ 	memcpy(&ssi_private->cpu_dai_drv, &fsl_ssi_dai_template,
+ 	       sizeof(fsl_ssi_dai_template));
+@@ -707,12 +737,16 @@ static int fsl_ssi_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 
+-	/* The 'name' should not have any slashes in it. */
+-	ret = devm_request_irq(&pdev->dev, ssi_private->irq, fsl_ssi_isr, 0,
+-			       ssi_private->name, ssi_private);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "could not claim irq %u\n", ssi_private->irq);
+-		goto error_irqmap;
++	if (ssi_private->use_dma) {
++		/* The 'name' should not have any slashes in it. */
++		ret = devm_request_irq(&pdev->dev, ssi_private->irq,
++					fsl_ssi_isr, 0, ssi_private->name,
++					ssi_private);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "could not claim irq %u\n",
++					ssi_private->irq);
++			goto error_irqmap;
++		}
+ 	}
+ 
+ 	/* Are the RX and the TX clocks locked? */
+@@ -766,7 +800,7 @@ static int fsl_ssi_probe(struct platform_device *pdev)
+ 		 */
+ 		ret = of_property_read_u32_array(pdev->dev.of_node,
+ 					"fsl,ssi-dma-events", dma_events, 2);
+-		if (ret) {
++		if (ret && !ssi_private->use_dma) {
+ 			dev_err(&pdev->dev, "could not get dma events\n");
+ 			goto error_clk;
+ 		}
+@@ -805,9 +839,30 @@ static int fsl_ssi_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (ssi_private->ssi_on_imx) {
+-		ret = imx_pcm_dma_init(pdev);
+-		if (ret)
+-			goto error_dev;
++		if (!ssi_private->use_dma) {
++
++			/*
++			 * Some boards use an incompatible codec. To get it
++			 * working, we are using imx-fiq-pcm-audio, that
++			 * can handle those codecs. DMA is not possible in this
++			 * situation.
++			 */
++
++			ssi_private->fiq_params.irq = ssi_private->irq;
++			ssi_private->fiq_params.base = ssi_private->ssi;
++			ssi_private->fiq_params.dma_params_rx =
++				&ssi_private->dma_params_rx;
++			ssi_private->fiq_params.dma_params_tx =
++				&ssi_private->dma_params_tx;
++
++			ret = imx_pcm_fiq_init(pdev, &ssi_private->fiq_params);
++			if (ret)
++				goto error_dev;
++		} else {
++			ret = imx_pcm_dma_init(pdev);
++			if (ret)
++				goto error_dev;
++		}
+ 	}
+ 
+ 	/*
+-- 
+1.8.3.2
