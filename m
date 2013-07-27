@@ -1,50 +1,33 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail.free-electrons.com ([94.23.35.102]:45343 "EHLO
-	mail.free-electrons.com" rhost-flags-OK-FAIL-OK-FAIL)
-	by vger.kernel.org with ESMTP id S1751003Ab3G1Ww7 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Sun, 28 Jul 2013 18:52:59 -0400
-Date: Sun, 28 Jul 2013 19:53:00 -0300
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH 1/4] mtd: nand: gpio: Determine bus width automatically
-Message-ID: <20130728225259.GA4215@localhost>
-References: <1374582499-31823-1-git-send-email-shc_work@mail.ru>
- <CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
+Received: from mail-vb0-f51.google.com ([209.85.212.51]:47247 "EHLO
+	mail-vb0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752493Ab3G0U6f (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 27 Jul 2013 16:58:35 -0400
+Received: by mail-vb0-f51.google.com with SMTP id x16so334562vbf.10
+        for <devicetree@vger.kernel.org>; Sat, 27 Jul 2013 13:58:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
+In-Reply-To: <CAN8TOE82MqJ0WRtLftbfp0D9d94yXsUH7-vF3M6fooDTFjFvsw@mail.gmail.com>
+References: <1374582499-31823-1-git-send-email-shc_work@mail.ru>
+	<CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
+	<20130724172804.373309617f46b6e66a1085c0@mail.ru>
+	<CAN8TOE82MqJ0WRtLftbfp0D9d94yXsUH7-vF3M6fooDTFjFvsw@mail.gmail.com>
+Date: Sat, 27 Jul 2013 13:58:34 -0700
+Message-ID: <CAN8TOE9ZEJY5bXRhY+mEc2iFSY90zJFNUnjp50R+an_viQokMw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] mtd: nand: gpio: Determine bus width automatically
+From: Brian Norris <computersforpeace@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Alexander Shiyan <shc_work@mail.ru>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, devicetree@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: David Woodhouse <dwmw2@infradead.org>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jul 23, 2013 at 11:42:08PM -0700, Brian Norris wrote:
-> On Tue, Jul 23, 2013 at 5:28 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
-> > This patch provide automatically determine of bus width. If resource size,
-> > supplied to the driver more than 1 byte, the NAND_BUSWIDTH_AUTO option
-> > will be used in the MTD core.
-> 
-> I presume this depends on the bugfix I sent for NAND_BUSWIDTH_AUTO /
-> nand_set_defaults()? That's worth noting (as I am right now), for
-> whenever someone gets around to merging this.
-> 
-> > Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-> > ---
-> >  .../devicetree/bindings/mtd/gpio-control-nand.txt  |  5 ++---
-> 
-> Considering the changes in device-tree bindings, it's good to CC the
-> device-tree list, I believe.
-> 
+(snip conversation)
 
-Adding the new devicetree list in Cc.
+BTW Alexander, please be sure to CC the appropriate list
+(devicetree@vger.kernel.org) for the resend of your DT-related patches
+(I initially used the wrong list). They should have better input on
+the process of adding/removing/deprecating device properties. And if
+they don't have any opinion, then it's probably fine to do this
+whatever way you/we see fit :)
 
-Keep in mind you might want to split the DT binding part of the patch
-into a separate patch. For small patches like this one, it's probably
-not a big deal.
-
--- 
-Ezequiel García, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+Brian
