@@ -1,63 +1,49 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH V2 7/8] ARM: dts: wm8994: Add wm8994 support on smdk5420
-Date: Sat, 27 Jul 2013 06:46:40 +0530
-Message-ID: <CAAgF-Be8SNxTZv1yFCwH6yJ-O_3R4reh=3y+pSCLJYW7S9TkUg@mail.gmail.com>
-References: <1374845812-7803-1-git-send-email-padma.v@samsung.com>
-	<1374845812-7803-8-git-send-email-padma.v@samsung.com>
-	<20130726151902.GL9858@sirena.org.uk>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/2] pinctrl: pinconf_generic: add utility functions for
+ add map/configs
+Date: Sat, 27 Jul 2013 15:44:48 +0530
+Message-ID: <51F39D98.1090008@nvidia.com>
+References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com> <1374833754-19659-2-git-send-email-ldewangan@nvidia.com> <51F2B384.9050706@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130726151902.GL9858@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, Kukjin Kim <kgene.kim@samsung.com>, abrestic@chromium.org, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51F2B384.9050706@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Friday 26 July 2013 11:06 PM, Stephen Warren wrote:
+> On 07/26/2013 04:15 AM, Laxman Dewangan wrote:
+>> Some of pincontrol driver needs the utility function to create map
+>> list. The utility function needed for adding mux, configs etc.
+> Which other drivers already contain this code? Are you planning on
+> converting them over to use these new functions? The code looks
+> familiar, so I assume it's just cut/paste from Tegra with some renames,
+> so I didn't read it through in detail.
 
-On Fri, Jul 26, 2013 at 8:49 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Jul 26, 2013 at 07:06:51PM +0530, Padmavathi Venna wrote:
->> This patch adds wm8994 codec node on i2c bus1 and the required
->> regulator supplies and properties on smdk5420 board.
->
-> This isn't a device tree patch for WM8994, it's a patch for the
-> SMDK5420.
+Yes, these functions are taken from the pinctrl-tegra driver. Other 
+drivers which have similar implementation are nomadik, tegra, abx500, 
+tz1090, tz1090-pdc.
+So All can use these utility function to avoid duplication and reduce 
+code size.
+Yes, I have plan to use this in Tegra atleast but once this patch get 
+accepted.
 
-Yes. I will correct the subject.
-
->
->> +     vdd: fixed-regulator@0 {
->> +             compatible = "regulator-fixed";
->> +             regulator-name = "vdd-supply";
->
-> These names look wrong - they should reflect the names in the schematic
-> as they're for human comprehensibility.  This may just be a case of
-> dropping the -supply.
-
-OK.
 
 >
->> +             wm8994: wm8994@1a {
->> +                     compatible = "wlf,wm8994";
->> +                     reg = <0x1a>;
->> +
->> +                     gpio-controller;
->> +                     #gpio-cells = <2>;
->> +
->> +                     AVDD2-supply = <&vdd>;
->> +                     CPVDD-supply = <&vdd>;
->> +                     DBVDD-supply = <&dbvdd>;
->> +                     SPKVDD1-supply = <&spkvdd>;
->> +                     SPKVDD2-supply = <&spkvdd>;
->> +             };
->
-> It would be helpful to also add a clock binding (I posted a binding
-> documentation update the other day, it's in my tree now) but it's not
-> essential and I suspect it needs some work on the clock driver side
-> still.
+>>   drivers/pinctrl/pinconf-generic.c       |  105 +++++++++++++++++++++++++++++++
+>>   include/linux/pinctrl/pinconf-generic.h |   52 +++++++++++++++
+> I don't think those are the correct files for this code. Presumably
+> there's no reason at all why a pinctrl driver that doesn't require
+> CONFIG_GENERIC_PINCONF can't use these basic utility functions. Perhaps
+> add a new pinctrl-utils file?
 
-OK. I will check this.
+I thought generic implementation of parsing of dt is pinctrl-generic 
+file and as these newly added APIs are require for the parsing the DT 
+node, I added here.
+I can move this to pinctrl-util.c/h also.
 
-Thanks
-Padma
+
+
