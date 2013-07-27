@@ -1,45 +1,85 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V2 2/8] ASoC: Samsung: I2S: Add quirks as driver data in I2S
-Date: Sat, 27 Jul 2013 13:56:43 +0200
-Message-ID: <2425397.IIfnern1kk@flatron>
-References: <1374845812-7803-1-git-send-email-padma.v@samsung.com> <1417636.4d7IlsSAyI@amdc1227> <20130726152551.GM9858@sirena.org.uk>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 2/2] pinctrl: palmas: add pincontrol driver
+Date: Sat, 27 Jul 2013 17:41:35 +0530
+Message-ID: <51F3B8F7.4000809@nvidia.com>
+References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com> <1374833754-19659-3-git-send-email-ldewangan@nvidia.com> <51F2C970.7000200@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130726152551.GM9858@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Tomasz Figa <t.figa@samsung.com>, Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com, kgene.kim@samsung.com, abrestic@chromium.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51F2C970.7000200@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 of July 2013 16:25:51 Mark Brown wrote:
-> On Fri, Jul 26, 2013 at 05:02:46PM +0200, Tomasz Figa wrote:
-> > IMHO this SoC-based identification looks much better, especially
-> > considering the fact that IP version isn't something easily
-> > determinable, as even the documentation can sometimes be not really
-> > clear about that.
-> 
-> Yeah, it's not terribly clever either way.  We've been using the version
-> numbers in audio for a long time partly because it is documented
-> sometimes and partly because most of the SoCs tend to have one fully
-> featured controller and a bunch of secondary controllers on older IP
-> revisions.
-> 
-> > However the s3c6410-i2sv4 string looks a bit unfortunate. AFAIK there
-> > were two types of I2S IPs on S3C6410 - normal I2S and I2S
-> > multichannel. What about having a compatible like s3c6410-i2s-multi?
-> 
-> It was explicitly identified as I2Sv4 in the S3C6410 datasheet so no
-> real issue there.
+Hi Stephen,
+Thanks for detail review.
+Agree on most of review. Some info/answer on some of query.
 
-Well, the datasheet I have calls it either "I2S V40" or "IIS MULTI AUDIO 
-INTERFACE". I like the latter much more, because it actually says what's 
-the difference compared to previous I2S IPs.
+On Saturday 27 July 2013 12:39 AM, Stephen Warren wrote:
+> (Also CC'ing in the DT bindings maintainers, hence quoting all of the
+> binding.)
+>
+> On 07/26/2013 04:15 AM, Laxman Dewangan wrote:
+>
+> That field looks odd. From what I can tell in the code, the location of
+> the pull-up/down/... registers/bits varies depending on which mux
+> function is selected for a particular pin? That's a very strange HW
+> design. Are you sure the set of pins/functions this driver exposes is
+> the correct way to represent the HW?
 
-I'm not strongly against using the v4 suffix, but since we decided to use 
-more meaningful compatible values elsewhere, I think this way would be 
-better for sound drivers as well.
 
-Best regards,
-Tomasz
+Yes, the pull up/down register is different for different mux/function. 
+It is not for pin specific.
+
+>> +     unsigned mux_reg_base;
+>> +     unsigned mux_reg_add;
+> This isn't an issue with this patch, but more with the way palmas_read()
+> works. Here, the MFD component is telling the MFD top-level object where
+> the MFD component exists within the top-level address space. That's
+> backwards. The top-level MFD is what know how the components are put
+> together to create the whole particular chip, and it's entirely possible
+> this could vary chip-to-chip. :-(
+
+I think this was original Idea when Graeme thought of the Palmas DT. But 
+unfortunately this was not written.
+The base address or the address space should be provided from the DT and 
+the address of particular register should be in offset to that base. But 
+not fully hardware support this neither the framework is written like 
+this for the palmas.
+
+>> +     for (i = 0; i < ARRAY_SIZE(g->opt); i++) {
+>> +             if (g->opt[i]->mux_opt == function)
+>> +                     break;
+>> +     }
+> So, when I create the Tegra bindings, I created the list of mux
+> functions by looking at the logical meaning of each register value
+> (0..3) for each pin, and then made the list of functions have a value
+> for each logical meaning. This requires a mapping table between the
+> pinctrl subsystem's mux function values and the HW mux function values,
+> which is what the loop above implements. Instead, if might be simpler to
+> just have functions named "0", "1", "2", ... and have all pins support
+> those functions. This simplifies the driver, and the DT bindings.
+> Whether doing so would make the DT bindings better probably depends on
+> exactly how the HW's documentation is written...
+
+I am not sure I got it completely or not. Let me try out this and get 
+reviewed by you.
+
+
+>
+>> +static int palmas_pinconf_get(struct pinctrl_dev *pctldev,
+>> +                     unsigned pin, unsigned long *config)
+>> +{
+>> +     dev_err(pctldev->dev, "pin_config_get op not supported\n");
+>> +     return -ENOTSUPP;
+>> +}
+> Are the pin configuration values applied per pin in HW? If so, you
+> should probably implement palmas_pinconf_get/set() rather than
+> palmas_pinconf_group_get/set(). You'd also need to change the DT->map
+> conversion function to use PIN_MAP_TYPE_CONFIGS_PIN rather than
+> PIN_MAP_TYPE_CONFIGS_GROUP.
+
+Yes, this is applied per pin in HW.
+
