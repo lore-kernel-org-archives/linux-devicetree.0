@@ -1,85 +1,93 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 2/2] pinctrl: palmas: add pincontrol driver
-Date: Sat, 27 Jul 2013 17:41:35 +0530
-Message-ID: <51F3B8F7.4000809@nvidia.com>
-References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com> <1374833754-19659-3-git-send-email-ldewangan@nvidia.com> <51F2C970.7000200@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v10 2/7] ASoC: codec: wm9712 simple DT bindings
+Date: Sat, 27 Jul 2013 12:59:50 +0100
+Message-ID: <20130727115950.GF9858@sirena.org.uk>
+References: <1374924716-23475-1-git-send-email-mpa@pengutronix.de>
+ <1374924716-23475-3-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51F2C970.7000200@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>
+Content-Type: multipart/mixed; boundary="===============0288759095491653159=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1374924716-23475-3-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-Thanks for detail review.
-Agree on most of review. Some info/answer on some of query.
 
-On Saturday 27 July 2013 12:39 AM, Stephen Warren wrote:
-> (Also CC'ing in the DT bindings maintainers, hence quoting all of the
-> binding.)
->
-> On 07/26/2013 04:15 AM, Laxman Dewangan wrote:
->
-> That field looks odd. From what I can tell in the code, the location of
-> the pull-up/down/... registers/bits varies depending on which mux
-> function is selected for a particular pin? That's a very strange HW
-> design. Are you sure the set of pins/functions this driver exposes is
-> the correct way to represent the HW?
+--===============0288759095491653159==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9TayrSCGl6Stf3M8"
+Content-Disposition: inline
 
 
-Yes, the pull up/down register is different for different mux/function. 
-It is not for pin specific.
+--9TayrSCGl6Stf3M8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +     unsigned mux_reg_base;
->> +     unsigned mux_reg_add;
-> This isn't an issue with this patch, but more with the way palmas_read()
-> works. Here, the MFD component is telling the MFD top-level object where
-> the MFD component exists within the top-level address space. That's
-> backwards. The top-level MFD is what know how the components are put
-> together to create the whole particular chip, and it's entirely possible
-> this could vary chip-to-chip. :-(
+On Sat, Jul 27, 2013 at 01:31:51PM +0200, Markus Pargmann wrote:
 
-I think this was original Idea when Graeme thought of the Palmas DT. But 
-unfortunately this was not written.
-The base address or the address space should be provided from the DT and 
-the address of particular register should be in offset to that base. But 
-not fully hardware support this neither the framework is written like 
-this for the palmas.
+> +static const struct of_device_id wm9712_codec_of_dev_id[] =3D {
+> +	{
+> +		.compatible =3D "wlf,wm9712",
+> +	}, {
+> +		/* sentinel */
+> +	}
+> +};
+> +
+>  static struct platform_driver wm9712_codec_driver =3D {
+>  	.driver =3D {
+>  		.name =3D "wm9712-codec",
+>  		.owner =3D THIS_MODULE,
+> +		.of_match_table =3D wm9712_codec_of_dev_id,
+>  	},
+> =20
+>  	.probe =3D wm9712_probe,
 
->> +     for (i = 0; i < ARRAY_SIZE(g->opt); i++) {
->> +             if (g->opt[i]->mux_opt == function)
->> +                     break;
->> +     }
-> So, when I create the Tegra bindings, I created the list of mux
-> functions by looking at the logical meaning of each register value
-> (0..3) for each pin, and then made the list of functions have a value
-> for each logical meaning. This requires a mapping table between the
-> pinctrl subsystem's mux function values and the HW mux function values,
-> which is what the loop above implements. Instead, if might be simpler to
-> just have functions named "0", "1", "2", ... and have all pins support
-> those functions. This simplifies the driver, and the DT bindings.
-> Whether doing so would make the DT bindings better probably depends on
-> exactly how the HW's documentation is written...
+AC'97 is an enumerable bus, we shouldn't need this...
 
-I am not sure I got it completely or not. Let me try out this and get 
-reviewed by you.
+--9TayrSCGl6Stf3M8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR87YzAAoJELSic+t+oim9/EAP/2EVuDDr1ao50mKua2irOEW8
+V0MJFv6N2o17rBJ8lGadPjRKrRocKnY9QcOHh9z1l5Pkq5CmbGGsym/DO/TAOAf8
+nSZV7MtB4NY2xVyrBbAuzjPUVyv8KlK3A8vK+y1Ff5UHwwk6vqk8Uh/o9nNtnjO6
+aRA/xfVv2voHMvmfQvSFrDIFbUnSDicsDGG7Lgj3K40HH9PiqI64PZWy4E+950Ei
+v6LDf7gg8uyDhwJ5MO0bzHdQKZhQISSPip1DYnLtoNlRtUV8q2m+TTGmY0xfAajR
+3/I+P30Gs/NJMfTEKHis7vwS34tR/Yn/m1n7b7XZ1KmWYo4Ekq60rf6D8Ix5KfbY
+UyykLdhNowTZm0wrHi6KSihgLoFRaNvWw0ouTC2v6LCbaml/2OL49mYexRTuIWx0
+tI39PRGrtvYeZB7tRUrYO1O6jXKCpw6Tky5UphPjHAjmbiV2ZO+WGKaW9r8/4ntD
+xzJu6jdhDE+l20z+B1KgjQ9W8V5SQg9kXEgMn2DUXtRdfMoLYL/A6RdR9IYXJp0A
+gMRDWNc69Wkq32KdPUrcnBG76r2OaeRvBn6FX/BaVoyKBrrdLA849EIkj/LQ+orC
+JnApnXSPreh2LJ/TNEHujem2JB8R2wa4mnCHca4vVt6CCM/9LP7GpVODBQNLHbIg
+6aqStMxynRu6O3OyfUyj
+=Y9hf
+-----END PGP SIGNATURE-----
+
+--9TayrSCGl6Stf3M8--
 
 
->
->> +static int palmas_pinconf_get(struct pinctrl_dev *pctldev,
->> +                     unsigned pin, unsigned long *config)
->> +{
->> +     dev_err(pctldev->dev, "pin_config_get op not supported\n");
->> +     return -ENOTSUPP;
->> +}
-> Are the pin configuration values applied per pin in HW? If so, you
-> should probably implement palmas_pinconf_get/set() rather than
-> palmas_pinconf_group_get/set(). You'd also need to change the DT->map
-> conversion function to use PIN_MAP_TYPE_CONFIGS_PIN rather than
-> PIN_MAP_TYPE_CONFIGS_GROUP.
+--===============0288759095491653159==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Yes, this is applied per pin in HW.
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
+--===============0288759095491653159==--
