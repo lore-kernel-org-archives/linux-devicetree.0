@@ -1,43 +1,79 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 1/3] clk: exynos5250: Add G2D gate clock
-Date: Sat, 27 Jul 2013 18:59:56 +0530
-Message-ID: <CAK9yfHw6KtVDAns-1JhNpiS0brTeUpfiHS-v3q7H2GLWkY-Adw@mail.gmail.com>
-References: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
-	<20130726201800.7598.54329@quantum>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH v11] reset: Add driver for gpio-controlled reset pins
+Date: Sat, 27 Jul 2013 18:38:16 +0100
+Message-ID: <51F40588.9020907@codethink.co.uk>
+References: <1374834384-8071-1-git-send-email-p.zabel@pengutronix.de>
+ <51F2E4A7.1040200@codethink.co.uk> <51F2EA59.8010908@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130726201800.7598.54329@quantum>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, patches@linaro.org, inki.dae@samsung.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51F2EA59.8010908@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Arnd Bergmann <arnd@arndb.de>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27 July 2013 01:48, Mike Turquette <mturquette@linaro.org> wrote:
-> Quoting Sachin Kamat (2013-07-05 01:42:27)
->> Adds gate clock for G2D IP for Exynos5250 SoC.
+On 26/07/13 22:30, Sylwester Nawrocki wrote:
+> On 07/26/2013 11:05 PM, Ben Dooks wrote:
+>> On 26/07/13 11:26, Philipp Zabel wrote:
+>>> This driver implements a reset controller device that toggle a gpio
+>>> connected to a reset pin of a peripheral IC. The delay between assertion
+>>> and de-assertion of the reset signal can be configured via device tree.
+>>>
+>>> Signed-off-by: Philipp Zabel<p.zabel@pengutronix.de>
+>>> Reviewed-by: Stephen Warren<swarren@nvidia.com>
 >>
->> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
->> Cc: Mike Turquette <mturquette@linaro.org>
+>> [snip]
+>>
+>>> +static struct of_device_id gpio_reset_dt_ids[] = {
+>>> + { .compatible = "gpio-reset" },
+>>> + { }
+>>> +};
+>>
+>> I think you need the following:
+>> MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids);
 >
-> I've taken patch #1 into clk-next.
-
-Thanks Mike.
-
+> It's already there, at bottom of the file. But if I'm not mistaken
+> the common practice is to keep it together with the actual array
+> definition. At least that's the case with, e.g. EXPORT_SYMBOL*.
 >
->> ---
->> This patch depends on the following patch:
->> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/20581
+>>> +static struct platform_driver gpio_reset_driver = {
+>>> + .probe = gpio_reset_probe,
+>>> + .remove = gpio_reset_remove,
+>>> + .driver = {
+>>> + .name = "gpio-reset",
+>>> + .owner = THIS_MODULE,
+>>> + .of_match_table = of_match_ptr(gpio_reset_dt_ids),
+>>> + },
+>>> +};
+>>> +
+>>> +module_platform_driver(gpio_reset_driver);
+>>> +
+>>> +MODULE_AUTHOR("Philipp Zabel<p.zabel@pengutronix.de>");
+>>> +MODULE_DESCRIPTION("gpio reset controller");
 >
-> I think I've gotten all three series you sent out, can you confirm?
+> nit: shouldn't gpio be capitalized ?
+>
+>>> +MODULE_LICENSE("GPL");
+>>> +MODULE_ALIAS("platform:gpio-reset");
+>>> +MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids);
+>
+> --
+> Regards,
+> Sylwester
 
-I haven't seen any update in your tree [1] since quite some time. The
-last commit I see in clk-next branch is 45e3ec3784 ("clk: tegra: fix
-ifdef for tegra_periph_reset_assert inline"). I hope I am looking at
-the right tree?
-
-[1] git://git.linaro.org/people/mturquette/linux.git
+ta, that's why I missed it. Nice if it stays with the table it
+references.
 
 -- 
-With warm regards,
-Sachin
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
