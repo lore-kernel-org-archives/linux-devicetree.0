@@ -1,79 +1,63 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH v11] reset: Add driver for gpio-controlled reset pins
-Date: Sat, 27 Jul 2013 18:38:16 +0100
-Message-ID: <51F40588.9020907@codethink.co.uk>
-References: <1374834384-8071-1-git-send-email-p.zabel@pengutronix.de>
- <51F2E4A7.1040200@codethink.co.uk> <51F2EA59.8010908@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] pinctrl: palmas: add pincontrol driver
+Date: Sun, 28 Jul 2013 13:20:55 +0100
+Message-ID: <20130728122055.GO9858@sirena.org.uk>
+References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com>
+ <1374833754-19659-3-git-send-email-ldewangan@nvidia.com>
+ <20130726164122.GT9858@sirena.org.uk>
+ <51F39F9F.5020607@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51F2EA59.8010908@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Arnd Bergmann <arnd@arndb.de>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="V7gLWA+uOry9OxZJ"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51F39F9F.5020607@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26/07/13 22:30, Sylwester Nawrocki wrote:
-> On 07/26/2013 11:05 PM, Ben Dooks wrote:
->> On 26/07/13 11:26, Philipp Zabel wrote:
->>> This driver implements a reset controller device that toggle a gpio
->>> connected to a reset pin of a peripheral IC. The delay between assertion
->>> and de-assertion of the reset signal can be configured via device tree.
->>>
->>> Signed-off-by: Philipp Zabel<p.zabel@pengutronix.de>
->>> Reviewed-by: Stephen Warren<swarren@nvidia.com>
->>
->> [snip]
->>
->>> +static struct of_device_id gpio_reset_dt_ids[] = {
->>> + { .compatible = "gpio-reset" },
->>> + { }
->>> +};
->>
->> I think you need the following:
->> MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids);
->
-> It's already there, at bottom of the file. But if I'm not mistaken
-> the common practice is to keep it together with the actual array
-> definition. At least that's the case with, e.g. EXPORT_SYMBOL*.
->
->>> +static struct platform_driver gpio_reset_driver = {
->>> + .probe = gpio_reset_probe,
->>> + .remove = gpio_reset_remove,
->>> + .driver = {
->>> + .name = "gpio-reset",
->>> + .owner = THIS_MODULE,
->>> + .of_match_table = of_match_ptr(gpio_reset_dt_ids),
->>> + },
->>> +};
->>> +
->>> +module_platform_driver(gpio_reset_driver);
->>> +
->>> +MODULE_AUTHOR("Philipp Zabel<p.zabel@pengutronix.de>");
->>> +MODULE_DESCRIPTION("gpio reset controller");
->
-> nit: shouldn't gpio be capitalized ?
->
->>> +MODULE_LICENSE("GPL");
->>> +MODULE_ALIAS("platform:gpio-reset");
->>> +MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids);
->
-> --
-> Regards,
-> Sylwester
 
-ta, that's why I missed it. Nice if it stays with the table it
-references.
+--V7gLWA+uOry9OxZJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+On Sat, Jul 27, 2013 at 03:53:27PM +0530, Laxman Dewangan wrote:
+> On Friday 26 July 2013 10:11 PM, Mark Brown wrote:
+
+> >>+	gpio4_sysen1, gpio5_clk32kgaudio_usb_psel, gpio6_sysen2,
+
+> >Would it not be easier to just name the GPIOs gpioN rather than using
+> >the full names with the possible functions?
+
+> I took the name approach as what we have on Tegra.
+> But I think I can put the name of the pins same as what we have in
+> datasheet. So pin name will be exact same as what we have in
+> datasheet. That will be easy to interpret.
+
+I was thinking more about ease of typing than ease of understanding
+here!
+
+--V7gLWA+uOry9OxZJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR9QykAAoJELSic+t+oim97TIQAJRfxCeUcj852LpOWf43QDJt
+ltoWfgWuGy9ezWkf+gOjh24s9mXugAOrGDdX54hO6qd5UXusxI/7KHYeMbgtLmX+
+zlbEkI2FwY4NfZhiRAB5W36sp4DIwi7e3KuRR5npT4yhNL1hXOE/ACS8019VY048
+k1Mm6PQiedMEMs4IG7Xd7NLRi6vwxLQH51WGn7kYndno/OxgiPprwNaiT0BXYgv3
+m/x9EeMNWi7m6x1sfWdDglS/J73DcZ7sdqaguGDj/o9QgkAUEuc6vi6xFfDslgw0
+VEXYH5NRrNlxc3uwQg06/LEtApnLuGfCgxuJysBB84IS9ThrHNoi0e3btWKou///
+Adwe7Y/yjF/UqH924GihLZ8ByHwTLT0tofIYSNCdJGTUpt14gPUCR9LHHr/+YQjy
+xxteIkAGX7XJVgA7TWDv5RWMFb0JCcWA37OLTcuAaCOr9RHNLj0twRlKXcn9m59B
+Lr3T34M1uclxg5Tqwu7FORW12QGyyIkjk+6yd6coOvaQE81VC2NC4xuH+4Muiivs
+lndurhFp0P8RCbTgL+/Yftwl1jbg4IYs+y0Ev4rsUBHZw7UlUQ557b+8U/ZCy+aR
+EXMG1O+RR5a9Bhn6N8jHvouTi/YTw8E+ifZgNFbn2KK2OOIpf9vrD9p0+b/ANKCq
+I74TNJjiq0AjAFWzEoBX
+=QJgV
+-----END PGP SIGNATURE-----
+
+--V7gLWA+uOry9OxZJ--
