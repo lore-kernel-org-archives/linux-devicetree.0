@@ -1,57 +1,31 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from service87.mimecast.com ([91.220.42.44]:53217 "EHLO
-	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755986Ab3G3SAW (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 30 Jul 2013 14:00:22 -0400
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: [RFC PATCH 0/2] PM / OPP: updates to enable sharing OPPs info
-Date: Tue, 30 Jul 2013 19:00:15 +0100
-Message-Id: <1375207217-4433-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Received: from mga02.intel.com ([134.134.136.20]:33435 "EHLO mga02.intel.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753689Ab3G1OaJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Sun, 28 Jul 2013 10:30:09 -0400
+Date: Sun, 28 Jul 2013 19:21:17 +0530
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v6 3/3] DMA: Freescale: update driver to support
+ 8-channel DMA engine
+Message-ID: <20130728135117.GG1986@intel.com>
+References: <1374834436-7149-1-git-send-email-hongbo.zhang@freescale.com>
+ <1374834436-7149-4-git-send-email-hongbo.zhang@freescale.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1374834436-7149-4-git-send-email-hongbo.zhang@freescale.com>
 Sender: devicetree-owner@vger.kernel.org
-To: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sudeep.KarkadaNagesha@arm.com, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+To: hongbo.zhang@freescale.com
+Cc: djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+On Fri, Jul 26, 2013 at 06:27:16PM +0800, hongbo.zhang@freescale.com wrote:
+> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+> 
+> This patch adds support to 8-channel DMA engine, thus the driver works for both
+> the new 8-channel and the legacy 4-channel DMA engines.
+> 
+> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+This looks fine. I need someone to ACK the DT bindings for the series to go in
 
-Hi,
-
-These are couple of updates to existing PM/OPP library to support
-sharing of OPPs between different device nodes.
-
-Currently all the cpu nodes are parsed until the OPPs are found. This
-is essential to support cpuhotplug without having to replicate OPP
-information in all the cpu nodes.
-
-However in systems with multiple cpu power domain, its better to have
-OPP entry for each cpu. To avoid replication, phandle can be specified
-to the node which contains the full OPP information.
-
-Previously I had posted these patch[1] but didn't get much review.
-Previous approach mixed both OPP values and the phandle in the same propert=
-y.
-The current approach adds new (optional) property to hold phandle if OPPs a=
-re
-shared. This makes it simpler and easier to be backward compatible.
-
-Regards,
-Sudeep
-
-[1] https://lkml.org/lkml/2013/5/1/84
-
-Sudeep KarkadaNagesha (2):
-  PM / OPP: add support to specify phandle of another node for OPP
-  PM / OPP: check for existing OPP list when initialising from device
-    tree
-
- Documentation/devicetree/bindings/power/opp.txt | 114 ++++++++++++++++++++=
-+---
- drivers/base/power/opp.c                        |  18 +++-
- 2 files changed, 118 insertions(+), 14 deletions(-)
-
---=20
-1.8.1.2
-
-
+~Vinod
