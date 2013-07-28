@@ -1,326 +1,167 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db9lp0249.outbound.messaging.microsoft.com ([213.199.154.249]:16094
-	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752081Ab3GXGg4 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 24 Jul 2013 02:36:56 -0400
-From: <hongbo.zhang@freescale.com>
-Subject: [PATCH v5 2/4] DMA: Freescale: Add new 8-channel DMA engine device tree nodes
-Date: Wed, 24 Jul 2013 14:21:07 +0800
-Message-ID: <1374646870-5162-3-git-send-email-hongbo.zhang@freescale.com>
-In-Reply-To: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
-References: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
+Return-Path: <glikely@secretlab.ca>
+Return-Path: <glikely@secretlab.ca>
+Sender: Grant Likely <glikely@secretlab.ca>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RESEND PATCH v5] Input: sysrq - DT binding for key sequence
+In-Reply-To: <1374705316-8520-1-git-send-email-mathieu.poirier@linaro.org>
+References: <1374705316-8520-1-git-send-email-mathieu.poirier@linaro.org>
+Date: Sat, 27 Jul 2013 22:52:35 -0600
+Message-Id: <20130728045235.EE6863E0A24@localhost>
+To: mathieu.poirier@linaro.org, robherring2@gmail.com, dmitry.torokhov@gmail.com
+Cc: devicetree@vger.kernel.org, john.stultz@linaro.org, linux-input@vger.kernel.org, kernel-team@android.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
+On Wed, 24 Jul 2013 16:35:16 -0600, mathieu.poirier@linaro.org wrote:
+> Sorry about the noise - device tree mailing has changed.
+> 
+> I haven't heard back from anyone after making the last modifications
+> a week ago.  If it's all good with you Rob, please ack it so that 
+> Dmitry can pick it up on his side.
+> 
+> Thanks,
+> Mathieu.
+> 
+> From 37318cb3c6339747f4e96e09f07f732a395a5ae1 Mon Sep 17 00:00:00 2001
+> From: "Mathieu J. Poirier" <mathieu.poirier@linaro.org>
+> Date: Wed, 10 Jul 2013 09:53:35 -0600
+> Subject: [RESEND PATCH v5] Input: sysrq - DT binding for key sequence
+> 
+> Adding a simple device tree binding for the specification of key sequences.
+> Definition of the keys found in the sequence are located in
+> 'include/uapi/linux/input.h'.
+> 
+> For the sysrq driver, holding the sequence of keys down for a specific amount of time
+> will reset the system.
+> 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+> changes for v5:
+>   - Corrected error in binding definition.
+>   - Using helper macro to fetch the key sequence.
+>   - Removing white space.
+> ---
+>  .../devicetree/bindings/input/input-reset.txt      | 34 ++++++++++++++++++++
+>  drivers/tty/sysrq.c                                | 37 ++++++++++++++++++++++
+>  2 files changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/input-reset.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/input-reset.txt b/Documentation/devicetree/bindings/input/input-reset.txt
+> new file mode 100644
+> index 0000000..c69390c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/input-reset.txt
+> @@ -0,0 +1,34 @@
+> +Input: sysrq reset sequence
+> +
+> +A simple binding to represent a set of keys as described in
+> +include/uapi/linux/input.h.  This is to communicate a
+> +sequence of keys to the sysrq driver.  Upon holding the keys
+> +for a specified amount of time (if specified) the system is
+> +sync'ed and reset.
+> +
+> +Key sequences are global to the system but all the keys in a
+> +set must be coming from the same input device.
+> +
+> +The /chosen node should contain a 'linux,sysrq-reset-seq' child
+> +node to define a set of keys.
+> +
+> +Required property:
+> +sysrq-reset-seq: array of keycodes
 
-Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch add
-the device tree nodes for them.
+Please be more specific: "array of Linux keycodes, one keycode per cell"
 
-Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
----
- .../devicetree/bindings/powerpc/fsl/dma.txt        |   66 ++++++++++++++++
- arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
- arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   81 ++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   81 ++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
- 5 files changed, 232 insertions(+), 4 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
- create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+> +
+> +Optional property:
+> +timeout-ms: duration keys must be pressed together in milliseconds
+> +before generating a sysrq
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-index ed703d9..54a023b2 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-@@ -130,6 +130,72 @@ Example:
- 		};
- 	};
- 
-+** Freescale Elo3 DMA Controller
-+   This is EloPlus controller with 8 channels, used in Freescale Txxx and Bxxx
-+   series chips, such as t1040, t4240, b4860.
-+
-+Required properties:
-+
-+- compatible        : should be "fsl,elo3-dma"
-+- reg               : <registers mapping for DMA general status reg>
-+- ranges            : describes the mapping between the address space of the
-+                      DMA channels and the address space of the DMA controller
-+
-+- DMA channel nodes:
-+        - compatible        : should be "fsl,eloplus-dma-channel"
-+        - reg               : <registers mapping for channel>
-+        - interrupts        : <interrupt mapping for DMA channel IRQ>
-+        - interrupt-parent  : optional, if needed for interrupt mapping
-+
-+Example:
-+dma@100300 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "fsl,elo3-dma";
-+	reg = <0x100300 0x4 0x100600 0x4>;
-+	ranges = <0x0 0x100100 0x500>;
-+	dma-channel@0 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x0 0x80>;
-+		interrupts = <28 2 0 0>;
-+	};
-+	dma-channel@80 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x80 0x80>;
-+		interrupts = <29 2 0 0>;
-+	};
-+	dma-channel@100 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x100 0x80>;
-+		interrupts = <30 2 0 0>;
-+	};
-+	dma-channel@180 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x180 0x80>;
-+		interrupts = <31 2 0 0>;
-+	};
-+	dma-channel@300 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x300 0x80>;
-+		interrupts = <76 2 0 0>;
-+	};
-+	dma-channel@380 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x380 0x80>;
-+		interrupts = <77 2 0 0>;
-+	};
-+	dma-channel@400 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x400 0x80>;
-+		interrupts = <78 2 0 0>;
-+	};
-+	dma-channel@480 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x480 0x80>;
-+		interrupts = <79 2 0 0>;
-+	};
-+};
-+
- Note on DMA channel compatible properties: The compatible property must say
- "fsl,elo-dma-channel" or "fsl,eloplus-dma-channel" to be used by the Elo DMA
- driver (fsldma).  Any DMA channel used by fsldma cannot be used by another
-diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-index 7399154..ea53ea1 100644
---- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
-@@ -223,13 +223,13 @@
- 		reg = <0xe2000 0x1000>;
- 	};
- 
--/include/ "qoriq-dma-0.dtsi"
-+/include/ "elo3-dma-0.dtsi"
- 	dma@100300 {
- 		fsl,iommu-parent = <&pamu0>;
- 		fsl,liodn-reg = <&guts 0x580>; /* DMA1LIODNR */
- 	};
- 
--/include/ "qoriq-dma-1.dtsi"
-+/include/ "elo3-dma-1.dtsi"
- 	dma@101300 {
- 		fsl,iommu-parent = <&pamu0>;
- 		fsl,liodn-reg = <&guts 0x584>; /* DMA2LIODNR */
-diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-new file mode 100644
-index 0000000..69a3277
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
-@@ -0,0 +1,81 @@
-+/*
-+ * QorIQ DMA device tree stub [ controller @ offset 0x100000 ]
-+ *
-+ * Copyright 2013 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *       notice, this list of conditions and the following disclaimer in the
-+ *       documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *       names of its contributors may be used to endorse or promote products
-+ *       derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+dma0: dma@100300 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "fsl,elo3-dma";
-+	reg = <0x100300 0x4 0x100600 0x4>;
-+	ranges = <0x0 0x100100 0x500>;
-+	dma-channel@0 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x0 0x80>;
-+		interrupts = <28 2 0 0>;
-+	};
-+	dma-channel@80 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x80 0x80>;
-+		interrupts = <29 2 0 0>;
-+	};
-+	dma-channel@100 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x100 0x80>;
-+		interrupts = <30 2 0 0>;
-+	};
-+	dma-channel@180 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x180 0x80>;
-+		interrupts = <31 2 0 0>;
-+	};
-+	dma-channel@300 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x300 0x80>;
-+		interrupts = <76 2 0 0>;
-+	};
-+	dma-channel@380 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x380 0x80>;
-+		interrupts = <77 2 0 0>;
-+	};
-+	dma-channel@400 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x400 0x80>;
-+		interrupts = <78 2 0 0>;
-+	};
-+	dma-channel@480 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x480 0x80>;
-+		interrupts = <79 2 0 0>;
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-new file mode 100644
-index 0000000..d410948
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-@@ -0,0 +1,81 @@
-+/*
-+ * QorIQ DMA device tree stub [ controller @ offset 0x101000 ]
-+ *
-+ * Copyright 2013 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *       notice, this list of conditions and the following disclaimer in the
-+ *       documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *       names of its contributors may be used to endorse or promote products
-+ *       derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+dma1: dma@101300 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "fsl,elo3-dma";
-+	reg = <0x101300 0x4 0x101600 0x4>;
-+	ranges = <0x0 0x101100 0x500>;
-+	dma-channel@0 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x0 0x80>;
-+		interrupts = <32 2 0 0>;
-+	};
-+	dma-channel@80 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x80 0x80>;
-+		interrupts = <33 2 0 0>;
-+	};
-+	dma-channel@100 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x100 0x80>;
-+		interrupts = <34 2 0 0>;
-+	};
-+	dma-channel@180 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x180 0x80>;
-+		interrupts = <35 2 0 0>;
-+	};
-+	dma-channel@300 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x300 0x80>;
-+		interrupts = <80 2 0 0>;
-+	};
-+	dma-channel@380 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x380 0x80>;
-+		interrupts = <81 2 0 0>;
-+	};
-+	dma-channel@400 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x400 0x80>;
-+		interrupts = <82 2 0 0>;
-+	};
-+	dma-channel@480 {
-+		compatible = "fsl,eloplus-dma-channel";
-+		reg = <0x480 0x80>;
-+		interrupts = <83 2 0 0>;
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-index bd611a9..ec95c60 100644
---- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
-@@ -387,8 +387,8 @@
- 		reg	   = <0xea000 0x4000>;
- 	};
- 
--/include/ "qoriq-dma-0.dtsi"
--/include/ "qoriq-dma-1.dtsi"
-+/include/ "elo3-dma-0.dtsi"
-+/include/ "elo3-dma-1.dtsi"
- 
- /include/ "qoriq-espi-0.dtsi"
- 	spi@110000 {
--- 
-1.7.9.5
+What is the default behaviour if timeout-ms isn't present?
 
+Otherwise, Acked-by: Grant Likely <grant.likely@linaro.org>
 
-
+> +
+> +Example:
+> +
+> + chosen {
+> +                linux,sysrq-reset-seq {
+> +                        keyset = <0x03
+> +                                  0x04
+> +                                  0x0a>;
+> +                        timeout-ms = <3000>;
+> +                };
+> +         };
+> +
+> +Would represent KEY_2, KEY_3 and KEY_9.
+> +
+> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> index b51c154..ed8f00f 100644
+> --- a/drivers/tty/sysrq.c
+> +++ b/drivers/tty/sysrq.c
+> @@ -44,6 +44,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/moduleparam.h>
+>  #include <linux/jiffies.h>
+> +#include <linux/of.h>
+>  
+>  #include <asm/ptrace.h>
+>  #include <asm/irq_regs.h>
+> @@ -671,6 +672,34 @@ static void sysrq_detect_reset_sequence(struct sysrq_state *state,
+>  	}
+>  }
+>  
+> +static void sysrq_of_get_keyreset_config(void)
+> +{
+> +	u32 key;
+> +	struct device_node *np;
+> +	struct property *prop;
+> +	const __be32 *p;
+> +
+> +	np = of_find_node_by_path("/chosen/linux,sysrq-reset-seq");
+> +	if (!np) {
+> +		pr_debug("No sysrq node found");
+> +		return;
+> +	}
+> +
+> +	/* reset in case a __weak definition was present */
+> +	sysrq_reset_seq_len = 0;
+> +
+> +	of_property_for_each_u32(np, "keyset", prop, p, key) {
+> +		if ((key == KEY_RESERVED || key > KEY_MAX) ||
+> +			(sysrq_reset_seq_len == SYSRQ_KEY_RESET_MAX))
+> +			break;
+> +
+> +		sysrq_reset_seq[sysrq_reset_seq_len++] = (unsigned short)key;
+> +	}
+> +
+> +	/* get reset timeout if any */
+> +	of_property_read_u32(np, "timeout-ms", &sysrq_reset_downtime_ms);
+> +}
+> +
+>  static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+>  {
+>  	struct sysrq_state *sysrq =
+> @@ -903,6 +932,7 @@ static inline void sysrq_register_handler(void)
+>  	int error;
+>  	int i;
+>  
+> +	/* first check if a __weak interface was instantiated */
+>  	for (i = 0; i < ARRAY_SIZE(sysrq_reset_seq); i++) {
+>  		key = platform_sysrq_reset_seq[i];
+>  		if (key == KEY_RESERVED || key > KEY_MAX)
+> @@ -911,6 +941,13 @@ static inline void sysrq_register_handler(void)
+>  		sysrq_reset_seq[sysrq_reset_seq_len++] = key;
+>  	}
+>  
+> +	/*
+> +	 * DT configuration takes precedence over anything
+> +	 * that would have been defined via the __weak
+> +	 * interface
+> +	 */
+> +	sysrq_of_get_keyreset_config();
+> +
+>  	error = input_register_handler(&sysrq_handler);
+>  	if (error)
+>  		pr_err("Failed to register input handler, error %d", error);
+> -- 
+> 1.8.1.2
+> 
