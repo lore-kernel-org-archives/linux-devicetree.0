@@ -1,63 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from service87.mimecast.com ([91.220.42.44]:47928 "EHLO
-	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754699Ab3GVNBL convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 22 Jul 2013 09:01:11 -0400
-Message-ID: <51ED2D27.2030904@arm.com>
-Date: Mon, 22 Jul 2013 14:01:27 +0100
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Received: from mail.free-electrons.com ([94.23.35.102]:45343 "EHLO
+	mail.free-electrons.com" rhost-flags-OK-FAIL-OK-FAIL)
+	by vger.kernel.org with ESMTP id S1751003Ab3G1Ww7 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Sun, 28 Jul 2013 18:52:59 -0400
+Date: Sun, 28 Jul 2013 19:53:00 -0300
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH 1/4] mtd: nand: gpio: Determine bus width automatically
+Message-ID: <20130728225259.GA4215@localhost>
+References: <1374582499-31823-1-git-send-email-shc_work@mail.ru>
+ <CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] PM / OPP: updates to enable sharing OPPs info
-References: <1367406679-21603-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <519B45C3.8050700@arm.com> <20130720050943.5EB853E169C@localhost>
-In-Reply-To: <20130720050943.5EB853E169C@localhost>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAN8TOE8_K3rT5gLFBGOnghK-ajFcjQK22mm0qYmF+hSvkT27aA@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Landley <rob@landley.net>, "Rafael J. Wysocki" <rjw@sisk.pl>, Shawn Guo <shawn.guo@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, mturquette@linaro.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Alexander Shiyan <shc_work@mail.ru>, David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-(sorry with new DT mailing list address this time)
-On 20/07/13 06:09, Grant Likely wrote:
-> On Tue, 21 May 2013 11:00:35 +0100, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com> wrote:
->> Hi Rob, Grant,
->>
->> On 01/05/13 12:11, Sudeep KarkadaNagesha wrote:
->>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
->>>
->>> These are couple of updates to existing PM/OPP library to support
->>> sharing of OPPs between different device nodes.
->>>
->>> Currently all the cpu nodes are parsed until the OPPs are found. This
->>> is essential to support cpuhotplug without having to replicate OPP
->>> information in all the cpu nodes.
->>>
->>> However in systems with multiple cpu power domain, its better to have
->>> OPP entry for each cpu. To avoid replication, phandle can be specified
->>> to the node which contains the full OPP information.
->>>
->> Is proposed option of phandle for OPP acceptable to avoid replication ?
->> Any suggestions to proceed on this ? This is needed to support CPU
->> hotplug on big LITTLE system where current methods like parsing all the
->> nodes or just CPU0 node will not work.
+On Tue, Jul 23, 2013 at 11:42:08PM -0700, Brian Norris wrote:
+> On Tue, Jul 23, 2013 at 5:28 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
+> > This patch provide automatically determine of bus width. If resource size,
+> > supplied to the driver more than 1 byte, the NAND_BUSWIDTH_AUTO option
+> > will be used in the MTD core.
 > 
-> Looks fine to me.
+> I presume this depends on the bugfix I sent for NAND_BUSWIDTH_AUTO /
+> nand_set_defaults()? That's worth noting (as I am right now), for
+> whenever someone gets around to merging this.
 > 
-Hi Grant,
+> > Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+> > ---
+> >  .../devicetree/bindings/mtd/gpio-control-nand.txt  |  5 ++---
+> 
+> Considering the changes in device-tree bindings, it's good to CC the
+> device-tree list, I believe.
+> 
 
-Thanks for the response.
+Adding the new devicetree list in Cc.
 
-However I had a thought after seeing recent patch series by Mike[1]
-Since the OPPs are usually associated with clocks, and multiple devices
-sharing clocks will point to same clock node in DT, clk node is more
-logical place to specify the OPPs. IMO this will be good alignment for
-the consolidation effort by Mike. One issue with this approach is
-backward compatibility(using old DT)
+Keep in mind you might want to split the DT binding part of the patch
+into a separate patch. For small patches like this one, it's probably
+not a big deal.
 
-Regards,
-Sudeep
-
-[1]
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/182231.html
-
-
+-- 
+Ezequiel García, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
