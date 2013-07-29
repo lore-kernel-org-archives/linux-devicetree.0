@@ -1,78 +1,75 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH V2 7/8] ARM: dts: wm8994: Add wm8994 support on smdk5420
-Date: Mon, 29 Jul 2013 17:31:16 +0530
-Message-ID: <CAAgF-Bexp_fGT8KV+TQ0_kZLJBtq7UK=TG4eYRA6qpTSL+scxg@mail.gmail.com>
-References: <1374845812-7803-1-git-send-email-padma.v@samsung.com>
-	<1374845812-7803-8-git-send-email-padma.v@samsung.com>
-	<20130726151902.GL9858@sirena.org.uk>
-	<CAAgF-Be8SNxTZv1yFCwH6yJ-O_3R4reh=3y+pSCLJYW7S9TkUg@mail.gmail.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
+Subject: [PATCH v4 0/6] ARM: rockchip: add smp functionality
+Date: Mon, 29 Jul 2013 15:10:31 +0200
+Message-ID: <201307291510.31679.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAgF-Be8SNxTZv1yFCwH6yJ-O_3R4reh=3y+pSCLJYW7S9TkUg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, Kukjin Kim <kgene.kim@samsung.com>, abrestic@chromium.org, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Ulrich Prinz <ulrich.prinz@googlemail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+This series enables the use of the additional cores on Rockchip
+Cortex-A9 SoCs.
 
-On Sat, Jul 27, 2013 at 6:46 AM, Padma Venkat <padma.kvr@gmail.com> wrote:
-> Hi Mark,
->
-> On Fri, Jul 26, 2013 at 8:49 PM, Mark Brown <broonie@kernel.org> wrote:
->> On Fri, Jul 26, 2013 at 07:06:51PM +0530, Padmavathi Venna wrote:
->>> This patch adds wm8994 codec node on i2c bus1 and the required
->>> regulator supplies and properties on smdk5420 board.
->>
->> This isn't a device tree patch for WM8994, it's a patch for the
->> SMDK5420.
->
-> Yes. I will correct the subject.
->
->>
->>> +     vdd: fixed-regulator@0 {
->>> +             compatible = "regulator-fixed";
->>> +             regulator-name = "vdd-supply";
->>
->> These names look wrong - they should reflect the names in the schematic
->> as they're for human comprehensibility.  This may just be a case of
->> dropping the -supply.
->
+To achieve this, add the scu, the needed sram and power-management-unit.
 
-When I posted the same patch for smdk5250, you asked me to club all
-the same supply regulators. So I clubbed AVDD2 and CPVDD. So any other
-better name for representing both supplies?
+Tested on a rk3066a (dual core) by me and on a rk3188 (quad core)
+by Ulrich Prinz.
 
-> OK.
->
->>
->>> +             wm8994: wm8994@1a {
->>> +                     compatible = "wlf,wm8994";
->>> +                     reg = <0x1a>;
->>> +
->>> +                     gpio-controller;
->>> +                     #gpio-cells = <2>;
->>> +
->>> +                     AVDD2-supply = <&vdd>;
->>> +                     CPVDD-supply = <&vdd>;
->>> +                     DBVDD-supply = <&dbvdd>;
->>> +                     SPKVDD1-supply = <&spkvdd>;
->>> +                     SPKVDD2-supply = <&spkvdd>;
->>> +             };
->>
->> It would be helpful to also add a clock binding (I posted a binding
->> documentation update the other day, it's in my tree now) but it's not
->> essential and I suspect it needs some work on the clock driver side
->> still.
->
-> OK. I will check this.
+(Note: rk3188 support in general needs additional upcoming patchsets)
 
-As per schemata, input clock to MCLK1 is an oscillator clock with
-16.9MHz and MCLK2 not showing any input clock. So here I need to add a
-fixed rate clock with 16.9MHz as MCLK1 in the smdk board file.
+changes since v3:
+- address comments from Rob Herring:
+  - split the gathering of the reserve-data into a separate loop
+  - spelling and style fixes
+- first patch only included for reference, already part of the
+  char-misc git tree
 
-Is it correct?
+changes since v2:
+- rework the sram allocation following the suggestion from Philipp Zabel
 
-Thanks
-Padma
+changes since v1:
+- add reserved block feature for mmio-sram, to not use two logical
+  sram nodes
+- the sram content is kept intact while the device is running, so
+  copying the trampoline is only needed once
+
+Heiko Stuebner (6):
+  misc: sram: fix error path in sram_probe
+  misc: sram: add ability to mark sram sections as reserved
+  ARM: rockchip: add snoop-control-unit
+  ARM: rockchip: add sram dt nodes and documentation
+  ARM: rockchip: add power-management-unit dt node
+  ARM: rockchip: add smp bringup code
+
+ .../devicetree/bindings/arm/rockchip/pmu.txt       |   16 ++
+ .../devicetree/bindings/arm/rockchip/smp-sram.txt  |   23 +++
+ Documentation/devicetree/bindings/misc/sram.txt    |    8 +
+ arch/arm/boot/dts/rk3066a.dtsi                     |   16 ++
+ arch/arm/mach-rockchip/Kconfig                     |    1 +
+ arch/arm/mach-rockchip/Makefile                    |    1 +
+ arch/arm/mach-rockchip/core.h                      |   22 +++
+ arch/arm/mach-rockchip/headsmp.S                   |   32 +++
+ arch/arm/mach-rockchip/platsmp.c                   |  203 ++++++++++++++++++++
+ arch/arm/mach-rockchip/rockchip.c                  |    2 +
+ drivers/misc/sram.c                                |  100 +++++++++-
+ 11 files changed, 417 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/pmu.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
+ create mode 100644 arch/arm/mach-rockchip/core.h
+ create mode 100644 arch/arm/mach-rockchip/headsmp.S
+ create mode 100644 arch/arm/mach-rockchip/platsmp.c
+
+-- 
+1.7.10.4
