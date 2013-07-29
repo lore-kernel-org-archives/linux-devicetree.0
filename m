@@ -1,58 +1,132 @@
-From: Matt Sealey <neko@bakuhatsu.net>
-Subject: Re: [PATCH v4 2/6] misc: sram: add ability to mark sram sections as reserved
-Date: Mon, 29 Jul 2013 16:39:45 -0500
-Message-ID: <CAHCPf3vSQHtRkk-_cs3monHfrF-hVx3vTDt1ctcax_bspXDmsg@mail.gmail.com>
-References: <201307291510.31679.heiko@sntech.de>
-	<201307291512.25126.heiko@sntech.de>
-	<1375106520.4223.24.camel@pizza.hi.pengutronix.de>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 4/7] ARM: dts: Add FIMD DT node to exynos5420 DTS files
+Date: Mon, 29 Jul 2013 23:48:38 +0200
+Message-ID: <2252729.V1lMZqU45k@thinkpad>
+References: <1375105771-8106-1-git-send-email-vikas.sajjan@linaro.org> <1375105771-8106-5-git-send-email-vikas.sajjan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1375106520.4223.24.camel@pizza.hi.pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ulrich Prinz <ulrich.prinz@googlemail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1375105771-8106-5-git-send-email-vikas.sajjan@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vikas Sajjan <vikas.sajjan@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, jg1.han@samsung.com, inki.dae@samsung.com, patches@linaro.org, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 29, 2013 at 9:02 AM, Philipp Zabel <p.zabel@pengutronix.de>=
- wrote:
-> Hi Heiko,
->
-> Am Montag, den 29.07.2013, 15:12 +0200 schrieb Heiko St=FCbner:
->> Some SoCs need parts of their sram for special purposes. So while be=
-ing part
->> of the peripheral, it should not be part of the genpool controlling =
-the sram.
->>
->> Therefore add an option mmio-sram-reserved to keep arbitrary portion=
-s of the
->> sram from being part of the pool.
->>
->> Suggested-by: Rob Herring <robherring2@gmail.com>
->> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
->> Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
->> ---
->> Philipp: I didn't carry the ack, because the loop changed significan=
-tly again.
->> So if it looks ok, could you re-ack it please?
->
-> I'd prefer the first loop to contain the magic and produce a list of
-> useable chunks, instead of a list of reserved blocks. The second loop
-> could then iterate over the array and just call gen_pool_add_virt
-> repeatedly.
->
-> regards
-> Philipp
+Hi Vikas,
 
-Agreed, however specifying chunks of memory should probably match the
-format of the standard memory@ node "available" property - mostly
-because it would be the same syntax and definition as defining any
-other chunk of memory, as OpenFirmware and device trees have been
-doing since the dark ages. In this case, why not re-use the
-"available" property name instead of creating a new one? Standard OF
-memory parsing code is then free for you to use to pull the chunks
-out.
+Please see my comments inline.
 
---=20
-Matt Sealey <mwsealey@gmail.com>
+On Monday 29 of July 2013 19:19:28 Vikas Sajjan wrote:
+> Adds FIMD DT node to exynos5420 based SMDK. Also adds display-timimg
+> information node.
+>=20
+> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+> ---
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts |   18 ++++++++++++++++++
+>  arch/arm/boot/dts/exynos5420.dtsi         |    8 ++++++++
+>  2 files changed, 26 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> b/arch/arm/boot/dts/exynos5420-smdk5420.dts index 08607df..7c2f477 10=
+0644
+> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> @@ -30,4 +30,22 @@
+>  			clock-frequency =3D <24000000>;
+>  		};
+>  	};
+> +
+> +	fimd {
+> +		display-timings {
+> +			native-mode =3D <&timing0>;
+> +			timing0: timing@0 {
+> +				clock-frequency =3D <50000>;
+> +				hactive =3D <2560>;
+> +				vactive =3D <1600>;
+> +				hfront-porch =3D <48>;
+> +				hback-porch =3D <80>;
+> +				hsync-len =3D <32>;
+> +				vback-porch =3D <16>;
+> +				vfront-porch =3D <8>;
+> +				vsync-len =3D <6>;
+> +			};
+> +		};
+> +	};
+> +
+>  };
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi
+> b/arch/arm/boot/dts/exynos5420.dtsi index bd6b310..1f659f4 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -180,4 +180,12 @@
+>  		clocks =3D <&clock 260>, <&clock 131>;
+>  		clock-names =3D "uart", "clk_uart_baud0";
+>  	};
+> +
+> +	fimd {
+> +		samsung,power-domain =3D <&disp_pd>;
+> +		clocks =3D <&clock 147>, <&clock 421>;
+> +		clock-names =3D "sclk_fimd", "fimd";
+> +		status =3D "okay";
+
+=46IMD can't operate without display timings, so status =3D "okay" does=
+n't=20
+represent real device state here. Please move status override to board =
+dts.
+
+I know that dtsi files of Exynos 5 SoCs have "okay" status as default, =
+but this=20
+is broken and needs to be fixed, because it moves the responsibility of=
+ knowing=20
+about all SoC hardware to board dts.
+
+Generally, the ePAPR document, chapter 2.3.4, specifies following defin=
+ition of=20
+status property:
+
+	The status property indicates the operational status of a device. Vali=
+d=20
+	values are listed and defined in the following table.
+
+The table specifies following values:
+
+	=E2=80=9Cokay=E2=80=9D
+	Indicates the device is operational
+
+	=E2=80=9Cdisabled=E2=80=9D
+	Indicates that the device is not presently operational, but it might b=
+ecome=20
+	operational in the future (for example, something is not plugged in, o=
+r 	=09
+	switched off). Refer to the device binding for details on what disable=
+d=20
+	means for a given device.
+
+	=E2=80=9Cfail=E2=80=9D
+	Indicates that the device is not operational. A serious error was dete=
+cted=20
+	in the device, and it is unlikely to become operational without repair=
+=2E
+
+	=E2=80=9Cfail-sss=E2=80=9D
+	Indicates that the device is not operational. A serious error was dete=
+cted =09
+	in the device and it is unlikely to become operational without repair.=
+ The=20
+	sss portion of the value is specific to the device and indicates the e=
+rror=20
+	condition detected.
+
+Without all required properties the device will not be operational, so =
+its=20
+status should be set to "disabled" and then overriden to "okay" when mi=
+ssing=20
+properties are provided (e.g. in board dts).
+
+Best regards,
+Tomasz
+
+> +	};
+> +
+>  };
