@@ -1,29 +1,45 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] of: provide of_platform_unpopulate()
-Date: Mon, 29 Jul 2013 19:33:02 +1000
-Message-ID: <1375090382.3859.38.camel@pasglop>
-References: <1374257691-31981-1-git-send-email-bigeasy@linutronix.de>
-	 <51EBF33A.4050207@gmail.com> <51EC4908.4040504@gmail.com>
-	 <CACxGe6sqv2Wsp26MWqqs9W_eWO3tjs-+2z3z8fC=2fe-BjJvkA@mail.gmail.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v2] tty: serial: Add initial MSM UART High Speed Lite
+ driver
+Date: Mon, 29 Jul 2013 12:52:01 +0300
+Message-ID: <1375091521.1956.54.camel@iivanov-dev.int.mm-sol.com>
+References: <1374476749-12763-1-git-send-email-iivanov@mm-sol.com>
+	 <20130726215023.GA1470@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6sqv2Wsp26MWqqs9W_eWO3tjs-+2z3z8fC=2fe-BjJvkA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robherring2@gmail.com>, George Cherian <george.cherian@ti.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Kishon Vijay Abraham I <kishon@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Felipe Balbi <balbi@ti.com>, Roger Quadros <rogerq@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Vivek Gautam <gautam.vivek@samsung.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20130726215023.GA1470@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: David Brown <davidb@codeaurora.org>
+Cc: gregkh@linuxfoundation.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, jslaby@suse.cz, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, mrana@codeaurora.org, sambley@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-07-22 at 00:44 +0100, Grant Likely wrote:
-> > BTW, it looks like Grant has attempted this already:
+Hi David, 
+
+On Fri, 2013-07-26 at 14:50 -0700, David Brown wrote:
+> On Mon, Jul 22, 2013 at 10:05:48AM +0300, Ivan T. Ivanov wrote:
+> >From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> >
+> >This is a tty driver with console support for Qualcomm's UART
+> >controllers found in the MSM8974 chipsets. Driver is completely
+> >based on implementation found in codeaurora.org msm_serial_hs_lite
+> >with Android dependences removed. Other changes include, moved to
+> >device managed resources and few cleanups.
+> >
+> >Driver functionality was tested in LEGACY_HSUART and BLSP_HSUART mode.
 > 
-> Yup, things broke badly. Unfortunately the of_platform_device and
-> platform_device history doesn't treat resources in the same way. I
-> would like to merge the code, but I haven't been able to figure out a
-> clean way to do it. Looks like we do need the unpopulate function.
+> Ivan, do we need this driver with the fixes Stephen Boyd posted that
+> are supposed to fix the problems with the existing msm_serial.c
+> driver?  If a single driver can correctly support both devices, that
+> seems like a better solution to me.
 
-What is the exact problem Grant ? Care to give me an example ?
+I have just tested Stephen's changes and they worked for me on 8074
+based dragon board, so I am fine to drop my port of the HSL driver.
 
-Cheers,
-Ben.
+Regards,
+Ivan
+
+> 
+> David
+> 
