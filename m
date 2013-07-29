@@ -1,101 +1,49 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtpfb1-g21.free.fr ([212.27.42.9]:37013 "EHLO
-	smtpfb1-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753142Ab3GYJO3 convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 05:14:29 -0400
-Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
-	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 1439D2CC54
-	for <devicetree@vger.kernel.org>; Thu, 25 Jul 2013 11:14:24 +0200 (CEST)
-Date: Thu, 25 Jul 2013 11:13:57 +0200
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH 2/4] ASoc: kirkwood: simplify probe error
-Message-ID: <20130725111357.7c976963@armhf>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Received: from mail-bk0-f47.google.com ([209.85.214.47]:62361 "EHLO
+	mail-bk0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754600Ab3G2Vqv (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 17:46:51 -0400
+Message-ID: <51F6E2C7.9000407@gmail.com>
+Date: Mon, 29 Jul 2013 23:46:47 +0200
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] usb: phy-samsung-usb: Simplify PMU register handling
+References: <1375130839-5523-1-git-send-email-jwerner@chromium.org> <51F6D88B.80202@gmail.com> <CAODwPW-hxtazAO=scZR+ZWK5hwdWMQXFBeYLd1qqau+a9tMCvA@mail.gmail.com>
+In-Reply-To: <CAODwPW-hxtazAO=scZR+ZWK5hwdWMQXFBeYLd1qqau+a9tMCvA@mail.gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Russell King <rmk+kernel@arm.linux.org.uk>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Julius Werner <jwerner@chromium.org>
+Cc: Felipe Balbi <balbi@ti.com>, LKML <linux-kernel@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Kamil Debski <k.debski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The function kirkwood_i2s_dev_remove() may be used when probe fails.
+On 07/29/2013 11:12 PM, Julius Werner wrote:
+>>> -       if (sphy->phy_type == USB_PHY_TYPE_DEVICE) {
+>>> -               reg = sphy->pmuregs + sphy->drv_data->devphy_reg_offset;
+>>> -               en_mask = sphy->drv_data->devphy_en_mask;
+>>> -       } else if (sphy->phy_type == USB_PHY_TYPE_HOST) {
+>>> -               reg = sphy->pmuregs + sphy->drv_data->hostphy_reg_offset;
+>>> -               en_mask = sphy->drv_data->hostphy_en_mask;
+>>> -       }
+>>
+>>
+>> How is en_mask supposed to get initialized, now when this code is removed ?
+>> It's always 0 now, isn't it ?
+>>
+>
+> Whoops... oh, I'm really sorry about that. I ported the patch from a
+> branch with slightly different code there and overlooked this. Thanks
+> for catching it, will send v2 in a minute.
 
-Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
----
- sound/soc/kirkwood/kirkwood-i2s.c | 44 +++++++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 23 deletions(-)
+v2 looks good, thanks. :) As a side note, we are working on the USB PHYs
+driver using the generic PHY framework (actually Kamil is working on that).
+Thus it is likely the original driver will get replaced in near future by
+something else. Not sure when that happens exactly but I suspect it is
+not worth to invest in the Samsung USB PHY drivers at drivers/usb/phy/
+too much and introduce changes, especially in *.dts, that won't be for
+long time in use. Perhaps Kamil can provide more details on which devices
+are initially going to be covered by the new driver.
 
-diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
-index 4c9dad3..d3e50af 100644
---- a/sound/soc/kirkwood/kirkwood-i2s.c
-+++ b/sound/soc/kirkwood/kirkwood-i2s.c
-@@ -455,6 +455,21 @@ static const struct snd_soc_component_driver kirkwood_i2s_component = {
- 	.name		= DRV_NAME,
- };
- 
-+static int kirkwood_i2s_dev_remove(struct platform_device *pdev)
-+{
-+	struct kirkwood_dma_data *priv = dev_get_drvdata(&pdev->dev);
-+
-+	snd_soc_unregister_component(&pdev->dev);
-+
-+	if (!IS_ERR(priv->extclk)) {
-+		clk_disable_unprepare(priv->extclk);
-+		clk_put(priv->extclk);
-+	}
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
- static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
- {
- 	struct kirkwood_asoc_platform_data *data = pdev->dev.platform_data;
-@@ -525,34 +540,17 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
- 
- 	err = snd_soc_register_component(&pdev->dev, &kirkwood_i2s_component,
- 					 soc_dai, 1);
--	if (!err)
--		return 0;
--	dev_err(&pdev->dev, "snd_soc_register_component failed\n");
--
--	if (!IS_ERR(priv->extclk)) {
--		clk_disable_unprepare(priv->extclk);
--		clk_put(priv->extclk);
-+	if (err) {
-+		dev_err(&pdev->dev, "snd_soc_register_component failed\n");
-+		goto fail;
- 	}
--	clk_disable_unprepare(priv->clk);
-+	return 0;
- 
-+fail:
-+	kirkwood_i2s_dev_remove(pdev);
- 	return err;
- }
- 
--static int kirkwood_i2s_dev_remove(struct platform_device *pdev)
--{
--	struct kirkwood_dma_data *priv = dev_get_drvdata(&pdev->dev);
--
--	snd_soc_unregister_component(&pdev->dev);
--
--	if (!IS_ERR(priv->extclk)) {
--		clk_disable_unprepare(priv->extclk);
--		clk_put(priv->extclk);
--	}
--	clk_disable_unprepare(priv->clk);
--
--	return 0;
--}
--
- static struct platform_driver kirkwood_i2s_driver = {
- 	.probe  = kirkwood_i2s_dev_probe,
- 	.remove = kirkwood_i2s_dev_remove,
--- 
-1.8.3.2
-
-
-
--- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+--
+Thanks,
+Sylwester
