@@ -1,7 +1,7 @@
 From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
-Subject: [PATCH v4 4/6] ARM: rockchip: add sram dt nodes and documentation
-Date: Mon, 29 Jul 2013 15:13:50 +0200
-Message-ID: <201307291513.50507.heiko@sntech.de>
+Subject: [PATCH v4 5/6] ARM: rockchip: add power-management-unit dt node
+Date: Mon, 29 Jul 2013 15:14:27 +0200
+Message-ID: <201307291514.27779.heiko@sntech.de>
 References: <201307291510.31679.heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
@@ -14,59 +14,50 @@ To: Arnd Bergmann <arnd@arndb.de>
 Cc: Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ulrich Prinz <ulrich.prinz@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The Rockchip SoCs need a special part of their sram for bringup
-of additional cores. Therefore also add a reserved section when adding the
-mmio-sram node to keep the sram driver from using this space.
+The pmu is needed to bring up the cores during smp operations.
+Therefore add a node and documentation for it.
 
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
 ---
- .../devicetree/bindings/arm/rockchip/smp-sram.txt  |   23 ++++++++++++++++++++
- arch/arm/boot/dts/rk3066a.dtsi                     |    6 +++++
- 2 files changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
+ Documentation/devicetree/bindings/arm/rockchip/pmu.txt |   16 ++++++++++++++++
+ arch/arm/boot/dts/rk3066a.dtsi                         |    5 +++++
+ 2 files changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/pmu.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt b/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
+diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu.txt b/Documentation/devicetree/bindings/arm/rockchip/pmu.txt
 new file mode 100644
-index 0000000..80c878e
+index 0000000..3ee9b42
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/rockchip/smp-sram.txt
-@@ -0,0 +1,23 @@
-+Rockchip SRAM for smp bringup:
-+------------------------------
++++ b/Documentation/devicetree/bindings/arm/rockchip/pmu.txt
+@@ -0,0 +1,16 @@
++Rockchip power-management-unit:
++-------------------------------
 +
-+Rockchip's smp-capable SoCs use the first part of the sram for the bringup
-+of the cores. Once the core gets powered up it executes the code that is
-+residing at the very beginning of the sram.
-+
-+Therefore a reserved section has to be added to the mmio-sram declaration.
++The pmu is used to turn off and on different power domains of the SoCs
++This includes the power to the CPU cores.
 +
 +Required node properties:
-+- compatible : should contain both "rockchip,rk3066-sram", "mmio-sram"
-+  so that the smp code can select the correct sram node.
-+
-+The rest of the properties should follow the generic mmio-sram discription
-+found in ../../misc/sram.txt
++- compatible value : = "rockchip,rk3066-pmu";
++- reg : physical base address and the size of the registers window
 +
 +Example:
 +
-+	sram: sram@10080000 {
-+		compatible = "rockchip,rk3066-sram", "mmio-sram";
-+		reg = <0x10080000 0x10000>;
-+		mmio-sram-reserved = <0x0 0x50>;
++	pmu@20004000 {
++		compatible = "rockchip,rk3066-pmu";
++		reg = <0x20004000 0x100>;
 +	};
 diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index 26c4311..24d1941 100644
+index 24d1941..43ac7c8 100644
 --- a/arch/arm/boot/dts/rk3066a.dtsi
 +++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -53,6 +53,12 @@
- 			reg = <0x1013c000 0x100>;
+@@ -59,6 +59,11 @@
+ 			mmio-sram-reserved = <0x0 0x50>;
  		};
  
-+		sram: sram@10080000 {
-+			compatible = "rockchip,rk3066-sram", "mmio-sram";
-+			reg = <0x10080000 0x10000>;
-+			mmio-sram-reserved = <0x0 0x50>;
++		pmu@20004000 {
++			compatible = "rockchip,rk3066-pmu";
++			reg = <0x20004000 0x100>;
 +		};
 +
  		gic: interrupt-controller@1013d000 {
