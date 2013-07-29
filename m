@@ -1,112 +1,53 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from co9ehsobe003.messaging.microsoft.com ([207.46.163.26]:26298
-	"EHLO co9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751972Ab3GXGVv (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 24 Jul 2013 02:21:51 -0400
-From: <hongbo.zhang@freescale.com>
-Subject: [PATCH v5 3/4] DMA: Freescale: update driver to support 8-channel DMA engine
-Date: Wed, 24 Jul 2013 14:21:08 +0800
-Message-ID: <1374646870-5162-4-git-send-email-hongbo.zhang@freescale.com>
-In-Reply-To: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
-References: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:48197 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752710Ab3G2Lk4 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 07:40:56 -0400
+Date: Mon, 29 Jul 2013 12:40:31 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130729114031.GV9858@sirena.org.uk>
+References: <1375083485-14785-1-git-send-email-ndevos@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uNJFlvTGIAMG9JN+"
+Content-Disposition: inline
+In-Reply-To: <1375083485-14785-1-git-send-email-ndevos@redhat.com>
+Subject: Re: [PATCH] spi-imx: expose module alias for loading from device-tree
 Sender: devicetree-owner@vger.kernel.org
-To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
+To: Niels de Vos <ndevos@redhat.com>
+Cc: devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
 
-This patch adds support to 8-channel DMA engine, thus the driver works for both
-the new 8-channel and the legacy 4-channel DMA engines.
+--uNJFlvTGIAMG9JN+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
----
- drivers/dma/Kconfig  |    9 +++++----
- drivers/dma/fsldma.c |    9 ++++++---
- drivers/dma/fsldma.h |    2 +-
- 3 files changed, 12 insertions(+), 8 deletions(-)
+On Mon, Jul 29, 2013 at 09:38:05AM +0200, Niels de Vos wrote:
+> Enable auto loading by udev when spi-imx is compiled as a module.
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 6825957..1b78272 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -89,14 +89,15 @@ config AT_HDMAC
- 	  Support the Atmel AHB DMA controller.
- 
- config FSL_DMA
--	tristate "Freescale Elo and Elo Plus DMA support"
-+	tristate "Freescale Elo series DMA support"
- 	depends on FSL_SOC
- 	select DMA_ENGINE
- 	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
- 	---help---
--	  Enable support for the Freescale Elo and Elo Plus DMA controllers.
--	  The Elo is the DMA controller on some 82xx and 83xx parts, and the
--	  Elo Plus is the DMA controller on 85xx and 86xx parts.
-+	  Enable support for the Freescale Elo series DMA controllers.
-+	  The Elo is the DMA controller on some mpc82xx and mpc83xx parts, the
-+	  EloPlus is on mpc85xx and mpc86xx and Pxxx parts, and the Elo3 is on
-+	  some Txxx and Bxxx parts. Look up user manuals for details anyway.
- 
- config MPC512X_DMA
- 	tristate "Freescale MPC512x built-in DMA engine support"
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 49e8fbd..16a9a48 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -1261,7 +1261,9 @@ static int fsl_dma_chan_probe(struct fsldma_device *fdev,
- 	WARN_ON(fdev->feature != chan->feature);
- 
- 	chan->dev = fdev->dev;
--	chan->id = ((res.start - 0x100) & 0xfff) >> 7;
-+	chan->id = (res.start & 0xfff) < 0x300 ?
-+		   ((res.start - 0x100) & 0xfff) >> 7 :
-+		   ((res.start - 0x200) & 0xfff) >> 7;
- 	if (chan->id >= FSL_DMA_MAX_CHANS_PER_DEVICE) {
- 		dev_err(fdev->dev, "too many channels for device\n");
- 		err = -EINVAL;
-@@ -1434,6 +1436,7 @@ static int fsldma_of_remove(struct platform_device *op)
- }
- 
- static const struct of_device_id fsldma_of_ids[] = {
-+	{ .compatible = "fsl,elo3-dma", },
- 	{ .compatible = "fsl,eloplus-dma", },
- 	{ .compatible = "fsl,elo-dma", },
- 	{}
-@@ -1455,7 +1458,7 @@ static struct platform_driver fsldma_of_driver = {
- 
- static __init int fsldma_init(void)
- {
--	pr_info("Freescale Elo / Elo Plus DMA driver\n");
-+	pr_info("Freescale Elo series DMA driver\n");
- 	return platform_driver_register(&fsldma_of_driver);
- }
- 
-@@ -1467,5 +1470,5 @@ static void __exit fsldma_exit(void)
- subsys_initcall(fsldma_init);
- module_exit(fsldma_exit);
- 
--MODULE_DESCRIPTION("Freescale Elo / Elo Plus DMA driver");
-+MODULE_DESCRIPTION("Freescale Elo series DMA driver");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index f5c3879..1ffc244 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -112,7 +112,7 @@ struct fsldma_chan_regs {
- };
- 
- struct fsldma_chan;
--#define FSL_DMA_MAX_CHANS_PER_DEVICE 4
-+#define FSL_DMA_MAX_CHANS_PER_DEVICE 8
- 
- struct fsldma_device {
- 	void __iomem *regs;	/* DGSR register base */
--- 
-1.7.9.5
+Applied, thanks.
 
+--uNJFlvTGIAMG9JN+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
+iQIcBAEBAgAGBQJR9lSsAAoJELSic+t+oim9uEYP/iJzy5caX1uxNcOFT9VYiC15
+6KcuU4snL3dH7SIgpZCOZCV4SzPJQVuGg6VwLLaVQsBeu/8MKLeenRcZWEhHMcw6
+GPf5YQeb9DftPzQZzXbQU+3AQgaGbs77wk8m4F+f2GveeyKIwNkaTuxJv8YbuJ7G
+/nC8TWefNuSwzSl4jJy7Cj/ZBppwcCWoyg+ErY9xK1XfjjQMbIk3nmLXdGs+6l5C
+ZBy7vKimxj2cL/3cvSjnRvX7wMDM3aMDkKhj6yn3B3t4MGqf51aXTxbAB6QB/z4Q
+nm62YJ4tGKNK6E5RgoX2EP6gemjybCFeqXdftyGY61mVO09Z+3xxCd8Id1LonmY2
+aSXp01EuIcK9Kw8GBIrrqg1NSccqH7pJzlfVv1iK0T9eJ28KKs/iaBUpXd9kOCE/
+v6g7adAX0OmeiDBo5L3wbIZDMBwsrxkyWfBrT+RtBQ2SWIKMfe2PMcx+Q2NhH9ai
+MsyXP9pAIZ1TJJeAq8NFXTJVaaISZE9i5OnRwDZbtqTL4m4tcELYc3/xGcL2g/VZ
+1iLpXusCgWhlowhMnRJUTuBSzr2MlXreuGJlT6ymPCWDIQInMEPJ0uF1fbtc2wvb
+yBXEYXEYvityVg2az5iZiseJxntZqaaUGLEvLID3+3Rq98w9+8y71p4Q/lGW/cmT
+dX25UXlu63S0vV39oc1g
+=tmTf
+-----END PGP SIGNATURE-----
+
+--uNJFlvTGIAMG9JN+--
