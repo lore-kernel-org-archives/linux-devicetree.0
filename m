@@ -1,63 +1,108 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] pinctrl: palmas: add pincontrol driver
-Date: Sun, 28 Jul 2013 13:20:55 +0100
-Message-ID: <20130728122055.GO9858@sirena.org.uk>
-References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com>
- <1374833754-19659-3-git-send-email-ldewangan@nvidia.com>
- <20130726164122.GT9858@sirena.org.uk>
- <51F39F9F.5020607@nvidia.com>
+From: Manish Badarkhe <badarkhe.manish@gmail.com>
+Subject: Re: [PATCH V3 1/2] tps6507x-ts: Add DT support
+Date: Mon, 29 Jul 2013 11:47:21 +0530
+Message-ID: <CAKDJKT500ewMEv-f-vZBkMELkFkNBXLrv0oS_qUivbq0T-Y6yA@mail.gmail.com>
+References: <1369126458-24872-1-git-send-email-manishv.b@ti.com>
+	<1369126458-24872-2-git-send-email-manishv.b@ti.com>
+	<20130610060442.GA30158@core.coreip.homeip.net>
+	<A4887BF146CD57468F700B415D2F47015A0DFD@DBDE04.ent.ti.com>
+	<20130610180311.GA4649@core.coreip.homeip.net>
+	<A4887BF146CD57468F700B415D2F47015A1315@DBDE04.ent.ti.com>
+	<CAKDJKT6UETVpPT9B6LE59_EMrxNGpTmUiu9iddHoWOYhGpHP3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="V7gLWA+uOry9OxZJ"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51F39F9F.5020607@nvidia.com>
+In-Reply-To: <CAKDJKT6UETVpPT9B6LE59_EMrxNGpTmUiu9iddHoWOYhGpHP3Q@mail.gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob@landley.net" <rob@landley.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Dmitry
 
---V7gLWA+uOry9OxZJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Jul 1, 2013 at 4:40 PM, Manish Badarkhe
+<badarkhe.manish@gmail.com> wrote:
+>
+> Hi Dmitry
+>
+>
+> On Wed, Jun 12, 2013 at 12:23 PM, Vishwanathrao Badarkhe, Manish
+> <manishv.b@ti.com> wrote:
+> > Hi Dmitry,
+> >
+> > On Mon, Jun 10, 2013 at 23:33:11, Dmitry Torokhov wrote:
+> >> Manish,
+> >>
+> >> On Mon, Jun 10, 2013 at 10:23:16AM +0000, Vishwanathrao Badarkhe,
+> >> Manish wrote:
+> >> > Hi Dmitry,
+> >> >
+> >> > On Mon, Jun 10, 2013 at 11:34:42, Dmitry Torokhov wrote:
+> >> > > Hi Manish,
+> >> > >
+> >> > > On Tue, May 21, 2013 at 02:24:17PM +0530, Vishwanathrao Badarkhe,
+> >> > > Manish wrote:
+> >> > >
+> >> > > > +       struct touchscreen_init_data *init_data = NULL;
+> >> > > > +       int err;
+> >> > > > +
+> >> > > > +       if (node)
+> >> > > > +               node = of_find_node_by_name(node, "tsc");
+> >> > >
+> >> > > Why do you have to locate OF node manually instead of already
+> >> > > having it attached to the device stucture?
+> >> >
+> >> > As TPS6507x is mfd device containing two nodes, regulator and
+> >> > touchscreen.
+> >> > It is necessary to use "of_find_node_by_name" to find child "tsc"
+> >> > node
+> >> > of TPS6507x MFD device.
+> >>
+> >> I understand that TPS6507x is a MFD device, However, I still do not
+> >> understand why you do not attach OF data to the child platform device
+> >> representing touch screen when you create it.
+> >
+> > I gone through most of MFD devices in mainline kernel where
+> > "of_find_node_by_name"
+> > function is used in order to populate child node properties.
+> > See below example of max8925 MFD device.
+> >
+> > Max8025 MFD device has following modules
+> > 1. Touch screen
+> > 2. Charger
+> > 3. Backlight
+> > 4. regulator
+> >
+> > In DT case, device node for max8925 MFD device is in
+> > "arch/arm/boot/dts/mmp2-brownstone.dts"
+> > file having child nodes as regulator, backlight and charger.
+> > Respective drivers (regulator, backlight and charger) of max8925 MFD
+> > device used
+> > "of_find_node_by_name" function in order to populate child node
+> > properties.
+> >
+> > Here, also same case for TPS6507x MFD device
+> >
+> > TPS6507x MFD device has two childs:
+> > 1. regulator
+> > 2. touch screen.
+> >
+> > Regulator driver for TPS6507x is already in mainline and using function
+> > "of_find_node_by_name" to populate device tree properties for
+> > regulators.
+> > On similar lines I used "of_find_node_by_name" to populate device
+> > tree properties for touch screen.
+> >
+> > Still, I agreed that it is possible to attach OF data to child platform
+> > device
+> > but it requires changes in MFD driver of TPS6507x.
+> >
+> > Please let me know your opinion about this.
+>
+> Please let me know so accordingly I will make changes in code.
+>
 
-On Sat, Jul 27, 2013 at 03:53:27PM +0530, Laxman Dewangan wrote:
-> On Friday 26 July 2013 10:11 PM, Mark Brown wrote:
+Please provide your comments so accordingly will make changes in code.
 
-> >>+	gpio4_sysen1, gpio5_clk32kgaudio_usb_psel, gpio6_sysen2,
-
-> >Would it not be easier to just name the GPIOs gpioN rather than using
-> >the full names with the possible functions?
-
-> I took the name approach as what we have on Tegra.
-> But I think I can put the name of the pins same as what we have in
-> datasheet. So pin name will be exact same as what we have in
-> datasheet. That will be easy to interpret.
-
-I was thinking more about ease of typing than ease of understanding
-here!
-
---V7gLWA+uOry9OxZJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR9QykAAoJELSic+t+oim97TIQAJRfxCeUcj852LpOWf43QDJt
-ltoWfgWuGy9ezWkf+gOjh24s9mXugAOrGDdX54hO6qd5UXusxI/7KHYeMbgtLmX+
-zlbEkI2FwY4NfZhiRAB5W36sp4DIwi7e3KuRR5npT4yhNL1hXOE/ACS8019VY048
-k1Mm6PQiedMEMs4IG7Xd7NLRi6vwxLQH51WGn7kYndno/OxgiPprwNaiT0BXYgv3
-m/x9EeMNWi7m6x1sfWdDglS/J73DcZ7sdqaguGDj/o9QgkAUEuc6vi6xFfDslgw0
-VEXYH5NRrNlxc3uwQg06/LEtApnLuGfCgxuJysBB84IS9ThrHNoi0e3btWKou///
-Adwe7Y/yjF/UqH924GihLZ8ByHwTLT0tofIYSNCdJGTUpt14gPUCR9LHHr/+YQjy
-xxteIkAGX7XJVgA7TWDv5RWMFb0JCcWA37OLTcuAaCOr9RHNLj0twRlKXcn9m59B
-Lr3T34M1uclxg5Tqwu7FORW12QGyyIkjk+6yd6coOvaQE81VC2NC4xuH+4Muiivs
-lndurhFp0P8RCbTgL+/Yftwl1jbg4IYs+y0Ev4rsUBHZw7UlUQ557b+8U/ZCy+aR
-EXMG1O+RR5a9Bhn6N8jHvouTi/YTw8E+ifZgNFbn2KK2OOIpf9vrD9p0+b/ANKCq
-I74TNJjiq0AjAFWzEoBX
-=QJgV
------END PGP SIGNATURE-----
-
---V7gLWA+uOry9OxZJ--
+Regards
+Manish Badarkhe
