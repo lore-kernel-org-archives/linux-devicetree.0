@@ -1,15 +1,19 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from service87.mimecast.com ([91.220.42.44]:35984 "EHLO
+Received: from service87.mimecast.com ([91.220.42.44]:56338 "EHLO
 	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750962Ab3G2K5W convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 06:57:22 -0400
-Message-ID: <1375095436.3340.13.camel@hornet>
+	with ESMTP id S1754125Ab3G2Ku5 convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 06:50:57 -0400
+Message-ID: <1375095053.3340.7.camel@hornet>
 Subject: Re: [PATCH 1/2] mmc: add Device Tree properties for UHS modes
 From: Pawel Moll <pawel.moll@arm.com>
-Date: Mon, 29 Jul 2013 11:57:16 +0100
-In-Reply-To: <51F2ADA2.2030503@wwwdotorg.org>
+Date: Mon, 29 Jul 2013 11:50:53 +0100
+In-Reply-To: <Pine.LNX.4.64.1307290903360.14405@axis700.grange>
 References: <Pine.LNX.4.64.1307261747210.22137@axis700.grange>
 	 <51F2ADA2.2030503@wwwdotorg.org>
+	 <Pine.LNX.4.64.1307262215110.27439@axis700.grange>
+	 <51F2EBD4.1060603@wwwdotorg.org>
+	 <Pine.LNX.4.64.1307290753090.14405@axis700.grange>
+	 <Pine.LNX.4.64.1307290903360.14405@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
@@ -18,26 +22,29 @@ To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 Cc: Stephen Warren <swarren@wwwdotorg.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Chris Ball <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <Mark.Rutland@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, 2013-07-26 at 18:10 +0100, Stephen Warren wrote:
-> > +- uhs-sdr12: the host supports UHS SDR12 mode
-> > +- uhs-sdr25: the host supports UHS SDR25 mode
-> > +- uhs-sdr50: the host supports UHS SDR50 mode
-> > +- uhs-sdr104: the host supports UHS SDR104 mode
-> > +- uhs-ddr50: the host supports UHS DDR50 mode
-> > +- ddr-1v2: the host can support DDR, using 1.2V VccQ
-> > +- ddr-1v8: the host can support DDR, using 1.8V VccQ
+On Mon, 2013-07-29 at 08:18 +0100, Guennadi Liakhovetski wrote:
+> A short addendum. At least with Renesas SoCs I see the situation in the 
+> following way: new SoC versions appear relatively frequently. 
 
-I understand that they are equivalent of the mmc caps #defines. Having
-absolutely no UHS knowledge (nor access to the spec) I'm just wondering
-if some of them couldn't be derived from the "environment", being the
-way the host is wired up?
+What frequency are we talking about? Once per year? Once per month? I'm
+not trying to be picky, it really makes a difference...
 
-An example would be the classic OCR VDD fields - the voltage range bits
-are taken from the regulator "vmmc" supply (see
-mmc_regulator_get_supply()).
+> With compatibility strings we have to change _all_ Renesas drivers for _each_ 
+> SoC version even if just to add a new struct of_device_id entry. This 
+> doesn't seem very productive to me.
 
-Of course I this may be completely wrong approach here...
+There is at least precedence in the MMC world - have a look at
+drivers/mmc/host/mmci.c and the struct variant_data... There seem to be
+a new variant every 6 months or so (I must admit guilt of of making some
+of them ;-) coming from two different companies.
+
+And although it's a primecell (aka amba_bus) device, so the compatibilty
+string remains the same, the struct amba_id was being extended every
+time which is pretty much the same thing.
 
 Pawel
+
+PS. Having said all that I'm hoping the MMCI evolution has finally
+stopped so no new variants will be needed ;-)
 
 
