@@ -1,32 +1,39 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-ye0-f170.google.com ([209.85.213.170]:46132 "EHLO
-	mail-ye0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752899Ab3G2QQP (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 12:16:15 -0400
-Date: Mon, 29 Jul 2013 12:15:37 -0400
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH] pata_imx: expose module alias for loading from
- device-tree
-Message-ID: <20130729161537.GE22605@mtj.dyndns.org>
-References: <1375083518-14899-1-git-send-email-ndevos@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1375083518-14899-1-git-send-email-ndevos@redhat.com>
+Received: from mail-wg0-f45.google.com ([74.125.82.45]:51463 "EHLO
+	mail-wg0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751749Ab3G2Hio (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 03:38:44 -0400
+Received: by mail-wg0-f45.google.com with SMTP id x12so4611572wgg.12
+        for <devicetree@vger.kernel.org>; Mon, 29 Jul 2013 00:38:43 -0700 (PDT)
+From: Niels de Vos <ndevos@redhat.com>
+Subject: [PATCH] pata_imx: expose module alias for loading from device-tree
+Date: Mon, 29 Jul 2013 09:38:38 +0200
+Message-Id: <1375083518-14899-1-git-send-email-ndevos@redhat.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Niels de Vos <ndevos@redhat.com>
-Cc: devicetree@vger.kernel.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>
+To: devicetree@vger.kernel.org
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Niels de Vos <ndevos@redhat.com>, Sascha Hauer <s.hauer@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jul 29, 2013 at 09:38:38AM +0200, Niels de Vos wrote:
-> Enable auto loading by udev when pata_imx is compiled as a module.
-> 
-> Signed-off-by: Niels de Vos <ndevos@redhat.com>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Enable auto loading by udev when pata_imx is compiled as a module.
 
-Applied to libata/for-3.11-fixes.
+Signed-off-by: Niels de Vos <ndevos@redhat.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/ata/pata_imx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks.
-
+diff --git a/drivers/ata/pata_imx.c b/drivers/ata/pata_imx.c
+index 4ec7c04..26386f0 100644
+--- a/drivers/ata/pata_imx.c
++++ b/drivers/ata/pata_imx.c
+@@ -237,6 +237,7 @@ static const struct of_device_id imx_pata_dt_ids[] = {
+ 		/* sentinel */
+ 	}
+ };
++MODULE_DEVICE_TABLE(of, imx_pata_dt_ids);
+ 
+ static struct platform_driver pata_imx_driver = {
+ 	.probe		= pata_imx_probe,
 -- 
-tejun
+1.7.11.7
+
