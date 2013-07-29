@@ -1,108 +1,36 @@
-From: Manish Badarkhe <badarkhe.manish@gmail.com>
-Subject: Re: [PATCH V3 1/2] tps6507x-ts: Add DT support
-Date: Mon, 29 Jul 2013 11:47:21 +0530
-Message-ID: <CAKDJKT500ewMEv-f-vZBkMELkFkNBXLrv0oS_qUivbq0T-Y6yA@mail.gmail.com>
-References: <1369126458-24872-1-git-send-email-manishv.b@ti.com>
-	<1369126458-24872-2-git-send-email-manishv.b@ti.com>
-	<20130610060442.GA30158@core.coreip.homeip.net>
-	<A4887BF146CD57468F700B415D2F47015A0DFD@DBDE04.ent.ti.com>
-	<20130610180311.GA4649@core.coreip.homeip.net>
-	<A4887BF146CD57468F700B415D2F47015A1315@DBDE04.ent.ti.com>
-	<CAKDJKT6UETVpPT9B6LE59_EMrxNGpTmUiu9iddHoWOYhGpHP3Q@mail.gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 1/3] dmaengine: add dma_get_slave_sg_limits()
+Date: Mon, 29 Jul 2013 12:14:15 +0530
+Message-ID: <20130729064415.GF29095@intel.com>
+References: <1374166001-31340-1-git-send-email-joelf@ti.com>
+ <1374166001-31340-2-git-send-email-joelf@ti.com>
+ <20130718170825.GZ21614@n2100.arm.linux.org.uk>
+ <51E83A9D.5020008@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAKDJKT6UETVpPT9B6LE59_EMrxNGpTmUiu9iddHoWOYhGpHP3Q@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob@landley.net" <rob@landley.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51E83A9D.5020008@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Joel Fernandes <joelf@ti.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, Balaji TK <balajitk@ti.com>, Gururaja Hebbar <gururaja.hebbar@ti.com>, Chris Ball <cjb@laptop.org>, Jason Kridner <jkridner@beagleboard.org>, Mark Jackson <mpfj-list@newflow.co.uk>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.ker>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry
+On Thu, Jul 18, 2013 at 01:57:33PM -0500, Joel Fernandes wrote:
+> On 07/18/2013 12:08 PM, Russell King - ARM Linux wrote:
+> > As for the maximum number of scatterlist entries, really that's a bug in
+> > the DMA engine implementations if they can't accept arbitary lengths.
+> > I've created DMA engine drivers for implementations where you have to
+> > program each segment individually, ones which can have the current and
+> > next segments, as well as those which can walk a list.  Provided you get
+> > informed of a transfer being completed, there really is no reason for a
+> > DMA engine driver to limit the number of scatterlist entries that it
+> > will accept.
+> 
+> Sure, that makes sense. Can you point to such a typical example
+> implementation to get some ideas?
+MXS MMC driver uses this: drivers/mmc/host/mxs-mmc.c
+And dma engine driver for this is mxs-dma.c
 
-On Mon, Jul 1, 2013 at 4:40 PM, Manish Badarkhe
-<badarkhe.manish@gmail.com> wrote:
->
-> Hi Dmitry
->
->
-> On Wed, Jun 12, 2013 at 12:23 PM, Vishwanathrao Badarkhe, Manish
-> <manishv.b@ti.com> wrote:
-> > Hi Dmitry,
-> >
-> > On Mon, Jun 10, 2013 at 23:33:11, Dmitry Torokhov wrote:
-> >> Manish,
-> >>
-> >> On Mon, Jun 10, 2013 at 10:23:16AM +0000, Vishwanathrao Badarkhe,
-> >> Manish wrote:
-> >> > Hi Dmitry,
-> >> >
-> >> > On Mon, Jun 10, 2013 at 11:34:42, Dmitry Torokhov wrote:
-> >> > > Hi Manish,
-> >> > >
-> >> > > On Tue, May 21, 2013 at 02:24:17PM +0530, Vishwanathrao Badarkhe,
-> >> > > Manish wrote:
-> >> > >
-> >> > > > +       struct touchscreen_init_data *init_data = NULL;
-> >> > > > +       int err;
-> >> > > > +
-> >> > > > +       if (node)
-> >> > > > +               node = of_find_node_by_name(node, "tsc");
-> >> > >
-> >> > > Why do you have to locate OF node manually instead of already
-> >> > > having it attached to the device stucture?
-> >> >
-> >> > As TPS6507x is mfd device containing two nodes, regulator and
-> >> > touchscreen.
-> >> > It is necessary to use "of_find_node_by_name" to find child "tsc"
-> >> > node
-> >> > of TPS6507x MFD device.
-> >>
-> >> I understand that TPS6507x is a MFD device, However, I still do not
-> >> understand why you do not attach OF data to the child platform device
-> >> representing touch screen when you create it.
-> >
-> > I gone through most of MFD devices in mainline kernel where
-> > "of_find_node_by_name"
-> > function is used in order to populate child node properties.
-> > See below example of max8925 MFD device.
-> >
-> > Max8025 MFD device has following modules
-> > 1. Touch screen
-> > 2. Charger
-> > 3. Backlight
-> > 4. regulator
-> >
-> > In DT case, device node for max8925 MFD device is in
-> > "arch/arm/boot/dts/mmp2-brownstone.dts"
-> > file having child nodes as regulator, backlight and charger.
-> > Respective drivers (regulator, backlight and charger) of max8925 MFD
-> > device used
-> > "of_find_node_by_name" function in order to populate child node
-> > properties.
-> >
-> > Here, also same case for TPS6507x MFD device
-> >
-> > TPS6507x MFD device has two childs:
-> > 1. regulator
-> > 2. touch screen.
-> >
-> > Regulator driver for TPS6507x is already in mainline and using function
-> > "of_find_node_by_name" to populate device tree properties for
-> > regulators.
-> > On similar lines I used "of_find_node_by_name" to populate device
-> > tree properties for touch screen.
-> >
-> > Still, I agreed that it is possible to attach OF data to child platform
-> > device
-> > but it requires changes in MFD driver of TPS6507x.
-> >
-> > Please let me know your opinion about this.
->
-> Please let me know so accordingly I will make changes in code.
->
-
-Please provide your comments so accordingly will make changes in code.
-
-Regards
-Manish Badarkhe
+~Vinod
+-- 
