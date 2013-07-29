@@ -1,57 +1,128 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: [PATCH 7/7] ARM: dts: Add pin state information for DP HPD support to Exynos5420
-Date: Mon, 29 Jul 2013 19:19:31 +0530
-Message-ID: <1375105771-8106-8-git-send-email-vikas.sajjan@linaro.org>
-References: <1375105771-8106-1-git-send-email-vikas.sajjan@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1375105771-8106-1-git-send-email-vikas.sajjan@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, jg1.han@samsung.com, inki.dae@samsung.com, patches@linaro.org, linaro-kernel@lists.linaro.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 2/6] misc: sram: add ability to mark sram sections as
+ reserved
+Date: Mon, 29 Jul 2013 16:02:00 +0200
+Message-ID: <1375106520.4223.24.camel@pizza.hi.pengutronix.de>
+References: <201307291510.31679.heiko@sntech.de>
+ <201307291512.25126.heiko@sntech.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201307291512.25126.heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Ulrich Prinz <ulrich.prinz@googlemail.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pin state information for DP HPD support that requires pin configuration
-support using pinctrl interface.
-
-Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
----
- arch/arm/boot/dts/exynos5420-pinctrl.dtsi |    7 +++++++
- arch/arm/boot/dts/exynos5420-smdk5420.dts |    5 +++++
- 2 files changed, 12 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-index 5848c42..e695aba 100644
---- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-@@ -59,6 +59,13 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 		};
-+
-+		dp_hpd: dp_hpd {
-+			samsung,pins = "gpx0-7";
-+			samsung,pin-function = <3>;
-+			samsung,pin-pud = <0>;
-+			samaung,pin-drv = <0>;
-+		};
- 	};
- 
- 	pinctrl@13410000 {
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index 7c2f477..1237ad2 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -31,6 +31,11 @@
- 		};
- 	};
- 
-+	dp-controller {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&dp_hpd>;
-+       };
-+
- 	fimd {
- 		display-timings {
- 			native-mode = <&timing0>;
--- 
-1.7.9.5
+SGkgSGVpa28sCgpBbSBNb250YWcsIGRlbiAyOS4wNy4yMDEzLCAxNToxMiArMDIwMCBzY2hyaWVi
+IEhlaWtvIFN0w7xibmVyOgo+IFNvbWUgU29DcyBuZWVkIHBhcnRzIG9mIHRoZWlyIHNyYW0gZm9y
+IHNwZWNpYWwgcHVycG9zZXMuIFNvIHdoaWxlIGJlaW5nIHBhcnQKPiBvZiB0aGUgcGVyaXBoZXJh
+bCwgaXQgc2hvdWxkIG5vdCBiZSBwYXJ0IG9mIHRoZSBnZW5wb29sIGNvbnRyb2xsaW5nIHRoZSBz
+cmFtLgo+IAo+IFRoZXJlZm9yZSBhZGQgYW4gb3B0aW9uIG1taW8tc3JhbS1yZXNlcnZlZCB0byBr
+ZWVwIGFyYml0cmFyeSBwb3J0aW9ucyBvZiB0aGUKPiBzcmFtIGZyb20gYmVpbmcgcGFydCBvZiB0
+aGUgcG9vbC4KPiAKPiBTdWdnZXN0ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoZXJyaW5nMkBnbWFp
+bC5jb20+Cj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4K
+PiBUZXN0ZWQtYnk6IFVscmljaCBQcmlueiA8dWxyaWNoLnByaW56QGdvb2dsZW1haWwuY29tPgo+
+IC0tLQo+IFBoaWxpcHA6IEkgZGlkbid0IGNhcnJ5IHRoZSBhY2ssIGJlY2F1c2UgdGhlIGxvb3Ag
+Y2hhbmdlZCBzaWduaWZpY2FudGx5IGFnYWluLgo+IFNvIGlmIGl0IGxvb2tzIG9rLCBjb3VsZCB5
+b3UgcmUtYWNrIGl0IHBsZWFzZT8KCkknZCBwcmVmZXIgdGhlIGZpcnN0IGxvb3AgdG8gY29udGFp
+biB0aGUgbWFnaWMgYW5kIHByb2R1Y2UgYSBsaXN0IG9mCnVzZWFibGUgY2h1bmtzLCBpbnN0ZWFk
+IG9mIGEgbGlzdCBvZiByZXNlcnZlZCBibG9ja3MuIFRoZSBzZWNvbmQgbG9vcApjb3VsZCB0aGVu
+IGl0ZXJhdGUgb3ZlciB0aGUgYXJyYXkgYW5kIGp1c3QgY2FsbCBnZW5fcG9vbF9hZGRfdmlydApy
+ZXBlYXRlZGx5LgoKcmVnYXJkcwpQaGlsaXBwCgo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWlzYy9zcmFtLnR4dCB8ICAgIDggKysKPiAgZHJpdmVycy9taXNjL3NyYW0uYyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTAxICsrKysrKysrKysrKysrKysrKysrKy0t
+Cj4gIDIgZmlsZXMgY2hhbmdlZCwgMTAxIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCj4g
+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXNjL3Ny
+YW0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21pc2Mvc3JhbS50eHQK
+PiBpbmRleCA0ZDBhMDBlLi4zYjdhNWMxIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9taXNjL3NyYW0udHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL21pc2Mvc3JhbS50eHQKPiBAQCAtOCw5ICs4LDE3IEBAIFJlcXVpcmVk
+IHByb3BlcnRpZXM6Cj4gIAo+ICAtIHJlZyA6IFNSQU0gaW9tZW0gYWRkcmVzcyByYW5nZQo+ICAK
+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArCj4gKy0gbW1pby1zcmFtLXJlc2VydmVkOiBvcmRl
+cmVkIGxpc3Qgb2YgcmVzZXJ2ZWQgY2h1bmtzIGluc2lkZSB0aGUgc3JhbSB0aGF0Cj4gKyAgc2hv
+dWxkIG5vdCBiZSB1c2VkIGJ5IHRoZSBPUy4KPiArICBGb3JtYXQgaXMgPGJhc2Ugc2l6ZT4sIDxi
+YXNlIHNpemU+LCAuLi47IHdpdGggYmFzZSBiZWluZyByZWxhdGl2ZSB0byB0aGUKPiArICByZWcg
+cHJvcGVydHkgYmFzZS4KPiArCj4gIEV4YW1wbGU6Cj4gIAo+ICBzcmFtOiBzcmFtQDVjMDAwMDAw
+IHsKPiAgCWNvbXBhdGlibGUgPSAibW1pby1zcmFtIjsKPiAgCXJlZyA9IDwweDVjMDAwMDAwIDB4
+NDAwMDA+OyAvKiAyNTYgS2lCIFNSQU0gYXQgYWRkcmVzcyAweDVjMDAwMDAwICovCj4gKwltbWlv
+LXNyYW0tcmVzZXJ2ZWQgPSA8MHgwIDB4MTAwPjsgLyogcmVzZXJ2ZSAweDVjMDAwMDAwLTB4NWMw
+MDAxMDAgKi8KPiAgfTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9taXNjL3NyYW0uYyBiL2RyaXZl
+cnMvbWlzYy9zcmFtLmMKPiBpbmRleCBhZmU2NjU3MS4uYjNjZWVmYiAxMDA2NDQKPiAtLS0gYS9k
+cml2ZXJzL21pc2Mvc3JhbS5jCj4gKysrIGIvZHJpdmVycy9taXNjL3NyYW0uYwo+IEBAIC0zNiwx
+MyArMzYsMjMgQEAgc3RydWN0IHNyYW1fZGV2IHsKPiAgCXN0cnVjdCBjbGsgKmNsazsKPiAgfTsK
+PiAgCj4gK3N0cnVjdCBzcmFtX3Jlc2VydmUgewo+ICsJdW5zaWduZWQgbG9uZyBzdGFydDsKPiAr
+CXVuc2lnbmVkIGxvbmcgc2l6ZTsKPiArfTsKPiArCj4gIHN0YXRpYyBpbnQgc3JhbV9wcm9iZShz
+dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICB7Cj4gIAl2b2lkIF9faW9tZW0gKnZpcnRf
+YmFzZTsKPiAgCXN0cnVjdCBzcmFtX2RldiAqc3JhbTsKPiAgCXN0cnVjdCByZXNvdXJjZSAqcmVz
+Owo+IC0JdW5zaWduZWQgbG9uZyBzaXplOwo+IC0JaW50IHJldDsKPiArCXVuc2lnbmVkIGxvbmcg
+c2l6ZSwgY3VyX3N0YXJ0LCBjdXJfc2l6ZTsKPiArCWNvbnN0IF9fYmUzMiAqcmVzZXJ2ZWRfbGlz
+dCA9IE5VTEw7Cj4gKwlpbnQgcmVzZXJ2ZWRfc2l6ZSA9IDA7Cj4gKwlzdHJ1Y3Qgc3JhbV9yZXNl
+cnZlICpyYmxvY2tzOwo+ICsJdW5zaWduZWQgaW50IG5ibG9ja3M7Cj4gKwlpbnQgcmV0ID0gMDsK
+PiArCWludCBpOwo+ICAKPiAgCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JF
+U09VUkNFX01FTSwgMCk7Cj4gIAl2aXJ0X2Jhc2UgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoJnBk
+ZXYtPmRldiwgcmVzKTsKPiBAQCAtNjUsMTkgKzc1LDk0IEBAIHN0YXRpYyBpbnQgc3JhbV9wcm9i
+ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJaWYgKCFzcmFtLT5wb29sKQo+ICAJ
+CXJldHVybiAtRU5PTUVNOwo+ICAKPiAtCXJldCA9IGdlbl9wb29sX2FkZF92aXJ0KHNyYW0tPnBv
+b2wsICh1bnNpZ25lZCBsb25nKXZpcnRfYmFzZSwKPiAtCQkJCXJlcy0+c3RhcnQsIHNpemUsIC0x
+KTsKPiAtCWlmIChyZXQgPCAwKSB7Cj4gLQkJaWYgKHNyYW0tPmNsaykKPiAtCQkJY2xrX2Rpc2Fi
+bGVfdW5wcmVwYXJlKHNyYW0tPmNsayk7Cj4gLQkJcmV0dXJuIHJldDsKPiArCWlmIChwZGV2LT5k
+ZXYub2Zfbm9kZSkgewo+ICsJCXJlc2VydmVkX2xpc3QgPSBvZl9nZXRfcHJvcGVydHkocGRldi0+
+ZGV2Lm9mX25vZGUsCj4gKwkJCQkJCSJtbWlvLXNyYW0tcmVzZXJ2ZWQiLAo+ICsJCQkJCQkmcmVz
+ZXJ2ZWRfc2l6ZSk7Cj4gKwkJaWYgKHJlc2VydmVkX2xpc3QpIHsKPiArCQkJcmVzZXJ2ZWRfc2l6
+ZSAvPSBzaXplb2YoKnJlc2VydmVkX2xpc3QpOwo+ICsJCQlpZiAoIXJlc2VydmVkX3NpemUgfHwg
+cmVzZXJ2ZWRfc2l6ZSAlIDIpIHsKPiArCQkJCWRldl93YXJuKCZwZGV2LT5kZXYsICJ3cm9uZyBu
+dW1iZXIgb2YgYXJndW1lbnRzIGluIG1taW8tc3JhbS1yZXNlcnZlZFxuIik7Cj4gKwkJCQlyZXNl
+cnZlZF9saXN0ID0gTlVMTDsKPiArCQkJCXJlc2VydmVkX3NpemUgPSAwOwo+ICsJCQl9Cj4gKwkJ
+fQo+ICAJfQo+ICAKPiArCS8qCj4gKwkgKiBXZSBuZWVkIGFuIGFkZGl0aW9uYWwgYmxvY2sgdG8g
+bWFyayB0aGUgZW5kIG9mIHRoZSBtZW1vcnkgcmVnaW9uCj4gKwkgKiBhZnRlciB0aGUgcmVzZXJ2
+ZWQgYmxvY2tzIGZyb20gdGhlIGR0IGFyZSBwcm9jZXNzZWQuCj4gKwkgKi8KPiArCW5ibG9ja3Mg
+PSByZXNlcnZlZF9zaXplIC8gMiArIDE7Cj4gKwlyYmxvY2tzID0ga21hbGxvYygobmJsb2Nrcykg
+KiBzaXplb2YoKnJibG9ja3MpLCBHRlBfS0VSTkVMKTsKPiArCWlmICghcmJsb2Nrcykgewo+ICsJ
+CXJldCA9IC1FTk9NRU07Cj4gKwkJZ290byBlcnJfYWxsb2M7Cj4gKwl9Cj4gKwo+ICsJZm9yIChp
+ID0gMDsgaSA8IG5ibG9ja3MgLSAxOyBpKyspIHsKPiArCQlyYmxvY2tzW2ldLnN0YXJ0ID0gYmUz
+Ml90b19jcHUoKnJlc2VydmVkX2xpc3QrKyk7Cj4gKwkJcmJsb2Nrc1tpXS5zaXplID0gYmUzMl90
+b19jcHUoKnJlc2VydmVkX2xpc3QrKyk7Cj4gKwo+ICsJCWRldl9kYmcoJnBkZXYtPmRldiwgImZv
+dW5kIHJlc2VydmVkIGJsb2NrIDB4JWx4LTB4JWx4XG4iLAo+ICsJCQlyYmxvY2tzW2ldLnN0YXJ0
+LAo+ICsJCQlyYmxvY2tzW2ldLnN0YXJ0ICsgcmJsb2Nrc1tpXS5zaXplKTsKPiArCX0KPiArCj4g
+KwkvKiB0aGUgbGFzdCBjaHVuayBtYXJrcyB0aGUgZW5kIG9mIHRoZSByZWdpb24gKi8KPiArCXJi
+bG9ja3NbbmJsb2NrcyAtIDFdLnN0YXJ0ID0gc2l6ZTsKPiArCXJibG9ja3NbbmJsb2NrcyAtIDFd
+LnNpemUgPSAwOwo+ICsKPiArCWN1cl9zdGFydCA9IDA7Cj4gKwlmb3IgKGkgPSAwOyBpIDwgbmJs
+b2NrczsgaSsrKSB7Cj4gKwkJLyogY2F0Y2ggdW5zb3J0ZWQgbGlzdCBlbnRyaWVzICovCj4gKwkJ
+aWYgKHJibG9ja3NbaV0uc3RhcnQgPCBjdXJfc3RhcnQpIHsKPiArCQkJZGV2X2VycigmcGRldi0+
+ZGV2LAo+ICsJCQkJInVuc29ydGVkIHJlc2VydmVkIGxpc3QgKDB4JWx4IGJlZm9yZSBjdXJyZW50
+IDB4JWx4KVxuIiwKPiArCQkJCXJibG9ja3NbaV0uc3RhcnQsIGN1cl9zdGFydCk7Cj4gKwkJCXJl
+dCA9IC1FSU5WQUw7Cj4gKwkJCWdvdG8gZXJyX2NodW5rczsKPiArCQl9Cj4gKwo+ICsJCS8qIGN1
+cnJlbnQgc3RhcnQgaXMgaW4gYSByZXNlcnZlZCBibG9jaywgc28gY29udGludWUgYWZ0ZXIgaXQg
+Ki8KPiArCQlpZiAocmJsb2Nrc1tpXS5zdGFydCA9PSBjdXJfc3RhcnQpIHsKPiArCQkJY3VyX3N0
+YXJ0ID0gcmJsb2Nrc1tpXS5zdGFydCArIHJibG9ja3NbaV0uc2l6ZTsKPiArCQkJY29udGludWU7
+Cj4gKwkJfQo+ICsKPiArCQkvKgo+ICsJCSAqIGFsbG9jYXRlIHRoZSBzcGFjZSBiZXR3ZWVuIHRo
+ZSBjdXJyZW50IHN0YXJ0aW5nCj4gKwkJICogYWRkcmVzcyBhbmQgdGhlIGZvbGxvd2luZyByZXNl
+cnZlZCBibG9jaywgb3IgdGhlCj4gKwkJICogZW5kIG9mIHRoZSByZWdpb24uCj4gKwkJICovCj4g
+KwkJY3VyX3NpemUgPSByYmxvY2tzW2ldLnN0YXJ0IC0gY3VyX3N0YXJ0Owo+ICsKPiArCQlkZXZf
+ZGJnKCZwZGV2LT5kZXYsICJhZGRpbmcgY2h1bmsgMHglbHgtMHglbHhcbiIsCj4gKwkJCWN1cl9z
+dGFydCwgY3VyX3N0YXJ0ICsgY3VyX3NpemUpOwo+ICsJCXJldCA9IGdlbl9wb29sX2FkZF92aXJ0
+KHNyYW0tPnBvb2wsCj4gKwkJCQkodW5zaWduZWQgbG9uZyl2aXJ0X2Jhc2UgKyBjdXJfc3RhcnQs
+Cj4gKwkJCQlyZXMtPnN0YXJ0ICsgY3VyX3N0YXJ0LCBjdXJfc2l6ZSwgLTEpOwo+ICsJCWlmIChy
+ZXQgPCAwKQo+ICsJCQlnb3RvIGVycl9jaHVua3M7Cj4gKwo+ICsJCS8qIG5leHQgYWxsb2NhdGlv
+biBhZnRlciB0aGlzIHJlc2VydmVkIGJsb2NrICovCj4gKwkJY3VyX3N0YXJ0ID0gcmJsb2Nrc1tp
+XS5zdGFydCArIHJibG9ja3NbaV0uc2l6ZTsKPiArCX0KPiArCj4gKwlrZnJlZShyYmxvY2tzKTsK
+PiArCj4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBzcmFtKTsKPiAgCj4gIAlkZXZfZGJn
+KCZwZGV2LT5kZXYsICJTUkFNIHBvb2w6ICVsZCBLaUIgQCAweCVwXG4iLCBzaXplIC8gMTAyNCwg
+dmlydF9iYXNlKTsKPiAgCj4gIAlyZXR1cm4gMDsKPiArCj4gK2Vycl9jaHVua3M6Cj4gKwlrZnJl
+ZShyYmxvY2tzKTsKPiArZXJyX2FsbG9jOgo+ICsJaWYgKHNyYW0tPmNsaykKPiArCQljbGtfZGlz
+YWJsZV91bnByZXBhcmUoc3JhbS0+Y2xrKTsKPiArCXJldHVybiByZXQ7Cj4gIH0KPiAgCj4gIHN0
+YXRpYyBpbnQgc3JhbV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
