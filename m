@@ -1,205 +1,159 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtpfb1-g21.free.fr ([212.27.42.9]:37076 "EHLO
-	smtpfb1-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755076Ab3GYJO6 convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 05:14:58 -0400
-Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
-	by smtpfb1-g21.free.fr (Postfix) with ESMTP id DBAA72DEE3
-	for <devicetree@vger.kernel.org>; Thu, 25 Jul 2013 11:14:54 +0200 (CEST)
-Date: Thu, 25 Jul 2013 11:14:28 +0200
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH 3/4] ASoc: kirkwood: merge kirkwood-i2c and kirkwood-dma
-Message-ID: <20130725111428.419ee278@armhf>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Received: from avon.wwwdotorg.org ([70.85.31.133]:37409 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753734Ab3G2R2d (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 13:28:33 -0400
+Message-ID: <51F6A63D.7050209@wwwdotorg.org>
+Date: Mon, 29 Jul 2013 11:28:29 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/2] mmc: add Device Tree properties for UHS modes
+References: <Pine.LNX.4.64.1307261747210.22137@axis700.grange> <51F2ADA2.2030503@wwwdotorg.org> <Pine.LNX.4.64.1307262215110.27439@axis700.grange> <51F2EBD4.1060603@wwwdotorg.org> <Pine.LNX.4.64.1307290753090.14405@axis700.grange>
+In-Reply-To: <Pine.LNX.4.64.1307290753090.14405@axis700.grange>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Russell King <rmk+kernel@arm.linux.org.uk>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, linux-mmc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Chris Ball <cjb@laptop.org>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Rob Herring <rob.herring@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
-To avoid the declaration of a 'kirkwood-pcm-audio' device in the DT,
-this patch merges the kirkwood-i2c and kirkwood-dma drivers into one
-module.
+On 07/29/2013 12:20 AM, Guennadi Liakhovetski wrote:
+> Hi Stephen
+> 
+> On Fri, 26 Jul 2013, Stephen Warren wrote:
+> 
+>> On 07/26/2013 02:23 PM, Guennadi Liakhovetski wrote:
+>>> Hi Stephen
+>>>
+>>> On Fri, 26 Jul 2013, Stephen Warren wrote:
+>>>
+>>>> On 07/26/2013 09:51 AM, Guennadi Liakhovetski wrote:
+>>>>> Add DT properties for UHS SDR12, SDR25, SDR50, SDR104 and DDR50 modes and
+>>>>> for supported by the host in DDR mode VccQ values. Adding them to DT will
+>>>>> automatically enable respective MMC host capabilities.
+>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+>>>>
+>>>>> +- uhs-sdr12: the host supports UHS SDR12 mode
+>>>>> +- uhs-sdr25: the host supports UHS SDR25 mode
+>>>>> +- uhs-sdr50: the host supports UHS SDR50 mode
+>>>>> +- uhs-sdr104: the host supports UHS SDR104 mode
+>>>>> +- uhs-ddr50: the host supports UHS DDR50 mode
+>>>>> +- ddr-1v2: the host can support DDR, using 1.2V VccQ
+>>>>> +- ddr-1v8: the host can support DDR, using 1.8V VccQ
+>>>>
+>>>> Surely the driver for the host controller already knows this, so there's
+>>>> no need to represent it in DT?
+>>>
+>>> Not necessarily. One driver can handle several versions of the same chip, 
+>>> and some versions of the chip implement some of those features, others 
+>>> don't.
+>>
+>> Certainly.
+>>
+>>> So, your choice is really whether to specify a chip version in the
+>>> compatible string or these properties.
+>>
+>> There's no choice there. The compatible property needs to specify all of
+>> the following:
+>>
+>> * A value which describes the exact chip the IP block is in. This can be
+>> matched on to enable any quirks that need to be handled due to
+>> integration of the IP into the particular chip. This value will list the
+>> chip version. An example might be tegra20-sdhci.
+>>
+>> * A value which describes the IP block version (if that IP block has a
+>> version independent of the SoC that contains it, as e.g. a Synopsis IP
+>> block might). A totally made-up example might be synopsis-dwc2-1.0.0
+>>
+>> * Various more generic values that describe the HW, and that define a n
+>> interface to the HW that is specific and complete enough that HW can
+>> program to. An example might be usb-ehci (assuming a chip that doesn't
+>> have so many quirks that a driver has to know more than just "it's an
+>> EHCI controller).
+> 
+> Yes, all these certainly make sense. As far as I understand, we are still 
+> in the process of defining good clear rules for DTs, there is an "ABI" 
+> discussion currently running on ALKML and IIRC this is also going to be a 
+> topic for one of coming conferences. So, hopefully we're approaching a 
+> state of a greater clarity about DT.
 
-Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
----
- arch/arm/mach-kirkwood/common.c      |  6 ------
- sound/soc/kirkwood/Kconfig           |  5 -----
- sound/soc/kirkwood/Makefile          |  4 +---
- sound/soc/kirkwood/kirkwood-dma.c    | 30 +-----------------------------
- sound/soc/kirkwood/kirkwood-i2s.c    |  5 +++++
- sound/soc/kirkwood/kirkwood-openrd.c |  2 +-
- sound/soc/kirkwood/kirkwood-t5325.c  |  2 +-
- sound/soc/kirkwood/kirkwood.h        |  1 +
- 8 files changed, 10 insertions(+), 45 deletions(-)
+I don't think the rules for the compatible property are up in the air;
+they've been pretty well communicated since at least the start of my
+involvement in DT perhaps 2 years ago.
 
-diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwood/common.c
-index e9238b5..fd02f1b 100644
---- a/arch/arm/mach-kirkwood/common.c
-+++ b/arch/arm/mach-kirkwood/common.c
-@@ -587,15 +587,9 @@ static struct platform_device kirkwood_i2s_device = {
- 	},
- };
- 
--static struct platform_device kirkwood_pcm_device = {
--	.name		= "kirkwood-pcm-audio",
--	.id		= -1,
--};
--
- void __init kirkwood_audio_init(void)
- {
- 	platform_device_register(&kirkwood_i2s_device);
--	platform_device_register(&kirkwood_pcm_device);
- }
- 
- /*****************************************************************************
-diff --git a/sound/soc/kirkwood/Kconfig b/sound/soc/kirkwood/Kconfig
-index c62d715..b6917a7 100644
---- a/sound/soc/kirkwood/Kconfig
-+++ b/sound/soc/kirkwood/Kconfig
-@@ -6,14 +6,10 @@ config SND_KIRKWOOD_SOC
- 	  the Kirkwood I2S interface. You will also need to select the
- 	  audio interfaces to support below.
- 
--config SND_KIRKWOOD_SOC_I2S
--	tristate
--
- config SND_KIRKWOOD_SOC_OPENRD
- 	tristate "SoC Audio support for Kirkwood Openrd Client"
- 	depends on SND_KIRKWOOD_SOC && (MACH_OPENRD_CLIENT || MACH_OPENRD_ULTIMATE)
- 	depends on I2C
--	select SND_KIRKWOOD_SOC_I2S
- 	select SND_SOC_CS42L51
- 	help
- 	  Say Y if you want to add support for SoC audio on
-@@ -22,7 +18,6 @@ config SND_KIRKWOOD_SOC_OPENRD
- config SND_KIRKWOOD_SOC_T5325
- 	tristate "SoC Audio support for HP t5325"
- 	depends on SND_KIRKWOOD_SOC && MACH_T5325 && I2C
--	select SND_KIRKWOOD_SOC_I2S
- 	select SND_SOC_ALC5623
- 	help
- 	  Say Y if you want to add support for SoC audio on
-diff --git a/sound/soc/kirkwood/Makefile b/sound/soc/kirkwood/Makefile
-index 3e62ae9..cf22ad3 100644
---- a/sound/soc/kirkwood/Makefile
-+++ b/sound/soc/kirkwood/Makefile
-@@ -1,8 +1,6 @@
--snd-soc-kirkwood-objs := kirkwood-dma.o
--snd-soc-kirkwood-i2s-objs := kirkwood-i2s.o
-+snd-soc-kirkwood-objs := kirkwood-i2s.o kirkwood-dma.o
- 
- obj-$(CONFIG_SND_KIRKWOOD_SOC) += snd-soc-kirkwood.o
--obj-$(CONFIG_SND_KIRKWOOD_SOC_I2S) += snd-soc-kirkwood-i2s.o
- 
- snd-soc-openrd-objs := kirkwood-openrd.o
- snd-soc-t5325-objs := kirkwood-t5325.o
-diff --git a/sound/soc/kirkwood/kirkwood-dma.c b/sound/soc/kirkwood/kirkwood-dma.c
-index cef5277..9f4c595 100644
---- a/sound/soc/kirkwood/kirkwood-dma.c
-+++ b/sound/soc/kirkwood/kirkwood-dma.c
-@@ -364,36 +364,8 @@ static void kirkwood_dma_free_dma_buffers(struct snd_pcm *pcm)
- 	}
- }
- 
--static struct snd_soc_platform_driver kirkwood_soc_platform = {
-+struct snd_soc_platform_driver kirkwood_soc_platform = {
- 	.ops		= &kirkwood_dma_ops,
- 	.pcm_new	= kirkwood_dma_new,
- 	.pcm_free	= kirkwood_dma_free_dma_buffers,
- };
--
--static int kirkwood_soc_platform_probe(struct platform_device *pdev)
--{
--	return snd_soc_register_platform(&pdev->dev, &kirkwood_soc_platform);
--}
--
--static int kirkwood_soc_platform_remove(struct platform_device *pdev)
--{
--	snd_soc_unregister_platform(&pdev->dev);
--	return 0;
--}
--
--static struct platform_driver kirkwood_pcm_driver = {
--	.driver = {
--			.name = "kirkwood-pcm-audio",
--			.owner = THIS_MODULE,
--	},
--
--	.probe = kirkwood_soc_platform_probe,
--	.remove = kirkwood_soc_platform_remove,
--};
--
--module_platform_driver(kirkwood_pcm_driver);
--
--MODULE_AUTHOR("Arnaud Patard <arnaud.patard@rtp-net.org>");
--MODULE_DESCRIPTION("Marvell Kirkwood Audio DMA module");
--MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:kirkwood-pcm-audio");
-diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
-index d3e50af..3517784 100644
---- a/sound/soc/kirkwood/kirkwood-i2s.c
-+++ b/sound/soc/kirkwood/kirkwood-i2s.c
-@@ -459,6 +459,7 @@ static int kirkwood_i2s_dev_remove(struct platform_device *pdev)
- {
- 	struct kirkwood_dma_data *priv = dev_get_drvdata(&pdev->dev);
- 
-+	snd_soc_unregister_platform(&pdev->dev);
- 	snd_soc_unregister_component(&pdev->dev);
- 
- 	if (!IS_ERR(priv->extclk)) {
-@@ -544,6 +545,10 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "snd_soc_register_component failed\n");
- 		goto fail;
- 	}
-+	err = snd_soc_register_platform(&pdev->dev, &kirkwood_soc_platform);;
-+	if (err) {
-+		dev_err(&pdev->dev, "snd_soc_register_platform failed\n");
-+		goto fail;
- 	return 0;
- 
- fail:
-diff --git a/sound/soc/kirkwood/kirkwood-openrd.c b/sound/soc/kirkwood/kirkwood-openrd.c
-index b979c71..0fa3082 100644
---- a/sound/soc/kirkwood/kirkwood-openrd.c
-+++ b/sound/soc/kirkwood/kirkwood-openrd.c
-@@ -55,7 +55,7 @@ static struct snd_soc_dai_link openrd_client_dai[] = {
- 	.name = "CS42L51",
- 	.stream_name = "CS42L51 HiFi",
- 	.cpu_dai_name = "kirkwood-i2s",
--	.platform_name = "kirkwood-pcm-audio",
-+	.platform_name = "kirkwood-i2s",
- 	.codec_dai_name = "cs42l51-hifi",
- 	.codec_name = "cs42l51-codec.0-004a",
- 	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_CBS_CFS,
-diff --git a/sound/soc/kirkwood/kirkwood-t5325.c b/sound/soc/kirkwood/kirkwood-t5325.c
-index 1d0ed6f..f48ebda 100644
---- a/sound/soc/kirkwood/kirkwood-t5325.c
-+++ b/sound/soc/kirkwood/kirkwood-t5325.c
-@@ -71,7 +71,7 @@ static struct snd_soc_dai_link t5325_dai[] = {
- 	.name = "ALC5621",
- 	.stream_name = "ALC5621 HiFi",
- 	.cpu_dai_name = "kirkwood-i2s",
--	.platform_name = "kirkwood-pcm-audio",
-+	.platform_name = "kirkwood-i2s",
- 	.codec_dai_name = "alc5621-hifi",
- 	.codec_name = "alc562x-codec.0-001a",
- 	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_CBS_CFS,
-diff --git a/sound/soc/kirkwood/kirkwood.h b/sound/soc/kirkwood/kirkwood.h
-index 4d92637..f3de119 100644
---- a/sound/soc/kirkwood/kirkwood.h
-+++ b/sound/soc/kirkwood/kirkwood.h
-@@ -133,4 +133,5 @@ struct kirkwood_dma_data {
- 	int burst;
- };
- 
-+extern struct snd_soc_platform_driver kirkwood_soc_platform;
- #endif
--- 
-1.8.3.2
+>> Further classes of compatible value might exist, but you get the idea.
+>>
+>> All of those values have to exist in the DT right from the very start,
+>> so that the first DT is usable with a future kernel, which might decide
+>> to vary the exact compatible value(s) it matches on, provided they're
+>> all documented in the DT binding ABI, in order to enable/disable new
+>> sets of quirsk.
+> 
+> Makes sense too, sure.
+> 
+>>> Now, when you consider that
+>>> multiple drivers have to decide upon those, and sometimes you don't have 
+>>> an exact IP version of the SD/MMC controller but only the SoC version, you 
+>>> choice becomes: 
+>>
+>> That would be a bug in the DT, given my assertions above.
+> 
+> Sorry, what exactly would be a bug? Not having an exact IP version?
 
+Yes.
 
+> But 
+> you did write above - "if that IP block has a version independent of the 
+> SoC that contains it." In my case it doesn't really. Those IPs only exist 
+> within those SoCs.
 
--- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+I think this has been well covered in the rest of the thread, but if the
+IP block doesn't have a version independent from the SoC itself (because
+the SoC is developed as a whole, rather than being pieced together out
+of a pool of IP blocks for example), then the IP block's version *is*
+the SoC version. In my list of "sources" of compatible values above,
+it's possible that the values for multiple of those bullet points end up
+being the same.
+
+>> Related, is it really true that zero driver involvement is required to
+>> enable these UHS features?
+> 
+> I think it is, in most cases at least.
+> 
+>> If absolutely any HW can enable them without
+>> any driver support at all, then perhaps it's still reasonable to create
+>> DT properties to enable them. However, if driver support is required to
+>> make those features actually work, the driver had better be validating
+>> that support actually works on the HW it's running on before enabling
+>> the feature (and can therefore pass the validation results to the SD
+>> core rather than relying on DT properties to be set).
+> 
+> I think it rather works the other way round. Those flags only mark 
+> hardware _capabilities_.
+
+Which HW though?
+
+Presumably eMMC/SD-card capabilities are reported by the card through
+the various ID commands.
+
+HW/driver capabilities would be reported by the driver itself. I still
+don't buy the argument that no driver support is required, since
+historically the different speed modes on MMC have required different
+clock rates to the HW, different clock divider rounding/selection
+schemes, different bug workarounds, etc.
+
+Board capabilities (i.e. was the board routed with the right trace
+impedance/... to support the UHS features, rather than something slower
+because the designer didn't care about the UHS features and they're more
+expensive) seem fine to go in DT.
+
+> But don't tell the driver to use them yet.
+> Normally drivers just collect them in their .caps and .caps2 fields and 
+> pass on to the mmc core.
+
+So you would expect individual drivers to parse these (perhaps using
+common code) and filter the values depending on their capabilities? If
+so, why not just have the drivers set the values up themselves. Why is
+there a need to represent the data in DT?
+
