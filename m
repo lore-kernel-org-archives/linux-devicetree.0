@@ -1,36 +1,69 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 1/3] dmaengine: add dma_get_slave_sg_limits()
-Date: Mon, 29 Jul 2013 12:14:15 +0530
-Message-ID: <20130729064415.GF29095@intel.com>
-References: <1374166001-31340-1-git-send-email-joelf@ti.com>
- <1374166001-31340-2-git-send-email-joelf@ti.com>
- <20130718170825.GZ21614@n2100.arm.linux.org.uk>
- <51E83A9D.5020008@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/4] pinctrl: single: Add hardware specific hooks for
+ IRQ and GPIO wake-up events
+Date: Mon, 29 Jul 2013 01:50:21 -0700
+Message-ID: <20130729085020.GV7656@atomide.com>
+References: <20130607203936.16513.57494.stgit@localhost>
+ <20130607205040.16513.36794.stgit@localhost>
+ <CAN1soZznJ1YxWhaFZ4rhQx+uk3aCigAcVeuLpOU+3oPzmfXF6w@mail.gmail.com>
+ <20130610153637.GK8164@atomide.com>
+ <CACRpkdZNGHRJX3_HRCAfKgrRGLMVbqNzFBfu7wP-3YrhOUESkw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51E83A9D.5020008@ti.com>
+In-Reply-To: <CACRpkdZNGHRJX3_HRCAfKgrRGLMVbqNzFBfu7wP-3YrhOUESkw@mail.gmail.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Joel Fernandes <joelf@ti.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Matt Porter <matt@ohporter.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, Balaji TK <balajitk@ti.com>, Gururaja Hebbar <gururaja.hebbar@ti.com>, Chris Ball <cjb@laptop.org>, Jason Kridner <jkridner@beagleboard.org>, Mark Jackson <mpfj-list@newflow.co.uk>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.ker>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2013 at 01:57:33PM -0500, Joel Fernandes wrote:
-> On 07/18/2013 12:08 PM, Russell King - ARM Linux wrote:
-> > As for the maximum number of scatterlist entries, really that's a bug in
-> > the DMA engine implementations if they can't accept arbitary lengths.
-> > I've created DMA engine drivers for implementations where you have to
-> > program each segment individually, ones which can have the current and
-> > next segments, as well as those which can walk a list.  Provided you get
-> > informed of a transfer being completed, there really is no reason for a
-> > DMA engine driver to limit the number of scatterlist entries that it
-> > will accept.
+* Linus Walleij <linus.walleij@linaro.org> [130722 14:50]:
+> On Mon, Jun 10, 2013 at 5:36 PM, Tony Lindgren <tony@atomide.com> wrote:
 > 
-> Sure, that makes sense. Can you point to such a typical example
-> implementation to get some ideas?
-MXS MMC driver uses this: drivers/mmc/host/mxs-mmc.c
-And dma engine driver for this is mxs-dma.c
+> > At least on omaps, each board typically has at least one device
+> > configured as wake-up capable from deeper idle modes. In the
+> > deeper idle modes the normal interrupt wake-up path won't work
+> > as the logic is powered off and separate wake-up hardware is
+> > available either via IO ring or GPIO hardware.
+> 
+> What I do not understand is why the irq_set_wake() should
+> not fall through to that IO ring / GPIO hardware.
 
-~Vinod
--- 
+That certainly makes sense.
+
+> For example: a composite GPIO+irqchip driver should surely
+> set the wake up for a certain line for irq_set_wake()?
+
+Yes we might be able to make it all transparent to consumer
+drivers. Although irq_set_wake() is for suspend/resume only
+AFAIK, but ideally we would not have to configure anything
+from the consumer drivers for runtime PM.
+
+For the GPIO wake-up events, GPIO + irqchip driver is not
+enough as we also need the mapping between pinctrl registers
+and GPIO numbers. And to stay out of the database business,
+that mapping should ideally come from device tree as it's
+only needed for the pins used, not for all hundreds of pins
+on a SoC.
+ 
+> > The wake-up
+> > event can be device specific, or may need to be dynamically
+> > remuxed to GPIO input for wake-up events. When the wake-up
+> > event happens, it's IRQ need to be called so the device won't
+> > lose interrupts.
+> 
+> I recognize this hardware type. The name I use for these
+> things are "latent interrupts".
+
+OK
+ 
+> What I think is that they should maybe be modeled as
+> irqchip from end to end, so that we don't orthogonally use
+> any pinctrl states to set this up.
+
+OK I'll take a look.
+
+Regards,
+
+Tony
