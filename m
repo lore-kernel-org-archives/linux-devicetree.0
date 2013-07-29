@@ -1,43 +1,103 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:58552 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755576Ab3GYObQ (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 10:31:16 -0400
-From: Mark Brown <broonie@kernel.org>
-Date: Thu, 25 Jul 2013 15:31:08 +0100
-Message-Id: <1374762668-5037-1-git-send-email-broonie@kernel.org>
-Subject: [PATCH] ASoC: wm8994: Add clock bindings to the device tree
+Received: from metis.ext.pengutronix.de ([92.198.50.35]:58164 "EHLO
+	metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758024Ab3G2RBN (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 13:01:13 -0400
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v3 5/6] Documentation: Add device tree bindings for DA9063 PMIC
+Date: Mon, 29 Jul 2013 19:00:46 +0200
+Message-Id: <1375117247-6376-6-git-send-email-p.zabel@pengutronix.de>
+In-Reply-To: <1375117247-6376-1-git-send-email-p.zabel@pengutronix.de>
+References: <1375117247-6376-1-git-send-email-p.zabel@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, Mark Brown <broonie@linaro.org>
+To: linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Krystian Garbaciak <krystian.garbaciak@diasemi.com>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Mark Brown <broonie@linaro.org>
+This patch adds device tree binding documentation for the Dialog Semiconductors
+DA9063 PMIC and its regulator nodes.
 
-Due to the variable availability of the clock API there is no code in the
-driver to use these at present, for the time being the machine drivers
-will need to handle requesting clocks.
-
-Signed-off-by: Mark Brown <broonie@linaro.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org
 ---
- Documentation/devicetree/bindings/sound/wm8994.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/mfd/da9063-i2c.txt         | 68 ++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/da9063-i2c.txt
 
-diff --git a/Documentation/devicetree/bindings/sound/wm8994.txt b/Documentation/devicetree/bindings/sound/wm8994.txt
-index f2f3e80..e045e90 100644
---- a/Documentation/devicetree/bindings/sound/wm8994.txt
-+++ b/Documentation/devicetree/bindings/sound/wm8994.txt
-@@ -32,6 +32,10 @@ Optional properties:
-     The second cell is the flags, encoded as the trigger masks from
-     Documentation/devicetree/bindings/interrupts.txt
- 
-+  - clocks : A list of up to two phandle and clock specifier pairs
-+  - clock-names : A list of clock names sorted in the same order as clocks.
-+                  Valid clock names are "MCLK1" and "MCLK2".
+diff --git a/Documentation/devicetree/bindings/mfd/da9063-i2c.txt b/Documentation/devicetree/bindings/mfd/da9063-i2c.txt
+new file mode 100644
+index 0000000..776b662
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/da9063-i2c.txt
+@@ -0,0 +1,68 @@
++* Dialog DA9063 Power Management Integrated Circuit (PMIC)
 +
-   - wlf,gpio-cfg : A list of GPIO configuration register values. If absent,
-     no configuration of these registers is performed. If any value is
-     over 0xffff then the register will be left as default. If present 11
++Required properties:
++- compatible : Should be "dialog,da9063"
++- interrupt-parent : phandle pointing to the interrupt controller
++- interrupts : interrupt number and flags in interrupt-parent
++  for the chip IRQ line. Interrupt bindings are documented here:
++  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++
++Sub-nodes:
++- regulators : Contain the regulator nodes. The DA9063 regulators are
++  bound using their names as listed below:
++
++    bcore1     : regulator BCORE1
++    bcore2     : regulator BCORE2
++    bpro       : regulator BPRO
++    bmem       : regulator BMEM
++    bio        : regulator BIO
++    bperi      : regulator BPERI
++    ldo1       : regulator LDO1
++    ldo2       : regulator LDO4
++    ldo3       : regulator LDO3
++    ldo4       : regulator LDO4
++    ldo5       : regulator LDO5
++    ldo6       : regulator LDO6
++    ldo7       : regulator LDO7
++    ldo8       : regulator LDO8
++    ldo9       : regulator LDO9
++    ldo10      : regulator LDO10
++    ldo11      : regulator LDO11
++
++  The PMIC can also be configured to merge both bcore1/2 into a single
++  supply and to merge bmem and bio into a single supply. In this case,
++  the following regulators are bound instead of bcore1/2 and bpro/bmem:
++
++    bcores-merged   : merged regulators BCORE1, BCORE2
++    bmem-bio-merged : merged regulators BMEM, BIO
++
++  See Documentation/devicetree/bindings/regulator/regulator.txt for
++  binding details of individual regulator device nodes.
++
++
++Examples:
++
++&i2c1 {
++	status = "okay";
++
++	pmic@58 {
++		compatible = "dialog,da9063";
++		reg = <0x58>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <17 0x8>; /* active-low GPIO4_17 */
++
++		regulators {
++			bcore1 {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1570000>;
++			};
++
++			bcore2 {
++				regulator-min-microvolt = <300000>;
++				regulator-max-microvolt = <1570000>;
++			};
++
++			/* ... */
++		};
++	};
++};
 -- 
 1.8.3.2
 
