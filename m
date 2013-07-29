@@ -1,39 +1,121 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from tx2ehsobe001.messaging.microsoft.com ([65.55.88.11]:23358 "EHLO
-	tx2outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754177Ab3G2WJg convert rfc822-to-8bit
-	(ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Mon, 29 Jul 2013 18:09:36 -0400
-Date: Mon, 29 Jul 2013 17:09:32 -0500
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v7 1/3] DMA: Freescale: revise device tree binding
- document
+Received: from mail-db9lp0253.outbound.messaging.microsoft.com ([213.199.154.253]:39075
+	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1753194Ab3G2Kt5 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Mon, 29 Jul 2013 06:49:57 -0400
+From: <hongbo.zhang@freescale.com>
+Subject: [PATCH v7 1/3] DMA: Freescale: revise device tree binding document
+Date: Mon, 29 Jul 2013 18:49:02 +0800
+Message-ID: <1375094944-3343-2-git-send-email-hongbo.zhang@freescale.com>
+In-Reply-To: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com>
 References: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com>
-	<1375094944-3343-2-git-send-email-hongbo.zhang@freescale.com>
-In-Reply-To: <1375094944-3343-2-git-send-email-hongbo.zhang@freescale.com>
-	(from hongbo.zhang@freescale.com on Mon Jul 29 05:49:02 2013)
-Message-ID: <1375135772.30721.59@snotra>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; delsp=Yes; format=Flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: hongbo.zhang@freescale.com
-Cc: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 07/29/2013 05:49:02 AM, hongbo.zhang@freescale.com wrote:
-> From: Hongbo Zhang <hongbo.zhang@freescale.com>
-> 
-> This patch updates the discription of each type of DMA controller and  
-> its
-> channels, it is preparation for adding another new DMA controller  
-> binding, it
-> also fixes some defects of indent for text alignment at the same time.
-> 
-> Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
 
-ACK, but next time please do the whitespace fixes as a separate patch  
-so that it's easier to see what's actually changing.
+This patch updates the discription of each type of DMA controller and its
+channels, it is preparation for adding another new DMA controller binding, it
+also fixes some defects of indent for text alignment at the same time.
 
--Scott
+Signed-off-by: Hongbo Zhang <hongbo.zhang@freescale.com>
+---
+ .../devicetree/bindings/powerpc/fsl/dma.txt        |   48 ++++++++------------
+ 1 file changed, 20 insertions(+), 28 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+index 2a4b4bc..6e9384b 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+@@ -1,33 +1,29 @@
+-* Freescale 83xx DMA Controller
++* Freescale DMA Controllers
+ 
+-Freescale PowerPC 83xx have on chip general purpose DMA controllers.
++** Freescale Elo DMA Controller
++   This is a little-endian DMA controller, used in Freescale mpc83xx series
++   chips such as mpc8315, mpc8349, mpc8379 etc.
+ 
+ Required properties:
+ 
+-- compatible        : compatible list, contains 2 entries, first is
+-		 "fsl,CHIP-dma", where CHIP is the processor
+-		 (mpc8349, mpc8360, etc.) and the second is
+-		 "fsl,elo-dma"
++- compatible        : must include "fsl,elo-dma"
+ - reg               : <registers mapping for DMA general status reg>
+-- ranges		: Should be defined as specified in 1) to describe the
+-		  DMA controller channels.
++- ranges            : describes the mapping between the address space of the
++                      DMA channels and the address space of the DMA controller
+ - cell-index        : controller index.  0 for controller @ 0x8100
+ - interrupts        : <interrupt mapping for DMA IRQ>
+ - interrupt-parent  : optional, if needed for interrupt mapping
+ 
+-
+ - DMA channel nodes:
+-        - compatible        : compatible list, contains 2 entries, first is
+-			 "fsl,CHIP-dma-channel", where CHIP is the processor
+-			 (mpc8349, mpc8350, etc.) and the second is
+-			 "fsl,elo-dma-channel". However, see note below.
++        - compatible        : must include "fsl,elo-dma-channel"
++                              However, see note below.
+         - reg               : <registers mapping for channel>
+         - cell-index        : dma channel index starts at 0.
+ 
+ Optional properties:
+         - interrupts        : <interrupt mapping for DMA channel IRQ>
+-			  (on 83xx this is expected to be identical to
+-			   the interrupts property of the parent node)
++                              (on 83xx this is expected to be identical to
++                              the interrupts property of the parent node)
+         - interrupt-parent  : optional, if needed for interrupt mapping
+ 
+ Example:
+@@ -70,27 +66,23 @@ Example:
+ 		};
+ 	};
+ 
+-* Freescale 85xx/86xx DMA Controller
+-
+-Freescale PowerPC 85xx/86xx have on chip general purpose DMA controllers.
++** Freescale EloPlus DMA Controller
++   This is DMA controller with extended addresses and chaining, mainly used in
++   Freescale mpc85xx/86xx, Pxxx and BSC series chips, such as mpc8540, mpc8641
++   p4080, bsc9131 etc.
+ 
+ Required properties:
+ 
+-- compatible        : compatible list, contains 2 entries, first is
+-		 "fsl,CHIP-dma", where CHIP is the processor
+-		 (mpc8540, mpc8540, etc.) and the second is
+-		 "fsl,eloplus-dma"
++- compatible        : must include "fsl,eloplus-dma"
+ - reg               : <registers mapping for DMA general status reg>
+ - cell-index        : controller index.  0 for controller @ 0x21000,
+                                          1 for controller @ 0xc000
+-- ranges		: Should be defined as specified in 1) to describe the
+-		  DMA controller channels.
++- ranges            : describes the mapping between the address space of the
++                      DMA channels and the address space of the DMA controller
+ 
+ - DMA channel nodes:
+-        - compatible        : compatible list, contains 2 entries, first is
+-			 "fsl,CHIP-dma-channel", where CHIP is the processor
+-			 (mpc8540, mpc8560, etc.) and the second is
+-			 "fsl,eloplus-dma-channel". However, see note below.
++        - compatible        : must include "fsl,eloplus-dma-channel"
++                              However, see note below.
+         - cell-index        : dma channel index starts at 0.
+         - reg               : <registers mapping for channel>
+         - interrupts        : <interrupt mapping for DMA channel IRQ>
+-- 
+1.7.9.5
+
+
+
