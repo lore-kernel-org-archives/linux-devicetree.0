@@ -1,67 +1,54 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db9lp0251.outbound.messaging.microsoft.com ([213.199.154.251]:28783
-	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750876Ab3GXGV0 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 24 Jul 2013 02:21:26 -0400
-From: <hongbo.zhang@freescale.com>
-Subject: [PATCH v5 0/4] DMA: Freescale: Add support for 8-channel DMA engine
-Date: Wed, 24 Jul 2013 14:21:05 +0800
-Message-ID: <1374646870-5162-1-git-send-email-hongbo.zhang@freescale.com>
+Received: from mail-oa0-f50.google.com ([209.85.219.50]:43432 "EHLO
+	mail-oa0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753951Ab3G2QPn (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 12:15:43 -0400
+Received: by mail-oa0-f50.google.com with SMTP id i4so744043oah.37
+        for <devicetree@vger.kernel.org>; Mon, 29 Jul 2013 09:15:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1374564964-1281-1-git-send-email-ldewangan@nvidia.com>
+References: <1374564964-1281-1-git-send-email-ldewangan@nvidia.com>
+Date: Mon, 29 Jul 2013 18:15:42 +0200
+Message-ID: <CACRpkdaemxzMmenWVN6H3Bq2O-_AB2Qb0Oj+xBOwhscr2_VGTA@mail.gmail.com>
+Subject: Re: [PATCH V4] gpio: palmas: add dt support
+From: Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hongbo Zhang <hongbo.zhang@freescale.com>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, kishon@ti.com, j-keerthy@ti.com, Graeme Gregory <gg@slimlogic.co.uk>, Stephen Warren <swarren@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Hongbo Zhang <hongbo.zhang@freescale.com>
+On Tue, Jul 23, 2013 at 9:36 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 
-Hi Vinod, Dan, Scott and Leo, please have a look at these V2 patches.
+> Add of_device_id table for Palma GPIO to be enable the
+> driver from DT file.
+>
+> The driver can be registered from DT file as:
+>         palmas: tps65913@58 {
+>                 :::::::::::
+>                 palmas_gpio: palmas_gpio {
+>                         compatible = "ti,palmas-gpio";
+>                         gpio-controller;
+>                         #gpio-cells = <2>;
+>                 };
+>         };
+>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+> Long back, I sent the similar patch but it was paused due to the DT binding.
+> http://lkml.indiana.edu/hypermail/linux/kernel/1304.2/00261.html
+>
+> Now, PMIC DT binding is already finalised and as per mfd binding, we can
+> go ahead with similar approach for gpios. pmic and other palams sub devices
+> are already following the same approach.
+>
+> Sending 3rd version of the change which is same as per code is related but
+> adding devicetree binding document for gpio also at this time.
+>
+> Changes from V3:
+> - Added description in DT binding document for second arg of gpio cells.
 
-Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch set
-adds support this DMA engine.
+Patch applied with Stephen's ACK.
 
-V4->V5 changes:
-- update description in the dt binding document, to make it more resonable
-- add new patch [4/4] to eliminate a compiling warning which already exists
-  for a long time
-
-V3->V4 changes:
-- introduce new patch [1/3] to revise the legacy dma binding document
-- and then add new paragraph to describe new dt node binding in [2/3]
-- rebase to latest kernel v3.11-rc1
-
-V2->V3 changes:
-- edit Documentation/devicetree/bindings/powerpc/fsl/dma.txt
-- edit text string in Kconfig and the driver files, using "elo series" to
-  mention all the current "elo*"
-
-V1->V2 changes:
-- removed the codes handling the register dgsr1, since it isn't used corrently
-- renamed the DMA DT compatible to "fsl,elo3-dma"
-- renamed the new dts files to "elo3-dma-<n>.dtsi"
-
-Hongbo Zhang (4):
-  DMA: Freescale: revise device tree binding document
-  DMA: Freescale: Add new 8-channel DMA engine device tree nodes
-  DMA: Freescale: update driver to support 8-channel DMA engine
-  DMA: Freescale: eliminate a compiling warning
-
- .../devicetree/bindings/powerpc/fsl/dma.txt        |  118 +++++++++++++++-----
- arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
- arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   81 ++++++++++++++
- arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   81 ++++++++++++++
- arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
- drivers/dma/Kconfig                                |    9 +-
- drivers/dma/fsldma.c                               |   11 +-
- drivers/dma/fsldma.h                               |    2 +-
- 8 files changed, 269 insertions(+), 41 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
- create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
-
--- 
-1.7.9.5
-
-
-
+Yours,
+Linus Walleij
