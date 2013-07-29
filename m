@@ -1,49 +1,71 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-bk0-f47.google.com ([209.85.214.47]:62361 "EHLO
-	mail-bk0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754600Ab3G2Vqv (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 17:46:51 -0400
-Message-ID: <51F6E2C7.9000407@gmail.com>
-Date: Mon, 29 Jul 2013 23:46:47 +0200
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Received: from bear.ext.ti.com ([192.94.94.41]:38347 "EHLO bear.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753016Ab3G2V2t (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Mon, 29 Jul 2013 17:28:49 -0400
+Date: Tue, 30 Jul 2013 00:28:35 +0300
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2] usb: phy-samsung-usb: Simplify PMU register handling
+Message-ID: <20130729212835.GC6901@radagast>
+Reply-To: <balbi@ti.com>
+References: <1375132676-15966-1-git-send-email-jwerner@chromium.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] usb: phy-samsung-usb: Simplify PMU register handling
-References: <1375130839-5523-1-git-send-email-jwerner@chromium.org> <51F6D88B.80202@gmail.com> <CAODwPW-hxtazAO=scZR+ZWK5hwdWMQXFBeYLd1qqau+a9tMCvA@mail.gmail.com>
-In-Reply-To: <CAODwPW-hxtazAO=scZR+ZWK5hwdWMQXFBeYLd1qqau+a9tMCvA@mail.gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="f+W+jCU1fRNres8c"
+Content-Disposition: inline
+In-Reply-To: <1375132676-15966-1-git-send-email-jwerner@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
 To: Julius Werner <jwerner@chromium.org>
-Cc: Felipe Balbi <balbi@ti.com>, LKML <linux-kernel@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Kamil Debski <k.debski@samsung.com>
+Cc: Felipe Balbi <balbi@ti.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 07/29/2013 11:12 PM, Julius Werner wrote:
->>> -       if (sphy->phy_type == USB_PHY_TYPE_DEVICE) {
->>> -               reg = sphy->pmuregs + sphy->drv_data->devphy_reg_offset;
->>> -               en_mask = sphy->drv_data->devphy_en_mask;
->>> -       } else if (sphy->phy_type == USB_PHY_TYPE_HOST) {
->>> -               reg = sphy->pmuregs + sphy->drv_data->hostphy_reg_offset;
->>> -               en_mask = sphy->drv_data->hostphy_en_mask;
->>> -       }
->>
->>
->> How is en_mask supposed to get initialized, now when this code is removed ?
->> It's always 0 now, isn't it ?
->>
->
-> Whoops... oh, I'm really sorry about that. I ported the patch from a
-> branch with slightly different code there and overlooked this. Thanks
-> for catching it, will send v2 in a minute.
+--f+W+jCU1fRNres8c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v2 looks good, thanks. :) As a side note, we are working on the USB PHYs
-driver using the generic PHY framework (actually Kamil is working on that).
-Thus it is likely the original driver will get replaced in near future by
-something else. Not sure when that happens exactly but I suspect it is
-not worth to invest in the Samsung USB PHY drivers at drivers/usb/phy/
-too much and introduce changes, especially in *.dts, that won't be for
-long time in use. Perhaps Kamil can provide more details on which devices
-are initially going to be covered by the new driver.
+On Mon, Jul 29, 2013 at 02:17:56PM -0700, Julius Werner wrote:
+> This patch simplifies the way the phy-samsung-usb code finds the correct
+> power management register to enable PHY clock gating. Previously, the
+> code would calculate the register address from a device tree supplied
+> base address and add an offset based on the PHY type.
+>=20
+> Since every PHY has its own device tree entry and needs only one
+> register, we can just encode the address itself in the device tree and
+> remove the diffentiation in the code. The bitmask needed to specify the
+> bit within that register stays in place, allowing support for platforms
+> like s3c64xx that use different bits within the same register. Due to
+> this simplification, the whole complication of a Samsung-specific USB
+> PHY type can be removed from the PHY driver.
+>=20
+> Change-Id: Id823f04bbf1942f307bd1d24ec9d8d55a69b0e56
 
---
-Thanks,
-Sylwester
+remove this Gerrit Change-Id, please. Also resend with
+linux-usb@vger.kernel.org in Cc.
+
+--=20
+balbi
+
+--f+W+jCU1fRNres8c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR9t6CAAoJEIaOsuA1yqREk4cP/1dOiP9b4+Wk5lScWYJM3z39
+rrP4t75wt8dnCyrjX4pyxvFkeGCIdx5qJPxkN1tbahYdDlgLx1VhUxD6bYYlA/LF
+TK5VHSozldkdCE6VtjqHSwZUBLyBgSuXjTIYW3sMSp+lRhlsCwZZm5jhKJHYojWB
+bs/7E/ynY/4gf3s3gjgdoAnB/KfHAm0hkMjS9oAyG5J7j2aEU0r/44+taupr6e/W
+Ouk5J815zkxZdKQJi3QM6MZn14bVKPgD+qVC4sdOCEJ5hD5OxFGtFheAn/zSIzoE
+3BKla0FdotqzG49SCIiHWJOGt0f3HR7RepAHRH/793zEyV/CQVDIdqb/GbEhRtZF
+2D21mhOhHf7vp05C/xYXLvu9ReABAJu190MFqOnVr+arX3EXC+oEzElXSb0KjmaL
+vKdalvCHJdrzrsZUo+kHD+1QTcx+PZb0LhzpEB+GubOdQchZIecgn5WHCDeVAfed
+q9FgCuTgdxfxuxATXblWXKB6xnMIOHpEitbA4Vo1ArHU+x7egAFp9/t7mjnjptEg
+MZ24FE/CqoCRwTyPVH6Ojyxlv497a1iuJGjk24MMbDAjCh8hrZXIDJCu6exdhj2t
+uWEU8gxXM6fOlt5iDmF776klvxvp1Pcb2qVDASYoCZLDKTQa8MnjWppz7FeQRm8j
+ZE+8Nzaz1oIVPlj+Viac
+=YREa
+-----END PGP SIGNATURE-----
+
+--f+W+jCU1fRNres8c--
