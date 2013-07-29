@@ -1,97 +1,77 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <51F67091.70502@gmail.com>
-Date: Mon, 29 Jul 2013 08:39:29 -0500
-From: Rob Herring <robherring2@gmail.com>
-MIME-Version: 1.0
+Return-Path: <devicetree-owner@vger.kernel.org>
+Received: from moutng.kundenserver.de ([212.227.17.10]:54171 "EHLO
+	moutng.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753740Ab3G2MF7 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 08:05:59 -0400
+Date: Mon, 29 Jul 2013 14:05:53 +0200 (CEST)
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 Subject: Re: [PATCH 1/2] mmc: add Device Tree properties for UHS modes
-References: <Pine.LNX.4.64.1307261747210.22137@axis700.grange> <51F2ADA2.2030503@wwwdotorg.org> <Pine.LNX.4.64.1307262215110.27439@axis700.grange> <51F2EBD4.1060603@wwwdotorg.org> <Pine.LNX.4.64.1307290753090.14405@axis700.grange> <Pine.LNX.4.64.1307290903360.14405@axis700.grange>
-In-Reply-To: <Pine.LNX.4.64.1307290903360.14405@axis700.grange>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, linux-sh@vger.kernel.org, linux-mmc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Chris Ball <cjb@laptop.org>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>
+In-Reply-To: <1375098159.3340.29.camel@hornet>
+Message-ID: <Pine.LNX.4.64.1307291359520.14405@axis700.grange>
+References: <Pine.LNX.4.64.1307261747210.22137@axis700.grange>
+ <51F2ADA2.2030503@wwwdotorg.org>  <Pine.LNX.4.64.1307262215110.27439@axis700.grange>
+  <51F2EBD4.1060603@wwwdotorg.org>  <Pine.LNX.4.64.1307290753090.14405@axis700.grange>
+  <Pine.LNX.4.64.1307290903360.14405@axis700.grange>  <1375095053.3340.7.camel@hornet>
+  <Pine.LNX.4.64.1307291312300.14405@axis700.grange> <1375098159.3340.29.camel@hornet>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Sender: devicetree-owner@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Chris Ball <cjb@laptop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <Mark.Rutland@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 07/29/2013 02:18 AM, Guennadi Liakhovetski wrote:
-> On Mon, 29 Jul 2013, Guennadi Liakhovetski wrote:
-> 
->> Hi Stephen
->>
->> On Fri, 26 Jul 2013, Stephen Warren wrote:
->>
->>> On 07/26/2013 02:23 PM, Guennadi Liakhovetski wrote:
->>>> Hi Stephen
->>>>
->>>> On Fri, 26 Jul 2013, Stephen Warren wrote:
->>>>
->>>>> On 07/26/2013 09:51 AM, Guennadi Liakhovetski wrote:
->>>>>> Add DT properties for UHS SDR12, SDR25, SDR50, SDR104 and DDR50 modes and
->>>>>> for supported by the host in DDR mode VccQ values. Adding them to DT will
->>>>>> automatically enable respective MMC host capabilities.
->>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>>
->>>>>> +- uhs-sdr12: the host supports UHS SDR12 mode
->>>>>> +- uhs-sdr25: the host supports UHS SDR25 mode
->>>>>> +- uhs-sdr50: the host supports UHS SDR50 mode
->>>>>> +- uhs-sdr104: the host supports UHS SDR104 mode
->>>>>> +- uhs-ddr50: the host supports UHS DDR50 mode
->>>>>> +- ddr-1v2: the host can support DDR, using 1.2V VccQ
->>>>>> +- ddr-1v8: the host can support DDR, using 1.8V VccQ
->>>>>
->>>>> Surely the driver for the host controller already knows this, so there's
->>>>> no need to represent it in DT?
->>>>
->>>> Not necessarily. One driver can handle several versions of the same chip, 
->>>> and some versions of the chip implement some of those features, others 
->>>> don't.
->>>
->>> Certainly.
->>>
->>>> So, your choice is really whether to specify a chip version in the
->>>> compatible string or these properties.
->>>
->>> There's no choice there. The compatible property needs to specify all of
->>> the following:
->>>
->>> * A value which describes the exact chip the IP block is in. This can be
->>> matched on to enable any quirks that need to be handled due to
->>> integration of the IP into the particular chip. This value will list the
->>> chip version. An example might be tegra20-sdhci.
->>>
->>> * A value which describes the IP block version (if that IP block has a
->>> version independent of the SoC that contains it, as e.g. a Synopsis IP
->>> block might). A totally made-up example might be synopsis-dwc2-1.0.0
->>>
->>> * Various more generic values that describe the HW, and that define a n
->>> interface to the HW that is specific and complete enough that HW can
->>> program to. An example might be usb-ehci (assuming a chip that doesn't
->>> have so many quirks that a driver has to know more than just "it's an
->>> EHCI controller).
->>
->> Yes, all these certainly make sense. As far as I understand, we are still 
->> in the process of defining good clear rules for DTs, there is an "ABI" 
->> discussion currently running on ALKML and IIRC this is also going to be a 
->> topic for one of coming conferences. So, hopefully we're approaching a 
->> state of a greater clarity about DT.
-> 
-> A short addendum. At least with Renesas SoCs I see the situation in the 
-> following way: new SoC versions appear relatively frequently. They often 
-> re-use multiple IP blocks, drivers for which are scattered across the 
-> entire kernel. Often the difference between an IP block on SoC A and A+1 
-> can be expressed by some integers, e.g. maximum size of addressable 
-> memory. Some other differences might never get supported by the driver. 
-> And only occasionally the new IP would get a feature, support for which is 
-> added to the driver and really modifies its behaviour. With platform data 
-> therefore you either get very similar or identical configurations, maybe 
-> some .max_frame_size will change, but the driver won't change anyway, and 
-> only in some rare cases the driver really needs to be changed. With 
-> compatibility strings we have to change _all_ Renesas drivers for _each_ 
-> SoC version even if just to add a new struct of_device_id entry. This 
-> doesn't seem very productive to me.
+On Mon, 29 Jul 2013, Pawel Moll wrote:
 
-If there is no change in the IP, then you can continue to use the
-previous compatible string in your binding for the new SoC. The kernel
-only has to be updated when there is a new feature, bug or other change.
+> On Mon, 2013-07-29 at 12:27 +0100, Guennadi Liakhovetski wrote:
+> > On Mon, 29 Jul 2013, Pawel Moll wrote:
+> > 
+> > > On Mon, 2013-07-29 at 08:18 +0100, Guennadi Liakhovetski wrote:
+> > > > A short addendum. At least with Renesas SoCs I see the situation in the 
+> > > > following way: new SoC versions appear relatively frequently. 
+> > > 
+> > > What frequency are we talking about? Once per year? Once per month? I'm
+> > > not trying to be picky, it really makes a difference...
+> > 
+> > Definitely not every month - not until now in the mainline at least. I 
+> > currently count 9 SoCs, added since 2010, which makes about 2-3 SoCs per 
+> > year.
+> 
+> So this is actually a slower rate that I've faced in my previous life
+> working for a silicon vendor ;-) And my experience is that the IPs were
+> different between the SoCs indeed but:
+> 
+> 1. Not all of them at the same time (so no extra compatible values for
+> others).
 
-Rob
+No, that's exactly the problem. We absolutely do not want to write 
+compatible="vendor,soc-v1"; in a .dts file for SoC v2 just because we 
+currently think, that we don't have to distinguish between those SoC 
+versions in this specific driver. I think we all know it quite well, that 
+there are (practically) always differences - sometimes documented, 
+sometimes undocumented. And if you later find out, that you do have to 
+differentiate in the driver - it's too late. Even if we disregard the 
+argument of ugliness of having to set compatibility with soc-v1, soc-v2, 
+soc-v3 in different DT nodes on an SoC v4.
+
+Thanks
+Guennadi
+
+> 2. When there was a change it required change in a driver as well (so
+> adding a compatible value is not an issue).
+> 3. The changes were *completely* unpredictable (so even comprehensive
+> list of DT properties wouldn't help)
+> 
+> To summarize, count this as another vote for using compatible rather
+> then "universal & future-proof" set of properties. Unless there is a
+> very good rationale for it (I'm sure such cases exist)
+> 
+> Thanks!
+> 
+> Pawel
+> 
+> 
+
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
