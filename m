@@ -1,157 +1,195 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp.codeaurora.org ([198.145.11.231]:47934 "EHLO
-	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754183Ab3G2W2e (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 18:28:34 -0400
-From: Abhimanyu Kapur <abhimany@codeaurora.org>
-Subject: [PATCH] drivers: power: reset: add msm restart support
-Date: Mon, 29 Jul 2013 15:28:26 -0700
-Message-Id: <1375136906-22501-1-git-send-email-abhimany@codeaurora.org>
+Received: from bear.ext.ti.com ([192.94.94.41]:58262 "EHLO bear.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1757521Ab3G3G0F (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Tue, 30 Jul 2013 02:26:05 -0400
+Date: Tue, 30 Jul 2013 09:25:51 +0300
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3] usb: phy-samsung-usb: Simplify PMU register handling
+Message-ID: <20130730062551.GG9155@radagast>
+Reply-To: <balbi@ti.com>
+References: <1375134253-18406-1-git-send-email-jwerner@chromium.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0z5c7mBtSy1wdr4F"
+Content-Disposition: inline
+In-Reply-To: <1375134253-18406-1-git-send-email-jwerner@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
-To: Anton Vorontsov <anton@enomsg.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org
+To: Julius Werner <jwerner@chromium.org>
+Cc: Felipe Balbi <balbi@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for restart and poweroff functionality present on MSM
-chipsets with the MPM2 ps-hold hardware.
+--0z5c7mBtSy1wdr4F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Abhimanyu Kapur <abhimany@codeaurora.org>
----
- .../bindings/power_supply/msm-poweroff.txt         | 17 +++++
- drivers/power/reset/Kconfig                        |  6 ++
- drivers/power/reset/Makefile                       |  1 +
- drivers/power/reset/msm-poweroff.c                 | 73 ++++++++++++++++++++++
- 4 files changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power_supply/msm-poweroff.txt
- create mode 100644 drivers/power/reset/msm-poweroff.c
+On Mon, Jul 29, 2013 at 02:44:13PM -0700, Julius Werner wrote:
+> This patch simplifies the way the phy-samsung-usb code finds the correct
+> power management register to enable PHY clock gating. Previously, the
+> code would calculate the register address from a device tree supplied
+> base address and add an offset based on the PHY type.
+>=20
+> Since every PHY has its own device tree entry and needs only one
+> register, we can just encode the address itself in the device tree and
+> remove the diffentiation in the code. The bitmask needed to specify the
+> bit within that register stays in place, allowing support for platforms
+> like s3c64xx that use different bits within the same register. Due to
+> this simplification, the whole complication of a Samsung-specific USB
+> PHY type can be removed from the PHY driver.
+>=20
+> Signed-off-by: Julius Werner <jwerner@chromium.org>
 
-diff --git a/Documentation/devicetree/bindings/power_supply/msm-poweroff.txt b/Documentation/devicetree/bindings/power_supply/msm-poweroff.txt
-new file mode 100644
-index 0000000..de08480
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power_supply/msm-poweroff.txt
-@@ -0,0 +1,17 @@
-+MSM Poweroff Driver
-+
-+A power supply hold (ps-hold) bit is set to power the msm chipsets.
-+Clearing that bit enables us to restart/poweroff. The difference
-+between poweroff and restart is determined by unique power manager IC
-+settings.
-+
-+Required Properties:
-+-compatible: "qcom,pshold"
-+-reg: Specifies the physical address of the ps-hold register
-+
-+Example:
-+
-+	restart@800820 {
-+		compatible = "qcom,pshold";
-+		reg = <0x00800820 0x4>;
-+	};
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index 349e9ae..fa6178f 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -37,3 +37,9 @@ config POWER_RESET_VEXPRESS
- 	help
- 	  Power off and reset support for the ARM Ltd. Versatile
- 	  Express boards.
-+
-+config POWER_RESET_MSM
-+	bool "Qualcomm MSM power-off driver"
-+	depends on POWER_RESET && ARCH_MSM
-+	help
-+	  Power off and restart support for Qualcomm boards.
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 372807f..b82288e 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -1,4 +1,5 @@
- obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
-+obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
- obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
- obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
- obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
-diff --git a/drivers/power/reset/msm-poweroff.c b/drivers/power/reset/msm-poweroff.c
-new file mode 100644
-index 0000000..0d33d18
---- /dev/null
-+++ b/drivers/power/reset/msm-poweroff.c
-@@ -0,0 +1,73 @@
-+/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include <asm/system_misc.h>
-+
-+static void __iomem *msm_ps_hold;
-+
-+static void do_msm_restart(char mode, const char *cmd)
-+{
-+	writel(0, msm_ps_hold);
-+	mdelay(10000);
-+}
-+
-+static void do_msm_poweroff(void)
-+{
-+	/* TODO: Add poweroff capability */
-+
-+	do_msm_restart('p', NULL);
-+}
-+
-+static int msm_restart_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *mem;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	msm_ps_hold = devm_ioremap_resource(dev, mem);
-+	if (IS_ERR(msm_ps_hold))
-+		return PTR_ERR(msm_ps_hold);
-+
-+	pm_power_off = do_msm_poweroff;
-+	arm_pm_restart = do_msm_restart;
-+	return 0;
-+}
-+
-+static const struct of_device_id of_msm_restart_match[] = {
-+	{ .compatible = "qcom,pshold", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, of_msm_restart_match);
-+
-+static struct platform_driver msm_restart_driver = {
-+	.probe = msm_restart_probe,
-+	.driver = {
-+		.name = "msm-restart",
-+		.of_match_table = of_match_ptr(of_msm_restart_match),
-+	},
-+};
-+
-+static int __init msm_restart_init(void)
-+{
-+	return platform_driver_register(&msm_restart_driver);
-+}
-+device_initcall(msm_restart_init);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+alright, let's try to split this patch down, it's too large.
 
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos=
+5250.dtsi
+> index ef57277..5a754d7 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -473,7 +473,7 @@
+>  		ranges;
+> =20
+>  		usbphy-sys {
+> -			reg =3D <0x10040704 0x8>;
+> +			reg =3D <0x10040704 0x4>;
+>  		};
+>  	};
+> =20
+> @@ -505,7 +505,7 @@
+>  		ranges;
+> =20
+>  		usbphy-sys {
+> -			reg =3D <0x10040704 0x8>,
+> +			reg =3D <0x10040708 0x4>,
+>  			      <0x10050230 0x4>;
+>  		};
+>  	};
+> diff --git a/drivers/usb/phy/phy-samsung-usb.c b/drivers/usb/phy/phy-sams=
+ung-usb.c
+> index ac025ca..32c5264 100644
+> --- a/drivers/usb/phy/phy-samsung-usb.c
+> +++ b/drivers/usb/phy/phy-samsung-usb.c
+> @@ -27,7 +27,6 @@
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> -#include <linux/usb/samsung_usb_phy.h>
+> =20
+>  #include "phy-samsung-usb.h"
+> =20
+> @@ -42,9 +41,9 @@ int samsung_usbphy_parse_dt(struct samsung_usbphy *sphy)
+>  		return -ENODEV;
+>  	}
+> =20
+> -	sphy->pmuregs =3D of_iomap(usbphy_sys, 0);
+> +	sphy->pmureg =3D of_iomap(usbphy_sys, 0);
+
+this rename can go in a separate patch.
+
+> @@ -75,35 +74,25 @@ EXPORT_SYMBOL_GPL(samsung_usbphy_parse_dt);
+>   */
+>  void samsung_usbphy_set_isolation_4210(struct samsung_usbphy *sphy, bool=
+ on)
+>  {
+> -	void __iomem *reg =3D NULL;
+>  	u32 reg_val;
+> -	u32 en_mask =3D 0;
+> =20
+> -	if (!sphy->pmuregs) {
+> +	if (!sphy->pmureg) {
+>  		dev_warn(sphy->dev, "Can't set pmu isolation\n");
+>  		return;
+>  	}
+> =20
+> -	if (sphy->phy_type =3D=3D USB_PHY_TYPE_DEVICE) {
+> -		reg =3D sphy->pmuregs + sphy->drv_data->devphy_reg_offset;
+> -		en_mask =3D sphy->drv_data->devphy_en_mask;
+> -	} else if (sphy->phy_type =3D=3D USB_PHY_TYPE_HOST) {
+> -		reg =3D sphy->pmuregs + sphy->drv_data->hostphy_reg_offset;
+> -		en_mask =3D sphy->drv_data->hostphy_en_mask;
+> -	}
+>=20
+> -	reg_val =3D readl(reg);
+> +	reg_val =3D readl(sphy->pmureg);
+> =20
+>  	if (on)
+> -		reg_val &=3D ~en_mask;
+> +		reg_val &=3D ~sphy->drv_data->phy_en_mask;
+>  	else
+> -		reg_val |=3D en_mask;
+> +		reg_val |=3D sphy->drv_data->phy_en_mask;
+
+removing the if case up there and updating this if here could be a patch
+of its own.
+
+> @@ -111,7 +100,7 @@ EXPORT_SYMBOL_GPL(samsung_usbphy_set_isolation_4210);
+>  /*
+>   * Configure the mode of working of usb-phy here: HOST/DEVICE.
+>   */
+> -void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy)
+> +void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy, bool device_mod=
+e)
+
+passing this extra parameter could be a patch of its own.
+
+> @@ -122,31 +111,15 @@ void samsung_usbphy_cfg_sel(struct samsung_usbphy *=
+sphy)
+> =20
+>  	reg =3D readl(sphy->sysreg);
+> =20
+> -	if (sphy->phy_type =3D=3D USB_PHY_TYPE_DEVICE)
+> +	if (device_mode)
+>  		reg &=3D ~EXYNOS_USB20PHY_CFG_HOST_LINK;
+> -	else if (sphy->phy_type =3D=3D USB_PHY_TYPE_HOST)
+> +	else
+>  		reg |=3D EXYNOS_USB20PHY_CFG_HOST_LINK;
+> =20
+>  	writel(reg, sphy->sysreg);
+>  }
+>  EXPORT_SYMBOL_GPL(samsung_usbphy_cfg_sel);
+> =20
+> -/*
+> - * PHYs are different for USB Device and USB Host.
+> - * This make sure that correct PHY type is selected before
+> - * any operation on PHY.
+> - */
+> -int samsung_usbphy_set_type(struct usb_phy *phy,
+> -				enum samsung_usb_phy_type phy_type)
+> -{
+> -	struct samsung_usbphy *sphy =3D phy_to_sphy(phy);
+> -
+> -	sphy->phy_type =3D phy_type;
+> -
+> -	return 0;
+> -}
+> -EXPORT_SYMBOL_GPL(samsung_usbphy_set_type);
+
+removing this function should be a patch of its own.
+
+--=20
+balbi
+
+--0z5c7mBtSy1wdr4F
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR91xvAAoJEIaOsuA1yqREUlMP/3+Kq5szEK9694Dy7TebVSub
+KC3D+kOq+jlgiZMOhgVf/hp49C9+N1ZpSIl7tn0Qp5L4TFfrDvVjBssxWjddqY0x
+kO/hQk1g/4CSx+NmaKTGZgo/bFy47x+ZoQphaiDmqnQ6094Q/K75cTr5Bi1SohdI
+2d8+e8MzUvcxPTB/uJ06M6gqVCj4ITN19+rLT3cYndvVqxots9N5ZXwoJ+sE1XV6
+GaNLsxurNzxTRM0rYaXPfsFkVsvdK0Ewlr4vkAG1ErTggSGlR5aYmpIAI+CaxKvV
+37vOeDFRdPQib9ajehpP6MnIhODIAVrDmwqYaTiftH9+2GrAS7CxLCKwbu/POKjS
+TGtMmQXkjbus2RbRlOf1vaCVTiQQl9roxILIt71SLCGmFUl+T+X31tPI6UUWmPwb
+pJrbvquSiQJwwD/+wIJfw1RDqCIhLp0xPH8GyK0foQF8BWGCj7jVIRxsw3/XPycL
+t6Ez+VA1rWi4Z4Lb9aRmb9DugsOIfOjQfWXDeCHDFoc6r7ZECuaVu25pJ1hEADSH
+tlr7MHkMU2Y6k9kr9LE4bug2gYjRR36AjSwgtmqq7aN9mFL1lbtM4fXYSAZegfRg
+NcdBaBPBvt093+PIdWWfiw4OzVaqElcph9l9CIlEST6RQ/AKhNSFekhb1vu88rtH
+4i0/b2k04CSha3FLxHRJ
+=L1qn
+-----END PGP SIGNATURE-----
+
+--0z5c7mBtSy1wdr4F--
