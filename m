@@ -1,69 +1,78 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from perceval.ideasonboard.com ([95.142.166.194]:32852 "EHLO
-	perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756632Ab3G2SiN (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 14:38:13 -0400
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 2/3] gpio: pcf857x: Remove pdata argument to pcf857x_irq_domain_init()
-Date: Mon, 29 Jul 2013 20:39:04 +0200
-Message-Id: <1375123145-31648-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-In-Reply-To: <1375123145-31648-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1375123145-31648-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Received: from kirsty.vergenet.net ([202.4.237.240]:43511 "EHLO
+	kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753015Ab3G3CSF (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 22:18:05 -0400
+Date: Tue, 30 Jul 2013 11:18:02 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC 2/2] ARM: shmobile: kzm9g: support DDR50 mode with
+ 1.8V VccQ on MMCIF
+Message-ID: <20130730021801.GA31526@verge.net.au>
+References: <Pine.LNX.4.64.1307261747210.22137@axis700.grange>
+ <Pine.LNX.4.64.1307261748260.22137@axis700.grange>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1307261748260.22137@axis700.grange>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, linux-mmc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Chris Ball <cjb@laptop.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The argument is not used, remove it. No board registers a pcf857x device
-with an IRQ without specifying platform data, IRQ domain registration
-behaviour is thus not affected by this change.
+On Fri, Jul 26, 2013 at 05:51:32PM +0200, Guennadi Liakhovetski wrote:
+> MMCIF on sh73a0 supports the UHS DDR50 mode and on the kzm9g board it can
+> be used with MMC VccQ = 1.8V. This patch enables them.
+> 
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> ---
+> 
+> This patch is correct AFAICS, but pointless on kzm9g, because (at least on 
+> my board) th eMMC chip, installed on the board and connected to MMCIF 
+> doesn't support DDR, so, it cannot be enabled. This patch is therefore 
+> more of an example how these flags shall be used, than a real use case. If 
+> it is decided to apply it, it can be applied even before patch 1/2, it 
+> just won't have any effect at all.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- drivers/gpio/gpio-pcf857x.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Thanks, understood.
 
-diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
-index ea9f3580..070e81f 100644
---- a/drivers/gpio/gpio-pcf857x.c
-+++ b/drivers/gpio/gpio-pcf857x.c
-@@ -223,7 +223,6 @@ static void pcf857x_irq_domain_cleanup(struct pcf857x *gpio)
- }
- 
- static int pcf857x_irq_domain_init(struct pcf857x *gpio,
--				   struct pcf857x_platform_data *pdata,
- 				   struct i2c_client *client)
- {
- 	int status;
-@@ -286,8 +285,8 @@ static int pcf857x_probe(struct i2c_client *client,
- 	gpio->chip.ngpio		= id->driver_data;
- 
- 	/* enable gpio_to_irq() if platform has settings */
--	if (pdata && client->irq) {
--		status = pcf857x_irq_domain_init(gpio, pdata, client);
-+	if (client->irq) {
-+		status = pcf857x_irq_domain_init(gpio, client);
- 		if (status < 0) {
- 			dev_err(&client->dev, "irq_domain init failed\n");
- 			goto fail;
-@@ -388,7 +387,7 @@ fail:
- 	dev_dbg(&client->dev, "probe error %d for '%s'\n",
- 			status, client->name);
- 
--	if (pdata && client->irq)
-+	if (client->irq)
- 		pcf857x_irq_domain_cleanup(gpio);
- 
- 	return status;
-@@ -411,7 +410,7 @@ static int pcf857x_remove(struct i2c_client *client)
- 		}
- 	}
- 
--	if (pdata && client->irq)
-+	if (client->irq)
- 		pcf857x_irq_domain_cleanup(gpio);
- 
- 	status = gpiochip_remove(&gpio->chip);
--- 
-1.8.1.5
+At this point I prefer not to apply it as it doesn't have any effect.
+I am more than happy to discuss this further if others would
+like it applied.
 
+> 
+>  arch/arm/boot/dts/sh73a0-kzm9g-reference.dts |    1 +
+>  arch/arm/boot/dts/sh73a0.dtsi                |    1 +
+>  2 files changed, 2 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+> index b99e890..d90de01 100644
+> --- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+> +++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+> @@ -191,6 +191,7 @@
+>  
+>  	bus-width = <8>;
+>  	vmmc-supply = <&reg_1p8v>;
+> +	ddr-1v8;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+> index 86e79fe..1146be8 100644
+> --- a/arch/arm/boot/dts/sh73a0.dtsi
+> +++ b/arch/arm/boot/dts/sh73a0.dtsi
+> @@ -186,6 +186,7 @@
+>  		interrupts = <0 140 0x4
+>  			      0 141 0x4>;
+>  		reg-io-width = <4>;
+> +		uhs-ddr50;
+>  		status = "disabled";
+>  	};
+>  
+> -- 
+> 1.7.2.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
