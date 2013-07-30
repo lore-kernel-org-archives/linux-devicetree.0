@@ -1,41 +1,55 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp121.dfw.emailsrvr.com ([67.192.241.121]:36538 "EHLO
-	smtp121.dfw.emailsrvr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932370Ab3GZPWS (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 11:22:18 -0400
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: [PATCH 2/5] sata highbank: enable 64-bit DMA mask when using LPAE
-Date: Fri, 26 Jul 2013 10:11:55 -0500
-Message-Id: <1374851518-4802-2-git-send-email-mark.langsdorf@calxeda.com>
-In-Reply-To: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
-References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:60886 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756140Ab3G3VZt (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 30 Jul 2013 17:25:49 -0400
+Message-ID: <51F82F58.8090705@wwwdotorg.org>
+Date: Tue, 30 Jul 2013 15:25:44 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH] mfd: palmas: Add DVFS mux setting
+References: <1374871308-490-1-git-send-email-achew@nvidia.com> <51F2E74E.2060107@wwwdotorg.org> <643E69AA4436674C8F39DCC2C05F763862A12740FB@HQMAIL03.nvidia.com> <51F2EC66.2080200@wwwdotorg.org> <643E69AA4436674C8F39DCC2C05F763862A1274113@HQMAIL03.nvidia.com> <51F2F22B.500@wwwdotorg.org> <643E69AA4436674C8F39DCC2C05F763862A1274137@HQMAIL03.nvidia.com> <51F398F8.5070602@nvidia.com> <51F81FF5.4020600@wwwdotorg.org> <643E69AA4436674C8F39DCC2C05F763862A1274697@HQMAIL03.nvidia.com>
+In-Reply-To: <643E69AA4436674C8F39DCC2C05F763862A1274697@HQMAIL03.nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
-Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
+To: Andrew Chew <AChew@nvidia.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "ian@slimlogic.co.uk" <ian@slimlogic.co.uk>, "j-keerthy@ti.com" <j-keerthy@ti.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, Rhyland Klein <rklein@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Rob Herring <rob.herring@calxeda.com>
+On 07/30/2013 02:53 PM, Andrew Chew wrote:
+>> On 07/27/2013 03:55 AM, Laxman Dewangan wrote:
+>>> On Saturday 27 July 2013 03:42 AM, Andrew Chew wrote:
+>>>> I wrote:
+>>>>> Andrew wrote:
+>>>>>> [adding a third pinmux configuration property to Palmas's DT]
+>>>>>
+>>>>> How does this interact with the pinctrl driver that Laxman just sent
+>>>>> for Palmas?
+>>>>>
+>>>>> https://lkml.org/lkml/2013/7/26/141
+>>>>> [PATCH 0/2] pinctrl: palmas: add pincontrol driver
+>> ..
+>>>> Abandoning this patch.
+>> ...
+>>> once we will have the pincontrol driver then mux pads are become
+>> redundant.
+>>
+>> OK. The driver should probably operate like this then:
+>>
+>> * During probe(), parse the ti,mux-pad* parameters, if present, and apply
+>> them. This is needed to maintain compatibility with old DTs that may contain
+>> these properties.
+>>
+>> * At the end of probe(), register the pinctrl driver. If standard pinctrl
+>> properties are present in DT, these will then be applied. These may override
+>> the values set by any ti,mux-pad* properties if they were present.
+>>
+>> Also, we should remove, or mark deprecated, the ti,mux-pad* properties in
+>> the binding document when adding pinctrl support.
+> 
+> Sounds reasonable to me.  The fate of my patch hasn't really been discussed, though.
+> Can we apply it, to make the ti,mux-pad* stuff complete?
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
----
- drivers/ata/sata_highbank.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
-index e9a4f46..8b40025 100644
---- a/drivers/ata/sata_highbank.c
-+++ b/drivers/ata/sata_highbank.c
-@@ -479,6 +479,9 @@ static int ahci_highbank_probe(struct platform_device *pdev)
- 	if (hpriv->cap & HOST_CAP_PMP)
- 		pi.flags |= ATA_FLAG_PMP;
- 
-+	if (hpriv->cap & HOST_CAP_64)
-+		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-+
- 	/* CAP.NP sometimes indicate the index of the last enabled
- 	 * port, at other times, that of the last possible port, so
- 	 * determining the maximum port number requires looking at
--- 
-1.8.1.2
-
+Oh, I thought you said you were dropping it. I don't see a need to apply
+it if the correct approach is Laxman's pinctrl driver.
