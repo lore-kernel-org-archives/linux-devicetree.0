@@ -1,21 +1,15 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH v9 0/8] Generic PHY Framework
-Date: Tue, 30 Jul 2013 11:55:15 +0530
-Message-ID: <CAPdUM4MoKfWRuES1QjEkYQ1=Af6MvLjjb_p6j4zdeFOAOcpDFg@mail.gmail.com>
-References: <51D3F773.9000209@ti.com> <20130703132038.GI15056@arwen.pp.htv.fi>
- <780E789C2E067A4BB8F69D0BB9EC4F253E975D6E@DBDE04.ent.ti.com>
- <51D54694.20203@ti.com> <20130704101216.GD4830@arwen.pp.htv.fi>
- <780E789C2E067A4BB8F69D0BB9EC4F253E9764D5@DBDE04.ent.ti.com>
- <51DAADD1.3060302@ti.com>
- <780E789C2E067A4BB8F69D0BB9EC4F253E976575@DBDE04.ent.ti.com>
- <20130709114416.GL5552@arwen.pp.htv.fi>
- <780E789C2E067A4BB8F69D0BB9EC4F253E97670D@DBDE04.ent.ti.com>
- <20130709173429.GE10776@arwen.pp.htv.fi>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 1/3] clk: exynos5250: Add G2D gate clock
+Date: Mon, 29 Jul 2013 23:48:00 -0700
+Message-ID: <20130730064800.22022.14773@quantum>
+References: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
+ <20130726201800.7598.54329@quantum>
+ <CAK9yfHw6KtVDAns-1JhNpiS0brTeUpfiHS-v3q7H2GLWkY-Adw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130709173429.GE10776@arwen.pp.htv.fi>
+In-Reply-To: <CAK9yfHw6KtVDAns-1JhNpiS0brTeUpfiHS-v3q7H2GLWkY-Adw@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,225 +19,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@ti.com
-Cc: dianders@chromium.org, "mchehab@redhat.com" <mchehab@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "Patel, Satish" <satish.patel@ti.com>, "Nori, Sekhar" <nsekhar@ti.com>, "Cherian, George" <george.cherian@ti.com>, sunil joshi <joshi@samsung.com>, "swarren@nvidia.com" <swarren@nvidia.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "cesarb@cesarb.net" <cesarb@cesarb.net>, "Mankad, Maulik Ojas" <maulik@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "sylvester.nawrocki@gmail.com" <sylvester.nawrocki@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vg>
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: kgene.kim@samsung.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Balbi, Kishon,
+Quoting Sachin Kamat (2013-07-27 06:29:56)
+> On 27 July 2013 01:48, Mike Turquette <mturquette@linaro.org> wrote:
+> > Quoting Sachin Kamat (2013-07-05 01:42:27)
+> >> Adds gate clock for G2D IP for Exynos5250 SoC.
+> >>
+> >> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> >> Cc: Mike Turquette <mturquette@linaro.org>
+> >
+> > I've taken patch #1 into clk-next.
+> 
+> Thanks Mike.
+> 
+> >
+> >> ---
+> >> This patch depends on the following patch:
+> >> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/20581
+> >
+> > I think I've gotten all three series you sent out, can you confirm?
+> 
+> I haven't seen any update in your tree [1] since quite some time. The
+> last commit I see in clk-next branch is 45e3ec3784 ("clk: tegra: fix
+> ifdef for tegra_periph_reset_assert inline"). I hope I am looking at
+> the right tree?
 
-I have similar requirements for exynos hdmi phy. hdmi driver (controller)
-need to set the operating clock to hdmi phy which depends on the pixel
-clock.
+You are, but I had not pushed to it since the merge window closed. It is
+now updated.
 
-Phy has an internal pll to be configured as per changing resolution. It can
-be done by writing into phy registers. CCF callbacks (set/get_rate) can
-not be used unless I register phy as a clock controller. But that way
-hdmi driver loses finer power control for the phy. Phy should be ON, only
-when hdmi hotplugged.
+Regards,
+Mike
 
-Callback: set_phy_operating_freq in phy framework, seems generic and
-addressing similar requirements for other phys. What you say on this?
-
-regards,
-Rahul Sharma.
-
-On Tue, Jul 9, 2013 at 11:04 PM, Felipe Balbi <balbi@ti.com> wrote:
->
-> Hi,
->
-> On Tue, Jul 09, 2013 at 02:33:58PM +0200, Patel, Satish wrote:
-> > > > Operation:
-> > > >
-> > > > Once the card gets inserted into the slot, user application can
-> > > > initiate activate sequence anytime, it is not mandatory that
-> > > > activation has to be called Immediately. It all depends whether
-> > > other
-> > > > connections ( network, printer) are proper.  User application can do
-> > > > some checks and then dynamically activate the card
-> > >
-> > > The card or the phy ? Who actually activates ? Is the activation
-> > > handling part of the PHY or part of the smartcard controller ?
-> > >
-> >
-> > It=92s a activation of smart card which is inserted into the phy slot.
-> > Smart card activation will by done phy but initiated by user application
-> > Handling of activation should be done at both the side - controller as =
-well
-> > As phy. Phy will raise certain signals and check timeout while activati=
-on
-> > , while controller will store data coming from smart card to FIFO. Its
-> > Controller which will give command to phy to initiate activation sequen=
-ce when it
-> > is ready.
-> >
-> > Which means, both controller and phy has role to play while activation.
-> > Also it is applicable while deactivation.
->
-> right, so when the smartcard device is opened, you want to powerup the
-> PHY, powerup the smartcard controller and get things going, which means
-> that all your activation logic can, and should, be hidden by
-> phy_power_on() and phy_power_off()
->
-> Perhaps you also want to delay phy_init() and phy_shutdown() to that
-> very time, which would mean that we wouldn't even need
-> phy_power_{on,off}() calls whatsoever.
->
-> > > > There are 2 sequence of activation - normal activation and warm
-> > > reset.
-> > > > If first fails then warm reset should be executed, if card does not
-> > > > response to both then deactivation will be carried out
-> > >
-> > > ret =3D phy_resume(phy);
-> > > if (ret =3D=3D -EINVAL) { /* perhaps there's a better error code */
-> > >     ret =3D phy_reset(phy);
-> > >     if (ret)
-> > >             phy_suspend(phy);
-> > > }
-> > >
-> >
-> > Its not like this. There are the cases, when during normal activation
-> > card respond With some characters, but they might not be valid or
-> > error prone - This check will be done by user application as only
-> > application knows how to decode characters as per protocol.
->
-> sure, and if the characters are invalid, the application needs to tell
-> the kernel, perhaps it would be enough to send and IOCTL or, even
-> easier, close the device and reopen it.
->
-> > It there is any error in characters/timeout paratmeters, user
-> > application will ask to initiate Warm reset.
->
-> and for that we can use an IOCTL which is implemented by smart card
-> layer. I mean, I'm assuming the smartcard would be seen as a char dev by
-> userland so it would be something like this:
->
-> ret =3D read(fd, buf, SIZE);
-> if (ret < 0)
->         boom();
->
-> ret =3D process_buffer(buf, ret);
-> if (ret =3D=3D -EINVAL) { /* we have received invalid characters */
->         ret =3D ioctl(fd, IOCTL_SMARTCARD_WARM_RESET);
->         if (ret < 0)
->                 handle_error();
-> }
->
-> in kernel space we would have an ioctl handler like so:
->
-> static int smart_card_ioctl(struct file *fd, unsigned code, usigned long =
-v)
-> {
->         struct smart_card *sc =3D fd->private_data;
->         unsigned long flags;
->         int ret;
->
->         spin_lock_irqsave(&sc->lock, flags);
->         switch (v)
->         case SMART_CARD_WARM_RESET:
->                 ret =3D phy_shutdown(sc->phy);
->                 if (ret < 0)
->                         boom();
->
->                 ret =3D smart_card_reset(sc);
->                 if (ret < 0)
->                         boom();
->
->                 ret =3D phy_init(sc->phy);
->                 if (ret < 0)
->                         boom();
->                 break;
->         [ ... ]
->         }
->
->         spin_unlock_irqrestore(&sc->lock, flags);
->
->         return ret;
-> }
->
-> see, we don't need to add a bunch of stuff in the PHY framework, because
-> you shouldn't expose the PHY directly to userland. You *must* have an
-> abstraction to userland with an in-kernel usage of the PHY layer.
->
-> > > > - on activation card will respond with some initial characters
-> > > (ATR),
-> > > > which will be verified by application, in case of error user
-> > > > application will de-activate the card not the phy module
-> > > >
-> > > > - After activation, use application initiate normal tx/rx
-> > > >
-> > > > - Once tx/rx is done, it will initiate deactivation of card not the
-> > > > phy module.
-> > >
-> > > then that has nothing to do with the PHY framework, right ?
-> >
-> > But all such sequence will be initiated by PHY by raising certain
-> > signals and only controller can give the push when to start.
->
-> sure, that's fair. But you don't need to expose every single detail of
-> the PHY. You need to use abstractions to make accesses to the PHY easy
-> to maintain. See the example above.
->
-> > > > > > Smartcard_set_c4/c8/rst/io -> phy_set_pin
-> > > > >
-> > > > > Whats should be exactly done here? Looks to me like it should be
-> > > > > part of init. Does these pin settings need to be changed
-> > > dynamically?
-> > > >
-> > > > These are all phy pins which will be physically come in contact with
-> > > > smart card When inserted. In case of synchronous card, these pins
-> > > will
-> > > > be toggled manually by s/w bit bang algorithm
-> > >
-> > > is that a requirement or just something that everybody does ?
-> > >
-> >
-> > Its requirement for synchronous card. At present there is no open driver
-> > Which does this thing.
->
-> alright, so you need to tell the PHY in which mode it should work and
-> the PHY driver needs to be smart enough to choose proper callbacks
-> depending on the mode.
->
-> > > In any case, you can hide that under some gpio calls, or something
-> > > similar.
-> >
-> > Can't be done using GPIO as pin can be toggled only which i2c read/write
-> > to the phy.
->
-> so ? look at the numerous I2C GPIO expanders we have in the kernel ;-)
->
-> > > > > > Smartcard_get_version -> phy_get_version
-> > > > >
-> > > > > Again why? Why would the smartcard need the version of the PHY?
-> > > > >
-> > > >
-> > > > Can be omitted. This is for the test suite reference.
-> > >
-> > > if it's for testsuite, it sounds like something that should be done
-> > > through userland and, as such, should be implemented by a set of
-> > > debugfs
-> > > files which expose the necessary information. That has nothing to do
-> > > with the PHY framework.
-> > >
-> > Agree.. can be omitted.
-> >
-> >
-> > I am ok to give internal webex presentation (TI team) to brief
-> > on phy and smart card controller interface.
->
-> let's try to cut down on internal agreements and let the community help
-> defining a proper way to handle the PHY :-)
->
-> Still, if you want to point me and Kishon (privately) to some internal
-> documentation, we can certainly read through it :-)
->
-> cheers
->
-> --
-> balbi
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+> 
+> [1] git://git.linaro.org/people/mturquette/linux.git
+> 
+> -- 
+> With warm regards,
+> Sachin
