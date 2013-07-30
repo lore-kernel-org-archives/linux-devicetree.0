@@ -1,35 +1,51 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtpfb2-g21.free.fr ([212.27.42.10]:36487 "EHLO
-	smtpfb2-g21.free.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755176Ab3GYJNE convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 25 Jul 2013 05:13:04 -0400
-Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
-	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 68836CA92DA
-	for <devicetree@vger.kernel.org>; Thu, 25 Jul 2013 11:12:59 +0200 (CEST)
-Date: Thu, 25 Jul 2013 11:12:32 +0200
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: [PATCH 0/4] ASoc: kirkwood: extend the kirkwood audio subsystem for
- DT usage
-Message-ID: <20130725111232.08736072@armhf>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Received: from comal.ext.ti.com ([198.47.26.152]:41939 "EHLO comal.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1755331Ab3G3AmY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Mon, 29 Jul 2013 20:42:24 -0400
+From: "Kim, Milo" <Milo.Kim@ti.com>
+Subject: [PATCH v2 0/4] LP3943 MFD driver for a GPIO expander and a PWM
+ generator
+Date: Tue, 30 Jul 2013 00:42:12 +0000
+Message-ID: <A874F61F95741C4A9BA573A70FE3998F82E849D1@DQHE06.ent.ti.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Russell King <rmk+kernel@arm.linux.org.uk>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: "Samuel Ortiz (sameo@linux.intel.com)" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series adds DT support to the kirkwood audio subsystem.
-
-It cancels the previous patch requests:
-- ARM: kirkwood: enable S/PDIF
-- ARM: kirkwood: extend the kirkwood i2s driver for DT usage
-- ARM: kirkwood: extend the kirkwood pcm/dma driver for DT usage
-
-It also contains the merge of kirkwood-i2c and kirkwood-dma into one
-module, and, the removal of the kirkwood-pcm-audio device.
-This involves changes in the openrd and t5325 drivers, as in the common
-Kirkwood machine initialization. These last changes have not been tested.
-
--- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+TFAzOTQzIGlzIGFuIGludGVncmF0ZWQgZGV2aWNlIGNhcGFibGUgb2YgZHJpdmluZyAxNiBvdXRw
+dXQgY2hhbm5lbHMuDQpJdCBjYW4gYmUgdXNlZCBmb3IgR1BJTyBleHBhbmRlciBhbmQgUFdNIGdl
+bmVyYXRvcnMuDQpMUDM0OTMgcmVnaXN0ZXJzIGFyZSBjb250cm9sbGVkIHZpYSB0aGUgSTJDIGlu
+dGVyZmFjZS4NCg0KVGhpcyBwYXRjaC1zZXQgY29uc2lzdHMgb2YgZm91ciBwYXJ0cyAtIE1GRCwg
+R1BJTywgUFdNIGFuZCBkZXZpY2UgdHJlZSBiaW5kaW5ncy4NCg0KTWlsbyBLaW0gKDQpOg0KICBt
+ZmQ6IGFkZCBMUDM5NDMgTUZEIGRyaXZlcg0KICBncGlvOiBhZGQgTFAzOTQzIEkyQyBHUElPIGV4
+cGFuZGVyIGRyaXZlcg0KICBwd206IGFkZCBMUDM5NDMgUFdNIGRyaXZlcg0KICBEb2N1bWVudGF0
+aW9uOiBkdDogYmluZGluZ3M6IGFkZCBMUDM5NDMgYmluZGluZ3MNCg0KIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2dwaW8vZ3Bpby1scDM5NDMudHh0ICAgICAgIHwgICA0MiArKysNCiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2xwMzk0My50eHQgICB8ICAgMzMgKysNCiAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLWxwMzk0My50eHQgICAgICAgICB8ICAgNjUg
+KysrKw0KIGRyaXZlcnMvZ3Bpby9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgICAgOCArDQogZHJpdmVycy9ncGlvL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgICAxICsNCiBkcml2ZXJzL2dwaW8vZ3Bpby1scDM5NDMuYyAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAyNDIgKysrKysrKysrKysrKysNCiBkcml2ZXJzL21mZC9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTEgKw0KIGRyaXZlcnMvbWZkL01ha2Vm
+aWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMSArDQogZHJpdmVycy9tZmQv
+bHAzOTQzLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTY1ICsrKysrKysrKysN
+CiBkcml2ZXJzL3B3bS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+MTAgKw0KIGRyaXZlcnMvcHdtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgICAgMSArDQogZHJpdmVycy9wd20vcHdtLWxwMzk0My5jICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgMzQ4ICsrKysrKysrKysrKysrKysrKysrDQogaW5jbHVkZS9saW51eC9tZmQvbHAz
+OTQzLmggICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTE1ICsrKysrKysNCiAxMyBmaWxlcyBj
+aGFuZ2VkLCAxMDQyIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vZ3Bpby1scDM5NDMudHh0DQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvbHAzOTQzLnR4
+dA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cHdtL3B3bS1scDM5NDMudHh0DQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3Bpby9ncGlv
+LWxwMzk0My5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWZkL2xwMzk0My5jDQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcHdtL3B3bS1scDM5NDMuYw0KIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBpbmNsdWRlL2xpbnV4L21mZC9scDM5NDMuaA0KDQotLSANCjEuNy45LjUNCg0KDQpCZXN0
+IFJlZ2FyZHMsDQpNaWxvDQoNCg==
