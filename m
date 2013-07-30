@@ -1,102 +1,53 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [RFC PATCH 1/3] of: provide a binding for the 'fixed-link'
- property
-Date: Tue, 30 Jul 2013 13:23:18 +0200
-Message-ID: <20130730132318.0270fc4b@skate>
-References: <1373902450-11857-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
-	<CACxGe6td6uM0v5w92xPVCaVH4tP4AJ-h4SnN-mFoz5gSSosnQw@mail.gmail.com>
-	<20130730110705.3262bc3d@skate>
-	<CAGVrzcZC9G2ny5rtojbzxmPu8-6EKQ_3io-+fxi61LLCt4Hk=w@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 1/8] ASoC: wm8731: add rates constraints
+Date: Tue, 30 Jul 2013 12:28:16 +0100
+Message-ID: <20130730112816.GO9858@sirena.org.uk>
+References: <1375178392-26060-1-git-send-email-richard.genoud@gmail.com>
+ <1375178392-26060-2-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcZC9G2ny5rtojbzxmPu8-6EKQ_3io-+fxi61LLCt4Hk=w@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oDAgBPM9EGlsVGM3"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1375178392-26060-2-git-send-email-richard.genoud@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>, Bo Shen <voice.shen@atmel.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Florian Fainelli,
 
-On Tue, 30 Jul 2013 11:05:04 +0100, Florian Fainelli wrote:
+--oDAgBPM9EGlsVGM3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > In fact, this value is used for two things:
-> >
-> >  * As the PHY address on the fake "fixed" MDIO bus.
-> >
-> >  * As the PHY identifier, as reported by the MII registers PHYS_ID1
-> >    (0x2) and PHYS_ID2 (0x3).
-> 
-> Right, so I would start with disambiguating the two and just forget
-> about PHYS_ID1 and PHYS_ID2 for the moment since they probably do not
-> need to be per-PHY configurable.
+On Tue, Jul 30, 2013 at 11:59:45AM +0200, Richard Genoud wrote:
+> Depending on the mclk (or crystal) selected, the wm8731 codec have some
+> constraints on its data sampling rates:
+> e.g. with a 12.288MHz or 18.432MHz crystal, the authorized rates are
+> 8KHz, 32KHz, 48KHz and 96KHz.
 
-Agreed.
+Applied, thanks.
 
-> > I think this doesn't make sense, because the two things are completely
-> > unrelated. Ideally, we'd like the PHY identifier for fixed PHYs to be
-> > something fixed, identical for all fixed PHYs. The problem is finding
-> > an OUI and device number that is available for that, but maybe we can
-> > ask the OpenMoko people to allocate one (see
-> > http://wiki.openmoko.org/wiki/OUI).
-> 
-> Well that would be ideal indeed, but I am wondering if we cannot just
-> go with some kind of magic value here anyway, regardless of
-> allocations since this is not a real hardware device.
+--oDAgBPM9EGlsVGM3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Well, isn't that exactly what I'm proposing? Have a fixed value for
-PHYS_ID1 and PHYS_ID2, that is used for /all/ fixed PHYs.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
-> How about the Linux Foundation?
+iQIcBAEBAgAGBQJR96NMAAoJELSic+t+oim9T2YP/0Sn+3UTvQIYDAuuIT4N6Xl+
+hony3W8MhyVADSA6/0xgeYHrw7J1tBxsaZxo0bpxqIMcAjO7vA8WTr58ZmjhNfRb
+zSiuCy8h7Zsdk1jbVCvqfJfkT7Lovzy5d4Z8evBq81Q3NWzCZJwg4FXgwo2uq/7s
+AoouygyzQgNMujJythkoNIkxqoTBbBR1rsUiS9HioOcsXiG5h/ZI5Z66FpKnl8gg
+xIKkJLEQxOIIievwQ9NYcUAAkNrsYEsKoOrkTzfqU0XIkLgJf9fgH7k7lr3v3bWJ
+aEc6HWXdIvV5DiakX4b66nFqh6pd02SroPG+bEMiZpNRXxphbN8vlID5La3ohsdm
+HIQnMiWMKEZd1lX8du7IZ1r5HaEobiiNcN0PugbRSoqupS7qd6rhzyxAv9ERXMDm
+J4KxePbwEEgSv33d5GCcIn2PMagkCwvuTNlzHHLZb1QTV1EYaukL2ZWBw1cnNqEf
+V9r9Qka8LS+dtAJG1cD43m/knqhFZrfDflMLHe4RjXnbZXhKcKwJDiiQQsbCEiLO
+86Z6Qgbxsdq8kqmIyLlrKxBeRBZGzmtbUYW1yyGWaLpfAZw9exmSWGO/jzfkWY6p
+lqmXHcAJ+yCZgT9FQXASi+6kwpAt8UPpqJ3k/ZJtAclehqShZ8ddUeXXwabBTmB8
+3IXRmxOBqJXUWTMKY6fl
+=Eln0
+-----END PGP SIGNATURE-----
 
-I am concerned about the time it would take to get a new OUI
-attributed. The OpenMoko OUI is said to be open for free and open
-source projects, I think the Linux kernel qualifies :)
-
-> Is not that the same problem as with gadget USB
-> devices which should have some sort of real MAC address for instance?
-
-They are either provided by the user or generated randomly, as far as I
-can see.
-
-> > Then, the PHY address could be generated dynamically. This would
-> > require:
-> >
-> >  * Adding a fixed_phy_create() function that internally uses
-> >    fixed_phy_add(), but before that creates an unique PHY address for
-> >    this newly created PHY. Those unique addresses will be generated by
-> >    incrementing a global number of fixed PHYs, up to PHY_MAX_ADDR,
-> >    which is the maximum number of fixed PHYs that can anyway be
-> >    registered on the fixed MDIO bus.
-> 
-> Even though these are purely software PHY implementations, I believe
-> that some sort of predictability would be welcome, so I would just use
-> the phy_id argument passed to fixed_phy_add() as the address on the
-> fixed MDIO bus like it is today.
-
-Well, the whole starting point of this discussion is precisely that
-both Grant and Mark disliked this phy ID that had to be globally
-unique, and they wanted it to be dynamically allocated by the kernel,
-because the DT shouldn't have to care about such internal details.
-
-> > Grant, Mark, Florian, do you have other proposals?
-> 
-> To sum up, let's just forget about the misuse of phy_id to fill in
-> PHYS_ID1 and PHYS_ID2 registers and keep the existing code with a
-> clear note that phy_id means the "PHY address on the fixed MDIO bus".
-
-Except that Grant and Mark point was precisely that the "PHY address on
-the fake MDIO bus" is not a description of the hardware, and therefore
-shouldn't be mentioned in the Device Tree but instead taken care of by
-the kernel itself.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--oDAgBPM9EGlsVGM3--
