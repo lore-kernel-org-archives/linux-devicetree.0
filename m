@@ -1,101 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp121.dfw.emailsrvr.com ([67.192.241.121]:45493 "EHLO
-	smtp121.dfw.emailsrvr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932384Ab3GZPWV (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 11:22:21 -0400
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: [PATCH 3/5] devicetree: create a separate binding description for sata_highbank
-Date: Fri, 26 Jul 2013 10:11:56 -0500
-Message-Id: <1374851518-4802-3-git-send-email-mark.langsdorf@calxeda.com>
-In-Reply-To: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
-References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
+Received: from smtp.codeaurora.org ([198.145.11.231]:52458 "EHLO
+	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751950Ab3G3A2u (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 20:28:50 -0400
+Date: Mon, 29 Jul 2013 17:28:49 -0700
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] hwspinlock/msm: Add support for Qualcomm MSM HW Mutex
+ block
+Message-ID: <20130730002849.GE8868@codeaurora.org>
+References: <1375128719-23642-1-git-send-email-galak@codeaurora.org>
+ <E9700EA7-7154-46C5-9258-03F030DF69F6@codeaurora.org>
+ <20130729214035.GC8868@codeaurora.org>
+ <9EB1A821-7137-4812-B58A-20F669BCA7DD@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9EB1A821-7137-4812-B58A-20F669BCA7DD@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
-Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
+To: Kumar Gala <galak@codeaurora.org>
+Cc: ohad@wizery.com, "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Eric Holmberg <eholmber@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The Calxeda sata_highbank driver has been adding its descriptions to the
-ahci driver. Separate them properly.
+On 07/29, Kumar Gala wrote:
+> 
+> On Jul 29, 2013, at 4:40 PM, Stephen Boyd wrote:
+> 
+> > On 07/29, Kumar Gala wrote:
+> >>> +#include <linux/of_device.h>
+> >>> +#include <linux/hwspinlock.h>
+> >>> +
+> >>> +#include <asm/io.h>
+> > 
+> > <linux/io.h> please.
+> 
+> will change, I choice <asm/io.h> since *_relaxed are arm specific.
+> 
 
-Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
----
- .../devicetree/bindings/ata/ahci-platform.txt      | 14 ++--------
- .../devicetree/bindings/ata/sata_highbank.txt      | 32 ++++++++++++++++++++++
- 2 files changed, 34 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
+I thought readl_relaxed() was universal for HAS_IOMEM arches.
+Unfortunately writel_relaxed() isn't defined on all arches.
+Luckily this driver depends on ARCH_MSM so it isn't a problem.
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-index 3ec0c5c..14d7b22 100644
---- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-@@ -4,27 +4,17 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
- Each SATA controller should have its own node.
- 
- Required properties:
--- compatible        : compatible list, contains "calxeda,hb-ahci" or "snps,spear-ahci"
-+- compatible        : compatible list, contains "snps,spear-ahci"
- - interrupts        : <interrupt mapping for SATA IRQ>
- - reg               : <registers mapping>
- 
- Optional properties:
--- calxeda,port-phys: phandle-combophy and lane assignment, which maps each
--			SATA port to a combophy and a lane within that
--			combophy
--- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
--			which indicates that the driver supports SGPIO
--			indicator lights using the indicated GPIOs
--- calxeda,led-order : a u32 array that map port numbers to offsets within the
--			SGPIO bitstream.
- - dma-coherent      : Present if dma operations are coherent
- 
- Example:
-         sata@ffe08000 {
--		compatible = "calxeda,hb-ahci";
-+		compatible = "snps,spear-ahci";
-                 reg = <0xffe08000 0x1000>;
-                 interrupts = <115>;
--		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
--					&combophy0 2 &combophy0 3>;
- 
-         };
-diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
-new file mode 100644
-index 0000000..aa1b798
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/sata_highbank.txt
-@@ -0,0 +1,32 @@
-+* Calxeda AHCI SATA Controller
-+
-+SATA nodes are defined to describe on-chip Serial ATA controllers.
-+The Calxeda SATA controller mostly conforms to the AHCI interface
-+with some special extensions to add functionality.
-+Each SATA controller should have its own node.
-+
-+Required properties:
-+- compatible        : compatible list, contains "calxeda,hb-ahci"
-+- interrupts        : <interrupt mapping for SATA IRQ>
-+- reg               : <registers mapping>
-+
-+Optional properties:
-+- dma-coherent      : Present if dma operations are coherent
-+- calxeda,port-phys: phandle-combophy and lane assignment, which maps each
-+			SATA port to a combophy and a lane within that
-+			combophy
-+- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
-+			which indicates that the driver supports SGPIO
-+			indicator lights using the indicated GPIOs
-+- calxeda,led-order : a u32 array that map port numbers to offsets within the
-+			SGPIO bitstream.
-+
-+Example:
-+        sata@ffe08000 {
-+		compatible = "calxeda,hb-ahci";
-+                reg = <0xffe08000 0x1000>;
-+                interrupts = <115>;
-+		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
-+					&combophy0 2 &combophy0 3>;
-+
-+        };
+Perhaps it should just depend on HAS_IOMEM so we can use it on
+arm64 and/or hexagon in the future without having to change the
+Kconfig. That would require introducing writel_relaxed() into the
+other arches that don't have it right now.
+
 -- 
-1.8.1.2
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
