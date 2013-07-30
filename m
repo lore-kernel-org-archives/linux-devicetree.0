@@ -1,89 +1,78 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH 1/3] of: provide a binding for the 'fixed-link'
- property
-Date: Tue, 30 Jul 2013 16:31:21 +0100
-Message-ID: <20130730153121.GC29859@e106331-lin.cambridge.arm.com>
-References: <1373902450-11857-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
- <CACxGe6td6uM0v5w92xPVCaVH4tP4AJ-h4SnN-mFoz5gSSosnQw@mail.gmail.com>
- <20130730110705.3262bc3d@skate>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [Patch V2 4/4] ARM: dts: AM33XX: update rtc node compatibility
+Date: Tue, 30 Jul 2013 21:51:14 +0530
+Message-ID: <51F7E7FA.3080702@ti.com>
+References: <1372841225-18813-1-git-send-email-gururaja.hebbar@ti.com>
+	<1372841225-18813-5-git-send-email-gururaja.hebbar@ti.com>
+	<51F749B0.7020802@ti.com>
+	<20130730145501.GA29859@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130730110705.3262bc3d@skate>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, netdev <netdev@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Florian Fainelli <florian@openwrt.org>, Grant Likely <grant.likely@secretlab.ca>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20130730145501.GA29859-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "benoit.cousson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <benoit.cousson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vaibhav.bedia-l0cyMroinI0@public.gmane.org" <vaibhav.bedia-l0cyMroinI0@public.gmane.org>, "benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 30, 2013 at 10:07:05AM +0100, Thomas Petazzoni wrote:
-> Dear Grant Likely,
+On 7/30/2013 8:25 PM, Mark Rutland wrote:
+> On Tue, Jul 30, 2013 at 06:05:52AM +0100, Gururaja Hebbar wrote:
+>> Hi,
+>>
+>> On 7/3/2013 2:17 PM, Hebbar Gururaja wrote:
+>>> Since AM33xx  RTC IP has RTC_IRQWAKEEN to support Alarm Wake-up.
+>>>
+>>> Update the rtc compatible property to "ti,am3352-rtc" to enable handling
+>>> of this feature inside rtc-omap driver.
+>>
+>> The other 2 rtc driver related patches have been pulled up. If you have 
+>> no comments, can you please pull this up.
+>>
+>> Regards
+>> Gururaja
+>>
+>>>
+>>> Signed-off-by: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+>>> ---
+>>> :100644 100644 77aa1b0... dde180a... M	arch/arm/boot/dts/am33xx.dtsi
+>>>   arch/arm/boot/dts/am33xx.dtsi |    2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+>>> index 77aa1b0..dde180a 100644
+>>> --- a/arch/arm/boot/dts/am33xx.dtsi
+>>> +++ b/arch/arm/boot/dts/am33xx.dtsi
+>>> @@ -297,7 +297,7 @@
+>>>   		};
+>>>
+>>>   		rtc@44e3e000 {
+>>> -			compatible = "ti,da830-rtc";
+>>> +			compatible = "ti,am3352-rtc";
 > 
-> On Tue, 23 Jul 2013 12:39:52 +0100, Grant Likely wrote:
+> Given that this is backwards compatible with the old binding, it would
+> be nicer to have this as:
 > 
-> > > +Such a fixed link situation is described within an Ethernet device
-> > > +Device Tree node using a 'fixed-link' property, composed of 5
-> > > +elements:
-> > > +
-> > > + 1. A fake PHY ID, which must be unique accross all fixed-link PHYs in
-> > > +    the system.
-> > 
-> > That's just loony!  :)  Regardless of existing code doing this, it is
-> > absolutely ridiculous to have it in the driver. The kernel should
-> > handle generating a phy id transparently. I'd rather mark this field
-> > as reserved in the binding and change the code to not care about it
-> > anymore.
+> 	compatible = "ti,am3352-rtc", "ti,da830-rtc";
 > 
-> In fact, this value is used for two things:
-> 
->  * As the PHY address on the fake "fixed" MDIO bus.
-> 
->  * As the PHY identifier, as reported by the MII registers PHYS_ID1
->    (0x2) and PHYS_ID2 (0x3).
-> 
-> I think this doesn't make sense, because the two things are completely
-> unrelated. Ideally, we'd like the PHY identifier for fixed PHYs to be
-> something fixed, identical for all fixed PHYs. The problem is finding
-> an OUI and device number that is available for that, but maybe we can
-> ask the OpenMoko people to allocate one (see
-> http://wiki.openmoko.org/wiki/OUI).
-> 
-> Then, the PHY address could be generated dynamically. This would
-> require:
-> 
->  * Adding a fixed_phy_create() function that internally uses
->    fixed_phy_add(), but before that creates an unique PHY address for
->    this newly created PHY. Those unique addresses will be generated by
->    incrementing a global number of fixed PHYs, up to PHY_MAX_ADDR,
->    which is the maximum number of fixed PHYs that can anyway be
->    registered on the fixed MDIO bus.
-> 
->    fixed_phy_create() would return this PHY address (positive) on
->    success, or a negative error code on failure.
-> 
->  * Change of_phy_register_fixed_link() to call fixed_phy_create()
->    instead of fixed_phy_add() and make it return the PHY address
->    allocated by fixed_phy_create().
-> 
->  * Add a of_phy_connect_fixed_link_direct() that is similar to
->    of_phy_connect_fixed_link() but takes an additional PHY address as
->    argument and uses that to generate the 'bus_id' used to find the
->    phy_device.
-> 
-> Grant, Mark, Florian, do you have other proposals?
+> We must get into the habit of changing dts files in a
+> backwards-compatible fashion.
 
-The above sounds good to me.
+Right, I suggested this when v1 was posted. It turns out the current
+kernel does not handle the compatilble list correctly and the string
+selected actually depends on the order in which it appears in match
+table in driver instead.
+
+I saw there were patches being discussed to fix this issue, but until
+that is fixed, we cannot really use what you (and I before) suggested.
 
 Thanks,
-Mark.
+Sekhar
