@@ -1,239 +1,249 @@
-From: Seung-Woo Kim <sw0312.kim@samsung.com>
-Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmiphy clock with pmu
- reg control
-Date: Tue, 30 Jul 2013 15:06:58 +0900
-Message-ID: <51F75802.90305@samsung.com>
-References: <1370935073-7475-1-git-send-email-rahul.sharma@samsung.com>
- <CAAQKjZMuSQhbYtOyni-RdHhXu0fv3U2Dm_2iqRLe0smSt_jjjQ@mail.gmail.com>
- <CAAQKjZOZCtLnE_OPs60NU+Z4pkHiSCqZcBOi1Dv+PC=01HKqyg@mail.gmail.com>
- <CAPdUM4Nis0uwyZf1hNDOMmdqFm0K7beVPoyAWRjMBwq0jcwwCQ@mail.gmail.com>
- <51B98908.8050403@samsung.com>
- <02c101ce6828$29ab0f20$7d012d60$%dae@samsung.com> <51B9C0ED.2040605@ti.com>
- <51BAB398.8090409@samsung.com>
- <CAPdUM4PK7K+Vw6umnehDubLD37jiWdcd4iXX2DJvHS8990LQGQ@mail.gmail.com>
- <51C04688.3090205@ti.com>
- <CAPdUM4O7cbBEEc4VdmcyryqFxpek6SsEcG-g-KyxwVypdwJnaw@mail.gmail.com>
-Reply-To: sw0312.kim@samsung.com
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH v9 0/8] Generic PHY Framework
+Date: Tue, 30 Jul 2013 11:55:15 +0530
+Message-ID: <CAPdUM4MoKfWRuES1QjEkYQ1=Af6MvLjjb_p6j4zdeFOAOcpDFg@mail.gmail.com>
+References: <51D3F773.9000209@ti.com> <20130703132038.GI15056@arwen.pp.htv.fi>
+ <780E789C2E067A4BB8F69D0BB9EC4F253E975D6E@DBDE04.ent.ti.com>
+ <51D54694.20203@ti.com> <20130704101216.GD4830@arwen.pp.htv.fi>
+ <780E789C2E067A4BB8F69D0BB9EC4F253E9764D5@DBDE04.ent.ti.com>
+ <51DAADD1.3060302@ti.com>
+ <780E789C2E067A4BB8F69D0BB9EC4F253E976575@DBDE04.ent.ti.com>
+ <20130709114416.GL5552@arwen.pp.htv.fi>
+ <780E789C2E067A4BB8F69D0BB9EC4F253E97670D@DBDE04.ent.ti.com>
+ <20130709173429.GE10776@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAPdUM4O7cbBEEc4VdmcyryqFxpek6SsEcG-g-KyxwVypdwJnaw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <r.sh.open@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-samsung-soc@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, sunil joshi <joshi@samsung.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, grant.likely@linaro.org, Rahul Sharma <rahul.sharma@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130709173429.GE10776@arwen.pp.htv.fi>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: balbi@ti.com
+Cc: dianders@chromium.org, "mchehab@redhat.com" <mchehab@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "Patel, Satish" <satish.patel@ti.com>, "Nori, Sekhar" <nsekhar@ti.com>, "Cherian, George" <george.cherian@ti.com>, sunil joshi <joshi@samsung.com>, "swarren@nvidia.com" <swarren@nvidia.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "cesarb@cesarb.net" <cesarb@cesarb.net>, "Mankad, Maulik Ojas" <maulik@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nayak, Rajendra" <rnayak@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "sylvester.nawrocki@gmail.com" <sylvester.nawrocki@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vg>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+Hi Balbi, Kishon,
 
-On 2013=EB=85=84 07=EC=9B=94 30=EC=9D=BC 12:42, Rahul Sharma wrote:
->=20
->=20
-> On Tue, Jun 18, 2013 at 5:07 PM, Kishon Vijay Abraham I <kishon@ti.co=
-m
-> <mailto:kishon@ti.com>> wrote:
->=20
->     Hi,
->=20
->     On Tuesday 18 June 2013 03:33 PM, Rahul Sharma wrote:
->     > Thanks all,
->     >
->     > On Fri, Jun 14, 2013 at 11:39 AM, =EA=B9=80=EC=8A=B9=EC=9A=B0 <=
-sw0312.kim@samsung.com
->     <mailto:sw0312.kim@samsung.com>> wrote:
->     >> Hello Kishon,
->     >>
->     >> On 2013=EB=85=84 06=EC=9B=94 13=EC=9D=BC 21:54, Kishon Vijay A=
-braham I wrote:
->     >>> Hi,
->     >>>
->     >>> On Thursday 13 June 2013 04:51 PM, Inki Dae wrote:
->     >>>>
->     >>>>
->     >>>>> -----Original Message-----
->     >>>>> From: Sylwester Nawrocki [mailto:s.nawrocki@samsung.com
->     <mailto:s.nawrocki@samsung.com>]
->     >>>>> Sent: Thursday, June 13, 2013 5:56 PM
->     >>>>> To: Rahul Sharma
->     >>>>> Cc: Rahul Sharma; Inki Dae; linux-samsung-soc@vger.kernel.o=
-rg
->     <mailto:linux-samsung-soc@vger.kernel.org>;
->     >>>>> devicetree-
->     >>>>> discuss@lists.ozlabs.org <mailto:discuss@lists.ozlabs.org>;
->     DRI mailing list; Kukjin Kim; Seung-Woo Kim;
->     >>>>> Sean Paul; sunil joshi; Kishon Vijay Abraham I; Stephen War=
-ren;
->     >>>>> grant.likely@linaro.org <mailto:grant.likely@linaro.org>
->     >>>>> Subject: Re: [RFC 0/2] exynos5250/hdmi: replace dummy hdmip=
-hy
->     clock with
->     >>>>> pmu reg control
->     >>>>>
->     >>>>> Hi,
->     >>>>>
->     >>>>> On 06/13/2013 06:26 AM, Rahul Sharma wrote:
->     >>>>>> Mr. Dae,
->     >>>>>>
->     >>>>>> Thanks for your valuable inputs.
->     >>>>>>
->     >>>>>> I posted it as RFC because, I also have received comments =
-to
->     register
->     >>>>>> hdmiphy as a clock controller. As we always configure it f=
-or
->     specific
->     >>>>>> frequency, hdmi-phy looks similar to a PLL. But it really =
-doesn't
->     >>>>>> belong to that class. Secondly prior to exynos5420, it was=
- a i2c
->     >>>>>> device. I am not sure we can register a I2C device as a cl=
-ock
->     >>>>>> controller. I wanted to discuss and explore this option he=
-re.
->     >>>>>
->     >>>>> Have you considered using the generic PHY framework for tho=
-se HDMI
->     >>>>> PHY devices [1] ? I guess we could add a dedicated group of
->     ops for
->     >>>>> video PHYs, similarly as is is done with struct
->     v4l2_subdev_ops. For
->     >>>>> configuring things like the carrier/pixel clock frequency o=
-r
->     anything
->     >>>>> what's common across the video PHYs.
->     >>>>>
->     >>>>> Perhaps you could have a look and see if this framework wou=
-ld be
->     >>>>> useful for HDMI and possibly point out anything what might =
-be
->     missing ?
->     >>>>>
->     >>>>> I'm not sure it it really solves the issues specific to the=
- Exynos
->     >>>>> HDMI but at least with a generic PHY driver the PHY module
->     would be
->     >>>>> separate from the PHY controller, as often same HDMI DPHY c=
-an
->     be used
->     >>>>> with various types of a HDMI controller. So this would allo=
-w
->     to not
->     >>>>> duplicate the HDMI PHY drivers in the long-term perspective=
-=2E
->     >>>>
->     >>>> Yeah, at least, it seems that we could use PHY module to
->     control PMU
->     >>>> register, HDMI_PHY_CONTROL. However, PHY module provides onl=
-y
->     init/on/off
->     >>>> callbacks. As you may know, HDMIPHY needs i2c interfaces to =
-control
->     >>>> HDMIPHY
->     >>>> clock. So with PHY module, HDMIPHY driver could enable PMU m=
-ore
->     >>>> generically,
->     >>>> but also has to use existing i2c stuff to control HDMIPHY
->     clock. I had a
->     >>>> quick review to Generic PHY Framework[v6] but I didn't see t=
-hat
->     the PHY
->     >>>> module could generically support more features such as i2c s=
-tuff.
->     >>>
->     >>> I don't think PHY framework needs to provide i2c interfaces t=
-o
->     program
->     >>> certain configurations. Instead in one of the callbacks
->     (init/on/off)
->     >>> PHY driver can program whatever it wants using any of the
->     interfaces it
->     >>> needs. IMO PHY framework should work independent of the inter=
-faces.
->     >>
->     >> In exnoys hdmi case, i2c interface is not the exact issue. In =
-exynos
->     >> hdmi, hdmiphy should send i2c configuration about video clock
->     >> information as the video mode information including resolution=
-,
->     bit per
->     >> pixel, refresh rate passed from drm subsystem. So init/on/off
->     callbacks
->     >> of phy framework are not enough for exynos hdmiphy and it shou=
-ld
->     have a
->     >> callback to set video mode.
->     >>
->     >> Do you have plan to add driver specific extend callback pointe=
-rs
->     to phy
->     >> framework?
->     >>
->     >> Currently, hdmi directly calls phy operations, but Rahul's
->     another patch
->     >> set, mentioned by Inki, divides hdmi and hdmiphy and hdmi and
->     hdmiphy is
->     >> connected with exynos hdmi own sub driver callback operations.
->     >>
->     >> IMHO, if phy framework can support extend callback feature, th=
-en this
->     >> own sub driver callbacks can be replaced with phy framework at
->     long term
->     >> view.
->     >
->     > Extended callbacks are always welcome. I can also use phy devic=
-e
->     > private data to pass on private ops like get_pixelclk and
->     set_pixelclk.
->=20
->     I would recommend creating a wrapper to the existing PHY framewor=
-k
->     for HDMI PHY. That way, we can have other HDMI phys added
->     easily. We need to figure out all the ops that might be needed by=
- the
->     HDMI PHY to be added to the wrapper.
->     IMO extended callbacks can lead to abuse of the system and should=
- be
->     used only when absolutely necessary.
->=20
->     Thanks
->     Kishon
->=20
->=20
-> Thanks Kishon,
->=20
-> I have started working on this wrapper layer which is customized for
-> video phys.
-> As if now, adding set_dv_timing, get_dv_timing as the only additional
-> callbacks.
-> I will post the RFC patches.
+I have similar requirements for exynos hdmi phy. hdmi driver (controller)
+need to set the operating clock to hdmi phy which depends on the pixel
+clock.
 
-I think your hdmiphy pmu patch is good enough just if dt binding for pm=
-u
-is in hdmiphy binding instead of hdmi binding. So I recommended to make
-pmu patch set on the top of independent hdmiphy patch set because with
-independent hdmiphy patch set hdmiphy pmu code is moved to hdmiphy driv=
-er.
+Phy has an internal pll to be configured as per changing resolution. It can
+be done by writing into phy registers. CCF callbacks (set/get_rate) can
+not be used unless I register phy as a clock controller. But that way
+hdmi driver loses finer power control for the phy. Phy should be ON, only
+when hdmi hotplugged.
 
-Is it possible that hdmi driver references pmu information from hdmiphy
-binding? If that, it seems one possible solution to fix current exynos
-hdmi broken.
+Callback: set_phy_operating_freq in phy framework, seems generic and
+addressing similar requirements for other phys. What you say on this?
 
-Thanks and Regards,
-- Seung-Woo Kim
+regards,
+Rahul Sharma.
 
->=20
-> regards,
-> Rahul Sharma.
->=20
->=20
->=20
+On Tue, Jul 9, 2013 at 11:04 PM, Felipe Balbi <balbi@ti.com> wrote:
+>
+> Hi,
+>
+> On Tue, Jul 09, 2013 at 02:33:58PM +0200, Patel, Satish wrote:
+> > > > Operation:
+> > > >
+> > > > Once the card gets inserted into the slot, user application can
+> > > > initiate activate sequence anytime, it is not mandatory that
+> > > > activation has to be called Immediately. It all depends whether
+> > > other
+> > > > connections ( network, printer) are proper.  User application can do
+> > > > some checks and then dynamically activate the card
+> > >
+> > > The card or the phy ? Who actually activates ? Is the activation
+> > > handling part of the PHY or part of the smartcard controller ?
+> > >
+> >
+> > It=92s a activation of smart card which is inserted into the phy slot.
+> > Smart card activation will by done phy but initiated by user application
+> > Handling of activation should be done at both the side - controller as =
+well
+> > As phy. Phy will raise certain signals and check timeout while activati=
+on
+> > , while controller will store data coming from smart card to FIFO. Its
+> > Controller which will give command to phy to initiate activation sequen=
+ce when it
+> > is ready.
+> >
+> > Which means, both controller and phy has role to play while activation.
+> > Also it is applicable while deactivation.
+>
+> right, so when the smartcard device is opened, you want to powerup the
+> PHY, powerup the smartcard controller and get things going, which means
+> that all your activation logic can, and should, be hidden by
+> phy_power_on() and phy_power_off()
+>
+> Perhaps you also want to delay phy_init() and phy_shutdown() to that
+> very time, which would mean that we wouldn't even need
+> phy_power_{on,off}() calls whatsoever.
+>
+> > > > There are 2 sequence of activation - normal activation and warm
+> > > reset.
+> > > > If first fails then warm reset should be executed, if card does not
+> > > > response to both then deactivation will be carried out
+> > >
+> > > ret =3D phy_resume(phy);
+> > > if (ret =3D=3D -EINVAL) { /* perhaps there's a better error code */
+> > >     ret =3D phy_reset(phy);
+> > >     if (ret)
+> > >             phy_suspend(phy);
+> > > }
+> > >
+> >
+> > Its not like this. There are the cases, when during normal activation
+> > card respond With some characters, but they might not be valid or
+> > error prone - This check will be done by user application as only
+> > application knows how to decode characters as per protocol.
+>
+> sure, and if the characters are invalid, the application needs to tell
+> the kernel, perhaps it would be enough to send and IOCTL or, even
+> easier, close the device and reopen it.
+>
+> > It there is any error in characters/timeout paratmeters, user
+> > application will ask to initiate Warm reset.
+>
+> and for that we can use an IOCTL which is implemented by smart card
+> layer. I mean, I'm assuming the smartcard would be seen as a char dev by
+> userland so it would be something like this:
+>
+> ret =3D read(fd, buf, SIZE);
+> if (ret < 0)
+>         boom();
+>
+> ret =3D process_buffer(buf, ret);
+> if (ret =3D=3D -EINVAL) { /* we have received invalid characters */
+>         ret =3D ioctl(fd, IOCTL_SMARTCARD_WARM_RESET);
+>         if (ret < 0)
+>                 handle_error();
+> }
+>
+> in kernel space we would have an ioctl handler like so:
+>
+> static int smart_card_ioctl(struct file *fd, unsigned code, usigned long =
+v)
+> {
+>         struct smart_card *sc =3D fd->private_data;
+>         unsigned long flags;
+>         int ret;
+>
+>         spin_lock_irqsave(&sc->lock, flags);
+>         switch (v)
+>         case SMART_CARD_WARM_RESET:
+>                 ret =3D phy_shutdown(sc->phy);
+>                 if (ret < 0)
+>                         boom();
+>
+>                 ret =3D smart_card_reset(sc);
+>                 if (ret < 0)
+>                         boom();
+>
+>                 ret =3D phy_init(sc->phy);
+>                 if (ret < 0)
+>                         boom();
+>                 break;
+>         [ ... ]
+>         }
+>
+>         spin_unlock_irqrestore(&sc->lock, flags);
+>
+>         return ret;
+> }
+>
+> see, we don't need to add a bunch of stuff in the PHY framework, because
+> you shouldn't expose the PHY directly to userland. You *must* have an
+> abstraction to userland with an in-kernel usage of the PHY layer.
+>
+> > > > - on activation card will respond with some initial characters
+> > > (ATR),
+> > > > which will be verified by application, in case of error user
+> > > > application will de-activate the card not the phy module
+> > > >
+> > > > - After activation, use application initiate normal tx/rx
+> > > >
+> > > > - Once tx/rx is done, it will initiate deactivation of card not the
+> > > > phy module.
+> > >
+> > > then that has nothing to do with the PHY framework, right ?
+> >
+> > But all such sequence will be initiated by PHY by raising certain
+> > signals and only controller can give the push when to start.
+>
+> sure, that's fair. But you don't need to expose every single detail of
+> the PHY. You need to use abstractions to make accesses to the PHY easy
+> to maintain. See the example above.
+>
+> > > > > > Smartcard_set_c4/c8/rst/io -> phy_set_pin
+> > > > >
+> > > > > Whats should be exactly done here? Looks to me like it should be
+> > > > > part of init. Does these pin settings need to be changed
+> > > dynamically?
+> > > >
+> > > > These are all phy pins which will be physically come in contact with
+> > > > smart card When inserted. In case of synchronous card, these pins
+> > > will
+> > > > be toggled manually by s/w bit bang algorithm
+> > >
+> > > is that a requirement or just something that everybody does ?
+> > >
+> >
+> > Its requirement for synchronous card. At present there is no open driver
+> > Which does this thing.
+>
+> alright, so you need to tell the PHY in which mode it should work and
+> the PHY driver needs to be smart enough to choose proper callbacks
+> depending on the mode.
+>
+> > > In any case, you can hide that under some gpio calls, or something
+> > > similar.
+> >
+> > Can't be done using GPIO as pin can be toggled only which i2c read/write
+> > to the phy.
+>
+> so ? look at the numerous I2C GPIO expanders we have in the kernel ;-)
+>
+> > > > > > Smartcard_get_version -> phy_get_version
+> > > > >
+> > > > > Again why? Why would the smartcard need the version of the PHY?
+> > > > >
+> > > >
+> > > > Can be omitted. This is for the test suite reference.
+> > >
+> > > if it's for testsuite, it sounds like something that should be done
+> > > through userland and, as such, should be implemented by a set of
+> > > debugfs
+> > > files which expose the necessary information. That has nothing to do
+> > > with the PHY framework.
+> > >
+> > Agree.. can be omitted.
+> >
+> >
+> > I am ok to give internal webex presentation (TI team) to brief
+> > on phy and smart card controller interface.
+>
+> let's try to cut down on internal agreements and let the community help
+> defining a proper way to handle the PHY :-)
+>
+> Still, if you want to point me and Kishon (privately) to some internal
+> documentation, we can certainly read through it :-)
+>
+> cheers
+>
+> --
+> balbi
+>
 > _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->=20
-
---=20
-Seung-Woo Kim
-Samsung Software R&D Center
---
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
