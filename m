@@ -1,14 +1,16 @@
-From: Luciano Coelho <coelho@ti.com>
-Subject: [PATCH v4 5/8] wlcore: add initial device tree support to the sdio
- module
-Date: Tue, 30 Jul 2013 16:04:33 +0300
-Message-ID: <1375189476-21557-6-git-send-email-coelho@ti.com>
-References: <1375189476-21557-1-git-send-email-coelho@ti.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [RFC PATCH 0/2] impedance-matcher generic improvements
+Date: Tue, 30 Jul 2013 09:17:25 -0400
+Message-ID: <20130730131725.GC5882@titan.lakedaemon.net>
+References: <51F2A014.7000209@gmail.com>
+ <cover.1375131816.git.jason@lakedaemon.net>
+ <51F76FE3.1080302@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1375189476-21557-1-git-send-email-coelho@ti.com>
+Content-Disposition: inline
+In-Reply-To: <51F76FE3.1080302@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,132 +20,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-wireless@vger.kernel.org, tony@atomide.com, nsekhar@ti.com
-Cc: mark.rutland@arm.com, nm@ti.com, coelho@ti.com, mturquette@linaro.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, balbi@ti.com, martinez.javier@gmail.com, rob.herring@calxeda.com, grant.likely@linaro.org, linux-omap@vger.kernel.org, luca@coelho.fi, linux-arm-kernel@lists.infradead.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Nicolas Pitre <nico@fluxnic.net>
 List-Id: devicetree@vger.kernel.org
 
-If platform data is not available, try to get the required information
-from the device tree.  Register an OF match table and parse the
-appropriate device tree nodes.
+On Tue, Jul 30, 2013 at 09:48:51AM +0200, Daniel Mack wrote:
+> Hi Jason,
+> 
+> On 29.07.2013 23:23, Jason Cooper wrote:
+> > Basic idea is to replace a device's stock kernel with this impedance-matcher.
+> > Load the kernel and/or the devicetree blob to desired addresses.  Add
+> > 'loadaddrs=0xXXXXXXXX,0xYYYYYYYY' to the kernel's command line.  Or, if you are
+> > appending, 'loadaddrs=appended,0xYYYYYYYY'.  First address is the location of
+> > the kernel, second is the location of the dtb.
+> 
+> Nice to see that idea implemented! For me though, changing any of the
+> U-Boot variables is out of the question, and I need the matcher just the
+> way I implemented it, including the LED blink pattern to let the user
+> know if things go wrong.
 
-Parse interrupt property only, for now.
+Understandable.  After thinking about it a bit, I think I'm going to
+rework this patch to allow appending both kernels and dtbs (as you had),
+and abstract out the led blink so that your code would become a compile
+time option.
 
-Signed-off-by: Luciano Coelho <coelho@ti.com>
-Reviewed-by: Felipe Balbi <balbi@ti.com>
----
- drivers/net/wireless/ti/wlcore/sdio.c | 69 ++++++++++++++++++++++++++++++++---
- 1 file changed, 63 insertions(+), 6 deletions(-)
+> Hence, I won't change to your generic version on my boards, and so I
+> think it might be best if you maintain your own tree for your approach.
 
-diff --git a/drivers/net/wireless/ti/wlcore/sdio.c b/drivers/net/wireless/ti/wlcore/sdio.c
-index 4c7e8ac..9370d7e 100644
---- a/drivers/net/wireless/ti/wlcore/sdio.c
-+++ b/drivers/net/wireless/ti/wlcore/sdio.c
-@@ -30,7 +30,7 @@
- #include <linux/mmc/sdio_ids.h>
- #include <linux/mmc/card.h>
- #include <linux/mmc/host.h>
--#include <linux/gpio.h>
-+#include <linux/of_irq.h>
- #include <linux/wl12xx.h>
- #include <linux/pm_runtime.h>
- #include <linux/printk.h>
-@@ -214,6 +214,43 @@ static struct wl1271_if_operations sdio_ops = {
- 	.set_block_size = wl1271_sdio_set_block_size,
- };
- 
-+static struct wl12xx_platform_data *wlcore_get_pdata_from_of(struct device *dev)
-+{
-+	struct wl12xx_platform_data *pdata;
-+	struct device_node *np = dev->of_node;
-+
-+	if (!np) {
-+		np = of_find_matching_node(NULL, dev->driver->of_match_table);
-+		if (!np) {
-+			dev_notice(dev, "device tree node not available\n");
-+			pdata = ERR_PTR(-ENODEV);
-+			goto out;
-+		}
-+	}
-+
-+	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		dev_err(dev, "can't allocate platform data\n");
-+		pdata = ERR_PTR(-ENODEV);
-+		goto out;
-+	}
-+
-+	pdata->irq = irq_of_parse_and_map(np, 0);
-+	if (pdata->irq < 0) {
-+		dev_err(dev, "can't get interrupt gpio from the device tree\n");
-+		goto out_free;
-+	}
-+
-+	goto out;
-+
-+out_free:
-+	kfree(pdata);
-+	pdata = ERR_PTR(-ENODEV);
-+
-+out:
-+	return pdata;
-+}
-+
- static int wl1271_probe(struct sdio_func *func,
- 				  const struct sdio_device_id *id)
- {
-@@ -248,11 +285,22 @@ static int wl1271_probe(struct sdio_func *func,
- 	/* Use block mode for transferring over one block size of data */
- 	func->card->quirks |= MMC_QUIRK_BLKSZ_FOR_BYTE_MODE;
- 
-+	/* The pdata allocated here is freed when the device is freed,
-+	 * so we don't need an additional out label to free it in case
-+	 * of error further on.
-+	 */
-+
-+	/* Try to get legacy platform data from the board file */
- 	pdev_data->pdata = wl12xx_get_platform_data();
- 	if (IS_ERR(pdev_data->pdata)) {
--		ret = PTR_ERR(pdev_data->pdata);
--		dev_err(glue->dev, "missing wlan platform data: %d\n", ret);
--		goto out_free_glue;
-+		dev_info(&func->dev,
-+			 "legacy platform data not found, trying device tree\n");
-+
-+		pdev_data->pdata = wlcore_get_pdata_from_of(&func->dev);
-+		if (IS_ERR(pdev_data->pdata)) {
-+			dev_err(&func->dev, "can't get platform data\n");
-+			goto out_free_glue;
-+		}
- 	}
- 
- 	/* if sdio can keep power while host is suspended, enable wow */
-@@ -386,16 +434,25 @@ static const struct dev_pm_ops wl1271_sdio_pm_ops = {
- };
- #endif
- 
-+static const struct of_device_id wlcore_sdio_of_match_table[] = {
-+	{ .compatible = "ti,wilink6" },
-+	{ .compatible = "ti,wilink7" },
-+	{ .compatible = "ti,wilink8" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, wlcore_sdio_of_match_table);
-+
- static struct sdio_driver wl1271_sdio_driver = {
- 	.name		= "wl1271_sdio",
- 	.id_table	= wl1271_devices,
- 	.probe		= wl1271_probe,
- 	.remove		= wl1271_remove,
--#ifdef CONFIG_PM
- 	.drv = {
-+#ifdef CONFIG_PM
- 		.pm = &wl1271_sdio_pm_ops,
--	},
- #endif
-+		.of_match_table = of_match_ptr(wlcore_sdio_of_match_table),
-+	},
- };
- 
- static int __init wl1271_init(void)
--- 
-1.8.3.2
+hrmmm, I don't like forking on general principle.  Let me do the above
+rework and see if that works for you, while adding the capabilities I
+need.
+
+When I'm done, you should just be able to do:
+
+  $ make APPEND_KERNEL=input/zImage APPEND_DTBS=input/*.dtb uImage
+
+And get the same result.
+
+In the meantime, would you mind adding a license to your code?  If you
+have no preference, I like GPLv2-only, but it's your code, so whatever
+you like.
+
+thx,
+
+Jason.
