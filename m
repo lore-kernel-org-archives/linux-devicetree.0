@@ -1,212 +1,58 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from service87.mimecast.com ([91.220.42.44]:53251 "EHLO
-	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756060Ab3G3SAX (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 30 Jul 2013 14:00:23 -0400
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Subject: [RFC PATCH 1/2] PM / OPP: add support to specify phandle of another node for OPP
-Date: Tue, 30 Jul 2013 19:00:16 +0100
-Message-Id: <1375207217-4433-2-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-In-Reply-To: <1375207217-4433-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-References: <1375207217-4433-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Received: from mail-pd0-f169.google.com ([209.85.192.169]:48807 "EHLO
+	mail-pd0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751633Ab3G3Qeg (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 30 Jul 2013 12:34:36 -0400
+Received: by mail-pd0-f169.google.com with SMTP id y11so1403473pdj.14
+        for <devicetree@vger.kernel.org>; Tue, 30 Jul 2013 09:34:35 -0700 (PDT)
+Date: Tue, 30 Jul 2013 09:34:41 -0700
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v2 1/4] mtd: nand: gpio: Determine bus width automatically
+Message-ID: <20130730163441.GB13634@quad.lixom.net>
+References: <1375182325-30003-1-git-send-email-shc_work@mail.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1375182325-30003-1-git-send-email-shc_work@mail.ru>
 Sender: devicetree-owner@vger.kernel.org
-To: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sudeep.KarkadaNagesha@arm.com, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+On Tue, Jul 30, 2013 at 03:05:24PM +0400, Alexander Shiyan wrote:
+> This patch provide automatically determine of NAND bus width if
+> "bank-width" parameter is ommited.
+> Patch depends on "mtd: nand: fix NAND_BUSWIDTH_AUTO for x16 devices".
+> 
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+> ---
+>  .../devicetree/bindings/mtd/gpio-control-nand.txt         |  4 ++--
+>  drivers/mtd/nand/gpio.c                                   | 15 ++++++++++-----
+>  2 files changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> index 36ef07d..2ac14d8 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> @@ -15,8 +15,8 @@ Required properties:
+>    optional gpio and may be set to 0 if not present.
+>  
+>  Optional properties:
+> -- bank-width : Width (in bytes) of the device.  If not present, the width
+> -  defaults to 1 byte.
+> +- bank-width : Width (in bytes) of the device. If not present, the bus width
+> +  of the device is determined automatically.
+>  - chip-delay : chip dependent delay for transferring data from array to
+>    read registers (tR).  If not present then a default of 20us is used.
+>  - gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
 
-If more than one similar devices share the same OPPs, currently we
-need to replicate the OPP entries in all the nodes.
+This would break backwards compatibility, something we're now starting to push
+back at.
 
-Few drivers like cpufreq depend on physical cpu0 node to specify the
-OPPs and only that node is referred irrespective of the logical cpu
-accessing it. Alternatively to support cpuhotplug path, few drivers
-parse all the cpu nodes for OPPs. Instead we can specify the phandle
-of the node with which the current node shares the operating points.
+Instead what you can do is add a bank-width-auto property that, if present and
+bank-width being absent, will result in the automatic determination of bank
+width.
 
-This patch adds support to specify the phandle in the operating points
-of any device node, where the node specified by the phandle holds the
-actual OPPs.
 
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Nishanth Menon <nm@ti.com>
-Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
----
- Documentation/devicetree/bindings/power/opp.txt | 114 ++++++++++++++++++++=
-+---
- drivers/base/power/opp.c                        |  12 ++-
- 2 files changed, 112 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentatio=
-n/devicetree/bindings/power/opp.txt
-index 74499e5..f66fd65 100644
---- a/Documentation/devicetree/bindings/power/opp.txt
-+++ b/Documentation/devicetree/bindings/power/opp.txt
-@@ -4,22 +4,112 @@ SoCs have a standard set of tuples consisting of frequen=
-cy and
- voltage pairs that the device will support per voltage domain. These
- are called Operating Performance Points or OPPs.
-=20
--Properties:
-+Required Properties:
- - operating-points: An array of 2-tuples items, and each item consists
-   of frequency and voltage like <freq-kHz vol-uV>.
- =09freq: clock frequency in kHz
- =09vol: voltage in microvolt
-=20
-+Optional properties:
-+- operating-points-phandle: phandle to the device node with which this
-+=09device shares the operating points(recommended if multiple
-+=09devices are in the same clock domain and share OPPs, as it
-+=09avoids replication of OPPs)
-+
- Examples:
-=20
--cpu@0 {
--=09compatible =3D "arm,cortex-a9";
--=09reg =3D <0>;
--=09next-level-cache =3D <&L2>;
--=09operating-points =3D <
--=09=09/* kHz    uV */
--=09=09792000  1100000
--=09=09396000  950000
--=09=09198000  850000
--=09>;
--};
-+1. A uniprocessor system
-+
-+=09cpu@0 {
-+=09=09compatible =3D "arm,cortex-a9";
-+=09=09reg =3D <0>;
-+=09=09next-level-cache =3D <&L2>;
-+=09=09operating-points =3D <
-+=09=09=09/* kHz    uV */
-+=09=09=09792000  1100000
-+=09=09=09396000  950000
-+=09=09=09198000  850000
-+=09=09>;
-+=09};
-+
-+If more than one device of same type share the same OPPs, for example
-+all the CPUs on a SoC or in a single cluster on a SoC, then we need to
-+avoid replicating the OPPs in all the nodes. We can specify the phandle
-+of the node with which the current node shares the operating points instea=
-d.
-+
-+2. Consider a SMP system with 4 CPUs in the same clock domain.
-+
-+=09cpu0: cpu@0 {
-+=09=09compatible =3D "arm,cortex-a9";
-+=09=09reg =3D <0>;
-+=09=09next-level-cache =3D <&L2>;
-+=09=09operating-points =3D <
-+=09=09=09/* kHz    uV */
-+=09=09=09792000  1100000
-+=09=09=09396000  950000
-+=09=09=09198000  850000
-+=09=09>;
-+=09};
-+
-+=09cpu1: cpu@1 {
-+=09=09compatible =3D "arm,cortex-a9";
-+=09=09reg =3D <1>;
-+=09=09next-level-cache =3D <&L2>;
-+=09=09operating-points-phandle =3D <&cpu0>;
-+=09};
-+
-+=09cpu2: cpu@2 {
-+=09=09compatible =3D "arm,cortex-a9";
-+=09=09reg =3D <2>;
-+=09=09next-level-cache =3D <&L2>;
-+=09=09operating-points-phandle =3D <&cpu0>;
-+=09};
-+
-+=09cpu3: cpu@3 {
-+=09=09compatible =3D "arm,cortex-a9";
-+=09=09reg =3D <3>;
-+=09=09next-level-cache =3D <&L2>;
-+=09=09operating-points-phandle =3D <&cpu0>;
-+=09};
-+
-+3. Consider an AMP(asymmetric multi-processor) sytem with 2 clusters of CP=
-Us.
-+   Each cluster has 2 CPUs and all the CPUs within the cluster share the c=
-lock
-+   domain.
-+
-+=09cpu0: cpu@0 {
-+=09=09compatible =3D "arm,cortex-a15";
-+=09=09reg =3D <0>;
-+=09=09operating-points =3D <
-+=09=09=09/* kHz    uV */
-+=09=09=09792000  1100000
-+=09=09=09396000  950000
-+=09=09=09198000  850000
-+=09=09>;
-+=09=09clock-latency =3D <100000>; /* 100us */
-+=09};
-+
-+=09cpu1: cpu@1 {
-+=09=09compatible =3D "arm,cortex-a15";
-+=09=09reg =3D <1>;
-+=09=09clock-latency =3D <100000>; /* 100us */
-+=09=09operating-points-phandle =3D <&cpu0>;
-+=09};
-+
-+=09cpu2: cpu@100 {
-+=09=09compatible =3D "arm,cortex-a7";
-+=09=09reg =3D <100>;
-+=09=09operating-points =3D <
-+=09=09=09/* kHz    uV */
-+=09=09=09792000  950000
-+=09=09=09396000  750000
-+=09=09=09198000  450000
-+=09=09>;
-+=09=09clock-latency =3D <100000>; /* 100us */
-+=09};
-+
-+=09cpu3: cpu@101 {
-+=09=09compatible =3D "arm,cortex-a7";
-+=09=09reg =3D <101>;
-+=09=09operating-points-phandle =3D <&cpu2>;
-+=09=09clock-latency =3D <100000>; /* 100us */
-+=09};
-diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
-index c8ec186..9ac3c93 100644
---- a/drivers/base/power/opp.c
-+++ b/drivers/base/power/opp.c
-@@ -707,12 +707,20 @@ struct srcu_notifier_head *opp_get_notifier(struct de=
-vice *dev)
- int of_init_opp_table(struct device *dev)
- {
- =09const struct property *prop;
-+=09struct device_node *opp_node;
- =09const __be32 *val;
- =09int nr;
-=20
--=09prop =3D of_find_property(dev->of_node, "operating-points", NULL);
--=09if (!prop)
-+=09opp_node =3D of_parse_phandle(dev->of_node,
-+=09=09=09=09=09"operating-points-phandle", 0);
-+=09if (!opp_node) /* if no OPP phandle, search for OPPs in current node */
-+=09=09opp_node =3D dev->of_node;
-+=09prop =3D of_find_property(opp_node, "operating-points", NULL);
-+=09if (!prop) {
-+=09=09dev_warn(dev, "node %s missing operating-points property\n",
-+=09=09=09=09=09=09=09opp_node->full_name);
- =09=09return -ENODEV;
-+=09}
- =09if (!prop->value)
- =09=09return -ENODATA;
-=20
---=20
-1.8.1.2
-
+-Olof
 
