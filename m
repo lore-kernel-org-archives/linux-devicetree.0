@@ -1,120 +1,117 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [RFC PATCH 1/3] of: provide a binding for the 'fixed-link'
- property
-Date: Tue, 30 Jul 2013 11:16:04 +0200
-Message-ID: <20130730111604.76fd5b6e@skate>
-References: <1373902450-11857-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20130723112259.GE4833@e106331-lin.cambridge.arm.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH v6 0/8] Sound support for at91sam9x5-wm8731
+	based boards
+Date: Tue, 30 Jul 2013 11:59:44 +0200
+Message-ID: <1375178392-26060-1-git-send-email-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130723112259.GE4833@e106331-lin.cambridge.arm.com>
-Sender: netdev-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <florian@openwrt.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Richard Genoud <richard.genoud@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Mark Rutland,
+Hi,
 
-On Tue, 23 Jul 2013 12:22:59 +0100, Mark Rutland wrote:
+This patchset add sound on the at91sam9x5ek board.
+It's based on Nicolas Ferre's work in the 2.6.39 atmel patch for sam9x5:
+https://github.com/linux4sam/linux-at91/commit/0aa157c9e71ccccf3abc30fa37eb5c95b392978d
 
-> > +Some Ethernet MACs have a "fixed link", and are not connected to a
-> > +normal MDIO-managed PHY device. For those situations, a Device Tree
-> > +binding allows to describe a "fixed link".
-> 
-> Are partictular MACs fixed link, or can some either be either fixed link
-> or wired to an MDIO-managed PHY? i.e. can we assume a given MAC is
-> fixed-link from its compatible string?
+It needs Bo Chen's patchset on the generic dmaengine (topic/atmel branch
+on Mark's sound tree) and the SSC interrupts disabled (cf
+http://www.spinics.net/lists/arm-kernel/msg256901.html)
 
-No, you can't. The case that I have is that the mvneta Ethernet MAC
-(of Marvell 370/XP SOCs) is sometimes used with a MDIO-managed PHY, and
-sometimes used with a switch that isn't manageable at all and should be
-considered as a fixed link.
+As the at91 chips are on their way to the common clock framework, I thought
+it may be better to retrieve the codec MCLK via this framework.
+So it needs Boris Brezillon patch set "ARM: at91: move to common clk framework"
+I've separated this patch because I don't know what is better:
+ * applying the patchset with a hard coded clock, and once at91 has moved to common
+clock framework, update the code and change the DT binding.
+ * wait for the common clock framework.
 
-So no, the compatible string of the Ethernet MAC cannot be used to
-determine whether we're wired fixed link or to a classical MDIO-managed
-PHY.
+Outstanding issue:
+If this machine driver will support more SoCs maybe we should name it differently.
+Maybe atmel_wm8731.c ? Since it could be merged with sam9g20_wm8731.c
+when the g20 is DT only (There will be some more work though).
 
-> > +Such a fixed link situation is described within an Ethernet device
-> > +Device Tree node using a 'fixed-link' property, composed of 5
-> > +elements:
-> 
-> I'm not sure grouping these values together is the best way of handling
-> this. It's rather opaque, and inflexible for future extension.
+It has been tested on at91sam9g35ek, and should work on g15, g25, x25 and x35 also.
 
-That's the DT binding that has been used by PowerPC platforms since
-several years, and I've simply re-used it. See 'git grep fixed-link
-arch/powerpc/boot/dts'.
+patches applies on next-20130729 + "ARM: at91: move to common clk framework"
 
-I have nothing against creating another DT binding, but for a start, I
-thought using existing bindings would be the best idea.
+Changes from v5:
+ * Update the wm8731 DT binding documentation with available audio endpoints.
+ * Remove Uwe's signed-off since it seems to be "an integration signed-off"
+ * Remove rate constrains if freq==0 in wm8731.
+ * Allocate dynamically card, dai and private structures.
+ * Add a separate patch to set the oscillator value via DT.
+NB: this last patch needs Boris Brezillon patch set "ARM: at91: move to common clk framework"
 
-> > + 1. A fake PHY ID, which must be unique accross all fixed-link PHYs in
-> > +    the system.
-> 
-> Is there any reason this couldn't be allocated dynamically within the
-> kernel as needed? I don't see why an arbitrary unique value should be a
-> dt binding requirement; it seems like a leak of Linux implementation
-> details.
 
-As I pointed out in my reply to Grant, this value is used both as the
-PHY address on the fake fixed MDIO bus, and as the PHY identifier as
-reported by MII registers PHYS_ID1 and PHYS_ID2. If we can get assigned
-a proper PHY identifier that is used statically by the driver (it
-doesn't have to be different per fixed PHY instance), then we can
-allocate the PHY address dynamically. It requires a little bit of API
-changes but that's certainly doable. See my reply to Grant for a
-proposal about this.
+Changes from v4:
+ * Move the rates constraints into the codec
+ * Hard code the DAI format since it cannot be changed anyway (and
+remove the DT bindings accordingly)
+ * Add some consistency in the functions naming (sam9x5ek/at91sam9x5ek/sam9x5)
+ * Retrieve the SSC id from the SSC controller phandle
+ * Clarify the atmel-ssc.txt documentation
+ * Develop audio-routing documentation
+ * Tidy up the includes in the machine driver
 
-> > + 2. The duplex (1 for full-duplex, 0 for half-duplex)
-> 
-> Will this change for a given MAC?
-> 
-> Could we not have a boolean property for each of these, and require one
-> to be present?
-> 
-> Possibly fixed-link-full-duplex / fix-link-half-duplex?
-> 
-> > + 3. The speed (10, 100, 1000)
-> 
-> fixed-link-speed?
-> 
-> > + 4. The pause setting (1 for enabled, 0 for disabled)
-> > + 5. The asym pause setting (1 for enabled, 0 for disabled)
-> 
-> Boolean properties for both of these?
+Changes from v3:
+ * Remove the use of macros in device tree documentation.
 
-As Florian already answered, he already proposed something like this in
-the past, and it was rejected because a fixed PHY is not a piece of
-hardware and should therefore not be represented in the Device Tree.
-However, the fact that the MAC is not connected to a MDIO-manageable
-PHY but to some fixed-link thing is a property of the MAC hardware
-layout, and can therefore be expressed as a property of the MAC
-hardware.
+Changes from v2:
+ * Change atmel,sam9x5-audio-wm8731 to atmel,sam9x5-wm8731-audio for
+consistency with sam9g20 machine driver.
+ * Use the snd_pcm_hw_constraint() API as suggested by Mark and Lars-Peter.
+ * Remove the unnecessary snd_soc_dapm_sync() call as Lars-Peter suggested.
+ * Add documentation for machine driver DT binding.
+ * Update atmel-ssc DT binding documentation.
+ * Add GPL license instead of just the "GPL" word (hope that's ok !)
 
-See the thread that starts at
-http://article.gmane.org/gmane.linux.network/275771, and specifically
-Grant answers to Florian suggestions of having DT nodes to represent
-fixed PHY: http://article.gmane.org/gmane.linux.network/276208. Grant's
-answer was:
-
-"""
-I think this discussion is going in the wrong direction. The concept
-of a dummy phy is really a Linux kernel internal detail. Creating some
-kind of dummy MDIO bus node does not describe the hardware. There is
-already support in the kernel for Ethernet MACs connected directly to
-a switch or other device. It is far better to describe how the MAC
-needs to be configured than to invent a non-existent phy. Search for
-"fixed-link" in the kernel tree to see how it is used.
-"""
+Changes from v1-RFC:
+ * drop patches on SSC since Bo Chen already did the work
+ * reorder patches to have the machine driver first
+ * drop code already handled by the ASoC framework
+ * drop unneeded SND_ATMEL_SOC_PDC config selection
+ * use static snd_soc_card and snd_soc_dai_link structures.
 
 Best regards,
+Richard.
 
-Thomas
+Nicolas Ferre (1):
+  ASoC: atmel: machine driver for at91sam9x5-wm8731 boards
+
+Richard Genoud (7):
+  ASoC: wm8731: add rates constraints
+  Documentation: DT: update atmel SSC with DMA binding
+  ARM: AT91: DTS: sam9x5: add SSC DMA parameters
+  ARM: AT91: DTS: sam9x5ek: add WM8731 codec
+  ARM: AT91: DTS: sam9x5ek: enable SSC
+  ARM: AT91: DTS: sam9x5ek: add sound configuration
+  ASoC: sam9x5: get codec MCLK via device tree
+
+ .../devicetree/bindings/misc/atmel-ssc.txt         |   23 ++-
+ .../bindings/sound/atmel-sam9x5-wm8731-audio.txt   |   39 ++++
+ Documentation/devicetree/bindings/sound/wm8731.txt |    9 +
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |    3 +
+ arch/arm/boot/dts/at91sam9x5ek.dtsi                |   32 +++
+ sound/soc/atmel/Kconfig                            |   10 +
+ sound/soc/atmel/Makefile                           |    2 +
+ sound/soc/atmel/sam9x5_wm8731.c                    |  218 ++++++++++++++++++++
+ sound/soc/codecs/wm8731.c                          |   60 +++++-
+ 9 files changed, 392 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-sam9x5-wm8731-audio.txt
+ create mode 100644 sound/soc/atmel/sam9x5_wm8731.c
+
 -- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.7.10.4
