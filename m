@@ -1,140 +1,102 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [RFC PATCH 1/3] of: provide a binding for the 'fixed-link' property
-Date: Tue, 30 Jul 2013 11:26:14 +0100
-Message-ID: <CAGVrzcbQSKp=UCp=6HeA1XZkuzaopUNH2wX4=xgus5BNiMaXXg@mail.gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [RFC PATCH 1/3] of: provide a binding for the 'fixed-link'
+ property
+Date: Tue, 30 Jul 2013 13:23:18 +0200
+Message-ID: <20130730132318.0270fc4b@skate>
 References: <1373902450-11857-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130723112259.GE4833@e106331-lin.cambridge.arm.com> <20130730111604.76fd5b6e@skate>
+	<1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
+	<CACxGe6td6uM0v5w92xPVCaVH4tP4AJ-h4SnN-mFoz5gSSosnQw@mail.gmail.com>
+	<20130730110705.3262bc3d@skate>
+	<CAGVrzcZC9G2ny5rtojbzxmPu8-6EKQ_3io-+fxi61LLCt4Hk=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130730111604.76fd5b6e@skate>
+In-Reply-To: <CAGVrzcZC9G2ny5rtojbzxmPu8-6EKQ_3io-+fxi61LLCt4Hk=w@mail.gmail.com>
 Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+To: Florian Fainelli <florian@openwrt.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Thomas,
+Dear Florian Fainelli,
 
-2013/7/30 Thomas Petazzoni <thomas.petazzoni@free-electrons.com>:
-> Dear Mark Rutland,
->
-> On Tue, 23 Jul 2013 12:22:59 +0100, Mark Rutland wrote:
->
->> > +Some Ethernet MACs have a "fixed link", and are not connected to a
->> > +normal MDIO-managed PHY device. For those situations, a Device Tree
->> > +binding allows to describe a "fixed link".
->>
->> Are partictular MACs fixed link, or can some either be either fixed link
->> or wired to an MDIO-managed PHY? i.e. can we assume a given MAC is
->> fixed-link from its compatible string?
->
-> No, you can't. The case that I have is that the mvneta Ethernet MAC
-> (of Marvell 370/XP SOCs) is sometimes used with a MDIO-managed PHY, and
-> sometimes used with a switch that isn't manageable at all and should be
-> considered as a fixed link.
->
-> So no, the compatible string of the Ethernet MAC cannot be used to
-> determine whether we're wired fixed link or to a classical MDIO-managed
-> PHY.
->
->> > +Such a fixed link situation is described within an Ethernet device
->> > +Device Tree node using a 'fixed-link' property, composed of 5
->> > +elements:
->>
->> I'm not sure grouping these values together is the best way of handling
->> this. It's rather opaque, and inflexible for future extension.
->
-> That's the DT binding that has been used by PowerPC platforms since
-> several years, and I've simply re-used it. See 'git grep fixed-link
-> arch/powerpc/boot/dts'.
->
-> I have nothing against creating another DT binding, but for a start, I
-> thought using existing bindings would be the best idea.
->
->> > + 1. A fake PHY ID, which must be unique accross all fixed-link PHYs in
->> > +    the system.
->>
->> Is there any reason this couldn't be allocated dynamically within the
->> kernel as needed? I don't see why an arbitrary unique value should be a
->> dt binding requirement; it seems like a leak of Linux implementation
->> details.
->
-> As I pointed out in my reply to Grant, this value is used both as the
-> PHY address on the fake fixed MDIO bus, and as the PHY identifier as
-> reported by MII registers PHYS_ID1 and PHYS_ID2. If we can get assigned
-> a proper PHY identifier that is used statically by the driver (it
-> doesn't have to be different per fixed PHY instance), then we can
-> allocate the PHY address dynamically. It requires a little bit of API
-> changes but that's certainly doable. See my reply to Grant for a
-> proposal about this.
->
->> > + 2. The duplex (1 for full-duplex, 0 for half-duplex)
->>
->> Will this change for a given MAC?
->>
->> Could we not have a boolean property for each of these, and require one
->> to be present?
->>
->> Possibly fixed-link-full-duplex / fix-link-half-duplex?
->>
->> > + 3. The speed (10, 100, 1000)
->>
->> fixed-link-speed?
->>
->> > + 4. The pause setting (1 for enabled, 0 for disabled)
->> > + 5. The asym pause setting (1 for enabled, 0 for disabled)
->>
->> Boolean properties for both of these?
->
-> As Florian already answered, he already proposed something like this in
-> the past, and it was rejected because a fixed PHY is not a piece of
-> hardware and should therefore not be represented in the Device Tree.
-> However, the fact that the MAC is not connected to a MDIO-manageable
-> PHY but to some fixed-link thing is a property of the MAC hardware
-> layout, and can therefore be expressed as a property of the MAC
-> hardware.
+On Tue, 30 Jul 2013 11:05:04 +0100, Florian Fainelli wrote:
 
-True, what I *did* not like about this "fixed-link" 5 integer property
-is that it does not present a consistent view of a PHY device and puts
-some properties in the Ethernet MAC node, while some other are in the
-Ethernet PHY node. From a hardware perspective, the Ethernet MAC and
-the Ethernet PHY are two pieces of hardware, so both should get their
-own node.
+> > In fact, this value is used for two things:
+> >
+> >  * As the PHY address on the fake "fixed" MDIO bus.
+> >
+> >  * As the PHY identifier, as reported by the MII registers PHYS_ID1
+> >    (0x2) and PHYS_ID2 (0x3).
+> 
+> Right, so I would start with disambiguating the two and just forget
+> about PHYS_ID1 and PHYS_ID2 for the moment since they probably do not
+> need to be per-PHY configurable.
 
-That said, since "fixed PHY" devices are not connected on the MDIO
-bus, they cannot be represented as Ethernet PHY nodes as leafs of a
-parent MDIO bus node, so maybe what we could do is having the fixed
-PHY nodes child nodes of the Ethernet MAC but still make them look
-like a "relatively" conventional Ethernet PHY node?
+Agreed.
 
->
-> See the thread that starts at
-> http://article.gmane.org/gmane.linux.network/275771, and specifically
-> Grant answers to Florian suggestions of having DT nodes to represent
-> fixed PHY: http://article.gmane.org/gmane.linux.network/276208. Grant's
-> answer was:
->
-> """
-> I think this discussion is going in the wrong direction. The concept
-> of a dummy phy is really a Linux kernel internal detail. Creating some
-> kind of dummy MDIO bus node does not describe the hardware. There is
-> already support in the kernel for Ethernet MACs connected directly to
-> a switch or other device. It is far better to describe how the MAC
-> needs to be configured than to invent a non-existent phy. Search for
-> "fixed-link" in the kernel tree to see how it is used.
-> """
->
-> Best regards,
->
-> Thomas
-> --
-> Thomas Petazzoni, Free Electrons
-> Kernel, drivers, real-time and embedded Linux
-> development, consulting, training and support.
-> http://free-electrons.com
+> > I think this doesn't make sense, because the two things are completely
+> > unrelated. Ideally, we'd like the PHY identifier for fixed PHYs to be
+> > something fixed, identical for all fixed PHYs. The problem is finding
+> > an OUI and device number that is available for that, but maybe we can
+> > ask the OpenMoko people to allocate one (see
+> > http://wiki.openmoko.org/wiki/OUI).
+> 
+> Well that would be ideal indeed, but I am wondering if we cannot just
+> go with some kind of magic value here anyway, regardless of
+> allocations since this is not a real hardware device.
 
+Well, isn't that exactly what I'm proposing? Have a fixed value for
+PHYS_ID1 and PHYS_ID2, that is used for /all/ fixed PHYs.
 
+> How about the Linux Foundation?
 
+I am concerned about the time it would take to get a new OUI
+attributed. The OpenMoko OUI is said to be open for free and open
+source projects, I think the Linux kernel qualifies :)
+
+> Is not that the same problem as with gadget USB
+> devices which should have some sort of real MAC address for instance?
+
+They are either provided by the user or generated randomly, as far as I
+can see.
+
+> > Then, the PHY address could be generated dynamically. This would
+> > require:
+> >
+> >  * Adding a fixed_phy_create() function that internally uses
+> >    fixed_phy_add(), but before that creates an unique PHY address for
+> >    this newly created PHY. Those unique addresses will be generated by
+> >    incrementing a global number of fixed PHYs, up to PHY_MAX_ADDR,
+> >    which is the maximum number of fixed PHYs that can anyway be
+> >    registered on the fixed MDIO bus.
+> 
+> Even though these are purely software PHY implementations, I believe
+> that some sort of predictability would be welcome, so I would just use
+> the phy_id argument passed to fixed_phy_add() as the address on the
+> fixed MDIO bus like it is today.
+
+Well, the whole starting point of this discussion is precisely that
+both Grant and Mark disliked this phy ID that had to be globally
+unique, and they wanted it to be dynamically allocated by the kernel,
+because the DT shouldn't have to care about such internal details.
+
+> > Grant, Mark, Florian, do you have other proposals?
+> 
+> To sum up, let's just forget about the misuse of phy_id to fill in
+> PHYS_ID1 and PHYS_ID2 registers and keep the existing code with a
+> clear note that phy_id means the "PHY address on the fixed MDIO bus".
+
+Except that Grant and Mark point was precisely that the "PHY address on
+the fake MDIO bus" is not a description of the hardware, and therefore
+shouldn't be mentioned in the Device Tree but instead taken care of by
+the kernel itself.
+
+Best regards,
+
+Thomas
 -- 
-Florian
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
