@@ -1,68 +1,88 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ozlabs.org ([203.10.76.45]:47081 "EHLO ozlabs.org"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751295Ab3GYEap (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 25 Jul 2013 00:30:45 -0400
-Date: Thu, 25 Jul 2013 14:30:31 +1000
-From: Anton Blanchard <anton@samba.org>
-Subject: [PATCH] of: Feed entire flattened device tree into the random pool
-Message-ID: <20130725143031.16af0a96@kryten>
-In-Reply-To: <20130725031717.GB15673@concordia>
-References: <20130725125122.78accf44@kryten>
-	<20130725031717.GB15673@concordia>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Received: from co1ehsobe002.messaging.microsoft.com ([216.32.180.185]:31296
+	"EHLO co1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1756633Ab3G3CIc (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Mon, 29 Jul 2013 22:08:32 -0400
+Message-ID: <51F72022.8070906@freescale.com>
+Date: Tue, 30 Jul 2013 10:08:34 +0800
+From: Hongbo Zhang <hongbo.zhang@freescale.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v7 0/3] DMA: Freescale: Add support for 8-channel DMA
+ engine
+References: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com> <20130729105901.GI29095@intel.com>
+In-Reply-To: <20130729105901.GI29095@intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Michael Ellerman <michael@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+On 07/29/2013 06:59 PM, Vinod Koul wrote:
+> On Mon, Jul 29, 2013 at 06:49:01PM +0800, hongbo.zhang@freescale.com wrote:
+>> From: Hongbo Zhang <hongbo.zhang@freescale.com>
+>>
+>> Hi Vinod, Dan, Scott and Leo, please have a look at these V7 patches.
+> The dma relates changes look okay to me.
+>
+> I need someone to review and ACK the DT bindings.
+Scott Wood has ACKed the [1/3] and [2/3].
+Thank you Vinod.
+>
+> ~Vinod
+>> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch set
+>> adds support this DMA engine.
+>>
+>> V6->V7 changes:
+>> - only remove unnecessary "CHIP-dma" explanations in [1/3]
+>>
+>> V5->V6 changes:
+>> - minor updates of descriptions in binding document and Kconfig
+>> - remove [4/4], that should be another patch in future
+>>
+>> V4->V5 changes:
+>> - update description in the dt binding document, to make it more resonable
+>> - add new patch [4/4] to eliminate a compiling warning which already exists
+>>    for a long time
+>>
+>> V3->V4 changes:
+>> - introduce new patch [1/3] to revise the legacy dma binding document
+>> - and then add new paragraph to describe new dt node binding in [2/3]
+>> - rebase to latest kernel v3.11-rc1
+>>
+>> V2->V3 changes:
+>> - edit Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+>> - edit text string in Kconfig and the driver files, using "elo series" to
+>>    mention all the current "elo*"
+>>
+>> V1->V2 changes:
+>> - removed the codes handling the register dgsr1, since it isn't used currently
+>> - renamed the DMA DT compatible to "fsl,elo3-dma"
+>> - renamed the new dts files to "elo3-dma-<n>.dtsi"
+>>
+>> Hongbo Zhang (3):
+>>    DMA: Freescale: revise device tree binding document
+>>    DMA: Freescale: Add new 8-channel DMA engine device tree nodes
+>>    DMA: Freescale: update driver to support 8-channel DMA engine
+>>
+>>   .../devicetree/bindings/powerpc/fsl/dma.txt        |  114 +++++++++++++++-----
+>>   arch/powerpc/boot/dts/fsl/b4si-post.dtsi           |    4 +-
+>>   arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi          |   81 ++++++++++++++
+>>   arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi          |   81 ++++++++++++++
+>>   arch/powerpc/boot/dts/fsl/t4240si-post.dtsi        |    4 +-
+>>   drivers/dma/Kconfig                                |    9 +-
+>>   drivers/dma/fsldma.c                               |    9 +-
+>>   drivers/dma/fsldma.h                               |    2 +-
+>>   8 files changed, 264 insertions(+), 40 deletions(-)
+>>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-0.dtsi
+>>   create mode 100644 arch/powerpc/boot/dts/fsl/elo3-dma-1.dtsi
+>>
+>> -- 
+>> 1.7.9.5
+>>
+>>
+>>
 
-Hi Michael,
 
-> But why not put the initcall in drivers/of/fdt.c, that way it's not
-> early but it's still common ?
 
-Good idea! How does this look? So long as it happens before
-module_init(rand_initialize) we should be good.
-
-Anton
---
-
-We feed the entire DMI table into the random pool to provide
-better random data during early boot, so do the same with the
-flattened device tree.
-
-Signed-off-by: Anton Blanchard <anton@samba.org>
----
-
-v2: move to drivers/of/fdt.c as suggested by Michael Ellerman
-
-Index: b/drivers/of/fdt.c
-===================================================================
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -17,6 +17,7 @@
- #include <linux/string.h>
- #include <linux/errno.h>
- #include <linux/slab.h>
-+#include <linux/random.h>
- 
- #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
- #ifdef CONFIG_PPC
-@@ -714,3 +715,14 @@ void __init unflatten_device_tree(void)
- }
- 
- #endif /* CONFIG_OF_EARLY_FLATTREE */
-+
-+/* Feed entire flattened device tree into the random pool */
-+static int __init add_fdt_randomness(void)
-+{
-+	if (initial_boot_params)
-+		add_device_randomness(initial_boot_params,
-+				      initial_boot_params->totalsize);
-+
-+	return 0;
-+}
-+core_initcall(add_fdt_randomness);
