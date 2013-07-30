@@ -1,52 +1,69 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from service87.mimecast.com ([91.220.42.44]:34367 "EHLO
-	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754700Ab3GaKpl convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 31 Jul 2013 06:45:41 -0400
-Message-ID: <51F8EAE9.8080309@arm.com>
-Date: Wed, 31 Jul 2013 11:46:01 +0100
-From: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:33959 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756852Ab3G3VZH (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 30 Jul 2013 17:25:07 -0400
+Message-ID: <51F82F2F.4080003@wwwdotorg.org>
+Date: Tue, 30 Jul 2013 15:25:03 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
 Subject: Re: [RFC PATCH 1/2] PM / OPP: add support to specify phandle of another
  node for OPP
-References: <1375207217-4433-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1375207217-4433-2-git-send-email-Sudeep.KarkadaNagesha@arm.com> <51F80750.8030701@wwwdotorg.org>
-In-Reply-To: <51F80750.8030701@wwwdotorg.org>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+References: <1375207217-4433-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1375207217-4433-2-git-send-email-Sudeep.KarkadaNagesha@arm.com> <51F80750.8030701@wwwdotorg.org> <51F826A0.2000109@ti.com>
+In-Reply-To: <51F826A0.2000109@ti.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Nishanth Menon <nm@ti.com>
+To: Nishanth Menon <nm@ti.com>
+Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@sisk.pl>
 List-ID: <devicetree@vger.kernel.org>
 
-On 30/07/13 19:34, Stephen Warren wrote:
-> On 07/30/2013 12:00 PM, Sudeep KarkadaNagesha wrote:
->> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+On 07/30/2013 02:48 PM, Nishanth Menon wrote:
+> On 07/30/2013 01:34 PM, Stephen Warren wrote:
+>> On 07/30/2013 12:00 PM, Sudeep KarkadaNagesha wrote:
+>>> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>>>
+>>> If more than one similar devices share the same OPPs, currently we
+>>> need to replicate the OPP entries in all the nodes.
+>>>
+>>> Few drivers like cpufreq depend on physical cpu0 node to specify the
+>>> OPPs and only that node is referred irrespective of the logical cpu
+>>> accessing it. Alternatively to support cpuhotplug path, few drivers
+>>> parse all the cpu nodes for OPPs. Instead we can specify the phandle
+>>> of the node with which the current node shares the operating points.
+>>>
+>>> This patch adds support to specify the phandle in the operating points
+>>> of any device node, where the node specified by the phandle holds the
+>>> actual OPPs.
 >>
->> If more than one similar devices share the same OPPs, currently we
->> need to replicate the OPP entries in all the nodes.
+>>> diff --git a/Documentation/devicetree/bindings/power/opp.txt
+>>> b/Documentation/devicetree/bindings/power/opp.txt
 >>
->> Few drivers like cpufreq depend on physical cpu0 node to specify the
->> OPPs and only that node is referred irrespective of the logical cpu
->> accessing it. Alternatively to support cpuhotplug path, few drivers
->> parse all the cpu nodes for OPPs. Instead we can specify the phandle
->> of the node with which the current node shares the operating points.
+>>> +Optional properties:
+>>> +- operating-points-phandle: phandle to the device node with which this
 >>
->> This patch adds support to specify the phandle in the operating points
->> of any device node, where the node specified by the phandle holds the
->> actual OPPs.
+>> That's a funny name. Bikeshedding a bit, how about
+>> shared-operating-points?
+>>
+>> I haven't thought at all about whether this change conceptually makes
+>> sense.
+>>
 > 
->> diff --git a/Documentation/devicetree/bindings/power/opp.txt b/Documentation/devicetree/bindings/power/opp.txt
+> They may not really be shared- we could have phandle list even.
+
+Well, they are shared, or you wouldn't have one node pointing at another
+node and hence sharing the same property...
+
+> one
+> might have optional OPP sets for a chip family that one may  - I was
+> about to suggest something similar to pinctrl
 > 
->> +Optional properties:
->> +- operating-points-phandle: phandle to the device node with which this
-> 
-> That's a funny name. Bikeshedding a bit, how about shared-operating-points?
+> operating-points-names = "default", "performance", "cheapboard-config" ;)
+> operating-points-0 = <&...>
+> operating-points-1 = <&...>
+> operating-points-2 = <&...>
 
-shared-operating-points makes sense, but I was thinking that name should
-indicate it's reference to the device that it shares OPP with. I agree
-'operating-points-phandle' is no good, is 'shared-opp-device' any better ?
-
-Regards,
-Sudeep
-
-
+There is an assertion that DT should only represent the absolute max
+limits for things like this, and not policy-oriented data such as
+different performance profiles. I don't expect you'll see anything like
+the above in DT, since it's more policy than HW description.
