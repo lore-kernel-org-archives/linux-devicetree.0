@@ -1,83 +1,130 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 2/3] ASoC: fsl: Add S/PDIF CPU DAI driver
-Date: Wed, 31 Jul 2013 14:16:27 +0200
-Message-ID: <51F9001B.6070203@metafoo.de>
-References: <cover.1375271745.git.b42378@freescale.com>
- <30e7b0fec9e813b8765514e48296ebecc6ca1039.1375271745.git.b42378@freescale.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v4 0/4] Device Tree support for CMA (Contiguous Memory
+ Allocator)
+Date: Wed, 31 Jul 2013 14:51:55 +0200
+Message-ID: <1375275119-12787-1-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <30e7b0fec9e813b8765514e48296ebecc6ca1039.1375271745.git.b42378@freescale.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolin Chen <b42378@freescale.com>
-Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, timur@tabi.org, rob.herring@calxeda.com, broonie@kernel.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree-discuss@lists.ozlabs.org
+Cc: Laura Abbott <lauraa@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@secretlab.ca>, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, Sascha Hauer <s.hauer@pengutronix.de>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-[...]
-a/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-> new file mode 100644
-> index 0000000..a655800
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-> @@ -0,0 +1,63 @@
-> +Freescale Sony/Philips Digital Interface Format (S/PDIF) Controller
-> +
-> +The Freescale S/PDIF audio block is a stereo transceiver that allows the
-> +processor to receive and transmit digital audio via an coaxial cable or
-> +a fibre cable.
-> +
-> +Required properties:
-> +
-> +  - compatible : Compatible list, contains "fsl,spdif".
+Hello,
 
-That's not what the driver says though.
+This is a fourth version of my proposal for device tree integration for
+reserved memory and Contiguous Memory Allocator. After the comments from
+Grant Likely I moved back memory region definitions back to /memory node
+(as it was in the first version of this proposal). I've also extended
+the code and made it more generic, added support for so called reserved
+dma memory (special dma memory regions created by dma_alloc_coherent()
+function, for exclusive usage for dma allocation for the given device).
 
-> +
-> +  - reg : Offset and length of the register set for the device.
-> +
-> +  - interrupts : <a b> where a is the interrupt number and b is a field that
-> +    represents an encoding of the sense and level information for the interrupt.
-> +    This should be encoded based on the information in section 2) depending on
-> +    the type of interrupt controller you have.
+Just a few words for those who see this code for the first time:
 
-The exact layout of the cell depends on the parent interrupt controller, so
-you probably shouldn't describe it here.
+The proposed bindings allows to define contiguous memory regions of
+specified base address and size. Then, the defined regions can be
+assigned to the given device(s) by adding a property with a phanle to
+the defined contiguous memory region. From the device tree perspective
+that's all. Once the bindings are added, all the memory allocations from
+dma-mapping subsystem will be served from the defined contiguous memory
+regions.
 
-> +
-> +  - clocks : The phandle for the clock ID number registered in clock tree.
-> +
-> +  - fsl,spdif-dma-events: The dma event ID numbers for Tx and Rx.
-> +
+Contiguous Memory Allocator is a framework, which lets to provide a
+large contiguous memory buffers for (usually a multimedia) devices. The
+contiguous memory is reserved during early boot and then shared with
+kernel, which is allowed to allocate it for movable pages. Then, when
+device driver requests a contigouous buffer, the framework migrates
+movable pages out of contiguous region and gives it to the driver. When
+device driver frees the buffer, it is added to kernel memory pool again.
+For more information, please refer to commit c64be2bb1c6eb43c838b2c6d57
+("drivers: add Contiguous Memory Allocator") and d484864dd96e1830e76895
+(CMA merge commit).
 
-Use the generic DMA bindings.
+Why we need device tree bindings for CMA at all?
 
-> +Optional properties:
-> +
-> +  - rx-clk-source : The clock cource for Rx. Need to set this source according
-> +  to the SoC datasheet in SPDIF_SRPC section. If absent, the default source is
-> +  value 0x0 - if (DPLL Locked) SPDIF_RxClk else extal.
-> +
-> +  - tx-clk-source : The clock cources for Tx. There're three sources, each for
-> +  different supported sample rate, sequentially 32000Hz, 44100Hz and 48000Hz.
-> +  Need to set this source according to the SoC datasheet in SPDIF_STC section.
-> +  If absent, the default source is value 0x1 - CCM spdif0_clk_root input.
-> +
-> +  - tx-clk-div : The clock divider factor for Tx clock. There're three values,
-> +  each for different supported sample rate, sequentially 32000Hz 44100Hz 48000Hz.
-> +  Need to set this source according to the clock rate from the clock source.
-> +  If absent, the default divider factor is <37 23 37> by using spdif0_clk source.
+Older ARM kernels used so called board-based initialization. Those board
+files contained a definition of all hardware blocks available on the
+target system and particular kernel and driver software configuration
+selected by the board maintainer.
 
-Can't the driver figure out the divider values on its own based on the input
-clock rate?
+In the new approach the board files will be removed completely and
+Device Tree approach is used to describe all hardware blocks available
+on the target system. By definition, the bindings should be software
+independent, so at least in theory it should be possible to use those
+bindings with other operating systems than Linux kernel.
 
-- Lars
+Reserved memory configuration belongs to the grey area. It might depend
+on hardware restriction of the board or modules and low-level
+configuration done by bootloader. Putting reserved and contiguous memory
+regions to /memory node and having phandles to those regions in the
+device nodes however matches well with the device-tree typical style of
+linking devices with other resources like clocks, interrupts,
+regulators, power domains, etc. This is the main reason to use such
+approach instead of putting everything to /chosen node as it has been
+proposed in v2 and v3.
+
+Best regards
+Marek Szyprowski
+Samsung R&D Institute Poland
+
+Changelog:
+
+v4:
+- moved back contiguous-memory bindings from /chosen/contiguous-memory
+  to /memory nodes as suggested by Grant (see 
+  http://article.gmane.org/gmane.linux.drivers.devicetree/41030
+  for more details)
+- added support for DMA reserved memory with dma_declare_coherent()
+- moved code to drivers/of/of_reserved_mem.c
+- added generic code to scan specific path in flat device tree
+
+v3: http://thread.gmane.org/gmane.linux.drivers.devicetree/40013/
+- fixed issues pointed by Laura and updated documentation
+
+v2: http://thread.gmane.org/gmane.linux.drivers.devicetree/34075
+- moved contiguous-memory bindings from /memory to /chosen/contiguous-memory/
+  node to avoid spreading Linux specific parameters over the whole device
+  tree definitions
+- added support for autoconfigured regions (use zero base)
+- fixes minor bugs
+
+v1: http://thread.gmane.org/gmane.linux.drivers.devicetree/30111/
+- initial proposal
+
+Patch summary:
+
+Marek Szyprowski (4):
+  drivers: dma-contiguous: clean source code and prepare for device
+    tree
+  drivers: of: add function to scan fdt nodes given by path
+  drivers: of: add initialization code for dma reserved memory
+  ARM: init: add support for reserved memory defined by device tree
+
+ Documentation/devicetree/bindings/memory.txt |  152 ++++++++++++++++++++++
+ arch/arm/mm/init.c                           |    3 +
+ drivers/base/dma-contiguous.c                |  147 +++++++++++-----------
+ drivers/of/Kconfig                           |    6 +
+ drivers/of/Makefile                          |    1 +
+ drivers/of/fdt.c                             |   76 +++++++++++
+ drivers/of/of_reserved_mem.c                 |  175 ++++++++++++++++++++++++++
+ include/asm-generic/dma-coherent.h           |    6 +
+ include/asm-generic/dma-contiguous.h         |    2 -
+ include/linux/dma-contiguous.h               |   49 +++++++-
+ include/linux/of_fdt.h                       |    3 +
+ 11 files changed, 541 insertions(+), 79 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory.txt
+ create mode 100644 drivers/of/of_reserved_mem.c
+
+-- 
+1.7.9.5
