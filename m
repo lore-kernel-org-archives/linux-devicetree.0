@@ -1,44 +1,33 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ns.mm-sol.com ([212.124.72.66]:38564 "EHLO extserv.mm-sol.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1752006Ab3GaHNr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 31 Jul 2013 03:13:47 -0400
-Message-ID: <1375254775.1956.86.camel@iivanov-dev.int.mm-sol.com>
+Received: from smtp.codeaurora.org ([198.145.11.231]:58516 "EHLO
+	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752192Ab3GaHFJ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 31 Jul 2013 03:05:09 -0400
+Date: Wed, 31 Jul 2013 00:05:07 -0700
+From: Stephen Boyd <sboyd@codeaurora.org>
 Subject: Re: [PATCH] drivers: power: reset: add msm restart support
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Date: Wed, 31 Jul 2013 10:12:55 +0300
-In-Reply-To: <1375229128-32226-1-git-send-email-abhimany@codeaurora.org>
+Message-ID: <20130731070507.GH8868@codeaurora.org>
 References: <1375229128-32226-1-git-send-email-abhimany@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1375229128-32226-1-git-send-email-abhimany@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 To: Abhimanyu Kapur <abhimany@codeaurora.org>
-Cc: Anton Vorontsov <anton@enomsg.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, sboyd@codeaurora.org
+Cc: Anton Vorontsov <anton@enomsg.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-
-Hi, 
-
-On Tue, 2013-07-30 at 17:05 -0700, Abhimanyu Kapur wrote:
+On 07/30, Abhimanyu Kapur wrote:
 > Add support for restart and poweroff functionality present on MSM
 > chipsets with the MPM2 ps-hold hardware.
 > 
 > Signed-off-by: Abhimanyu Kapur <abhimany@codeaurora.org>
 > ---
->  .../bindings/power_supply/msm-poweroff.txt         | 17 +++++
->  drivers/power/reset/Kconfig                        |  6 ++
->  drivers/power/reset/Makefile                       |  1 +
->  drivers/power/reset/msm-poweroff.c                 | 75 ++++++++++++++++++++++
->  4 files changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power_supply/msm-poweroff.txt
->  create mode 100644 drivers/power/reset/msm-poweroff.c
 
-Thank you, Could you next time add version in the subject line, 
-like "PATH v2", it is easier to track changes.
+Thanks, this version looks good. Feel free to add my reviewed-by:
 
-Tested-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
 
-Regards,
-Ivan
-
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
