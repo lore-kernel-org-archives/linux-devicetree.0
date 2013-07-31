@@ -1,55 +1,75 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v4 4/4] ARM: init: add support for reserved memory defined by
- device tree
-Date: Wed, 31 Jul 2013 14:51:59 +0200
-Message-ID: <1375275119-12787-5-git-send-email-m.szyprowski@samsung.com>
-References: <1375275119-12787-1-git-send-email-m.szyprowski@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3] ASoC: codec: spdif: Add S20_3LE and
+ S24_LE support for dummy codec drivers
+Date: Wed, 31 Jul 2013 14:28:49 +0100
+Message-ID: <20130731132849.GR9858@sirena.org.uk>
+References: <cover.1375271745.git.b42378@freescale.com>
+ <ad8f9d8812c1823ae6f9e4a0d1e6d3c76b26a285.1375271745.git.b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1375275119-12787-1-git-send-email-m.szyprowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree-discuss@lists.ozlabs.org
-Cc: Laura Abbott <lauraa@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@secretlab.ca>, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, Sascha Hauer <s.hauer@pengutronix.de>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: multipart/mixed; boundary="===============4542507982251571308=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <ad8f9d8812c1823ae6f9e4a0d1e6d3c76b26a285.1375271745.git.b42378@freescale.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Nicolin Chen <b42378@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, timur@tabi.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-Enable reserved memory initialization from device tree.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/mm/init.c |    3 +++
- 1 file changed, 3 insertions(+)
+--===============4542507982251571308==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6R6uZ1KJeew1pu/D"
+Content-Disposition: inline
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 15225d8..82db8d8 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -20,6 +20,7 @@
- #include <linux/highmem.h>
- #include <linux/gfp.h>
- #include <linux/memblock.h>
-+#include <linux/dma-mapping.h>
- #include <linux/dma-contiguous.h>
- #include <linux/sizes.h>
- 
-@@ -377,6 +378,8 @@ void __init arm_memblock_init(struct meminfo *mi, struct machine_desc *mdesc)
- 	if (mdesc->reserve)
- 		mdesc->reserve();
- 
-+	dma_reserved_mem_of_reserve();
-+
- 	/*
- 	 * reserve memory for DMA contigouos allocations,
- 	 * must come from DMA area inside low memory
--- 
-1.7.9.5
+
+--6R6uZ1KJeew1pu/D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jul 31, 2013 at 08:07:05PM +0800, Nicolin Chen wrote:
+> Generally, S/PDIF supports 20bit and optional 24bit samples. Thus add these
+> two formats for the dummy codec drivers.
+
+Applied, thanks.  Please check the mailing lists you're posting to -
+you've got the DT list wrong here and you shouldn't post non-binding
+reviews there anyway.
+
+--6R6uZ1KJeew1pu/D
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR+REOAAoJELSic+t+oim9MNgQAJsRCS7pizBIQ9QClY8auT3L
+VvimYRxFA3PvpfUmRVHfv+a+RmWIftPRLQzWGIjoxjgs9CZzybEqP/cWRmiGSFWO
+jsoFnqs+JjXfd6nLRDLgI36POP7gRFTT3+lHAcmdWeG/mxRpDTphlLKQhEL7MHvA
+JyFSLL4N8p2jgy7Owg/7ayM4e9EDEMOPjB6Zc6bn4FZiGoiP3Feu60V81fdd3qiA
+UphTSDPd+rgq599yyyFqYKIKdtqKCOATU1zhcO/fhamSkrJc11PM3wnJ2cYXqRvA
+y9qQ31NJc8e/pjJJUCubaiYtCx6pxD21vY6BJdqW0itnc+Vbd0Xu8Dky4r8iTNY+
+DnGSaA8Gr1Ufjms9JJaBKqen+cvY5A1ijkOte19OnHLZ5XmiLCei7r3wNaRnP+5k
+qvHSy1anpz8dg+WvM52p4I8OcHZ8+dY9R7YS/AnHHwl734MUZEG+ewHH0wVK2xWm
+HXXiKphZ0/xayo6/L6xL/fVOaz7aLC5N2swUHG0WauIBwIBrZSyJsTG4iV3zTfAt
+joAH6l5WeL14Gpad90y1w5mbzRleQdAJb+rwY3oUJ0Ho/CgeYolu0zmjCCeZICs2
+mbXRLE2fzrnvU2MGvX+ZuENl5c2b8nKNBMkXFOmyY4wZL9U8K/NRbEHDom97P/yd
+tCkao/P5zLmWen4susBa
+=6vr8
+-----END PGP SIGNATURE-----
+
+--6R6uZ1KJeew1pu/D--
+
+--===============4542507982251571308==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4542507982251571308==--
