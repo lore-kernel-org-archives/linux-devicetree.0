@@ -1,169 +1,102 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp121.dfw.emailsrvr.com ([67.192.241.121]:40428 "EHLO
-	smtp121.dfw.emailsrvr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932372Ab3GZPWT (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 26 Jul 2013 11:22:19 -0400
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: [PATCH 4/5] sata, highbank: set tx_atten override bits
-Date: Fri, 26 Jul 2013 10:11:57 -0500
-Message-Id: <1374851518-4802-4-git-send-email-mark.langsdorf@calxeda.com>
-In-Reply-To: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
-References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:54534 "EHLO
+	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1756765Ab3GaP4T (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Wed, 31 Jul 2013 11:56:19 -0400
+Date: Wed, 31 Jul 2013 16:56:08 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC RESEND] GPIO: gpio-generic: Add DT support
+Message-ID: <20130731155608.GR29859@e106331-lin.cambridge.arm.com>
+References: <1375183115-30237-1-git-send-email-shc_work@mail.ru>
+ <20130730162241.GA13634@quad.lixom.net>
+ <51F7FEE5.1010608@wwwdotorg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51F7FEE5.1010608@wwwdotorg.org>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
-Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Olof Johansson <olof@lixom.net>, Alexander Shiyan <shc_work@mail.ru>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Some board designs do not drive the SATA transmit lines within the
-specification. The ECME can provide override settings, on a per board
-basis, to bring the transmit lines within spec. Read those settings
-from the DTB and program them in.
+On Tue, Jul 30, 2013 at 06:59:01PM +0100, Stephen Warren wrote:
+> On 07/30/2013 10:22 AM, Olof Johansson wrote:
+> > On Tue, Jul 30, 2013 at 03:18:35PM +0400, Alexander Shiyan wrote:
+> >> This patch adds DT support for generic (MMIO) GPIO driver.
+> 
+> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio-generic.txt b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
+> 
+> >> +Generic memory-mapped GPIO controller
+> >> +
+> >> +Required properties:
+> >> +- compatible: Should be "basic-mmio-gpio" or "basic-mmio-gpio-be".
+> 
+> I think naming this "simple-gpio" would match other simple/basic/generic
+> bindings better.
+> 
+> >> +- reg: Physical base GPIO controller registers location and length.
+> >> +- reg-names: Should be the names of reg resources. Each register uses
+> >> +  its own reg name, so there should be as many reg names as referenced
+> >> +  registers:
+> >> +  "dat"		: Input/output register (Required),
+> >> +  "set"		: Register for set output bits (Optional),
+> >> +  "clr"		: Register for clear output bits (Optional),
+> >> +  "dirout"	: Register for setup direction as output (Optional),
+> >> +  "dirin"	: Register for setup direction as input (Optional).
+> >> +- gpio-controller: Marks the device node as a gpio controller.
+> >> +- #gpio-cells: Should be two.
+> ...
+> > 
+> > I'm trying to figure out what to say about this binding. It's not really
+> > describing hardware, instead it's strongly tied to how the basic-mmio-gpio
+> > driver expects the platform data to look.
+> 
+> I'm not sure; the binding seems to only contain a direct representation
+> of pure HW properties; the addresses/offsets of various registers in the
+> HW block.
+> 
+> > It makes more sense to actually describe the hardware in question,
+> > and then have the driver handle that as expected. I.e. either have a
+> > small conversion layer that binds to the actual hardware compatible
+> > value and registers a basic-mmio-gpio device from there, or extend the
+> > basic-mmio-gpio driver to do it by itself.
+> 
+> Ah, I guess the question more: Do we want generic bindings that describe
+> the low-level details of the HW in a completely generic fashion so that
+> new HW can be supported with zero kernel changes, or do we want a simple
+> driver with a lookup table that maps from compatible value to the HW
+> configuration? One of the potential benefits of DT is to be able to
+> support new HW without code changes, although perhaps that's more
+> typically considered in the context of new boards rather than new IP
+> blocks or SoCs.
 
-Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
----
- .../devicetree/bindings/ata/sata_highbank.txt      |  2 +
- drivers/ata/sata_highbank.c                        | 57 +++++++++++++++++-----
- 2 files changed, 47 insertions(+), 12 deletions(-)
+I think that going forward it would be better to have have a compatible
+string per different device. As Olof pointed out, we're leaking the way
+we currently handle things in Linux into the binding, rather than
+precisely describing the hardware (with a unique compatible string). I'm
+not sure if this is much better than embedding a bytecode describing how
+to poke devices.
 
-diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
-index aa1b798..d692e9e 100644
---- a/Documentation/devicetree/bindings/ata/sata_highbank.txt
-+++ b/Documentation/devicetree/bindings/ata/sata_highbank.txt
-@@ -20,6 +20,8 @@ Optional properties:
- 			indicator lights using the indicated GPIOs
- - calxeda,led-order : a u32 array that map port numbers to offsets within the
- 			SGPIO bitstream.
-+- calxeda,tx-atten  : a u8 array that contains TX attenuation override
-+			codes, one per port.
- 
- Example:
-         sata@ffe08000 {
-diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
-index 8b40025..4c8444f 100644
---- a/drivers/ata/sata_highbank.c
-+++ b/drivers/ata/sata_highbank.c
-@@ -46,14 +46,19 @@
- #define CR_BUSY				0x0001
- #define CR_START			0x0001
- #define CR_WR_RDN			0x0002
-+#define CPHY_TX_INPUT_STS		0x2001
- #define CPHY_RX_INPUT_STS		0x2002
--#define CPHY_SATA_OVERRIDE	 	0x4000
--#define CPHY_OVERRIDE			0x2005
-+#define CPHY_SATA_TX_OVERRIDE		0x8000
-+#define CPHY_SATA_RX_OVERRIDE	 	0x4000
-+#define CPHY_TX_OVERRIDE		0x2004
-+#define CPHY_RX_OVERRIDE		0x2005
- #define SPHY_LANE			0x100
- #define SPHY_HALF_RATE			0x0001
- #define CPHY_SATA_DPLL_MODE		0x0700
- #define CPHY_SATA_DPLL_SHIFT		8
- #define CPHY_SATA_DPLL_RESET		(1 << 11)
-+#define CPHY_SATA_TX_ATTEN		0x1c00
-+#define CPHY_SATA_TX_ATTEN_SHIFT	10
- #define CPHY_PHY_COUNT			6
- #define CPHY_LANE_COUNT			4
- #define CPHY_PORT_COUNT			(CPHY_PHY_COUNT * CPHY_LANE_COUNT)
-@@ -66,6 +71,7 @@ struct phy_lane_info {
- 	void __iomem *phy_base;
- 	u8 lane_mapping;
- 	u8 phy_devs;
-+	u8 tx_atten;
- };
- static struct phy_lane_info port_data[CPHY_PORT_COUNT];
- 
-@@ -259,8 +265,27 @@ static void highbank_cphy_disable_overrides(u8 sata_port)
- 	if (unlikely(port_data[sata_port].phy_base == NULL))
- 		return;
- 	tmp = combo_phy_read(sata_port, CPHY_RX_INPUT_STS + lane * SPHY_LANE);
--	tmp &= ~CPHY_SATA_OVERRIDE;
--	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
-+	tmp &= ~CPHY_SATA_RX_OVERRIDE;
-+	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
-+}
-+
-+static void cphy_override_tx_attenuation(u8 sata_port, u32 val)
-+{
-+	u8 lane = port_data[sata_port].lane_mapping;
-+	u32 tmp;
-+
-+	if (val & 0x8)
-+		return;
-+
-+	tmp = combo_phy_read(sata_port, CPHY_TX_INPUT_STS + lane * SPHY_LANE);
-+	tmp &= ~CPHY_SATA_TX_OVERRIDE;
-+	combo_phy_write(sata_port, CPHY_TX_OVERRIDE + lane * SPHY_LANE, tmp);
-+
-+	tmp |= CPHY_SATA_TX_OVERRIDE;
-+	combo_phy_write(sata_port, CPHY_TX_OVERRIDE + lane * SPHY_LANE, tmp);
-+
-+	tmp |= (val << CPHY_SATA_TX_ATTEN_SHIFT) & CPHY_SATA_TX_ATTEN;
-+	combo_phy_write(sata_port, CPHY_TX_OVERRIDE + lane * SPHY_LANE, tmp);
- }
- 
- static void cphy_override_rx_mode(u8 sata_port, u32 val)
-@@ -268,21 +293,21 @@ static void cphy_override_rx_mode(u8 sata_port, u32 val)
- 	u8 lane = port_data[sata_port].lane_mapping;
- 	u32 tmp;
- 	tmp = combo_phy_read(sata_port, CPHY_RX_INPUT_STS + lane * SPHY_LANE);
--	tmp &= ~CPHY_SATA_OVERRIDE;
--	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
-+	tmp &= ~CPHY_SATA_RX_OVERRIDE;
-+	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
- 
--	tmp |= CPHY_SATA_OVERRIDE;
--	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
-+	tmp |= CPHY_SATA_RX_OVERRIDE;
-+	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
- 
- 	tmp &= ~CPHY_SATA_DPLL_MODE;
- 	tmp |= val << CPHY_SATA_DPLL_SHIFT;
--	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
-+	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
- 
- 	tmp |= CPHY_SATA_DPLL_RESET;
--	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
-+	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
- 
- 	tmp &= ~CPHY_SATA_DPLL_RESET;
--	combo_phy_write(sata_port, CPHY_OVERRIDE + lane * SPHY_LANE, tmp);
-+	combo_phy_write(sata_port, CPHY_RX_OVERRIDE + lane * SPHY_LANE, tmp);
- 
- 	msleep(15);
- }
-@@ -299,16 +324,20 @@ static void highbank_cphy_override_lane(u8 sata_port)
- 						lane * SPHY_LANE);
- 	} while ((tmp & SPHY_HALF_RATE) && (k++ < 1000));
- 	cphy_override_rx_mode(sata_port, 3);
-+	cphy_override_tx_attenuation(sata_port, port_data[sata_port].tx_atten);
- }
- 
- static int highbank_initialize_phys(struct device *dev, void __iomem *addr)
- {
- 	struct device_node *sata_node = dev->of_node;
--	int phy_count = 0, phy, port = 0;
-+	int phy_count = 0, phy, port = 0, i;
- 	void __iomem *cphy_base[CPHY_PHY_COUNT];
- 	struct device_node *phy_nodes[CPHY_PHY_COUNT];
-+	u32 tx_atten[CPHY_PORT_COUNT];
-+
- 	memset(port_data, 0, sizeof(struct phy_lane_info) * CPHY_PORT_COUNT);
- 	memset(phy_nodes, 0, sizeof(struct device_node*) * CPHY_PHY_COUNT);
-+	memset(tx_atten, 0xff, CPHY_PORT_COUNT);
- 
- 	do {
- 		u32 tmp;
-@@ -336,6 +365,10 @@ static int highbank_initialize_phys(struct device *dev, void __iomem *addr)
- 		of_node_put(phy_data.np);
- 		port += 1;
- 	} while (port < CPHY_PORT_COUNT);
-+	of_property_read_u32_array(sata_node, "calxeda,tx-atten",
-+				tx_atten, port);
-+	for (i = 0; i < port; i++)
-+		port_data[i].tx_atten = (u8) tx_atten[i];
- 	return 0;
- }
- 
--- 
-1.8.1.2
+Certainly there should be more-specific bindings for each device, so we
+can later improve support for them. If we have that anyway, I think it
+would be nicer to have the mapping from that compatible string to some
+internal data passed to the simple-gpio driver, rather than explicitly
+stating that the current version of the Linux simple-gpio driver is
+capable of driving the device.
 
+I think the issue is that we're describing a hardware block in general,
+rather than the instance of the hardware block, and that limits how
+flexibly we can use the data in the description.
+
+> 
+> If we reject this driver, we surely have to get rid of pinctrl-single,
+> and perhaps some others?
+> 
+
+That's certainly something we need to consider. However, those bindings
+are in active use, and this is not yet. I don't think that we should
+necessarily follow that style of binding.
+
+Thanks,
+Mark.
