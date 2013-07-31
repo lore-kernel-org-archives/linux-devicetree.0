@@ -1,51 +1,111 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from comal.ext.ti.com ([198.47.26.152]:41939 "EHLO comal.ext.ti.com"
+Received: from smtp6-g21.free.fr ([212.27.42.6]:41880 "EHLO smtp6-g21.free.fr"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755331Ab3G3AmY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Mon, 29 Jul 2013 20:42:24 -0400
-From: "Kim, Milo" <Milo.Kim@ti.com>
-Subject: [PATCH v2 0/4] LP3943 MFD driver for a GPIO expander and a PWM
- generator
-Date: Tue, 30 Jul 2013 00:42:12 +0000
-Message-ID: <A874F61F95741C4A9BA573A70FE3998F82E849D1@DQHE06.ent.ti.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+	id S1751316Ab3GaGR5 convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 31 Jul 2013 02:17:57 -0400
+Date: Wed, 31 Jul 2013 08:18:32 +0200
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: [PATCH v3 3/4] ASoc: kirkwood: add DT support
+Message-ID: <20130731081832.54212b76@armhf>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
-To: "Samuel Ortiz (sameo@linux.intel.com)" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, Russell King <rmk+kernel@arm.linux.org.uk>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-TFAzOTQzIGlzIGFuIGludGVncmF0ZWQgZGV2aWNlIGNhcGFibGUgb2YgZHJpdmluZyAxNiBvdXRw
-dXQgY2hhbm5lbHMuDQpJdCBjYW4gYmUgdXNlZCBmb3IgR1BJTyBleHBhbmRlciBhbmQgUFdNIGdl
-bmVyYXRvcnMuDQpMUDM0OTMgcmVnaXN0ZXJzIGFyZSBjb250cm9sbGVkIHZpYSB0aGUgSTJDIGlu
-dGVyZmFjZS4NCg0KVGhpcyBwYXRjaC1zZXQgY29uc2lzdHMgb2YgZm91ciBwYXJ0cyAtIE1GRCwg
-R1BJTywgUFdNIGFuZCBkZXZpY2UgdHJlZSBiaW5kaW5ncy4NCg0KTWlsbyBLaW0gKDQpOg0KICBt
-ZmQ6IGFkZCBMUDM5NDMgTUZEIGRyaXZlcg0KICBncGlvOiBhZGQgTFAzOTQzIEkyQyBHUElPIGV4
-cGFuZGVyIGRyaXZlcg0KICBwd206IGFkZCBMUDM5NDMgUFdNIGRyaXZlcg0KICBEb2N1bWVudGF0
-aW9uOiBkdDogYmluZGluZ3M6IGFkZCBMUDM5NDMgYmluZGluZ3MNCg0KIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2dwaW8vZ3Bpby1scDM5NDMudHh0ICAgICAgIHwgICA0MiArKysNCiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2xwMzk0My50eHQgICB8ICAgMzMgKysNCiAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLWxwMzk0My50eHQgICAgICAgICB8ICAgNjUg
-KysrKw0KIGRyaXZlcnMvZ3Bpby9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgICAgOCArDQogZHJpdmVycy9ncGlvL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgICAxICsNCiBkcml2ZXJzL2dwaW8vZ3Bpby1scDM5NDMuYyAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAyNDIgKysrKysrKysrKysrKysNCiBkcml2ZXJzL21mZC9LY29uZmlnICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTEgKw0KIGRyaXZlcnMvbWZkL01ha2Vm
-aWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMSArDQogZHJpdmVycy9tZmQv
-bHAzOTQzLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTY1ICsrKysrKysrKysN
-CiBkcml2ZXJzL3B3bS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
-MTAgKw0KIGRyaXZlcnMvcHdtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgICAgMSArDQogZHJpdmVycy9wd20vcHdtLWxwMzk0My5jICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAgMzQ4ICsrKysrKysrKysrKysrKysrKysrDQogaW5jbHVkZS9saW51eC9tZmQvbHAz
-OTQzLmggICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTE1ICsrKysrKysNCiAxMyBmaWxlcyBj
-aGFuZ2VkLCAxMDQyIGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vZ3Bpby1scDM5NDMudHh0DQogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvbHAzOTQzLnR4
-dA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cHdtL3B3bS1scDM5NDMudHh0DQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3Bpby9ncGlv
-LWxwMzk0My5jDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWZkL2xwMzk0My5jDQogY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcHdtL3B3bS1scDM5NDMuYw0KIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBpbmNsdWRlL2xpbnV4L21mZC9scDM5NDMuaA0KDQotLSANCjEuNy45LjUNCg0KDQpCZXN0
-IFJlZ2FyZHMsDQpNaWxvDQoNCg==
+The kirkwood audio driver is used without DT in the Kirkwood machine.
+This patch adds a DT compatible definition for use in other Marvell
+machines such as the Armada 88AP510 (Dove).
+
+Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+---
+ sound/soc/kirkwood/kirkwood-i2s.c        | 27 ++++++++++++++++------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
+
+diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
+index a13fffb..234b5a1 100644
+--- a/sound/soc/kirkwood/kirkwood-i2s.c
++++ b/sound/soc/kirkwood/kirkwood-i2s.c
+@@ -12,7 +12,6 @@
+ 
+ #include <linux/init.h>
+ #include <linux/module.h>
+-#include <linux/platform_device.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
+ #include <linux/mbus.h>
+@@ -22,6 +21,8 @@
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+ #include <linux/platform_data/asoc-kirkwood.h>
++#include <linux/of.h>
++
+ #include "kirkwood.h"
+ 
+ #define DRV_NAME	"kirkwood-i2s"
+@@ -469,6 +470,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+ 	struct snd_soc_dai_driver *soc_dai = &kirkwood_i2s_dai;
+ 	struct kirkwood_dma_data *priv;
+ 	struct resource *mem;
++	struct device_node *np = pdev->dev.of_node;
+ 	int err;
+ 
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+@@ -489,14 +491,16 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 
+-	if (!data) {
+-		dev_err(&pdev->dev, "no platform data ?!\n");
++	if (np) {
++		priv->burst = 128;		/* might be 32 or 128 */
++	} else if (data) {
++		priv->burst = data->burst;
++	} else {
++		dev_err(&pdev->dev, "no DT nor platform data ?!\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	priv->burst = data->burst;
+-
+-	priv->clk = devm_clk_get(&pdev->dev, NULL);
++	priv->clk = devm_clk_get(&pdev->dev, np ? "internal" : NULL);
+ 	if (IS_ERR(priv->clk)) {
+ 		dev_err(&pdev->dev, "no clock\n");
+ 		return PTR_ERR(priv->clk);
+@@ -523,7 +527,7 @@ static int kirkwood_i2s_dev_probe(struct platform_device *pdev)
+ 	priv->ctl_rec = KIRKWOOD_RECCTL_SIZE_24;
+ 
+ 	/* Select the burst size */
+-	if (data->burst == 32) {
++	if (priv->burst == 32) {
+ 		priv->ctl_play |= KIRKWOOD_PLAYCTL_BURST_32;
+ 		priv->ctl_rec |= KIRKWOOD_RECCTL_BURST_32;
+ 	} else {
+@@ -549,12 +553,21 @@ fail:
+ 	return err;
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id kirkwood_i2s_of_match[] = {
++	{ .compatible = "marvell,kirkwood-i2s" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, kirkwood_i2s_of_match);
++#endif
++
+ static struct platform_driver kirkwood_i2s_driver = {
+ 	.probe  = kirkwood_i2s_dev_probe,
+ 	.remove = kirkwood_i2s_dev_remove,
+ 	.driver = {
+ 		.name = DRV_NAME,
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(kirkwood_i2s_of_match),
+ 	},
+ };
+ 
+
+-- 
+Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
