@@ -1,69 +1,35 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from moutng.kundenserver.de ([212.227.126.187]:49231 "EHLO
-	moutng.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933537Ab3GWQMI (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 23 Jul 2013 12:12:08 -0400
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH 2/4] net: smsc911x: add a reset GPIO DT binding
-Date: Tue, 23 Jul 2013 18:12:02 +0200
-Message-Id: <1374595924-12338-3-git-send-email-g.liakhovetski@gmx.de>
-In-Reply-To: <1374595924-12338-1-git-send-email-g.liakhovetski@gmx.de>
-References: <1374595924-12338-1-git-send-email-g.liakhovetski@gmx.de>
+Received: from mailout3.samsung.com ([203.254.224.33]:29581 "EHLO
+	mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754759Ab3GaArw (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 30 Jul 2013 20:47:52 -0400
+From: Jingoo Han <jg1.han@samsung.com>
+References: <007601ce8d06$13dbb890$3b9329b0$@samsung.com>
+ <20130730135720.GC27962@kroah.com>
+In-reply-to: <20130730135720.GC27962@kroah.com>
+Subject: Re: [PATCH] Driver core: Add accessor for device tree node
+Date: Wed, 31 Jul 2013 09:47:50 +0900
+Message-id: <001001ce8d87$9545bd00$bfd13700$@samsung.com>
+MIME-version: 1.0
+Content-type: text/plain; charset=us-ascii
+Content-transfer-encoding: 7bit
+Content-language: ko
 Sender: devicetree-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Steve Glendinning <steve.glendinning@shawell.net>, netdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>, devicetree@vger.kernel.org
+To: 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <rob.herring@calxeda.com>, 'Mark Brown' <broonie@kernel.org>, 'Andrew Morton' <akpm@linux-foundation.org>, Jingoo Han <jg1.han@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add a new DT property to specify a reset GPIO.
+On Tuesday, July 30, 2013 10:57 PM, Greg Kroah-Hartman wrote:
+> On Tue, Jul 30, 2013 at 06:20:47PM +0900, Jingoo Han wrote:
+> > Add the wrapper function for retrieving device tree node instead of
+> > accessing dev->of_node directly.
+> 
+> Why?
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/net/smsc911x.txt |    1 +
- drivers/net/ethernet/smsc/smsc911x.c               |   11 +++++++++++
- 2 files changed, 12 insertions(+), 0 deletions(-)
+Sorry, I cannot find the special reason why it should be used.
+Please, ignore it. :)
+Thanks.
 
-diff --git a/Documentation/devicetree/bindings/net/smsc911x.txt b/Documentation/devicetree/bindings/net/smsc911x.txt
-index adb5b57..2bf32be 100644
---- a/Documentation/devicetree/bindings/net/smsc911x.txt
-+++ b/Documentation/devicetree/bindings/net/smsc911x.txt
-@@ -23,6 +23,7 @@ Optional properties:
-   external PHY
- - smsc,save-mac-address : Indicates that mac address needs to be saved
-   before resetting the controller
-+- smsc,reset-gpios : a GPIO binding to take the controller out of reset
- - local-mac-address : 6 bytes, mac address
- 
- Examples:
-diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
-index ca01c03..db6255e 100644
---- a/drivers/net/ethernet/smsc/smsc911x.c
-+++ b/drivers/net/ethernet/smsc/smsc911x.c
-@@ -2328,6 +2328,8 @@ static int smsc911x_probe_config_dt(struct smsc911x_platform_config *config,
- {
- 	const char *mac;
- 	u32 width = 0;
-+	enum of_gpio_flags flags;
-+	int gpio;
- 
- 	if (!np)
- 		return -ENODEV;
-@@ -2361,6 +2363,15 @@ static int smsc911x_probe_config_dt(struct smsc911x_platform_config *config,
- 	if (of_get_property(np, "smsc,save-mac-address", NULL))
- 		config->flags |= SMSC911X_SAVE_MAC_ADDRESS;
- 
-+	gpio = of_get_named_gpio_flags(np, "smsc,reset-gpios", 0, &flags);
-+	if (gpio == -EPROBE_DEFER)
-+		return gpio;
-+	if (gpio_is_valid(gpio)) {
-+		config->reset_gpio = gpio;
-+		config->reset_gpio_config = SMSC911X_RESET_GPIO_VALID |
-+			(flags & OF_GPIO_ACTIVE_LOW ? GPIOF_INIT_LOW : GPIOF_INIT_HIGH);
-+	}
-+
- 	return 0;
- }
- #else
--- 
-1.7.2.5
+Best regards,
+Jingoo Han
 
