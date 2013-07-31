@@ -1,90 +1,111 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from comal.ext.ti.com ([198.47.26.152]:59086 "EHLO comal.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751935Ab3GWGaI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Tue, 23 Jul 2013 02:30:08 -0400
-Message-ID: <51EE22DF.6090902@ti.com>
-Date: Tue, 23 Jul 2013 11:59:51 +0530
-From: Kishon Vijay Abraham I <kishon@ti.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:42114 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753430Ab3GaVDS (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 31 Jul 2013 17:03:18 -0400
+Message-ID: <51F97B92.1040707@wwwdotorg.org>
+Date: Wed, 31 Jul 2013 15:03:14 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH V3] pci: exynos: split into two parts such as Synopsys
- part and Exynos part
-References: <002801ce8376$a807dbf0$f81793d0$@samsung.com> <51ED49D6.9050209@ti.com> <000701ce8741$fe47deb0$fad79c10$@samsung.com>
-In-Reply-To: <000701ce8741$fe47deb0$fad79c10$@samsung.com>
-Content-Type: text/plain; charset="ISO-8859-1"
+Subject: Re: [RFC] binding for nvec mfd device
+References: <1416005.VvfEeGuSWa@ax5200p> <6071437.eL7j9JF89s@fb07-iapwap2.physik.uni-giessen.de> <20130731153322.GQ29859@e106331-lin.cambridge.arm.com> <2910047.nJ4yDntMXS@ax5200p>
+In-Reply-To: <2910047.nJ4yDntMXS@ax5200p>
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Pratyush Anand' <pratyush.anand@st.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Marc Dietrich <marvin24@gmx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Andrey Danin <danindrey@mail.ru>, Ian Campbell <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-
-On Tuesday 23 July 2013 06:44 AM, Jingoo Han wrote:
-> On Tuesday, July 23, 2013 12:04 AM, Kishon Vijay Abraham I wrote:
->> On Thursday 18 July 2013 10:51 AM, Jingoo Han wrote:
->>> Exynos PCIe IP consists of Synopsys specific part and Exynos
->>> specific part. Only core block is a Synopsys designware part;
->>> other parts are Exynos specific.
->>> Also, the Synopsys designware part can be shared with other
->>> platforms; thus, it can be split two parts such as Synopsys
->>> designware part and Exynos specific part.
+On 07/31/2013 10:52 AM, Marc Dietrich wrote:
+> On Wednesday 31 July 2013 16:33:22 Mark Rutland wrote:
+>> On Wed, Jul 31, 2013 at 03:57:13PM +0100, Marc Dietrich wrote:
+>>> Am Mittwoch, 31. Juli 2013, 15:13:14 schrieb Mark Rutland:
+...
+>>>> If you need to instantiate child nodes as Linux platform devices, this
+>>>> should be done in the driver for the bus. Relying on simple-bus to do
+>>>> this is a hack.
+>>>
+>>> ok, I'll rip this off from both nodes. I guess I should use
+>>> of_platform_populate instead and keeping the compatible node in the childs
+>>> - right?
 >>
->> some more queries and comments..
+>> I believe that would be a correct way of handling this.
 > 
-.
-.
-<snip>
-.
-.
->>> +			of_pci_range_to_resource(&range, np, &pp->cfg);
->>> +			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
->>> +			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
->>> +		}
->>> +	}
->>> +
->>> +	pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
->>> +				resource_size(&pp->cfg));
->>
->> Why is configuraion space divided into two?
-> 
-> Sorry, I don't know the exact reason. :(
-> Pratyush Anand may know about this.
-> Pratyush Anand, could you answer the question?
-> 
-> Also, if you find some problems, please let me know.
+> Great. Thinking about a really generic dt representation of an i2c bus (with 
+> multi-slave, slave and master controllers can act in parallel), something like 
+> this came into my mind:
 > 
 > 
->> Why should it be same as dbi_base?
->> AFAIK, jacinto6 has a dedicated configuration/io/memory space that is entirely
->> different from dbi_base.
+> i2c@xxxxxxx {
+> 		compatible = "nvidia,tegra-i2c", "simple-bus"; /* This time it is 
+> truly a simple bus, because there is no higher control instance */
 > 
-> According to the Synopsys designware PCIe datasheet,
-> in chapter 5.1.1 Register Space Layout,
-> 'Port Logic Registers' are placed between (config space 0x0 + 0x700)
-> and (config space 0x0 + 0xFFF).
-> 'dbi_base' is used for reading/writing 'Port Logic Registers'.
-> Exynos are using 'dbi_base' like this. Thus, the base addresses of
-> both 'dbi_base' and configuration/io/memory space are same.
+> 		... common master/slave resources ...
 > 
-> Just now, I looked at Spear PCIe driver.
-> However, in the case of Spear, the base address of configuration/io/memory
-> space is defined as 0x80000000. The base address of 'Port Logic Registers'
-> is defined as 0xb1000000.
-> I think that the situation of 'jacinto6' is similar with Spear, right?
+> 		master {
+> 				compatible = "nvidia,tegra-i2c-master";
+> 				... resources ??? ....
 > 
-> Then, I will move pp->dbi_base mapping code from pcie-designware.c
-> to pci-exynos.c.
+> 			 	client1@xx {
+> 						...
+> 				};
+> 
+> 			 	client2@xx {
+> 						...
+> 				};
+> 
+> 				...
+> 		}
+> 
+> 		slave1@xxx {
+> 				compatible = "nvidia,tegra-i2c-slave";
+> 				... resources ??? ...
+> 
+> 				client1@xx {
+> 						...
+> 				};
+> 		};
+> 
+> 		slave2@xxx {
+> 				compatible = "nvidia,tegra-i2c-slave";
+> 				... resources ??? ...
+> 
+> 				client1@xx {
+> 						...
+> 				};
+> 
+> 		};
+> 
+> 		....
+> };
 
-I think you need not move this to exynos (since registers in dbi_base is common
-for all platforms) but modify the pcie-designware.c to use different address
-space for dbi_base. In your case, you'll duplicate the address space for
-dbi_base and configuration space.
+The generic I2C bindings already define that the other chips on the I2C
+bus appear directly underneath the I2C controller's DT node. Perhaps it
+isn't a big issue to change that, since each I2C controller can define
+the layout of its own node?
 
-Also I have one more query.
-In your dt binding, your pci address and cpu address is the same. But the pci
-address should start at 0x00000000 and end at 0xffffffff (for 32bit). Shouldn't
-the cpu address map to something within this range of pci address?
+Anyway, we can probably get away without introducing multiple levels by
+adding some more bits or cells into the reg address for I2C child nodes:
 
-Thanks
-Kishon
+i2c@xxxxxxxx {
+	compatible = "nvidia,tegra20-i2c";
+	... resources
+	#address-cells = <2>;
+
+	codec {
+		// 0 means external slave, 0x1c is slave's address
+		reg = <0 0x1c>;
+		...
+	};
+
+	tegraslave {
+		// 0 means internal slave, 0x80 is controller's address
+		reg = <1 0x80>;
+		...
+	};
+};
+
+... where each of those child nodes could be repeated N times. We could
+also or in 0x80000000 to the reg values in the child nodes rather than
+using a separate cell if we wanted.
