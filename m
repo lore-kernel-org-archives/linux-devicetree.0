@@ -1,72 +1,53 @@
 From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH 1/3] clk: exynos5250: Add G2D gate clock
-Date: Tue, 30 Jul 2013 20:42:35 -0700
-Message-ID: <20130731034235.5270.7481@quantum>
-References: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
- <20130726201800.7598.54329@quantum>
- <CAK9yfHw6KtVDAns-1JhNpiS0brTeUpfiHS-v3q7H2GLWkY-Adw@mail.gmail.com>
- <20130730064800.22022.14773@quantum>
- <CAK9yfHxLjYNjQ9h-N8hNLBvqyUTxNzt=Bw10=mEA=D1kg2f9dw@mail.gmail.com>
+Subject: Re: [PATCH v2 Resend 2/3] of/documentation: Update G2D documentation
+Date: Tue, 30 Jul 2013 21:02:23 -0700
+Message-ID: <20130731040223.24490.62098@quantum>
+References: <1373351355-27444-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK9yfHxLjYNjQ9h-N8hNLBvqyUTxNzt=Bw10=mEA=D1kg2f9dw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: kgene.kim@samsung.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1373351355-27444-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org, tomasz.figa@gmail.com, Inki Dae <inki.dae@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sachin Kamat (2013-07-29 23:55:33)
-> On 30 July 2013 12:18, Mike Turquette <mturquette@linaro.org> wrote:
-> > Quoting Sachin Kamat (2013-07-27 06:29:56)
-> >> On 27 July 2013 01:48, Mike Turquette <mturquette@linaro.org> wrote:
-> >> > Quoting Sachin Kamat (2013-07-05 01:42:27)
-> >> >> Adds gate clock for G2D IP for Exynos5250 SoC.
-> >> >>
-> >> >> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> >> >> Cc: Mike Turquette <mturquette@linaro.org>
-> >> >
-> >> > I've taken patch #1 into clk-next.
-> >>
-> >> Thanks Mike.
-> >>
-> >> >
-> >> >> ---
-> >> >> This patch depends on the following patch:
-> >> >> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/20581
-> >> >
-> >> > I think I've gotten all three series you sent out, can you confirm?
-> >>
-> >> I haven't seen any update in your tree [1] since quite some time. The
-> >> last commit I see in clk-next branch is 45e3ec3784 ("clk: tegra: fix
-> >> ifdef for tegra_periph_reset_assert inline"). I hope I am looking at
-> >> the right tree?
-> >
-> > You are, but I had not pushed to it since the merge window closed. It is
-> > now updated.
-> >
+Quoting Sachin Kamat (2013-07-08 23:29:15)
+> Exynos5250 G2D IP requires only the gate clock. Update the
+> binding documentation accordingly.
 > 
-> Thanks Mike. I confirm that all the three patch series that you
-> mentioned are applied in your tree.
-> Please check the below one too.
-> 
-> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg20598.html
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> Cc: Inki Dae <inki.dae@samsung.com>
 
-Ok, I picked that one up too.
+Taken into clk-next.
 
-Regards,
+Thanks,
 Mike
 
+> ---
+> Updated the description of clock-names as suggested by Tomasz Figa.
+> ---
+>  .../devicetree/bindings/gpu/samsung-g2d.txt        |    7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> index 3f454ff..c4f358d 100644
+> --- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> @@ -11,8 +11,11 @@ Required properties:
+>  
+>    - interrupts : G2D interrupt number to the CPU.
+>    - clocks : from common clock binding: handle to G2D clocks.
+> -  - clock-names : from common clock binding: must contain "sclk_fimg2d" and
+> -                 "fimg2d", corresponding to entries in the clocks property.
+> +  - clock-names : names of clocks listed in clocks property, in the same
+> +                 order, depending on SoC type:
+> +                 - for S5PV210 and Exynos4 based SoCs: "fimg2d" and
+> +                   "sclk_fimg2d"
+> +                 - for Exynos5250 SoC: "fimg2d".
+>  
+>  Example:
+>         g2d@12800000 {
 > -- 
-> With warm regards,
-> Sachin
+> 1.7.9.5
