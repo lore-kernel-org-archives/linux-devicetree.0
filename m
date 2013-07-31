@@ -1,51 +1,69 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-bk0-f42.google.com ([209.85.214.42]:61614 "EHLO
-	mail-bk0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751153Ab3G2XxY (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 19:53:24 -0400
-Received: by mail-bk0-f42.google.com with SMTP id jk14so606153bkc.1
-        for <devicetree@vger.kernel.org>; Mon, 29 Jul 2013 16:53:23 -0700 (PDT)
+Received: from avon.wwwdotorg.org ([70.85.31.133]:41685 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751835Ab3GaVpL (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 31 Jul 2013 17:45:11 -0400
+Message-ID: <51F98562.9080307@wwwdotorg.org>
+Date: Wed, 31 Jul 2013 15:45:06 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Date: Tue, 30 Jul 2013 07:53:23 +0800
-Message-ID: <CAPgLHd_4toX_5Q95M39YFb7VssvFQXDU3=AX=NFu+h8yo-DXYg@mail.gmail.com>
-Subject: [PATCH -next] ASoC: fsl: imx-audmux: fix possible memory leak in audmux_read_file()
-From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: Re: [PATCH 4/4] serial: sccnxp: Add DT support
+References: <1375268145-13393-1-git-send-email-shc_work@mail.ru>
+In-Reply-To: <1375268145-13393-1-git-send-email-shc_work@mail.ru>
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, rob.herring@calxeda.com, fabio.estevam@freescale.com, wfp5p@virginia.edu, gregkh@linuxfoundation.org, thierry.reding@avionic-design.de
-Cc: yongjun_wei@trendmicro.com.cn, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On 07/31/2013 04:55 AM, Alexander Shiyan wrote:
+> Add DT support to the SCCNCP serial driver.
 
-memory is malloced in audmux_read_file() and should be freed before
-leaving from the error handling cases, otherwise it will cause
-memory leak.
+> diff --git a/Documentation/devicetree/bindings/tty/serial/sccnxp-serial.txt b/Documentation/devicetree/bindings/tty/serial/sccnxp-serial.txt
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- sound/soc/fsl/imx-audmux.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
-index 1a5da1e..40c591e 100644
---- a/sound/soc/fsl/imx-audmux.c
-+++ b/sound/soc/fsl/imx-audmux.c
-@@ -76,7 +76,7 @@ static ssize_t audmux_read_file(struct file *file, char __user *user_buf,
- 	if (audmux_clk) {
- 		ret = clk_prepare_enable(audmux_clk);
- 		if (ret)
--			return ret;
-+			goto out;
- 	}
- 
- 	ptcr = readl(audmux_base + IMX_AUDMUX_V2_PTCR(port));
-@@ -133,6 +133,7 @@ static ssize_t audmux_read_file(struct file *file, char __user *user_buf,
- 
- 	ret = simple_read_from_buffer(user_buf, count, ppos, buf, ret);
- 
-+out:
- 	kfree(buf);
- 
- 	return ret;
+> +Optional properties:
 
+> +- poll-interval: Poll interval time in nanoseconds.
+
+Is this a standard/common property? If not, then it'd be best if the
+property name included the vendor-prefix "nxp,".
+
+> +- nxp,sccnxp-io-cfg: Array contains values for the emulated modem signals.
+> +  The number of values depends on the UART-number in the selected chip.
+> +  Each value should be composed according to the following rules:
+> +  (LINE1 << SIGNAL1) | ... | (LINEX << SIGNALX), where:
+> +   LINE - VALUE:
+> +    OP0 - 1
+...
+> +    IP6 - 15
+> +   SIGNAL - VALUE:
+> +    DTR - 0
+...
+> +    DIR - 24
+
+I wonder that shouldn't be implemented using standard pinctrl bindings.
+I could see someone wanting to create a pinmuxing-based serial port
+multiplexing device, which would then need to rely on this node acting
+as a standard pin controller...
+
+> +Example (Dual UART with direction control on OP0 & OP1):
+> +sc2892@10100000 {
+> +	compatible = "nxp,sc2892";
+> +	reg = <0x10100000 0x10>;
+> +	poll-interval = <10000>;
+> +	clocks = <&sc2892_clk>;
+> +	vcc-supply = <&sc2892_reg>;
+> +	nxp,sccnxp-io-cfg = <0x01000000 0x02000000>;
+
+Why two cells for io-cfg when the shifts above imply everything fits
+into a single cell?
+
+Oh I guess that "The number of values depends on the UART-number" means
+"number of UARTs in the chip", whereas I read it as "the ID of the UART
+within the chip"..
+
+When there are multiple UARTs in the chip, should each UART have its own
+separate DT node? If not, how could you refer to each individual UART
+e.g. in order to set up the /aliases node?
