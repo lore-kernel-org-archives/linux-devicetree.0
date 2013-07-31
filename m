@@ -1,74 +1,109 @@
-From: Alexander Popov <a13xp0p0v88@gmail.com>
-Subject: Re: [PATCH RFC v2 2/5] dma: mpc512x: add support for peripheral
- transfers
-Date: Wed, 31 Jul 2013 11:46:09 +0400
-Message-ID: <CAF0T0X4pR_uAZq-iGrrJS=oGDFzKBj-CLELyu_fLbDzk2dnroA@mail.gmail.com>
-References: <1373642781-32631-1-git-send-email-gsi@denx.de>
- <1373803321-11628-1-git-send-email-gsi@denx.de>
- <1373803321-11628-3-git-send-email-gsi@denx.de>
- <51E5226D.9050100@metafoo.de>
- <20130717104234.GJ7080@book.gsilab.sittig.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv4 01/33] CLK: clkdev: add support for looking up clocks
+ from DT
+Date: Wed, 31 Jul 2013 11:43:41 +0300
+Message-ID: <51F8CE3D.6040101@ti.com>
+References: <1374564028-11352-1-git-send-email-t-kristo@ti.com>
+ <1374564028-11352-2-git-send-email-t-kristo@ti.com> <51F7D5FE.7030003@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20130717104234.GJ7080@book.gsilab.sittig.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Lars-Peter Clausen <lars@metafoo.de>, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, Alexander Popov <a13xp0p0v88@gmail.com>, Dan Williams <djbw@fb.com>, Vinod Koul <vinod.koul@intel.com>, Arnd Bergmann <arnd@arndb.de>, Anatolij Gustschin <agust@denx.de>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51F7D5FE.7030003@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>
+Cc: paul@pwsan.com, khilman@linaro.org, mturquette@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello everyone!
-
-I've just sent v3 of part 1 and 2 of RFC series:
-https://patchwork.kernel.org/patch/2836123/
-https://patchwork.kernel.org/patch/2836124/
-
-
-2013/7/17 Gerhard Sittig <gsi@denx.de>:
-> OK, so the need for explicit start in software or external
-> request by the peripheral remains, but the condition for the
-> choice is different. It might become a flag attached to the DMA
-> channel, that gets setup in the prep routines (memory and slave
-> access each use their own prep calls) and gets evaluated in
-> execute.
-
-I made a flag "will_access_peripheral" be set up in the device control callback.
-
-
-> non-MDDRC channels can get used for memory
-> transfers as well, which your description of the the former use
-> suggests, when slave support was absent.
-
-I tested v3 on MPC5125 with SCLPC driver (transfers between dev and
-mem work fine)
-and dmatest module (all 64 DMA channels can perform mem-to-mem transfers).
-
-
->> > +   mchan = dma_chan_to_mpc_dma_chan(chan);
->> > +   switch (cmd) {
->> > +   case DMA_TERMINATE_ALL:
->> > +           /* disable channel requests */
->> > +           mdma = dma_chan_to_mpc_dma(chan);
->> > +           out_8(&mdma->regs->dmacerq, chan->chan_id);
->> > +           list_splice_tail_init(&mchan->prepared, &mchan->free);
->> > +           list_splice_tail_init(&mchan->queued, &mchan->free);
->> > +           list_splice_tail_init(&mchan->active, &mchan->free);
+On 07/30/2013 06:04 PM, Nishanth Menon wrote:
+> On 07/23/2013 02:19 AM, Tero Kristo wrote:
+>> clk_get_sys / clk_get can now find clocks from device-tree. If a DT clock
+>> is found, an entry is added to the clk_lookup list also for subsequent
+>> searches.
 >>
->> This probably need locking.
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> Cc: Russell King <linux@arm.linux.org.uk>
+>> ---
+>>   drivers/clk/clkdev.c |   32 ++++++++++++++++++++++++++++++++
+>>   1 file changed, 32 insertions(+)
+>>
+>> diff --git a/drivers/clk/clkdev.c b/drivers/clk/clkdev.c
+>> index 442a313..e39f082 100644
+>> --- a/drivers/clk/clkdev.c
+>> +++ b/drivers/clk/clkdev.c
+>> @@ -93,6 +93,18 @@ struct clk *of_clk_get_by_name(struct device_node
+>> *np, const char *name)
+>>   EXPORT_SYMBOL(of_clk_get_by_name);
+>>   #endif
+>>
+>> +/**
+>> + * clkdev_add_nolock - add lookup entry for a clock
+>> + * @cl: pointer to new clock lookup entry
+>> + *
+>> + * Non-locking version, used internally by clk_find() to add DT based
+>> + * clock lookup entries.
+>> + */
+>> +static void clkdev_add_nolock(struct clk_lookup *cl)
+>> +{
+>> +    list_add_tail(&cl->node, &clocks);
+>> +}
+>> +
+>>   /*
+>>    * Find the correct struct clk for the device and connection ID.
+>>    * We do slightly fuzzy matching here:
+>> @@ -106,6 +118,9 @@ static struct clk_lookup *clk_find(const char
+>> *dev_id, const char *con_id)
+>>   {
+>>       struct clk_lookup *p, *cl = NULL;
+>>       int match, best_found = 0, best_possible = 0;
+>> +    struct device_node *node;
+>> +    struct clk *clk;
+>> +    struct of_phandle_args clkspec;
+>>
+>>       if (dev_id)
+>>           best_possible += 2;
+>> @@ -133,6 +148,23 @@ static struct clk_lookup *clk_find(const char
+>> *dev_id, const char *con_id)
+>>                   break;
+>>           }
+>>       }
+>> +
+>> +    if (cl)
+>> +        return cl;
+>> +
+>> +    /* If clock was not found, attempt to look-up from DT */
+>> +    node = of_find_node_by_name(NULL, con_id);
+>> +
+>> +    clkspec.np = node;
+>> +
+>> +    clk = of_clk_get_from_provider(&clkspec);
+>> +
+>> +    if (!IS_ERR(clk)) {
+>> +        /* We found a clock, add node to clkdev */
+>> +        cl = clkdev_alloc(clk, con_id, dev_id);
 >
-> Ah, yes.  It needs to grab the same lock as all the other list
-> manipulations in the driver's source.
+> clkdev_alloc may return NULL depending on vclkdev_alloc in which case
+> clkdev_add_nolock will crash trying to dereference it.
 
-Fixed that too.
+I'll add a check for that.
 
-Best regards,
-Alexander.
+-Tero
+
+>
+>> +        clkdev_add_nolock(cl);
+>> +    }
+>> +
+>>       return cl;
+>>   }
+>>
+>>
+>
+>
