@@ -1,7 +1,7 @@
 From: Daniel Lezcano <daniel.lezcano@linaro.org>
 Subject: Re: [PATCH v4 0/5] Memory mapped architected timers
-Date: Thu, 01 Aug 2013 00:49:14 +0200
-Message-ID: <51F9946A.50107@linaro.org>
+Date: Thu, 01 Aug 2013 01:16:36 +0200
+Message-ID: <51F99AD4.1070009@linaro.org>
 References: <1374191972-18015-1-git-send-email-sboyd@codeaurora.org> <20130722170817.GB4833@e106331-lin.cambridge.arm.com> <20130724203253.GE27761@codeaurora.org> <20130731223833.GJ8868@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,10 +59,9 @@ ort,
 >=20
 > Ping Daniel?
 
-Yes, thanks for the head up.
+Applied to my tree as 3.12 material
 
-I will look at them and pick the patches.
-
+Thanks
   -- Daniel
 
 
