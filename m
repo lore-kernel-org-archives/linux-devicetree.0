@@ -1,156 +1,181 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
-Date: Wed, 31 Jul 2013 11:14:32 +0530
-Message-ID: <51F8A440.8010803@ti.com>
-References: <20130720220006.GA7977@kroah.com> <3839600.WiC1OLF35o@flatron> <51EBC0F5.70601@ti.com> <9748041.Qq1fWJBg6D@flatron> <20130721154653.GG16598@kroah.com> <20130730071106.GC16441@radagast>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] ARM: davinci: da850: configure system configuration
+	chip(CFGCHIP3) for emac
+Date: Wed, 31 Jul 2013 11:17:43 +0530
+Message-ID: <51F8A4FF.8020803@ti.com>
+References: <1371999607-6483-1-git-send-email-prabhakar.csengg@gmail.com>
+	<1371999607-6483-7-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130730071106.GC16441@radagast>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Greg KH <gregkh@linuxfoundation.org>, Tomasz Figa <tomasz.figa@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, kyungmin.park@samsung.com, jg1.han@samsung.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, tony@atomide.com, arnd@arndb.de, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-media@vger.kernel.org, linux-fbdev@vger.kernel.org, akpm@linux-foundation.org, balajitk@ti.com, george.cherian@ti.com, nsekhar@ti.com
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1371999607-6483-7-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sunday 23 June 2013 08:30 PM, Prabhakar Lad wrote:
+> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> This patch makes a common function for to configure emac and calls
+> it appropriately in DT and non DT boot mode. The system configuration
+> chip CFGCHIP3, controls the emac module. This patch appropriately
+> configures this register for emac and sets DA850_MII_MDIO_CLKEN_PIN
+> GPIO pin appropriately.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+> ---
+>  Changes for v2: none
+>  Changes for v3:
+>   a> added a common function in da850.c to configure
+>      the CFGCHIP3 chip.
+>      
+>  arch/arm/mach-davinci/board-da850-evm.c    |   36 ++--------------------
+>  arch/arm/mach-davinci/da850.c              |   45 ++++++++++++++++++++++++++++
+>  arch/arm/mach-davinci/da8xx-dt.c           |   16 ++++++++++
+>  arch/arm/mach-davinci/include/mach/da8xx.h |    1 +
+>  4 files changed, 64 insertions(+), 34 deletions(-)
+> 
+> diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+> index 8a24b6c..03dd1df 100644
+> --- a/arch/arm/mach-davinci/board-da850-evm.c
+> +++ b/arch/arm/mach-davinci/board-da850-evm.c
+> @@ -50,7 +50,6 @@
+>  #include <media/tvp514x.h>
+>  #include <media/adv7343.h>
+>  
+> -#define DA850_EVM_PHY_ID		"davinci_mdio-0:00"
+>  #define DA850_LCD_PWR_PIN		GPIO_TO_PIN(2, 8)
+>  #define DA850_LCD_BL_PIN		GPIO_TO_PIN(2, 15)
+>  
+> @@ -60,8 +59,6 @@
+>  #define DA850_WLAN_EN			GPIO_TO_PIN(6, 9)
+>  #define DA850_WLAN_IRQ			GPIO_TO_PIN(6, 10)
+>  
+> -#define DA850_MII_MDIO_CLKEN_PIN	GPIO_TO_PIN(2, 6)
+> -
+>  static struct mtd_partition da850evm_spiflash_part[] = {
+>  	[0] = {
+>  		.name = "UBL",
+> @@ -1033,26 +1030,18 @@ static const short da850_evm_rmii_pins[] = {
+>  
+>  static int __init da850_evm_config_emac(void)
+>  {
+> -	void __iomem *cfg_chip3_base;
+> -	int ret;
+> -	u32 val;
+>  	struct davinci_soc_info *soc_info = &davinci_soc_info;
+>  	u8 rmii_en = soc_info->emac_pdata->rmii_en;
+> +	int ret;
+>  
+>  	if (!machine_is_davinci_da850_evm())
+>  		return 0;
+>  
+> -	cfg_chip3_base = DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG);
+> -
+> -	val = __raw_readl(cfg_chip3_base);
+> -
+>  	if (rmii_en) {
+> -		val |= BIT(8);
+>  		ret = davinci_cfg_reg_list(da850_evm_rmii_pins);
+>  		pr_info("EMAC: RMII PHY configured, MII PHY will not be"
+>  							" functional\n");
+>  	} else {
+> -		val &= ~BIT(8);
+>  		ret = davinci_cfg_reg_list(da850_evm_mii_pins);
+>  		pr_info("EMAC: MII PHY configured, RMII PHY will not be"
+>  							" functional\n");
+> @@ -1062,28 +1051,7 @@ static int __init da850_evm_config_emac(void)
+>  		pr_warn("%s: CPGMAC/RMII mux setup failed: %d\n",
+>  			__func__, ret);
+>  
+> -	/* configure the CFGCHIP3 register for RMII or MII */
+> -	__raw_writel(val, cfg_chip3_base);
+> -
+> -	ret = davinci_cfg_reg(DA850_GPIO2_6);
+> -	if (ret)
+> -		pr_warn("%s:GPIO(2,6) mux setup failed\n", __func__);
+> -
+> -	ret = gpio_request(DA850_MII_MDIO_CLKEN_PIN, "mdio_clk_en");
+> -	if (ret) {
+> -		pr_warn("Cannot open GPIO %d\n", DA850_MII_MDIO_CLKEN_PIN);
+> -		return ret;
+> -	}
+> -
+> -	/* Enable/Disable MII MDIO clock */
+> -	gpio_direction_output(DA850_MII_MDIO_CLKEN_PIN, rmii_en);
+> -
+> -	soc_info->emac_pdata->phy_id = DA850_EVM_PHY_ID;
+> -
+> -	ret = da8xx_register_emac();
+> -	if (ret)
+> -		pr_warn("%s: EMAC registration failed: %d\n", __func__, ret);
+> -
+> +	da850_config_emac(0, rmii_en);
+>  	return 0;
+>  }
+>  device_initcall(da850_evm_config_emac);
+> diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+> index c43abee..d8021bb 100644
+> --- a/arch/arm/mach-davinci/da850.c
+> +++ b/arch/arm/mach-davinci/da850.c
+> @@ -1197,6 +1197,51 @@ no_ddrpll_mem:
+>  	return ret;
+>  }
+>  
+> +void __init da850_config_emac(u32 dt_mode, u32 rmii_enabled)
+> +{
+> +#define DA850_MII_MDIO_CLKEN_PIN	GPIO_TO_PIN(2, 6)
+> +#define DA850_EVM_PHY_ID		"davinci_mdio-0:00"
+> +
+> +	void __iomem *cfg_chip3_base;
+> +	int ret;
+> +	u32 val;
+> +
+> +	cfg_chip3_base = DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG);
+> +
+> +	val = readl(cfg_chip3_base);
+> +
+> +	if (rmii_enabled)
+> +		val |= BIT(8);
+> +	else
+> +		val &= ~BIT(8);
+> +
+> +	/* configure the CFGCHIP3 register for RMII or MII */
+> +	writel(val, cfg_chip3_base);
+> +
+> +	ret = davinci_cfg_reg(DA850_GPIO2_6);
+> +	if (ret)
+> +		pr_warn("%s:GPIO(2,6) mux setup failed\n", __func__);
+> +
+> +	ret = gpio_request(DA850_MII_MDIO_CLKEN_PIN, "mdio_clk_en");
+> +	if (ret) {
+> +		pr_warn("Cannot open GPIO %d\n", DA850_MII_MDIO_CLKEN_PIN);
+> +		return;
+> +	}
 
-On Tuesday 30 July 2013 12:41 PM, Felipe Balbi wrote:
-> On Sun, Jul 21, 2013 at 08:46:53AM -0700, Greg KH wrote:
->> On Sun, Jul 21, 2013 at 01:12:07PM +0200, Tomasz Figa wrote:
->>> On Sunday 21 of July 2013 16:37:33 Kishon Vijay Abraham I wrote:
->>>> Hi,
->>>>
->>>> On Sunday 21 July 2013 04:01 PM, Tomasz Figa wrote:
->>>>> Hi,
->>>>>
->>>>> On Saturday 20 of July 2013 19:59:10 Greg KH wrote:
->>>>>> On Sat, Jul 20, 2013 at 10:32:26PM -0400, Alan Stern wrote:
->>>>>>> On Sat, 20 Jul 2013, Greg KH wrote:
->>>>>>>>>>> That should be passed using platform data.
->>>>>>>>>>
->>>>>>>>>> Ick, don't pass strings around, pass pointers.  If you have
->>>>>>>>>> platform
->>>>>>>>>> data you can get to, then put the pointer there, don't use a
->>>>>>>>>> "name".
->>>>>>>>>
->>>>>>>>> I don't think I understood you here :-s We wont have phy pointer
->>>>>>>>> when we create the device for the controller no?(it'll be done in
->>>>>>>>> board file). Probably I'm missing something.
->>>>>>>>
->>>>>>>> Why will you not have that pointer?  You can't rely on the "name"
->>>>>>>> as
->>>>>>>> the device id will not match up, so you should be able to rely on
->>>>>>>> the pointer being in the structure that the board sets up, right?
->>>>>>>>
->>>>>>>> Don't use names, especially as ids can, and will, change, that is
->>>>>>>> going
->>>>>>>> to cause big problems.  Use pointers, this is C, we are supposed to
->>>>>>>> be
->>>>>>>> doing that :)
->>>>>>>
->>>>>>> Kishon, I think what Greg means is this:  The name you are using
->>>>>>> must
->>>>>>> be stored somewhere in a data structure constructed by the board
->>>>>>> file,
->>>>>>> right?  Or at least, associated with some data structure somehow.
->>>>>>> Otherwise the platform code wouldn't know which PHY hardware
->>>>>>> corresponded to a particular name.
->>>>>>>
->>>>>>> Greg's suggestion is that you store the address of that data
->>>>>>> structure
->>>>>>> in the platform data instead of storing the name string.  Have the
->>>>>>> consumer pass the data structure's address when it calls phy_create,
->>>>>>> instead of passing the name.  Then you don't have to worry about two
->>>>>>> PHYs accidentally ending up with the same name or any other similar
->>>>>>> problems.
->>>>>>
->>>>>> Close, but the issue is that whatever returns from phy_create()
->>>>>> should
->>>>>> then be used, no need to call any "find" functions, as you can just
->>>>>> use
->>>>>> the pointer that phy_create() returns.  Much like all other class api
->>>>>> functions in the kernel work.
->>>>>
->>>>> I think there is a confusion here about who registers the PHYs.
->>>>>
->>>>> All platform code does is registering a platform/i2c/whatever device,
->>>>> which causes a driver (located in drivers/phy/) to be instantiated.
->>>>> Such drivers call phy_create(), usually in their probe() callbacks,
->>>>> so platform_code has no way (and should have no way, for the sake of
->>>>> layering) to get what phy_create() returns.
->>
->> Why not put pointers in the platform data structure that can hold these
->> pointers?  I thought that is why we created those structures in the
->> first place.  If not, what are they there for?
-> 
-> heh, IMO we shouldn't pass pointers of any kind through platform_data,
-> we want to pass data :-)
-> 
-> Allowing to pass pointers through that, is one of the reasons which got
-> us in such a big mess in ARM land, well it was much easier for a
-> board-file/driver writer to pass a function pointer then to create a
-> generic framework :-)
-> 
->>>>> IMHO we need a lookup method for PHYs, just like for clocks,
->>>>> regulators, PWMs or even i2c busses because there are complex cases
->>>>> when passing just a name using platform data will not work. I would
->>>>> second what Stephen said [1] and define a structure doing things in a
->>>>> DT-like way.
->>>>>
->>>>> Example;
->>>>>
->>>>> [platform code]
->>>>>
->>>>> static const struct phy_lookup my_phy_lookup[] = {
->>>>>
->>>>> 	PHY_LOOKUP("s3c-hsotg.0", "otg", "samsung-usbphy.1", "phy.2"),
->>>>
->>>> The only problem here is that if *PLATFORM_DEVID_AUTO* is used while
->>>> creating the device, the ids in the device name would change and
->>>> PHY_LOOKUP wont be useful.
->>>
->>> I don't think this is a problem. All the existing lookup methods already 
->>> use ID to identify devices (see regulators, clkdev, PWMs, i2c, ...). You 
->>> can simply add a requirement that the ID must be assigned manually, 
->>> without using PLATFORM_DEVID_AUTO to use PHY lookup.
->>
->> And I'm saying that this idea, of using a specific name and id, is
->> frought with fragility and will break in the future in various ways when
->> devices get added to systems, making these strings constantly have to be
->> kept up to date with different board configurations.
->>
->> People, NEVER, hardcode something like an id.  The fact that this
->> happens today with the clock code, doesn't make it right, it makes the
->> clock code wrong.  Others have already said that this is wrong there as
->> well, as systems change and dynamic ids get used more and more.
->>
->> Let's not repeat the same mistakes of the past just because we refuse to
->> learn from them...
->>
->> So again, the "find a phy by a string" functions should be removed, the
->> device id should be automatically created by the phy core just to make
->> things unique in sysfs, and no driver code should _ever_ be reliant on
->> the number that is being created, and the pointer to the phy structure
->> should be used everywhere instead.
->>
->> With those types of changes, I will consider merging this subsystem, but
->> without them, sorry, I will not.
-> 
-> I'll agree with Greg here, the very fact that we see people trying to
-> add a requirement of *NOT* using PLATFORM_DEVID_AUTO already points to a
-> big problem in the framework.
-> 
-> The fact is that if we don't allow PLATFORM_DEVID_AUTO we will end up
-> adding similar infrastructure to the driver themselves to make sure we
-> don't end up with duplicate names in sysfs in case we have multiple
-> instances of the same IP in the SoC (or several of the same PCIe card).
-> I really don't want to go back to that.
+You cannot do this in SoC specific code. All boards wont use a GPIO to
+choose between MII/RMII. You need to do this in a EVM specific manner.
+This just means you retain the GPIO part of code in board-da850-evm.c
+and for the DT case use a board specific GPIO node. See a similar
+example in arch/arm/boot/dts/ste-nomadik-s8815.dts and how the code uses
+it in arch/arm/mach-nomadik/cpu-8815.c.
 
-If we are using PLATFORM_DEVID_AUTO, then I dont see any way we can give the
-correct binding information to the PHY framework. I think we can drop having
-this non-dt support in PHY framework? I see only one platform (OMAP3) going to
-be needing this non-dt support and we can use the USB PHY library for it.
-
-Thanks
-Kishon
+Thanks,
+Sekhar
