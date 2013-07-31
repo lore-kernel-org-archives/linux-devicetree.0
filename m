@@ -1,59 +1,57 @@
-Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-oa0-f41.google.com ([209.85.219.41]:49266 "EHLO
-	mail-oa0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754329Ab3G2WfD (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 18:35:03 -0400
-Received: by mail-oa0-f41.google.com with SMTP id j6so4958038oag.14
-        for <devicetree@vger.kernel.org>; Mon, 29 Jul 2013 15:35:03 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <1371547751-13873-2-git-send-email-christian.ruppert@abilis.com>
-References: <20130618092516.GC18663@ab42.lan>
-	<1371547751-13873-2-git-send-email-christian.ruppert@abilis.com>
-Date: Tue, 30 Jul 2013 00:35:03 +0200
-Message-ID: <CACRpkdZvcF3agP=hK6J6hZn-Sx2Mw=P4dR2Mwzo+NoLxtMkbQg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
-From: Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset=ISO-8859-1
-Sender: devicetree-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-List-ID: <devicetree@vger.kernel.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 0/5] Memory mapped architected timers
+Date: Wed, 31 Jul 2013 15:38:33 -0700
+Message-ID: <20130731223833.GJ8868@codeaurora.org>
+References: <1374191972-18015-1-git-send-email-sboyd@codeaurora.org>
+ <20130722170817.GB4833@e106331-lin.cambridge.arm.com>
+ <20130724203253.GE27761@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130724203253.GE27761@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+List-Id: devicetree@vger.kernel.org
 
-Sorry for taking eternities to look into this.
+On 07/24, Stephen Boyd wrote:
+> On 07/22, Mark Rutland wrote:
+> > Hi Stephen,
+> > 
+> > On Fri, Jul 19, 2013 at 12:59:27AM +0100, Stephen Boyd wrote:
+> > > This patchset adds support for memory mapped architected timers. We
+> > > don't have any other global broadcast timer in our system, so we use the
+> > > mmio timer during low power modes. The first patch changes the register
+> > > accessor to an enum per Thomas' request. The second patch is the binding.
+> > > The next two patches lay some groundwork so that the last patch is simpler.
+> > > The final patch adds support for mmio timers.
+> > > 
+> > > Patches are based on v3.11-rc1.
+> > 
+> > Be aware that as of v3.11-rc2 this doesn't cleanly apply, as the
+> > __cpuinit removal broke the final patch's context in a couple of places.
+> > It would be nice to get rid of the new cpuinit additions too...
+> > 
+> > With that cleaned up locally, I've gave this a spin on tc2 and a
+> > Foundation model to test the cp15/system timers, hotplugging CPUs and
+> > running a basic test (`time sleep 5`). That all seems to work.
+> > 
+> > Unfortunately I have no way of testing the memory-mapped timer support,
+> > but I trust you've tested that locally.
+> > 
+> > For the series:
+> > 
+> > Acked-by: Mark Rutland <mark.rutland@arm.com>
+> > 
+> 
+> Thanks Mark.
+> 
+> Daniel, can you pick up these patches please?
+> 
 
-On Tue, Jun 18, 2013 at 11:29 AM, Christian Ruppert
-<christian.ruppert@abilis.com> wrote:
+Ping Daniel?
 
-> The pinmux driver of the Abilis Systems TB10x platform based on ARC700 CPUs.
-> Used to control the pinmux and is a prerequisite for the GPIO driver.
->
-> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-> Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
-(...)
-> +The following pin groups are available:
-> +  - GPIO ports: gpioa_pins, gpiob_pins, gpioc_pins, gpiod_pins, gpioe_pins,
-> +                gpiof_pins, gpiog_pins, gpioh_pins, gpioi_pins, gpioj_pins,
-> +                gpiok_pins, gpiol_pins, gpiom_pins, gpion_pins
-
-I would not attempt to define groups for all GPIO pins.
-
-(...)
-> +gpioa: gpio@FF140000 {
-> +       compatible = "abilis,tb10x-gpio";
-> +       reg = <0xFF140000 0x1000>;
-> +       gpio-controller;
-> +       #gpio-cells = <2>;
-> +       ngpio = <3>;
-> +       gpio-ranges = <&iomux 0 0>;
-> +       gpio-ranges-group-names = "gpioa_pins";
-
-This uses that feature to define GPIO ranges from a group does
-it not? I'm not certain about that feature.
-
-I don't see any of the port concept creeping into the device tree
-in this version and that is how I think it should be kept:
-the "port" particulars is a thing for the driver and not the
-device tree.
-
-Yours,
-Linus Walleij
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
