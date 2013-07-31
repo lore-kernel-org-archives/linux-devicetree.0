@@ -1,23 +1,63 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2] net: Add MOXA ART SoCs ethernet driver
-Date: Tue, 30 Jul 2013 16:24:34 -0700 (PDT)
-Message-ID: <20130730.162434.539163047913568607.davem@davemloft.net>
-References: <1374140806-12485-1-git-send-email-jonas.jensen@gmail.com>
-	<1374842890-20735-1-git-send-email-jonas.jensen@gmail.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 1/3] clk: exynos5250: Add G2D gate clock
+Date: Wed, 31 Jul 2013 09:18:56 +0530
+Message-ID: <CAK9yfHxi-4f5UtbRj1oZZ0_jMPFBfsPHnPXoO-020-rsLXEOoQ@mail.gmail.com>
+References: <1373013749-14530-1-git-send-email-sachin.kamat@linaro.org>
+	<20130726201800.7598.54329@quantum>
+	<CAK9yfHw6KtVDAns-1JhNpiS0brTeUpfiHS-v3q7H2GLWkY-Adw@mail.gmail.com>
+	<20130730064800.22022.14773@quantum>
+	<CAK9yfHxLjYNjQ9h-N8hNLBvqyUTxNzt=Bw10=mEA=D1kg2f9dw@mail.gmail.com>
+	<20130731034235.5270.7481@quantum>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1374842890-20735-1-git-send-email-jonas.jensen@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: jonas.jensen@gmail.com
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arm@kernel.org, florian@openwrt.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130731034235.5270.7481@quantum>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, patches@linaro.org, inki.dae@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Jonas Jensen <jonas.jensen@gmail.com>
-Date: Fri, 26 Jul 2013 14:48:10 +0200
+On 31 July 2013 09:12, Mike Turquette <mturquette@linaro.org> wrote:
+> Quoting Sachin Kamat (2013-07-29 23:55:33)
+>> On 30 July 2013 12:18, Mike Turquette <mturquette@linaro.org> wrote:
+>> > Quoting Sachin Kamat (2013-07-27 06:29:56)
+>> >> On 27 July 2013 01:48, Mike Turquette <mturquette@linaro.org> wrote:
+>> >> > Quoting Sachin Kamat (2013-07-05 01:42:27)
+>> >> >> Adds gate clock for G2D IP for Exynos5250 SoC.
+>> >> >>
+>> >> >> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+>> >> >> Cc: Mike Turquette <mturquette@linaro.org>
+>> >> >
+>> >> > I've taken patch #1 into clk-next.
+>> >>
+>> >> Thanks Mike.
+>> >>
+>> >> >
+>> >> >> ---
+>> >> >> This patch depends on the following patch:
+>> >> >> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/20581
+>> >> >
+>> >> > I think I've gotten all three series you sent out, can you confirm?
+>> >>
+>> >> I haven't seen any update in your tree [1] since quite some time. The
+>> >> last commit I see in clk-next branch is 45e3ec3784 ("clk: tegra: fix
+>> >> ifdef for tegra_periph_reset_assert inline"). I hope I am looking at
+>> >> the right tree?
+>> >
+>> > You are, but I had not pushed to it since the merge window closed. It is
+>> > now updated.
+>> >
+>>
+>> Thanks Mike. I confirm that all the three patch series that you
+>> mentioned are applied in your tree.
+>> Please check the below one too.
+>>
+>> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg20598.html
+>
+> Ok, I picked that one up too.
 
-> +
-> +CFLAGS_moxart_ether.o := -DDEBUG
+Thanks Mike.
 
-This is not appropriate, please remove this.
+-- 
+With warm regards,
+Sachin
