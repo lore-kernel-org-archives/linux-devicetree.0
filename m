@@ -1,51 +1,75 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from jdl.com ([208.123.74.7]:44962 "EHLO jdl.com"
+Received: from comal.ext.ti.com ([198.47.26.152]:47509 "EHLO comal.ext.ti.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932388Ab3GVVe6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Mon, 22 Jul 2013 17:34:58 -0400
-Message-Id: <E1V1Nkn-00072x-Df@jdl.com>
-Subject: Re: The future of DT binding maintainership
-In-reply-to: <1925583.R0td2pS6as@flatron>
-References: <CACxGe6vtJPbbqwpH8Th5S36Hx50f39j1P4OpLb-Um9xQie6Lng@mail.gmail.com> <2962401.WRRoYlXkRr@flatron> <60BA5429A0E1584BA3633194F6F993B502B21362@NA-MBX-03.mgc.mentorg.com> <1925583.R0td2pS6as@flatron>
-Date: Mon, 22 Jul 2013 16:34:49 -0500
-From: Jon Loeliger <jdl@jdl.com>
+	id S1756811Ab3GaQjw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 31 Jul 2013 12:39:52 -0400
+Message-ID: <51F93DD1.6030901@ti.com>
+Date: Wed, 31 Jul 2013 11:39:45 -0500
+From: Nishanth Menon <nm@ti.com>
+MIME-Version: 1.0
+Subject: Re: [RFC PATCH 2/2] PM / OPP: check for existing OPP list when initialising
+ from device tree
+References: <1375207217-4433-1-git-send-email-Sudeep.KarkadaNagesha@arm.com> <1375207217-4433-3-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+In-Reply-To: <1375207217-4433-3-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: "Chaiken, Alison" <Alison_Chaiken@mentor.com>, Grant Likely <grant.likely@secretlab.ca>, Wolfram Sang <w.sang@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>
 List-ID: <devicetree@vger.kernel.org>
 
+On 07/30/2013 01:00 PM, Sudeep KarkadaNagesha wrote:
+> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+>
+> CPUs are registered as devices and their OPPs can be initialised from
+> the device tree. Whenever CPUs can be hotplugged out, the corresponding
+> cpu devices are not removed. As a result all their OPPs remain intact
+> even when they are offlined.
+>
+> But when they are hotplugged back-in, the cpufreq along with other cpu
+> related subsystem gets re-initialised. Since its almost same as secondary
+> cpu being brought up, no special consideration is taken in the hotplug
+> path. This may result in cpufreq trying to initialise the OPPs again though
+> the cpu device already contains the OPPs.
+>
+> This patch checks if there exist an OPP list associated with the device,
+> before attempting to initialise it.
+>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: "Rafael J. Wysocki" <rjw@sisk.pl>
+> Cc: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> ---
+>   drivers/base/power/opp.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
+> index 9ac3c93..8a9d138 100644
+> --- a/drivers/base/power/opp.c
+> +++ b/drivers/base/power/opp.c
+> @@ -708,9 +708,15 @@ int of_init_opp_table(struct device *dev)
+>   {
+>   	const struct property *prop;
+>   	struct device_node *opp_node;
+> +	struct device_opp *dev_opp;
+>   	const __be32 *val;
+>   	int nr;
+>
+> +	/* Check for existing list for 'dev' */
+> +	dev_opp = find_device_opp(dev);
+> +	if (!IS_ERR(dev_opp))
+> +		return -EEXIST; /* Device OPP already initialized */
+> +
+>   	opp_node = of_parse_phandle(dev->of_node,
+>   					"operating-points-phandle", 0);
+>   	if (!opp_node) /* if no OPP phandle, search for OPPs in current node */
+>
 
-> > Is there a schema out there in the wild that exemplifies what you mean?
-> 
-> Not really. The format of schemas is currently in design stage. I'm 
-> currently rethinking some details of what I have in my mind. Give me some 
-> more time and I will post an RFC to the ML with all that written down.
+Acked-by: Nishanth Menon <nm@ti.com>
 
-...and...
-
-> > The schema-check idea reminds me of the W3C HTML validators:
-> > 
-> >       http://validator.w3.org/
-> > 
-> > Since device-tree source looks a bit like XML (or maybe more like JSON),
-> > will be the schemas be similar in spirit to DTDs, and is it helpful to
-> > think of the validator in this spirit?   Or will the checker be more
-> > like "gcc -Wall", since it will be invoked by a compiler?
-> 
-> My idea is to implement compile time verification in dtc, so I guess it 
-> will be more like the latter. Since dts is what dtc can already parse, my 
-> plan is to keep the schemas in spirit to dts, just modifying/extending it 
-> to allow specifying bindings with them, rather than static values.
-> 
-> Best regards,
-> Tomasz
-
-It is possible to add some-damn XML DTD parsing and
-rule glomming even in DTC if that is what is wanted.
-I think it will be more an issue of expressability.
-That is, how can the desired style of rules be most
-eloquently expressed, internalized and applied?
-
-That will be the current challenge first.
-
-jdl
+-- 
+Regards,
+Nishanth Menon
