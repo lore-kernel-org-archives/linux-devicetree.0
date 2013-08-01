@@ -1,44 +1,35 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp65.ord1c.emailsrvr.com ([108.166.43.65]:60469 "EHLO
-	smtp65.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1753086Ab3HBQ2e (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 12:28:34 -0400
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: [PATCH v2 2/5] sata highbank: enable 64-bit DMA mask when using LPAE
-Date: Fri,  2 Aug 2013 11:28:35 -0500
-Message-Id: <1375460918-4661-2-git-send-email-mark.langsdorf@calxeda.com>
-In-Reply-To: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com>
-References: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com>
+Received: from mail1.g1.pair.com ([66.39.3.162]:28799 "EHLO mail1.g1.pair.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752204Ab3HAJgJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Thu, 1 Aug 2013 05:36:09 -0400
+From: Sean Cross <xobs@kosagi.com>
+Subject: [PATCH v3] Add OF bindings to Micrel ksz9021 PHY
+Date: Thu,  1 Aug 2013 09:19:16 +0000
+Message-Id: <1375348757-12856-1-git-send-email-xobs@kosagi.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
-Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>, Duan Fugang-B38611 <B38611@freescale.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: David Miller <davem@davemloft.net>, "stephen@networkplumber.org" <stephen@networkplumber.org>, Steven Rostedt <rostedt@goodmis.org>, Sean Cross <xobs@kosagi.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Rob Herring <rob.herring@calxeda.com>
+Some boards require custom parameters be passed to the Micrel PHY.
+Allow these boards to specify custom timing parameters in the device
+tree node.
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
----
-Changes from v1
-	None.
+Changes since v2:
+ - limited the scope to just ksz9021 rather than all PHYs
 
- drivers/ata/sata_highbank.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes since v1:
+ - removed redefinition of registers and addresses 
 
-diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
-index e9a4f46..8b40025 100644
---- a/drivers/ata/sata_highbank.c
-+++ b/drivers/ata/sata_highbank.c
-@@ -479,6 +479,9 @@ static int ahci_highbank_probe(struct platform_device *pdev)
- 	if (hpriv->cap & HOST_CAP_PMP)
- 		pi.flags |= ATA_FLAG_PMP;
- 
-+	if (hpriv->cap & HOST_CAP_64)
-+		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
-+
- 	/* CAP.NP sometimes indicate the index of the last enabled
- 	 * port, at other times, that of the last possible port, so
- 	 * determining the maximum port number requires looking at
+Sean Cross (1):
+  net/phy: micrel: Add OF configuration support for ksz9021
+
+ .../devicetree/bindings/net/micrel-ksz9021.txt     |   19 +++++++
+ drivers/net/phy/micrel.c                           |   57 +++++++++++++++++++-
+ 2 files changed, 75 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/net/micrel-ksz9021.txt
+
 -- 
-1.8.1.2
+1.7.9.5
 
