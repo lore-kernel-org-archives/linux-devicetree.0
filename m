@@ -1,109 +1,68 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from bear.ext.ti.com ([192.94.94.41]:51324 "EHLO bear.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1030596Ab3HIIjc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 9 Aug 2013 04:39:32 -0400
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [RFC 03/22] ARM: OMAP2+: add omapdss_init_of()
-Date: Fri, 9 Aug 2013 11:38:48 +0300
-Message-ID: <1376037547-10859-4-git-send-email-tomi.valkeinen@ti.com>
-In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
-References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+Received: from devils.ext.ti.com ([198.47.26.153]:54088 "EHLO
+	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755558Ab3HAPk6 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 11:40:58 -0400
+Date: Thu, 1 Aug 2013 18:40:20 +0300
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH V3] drivers/rtc/rtc-palmas.c: support for backup battery
+ charging
+Message-ID: <20130801154020.GD11286@radagast>
+Reply-To: <balbi@ti.com>
+References: <1375370931-2194-1-git-send-email-ldewangan@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JwB53PgKC5A7+0Ej"
+Content-Disposition: inline
+In-Reply-To: <1375370931-2194-1-git-send-email-ldewangan@nvidia.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: akpm@linux-foundation.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, gg@slimlogic.co.uk, kishon@ti.com, swarren@nvidia.com, pawel.moll@arm.com, Mark.Rutland@arm.com, ian.campbell@citrix.com, broonie@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-omapdss driver uses a omapdss platform device to pass platform specific
-function pointers and DSS hardware version from the arch code to the
-driver. This device is needed also when booting with DT.
+--JwB53PgKC5A7+0Ej
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch adds omapdss_init_of() function, called from board-generic at
-init time, which creates the omapdss device.
+On Thu, Aug 01, 2013 at 08:58:51PM +0530, Laxman Dewangan wrote:
+> Palmas series device like TPS65913, TPS80036 supports the backup battery
+> for powering the RTC when no other energy source is available.
+>=20
+> The backup battery is optional, connected to the VBACKUP pin, and can be
+> nonrechargeable or rechargeable. The rechargeable battery can be charged
+> from the system supply using the backup battery charger.
+>=20
+> Add support for enabling charging of this backup battery.  Also add the DT
+> binding document and the new properties to have this support.
+>=20
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- arch/arm/mach-omap2/board-generic.c |  2 ++
- arch/arm/mach-omap2/common.h        |  2 ++
- arch/arm/mach-omap2/display.c       | 34 ++++++++++++++++++++++++++++++++++
- 3 files changed, 38 insertions(+)
+Reviewed-by: Felipe Balbi <balbi@ti.com>
 
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-index d388d33..aaf1125 100644
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -61,6 +61,8 @@ static void __init omap_generic_init(void)
- 		legacy_init_ehci_clk("auxclk3_ck");
- 	else if (of_machine_is_compatible("ti,omap5-uevm"))
- 		legacy_init_ehci_clk("auxclk1_ck");
-+
-+	omapdss_init_of();
- }
- 
- #ifdef CONFIG_SOC_OMAP2420
-diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
-index dfcc182..377900c 100644
---- a/arch/arm/mach-omap2/common.h
-+++ b/arch/arm/mach-omap2/common.h
-@@ -300,5 +300,7 @@ extern int omap_dss_reset(struct omap_hwmod *);
- /* SoC specific clock initializer */
- extern int (*omap_clk_init)(void);
- 
-+int __init omapdss_init_of(void);
-+
- #endif /* __ASSEMBLER__ */
- #endif /* __ARCH_ARM_MACH_OMAP2PLUS_COMMON_H */
-diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.c
-index ff37be1..c62aee0 100644
---- a/arch/arm/mach-omap2/display.c
-+++ b/arch/arm/mach-omap2/display.c
-@@ -23,6 +23,8 @@
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/delay.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
- 
- #include <video/omapdss.h>
- #include "omap_hwmod.h"
-@@ -564,3 +566,35 @@ int omap_dss_reset(struct omap_hwmod *oh)
- 
- 	return r;
- }
-+
-+int __init omapdss_init_of(void)
-+{
-+	int r;
-+	enum omapdss_version ver;
-+
-+	static struct omap_dss_board_info board_data = {
-+		.dsi_enable_pads = omap_dsi_enable_pads,
-+		.dsi_disable_pads = omap_dsi_disable_pads,
-+		.get_context_loss_count = omap_pm_get_dev_context_loss_count,
-+		.set_min_bus_tput = omap_dss_set_min_bus_tput,
-+	};
-+
-+	ver = omap_display_get_version();
-+
-+	if (ver == OMAPDSS_VER_UNKNOWN) {
-+		pr_err("DSS not supported on this SoC\n");
-+		return -ENODEV;
-+	}
-+
-+	board_data.version = ver;
-+
-+	omap_display_device.dev.platform_data = &board_data;
-+
-+	r = platform_device_register(&omap_display_device);
-+	if (r < 0) {
-+		pr_err("Unable to register omapdss device\n");
-+		return r;
-+	}
-+
-+	return 0;
-+}
--- 
-1.8.1.2
+--=20
+balbi
 
+--JwB53PgKC5A7+0Ej
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR+oFkAAoJEIaOsuA1yqREe40P/jgvgPeOPU6EksuQBoylj2Oi
+tDeb43CAiN9OMP1R8V0yv48Lm0T8Y20hdaSrGtqIGU76VfEl7puGmRBkpszoMfr2
++gZL/KtmWVbUEzy2/jLrQ1KQhC1YPEgPp8Zck5T5nPU7/vbj85FgGqFSgpbKZBB6
+UD1Pt77l26qL/7dRr1ec6yauk0q0ZfTeKopuG8HKW8FQOhRAX7XZzzgh1cNQtBFT
+9GTk54DfAFS3+jqCA5DyRRJKCmZPlKCSOXrHAyj0tylQJ3O1OCLv+gu6OgR5DqsV
+JgnCXFflr8yuMvVf5ZFfhZu4GSnw+TScjUJP1TmgHKhC/IJShvDQOAvIzPB1SFD1
+8C+VIDjdR4Dvf8a1qEy3vvUmipZbmvEqp1DoBJNa7JQXsqOa9CK/3ZyoO559MBqQ
+UgNwexcEROILIpy8sFgM1Z07GjzLqofR2FfbWjp39HqcsL+dyKmRQVg89ODv+4zx
+FbhqpuJ1mns1zkQt27P3kTRvktSKefqL+sL58ola/2J8nIW38TieF90BnMj833JT
+WkA4D6XgedPVmXae43Jg96ZgbYTnE0LosU+PICEU3VffTUscf23ZKadYg/oFWgUW
+gZGVcLwEPvWMSQj33Pw0Gf2bPhxB2inJQC6ZFp12/2rhNK+RjU7k/xUFnd59zwaU
+14TAkTOmkYF9+n3Ua5iG
+=LHc1
+-----END PGP SIGNATURE-----
+
+--JwB53PgKC5A7+0Ej--
