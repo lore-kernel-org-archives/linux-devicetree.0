@@ -1,16 +1,18 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4 2/6] misc: sram: add ability to mark sram sections as
- reserved
-Date: Thu, 1 Aug 2013 18:35:21 +0200
-Message-ID: <201308011835.22186.heiko@sntech.de>
-References: <201307291510.31679.heiko@sntech.de>
- <1375106520.4223.24.camel@pizza.hi.pengutronix.de>
- <CAHCPf3vSQHtRkk-_cs3monHfrF-hVx3vTDt1ctcax_bspXDmsg@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [Patch V2 4/4] ARM: dts: AM33XX: update rtc node compatibility
+Date: Thu, 1 Aug 2013 18:05:37 +0100
+Message-ID: <20130801170537.GF8095@e106331-lin.cambridge.arm.com>
+References: <1372841225-18813-1-git-send-email-gururaja.hebbar@ti.com>
+ <1372841225-18813-5-git-send-email-gururaja.hebbar@ti.com>
+ <51F749B0.7020802@ti.com>
+ <20130730145501.GA29859@e106331-lin.cambridge.arm.com>
+ <51F7E7FA.3080702@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAHCPf3vSQHtRkk-_cs3monHfrF-hVx3vTDt1ctcax_bspXDmsg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <51F7E7FA.3080702@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,73 +22,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matt Sealey <neko@bakuhatsu.net>
-Cc: Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Ulrich Prinz <ulrich.prinz@googlemail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@gmail.com" <benoit.cousson@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "vaibhav.bedia@ti.com" <vaibhav.bedia@ti.com>, Gururaja Hebbar <gururaja.hebbar@ti.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 29. Juli 2013, 23:39:45 schrieb Matt Sealey:
-> On Mon, Jul 29, 2013 at 9:02 AM, Philipp Zabel <p.zabel@pengutronix.de> =
+On Tue, Jul 30, 2013 at 05:21:14PM +0100, Sekhar Nori wrote:
+> On 7/30/2013 8:25 PM, Mark Rutland wrote:
+> > On Tue, Jul 30, 2013 at 06:05:52AM +0100, Gururaja Hebbar wrote:
+> >> Hi,
+> >>
+> >> On 7/3/2013 2:17 PM, Hebbar Gururaja wrote:
+> >>> Since AM33xx  RTC IP has RTC_IRQWAKEEN to support Alarm Wake-up.
+> >>>
+> >>> Update the rtc compatible property to "ti,am3352-rtc" to enable handling
+> >>> of this feature inside rtc-omap driver.
+> >>
+> >> The other 2 rtc driver related patches have been pulled up. If you have 
+> >> no comments, can you please pull this up.
+> >>
+> >> Regards
+> >> Gururaja
+> >>
+> >>>
+> >>> Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
+> >>> ---
+> >>> :100644 100644 77aa1b0... dde180a... M	arch/arm/boot/dts/am33xx.dtsi
+> >>>   arch/arm/boot/dts/am33xx.dtsi |    2 +-
+> >>>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> >>> index 77aa1b0..dde180a 100644
+> >>> --- a/arch/arm/boot/dts/am33xx.dtsi
+> >>> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> >>> @@ -297,7 +297,7 @@
+> >>>   		};
+> >>>
+> >>>   		rtc@44e3e000 {
+> >>> -			compatible = "ti,da830-rtc";
+> >>> +			compatible = "ti,am3352-rtc";
+> > 
+> > Given that this is backwards compatible with the old binding, it would
+> > be nicer to have this as:
+> > 
+> > 	compatible = "ti,am3352-rtc", "ti,da830-rtc";
+> > 
+> > We must get into the habit of changing dts files in a
+> > backwards-compatible fashion.
+> 
+> Right, I suggested this when v1 was posted. It turns out the current
+> kernel does not handle the compatilble list correctly and the string
+> selected actually depends on the order in which it appears in match
+> table in driver instead.
+> 
+> I saw there were patches being discussed to fix this issue, but until
+> that is fixed, we cannot really use what you (and I before) suggested.
 
-wrote:
-> > Hi Heiko,
-> > =
+A temporary solution would be to list the "ti,am3352-rtc" first in the
+of_match_table kernel-side. That way you can keep the old compatible
+string in the dts compatible list, and maintain backwards compatibilty
+with older kernels.
 
-> > Am Montag, den 29.07.2013, 15:12 +0200 schrieb Heiko St=FCbner:
-> >> Some SoCs need parts of their sram for special purposes. So while being
-> >> part of the peripheral, it should not be part of the genpool
-> >> controlling the sram.
-> >> =
+Later if the way Linux matches compatible strings is changed, this
+shouldn't break the probe order, and the of_match_table order could be
+changed.
 
-> >> Therefore add an option mmio-sram-reserved to keep arbitrary portions =
-of
-> >> the sram from being part of the pool.
-> >> =
+Have I missed something?
 
-> >> Suggested-by: Rob Herring <robherring2@gmail.com>
-> >> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> >> Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
-> >> ---
-> >> Philipp: I didn't carry the ack, because the loop changed significantly
-> >> again. So if it looks ok, could you re-ack it please?
-> > =
-
-> > I'd prefer the first loop to contain the magic and produce a list of
-> > useable chunks, instead of a list of reserved blocks. The second loop
-> > could then iterate over the array and just call gen_pool_add_virt
-> > repeatedly.
-> > =
-
-> > regards
-> > Philipp
-> =
-
-> Agreed, however specifying chunks of memory should probably match the
-> format of the standard memory@ node "available" property - mostly
-> because it would be the same syntax and definition as defining any
-> other chunk of memory, as OpenFirmware and device trees have been
-> doing since the dark ages. In this case, why not re-use the
-> "available" property name instead of creating a new one? Standard OF
-> memory parsing code is then free for you to use to pull the chunks
-> out.
-
-Sound interesting, but could you give me a pointer to some sort of docs abo=
-ut =
-
-this "available" property in memory nodes?
-
-Documentation/devicetree/booting-without-of.txt seems to be the only file =
-
-describing the memory node at all but only required properties, and not any =
-
-"available" property.
-
-I've found a document  on power.org describing the memory node, but also no=
-t =
-
-mentioning any "available" property.
-
-And devicetree.org does not seem to handle the memory node at all.
-
-
-Thanks for any hints
-Heiko
+Thanks,
+Mark.
