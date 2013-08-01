@@ -1,68 +1,132 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from devils.ext.ti.com ([198.47.26.153]:54088 "EHLO
-	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755558Ab3HAPk6 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 11:40:58 -0400
-Date: Thu, 1 Aug 2013 18:40:20 +0300
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH V3] drivers/rtc/rtc-palmas.c: support for backup battery
- charging
-Message-ID: <20130801154020.GD11286@radagast>
-Reply-To: <balbi@ti.com>
-References: <1375370931-2194-1-git-send-email-ldewangan@nvidia.com>
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:10859 "EHLO
+	hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756409Ab3HAPQW (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 11:16:22 -0400
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V3] drivers/rtc/rtc-palmas.c: support for backup battery charging
+Date: Thu, 1 Aug 2013 20:58:51 +0530
+Message-ID: <1375370931-2194-1-git-send-email-ldewangan@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JwB53PgKC5A7+0Ej"
-Content-Disposition: inline
-In-Reply-To: <1375370931-2194-1-git-send-email-ldewangan@nvidia.com>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: akpm@linux-foundation.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, gg@slimlogic.co.uk, kishon@ti.com, swarren@nvidia.com, pawel.moll@arm.com, Mark.Rutland@arm.com, ian.campbell@citrix.com, broonie@kernel.org
+To: akpm@linux-foundation.org
+Cc: grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, gg@slimlogic.co.uk, kishon@ti.com, swarren@nvidia.com, pawel.moll@arm.com, Mark.Rutland@arm.com, ian.campbell@citrix.com, broonie@kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
---JwB53PgKC5A7+0Ej
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Palmas series device like TPS65913, TPS80036 supports the backup battery
+for powering the RTC when no other energy source is available.
 
-On Thu, Aug 01, 2013 at 08:58:51PM +0530, Laxman Dewangan wrote:
-> Palmas series device like TPS65913, TPS80036 supports the backup battery
-> for powering the RTC when no other energy source is available.
->=20
-> The backup battery is optional, connected to the VBACKUP pin, and can be
-> nonrechargeable or rechargeable. The rechargeable battery can be charged
-> from the system supply using the backup battery charger.
->=20
-> Add support for enabling charging of this backup battery.  Also add the DT
-> binding document and the new properties to have this support.
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+The backup battery is optional, connected to the VBACKUP pin, and can be
+nonrechargeable or rechargeable. The rechargeable battery can be charged
+from the system supply using the backup battery charger.
 
-Reviewed-by: Felipe Balbi <balbi@ti.com>
+Add support for enabling charging of this backup battery.  Also add the DT
+binding document and the new properties to have this support.
 
---=20
-balbi
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+Changes from V1: 
+- Converted DT property to boolean.
+- cleanups as use "...".
 
---JwB53PgKC5A7+0Ej
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes from V2:
+- Change the property name "ti,back-charge-low-current" to
+  "ti,back-battery-charge-low-current"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+ .../devicetree/bindings/rtc/rtc-palmas.txt         |   29 ++++++++++++++++
+ drivers/rtc/rtc-palmas.c                           |   35 ++++++++++++++++++++
+ 2 files changed, 64 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-palmas.txt
 
-iQIcBAEBAgAGBQJR+oFkAAoJEIaOsuA1yqREe40P/jgvgPeOPU6EksuQBoylj2Oi
-tDeb43CAiN9OMP1R8V0yv48Lm0T8Y20hdaSrGtqIGU76VfEl7puGmRBkpszoMfr2
-+gZL/KtmWVbUEzy2/jLrQ1KQhC1YPEgPp8Zck5T5nPU7/vbj85FgGqFSgpbKZBB6
-UD1Pt77l26qL/7dRr1ec6yauk0q0ZfTeKopuG8HKW8FQOhRAX7XZzzgh1cNQtBFT
-9GTk54DfAFS3+jqCA5DyRRJKCmZPlKCSOXrHAyj0tylQJ3O1OCLv+gu6OgR5DqsV
-JgnCXFflr8yuMvVf5ZFfhZu4GSnw+TScjUJP1TmgHKhC/IJShvDQOAvIzPB1SFD1
-8C+VIDjdR4Dvf8a1qEy3vvUmipZbmvEqp1DoBJNa7JQXsqOa9CK/3ZyoO559MBqQ
-UgNwexcEROILIpy8sFgM1Z07GjzLqofR2FfbWjp39HqcsL+dyKmRQVg89ODv+4zx
-FbhqpuJ1mns1zkQt27P3kTRvktSKefqL+sL58ola/2J8nIW38TieF90BnMj833JT
-WkA4D6XgedPVmXae43Jg96ZgbYTnE0LosU+PICEU3VffTUscf23ZKadYg/oFWgUW
-gZGVcLwEPvWMSQj33Pw0Gf2bPhxB2inJQC6ZFp12/2rhNK+RjU7k/xUFnd59zwaU
-14TAkTOmkYF9+n3Ua5iG
-=LHc1
------END PGP SIGNATURE-----
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-palmas.txt b/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
+new file mode 100644
+index 0000000..4f930b0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
+@@ -0,0 +1,29 @@
++Palmas RTC controller bindings
++
++Required properties:
++- compatible:
++  - "ti,palmas-rtc" for palma series of the RTC controller
++- interrupt-parent: Parent interrupt device, must be handle of palmas node.
++- interrupts: Interrupt number of RTC submodule on device.
++
++Optional properties:
++- ti,back-battery-charge-enable: The palmas series device like TPS65913 or
++	TPS80036 supports the battery backup for powering the RTC when main
++	battery is removed or in very low power state. This flag will enable
++	the backup battery charging.
++- ti,back-battery-charge-low-current: Configure lower charging current. Device
++	supports the charging current as < 100mA or >100mA. Low current will
++	set as <100mA.
++
++Example:
++	palmas: tps65913@58 {
++		...
++		palmas_rtc: rtc {
++			compatible = "ti,palmas-rtc";
++			interrupt-parent = <&palmas>;
++			interrupts = <8 0>;
++			ti,back-battery-charge-enable;
++			ti,back-battery-charge-low-current;
++		};
++		...
++	};
+diff --git a/drivers/rtc/rtc-palmas.c b/drivers/rtc/rtc-palmas.c
+index a1fecc8..adb6e71 100644
+--- a/drivers/rtc/rtc-palmas.c
++++ b/drivers/rtc/rtc-palmas.c
+@@ -238,6 +238,15 @@ static int palmas_rtc_probe(struct platform_device *pdev)
+ 	struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
+ 	struct palmas_rtc *palmas_rtc = NULL;
+ 	int ret;
++	bool enable_bb_charging = false;
++	bool low_bb_charging;
++
++	if (pdev->dev.of_node) {
++		enable_bb_charging = of_property_read_bool(pdev->dev.of_node,
++					"ti,back-battery-charge-enable");
++		low_bb_charging = of_property_read_bool(pdev->dev.of_node,
++					"ti,back-battery-charge-low-current");
++	}
+ 
+ 	palmas_rtc = devm_kzalloc(&pdev->dev, sizeof(struct palmas_rtc),
+ 			GFP_KERNEL);
+@@ -254,6 +263,32 @@ static int palmas_rtc_probe(struct platform_device *pdev)
+ 	palmas_rtc->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, palmas_rtc);
+ 
++	if (enable_bb_charging) {
++		unsigned reg = 0;
++
++		if (low_bb_charging)
++			reg |= PALMAS_BACKUP_BATTERY_CTRL_BBS_BBC_LOW_ICHRG;
++
++		ret = palmas_update_bits(palmas, PALMAS_PMU_CONTROL_BASE,
++			PALMAS_BACKUP_BATTERY_CTRL,
++			PALMAS_BACKUP_BATTERY_CTRL_BBS_BBC_LOW_ICHRG, reg);
++		if (ret < 0) {
++			dev_err(&pdev->dev,
++				"BACKUP_BATTERY_CTRL update failed, %d\n", ret);
++			return ret;
++		}
++
++		ret = palmas_update_bits(palmas, PALMAS_PMU_CONTROL_BASE,
++			PALMAS_BACKUP_BATTERY_CTRL,
++			PALMAS_BACKUP_BATTERY_CTRL_BB_CHG_EN,
++			PALMAS_BACKUP_BATTERY_CTRL_BB_CHG_EN);
++		if (ret < 0) {
++			dev_err(&pdev->dev,
++				"BACKUP_BATTERY_CTRL update failed, %d\n", ret);
++			return ret;
++		}
++	}
++
+ 	/* Start RTC */
+ 	ret = palmas_update_bits(palmas, PALMAS_RTC_BASE, PALMAS_RTC_CTRL_REG,
+ 			PALMAS_RTC_CTRL_REG_STOP_RTC,
+-- 
+1.7.1.1
 
---JwB53PgKC5A7+0Ej--
