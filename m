@@ -1,77 +1,90 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv4 05/33] CLK: omap: add DT duplicate clock registration
- mechanism
-Date: Thu, 1 Aug 2013 18:30:26 +0300
-Message-ID: <51FA7F12.6010407@ti.com>
-References: <1374564028-11352-1-git-send-email-t-kristo@ti.com>
- <1374564028-11352-6-git-send-email-t-kristo@ti.com> <51F808A8.6000503@ti.com>
- <51F8E1F5.20706@ti.com> <51FA6FCA.3050900@ti.com> <51FA7C39.8090100@ti.com>
- <51FA7DB6.3060002@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+From: Kumar Gala <galak@kernel.crashing.org>
+Subject: Re: [PATCH] Add device file bindings for MAPLE
+Date: Thu, 1 Aug 2013 11:05:09 -0500
+Message-ID: <5C32ABF4-ECC3-4F1C-82D0-EA3AD9053575@kernel.crashing.org>
+References: <1375354963-11219-1-git-send-email-shaveta@freescale.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51FA7DB6.3060002@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>
-Cc: paul@pwsan.com, khilman@linaro.org, mturquette@linaro.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1375354963-11219-1-git-send-email-shaveta@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Shaveta Leekha <shaveta@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/01/2013 06:24 PM, Nishanth Menon wrote:
-> On 08/01/2013 10:18 AM, Tero Kristo wrote:
->> On 08/01/2013 05:25 PM, Nishanth Menon wrote:
->>> On 07/31/2013 05:07 AM, Tero Kristo wrote:
->>>> On 07/30/2013 09:40 PM, Nishanth Menon wrote:
->>>>> On 07/23/2013 02:20 AM, Tero Kristo wrote:
-> [..]
->>> if we can get rid of usage of omap_hwmod_get_main_clk by catching them
->>> with [1], then we can force the drivers to pick up based on device node
->>> clocks= property.
->>>
->>> It might be easier to fix 1 driver - timer, rather than introduce am33x,
->>> omap4, omap5 dra7 specific "SoC clk driver".
->>>
->>> with that this entire patch becomes redundant.
->>
->> It is not that simple. Looking at the architectures this set supports, I
->> see clock alias nodes at least for following drivers:
->>
->> - GPT timer
->> - USB
->> - DCAN
->> - EMAC
->> - VPFE
->> - UART
->> - SSI
->> - DSS
->> - security
->> - MMC
->> - MCBSP
->> - MCSPI
->>
->> I am _not_ going to fix all of these during the initial phase. :P
->>
->> But yes, eventually these should go away.
->
-> How many of these are needed to boot? what functionality do we expect
-> with the series -> we can constraint saying that remaining drivers
-> should fix themselves the right way, else dont have the feature -
-> example cpufreq- fix it the right way, or wont see the feature enabled.
->
-> introducing a "way out" for all of these just invites more guys to screw
-> around claiming "it was done before - see here"..
->
-> lets just fix the darned basic ones, refuse to provide "way out" and let
-> the others fix themselves.
->
 
-Yea, that would be one way. I guess someone like Tony should comment on 
-this.
+On Aug 1, 2013, at 6:02 AM, Shaveta Leekha wrote:
+
+> Signed-off-by: Shaveta Leekha <shaveta@freescale.com>
+> ---
+> .../devicetree/bindings/powerpc/fsl/maple.txt      |   30 ++++++++++++++++++++
+> 1 files changed, 30 insertions(+), 0 deletions(-)
+> create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/maple.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/maple.txt b/Documentation/devicetree/bindings/powerpc/fsl/maple.txt
+> new file mode 100644
+> index 0000000..da51c5f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/maple.txt
+> @@ -0,0 +1,30 @@
+> +* Freescale MAPLE Multi Accelerator Platform Engine Baseband 3
+> +  (MAPLE-B3)device nodes
+> +
+> +Supported chips:
+> +Example: B4860
+> +
+> +Required properties:
+> +
+> +- compatible:	Should contain "fsl,maple-b3-liodn" as the value
+> +		This identifies Multi Accelerator Platform Engine
+> +		Baseband 3 block.This representation is required
+> +		for doing the PAMU/LIODN programming on the Linux side.
+
+This compatible makes no sense, we shouldn't be marking a full HW block with some name that is just intended for LIODN convenance.
+
+Is this version 3 of the block?  If so a name like "fsl,maple-v3" or "fsl,maple-v3.0" would be more appropriate.
+
+- k
+
+> +
+> +- reg:		offset and length of the register set for the device
+> +
+> +Devices that have LIODNs need to specify links to the parent PAMU controller
+> +(the actual PAMU controller that this device is connected to) and a pointer to
+> +the LIODN register, if applicable.
+
+
+Does Maple not have any IRQs associated with it?
+
+If you are going to have a minimal binding, at least cover the basics associated with a device.
+
+> +
+> +- fsl,iommu-parent
+> +		: <phandle>
+> +		This property should be present
+> +
+> +Example:
+> +	/* B4860 */
+> +	maple@800000 {
+> +		compatible = "fsl,maple-b3-liodn";
+> +		reg = <0x8000000 0x10000>;
+> +		fsl,iommu-parent = <&pamu1>;
+> +	};
+> -- 
+> 1.7.6.GIT
+> 
+> 
+> _______________________________________________
+> Linuxppc-dev mailing list
+> Linuxppc-dev@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/linuxppc-dev
