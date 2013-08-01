@@ -1,60 +1,103 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-ve0-f170.google.com ([209.85.128.170]:60664 "EHLO
-	mail-ve0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751413Ab3HUCZI (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 20 Aug 2013 22:25:08 -0400
-MIME-Version: 1.0
-Date: Tue, 20 Aug 2013 19:25:06 -0700
-Message-ID: <CAN8TOE_8f_vhCAhRaBGXk9=F8=-2YtY5eSNgypSuxiL5z-B-=Q@mail.gmail.com>
-Subject: [Device-tree] mailing list responsiveness and discoverability
-From: Brian Norris <computersforpeace@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1
+Received: from mail-pb0-f44.google.com ([209.85.160.44]:56890 "EHLO
+	mail-pb0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752167Ab3HAJgF (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 05:36:05 -0400
+Received: by mail-pb0-f44.google.com with SMTP id xa7so1878608pbc.17
+        for <devicetree@vger.kernel.org>; Thu, 01 Aug 2013 02:36:04 -0700 (PDT)
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 1/1] usb: samsung: Update Exynos ehci/ohci bindings documentation
+Date: Thu,  1 Aug 2013 14:49:32 +0530
+Message-Id: <1375348772-23357-1-git-send-email-sachin.kamat@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
-Cc: devicetree@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, kgene.kim@samsung.com, stern@rowland.harvard.edu, rob@landley.net, swarren@wwwdotorg.org, gautam.vivek@samsung.com, sachin.kamat@linaro.org, patches@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hello device tree maintainers,
+Updated the document as per the latest implementation.
+While at it also fixed some trivial typos.
 
-I (sub)maintain the Linux MTD subsystem and hang out on the
-linux-mtd@infradead.org mailing list. I have been seeing an increasing
-number of submissions that involve device-tree changes. Many of these
-changes are ill thought out and may even cause ABI breakage.
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+---
+ .../devicetree/bindings/usb/exynos-usb.txt         |   38 +++++++++++---------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
-According to discussions I've seen on LKML, you want to see better
-bindings merged into the kernel, and you want to maintain more control
-over the acceptance of bindings in general. However, I see a few
-problems that have inhibited this.
+diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+index d967ba1..16a2c0f 100644
+--- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
++++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+@@ -5,13 +5,15 @@ The device node has following properties.
+ 
+ EHCI
+ Required properties:
+- - compatible: should be "samsung,exynos4210-ehci" for USB 2.0
+-   EHCI controller in host mode.
+- - reg: physical base address of the controller and length of memory mapped
++ - compatible : should be one of the following for USB 2.0 EHCI controller
++		in host mode:
++	(a) "samsung,exynos5440-ehci" for Exynos5440 SoC
++	(b) "samsung,exynos4210-ehci" for all other Exynos4 and 5 SoCs
++ - reg : physical base address of the controller and length of memory mapped
+    region.
+- - interrupts: interrupt number to the cpu.
+- - clocks: from common clock binding: handle to usb clock.
+- - clock-names: from common clock binding: Shall be "usbhost".
++ - interrupts : interrupt number to the CPU.
++ - clocks : from common clock binding: handle to USB clock.
++ - clock-names : from common clock binding: Shall be "usbhost".
+ 
+ Optional properties:
+  - samsung,vbus-gpio:  if present, specifies the GPIO that
+@@ -23,7 +25,7 @@ Example:
+ 		compatible = "samsung,exynos4210-ehci";
+ 		reg = <0x12110000 0x100>;
+ 		interrupts = <0 71 0>;
+-		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
++		samsung,vbus-gpio = <&gpx2 6 0>;
+ 
+ 		clocks = <&clock 285>;
+ 		clock-names = "usbhost";
+@@ -31,13 +33,15 @@ Example:
+ 
+ OHCI
+ Required properties:
+- - compatible: should be "samsung,exynos4210-ohci" for USB 2.0
+-   OHCI companion controller in host mode.
+- - reg: physical base address of the controller and length of memory mapped
++ - compatible : should be one of the following for USB 2.0 OHCI companion
++		controller in host mode:
++	(a) "samsung,exynos5440-ohci" for Exynos5440 SoC
++	(b) "samsung,exynos4210-ohci" for all other Exynos4 and 5 SoCs
++ - reg : physical base address of the controller and length of memory mapped
+    region.
+- - interrupts: interrupt number to the cpu.
+- - clocks: from common clock binding: handle to usb clock.
+- - clock-names: from common clock binding: Shall be "usbhost".
++ - interrupts : interrupt number to the CPU.
++ - clocks : from common clock binding: handle to USB clock.
++ - clock-names : from common clock binding: Shall be "usbhost".
+ 
+ Example:
+ 	usb@12120000 {
+@@ -51,14 +55,14 @@ Example:
+ 
+ DWC3
+ Required properties:
+- - compatible: should be "samsung,exynos5250-dwusb3" for USB 3.0 DWC3
++ - compatible : should be "samsung,exynos5250-dwusb3" for USB 3.0 DWC3
+ 	       controller.
+  - #address-cells, #size-cells : should be '1' if the device has sub-nodes
+ 				 with 'reg' property.
+- - ranges: allows valid 1:1 translation between child's address space and
++ - ranges : allows valid 1:1 translation between child's address space and
+ 	   parent's address space
+- - clocks: Clock IDs array as required by the controller.
+- - clock-names: names of clocks correseponding to IDs in the clock property
++ - clocks : Clock IDs array as required by the controller.
++ - clock-names : names of clocks corresponding to IDs in the clock property
+ 
+ Sub-nodes:
+ The dwc3 core should be added as subnode to Exynos dwc3 glue.
+-- 
+1.7.9.5
 
-(1) Mailing list change: it just so happens that you recently moved
-your mailing list to @vger.kernel.org. Some people are still CC'ing
-the old one (if they CC any DT list at all). I'm not sure what can be
-done about this, exactly. Perhaps a forwarding rule + a warning
-response would have been better for a transition period, rather than
-just shutting down and rejecting from the old one.
-
-(2) Responsiveness: when we finally do CC devicetree@vger.kernel.org,
-I don't see much feedback, even for those which (when I get around to
-reviewing them myself) look like they have obvious issues that
-device-tree maintainers should care about.
-
-(3) Archives: Archives for devicetree@vger.kernel.org are not easy to
-find. I recently subscribed to the mailing list, so general
-device-tree activity doesn't get lost in oblivion (to me). But if no
-one has done so yet, I'd like to see this mailing list archived on at
-least one of gmane (gmane has the old devicetree list and not the new
-one.), marc.info (I "devicetree" is this the new one?), etc. and
-linked at:
-
-http://vger.kernel.org/vger-lists.html#devicetree
-
-(there are no listed archives as of this email)
-
-Admittedly, (2) is exacerbated by (1) when submitters send to the
-wrong address and don't bother correcting and resending, so maybe
-discoverability ((1) and (3)) is the only real issue.
-
-Thanks for considering my complaints.
-
-Regards,
-Brian
