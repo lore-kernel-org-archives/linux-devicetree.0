@@ -1,66 +1,93 @@
-From: Shaveta Leekha <shaveta@freescale.com>
-Subject: [PATCH] Add device file bindings for MAPLE
-Date: Thu, 1 Aug 2013 16:32:43 +0530
-Message-ID: <1375354963-11219-1-git-send-email-shaveta@freescale.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCHv4 02/33] clk: omap: introduce clock driver
+Date: Thu, 1 Aug 2013 08:44:30 -0500
+Message-ID: <51FA663E.3070109@ti.com>
+References: <1374564028-11352-1-git-send-email-t-kristo@ti.com> <1374564028-11352-3-git-send-email-t-kristo@ti.com> <51F7DA0D.7060709@ti.com> <51F8D1E3.2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
-Cc: Shaveta Leekha <shaveta@freescale.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51F8D1E3.2@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: linux-omap@vger.kernel.org, paul@pwsan.com, khilman@linaro.org, tony@atomide.com, mturquette@linaro.org, rnayak@ti.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Shaveta Leekha <shaveta@freescale.com>
----
- .../devicetree/bindings/powerpc/fsl/maple.txt      |   30 ++++++++++++++++++++
- 1 files changed, 30 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/maple.txt
+On 07/31/2013 03:59 AM, Tero Kristo wrote:
+> On 07/30/2013 06:21 PM, Nishanth Menon wrote:
+>> On 07/23/2013 02:19 AM, Tero Kristo wrote:
+>>> Parses OMAP clock data from DT and registers those clocks with the clock
+>>> framework.  dt_omap_clk_init must be called early during boot for timer
+>>> initialization so it is exported and called from the existing clock code
+>>> instead of probing like a real driver. Based on initial work done by
+>>> Mike Turquette.
+>>>
+>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>> Cc: Mike Turquette <mturquette@linaro.org>
+>>> ---
+>>>   drivers/clk/Makefile      |    1 +
+>>>   drivers/clk/omap/Makefile |    1 +
+>>>   drivers/clk/omap/clk.c    |   39
+>>> +++++++++++++++++++++++++++++++++++++++
+>>
+>> Minor suggestion - should we just start drivers/clk/ti/ instead of
+>> clk/omap?
+>>
+>> AM335x/DRA7 are not "strictly OMAP".. might also allow for some reuse
+>> for other TI platforms..
+>
+> Not sure, this idea has been bounced around a bit. samsung has its own
+> directory under drivers/clk/ so maybe. I can change this if there is a
+> strong wish for this.
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/maple.txt b/Documentation/devicetree/bindings/powerpc/fsl/maple.txt
-new file mode 100644
-index 0000000..da51c5f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/maple.txt
-@@ -0,0 +1,30 @@
-+* Freescale MAPLE Multi Accelerator Platform Engine Baseband 3
-+  (MAPLE-B3)device nodes
-+
-+Supported chips:
-+Example: B4860
-+
-+Required properties:
-+
-+- compatible:	Should contain "fsl,maple-b3-liodn" as the value
-+		This identifies Multi Accelerator Platform Engine
-+		Baseband 3 block.This representation is required
-+		for doing the PAMU/LIODN programming on the Linux side.
-+
-+- reg:		offset and length of the register set for the device
-+
-+Devices that have LIODNs need to specify links to the parent PAMU controller
-+(the actual PAMU controller that this device is connected to) and a pointer to
-+the LIODN register, if applicable.
-+
-+- fsl,iommu-parent
-+		: <phandle>
-+		This property should be present
-+
-+Example:
-+	/* B4860 */
-+	maple@800000 {
-+		compatible = "fsl,maple-b3-liodn";
-+		reg = <0x8000000 0x10000>;
-+		fsl,iommu-parent = <&pamu1>;
-+	};
+just my 2 cents - if we use drivers/clk/ti, we can then move required 
+stuff from arch/arm/mach-davinci or arch/arm/mach-keystone to a ti 
+generic location allowing us to reuse things as needed.
+
+>
+>>
+>>>   include/linux/clk/omap.h  |   24 ++++++++++++++++++++++++
+>>>   4 files changed, 65 insertions(+)
+>>>   create mode 100644 drivers/clk/omap/Makefile
+>>>   create mode 100644 drivers/clk/omap/clk.c
+>>>   create mode 100644 include/linux/clk/omap.h
+>>>
+>>> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+>>> index 4038c2b..d3c3733 100644
+>>> --- a/drivers/clk/Makefile
+>>> +++ b/drivers/clk/Makefile
+>>> @@ -32,6 +32,7 @@ obj-$(CONFIG_ARCH_VT8500)    += clk-vt8500.o
+>>>   obj-$(CONFIG_ARCH_ZYNQ)        += zynq/
+>>>   obj-$(CONFIG_ARCH_TEGRA)    += tegra/
+>>>   obj-$(CONFIG_PLAT_SAMSUNG)    += samsung/
+>>> +obj-$(CONFIG_ARCH_OMAP)        += omap/
+>>>
+>>>   obj-$(CONFIG_X86)        += x86/
+>>>
+>>> diff --git a/drivers/clk/omap/Makefile b/drivers/clk/omap/Makefile
+>>> new file mode 100644
+>>> index 0000000..8195931
+>>> --- /dev/null
+>>> +++ b/drivers/clk/omap/Makefile
+>>> @@ -0,0 +1 @@
+>>> +obj-y                    += clk.o
+>>> diff --git a/drivers/clk/omap/clk.c b/drivers/clk/omap/clk.c
+>>> new file mode 100644
+>>> index 0000000..4bf1929
+>>> --- /dev/null
+>>> +++ b/drivers/clk/omap/clk.c
+>>> @@ -0,0 +1,39 @@
+>>> +/*
+>>> + * OMAP PRCM clock driver
+>>
+>> maybe then prcm-clk.c ?
+>
+> Maybe remove the PRCM part. We have some clocks behind i2c for example,
+> and we might want to add support for them here.
+
+I think we can actually drop this file in it's entirety if we stick with 
+of_clk_init(NULL) and depend solely of CLK_OF_DECLARE from relevant drivers.
+
 -- 
-1.7.6.GIT
+Regards,
+Nishanth Menon
