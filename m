@@ -1,267 +1,115 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp.codeaurora.org ([198.145.11.231]:43050 "EHLO
+Received: from smtp.codeaurora.org ([198.145.11.231]:49675 "EHLO
 	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753144Ab3G2UOw convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 29 Jul 2013 16:14:52 -0400
-Subject: Re: [PATCH] hwspinlock/msm: Add support for Qualcomm MSM HW Mutex block
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-From: Kumar Gala <galak@codeaurora.org>
-In-Reply-To: <1375128719-23642-1-git-send-email-galak@codeaurora.org>
-Date: Mon, 29 Jul 2013 15:14:49 -0500
-Content-Transfer-Encoding: 8BIT
-Message-Id: <E9700EA7-7154-46C5-9258-03F030DF69F6@codeaurora.org>
-References: <1375128719-23642-1-git-send-email-galak@codeaurora.org>
+	with ESMTP id S1750857Ab3HAAR5 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 31 Jul 2013 20:17:57 -0400
+Message-ID: <51F9A934.404@codeaurora.org>
+Date: Wed, 31 Jul 2013 17:17:56 -0700
+From: Hanumant Singh <hanumant@codeaurora.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH] pinctrl: msm: Add support for MSM TLMM pinmux
+References: <1374702089-2832-1-git-send-email-hanumant@codeaurora.org> <CACRpkdZLFD-KAvZdUUvQKje3vAH1D0EJMW9PSK8VSp3Xs4eiGA@mail.gmail.com> <51F82BCC.1080409@codeaurora.org> <51F82E9F.9010309@wwwdotorg.org> <51F853BF.9040007@codeaurora.org> <51F8556A.1010300@wwwdotorg.org> <51F85690.9060701@codeaurora.org> <51F88BAC.2020001@wwwdotorg.org> <51F969A5.5020405@codeaurora.org> <51F97C47.5020202@wwwdotorg.org>
+In-Reply-To: <51F97C47.5020202@wwwdotorg.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: ohad@wizery.com
-Cc: "linux-kernel@vger.kernel.org list" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Eric Holmberg <eholmber@codeaurora.org>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, "Bird, Tim" <Tim.Bird@sonymobile.com>, ext Tony Lindgren <tony@atomide.com>
 List-ID: <devicetree@vger.kernel.org>
 
+On 7/31/2013 2:06 PM, Stephen Warren wrote:
+> On 07/31/2013 01:46 PM, Hanumant Singh wrote:
+>> On 7/30/2013 8:59 PM, Stephen Warren wrote:
+>>> On 07/30/2013 06:13 PM, Hanumant Singh wrote:
+>>>> On 7/30/2013 5:08 PM, Stephen Warren wrote:
+>>>>> On 07/30/2013 06:01 PM, Hanumant Singh wrote:
+>>>>>> On 7/30/2013 2:22 PM, Stephen Warren wrote:
+>>>>>>> On 07/30/2013 03:10 PM, hanumant wrote:
+>>>>>>> ...
+>>>>>>>> We actually have the same TLMM pinmux used by several socs of a
+>>>>>>>> family.
+>>>>>>>> The number of pins on each soc may vary.
+>>>>>>>> Also a given soc gets used in a number of boards.
+>>>>>>>> The device tree for a given soc is split into the different boards
+>>>>>>>> that
+>>>>>>>> its in ie the boards inherit a common soc.dtsi but have separate
+>>>>>>>> dts.
+>>>>>>>> The boards for the same soc may use different pin groups for
+>>>>>>>> accomplishing a function, since we have multiple i2c, spi uart etc
+>>>>>>>> peripheral instances on a soc. A different instance of each of the
+>>>>>>>> above
+>>>>>>>> peripherals, can be used in different boards, utilizing different
+>>>>>>>> or subset of same pin groups.
+>>>>>>>> Thus I would need to have multiple C files for one soc, based on the
+>>>>>>>> boards that it goes into.
+>>>>>>>
+>>>>>>> The pinctrl driver should be exposing the raw capabilities of the HW.
+>>>>>>> All the board-specific configuration should be expressed in DT.
+>>>>>>> So, the
+>>>>>>> driver shouldn't have to know anything about different boards at
+>>>>>>> compile-time.
+>>>>>>>
+>>>>>> I agree, so I wanted to keep the pin grouping information in DT, we
+>>>>>> already have a board based differentiation of dts files in DT, for the
+>>>>>> same soc.
+>>>>>
+>>>>> That's the opposite of what I was saying. Pin groups are a feature of
+>>>>> the SoC design, not the board.
+>>>>>
+>>>> Sorry I guess I wasn't clear.
+>>>> Right now I have a soc-pinctrl.dtsi containing pin groupings.
+>>>> This will be "inherited" by soc-boardtype.dts.
+>>>> The pinctrl client device nodes in soc-boardtype.dts will point to pin
+>>>> groupings in soc-pinctrl.dtsi that are valid for that particular
+>>>> boardtype.
+>>>> Is this a valid design?
+>>>
+>>> OK, so you have two types of child node inside the pinctrl DT node; some
+>>> define the pin groups the SoC has (in soc.dtsi) and some define pinctrl
+>>> states that reference the pin group nodes and are referenced by the
+>>> client nodes.
+>>>
+>>> That's probably fine. However, I'd still question putting the pin group
+>>> nodes in DT at all; I'm not convinced it's better than just putting
+>>> those into the driver itself. You end up with the same data tables after
+>>> parsing the DT anyway.
+>>>
+>>
+>> Any feedback for the rest of the patch?
+>
+> I'm certainly waiting for this aspect of the patch to be resolved; I
+> think it will impact the rest of the patch so much that it's not worth
+> reviewing until we decide on where to represent the pin groups (some DT
+> parsing could would be removed if we put the pin group definitions into
+> the driver, hence wouldn't need to be reviewed, and likewise there's be
+> some new tables to review).
+>
 
-On Jul 29, 2013, at 3:11 PM, Kumar Gala wrote:
+I am trying to look at examples of what you are suggesting.
+I was looking at the exynos implementation, and just from a brief glance 
+it seems like there too the pin grouping is being specified in the 
+device tree, using what looks like labels of the pins.
+The labels are matched to group structures in soc specific files?
 
-> Add driver for Qualcomm MSM Hardware Mutex block that exists on newer MSM
-> SoC (MSM8974, etc).
-> 
-> CC: Jeffrey Hugo <jhugo@codeaurora.org>
-> CC: Eric Holmberg <eholmber@codeaurora.org>
-> Signed-off-by: Kumar Gala <galak@codeaurora.org>
-> ---
+By having the pin groupings in DT I am able to reuse the driver without 
+any SOC based code bloat.
+As I mentioned earlier, we have entire families of SOCs using the same
+TLMM hardware.
+Its not a guarantee that for a given TLMM version,
+the pin groupings on that hardware are the same for every SOC that its 
+in. Its infact most likely that I wont be able to use the pin groupings
+from one SOC to the next even if they both use the same TLMM.
+It will very quickly lead to a bloat of
+pinctrl-<msm_soc>.c (containing the pin groupings replicated for each soc)
+which use TLMM version specific register programming implementation
+pinctrl-tlmm-<version>.c
+and the DT parsing and interface to framework (which remains unchanged).
+pinctrl-msm.c.
 
-[ had old device tree mailing list ]
+Thanks
+Hanumant
 
-> .../devicetree/bindings/arm/msm/tcsr-mutex.txt     |  20 +++
-> drivers/hwspinlock/Kconfig                         |  11 ++
-> drivers/hwspinlock/Makefile                        |   1 +
-> drivers/hwspinlock/msm_hwspinlock.c                | 150 +++++++++++++++++++++
-> 4 files changed, 182 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/arm/msm/tcsr-mutex.txt
-> create mode 100644 drivers/hwspinlock/msm_hwspinlock.c
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/msm/tcsr-mutex.txt b/Documentation/devicetree/bindings/arm/msm/tcsr-mutex.txt
-> new file mode 100644
-> index 0000000..ddd6889
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/msm/tcsr-mutex.txt
-> @@ -0,0 +1,20 @@
-> +Qualcomm MSM Hardware Mutex Block:
-> +
-> +The hardware block provides mutexes utilized between different processors
-> +on the SoC as part of the communication protocol used by these processors.
-> +
-> +Required properties:
-> +- compatible: should be "qcom,tcsr-mutex"
-> +- reg: Should contain registers location and length of mutex registers
-> +- reg-names:
-> +	"mutex-base"  - string to identify mutex registers
-> +- qcom,num-locks: the number of locks/mutexes supported
-> +
-> +Example:
-> +
-> +	qcom,tcsr-mutex@fd484000 {
-> +		compatible = "qcom,tcsr-mutex";
-> +		reg = <0xfd484000 0x1000>;
-> +		reg-names = "mutex-base";
-> +		qcom,num-locks = <32>;
-> +	};
-> diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
-> index 70637d2..192e939 100644
-> --- a/drivers/hwspinlock/Kconfig
-> +++ b/drivers/hwspinlock/Kconfig
-> @@ -8,6 +8,17 @@ config HWSPINLOCK
-> 
-> menu "Hardware Spinlock drivers"
-> 
-> +config HWSPINLOCK_MSM
-> +	tristate "MSM Hardware Spinlock device"
-> +	depends on ARCH_MSM
-> +	select HWSPINLOCK
-> +	help
-> +	  Say y here to support the MSM Hardware Mutex functionality, which
-> +	  provides a synchronisation mechanism for the various processors on
-> +	  the SoC.
-> +
-> +	  If unsure, say N.
-> +
-> config HWSPINLOCK_OMAP
-> 	tristate "OMAP Hardware Spinlock device"
-> 	depends on ARCH_OMAP4 || SOC_OMAP5
-> diff --git a/drivers/hwspinlock/Makefile b/drivers/hwspinlock/Makefile
-> index 93eb64b..4074c56 100644
-> --- a/drivers/hwspinlock/Makefile
-> +++ b/drivers/hwspinlock/Makefile
-> @@ -3,5 +3,6 @@
-> #
-> 
-> obj-$(CONFIG_HWSPINLOCK)		+= hwspinlock_core.o
-> +obj-$(CONFIG_HWSPINLOCK_MSM)		+= msm_hwspinlock.o
-> obj-$(CONFIG_HWSPINLOCK_OMAP)		+= omap_hwspinlock.o
-> obj-$(CONFIG_HSEM_U8500)		+= u8500_hsem.o
-> diff --git a/drivers/hwspinlock/msm_hwspinlock.c b/drivers/hwspinlock/msm_hwspinlock.c
-> new file mode 100644
-> index 0000000..c7d80c5
-> --- /dev/null
-> +++ b/drivers/hwspinlock/msm_hwspinlock.c
-> @@ -0,0 +1,150 @@
-> +/*
-> + * Copyright (c) 2013, The Linux Foundation. All rights reserved.
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/hwspinlock.h>
-> +
-> +#include <asm/io.h>
-> +
-> +#include "hwspinlock_internal.h"
-> +
-> +#define SPINLOCK_ID_APPS_PROC	1
-> +#define BASE_ID			0
-> +
-> +static int msm_hwspinlock_trylock(struct hwspinlock *lock)
-> +{
-> +	void __iomem *lock_addr = lock->priv;
-> +
-> +	writel_relaxed(SPINLOCK_ID_APPS_PROC, lock_addr);
-> +	smp_mb();
-> +	return readl_relaxed(lock_addr) == SPINLOCK_ID_APPS_PROC;
-> +}
-> +
-> +static void msm_hwspinlock_unlock(struct hwspinlock *lock)
-> +{
-> +	int lock_owner;
-> +	void __iomem *lock_addr = lock->priv;
-> +
-> +	lock_owner = readl_relaxed(lock_addr);
-> +	if (lock_owner != SPINLOCK_ID_APPS_PROC) {
-> +		pr_err("%s: spinlock not owned by Apps (actual owner is %d)\n",
-> +				__func__, lock_owner);
-> +	}
-> +
-> +	writel_relaxed(0, lock_addr);
-> +	smp_mb();
-> +}
-> +
-> +static const struct hwspinlock_ops msm_hwspinlock_ops = {
-> +	.trylock	= msm_hwspinlock_trylock,
-> +	.unlock		= msm_hwspinlock_unlock,
-> +};
-> +
-> +static struct of_device_id msm_hwspinlock_of_match[];
-> +static int msm_hwspinlock_probe(struct platform_device *pdev)
-> +{
-> +	int ret, i, stride;
-> +	u32 num_locks;
-> +	struct hwspinlock_device *bank;
-> +	struct hwspinlock *hwlock;
-> +	struct resource *res;
-> +	void __iomem *iobase;
-> +	struct device_node *node = pdev->dev.of_node;
-> +	const struct of_device_id *match;
-> +
-> +	match = of_match_device(msm_hwspinlock_of_match, &pdev->dev);
-> +	if (!match)
-> +		return -EINVAL;
-> +
-> +	ret = of_property_read_u32(node, "qcom,num-locks", &num_locks);
-> +	if (ret || (num_locks == 0))
-> +		return -ENODEV;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mutex-base");
-> +	iobase = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(iobase))
-> +		return PTR_ERR(iobase);
-> +
-> +	bank = devm_kzalloc(&pdev->dev,
-> +		 sizeof(*bank) + num_locks * sizeof(*hwlock), GFP_KERNEL);
-> +	if (!bank)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, bank);
-> +
-> +	for (i = 0, hwlock = &bank->lock[0]; i < num_locks; i++, hwlock++)
-> +		hwlock->priv = iobase + i * stride;
-> +
-> +	ret = hwspin_lock_register(bank, &pdev->dev, &msm_hwspinlock_ops,
-> +						BASE_ID, num_locks);
-> +	return ret;
-> +}
-> +
-> +static int msm_hwspinlock_remove(struct platform_device *pdev)
-> +{
-> +	struct hwspinlock_device *bank = platform_get_drvdata(pdev);
-> +	int ret;
-> +
-> +	ret = hwspin_lock_unregister(bank);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s failed: %d\n", __func__, ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct of_device_id msm_hwspinlock_of_match[] = {
-> +	{
-> +		.compatible = "qcom,tcsr-mutex",
-> +		.data = (void *)0x80, /* register stride */
-> +	},
-> +	{ },
-> +};
-> +
-> +static struct platform_driver msm_hwspinlock_driver = {
-> +	.probe		= msm_hwspinlock_probe,
-> +	.remove		= msm_hwspinlock_remove,
-> +	.driver		= {
-> +		.name	= "msm_hwspinlock",
-> +		.owner	= THIS_MODULE,
-> +		.of_match_table = msm_hwspinlock_of_match,
-> +	},
-> +};
-> +
-> +static int __init msm_hwspinlock_init(void)
-> +{
-> +	return platform_driver_register(&msm_hwspinlock_driver);
-> +}
-> +/* board init code might need to reserve hwspinlocks for predefined purposes */
-> +postcore_initcall(msm_hwspinlock_init);
-> +
-> +static void __exit msm_hwspinlock_exit(void)
-> +{
-> +	platform_driver_unregister(&msm_hwspinlock_driver);
-> +}
-> +module_exit(msm_hwspinlock_exit);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Hardware spinlock driver for MSM");
-> +MODULE_AUTHOR("Kumar Gala <galak@codeaurora.org>");
-> +MODULE_AUTHOR("Jeffrey Hugo <jhugo@codeaurora.org>");
-> +MODULE_AUTHOR("Eric Holmberg <eholmber@codeaurora.org>");
-> -- 
-> 1.8.2.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
---
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
+-- 
