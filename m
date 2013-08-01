@@ -1,85 +1,62 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCHv4 05/33] CLK: omap: add DT duplicate clock registration
- mechanism
-Date: Thu, 1 Aug 2013 09:25:14 -0500
-Message-ID: <51FA6FCA.3050900@ti.com>
-References: <1374564028-11352-1-git-send-email-t-kristo@ti.com> <1374564028-11352-6-git-send-email-t-kristo@ti.com> <51F808A8.6000503@ti.com> <51F8E1F5.20706@ti.com>
+Subject: Re: [PATCHv4 23/33] CLK: OMAP: add interface clock support for OMAP3
+Date: Thu, 1 Aug 2013 09:50:38 -0500
+Message-ID: <51FA75BE.3080802@ti.com>
+References: <1374564028-11352-1-git-send-email-t-kristo@ti.com> <1374564028-11352-24-git-send-email-t-kristo@ti.com> <51F820DF.1080306@ti.com> <51F92898.3090206@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51F8E1F5.20706@ti.com>
+In-Reply-To: <51F92898.3090206@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Tero Kristo <t-kristo@ti.com>
 Cc: linux-omap@vger.kernel.org, paul@pwsan.com, khilman@linaro.org, tony@atomide.com, mturquette@linaro.org, rnayak@ti.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2013 05:07 AM, Tero Kristo wrote:
-> On 07/30/2013 09:40 PM, Nishanth Menon wrote:
+On 07/31/2013 10:09 AM, Tero Kristo wrote:
+> On 07/30/2013 11:23 PM, Nishanth Menon wrote:
 >> On 07/23/2013 02:20 AM, Tero Kristo wrote:
->>> Some devices require their clocks to be available with a specific
->>> dev-id con-id mapping. With DT, the clocks can be found by default
->>> only with their name, or alternatively through the device node of
->>> the consumer. With drivers, that don't support DT fully yet, add
->>> mechanism to register specific clock names.
+>>> OMAP3 has interface clocks in addition to functional clocks, which
+>> is it just OMAP3?
+>
+> Yea, only omap3 is using this code. Basically because there is control
+> for the module specific interface clocks which is absent from omap4+.
+> Personally I think modelling the interface clocks in the first place in
+> kernel side was a bad idea, and should have just enabled all of them and
+> enable autoidles for them at the same point.
+
+Not all autoidles work unfortunately, which is why they got modelled :D 
+some even have the weird tendency to hang up L3/L4 interconnect when the 
+OCP statemachines required inside the IP block for the autoidle PRCM 
+handshake has been, umm... "not well implemented" ;) forcing us to use 
+S/w supervised mode of operations.
+
+
+>
+>>
+>>> require special handling for the autoidle and idle status register
+>>> offsets mainly.
+>>
 >>>
 >>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>
->> with this, should it not be enough to add clocks=<&phandle>
+>>> ---
+>>>   drivers/clk/omap/Makefile    |    2 +-
+>>>   drivers/clk/omap/clk.c       |    3 ++
+>>>   drivers/clk/omap/interface.c |  110
+>>> ++++++++++++++++++++++++++++++++++++++++++
+>> should this be isolated off for omap3?
 >
-> Don't know, I am not an expert on DT. :)
+> You mean within makefile or?
 
-That is the usage - 
-Documentation/devicetree/bindings/clock/clock-bindings.txt
+omap3-interface-clock.c or something more sensible and Makefile? I dont 
+really have any strong opinions on this anyways.. interface.c is fine 
+with me as well as the nodes are not probed unless compatible flags are 
+set..
 
->
->>
->> I am not sure I understand what specific drivers should need to carry
->> this "old hack" forward. More importantly, why is it preferable to carry
->> the hack forward rather than fixing the drivers.
->
-> At least the GP timer seems to need this, and I don't want to touch /
-> verify all the potential drivers touched by this so it is easier to
-> provide a (semi) temporary tweak.
-
-I see that GP timer nodes seem to be already device tree converted, at 
-least I see the nodes in SoC.dtsi
-
-Do we know what is going on for these that need these temporary devices? 
-can we do a special node property for these?
-
-I think the entire problem is coz of
-timer->fclk = clk_get(NULL, omap_hwmod_get_main_clk(oh)); in case of 
-even of_populated.
-
-if we can get rid of usage of omap_hwmod_get_main_clk by catching them 
-with [1], then we can force the drivers to pick up based on device node 
-clocks= property.
-
-It might be easier to fix 1 driver - timer, rather than introduce am33x, 
-omap4, omap5 dra7 specific "SoC clk driver".
-
-with that this entire patch becomes redundant.
+just trying to save a few bits in code space by building only if OMAP3 
+is present.. /me shrugs..
 
 
-[1]
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c 
-b/arch/arm/mach-omap2/omap_hwmod.c
-index da26659..2e90ab4 100644
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -4153,5 +4153,10 @@ const char *omap_hwmod_get_main_clk(struct 
-omap_hwmod *oh)
-  	if (!oh)
-  		return NULL;
-
-+	if (!of_have_populated_dt()) {
-+		WARN(1, "%s hwmod clk node read with OF?:FIXME!\n",
-+		     oh->name);
-+	}
-+
-  	return oh->main_clk;
-  }
 -- 
 Regards,
 Nishanth Menon
