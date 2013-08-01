@@ -1,88 +1,83 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9508 "EHLO
-	hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1750828Ab3HBFgo (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 01:36:44 -0400
-Message-ID: <1375422317.32701.19.camel@bilhuang-vm1>
-Subject: Re: [PATCH v2 1/1] mfd: palmas: Add power off control
-From: Bill Huang <bilhuang@nvidia.com>
-Date: Thu, 1 Aug 2013 22:45:17 -0700
-In-Reply-To: <20130801130857.GA3413@kahuna>
-References: <1375255037-10024-1-git-send-email-bilhuang@nvidia.com>
-	 <51F8FBC4.1040009@ti.com> <1375355332.32701.13.camel@bilhuang-vm1>
-	 <20130801130857.GA3413@kahuna>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:60208 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753220Ab3HAQNa (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 12:13:30 -0400
+Message-ID: <51FA8925.9000101@wwwdotorg.org>
+Date: Thu, 01 Aug 2013 10:13:25 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-9"
+Subject: Re: [PATCH 1/1] mfd: palmas: Add power off control
+References: <1375185957-28212-1-git-send-email-bilhuang@nvidia.com> <20130731095636.GB13298@lee--X1> <51F946C7.2080205@wwwdotorg.org> <20130801084702.GM13298@lee--X1>
+In-Reply-To: <20130801084702.GM13298@lee--X1>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "broonie@linaro.org" <broonie@linaro.org>, "j-keerthy@ti.com" <j-keerthy@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "ian@slimlogic.co.uk" <ian@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mallikarjun Kasoju <mkasoju@nvidia.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Bill Huang <bilhuang@nvidia.com>, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob@landley.net, broonie@linaro.org, nm@ti.com, j-keerthy@ti.com, grant.likely@linaro.org, ian@slimlogic.co.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, 2013-08-01 at 21:08 +0800, Nishanth Menon wrote:
-> On 04:08-20130801, Bill Huang wrote:
-> > On Wed, 2013-07-31 at 19:57 +0800, Nishanth Menon wrote:
-> > > 
-> > > If you notice the reference code I send, atleast on TWL6035/37 variants 
-> > > of Palmas, USB IRQ unmask is mandatory for power on with USB cable - 
-> > > example usage scenario: extremely low battery, device powered off, plug 
-> > > in usb cable to restart charging - you'd like to initiate charging logic 
-> > > in bootloader, but that wont work if the device does not do OFF-ON 
-> > > transition with usb cable plugged in for vbus.
-> > > 
-> > Why do we need to add Palmas USB_IRQ unmask logic in shutdown? Does that
-> > mean for all platform using Palmas has to unmask USB IRQ (including
-> > those do not power vbus through Palmas)? Can't we just have a simple
-> > shutdown function but have the VBus programming been done in USB driver
-> > or maybe platform driver since it is platform specific control?
-> we dont have a irq cleanup, irq handling is done in palmas-mfd. Further,
+On 08/01/2013 02:47 AM, Lee Jones wrote:
+> On Wed, 31 Jul 2013, Stephen Warren wrote:
 > 
-> Why would USB driver care about vbus supply needs in complete power off
-> - it is the job of palmas driver? Further, palmas-mfd shutdown
-> handler(currently missing) if probably cleansup things:
+>> On 07/31/2013 03:56 AM, Lee Jones wrote:
+>>> On Tue, 30 Jul 2013, Bill Huang wrote:
+>>>
+>>>> Hook up "pm_power_off" to palmas power off routine if there is DT
+>>>> property "ti,system-power-controller" defined, so platform which is
+>>>> powered by this regulator can be powered off properly.
+>>>>
+>>>> Based on work by:
+>>>> Mallikarjun Kasoju <mkasoju@nvidia.com>
+>>>>
+>>>> Signed-off-by: Bill Huang <bilhuang@nvidia.com>
+>>>> cc: Mallikarjun Kasoju <mkasoju@nvidia.com>
+>>>
+>>> Please put the 'Cc:' (not 'cc:') above the SoBs, then drop the "Based
+>>> on work by:" and replace with:
+>>>
+>>> Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
+>>> Signed-off-by: Bill Huang <bilhuang@nvidia.com>
+>>>
+>>> This insinuates that the original patch was crated by Mallikarjun.
+>>
+>> That advice may not be correct. Did Mallikarjun actually create *this*
+>> patch? More likely, this patch was based on an equivalent change to some
+>> other PMIC, and Bill just applied the same technique to this other
+>> driver.
 > 
->  mfd_remove_devices(palmas->dev);
->   palmas_irq_exit(palmas);
+> Yes, I agree with this, and I'm sure there is a place for "Based on
+> work by:" or "Originally authored by:" tags, but in general, I think
+> the SoBs can paint a pretty good picture.
 > 
-> shutdown sequence becomes complicated further esp if things are
-> cleanedup in shutdown (Dummy patch[1]).
+> For example, if this patch is simply using techniques which already
+> exist in other drivers, I would personally not mention it in the
+> commit message. A massive percentage of kernel code has been
+> influenced by already existing implementations. Not much truly new and
+> unique kernel code enters the kernel these days.
 > 
->  
-> All I am saying is this: shutdown should allow powerup functionality to
-> work as well, how we do that is upto us - I personally found it a little
-> easier to keep the IRQ unmask in shutdown easier to deal with, but other
-> options might be possible as well.
+>> If Mallikarjun really did write this patch, then the git author
+>> field should also be set to Mallikarjun not Bill.
+> 
+> That's not how I'm lead to believe it works. I am under the impression
+> that if you take an already existing patch and upstream it with little
+> changes, then you keep the original creator's authorship and apply
+> your SoB before sending.
 
-I'm not sure if I understand your comments completely (maybe due to I'm
-not familiar with the mechanism of unmasking USB IRQ in Palmas driver)
-but doing cleanup in each driver shutdown handler makes sense to me, if
-those clean up can be done in shutdown then we can make power off
-function as simple as possible and being part of Palmas mfd driver?
-> 
-> [1]
-> diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
-> index e4d1c70..6998863 100644
-> --- a/drivers/mfd/palmas.c
-> +++ b/drivers/mfd/palmas.c
-> @@ -447,6 +447,11 @@ static int palmas_i2c_remove(struct i2c_client *i2c)
->  	return 0;
->  }
->  
-> +static void palmas_i2c_shutdown(struct i2c_client *i2c)
-> +{
-> +	palmas_i2c_remove(i2c);
-> +}
-> +
->  static const struct i2c_device_id palmas_i2c_id[] = {
->  	{ "palmas", },
->  	{ "twl6035", },
-> @@ -464,6 +469,7 @@ static struct i2c_driver palmas_i2c_driver = {
->  	},
->  	.probe = palmas_i2c_probe,
->  	.remove = palmas_i2c_remove,
-> +	.shutdown = palmas_i2c_shutdown,
->  	.id_table = palmas_i2c_id,
->  };
->  
+Yes.
 
+> Whereas if you have make considerable (down
+> to perception) changes to the patch, then you may adopt authorship. To
+> credit the efforts of the original author in this case I would advise
+> to keep the first SoB. Providing they agree with the changes of course.
 
+I'm not sure about this. I've certainly made significant changes then
+still been asked to maintain the original authorship. There is plenty of
+opportunity to list the changes you made in the free-form commit
+description, or for smaller changes, to inline the list into the final
+tag paragraph.
+
+Either way, this situation is quite unlikely to apply to this simple patch.
+
+But anyway, Bill knows the exact history of the patch and can presumably
+choose the correct approach.
