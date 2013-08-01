@@ -1,60 +1,29 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH 1/1] arm: dts: am33xx: correcting dt node unit address
- for usb
-Date: Sat, 31 Aug 2013 23:59:22 +0530
-Message-ID: <52223602.9060206@ti.com>
-References: <1377885140-3529-1-git-send-email-mugunthanvnm@ti.com> <52222AEE.2090607@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <52222AEE.2090607@cogentembedded.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: balbi@ti.com, bigeasy@linutronix.de, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-List-Id: devicetree@vger.kernel.org
+Return-Path: <devicetree-owner@vger.kernel.org>
+Received: from mail1.g1.pair.com ([66.39.3.162]:34398 "EHLO mail1.g1.pair.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751059Ab3HAEka (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Thu, 1 Aug 2013 00:40:30 -0400
+From: Sean Cross <xobs@kosagi.com>
+Subject: [PATCH] Add OF bindings to Micrel PHY
+Date: Thu,  1 Aug 2013 04:16:40 +0000
+Message-Id: <1375330601-3609-1-git-send-email-xobs@kosagi.com>
+Sender: devicetree-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Sean Cross <xobs@kosagi.com>
+List-ID: <devicetree@vger.kernel.org>
 
-On Saturday 31 August 2013 11:12 PM, Sergei Shtylyov wrote:
-> Hello.
->
-> On 08/30/2013 09:52 PM, Mugunthan V N wrote:
->
->> DT node's unit address should be its own register offset address to
->> make it a
->> unique across the system. This patch corrects the incorrect USB
->> entries with
->> correct register offset for unit address.
->
->> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->> Cc: Felipe Balbi <balbi@ti.com>
->> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->> ---
->>   arch/arm/boot/dts/am33xx.dtsi | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->
->> diff --git a/arch/arm/boot/dts/am33xx.dtsi
->> b/arch/arm/boot/dts/am33xx.dtsi
->> index f9c5da9..e9b6775 100644
->> --- a/arch/arm/boot/dts/am33xx.dtsi
->> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> [...]
->> @@ -449,7 +449,7 @@
->>                       "tx14", "tx15";
->>               };
->>
->> -            cppi41dma: dma-controller@07402000 {
->> +            cppi41dma: dma-controller@47402000 {
->
->    Not @47400000? Look at the first entry in the "reg" prop. 
-47400000 is already used in USB SS. See below from am33xx.dtsi file
+Some boards require custom parameters be passed to the Micrel PHY.
+Allow these boards to specify custom timing parameters in the device
+tree node.
 
-340                 usb: usb@47400000
-{                                             
-341                         compatible =
-"ti,am33xx-usb";                           
-342                         reg = <0x47400000
-0x1000>;                              
-343                         ranges;
+Sean Cross (1):
+  net/phy: micrel: Add OF configuration support
 
-Regards
-Mugunthan V N
+ .../devicetree/bindings/net/micrel-phy.txt         |   20 +++++++
+ drivers/net/phy/micrel.c                           |   57 ++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/micrel-phy.txt
+
+-- 
+1.7.9.5
+
