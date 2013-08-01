@@ -1,35 +1,78 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:3338 "EHLO
-	hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752204Ab3HAK4r (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 06:56:47 -0400
-Message-ID: <1375355332.32701.13.camel@bilhuang-vm1>
-Subject: Re: [PATCH v2 1/1] mfd: palmas: Add power off control
-From: Bill Huang <bilhuang@nvidia.com>
-Date: Thu, 1 Aug 2013 04:08:52 -0700
-In-Reply-To: <51F8FBC4.1040009@ti.com>
-References: <1375255037-10024-1-git-send-email-bilhuang@nvidia.com>
-	 <51F8FBC4.1040009@ti.com>
+Received: from mail-wg0-f50.google.com ([74.125.82.50]:52881 "EHLO
+	mail-wg0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752286Ab3HAIrI (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 04:47:08 -0400
+Received: by mail-wg0-f50.google.com with SMTP id m15so1439651wgh.29
+        for <devicetree@vger.kernel.org>; Thu, 01 Aug 2013 01:47:07 -0700 (PDT)
+Date: Thu, 1 Aug 2013 09:47:02 +0100
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/1] mfd: palmas: Add power off control
+Message-ID: <20130801084702.GM13298@lee--X1>
+References: <1375185957-28212-1-git-send-email-bilhuang@nvidia.com>
+ <20130731095636.GB13298@lee--X1>
+ <51F946C7.2080205@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-9"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <51F946C7.2080205@wwwdotorg.org>
 Sender: devicetree-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "broonie@linaro.org" <broonie@linaro.org>, "j-keerthy@ti.com" <j-keerthy@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "ian@slimlogic.co.uk" <ian@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mallikarjun Kasoju <mkasoju@nvidia.com>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Bill Huang <bilhuang@nvidia.com>, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob@landley.net, broonie@linaro.org, nm@ti.com, j-keerthy@ti.com, grant.likely@linaro.org, ian@slimlogic.co.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 2013-07-31 at 19:57 +0800, Nishanth Menon wrote:
-> 
-> If you notice the reference code I send, atleast on TWL6035/37 variants 
-> of Palmas, USB IRQ unmask is mandatory for power on with USB cable - 
-> example usage scenario: extremely low battery, device powered off, plug 
-> in usb cable to restart charging - you'd like to initiate charging logic 
-> in bootloader, but that wont work if the device does not do OFF-ON 
-> transition with usb cable plugged in for vbus.
-> 
-Why do we need to add Palmas USB_IRQ unmask logic in shutdown? Does that
-mean for all platform using Palmas has to unmask USB IRQ (including
-those do not power vbus through Palmas)? Can't we just have a simple
-shutdown function but have the VBus programming been done in USB driver
-or maybe platform driver since it is platform specific control?
+On Wed, 31 Jul 2013, Stephen Warren wrote:
 
+> On 07/31/2013 03:56 AM, Lee Jones wrote:
+> > On Tue, 30 Jul 2013, Bill Huang wrote:
+> > 
+> >> Hook up "pm_power_off" to palmas power off routine if there is DT
+> >> property "ti,system-power-controller" defined, so platform which is
+> >> powered by this regulator can be powered off properly.
+> >>
+> >> Based on work by:
+> >> Mallikarjun Kasoju <mkasoju@nvidia.com>
+> >>
+> >> Signed-off-by: Bill Huang <bilhuang@nvidia.com>
+> >> cc: Mallikarjun Kasoju <mkasoju@nvidia.com>
+> > 
+> > Please put the 'Cc:' (not 'cc:') above the SoBs, then drop the "Based
+> > on work by:" and replace with:
+> > 
+> > Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
+> > Signed-off-by: Bill Huang <bilhuang@nvidia.com>
+> > 
+> > This insinuates that the original patch was crated by Mallikarjun.
+> 
+> That advice may not be correct. Did Mallikarjun actually create *this*
+> patch? More likely, this patch was based on an equivalent change to some
+> other PMIC, and Bill just applied the same technique to this other
+> driver.
+
+Yes, I agree with this, and I'm sure there is a place for "Based on
+work by:" or "Originally authored by:" tags, but in general, I think
+the SoBs can paint a pretty good picture.
+
+For example, if this patch is simply using techniques which already
+exist in other drivers, I would personally not mention it in the
+commit message. A massive percentage of kernel code has been
+influenced by already existing implementations. Not much truly new and
+unique kernel code enters the kernel these days.
+
+> If Mallikarjun really did write this patch, then the git author
+> field should also be set to Mallikarjun not Bill.
+
+That's not how I'm lead to believe it works. I am under the impression
+that if you take an already existing patch and upstream it with little
+changes, then you keep the original creator's authorship and apply
+your SoB before sending. Whereas if you have make considerable (down
+to perception) changes to the patch, then you may adopt authorship. To
+credit the efforts of the original author in this case I would advise
+to keep the first SoB. Providing they agree with the changes of course.
+
+-- 
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
