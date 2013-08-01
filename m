@@ -1,90 +1,92 @@
-From: Kumar Gala <galak@kernel.crashing.org>
-Subject: Re: [PATCH] Add device file bindings for MAPLE
-Date: Thu, 1 Aug 2013 11:05:09 -0500
-Message-ID: <5C32ABF4-ECC3-4F1C-82D0-EA3AD9053575@kernel.crashing.org>
-References: <1375354963-11219-1-git-send-email-shaveta@freescale.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1375354963-11219-1-git-send-email-shaveta@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Shaveta Leekha <shaveta@freescale.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 2/6] misc: sram: add ability to mark sram sections as
+ reserved
+Date: Thu, 1 Aug 2013 18:35:21 +0200
+Message-ID: <201308011835.22186.heiko@sntech.de>
+References: <201307291510.31679.heiko@sntech.de>
+ <1375106520.4223.24.camel@pizza.hi.pengutronix.de>
+ <CAHCPf3vSQHtRkk-_cs3monHfrF-hVx3vTDt1ctcax_bspXDmsg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAHCPf3vSQHtRkk-_cs3monHfrF-hVx3vTDt1ctcax_bspXDmsg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matt Sealey <neko@bakuhatsu.net>
+Cc: Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Ulrich Prinz <ulrich.prinz@googlemail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Am Montag, 29. Juli 2013, 23:39:45 schrieb Matt Sealey:
+> On Mon, Jul 29, 2013 at 9:02 AM, Philipp Zabel <p.zabel@pengutronix.de> =
 
-On Aug 1, 2013, at 6:02 AM, Shaveta Leekha wrote:
+wrote:
+> > Hi Heiko,
+> > =
 
-> Signed-off-by: Shaveta Leekha <shaveta@freescale.com>
-> ---
-> .../devicetree/bindings/powerpc/fsl/maple.txt      |   30 ++++++++++++++++++++
-> 1 files changed, 30 insertions(+), 0 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/maple.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/maple.txt b/Documentation/devicetree/bindings/powerpc/fsl/maple.txt
-> new file mode 100644
-> index 0000000..da51c5f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/maple.txt
-> @@ -0,0 +1,30 @@
-> +* Freescale MAPLE Multi Accelerator Platform Engine Baseband 3
-> +  (MAPLE-B3)device nodes
-> +
-> +Supported chips:
-> +Example: B4860
-> +
-> +Required properties:
-> +
-> +- compatible:	Should contain "fsl,maple-b3-liodn" as the value
-> +		This identifies Multi Accelerator Platform Engine
-> +		Baseband 3 block.This representation is required
-> +		for doing the PAMU/LIODN programming on the Linux side.
+> > Am Montag, den 29.07.2013, 15:12 +0200 schrieb Heiko St=FCbner:
+> >> Some SoCs need parts of their sram for special purposes. So while being
+> >> part of the peripheral, it should not be part of the genpool
+> >> controlling the sram.
+> >> =
 
-This compatible makes no sense, we shouldn't be marking a full HW block with some name that is just intended for LIODN convenance.
+> >> Therefore add an option mmio-sram-reserved to keep arbitrary portions =
+of
+> >> the sram from being part of the pool.
+> >> =
 
-Is this version 3 of the block?  If so a name like "fsl,maple-v3" or "fsl,maple-v3.0" would be more appropriate.
+> >> Suggested-by: Rob Herring <robherring2@gmail.com>
+> >> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> >> Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
+> >> ---
+> >> Philipp: I didn't carry the ack, because the loop changed significantly
+> >> again. So if it looks ok, could you re-ack it please?
+> > =
 
-- k
+> > I'd prefer the first loop to contain the magic and produce a list of
+> > useable chunks, instead of a list of reserved blocks. The second loop
+> > could then iterate over the array and just call gen_pool_add_virt
+> > repeatedly.
+> > =
 
-> +
-> +- reg:		offset and length of the register set for the device
-> +
-> +Devices that have LIODNs need to specify links to the parent PAMU controller
-> +(the actual PAMU controller that this device is connected to) and a pointer to
-> +the LIODN register, if applicable.
+> > regards
+> > Philipp
+> =
+
+> Agreed, however specifying chunks of memory should probably match the
+> format of the standard memory@ node "available" property - mostly
+> because it would be the same syntax and definition as defining any
+> other chunk of memory, as OpenFirmware and device trees have been
+> doing since the dark ages. In this case, why not re-use the
+> "available" property name instead of creating a new one? Standard OF
+> memory parsing code is then free for you to use to pull the chunks
+> out.
+
+Sound interesting, but could you give me a pointer to some sort of docs abo=
+ut =
+
+this "available" property in memory nodes?
+
+Documentation/devicetree/booting-without-of.txt seems to be the only file =
+
+describing the memory node at all but only required properties, and not any =
+
+"available" property.
+
+I've found a document  on power.org describing the memory node, but also no=
+t =
+
+mentioning any "available" property.
+
+And devicetree.org does not seem to handle the memory node at all.
 
 
-Does Maple not have any IRQs associated with it?
-
-If you are going to have a minimal binding, at least cover the basics associated with a device.
-
-> +
-> +- fsl,iommu-parent
-> +		: <phandle>
-> +		This property should be present
-> +
-> +Example:
-> +	/* B4860 */
-> +	maple@800000 {
-> +		compatible = "fsl,maple-b3-liodn";
-> +		reg = <0x8000000 0x10000>;
-> +		fsl,iommu-parent = <&pamu1>;
-> +	};
-> -- 
-> 1.7.6.GIT
-> 
-> 
-> _______________________________________________
-> Linuxppc-dev mailing list
-> Linuxppc-dev@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/linuxppc-dev
+Thanks for any hints
+Heiko
