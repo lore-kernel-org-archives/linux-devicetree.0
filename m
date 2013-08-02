@@ -1,108 +1,93 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp65.ord1c.emailsrvr.com ([108.166.43.65]:57357 "EHLO
-	smtp65.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752218Ab3HBULV (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 16:11:21 -0400
-Message-ID: <51FC1272.8010305@calxeda.com>
-Date: Fri, 02 Aug 2013 15:11:30 -0500
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Received: from mail-lb0-f177.google.com ([209.85.217.177]:34717 "EHLO
+	mail-lb0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752976Ab3HBUBW (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 16:01:22 -0400
+Received: by mail-lb0-f177.google.com with SMTP id r11so736952lbv.8
+        for <devicetree@vger.kernel.org>; Fri, 02 Aug 2013 13:01:19 -0700 (PDT)
+Message-ID: <51FC1015.7010203@cogentembedded.com>
+Date: Sat, 03 Aug 2013 00:01:25 +0400
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH v2 3/5] devicetree: create a separate binding description
  for sata_highbank
-References: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com> <1375460918-4661-3-git-send-email-mark.langsdorf@calxeda.com> <51FC1015.7010203@cogentembedded.com>
-In-Reply-To: <51FC1015.7010203@cogentembedded.com>
-Content-Type: text/plain; charset=ISO-8859-1
+References: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com> <1375460918-4661-3-git-send-email-mark.langsdorf@calxeda.com>
+In-Reply-To: <1375460918-4661-3-git-send-email-mark.langsdorf@calxeda.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Rob Herring <rob.herring@calxeda.com>
+To: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Cc: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/02/2013 03:01 PM, Sergei Shtylyov wrote:
-> On 08/02/2013 08:28 PM, Mark Langsdorf wrote:
-> 
->> The Calxeda sata_highbank driver has been adding its descriptions to the
->> ahci driver. Separate them properly.
-> 
->> Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
->> Acked-by: Rob Herring <rob.herring@calxeda.com>
-> [...]
-> 
->> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
->> index 3ec0c5c..14d7b22 100644
->> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
->> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
->> @@ -4,27 +4,17 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
-> [...]
->>   Example:
->>           sata@ffe08000 {
->> -		compatible = "calxeda,hb-ahci";
->> +		compatible = "snps,spear-ahci";
->>                   reg = <0xffe08000 0x1000>;
->>                   interrupts = <115>;
-> 
->     Indented these 2 props with spaces, would be good to fix...
+On 08/02/2013 08:28 PM, Mark Langsdorf wrote:
 
-Thanks, I will fix.
+> The Calxeda sata_highbank driver has been adding its descriptions to the
+> ahci driver. Separate them properly.
 
->> -		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
->> -					&combophy0 2 &combophy0 3>;
->>
->>           };
->> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
->> new file mode 100644
->> index 0000000..aa1b798
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/ata/sata_highbank.txt
->     Shouldn't the file be called calxeda,hb-ahci.txt?
+> Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
+> Acked-by: Rob Herring <rob.herring@calxeda.com>
+[...]
 
-# ls Documentation/devicetree/bindings/ata/
-ahci-platform.txt         exynos-sata.txt           pata-arasan.txt
-atmel-at91_cf.txt         fsl-sata.txt              sata_highbank.txt
-cavium-compact-flash.txt  imx-pata.txt
-exynos-sata-phy.txt       marvell.txt
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> index 3ec0c5c..14d7b22 100644
+> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> @@ -4,27 +4,17 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
+[...]
+>   Example:
+>           sata@ffe08000 {
+> -		compatible = "calxeda,hb-ahci";
+> +		compatible = "snps,spear-ahci";
+>                   reg = <0xffe08000 0x1000>;
+>                   interrupts = <115>;
 
-By comparison with the other files in the directory, no. Using _ instead
-of - is slightly unorthodox but not unknown within the
-devicetree/bindings subdirectories.
+    Indented these 2 props with spaces, would be good to fix...
 
->> @@ -0,0 +1,32 @@
->> +* Calxeda AHCI SATA Controller
->> +
->> +SATA nodes are defined to describe on-chip Serial ATA controllers.
->> +The Calxeda SATA controller mostly conforms to the AHCI interface
->> +with some special extensions to add functionality.
->> +Each SATA controller should have its own node.
->> +
->> +Required properties:
->> +- compatible        : compatible list, contains "calxeda,hb-ahci"
->> +- interrupts        : <interrupt mapping for SATA IRQ>
->> +- reg               : <registers mapping>
->> +
->> +Optional properties:
->> +- dma-coherent      : Present if dma operations are coherent
->> +- calxeda,port-phys: phandle-combophy and lane assignment, which maps each
->> +			SATA port to a combophy and a lane within that
->> +			combophy
->> +- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
->> +			which indicates that the driver supports SGPIO
->> +			indicator lights using the indicated GPIOs
->> +- calxeda,led-order : a u32 array that map port numbers to offsets within the
->> +			SGPIO bitstream.
->> +
->> +Example:
->> +        sata@ffe08000 {
->> +		compatible = "calxeda,hb-ahci";
->> +                reg = <0xffe08000 0x1000>;
->> +                interrupts = <115>;
->> +		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
-> 
->     Could you indent props uniformly here, with tabs?
+> -		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
+> -					&combophy0 2 &combophy0 3>;
+>
+>           };
+> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
+> new file mode 100644
+> index 0000000..aa1b798
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/sata_highbank.txt
 
-Yes.
+    Shouldn't the file be called calxeda,hb-ahci.txt?
 
-Thanks for the review.
+> @@ -0,0 +1,32 @@
+> +* Calxeda AHCI SATA Controller
+> +
+> +SATA nodes are defined to describe on-chip Serial ATA controllers.
+> +The Calxeda SATA controller mostly conforms to the AHCI interface
+> +with some special extensions to add functionality.
+> +Each SATA controller should have its own node.
+> +
+> +Required properties:
+> +- compatible        : compatible list, contains "calxeda,hb-ahci"
+> +- interrupts        : <interrupt mapping for SATA IRQ>
+> +- reg               : <registers mapping>
+> +
+> +Optional properties:
+> +- dma-coherent      : Present if dma operations are coherent
+> +- calxeda,port-phys: phandle-combophy and lane assignment, which maps each
+> +			SATA port to a combophy and a lane within that
+> +			combophy
+> +- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
+> +			which indicates that the driver supports SGPIO
+> +			indicator lights using the indicated GPIOs
+> +- calxeda,led-order : a u32 array that map port numbers to offsets within the
+> +			SGPIO bitstream.
+> +
+> +Example:
+> +        sata@ffe08000 {
+> +		compatible = "calxeda,hb-ahci";
+> +                reg = <0xffe08000 0x1000>;
+> +                interrupts = <115>;
+> +		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
 
---Mark Langsdorf
-Calxeda, Inc.
+    Could you indent props uniformly here, with tabs?
+
+WBR, Sergei
 
