@@ -1,72 +1,204 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from comal.ext.ti.com ([198.47.26.152]:52333 "EHLO comal.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757858Ab3HBHvk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 2 Aug 2013 03:51:40 -0400
-Date: Fri, 2 Aug 2013 10:51:22 +0300
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 1/3] usb: phy-samsung-usb: Simplify PMU register handling
-Message-ID: <20130802075122.GK24465@radagast>
-Reply-To: <balbi@ti.com>
+Received: from mail-pb0-f52.google.com ([209.85.160.52]:46877 "EHLO
+	mail-pb0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753022Ab3HBAxF (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 20:53:05 -0400
+Received: by mail-pb0-f52.google.com with SMTP id wz12so52736pbc.11
+        for <devicetree@vger.kernel.org>; Thu, 01 Aug 2013 17:53:04 -0700 (PDT)
+From: Julius Werner <jwerner@chromium.org>
+Subject: [PATCH 1/3] usb: phy-samsung-usb: Simplify PMU register handling
+Date: Thu,  1 Aug 2013 17:52:04 -0700
+Message-Id: <1375404726-26264-2-git-send-email-jwerner@chromium.org>
+In-Reply-To: <1375404726-26264-1-git-send-email-jwerner@chromium.org>
 References: <1375404726-26264-1-git-send-email-jwerner@chromium.org>
- <1375404726-26264-2-git-send-email-jwerner@chromium.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EVcIhgQsEzAXu06J"
-Content-Disposition: inline
-In-Reply-To: <1375404726-26264-2-git-send-email-jwerner@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
-To: Julius Werner <jwerner@chromium.org>
-Cc: Felipe Balbi <balbi@ti.com>, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+To: Felipe Balbi <balbi@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Julius Werner <jwerner@chromium.org>
 List-ID: <devicetree@vger.kernel.org>
 
---EVcIhgQsEzAXu06J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch simplifies the way the phy-samsung-usb code finds the correct
+power management register to enable PHY clock gating. Previously, the
+code would calculate the register address from a device tree supplied
+base address and add an offset based on the PHY type.
 
-Hi,
+Since every PHY has its own device tree entry and needs only one
+register, we can just encode the address itself in the device tree and
+remove the diffentiation in the code. The bitmask needed to specify the
+bit within that register stays in place, allowing support for platforms
+like s3c64xx that use different bits within the same register.
 
-On Thu, Aug 01, 2013 at 05:52:04PM -0700, Julius Werner wrote:
-> This patch simplifies the way the phy-samsung-usb code finds the correct
-> power management register to enable PHY clock gating. Previously, the
-> code would calculate the register address from a device tree supplied
-> base address and add an offset based on the PHY type.
->=20
-> Since every PHY has its own device tree entry and needs only one
-> register, we can just encode the address itself in the device tree and
-> remove the diffentiation in the code. The bitmask needed to specify the
-> bit within that register stays in place, allowing support for platforms
-> like s3c64xx that use different bits within the same register.
->=20
-> Signed-off-by: Julius Werner <jwerner@chromium.org>
+Signed-off-by: Julius Werner <jwerner@chromium.org>
+---
+ arch/arm/boot/dts/exynos5250.dtsi  |  4 ++--
+ drivers/usb/phy/phy-samsung-usb.c  | 18 ++++--------------
+ drivers/usb/phy/phy-samsung-usb.h  | 23 +++++------------------
+ drivers/usb/phy/phy-samsung-usb2.c | 11 ++++-------
+ drivers/usb/phy/phy-samsung-usb3.c |  2 +-
+ 5 files changed, 16 insertions(+), 42 deletions(-)
 
-I need an Acked-by for the dtsi part. Ideally from Exynos 5 maintainer
-and at least one of the DT maintainers.
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index ef57277..5a754d7 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -473,7 +473,7 @@
+ 		ranges;
+ 
+ 		usbphy-sys {
+-			reg = <0x10040704 0x8>;
++			reg = <0x10040704 0x4>;
+ 		};
+ 	};
+ 
+@@ -505,7 +505,7 @@
+ 		ranges;
+ 
+ 		usbphy-sys {
+-			reg = <0x10040704 0x8>,
++			reg = <0x10040708 0x4>,
+ 			      <0x10050230 0x4>;
+ 		};
+ 	};
+diff --git a/drivers/usb/phy/phy-samsung-usb.c b/drivers/usb/phy/phy-samsung-usb.c
+index ac025ca..51cad19 100644
+--- a/drivers/usb/phy/phy-samsung-usb.c
++++ b/drivers/usb/phy/phy-samsung-usb.c
+@@ -75,31 +75,21 @@ EXPORT_SYMBOL_GPL(samsung_usbphy_parse_dt);
+  */
+ void samsung_usbphy_set_isolation_4210(struct samsung_usbphy *sphy, bool on)
+ {
+-	void __iomem *reg = NULL;
+ 	u32 reg_val;
+-	u32 en_mask = 0;
+ 
+ 	if (!sphy->pmuregs) {
+ 		dev_warn(sphy->dev, "Can't set pmu isolation\n");
+ 		return;
+ 	}
+ 
+-	if (sphy->phy_type == USB_PHY_TYPE_DEVICE) {
+-		reg = sphy->pmuregs + sphy->drv_data->devphy_reg_offset;
+-		en_mask = sphy->drv_data->devphy_en_mask;
+-	} else if (sphy->phy_type == USB_PHY_TYPE_HOST) {
+-		reg = sphy->pmuregs + sphy->drv_data->hostphy_reg_offset;
+-		en_mask = sphy->drv_data->hostphy_en_mask;
+-	}
+-
+-	reg_val = readl(reg);
++	reg_val = readl(sphy->pmuregs);
+ 
+ 	if (on)
+-		reg_val &= ~en_mask;
++		reg_val &= ~sphy->drv_data->phy_en_mask;
+ 	else
+-		reg_val |= en_mask;
++		reg_val |= sphy->drv_data->phy_en_mask;
+ 
+-	writel(reg_val, reg);
++	writel(reg_val, sphy->pmuregs);
+ 
+ 	if (sphy->drv_data->cpu_type == TYPE_EXYNOS4X12) {
+ 		writel(reg_val, sphy->pmuregs + EXYNOS4X12_PHY_HSIC_CTRL0);
+diff --git a/drivers/usb/phy/phy-samsung-usb.h b/drivers/usb/phy/phy-samsung-usb.h
+index 68771bf..a817af5 100644
+--- a/drivers/usb/phy/phy-samsung-usb.h
++++ b/drivers/usb/phy/phy-samsung-usb.h
+@@ -243,7 +243,6 @@
+ #define KHZ (1000)
+ #endif
+ 
+-#define EXYNOS_USBHOST_PHY_CTRL_OFFSET		(0x4)
+ #define S3C64XX_USBPHY_ENABLE			(0x1 << 16)
+ #define EXYNOS_USBPHY_ENABLE			(0x1 << 0)
+ #define EXYNOS_USB20PHY_CFG_HOST_LINK		(0x1 << 0)
+@@ -260,27 +259,15 @@ struct samsung_usbphy;
+ /*
+  * struct samsung_usbphy_drvdata - driver data for various SoC variants
+  * @cpu_type: machine identifier
+- * @devphy_en_mask: device phy enable mask for PHY CONTROL register
+- * @hostphy_en_mask: host phy enable mask for PHY CONTROL register
+- * @devphy_reg_offset: offset to DEVICE PHY CONTROL register from
+- *		       mapped address of system controller.
+- * @hostphy_reg_offset: offset to HOST PHY CONTROL register from
+- *		       mapped address of system controller.
++ * @phy_en_mask: phy enable mask for PHY CONTROL register
+  *
+- *	Here we have a separate mask for device type phy.
+- *	Having different masks for host and device type phy helps
+- *	in setting independent masks in case of SoCs like S5PV210,
+- *	in which PHY0 and PHY1 enable bits belong to same register
+- *	placed at position 0 and 1 respectively.
+- *	Although for newer SoCs like exynos these bits belong to
+- *	different registers altogether placed at position 0.
++ *	Here we have a mask for the phy control bit. This is required for SoCs
++ *	like S5PV210, in which different PHYs use different bits in the same
++ *	register.
+  */
+ struct samsung_usbphy_drvdata {
+ 	int cpu_type;
+-	int devphy_en_mask;
+-	int hostphy_en_mask;
+-	u32 devphy_reg_offset;
+-	u32 hostphy_reg_offset;
++	int phy_en_mask;
+ 	int (*rate_to_clksel)(struct samsung_usbphy *, unsigned long);
+ 	void (*set_isolation)(struct samsung_usbphy *, bool);
+ 	void (*phy_enable)(struct samsung_usbphy *);
+diff --git a/drivers/usb/phy/phy-samsung-usb2.c b/drivers/usb/phy/phy-samsung-usb2.c
+index 758b86d..adbaa8c 100644
+--- a/drivers/usb/phy/phy-samsung-usb2.c
++++ b/drivers/usb/phy/phy-samsung-usb2.c
+@@ -445,7 +445,7 @@ static int samsung_usb2phy_remove(struct platform_device *pdev)
+ 
+ static const struct samsung_usbphy_drvdata usb2phy_s3c64xx = {
+ 	.cpu_type		= TYPE_S3C64XX,
+-	.devphy_en_mask		= S3C64XX_USBPHY_ENABLE,
++	.phy_en_mask		= S3C64XX_USBPHY_ENABLE,
+ 	.rate_to_clksel		= samsung_usbphy_rate_to_clksel_64xx,
+ 	.set_isolation		= NULL, /* TODO */
+ 	.phy_enable		= samsung_usb2phy_enable,
+@@ -454,8 +454,7 @@ static const struct samsung_usbphy_drvdata usb2phy_s3c64xx = {
+ 
+ static const struct samsung_usbphy_drvdata usb2phy_exynos4 = {
+ 	.cpu_type		= TYPE_EXYNOS4210,
+-	.devphy_en_mask		= EXYNOS_USBPHY_ENABLE,
+-	.hostphy_en_mask	= EXYNOS_USBPHY_ENABLE,
++	.phy_en_mask		= EXYNOS_USBPHY_ENABLE,
+ 	.rate_to_clksel		= samsung_usbphy_rate_to_clksel_64xx,
+ 	.set_isolation		= samsung_usbphy_set_isolation_4210,
+ 	.phy_enable		= samsung_usb2phy_enable,
+@@ -464,8 +463,7 @@ static const struct samsung_usbphy_drvdata usb2phy_exynos4 = {
+ 
+ static const struct samsung_usbphy_drvdata usb2phy_exynos4x12 = {
+ 	.cpu_type		= TYPE_EXYNOS4X12,
+-	.devphy_en_mask		= EXYNOS_USBPHY_ENABLE,
+-	.hostphy_en_mask	= EXYNOS_USBPHY_ENABLE,
++	.phy_en_mask		= EXYNOS_USBPHY_ENABLE,
+ 	.rate_to_clksel		= samsung_usbphy_rate_to_clksel_4x12,
+ 	.set_isolation		= samsung_usbphy_set_isolation_4210,
+ 	.phy_enable		= samsung_usb2phy_enable,
+@@ -474,8 +472,7 @@ static const struct samsung_usbphy_drvdata usb2phy_exynos4x12 = {
+ 
+ static struct samsung_usbphy_drvdata usb2phy_exynos5 = {
+ 	.cpu_type		= TYPE_EXYNOS5250,
+-	.hostphy_en_mask	= EXYNOS_USBPHY_ENABLE,
+-	.hostphy_reg_offset	= EXYNOS_USBHOST_PHY_CTRL_OFFSET,
++	.phy_en_mask		= EXYNOS_USBPHY_ENABLE,
+ 	.rate_to_clksel		= samsung_usbphy_rate_to_clksel_4x12,
+ 	.set_isolation		= samsung_usbphy_set_isolation_4210,
+ 	.phy_enable		= samsung_exynos5_usb2phy_enable,
+diff --git a/drivers/usb/phy/phy-samsung-usb3.c b/drivers/usb/phy/phy-samsung-usb3.c
+index 300e0cf..3ad9579 100644
+--- a/drivers/usb/phy/phy-samsung-usb3.c
++++ b/drivers/usb/phy/phy-samsung-usb3.c
+@@ -302,7 +302,7 @@ static int samsung_usb3phy_remove(struct platform_device *pdev)
+ 
+ static struct samsung_usbphy_drvdata usb3phy_exynos5 = {
+ 	.cpu_type		= TYPE_EXYNOS5250,
+-	.devphy_en_mask		= EXYNOS_USBPHY_ENABLE,
++	.phy_en_mask		= EXYNOS_USBPHY_ENABLE,
+ 	.rate_to_clksel		= samsung_usbphy_rate_to_clksel_4x12,
+ 	.set_isolation		= samsung_usbphy_set_isolation_4210,
+ 	.phy_enable		= samsung_exynos5_usb3phy_enable,
+-- 
+1.7.12.4
 
---=20
-balbi
-
---EVcIhgQsEzAXu06J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR+2T6AAoJEIaOsuA1yqREKGYQAI2EWPYDjwuIC6wWFnWbpYW4
-p+J0+zepF36v5zK1T8iEuYO91Fi/ByyD2s1cQHj7E90spg3hHtXOjs1ml7KzL6gL
-ftmXNJp2T4VD1YHvHSF8y0JP9D6nc8/aVViHTxmZZoVE4PzfgD5/fAz7EhGXtiK/
-5mXZdPI7TuRlhrxPfQL/juPpQY9bIQWI6Qp2aWLGqY5uydQD7e4PhfO9ZHTF0cfE
-SrQmiR1b3JOhHXd41hfYvQRtONoQ5MRKPwCb94zmeE1pdNiRDIBdKPES2En+eRS6
-AKLeB0wdDlMIvtfi1zjtVooz4fM0sf69oEmKSTh4iNVkKYx8IsqMTd/0wX+PRYZ3
-fYGStuDM12NfFdxrbGVF1nnitFd0pvmxKx/IiRdV6XUxwlukcItrsoRallJ4Mcqd
-MwbVSDu5TWgz3drxZQA2dWw5wYS8/S+LKEVwAkWC9qtPUJhCRpXxGHFKdTOoizmd
-v12vPXsyncpUuWWg20a9UnQbADbeFwuGT0sbVdJZoR9DuAafZUh/H018aU2xRaM/
-TwqM7XGsztuXTECwGl1xvJWB7VOmwlrXoGpjPwJtXrHwYOwINKLyAhG/iWH01uxI
-c/MkkodIHYmEJqg4ZBCqmUL32yFGYwZMhyvuiOeH1zuRhOEf4rbv2ViSsRYLzCuK
-S3zM1GHQxnYKR7ZV2bU1
-=ARgF
------END PGP SIGNATURE-----
-
---EVcIhgQsEzAXu06J--
