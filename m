@@ -1,300 +1,209 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from moutng.kundenserver.de ([212.227.126.186]:54332 "EHLO
-	moutng.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756058Ab3HFTs1 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 15:48:27 -0400
-From: Fabian Vogt <fabian@ritter-vogt.de>
-Subject: [PATCH] [V2] gpio: New driver for LSI ZEVIO SoCs
-Date: Tue,  6 Aug 2013 21:53:24 +0200
-Message-Id: <1375818804-13053-1-git-send-email-fabian@ritter-vogt.de>
+Received: from mail-pd0-f176.google.com ([209.85.192.176]:33619 "EHLO
+	mail-pd0-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753167Ab3HBAxH (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 20:53:07 -0400
+Received: by mail-pd0-f176.google.com with SMTP id q10so50144pdj.21
+        for <devicetree@vger.kernel.org>; Thu, 01 Aug 2013 17:53:06 -0700 (PDT)
+From: Julius Werner <jwerner@chromium.org>
+Subject: [PATCH 3/3] usb: phy-samsung-usb: Remove USB_PHY_TYPE from Samsung PHY driver
+Date: Thu,  1 Aug 2013 17:52:06 -0700
+Message-Id: <1375404726-26264-4-git-send-email-jwerner@chromium.org>
+In-Reply-To: <1375404726-26264-1-git-send-email-jwerner@chromium.org>
+References: <1375404726-26264-1-git-send-email-jwerner@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, grant.likely@linaro.org, pawel.moll@arm.com, jakob.braun96@gmx.de, Fabian Vogt <fabian@ritter-vogt.de>
+To: Felipe Balbi <balbi@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Julius Werner <jwerner@chromium.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This driver supports the GPIO controller found in LSI ZEVIO SoCs.
-It has been successfully tested on a TI nspire CX calculator.
----
- .../devicetree/bindings/gpio/gpio-zevio.txt        |  19 ++
- drivers/gpio/Kconfig                               |   7 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-zevio.c                          | 212 +++++++++++++++++++++
- 4 files changed, 239 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-zevio.txt
- create mode 100644 drivers/gpio/gpio-zevio.c
+Since the PMU register handling was simplified, the last reason to
+differentiate between HOST and DEVICE PHYs in the Samsung USB PHY driver
+has disappeared. This patch removes that variable and reworks
+surrounding code to live without it to make the driver a little smaller
+and cleaner.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-zevio.txt b/Documentation/devicetree/bindings/gpio/gpio-zevio.txt
-new file mode 100644
-index 0000000..96d948b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-zevio.txt
-@@ -0,0 +1,19 @@
-+Zevio GPIO controller
-+
-+Required properties:
-+- compatible = "lsi,zevio-gpio"
-+- reg = <BASEADDR SIZE>
-+- #gpio-cells = <2>
-+- gpio-controller;
-+
-+Optional:
-+- #ngpios = <32>: Number of GPIOs. Defaults to 32 if absent
-+
-+Example:
-+	gpio: gpio@90000000 {
-+		compatible = "lsi,zevio-gpio";
-+		reg = <0x90000000 0x1000>;
-+	
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-\ No newline at end of file
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index b2450ba..ba8c357 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -138,6 +138,13 @@ config GPIO_EP93XX
- 	depends on ARCH_EP93XX
- 	select GPIO_GENERIC
+Signed-off-by: Julius Werner <jwerner@chromium.org>
+---
+ drivers/usb/phy/phy-samsung-usb.c  | 23 +++--------------------
+ drivers/usb/phy/phy-samsung-usb.h  |  7 +------
+ drivers/usb/phy/phy-samsung-usb2.c | 19 +++----------------
+ drivers/usb/phy/phy-samsung-usb3.c |  7 -------
+ 4 files changed, 7 insertions(+), 49 deletions(-)
+
+diff --git a/drivers/usb/phy/phy-samsung-usb.c b/drivers/usb/phy/phy-samsung-usb.c
+index fa382c9..32c5264 100644
+--- a/drivers/usb/phy/phy-samsung-usb.c
++++ b/drivers/usb/phy/phy-samsung-usb.c
+@@ -27,7 +27,6 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+-#include <linux/usb/samsung_usb_phy.h>
  
-+config GPIO_ZEVIO
-+	bool "LSI ZEVIO SoC memory mapped GPIOs"
-+	depends on ARCH_NSPIRE
-+	select GENERIC_IRQ_CHIP
-+	help
-+	  Say yes here to support the GPIO controller in LSI ZEVIO SoCs.
-+
- config GPIO_MM_LANTIQ
- 	bool "Lantiq Memory mapped GPIOs"
- 	depends on LANTIQ && SOC_XWAY
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index ef3e983..1e7e926 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -87,3 +87,4 @@ obj-$(CONFIG_GPIO_WM831X)	+= gpio-wm831x.o
- obj-$(CONFIG_GPIO_WM8350)	+= gpio-wm8350.o
- obj-$(CONFIG_GPIO_WM8994)	+= gpio-wm8994.o
- obj-$(CONFIG_GPIO_XILINX)	+= gpio-xilinx.o
-+obj-$(CONFIG_GPIO_ZEVIO)	+= gpio-zevio.o
-\ No newline at end of file
-diff --git a/drivers/gpio/gpio-zevio.c b/drivers/gpio/gpio-zevio.c
-new file mode 100644
-index 0000000..f5c04b3
---- /dev/null
-+++ b/drivers/gpio/gpio-zevio.c
-@@ -0,0 +1,212 @@
-+/*
-+ * GPIO controller in LSI ZEVIO SoCs.
-+ * 
-+ * Author: Fabian Vogt <fabian@ritter-vogt.de>
-+ * 
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/spinlock.h>
-+#include <linux/errno.h>
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/slab.h>
-+#include <linux/gpio.h>
-+
-+/* 
-+ * Memory layout:
-+ * This chip has four gpio sections, each controls 8 GPIOs.
-+ * Bit 0 in section 0 is GPIO 0, bit 2 in section 1 is GPIO 10.
-+ * Disclaimer: Reverse engineered!
-+ * For more information refer to:
-+ * http://hackspire.unsads.com/wiki/index.php/Memory-mapped_I/O_ports#90000000_-_General_Purpose_I.2FO_.28GPIO.29
-+ * 
-+ * 0x00-0x3F: Section 0
-+ *     +0x00: Masked interrupt status (read-only)
-+ *     +0x04: R: Interrupt status W: Reset interrupt status
-+ *     +0x08: R: Interrupt mask W: Mask interrupt
-+ *     +0x0C: W: Unmask interrupt (write-only)
-+ *     +0x10: Direction: I/O=1/0
-+ *     +0x14: Output
-+ *     +0x18: Input (read-only)
-+ *     +0x20: R: Sticky interrupts W: Set sticky interrupt
-+ * 0x40-0x7F: Section 1
-+ * 0x80-0xBF: Section 2
-+ * 0xC0-0xFF: Section 3
-+ */
-+
-+#define ZEVIO_GPIO_SECTION_SIZE 		0x40
-+
-+#define ZEVIO_GPIO_INT_MASKED_STATUS_OFFSET	0x00
-+#define ZEVIO_GPIO_INT_STATUS_OFFSET		0x04
-+#define ZEVIO_GPIO_INT_UNMASK_OFFSET		0x08
-+#define ZEVIO_GPIO_INT_MASK_OFFSET		0x0C
-+#define ZEVIO_GPIO_DIRECTION_OFFSET		0x10
-+#define ZEVIO_GPIO_OUTPUT_OFFSET		0x14
-+#define ZEVIO_GPIO_INPUT_OFFSET			0x18
-+#define ZEVIO_GPIO_INT_STICKY_OFFSET		0x20
-+
-+#define to_zevio_gpio(chip) container_of(to_of_mm_gpio_chip(chip), \
-+				struct zevio_gpio, chip)
-+
-+/* Bit of GPIO in section */
-+#define ZEVIO_GPIO_BIT(gpio) (gpio&7)
-+/* Offset to section of GPIO relative to base */
-+#define ZEVIO_GPIO_SECTION_OFFSET(gpio) (((gpio>>3)&3)*ZEVIO_GPIO_SECTION_SIZE)
-+/* Address of register, which is responsible for given GPIO */
-+#define ZEVIO_GPIO(cntrlr, gpio, reg) IOMEM(cntrlr->chip.regs + \
-+		ZEVIO_GPIO_SECTION_OFFSET(gpio) + ZEVIO_GPIO_##reg##_OFFSET)
-+
-+struct zevio_gpio {
-+	spinlock_t		lock;
-+	struct of_mm_gpio_chip	chip;
-+};
-+
-+/* Functions for struct gpio_chip */
-+static int zevio_gpio_get(struct gpio_chip *chip, unsigned pin)
-+{
-+	struct zevio_gpio *controller = to_zevio_gpio(chip);
-+
-+	/* Only reading allowed, so no spinlock needed */
-+	uint16_t val = readw(ZEVIO_GPIO(controller, pin, INPUT));
-+
-+	return (val >> ZEVIO_GPIO_BIT(pin)) & 0x1;
-+}
-+
-+static void zevio_gpio_set(struct gpio_chip *chip, unsigned pin, int value)
-+{
-+	struct zevio_gpio *controller = to_zevio_gpio(chip);
-+	uint16_t val;
-+
-+	spin_lock(&controller->lock);
-+	val = readw(ZEVIO_GPIO(controller, pin, OUTPUT));
-+	if (value)
-+		val |= 1<<ZEVIO_GPIO_BIT(pin);
+ #include "phy-samsung-usb.h"
+ 
+@@ -101,7 +100,7 @@ EXPORT_SYMBOL_GPL(samsung_usbphy_set_isolation_4210);
+ /*
+  * Configure the mode of working of usb-phy here: HOST/DEVICE.
+  */
+-void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy)
++void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy, bool device_mode)
+ {
+ 	u32 reg;
+ 
+@@ -112,31 +111,15 @@ void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy)
+ 
+ 	reg = readl(sphy->sysreg);
+ 
+-	if (sphy->phy_type == USB_PHY_TYPE_DEVICE)
++	if (device_mode)
+ 		reg &= ~EXYNOS_USB20PHY_CFG_HOST_LINK;
+-	else if (sphy->phy_type == USB_PHY_TYPE_HOST)
 +	else
-+		val &= ~(1<<ZEVIO_GPIO_BIT(pin));
-+
-+	writew(val, ZEVIO_GPIO(controller, pin, OUTPUT));
-+	spin_unlock(&controller->lock);
-+}
-+
-+static int zevio_gpio_direction_input(struct gpio_chip *chip, unsigned pin)
-+{
-+	struct zevio_gpio *controller = to_zevio_gpio(chip);
-+	uint16_t val;
-+
-+	spin_lock(&controller->lock);
-+
-+	val = readw(ZEVIO_GPIO(controller, pin, DIRECTION));
-+	val |= 1<<ZEVIO_GPIO_BIT(pin);
-+	writew(val, ZEVIO_GPIO(controller, pin, DIRECTION));
-+
-+	spin_unlock(&controller->lock);
-+
-+	return 0;
-+}
-+
-+static int zevio_gpio_direction_output(struct gpio_chip *chip, 
-+				       unsigned pin, int value)
-+{
-+	struct zevio_gpio *controller = to_zevio_gpio(chip);
-+	uint16_t val;
-+
-+	spin_lock(&controller->lock);
-+	val = readw(ZEVIO_GPIO(controller, pin, OUTPUT));
-+	if (value)
-+		val |= 1<<ZEVIO_GPIO_BIT(pin);
-+	else
-+		val &= ~(1<<ZEVIO_GPIO_BIT(pin));
-+
-+	writew(val, ZEVIO_GPIO(controller, pin, OUTPUT));
-+	val = readw(ZEVIO_GPIO(controller, pin, DIRECTION));
-+	val &= ~(1<<ZEVIO_GPIO_BIT(pin));
-+	writew(val, ZEVIO_GPIO(controller, pin, DIRECTION));
-+
-+	spin_unlock(&controller->lock);
-+
-+	return 0;
-+}
-+
-+static int zevio_gpio_to_irq(struct gpio_chip *chip, unsigned pin)
-+{
-+	/* Not implemented due to weird lockups */
-+	return -ENXIO;
-+}
-+
-+static struct gpio_chip zevio_gpio_chip = {
-+	.direction_input	= zevio_gpio_direction_input,
-+	.direction_output	= zevio_gpio_direction_output,
-+	.set			= zevio_gpio_set,
-+	.get			= zevio_gpio_get,
-+	.to_irq			= zevio_gpio_to_irq,
-+	.base			= 0,
-+	.owner			= THIS_MODULE,
-+	.ngpio			= 32, /* Default, if not given in DT */
-+	.of_gpio_n_cells	= 2,
-+};
-+
-+/* Initialization */
-+static int zevio_gpio_probe(struct platform_device *pdev)
-+{
-+	struct zevio_gpio *controller;
-+	int status, i;
-+	u32 ngpio;
-+
-+	controller = devm_kzalloc(&pdev->dev, sizeof(*controller), GFP_KERNEL);
-+	if (!controller) {
-+		dev_err(&pdev->dev, "not enough free memory\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Copy our reference */
-+	controller->chip.gc = zevio_gpio_chip;
-+	controller->chip.gc.dev = &pdev->dev;
-+
-+	if (!of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpio))
-+		controller->chip.gc.ngpio = ngpio;
-+
-+	status = of_mm_gpiochip_add(pdev->dev.of_node, &(controller->chip));
-+	if (status) {
-+		kfree(controller);
-+		dev_err(&pdev->dev, "failed to add gpiochip: %d\n", status);
-+		return status;
-+	}
-+
-+	spin_lock_init(&(controller->lock));
-+
-+	/* Disable interrupts, they only cause errors */
-+	for (i = 0; i < controller->chip.gc.ngpio; i += 8)
-+		writew(0xFF, ZEVIO_GPIO(controller, i, INT_MASK));
-+
-+	dev_dbg(controller->chip.gc.dev, "ZEVIO GPIO controller set up!\n");
-+
-+	return 0;
-+}
-+
-+static struct of_device_id zevio_gpio_of_match[] = {
-+	{ .compatible = "lsi,zevio-gpio", },
-+	{ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, zevio_gpio_of_match);
-+
-+static struct platform_driver zevio_gpio_driver = {
-+	.driver		= {
-+		.name	= "gpio-zevio",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(zevio_gpio_of_match),
-+	},
-+	.probe		= zevio_gpio_probe,
-+};
-+
-+module_platform_driver(zevio_gpio_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Fabian Vogt <fabian@ritter-vogt.de>");
-+MODULE_DESCRIPTION("LSI ZEVIO SoC GPIO driver");
-+
+ 		reg |= EXYNOS_USB20PHY_CFG_HOST_LINK;
+ 
+ 	writel(reg, sphy->sysreg);
+ }
+ EXPORT_SYMBOL_GPL(samsung_usbphy_cfg_sel);
+ 
+-/*
+- * PHYs are different for USB Device and USB Host.
+- * This make sure that correct PHY type is selected before
+- * any operation on PHY.
+- */
+-int samsung_usbphy_set_type(struct usb_phy *phy,
+-				enum samsung_usb_phy_type phy_type)
+-{
+-	struct samsung_usbphy *sphy = phy_to_sphy(phy);
+-
+-	sphy->phy_type = phy_type;
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL_GPL(samsung_usbphy_set_type);
+-
+ int samsung_usbphy_rate_to_clksel_64xx(struct samsung_usbphy *sphy,
+ 							unsigned long rate)
+ {
+diff --git a/drivers/usb/phy/phy-samsung-usb.h b/drivers/usb/phy/phy-samsung-usb.h
+index f2e9c4a..0c0d7d1 100644
+--- a/drivers/usb/phy/phy-samsung-usb.h
++++ b/drivers/usb/phy/phy-samsung-usb.h
+@@ -285,8 +285,6 @@ struct samsung_usbphy_drvdata {
+  * @sysreg: USB2.0 PHY_CFG register memory base
+  * @ref_clk_freq: reference clock frequency selection
+  * @drv_data: driver data available for different SoCs
+- * @phy_type: Samsung SoCs specific phy types:	#HOST
+- *						#DEVICE
+  * @phy_usage: usage count for phy
+  * @lock: lock for phy operations
+  */
+@@ -300,7 +298,6 @@ struct samsung_usbphy {
+ 	void __iomem	*sysreg;
+ 	int		ref_clk_freq;
+ 	const struct samsung_usbphy_drvdata *drv_data;
+-	enum samsung_usb_phy_type phy_type;
+ 	atomic_t	phy_usage;
+ 	spinlock_t	lock;
+ };
+@@ -326,9 +323,7 @@ static inline const struct samsung_usbphy_drvdata
+ extern int samsung_usbphy_parse_dt(struct samsung_usbphy *sphy);
+ extern void samsung_usbphy_set_isolation_4210(struct samsung_usbphy *sphy,
+ 								bool on);
+-extern void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy);
+-extern int samsung_usbphy_set_type(struct usb_phy *phy,
+-					enum samsung_usb_phy_type phy_type);
++extern void samsung_usbphy_cfg_sel(struct samsung_usbphy *sphy, bool dev_mode);
+ extern int samsung_usbphy_get_refclk_freq(struct samsung_usbphy *sphy);
+ extern int samsung_usbphy_rate_to_clksel_64xx(struct samsung_usbphy *sphy,
+ 							unsigned long rate);
+diff --git a/drivers/usb/phy/phy-samsung-usb2.c b/drivers/usb/phy/phy-samsung-usb2.c
+index c2c83d4..eb215a1 100644
+--- a/drivers/usb/phy/phy-samsung-usb2.c
++++ b/drivers/usb/phy/phy-samsung-usb2.c
+@@ -27,7 +27,6 @@
+ #include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/usb/otg.h>
+-#include <linux/usb/samsung_usb_phy.h>
+ #include <linux/platform_data/samsung-usbphy.h>
+ 
+ #include "phy-samsung-usb.h"
+@@ -283,13 +282,13 @@ static int samsung_usb2phy_init(struct usb_phy *phy)
+ 
+ 	spin_lock_irqsave(&sphy->lock, flags);
+ 
++	/* Selecting Host/OTG mode; After reset USB2.0PHY_CFG: HOST */
+ 	if (host) {
+-		/* setting default phy-type for USB 2.0 */
+ 		if (!strstr(dev_name(host->controller), "ehci") ||
+ 				!strstr(dev_name(host->controller), "ohci"))
+-			samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_HOST);
++			samsung_usbphy_cfg_sel(sphy, false);
+ 	} else {
+-		samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_DEVICE);
++		samsung_usbphy_cfg_sel(sphy, true);
+ 	}
+ 
+ 	/* Disable phy isolation */
+@@ -298,9 +297,6 @@ static int samsung_usb2phy_init(struct usb_phy *phy)
+ 	else if (sphy->drv_data->set_isolation)
+ 		sphy->drv_data->set_isolation(sphy, false);
+ 
+-	/* Selecting Host/OTG mode; After reset USB2.0PHY_CFG: HOST */
+-	samsung_usbphy_cfg_sel(sphy);
+-
+ 	/* Initialize usb phy registers */
+ 	sphy->drv_data->phy_enable(sphy);
+ 
+@@ -332,15 +328,6 @@ static void samsung_usb2phy_shutdown(struct usb_phy *phy)
+ 
+ 	spin_lock_irqsave(&sphy->lock, flags);
+ 
+-	if (host) {
+-		/* setting default phy-type for USB 2.0 */
+-		if (!strstr(dev_name(host->controller), "ehci") ||
+-				!strstr(dev_name(host->controller), "ohci"))
+-			samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_HOST);
+-	} else {
+-		samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_DEVICE);
+-	}
+-
+ 	/* De-initialize usb phy registers */
+ 	sphy->drv_data->phy_disable(sphy);
+ 
+diff --git a/drivers/usb/phy/phy-samsung-usb3.c b/drivers/usb/phy/phy-samsung-usb3.c
+index 6259a35..ac05d91 100644
+--- a/drivers/usb/phy/phy-samsung-usb3.c
++++ b/drivers/usb/phy/phy-samsung-usb3.c
+@@ -24,7 +24,6 @@
+ #include <linux/err.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
+-#include <linux/usb/samsung_usb_phy.h>
+ #include <linux/platform_data/samsung-usbphy.h>
+ 
+ #include "phy-samsung-usb.h"
+@@ -178,9 +177,6 @@ static int samsung_usb3phy_init(struct usb_phy *phy)
+ 
+ 	spin_lock_irqsave(&sphy->lock, flags);
+ 
+-	/* setting default phy-type for USB 3.0 */
+-	samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_DEVICE);
+-
+ 	/* Disable phy isolation */
+ 	if (sphy->drv_data->set_isolation)
+ 		sphy->drv_data->set_isolation(sphy, false);
+@@ -213,9 +209,6 @@ static void samsung_usb3phy_shutdown(struct usb_phy *phy)
+ 
+ 	spin_lock_irqsave(&sphy->lock, flags);
+ 
+-	/* setting default phy-type for USB 3.0 */
+-	samsung_usbphy_set_type(&sphy->phy, USB_PHY_TYPE_DEVICE);
+-
+ 	/* De-initialize usb phy registers */
+ 	sphy->drv_data->phy_disable(sphy);
+ 
 -- 
-1.8.1.4
+1.7.12.4
 
