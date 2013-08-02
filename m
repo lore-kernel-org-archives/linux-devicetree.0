@@ -1,14 +1,15 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v10] reset: Add driver for gpio-controlled reset pins
-Date: Fri, 2 Aug 2013 10:28:23 +0100
-Message-ID: <20130802092823.GA2884@e106331-lin.cambridge.arm.com>
-References: <1374139586-6344-1-git-send-email-p.zabel@pengutronix.de>
+Subject: Re: [PATCH] Documentation: Add device tree binding file for MOXA
+ ART SoCs interrupt controller
+Date: Fri, 2 Aug 2013 10:35:59 +0100
+Message-ID: <20130802093559.GB2884@e106331-lin.cambridge.arm.com>
+References: <1374137426-6763-1-git-send-email-jonas.jensen@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1374139586-6344-1-git-send-email-p.zabel@pengutronix.de>
+In-Reply-To: <1374137426-6763-1-git-send-email-jonas.jensen@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,105 +19,76 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
+To: Jonas Jensen <jonas.jensen@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "arm@kernel.org" <arm@kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2013 at 10:26:26AM +0100, Philipp Zabel wrote:
-> This driver implements a reset controller device that toggle a gpio
-> connected to a reset pin of a peripheral IC. The delay between assertion
-> and de-assertion of the reset signal can be configured via device tree.
+On Thu, Jul 18, 2013 at 09:50:26AM +0100, Jonas Jensen wrote:
+> Add binding document for MOXA ART SoCs interrupt controller.
 > 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
 > ---
-> Changes since v9:
->  - Use gpio_set_value_cansleep unconditionally. reset_controller_assert/deassert
->    should not be called from atomic context.
-> ---
->  .../devicetree/bindings/reset/gpio-reset.txt       |  35 ++++
->  drivers/reset/Kconfig                              |  11 ++
->  drivers/reset/Makefile                             |   1 +
->  drivers/reset/gpio-reset.c                         | 184 +++++++++++++++++++++
->  4 files changed, 231 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/gpio-reset.txt
->  create mode 100644 drivers/reset/gpio-reset.c
 > 
-> diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> Notes:
+>     The MOXA ART irqchip driver was added without accompanying devicetree document.
+>     ( in next-20130716   drivers/irqchip/irq-moxart.c )
+
+Aaargh. That should not have happened >:(
+
+>     
+>     Applies to next-20130716
+> 
+>  .../interrupt-controller/moxa,moxart-ic.txt        | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/moxa,moxart-ic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/moxa,moxart-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/moxa,moxart-ic.txt
 > new file mode 100644
-> index 0000000..bca5348
+> index 0000000..58f1fe1
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> @@ -0,0 +1,35 @@
-> +GPIO reset controller
-> +=====================
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/moxa,moxart-ic.txt
+> @@ -0,0 +1,28 @@
+> +* MOXA ART Interrupt Controller
 > +
-> +A GPIO reset controller controls a single GPIO that is connected to the reset
-> +pin of a peripheral IC. Please also refer to reset.txt in this directory for
-> +common reset controller binding usage.
+> +MOXA ART Interrupt Controller (moxart-ic) is used on MOXA ART SoCs
+> +and supports 32 non-configurable number of interrupts
 > +
-> +Required properties:
-> +- compatible: Should be "gpio-reset"
-> +- reset-gpios: A gpio used as reset line. The gpio specifier for this property
-> +               depends on the gpio controller that provides the gpio.
-> +- #reset-cells: 0, see below
+> +Main node required properties:
 > +
-> +Optional properties:
-> +- reset-delay-us: delay in microseconds. The gpio reset line will be asserted for
-> +                  this duration to reset.
-> +- initially-in-reset: boolean. If not set, the initial state should be a
-> +                      deasserted reset line. If this property exists, the
-> +                      reset line should be kept in reset.
+> +- compatible : "moxa,moxart-ic"
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt source. The type shall be a <u32> and the value shall be 2.
 > +
-> +example:
+> +  The first cell contains the interrupt number in the range [0-31].
+> +  The second cell contains the interrupt type
 > +
-> +sii902x_reset: gpio-reset {
-> +	compatible = "gpio-reset";
-> +	reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-> +	reset-delay-us = <10000>;
-> +	initially-in-reset;
-> +	#reset-cells = <0>;
-> +};
-> +
-> +/* Device with nRESET pin connected to GPIO5_0 */
-> +sii902x@39 {
-> +	/* ... */
-> +	resets = <&sii902x_reset>; /* active-low GPIO5_0, 10 ms delay */
-> +};
+> +- reg: physical base address and size of the intc registers map.
+> +- interrupt-mask: Specifies if the interrupt is edge or level-triggered
+> +  each bit represent an interrupt 0-31 where 1 signify edge
 
-I don't like the approach here. The reset GPIO line is not a device in
-itself, and surely the way in which it must be toggled to reset a device
-is a property of that device, not the GPIO. We're leaking a Linux
-internal abstraction rather than describing teh hardware.
-
-I think thie linkage of the gpio would be better described on the node
-for the device with the reset input, in a binding-specific property for
-the device (e.g. names for the specific input line on the device):
-
-I'd imagine the delay required would be fixed for a device (or possibly
-influenced by clock inputs), and can either be knwon by the driver
-without dt information, or discovered elsewhere (e.g. dervied from the
-rates of clock inputs). We shuold be able to derive that from the
-compatible string in most cases.
-
-I think this should look more like the below:
-
-/* Device with nRESET pin connected to GPIO5_0 */
-sii902x@39 {
-	/* named for the actual input line */
-	nreset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-	/* 
-	 * If there's some configurable property relating to the reset
-	 * line, we can describe it
-	 */
-	vendor,some-optional-reset-gpio-property;
-	...
-};
-
-If we want a separate device in the Linux driver model to abstract this,
-that's fine, but it should not be described in the dt. The device driver
-can call some generic helpers to handle creating said reset device in
-the driver model.
+For the GIC, this gets descrbied in the interrupt sepcifier rather than
+on the interrupt controller's root node. Is there a reason to do this
+differently here?
 
 Thanks,
 Mark.
+
+> +
+> +Example:
+> +
+> +	intc: interrupt-controller@98800000 {
+> +		compatible = "moxa,moxart-ic";
+> +		reg = <0x98800000 0x38>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		interrupt-mask = <0x00080000>;
+> +	};
+> -- 
+> 1.8.2.1
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
