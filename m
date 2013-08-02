@@ -1,76 +1,93 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [LINUX PATCH RFC v2] trafgen: xilinx: add axi traffic generator
- driver
-Date: Fri, 2 Aug 2013 11:24:25 +0800
-Message-ID: <20130802032425.GC2553@kroah.com>
-References: <477a2d56-a6f9-455f-b5c7-740ae9e9ba8e@CO1EHSMHS024.ehs.local>
+From: sunil joshi <sjoshi.open@gmail.com>
+Subject: Re: [PATCH V2 6/8] ARM: dts: exynos5420: add i2s controllers
+Date: Fri, 2 Aug 2013 12:02:17 +0530
+Message-ID: <CANruHrT6m233MH69XitCwb66cgKvAngKBv5EPPD4xb-1jx1DUw@mail.gmail.com>
+References: <1374845812-7803-1-git-send-email-padma.v@samsung.com>
+	<1374845812-7803-7-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <477a2d56-a6f9-455f-b5c7-740ae9e9ba8e@CO1EHSMHS024.ehs.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srikanth Thokala <srikanth.thokala@xilinx.com>
-Cc: arnd@arndb.de, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@linaro.org, Michal Simek <michal.simek@xilinx.com>, Srikanth Thokala <sthokal@xilinx.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1374845812-7803-7-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com, broonie@kernel.org, kgene.kim@samsung.com, abrestic@chromium.org, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 20, 2013 at 08:31:14PM +0530, Srikanth Thokala wrote:
-> This is the driver for AXI Traffic Generator IP. The AXI
-> Traffic Generator IP is a core that stresses the AXI4
-> interconnect and other AXI4 peripherals in the system.
-> It generates a wide variety of AXI4 transactions based on
-> the core programming.
-> 
-> Architecture of the core is broadly separated into a master
-> and slave block, each of which contains the write block and
-> read block. Other support functions are provided by the
-> control registers and three internal RAMs - Master RAM,
-> Command RAM, Parameter RAM. The initialisation sequence
-> includes programming Command RAM with commands, data into
-> Master RAM (optional Parameter RAM programming) and then
-> enable master logic using control register interface.
-> This sequence generates traffic to cores connected in the
-> h/w design.
-> 
-> The driver for this IP is designed to be a module with
-> sysfs interface.  All the control registers and internal
-> RAMs can be accessed through sysfs interface.
+Padma,
+You may move the common stuff of I2S contents for 5250 & 5420 into exynos5.dtsi.
 
-As you are adding sysfs files, you also need to add Documentation/ABI/
-entries as well.
+Regards
+Sunil
 
-One other comment:
-
-> +	/*
-> +	 * Create sysfs file entries for the device
-> +	 *
-> +	 * NOTE: We can create sysfs entries by adding attribute groups
-> +	 * and then populate into device_driver structure. We see issue
-> +	 * here, as this process doesn't allow to add sysfs entries with
-> +	 * BIN attributes (SYSFS_KOBJ_BIN_ATTR). Also, this would create
-> +	 * sysfs entries under driver/ which will be a bit confusing for
-> +	 * users as bin files and normal files will be populated at diff
-> +	 * erent places. So to avoid this, we created this function to
-> +	 * add sysfs entries at a common place.
-> +	 *
-> +	 * This issue is being addressed in mainline by
-> +	 * 'sysfs: add support for binary attributes in groups'. It
-> +	 * removes this overhead of creating/removing sysfs file entries.
-> +	 */
-> +	err = xtg_create_sysfs_dev_files(tg);
-> +	if (err < 0) {
-> +		dev_err(tg->dev, "unable to create sysfs entries\n");
-> +		return err;
-> +	}
-
-This patch is now in place, so you don't have to create the sysfs binary
-files separately, just add them to the same attribute group as your
-"normal" sysfs files.
-
-Now the idea of doing all of the api to this device from sysfs is
-another story, but as I don't know what these files are really doing
-(i.e. no documentation), I'll hold off on that until you fix that up.
-
-thanks,
-
-greg k-h
+On Fri, Jul 26, 2013 at 7:06 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+> From: Andrew Bresticker <abrestic@chromium.org>
+>
+> This adds device-tree bindings for the i2s controllers on Exynos 5420.
+>
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> Reviewed-on: https://gerrit.chromium.org/gerrit/57713
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi |   44 +++++++++++++++++++++++++++++++++++++
+>  1 files changed, 44 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index d2fdb87..c9ed8d2 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -242,4 +242,48 @@
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&i2c3_bus>;
+>         };
+> +
+> +       i2s_0: i2s@03830000 {
+> +               compatible = "samsung,exynos5420-i2s";
+> +               reg = <0x03830000 0x100>;
+> +               dmas = <&adma 0
+> +                       &adma 2
+> +                       &adma 1>;
+> +               dma-names = "tx", "rx", "tx-sec";
+> +               clocks = <&clock_audss EXYNOS_I2S_BUS>,
+> +                       <&clock_audss EXYNOS_I2S_BUS>,
+> +                       <&clock_audss EXYNOS_SCLK_I2S>;
+> +               clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+> +               samsung,idma-addr = <0x03000000>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&i2s0_bus>;
+> +               status = "disabled";
+> +       };
+> +
+> +       i2s_1: i2s@12D60000 {
+> +               compatible = "samsung,s3c6410-i2s";
+> +               reg = <0x12D60000 0x100>;
+> +               dmas = <&pdma1 12
+> +                       &pdma1 11>;
+> +               dma-names = "tx", "rx";
+> +               clocks = <&clock 275>, <&clock 138>;
+> +               clock-names = "iis", "i2s_opclk0";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&i2s1_bus>;
+> +               status = "disabled";
+> +       };
+> +
+> +       i2s_2: i2s@12D70000 {
+> +               compatible = "samsung,s3c6410-i2s";
+> +               reg = <0x12D70000 0x100>;
+> +               dmas = <&pdma0 12
+> +                       &pdma0 11>;
+> +               dma-names = "tx", "rx";
+> +               clocks = <&clock 276>, <&clock 139>;
+> +               clock-names = "iis", "i2s_opclk0";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&i2s2_bus>;
+> +               status = "disabled";
+> +       };
+> +
+>  };
+> --
+> 1.7.4.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
