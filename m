@@ -1,51 +1,119 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-wg0-f45.google.com ([74.125.82.45]:41674 "EHLO
-	mail-wg0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751970Ab3HCVkK (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sat, 3 Aug 2013 17:40:10 -0400
-Message-ID: <51FD78B5.6080507@gmail.com>
-Date: Sat, 03 Aug 2013 23:40:05 +0200
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-MIME-Version: 1.0
-Subject: Re: [RFC v3 00/13] Exynos5 IS driver
-References: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Received: from mail-pb0-f48.google.com ([209.85.160.48]:47577 "EHLO
+	mail-pb0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750766Ab3HBPCk (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 11:02:40 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [RFC v3 00/13] Exynos5 IS driver
+Date: Fri,  2 Aug 2013 20:32:29 +0530
+Message-Id: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>
-Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Arun,
+The patch series add support for Exynos5 camera subsystem. It
+re-uses mipi-csis and fimc-lite from exynos4-is and adds a new
+media device and fimc-is device drivers for exynos5.
+The media device supports asynchronos subdev registration for the
+fimc-is sensors and is based on the patch series from Sylwester
+for exynos4-is [1].
 
-On 08/02/2013 05:02 PM, Arun Kumar K wrote:
-> The patch series add support for Exynos5 camera subsystem. It
-> re-uses mipi-csis and fimc-lite from exynos4-is and adds a new
-> media device and fimc-is device drivers for exynos5.
-> The media device supports asynchronos subdev registration for the
-> fimc-is sensors and is based on the patch series from Sylwester
-> for exynos4-is [1].
->
-> [1]http://www.mail-archive.com/linux-media@vger.kernel.org/msg64653.html
->
-> Changes from v2
-> ---------------
-> - Added exynos5 media device driver from Shaik to this series
-> - Added ISP pipeline support in media device driver
-> - Based on Sylwester's latest exynos4-is development
-> - Asynchronos registration of sensor subdevs
-> - Made independent IS-sensor support
-> - Add s5k4e5 sensor driver
-> - Addressed review comments from Sylwester, Hans, Andrzej, Sachin
+[1] http://www.mail-archive.com/linux-media@vger.kernel.org/msg64653.html
 
-This is starting to look pretty good to me, I hope we can merge this
-patch set for v3.12. Let use coming two weeks for one or two review/
-corrections round.
-In the meantime I've done numerous fixes to the patch series [1],
-especially the clock provider code was pretty buggy on the clean up
-paths. Let's go through the patches and see what can be improved yet.
+Changes from v2
+---------------
+- Added exynos5 media device driver from Shaik to this series
+- Added ISP pipeline support in media device driver
+- Based on Sylwester's latest exynos4-is development
+- Asynchronos registration of sensor subdevs
+- Made independent IS-sensor support
+- Add s5k4e5 sensor driver
+- Addressed review comments from Sylwester, Hans, Andrzej, Sachin
 
-Thanks,
-Sylwester
+Changes from v1
+---------------
+- Addressed all review comments from Sylwester
+- Made sensor subdevs as independent i2c devices
+- Lots of cleanup
+- Debugfs support added
+- Removed PMU global register access
+
+Arun Kumar K (12):
+  [media] exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings
+    documentation
+  [media] exynos5-fimc-is: Add driver core files
+  [media] exynos5-fimc-is: Add common driver header files
+  [media] exynos5-fimc-is: Add register definition and context header
+  [media] exynos5-fimc-is: Add isp subdev
+  [media] exynos5-fimc-is: Add scaler subdev
+  [media] exynos5-fimc-is: Add sensor interface
+  [media] exynos5-fimc-is: Add the hardware pipeline control
+  [media] exynos5-fimc-is: Add the hardware interface module
+  [media] exynos5-is: Add Kconfig and Makefile
+  V4L: s5k6a3: Change sensor min/max resolutions
+  V4L: Add driver for s5k4e5 image sensor
+
+Shaik Ameer Basha (1):
+  [media] exynos5-is: Adding media device driver for exynos5
+
+ .../devicetree/bindings/media/exynos5-fimc-is.txt  |   52 +
+ .../devicetree/bindings/media/exynos5-mdev.txt     |  153 ++
+ drivers/media/i2c/Kconfig                          |    8 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/s5k4e5.c                         |  362 ++++
+ drivers/media/i2c/s5k6a3.c                         |   14 +-
+ drivers/media/platform/Kconfig                     |    1 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/exynos5-is/Kconfig          |   19 +
+ drivers/media/platform/exynos5-is/Makefile         |    7 +
+ drivers/media/platform/exynos5-is/exynos5-mdev.c   | 1471 +++++++++++++++
+ drivers/media/platform/exynos5-is/exynos5-mdev.h   |  199 ++
+ drivers/media/platform/exynos5-is/fimc-is-cmd.h    |  187 ++
+ drivers/media/platform/exynos5-is/fimc-is-core.c   |  394 ++++
+ drivers/media/platform/exynos5-is/fimc-is-core.h   |  122 ++
+ drivers/media/platform/exynos5-is/fimc-is-err.h    |  257 +++
+ .../media/platform/exynos5-is/fimc-is-interface.c  |  861 +++++++++
+ .../media/platform/exynos5-is/fimc-is-interface.h  |  128 ++
+ drivers/media/platform/exynos5-is/fimc-is-isp.c    |  509 +++++
+ drivers/media/platform/exynos5-is/fimc-is-isp.h    |   93 +
+ .../media/platform/exynos5-is/fimc-is-metadata.h   |  767 ++++++++
+ drivers/media/platform/exynos5-is/fimc-is-param.h  | 1212 ++++++++++++
+ .../media/platform/exynos5-is/fimc-is-pipeline.c   | 1961 ++++++++++++++++++++
+ .../media/platform/exynos5-is/fimc-is-pipeline.h   |  129 ++
+ drivers/media/platform/exynos5-is/fimc-is-regs.h   |  105 ++
+ drivers/media/platform/exynos5-is/fimc-is-scaler.c |  458 +++++
+ drivers/media/platform/exynos5-is/fimc-is-scaler.h |  112 ++
+ drivers/media/platform/exynos5-is/fimc-is-sensor.c |   46 +
+ drivers/media/platform/exynos5-is/fimc-is-sensor.h |   69 +
+ drivers/media/platform/exynos5-is/fimc-is.h        |  153 ++
+ 30 files changed, 9847 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+ create mode 100644 Documentation/devicetree/bindings/media/exynos5-mdev.txt
+ create mode 100644 drivers/media/i2c/s5k4e5.c
+ create mode 100644 drivers/media/platform/exynos5-is/Kconfig
+ create mode 100644 drivers/media/platform/exynos5-is/Makefile
+ create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.c
+ create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-cmd.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-core.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-err.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-interface.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-isp.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-metadata.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-param.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-pipeline.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-regs.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-scaler.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.c
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.h
+ create mode 100644 drivers/media/platform/exynos5-is/fimc-is.h
+
+-- 
+1.7.9.5
 
