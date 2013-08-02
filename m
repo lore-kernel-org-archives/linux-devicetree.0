@@ -1,38 +1,92 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH v1 0/4] mtd: nand: omap: add support for BCH16_ECC
-Date: Fri, 02 Aug 2013 18:56:54 +0300
-Message-ID: <1375459014.14869.351.camel@sauron.fi.intel.com>
-References: <1374090726-9393-1-git-send-email-pekon@ti.com>
-Reply-To: dedekind1@gmail.com
+From: Markus Mayer <markus.mayer@linaro.org>
+Subject: Re: [PATCH v2 2/2] ARM: bcm281xx: DT changes for reboot code
+Date: Fri, 2 Aug 2013 13:08:42 -0700
+Message-ID: <CAPdLdq=8EAVpbi9uGEV+AfYFgpK768mnMtphqz=55bP24FiKKA@mail.gmail.com>
+References: <1374708923-11956-1-git-send-email-markus.mayer@linaro.org>
+ <1374708923-11956-3-git-send-email-markus.mayer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1374090726-9393-1-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, tony@atomide.com, benoit.cousson@linaro.org, avinashphilipk@gmail.com, balbi@ti.com, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1374708923-11956-3-git-send-email-markus.mayer@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Device Tree List <devicetree@vger.kernel.org>
+Cc: Christian Daudt <csd@broadcom.com>, Markus Mayer <markus.mayer@linaro.org>, Device Tree List <devicetree-discuss@lists.ozlabs.org>, Linaro Patches <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-07-18 at 01:22 +0530, Pekon Gupta wrote:
-> This patch series add support of BCH16_ECC scheme.
-> As BCH16_ECC scheme generates 26bytes of ECC syndrome per 512B data,
-> hence this scheme is usable only for NAND devices having 4K or above
-> page-size, as their OOB/spare area has enough space to accomodate ECC.
-> 
-> This patch series is applicable over an above following series:
-> [1] [Patch] mtd:nand:omap2: clean-up of supported ECC schemes 
->  http://lists.infradead.org/pipermail/linux-mtd/2013-July/047530.html
-> [2] [Patch] optimize and clean-up of OMAP NAND and ELM driver
->  http://lists.infradead.org/pipermail/linux-mtd/2013-July/047538.html
-> 
-> Also this BCH16_ECC patch series is sparsely tested, due to limited
-> availability of boards with 4K/224NAND, so request the users to test
-> the mentioned series, and provide Tested-by.
+There are some minor changes necessary for this patch.
 
-I wonder if anyone in the list could help reviewing this?
+> This patch adds the device tree bindings for the bcm281xx reboot code.
+
+> diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm,kona-wdt.txt b/Documentation/devicetree/bindings/arm/bcm/bcm,kona-wdt.txt
+> new file mode 100644
+> index 0000000..bb7be64
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/bcm/bcm,kona-wdt.txt
+
+Name changed to brcm,kona-wdt.txt.
+
+> @@ -0,0 +1,15 @@
+> +Broadcom Kona Family Watchdog Timer
+> +-----------------------------------
+> +
+> +This watchdog timer is used in the following Broadcom SoCs:
+> +  BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
+> +
+> +Required properties:
+> +  - compatible = "brcm,kona-wdt";
+
+Change to:  - compatible = "brcm,bcm11351-wdt", "brcm,kona-wdt";
+
+> +  - reg: memory range
+> +
+> +Example:
+> +       watchdog@35002f40 {
+> +               compatible = "brcm,kona-wdt";
+
+Change to: compatible = "brcm,bcm11351-wdt", "brcm,kona-wdt";
+
+> +               reg = <0x35002f40 0x6c>;
+> +       };
+> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+> index c0cdf66..a1c1881 100644
+> --- a/arch/arm/boot/dts/bcm11351.dtsi
+> +++ b/arch/arm/boot/dts/bcm11351.dtsi
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Copyright (C) 2012 Broadcom Corporation
+> + * Copyright (C) 2012-2013 Broadcom Corporation
+>   *
+>   * This program is free software; you can redistribute it and/or
+>   * modify it under the terms of the GNU General Public License as
+> @@ -56,6 +56,11 @@
+>                 cache-level = <2>;
+>         };
+>
+> +       watchdog@35002f40 {
+> +               compatible = "bcm,kona-wdt";
+
+Change to: compatible = "brcm,bcm11351-wdt", "brcm,kona-wdt";
+
+> +               reg = <0x35002f40 0x6c>;
+> +       };
+> +
+>         timer@35006000 {
+>                 compatible = "bcm,kona-timer";
+>                 reg = <0x35006000 0x1000>;
+> --
+> 1.7.9.5
+>
+>
 
 -- 
-Best Regards,
-Artem Bityutskiy
-
+Markus Mayer
+Broadcom Landing Team
