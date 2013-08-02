@@ -1,94 +1,77 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] Documentation: Add device tree binding file for MOXA
- ART SoCs interrupt controller
-Date: Fri, 2 Aug 2013 10:35:59 +0100
-Message-ID: <20130802093559.GB2884@e106331-lin.cambridge.arm.com>
-References: <1374137426-6763-1-git-send-email-jonas.jensen@gmail.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V2 7/8] ARM: dts: wm8994: Add wm8994 support on smdk5420
+Date: Fri, 2 Aug 2013 16:15:28 +0530
+Message-ID: <CAAgF-BcPT24LcQe5SUyOP3qHThXqZ1mVts=_cnww3EAUYEYikw@mail.gmail.com>
+References: <1374845812-7803-1-git-send-email-padma.v@samsung.com>
+	<1374845812-7803-8-git-send-email-padma.v@samsung.com>
+	<20130726151902.GL9858@sirena.org.uk>
+	<CAAgF-Be8SNxTZv1yFCwH6yJ-O_3R4reh=3y+pSCLJYW7S9TkUg@mail.gmail.com>
+	<CAAgF-Bexp_fGT8KV+TQ0_kZLJBtq7UK=TG4eYRA6qpTSL+scxg@mail.gmail.com>
+	<20130729134311.GX9858@sirena.org.uk>
+	<CAAgF-BeDYm1jNJpkyfTeS5HjpEuaHiumFq+D_PNs=QYG6-Px+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1374137426-6763-1-git-send-email-jonas.jensen@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonas Jensen <jonas.jensen@gmail.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "arm@kernel.org" <arm@kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAAgF-BeDYm1jNJpkyfTeS5HjpEuaHiumFq+D_PNs=QYG6-Px+w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, Kukjin Kim <kgene.kim@samsung.com>, abrestic@chromium.org, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 18, 2013 at 09:50:26AM +0100, Jonas Jensen wrote:
-> Add binding document for MOXA ART SoCs interrupt controller.
-> 
-> Signed-off-by: Jonas Jensen <jonas.jensen@gmail.com>
-> ---
-> 
-> Notes:
->     The MOXA ART irqchip driver was added without accompanying devicetree document.
->     ( in next-20130716   drivers/irqchip/irq-moxart.c )
+Hi Mark,
 
-Aaargh. That should not have happened >:(
+On Tue, Jul 30, 2013 at 8:58 AM, Padma Venkat <padma.kvr@gmail.com> wrote:
+> Hi Mark,
+>
+> On Mon, Jul 29, 2013 at 7:13 PM, Mark Brown <broonie@kernel.org> wrote:
+>> On Mon, Jul 29, 2013 at 05:31:16PM +0530, Padma Venkat wrote:
+>>> On Sat, Jul 27, 2013 at 6:46 AM, Padma Venkat <padma.kvr@gmail.com> wrote:
+>>
+>>> >>> +     vdd: fixed-regulator@0 {
+>>> >>> +             compatible = "regulator-fixed";
+>>> >>> +             regulator-name = "vdd-supply";
+>>
+>>> >> These names look wrong - they should reflect the names in the schematic
+>>> >> as they're for human comprehensibility.  This may just be a case of
+>>> >> dropping the -supply.
+>>
+>>> When I posted the same patch for smdk5250, you asked me to club all
+>>> the same supply regulators. So I clubbed AVDD2 and CPVDD. So any other
+>>> better name for representing both supplies?
+>>
+>> No, I'd have told you to combine things taht come from the same supply
+>> on the board - things like the speaker supplies for example aren't going
+>> to be coming from separate places.  The names should reflect whatever
+>> the names on the schemaric are, like I say that's probably just removing
+>> the -supply.
+>>
+>>> >> documentation update the other day, it's in my tree now) but it's not
+>>> >> essential and I suspect it needs some work on the clock driver side
+>>> >> still.
+>>
+>>> > OK. I will check this.
+>>
+>>> As per schemata, input clock to MCLK1 is an oscillator clock with
+>>> 16.9MHz and MCLK2 not showing any input clock. So here I need to add a
+>>> fixed rate clock with 16.9MHz as MCLK1 in the smdk board file.
+>>
+>>> Is it correct?
+>>
+>> Yes, in the DTS (or to XCLKOUT on the AP?).
+>
+> On smdk boards(atleast on smdk5250 and smdk5420) there is no XCLKOUT
+> funda. Codec MCLK can get clock from oscillator clock in codec master
+> mode or i2scdclk in codec slave mode. XCLKOUT is there in some other
+> variants of 5250 and 5420 where it is using other codecs than wm8994.
+> But the mux and divider of XCLKOUT is out of CMU. As Sylwester told it
+> is there in PMU registers.
 
->     
->     Applies to next-20130716
-> 
->  .../interrupt-controller/moxa,moxart-ic.txt        | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/moxa,moxart-ic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/moxa,moxart-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/moxa,moxart-ic.txt
-> new file mode 100644
-> index 0000000..58f1fe1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/moxa,moxart-ic.txt
-> @@ -0,0 +1,28 @@
-> +* MOXA ART Interrupt Controller
-> +
-> +MOXA ART Interrupt Controller (moxart-ic) is used on MOXA ART SoCs
-> +and supports 32 non-configurable number of interrupts
-> +
-> +Main node required properties:
-> +
-> +- compatible : "moxa,moxart-ic"
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt source. The type shall be a <u32> and the value shall be 2.
-> +
-> +  The first cell contains the interrupt number in the range [0-31].
-> +  The second cell contains the interrupt type
-> +
-> +- reg: physical base address and size of the intc registers map.
-> +- interrupt-mask: Specifies if the interrupt is edge or level-triggered
-> +  each bit represent an interrupt 0-31 where 1 signify edge
+Sorry for giving some what wrong info here. I verified the schemata.
+There is a switch on the board which can be used to select the input
+clock of codec MCLK1. We can either select oscillator clock which is
+16.9MHz which is on the board or XCLKOUT which is from PMU or
+i2scdclk(codec slave mode). Right now we are using oscillator clock as
+input clock to MCLK1.
 
-For the GIC, this gets descrbied in the interrupt sepcifier rather than
-on the interrupt controller's root node. Is there a reason to do this
-differently here?
-
-Thanks,
-Mark.
-
-> +
-> +Example:
-> +
-> +	intc: interrupt-controller@98800000 {
-> +		compatible = "moxa,moxart-ic";
-> +		reg = <0x98800000 0x38>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupt-mask = <0x00080000>;
-> +	};
-> -- 
-> 1.8.2.1
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+Thanks
+Padma
