@@ -1,18 +1,16 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp97.ord1c.emailsrvr.com ([108.166.43.97]:43955 "EHLO
-	smtp97.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754413Ab3HNSXf (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 14 Aug 2013 14:23:35 -0400
+Received: from smtp65.ord1c.emailsrvr.com ([108.166.43.65]:54782 "EHLO
+	smtp65.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754811Ab3HBQ2f (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 12:28:35 -0400
 From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: [PATCH v4 2/3] sata, highbank: set tx_atten override bits
-Date: Wed, 14 Aug 2013 13:23:31 -0500
-Message-Id: <1376504612-17340-2-git-send-email-mark.langsdorf@calxeda.com>
-In-Reply-To: <1376504612-17340-1-git-send-email-mark.langsdorf@calxeda.com>
-References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
- <1376504612-17340-1-git-send-email-mark.langsdorf@calxeda.com>
+Subject: [PATCH v2 4/5] sata, highbank: set tx_atten override bits
+Date: Fri,  2 Aug 2013 11:28:37 -0500
+Message-Id: <1375460918-4661-4-git-send-email-mark.langsdorf@calxeda.com>
+In-Reply-To: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com>
+References: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com, sergei.shtylyov@cogentembedded.com
+To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
 Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
@@ -21,25 +19,18 @@ specification. The ECME can provide override settings, on a per board
 basis, to bring the transmit lines within spec. Read those settings
 from the DTB and program them in.
 
-At the time of submission, no production hardware requires this patch.
-
 Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
 ---
-Changes from v3
-	Edited the commit message to describe the hardware impact.
-	Renumbered the patch series since the first two got accepted.
-Changes from v2
-	None.
 Changes from v1
 	Clarified that the array is a u32 array.
 	Added an example in the bindings.
 
- .../devicetree/bindings/ata/sata_highbank.txt      |  4 ++
+ .../devicetree/bindings/ata/sata_highbank.txt      |  5 +-
  drivers/ata/sata_highbank.c                        | 58 +++++++++++++++++-----
- 2 files changed, 49 insertions(+), 13 deletions(-)
+ 2 files changed, 49 insertions(+), 14 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
-index e7a6f28..c84833e 100644
+index aa1b798..b6f04a2 100644
 --- a/Documentation/devicetree/bindings/ata/sata_highbank.txt
 +++ b/Documentation/devicetree/bindings/ata/sata_highbank.txt
 @@ -20,6 +20,9 @@ Optional properties:
@@ -52,10 +43,11 @@ index e7a6f28..c84833e 100644
  
  Example:
          sata@ffe08000 {
-@@ -31,4 +34,5 @@ Example:
+@@ -28,5 +31,5 @@ Example:
+                 interrupts = <115>;
+ 		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
  					&combophy0 2 &combophy0 3>;
- 		calxeda,sgpio-gpio =<&gpioh 5 1 &gpioh 6 1 &gpioh 7 1>;
- 		calxeda,led-order = <4 0 1 2 3>;
+-
 +		calxeda,tx-atten = <0xff 22 0xff 0xff 23>;
          };
 diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
