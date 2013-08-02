@@ -1,87 +1,73 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pb0-f50.google.com ([209.85.160.50]:50003 "EHLO
-	mail-pb0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757291Ab3HGJED (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 05:04:03 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v4 02/13] [media] exynos5-fimc-is: Add Exynos5 FIMC-IS device tree bindings documentation
-Date: Wed,  7 Aug 2013 14:33:50 +0530
-Message-Id: <1375866242-18084-3-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1375866242-18084-1-git-send-email-arun.kk@samsung.com>
-References: <1375866242-18084-1-git-send-email-arun.kk@samsung.com>
+Received: from smtp45.i.mail.ru ([94.100.177.105]:41446 "EHLO smtp45.i.mail.ru"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1030600Ab3HBKOf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 2 Aug 2013 06:14:35 -0400
+Date: Fri, 2 Aug 2013 14:14:00 +0400
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: Re: [PATCH 4/4] serial: sccnxp: Add DT support
+Message-Id: <20130802141400.8bf8fac5693ed315023a5af2@mail.ru>
+In-Reply-To: <51FA8D51.8030301@wwwdotorg.org>
+References: <1375268145-13393-1-git-send-email-shc_work@mail.ru>
+	<51F98562.9080307@wwwdotorg.org>
+	<1375343473.135835596@f377.i.mail.ru>
+	<51FA8D51.8030301@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The patch adds the DT binding documentation for Samsung
-Exynos5 SoC series imaging subsystem (FIMC-IS).
+On Thu, 01 Aug 2013 10:31:13 -0600
+Stephen Warren <swarren@wwwdotorg.org> wrote:
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- .../devicetree/bindings/media/exynos5-fimc-is.txt  |   52 ++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
+> On 08/01/2013 01:51 AM, Alexander Shiyan wrote:
+> >> On 07/31/2013 04:55 AM, Alexander Shiyan wrote:
+> >>> Add DT support to the SCCNCP serial driver.
+> >>
+> >>> diff --git a/Documentation/devicetree/bindings/tty/serial/sccnxp-serial.txt b/Documentation/devicetree/bindings/tty/serial/sccnxp-serial.txt
+[...]
+> >>> +- nxp,sccnxp-io-cfg: Array contains values for the emulated modem signals.
+> >>> +  The number of values depends on the UART-number in the selected chip.
+> >>> +  Each value should be composed according to the following rules:
+> >>> +  (LINE1 << SIGNAL1) | ... | (LINEX << SIGNALX), where:
+> >>> +   LINE - VALUE:
+> >>> +    OP0 - 1
+> >> ...
+> >>> +    IP6 - 15
+> >>> +   SIGNAL - VALUE:
+> >>> +    DTR - 0
+> >> ...
+> >>> +    DIR - 24
+> >>
+> >> I wonder that shouldn't be implemented using standard pinctrl bindings.
+> >> I could see someone wanting to create a pinmuxing-based serial port
+> >> multiplexing device, which would then need to rely on this node acting
+> >> as a standard pin controller...
+> > 
+> > In this case pin-controller cannot be applied here.
+> 
+> Why not?
+> 
+> > The device has several lines of general purpose inputs and outputs, there is
+> > no functional purpose of these lines as a modem signals. In the driver realized
+> > only an emulation of these signals. That is, this property describes the trick.
+> > I have no idea how to do this trick in another way.
+> 
+> I assume the HW design is that there are 15 pins, and there is a
+> register or are multiple registers that define which pins are used for
+> which purpose.
+> 
+> If so, that's exactly what the pinctrl bindings are for.
+> 
+> However, you're talking about emulation... Is this property really
+> describing HW? If not, it isn't appropriate for DT.
 
-diff --git a/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
-new file mode 100644
-index 0000000..5e6dee6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/exynos5-fimc-is.txt
-@@ -0,0 +1,52 @@
-+Samsung EXYNOS5 SoC series Imaging Subsystem (FIMC-IS)
-+------------------------------------------------------
-+
-+The camera subsystem on Samsung Exynos5 SoC has some changes relative
-+to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
-+FIMC-LITE IPs but has a much improved version of FIMC-IS which can
-+handle sensor controls and camera post-processing operations. The
-+Exynos5 FIMC-IS has a dedicated ARM Cortex A5 processor, many
-+post-processing blocks (ISP, DRC, FD, ODC, DIS, 3DNR) and two
-+dedicated scalers (SCC and SCP).
-+
-+fimc-is node
-+------------
-+
-+Required properties:
-+
-+- compatible        : must be "samsung,exynos5250-fimc-is"
-+- reg               : physical base address and size of the memory mapped
-+                      registers
-+- interrupt-parent  : parent interrupt controller
-+- interrupts        : fimc-is interrupt to the parent combiner
-+- clocks            : list of clock specifiers, corresponding to entries in
-+                      clock-names property;
-+- clock-names       : must contain "isp", "mcu_isp", "isp_div0", "isp_div1",
-+                      "isp_divmpwm", "mcu_isp_div0", "mcu_isp_div1" entries,
-+                      matching entries in the clocks property.
-+
-+pmu subnode
-+-----------
-+
-+Required properties:
-+ - reg : should contain PMU physical base address and size of the memory
-+         mapped registers.
-+
-+i2c-isp (ISP I2C bus controller) nodes
-+------------------------------------------
-+
-+Required properties:
-+
-+- compatible	: should be "samsung,exynos4212-i2c-isp" for Exynos4212,
-+		  Exynos4412 and Exynos5250 SoCs;
-+- reg		: physical base address and length of the registers set;
-+- clocks	: must contain gate clock specifier for this controller;
-+- clock-names	: must contain "i2c_isp" entry.
-+
-+For the i2c-isp node, it is required to specify a pinctrl state named "default",
-+according to the pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt.
-+
-+Device tree nodes of the image sensors' controlled directly by the FIMC-IS
-+firmware must be child nodes of their corresponding ISP I2C bus controller node.
-+The data link of these image sensors must be specified using the common video
-+interfaces bindings, defined in video-interfaces.txt.
+What your opinion about replace this property by "quirk" property and hardcode
+these values into the driver?
+Thanks.
+
 -- 
-1.7.9.5
-
+Alexander Shiyan <shc_work@mail.ru>
