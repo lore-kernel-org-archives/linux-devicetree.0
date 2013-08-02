@@ -1,116 +1,76 @@
-From: Matt Sealey <neko@bakuhatsu.net>
-Subject: Re: [PATCH v4 2/6] misc: sram: add ability to mark sram sections as reserved
-Date: Thu, 1 Aug 2013 12:07:43 -0500
-Message-ID: <CAHCPf3vHQ0P0xL1XUt93-aLp9zbMjTcCroOORiBOmoi6uePWjw@mail.gmail.com>
-References: <201307291510.31679.heiko@sntech.de>
-	<1375106520.4223.24.camel@pizza.hi.pengutronix.de>
-	<CAHCPf3vSQHtRkk-_cs3monHfrF-hVx3vTDt1ctcax_bspXDmsg@mail.gmail.com>
-	<201308011835.22186.heiko@sntech.de>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [LINUX PATCH RFC v2] trafgen: xilinx: add axi traffic generator
+ driver
+Date: Fri, 2 Aug 2013 11:24:25 +0800
+Message-ID: <20130802032425.GC2553@kroah.com>
+References: <477a2d56-a6f9-455f-b5c7-740ae9e9ba8e@CO1EHSMHS024.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201308011835.22186.heiko@sntech.de>
+Content-Disposition: inline
+In-Reply-To: <477a2d56-a6f9-455f-b5c7-740ae9e9ba8e@CO1EHSMHS024.ehs.local>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ulrich Prinz <ulrich.prinz@googlemail.com>
+To: Srikanth Thokala <srikanth.thokala@xilinx.com>
+Cc: arnd@arndb.de, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@linaro.org, Michal Simek <michal.simek@xilinx.com>, Srikanth Thokala <sthokal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-IEEE1275 (Open Firmware) specification has details on it in the MMU
-(section 3.6.5), Memory (section 3.7.6) node specifications and the
-glossary defines how the property should look. How you find that
-document is.. up to you (I have a PDF of it I got hold of around 2004,
-it used to be linked at www.openfirmware.org but I've not checked). I
-think it's missed from the devicetree.org spec since it's already very
-well defined and there's no reason to reinvent (or redefine) the
-wheel.
+On Sat, Jul 20, 2013 at 08:31:14PM +0530, Srikanth Thokala wrote:
+> This is the driver for AXI Traffic Generator IP. The AXI
+> Traffic Generator IP is a core that stresses the AXI4
+> interconnect and other AXI4 peripherals in the system.
+> It generates a wide variety of AXI4 transactions based on
+> the core programming.
+> 
+> Architecture of the core is broadly separated into a master
+> and slave block, each of which contains the write block and
+> read block. Other support functions are provided by the
+> control registers and three internal RAMs - Master RAM,
+> Command RAM, Parameter RAM. The initialisation sequence
+> includes programming Command RAM with commands, data into
+> Master RAM (optional Parameter RAM programming) and then
+> enable master logic using control register interface.
+> This sequence generates traffic to cores connected in the
+> h/w design.
+> 
+> The driver for this IP is designed to be a module with
+> sysfs interface.  All the control registers and internal
+> RAMs can be accessed through sysfs interface.
 
-Essentially it follows the same format as "reg" - phys.hi phys.lo
-length - which define regions which are ACTUALLY available to the
-system. The intent is that it would be used to define the memory as
-going from an address for a certain size, but mark sections of it the
-device tree user could use (further intent being that you would want
-the OS to know that there is, for example, 4GiB of memory there and
-set up any mappings to suit, but the last 256MiB is where you've put
-some important data and you would rather it didn't just allocate it to
-something else..).
+As you are adding sysfs files, you also need to add Documentation/ABI/
+entries as well.
 
-Linux doesn't actually parse and use the information in the available
-property (or care about "existing" property in an MMU node since it
-replaces page tables super early and has different ideas about mapping
-than most bootloaders), but other operating systems possibly do. It
-would not be a significant hardship for Linux to actually parse the
-property if present and use that information after a bit of sanity
-checking rather than just trusting reg. And in that sense, it would
-not be a significant hardship to use existing specifications to define
-nodes that describe memory, since if there IS parsing code available,
-it will be re-used, which is good all round.
+One other comment:
 
---=20
-Matt
+> +	/*
+> +	 * Create sysfs file entries for the device
+> +	 *
+> +	 * NOTE: We can create sysfs entries by adding attribute groups
+> +	 * and then populate into device_driver structure. We see issue
+> +	 * here, as this process doesn't allow to add sysfs entries with
+> +	 * BIN attributes (SYSFS_KOBJ_BIN_ATTR). Also, this would create
+> +	 * sysfs entries under driver/ which will be a bit confusing for
+> +	 * users as bin files and normal files will be populated at diff
+> +	 * erent places. So to avoid this, we created this function to
+> +	 * add sysfs entries at a common place.
+> +	 *
+> +	 * This issue is being addressed in mainline by
+> +	 * 'sysfs: add support for binary attributes in groups'. It
+> +	 * removes this overhead of creating/removing sysfs file entries.
+> +	 */
+> +	err = xtg_create_sysfs_dev_files(tg);
+> +	if (err < 0) {
+> +		dev_err(tg->dev, "unable to create sysfs entries\n");
+> +		return err;
+> +	}
 
-On Thu, Aug 1, 2013 at 11:35 AM, Heiko St=FCbner <heiko@sntech.de> wrot=
-e:
-> Am Montag, 29. Juli 2013, 23:39:45 schrieb Matt Sealey:
->> On Mon, Jul 29, 2013 at 9:02 AM, Philipp Zabel <p.zabel@pengutronix.=
-de>
-> wrote:
->> > Hi Heiko,
->> >
->> > Am Montag, den 29.07.2013, 15:12 +0200 schrieb Heiko St=FCbner:
->> >> Some SoCs need parts of their sram for special purposes. So while=
- being
->> >> part of the peripheral, it should not be part of the genpool
->> >> controlling the sram.
->> >>
->> >> Therefore add an option mmio-sram-reserved to keep arbitrary port=
-ions of
->> >> the sram from being part of the pool.
->> >>
->> >> Suggested-by: Rob Herring <robherring2@gmail.com>
->> >> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
->> >> Tested-by: Ulrich Prinz <ulrich.prinz@googlemail.com>
->> >> ---
->> >> Philipp: I didn't carry the ack, because the loop changed signifi=
-cantly
->> >> again. So if it looks ok, could you re-ack it please?
->> >
->> > I'd prefer the first loop to contain the magic and produce a list =
-of
->> > useable chunks, instead of a list of reserved blocks. The second l=
-oop
->> > could then iterate over the array and just call gen_pool_add_virt
->> > repeatedly.
->> >
->> > regards
->> > Philipp
->>
->> Agreed, however specifying chunks of memory should probably match th=
-e
->> format of the standard memory@ node "available" property - mostly
->> because it would be the same syntax and definition as defining any
->> other chunk of memory, as OpenFirmware and device trees have been
->> doing since the dark ages. In this case, why not re-use the
->> "available" property name instead of creating a new one? Standard OF
->> memory parsing code is then free for you to use to pull the chunks
->> out.
->
-> Sound interesting, but could you give me a pointer to some sort of do=
-cs about
-> this "available" property in memory nodes?
->
-> Documentation/devicetree/booting-without-of.txt seems to be the only =
-file
-> describing the memory node at all but only required properties, and n=
-ot any
-> "available" property.
->
-> I've found a document  on power.org describing the memory node, but a=
-lso not
-> mentioning any "available" property.
->
-> And devicetree.org does not seem to handle the memory node at all.
->
->
-> Thanks for any hints
-> Heiko
+This patch is now in place, so you don't have to create the sysfs binary
+files separately, just add them to the same attribute group as your
+"normal" sysfs files.
+
+Now the idea of doing all of the api to this device from sysfs is
+another story, but as I don't know what these files are really doing
+(i.e. no documentation), I'll hold off on that until you fix that up.
+
+thanks,
+
+greg k-h
