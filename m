@@ -1,93 +1,40 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:53136 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754922Ab3HKSCs (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sun, 11 Aug 2013 14:02:48 -0400
-From: Mark Brown <broonie@kernel.org>
-Date: Sun, 11 Aug 2013 19:02:39 +0100
-Message-Id: <1376244161-24206-1-git-send-email-broonie@kernel.org>
-Subject: [PATCH 1/3] ASoC: dt: Move ALC5632 pin list from Tegra board binding to CODEC binding
+Received: from mail-qa0-f46.google.com ([209.85.216.46]:50718 "EHLO
+	mail-qa0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755562Ab3HBT3f (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 15:29:35 -0400
+Date: Fri, 2 Aug 2013 15:29:28 -0400
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 1/5] sata, highbank: fix ordering of SGPIO signals
+Message-ID: <20130802192928.GA29736@mtj.dyndns.org>
+References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com>
+ <20130729165530.GG22605@mtj.dyndns.org>
+ <51FBCF05.9090509@calxeda.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51FBCF05.9090509@calxeda.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org, Mark Brown <broonie@linaro.org>
+To: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Rob Herring <rob.herring@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Mark Brown <broonie@linaro.org>
+Hello,
 
-The pin list is the same for any board using the CODEC.
+On Fri, Aug 02, 2013 at 10:23:49AM -0500, Mark Langsdorf wrote:
+> I didn't think I needed more of an explanation than "this is completely
+> wrong per the spec" but I'll revise and resubmit.
 
-Signed-off-by: Mark Brown <broonie@linaro.org>
----
- .../devicetree/bindings/sound/alc5632.txt          | 20 ++++++++++++++++++
- .../bindings/sound/nvidia,tegra-audio-alc5632.txt  | 24 ++--------------------
- 2 files changed, 22 insertions(+), 22 deletions(-)
+Of course you always need to explain the implications as the result of
+"being completely wrong per the spec" can range from no actual effect
+at all to massive data corruption.  In general, it's a good idea for a
+patch descrpition to describe why the change is an improvement and how
+it changes the behavior.  The former provides the rationale for
+inclusion and the latter helps various people including the subsystem,
+-stable and distro kernel maintainers to assess the risk involved in
+taking the change.
 
-diff --git a/Documentation/devicetree/bindings/sound/alc5632.txt b/Documentation/devicetree/bindings/sound/alc5632.txt
-index 8608f74..b913b74 100644
---- a/Documentation/devicetree/bindings/sound/alc5632.txt
-+++ b/Documentation/devicetree/bindings/sound/alc5632.txt
-@@ -13,6 +13,26 @@ Required properties:
-   - #gpio-cells : Should be two. The first cell is the pin number and the
-     second cell is used to specify optional parameters (currently unused).
- 
-+Pins on the device (for linking into audio routes):
-+
-+  * SPK_OUTP
-+  * SPK_OUTN
-+  * HP_OUT_L
-+  * HP_OUT_R
-+  * AUX_OUT_P
-+  * AUX_OUT_N
-+  * LINE_IN_L
-+  * LINE_IN_R
-+  * PHONE_P
-+  * PHONE_N
-+  * MIC1_P
-+  * MIC1_N
-+  * MIC2_P
-+  * MIC2_N
-+  * MICBIAS1
-+  * DMICDAT
-+
-+
- Example:
- 
- alc5632: alc5632@1e {
-diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
-index 05ffecb..8b8903e 100644
---- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
-+++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
-@@ -11,28 +11,8 @@ Required properties:
- - nvidia,audio-routing : A list of the connections between audio components.
-   Each entry is a pair of strings, the first being the connection's sink,
-   the second being the connection's source. Valid names for sources and
--  sinks are the ALC5632's pins:
--
--  ALC5632 pins:
--
--  * SPK_OUTP
--  * SPK_OUTN
--  * HP_OUT_L
--  * HP_OUT_R
--  * AUX_OUT_P
--  * AUX_OUT_N
--  * LINE_IN_L
--  * LINE_IN_R
--  * PHONE_P
--  * PHONE_N
--  * MIC1_P
--  * MIC1_N
--  * MIC2_P
--  * MIC2_N
--  * MICBIAS1
--  * DMICDAT
--
--  Board connectors:
-+  sinks are the ALC5632's pins as documented in the binding for the device
-+  and:
- 
-   * Headset Stereophone
-   * Int Spk
+Thanks.
+
 -- 
-1.8.4.rc1
-
+tejun
