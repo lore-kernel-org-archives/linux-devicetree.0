@@ -1,109 +1,37 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from bear.ext.ti.com ([192.94.94.41]:51313 "EHLO bear.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1030596Ab3HIIj1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 9 Aug 2013 04:39:27 -0400
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [RFC 01/22] ARM: OMAP: remove DSS DT hack
-Date: Fri, 9 Aug 2013 11:38:46 +0300
-Message-ID: <1376037547-10859-2-git-send-email-tomi.valkeinen@ti.com>
-In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
-References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from mail-pb0-f47.google.com ([209.85.160.47]:62119 "EHLO
+	mail-pb0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751622Ab3HBAw6 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 20:52:58 -0400
+Received: by mail-pb0-f47.google.com with SMTP id rr4so50151pbb.34
+        for <devicetree@vger.kernel.org>; Thu, 01 Aug 2013 17:52:57 -0700 (PDT)
+From: Julius Werner <jwerner@chromium.org>
+Subject: [PATCH 0/3] usb: phy-samsung-usb: Simplify and cleanup
+Date: Thu,  1 Aug 2013 17:52:03 -0700
+Message-Id: <1375404726-26264-1-git-send-email-jwerner@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Felipe Balbi <balbi@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Julius Werner <jwerner@chromium.org>
 List-ID: <devicetree@vger.kernel.org>
 
-As a temporary solution to enable DSS for selected boards when booting
-with DT, a hack was added to board-generic.c in
-63d5fc0c2f748e20f38a0a0ec1c8494bddf5c288 (OMAP: board-generic: enable
-DSS for panda & sdp boards).
+This patch series cleans up and simplifies some of the Samsung USB PHY
+driver code. It changes the PMU register handling to carry the register
+address directly in the device tree and avoid a lot of special-cased
+address arithmatic in the code. Then it removes the USB_PHY_TYPE
+HOST/DEVICE distinction which was only needed for those removed parts.
 
-We're now adding proper DT support, so the hack can be removed.
+Julius Werner (3):
+  usb: phy-samsung-usb: Simplify PMU register handling
+  usb: phy-samsung-usb: trivial: rename pmuregs variable
+  usb: phy-samsung-usb: Remove USB_PHY_TYPE from Samsung PHY driver
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- arch/arm/mach-omap2/board-generic.c | 11 +----------
- arch/arm/mach-omap2/dss-common.c    | 23 -----------------------
- arch/arm/mach-omap2/dss-common.h    |  2 --
- 3 files changed, 1 insertion(+), 35 deletions(-)
+ arch/arm/boot/dts/exynos5250.dtsi  |  4 +--
+ drivers/usb/phy/phy-samsung-usb.c  | 51 +++++++++-----------------------------
+ drivers/usb/phy/phy-samsung-usb.h  | 34 ++++++-------------------
+ drivers/usb/phy/phy-samsung-usb2.c | 34 +++++++------------------
+ drivers/usb/phy/phy-samsung-usb3.c | 13 +++-------
+ 5 files changed, 34 insertions(+), 102 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-index be5d005..d388d33 100644
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -57,17 +57,8 @@ static void __init omap_generic_init(void)
- 
- 	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
- 
--	/*
--	 * HACK: call display setup code for selected boards to enable omapdss.
--	 * This will be removed when omapdss supports DT.
--	 */
--	if (of_machine_is_compatible("ti,omap4-panda")) {
--		omap4_panda_display_init_of();
-+	if (of_machine_is_compatible("ti,omap4-panda"))
- 		legacy_init_ehci_clk("auxclk3_ck");
--
--	}
--	else if (of_machine_is_compatible("ti,omap4-sdp"))
--		omap_4430sdp_display_init_of();
- 	else if (of_machine_is_compatible("ti,omap5-uevm"))
- 		legacy_init_ehci_clk("auxclk1_ck");
- }
-diff --git a/arch/arm/mach-omap2/dss-common.c b/arch/arm/mach-omap2/dss-common.c
-index 043e570..f3282ac 100644
---- a/arch/arm/mach-omap2/dss-common.c
-+++ b/arch/arm/mach-omap2/dss-common.c
-@@ -98,12 +98,6 @@ void __init omap4_panda_display_init(void)
- 	omap_mux_init_gpio(HDMI_GPIO_HPD, OMAP_PIN_INPUT_PULLDOWN);
- }
- 
--void __init omap4_panda_display_init_of(void)
--{
--	omap_display_init(&omap4_panda_dss_data);
--}
--
--
- /* OMAP4 Blaze display data */
- 
- #define DISPLAY_SEL_GPIO	59	/* LCD2/PicoDLP switch */
-@@ -232,20 +226,3 @@ void __init omap_4430sdp_display_init(void)
- 	omap_mux_init_gpio(HDMI_GPIO_CT_CP_HPD, OMAP_PIN_OUTPUT);
- 	omap_mux_init_gpio(HDMI_GPIO_HPD, OMAP_PIN_INPUT_PULLDOWN);
- }
--
--void __init omap_4430sdp_display_init_of(void)
--{
--	int r;
--
--	r = gpio_request_one(DISPLAY_SEL_GPIO, GPIOF_OUT_INIT_HIGH,
--			"display_sel");
--	if (r)
--		pr_err("%s: Could not get display_sel GPIO\n", __func__);
--
--	r = gpio_request_one(DLP_POWER_ON_GPIO, GPIOF_OUT_INIT_LOW,
--		"DLP POWER ON");
--	if (r)
--		pr_err("%s: Could not get DLP POWER ON GPIO\n", __func__);
--
--	omap_display_init(&sdp4430_dss_data);
--}
-diff --git a/arch/arm/mach-omap2/dss-common.h b/arch/arm/mach-omap2/dss-common.h
-index 915f6ff..611b341 100644
---- a/arch/arm/mach-omap2/dss-common.h
-+++ b/arch/arm/mach-omap2/dss-common.h
-@@ -7,8 +7,6 @@
-  */
- 
- void __init omap4_panda_display_init(void);
--void __init omap4_panda_display_init_of(void);
- void __init omap_4430sdp_display_init(void);
--void __init omap_4430sdp_display_init_of(void);
- 
- #endif
 -- 
-1.8.1.2
+1.7.12.4
 
