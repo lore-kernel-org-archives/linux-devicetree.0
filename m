@@ -1,52 +1,64 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56319 "EHLO mail.gnudd.com"
+Received: from bear.ext.ti.com ([192.94.94.41]:60209 "EHLO bear.ext.ti.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932458Ab3HGKXq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:23:46 -0400
-Date: Wed, 7 Aug 2013 12:17:03 +0200
-From: Alessandro Rubini <rubini@gnudd.com>
-Subject: [PATCH 04/26] x86: add CONFIG_ARM_AMBA, selected by STA2X11
-Message-ID: <3c3bda8fd9406d752a710aa75de613463b712bbe.1375867291.git.rubini@gnudd.com>
+	id S1757361Ab3HBHie (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 2 Aug 2013 03:38:34 -0400
+Date: Fri, 2 Aug 2013 10:38:15 +0300
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/1] usb: phy: samsung: Update usbphy documentation
+Message-ID: <20130802073815.GG24465@radagast>
+Reply-To: <balbi@ti.com>
+References: <1375349075-15833-1-git-send-email-sachin.kamat@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NPukt5Otb9an/u20"
 Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+In-Reply-To: <1375349075-15833-1-git-send-email-sachin.kamat@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Davide Ciminaghi <ciminaghi@gnudd.com>, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, gautam.vivek@samsung.com, kgene.kim@samsung.com, swarren@wwwdotorg.org, rob@landley.net, patches@linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-The sta2x11 I/O Hub is a bridge from PCIe to AMBA. It reuses a number
-of amba drivers and needs to activate core bus support.
+--NPukt5Otb9an/u20
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alessandro Rubini <rubini@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
----
- arch/x86/Kconfig |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+Hi,
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 52432ab..490b001 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -554,6 +554,7 @@ config STA2X11
- 	select SWIOTLB
- 	select MFD_STA2X11
- 	select ARCH_REQUIRE_GPIOLIB
-+	select ARM_AMBA
- 	default n
- 	---help---
- 	  This adds support for boards based on the STA2X11 IO-Hub,
-@@ -2255,6 +2256,9 @@ config TS5500
- 
- endif # X86_32
- 
-+config ARM_AMBA
-+        bool
-+
- config AMD_NB
- 	def_bool y
- 	depends on CPU_SUP_AMD && PCI
--- 
-1.7.7.2
+On Thu, Aug 01, 2013 at 02:54:35PM +0530, Sachin Kamat wrote:
+> Updated the documentation as per the latest driver implementation.
+> While at it also fixed some trivial typos.
+>=20
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+
+this can go through DeviceTree maintainers:
+
+Acked-by: Felipe Balbi <balbi@ti.com>
+
+--=20
+balbi
+
+--NPukt5Otb9an/u20
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR+2HnAAoJEIaOsuA1yqREd7QP/2tGmepTtPG5Jto0tQQgBpKA
+hLSthsU7Ol9gUo8Rsj62EmWgl+wuJRzsJ2wK2rT6fXdOGen0XIEAUdxwb5BB09UX
+16EPpR9lHB+qIM7SI564SiEpksCKhfZ77xBUkOXlg9WbE/6f3cquQkoDauyNmwRC
+QMxL9UCFlGziO3EBtpNgJeL8vygPc1QQys9qP8eM1s+lsc+hheKb7ajSdGVZ8Qpj
+Dp10XUf0b5p6SuIyIuLuCqqwHcFBWnLUzxKFsvbxR8q4Ns5p3CBmG51uQwPvRvtm
+30942iXzXIAonctaQbZbb2rE/YS+DpDcMs/3fASkZFq+kZiMF76mXUMsOBAD0gzO
++pxOvxziaHKP19KniwdpN2cyQZd4x305/6P+qXwxZT0arnUsfi9fWSKKpQfnznlQ
+WX6efZ7lr61BgnNAL758T9Kf7xhCdivUvyL2tsKOgbiRjzmfTLCgQmqv8+k8I8rA
+v7XroqT4UsYlrVdJnGUH4Z5qHvxEoGViUDzXI8FIVaM6XAVPB0kC3RPt5+jUIkaJ
+dV8Ot9x0ctkHDhu6ELtdPkN8N8e+lxIW3eVh1YW6P1npIG1aKcf4+GbgfNKe6mCr
+iZEIjeMR6Xi2K7NBgIGiXTVNBDoLILTSvm9o6nLgIM4z15rQLS51EOeSutjNeDGY
+gkrHaYiAqCYGllk/S6YH
+=sfwM
+-----END PGP SIGNATURE-----
+
+--NPukt5Otb9an/u20--
