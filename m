@@ -1,65 +1,65 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from comal.ext.ti.com ([198.47.26.152]:48012 "EHLO comal.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754876Ab3HEHz0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Mon, 5 Aug 2013 03:55:26 -0400
-Message-ID: <51FF5A69.7040604@ti.com>
-Date: Mon, 5 Aug 2013 10:55:21 +0300
-From: Roger Quadros <rogerq@ti.com>
+Received: from devils.ext.ti.com ([198.47.26.153]:60561 "EHLO
+	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752674Ab3HBPEV (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 11:04:21 -0400
+Message-ID: <51FBCA6F.9030503@ti.com>
+Date: Fri, 2 Aug 2013 20:34:15 +0530
+From: George Cherian <george.cherian@ti.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH 3/4] dts: dra7-evm: add USB support
-References: <1375369134-26398-1-git-send-email-rogerq@ti.com> <1375369134-26398-4-git-send-email-rogerq@ti.com> <51FBCA6F.9030503@ti.com>
-In-Reply-To: <51FBCA6F.9030503@ti.com>
-Content-Type: text/plain; charset="ISO-8859-1"
+References: <1375369134-26398-1-git-send-email-rogerq@ti.com> <1375369134-26398-4-git-send-email-rogerq@ti.com>
+In-Reply-To: <1375369134-26398-4-git-send-email-rogerq@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
+To: Roger Quadros <rogerq@ti.com>
 Cc: tony@atomide.com, rnayak@ti.com, benoit.cousson@linaro.org, balbi@ti.com, kishon@ti.com, dmurphy@ti.com, t-kristo@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/02/2013 06:04 PM, George Cherian wrote:
-> On 8/1/2013 8:28 PM, Roger Quadros wrote:
->> Add USB drv_vbus pinctrl information and USB mode
->> for the USB controller.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>   arch/arm/boot/dts/dra7-evm.dts |   22 ++++++++++++++++++++++
->>   1 files changed, 22 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
->> index cb0703c..acd3c09 100644
->> --- a/arch/arm/boot/dts/dra7-evm.dts
->> +++ b/arch/arm/boot/dts/dra7-evm.dts
->> @@ -18,3 +18,25 @@
->>           reg = <0x80000000 0x60000000>; /* 1536 MB */
->>       };
->>   };
->> +
->> +&dra7_pmx_core {
->> +        pinctrl-names = "default";
->> +        pinctrl-0 = <
->> +        &usb_pins
->> +    >;
->> +
->> +    usb_pins: pinmux_usb_pins {
->> +                pinctrl-single,pins = <
->> +            0x280    0xc0000    /* usb1_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
->> +            0x284    0xc0000 /* usb2_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
->> +                >;
->> +        };
->> +};
->> +
->> +&dwc3_1 {
->> +    dr_mode = "otg";
-> 
-> otg???
+On 8/1/2013 8:28 PM, Roger Quadros wrote:
+> Add USB drv_vbus pinctrl information and USB mode
+> for the USB controller.
+>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>   arch/arm/boot/dts/dra7-evm.dts |   22 ++++++++++++++++++++++
+>   1 files changed, 22 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+> index cb0703c..acd3c09 100644
+> --- a/arch/arm/boot/dts/dra7-evm.dts
+> +++ b/arch/arm/boot/dts/dra7-evm.dts
+> @@ -18,3 +18,25 @@
+>   		reg = <0x80000000 0x60000000>; /* 1536 MB */
+>   	};
+>   };
+> +
+> +&dra7_pmx_core {
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <
+> +		&usb_pins
+> +	>;
+> +
+> +	usb_pins: pinmux_usb_pins {
+> +                pinctrl-single,pins = <
+> +			0x280	0xc0000	/* usb1_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
+> +			0x284	0xc0000 /* usb2_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
+> +                >;
+> +        };
+> +};
+> +
+> +&dwc3_1 {
+> +	dr_mode = "otg";
 
-What's wrong there? 
-please see
-Documentation/devicetree/bindings/usb/generic.txt
+otg???
+> +};
+> +
+> +&dwc3_2 {
+> +	dr_mode = "host";
+> +};
 
-we want it to operate in dual role mode and hence "otg"
 
-cheers,
--roger
+-- 
+-George
+
