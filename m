@@ -1,183 +1,129 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15453 "EHLO
-	hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756112Ab3HFM71 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 08:59:27 -0400
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V3 2/3] pinctrl: pinconf-generic: add generic APIs for mapping pinctrl node
-Date: Tue, 6 Aug 2013 18:42:34 +0530
-Message-ID: <1375794755-6246-3-git-send-email-ldewangan@nvidia.com>
-In-Reply-To: <1375794755-6246-1-git-send-email-ldewangan@nvidia.com>
-References: <1375794755-6246-1-git-send-email-ldewangan@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from mail-pd0-f181.google.com ([209.85.192.181]:35088 "EHLO
+	mail-pd0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753127Ab3HBAxH (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 20:53:07 -0400
+Received: by mail-pd0-f181.google.com with SMTP id g10so47591pdj.40
+        for <devicetree@vger.kernel.org>; Thu, 01 Aug 2013 17:53:05 -0700 (PDT)
+From: Julius Werner <jwerner@chromium.org>
+Subject: [PATCH 2/3] usb: phy-samsung-usb: trivial: rename pmuregs variable
+Date: Thu,  1 Aug 2013 17:52:05 -0700
+Message-Id: <1375404726-26264-3-git-send-email-jwerner@chromium.org>
+In-Reply-To: <1375404726-26264-1-git-send-email-jwerner@chromium.org>
+References: <1375404726-26264-1-git-send-email-jwerner@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
-To: swarren@wwwdotorg.org, linus.walleij@linaro.org
-Cc: ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, Laxman Dewangan <ldewangan@nvidia.com>
+To: Felipe Balbi <balbi@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, devicetree@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Julius Werner <jwerner@chromium.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add generic APIs to map the DT node and its sub node in pinconf generic
-driver. These APIs can be used from driver to parse the DT node who
-uses the pinconf generic APIs for defining their nodes.
+Now that the sphy->pmuregs variable always points to only a single
+register, let's rename it to make that more clear.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Julius Werner <jwerner@chromium.org>
 ---
-Changes from V1: 
-- Add generic property for pins and functions in pinconf-generic.
-- Add APIs to map the DT and subnode.
-- Move common utils APIs to the pinctrl-utils from this file.
-- Update the binding document accordingly.
-Changes from V2:
-- Rebased the pinctrl binding doc on top of Stephen's cleanup.
-- Rename properties "pinctrl-pins" and "pinctrl-function" to
-  "pins" and "function".
+ drivers/usb/phy/phy-samsung-usb.c  | 14 +++++++-------
+ drivers/usb/phy/phy-samsung-usb.h  |  4 ++--
+ drivers/usb/phy/phy-samsung-usb2.c |  4 ++--
+ drivers/usb/phy/phy-samsung-usb3.c |  4 ++--
+ 4 files changed, 13 insertions(+), 13 deletions(-)
 
- .../bindings/pinctrl/pinctrl-bindings.txt          |    3 +
- drivers/pinctrl/pinconf-generic.c                  |   96 ++++++++++++++++++++
- include/linux/pinctrl/pinconf-generic.h            |    6 ++
- 3 files changed, 105 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-index 237823a..4546b23 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -172,3 +172,6 @@ arguments are described below.
+diff --git a/drivers/usb/phy/phy-samsung-usb.c b/drivers/usb/phy/phy-samsung-usb.c
+index 51cad19..fa382c9 100644
+--- a/drivers/usb/phy/phy-samsung-usb.c
++++ b/drivers/usb/phy/phy-samsung-usb.c
+@@ -42,9 +42,9 @@ int samsung_usbphy_parse_dt(struct samsung_usbphy *sphy)
+ 		return -ENODEV;
+ 	}
  
- More in-depth documentation on these parameters can be found in
- <include/linux/pinctrl/pinconfig-generic.h>
-+
-+The valid pin names and function are device/chip specific and it can be
-+found from the device/chip specific binding documents.
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index 8594f03..d9536ca 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -24,6 +24,7 @@
- #include <linux/of.h>
- #include "core.h"
- #include "pinconf.h"
-+#include "pinctrl-utils.h"
+-	sphy->pmuregs = of_iomap(usbphy_sys, 0);
++	sphy->pmureg = of_iomap(usbphy_sys, 0);
  
- #ifdef CONFIG_DEBUG_FS
+-	if (sphy->pmuregs == NULL) {
++	if (sphy->pmureg == NULL) {
+ 		dev_err(sphy->dev, "Can't get usb-phy pmu control register\n");
+ 		goto err0;
+ 	}
+@@ -77,23 +77,23 @@ void samsung_usbphy_set_isolation_4210(struct samsung_usbphy *sphy, bool on)
+ {
+ 	u32 reg_val;
  
-@@ -236,4 +237,99 @@ out:
- 	kfree(cfg);
- 	return ret;
+-	if (!sphy->pmuregs) {
++	if (!sphy->pmureg) {
+ 		dev_warn(sphy->dev, "Can't set pmu isolation\n");
+ 		return;
+ 	}
+ 
+-	reg_val = readl(sphy->pmuregs);
++	reg_val = readl(sphy->pmureg);
+ 
+ 	if (on)
+ 		reg_val &= ~sphy->drv_data->phy_en_mask;
+ 	else
+ 		reg_val |= sphy->drv_data->phy_en_mask;
+ 
+-	writel(reg_val, sphy->pmuregs);
++	writel(reg_val, sphy->pmureg);
+ 
+ 	if (sphy->drv_data->cpu_type == TYPE_EXYNOS4X12) {
+-		writel(reg_val, sphy->pmuregs + EXYNOS4X12_PHY_HSIC_CTRL0);
+-		writel(reg_val, sphy->pmuregs + EXYNOS4X12_PHY_HSIC_CTRL1);
++		writel(reg_val, sphy->pmureg + EXYNOS4X12_PHY_HSIC_CTRL0);
++		writel(reg_val, sphy->pmureg + EXYNOS4X12_PHY_HSIC_CTRL1);
+ 	}
  }
-+
-+int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-+		struct device_node *np, struct pinctrl_map **map,
-+		unsigned *reserved_maps, unsigned *num_maps)
-+{
-+	int ret;
-+	const char *function;
-+	struct device *dev = pctldev->dev;
-+	unsigned long *configs = NULL;
-+	unsigned num_configs = 0;
-+	unsigned reserve;
-+	struct property *prop;
-+	const char *group;
-+
-+	ret = of_property_read_string(np, "function", &function);
-+	if (ret < 0) {
-+		/* EINVAL=missing, which is fine since it's optional */
-+		if (ret != -EINVAL)
-+			dev_err(dev,
-+				"could not parse property ti,function\n");
-+		function = NULL;
-+	}
-+
-+	ret = pinconf_generic_parse_dt_config(np, &configs, &num_configs);
-+	if (ret < 0) {
-+		dev_err(dev, "could not parse node property\n");
-+		return ret;
-+	}
-+
-+	reserve = 0;
-+	if (function != NULL)
-+		reserve++;
-+	if (num_configs)
-+		reserve++;
-+	ret = of_property_count_strings(np, "pins");
-+	if (ret < 0) {
-+		dev_err(dev, "could not parse property ti,pins\n");
-+		goto exit;
-+	}
-+	reserve *= ret;
-+
-+	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps,
-+			num_maps, reserve);
-+	if (ret < 0)
-+		goto exit;
-+
-+	of_property_for_each_string(np, "pins", prop, group) {
-+		if (function) {
-+			ret = pinctrl_utils_add_map_mux(pctldev, map,
-+					reserved_maps, num_maps, group,
-+					function);
-+			if (ret < 0)
-+				goto exit;
-+		}
-+
-+		if (num_configs) {
-+			ret = pinctrl_utils_add_map_configs(pctldev, map,
-+					reserved_maps, num_maps, group, configs,
-+					num_configs, PIN_MAP_TYPE_CONFIGS_PIN);
-+			if (ret < 0)
-+				goto exit;
-+		}
-+	}
-+	ret = 0;
-+
-+exit:
-+	kfree(configs);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pinconf_generic_dt_subnode_to_map);
-+
-+int pinconf_generic_dt_node_to_map(struct pinctrl_dev *pctldev,
-+		struct device_node *np_config, struct pinctrl_map **map,
-+		unsigned *num_maps)
-+{
-+	unsigned reserved_maps;
-+	struct device_node *np;
-+	int ret;
-+
-+	reserved_maps = 0;
-+	*map = NULL;
-+	*num_maps = 0;
-+
-+	for_each_child_of_node(np_config, np) {
-+		ret = pinconf_generic_dt_subnode_to_map(pctldev, np, map,
-+						&reserved_maps, num_maps);
-+		if (ret < 0) {
-+			pinctrl_utils_dt_free_map(pctldev, *map, *num_maps);
-+			return ret;
-+		}
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pinconf_generic_dt_node_to_map);
-+
- #endif
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index bf7e989..a472b93 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -137,6 +137,12 @@ static inline unsigned long pinconf_to_config_packed(enum pin_config_param param
- 	return PIN_CONF_PACKED(param, argument);
- }
+ EXPORT_SYMBOL_GPL(samsung_usbphy_set_isolation_4210);
+diff --git a/drivers/usb/phy/phy-samsung-usb.h b/drivers/usb/phy/phy-samsung-usb.h
+index a817af5..f2e9c4a 100644
+--- a/drivers/usb/phy/phy-samsung-usb.h
++++ b/drivers/usb/phy/phy-samsung-usb.h
+@@ -281,7 +281,7 @@ struct samsung_usbphy_drvdata {
+  * @dev: The parent device supplied to the probe function
+  * @clk: usb phy clock
+  * @regs: usb phy controller registers memory base
+- * @pmuregs: USB device PHY_CONTROL register memory base
++ * @pmureg: USB device PHY_CONTROL register address
+  * @sysreg: USB2.0 PHY_CFG register memory base
+  * @ref_clk_freq: reference clock frequency selection
+  * @drv_data: driver data available for different SoCs
+@@ -296,7 +296,7 @@ struct samsung_usbphy {
+ 	struct device	*dev;
+ 	struct clk	*clk;
+ 	void __iomem	*regs;
+-	void __iomem	*pmuregs;
++	void __iomem	*pmureg;
+ 	void __iomem	*sysreg;
+ 	int		ref_clk_freq;
+ 	const struct samsung_usbphy_drvdata *drv_data;
+diff --git a/drivers/usb/phy/phy-samsung-usb2.c b/drivers/usb/phy/phy-samsung-usb2.c
+index adbaa8c..c2c83d4 100644
+--- a/drivers/usb/phy/phy-samsung-usb2.c
++++ b/drivers/usb/phy/phy-samsung-usb2.c
+@@ -435,8 +435,8 @@ static int samsung_usb2phy_remove(struct platform_device *pdev)
  
-+int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-+		struct device_node *np, struct pinctrl_map **map,
-+		unsigned *reserved_maps, unsigned *num_maps);
-+int pinconf_generic_dt_node_to_map(struct pinctrl_dev *pctldev,
-+		struct device_node *np_config, struct pinctrl_map **map,
-+		unsigned *num_maps);
- #endif /* CONFIG_GENERIC_PINCONF */
+ 	usb_remove_phy(&sphy->phy);
  
- #endif /* __LINUX_PINCTRL_PINCONF_GENERIC_H */
+-	if (sphy->pmuregs)
+-		iounmap(sphy->pmuregs);
++	if (sphy->pmureg)
++		iounmap(sphy->pmureg);
+ 	if (sphy->sysreg)
+ 		iounmap(sphy->sysreg);
+ 
+diff --git a/drivers/usb/phy/phy-samsung-usb3.c b/drivers/usb/phy/phy-samsung-usb3.c
+index 3ad9579..6259a35 100644
+--- a/drivers/usb/phy/phy-samsung-usb3.c
++++ b/drivers/usb/phy/phy-samsung-usb3.c
+@@ -292,8 +292,8 @@ static int samsung_usb3phy_remove(struct platform_device *pdev)
+ 
+ 	usb_remove_phy(&sphy->phy);
+ 
+-	if (sphy->pmuregs)
+-		iounmap(sphy->pmuregs);
++	if (sphy->pmureg)
++		iounmap(sphy->pmureg);
+ 	if (sphy->sysreg)
+ 		iounmap(sphy->sysreg);
+ 
 -- 
-1.7.1.1
+1.7.12.4
 
