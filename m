@@ -1,250 +1,108 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from co9ehsobe002.messaging.microsoft.com ([207.46.163.25]:5824 "EHLO
-	co9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754530Ab3HLLuo (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 12 Aug 2013 07:50:44 -0400
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v4 2/2] ASoC: fsl: Add S/PDIF machine driver
-Date: Mon, 12 Aug 2013 20:01:10 +0800
-Message-ID: <1376308870-14232-3-git-send-email-b42378@freescale.com>
-In-Reply-To: <1376308870-14232-1-git-send-email-b42378@freescale.com>
-References: <1376308870-14232-1-git-send-email-b42378@freescale.com>
+Received: from smtp65.ord1c.emailsrvr.com ([108.166.43.65]:57357 "EHLO
+	smtp65.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752218Ab3HBULV (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 16:11:21 -0400
+Message-ID: <51FC1272.8010305@calxeda.com>
+Date: Fri, 02 Aug 2013 15:11:30 -0500
+From: Mark Langsdorf <mark.langsdorf@calxeda.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [PATCH v2 3/5] devicetree: create a separate binding description
+ for sata_highbank
+References: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com> <1375460918-4661-3-git-send-email-mark.langsdorf@calxeda.com> <51FC1015.7010203@cogentembedded.com>
+In-Reply-To: <51FC1015.7010203@cogentembedded.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de
-Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Rob Herring <rob.herring@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add S/PDIF machine driver for Freescale i.MX series SoC.
+On 08/02/2013 03:01 PM, Sergei Shtylyov wrote:
+> On 08/02/2013 08:28 PM, Mark Langsdorf wrote:
+> 
+>> The Calxeda sata_highbank driver has been adding its descriptions to the
+>> ahci driver. Separate them properly.
+> 
+>> Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
+>> Acked-by: Rob Herring <rob.herring@calxeda.com>
+> [...]
+> 
+>> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+>> index 3ec0c5c..14d7b22 100644
+>> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+>> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+>> @@ -4,27 +4,17 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
+> [...]
+>>   Example:
+>>           sata@ffe08000 {
+>> -		compatible = "calxeda,hb-ahci";
+>> +		compatible = "snps,spear-ahci";
+>>                   reg = <0xffe08000 0x1000>;
+>>                   interrupts = <115>;
+> 
+>     Indented these 2 props with spaces, would be good to fix...
 
-Signed-off-by: Nicolin Chen <b42378@freescale.com>
----
- .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +++++
- sound/soc/fsl/Kconfig                              |   11 ++
- sound/soc/fsl/Makefile                             |    2 +
- sound/soc/fsl/imx-spdif.c                          |  134 ++++++++++++++++++++
- 4 files changed, 176 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
- create mode 100644 sound/soc/fsl/imx-spdif.c
+Thanks, I will fix.
 
-diff --git a/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-new file mode 100644
-index 0000000..9a3fa26
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-@@ -0,0 +1,29 @@
-+Freescale i.MX audio complex with S/PDIF transceiver
-+
-+Required properties:
-+
-+  - compatible : "fsl,imx-audio-spdif"
-+
-+  - model : The user-visible name of this sound complex
-+
-+  - spdif-controller : The phandle of the i.MX S/PDIF controller
-+
-+
-+Optional properties:
-+
-+  - spdif-transmitter : The phandle of the spdif-transmitter dummy codec
-+
-+  - spdif-receiver : The phandle of the spdif-receiver dummy codec
-+
-+* Note: At least one of these two properties should be set in the DT binding.
-+
-+
-+Example:
-+
-+sound-spdif {
-+	compatible = "fsl,imx-audio-spdif";
-+	model = "imx-spdif";
-+	spdif-controller = <&spdif>;
-+	spdif-transmitter = <&spdif_tx_codec>;
-+	spdif-receiver = <&spdif_rx_codec>;
-+};
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index 2c518db..4cc118c 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -195,6 +195,17 @@ config SND_SOC_IMX_SGTL5000
- 	  Say Y if you want to add support for SoC audio on an i.MX board with
- 	  a sgtl5000 codec.
- 
-+config SND_SOC_IMX_SPDIF
-+	tristate "SoC Audio support for i.MX boards with S/PDIF"
-+	select SND_SOC_IMX_PCM_DMA
-+	select SND_SOC_FSL_SPDIF
-+	select SND_SOC_FSL_UTILS
-+	select SND_SOC_SPDIF
-+	help
-+	  SoC Audio support for i.MX boards with S/PDIF
-+	  Say Y if you want to add support for SoC audio on an i.MX board with
-+	  a S/DPDIF.
-+
- config SND_SOC_IMX_MC13783
- 	tristate "SoC Audio support for I.MX boards with mc13783"
- 	depends on MFD_MC13783 && ARM
-diff --git a/sound/soc/fsl/Makefile b/sound/soc/fsl/Makefile
-index 4b5970e..e2aaff7 100644
---- a/sound/soc/fsl/Makefile
-+++ b/sound/soc/fsl/Makefile
-@@ -45,6 +45,7 @@ snd-soc-mx27vis-aic32x4-objs := mx27vis-aic32x4.o
- snd-soc-wm1133-ev1-objs := wm1133-ev1.o
- snd-soc-imx-sgtl5000-objs := imx-sgtl5000.o
- snd-soc-imx-wm8962-objs := imx-wm8962.o
-+snd-soc-imx-spdif-objs :=imx-spdif.o
- snd-soc-imx-mc13783-objs := imx-mc13783.o
- 
- obj-$(CONFIG_SND_SOC_EUKREA_TLV320) += snd-soc-eukrea-tlv320.o
-@@ -53,4 +54,5 @@ obj-$(CONFIG_SND_SOC_MX27VIS_AIC32X4) += snd-soc-mx27vis-aic32x4.o
- obj-$(CONFIG_SND_MXC_SOC_WM1133_EV1) += snd-soc-wm1133-ev1.o
- obj-$(CONFIG_SND_SOC_IMX_SGTL5000) += snd-soc-imx-sgtl5000.o
- obj-$(CONFIG_SND_SOC_IMX_WM8962) += snd-soc-imx-wm8962.o
-+obj-$(CONFIG_SND_SOC_IMX_SPDIF) += snd-soc-imx-spdif.o
- obj-$(CONFIG_SND_SOC_IMX_MC13783) += snd-soc-imx-mc13783.o
-diff --git a/sound/soc/fsl/imx-spdif.c b/sound/soc/fsl/imx-spdif.c
-new file mode 100644
-index 0000000..893f3d1
---- /dev/null
-+++ b/sound/soc/fsl/imx-spdif.c
-@@ -0,0 +1,134 @@
-+/*
-+ * Copyright (C) 2013 Freescale Semiconductor, Inc.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <sound/soc.h>
-+
-+struct imx_spdif_data {
-+	struct snd_soc_dai_link dai[2];
-+	struct snd_soc_card card;
-+};
-+
-+static int imx_spdif_audio_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *spdif_np, *codec_tx_np, *codec_rx_np;
-+	struct platform_device *spdif_pdev;
-+	struct imx_spdif_data *data;
-+	int ret = 0, num_links = 0;
-+
-+	spdif_np = of_parse_phandle(np, "spdif-controller", 0);
-+	if (!spdif_np) {
-+		dev_err(&pdev->dev, "failed to find spdif-controller\n");
-+		ret = -EINVAL;
-+		goto fail;
-+	}
-+
-+	spdif_pdev = of_find_device_by_node(spdif_np);
-+	if (!spdif_pdev) {
-+		dev_err(&pdev->dev, "failed to find S/PDIF device\n");
-+		ret = -EINVAL;
-+		goto fail;
-+	}
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data) {
-+		dev_err(&pdev->dev, "failed to allocate memory\n");
-+		ret = -ENOMEM;
-+		goto fail;
-+	}
-+
-+	codec_tx_np = of_parse_phandle(np, "spdif-transmitter", 0);
-+	if (codec_tx_np) {
-+		data->dai[num_links].name = "S/PDIF TX";
-+		data->dai[num_links].stream_name = "S/PDIF PCM Playback";
-+		data->dai[num_links].codec_dai_name = "dit-hifi";
-+		data->dai[num_links].codec_of_node = codec_tx_np;
-+		data->dai[num_links].cpu_of_node = spdif_np;
-+		data->dai[num_links].platform_of_node = spdif_np;
-+		num_links++;
-+	}
-+
-+	codec_rx_np = of_parse_phandle(np, "spdif-receiver", 0);
-+	if (codec_rx_np) {
-+		data->dai[num_links].name = "S/PDIF RX";
-+		data->dai[num_links].stream_name = "S/PDIF PCM Capture";
-+		data->dai[num_links].codec_dai_name = "dir-hifi";
-+		data->dai[num_links].codec_of_node = codec_rx_np;
-+		data->dai[num_links].cpu_of_node = spdif_np;
-+		data->dai[num_links].platform_of_node = spdif_np;
-+		num_links++;
-+	}
-+
-+	if (!num_links) {
-+		dev_err(&pdev->dev, "no enabled S/PDIF DAI link\n");
-+		goto fail;
-+	}
-+
-+	data->card.dev = &pdev->dev;
-+	data->card.num_links = num_links;
-+	data->card.dai_link = data->dai;
-+
-+	ret = snd_soc_of_parse_card_name(&data->card, "model");
-+	if (ret)
-+		goto fail;
-+
-+	ret = snd_soc_register_card(&data->card);
-+	if (ret) {
-+		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+fail:
-+	if (codec_tx_np)
-+		of_node_put(codec_tx_np);
-+	if (codec_rx_np)
-+		of_node_put(codec_rx_np);
-+	if (spdif_np)
-+		of_node_put(spdif_np);
-+
-+	return ret;
-+}
-+
-+static int imx_spdif_audio_remove(struct platform_device *pdev)
-+{
-+	struct imx_spdif_data *data = platform_get_drvdata(pdev);
-+
-+	snd_soc_unregister_card(&data->card);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id imx_spdif_dt_ids[] = {
-+	{ .compatible = "fsl,imx-audio-spdif", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, imx_spdif_dt_ids);
-+
-+static struct platform_driver imx_spdif_driver = {
-+	.driver = {
-+		.name = "imx-spdif",
-+		.owner = THIS_MODULE,
-+		.of_match_table = imx_spdif_dt_ids,
-+	},
-+	.probe = imx_spdif_audio_probe,
-+	.remove = imx_spdif_audio_remove,
-+};
-+
-+module_platform_driver(imx_spdif_driver);
-+
-+MODULE_AUTHOR("Freescale Semiconductor, Inc.");
-+MODULE_DESCRIPTION("Freescale i.MX S/PDIF machine driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:imx-spdif");
--- 
-1.7.1
+>> -		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
+>> -					&combophy0 2 &combophy0 3>;
+>>
+>>           };
+>> diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
+>> new file mode 100644
+>> index 0000000..aa1b798
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/ata/sata_highbank.txt
+>     Shouldn't the file be called calxeda,hb-ahci.txt?
 
+# ls Documentation/devicetree/bindings/ata/
+ahci-platform.txt         exynos-sata.txt           pata-arasan.txt
+atmel-at91_cf.txt         fsl-sata.txt              sata_highbank.txt
+cavium-compact-flash.txt  imx-pata.txt
+exynos-sata-phy.txt       marvell.txt
+
+By comparison with the other files in the directory, no. Using _ instead
+of - is slightly unorthodox but not unknown within the
+devicetree/bindings subdirectories.
+
+>> @@ -0,0 +1,32 @@
+>> +* Calxeda AHCI SATA Controller
+>> +
+>> +SATA nodes are defined to describe on-chip Serial ATA controllers.
+>> +The Calxeda SATA controller mostly conforms to the AHCI interface
+>> +with some special extensions to add functionality.
+>> +Each SATA controller should have its own node.
+>> +
+>> +Required properties:
+>> +- compatible        : compatible list, contains "calxeda,hb-ahci"
+>> +- interrupts        : <interrupt mapping for SATA IRQ>
+>> +- reg               : <registers mapping>
+>> +
+>> +Optional properties:
+>> +- dma-coherent      : Present if dma operations are coherent
+>> +- calxeda,port-phys: phandle-combophy and lane assignment, which maps each
+>> +			SATA port to a combophy and a lane within that
+>> +			combophy
+>> +- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
+>> +			which indicates that the driver supports SGPIO
+>> +			indicator lights using the indicated GPIOs
+>> +- calxeda,led-order : a u32 array that map port numbers to offsets within the
+>> +			SGPIO bitstream.
+>> +
+>> +Example:
+>> +        sata@ffe08000 {
+>> +		compatible = "calxeda,hb-ahci";
+>> +                reg = <0xffe08000 0x1000>;
+>> +                interrupts = <115>;
+>> +		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
+> 
+>     Could you indent props uniformly here, with tabs?
+
+Yes.
+
+Thanks for the review.
+
+--Mark Langsdorf
+Calxeda, Inc.
 
