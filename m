@@ -1,81 +1,171 @@
 From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v1 05/24] clk: wrap I/O access for improved portability
-Date: Fri, 02 Aug 2013 15:09:35 -0700
-Message-ID: <20130802220935.6450.38975@quantum>
-References: <1373914074-20889-1-git-send-email-gsi@denx.de>
- <1373914074-20889-6-git-send-email-gsi@denx.de>
- <20130715193829.GS14452@pengutronix.de>
- <20130718070402.GO7080@book.gsilab.sittig.org>
- <20130718091735.GW24642@n2100.arm.linux.org.uk>
- <alpine.LFD.2.03.1307181330520.14924@syhkavp.arg>
+Subject: Re: [PATCH v3 13/31] clk: wrap I/O access for improved portability
+Date: Fri, 02 Aug 2013 15:30:00 -0700
+Message-ID: <20130802223000.6450.97817@quantum>
+References: <1374166855-7280-1-git-send-email-gsi@denx.de>
+ <1374495298-22019-1-git-send-email-gsi@denx.de>
+ <1374495298-22019-14-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.LFD.2.03.1307181330520.14924@syhkavp.arg>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, linuxppc-dev@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>, David Woodhouse <dwmw2@infradead.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1374495298-22019-14-git-send-email-gsi@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gerhard Sittig <gsi@denx.de>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, David Woodhouse <dwmw2@infradead.org>, Wolfgang Grandegger <wg@grandegger.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Nicolas Pitre (2013-07-18 10:47:22)
-> On Thu, 18 Jul 2013, Russell King - ARM Linux wrote:
+Quoting Gerhard Sittig (2013-07-22 05:14:40)
+> the common clock drivers were motivated/initiated by ARM development
+> and apparently assume little endian peripherals
 > 
-> > 1. clk_get() and clk_put() are NOT part of the common clock API.
-> >    They're separate - they're part of the clk API, and the infrastructure
-> >    behind that is clkdev, which is a separately owned thing (by me.)
-> > 
-> > 2. The "contract" of the clk API is defined by the clk API, not by some
-> >    random implementation like the common clock API.  The clk API is
-> >    maintained by myself, and is described in include/linux/clk.h
-> > 
-> > 3. clk_prepare() and clk_unprepare() are functions MUST only be called
-> >    from contexts where sleeping is permitted.  These functions MAY sleep
-> >    for whatever reason they require to, and as long as they require to.
-> >    (This is the whole reason these two functions were created in the
-> >    first place.)
-> > 
-> > 4. clk_enable() and clk_disable() MAY be called from any context, but
-> >    MUST never sleep.  If you need to talk over a non-atomic bus for these,
-> >    then these functions should be no-ops, and the code which does that
-> >    must be executed from the clk_prepare()/clk_unprepare() operations.
+> wrap register/peripherals access in the common code (div, gate, mux)
+> in preparation of adding COMMON_CLK support for other platforms
 > 
-> Could the above be included in some form in Documentation/clk.txt (this 
-> is likely one of the first location people look for information) and 
-> elsewhere if appropriate please?
-> 
-> A *lot* of people are confused by the prepare-enable-disable-unprepare 
-> sequence and when I try to find some rational for the prepare/enable 
-> split I can only direct them to mail archive posts since this is nowhere 
-> to be found in the kernel.
-> 
-> The comments in include/linux/clk.h, while correct, are very terse and 
-> don't provide any insight to the reason why there is a split in the API.
-> 
-> The content of Documentation/clk.txt does refer to prepare and enable 
-> (and their counterparts) but again doesn't provide any clue about the 
-> reason for their existence.
-> 
-> Since there've been several good posts with usage example now buried 
-> into list archives, I think this would go a long way helping people get 
-> it right if those were part of the kernel documentation as well.
+> Signed-off-by: Gerhard Sittig <gsi@denx.de>
 
-I'll update Documentation/clk.txt with more verbosity. The document was
-originally intended as a "porting guide" to help migrate from legacy
-frameworks to the common struct clk implementation. However the scope of
-the document should probably be generalized a bit more.
+I've taken this into clk-next for testing. regmap deserves investigation
+but I don't think your series should be blocked on that. We can always
+overhaul the basic clock primitives with regmap support later on if that
+makes sense.
 
 Regards,
 Mike
 
+> ---
+>  drivers/clk/clk-divider.c    |    6 +++---
+>  drivers/clk/clk-gate.c       |    6 +++---
+>  drivers/clk/clk-mux.c        |    6 +++---
+>  include/linux/clk-provider.h |   17 +++++++++++++++++
+>  4 files changed, 26 insertions(+), 9 deletions(-)
 > 
-> 
-> Nicolas
+> diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
+> index 6d55eb2..2c07061 100644
+> --- a/drivers/clk/clk-divider.c
+> +++ b/drivers/clk/clk-divider.c
+> @@ -104,7 +104,7 @@ static unsigned long clk_divider_recalc_rate(struct clk_hw *hw,
+>         struct clk_divider *divider = to_clk_divider(hw);
+>         unsigned int div, val;
+>  
+> -       val = readl(divider->reg) >> divider->shift;
+> +       val = clk_readl(divider->reg) >> divider->shift;
+>         val &= div_mask(divider);
+>  
+>         div = _get_div(divider, val);
+> @@ -230,11 +230,11 @@ static int clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
+>         if (divider->flags & CLK_DIVIDER_HIWORD_MASK) {
+>                 val = div_mask(divider) << (divider->shift + 16);
+>         } else {
+> -               val = readl(divider->reg);
+> +               val = clk_readl(divider->reg);
+>                 val &= ~(div_mask(divider) << divider->shift);
+>         }
+>         val |= value << divider->shift;
+> -       writel(val, divider->reg);
+> +       clk_writel(val, divider->reg);
+>  
+>         if (divider->lock)
+>                 spin_unlock_irqrestore(divider->lock, flags);
+> diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
+> index 790306e..b7fbd96 100644
+> --- a/drivers/clk/clk-gate.c
+> +++ b/drivers/clk/clk-gate.c
+> @@ -58,7 +58,7 @@ static void clk_gate_endisable(struct clk_hw *hw, int enable)
+>                 if (set)
+>                         reg |= BIT(gate->bit_idx);
+>         } else {
+> -               reg = readl(gate->reg);
+> +               reg = clk_readl(gate->reg);
+>  
+>                 if (set)
+>                         reg |= BIT(gate->bit_idx);
+> @@ -66,7 +66,7 @@ static void clk_gate_endisable(struct clk_hw *hw, int enable)
+>                         reg &= ~BIT(gate->bit_idx);
+>         }
+>  
+> -       writel(reg, gate->reg);
+> +       clk_writel(reg, gate->reg);
+>  
+>         if (gate->lock)
+>                 spin_unlock_irqrestore(gate->lock, flags);
+> @@ -89,7 +89,7 @@ static int clk_gate_is_enabled(struct clk_hw *hw)
+>         u32 reg;
+>         struct clk_gate *gate = to_clk_gate(hw);
+>  
+> -       reg = readl(gate->reg);
+> +       reg = clk_readl(gate->reg);
+>  
+>         /* if a set bit disables this clk, flip it before masking */
+>         if (gate->flags & CLK_GATE_SET_TO_DISABLE)
+> diff --git a/drivers/clk/clk-mux.c b/drivers/clk/clk-mux.c
+> index 614444c..02ef506 100644
+> --- a/drivers/clk/clk-mux.c
+> +++ b/drivers/clk/clk-mux.c
+> @@ -42,7 +42,7 @@ static u8 clk_mux_get_parent(struct clk_hw *hw)
+>          * OTOH, pmd_trace_clk_mux_ck uses a separate bit for each clock, so
+>          * val = 0x4 really means "bit 2, index starts at bit 0"
+>          */
+> -       val = readl(mux->reg) >> mux->shift;
+> +       val = clk_readl(mux->reg) >> mux->shift;
+>         val &= mux->mask;
+>  
+>         if (mux->table) {
+> @@ -89,11 +89,11 @@ static int clk_mux_set_parent(struct clk_hw *hw, u8 index)
+>         if (mux->flags & CLK_MUX_HIWORD_MASK) {
+>                 val = mux->mask << (mux->shift + 16);
+>         } else {
+> -               val = readl(mux->reg);
+> +               val = clk_readl(mux->reg);
+>                 val &= ~(mux->mask << mux->shift);
+>         }
+>         val |= index << mux->shift;
+> -       writel(val, mux->reg);
+> +       clk_writel(val, mux->reg);
+>  
+>         if (mux->lock)
+>                 spin_unlock_irqrestore(mux->lock, flags);
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> index 1ec14a7..c4f7799 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -12,6 +12,7 @@
+>  #define __LINUX_CLK_PROVIDER_H
+>  
+>  #include <linux/clk.h>
+> +#include <linux/io.h>
+>  
+>  #ifdef CONFIG_COMMON_CLK
+>  
+> @@ -490,5 +491,21 @@ static inline const char *of_clk_get_parent_name(struct device_node *np,
+>  #define of_clk_init(matches) \
+>         { while (0); }
+>  #endif /* CONFIG_OF */
+> +
+> +/*
+> + * wrap access to peripherals in accessor routines
+> + * for improved portability across platforms
+> + */
+> +
+> +static inline u32 clk_readl(u32 __iomem *reg)
+> +{
+> +       return readl(reg);
+> +}
+> +
+> +static inline void clk_writel(u32 val, u32 __iomem *reg)
+> +{
+> +       writel(val, reg);
+> +}
+> +
+>  #endif /* CONFIG_COMMON_CLK */
+>  #endif /* CLK_PROVIDER_H */
+> -- 
+> 1.7.10.4
