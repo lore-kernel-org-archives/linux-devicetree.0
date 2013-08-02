@@ -1,93 +1,91 @@
-From: sunil joshi <sjoshi.open@gmail.com>
-Subject: Re: [PATCH V2 6/8] ARM: dts: exynos5420: add i2s controllers
-Date: Fri, 2 Aug 2013 12:02:17 +0530
-Message-ID: <CANruHrT6m233MH69XitCwb66cgKvAngKBv5EPPD4xb-1jx1DUw@mail.gmail.com>
-References: <1374845812-7803-1-git-send-email-padma.v@samsung.com>
-	<1374845812-7803-7-git-send-email-padma.v@samsung.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCH] drivers: mtd: devices: make m25p80 dt adapted.
+Date: Fri, 2 Aug 2013 12:19:30 +0530
+Message-ID: <1375426170-31609-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1374845812-7803-7-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.kvr@gmail.com, broonie@kernel.org, kgene.kim@samsung.com, abrestic@chromium.org, tomasz.figa@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, linux-mtd@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Sourav Poddar <sourav.poddar@ti.com>, linux-omap@vger.kernel.org, pekon@ti.com, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Padma,
-You may move the common stuff of I2S contents for 5250 & 5420 into exynos5.dtsi.
+This patch helps gettimg m25p80 probed through dt.
+To get the id of the exact flash type supported for dt case,
+data->type is getting parsed from dt entry.
 
-Regards
-Sunil
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+---
+ drivers/mtd/devices/m25p80.c |   22 +++++++++++++++++++++-
+ 1 files changed, 21 insertions(+), 1 deletions(-)
 
-On Fri, Jul 26, 2013 at 7:06 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
-> From: Andrew Bresticker <abrestic@chromium.org>
->
-> This adds device-tree bindings for the i2s controllers on Exynos 5420.
->
-> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
-> Reviewed-on: https://gerrit.chromium.org/gerrit/57713
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi |   44 +++++++++++++++++++++++++++++++++++++
->  1 files changed, 44 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index d2fdb87..c9ed8d2 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -242,4 +242,48 @@
->                 pinctrl-names = "default";
->                 pinctrl-0 = <&i2c3_bus>;
->         };
-> +
-> +       i2s_0: i2s@03830000 {
-> +               compatible = "samsung,exynos5420-i2s";
-> +               reg = <0x03830000 0x100>;
-> +               dmas = <&adma 0
-> +                       &adma 2
-> +                       &adma 1>;
-> +               dma-names = "tx", "rx", "tx-sec";
-> +               clocks = <&clock_audss EXYNOS_I2S_BUS>,
-> +                       <&clock_audss EXYNOS_I2S_BUS>,
-> +                       <&clock_audss EXYNOS_SCLK_I2S>;
-> +               clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-> +               samsung,idma-addr = <0x03000000>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&i2s0_bus>;
-> +               status = "disabled";
-> +       };
-> +
-> +       i2s_1: i2s@12D60000 {
-> +               compatible = "samsung,s3c6410-i2s";
-> +               reg = <0x12D60000 0x100>;
-> +               dmas = <&pdma1 12
-> +                       &pdma1 11>;
-> +               dma-names = "tx", "rx";
-> +               clocks = <&clock 275>, <&clock 138>;
-> +               clock-names = "iis", "i2s_opclk0";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&i2s1_bus>;
-> +               status = "disabled";
-> +       };
-> +
-> +       i2s_2: i2s@12D70000 {
-> +               compatible = "samsung,s3c6410-i2s";
-> +               reg = <0x12D70000 0x100>;
-> +               dmas = <&pdma0 12
-> +                       &pdma0 11>;
-> +               dma-names = "tx", "rx";
-> +               clocks = <&clock 276>, <&clock 139>;
-> +               clock-names = "iis", "i2s_opclk0";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&i2s2_bus>;
-> +               status = "disabled";
-> +       };
-> +
->  };
-> --
-> 1.7.4.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index 33098bf..cbfb9b3 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -855,6 +855,13 @@ static const struct spi_device_id m25p_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, m25p_ids);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id m25p_dt_ids[] = {
++	{ .compatible = "m25p80", },
++	{ /* sentinel */ }
++};
++#endif
++
+ static const struct spi_device_id *jedec_probe(struct spi_device *spi)
+ {
+ 	int			tmp;
+@@ -909,6 +916,7 @@ static int m25p_probe(struct spi_device *spi)
+ 	unsigned			i;
+ 	struct mtd_part_parser_data	ppdata;
+ 	struct device_node __maybe_unused *np = spi->dev.of_node;
++	int len;
+ 
+ #ifdef CONFIG_MTD_OF_PARTS
+ 	if (!of_device_is_available(np))
+@@ -920,7 +928,18 @@ static int m25p_probe(struct spi_device *spi)
+ 	 * a chip ID, try the JEDEC id commands; they'll work for most
+ 	 * newer chips, even if we don't recognize the particular chip.
+ 	 */
+-	data = spi->dev.platform_data;
++	if (!np) {
++		data = spi->dev.platform_data;
++	} else {
++		data = devm_kzalloc(&spi->dev, sizeof(*data), GFP_KERNEL);
++		if (!data)
++			return -ENOMEM;
++
++		data->type = (char *) of_get_property(np, "type", &len);
++		if (!data->type || strlen(data->type) > len)
++			return -ENODEV;
++	}
++
+ 	if (data && data->type) {
+ 		const struct spi_device_id *plat_id;
+ 
+@@ -1098,6 +1117,7 @@ static struct spi_driver m25p80_driver = {
+ 	.driver = {
+ 		.name	= "m25p80",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(m25p_dt_ids),
+ 	},
+ 	.id_table	= m25p_ids,
+ 	.probe	= m25p_probe,
+-- 
+1.7.1
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
