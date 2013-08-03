@@ -1,68 +1,48 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-db9lp0251.outbound.messaging.microsoft.com ([213.199.154.251]:2052
-	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1750810Ab3HSIZC (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 19 Aug 2013 04:25:02 -0400
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v7 0/2] Add freescale S/PDIF CPU DAI and machine drivers
-Date: Mon, 19 Aug 2013 16:35:20 +0800
-Message-ID: <cover.1376901081.git.b42378@freescale.com>
+Received: from caramon.arm.linux.org.uk ([78.32.30.218]:40073 "EHLO
+	caramon.arm.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751829Ab3HCNwG (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 3 Aug 2013 09:52:06 -0400
+Date: Sat, 3 Aug 2013 14:51:51 +0100
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 3/4] ASoc: kirkwood: add DT support
+Message-ID: <20130803135150.GA23006@n2100.arm.linux.org.uk>
+References: <20130731081832.54212b76@armhf>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20130731081832.54212b76@armhf>
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, s.hauer@pengutronix.de
-Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, tomasz.figa@gmail.com, swarren@wwwdotorg.org, mark.rutland@arm.com, R65777@freescale.com
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Changelog:
-v6->v7:
- * Removed extra comma in array.
- * Revised some comments.
- * Added some dev_err().
- * Check the return value of soft reset.
- * Use bitrev8() instead of extra reverse_bits().
- * Use cache_bypass as default for regmap.
-v5->v6:
- * Sorted out rxtx clk source in DT binding.
- * Use devm_xxxx() functions.
- * Use platform_get_resource() instead.
-v4->v5:
- * Dropped rx/tx-clksrc-names DT bindings.
- * Use standard clock binding instead to pass the clock source list.
- * Update the compatible list by using "imx35", the first SoC that has spdif.
-v3->v4:
- * Use regmap for CPU DAI driver.
- * Use individual clock source for 32KHz, 44KHz, 48KHz playback.
- * Determine clock source configuration from 'clocks' entry.
- * Added imx53 to compatible list, merged imx6q and imx6dl in the list.
- * Improve the algorism of reverse_bits().
- * Dropped the unneeded clk_put().
-v2->v3:
- * Removed a wrong tag from the commit of patch-1.
-v1->v2:
- * Dropped one applied patch for spdif dummy codec drivers.
- * Use generic DMA DT binding.
- * Let spdif controller driver calculate the clock div.
- * Added one optional clock source for spdif tx.
- * Reivsed documentation accordingly.
+On Wed, Jul 31, 2013 at 08:18:32AM +0200, Jean-Francois Moine wrote:
+> The kirkwood audio driver is used without DT in the Kirkwood machine.
+> This patch adds a DT compatible definition for use in other Marvell
+> machines such as the Armada 88AP510 (Dove).
+> 
+> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+> ---
+>  sound/soc/kirkwood/kirkwood-i2s.c        | 27 ++++++++++++++++------
+>  1 file changed, 20 insertions(+), 7 deletions(-)
 
-Nicolin Chen (2):
-  ASoC: fsl: Add S/PDIF CPU DAI driver
-  ASoC: fsl: Add S/PDIF machine driver
+This misses documentation for the DT conversion.  Documentation should be
+created at the same time as a driver is converted.  I think you should
+combine patches 3 and 4 together given that you add the documentation and
+change the DT compatible name you've given this driver in this patch in
+patch 4.
+> 
+> diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
+> index a13fffb..234b5a1 100644
+> --- a/sound/soc/kirkwood/kirkwood-i2s.c
+> +++ b/sound/soc/kirkwood/kirkwood-i2s.c
+> @@ -12,7 +12,6 @@
+>  
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+> -#include <linux/platform_device.h>
 
- .../devicetree/bindings/sound/fsl,spdif.txt        |   56 +
- .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +
- sound/soc/fsl/Kconfig                              |   14 +
- sound/soc/fsl/Makefile                             |    4 +
- sound/soc/fsl/fsl_spdif.c                          | 1277 ++++++++++++++++++++
- sound/soc/fsl/fsl_spdif.h                          |  224 ++++
- sound/soc/fsl/imx-spdif.c                          |  134 ++
- 7 files changed, 1738 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
- create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
- create mode 100644 sound/soc/fsl/fsl_spdif.c
- create mode 100644 sound/soc/fsl/fsl_spdif.h
- create mode 100644 sound/soc/fsl/imx-spdif.c
-
-
+Why are you getting rid of this include?  It still makes use of platform
+devices and the like, so it _should_ continue to include this.  Don't
+rely on implicit includes.
