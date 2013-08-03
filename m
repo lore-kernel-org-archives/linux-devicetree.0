@@ -1,61 +1,107 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from bear.ext.ti.com ([192.94.94.41]:44633 "EHLO bear.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755623Ab3HAO67 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 1 Aug 2013 10:58:59 -0400
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 0/4] ARM: DRA7-evm: USB host adaptation
-Date: Thu, 1 Aug 2013 17:58:50 +0300
-Message-ID: <1375369134-26398-1-git-send-email-rogerq@ti.com>
+Received: from mail-wi0-f179.google.com ([209.85.212.179]:45928 "EHLO
+	mail-wi0-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752586Ab3HCWFN (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 3 Aug 2013 18:05:13 -0400
+Message-ID: <51FD7E95.4040301@gmail.com>
+Date: Sun, 04 Aug 2013 00:05:09 +0200
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [RFC v3 11/13] [media] exynos5-is: Add Kconfig and Makefile
+References: <1375455762-22071-1-git-send-email-arun.kk@samsung.com> <1375455762-22071-12-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1375455762-22071-12-git-send-email-arun.kk@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: tony@atomide.com, rnayak@ti.com
-Cc: benoit.cousson@linaro.org, balbi@ti.com, george.cherian@ti.com, kishon@ti.com, dmurphy@ti.com, t-kristo@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+On 08/02/2013 05:02 PM, Arun Kumar K wrote:
+> Adds Kconfig and Makefile for exynos5-is driver files.
+>
+> Signed-off-by: Shaik Ameer Basha<shaik.ameer@samsung.com>
+> Signed-off-by: Kilyeon Im<kilyeon.im@samsung.com>
+> Signed-off-by: Arun Kumar K<arun.kk@samsung.com>
+> ---
+>   drivers/media/platform/Kconfig             |    1 +
+>   drivers/media/platform/Makefile            |    1 +
+>   drivers/media/platform/exynos5-is/Kconfig  |   19 +++++++++++++++++++
+>   drivers/media/platform/exynos5-is/Makefile |    7 +++++++
+>   4 files changed, 28 insertions(+)
+>   create mode 100644 drivers/media/platform/exynos5-is/Kconfig
+>   create mode 100644 drivers/media/platform/exynos5-is/Makefile
+>
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index 08de865..4b0475e 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -123,6 +123,7 @@ config VIDEO_S3C_CAMIF
+>
+>   source "drivers/media/platform/soc_camera/Kconfig"
+>   source "drivers/media/platform/exynos4-is/Kconfig"
+> +source "drivers/media/platform/exynos5-is/Kconfig"
+>   source "drivers/media/platform/s5p-tv/Kconfig"
+>
+>   endif # V4L_PLATFORM_DRIVERS
+> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+> index eee28dd..b1225e5 100644
+> --- a/drivers/media/platform/Makefile
+> +++ b/drivers/media/platform/Makefile
+> @@ -37,6 +37,7 @@ obj-$(CONFIG_VIDEO_SAMSUNG_S5P_TV)	+= s5p-tv/
+>
+>   obj-$(CONFIG_VIDEO_SAMSUNG_S5P_G2D)	+= s5p-g2d/
+>   obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC)	+= exynos-gsc/
+> +obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_MDEV)	+= exynos5-is/
+>
+>   obj-$(CONFIG_BLACKFIN)                  += blackfin/
+>
+> diff --git a/drivers/media/platform/exynos5-is/Kconfig b/drivers/media/platform/exynos5-is/Kconfig
+> new file mode 100644
+> index 0000000..99d5edf
+> --- /dev/null
+> +++ b/drivers/media/platform/exynos5-is/Kconfig
+> @@ -0,0 +1,19 @@
+> +config VIDEO_SAMSUNG_EXYNOS5_MDEV
 
-These patches adds support for USB host on the DRA7-evm board.
-The USB host port (USB2) is tested and works fine.
+Wouldn't VIDEO_SAMSUNG_EXYNOS5_CAMERA be a better symbol name ?
 
-The USB OTG port (USB1) is still not functional in OTG mode as it is missing
-ID pin routing and mailbox write. However, you can get just the host mode to
-work by explicitely setting this port to "host" mode.
+> +	bool "Samsung Exynos5 Media Device driver"
+> +	depends on VIDEO_V4L2&&  VIDEO_V4L2_SUBDEV_API&&  PM_RUNTIME&&  VIDEO_SAMSUNG_EXYNOS4_IS
 
-Patches are based on v3.11-rc3 dra7 baseport tree [1], with balbi/next
-merged on top and the control-usb multiple instance support [2].
+nit: It might make sense to put "depends on VIDEO_SAMSUNG_EXYNOS4_IS"
+      in a separate line so it stands out a bit.
 
-NOTE: It also needs a patch [3] which allows us to operate at lower then
-Super Speed mode. This patch is still in transition.
+> +	help
+> +	  This is a v4l2 based media controller driver for
+> +	  Exynos5 SoC.
+> +
+> +if VIDEO_SAMSUNG_EXYNOS5_MDEV
+> +
+> +config VIDEO_SAMSUNG_EXYNOS5_FIMC_IS
+> +	tristate "Samsung Exynos5 SoC FIMC-IS driver"
+> +	depends on I2C&&  OF
+> +	depends on VIDEO_EXYNOS4_FIMC_IS
+> +	select VIDEOBUF2_DMA_CONTIG
+> +	help
+> +	  This is a V4L2 driver for Samsung Exynos5 SoC series Imaging
+> +	  Subsystem known as FIMC-IS.
+> +
+> +endif #VIDEO_SAMSUNG_EXYNOS5_MDEV
+> diff --git a/drivers/media/platform/exynos5-is/Makefile b/drivers/media/platform/exynos5-is/Makefile
+> new file mode 100644
+> index 0000000..c4e37e0
+> --- /dev/null
+> +++ b/drivers/media/platform/exynos5-is/Makefile
+> @@ -0,0 +1,7 @@
+> +ccflags-y += -Idrivers/media/platform/exynos4-is
+> +exynos5-fimc-is-objs := fimc-is-core.o fimc-is-isp.o fimc-is-scaler.o
+> +exynos5-fimc-is-objs += fimc-is-pipeline.o fimc-is-interface.o fimc-is-sensor.o
+> +exynos-mdevice-objs := exynos5-mdev.o
+> +
+> +obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_FIMC_IS) += exynos5-fimc-is.o
+> +obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_MDEV) += exynos-mdevice.o
 
-Patches in this series can be obtained from branch
- usbhost-dra7-3.11-rc3
-in git tree
- git://github.com/rogerq/linux.git
-
-cheers,
--roger
-
-[1] - dra7 base tree
-	https://github.com/lokeshvutla/linux/tree/dra7-3.11-rc3-base
-[2] - multiple control-usb instances
-	https://github.com/rogerq/linux/tree/usb-control-module
-[3] - usb: dwc3: core: make USB3 PHY optional
-	https://github.com/rogerq/linux/commit/290955f6b4d1f2d6d466732c6ec92d009500fb67
-
-Roger Quadros (4):
-  CLK: ti: dra7: Initialize USB_DPLL
-  ARM: dts: dra7: Add USB related nodes
-  dts: dra7-evm: add USB support
-  ARM: DRA7: hwmod: Add SYSCONFIG for usb_otg_ss
-
- arch/arm/boot/dts/dra7-evm.dts            |   22 +++++
- arch/arm/boot/dts/dra7.dtsi               |  136 +++++++++++++++++++++++++++++
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c |   12 +++
- drivers/clk/omap/clk-7xx.c                |   11 +++
- 4 files changed, 181 insertions(+), 0 deletions(-)
-
--- 
-1.7.4.1
-
+--
+Thanks,
+Sylwester
