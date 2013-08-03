@@ -1,160 +1,95 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [Patch V2 4/4] ARM: dts: AM33XX: update rtc node compatibility
-Date: Fri, 2 Aug 2013 13:40:33 +0100
-Message-ID: <20130802124033.GL2884@e106331-lin.cambridge.arm.com>
-References: <1372841225-18813-1-git-send-email-gururaja.hebbar@ti.com>
- <1372841225-18813-5-git-send-email-gururaja.hebbar@ti.com>
- <51F749B0.7020802@ti.com>
- <20130730145501.GA29859@e106331-lin.cambridge.arm.com>
- <51F7E7FA.3080702@ti.com>
- <20130801170537.GF8095@e106331-lin.cambridge.arm.com>
- <51FB92F8.9020801@ti.com>
- <20130802112018.GI2884@e106331-lin.cambridge.arm.com>
- <51FB9C77.3090202@ti.com>
+From: Huang Shijie <shijie8@gmail.com>
+Subject: Re: [PATCH] drivers: mtd: devices: make m25p80 dt adapted.
+Date: Fri, 2 Aug 2013 22:22:17 -0400
+Message-ID: <20130803022215.GA7627@gmail.com>
+References: <1375426170-31609-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51FB9C77.3090202@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gururaja Hebbar <gururaja.hebbar@ti.com>
-Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "tony@atomide.com" <tony@atomide.com>, "benoit.cousson@gmail.com" <benoit.cousson@gmail.com>, Sekhar Nori <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "vaibhav.bedia@ti.com" <vaibhav.bedia@ti.com>, "benoit.cousson@linaro.org" <benoit.cousson@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1375426170-31609-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>
+Cc: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, linux-mtd@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, pekon@ti.com, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 02, 2013 at 12:48:07PM +0100, Gururaja Hebbar wrote:
-> On 8/2/2013 4:50 PM, Mark Rutland wrote:
-> > On Fri, Aug 02, 2013 at 12:07:36PM +0100, Gururaja Hebbar wrote:
-> >> On 8/1/2013 10:35 PM, Mark Rutland wrote:
-> >>> On Tue, Jul 30, 2013 at 05:21:14PM +0100, Sekhar Nori wrote:
-> >>>> On 7/30/2013 8:25 PM, Mark Rutland wrote:
-> >>>>> On Tue, Jul 30, 2013 at 06:05:52AM +0100, Gururaja Hebbar wrote:
-> >>>>>> Hi,
-> >>>>>>
-> >>>>>> On 7/3/2013 2:17 PM, Hebbar Gururaja wrote:
-> >>>>>>> Since AM33xx  RTC IP has RTC_IRQWAKEEN to support Alarm Wake-up.
-> >>>>>>>
-> >>>>>>> Update the rtc compatible property to "ti,am3352-rtc" to enable handling
-> >>>>>>> of this feature inside rtc-omap driver.
-> >>>>>>
-> >>>>>> The other 2 rtc driver related patches have been pulled up. If you have
-> >>>>>> no comments, can you please pull this up.
-> >>>>>>
-> >>>>>> Regards
-> >>>>>> Gururaja
-> >>>>>>
-> >>>>>>>
-> >>>>>>> Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
-> >>>>>>> ---
-> >>>>>>> :100644 100644 77aa1b0... dde180a... M	arch/arm/boot/dts/am33xx.dtsi
-> >>>>>>>     arch/arm/boot/dts/am33xx.dtsi |    2 +-
-> >>>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>>>>>
-> >>>>>>> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> >>>>>>> index 77aa1b0..dde180a 100644
-> >>>>>>> --- a/arch/arm/boot/dts/am33xx.dtsi
-> >>>>>>> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> >>>>>>> @@ -297,7 +297,7 @@
-> >>>>>>>     		};
-> >>>>>>>
-> >>>>>>>     		rtc@44e3e000 {
-> >>>>>>> -			compatible = "ti,da830-rtc";
-> >>>>>>> +			compatible = "ti,am3352-rtc";
-> >>>>>
-> >>>>> Given that this is backwards compatible with the old binding, it would
-> >>>>> be nicer to have this as:
-> >>>>>
-> >>>>> 	compatible = "ti,am3352-rtc", "ti,da830-rtc";
-> >>>>>
-> >>>>> We must get into the habit of changing dts files in a
-> >>>>> backwards-compatible fashion.
-> >>>>
-> >>>> Right, I suggested this when v1 was posted. It turns out the current
-> >>>> kernel does not handle the compatilble list correctly and the string
-> >>>> selected actually depends on the order in which it appears in match
-> >>>> table in driver instead.
-> >>>>
-> >>>> I saw there were patches being discussed to fix this issue, but until
-> >>>> that is fixed, we cannot really use what you (and I before) suggested.
-> >>>
-> >>> A temporary solution would be to list the "ti,am3352-rtc" first in the
-> >>> of_match_table kernel-side.
-> >>
-> >> If above method is followed, then it would cause trouble on davinci
-> >> platform because this rtc-omap driver is also used by Davinci platform.
-> >> On davinci Plaform the driver would match with "ti,am3352-rtc" for
-> >> compatible.
-> >
-> > Sorry, I don't follow. Does the davinci dt have "ti,am3352-rtc" in it's
-> > compatible string list?
+On Fri, Aug 02, 2013 at 12:19:30PM +0530, Sourav Poddar wrote:
+> This patch helps gettimg m25p80 probed through dt.
+without this patch, we also can get the right SPI NOR type from the
+dt entry.
+
+Could you explain why we should get the m25p80 probed though the DT?
+or give an example.
+
+
+thanks
+Huang Shijie
+> To get the id of the exact flash type supported for dt case,
+> data->type is getting parsed from dt entry.
 > 
-> no no. Davinci .dts uses "ti,da830-rtc".
-
-Ok.
-
+> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> ---
+>  drivers/mtd/devices/m25p80.c |   22 +++++++++++++++++++++-
+>  1 files changed, 21 insertions(+), 1 deletions(-)
 > 
-> I was saying if we reverse the order of "of_device_id" structure in 
-> rtc-omap driver, then it would work nicely for am335x but will cause 
-> trouble on davinci platform.
-
-I don't understand. If we place "ti,am3352-rtc" first in the list, it
-won't be match the davinci dts compatible string, and the code will go
-over the of_device_id entires until it finds the "ti,da830-rtc" entry
-used by davinci.
-
-What problem would this cause, and why?
-
-Thanks,
-Mark.
-
-> 
-> >
-> > If so, and it's not compatible, the dts is wrong.
-> >
-> > If not, then we won't use the behaviour specific to "ti,am3352-rtc", and
-> > there's no problem.
-> >
-> > What trouble would this cause?
-> >
-> > Thanks,
-> > Mark.
-> >
-> >>
-> >> Regards
-> >> Gururaja
-> >>
-> >>> That way you can keep the old compatible
-> >>> string in the dts compatible list, and maintain backwards compatibilty
-> >>> with older kernels.
-> >>>
-> >>> Later if the way Linux matches compatible strings is changed, this
-> >>> shouldn't break the probe order, and the of_match_table order could be
-> >>> changed.
-> >>>
-> >>> Have I missed something?
-> >>>
-> >>> Thanks,
-> >>> Mark.
-> >>>
-> >>
-> >>
-> >> _______________________________________________
-> >> linux-arm-kernel mailing list
-> >> linux-arm-kernel@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >>
+> diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+> index 33098bf..cbfb9b3 100644
+> --- a/drivers/mtd/devices/m25p80.c
+> +++ b/drivers/mtd/devices/m25p80.c
+> @@ -855,6 +855,13 @@ static const struct spi_device_id m25p_ids[] = {
+>  };
+>  MODULE_DEVICE_TABLE(spi, m25p_ids);
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id m25p_dt_ids[] = {
+> +	{ .compatible = "m25p80", },
+> +	{ /* sentinel */ }
+> +};
+> +#endif
+> +
+>  static const struct spi_device_id *jedec_probe(struct spi_device *spi)
+>  {
+>  	int			tmp;
+> @@ -909,6 +916,7 @@ static int m25p_probe(struct spi_device *spi)
+>  	unsigned			i;
+>  	struct mtd_part_parser_data	ppdata;
+>  	struct device_node __maybe_unused *np = spi->dev.of_node;
+> +	int len;
+>  
+>  #ifdef CONFIG_MTD_OF_PARTS
+>  	if (!of_device_is_available(np))
+> @@ -920,7 +928,18 @@ static int m25p_probe(struct spi_device *spi)
+>  	 * a chip ID, try the JEDEC id commands; they'll work for most
+>  	 * newer chips, even if we don't recognize the particular chip.
+>  	 */
+> -	data = spi->dev.platform_data;
+> +	if (!np) {
+> +		data = spi->dev.platform_data;
+> +	} else {
+> +		data = devm_kzalloc(&spi->dev, sizeof(*data), GFP_KERNEL);
+> +		if (!data)
+> +			return -ENOMEM;
+> +
+> +		data->type = (char *) of_get_property(np, "type", &len);
+> +		if (!data->type || strlen(data->type) > len)
+> +			return -ENODEV;
+> +	}
+> +
+>  	if (data && data->type) {
+>  		const struct spi_device_id *plat_id;
+>  
+> @@ -1098,6 +1117,7 @@ static struct spi_driver m25p80_driver = {
+>  	.driver = {
+>  		.name	= "m25p80",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = of_match_ptr(m25p_dt_ids),
+>  	},
+>  	.id_table	= m25p_ids,
+>  	.probe	= m25p_probe,
+> -- 
+> 1.7.1
 > 
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
