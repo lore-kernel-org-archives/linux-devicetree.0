@@ -1,52 +1,64 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] iio: lps331ap: Add support for DT
-Date: Sun, 04 Aug 2013 17:22:03 +0100
-Message-ID: <51FE7FAB.8050608@kernel.org>
-References: <1374240981-13560-1-git-send-email-j.anaszewski@samsung.com> <1374240981-13560-2-git-send-email-j.anaszewski@samsung.com> <51FE4117.3040404@kernel.org> <51FE4267.2090409@kernel.org> <20130804120854.GV2911@lukather>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 7/8] ARM: dts: wm8994: Add wm8994 support on smdk5420
+Date: Sun, 4 Aug 2013 18:22:05 +0100
+Message-ID: <20130804172205.GT9858@sirena.org.uk>
+References: <1374845812-7803-1-git-send-email-padma.v@samsung.com>
+ <1374845812-7803-8-git-send-email-padma.v@samsung.com>
+ <20130726151902.GL9858@sirena.org.uk>
+ <CAAgF-Be8SNxTZv1yFCwH6yJ-O_3R4reh=3y+pSCLJYW7S9TkUg@mail.gmail.com>
+ <CAAgF-Bexp_fGT8KV+TQ0_kZLJBtq7UK=TG4eYRA6qpTSL+scxg@mail.gmail.com>
+ <20130729134311.GX9858@sirena.org.uk>
+ <CAAgF-BeDYm1jNJpkyfTeS5HjpEuaHiumFq+D_PNs=QYG6-Px+w@mail.gmail.com>
+ <CAAgF-BcPT24LcQe5SUyOP3qHThXqZ1mVts=_cnww3EAUYEYikw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130804120854.GV2911@lukather>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, denis.ciocca-qxv4g6HH51o@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b0cBboSxZFnoy/DE"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAgF-BcPT24LcQe5SUyOP3qHThXqZ1mVts=_cnww3EAUYEYikw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padma Venkat <padma.kvr@gmail.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, Kukjin Kim <kgene.kim@samsung.com>, abrestic@chromium.org, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/04/13 13:08, Maxime Ripard wrote:
-> Hi Jonathan,
-> 
-> On Sun, Aug 04, 2013 at 01:00:39PM +0100, Jonathan Cameron wrote:
->> On 08/04/13 12:55, Jonathan Cameron wrote:
->>> On 07/19/13 14:36, Jacek Anaszewski wrote:
->>>> This patch adds DT support for the lps331ap barometer sensor.
->>>> 
->>>> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> Signed-off-by: Kyungmin Park
->>>> <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> This makes sense to me and looks similar to that in existing bindings hence,
->>> 
->>> Applied to the togreg branch of git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
->> Actually I've backed this change out as I've just read a few more emails down my backlog and found a long
->> discussion of it when it got pulled into another patch set.  Will review that discussion before making any
->> decisions on this one.
-> 
-> Also, a new process begin to emerge, and now, every new bindings should be acked by the new device tree
-> maintainers. I'm not sure the discussion on the exact process has been settled, so that's probably why not all the
-> maintainers are aware of that, but this ACK is (or will be) required for every new binding that comes in, and this
-> should be enforced by all maintainers.
-> 
-> The underlying thinking is that DT bindings should be a stable ABI, and as such be properly reviewed, instead of
-> just being looked at by the other maintainers that are often not interested or just don't really know about DT at
-> all.
-> 
-> You can see parts of this discussion here: 
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-July/038275.html 
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-July/038264.html 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/186420.html
-> 
-Thanks for the heads up. I'd picked up on this a little via LWN. Hopefully
-the process will become clear shortly.
 
+--b0cBboSxZFnoy/DE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Fri, Aug 02, 2013 at 04:15:28PM +0530, Padma Venkat wrote:
 
-Jonathan
+> Sorry for giving some what wrong info here. I verified the schemata.
+> There is a switch on the board which can be used to select the input
+> clock of codec MCLK1. We can either select oscillator clock which is
+> 16.9MHz which is on the board or XCLKOUT which is from PMU or
+> i2scdclk(codec slave mode). Right now we are using oscillator clock as
+> input clock to MCLK1.
+
+I agree that going with whatever the board ships with as default seems
+sensible.  Might be worth putting in a comment with the XCLKOUT option
+saying how it maps into the control on the board.
+
+--b0cBboSxZFnoy/DE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR/o26AAoJELSic+t+oim9BUwP/2su3IKsZ2CtanNIMmfN0C5N
+y1ZtRbpJ9Asecsnvugtb3geZXTjPVLz5FHVc8/p2SbU+qxGObPbyH0GNi3pHJjgG
+fIxFhmIO2qPUBetKdgpJjD+LInI+yRK5oOrTnE6ObfCzaHedM1xehAeTM5APwHLf
+TuHkUnNxie/LnTaNP/uQwLQ8yOH43IA6oAu5QdppbvLLMipTN1aILc8DpEfEhGq7
+f/IlJWY+aBE1i8lhsizHQvl8XeRadMqXpjuvAzJ2RNjjy38EJ28LzEHhAQrRtMPt
+TyjSaB77qfxlW7Ry10UDHf6g4wQwl66doZ1z30du9oAOL00jmDc2wg1175TAlbFr
+0aOT4beEMamjZ4PmeoHhlh7Ow1Ml8r6Ya9IFy/bX7OCHjR1Ru6dIcs88PNIrdH+U
++JeRqI9T72Alw68m1wS9BOfJUZh5kF2PVpEFN1XQAL4ea0WpZKGcSdHj9rlozMag
+TtYotc84440h+x6WSa7KzkgPztxYWdiF+k7WKOJTYdUrOd3Q4GK9+p12Cdz09rRf
+1pRt/j41pr7SupnxnE1itSLcAiIq06ndPysRFIjLEhUHX10/QQelCCxDdnaRIJ+W
+omOBBC6KpZ31awaYYXrEFyWmPd7Zq/+41umAX9Ypibh0cz3p2ZN7AwSo4Rpkcrhm
+u2UjfpAVDsmLzrpXWvIw
+=UCbp
+-----END PGP SIGNATURE-----
+
+--b0cBboSxZFnoy/DE--
