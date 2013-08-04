@@ -1,70 +1,72 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:51562 "EHLO
-	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1755863Ab3HFQSk (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 12:18:40 -0400
-Date: Tue, 6 Aug 2013 17:18:05 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] of: add vendor prefix for Altera Corp.
-Message-ID: <20130806161804.GB26996@e106331-lin.cambridge.arm.com>
-References: <1374867540-9477-1-git-send-email-dinguyen@altera.com>
- <51F2D686.4090104@wwwdotorg.org>
- <20130728044125.60F3A3E08FE@localhost>
- <20130730061028.GM29970@voom.fritz.box>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:34156 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753423Ab3HDTlT (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sun, 4 Aug 2013 15:41:19 -0400
+Date: Sun, 4 Aug 2013 20:40:53 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130804194053.GV9858@sirena.org.uk>
+References: <20130731081858.53413597@armhf>
+ <20130803134855.GZ23006@n2100.arm.linux.org.uk>
+ <20130803182636.012cccb2@armhf>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="isYHVKADKR45LecX"
 Content-Disposition: inline
-In-Reply-To: <20130730061028.GM29970@voom.fritz.box>
-Content-Language: en-US
+In-Reply-To: <20130803182636.012cccb2@armhf>
+Subject: Re: [PATCH v3 4/4] ASoC: kirkwood: change kirkwood-i2s to
+ mvebu-pcm-audio and DT doc
 Sender: devicetree-owner@vger.kernel.org
-To: "dinguyen@altera.com" <dinguyen@altera.com>, David Gibson <david@gibson.dropbear.id.au>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, "dinh.linux@gmail.com" <dinh.linux@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Dinh,
 
-Apologies for the delay on this.
+--isYHVKADKR45LecX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 30, 2013 at 07:10:28AM +0100, David Gibson wrote:
-> On Sat, Jul 27, 2013 at 10:41:25PM -0600, Grant Likely wrote:
-> > On Fri, 26 Jul 2013 14:05:26 -0600, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> > > On 07/26/2013 01:39 PM, dinguyen@altera.com wrote:
-> > > 
-> > > > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > 
-> > > > +altr	Altera Corp.
-> > > 
-> > > In the context of Marvel(?) wanting to change between a longer and
-> > > stock-ticker vendor name, there was some discussion re: whether we had
-> > > decided not to use stock tickers any more. Is there still consensus that
-> > > we should? If so, I have no problem with this patch, but I wanted to
-> > > make sure everyone was on the same page.
-> > 
-> > Stock ticker names are just fine by me. But once set they should not
-> > change.
-> 
-> The old recommendation from OF working group was that vendor prefixes
-> could be either ticker symbols in all caps (e.g. "AAPL"), or some
-> other string in lower case.
-> 
-> We've mostly only used the second option.
+On Sat, Aug 03, 2013 at 06:26:36PM +0200, Jean-Francois Moine wrote:
+> Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
 
-Given that all the vendor prefixes we have (even those that are based on 
-stock-ticker symbols) are lower case, I'd be happier with the lower-case
-"altr" in the original patch.
+> > >  static struct of_device_id kirkwood_i2s_of_match[] =3D {
+> > > -	{ .compatible =3D "marvell,kirkwood-i2s" },
+> > > +	{ .compatible =3D "marvell,mvebu-pcm-audio" }, =20
 
->From the sounds of it, no-one wants to push for "altera", and we already
-have bindings with "altr", so I guess "altr" it is:
+> > You've only just introduced "marvell,kirkwood-i2s" in the previous patc=
+h.
+> > Why introduce something and then immediately change its name?  This mak=
+es
+> > no sense what so ever.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+> 2 patches for 2 different purposes. The first one just adds the DT
+> support. It is enough for DT based kernels. But some people wanted the
+> device name to be changed to 'mvebu'. So, the second patch.
 
-I note that there are some bindings with "altr" and some with "ALTR",
-though "altr" is more common. It would be nice if the binding documents
-were updated mention "ALTR" being deprecated, but useful for
-compatibility, hopefully this will lead to less confusion in future.
+There is no need for the DT name to be connected to the Linux internal
+platform device name, just use the final name to start with.
 
-It would also be nice for the drivers dealing with "ALTR" to be updated
-to also support "altr" (without removing support for "ALTR").
+--isYHVKADKR45LecX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks,
-Mark.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR/q5CAAoJELSic+t+oim92rYP/A9m6JvaQfFjiPOE8C/mZLxv
+yIu9Nzg8IEs2+HLgSVYYEQtf3Z/wBHyk69UGuWfWYLmJ9lGaDznQ6SKgPk4sq3zY
+BixiFv2U1Gt1A6kwSJ3SyhHU+kpEwIqCWQtfw25Q7jKzaoFrB71yfYNU2lN2htEl
+8xd+pWSPu9xqQSg24fgq9mRyqA8+CTc2PJUSz+/99FdOL3cFgGLR41v9ZUxmZGmC
+Fw//SxrIetx3R/iKHpCK6lxeDoqYyS4NvOWI+Hn2xHMvDLC/19R+PQfULlU6gb4X
+bJBU1vXkXjXtrBEdNPLy42SoGl5glLIzzAG34bUu9M1g4LcMKHqp2FLgXlnw6gyM
+EsU+6iQGtpBa46McVOyCuVwEFbb6zF8xsHnPGTe0R0VyhU2mValfMLz1Ab515rOg
+SDnQiLwOvuBh64IWofsyiyVhA/iJ4mU1iFGW7YO3bGznMC8w+2TBAYyXchF7U52W
+x/3AL9BmcJvrC1OUDo88HLu2GRHhiBIb2aF9V3rJTxyJVNVo+Uh8bL0KUep5zdrh
+mLLKqP6ji3CSh6IlnboEeze8jFxZNNBcvXRkO1lE8DOBkrzpZJ6M3tNcgNtRGFBg
+iox2x698YVD75q3BB0HStBoqJD9nb/5xpnOxfLbsYq5GVbP1a7ho50fsWyLjgjiA
+JCrt3nM8ieAkNv4l1c99
+=NnIB
+-----END PGP SIGNATURE-----
+
+--isYHVKADKR45LecX--
