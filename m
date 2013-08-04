@@ -1,94 +1,54 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Subject: Re: [PATCH v2] iio: lps331ap: Add support for DT
-Date: Sun, 4 Aug 2013 14:08:54 +0200
-Message-ID: <20130804120854.GV2911@lukather>
-References: <1374240981-13560-1-git-send-email-j.anaszewski@samsung.com>
- <1374240981-13560-2-git-send-email-j.anaszewski@samsung.com>
- <51FE4117.3040404@kernel.org>
- <51FE4267.2090409@kernel.org>
+Date: Sun, 04 Aug 2013 15:30:12 +0200
+Message-ID: <51FE5764.5090304@metafoo.de>
+References: <1374240981-13560-1-git-send-email-j.anaszewski@samsung.com> <1374240981-13560-2-git-send-email-j.anaszewski@samsung.com> <51FE4117.3040404@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nSY6dmU9u4MMxp1o"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51FE4267.2090409-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <51FE4117.3040404-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, denis.ciocca-qxv4g6HH51o@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, denis.ciocca-qxv4g6HH51o@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 08/04/2013 01:55 PM, Jonathan Cameron wrote:
+> On 07/19/13 14:36, Jacek Anaszewski wrote:
+>> This patch adds DT support for the lps331ap barometer
+>> sensor.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> This makes sense to me and looks similar to that in existing bindings
+> hence,
+> 
+> Applied to the togreg branch of git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
+> 
+> Note I am one of those maintainers who has very limited knowledge of device
+> tree so am basing this decision on the 'it looks like existing mappings' rather
+> than any deep understanding.
 
---nSY6dmU9u4MMxp1o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The bindings are not OK.
 
-Hi Jonathan,
+[...]
+>> +  - drdy-int-pin : redirect DRDY on pin INT1 (1) or pin INT2 (2) (u8)
 
-On Sun, Aug 04, 2013 at 01:00:39PM +0100, Jonathan Cameron wrote:
-> On 08/04/13 12:55, Jonathan Cameron wrote:
-> > On 07/19/13 14:36, Jacek Anaszewski wrote:
-> >> This patch adds DT support for the lps331ap barometer
-> >> sensor.
-> >>
-> >> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > This makes sense to me and looks similar to that in existing bindings
-> > hence,
-> >=20
-> > Applied to the togreg branch of git://git.kernel.org/pub/scm/linux/kern=
-el/git/jic23/iio.git
-> Actually I've backed this change out as I've just read a few more emails =
-down
-> my backlog and found a long discussion of it when it got pulled into anot=
-her
-> patch set.  Will review that discussion before making any decisions on th=
-is one.
+This is a vendor specific property, so it needs a vendor prefix. Also
+abbreviations are kind of frowned upon for dt property names. So
+'st,data-ready-interrupt-pin' is probably a better name.
 
-Also, a new process begin to emerge, and now, every new bindings should
-be acked by the new device tree maintainers. I'm not sure the discussion
-on the exact process has been settled, so that's probably why not all
-the maintainers are aware of that, but this ACK is (or will be) required
-for every new binding that comes in, and this should be enforced by all
-maintainers.
-
-The underlying thinking is that DT bindings should be a stable ABI, and
-as such be properly reviewed, instead of just being looked at by the
-other maintainers that are often not interested or just don't really
-know about DT at all.
-
-You can see parts of this discussion here:
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-July/038275.html
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-July/038264.html
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-July/186420.html
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---nSY6dmU9u4MMxp1o
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR/kRWAAoJEBx+YmzsjxAg8Y8QAMITL5VGbEGT2nSDmZpOc4S+
-cagQfXKZElIgS/AoIyAE7oBZtAPu4oUPBCJlqLMVAA0VJd3l5XXjcuj8MbMEqiTW
-1Mc5775rhlLfZZLEoi/JsB22zcx9As73McemQnK/HdfFQn5yVMzlQdyfooKRD9r6
-ZVumO/6Y9fZUHM3Vd/NbIRN4pB4vSyxtqrzlxeSVnDenkIV5DqePG9jdWwrc75gu
-+sSfnm83tvXSRPAiLsOfkZB2z+uPbFGsDpl44/WsQf/pn2mOIZeIkXtOUDNZCxD5
-jkSjRvcFrGKw14TAkmCq5/p61Fq/FPDG40nTcRYP/fzd3aW6fTjasZDb60HciVUz
-x//dTty1CZGiVdhSkcY56b5zBLzgcoVLYbeuNjObbk7AvJyRuvTkqbOQ0Bmjl8A/
-KVtYrDbCOj8jC9dwBEiaU+fM1Fk0kIR855z0ohqsMaAiiZ2SPXSjxb6FsD+RvDVE
-fJ145SHQJdehaiu1rYWAAng6xiTWv90M40n3N/NG6PYF2OPXiwrgzV75KvjKmtgM
-/XhEGoffcotf5Cw51KOTGqdkFtVvg3hBspRfLBmQac+CTy1f58sdrSVMPQIDBYjb
-AyD1liCZi98+NUUSWEYI1GZivPyyzV2xdjL+cMIMJlxtWgGboiw8zZ7Vpyi2T4wc
-3Hsq2cbD6WfJ6ZbyyzIp
-=a+5m
------END PGP SIGNATURE-----
-
---nSY6dmU9u4MMxp1o--
+>> +  - interrupt-parent : phandle to the interrupt map subnode
+>> +  - interrupts : interrupt mapping for LPS331AP interrupt sources:
+>> +		 2 sources: 0 - data ready, 1 - threshold event
+>> +  - irq-map : irq sub-node defining interrupt map
+>> +	      (all properties listed below are required):
+>> +      - #interrupt-cells : should be 1
+>> +      - #address-cells : should be 0
+>> +      - #size-cells : should be 0
+>> +      - interrupt-map : table of entries consisting of three child elements:
+>> +	  - unit_interrupt_specifier - 0 : data ready, 1 : threshold event
+>> +	  - interrupt parent phandle
+>> +	  - parent unit interrupt specifier consisiting of two elements:
+>> +	      - index of the interrupt within the controller
+[...]
