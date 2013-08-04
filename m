@@ -1,54 +1,120 @@
 From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v2] iio: lps331ap: Add support for DT
-Date: Sun, 04 Aug 2013 15:30:12 +0200
-Message-ID: <51FE5764.5090304@metafoo.de>
-References: <1374240981-13560-1-git-send-email-j.anaszewski@samsung.com> <1374240981-13560-2-git-send-email-j.anaszewski@samsung.com> <51FE4117.3040404@kernel.org>
+Subject: Re: [PATCH 2/2] iio: add Bosch BMA180 acceleration sensor driver
+Date: Sun, 04 Aug 2013 15:45:48 +0200
+Message-ID: <51FE5B0C.4070206@metafoo.de>
+References: <1375109893-7917-1-git-send-email-x0199363@ti.com> <1375109893-7917-2-git-send-email-x0199363@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51FE4117.3040404-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1375109893-7917-2-git-send-email-x0199363-l0cyMroinI0@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, denis.ciocca-qxv4g6HH51o@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, l.czerwinski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Oleksandr Kravchenko <x0199363-l0cyMroinI0@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org, srinivas.pandruvada-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/04/2013 01:55 PM, Jonathan Cameron wrote:
-> On 07/19/13 14:36, Jacek Anaszewski wrote:
->> This patch adds DT support for the lps331ap barometer
->> sensor.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> This makes sense to me and looks similar to that in existing bindings
-> hence,
+On 07/29/2013 04:58 PM, Oleksandr Kravchenko wrote:
+> From: Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
 > 
-> Applied to the togreg branch of git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
+> This patch adds IIO driver for Bosch BMA180 triaxial
+> acceleration sensor.
+> http://omapworld.com/BMA180_111_1002839.pdf
 > 
-> Note I am one of those maintainers who has very limited knowledge of device
-> tree so am basing this decision on the 'it looks like existing mappings' rather
-> than any deep understanding.
+> Signed-off-by: Oleksandr Kravchenko <o.v.kravchenko-hExfYMNmJl/Cnp4W7fqMDg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/accel/bma180.txt       |   53 +++
+>  drivers/iio/accel/Kconfig                          |   10 +
+>  drivers/iio/accel/Makefile                         |    2 +
+>  drivers/iio/accel/bma180.c                         |  462 ++++++++++++++++++++
+>  4 files changed, 527 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bma180.txt
+>  create mode 100644 drivers/iio/accel/bma180.c
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/bma180.txt b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+> new file mode 100644
+> index 0000000..7c13c84
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+> @@ -0,0 +1,53 @@
+> +* Bosch BMA180 triaxial acceleration sensor
+> +
+> +http://omapworld.com/BMA180_111_1002839.pdf
+> +
+> +Required properties:
+> +
+> +  - compatible : should be "bosch,bma180"
+> +  - reg : the I2C address of the sensor
+> +
+> +Optional properties:
+> +
+> +  - interrupt-parent : should be the phandle for the interrupt controller
+> +
+> +  - interrupts : interrupt mapping for GPIO IRQ, it shuld by configured with
+> +		flags IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING
+> +
+> +  - range : select the full scale acceleration range
+> +		0 : -1g..+1g
+> +		1 : -1.5g..+1.5g
+> +		2 : -2g..+2g
+> +		3 : -3g..+3g
+> +		4 : -4g..+4g
+> +		5 : -8g..+8g
+> +		6 : -16g..+16g
+> +
+> +  - bw : select bandwidth bandwidth
+> +		0 : 10Hz
+> +		1 : 20Hz
+> +		2 : 40Hz
+> +		3 : 75Hz
+> +		4 : 150Hz
+> +		5 : 300Hz
+> +		Don't use bandwidth frequency more than 300Hz couse it
+> +		influences the frequency of generating new data interrupts
+> +		and i2c reading phase can be longer than pheriod of interrupt
+> +		generation.
+> +
+> +  - mode_config : 0 - select low noise mode, 1 - select low power mode
+> +
+> +  - fuzz : specifies fuzz value that is used to filter noise from the event stream
+> +
 
-The bindings are not OK.
+All the four properties above are vendor specific, so they need a vendor
+prefix. Also no underscores in property names and no abbreviations. Also I
+wonder if some of them should rather be runtime configurable, like range and
+bandwidth,
 
+> +Example:
+> +
+> +bma180@40 {
+> +	compatible = "bosch,bma180";
+> +	reg = <0x40>;
+> +	interrupt-parent = <&gpio6>;
+> +	interrupts = <18 (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_EDGE_RISING)>;
+> +	range = <2>;
+> +	bw = <0>;
+> +	mode_config = <1>;
+> +	fuzz = <555>;
+> +};
 [...]
->> +  - drdy-int-pin : redirect DRDY on pin INT1 (1) or pin INT2 (2) (u8)
+> +static int bma180_read_raw(struct iio_dev *indio_dev,
+> +		struct iio_chan_spec const *chan, int *val, int *val2,
+> +		long mask)
+> +{
+> +	struct bma180_data *data = iio_priv(indio_dev);
+> +	long tmp = ((s16)data->acc_reg[chan->channel] >> 2)
+> +		* bma180_range_table[data->range].ratio;
 
-This is a vendor specific property, so it needs a vendor prefix. Also
-abbreviations are kind of frowned upon for dt property names. So
-'st,data-ready-interrupt-pin' is probably a better name.
+> +
+> +	if (data->acc_reg[chan->channel] < 0)
+> +		return data->acc_reg[chan->channel];
+> +
+> +	*val = tmp / 1000000;
+> +	*val2 = (tmp % 1000000);
+> +
 
->> +  - interrupt-parent : phandle to the interrupt map subnode
->> +  - interrupts : interrupt mapping for LPS331AP interrupt sources:
->> +		 2 sources: 0 - data ready, 1 - threshold event
->> +  - irq-map : irq sub-node defining interrupt map
->> +	      (all properties listed below are required):
->> +      - #interrupt-cells : should be 1
->> +      - #address-cells : should be 0
->> +      - #size-cells : should be 0
->> +      - interrupt-map : table of entries consisting of three child elements:
->> +	  - unit_interrupt_specifier - 0 : data ready, 1 : threshold event
->> +	  - interrupt parent phandle
->> +	  - parent unit interrupt specifier consisiting of two elements:
->> +	      - index of the interrupt within the controller
+This doesn't look as if the device needs a special conversion formula. Just
+expose the raw value and ratio as the scale.
+
+> +	return IIO_VAL_INT_PLUS_MICRO;
+> +}
 [...]
