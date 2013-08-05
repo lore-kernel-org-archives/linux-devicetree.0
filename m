@@ -1,16 +1,16 @@
 From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH v10] reset: Add driver for gpio-controlled reset pins
-Date: Mon, 5 Aug 2013 16:13:51 +0100
-Message-ID: <20130805151351.GB13091@e106331-lin.cambridge.arm.com>
+Date: Mon, 5 Aug 2013 16:35:16 +0100
+Message-ID: <20130805153516.GC13091@e106331-lin.cambridge.arm.com>
 References: <1374139586-6344-1-git-send-email-p.zabel@pengutronix.de>
  <20130802092823.GA2884@e106331-lin.cambridge.arm.com>
- <51FC11FF.4060604@wwwdotorg.org>
+ <1375687936.4000.21.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <51FC11FF.4060604@wwwdotorg.org>
+In-Reply-To: <1375687936.4000.21.camel@pizza.hi.pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,107 +20,87 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "Rafael J. Wysocki" <rjw@sisk.pl>, Philipp Zabel <p.zabel@pengutronix.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 02, 2013 at 09:09:35PM +0100, Stephen Warren wrote:
-> On 08/02/2013 03:28 AM, Mark Rutland wrote:
+On Mon, Aug 05, 2013 at 08:32:16AM +0100, Philipp Zabel wrote:
+> Hi Mark,
+
+Hi Philipp,
+
+> 
+> Am Freitag, den 02.08.2013, 10:28 +0100 schrieb Mark Rutland:
 > > On Thu, Jul 18, 2013 at 10:26:26AM +0100, Philipp Zabel wrote:
-> >> This driver implements a reset controller device that toggle a gpio
-> >> connected to a reset pin of a peripheral IC. The delay between assertion
-> >> and de-assertion of the reset signal can be configured via device tree.
-> 
-> >> diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> 
-> >> +GPIO reset controller
-> >> +=====================
-> >> +
-> >> +A GPIO reset controller controls a single GPIO that is connected to the reset
-> >> +pin of a peripheral IC. Please also refer to reset.txt in this directory for
-> >> +common reset controller binding usage.
-> >> +
-> >> +Required properties:
-> >> +- compatible: Should be "gpio-reset"
-> >> +- reset-gpios: A gpio used as reset line. The gpio specifier for this property
-> >> +               depends on the gpio controller that provides the gpio.
-> >> +- #reset-cells: 0, see below
-> >> +
-> >> +Optional properties:
-> >> +- reset-delay-us: delay in microseconds. The gpio reset line will be asserted for
-> >> +                  this duration to reset.
-> >> +- initially-in-reset: boolean. If not set, the initial state should be a
-> >> +                      deasserted reset line. If this property exists, the
-> >> +                      reset line should be kept in reset.
-> >> +
-> >> +example:
-> >> +
-> >> +sii902x_reset: gpio-reset {
-> >> +	compatible = "gpio-reset";
-> >> +	reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-> >> +	reset-delay-us = <10000>;
-> >> +	initially-in-reset;
-> >> +	#reset-cells = <0>;
-> >> +};
-> >> +
-> >> +/* Device with nRESET pin connected to GPIO5_0 */
-> >> +sii902x@39 {
-> >> +	/* ... */
-> >> +	resets = <&sii902x_reset>; /* active-low GPIO5_0, 10 ms delay */
-> >> +};
+> > > This driver implements a reset controller device that toggle a gpio
+> > > connected to a reset pin of a peripheral IC. The delay between assertion
+> > > and de-assertion of the reset signal can be configured via device tree.
+> > > 
+> > > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > > Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> > > ---
+> > > Changes since v9:
+> > >  - Use gpio_set_value_cansleep unconditionally. reset_controller_assert/deassert
+> > >    should not be called from atomic context.
+> > > ---
+> > >  .../devicetree/bindings/reset/gpio-reset.txt       |  35 ++++
+> > >  drivers/reset/Kconfig                              |  11 ++
+> > >  drivers/reset/Makefile                             |   1 +
+> > >  drivers/reset/gpio-reset.c                         | 184 +++++++++++++++++++++
+> > >  4 files changed, 231 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/reset/gpio-reset.txt
+> > >  create mode 100644 drivers/reset/gpio-reset.c
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> > > new file mode 100644
+> > > index 0000000..bca5348
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> > > @@ -0,0 +1,35 @@
+> > > +GPIO reset controller
+> > > +=====================
+> > > +
+> > > +A GPIO reset controller controls a single GPIO that is connected to the reset
+> > > +pin of a peripheral IC. Please also refer to reset.txt in this directory for
+> > > +common reset controller binding usage.
+> > > +
+> > > +Required properties:
+> > > +- compatible: Should be "gpio-reset"
+> > > +- reset-gpios: A gpio used as reset line. The gpio specifier for this property
+> > > +               depends on the gpio controller that provides the gpio.
+> > > +- #reset-cells: 0, see below
+> > > +
+> > > +Optional properties:
+> > > +- reset-delay-us: delay in microseconds. The gpio reset line will be asserted for
+> > > +                  this duration to reset.
+> > > +- initially-in-reset: boolean. If not set, the initial state should be a
+> > > +                      deasserted reset line. If this property exists, the
+> > > +                      reset line should be kept in reset.
+> > > +
+> > > +example:
+> > > +
+> > > +sii902x_reset: gpio-reset {
+> > > +	compatible = "gpio-reset";
+> > > +	reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+> > > +	reset-delay-us = <10000>;
+> > > +	initially-in-reset;
+> > > +	#reset-cells = <0>;
+> > > +};
+> > > +
+> > > +/* Device with nRESET pin connected to GPIO5_0 */
+> > > +sii902x@39 {
+> > > +	/* ... */
+> > > +	resets = <&sii902x_reset>; /* active-low GPIO5_0, 10 ms delay */
+> > > +};
 > > 
 > > I don't like the approach here. The reset GPIO line is not a device in
 > > itself, and surely the way in which it must be toggled to reset a device
 > > is a property of that device, not the GPIO. We're leaking a Linux
-> > internal abstraction rather than describing the hardware.
+> > internal abstraction rather than describing teh hardware.
 > 
-> At first, I was going to say I disagree completely, but I do see your point.
-> 
-> I don't think that having a separate reset controller concept in DT, and
-> having a GPIO implementation of that, is purely exposing Linux concepts
-> in the DT. It's just one way of looking at the HW. As you say, another
-> is that any external chip that needs reset has a GPIO input.
-> 
-> The history here is that we have to concept of IP modules inside a chip
-> that can be reset, and that reset is driven by some external entity to
-> the IP block, and hence there's a concept of a "reset controller" that
-> drives that reset. That enables arbitrary different implementations to
-> cover the case of the IP block being dropped into different SoCs with
-> different ways of resetting it.
-> 
-> Extend that same concept to external chips that happen to have GPIOs
-> driving the chip's reset inputs, and you get this GPIO reset controller
-> binding.
-> 
-> On the surface, any external chip is going to be reset by a GPIO, and
-> hence that should be represented by a property in that external chip's
-> DT node, just as you say.
-> 
-> But what if the reset pin is /not/ hooked up to a GPIO? What if there's
-> a dedicated "reset" HW device that drives the reset input, and all it
-> can do is pulse the reset, not maintain it at some static level, and
-> hence that signal can't be represented as a GPIO? Or what if the core of
-> the external chip gets integrated into an SoC, which has a reset
-> controller rather than a GPIO input? Of course, I have no idea how
-> likely this would be.
-> 
-> To cover those cases, continuing to abstract the reset input
-> semantically as a reset input, rather than as a plain GPIO, might make
-> sense.
-
-That does sound reasonable. Do we have any of the above cases described
-in any existing DTs?
-
-If I've not misunderstood, there seem to be a lot of *reset-gpio*
-properties Documented (e.g. nvidia,phy-reset-gpio) which look like what
-I was suggesting (though perhaps that's a different meaning of reset,
-I'm not that familiar with PHYs). Given it's a common pattern already, I
-think it would make sense to allow for that style of binding (in
-addition to supporting more complex reset devices as required).
-
-The reset bindings (Documentation/devicetree/bindings/reset/reset.txt)
-seem to suggest that both are reasonable.
-
+> you are right, this results from the reset bindings being designed for
+> actual hardware reset controllers that appeared in several SoCs.
+> Initially I've sent the GPIO reset driver only as an example.
 > 
 > > I think thie linkage of the gpio would be better described on the node
 > > for the device with the reset input, in a binding-specific property for
@@ -146,13 +126,50 @@ seem to suggest that both are reasonable.
 > > 	...
 > > };
 > 
-> If we decide to ignore the case where the reset signal isn't driven by a
-> GPIO, yes, the above binding does look better.
-> 
+> I don't like the arbitrary name, as that makes it difficult to handle
+> this in an automated way. In this case I'd prefer to use 'reset-gpios'
+> and optionally 'reset-gpio-names' analogous to how clocks and interrupts
+> (and resets) are handled. The framework itself could then also check the
+> reset-gpios property and create the gpio reset controllers on the fly:
 
-For the GPIO case, I'd prefer to describe the GPIO input directly. I'm
-not opposed to also supporting the description of more complex reset
-devices. I believe it's feasible to support both?
+I'm not sure about the structure you suggest. The main reason we'd want
+to tell apart multiple reset GPIOs (via reset-gpio-names) would be that
+the device needs to have said GPIOs poked in a device-specific manner
+(i.e. with some ordering and timing constraints, possibly only a subset
+of the GPIOs needing to be poked to reset components of the device).
+
+Given that, I'm not sure what separating the GPIOs out into a
+reset-gpios property buys us, as the driver still needs to handle them
+(at least to provide some additional information to device reset
+framework code).
+
+> 
+> sii902x@39 {
+> 	reset-gpios <&gpio5 0 GPIO_ACTIVE_LOW>;
+> 	reset-gpio-names = "nreset";
+> 	reset-delay-us = <10000>;
+> 	initially-in-reset;
+> };
+> 
+> But this reintroduces the (currently theoretical) problem of how to
+> express delays and initially-in-reset information for multiple gpio
+> resets on a single device if that information cannot be determined by
+> the driver automatically.
+> 
+> If there is a fixed delay (or a delay calculated from a known clock), we
+> can just extend the API:
+> 	device_reset_usleep(dev, 1000);
+> instead of currently:
+> 	device_reset(dev);
+
+I was working on the assumption that any required delay would be a
+function of the devices input clocks (or fixed, if the device has some
+fixed rate internal clock). If that's true, the API extension you
+suggest makes sense to me.
+
+I'm not sure about initially-in-reset. Is it not possible for the driver
+to poke the GPIO controller to ensure the GPIOs are in the state
+required?
 
 Thanks,
 Mark.
