@@ -1,173 +1,55 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from arroyo.ext.ti.com ([192.94.94.40]:48255 "EHLO arroyo.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1030614Ab3HIIjn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 9 Aug 2013 04:39:43 -0400
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [RFC 08/22] OMAPDSS: Add DT support to DSS, DISPC, DPI, HDMI, VENC
-Date: Fri, 9 Aug 2013 11:38:53 +0300
-Message-ID: <1376037547-10859-9-git-send-email-tomi.valkeinen@ti.com>
-In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
-References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:40550 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753964Ab3HEVms (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 17:42:48 -0400
+Message-ID: <52001C54.7020908@wwwdotorg.org>
+Date: Mon, 05 Aug 2013 15:42:44 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [PATCH V2 2/3] pinctrl: pinconf-generic: add generic APIs for
+ mapping pinctrl node
+References: <1375688014-6117-1-git-send-email-ldewangan@nvidia.com> <1375688014-6117-3-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1375688014-6117-3-git-send-email-ldewangan@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: linus.walleij@linaro.org, ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add the code to make DSS, DISPC, DPI, HDMI and VENC drivers work with
-device tree on OMAP3 and OMAP4. The only change is adding the
-of_match_tables.
+On 08/05/2013 01:33 AM, Laxman Dewangan wrote:
+> Add generic APIs to map the DT node and its sub node in pinconf generic
+> driver. These APIs can be used from driver to parse the DT node who
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- drivers/video/omap2/dss/dispc.c |  7 +++++++
- drivers/video/omap2/dss/dpi.c   |  8 ++++++++
- drivers/video/omap2/dss/dss.c   | 10 ++++++++++
- drivers/video/omap2/dss/hdmi.c  |  6 ++++++
- drivers/video/omap2/dss/venc.c  |  7 +++++++
- 5 files changed, 38 insertions(+)
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> index aeb3c99..52fb521 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> @@ -174,3 +174,19 @@ All parameters not listed here, do not take an argument.
+>  
+>  More in-depth documentation on these parameters can be found in
+>  <include/linux/pinctrl/pinconfig-generic.h>
+> +
+> +Generic pinconfig option also support the defining of pins and functions.
+> +The properties are:
+> +pinctrl-pins: This property tells the name of pins or list of pins for which
+> +  configuration is needed. The valid pin names are device/chip specific and
+> +  it can be found from the device/chip specific binding documents.
+> +pinctrl-function: This property tells the configuration of the pins on to the
+> +  given function. The valid functions are device/chip specific and it can be
+> +  found from the device/chip specific binding documents.
 
-diff --git a/drivers/video/omap2/dss/dispc.c b/drivers/video/omap2/dss/dispc.c
-index 02a7340..b4dccb8 100644
---- a/drivers/video/omap2/dss/dispc.c
-+++ b/drivers/video/omap2/dss/dispc.c
-@@ -3743,12 +3743,19 @@ static const struct dev_pm_ops dispc_pm_ops = {
- 	.runtime_resume = dispc_runtime_resume,
- };
- 
-+static const struct of_device_id dispc_of_match[] = {
-+	{ .compatible = "ti,omap3-dispc", },
-+	{ .compatible = "ti,omap4-dispc", },
-+	{},
-+};
-+
- static struct platform_driver omap_dispchw_driver = {
- 	.remove         = __exit_p(omap_dispchw_remove),
- 	.driver         = {
- 		.name   = "omapdss_dispc",
- 		.owner  = THIS_MODULE,
- 		.pm	= &dispc_pm_ops,
-+		.of_match_table = dispc_of_match,
- 	},
- };
- 
-diff --git a/drivers/video/omap2/dss/dpi.c b/drivers/video/omap2/dss/dpi.c
-index a6b331e..6b832c8 100644
---- a/drivers/video/omap2/dss/dpi.c
-+++ b/drivers/video/omap2/dss/dpi.c
-@@ -30,6 +30,7 @@
- #include <linux/platform_device.h>
- #include <linux/regulator/consumer.h>
- #include <linux/string.h>
-+#include <linux/of.h>
- 
- #include <video/omapdss.h>
- 
-@@ -801,12 +802,19 @@ static int __exit omap_dpi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id dpi_of_match[] = {
-+	{ .compatible = "ti,omap3-dpi", },
-+	{ .compatible = "ti,omap4-dpi", },
-+	{},
-+};
-+
- static struct platform_driver omap_dpi_driver = {
- 	.probe		= omap_dpi_probe,
- 	.remove         = __exit_p(omap_dpi_remove),
- 	.driver         = {
- 		.name   = "omapdss_dpi",
- 		.owner  = THIS_MODULE,
-+		.of_match_table = dpi_of_match,
- 	},
- };
- 
-diff --git a/drivers/video/omap2/dss/dss.c b/drivers/video/omap2/dss/dss.c
-index bd01608..d0d61b1 100644
---- a/drivers/video/omap2/dss/dss.c
-+++ b/drivers/video/omap2/dss/dss.c
-@@ -23,6 +23,7 @@
- #define DSS_SUBSYS_NAME "DSS"
- 
- #include <linux/kernel.h>
-+#include <linux/module.h>
- #include <linux/io.h>
- #include <linux/export.h>
- #include <linux/err.h>
-@@ -955,12 +956,21 @@ static const struct dev_pm_ops dss_pm_ops = {
- 	.runtime_resume = dss_runtime_resume,
- };
- 
-+static const struct of_device_id dss_of_match[] = {
-+	{ .compatible = "ti,omap3-dss", },
-+	{ .compatible = "ti,omap4-dss", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, dss_of_match);
-+
- static struct platform_driver omap_dsshw_driver = {
- 	.remove         = __exit_p(omap_dsshw_remove),
- 	.driver         = {
- 		.name   = "omapdss_dss",
- 		.owner  = THIS_MODULE,
- 		.pm	= &dss_pm_ops,
-+		.of_match_table = dss_of_match,
- 	},
- };
- 
-diff --git a/drivers/video/omap2/dss/hdmi.c b/drivers/video/omap2/dss/hdmi.c
-index 1b38f1f..1cea0ab 100644
---- a/drivers/video/omap2/dss/hdmi.c
-+++ b/drivers/video/omap2/dss/hdmi.c
-@@ -1374,6 +1374,11 @@ static const struct dev_pm_ops hdmi_pm_ops = {
- 	.runtime_resume = hdmi_runtime_resume,
- };
- 
-+static const struct of_device_id hdmi_of_match[] = {
-+	{ .compatible = "ti,omap4-hdmi", },
-+	{},
-+};
-+
- static struct platform_driver omapdss_hdmihw_driver = {
- 	.probe		= omapdss_hdmihw_probe,
- 	.remove         = __exit_p(omapdss_hdmihw_remove),
-@@ -1381,6 +1386,7 @@ static struct platform_driver omapdss_hdmihw_driver = {
- 		.name   = "omapdss_hdmi",
- 		.owner  = THIS_MODULE,
- 		.pm	= &hdmi_pm_ops,
-+		.of_match_table = hdmi_of_match,
- 	},
- };
- 
-diff --git a/drivers/video/omap2/dss/venc.c b/drivers/video/omap2/dss/venc.c
-index 496a106..93e13dd 100644
---- a/drivers/video/omap2/dss/venc.c
-+++ b/drivers/video/omap2/dss/venc.c
-@@ -980,6 +980,12 @@ static const struct dev_pm_ops venc_pm_ops = {
- 	.runtime_resume = venc_runtime_resume,
- };
- 
-+
-+static const struct of_device_id venc_of_match[] = {
-+	{ .compatible = "ti,omap3-venc", },
-+	{},
-+};
-+
- static struct platform_driver omap_venchw_driver = {
- 	.probe		= omap_venchw_probe,
- 	.remove         = __exit_p(omap_venchw_remove),
-@@ -987,6 +993,7 @@ static struct platform_driver omap_venchw_driver = {
- 		.name   = "omapdss_venc",
- 		.owner  = THIS_MODULE,
- 		.pm	= &venc_pm_ops,
-+		.of_match_table = venc_of_match,
- 	},
- };
- 
--- 
-1.8.1.2
+This text feels like it's just been bolted on the end rather than
+integrated into the existing description of generic pinconfig options.
+Also, the existing text for generic pinconfig options doesn't feel at
+all right to me. I'll send a patch to clean that up, and integrate these
+new properties.
 
+I would name the new properties just pins and functions, given their
+scope is explicitly limited to pinctrl configuration nodes, so
+"pinctrl-" is a little redundant.
+
+With the properties renamed, and this patch rebased on top of the patch
+I'll send out later, this patch,
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
