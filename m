@@ -1,60 +1,64 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pa0-f47.google.com ([209.85.220.47]:53300 "EHLO
-	mail-pa0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751970Ab3HBPDm (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 11:03:42 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [RFC v3 12/13] V4L: s5k6a3: Change sensor min/max resolutions
-Date: Fri,  2 Aug 2013 20:32:41 +0530
-Message-Id: <1375455762-22071-13-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
-References: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
+Received: from moutng.kundenserver.de ([212.227.17.8]:52438 "EHLO
+	moutng.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752290Ab3HEPab (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 11:30:31 -0400
+Date: Mon, 5 Aug 2013 17:30:26 +0200 (CEST)
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH/RFC] mmc: sh_mmcif: revision-specific configuration from
+ Device Tree
+In-Reply-To: <8661vkgqdw.fsf@void.printf.net>
+Message-ID: <Pine.LNX.4.64.1308051722490.22479@axis700.grange>
+References: <Pine.LNX.4.64.1308051514350.22479@axis700.grange>
+ <8661vkgqdw.fsf@void.printf.net>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: Chris Ball <cjb@laptop.org>
+Cc: linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Daniel Drake <dsd@laptop.org>
 List-ID: <devicetree@vger.kernel.org>
 
-s5k6a3 sensor has actual pixel resolution of 1408x1402 against
-the active resolution 1392x1392. The real resolution is needed
-when raw sensor SRGB data is dumped to memory by fimc-lite.
+Hi Chris
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+On Mon, 5 Aug 2013, Chris Ball wrote:
+
+> Hi Guennadi,
+> 
+> On Mon, Aug 05 2013, Guennadi Liakhovetski wrote:
+> > Add compatibility strings to configure MMCIF revision-specific features.
+> > MMCIF blocks are always integrated into SoCs, so, we use SoC model to
+> > distinguish between MMCIF versions.
+> >
+> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> > ---
+> >
+> > Hi Chris,
+> > I marked this as RFC, because having no access to the MMC standard I'm not 
+> > certain about VccQ requirements for MMC DDR. On the one hand a comment in 
+> > mmc.c says
+> > 	 * EXT_CSD_CARD_TYPE_DDR_1_8V means 3.3V or 1.8V vccq.
+> > which suggests, that DDR (DDR50?) can be used with VccQ = 3.3V, 1.8V and 
+> > 1.2V at least. But in mmc_init_card() DDR50 is only requested from the 
+> > driver if either MMC_CAP_1_8V_DDR or MMC_CAP_1_2V_DDR is specified in 
+> > host's capabilities. So, I'm actually not sure whether MMC_CAP_UHS_DDR50 
+> > alone without 1_8V or 1_2V makes sense. That's also what I implemented in 
+> > this patch - DDR50 is only enabled in combination with either 1.2 or 1.8V 
+> > capability. Is this correct?
+> 
+> OLPC's using DDR50 at 3.3V in production.  Honestly, I don't know
+> whether it's spec compliant (I think the spec claims that 1.8V is
+> required) but it happens to work on these parts.  The host controller
+> does support 1.8V, there's just no hardware capable of supplying 1.8V
+> to MMC on the board.
+
+Thanks for the example. So, I think, for now it should be ok to just act 
+in a way, compatible with the mmc core, i.e. always set one of 
+MMC_CAP_1_8V_DDR or MMC_CAP_1_2V_DDR, when aiming at MMC_CAP_UHS_DDR50. 
+So, the patch should be ok then.
+
+Thanks
+Guennadi
 ---
- drivers/media/i2c/s5k6a3.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/media/i2c/s5k6a3.c b/drivers/media/i2c/s5k6a3.c
-index ccbb4fc..d81638d 100644
---- a/drivers/media/i2c/s5k6a3.c
-+++ b/drivers/media/i2c/s5k6a3.c
-@@ -30,6 +30,9 @@
- #define S5K6A3_SENSOR_MIN_WIDTH		32
- #define S5K6A3_SENSOR_MIN_HEIGHT	32
- 
-+#define S5K6A3_WIDTH_PADDING		16
-+#define S5K6A3_HEIGHT_PADDING		10
-+
- #define S5K6A3_DEF_PIX_WIDTH		1296
- #define S5K6A3_DEF_PIX_HEIGHT		732
- 
-@@ -107,10 +110,13 @@ static void s5k6a3_try_format(struct v4l2_mbus_framefmt *mf)
- 
- 	fmt = find_sensor_format(mf);
- 	mf->code = fmt->code;
--	v4l_bound_align_image(&mf->width, S5K6A3_SENSOR_MIN_WIDTH,
--			      S5K6A3_SENSOR_MAX_WIDTH, 0,
--			      &mf->height, S5K6A3_SENSOR_MIN_HEIGHT,
--			      S5K6A3_SENSOR_MAX_HEIGHT, 0, 0);
-+	v4l_bound_align_image(&mf->width,
-+			S5K6A3_SENSOR_MIN_WIDTH + S5K6A3_WIDTH_PADDING,
-+			S5K6A3_SENSOR_MAX_WIDTH + S5K6A3_WIDTH_PADDING, 0,
-+			&mf->height,
-+			S5K6A3_SENSOR_MIN_HEIGHT + S5K6A3_HEIGHT_PADDING,
-+			S5K6A3_SENSOR_MAX_HEIGHT + S5K6A3_HEIGHT_PADDING, 0,
-+			0);
- }
- 
- static struct v4l2_mbus_framefmt *__s5k6a3_get_format(
--- 
-1.7.9.5
-
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
