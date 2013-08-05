@@ -1,25 +1,70 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from service87.mimecast.com ([91.220.42.44]:52082 "EHLO
-	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755047Ab3HFLA4 convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 07:00:56 -0400
-Message-ID: <1375786850.12043.22.camel@hornet>
+Received: from fallback6.mail.ru ([94.100.176.134]:48798 "EHLO
+	fallback6.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753773Ab3HEPg1 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 11:36:27 -0400
+Date: Mon, 5 Aug 2013 19:35:46 +0400
+From: Alexander Shiyan <shc_work@mail.ru>
 Subject: Re: [RFC RESEND] GPIO: gpio-generic: Add DT support
-From: Pawel Moll <pawel.moll@arm.com>
-Date: Tue, 06 Aug 2013 12:00:50 +0100
+Message-Id: <20130805193546.c1bf5937bcb4cefba9747486@mail.ru>
 In-Reply-To: <20130731155608.GR29859@e106331-lin.cambridge.arm.com>
 References: <1375183115-30237-1-git-send-email-shc_work@mail.ru>
-	 <20130730162241.GA13634@quad.lixom.net> <51F7FEE5.1010608@wwwdotorg.org>
-	 <20130731155608.GR29859@e106331-lin.cambridge.arm.com>
+	<20130730162241.GA13634@quad.lixom.net>
+	<51F7FEE5.1010608@wwwdotorg.org>
+	<20130731155608.GR29859@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 To: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Olof Johansson <olof@lixom.net>, Alexander Shiyan <shc_work@mail.ru>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Mike Turquette <mturquette@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Olof Johansson <olof@lixom.net>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 2013-07-31 at 16:56 +0100, Mark Rutland wrote:
+On Wed, 31 Jul 2013 16:56:08 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
+
+> On Tue, Jul 30, 2013 at 06:59:01PM +0100, Stephen Warren wrote:
+> > On 07/30/2013 10:22 AM, Olof Johansson wrote:
+> > > On Tue, Jul 30, 2013 at 03:18:35PM +0400, Alexander Shiyan wrote:
+> > >> This patch adds DT support for generic (MMIO) GPIO driver.
+> > 
+> > >> diff --git a/Documentation/devicetree/bindings/gpio/gpio-generic.txt b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
+> > 
+> > >> +Generic memory-mapped GPIO controller
+> > >> +
+> > >> +Required properties:
+> > >> +- compatible: Should be "basic-mmio-gpio" or "basic-mmio-gpio-be".
+> > 
+> > I think naming this "simple-gpio" would match other simple/basic/generic
+> > bindings better.
+> > 
+> > >> +- reg: Physical base GPIO controller registers location and length.
+> > >> +- reg-names: Should be the names of reg resources. Each register uses
+> > >> +  its own reg name, so there should be as many reg names as referenced
+> > >> +  registers:
+> > >> +  "dat"		: Input/output register (Required),
+> > >> +  "set"		: Register for set output bits (Optional),
+> > >> +  "clr"		: Register for clear output bits (Optional),
+> > >> +  "dirout"	: Register for setup direction as output (Optional),
+> > >> +  "dirin"	: Register for setup direction as input (Optional).
+> > >> +- gpio-controller: Marks the device node as a gpio controller.
+> > >> +- #gpio-cells: Should be two.
+> > ...
+> > > 
+> > > I'm trying to figure out what to say about this binding. It's not really
+> > > describing hardware, instead it's strongly tied to how the basic-mmio-gpio
+> > > driver expects the platform data to look.
+> > 
+> > I'm not sure; the binding seems to only contain a direct representation
+> > of pure HW properties; the addresses/offsets of various registers in the
+> > HW block.
+> > 
+> > > It makes more sense to actually describe the hardware in question,
+> > > and then have the driver handle that as expected. I.e. either have a
+> > > small conversion layer that binds to the actual hardware compatible
+> > > value and registers a basic-mmio-gpio device from there, or extend the
+> > > basic-mmio-gpio driver to do it by itself.
+> > 
 > > Ah, I guess the question more: Do we want generic bindings that describe
 > > the low-level details of the HW in a completely generic fashion so that
 > > new HW can be supported with zero kernel changes, or do we want a simple
@@ -28,11 +73,7 @@ On Wed, 2013-07-31 at 16:56 +0100, Mark Rutland wrote:
 > > support new HW without code changes, although perhaps that's more
 > > typically considered in the context of new boards rather than new IP
 > > blocks or SoCs.
-
-... or FPGAs that can be synthesized with random collection of standard
-IP blocks. With Xilinx's Zynq and Altera's SOCFPGA this is getting
-simpler and simpler...
-
+> 
 > I think that going forward it would be better to have have a compatible
 > string per different device. As Olof pointed out, we're leaking the way
 > we currently handle things in Linux into the binding, rather than
@@ -46,44 +87,13 @@ simpler and simpler...
 > internal data passed to the simple-gpio driver, rather than explicitly
 > stating that the current version of the Linux simple-gpio driver is
 > capable of driving the device.
-
-This is one of the important decisions we may have to make going
-forward... Do we only accept bindings for "real" blocks of IP? (and how
-we define "real"?) If so, why does the "simple-bus"?
-
-Frankly speaking I don't know where to draw the line, but I feel that in
-this particular case - a "generic" GPIO binding - is worth the effort.
-SOCs are literally littered with control registers driving random bits.
-My favourite example - Versatile Express ;-) - have random registers
-representing things like LEDs or MMC status lines. Depending on the
-motherboard/FPGA version they can live in different places. And yes, I
-can have a Versatile Express "platform" driver registering different set
-of them depending on the particular variant of the FPGA bitfile. Or try
-to represent them in the tree...
-
-And yes, I've actually came with a patch almost identical to Alexander's
-one. No, I won't feel depressed if it doesn't get in :-)
-
+> 
 > I think the issue is that we're describing a hardware block in general,
 > rather than the instance of the hardware block, and that limits how
 > flexibly we can use the data in the description.
 
-So if I went and designed a parametrized, synthesizeble, memory-mapped
-GPIO "controller" matching the binding in question, would it change the
-situation?
+A lot of people - a lot of opinions.
+So, what the final resolution for this?
 
-> > If we reject this driver, we surely have to get rid of pinctrl-single,
-> > and perhaps some others?
->
-> That's certainly something we need to consider. However, those bindings
-> are in active use, and this is not yet. I don't think that we should
-> necessarily follow that style of binding.
-
-I think we should tell Mike Turquette about this, as his bindings for
-basic clock components definitely fall into the same category:
-
-http://thread.gmane.org/gmane.linux.kernel/1513049/
-
-Pawel
-
-
+-- 
+Alexander Shiyan <shc_work@mail.ru>
