@@ -1,145 +1,120 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-vb0-f52.google.com ([209.85.212.52]:48121 "EHLO
-	mail-vb0-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751345Ab3HEKHA (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 06:07:00 -0400
+Received: from mail-oa0-f45.google.com ([209.85.219.45]:55436 "EHLO
+	mail-oa0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1753617Ab3HEFVB (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 01:21:01 -0400
+Received: by mail-oa0-f45.google.com with SMTP id m1so5276164oag.18
+        for <devicetree@vger.kernel.org>; Sun, 04 Aug 2013 22:21:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <51FD78F8.4080304@gmail.com>
+In-Reply-To: <1375455762-22071-2-git-send-email-arun.kk@samsung.com>
 References: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
 	<1375455762-22071-2-git-send-email-arun.kk@samsung.com>
-	<51FD78F8.4080304@gmail.com>
-Date: Mon, 5 Aug 2013 15:36:59 +0530
-Message-ID: <CALt3h7_qHb4UqsnVo+KPtHFdL42AShkKo5-V3qPaPrMUOANpGg@mail.gmail.com>
+Date: Mon, 5 Aug 2013 10:51:00 +0530
+Message-ID: <CAK9yfHzt3taTwsub_DyPQr6Ojz1BAXuF+dNJ3sVv2RymmDy72A@mail.gmail.com>
 Subject: Re: [RFC v3 01/13] [media] exynos5-is: Adding media device driver for exynos5
-From: Arun Kumar K <arunkk.samsung@gmail.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
 Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, shaik.ameer@samsung.com, kilyeon.im@samsung.com
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Sylwester,
-
-Thank you for the review.
-Will address all your review comments.
-Some responses below:
+On 2 August 2013 20:32, Arun Kumar K <arun.kk@samsung.com> wrote:
+> From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+>
+> This patch adds support for media device for EXYNOS5 SoCs.
+> The current media device supports the following ips to connect
+> through the media controller framework.
+>
+> * MIPI-CSIS
+>   Support interconnection(subdev interface) between devices
+>
+> * FIMC-LITE
+>   Support capture interface from device(Sensor, MIPI-CSIS) to memory
+>   Support interconnection(subdev interface) between devices
+>
+> * FIMC-IS
+>   Camera post-processing IP having multiple sub-nodes.
+>
+> G-Scaler will be added later to the current media device.
+>
+> The media device creates two kinds of pipelines for connecting
+> the above mentioned IPs.
+> The pipeline0 is uses Sensor, MIPI-CSIS and FIMC-LITE which captures
+> image data and dumps to memory.
+> Pipeline1 uses FIMC-IS components for doing post-processing
+> operations on the captured image and give scaled YUV output.
+>
+> Pipeline0
+>   +--------+     +-----------+     +-----------+     +--------+
+>   | Sensor | --> | MIPI-CSIS | --> | FIMC-LITE | --> | Memory |
+>   +--------+     +-----------+     +-----------+     +--------+
+>
+> Pipeline1
+>  +--------+      +--------+     +-----------+     +-----------+
+>  | Memory | -->  |  ISP   | --> |    SCC    | --> |    SCP    |
+>  +--------+      +--------+     +-----------+     +-----------+
+>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
 
 [snip]
->> +
->> +static int fimc_md_register_sensor_entities(struct fimc_md *fmd)
->> +{
->> +       struct device_node *of_node = fmd->pdev->dev.of_node;
->> +       int ret;
->> +
->> +       /*
->> +        * Runtime resume one of the FIMC entities to make sure
->> +        * the sclk_cam clocks are not globally disabled.
->
->
-> It's a bit mysterious to me, is this requirement still valid on Exynos5 ?
-> I glanced over the Exynos5250 datasheet and there seem to be no sclk_cam?
-> clocks dependency on any of GScaler clocks. Maybe you don't need a clock
-> provider in this driver, perhaps sensor drivers could use sclk_cam clocks
-> directly, assigned through dts ?
->
 
-Yes these clocks can be directly exposed via dt.
-I will drop clock provider from this driver.
+> +
+> +Common 'camera' node
+> +--------------------
+> +
+> +Required properties:
+> +
+> +- compatible   : must be "samsung,exynos5-fimc", "simple-bus"
+
+I am not sure if this point was discusssed during the previous
+versions. "samsung,exynos5-fimc" seems a bit generic.
+The compatible string should generally point to a specific SoC (the
+first one to have this IP), something like "samsung,exynos5250-fimc".
+
+> +- clocks       : list of clock specifiers, corresponding to entries in
+> +                 the clock-names property;
+> +- clock-names  : must contain "sclk_cam0", "sclk_cam1" entries,
+> +                 matching entries in the clocks property.
+> +
 
 [snip]
 
->> +/*
->> + * The peripheral sensor clock management.
->> + */
->> +static void fimc_md_put_clocks(struct fimc_md *fmd)
->> +{
->> +       int i = FIMC_MAX_CAMCLKS;
->> +
->> +       while (--i>= 0) {
->> +               if (IS_ERR(fmd->camclk[i].clock))
->> +                       continue;
->> +               clk_put(fmd->camclk[i].clock);
->> +               fmd->camclk[i].clock = ERR_PTR(-EINVAL);
->> +       }
->
->
-> Please double check if you need this sclk_cam clocks handling. We could
-> simply add a requirement that this driver supports only sensor subdevs
-> through the v4l2-async API and which controls their clock themselves.
->
+> +Example:
+> +
+> +       aliases {
+> +               fimc-lite0 = &fimc_lite_0
+> +       };
+> +
+> +       /* Parallel bus IF sensor */
+> +       i2c_0: i2c@13860000 {
+> +               s5k6aa: sensor@3c {
+> +                       compatible = "samsung,s5k6aafx";
+> +                       reg = <0x3c>;
+> +                       vddio-supply = <...>;
+> +
+> +                       clock-frequency = <24000000>;
+> +                       clocks = <...>;
+> +                       clock-names = "mclk";
+> +
+> +                       port {
+> +                               s5k6aa_ep: endpoint {
+> +                                       remote-endpoint = <&fimc0_ep>;
+> +                                       bus-width = <8>;
+> +                                       hsync-active = <0>;
+> +                                       vsync-active = <1>;
+> +                                       pclk-sample = <1>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +
+> +       /* MIPI CSI-2 bus IF sensor */
+> +       s5c73m3: sensor@0x1a {
 
-sclk_cam* handling can be removed and be done from respective
-sensors. But I think the sclk_bayer handling needs to be retained in the
-media driver.
+0x not needed.
 
->> +}
->> +
->> +static int fimc_md_get_clocks(struct fimc_md *fmd)
->> +{
->> +       struct device *dev = NULL;
->> +       char clk_name[32];
->> +       struct clk *clock;
->> +       int i, ret = 0;
->> +
->> +       for (i = 0; i<  FIMC_MAX_CAMCLKS; i++)
->> +               fmd->camclk[i].clock = ERR_PTR(-EINVAL);
->> +
->> +       if (fmd->pdev->dev.of_node)
->> +               dev =&fmd->pdev->dev;
->> +
->> +       for (i = 0; i<  SCLK_BAYER; i++) {
->> +               snprintf(clk_name, sizeof(clk_name), "sclk_cam%u", i);
->> +               clock = clk_get(dev, clk_name);
->> +
->> +               if (IS_ERR(clock)) {
->> +                       dev_err(&fmd->pdev->dev, "Failed to get clock:
->> %s\n",
->> +                                                               clk_name);
->> +                       ret = PTR_ERR(clock);
->> +                       break;
->> +               }
->> +               fmd->camclk[i].clock = clock;
->> +       }
->> +       if (ret)
->> +               fimc_md_put_clocks(fmd);
->> +
->> +       /* Prepare bayer clk */
->> +       clock = clk_get(dev, "sclk_bayer");
->> +
->> +       if (IS_ERR(clock)) {
->> +               dev_err(&fmd->pdev->dev, "Failed to get clock: %s\n",
->> +                                                       clk_name);
->
->
-> Wrong error message.
->
->> +               ret = PTR_ERR(clock);
->> +               goto err_exit;
->> +       }
->> +       ret = clk_prepare(clock);
->> +       if (ret<  0) {
->> +               clk_put(clock);
->> +               fmd->camclk[SCLK_BAYER].clock = ERR_PTR(-EINVAL);
->> +               goto err_exit;
->> +       }
->> +       fmd->camclk[SCLK_BAYER].clock = clock;
->
->
-> Could you explain a bit how is this SCLK_BAYER clock used ? Is it routed
-> to external image sensor, or is it used only inside an SoC ?
->
-
-It is not defined properly in the manual, but I suppose its the bus clock
-for the bayer rgb data bus. So for proper sensor functionality, we need this
-sclk_bayer in addition to the external sensor clks (sclk_cam*). Isn't
-exynos5 media driver is the best place to handle such clocks?
-
->> +       return 0;
->> +err_exit:
->> +       fimc_md_put_clocks(fmd);
->> +       return ret;
->> +}
->> +
-
-Regards
-Arun
+-- 
+With warm regards,
+Sachin
