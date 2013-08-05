@@ -1,64 +1,76 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56389 "EHLO mail.gnudd.com"
+Received: from comal.ext.ti.com ([198.47.26.152]:58840 "EHLO comal.ext.ti.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932456Ab3HGK0I (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:26:08 -0400
-Date: Wed, 7 Aug 2013 12:19:31 +0200
-From: Davide Ciminaghi <ciminaghi@gnudd.com>
-Subject: [PATCH 12/26] x86 kernel apic: notify MSI irqdomain(s) on
- etup/teardown of MSI IRQs
-Message-ID: <7e98fe84a1cabd344308f8fa142e2a67aa105cdc.1375867291.git.rubini@gnudd.com>
+	id S1752909Ab3HEKXp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Mon, 5 Aug 2013 06:23:45 -0400
+Message-ID: <51FF7D2C.1090107@ti.com>
+Date: Mon, 5 Aug 2013 13:23:40 +0300
+From: Roger Quadros <rogerq@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+Subject: Re: [PATCH 3/4] dts: dra7-evm: add USB support
+References: <1375369134-26398-1-git-send-email-rogerq@ti.com> <1375369134-26398-4-git-send-email-rogerq@ti.com> <51FBCA6F.9030503@ti.com> <51FF5A69.7040604@ti.com> <51FF6A45.3060702@ti.com>
+In-Reply-To: <51FF6A45.3060702@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>
+Cc: tony@atomide.com, rnayak@ti.com, benoit.cousson@linaro.org, balbi@ti.com, kishon@ti.com, dmurphy@ti.com, t-kristo@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch should have no effect on non-OF x86 machines.
+On 08/05/2013 12:03 PM, George Cherian wrote:
+> On 8/5/2013 1:25 PM, Roger Quadros wrote:
+>> On 08/02/2013 06:04 PM, George Cherian wrote:
+>>> On 8/1/2013 8:28 PM, Roger Quadros wrote:
+>>>> Add USB drv_vbus pinctrl information and USB mode
+>>>> for the USB controller.
+>>>>
+>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>>> ---
+>>>>    arch/arm/boot/dts/dra7-evm.dts |   22 ++++++++++++++++++++++
+>>>>    1 files changed, 22 insertions(+), 0 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+>>>> index cb0703c..acd3c09 100644
+>>>> --- a/arch/arm/boot/dts/dra7-evm.dts
+>>>> +++ b/arch/arm/boot/dts/dra7-evm.dts
+>>>> @@ -18,3 +18,25 @@
+>>>>            reg = <0x80000000 0x60000000>; /* 1536 MB */
+>>>>        };
+>>>>    };
+>>>> +
+>>>> +&dra7_pmx_core {
+>>>> +        pinctrl-names = "default";
+>>>> +        pinctrl-0 = <
+>>>> +        &usb_pins
+>>>> +    >;
+>>>> +
+>>>> +    usb_pins: pinmux_usb_pins {
+>>>> +                pinctrl-single,pins = <
+>>>> +            0x280    0xc0000    /* usb1_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
+>>>> +            0x284    0xc0000 /* usb2_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
+>>>> +                >;
+>>>> +        };
+>>>> +};
+>>>> +
+>>>> +&dwc3_1 {
+>>>> +    dr_mode = "otg";
+>>> otg???
+>> What's wrong there?
+>> please see
+>> Documentation/devicetree/bindings/usb/generic.txt
+>>
+>> we want it to operate in dual role mode and hence "otg"
+> 
+> Am sorry for not being clear with my earlier comment.
+> I meant whether we have otg/ DRD working. Till then shouldnt we put either peripheral/host?
 
-When CONFIG_OF is enabled, an irqdomain exists for each MSI controller
-in the devicetree. This patch invokes the functions taking care of
-adding/removing IRQs numbers to/from the MSI irqdomain they belong to.
+Setting it to peripheral did not work and I don't think it is meant to be used as host port at all
+so no point in setting it has host. Users needing host support can always use usb2 port.
+The kit comes supplied with host adapter only for the usb2 (mini) port.
 
-Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
----
- arch/x86/kernel/apic/io_apic.c |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+So I think we should just leave usb1 port OTG, and get it to work somehow, at least in peripheral mode
+first.
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 9ed796c..65db413 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -60,6 +60,7 @@
- #include <asm/irq_remapping.h>
- #include <asm/hpet.h>
- #include <asm/hw_irq.h>
-+#include <asm/prom.h>
- 
- #include <asm/apic.h>
- 
-@@ -3154,6 +3155,9 @@ int native_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
- 		ret = setup_msi_irq(dev, msidesc, irq, 0);
- 		if (ret < 0)
- 			goto error;
-+		ret = x86_of_new_msi_irq(dev, irq);
-+		if (ret < 0)
-+			goto error;
- 	}
- 	return 0;
- 
-@@ -3164,6 +3168,7 @@ error:
- 
- void native_teardown_msi_irq(unsigned int irq)
- {
-+	x86_of_del_msi_irq(irq);
- 	destroy_irq(irq);
- }
- 
--- 
-1.7.7.2
+cheers,
+-roger
+
