@@ -1,42 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail1.bemta3.messagelabs.com ([195.245.230.177]:57265 "EHLO
-	mail1.bemta3.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1751613Ab3HUMq5 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Wed, 21 Aug 2013 08:46:57 -0400
-From: Johannes Thumshirn <johannes.thumshirn@men.de>
-Subject: [PATCH] documentation/devicetree: Move DT bindigns from gpio to watchdog
-Date: Wed, 21 Aug 2013 14:42:09 +0200
-Message-ID: <1377088929-23694-1-git-send-email-johannes.thumshirn@men.de>
+Received: from mail-db9lp0249.outbound.messaging.microsoft.com ([213.199.154.249]:19476
+	"EHLO db9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754296Ab3HEDEE (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sun, 4 Aug 2013 23:04:04 -0400
+From: Duan Fugang-B38611 <B38611@freescale.com>
+Subject: RE: [PATCH v3] net/phy: micrel: Add OF configuration support for
+ ksz9021
+Date: Mon, 5 Aug 2013 03:03:55 +0000
+Message-ID: <9848F2DB572E5649BA045B288BE08FBE015EE4A2@039-SN2MPN1-023.039d.mgd.msft.net>
+References: <1375348757-12856-1-git-send-email-xobs@kosagi.com>
+ <1375348757-12856-2-git-send-email-xobs@kosagi.com>
+ <9848F2DB572E5649BA045B288BE08FBE015ED2F7@039-SN2MPN1-023.039d.mgd.msft.net>
+ <5CE77AC80B4242C98833109D6F1C9F85@kosagi.com>
+In-Reply-To: <5CE77AC80B4242C98833109D6F1C9F85@kosagi.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Rob Landley <rob@landley.net>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: Sean Cross <xobs@kosagi.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Miller <davem@davemloft.net>, "stephen@networkplumber.org" <stephen@networkplumber.org>, Steven Rostedt <rostedt@goodmis.org>
 List-ID: <devicetree@vger.kernel.org>
 
-I accidently put the devicetree bindings for the MEN A21 watchdog driver in
-Documentation/devicetree/bindings/gpio instead of
-Documentation/devicetree/bindings/watchdog, this patch addresses this error.
-
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@men.de>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Campbell <ian.campbell@citrix.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Wim Van Sebroeck <wim@iguana.be>
-Cc: Guenter Roeck <linux@roeck-us.net>
----
- .../bindings/{gpio => watchdog}/men-a021-wdt.txt   |    0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/{gpio => watchdog}/men-a021-wdt.txt (100%)
-
-diff --git a/Documentation/devicetree/bindings/gpio/men-a021-wdt.txt b/Documentation/devicetree/bindings/watchdog/men-a021-wdt.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/gpio/men-a021-wdt.txt
-rename to Documentation/devicetree/bindings/watchdog/men-a021-wdt.txt
---
-1.7.9.5
+RnJvbTogU2VhbiBDcm9zcyBbbWFpbHRvOnhvYnNAa29zYWdpLmNvbV0NCkRhdGE6IE1vbmRheSwg
+QXVndXN0IDA1LCAyMDEzIDEwOjI0IEFNDQoNCj4gPiA+ICtFeGFtcGxlOg0KPiA+ID4gKyAmZW5l
+dCB7DQo+ID4gPiArIG1pY3JlbCxjbGstY29udHJvbC1wYWQtc2tldyA9IDwweGYwZjA+OyAgbWlj
+cmVsLHJ4LWRhdGEtcGFkLXNrZXcgPQ0KPiA+ID4gKzwweDAwMDA+OyAgbWljcmVsLHR4LWRhdGEt
+cGFkLXNrZXcgPSA8MHhmZmZmPjsgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiA+ICt9Ow0KPiA+ID4g
+Kw0KPiA+DQo+ID4NCj4gPg0KPiA+IFRoZSBwaHkgYmluZGluZyBtdXN0IGJlIHRoZSBwaHkgbm9k
+ZSwgbm90IHRoZSBldGhlcm5ldCBub2RlLg0KPiA+IFBscyByZWZlciB0bzoNCj4gPiBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYm9vdGluZy13aXRob3V0LW9mLnR4dA0KPiA+IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvcGh5LnR4dA0KPiANCj4gVGhpcyB3b24ndCBuZWNl
+c3NhcmlseSB3b3JrLiAgSW4gbXkgYm9hcmQsIEkgZG9uJ3QgdGhpbmsgaXQncyBwb3NzaWJsZSB0
+bw0KPiBtYW51YWxseSBzcGVjaWZ5IHRoZSBQSFksIGFzIG1vc3Qgb2YgdGhlIGZpZWxkcyByZXF1
+aXJlZCBieSB0aGUgT0YgUEhZDQo+IG5vZGUgZG9uJ3QgYXBwbHkgdG8gdGhpcyBkZXZpY2UgKGF0
+IGxlYXN0IGFjY29yZGluZyB0byBwaHkudHh0KS4gIFRoZXJlDQo+IGFyZSBubyBpbnRlcnJ1cHRz
+LCBubyBpbnRlcnJ1cHQgcGFyZW50LCBhbmQgaXQncyB1bmNsZWFyIHdoYXQgdGhlIHJlZyBvcg0K
+PiBsaW51eCxwaGFuZGxlIGZpZWxkcyBkby4gIEFsbCBvZiB0aGVzZSBhcmUgcmVxdWlyZWQgZmll
+bGRzLCBub25lIG9mIHdoaWNoDQo+IHNlZW0gdG8gYXBwbHkgdG8gdGhpcyBwYXJ0aWN1bGFyIGJv
+YXJkLiAgRnVydGhlcm1vcmUsIGl0IGRvZXNuJ3Qgc2VlbSB0bw0KPiBiZSBwb3NzaWJsZSB0byBz
+cGVjaWZ5IGEgcGFydGljdWxhciBQSFksIHN1Y2ggYXMgdGhlIGtzejkwMjEuDQo+IA0KPiBJIHNl
+ZSB0aGUgcGF0dGVybiBvZiBnZXR0aW5nIE9GIHNldHRpbmdzIGZyb20gYSBwYXJlbnQncyBub2Rl
+IHVzZWQNCj4gZWxzZXdoZXJlIGluIHRoZSBrZXJuZWwuICBGb3IgZXhhbXBsZSwgaW4gbW1jX29m
+X3BhcnNlKCksIG9yIG1vcmUNCj4gc2ltaWxhcmx5IGluIHRoZSBjaGlwaWRlYSBjaV9oZHJjX3By
+b2JlKCkgZHJpdmVyLg0KDQpZZXMsIHRoZSBwYXRjaCBpcyBvbmx5IHJlYXNvbmFibGUgZm9yIHlv
+dXIgcGxhdGZvcm0sIGJ1dCBpdCBpcyB0aGUgcGh5IGRyaXZlciBmb3IgZGlmZmVyZW50IHBsYXRm
+b3JtcyB0aGF0IHlvdSBtdXN0IGNvbnNpZGVyYXRlLg0KUGxlYXNlIGFkZCBtb3JlIGV4YW1wbGUg
+Y2FzZXMgaW4gYmluZGluZyBkb2MuDQoNCg==
 
