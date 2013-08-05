@@ -1,14 +1,14 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail1.g1.pair.com ([66.39.3.162]:27983 "EHLO mail1.g1.pair.com"
+Received: from mail1.g1.pair.com ([66.39.3.162]:31932 "EHLO mail1.g1.pair.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1754329Ab3HEHVE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Mon, 5 Aug 2013 03:21:04 -0400
+	id S1752442Ab3HEETM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Mon, 5 Aug 2013 00:19:12 -0400
 From: Sean Cross <xobs@kosagi.com>
-Subject: [PATCH v5] net/phy: micrel: Add OF configuration support for ksz9021
-Date: Mon,  5 Aug 2013 07:04:08 +0000
-Message-Id: <1375686248-17995-2-git-send-email-xobs@kosagi.com>
-In-Reply-To: <1375686248-17995-1-git-send-email-xobs@kosagi.com>
-References: <1375686248-17995-1-git-send-email-xobs@kosagi.com>
+Subject: [PATCH v4] net/phy: micrel: Add OF configuration support for ksz9021
+Date: Mon,  5 Aug 2013 04:02:10 +0000
+Message-Id: <1375675330-14220-2-git-send-email-xobs@kosagi.com>
+In-Reply-To: <1375675330-14220-1-git-send-email-xobs@kosagi.com>
+References: <1375675330-14220-1-git-send-email-xobs@kosagi.com>
 Sender: devicetree-owner@vger.kernel.org
 To: Sascha Hauer <s.hauer@pengutronix.de>, Duan Fugang-B38611 <B38611@freescale.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 Cc: David Miller <davem@davemloft.net>, "stephen@networkplumber.org" <stephen@networkplumber.org>, Steven Rostedt <rostedt@goodmis.org>, Sean Cross <xobs@kosagi.com>
@@ -24,66 +24,36 @@ PHY device node is present.
 
 Signed-off-by: Sean Cross <xobs@kosagi.com>
 ---
- .../devicetree/bindings/net/micrel-ksz9021.txt     |   49 ++++++++++
+ .../devicetree/bindings/net/micrel-ksz9021.txt     |   19 ++++
  drivers/net/phy/micrel.c                           |  101 +++++++++++++++++++-
- 2 files changed, 149 insertions(+), 1 deletion(-)
+ 2 files changed, 119 insertions(+), 1 deletion(-)
  create mode 100644 Documentation/devicetree/bindings/net/micrel-ksz9021.txt
 
 diff --git a/Documentation/devicetree/bindings/net/micrel-ksz9021.txt b/Documentation/devicetree/bindings/net/micrel-ksz9021.txt
 new file mode 100644
-index 0000000..338a7e2
+index 0000000..b3e5cd2
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/net/micrel-ksz9021.txt
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,19 @@
 +Micrel KSZ9021 Gigabit Ethernet PHY
 +
 +Some boards require special tuning values, particularly when it comes to
 +clock delays.  You can specify clock delay values by adding
 +micrel-specific properties to an Ethernet OF device node.
 +
-+All skew control options are specified in picoseconds.  The minimum
-+value is 0, and the maximum value is 3000.
-+
 +Optional properties:
-+ - rxc-skew : Skew control of RXC pad
-+ - rxdv-skew : Skew control of RX CTL pad
-+ - txc-skew : Skew control of TXC pad
-+ - txen-skew : Skew control of TX_CTL pad
-+ - rxd0-skew : Skew control of RX data 0 pad
-+ - rxd1-skew : Skew control of RX data 1 pad
-+ - rxd2-skew : Skew control of RX data 2 pad
-+ - rxd3-skew : Skew control of RX data 3 pad
-+ - txd0-skew : Skew control of TX data 0 pad
-+ - txd1-skew : Skew control of TX data 1 pad
-+ - txd2-skew : Skew control of TX data 2 pad
-+ - txd3-skew : Skew control of TX data 3 pad
++- micrel,clk-control-pad-skew : Timing offset for the MII clock line
++- micrel,rx-data-pad-skew : Timing offset for the RX MII pad
++- micrel,tx-data-pad-skew : Timing offset for the TX MII pad
 +
-+Examples:
-+
-+	/* Attach to an Ethernet device with autodetected PHY */
++Example:
 +	&enet {
-+		rxc-skew = <3000>; // picoseconds
-+		rxdv-skew = <0>;   // picoseconds
-+		txc-skew = <3000>; // picoseconds
-+		txen-skew = <0>;   // picoseconds
++		micrel,clk-control-pad-skew = <0xf0f0>;
++		micrel,rx-data-pad-skew = <0x0000>;
++		micrel,tx-data-pad-skew = <0xffff>;
 +		status = "okay";
 +	};
 +
-+	/* Attach to an explicitly-specified PHY */
-+	mdio {
-+		phy0: ethernet-phy@0 {
-+			rxc-skew = <3000>; // picoseconds
-+			rxdv-skew = <0>;   // picoseconds
-+			txc-skew = <3000>; // picoseconds
-+			txen-skew = <0>;   // picoseconds
-+			reg = <0>;
-+		};
-+	};
-+	ethernet@70000 {
-+		status = "okay";
-+		phy = <&phy0>;
-+		phy-mode = "rgmii-id";
-+	};
 diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
 index 2510435..3e60ed0 100644
 --- a/drivers/net/phy/micrel.c
