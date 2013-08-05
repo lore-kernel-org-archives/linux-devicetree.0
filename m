@@ -1,64 +1,53 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from moutng.kundenserver.de ([212.227.17.8]:52438 "EHLO
-	moutng.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752290Ab3HEPab (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 11:30:31 -0400
-Date: Mon, 5 Aug 2013 17:30:26 +0200 (CEST)
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH/RFC] mmc: sh_mmcif: revision-specific configuration from
- Device Tree
-In-Reply-To: <8661vkgqdw.fsf@void.printf.net>
-Message-ID: <Pine.LNX.4.64.1308051722490.22479@axis700.grange>
+Received: from void.printf.net ([89.145.121.20]:56775 "EHLO void.printf.net"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753792Ab3HEOcN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Mon, 5 Aug 2013 10:32:13 -0400
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH/RFC] mmc: sh_mmcif: revision-specific configuration from Device Tree
 References: <Pine.LNX.4.64.1308051514350.22479@axis700.grange>
- <8661vkgqdw.fsf@void.printf.net>
+Date: Mon, 05 Aug 2013 15:32:11 +0100
+In-Reply-To: <Pine.LNX.4.64.1308051514350.22479@axis700.grange> (Guennadi
+	Liakhovetski's message of "Mon, 5 Aug 2013 16:11:02 +0200 (CEST)")
+Message-ID: <8661vkgqdw.fsf@void.printf.net>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 Cc: linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Daniel Drake <dsd@laptop.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Chris
+Hi Guennadi,
 
-On Mon, 5 Aug 2013, Chris Ball wrote:
+On Mon, Aug 05 2013, Guennadi Liakhovetski wrote:
+> Add compatibility strings to configure MMCIF revision-specific features.
+> MMCIF blocks are always integrated into SoCs, so, we use SoC model to
+> distinguish between MMCIF versions.
+>
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> ---
+>
+> Hi Chris,
+> I marked this as RFC, because having no access to the MMC standard I'm not 
+> certain about VccQ requirements for MMC DDR. On the one hand a comment in 
+> mmc.c says
+> 	 * EXT_CSD_CARD_TYPE_DDR_1_8V means 3.3V or 1.8V vccq.
+> which suggests, that DDR (DDR50?) can be used with VccQ = 3.3V, 1.8V and 
+> 1.2V at least. But in mmc_init_card() DDR50 is only requested from the 
+> driver if either MMC_CAP_1_8V_DDR or MMC_CAP_1_2V_DDR is specified in 
+> host's capabilities. So, I'm actually not sure whether MMC_CAP_UHS_DDR50 
+> alone without 1_8V or 1_2V makes sense. That's also what I implemented in 
+> this patch - DDR50 is only enabled in combination with either 1.2 or 1.8V 
+> capability. Is this correct?
 
-> Hi Guennadi,
-> 
-> On Mon, Aug 05 2013, Guennadi Liakhovetski wrote:
-> > Add compatibility strings to configure MMCIF revision-specific features.
-> > MMCIF blocks are always integrated into SoCs, so, we use SoC model to
-> > distinguish between MMCIF versions.
-> >
-> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-> > ---
-> >
-> > Hi Chris,
-> > I marked this as RFC, because having no access to the MMC standard I'm not 
-> > certain about VccQ requirements for MMC DDR. On the one hand a comment in 
-> > mmc.c says
-> > 	 * EXT_CSD_CARD_TYPE_DDR_1_8V means 3.3V or 1.8V vccq.
-> > which suggests, that DDR (DDR50?) can be used with VccQ = 3.3V, 1.8V and 
-> > 1.2V at least. But in mmc_init_card() DDR50 is only requested from the 
-> > driver if either MMC_CAP_1_8V_DDR or MMC_CAP_1_2V_DDR is specified in 
-> > host's capabilities. So, I'm actually not sure whether MMC_CAP_UHS_DDR50 
-> > alone without 1_8V or 1_2V makes sense. That's also what I implemented in 
-> > this patch - DDR50 is only enabled in combination with either 1.2 or 1.8V 
-> > capability. Is this correct?
-> 
-> OLPC's using DDR50 at 3.3V in production.  Honestly, I don't know
-> whether it's spec compliant (I think the spec claims that 1.8V is
-> required) but it happens to work on these parts.  The host controller
-> does support 1.8V, there's just no hardware capable of supplying 1.8V
-> to MMC on the board.
+OLPC's using DDR50 at 3.3V in production.  Honestly, I don't know
+whether it's spec compliant (I think the spec claims that 1.8V is
+required) but it happens to work on these parts.  The host controller
+does support 1.8V, there's just no hardware capable of supplying 1.8V
+to MMC on the board.
 
-Thanks for the example. So, I think, for now it should be ok to just act 
-in a way, compatible with the mmc core, i.e. always set one of 
-MMC_CAP_1_8V_DDR or MMC_CAP_1_2V_DDR, when aiming at MMC_CAP_UHS_DDR50. 
-So, the patch should be ok then.
+Thanks,
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>ng
