@@ -1,105 +1,45 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp65.ord1c.emailsrvr.com ([108.166.43.65]:39140 "EHLO
-	smtp65.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754638Ab3HBQ2e (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 12:28:34 -0400
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: [PATCH v2 3/5] devicetree: create a separate binding description for sata_highbank
-Date: Fri,  2 Aug 2013 11:28:36 -0500
-Message-Id: <1375460918-4661-3-git-send-email-mark.langsdorf@calxeda.com>
-In-Reply-To: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com>
-References: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com>
+Received: from co1ehsobe001.messaging.microsoft.com ([216.32.180.184]:5432
+	"EHLO co1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754329Ab3HEHTW (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 03:19:22 -0400
+From: Nicolin Chen <b42378@freescale.com>
+Subject: [PATCH v3 0/2] Add freescale S/PDIF CPU DAI and machine drivers
+Date: Mon, 5 Aug 2013 15:29:39 +0800
+Message-ID: <1375687781-23225-1-git-send-email-b42378@freescale.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
-Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
+To: broonie@kernel.org, lars@metafoo.de
+Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com
 List-ID: <devicetree@vger.kernel.org>
 
-The Calxeda sata_highbank driver has been adding its descriptions to the
-ahci driver. Separate them properly.
+Changelog:
+v2->v3:
+ * Removed a wrong tag from the commit of patch-1.
+v1->v2:
+ * Dropped one applied patch for spdif dummy codec drivers.
+ * Use generic DMA DT binding.
+ * Let spdif controller driver calculate the clock div.
+ * Added one optional clock source for spdif tx.
+ * Reivsed documentation accordingly.
 
-Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Acked-by: Rob Herring <rob.herring@calxeda.com>
----
-Changes from v1
-	None.
+Nicolin Chen (2):
+  ASoC: fsl: Add S/PDIF CPU DAI driver
+  ASoC: fsl: Add S/PDIF machine driver
 
- .../devicetree/bindings/ata/ahci-platform.txt      | 14 ++--------
- .../devicetree/bindings/ata/sata_highbank.txt      | 32 ++++++++++++++++++++++
- 2 files changed, 34 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/sata_highbank.txt
+ .../devicetree/bindings/sound/fsl,spdif.txt        |   62 +
+ .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +
+ sound/soc/fsl/Kconfig                              |   14 +
+ sound/soc/fsl/Makefile                             |    4 +
+ sound/soc/fsl/fsl_spdif.c                          | 1311 ++++++++++++++++++++
+ sound/soc/fsl/fsl_spdif.h                          |  227 ++++
+ sound/soc/fsl/imx-spdif.c                          |  134 ++
+ 7 files changed, 1781 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
+ create mode 100644 sound/soc/fsl/fsl_spdif.c
+ create mode 100644 sound/soc/fsl/fsl_spdif.h
+ create mode 100644 sound/soc/fsl/imx-spdif.c
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-index 3ec0c5c..14d7b22 100644
---- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-@@ -4,27 +4,17 @@ SATA nodes are defined to describe on-chip Serial ATA controllers.
- Each SATA controller should have its own node.
- 
- Required properties:
--- compatible        : compatible list, contains "calxeda,hb-ahci" or "snps,spear-ahci"
-+- compatible        : compatible list, contains "snps,spear-ahci"
- - interrupts        : <interrupt mapping for SATA IRQ>
- - reg               : <registers mapping>
- 
- Optional properties:
--- calxeda,port-phys: phandle-combophy and lane assignment, which maps each
--			SATA port to a combophy and a lane within that
--			combophy
--- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
--			which indicates that the driver supports SGPIO
--			indicator lights using the indicated GPIOs
--- calxeda,led-order : a u32 array that map port numbers to offsets within the
--			SGPIO bitstream.
- - dma-coherent      : Present if dma operations are coherent
- 
- Example:
-         sata@ffe08000 {
--		compatible = "calxeda,hb-ahci";
-+		compatible = "snps,spear-ahci";
-                 reg = <0xffe08000 0x1000>;
-                 interrupts = <115>;
--		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
--					&combophy0 2 &combophy0 3>;
- 
-         };
-diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
-new file mode 100644
-index 0000000..aa1b798
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/sata_highbank.txt
-@@ -0,0 +1,32 @@
-+* Calxeda AHCI SATA Controller
-+
-+SATA nodes are defined to describe on-chip Serial ATA controllers.
-+The Calxeda SATA controller mostly conforms to the AHCI interface
-+with some special extensions to add functionality.
-+Each SATA controller should have its own node.
-+
-+Required properties:
-+- compatible        : compatible list, contains "calxeda,hb-ahci"
-+- interrupts        : <interrupt mapping for SATA IRQ>
-+- reg               : <registers mapping>
-+
-+Optional properties:
-+- dma-coherent      : Present if dma operations are coherent
-+- calxeda,port-phys: phandle-combophy and lane assignment, which maps each
-+			SATA port to a combophy and a lane within that
-+			combophy
-+- calxeda,sgpio-gpio: phandle-gpio bank, bit offset, and default on or off,
-+			which indicates that the driver supports SGPIO
-+			indicator lights using the indicated GPIOs
-+- calxeda,led-order : a u32 array that map port numbers to offsets within the
-+			SGPIO bitstream.
-+
-+Example:
-+        sata@ffe08000 {
-+		compatible = "calxeda,hb-ahci";
-+                reg = <0xffe08000 0x1000>;
-+                interrupts = <115>;
-+		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
-+					&combophy0 2 &combophy0 3>;
-+
-+        };
--- 
-1.8.1.2
 
