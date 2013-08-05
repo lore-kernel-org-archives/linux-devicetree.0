@@ -1,17 +1,14 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 17/31] clk: mpc512x: introduce COMMON_CLK for MPC512x
-Date: Mon, 5 Aug 2013 12:37:20 +0100
-Message-ID: <20130805113720.GE9910@e106331-lin.cambridge.arm.com>
-References: <1374166855-7280-1-git-send-email-gsi@denx.de>
- <1374495298-22019-1-git-send-email-gsi@denx.de>
- <1374495298-22019-18-git-send-email-gsi@denx.de>
+From: Michal Nazarewicz <mina86@mina86.com>
+Subject: Re: [PATCH v4 1/4] drivers: dma-contiguous: clean source code and
+ prepare for device tree
+Date: Mon, 05 Aug 2013 16:06:17 +0200
+Message-ID: <xa1twqo0ut9i.fsf@mina86.com>
+References: <1375275119-12787-1-git-send-email-m.szyprowski@samsung.com>
+ <1375275119-12787-2-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="=-=-="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1374495298-22019-18-git-send-email-gsi@denx.de>
-Content-Language: en-US
+In-Reply-To: <1375275119-12787-2-git-send-email-m.szyprowski@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,107 +18,168 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gerhard Sittig <gsi@denx.de>
-Cc: Mike Turquette <mturquette@linaro.org>, Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Anatolij Gustschin <agust@denx.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+To: linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree-discuss@lists.ozlabs.org
+Cc: Laura Abbott <lauraa@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, Sascha Hauer <s.hauer@pengutronix.de>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 22, 2013 at 01:14:44PM +0100, Gerhard Sittig wrote:
-> this change implements a clock driver for the MPC512x PowerPC platform
-> which follows the COMMON_CLK approach and uses common clock drivers
-> shared with other platforms
->
-> this driver implements the publicly announced set of clocks (which can
-> get referenced by means of symbolic identifiers from the dt-bindings
-> header file), as well as generates additional 'struct clk' items where
-> the SoC hardware cannot easily get mapped to the common primitives of
-> the clock API, or requires "intermediate" clock nodes to represent
-> clocks that have both gates and dividers
->
-> the previous PPC_CLOCK implementation is kept in place and remains in
-> parallel to the common clock implementation for test and comparison
-> during migration, a compile time option picks one of the two
-> alternatives (Kconfig switch, common clock used by default)
->
-> some of the clock items get pre-enabled in the clock driver to not have
-> them automatically disabled by the underlying clock subsystem because of
-> their being unused -- this approach is desirable because
-> - some of the clocks are useful to have for diagnostics and information
->   despite their not getting claimed by any drivers (CPU, internal and
->   external RAM, internal busses, boot media)
-> - some of the clocks aren't claimed by their peripheral drivers yet,
->   either because of missing driver support or because device tree specs
->   aren't available yet (but the workarounds will get removed as the
->   drivers get adjusted and the device tree provides the clock specs)
-> - some help introduce support for and migrate to the common
->   infrastructure, while more appropriate support for specific hardware
->   constraints isn't available yet (remaining changes are strictly
->   internal to the clock driver and won't affect peripheral drivers)
->
-> clkdev registration provides "alias names" for few clock items
-> - to not break those peripheral drivers which encode their component
->   index into the name that is used for clock lookup (UART, SPI, USB)
-> - to not break those drivers which use names for the clock lookup which
->   were encoded in the previous PPC_CLOCK implementation (NFC, VIU, CAN)
-> this workaround will get removed as these drivers get adjusted after
-> device tree based clock lookup has become available
->
-> Signed-off-by: Gerhard Sittig <gsi@denx.de>
-> ---
->  arch/powerpc/platforms/512x/Kconfig           |   14 +-
->  arch/powerpc/platforms/512x/Makefile          |    4 +-
->  arch/powerpc/platforms/512x/clock-commonclk.c |  786 +++++++++++++++++++++++++
->  include/linux/clk-provider.h                  |   16 +
->  4 files changed, 818 insertions(+), 2 deletions(-)
->  create mode 100644 arch/powerpc/platforms/512x/clock-commonclk.c
->
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-[...]
+On Wed, Jul 31 2013, Marek Szyprowski wrote:
+> This patch cleans the initialization of dma contiguous framework. The
+> all-in-one dma_declare_contiguous() function is now separated into
+> dma_contiguous_reserve_area() which only steals the the memory from
+> memblock allocator and dma_contiguous_add_device() function, which
+> assigns given device to the specified reserved memory area. This improves
+> the flexibility in defining contiguous memory areas and assigning device
+> to them, because now it is possible to assign more than one device to
+> the given contiguous memory area. Such split in initialization procedure
+> is also required for upcoming device tree support.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
 
-> +static int get_freq_from_dt(char *propname)
-> +{
-> +       struct device_node *np;
-> +       const unsigned int *prop;
-> +       int val;
+Acked-by: Michal Nazarewicz <mina86@mina86.com>
+
+Even though I have some comments.
+
+> @@ -124,22 +124,29 @@ void __init dma_contiguous_reserve(phys_addr_t limi=
+t)
+>  #endif
+>  	}
+>=20=20
+> -	if (selected_size) {
+> +	if (selected_size && !dma_contiguous_default_area) {
+
+Perhaps check this earlier in the function?  Also, maybe WARN would be
+in order when dma_contiguous_reserve is called with
+dma_contiguous_default_area already reserved.
+
+>  		pr_debug("%s: reserving %ld MiB for global area\n", __func__,
+>  			 (unsigned long)selected_size / SZ_1M);
+>=20=20
+> -		dma_declare_contiguous(NULL, selected_size, 0, limit);
+> +		dma_contiguous_reserve_area(selected_size, 0, limit,
+> +					    &dma_contiguous_default_area);
+>  	}
+>  };
+>=20=20
+>  static DEFINE_MUTEX(cma_mutex);
+
+
+> -int __init dma_declare_contiguous(struct device *dev, phys_addr_t size,
+> -				  phys_addr_t base, phys_addr_t limit)
+> +int __init dma_contiguous_reserve_area(phys_addr_t size, phys_addr_t bas=
+e,
+> +				       phys_addr_t limit, struct cma **res_cma)
+
+> @@ -277,10 +245,11 @@ int __init dma_declare_contiguous(struct device *de=
+v, phys_addr_t size,
+>  	 * Each reserved area must be initialised later, when more kernel
+>  	 * subsystems (like slab allocator) are available.
+>  	 */
+> -	r->start =3D base;
+> -	r->size =3D size;
+> -	r->dev =3D dev;
+> -	cma_reserved_count++;
+> +	cma->base_pfn =3D PFN_DOWN(base);
+> +	cma->count =3D size >> PAGE_SHIFT;
+> +	*res_cma =3D cma;
+
+Alternatively it could return a pointer, but either way=E2=80=A6
+
+> +	cma_area_count++;
 > +
-> +       val = 0;
-> +       np = of_find_compatible_node(NULL, NULL, "fsl,mpc5121-immr");
-> +       if (np) {
-> +               prop = of_get_property(np, propname, NULL);
-> +               if (prop)
-> +                       val = *prop;
-> +           of_node_put(np);
-> +       }
-> +       return val;
+>  	pr_info("CMA: reserved %ld MiB at %08lx\n", (unsigned long)size / SZ_1M,
+>  		(unsigned long)base);
+>=20=20
+
+> +int __init dma_contiguous_add_device(struct device *dev, struct cma *cma)
+> +{
+> +	dev_set_cma_area(dev, cma);
+> +	return 0;
 > +}
 
-Can you not use of_property_read_u32 here rather than of_get_property?
+This never fails and it is used in dma_declare_contiguous w/o checking
+for errors so perhaps it should return void?  Applies to some other
+functions as well.
 
-Also, this seems rather unlike the common clock bindings method for
-describing frequencies in the dt. Given there's nothing in mainline
-using this yet, we can do it 'right' from the start.
+Moreover, this function is so tiny, it makes me wonder why does it exist
+in the first place (why would anyone call it rather then
+dev_set_cma_area?  is it just matter of name?), and since it exists, why
+not put it to a header file as a static inline.
 
-[...]
+> +int __init dma_contiguous_set_default_area(struct cma *cma)
+> +{
+> +	dma_contiguous_default_area =3D cma;
+> +	return 0;
+>  }
 
-> +       /*
-> +        * externally provided clocks (when implemented in hardware,
-> +        * device tree may specify values which otherwise were unknown)
-> +        */
-> +       freq = get_freq_from_dt("psc_mclk_in");
-> +       if (!freq)
-> +               freq = 25000000;
-> +       clks[MPC512x_CLK_PSC_MCLK_IN] = mpc512x_clk_fixed("psc_mclk_in", freq);
-> +       freq = get_freq_from_dt("spdif_tx_in");
-> +       clks[MPC512x_CLK_SPDIF_TX_IN] = mpc512x_clk_fixed("spdif_tx_in", freq);
-> +       freq = get_freq_from_dt("spdif_rx_in");
-> +       clks[MPC512x_CLK_SPDIF_TX_IN] = mpc512x_clk_fixed("spdif_rx_in", freq);
+Ditto.
 
-Can we not just use fixed-clocks for these in the dt? It feels odd to
-describe them in a compeltely differnet way in the dt, especially as
-we'll have to maintain some backwards compatibility for a while...
+> +static inline int dma_declare_contiguous(struct device *dev, phys_addr_t=
+ size,
+> +					 phys_addr_t base, phys_addr_t limit)
+> +{
+> +	struct cma *cma;
+> +	int ret;
 
-I see for psc_mclk_in we assume a default value if not present. I'm not
-sure how to handle that, but I assume there's some way of finding out if
-we've already registered a clock output with the same name?
++	if (WARN_ON(!dev))
++		return -EINVAL;
 
-Thanks,
-Mark.
+> +	ret =3D dma_contiguous_reserve_area(size, base, limit, &cma);
+> +	if (ret =3D=3D 0)
+> +		dma_contiguous_add_device(dev, cma);
+> +
+> +	return ret;
+> +}
+
+--=20
+Best regards,                                         _     _
+.o. | Liege of Serenely Enlightened Majesty of      o' \,=3D./ `o
+..o | Computer Science,  Micha=C5=82 =E2=80=9Cmina86=E2=80=9D Nazarewicz   =
+ (o o)
+ooo +----<email/xmpp: mpn@google.com>--------------ooO--(_)--Ooo--
+--=-=-=
+Content-Type: multipart/signed; boundary="==-=-=";
+	micalg=pgp-sha1; protocol="application/pgp-signature"
+
+--==-=-=
+Content-Type: text/plain
+
+
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJR/7FZAAoJECBgQBJQdR/0+3IP/3PaEV+O+5XzVZV8r3eLBF3I
+FOUdGBBiWIlulG4agodTVkCL6AdmKQ8ocEr+pBMxYoPTxbofblVANXSmj33q/Cpb
+bFkIppWY+8IAC4v0WJUTbeDT0soVNIKXPwWrIgag6NGFdPK7f+CD2psLRI6KOFM2
+MGlZFhhBVt3HMGDE6lZ8oCq3It5dWBe7Am2dwXgXL4vKfhJZqp2bsVH55NbZVI/+
+tTtLT1vmZ2shSqxWqdnwUM8oPuIam0G0ZlEAjimBFqLmPvEeLq8atOhUomz+A+1L
+vdynCKU0PqCwkfM7mnSxPFhwNFo75kx6dLb5II5VhPAua6mty4KbrtYMET6yLCPt
+RSuJz+t7ljA+F1lx6S6LtVe0jJZU3hK6/2zjnCi6ccCZ02yib9HisiXadGXUSJbD
+r/wemhrabxk1QE9XPAUbFJx7NB784ZEmlrwADGqOC5T8GyH4Q7Ds1VnEpTS00Qos
+5FH2Gl9r+U9PAKiJ3LdpHERn6MTX8MIgXaKpIhY38EM4Dx1ohzz1T4Q7USbJOVpD
+gdZHpm2keklcv4rpeaARMnDY21s1WE1px56PUESatqOoPuNWotFYfAUP/VkkwFAU
+5jslxg0j8BBC3eCdm28sD1oXVNGAVmB1EFftstea1UH+YFsV5giS/QIJAkSYqDDy
+NmlBzntJwubr8P1MiEho
+=HCxf
+-----END PGP SIGNATURE-----
+--==-=-=--
+
+--=-=-=
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=-=-=--
