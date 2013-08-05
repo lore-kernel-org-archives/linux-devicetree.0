@@ -1,48 +1,45 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from caramon.arm.linux.org.uk ([78.32.30.218]:40073 "EHLO
-	caramon.arm.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751829Ab3HCNwG (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sat, 3 Aug 2013 09:52:06 -0400
-Date: Sat, 3 Aug 2013 14:51:51 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v3 3/4] ASoc: kirkwood: add DT support
-Message-ID: <20130803135150.GA23006@n2100.arm.linux.org.uk>
-References: <20130731081832.54212b76@armhf>
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:7629 "EHLO
+	hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754836Ab3HEHUd (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 03:20:33 -0400
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 0/3] pinctrl: add pincontrol driver for palmas device.
+Date: Mon, 5 Aug 2013 13:03:31 +0530
+Message-ID: <1375688014-6117-1-git-send-email-ldewangan@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20130731081832.54212b76@armhf>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Rob Herring <rob.herring@calxeda.com>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: swarren@wwwdotorg.org, linus.walleij@linaro.org
+Cc: ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Jul 31, 2013 at 08:18:32AM +0200, Jean-Francois Moine wrote:
-> The kirkwood audio driver is used without DT in the Kirkwood machine.
-> This patch adds a DT compatible definition for use in other Marvell
-> machines such as the Armada 88AP510 (Dove).
-> 
-> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
-> ---
->  sound/soc/kirkwood/kirkwood-i2s.c        | 27 ++++++++++++++++------
->  1 file changed, 20 insertions(+), 7 deletions(-)
+Changes from V1:
+- Split the additon of common code into pinctrl-utils and pinconf-generic.
+- Use the pinconf-generic APIs for mapping node.
+- Use pinconf generic properties to define the Palmas pincontrol nodes.
+- Nit and cleanups, typo fixes, rephrasing the sentences etc.
+- Use pin specific APIs for setting pin configuration rather than group
+  specific.
 
-This misses documentation for the DT conversion.  Documentation should be
-created at the same time as a driver is converted.  I think you should
-combine patches 3 and 4 together given that you add the documentation and
-change the DT compatible name you've given this driver in this patch in
-patch 4.
-> 
-> diff --git a/sound/soc/kirkwood/kirkwood-i2s.c b/sound/soc/kirkwood/kirkwood-i2s.c
-> index a13fffb..234b5a1 100644
-> --- a/sound/soc/kirkwood/kirkwood-i2s.c
-> +++ b/sound/soc/kirkwood/kirkwood-i2s.c
-> @@ -12,7 +12,6 @@
->  
->  #include <linux/init.h>
->  #include <linux/module.h>
-> -#include <linux/platform_device.h>
+Laxman Dewangan (3):
+  pinctrl: add utility functions for add map/configs
+  pinctrl: pinconf-generic: add generic APIs for mapping pinctrl node
+  pinctrl: palmas: add pincontrol driver
 
-Why are you getting rid of this include?  It still makes use of platform
-devices and the like, so it _should_ continue to include this.  Don't
-rely on implicit includes.
+ .../bindings/pinctrl/pinctrl-bindings.txt          |   16 +
+ .../devicetree/bindings/pinctrl/pinctrl-palmas.txt |   97 ++
+ drivers/pinctrl/Kconfig                            |   10 +
+ drivers/pinctrl/Makefile                           |    3 +-
+ drivers/pinctrl/pinconf-generic.c                  |   96 ++
+ drivers/pinctrl/pinctrl-palmas.c                   | 1085 ++++++++++++++++++++
+ drivers/pinctrl/pinctrl-utils.c                    |  135 +++
+ drivers/pinctrl/pinctrl-utils.h                    |   42 +
+ include/linux/mfd/palmas.h                         |   35 +-
+ include/linux/pinctrl/pinconf-generic.h            |    6 +
+ 10 files changed, 1513 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
+ create mode 100644 drivers/pinctrl/pinctrl-palmas.c
+ create mode 100644 drivers/pinctrl/pinctrl-utils.c
+ create mode 100644 drivers/pinctrl/pinctrl-utils.h
+
