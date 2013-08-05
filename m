@@ -1,55 +1,191 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:40550 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753964Ab3HEVms (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 17:42:48 -0400
-Message-ID: <52001C54.7020908@wwwdotorg.org>
-Date: Mon, 05 Aug 2013 15:42:44 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17900 "EHLO
+	hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754329Ab3HEHUo (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 03:20:44 -0400
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 2/3] pinctrl: pinconf-generic: add generic APIs for mapping pinctrl node
+Date: Mon, 5 Aug 2013 13:03:33 +0530
+Message-ID: <1375688014-6117-3-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1375688014-6117-1-git-send-email-ldewangan@nvidia.com>
+References: <1375688014-6117-1-git-send-email-ldewangan@nvidia.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH V2 2/3] pinctrl: pinconf-generic: add generic APIs for
- mapping pinctrl node
-References: <1375688014-6117-1-git-send-email-ldewangan@nvidia.com> <1375688014-6117-3-git-send-email-ldewangan@nvidia.com>
-In-Reply-To: <1375688014-6117-3-git-send-email-ldewangan@nvidia.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: linus.walleij@linaro.org, ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com
+To: swarren@wwwdotorg.org, linus.walleij@linaro.org
+Cc: ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/05/2013 01:33 AM, Laxman Dewangan wrote:
-> Add generic APIs to map the DT node and its sub node in pinconf generic
-> driver. These APIs can be used from driver to parse the DT node who
+Add generic APIs to map the DT node and its sub node in pinconf generic
+driver. These APIs can be used from driver to parse the DT node who
+uses the pinconf generic APIs for defining their nodes.
 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> index aeb3c99..52fb521 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> @@ -174,3 +174,19 @@ All parameters not listed here, do not take an argument.
->  
->  More in-depth documentation on these parameters can be found in
->  <include/linux/pinctrl/pinconfig-generic.h>
-> +
-> +Generic pinconfig option also support the defining of pins and functions.
-> +The properties are:
-> +pinctrl-pins: This property tells the name of pins or list of pins for which
-> +  configuration is needed. The valid pin names are device/chip specific and
-> +  it can be found from the device/chip specific binding documents.
-> +pinctrl-function: This property tells the configuration of the pins on to the
-> +  given function. The valid functions are device/chip specific and it can be
-> +  found from the device/chip specific binding documents.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+Changes from V1: 
+- Add generic property for pins and functions in pinconf-generic.
+- Add APIs to map the DT and subnode.
+- Move common utils APIs to the pinctrl-utils from this file.
+- Update the binding document accordingly.
 
-This text feels like it's just been bolted on the end rather than
-integrated into the existing description of generic pinconfig options.
-Also, the existing text for generic pinconfig options doesn't feel at
-all right to me. I'll send a patch to clean that up, and integrate these
-new properties.
+ .../bindings/pinctrl/pinctrl-bindings.txt          |   16 ++++
+ drivers/pinctrl/pinconf-generic.c                  |   96 ++++++++++++++++++++
+ include/linux/pinctrl/pinconf-generic.h            |    6 ++
+ 3 files changed, 118 insertions(+), 0 deletions(-)
 
-I would name the new properties just pins and functions, given their
-scope is explicitly limited to pinctrl configuration nodes, so
-"pinctrl-" is a little redundant.
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index aeb3c99..52fb521 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -174,3 +174,19 @@ All parameters not listed here, do not take an argument.
+ 
+ More in-depth documentation on these parameters can be found in
+ <include/linux/pinctrl/pinconfig-generic.h>
++
++Generic pinconfig option also support the defining of pins and functions.
++The properties are:
++pinctrl-pins: This property tells the name of pins or list of pins for which
++  configuration is needed. The valid pin names are device/chip specific and
++  it can be found from the device/chip specific binding documents.
++pinctrl-function: This property tells the configuration of the pins on to the
++  given function. The valid functions are device/chip specific and it can be
++  found from the device/chip specific binding documents.
++
++Example:
++gpio0_id:gpio0 {
++	pinctrl-pins = "gpio0";
++	pinctrl-function = "id";
++	bias-pull-up;
++};
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index 8594f03..87ef767 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -24,6 +24,7 @@
+ #include <linux/of.h>
+ #include "core.h"
+ #include "pinconf.h"
++#include "pinctrl-utils.h"
+ 
+ #ifdef CONFIG_DEBUG_FS
+ 
+@@ -236,4 +237,99 @@ out:
+ 	kfree(cfg);
+ 	return ret;
+ }
++
++int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
++		struct device_node *np, struct pinctrl_map **map,
++		unsigned *reserved_maps, unsigned *num_maps)
++{
++	int ret;
++	const char *function;
++	struct device *dev = pctldev->dev;
++	unsigned long *configs = NULL;
++	unsigned num_configs = 0;
++	unsigned reserve;
++	struct property *prop;
++	const char *group;
++
++	ret = of_property_read_string(np, "pinctrl-function", &function);
++	if (ret < 0) {
++		/* EINVAL=missing, which is fine since it's optional */
++		if (ret != -EINVAL)
++			dev_err(dev,
++				"could not parse property ti,function\n");
++		function = NULL;
++	}
++
++	ret = pinconf_generic_parse_dt_config(np, &configs, &num_configs);
++	if (ret < 0) {
++		dev_err(dev, "could not parse node property\n");
++		return ret;
++	}
++
++	reserve = 0;
++	if (function != NULL)
++		reserve++;
++	if (num_configs)
++		reserve++;
++	ret = of_property_count_strings(np, "pinctrl-pins");
++	if (ret < 0) {
++		dev_err(dev, "could not parse property ti,pins\n");
++		goto exit;
++	}
++	reserve *= ret;
++
++	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps,
++			num_maps, reserve);
++	if (ret < 0)
++		goto exit;
++
++	of_property_for_each_string(np, "pinctrl-pins", prop, group) {
++		if (function) {
++			ret = pinctrl_utils_add_map_mux(pctldev, map,
++					reserved_maps, num_maps, group,
++					function);
++			if (ret < 0)
++				goto exit;
++		}
++
++		if (num_configs) {
++			ret = pinctrl_utils_add_map_configs(pctldev, map,
++					reserved_maps, num_maps, group, configs,
++					num_configs, PIN_MAP_TYPE_CONFIGS_PIN);
++			if (ret < 0)
++				goto exit;
++		}
++	}
++	ret = 0;
++
++exit:
++	kfree(configs);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(pinconf_generic_dt_subnode_to_map);
++
++int pinconf_generic_dt_node_to_map(struct pinctrl_dev *pctldev,
++		struct device_node *np_config, struct pinctrl_map **map,
++		unsigned *num_maps)
++{
++	unsigned reserved_maps;
++	struct device_node *np;
++	int ret;
++
++	reserved_maps = 0;
++	*map = NULL;
++	*num_maps = 0;
++
++	for_each_child_of_node(np_config, np) {
++		ret = pinconf_generic_dt_subnode_to_map(pctldev, np, map,
++						&reserved_maps, num_maps);
++		if (ret < 0) {
++			pinctrl_utils_dt_free_map(pctldev, *map, *num_maps);
++			return ret;
++		}
++	}
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pinconf_generic_dt_node_to_map);
++
+ #endif
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index bf7e989..a472b93 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -137,6 +137,12 @@ static inline unsigned long pinconf_to_config_packed(enum pin_config_param param
+ 	return PIN_CONF_PACKED(param, argument);
+ }
+ 
++int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
++		struct device_node *np, struct pinctrl_map **map,
++		unsigned *reserved_maps, unsigned *num_maps);
++int pinconf_generic_dt_node_to_map(struct pinctrl_dev *pctldev,
++		struct device_node *np_config, struct pinctrl_map **map,
++		unsigned *num_maps);
+ #endif /* CONFIG_GENERIC_PINCONF */
+ 
+ #endif /* __LINUX_PINCTRL_PINCONF_GENERIC_H */
+-- 
+1.7.1.1
 
-With the properties renamed, and this patch rebased on top of the patch
-I'll send out later, this patch,
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
