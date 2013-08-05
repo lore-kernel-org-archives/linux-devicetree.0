@@ -1,14 +1,14 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from am1ehsobe006.messaging.microsoft.com ([213.199.154.209]:9079
-	"EHLO am1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754800Ab3HEHTa (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 03:19:30 -0400
+Received: from co1ehsobe004.messaging.microsoft.com ([216.32.180.187]:12977
+	"EHLO co1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754318Ab3HEF72 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 01:59:28 -0400
 From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v3 2/2] ASoC: fsl: Add S/PDIF machine driver
-Date: Mon, 5 Aug 2013 15:29:41 +0800
-Message-ID: <1375687781-23225-3-git-send-email-b42378@freescale.com>
-In-Reply-To: <1375687781-23225-1-git-send-email-b42378@freescale.com>
-References: <1375687781-23225-1-git-send-email-b42378@freescale.com>
+Subject: [PATCH v2 2/2] ASoC: fsl: Add S/PDIF machine driver
+Date: Mon, 5 Aug 2013 14:09:25 +0800
+Message-ID: <1375682965-3116-3-git-send-email-b42378@freescale.com>
+In-Reply-To: <1375682965-3116-1-git-send-email-b42378@freescale.com>
+References: <1375682965-3116-1-git-send-email-b42378@freescale.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
