@@ -1,56 +1,64 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mailout4.samsung.com ([203.254.224.34]:29857 "EHLO
-	mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751525Ab3HGENo (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 00:13:44 -0400
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH V5] pci: exynos: split into two parts such as Synopsys part
- and Exynos part
-Date: Wed, 07 Aug 2013 13:13:42 +0900
-Message-id: <002501ce9324$8066f5a0$8134e0e0$@samsung.com>
-MIME-version: 1.0
-Content-type: text/plain; charset=us-ascii
-Content-transfer-encoding: 7bit
-Content-language: ko
+Received: from mail-vb0-f50.google.com ([209.85.212.50]:51036 "EHLO
+	mail-vb0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754217Ab3HEFKW (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 01:10:22 -0400
+MIME-Version: 1.0
+In-Reply-To: <51FD78B5.6080507@gmail.com>
+References: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
+	<51FD78B5.6080507@gmail.com>
+Date: Mon, 5 Aug 2013 10:40:20 +0530
+Message-ID: <CALt3h78H3pmdyKJJibN35NB--DSZ9Mfdi-PpxH+MdCpbhU+=Jg@mail.gmail.com>
+Subject: Re: [RFC v3 00/13] Exynos5 IS driver
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: 'Bjorn Helgaas' <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jingoo Han <jg1.han@samsung.com>
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, shaik.ameer@samsung.com, kilyeon.im@samsung.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Wednesday, July 31, 2013 5:14 PM, Jingoo Han <jg1.han@samsung.com> wrote:
-> Exynos PCIe IP consists of Synopsys specific part and Exynos
-> specific part. Only core block is a Synopsys designware part;
-> other parts are Exynos specific.
-> Also, the Synopsys designware part can be shared with other
-> platforms; thus, it can be split two parts such as Synopsys
-> designware part and Exynos specific part.
-> 
-> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-> Cc: Pratyush Anand <pratyush.anand@st.com>
-> Cc: Mohit KUMAR <Mohit.KUMAR@st.com>
+Hi Sylwester,
 
-Hi Bjorn Helgaas,
+On Sun, Aug 4, 2013 at 3:10 AM, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
+> Hi Arun,
+>
+>
+> On 08/02/2013 05:02 PM, Arun Kumar K wrote:
+>>
+>> The patch series add support for Exynos5 camera subsystem. It
+>> re-uses mipi-csis and fimc-lite from exynos4-is and adds a new
+>> media device and fimc-is device drivers for exynos5.
+>> The media device supports asynchronos subdev registration for the
+>> fimc-is sensors and is based on the patch series from Sylwester
+>> for exynos4-is [1].
+>>
+>> [1]http://www.mail-archive.com/linux-media@vger.kernel.org/msg64653.html
+>>
+>> Changes from v2
+>> ---------------
+>> - Added exynos5 media device driver from Shaik to this series
+>> - Added ISP pipeline support in media device driver
+>> - Based on Sylwester's latest exynos4-is development
+>> - Asynchronos registration of sensor subdevs
+>> - Made independent IS-sensor support
+>> - Add s5k4e5 sensor driver
+>> - Addressed review comments from Sylwester, Hans, Andrzej, Sachin
+>
+>
+> This is starting to look pretty good to me, I hope we can merge this
+> patch set for v3.12. Let use coming two weeks for one or two review/
+> corrections round.
 
-There is no comment for last 2 weeks.
-Will you accept this patch?
+Sure. I will address the review comments quickly and send v4 version.
 
+> In the meantime I've done numerous fixes to the patch series [1],
+> especially the clock provider code was pretty buggy on the clean up
+> paths. Let's go through the patches and see what can be improved yet.
+>
 
-Best regards,
-Jingoo Han
+Ok. Is the updated version available in your git repository
+git://linuxtv.org/snawrocki/samsung.git?
 
-> ---
-> Changes since v4:
-> - fixed section mismatch warnings
-> - fixed sparse warnings
-> 
->  .../devicetree/bindings/pci/designware-pcie.txt    |    3 +
->  arch/arm/boot/dts/exynos5440.dtsi                  |    2 +
->  drivers/pci/host/Makefile                          |    3 +-
->  drivers/pci/host/pci-exynos.c                      |  530 ++++++++++
->  drivers/pci/host/pcie-designware.c                 | 1011 ++++++--------------
->  drivers/pci/host/pcie-designware.h                 |   65 ++
->  6 files changed, 874 insertions(+), 740 deletions(-)
->  create mode 100644 drivers/pci/host/pci-exynos.c
->  create mode 100644 drivers/pci/host/pcie-designware.h
-
-
+Regards
+Arun
