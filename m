@@ -1,153 +1,104 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v10] reset: Add driver for gpio-controlled reset pins
-Date: Mon, 05 Aug 2013 09:32:16 +0200
-Message-ID: <1375687936.4000.21.camel@pizza.hi.pengutronix.de>
-References: <1374139586-6344-1-git-send-email-p.zabel@pengutronix.de>
- <20130802092823.GA2884@e106331-lin.cambridge.arm.com>
+From: Josh Wu <josh.wu@atmel.com>
+Subject: Re: [PATCH 6/6] mtd: ofpart: add compatible check for child nodes
+Date: Mon, 5 Aug 2013 19:33:36 +0800
+Message-ID: <51FF8D90.2060308@atmel.com>
+References: <1375701279-11495-1-git-send-email-josh.wu@atmel.com>
+ <1375701279-11495-7-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130802092823.GA2884@e106331-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1375701279-11495-7-git-send-email-josh.wu@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Josh Wu <josh.wu@atmel.com>
+Cc: devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, dedekind1@gmail.com, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Add device tree mail list to CC.
 
-Am Freitag, den 02.08.2013, 10:28 +0100 schrieb Mark Rutland:
-> On Thu, Jul 18, 2013 at 10:26:26AM +0100, Philipp Zabel wrote:
-> > This driver implements a reset controller device that toggle a gpio
-> > connected to a reset pin of a peripheral IC. The delay between assertion
-> > and de-assertion of the reset signal can be configured via device tree.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Reviewed-by: Stephen Warren <swarren@nvidia.com>
-> > ---
-> > Changes since v9:
-> >  - Use gpio_set_value_cansleep unconditionally. reset_controller_assert/deassert
-> >    should not be called from atomic context.
-> > ---
-> >  .../devicetree/bindings/reset/gpio-reset.txt       |  35 ++++
-> >  drivers/reset/Kconfig                              |  11 ++
-> >  drivers/reset/Makefile                             |   1 +
-> >  drivers/reset/gpio-reset.c                         | 184 +++++++++++++++++++++
-> >  4 files changed, 231 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/reset/gpio-reset.txt
-> >  create mode 100644 drivers/reset/gpio-reset.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> > new file mode 100644
-> > index 0000000..bca5348
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> > @@ -0,0 +1,35 @@
-> > +GPIO reset controller
-> > +=====================
-> > +
-> > +A GPIO reset controller controls a single GPIO that is connected to the reset
-> > +pin of a peripheral IC. Please also refer to reset.txt in this directory for
-> > +common reset controller binding usage.
-> > +
-> > +Required properties:
-> > +- compatible: Should be "gpio-reset"
-> > +- reset-gpios: A gpio used as reset line. The gpio specifier for this property
-> > +               depends on the gpio controller that provides the gpio.
-> > +- #reset-cells: 0, see below
-> > +
-> > +Optional properties:
-> > +- reset-delay-us: delay in microseconds. The gpio reset line will be asserted for
-> > +                  this duration to reset.
-> > +- initially-in-reset: boolean. If not set, the initial state should be a
-> > +                      deasserted reset line. If this property exists, the
-> > +                      reset line should be kept in reset.
-> > +
-> > +example:
-> > +
-> > +sii902x_reset: gpio-reset {
-> > +	compatible = "gpio-reset";
-> > +	reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-> > +	reset-delay-us = <10000>;
-> > +	initially-in-reset;
-> > +	#reset-cells = <0>;
-> > +};
-> > +
-> > +/* Device with nRESET pin connected to GPIO5_0 */
-> > +sii902x@39 {
-> > +	/* ... */
-> > +	resets = <&sii902x_reset>; /* active-low GPIO5_0, 10 ms delay */
-> > +};
-> 
-> I don't like the approach here. The reset GPIO line is not a device in
-> itself, and surely the way in which it must be toggled to reset a device
-> is a property of that device, not the GPIO. We're leaking a Linux
-> internal abstraction rather than describing teh hardware.
+On 8/5/2013 7:14 PM, Josh Wu wrote:
+> In case that the nand device will support some features like Nand Flash
+> Controller, we want to make the sub feature as a sub node of nand device.
+>
+> Use such organization it is easy to enable/disable feature, also it is back
+> compatible and more readable.
+>
+> If the sub-node has a compatible property then it is a driver not partition.
+>
+> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+> Acked-by: Brian Norris <computersforpeace@gmail.com>
+> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> ---
+> v3 --> v4:
+>    - remove the 'len' parameter, just use NULL.
+>    - refine the commit message.
+>    - also add a NOTE in devicetree/bindings/mtd/partition.txt.
+>
+>   .../devicetree/bindings/mtd/partition.txt          |    1 +
+>   drivers/mtd/ofpart.c                               |   13 ++++++++++++-
+>   2 files changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
+> index 9315ac9..8e5557d 100644
+> --- a/Documentation/devicetree/bindings/mtd/partition.txt
+> +++ b/Documentation/devicetree/bindings/mtd/partition.txt
+> @@ -4,6 +4,7 @@ Partitions can be represented by sub-nodes of an mtd device. This can be used
+>   on platforms which have strong conventions about which portions of a flash are
+>   used for what purposes, but which don't use an on-flash partition table such
+>   as RedBoot.
+> +NOTE: if the sub-node has a compatible string, then it is not a partition.
+>   
+>   #address-cells & #size-cells must both be present in the mtd device. There are
+>   two valid values for both:
+> diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
+> index 553d6d6..30fcea1 100644
+> --- a/drivers/mtd/ofpart.c
+> +++ b/drivers/mtd/ofpart.c
+> @@ -20,6 +20,10 @@
+>   #include <linux/slab.h>
+>   #include <linux/mtd/partitions.h>
+>   
+> +static bool node_has_compatible(struct device_node *pp)
+> +{
+> +	return of_get_property(pp, "compatible", NULL);
+> +}
+>   static int parse_ofpart_partitions(struct mtd_info *master,
+>   				   struct mtd_partition **pparts,
+>   				   struct mtd_part_parser_data *data)
+> @@ -40,8 +44,12 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+>   	/* First count the subnodes */
+>   	pp = NULL;
+>   	nr_parts = 0;
+> -	while ((pp = of_get_next_child(node, pp)))
+> +	while ((pp = of_get_next_child(node, pp))) {
+> +		if (node_has_compatible(pp))
+> +			continue;
+> +
+>   		nr_parts++;
+> +	}
+>   
+>   	if (nr_parts == 0)
+>   		return 0;
+> @@ -57,6 +65,9 @@ static int parse_ofpart_partitions(struct mtd_info *master,
+>   		int len;
+>   		int a_cells, s_cells;
+>   
+> +		if (node_has_compatible(pp))
+> +			continue;
+> +
+>   		reg = of_get_property(pp, "reg", &len);
+>   		if (!reg) {
+>   			nr_parts--;
 
-you are right, this results from the reset bindings being designed for
-actual hardware reset controllers that appeared in several SoCs.
-Initially I've sent the GPIO reset driver only as an example.
 
-> I think thie linkage of the gpio would be better described on the node
-> for the device with the reset input, in a binding-specific property for
-> the device (e.g. names for the specific input line on the device):
-> 
-> I'd imagine the delay required would be fixed for a device (or possibly
-> influenced by clock inputs), and can either be knwon by the driver
-> without dt information, or discovered elsewhere (e.g. dervied from the
-> rates of clock inputs). We shuold be able to derive that from the
-> compatible string in most cases.
-> 
-> I think this should look more like the below:
-> 
-> /* Device with nRESET pin connected to GPIO5_0 */
-> sii902x@39 {
-> 	/* named for the actual input line */
-> 	nreset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-> 	/* 
-> 	 * If there's some configurable property relating to the reset
-> 	 * line, we can describe it
-> 	 */
-> 	vendor,some-optional-reset-gpio-property;
-> 	...
-> };
-
-I don't like the arbitrary name, as that makes it difficult to handle
-this in an automated way. In this case I'd prefer to use 'reset-gpios'
-and optionally 'reset-gpio-names' analogous to how clocks and interrupts
-(and resets) are handled. The framework itself could then also check the
-reset-gpios property and create the gpio reset controllers on the fly:
-
-sii902x@39 {
-	reset-gpios <&gpio5 0 GPIO_ACTIVE_LOW>;
-	reset-gpio-names = "nreset";
-	reset-delay-us = <10000>;
-	initially-in-reset;
-};
-
-But this reintroduces the (currently theoretical) problem of how to
-express delays and initially-in-reset information for multiple gpio
-resets on a single device if that information cannot be determined by
-the driver automatically.
-
-If there is a fixed delay (or a delay calculated from a known clock), we
-can just extend the API:
-	device_reset_usleep(dev, 1000);
-instead of currently:
-	device_reset(dev);
-
-> If we want a separate device in the Linux driver model to abstract this,
-> that's fine, but it should not be described in the dt. The device driver
-> can call some generic helpers to handle creating said reset device in
-> the driver model.
-
-regards
-Philipp
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
