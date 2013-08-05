@@ -1,23 +1,28 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:57573 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755040Ab3HEWE2 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 18:04:28 -0400
-Message-ID: <52002167.2050504@wwwdotorg.org>
-Date: Mon, 05 Aug 2013 16:04:23 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
-MIME-Version: 1.0
+Received: from mail-wi0-f172.google.com ([209.85.212.172]:48772 "EHLO
+	mail-wi0-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754940Ab3HEHoL (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 03:44:11 -0400
+Received: by mail-wi0-f172.google.com with SMTP id hj13so1116049wib.5
+        for <devicetree@vger.kernel.org>; Mon, 05 Aug 2013 00:44:10 -0700 (PDT)
+Date: Mon, 5 Aug 2013 08:44:05 +0100
+From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH V2 3/3] pinctrl: palmas: add pincontrol driver
-References: <1375688014-6117-1-git-send-email-ldewangan@nvidia.com> <1375688014-6117-4-git-send-email-ldewangan@nvidia.com>
+Message-ID: <20130805074405.GA29942@lee--X1>
+References: <1375688014-6117-1-git-send-email-ldewangan@nvidia.com>
+ <1375688014-6117-4-git-send-email-ldewangan@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <1375688014-6117-4-git-send-email-ldewangan@nvidia.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: linus.walleij@linaro.org, ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com
+Cc: swarren@wwwdotorg.org, linus.walleij@linaro.org, ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/05/2013 01:33 AM, Laxman Dewangan wrote:
+On Mon, 05 Aug 2013, Laxman Dewangan wrote:
+
 > TI Palmas series Power Management IC have multiple pins which can be
 > configured for different functionality. This pins can be configured
 > for different function. Also their properties like pull up/down,
@@ -25,78 +30,31 @@ On 08/05/2013 01:33 AM, Laxman Dewangan wrote:
 > 
 > Add support for pincontrol driver Palmas series device like TPS65913,
 > TPS80036. The driver supports to be register from DT only.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+> Changes from V1: 
+> - Use pinconf generic properties to define the Palmas pincontrol nodes.
+> - Nit and cleanups, typo fixes, rephrasing the sentences etc.
+> - Use pin specific APIs for setting pin configuration rather than group
+>   specific.
+> 
+>  .../devicetree/bindings/pinctrl/pinctrl-palmas.txt |  107 ++
+>  drivers/pinctrl/Kconfig                            |   10 +
+>  drivers/pinctrl/Makefile                           |    1 +
+>  drivers/pinctrl/pinctrl-palmas.c                   | 1085 ++++++++++++++++++++
+>  include/linux/mfd/palmas.h                         |   35 +-
 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
+For the MFD stuff:
 
-> +Required subnode-properties:
-> +- pinctrl-pins: An array of strings. Each string contains the name of a pin.
-> +  Valid values for these names are listed below.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-s/pinctrl-pins/pins/ I think.
+>  5 files changed, 1227 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
+>  create mode 100644 drivers/pinctrl/pinctrl-palmas.c
 
-> +Optional subnode-properties:
-> +- pinctrl-function:  string containing the name of the function to mux to the
-> +  pin. Valid values for function names are listed below. Please refer the
-> +  datasheet of the device to determine which are valid for each pin.
-
-s/pinctrl-function/function/ I think.
-
-> +The properties "pinctrl-pins" and "pinctrl-function" ara generic pincontrol
-> +properties and described in pinctrl-bindings.txt.
-> +
-> +Following are other valid propeties for Palams pinctrol dt node which are
-> +described in pinctrl-bindings.txt.
-> +bias-disable, bias-pull-up, bias-pull-down, bias-pull-pin-default
-> +drive-open-drain: Value will represent the open drain to be enable/disable
-> + of pins.
-> +    0: Disable, 1: Enable.
-
-I'd be tempted to replace everything I quoted above with something a
-little simpler to avoid any redundancy with pinctrl-bindings.txt:
-
-==========
-This binding uses the following generic properties as defined in
-pinctrl-bindings.txt:
-
-Required: pins
-Options: function, bias-disable, bias-pull-up, bias-pull-down,
-bias-pin-default, drive-open-drain.
-==========
-
-> +Note that many of these properties are only valid for certain specific pins.
-> +See the Palmas device datasheet for complete details regarding which pins
-> +support which functionality.
-> +
-> +Valid values for pin names are:
-> +pins: gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7, gpio8, gpio9,
-
-"pins:" is redundant here.
-
-> +	gpio10, gpio11, gpio12, gpio13, gpio14, gpio15, vac, powergood,
-> +	nreswarm, pwrdown, gpadc_start, reset_in, nsleep, enable1, enable2,
-> +	int.
-> +
-> +function: gpio, led, pwm, regen, sysen, clk32kgaudio, id, vbus_det, chrg_det,
-
-I think you would want to structure this list the same as the pins list,
-so prefix it with "Valid values for function names are:", and delete
-"function:" at the start of the list.
-
-> +There is 4 special function: opt0, opt1, opt2 and opt3. If this functions are
-
-s/this/any of these/
-
-> +selected then directly pins register will be written with 0, 1, 2 and 3
-
-s/and/or/
-
-> +repectively if it is valid for that pins.
-
-s/repectively/respectively/
-
-Hmm. I'm not sure I like mixing those functions with the more "semantic"
-function names above. I'd prefer the driver support either the semantic
-names or the raw names, but not both. It's not really a big deal though
-I suppose.
-
-I didn't review the code, just the binding.
+-- 
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
