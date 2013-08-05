@@ -1,14 +1,16 @@
-From: Michal Nazarewicz <mina86@mina86.com>
-Subject: Re: [PATCH v4 4/4] ARM: init: add support for reserved memory defined
- by device tree
-Date: Mon, 05 Aug 2013 16:31:50 +0200
-Message-ID: <xa1tr4e8us2x.fsf@mina86.com>
-References: <1375275119-12787-1-git-send-email-m.szyprowski@samsung.com>
- <1375275119-12787-5-git-send-email-m.szyprowski@samsung.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v10] reset: Add driver for gpio-controlled reset pins
+Date: Mon, 5 Aug 2013 16:13:51 +0100
+Message-ID: <20130805151351.GB13091@e106331-lin.cambridge.arm.com>
+References: <1374139586-6344-1-git-send-email-p.zabel@pengutronix.de>
+ <20130802092823.GA2884@e106331-lin.cambridge.arm.com>
+ <51FC11FF.4060604@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-=-="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1375275119-12787-5-git-send-email-m.szyprowski@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <51FC11FF.4060604@wwwdotorg.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,97 +20,139 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree-discuss@lists.ozlabs.org
-Cc: Laura Abbott <lauraa@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Marc <marc.ceeeee@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, Sascha Hauer <s.hauer@pengutronix.de>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "Rafael J. Wysocki" <rjw@sisk.pl>, Philipp Zabel <p.zabel@pengutronix.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Fri, Aug 02, 2013 at 09:09:35PM +0100, Stephen Warren wrote:
+> On 08/02/2013 03:28 AM, Mark Rutland wrote:
+> > On Thu, Jul 18, 2013 at 10:26:26AM +0100, Philipp Zabel wrote:
+> >> This driver implements a reset controller device that toggle a gpio
+> >> connected to a reset pin of a peripheral IC. The delay between assertion
+> >> and de-assertion of the reset signal can be configured via device tree.
+> 
+> >> diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> 
+> >> +GPIO reset controller
+> >> +=====================
+> >> +
+> >> +A GPIO reset controller controls a single GPIO that is connected to the reset
+> >> +pin of a peripheral IC. Please also refer to reset.txt in this directory for
+> >> +common reset controller binding usage.
+> >> +
+> >> +Required properties:
+> >> +- compatible: Should be "gpio-reset"
+> >> +- reset-gpios: A gpio used as reset line. The gpio specifier for this property
+> >> +               depends on the gpio controller that provides the gpio.
+> >> +- #reset-cells: 0, see below
+> >> +
+> >> +Optional properties:
+> >> +- reset-delay-us: delay in microseconds. The gpio reset line will be asserted for
+> >> +                  this duration to reset.
+> >> +- initially-in-reset: boolean. If not set, the initial state should be a
+> >> +                      deasserted reset line. If this property exists, the
+> >> +                      reset line should be kept in reset.
+> >> +
+> >> +example:
+> >> +
+> >> +sii902x_reset: gpio-reset {
+> >> +	compatible = "gpio-reset";
+> >> +	reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+> >> +	reset-delay-us = <10000>;
+> >> +	initially-in-reset;
+> >> +	#reset-cells = <0>;
+> >> +};
+> >> +
+> >> +/* Device with nRESET pin connected to GPIO5_0 */
+> >> +sii902x@39 {
+> >> +	/* ... */
+> >> +	resets = <&sii902x_reset>; /* active-low GPIO5_0, 10 ms delay */
+> >> +};
+> > 
+> > I don't like the approach here. The reset GPIO line is not a device in
+> > itself, and surely the way in which it must be toggled to reset a device
+> > is a property of that device, not the GPIO. We're leaking a Linux
+> > internal abstraction rather than describing the hardware.
+> 
+> At first, I was going to say I disagree completely, but I do see your point.
+> 
+> I don't think that having a separate reset controller concept in DT, and
+> having a GPIO implementation of that, is purely exposing Linux concepts
+> in the DT. It's just one way of looking at the HW. As you say, another
+> is that any external chip that needs reset has a GPIO input.
+> 
+> The history here is that we have to concept of IP modules inside a chip
+> that can be reset, and that reset is driven by some external entity to
+> the IP block, and hence there's a concept of a "reset controller" that
+> drives that reset. That enables arbitrary different implementations to
+> cover the case of the IP block being dropped into different SoCs with
+> different ways of resetting it.
+> 
+> Extend that same concept to external chips that happen to have GPIOs
+> driving the chip's reset inputs, and you get this GPIO reset controller
+> binding.
+> 
+> On the surface, any external chip is going to be reset by a GPIO, and
+> hence that should be represented by a property in that external chip's
+> DT node, just as you say.
+> 
+> But what if the reset pin is /not/ hooked up to a GPIO? What if there's
+> a dedicated "reset" HW device that drives the reset input, and all it
+> can do is pulse the reset, not maintain it at some static level, and
+> hence that signal can't be represented as a GPIO? Or what if the core of
+> the external chip gets integrated into an SoC, which has a reset
+> controller rather than a GPIO input? Of course, I have no idea how
+> likely this would be.
+> 
+> To cover those cases, continuing to abstract the reset input
+> semantically as a reset input, rather than as a plain GPIO, might make
+> sense.
 
-On Wed, Jul 31 2013, Marek Szyprowski wrote:
-> Enable reserved memory initialization from device tree.
->
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+That does sound reasonable. Do we have any of the above cases described
+in any existing DTs?
 
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
+If I've not misunderstood, there seem to be a lot of *reset-gpio*
+properties Documented (e.g. nvidia,phy-reset-gpio) which look like what
+I was suggesting (though perhaps that's a different meaning of reset,
+I'm not that familiar with PHYs). Given it's a common pattern already, I
+think it would make sense to allow for that style of binding (in
+addition to supporting more complex reset devices as required).
 
-> ---
->  arch/arm/mm/init.c |    3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-> index 15225d8..82db8d8 100644
-> --- a/arch/arm/mm/init.c
-> +++ b/arch/arm/mm/init.c
-> @@ -20,6 +20,7 @@
->  #include <linux/highmem.h>
->  #include <linux/gfp.h>
->  #include <linux/memblock.h>
-> +#include <linux/dma-mapping.h>
->  #include <linux/dma-contiguous.h>
->  #include <linux/sizes.h>
->=20=20
-> @@ -377,6 +378,8 @@ void __init arm_memblock_init(struct meminfo *mi, str=
-uct machine_desc *mdesc)
->  	if (mdesc->reserve)
->  		mdesc->reserve();
->=20=20
-> +	dma_reserved_mem_of_reserve();
-> +
->  	/*
->  	 * reserve memory for DMA contigouos allocations,
->  	 * must come from DMA area inside low memory
-> --=20
-> 1.7.9.5
->
+The reset bindings (Documentation/devicetree/bindings/reset/reset.txt)
+seem to suggest that both are reasonable.
 
---=20
-Best regards,                                         _     _
-.o. | Liege of Serenely Enlightened Majesty of      o' \,=3D./ `o
-..o | Computer Science,  Micha=C5=82 =E2=80=9Cmina86=E2=80=9D Nazarewicz   =
- (o o)
-ooo +----<email/xmpp: mpn@google.com>--------------ooO--(_)--Ooo--
---=-=-=
-Content-Type: multipart/signed; boundary="==-=-=";
-	micalg=pgp-sha1; protocol="application/pgp-signature"
+> 
+> > I think thie linkage of the gpio would be better described on the node
+> > for the device with the reset input, in a binding-specific property for
+> > the device (e.g. names for the specific input line on the device):
+> > 
+> > I'd imagine the delay required would be fixed for a device (or possibly
+> > influenced by clock inputs), and can either be knwon by the driver
+> > without dt information, or discovered elsewhere (e.g. dervied from the
+> > rates of clock inputs). We shuold be able to derive that from the
+> > compatible string in most cases.
+> > 
+> > I think this should look more like the below:
+> > 
+> > /* Device with nRESET pin connected to GPIO5_0 */
+> > sii902x@39 {
+> > 	/* named for the actual input line */
+> > 	nreset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+> > 	/* 
+> > 	 * If there's some configurable property relating to the reset
+> > 	 * line, we can describe it
+> > 	 */
+> > 	vendor,some-optional-reset-gpio-property;
+> > 	...
+> > };
+> 
+> If we decide to ignore the case where the reset signal isn't driven by a
+> GPIO, yes, the above binding does look better.
+> 
 
---==-=-=
-Content-Type: text/plain
+For the GPIO case, I'd prefer to describe the GPIO input directly. I'm
+not opposed to also supporting the description of more complex reset
+devices. I believe it's feasible to support both?
 
-
---==-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJR/7dWAAoJECBgQBJQdR/0ETwP/R4WrBghz6R8BQP8anTT9Fo8
-KFqiTpNWTlkSgsnveE2DMd/GAA4koGpCnwfwiVXQBeqKtU8mShLM7iqqwP/bLZiS
-KLm+Ap0IFWX2ksKNwXGJL2ZC9t2WmXMzSgD4fCjm8/fSEZq2s8LLbMKqqXvEV0eZ
-xz+HRZ+JxowsHDzFBYERl0psANkgPVKWxrnSOi3XYVyKIa+ZpI7AXYhNx2Bv3J/N
-fuITzZeBv1Ztjqd0cc9RaBRQecKp3SXYLq3NpQfwY98b+uHDH8ERYq1Km9+zeIfT
-R23XrxcLBfXX8Ze5HOyOh2waYJx5evIuvQKU3IirtjKAktmEhEGoua/ZznHcQG5E
-ER951SwU0GPeDHSuS1tEwQiFGKSLj51wVi0PRLZeQwdRsWKVwoySusBVSOZp2m4X
-LGJYAKGMcE+Dw/nH+N8COfRGE5MTYeDEGiVxnwfHk2Be3ACti1Pvk6wV6j+ZBs8d
-jp67vi+aKCTy9i2VhIVf50f3BZrlAoZgpcsHAKz9vPv2uTJVyB36lNbD8SJjaTPn
-1khE/3K/LI6k7dvi57KTUnxtsrT3JbxxK71tYaTYZby/4BPjoofwdPe4hZrIY1gY
-U/0SoQELHKarnKiCaKfqa9Y/Iwol4VlJ3xHtcaDJDKKqpXME7yGawc6F8hgku7xE
-cV3vcALUUHjVnQ+V+3Q7
-=FGU5
------END PGP SIGNATURE-----
---==-=-=--
-
---=-=-=
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---=-=-=--
+Thanks,
+Mark.
