@@ -1,104 +1,127 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: Re: [PATCH 6/6] mtd: ofpart: add compatible check for child nodes
-Date: Mon, 5 Aug 2013 19:33:36 +0800
-Message-ID: <51FF8D90.2060308@atmel.com>
-References: <1375701279-11495-1-git-send-email-josh.wu@atmel.com>
- <1375701279-11495-7-git-send-email-josh.wu@atmel.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 17/31] clk: mpc512x: introduce COMMON_CLK for MPC512x
+Date: Mon, 5 Aug 2013 12:37:20 +0100
+Message-ID: <20130805113720.GE9910@e106331-lin.cambridge.arm.com>
+References: <1374166855-7280-1-git-send-email-gsi@denx.de>
+ <1374495298-22019-1-git-send-email-gsi@denx.de>
+ <1374495298-22019-18-git-send-email-gsi@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1375701279-11495-7-git-send-email-josh.wu@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Josh Wu <josh.wu@atmel.com>
-Cc: devicetree@vger.kernel.org, sergei.shtylyov@cogentembedded.com, dedekind1@gmail.com, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1374495298-22019-18-git-send-email-gsi@denx.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gerhard Sittig <gsi@denx.de>
+Cc: Mike Turquette <mturquette@linaro.org>, Detlev Zundel <dzu@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Brown <broonie@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Anatolij Gustschin <agust@denx.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree mail list to CC.
-
-On 8/5/2013 7:14 PM, Josh Wu wrote:
-> In case that the nand device will support some features like Nand Flash
-> Controller, we want to make the sub feature as a sub node of nand device.
+On Mon, Jul 22, 2013 at 01:14:44PM +0100, Gerhard Sittig wrote:
+> this change implements a clock driver for the MPC512x PowerPC platform
+> which follows the COMMON_CLK approach and uses common clock drivers
+> shared with other platforms
 >
-> Use such organization it is easy to enable/disable feature, also it is back
-> compatible and more readable.
+> this driver implements the publicly announced set of clocks (which can
+> get referenced by means of symbolic identifiers from the dt-bindings
+> header file), as well as generates additional 'struct clk' items where
+> the SoC hardware cannot easily get mapped to the common primitives of
+> the clock API, or requires "intermediate" clock nodes to represent
+> clocks that have both gates and dividers
 >
-> If the sub-node has a compatible property then it is a driver not partition.
+> the previous PPC_CLOCK implementation is kept in place and remains in
+> parallel to the common clock implementation for test and comparison
+> during migration, a compile time option picks one of the two
+> alternatives (Kconfig switch, common clock used by default)
 >
-> Signed-off-by: Josh Wu <josh.wu@atmel.com>
-> Acked-by: Brian Norris <computersforpeace@gmail.com>
-> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> some of the clock items get pre-enabled in the clock driver to not have
+> them automatically disabled by the underlying clock subsystem because of
+> their being unused -- this approach is desirable because
+> - some of the clocks are useful to have for diagnostics and information
+>   despite their not getting claimed by any drivers (CPU, internal and
+>   external RAM, internal busses, boot media)
+> - some of the clocks aren't claimed by their peripheral drivers yet,
+>   either because of missing driver support or because device tree specs
+>   aren't available yet (but the workarounds will get removed as the
+>   drivers get adjusted and the device tree provides the clock specs)
+> - some help introduce support for and migrate to the common
+>   infrastructure, while more appropriate support for specific hardware
+>   constraints isn't available yet (remaining changes are strictly
+>   internal to the clock driver and won't affect peripheral drivers)
+>
+> clkdev registration provides "alias names" for few clock items
+> - to not break those peripheral drivers which encode their component
+>   index into the name that is used for clock lookup (UART, SPI, USB)
+> - to not break those drivers which use names for the clock lookup which
+>   were encoded in the previous PPC_CLOCK implementation (NFC, VIU, CAN)
+> this workaround will get removed as these drivers get adjusted after
+> device tree based clock lookup has become available
+>
+> Signed-off-by: Gerhard Sittig <gsi@denx.de>
 > ---
-> v3 --> v4:
->    - remove the 'len' parameter, just use NULL.
->    - refine the commit message.
->    - also add a NOTE in devicetree/bindings/mtd/partition.txt.
+>  arch/powerpc/platforms/512x/Kconfig           |   14 +-
+>  arch/powerpc/platforms/512x/Makefile          |    4 +-
+>  arch/powerpc/platforms/512x/clock-commonclk.c |  786 +++++++++++++++++++++++++
+>  include/linux/clk-provider.h                  |   16 +
+>  4 files changed, 818 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/powerpc/platforms/512x/clock-commonclk.c
 >
->   .../devicetree/bindings/mtd/partition.txt          |    1 +
->   drivers/mtd/ofpart.c                               |   13 ++++++++++++-
->   2 files changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mtd/partition.txt b/Documentation/devicetree/bindings/mtd/partition.txt
-> index 9315ac9..8e5557d 100644
-> --- a/Documentation/devicetree/bindings/mtd/partition.txt
-> +++ b/Documentation/devicetree/bindings/mtd/partition.txt
-> @@ -4,6 +4,7 @@ Partitions can be represented by sub-nodes of an mtd device. This can be used
->   on platforms which have strong conventions about which portions of a flash are
->   used for what purposes, but which don't use an on-flash partition table such
->   as RedBoot.
-> +NOTE: if the sub-node has a compatible string, then it is not a partition.
->   
->   #address-cells & #size-cells must both be present in the mtd device. There are
->   two valid values for both:
-> diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
-> index 553d6d6..30fcea1 100644
-> --- a/drivers/mtd/ofpart.c
-> +++ b/drivers/mtd/ofpart.c
-> @@ -20,6 +20,10 @@
->   #include <linux/slab.h>
->   #include <linux/mtd/partitions.h>
->   
-> +static bool node_has_compatible(struct device_node *pp)
+
+[...]
+
+> +static int get_freq_from_dt(char *propname)
 > +{
-> +	return of_get_property(pp, "compatible", NULL);
+> +       struct device_node *np;
+> +       const unsigned int *prop;
+> +       int val;
+> +
+> +       val = 0;
+> +       np = of_find_compatible_node(NULL, NULL, "fsl,mpc5121-immr");
+> +       if (np) {
+> +               prop = of_get_property(np, propname, NULL);
+> +               if (prop)
+> +                       val = *prop;
+> +           of_node_put(np);
+> +       }
+> +       return val;
 > +}
->   static int parse_ofpart_partitions(struct mtd_info *master,
->   				   struct mtd_partition **pparts,
->   				   struct mtd_part_parser_data *data)
-> @@ -40,8 +44,12 @@ static int parse_ofpart_partitions(struct mtd_info *master,
->   	/* First count the subnodes */
->   	pp = NULL;
->   	nr_parts = 0;
-> -	while ((pp = of_get_next_child(node, pp)))
-> +	while ((pp = of_get_next_child(node, pp))) {
-> +		if (node_has_compatible(pp))
-> +			continue;
-> +
->   		nr_parts++;
-> +	}
->   
->   	if (nr_parts == 0)
->   		return 0;
-> @@ -57,6 +65,9 @@ static int parse_ofpart_partitions(struct mtd_info *master,
->   		int len;
->   		int a_cells, s_cells;
->   
-> +		if (node_has_compatible(pp))
-> +			continue;
-> +
->   		reg = of_get_property(pp, "reg", &len);
->   		if (!reg) {
->   			nr_parts--;
 
+Can you not use of_property_read_u32 here rather than of_get_property?
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Also, this seems rather unlike the common clock bindings method for
+describing frequencies in the dt. Given there's nothing in mainline
+using this yet, we can do it 'right' from the start.
+
+[...]
+
+> +       /*
+> +        * externally provided clocks (when implemented in hardware,
+> +        * device tree may specify values which otherwise were unknown)
+> +        */
+> +       freq = get_freq_from_dt("psc_mclk_in");
+> +       if (!freq)
+> +               freq = 25000000;
+> +       clks[MPC512x_CLK_PSC_MCLK_IN] = mpc512x_clk_fixed("psc_mclk_in", freq);
+> +       freq = get_freq_from_dt("spdif_tx_in");
+> +       clks[MPC512x_CLK_SPDIF_TX_IN] = mpc512x_clk_fixed("spdif_tx_in", freq);
+> +       freq = get_freq_from_dt("spdif_rx_in");
+> +       clks[MPC512x_CLK_SPDIF_TX_IN] = mpc512x_clk_fixed("spdif_rx_in", freq);
+
+Can we not just use fixed-clocks for these in the dt? It feels odd to
+describe them in a compeltely differnet way in the dt, especially as
+we'll have to maintain some backwards compatibility for a while...
+
+I see for psc_mclk_in we assume a default value if not present. I'm not
+sure how to handle that, but I assume there's some way of finding out if
+we've already registered a clock output with the same name?
+
+Thanks,
+Mark.
