@@ -1,12 +1,12 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from co1ehsobe001.messaging.microsoft.com ([216.32.180.184]:5432
+Received: from co1ehsobe004.messaging.microsoft.com ([216.32.180.187]:15336
 	"EHLO co1outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754329Ab3HEHTW (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 03:19:22 -0400
+	by vger.kernel.org with ESMTP id S1754270Ab3HEF7R (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 01:59:17 -0400
 From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v3 0/2] Add freescale S/PDIF CPU DAI and machine drivers
-Date: Mon, 5 Aug 2013 15:29:39 +0800
-Message-ID: <1375687781-23225-1-git-send-email-b42378@freescale.com>
+Subject: [PATCH v2 0/2] Add freescale S/PDIF CPU DAI and machine drivers
+Date: Mon, 5 Aug 2013 14:09:23 +0800
+Message-ID: <1375682965-3116-1-git-send-email-b42378@freescale.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -15,8 +15,6 @@ Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.
 List-ID: <devicetree@vger.kernel.org>
 
 Changelog:
-v2->v3:
- * Removed a wrong tag from the commit of patch-1.
 v1->v2:
  * Dropped one applied patch for spdif dummy codec drivers.
  * Use generic DMA DT binding.
