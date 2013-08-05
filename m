@@ -1,49 +1,62 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12]:41713 "EHLO
-	mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751835Ab3HAHac (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 03:30:32 -0400
-Date: Wed, 31 Jul 2013 18:11:50 -0700
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v7] serial:st-asc: Add ST ASC driver.
-Message-ID: <20130801011150.GA11704@kroah.com>
-References: <1375263408-12834-1-git-send-email-srinivas.kandagatla@st.com>
+Received: from mail-db8lp0185.outbound.messaging.microsoft.com ([213.199.154.185]:37029
+	"EHLO db8outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1752392Ab3HELdf (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 07:33:35 -0400
+Date: Mon, 5 Aug 2013 19:28:05 +0800
+From: Nicolin Chen <b42378@freescale.com>
+Subject: Re: [PATCH v3 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
+Message-ID: <20130805112804.GA6770@MrMyself>
+References: <1375687781-23225-1-git-send-email-b42378@freescale.com>
+ <1375687781-23225-2-git-send-email-b42378@freescale.com>
+ <1375697222.4000.59.camel@pizza.hi.pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1375263408-12834-1-git-send-email-srinivas.kandagatla@st.com>
+In-Reply-To: <1375697222.4000.59.camel@pizza.hi.pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Cc: linux-serial@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Gallimore <stephen.gallimore@st.com>, Stuart Menefy <stuart.menefy@st.com>, Arnd Bergmann <arnd@arndb.de>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: broonie@kernel.org, lars@metafoo.de, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Jul 31, 2013 at 10:36:48AM +0100, Srinivas KANDAGATLA wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> 
-> This patch adds support to ASC (asynchronous serial controller)
-> driver, which is basically a standard serial driver. This IP is common
-> across all the ST parts for settop box platforms.
-> 
-> ASC is embedded in ST COMMS IP block. It supports Rx & Tx functionality.
-> It support all industry standard baud rates.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> CC: Stephen Gallimore <stephen.gallimore@st.com>
-> CC: Stuart Menefy <stuart.menefy@st.com>
-> CC: Arnd Bergmann <arnd@arndb.de>
-> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> Hi Greg,
-> 
-> This patch is the part of the driver support for Sti ARM SOCs.
-> This patch undergone 3-4 cycles of review in arm-kernel mailing list.
-> All the patches in that series went into 3.11.
-> This patch is based on 3.11-rc1.
+Hi Philipp,
 
-This patch doesn't apply to my tree at all, can you please refresh it
-against my tty-next tree and resend it so that I can have the chance to
-apply it?
+   Thanks for the comments! I'll revise it and send a v4.
+   Here is my reply to some parts of your question.
 
-thanks,
+On Mon, Aug 05, 2013 at 12:07:02PM +0200, Philipp Zabel wrote:
+> This looks to me like a case of configuration data in the device tree.
+> Couldn't the tx/rx clock source be determined automatically or at least
+> the SoC specific clock sources to the mux be known to the driver, so
+> that we can use clock phandles here?
+> 
+> What happens if a different tx-clk-source is needed for 48 kHz than for
+> 44.1 kHz?
 
-greg k-h
+You are right about the case. I'll try to figure out a nicer way, including
+for the different sample-rate.
+
+
+> Do we already have anything for this in the kernel?
+> It could also be done using:
+> 
+> 	u8 tmp = input;
+> 
+>         tmp = ((tmp & 0b10101010) >> 1) | ((tmp << 1) & 0b10101010);
+>         tmp = ((tmp & 0b11001100) >> 2) | ((tmp << 2) & 0b11001100);
+>         tmp = ((tmp & 0b11110000) >> 4) | ((tmp << 4) & 0b11110000);
+> 
+> 	return tmp;
+
+I was also wondering this question but I couldn't find it.
+And obviously your algorithm is better :)
+
+
+> In principle, it should also be possible to let the SDMA engine only
+> take the FIFOs' MSBs for S16_LE. Is this a limitation of the SDMA ROM
+> script?
+
+You are right about the idea and the inference.
+
+
+
