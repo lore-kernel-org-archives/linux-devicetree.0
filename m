@@ -1,10 +1,11 @@
-From: Daniel Drake <mturquette@linaro.org>
-Subject: [PATCH RESEND 2/2] clk: mmp: add support for DT-defined clocks
-Date: Mon, 05 Aug 2013 15:00:57 -0700
-Message-ID: <20130805220057.5348.98721@quantum>
+From: <dinguyen@altera.com>
+Subject: [RESEND PATCH 1/2] ARM: dts: Change dw-apb-timer-osc and
+ dw-apb-timer-sp to just dw-apb-timer
+Date: Mon, 5 Aug 2013 17:02:37 -0500
+Message-ID: <1375740158-10012-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -15,172 +16,219 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: eric.y.miao@gmail.com, haojian.zhuang@gmail.com, mturquette@linaro.org
-Cc: devicetree-discuss@lists.ozlabs.org, pgf@laptop.org, linux-arm-kernel@lists.infradead.org
+To: dinh.linux@gmail.com
+Cc: Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Pavel Machek <pavel@denx.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Jamie Iles <jamie@jamieiles.com>, Dinh Nguyen <dinguyen@altera.com>, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHN1cHBvcnQgdG8gdGhlIGV4aXN0aW5nIG1tcCBjbG9jayBkcml2ZXJzIGZvciBjbG9ja3Mg
-dG8gYmUgZGVmaW5lZAppbiB0aGUgZGV2aWNlIHRyZWUuIFRoaXMgd2lsbCBiZSB1c2VkIG9uIE9M
-UEMgTU1QMi9NTVAzLWJhc2VkIGxhcHRvcHMuCgpJZiBjbG9jayBpbmZvIGNhbm5vdCBiZSBmb3Vu
-ZCBpbiB0aGUgZGV2aWNlIHRyZWUsIHdlIGZhbGwgYmFjayB0byB0aGUKc3RhdGljIGNsb2NrIGlu
-aXRpYWxpemF0aW9uIGFscmVhZHkgcHJlc2VudC4KClNpZ25lZC1vZmYtYnk6IERhbmllbCBEcmFr
-ZSA8ZHNkQGxhcHRvcC5vcmc+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svbW1w
-LWFwYmMudHh0ICAgICAgICAgfCAzMCArKysrKysrKysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9jbG9jay9tbXAtYXBtdS50eHQgICAgICAgICB8IDMwICsrKysrKysrKysKIGRyaXZlcnMvY2xr
-L21tcC9jbGstYXBiYy5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgNjYgKysrKysrKysrKysr
-KysrKysrKysrLQogZHJpdmVycy9jbGsvbW1wL2Nsay1hcG11LmMgICAgICAgICAgICAgICAgICAg
-ICAgICAgfCAzNyArKysrKysrKysrKy0KIGRyaXZlcnMvY2xrL21tcC9jbGstbW1wMi5jICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgMTkgKysrKysrLQogNSBmaWxlcyBjaGFuZ2VkLCAxNzkgaW5z
-ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svbW1wLWFwYmMudHh0CiBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL21tcC1hcG11LnR4
-dAoKUmVzZW5kaW5nIGFmdGVyIGEgbW9udGggd2l0aG91dCByZXZpZXcuCgpkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL21tcC1hcGJjLnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9tbXAtYXBiYy50eHQKbmV3IGZp
-bGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uODhlMTI1MwotLS0gL2Rldi9udWxsCisrKyBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9tbXAtYXBiYy50eHQKQEAg
-LTAsMCArMSwzMCBAQAorKiBDbG9jayBiaW5kaW5ncyBmb3IgTWFydmVsbCBNTVAgQWR2YW5jZWQg
-UGVyaXBoZXJhbCBCdXMgY2xvY2sKKworUGFyZW50IGFwYi1jbG9jayBub2RlCis9PT09PT09PT09
-PT09PT09PT09PT0KK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIHJlZzogQWRkcmVzcyBhbmQgbGVu
-Z3RoIG9mIHRoZSBBUEIgY2xvY2sgdW5pdCByZWdpc3RlcnMKKworCitDaGlsZCBwZXJpcGhlcmFs
-IGNsb2NrIG5vZGVzCis9PT09PT09PT09PT09PT09PT09PT09PT09PT09CitSZXF1aXJlZCBwcm9w
-ZXJ0aWVzOgorLSBjb21wYXRpYmxlIDogc2hhbGwgYmUgIm1hcnZlbGwsbW1wLWFwYi1jbG9jayIK
-Ky0gI2Nsb2NrLWNlbGxzIDogZnJvbSBjb21tb24gY2xvY2sgYmluZGluZzsgc2hhbGwgYmUgc2V0
-IHRvIDEKKy0gY2xvY2tzIDogcGFyZW50IGNsb2NrLCBmcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5n
-CistIGNsb2NrLW91dHB1dC1uYW1lcyA6IEFycmF5IG9mIGNsb2NrIG5hbWVzLCBmcm9tIGNvbW1v
-biBjbG9jayBiaW5kaW5nCistIHJlZyA6IEFycmF5IG9mIGNvbnRyb2wgcmVnaXN0ZXIgb2Zmc2V0
-cyBpbnRvIEFQQiBjbG9jayB1bml0IHJlZ2lzdGVyIHNwYWNlCisKKworRXhhbXBsZToKK2FwYmM6
-IGFwYi1jbG9jayB7CisgICAgICAgcmVnID0gPDB4ZDQwMTUwMDAgMHgxMDAwPjsKKworICAgICAg
-IHR3c2ktY2xvY2tzIHsKKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibWFydmVsbCxtbXAt
-YXBiLWNsb2NrIjsKKyAgICAgICAgICAgICAgICNjbG9jay1jZWxscyA9IDwxPjsKKyAgICAgICAg
-ICAgICAgIGNsb2NrcyA9IDwmdmN0dnhvLWNsb2NrPjsKKyAgICAgICAgICAgICAgIGNsb2NrLW91
-dHB1dC1uYW1lcyA9ICJUV1NJMCIsICJUV1NJMSI7CisgICAgICAgICAgICAgICByZWcgPSA8MHgw
-NCAweDA4PjsKKyAgICAgICB9OworfTsKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9jbG9jay9tbXAtYXBtdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvY2xvY2svbW1wLWFwbXUudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4
-IDAwMDAwMDAuLjE4YmIwZjkKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvY2xvY2svbW1wLWFwbXUudHh0CkBAIC0wLDAgKzEsMzAgQEAKKyogQ2xv
-Y2sgYmluZGluZ3MgZm9yIE1hcnZlbGwgTU1QIEFwcGxpY2F0aW9uIFN1YnN5c3RlbSBQb3dlciBN
-YW5hZ2VtZW50IFVuaXQKKworUGFyZW50IGFwbXUtY2xvY2sgbm9kZQorPT09PT09PT09PT09PT09
-PT09PT09CitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSByZWc6IEFkZHJlc3MgYW5kIGxlbmd0aCBv
-ZiB0aGUgQ1BVIFN1YnN5c3RlbSBQTVUgcmVnaXN0ZXJzCisKKworQ2hpbGQgcGVyaXBoZXJhbCBj
-bG9jayBub2RlcworPT09PT09PT09PT09PT09PT09PT09PT09PT09PQorUmVxdWlyZWQgcHJvcGVy
-dGllczoKKy0gY29tcGF0aWJsZSA6IHNoYWxsIGJlICJtYXJ2ZWxsLG1tcC1hcG11LWNsb2NrIgor
-LSAjY2xvY2stY2VsbHMgOiBmcm9tIGNvbW1vbiBjbG9jayBiaW5kaW5nOyBzaGFsbCBiZSBzZXQg
-dG8gMAorLSBjbG9ja3MgOiBwYXJlbnQgY2xvY2ssIGZyb20gY29tbW9uIGNsb2NrIGJpbmRpbmcK
-Ky0gcmVnIDogQ29udHJvbCByZWdpc3RlciBvZmZzZXRzIGludG8gcGFyZW50IHJlZ2lzdGVyIHNw
-YWNlCistIGVuYWJsZS1tYXNrIDogVGhlIGJpdHMgdG8gYmUgc2V0IGluIHRoZSByZWdpc3RlciB0
-byBlbmFibGUgdGhlIGNsb2NrLCBvcgorICAgICAgICAgICAgICAgIGNsZWFyZWQgdG8gZGlzYWJs
-ZS4KKworRXhhbXBsZToKK2FwbXUtY2xvY2sgeworICAgICAgIHJlZyA9IDwweGQ0MjgyODAwIDB4
-MTAwMD47CisKKyAgICAgICB1c2ItY2xvY2sgeworICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9
-ICJtYXJ2ZWxsLG1tcC1hcG11LWNsb2NrIjsKKyAgICAgICAgICAgICAgICNjbG9jay1jZWxscyA9
-IDwwPjsKKyAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmdXNiX3BsbD47CisgICAgICAgICAgICAg
-ICByZWcgPSA8MHg1Yz47CisgICAgICAgICAgICAgICBlbmFibGUtbWFzayA9IDwweDA5PjsKKyAg
-ICAgICB9OworfTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL21tcC9jbGstYXBiYy5jIGIvZHJp
-dmVycy9jbGsvbW1wL2Nsay1hcGJjLmMKaW5kZXggODlhMTQ2YS4uZDUzYmM3OSAxMDA2NDQKLS0t
-IGEvZHJpdmVycy9jbGsvbW1wL2Nsay1hcGJjLmMKKysrIGIvZHJpdmVycy9jbGsvbW1wL2Nsay1h
-cGJjLmMKQEAgLTE1LDYgKzE1LDggQEAKICNpbmNsdWRlIDxsaW51eC9lcnIuaD4KICNpbmNsdWRl
-IDxsaW51eC9kZWxheS5oPgogI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KKyNpbmNsdWRlIDxsaW51
-eC9vZi5oPgorI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KIAogI2luY2x1ZGUgImNsay5o
-IgogCkBAIC0xMjksOCArMTMxLDcwIEBAIHN0cnVjdCBjbGsgKm1tcF9jbGtfcmVnaXN0ZXJfYXBi
-Yyhjb25zdCBjaGFyICpuYW1lLCBjb25zdCBjaGFyICpwYXJlbnRfbmFtZSwKICAgICAgICBhcGJj
-LT5ody5pbml0ID0gJmluaXQ7CiAKICAgICAgICBjbGsgPSBjbGtfcmVnaXN0ZXIoTlVMTCwgJmFw
-YmMtPmh3KTsKLSAgICAgICBpZiAoSVNfRVJSKGNsaykpCisgICAgICAgaWYgKFdBUk5fT04oSVNf
-RVJSKGNsaykpKQogICAgICAgICAgICAgICAga2ZyZWUoYXBiYyk7CiAKICAgICAgICByZXR1cm4g
-Y2xrOwogfQorCitzdGF0aWMgdm9pZCBfX2luaXQgbW1wX2FwYmNfZHRfaW5pdChzdHJ1Y3QgZGV2
-aWNlX25vZGUgKm5vZGUpCit7CisgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpwYXJlbnQgPSBv
-Zl9nZXRfcGFyZW50KG5vZGUpOworICAgICAgIGNvbnN0IF9fYmUzMiAqcmVnczsKKyAgICAgICBz
-dHJ1Y3QgY2xrICpjbGs7CisgICAgICAgaW50IHJjOworICAgICAgIGludCBsZW47CisgICAgICAg
-aW50IG51bV9jbG9ja3M7CisgICAgICAgaW50IGNsb2NrX251bTsKKyAgICAgICB2b2lkIF9faW9t
-ZW0gKmJhc2VhZGRyOworICAgICAgIGNvbnN0IGNoYXIgKmNsb2NrX25hbWU7CisgICAgICAgY29u
-c3QgY2hhciAqcGFyZW50X25hbWU7CisgICAgICAgc3RydWN0IGNsayAqKmNsa3M7CisgICAgICAg
-c3RydWN0IGNsa19vbmVjZWxsX2RhdGEgKmNsa19kYXRhOworCisgICAgICAgcmVncyA9IG9mX2dl
-dF9wcm9wZXJ0eShub2RlLCAicmVnIiwgJmxlbik7CisgICAgICAgaWYgKFdBUk5fT04oIXJlZ3Mg
-fHwgKGxlbiAlIHNpemVvZihfX2JlMzIpICE9IDApKSkKKyAgICAgICAgICAgICAgIHJldHVybjsK
-KyAgICAgICBudW1fY2xvY2tzID0gbGVuIC8gc2l6ZW9mKF9fYmUzMik7CisKKyAgICAgICBiYXNl
-YWRkciA9IG9mX2lvbWFwKHBhcmVudCwgMCk7CisgICAgICAgb2Zfbm9kZV9wdXQocGFyZW50KTsK
-KyAgICAgICBpZiAoV0FSTl9PTighYmFzZWFkZHIpKQorICAgICAgICAgICAgICAgcmV0dXJuOwor
-CisgICAgICAgY2xrX2RhdGEgPSBremFsbG9jKHNpemVvZigqY2xrX2RhdGEpLCBHRlBfS0VSTkVM
-KTsKKyAgICAgICBpZiAoV0FSTl9PTighY2xrX2RhdGEpKQorICAgICAgICAgICAgICAgZ290byBl
-cnJfY2xrX2RhdGE7CisKKyAgICAgICBjbGtzID0ga3phbGxvYyhudW1fY2xvY2tzICogc2l6ZW9m
-KCpjbGtzKSwgR0ZQX0tFUk5FTCk7CisgICAgICAgaWYgKFdBUk5fT04oIWNsa3MpKQorICAgICAg
-ICAgICAgICAgZ290byBlcnJfY2xrczsKKworICAgICAgIGNsb2NrX25hbWUgPSBvZl9nZXRfcHJv
-cGVydHkobm9kZSwgImNsb2NrLW91dHB1dC1uYW1lcyIsIE5VTEwpOworICAgICAgIHBhcmVudF9u
-YW1lID0gb2ZfY2xrX2dldF9wYXJlbnRfbmFtZShub2RlLCAwKTsKKworICAgICAgIGZvciAoY2xv
-Y2tfbnVtID0gMDsgY2xvY2tfbnVtIDwgbnVtX2Nsb2NrczsgY2xvY2tfbnVtKyspIHsKKyAgICAg
-ICAgICAgICAgIHZvaWQgX19pb21lbSAqY2xvY2tfYWRkcjsKKyAgICAgICAgICAgICAgIGNsb2Nr
-X2FkZHIgPSBiYXNlYWRkciArIGJlMzJfdG9fY3B1cChyZWdzICsgY2xvY2tfbnVtKTsKKworICAg
-ICAgICAgICAgICAgY2xrID0gbW1wX2Nsa19yZWdpc3Rlcl9hcGJjKGNsb2NrX25hbWUsIHBhcmVu
-dF9uYW1lLAorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2Nr
-X2FkZHIsIDEwLCAwKTsKCkxvb2tzIGxpa2UgbW1wX2Nsa19yZWdpc3Rlcl9hcGJjIGlzIG1pc3Np
-bmcgYW4gYXJndW1lbnQgZm9yIHRoZQpzcGlubG9jay4gSSdtIGdldHRpbmcgdGhlIGZvbGxvd2lu
-ZzoKCmRyaXZlcnMvY2xrL21tcC9jbGstYXBiYy5jOiBJbiBmdW5jdGlvbiDigJhtbXBfYXBiY19k
-dF9pbml04oCZOgpkcml2ZXJzL2Nsay9tbXAvY2xrLWFwYmMuY3wxOTcgY29sIDEwfCBlcnJvcjog
-dG9vIGZldyBhcmd1bWVudHMgdG8KZnVuY3Rpb24g4oCYbW1wX2Nsa19yZWdpc3Rlcl9hcGJj4oCZ
-CgpSZWdhcmRzLApNaWtlCgorICAgICAgICAgICAgICAgaWYgKElTX0VSUihjbGspKQorICAgICAg
-ICAgICAgICAgICAgICAgICByZXR1cm47CisgICAgICAgICAgICAgICBjbG9ja19uYW1lICs9IHN0
-cmxlbihjbG9ja19uYW1lKSArIDE7CisgICAgICAgICAgICAgICBjbGtzW2Nsb2NrX251bV0gPSBj
-bGs7CisgICAgICAgfQorCisgICAgICAgY2xrX2RhdGEtPmNsa19udW0gPSBudW1fY2xvY2tzOwor
-ICAgICAgIGNsa19kYXRhLT5jbGtzID0gY2xrczsKKyAgICAgICByYyA9IG9mX2Nsa19hZGRfcHJv
-dmlkZXIobm9kZSwgb2ZfY2xrX3NyY19vbmVjZWxsX2dldCwgY2xrX2RhdGEpOworICAgICAgIFdB
-Uk5fT04ocmMpOworICAgICAgIHJldHVybjsKKworZXJyX2Nsa3M6CisgICAgICAga2ZyZWUoY2xr
-X2RhdGEpOworZXJyX2Nsa19kYXRhOgorICAgICAgIGlvdW5tYXAoYmFzZWFkZHIpOworCit9CitD
-TEtfT0ZfREVDTEFSRShtbXAyX2FwYmMsICJtYXJ2ZWxsLG1tcC1hcGItY2xvY2siLCBtbXBfYXBi
-Y19kdF9pbml0KTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL21tcC9jbGstYXBtdS5jIGIvZHJp
-dmVycy9jbGsvbW1wL2Nsay1hcG11LmMKaW5kZXggNGY0ZDhjNS4uZGZjZWNjOSAxMDA2NDQKLS0t
-IGEvZHJpdmVycy9jbGsvbW1wL2Nsay1hcG11LmMKKysrIGIvZHJpdmVycy9jbGsvbW1wL2Nsay1h
-cG11LmMKQEAgLTE1LDYgKzE1LDggQEAKICNpbmNsdWRlIDxsaW51eC9lcnIuaD4KICNpbmNsdWRl
-IDxsaW51eC9kZWxheS5oPgogI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KKyNpbmNsdWRlIDxsaW51
-eC9vZi5oPgorI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KIAogI2luY2x1ZGUgImNsay5o
-IgogCkBAIC0yMiw3ICsyNCw2IEBACiBzdHJ1Y3QgY2xrX2FwbXUgewogICAgICAgIHN0cnVjdCBj
-bGtfaHcgICBodzsKICAgICAgICB2b2lkIF9faW9tZW0gICAgKmJhc2U7Ci0gICAgICAgdTMyICAg
-ICAgICAgICAgIHJzdF9tYXNrOwogICAgICAgIHUzMiAgICAgICAgICAgICBlbmFibGVfbWFzazsK
-IH07CiAKQEAgLTg1LDMgKzg2LDM3IEBAIHN0cnVjdCBjbGsgKm1tcF9jbGtfcmVnaXN0ZXJfYXBt
-dShjb25zdCBjaGFyICpuYW1lLCBjb25zdCBjaGFyICpwYXJlbnRfbmFtZSwKIAogICAgICAgIHJl
-dHVybiBjbGs7CiB9CisKK3N0YXRpYyB2b2lkIF9faW5pdCBtbXBfYXBtdV9kdF9pbml0KHN0cnVj
-dCBkZXZpY2Vfbm9kZSAqbm9kZSkKK3sKKyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVu
-dCA9IG9mX2dldF9wYXJlbnQobm9kZSk7CisgICAgICAgY29uc3QgY2hhciAqY2xrX25hbWUgPSBu
-b2RlLT5uYW1lOworICAgICAgIHZvaWQgX19pb21lbSAqYmFzZWFkZHI7CisgICAgICAgc3RydWN0
-IGNsayAqY2xrOworICAgICAgIHUzMiByZWc7CisgICAgICAgdTMyIGVuYWJsZV9tYXNrOworICAg
-ICAgIGludCByYzsKKworICAgICAgIHJjID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgInJl
-ZyIsICZyZWcpOworICAgICAgIGlmIChXQVJOX09OKHJjKSkKKyAgICAgICAgICAgICAgIHJldHVy
-bjsKKworICAgICAgIHJjID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgImVuYWJsZS1tYXNr
-IiwgJmVuYWJsZV9tYXNrKTsKKyAgICAgICBpZiAoV0FSTl9PTihyYykpCisgICAgICAgICAgICAg
-ICByZXR1cm47CisKKyAgICAgICBiYXNlYWRkciA9IG9mX2lvbWFwKHBhcmVudCwgMCk7CisgICAg
-ICAgb2Zfbm9kZV9wdXQocGFyZW50KTsKKyAgICAgICBpZiAoV0FSTl9PTighYmFzZWFkZHIpKQor
-ICAgICAgICAgICAgICAgcmV0dXJuOworCisgICAgICAgb2ZfcHJvcGVydHlfcmVhZF9zdHJpbmco
-bm9kZSwgImNsb2NrLW91dHB1dC1uYW1lcyIsICZjbGtfbmFtZSk7CisgICAgICAgY2xrID0gbW1w
-X2Nsa19yZWdpc3Rlcl9hcG11KGNsa19uYW1lLCBvZl9jbGtfZ2V0X3BhcmVudF9uYW1lKG5vZGUs
-IDApLAorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBiYXNlYWRkciArIHJlZywg
-ZW5hYmxlX21hc2spOworICAgICAgIGlmIChXQVJOX09OKElTX0VSUihjbGspKSkKKyAgICAgICAg
-ICAgICAgIHJldHVybjsKKworICAgICAgIHJjID0gb2ZfY2xrX2FkZF9wcm92aWRlcihub2RlLCBv
-Zl9jbGtfc3JjX3NpbXBsZV9nZXQsIGNsayk7CisgICAgICAgV0FSTl9PTihyYyk7Cit9CitDTEtf
-T0ZfREVDTEFSRShtbXAyX2FwbXUsICJtYXJ2ZWxsLG1tcC1hcG11LWNsb2NrIiwgbW1wX2FwbXVf
-ZHRfaW5pdCk7CmRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9tbXAvY2xrLW1tcDIuYyBiL2RyaXZl
-cnMvY2xrL21tcC9jbGstbW1wMi5jCmluZGV4IGNiMWIwYjYuLjc3NDE5M2IgMTAwNjQ0Ci0tLSBh
-L2RyaXZlcnMvY2xrL21tcC9jbGstbW1wMi5jCisrKyBiL2RyaXZlcnMvY2xrL21tcC9jbGstbW1w
-Mi5jCkBAIC0xNSw2ICsxNSw3IEBACiAjaW5jbHVkZSA8bGludXgvaW8uaD4KICNpbmNsdWRlIDxs
-aW51eC9kZWxheS5oPgogI2luY2x1ZGUgPGxpbnV4L2Vyci5oPgorI2luY2x1ZGUgPGxpbnV4L29m
-Lmg+CiAKICNpbmNsdWRlIDxtYWNoL2FkZHItbWFwLmg+CiAKQEAgLTczLDcgKzc0LDcgQEAgc3Rh
-dGljIGNvbnN0IGNoYXIgKnNkaF9wYXJlbnRbXSA9IHsicGxsMV80IiwgInBsbDIiLCAidXNiX3Bs
-bCIsICJwbGwxIn07CiBzdGF0aWMgY29uc3QgY2hhciAqZGlzcF9wYXJlbnRbXSA9IHsicGxsMSIs
-ICJwbGwxXzE2IiwgInBsbDIiLCAidmN0Y3hvIn07CiBzdGF0aWMgY29uc3QgY2hhciAqY2NpY19w
-YXJlbnRbXSA9IHsicGxsMV8yIiwgInBsbDFfMTYiLCAidmN0Y3hvIn07CiAKLXZvaWQgX19pbml0
-IG1tcDJfY2xrX2luaXQodm9pZCkKK3N0YXRpYyB2b2lkIF9faW5pdCBtbXAyX2Nsa19pbml0X3N0
-YXRpYyh2b2lkKQogewogICAgICAgIHN0cnVjdCBjbGsgKmNsazsKICAgICAgICBzdHJ1Y3QgY2xr
-ICp2Y3RjeG87CkBAIC00NDUsMyArNDQ2LDE5IEBAIHZvaWQgX19pbml0IG1tcDJfY2xrX2luaXQo
-dm9pZCkKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhcG11X2Jhc2UgKyBBUE1VX0ND
-SUMxLCAweDMwMCk7CiAgICAgICAgY2xrX3JlZ2lzdGVyX2Nsa2RldihjbGssICJzcGh5Y2xrIiwg
-Im1tcC1jY2ljLjEiKTsKIH0KKwordm9pZCBfX2luaXQgbW1wMl9jbGtfaW5pdCh2b2lkKQorewor
-ICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZTsKKworICAgICAgIC8qIFRoZSBwcmVzZW5j
-ZSBvZiB0aGUgQUJQIGNsb2NrIG5vZGUgaW4gdGhlIGRldmljZSB0cmVlIGluZGljYXRlcworICAg
-ICAgICAqIHRoYXQgd2Ugc2hvdWxkIHVzZSB0aGUgRFQgZm9yIGNsb2NrIHNldHVwLiAqLworICAg
-ICAgIG5vZGUgPSBvZl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAibWFydmVsbCxt
-bXAtYXBiLWNsb2NrIik7CisgICAgICAgaWYgKG5vZGUpIHsKKyAgICAgICAgICAgICAgIG9mX25v
-ZGVfcHV0KG5vZGUpOworICAgICAgICAgICAgICAgb2ZfY2xrX2luaXQoTlVMTCk7CisgICAgICAg
-fSBlbHNlIHsKKyAgICAgICAgICAgICAgIC8qIEZhbGxiYWNrIHRvIHN0YXRpYyBzZXR1cCAqLwor
-ICAgICAgICAgICAgICAgbW1wMl9jbGtfaW5pdF9zdGF0aWMoKTsKKyAgICAgICB9Cit9Ci0tIAox
-LjguMS40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+From: Dinh Nguyen <dinguyen@altera.com>
+
+"dw-apb-timer-osc" and "dw-apb-timer-sp" are the same implementation of the
+DW APB timer, just fed by different clocks.
+
+Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+Reviewed-by: Pavel Machek <pavel@denx.de>
+CC: Rob Herring <rob.herring@calxeda.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Ian Campbell <ian.campbell@citrix.com>
+CC: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
+CC: Jamie Iles <jamie@jamieiles.com>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Pavel Machek <pavel@denx.de>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ Documentation/devicetree/bindings/rtc/dw-apb.txt |   21 +++----------------
+ arch/arm/boot/dts/rk3066a.dtsi                   |    6 +++---
+ arch/arm/boot/dts/socfpga.dtsi                   |   24 +++++++++++-----------
+ arch/arm/boot/dts/socfpga_cyclone5.dts           |    8 ++++----
+ arch/arm/boot/dts/socfpga_vt.dts                 |    8 ++++----
+ 5 files changed, 26 insertions(+), 41 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/rtc/dw-apb.txt b/Documentation/devicetree/bindings/rtc/dw-apb.txt
+index eb2327b..0a1020e 100644
+--- a/Documentation/devicetree/bindings/rtc/dw-apb.txt
++++ b/Documentation/devicetree/bindings/rtc/dw-apb.txt
+@@ -1,7 +1,7 @@
+ * Designware APB timer
+ 
+ Required properties:
+-- compatible: "snps,dw-apb-timer-sp" or "snps,dw-apb-timer-osc"
++- compatible: "snps,dw-apb-timer"
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ - interrupts: IRQ line for the timer.
+@@ -20,23 +20,8 @@ systems may use one.
+ 
+ 
+ Example:
+-
+-		timer1: timer@ffc09000 {
+-				compatible = "snps,dw-apb-timer-sp";
+-				interrupts = <0 168 4>;
+-				clock-frequency = <200000000>;
+-				reg = <0xffc09000 0x1000>;
+-			};
+-
+-		timer2: timer@ffd00000 {
+-				compatible = "snps,dw-apb-timer-osc";
+-				interrupts = <0 169 4>;
+-				clock-frequency = <200000000>;
+-				reg = <0xffd00000 0x1000>;
+-			};
+-
+-		timer3: timer@ffe00000 {
+-				compatible = "snps,dw-apb-timer-osc";
++		timer1: timer@ffe00000 {
++				compatible = "snps,dw-apb-timer";
+ 				interrupts = <0 170 4>;
+ 				reg = <0xffe00000 0x1000>;
+ 				clocks = <&timer_clk>, <&timer_pclk>;
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index 56bfac9..2dff468 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -71,7 +71,7 @@
+ 		};
+ 
+ 		timer@20038000 {
+-			compatible = "snps,dw-apb-timer-osc";
++			compatible = "snps,dw-apb-timer";
+ 			reg = <0x20038000 0x100>;
+ 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk_gates1 0>, <&clk_gates7 7>;
+@@ -79,7 +79,7 @@
+ 		};
+ 
+ 		timer@2003a000 {
+-			compatible = "snps,dw-apb-timer-osc";
++			compatible = "snps,dw-apb-timer";
+ 			reg = <0x2003a000 0x100>;
+ 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk_gates1 1>, <&clk_gates7 8>;
+@@ -87,7 +87,7 @@
+ 		};
+ 
+ 		timer@2000e000 {
+-			compatible = "snps,dw-apb-timer-osc";
++			compatible = "snps,dw-apb-timer";
+ 			reg = <0x2000e000 0x100>;
+ 			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk_gates1 2>, <&clk_gates7 9>;
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 93ee655..4e8291b 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -26,10 +26,6 @@
+ 		ethernet1 = &gmac1;
+ 		serial0 = &uart0;
+ 		serial1 = &uart1;
+-		timer0 = &timer0;
+-		timer1 = &timer1;
+-		timer2 = &timer2;
+-		timer3 = &timer3;
+ 	};
+ 
+ 	cpus {
+@@ -486,28 +482,32 @@
+ 			interrupts = <1 13 0xf04>;
+ 		};
+ 
+-		timer0: timer0@ffc08000 {
+-			compatible = "snps,dw-apb-timer-sp";
++		timer0: timer@ffc08000 {
++			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 167 4>;
+ 			reg = <0xffc08000 0x1000>;
++			clocks = <&osc>;
+ 		};
+ 
+-		timer1: timer1@ffc09000 {
+-			compatible = "snps,dw-apb-timer-sp";
++		timer1: timer@ffc09000 {
++			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 168 4>;
+ 			reg = <0xffc09000 0x1000>;
++			clocks = <&osc>;
+ 		};
+ 
+-		timer2: timer2@ffd00000 {
+-			compatible = "snps,dw-apb-timer-osc";
++		timer2: timer@ffd00000 {
++			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 169 4>;
+ 			reg = <0xffd00000 0x1000>;
++			clocks = <&l4_sp_clk>;
+ 		};
+ 
+-		timer3: timer3@ffd01000 {
+-			compatible = "snps,dw-apb-timer-osc";
++		timer3: timer@ffd01000 {
++			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 170 4>;
+ 			reg = <0xffd01000 0x1000>;
++			clocks = <&l4_sp_clk>;
+ 		};
+ 
+ 		uart0: serial0@ffc02000 {
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dts b/arch/arm/boot/dts/socfpga_cyclone5.dts
+index 102c4d8..54b8483 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5.dts
+@@ -67,19 +67,19 @@
+ 			};
+ 		};
+ 
+-		timer0@ffc08000 {
++		timer@ffc08000 {
+ 			clock-frequency = <100000000>;
+ 		};
+ 
+-		timer1@ffc09000 {
++		timer@ffc09000 {
+ 			clock-frequency = <100000000>;
+ 		};
+ 
+-		timer2@ffd00000 {
++		timer@ffd00000 {
+ 			clock-frequency = <25000000>;
+ 		};
+ 
+-		timer3@ffd01000 {
++		timer@ffd01000 {
+ 			clock-frequency = <25000000>;
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
+index d93deb0..6a1d8b7 100644
+--- a/arch/arm/boot/dts/socfpga_vt.dts
++++ b/arch/arm/boot/dts/socfpga_vt.dts
+@@ -58,19 +58,19 @@
+ 			};
+ 		};
+ 
+-		timer0@ffc08000 {
++		timer@ffc08000 {
+ 			clock-frequency = <7000000>;
+ 		};
+ 
+-		timer1@ffc09000 {
++		timer@ffc09000 {
+ 			clock-frequency = <7000000>;
+ 		};
+ 
+-		timer2@ffd00000 {
++		timer@ffd00000 {
+ 			clock-frequency = <7000000>;
+ 		};
+ 
+-		timer3@ffd01000 {
++		timer@ffd01000 {
+ 			clock-frequency = <7000000>;
+ 		};
+ 
+-- 
+1.7.9.5
