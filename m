@@ -1,99 +1,90 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pd0-f177.google.com ([209.85.192.177]:60405 "EHLO
-	mail-pd0-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756045Ab3H2LvE (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 29 Aug 2013 07:51:04 -0400
-Received: by mail-pd0-f177.google.com with SMTP id y10so352561pdj.22
-        for <devicetree@vger.kernel.org>; Thu, 29 Aug 2013 04:51:03 -0700 (PDT)
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH v2 1/2] usb: samsung: Update Exynos EHCI/OHCI bindings documentation
-Date: Thu, 29 Aug 2013 17:03:25 +0530
-Message-Id: <1377776006-22972-1-git-send-email-sachin.kamat@linaro.org>
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:46198 "EHLO
+	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1751293Ab3HFLjo (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 07:39:44 -0400
+Date: Tue, 6 Aug 2013 12:38:39 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 4/4] mtd: nand: gpio: Add support for multichip
+ devices
+Message-ID: <20130806113839.GB25383@e106331-lin.cambridge.arm.com>
+References: <1375779459-32549-1-git-send-email-shc_work@mail.ru>
+ <1375779459-32549-2-git-send-email-shc_work@mail.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1375779459-32549-2-git-send-email-shc_work@mail.ru>
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: rob.herring@calxeda.com, swarren@wwwdotorg.org, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, sachin.kamat@linaro.org, kgene.kim@samsung.com, patches@linaro.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Updated the document as per the latest implementation.
-While at it also fixed some trivial typos.
+On Tue, Aug 06, 2013 at 09:57:39AM +0100, Alexander Shiyan wrote:
+> This patch adds support for multichip NAND devices controlled through GPIOs.
+> To implement this, the properties of tree have been renamed. All current
+> boards and DTS files converted to use an updated driver. Also driver
+> temporarily keep support for DTS files which use the previous names scheme.
+> 
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+> ---
+>  .../devicetree/bindings/mtd/gpio-control-nand.txt  |  16 +--
+>  arch/arm/boot/dts/picoxcell-pc7302-pc3x2.dts       |  10 +-
+>  arch/arm/boot/dts/picoxcell-pc7302-pc3x3.dts       |  10 +-
+>  arch/arm/mach-clps711x/board-autcpu12.c            |   4 +-
+>  arch/arm/mach-clps711x/board-p720t.c               |   4 +-
+>  arch/arm/mach-pxa/cm-x255.c                        |  10 +-
+>  drivers/mtd/nand/gpio.c                            | 108 +++++++++++++++------
+>  include/linux/mtd/nand-gpio.h                      |  12 ++-
+>  8 files changed, 112 insertions(+), 62 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> index 91070d0..c58210a 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+> @@ -11,8 +11,11 @@ Required properties:
+>    are made in native endianness.
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
-Changes since v1:
-* Updated review comments from Stephen Warren regarding the wording
-and some styling.
----
- .../devicetree/bindings/usb/exynos-usb.txt         |   29 ++++++++++----------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+Unrelated, but the above like sounds mighty suspicious and possibly
+meaningless...
 
-diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-index d967ba1..56468f7 100644
---- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-@@ -5,13 +5,14 @@ The device node has following properties.
- 
- EHCI
- Required properties:
-- - compatible: should be "samsung,exynos4210-ehci" for USB 2.0
--   EHCI controller in host mode.
-+ - compatible: should be one of the following for USB 2.0 EHCI controller:
-+	(a) "samsung,exynos5440-ehci" for Exynos5440 SoC
-+	(b) "samsung,exynos4210-ehci" for all other Exynos4 and 5 SoCs
-  - reg: physical base address of the controller and length of memory mapped
-    region.
-- - interrupts: interrupt number to the cpu.
-- - clocks: from common clock binding: handle to usb clock.
-- - clock-names: from common clock binding: Shall be "usbhost".
-+ - interrupts: interrupt number to the CPU.
-+ - clocks: from common clock binding: handle to USB clock.
-+ - clock-names: shall be "usbhost".
- 
- Optional properties:
-  - samsung,vbus-gpio:  if present, specifies the GPIO that
-@@ -23,7 +24,7 @@ Example:
- 		compatible = "samsung,exynos4210-ehci";
- 		reg = <0x12110000 0x100>;
- 		interrupts = <0 71 0>;
--		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
-+		samsung,vbus-gpio = <&gpx2 6 0>;
- 
- 		clocks = <&clock 285>;
- 		clock-names = "usbhost";
-@@ -31,13 +32,14 @@ Example:
- 
- OHCI
- Required properties:
-- - compatible: should be "samsung,exynos4210-ohci" for USB 2.0
--   OHCI companion controller in host mode.
-+ - compatible: should be one of the following for USB 2.0 OHCI controller:
-+	(a) "samsung,exynos5440-ohci" for Exynos5440 SoC
-+	(b) "samsung,exynos4210-ohci" for all other Exynos4 and 5 SoCs
-  - reg: physical base address of the controller and length of memory mapped
-    region.
-- - interrupts: interrupt number to the cpu.
-- - clocks: from common clock binding: handle to usb clock.
-- - clock-names: from common clock binding: Shall be "usbhost".
-+ - interrupts: interrupt number to the CPU.
-+ - clocks: from common clock binding: handle to USB clock.
-+ - clock-names: shall be "usbhost".
- 
- Example:
- 	usb@12120000 {
-@@ -53,12 +55,11 @@ DWC3
- Required properties:
-  - compatible: should be "samsung,exynos5250-dwusb3" for USB 3.0 DWC3
- 	       controller.
-- - #address-cells, #size-cells : should be '1' if the device has sub-nodes
--				 with 'reg' property.
-+ - #address-cells, #size-cells: should be '1'.
-  - ranges: allows valid 1:1 translation between child's address space and
- 	   parent's address space
-  - clocks: Clock IDs array as required by the controller.
-- - clock-names: names of clocks correseponding to IDs in the clock property
-+ - clock-names: shall be "usbdrd30".
- 
- Sub-nodes:
- The dwc3 core should be added as subnode to Exynos dwc3 glue.
--- 
-1.7.9.5
+>  - #address-cells, #size-cells : Must be present if the device has sub-nodes
+>    representing partitions.
+> -- gpios : specifies the gpio pins to control the NAND device.  nwp is an
+> -  optional gpio and may be set to 0 if not present.
 
+I'm not against deprecating this property, as the new mechanism is far
+more flexible, and gets rid of the odd nwp case. However I think the
+documentation for the old property should be kept (though marked as
+deprecated). I'd be happy with a "Deprecated properties" section as with
+the regulator bindings.
+
+I'm not sure about changing the dts immediately as this prevents using
+them with an old kernel, and creates a lot of churn, given the existing
+binding will be supported for the transitionary period...
+
+> +- ale-gpios : specifies the ALE gpio pin.
+> +- cle-gpios : specifies the CLE gpio pin.
+> +- nwp-gpios : specifies the NWP gpio pin (Optional).
+> +- nce-gpios : specifies the NCE gpio pin or several NCE GPIOs for multichip NAND.
+> +- rdy-gpios : specifies the RDY gpio pin or several RDY GPIOs for multichip NAND.
+> 
+>  Optional properties:
+>  - bank-width : Width (in bytes) of the device.  If not present, the width
+> @@ -37,11 +40,10 @@ gpio-nand@1,0 {
+>         reg = <1 0x0000 0x2>;
+>         #address-cells = <1>;
+>         #size-cells = <1>;
+> -       gpios = <&banka 1 0     /* rdy */
+> -                &banka 2 0     /* nce */
+> -                &banka 3 0     /* ale */
+> -                &banka 4 0     /* cle */
+> -                0              /* nwp */>;
+> +       ale-gpios = <&banka 3 0>;
+> +       cle-gpios = <&banka 4 0>;
+> +       nce-gpios = <&banka 2 0>;
+> +       rdy-gpios = <&banka 1 0>;
+
+It would be nice to have a multichip NAND example, also.
+
+Thanks,
+Mark.
