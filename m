@@ -1,53 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp161.dfw.emailsrvr.com ([67.192.241.161]:59699 "EHLO
-	smtp161.dfw.emailsrvr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753806Ab3HGPxz (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 11:53:55 -0400
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: [PATCH v3 1/5] sata, highbank: fix ordering of SGPIO signals
-Date: Wed,  7 Aug 2013 10:52:34 -0500
-Message-Id: <1375890758-30265-1-git-send-email-mark.langsdorf@calxeda.com>
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15122 "EHLO
+	hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755929Ab3HFM7Q (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 08:59:16 -0400
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V3 0/3] pinctrl: add pincontrol driver for palmas device.
+Date: Tue, 6 Aug 2013 18:42:32 +0530
+Message-ID: <1375794755-6246-1-git-send-email-ldewangan@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com, sergei.shtylyov@cogentembedded.com
-Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
+To: swarren@wwwdotorg.org, linus.walleij@linaro.org
+Cc: ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The ACTIVITY and ERROR signals were reversed in the original commit.
-Fix that so that hard drive activity does not show up on the error
-light, and attempts to indicate that the hard drive is failing do
-not show up as hard drive activity. This fixes a fairly serious
-functional bug in the driver, but failing to apply this patch will
-not cause any stability issues on the system.
+Changes from V1: 
+- Split the additon of common code into pinctrl-utils and pinconf-generic.
+- Use the pinconf-generic APIs for mapping node.
+- Use pinconf generic properties to define the Palmas pincontrol nodes.
+- Nit and cleanups, typo fixes, rephrasing the sentences etc.
+- Use pin specific APIs for setting pin configuration rather than group
+  specific.
 
-Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
----
-Changes from v2
-	Further rewords of the commit message.
-Changes from v1
-        Expanded commit message explaining the problems with the
-unpatched code.
+Changes from V2:
+- Rebased the  DT binding document on top of Stephen's cleanup.
+- Convert name of propery "pinctrl-pins" to "pins" and "pinctrl-function" to
+  function.
 
- drivers/ata/sata_highbank.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Laxman Dewangan (3):
+  pinctrl: add utility functions for add map/configs
+  pinctrl: pinconf-generic: add generic APIs for mapping pinctrl node
+  pinctrl: palmas: add pincontrol driver
 
-diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
-index d047d92..e9a4f46 100644
---- a/drivers/ata/sata_highbank.c
-+++ b/drivers/ata/sata_highbank.c
-@@ -86,11 +86,11 @@ struct ecx_plat_data {
- 
- #define SGPIO_SIGNALS			3
- #define ECX_ACTIVITY_BITS		0x300000
--#define ECX_ACTIVITY_SHIFT		2
-+#define ECX_ACTIVITY_SHIFT		0
- #define ECX_LOCATE_BITS			0x80000
- #define ECX_LOCATE_SHIFT		1
- #define ECX_FAULT_BITS			0x400000
--#define ECX_FAULT_SHIFT			0
-+#define ECX_FAULT_SHIFT			2
- static inline int sgpio_bit_shift(struct ecx_plat_data *pdata, u32 port,
- 				u32 shift)
- {
--- 
-1.8.1.2
+ .../bindings/pinctrl/pinctrl-bindings.txt          |    3 +
+ .../devicetree/bindings/pinctrl/pinctrl-palmas.txt |   96 ++
+ drivers/pinctrl/Kconfig                            |   10 +
+ drivers/pinctrl/Makefile                           |    3 +-
+ drivers/pinctrl/pinconf-generic.c                  |   96 ++
+ drivers/pinctrl/pinctrl-palmas.c                   | 1085 ++++++++++++++++++++
+ drivers/pinctrl/pinctrl-utils.c                    |  135 +++
+ drivers/pinctrl/pinctrl-utils.h                    |   42 +
+ include/linux/mfd/palmas.h                         |   35 +-
+ include/linux/pinctrl/pinconf-generic.h            |    6 +
+ 10 files changed, 1499 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
+ create mode 100644 drivers/pinctrl/pinctrl-palmas.c
+ create mode 100644 drivers/pinctrl/pinctrl-utils.c
+ create mode 100644 drivers/pinctrl/pinctrl-utils.h
 
