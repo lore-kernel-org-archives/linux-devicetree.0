@@ -1,87 +1,87 @@
-From: Kumar Gala <galak@kernel.crashing.org>
-Subject: Re: [PATCH] Add device file bindings for MAPLE
-Date: Mon, 5 Aug 2013 17:26:23 -0500
-Message-ID: <02BD0D75-437A-4653-B7F9-856373F58763@kernel.crashing.org>
-References: <1375354963-11219-1-git-send-email-shaveta@freescale.com>
- <5C32ABF4-ECC3-4F1C-82D0-EA3AD9053575@kernel.crashing.org>
- <1375737065.13074.58.camel@snotra.buserror.net>
-Mime-Version: 1.0 (Apple Message framework v1283)
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v10] reset: Add driver for gpio-controlled reset pins
+Date: Tue, 06 Aug 2013 09:32:25 +0200
+Message-ID: <1375774345.4004.25.camel@pizza.hi.pengutronix.de>
+References: <1374139586-6344-1-git-send-email-p.zabel@pengutronix.de>
+ <20130802092823.GA2884@e106331-lin.cambridge.arm.com>
+ <1375687936.4000.21.camel@pizza.hi.pengutronix.de>
+ <51FFDFB7.6080806@wwwdotorg.org>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1375737065.13074.58.camel@snotra.buserror.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>
-Cc: Shaveta Leekha <shaveta@freescale.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51FFDFB7.6080806@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, Mike Turquette <mturquette@linaro.org>, Fabio Estevam <fabio.estevam@freescale.com>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On Aug 5, 2013, at 4:11 PM, Scott Wood wrote:
-
-> On Thu, 2013-08-01 at 11:05 -0500, Kumar Gala wrote:
->> On Aug 1, 2013, at 6:02 AM, Shaveta Leekha wrote:
->> 
->>> Signed-off-by: Shaveta Leekha <shaveta@freescale.com>
->>> ---
->>> .../devicetree/bindings/powerpc/fsl/maple.txt      |   30 ++++++++++++++++++++
->>> 1 files changed, 30 insertions(+), 0 deletions(-)
->>> create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/maple.txt
->>> 
->>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/maple.txt b/Documentation/devicetree/bindings/powerpc/fsl/maple.txt
->>> new file mode 100644
->>> index 0000000..da51c5f
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/powerpc/fsl/maple.txt
->>> @@ -0,0 +1,30 @@
->>> +* Freescale MAPLE Multi Accelerator Platform Engine Baseband 3
->>> +  (MAPLE-B3)device nodes
->>> +
->>> +Supported chips:
->>> +Example: B4860
->>> +
->>> +Required properties:
->>> +
->>> +- compatible:	Should contain "fsl,maple-b3-liodn" as the value
->>> +		This identifies Multi Accelerator Platform Engine
->>> +		Baseband 3 block.This representation is required
->>> +		for doing the PAMU/LIODN programming on the Linux side.
->> 
->> This compatible makes no sense, we shouldn't be marking a full HW block with some name that is just intended for LIODN convenance.
+Am Montag, den 05.08.2013, 11:24 -0600 schrieb Stephen Warren:
+> On 08/05/2013 01:32 AM, Philipp Zabel wrote:
+> > Am Freitag, den 02.08.2013, 10:28 +0100 schrieb Mark Rutland:
+> >> On Thu, Jul 18, 2013 at 10:26:26AM +0100, Philipp Zabel wrote:
+> >>> This driver implements a reset controller device that toggle a gpio
+> >>> connected to a reset pin of a peripheral IC. The delay between assertion
+> >>> and de-assertion of the reset signal can be configured via device tree.
+> ...
+> >> I think this should look more like the below:
+> >>
+> >> /* Device with nRESET pin connected to GPIO5_0 */
+> >> sii902x@39 {
+> >> 	/* named for the actual input line */
+> >> 	nreset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+> >> 	/* 
+> >> 	 * If there's some configurable property relating to the reset
+> >> 	 * line, we can describe it
+> >> 	 */
+> >> 	vendor,some-optional-reset-gpio-property;
+> >> 	...
+> >> };
+> > 
+> > I don't like the arbitrary name, as that makes it difficult to handle
+> > this in an automated way. In this case I'd prefer to use 'reset-gpios'
+> > and optionally 'reset-gpio-names' analogous to how clocks and interrupts
+> > (and resets) are handled.
 > 
-> The point is we're not describing the whole block here, because the rest
-> of the block is owned by an external entity (the DSP cores).
+> Hmm. Just be aware that you can't force existing bindings to be
+> retro-actively modified, or you'll break the DT ABI. So, at the very
+> least we'd have to allow the existing custom-property-based approach for
+> bindings where it's already been used.
 
-So the binding should make that far more clear that the MAPLE would be controlled by DSP SW.
+Of course we have to continue supporting existing bindings. We could
+continue using the GPIO API directly for those cases, or we could add a
+function similar to of_get_named_gpio to wrap the GPIO:
 
-> 
->> Is this version 3 of the block?  If so a name like "fsl,maple-v3" or "fsl,maple-v3.0" would be more appropriate.
->> 
->> - k
->> 
->>> +
->>> +- reg:		offset and length of the register set for the device
->>> +
+	rstc = of_get_named_reset_control(np, "nvidia,phy-reset-gpio", 0);
+	reset_control_assert(rstc);
+	usleep(1000);
+	reset_control_deassert(rstc);
 
-So the reg should limit itself to the LIODN registers only.
+My point is that for new bindings I'd prefer a well known property name
+such as reset-gpios and a -names string list (as described
+Documentation/devicetree/bindings/resource-names.txt) over ad-hoc
+property names such as nreset-gpios, <vendor>-<submodule>-(n)reset,
+nrst-gpios etc., both for consistency with existing resource properties
+and because it is easier to grep for a single property name than for a
+combination of all possible datasheet spellings of "reset".
 
->>> +Devices that have LIODNs need to specify links to the parent PAMU controller
->>> +(the actual PAMU controller that this device is connected to) and a pointer to
->>> +the LIODN register, if applicable.
->> 
->> 
->> Does Maple not have any IRQs associated with it?
-> 
-> maple-liodn doesn't.
-> 
-> -Scott
-> 
-> 
+I'd like
+	rstc = reset_control_get(dev, "nreset");
+to go look for
+	resets = <&src 3>;
+	reset-names = "nreset";
+or for
+	reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+	reset-gpio-names = "nreset";
+by default.
+
+regards
+Philipp
