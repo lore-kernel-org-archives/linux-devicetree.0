@@ -1,97 +1,75 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v10] reset: Add driver for gpio-controlled reset pins
-Date: Tue, 06 Aug 2013 10:59:28 -0600
-Message-ID: <52012B70.7050306@wwwdotorg.org>
-References: <1374139586-6344-1-git-send-email-p.zabel@pengutronix.de>
- <20130802092823.GA2884@e106331-lin.cambridge.arm.com>
- <1375687936.4000.21.camel@pizza.hi.pengutronix.de>
- <51FFDFB7.6080806@wwwdotorg.org>
- <1375774345.4004.25.camel@pizza.hi.pengutronix.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v10 5/7] ASoC: fsl-ssi: Use generic DMA
+ bindings if possible
+Date: Tue, 6 Aug 2013 17:59:43 +0100
+Message-ID: <20130806165943.GJ6427@sirena.org.uk>
+References: <1374924716-23475-1-git-send-email-mpa@pengutronix.de>
+ <1374924716-23475-6-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1375774345.4004.25.camel@pizza.hi.pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>, Mike Turquette <mturquette@linaro.org>, Fabio Estevam <fabio.estevam@freescale.com>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
+Content-Type: multipart/mixed; boundary="===============1189399491143719471=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1374924716-23475-6-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/06/2013 01:32 AM, Philipp Zabel wrote:
-> Am Montag, den 05.08.2013, 11:24 -0600 schrieb Stephen Warren:
->> On 08/05/2013 01:32 AM, Philipp Zabel wrote:
->>> Am Freitag, den 02.08.2013, 10:28 +0100 schrieb Mark Rutland:
->>>> On Thu, Jul 18, 2013 at 10:26:26AM +0100, Philipp Zabel wrote:
->>>>> This driver implements a reset controller device that toggle a gpio
->>>>> connected to a reset pin of a peripheral IC. The delay between assertion
->>>>> and de-assertion of the reset signal can be configured via device tree.
->> ...
->>>> I think this should look more like the below:
->>>>
->>>> /* Device with nRESET pin connected to GPIO5_0 */
->>>> sii902x@39 {
->>>> 	/* named for the actual input line */
->>>> 	nreset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
->>>> 	/* 
->>>> 	 * If there's some configurable property relating to the reset
->>>> 	 * line, we can describe it
->>>> 	 */
->>>> 	vendor,some-optional-reset-gpio-property;
->>>> 	...
->>>> };
->>>
->>> I don't like the arbitrary name, as that makes it difficult to handle
->>> this in an automated way. In this case I'd prefer to use 'reset-gpios'
->>> and optionally 'reset-gpio-names' analogous to how clocks and interrupts
->>> (and resets) are handled.
->>
->> Hmm. Just be aware that you can't force existing bindings to be
->> retro-actively modified, or you'll break the DT ABI. So, at the very
->> least we'd have to allow the existing custom-property-based approach for
->> bindings where it's already been used.
-> 
-> Of course we have to continue supporting existing bindings. We could
-> continue using the GPIO API directly for those cases, or we could add a
-> function similar to of_get_named_gpio to wrap the GPIO:
-> 
-> 	rstc = of_get_named_reset_control(np, "nvidia,phy-reset-gpio", 0);
-> 	reset_control_assert(rstc);
-> 	usleep(1000);
-> 	reset_control_deassert(rstc);
 
-Well, you'd need to pass two names into that function; one would be the
-name of the legacy property and the other the entry in reset-names or
-reset-gpio-names. It's quite unlikely that the same string would be used
-in both places.
+--===============1189399491143719471==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="C7PTD44AewjTsiSV"
+Content-Disposition: inline
 
-> My point is that for new bindings I'd prefer a well known property name
-> such as reset-gpios and a -names string list (as described
-> Documentation/devicetree/bindings/resource-names.txt) over ad-hoc
-> property names such as nreset-gpios, <vendor>-<submodule>-(n)reset,
-> nrst-gpios etc., both for consistency with existing resource properties
-> and because it is easier to grep for a single property name than for a
-> combination of all possible datasheet spellings of "reset".
-> 
-> I'd like
-> 	rstc = reset_control_get(dev, "nreset");
-> to go look for
-> 	resets = <&src 3>;
-> 	reset-names = "nreset";
-> or for
-> 	reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-> 	reset-gpio-names = "nreset";
-> by default.
 
-That's rather complex for little benefit though. Take a look at existing
-plain GPIO bindings, regulators, etc. They all simply encode the name
-you're looking for directly into the property name, which is a lot less
-overhead; simpler for humans to write and read without having to match n
-properties together, and simpler to parse in code.
+--C7PTD44AewjTsiSV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sat, Jul 27, 2013 at 01:31:54PM +0200, Markus Pargmann wrote:
+> There may be some platforms using fsl-ssi that do not have a DMA driver
+> with generic DMA bindings. So this patch adds support for the generic
+> DMA bindings, while still accepting the old "fsl,dma-events" property if
+> "dmas" is not found.
+
+Applied, thanks.
+
+--C7PTD44AewjTsiSV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSASt8AAoJELSic+t+oim9wT4P/j4pQz7X4zk/DNK7yvVMooLS
+EVVynStQ9NA2rLjpiOrk51LSGWv3Vco52qArZsgGlY55nu4TsheIRJioLAhSve2p
+io4BkG44FOZj8XhQziPHwofCSeyPpHvHuuTh31lppg1Q0Ivh3Co059ZEPEJfikAN
+1gulZOGRF0z1VjB/Zj2I7uoTyO5iAR5v0VuGZEzLyaBdfDy7Jt9j6l/RTKjZ9jHF
+5GSpQhF3B7k+WPhEonhLy1g0bB5F8L7Q/my+vCsVOGQfG+d60XK3bCb7/8PGQEyv
+JOphr9TyynX0e+EJuKwuSIosUmbBAhPh7SBWKLL2eRbv5BjMxoaCA17DLWtbuQ2M
+KGz5p1+qYzGkDWtDu9Y+kGoXbpIh2C12CpO2tOowZ5wWJi61H585uNOxxjm/roJz
+5IgvJXxBmIDu6hRt/CzdM2znWMAjm/V2X1s+lbHaR7K4iW/YN/MtXAJFhKIIroQM
+JLmHm0f2DSPRop/1sMedhiNlPkiQ6j9x+zJwT1Q2s3GPdYI04DRzd4bSYxk1GXFY
+JbDuC15wjennl2NtSCLLY7AUa09leWT6TXzuduQX0qj1O+0eaQUB5SlJ9m4XJfy7
+05quJsx0go3c1Bz5ytNbT1oxN5wDnyG0VZJ8h2s6udaaANTWkljaS1pHFfb1Nf1D
+Vas78v/c1384jQmkMIPX
+=tz5O
+-----END PGP SIGNATURE-----
+
+--C7PTD44AewjTsiSV--
+
+--===============1189399491143719471==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1189399491143719471==--
