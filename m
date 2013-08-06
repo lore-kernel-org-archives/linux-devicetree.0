@@ -1,104 +1,79 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp65.ord1c.emailsrvr.com ([108.166.43.65]:39140 "EHLO
-	smtp65.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754838Ab3HBQ2g (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 12:28:36 -0400
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: [PATCH v2 5/5] sata, highbank: send extra clock cycles in SGPIO patterns
-Date: Fri,  2 Aug 2013 11:28:38 -0500
-Message-Id: <1375460918-4661-5-git-send-email-mark.langsdorf@calxeda.com>
-In-Reply-To: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com>
-References: <1375460918-4661-1-git-send-email-mark.langsdorf@calxeda.com>
+Received: from arroyo.ext.ti.com ([192.94.94.40]:44447 "EHLO arroyo.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751107Ab3HFN05 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Tue, 6 Aug 2013 09:26:57 -0400
+Message-ID: <5200F99C.8010200@ti.com>
+Date: Tue, 6 Aug 2013 16:26:52 +0300
+From: Roger Quadros <rogerq@ti.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/7] usb: phy: omap: Add new PHY types and remove omap_control_usb3_phy_power()
+References: <1375365915-21380-1-git-send-email-rogerq@ti.com> <1375365915-21380-2-git-send-email-rogerq@ti.com> <5200E1DB.8040006@ti.com>
+In-Reply-To: <5200E1DB.8040006@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com
-Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, tony@atomide.com, george.cherian@ti.com, dmurphy@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Some SGPIO PICs don't follow the standard very well and expect a certain
-number of clock cycles or port frames in each SGPIO pattern. Add two
-optional parameters in the DTB that can provide the number of extra
-clock cycles to be sent before and after SGPIO pattern. Read those
-parameters from the DTB and send the extra clock cycles.
+On 08/06/2013 02:45 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Thursday 01 August 2013 07:35 PM, Roger Quadros wrote:
+>> TYPE2 meaning has changed. It is now a USB2 phy with Power down bit in
+>> control_dev_conf register.
+>>
+>> Introduce TYPE3 and TYPE4 PHY. TYPE3 is USB3 phy with DPLL and individual
+>> TX/RX power control. TYPE4 is USB2 phy with power aux register.
+>>
+>> Update DT binding information to reflect these changes.
+>>
+>> Also get rid of omap_control_usb3_phy_power(). Just one function
+>> i.e. omap_control_usb_phy_power() will now take care of all PHY types.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> 
+> Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
+> but one minor comment below.
+>> ---
+>>   Documentation/devicetree/bindings/usb/omap-usb.txt |   23 ++--
+>>   drivers/usb/phy/phy-omap-control.c                 |  129 +++++++++++---------
+>>   drivers/usb/phy/phy-omap-usb2.c                    |    4 +
+>>   drivers/usb/phy/phy-omap-usb3.c                    |    6 +-
+>>   include/linux/usb/omap_control_usb.h               |   18 ++--
+>>   5 files changed, 100 insertions(+), 80 deletions(-)
+>>
+> .
+> .
+> <snip>
+> .
+> .
+> 
+>> +    omap_control_usb_phy_power(phy->control_dev, 0);
+>>       usb_add_phy_dev(&phy->phy);
+>>
+>>       platform_set_drvdata(pdev, phy);
+>> diff --git a/include/linux/usb/omap_control_usb.h b/include/linux/usb/omap_control_usb.h
+>> index 27b5b8c..7f027d3 100644
+>> --- a/include/linux/usb/omap_control_usb.h
+>> +++ b/include/linux/usb/omap_control_usb.h
+>> @@ -22,9 +22,9 @@
+> 
+>>   struct omap_control_usb {
+>>       struct device *dev;
+>>
+>> -    u32 __iomem *dev_conf;
+>>       u32 __iomem *otghs_control;
+>> -    u32 __iomem *phy_power;
+>> +    u32 __iomem *power;
+>> +    u32 __iomem *power_aux;
+>>
+>>       struct clk *sys_clk;
+>>
+> you can remove omap_control_usb_platform_data from here.
+> 
+OK.
 
-Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Acked-by: Rob Herring <rob.herring@calxeda.com>
----
-Changes from v1
-	Added an example to the bindings.
-	Forced the pre-clocks and post-clocks values to 0 if there is an
-error while reading them or the values aren't in the DTB.
-
- Documentation/devicetree/bindings/ata/sata_highbank.txt |  6 ++++++
- drivers/ata/sata_highbank.c                             | 13 +++++++++++++
- 2 files changed, 19 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/ata/sata_highbank.txt b/Documentation/devicetree/bindings/ata/sata_highbank.txt
-index b6f04a2..febb5f5 100644
---- a/Documentation/devicetree/bindings/ata/sata_highbank.txt
-+++ b/Documentation/devicetree/bindings/ata/sata_highbank.txt
-@@ -23,6 +23,10 @@ Optional properties:
- - calxeda,tx-atten  : a u32 array that contains TX attenuation override
- 			codes, one per port. The upper 3 bytes are always
- 			0 and thus ignored.
-+- calxeda,pre-clocks : a u32 that indicates the number of additional clock
-+			cycles to transmit before sending an SGPIO pattern
-+- calxeda,post-clocks: a u32 that indicates the number of additional clock
-+			cycles to transmit after sending an SGPIO pattern
- 
- Example:
-         sata@ffe08000 {
-@@ -32,4 +36,6 @@ Example:
- 		calxeda,port-phys = <&combophy5 0 &combophy0 0 &combophy0 1
- 					&combophy0 2 &combophy0 3>;
- 		calxeda,tx-atten = <0xff 22 0xff 0xff 23>;
-+		calxeda,pre-clocks = <10>;
-+		calxeda,post-clocks = <0>;
-         };
-diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
-index a7c8038..7f5e5d9 100644
---- a/drivers/ata/sata_highbank.c
-+++ b/drivers/ata/sata_highbank.c
-@@ -84,6 +84,9 @@ static DEFINE_SPINLOCK(sgpio_lock);
- 
- struct ecx_plat_data {
- 	u32		n_ports;
-+	/* number of extra clocks that the SGPIO PIC controller expects */
-+	u32		pre_clocks;
-+	u32		post_clocks;
- 	unsigned	sgpio_gpio[SGPIO_PINS];
- 	u32		sgpio_pattern;
- 	u32		port_to_sgpio[SGPIO_PORTS];
-@@ -160,6 +163,9 @@ static ssize_t ecx_transmit_led_message(struct ata_port *ap, u32 state,
- 	spin_lock_irqsave(&sgpio_lock, flags);
- 	ecx_parse_sgpio(pdata, ap->port_no, state);
- 	sgpio_out = pdata->sgpio_pattern;
-+	for (i = 0; i < pdata->pre_clocks; i++)
-+		ecx_led_cycle_clock(pdata);
-+
- 	gpio_set_value(pdata->sgpio_gpio[SLOAD], 1);
- 	ecx_led_cycle_clock(pdata);
- 	gpio_set_value(pdata->sgpio_gpio[SLOAD], 0);
-@@ -172,6 +178,8 @@ static ssize_t ecx_transmit_led_message(struct ata_port *ap, u32 state,
- 		sgpio_out >>= 1;
- 		ecx_led_cycle_clock(pdata);
- 	}
-+	for (i = 0; i < pdata->post_clocks; i++)
-+		ecx_led_cycle_clock(pdata);
- 
- 	/* save off new led state for port/slot */
- 	emp->led_state = state;
-@@ -206,6 +214,11 @@ static void highbank_set_em_messages(struct device *dev,
- 	of_property_read_u32_array(np, "calxeda,led-order",
- 						pdata->port_to_sgpio,
- 						pdata->n_ports);
-+	if (of_property_read_u32(np, "calxeda,pre-clocks", &pdata->pre_clocks))
-+		pdata->pre_clocks = 0;
-+	if (of_property_read_u32(np, "calxeda,post-clocks",
-+				&pdata->post_clocks))
-+		pdata->post_clocks = 0;
- 
- 	/* store em_loc */
- 	hpriv->em_loc = 0;
--- 
-1.8.1.2
-
+cheers,
+-roger
