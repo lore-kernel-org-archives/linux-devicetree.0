@@ -1,54 +1,70 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-bk0-f47.google.com ([209.85.214.47]:54150 "EHLO
-	mail-bk0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752943Ab3HWDE2 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 23:04:28 -0400
-Received: by mail-bk0-f47.google.com with SMTP id mx12so30248bkb.34
-        for <devicetree@vger.kernel.org>; Thu, 22 Aug 2013 20:04:27 -0700 (PDT)
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:51562 "EHLO
+	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1755863Ab3HFQSk (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 12:18:40 -0400
+Date: Tue, 6 Aug 2013 17:18:05 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] of: add vendor prefix for Altera Corp.
+Message-ID: <20130806161804.GB26996@e106331-lin.cambridge.arm.com>
+References: <1374867540-9477-1-git-send-email-dinguyen@altera.com>
+ <51F2D686.4090104@wwwdotorg.org>
+ <20130728044125.60F3A3E08FE@localhost>
+ <20130730061028.GM29970@voom.fritz.box>
 MIME-Version: 1.0
-Date: Fri, 23 Aug 2013 11:04:27 +0800
-Message-ID: <CAPgLHd_zSXzRWGgQUzsmsM4beiTFKoWtcic6QmJdxhfBvNEZYg@mail.gmail.com>
-Subject: [PATCH -next] mtd: ofpart: use for_each_child_of_node() macro
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20130730061028.GM29970@voom.fritz.box>
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
-To: dwmw2@infradead.org, grant.likely@linaro.org, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+To: "dinguyen@altera.com" <dinguyen@altera.com>, David Gibson <david@gibson.dropbear.id.au>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, "dinh.linux@gmail.com" <dinh.linux@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Dinh,
 
-Use for_each_child_of_node() macro instead of open coding it.
+Apologies for the delay on this.
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/mtd/ofpart.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+On Tue, Jul 30, 2013 at 07:10:28AM +0100, David Gibson wrote:
+> On Sat, Jul 27, 2013 at 10:41:25PM -0600, Grant Likely wrote:
+> > On Fri, 26 Jul 2013 14:05:26 -0600, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> > > On 07/26/2013 01:39 PM, dinguyen@altera.com wrote:
+> > > 
+> > > > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > > 
+> > > > +altr	Altera Corp.
+> > > 
+> > > In the context of Marvel(?) wanting to change between a longer and
+> > > stock-ticker vendor name, there was some discussion re: whether we had
+> > > decided not to use stock tickers any more. Is there still consensus that
+> > > we should? If so, I have no problem with this patch, but I wanted to
+> > > make sure everyone was on the same page.
+> > 
+> > Stock ticker names are just fine by me. But once set they should not
+> > change.
+> 
+> The old recommendation from OF working group was that vendor prefixes
+> could be either ticker symbols in all caps (e.g. "AAPL"), or some
+> other string in lower case.
+> 
+> We've mostly only used the second option.
 
-diff --git a/drivers/mtd/ofpart.c b/drivers/mtd/ofpart.c
-index 7843a44..d64f8c3 100644
---- a/drivers/mtd/ofpart.c
-+++ b/drivers/mtd/ofpart.c
-@@ -43,9 +43,8 @@ static int parse_ofpart_partitions(struct mtd_info *master,
- 		return 0;
- 
- 	/* First count the subnodes */
--	pp = NULL;
- 	nr_parts = 0;
--	while ((pp = of_get_next_child(node, pp))) {
-+	for_each_child_of_node(node,  pp) {
- 		if (node_has_compatible(pp))
- 			continue;
- 
-@@ -59,9 +58,8 @@ static int parse_ofpart_partitions(struct mtd_info *master,
- 	if (!*pparts)
- 		return -ENOMEM;
- 
--	pp = NULL;
- 	i = 0;
--	while ((pp = of_get_next_child(node, pp))) {
-+	for_each_child_of_node(node,  pp) {
- 		const __be32 *reg;
- 		int len;
- 		int a_cells, s_cells;
+Given that all the vendor prefixes we have (even those that are based on 
+stock-ticker symbols) are lower case, I'd be happier with the lower-case
+"altr" in the original patch.
 
+>From the sounds of it, no-one wants to push for "altera", and we already
+have bindings with "altr", so I guess "altr" it is:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+I note that there are some bindings with "altr" and some with "ALTR",
+though "altr" is more common. It would be nice if the binding documents
+were updated mention "ALTR" being deprecated, but useful for
+compatibility, hopefully this will lead to less confusion in future.
+
+It would also be nice for the drivers dealing with "ALTR" to be updated
+to also support "altr" (without removing support for "ALTR").
+
+Thanks,
+Mark.
