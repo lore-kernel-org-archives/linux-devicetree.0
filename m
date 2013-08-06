@@ -1,41 +1,31 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10225 "EHLO
-	hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757587Ab3HMNNX (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 09:13:23 -0400
-Message-ID: <520A3467.20203@nvidia.com>
-Date: Tue, 13 Aug 2013 18:58:07 +0530
-From: Laxman Dewangan <ldewangan@nvidia.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:49397 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755715Ab3HFSy6 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 14:54:58 -0400
+Message-ID: <5201467D.9020803@wwwdotorg.org>
+Date: Tue, 06 Aug 2013 12:54:53 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH V3 3/3] pinctrl: palmas: add pincontrol driver
-References: <1375794755-6246-1-git-send-email-ldewangan@nvidia.com> <1375794755-6246-4-git-send-email-ldewangan@nvidia.com> <5201467D.9020803@wwwdotorg.org>
-In-Reply-To: <5201467D.9020803@wwwdotorg.org>
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+References: <1375794755-6246-1-git-send-email-ldewangan@nvidia.com> <1375794755-6246-4-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1375794755-6246-4-git-send-email-ldewangan@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: linus.walleij@linaro.org, ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Linus,
+On 08/06/2013 07:12 AM, Laxman Dewangan wrote:
+> TI Palmas series Power Management IC have multiple pins which can be
+> configured for different functionality. This pins can be configured
+> for different function. Also their properties like pull up/down,
+> open drain enable/disable are configurable.
+> 
+> Add support for pincontrol driver Palmas series device like TPS65913,
+> TPS80036. The driver supports to be register from DT only.
 
-On Wednesday 07 August 2013 12:24 AM, Stephen Warren wrote:
-> On 08/06/2013 07:12 AM, Laxman Dewangan wrote:
->> TI Palmas series Power Management IC have multiple pins which can be
->> configured for different functionality. This pins can be configured
->> for different function. Also their properties like pull up/down,
->> open drain enable/disable are configurable.
->>
->> Add support for pincontrol driver Palmas series device like TPS65913,
->> TPS80036. The driver supports to be register from DT only.
-> I think this binding is reasonable enough, so that part,
->
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+I think this binding is reasonable enough, so that part,
 
-Can you please review this series?
-I have some follow on patches on cleanups of tegra pincontrol driver to 
-use the utils function which is introduced on this series which I want 
-to send.
-
-Thanks,
-Laxman
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
