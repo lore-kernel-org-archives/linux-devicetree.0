@@ -1,39 +1,79 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from perceval.ideasonboard.com ([95.142.166.194]:41982 "EHLO
-	perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751452Ab3HSXEH (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 19 Aug 2013 19:04:07 -0400
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 0/3] pcf857x: Add OF support
-Date: Tue, 20 Aug 2013 01:04:51 +0200
-Message-Id: <1376953494-9684-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Received: from bear.ext.ti.com ([192.94.94.41]:35320 "EHLO bear.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753982Ab3HFLrt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Tue, 6 Aug 2013 07:47:49 -0400
+Message-ID: <5200E260.3030205@ti.com>
+Date: Tue, 6 Aug 2013 17:17:44 +0530
+From: Kishon Vijay Abraham I <kishon@ti.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 2/7] usb: phy: omap-usb2: Don't use omap_get_control_dev()
+References: <1375365915-21380-1-git-send-email-rogerq@ti.com> <1375365915-21380-3-git-send-email-rogerq@ti.com>
+In-Reply-To: <1375365915-21380-3-git-send-email-rogerq@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+To: Roger Quadros <rogerq@ti.com>
+Cc: balbi@ti.com, tony@atomide.com, george.cherian@ti.com, dmurphy@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
-
-Here's a small series of patches that add OF support to the pcf857x driver.
-The first two patches prepare the driver for the third one that introduces DT
-bindings and parses the device tree node.
-
-Changes since v1:
-
-- Add GPIO properties to the pcf8575 DT node in the bindings documentation
-
-Laurent Pinchart (3):
-  gpio: pcf857x: Sort headers alphabetically
-  gpio: pcf857x: Remove pdata argument to pcf857x_irq_domain_init()
-  gpio: pcf857x: Add OF support
-
- .../devicetree/bindings/gpio/gpio-pcf857x.txt      | 71 ++++++++++++++++++++++
- drivers/gpio/gpio-pcf857x.c                        | 70 ++++++++++++++++-----
- 2 files changed, 125 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-
--- 
-Regards,
-
-Laurent Pinchart
+On Thursday 01 August 2013 07:35 PM, Roger Quadros wrote:
+> omap_get_control_dev() is being deprecated as it doesn't support
+> multiple instances. As control device is present only from OMAP4
+> onwards which supports DT only, we use phandles to get the
+> reference to the control device.
+>
+> As we don't support non-DT boot, we just bail out on probe
+> if device node is not present.
+>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>   drivers/usb/phy/phy-omap-usb2.c |   16 +++++++++++++---
+>   1 files changed, 13 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/usb/phy/phy-omap-usb2.c b/drivers/usb/phy/phy-omap-usb2.c
+> index 376b367..77e0cf4 100644
+> --- a/drivers/usb/phy/phy-omap-usb2.c
+> +++ b/drivers/usb/phy/phy-omap-usb2.c
+> @@ -28,6 +28,7 @@
+>   #include <linux/pm_runtime.h>
+>   #include <linux/delay.h>
+>   #include <linux/usb/omap_control_usb.h>
+> +#include <linux/of_platform.h>
+>
+>   /**
+>    * omap_usb2_set_comparator - links the comparator present in the sytem with
+> @@ -124,6 +125,8 @@ static int omap_usb2_probe(struct platform_device *pdev)
+>   	struct omap_usb			*phy;
+>   	struct usb_otg			*otg;
+>   	struct device_node *node = pdev->dev.of_node;
+> +	struct device_node *control_node;
+> +	struct platform_device *control_pdev;
+>
+>   	if (!node)
+>   		return -ENODEV;
+> @@ -148,11 +151,18 @@ static int omap_usb2_probe(struct platform_device *pdev)
+>   	phy->phy.otg		= otg;
+>   	phy->phy.type		= USB_PHY_TYPE_USB2;
+>
+> -	phy->control_dev = omap_get_control_dev();
+> -	if (IS_ERR(phy->control_dev)) {
+> -		dev_dbg(&pdev->dev, "Failed to get control device\n");
+> +	control_node = of_parse_phandle(node, "ctrl-module", 0);
+> +	if (!control_node) {
+> +		dev_err(&pdev->dev, "Failed to get control device phandle\n");
+>   		return -ENODEV;
+>   	}
+> +	control_pdev = of_find_device_by_node(control_node);
+> +	if (!control_pdev) {
+> +		dev_err(&pdev->dev, "Failed to get control device\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	phy->control_dev = &control_pdev->dev;
+>
+>   	phy->is_suspended	= 1;
+>   	omap_control_usb_phy_power(phy->control_dev, 0);
+>
 
