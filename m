@@ -1,55 +1,57 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pa0-f51.google.com ([209.85.220.51]:39135 "EHLO
-	mail-pa0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759911Ab3HNLl1 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 07:41:27 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v3 1/4] ARM: dts: Update clocks entry in MFC binding documentation
-Date: Wed, 14 Aug 2013 17:11:34 +0530
-Message-Id: <1376480497-17572-2-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1376480497-17572-1-git-send-email-arun.kk@samsung.com>
-References: <1376480497-17572-1-git-send-email-arun.kk@samsung.com>
+Received: from comal.ext.ti.com ([198.47.26.152]:38757 "EHLO comal.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1751807Ab3HFN1e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Tue, 6 Aug 2013 09:27:34 -0400
+Message-ID: <5200F9C1.8090307@ti.com>
+Date: Tue, 6 Aug 2013 16:27:29 +0300
+From: Roger Quadros <rogerq@ti.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 4/7] usb: musb: omap2430: Don't use omap_get_control_dev()
+References: <1375365915-21380-1-git-send-email-rogerq@ti.com> <1375365915-21380-5-git-send-email-rogerq@ti.com> <5200E358.9010505@ti.com>
+In-Reply-To: <5200E358.9010505@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, k.debski@samsung.com, s.nawrocki@samsung.com, sachin.kamat@linaro.org, arun.kk@samsung.com
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, tony@atomide.com, george.cherian@ti.com, dmurphy@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-MFC driver is updated to use only one clock instead of
-two. Correcting this in the binding documentation.
+On 08/06/2013 02:51 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Thursday 01 August 2013 07:35 PM, Roger Quadros wrote:
+>> omap_get_control_dev() is being deprecated as it doesn't support
+>> multiple instances. As control device is present only from OMAP4
+>> onwards which supports DT only, we use phandles to get the
+>> reference to the control device.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>   drivers/usb/musb/omap2430.c |   22 ++++++++++++++++++----
+>>   1 files changed, 18 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
+>> index ebb46ec..1db9588 100644
+>> --- a/drivers/usb/musb/omap2430.c
+>> +++ b/drivers/usb/musb/omap2430.c
+>> @@ -38,6 +38,7 @@
+>>   #include <linux/delay.h>
+>>   #include <linux/usb/musb-omap.h>
+>>   #include <linux/usb/omap_control_usb.h>
+>> +#include <linux/of_platform.h>
+>>
+>>   #include "musb_core.h"
+>>   #include "omap2430.h"
+>> @@ -547,12 +548,25 @@ static int omap2430_probe(struct platform_device *pdev)
+>>       }
+>>
+>>       if (pdata->has_mailbox) {
+> 
+> I think you can remove this this check all together. Mailbox is present only from OMAP4 so it can be dt only.
+> 
+OK.
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
- .../devicetree/bindings/media/s5p-mfc.txt          |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-index df37b02..d75c3e5 100644
---- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
-+++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-@@ -15,9 +15,9 @@ Required properties:
- 	  mapped region.
- 
-   - interrupts : MFC interrupt number to the CPU.
--  - clocks : from common clock binding: handle to mfc clocks.
--  - clock-names : from common clock binding: must contain "sclk_mfc" and "mfc",
--		  corresponding to entries in the clocks property.
-+  - clocks : from common clock binding: handle to mfc clock.
-+  - clock-names : from common clock binding: must contain "mfc",
-+		  corresponding to entry in the clocks property.
- 
-   - samsung,mfc-r : Base address of the first memory bank used by MFC
- 		    for DMA contiguous memory allocation and its size.
-@@ -37,8 +37,8 @@ mfc: codec@13400000 {
- 	reg = <0x13400000 0x10000>;
- 	interrupts = <0 94 0>;
- 	samsung,power-domain = <&pd_mfc>;
--	clocks = <&clock 170>, <&clock 273>;
--	clock-names = "sclk_mfc", "mfc";
-+	clocks = <&clock 273>;
-+	clock-names = "mfc";
- };
- 
- Board specific DT entry:
--- 
-1.7.9.5
+cheers,
+-roger
 
