@@ -1,59 +1,104 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from bear.ext.ti.com ([192.94.94.41]:44653 "EHLO bear.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1756331Ab3HAO7I (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 1 Aug 2013 10:59:08 -0400
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 3/4] dts: dra7-evm: add USB support
-Date: Thu, 1 Aug 2013 17:58:53 +0300
-Message-ID: <1375369134-26398-4-git-send-email-rogerq@ti.com>
-In-Reply-To: <1375369134-26398-1-git-send-email-rogerq@ti.com>
-References: <1375369134-26398-1-git-send-email-rogerq@ti.com>
+Received: from mail-vb0-f53.google.com ([209.85.212.53]:51578 "EHLO
+	mail-vb0-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1751122Ab3HFErK (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 00:47:10 -0400
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <51FD7982.5080101@gmail.com>
+References: <1375455762-22071-1-git-send-email-arun.kk@samsung.com>
+	<1375455762-22071-5-git-send-email-arun.kk@samsung.com>
+	<51FD7982.5080101@gmail.com>
+Date: Tue, 6 Aug 2013 10:17:09 +0530
+Message-ID: <CALt3h7-N+79tfNb0o8bcEZRuNDLS9-wbynHFo+aErr0k_Lb6Vg@mail.gmail.com>
+Subject: Re: [RFC v3 04/13] [media] exynos5-fimc-is: Add common driver header files
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: tony@atomide.com, rnayak@ti.com
-Cc: benoit.cousson@linaro.org, balbi@ti.com, george.cherian@ti.com, kishon@ti.com, dmurphy@ti.com, t-kristo@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Hans Verkuil <hverkuil@xs4all.nl>, Andrzej Hajda <a.hajda@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, shaik.ameer@samsung.com, kilyeon.im@samsung.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add USB drv_vbus pinctrl information and USB mode
-for the USB controller.
+Hi Sylwester,
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/dra7-evm.dts |   22 ++++++++++++++++++++++
- 1 files changed, 22 insertions(+), 0 deletions(-)
+On Sun, Aug 4, 2013 at 3:13 AM, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
+> On 08/02/2013 05:02 PM, Arun Kumar K wrote:
+>>
+>> This patch adds all the common header files used by the fimc-is
+>> driver. It includes the commands for interfacing with the firmware
+>> and error codes from IS firmware, metadata and command parameter
+>> definitions.
+>>
+>> Signed-off-by: Arun Kumar K<arun.kk@samsung.com>
+>> Signed-off-by: Kilyeon Im<kilyeon.im@samsung.com>
+>> ---
+>>   drivers/media/platform/exynos5-is/fimc-is-cmd.h    |  187 +++
+>>   drivers/media/platform/exynos5-is/fimc-is-err.h    |  257 +++++
+>>   .../media/platform/exynos5-is/fimc-is-metadata.h   |  767 +++++++++++++
+>>   drivers/media/platform/exynos5-is/fimc-is-param.h  | 1212
+>> ++++++++++++++++++++
+>>   4 files changed, 2423 insertions(+)
+>>   create mode 100644 drivers/media/platform/exynos5-is/fimc-is-cmd.h
+>>   create mode 100644 drivers/media/platform/exynos5-is/fimc-is-err.h
+>>   create mode 100644 drivers/media/platform/exynos5-is/fimc-is-metadata.h
+>>   create mode 100644 drivers/media/platform/exynos5-is/fimc-is-param.h
+>>
 
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index cb0703c..acd3c09 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -18,3 +18,25 @@
- 		reg = <0x80000000 0x60000000>; /* 1536 MB */
- 	};
- };
-+
-+&dra7_pmx_core {
-+        pinctrl-names = "default";
-+        pinctrl-0 = <
-+		&usb_pins
-+	>;
-+
-+	usb_pins: pinmux_usb_pins {
-+                pinctrl-single,pins = <
-+			0x280	0xc0000	/* usb1_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
-+			0x284	0xc0000 /* usb2_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
-+                >;
-+        };
-+};
-+
-+&dwc3_1 {
-+	dr_mode = "otg";
-+};
-+
-+&dwc3_2 {
-+	dr_mode = "host";
-+};
--- 
-1.7.4.1
+[snip]
 
+>> +
+>> +struct camera2_tonemap_dm {
+>> +       enum tonemap_mode               mode;
+>> +       /* assuming maxCurvePoints = 64 */
+>> +       float                           curve_red[64];
+>> +       float                           curve_green[64];
+>> +       float                           curve_blue[64];
+>
+>
+> So all those floating point numbers are now not really used in
+> the driver but we need them for proper data structures/offsets
+> declarations of the firmware interface ?
+>
+
+Yes. Same floats are used in firmware internal data structures
+also and the driver should assign these values when these parameters
+are to be changed.
+
+>> +};
+>> +
+
+[snip]
+
+>> +/* --------------------------  Effect
+>> ----------------------------------- */
+>> +enum isp_imageeffect_command {
+>> +       ISP_IMAGE_EFFECT_DISABLE                = 0,
+>> +       ISP_IMAGE_EFFECT_MONOCHROME             = 1,
+>> +       ISP_IMAGE_EFFECT_NEGATIVE_MONO          = 2,
+>> +       ISP_IMAGE_EFFECT_NEGATIVE_COLOR         = 3,
+>> +       ISP_IMAGE_EFFECT_SEPIA                  = 4,
+>> +       ISP_IMAGE_EFFECT_AQUA                   = 5,
+>> +       ISP_IMAGE_EFFECT_EMBOSS                 = 6,
+>> +       ISP_IMAGE_EFFECT_EMBOSS_MONO            = 7,
+>> +       ISP_IMAGE_EFFECT_SKETCH                 = 8,
+>> +       ISP_IMAGE_EFFECT_RED_YELLOW_POINT       = 9,
+>> +       ISP_IMAGE_EFFECT_GREEN_POINT            = 10,
+>> +       ISP_IMAGE_EFFECT_BLUE_POINT             = 11,
+>> +       ISP_IMAGE_EFFECT_MAGENTA_POINT          = 12,
+>> +       ISP_IMAGE_EFFECT_WARM_VINTAGE           = 13,
+>> +       ISP_IMAGE_EFFECT_COLD_VINTAGE           = 14,
+>> +       ISP_IMAGE_EFFECT_POSTERIZE              = 15,
+>> +       ISP_IMAGE_EFFECT_SOLARIZE               = 16,
+>> +       ISP_IMAGE_EFFECT_WASHED                 = 17,
+>> +       ISP_IMAGE_EFFECT_CCM                    = 18,
+>> +};
+>
+>
+> Hmm, I guess we will need a private v4l2 control for those.
+>
+
+Yes. I am planning to add the controls after the basic support
+gets merged.
+
+Regards
+Arun
