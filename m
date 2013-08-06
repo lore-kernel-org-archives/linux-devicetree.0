@@ -1,167 +1,81 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:40583 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S968243Ab3HIQ6C (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 12:58:02 -0400
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V4 3/4] of: introduce of_parse_phandle_with_fixed_args
-Date: Fri,  9 Aug 2013 10:57:48 -0600
-Message-Id: <1376067469-8811-3-git-send-email-swarren@wwwdotorg.org>
-In-Reply-To: <1376067469-8811-1-git-send-email-swarren@wwwdotorg.org>
-References: <1376067469-8811-1-git-send-email-swarren@wwwdotorg.org>
+Received: from smtp46.i.mail.ru ([94.100.177.106]:56017 "EHLO smtp46.i.mail.ru"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1753193Ab3HFI6U (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Tue, 6 Aug 2013 04:58:20 -0400
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH v3 1/4] mtd: nand: gpio: Add DT property to automatically determine bus width
+Date: Tue,  6 Aug 2013 12:57:38 +0400
+Message-Id: <1375779459-32549-1-git-send-email-shc_work@mail.ru>
 Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@kernel.crashing.org>, Stephen Warren <swarren@nvidia.com>
+To: linux-mtd@lists.infradead.org
+Cc: David Woodhouse <dwmw2@infradead.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Grant Likely <grant.likely@linaro.org>, Alexander Shiyan <shc_work@mail.ru>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Stephen Warren <swarren@nvidia.com>
+This patch adds a property to automatically determine the NAND
+bus width. This property works if the bus width is not specified
+explicitly.
 
-This is identical to of_parse_phandle_with_args(), except that the
-number of argument cells is fixed, rather than being parsed out of the
-node referenced by each phandle.
-
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
 ---
-Rob, Grant, Linus needs your ack on this so he can take the change through
-the GPIO tree along with the others.
+ .../devicetree/bindings/mtd/gpio-control-nand.txt        |  2 ++
+ drivers/mtd/nand/gpio.c                                  | 16 ++++++++++++----
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
-v3: s/cells_count/cell_count, add missing braces per coding style
----
- drivers/of/base.c  | 66 +++++++++++++++++++++++++++++++++++++++++++++++-------
- include/linux/of.h | 10 +++++++++
- 2 files changed, 68 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 23e7073..2c9a808 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1106,7 +1106,8 @@ EXPORT_SYMBOL(of_parse_phandle);
+diff --git a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+index 36ef07d..91070d0 100644
+--- a/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpio-control-nand.txt
+@@ -19,6 +19,8 @@ Optional properties:
+   defaults to 1 byte.
+ - chip-delay : chip dependent delay for transferring data from array to
+   read registers (tR).  If not present then a default of 20us is used.
++- gpio-control-nand,bank-width-auto : Device bus width is determined
++  automatically if "bank-width" is omitted (Boolean).
+ - gpio-control-nand,io-sync-reg : A 64-bit physical address for a read
+   location used to guard against bus reordering with regards to accesses to
+   the GPIO's and the NAND flash data bus.  If present, then after changing
+diff --git a/drivers/mtd/nand/gpio.c b/drivers/mtd/nand/gpio.c
+index 800a1cc..c75f92e 100644
+--- a/drivers/mtd/nand/gpio.c
++++ b/drivers/mtd/nand/gpio.c
+@@ -116,6 +116,10 @@ static int gpio_nand_get_config_of(const struct device *dev,
+ 			dev_err(dev, "invalid bank-width %u\n", val);
+ 			return -EINVAL;
+ 		}
++	} else {
++		if (of_get_property(dev->of_node,
++				    "gpio-control-nand,bank-width-auto", NULL))
++			plat->options |= NAND_BUSWIDTH_AUTO;
+ 	}
  
- static int __of_parse_phandle_with_args(const struct device_node *np,
- 					const char *list_name,
--					const char *cells_name, int index,
-+					const char *cells_name,
-+					int cell_count, int index,
- 					struct of_phandle_args *out_args)
- {
- 	const __be32 *list, *list_end;
-@@ -1142,11 +1143,17 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
- 					 np->full_name);
- 				goto err;
- 			}
--			if (of_property_read_u32(node, cells_name, &count)) {
--				pr_err("%s: could not get %s for %s\n",
--					 np->full_name, cells_name,
--					 node->full_name);
--				goto err;
+ 	plat->gpio_rdy = of_get_gpio(dev->of_node, 0);
+@@ -223,6 +227,14 @@ static int gpio_nand_probe(struct platform_device *pdev)
+ 	if (IS_ERR(chip->IO_ADDR_R))
+ 		return PTR_ERR(chip->IO_ADDR_R);
+ 
++	ret = gpio_nand_get_config(&pdev->dev, &gpiomtd->plat);
++	if (ret)
++		return ret;
 +
-+			if (cells_name) {
-+				if (of_property_read_u32(node, cells_name,
-+							 &count)) {
-+					pr_err("%s: could not get %s for %s\n",
-+						np->full_name, cells_name,
-+						node->full_name);
-+					goto err;
-+				}
-+			} else {
-+				count = cell_count;
- 			}
- 
- 			/*
-@@ -1244,11 +1251,53 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
- {
- 	if (index < 0)
- 		return -EINVAL;
--	return __of_parse_phandle_with_args(np, list_name, cells_name, index, out_args);
-+	return __of_parse_phandle_with_args(np, list_name, cells_name, 0,
-+					    index, out_args);
- }
- EXPORT_SYMBOL(of_parse_phandle_with_args);
- 
- /**
-+ * of_parse_phandle_with_fixed_args() - Find a node pointed by phandle in a list
-+ * @np:		pointer to a device tree node containing a list
-+ * @list_name:	property name that contains a list
-+ * @cell_count: number of argument cells following the phandle
-+ * @index:	index of a phandle to parse out
-+ * @out_args:	optional pointer to output arguments structure (will be filled)
-+ *
-+ * This function is useful to parse lists of phandles and their arguments.
-+ * Returns 0 on success and fills out_args, on error returns appropriate
-+ * errno value.
-+ *
-+ * Caller is responsible to call of_node_put() on the returned out_args->node
-+ * pointer.
-+ *
-+ * Example:
-+ *
-+ * phandle1: node1 {
-+ * }
-+ *
-+ * phandle2: node2 {
-+ * }
-+ *
-+ * node3 {
-+ * 	list = <&phandle1 0 2 &phandle2 2 3>;
-+ * }
-+ *
-+ * To get a device_node of the `node2' node you may call this:
-+ * of_parse_phandle_with_fixed_args(node3, "list", 2, 1, &args);
-+ */
-+int of_parse_phandle_with_fixed_args(const struct device_node *np,
-+				const char *list_name, int cell_count,
-+				int index, struct of_phandle_args *out_args)
-+{
-+	if (index < 0)
-+		return -EINVAL;
-+	return __of_parse_phandle_with_args(np, list_name, NULL, cell_count,
-+					   index, out_args);
-+}
-+EXPORT_SYMBOL(of_parse_phandle_with_fixed_args);
++	if (resource_size(res) < 2)
++		gpiomtd->plat.options &= ~(NAND_BUSWIDTH_16 |
++					   NAND_BUSWIDTH_AUTO);
 +
-+/**
-  * of_count_phandle_with_args() - Find the number of phandles references in a property
-  * @np:		pointer to a device tree node containing a list
-  * @list_name:	property name that contains a list
-@@ -1266,7 +1315,8 @@ EXPORT_SYMBOL(of_parse_phandle_with_args);
- int of_count_phandle_with_args(const struct device_node *np, const char *list_name,
- 				const char *cells_name)
- {
--	return __of_parse_phandle_with_args(np, list_name, cells_name, -1, NULL);
-+	return __of_parse_phandle_with_args(np, list_name, cells_name, 0, -1,
-+					    NULL);
- }
- EXPORT_SYMBOL(of_count_phandle_with_args);
+ 	res = gpio_nand_get_io_sync(pdev);
+ 	if (res) {
+ 		gpiomtd->io_sync = devm_ioremap_resource(&pdev->dev, res);
+@@ -230,10 +242,6 @@ static int gpio_nand_probe(struct platform_device *pdev)
+ 			return PTR_ERR(gpiomtd->io_sync);
+ 	}
  
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 1fd08ca..0c457f5 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -280,6 +280,9 @@ extern struct device_node *of_parse_phandle(const struct device_node *np,
- extern int of_parse_phandle_with_args(const struct device_node *np,
- 	const char *list_name, const char *cells_name, int index,
- 	struct of_phandle_args *out_args);
-+extern int of_parse_phandle_with_fixed_args(const struct device_node *np,
-+	const char *list_name, int cells_count, int index,
-+	struct of_phandle_args *out_args);
- extern int of_count_phandle_with_args(const struct device_node *np,
- 	const char *list_name, const char *cells_name);
- 
-@@ -488,6 +491,13 @@ static inline int of_parse_phandle_with_args(struct device_node *np,
- 	return -ENOSYS;
- }
- 
-+static inline int of_parse_phandle_with_fixed_args(const struct device_node *np,
-+	const char *list_name, int cells_count, int index,
-+	struct of_phandle_args *out_args)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline int of_count_phandle_with_args(struct device_node *np,
- 					     const char *list_name,
- 					     const char *cells_name)
+-	ret = gpio_nand_get_config(&pdev->dev, &gpiomtd->plat);
+-	if (ret)
+-		return ret;
+-
+ 	ret = devm_gpio_request(&pdev->dev, gpiomtd->plat.gpio_nce, "NAND NCE");
+ 	if (ret)
+ 		return ret;
 -- 
 1.8.1.5
 
