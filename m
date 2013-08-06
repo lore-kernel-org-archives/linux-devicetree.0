@@ -1,113 +1,106 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:51427 "EHLO
-	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1755917Ab3HFQLv (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 12:11:51 -0400
-Date: Tue, 6 Aug 2013 17:11:30 +0100
-From: Mark Rutland <mark.rutland@arm.com>
+Received: from va3ehsobe001.messaging.microsoft.com ([216.32.180.11]:28171
+	"EHLO va3outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1755672Ab3HFP4I (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 11:56:08 -0400
+From: Dinh Nguyen <dinguyen@altera.com>
+Date: Tue, 6 Aug 2013 08:56:01 -0700
 Subject: Re: [RESEND PATCHv2] of: add vendor prefix for Altera Corp.
-Message-ID: <20130806161130.GA26996@e106331-lin.cambridge.arm.com>
+Message-ID: <71B37E0559AC6849A68C5BA94C509FB45CCE13F108@SJ-ITMSG02.altera.priv.altera.com>
 References: <1375735699-7056-1-git-send-email-dinguyen@altera.com>
  <5FD2B856-610A-4D25-85F4-0CE30EB86323@codeaurora.org>
  <1375736573.7277.7.camel@linux-builds1>
  <20130806083901.GA23111@e106331-lin.cambridge.arm.com>
- <71B37E0559AC6849A68C5BA94C509FB45CCE13F108@SJ-ITMSG02.altera.priv.altera.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <71B37E0559AC6849A68C5BA94C509FB45CCE13F108@SJ-ITMSG02.altera.priv.altera.com>
+In-Reply-To: <20130806083901.GA23111@e106331-lin.cambridge.arm.com>
 Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@altera.com>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "david@gibson.dropbear.id.au" <david@gibson.dropbear.id.au>, "dinh.linux@gmail.com" <dinh.linux@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "david@gibson.dropbear.id.au" <david@gibson.dropbear.id.au>, "dinh.linux@gmail.com" <dinh.linux@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Pawel.Moll@arm.com" <Pawel.Moll@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Aug 06, 2013 at 04:56:01PM +0100, Dinh Nguyen wrote:
-> On Tue, 2013-08-06 at 09:39 +0100, Mark Rutland wrote:
-> > On Mon, Aug 05, 2013 at 10:02:53PM +0100, Dinh Nguyen wrote:
-> > > On Mon, 2013-08-05 at 15:50 -0500, Kumar Gala wrote:
-> > > > On Aug 5, 2013, at 3:48 PM, <dinguyen@altera.com> <dinguyen@altera.com> wrote:
-> > > >
-> > > > > From: Dinh Nguyen <dinguyen@altera.com>
-> > > > >
-> > > > > Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-> > > > > Cc: Grant Likely <grant.likely@linaro.org>
-> > > > > Cc: Rob Herring <rob.herring@calxeda.com>
-> > > > > Cc: Pawel Moll <pawel.moll@arm.com>
-> > > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > > Cc: Stephen Warren <swarren@wwwdotorg.org>
-> > > > > Cc: Ian Campbell <ian.campbell@citrix.com>
-> > > > > Cc: devicetree@vger.kernel.org
-> > > > >
-> > > > > v2:
-> > > > > - Changed altr -> ALTR
-> > > > > ---
-> > > > > .../devicetree/bindings/vendor-prefixes.txt        |    1 +
-> > > > > 1 file changed, 1 insertion(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > > > index 366ce9b..6c2b273 100644
-> > > > > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > > > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > > > @@ -7,6 +7,7 @@ ad      Avionic Design GmbH
-> > > > > adi     Analog Devices, Inc.
-> > > > > aeroflexgaisler Aeroflex Gaisler AB
-> > > > > ak      Asahi Kasei Corp.
-> > > > > +ALTR   Altera Corp.
-> > > >
-> > > > why all caps?  we seem to have avoid doing that for almost everyone?
-> > >
-> > > CC: David Gibson <david@gibson.dropbear.id.au>
-> > >
-> > > I can't find the archived email, but this is the excerpt from v1:
-> > >
-> > > On Sat, Jul 27, 2013 at 10:41:25PM -0600, Grant Likely wrote:
-> > > > On Fri, 26 Jul 2013 14:05:26 -0600, Stephen Warren
-> > > <swarren@wwwdotorg.org> wrote:
-> > > > > On 07/26/2013 01:39 PM, dinguyen@altera.com wrote:
-> > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > > >
-> > > > > > +altr     Altera Corp.
-> > > > >
-> > > > > In the context of Marvel(?) wanting to change between a longer and
-> > > > > stock-ticker vendor name, there was some discussion re: whether we
-> > > had
-> > > > > decided not to use stock tickers any more. Is there still consensus
-> > > that
-> > > > > we should? If so, I have no problem with this patch, but I wanted to
-> > > > > make sure everyone was on the same page.
-> > > >
-> > > > Stock ticker names are just fine by me. But once set they should not
-> > > > change.
-> > >
-> > > On Tue, 2013-07-30 at 16:10 +1000, David Gibson wrote:
-> > > >The old recommendation from OF working group was that vendor
-> > > >prefixes could be either ticker symbols in all caps (e.g. "AAPL"), or
-> > > >some other string in lower case.
-> >
-> > This would leave ALTR as the oddball out of all the prefixes currently
-> > in existence (of which several are *lower case* stock ticker symbols).
-> >
-> > Grant, do you have any view here? I'm happy to allow uppercase if you're
-> > happy with it.
-> >
-> > >
-> > > >We've mostly only used the second option.
-> > > ------
-> > >
-> > > So I'm think we're going with all caps for ALTR. We've already been
-> > > using altr, so the 2nd option is colliding with the 1st option.
-> >
-> > Why is using the string you're using already (atlr) a problem?
-> 
-> Its not a problem. It was a suggestion from the V1 patch and then
-> silence. I took the silence as *caps* was the way to go.
+T24gVHVlLCAyMDEzLTA4LTA2IGF0IDA5OjM5ICswMTAwLCBNYXJrIFJ1dGxhbmQgd3JvdGU6DQo+
+IE9uIE1vbiwgQXVnIDA1LCAyMDEzIGF0IDEwOjAyOjUzUE0gKzAxMDAsIERpbmggTmd1eWVuIHdy
+b3RlOg0KPiA+IE9uIE1vbiwgMjAxMy0wOC0wNSBhdCAxNTo1MCAtMDUwMCwgS3VtYXIgR2FsYSB3
+cm90ZToNCj4gPiA+IE9uIEF1ZyA1LCAyMDEzLCBhdCAzOjQ4IFBNLCA8ZGluZ3V5ZW5AYWx0ZXJh
+LmNvbT4gPGRpbmd1eWVuQGFsdGVyYS5jb20+IHdyb3RlOg0KPiA+ID4NCj4gPiA+ID4gRnJvbTog
+RGluaCBOZ3V5ZW4gPGRpbmd1eWVuQGFsdGVyYS5jb20+DQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25l
+ZC1vZmYtYnk6IERpbmggTmd1eWVuIDxkaW5ndXllbkBhbHRlcmEuY29tPg0KPiA+ID4gPiBDYzog
+R3JhbnQgTGlrZWx5IDxncmFudC5saWtlbHlAbGluYXJvLm9yZz4NCj4gPiA+ID4gQ2M6IFJvYiBI
+ZXJyaW5nIDxyb2IuaGVycmluZ0BjYWx4ZWRhLmNvbT4NCj4gPiA+ID4gQ2M6IFBhd2VsIE1vbGwg
+PHBhd2VsLm1vbGxAYXJtLmNvbT4NCj4gPiA+ID4gQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRs
+YW5kQGFybS5jb20+DQo+ID4gPiA+IENjOiBTdGVwaGVuIFdhcnJlbiA8c3dhcnJlbkB3d3dkb3Rv
+cmcub3JnPg0KPiA+ID4gPiBDYzogSWFuIENhbXBiZWxsIDxpYW4uY2FtcGJlbGxAY2l0cml4LmNv
+bT4NCj4gPiA+ID4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+ID4gPiA+DQo+ID4g
+PiA+IHYyOg0KPiA+ID4gPiAtIENoYW5nZWQgYWx0ciAtPiBBTFRSDQo+ID4gPiA+IC0tLQ0KPiA+
+ID4gPiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0ICAgICAgICB8
+ICAgIDEgKw0KPiA+ID4gPiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPiA+ID4N
+Cj4gPiA+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92
+ZW5kb3ItcHJlZml4ZXMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Zl
+bmRvci1wcmVmaXhlcy50eHQNCj4gPiA+ID4gaW5kZXggMzY2Y2U5Yi4uNmMyYjI3MyAxMDA2NDQN
+Cj4gPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1w
+cmVmaXhlcy50eHQNCj4gPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3ZlbmRvci1wcmVmaXhlcy50eHQNCj4gPiA+ID4gQEAgLTcsNiArNyw3IEBAIGFkICAgICAg
+QXZpb25pYyBEZXNpZ24gR21iSA0KPiA+ID4gPiBhZGkgICAgIEFuYWxvZyBEZXZpY2VzLCBJbmMu
+DQo+ID4gPiA+IGFlcm9mbGV4Z2Fpc2xlciBBZXJvZmxleCBHYWlzbGVyIEFCDQo+ID4gPiA+IGFr
+ICAgICAgQXNhaGkgS2FzZWkgQ29ycC4NCj4gPiA+ID4gK0FMVFIgICBBbHRlcmEgQ29ycC4NCj4g
+PiA+DQo+ID4gPiB3aHkgYWxsIGNhcHM/ICB3ZSBzZWVtIHRvIGhhdmUgYXZvaWQgZG9pbmcgdGhh
+dCBmb3IgYWxtb3N0IGV2ZXJ5b25lPw0KPiA+DQo+ID4gQ0M6IERhdmlkIEdpYnNvbiA8ZGF2aWRA
+Z2lic29uLmRyb3BiZWFyLmlkLmF1Pg0KPiA+DQo+ID4gSSBjYW4ndCBmaW5kIHRoZSBhcmNoaXZl
+ZCBlbWFpbCwgYnV0IHRoaXMgaXMgdGhlIGV4Y2VycHQgZnJvbSB2MToNCj4gPg0KPiA+IE9uIFNh
+dCwgSnVsIDI3LCAyMDEzIGF0IDEwOjQxOjI1UE0gLTA2MDAsIEdyYW50IExpa2VseSB3cm90ZToN
+Cj4gPiA+IE9uIEZyaSwgMjYgSnVsIDIwMTMgMTQ6MDU6MjYgLTA2MDAsIFN0ZXBoZW4gV2FycmVu
+DQo+ID4gPHN3YXJyZW5Ad3d3ZG90b3JnLm9yZz4gd3JvdGU6DQo+ID4gPiA+IE9uIDA3LzI2LzIw
+MTMgMDE6MzkgUE0sIGRpbmd1eWVuQGFsdGVyYS5jb20gd3JvdGU6DQo+ID4gPiA+DQo+ID4gPiA+
+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3It
+cHJlZml4ZXMudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVu
+ZG9yLXByZWZpeGVzLnR4dA0KPiA+ID4gPg0KPiA+ID4gPiA+ICthbHRyICAgICBBbHRlcmEgQ29y
+cC4NCj4gPiA+ID4NCj4gPiA+ID4gSW4gdGhlIGNvbnRleHQgb2YgTWFydmVsKD8pIHdhbnRpbmcg
+dG8gY2hhbmdlIGJldHdlZW4gYSBsb25nZXIgYW5kDQo+ID4gPiA+IHN0b2NrLXRpY2tlciB2ZW5k
+b3IgbmFtZSwgdGhlcmUgd2FzIHNvbWUgZGlzY3Vzc2lvbiByZTogd2hldGhlciB3ZQ0KPiA+IGhh
+ZA0KPiA+ID4gPiBkZWNpZGVkIG5vdCB0byB1c2Ugc3RvY2sgdGlja2VycyBhbnkgbW9yZS4gSXMg
+dGhlcmUgc3RpbGwgY29uc2Vuc3VzDQo+ID4gdGhhdA0KPiA+ID4gPiB3ZSBzaG91bGQ/IElmIHNv
+LCBJIGhhdmUgbm8gcHJvYmxlbSB3aXRoIHRoaXMgcGF0Y2gsIGJ1dCBJIHdhbnRlZCB0bw0KPiA+
+ID4gPiBtYWtlIHN1cmUgZXZlcnlvbmUgd2FzIG9uIHRoZSBzYW1lIHBhZ2UuDQo+ID4gPg0KPiA+
+ID4gU3RvY2sgdGlja2VyIG5hbWVzIGFyZSBqdXN0IGZpbmUgYnkgbWUuIEJ1dCBvbmNlIHNldCB0
+aGV5IHNob3VsZCBub3QNCj4gPiA+IGNoYW5nZS4NCj4gPg0KPiA+IE9uIFR1ZSwgMjAxMy0wNy0z
+MCBhdCAxNjoxMCArMTAwMCwgRGF2aWQgR2lic29uIHdyb3RlOg0KPiA+ID5UaGUgb2xkIHJlY29t
+bWVuZGF0aW9uIGZyb20gT0Ygd29ya2luZyBncm91cCB3YXMgdGhhdCB2ZW5kb3INCj4gPiA+cHJl
+Zml4ZXMgY291bGQgYmUgZWl0aGVyIHRpY2tlciBzeW1ib2xzIGluIGFsbCBjYXBzIChlLmcuICJB
+QVBMIiksIG9yDQo+ID4gPnNvbWUgb3RoZXIgc3RyaW5nIGluIGxvd2VyIGNhc2UuDQo+DQo+IFRo
+aXMgd291bGQgbGVhdmUgQUxUUiBhcyB0aGUgb2RkYmFsbCBvdXQgb2YgYWxsIHRoZSBwcmVmaXhl
+cyBjdXJyZW50bHkNCj4gaW4gZXhpc3RlbmNlIChvZiB3aGljaCBzZXZlcmFsIGFyZSAqbG93ZXIg
+Y2FzZSogc3RvY2sgdGlja2VyIHN5bWJvbHMpLg0KPg0KPiBHcmFudCwgZG8geW91IGhhdmUgYW55
+IHZpZXcgaGVyZT8gSSdtIGhhcHB5IHRvIGFsbG93IHVwcGVyY2FzZSBpZiB5b3UncmUNCj4gaGFw
+cHkgd2l0aCBpdC4NCj4NCj4gPg0KPiA+ID5XZSd2ZSBtb3N0bHkgb25seSB1c2VkIHRoZSBzZWNv
+bmQgb3B0aW9uLg0KPiA+IC0tLS0tLQ0KPiA+DQo+ID4gU28gSSdtIHRoaW5rIHdlJ3JlIGdvaW5n
+IHdpdGggYWxsIGNhcHMgZm9yIEFMVFIuIFdlJ3ZlIGFscmVhZHkgYmVlbg0KPiA+IHVzaW5nIGFs
+dHIsIHNvIHRoZSAybmQgb3B0aW9uIGlzIGNvbGxpZGluZyB3aXRoIHRoZSAxc3Qgb3B0aW9uLg0K
+Pg0KPiBXaHkgaXMgdXNpbmcgdGhlIHN0cmluZyB5b3UncmUgdXNpbmcgYWxyZWFkeSAoYXRscikg
+YSBwcm9ibGVtPw0KDQpJdHMgbm90IGEgcHJvYmxlbS4gSXQgd2FzIGEgc3VnZ2VzdGlvbiBmcm9t
+IHRoZSBWMSBwYXRjaCBhbmQgdGhlbg0Kc2lsZW5jZS4gSSB0b29rIHRoZSBzaWxlbmNlIGFzICpj
+YXBzKiB3YXMgdGhlIHdheSB0byBnby4NCg0KRGluaA0KPg0KPiBUaGFua3MsDQo+IE1hcmsuDQo+
+DQo+ID4NCj4gPg0KPiA+IERpbmgNCj4gPg0KPiA+ID4NCj4gPiA+IC0gaw0KPiA+ID4NCj4gPiA+
+ID4gYW1jYyAgICBBcHBsaWVkIE1pY3JvIENpcmN1aXRzIENvcnBvcmF0aW9uIChBUE0sIGZvcm1h
+bGx5IEFNQ0MpDQo+ID4gPiA+IGFwbSAgICAgQXBwbGllZCBNaWNybyBDaXJjdWl0cyBDb3Jwb3Jh
+dGlvbiAoQVBNKQ0KPiA+ID4gPiBhcm0gICAgIEFSTSBMdGQuDQo+ID4gPiA+IC0tDQo+ID4gPiA+
+IDEuNy45LjUNCj4gPiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4gLS0NCj4gPiA+ID4gVG8gdW5zdWJz
+Y3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGRldmljZXRy
+ZWUiIGluDQo+ID4gPiA+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5r
+ZXJuZWwub3JnDQo+ID4gPiA+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtl
+cm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbA0KPiA+ID4NCj4gPiA+IC0tDQo+ID4gPiBFbXBs
+b3llZSBvZiBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLg0KPiA+ID4gUXVhbGNvbW0g
+SW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0s
+IGhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbg0KPiA+ID4NCj4gPiA+DQo+ID4NCj4gPg0K
+PiA+DQo+ID4NCj4NCg0KDQpDb25maWRlbnRpYWxpdHkgTm90aWNlLg0KVGhpcyBtZXNzYWdlIG1h
+eSBjb250YWluIGluZm9ybWF0aW9uIHRoYXQgaXMgY29uZmlkZW50aWFsIG9yIG90aGVyd2lzZSBw
+cm90ZWN0ZWQgZnJvbSBkaXNjbG9zdXJlLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVj
+aXBpZW50LCB5b3UgYXJlIGhlcmVieSBub3RpZmllZCB0aGF0IGFueSB1c2UsIGRpc2Nsb3N1cmUs
+IGRpc3NlbWluYXRpb24sIGRpc3RyaWJ1dGlvbiwgIG9yIGNvcHlpbmcgIG9mIHRoaXMgbWVzc2Fn
+ZSwgb3IgYW55IGF0dGFjaG1lbnRzLCBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiAgSWYgeW91IGhh
+dmUgcmVjZWl2ZWQgdGhpcyBtZXNzYWdlIGluIGVycm9yLCBwbGVhc2UgYWR2aXNlIHRoZSBzZW5k
+ZXIgYnkgcmVwbHkgZS1tYWlsLCBhbmQgZGVsZXRlIHRoZSBtZXNzYWdlIGFuZCBhbnkgYXR0YWNo
+bWVudHMuICBUaGFuayB5b3UuDQo=
 
-Aah, sorry for the confusion there. I guess we're all a bit stretched at
-the moment. I'm happy with altr (lower case) as a vendor prefix, and
-I'll reply to the original patch to clarify the matter.
-
-Thanks,
-Mark.
