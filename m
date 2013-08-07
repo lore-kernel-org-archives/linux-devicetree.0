@@ -1,217 +1,57 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v4 3/4] drivers: of: add initialization code for dma
- reserved memory
-Date: Wed, 7 Aug 2013 10:07:57 -0500
-Message-ID: <4BB8CECD-DBAC-496D-88EE-570A01875535@codeaurora.org>
-References: <1375275119-12787-1-git-send-email-m.szyprowski@samsung.com>
- <1375275119-12787-4-git-send-email-m.szyprowski@samsung.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
+From: Christophe Leroy <christophe.leroy-GgN8y9CXRhA@public.gmane.org>
+Subject: [PATCH] SPI: Set SPI bits per words in an OF DeviceTree SPI node
+Date: Wed, 7 Aug 2013 17:44:45 +0200
+Message-ID: <201308071544.r77Fij2Y006649@localhost.localdomain>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1375275119-12787-4-git-send-email-m.szyprowski@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Laura Abbott <lauraa@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Michal Nazarewicz <mina86@mina86.com>, Sascha Hauer <s.hauer@pengutronix.de>, linaro-mm-sig@lists.linaro.org, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch allows to set up the bits per word together with all other SPI
+parameters in the SPI Node of the OF device tree
 
-On Jul 31, 2013, at 7:51 AM, Marek Szyprowski wrote:
+In the node, you then have to include the 'spi-bits' property.
 
-> Add device tree support for contiguous and reserved memory regions
-> defined in device tree. Initialization is done in 2 steps. First, the
-> memory is reserved, what happens very early when only flattened device
-> tree is available. Then on device initialization the corresponding cma
-> and reserved regions are assigned to each device structure.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
-> Documentation/devicetree/bindings/memory.txt |  152 ++++++++++++++++++++++
-> drivers/of/Kconfig                           |    6 +
-> drivers/of/Makefile                          |    1 +
-> drivers/of/of_reserved_mem.c                 |  175 ++++++++++++++++++++++++++
-> include/asm-generic/dma-coherent.h           |    6 +
-> 5 files changed, 340 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/memory.txt
-> create mode 100644 drivers/of/of_reserved_mem.c
-> 
-> diff --git a/Documentation/devicetree/bindings/memory.txt b/Documentation/devicetree/bindings/memory.txt
-> new file mode 100644
-> index 0000000..4aece19
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory.txt
-> @@ -0,0 +1,152 @@
-> +*** Memory binding ***
-> +
-> +The /memory node provides basic information about the address and size
-> +of the physical memory. This node is usually filled or updated by the
-> +bootloader, depending on the actual memory configuration of the given
-> +hardware.
-> +
-> +The memory layout is described by the folllowing node:
-> +
-> +memory {
-> +	reg =  <(baseaddr1) (size1)
-> +		(baseaddr2) (size2)
-> +		...
-> +		(baseaddrN) (sizeN)>;
-> +};
-> +
-> +baseaddrX:	the base address of the defined memory bank
-> +sizeX:		the size of the defined memory bank
-> +
-> +More than one memory bank can be defined.
-> +
-> +
-> +*** Reserved memory regions ***
-> +
-> +In /memory/reserved-memory node one can create additional nodes
-> +describing particular reserved (excluded from normal use) memory
-> +regions. Such memory regions are usually designed for the special usage
-> +by various device drivers. A good example are contiguous memory
-> +allocations or memory sharing with other operating system on the same
-> +hardware board. Those special memory regions might depend on the board
-> +configuration and devices used on the target system.
-> +
-> +Parameters for each memory region can be encoded into the device tree
-> +wit the following convention:
-> +
-> +[(label):] (name)@(address) {
-> +	compatible = "contiguous-memory-region", "reserved-memory-region";
-> +	reg = <(address) (size)>;
-> +	(linux,contiguous-region);
-> +	(linux,default-contiguous-region);
-> +};
-> +
-> +label:		label given to the defined region (optional)
-> +name:		an name given to the defined region
-> +address:	the base address of the defined region
-> +size:		the size of the memory region
+Exemple:
+	fpga-loader@7 {
+		compatible = "cs,fpga-loader";
+		spi-max-frequency = <10000000>;
+		reg = <7>;
+		spi-cs-high;
+		spi-bits = <16>;
+	};
 
-Should we try and convey some type of cacheability attributes, I know this is difficult to do in a generic way, but would seem useful and necessary.
+Signed-off-by: Christophe Leroy <christophe.leroy-GgN8y9CXRhA@public.gmane.org>
 
-> +
-> +compatible:	"contiguous-memory-region" - enables binding of this
-> +		region to Contiguous Memory Allocator (special region for
-> +		contiguous memory allocations, shared with movable system
-> +		memory, Linux kernel-specific), alternatively if
-> +		"reserved-memory-region" - compatibility is defined, given
-> +		region is assigned for exclusive usage for DMA transfers
-> +
-> +linux,default-contiguous-region: property indicating that the region
-> +		is the default region for all contiguous memory
-> +		allocations, Linux specific (optional)
-> +
-> +Each defined region must use unique name. It is optional to specify the
-> +base address, so if one wants to use autoconfiguration of the base
-> +address, he must specify the '0' as base address in the 'reg' property
-> +and assign ann uniqe name to such regions.
-> +
-> +
-> +*** Device node's properties ***
-> +
-> +Once the regions in the /memory/reserved-memory node are defined, they
-> +can be assigned to device nodes to enable drivers for their special use.
-> +The following properties are defined:
-> +
-> +dma-memory-region = <&phandle_to_defined_region>;
+--- linux-3.8.13/drivers/spi/spi.c	2013-05-11 22:57:46.000000000 +0200
++++ linux/drivers/spi/spi.c	2013-08-06 18:19:30.000000000 +0200
+@@ -870,6 +870,11 @@
+ 		if (of_find_property(nc, "spi-3wire", NULL))
+ 			spi->mode |= SPI_3WIRE;
+ 
++		/* Bits per word */
++		prop = of_get_property(nc, "spi-bits", &len);
++		if (prop && len >= sizeof(*prop))
++			spi->bits_per_word = prop[0];
++
+ 		/* Device speed */
+ 		prop = of_get_property(nc, "spi-max-frequency", &len);
+ 		if (!prop || len < sizeof(*prop)) {
 
-Should we go with just 'memory-region' to be more generic?  An example might be a region of memory used for multiprocessor communication that isn't cache-able.
-
-> +
-> +This property indicates that the device driver should use the
-> +memory region pointed by the given phandle.
-> +
-> +
-> +*** Example ***
-> +
-> +This example defines a memory consisting of 4 memory banks. 3 contiguous
-> +regions are defined for Linux kernel, one default of all device drivers
-> +(named contig_mem, placed at 0x72000000, 64MiB), one dedicated to the
-> +framebuffer device (labelled display_mem, placed at 0x78000000, 8MiB)
-> +and one for multimedia processing (labelled multimedia_mem, placed at
-> +0x77000000, 64MiB). 'display_mem' region is then assigned to fb@12300000
-> +device for DMA memory allocations (Linux kernel drivers will use CMA is
-> +available or dma-exclusive usage otherwise). 'multimedia_mem' is
-> +assigned to scaller@12500000 and codec@12600000 devices for contiguous
-> +memory allocations when CMA driver is enabled.
-> +
-> +The reason for creating a separate region for framebuffer device is to
-> +match the framebuffer base address to the one configured by bootloader,
-> +so once Linux kernel drivers starts no glitches on the displayed boot
-> +logo appears. Scaller and codec drivers should share the memory
-> +allocations.
-> +
-> +/ {
-> +	/* ... */
-> +	memory {
-> +		reg =  <0x40000000 0x10000000
-> +			0x50000000 0x10000000
-> +			0x60000000 0x10000000
-> +			0x70000000 0x10000000>;
-> +
-> +		reserved-memory {
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			/*
-> +			 * global autoconfigured region for contiguous allocations
-> +			 * (used only with Contiguous Memory Allocator)
-> +			 */
-> +			contig_region@0 {
-> +				compatible = "contiguous-memory-region";
-> +				reg = <0x0 0x4000000>;
-> +				linux,default-contiguous-region;
-> +			};
-> +
-> +			/*
-> +			 * special region for framebuffer
-> +			 */
-> +			display_mem: region@78000000 {
-> +				compatible = "contiguous-memory-region", "reserved-memory-region";
-> +				reg = <0x78000000 0x800000>;
-> +			};
-> +
-> +			/*
-> +			 * special region for multimedia processing devices
-> +			 */
-> +			multimedia_mem: region@77000000 {
-> +				compatible = "contiguous-memory-region";
-> +				reg = <0x77000000 0x4000000>;
-> +			};
-> +		};
-> +	};
-> +
-> +	/* ... */
-> +
-> +	fb0: fb@12300000 {
-> +		status = "okay";
-> +		dma-memory-region = <&display_mem>;
-> +	};
-> +
-> +	scaller: scaller@12500000 {
-> +		status = "okay";
-> +		dma-memory-region = <&multimedia_mem>;
-> +	};
-> +
-> +	codec: codec@12600000 {
-> +		status = "okay";
-> +		dma-memory-region = <&multimedia_mem>;
-> +	};
-> +};
-
-- k
-
-
---
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+------------------------------------------------------------------------------
+Get 100% visibility into Java/.NET code with AppDynamics Lite!
+It's a free troubleshooting tool designed for production.
+Get down to code-level detail for bottlenecks, with <2% overhead. 
+Download for free and get started troubleshooting in minutes. 
+http://pubads.g.doubleclick.net/gampad/clk?id=48897031&iu=/4140/ostg.clktrk
