@@ -1,15 +1,13 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pd0-f171.google.com ([209.85.192.171]:58087 "EHLO
-	mail-pd0-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755179Ab3HKXzt (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sun, 11 Aug 2013 19:55:49 -0400
-Received: by mail-pd0-f171.google.com with SMTP id g10so2682579pdj.30
-        for <devicetree@vger.kernel.org>; Sun, 11 Aug 2013 16:55:49 -0700 (PDT)
-Date: Sun, 11 Aug 2013 16:55:05 -0700
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [RESEND PATCH 2/4] arm: socfpga: Add platform initialization for
- ethernet
-Message-ID: <20130811235505.GI26757@quad.lixom.net>
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57470 "EHLO
+	atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757164Ab3HGS57 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 14:57:59 -0400
+Date: Wed, 7 Aug 2013 20:57:57 +0200
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [RESEND PATCH 2/4] arm: socfpga: Add platform initialization
+ for ethernet
+Message-ID: <20130807185757.GA12555@amd.pavel.ucw.cz>
 References: <1375739925-9110-1-git-send-email-dinguyen@altera.com>
  <1375739925-9110-3-git-send-email-dinguyen@altera.com>
 MIME-Version: 1.0
@@ -18,187 +16,78 @@ Content-Disposition: inline
 In-Reply-To: <1375739925-9110-3-git-send-email-dinguyen@altera.com>
 Sender: devicetree-owner@vger.kernel.org
 To: dinguyen@altera.com
-Cc: dinh.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pavel Machek <pavel@denx.de>, Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
+Cc: dinh.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Hi!
 
-On Mon, Aug 05, 2013 at 04:58:43PM -0500, dinguyen@altera.com wrote:
 > From: Dinh Nguyen <dinguyen@altera.com>
 > 
 > Use the PHYLIB to set the correct clock and skew values to the Micrel PHY. Add
 > platform specific intilization to put the STMMAC ethernet controller into the
 > correct PHY mode.
 > 
-> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-> Tested-by: Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
-> CC: Arnd Bergmann <arnd@arndb.de>
-> CC: Olof Johansson <olof@lixom.net>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: Ian Campbell <ian.campbell@citrix.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Cc: Pavel Machek <pavel@denx.de>
-> Cc: Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
-> ---
+...
 >  arch/arm/mach-socfpga/core.h    |    8 ++++
 >  arch/arm/mach-socfpga/socfpga.c |   85 ++++++++++++++++++++++++++++++++++++++-
 >  2 files changed, 92 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
-> index 572b8f7..505b8fe5 100644
-> --- a/arch/arm/mach-socfpga/core.h
-> +++ b/arch/arm/mach-socfpga/core.h
-> @@ -28,6 +28,14 @@
->  #define RSTMGR_CTRL_SWCOLDRSTREQ	0x1	/* Cold Reset */
->  #define RSTMGR_CTRL_SWWARMRSTREQ	0x2	/* Warm Reset */
->  
-> +#define SYSMGR_EMACGRP_CTRL_OFFSET 0x60
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII 0x0
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII 0x1
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RMII 0x2
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_WIDTH 2
-> +
-> +#define SYSMGR_EMACGRP_CTRL_PHYSEL_MASK 0x00000003
-> +
->  extern void socfpga_secondary_startup(void);
->  extern void __iomem *socfpga_scu_base_addr;
->  
-> diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
-> index bfce964..abbde76 100644
-> --- a/arch/arm/mach-socfpga/socfpga.c
-> +++ b/arch/arm/mach-socfpga/socfpga.c
-> @@ -16,10 +16,14 @@
->   */
->  #include <linux/clk-provider.h>
->  #include <linux/irqchip.h>
-> +#include <linux/micrel_phy.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
-> +#include <linux/of_net.h>
->  #include <linux/of_platform.h>
->  #include <linux/reboot.h>
-> +#include <linux/stmmac.h>
-> +#include <linux/phy.h>
->  
->  #include <asm/hardware/cache-l2x0.h>
->  #include <asm/mach/arch.h>
-> @@ -33,6 +37,22 @@ void __iomem *rst_manager_base_addr;
->  void __iomem *clk_mgr_base_addr;
->  unsigned long cpu1start_addr;
->  
-> +static int stmmac_plat_init(struct platform_device *pdev);
-> +
-> +static struct plat_stmmacenet_data stmmacenet0_data = {
-> +	.init = &stmmac_plat_init,
-> +};
-> +
-> +static struct plat_stmmacenet_data stmmacenet1_data = {
-> +	.init = &stmmac_plat_init,
-> +};
 
-I would prefer to see refactoring of the driver such that it gets
-the phy configuration data out of the devicetree instead of needing
-per-board callbacks.
+When I tried to apply it on today's mainline, I got:
 
-> +
-> +static const struct of_dev_auxdata socfpga_auxdata_lookup[] __initconst = {
-> +	OF_DEV_AUXDATA("snps,dwmac-3.70a", 0xff700000, NULL, &stmmacenet0_data),
-> +	OF_DEV_AUXDATA("snps,dwmac-3.70a", 0xff702000, NULL, &stmmacenet1_data),
-> +	{/* sentinel */}
-> +};
-> +
->  static struct map_desc scu_io_desc __initdata = {
->  	.virtual	= SOCFPGA_SCU_VIRT_BASE,
->  	.pfn		= 0, /* run-time */
-> @@ -58,6 +78,65 @@ static void __init socfpga_scu_map_io(void)
->  	iotable_init(&scu_io_desc, 1);
->  }
->  
-> +static int ksz9021rlrn_phy_fixup(struct phy_device *phydev)
-> +{
-> +	if (IS_BUILTIN(CONFIG_PHYLIB)) {
+  LD      init/built-in.o
+arch/arm/mach-socfpga/socfpga.c: In function 'ksz9021rlrn_phy_fixup':
+arch/arm/mach-socfpga/socfpga.c:85:21: error:
+'MICREL_KSZ9021_EXTREG_CTRL' undeclared (first use in this function)
+arch/arm/mach-socfpga/socfpga.c:85:21: note: each undeclared
+identifier is reported only once for each function it appears in
+arch/arm/mach-socfpga/socfpga.c:86:4: error:
+'MICREL_KSZ9021_RGMII_RX_DATA_PAD_SCEW' undeclared (first use in this
+function)
+arch/arm/mach-socfpga/socfpga.c:87:21: error:
+'MICREL_KSZ9021_EXTREG_DATA_WRITE' undeclared (first use in this
+function)
+arch/arm/mach-socfpga/socfpga.c:91:4: error:
+'MICREL_KSZ9021_RGMII_CLK_CTRL_PAD_SCEW' undeclared (first use in this
+function)
+arch/arm/mach-socfpga/socfpga.c: In function 'socfpga_cyclone5_init':
+arch/arm/mach-socfpga/socfpga.c:193:30: error: 'PHY_ID_KSZ9021RLRN'
+undeclared (first use in this function)
 
-So what happens if PHYLIB is a module?
+I tried adding
+git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git to my
+branch, but that did not help.
+ 
+It compiles ok when I apply
 
-> +		/* min rx data delay */
-> +		phy_write(phydev, MICREL_KSZ9021_EXTREG_CTRL,
-> +			MICREL_KSZ9021_RGMII_RX_DATA_PAD_SCEW | 0x8000);
-> +		phy_write(phydev, MICREL_KSZ9021_EXTREG_DATA_WRITE, 0x0000);
-> +
-> +		/* max rx/tx clock delay, min rx/tx control delay */
-> +		phy_write(phydev, MICREL_KSZ9021_EXTREG_CTRL,
-> +			MICREL_KSZ9021_RGMII_CLK_CTRL_PAD_SCEW | 0x8000);
-> +		phy_write(phydev, MICREL_KSZ9021_EXTREG_DATA_WRITE, 0xa0d0);
-> +		phy_write(phydev, MICREL_KSZ9021_EXTREG_CTRL, 0x104);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int stmmac_plat_init(struct platform_device *pdev)
-> +{
-> +	u32 ctrl, val, shift;
-> +	int phymode;
-> +
-> +	if (of_machine_is_compatible("altr,socfpga-vt"))
-> +		return 0;
-> +
-> +	phymode = of_get_phy_mode(pdev->dev.of_node);
-> +
-> +	switch (phymode) {
-> +	case PHY_INTERFACE_MODE_RGMII:
-> +		val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_RGMII;
-> +		break;
-> +	case PHY_INTERFACE_MODE_MII:
-> +	case PHY_INTERFACE_MODE_GMII:
-> +		val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII;
-> +		break;
-> +	default:
-> +		pr_err("%s bad phy mode %d", __func__, phymode);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (&stmmacenet1_data == pdev->dev.platform_data)
-> +		shift = SYSMGR_EMACGRP_CTRL_PHYSEL_WIDTH;
-> +	else if (&stmmacenet0_data == pdev->dev.platform_data)
-> +		shift = 0;
+Date: Mon, 15 Jul 2013 18:08:50 -0500
+From: dinguyen@altera.com
+To: dinh.linux@gmail.com, netdev@vger.kernel.org
+Cc: Pavel Machek <pavel@denx.de>, Nicolas Ferre
+<nicolas.ferre@atmel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>,
+        Andrew Victor <linux@maxim.org.za>,
+        Dinh Nguyen <dinguyen@altera.com>
+Subject: [PATCH] phy: micrel: Add definitions for common Micrel PHY
+registers
+X-Mailer: git-send-email 1.7.9.5
 
-This is awkward too, comparing back to the platform data to figure out which of
-the two devices you're on.
+From: Dinh Nguyen <dinguyen@altera.com>
 
-> +	else {
-> +		pr_err("%s unexpected platform data pointer\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ctrl = readl(sys_manager_base_addr + SYSMGR_EMACGRP_CTRL_OFFSET);
-> +	ctrl &= ~(SYSMGR_EMACGRP_CTRL_PHYSEL_MASK << shift);
-> +	ctrl |= (val << shift);
-> +
-> +	writel(ctrl, (sys_manager_base_addr + SYSMGR_EMACGRP_CTRL_OFFSET));
-> +
-> +	return 0;
-> +}
-> +
->  static void __init socfpga_map_io(void)
->  {
->  	socfpga_scu_map_io();
-> @@ -106,9 +185,13 @@ static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
->  static void __init socfpga_cyclone5_init(void)
->  {
->  	l2x0_of_init(0, ~0UL);
-> -	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-> +	of_platform_populate(NULL, of_default_bus_match_table,
-> +		socfpga_auxdata_lookup, NULL);
->  	of_clk_init(NULL);
->  	socfpga_init_clocks();
-> +	if (IS_BUILTIN(CONFIG_PHYLIB))
-> +		phy_register_fixup_for_uid(PHY_ID_KSZ9021RLRN,
-> +			MICREL_PHY_ID_MASK, ksz9021rlrn_phy_fixup);
+Add defines for common Micrel PHY setups so that other platforms
+can use them. Update imx61 and sama5 hardware to use the micrel_phy.h
+PHY defines.
 
+Also add support for the KSZ9021RLRN PHY.
 
--Olof
+. Perhaps it should be added to the series (or at least pushed
+again?).
+
+Thanks,
+									Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
