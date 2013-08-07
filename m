@@ -1,46 +1,132 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-oa0-f46.google.com ([209.85.219.46]:51135 "EHLO
-	mail-oa0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758558Ab3HNTQT (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 15:16:19 -0400
-Received: by mail-oa0-f46.google.com with SMTP id l10so13723084oag.33
-        for <devicetree@vger.kernel.org>; Wed, 14 Aug 2013 12:16:19 -0700 (PDT)
+Received: from avon.wwwdotorg.org ([70.85.31.133]:43514 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756852Ab3HGQAR (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 12:00:17 -0400
+Message-ID: <52026F0B.6020705@wwwdotorg.org>
+Date: Wed, 07 Aug 2013 10:00:11 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
 MIME-Version: 1.0
-In-Reply-To: <52026F0B.6020705@wwwdotorg.org>
-References: <1374702089-2832-1-git-send-email-hanumant@codeaurora.org>
-	<CACRpkdZLFD-KAvZdUUvQKje3vAH1D0EJMW9PSK8VSp3Xs4eiGA@mail.gmail.com>
-	<51F82BCC.1080409@codeaurora.org>
-	<51F82E9F.9010309@wwwdotorg.org>
-	<51F853BF.9040007@codeaurora.org>
-	<51F8556A.1010300@wwwdotorg.org>
-	<51F85690.9060701@codeaurora.org>
-	<51F88BAC.2020001@wwwdotorg.org>
-	<51F969A5.5020405@codeaurora.org>
-	<51F97C47.5020202@wwwdotorg.org>
-	<51F9A934.404@codeaurora.org>
-	<52018A8D.70608@codeaurora.org>
-	<52026F0B.6020705@wwwdotorg.org>
-Date: Wed, 14 Aug 2013 21:16:18 +0200
-Message-ID: <CACRpkdbWmb2Kmj8NVBpJh4zumpq-=z=hFnRY9uWrARi5uSfwOQ@mail.gmail.com>
 Subject: Re: [PATCH] pinctrl: msm: Add support for MSM TLMM pinmux
-From: Linus Walleij <linus.walleij@linaro.org>
+References: <1374702089-2832-1-git-send-email-hanumant@codeaurora.org> <CACRpkdZLFD-KAvZdUUvQKje3vAH1D0EJMW9PSK8VSp3Xs4eiGA@mail.gmail.com> <51F82BCC.1080409@codeaurora.org> <51F82E9F.9010309@wwwdotorg.org> <51F853BF.9040007@codeaurora.org> <51F8556A.1010300@wwwdotorg.org> <51F85690.9060701@codeaurora.org> <51F88BAC.2020001@wwwdotorg.org> <51F969A5.5020405@codeaurora.org> <51F97C47.5020202@wwwdotorg.org> <51F9A934.404@codeaurora.org> <52018A8D.70608@codeaurora.org>
+In-Reply-To: <52018A8D.70608@codeaurora.org>
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Hanumant Singh <hanumant@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, "Bird, Tim" <Tim.Bird@sonymobile.com>, ext Tony Lindgren <tony@atomide.com>
+To: Hanumant Singh <hanumant@codeaurora.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, "Bird, Tim" <Tim.Bird@sonymobile.com>, ext Tony Lindgren <tony@atomide.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Aug 7, 2013 at 6:00 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 08/06/2013 05:45 PM, Hanumant Singh wrote:
+On 08/06/2013 05:45 PM, Hanumant Singh wrote:
+> On 7/31/2013 5:17 PM, Hanumant Singh wrote:
+>> On 7/31/2013 2:06 PM, Stephen Warren wrote:
+>>> On 07/31/2013 01:46 PM, Hanumant Singh wrote:
+>>>> On 7/30/2013 8:59 PM, Stephen Warren wrote:
+>>>>> On 07/30/2013 06:13 PM, Hanumant Singh wrote:
+>>>>>> On 7/30/2013 5:08 PM, Stephen Warren wrote:
+>>>>>>> On 07/30/2013 06:01 PM, Hanumant Singh wrote:
+>>>>>>>> On 7/30/2013 2:22 PM, Stephen Warren wrote:
+>>>>>>>>> On 07/30/2013 03:10 PM, hanumant wrote:
+>>>>>>>>> ...
+>>>>>>>>>> We actually have the same TLMM pinmux used by several socs of a
+>>>>>>>>>> family.
+>>>>>>>>>> The number of pins on each soc may vary.
+>>>>>>>>>> Also a given soc gets used in a number of boards.
+>>>>>>>>>> The device tree for a given soc is split into the different
+>>>>>>>>>> boards
+>>>>>>>>>> that
+>>>>>>>>>> its in ie the boards inherit a common soc.dtsi but have separate
+>>>>>>>>>> dts.
+>>>>>>>>>> The boards for the same soc may use different pin groups for
+>>>>>>>>>> accomplishing a function, since we have multiple i2c, spi uart
+>>>>>>>>>> etc
+>>>>>>>>>> peripheral instances on a soc. A different instance of each of
+>>>>>>>>>> the
+>>>>>>>>>> above
+>>>>>>>>>> peripherals, can be used in different boards, utilizing different
+>>>>>>>>>> or subset of same pin groups.
+>>>>>>>>>> Thus I would need to have multiple C files for one soc, based
+>>>>>>>>>> on the
+>>>>>>>>>> boards that it goes into.
+>>>>>>>>>
+>>>>>>>>> The pinctrl driver should be exposing the raw capabilities of
+>>>>>>>>> the HW.
+>>>>>>>>> All the board-specific configuration should be expressed in DT.
+>>>>>>>>> So, the
+>>>>>>>>> driver shouldn't have to know anything about different boards at
+>>>>>>>>> compile-time.
+>>>>>>>>>
+>>>>>>>> I agree, so I wanted to keep the pin grouping information in DT, we
+>>>>>>>> already have a board based differentiation of dts files in DT,
+>>>>>>>> for the
+>>>>>>>> same soc.
+>>>>>>>
+>>>>>>> That's the opposite of what I was saying. Pin groups are a
+>>>>>>> feature of
+>>>>>>> the SoC design, not the board.
+>>>>>>>
+>>>>>> Sorry I guess I wasn't clear.
+>>>>>> Right now I have a soc-pinctrl.dtsi containing pin groupings.
+>>>>>> This will be "inherited" by soc-boardtype.dts.
+>>>>>> The pinctrl client device nodes in soc-boardtype.dts will point to
+>>>>>> pin
+>>>>>> groupings in soc-pinctrl.dtsi that are valid for that particular
+>>>>>> boardtype.
+>>>>>> Is this a valid design?
+>>>>>
+>>>>> OK, so you have two types of child node inside the pinctrl DT node;
+>>>>> some
+>>>>> define the pin groups the SoC has (in soc.dtsi) and some define
+>>>>> pinctrl
+>>>>> states that reference the pin group nodes and are referenced by the
+>>>>> client nodes.
+>>>>>
+>>>>> That's probably fine. However, I'd still question putting the pin
+>>>>> group
+>>>>> nodes in DT at all; I'm not convinced it's better than just putting
+>>>>> those into the driver itself. You end up with the same data tables
+>>>>> after
+>>>>> parsing the DT anyway.
+>>>>>
+>>>>
+>>>> Any feedback for the rest of the patch?
+>>>
+>>> I'm certainly waiting for this aspect of the patch to be resolved; I
+>>> think it will impact the rest of the patch so much that it's not worth
+>>> reviewing until we decide on where to represent the pin groups (some DT
+>>> parsing could would be removed if we put the pin group definitions into
+>>> the driver, hence wouldn't need to be reviewed, and likewise there's be
+>>> some new tables to review).
+>>>
+>>
+>> I am trying to look at examples of what you are suggesting.
+>> I was looking at the exynos implementation, and just from a brief glance
+>> it seems like there too the pin grouping is being specified in the
+>> device tree, using what looks like labels of the pins.
+>> The labels are matched to group structures in soc specific files?
+>>
+>> By having the pin groupings in DT I am able to reuse the driver without
+>> any SOC based code bloat.
+>> As I mentioned earlier, we have entire families of SOCs using the same
+>> TLMM hardware.
+>> Its not a guarantee that for a given TLMM version,
+>> the pin groupings on that hardware are the same for every SOC that its
+>> in. Its infact most likely that I wont be able to use the pin groupings
+>> from one SOC to the next even if they both use the same TLMM.
+>> It will very quickly lead to a bloat of
+>> pinctrl-<msm_soc>.c (containing the pin groupings replicated for each
+>> soc)
+>> which use TLMM version specific register programming implementation
+>> pinctrl-tlmm-<version>.c
+>> and the DT parsing and interface to framework (which remains unchanged).
+>> pinctrl-msm.c.
+>>
+>> Thanks
+>> Hanumant
+>>
+> 
+> Any comments on this?
 
->> Any comments on this?
->
-> No. As I said, I personally want to see all the pingroups defined in the
-> pinctrl driver. But, if someone else acks/... the patches without it, I
-> probably won't nack it.
-
-I agree with Stephen that I want to see the groups defined in a
-(per-SoC) in-kernel driver, not as DT data.
-
-Yours,
-Linus Walleij
+No. As I said, I personally want to see all the pingroups defined in the
+pinctrl driver. But, if someone else acks/... the patches without it, I
+probably won't nack it.
