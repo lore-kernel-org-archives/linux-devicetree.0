@@ -1,135 +1,89 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:17624 "EHLO
-	hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757225Ab3HGKQY (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 06:16:24 -0400
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V4] drivers/rtc/rtc-palmas.c: support for backup battery charging
-Date: Wed, 7 Aug 2013 15:59:52 +0530
-Message-ID: <1375871392-871-1-git-send-email-ldewangan@nvidia.com>
+Received: from mail2.gnudd.com ([213.203.150.91]:56347 "EHLO mail.gnudd.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932491Ab3HGKYY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 7 Aug 2013 06:24:24 -0400
+Date: Wed, 7 Aug 2013 12:17:47 +0200
+From: Davide Ciminaghi <ciminaghi@gnudd.com>
+Subject: [PATCH 08/26] OF platform, of_amba_device_create(): add parent
+ resource to parameters.
+Message-ID: <6ffb74421dace254700dc2ee72d908dd7327bec1.1375867291.git.rubini@gnudd.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+References: <cover.1375867291.git.rubini@gnudd.com>
+In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
 Sender: devicetree-owner@vger.kernel.org
-To: akpm@linux-foundation.org
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, gg@slimlogic.co.uk, kishon@ti.com, swarren@nvidia.com, pawel.moll@arm.com, Mark.Rutland@arm.com, ian.campbell@citrix.com, broonie@kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+To: linux-kernel@vger.kernel.org
+Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Palmas series device like TPS65913, TPS80036 supports the backup battery
-for powering the RTC when no other energy source is available.
+This is needed when creating pci-amba devices: an amba device's
+resource shall be child of the corresponding pci device's resource.
 
-The backup battery is optional, connected to the VBACKUP pin, and can be
-nonrechargeable or rechargeable. The rechargeable battery can be charged
-from the system supply using the backup battery charger.
-
-Add support for enabling charging of this backup battery.  Also add the DT
-binding document and the new properties to have this support.
-
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
-Reviewed-by: Felipe Balbi <balbi@ti.com>
+Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
+Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
 ---
-Changes from V1:
-- Converted DT property to boolean.
-- cleanups as use "...".
-Changes from V2:
-- Correct the property name.
-Changes from V3:
-- Nit cleanups: properly capatilise the palmas to make it Palmas.
-- Added reviewed by of Felipe and Stephen.
+ drivers/of/platform.c       |   11 +++++++----
+ include/linux/of_platform.h |    3 ++-
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
- .../devicetree/bindings/rtc/rtc-palmas.txt         |   29 ++++++++++++++++
- drivers/rtc/rtc-palmas.c                           |   35 ++++++++++++++++++++
- 2 files changed, 64 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-palmas.txt
-
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-palmas.txt b/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
-new file mode 100644
-index 0000000..41bb445
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/rtc-palmas.txt
-@@ -0,0 +1,29 @@
-+Palmas RTC controller bindings
-+
-+Required properties:
-+- compatible:
-+  - "ti,palmas-rtc" for Palmas series of the RTC controller
-+- interrupt-parent: Parent interrupt device, must be handle of Palmas node.
-+- interrupts: Interrupt number of RTC submodule on device.
-+
-+Optional properties:
-+- ti,back-battery-charge-enable: The Palmas series device like TPS65913 or
-+	TPS80036 supports the battery backup for powering the RTC when main
-+	battery is removed or in very low power state. This flag will enable
-+	the backup battery charging.
-+- ti,back-battery-charge-low-current: Configure lower charging current. Device
-+	supports the charging current as < 100mA or >100mA. Low current will
-+	set as <100mA.
-+
-+Example:
-+	palmas: tps65913@58 {
-+		...
-+		palmas_rtc: rtc {
-+			compatible = "ti,palmas-rtc";
-+			interrupt-parent = <&palmas>;
-+			interrupts = <8 0>;
-+			ti,back-battery-charge-enable;
-+			ti,back-battery-charge-low-current;
-+		};
-+		...
-+	};
-diff --git a/drivers/rtc/rtc-palmas.c b/drivers/rtc/rtc-palmas.c
-index a1fecc8..adb6e71 100644
---- a/drivers/rtc/rtc-palmas.c
-+++ b/drivers/rtc/rtc-palmas.c
-@@ -238,6 +238,15 @@ static int palmas_rtc_probe(struct platform_device *pdev)
- 	struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
- 	struct palmas_rtc *palmas_rtc = NULL;
- 	int ret;
-+	bool enable_bb_charging = false;
-+	bool low_bb_charging;
-+
-+	if (pdev->dev.of_node) {
-+		enable_bb_charging = of_property_read_bool(pdev->dev.of_node,
-+					"ti,back-battery-charge-enable");
-+		low_bb_charging = of_property_read_bool(pdev->dev.of_node,
-+					"ti,back-battery-charge-low-current");
-+	}
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 57c6bbe..bf75aaa 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -252,7 +252,8 @@ EXPORT_SYMBOL(of_platform_device_create);
+ struct amba_device *of_amba_device_create(struct device_node *node,
+ 					  const char *bus_id,
+ 					  void *platform_data,
+-					  struct device *parent)
++					  struct device *parent,
++					  struct resource *parent_resource)
+ {
+ 	struct amba_device *dev;
+ 	const void *prop;
+@@ -293,7 +294,7 @@ struct amba_device *of_amba_device_create(struct device_node *node,
+ 	if (ret)
+ 		goto err_free;
  
- 	palmas_rtc = devm_kzalloc(&pdev->dev, sizeof(struct palmas_rtc),
- 			GFP_KERNEL);
-@@ -254,6 +263,32 @@ static int palmas_rtc_probe(struct platform_device *pdev)
- 	palmas_rtc->dev = &pdev->dev;
- 	platform_set_drvdata(pdev, palmas_rtc);
+-	ret = amba_device_add(dev, &iomem_resource);
++	ret = amba_device_add(dev, parent_resource);
+ 	if (ret)
+ 		goto err_free;
  
-+	if (enable_bb_charging) {
-+		unsigned reg = 0;
-+
-+		if (low_bb_charging)
-+			reg |= PALMAS_BACKUP_BATTERY_CTRL_BBS_BBC_LOW_ICHRG;
-+
-+		ret = palmas_update_bits(palmas, PALMAS_PMU_CONTROL_BASE,
-+			PALMAS_BACKUP_BATTERY_CTRL,
-+			PALMAS_BACKUP_BATTERY_CTRL_BBS_BBC_LOW_ICHRG, reg);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev,
-+				"BACKUP_BATTERY_CTRL update failed, %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = palmas_update_bits(palmas, PALMAS_PMU_CONTROL_BASE,
-+			PALMAS_BACKUP_BATTERY_CTRL,
-+			PALMAS_BACKUP_BATTERY_CTRL_BB_CHG_EN,
-+			PALMAS_BACKUP_BATTERY_CTRL_BB_CHG_EN);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev,
-+				"BACKUP_BATTERY_CTRL update failed, %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
- 	/* Start RTC */
- 	ret = palmas_update_bits(palmas, PALMAS_RTC_BASE, PALMAS_RTC_CTRL_REG,
- 			PALMAS_RTC_CTRL_REG_STOP_RTC,
+@@ -307,7 +308,8 @@ err_free:
+ struct amba_device *of_amba_device_create(struct device_node *node,
+ 					  const char *bus_id,
+ 					  void *platform_data,
+-					  struct device *parent)
++					  struct device *parent,
++					  struct resource *parent_resource)
+ {
+ 	return NULL;
+ }
+@@ -375,7 +377,8 @@ static int of_platform_bus_create(struct device_node *bus,
+ 	}
+ 
+ 	if (of_device_is_compatible(bus, "arm,primecell")) {
+-		of_amba_device_create(bus, bus_id, platform_data, parent);
++		of_amba_device_create(bus, bus_id, platform_data, parent,
++				      &iomem_resource);
+ 		return 0;
+ 	}
+ 
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 6cd5ac2..be13538 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -66,7 +66,8 @@ extern struct platform_device *of_platform_device_create(struct device_node *np,
+ extern struct amba_device *of_amba_device_create(struct device_node *node,
+ 						 const char *bus_id,
+ 						 void *platform_data,
+-						 struct device *parent);
++						 struct device *parent,
++						 struct resource *parent_res);
+ 
+ extern int of_platform_bus_probe(struct device_node *root,
+ 				 const struct of_device_id *matches,
 -- 
-1.7.1.1
-
+1.7.7.2
