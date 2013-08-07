@@ -1,175 +1,252 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from moutng.kundenserver.de ([212.227.126.187]:54730 "EHLO
-	moutng.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751055Ab3HEOLP (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 10:11:15 -0400
-Date: Mon, 5 Aug 2013 16:11:02 +0200 (CEST)
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH/RFC] mmc: sh_mmcif: revision-specific configuration from
- Device Tree
-Message-ID: <Pine.LNX.4.64.1308051514350.22479@axis700.grange>
+Received: from mail2.gnudd.com ([213.203.150.91]:56453 "EHLO mail.gnudd.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932662Ab3HGK16 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 7 Aug 2013 06:27:58 -0400
+Date: Wed, 7 Aug 2013 12:21:20 +0200
+From: Davide Ciminaghi <ciminaghi@gnudd.com>
+Subject: [PATCH 22/26] AMBA: pci-amba bridge: extend number of amba devs
+ per pci device
+Message-ID: <404568d195a70561a04ff1c534ac1db7c015f53b.1375867291.git.rubini@gnudd.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+References: <cover.1375867291.git.rubini@gnudd.com>
+In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: Chris Ball <cjb@laptop.org>, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add compatibility strings to configure MMCIF revision-specific features.
-MMCIF blocks are always integrated into SoCs, so, we use SoC model to
-distinguish between MMCIF versions.
+This patch makes it possible to create multiple AMBA devices
+per PCI device (multiple AMBA devices on the same PCI bar, or
+one/more AMBA devices referring to more than one PCI BAR).
+This feature is needed to completely support the Connext chip,
+which has, for instance, multiple devices on the same BAR
+(former mfd device) and multiple devices on multiple PCI BARs
+(6 msp ports, 2 ports per PCI BAR).
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
+Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
 ---
+ drivers/amba/pci-amba.c |  152 +++++++++++++++++++++++++++++++++++++----------
+ 1 files changed, 121 insertions(+), 31 deletions(-)
 
-Hi Chris,
-I marked this as RFC, because having no access to the MMC standard I'm not 
-certain about VccQ requirements for MMC DDR. On the one hand a comment in 
-mmc.c says
-	 * EXT_CSD_CARD_TYPE_DDR_1_8V means 3.3V or 1.8V vccq.
-which suggests, that DDR (DDR50?) can be used with VccQ = 3.3V, 1.8V and 
-1.2V at least. But in mmc_init_card() DDR50 is only requested from the 
-driver if either MMC_CAP_1_8V_DDR or MMC_CAP_1_2V_DDR is specified in 
-host's capabilities. So, I'm actually not sure whether MMC_CAP_UHS_DDR50 
-alone without 1_8V or 1_2V makes sense. That's also what I implemented in 
-this patch - DDR50 is only enabled in combination with either 1.2 or 1.8V 
-capability. Is this correct?
-
- Documentation/devicetree/bindings/mmc/sh_mmcif.txt |   15 ++++
- drivers/mmc/host/sh_mmcif.c                        |   68 +++++++++++++++++--
- 2 files changed, 75 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/sh_mmcif.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/sh_mmcif.txt b/Documentation/devicetree/bindings/mmc/sh_mmcif.txt
-new file mode 100644
-index 0000000..a0e7fee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sh_mmcif.txt
-@@ -0,0 +1,15 @@
-+* Renesas MMCIF MMC controller
+diff --git a/drivers/amba/pci-amba.c b/drivers/amba/pci-amba.c
+index c825c7a..f272d38 100644
+--- a/drivers/amba/pci-amba.c
++++ b/drivers/amba/pci-amba.c
+@@ -25,9 +25,47 @@
+ */
+ #define IMAP_ROW_LEN (1 + 1 + 1 + 1 + 1)
+ 
+-static int fixup_amba_irq(struct device_node *amba_node,
+-			  struct device_node *amba_bus,
+-			  struct pci_dev *pdev)
++static inline int resource_fits(struct resource *r1, struct resource *r2)
++{
++	return (r1->start >= r2->start) && (r1->end <= r2->end);
++}
 +
-+The MMCIF driver uses the standard mmc DT parser to evaluate all standard MMC DT
-+properties. Additionally the following properties must or can be used:
++static const char *get_platform_prefix(struct pci_dev *pdev)
++{
++	switch (pdev->device) {
++	case PCI_DEVICE_ID_STMICRO_ESRAM:
++		return "mmio";
++	case PCI_DEVICE_ID_STMICRO_GPIO:
++		return "gpio";
++	default:
++		return "pci-amba-platform";
++	}
++	return NULL;
++}
 +
-+Compulsory properties:
-+- compatible:	must be one of
-+		"renesas,sh-mmcif" for generic MMCIF blocks
-+		"renesas,sh-mmcif-r8a73a4" for MMCIF on R8A73A4 (APE6)
-+		"renesas,sh-mmcif-r8a7740" for MMCIF on R8A7740 (A1)
-+		"renesas,sh-mmcif-r8a7790" for MMCIF on R8A7790 (H2)
-+		"renesas,sh-mmcif-sh73a0" for MMCIF on SH73A0 (AG5)
-+		"renesas,sh-mmcif-sh7372" for MMCIF on SH7372 (AP4)
++static inline int is_platform_device(struct pci_dev *pdev)
++{
++	return pdev->device == PCI_DEVICE_ID_STMICRO_ESRAM ||
++		pdev->device == PCI_DEVICE_ID_STMICRO_GPIO ||
++		pdev->device == PCI_DEVICE_ID_STMICRO_VIC;
++}
 +
-+Further, any standard MMC DT properties from mmc.txt can be used.
-diff --git a/drivers/mmc/host/sh_mmcif.c b/drivers/mmc/host/sh_mmcif.c
-index 444f83b..a4bd784 100644
---- a/drivers/mmc/host/sh_mmcif.c
-+++ b/drivers/mmc/host/sh_mmcif.c
-@@ -57,6 +57,7 @@
- #include <linux/mmc/slot-gpio.h>
- #include <linux/mod_devicetable.h>
- #include <linux/mutex.h>
-+#include <linux/of_device.h>
- #include <linux/pagemap.h>
- #include <linux/platform_device.h>
- #include <linux/pm_qos.h>
-@@ -257,6 +258,39 @@ struct sh_mmcif_host {
- 	bool			dma_active;
++static int get_dev_name(char **name, struct pci_dev *pdev, int index)
++{
++	const char *prefix = is_platform_device(pdev) ?
++		get_platform_prefix(pdev) : "amba";
++	const char *core = dev_name(&pdev->dev);
++	*name = devm_kzalloc(&pdev->dev, strlen(core) + strlen(prefix) + 3,
++			     GFP_KERNEL);
++	if (!*name)
++		return -ENOMEM;
++	sprintf(*name, "%s-%s-%1d", prefix, core, index);
++	return 0;
++}
++
++static int fixup_irq(struct device_node *node,
++		     struct device_node *amba_bus,
++		     struct pci_dev *pdev)
+ {
+ 	const void *p;
+ 	struct property *newimap;
+@@ -59,7 +97,7 @@ static int fixup_amba_irq(struct device_node *amba_node,
+ 	memcpy(newv, p, len);
+ 	for (ptr = newv, i = 0, found = 0;
+ 	     i < len/sizeof(u32); ptr += IMAP_ROW_LEN, i += IMAP_ROW_LEN) {
+-		reg = of_get_property(amba_node, "reg", NULL);
++		reg = of_get_property(node, "reg", NULL);
+ 		if (ptr[0] == reg[0]) {
+ 			ptr[IMAP_ROW_LEN - 1] = cpu_to_be32(pdev->irq);
+ 			found = 1;
+@@ -77,10 +115,12 @@ static int fixup_amba_irq(struct device_node *amba_node,
+ static int pci_amba_probe(struct pci_dev *pdev,
+ 			  const struct pci_device_id *id)
+ {
+-	struct amba_device *adev;
+-	int ret;
++	struct amba_device **adev = NULL;
++	struct platform_device **platdev = NULL;
++	int ret, i, dncnt = 0;
++	void *drvdata;
+ 	struct device_node *n, *node, *pci_amba_bridge, *amba_bus = NULL,
+-		*amba_node = NULL;
++		*dev_nodes[8];
+ 	char *name;
+ 
+ 	pci_enable_msi(pdev);
+@@ -95,6 +135,8 @@ static int pci_amba_probe(struct pci_dev *pdev,
+ 	if (!node)
+ 		return -EINVAL;
+ 
++	memset(dev_nodes, 0, sizeof(dev_nodes));
++
+ 	/* Get a reference to the pci amba bridge (our pci parent) */
+ 	pci_amba_bridge = of_get_parent(node);
+ 	if (!pci_amba_bridge)
+@@ -114,47 +156,93 @@ static int pci_amba_probe(struct pci_dev *pdev,
+ 		return -ENODEV;
+ 
+ 	/*
++	  Allocate an array of amba or platform devices pointers
++	*/
++	if (is_platform_device(pdev))
++		platdev = devm_kzalloc(&pdev->dev, sizeof(*platdev) * 8,
++				       GFP_KERNEL);
++	else
++		adev = devm_kzalloc(&pdev->dev, sizeof(*adev) * 8, GFP_KERNEL);
++	if (!adev && !platdev)
++		return -ENOMEM;
++
++	/*
+ 	   Now find out what the relevant amba device is by looking for
+ 	   a resource with the same initial address of this pci device's BAR0
+ 	*/
+ 	for_each_child_of_node(amba_bus, n) {
+-		struct resource r;
+-		if (of_address_to_resource(n, 0, &r))
++		struct resource r[8];
++		if (of_address_to_resource(n, 0, &r[dncnt]))
+ 			continue;
+-		if (r.start == pdev->resource[0].start) {
+-			amba_node = n;
+-			break;
++		for (i = PCI_STD_RESOURCES; (i < PCI_STD_RESOURCE_END) &&
++			     (dncnt < ARRAY_SIZE(dev_nodes)); i++) {
++			if (resource_fits(&r[dncnt], &pdev->resource[i])) {
++				dev_nodes[dncnt++] = n;
++				break;
++			}
+ 		}
+ 	}
+-	if (!amba_node)
++	if (!dncnt)
+ 		return -ENODEV;
+ 
+-	/* Create a unique name for the device */
+-	name = devm_kzalloc(&pdev->dev, strlen(dev_name(&pdev->dev)) + 6,
+-			    GFP_KERNEL);
+-	sprintf(name, "amba-%s", dev_name(&pdev->dev));
+-
+-	/*
+-	  Since we're dealing with MSI IRQs, the value of a device's IRQ
+-	  number is known at runtime only. Update the amba bus interrupt
+-	  map to fix things up.
+-	*/
+-	if (of_get_property(amba_node, "interrupts", NULL)) {
+-		ret = fixup_amba_irq(amba_node, amba_bus, pdev);
++	for (i = 0; i < dncnt && dev_nodes[i]; i++) {
++		/* Create a unique name for the device */
++		ret = get_dev_name(&name, pdev, i);
+ 		if (ret < 0)
+ 			return ret;
++		/*
++		  Since we're dealing with MSI IRQs, the value of a device's
++		  IRQ number is known at runtime only. Update the amba bus
++		  interrupt map property to fix things up.
++		*/
++		if (of_get_property(dev_nodes[i], "interrupts", NULL)) {
++			ret = fixup_irq(dev_nodes[i], amba_bus, pdev);
++			if (ret < 0)
++				return ret;
++		}
++		/* And finally create the amba or platform device */
++		if (is_platform_device(pdev)) {
++			platdev[i] = of_platform_device_create(dev_nodes[i],
++							       name, NULL);
++			continue;
++		}
++		adev[i] = of_amba_device_create(dev_nodes[i], name, NULL, NULL,
++						&pdev->resource[0]);
+ 	}
+-
+-	/* And finally create the amba device */
+-	adev = of_amba_device_create(n, name, NULL, NULL, &pdev->resource[0]);
+-	pci_set_drvdata(pdev, adev);
++	drvdata = is_platform_device(pdev) ? (void *)platdev : (void *)adev;
++	pci_set_drvdata(pdev, drvdata);
+ 	return 0;
  };
  
-+struct sh_mmcif_of_data {
-+	unsigned int	ccs_enable : 1;
-+	unsigned int	clk_ctrl2_enable : 1;
-+	unsigned int	uhs_ddr_1v8 : 1;
-+	unsigned int	uhs_ddr_1v2 : 1;
-+};
++static void platform_remove(void *__platdev)
++{
++	int i;
++	struct platform_device **platdev = __platdev;
++	for (i = 0; i < 8; i++) {
++		if (!platdev[i])
++			break;
++		platform_device_unregister(platdev[i]);
++	}
++}
 +
-+enum {
-+	R8A73A4,
-+	R8A7740,
-+	R8A7790,
-+	SH7372,
-+	SH73A0,
-+};
++static void amba_remove(void *__ambadev)
++{
++	int i;
++	struct amba_device **ambadev = __ambadev;
++	for (i = 0; i < 8; i++) {
++		if (!ambadev[i])
++			break;
++		amba_device_unregister(ambadev[i]);
++	}
++}
 +
-+static const struct sh_mmcif_of_data sh_mmcif_of_cfg[] = {
-+	[R8A73A4] = {
-+		.uhs_ddr_1v8 = 1,
-+	},
-+	[R8A7740] = {
-+		/* all disabled */
-+	},
-+	[R8A7790] = {
-+		.clk_ctrl2_enable = 1,
-+	},
-+	[SH73A0] = {
-+		.uhs_ddr_1v8 = 1,
-+	},
-+	[SH7372] = {
-+		.ccs_enable = 1,
-+	},
-+};
-+
- static inline void sh_mmcif_bitset(struct sh_mmcif_host *host,
- 					unsigned int reg, u32 val)
+ static void pci_amba_remove(struct pci_dev *pdev)
  {
-@@ -1362,8 +1396,21 @@ static void sh_mmcif_init_ocr(struct sh_mmcif_host *host)
- 		dev_warn(mmc_dev(mmc), "Platform OCR mask is ignored\n");
+-	struct amba_device *adev = pci_get_drvdata(pdev);
+-	amba_device_unregister(adev);
++	void *drvdata = pci_get_drvdata(pdev);
++	if (is_platform_device(pdev))
++		platform_remove(drvdata);
++	else
++		amba_remove(drvdata);
+ 	pci_disable_msi(pdev);
  }
  
-+static const struct of_device_id mmcif_of_match[] = {
-+	{.compatible = "renesas,sh-mmcif"},
-+	{.compatible = "renesas,sh-mmcif-r8a73a4", .data = &sh_mmcif_of_cfg[R8A73A4]},
-+	{.compatible = "renesas,sh-mmcif-r8a7740", .data = &sh_mmcif_of_cfg[R8A7740]},
-+	{.compatible = "renesas,sh-mmcif-r8a7790", .data = &sh_mmcif_of_cfg[R8A7790]},
-+	{.compatible = "renesas,sh-mmcif-sh73a0", .data = &sh_mmcif_of_cfg[SH73A0]},
-+	{.compatible = "renesas,sh-mmcif-sh7372", .data = &sh_mmcif_of_cfg[SH7372]},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, mmcif_of_match);
-+
- static int sh_mmcif_probe(struct platform_device *pdev)
- {
-+	const struct of_device_id *of_id =
-+		of_match_device(mmcif_of_match, &pdev->dev);
- 	int ret = 0, irq[2];
- 	struct mmc_host *mmc;
- 	struct sh_mmcif_host *host;
-@@ -1403,8 +1450,19 @@ static int sh_mmcif_probe(struct platform_device *pdev)
- 	host->mmc	= mmc;
- 	host->addr	= reg;
- 	host->timeout	= msecs_to_jiffies(1000);
--	host->ccs_enable = !pd || !pd->ccs_unsupported;
--	host->clk_ctrl2_enable = pd && pd->clk_ctrl2_present;
-+
-+	if (of_id && of_id->data) {
-+		const struct sh_mmcif_of_data *of_data = of_id->data;
-+		host->ccs_enable = of_data->ccs_enable;
-+		host->clk_ctrl2_enable = of_data->clk_ctrl2_enable;
-+		if (of_data->uhs_ddr_1v8)
-+			mmc->caps |= MMC_CAP_UHS_DDR50 | MMC_CAP_1_8V_DDR;
-+		if (of_data->uhs_ddr_1v2)
-+			mmc->caps |= MMC_CAP_UHS_DDR50 | MMC_CAP_1_2V_DDR;
-+	} else {
-+		host->ccs_enable = !pd || !pd->ccs_unsupported;
-+		host->clk_ctrl2_enable = pd && pd->clk_ctrl2_present;
-+	}
+@@ -168,6 +256,8 @@ static DEFINE_PCI_DEVICE_TABLE(pci_amba_table) = {
+ 	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_SDIO)},
+ 	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_AUDIO_ROUTER_DMA)},
+ 	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_AUDIO_ROUTER_MSPS)},
++	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_ESRAM)},
++	{PCI_VDEVICE(STMICRO, PCI_DEVICE_ID_STMICRO_GPIO)},
+ 	{0,}
+ };
  
- 	host->pd = pdev;
- 
-@@ -1564,12 +1622,6 @@ static int sh_mmcif_resume(struct device *dev)
- #define sh_mmcif_resume		NULL
- #endif	/* CONFIG_PM */
- 
--static const struct of_device_id mmcif_of_match[] = {
--	{ .compatible = "renesas,sh-mmcif" },
--	{ }
--};
--MODULE_DEVICE_TABLE(of, mmcif_of_match);
--
- static const struct dev_pm_ops sh_mmcif_dev_pm_ops = {
- 	.suspend = sh_mmcif_suspend,
- 	.resume = sh_mmcif_resume,
 -- 
-1.7.2.5
-
+1.7.7.2
