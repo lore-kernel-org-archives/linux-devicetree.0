@@ -1,71 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mailout3.samsung.com ([203.254.224.33]:53662 "EHLO
-	mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752038Ab3HLKdk (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 06:33:40 -0400
-From: Seungwon Jeon <tgih.jun@samsung.com>
-References: <1375846138-15839-1-git-send-email-dbasehore@chromium.org>
-In-reply-to: <1375846138-15839-1-git-send-email-dbasehore@chromium.org>
-Subject: RE: [PATCH] mmc: dw_mmc: Don't disable vmmc if keeping power in suspend
-Date: Mon, 12 Aug 2013 19:33:38 +0900
-Message-id: <000001ce9747$680a9800$381fc800$%jun@samsung.com>
-MIME-version: 1.0
-Content-type: text/plain; charset=ks_c_5601-1987
-Content-transfer-encoding: 7bit
-Content-language: ko
+Received: from mail-qa0-f73.google.com ([209.85.216.73]:56549 "EHLO
+	mail-qa0-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756935Ab3HGD3E (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 23:29:04 -0400
+Received: by mail-qa0-f73.google.com with SMTP id f14so163321qak.2
+        for <devicetree@vger.kernel.org>; Tue, 06 Aug 2013 20:29:02 -0700 (PDT)
+From: Derek Basehore <dbasehore@chromium.org>
+Subject: [PATCH] mmc: dw_mmc: Don't disable vmmc if keeping power in suspend
+Date: Tue,  6 Aug 2013 20:28:58 -0700
+Message-Id: <1375846138-15839-1-git-send-email-dbasehore@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
-To: 'Derek Basehore' <dbasehore@chromium.org>
-Cc: 'Chris Ball' <cjb@laptop.org>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <rob.herring@calxeda.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>
+Cc: Chris Ball <cjb@laptop.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Derek Basehore <dbasehore@chromium.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, August 07, 2013, Derek Basehore
-> If we keep power for suspend on a host for dw_mmc, don't disable vmmc-supply
-> regulator when suspending the host.
+If we keep power for suspend on a host for dw_mmc, don't disable vmmc-supply
+regulator when suspending the host.
 
-I have a trivial comment.
-It would be better to add some macro for checking MMC_PM_KEEP_POWER.
-And I just wonder how the problem is silent. Origin code has stood up somewhat long.
-Did you see?
+Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+Reviewed-by: Doug Anderson <dianders@chromium.org>
+---
+ drivers/mmc/host/dw_mmc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
-
-Thanks,
-Seungwon Jeon
-
-> 
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> ---
->  drivers/mmc/host/dw_mmc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index ee5f167..bf82d7c 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -2474,7 +2474,7 @@ int dw_mci_suspend(struct dw_mci *host)
->  		}
->  	}
-> 
-> -	if (host->vmmc)
-> +	if (host->vmmc && !(host->pdata->pm_caps & MMC_PM_KEEP_POWER))
->  		regulator_disable(host->vmmc);
-> 
->  	return 0;
-> @@ -2485,7 +2485,7 @@ int dw_mci_resume(struct dw_mci *host)
->  {
->  	int i, ret;
-> 
-> -	if (host->vmmc) {
-> +	if (host->vmmc && !(host->pdata->pm_caps & MMC_PM_KEEP_POWER)) {
->  		ret = regulator_enable(host->vmmc);
->  		if (ret) {
->  			dev_err(host->dev,
-> --
-> 1.8.3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index ee5f167..bf82d7c 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -2474,7 +2474,7 @@ int dw_mci_suspend(struct dw_mci *host)
+ 		}
+ 	}
+ 
+-	if (host->vmmc)
++	if (host->vmmc && !(host->pdata->pm_caps & MMC_PM_KEEP_POWER))
+ 		regulator_disable(host->vmmc);
+ 
+ 	return 0;
+@@ -2485,7 +2485,7 @@ int dw_mci_resume(struct dw_mci *host)
+ {
+ 	int i, ret;
+ 
+-	if (host->vmmc) {
++	if (host->vmmc && !(host->pdata->pm_caps & MMC_PM_KEEP_POWER)) {
+ 		ret = regulator_enable(host->vmmc);
+ 		if (ret) {
+ 			dev_err(host->dev,
+-- 
+1.8.3
 
