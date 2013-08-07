@@ -1,59 +1,70 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:59921 "EHLO
-	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S934118Ab3HHJ0T (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2013 05:26:19 -0400
-Date: Thu, 8 Aug 2013 10:26:15 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/3 v5] usb: phy-samsung-usb: Simplify PMU register
- handling
-Message-ID: <20130808092615.GF14648@e106331-lin.cambridge.arm.com>
+Received: from mailout3.w1.samsung.com ([210.118.77.13]:49076 "EHLO
+	mailout3.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932348Ab3HGSu0 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 14:50:26 -0400
+Message-id: <520296ED.7080003@samsung.com>
+Date: Wed, 07 Aug 2013 20:50:21 +0200
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+MIME-version: 1.0
+Subject: Re: [PATCH 1/3 v5] usb: phy-samsung-usb: Simplify PMU register handling
 References: <1375812017-6287-1-git-send-email-jwerner@chromium.org>
  <20130807163045.GK28558@e106331-lin.cambridge.arm.com>
  <CAODwPW9DmVdzHbHN0NUK0fYUNw0tj2ktyh-20no30r14_JayFQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAODwPW9DmVdzHbHN0NUK0fYUNw0tj2ktyh-20no30r14_JayFQ@mail.gmail.com>
-Content-Language: en-US
+In-reply-to: <CAODwPW9DmVdzHbHN0NUK0fYUNw0tj2ktyh-20no30r14_JayFQ@mail.gmail.com>
+Content-type: text/plain; charset=ISO-8859-1
+Content-transfer-encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 To: Julius Werner <jwerner@chromium.org>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kukjin Kim <kgene.kim@samsung.com>, Felipe Balbi <balbi@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kukjin Kim <kgene.kim@samsung.com>, Felipe Balbi <balbi@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Aug 07, 2013 at 06:06:05PM +0100, Julius Werner wrote:
-> > This breaks compatibility, both for an old kernel and a new dt and a new
-> > kernel with an old dt. Is anyone using these bindings?
+On 08/07/2013 07:06 PM, Julius Werner wrote:
+>> This breaks compatibility, both for an old kernel and a new dt and a new
+>> kernel with an old dt. Is anyone using these bindings?
 > 
 > They only affect Samsung SoCs and have only been upstream for half a
 > year, so I doubt it's heavily used.
 
-I'm not sure everyone will be happy with that line.
+It probably wouldn't be of much concern, but I can't tell for sure.
 
-> 
-> > Why are we describing fewer registers now? Are they described elsewhere?
-> >
-> > The dt should describe the device, not only the portion of it Linux
-> > wants to use right now.
+>> Why are we describing fewer registers now? Are they described elsewhere?
+>>
+>> The dt should describe the device, not only the portion of it Linux
+>> wants to use right now.
 > 
 > This only ever described a small section of the huge set of PMU
-> registers anyway. Before it described up to three registers
+> registers anyway. 
+
+The PMU registers are already scattered across various drivers, like
+Power Domain, various PHYs (USB/HSIC/MIPI CSI-2/DSI, ADC, ...), Reset
+and more. And it happens currently there is no central driver for
+the Power Management Unit, that would, for example expose the regmap
+interface that the interested drivers could use. The downside of this
+would be that each, e.g. USB PHY driver would need to know SoC specific
+offsets to its registers in the PMU.
+
+Before device tree started to be used those PMU registers were controlled
+by respective drivers, mostly through platform_data callbacks. As they
+could be considered parts of given device.
+
+                   Before it described up to three registers
 > controlling different PHYs (using hardcoded offsets in the code to
 > later find the right one)... with my patch every PHY's DT entry only
 > describes the one register concerning itself, which makes more sense
 > in my opinion. It will also prevent the register descriptions in
 > different DT entries from overlapping.
-> 
 
-I'm not sure I understand. The old documentation referred to the
-USBDEVICE_PHY_CONTROL and USBHOST_PHY_CONTROL registers for a phy, and
-your new version only refers to (usb device) PHY_CONTROL. Regardless of
-multiple phys, you're suggesting that we describe less of each phy.
-That seems like taking away usable information. Unless I've
-misunderstood?
+Yes, the patch looks sensible. Since currently each USB PHY has its
+own device tree node it looks wrong to have the reg property in the
+usbphy-sys subnodes defining register region for all possible PHYs.
+And we indeed and up with multiple reg properties pointing to same
+register region.
 
-Ideally, we'd describe the whole set of registers and linkages to phys,
-even if Linux doesn't ahppen to use that information right now.
+However the biggest drawback is breaking backwards compatibility.
+I'm not sure if those changes are worth it, especially that all those
+USB PHY drivers are supposed to be rewritten to use the generic PHY API.
+
 
 Thanks,
-Mark.
+Sylwester
