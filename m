@@ -1,50 +1,84 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15122 "EHLO
-	hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755929Ab3HFM7Q (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 08:59:16 -0400
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V3 0/3] pinctrl: add pincontrol driver for palmas device.
-Date: Tue, 6 Aug 2013 18:42:32 +0530
-Message-ID: <1375794755-6246-1-git-send-email-ldewangan@nvidia.com>
+Received: from mail2.gnudd.com ([213.203.150.91]:56437 "EHLO mail.gnudd.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932662Ab3HGK1Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 7 Aug 2013 06:27:25 -0400
+Date: Wed, 7 Aug 2013 12:20:48 +0200
+From: Davide Ciminaghi <ciminaghi@gnudd.com>
+Subject: [PATCH 19/26] x86 STA2X11 platform: create sta2x11-clock-regs
+ device
+Message-ID: <a018fe226244e4dec7eaa64911a957089d499edc.1375867291.git.rubini@gnudd.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+References: <cover.1375867291.git.rubini@gnudd.com>
+In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
 Sender: devicetree-owner@vger.kernel.org
-To: swarren@wwwdotorg.org, linus.walleij@linaro.org
-Cc: ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, Laxman Dewangan <ldewangan@nvidia.com>
+To: linux-kernel@vger.kernel.org
+Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Changes from V1: 
-- Split the additon of common code into pinctrl-utils and pinconf-generic.
-- Use the pinconf-generic APIs for mapping node.
-- Use pinconf generic properties to define the Palmas pincontrol nodes.
-- Nit and cleanups, typo fixes, rephrasing the sentences etc.
-- Use pin specific APIs for setting pin configuration rather than group
-  specific.
+This patch creates a virtual platform device each time the apb-soc-regs
+and sctl devices have been probed for a given sta2x11 instance.
+This will trigger clock registration for such instance.
 
-Changes from V2:
-- Rebased the  DT binding document on top of Stephen's cleanup.
-- Convert name of propery "pinctrl-pins" to "pins" and "pinctrl-function" to
-  function.
+Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
+Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
+---
+ arch/x86/include/asm/sta2x11.h      |    1 +
+ arch/x86/platform/sta2x11/sta2x11.c |   21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 0 deletions(-)
 
-Laxman Dewangan (3):
-  pinctrl: add utility functions for add map/configs
-  pinctrl: pinconf-generic: add generic APIs for mapping pinctrl node
-  pinctrl: palmas: add pincontrol driver
-
- .../bindings/pinctrl/pinctrl-bindings.txt          |    3 +
- .../devicetree/bindings/pinctrl/pinctrl-palmas.txt |   96 ++
- drivers/pinctrl/Kconfig                            |   10 +
- drivers/pinctrl/Makefile                           |    3 +-
- drivers/pinctrl/pinconf-generic.c                  |   96 ++
- drivers/pinctrl/pinctrl-palmas.c                   | 1085 ++++++++++++++++++++
- drivers/pinctrl/pinctrl-utils.c                    |  135 +++
- drivers/pinctrl/pinctrl-utils.h                    |   42 +
- include/linux/mfd/palmas.h                         |   35 +-
- include/linux/pinctrl/pinconf-generic.h            |    6 +
- 10 files changed, 1499 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-palmas.txt
- create mode 100644 drivers/pinctrl/pinctrl-palmas.c
- create mode 100644 drivers/pinctrl/pinctrl-utils.c
- create mode 100644 drivers/pinctrl/pinctrl-utils.h
-
+diff --git a/arch/x86/include/asm/sta2x11.h b/arch/x86/include/asm/sta2x11.h
+index 31fc648..3c5dee4 100644
+--- a/arch/x86/include/asm/sta2x11.h
++++ b/arch/x86/include/asm/sta2x11.h
+@@ -78,6 +78,7 @@ struct sta2x11_instance_data *sta2x11_dev_to_instance(struct device *dev)
+ #define STA2X11_APBREG_NAME		"sta2x11-apbreg"
+ #define STA2X11_APB_SOC_REGS_NAME	"sta2x11-apb-soc-regs"
+ #define STA2X11_VIC_NAME		"sta2x11-vic"
++#define STA2X11_CLOCK_REGS_NAME		"sta2x11-clock-regs"
+ 
+ /* CAN and MLB */
+ #define APBREG_BSR	0x00	/* Bridge Status Reg */
+diff --git a/arch/x86/platform/sta2x11/sta2x11.c b/arch/x86/platform/sta2x11/sta2x11.c
+index 1f1d1af..57ed10d 100644
+--- a/arch/x86/platform/sta2x11/sta2x11.c
++++ b/arch/x86/platform/sta2x11/sta2x11.c
+@@ -243,6 +243,20 @@ struct sta2x11_instance_data *sta2x11_node_to_instance(struct device_node *n)
+ }
+ EXPORT_SYMBOL(sta2x11_node_to_instance);
+ 
++static int create_clk_dev(struct sta2x11_instance_data *instance)
++{
++	int stat;
++	struct platform_device *cpd =
++		platform_device_alloc(STA2X11_CLOCK_REGS_NAME, instance->id);
++	if (!cpd)
++		return -ENOMEM;
++
++	cpd->dev.platform_data = instance;
++	stat = platform_device_add(cpd);
++	if (stat < 0)
++		platform_device_put(cpd);
++	return stat;
++}
+ 
+ /* Common probe for the four platform devices */
+ static int sta2x11_platform_probe(struct platform_device *dev,
+@@ -312,6 +326,13 @@ static int sta2x11_platform_probe(struct platform_device *dev,
+ 	}
+ 	*dst = platform_drv_data;
+ 
++	/*
++	 * When both sctl and apb_soc_regs have been probed, we're ready for
++	 * creating the "sta2x11-clock-regs" platform device
++	 */
++	if (instance->sctl && instance->apb_soc_regs)
++		create_clk_dev(instance);
++
+ 	platform_set_drvdata(dev, platform_drv_data);
+ 	return 0;
+ }
+-- 
+1.7.7.2
