@@ -1,76 +1,138 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v10 6/7] ASoC: fsl-ssi: ac97-slave support
-Date: Tue, 6 Aug 2013 18:00:56 +0100
-Message-ID: <20130806170056.GK6427@sirena.org.uk>
-References: <1374924716-23475-1-git-send-email-mpa@pengutronix.de>
- <1374924716-23475-7-git-send-email-mpa@pengutronix.de>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] iio: mxs-lradc: add scale_available file to channels
+Date: Wed, 07 Aug 2013 09:50:45 +0200
+Message-ID: <5201FC55.5080304@free-electrons.com>
+References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com> <1374501843-19651-5-git-send-email-hector.palacios@digi.com> <51EE4300.7070802@metafoo.de> <51EE8445.6070603@digi.com> <51F276D8.9090906@free-electrons.com> <d838f30e-30ca-49ca-a9f3-ebf4e523c7eb@email.android.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3246478506355382436=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1374924716-23475-7-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d838f30e-30ca-49ca-a9f3-ebf4e523c7eb-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jonathan, Lars
 
---===============3246478506355382436==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RVlUGXxwBj5SDcM9"
-Content-Disposition: inline
+I would really like to see that included in 3.12. While I agree there is
+room for improvement, I don't think there are any comments that need an
+immediate action before inclusion apart from the decision that has to be
+taken for the device tree.
+
+Can you confirm whether you'll take this series as is ?
+
+Regards,
+
+On 26/07/2013 18:13, Jonathan Cameron wrote:
+>
+> Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> On 23/07/2013 15:25, Hector Palacios wrote:
+>>> Dear Lars,
+>>>
+>>> On 07/23/2013 10:46 AM, Lars-Peter Clausen wrote:
+>>>> On 07/22/2013 04:04 PM, Hector Palacios wrote:
+>>>> [...]
+>>>>> +static ssize_t mxs_lradc_show_scale_available_ch(struct device
+>> *dev,
+>>>>> +        struct device_attribute *attr,
+>>>>> +        char *buf,
+>>>>> +        int ch)
+>>>>> +{
+>>>>> +    struct iio_dev *iio = dev_to_iio_dev(dev);
+>>>>> +    struct mxs_lradc *lradc = iio_priv(iio);
+>>>>> +    int i, len = 0;
+>>>>> +
+>>>>> +    for (i = 0; i < ARRAY_SIZE(lradc->scale_avail[ch]); i++)
+>>>>> +        len += sprintf(buf + len, "%d.%09u ",
+>>>>> +                   lradc->scale_avail[ch][i].integer,
+>>>>> +                   lradc->scale_avail[ch][i].nano);
+>>>>> +
+>>>>> +    len += sprintf(buf + len, "\n");
+>>>>> +
+>>>>> +    return len;
+>>>>> +}
+>>>>> +
+>>>>> +static ssize_t mxs_lradc_show_scale_available(struct device *dev,
+>>>>> +        struct device_attribute *attr,
+>>>>> +        char *buf)
+>>>>> +{
+>>>>> +    struct iio_dev_attr *iio_attr = to_iio_dev_attr(attr);
+>>>>> +
+>>>>> +    return mxs_lradc_show_scale_available_ch(dev, attr, buf,
+>>>>> +                         iio_attr->address);
+>>>>> +}
+>>>>> +
+>>>>> +#define SHOW_SCALE_AVAILABLE_ATTR(ch)                    \
+>>>>> +static IIO_DEVICE_ATTR(in_voltage##ch##_scale_available, S_IRUGO, 
+>>  \
+>>>>> +               mxs_lradc_show_scale_available, NULL, ch)
+>>>>> +
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(0);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(1);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(2);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(3);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(4);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(5);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(6);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(7);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(8);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(9);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(10);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(11);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(12);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(13);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(14);
+>>>>> +SHOW_SCALE_AVAILABLE_ATTR(15);
+>>>>> +
+>>>>> +static struct attribute *mxs_lradc_attributes[] = {
+>>>>> +    &iio_dev_attr_in_voltage0_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage1_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage2_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage3_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage4_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage5_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage6_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage7_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage8_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage9_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage10_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage11_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage12_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage13_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage14_scale_available.dev_attr.attr,
+>>>>> +    &iio_dev_attr_in_voltage15_scale_available.dev_attr.attr,
+>>>>> +    NULL
+>>>>> +};
+>>>> This should really be using the iio_chan_spec_ext_info
+>>>> infrastructure. Bonus
+>>>> points for factoring out the common code used to calculate and
+>>>> display the
+>>>> scales.
+>>> I perfectly understand. Sadly, I don't currently have the time and
+>>> expertise to try to work this out the proper way. It already took
+>> much
+>>> longer than expected to have this driver toggle a divider flag.
+>>>
+>>> I'd appreciate if anyone wishes to complete this job.
+>>> @Alexander, please feel free to submit your other temp patch without
+>>> waiting for this one.
+>>>
+>> Maybe, we can get the patch set as is and do further clean up later.
+>> Anyway, that driver is still in staging, right ?
+>>
+>> As said, I'm willing to propose something for the scale calculation.
+> My thoughts exactly. Long term plans include generic handling of available attributes for the whole of IIO.
+>
+> It will take me a little while to catch up my backlog though!
+>
+> Jonathan
+>
+>
+>
 
 
---RVlUGXxwBj5SDcM9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sat, Jul 27, 2013 at 01:31:55PM +0200, Markus Pargmann wrote:
-> This patch adds ac97-slave support.
-
-Applied, thanks.
-
---RVlUGXxwBj5SDcM9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSASvFAAoJELSic+t+oim9ru4QAJWM/GI2B/1916s+zn52qy01
-L9wBicLm9e5j1uLTdtlnMAPrI6/4PbXR4Px6HuPmLhZXTG/6zYhScajUU/YL4wc4
-5T0+ddjberx3yZV2zW5XdvbkbFe2nM+h+/Zv5h+Kyv2b2q+2nf8rg55DPR33iwTu
-s9nuN3kMmmUNJZWsaYONTMYDCZcNqnJf/TGcOK62HV+baApEXnOtAHzCFuh2T0GX
-Fw0U9Z90jJLqGIdetVaOC69vGUDZQWcRtwbGFi5gpIjil4Wdyk6O6wytjzusX7pi
-oiPb5yqDCsHxdGKUJcKYl6NJSq9/GF8GD1aB4/amnISsZHzOImMHaq7+hNEt3JWB
-ebNzyzLk3PTb3+EwpC+qdSA3Bc4P9M06cyOj19YxlTbvstI9qLpeD1gJK6Fk7nh6
-C33j1/ZXnXJsooSE9UT/cRyib9e0CwgdwgeQhsriOuEaGeLsNqvH+6kPDMnj2d2D
-i3gPncf0I0QSPXBH72FuVqwqcF+yu+7Cfg6mKDU9vM6paefCdzTlqt15WLYx0AIA
-yHH2LRD+wfraFY067e8OzywIIzbLkcPpX9/smz3wYqy2q2ASMN8KJ1uHQIrR+Uws
-WsBlHhQqoCeeyMtk+2/FrBRjvMjvcpZcbziRF/uJajFf7aWRRZZlBvREJ0Ud6NN3
-ED7e3DPuOtzjW6APSdjh
-=yvfQ
------END PGP SIGNATURE-----
-
---RVlUGXxwBj5SDcM9--
-
-
---===============3246478506355382436==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3246478506355382436==--
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
