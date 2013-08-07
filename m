@@ -1,163 +1,334 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from devils.ext.ti.com ([198.47.26.153]:59296 "EHLO
-	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752035Ab3HMFq5 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 01:46:57 -0400
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH] ARM: DTS: DRA7: Add TPS659038 PMIC nodes
-Date: Tue, 13 Aug 2013 11:12:36 +0530
-Message-ID: <1376372556-4244-1-git-send-email-j-keerthy@ti.com>
+Received: from mail2.gnudd.com ([213.203.150.91]:56297 "EHLO mail.gnudd.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932404Ab3HGKXT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 7 Aug 2013 06:23:19 -0400
+Date: Wed, 7 Aug 2013 12:16:41 +0200
+From: Alessandro Rubini <rubini@gnudd.com>
+Subject: [PATCH 02/26] DMA: PL330: use prefix in reg names to build under
+ x86
+Message-ID: <68d6ec88a6d5ce4f9034b00a5dac4b2a5e22d849.1375867291.git.rubini@gnudd.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+References: <cover.1375867291.git.rubini@gnudd.com>
+In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: swarren@wwwdotorg.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, nm@ti.com, balajitk@ti.com, j-keerthy@ti.com
+To: linux-kernel@vger.kernel.org
+Cc: Davide Ciminaghi <ciminaghi@gnudd.com>, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The Patch adds nodes for TPS659038 PMIC for DRA7 boards.
+This driver would not compile if ARM_AMBA is selected under x86,
+because "CS" and "DS" are already defined there.  But AMBA
+is used in the x86 world by a PCI-to-AMBA bridge, to be submitted.
 
-It is based on:
-http://comments.gmane.org/gmane.linux.ports.arm.omap/102459.
+The patch just adds the "PL330_" prefix to all registers,
+so it can be built by randomconfig after ARM_AMBA appears within x86.
+No other technical changes have been performed.
+The patch was build-tested only.
 
-Documentation:	Documentation/devicetree/bindings/mfd/palmas.txt
-		Documentation/devicetree/bindings/regulator/palmas-pmic.txt		
+Signed-off-by: Alessandro Rubini <rubini@gnudd.com>
+Link: http://lkml.kernel.org/r/1355146956-6009-2-git-send-email-ciminaghi@gnudd.com
+Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
+[Davide Ciminaghi <ciminaghi@gnudd.com>: only registers prefixed]
+Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
+Acked-by: Jassi Brar <jassisinghbrar@gmail.com>
+Signed-off-by: H. Peter Anvin <hpa@linux.intel.com>
 
-Tested on DRA7 Board, 3.11-rc5 plus the above patch-set.
+Conflicts:
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
+	drivers/dma/pl330.c
 ---
- arch/arm/boot/dts/dra7-evm.dts |  118 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+ drivers/dma/pl330.c |  107 ++++++++++++++++++++++++++-------------------------
+ 1 files changed, 54 insertions(+), 53 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index b270e24..96f409f 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -93,6 +93,124 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins>;
- 	clock-frequency = <400000>;
-+
-+	tps659038: tps659038@58 {
-+		compatible = "ti,tps659038";
-+		reg = <0x58>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		tps659038_pmic {
-+			compatible = "ti,tps659038-pmic";
-+
-+			regulators {
-+				smps123_reg: smps123 {
-+					/* VDD_MPU */
-+						regulator-name = "smps123";
-+						regulator-min-microvolt = < 600000>;
-+						regulator-max-microvolt = <1500000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+				smps45_reg: smps45 {
-+						/* VDD_DSPEVE */
-+						regulator-name = "smps45";
-+						regulator-min-microvolt = < 600000>;
-+						regulator-max-microvolt = <1310000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+				smps6_reg: smps6 {
-+						/* VDD_GPU - over VDD_SMPS6 */
-+						regulator-name = "smps6";
-+						regulator-min-microvolt = <600000>;
-+						regulator-max-microvolt = <13100000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+				smps7_reg: smps7 {
-+						/* VDDS_CORE */
-+						regulator-name = "smps7";
-+						regulator-min-microvolt = <600000>;
-+						regulator-max-microvolt = <1310000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+				smps8_reg: smps8 {
-+						/* VDD_IVAHD */
-+						regulator-name = "smps8";
-+						regulator-min-microvolt = < 600000>;
-+						regulator-max-microvolt = <1310000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+				smps9_reg: smps9 {
-+						/* VDD_1V8 */
-+						regulator-name = "smps9";
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+				ldo1_reg: ldo1 {
-+						/* LDO1_OUT --> SDIO  */
-+						regulator-name = "ldo1";
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <3300000>;
-+					};
-+
-+				ldo2_reg: ldo2 {
-+						/* VDD_RTCIO */
-+						regulator-name = "ldo2";
-+						regulator-min-microvolt = <3300000>;
-+						regulator-max-microvolt = <3300000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+				ldo3_reg: ldo3 {
-+						/* VDDA_1V8 PHYs */
-+						regulator-name = "ldo3";
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+					};
-+
-+				ldo9_reg: ldo9 {
-+						/* VDD_RTC */
-+						regulator-name = "ldo9";
-+						regulator-min-microvolt = <1000000>;
-+						regulator-max-microvolt = <1000000>;
-+						regulator-boot-on;
-+						regulator-always-on;
-+					};
-+
-+				ldoln_reg: ldoln {
-+						/* VDDA_1v8: PLLs */
-+						regulator-name = "ldoln";
-+						regulator-min-microvolt = <1800000>;
-+						regulator-max-microvolt = <1800000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+				ldousb_reg: ldousb {
-+						/* VDDA_3V_USB: VDDA_USBHS33 */
-+						regulator-name = "ldousb";
-+						regulator-min-microvolt = <3250000>;
-+						regulator-max-microvolt = <3250000>;
-+						regulator-always-on;
-+						regulator-boot-on;
-+					};
-+
-+				};
-+			};
-+		};
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 4ad13eb..da67bee 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -71,7 +71,7 @@ enum pl330_reqtype {
  };
  
- &i2c2 {
+ /* Register and Bit field Definitions */
+-#define DS			0x0
++#define PL330_DS		0x0
+ #define DS_ST_STOP		0x0
+ #define DS_ST_EXEC		0x1
+ #define DS_ST_CMISS		0x2
+@@ -85,33 +85,33 @@ enum pl330_reqtype {
+ #define DS_ST_FLTCMP		0xe
+ #define DS_ST_FAULT		0xf
+ 
+-#define DPC			0x4
+-#define INTEN			0x20
+-#define ES			0x24
+-#define INTSTATUS		0x28
+-#define INTCLR			0x2c
+-#define FSM			0x30
+-#define FSC			0x34
+-#define FTM			0x38
++#define PL330_DPC		0x4
++#define PL330_INTEN		0x20
++#define PL330_ES		0x24
++#define PL330_INTSTATUS		0x28
++#define PL330_INTCLR		0x2c
++#define PL330_FSM		0x30
++#define PL330_FSC		0x34
++#define PL330_FTM		0x38
+ 
+ #define _FTC			0x40
+-#define FTC(n)			(_FTC + (n)*0x4)
++#define PL330_FTC(n)		(_FTC + (n)*0x4)
+ 
+ #define _CS			0x100
+-#define CS(n)			(_CS + (n)*0x8)
++#define PL330_CS(n)		(_CS + (n)*0x8)
+ #define CS_CNS			(1 << 21)
+ 
+ #define _CPC			0x104
+-#define CPC(n)			(_CPC + (n)*0x8)
++#define PL330_CPC(n)		(_CPC + (n)*0x8)
+ 
+ #define _SA			0x400
+-#define SA(n)			(_SA + (n)*0x20)
++#define PL330_SA(n)		(_SA + (n)*0x20)
+ 
+ #define _DA			0x404
+-#define DA(n)			(_DA + (n)*0x20)
++#define PL330_DA(n)		(_DA + (n)*0x20)
+ 
+ #define _CC			0x408
+-#define CC(n)			(_CC + (n)*0x20)
++#define PL330_CC(n)		(_CC + (n)*0x20)
+ 
+ #define CC_SRCINC		(1 << 0)
+ #define CC_DSTINC		(1 << 14)
+@@ -132,24 +132,24 @@ enum pl330_reqtype {
+ #define CC_SWAP_SHFT		28
+ 
+ #define _LC0			0x40c
+-#define LC0(n)			(_LC0 + (n)*0x20)
++#define PL330_LC0(n)		(_LC0 + (n)*0x20)
+ 
+ #define _LC1			0x410
+-#define LC1(n)			(_LC1 + (n)*0x20)
++#define PL330_LC1(n)		(_LC1 + (n)*0x20)
+ 
+-#define DBGSTATUS		0xd00
++#define PL330_DBGSTATUS		0xd00
+ #define DBG_BUSY		(1 << 0)
+ 
+-#define DBGCMD			0xd04
+-#define DBGINST0		0xd08
+-#define DBGINST1		0xd0c
++#define PL330_DBGCMD		0xd04
++#define PL330_DBGINST0		0xd08
++#define PL330_DBGINST1		0xd0c
+ 
+-#define CR0			0xe00
+-#define CR1			0xe04
+-#define CR2			0xe08
+-#define CR3			0xe0c
+-#define CR4			0xe10
+-#define CRD			0xe14
++#define PL330_CR0		0xe00
++#define PL330_CR1		0xe04
++#define PL330_CR2		0xe08
++#define PL330_CR3		0xe0c
++#define PL330_CR4		0xe10
++#define PL330_CRD		0xe14
+ 
+ #define PERIPH_ID		0xfe0
+ #define PERIPH_REV_SHIFT	20
+@@ -1006,7 +1006,7 @@ static bool _until_dmac_idle(struct pl330_thread *thrd)
+ 
+ 	do {
+ 		/* Until Manager is Idle */
+-		if (!(readl(regs + DBGSTATUS) & DBG_BUSY))
++		if (!(readl(regs + PL330_DBGSTATUS) & DBG_BUSY))
+ 			break;
+ 
+ 		cpu_relax();
+@@ -1029,10 +1029,10 @@ static inline void _execute_DBGINSN(struct pl330_thread *thrd,
+ 		val |= (1 << 0);
+ 		val |= (thrd->id << 8); /* Channel Number */
+ 	}
+-	writel(val, regs + DBGINST0);
++	writel(val, regs + PL330_DBGINST0);
+ 
+ 	val = *((u32 *)&insn[2]);
+-	writel(val, regs + DBGINST1);
++	writel(val, regs + PL330_DBGINST1);
+ 
+ 	/* If timed out due to halted state-machine */
+ 	if (_until_dmac_idle(thrd)) {
+@@ -1041,7 +1041,7 @@ static inline void _execute_DBGINSN(struct pl330_thread *thrd,
+ 	}
+ 
+ 	/* Get going */
+-	writel(0, regs + DBGCMD);
++	writel(0, regs + PL330_DBGCMD);
+ }
+ 
+ /*
+@@ -1066,9 +1066,9 @@ static inline u32 _state(struct pl330_thread *thrd)
+ 	u32 val;
+ 
+ 	if (is_manager(thrd))
+-		val = readl(regs + DS) & 0xf;
++		val = readl(regs + PL330_DS) & 0xf;
+ 	else
+-		val = readl(regs + CS(thrd->id)) & 0xf;
++		val = readl(regs + PL330_CS(thrd->id)) & 0xf;
+ 
+ 	switch (val) {
+ 	case DS_ST_STOP:
+@@ -1135,7 +1135,8 @@ static void _stop(struct pl330_thread *thrd)
+ 	_emit_KILL(0, insn);
+ 
+ 	/* Stop generating interrupts for SEV */
+-	writel(readl(regs + INTEN) & ~(1 << thrd->ev), regs + INTEN);
++	writel(readl(regs + PL330_INTEN) & ~(1 << thrd->ev),
++	       regs + PL330_INTEN);
+ 
+ 	_execute_DBGINSN(thrd, insn, is_manager(thrd));
+ }
+@@ -1174,7 +1175,7 @@ static bool _trigger(struct pl330_thread *thrd)
+ 
+ 	if (r->cfg)
+ 		ns = r->cfg->nonsecure ? 1 : 0;
+-	else if (readl(regs + CS(thrd->id)) & CS_CNS)
++	else if (readl(regs + PL330_CS(thrd->id)) & CS_CNS)
+ 		ns = 1;
+ 	else
+ 		ns = 0;
+@@ -1190,7 +1191,7 @@ static bool _trigger(struct pl330_thread *thrd)
+ 	_emit_GO(0, insn, &go);
+ 
+ 	/* Set to generate interrupts for SEV */
+-	writel(readl(regs + INTEN) | (1 << thrd->ev), regs + INTEN);
++	writel(readl(regs + PL330_INTEN) | (1 << thrd->ev), regs + PL330_INTEN);
+ 
+ 	/* Only manager can execute GO */
+ 	_execute_DBGINSN(thrd, insn, true);
+@@ -1565,7 +1566,7 @@ static int pl330_submit_req(void *ch_id, struct pl330_req *r)
+ 
+ 		ccr = _prepare_ccr(r->cfg);
+ 	} else {
+-		ccr = readl(regs + CC(thrd->id));
++		ccr = readl(regs + PL330_CC(thrd->id));
+ 	}
+ 
+ 	/* If this req doesn't have valid xfer settings */
+@@ -1642,7 +1643,7 @@ static void pl330_dotask(unsigned long data)
+ 
+ 			_stop(thrd);
+ 
+-			if (readl(regs + FSC) & (1 << thrd->id))
++			if (readl(regs + PL330_FSC) & (1 << thrd->id))
+ 				err = PL330_ERR_FAIL;
+ 			else
+ 				err = PL330_ERR_ABORT;
+@@ -1687,13 +1688,13 @@ static int pl330_update(const struct pl330_info *pi)
+ 
+ 	spin_lock_irqsave(&pl330->lock, flags);
+ 
+-	val = readl(regs + FSM) & 0x1;
++	val = readl(regs + PL330_FSM) & 0x1;
+ 	if (val)
+ 		pl330->dmac_tbd.reset_mngr = true;
+ 	else
+ 		pl330->dmac_tbd.reset_mngr = false;
+ 
+-	val = readl(regs + FSC) & ((1 << pi->pcfg.num_chan) - 1);
++	val = readl(regs + PL330_FSC) & ((1 << pi->pcfg.num_chan) - 1);
+ 	pl330->dmac_tbd.reset_chan |= val;
+ 	if (val) {
+ 		int i = 0;
+@@ -1701,8 +1702,8 @@ static int pl330_update(const struct pl330_info *pi)
+ 			if (val & (1 << i)) {
+ 				dev_info(pi->dev,
+ 					"Reset Channel-%d\t CS-%x FTC-%x\n",
+-						i, readl(regs + CS(i)),
+-						readl(regs + FTC(i)));
++						i, readl(regs + PL330_CS(i)),
++						readl(regs + PL330_FTC(i)));
+ 				_stop(&pl330->channels[i]);
+ 			}
+ 			i++;
+@@ -1710,7 +1711,7 @@ static int pl330_update(const struct pl330_info *pi)
+ 	}
+ 
+ 	/* Check which event happened i.e, thread notified */
+-	val = readl(regs + ES);
++	val = readl(regs + PL330_ES);
+ 	if (pi->pcfg.num_events < 32
+ 			&& val & ~((1 << pi->pcfg.num_events) - 1)) {
+ 		pl330->dmac_tbd.reset_dmac = true;
+@@ -1722,12 +1723,12 @@ static int pl330_update(const struct pl330_info *pi)
+ 	for (ev = 0; ev < pi->pcfg.num_events; ev++) {
+ 		if (val & (1 << ev)) { /* Event occurred */
+ 			struct pl330_thread *thrd;
+-			u32 inten = readl(regs + INTEN);
++			u32 inten = readl(regs + PL330_INTEN);
+ 			int active;
+ 
+ 			/* Clear the event */
+ 			if (inten & (1 << ev))
+-				writel(1 << ev, regs + INTCLR);
++				writel(1 << ev, regs + PL330_INTCLR);
+ 
+ 			ret = 1;
+ 
+@@ -1934,41 +1935,41 @@ static void read_dmac_config(struct pl330_info *pi)
+ 	void __iomem *regs = pi->base;
+ 	u32 val;
+ 
+-	val = readl(regs + CRD) >> CRD_DATA_WIDTH_SHIFT;
++	val = readl(regs + PL330_CRD) >> CRD_DATA_WIDTH_SHIFT;
+ 	val &= CRD_DATA_WIDTH_MASK;
+ 	pi->pcfg.data_bus_width = 8 * (1 << val);
+ 
+-	val = readl(regs + CRD) >> CRD_DATA_BUFF_SHIFT;
++	val = readl(regs + PL330_CRD) >> CRD_DATA_BUFF_SHIFT;
+ 	val &= CRD_DATA_BUFF_MASK;
+ 	pi->pcfg.data_buf_dep = val + 1;
+ 
+-	val = readl(regs + CR0) >> CR0_NUM_CHANS_SHIFT;
++	val = readl(regs + PL330_CR0) >> CR0_NUM_CHANS_SHIFT;
+ 	val &= CR0_NUM_CHANS_MASK;
+ 	val += 1;
+ 	pi->pcfg.num_chan = val;
+ 
+-	val = readl(regs + CR0);
++	val = readl(regs + PL330_CR0);
+ 	if (val & CR0_PERIPH_REQ_SET) {
+ 		val = (val >> CR0_NUM_PERIPH_SHIFT) & CR0_NUM_PERIPH_MASK;
+ 		val += 1;
+ 		pi->pcfg.num_peri = val;
+-		pi->pcfg.peri_ns = readl(regs + CR4);
++		pi->pcfg.peri_ns = readl(regs + PL330_CR4);
+ 	} else {
+ 		pi->pcfg.num_peri = 0;
+ 	}
+ 
+-	val = readl(regs + CR0);
++	val = readl(regs + PL330_CR0);
+ 	if (val & CR0_BOOT_MAN_NS)
+ 		pi->pcfg.mode |= DMAC_MODE_NS;
+ 	else
+ 		pi->pcfg.mode &= ~DMAC_MODE_NS;
+ 
+-	val = readl(regs + CR0) >> CR0_NUM_EVENTS_SHIFT;
++	val = readl(regs + PL330_CR0) >> CR0_NUM_EVENTS_SHIFT;
+ 	val &= CR0_NUM_EVENTS_MASK;
+ 	val += 1;
+ 	pi->pcfg.num_events = val;
+ 
+-	pi->pcfg.irq_ns = readl(regs + CR3);
++	pi->pcfg.irq_ns = readl(regs + PL330_CR3);
+ }
+ 
+ static inline void _reset_thread(struct pl330_thread *thrd)
 -- 
-1.7.9.5
-
+1.7.7.2
