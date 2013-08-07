@@ -1,141 +1,117 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from comal.ext.ti.com ([198.47.26.152]:55637 "EHLO comal.ext.ti.com"
+Received: from mail2.gnudd.com ([213.203.150.91]:56382 "EHLO mail.gnudd.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1030657Ab3HIIjq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 9 Aug 2013 04:39:46 -0400
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [RFC 09/22] OMAPDSS: Add DT support to DSI
-Date: Fri, 9 Aug 2013 11:38:54 +0300
-Message-ID: <1376037547-10859-10-git-send-email-tomi.valkeinen@ti.com>
-In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
-References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+	id S932456Ab3HGKZ6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 7 Aug 2013 06:25:58 -0400
+Date: Wed, 7 Aug 2013 12:19:19 +0200
+From: Davide Ciminaghi <ciminaghi@gnudd.com>
+Subject: [PATCH 11/26] x86 devicetree: add functions for handling
+ setup/teardown of MSI irqs
+Message-ID: <7d9a2146a1b661a22ec52feb8fbe64df984ccb0c.1375867291.git.rubini@gnudd.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+References: <cover.1375867291.git.rubini@gnudd.com>
+In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: linux-kernel@vger.kernel.org
+Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add the code to make the DSI driver work with device tree on OMAP3 and
-OMAP4.
+This patch introduces x86_of_new_msi_irq() and x86_of_del_msi_irq(), which
+shall be invoked by native_setup_msi_irqs() and native_teardown_msi_irq()
+respectively to add/delete irq numbers to/from the "dummy" msi irqdomain.
 
-A minor hack is needed at the moment in the DSI driver: the DSS driver
-needs to know the ID number of a DSI device, as clocks are routed in
-different ways to the DSI devices. At the moment we don't have any
-proper way to manage this, so this patchs adds a simple lookup table
-that is used to deduce the ID from the DSI device's base address.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
+Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
 ---
- drivers/video/omap2/dss/dsi.c | 53 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 52 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/prom.h  |    9 +++++++
+ arch/x86/kernel/devicetree.c |   48 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/video/omap2/dss/dsi.c b/drivers/video/omap2/dss/dsi.c
-index 0c8bd1f..bccf5fc 100644
---- a/drivers/video/omap2/dss/dsi.c
-+++ b/drivers/video/omap2/dss/dsi.c
-@@ -38,6 +38,7 @@
- #include <linux/slab.h>
- #include <linux/debugfs.h>
- #include <linux/pm_runtime.h>
-+#include <linux/of.h>
+diff --git a/arch/x86/include/asm/prom.h b/arch/x86/include/asm/prom.h
+index bade6ac..902b361 100644
+--- a/arch/x86/include/asm/prom.h
++++ b/arch/x86/include/asm/prom.h
+@@ -27,11 +27,20 @@ extern int of_ioapic;
+ extern u64 initial_dtb;
+ extern void add_dtb(u64 data);
+ extern void x86_add_irq_domains(void);
++extern int x86_of_new_msi_irq(struct pci_dev *pdev, unsigned int irq);
++extern void x86_of_del_msi_irq(unsigned int irq);
+ void x86_of_pci_init(void);
+ void x86_dtb_init(void);
+ #else
+ static inline void add_dtb(u64 data) { }
+ static inline void x86_add_irq_domains(void) { }
++
++static inline int x86_of_new_msi_irq(struct pci_dev *pdev, unsigned int irq)
++{
++	return 0;
++}
++
++static inline void x86_of_del_msi_irq(unsigned int irq) { }
+ static inline void x86_of_pci_init(void) { }
+ static inline void x86_dtb_init(void) { }
+ #define of_ioapic 0
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index d1dcfd0..805931b 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -401,6 +401,54 @@ static void __init ioapic_add_ofnode(struct device_node *np)
+ 	printk(KERN_ERR "IOxAPIC at %s is not registered.\n", np->full_name);
+ }
  
- #include <video/omapdss.h>
- #include <video/mipi_display.h>
-@@ -371,6 +372,13 @@ struct dsi_packet_sent_handler_data {
- 	struct completion *completion;
- };
- 
-+struct dsi_module_id_data {
-+	u32 address;
-+	int id;
-+};
++int x86_of_new_msi_irq(struct pci_dev *pdev, unsigned int irq)
++{
++	struct device_node *n = of_node_get(pci_device_to_OF_node(pdev));
++	struct device_node *iparent;
++	struct irq_domain *d;
++	int ret = 0;
++	/* Dummy interrupt specifier */
++	__be32 intspec = 0;
++	const __be32 *addr;
++	struct of_irq oirq;
 +
-+static const struct of_device_id dsi_of_match[];
++	/* Walk up the tree looking for the device's interrupt controller */
++	if (!n)
++		return ret;
++	iparent = of_irq_find_parent(n);
++	of_node_put(n);
++	if (!iparent)
++		return ret;
 +
- #ifdef DEBUG
- static bool dsi_perf;
- module_param(dsi_perf, bool, 0644);
-@@ -5537,7 +5545,6 @@ static int omap_dsihw_probe(struct platform_device *dsidev)
- 	if (!dsi)
- 		return -ENOMEM;
- 
--	dsi->module_id = dsidev->id;
- 	dsi->pdev = dsidev;
- 	dev_set_drvdata(&dsidev->dev, dsi);
- 
-@@ -5587,6 +5594,31 @@ static int omap_dsihw_probe(struct platform_device *dsidev)
- 		return r;
- 	}
- 
-+	if (dsidev->dev.of_node) {
-+		const struct of_device_id *match;
-+		const struct dsi_module_id_data *d;
++	addr = of_get_property(n, "reg", NULL);
++	if (!addr)
++		return ret;
 +
-+		match = of_match_node(dsi_of_match, dsidev->dev.of_node);
-+		if (!match) {
-+			DSSERR("unsupported DSI module\n");
-+			return -ENODEV;
-+		}
++	ret = of_irq_map_raw(iparent, &intspec, 1, addr, &oirq);
++	if (ret < 0)
++		return ret;
 +
-+		d = match->data;
-+
-+		while (d->address != 0 && d->address != dsi_mem->start)
-+			d++;
-+
-+		if (d->address == 0) {
-+			DSSERR("unsupported DSI module\n");
-+			return -ENODEV;
-+		}
-+
-+		dsi->module_id = d->id;
-+	} else {
-+		dsi->module_id = dsidev->id;
++	/* Controller found, now look for the relevant irq domain */
++	d = irq_find_host(oirq.controller);
++	if (!d) {
++		WARN_ON(1);
++		return -ENODEV;
 +	}
++	/* And finally simply associate this irq number with itself */
++	ret = irq_domain_associate(d, irq, irq);
++	return ret;
++}
 +
- 	/* DSI VCs initialization */
- 	for (i = 0; i < ARRAY_SIZE(dsi->vc); i++) {
- 		dsi->vc[i].source = DSI_VC_SOURCE_L4;
-@@ -5641,6 +5673,7 @@ static int omap_dsihw_probe(struct platform_device *dsidev)
- 	else if (dsi->module_id == 1)
- 		dss_debugfs_create_file("dsi2_irqs", dsi2_dump_irqs);
- #endif
++void x86_of_del_msi_irq(unsigned int irq)
++{
++	struct irq_data *irq_data = irq_get_irq_data(irq);
++	if (!irq_data->domain) {
++		WARN_ON(1);
++		return;
++	}
++	irq_domain_disassociate(irq_data->domain, irq);
++}
 +
- 	return 0;
- 
- err_probe:
-@@ -5694,6 +5727,23 @@ static const struct dev_pm_ops dsi_pm_ops = {
- 	.runtime_resume = dsi_runtime_resume,
+ static const struct irq_domain_ops msi_irq_domain_ops = {
+ 	.xlate = irq_domain_xlate_onecell,
  };
- 
-+static const struct dsi_module_id_data dsi_of_data_omap3[] = {
-+	{ .address = 0x4804fc00, .id = 0, },
-+	{ },
-+};
-+
-+static const struct dsi_module_id_data dsi_of_data_omap4[] = {
-+	{ .address = 0x58004000, .id = 0, },
-+	{ .address = 0x58005000, .id = 1, },
-+	{ },
-+};
-+
-+static const struct of_device_id dsi_of_match[] = {
-+	{ .compatible = "ti,omap3-dsi", .data = dsi_of_data_omap3, },
-+	{ .compatible = "ti,omap4-dsi", .data = dsi_of_data_omap4, },
-+	{},
-+};
-+
- static struct platform_driver omap_dsihw_driver = {
- 	.probe		= omap_dsihw_probe,
- 	.remove         = __exit_p(omap_dsihw_remove),
-@@ -5701,6 +5751,7 @@ static struct platform_driver omap_dsihw_driver = {
- 		.name   = "omapdss_dsi",
- 		.owner  = THIS_MODULE,
- 		.pm	= &dsi_pm_ops,
-+		.of_match_table = dsi_of_match,
- 	},
- };
- 
 -- 
-1.8.1.2
-
+1.7.7.2
