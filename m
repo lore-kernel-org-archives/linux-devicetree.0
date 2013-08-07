@@ -1,57 +1,43 @@
-From: Christophe Leroy <christophe.leroy-GgN8y9CXRhA@public.gmane.org>
-Subject: [PATCH] SPI: Set SPI bits per words in an OF DeviceTree SPI node
-Date: Wed, 7 Aug 2013 17:44:45 +0200
-Message-ID: <201308071544.r77Fij2Y006649@localhost.localdomain>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] pinctrl: pinconf_generic: add utility functions for
+ add map/configs
+Date: Wed, 7 Aug 2013 20:27:14 +0200
+Message-ID: <CACRpkdYXmccm-4dP4_cVCH-EPhhw9ww811Qu9ZVjZqN+e+8zVQ@mail.gmail.com>
+References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com>
+	<1374833754-19659-2-git-send-email-ldewangan@nvidia.com>
+	<51F2B384.9050706@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51F2B384.9050706@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Graeme Gregory <gg@slimlogic.co.uk>, kishon@ti.com, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to set up the bits per word together with all other SPI
-parameters in the SPI Node of the OF device tree
+On Fri, Jul 26, 2013 at 7:36 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 07/26/2013 04:15 AM, Laxman Dewangan wrote:
+>> Some of pincontrol driver needs the utility function to create map
+>> list. The utility function needed for adding mux, configs etc.
 
-In the node, you then have to include the 'spi-bits' property.
+It is a noble goal to unify this and thank you *very* much for taking
+it on.
 
-Exemple:
-	fpga-loader@7 {
-		compatible = "cs,fpga-loader";
-		spi-max-frequency = <10000000>;
-		reg = <7>;
-		spi-cs-high;
-		spi-bits = <16>;
-	};
+> Which other drivers already contain this code? Are you planning on
+> converting them over to use these new functions? The code looks
+> familiar, so I assume it's just cut/paste from Tegra with some renames,
+> so I didn't read it through in detail.
+>
+>>  drivers/pinctrl/pinconf-generic.c       |  105 +++++++++++++++++++++++++++++++
+>>  include/linux/pinctrl/pinconf-generic.h |   52 +++++++++++++++
+>
+> I don't think those are the correct files for this code. Presumably
+> there's no reason at all why a pinctrl driver that doesn't require
+> CONFIG_GENERIC_PINCONF can't use these basic utility functions. Perhaps
+> add a new pinctrl-utils file?
 
-Signed-off-by: Christophe Leroy <christophe.leroy-GgN8y9CXRhA@public.gmane.org>
+Agree with Stephen, we need to put this in a separate file, such at
+pinctrl-dt.c or just put it into core.c.
 
---- linux-3.8.13/drivers/spi/spi.c	2013-05-11 22:57:46.000000000 +0200
-+++ linux/drivers/spi/spi.c	2013-08-06 18:19:30.000000000 +0200
-@@ -870,6 +870,11 @@
- 		if (of_find_property(nc, "spi-3wire", NULL))
- 			spi->mode |= SPI_3WIRE;
- 
-+		/* Bits per word */
-+		prop = of_get_property(nc, "spi-bits", &len);
-+		if (prop && len >= sizeof(*prop))
-+			spi->bits_per_word = prop[0];
-+
- 		/* Device speed */
- 		prop = of_get_property(nc, "spi-max-frequency", &len);
- 		if (!prop || len < sizeof(*prop)) {
-
-------------------------------------------------------------------------------
-Get 100% visibility into Java/.NET code with AppDynamics Lite!
-It's a free troubleshooting tool designed for production.
-Get down to code-level detail for bottlenecks, with <2% overhead. 
-Download for free and get started troubleshooting in minutes. 
-http://pubads.g.doubleclick.net/gampad/clk?id=48897031&iu=/4140/ostg.clktrk
+Yours,
+Linus Walleij
