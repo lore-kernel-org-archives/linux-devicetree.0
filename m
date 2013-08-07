@@ -1,99 +1,34 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-qa0-f47.google.com ([209.85.216.47]:64451 "EHLO
-	mail-qa0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758758Ab3HJVcV (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sat, 10 Aug 2013 17:32:21 -0400
-Received: by mail-qa0-f47.google.com with SMTP id o19so430206qap.6
-        for <devicetree@vger.kernel.org>; Sat, 10 Aug 2013 14:32:20 -0700 (PDT)
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57353 "EHLO
+	atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932312Ab3HGSxJ (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 14:53:09 -0400
+Date: Wed, 7 Aug 2013 20:53:07 +0200
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [RESEND PATCH 1/4] arm: socfpga: Enable ARM_TWD for socfpga
+Message-ID: <20130807185307.GA12473@amd.pavel.ucw.cz>
+References: <1375739925-9110-1-git-send-email-dinguyen@altera.com>
+ <1375739925-9110-2-git-send-email-dinguyen@altera.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=U+S__hkbtWDAb5Ezkw0jJ6-tJLFKQPx4KpbvqHfFJnAg@mail.gmail.com>
-References: <1374658699-3961-1-git-send-email-l.krishna@samsung.com>
-	<1374658699-3961-2-git-send-email-l.krishna@samsung.com>
-	<3356224.pISrcKET7X@amdc1227>
-	<CAD=FV=U+S__hkbtWDAb5Ezkw0jJ6-tJLFKQPx4KpbvqHfFJnAg@mail.gmail.com>
-Date: Sat, 10 Aug 2013 14:32:20 -0700
-Message-ID: <CAOesGMj0AeU8ZCGd-t7+hBFvF6u_Vga28eQza7C7jAiJF6zU0w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] watchdog: s3c2410_wdt: parse watchdog dt node to read
- PMU registers adresses
-From: Olof Johansson <olof@lixom.net>
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1375739925-9110-2-git-send-email-dinguyen@altera.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Tomasz Figa <t.figa@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Wim Van Sebroeck <wim@iguana.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: dinguyen@altera.com
+Cc: dinh.linux@gmail.com, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Jul 25, 2013 at 5:32 PM, Doug Anderson <dianders@chromium.org> wrote:
-> Tomasz,
->
-> On Thu, Jul 25, 2013 at 3:27 AM, Tomasz Figa <t.figa@samsung.com> wrote:
->> Hi Leela,
->>
->> On Wednesday 24 of July 2013 15:08:17 Leela Krishna Amudala wrote:
->>> This patch parses the watchdog node to read pmu wdt sys registers
->>> addresses and do mask/unmask enable/disable of WDT in probe and s2r
->>> scenarios.
->>>
->>> Reviewed-by: Doug Anderson <dianders@chromium.org>
->>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
->>> ---
->>>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   14 ++++-
->>>  drivers/watchdog/s3c2410_wdt.c                     |   56
->>> ++++++++++++++++++++ 2 files changed, 69 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
->>> b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt index
->>> 2aa486c..4c798e3 100644
->>> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
->>> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
->>> @@ -7,8 +7,20 @@ occurred.
->>>  Required properties:
->>>  - compatible : should be "samsung,s3c2410-wdt"
->>>  - reg : base physical address of the controller and length of memory
->>> mapped -      region.
->>> +     region and the optional (addresses and length of memory mapped regions
->>> +     of) PMU registers for masking/unmasking WDT.
->>>  - interrupts : interrupt number to the cpu.
->>
->> I don't think PMU registers should be passed like this, even if USB PHY
->> driver currently does it - it needs to be fixed. Every time you are mapping
->> a single 4-byte register, you are creating new mapping for the whole page
->> (4K) containing it. In addition, this makes the WDT driver map IO memory
->> that does not belong to the IP block it handles, which is not nice.
->>
->> I would suggest looking into regmap helpers to implement a driver for the
->> PMU that can share PMU registers with interested drivers.
->
-> We've done this in some other drivers as well.  I remember someone
-> suggested that this was fine when I posted the change to the ADC
-> driver for something similar.
->
-> Do you really think it's worth adding a level of abstraction here?
-> The argument I remember in the past was that it was fine as long as
-> the register itself was used only by this driver.
->
-> If we want to do as you say, we'll have to figure out whether you want
-> to create a new generic interface for this or reuse an existing one.
-> You could kinda think of these bits as enabling power, so you could
-> use the regulator framework.  ...but that framework often gets abused.
->
-> Olof: I think I got your advice when I did the ADC work.  Do you have
-> any advice here?
+On Mon 2013-08-05 16:58:42, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
+> 
+> Update Kconfig to enable TWD.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> Tested-by: Jack Mitchell <jack.mitchell@dbbroadcast.co.uk>
+> Reviewed-by: Pavel Machek <pavel@denx.de>
 
-These tradeoffs are always tricky since it's hard to decide what
-corners are OK to cut a bit off of, and when you have to be a stickler
-for really following hard strict rules and stick to abstraction
-models.
+Tested-by: Pavel Machek <pavel@denx.de>
 
-I think the more reasonable approach is the one you've taken here,
-Doug. I think we risk over-abstracting this otherwise, to little
-actual gain. The register is not shared so there's no conflict in that
-area. The argument that it wastes a 4K page isn't a big deal either,
-since we don't do this everywhere all the time.
-
-I'd rather have the register described in the reg range like this,
-than having the driver go out and find the PMU node and find a magic
-offset into that, with or without an abstraction layer for the PMU
-register access.
-
-
--Olof
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
