@@ -1,33 +1,44 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-qa0-f48.google.com ([209.85.216.48]:36133 "EHLO
-	mail-qa0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933806Ab3HIQI4 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 12:08:56 -0400
-Date: Fri, 9 Aug 2013 12:08:50 -0400
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v3 2/5] sata highbank: enable 64-bit DMA mask when using
- LPAE
-Message-ID: <20130809160850.GP20515@mtj.dyndns.org>
+Received: from smtp161.dfw.emailsrvr.com ([67.192.241.161]:55651 "EHLO
+	smtp161.dfw.emailsrvr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755772Ab3HGPxz (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 11:53:55 -0400
+From: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Subject: [PATCH v3 2/5] sata highbank: enable 64-bit DMA mask when using LPAE
+Date: Wed,  7 Aug 2013 10:52:35 -0500
+Message-Id: <1375890758-30265-2-git-send-email-mark.langsdorf@calxeda.com>
+In-Reply-To: <1375890758-30265-1-git-send-email-mark.langsdorf@calxeda.com>
 References: <1375890758-30265-1-git-send-email-mark.langsdorf@calxeda.com>
- <1375890758-30265-2-git-send-email-mark.langsdorf@calxeda.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1375890758-30265-2-git-send-email-mark.langsdorf@calxeda.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Cc: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com, sergei.shtylyov@cogentembedded.com
+To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob.herring@calxeda.com, sergei.shtylyov@cogentembedded.com
+Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Aug 07, 2013 at 10:52:35AM -0500, Mark Langsdorf wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
+From: Rob Herring <rob.herring@calxeda.com>
 
-Applied to libata/for-3.12.
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
+---
+Changes from v1, v2
+	None.
 
-Thanks.
+ drivers/ata/sata_highbank.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/ata/sata_highbank.c b/drivers/ata/sata_highbank.c
+index e9a4f46..8b40025 100644
+--- a/drivers/ata/sata_highbank.c
++++ b/drivers/ata/sata_highbank.c
+@@ -479,6 +479,9 @@ static int ahci_highbank_probe(struct platform_device *pdev)
+ 	if (hpriv->cap & HOST_CAP_PMP)
+ 		pi.flags |= ATA_FLAG_PMP;
+ 
++	if (hpriv->cap & HOST_CAP_64)
++		dma_set_coherent_mask(dev, DMA_BIT_MASK(64));
++
+ 	/* CAP.NP sometimes indicate the index of the last enabled
+ 	 * port, at other times, that of the last possible port, so
+ 	 * determining the maximum port number requires looking at
 -- 
-tejun
+1.8.1.2
+
