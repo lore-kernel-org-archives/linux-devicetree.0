@@ -1,10 +1,10 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from terminus.zytor.com ([198.137.202.10]:54723 "EHLO mail.zytor.com"
+Received: from terminus.zytor.com ([198.137.202.10]:54234 "EHLO mail.zytor.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S933147Ab3HGWGg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 18:06:36 -0400
-Message-ID: <5202C4C3.6050007@zytor.com>
-Date: Wed, 07 Aug 2013 15:05:55 -0700
+	id S933346Ab3HGVQ6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 7 Aug 2013 17:16:58 -0400
+Message-ID: <5202B90D.1000008@zytor.com>
+Date: Wed, 07 Aug 2013 14:15:57 -0700
 From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH 00/26] STA2X11 devicetree support for amba/pci
@@ -19,22 +19,12 @@ List-ID: <devicetree@vger.kernel.org>
 
 On 08/07/2013 02:12 PM, Alessandro Rubini wrote:
 > 
-> I understand. My impression of devicetree is exactly like that, I must
-> say.  What we have here is a very clean PCI enumeration of it all: we
-> only need to specify the mapping of GPIO pins (i.e. card-detect for
-> mmc) and DMA channels, as all the rest works by itself.
+> Would it make sense to work on devicetree support in x86 bootloaders
+> (especially yours, let's ignore grub)?
 > 
 
-Could you elucidate this a bit more?  Specifically, from the PCI host's
-perspective, how do you know what you are dealing with (presumably PCI
-VID:DID:SVID:SID?)  How exactly does the mapping of PCI BARs and
-INT/MSI/MSI-X channels to the slave device play in?
-
-I think it is safe to say that the device models we have today simply
-don't account for this kind of usage, which, as you say, is a genuine
-problem, and I think we need to understand the problem space better in
-order to properly architect the solution, as I don't think we have one
-right now.
+No, it's already there.  ;)
 
 	-hpa
+
 
