@@ -1,142 +1,121 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from arroyo.ext.ti.com ([192.94.94.40]:48282 "EHLO arroyo.ext.ti.com"
+Received: from mail2.gnudd.com ([213.203.150.91]:56224 "EHLO mail.gnudd.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1030544Ab3HIIkN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 9 Aug 2013 04:40:13 -0400
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [RFC 21/22] OMAPDSS: panel-dpi: Add DT support
-Date: Fri, 9 Aug 2013 11:39:06 +0300
-Message-ID: <1376037547-10859-22-git-send-email-tomi.valkeinen@ti.com>
-In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
-References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+	id S932454Ab3HGKVy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 7 Aug 2013 06:21:54 -0400
+Date: Wed, 7 Aug 2013 12:21:31 +0200
+From: Davide Ciminaghi <ciminaghi@gnudd.com>
+Subject: [PATCH 23/26] AMBA: pci-amba bridge: export function creating
+ pci-amba device names
+Message-ID: <25c849c312f08d161b91a1c7b7ea56e1c7207789.1375867291.git.rubini@gnudd.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+References: <cover.1375867291.git.rubini@gnudd.com>
+In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: linux-kernel@vger.kernel.org
+Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+pci_amba_get_dev_name() will be used by the sta2x11 common clock framework
+to register clkdevs with the same name as the corresponding amba or
+platform device.
+
+Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
+Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
 ---
- drivers/video/omap2/displays-new/panel-dpi.c | 75 ++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+ drivers/amba/pci-amba.c  |   14 ++++++++++++++
+ include/linux/pci-amba.h |   42 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 0 deletions(-)
+ create mode 100644 include/linux/pci-amba.h
 
-diff --git a/drivers/video/omap2/displays-new/panel-dpi.c b/drivers/video/omap2/displays-new/panel-dpi.c
-index 5f8f7e7..31bd184 100644
---- a/drivers/video/omap2/displays-new/panel-dpi.c
-+++ b/drivers/video/omap2/displays-new/panel-dpi.c
-@@ -13,9 +13,12 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
+diff --git a/drivers/amba/pci-amba.c b/drivers/amba/pci-amba.c
+index f272d38..1beeefd 100644
+--- a/drivers/amba/pci-amba.c
++++ b/drivers/amba/pci-amba.c
+@@ -9,6 +9,7 @@
+ #include <linux/amba/bus.h>
+ #include <linux/pci.h>
+ #include <linux/pci_ids.h>
++#include <linux/pci-amba.h>
  #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
+ #include <linux/irq.h>
+ #include <linux/sizes.h>
+@@ -25,6 +26,8 @@
+ */
+ #define IMAP_ROW_LEN (1 + 1 + 1 + 1 + 1)
  
- #include <video/omapdss.h>
- #include <video/omap-panel-data.h>
-+#include <video/of_display_timing.h>
- 
- struct panel_drv_data {
- 	struct omap_dss_device dssdev;
-@@ -182,6 +185,66 @@ static int panel_dpi_probe_pdata(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int panel_dpi_probe_of(struct platform_device *pdev)
-+{
-+	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
-+	struct device_node *node = pdev->dev.of_node;
-+	struct omap_dss_device *in;
-+	struct device_node *src_node;
-+	int r, datalines;
-+	struct display_timing timing;
-+	struct videomode vm;
-+	int gpio;
++static const struct pci_device_id pci_amba_table[];
 +
-+	src_node = of_parse_phandle(node, "video-source", 0);
-+	if (!src_node) {
-+		dev_err(&pdev->dev, "failed to parse video source\n");
-+		return -ENODEV;
-+	}
-+
-+	in = omap_dss_find_output_by_node(src_node);
-+	if (in == NULL) {
-+		dev_err(&pdev->dev, "failed to find video source\n");
-+		return -EPROBE_DEFER;
-+	}
-+	ddata->in = in;
-+
-+	r = of_property_read_u32(node, "data-lines", &datalines);
-+	if (r) {
-+		dev_err(&pdev->dev, "failed to parse datalines\n");
-+		return r;
-+	}
-+
-+	ddata->data_lines = datalines;
-+
-+	gpio = of_get_gpio(node, 0);
-+	if (gpio_is_valid(gpio) || gpio == -ENOENT) {
-+		ddata->enable_gpio = gpio;
-+	} else {
-+		dev_err(&pdev->dev, "failed to parse enable gpio\n");
-+		return gpio;
-+	}
-+
-+	gpio = of_get_gpio(node, 1);
-+	if (gpio_is_valid(gpio) || gpio == -ENOENT) {
-+		ddata->backlight_gpio = gpio;
-+	} else {
-+		dev_err(&pdev->dev, "failed to parse backlight gpio\n");
-+		return gpio;
-+	}
-+
-+	r = of_get_display_timing(node, "panel-timing", &timing);
-+	if (r) {
-+		dev_err(&pdev->dev, "failed to get video timing\n");
-+		return r;
-+	}
-+
-+	videomode_from_timing(&timing, &vm);
-+	videomode_to_omap_video_timings(&vm, &ddata->videomode);
-+
-+	return 0;
-+}
-+
- static int panel_dpi_probe(struct platform_device *pdev)
+ static inline int resource_fits(struct resource *r1, struct resource *r2)
  {
- 	struct panel_drv_data *ddata;
-@@ -198,6 +261,10 @@ static int panel_dpi_probe(struct platform_device *pdev)
- 		r = panel_dpi_probe_pdata(pdev);
- 		if (r)
- 			return r;
-+	} else if (pdev->dev.of_node) {
-+		r = panel_dpi_probe_of(pdev);
-+		if (r)
-+			return r;
- 	} else {
- 		return -ENODEV;
- 	}
-@@ -254,12 +321,20 @@ static int __exit panel_dpi_remove(struct platform_device *pdev)
+ 	return (r1->start >= r2->start) && (r1->end <= r2->end);
+@@ -63,6 +66,17 @@ static int get_dev_name(char **name, struct pci_dev *pdev, int index)
  	return 0;
  }
  
-+static const struct of_device_id panel_dpi_of_match[] = {
-+	{ .compatible = "panel-dpi", },
-+	{},
-+};
++int pci_amba_get_dev_name(char **name, struct pci_dev *pdev, int index)
++{
++	/* Check whether the device is a pci-amba one */
++	if (!pci_match_id(pci_amba_table, pdev))
++		return -ENODEV;
++	if (!name)
++		return -EINVAL;
++	return get_dev_name(name, pdev, index);
++}
++EXPORT_SYMBOL(pci_amba_get_dev_name);
 +
-+MODULE_DEVICE_TABLE(of, panel_dpi_of_match);
+ static int fixup_irq(struct device_node *node,
+ 		     struct device_node *amba_bus,
+ 		     struct pci_dev *pdev)
+diff --git a/include/linux/pci-amba.h b/include/linux/pci-amba.h
+new file mode 100644
+index 0000000..913624e
+--- /dev/null
++++ b/include/linux/pci-amba.h
+@@ -0,0 +1,42 @@
++/*
++ * PCI-AMBA Helpers
++ *
++ * Copyright 2012 ST Microelectronics (Alessandro Rubini, Davide Ciminaghi)
++ *
++ * All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or (at
++ * your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
++ * NON INFRINGEMENT.  See the GNU General Public License for more
++ * details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ *
++ */
++#ifndef _PCI_AMBA_H
++#define _PCI_AMBA_H
 +
- static struct platform_driver panel_dpi_driver = {
- 	.probe = panel_dpi_probe,
- 	.remove = __exit_p(panel_dpi_remove),
- 	.driver = {
- 		.name = "panel-dpi",
- 		.owner = THIS_MODULE,
-+		.of_match_table = panel_dpi_of_match,
- 	},
- };
- 
++#include <linux/of.h>
++
++/*
++ * pci_amba_get_dev_name: allocate and fill in a buffer with a suitable
++ * name for a pci-amba device.
++ *
++ * @name: pointer to a location where the address of the allocated buffer
++ * shall be stored.
++ * @pdev: pointer to the corresponding pci device.
++ * @index: index of device (in case of more than one amba/platform device
++ * per pci device).
++ *
++ */
++extern int pci_amba_get_dev_name(char **name, struct pci_dev *pdev, int index);
++
++#endif /* _PCI_AMBA_H */
 -- 
-1.8.1.2
-
+1.7.7.2
