@@ -1,77 +1,52 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:58095 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752506Ab3HUWku (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 18:40:50 -0400
-Message-ID: <521541EE.4010303@wwwdotorg.org>
-Date: Wed, 21 Aug 2013 16:40:46 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from mail2.gnudd.com ([213.203.150.91]:56319 "EHLO mail.gnudd.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S932458Ab3HGKXq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 7 Aug 2013 06:23:46 -0400
+Date: Wed, 7 Aug 2013 12:17:03 +0200
+From: Alessandro Rubini <rubini@gnudd.com>
+Subject: [PATCH 04/26] x86: add CONFIG_ARM_AMBA, selected by STA2X11
+Message-ID: <3c3bda8fd9406d752a710aa75de613463b712bbe.1375867291.git.rubini@gnudd.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v7 2/3] DMA: Freescale: Add new 8-channel DMA engine device
- tree nodes
-References: <1375094944-3343-1-git-send-email-hongbo.zhang@freescale.com> <1375094944-3343-3-git-send-email-hongbo.zhang@freescale.com>
-In-Reply-To: <1375094944-3343-3-git-send-email-hongbo.zhang@freescale.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+References: <cover.1375867291.git.rubini@gnudd.com>
+In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
 Sender: devicetree-owner@vger.kernel.org
-To: hongbo.zhang@freescale.com
-Cc: vinod.koul@intel.com, djbw@fb.com, leoli@freescale.com, scottwood@freescale.com, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Davide Ciminaghi <ciminaghi@gnudd.com>, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 07/29/2013 04:49 AM, hongbo.zhang@freescale.com wrote:
-> Freescale QorIQ T4 and B4 introduce new 8-channel DMA engines, this patch adds
-> the device tree nodes for them.
+The sta2x11 I/O Hub is a bridge from PCIe to AMBA. It reuses a number
+of amba drivers and needs to activate core bus support.
 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/dma.txt b/Documentation/devicetree/bindings/powerpc/fsl/dma.txt
+Signed-off-by: Alessandro Rubini <rubini@gnudd.com>
+Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
+---
+ arch/x86/Kconfig |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
 
-> +** Freescale Elo3 DMA Controller
-> +   This is EloPlus controller with 8 channels, used in Freescale Txxx and Bxxx
-> +   series chips, such as t1040, t4240, b4860.
-> +
-> +Required properties:
-> +
-> +- compatible        : must include "fsl,elo3-dma"
-
-This should probably list all the SoC-specific compatible values too.
-
-> +- ranges            : describes the mapping between the address space of the
-> +                      DMA channels and the address space of the DMA controller
-
-Oh, so looking at the example, this is simply about being able to write
-the reg value in the child nodes more easily without having to write out
-the full based address of the controller in each child node.
-
-I don't think the binding document should require this; all the binding
-document should care about is that the child nodes have a valid reg
-value. Whether that reg value is <0x100100 0x80> without a ranges in the
-top-level DMA nor or whether that reg value is <0x0 0x80> with a ranges
-value in the top-level DMA node isn't something that the binding should
-specify. Either way will work equally without affecting a driver for the
-DMA controller; the parsing of reg with/without a ranges property is
-more of a core part of DT than anything to do with this binding.
-
-> +- DMA channel nodes:
-> +        - compatible        : must include "fsl,eloplus-dma-channel"
-
-Why do the channel nodes even need a compatible value? Presumably the
-driver for the top-level DMA node will scan these dma-channel nodes to
-extract the information it needs and will simply assume that all these
-nodes are DMA channel nodes rather than something else? I suppose this
-doesn't hurt, it just seems unnecessary unless you foresee other child
-nodes types existing in the future and hence a need to differentiate
-different types of nodes.
-
-> +        - reg               : <registers mapping for channel>
-> +        - interrupts        : <interrupt mapping for DMA channel IRQ>
-
-s/interrupts/specifier/
-
-> +Example:
-> +dma@100300 {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-
-Those weren't mentioned in the required properties list above. Perhaps
-they're considered such a core part of DT functionality that it's not
-necessary, yet some other binding documents do include these properties
-in the list of required properties.
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 52432ab..490b001 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -554,6 +554,7 @@ config STA2X11
+ 	select SWIOTLB
+ 	select MFD_STA2X11
+ 	select ARCH_REQUIRE_GPIOLIB
++	select ARM_AMBA
+ 	default n
+ 	---help---
+ 	  This adds support for boards based on the STA2X11 IO-Hub,
+@@ -2255,6 +2256,9 @@ config TS5500
+ 
+ endif # X86_32
+ 
++config ARM_AMBA
++        bool
++
+ config AMD_NB
+ 	def_bool y
+ 	depends on CPU_SUP_AMD && PCI
+-- 
+1.7.7.2
