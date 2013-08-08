@@ -1,93 +1,40 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from arroyo.ext.ti.com ([192.94.94.40]:48246 "EHLO arroyo.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1030643Ab3HIIjj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 9 Aug 2013 04:39:39 -0400
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [RFC 06/22] OMAPFB: clean up default display search
-Date: Fri, 9 Aug 2013 11:38:51 +0300
-Message-ID: <1376037547-10859-7-git-send-email-tomi.valkeinen@ti.com>
-In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
-References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9681 "EHLO
+	hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752896Ab3HHRD6 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2013 13:03:58 -0400
+Message-ID: <5203D2BE.1010807@nvidia.com>
+Date: Thu, 8 Aug 2013 22:47:50 +0530
+From: Laxman Dewangan <ldewangan@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [PATCH V4] drivers/rtc/rtc-palmas.c: support for backup battery
+ charging
+References: <1375871392-871-1-git-send-email-ldewangan@nvidia.com> <20130807163804.GL28558@e106331-lin.cambridge.arm.com> <520295F3.2020401@nvidia.com> <20130808093340.GG14648@e106331-lin.cambridge.arm.com>
+In-Reply-To: <20130808093340.GG14648@e106331-lin.cambridge.arm.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, Stephen Warren <swarren@nvidia.com>, Pawel Moll <Pawel.Moll@arm.com>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "broonie@kernel.org" <broonie@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Separate the code for finding the default display into a function for
-clarity and to make it easier to extend it in the future.
+On Thursday 08 August 2013 03:03 PM, Mark Rutland wrote:
+> On Wed, Aug 07, 2013 at 07:46:11PM +0100, Laxman Dewangan wrote:
+>>> What happens if we charge at the wrong current?
+>> Not much sure but I think it can create battery damage.
+> If we charge a battery supporting >100mA at a current <100mA, will that
+> cause damage? Or only if we charge above it's supported current?
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- drivers/video/omap2/omapfb/omapfb-main.c | 46 ++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 17 deletions(-)
+Over-current charging can only damage. Lower charging current will not 
+damage, just will take more time to charge.
 
-diff --git a/drivers/video/omap2/omapfb/omapfb-main.c b/drivers/video/omap2/omapfb/omapfb-main.c
-index 27d6905..8bfe973 100644
---- a/drivers/video/omap2/omapfb/omapfb-main.c
-+++ b/drivers/video/omap2/omapfb/omapfb-main.c
-@@ -2407,6 +2407,34 @@ static int omapfb_init_connections(struct omapfb2_device *fbdev,
- 	return 0;
- }
- 
-+static struct omap_dss_device *
-+omapfb_find_default_display(struct omapfb2_device *fbdev)
-+{
-+	const char *def_name;
-+	int i;
-+
-+	/* search with the display name from the user or the board file */
-+
-+	def_name = omapdss_get_default_display_name();
-+
-+	if (def_name) {
-+		for (i = 0; i < fbdev->num_displays; ++i) {
-+			struct omap_dss_device *dssdev;
-+
-+			dssdev = fbdev->displays[i].dssdev;
-+
-+			if (dssdev->name && strcmp(def_name, dssdev->name) == 0)
-+				return dssdev;
-+		}
-+
-+		/* def_name given but not found */
-+		return NULL;
-+	}
-+
-+	/* return the first display we have in the list */
-+	return fbdev->displays[0].dssdev;
-+}
-+
- static int omapfb_probe(struct platform_device *pdev)
- {
- 	struct omapfb2_device *fbdev = NULL;
-@@ -2484,23 +2512,7 @@ static int omapfb_probe(struct platform_device *pdev)
- 	for (i = 0; i < fbdev->num_managers; i++)
- 		fbdev->managers[i] = omap_dss_get_overlay_manager(i);
- 
--	def_display = NULL;
--
--	for (i = 0; i < fbdev->num_displays; ++i) {
--		struct omap_dss_device *dssdev;
--		const char *def_name;
--
--		def_name = omapdss_get_default_display_name();
--
--		dssdev = fbdev->displays[i].dssdev;
--
--		if (def_name == NULL ||
--			(dssdev->name && strcmp(def_name, dssdev->name) == 0)) {
--			def_display = dssdev;
--			break;
--		}
--	}
--
-+	def_display = omapfb_find_default_display(fbdev);
- 	if (def_display == NULL) {
- 		dev_err(fbdev->dev, "failed to find default display\n");
- 		r = -EPROBE_DEFER;
--- 
-1.8.1.2
+>
+> If the latter's true, it might make sense to invert the condition and
+> describe that the battery may be charged at a higher current, with the
+> default being <100mA. That way a missing property in the dt will only
+> result in sub-optimal charging rather than battery damage.
+>
+Ok, fine with this. In this case property will be 
+"ti,backup-battery-charge-high-current".
+
 
