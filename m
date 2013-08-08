@@ -1,252 +1,77 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from [207.46.163.26] ([207.46.163.26]:43271 "EHLO
-	co9outboundpool.messaging.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK)
-	by vger.kernel.org with ESMTP id S1751577Ab3HSMAY (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 19 Aug 2013 08:00:24 -0400
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v8 2/2] ASoC: fsl: Add S/PDIF machine driver
-Date: Mon, 19 Aug 2013 20:08:49 +0800
-Message-ID: <ca3061d70ab8bf59afc59031fa7befcfaed26d51.1376912873.git.b42378@freescale.com>
-In-Reply-To: <cover.1376912873.git.b42378@freescale.com>
-References: <cover.1376912873.git.b42378@freescale.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from service87.mimecast.com ([91.220.42.44]:42064 "EHLO
+	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757836Ab3HHNpY convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2013 09:45:24 -0400
+Message-ID: <1375969519.12043.142.camel@hornet>
+Subject: Re: RFC: device thermal limits represented in device tree nodes
+From: Pawel Moll <pawel.moll@arm.com>
+Date: Thu, 08 Aug 2013 14:45:19 +0100
+In-Reply-To: <20130808085346.GC14648@e106331-lin.cambridge.arm.com>
+References: <51ED40E3.5020703@ti.com> <51EF3186.9060001@wwwdotorg.org>
+	 <1374664745.25700.118.camel@hornet> <51EFED19.5090900@ti.com>
+	 <1374768928.3213.31.camel@hornet> <51F15E42.1060409@ti.com>
+	 <1374773611.3213.44.camel@hornet> <51F2D443.6040909@ti.com>
+	 <1375787649.12043.34.camel@hornet> <5202AB95.9020605@ti.com>
+	 <20130808085346.GC14648@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
-To: broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, s.hauer@pengutronix.de
-Cc: linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, timur@tabi.org, rob.herring@calxeda.com, shawn.guo@linaro.org, festevam@gmail.com, tomasz.figa@gmail.com, swarren@wwwdotorg.org, mark.rutland@arm.com, R65777@freescale.com
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Guenter Roeck <linux@roeck-us.net>, Durgadoss R <durgadoss.r@intel.com>, "Zhang, Rui" <rui.zhang@intel.com>, Wei Ni <wni@nvidia.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch implements a device-tree-only machine driver for Freescale
-i.MX series Soc. It works with spdif_transmitter/spdif_receiver and
-fsl_spdif.c drivers.
+On Thu, 2013-08-08 at 09:53 +0100, Mark Rutland wrote:
+> On Wed, Aug 07, 2013 at 09:18:29PM +0100, Eduardo Valentin wrote:
+> > Pawel, all,
+> > 
+> > On 06-08-2013 07:14, Pawel Moll wrote:
+> > > Apologies about the delay, I was "otherwise engaged" for a week...
+> > > 
+> > 
+> > I do also excuse for my delay, as I was also "engaged" for a week or so.
+> > 
+> > > I hope you haven't lost all motivation to work on this subject, as it's
+> > > really worth the while!
+> > 
+> > Not really! quite the opposite. Although I was looking at some other
+> > stuff, I got this series also tested on different boards and wrote down
+> > a couple of improvements I will be working in the coming days. Indeed,
+> > it is worth moving forward with this work.
+> > 
+> > > 
+> > > On Fri, 2013-07-26 at 20:55 +0100, Eduardo Valentin wrote:
+> > >> On 25-07-2013 13:33, Pawel Moll wrote:
+> > >>> On Thu, 2013-07-25 at 18:20 +0100, Eduardo Valentin wrote:
+> > >>>>>> 	thermal_zone {
+> > >>>>>> 		type = "CPU";
+> > >>>>>
+> > >>>>> So what does this exactly mean? What is so special about CPU? What other
+> > >>>>> types you've got there? (Am I just lazy not looking at the numerous
+> > >>>>> links you provided? ;-)
+> > >>>>
+> > >>>> Hehehe. OK. Type is supposed to describe what your zone is representing.
+> > >>>
+> > >>> As in "a name"? So, for example "The board", "PSU"? What I meant to ask
+> > >>> was: does the string carry any meaning?
+> > > 
+> > > You haven't commended on this...
+> > 
+> > The string is supposed to carry meaning, yes. Couple of common used:
+> > CPU, GPU, PCB, LCD
+> 
+> I think the point Pawel was getting at is that the string doesn't have a
+> *well-defined* meaning that always allows an OS to figure out the set of
+> relevant devices. If we have a thermal zone for "LCD", and have multiple
+> LCDs, which LCDs are covered? If we have a "PCB" zone, does this cover all
+> the devices attached to the PCB, a subset thereof, or the substrate of
+> the PCB itself?
 
-Signed-off-by: Nicolin Chen <b42378@freescale.com>
----
- .../devicetree/bindings/sound/imx-audio-spdif.txt  |   29 +++++
- sound/soc/fsl/Kconfig                              |   11 ++
- sound/soc/fsl/Makefile                             |    2 +
- sound/soc/fsl/imx-spdif.c                          |  134 ++++++++++++++++++++
- 4 files changed, 176 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
- create mode 100644 sound/soc/fsl/imx-spdif.c
+Or: what happens if I type "lcd" instead of "LCD"? Would there be any
+decision made based on this string? Or is it just a label to be used
+somewhere in debugging messages?
 
-diff --git a/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-new file mode 100644
-index 0000000..9a3fa26
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-@@ -0,0 +1,29 @@
-+Freescale i.MX audio complex with S/PDIF transceiver
-+
-+Required properties:
-+
-+  - compatible : "fsl,imx-audio-spdif"
-+
-+  - model : The user-visible name of this sound complex
-+
-+  - spdif-controller : The phandle of the i.MX S/PDIF controller
-+
-+
-+Optional properties:
-+
-+  - spdif-transmitter : The phandle of the spdif-transmitter dummy codec
-+
-+  - spdif-receiver : The phandle of the spdif-receiver dummy codec
-+
-+* Note: At least one of these two properties should be set in the DT binding.
-+
-+
-+Example:
-+
-+sound-spdif {
-+	compatible = "fsl,imx-audio-spdif";
-+	model = "imx-spdif";
-+	spdif-controller = <&spdif>;
-+	spdif-transmitter = <&spdif_tx_codec>;
-+	spdif-receiver = <&spdif_rx_codec>;
-+};
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index cd088cc..a708380 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -193,6 +193,17 @@ config SND_SOC_IMX_SGTL5000
- 	  Say Y if you want to add support for SoC audio on an i.MX board with
- 	  a sgtl5000 codec.
- 
-+config SND_SOC_IMX_SPDIF
-+	tristate "SoC Audio support for i.MX boards with S/PDIF"
-+	select SND_SOC_IMX_PCM_DMA
-+	select SND_SOC_FSL_SPDIF
-+	select SND_SOC_FSL_UTILS
-+	select SND_SOC_SPDIF
-+	help
-+	  SoC Audio support for i.MX boards with S/PDIF
-+	  Say Y if you want to add support for SoC audio on an i.MX board with
-+	  a S/DPDIF.
-+
- config SND_SOC_IMX_MC13783
- 	tristate "SoC Audio support for I.MX boards with mc13783"
- 	depends on MFD_MC13783 && ARM
-diff --git a/sound/soc/fsl/Makefile b/sound/soc/fsl/Makefile
-index 4b5970e..e2aaff7 100644
---- a/sound/soc/fsl/Makefile
-+++ b/sound/soc/fsl/Makefile
-@@ -45,6 +45,7 @@ snd-soc-mx27vis-aic32x4-objs := mx27vis-aic32x4.o
- snd-soc-wm1133-ev1-objs := wm1133-ev1.o
- snd-soc-imx-sgtl5000-objs := imx-sgtl5000.o
- snd-soc-imx-wm8962-objs := imx-wm8962.o
-+snd-soc-imx-spdif-objs :=imx-spdif.o
- snd-soc-imx-mc13783-objs := imx-mc13783.o
- 
- obj-$(CONFIG_SND_SOC_EUKREA_TLV320) += snd-soc-eukrea-tlv320.o
-@@ -53,4 +54,5 @@ obj-$(CONFIG_SND_SOC_MX27VIS_AIC32X4) += snd-soc-mx27vis-aic32x4.o
- obj-$(CONFIG_SND_MXC_SOC_WM1133_EV1) += snd-soc-wm1133-ev1.o
- obj-$(CONFIG_SND_SOC_IMX_SGTL5000) += snd-soc-imx-sgtl5000.o
- obj-$(CONFIG_SND_SOC_IMX_WM8962) += snd-soc-imx-wm8962.o
-+obj-$(CONFIG_SND_SOC_IMX_SPDIF) += snd-soc-imx-spdif.o
- obj-$(CONFIG_SND_SOC_IMX_MC13783) += snd-soc-imx-mc13783.o
-diff --git a/sound/soc/fsl/imx-spdif.c b/sound/soc/fsl/imx-spdif.c
-new file mode 100644
-index 0000000..893f3d1
---- /dev/null
-+++ b/sound/soc/fsl/imx-spdif.c
-@@ -0,0 +1,134 @@
-+/*
-+ * Copyright (C) 2013 Freescale Semiconductor, Inc.
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <sound/soc.h>
-+
-+struct imx_spdif_data {
-+	struct snd_soc_dai_link dai[2];
-+	struct snd_soc_card card;
-+};
-+
-+static int imx_spdif_audio_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *spdif_np, *codec_tx_np, *codec_rx_np;
-+	struct platform_device *spdif_pdev;
-+	struct imx_spdif_data *data;
-+	int ret = 0, num_links = 0;
-+
-+	spdif_np = of_parse_phandle(np, "spdif-controller", 0);
-+	if (!spdif_np) {
-+		dev_err(&pdev->dev, "failed to find spdif-controller\n");
-+		ret = -EINVAL;
-+		goto fail;
-+	}
-+
-+	spdif_pdev = of_find_device_by_node(spdif_np);
-+	if (!spdif_pdev) {
-+		dev_err(&pdev->dev, "failed to find S/PDIF device\n");
-+		ret = -EINVAL;
-+		goto fail;
-+	}
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data) {
-+		dev_err(&pdev->dev, "failed to allocate memory\n");
-+		ret = -ENOMEM;
-+		goto fail;
-+	}
-+
-+	codec_tx_np = of_parse_phandle(np, "spdif-transmitter", 0);
-+	if (codec_tx_np) {
-+		data->dai[num_links].name = "S/PDIF TX";
-+		data->dai[num_links].stream_name = "S/PDIF PCM Playback";
-+		data->dai[num_links].codec_dai_name = "dit-hifi";
-+		data->dai[num_links].codec_of_node = codec_tx_np;
-+		data->dai[num_links].cpu_of_node = spdif_np;
-+		data->dai[num_links].platform_of_node = spdif_np;
-+		num_links++;
-+	}
-+
-+	codec_rx_np = of_parse_phandle(np, "spdif-receiver", 0);
-+	if (codec_rx_np) {
-+		data->dai[num_links].name = "S/PDIF RX";
-+		data->dai[num_links].stream_name = "S/PDIF PCM Capture";
-+		data->dai[num_links].codec_dai_name = "dir-hifi";
-+		data->dai[num_links].codec_of_node = codec_rx_np;
-+		data->dai[num_links].cpu_of_node = spdif_np;
-+		data->dai[num_links].platform_of_node = spdif_np;
-+		num_links++;
-+	}
-+
-+	if (!num_links) {
-+		dev_err(&pdev->dev, "no enabled S/PDIF DAI link\n");
-+		goto fail;
-+	}
-+
-+	data->card.dev = &pdev->dev;
-+	data->card.num_links = num_links;
-+	data->card.dai_link = data->dai;
-+
-+	ret = snd_soc_of_parse_card_name(&data->card, "model");
-+	if (ret)
-+		goto fail;
-+
-+	ret = snd_soc_register_card(&data->card);
-+	if (ret) {
-+		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+fail:
-+	if (codec_tx_np)
-+		of_node_put(codec_tx_np);
-+	if (codec_rx_np)
-+		of_node_put(codec_rx_np);
-+	if (spdif_np)
-+		of_node_put(spdif_np);
-+
-+	return ret;
-+}
-+
-+static int imx_spdif_audio_remove(struct platform_device *pdev)
-+{
-+	struct imx_spdif_data *data = platform_get_drvdata(pdev);
-+
-+	snd_soc_unregister_card(&data->card);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id imx_spdif_dt_ids[] = {
-+	{ .compatible = "fsl,imx-audio-spdif", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, imx_spdif_dt_ids);
-+
-+static struct platform_driver imx_spdif_driver = {
-+	.driver = {
-+		.name = "imx-spdif",
-+		.owner = THIS_MODULE,
-+		.of_match_table = imx_spdif_dt_ids,
-+	},
-+	.probe = imx_spdif_audio_probe,
-+	.remove = imx_spdif_audio_remove,
-+};
-+
-+module_platform_driver(imx_spdif_driver);
-+
-+MODULE_AUTHOR("Freescale Semiconductor, Inc.");
-+MODULE_DESCRIPTION("Freescale i.MX S/PDIF machine driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:imx-spdif");
--- 
-1.7.1
+Paweł
 
 
