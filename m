@@ -1,14 +1,14 @@
-From: Daniel Drake <dsd@laptop.org>
-Subject: Re: [PATCH RESEND 1/2] clk: mmp: use global clock lock
-Date: Thu, 8 Aug 2013 11:17:16 -0600
-Message-ID: <CAMLZHHQNtJM40Po1pj7NSfFc01BDVpeeUOgQwhD25VJ=4tBc1Q@mail.gmail.com>
-References: <20130716181029.C08D8FAAF3@dev.laptop.org>
- <CAN1soZw7_3X5pdvp2M-Wp69=7Cr9bp4DDD0qMps4XT6u1s_9mQ@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RESEND PATCH 1/2] ARM: dts: Change dw-apb-timer-osc and
+ dw-apb-timer-sp to just dw-apb-timer
+Date: Thu, 08 Aug 2013 14:17:46 -0600
+Message-ID: <5203FCEA.7040709@wwwdotorg.org>
+References: <1375740158-10012-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAN1soZw7_3X5pdvp2M-Wp69=7Cr9bp4DDD0qMps4XT6u1s_9mQ@mail.gmail.com>
+In-Reply-To: <1375740158-10012-1-git-send-email-dinguyen@altera.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,36 +18,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Mike Turquette <mturquette@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, paul fox <pgf@laptop.org>, Miao Eric <eric.y.miao@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: dinguyen@altera.com
+Cc: Mark Rutland <mark.rutland@arm.com>, dinh.linux@gmail.com, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@denx.de>, devicetree-discuss@lists.ozlabs.org, Heiko Stuebner <heiko@sntech.de>, Rob Herring <rob.herring@calxeda.com>, John Stultz <john.stultz@linaro.org>, Olof Johansson <olof@lixom.net>, Jamie Iles <jamie@jamieiles.com>, linux-arm-kernel@lists.infradead.org, Ian Campbell <ian.campbell@citrix.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 08/05/2013 04:02 PM, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
+> 
+> "dw-apb-timer-osc" and "dw-apb-timer-sp" are the same implementation of the
+> DW APB timer, just fed by different clocks.
 
-Sorry for the late response.
+I assume patch 1/1 made similar changes to the driver?
 
-On Thu, Jul 25, 2013 at 8:42 PM, Haojian Zhuang
-<haojian.zhuang@gmail.com> wrote:
-> Currently lock is defined in pxa910, pxa168 & mmp2 clock driver. Only
-> one of these driver
-> could be active in real system. So I can't see any benefit to use the
-> shared clock lock among
-> these three drivers.
+> diff --git a/Documentation/devicetree/bindings/rtc/dw-apb.txt b/Documentation/devicetree/bindings/rtc/dw-apb.txt
 
-As far as I can see, my patch does not attempt to share the clock
-between those 3 platforms. Instead it only affects the mmp2 case.
+>  Required properties:
+> -- compatible: "snps,dw-apb-timer-sp" or "snps,dw-apb-timer-osc"
+> +- compatible: "snps,dw-apb-timer"
 
-The mmp2 case does *already* have a shared clock lock defined in
-static bindings (drivers/clk/mmp/clk-mmp2.c):
-static DEFINE_SPINLOCK(clk_lock);
+This change is problematic w.r.t device tree as an ABI. any DT that uses
+the new value "snps,dw-apb-timer" will not work with older software that
+was written to expect the old values.
 
-This lock is shared between MMP apmu and apbc drivers.
+Similarly, if the driver was edited to only support the new value listed
+above, then old DTs will not work with the new driver.
 
-My patch simply moves the location of where the shared clk_lock is
-defined so that it can be additionally used by dynamic DT-driven
-bindings. If you take a quick glance at the next patch, "clk: mmp: add
-support for DT-defined clocks" the reasoning behind this change is
-hopefully even clearer.
+Instead, I think what you need to do is:
 
-Thanks
-Daniel
+a) Update the driver to support all 3 compatible values, so all DTs will
+work with the new driver.
+
+b) Modify the *.dtsi files to uses one of the old compatible values, so
+the new DTs will work with the old driver.
+
+c) Modify the binding document to mention all 3 compatible values, but
+mark the old 2 as deprecated.
