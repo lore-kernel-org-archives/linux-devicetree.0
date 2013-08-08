@@ -1,57 +1,84 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ns.mm-sol.com ([212.124.72.66]:60874 "EHLO extserv.mm-sol.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S965802Ab3HIJzN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 9 Aug 2013 05:55:13 -0400
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [RFC PATCH v2 0/3] DWC3 USB support for Qualcomm platform
-Date: Fri,  9 Aug 2013 12:53:44 +0300
-Message-Id: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
+Received: from smtp.codeaurora.org ([198.145.11.231]:54485 "EHLO
+	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S965398Ab3HHPzT convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2013 11:55:19 -0400
+Subject: Re: [PATCH V2 1/2] DT: Add documentation for ralink-wdt
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+From: Kumar Gala <galak@codeaurora.org>
+In-Reply-To: <1375954919-30737-1-git-send-email-blogic@openwrt.org>
+Date: Thu, 8 Aug 2013 10:55:15 -0500
+Content-Transfer-Encoding: 8BIT
+Message-Id: <0631E84C-AC6E-4B75-9073-D6A2BFD9EB02@codeaurora.org>
+References: <1375954919-30737-1-git-send-email-blogic@openwrt.org>
 Sender: devicetree-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+To: John Crispin <blogic@openwrt.org>
+Cc: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-Hi,
+On Aug 8, 2013, at 4:41 AM, John Crispin wrote:
 
-These patches add basic support for USB3.0 controllers found
-on MSM platforms. USB3.0 core is based on Synopsys DesignWare 
-SuperSpeed IP. 
+> Describe ralink-wdt binding.
+> 
+> Signed-off-by: John Crispin <blogic@openwrt.org>
+> Cc: linux-watchdog@vger.kernel.org
+> Cc: linux-mips@linux-mips.org
+> Cc: devicetree@vger.kernel.org
+> ---
+> V1 used the old devicetree list as Cc.
+> 
+> .../devicetree/bindings/watchdog/ralink-wdt.txt     |   19 +++++++++++++++++++
+> 1 file changed, 19 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/watchdog/ralink-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/ralink-wdt.txt b/Documentation/devicetree/bindings/watchdog/ralink-wdt.txt
+> new file mode 100644
+> index 0000000..a70f0e8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/ralink-wdt.txt
 
-Changes since first version:
-* Split devicetree bindings description file to separate patch
-* Address comments for device bindings description
-* Fix typo in 'gdsc' requlator name.
+Seems like this should be ralink-rt2880-wdt.txt (I'm guessing there are other ralink watchdog timers).
 
-With fake regulators and clocks support drivers could be successfully 
-loaded, but nothing more, of course.
+> @@ -0,0 +1,19 @@
+> +Ralink Watchdog Timers
 
-Generated on top of Felipe 'testing' branch.
+Should probably be Ralink RT2880 Watchdog Timer
 
-Regards,
-Ivan
+> +
+> +Required properties :
+> +- compatible: must be "ralink,rt2880-wdt"
+> +- reg: physical base address of the controller and length of the register range
+> +
+> +Optional properties :
+> +- interrupt-parent: phandle to the INTC device node
+> +- interrupts : Specify the INTC interrupt number
 
-Ivan T. Ivanov (3):
-  usb: dwc3: msm: Add device tree binding information
-  usb: phy: Add Qualcomm SS-USB and HS-USB drivers for DWC3 core
-  usb: dwc3: Add Qualcomm DWC3 glue layer driver
+Since you'll be updating this to drop 'ralink,mt7620a-wdt' how about cleaning up the whitespace around ' :'
 
- .../devicetree/bindings/usb/msm-ssusb.txt          |  101 +++++
- drivers/usb/dwc3/Kconfig                           |    8 +
- drivers/usb/dwc3/Makefile                          |    1 +
- drivers/usb/dwc3/dwc3-msm.c                        |  174 +++++++++
- drivers/usb/phy/Kconfig                            |   11 +
- drivers/usb/phy/Makefile                           |    2 +
- drivers/usb/phy/phy-msm-dwc3-hs.c                  |  340 +++++++++++++++++
- drivers/usb/phy/phy-msm-dwc3-ss.c                  |  387 ++++++++++++++++++++
- 8 files changed, 1024 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
- create mode 100644 drivers/usb/dwc3/dwc3-msm.c
- create mode 100644 drivers/usb/phy/phy-msm-dwc3-hs.c
- create mode 100644 drivers/usb/phy/phy-msm-dwc3-ss.c
+> +
+> +Example:
+> +
+> +	watchdog@120 {
+> +		compatible = "ralink,mt7620a-wdt", "ralink,rt2880-wdt";
+> +		reg = <0x120 0x10>;
+> +
+> +		interrupt-parent = <&intc>;
+> +		interrupts = <1>;
+> +	};
+> -- 
+> 1.7.10.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
--- 
-1.7.9.5
+
+- k
+
+--
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
