@@ -1,29 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] Documentation: Add device tree binding file for MOXA ART SoCs interrupt controller
-Date: Thu, 8 Aug 2013 12:09:54 +0200
-Message-ID: <201308081209.54412.arnd@arndb.de>
-References: <1374137426-6763-1-git-send-email-jonas.jensen@gmail.com> <20130802093559.GB2884@e106331-lin.cambridge.arm.com> <CACmBeS0wbCSU+3DJwtyN5CuX8GDCNWJxeiDq8YUrfTL8DwU_1w@mail.gmail.com>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3 6/6] ARM: davinci: da850: configure system
+ configuration chip(CFGCHIP3) for emac
+Date: Thu, 8 Aug 2013 16:02:30 +0530
+Message-ID: <CA+V-a8smEd_75Ab-_vxjBATr8Q9Sefs0tpxc+kgQJRtuLJad=w@mail.gmail.com>
+References: <1371999607-6483-1-git-send-email-prabhakar.csengg@gmail.com>
+ <1371999607-6483-7-git-send-email-prabhakar.csengg@gmail.com> <51F8A4FF.8020803@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACmBeS0wbCSU+3DJwtyN5CuX8GDCNWJxeiDq8YUrfTL8DwU_1w@mail.gmail.com>
+In-Reply-To: <51F8A4FF.8020803@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Jensen <jonas.jensen@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "arm@kernel.org" <arm@kernel.org>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LAK <linux-arm-kernel@lists.infradead.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, Heiko Schocher <hs@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 08 August 2013, Jonas Jensen wrote:
-> It's true that "interrupt-mask" is redundant, DT "interrupts" hold the
-> same information. I just never found nice way to collect it from DT.
-> 
-> See registers written on line 111:
-> http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/drivers/irqchip/irq-moxart.c#n111
-> 
+Hi Sekhar,
 
-Can't you just update the register whenever an interrupt gets mapped?
+Sorry for the  delayed response I was on leave and now back again up
+and running.
 
-All unused interrupts can start out as edge triggered.
+On Wed, Jul 31, 2013 at 11:17 AM, Sekhar Nori <nsekhar@ti.com> wrote:
+> On Sunday 23 June 2013 08:30 PM, Prabhakar Lad wrote:
+>> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>>
+>> This patch makes a common function for to configure emac and calls
+>> it appropriately in DT and non DT boot mode. The system configuration
+>> chip CFGCHIP3, controls the emac module. This patch appropriately
+>> configures this register for emac and sets DA850_MII_MDIO_CLKEN_PIN
+>> GPIO pin appropriately.
+>>
+[Snip]
 
-	Arnd
+>> +     if (rmii_enabled)
+>> +             val |= BIT(8);
+>> +     else
+>> +             val &= ~BIT(8);
+>> +
+>> +     /* configure the CFGCHIP3 register for RMII or MII */
+>> +     writel(val, cfg_chip3_base);
+>> +
+>> +     ret = davinci_cfg_reg(DA850_GPIO2_6);
+>> +     if (ret)
+>> +             pr_warn("%s:GPIO(2,6) mux setup failed\n", __func__);
+>> +
+>> +     ret = gpio_request(DA850_MII_MDIO_CLKEN_PIN, "mdio_clk_en");
+>> +     if (ret) {
+>> +             pr_warn("Cannot open GPIO %d\n", DA850_MII_MDIO_CLKEN_PIN);
+>> +             return;
+>> +     }
+>
+> You cannot do this in SoC specific code. All boards wont use a GPIO to
+> choose between MII/RMII. You need to do this in a EVM specific manner.
+> This just means you retain the GPIO part of code in board-da850-evm.c
+
+OK
+
+> and for the DT case use a board specific GPIO node. See a similar
+> example in arch/arm/boot/dts/ste-nomadik-s8815.dts and how the code uses
+Alrite something similar to usb-s8815 node.
+
+> it in arch/arm/mach-nomadik/cpu-8815.c.
+>
+But I don't see any code to access this node in this file, can
+you point me to right direction ?
+
+Regards,
+--Prabhakar Lad
