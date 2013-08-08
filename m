@@ -1,41 +1,56 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 1/2] pinctrl: pinconf_generic: add utility functions for
- add map/configs
-Date: Thu, 8 Aug 2013 12:53:15 +0530
-Message-ID: <52034763.9060307@nvidia.com>
-References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com> <1374833754-19659-2-git-send-email-ldewangan@nvidia.com> <51F2B384.9050706@wwwdotorg.org> <CACRpkdYXmccm-4dP4_cVCH-EPhhw9ww811Qu9ZVjZqN+e+8zVQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYXmccm-4dP4_cVCH-EPhhw9ww811Qu9ZVjZqN+e+8zVQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Graeme Gregory <gg@slimlogic.co.uk>, "kishon@ti.com" <kishon@ti.com>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: John Crispin <blogic@openwrt.org>
+Subject: [PATCH 1/2] DT: Add documentation for ralink-wdt
+Date: Thu,  8 Aug 2013 11:26:16 +0200
+Message-ID: <1375953976-28689-1-git-send-email-blogic@openwrt.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Wim Van Sebroeck <wim@iguana.be>
+Cc: John Crispin <blogic@openwrt.org>, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 August 2013 11:57 PM, Linus Walleij wrote:
-> On Fri, Jul 26, 2013 at 7:36 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 07/26/2013 04:15 AM, Laxman Dewangan wrote:
->>> Some of pincontrol driver needs the utility function to create map
->>> list. The utility function needed for adding mux, configs etc.
-> It is a noble goal to unify this and thank you *very* much for taking
-> it on.
+Describe ralink-wdt binding.
 
-Thanks Linus,
-There is 3 patches of version 3 of same series, if it gets 
-concluded/applied then I will have some more patches for removing 
-duplicate code from individual driver.
+Signed-off-by: John Crispin <blogic@openwrt.org>
+Cc: linux-watchdog@vger.kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ .../devicetree/bindings/watchdog/ralink-wdt.txt     |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/ralink-wdt.txt
 
-
->>
->> I don't think those are the correct files for this code. Presumably
->> there's no reason at all why a pinctrl driver that doesn't require
->> CONFIG_GENERIC_PINCONF can't use these basic utility functions. Perhaps
->> add a new pinctrl-utils file?
-> Agree with Stephen, we need to put this in a separate file, such at
-> pinctrl-dt.c or just put it into core.c.
->
-Version 3 address all these.
-Thanks,,
-Laxman
+diff --git a/Documentation/devicetree/bindings/watchdog/ralink-wdt.txt b/Documentation/devicetree/bindings/watchdog/ralink-wdt.txt
+new file mode 100644
+index 0000000..a70f0e8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/ralink-wdt.txt
+@@ -0,0 +1,19 @@
++Ralink Watchdog Timers
++
++Required properties :
++- compatible: must be "ralink,rt2880-wdt"
++- reg: physical base address of the controller and length of the register range
++
++Optional properties :
++- interrupt-parent: phandle to the INTC device node
++- interrupts : Specify the INTC interrupt number
++
++Example:
++
++	watchdog@120 {
++		compatible = "ralink,mt7620a-wdt", "ralink,rt2880-wdt";
++		reg = <0x120 0x10>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <1>;
++	};
+-- 
+1.7.10.4
