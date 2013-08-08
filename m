@@ -1,43 +1,48 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] pinctrl: pinconf_generic: add utility functions for
- add map/configs
-Date: Wed, 7 Aug 2013 20:27:14 +0200
-Message-ID: <CACRpkdYXmccm-4dP4_cVCH-EPhhw9ww811Qu9ZVjZqN+e+8zVQ@mail.gmail.com>
-References: <1374833754-19659-1-git-send-email-ldewangan@nvidia.com>
-	<1374833754-19659-2-git-send-email-ldewangan@nvidia.com>
-	<51F2B384.9050706@wwwdotorg.org>
+From: Jonas Jensen <jonas.jensen@gmail.com>
+Subject: Re: [PATCH] Documentation: Add device tree binding file for MOXA ART
+ SoCs interrupt controller
+Date: Thu, 8 Aug 2013 08:50:07 +0200
+Message-ID: <CACmBeS0wbCSU+3DJwtyN5CuX8GDCNWJxeiDq8YUrfTL8DwU_1w@mail.gmail.com>
+References: <1374137426-6763-1-git-send-email-jonas.jensen@gmail.com>
+	<20130802093559.GB2884@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51F2B384.9050706@wwwdotorg.org>
+In-Reply-To: <20130802093559.GB2884@e106331-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Graeme Gregory <gg@slimlogic.co.uk>, kishon@ti.com, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "arm@kernel.org" <arm@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 26, 2013 at 7:36 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 07/26/2013 04:15 AM, Laxman Dewangan wrote:
->> Some of pincontrol driver needs the utility function to create map
->> list. The utility function needed for adding mux, configs etc.
+Hi Mark,
 
-It is a noble goal to unify this and thank you *very* much for taking
-it on.
-
-> Which other drivers already contain this code? Are you planning on
-> converting them over to use these new functions? The code looks
-> familiar, so I assume it's just cut/paste from Tegra with some renames,
-> so I didn't read it through in detail.
+On 2 August 2013 11:35, Mark Rutland <mark.rutland@arm.com> wrote:
+>>     The MOXA ART irqchip driver was added without accompanying devicetree document.
+>>     ( in next-20130716   drivers/irqchip/irq-moxart.c )
 >
->>  drivers/pinctrl/pinconf-generic.c       |  105 +++++++++++++++++++++++++++++++
->>  include/linux/pinctrl/pinconf-generic.h |   52 +++++++++++++++
+> Aaargh. That should not have happened >:(
+
+Sorry about this, my plan was to submit all documents along with
+moxart platform support. At the time I did not know it is more normal
+to push the binding along with the driver.
+
+>> +- interrupt-mask: Specifies if the interrupt is edge or level-triggered
+>> +  each bit represent an interrupt 0-31 where 1 signify edge
 >
-> I don't think those are the correct files for this code. Presumably
-> there's no reason at all why a pinctrl driver that doesn't require
-> CONFIG_GENERIC_PINCONF can't use these basic utility functions. Perhaps
-> add a new pinctrl-utils file?
+> For the GIC, this gets descrbied in the interrupt sepcifier rather than
+> on the interrupt controller's root node. Is there a reason to do this
+> differently here?
 
-Agree with Stephen, we need to put this in a separate file, such at
-pinctrl-dt.c or just put it into core.c.
+The reason is, IRQ types must be written to the controller as two u32
+registers (IRQ_MODE_REG and IRQ_LEVEL_REG). I could not find an easier
+way (that uses generic things) to do it.
 
-Yours,
-Linus Walleij
+It's true that "interrupt-mask" is redundant, DT "interrupts" hold the
+same information. I just never found nice way to collect it from DT.
+
+See registers written on line 111:
+http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/drivers/irqchip/irq-moxart.c#n111
+
+
+Best regards,
+Jonas
