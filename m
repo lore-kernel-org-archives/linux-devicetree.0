@@ -1,36 +1,52 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from metis.ext.pengutronix.de ([92.198.50.35]:47526 "EHLO
+Received: from metis.ext.pengutronix.de ([92.198.50.35]:48274 "EHLO
 	metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S965293Ab3HHOKS (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2013 10:10:18 -0400
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+	with ESMTP id S933982Ab3HHILy (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2013 04:11:54 -0400
+Date: Thu, 8 Aug 2013 10:11:23 +0200
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
 	<u.kleine-koenig@pengutronix.de>
-Date: Thu,  8 Aug 2013 16:09:50 +0200
-Message-Id: <1375970990-17225-2-git-send-email-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <1375970990-17225-1-git-send-email-u.kleine-koenig@pengutronix.de>
-References: <1375970990-17225-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Subject: [PATCH RESENT v3 2/2] spi: new controller driver for efm32 SoCs
+Message-ID: <20130808081123.GN6104@pengutronix.de>
+References: <1375908794-29147-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1375908794-29147-2-git-send-email-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: [PATCH v4 2/2] spi: new controller driver for efm32 SoCs
+In-Reply-To: <1375908794-29147-2-git-send-email-u.kleine-koenig@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 To: linux-spi@vger.kernel.org
 Cc: Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
 ---
-Changes since v3 sent with Message-Id:20130808081123.GN6104@pengutronix.de:
- - simplify efm32_spi_{rx,tx}_u8
- - drop check about unidirectional transfers, the driver is able to cope with
-   these
+Hello,
+
+this is just a resent to the correct mailing list address.
+
+Best regards
+Uwe
+
+Changes since v1, sent with Message-Id: 1374676604-19922-1-git-send-email-u.kleine-koenig@pengutronix.de
+ - drop empty callbacks now that the core can handle that (patch 1/2)
+ - fix description of location property
+ - use dev_vdbg instead of pr_debug for low level debug messages
+ - drop use of devm_request_irq
+ - drop duplicated documentation entry of cs-gpios
+ - clearify documentation of location property
+ - error out for uni directional transfers instead of dead locking
+ - use devm_ioremap_resource instead of devm_request_and_ioremap
+ - minor coding style fixes
+ - consistently use dev_err to report failures in probe
 
  .../devicetree/bindings/spi/efm32-spi.txt          |  34 ++
  drivers/spi/Kconfig                                |   7 +
  drivers/spi/Makefile                               |   1 +
- drivers/spi/spi-efm32.c                            | 517 +++++++++++++++++++++
+ drivers/spi/spi-efm32.c                            | 527 +++++++++++++++++++++
  include/linux/platform_data/efm32-spi.h            |  14 +
- 5 files changed, 573 insertions(+)
+ 5 files changed, 583 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/spi/efm32-spi.txt
  create mode 100644 drivers/spi/spi-efm32.c
  create mode 100644 include/linux/platform_data/efm32-spi.h
@@ -107,10 +123,10 @@ index 33f9c09..4a1cfb2 100644
  obj-$(CONFIG_SPI_FSL_CPM)		+= spi-fsl-cpm.o
 diff --git a/drivers/spi/spi-efm32.c b/drivers/spi/spi-efm32.c
 new file mode 100644
-index 0000000..ba38452
+index 0000000..e881efd
 --- /dev/null
 +++ b/drivers/spi/spi-efm32.c
-@@ -0,0 +1,517 @@
+@@ -0,0 +1,527 @@
 +/*
 + * Copyright (C) 2012-2013 Uwe Kleine-Koenig for Pengutronix
 + *
@@ -262,27 +278,31 @@ index 0000000..ba38452
 +{
 +	u8 val = 0;
 +
-+	if (ddata->tx_buf) {
-+		val = *ddata->tx_buf;
-+		ddata->tx_buf++;
-+	}
++	if (ddata->tx_len > 0) {
++		if (ddata->tx_buf) {
++			val = *ddata->tx_buf;
++			ddata->tx_buf++;
++		}
 +
-+	ddata->tx_len--;
-+	efm32_spi_write32(ddata, val, REG_TXDATA);
-+	efm32_spi_vdbg(ddata, "%s: tx 0x%x\n", __func__, val);
++		ddata->tx_len--;
++		efm32_spi_write32(ddata, val, REG_TXDATA);
++		efm32_spi_vdbg(ddata, "%s: tx 0x%x\n", __func__, val);
++	}
 +}
 +
 +static void efm32_spi_rx_u8(struct efm32_spi_ddata *ddata)
 +{
-+	u32 rxdata = efm32_spi_read32(ddata, REG_RXDATAX);
-+	efm32_spi_vdbg(ddata, "%s: rx 0x%x\n", __func__, rxdata);
++	if (ddata->rx_len > 0) {
++		u32 rxdata = efm32_spi_read32(ddata, REG_RXDATAX);
++		efm32_spi_vdbg(ddata, "%s: rx 0x%x\n", __func__, rxdata);
 +
-+	if (ddata->rx_buf) {
-+		*ddata->rx_buf = rxdata;
-+		ddata->rx_buf++;
++		if (ddata->rx_buf) {
++			*ddata->rx_buf = rxdata;
++			ddata->rx_buf++;
++		}
++
++		ddata->rx_len--;
 +	}
-+
-+	ddata->rx_len--;
 +}
 +
 +static void efm32_spi_filltx(struct efm32_spi_ddata *ddata)
@@ -298,6 +318,12 @@ index 0000000..ba38452
 +{
 +	struct efm32_spi_ddata *ddata = spi_master_get_devdata(spi->master);
 +	int ret = -EBUSY;
++
++	if (!t->tx_buf || !t->rx_buf) {
++		dev_warn_ratelimited(ddata_to_dev(ddata),
++				"driver doesn't support unidirectional transfers\n");
++		return -ENOSYS;
++	}
 +
 +	spin_lock_irq(&ddata->lock);
 +
@@ -651,3 +677,8 @@ index 0000000..31b19ca
 -- 
 1.8.4.rc0
 
+
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-K�nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
