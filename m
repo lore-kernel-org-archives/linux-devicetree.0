@@ -1,96 +1,93 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from fallback1.mail.ru ([94.100.176.18]:53868 "EHLO
-	fallback1.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S968112Ab3HIQpb (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 12:45:31 -0400
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtSRkMgUkVTRU5EXSBHUElPOiBncGlvLWdlbmVyaWM6IEFkZCBEVCBz?=
- =?UTF-8?B?dXBwb3J0?=
-Mime-Version: 1.0
-Date: Fri, 09 Aug 2013 20:44:58 +0400
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Message-ID: <1376066698.904045799@f229.i.mail.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-In-Reply-To: <52051950.50501@wwwdotorg.org>
-References: <1375183115-30237-1-git-send-email-shc_work@mail.ru>
- <20130809090938.GJ27325@e106331-lin.cambridge.arm.com>
- <52051950.50501@wwwdotorg.org>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:56981 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S967927Ab3HIQbR (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 12:31:17 -0400
+Message-ID: <52051950.50501@wwwdotorg.org>
+Date: Fri, 09 Aug 2013 10:31:12 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
+MIME-Version: 1.0
+Subject: Re: [RFC RESEND] GPIO: gpio-generic: Add DT support
+References: <1375183115-30237-1-git-send-email-shc_work@mail.ru> <20130730162241.GA13634@quad.lixom.net> <51F7FEE5.1010608@wwwdotorg.org> <20130731155608.GR29859@e106331-lin.cambridge.arm.com> <1375786850.12043.22.camel@hornet> <20130807140702.GE28558@e106331-lin.cambridge.arm.com> <520271DC.2020006@wwwdotorg.org> <20130808091155.GD14648@e106331-lin.cambridge.arm.com> <5203E4B4.6080600@wwwdotorg.org> <20130809090938.GJ27325@e106331-lin.cambridge.arm.com>
+In-Reply-To: <20130809090938.GJ27325@e106331-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>
-Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <Pawel.Moll@arm.com>, =?UTF-8?B?T2xvZiBKb2hhbnNzb24=?= <olof@lixom.net>, =?UTF-8?B?bGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc=?= <linux-gpio@vger.kernel.org>, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij@linaro.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>, =?UTF-8?B?cm9iLmhlcnJpbmdAY2FseGVkYS5jb20=?= <rob.herring@calxeda.com>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ian.campbell@citrix.com>, =?UTF-8?B?Z3JhbnQubGlrZWx5QGxpbmFyby5vcmc=?= <grant.likely@linaro.org>, =?UTF-8?B?TWlrZSBUdXJxdWV0dGU=?= <mturquette@linaro.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Pawel Moll <Pawel.Moll@arm.com>, Olof Johansson <olof@lixom.net>, Alexander Shiyan <shc_work@mail.ru>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Mike Turquette <mturquette@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-PiA+Pj4+Pj4gT24gV2VkLCAyMDEzLTA3LTMxIGF0IDE2OjU2ICswMTAwLCBNYXJrIFJ1dGxhbmQg
-d3JvdGU6Cj4gPj4+Pj4+Pj4gQWgsIEkgZ3Vlc3MgdGhlIHF1ZXN0aW9uIG1vcmU6IERvIHdlIHdh
-bnQgZ2VuZXJpYyBiaW5kaW5ncyB0aGF0IGRlc2NyaWJlCj4gPj4+Pj4+Pj4gdGhlIGxvdy1sZXZl
-bCBkZXRhaWxzIG9mIHRoZSBIVyBpbiBhIGNvbXBsZXRlbHkgZ2VuZXJpYyBmYXNoaW9uIHNvIHRo
-YXQKPiA+Pj4+Pj4+PiBuZXcgSFcgY2FuIGJlIHN1cHBvcnRlZCB3aXRoIHplcm8ga2VybmVsIGNo
-YW5nZXMsIG9yIGRvIHdlIHdhbnQgYSBzaW1wbGUKPiA+Pj4+Pj4+PiBkcml2ZXIgd2l0aCBhIGxv
-b2t1cCB0YWJsZSB0aGF0IG1hcHMgZnJvbSBjb21wYXRpYmxlIHZhbHVlIHRvIHRoZSBIVwo+ID4+
-Pj4+Pj4+IGNvbmZpZ3VyYXRpb24/IE9uZSBvZiB0aGUgcG90ZW50aWFsIGJlbmVmaXRzIG9mIERU
-IGlzIHRvIGJlIGFibGUgdG8KPiA+Pj4+Pj4+PiBzdXBwb3J0IG5ldyBIVyB3aXRob3V0IGNvZGUg
-Y2hhbmdlcywgYWx0aG91Z2ggcGVyaGFwcyB0aGF0J3MgbW9yZQo+ID4+Pj4+Pj4+IHR5cGljYWxs
-eSBjb25zaWRlcmVkIGluIHRoZSBjb250ZXh0IG9mIG5ldyBib2FyZHMgcmF0aGVyIHRoYW4gbmV3
-IElQCj4gPj4+Pj4+Pj4gYmxvY2tzIG9yIFNvQ3MuCj4gPj4+Pj4+Cj4gPj4+Pj4+IC4uLiBvciBG
-UEdBcyB0aGF0IGNhbiBiZSBzeW50aGVzaXplZCB3aXRoIHJhbmRvbSBjb2xsZWN0aW9uIG9mIHN0
-YW5kYXJkCj4gPj4+Pj4+IElQIGJsb2Nrcy4gV2l0aCBYaWxpbngncyBaeW5xIGFuZCBBbHRlcmEn
-cyBTT0NGUEdBIHRoaXMgaXMgZ2V0dGluZwo+ID4+Pj4+PiBzaW1wbGVyIGFuZCBzaW1wbGVyLi4u
-Cj4gPj4+Pj4+Cj4gPj4+Pj4+PiBJIHRoaW5rIHRoYXQgZ29pbmcgZm9yd2FyZCBpdCB3b3VsZCBi
-ZSBiZXR0ZXIgdG8gaGF2ZSBoYXZlIGEgY29tcGF0aWJsZQo+ID4+Pj4+Pj4gc3RyaW5nIHBlciBk
-aWZmZXJlbnQgZGV2aWNlLiBBcyBPbG9mIHBvaW50ZWQgb3V0LCB3ZSdyZSBsZWFraW5nIHRoZSB3
-YXkKPiA+Pj4+Pj4+IHdlIGN1cnJlbnRseSBoYW5kbGUgdGhpbmdzIGluIExpbnV4IGludG8gdGhl
-IGJpbmRpbmcsIHJhdGhlciB0aGFuCj4gPj4+Pj4+PiBwcmVjaXNlbHkgZGVzY3JpYmluZyB0aGUg
-aGFyZHdhcmUgKHdpdGggYSB1bmlxdWUgY29tcGF0aWJsZSBzdHJpbmcpLiBJJ20KPiA+Pj4+Pj4+
-IG5vdCBzdXJlIGlmIHRoaXMgaXMgbXVjaCBiZXR0ZXIgdGhhbiBlbWJlZGRpbmcgYSBieXRlY29k
-ZSBkZXNjcmliaW5nIGhvdwo+ID4+Pj4+Pj4gdG8gcG9rZSBkZXZpY2VzLgo+ID4+Pj4KPiA+Pj4+
-IFRoaXMgcmVhbGx5IGlzbid0IGxlYWtpbmcgaW5mb3JtYXRpb24gYWJvdXQgaG93IExpbnV4IGhh
-bmRsZXMgdGhlCj4gPj4+PiBkZXZpY2UuIEl0J3Mgc2ltcGx5IHNheWluZyB0aGF0IHRoZXJlIGlz
-IGEgR1BJTyBjb250cm9sbGVyIHdob3NlIEhXIGlzCj4gPj4+PiBhYmxlIHRvIGJlIGRlc2NyaWJl
-ZCBieSBhIHNpbXBsZS9nZW5lcmljIGJpbmRpbmcsIGFuZCB0aGF0IGJpbmRpbmcKPiA+Pj4+IHBy
-b3ZpZGVzIGZ1bGwgZGV0YWlscyBvZiB0aGUgcmVnaXN0ZXIgbGF5b3V0LiBPdGhlciBPU3MgY2Fu
-IGhhbmRsZSB0aGlzCj4gPj4+PiBkaWZmZXJlbnRseTsgc2VlIGJlbG93IC4uLgo+ID4+Pgo+ID4+
-PiBJIHdvcnJ5IHRoYXQgaXQgZG9lc24ndCBwcm92aWRlIGEgZnVsbCBkZXNjcmlwdGlvbiwgYnV0
-IHJhdGhlciBhCj4gPj4+IGRlc2NyaXB0aW9uIG9mIHRoZSBzdWJzZXQgb2YgdGhlIGhhcmR3YXJl
-IHVzZWQgYnkgdGhlIGRyaXZlci4KPiA+Pgo+ID4+IEkgZG9uJ3Qgc2VlIHRoYXQgYXMgYSBwcm9i
-bGVtLgo+ID4+Cj4gPj4gQSBwYXJ0aWN1bGFyIERUIGZpbGUgcHJvdmlkZXMgYSBkZXNjcmlwdGlv
-biBvZiBhbiBpbnRlcmZhY2UgdG8gSFcuIFRvIG15Cj4gPj4gbWluZCwgaWYgdGhhdCBwYXJ0aWN1
-bGFyIERUIGRvZXNuJ3QgZGVzY3JpYmUgZXZlcnl0aGluZyBhYm91dCBhCj4gPj4gcGFydGljdWxh
-ciBIVyBtb2R1bGUgKGUuZy4gc29tZSBhZHZhbmNlZCBmZWF0dXJlIGNhbid0IGJlIGVuYWJsZWQp
-LAo+ID4+IHRoYXQncyBiYXNpY2FsbHkgZXF1aXZhbGVudCB0byBub3QgZGVzY3JpYmluZyBhc3Bl
-Y3Qgb2YgdGhlIGJvYXJkL3N5c3RlbQo+ID4+IChzbyBlLmcuIHNvbWUgSTJDIGRldmljZSBpc24n
-dCByZXByZXNlbnRlZCBhdCBhbGwsIGFuZCBoZW5jZSBzb21lCj4gPj4gdGVtcGVyYXR1cmUgcHJv
-YmUgY2FuJ3QgYmUgbW9uaXRvcmVkKS4KPiA+IAo+ID4gTXkgY29uY2VybiBpcyBzaW1wbHkgdGhh
-dCBpZiBwZW9wbGUgY2FuIGdldCBiYXNpYyBmdW5jdGlvbmFsaXR5IHdpdGggdGhlCj4gPiBnZW5l
-cmljIGRyaXZlciB0aGV5IHdvbid0IGJvdGhlciBkZXNjcmliaW5nIHRoZSBkZXRhaWxzIG9mIHRo
-ZSBtb3JlCj4gPiBzcGVjaWZpYyBiaW5kaW5nLCBhbmQgeW91J2xsIG5ldmVyIGJlIGFibGUgdG8g
-dXNlIHRoZSBib2FyZCB3aXRoIGEKPiA+IGJldHRlciBkcml2ZXIgd2l0aG91dCBoYXZpbmcgdG8g
-bW9kaWZ5IHRoZSBkdCBsYXRlci4KPiA+IAo+ID4gSSBndWVzcyB0aGUgcXVlc3Rpb24gYm9pbHMg
-ZG93biB0byBob3cgbXVjaCB3ZSBjYXJlIGFib3V0IHRoYXQKPiA+IHNpdHVhdGlvbi4KPiAKPiBJ
-IHBlcnNvbmFsbHkgdGhpbmsgaXQncyBmaW5lLiBJZiBwZW9wbGUgb25seSB3YW50IHRvIGV4cG9z
-ZSB0aGUgYmFzaWMKPiBmdW5jdGlvbmFsaXR5IGFuZCBjYW4gZG8gc28gd2l0aCBzaW1wbGUtZ3Bp
-bywgSSBkb24ndCBzZWUgYW55IHByb2JsZW0gYXQKPiBhbGwgd2l0aCB0aGF0LiAoV2h5IHNob3Vs
-ZCB3ZSBjYXJlIHRoYXQgYSBiaW5kaW5nIGRvZXNuJ3QgZXhwb3NlIGFsbAo+IGZlYXR1cmVzIG9m
-IHRoZSBkZXZpY2U/IEknbSBzdXJlIHRoZXJlIGFyZSBtYW55IHVuZG9jdW1lbnRlZCBmZWF0dXJl
-cywKPiBlLmcuIGRlYnVnL2JhY2tkb29yLCBpbiBIVyB0aGF0IHdlIGRvbid0IGV2ZW4ga25vdyBl
-eGlzdCBhbmQgc28gZG9uJ3QKPiBrbm93IGFyZW4ndCBleHBvc2VkIGJ5IHZhcmlvdXMgYmluZGlu
-Z3MpCj4gCj4gSWYgc29tZW9uZSBsYXRlciBmaW5kcyBpdCB1c2VmdWwgdG8gZXhwb3NlIG1vcmUg
-ZnVuY3Rpb25hbGl0eSB0aGFuIGlzCj4gc2Vuc2libGUgdG8gZXhwb3NlIHRocm91Z2ggc2ltcGxl
-LWdwaW8sIHRoZW4gYSBIVy1zcGVjaWZpYyBiaW5kaW5nIGNhbgo+IGJlIGFkZGVkIGZvciB0aGF0
-IHB1cnBvc2UsIGFuZCB0aGUgLmR0cyBmaWxlIGFtZW5kZWQgdG8gdXNlIHRoYXQuCj4gCj4gVGhl
-IG1vcmUgSSB0aGluayBhYm91dCB0aGlzLCB0aGUgbW9yZSBJIHRoaW5rIHRoYXQgc2ltcGx5IGhh
-dmluZwo+IGRpc2pvaW50IHNpbXBsZSBhbmQgSFctc3BlY2lmaWMgYmluZGluZ3MgbWFrZXMgc2Vu
-c2UuCj4gCj4gSW4gdGhhdCBjYXNlLCB0aGUgbmV3IERUIHdvbid0IGJlIGNvbXBhdGlibGUgd2l0
-aCBhbiBvbGQga2VybmVsLCBidXQgSQo+IHRoaW5rIHRoYXQncyByZWFzb25hYmxlLCBzaW5jZSBp
-dCB3YXMgZXhwbGljaXRseSBjaGFuZ2VkIHRvIGltcGxlbWVudAo+IG5ldyBmZWF0dXJlcy4KPiAK
-PiBJIHRoaW5rIHdlIHNob3VsZCByZXNvbHZlIHRoaXMgYXNwZWN0IGZpcnN0IGJlZm9yZSBjb25z
-aWRlcmluZyB0aGUKPiBkZXRhaWxzLiBJJ20gY3VyaW91cyB3aGF0IG90aGVyIERUIG1haW50YWlu
-ZXJzIGFuZCB1c2VycyB0aGluayBhYm91dAo+IHRoaXMgdG9waWM/CgpJIHdhbnQgdG8gYWRkIGZy
-b20gbXlzZWxmIHRoYXQgdGhlIGFiaWxpdHkgdG8gdXNlIGEgc2ltcGxlLWdwaW8gaW50ZXJmYWNl
-Cm1ha2VzIHRoaW5ncyB2ZXJ5IHNpbXBsZSA6KSBBcyBhbiBleGFtcGxlLCBJIGNpdGUgb25lIG9m
-IHRoZSBhcmNoaXRlY3R1cmVzCm9uIHdoaWNoIEkgd29yay4gQVJNIENMUFM3MTFYLiBJIGNhbiBm
-cmVlbHkgdXNlIGEgc2ltcGxlLWdwaW8gZHJpdmVyIGluc3RlYWQKb2YgdGhlIHNwZWNpYWwgZHJp
-dmVyLCBzaW5jZSB0aGUgYXJjaGl0ZWN0dXJlIGRvZXMgbm90IGhhdmUgYW55IG90aGVyIGNhcGFj
-aXR5CmZvciB0aGUgcGlucyAoaW50ZXJydXB0cywgZXRjLikuCkJ1dCBtb3N0bHksIEkgaW50ZW5k
-ZWQgdG8gdXNlIHRoaXMgZHJpdmVyIGZvciBzdWNoIHRoaW5ncyBsaWtlIFBMRCwgNzRIQzI0eCwK
-NzRIQzU3eCwgZXRjLiBvbiB0aGUgYnVzLgotLS0K
+On 08/09/2013 03:09 AM, Mark Rutland wrote:
+> On Thu, Aug 08, 2013 at 07:34:28PM +0100, Stephen Warren wrote:
+>> On 08/08/2013 03:11 AM, Mark Rutland wrote:
+>>> On Wed, Aug 07, 2013 at 05:12:12PM +0100, Stephen Warren wrote:
+>>>> On 08/07/2013 08:07 AM, Mark Rutland wrote:
+>>>>> On Tue, Aug 06, 2013 at 12:00:50PM +0100, Pawel Moll wrote:
+>>>>>> On Wed, 2013-07-31 at 16:56 +0100, Mark Rutland wrote:
+>>>>>>>> Ah, I guess the question more: Do we want generic bindings that describe
+>>>>>>>> the low-level details of the HW in a completely generic fashion so that
+>>>>>>>> new HW can be supported with zero kernel changes, or do we want a simple
+>>>>>>>> driver with a lookup table that maps from compatible value to the HW
+>>>>>>>> configuration? One of the potential benefits of DT is to be able to
+>>>>>>>> support new HW without code changes, although perhaps that's more
+>>>>>>>> typically considered in the context of new boards rather than new IP
+>>>>>>>> blocks or SoCs.
+>>>>>>
+>>>>>> ... or FPGAs that can be synthesized with random collection of standard
+>>>>>> IP blocks. With Xilinx's Zynq and Altera's SOCFPGA this is getting
+>>>>>> simpler and simpler...
+>>>>>>
+>>>>>>> I think that going forward it would be better to have have a compatible
+>>>>>>> string per different device. As Olof pointed out, we're leaking the way
+>>>>>>> we currently handle things in Linux into the binding, rather than
+>>>>>>> precisely describing the hardware (with a unique compatible string). I'm
+>>>>>>> not sure if this is much better than embedding a bytecode describing how
+>>>>>>> to poke devices.
+>>>>
+>>>> This really isn't leaking information about how Linux handles the
+>>>> device. It's simply saying that there is a GPIO controller whose HW is
+>>>> able to be described by a simple/generic binding, and that binding
+>>>> provides full details of the register layout. Other OSs can handle this
+>>>> differently; see below ...
+>>>
+>>> I worry that it doesn't provide a full description, but rather a
+>>> description of the subset of the hardware used by the driver.
+>>
+>> I don't see that as a problem.
+>>
+>> A particular DT file provides a description of an interface to HW. To my
+>> mind, if that particular DT doesn't describe everything about a
+>> particular HW module (e.g. some advanced feature can't be enabled),
+>> that's basically equivalent to not describing aspect of the board/system
+>> (so e.g. some I2C device isn't represented at all, and hence some
+>> temperature probe can't be monitored).
+> 
+> My concern is simply that if people can get basic functionality with the
+> generic driver they won't bother describing the details of the more
+> specific binding, and you'll never be able to use the board with a
+> better driver without having to modify the dt later.
+> 
+> I guess the question boils down to how much we care about that
+> situation.
+
+I personally think it's fine. If people only want to expose the basic
+functionality and can do so with simple-gpio, I don't see any problem at
+all with that. (Why should we care that a binding doesn't expose all
+features of the device? I'm sure there are many undocumented features,
+e.g. debug/backdoor, in HW that we don't even know exist and so don't
+know aren't exposed by various bindings)
+
+If someone later finds it useful to expose more functionality than is
+sensible to expose through simple-gpio, then a HW-specific binding can
+be added for that purpose, and the .dts file amended to use that.
+
+The more I think about this, the more I think that simply having
+disjoint simple and HW-specific bindings makes sense.
+
+In that case, the new DT won't be compatible with an old kernel, but I
+think that's reasonable, since it was explicitly changed to implement
+new features.
+
+I think we should resolve this aspect first before considering the
+details. I'm curious what other DT maintainers and users think about
+this topic?
