@@ -1,64 +1,241 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from devils.ext.ti.com ([198.47.26.153]:40505 "EHLO
-	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S967587Ab3HINce (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 09:32:34 -0400
-Date: Fri, 9 Aug 2013 16:32:13 +0300
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [RFC PATCH v2 3/3] usb: dwc3: Add Qualcomm DWC3 glue layer driver
-Message-ID: <20130809133213.GJ12041@radagast>
-Reply-To: <balbi@ti.com>
+Received: from ns.mm-sol.com ([212.124.72.66]:60877 "EHLO extserv.mm-sol.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S965837Ab3HIJzN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 05:55:13 -0400
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [RFC PATCH v2 3/3] usb: dwc3: Add Qualcomm DWC3 glue layer driver
+Date: Fri,  9 Aug 2013 12:53:47 +0300
+Message-Id: <1376042027-9798-4-git-send-email-iivanov@mm-sol.com>
+In-Reply-To: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
 References: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
- <1376042027-9798-4-git-send-email-iivanov@mm-sol.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="liqSWPDvh3eyfZ9k"
-Content-Disposition: inline
-In-Reply-To: <1376042027-9798-4-git-send-email-iivanov@mm-sol.com>
 Sender: devicetree-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: balbi@ti.com
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-ID: <devicetree@vger.kernel.org>
 
---liqSWPDvh3eyfZ9k
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-On Fri, Aug 09, 2013 at 12:53:47PM +0300, Ivan T. Ivanov wrote:
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
->=20
-> DWC3 glue layer is hardware layer around Synopsys DesignWare
-> USB3 core. Its purpose is to supply Synopsys IP with required
-> clocks, voltages and interface it with the rest of the SoC.
->=20
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+DWC3 glue layer is hardware layer around Synopsys DesignWare
+USB3 core. Its purpose is to supply Synopsys IP with required
+clocks, voltages and interface it with the rest of the SoC.
 
-same comments from previous version.
+Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+---
+ drivers/usb/dwc3/Kconfig    |    8 ++
+ drivers/usb/dwc3/Makefile   |    1 +
+ drivers/usb/dwc3/dwc3-msm.c |  174 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 183 insertions(+)
+ create mode 100644 drivers/usb/dwc3/dwc3-msm.c
 
---=20
-balbi
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 3e225d5..e2032c4 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -70,6 +70,14 @@ config USB_DWC3_PCI
+ 	  One such PCIe-based platform is Synopsys' PCIe HAPS model of
+ 	  this IP.
+ 
++config USB_DWC3_MSM
++	tristate "Qualcomm MSM/APQ Platforms"
++	default USB_DWC3
++	select USB_MSM_DWC3_PHYS
++	help
++	  Recent Qualcomm SoCs ship with one DesignWare Core USB3 IP inside,
++	  say 'Y' or 'M' if you have one such device.
++
+ comment "Debugging features"
+ 
+ config USB_DWC3_DEBUG
+diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
+index dd17601..5226681 100644
+--- a/drivers/usb/dwc3/Makefile
++++ b/drivers/usb/dwc3/Makefile
+@@ -32,3 +32,4 @@ endif
+ obj-$(CONFIG_USB_DWC3_OMAP)		+= dwc3-omap.o
+ obj-$(CONFIG_USB_DWC3_EXYNOS)		+= dwc3-exynos.o
+ obj-$(CONFIG_USB_DWC3_PCI)		+= dwc3-pci.o
++obj-$(CONFIG_USB_DWC3_MSM)		+= dwc3-msm.o
+diff --git a/drivers/usb/dwc3/dwc3-msm.c b/drivers/usb/dwc3/dwc3-msm.c
+new file mode 100644
+index 0000000..f442249
+--- /dev/null
++++ b/drivers/usb/dwc3/dwc3-msm.c
+@@ -0,0 +1,174 @@
++/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++#include <linux/usb/phy.h>
++
++struct dwc3_msm {
++	struct device		*dev;
++	void __iomem		*base;
++
++	struct clk		*core_clk;
++	struct clk		*iface_clk;
++	struct clk		*sleep_clk;
++	struct clk		*utmi_clk;
++
++	struct regulator	*gdsc;
++};
++
++static int dwc3_msm_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct dwc3_msm *mdwc;
++	struct resource *res;
++	void __iomem *tcsr;
++	int ret = 0;
++
++	dev_info(&pdev->dev, "MSM DWC3\n");
++
++	mdwc = devm_kzalloc(&pdev->dev, sizeof(*mdwc), GFP_KERNEL);
++	if (!mdwc) {
++		dev_err(&pdev->dev, "not enough memory\n");
++		return -ENOMEM;
++	}
++
++	platform_set_drvdata(pdev, mdwc);
++	mdwc->dev = &pdev->dev;
++
++	mdwc->gdsc = devm_regulator_get(mdwc->dev, "gdsc");
++
++	mdwc->core_clk = devm_clk_get(&pdev->dev, "core_clk");
++	if (IS_ERR(mdwc->core_clk)) {
++		dev_err(&pdev->dev, "failed to get core_clk\n");
++		return PTR_ERR(mdwc->core_clk);
++	}
++
++	mdwc->iface_clk = devm_clk_get(&pdev->dev, "iface_clk");
++	if (IS_ERR(mdwc->iface_clk)) {
++		dev_err(&pdev->dev, "failed to get iface_clk\n");
++		return PTR_ERR(mdwc->iface_clk);
++	}
++
++	mdwc->sleep_clk = devm_clk_get(&pdev->dev, "sleep_clk");
++	if (IS_ERR(mdwc->sleep_clk)) {
++		dev_err(&pdev->dev, "failed to get sleep_clk\n");
++		return  PTR_ERR(mdwc->sleep_clk);
++	}
++
++	mdwc->utmi_clk = devm_clk_get(&pdev->dev, "utmi_clk");
++	if (IS_ERR(mdwc->utmi_clk)) {
++		dev_err(&pdev->dev, "failed to get utmi_clk\n");
++		return  PTR_ERR(mdwc->utmi_clk);
++	}
++
++	if (!IS_ERR(mdwc->gdsc)) {
++		ret = regulator_enable(mdwc->gdsc);
++		if (ret)
++			dev_err(mdwc->dev, "unable to enable usb3 gdsc\n");
++	}
++
++	/*
++	 * DWC3 Core requires its CORE CLK (aka master / bus clk) to
++	 * run at 125Mhz in SSUSB mode and >60MHZ for HSUSB mode.
++	 */
++	clk_set_rate(mdwc->core_clk, 125000000);
++	clk_prepare_enable(mdwc->core_clk);
++	clk_prepare_enable(mdwc->iface_clk);
++	clk_prepare_enable(mdwc->sleep_clk);
++	clk_prepare_enable(mdwc->utmi_clk);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	tcsr = devm_ioremap_resource(&pdev->dev, res);
++	if (!tcsr) {
++		dev_dbg(&pdev->dev, "tcsr ioremap failed\n");
++	} else {
++		/* TODO: This has to be revised */
++
++		/* Enable USB3 on the primary USB port. */
++		writel_relaxed(0x1, tcsr);
++		/*
++		 * Ensure that TCSR write is completed before
++		 * USB registers initialization.
++		 */
++		mb();
++	}
++
++	ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to add create dwc3 core\n");
++		goto dis_clks;
++	}
++
++	return 0;
++
++dis_clks:
++	clk_disable_unprepare(mdwc->utmi_clk);
++	clk_disable_unprepare(mdwc->sleep_clk);
++	clk_disable_unprepare(mdwc->iface_clk);
++	clk_disable_unprepare(mdwc->core_clk);
++	if (!IS_ERR(mdwc->gdsc)) {
++		ret = regulator_disable(mdwc->gdsc);
++		if (ret)
++			dev_err(mdwc->dev, "cannot disable usb3 gdsc\n");
++	}
++
++	return ret;
++}
++
++static int dwc3_msm_remove(struct platform_device *pdev)
++{
++	struct dwc3_msm	*mdwc = platform_get_drvdata(pdev);
++	int ret;
++
++	clk_disable_unprepare(mdwc->utmi_clk);
++	clk_disable_unprepare(mdwc->sleep_clk);
++	clk_disable_unprepare(mdwc->iface_clk);
++	clk_disable_unprepare(mdwc->core_clk);
++
++	if (!IS_ERR(mdwc->gdsc)) {
++		ret = regulator_disable(mdwc->gdsc);
++		if (ret)
++			dev_err(mdwc->dev, "cannot disable usb3 gdsc\n");
++	}
++
++	return 0;
++}
++
++static const struct of_device_id of_dwc3_matach[] = {
++	{
++		.compatible = "qcom,dwc3",
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, of_dwc3_matach);
++
++static struct platform_driver dwc3_msm_driver = {
++	.probe		= dwc3_msm_probe,
++	.remove		= dwc3_msm_remove,
++	.driver		= {
++		.name	= "msm-dwc3",
++		.owner	= THIS_MODULE,
++		.of_match_table	= of_dwc3_matach,
++	},
++};
++
++module_platform_driver(dwc3_msm_driver);
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("DesignWare USB3 MSM Glue Layer");
+-- 
+1.7.9.5
 
---liqSWPDvh3eyfZ9k
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSBO9dAAoJEIaOsuA1yqREA5kP/26Un/6Qx06IuL2gpD2oTArR
-qPGX3Ydweg/+my/XkO22FazWCqD/yUCjGZdAACr9nAmJM96F3ToTxNKFe9ZJ1ZOU
-oagvIQoe/DjWZ91uEKif5PiFuRzsFyry4ukNP6J5WMToWuD1N4i+5Y/dup9QxGTo
-lYpNdOAfbKGxpu0W/OzVkw2C90CIhJE8kh6IoalkxPwzPzjM3R7ehQzhdnmR4Rfv
-sQt3JCmGmcBLTuZ5fNoRSXyaheBqxGD9AhooLMhC38nU7jqLybVPxxGe4icWQ8o/
-hJDFQ8Eg6wI397H6E0p4oVwGKTHygdsyTBdc+91taXygyzGEwxVfQgv9N7eMxNJU
-e3fFpQf1pJb2EjM2grAne3kHsNWDT3+8W/xIVC2J4S4HrfDcyXbza9bZu1/h0ibV
-qAgtruO9Ejc1Iqd9h1nqIzm5WkJfXL5cBM3PLsCnLCG4gWqxvSu1kQjQVWhoL0WK
-YPxf5RMz0cGoCWrgSce8lBzNgoykL/X6/kKGqwc8p7ZomiWLn52ywvV/s9+a62In
-pGvLs4/O2U1wlNgZyY5Tz7/CQdTjACEtc6g9ukAJR5sZ0S4sEORlybgymTeOjCRx
-gwxk/weuQYzqOf3FcAthZ5rY1/JBli7pB/qHHvCiIuFon57F09FIDP98YZ0RSqtZ
-zbqxVJ4MUohhd+akh6Uy
-=mSk0
------END PGP SIGNATURE-----
-
---liqSWPDvh3eyfZ9k--
