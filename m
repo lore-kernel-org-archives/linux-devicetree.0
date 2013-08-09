@@ -1,115 +1,131 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from arroyo.ext.ti.com ([192.94.94.40]:53091 "EHLO arroyo.ext.ti.com"
+Received: from ns.mm-sol.com ([212.124.72.66]:58742 "EHLO extserv.mm-sol.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750980Ab3HLSZK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Mon, 12 Aug 2013 14:25:10 -0400
-Date: Mon, 12 Aug 2013 13:24:39 -0500
-From: Felipe Balbi <balbi@ti.com>
+	id S933806Ab3HIQK0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 12:10:26 -0400
+Message-ID: <1376064558.7709.31.camel@iivanov-dev.int.mm-sol.com>
 Subject: Re: [RFC 2/2] usb: dwc3: Add Qualcomm DWC3 glue layer driver
-Message-ID: <20130812182439.GG27954@radagast>
-Reply-To: <balbi@ti.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Date: Fri, 09 Aug 2013 19:09:18 +0300
+In-Reply-To: <20130809132349.GC12041@radagast>
 References: <1375789991-30041-1-git-send-email-iivanov@mm-sol.com>
- <1375789991-30041-3-git-send-email-iivanov@mm-sol.com>
- <20130809132349.GC12041@radagast>
- <1376064558.7709.31.camel@iivanov-dev.int.mm-sol.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/i8j2F0k9BYX4qLc"
-Content-Disposition: inline
-In-Reply-To: <1376064558.7709.31.camel@iivanov-dev.int.mm-sol.com>
+	 <1375789991-30041-3-git-send-email-iivanov@mm-sol.com>
+	 <20130809132349.GC12041@radagast>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+To: balbi@ti.com
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---/i8j2F0k9BYX4qLc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi, 
 
-On Fri, Aug 09, 2013 at 07:09:18PM +0300, Ivan T. Ivanov wrote:
-> Hi,=20
->=20
-> On Fri, 2013-08-09 at 16:23 +0300, Felipe Balbi wrote:
-> > Hi,
-> >=20
-> > On Tue, Aug 06, 2013 at 02:53:11PM +0300, Ivan T. Ivanov wrote:
-> > > diff --git a/drivers/usb/dwc3/dwc3-msm.c b/drivers/usb/dwc3/dwc3-msm.c
-> > > new file mode 100644
-> > > index 0000000..e509abc
-> > > --- /dev/null
-> > > +++ b/drivers/usb/dwc3/dwc3-msm.c
-> > > @@ -0,0 +1,175 @@
-> > > +#undef CONFIG_REGULATOR
-> >=20
-> > why ??????
-> >=20
->=20
-> 1. This shows that driver is still not fully tested=20
->    Regulators support is still missing in the MSM
-> 2. Helps me to load driver successfully.=20
+On Fri, 2013-08-09 at 16:23 +0300, Felipe Balbi wrote:
+> Hi,
+> 
+> On Tue, Aug 06, 2013 at 02:53:11PM +0300, Ivan T. Ivanov wrote:
+> > diff --git a/drivers/usb/dwc3/dwc3-msm.c b/drivers/usb/dwc3/dwc3-msm.c
+> > new file mode 100644
+> > index 0000000..e509abc
+> > --- /dev/null
+> > +++ b/drivers/usb/dwc3/dwc3-msm.c
+> > @@ -0,0 +1,175 @@
+> > +#undef CONFIG_REGULATOR
+> 
+> why ??????
+> 
 
-Then remove all the regulator-related code from this.
+1. This shows that driver is still not fully tested 
+   Regulators support is still missing in the MSM
+2. Helps me to load driver successfully. 
 
-> > > +	clk_prepare_enable(mdwc->core_clk);
-> > > +	clk_prepare_enable(mdwc->iface_clk);
-> > > +	clk_prepare_enable(mdwc->sleep_clk);
-> > > +	clk_prepare_enable(mdwc->utmi_clk);
-> >=20
-> > do you really need to enable your clocks here ? Why don't you enable
-> > them on runtime_resume and disable on runtime_suspend ?
->=20
-> I will like to make it working first and then will improve
-> power management.
+> > +static int dwc3_msm_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device_node *node = pdev->dev.of_node;
+> > +	struct dwc3_msm *mdwc;
+> > +	struct resource *res;
+> > +	void __iomem *tcsr;
+> > +	int ret = 0;
+> > +
+> > +	dev_info(&pdev->dev, "MSM DWC3\n");
+> 
+> please don't. This is hardly necessary.
 
-alright, makes sense.
+Sure, this will be removed.
 
-> > > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +	tcsr =3D devm_ioremap_resource(&pdev->dev, res);
-> > > +	if (!tcsr) {
-> > > +		dev_dbg(&pdev->dev, "tcsr ioremap failed\n");
-> >=20
-> > no need to ioremap, also you're likely leaking clocks and regulators
-> > enabled here.
-> >=20
-> > Make sure to have something like:
-> >=20
-> > 	if (!tcsr)
-> > 		goto err_disable_clocks;
-> >=20
-> > 	/* TODO This has to be revised */\
-> >=20
-> > 	[...]
-> >=20
->=20
-> Sure.
+> 
+> > +	mdwc = devm_kzalloc(&pdev->dev, sizeof(*mdwc), GFP_KERNEL);
+> > +	if (!mdwc) {
+> > +		dev_err(&pdev->dev, "not enough memory\n");
+> 
+> this message isn't needed either
 
-just to make it clear, I meant to say that you don't need to print the
-error message :-)
+ok.
 
---=20
-balbi
+> 
+> > +	/*
+> > +	 * DWC3 Core requires its CORE CLK (aka master / bus clk) to
+> > +	 * run at 125Mhz in SSUSB mode and >60MHZ for HSUSB mode.
+> > +	 */
+> > +	clk_set_rate(mdwc->core_clk, 125000000);
+> 
+> if this is dwc3's core clock, why don't we teach dwc3.ko about this
+> requirement ? Just make sure to have it optional, since x86 and OMAP
+> wouldn't need direct fiddling with the clocks.
 
---/i8j2F0k9BYX4qLc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I have to check whether DWC3 core or Qcom wrapper requires this clock.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+> 
+> > +	clk_prepare_enable(mdwc->core_clk);
+> > +	clk_prepare_enable(mdwc->iface_clk);
+> > +	clk_prepare_enable(mdwc->sleep_clk);
+> > +	clk_prepare_enable(mdwc->utmi_clk);
+> 
+> do you really need to enable your clocks here ? Why don't you enable
+> them on runtime_resume and disable on runtime_suspend ?
 
-iQIcBAEBAgAGBQJSCShnAAoJEIaOsuA1yqREvsYP/3POPDG+3Xt/Jm9+ntvZwRpe
-q0I8EVHQrw/UpcnJdjLkwCW0Z8ieHBbmmECMGuzQ+f6ZIUPGEQt9NM96qqEweMwd
-jQA6Sjm1CkMNFv6OU/yKr7LpjS/mc7xv3pCkTka9PKRJSqmoh2qF9Me0fO9WT/fY
-Sg1K2O8YBri2pqlKS/7fT4lTh+wUnz87f+NE+CfW+K4samgTZDNEDz02xMIOS85Y
-gF0jT3y1hmJWbkfobFihlR+KqBZPmzgZpYaVLiOwwNGrZE/o0aS9mbEjtKeh11Cf
-Zbx7h9CHBbff731xTFZn5gj6HWRGyFN97DYsat0Yn2e+bqCOTCqeNM/FgkMncl6I
-U2nAnYL1YlHDkID2H6okLljgnjoo1/zcY1hRVKY+cFYJH1G3ewz7CuGD17U0k06w
-oWWM7erXoE/GZ+qvOOCQ48Q2seOY+WUyE/Emjx0qcsZJsrcreo92ybo6OA2miMLJ
-/7qkOYs55kqYASpsL7maW67S4A6JOj5qapesrH39R9iEwnHZz2PR0GDDI+7lRpXC
-OZTKJLKNScxDaUantdWWqSJ5y9Kmimx7SWJgiShfBe9TeLMQYKZY8BoFqsqodyJz
-ocuzAC+T+XCcIquQANoO4Ry9244QkuxhMgMHqqJLJXogZbE4DBcisVwCSZpaoS72
-0bBxwdVmgdnrYs/gpmuz
-=HJ44
------END PGP SIGNATURE-----
+I will like to make it working first and then will improve
+power management.
 
---/i8j2F0k9BYX4qLc--
+> 
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	tcsr = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (!tcsr) {
+> > +		dev_dbg(&pdev->dev, "tcsr ioremap failed\n");
+> 
+> no need to ioremap, also you're likely leaking clocks and regulators
+> enabled here.
+> 
+> Make sure to have something like:
+> 
+> 	if (!tcsr)
+> 		goto err_disable_clocks;
+> 
+> 	/* TODO This has to be revised */\
+> 
+> 	[...]
+> 
+
+Sure.
+
+> > +	} else {
+> > +		/* TODO: This has to be revised */
+> > +
+> > +		/* Enable USB3 on the primary USB port. */
+> > +		writel_relaxed(0x1, tcsr);
+> > +		/*
+> > +		 * Ensure that TCSR write is completed before
+> > +		 * USB registers initialization.
+> > +		 */
+> > +		mb();
+> 
+> why don't you use writel() instead. It will add the memory barrier for
+> you.
+
+Ok.
+
+Thanks
+Ivan
+
+
