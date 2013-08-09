@@ -1,44 +1,63 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-bk0-f44.google.com ([209.85.214.44]:42568 "EHLO
-	mail-bk0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755340Ab3HLNuy (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 09:50:54 -0400
-Received: by mail-bk0-f44.google.com with SMTP id mz10so2199311bkb.17
-        for <devicetree@vger.kernel.org>; Mon, 12 Aug 2013 06:50:53 -0700 (PDT)
-Received: from [192.168.3.130] ([194.9.67.191])
-        by mx.google.com with ESMTPSA id m6sm5563552bki.7.2013.08.12.06.50.51
-        for <devicetree@vger.kernel.org>
-        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
-        Mon, 12 Aug 2013 06:50:51 -0700 (PDT)
-Message-ID: <5208E839.3090509@statystyka.net>
-Date: Mon, 12 Aug 2013 15:50:49 +0200
-From: Adam Ryczkowski <adam.ryczkowski@statystyka.net>
+Received: from bear.ext.ti.com ([192.94.94.41]:51319 "EHLO bear.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1030622Ab3HIIja (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 04:39:30 -0400
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC 02/22] OMAPDSS: remove DT hacks for regulators
+Date: Fri, 9 Aug 2013 11:38:47 +0300
+Message-ID: <1376037547-10859-3-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
 MIME-Version: 1.0
-Subject: Is there any way I can use notebook's touchpad as a pressure-aware
- poor-man tablet in a painting program?
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Apparently my touchpad supports pressure levels (in Xorg.0.log I have 
-line synaptics: ETPS/2 Elantech Touchpad: pressure range 0 - 255). It 
-would great, If I could use the pressure information in paint programs 
-and use it as a poor-man's tablet.
+For booting Panda and 4430SDP with DT, while DSS did not support DT, we
+had to had small hacks in the omapdss driver to get the regulators. With
+DT now supported in DSS, we can remove those hacks.
 
-Is it possible at all? If so, what hardware is supported? How can I test it?
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ drivers/video/omap2/dss/dsi.c  | 5 -----
+ drivers/video/omap2/dss/hdmi.c | 5 -----
+ 2 files changed, 10 deletions(-)
 
-     *    *    *
-
-I'm not 100% sure I address the correct mailing list, but I can't find a 
-better one. Please advice me, if I'm wrong.
-This question is a cross post from 
-http://unix.stackexchange.com/questions/77180/is-there-any-way-i-can-use-notebooks-touchpad-as-a-pressure-aware-pointer-in-a 
-that I asked 3 months ago and still got no answers.
-
-
-Adam Ryczkowski
-+48505919892
-Skype:sisteczko
+diff --git a/drivers/video/omap2/dss/dsi.c b/drivers/video/omap2/dss/dsi.c
+index 99a043b..0c8bd1f 100644
+--- a/drivers/video/omap2/dss/dsi.c
++++ b/drivers/video/omap2/dss/dsi.c
+@@ -1132,11 +1132,6 @@ static int dsi_regulator_init(struct platform_device *dsidev)
+ 		return 0;
+ 
+ 	vdds_dsi = devm_regulator_get(&dsi->pdev->dev, "vdds_dsi");
+-
+-	/* DT HACK: try VCXIO to make omapdss work for o4 sdp/panda */
+-	if (IS_ERR(vdds_dsi))
+-		vdds_dsi = devm_regulator_get(&dsi->pdev->dev, "VCXIO");
+-
+ 	if (IS_ERR(vdds_dsi)) {
+ 		DSSERR("can't get VDDS_DSI regulator\n");
+ 		return PTR_ERR(vdds_dsi);
+diff --git a/drivers/video/omap2/dss/hdmi.c b/drivers/video/omap2/dss/hdmi.c
+index 44a885b..1b38f1f 100644
+--- a/drivers/video/omap2/dss/hdmi.c
++++ b/drivers/video/omap2/dss/hdmi.c
+@@ -338,11 +338,6 @@ static int hdmi_init_regulator(void)
+ 		return 0;
+ 
+ 	reg = devm_regulator_get(&hdmi.pdev->dev, "vdda_hdmi_dac");
+-
+-	/* DT HACK: try VDAC to make omapdss work for o4 sdp/panda */
+-	if (IS_ERR(reg))
+-		reg = devm_regulator_get(&hdmi.pdev->dev, "VDAC");
+-
+ 	if (IS_ERR(reg)) {
+ 		DSSERR("can't get VDDA_HDMI_DAC regulator\n");
+ 		return PTR_ERR(reg);
+-- 
+1.8.1.2
 
