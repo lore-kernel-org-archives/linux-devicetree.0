@@ -1,58 +1,27 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from multi.imgtec.com ([194.200.65.239]:2004 "EHLO multi.imgtec.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751629Ab3HUOgu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 21 Aug 2013 10:36:50 -0400
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH] MIPS: add <dt-bindings/> symlink
-Date: Wed, 21 Aug 2013 15:36:02 +0100
-Message-ID: <1377095762-18926-1-git-send-email-james.hogan@imgtec.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+Received: from mail-ea0-f170.google.com ([209.85.215.170]:41497 "EHLO
+	mail-ea0-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758860Ab3HJV7E (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 10 Aug 2013 17:59:04 -0400
+Received: by mail-ea0-f170.google.com with SMTP id h14so2675849eak.15
+        for <devicetree@vger.kernel.org>; Sat, 10 Aug 2013 14:59:03 -0700 (PDT)
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC RESEND] GPIO: gpio-generic: Add DT support
+In-Reply-To: <5203E4B4.6080600@wwwdotorg.org>
+References: <1375183115-30237-1-git-send-email-shc_work@mail.ru> <20130730162241.GA13634@quad.lixom.net> <51F7FEE5.1010608@wwwdotorg.org> <20130731155608.GR29859@e106331-lin.cambridge.arm.com> <1375786850.12043.22.camel@hornet> <20130807140702.GE28558@e106331-lin.cambridge.arm.com> <520271DC.2020006@wwwdotorg.org> <20130808091155.GD14648@e106331-lin.cambridge.arm.com> <5203E4B4.6080600@wwwdotorg.org>
+Date: Thu, 08 Aug 2013 21:21:58 -0600
+Message-Id: <20130809032158.3BA173E08A0@localhost>
 Sender: devicetree-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <james.hogan@imgtec.com>, Stephen Warren <swarren@nvidia.com>, Michal Marek <mmarek@suse.cz>, Shawn Guo <shawn.guo@linaro.org>, Ian Campbell <ian.campbell@citrix.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <rob.herring@calxeda.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Pawel Moll <Pawel.Moll@arm.com>, Olof Johansson <olof@lixom.net>, Alexander Shiyan <shc_work@mail.ru>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ian Campbell <ian.campbell@citrix.com>, Mike Turquette <mturquette@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add symlink to include/dt-bindings from arch/mips/boot/dts/include/ to
-match the ones in ARM and Meta architectures so that preprocessed device
-tree files can include various useful constant definitions.
+On Thu, 08 Aug 2013 12:34:28 -0600, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> I'd tend to lean towards new kernels maintaining at least old
+> functionality, rather than requiring that no DT changes are required to
+> enable new functionality.
 
-See commit c58299a (kbuild: create an "include chroot" for DT bindings)
-merged in v3.10-rc1 for details.
++1
 
-MIPS structures it's dts files a little differently to other
-architectures, having a separate dts directory for each SoC/platform,
-but most of the definitions in the dt-bindings/ directory are common so
-for now lets just have a single "include chroot" for all MIPS platforms.
-
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Reviewed-by: Steven. J. Hill <steven.hill@imgtec.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Stephen Warren <swarren@nvidia.com>
-Cc: Michal Marek <mmarek@suse.cz>
-Cc: Shawn Guo <shawn.guo@linaro.org>
-Cc: Ian Campbell <ian.campbell@citrix.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org
----
- arch/mips/boot/dts/include/dt-bindings | 1 +
- 1 file changed, 1 insertion(+)
- create mode 120000 arch/mips/boot/dts/include/dt-bindings
-
-diff --git a/arch/mips/boot/dts/include/dt-bindings b/arch/mips/boot/dts/include/dt-bindings
-new file mode 120000
-index 0000000..08c00e4
---- /dev/null
-+++ b/arch/mips/boot/dts/include/dt-bindings
-@@ -0,0 +1 @@
-+../../../../../include/dt-bindings
-\ No newline at end of file
--- 
-1.8.1.2
-
+g.
 
