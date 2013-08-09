@@ -1,100 +1,53 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:53148 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755004Ab3HKSDK (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Sun, 11 Aug 2013 14:03:10 -0400
-From: Mark Brown <broonie@kernel.org>
-Date: Sun, 11 Aug 2013 19:02:41 +0100
-Message-Id: <1376244161-24206-3-git-send-email-broonie@kernel.org>
-In-Reply-To: <1376244161-24206-1-git-send-email-broonie@kernel.org>
-References: <1376244161-24206-1-git-send-email-broonie@kernel.org>
-Subject: [PATCH 3/3] ASoC: dt: Move WM8753 pin list from Tegra board binding to CODEC binding
+Received: from smtp.codeaurora.org ([198.145.11.231]:36929 "EHLO
+	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S965056Ab3HIPlk convert rfc822-to-8bit (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 11:41:40 -0400
+Subject: Re: [PATCH] drivers/rtc/rtc-palmas.c: rename charging dt property name
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+From: Kumar Gala <galak@codeaurora.org>
+In-Reply-To: <1376063230-22578-1-git-send-email-ldewangan@nvidia.com>
+Date: Fri, 9 Aug 2013 10:41:42 -0500
+Content-Transfer-Encoding: 8BIT
+Message-Id: <429B5799-B625-47E9-A1A5-527FD0D28B3B@codeaurora.org>
+References: <1376063230-22578-1-git-send-email-ldewangan@nvidia.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org, Mark Brown <broonie@linaro.org>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: akpm@linux-foundation.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, gg@slimlogic.co.uk, kishon@ti.com, swarren@nvidia.com, pawel.moll@arm.com, Mark.Rutland@arm.com, ian.campbell@citrix.com, broonie@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Mark Brown <broonie@linaro.org>
 
-The pin list is the same for any board using the CODEC.
+On Aug 9, 2013, at 10:47 AM, Laxman Dewangan wrote:
 
-Signed-off-by: Mark Brown <broonie@linaro.org>
----
- .../bindings/sound/nvidia,tegra-audio-wm8753.txt   | 27 ++--------------------
- Documentation/devicetree/bindings/sound/wm8753.txt | 22 ++++++++++++++++++
- 2 files changed, 24 insertions(+), 25 deletions(-)
+> Renaming the charging property names to have more meaningful:
+> 
+> Renaming property "ti,back-battery-charge-enable" to "ti,backup-battery-chargeable"
+> to tells OS that attahced battery is chargeable and OS can do charging.
+> 
+> Renaming property "ti,back-battery-charge-low-current" to
+> "ti,backup-battery-charge-high-current" for safe configuration as maximum charging current
+> of battery depends on battery type and overcurrent charging can damage the battery. So
+> enable the high current charging only if this property is available.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+> The patch V4 version of the change
+> [PATCH V4] drivers/rtc/rtc-palmas.c: support for backup battery charging
+> is already applied but still the discussion is going on the property name.
+> 
+> To correct the property name, I am sending this patch on top of above patch
+> as per discussion on above patch.
+> 
+> .../devicetree/bindings/rtc/rtc-palmas.txt         |   21 +++++++++++--------
+> drivers/rtc/rtc-palmas.c                           |   14 ++++++------
+> 2 files changed, 19 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
-index d145106..aab6ce0 100644
---- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
-+++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
-@@ -11,31 +11,8 @@ Required properties:
- - nvidia,audio-routing : A list of the connections between audio components.
-   Each entry is a pair of strings, the first being the connection's sink,
-   the second being the connection's source. Valid names for sources and
--  sinks are the WM8753's pins, and the jacks on the board:
--
--  WM8753 pins:
--
--  * LOUT1
--  * LOUT2
--  * ROUT1
--  * ROUT2
--  * MONO1
--  * MONO2
--  * OUT3
--  * OUT4
--  * LINE1
--  * LINE2
--  * RXP
--  * RXN
--  * ACIN
--  * ACOP
--  * MIC1N
--  * MIC1
--  * MIC2N
--  * MIC2
--  * Mic Bias
--
--  Board connectors:
-+  sinks are the WM8753's pins as documented in the binding for the WM8753,
-+  and the jacks on the board:
- 
-   * Headphone Jack
-   * Mic Jack
-diff --git a/Documentation/devicetree/bindings/sound/wm8753.txt b/Documentation/devicetree/bindings/sound/wm8753.txt
-index 5dbcde0..8eee612 100644
---- a/Documentation/devicetree/bindings/sound/wm8753.txt
-+++ b/Documentation/devicetree/bindings/sound/wm8753.txt
-@@ -10,6 +10,28 @@ Required properties:
-   - reg : the I2C address of the device for I2C, the chip select
-           number for SPI.
- 
-+Pins on the device (for linking into audio routes):
-+
-+  * LOUT1
-+  * LOUT2
-+  * ROUT1
-+  * ROUT2
-+  * MONO1
-+  * MONO2
-+  * OUT3
-+  * OUT4
-+  * LINE1
-+  * LINE2
-+  * RXP
-+  * RXN
-+  * ACIN
-+  * ACOP
-+  * MIC1N
-+  * MIC1
-+  * MIC2N
-+  * MIC2
-+  * Mic Bias
-+
- Example:
- 
- codec: wm8753@1a {
--- 
-1.8.4.rc1
+Acked-by: Kumar Gala <galak@codeaurora.org>
+
+- k
+
+--
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
