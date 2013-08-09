@@ -1,100 +1,95 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from top.free-electrons.com ([176.31.233.9]:55296 "EHLO
-	mail.free-electrons.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1757499Ab3HLRPT (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 13:15:19 -0400
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH v4 02/14] mtd: nand: pxa3xx: Introduce 'marvell,armada370-nand' compatible string
-Date: Mon, 12 Aug 2013 14:14:47 -0300
-Message-Id: <1376327699-7973-3-git-send-email-ezequiel.garcia@free-electrons.com>
-In-Reply-To: <1376327699-7973-1-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1376327699-7973-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Received: from comal.ext.ti.com ([198.47.26.152]:55641 "EHLO comal.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1030596Ab3HIIju (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 04:39:50 -0400
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC 11/22] ARM: omap4.dtsi: add omapdss information
+Date: Fri, 9 Aug 2013 11:38:56 +0300
+Message-ID: <1376037547-10859-12-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Artem Bityutskiy <dedekind1@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This driver supports NFCv1 (as found in PXA SoC) and NFCv2 (as found in
-Armada 370/XP SoC). As both controller has a few differences, a way of
-distinguishing between the two is needed.
-
-This commit introduces a new compatible string 'marvell,armada370-nand'
-and assigns a compatible data of type enum pxa3xx_nand_variant to allow
-such distinction.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/mtd/nand/pxa3xx_nand.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/omap4.dtsi | 59 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/drivers/mtd/nand/pxa3xx_nand.c b/drivers/mtd/nand/pxa3xx_nand.c
-index 02f214d..55eb153 100644
---- a/drivers/mtd/nand/pxa3xx_nand.c
-+++ b/drivers/mtd/nand/pxa3xx_nand.c
-@@ -123,6 +123,11 @@ enum {
- 	STATE_READY,
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 22d9f2b..ab19f16 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -663,5 +663,64 @@
+ 			ram-bits = <12>;
+ 			ti,has-mailbox;
+ 		};
++
++		dss@58000000 {
++			compatible = "ti,omap4-dss", "simple-bus";
++			reg = <0x58000000 0x80>;
++			ti,hwmods = "dss_core";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			dispc@58001000 {
++				compatible = "ti,omap4-dispc";
++				reg = <0x58001000 0x1000>;
++				interrupts = <0 25 0x4>;
++				ti,hwmods = "dss_dispc";
++			};
++
++			dpi: encoder@0 {
++				compatible = "ti,omap4-dpi";
++			};
++
++			rfbi: encoder@58002000  {
++				compatible = "ti,omap4-rfbi";
++				reg = <0x58002000 0x1000>;
++				ti,hwmods = "dss_rfbi";
++			};
++
++			/*
++			 * Accessing venc registers cause a crash on omap4, so
++			 * this is disabled for now.
++			 */
++			/*
++			venc: encoder@58003000 {
++				compatible = "ti,omap4-venc";
++				reg = <0x58003000 0x1000>;
++				ti,hwmods = "dss_venc";
++			};
++			*/
++
++			dsi1: encoder@58004000 {
++				compatible = "ti,omap4-dsi";
++				reg = <0x58004000 0x200>;
++				interrupts = <0 53 0x4>;
++				ti,hwmods = "dss_dsi1";
++			};
++
++			dsi2: encoder@58005000 {
++				compatible = "ti,omap4-dsi";
++				reg = <0x58005000 0x200>;
++				interrupts = <0 84 0x4>;
++				ti,hwmods = "dss_dsi2";
++			};
++
++			hdmi: encoder@58006000 {
++				compatible = "ti,omap4-hdmi";
++				reg = <0x58006000 0x1000>;
++				interrupts = <0 101 0x4>;
++				ti,hwmods = "dss_hdmi";
++			};
++		};
+ 	};
  };
- 
-+enum pxa3xx_nand_variant {
-+	PXA3XX_NAND_VARIANT_PXA,
-+	PXA3XX_NAND_VARIANT_ARMADA370,
-+};
-+
- struct pxa3xx_nand_host {
- 	struct nand_chip	chip;
- 	struct pxa3xx_nand_cmdset *cmdset;
-@@ -171,6 +176,12 @@ struct pxa3xx_nand_info {
- 	struct pxa3xx_nand_host *host[NUM_CHIP_SELECT];
- 	unsigned int		state;
- 
-+	/*
-+	 * This driver supports NFCv1 (as found in PXA SoC)
-+	 * and NFCv2 (as found in Armada 370/XP SoC).
-+	 */
-+	enum pxa3xx_nand_variant variant;
-+
- 	int			cs;
- 	int			use_ecc;	/* use HW ECC ? */
- 	int			use_dma;	/* use DMA ? */
-@@ -1191,11 +1202,28 @@ static int pxa3xx_nand_remove(struct platform_device *pdev)
- }
- 
- static struct of_device_id pxa3xx_nand_dt_ids[] = {
--	{ .compatible = "marvell,pxa3xx-nand" },
-+	{
-+		.compatible = "marvell,pxa3xx-nand",
-+		.data       = (void *) PXA3XX_NAND_VARIANT_PXA,
-+	},
-+	{
-+		.compatible = "marvell,armada370-nand",
-+		.data       = (void *) PXA3XX_NAND_VARIANT_ARMADA370,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, pxa3xx_nand_dt_ids);
- 
-+static enum pxa3xx_nand_variant
-+pxa3xx_nand_get_variant(struct platform_device *pdev)
-+{
-+	const struct of_device_id *of_id =
-+			of_match_device(pxa3xx_nand_dt_ids, &pdev->dev);
-+	if (!of_id)
-+		return PXA3XX_NAND_VARIANT_PXA;
-+	return (enum pxa3xx_nand_variant) of_id->data;
-+}
-+
- static int pxa3xx_nand_probe_dt(struct platform_device *pdev)
- {
- 	struct pxa3xx_nand_platform_data *pdata;
-@@ -1245,6 +1273,7 @@ static int pxa3xx_nand_probe(struct platform_device *pdev)
- 	}
- 
- 	info = platform_get_drvdata(pdev);
-+	info->variant = pxa3xx_nand_get_variant(pdev);
- 	probe_success = 0;
- 	for (cs = 0; cs < pdata->num_cs; cs++) {
- 		info->cs = cs;
 -- 
-1.8.1.5
+1.8.1.2
 
