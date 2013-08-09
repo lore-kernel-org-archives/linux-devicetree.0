@@ -1,99 +1,78 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56310 "EHLO mail.gnudd.com"
+Received: from bear.ext.ti.com ([192.94.94.41]:51330 "EHLO bear.ext.ti.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932458Ab3HGKXe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:23:34 -0400
-Date: Wed, 7 Aug 2013 12:16:51 +0200
-From: Alessandro Rubini <rubini@gnudd.com>
-Subject: [PATCH 03/26] mmc: Use the new <linux/sizes.h>
-Message-ID: <85d780625135282d3dda1ad136b74db9b658d927.1375867291.git.rubini@gnudd.com>
+	id S1030636Ab3HIIjh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 04:39:37 -0400
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC 05/22] OMAPDSS: get dssdev->alias from DT alias
+Date: Fri, 9 Aug 2013 11:38:50 +0300
+Message-ID: <1376037547-10859-6-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Davide Ciminaghi <ciminaghi@gnudd.com>, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-For portability, use <linux/sizes.h>.
+We currently create a "displayX" style alias name for all displays,
+using a number that is incremented for each registered display. With the
+new DSS device model there is no clear order in which the displays are
+registered, and thus the numbering is somewhat random.
 
-Signed-off-by: Alessandro Rubini <rubini@gnudd.com>
-Link: http://lkml.kernel.org/r/1355146956-6009-6-git-send-email-ciminaghi@gnudd.com
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
-Acked-by: David Brown <davidb@codeaurora.org>
-Signed-off-by: H. Peter Anvin <hpa@linux.intel.com>
+This patch improves the behavior for DT case so that if the displays
+have been assigned DT aliases, those aliases will be used as DSS
+aliases.
+
+This means that "display0" is always the one specified in the DT alias,
+and thus display0 can be used as default display in case the user didn't
+specify a default display.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/mmc/host/mmci.c     |    2 +-
- drivers/mmc/host/msm_sdcc.c |    2 +-
- drivers/mmc/host/mvsdio.c   |    2 +-
- drivers/mmc/host/pxamci.c   |    3 +--
- 4 files changed, 4 insertions(+), 5 deletions(-)
+ drivers/video/omap2/dss/display.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index c3785ed..edd987e 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -34,11 +34,11 @@
- #include <linux/amba/mmci.h>
- #include <linux/pm_runtime.h>
- #include <linux/types.h>
-+#include <linux/sizes.h>
- #include <linux/pinctrl/consumer.h>
+diff --git a/drivers/video/omap2/dss/display.c b/drivers/video/omap2/dss/display.c
+index 64fb6e5..a8833ca 100644
+--- a/drivers/video/omap2/dss/display.c
++++ b/drivers/video/omap2/dss/display.c
+@@ -26,6 +26,7 @@
+ #include <linux/module.h>
+ #include <linux/jiffies.h>
+ #include <linux/platform_device.h>
++#include <linux/of.h>
  
- #include <asm/div64.h>
- #include <asm/io.h>
--#include <asm/sizes.h>
+ #include <video/omapdss.h>
+ #include "dss.h"
+@@ -133,9 +134,24 @@ static int disp_num_counter;
+ int omapdss_register_display(struct omap_dss_device *dssdev)
+ {
+ 	struct omap_dss_driver *drv = dssdev->driver;
++	int id;
  
- #include "mmci.h"
+-	snprintf(dssdev->alias, sizeof(dssdev->alias),
+-			"display%d", disp_num_counter++);
++	/*
++	 * Note: this presumes all the displays are either using DT or non-DT,
++	 * which normally should be the case. This also presumes that all
++	 * displays either have an DT alias, or none has.
++	 */
++
++	if (dssdev->dev->of_node) {
++		id = of_alias_get_id(dssdev->dev->of_node, "display");
++
++		if (id < 0)
++			id = disp_num_counter++;
++	} else {
++		id = disp_num_counter++;
++	}
++
++	snprintf(dssdev->alias, sizeof(dssdev->alias), "display%d", id);
  
-diff --git a/drivers/mmc/host/msm_sdcc.c b/drivers/mmc/host/msm_sdcc.c
-index b900de4..405f0d8 100644
---- a/drivers/mmc/host/msm_sdcc.c
-+++ b/drivers/mmc/host/msm_sdcc.c
-@@ -37,10 +37,10 @@
- #include <linux/memory.h>
- #include <linux/gfp.h>
- #include <linux/gpio.h>
-+#include <linux/sizes.h>
- 
- #include <asm/cacheflush.h>
- #include <asm/div64.h>
--#include <asm/sizes.h>
- 
- #include <linux/platform_data/mmc-msm_sdcc.h>
- #include <mach/dma.h>
-diff --git a/drivers/mmc/host/mvsdio.c b/drivers/mmc/host/mvsdio.c
-index 4ddd83f..4dec50f 100644
---- a/drivers/mmc/host/mvsdio.c
-+++ b/drivers/mmc/host/mvsdio.c
-@@ -23,11 +23,11 @@
- #include <linux/gpio.h>
- #include <linux/of_gpio.h>
- #include <linux/of_irq.h>
-+#include <linux/sizes.h>
- #include <linux/mmc/host.h>
- #include <linux/mmc/slot-gpio.h>
- #include <linux/pinctrl/consumer.h>
- 
--#include <asm/sizes.h>
- #include <asm/unaligned.h>
- #include <linux/platform_data/mmc-mvsdio.h>
- 
-diff --git a/drivers/mmc/host/pxamci.c b/drivers/mmc/host/pxamci.c
-index 1956a3d..3924f36 100644
---- a/drivers/mmc/host/pxamci.c
-+++ b/drivers/mmc/host/pxamci.c
-@@ -33,8 +33,7 @@
- #include <linux/of.h>
- #include <linux/of_gpio.h>
- #include <linux/of_device.h>
--
--#include <asm/sizes.h>
-+#include <linux/sizes.h>
- 
- #include <mach/hardware.h>
- #include <mach/dma.h>
+ 	if (dssdev->name == NULL)
+ 		dssdev->name = dssdev->alias;
 -- 
-1.7.7.2
+1.8.1.2
+
