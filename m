@@ -1,117 +1,37 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pb0-f50.google.com ([209.85.160.50]:52866 "EHLO
-	mail-pb0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753223Ab3HAJlM (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 05:41:12 -0400
-Received: by mail-pb0-f50.google.com with SMTP id uo5so1884244pbc.37
-        for <devicetree@vger.kernel.org>; Thu, 01 Aug 2013 02:41:11 -0700 (PDT)
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 1/1] usb: phy: samsung: Update usbphy documentation
-Date: Thu,  1 Aug 2013 14:54:35 +0530
-Message-Id: <1375349075-15833-1-git-send-email-sachin.kamat@linaro.org>
+Received: from mail-qe0-f42.google.com ([209.85.128.42]:49137 "EHLO
+	mail-qe0-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758237Ab3HICwK (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2013 22:52:10 -0400
+Received: by mail-qe0-f42.google.com with SMTP id s14so2125552qeb.29
+        for <devicetree@vger.kernel.org>; Thu, 08 Aug 2013 19:52:09 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <1729120.r596vOTlMW@flatron>
+References: <1375812017-6287-1-git-send-email-jwerner@chromium.org>
+	<20130808092615.GF14648@e106331-lin.cambridge.arm.com>
+	<CAODwPW-j=JjunZU3zewrE1_-WoW-RXLmKVQypzxmo_BOYjc3VA@mail.gmail.com>
+	<1729120.r596vOTlMW@flatron>
+Date: Thu, 8 Aug 2013 19:52:09 -0700
+Message-ID: <CAODwPW_W9gu+nwNzpq3sfcOCDkyppu6K8C9+S8OZt_A0qHqNEg@mail.gmail.com>
+Subject: Re: [PATCH 1/3 v5] usb: phy-samsung-usb: Simplify PMU register handling
+From: Julius Werner <jwerner@chromium.org>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, balbi@ti.com, gautam.vivek@samsung.com, kgene.kim@samsung.com, swarren@wwwdotorg.org, rob@landley.net, sachin.kamat@linaro.org, patches@linaro.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Julius Werner <jwerner@chromium.org>, Mark Rutland <mark.rutland@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Kukjin Kim <kgene.kim@samsung.com>, Felipe Balbi <balbi@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Updated the documentation as per the latest driver implementation.
-While at it also fixed some trivial typos.
+> Sorry, I don't understand what is not implemented. Without your patch, the
+> PHY driver handles both PMU registers of Exynos4.
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- .../devicetree/bindings/usb/samsung-usbphy.txt     |   48 ++++++++++----------
- 1 file changed, 23 insertions(+), 25 deletions(-)
+I don't have an Exynos4 to actually test this, so please let me know
+if I'm missing something here... but in order to hit the right HOST
+PHY register in the current upstream code, the Exynos4 code would need
+to have a hostphy_reg_offset of 4 somewhere in its
+samsung_usbphy_drvdata. In my latest checkout of Linus' tree (6c2580c)
+it does not (only Exynos5 sets that attribute), so it would default to
+0 (thereby actually hitting the DEVICE register).
 
-diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-index 33fd354..62e6f17 100644
---- a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-+++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-@@ -1,34 +1,32 @@
- SAMSUNG USB-PHY controllers
- 
--** Samsung's usb 2.0 phy transceiver
-+** Samsung's USB 2.0 phy transceiver
- 
--The Samsung's usb 2.0 phy transceiver is used for controlling
--usb 2.0 phy for s3c-hsotg as well as ehci-s5p and ohci-exynos
--usb controllers across Samsung SOCs.
-+The Samsung's USB 2.0 phy transceiver is used for controlling
-+USB 2.0 phy for s3c-hsotg as well as ehci-s5p and ohci-exynos
-+USB controllers across Samsung SOCs.
- TODO: Adding the PHY binding with controller(s) according to the under
- development generic PHY driver.
- 
- Required properties:
- 
--Exynos4210:
--- compatible : should be "samsung,exynos4210-usb2phy"
--- reg : base physical address of the phy registers and length of memory mapped
--	region.
--- clocks: Clock IDs array as required by the controller.
--- clock-names: names of clock correseponding IDs clock property as requested
--	       by the controller driver.
--
--Exynos5250:
--- compatible : should be "samsung,exynos5250-usb2phy"
-+- compatible : value should be one among the following:
-+	(a) "samsung,s3c64xx-usb2phy" for S3C64xx SoCs
-+	(b) "samsung,exynos4210-usb2phy" for Exynos4210 SoC
-+	(c) "samsung,exynos4x12-usb2phy" for Exynos4x12 SoCs
-+	(d) "samsung,exynos5250-usb2phy" for Exynos5250 SoC
- - reg : base physical address of the phy registers and length of memory mapped
- 	region.
-+- clocks : Clock IDs array as required by the controller.
-+- clock-names : names of clocks listed in clocks property in the same order
-+	       as requested by the controller driver.
- 
- Optional properties:
--- #address-cells: should be '1' when usbphy node has a child node with 'reg'
-+- #address-cellsi : should be '1' when usbphy node has a child node with 'reg'
- 		  property.
--- #size-cells: should be '1' when usbphy node has a child node with 'reg'
-+- #size-cells : should be '1' when usbphy node has a child node with 'reg'
- 	       property.
--- ranges: allows valid translation between child's address space and parent's
-+- ranges : allows valid translation between child's address space and parent's
- 	  address space.
- 
- - The child node 'usbphy-sys' to the node 'usbphy' is for the system controller
-@@ -63,10 +61,10 @@ Example:
- 	};
- 
- 
--** Samsung's usb 3.0 phy transceiver
-+** Samsung's USB 3.0 phy transceiver
- 
--Starting exynso5250, Samsung's SoC have usb 3.0 phy transceiver
--which is used for controlling usb 3.0 phy for dwc3-exynos usb 3.0
-+Starting Exynos5250, Samsung's SoC have USB 3.0 phy transceiver
-+which is used for controlling USB 3.0 phy for dwc3-exynos USB 3.0
- controllers across Samsung SOCs.
- 
- Required properties:
-@@ -75,16 +73,16 @@ Exynos5250:
- - compatible : should be "samsung,exynos5250-usb3phy"
- - reg : base physical address of the phy registers and length of memory mapped
- 	region.
--- clocks: Clock IDs array as required by the controller.
--- clock-names: names of clocks correseponding to IDs in the clock property
-+- clocks : Clock IDs array as required by the controller.
-+- clock-names : names of clocks correseponding to IDs in the clock property
- 	       as requested by the controller driver.
- 
- Optional properties:
--- #address-cells: should be '1' when usbphy node has a child node with 'reg'
-+- #address-cells : should be '1' when usbphy node has a child node with 'reg'
- 		  property.
--- #size-cells: should be '1' when usbphy node has a child node with 'reg'
-+- #size-cells : should be '1' when usbphy node has a child node with 'reg'
- 	       property.
--- ranges: allows valid translation between child's address space and parent's
-+- ranges : allows valid translation between child's address space and parent's
- 	  address space.
- 
- - The child node 'usbphy-sys' to the node 'usbphy' is for the system controller
--- 
-1.7.9.5
-
+If you want I can gladly provide another change on top of my patchset
+to fix that in the future... but it looks to me like it had been
+broken anyway for now.
