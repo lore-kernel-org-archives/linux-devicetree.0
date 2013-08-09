@@ -1,241 +1,141 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ns.mm-sol.com ([212.124.72.66]:60877 "EHLO extserv.mm-sol.com"
+Received: from comal.ext.ti.com ([198.47.26.152]:55637 "EHLO comal.ext.ti.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S965837Ab3HIJzN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 9 Aug 2013 05:55:13 -0400
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [RFC PATCH v2 3/3] usb: dwc3: Add Qualcomm DWC3 glue layer driver
-Date: Fri,  9 Aug 2013 12:53:47 +0300
-Message-Id: <1376042027-9798-4-git-send-email-iivanov@mm-sol.com>
-In-Reply-To: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
-References: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
+	id S1030657Ab3HIIjq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 04:39:46 -0400
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC 09/22] OMAPDSS: Add DT support to DSI
+Date: Fri, 9 Aug 2013 11:38:54 +0300
+Message-ID: <1376037547-10859-10-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Add the code to make the DSI driver work with device tree on OMAP3 and
+OMAP4.
 
-DWC3 glue layer is hardware layer around Synopsys DesignWare
-USB3 core. Its purpose is to supply Synopsys IP with required
-clocks, voltages and interface it with the rest of the SoC.
+A minor hack is needed at the moment in the DSI driver: the DSS driver
+needs to know the ID number of a DSI device, as clocks are routed in
+different ways to the DSI devices. At the moment we don't have any
+proper way to manage this, so this patchs adds a simple lookup table
+that is used to deduce the ID from the DSI device's base address.
 
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/usb/dwc3/Kconfig    |    8 ++
- drivers/usb/dwc3/Makefile   |    1 +
- drivers/usb/dwc3/dwc3-msm.c |  174 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 183 insertions(+)
- create mode 100644 drivers/usb/dwc3/dwc3-msm.c
+ drivers/video/omap2/dss/dsi.c | 53 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 52 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-index 3e225d5..e2032c4 100644
---- a/drivers/usb/dwc3/Kconfig
-+++ b/drivers/usb/dwc3/Kconfig
-@@ -70,6 +70,14 @@ config USB_DWC3_PCI
- 	  One such PCIe-based platform is Synopsys' PCIe HAPS model of
- 	  this IP.
- 
-+config USB_DWC3_MSM
-+	tristate "Qualcomm MSM/APQ Platforms"
-+	default USB_DWC3
-+	select USB_MSM_DWC3_PHYS
-+	help
-+	  Recent Qualcomm SoCs ship with one DesignWare Core USB3 IP inside,
-+	  say 'Y' or 'M' if you have one such device.
-+
- comment "Debugging features"
- 
- config USB_DWC3_DEBUG
-diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
-index dd17601..5226681 100644
---- a/drivers/usb/dwc3/Makefile
-+++ b/drivers/usb/dwc3/Makefile
-@@ -32,3 +32,4 @@ endif
- obj-$(CONFIG_USB_DWC3_OMAP)		+= dwc3-omap.o
- obj-$(CONFIG_USB_DWC3_EXYNOS)		+= dwc3-exynos.o
- obj-$(CONFIG_USB_DWC3_PCI)		+= dwc3-pci.o
-+obj-$(CONFIG_USB_DWC3_MSM)		+= dwc3-msm.o
-diff --git a/drivers/usb/dwc3/dwc3-msm.c b/drivers/usb/dwc3/dwc3-msm.c
-new file mode 100644
-index 0000000..f442249
---- /dev/null
-+++ b/drivers/usb/dwc3/dwc3-msm.c
-@@ -0,0 +1,174 @@
-+/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
+diff --git a/drivers/video/omap2/dss/dsi.c b/drivers/video/omap2/dss/dsi.c
+index 0c8bd1f..bccf5fc 100644
+--- a/drivers/video/omap2/dss/dsi.c
++++ b/drivers/video/omap2/dss/dsi.c
+@@ -38,6 +38,7 @@
+ #include <linux/slab.h>
+ #include <linux/debugfs.h>
+ #include <linux/pm_runtime.h>
 +#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/usb/phy.h>
-+
-+struct dwc3_msm {
-+	struct device		*dev;
-+	void __iomem		*base;
-+
-+	struct clk		*core_clk;
-+	struct clk		*iface_clk;
-+	struct clk		*sleep_clk;
-+	struct clk		*utmi_clk;
-+
-+	struct regulator	*gdsc;
+ 
+ #include <video/omapdss.h>
+ #include <video/mipi_display.h>
+@@ -371,6 +372,13 @@ struct dsi_packet_sent_handler_data {
+ 	struct completion *completion;
+ };
+ 
++struct dsi_module_id_data {
++	u32 address;
++	int id;
 +};
 +
-+static int dwc3_msm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct dwc3_msm *mdwc;
-+	struct resource *res;
-+	void __iomem *tcsr;
-+	int ret = 0;
++static const struct of_device_id dsi_of_match[];
 +
-+	dev_info(&pdev->dev, "MSM DWC3\n");
+ #ifdef DEBUG
+ static bool dsi_perf;
+ module_param(dsi_perf, bool, 0644);
+@@ -5537,7 +5545,6 @@ static int omap_dsihw_probe(struct platform_device *dsidev)
+ 	if (!dsi)
+ 		return -ENOMEM;
+ 
+-	dsi->module_id = dsidev->id;
+ 	dsi->pdev = dsidev;
+ 	dev_set_drvdata(&dsidev->dev, dsi);
+ 
+@@ -5587,6 +5594,31 @@ static int omap_dsihw_probe(struct platform_device *dsidev)
+ 		return r;
+ 	}
+ 
++	if (dsidev->dev.of_node) {
++		const struct of_device_id *match;
++		const struct dsi_module_id_data *d;
 +
-+	mdwc = devm_kzalloc(&pdev->dev, sizeof(*mdwc), GFP_KERNEL);
-+	if (!mdwc) {
-+		dev_err(&pdev->dev, "not enough memory\n");
-+		return -ENOMEM;
-+	}
++		match = of_match_node(dsi_of_match, dsidev->dev.of_node);
++		if (!match) {
++			DSSERR("unsupported DSI module\n");
++			return -ENODEV;
++		}
 +
-+	platform_set_drvdata(pdev, mdwc);
-+	mdwc->dev = &pdev->dev;
++		d = match->data;
 +
-+	mdwc->gdsc = devm_regulator_get(mdwc->dev, "gdsc");
++		while (d->address != 0 && d->address != dsi_mem->start)
++			d++;
 +
-+	mdwc->core_clk = devm_clk_get(&pdev->dev, "core_clk");
-+	if (IS_ERR(mdwc->core_clk)) {
-+		dev_err(&pdev->dev, "failed to get core_clk\n");
-+		return PTR_ERR(mdwc->core_clk);
-+	}
++		if (d->address == 0) {
++			DSSERR("unsupported DSI module\n");
++			return -ENODEV;
++		}
 +
-+	mdwc->iface_clk = devm_clk_get(&pdev->dev, "iface_clk");
-+	if (IS_ERR(mdwc->iface_clk)) {
-+		dev_err(&pdev->dev, "failed to get iface_clk\n");
-+		return PTR_ERR(mdwc->iface_clk);
-+	}
-+
-+	mdwc->sleep_clk = devm_clk_get(&pdev->dev, "sleep_clk");
-+	if (IS_ERR(mdwc->sleep_clk)) {
-+		dev_err(&pdev->dev, "failed to get sleep_clk\n");
-+		return  PTR_ERR(mdwc->sleep_clk);
-+	}
-+
-+	mdwc->utmi_clk = devm_clk_get(&pdev->dev, "utmi_clk");
-+	if (IS_ERR(mdwc->utmi_clk)) {
-+		dev_err(&pdev->dev, "failed to get utmi_clk\n");
-+		return  PTR_ERR(mdwc->utmi_clk);
-+	}
-+
-+	if (!IS_ERR(mdwc->gdsc)) {
-+		ret = regulator_enable(mdwc->gdsc);
-+		if (ret)
-+			dev_err(mdwc->dev, "unable to enable usb3 gdsc\n");
-+	}
-+
-+	/*
-+	 * DWC3 Core requires its CORE CLK (aka master / bus clk) to
-+	 * run at 125Mhz in SSUSB mode and >60MHZ for HSUSB mode.
-+	 */
-+	clk_set_rate(mdwc->core_clk, 125000000);
-+	clk_prepare_enable(mdwc->core_clk);
-+	clk_prepare_enable(mdwc->iface_clk);
-+	clk_prepare_enable(mdwc->sleep_clk);
-+	clk_prepare_enable(mdwc->utmi_clk);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	tcsr = devm_ioremap_resource(&pdev->dev, res);
-+	if (!tcsr) {
-+		dev_dbg(&pdev->dev, "tcsr ioremap failed\n");
++		dsi->module_id = d->id;
 +	} else {
-+		/* TODO: This has to be revised */
-+
-+		/* Enable USB3 on the primary USB port. */
-+		writel_relaxed(0x1, tcsr);
-+		/*
-+		 * Ensure that TCSR write is completed before
-+		 * USB registers initialization.
-+		 */
-+		mb();
++		dsi->module_id = dsidev->id;
 +	}
 +
-+	ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to add create dwc3 core\n");
-+		goto dis_clks;
-+	}
+ 	/* DSI VCs initialization */
+ 	for (i = 0; i < ARRAY_SIZE(dsi->vc); i++) {
+ 		dsi->vc[i].source = DSI_VC_SOURCE_L4;
+@@ -5641,6 +5673,7 @@ static int omap_dsihw_probe(struct platform_device *dsidev)
+ 	else if (dsi->module_id == 1)
+ 		dss_debugfs_create_file("dsi2_irqs", dsi2_dump_irqs);
+ #endif
 +
-+	return 0;
-+
-+dis_clks:
-+	clk_disable_unprepare(mdwc->utmi_clk);
-+	clk_disable_unprepare(mdwc->sleep_clk);
-+	clk_disable_unprepare(mdwc->iface_clk);
-+	clk_disable_unprepare(mdwc->core_clk);
-+	if (!IS_ERR(mdwc->gdsc)) {
-+		ret = regulator_disable(mdwc->gdsc);
-+		if (ret)
-+			dev_err(mdwc->dev, "cannot disable usb3 gdsc\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static int dwc3_msm_remove(struct platform_device *pdev)
-+{
-+	struct dwc3_msm	*mdwc = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	clk_disable_unprepare(mdwc->utmi_clk);
-+	clk_disable_unprepare(mdwc->sleep_clk);
-+	clk_disable_unprepare(mdwc->iface_clk);
-+	clk_disable_unprepare(mdwc->core_clk);
-+
-+	if (!IS_ERR(mdwc->gdsc)) {
-+		ret = regulator_disable(mdwc->gdsc);
-+		if (ret)
-+			dev_err(mdwc->dev, "cannot disable usb3 gdsc\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_dwc3_matach[] = {
-+	{
-+		.compatible = "qcom,dwc3",
-+	},
+ 	return 0;
+ 
+ err_probe:
+@@ -5694,6 +5727,23 @@ static const struct dev_pm_ops dsi_pm_ops = {
+ 	.runtime_resume = dsi_runtime_resume,
+ };
+ 
++static const struct dsi_module_id_data dsi_of_data_omap3[] = {
++	{ .address = 0x4804fc00, .id = 0, },
 +	{ },
 +};
-+MODULE_DEVICE_TABLE(of, of_dwc3_matach);
 +
-+static struct platform_driver dwc3_msm_driver = {
-+	.probe		= dwc3_msm_probe,
-+	.remove		= dwc3_msm_remove,
-+	.driver		= {
-+		.name	= "msm-dwc3",
-+		.owner	= THIS_MODULE,
-+		.of_match_table	= of_dwc3_matach,
-+	},
++static const struct dsi_module_id_data dsi_of_data_omap4[] = {
++	{ .address = 0x58004000, .id = 0, },
++	{ .address = 0x58005000, .id = 1, },
++	{ },
 +};
 +
-+module_platform_driver(dwc3_msm_driver);
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("DesignWare USB3 MSM Glue Layer");
++static const struct of_device_id dsi_of_match[] = {
++	{ .compatible = "ti,omap3-dsi", .data = dsi_of_data_omap3, },
++	{ .compatible = "ti,omap4-dsi", .data = dsi_of_data_omap4, },
++	{},
++};
++
+ static struct platform_driver omap_dsihw_driver = {
+ 	.probe		= omap_dsihw_probe,
+ 	.remove         = __exit_p(omap_dsihw_remove),
+@@ -5701,6 +5751,7 @@ static struct platform_driver omap_dsihw_driver = {
+ 		.name   = "omapdss_dsi",
+ 		.owner  = THIS_MODULE,
+ 		.pm	= &dsi_pm_ops,
++		.of_match_table = dsi_of_match,
+ 	},
+ };
+ 
 -- 
-1.7.9.5
+1.8.1.2
 
