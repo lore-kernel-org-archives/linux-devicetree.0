@@ -1,99 +1,104 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from fallback6.mail.ru ([94.100.176.134]:48798 "EHLO
-	fallback6.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753773Ab3HEPg1 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 11:36:27 -0400
-Date: Mon, 5 Aug 2013 19:35:46 +0400
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: Re: [RFC RESEND] GPIO: gpio-generic: Add DT support
-Message-Id: <20130805193546.c1bf5937bcb4cefba9747486@mail.ru>
-In-Reply-To: <20130731155608.GR29859@e106331-lin.cambridge.arm.com>
-References: <1375183115-30237-1-git-send-email-shc_work@mail.ru>
-	<20130730162241.GA13634@quad.lixom.net>
-	<51F7FEE5.1010608@wwwdotorg.org>
-	<20130731155608.GR29859@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Received: from devils.ext.ti.com ([198.47.26.153]:57754 "EHLO
+	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1030674Ab3HIIj6 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 04:39:58 -0400
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC 13/22] ARM: omap4-sdp.dts: add display information
+Date: Fri, 9 Aug 2013 11:38:58 +0300
+Message-ID: <1376037547-10859-14-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Olof Johansson <olof@lixom.net>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 31 Jul 2013 16:56:08 +0100
-Mark Rutland <mark.rutland@arm.com> wrote:
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ arch/arm/boot/dts/omap4-sdp.dts | 70 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
-> On Tue, Jul 30, 2013 at 06:59:01PM +0100, Stephen Warren wrote:
-> > On 07/30/2013 10:22 AM, Olof Johansson wrote:
-> > > On Tue, Jul 30, 2013 at 03:18:35PM +0400, Alexander Shiyan wrote:
-> > >> This patch adds DT support for generic (MMIO) GPIO driver.
-> > 
-> > >> diff --git a/Documentation/devicetree/bindings/gpio/gpio-generic.txt b/Documentation/devicetree/bindings/gpio/gpio-generic.txt
-> > 
-> > >> +Generic memory-mapped GPIO controller
-> > >> +
-> > >> +Required properties:
-> > >> +- compatible: Should be "basic-mmio-gpio" or "basic-mmio-gpio-be".
-> > 
-> > I think naming this "simple-gpio" would match other simple/basic/generic
-> > bindings better.
-> > 
-> > >> +- reg: Physical base GPIO controller registers location and length.
-> > >> +- reg-names: Should be the names of reg resources. Each register uses
-> > >> +  its own reg name, so there should be as many reg names as referenced
-> > >> +  registers:
-> > >> +  "dat"		: Input/output register (Required),
-> > >> +  "set"		: Register for set output bits (Optional),
-> > >> +  "clr"		: Register for clear output bits (Optional),
-> > >> +  "dirout"	: Register for setup direction as output (Optional),
-> > >> +  "dirin"	: Register for setup direction as input (Optional).
-> > >> +- gpio-controller: Marks the device node as a gpio controller.
-> > >> +- #gpio-cells: Should be two.
-> > ...
-> > > 
-> > > I'm trying to figure out what to say about this binding. It's not really
-> > > describing hardware, instead it's strongly tied to how the basic-mmio-gpio
-> > > driver expects the platform data to look.
-> > 
-> > I'm not sure; the binding seems to only contain a direct representation
-> > of pure HW properties; the addresses/offsets of various registers in the
-> > HW block.
-> > 
-> > > It makes more sense to actually describe the hardware in question,
-> > > and then have the driver handle that as expected. I.e. either have a
-> > > small conversion layer that binds to the actual hardware compatible
-> > > value and registers a basic-mmio-gpio device from there, or extend the
-> > > basic-mmio-gpio driver to do it by itself.
-> > 
-> > Ah, I guess the question more: Do we want generic bindings that describe
-> > the low-level details of the HW in a completely generic fashion so that
-> > new HW can be supported with zero kernel changes, or do we want a simple
-> > driver with a lookup table that maps from compatible value to the HW
-> > configuration? One of the potential benefits of DT is to be able to
-> > support new HW without code changes, although perhaps that's more
-> > typically considered in the context of new boards rather than new IP
-> > blocks or SoCs.
-> 
-> I think that going forward it would be better to have have a compatible
-> string per different device. As Olof pointed out, we're leaking the way
-> we currently handle things in Linux into the binding, rather than
-> precisely describing the hardware (with a unique compatible string). I'm
-> not sure if this is much better than embedding a bytecode describing how
-> to poke devices.
-> 
-> Certainly there should be more-specific bindings for each device, so we
-> can later improve support for them. If we have that anyway, I think it
-> would be nicer to have the mapping from that compatible string to some
-> internal data passed to the simple-gpio driver, rather than explicitly
-> stating that the current version of the Linux simple-gpio driver is
-> capable of driving the device.
-> 
-> I think the issue is that we're describing a hardware block in general,
-> rather than the instance of the hardware block, and that limits how
-> flexibly we can use the data in the description.
-
-A lot of people - a lot of opinions.
-So, what the final resolution for this?
-
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index 7951b4e..49f98b1 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -532,3 +532,73 @@
+ 	mode = <3>;
+ 	power = <50>;
+ };
++
++&dsi1 {
++	vdds_dsi-supply = <&vcxio>;
++};
++
++&dsi2 {
++	vdds_dsi-supply = <&vcxio>;
++};
++
++&hdmi {
++	vdda_hdmi_dac-supply = <&vdac>;
++};
++
++/ {
++	aliases {
++		display0 = &lcd0;
++		display1 = &lcd1;
++		display2 = &hdmi0;
++	};
++
++	lcd0: display@0 {
++		compatible = "tpo,taal", "panel-dsi-cm";
++
++		video-source = <&dsi1>;
++
++		lanes = <
++			0       /* clk + */
++			1       /* clk - */
++			2       /* data1 + */
++			3       /* data1 - */
++			4       /* data2 + */
++			5       /* data2 - */
++		>;
++
++		gpios = <&gpio4 6 0>;	/* 102, reset */
++	};
++
++	lcd1: display@1 {
++		compatible = "tpo,taal", "panel-dsi-cm";
++
++		video-source = <&dsi2>;
++
++		lanes = <
++			0       /* clk + */
++			1       /* clk - */
++			2       /* data1 + */
++			3       /* data1 - */
++			4       /* data2 + */
++			5       /* data2 - */
++		>;
++
++		gpios = <&gpio4 8 0>;	/* 104, reset */
++	};
++
++	tpd12s015: encoder@0 {
++		compatible = "ti,tpd12s015";
++
++		video-source = <&hdmi>;
++
++		gpios = <&gpio2 28 0>,	/* 60, CT CP HPD */
++			<&gpio2 9 0>,	/* 41, LS OE */
++			<&gpio2 31 0>;	/* 63, HPD */
++	};
++
++	hdmi0: connector@0 {
++		compatible = "ti,hdmi_connector";
++
++		video-source = <&tpd12s015>;
++	};
++};
 -- 
-Alexander Shiyan <shc_work@mail.ru>
+1.8.1.2
+
