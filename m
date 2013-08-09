@@ -1,75 +1,202 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V3 1/2] DT: Add documentation for rt2880-wdt
-Date: Fri, 9 Aug 2013 12:34:59 -0700
-Message-ID: <20130809193459.GE10417@roeck-us.net>
-References: <1376074831-29561-1-git-send-email-blogic@openwrt.org>
+From: Anton Vorontsov <anton@enomsg.org>
+Subject: Re: [PATCH 1/2] power: Add APM X-Gene system reboot driver
+Date: Fri, 9 Aug 2013 14:28:50 -0700
+Message-ID: <20130809212849.GD12638@lizard.sbx05730.santaca.wayport.net>
+References: <1372797539-13111-1-git-send-email-lho@apm.com>
+ <1372797539-13111-2-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1376074831-29561-1-git-send-email-blogic@openwrt.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: John Crispin <blogic@openwrt.org>
-Cc: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <1372797539-13111-2-git-send-email-lho@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Loc Ho <lho@apm.com>
+Cc: fkan@apm.com, Catalin.Marinas@arm.com, devicetree-discuss@lists.ozlabs.org, ksankaran@apm.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 09, 2013 at 09:00:31PM +0200, John Crispin wrote:
-> This document describes the binding of the watchdog core found ralink wireless
-> SoC.
+On Tue, Jul 02, 2013 at 02:38:58PM -0600, Loc Ho wrote:
+> power: Add APM X-Gene SoC system reboot driver. This driver handles only
+> system reboot. System shutdown is board specific and can be handled by board
+> driver or GPIO based shutdown driver.
 > 
-> Signed-off-by: John Crispin <blogic@openwrt.org>
-> Cc: linux-watchdog@vger.kernel.org
-> Cc: linux-mips@linux-mips.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-
+> Signed-off-by: Loc Ho <lho@apm.com>
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> Signed-off-by: Kumar Sankaran <ksankaran@apm.com>
 > ---
-> Changes in V3:
-> * renamed file to rt2880-wdt.txt
+
+The patch looks great, thanks for it! Just a few minor issues I noticed...
+
+>  drivers/power/reset/Kconfig        |    7 +++
+>  drivers/power/reset/Makefile       |    1 +
+>  drivers/power/reset/xgene-reboot.c |  101 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 109 insertions(+), 0 deletions(-)
+>  create mode 100755 drivers/power/reset/xgene-reboot.c
 > 
->  .../devicetree/bindings/watchdog/rt2880-wdt.txt     |   19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/rt2880-wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/rt2880-wdt.txt b/Documentation/devicetree/bindings/watchdog/rt2880-wdt.txt
-> new file mode 100644
-> index 0000000..a654dd1
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> index 349e9ae..c41a7de 100644
+> --- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+> @@ -37,3 +37,10 @@ config POWER_RESET_VEXPRESS
+>  	help
+>  	  Power off and reset support for the ARM Ltd. Versatile
+>  	  Express boards.
+> +
+> +config POWER_RESET_XGENE
+> +        bool
+> +	default y if ARM64
+
+This is not good. You don't want to select the driver for all ARM64
+builds. I changed it to 'depends on' and made the driver optionally
+selectable.
+
+> +        depends on POWER_RESET	
+> +        help
+> +          Reboot support for the APM SoC X-Gene Eval boards.
+
+Some whitespace issues here...
+
+> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+> index 372807f..e75d54c 100644
+> --- a/drivers/power/reset/Makefile
+> +++ b/drivers/power/reset/Makefile
+> @@ -2,3 +2,4 @@ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
+> +obj-$(CONFIG_POWER_RESET_XGENE) += xgene-reboot.o
+> diff --git a/drivers/power/reset/xgene-reboot.c b/drivers/power/reset/xgene-reboot.c
+> new file mode 100755
+
+Executable bit on the source file?..
+
+> index 0000000..e6e4178
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/rt2880-wdt.txt
-> @@ -0,0 +1,19 @@
-> +Ralink Watchdog Timers
+> +++ b/drivers/power/reset/xgene-reboot.c
+> @@ -0,0 +1,101 @@
+> +/*
+> + * xgene-reboot.c - AppliedMicro X-Gene SoC Reboot Driver
+
+No need for the file name in the file itself.
+
+> + *
+> + * Copyright (c) 2013, Applied Micro Circuits Corporation
+> + * Author: Feng Kan <fkan@apm.com>
+> + * Author: Loc Ho <lho@apm.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, write to the Free Software
+> + * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+> + * MA 02111-1307 USA
+> + *
+> + * This driver provides system reboot functionality for APM X-Gene SoC.
+> + * For system shutdown, this is board specify. If a board designer
+> + * implements GPIO shutdown, use the gpio-poweroff.c driver.
+> + *
+> + */
+> +#include <linux/io.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/stat.h>
+> +#include <linux/slab.h>
+> +#include <asm/system_misc.h>
 > +
-> +Required properties :
-> +- compatible: must be "ralink,rt2880-wdt"
-> +- reg: physical base address of the controller and length of the register range
+> +struct xgene_reboot_context {
+> +	struct platform_device *pdev;
+> +	void *csr;
+> +	u32 mask;
+> +};
 > +
-> +Optional properties :
-> +- interrupt-parent: phandle to the INTC device node
-> +- interrupts: Specify the INTC interrupt number
+> +static struct xgene_reboot_context *xgene_restart_ctx;
 > +
-> +Example:
+> +static void xgene_restart(char str, const char *cmd)
+> +{
+> +	struct xgene_reboot_context *ctx = xgene_restart_ctx;
+> +	unsigned long timeout;
 > +
-> +	watchdog@120 {
-> +		compatible = "ralink,rt2880-wdt";
-> +		reg = <0x120 0x10>;
+> +	/* Issue the reboot */
+> +	if (ctx)
+> +		writel(ctx->mask, ctx->csr);
 > +
-> +		interrupt-parent = <&intc>;
-> +		interrupts = <1>;
-> +	};
+> +	timeout = jiffies + HZ;
+> +	while (time_before(jiffies, timeout))
+> +		cpu_relax();
+> +
+> +	dev_emerg(&ctx->pdev->dev, "Unable to restart system\n");
+> +}
+> +
+> +static int xgene_reboot_probe(struct platform_device *pdev)
+> +{
+> +	struct xgene_reboot_context *ctx;
+> +
+> +	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (ctx == NULL) {
+
+!ctx is shorter
+
+> +		dev_err(&pdev->dev, "out of memory for context\n");
+> +		return -ENODEV;
+> +	}
+> +	ctx->csr = of_iomap(pdev->dev.of_node, 0);
+> +	if (ctx->csr == NULL) {
+> +		devm_kfree(&pdev->dev, ctx);
+> +		dev_err(&pdev->dev, "can not map resource\n");
+> +		return -ENODEV;
+> +	}
+> +	if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
+> +		ctx->mask = 0xFFFFFFFF;
+> +	ctx->pdev = pdev;
+> +	arm_pm_restart = xgene_restart;
+> +	xgene_restart_ctx = ctx;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id xgene_reboot_of_match[] = {
+> +	{ .compatible = "apm,xgene-reboot" },
+> +	{}
+> +};
+> +
+> +static struct platform_driver xgene_reboot_driver = {
+> +	.probe = xgene_reboot_probe,
+> +	.driver = {
+> +		.name = "xgene-reboot",
+> +		.of_match_table = xgene_reboot_of_match,
+> +	},
+> +};
+> +
+> +static int __init xgene_reboot_init(void)
+> +{
+> +	return platform_driver_register(&xgene_reboot_driver);
+> +}
+> +device_initcall(xgene_reboot_init);
 > -- 
-> 1.7.10.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> 1.5.5
+
+Wow! This is an ancient git release, 5 years old. Just saying... :)
+
+Anyways, I fixed all the nits and applied the patch to the battery-2.6.git
+tree.
+
+Thanks!
+
+Anton
