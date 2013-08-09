@@ -1,78 +1,109 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-wg0-f50.google.com ([74.125.82.50]:52881 "EHLO
-	mail-wg0-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752286Ab3HAIrI (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 1 Aug 2013 04:47:08 -0400
-Received: by mail-wg0-f50.google.com with SMTP id m15so1439651wgh.29
-        for <devicetree@vger.kernel.org>; Thu, 01 Aug 2013 01:47:07 -0700 (PDT)
-Date: Thu, 1 Aug 2013 09:47:02 +0100
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/1] mfd: palmas: Add power off control
-Message-ID: <20130801084702.GM13298@lee--X1>
-References: <1375185957-28212-1-git-send-email-bilhuang@nvidia.com>
- <20130731095636.GB13298@lee--X1>
- <51F946C7.2080205@wwwdotorg.org>
+Received: from bear.ext.ti.com ([192.94.94.41]:51324 "EHLO bear.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1030596Ab3HIIjc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 04:39:32 -0400
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC 03/22] ARM: OMAP2+: add omapdss_init_of()
+Date: Fri, 9 Aug 2013 11:38:48 +0300
+Message-ID: <1376037547-10859-4-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <51F946C7.2080205@wwwdotorg.org>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Bill Huang <bilhuang@nvidia.com>, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob@landley.net, broonie@linaro.org, nm@ti.com, j-keerthy@ti.com, grant.likely@linaro.org, ian@slimlogic.co.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Mallikarjun Kasoju <mkasoju@nvidia.com>
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 31 Jul 2013, Stephen Warren wrote:
+omapdss driver uses a omapdss platform device to pass platform specific
+function pointers and DSS hardware version from the arch code to the
+driver. This device is needed also when booting with DT.
 
-> On 07/31/2013 03:56 AM, Lee Jones wrote:
-> > On Tue, 30 Jul 2013, Bill Huang wrote:
-> > 
-> >> Hook up "pm_power_off" to palmas power off routine if there is DT
-> >> property "ti,system-power-controller" defined, so platform which is
-> >> powered by this regulator can be powered off properly.
-> >>
-> >> Based on work by:
-> >> Mallikarjun Kasoju <mkasoju@nvidia.com>
-> >>
-> >> Signed-off-by: Bill Huang <bilhuang@nvidia.com>
-> >> cc: Mallikarjun Kasoju <mkasoju@nvidia.com>
-> > 
-> > Please put the 'Cc:' (not 'cc:') above the SoBs, then drop the "Based
-> > on work by:" and replace with:
-> > 
-> > Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
-> > Signed-off-by: Bill Huang <bilhuang@nvidia.com>
-> > 
-> > This insinuates that the original patch was crated by Mallikarjun.
-> 
-> That advice may not be correct. Did Mallikarjun actually create *this*
-> patch? More likely, this patch was based on an equivalent change to some
-> other PMIC, and Bill just applied the same technique to this other
-> driver.
+This patch adds omapdss_init_of() function, called from board-generic at
+init time, which creates the omapdss device.
 
-Yes, I agree with this, and I'm sure there is a place for "Based on
-work by:" or "Originally authored by:" tags, but in general, I think
-the SoBs can paint a pretty good picture.
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ arch/arm/mach-omap2/board-generic.c |  2 ++
+ arch/arm/mach-omap2/common.h        |  2 ++
+ arch/arm/mach-omap2/display.c       | 34 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 38 insertions(+)
 
-For example, if this patch is simply using techniques which already
-exist in other drivers, I would personally not mention it in the
-commit message. A massive percentage of kernel code has been
-influenced by already existing implementations. Not much truly new and
-unique kernel code enters the kernel these days.
-
-> If Mallikarjun really did write this patch, then the git author
-> field should also be set to Mallikarjun not Bill.
-
-That's not how I'm lead to believe it works. I am under the impression
-that if you take an already existing patch and upstream it with little
-changes, then you keep the original creator's authorship and apply
-your SoB before sending. Whereas if you have make considerable (down
-to perception) changes to the patch, then you may adopt authorship. To
-credit the efforts of the original author in this case I would advise
-to keep the first SoB. Providing they agree with the changes of course.
-
+diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+index d388d33..aaf1125 100644
+--- a/arch/arm/mach-omap2/board-generic.c
++++ b/arch/arm/mach-omap2/board-generic.c
+@@ -61,6 +61,8 @@ static void __init omap_generic_init(void)
+ 		legacy_init_ehci_clk("auxclk3_ck");
+ 	else if (of_machine_is_compatible("ti,omap5-uevm"))
+ 		legacy_init_ehci_clk("auxclk1_ck");
++
++	omapdss_init_of();
+ }
+ 
+ #ifdef CONFIG_SOC_OMAP2420
+diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
+index dfcc182..377900c 100644
+--- a/arch/arm/mach-omap2/common.h
++++ b/arch/arm/mach-omap2/common.h
+@@ -300,5 +300,7 @@ extern int omap_dss_reset(struct omap_hwmod *);
+ /* SoC specific clock initializer */
+ extern int (*omap_clk_init)(void);
+ 
++int __init omapdss_init_of(void);
++
+ #endif /* __ASSEMBLER__ */
+ #endif /* __ARCH_ARM_MACH_OMAP2PLUS_COMMON_H */
+diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.c
+index ff37be1..c62aee0 100644
+--- a/arch/arm/mach-omap2/display.c
++++ b/arch/arm/mach-omap2/display.c
+@@ -23,6 +23,8 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/delay.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
+ 
+ #include <video/omapdss.h>
+ #include "omap_hwmod.h"
+@@ -564,3 +566,35 @@ int omap_dss_reset(struct omap_hwmod *oh)
+ 
+ 	return r;
+ }
++
++int __init omapdss_init_of(void)
++{
++	int r;
++	enum omapdss_version ver;
++
++	static struct omap_dss_board_info board_data = {
++		.dsi_enable_pads = omap_dsi_enable_pads,
++		.dsi_disable_pads = omap_dsi_disable_pads,
++		.get_context_loss_count = omap_pm_get_dev_context_loss_count,
++		.set_min_bus_tput = omap_dss_set_min_bus_tput,
++	};
++
++	ver = omap_display_get_version();
++
++	if (ver == OMAPDSS_VER_UNKNOWN) {
++		pr_err("DSS not supported on this SoC\n");
++		return -ENODEV;
++	}
++
++	board_data.version = ver;
++
++	omap_display_device.dev.platform_data = &board_data;
++
++	r = platform_device_register(&omap_display_device);
++	if (r < 0) {
++		pr_err("Unable to register omapdss device\n");
++		return r;
++	}
++
++	return 0;
++}
 -- 
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.8.1.2
+
