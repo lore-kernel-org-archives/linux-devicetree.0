@@ -1,81 +1,810 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from arroyo.ext.ti.com ([192.94.94.40]:47531 "EHLO arroyo.ext.ti.com"
+Received: from ns.mm-sol.com ([212.124.72.66]:60875 "EHLO extserv.mm-sol.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751694Ab3HUOcT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 21 Aug 2013 10:32:19 -0400
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v3 3/5] arm: omap5: dts: add palmas-usb node
-Date: Wed, 21 Aug 2013 20:01:32 +0530
-Message-ID: <1377095494-15380-4-git-send-email-kishon@ti.com>
-In-Reply-To: <1377095494-15380-1-git-send-email-kishon@ti.com>
-References: <1377095494-15380-1-git-send-email-kishon@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+	id S965382Ab3HIJzN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 05:55:13 -0400
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [RFC PATCH v2 2/3] usb: phy: Add Qualcomm SS-USB and HS-USB drivers for DWC3 core
+Date: Fri,  9 Aug 2013 12:53:46 +0300
+Message-Id: <1376042027-9798-3-git-send-email-iivanov@mm-sol.com>
+In-Reply-To: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
+References: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
 Sender: devicetree-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, balbi@ti.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, linux@arm.linux.org.uk, javier.martinez@collabora.co.uk, devicetree@vger.kernel.org, kishon@ti.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: balbi@ti.com
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Felipe Balbi <balbi@ti.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-Without this node, there will be no palmas
-driver to notify dwc3 that a cable has
-been connected and, without that, dwc3
-will never initialize.
+These drivers handles control and configuration of the HS
+and SS USB PHY transceivers. They are part of the driver
+which manage Synopsys DesignWare USB3 controller stack
+inside Qualcomm SoC's.
 
-[ kishon@ti.com: added dt properties for enabling vbus/id interrupts and fixed
-vbus-supply value after SMPS10 is modeled as 2 regulators ]
-
-Signed-off-by: Felipe Balbi <balbi@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
 ---
- arch/arm/boot/dts/omap5-uevm.dts |   12 ++++++++++++
- arch/arm/boot/dts/omap5.dtsi     |    2 +-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/usb/phy/Kconfig           |   11 ++
+ drivers/usb/phy/Makefile          |    2 +
+ drivers/usb/phy/phy-msm-dwc3-hs.c |  340 ++++++++++++++++++++++++++++++++
+ drivers/usb/phy/phy-msm-dwc3-ss.c |  387 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 740 insertions(+)
+ create mode 100644 drivers/usb/phy/phy-msm-dwc3-hs.c
+ create mode 100644 drivers/usb/phy/phy-msm-dwc3-ss.c
 
-diff --git a/arch/arm/boot/dts/omap5-uevm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-index 65d7b60..2a3f363 100644
---- a/arch/arm/boot/dts/omap5-uevm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -272,6 +272,13 @@
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
+diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+index 5443958..40e83b5 100644
+--- a/drivers/usb/phy/Kconfig
++++ b/drivers/usb/phy/Kconfig
+@@ -202,6 +202,17 @@ config USB_RCAR_PHY
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called phy-rcar-usb.
  
-+		extcon_usb3: palmas_usb {
-+			compatible = "ti,palmas-usb-vid";
-+			ti,enable-vbus-detection;
-+			ti,enable-id-detection;
-+			ti,wakeup;
-+		};
++config USB_MSM_DWC3_PHYS
++	tristate "Qualcomm DWC3 USB controller PHY's support"
++	depends on (USB || USB_GADGET) && ARCH_MSM
++	select USB_PHY
++	help
++	  Enable this to support the USB PHY transceivers on MSM chips with
++	  DWC3 USB core. It handles PHY initialization, clock management
++	  required after resetting the hardware and power management.
++	  This driver is required even for peripheral only or host only
++	  mode configurations.
 +
- 		palmas_pmic {
- 			compatible = "ti,palmas-pmic";
- 			interrupt-parent = <&palmas>;
-@@ -470,6 +477,11 @@
- 	phys = <0 &hsusb2_phy &hsusb3_phy>;
- };
- 
-+&usb3 {
-+	extcon = <&extcon_usb3>;
-+	vbus-supply = <&smps10_out1_reg>;
+ config USB_ULPI
+ 	bool "Generic ULPI Transceiver Driver"
+ 	depends on ARM
+diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
+index 98730ca..ddaa11c 100644
+--- a/drivers/usb/phy/Makefile
++++ b/drivers/usb/phy/Makefile
+@@ -24,6 +24,8 @@ obj-$(CONFIG_USB_EHCI_TEGRA)		+= phy-tegra-usb.o
+ obj-$(CONFIG_USB_GPIO_VBUS)		+= phy-gpio-vbus-usb.o
+ obj-$(CONFIG_USB_ISP1301)		+= phy-isp1301.o
+ obj-$(CONFIG_USB_MSM_OTG)		+= phy-msm-usb.o
++obj-$(CONFIG_USB_MSM_DWC3_PHYS)		+= phy-msm-dwc3-hs.o
++obj-$(CONFIG_USB_MSM_DWC3_PHYS)		+= phy-msm-dwc3-ss.o
+ obj-$(CONFIG_USB_MV_OTG)		+= phy-mv-usb.o
+ obj-$(CONFIG_USB_MXS_PHY)		+= phy-mxs-usb.o
+ obj-$(CONFIG_USB_RCAR_PHY)		+= phy-rcar-usb.o
+diff --git a/drivers/usb/phy/phy-msm-dwc3-hs.c b/drivers/usb/phy/phy-msm-dwc3-hs.c
+new file mode 100644
+index 0000000..d91c595
+--- /dev/null
++++ b/drivers/usb/phy/phy-msm-dwc3-hs.c
+@@ -0,0 +1,340 @@
++/* Copyright (c) 2013, Code Aurora Forum. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
++ * 02110-1301, USA.
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++#include <linux/usb/phy.h>
++
++/**
++ *  USB QSCRATCH Hardware registers
++ */
++#define QSCRATCH_CTRL_REG		(0x04)
++#define QSCRATCH_GENERAL_CFG		(0x08)
++#define PHY_CTRL_REG			(0x10)
++#define PARAMETER_OVERRIDE_X_REG	(0x14)
++#define CHARGING_DET_CTRL_REG		(0x18)
++#define CHARGING_DET_OUTPUT_REG		(0x1c)
++#define ALT_INTERRUPT_EN_REG		(0x20)
++#define PHY_IRQ_STAT_REG		(0x24)
++#define CGCTL_REG			(0x28)
++
++#define PHY_3P3_VOL_MIN			3050000 /* uV */
++#define PHY_3P3_VOL_MAX			3300000 /* uV */
++#define PHY_3P3_HPM_LOAD		16000	/* uA */
++
++#define PHY_1P8_VOL_MIN			1800000 /* uV */
++#define PHY_1P8_VOL_MAX			1800000 /* uV */
++#define PHY_1P8_HPM_LOAD		19000	/* uA */
++
++/* TODO: these are suspicious */
++#define USB_VDDCX_NO			1	/* uV */
++#define USB_VDDCX_MIN			5	/* uV */
++#define USB_VDDCX_MAX			7	/* uV */
++
++struct msm_dwc3_hs_phy {
++	struct usb_phy		phy;
++	void __iomem		*base;
++	struct device		*dev;
++
++	struct clk		*xo_clk;
++	struct clk		*sleep_a_clk;
++
++	struct regulator	*v3p3;
++	struct regulator	*v1p8;
++	struct regulator	*vddcx;
++	struct regulator	*vbus;
 +};
 +
- &mcspi1 {
- 
- };
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 4e41409..1659246 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -634,7 +634,7 @@
- 			ti,type = <2>;
- 		};
- 
--		omap_dwc3@4a020000 {
-+		usb3: omap_dwc3@4a020000 {
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss";
- 			reg = <0x4a020000 0x10000>;
++#define	phy_to_dwc3_phy(x)	container_of((x), struct msm_dwc3_hs_phy, phy)
++
++
++/**
++ *
++ * Write register with debug info.
++ *
++ * @base - DWC3 base virtual address.
++ * @offset - register offset.
++ * @val - value to write.
++ *
++ */
++static inline void msm_dwc3_hs_write(void *base, u32 offset, u32 val)
++{
++	iowrite32(val, base + offset);
++}
++
++/**
++ * Write register and read back masked value to confirm it is written
++ *
++ * @base - DWC3 base virtual address.
++ * @offset - register offset.
++ * @mask - register bitmask specifying what should be updated
++ * @val - value to write.
++ *
++ */
++static inline void msm_dwc3_hs_write_readback(void *base, u32 offset,
++					    const u32 mask, u32 val)
++{
++	u32 write_val, tmp = ioread32(base + offset);
++
++	tmp &= ~mask;		/* retain other bits */
++	write_val = tmp | val;
++
++	iowrite32(write_val, base + offset);
++
++	/* Read back to see if val was written */
++	tmp = ioread32(base + offset);
++	tmp &= mask;		/* clear other bits */
++
++	if (tmp != val)
++		pr_err("write: %x to QSCRATCH: %x FAILED\n", val, offset);
++}
++
++static void msm_dwc3_hs_phy_shutdown(struct usb_phy *x)
++{
++	struct msm_dwc3_hs_phy *phy = phy_to_dwc3_phy(x);
++	int ret;
++
++	ret = regulator_set_voltage(phy->v3p3, 0, PHY_3P3_VOL_MAX);
++	if (ret)
++		dev_err(phy->dev, "unable to set voltage for v3p3\n");
++
++	ret = regulator_set_voltage(phy->v1p8, 0, PHY_1P8_VOL_MAX);
++	if (ret)
++		dev_err(phy->dev, "unable to set voltage for v1p8\n");
++
++	ret = regulator_disable(phy->v1p8);
++	if (ret)
++		dev_err(phy->dev, "cannot disable v1p8\n");
++
++	ret = regulator_disable(phy->v3p3);
++	if (ret)
++		dev_err(phy->dev, "cannot disable v3p3\n");
++
++	ret = regulator_set_voltage(phy->vddcx, USB_VDDCX_NO, USB_VDDCX_MAX);
++	if (ret)
++		dev_err(phy->dev, "unable to set voltage for vddcx\n");
++
++	ret = regulator_disable(phy->vddcx);
++	if (ret)
++		dev_err(phy->dev, "unable to enable the vddcx\n");
++
++	clk_disable_unprepare(phy->sleep_a_clk);
++}
++
++static int msm_dwc3_hs_phy_init(struct usb_phy *x)
++{
++	struct msm_dwc3_hs_phy	*phy = phy_to_dwc3_phy(x);
++	int ret;
++
++	clk_prepare_enable(phy->sleep_a_clk);
++
++	ret = regulator_set_voltage(phy->vddcx, USB_VDDCX_MIN, USB_VDDCX_MAX);
++	if (ret) {
++		dev_err(phy->dev, "unable to set voltage for vddcx\n");
++		return ret;
++	}
++
++	ret = regulator_enable(phy->vddcx);
++	if (ret) {
++		dev_err(phy->dev, "unable to enable the vddcx\n");
++		return ret;
++	}
++
++	ret = regulator_set_voltage(phy->v3p3, PHY_3P3_VOL_MIN,
++				    PHY_3P3_VOL_MAX);
++	if (ret) {
++		dev_err(phy->dev, "unable to set voltage for v3p3\n");
++		return ret;
++	}
++
++	ret = regulator_set_voltage(phy->v1p8, PHY_1P8_VOL_MIN,
++				    PHY_1P8_VOL_MAX);
++	if (ret) {
++		dev_err(phy->dev, "unable to set voltage for v1p8\n");
++		return ret;
++	}
++
++	ret = regulator_set_optimum_mode(phy->v1p8, PHY_1P8_HPM_LOAD);
++	if (ret < 0) {
++		dev_err(phy->dev, "unable to set HPM of regulator v1p8\n");
++		return ret;
++	}
++
++	ret = regulator_enable(phy->v1p8);
++	if (ret) {
++		dev_err(phy->dev, "unable to enable v1p8\n");
++		return ret;
++	}
++
++	ret = regulator_set_optimum_mode(phy->v3p3, PHY_3P3_HPM_LOAD);
++	if (ret < 0) {
++		dev_err(phy->dev, "unable to set HPM of regulator v3p3\n");
++		return ret;
++	}
++
++	ret = regulator_enable(phy->v3p3);
++	if (ret) {
++		dev_err(phy->dev, "unable to enable v3p3\n");
++		return ret;
++	}
++
++	/*
++	 * HSPHY Initialization: Enable UTMI clock and clamp enable HVINTs,
++	 * and disable RETENTION (power-on default is ENABLED)
++	 */
++	msm_dwc3_hs_write(phy->base, PHY_CTRL_REG, 0x5220bb2);
++	usleep_range(2000, 2200);
++
++	/*
++	 * write HSPHY init value to QSCRATCH reg to set HSPHY parameters like
++	 * VBUS valid threshold, disconnect valid threshold, DC voltage level,
++	 * preempasis and rise/fall time.
++	 */
++	msm_dwc3_hs_write_readback(phy->base, PARAMETER_OVERRIDE_X_REG,
++				0x03ffffff, 0x00d191a4);
++
++	/* Disable (bypass) VBUS and ID filters */
++	msm_dwc3_hs_write(phy->base, QSCRATCH_GENERAL_CFG, 0x78);
++
++	return 0;
++}
++
++static int msm_dwc3_hs_phy_set_vbus(struct usb_phy *x, int on)
++{
++	struct msm_dwc3_hs_phy	*phy = phy_to_dwc3_phy(x);
++	int ret;
++
++	if (on)
++		ret = regulator_enable(phy->vbus);
++	else
++		ret = regulator_disable(phy->vbus);
++
++	if (ret)
++		dev_err(x->dev, "Cannot %s Vbus\n", on ? "set" : "off");
++	return ret;
++}
++
++static int msm_dwc3_hs_probe(struct platform_device *pdev)
++{
++	struct msm_dwc3_hs_phy	*phy;
++	struct resource			*res;
++	void __iomem			*base;
++
++	dev_info(&pdev->dev, "MSM DWC3 HS-PHY\n");
++
++	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
++	if (!phy) {
++		dev_err(&pdev->dev, "no alloc mem for MSM DWC3 HS-PHY\n");
++		return -ENOMEM;
++	}
++
++	platform_set_drvdata(pdev, phy);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	phy->vddcx = devm_regulator_get(&pdev->dev, "vddcx");
++	if (IS_ERR(phy->vddcx)) {
++		dev_err(&pdev->dev, "unable to get vddcx\n");
++		return  PTR_ERR(phy->vddcx);
++	}
++
++	phy->v3p3 = devm_regulator_get(phy->dev, "v3p3");
++	if (IS_ERR(phy->v3p3)) {
++		dev_err(phy->dev, "unable to get v3p3\n");
++		return PTR_ERR(phy->v3p3);
++	}
++
++	phy->v1p8 = devm_regulator_get(phy->dev, "v1p8");
++	if (IS_ERR(phy->v1p8)) {
++		dev_err(phy->dev, "unable to get v1p8\n");
++		return PTR_ERR(phy->v1p8);
++	}
++
++	phy->vbus = devm_regulator_get(&pdev->dev, "vbus");
++	if (IS_ERR(phy->vbus)) {
++		dev_err(phy->dev, "Failed to get vbus\n");
++		return PTR_ERR(phy->vbus);
++	}
++
++	phy->xo_clk = devm_clk_get(&pdev->dev, "xo");
++	if (IS_ERR(phy->xo_clk)) {
++		dev_err(&pdev->dev, "unable to get TCXO buffer handle\n");
++		return PTR_ERR(phy->xo_clk);
++	}
++
++	phy->sleep_a_clk = devm_clk_get(&pdev->dev, "sleep_a_clk");
++	if (IS_ERR(phy->sleep_a_clk)) {
++		dev_err(&pdev->dev, "failed to get sleep_a_clk\n");
++		return PTR_ERR(phy->sleep_a_clk);
++	}
++
++	clk_prepare_enable(phy->xo_clk);
++
++	phy->dev		= &pdev->dev;
++	phy->base		= base;
++	phy->phy.dev		= phy->dev;
++	phy->phy.label		= "msm-dwc3-hsphy";
++	phy->phy.init		= msm_dwc3_hs_phy_init;
++	phy->phy.shutdown	= msm_dwc3_hs_phy_shutdown;
++	phy->phy.set_vbus	= msm_dwc3_hs_phy_set_vbus;
++	phy->phy.type		= USB_PHY_TYPE_USB2;
++	phy->phy.state          = OTG_STATE_UNDEFINED;
++
++	usb_add_phy_dev(&phy->phy);
++
++	return 0;
++}
++
++static int msm_dwc3_hs_remove(struct platform_device *pdev)
++{
++	struct msm_dwc3_hs_phy *phy = platform_get_drvdata(pdev);
++
++	clk_disable_unprepare(phy->xo_clk);
++	usb_remove_phy(&phy->phy);
++	return 0;
++}
++
++static const struct of_device_id msm_dwc3_hs_id_table[] = {
++	{ .compatible = "qcom,dwc3-hsphy" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, msm_dwc3_hs_id_table);
++
++static struct platform_driver msm_dwc3_hs_driver = {
++	.probe		= msm_dwc3_hs_probe,
++	.remove		= msm_dwc3_hs_remove,
++	.driver		= {
++		.name	= "msm-dwc3-hsphy",
++		.owner	= THIS_MODULE,
++		.of_match_table = msm_dwc3_hs_id_table,
++	},
++};
++
++module_platform_driver(msm_dwc3_hs_driver);
++
++MODULE_ALIAS("platform:msm_dwc3_hsphy");
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("DesignWare USB3 MSM HS-PHY driver");
+diff --git a/drivers/usb/phy/phy-msm-dwc3-ss.c b/drivers/usb/phy/phy-msm-dwc3-ss.c
+new file mode 100644
+index 0000000..75f1781
+--- /dev/null
++++ b/drivers/usb/phy/phy-msm-dwc3-ss.c
+@@ -0,0 +1,387 @@
++/* Copyright (c) 2013, Code Aurora Forum. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
++ * 02110-1301, USA.
++ *
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++#include <linux/usb/phy.h>
++
++/**
++ *  USB QSCRATCH Hardware registers
++ */
++#define PHY_CTRL_REG			(0x00)
++#define PHY_PARAM_CTRL_1		(0x04)
++#define PHY_PARAM_CTRL_2		(0x08)
++#define CR_PROTOCOL_DATA_IN_REG		(0x0c)
++#define CR_PROTOCOL_DATA_OUT_REG	(0x10)
++#define CR_PROTOCOL_CAP_ADDR_REG	(0x14)
++#define CR_PROTOCOL_CAP_DATA_REG	(0x18)
++#define CR_PROTOCOL_READ_REG		(0x1c)
++#define CR_PROTOCOL_WRITE_REG		(0x20)
++
++#define PHY_1P8_VOL_MIN			1800000 /* uV */
++#define PHY_1P8_VOL_MAX			1800000 /* uV */
++#define PHY_1P8_HPM_LOAD		23000	/* uA */
++
++/* TODO: these are suspicious */
++#define USB_VDDCX_NO			1	/* uV */
++#define USB_VDDCX_MIN			5	/* uV */
++#define USB_VDDCX_MAX			7	/* uV */
++
++struct msm_dwc3_ss_phy {
++	struct usb_phy		phy;
++	void __iomem		*base;
++	struct device		*dev;
++
++	struct regulator	*v1p8;
++	struct regulator	*vddcx;
++
++	struct clk		*xo_clk;
++	struct clk		*ref_clk;
++};
++
++#define	phy_to_dwc3_phy(x)	container_of((x), struct msm_dwc3_ss_phy, phy)
++
++
++/**
++ *
++ * Write register with debug info.
++ *
++ * @base - DWC3 base virtual address.
++ * @offset - register offset.
++ * @val - value to write.
++ *
++ */
++static inline void msm_dwc3_ss_write(void *base, u32 offset, u32 val)
++{
++	iowrite32(val, base + offset);
++}
++
++/**
++ * Write register and read back masked value to confirm it is written
++ *
++ * @base - DWC3 base virtual address.
++ * @offset - register offset.
++ * @mask - register bitmask specifying what should be updated
++ * @val - value to write.
++ *
++ */
++static inline void msm_dwc3_ss_write_readback(void *base, u32 offset,
++					    const u32 mask, u32 val)
++{
++	u32 write_val, tmp = ioread32(base + offset);
++
++	tmp &= ~mask;		/* retain other bits */
++	write_val = tmp | val;
++
++	iowrite32(write_val, base + offset);
++
++	/* Read back to see if val was written */
++	tmp = ioread32(base + offset);
++	tmp &= mask;		/* clear other bits */
++
++	if (tmp != val)
++		pr_err("write: %x to QSCRATCH: %x FAILED\n", val, offset);
++}
++
++/**
++ *
++ * Write SSPHY register with debug info.
++ *
++ * @base - DWC3 base virtual address.
++ * @addr - SSPHY address to write.
++ * @val - value to write.
++ *
++ */
++static void msm_dwc3_ss_write_phycreg(void *base, u32 addr, u32 val)
++{
++	iowrite32(addr, base + CR_PROTOCOL_DATA_IN_REG);
++	iowrite32(0x1, base + CR_PROTOCOL_CAP_ADDR_REG);
++	while (ioread32(base + CR_PROTOCOL_CAP_ADDR_REG))
++		cpu_relax();
++
++	iowrite32(val, base + CR_PROTOCOL_DATA_IN_REG);
++	iowrite32(0x1, base + CR_PROTOCOL_CAP_DATA_REG);
++	while (ioread32(base + CR_PROTOCOL_CAP_DATA_REG))
++		cpu_relax();
++
++	iowrite32(0x1, base + CR_PROTOCOL_WRITE_REG);
++	while (ioread32(base + CR_PROTOCOL_WRITE_REG))
++		cpu_relax();
++}
++
++/**
++ *
++ * Read SSPHY register with debug info.
++ *
++ * @base - DWC3 base virtual address.
++ * @addr - SSPHY address to read.
++ *
++ */
++static u32 msm_dwc3_ss_read_phycreg(void *base, u32 addr)
++{
++	bool first_read = true;
++
++	iowrite32(addr, base + CR_PROTOCOL_DATA_IN_REG);
++	iowrite32(0x1, base + CR_PROTOCOL_CAP_ADDR_REG);
++	while (ioread32(base + CR_PROTOCOL_CAP_ADDR_REG))
++		cpu_relax();
++
++	/*
++	 * Due to hardware bug, first read of SSPHY register might be
++	 * incorrect. Hence as workaround, SW should perform SSPHY register
++	 * read twice, but use only second read and ignore first read.
++	 */
++retry:
++	iowrite32(0x1, base + CR_PROTOCOL_READ_REG);
++	while (ioread32(base + CR_PROTOCOL_READ_REG))
++		cpu_relax();
++
++	if (first_read) {
++		ioread32(base + CR_PROTOCOL_DATA_OUT_REG);
++		first_read = false;
++		goto retry;
++	}
++
++	return ioread32(base + CR_PROTOCOL_DATA_OUT_REG);
++}
++
++static void msm_dwc3_ss_phy_shutdown(struct usb_phy *x)
++{
++	struct msm_dwc3_ss_phy *phy = phy_to_dwc3_phy(x);
++	int ret;
++
++	/* Sequence to put SSPHY in low power state:
++	 * 1. Clear REF_PHY_EN in PHY_CTRL_REG
++	 * 2. Clear REF_USE_PAD in PHY_CTRL_REG
++	 * 3. Set TEST_POWERED_DOWN in PHY_CTRL_REG to enable PHY retention
++	 * 4. Disable SSPHY ref clk
++	 */
++	msm_dwc3_ss_write_readback(phy->base, PHY_CTRL_REG, (1 << 8), 0x0);
++	msm_dwc3_ss_write_readback(phy->base, PHY_CTRL_REG, (1 << 28), 0x0);
++	msm_dwc3_ss_write_readback(phy->base, PHY_CTRL_REG,
++				    (1 << 26), (1 << 26));
++
++	usleep_range(1000, 1200);
++	clk_disable_unprepare(phy->ref_clk);
++
++	ret = regulator_set_voltage(phy->vddcx, USB_VDDCX_NO, USB_VDDCX_MAX);
++	if (ret)
++		dev_err(phy->dev, "unable to set voltage for vddcx\n");
++
++	regulator_disable(phy->vddcx);
++
++	ret = regulator_set_voltage(phy->v1p8, 0, PHY_1P8_VOL_MAX);
++	if (ret)
++		dev_err(phy->dev, "unable to set v1p8\n");
++
++	regulator_disable(phy->v1p8);
++}
++
++static int msm_dwc3_ss_phy_init(struct usb_phy *x)
++{
++	struct msm_dwc3_ss_phy *phy = phy_to_dwc3_phy(x);
++	u32 data = 0;
++	int ret;
++
++	ret = regulator_set_voltage(phy->vddcx, USB_VDDCX_MIN, USB_VDDCX_MAX);
++	if (ret) {
++		dev_err(phy->dev, "unable to set voltage for vddcx\n");
++		return ret;
++	}
++
++	ret = regulator_enable(phy->vddcx);
++	if (ret) {
++		dev_err(phy->dev, "cannot enable the vddcx\n");
++		return ret;
++	}
++
++	ret = regulator_set_voltage(phy->v1p8, PHY_1P8_VOL_MIN,
++				    PHY_1P8_VOL_MAX);
++	if (ret) {
++		regulator_disable(phy->vddcx);
++		dev_err(phy->dev, "unable to set v1p8\n");
++		return ret;
++	}
++
++	ret = regulator_enable(phy->v1p8);
++	if (ret) {
++		regulator_disable(phy->vddcx);
++		dev_err(phy->dev, "cannot enable the v1p8\n");
++		return ret;
++	}
++
++	clk_prepare_enable(phy->ref_clk);
++	usleep_range(1000, 1200);
++
++	/* SSPHY Initialization: Use ref_clk from pads and set its parameters */
++	msm_dwc3_ss_write(phy->base, PHY_CTRL_REG, 0x10210002);
++	msleep(30);
++	/* Assert SSPHY reset */
++	msm_dwc3_ss_write(phy->base, PHY_CTRL_REG, 0x10210082);
++	usleep_range(2000, 2200);
++	/* De-assert SSPHY reset - power and ref_clock must be ON */
++	msm_dwc3_ss_write(phy->base, PHY_CTRL_REG, 0x10210002);
++	usleep_range(2000, 2200);
++	/* Ref clock must be stable now, enable ref clock for HS mode */
++	msm_dwc3_ss_write(phy->base, PHY_CTRL_REG, 0x10210102);
++	usleep_range(2000, 2200);
++
++	/*
++	 * WORKAROUND: There is SSPHY suspend bug due to which USB enumerates
++	 * in HS mode instead of SS mode. Workaround it by asserting
++	 * LANE0.TX_ALT_BLOCK.EN_ALT_BUS to enable TX to use alt bus mode
++	 */
++	data = msm_dwc3_ss_read_phycreg(phy->base, 0x102d);
++	data |= (1 << 7);
++	msm_dwc3_ss_write_phycreg(phy->base, 0x102D, data);
++
++	data = msm_dwc3_ss_read_phycreg(phy->base, 0x1010);
++	data &= ~0xff0;
++	data |= 0x20;
++	msm_dwc3_ss_write_phycreg(phy->base, 0x1010, data);
++
++	/*
++	 * Fix RX Equalization setting as follows
++	 * LANE0.RX_OVRD_IN_HI. RX_EQ_EN set to 0
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ_EN_OVRD set to 1
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ set to 3
++	 * LANE0.RX_OVRD_IN_HI.RX_EQ_OVRD set to 1
++	 */
++	data = msm_dwc3_ss_read_phycreg(phy->base, 0x1006);
++	data &= ~(1 << 6);
++	data |= (1 << 7);
++	data &= ~(0x7 << 8);
++	data |= (0x3 << 8);
++	data |= (0x1 << 11);
++	msm_dwc3_ss_write_phycreg(phy->base, 0x1006, data);
++
++	/*
++	 * Set EQ and TX launch amplitudes as follows
++	 * LANE0.TX_OVRD_DRV_LO.PREEMPH set to 22
++	 * LANE0.TX_OVRD_DRV_LO.AMPLITUDE set to 127
++	 * LANE0.TX_OVRD_DRV_LO.EN set to 1.
++	 */
++	data = msm_dwc3_ss_read_phycreg(phy->base, 0x1002);
++	data &= ~0x3f80;
++	data |= (0x16 << 7);
++	data &= ~0x7f;
++	data |= (0x7f | (1 << 14));
++	msm_dwc3_ss_write_phycreg(phy->base, 0x1002, data);
++
++	/*
++	 * Set the QSCRATCH PHY_PARAM_CTRL1 parameters as follows
++	 * TX_FULL_SWING [26:20] amplitude to 127
++	 * TX_DEEMPH_3_5DB [13:8] to 22
++	 * LOS_BIAS [2:0] to 0x5
++	 */
++	msm_dwc3_ss_write_readback(phy->base, PHY_PARAM_CTRL_1,
++				0x07f03f07, 0x07f01605);
++	return 0;
++}
++
++static int msm_dwc3_ss_probe(struct platform_device *pdev)
++{
++	struct msm_dwc3_ss_phy	*phy;
++	struct resource			*res;
++	void __iomem			*base;
++
++	dev_info(&pdev->dev, "MSM DWC3 SS-PHY\n");
++
++	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
++	if (!phy) {
++		dev_err(&pdev->dev, "no mem for MSM DWC3 SS-PHY\n");
++		return -ENOMEM;
++	}
++
++	platform_set_drvdata(pdev, phy);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	phy->vddcx = devm_regulator_get(phy->dev, "vddcx");
++	if (IS_ERR(phy->vddcx))
++		return -EPROBE_DEFER;
++
++	phy->v1p8 = devm_regulator_get(phy->dev, "v1p8");
++	if (IS_ERR(phy->v1p8))
++		return -EPROBE_DEFER;
++
++	phy->xo_clk = devm_clk_get(&pdev->dev, "xo");
++	if (IS_ERR(phy->xo_clk)) {
++		dev_err(&pdev->dev, "unable to get TCXO buffer handle\n");
++		return PTR_ERR(phy->xo_clk);
++	}
++
++	phy->ref_clk = devm_clk_get(&pdev->dev, "ref_clk");
++	if (IS_ERR(phy->ref_clk)) {
++		dev_err(&pdev->dev, "unable to get ref_clk handle\n");
++		return PTR_ERR(phy->ref_clk);
++	}
++
++	clk_prepare_enable(phy->xo_clk);
++
++	phy->dev		= &pdev->dev;
++	phy->base		= base;
++	phy->phy.dev		= phy->dev;
++	phy->phy.label		= "msm-dwc3-ssphy";
++	phy->phy.init		= msm_dwc3_ss_phy_init;
++	phy->phy.shutdown       = msm_dwc3_ss_phy_shutdown;
++	phy->phy.type		= USB_PHY_TYPE_USB3;
++
++	usb_add_phy_dev(&phy->phy);
++
++	return 0;
++}
++
++static int msm_dwc3_ss_remove(struct platform_device *pdev)
++{
++	struct msm_dwc3_ss_phy *phy = platform_get_drvdata(pdev);
++
++	clk_disable_unprepare(phy->xo_clk);
++	usb_remove_phy(&phy->phy);
++	return 0;
++}
++
++static const struct of_device_id msm_dwc3_ss_id_table[] = {
++	{ .compatible = "qcom,dwc3-ssphy" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, msm_dwc3_ss_id_table);
++
++static struct platform_driver msm_dwc3_ss_driver = {
++	.probe		= msm_dwc3_ss_probe,
++	.remove		= msm_dwc3_ss_remove,
++	.driver		= {
++		.name	= "msm-dwc3-ssphy",
++		.owner	= THIS_MODULE,
++		.of_match_table = msm_dwc3_ss_id_table,
++	},
++};
++
++module_platform_driver(msm_dwc3_ss_driver);
++
++MODULE_ALIAS("platform:msm_dwc3_ssphy");
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("DesignWare USB3 MSM SS-PHY driver");
 -- 
-1.7.10.4
+1.7.9.5
 
