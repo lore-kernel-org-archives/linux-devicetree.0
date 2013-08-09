@@ -1,131 +1,83 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from ns.mm-sol.com ([212.124.72.66]:58742 "EHLO extserv.mm-sol.com"
+Received: from comal.ext.ti.com ([198.47.26.152]:37999 "EHLO comal.ext.ti.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S933806Ab3HIQK0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 9 Aug 2013 12:10:26 -0400
-Message-ID: <1376064558.7709.31.camel@iivanov-dev.int.mm-sol.com>
+	id S966645Ab3HINZT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 09:25:19 -0400
+Date: Fri, 9 Aug 2013 16:24:59 +0300
+From: Felipe Balbi <balbi@ti.com>
 Subject: Re: [RFC 2/2] usb: dwc3: Add Qualcomm DWC3 glue layer driver
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Date: Fri, 09 Aug 2013 19:09:18 +0300
-In-Reply-To: <20130809132349.GC12041@radagast>
+Message-ID: <20130809132459.GD12041@radagast>
+Reply-To: <balbi@ti.com>
 References: <1375789991-30041-1-git-send-email-iivanov@mm-sol.com>
-	 <1375789991-30041-3-git-send-email-iivanov@mm-sol.com>
-	 <20130809132349.GC12041@radagast>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0
+ <1375789991-30041-3-git-send-email-iivanov@mm-sol.com>
+ <1375791698.12043.53.camel@hornet>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="rqzD5py0kzyFAOWN"
+Content-Disposition: inline
+In-Reply-To: <1375791698.12043.53.camel@hornet>
 Sender: devicetree-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, "balbi@ti.com" <balbi@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi, 
+--rqzD5py0kzyFAOWN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2013-08-09 at 16:23 +0300, Felipe Balbi wrote:
-> Hi,
-> 
-> On Tue, Aug 06, 2013 at 02:53:11PM +0300, Ivan T. Ivanov wrote:
-> > diff --git a/drivers/usb/dwc3/dwc3-msm.c b/drivers/usb/dwc3/dwc3-msm.c
-> > new file mode 100644
-> > index 0000000..e509abc
-> > --- /dev/null
-> > +++ b/drivers/usb/dwc3/dwc3-msm.c
-> > @@ -0,0 +1,175 @@
-> > +#undef CONFIG_REGULATOR
-> 
-> why ??????
-> 
+Hi,
 
-1. This shows that driver is still not fully tested 
-   Regulators support is still missing in the MSM
-2. Helps me to load driver successfully. 
-
-> > +static int dwc3_msm_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *node = pdev->dev.of_node;
-> > +	struct dwc3_msm *mdwc;
-> > +	struct resource *res;
-> > +	void __iomem *tcsr;
-> > +	int ret = 0;
+On Tue, Aug 06, 2013 at 01:21:38PM +0100, Pawel Moll wrote:
+> > @@ -47,3 +64,25 @@ Example device nodes:
+> >  		vddcx-supply =3D <&supply>;
+> >  		v1p8-supply =3D <&supply>;
+> >  	};
 > > +
-> > +	dev_info(&pdev->dev, "MSM DWC3\n");
-> 
-> please don't. This is hardly necessary.
-
-Sure, this will be removed.
-
-> 
-> > +	mdwc = devm_kzalloc(&pdev->dev, sizeof(*mdwc), GFP_KERNEL);
-> > +	if (!mdwc) {
-> > +		dev_err(&pdev->dev, "not enough memory\n");
-> 
-> this message isn't needed either
-
-ok.
-
-> 
-> > +	/*
-> > +	 * DWC3 Core requires its CORE CLK (aka master / bus clk) to
-> > +	 * run at 125Mhz in SSUSB mode and >60MHZ for HSUSB mode.
-> > +	 */
-> > +	clk_set_rate(mdwc->core_clk, 125000000);
-> 
-> if this is dwc3's core clock, why don't we teach dwc3.ko about this
-> requirement ? Just make sure to have it optional, since x86 and OMAP
-> wouldn't need direct fiddling with the clocks.
-
-I have to check whether DWC3 core or Qcom wrapper requires this clock.
-
-> 
-> > +	clk_prepare_enable(mdwc->core_clk);
-> > +	clk_prepare_enable(mdwc->iface_clk);
-> > +	clk_prepare_enable(mdwc->sleep_clk);
-> > +	clk_prepare_enable(mdwc->utmi_clk);
-> 
-> do you really need to enable your clocks here ? Why don't you enable
-> them on runtime_resume and disable on runtime_suspend ?
-
-I will like to make it working first and then will improve
-power management.
-
-> 
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	tcsr = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (!tcsr) {
-> > +		dev_dbg(&pdev->dev, "tcsr ioremap failed\n");
-> 
-> no need to ioremap, also you're likely leaking clocks and regulators
-> enabled here.
-> 
-> Make sure to have something like:
-> 
-> 	if (!tcsr)
-> 		goto err_disable_clocks;
-> 
-> 	/* TODO This has to be revised */\
-> 
-> 	[...]
-> 
-
-Sure.
-
-> > +	} else {
-> > +		/* TODO: This has to be revised */
+> > +	usb@fd4ab000 {
+> > +		compatible =3D "qcom,dwc-usb3-msm";
+> > +		#address-cells =3D <1>;
+> > +		#size-cells =3D <1>;
+> > +		reg =3D <0xfd4ab000 0x4>;
 > > +
-> > +		/* Enable USB3 on the primary USB port. */
-> > +		writel_relaxed(0x1, tcsr);
-> > +		/*
-> > +		 * Ensure that TCSR write is completed before
-> > +		 * USB registers initialization.
-> > +		 */
-> > +		mb();
-> 
-> why don't you use writel() instead. It will add the memory barrier for
-> you.
+> > +		clocks =3D <&usb30_master_cxc>, <&sys_noc_usb3_axi_cxc>, <&usb30_sle=
+ep_cxc>, <&usb30_mock_utmi_cxc>;
+> > +		clock-names =3D "core_clk", "iface_clk", "sleep_clk", "utmi_clk";
+> > +
+> > +		gdsc-supply =3D <&supply>;
+> > +		ranges;
+> > +
+> > +		dwc3@f9200000 {
+> > +			compatible =3D "snps,dwc3";
+>=20
+> Note that the Documentation/devicetree/bindings/usb/dwc3.txt is
+> mentioning "synopsys,dwc3" (which is clearly in opposition to the
 
-Ok.
+I have a patch converting to snps,dwc3.
 
-Thanks
-Ivan
+--=20
+balbi
 
+--rqzD5py0kzyFAOWN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSBO2rAAoJEIaOsuA1yqREjykP/03Zs/oOvj3EgagOJc8Z18L5
+OF+pZpJFrSuSfZGTPTCdRHPSLKuPMSHF1o4yBZzX3Fpx4QKL6gXGlEA1qD954wsw
+3MI2g+dvjbugFx9IalMqvx60jwwtBqUiY+75ekiamCzr6kXiyhRcOJ7+2FWKMNMb
+1bETiTaInaPtrMQfVTUIVsl+JvqoyxfDAtjkSCptR6FQdH7lW1nNolgruDvX2e4E
+oQA/nvumsCJwSkJfGgx83d+EwGp/zsUdiA6eWXkyziMfSsEjdAYyPAHlZxF2pRCY
+UPypSraAW0jsHWFuEhJtJGh7yUeVlmxnwUhFHSEQLyAQfkXLh02z0ks21gqCbIuL
+B+eTPmv3Tvyu12tCPdvfSqUIiM19LxrWjExwvlC32sqDhTSVwlvjddNd1t9MNu7Y
+5TofABmJcgrsSK1AyUz6VuQYlCsJs5YKJR3a7pSsn+7bapHWkRe3XX277tQDJ/lT
+l+laR1AVTLp79JMT0HYRp5iVJ2dchMnHkQmYP73Al2hF63k13sKP1HHd53P0f36W
+tV3aG1UeJmW7raoqlEM3cL7xk8kcsmH3p30tGOsH7Nua2FJ2dv24GCLDZIk74BxE
+H/B0V1zizQ3X3BO5oRjGZAj6QTi0UmszTPZfAkaW5Gtws/aoWXGfuBd5kulQGKVP
+kKamDfPwPIF/MsxuVUXR
+=qAyD
+-----END PGP SIGNATURE-----
+
+--rqzD5py0kzyFAOWN--
