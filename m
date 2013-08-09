@@ -1,12 +1,12 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from arroyo.ext.ti.com ([192.94.94.40]:48275 "EHLO arroyo.ext.ti.com"
+Received: from arroyo.ext.ti.com ([192.94.94.40]:48282 "EHLO arroyo.ext.ti.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1030674Ab3HIIkG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 9 Aug 2013 04:40:06 -0400
+	id S1030544Ab3HIIkN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 04:40:13 -0400
 From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [RFC 18/22] OMAPDSS: connector-dvi: Add DT support
-Date: Fri, 9 Aug 2013 11:39:03 +0300
-Message-ID: <1376037547-10859-19-git-send-email-tomi.valkeinen@ti.com>
+Subject: [RFC 21/22] OMAPDSS: panel-dpi: Add DT support
+Date: Fri, 9 Aug 2013 11:39:06 +0300
+Message-ID: <1376037547-10859-22-git-send-email-tomi.valkeinen@ti.com>
 In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
 References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
 MIME-Version: 1.0
@@ -18,33 +18,40 @@ List-ID: <devicetree@vger.kernel.org>
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/video/omap2/displays-new/connector-dvi.c | 49 ++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ drivers/video/omap2/displays-new/panel-dpi.c | 75 ++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-diff --git a/drivers/video/omap2/displays-new/connector-dvi.c b/drivers/video/omap2/displays-new/connector-dvi.c
-index bc5f8ce..99ee1b2 100644
---- a/drivers/video/omap2/displays-new/connector-dvi.c
-+++ b/drivers/video/omap2/displays-new/connector-dvi.c
-@@ -13,6 +13,7 @@
+diff --git a/drivers/video/omap2/displays-new/panel-dpi.c b/drivers/video/omap2/displays-new/panel-dpi.c
+index 5f8f7e7..31bd184 100644
+--- a/drivers/video/omap2/displays-new/panel-dpi.c
++++ b/drivers/video/omap2/displays-new/panel-dpi.c
+@@ -13,9 +13,12 @@
  #include <linux/module.h>
  #include <linux/platform_device.h>
  #include <linux/slab.h>
-+#include <linux/of_i2c.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
  
- #include <drm/drm_edid.h>
+ #include <video/omapdss.h>
+ #include <video/omap-panel-data.h>
++#include <video/of_display_timing.h>
  
-@@ -274,6 +275,42 @@ static int dvic_probe_pdata(struct platform_device *pdev)
+ struct panel_drv_data {
+ 	struct omap_dss_device dssdev;
+@@ -182,6 +185,66 @@ static int panel_dpi_probe_pdata(struct platform_device *pdev)
  	return 0;
  }
  
-+static int dvic_probe_of(struct platform_device *pdev)
++static int panel_dpi_probe_of(struct platform_device *pdev)
 +{
 +	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
 +	struct device_node *node = pdev->dev.of_node;
 +	struct omap_dss_device *in;
 +	struct device_node *src_node;
-+	struct device_node *adapter_node;
-+	struct i2c_adapter *adapter;
++	int r, datalines;
++	struct display_timing timing;
++	struct videomode vm;
++	int gpio;
 +
 +	src_node = of_parse_phandle(node, "video-source", 0);
 +	if (!src_node) {
@@ -59,52 +66,74 @@ index bc5f8ce..99ee1b2 100644
 +	}
 +	ddata->in = in;
 +
-+	adapter_node = of_parse_phandle(node, "i2c-bus", 0);
-+	if (adapter_node) {
-+		adapter = of_find_i2c_adapter_by_node(adapter_node);
-+		if (adapter == NULL) {
-+			dev_err(&pdev->dev, "failed to parse i2c-bus\n");
-+			return -EINVAL;
-+		}
-+
-+		ddata->i2c_adapter = adapter;
++	r = of_property_read_u32(node, "data-lines", &datalines);
++	if (r) {
++		dev_err(&pdev->dev, "failed to parse datalines\n");
++		return r;
 +	}
++
++	ddata->data_lines = datalines;
++
++	gpio = of_get_gpio(node, 0);
++	if (gpio_is_valid(gpio) || gpio == -ENOENT) {
++		ddata->enable_gpio = gpio;
++	} else {
++		dev_err(&pdev->dev, "failed to parse enable gpio\n");
++		return gpio;
++	}
++
++	gpio = of_get_gpio(node, 1);
++	if (gpio_is_valid(gpio) || gpio == -ENOENT) {
++		ddata->backlight_gpio = gpio;
++	} else {
++		dev_err(&pdev->dev, "failed to parse backlight gpio\n");
++		return gpio;
++	}
++
++	r = of_get_display_timing(node, "panel-timing", &timing);
++	if (r) {
++		dev_err(&pdev->dev, "failed to get video timing\n");
++		return r;
++	}
++
++	videomode_from_timing(&timing, &vm);
++	videomode_to_omap_video_timings(&vm, &ddata->videomode);
 +
 +	return 0;
 +}
 +
- static int dvic_probe(struct platform_device *pdev)
+ static int panel_dpi_probe(struct platform_device *pdev)
  {
  	struct panel_drv_data *ddata;
-@@ -290,6 +327,10 @@ static int dvic_probe(struct platform_device *pdev)
- 		r = dvic_probe_pdata(pdev);
+@@ -198,6 +261,10 @@ static int panel_dpi_probe(struct platform_device *pdev)
+ 		r = panel_dpi_probe_pdata(pdev);
  		if (r)
  			return r;
 +	} else if (pdev->dev.of_node) {
-+		r = dvic_probe_of(pdev);
++		r = panel_dpi_probe_of(pdev);
 +		if (r)
 +			return r;
  	} else {
  		return -ENODEV;
  	}
-@@ -335,12 +376,20 @@ static int __exit dvic_remove(struct platform_device *pdev)
+@@ -254,12 +321,20 @@ static int __exit panel_dpi_remove(struct platform_device *pdev)
  	return 0;
  }
  
-+static const struct of_device_id dvic_of_match[] = {
-+	{ .compatible = "ti,dvi_connector", },
++static const struct of_device_id panel_dpi_of_match[] = {
++	{ .compatible = "panel-dpi", },
 +	{},
 +};
 +
-+MODULE_DEVICE_TABLE(of, dvic_of_match);
++MODULE_DEVICE_TABLE(of, panel_dpi_of_match);
 +
- static struct platform_driver dvi_connector_driver = {
- 	.probe	= dvic_probe,
- 	.remove	= __exit_p(dvic_remove),
- 	.driver	= {
- 		.name	= "connector-dvi",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = dvic_of_match,
+ static struct platform_driver panel_dpi_driver = {
+ 	.probe = panel_dpi_probe,
+ 	.remove = __exit_p(panel_dpi_remove),
+ 	.driver = {
+ 		.name = "panel-dpi",
+ 		.owner = THIS_MODULE,
++		.of_match_table = panel_dpi_of_match,
  	},
  };
  
