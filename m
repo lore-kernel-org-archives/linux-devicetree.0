@@ -1,124 +1,126 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-oa0-f54.google.com ([209.85.219.54]:36663 "EHLO
-	mail-oa0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757642Ab3HHH6e (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 8 Aug 2013 03:58:34 -0400
-Received: by mail-oa0-f54.google.com with SMTP id o6so4948737oag.27
-        for <devicetree@vger.kernel.org>; Thu, 08 Aug 2013 00:58:34 -0700 (PDT)
+Received: from comal.ext.ti.com ([198.47.26.152]:55691 "EHLO comal.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1030682Ab3HIIkI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 04:40:08 -0400
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC 19/22] OMAPDSS: encoder-tpd12s015: Add DT support
+Date: Fri, 9 Aug 2013 11:39:04 +0300
+Message-ID: <1376037547-10859-20-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1375878679-18098-2-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1375878679-18098-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<1375878679-18098-2-git-send-email-ezequiel.garcia@free-electrons.com>
-Date: Thu, 8 Aug 2013 00:58:34 -0700
-Message-ID: <CAN8TOE_ZjikTe-+vPrM8HKmJAu_HuiDBhoh8TTJGXKsrTo+Odw@mail.gmail.com>
-Subject: Re: [PATCH v2 01/14] mtd: nand: pxa3xx: Introduce 'marvell,armada370-nand'
- compatible string
-From: Brian Norris <computersforpeace@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: linux-mtd@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Lior Amsalem <alior@marvell.com>, Artem Bityutskiy <dedekind1@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Daniel Mack <zonque@gmail.com>, Willy Tarreau <w@1wt.eu>, devicetree@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-+ devicetree list
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ .../video/omap2/displays-new/encoder-tpd12s015.c   | 62 ++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-On Wed, Aug 7, 2013 at 5:31 AM, Ezequiel Garcia
-<ezequiel.garcia@free-electrons.com> wrote:
-> This driver supports NFCv1 (as found in PXA SoC) and NFCv2 (as found in
-> Armada 370/XP SoC). As both controller has a few differences, a way of
-> distinguishing between the two is needed.
->
-> This commit introduces a new compatible string 'marvell,armada370-nand'
-> and assigns a compatible data of type enum pxa3xx_nand_variant to allow
-> such distinction.
->
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-> ---
->  drivers/mtd/nand/pxa3xx_nand.c | 38 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 37 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mtd/nand/pxa3xx_nand.c b/drivers/mtd/nand/pxa3xx_nand.c
-> index 501e380..2582e1f 100644
-> --- a/drivers/mtd/nand/pxa3xx_nand.c
-> +++ b/drivers/mtd/nand/pxa3xx_nand.c
-> @@ -123,6 +123,11 @@ enum {
->         STATE_READY,
->  };
->
-> +enum pxa3xx_nand_variant {
-> +       PXA3XX_NAND_VARIANT_PXA,
-> +       PXA3XX_NAND_VARIANT_ARMADA370,
-> +};
-> +
->  struct pxa3xx_nand_host {
->         struct nand_chip        chip;
->         struct pxa3xx_nand_cmdset *cmdset;
-> @@ -171,6 +176,12 @@ struct pxa3xx_nand_info {
->         struct pxa3xx_nand_host *host[NUM_CHIP_SELECT];
->         unsigned int            state;
->
-> +       /*
-> +        * This driver supports NFCv1 (as found in PXA SoC)
-> +        * and NFCv2 (as found in Armada 370/XP SoC).
-> +        */
-> +       enum pxa3xx_nand_variant variant;
-> +
->         int                     cs;
->         int                     use_ecc;        /* use HW ECC ? */
->         int                     use_dma;        /* use DMA ? */
-> @@ -1192,7 +1203,14 @@ static int pxa3xx_nand_remove(struct platform_device *pdev)
->
->  #ifdef CONFIG_OF
->  static struct of_device_id pxa3xx_nand_dt_ids[] = {
-> -       { .compatible = "marvell,pxa3xx-nand" },
-> +       {
-> +               .compatible = "marvell,pxa3xx-nand",
-> +               .data       = (void *) PXA3XX_NAND_VARIANT_PXA,
-> +       },
-> +       {
-> +               .compatible = "marvell,armada370-nand",
-> +               .data       = (void *) PXA3XX_NAND_VARIANT_ARMADA370,
-> +       },
->         {}
->  };
->  MODULE_DEVICE_TABLE(of, pxa3xx_nand_dt_ids);
-> @@ -1221,11 +1239,28 @@ static int pxa3xx_nand_probe_dt(struct platform_device *pdev)
->
->         return 0;
->  }
-> +
-> +static enum pxa3xx_nand_variant
-> +pxa3xx_nand_get_variant(struct platform_device *pdev)
-> +{
-> +       const struct of_device_id *of_id =
-> +                       of_match_device(pxa3xx_nand_dt_ids, &pdev->dev);
-> +       if (!of_id)
-> +               return PXA3XX_NAND_VARIANT_PXA;
-> +       return (enum pxa3xx_nand_variant) of_id->data;
-> +}
->  #else
->  static inline int pxa3xx_nand_probe_dt(struct platform_device *pdev)
->  {
->         return 0;
->  }
-> +
-> +static enum pxa3xx_nand_variant
-> +pxa3xx_nand_get_variant(struct platform_device *pdev)
-> +{
-> +       /* Default lefacy (non-DT) variant */
-> +       return PXA3XX_NAND_VARIANT_PXA;
-> +}
->  #endif
->
->  static int pxa3xx_nand_probe(struct platform_device *pdev)
-> @@ -1252,6 +1287,7 @@ static int pxa3xx_nand_probe(struct platform_device *pdev)
->         }
->
->         info = platform_get_drvdata(pdev);
-> +       info->variant = pxa3xx_nand_get_variant(pdev);
->         probe_success = 0;
->         for (cs = 0; cs < pdata->num_cs; cs++) {
->                 info->cs = cs;
-> --
-> 1.8.1.5
->
+diff --git a/drivers/video/omap2/displays-new/encoder-tpd12s015.c b/drivers/video/omap2/displays-new/encoder-tpd12s015.c
+index ce0e010..4650cc7 100644
+--- a/drivers/video/omap2/displays-new/encoder-tpd12s015.c
++++ b/drivers/video/omap2/displays-new/encoder-tpd12s015.c
+@@ -15,6 +15,7 @@
+ #include <linux/slab.h>
+ #include <linux/gpio.h>
+ #include <linux/platform_device.h>
++#include <linux/of_gpio.h>
+ 
+ #include <video/omapdss.h>
+ #include <video/omap-panel-data.h>
+@@ -289,6 +290,55 @@ static int tpd_probe_pdata(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int tpd_probe_of(struct platform_device *pdev)
++{
++	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
++	struct device_node *node = pdev->dev.of_node;
++	struct omap_dss_device *in;
++	struct device_node *src_node;
++	int gpio;
++
++	src_node = of_parse_phandle(node, "video-source", 0);
++	if (!src_node) {
++		dev_err(&pdev->dev, "failed to parse video source\n");
++		return -ENODEV;
++	}
++
++	in = omap_dss_find_output_by_node(src_node);
++	if (in == NULL) {
++		dev_err(&pdev->dev, "failed to find video source\n");
++		return -EPROBE_DEFER;
++	}
++	ddata->in = in;
++
++	/* CT CP HPD GPIO */
++	gpio = of_get_gpio(node, 0);
++	if (!gpio_is_valid(gpio)) {
++		dev_err(&pdev->dev, "failed to parse CT CP HPD gpio\n");
++		return gpio;
++	}
++	ddata->ct_cp_hpd_gpio = gpio;
++
++	/* LS OE GPIO */
++	gpio = of_get_gpio(node, 1);
++	if (gpio_is_valid(gpio) || gpio == -ENOENT) {
++		ddata->ls_oe_gpio = gpio;
++	} else {
++		dev_err(&pdev->dev, "failed to parse LS OE gpio\n");
++		return gpio;
++	}
++
++	/* HPD GPIO */
++	gpio = of_get_gpio(node, 2);
++	if (!gpio_is_valid(gpio)) {
++		dev_err(&pdev->dev, "failed to parse HPD gpio\n");
++		return gpio;
++	}
++	ddata->hpd_gpio = gpio;
++
++	return 0;
++}
++
+ static int tpd_probe(struct platform_device *pdev)
+ {
+ 	struct omap_dss_device *in, *dssdev;
+@@ -307,6 +357,10 @@ static int tpd_probe(struct platform_device *pdev)
+ 		r = tpd_probe_pdata(pdev);
+ 		if (r)
+ 			return r;
++	} else if (pdev->dev.of_node) {
++		r = tpd_probe_of(pdev);
++		if (r)
++			return r;
+ 	} else {
+ 		return -ENODEV;
+ 	}
+@@ -379,12 +433,20 @@ static int __exit tpd_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id tpd_of_match[] = {
++	{ .compatible = "ti,tpd12s015", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, tpd_of_match);
++
+ static struct platform_driver tpd_driver = {
+ 	.probe	= tpd_probe,
+ 	.remove	= __exit_p(tpd_remove),
+ 	.driver	= {
+ 		.name	= "tpd12s015",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = tpd_of_match,
+ 	},
+ };
+ 
+-- 
+1.8.1.2
+
