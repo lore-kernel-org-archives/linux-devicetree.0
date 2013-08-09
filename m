@@ -1,15 +1,17 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/2] power: Add APM X-Gene system reboot driver
-Date: Fri, 09 Aug 2013 14:55:34 -0700
-Message-ID: <52056556.7060005@codeaurora.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 2/2] power: arm64: Add DTS entry for APM X-Gene reboot
+ driver.
+Date: Fri, 9 Aug 2013 15:37:24 -0700
+Message-ID: <CAOesGMj-chSDsA7YT5GFAyoxPw43LOjbmnQUqo14nxJV_88GcA@mail.gmail.com>
 References: <1372797539-13111-1-git-send-email-lho@apm.com>
  <1372797539-13111-2-git-send-email-lho@apm.com>
- <20130809212849.GD12638@lizard.sbx05730.santaca.wayport.net>
+ <1372797539-13111-3-git-send-email-lho@apm.com>
+ <20130809213116.GE12638@lizard.sbx05730.santaca.wayport.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130809212849.GD12638@lizard.sbx05730.santaca.wayport.net>
+In-Reply-To: <20130809213116.GE12638@lizard.sbx05730.santaca.wayport.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,123 +22,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Anton Vorontsov <anton@enomsg.org>
-Cc: fkan@apm.com, Catalin.Marinas@arm.com, devicetree-discuss@lists.ozlabs.org, Loc Ho <lho@apm.com>, ksankaran@apm.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: fkan@apm.com, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Loc Ho <lho@apm.com>, ksankaran@apm.com, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/13 14:28, Anton Vorontsov wrote:
-> On Tue, Jul 02, 2013 at 02:38:58PM -0600, Loc Ho wrote:
->> + *
->> + * Copyright (c) 2013, Applied Micro Circuits Corporation
->> + * Author: Feng Kan <fkan@apm.com>
->> + * Author: Loc Ho <lho@apm.com>
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation; either version 2 of
->> + * the License, or (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program; if not, write to the Free Software
->> + * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
->> + * MA 02111-1307 USA
->> + *
->> + * This driver provides system reboot functionality for APM X-Gene SoC.
->> + * For system shutdown, this is board specify. If a board designer
->> + * implements GPIO shutdown, use the gpio-poweroff.c driver.
->> + *
->> + */
->> +#include <linux/io.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_address.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/stat.h>
->> +#include <linux/slab.h>
->> +#include <asm/system_misc.h>
->> +
->> +struct xgene_reboot_context {
->> +	struct platform_device *pdev;
->> +	void *csr;
-
-__iomem. Please run sparse.
-
->> +	u32 mask;
->> +};
->> +
->> +static struct xgene_reboot_context *xgene_restart_ctx;
->> +
->> +static void xgene_restart(char str, const char *cmd)
->> +{
->> +	struct xgene_reboot_context *ctx = xgene_restart_ctx;
->> +	unsigned long timeout;
->> +
->> +	/* Issue the reboot */
->> +	if (ctx)
->> +		writel(ctx->mask, ctx->csr);
->> +
->> +	timeout = jiffies + HZ;
->> +	while (time_before(jiffies, timeout))
->> +		cpu_relax();
-
-Maybe this should go into the arm64 layer. It doesn't seem that xgene
-specific.
-
->> +
->> +	dev_emerg(&ctx->pdev->dev, "Unable to restart system\n");
-
-If ctx is NULL here this will blow up so why check for ctx before the
-writel?
-
->> +}
->> +
->> +static int xgene_reboot_probe(struct platform_device *pdev)
->> +{
->> +	struct xgene_reboot_context *ctx;
->> +
->> +	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
->> +	if (ctx == NULL) {
-> !ctx is shorter
+On Fri, Aug 9, 2013 at 2:31 PM, Anton Vorontsov <anton@enomsg.org> wrote:
+> On Tue, Jul 02, 2013 at 02:38:59PM -0600, Loc Ho wrote:
+>> power: arm64: Add DTS entry for APM X-Gene reboot driver.
+>>
+>> Signed-off-by: Loc Ho <lho@apm.com>
+>> Signed-off-by: Feng Kan <fkan@apm.com>
+>> Signed-off-by: Kumar Sankaran <ksankaran@apm.com>
+>> ---
 >
->> +		dev_err(&pdev->dev, "out of memory for context\n");
+> I've applied patch 1/2 to battery-2.6.git tree. I need an ack from ARM
+> maintainers to grab this together with the first one.
+>
+>>  arch/arm64/boot/dts/apm-storm.dtsi |    6 ++++++
+>>  1 files changed, 6 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+>> index d37d736..e686919 100644
+>> --- a/arch/arm64/boot/dts/apm-storm.dtsi
+>> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
+>> @@ -178,6 +178,12 @@
+>>                       };
+>>               };
+>>
+>> +                reboot@0x17000014 {
+>> +                        compatible = "apm,xgene-reboot";
+>> +                        reg = <0x0 0x17000014 0x0 0x100>;
+>> +                        mask = <0x1>;
+>> +                };
+>
+> There should be tabs instead of whitespaces.
 
-kmalloc prints an error on failure so this print is unnecessary.
+Binding is undocumented, as far as I can tell. Please add
+documentation of this under Documentation/devicetree/bindings.
 
->> +		return -ENODEV;
->> +	}
->> +	ctx->csr = of_iomap(pdev->dev.of_node, 0);
+In particular, the 'mask' property is nonstandard and it needs to be
+documented what part of the reboot controller hardware it is
+describing.
 
-You should use platform functions instead of of_*() functions.
 
->> +	if (ctx->csr == NULL) {
->> +		devm_kfree(&pdev->dev, ctx);
 
-This isn't necessary.
-
->> +		dev_err(&pdev->dev, "can not map resource\n");
->> +		return -ENODEV;
->> +	}
->> +	if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
->> +		ctx->mask = 0xFFFFFFFF;
->> +	ctx->pdev = pdev;
->> +	arm_pm_restart = xgene_restart;
->> +	xgene_restart_ctx = ctx;
-
-Although it's unlikely, this exposes a race condition where the
-arm_pm_restart is assigned before ctx and if a restart happens in
-between we won't actually restart. The two should probably be swapped.
-
->> +
->> +	return 0;
->> +}
->> +
->> +static struct of_device_id xgene_reboot_of_match[] = {
-
-const?
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+-Olof
