@@ -1,59 +1,153 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from bear.ext.ti.com ([192.94.94.41]:44638 "EHLO bear.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755674Ab3HAO7C (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 1 Aug 2013 10:59:02 -0400
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 1/4] CLK: ti: dra7: Initialize USB_DPLL
-Date: Thu, 1 Aug 2013 17:58:51 +0300
-Message-ID: <1375369134-26398-2-git-send-email-rogerq@ti.com>
-In-Reply-To: <1375369134-26398-1-git-send-email-rogerq@ti.com>
-References: <1375369134-26398-1-git-send-email-rogerq@ti.com>
+Received: from devils.ext.ti.com ([198.47.26.153]:57761 "EHLO
+	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1030682Ab3HIIkB (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 04:40:01 -0400
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC 16/22] OMAPDSS: panel-dsi-cm: Add DT support
+Date: Fri, 9 Aug 2013 11:39:01 +0300
+Message-ID: <1376037547-10859-17-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: tony@atomide.com, rnayak@ti.com
-Cc: benoit.cousson@linaro.org, balbi@ti.com, george.cherian@ti.com, kishon@ti.com, dmurphy@ti.com, t-kristo@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-USB_DPLL must be initialized and locked at boot so that
-USB modules can work.
+XXX ULPS and backlight missing.
 
-Also program USB_DLL_M2 output to half rate.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/clk/omap/clk-7xx.c |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
+ drivers/video/omap2/displays-new/panel-dsi-cm.c | 87 +++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
 
-diff --git a/drivers/clk/omap/clk-7xx.c b/drivers/clk/omap/clk-7xx.c
-index ddb39dd..f444513 100644
---- a/drivers/clk/omap/clk-7xx.c
-+++ b/drivers/clk/omap/clk-7xx.c
-@@ -19,6 +19,7 @@
+diff --git a/drivers/video/omap2/displays-new/panel-dsi-cm.c b/drivers/video/omap2/displays-new/panel-dsi-cm.c
+index aaaea64..f65ea4d 100644
+--- a/drivers/video/omap2/displays-new/panel-dsi-cm.c
++++ b/drivers/video/omap2/displays-new/panel-dsi-cm.c
+@@ -22,6 +22,8 @@
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
  
- #define DRA7_DPLL_ABE_DEFFREQ				361267200
- #define DRA7_DPLL_GMAC_DEFFREQ				1000000000
-+#define DRA7_DPLL_USB_DEFFREQ				960000000
- 
- 
- static struct omap_dt_clk dra7xx_clks[] = {
-@@ -63,5 +64,15 @@ int __init dra7xx_clk_init(void)
- 	if (rc)
- 		pr_err("%s: failed to configure GMAC DPLL!\n", __func__);
- 
-+	dpll_ck = clk_get_sys(NULL, "dpll_usb_ck");
-+	rc = clk_set_rate(dpll_ck, DRA7_DPLL_USB_DEFFREQ);
-+	if (rc)
-+		pr_err("%s: failed to configure USB DPLL!\n", __func__);
-+
-+	dpll_ck = clk_get_sys(NULL, "dpll_usb_m2_ck");
-+	rc = clk_set_rate(dpll_ck, DRA7_DPLL_USB_DEFFREQ/2);
-+	if (rc)
-+		pr_err("%s: failed to set USB_DPLL M2 OUT\n", __func__);
-+
- 	return rc;
+ #include <video/omapdss.h>
+ #include <video/omap-panel-data.h>
+@@ -1156,6 +1158,79 @@ static int dsicm_probe_pdata(struct platform_device *pdev)
+ 	return 0;
  }
+ 
++static int dsicm_probe_of(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
++	struct omap_dss_device *in;
++	struct property *prop;
++	struct device_node *src_node;
++	u32 lane_arr[10];
++	int gpio, len, num_pins;
++	int r, i;
++
++	src_node = of_parse_phandle(node, "video-source", 0);
++	if (!src_node) {
++		dev_err(&pdev->dev, "failed to parse video source\n");
++		return -ENODEV;
++	}
++
++	in = omap_dss_find_output_by_node(src_node);
++	if (in == NULL) {
++		dev_err(&pdev->dev, "failed to find video source\n");
++		return -EPROBE_DEFER;
++	}
++	ddata->in = in;
++
++	gpio = of_get_gpio(node, 0);
++	if (!gpio_is_valid(gpio)) {
++		dev_err(&pdev->dev, "failed to parse reset gpio\n");
++		return gpio;
++	}
++	ddata->reset_gpio = gpio;
++
++	if (of_gpio_count(node) > 1) {
++		gpio = of_get_gpio(node, 1);
++
++		if (gpio_is_valid(gpio) || gpio == -ENOENT) {
++			ddata->ext_te_gpio = gpio;
++		} else {
++			dev_err(&pdev->dev, "failed to parse TE gpio\n");
++			return gpio;
++		}
++	} else {
++		ddata->ext_te_gpio = -1;
++	}
++
++	prop = of_find_property(node, "lanes", &len);
++	if (prop == NULL) {
++		dev_err(&pdev->dev, "failed to find lane data\n");
++		return -EINVAL;
++	}
++
++	num_pins = len / sizeof(u32);
++
++	if (num_pins < 4 || num_pins % 2 != 0
++			|| num_pins > ARRAY_SIZE(lane_arr)) {
++		dev_err(&pdev->dev, "bad number of lanes\n");
++		return -EINVAL;
++	}
++
++	r = of_property_read_u32_array(node, "lanes", lane_arr, num_pins);
++	if (r) {
++		dev_err(&pdev->dev, "failed to read lane data\n");
++		return r;
++	}
++
++	ddata->pin_config.num_pins = num_pins;
++	for (i = 0; i < num_pins; ++i)
++		ddata->pin_config.pins[i] = (int)lane_arr[i];
++
++	/* TODO: ulps, backlight */
++
++	return 0;
++}
++
+ static int dsicm_probe(struct platform_device *pdev)
+ {
+ 	struct backlight_properties props;
+@@ -1178,6 +1253,10 @@ static int dsicm_probe(struct platform_device *pdev)
+ 		r = dsicm_probe_pdata(pdev);
+ 		if (r)
+ 			return r;
++	} else if (pdev->dev.of_node) {
++		r = dsicm_probe_of(pdev);
++		if (r)
++			return r;
+ 	} else {
+ 		return -ENODEV;
+ 	}
+@@ -1320,12 +1399,20 @@ static int __exit dsicm_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id dsicm_of_match[] = {
++	{ .compatible = "panel-dsi-cm", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, dsicm_of_match);
++
+ static struct platform_driver dsicm_driver = {
+ 	.probe = dsicm_probe,
+ 	.remove = __exit_p(dsicm_remove),
+ 	.driver = {
+ 		.name = "panel-dsi-cm",
+ 		.owner = THIS_MODULE,
++		.of_match_table = dsicm_of_match,
+ 	},
+ };
+ 
 -- 
-1.7.4.1
+1.8.1.2
 
