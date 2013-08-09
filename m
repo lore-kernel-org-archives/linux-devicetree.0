@@ -1,89 +1,44 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56347 "EHLO mail.gnudd.com"
+Received: from ns.mm-sol.com ([212.124.72.66]:56407 "EHLO extserv.mm-sol.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932491Ab3HGKYY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:24:24 -0400
-Date: Wed, 7 Aug 2013 12:17:47 +0200
-From: Davide Ciminaghi <ciminaghi@gnudd.com>
-Subject: [PATCH 08/26] OF platform, of_amba_device_create(): add parent
- resource to parameters.
-Message-ID: <6ffb74421dace254700dc2ee72d908dd7327bec1.1375867291.git.rubini@gnudd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+	id S934350Ab3HIPOe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 11:14:34 -0400
+Message-ID: <1376061400.6143.1.camel@debian>
+Subject: Re: [RFC PATCH v2 3/3] usb: dwc3: Add Qualcomm DWC3 glue layer
+ driver
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Date: Fri, 09 Aug 2013 11:16:40 -0400
+In-Reply-To: <20130809133213.GJ12041@radagast>
+References: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
+	 <1376042027-9798-4-git-send-email-iivanov@mm-sol.com>
+	 <20130809133213.GJ12041@radagast>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: balbi@ti.com
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is needed when creating pci-amba devices: an amba device's
-resource shall be child of the corresponding pci device's resource.
 
-Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
----
- drivers/of/platform.c       |   11 +++++++----
- include/linux/of_platform.h |    3 ++-
- 2 files changed, 9 insertions(+), 5 deletions(-)
+Hi, 
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 57c6bbe..bf75aaa 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -252,7 +252,8 @@ EXPORT_SYMBOL(of_platform_device_create);
- struct amba_device *of_amba_device_create(struct device_node *node,
- 					  const char *bus_id,
- 					  void *platform_data,
--					  struct device *parent)
-+					  struct device *parent,
-+					  struct resource *parent_resource)
- {
- 	struct amba_device *dev;
- 	const void *prop;
-@@ -293,7 +294,7 @@ struct amba_device *of_amba_device_create(struct device_node *node,
- 	if (ret)
- 		goto err_free;
- 
--	ret = amba_device_add(dev, &iomem_resource);
-+	ret = amba_device_add(dev, parent_resource);
- 	if (ret)
- 		goto err_free;
- 
-@@ -307,7 +308,8 @@ err_free:
- struct amba_device *of_amba_device_create(struct device_node *node,
- 					  const char *bus_id,
- 					  void *platform_data,
--					  struct device *parent)
-+					  struct device *parent,
-+					  struct resource *parent_resource)
- {
- 	return NULL;
- }
-@@ -375,7 +377,8 @@ static int of_platform_bus_create(struct device_node *bus,
- 	}
- 
- 	if (of_device_is_compatible(bus, "arm,primecell")) {
--		of_amba_device_create(bus, bus_id, platform_data, parent);
-+		of_amba_device_create(bus, bus_id, platform_data, parent,
-+				      &iomem_resource);
- 		return 0;
- 	}
- 
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 6cd5ac2..be13538 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -66,7 +66,8 @@ extern struct platform_device *of_platform_device_create(struct device_node *np,
- extern struct amba_device *of_amba_device_create(struct device_node *node,
- 						 const char *bus_id,
- 						 void *platform_data,
--						 struct device *parent);
-+						 struct device *parent,
-+						 struct resource *parent_res);
- 
- extern int of_platform_bus_probe(struct device_node *root,
- 				 const struct of_device_id *matches,
--- 
-1.7.7.2
+On Fri, 2013-08-09 at 16:32 +0300, Felipe Balbi wrote:
+> On Fri, Aug 09, 2013 at 12:53:47PM +0300, Ivan T. Ivanov wrote:
+> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > 
+> > DWC3 glue layer is hardware layer around Synopsys DesignWare
+> > USB3 core. Its purpose is to supply Synopsys IP with required
+> > clocks, voltages and interface it with the rest of the SoC.
+> > 
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> 
+> same comments from previous version.
+> 
+
+Sorry, I have somehow missed Your email.
+I will address them shortly.
+
+Regard,
+Ivan
+
