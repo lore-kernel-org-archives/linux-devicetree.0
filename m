@@ -1,58 +1,50 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from aserp1040.oracle.com ([141.146.126.69]:41632 "EHLO
-	aserp1040.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751718Ab3HUIl3 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 21 Aug 2013 04:41:29 -0400
-Date: Wed, 21 Aug 2013 11:41:22 +0300
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [patch] usb: phy: signedness bugs in suspend/resume functions
-Message-ID: <20130821084122.GL5240@elgon.mountain>
+Received: from arroyo.ext.ti.com ([192.94.94.40]:48242 "EHLO arroyo.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1030614Ab3HIIjf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 04:39:35 -0400
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC 04/22] OMAPDSS: if dssdev->name==NULL, use alias
+Date: Fri, 9 Aug 2013 11:38:49 +0300
+Message-ID: <1376037547-10859-5-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-"ret" needs to be signed for the error handling to work.
+To avoid the need for a "nickname" property for each display, change
+the display registration so that the display's alias (i.e. "display0"
+etc) will be used for the dssdev->name if the display driver didn't
+provide a name.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+This means that when booting with board files, we will have more
+descriptive names for displays, like "lcd1", "hdmi". With DT we'll only
+have "display0", etc. But as there are no "nicknames" for things like
+serials ports either, I hope we will do fine with this approach.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
-I can't compile this.
+ drivers/video/omap2/dss/display.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/usb/phy/phy-omap-usb2.c b/drivers/usb/phy/phy-omap-usb2.c
-index 844ab68..d266861 100644
---- a/drivers/usb/phy/phy-omap-usb2.c
-+++ b/drivers/usb/phy/phy-omap-usb2.c
-@@ -98,8 +98,8 @@ static int omap_usb_set_peripheral(struct usb_otg *otg,
+diff --git a/drivers/video/omap2/dss/display.c b/drivers/video/omap2/dss/display.c
+index fafe7c9..64fb6e5 100644
+--- a/drivers/video/omap2/dss/display.c
++++ b/drivers/video/omap2/dss/display.c
+@@ -137,6 +137,9 @@ int omapdss_register_display(struct omap_dss_device *dssdev)
+ 	snprintf(dssdev->alias, sizeof(dssdev->alias),
+ 			"display%d", disp_num_counter++);
  
- static int omap_usb2_suspend(struct usb_phy *x, int suspend)
- {
--	u32 ret;
- 	struct omap_usb *phy = phy_to_omapusb(x);
-+	int ret;
- 
- 	if (suspend && !phy->is_suspended) {
- 		omap_control_usb_phy_power(phy->control_dev, 0);
-@@ -108,8 +108,7 @@ static int omap_usb2_suspend(struct usb_phy *x, int suspend)
- 	} else if (!suspend && phy->is_suspended) {
- 		ret = pm_runtime_get_sync(phy->dev);
- 		if (ret < 0) {
--			dev_err(phy->dev, "get_sync failed with err %d\n",
--									ret);
-+			dev_err(phy->dev, "get_sync failed with err %d\n", ret);
- 			return ret;
- 		}
- 		omap_control_usb_phy_power(phy->control_dev, 1);
-@@ -209,9 +208,9 @@ static int omap_usb2_runtime_suspend(struct device *dev)
- 
- static int omap_usb2_runtime_resume(struct device *dev)
- {
--	u32 ret = 0;
- 	struct platform_device	*pdev = to_platform_device(dev);
- 	struct omap_usb	*phy = platform_get_drvdata(pdev);
-+	int ret;
- 
- 	ret = clk_enable(phy->wkupclk);
- 	if (ret < 0) {
++	if (dssdev->name == NULL)
++		dssdev->name = dssdev->alias;
++
+ 	if (drv && drv->get_resolution == NULL)
+ 		drv->get_resolution = omapdss_default_get_resolution;
+ 	if (drv && drv->get_recommended_bpp == NULL)
+-- 
+1.8.1.2
+
