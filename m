@@ -1,1935 +1,2446 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56418 "EHLO mail.gnudd.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932672Ab3HGK0x (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:26:53 -0400
-Date: Wed, 7 Aug 2013 12:20:03 +0200
-From: Davide Ciminaghi <ciminaghi@gnudd.com>
-Subject: [PATCH 15/26] x86 STA2X11: remove the sta2x11-mfd driver.
-Message-ID: <4d9d1214c1bb6b320cb364f9254bfad74df6f892.1375867291.git.rubini@gnudd.com>
+Received: from mail-ee0-f43.google.com ([74.125.83.43]:44197 "EHLO
+	mail-ee0-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1031204Ab3HIWTj (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 18:19:39 -0400
+Message-ID: <52056AF5.7000301@gmail.com>
+Date: Sat, 10 Aug 2013 00:19:33 +0200
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+Subject: Re: [PATCH v4 04/13] [media] exynos5-fimc-is: Add common driver header
+ files
+References: <1375866242-18084-1-git-send-email-arun.kk@samsung.com> <1375866242-18084-5-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1375866242-18084-5-git-send-email-arun.kk@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch removes the mfd driver for the Connext chip, the final goal
-being to create platform devices through the new OF enabled version of
-the pci to amba bridge.
-Most of the sta2x11-mfd.h header file is moved to asm/sta2x11.h.
-Platform drivers for sctl, scr, apbreg and apb_soc_regs are moved under
-arch/x86/platform/sta2x11.c (but the common probe function is empty at
-the moment, since we have no struct sta2x11_mfd anymore).
-Makefiles and Kconfigs are updated accordingly (note that REGMAP_MMIO is
-now selected by CONFIG_STA2X11, not CONFIG_STA2X11_MFD, which does not
-exist anymore).
+On 08/07/2013 11:03 AM, Arun Kumar K wrote:
+> This patch adds all the common header files used by the fimc-is
+> driver. It includes the commands for interfacing with the firmware
+> and error codes from IS firmware, metadata and command parameter
+> definitions.
+>
+> Signed-off-by: Arun Kumar K<arun.kk@samsung.com>
+> Signed-off-by: Kilyeon Im<kilyeon.im@samsung.com>
+> ---
+>   drivers/media/platform/exynos5-is/fimc-is-cmd.h    |  187 ++++
+>   drivers/media/platform/exynos5-is/fimc-is-err.h    |  257 +++++
+>   .../media/platform/exynos5-is/fimc-is-metadata.h   |  767 +++++++++++++
+>   drivers/media/platform/exynos5-is/fimc-is-param.h  | 1160 ++++++++++++++++++++
+>   4 files changed, 2371 insertions(+)
+>   create mode 100644 drivers/media/platform/exynos5-is/fimc-is-cmd.h
+>   create mode 100644 drivers/media/platform/exynos5-is/fimc-is-err.h
+>   create mode 100644 drivers/media/platform/exynos5-is/fimc-is-metadata.h
+>   create mode 100644 drivers/media/platform/exynos5-is/fimc-is-param.h
+>
+> diff --git a/drivers/media/platform/exynos5-is/fimc-is-cmd.h b/drivers/media/platform/exynos5-is/fimc-is-cmd.h
+> new file mode 100644
+> index 0000000..6250280
+> --- /dev/null
+> +++ b/drivers/media/platform/exynos5-is/fimc-is-cmd.h
+> @@ -0,0 +1,187 @@
+> +/*
+> + * Samsung Exynos5 SoC series FIMC-IS driver
+> + *
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd
+> + * Kil-yeon Lim<kilyeon.im@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef FIMC_IS_CMD_H
+> +#define FIMC_IS_CMD_H
+> +
+> +#define IS_COMMAND_VER 122 /* IS COMMAND VERSION 1.22 */
+> +
+> +enum is_cmd {
+> +	/* HOST ->  IS */
+> +	HIC_PREVIEW_STILL = 0x1,
+> +	HIC_PREVIEW_VIDEO,
+> +	HIC_CAPTURE_STILL,
+> +	HIC_CAPTURE_VIDEO,
+> +	HIC_PROCESS_START,
+> +	HIC_PROCESS_STOP,
+> +	HIC_STREAM_ON,
+> +	HIC_STREAM_OFF,
+> +	HIC_SHOT,
+> +	HIC_GET_STATIC_METADATA,
+> +	HIC_SET_CAM_CONTROL,
+> +	HIC_GET_CAM_CONTROL,
+> +	HIC_SET_PARAMETER,
+> +	HIC_GET_PARAMETER,
+> +	HIC_SET_A5_MEM_ACCESS,
+> +	RESERVED2,
+> +	HIC_GET_STATUS,
+> +	/* SENSOR PART*/
+> +	HIC_OPEN_SENSOR,
+> +	HIC_CLOSE_SENSOR,
+> +	HIC_SIMMIAN_INIT,
+> +	HIC_SIMMIAN_WRITE,
+> +	HIC_SIMMIAN_READ,
+> +	HIC_POWER_DOWN,
+> +	HIC_GET_SET_FILE_ADDR,
+> +	HIC_LOAD_SET_FILE,
+> +	HIC_MSG_CONFIG,
+> +	HIC_MSG_TEST,
+> +	/* IS ->  HOST */
+> +	IHC_GET_SENSOR_NUMBER = 0x1000,
+> +	/* Parameter1 : Address of space to copy a setfile */
+> +	/* Parameter2 : Space szie */
+> +	IHC_SET_SHOT_MARK,
+> +	/* PARAM1 : a frame number */
+> +	/* PARAM2 : confidence level(smile 0~100) */
+> +	/* PARMA3 : confidence level(blink 0~100) */
+> +	IHC_SET_FACE_MARK,
+> +	/* PARAM1 : coordinate count */
+> +	/* PARAM2 : coordinate buffer address */
+> +	IHC_FRAME_DONE,
+> +	/* PARAM1 : frame start number */
+> +	/* PARAM2 : frame count */
+> +	IHC_AA_DONE,
+> +	IHC_NOT_READY,
+> +	IHC_FLASH_READY
+> +};
+> +
+> +enum is_reply {
+> +	ISR_DONE	= 0x2000,
+> +	ISR_NDONE
+> +};
+> +
+> +enum is_scenario_id {
+> +	ISS_PREVIEW_STILL,
+> +	ISS_PREVIEW_VIDEO,
+> +	ISS_CAPTURE_STILL,
+> +	ISS_CAPTURE_VIDEO,
+> +	ISS_END
+> +};
+> +
+> +enum is_subscenario_id {
+> +	ISS_SUB_SCENARIO_STILL,
+> +	ISS_SUB_SCENARIO_VIDEO,
+> +	ISS_SUB_SCENARIO_SCENE1,
+> +	ISS_SUB_SCENARIO_SCENE2,
+> +	ISS_SUB_SCENARIO_SCENE3,
+> +	ISS_SUB_END
+> +};
+> +
+> +struct is_setfile_header_element {
+> +	u32 binary_addr;
+> +	u32 binary_size;
+> +};
+> +
+> +struct is_setfile_header {
+> +	struct is_setfile_header_element isp[ISS_END];
+> +	struct is_setfile_header_element drc[ISS_END];
+> +	struct is_setfile_header_element fd[ISS_END];
+> +};
+> +
+> +struct is_common_reg {
+> +	u32 hicmd;
+> +	u32 hic_sensorid;
+> +	u32 hic_param[4];
+> +
+> +	u32 reserved1[3];
+> +
+> +	u32 ihcmd_iflag;
+> +	u32 ihcmd;
+> +	u32 ihc_sensorid;
+> +	u32 ihc_param[4];
+> +
+> +	u32 reserved2[3];
+> +
+> +	u32 isp_bayer_iflag;
+> +	u32 isp_bayer_sensor_id;
+> +	u32 isp_bayer_param[2];
+> +
+> +	u32 reserved3[4];
+> +
+> +	u32 scc_iflag;
+> +	u32 scc_sensor_id;
+> +	u32 scc_param[3];
+> +
+> +	u32 reserved4[3];
+> +
+> +	u32 dnr_iflag;
+> +	u32 dnr_sensor_id;
+> +	u32 dnr_param[2];
+> +
+> +	u32 reserved5[4];
+> +
+> +	u32 scp_iflag;
+> +	u32 scp_sensor_id;
+> +	u32 scp_param[3];
+> +
+> +	u32 reserved6[1];
+> +
+> +	u32 isp_yuv_iflag;
+> +	u32 isp_yuv_sensor_id;
+> +	u32 isp_yuv_param[2];
+> +
+> +	u32 reserved7[1];
+> +
+> +	u32 shot_iflag;
+> +	u32 shot_sensor_id;
+> +	u32 shot_param[2];
+> +
+> +	u32 reserved8[1];
+> +
+> +	u32 meta_iflag;
+> +	u32 meta_sensor_id;
+> +	u32 meta_param1;
+> +
+> +	u32 reserved9[1];
+> +
+> +	u32 fcount;
+> +};
+> +
+> +struct is_mcuctl_reg {
+> +	u32 mcuctl;
+> +	u32 bboar;
+> +
+> +	u32 intgr0;
+> +	u32 intcr0;
+> +	u32 intmr0;
+> +	u32 intsr0;
+> +	u32 intmsr0;
+> +
+> +	u32 intgr1;
+> +	u32 intcr1;
+> +	u32 intmr1;
+> +	u32 intsr1;
+> +	u32 intmsr1;
+> +
+> +	u32 intcr2;
+> +	u32 intmr2;
+> +	u32 intsr2;
+> +	u32 intmsr2;
+> +
+> +	u32 gpoctrl;
+> +	u32 cpoenctlr;
+> +	u32 gpictlr;
+> +
+> +	u32 pad[0xD];
+> +
+> +	struct is_common_reg common_reg;
+> +};
+> +#endif
+> diff --git a/drivers/media/platform/exynos5-is/fimc-is-err.h b/drivers/media/platform/exynos5-is/fimc-is-err.h
+> new file mode 100644
+> index 0000000..e19eced
+> --- /dev/null
+> +++ b/drivers/media/platform/exynos5-is/fimc-is-err.h
+> @@ -0,0 +1,257 @@
+> +/*
+> + * Samsung Exynos5 SoC series FIMC-IS driver
+> + *
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd
+> + * Arun Kumar K<arun.kk@samsung.com>
+> + * Kil-yeon Lim<kilyeon.im@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef FIMC_IS_ERR_H
+> +#define FIMC_IS_ERR_H
+> +
+> +#define IS_ERROR_VER 012 /* IS ERROR VERSION 0.07 */
+> +
+> +/* IS error enum */
+> +enum is_error {
+> +
+> +	IS_ERROR_SUCCESS = 0,
+> +
+> +	/* General 1 ~ 100 */
+> +	IS_ERROR_INVALID_COMMAND = 1,
+> +	IS_ERROR_REQUEST_FAIL,
+> +	IS_ERROR_INVALID_SCENARIO,
+> +	IS_ERROR_INVALID_SENSORID,
+> +	IS_ERROR_INVALID_MODE_CHANGE,
+> +	IS_ERROR_INVALID_MAGIC_NUMBER,
+> +	IS_ERROR_INVALID_SETFILE_HDR,
+> +	IS_ERROR_ISP_SETFILE_VERSION_MISMATCH,
+> +	IS_ERROR_ISP_SETFILE_REVISION_MISMATCH,
+> +	IS_ERROR_BUSY,
+> +	IS_ERROR_SET_PARAMETER,
+> +	IS_ERROR_INVALID_PATH,
+> +	IS_ERROR_OPEN_SENSOR_FAIL,
+> +	IS_ERROR_ENTRY_MSG_THREAD_DOWN,
+> +	IS_ERROR_ISP_FRAME_END_NOT_DONE,
+> +	IS_ERROR_DRC_FRAME_END_NOT_DONE,
+> +	IS_ERROR_SCALERC_FRAME_END_NOT_DONE,
+> +	IS_ERROR_ODC_FRAME_END_NOT_DONE,
+> +	IS_ERROR_DIS_FRAME_END_NOT_DONE,
+> +	IS_ERROR_TDNR_FRAME_END_NOT_DONE,
+> +	IS_ERROR_SCALERP_FRAME_END_NOT_DONE,
+> +	IS_ERROR_WAIT_STREAM_OFF_NOT_DONE,
+> +	IS_ERROR_NO_MSG_IS_RECEIVED,
+> +	IS_ERROR_SENSOR_MSG_FAIL,
+> +	IS_ERROR_ISP_MSG_FAIL,
+> +	IS_ERROR_DRC_MSG_FAIL,
+> +	IS_ERROR_SCALERC_MSG_FAIL,
+> +	IS_ERROR_ODC_MSG_FAIL,
+> +	IS_ERROR_DIS_MSG_FAIL,
+> +	IS_ERROR_TDNR_MSG_FAIL,
+> +	IS_ERROR_SCALERP_MSG_FAIL,
+> +	IS_ERROR_LHFD_MSG_FAIL,
+> +	IS_ERROR_INTERNAL_STOP,
+> +	IS_ERROR_UNKNOWN,
+> +	IS_ERROR_TIME_OUT_FLAG,
+> +
+> +	/* Sensor 100 ~ 200 */
+> +	IS_ERROR_SENSOR_PWRDN_FAIL = 100,
+> +	IS_ERROR_SENSOR_STREAM_ON_FAIL,
+> +	IS_ERROR_SENSOR_STREAM_OFF_FAIL,
+> +
+> +	/* ISP 200 ~ 300 */
+> +	IS_ERROR_ISP_PWRDN_FAIL = 200,
+> +	IS_ERROR_ISP_MULTIPLE_INPUT,
+> +	IS_ERROR_ISP_ABSENT_INPUT,
+> +	IS_ERROR_ISP_ABSENT_OUTPUT,
+> +	IS_ERROR_ISP_NONADJACENT_OUTPUT,
+> +	IS_ERROR_ISP_FORMAT_MISMATCH,
+> +	IS_ERROR_ISP_WIDTH_MISMATCH,
+> +	IS_ERROR_ISP_HEIGHT_MISMATCH,
+> +	IS_ERROR_ISP_BITWIDTH_MISMATCH,
+> +	IS_ERROR_ISP_FRAME_END_TIME_OUT,
+> +
+> +	/* DRC 300 ~ 400 */
+> +	IS_ERROR_DRC_PWRDN_FAIL = 300,
+> +	IS_ERROR_DRC_MULTIPLE_INPUT,
+> +	IS_ERROR_DRC_ABSENT_INPUT,
+> +	IS_ERROR_DRC_NONADJACENT_INTPUT,
+> +	IS_ERROR_DRC_ABSENT_OUTPUT,
+> +	IS_ERROR_DRC_NONADJACENT_OUTPUT,
+> +	IS_ERROR_DRC_FORMAT_MISMATCH,
+> +	IS_ERROR_DRC_WIDTH_MISMATCH,
+> +	IS_ERROR_DRC_HEIGHT_MISMATCH,
+> +	IS_ERROR_DRC_BITWIDTH_MISMATCH,
+> +	IS_ERROR_DRC_FRAME_END_TIME_OUT,
+> +
+> +	/*SCALERC(400~500)*/
+> +	IS_ERROR_SCALERC_PWRDN_FAIL = 400,
+> +
+> +	/*ODC(500~600)*/
+> +	IS_ERROR_ODC_PWRDN_FAIL = 500,
+> +
+> +	/*DIS(600~700)*/
+> +	IS_ERROR_DIS_PWRDN_FAIL = 600,
+> +
+> +	/*TDNR(700~800)*/
+> +	IS_ERROR_TDNR_PWRDN_FAIL = 700,
+> +
+> +	/*SCALERP(800~900)*/
+> +	IS_ERROR_SCALERP_PWRDN_FAIL = 800,
+> +
+> +	/*FD(900~1000)*/
+> +	IS_ERROR_FD_PWRDN_FAIL = 900,
+> +	IS_ERROR_FD_MULTIPLE_INPUT,
+> +	IS_ERROR_FD_ABSENT_INPUT,
+> +	IS_ERROR_FD_NONADJACENT_INPUT,
+> +	IS_ERROR_LHFD_FRAME_END_TIME_OUT,
+> +};
+> +
+> +/* Set parameter error enum */
+> +enum error {
+> +	/* Common error (0~99) */
+> +	ERROR_COMMON_NONE		= 0,
+> +	ERROR_COMMON_CMD		= 1,	/* Invalid command*/
+> +	ERROR_COMMON_PARAMETER		= 2,	/* Invalid parameter*/
+> +	/* setfile is not loaded before adjusting */
+> +	ERROR_COMMON_SETFILE_LOAD	= 3,
+> +	/* setfile is not Adjusted before runnng. */
+> +	ERROR_COMMON_SETFILE_ADJUST	= 4,
+> +	/* index of setfile is not valid. */
+> +	ERROR_COMMON_SETFILE_INDEX = 5,
+> +	/* Input path can be changed in ready state(stop) */
+> +	ERROR_COMMON_INPUT_PATH		= 6,
+> +	/* IP can not start if input path is not set */
+> +	ERROR_COMMON_INPUT_INIT		= 7,
+> +	/* Output path can be changed in ready state(stop) */
+> +	ERROR_COMMON_OUTPUT_PATH	= 8,
+> +	/* IP can not start if output path is not set */
+> +	ERROR_COMMON_OUTPUT_INIT	= 9,
+> +
+> +	ERROR_CONTROL_NONE		= ERROR_COMMON_NONE,
+> +	ERROR_CONTROL_BYPASS		= 11,	/* Enable or Disable */
+> +	ERROR_CONTROL_BUF		= 12,	/* invalid buffer info */
+> +
+> +	ERROR_OTF_INPUT_NONE		= ERROR_COMMON_NONE,
+> +	/* invalid command */
+> +	ERROR_OTF_INPUT_CMD		= 21,
+> +	/* invalid format  (DRC: YUV444, FD: YUV444, 422, 420) */
+> +	ERROR_OTF_INPUT_FORMAT		= 22,
+> +	/* invalid width (DRC: 128~8192, FD: 32~8190) */
+> +	ERROR_OTF_INPUT_WIDTH		= 23,
+> +	/* invalid height (DRC: 64~8192, FD: 16~8190) */
+> +	ERROR_OTF_INPUT_HEIGHT		= 24,
+> +	/* invalid bit-width (DRC: 8~12bits, FD: 8bit) */
+> +	ERROR_OTF_INPUT_BIT_WIDTH	= 25,
+> +	/* invalid frame time for ISP */
+> +	ERROR_OTF_INPUT_USER_FRAMETILE = 26,
+> +
+> +	ERROR_DMA_INPUT_NONE		= ERROR_COMMON_NONE,
+> +	/* invalid width (DRC: 128~8192, FD: 32~8190) */
+> +	ERROR_DMA_INPUT_WIDTH		= 31,
+> +	/* invalid height (DRC: 64~8192, FD: 16~8190) */
+> +	ERROR_DMA_INPUT_HEIGHT		= 32,
+> +	/* invalid format (DRC: YUV444 or YUV422, FD: YUV444, 422, 420) */
+> +	ERROR_DMA_INPUT_FORMAT		= 33,
+> +	/* invalid bit-width (DRC: 8~12bit, FD: 8bit) */
+> +	ERROR_DMA_INPUT_BIT_WIDTH	= 34,
+> +	/* invalid order(DRC: YYCbCrorYCbYCr, FD:NO,YYCbCr,YCbYCr,CbCr,CrCb) */
+> +	ERROR_DMA_INPUT_ORDER		= 35,
+> +	/* invalid palne (DRC: 3, FD: 1, 2, 3) */
+> +	ERROR_DMA_INPUT_PLANE		= 36,
+> +
+> +	ERROR_OTF_OUTPUT_NONE		= ERROR_COMMON_NONE,
+> +	/* invalid width (DRC: 128~8192) */
+> +	ERROR_OTF_OUTPUT_WIDTH		= 41,
+> +	/* invalid height (DRC: 64~8192) */
+> +	ERROR_OTF_OUTPUT_HEIGHT		= 42,
+> +	/* invalid format (DRC: YUV444) */
+> +	ERROR_OTF_OUTPUT_FORMAT		= 43,
+> +	/* invalid bit-width (DRC: 8~12bits) */
+> +	ERROR_OTF_OUTPUT_BIT_WIDTH	= 44,
+> +	/* invalid crop size (ODC: left>2, right>10) */
+> +	ERROR_OTF_OUTPUT_CROP		= 45,
+> +
+> +	ERROR_DMA_OUTPUT_NONE		= ERROR_COMMON_NONE,
+> +	ERROR_DMA_OUTPUT_WIDTH		= 51,	/* invalid width */
+> +	ERROR_DMA_OUTPUT_HEIGHT		= 52,	/* invalid height */
+> +	ERROR_DMA_OUTPUT_FORMAT		= 53,	/* invalid format */
+> +	ERROR_DMA_OUTPUT_BIT_WIDTH	= 54,	/* invalid bit-width */
+> +	ERROR_DMA_OUTPUT_PLANE		= 55,	/* invalid plane */
+> +	ERROR_DMA_OUTPUT_ORDER		= 56,	/* invalid order */
+> +	ERROR_DMA_OUTPUT_BUF		= 57,	/* invalid buffer info */
+> +
+> +	ERROR_GLOBAL_SHOTMODE_NONE	= ERROR_COMMON_NONE,
+> +
+> +	/* SENSOR Error(100~199) */
+> +	ERROR_SENSOR_NONE		= ERROR_COMMON_NONE,
+> +	ERROR_SENSOR_I2C_FAIL		= 101,
+> +	ERROR_SENSOR_INVALID_FRAMERATE,
+> +	ERROR_SENSOR_INVALID_EXPOSURETIME,
+> +	ERROR_SENSOR_INVALID_SIZE,
+> +	ERROR_SENSOR_ACTURATOR_INIT_FAIL,
+> +	ERROR_SENSOR_INVALID_AF_POS,
+> +	ERROR_SENSOR_UNSUPPORT_FUNC,
+> +	ERROR_SENSOR_UNSUPPORT_PERI,
+> +	ERROR_SENSOR_UNSUPPORT_AF,
+> +	ERROR_SENSOR_FLASH_FAIL,
+> +	ERROR_SENSOR_START_FAIL,
+> +	ERROR_SENSOR_STOP_FAIL,
+> +
+> +	/* ISP Error (200~299) */
+> +	ERROR_ISP_AF_NONE		= ERROR_COMMON_NONE,
+> +	ERROR_ISP_AF_BUSY		= 201,
+> +	ERROR_ISP_AF_INVALID_COMMAND	= 202,
+> +	ERROR_ISP_AF_INVALID_MODE	= 203,
+> +	ERROR_ISP_FLASH_NONE		= ERROR_COMMON_NONE,
+> +	ERROR_ISP_AWB_NONE		= ERROR_COMMON_NONE,
+> +	ERROR_ISP_IMAGE_EFFECT_NONE	= ERROR_COMMON_NONE,
+> +	ERROR_ISP_IMAGE_EFFECT_INVALID	= 231,
+> +	ERROR_ISP_ISO_NONE		= ERROR_COMMON_NONE,
+> +	ERROR_ISP_ADJUST_NONE		= ERROR_COMMON_NONE,
+> +	ERROR_ISP_METERING_NONE		= ERROR_COMMON_NONE,
+> +	ERROR_ISP_AFC_NONE		= ERROR_COMMON_NONE,
+> +
+> +	/* DRC Error (300~399) */
+> +
+> +	/* FD Error  (400~499) */
+> +	ERROR_FD_NONE					= ERROR_COMMON_NONE,
+> +	/* Invalid max number (1~16) */
+> +	ERROR_FD_CONFIG_MAX_NUMBER_STATE		= 401,
+> +	ERROR_FD_CONFIG_MAX_NUMBER_INVALID		= 402,
+> +	ERROR_FD_CONFIG_YAW_ANGLE_STATE			= 403,
+> +	ERROR_FD_CONFIG_YAW_ANGLE_INVALID		= 404,
+> +	ERROR_FD_CONFIG_ROLL_ANGLE_STATE		= 405,
+> +	ERROR_FD_CONFIG_ROLL_ANGLE_INVALID		= 406,
+> +	ERROR_FD_CONFIG_SMILE_MODE_INVALID		= 407,
+> +	ERROR_FD_CONFIG_BLINK_MODE_INVALID		= 408,
+> +	ERROR_FD_CONFIG_EYES_DETECT_INVALID		= 409,
+> +	ERROR_FD_CONFIG_MOUTH_DETECT_INVALID		= 410,
+> +	ERROR_FD_CONFIG_ORIENTATION_STATE		= 411,
+> +	ERROR_FD_CONFIG_ORIENTATION_INVALID		= 412,
+> +	ERROR_FD_CONFIG_ORIENTATION_VALUE_INVALID	= 413,
+> +	/* PARAM_FdResultStr can be only applied
+> +	 * in ready-state or stream off */
+> +	ERROR_FD_RESULT				= 414,
+> +	/* PARAM_FdModeStr can be only applied
+> +	 * in ready-state or stream off */
+> +	ERROR_FD_MODE					= 415,
+> +
+> +	/*SCALER ERR(500~599)*/
+> +	ERROR_SCALER_NONE			= ERROR_COMMON_NONE,
+> +	ERROR_SCALER_DMA_OUTSEL			= 501,
+> +	ERROR_SCALER_H_RATIO			= 502,
+> +	ERROR_SCALER_V_RATIO			= 503,
+> +	ERROR_SCALER_FRAME_BUFFER_SEQ		= 504,
+> +
+> +	ERROR_SCALER_IMAGE_EFFECT		= 510,
+> +
+> +	ERROR_SCALER_ROTATE			= 520,
+> +	ERROR_SCALER_FLIP			= 521,
+> +
+> +};
+> +
+> +#endif
+> diff --git a/drivers/media/platform/exynos5-is/fimc-is-metadata.h b/drivers/media/platform/exynos5-is/fimc-is-metadata.h
+> new file mode 100644
+> index 0000000..02367c4
+> --- /dev/null
+> +++ b/drivers/media/platform/exynos5-is/fimc-is-metadata.h
+> @@ -0,0 +1,767 @@
+> +/*
+> + * Samsung EXYNOS5 FIMC-IS (Imaging Subsystem) driver
+> + *
+> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+> + * Kil-yeon Lim<kilyeon.im@samsung.com>
+> + * Arun Kumar K<arun.kk@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef FIMC_IS_METADATA_H_
+> +#define FIMC_IS_METADATA_H_
+> +
+> +struct rational {
+> +	uint32_t num;
+> +	uint32_t den;
+> +};
+> +
+> +#define CAMERA2_MAX_AVAILABLE_MODE	21
+> +#define CAMERA2_MAX_FACES		16
+> +
+> +/*
+> + * Controls/dynamic metadata
+> + */
+> +
+> +enum metadata_mode {
+> +	METADATA_MODE_NONE,
+> +	METADATA_MODE_FULL
+> +};
+> +
+> +struct camera2_request_ctl {
+> +	uint32_t		id;
+> +	enum metadata_mode	metadatamode;
+> +	uint8_t			outputstreams[16];
+> +	uint32_t		framecount;
+> +};
+> +
+> +struct camera2_request_dm {
+> +	uint32_t		id;
+> +	enum metadata_mode	metadatamode;
+> +	uint32_t		framecount;
+> +};
+> +
+> +
+> +
+> +enum optical_stabilization_mode {
+> +	OPTICAL_STABILIZATION_MODE_OFF,
+> +	OPTICAL_STABILIZATION_MODE_ON
+> +};
+> +
+> +enum lens_facing {
+> +	LENS_FACING_BACK,
+> +	LENS_FACING_FRONT
+> +};
+> +
+> +struct camera2_lens_ctl {
+> +	uint32_t				focus_distance;
+> +	float					aperture;
+> +	float					focal_length;
+> +	float					filter_density;
+> +	enum optical_stabilization_mode		optical_stabilization_mode;
+> +};
+> +
+> +struct camera2_lens_dm {
+> +	uint32_t				focus_distance;
+> +	float					aperture;
+> +	float					focal_length;
+> +	float					filter_density;
+> +	enum optical_stabilization_mode		optical_stabilization_mode;
+> +	float					focus_range[2];
+> +};
+> +
+> +struct camera2_lens_sm {
+> +	float				minimum_focus_distance;
+> +	float				hyper_focal_distance;
+> +	float				available_focal_length[2];
+> +	float				available_apertures;
+> +	/* assuming 1 aperture */
+> +	float				available_filter_densities;
+> +	/* assuming 1 ND filter value */
+> +	enum optical_stabilization_mode	available_optical_stabilization;
+> +	/* assuming 1 */
+> +	uint32_t			shading_map_size;
+> +	float				shading_map[3][40][30];
+> +	uint32_t			geometric_correction_map_size;
+> +	float				geometric_correction_map[2][3][40][30];
+> +	enum lens_facing		facing;
+> +	float				position[2];
+> +};
+> +
+> +enum sensor_colorfilter_arrangement {
+> +	SENSOR_COLORFILTER_ARRANGEMENT_RGGB,
+> +	SENSOR_COLORFILTER_ARRANGEMENT_GRBG,
+> +	SENSOR_COLORFILTER_ARRANGEMENT_GBRG,
+> +	SENSOR_COLORFILTER_ARRANGEMENT_BGGR,
+> +	SENSOR_COLORFILTER_ARRANGEMENT_RGB
+> +};
+> +
+> +enum sensor_ref_illuminant {
+> +	SENSOR_ILLUMINANT_DAYLIGHT = 1,
+> +	SENSOR_ILLUMINANT_FLUORESCENT = 2,
+> +	SENSOR_ILLUMINANT_TUNGSTEN = 3,
+> +	SENSOR_ILLUMINANT_FLASH = 4,
+> +	SENSOR_ILLUMINANT_FINE_WEATHER = 9,
+> +	SENSOR_ILLUMINANT_CLOUDY_WEATHER = 10,
+> +	SENSOR_ILLUMINANT_SHADE = 11,
+> +	SENSOR_ILLUMINANT_DAYLIGHT_FLUORESCENT = 12,
+> +	SENSOR_ILLUMINANT_DAY_WHITE_FLUORESCENT = 13,
+> +	SENSOR_ILLUMINANT_COOL_WHITE_FLUORESCENT = 14,
+> +	SENSOR_ILLUMINANT_WHITE_FLUORESCENT = 15,
+> +	SENSOR_ILLUMINANT_STANDARD_A = 17,
+> +	SENSOR_ILLUMINANT_STANDARD_B = 18,
+> +	SENSOR_ILLUMINANT_STANDARD_C = 19,
+> +	SENSOR_ILLUMINANT_D55 = 20,
+> +	SENSOR_ILLUMINANT_D65 = 21,
+> +	SENSOR_ILLUMINANT_D75 = 22,
+> +	SENSOR_ILLUMINANT_D50 = 23,
+> +	SENSOR_ILLUMINANT_ISO_STUDIO_TUNGSTEN = 24
+> +};
+> +
+> +struct camera2_sensor_ctl {
+> +	/* unit : nano */
+> +	uint64_t	exposure_time;
+> +	/* unit : nano(It's min frame duration */
+> +	uint64_t	frame_duration;
+> +	/* unit : percent(need to change ISO value?) */
+> +	uint32_t	sensitivity;
+> +};
+> +
+> +struct camera2_sensor_dm {
+> +	uint64_t	exposure_time;
+> +	uint64_t	frame_duration;
+> +	uint32_t	sensitivity;
+> +	uint64_t	timestamp;
+> +};
+> +
+> +struct camera2_sensor_sm {
+> +	uint32_t	exposure_time_range[2];
+> +	uint32_t	max_frame_duration;
+> +	/* list of available sensitivities. */
+> +	uint32_t	available_sensitivities[10];
+> +	enum sensor_colorfilter_arrangement colorfilter_arrangement;
+> +	float		physical_size[2];
+> +	uint32_t	pixel_array_size[2];
+> +	uint32_t	active_array_size[4];
+> +	uint32_t	white_level;
+> +	uint32_t	black_level_pattern[4];
+> +	struct rational	color_transform1[9];
+> +	struct rational	color_transform2[9];
+> +	enum sensor_ref_illuminant	reference_illuminant1;
+> +	enum sensor_ref_illuminant	reference_illuminant2;
+> +	struct rational	forward_matrix1[9];
+> +	struct rational	forward_matrix2[9];
+> +	struct rational	calibration_transform1[9];
+> +	struct rational	calibration_transform2[9];
+> +	struct rational	base_gain_factor;
+> +	uint32_t	max_analog_sensitivity;
+> +	float		noise_model_coefficients[2];
+> +	uint32_t	orientation;
+> +};
+> +
+> +
+> +
+> +enum flash_mode {
+> +	CAM2_FLASH_MODE_OFF = 1,
+> +	CAM2_FLASH_MODE_SINGLE,
+> +	CAM2_FLASH_MODE_TORCH,
+> +	CAM2_FLASH_MODE_BEST
+> +};
+> +
+> +struct camera2_flash_ctl {
+> +	enum flash_mode		flash_mode;
+> +	uint32_t		firing_power;
+> +	uint64_t		firing_time;
+> +};
+> +
+> +struct camera2_flash_dm {
+> +	enum flash_mode		flash_mode;
+> +	/* 10 is max power */
+> +	uint32_t		firing_power;
+> +	/* unit : microseconds */
+> +	uint64_t		firing_time;
+> +	/* 1 : stable, 0 : unstable */
+> +	uint32_t		firing_stable;
+> +	/* 1 : success, 0 : fail */
+> +	uint32_t		decision;
+> +};
+> +
+> +struct camera2_flash_sm {
+> +	uint32_t	available;
+> +	uint64_t	charge_duration;
+> +};
+> +
+> +enum processing_mode {
+> +	PROCESSING_MODE_OFF = 1,
+> +	PROCESSING_MODE_FAST,
+> +	PROCESSING_MODE_HIGH_QUALITY
+> +};
+> +
+> +
+> +struct camera2_hotpixel_ctl {
+> +	enum processing_mode	mode;
+> +};
+> +
+> +struct camera2_hotpixel_dm {
+> +	enum processing_mode	mode;
+> +};
+> +
+> +struct camera2_demosaic_ctl {
+> +	enum processing_mode	mode;
+> +};
+> +
+> +struct camera2_demosaic_dm {
+> +	enum processing_mode	mode;
+> +};
+> +
+> +struct camera2_noise_reduction_ctl {
+> +	enum processing_mode	mode;
+> +	uint32_t		strength;
+> +};
+> +
+> +struct camera2_noise_reduction_dm {
+> +	enum processing_mode	mode;
+> +	uint32_t		strength;
+> +};
+> +
+> +struct camera2_shading_ctl {
+> +	enum processing_mode	mode;
+> +};
+> +
+> +struct camera2_shading_dm {
+> +	enum processing_mode	mode;
+> +};
+> +
+> +struct camera2_geometric_ctl {
+> +	enum processing_mode	mode;
+> +};
+> +
+> +struct camera2_geometric_dm {
+> +	enum processing_mode	mode;
+> +};
+> +
+> +enum color_correction_mode {
+> +	COLOR_CORRECTION_MODE_FAST = 1,
+> +	COLOR_CORRECTION_MODE_HIGH_QUALITY,
+> +	COLOR_CORRECTION_MODE_TRANSFORM_MATRIX,
+> +	COLOR_CORRECTION_MODE_EFFECT_MONO,
+> +	COLOR_CORRECTION_MODE_EFFECT_NEGATIVE,
+> +	COLOR_CORRECTION_MODE_EFFECT_SOLARIZE,
+> +	COLOR_CORRECTION_MODE_EFFECT_SEPIA,
+> +	COLOR_CORRECTION_MODE_EFFECT_POSTERIZE,
+> +	COLOR_CORRECTION_MODE_EFFECT_WHITEBOARD,
+> +	COLOR_CORRECTION_MODE_EFFECT_BLACKBOARD,
+> +	COLOR_CORRECTION_MODE_EFFECT_AQUA
+> +};
+> +
+> +
+> +struct camera2_color_correction_ctl {
+> +	enum color_correction_mode	mode;
+> +	float				transform[9];
+> +	uint32_t			hue;
+> +	uint32_t			saturation;
+> +	uint32_t			brightness;
+> +};
+> +
+> +struct camera2_color_correction_dm {
+> +	enum color_correction_mode	mode;
+> +	float				transform[9];
+> +	uint32_t			hue;
+> +	uint32_t			saturation;
+> +	uint32_t			brightness;
+> +};
+> +
+> +struct camera2_color_correction_sm {
+> +	/* assuming 10 supported modes */
+> +	uint8_t			available_modes[CAMERA2_MAX_AVAILABLE_MODE];
+> +	uint32_t		hue_range[2];
+> +	uint32_t		saturation_range[2];
+> +	uint32_t		brightness_range[2];
+> +};
+> +
+> +enum tonemap_mode {
+> +	TONEMAP_MODE_FAST = 1,
+> +	TONEMAP_MODE_HIGH_QUALITY,
+> +	TONEMAP_MODE_CONTRAST_CURVE
+> +};
+> +
+> +struct camera2_tonemap_ctl {
+> +	enum tonemap_mode		mode;
+> +	/* assuming maxCurvePoints = 64 */
+> +	float				curve_red[64];
+> +	float				curve_green[64];
+> +	float				curve_blue[64];
+> +};
+> +
+> +struct camera2_tonemap_dm {
+> +	enum tonemap_mode		mode;
+> +	/* assuming maxCurvePoints = 64 */
+> +	float				curve_red[64];
+> +	float				curve_green[64];
+> +	float				curve_blue[64];
+> +};
+> +
+> +struct camera2_tonemap_sm {
+> +	uint32_t	max_curve_points;
+> +};
+> +
+> +struct camera2_edge_ctl {
+> +	enum processing_mode	mode;
+> +	uint32_t		strength;
+> +};
+> +
+> +struct camera2_edge_dm {
+> +	enum processing_mode	mode;
+> +	uint32_t		strength;
+> +};
+> +
+> +enum scaler_formats {
+> +	SCALER_FORMAT_BAYER_RAW,
+> +	SCALER_FORMAT_YV12,
+> +	SCALER_FORMAT_NV21,
+> +	SCALER_FORMAT_JPEG,
+> +	SCALER_FORMAT_UNKNOWN
+> +};
+> +
+> +struct camera2_scaler_ctl {
+> +	uint32_t	crop_region[3];
+> +};
+> +
+> +struct camera2_scaler_dm {
+> +	uint32_t	crop_region[3];
+> +};
+> +
+> +struct camera2_scaler_sm {
+> +	enum scaler_formats available_formats[4];
+> +	/* assuming # of availableFormats = 4 */
+> +	uint32_t	available_raw_sizes;
+> +	uint64_t	available_raw_min_durations;
+> +	/* needs check */
+> +	uint32_t	available_processed_sizes[8];
+> +	uint64_t	available_processed_min_durations[8];
+> +	uint32_t	available_jpeg_sizes[8][2];
+> +	uint64_t	available_jpeg_min_durations[8];
+> +	uint32_t	available_max_digital_zoom[8];
+> +};
+> +
+> +struct camera2_jpeg_ctl {
+> +	uint32_t	quality;
+> +	uint32_t	thumbnail_size[2];
+> +	uint32_t	thumbnail_quality;
+> +	double		gps_coordinates[3];
+> +	uint32_t	gps_processing_method;
+> +	uint64_t	gps_timestamp;
+> +	uint32_t	orientation;
+> +};
+> +
+> +struct camera2_jpeg_dm {
+> +	uint32_t	quality;
+> +	uint32_t	thumbnail_size[2];
+> +	uint32_t	thumbnail_quality;
+> +	double		gps_coordinates[3];
+> +	uint32_t	gps_processing_method;
+> +	uint64_t	gps_timestamp;
+> +	uint32_t	orientation;
+> +};
+> +
+> +struct camera2_jpeg_sm {
+> +	uint32_t	available_thumbnail_sizes[8][2];
+> +	uint32_t	maxsize;
+> +	/* assuming supported size=8 */
+> +};
+> +
+> +enum face_detect_mode {
+> +	FACEDETECT_MODE_OFF = 1,
+> +	FACEDETECT_MODE_SIMPLE,
+> +	FACEDETECT_MODE_FULL
+> +};
+> +
+> +enum stats_mode {
+> +	STATS_MODE_OFF = 1,
+> +	STATS_MODE_ON
+> +};
+> +
+> +struct camera2_stats_ctl {
+> +	enum face_detect_mode	face_detect_mode;
+> +	enum stats_mode		histogram_mode;
+> +	enum stats_mode		sharpness_map_mode;
+> +};
+> +
+> +
+> +struct camera2_stats_dm {
+> +	enum face_detect_mode	face_detect_mode;
+> +	uint32_t		face_rectangles[CAMERA2_MAX_FACES][4];
+> +	uint8_t			face_scores[CAMERA2_MAX_FACES];
+> +	uint32_t		face_landmarks[CAMERA2_MAX_FACES][6];
+> +	uint32_t		face_ids[CAMERA2_MAX_FACES];
+> +	enum stats_mode		histogram_mode;
+> +	uint32_t		histogram[3 * 256];
+> +	enum stats_mode		sharpness_map_mode;
+> +};
+> +
+> +
+> +struct camera2_stats_sm {
+> +	uint8_t		available_face_detect_modes[CAMERA2_MAX_AVAILABLE_MODE];
+> +	/* assuming supported modes = 3 */
+> +	uint32_t	max_face_count;
+> +	uint32_t	histogram_bucket_count;
+> +	uint32_t	max_histogram_count;
+> +	uint32_t	sharpness_map_size[2];
+> +	uint32_t	max_sharpness_map_value;
+> +};
+> +
+> +enum aa_capture_intent {
+> +	AA_CAPTURE_INTENT_CUSTOM = 0,
+> +	AA_CAPTURE_INTENT_PREVIEW,
+> +	AA_CAPTURE_INTENT_STILL_CAPTURE,
+> +	AA_CAPTURE_INTENT_VIDEO_RECORD,
+> +	AA_CAPTURE_INTENT_VIDEO_SNAPSHOT,
+> +	AA_CAPTURE_INTENT_ZERO_SHUTTER_LAG
+> +};
+> +
+> +enum aa_mode {
+> +	AA_CONTROL_OFF = 1,
+> +	AA_CONTROL_AUTO,
+> +	AA_CONTROL_USE_SCENE_MODE
+> +};
+> +
+> +enum aa_scene_mode {
+> +	AA_SCENE_MODE_UNSUPPORTED = 1,
+> +	AA_SCENE_MODE_FACE_PRIORITY,
+> +	AA_SCENE_MODE_ACTION,
+> +	AA_SCENE_MODE_PORTRAIT,
+> +	AA_SCENE_MODE_LANDSCAPE,
+> +	AA_SCENE_MODE_NIGHT,
+> +	AA_SCENE_MODE_NIGHT_PORTRAIT,
+> +	AA_SCENE_MODE_THEATRE,
+> +	AA_SCENE_MODE_BEACH,
+> +	AA_SCENE_MODE_SNOW,
+> +	AA_SCENE_MODE_SUNSET,
+> +	AA_SCENE_MODE_STEADYPHOTO,
+> +	AA_SCENE_MODE_FIREWORKS,
+> +	AA_SCENE_MODE_SPORTS,
+> +	AA_SCENE_MODE_PARTY,
+> +	AA_SCENE_MODE_CANDLELIGHT,
+> +	AA_SCENE_MODE_BARCODE,
+> +	AA_SCENE_MODE_NIGHT_CAPTURE
+> +};
+> +
+> +enum aa_effect_mode {
+> +	AA_EFFECT_OFF = 1,
+> +	AA_EFFECT_MONO,
+> +	AA_EFFECT_NEGATIVE,
+> +	AA_EFFECT_SOLARIZE,
+> +	AA_EFFECT_SEPIA,
+> +	AA_EFFECT_POSTERIZE,
+> +	AA_EFFECT_WHITEBOARD,
+> +	AA_EFFECT_BLACKBOARD,
+> +	AA_EFFECT_AQUA
+> +};
+> +
+> +enum aa_aemode {
+> +	AA_AEMODE_OFF = 1,
+> +	AA_AEMODE_LOCKED,
+> +	AA_AEMODE_ON,
+> +	AA_AEMODE_ON_AUTO_FLASH,
+> +	AA_AEMODE_ON_ALWAYS_FLASH,
+> +	AA_AEMODE_ON_AUTO_FLASH_REDEYE
+> +};
+> +
+> +enum aa_ae_flashmode {
+> +	/* all flash control stop */
+> +	AA_FLASHMODE_OFF = 1,
+> +	/* internal 3A can control flash */
+> +	AA_FLASHMODE_ON,
+> +	/* internal 3A can do auto flash algorithm */
+> +	AA_FLASHMODE_AUTO,
+> +	/* internal 3A can fire flash by auto result */
+> +	AA_FLASHMODE_CAPTURE,
+> +	/* internal 3A can control flash forced */
+> +	AA_FLASHMODE_ON_ALWAYS
+> +
+> +};
+> +
+> +enum aa_ae_antibanding_mode {
+> +	AA_AE_ANTIBANDING_OFF = 1,
+> +	AA_AE_ANTIBANDING_50HZ,
+> +	AA_AE_ANTIBANDING_60HZ,
+> +	AA_AE_ANTIBANDING_AUTO
+> +};
+> +
+> +enum aa_awbmode {
+> +	AA_AWBMODE_OFF = 1,
+> +	AA_AWBMODE_LOCKED,
+> +	AA_AWBMODE_WB_AUTO,
+> +	AA_AWBMODE_WB_INCANDESCENT,
+> +	AA_AWBMODE_WB_FLUORESCENT,
+> +	AA_AWBMODE_WB_WARM_FLUORESCENT,
+> +	AA_AWBMODE_WB_DAYLIGHT,
+> +	AA_AWBMODE_WB_CLOUDY_DAYLIGHT,
+> +	AA_AWBMODE_WB_TWILIGHT,
+> +	AA_AWBMODE_WB_SHADE
+> +};
+> +
+> +enum aa_afmode {
+> +	AA_AFMODE_OFF = 1,
+> +	AA_AFMODE_AUTO,
+> +	AA_AFMODE_MACRO,
+> +	AA_AFMODE_CONTINUOUS_VIDEO,
+> +	AA_AFMODE_CONTINUOUS_PICTURE,
+> +	AA_AFMODE_EDOF
+> +};
+> +
+> +enum aa_afstate {
+> +	AA_AFSTATE_INACTIVE = 1,
+> +	AA_AFSTATE_PASSIVE_SCAN,
+> +	AA_AFSTATE_ACTIVE_SCAN,
+> +	AA_AFSTATE_AF_ACQUIRED_FOCUS,
+> +	AA_AFSTATE_AF_FAILED_FOCUS
+> +};
+> +
+> +enum ae_state {
+> +	AE_STATE_INACTIVE = 1,
+> +	AE_STATE_SEARCHING,
+> +	AE_STATE_CONVERGED,
+> +	AE_STATE_LOCKED,
+> +	AE_STATE_FLASH_REQUIRED,
+> +	AE_STATE_PRECAPTURE
+> +};
+> +
+> +enum awb_state {
+> +	AWB_STATE_INACTIVE = 1,
+> +	AWB_STATE_SEARCHING,
+> +	AWB_STATE_CONVERGED,
+> +	AWB_STATE_LOCKED
+> +};
+> +
+> +enum aa_isomode {
+> +	AA_ISOMODE_AUTO = 1,
+> +	AA_ISOMODE_MANUAL,
+> +};
+> +
+> +struct camera2_aa_ctl {
+> +	enum aa_capture_intent		capture_intent;
+> +	enum aa_mode			mode;
+> +	enum aa_scene_mode		scene_mode;
+> +	uint32_t			video_stabilization_mode;
+> +	enum aa_aemode			ae_mode;
+> +	uint32_t			ae_regions[5];
+> +	/* 5 per region(x1,y1,x2,y2,weight). Currently assuming 1 region. */
+> +	int32_t				ae_exp_compensation;
+> +	uint32_t			ae_target_fps_range[2];
+> +	enum aa_ae_antibanding_mode	ae_anti_banding_mode;
+> +	enum aa_ae_flashmode		ae_flash_mode;
+> +	enum aa_awbmode			awb_mode;
+> +	uint32_t			awb_regions[5];
+> +	/* 5 per region(x1,y1,x2,y2,weight). Currently assuming 1 region. */
+> +	enum aa_afmode			af_mode;
+> +	uint32_t			af_regions[5];
+> +	/* 5 per region(x1,y1,x2,y2,weight). Currently assuming 1 region. */
+> +	uint32_t			af_trigger;
+> +	enum aa_isomode			iso_mode;
+> +	uint32_t			iso_value;
+> +
+> +};
+> +
+> +struct camera2_aa_dm {
+> +	enum aa_mode				mode;
+> +	enum aa_effect_mode			effect_mode;
+> +	enum aa_scene_mode			scene_mode;
+> +	uint32_t				video_stabilization_mode;
+> +	enum aa_aemode				ae_mode;
+> +	uint32_t				ae_regions[5];
+> +	/* 5 per region(x1,y1,x2,y2,weight). Currently assuming 1 region. */
+> +	enum ae_state				ae_state;
+> +	enum aa_ae_flashmode			ae_flash_mode;
+> +	enum aa_awbmode				awb_mode;
+> +	uint32_t				awb_regions[5];
+> +	enum awb_state				awb_state;
+> +	/* 5 per region(x1,y1,x2,y2,weight). Currently assuming 1 region. */
+> +	enum aa_afmode				af_mode;
+> +	uint32_t				af_regions[5];
+> +	/* 5 per region(x1,y1,x2,y2,weight). Currently assuming 1 region */
+> +	enum aa_afstate				af_state;
+> +	enum aa_isomode				iso_mode;
+> +	uint32_t				iso_value;
+> +};
+> +
+> +struct camera2_aa_sm {
+> +	uint8_t	available_scene_modes[CAMERA2_MAX_AVAILABLE_MODE];
+> +	uint8_t	available_effects[CAMERA2_MAX_AVAILABLE_MODE];
+> +	/* Assuming # of available scene modes = 10 */
+> +	uint32_t max_regions;
+> +	uint8_t ae_available_modes[CAMERA2_MAX_AVAILABLE_MODE];
+> +	/* Assuming # of available ae modes = 8 */
+> +	struct rational	ae_compensation_step;
+> +	int32_t	ae_compensation_range[2];
+> +	uint32_t ae_available_target_fps_ranges[CAMERA2_MAX_AVAILABLE_MODE][2];
+> +	uint8_t	 ae_available_antibanding_modes[CAMERA2_MAX_AVAILABLE_MODE];
+> +	uint8_t	awb_available_modes[CAMERA2_MAX_AVAILABLE_MODE];
+> +	/* Assuming # of awbAvailableModes = 10 */
+> +	uint8_t	af_available_modes[CAMERA2_MAX_AVAILABLE_MODE];
+> +	/* Assuming # of afAvailableModes = 4 */
+> +	uint8_t	available_video_stabilization_modes[4];
+> +	/* Assuming # of availableVideoStabilizationModes = 4 */
+> +	uint32_t iso_range[2];
+> +};
+> +
+> +struct camera2_lens_usm {
+> +	/* Frame delay between sending command and applying frame data */
+> +	uint32_t	focus_distance_frame_delay;
+> +};
+> +
+> +struct camera2_sensor_usm {
+> +	/* Frame delay between sending command and applying frame data */
+> +	uint32_t	exposure_time_frame_delay;
+> +	uint32_t	frame_duration_frame_delay;
+> +	uint32_t	sensitivity_frame_delay;
+> +};
+> +
+> +struct camera2_flash_usm {
+> +	/* Frame delay between sending command and applying frame data */
+> +	uint32_t	flash_mode_frame_delay;
+> +	uint32_t	firing_power_frame_delay;
+> +	uint64_t	firing_time_frame_delay;
+> +};
+> +
+> +struct camera2_ctl {
+> +	struct camera2_request_ctl		request;
+> +	struct camera2_lens_ctl			lens;
+> +	struct camera2_sensor_ctl		sensor;
+> +	struct camera2_flash_ctl		flash;
+> +	struct camera2_hotpixel_ctl		hotpixel;
+> +	struct camera2_demosaic_ctl		demosaic;
+> +	struct camera2_noise_reduction_ctl	noise;
+> +	struct camera2_shading_ctl		shading;
+> +	struct camera2_geometric_ctl		geometric;
+> +	struct camera2_color_correction_ctl	color;
+> +	struct camera2_tonemap_ctl		tonemap;
+> +	struct camera2_edge_ctl			edge;
+> +	struct camera2_scaler_ctl		scaler;
+> +	struct camera2_jpeg_ctl			jpeg;
+> +	struct camera2_stats_ctl		stats;
+> +	struct camera2_aa_ctl			aa;
+> +};
+> +
+> +struct camera2_dm {
+> +	struct camera2_request_dm		request;
+> +	struct camera2_lens_dm			lens;
+> +	struct camera2_sensor_dm		sensor;
+> +	struct camera2_flash_dm			flash;
+> +	struct camera2_hotpixel_dm		hotpixel;
+> +	struct camera2_demosaic_dm		demosaic;
+> +	struct camera2_noise_reduction_dm	noise;
+> +	struct camera2_shading_dm		shading;
+> +	struct camera2_geometric_dm		geometric;
+> +	struct camera2_color_correction_dm	color;
+> +	struct camera2_tonemap_dm		tonemap;
+> +	struct camera2_edge_dm			edge;
+> +	struct camera2_scaler_dm		scaler;
+> +	struct camera2_jpeg_dm			jpeg;
+> +	struct camera2_stats_dm			stats;
+> +	struct camera2_aa_dm			aa;
+> +};
+> +
+> +struct camera2_sm {
+> +	struct camera2_lens_sm			lens;
+> +	struct camera2_sensor_sm		sensor;
+> +	struct camera2_flash_sm			flash;
+> +	struct camera2_color_correction_sm	color;
+> +	struct camera2_tonemap_sm		tonemap;
+> +	struct camera2_scaler_sm		scaler;
+> +	struct camera2_jpeg_sm			jpeg;
+> +	struct camera2_stats_sm			stats;
+> +	struct camera2_aa_sm			aa;
+> +
+> +	/* User-defined(ispfw specific) static metadata. */
+> +	struct camera2_lens_usm			lensud;
+> +	struct camera2_sensor_usm		sensor_ud;
+> +	struct camera2_flash_usm		flash_ud;
+> +};
+> +
+> +/*
+> + * User-defined control for lens.
+> + */
+> +struct camera2_lens_uctl {
+> +	struct camera2_lens_ctl ctl;
+> +
+> +	/* It depends by af algorithm(normally 255 or 1023) */
+> +	uint32_t        max_pos;
+> +	/* Some actuator support slew rate control. */
+> +	uint32_t        slew_rate;
+> +};
+> +
+> +/*
+> + * User-defined metadata for lens.
+> + */
+> +struct camera2_lens_udm {
+> +	/* It depends by af algorithm(normally 255 or 1023) */
+> +	uint32_t        max_pos;
+> +	/* Some actuator support slew rate control. */
+> +	uint32_t        slew_rate;
+> +};
+> +
+> +/*
+> + * User-defined control for sensor.
+> + */
+> +struct camera2_sensor_uctl {
+> +	struct camera2_sensor_ctl ctl;
+> +	/* Dynamic frame duration.
+> +	 * This feature is decided to max. value between
+> +	 * 'sensor.exposureTime'+alpha and 'sensor.frameDuration'.
+> +	 */
+> +	uint64_t        dynamic_frame_duration;
+> +};
+> +
+> +struct camera2_scaler_uctl {
+> +	/* Target address for next frame.
+> +	 * [0] invalid address, stop
+> +	 * [others] valid address
+> +	 */
+> +	uint32_t scc_target_address[4];
+> +	uint32_t scp_target_address[4];
+> +};
+> +
+> +struct camera2_flash_uctl {
+> +	struct camera2_flash_ctl ctl;
+> +};
+> +
+> +struct camera2_uctl {
+> +	/* Set sensor, lens, flash control for next frame.
+> +	 * This flag can be combined.
+> +	 * [0 bit] lens
+> +	 * [1 bit] sensor
+> +	 * [2 bit] flash
+> +	 */
+> +	uint32_t u_update_bitmap;
+> +
+> +	/* For debugging */
+> +	uint32_t u_frame_number;
+> +
+> +	/* isp fw specific control (user-defined) of lens. */
+> +	struct camera2_lens_uctl	lens_ud;
+> +	/* isp fw specific control (user-defined) of sensor. */
+> +	struct camera2_sensor_uctl	sensor_ud;
+> +	/* isp fw specific control (user-defined) of flash. */
+> +	struct camera2_flash_uctl	flash_ud;
+> +
+> +	struct camera2_scaler_uctl	scaler_ud;
+> +};
+> +
+> +struct camera2_udm {
+> +	struct camera2_lens_udm		lens;
+> +};
+> +
+> +struct camera2_shot {
+> +	/* standard area */
+> +	struct camera2_ctl	ctl;
+> +	struct camera2_dm	dm;
+> +	/* user defined area */
+> +	struct camera2_uctl	uctl;
+> +	struct camera2_udm	udm;
+> +	/* magic : 23456789 */
+> +	uint32_t		magicnumber;
+> +};
+> +#endif
+> diff --git a/drivers/media/platform/exynos5-is/fimc-is-param.h b/drivers/media/platform/exynos5-is/fimc-is-param.h
+> new file mode 100644
+> index 0000000..1107d30
+> --- /dev/null
+> +++ b/drivers/media/platform/exynos5-is/fimc-is-param.h
+> @@ -0,0 +1,1160 @@
+> +/*
+> + * Samsung Exynos5 SoC series FIMC-IS driver
+> + *
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd
+> + * Kil-yeon Lim<kilyeon.im@samsung.com>
+> + * Arun Kumar K<arun.kk@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef FIMC_IS_PARAM_H
+> +#define FIMC_IS_PARAM_H
+> +
+> +#define MAGIC_NUMBER 0x01020304
+> +
+> +#define PARAMETER_MAX_SIZE    128  /* in bytes */
+> +#define PARAMETER_MAX_MEMBER  (PARAMETER_MAX_SIZE / 4)
+> +
+> +enum is_param_set_bit {
+> +	PARAM_GLOBAL_SHOTMODE = 0,
+> +	PARAM_SENSOR_CONTROL,
+> +	PARAM_SENSOR_OTF_INPUT,
+> +	PARAM_SENSOR_OTF_OUTPUT,
+> +	PARAM_SENSOR_FRAME_RATE,
+> +	PARAM_SENSOR_DMA_OUTPUT,
+> +	PARAM_BUFFER_CONTROL,
+> +	PARAM_BUFFER_OTF_INPUT,
+> +	PARAM_BUFFER_OTF_OUTPUT,
+> +	PARAM_ISP_CONTROL,
+> +	PARAM_ISP_OTF_INPUT = 10,
+> +	PARAM_ISP_DMA1_INPUT,
+> +	PARAM_ISP_DMA2_INPUT,
+> +	PARAM_ISP_AA,
+> +	PARAM_ISP_FLASH,
+> +	PARAM_ISP_AWB,
+> +	PARAM_ISP_IMAGE_EFFECT,
+> +	PARAM_ISP_ISO,
+> +	PARAM_ISP_ADJUST,
+> +	PARAM_ISP_METERING,
+> +	PARAM_ISP_AFC = 20,
+> +	PARAM_ISP_OTF_OUTPUT,
+> +	PARAM_ISP_DMA1_OUTPUT,
+> +	PARAM_ISP_DMA2_OUTPUT,
+> +	PARAM_DRC_CONTROL,
+> +	PARAM_DRC_OTF_INPUT,
+> +	PARAM_DRC_DMA_INPUT,
+> +	PARAM_DRC_OTF_OUTPUT,
+> +	PARAM_SCALERC_CONTROL,
+> +	PARAM_SCALERC_OTF_INPUT,
+> +	PARAM_SCALERC_IMAGE_EFFECT = 30,
+> +	PARAM_SCALERC_INPUT_CROP,
+> +	PARAM_SCALERC_OUTPUT_CROP,
+> +	PARAM_SCALERC_OTF_OUTPUT,
+> +	PARAM_SCALERC_DMA_OUTPUT = 34,
+> +	PARAM_ODC_CONTROL,
+> +	PARAM_ODC_OTF_INPUT,
+> +	PARAM_ODC_OTF_OUTPUT,
+> +	PARAM_DIS_CONTROL,
+> +	PARAM_DIS_OTF_INPUT,
+> +	PARAM_DIS_OTF_OUTPUT = 40,
+> +	PARAM_TDNR_CONTROL,
+> +	PARAM_TDNR_OTF_INPUT,
+> +	PARAM_TDNR_1ST_FRAME,
+> +	PARAM_TDNR_OTF_OUTPUT,
+> +	PARAM_TDNR_DMA_OUTPUT,
+> +	PARAM_SCALERP_CONTROL,
+> +	PARAM_SCALERP_OTF_INPUT,
+> +	PARAM_SCALERP_IMAGE_EFFECT,
+> +	PARAM_SCALERP_INPUT_CROP,
+> +	PARAM_SCALERP_OUTPUT_CROP = 50,
+> +	PARAM_SCALERP_ROTATION,
+> +	PARAM_SCALERP_FLIP,
+> +	PARAM_SCALERP_OTF_OUTPUT,
+> +	PARAM_SCALERP_DMA_OUTPUT,
+> +	PARAM_FD_CONTROL,
+> +	PARAM_FD_OTF_INPUT,
+> +	PARAM_FD_DMA_INPUT,
+> +	PARAM_FD_CONFIG = 58,
+> +	PARAM_END,
+> +};
+> +
+> +/* ----------------------  Input  ----------------------------------- */
+> +enum control_command {
+> +	CONTROL_COMMAND_STOP	= 0,
+> +	CONTROL_COMMAND_START	= 1,
+> +	CONTROL_COMMAND_TEST	= 2
+> +};
+> +
+> +enum bypass_command {
+> +	CONTROL_BYPASS_DISABLE		= 0,
+> +	CONTROL_BYPASS_ENABLE		= 1
+> +};
+> +
+> +enum control_error {
+> +	CONTROL_ERROR_NONE		= 0
+> +};
+> +
+> +enum otf_input_command {
+> +	OTF_INPUT_COMMAND_DISABLE	= 0,
+> +	OTF_INPUT_COMMAND_ENABLE	= 1
+> +};
+> +
+> +enum otf_input_format {
+> +	OTF_INPUT_FORMAT_BAYER		= 0, /* 1 Channel */
+> +	OTF_INPUT_FORMAT_YUV444		= 1, /* 3 Channel */
+> +	OTF_INPUT_FORMAT_YUV422		= 2, /* 3 Channel */
+> +	OTF_INPUT_FORMAT_YUV420		= 3, /* 3 Channel */
+> +	OTF_INPUT_FORMAT_STRGEN_COLORBAR_BAYER = 10,
+> +	OTF_INPUT_FORMAT_BAYER_DMA	= 11,
+> +};
+> +
+> +enum otf_input_bitwidth {
+> +	OTF_INPUT_BIT_WIDTH_14BIT	= 14,
+> +	OTF_INPUT_BIT_WIDTH_12BIT	= 12,
+> +	OTF_INPUT_BIT_WIDTH_11BIT	= 11,
+> +	OTF_INPUT_BIT_WIDTH_10BIT	= 10,
+> +	OTF_INPUT_BIT_WIDTH_9BIT	= 9,
+> +	OTF_INPUT_BIT_WIDTH_8BIT	= 8
+> +};
+> +
+> +enum otf_input_order {
+> +	OTF_INPUT_ORDER_BAYER_GR_BG	= 0,
+> +	OTF_INPUT_ORDER_BAYER_RG_GB	= 1,
+> +	OTF_INPUT_ORDER_BAYER_BG_GR	= 2,
+> +	OTF_INPUT_ORDER_BAYER_GB_RG	= 3
+> +};
+> +
+> +enum otf_intput_error {
+> +	OTF_INPUT_ERROR_NONE		= 0 /* Input setting is done */
+> +};
+> +
+> +enum dma_input_command {
+> +	DMA_INPUT_COMMAND_DISABLE	= 0,
+> +	DMA_INPUT_COMMAND_ENABLE	= 1,
+> +	DMA_INPUT_COMMAND_BUF_MNGR	= 2,
+> +	DMA_INPUT_COMMAND_RUN_SINGLE	= 3,
+> +};
+> +
+> +enum dma_inut_format {
+> +	DMA_INPUT_FORMAT_BAYER		= 0,
+> +	DMA_INPUT_FORMAT_YUV444		= 1,
+> +	DMA_INPUT_FORMAT_YUV422		= 2,
+> +	DMA_INPUT_FORMAT_YUV420		= 3,
+> +};
+> +
+> +enum dma_input_bitwidth {
+> +	DMA_INPUT_BIT_WIDTH_14BIT	= 14,
+> +	DMA_INPUT_BIT_WIDTH_12BIT	= 12,
+> +	DMA_INPUT_BIT_WIDTH_11BIT	= 11,
+> +	DMA_INPUT_BIT_WIDTH_10BIT	= 10,
+> +	DMA_INPUT_BIT_WIDTH_9BIT	= 9,
+> +	DMA_INPUT_BIT_WIDTH_8BIT	= 8
+> +};
+> +
+> +enum dma_input_order {
+> +	DMA_INPUT_ORDER_NONE	= 0,
+> +	DMA_INPUT_ORDER_CBCR	= 1,
+> +	DMA_INPUT_ORDER_CRCB	= 2,
+> +	DMA_INPUT_ORDER_YCBCR	= 3,
+> +	DMA_INPUT_ORDER_YYCBCR	= 4,
+> +	DMA_INPUT_ORDER_YCBYCR	= 5,
+> +	DMA_INPUT_ORDER_YCRYCB	= 6,
+> +	DMA_INPUT_ORDER_CBYCRY	= 7,
+> +	DMA_INPUT_ORDER_CRYCBY	= 8,
+> +	DMA_INPUT_ORDER_GR_BG	= 9
+> +};
+> +
+> +enum dma_input_error {
+> +	DMA_INPUT_ERROR_NONE	= 0 /*  DMA input setting is done */
+> +};
+> +
+> +/* ----------------------  Output  ----------------------------------- */
+> +enum otf_output_crop {
+> +	OTF_OUTPUT_CROP_DISABLE		= 0,
+> +	OTF_OUTPUT_CROP_ENABLE		= 1
+> +};
+> +
+> +enum otf_output_command {
+> +	OTF_OUTPUT_COMMAND_DISABLE	= 0,
+> +	OTF_OUTPUT_COMMAND_ENABLE	= 1
+> +};
+> +
+> +enum orf_output_format {
+> +	OTF_OUTPUT_FORMAT_YUV444	= 1,
+> +	OTF_OUTPUT_FORMAT_YUV422	= 2,
+> +	OTF_OUTPUT_FORMAT_YUV420	= 3,
+> +	OTF_OUTPUT_FORMAT_RGB		= 4
+> +};
+> +
+> +enum otf_output_bitwidth {
+> +	OTF_OUTPUT_BIT_WIDTH_14BIT	= 14,
+> +	OTF_OUTPUT_BIT_WIDTH_12BIT	= 12,
+> +	OTF_OUTPUT_BIT_WIDTH_11BIT	= 11,
+> +	OTF_OUTPUT_BIT_WIDTH_10BIT	= 10,
+> +	OTF_OUTPUT_BIT_WIDTH_9BIT	= 9,
+> +	OTF_OUTPUT_BIT_WIDTH_8BIT	= 8
+> +};
+> +
+> +enum otf_output_order {
+> +	OTF_OUTPUT_ORDER_BAYER_GR_BG	= 0,
+> +};
+> +
+> +enum otf_output_error {
+> +	OTF_OUTPUT_ERROR_NONE = 0 /* Output Setting is done */
+> +};
+> +
+> +enum dma_output_command {
+> +	DMA_OUTPUT_COMMAND_DISABLE	= 0,
+> +	DMA_OUTPUT_COMMAND_ENABLE	= 1,
+> +	DMA_OUTPUT_COMMAND_BUF_MNGR	= 2,
+> +	DMA_OUTPUT_UPDATE_MASK_BITS	= 3
+> +};
+> +
+> +enum dma_output_format {
+> +	DMA_OUTPUT_FORMAT_BAYER		= 0,
+> +	DMA_OUTPUT_FORMAT_YUV444	= 1,
+> +	DMA_OUTPUT_FORMAT_YUV422	= 2,
+> +	DMA_OUTPUT_FORMAT_YUV420	= 3,
+> +	DMA_OUTPUT_FORMAT_RGB		= 4
+> +};
+> +
+> +enum dma_output_bitwidth {
+> +	DMA_OUTPUT_BIT_WIDTH_14BIT	= 14,
+> +	DMA_OUTPUT_BIT_WIDTH_12BIT	= 12,
+> +	DMA_OUTPUT_BIT_WIDTH_11BIT	= 11,
+> +	DMA_OUTPUT_BIT_WIDTH_10BIT	= 10,
+> +	DMA_OUTPUT_BIT_WIDTH_9BIT	= 9,
+> +	DMA_OUTPUT_BIT_WIDTH_8BIT	= 8
+> +};
+> +
+> +enum dma_output_order {
+> +	DMA_OUTPUT_ORDER_NONE		= 0,
+> +	DMA_OUTPUT_ORDER_CBCR		= 1,
+> +	DMA_OUTPUT_ORDER_CRCB		= 2,
+> +	DMA_OUTPUT_ORDER_YYCBCR		= 3,
+> +	DMA_OUTPUT_ORDER_YCBYCR		= 4,
+> +	DMA_OUTPUT_ORDER_YCRYCB		= 5,
+> +	DMA_OUTPUT_ORDER_CBYCRY		= 6,
+> +	DMA_OUTPUT_ORDER_CRYCBY		= 7,
+> +	DMA_OUTPUT_ORDER_YCBCR		= 8,
+> +	DMA_OUTPUT_ORDER_CRYCB		= 9,
+> +	DMA_OUTPUT_ORDER_CRCBY		= 10,
+> +	DMA_OUTPUT_ORDER_CBYCR		= 11,
+> +	DMA_OUTPUT_ORDER_YCRCB		= 12,
+> +	DMA_OUTPUT_ORDER_CBCRY		= 13,
+> +	DMA_OUTPUT_ORDER_BGR		= 14,
+> +	DMA_OUTPUT_ORDER_GB_BG		= 15
+> +};
+> +
+> +enum dma_output_notify_dma_done {
+> +	DMA_OUTPUT_NOTIFY_DMA_DONE_DISABLE	= 0,
+> +	DMA_OUTPUT_NOTIFY_DMA_DONE_ENBABLE	= 1,
+> +};
+> +
+> +enum dma_output_error {
+> +	DMA_OUTPUT_ERROR_NONE		= 0 /* DMA output setting is done */
+> +};
+> +
+> +/* ----------------------  Global  ----------------------------------- */
+> +enum global_shotmode_error {
+> +	GLOBAL_SHOTMODE_ERROR_NONE	= 0 /* shot-mode setting is done */
+> +};
+> +
+> +/* -------------------------  AA  ------------------------------------ */
+> +enum isp_lock_command {
+> +	ISP_AA_COMMAND_START	= 0,
+> +	ISP_AA_COMMAND_STOP	= 1
+> +};
+> +
+> +enum isp_lock_target {
+> +	ISP_AA_TARGET_AF	= 1,
+> +	ISP_AA_TARGET_AE	= 2,
+> +	ISP_AA_TARGET_AWB	= 4
+> +};
+> +
+> +enum isp_af_mode {
+> +	ISP_AF_MANUAL = 0,
+> +	ISP_AF_SINGLE,
+> +	ISP_AF_CONTINUOUS,
+> +	ISP_AF_REGION,
+> +	ISP_AF_SLEEP,
+> +	ISP_AF_INIT,
+> +	ISP_AF_SET_CENTER_WINDOW,
+> +	ISP_AF_SET_TOUCH_WINDOW,
+> +	ISP_AF_SET_FACE_WINDOW
+> +};
+> +
+> +enum isp_af_scene {
+> +	ISP_AF_SCENE_NORMAL		= 0,
+> +	ISP_AF_SCENE_MACRO		= 1
+> +};
+> +
+> +enum isp_af_touch {
+> +	ISP_AF_TOUCH_DISABLE = 0,
+> +	ISP_AF_TOUCH_ENABLE
+> +};
+> +
+> +enum isp_af_face {
+> +	ISP_AF_FACE_DISABLE = 0,
+> +	ISP_AF_FACE_ENABLE
+> +};
+> +
+> +enum isp_af_reponse {
+> +	ISP_AF_RESPONSE_PREVIEW = 0,
+> +	ISP_AF_RESPONSE_MOVIE
+> +};
+> +
+> +enum isp_af_sleep {
+> +	ISP_AF_SLEEP_OFF		= 0,
+> +	ISP_AF_SLEEP_ON			= 1
+> +};
+> +
+> +enum isp_af_continuous {
+> +	ISP_AF_CONTINUOUS_DISABLE	= 0,
+> +	ISP_AF_CONTINUOUS_ENABLE	= 1
+> +};
+> +
+> +enum isp_af_error {
+> +	ISP_AF_ERROR_NONE		= 0, /* AF mode change is done */
+> +	ISP_AF_EROOR_NO_LOCK_DONE	= 1  /* AF lock is done */
+> +};
+> +
+> +/* -------------------------  Flash  ------------------------------------- */
+> +enum isp_flash_command {
+> +	ISP_FLASH_COMMAND_DISABLE	= 0,
+> +	ISP_FLASH_COMMAND_MANUALON	= 1, /* (forced flash) */
+> +	ISP_FLASH_COMMAND_AUTO		= 2,
+> +	ISP_FLASH_COMMAND_TORCH		= 3,   /* 3 sec */
+> +	ISP_FLASH_COMMAND_FLASH_ON	= 4,
+> +	ISP_FLASH_COMMAND_CAPTURE	= 5,
+> +	ISP_FLASH_COMMAND_TRIGGER	= 6,
+> +	ISP_FLASH_COMMAND_CALIBRATION	= 7
+> +};
+> +
+> +enum isp_flash_redeye {
+> +	ISP_FLASH_REDEYE_DISABLE	= 0,
+> +	ISP_FLASH_REDEYE_ENABLE		= 1
+> +};
+> +
+> +enum isp_flash_error {
+> +	ISP_FLASH_ERROR_NONE		= 0 /* Flash setting is done */
+> +};
+> +
+> +/* --------------------------  AWB  ------------------------------------ */
+> +enum isp_awb_command {
+> +	ISP_AWB_COMMAND_AUTO		= 0,
+> +	ISP_AWB_COMMAND_ILLUMINATION	= 1,
+> +	ISP_AWB_COMMAND_MANUAL	= 2
+> +};
+> +
+> +enum isp_awb_illumination {
+> +	ISP_AWB_ILLUMINATION_DAYLIGHT		= 0,
+> +	ISP_AWB_ILLUMINATION_CLOUDY		= 1,
+> +	ISP_AWB_ILLUMINATION_TUNGSTEN		= 2,
+> +	ISP_AWB_ILLUMINATION_FLUORESCENT	= 3
+> +};
+> +
+> +enum isp_awb_error {
+> +	ISP_AWB_ERROR_NONE		= 0 /* AWB setting is done */
+> +};
+> +
+> +/* --------------------------  Effect  ----------------------------------- */
+> +enum isp_imageeffect_command {
+> +	ISP_IMAGE_EFFECT_DISABLE		= 0,
+> +	ISP_IMAGE_EFFECT_MONOCHROME		= 1,
+> +	ISP_IMAGE_EFFECT_NEGATIVE_MONO		= 2,
+> +	ISP_IMAGE_EFFECT_NEGATIVE_COLOR		= 3,
+> +	ISP_IMAGE_EFFECT_SEPIA			= 4,
+> +	ISP_IMAGE_EFFECT_AQUA			= 5,
+> +	ISP_IMAGE_EFFECT_EMBOSS			= 6,
+> +	ISP_IMAGE_EFFECT_EMBOSS_MONO		= 7,
+> +	ISP_IMAGE_EFFECT_SKETCH			= 8,
+> +	ISP_IMAGE_EFFECT_RED_YELLOW_POINT	= 9,
+> +	ISP_IMAGE_EFFECT_GREEN_POINT		= 10,
+> +	ISP_IMAGE_EFFECT_BLUE_POINT		= 11,
+> +	ISP_IMAGE_EFFECT_MAGENTA_POINT		= 12,
+> +	ISP_IMAGE_EFFECT_WARM_VINTAGE		= 13,
+> +	ISP_IMAGE_EFFECT_COLD_VINTAGE		= 14,
+> +	ISP_IMAGE_EFFECT_POSTERIZE		= 15,
+> +	ISP_IMAGE_EFFECT_SOLARIZE		= 16,
+> +	ISP_IMAGE_EFFECT_WASHED			= 17,
+> +	ISP_IMAGE_EFFECT_CCM			= 18,
+> +};
+> +
+> +enum isp_imageeffect_error {
+> +	ISP_IMAGE_EFFECT_ERROR_NONE	= 0 /* Image effect setting is done */
+> +};
+> +
+> +/* ---------------------------  ISO  ------------------------------------ */
+> +enum isp_iso_command {
+> +	ISP_ISO_COMMAND_AUTO		= 0,
+> +	ISP_ISO_COMMAND_MANUAL		= 1
+> +};
+> +
+> +enum iso_error {
+> +	ISP_ISO_ERROR_NONE		= 0 /* ISO setting is done */
+> +};
+> +
+> +/* --------------------------  Adjust  ----------------------------------- */
+> +enum iso_adjust_command {
+> +	ISP_ADJUST_COMMAND_AUTO			= 0,
+> +	ISP_ADJUST_COMMAND_MANUAL_CONTRAST	= (1<<  0),
+> +	ISP_ADJUST_COMMAND_MANUAL_SATURATION	= (1<<  1),
+> +	ISP_ADJUST_COMMAND_MANUAL_SHARPNESS	= (1<<  2),
+> +	ISP_ADJUST_COMMAND_MANUAL_EXPOSURE	= (1<<  3),
+> +	ISP_ADJUST_COMMAND_MANUAL_BRIGHTNESS	= (1<<  4),
+> +	ISP_ADJUST_COMMAND_MANUAL_HUE		= (1<<  5),
+> +	ISP_ADJUST_COMMAND_MANUAL_HOTPIXEL	= (1<<  6),
+> +	ISP_ADJUST_COMMAND_MANUAL_NOISEREDUCTION = (1<<  7),
+> +	ISP_ADJUST_COMMAND_MANUAL_SHADING	= (1<<  8),
+> +	ISP_ADJUST_COMMAND_MANUAL_GAMMA		= (1<<  9),
+> +	ISP_ADJUST_COMMAND_MANUAL_EDGEENHANCEMENT = (1<<  10),
+> +	ISP_ADJUST_COMMAND_MANUAL_SCENE		= (1<<  11),
+> +	ISP_ADJUST_COMMAND_MANUAL_FRAMETIME	= (1<<  12),
+> +	ISP_ADJUST_COMMAND_MANUAL_ALL		= 0x1FFF
 
-Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
----
- arch/x86/Kconfig                    |    1 +
- arch/x86/include/asm/sta2x11.h      |  318 ++++++++++++++++-
- arch/x86/platform/Makefile          |    1 +
- arch/x86/platform/sta2x11/Makefile  |    1 +
- arch/x86/platform/sta2x11/sta2x11.c |  279 ++++++++++++++
- drivers/mfd/Kconfig                 |    6 -
- drivers/mfd/Makefile                |    1 -
- drivers/mfd/sta2x11-mfd.c           |  680 -----------------------------------
- include/linux/mfd/sta2x11-mfd.h     |  518 --------------------------
- 9 files changed, 598 insertions(+), 1207 deletions(-)
- create mode 100644 arch/x86/platform/sta2x11/Makefile
- create mode 100644 arch/x86/platform/sta2x11/sta2x11.c
- delete mode 100644 drivers/mfd/sta2x11-mfd.c
- delete mode 100644 include/linux/mfd/sta2x11-mfd.h
+nit: 0x1FFF should be in lower case.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 0a779eb..ae05df92 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -559,6 +559,7 @@ config STA2X11
- 	select OF_EARLY_FLATTREE
- 	select OF_DYNAMIC
- 	select IRQ_DOMAIN
-+	select REGMAP_MMIO
- 	default n
- 	---help---
- 	  This adds support for boards based on the STA2X11 IO-Hub,
-diff --git a/arch/x86/include/asm/sta2x11.h b/arch/x86/include/asm/sta2x11.h
-index e9d32df..cd76923 100644
---- a/arch/x86/include/asm/sta2x11.h
-+++ b/arch/x86/include/asm/sta2x11.h
-@@ -1,12 +1,326 @@
- /*
-  * Header file for STMicroelectronics ConneXt (STA2X11) IOHub
-+ * Copyright (c) 2009-2011 Wind River Systems, Inc.
-+ * Copyright (c) 2011 ST Microelectronics (Alessandro Rubini)
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-+ * See the GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-+ *
-  */
- #ifndef __ASM_STA2X11_H
- #define __ASM_STA2X11_H
- 
-+#include <linux/types.h>
- #include <linux/pci.h>
- 
--/* This needs to be called from the MFD to configure its sub-devices */
--struct sta2x11_instance *sta2x11_get_instance(struct pci_dev *pdev);
-+enum sta2x11_plat_dev {
-+	sta2x11_sctl = 0,
-+	sta2x11_gpio,
-+	sta2x11_scr,
-+	sta2x11_time,
-+	sta2x11_apbreg,
-+	sta2x11_apb_soc_regs,
-+	sta2x11_vic,
-+	sta2x11_n_plat_devs,
-+};
-+
-+#define STA2X11_SCTL_NAME		"sta2x11-sctl"
-+#define STA2X11_GPIO_NAME		"sta2x11-gpio"
-+#define STA2X11_SCR_NAME		"sta2x11-scr"
-+#define STA2X11_TIME_NAME		"sta2x11-time"
-+#define STA2X11_APBREG_NAME		"sta2x11-apbreg"
-+#define STA2X11_APB_SOC_REGS_NAME	"sta2x11-apb-soc-regs"
-+#define STA2X11_VIC_NAME		"sta2x11-vic"
-+
-+/* CAN and MLB */
-+#define APBREG_BSR	0x00	/* Bridge Status Reg */
-+#define APBREG_PAER	0x08	/* Peripherals Address Error Reg */
-+#define APBREG_PWAC	0x20	/* Peripheral Write Access Control reg */
-+#define APBREG_PRAC	0x40	/* Peripheral Read Access Control reg */
-+#define APBREG_PCG	0x60	/* Peripheral Clock Gating Reg */
-+#define APBREG_PUR	0x80	/* Peripheral Under Reset Reg */
-+#define APBREG_EMU_PCG	0xA0	/* Emulator Peripheral Clock Gating Reg */
-+
-+#define APBREG_CAN	(1 << 1)
-+#define APBREG_MLB	(1 << 3)
-+
-+/* SARAC */
-+#define APBREG_BSR_SARAC     0x100 /* Bridge Status Reg */
-+#define APBREG_PAER_SARAC    0x108 /* Peripherals Address Error Reg */
-+#define APBREG_PWAC_SARAC    0x120 /* Peripheral Write Access Control reg */
-+#define APBREG_PRAC_SARAC    0x140 /* Peripheral Read Access Control reg */
-+#define APBREG_PCG_SARAC     0x160 /* Peripheral Clock Gating Reg */
-+#define APBREG_PUR_SARAC     0x180 /* Peripheral Under Reset Reg */
-+#define APBREG_EMU_PCG_SARAC 0x1A0 /* Emulator Peripheral Clock Gating Reg */
-+
-+#define APBREG_SARAC	(1 << 2)
-+
-+#define SCTL_SCCTL		0x00	/* System controller control register */
-+#define SCTL_ARMCFG		0x04	/* ARM configuration register */
-+#define SCTL_SCPLLCTL		0x08	/* PLL control status register */
-+
-+#define SCTL_SCPLLCTL_AUDIO_PLL_PD	     BIT(1)
-+#define SCTL_SCPLLCTL_FRAC_CONTROL	     BIT(3)
-+#define SCTL_SCPLLCTL_STRB_BYPASS	     BIT(6)
-+#define SCTL_SCPLLCTL_STRB_INPUT	     BIT(8)
-+
-+#define SCTL_SCPLLFCTRL		0x0c	/* PLL frequency control register */
-+
-+#define SCTL_SCPLLFCTRL_AUDIO_PLL_NDIV_MASK	0xff
-+#define SCTL_SCPLLFCTRL_AUDIO_PLL_NDIV_SHIFT	  10
-+#define SCTL_SCPLLFCTRL_AUDIO_PLL_IDF_MASK	   7
-+#define SCTL_SCPLLFCTRL_AUDIO_PLL_IDF_SHIFT	  21
-+#define SCTL_SCPLLFCTRL_AUDIO_PLL_ODF_MASK	   7
-+#define SCTL_SCPLLFCTRL_AUDIO_PLL_ODF_SHIFT	  18
-+#define SCTL_SCPLLFCTRL_DITHER_DISABLE_MASK     0x03
-+#define SCTL_SCPLLFCTRL_DITHER_DISABLE_SHIFT       4
-+
-+
-+#define SCTL_SCRESFRACT		0x10	/* PLL fractional input register */
-+
-+#define SCTL_SCRESFRACT_MASK	0x0000ffff
-+
-+
-+#define SCTL_SCRESCTRL1		0x14	/* Peripheral reset control 1 */
-+#define SCTL_SCRESXTRL2		0x18	/* Peripheral reset control 2 */
-+#define SCTL_SCPEREN0		0x1c	/* Peripheral clock enable register 0 */
-+#define SCTL_SCPEREN1		0x20	/* Peripheral clock enable register 1 */
-+#define SCTL_SCPEREN2		0x24	/* Peripheral clock enable register 2 */
-+#define SCTL_SCGRST		0x28	/* Peripheral global reset */
-+#define SCTL_SCPCIECSBRST	0x2c	/* PCIe PAB CSB reset status register */
-+#define SCTL_SCPCIPMCR1		0x30	/* PCI power management control 1 */
-+#define SCTL_SCPCIPMCR2		0x34	/* PCI power management control 2 */
-+#define SCTL_SCPCIPMSR1		0x38	/* PCI power management status 1 */
-+#define SCTL_SCPCIPMSR2		0x3c	/* PCI power management status 2 */
-+#define SCTL_SCPCIPMSR3		0x40	/* PCI power management status 3 */
-+#define SCTL_SCINTREN		0x44	/* Interrupt enable */
-+#define SCTL_SCRISR		0x48	/* RAW interrupt status */
-+#define SCTL_SCCLKSTAT0		0x4c	/* Peripheral clocks status 0 */
-+#define SCTL_SCCLKSTAT1		0x50	/* Peripheral clocks status 1 */
-+#define SCTL_SCCLKSTAT2		0x54	/* Peripheral clocks status 2 */
-+#define SCTL_SCRSTSTA		0x58	/* Reset status register */
-+
-+#define SCTL_SCRESCTRL1_USB_PHY_POR	(1 << 0)
-+#define SCTL_SCRESCTRL1_USB_OTG		(1 << 1)
-+#define SCTL_SCRESCTRL1_USB_HRST	(1 << 2)
-+#define SCTL_SCRESCTRL1_USB_PHY_HOST	(1 << 3)
-+#define SCTL_SCRESCTRL1_SATAII		(1 << 4)
-+#define SCTL_SCRESCTRL1_VIP		(1 << 5)
-+#define SCTL_SCRESCTRL1_PER_MMC0	(1 << 6)
-+#define SCTL_SCRESCTRL1_PER_MMC1	(1 << 7)
-+#define SCTL_SCRESCTRL1_PER_GPIO0	(1 << 8)
-+#define SCTL_SCRESCTRL1_PER_GPIO1	(1 << 9)
-+#define SCTL_SCRESCTRL1_PER_GPIO2	(1 << 10)
-+#define SCTL_SCRESCTRL1_PER_GPIO3	(1 << 11)
-+#define SCTL_SCRESCTRL1_PER_MTU0	(1 << 12)
-+#define SCTL_SCRESCTRL1_KER_SPI0	(1 << 13)
-+#define SCTL_SCRESCTRL1_KER_SPI1	(1 << 14)
-+#define SCTL_SCRESCTRL1_KER_SPI2	(1 << 15)
-+#define SCTL_SCRESCTRL1_KER_MCI0	(1 << 16)
-+#define SCTL_SCRESCTRL1_KER_MCI1	(1 << 17)
-+#define SCTL_SCRESCTRL1_PRE_HSI2C0	(1 << 18)
-+#define SCTL_SCRESCTRL1_PER_HSI2C1	(1 << 19)
-+#define SCTL_SCRESCTRL1_PER_HSI2C2	(1 << 20)
-+#define SCTL_SCRESCTRL1_PER_HSI2C3	(1 << 21)
-+#define SCTL_SCRESCTRL1_PER_MSP0	(1 << 22)
-+#define SCTL_SCRESCTRL1_PER_MSP1	(1 << 23)
-+#define SCTL_SCRESCTRL1_PER_MSP2	(1 << 24)
-+#define SCTL_SCRESCTRL1_PER_MSP3	(1 << 25)
-+#define SCTL_SCRESCTRL1_PER_MSP4	(1 << 26)
-+#define SCTL_SCRESCTRL1_PER_MSP5	(1 << 27)
-+#define SCTL_SCRESCTRL1_PER_MMC		(1 << 28)
-+#define SCTL_SCRESCTRL1_KER_MSP0	(1 << 29)
-+#define SCTL_SCRESCTRL1_KER_MSP1	(1 << 30)
-+#define SCTL_SCRESCTRL1_KER_MSP2	(1 << 31)
-+
-+#define SCTL_SCPEREN0_UART0		(1 << 0)
-+#define SCTL_SCPEREN0_UART1		(1 << 1)
-+#define SCTL_SCPEREN0_UART2		(1 << 2)
-+#define SCTL_SCPEREN0_UART3		(1 << 3)
-+#define SCTL_SCPEREN0_MSP0		(1 << 4)
-+#define SCTL_SCPEREN0_MSP1		(1 << 5)
-+#define SCTL_SCPEREN0_MSP2		(1 << 6)
-+#define SCTL_SCPEREN0_MSP3		(1 << 7)
-+#define SCTL_SCPEREN0_MSP4		(1 << 8)
-+#define SCTL_SCPEREN0_MSP5		(1 << 9)
-+#define SCTL_SCPEREN0_SPI0		(1 << 10)
-+#define SCTL_SCPEREN0_SPI1		(1 << 11)
-+#define SCTL_SCPEREN0_SPI2		(1 << 12)
-+#define SCTL_SCPEREN0_I2C0		(1 << 13)
-+#define SCTL_SCPEREN0_I2C1		(1 << 14)
-+#define SCTL_SCPEREN0_I2C2		(1 << 15)
-+#define SCTL_SCPEREN0_I2C3		(1 << 16)
-+#define SCTL_SCPEREN0_SVDO_LVDS		(1 << 17)
-+#define SCTL_SCPEREN0_USB_HOST		(1 << 18)
-+#define SCTL_SCPEREN0_USB_OTG		(1 << 19)
-+#define SCTL_SCPEREN0_MCI0		(1 << 20)
-+#define SCTL_SCPEREN0_MCI1		(1 << 21)
-+#define SCTL_SCPEREN0_MCI2		(1 << 22)
-+#define SCTL_SCPEREN0_MCI3		(1 << 23)
-+#define SCTL_SCPEREN0_SATA		(1 << 24)
-+#define SCTL_SCPEREN0_ETHERNET		(1 << 25)
-+#define SCTL_SCPEREN0_VIC		(1 << 26)
-+#define SCTL_SCPEREN0_DMA_AUDIO		(1 << 27)
-+#define SCTL_SCPEREN0_DMA_SOC		(1 << 28)
-+#define SCTL_SCPEREN0_RAM		(1 << 29)
-+#define SCTL_SCPEREN0_VIP		(1 << 30)
-+#define SCTL_SCPEREN0_ARM		(1 << 31)
-+
-+#define SCTL_SCPEREN1_UART0		(1 << 0)
-+#define SCTL_SCPEREN1_UART1		(1 << 1)
-+#define SCTL_SCPEREN1_UART2		(1 << 2)
-+#define SCTL_SCPEREN1_UART3		(1 << 3)
-+#define SCTL_SCPEREN1_MSP0		(1 << 4)
-+#define SCTL_SCPEREN1_MSP1		(1 << 5)
-+#define SCTL_SCPEREN1_MSP2		(1 << 6)
-+#define SCTL_SCPEREN1_MSP3		(1 << 7)
-+#define SCTL_SCPEREN1_MSP4		(1 << 8)
-+#define SCTL_SCPEREN1_MSP5		(1 << 9)
-+#define SCTL_SCPEREN1_SPI0		(1 << 10)
-+#define SCTL_SCPEREN1_SPI1		(1 << 11)
-+#define SCTL_SCPEREN1_SPI2		(1 << 12)
-+#define SCTL_SCPEREN1_I2C0		(1 << 13)
-+#define SCTL_SCPEREN1_I2C1		(1 << 14)
-+#define SCTL_SCPEREN1_I2C2		(1 << 15)
-+#define SCTL_SCPEREN1_I2C3		(1 << 16)
-+#define SCTL_SCPEREN1_USB_PHY		(1 << 17)
-+
-+#define PCIE_EP1_FUNC3_0_INTR_REG	0x000
-+#define PCIE_EP1_FUNC7_4_INTR_REG	0x004
-+#define PCIE_EP2_FUNC3_0_INTR_REG	0x008
-+#define PCIE_EP2_FUNC7_4_INTR_REG	0x00c
-+#define PCIE_EP3_FUNC3_0_INTR_REG	0x010
-+#define PCIE_EP3_FUNC7_4_INTR_REG	0x014
-+#define PCIE_EP4_FUNC3_0_INTR_REG	0x018
-+#define PCIE_EP4_FUNC7_4_INTR_REG	0x01c
-+#define PCIE_INTR_ENABLE0_REG		0x020
-+#define PCIE_INTR_ENABLE1_REG		0x024
-+#define PCIE_EP1_FUNC_TC_REG		0x028
-+#define PCIE_EP2_FUNC_TC_REG		0x02c
-+#define PCIE_EP3_FUNC_TC_REG		0x030
-+#define PCIE_EP4_FUNC_TC_REG		0x034
-+#define PCIE_EP1_FUNC_F_REG		0x038
-+#define PCIE_EP2_FUNC_F_REG		0x03c
-+#define PCIE_EP3_FUNC_F_REG		0x040
-+#define PCIE_EP4_FUNC_F_REG		0x044
-+#define PCIE_PAB_AMBA_SW_RST_REG	0x048
-+#define PCIE_PM_STATUS_0_PORT_0_4	0x04c
-+#define PCIE_PM_STATUS_7_0_EP1		0x050
-+#define PCIE_PM_STATUS_7_0_EP2		0x054
-+#define PCIE_PM_STATUS_7_0_EP3		0x058
-+#define PCIE_PM_STATUS_7_0_EP4		0x05c
-+#define PCIE_DEV_ID_0_EP1_REG		0x060
-+#define PCIE_CC_REV_ID_0_EP1_REG	0x064
-+#define PCIE_DEV_ID_1_EP1_REG		0x068
-+#define PCIE_CC_REV_ID_1_EP1_REG	0x06c
-+#define PCIE_DEV_ID_2_EP1_REG		0x070
-+#define PCIE_CC_REV_ID_2_EP1_REG	0x074
-+#define PCIE_DEV_ID_3_EP1_REG		0x078
-+#define PCIE_CC_REV_ID_3_EP1_REG	0x07c
-+#define PCIE_DEV_ID_4_EP1_REG		0x080
-+#define PCIE_CC_REV_ID_4_EP1_REG	0x084
-+#define PCIE_DEV_ID_5_EP1_REG		0x088
-+#define PCIE_CC_REV_ID_5_EP1_REG	0x08c
-+#define PCIE_DEV_ID_6_EP1_REG		0x090
-+#define PCIE_CC_REV_ID_6_EP1_REG	0x094
-+#define PCIE_DEV_ID_7_EP1_REG		0x098
-+#define PCIE_CC_REV_ID_7_EP1_REG	0x09c
-+#define PCIE_DEV_ID_0_EP2_REG		0x0a0
-+#define PCIE_CC_REV_ID_0_EP2_REG	0x0a4
-+#define PCIE_DEV_ID_1_EP2_REG		0x0a8
-+#define PCIE_CC_REV_ID_1_EP2_REG	0x0ac
-+#define PCIE_DEV_ID_2_EP2_REG		0x0b0
-+#define PCIE_CC_REV_ID_2_EP2_REG	0x0b4
-+#define PCIE_DEV_ID_3_EP2_REG		0x0b8
-+#define PCIE_CC_REV_ID_3_EP2_REG	0x0bc
-+#define PCIE_DEV_ID_4_EP2_REG		0x0c0
-+#define PCIE_CC_REV_ID_4_EP2_REG	0x0c4
-+#define PCIE_DEV_ID_5_EP2_REG		0x0c8
-+#define PCIE_CC_REV_ID_5_EP2_REG	0x0cc
-+#define PCIE_DEV_ID_6_EP2_REG		0x0d0
-+#define PCIE_CC_REV_ID_6_EP2_REG	0x0d4
-+#define PCIE_DEV_ID_7_EP2_REG		0x0d8
-+#define PCIE_CC_REV_ID_7_EP2_REG	0x0dC
-+#define PCIE_DEV_ID_0_EP3_REG		0x0e0
-+#define PCIE_CC_REV_ID_0_EP3_REG	0x0e4
-+#define PCIE_DEV_ID_1_EP3_REG		0x0e8
-+#define PCIE_CC_REV_ID_1_EP3_REG	0x0ec
-+#define PCIE_DEV_ID_2_EP3_REG		0x0f0
-+#define PCIE_CC_REV_ID_2_EP3_REG	0x0f4
-+#define PCIE_DEV_ID_3_EP3_REG		0x0f8
-+#define PCIE_CC_REV_ID_3_EP3_REG	0x0fc
-+#define PCIE_DEV_ID_4_EP3_REG		0x100
-+#define PCIE_CC_REV_ID_4_EP3_REG	0x104
-+#define PCIE_DEV_ID_5_EP3_REG		0x108
-+#define PCIE_CC_REV_ID_5_EP3_REG	0x10c
-+#define PCIE_DEV_ID_6_EP3_REG		0x110
-+#define PCIE_CC_REV_ID_6_EP3_REG	0x114
-+#define PCIE_DEV_ID_7_EP3_REG		0x118
-+#define PCIE_CC_REV_ID_7_EP3_REG	0x11c
-+#define PCIE_DEV_ID_0_EP4_REG		0x120
-+#define PCIE_CC_REV_ID_0_EP4_REG	0x124
-+#define PCIE_DEV_ID_1_EP4_REG		0x128
-+#define PCIE_CC_REV_ID_1_EP4_REG	0x12c
-+#define PCIE_DEV_ID_2_EP4_REG		0x130
-+#define PCIE_CC_REV_ID_2_EP4_REG	0x134
-+#define PCIE_DEV_ID_3_EP4_REG		0x138
-+#define PCIE_CC_REV_ID_3_EP4_REG	0x13c
-+#define PCIE_DEV_ID_4_EP4_REG		0x140
-+#define PCIE_CC_REV_ID_4_EP4_REG	0x144
-+#define PCIE_DEV_ID_5_EP4_REG		0x148
-+#define PCIE_CC_REV_ID_5_EP4_REG	0x14c
-+#define PCIE_DEV_ID_6_EP4_REG		0x150
-+#define PCIE_CC_REV_ID_6_EP4_REG	0x154
-+#define PCIE_DEV_ID_7_EP4_REG		0x158
-+#define PCIE_CC_REV_ID_7_EP4_REG	0x15c
-+#define PCIE_SUBSYS_VEN_ID_REG		0x160
-+#define PCIE_COMMON_CLOCK_CONFIG_0_4_0	0x164
-+#define PCIE_MIPHYP_SSC_EN_REG		0x168
-+#define PCIE_MIPHYP_ADDR_REG		0x16c
-+#define PCIE_L1_ASPM_READY_REG		0x170
-+#define PCIE_EXT_CFG_RDY_REG		0x174
-+#define PCIE_SoC_INT_ROUTER_STATUS0_REG 0x178
-+#define PCIE_SoC_INT_ROUTER_STATUS1_REG 0x17c
-+#define PCIE_SoC_INT_ROUTER_STATUS2_REG 0x180
-+#define PCIE_SoC_INT_ROUTER_STATUS3_REG 0x184
-+#define DMA_IP_CTRL_REG			0x324
-+#define DISP_BRIDGE_PU_PD_CTRL_REG	0x328
-+#define VIP_PU_PD_CTRL_REG		0x32c
-+#define USB_MLB_PU_PD_CTRL_REG		0x330
-+#define SDIO_PU_PD_MISCFUNC_CTRL_REG1	0x334
-+#define SDIO_PU_PD_MISCFUNC_CTRL_REG2	0x338
-+#define UART_PU_PD_CTRL_REG		0x33c
-+#define ARM_Lock			0x340
-+#define SYS_IO_CHAR_REG1		0x344
-+#define SYS_IO_CHAR_REG2		0x348
-+#define SATA_CORE_ID_REG		0x34c
-+#define SATA_CTRL_REG			0x350
-+#define I2C_HSFIX_MISC_REG		0x354
-+#define SPARE2_RESERVED			0x358
-+#define SPARE3_RESERVED			0x35c
-+#define MASTER_LOCK_REG			0x368
-+#define SYSTEM_CONFIG_STATUS_REG	0x36c
-+#define MSP_CLK_CTRL_REG		0x39c
-+#define COMPENSATION_REG1		0x3c4
-+#define COMPENSATION_REG2		0x3c8
-+#define COMPENSATION_REG3		0x3cc
-+#define TEST_CTL_REG			0x3d0
-+
-+/*
-+ * SECR (OTP) registers
-+ */
-+#define STA2X11_SECR_CR			0x00
-+#define STA2X11_SECR_FVR0		0x10
-+#define STA2X11_SECR_FVR1		0x14
- 
- #endif /* __ASM_STA2X11_H */
-diff --git a/arch/x86/platform/Makefile b/arch/x86/platform/Makefile
-index 01e0231..28fc10c 100644
---- a/arch/x86/platform/Makefile
-+++ b/arch/x86/platform/Makefile
-@@ -11,3 +11,4 @@ obj-y	+= sfi/
- obj-y	+= ts5500/
- obj-y	+= visws/
- obj-y	+= uv/
-+obj-y	+= sta2x11/
-diff --git a/arch/x86/platform/sta2x11/Makefile b/arch/x86/platform/sta2x11/Makefile
-new file mode 100644
-index 0000000..798c497
---- /dev/null
-+++ b/arch/x86/platform/sta2x11/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_STA2X11) = sta2x11.o
-diff --git a/arch/x86/platform/sta2x11/sta2x11.c b/arch/x86/platform/sta2x11/sta2x11.c
-new file mode 100644
-index 0000000..ab3bc62
---- /dev/null
-+++ b/arch/x86/platform/sta2x11/sta2x11.c
-@@ -0,0 +1,279 @@
-+/*
-+ * Copyright (c) 2009-2011 Wind River Systems, Inc.
-+ * Copyright (c) 2011 ST Microelectronics (Alessandro Rubini, Davide Ciminaghi)
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-+ * See the GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-+ *
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/spinlock.h>
-+#include <linux/errno.h>
-+#include <linux/device.h>
-+#include <linux/slab.h>
-+#include <linux/list.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/pci.h>
-+#include <linux/seq_file.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <asm/sta2x11.h>
-+
-+static inline int __reg_within_range(unsigned int r,
-+				     unsigned int start,
-+				     unsigned int end)
-+{
-+	return ((r >= start) && (r <= end));
-+}
-+
-+/*
-+ * Special sta2x11 regmap lock/unlock functions
-+ */
-+
-+static void sta2x11_regmap_lock(void *__lock)
-+{
-+	spinlock_t *lock = __lock;
-+	spin_lock(lock);
-+}
-+
-+static void sta2x11_regmap_unlock(void *__lock)
-+{
-+	spinlock_t *lock = __lock;
-+	spin_unlock(lock);
-+}
-+
-+/* OTP (one time programmable registers do not require locking */
-+static void sta2x11_regmap_nolock(void *__lock)
-+{
-+}
-+
-+static bool sta2x11_sctl_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	return !__reg_within_range(reg, SCTL_SCPCIECSBRST, SCTL_SCRSTSTA);
-+}
-+
-+static struct regmap_config sta2x11_sctl_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.lock = sta2x11_regmap_lock,
-+	.unlock = sta2x11_regmap_unlock,
-+	.max_register = SCTL_SCRSTSTA,
-+	.writeable_reg = sta2x11_sctl_writeable_reg,
-+};
-+
-+static bool sta2x11_scr_readable_reg(struct device *dev, unsigned int reg)
-+{
-+	return (reg == STA2X11_SECR_CR) ||
-+		__reg_within_range(reg, STA2X11_SECR_FVR0, STA2X11_SECR_FVR1);
-+}
-+
-+static bool sta2x11_scr_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	return false;
-+}
-+
-+static struct regmap_config sta2x11_scr_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.lock = sta2x11_regmap_nolock,
-+	.unlock = sta2x11_regmap_nolock,
-+	.max_register = STA2X11_SECR_FVR1,
-+	.readable_reg = sta2x11_scr_readable_reg,
-+	.writeable_reg = sta2x11_scr_writeable_reg,
-+};
-+
-+static bool sta2x11_apbreg_readable_reg(struct device *dev, unsigned int reg)
-+{
-+	/* Two blocks (CAN and MLB, SARAC) 0x100 bytes apart */
-+	if (reg >= APBREG_BSR_SARAC)
-+		reg -= APBREG_BSR_SARAC;
-+	switch (reg) {
-+	case APBREG_BSR:
-+	case APBREG_PAER:
-+	case APBREG_PWAC:
-+	case APBREG_PRAC:
-+	case APBREG_PCG:
-+	case APBREG_PUR:
-+	case APBREG_EMU_PCG:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static bool sta2x11_apbreg_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	if (reg >= APBREG_BSR_SARAC)
-+		reg -= APBREG_BSR_SARAC;
-+	if (!sta2x11_apbreg_readable_reg(dev, reg))
-+		return false;
-+	return reg != APBREG_PAER;
-+}
-+
-+static struct regmap_config sta2x11_apbreg_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.lock = sta2x11_regmap_lock,
-+	.unlock = sta2x11_regmap_unlock,
-+	.max_register = APBREG_EMU_PCG_SARAC,
-+	.readable_reg = sta2x11_apbreg_readable_reg,
-+	.writeable_reg = sta2x11_apbreg_writeable_reg,
-+};
-+
-+static bool sta2x11_apb_soc_regs_readable_reg(struct device *dev,
-+					      unsigned int reg)
-+{
-+	return reg <= PCIE_SoC_INT_ROUTER_STATUS3_REG ||
-+		__reg_within_range(reg, DMA_IP_CTRL_REG, SPARE3_RESERVED) ||
-+		__reg_within_range(reg, MASTER_LOCK_REG,
-+				   SYSTEM_CONFIG_STATUS_REG) ||
-+		reg == MSP_CLK_CTRL_REG ||
-+		__reg_within_range(reg, COMPENSATION_REG1, TEST_CTL_REG);
-+}
-+
-+static bool sta2x11_apb_soc_regs_writeable_reg(struct device *dev,
-+					       unsigned int reg)
-+{
-+	if (!sta2x11_apb_soc_regs_readable_reg(dev, reg))
-+		return false;
-+	switch (reg) {
-+	case PCIE_COMMON_CLOCK_CONFIG_0_4_0:
-+	case SYSTEM_CONFIG_STATUS_REG:
-+	case COMPENSATION_REG1:
-+	case PCIE_SoC_INT_ROUTER_STATUS0_REG...PCIE_SoC_INT_ROUTER_STATUS3_REG:
-+	case PCIE_PM_STATUS_0_PORT_0_4...PCIE_PM_STATUS_7_0_EP4:
-+		return false;
-+	default:
-+		return true;
-+	}
-+}
-+
-+static struct regmap_config sta2x11_apb_soc_regs_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.lock = sta2x11_regmap_lock,
-+	.unlock = sta2x11_regmap_unlock,
-+	.max_register = TEST_CTL_REG,
-+	.readable_reg = sta2x11_apb_soc_regs_readable_reg,
-+	.writeable_reg = sta2x11_apb_soc_regs_writeable_reg,
-+};
-+
-+static struct regmap_config *
-+sta2x11_platform_regmap_configs[sta2x11_n_plat_devs] = {
-+	[sta2x11_sctl] = &sta2x11_sctl_regmap_config,
-+	[sta2x11_apbreg] = &sta2x11_apbreg_regmap_config,
-+	[sta2x11_apb_soc_regs] = &sta2x11_apb_soc_regs_regmap_config,
-+	[sta2x11_scr] = &sta2x11_scr_regmap_config,
-+};
-+
-+/* Probe for the four platform devices */
-+
-+static int sta2x11_platform_probe(struct platform_device *dev,
-+				  enum sta2x11_plat_dev index)
-+{
-+	return -EINVAL;
-+}
-+
-+static int sta2x11_sctl_probe(struct platform_device *dev)
-+{
-+	return sta2x11_platform_probe(dev, sta2x11_sctl);
-+}
-+
-+static int sta2x11_apbreg_probe(struct platform_device *dev)
-+{
-+	return sta2x11_platform_probe(dev, sta2x11_apbreg);
-+}
-+
-+static int sta2x11_apb_soc_regs_probe(struct platform_device *dev)
-+{
-+	return sta2x11_platform_probe(dev, sta2x11_apb_soc_regs);
-+}
-+
-+static int sta2x11_scr_probe(struct platform_device *dev)
-+{
-+	return sta2x11_platform_probe(dev, sta2x11_scr);
-+}
-+
-+/* The three platform drivers */
-+static struct platform_driver sta2x11_sctl_platform_driver = {
-+	.driver = {
-+		.name	= STA2X11_SCTL_NAME,
-+		.owner	= THIS_MODULE,
-+	},
-+	.probe		= sta2x11_sctl_probe,
-+};
-+
-+static int __init sta2x11_sctl_init(void)
-+{
-+	pr_info("%s\n", __func__);
-+	return platform_driver_register(&sta2x11_sctl_platform_driver);
-+}
-+
-+static struct platform_driver sta2x11_platform_driver = {
-+	.driver = {
-+		.name	= STA2X11_APBREG_NAME,
-+		.owner	= THIS_MODULE,
-+	},
-+	.probe		= sta2x11_apbreg_probe,
-+};
-+
-+static int __init sta2x11_apbreg_init(void)
-+{
-+	pr_info("%s\n", __func__);
-+	return platform_driver_register(&sta2x11_platform_driver);
-+}
-+
-+static struct platform_driver sta2x11_apb_soc_regs_platform_driver = {
-+	.driver = {
-+		.name	= STA2X11_APB_SOC_REGS_NAME,
-+		.owner	= THIS_MODULE,
-+	},
-+	.probe		= sta2x11_apb_soc_regs_probe,
-+};
-+
-+static int __init sta2x11_apb_soc_regs_init(void)
-+{
-+	pr_info("%s\n", __func__);
-+	return platform_driver_register(&sta2x11_apb_soc_regs_platform_driver);
-+}
-+
-+static struct platform_driver sta2x11_scr_platform_driver = {
-+	.driver = {
-+		.name = STA2X11_SCR_NAME,
-+		.owner = THIS_MODULE,
-+	},
-+	.probe = sta2x11_scr_probe,
-+};
-+
-+static int __init sta2x11_scr_init(void)
-+{
-+	pr_info("%s\n", __func__);
-+	return platform_driver_register(&sta2x11_scr_platform_driver);
-+}
-+
-+subsys_initcall(sta2x11_apbreg_init);
-+subsys_initcall(sta2x11_sctl_init);
-+subsys_initcall(sta2x11_apb_soc_regs_init);
-+subsys_initcall(sta2x11_scr_init);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Wind River");
-+MODULE_DESCRIPTION("STA2x11 platform drivers");
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 633ee43..372d221 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -666,12 +666,6 @@ config STMPE_SPI
- 	  This is used to enable SPI interface of STMPE
- endmenu
- 
--config MFD_STA2X11
--	bool "STMicroelectronics STA2X11"
--	depends on STA2X11 && GENERIC_HARDIRQS
--	select MFD_CORE
--	select REGMAP_MMIO
--
- config MFD_SYSCON
- 	bool "System Controller Register R/W Based on Regmap"
- 	select REGMAP_MMIO
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 3c90051..4819411 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -24,7 +24,6 @@ obj-$(CONFIG_MFD_DM355EVM_MSP)	+= dm355evm_msp.o
- obj-$(CONFIG_MFD_TI_SSP)	+= ti-ssp.o
- obj-$(CONFIG_MFD_TI_AM335X_TSCADC)	+= ti_am335x_tscadc.o
- 
--obj-$(CONFIG_MFD_STA2X11)	+= sta2x11-mfd.o
- obj-$(CONFIG_MFD_STMPE)		+= stmpe.o
- obj-$(CONFIG_STMPE_I2C)		+= stmpe-i2c.o
- obj-$(CONFIG_STMPE_SPI)		+= stmpe-spi.o
-diff --git a/drivers/mfd/sta2x11-mfd.c b/drivers/mfd/sta2x11-mfd.c
-deleted file mode 100644
-index 65c6fa6..0000000
---- a/drivers/mfd/sta2x11-mfd.c
-+++ /dev/null
-@@ -1,680 +0,0 @@
--/*
-- * Copyright (c) 2009-2011 Wind River Systems, Inc.
-- * Copyright (c) 2011 ST Microelectronics (Alessandro Rubini, Davide Ciminaghi)
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-- * See the GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-- *
-- */
--
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/spinlock.h>
--#include <linux/errno.h>
--#include <linux/device.h>
--#include <linux/slab.h>
--#include <linux/list.h>
--#include <linux/io.h>
--#include <linux/ioport.h>
--#include <linux/pci.h>
--#include <linux/seq_file.h>
--#include <linux/platform_device.h>
--#include <linux/mfd/core.h>
--#include <linux/mfd/sta2x11-mfd.h>
--#include <linux/regmap.h>
--
--#include <asm/sta2x11.h>
--
--static inline int __reg_within_range(unsigned int r,
--				     unsigned int start,
--				     unsigned int end)
--{
--	return ((r >= start) && (r <= end));
--}
--
--/* This describes STA2X11 MFD chip for us, we may have several */
--struct sta2x11_mfd {
--	struct sta2x11_instance *instance;
--	struct regmap *regmap[sta2x11_n_mfd_plat_devs];
--	spinlock_t lock[sta2x11_n_mfd_plat_devs];
--	struct list_head list;
--	void __iomem *regs[sta2x11_n_mfd_plat_devs];
--};
--
--static LIST_HEAD(sta2x11_mfd_list);
--
--/* Three functions to act on the list */
--static struct sta2x11_mfd *sta2x11_mfd_find(struct pci_dev *pdev)
--{
--	struct sta2x11_instance *instance;
--	struct sta2x11_mfd *mfd;
--
--	if (!pdev && !list_empty(&sta2x11_mfd_list)) {
--		pr_warning("%s: Unspecified device, "
--			    "using first instance\n", __func__);
--		return list_entry(sta2x11_mfd_list.next,
--				  struct sta2x11_mfd, list);
--	}
--
--	instance = sta2x11_get_instance(pdev);
--	if (!instance)
--		return NULL;
--	list_for_each_entry(mfd, &sta2x11_mfd_list, list) {
--		if (mfd->instance == instance)
--			return mfd;
--	}
--	return NULL;
--}
--
--static int sta2x11_mfd_add(struct pci_dev *pdev, gfp_t flags)
--{
--	int i;
--	struct sta2x11_mfd *mfd = sta2x11_mfd_find(pdev);
--	struct sta2x11_instance *instance;
--
--	if (mfd)
--		return -EBUSY;
--	instance = sta2x11_get_instance(pdev);
--	if (!instance)
--		return -EINVAL;
--	mfd = kzalloc(sizeof(*mfd), flags);
--	if (!mfd)
--		return -ENOMEM;
--	INIT_LIST_HEAD(&mfd->list);
--	for (i = 0; i < ARRAY_SIZE(mfd->lock); i++)
--		spin_lock_init(&mfd->lock[i]);
--	mfd->instance = instance;
--	list_add(&mfd->list, &sta2x11_mfd_list);
--	return 0;
--}
--
--/* This function is exported and is not expected to fail */
--u32 __sta2x11_mfd_mask(struct pci_dev *pdev, u32 reg, u32 mask, u32 val,
--		       enum sta2x11_mfd_plat_dev index)
--{
--	struct sta2x11_mfd *mfd = sta2x11_mfd_find(pdev);
--	u32 r;
--	unsigned long flags;
--	void __iomem *regs;
--
--	if (!mfd) {
--		dev_warn(&pdev->dev, ": can't access sctl regs\n");
--		return 0;
--	}
--
--	regs = mfd->regs[index];
--	if (!regs) {
--		dev_warn(&pdev->dev, ": system ctl not initialized\n");
--		return 0;
--	}
--	spin_lock_irqsave(&mfd->lock[index], flags);
--	r = readl(regs + reg);
--	r &= ~mask;
--	r |= val;
--	if (mask)
--		writel(r, regs + reg);
--	spin_unlock_irqrestore(&mfd->lock[index], flags);
--	return r;
--}
--EXPORT_SYMBOL(__sta2x11_mfd_mask);
--
--int sta2x11_mfd_get_regs_data(struct platform_device *dev,
--			      enum sta2x11_mfd_plat_dev index,
--			      void __iomem **regs,
--			      spinlock_t **lock)
--{
--	struct pci_dev *pdev = *(struct pci_dev **)dev_get_platdata(&dev->dev);
--	struct sta2x11_mfd *mfd;
--
--	if (!pdev)
--		return -ENODEV;
--	mfd = sta2x11_mfd_find(pdev);
--	if (!mfd)
--		return -ENODEV;
--	if (index >= sta2x11_n_mfd_plat_devs)
--		return -ENODEV;
--	*regs = mfd->regs[index];
--	*lock = &mfd->lock[index];
--	pr_debug("%s %d *regs = %p\n", __func__, __LINE__, *regs);
--	return *regs ? 0 : -ENODEV;
--}
--EXPORT_SYMBOL(sta2x11_mfd_get_regs_data);
--
--/*
-- * Special sta2x11-mfd regmap lock/unlock functions
-- */
--
--static void sta2x11_regmap_lock(void *__lock)
--{
--	spinlock_t *lock = __lock;
--	spin_lock(lock);
--}
--
--static void sta2x11_regmap_unlock(void *__lock)
--{
--	spinlock_t *lock = __lock;
--	spin_unlock(lock);
--}
--
--/* OTP (one time programmable registers do not require locking */
--static void sta2x11_regmap_nolock(void *__lock)
--{
--}
--
--static const char *sta2x11_mfd_names[sta2x11_n_mfd_plat_devs] = {
--	[sta2x11_sctl] = STA2X11_MFD_SCTL_NAME,
--	[sta2x11_apbreg] = STA2X11_MFD_APBREG_NAME,
--	[sta2x11_apb_soc_regs] = STA2X11_MFD_APB_SOC_REGS_NAME,
--	[sta2x11_scr] = STA2X11_MFD_SCR_NAME,
--};
--
--static bool sta2x11_sctl_writeable_reg(struct device *dev, unsigned int reg)
--{
--	return !__reg_within_range(reg, SCTL_SCPCIECSBRST, SCTL_SCRSTSTA);
--}
--
--static struct regmap_config sta2x11_sctl_regmap_config = {
--	.reg_bits = 32,
--	.reg_stride = 4,
--	.val_bits = 32,
--	.lock = sta2x11_regmap_lock,
--	.unlock = sta2x11_regmap_unlock,
--	.max_register = SCTL_SCRSTSTA,
--	.writeable_reg = sta2x11_sctl_writeable_reg,
--};
--
--static bool sta2x11_scr_readable_reg(struct device *dev, unsigned int reg)
--{
--	return (reg == STA2X11_SECR_CR) ||
--		__reg_within_range(reg, STA2X11_SECR_FVR0, STA2X11_SECR_FVR1);
--}
--
--static bool sta2x11_scr_writeable_reg(struct device *dev, unsigned int reg)
--{
--	return false;
--}
--
--static struct regmap_config sta2x11_scr_regmap_config = {
--	.reg_bits = 32,
--	.reg_stride = 4,
--	.val_bits = 32,
--	.lock = sta2x11_regmap_nolock,
--	.unlock = sta2x11_regmap_nolock,
--	.max_register = STA2X11_SECR_FVR1,
--	.readable_reg = sta2x11_scr_readable_reg,
--	.writeable_reg = sta2x11_scr_writeable_reg,
--};
--
--static bool sta2x11_apbreg_readable_reg(struct device *dev, unsigned int reg)
--{
--	/* Two blocks (CAN and MLB, SARAC) 0x100 bytes apart */
--	if (reg >= APBREG_BSR_SARAC)
--		reg -= APBREG_BSR_SARAC;
--	switch (reg) {
--	case APBREG_BSR:
--	case APBREG_PAER:
--	case APBREG_PWAC:
--	case APBREG_PRAC:
--	case APBREG_PCG:
--	case APBREG_PUR:
--	case APBREG_EMU_PCG:
--		return true;
--	default:
--		return false;
--	}
--}
--
--static bool sta2x11_apbreg_writeable_reg(struct device *dev, unsigned int reg)
--{
--	if (reg >= APBREG_BSR_SARAC)
--		reg -= APBREG_BSR_SARAC;
--	if (!sta2x11_apbreg_readable_reg(dev, reg))
--		return false;
--	return reg != APBREG_PAER;
--}
--
--static struct regmap_config sta2x11_apbreg_regmap_config = {
--	.reg_bits = 32,
--	.reg_stride = 4,
--	.val_bits = 32,
--	.lock = sta2x11_regmap_lock,
--	.unlock = sta2x11_regmap_unlock,
--	.max_register = APBREG_EMU_PCG_SARAC,
--	.readable_reg = sta2x11_apbreg_readable_reg,
--	.writeable_reg = sta2x11_apbreg_writeable_reg,
--};
--
--static bool sta2x11_apb_soc_regs_readable_reg(struct device *dev,
--					      unsigned int reg)
--{
--	return reg <= PCIE_SoC_INT_ROUTER_STATUS3_REG ||
--		__reg_within_range(reg, DMA_IP_CTRL_REG, SPARE3_RESERVED) ||
--		__reg_within_range(reg, MASTER_LOCK_REG,
--				   SYSTEM_CONFIG_STATUS_REG) ||
--		reg == MSP_CLK_CTRL_REG ||
--		__reg_within_range(reg, COMPENSATION_REG1, TEST_CTL_REG);
--}
--
--static bool sta2x11_apb_soc_regs_writeable_reg(struct device *dev,
--					       unsigned int reg)
--{
--	if (!sta2x11_apb_soc_regs_readable_reg(dev, reg))
--		return false;
--	switch (reg) {
--	case PCIE_COMMON_CLOCK_CONFIG_0_4_0:
--	case SYSTEM_CONFIG_STATUS_REG:
--	case COMPENSATION_REG1:
--	case PCIE_SoC_INT_ROUTER_STATUS0_REG...PCIE_SoC_INT_ROUTER_STATUS3_REG:
--	case PCIE_PM_STATUS_0_PORT_0_4...PCIE_PM_STATUS_7_0_EP4:
--		return false;
--	default:
--		return true;
--	}
--}
--
--static struct regmap_config sta2x11_apb_soc_regs_regmap_config = {
--	.reg_bits = 32,
--	.reg_stride = 4,
--	.val_bits = 32,
--	.lock = sta2x11_regmap_lock,
--	.unlock = sta2x11_regmap_unlock,
--	.max_register = TEST_CTL_REG,
--	.readable_reg = sta2x11_apb_soc_regs_readable_reg,
--	.writeable_reg = sta2x11_apb_soc_regs_writeable_reg,
--};
--
--static struct regmap_config *
--sta2x11_mfd_regmap_configs[sta2x11_n_mfd_plat_devs] = {
--	[sta2x11_sctl] = &sta2x11_sctl_regmap_config,
--	[sta2x11_apbreg] = &sta2x11_apbreg_regmap_config,
--	[sta2x11_apb_soc_regs] = &sta2x11_apb_soc_regs_regmap_config,
--	[sta2x11_scr] = &sta2x11_scr_regmap_config,
--};
--
--/* Probe for the four platform devices */
--
--static int sta2x11_mfd_platform_probe(struct platform_device *dev,
--				      enum sta2x11_mfd_plat_dev index)
--{
--	struct pci_dev **pdev;
--	struct sta2x11_mfd *mfd;
--	struct resource *res;
--	const char *name = sta2x11_mfd_names[index];
--	struct regmap_config *regmap_config = sta2x11_mfd_regmap_configs[index];
--
--	pdev = dev_get_platdata(&dev->dev);
--	mfd = sta2x11_mfd_find(*pdev);
--	if (!mfd)
--		return -ENODEV;
--	if (!regmap_config)
--		return -ENODEV;
--
--	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
--	if (!res)
--		return -ENOMEM;
--
--	if (!request_mem_region(res->start, resource_size(res), name))
--		return -EBUSY;
--
--	mfd->regs[index] = ioremap(res->start, resource_size(res));
--	if (!mfd->regs[index]) {
--		release_mem_region(res->start, resource_size(res));
--		return -ENOMEM;
--	}
--	regmap_config->lock_arg = &mfd->lock;
--	/*
--	   No caching, registers could be reached both via regmap and via
--	   void __iomem *
--	*/
--	regmap_config->cache_type = REGCACHE_NONE;
--	mfd->regmap[index] = devm_regmap_init_mmio(&dev->dev, mfd->regs[index],
--						   regmap_config);
--	WARN_ON(!mfd->regmap[index]);
--
--	return 0;
--}
--
--static int sta2x11_sctl_probe(struct platform_device *dev)
--{
--	return sta2x11_mfd_platform_probe(dev, sta2x11_sctl);
--}
--
--static int sta2x11_apbreg_probe(struct platform_device *dev)
--{
--	return sta2x11_mfd_platform_probe(dev, sta2x11_apbreg);
--}
--
--static int sta2x11_apb_soc_regs_probe(struct platform_device *dev)
--{
--	return sta2x11_mfd_platform_probe(dev, sta2x11_apb_soc_regs);
--}
--
--static int sta2x11_scr_probe(struct platform_device *dev)
--{
--	return sta2x11_mfd_platform_probe(dev, sta2x11_scr);
--}
--
--/* The three platform drivers */
--static struct platform_driver sta2x11_sctl_platform_driver = {
--	.driver = {
--		.name	= STA2X11_MFD_SCTL_NAME,
--		.owner	= THIS_MODULE,
--	},
--	.probe		= sta2x11_sctl_probe,
--};
--
--static int __init sta2x11_sctl_init(void)
--{
--	pr_info("%s\n", __func__);
--	return platform_driver_register(&sta2x11_sctl_platform_driver);
--}
--
--static struct platform_driver sta2x11_platform_driver = {
--	.driver = {
--		.name	= STA2X11_MFD_APBREG_NAME,
--		.owner	= THIS_MODULE,
--	},
--	.probe		= sta2x11_apbreg_probe,
--};
--
--static int __init sta2x11_apbreg_init(void)
--{
--	pr_info("%s\n", __func__);
--	return platform_driver_register(&sta2x11_platform_driver);
--}
--
--static struct platform_driver sta2x11_apb_soc_regs_platform_driver = {
--	.driver = {
--		.name	= STA2X11_MFD_APB_SOC_REGS_NAME,
--		.owner	= THIS_MODULE,
--	},
--	.probe		= sta2x11_apb_soc_regs_probe,
--};
--
--static int __init sta2x11_apb_soc_regs_init(void)
--{
--	pr_info("%s\n", __func__);
--	return platform_driver_register(&sta2x11_apb_soc_regs_platform_driver);
--}
--
--static struct platform_driver sta2x11_scr_platform_driver = {
--	.driver = {
--		.name = STA2X11_MFD_SCR_NAME,
--		.owner = THIS_MODULE,
--	},
--	.probe = sta2x11_scr_probe,
--};
--
--static int __init sta2x11_scr_init(void)
--{
--	pr_info("%s\n", __func__);
--	return platform_driver_register(&sta2x11_scr_platform_driver);
--}
--
--
--/*
-- * What follows are the PCI devices that host the above pdevs.
-- * Each logic block is 4kB and they are all consecutive: we use this info.
-- */
--
--/* Mfd 0 device */
--
--/* Mfd 0, Bar 0 */
--enum mfd0_bar0_cells {
--	STA2X11_GPIO_0 = 0,
--	STA2X11_GPIO_1,
--	STA2X11_GPIO_2,
--	STA2X11_GPIO_3,
--	STA2X11_SCTL,
--	STA2X11_SCR,
--	STA2X11_TIME,
--};
--/* Mfd 0 , Bar 1 */
--enum mfd0_bar1_cells {
--	STA2X11_APBREG = 0,
--};
--#define CELL_4K(_name, _cell) { \
--		.name = _name, \
--		.start = _cell * 4096, .end = _cell * 4096 + 4095, \
--		.flags = IORESOURCE_MEM, \
--		}
--
--static const struct resource gpio_resources[] = {
--	{
--		/* 4 consecutive cells, 1 driver */
--		.name = STA2X11_MFD_GPIO_NAME,
--		.start = 0,
--		.end = (4 * 4096) - 1,
--		.flags = IORESOURCE_MEM,
--	}
--};
--static const struct resource sctl_resources[] = {
--	CELL_4K(STA2X11_MFD_SCTL_NAME, STA2X11_SCTL),
--};
--static const struct resource scr_resources[] = {
--	CELL_4K(STA2X11_MFD_SCR_NAME, STA2X11_SCR),
--};
--static const struct resource time_resources[] = {
--	CELL_4K(STA2X11_MFD_TIME_NAME, STA2X11_TIME),
--};
--
--static const struct resource apbreg_resources[] = {
--	CELL_4K(STA2X11_MFD_APBREG_NAME, STA2X11_APBREG),
--};
--
--#define DEV(_name, _r) \
--	{ .name = _name, .num_resources = ARRAY_SIZE(_r), .resources = _r, }
--
--static struct mfd_cell sta2x11_mfd0_bar0[] = {
--	/* offset 0: we add pdata later */
--	DEV(STA2X11_MFD_GPIO_NAME, gpio_resources),
--	DEV(STA2X11_MFD_SCTL_NAME, sctl_resources),
--	DEV(STA2X11_MFD_SCR_NAME,  scr_resources),
--	DEV(STA2X11_MFD_TIME_NAME, time_resources),
--};
--
--static struct mfd_cell sta2x11_mfd0_bar1[] = {
--	DEV(STA2X11_MFD_APBREG_NAME, apbreg_resources),
--};
--
--/* Mfd 1 devices */
--
--/* Mfd 1, Bar 0 */
--enum mfd1_bar0_cells {
--	STA2X11_VIC = 0,
--};
--
--/* Mfd 1, Bar 1 */
--enum mfd1_bar1_cells {
--	STA2X11_APB_SOC_REGS = 0,
--};
--
--static const struct resource vic_resources[] = {
--	CELL_4K(STA2X11_MFD_VIC_NAME, STA2X11_VIC),
--};
--
--static const struct resource apb_soc_regs_resources[] = {
--	CELL_4K(STA2X11_MFD_APB_SOC_REGS_NAME, STA2X11_APB_SOC_REGS),
--};
--
--static struct mfd_cell sta2x11_mfd1_bar0[] = {
--	DEV(STA2X11_MFD_VIC_NAME, vic_resources),
--};
--
--static struct mfd_cell sta2x11_mfd1_bar1[] = {
--	DEV(STA2X11_MFD_APB_SOC_REGS_NAME, apb_soc_regs_resources),
--};
--
--
--static int sta2x11_mfd_suspend(struct pci_dev *pdev, pm_message_t state)
--{
--	pci_save_state(pdev);
--	pci_disable_device(pdev);
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
--
--	return 0;
--}
--
--static int sta2x11_mfd_resume(struct pci_dev *pdev)
--{
--	int err;
--
--	pci_set_power_state(pdev, 0);
--	err = pci_enable_device(pdev);
--	if (err)
--		return err;
--	pci_restore_state(pdev);
--
--	return 0;
--}
--
--struct sta2x11_mfd_bar_setup_data {
--	struct mfd_cell *cells;
--	int ncells;
--};
--
--struct sta2x11_mfd_setup_data {
--	struct sta2x11_mfd_bar_setup_data bars[2];
--};
--
--#define STA2X11_MFD0 0
--#define STA2X11_MFD1 1
--
--static struct sta2x11_mfd_setup_data mfd_setup_data[] = {
--	/* Mfd 0: gpio, sctl, scr, timers / apbregs */
--	[STA2X11_MFD0] = {
--		.bars = {
--			[0] = {
--				.cells = sta2x11_mfd0_bar0,
--				.ncells = ARRAY_SIZE(sta2x11_mfd0_bar0),
--			},
--			[1] = {
--				.cells = sta2x11_mfd0_bar1,
--				.ncells = ARRAY_SIZE(sta2x11_mfd0_bar1),
--			},
--		},
--	},
--	/* Mfd 1: vic / apb-soc-regs */
--	[STA2X11_MFD1] = {
--		.bars = {
--			[0] = {
--				.cells = sta2x11_mfd1_bar0,
--				.ncells = ARRAY_SIZE(sta2x11_mfd1_bar0),
--			},
--			[1] = {
--				.cells = sta2x11_mfd1_bar1,
--				.ncells = ARRAY_SIZE(sta2x11_mfd1_bar1),
--			},
--		},
--	},
--};
--
--static void sta2x11_mfd_setup(struct pci_dev *pdev,
--			      struct sta2x11_mfd_setup_data *sd)
--{
--	int i, j;
--	for (i = 0; i < ARRAY_SIZE(sd->bars); i++)
--		for (j = 0; j < sd->bars[i].ncells; j++) {
--			sd->bars[i].cells[j].pdata_size = sizeof(pdev);
--			sd->bars[i].cells[j].platform_data = &pdev;
--		}
--}
--
--static int sta2x11_mfd_probe(struct pci_dev *pdev,
--			     const struct pci_device_id *pci_id)
--{
--	int err, i;
--	struct sta2x11_mfd_setup_data *setup_data;
--
--	dev_info(&pdev->dev, "%s\n", __func__);
--
--	err = pci_enable_device(pdev);
--	if (err) {
--		dev_err(&pdev->dev, "Can't enable device.\n");
--		return err;
--	}
--
--	err = pci_enable_msi(pdev);
--	if (err)
--		dev_info(&pdev->dev, "Enable msi failed\n");
--
--	setup_data = pci_id->device == PCI_DEVICE_ID_STMICRO_GPIO ?
--		&mfd_setup_data[STA2X11_MFD0] :
--		&mfd_setup_data[STA2X11_MFD1];
--
--	/* platform data is the pci device for all of them */
--	sta2x11_mfd_setup(pdev, setup_data);
--
--	/* Record this pdev before mfd_add_devices: their probe looks for it */
--	if (!sta2x11_mfd_find(pdev))
--		sta2x11_mfd_add(pdev, GFP_ATOMIC);
--
--	/* Just 2 bars for all mfd's at present */
--	for (i = 0; i < 2; i++) {
--		err = mfd_add_devices(&pdev->dev, -1,
--				      setup_data->bars[i].cells,
--				      setup_data->bars[i].ncells,
--				      &pdev->resource[i],
--				      0, NULL);
--		if (err) {
--			dev_err(&pdev->dev,
--				"mfd_add_devices[%d] failed: %d\n", i, err);
--			goto err_disable;
--		}
--	}
--
--	return 0;
--
--err_disable:
--	mfd_remove_devices(&pdev->dev);
--	pci_disable_device(pdev);
--	pci_disable_msi(pdev);
--	return err;
--}
--
--static DEFINE_PCI_DEVICE_TABLE(sta2x11_mfd_tbl) = {
--	{PCI_DEVICE(PCI_VENDOR_ID_STMICRO, PCI_DEVICE_ID_STMICRO_GPIO)},
--	{PCI_DEVICE(PCI_VENDOR_ID_STMICRO, PCI_DEVICE_ID_STMICRO_VIC)},
--	{0,},
--};
--
--static struct pci_driver sta2x11_mfd_driver = {
--	.name =		"sta2x11-mfd",
--	.id_table =	sta2x11_mfd_tbl,
--	.probe =	sta2x11_mfd_probe,
--	.suspend =	sta2x11_mfd_suspend,
--	.resume =	sta2x11_mfd_resume,
--};
--
--static int __init sta2x11_mfd_init(void)
--{
--	pr_info("%s\n", __func__);
--	return pci_register_driver(&sta2x11_mfd_driver);
--}
--
--/*
-- * All of this must be ready before "normal" devices like MMCI appear.
-- * But MFD (the pci device) can't be too early. The following choice
-- * prepares platform drivers very early and probe the PCI device later,
-- * but before other PCI devices.
-- */
--subsys_initcall(sta2x11_apbreg_init);
--subsys_initcall(sta2x11_sctl_init);
--subsys_initcall(sta2x11_apb_soc_regs_init);
--subsys_initcall(sta2x11_scr_init);
--rootfs_initcall(sta2x11_mfd_init);
--
--MODULE_LICENSE("GPL v2");
--MODULE_AUTHOR("Wind River");
--MODULE_DESCRIPTION("STA2x11 mfd for GPIO, SCTL and APBREG");
--MODULE_DEVICE_TABLE(pci, sta2x11_mfd_tbl);
-diff --git a/include/linux/mfd/sta2x11-mfd.h b/include/linux/mfd/sta2x11-mfd.h
-deleted file mode 100644
-index 9a855ac..0000000
---- a/include/linux/mfd/sta2x11-mfd.h
-+++ /dev/null
-@@ -1,518 +0,0 @@
--/*
-- * Copyright (c) 2009-2011 Wind River Systems, Inc.
-- * Copyright (c) 2011 ST Microelectronics (Alessandro Rubini)
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-- * See the GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-- *
-- * The STMicroelectronics ConneXt (STA2X11) chip has several unrelated
-- * functions in one PCI endpoint functions. This driver simply
-- * registers the platform devices in this iomemregion and exports a few
-- * functions to access common registers
-- */
--
--#ifndef __STA2X11_MFD_H
--#define __STA2X11_MFD_H
--#include <linux/types.h>
--#include <linux/pci.h>
--
--enum sta2x11_mfd_plat_dev {
--	sta2x11_sctl = 0,
--	sta2x11_gpio,
--	sta2x11_scr,
--	sta2x11_time,
--	sta2x11_apbreg,
--	sta2x11_apb_soc_regs,
--	sta2x11_vic,
--	sta2x11_n_mfd_plat_devs,
--};
--
--#define STA2X11_MFD_SCTL_NAME	       "sta2x11-sctl"
--#define STA2X11_MFD_GPIO_NAME	       "sta2x11-gpio"
--#define STA2X11_MFD_SCR_NAME	       "sta2x11-scr"
--#define STA2X11_MFD_TIME_NAME	       "sta2x11-time"
--#define STA2X11_MFD_APBREG_NAME	       "sta2x11-apbreg"
--#define STA2X11_MFD_APB_SOC_REGS_NAME  "sta2x11-apb-soc-regs"
--#define STA2X11_MFD_VIC_NAME	       "sta2x11-vic"
--
--extern u32
--__sta2x11_mfd_mask(struct pci_dev *, u32, u32, u32, enum sta2x11_mfd_plat_dev);
--
--/*
-- * The MFD PCI block includes the GPIO peripherals and other register blocks.
-- * For GPIO, we have 32*4 bits (I use "gsta" for "gpio sta2x11".)
-- */
--#define GSTA_GPIO_PER_BLOCK	32
--#define GSTA_NR_BLOCKS		4
--#define GSTA_NR_GPIO		(GSTA_GPIO_PER_BLOCK * GSTA_NR_BLOCKS)
--
--/* Pinconfig is set by the board definition: altfunc, pull-up, pull-down */
--struct sta2x11_gpio_pdata {
--	unsigned pinconfig[GSTA_NR_GPIO];
--};
--
--/* Macros below lifted from sh_pfc.h, with minor differences */
--#define PINMUX_TYPE_NONE		0
--#define PINMUX_TYPE_FUNCTION		1
--#define PINMUX_TYPE_OUTPUT_LOW		2
--#define PINMUX_TYPE_OUTPUT_HIGH		3
--#define PINMUX_TYPE_INPUT		4
--#define PINMUX_TYPE_INPUT_PULLUP	5
--#define PINMUX_TYPE_INPUT_PULLDOWN	6
--
--/* Give names to GPIO pins, like PXA does, taken from the manual */
--#define STA2X11_GPIO0			0
--#define STA2X11_GPIO1			1
--#define STA2X11_GPIO2			2
--#define STA2X11_GPIO3			3
--#define STA2X11_GPIO4			4
--#define STA2X11_GPIO5			5
--#define STA2X11_GPIO6			6
--#define STA2X11_GPIO7			7
--#define STA2X11_GPIO8_RGBOUT_RED7	8
--#define STA2X11_GPIO9_RGBOUT_RED6	9
--#define STA2X11_GPIO10_RGBOUT_RED5	10
--#define STA2X11_GPIO11_RGBOUT_RED4	11
--#define STA2X11_GPIO12_RGBOUT_RED3	12
--#define STA2X11_GPIO13_RGBOUT_RED2	13
--#define STA2X11_GPIO14_RGBOUT_RED1	14
--#define STA2X11_GPIO15_RGBOUT_RED0	15
--#define STA2X11_GPIO16_RGBOUT_GREEN7	16
--#define STA2X11_GPIO17_RGBOUT_GREEN6	17
--#define STA2X11_GPIO18_RGBOUT_GREEN5	18
--#define STA2X11_GPIO19_RGBOUT_GREEN4	19
--#define STA2X11_GPIO20_RGBOUT_GREEN3	20
--#define STA2X11_GPIO21_RGBOUT_GREEN2	21
--#define STA2X11_GPIO22_RGBOUT_GREEN1	22
--#define STA2X11_GPIO23_RGBOUT_GREEN0	23
--#define STA2X11_GPIO24_RGBOUT_BLUE7	24
--#define STA2X11_GPIO25_RGBOUT_BLUE6	25
--#define STA2X11_GPIO26_RGBOUT_BLUE5	26
--#define STA2X11_GPIO27_RGBOUT_BLUE4	27
--#define STA2X11_GPIO28_RGBOUT_BLUE3	28
--#define STA2X11_GPIO29_RGBOUT_BLUE2	29
--#define STA2X11_GPIO30_RGBOUT_BLUE1	30
--#define STA2X11_GPIO31_RGBOUT_BLUE0	31
--#define STA2X11_GPIO32_RGBOUT_VSYNCH	32
--#define STA2X11_GPIO33_RGBOUT_HSYNCH	33
--#define STA2X11_GPIO34_RGBOUT_DEN	34
--#define STA2X11_GPIO35_ETH_CRS_DV	35
--#define STA2X11_GPIO36_ETH_TXD1		36
--#define STA2X11_GPIO37_ETH_TXD0		37
--#define STA2X11_GPIO38_ETH_TX_EN	38
--#define STA2X11_GPIO39_MDIO		39
--#define STA2X11_GPIO40_ETH_REF_CLK	40
--#define STA2X11_GPIO41_ETH_RXD1		41
--#define STA2X11_GPIO42_ETH_RXD0		42
--#define STA2X11_GPIO43_MDC		43
--#define STA2X11_GPIO44_CAN_TX		44
--#define STA2X11_GPIO45_CAN_RX		45
--#define STA2X11_GPIO46_MLB_DAT		46
--#define STA2X11_GPIO47_MLB_SIG		47
--#define STA2X11_GPIO48_SPI0_CLK		48
--#define STA2X11_GPIO49_SPI0_TXD		49
--#define STA2X11_GPIO50_SPI0_RXD		50
--#define STA2X11_GPIO51_SPI0_FRM		51
--#define STA2X11_GPIO52_SPI1_CLK		52
--#define STA2X11_GPIO53_SPI1_TXD		53
--#define STA2X11_GPIO54_SPI1_RXD		54
--#define STA2X11_GPIO55_SPI1_FRM		55
--#define STA2X11_GPIO56_SPI2_CLK		56
--#define STA2X11_GPIO57_SPI2_TXD		57
--#define STA2X11_GPIO58_SPI2_RXD		58
--#define STA2X11_GPIO59_SPI2_FRM		59
--#define STA2X11_GPIO60_I2C0_SCL		60
--#define STA2X11_GPIO61_I2C0_SDA		61
--#define STA2X11_GPIO62_I2C1_SCL		62
--#define STA2X11_GPIO63_I2C1_SDA		63
--#define STA2X11_GPIO64_I2C2_SCL		64
--#define STA2X11_GPIO65_I2C2_SDA		65
--#define STA2X11_GPIO66_I2C3_SCL		66
--#define STA2X11_GPIO67_I2C3_SDA		67
--#define STA2X11_GPIO68_MSP0_RCK		68
--#define STA2X11_GPIO69_MSP0_RXD		69
--#define STA2X11_GPIO70_MSP0_RFS		70
--#define STA2X11_GPIO71_MSP0_TCK		71
--#define STA2X11_GPIO72_MSP0_TXD		72
--#define STA2X11_GPIO73_MSP0_TFS		73
--#define STA2X11_GPIO74_MSP0_SCK		74
--#define STA2X11_GPIO75_MSP1_CK		75
--#define STA2X11_GPIO76_MSP1_RXD		76
--#define STA2X11_GPIO77_MSP1_FS		77
--#define STA2X11_GPIO78_MSP1_TXD		78
--#define STA2X11_GPIO79_MSP2_CK		79
--#define STA2X11_GPIO80_MSP2_RXD		80
--#define STA2X11_GPIO81_MSP2_FS		81
--#define STA2X11_GPIO82_MSP2_TXD		82
--#define STA2X11_GPIO83_MSP3_CK		83
--#define STA2X11_GPIO84_MSP3_RXD		84
--#define STA2X11_GPIO85_MSP3_FS		85
--#define STA2X11_GPIO86_MSP3_TXD		86
--#define STA2X11_GPIO87_MSP4_CK		87
--#define STA2X11_GPIO88_MSP4_RXD		88
--#define STA2X11_GPIO89_MSP4_FS		89
--#define STA2X11_GPIO90_MSP4_TXD		90
--#define STA2X11_GPIO91_MSP5_CK		91
--#define STA2X11_GPIO92_MSP5_RXD		92
--#define STA2X11_GPIO93_MSP5_FS		93
--#define STA2X11_GPIO94_MSP5_TXD		94
--#define STA2X11_GPIO95_SDIO3_DAT3	95
--#define STA2X11_GPIO96_SDIO3_DAT2	96
--#define STA2X11_GPIO97_SDIO3_DAT1	97
--#define STA2X11_GPIO98_SDIO3_DAT0	98
--#define STA2X11_GPIO99_SDIO3_CLK	99
--#define STA2X11_GPIO100_SDIO3_CMD	100
--#define STA2X11_GPIO101			101
--#define STA2X11_GPIO102			102
--#define STA2X11_GPIO103			103
--#define STA2X11_GPIO104			104
--#define STA2X11_GPIO105_SDIO2_DAT3	105
--#define STA2X11_GPIO106_SDIO2_DAT2	106
--#define STA2X11_GPIO107_SDIO2_DAT1	107
--#define STA2X11_GPIO108_SDIO2_DAT0	108
--#define STA2X11_GPIO109_SDIO2_CLK	109
--#define STA2X11_GPIO110_SDIO2_CMD	110
--#define STA2X11_GPIO111			111
--#define STA2X11_GPIO112			112
--#define STA2X11_GPIO113			113
--#define STA2X11_GPIO114			114
--#define STA2X11_GPIO115_SDIO1_DAT3	115
--#define STA2X11_GPIO116_SDIO1_DAT2	116
--#define STA2X11_GPIO117_SDIO1_DAT1	117
--#define STA2X11_GPIO118_SDIO1_DAT0	118
--#define STA2X11_GPIO119_SDIO1_CLK	119
--#define STA2X11_GPIO120_SDIO1_CMD	120
--#define STA2X11_GPIO121			121
--#define STA2X11_GPIO122			122
--#define STA2X11_GPIO123			123
--#define STA2X11_GPIO124			124
--#define STA2X11_GPIO125_UART2_TXD	125
--#define STA2X11_GPIO126_UART2_RXD	126
--#define STA2X11_GPIO127_UART3_TXD	127
--
--/*
-- * The APB bridge has its own registers, needed by our users as well.
-- * They are accessed with the following read/mask/write function.
-- */
--static inline u32
--sta2x11_apbreg_mask(struct pci_dev *pdev, u32 reg, u32 mask, u32 val)
--{
--	return __sta2x11_mfd_mask(pdev, reg, mask, val, sta2x11_apbreg);
--}
--
--/* CAN and MLB */
--#define APBREG_BSR	0x00	/* Bridge Status Reg */
--#define APBREG_PAER	0x08	/* Peripherals Address Error Reg */
--#define APBREG_PWAC	0x20	/* Peripheral Write Access Control reg */
--#define APBREG_PRAC	0x40	/* Peripheral Read Access Control reg */
--#define APBREG_PCG	0x60	/* Peripheral Clock Gating Reg */
--#define APBREG_PUR	0x80	/* Peripheral Under Reset Reg */
--#define APBREG_EMU_PCG	0xA0	/* Emulator Peripheral Clock Gating Reg */
--
--#define APBREG_CAN	(1 << 1)
--#define APBREG_MLB	(1 << 3)
--
--/* SARAC */
--#define APBREG_BSR_SARAC     0x100 /* Bridge Status Reg */
--#define APBREG_PAER_SARAC    0x108 /* Peripherals Address Error Reg */
--#define APBREG_PWAC_SARAC    0x120 /* Peripheral Write Access Control reg */
--#define APBREG_PRAC_SARAC    0x140 /* Peripheral Read Access Control reg */
--#define APBREG_PCG_SARAC     0x160 /* Peripheral Clock Gating Reg */
--#define APBREG_PUR_SARAC     0x180 /* Peripheral Under Reset Reg */
--#define APBREG_EMU_PCG_SARAC 0x1A0 /* Emulator Peripheral Clock Gating Reg */
--
--#define APBREG_SARAC	(1 << 2)
--
--/*
-- * The system controller has its own registers. Some of these are accessed
-- * by out users as well, using the following read/mask/write/function
-- */
--static inline
--u32 sta2x11_sctl_mask(struct pci_dev *pdev, u32 reg, u32 mask, u32 val)
--{
--	return __sta2x11_mfd_mask(pdev, reg, mask, val, sta2x11_sctl);
--}
--
--#define SCTL_SCCTL		0x00	/* System controller control register */
--#define SCTL_ARMCFG		0x04	/* ARM configuration register */
--#define SCTL_SCPLLCTL		0x08	/* PLL control status register */
--
--#define SCTL_SCPLLCTL_AUDIO_PLL_PD	     BIT(1)
--#define SCTL_SCPLLCTL_FRAC_CONTROL	     BIT(3)
--#define SCTL_SCPLLCTL_STRB_BYPASS	     BIT(6)
--#define SCTL_SCPLLCTL_STRB_INPUT	     BIT(8)
--
--#define SCTL_SCPLLFCTRL		0x0c	/* PLL frequency control register */
--
--#define SCTL_SCPLLFCTRL_AUDIO_PLL_NDIV_MASK	0xff
--#define SCTL_SCPLLFCTRL_AUDIO_PLL_NDIV_SHIFT	  10
--#define SCTL_SCPLLFCTRL_AUDIO_PLL_IDF_MASK	   7
--#define SCTL_SCPLLFCTRL_AUDIO_PLL_IDF_SHIFT	  21
--#define SCTL_SCPLLFCTRL_AUDIO_PLL_ODF_MASK	   7
--#define SCTL_SCPLLFCTRL_AUDIO_PLL_ODF_SHIFT	  18
--#define SCTL_SCPLLFCTRL_DITHER_DISABLE_MASK     0x03
--#define SCTL_SCPLLFCTRL_DITHER_DISABLE_SHIFT       4
--
--
--#define SCTL_SCRESFRACT		0x10	/* PLL fractional input register */
--
--#define SCTL_SCRESFRACT_MASK	0x0000ffff
--
--
--#define SCTL_SCRESCTRL1		0x14	/* Peripheral reset control 1 */
--#define SCTL_SCRESXTRL2		0x18	/* Peripheral reset control 2 */
--#define SCTL_SCPEREN0		0x1c	/* Peripheral clock enable register 0 */
--#define SCTL_SCPEREN1		0x20	/* Peripheral clock enable register 1 */
--#define SCTL_SCPEREN2		0x24	/* Peripheral clock enable register 2 */
--#define SCTL_SCGRST		0x28	/* Peripheral global reset */
--#define SCTL_SCPCIECSBRST       0x2c    /* PCIe PAB CSB reset status register */
--#define SCTL_SCPCIPMCR1		0x30	/* PCI power management control 1 */
--#define SCTL_SCPCIPMCR2		0x34	/* PCI power management control 2 */
--#define SCTL_SCPCIPMSR1		0x38	/* PCI power management status 1 */
--#define SCTL_SCPCIPMSR2		0x3c	/* PCI power management status 2 */
--#define SCTL_SCPCIPMSR3		0x40	/* PCI power management status 3 */
--#define SCTL_SCINTREN		0x44	/* Interrupt enable */
--#define SCTL_SCRISR		0x48	/* RAW interrupt status */
--#define SCTL_SCCLKSTAT0		0x4c	/* Peripheral clocks status 0 */
--#define SCTL_SCCLKSTAT1		0x50	/* Peripheral clocks status 1 */
--#define SCTL_SCCLKSTAT2		0x54	/* Peripheral clocks status 2 */
--#define SCTL_SCRSTSTA		0x58	/* Reset status register */
--
--#define SCTL_SCRESCTRL1_USB_PHY_POR	(1 << 0)
--#define SCTL_SCRESCTRL1_USB_OTG	(1 << 1)
--#define SCTL_SCRESCTRL1_USB_HRST	(1 << 2)
--#define SCTL_SCRESCTRL1_USB_PHY_HOST	(1 << 3)
--#define SCTL_SCRESCTRL1_SATAII	(1 << 4)
--#define SCTL_SCRESCTRL1_VIP		(1 << 5)
--#define SCTL_SCRESCTRL1_PER_MMC0	(1 << 6)
--#define SCTL_SCRESCTRL1_PER_MMC1	(1 << 7)
--#define SCTL_SCRESCTRL1_PER_GPIO0	(1 << 8)
--#define SCTL_SCRESCTRL1_PER_GPIO1	(1 << 9)
--#define SCTL_SCRESCTRL1_PER_GPIO2	(1 << 10)
--#define SCTL_SCRESCTRL1_PER_GPIO3	(1 << 11)
--#define SCTL_SCRESCTRL1_PER_MTU0	(1 << 12)
--#define SCTL_SCRESCTRL1_KER_SPI0	(1 << 13)
--#define SCTL_SCRESCTRL1_KER_SPI1	(1 << 14)
--#define SCTL_SCRESCTRL1_KER_SPI2	(1 << 15)
--#define SCTL_SCRESCTRL1_KER_MCI0	(1 << 16)
--#define SCTL_SCRESCTRL1_KER_MCI1	(1 << 17)
--#define SCTL_SCRESCTRL1_PRE_HSI2C0	(1 << 18)
--#define SCTL_SCRESCTRL1_PER_HSI2C1	(1 << 19)
--#define SCTL_SCRESCTRL1_PER_HSI2C2	(1 << 20)
--#define SCTL_SCRESCTRL1_PER_HSI2C3	(1 << 21)
--#define SCTL_SCRESCTRL1_PER_MSP0	(1 << 22)
--#define SCTL_SCRESCTRL1_PER_MSP1	(1 << 23)
--#define SCTL_SCRESCTRL1_PER_MSP2	(1 << 24)
--#define SCTL_SCRESCTRL1_PER_MSP3	(1 << 25)
--#define SCTL_SCRESCTRL1_PER_MSP4	(1 << 26)
--#define SCTL_SCRESCTRL1_PER_MSP5	(1 << 27)
--#define SCTL_SCRESCTRL1_PER_MMC	(1 << 28)
--#define SCTL_SCRESCTRL1_KER_MSP0	(1 << 29)
--#define SCTL_SCRESCTRL1_KER_MSP1	(1 << 30)
--#define SCTL_SCRESCTRL1_KER_MSP2	(1 << 31)
--
--#define SCTL_SCPEREN0_UART0		(1 << 0)
--#define SCTL_SCPEREN0_UART1		(1 << 1)
--#define SCTL_SCPEREN0_UART2		(1 << 2)
--#define SCTL_SCPEREN0_UART3		(1 << 3)
--#define SCTL_SCPEREN0_MSP0		(1 << 4)
--#define SCTL_SCPEREN0_MSP1		(1 << 5)
--#define SCTL_SCPEREN0_MSP2		(1 << 6)
--#define SCTL_SCPEREN0_MSP3		(1 << 7)
--#define SCTL_SCPEREN0_MSP4		(1 << 8)
--#define SCTL_SCPEREN0_MSP5		(1 << 9)
--#define SCTL_SCPEREN0_SPI0		(1 << 10)
--#define SCTL_SCPEREN0_SPI1		(1 << 11)
--#define SCTL_SCPEREN0_SPI2		(1 << 12)
--#define SCTL_SCPEREN0_I2C0		(1 << 13)
--#define SCTL_SCPEREN0_I2C1		(1 << 14)
--#define SCTL_SCPEREN0_I2C2		(1 << 15)
--#define SCTL_SCPEREN0_I2C3		(1 << 16)
--#define SCTL_SCPEREN0_SVDO_LVDS		(1 << 17)
--#define SCTL_SCPEREN0_USB_HOST		(1 << 18)
--#define SCTL_SCPEREN0_USB_OTG		(1 << 19)
--#define SCTL_SCPEREN0_MCI0		(1 << 20)
--#define SCTL_SCPEREN0_MCI1		(1 << 21)
--#define SCTL_SCPEREN0_MCI2		(1 << 22)
--#define SCTL_SCPEREN0_MCI3		(1 << 23)
--#define SCTL_SCPEREN0_SATA		(1 << 24)
--#define SCTL_SCPEREN0_ETHERNET		(1 << 25)
--#define SCTL_SCPEREN0_VIC		(1 << 26)
--#define SCTL_SCPEREN0_DMA_AUDIO		(1 << 27)
--#define SCTL_SCPEREN0_DMA_SOC		(1 << 28)
--#define SCTL_SCPEREN0_RAM		(1 << 29)
--#define SCTL_SCPEREN0_VIP		(1 << 30)
--#define SCTL_SCPEREN0_ARM		(1 << 31)
--
--#define SCTL_SCPEREN1_UART0		(1 << 0)
--#define SCTL_SCPEREN1_UART1		(1 << 1)
--#define SCTL_SCPEREN1_UART2		(1 << 2)
--#define SCTL_SCPEREN1_UART3		(1 << 3)
--#define SCTL_SCPEREN1_MSP0		(1 << 4)
--#define SCTL_SCPEREN1_MSP1		(1 << 5)
--#define SCTL_SCPEREN1_MSP2		(1 << 6)
--#define SCTL_SCPEREN1_MSP3		(1 << 7)
--#define SCTL_SCPEREN1_MSP4		(1 << 8)
--#define SCTL_SCPEREN1_MSP5		(1 << 9)
--#define SCTL_SCPEREN1_SPI0		(1 << 10)
--#define SCTL_SCPEREN1_SPI1		(1 << 11)
--#define SCTL_SCPEREN1_SPI2		(1 << 12)
--#define SCTL_SCPEREN1_I2C0		(1 << 13)
--#define SCTL_SCPEREN1_I2C1		(1 << 14)
--#define SCTL_SCPEREN1_I2C2		(1 << 15)
--#define SCTL_SCPEREN1_I2C3		(1 << 16)
--#define SCTL_SCPEREN1_USB_PHY		(1 << 17)
--
--/*
-- * APB-SOC registers
-- */
--static inline
--u32 sta2x11_apb_soc_regs_mask(struct pci_dev *pdev, u32 reg, u32 mask, u32 val)
--{
--	return __sta2x11_mfd_mask(pdev, reg, mask, val, sta2x11_apb_soc_regs);
--}
--
--#define PCIE_EP1_FUNC3_0_INTR_REG	0x000
--#define PCIE_EP1_FUNC7_4_INTR_REG	0x004
--#define PCIE_EP2_FUNC3_0_INTR_REG	0x008
--#define PCIE_EP2_FUNC7_4_INTR_REG	0x00c
--#define PCIE_EP3_FUNC3_0_INTR_REG	0x010
--#define PCIE_EP3_FUNC7_4_INTR_REG	0x014
--#define PCIE_EP4_FUNC3_0_INTR_REG	0x018
--#define PCIE_EP4_FUNC7_4_INTR_REG	0x01c
--#define PCIE_INTR_ENABLE0_REG		0x020
--#define PCIE_INTR_ENABLE1_REG		0x024
--#define PCIE_EP1_FUNC_TC_REG		0x028
--#define PCIE_EP2_FUNC_TC_REG		0x02c
--#define PCIE_EP3_FUNC_TC_REG		0x030
--#define PCIE_EP4_FUNC_TC_REG		0x034
--#define PCIE_EP1_FUNC_F_REG		0x038
--#define PCIE_EP2_FUNC_F_REG		0x03c
--#define PCIE_EP3_FUNC_F_REG		0x040
--#define PCIE_EP4_FUNC_F_REG		0x044
--#define PCIE_PAB_AMBA_SW_RST_REG	0x048
--#define PCIE_PM_STATUS_0_PORT_0_4	0x04c
--#define PCIE_PM_STATUS_7_0_EP1		0x050
--#define PCIE_PM_STATUS_7_0_EP2		0x054
--#define PCIE_PM_STATUS_7_0_EP3		0x058
--#define PCIE_PM_STATUS_7_0_EP4		0x05c
--#define PCIE_DEV_ID_0_EP1_REG		0x060
--#define PCIE_CC_REV_ID_0_EP1_REG	0x064
--#define PCIE_DEV_ID_1_EP1_REG		0x068
--#define PCIE_CC_REV_ID_1_EP1_REG	0x06c
--#define PCIE_DEV_ID_2_EP1_REG		0x070
--#define PCIE_CC_REV_ID_2_EP1_REG	0x074
--#define PCIE_DEV_ID_3_EP1_REG		0x078
--#define PCIE_CC_REV_ID_3_EP1_REG	0x07c
--#define PCIE_DEV_ID_4_EP1_REG		0x080
--#define PCIE_CC_REV_ID_4_EP1_REG	0x084
--#define PCIE_DEV_ID_5_EP1_REG		0x088
--#define PCIE_CC_REV_ID_5_EP1_REG	0x08c
--#define PCIE_DEV_ID_6_EP1_REG		0x090
--#define PCIE_CC_REV_ID_6_EP1_REG	0x094
--#define PCIE_DEV_ID_7_EP1_REG		0x098
--#define PCIE_CC_REV_ID_7_EP1_REG	0x09c
--#define PCIE_DEV_ID_0_EP2_REG		0x0a0
--#define PCIE_CC_REV_ID_0_EP2_REG	0x0a4
--#define PCIE_DEV_ID_1_EP2_REG		0x0a8
--#define PCIE_CC_REV_ID_1_EP2_REG	0x0ac
--#define PCIE_DEV_ID_2_EP2_REG		0x0b0
--#define PCIE_CC_REV_ID_2_EP2_REG	0x0b4
--#define PCIE_DEV_ID_3_EP2_REG		0x0b8
--#define PCIE_CC_REV_ID_3_EP2_REG	0x0bc
--#define PCIE_DEV_ID_4_EP2_REG		0x0c0
--#define PCIE_CC_REV_ID_4_EP2_REG	0x0c4
--#define PCIE_DEV_ID_5_EP2_REG		0x0c8
--#define PCIE_CC_REV_ID_5_EP2_REG	0x0cc
--#define PCIE_DEV_ID_6_EP2_REG		0x0d0
--#define PCIE_CC_REV_ID_6_EP2_REG	0x0d4
--#define PCIE_DEV_ID_7_EP2_REG		0x0d8
--#define PCIE_CC_REV_ID_7_EP2_REG	0x0dC
--#define PCIE_DEV_ID_0_EP3_REG		0x0e0
--#define PCIE_CC_REV_ID_0_EP3_REG	0x0e4
--#define PCIE_DEV_ID_1_EP3_REG		0x0e8
--#define PCIE_CC_REV_ID_1_EP3_REG	0x0ec
--#define PCIE_DEV_ID_2_EP3_REG		0x0f0
--#define PCIE_CC_REV_ID_2_EP3_REG	0x0f4
--#define PCIE_DEV_ID_3_EP3_REG		0x0f8
--#define PCIE_CC_REV_ID_3_EP3_REG	0x0fc
--#define PCIE_DEV_ID_4_EP3_REG		0x100
--#define PCIE_CC_REV_ID_4_EP3_REG	0x104
--#define PCIE_DEV_ID_5_EP3_REG		0x108
--#define PCIE_CC_REV_ID_5_EP3_REG	0x10c
--#define PCIE_DEV_ID_6_EP3_REG		0x110
--#define PCIE_CC_REV_ID_6_EP3_REG	0x114
--#define PCIE_DEV_ID_7_EP3_REG		0x118
--#define PCIE_CC_REV_ID_7_EP3_REG	0x11c
--#define PCIE_DEV_ID_0_EP4_REG		0x120
--#define PCIE_CC_REV_ID_0_EP4_REG	0x124
--#define PCIE_DEV_ID_1_EP4_REG		0x128
--#define PCIE_CC_REV_ID_1_EP4_REG	0x12c
--#define PCIE_DEV_ID_2_EP4_REG		0x130
--#define PCIE_CC_REV_ID_2_EP4_REG	0x134
--#define PCIE_DEV_ID_3_EP4_REG		0x138
--#define PCIE_CC_REV_ID_3_EP4_REG	0x13c
--#define PCIE_DEV_ID_4_EP4_REG		0x140
--#define PCIE_CC_REV_ID_4_EP4_REG	0x144
--#define PCIE_DEV_ID_5_EP4_REG		0x148
--#define PCIE_CC_REV_ID_5_EP4_REG	0x14c
--#define PCIE_DEV_ID_6_EP4_REG		0x150
--#define PCIE_CC_REV_ID_6_EP4_REG	0x154
--#define PCIE_DEV_ID_7_EP4_REG		0x158
--#define PCIE_CC_REV_ID_7_EP4_REG	0x15c
--#define PCIE_SUBSYS_VEN_ID_REG		0x160
--#define PCIE_COMMON_CLOCK_CONFIG_0_4_0	0x164
--#define PCIE_MIPHYP_SSC_EN_REG		0x168
--#define PCIE_MIPHYP_ADDR_REG		0x16c
--#define PCIE_L1_ASPM_READY_REG		0x170
--#define PCIE_EXT_CFG_RDY_REG		0x174
--#define PCIE_SoC_INT_ROUTER_STATUS0_REG 0x178
--#define PCIE_SoC_INT_ROUTER_STATUS1_REG 0x17c
--#define PCIE_SoC_INT_ROUTER_STATUS2_REG 0x180
--#define PCIE_SoC_INT_ROUTER_STATUS3_REG 0x184
--#define DMA_IP_CTRL_REG			0x324
--#define DISP_BRIDGE_PU_PD_CTRL_REG	0x328
--#define VIP_PU_PD_CTRL_REG		0x32c
--#define USB_MLB_PU_PD_CTRL_REG		0x330
--#define SDIO_PU_PD_MISCFUNC_CTRL_REG1	0x334
--#define SDIO_PU_PD_MISCFUNC_CTRL_REG2	0x338
--#define UART_PU_PD_CTRL_REG		0x33c
--#define ARM_Lock			0x340
--#define SYS_IO_CHAR_REG1		0x344
--#define SYS_IO_CHAR_REG2		0x348
--#define SATA_CORE_ID_REG		0x34c
--#define SATA_CTRL_REG			0x350
--#define I2C_HSFIX_MISC_REG		0x354
--#define SPARE2_RESERVED			0x358
--#define SPARE3_RESERVED			0x35c
--#define MASTER_LOCK_REG			0x368
--#define SYSTEM_CONFIG_STATUS_REG	0x36c
--#define MSP_CLK_CTRL_REG		0x39c
--#define COMPENSATION_REG1		0x3c4
--#define COMPENSATION_REG2		0x3c8
--#define COMPENSATION_REG3		0x3cc
--#define TEST_CTL_REG			0x3d0
--
--/*
-- * SECR (OTP) registers
-- */
--#define STA2X11_SECR_CR			0x00
--#define STA2X11_SECR_FVR0		0x10
--#define STA2X11_SECR_FVR1		0x14
--
--extern int sta2x11_mfd_get_regs_data(struct platform_device *pdev,
--				     enum sta2x11_mfd_plat_dev index,
--				     void __iomem **regs,
--				     spinlock_t **lock);
--
--#endif /* __STA2X11_MFD_H */
--- 
-1.7.7.2
+> +};
+> +
+> +enum isp_adjust_scene_index {
+> +	ISP_ADJUST_SCENE_NORMAL			= 0,
+> +	ISP_ADJUST_SCENE_NIGHT_PREVIEW		= 1,
+> +	ISP_ADJUST_SCENE_NIGHT_CAPTURE		= 2
+> +};
+> +
+> +
+> +enum isp_adjust_error {
+> +	ISP_ADJUST_ERROR_NONE		= 0 /* Adjust setting is done */
+> +};
+> +
+> +/* -------------------------  Metering  ---------------------------------- */
+> +enum isp_metering_command {
+> +	ISP_METERING_COMMAND_AVERAGE		= 0,
+> +	ISP_METERING_COMMAND_SPOT		= 1,
+> +	ISP_METERING_COMMAND_MATRIX		= 2,
+> +	ISP_METERING_COMMAND_CENTER		= 3,
+> +	ISP_METERING_COMMAND_EXPOSURE_MODE	= (1<<  8)
+> +};
+> +
+> +enum isp_exposure_mode {
+> +	ISP_EXPOSUREMODE_OFF		= 1,
+> +	ISP_EXPOSUREMODE_AUTO		= 2
+> +};
+> +
+> +enum isp_metering_error {
+> +	ISP_METERING_ERROR_NONE	= 0 /* Metering setting is done */
+> +};
+> +
+> +/* --------------------------  AFC  ----------------------------------- */
+> +enum isp_afc_command {
+> +	ISP_AFC_COMMAND_DISABLE		= 0,
+> +	ISP_AFC_COMMAND_AUTO		= 1,
+> +	ISP_AFC_COMMAND_MANUAL		= 2
+> +};
+> +
+> +enum isp_afc_manual {
+> +	ISP_AFC_MANUAL_50HZ		= 50,
+> +	ISP_AFC_MANUAL_60HZ		= 60
+> +};
+> +
+> +enum isp_afc_error {
+> +	ISP_AFC_ERROR_NONE	= 0 /* AFC setting is done */
+> +};
+> +
+> +enum isp_scene_command {
+> +	ISP_SCENE_NONE		= 0,
+> +	ISP_SCENE_PORTRAIT	= 1,
+> +	ISP_SCENE_LANDSCAPE     = 2,
+> +	ISP_SCENE_SPORTS        = 3,
+> +	ISP_SCENE_PARTYINDOOR	= 4,
+> +	ISP_SCENE_BEACHSNOW	= 5,
+> +	ISP_SCENE_SUNSET	= 6,
+> +	ISP_SCENE_DAWN		= 7,
+> +	ISP_SCENE_FALL		= 8,
+> +	ISP_SCENE_NIGHT		= 9,
+> +	ISP_SCENE_AGAINSTLIGHTWLIGHT	= 10,
+> +	ISP_SCENE_AGAINSTLIGHTWOLIGHT	= 11,
+> +	ISP_SCENE_FIRE			= 12,
+> +	ISP_SCENE_TEXT			= 13,
+> +	ISP_SCENE_CANDLE		= 14
+> +};
+> +
+> +/* --------------------------  Scaler  --------------------------------- */
+> +enum scaler_imageeffect_command {
+> +	SCALER_IMAGE_EFFECT_COMMNAD_DISABLE	= 0,
+> +	SCALER_IMAGE_EFFECT_COMMNAD_SEPIA_CB	= 1,
+> +	SCALER_IMAGE_EFFECT_COMMAND_SEPIA_CR	= 2,
+> +	SCALER_IMAGE_EFFECT_COMMAND_NEGATIVE	= 3,
+> +	SCALER_IMAGE_EFFECT_COMMAND_ARTFREEZE	= 4,
+> +	SCALER_IMAGE_EFFECT_COMMAND_EMBOSSING	= 5,
+> +	SCALER_IMAGE_EFFECT_COMMAND_SILHOUETTE	= 6
+> +};
+> +
+> +enum scaler_imageeffect_error {
+> +	SCALER_IMAGE_EFFECT_ERROR_NONE		= 0
+> +};
+> +
+> +enum scaler_crop_command {
+> +	SCALER_CROP_COMMAND_DISABLE		= 0,
+> +	SCALER_CROP_COMMAND_ENABLE		= 1
+> +};
+> +
+> +enum scaler_crop_error {
+> +	SCALER_CROP_ERROR_NONE			= 0 /* crop setting is done */
+> +};
+> +
+> +enum scaler_scaling_command {
+> +	SCALER_SCALING_COMMNAD_DISABLE		= 0,
+> +	SCALER_SCALING_COMMAND_UP		= 1,
+> +	SCALER_SCALING_COMMAND_DOWN		= 2
+> +};
+> +
+> +enum scaler_scaling_error {
+> +	SCALER_SCALING_ERROR_NONE		= 0
+> +};
+> +
+> +enum scaler_rotation_command {
+> +	SCALER_ROTATION_COMMAND_DISABLE		= 0,
+> +	SCALER_ROTATION_COMMAND_CLOCKWISE90	= 1
+> +};
+> +
+> +enum scaler_rotation_error {
+> +	SCALER_ROTATION_ERROR_NONE		= 0
+> +};
+> +
+> +enum scaler_flip_command {
+> +	SCALER_FLIP_COMMAND_NORMAL		= 0,
+> +	SCALER_FLIP_COMMAND_X_MIRROR		= 1,
+> +	SCALER_FLIP_COMMAND_Y_MIRROR		= 2,
+> +	SCALER_FLIP_COMMAND_XY_MIRROR		= 3 /* (180 rotation) */
+> +};
+> +
+> +enum scaler_flip_error {
+> +	SCALER_FLIP_ERROR_NONE			= 0 /* flip setting is done */
+> +};
+> +
+> +/* --------------------------  3DNR  ----------------------------------- */
+> +enum tdnr_1st_frame_command {
+> +	TDNR_1ST_FRAME_COMMAND_NOPROCESSING	= 0,
+> +	TDNR_1ST_FRAME_COMMAND_2DNR		= 1
+> +};
+> +
+> +enum tdnr_1st_frame_error {
+> +	TDNR_1ST_FRAME_ERROR_NONE		= 0
+> +};
+> +
+> +/* ----------------------------  FD  ------------------------------------- */
+> +enum fd_config_command {
+> +	FD_CONFIG_COMMAND_MAXIMUM_NUMBER	= 0x1,
+> +	FD_CONFIG_COMMAND_ROLL_ANGLE		= 0x2,
+> +	FD_CONFIG_COMMAND_YAW_ANGLE		= 0x4,
+> +	FD_CONFIG_COMMAND_SMILE_MODE		= 0x8,
+> +	FD_CONFIG_COMMAND_BLINK_MODE		= 0x10,
+> +	FD_CONFIG_COMMAND_EYES_DETECT		= 0x20,
+> +	FD_CONFIG_COMMAND_MOUTH_DETECT		= 0x40,
+> +	FD_CONFIG_COMMAND_ORIENTATION		= 0x80,
+> +	FD_CONFIG_COMMAND_ORIENTATION_VALUE	= 0x100
+> +};
+> +
+> +enum fd_config_roll_angle {
+> +	FD_CONFIG_ROLL_ANGLE_BASIC		= 0,
+> +	FD_CONFIG_ROLL_ANGLE_PRECISE_BASIC	= 1,
+> +	FD_CONFIG_ROLL_ANGLE_SIDES		= 2,
+> +	FD_CONFIG_ROLL_ANGLE_PRECISE_SIDES	= 3,
+> +	FD_CONFIG_ROLL_ANGLE_FULL		= 4,
+> +	FD_CONFIG_ROLL_ANGLE_PRECISE_FULL	= 5,
+> +};
+> +
+> +enum fd_config_yaw_angle {
+> +	FD_CONFIG_YAW_ANGLE_0			= 0,
+> +	FD_CONFIG_YAW_ANGLE_45			= 1,
+> +	FD_CONFIG_YAW_ANGLE_90			= 2,
+> +	FD_CONFIG_YAW_ANGLE_45_90		= 3,
+> +};
+> +
+> +enum fd_config_smile_mode {
+> +	FD_CONFIG_SMILE_MODE_DISABLE		= 0,
+> +	FD_CONFIG_SMILE_MODE_ENABLE		= 1
+> +};
+> +
+> +enum fd_config_blink_mode {
+> +	FD_CONFIG_BLINK_MODE_DISABLE		= 0,
+> +	FD_CONFIG_BLINK_MODE_ENABLE		= 1
+> +};
+> +
+> +enum fd_config_eye_result {
+> +	FD_CONFIG_EYES_DETECT_DISABLE		= 0,
+> +	FD_CONFIG_EYES_DETECT_ENABLE		= 1
+> +};
+> +
+> +enum fd_config_mouth_result {
+> +	FD_CONFIG_MOUTH_DETECT_DISABLE		= 0,
+> +	FD_CONFIG_MOUTH_DETECT_ENABLE		= 1
+> +};
+> +
+> +enum fd_config_orientation {
+> +	FD_CONFIG_ORIENTATION_DISABLE		= 0,
+> +	FD_CONFIG_ORIENTATION_ENABLE		= 1
+> +};
+> +
+> +struct param_control {
+> +	u32 cmd;
+> +	u32 bypass;
+> +	u32 buffer_address;
+> +	u32 buffer_number;
+> +	/* 0: continuous, 1: single */
+> +	u32 run_mode;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 6];
+> +	u32 err;
+> +};
+> +
+> +struct param_otf_input {
+> +	u32 cmd;
+> +	u32 width;
+> +	u32 height;
+> +	u32 format;
+> +	u32 bitwidth;
+> +	u32 order;
+> +	u32 crop_offset_x;
+> +	u32 crop_offset_y;
+> +	u32 crop_width;
+> +	u32 crop_height;
+> +	u32 frametime_min;
+> +	u32 frametime_max;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 13];
+> +	u32 err;
+> +};
+> +
+> +struct param_dma_input {
+> +	u32 cmd;
+> +	u32 width;
+> +	u32 height;
+> +	u32 format;
+> +	u32 bitwidth;
+> +	u32 plane;
+> +	u32 order;
+> +	u32 buffer_number;
+> +	u32 buffer_address;
+> +	u32 bayer_crop_offset_x;
+> +	u32 bayer_crop_offset_y;
+> +	u32 bayer_crop_width;
+> +	u32 bayer_crop_height;
+> +	u32 dma_crop_offset_x;
+> +	u32 dma_crop_offset_y;
+> +	u32 dma_crop_width;
+> +	u32 dma_crop_height;
+> +	u32 user_min_frametime;
+> +	u32 user_max_frametime;
+> +	u32 wide_frame_gap;
+> +	u32 frame_gap;
+> +	u32 line_gap;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 23];
+> +	u32 err;
+> +};
+> +
+> +struct param_otf_output {
+> +	u32 cmd;
+> +	u32 width;
+> +	u32 height;
+> +	u32 format;
+> +	u32 bitwidth;
+> +	u32 order;
+> +	u32 crop_offset_x;
+> +	u32 crop_offset_y;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 9];
+> +	u32 err;
+> +};
+> +
+> +struct param_dma_output {
+> +	u32 cmd;
+> +	u32 width;
+> +	u32 height;
+> +	u32 format;
+> +	u32 bitwidth;
+> +	u32 plane;
+> +	u32 order;
+> +	u32 buffer_number;
+> +	u32 buffer_address;
+> +	u32 notify_dma_done;
+> +	u32 dma_out_mask;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 12];
+> +	u32 err;
+> +};
+> +
+> +struct param_global_shotmode {
+> +	u32 cmd;
+> +	u32 skip_frames;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 3];
+> +	u32 err;
+> +};
+> +
+> +struct param_sensor_framerate {
+> +	u32 frame_rate;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 2];
+> +	u32 err;
+> +};
+> +
+> +struct param_isp_aa {
+> +	u32 cmd;
+> +	u32 target;
+> +	u32 mode;
+> +	u32 scene;
+> +	u32 af_touch;
+> +	u32 af_face;
+> +	u32 af_response;
+> +	u32 sleep;
+> +	u32 touch_x;
+> +	u32 touch_y;
+> +	u32 manual_af_setting;
+> +	/* 0: Legacy, 1: Camera 2.0 */
+> +	u32 cam_api2p0;
+> +	/*
+> +	 * For android.control.afRegions in Camera 2.0,
+> +	 * Resolution based on YUV output size
+> +	 */
+> +	u32 af_region_left;
+> +	u32 af_region_top;
+> +	u32 af_region_right;
+> +	u32 af_region_bottom;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 17];
+> +	u32 err;
+> +};
+> +
+> +struct param_isp_flash {
+> +	u32 cmd;
+> +	u32 redeye;
+> +	u32 flash_intensity;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 4];
+> +	u32 err;
+> +};
+> +
+> +struct param_isp_awb {
+> +	u32 cmd;
+> +	u32 illumination;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 3];
+> +	u32 err;
+> +};
+> +
+> +struct param_isp_imageeffect {
+> +	u32 cmd;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 2];
+> +	u32 err;
+> +};
+> +
+> +struct param_isp_iso {
+> +	u32 cmd;
+> +	u32 value;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 3];
+> +	u32 err;
+> +};
+> +
+> +struct param_isp_adjust {
+> +	u32 cmd;
+> +	s32 contrast;
+> +	s32 saturation;
+> +	s32 sharpness;
+> +	s32 exposure;
+> +	s32 brightness;
+> +	s32 hue;
+> +	/* 0 or 1 */
+> +	u32 hotpixel_enable;
+> +	/* -127 ~ 127 */
+> +	s32 noise_reduction_strength;
+> +	/* 0 or 1 */
+> +	u32 shading_correction_enable;
+> +	/* 0 or 1 */
+> +	u32 user_gamma_enable;
+> +	/* -127 ~ 127 */
+> +	s32 edge_enhancement_strength;
+> +	/* ISP_AdjustSceneIndexEnum */
+> +	u32 user_scene_mode;
+> +	u32 min_frametime;
+> +	u32 max_frametime;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 16];
+> +	u32 err;
+> +};
+> +
+> +struct param_isp_metering {
+> +	u32 cmd;
+> +	u32 win_pos_x;
+> +	u32 win_pos_y;
+> +	u32 win_width;
+> +	u32 win_height;
+> +	u32 exposure_mode;
+> +	/* 0: Legacy, 1: Camera 2.0 */
+> +	u32 cam_api2p0;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 8];
+> +	u32 err;
+> +};
+> +
+> +struct param_isp_afc {
+> +	u32 cmd;
+> +	u32 manual;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 3];
+> +	u32 err;
+> +};
+> +
+> +struct param_scaler_imageeffect {
+> +	u32 cmd;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 2];
+> +	u32 err;
+> +};
+> +
+> +struct param_scaler_input_crop {
+> +	u32  cmd;
+> +	u32  pos_x;
+> +	u32  pos_y;
+> +	u32  crop_width;
+> +	u32  crop_height;
+> +	u32  in_width;
+> +	u32  in_height;
+> +	u32  out_width;
+> +	u32  out_height;
+> +	u32  reserved[PARAMETER_MAX_MEMBER - 10];
+> +	u32  err;
+> +};
+> +
+> +struct param_scaler_output_crop {
+> +	u32  cmd;
+> +	u32  pos_x;
+> +	u32  pos_y;
+> +	u32  crop_width;
+> +	u32  crop_height;
+> +	u32  format;
+> +	u32  reserved[PARAMETER_MAX_MEMBER - 7];
+> +	u32  err;
+> +};
+> +
+> +struct param_scaler_rotation {
+> +	u32 cmd;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 2];
+> +	u32 err;
+> +};
+> +
+> +struct param_scaler_flip {
+> +	u32 cmd;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 2];
+> +	u32 err;
+> +};
+> +
+> +struct param_3dnr_1stframe {
+> +	u32 cmd;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 2];
+> +	u32 err;
+> +};
+> +
+> +struct param_fd_config {
+> +	u32 cmd;
+> +	u32 max_number;
+> +	u32 roll_angle;
+> +	u32 yaw_angle;
+> +	s32 smile_mode;
+> +	s32 blink_mode;
+> +	u32 eye_detect;
+> +	u32 mouth_detect;
+> +	u32 orientation;
+> +	u32 orientation_value;
+> +	u32 reserved[PARAMETER_MAX_MEMBER - 11];
+> +	u32 err;
+> +};
+> +
+> +struct global_param {
+> +	struct param_global_shotmode shotmode;
+> +};
+> +
+> +struct sensor_param {
+> +	struct param_control		control;
+> +	struct param_otf_input		otf_input;
+> +	struct param_otf_output		otf_output;
+> +	struct param_sensor_framerate	frame_rate;
+> +	struct param_dma_output		dma_output;
+> +};
+> +
+> +struct buffer_param {
+> +	struct param_control	control;
+> +	struct param_otf_input	otf_input;
+> +	struct param_otf_output	otf_output;
+> +};
+> +
+> +struct isp_param {
+> +	struct param_control		control;
+> +	struct param_otf_input		otf_input;
+> +	struct param_dma_input		dma1_input;
+> +	struct param_dma_input		dma2_input;
+> +	struct param_isp_aa		aa;
+> +	struct param_isp_flash		flash;
+> +	struct param_isp_awb		awb;
+> +	struct param_isp_imageeffect	effect;
+> +	struct param_isp_iso		iso;
+> +	struct param_isp_adjust		adjust;
+> +	struct param_isp_metering	metering;
+> +	struct param_isp_afc		afc;
+> +	struct param_otf_output		otf_output;
+> +	struct param_dma_output		dma1_output;
+> +	struct param_dma_output		dma2_output;
+> +};
+> +
+> +struct drc_param {
+> +	struct param_control		control;
+> +	struct param_otf_input		otf_input;
+> +	struct param_dma_input		dma_input;
+> +	struct param_otf_output		otf_output;
+> +};
+> +
+> +struct scalerc_param {
+> +	struct param_control		control;
+> +	struct param_otf_input		otf_input;
+> +	struct param_scaler_imageeffect	effect;
+> +	struct param_scaler_input_crop	input_crop;
+> +	struct param_scaler_output_crop	 output_crop;
+> +	struct param_otf_output		otf_output;
+> +	struct param_dma_output		dma_output;
+> +};
+> +
+> +struct odc_param {
+> +	struct param_control		control;
+> +	struct param_otf_input		otf_input;
+> +	struct param_otf_output		otf_output;
+> +};
+> +
+> +struct dis_param {
+> +	struct param_control		control;
+> +	struct param_otf_input		otf_input;
+> +	struct param_otf_output		otf_output;
+> +};
+> +
+> +struct tdnr_param {
+> +	struct param_control		control;
+> +	struct param_otf_input		otf_input;
+> +	struct param_3dnr_1stframe	frame;
+> +	struct param_otf_output		otf_output;
+> +	struct param_dma_output		dma_output;
+> +};
+> +
+> +struct scalerp_param {
+> +	struct param_control			control;
+> +	struct param_otf_input			otf_input;
+> +	struct param_scaler_imageeffect		effect;
+> +	struct param_scaler_input_crop		input_crop;
+> +	struct param_scaler_output_crop		output_crop;
+> +	struct param_scaler_rotation		rotation;
+> +	struct param_scaler_flip		flip;
+> +	struct param_otf_output			otf_output;
+> +	struct param_dma_output			dma_output;
+> +};
+> +
+> +struct fd_param {
+> +	struct param_control		control;
+> +	struct param_otf_input		otf_input;
+> +	struct param_dma_input		dma_input;
+> +	struct param_fd_config		config;
+> +};
+> +
+> +struct is_param_region {
+> +	struct global_param	global;
+> +	struct sensor_param	sensor;
+> +	struct buffer_param	buf;
+> +	struct isp_param	isp;
+> +	struct drc_param	drc;
+> +	struct scalerc_param	scalerc;
+> +	struct odc_param	odc;
+> +	struct dis_param	dis;
+> +	struct tdnr_param	tdnr;
+> +	struct scalerp_param	scalerp;
+> +	struct fd_param		fd;
+> +};
+> +
+> +#define	NUMBER_OF_GAMMA_CURVE_POINTS	32
+> +
+> +struct is_sensor_tune {
+> +	u32 exposure;
+> +	u32 analog_gain;
+> +	u32 frame_rate;
+> +	u32 actuator_pos;
+> +};
+> +
+> +struct is_tune_gammacurve {
+> +	u32 num_pts_x[NUMBER_OF_GAMMA_CURVE_POINTS];
+> +	u32 num_pts_y_r[NUMBER_OF_GAMMA_CURVE_POINTS];
+> +	u32 num_pts_y_g[NUMBER_OF_GAMMA_CURVE_POINTS];
+> +	u32 num_pts_y_b[NUMBER_OF_GAMMA_CURVE_POINTS];
+> +};
+> +
+> +struct is_isp_tune {
+> +	/* Brightness level: range 0~100, default: 7 */
+> +	u32 brightness_level;
+> +	/* Contrast level: range -127~127, default: 0 */
+> +	s32 contrast_level;
+> +	/* Saturation level: range -127~127, default: 0 */
+> +	s32 saturation_level;
+> +	s32 gamma_level;
+> +	struct is_tune_gammacurve gamma_curve[4];
+> +	/* Hue: range -127~127, default: 0 */
+> +	s32 hue;
+> +	/* Sharpness blur: range -127~127, default: 0 */
+> +	s32 sharpness_blur;
+> +	/* Despeckle: range -127~127, default: 0 */
+> +	s32 despeckle;
+> +	/* Edge color supression: range -127~127, default: 0 */
+> +	s32 edge_color_supression;
+> +	/* Noise reduction: range -127~127, default: 0 */
+> +	s32 noise_reduction;
+> +};
+> +
+> +struct is_tune_region {
+> +	struct is_sensor_tune sensor_tune;
+> +	struct is_isp_tune isp_tune;
+> +};
+> +
+> +struct rational_t {
+> +	u32 num;
+> +	u32 den;
+> +};
+> +
+> +struct srational_t {
+> +	s32 num;
+> +	s32 den;
+> +};
+> +
+> +#define FLASH_FIRED_SHIFT	0
+> +#define FLASH_NOT_FIRED		0
+> +#define FLASH_FIRED		1
+> +
+> +#define FLASH_STROBE_SHIFT				1
+> +#define FLASH_STROBE_NO_DETECTION			0
+> +#define FLASH_STROBE_RESERVED				1
+> +#define FLASH_STROBE_RETURN_LIGHT_NOT_DETECTED		2
+> +#define FLASH_STROBE_RETURN_LIGHT_DETECTED		3
+> +
+> +#define FLASH_MODE_SHIFT			3
+> +#define FLASH_MODE_UNKNOWN			0
+> +#define FLASH_MODE_COMPULSORY_FLASH_FIRING	1
+> +#define FLASH_MODE_COMPULSORY_FLASH_SUPPRESSION	2
+> +#define FLASH_MODE_AUTO_MODE			3
+> +
+> +#define FLASH_FUNCTION_SHIFT		5
+> +#define FLASH_FUNCTION_PRESENT		0
+> +#define FLASH_FUNCTION_NONE		1
+> +
+> +#define FLASH_RED_EYE_SHIFT		6
+> +#define FLASH_RED_EYE_DISABLED		0
+> +#define FLASH_RED_EYE_SUPPORTED		1
+> +
+> +struct exif_attribute {
+> +	struct rational_t exposure_time;
+> +	struct srational_t shutter_speed;
+> +	u32 iso_speed_rating;
+> +	u32 flash;
+> +	struct srational_t brightness;
+> +};
+> +
+> +struct is_frame_header {
+> +	u32 valid;
+> +	u32 bad_mark;
+> +	u32 captured;
+> +	u32 frame_number;
+> +	struct exif_attribute	exif;
+> +};
+> +
+> +struct is_face_marker {
+> +	u32 frame_number;
+> +	struct v4l2_rect face;
+> +	struct v4l2_rect left_eye;
+> +	struct v4l2_rect right_eye;
+> +	struct v4l2_rect mouth;
+> +	u32 roll_angle;
+> +	u32 yaw_angle;
+> +	u32 confidence;
+> +	u32 stracked;
+> +	u32 tracked_faceid;
+> +	u32 smile_level;
+> +	u32 blink_level;
+> +};
+> +
+> +#define MAX_FRAME_COUNT		8
+> +#define MAX_FRAME_COUNT_PREVIEW	4
+> +#define MAX_FRAME_COUNT_CAPTURE	1
+> +#define MAX_FACE_COUNT		16
+> +
+> +#define MAX_SHARED_COUNT	500
+> +
+> +struct is_region {
+> +	struct is_param_region	parameter;
+> +	struct is_tune_region	tune;
+> +	struct is_frame_header	header[MAX_FRAME_COUNT];
+> +	struct is_face_marker	face[MAX_FACE_COUNT];
+> +	u32			shared[MAX_SHARED_COUNT];
+> +};
+> +
+> +struct is_time_measure_us {
+> +	u32 min_time_us;
+> +	u32 max_time_us;
+> +	u32 avrg_time_us;
+> +	u32 current_time_us;
+> +};
+> +
+> +struct is_debug_frame_descriptor {
+> +	u32 sensor_frame_time;
+> +	u32 sensor_exposure_time;
+> +	u32 sensor_analog_gain;
+> +	u32 req_lei;
+> +};
+> +
+> +#define MAX_FRAMEDESCRIPTOR_CONTEXT_NUM	(30 * 20)	/* 600 frame */
+> +#define MAX_VERSION_DISPLAY_BUF		(32)
+> +
+> +struct is_share_region {
+> +	u32 frame_time;
+> +	u32 exposure_time;
+> +	u32 analog_gain;
+> +
+> +	u32 r_gain;
+> +	u32 g_gain;
+> +	u32 b_gain;
+> +
+> +	u32 af_position;
+> +	u32 af_status;
+> +	u32 af_scene_type;
+> +
+> +	u32 frame_descp_onoff_control;
+> +	u32 frame_descp_update_done;
+> +	u32 frame_descp_idx;
+> +	u32 frame_descp_max_idx;
+> +
+> +	struct is_debug_frame_descriptor
+> +		dbg_frame_descp_ctx[MAX_FRAMEDESCRIPTOR_CONTEXT_NUM];
+> +
+> +	u32 chip_id;
+> +	u32 chip_rev_no;
+> +	u8 ispfw_version_no[MAX_VERSION_DISPLAY_BUF];
+> +	u8 ispfw_version_date[MAX_VERSION_DISPLAY_BUF];
+> +	u8 sirc_sdk_version_no[MAX_VERSION_DISPLAY_BUF];
+> +	u8 sirc_sdk_revsion_no[MAX_VERSION_DISPLAY_BUF];
+> +	u8 sirc_sdk_version_date[MAX_VERSION_DISPLAY_BUF];
+> +
+> +	/*measure timing*/
+
+nit: missing spaces
+
+> +	struct is_time_measure_us	isp_sdk_time;
+> +};
+> +
+> +struct is_debug_control {
+> +	u32 write_point;	/* 0~500KB boundary*/
+> +	u32 assert_flag;	/* 0:Not Invoked, 1:Invoked*/
+> +	u32 pabort_flag;	/* 0:Not Invoked, 1:Invoked*/
+> +	u32 dabort_flag;	/* 0:Not Invoked, 1:Invoked*/
+> +	u32 pd_ready_flag;	/* 0:Normal, 1:EnterIdle(Ready to power down)*/
+> +	u32 isp_frame_err;	/* Frame Error Counters */
+> +	u32 drc_frame_err;
+> +	u32 scc_frame_err;
+> +	u32 odc_frame_err;
+> +	u32 dis_frame_err;
+> +	u32 tdnr_frame_err;
+> +	u32 scp_frame_err;
+> +	u32 fd_frame_err;
+> +	u32 isp_frame_drop;	/* Frame Drop Counters*/
+> +	u32 drc_frame_drop;
+> +	u32 dis_frame_drop;
+> +	u32 uifdframedrop;
+> +};
+> +
+> +#endif
+
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+
+--
+Regards,
+Sylwester
