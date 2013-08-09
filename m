@@ -1,16 +1,17 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [RESEND PATCH 1/2] ARM: dts: Change dw-apb-timer-osc and
- dw-apb-timer-sp to just dw-apb-timer
-Date: Thu, 8 Aug 2013 23:01:08 +0200
-Message-ID: <20130808210108.GA17855@amd.pavel.ucw.cz>
-References: <1375740158-10012-1-git-send-email-dinguyen@altera.com>
- <5203FCEA.7040709@wwwdotorg.org>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v10 3/7] ASoC: imx-audmux: Read default configuration
+ from devicetree
+Date: Fri, 9 Aug 2013 14:37:12 +0200
+Message-ID: <20130809123712.GD13664@s25.your-server.de>
+References: <1374924716-23475-1-git-send-email-mpa@pengutronix.de>
+ <1374924716-23475-4-git-send-email-mpa@pengutronix.de>
+ <20130806165746.GH6427@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <5203FCEA.7040709@wwwdotorg.org>
+In-Reply-To: <20130806165746.GH6427@sirena.org.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,37 +21,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, dinh.linux@gmail.com, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, John Stultz <john.stultz@linaro.org>, Olof Johansson <olof@lixom.net>, Jamie Iles <jamie@jamieiles.com>, dinguyen@altera.com, Heiko Stuebner <heiko@sntech.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 2013-08-08 14:17:46, Stephen Warren wrote:
-> On 08/05/2013 04:02 PM, dinguyen@altera.com wrote:
-> > From: Dinh Nguyen <dinguyen@altera.com>
-> > 
-> > "dw-apb-timer-osc" and "dw-apb-timer-sp" are the same implementation of the
-> > DW APB timer, just fed by different clocks.
+On Tue, Aug 06, 2013 at 05:57:46PM +0100, Mark Brown wrote:
+> On Sat, Jul 27, 2013 at 01:31:52PM +0200, Markus Pargmann wrote:
+> > Adds a function to parse a default port configuration from devicetree.
 > 
-> I assume patch 1/1 made similar changes to the driver?
-> 
-> > diff --git a/Documentation/devicetree/bindings/rtc/dw-apb.txt b/Documentation/devicetree/bindings/rtc/dw-apb.txt
-> 
-> >  Required properties:
-> > -- compatible: "snps,dw-apb-timer-sp" or "snps,dw-apb-timer-osc"
-> > +- compatible: "snps,dw-apb-timer"
-> 
-> This change is problematic w.r.t device tree as an ABI. any DT that uses
-> the new value "snps,dw-apb-timer" will not work with older software that
-> was written to expect the old values.
+> Applied, thanks - this is a really nice improvement.
 
-I'm pretty sure there's no such software out there. Actually, I don't
-think timers ever worked properly on any mainline kernels.
+Sorry, but I noticed two bugs in this patch, I will send a fixup.
 
-So I believe we can still fix it the right way... it is same hardware
-with different labels after all.
+Regards,
 
-Thanks,
-									Pavel
+Markus
+
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
