@@ -1,129 +1,140 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from comal.ext.ti.com ([198.47.26.152]:49655 "EHLO comal.ext.ti.com"
+Received: from ns.mm-sol.com ([212.124.72.66]:60876 "EHLO extserv.mm-sol.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1750911Ab3HLSFH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Mon, 12 Aug 2013 14:05:07 -0400
-Date: Mon, 12 Aug 2013 13:04:38 -0500
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [RFC PATCH v2 1/3] usb: dwc3: msm: Add device tree binding
- information
-Message-ID: <20130812180438.GC27954@radagast>
-Reply-To: <balbi@ti.com>
+	id S965879Ab3HIJzN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 05:55:13 -0400
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [RFC PATCH v2 1/3] usb: dwc3: msm: Add device tree binding information
+Date: Fri,  9 Aug 2013 12:53:45 +0300
+Message-Id: <1376042027-9798-2-git-send-email-iivanov@mm-sol.com>
+In-Reply-To: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
 References: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
- <1376042027-9798-2-git-send-email-iivanov@mm-sol.com>
- <169628C9-00BA-4E58-BF65-7B180E6BE4ED@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="t0UkRYy7tHLRMCai"
-Content-Disposition: inline
-In-Reply-To: <169628C9-00BA-4E58-BF65-7B180E6BE4ED@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, balbi@ti.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: balbi@ti.com
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-ID: <devicetree@vger.kernel.org>
 
---t0UkRYy7tHLRMCai
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-On Fri, Aug 09, 2013 at 10:31:58AM -0500, Kumar Gala wrote:
->=20
-> On Aug 9, 2013, at 4:53 AM, Ivan T. Ivanov wrote:
->=20
-> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> >=20
-> > MSM USB3.0 core wrapper consist of USB3.0 IP (SNPS)
->=20
-> probably good to spell out Synopsys rather than SNPS
+MSM USB3.0 core wrapper consist of USB3.0 IP (SNPS)
+and HS, SS PHY's controll and configuration registers.
 
-Synopsys (the company) has always used snps in their bindings though.
+It could operate in device mode (SS, HS, FS) and host
+mode (SS, HS, FS, LS).
 
-> > +Required properities :
-> > +- compatible : sould be "qcom,dwc3-hsphy";
-> > +- reg : offset and length of the register set in the memory map
-> > +- clocks : phandles to clock instances of the device tree nodes
-> > +- clock-names :
-> > +	"xo" : External reference clock 19 MHz
-> > +	"sleep_a_clk" : Sleep clock, used when USB3 core goes into low
-> > +	power mode (U3).
-> > +<supply-name>-supply : phandle to the regulator device tree node
-> > +Required "supply-name" are:
-> > +	"v1p8" : 1.8v supply for HSPHY
-> > +	"v3p3" : 3.3v supply for HSPHY
-> > +	"vbus" : vbus supply for host mode
-> > +	"vddcx" : vdd supply for HS-PHY digital circuit operation
+Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+---
+ .../devicetree/bindings/usb/msm-ssusb.txt          |  101 ++++++++++++++++++++
+ 1 file changed, 101 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
 
-I believe these regulators belong to the PHY, not DWC3. Please write a
-PHY driver.
+diff --git a/Documentation/devicetree/bindings/usb/msm-ssusb.txt b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
+new file mode 100644
+index 0000000..7a97163
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
+@@ -0,0 +1,101 @@
++MSM SuperSpeed DWC3 USB SoC controller
++
++Required properities :
++- compatible : sould be "qcom,dwc3-hsphy";
++- reg : offset and length of the register set in the memory map
++- clocks : phandles to clock instances of the device tree nodes
++- clock-names :
++	"xo" : External reference clock 19 MHz
++	"sleep_a_clk" : Sleep clock, used when USB3 core goes into low
++	power mode (U3).
++<supply-name>-supply : phandle to the regulator device tree node
++Required "supply-name" are:
++	"v1p8" : 1.8v supply for HSPHY
++	"v3p3" : 3.3v supply for HSPHY
++	"vbus" : vbus supply for host mode
++	"vddcx" : vdd supply for HS-PHY digital circuit operation
++
++Required properities :
++- compatible : sould be "qcom,dwc3-ssphy";
++- reg : offset and length of the register set in the memory map
++- clocks : phandles to clock instances of the device tree nodes
++- clock-names :
++	"xo" : External reference clock 19 MHz
++	"ref_clk" : Reference clock - used in host mode.
++<supply-name>-supply : phandle to the regulator device tree node
++Required "supply-name" are:
++	"v1p8" : 1.8v supply for SS-PHY
++	"vddcx" : vdd supply for SS-PHY digital circuit operation
++
++Required properties :
++- compatible : should be "qcom,dwc3"
++- reg : offset and length of the register set in the memory map
++	offset and length of the TCSR register for routing USB
++	signals to either picoPHY0 or picoPHY1.
++- clocks : phandles to clock instances of the device tree nodes
++- clock-names :
++	"core_clk" : Master/Core clock, have to be >= 125 MHz for SS
++	operation and >= 60MHz for HS operation
++	"iface_clk" : System bus AXI clock
++	"sleep_clk" : Sleep clock, used when USB3 core goes into low
++	power mode (U3).
++	"utmi_clk" : Generated by HS-PHY. Used to clock the low power
++	parts of thr HS Link layer.
++
++Optional properties :
++- gdsc-supply : phandle to the globally distributed switch controller
++  regulator node to the USB controller.
++
++Sub nodes:
++- Sub node for "DWC3 USB3 controller".
++  This sub node is required property for device node. The properties
++  of this subnode are specified in dwc3.txt.
++
++Example device nodes:
++
++	dwc3_hsphy: phy@f92f8800 {
++		compatible = "qcom,dwc3-hsphy";
++		reg = <0xf92f8800 0x30>;
++
++		clocks = <&cxo>, <&usb2a_phy_sleep_cxc>;
++		clock-names = "xo", "sleep_a_clk";
++
++		vbus-supply = <&supply>;
++		vddcx-supply = <&supply>;
++		v1p8-supply = <&supply>;
++		v3p3-supply = <&supply>;
++	};
++
++	dwc3_ssphy: phy@f92f8830 {
++		compatible = "qcom,dwc3-ssphy";
++		reg = <0xf92f8830 0x30>;
++
++		clocks = <&cxo>, <&usb30_mock_utmi_cxc>;
++		clock-names = "xo", "ref_clk";
++
++		vddcx-supply = <&supply>;
++		v1p8-supply = <&supply>;
++	};
++
++	usb@fd4ab000 {
++		compatible = "qcom,dwc3";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0xfd4ab000 0x4>;
++
++		clocks = <&usb30_master_cxc>, <&sys_noc_usb3_axi_cxc>,
++				<&usb30_sleep_cxc>, <&usb30_mock_utmi_cxc>;
++		clock-names = "core_clk", "iface_clk", "sleep_clk", "utmi_clk";
++
++		gdsc-supply = <&supply>;
++		ranges;
++
++		dwc3@f9200000 {
++			compatible = "snps,dwc3";
++			reg = <0xf9200000 0xcd00>;
++			interrupts = <0 131 0>;
++			interrupt-names = "irq";
++			usb-phy = <&dwc3_hsphy>, <&dwc3_ssphy>;
++			tx-fifo-resize;
++		};
++	};
+-- 
+1.7.9.5
 
-> > +Required properities :
-> > +- compatible : sould be "qcom,dwc3-ssphy";
-> > +- reg : offset and length of the register set in the memory map
-> > +- clocks : phandles to clock instances of the device tree nodes
-> > +- clock-names :
-> > +	"xo" : External reference clock 19 MHz
-> > +	"ref_clk" : Reference clock - used in host mode.
-> > +<supply-name>-supply : phandle to the regulator device tree node
-> > +Required "supply-name" are:
-> > +	"v1p8" : 1.8v supply for SS-PHY
-> > +	"vddcx" : vdd supply for SS-PHY digital circuit operation
-
-likewise, these regulators should be moved to the PHY driver.
-
-> > +Required properties :
-> > +- compatible : should be "qcom,dwc3"
-> > +- reg : offset and length of the register set in the memory map
-> > +	offset and length of the TCSR register for routing USB
-> > +	signals to either picoPHY0 or picoPHY1.
-> > +- clocks : phandles to clock instances of the device tree nodes
-> > +- clock-names :
-> > +	"core_clk" : Master/Core clock, have to be >=3D 125 MHz for SS
-> > +	operation and >=3D 60MHz for HS operation
-> > +	"iface_clk" : System bus AXI clock
-> > +	"sleep_clk" : Sleep clock, used when USB3 core goes into low
-> > +	power mode (U3).
-> > +	"utmi_clk" : Generated by HS-PHY. Used to clock the low power
-> > +	parts of thr HS Link layer.
-> > +
-> > +Optional properties :
-> > +- gdsc-supply : phandle to the globally distributed switch controller
-> > +  regulator node to the USB controller.
-> > +
-> > +Sub nodes:
-> > +- Sub node for "DWC3 USB3 controller".
-> > +  This sub node is required property for device node. The properties
-> > +  of this subnode are specified in dwc3.txt.
->=20
-> Is tx-fifo-resize required for qcom,dwc3? if so we should call that
-> out in the binding.
-
-AFAICT that's only needed for OMAP5 ES1.0. Unless Qualcomm also screwed
-up default TX FIFO sizes :-p
-
---=20
-balbi
-
---t0UkRYy7tHLRMCai
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSCSO2AAoJEIaOsuA1yqREWxMP/3jiFI/Oy1xBYu8O8bTH98FH
-Wi1iBx5FToWYCUd74Yvk4xOJB2/0o1/JnoYvSJmILGirUAs2aRn/uIxpxMaCeg2v
-V4MR9vVLgEvFtg8jEwpDX/cgHWagSDSKGUX0zs+YKPLa8smn09LEOYVPPiDZIu7m
-8Rl6Rgak4WEYLvbImS1FY/gE/ih9bg/Ehrk/xgyyW8FI88dyTQkH2wNrsDSp/Sy5
-7D6cXFlGXqQdgbib4nj2KZ/H/megS2NQ8YXOv4YveDIKL8uIspgUldCWA4J4YCTg
-64nXHbuRS8/5uKzvIrxav08XR+9zk7N3/K6Y2pJSbTG/5K0v1VNLEwtgeDna9Zj7
-epwzq5BqVGJ7juEntKFyEbQak0KZUiABoJeL0ZqL5jxtja/BkLGbgOHcagm/aL/t
-owKTGEnfvySO+zjEJUBYUoc7ZFrqOYwV0eVnIosw2FHsirzjKIR5Umwffqf4ihyo
-oyw0DJs7d8ykn5d8wcBPv2QLRJDh+pCk7SDxWz6pbII6JZyYb3qkS8InEpkjt/9F
-Tfj/9N/X9YFbJ3PDHZEP0XFlfLtRlwYYCqEfg0EVU1SWIj8th8AX+q+0ctCBEnQu
-/tCzMKSt3ARqsiWLaM4BTqSnRGZkddMDRB5MpYTcECtEJnSDQTBT+wV6SQY+f4Df
-UF2kGRqNpfFzhqF98Jmo
-=OEER
------END PGP SIGNATURE-----
-
---t0UkRYy7tHLRMCai--
