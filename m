@@ -1,191 +1,108 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17900 "EHLO
-	hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754329Ab3HEHUo (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 03:20:44 -0400
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 2/3] pinctrl: pinconf-generic: add generic APIs for mapping pinctrl node
-Date: Mon, 5 Aug 2013 13:03:33 +0530
-Message-ID: <1375688014-6117-3-git-send-email-ldewangan@nvidia.com>
-In-Reply-To: <1375688014-6117-1-git-send-email-ldewangan@nvidia.com>
-References: <1375688014-6117-1-git-send-email-ldewangan@nvidia.com>
+Received: from mail-ee0-f48.google.com ([74.125.83.48]:53591 "EHLO
+	mail-ee0-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1031447Ab3HIXZ6 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 19:25:58 -0400
+Message-ID: <52057A80.30006@gmail.com>
+Date: Sat, 10 Aug 2013 01:25:52 +0200
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Re: [PATCH v4 11/13] [media] exynos5-is: Add Kconfig and Makefile
+References: <1375866242-18084-1-git-send-email-arun.kk@samsung.com> <1375866242-18084-12-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1375866242-18084-12-git-send-email-arun.kk@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: swarren@wwwdotorg.org, linus.walleij@linaro.org
-Cc: ian.campbell@citrix.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, Laxman Dewangan <ldewangan@nvidia.com>
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add generic APIs to map the DT node and its sub node in pinconf generic
-driver. These APIs can be used from driver to parse the DT node who
-uses the pinconf generic APIs for defining their nodes.
+On 08/07/2013 11:03 AM, Arun Kumar K wrote:
+> Adds Kconfig and Makefile for exynos5-is driver files.
+>
+> Signed-off-by: Shaik Ameer Basha<shaik.ameer@samsung.com>
+> Signed-off-by: Kilyeon Im<kilyeon.im@samsung.com>
+> Signed-off-by: Arun Kumar K<arun.kk@samsung.com>
+> ---
+>   drivers/media/platform/Kconfig             |    1 +
+>   drivers/media/platform/Makefile            |    1 +
+>   drivers/media/platform/exynos5-is/Kconfig  |   20 ++++++++++++++++++++
+>   drivers/media/platform/exynos5-is/Makefile |    7 +++++++
+>   4 files changed, 29 insertions(+)
+>   create mode 100644 drivers/media/platform/exynos5-is/Kconfig
+>   create mode 100644 drivers/media/platform/exynos5-is/Makefile
+>
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index 08de865..4b0475e 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -123,6 +123,7 @@ config VIDEO_S3C_CAMIF
+>
+>   source "drivers/media/platform/soc_camera/Kconfig"
+>   source "drivers/media/platform/exynos4-is/Kconfig"
+> +source "drivers/media/platform/exynos5-is/Kconfig"
+>   source "drivers/media/platform/s5p-tv/Kconfig"
+>
+>   endif # V4L_PLATFORM_DRIVERS
+> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+> index eee28dd..40bf09f 100644
+> --- a/drivers/media/platform/Makefile
+> +++ b/drivers/media/platform/Makefile
+> @@ -37,6 +37,7 @@ obj-$(CONFIG_VIDEO_SAMSUNG_S5P_TV)	+= s5p-tv/
+>
+>   obj-$(CONFIG_VIDEO_SAMSUNG_S5P_G2D)	+= s5p-g2d/
+>   obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC)	+= exynos-gsc/
+> +obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_CAMERA) += exynos5-is/
+>
+>   obj-$(CONFIG_BLACKFIN)                  += blackfin/
+>
+> diff --git a/drivers/media/platform/exynos5-is/Kconfig b/drivers/media/platform/exynos5-is/Kconfig
+> new file mode 100644
+> index 0000000..c872757
+> --- /dev/null
+> +++ b/drivers/media/platform/exynos5-is/Kconfig
+> @@ -0,0 +1,20 @@
+> +config VIDEO_SAMSUNG_EXYNOS5_CAMERA
+> +	bool "Samsung Exynos5 Media Device driver"
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
-Changes from V1: 
-- Add generic property for pins and functions in pinconf-generic.
-- Add APIs to map the DT and subnode.
-- Move common utils APIs to the pinctrl-utils from this file.
-- Update the binding document accordingly.
+"Samsung Exynos5 SoC Camera Media Device driver" ?
 
- .../bindings/pinctrl/pinctrl-bindings.txt          |   16 ++++
- drivers/pinctrl/pinconf-generic.c                  |   96 ++++++++++++++++++++
- include/linux/pinctrl/pinconf-generic.h            |    6 ++
- 3 files changed, 118 insertions(+), 0 deletions(-)
+> +	depends on VIDEO_V4L2&&  VIDEO_V4L2_SUBDEV_API&&  PM_RUNTIME
+> +	depends on VIDEO_SAMSUNG_EXYNOS4_IS
+> +	help
+> +	  This is a v4l2 based media controller driver for
+> +	  Exynos5 SoC.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-index aeb3c99..52fb521 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -174,3 +174,19 @@ All parameters not listed here, do not take an argument.
- 
- More in-depth documentation on these parameters can be found in
- <include/linux/pinctrl/pinconfig-generic.h>
-+
-+Generic pinconfig option also support the defining of pins and functions.
-+The properties are:
-+pinctrl-pins: This property tells the name of pins or list of pins for which
-+  configuration is needed. The valid pin names are device/chip specific and
-+  it can be found from the device/chip specific binding documents.
-+pinctrl-function: This property tells the configuration of the pins on to the
-+  given function. The valid functions are device/chip specific and it can be
-+  found from the device/chip specific binding documents.
-+
-+Example:
-+gpio0_id:gpio0 {
-+	pinctrl-pins = "gpio0";
-+	pinctrl-function = "id";
-+	bias-pull-up;
-+};
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index 8594f03..87ef767 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -24,6 +24,7 @@
- #include <linux/of.h>
- #include "core.h"
- #include "pinconf.h"
-+#include "pinctrl-utils.h"
- 
- #ifdef CONFIG_DEBUG_FS
- 
-@@ -236,4 +237,99 @@ out:
- 	kfree(cfg);
- 	return ret;
- }
-+
-+int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-+		struct device_node *np, struct pinctrl_map **map,
-+		unsigned *reserved_maps, unsigned *num_maps)
-+{
-+	int ret;
-+	const char *function;
-+	struct device *dev = pctldev->dev;
-+	unsigned long *configs = NULL;
-+	unsigned num_configs = 0;
-+	unsigned reserve;
-+	struct property *prop;
-+	const char *group;
-+
-+	ret = of_property_read_string(np, "pinctrl-function", &function);
-+	if (ret < 0) {
-+		/* EINVAL=missing, which is fine since it's optional */
-+		if (ret != -EINVAL)
-+			dev_err(dev,
-+				"could not parse property ti,function\n");
-+		function = NULL;
-+	}
-+
-+	ret = pinconf_generic_parse_dt_config(np, &configs, &num_configs);
-+	if (ret < 0) {
-+		dev_err(dev, "could not parse node property\n");
-+		return ret;
-+	}
-+
-+	reserve = 0;
-+	if (function != NULL)
-+		reserve++;
-+	if (num_configs)
-+		reserve++;
-+	ret = of_property_count_strings(np, "pinctrl-pins");
-+	if (ret < 0) {
-+		dev_err(dev, "could not parse property ti,pins\n");
-+		goto exit;
-+	}
-+	reserve *= ret;
-+
-+	ret = pinctrl_utils_reserve_map(pctldev, map, reserved_maps,
-+			num_maps, reserve);
-+	if (ret < 0)
-+		goto exit;
-+
-+	of_property_for_each_string(np, "pinctrl-pins", prop, group) {
-+		if (function) {
-+			ret = pinctrl_utils_add_map_mux(pctldev, map,
-+					reserved_maps, num_maps, group,
-+					function);
-+			if (ret < 0)
-+				goto exit;
-+		}
-+
-+		if (num_configs) {
-+			ret = pinctrl_utils_add_map_configs(pctldev, map,
-+					reserved_maps, num_maps, group, configs,
-+					num_configs, PIN_MAP_TYPE_CONFIGS_PIN);
-+			if (ret < 0)
-+				goto exit;
-+		}
-+	}
-+	ret = 0;
-+
-+exit:
-+	kfree(configs);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(pinconf_generic_dt_subnode_to_map);
-+
-+int pinconf_generic_dt_node_to_map(struct pinctrl_dev *pctldev,
-+		struct device_node *np_config, struct pinctrl_map **map,
-+		unsigned *num_maps)
-+{
-+	unsigned reserved_maps;
-+	struct device_node *np;
-+	int ret;
-+
-+	reserved_maps = 0;
-+	*map = NULL;
-+	*num_maps = 0;
-+
-+	for_each_child_of_node(np_config, np) {
-+		ret = pinconf_generic_dt_subnode_to_map(pctldev, np, map,
-+						&reserved_maps, num_maps);
-+		if (ret < 0) {
-+			pinctrl_utils_dt_free_map(pctldev, *map, *num_maps);
-+			return ret;
-+		}
-+	}
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pinconf_generic_dt_node_to_map);
-+
- #endif
-diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
-index bf7e989..a472b93 100644
---- a/include/linux/pinctrl/pinconf-generic.h
-+++ b/include/linux/pinctrl/pinconf-generic.h
-@@ -137,6 +137,12 @@ static inline unsigned long pinconf_to_config_packed(enum pin_config_param param
- 	return PIN_CONF_PACKED(param, argument);
- }
- 
-+int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
-+		struct device_node *np, struct pinctrl_map **map,
-+		unsigned *reserved_maps, unsigned *num_maps);
-+int pinconf_generic_dt_node_to_map(struct pinctrl_dev *pctldev,
-+		struct device_node *np_config, struct pinctrl_map **map,
-+		unsigned *num_maps);
- #endif /* CONFIG_GENERIC_PINCONF */
- 
- #endif /* __LINUX_PINCTRL_PINCONF_GENERIC_H */
--- 
-1.7.1.1
+Or perhaps:
+	  This is a V4L2 media device driver for Exynos5 SoC series
+	  camera subsystem.
+?
+> +
+> +if VIDEO_SAMSUNG_EXYNOS5_CAMERA
+> +
+> +config VIDEO_SAMSUNG_EXYNOS5_FIMC_IS
+> +	tristate "Samsung Exynos5 SoC FIMC-IS driver"
+> +	depends on I2C&&  OF
+> +	depends on VIDEO_EXYNOS4_FIMC_IS
+> +	select VIDEOBUF2_DMA_CONTIG
+> +	help
+> +	  This is a V4L2 driver for Samsung Exynos5 SoC series Imaging
+> +	  Subsystem known as FIMC-IS.
+> +
+> +endif #VIDEO_SAMSUNG_EXYNOS5_MDEV
+> diff --git a/drivers/media/platform/exynos5-is/Makefile b/drivers/media/platform/exynos5-is/Makefile
+> new file mode 100644
+> index 0000000..6cdb037
+> --- /dev/null
+> +++ b/drivers/media/platform/exynos5-is/Makefile
+> @@ -0,0 +1,7 @@
+> +ccflags-y += -Idrivers/media/platform/exynos4-is
+> +exynos5-fimc-is-objs := fimc-is-core.o fimc-is-isp.o fimc-is-scaler.o
+> +exynos5-fimc-is-objs += fimc-is-pipeline.o fimc-is-interface.o fimc-is-sensor.o
+> +exynos-mdevice-objs := exynos5-mdev.o
+> +
+> +obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_FIMC_IS) += exynos5-fimc-is.o
+> +obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS5_CAMERA) += exynos-mdevice.o
 
+
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
