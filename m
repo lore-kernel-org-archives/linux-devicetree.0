@@ -1,215 +1,77 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from comal.ext.ti.com ([198.47.26.152]:54478 "EHLO comal.ext.ti.com"
+Received: from arroyo.ext.ti.com ([192.94.94.40]:48250 "EHLO arroyo.ext.ti.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S966451Ab3HHUTC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 8 Aug 2013 16:19:02 -0400
-From: Darren Etheridge <detheridge@ti.com>
-Subject: [RFC 1/1] video: da8xx-fb: adding dt support
-Date: Thu, 8 Aug 2013 15:15:36 -0500
-Message-ID: <1375992936-16755-2-git-send-email-detheridge@ti.com>
-In-Reply-To: <1375992936-16755-1-git-send-email-detheridge@ti.com>
-References: <1375992936-16755-1-git-send-email-detheridge@ti.com>
+	id S1030622Ab3HIIjl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 04:39:41 -0400
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [RFC 07/22] OMAPFB: search for default display with DT alias
+Date: Fri, 9 Aug 2013 11:38:52 +0300
+Message-ID: <1376037547-10859-8-git-send-email-tomi.valkeinen@ti.com>
+In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, tomi.valkeinen@ti.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org, detheridge@ti.com
-Cc: afzal@ti.com
+To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Enhancing driver to enable probe triggered by a corresponding dt entry.
+Improve the search for the default display in two ways:
+* compare the given display name to the display's alias
+* if no display name is given, look for "display0" DT alias
 
-Add da8xx-fb.txt documentation to devicetree section.
-
-Obtain fb_videomode details for the connected lcd panel using the
-display timing details present in DT.
-
-Ensure that platform data is present before checking whether platform
-callback is present (the one used to control backlight). So far this
-was not an issue as driver was purely non-DT triggered, but now DT
-support has been added this check must be performed.
-
-v2: squashing multiple commits from Afzal Mohammed (afzal@ti.com)
-v3: remove superfluous cast
-v4: expose both ti,am3352-lcdc and ti,da830-lcdc for .compatible
-	as driver can use enhanced features of all version of the
-	silicon block.
-
-Signed-off-by: Darren Etheridge <detheridge@ti.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- .../devicetree/bindings/video/fb-da8xx.txt         |   37 +++++++++++
- drivers/video/da8xx-fb.c                           |   67 +++++++++++++++++++-
- 2 files changed, 101 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/fb-da8xx.txt
+ drivers/video/omap2/omapfb/omapfb-main.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/video/fb-da8xx.txt b/Documentation/devicetree/bindings/video/fb-da8xx.txt
-new file mode 100644
-index 0000000..a6cfe3c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/fb-da8xx.txt
-@@ -0,0 +1,37 @@
-+TI LCD Controller on DA830/DA850/AM335x SoC's
-+
-+Required properties:
-+- compatible:
-+	DA830 - "ti,da830-lcdc"
-+	AM335x SoC's - "ti,am3352-lcdc"
-+- reg: Address range of lcdc register set
-+- interrupts: lcdc interrupt
-+- display-timings: typical videomode of lcd panel, represented as child.
-+  Refer Documentation/devicetree/bindings/video/display-timing.txt for
-+  display timing binding details. If multiple videomodes are mentioned
-+  in display timings node, typical videomode has to be mentioned as the
-+  native mode or it has to be first child (driver cares only for native
-+  videomode).
-+
-+Example:
-+
-+lcdc@4830e000 {
-+	compatible = "ti,am3352-lcdc";
-+	reg =  <0x4830e000 0x1000>;
-+	interrupts = <36>;
-+	display-timings {
-+		800x480p62 {
-+			clock-frequency = <30000000>;
-+			hactive = <800>;
-+			vactive = <480>;
-+			hfront-porch = <39>;
-+			hback-porch = <39>;
-+			hsync-len = <47>;
-+			vback-porch = <29>;
-+			vfront-porch = <13>;
-+			vsync-len = <2>;
-+			hsync-active = <1>;
-+			vsync-active = <1>;
-+		};
-+	};
-+};
-diff --git a/drivers/video/da8xx-fb.c b/drivers/video/da8xx-fb.c
-index ea9771f..64fd8af 100644
---- a/drivers/video/da8xx-fb.c
-+++ b/drivers/video/da8xx-fb.c
-@@ -36,6 +36,7 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/lcm.h>
-+#include <video/of_display_timing.h>
- #include <video/da8xx-fb.h>
- #include <asm/div64.h>
- 
-@@ -1297,12 +1298,57 @@ static struct fb_ops da8xx_fb_ops = {
- 	.fb_blank = cfb_blank,
- };
- 
-+static struct lcd_ctrl_config *da8xx_fb_create_cfg(struct platform_device *dev)
-+{
-+	struct lcd_ctrl_config *cfg;
-+
-+	cfg = devm_kzalloc(&dev->dev, sizeof(struct fb_videomode), GFP_KERNEL);
-+	if (!cfg) {
-+		dev_err(&dev->dev, "memory allocation failed\n");
-+		return NULL;
-+	}
-+
-+	/* default values */
-+
-+	if (lcd_revision == LCD_VERSION_1)
-+		cfg->bpp = 16;
-+	else
-+		cfg->bpp = 32;
-+
-+	/*
-+	 * For panels so far used with this LCDC, below statement is sufficient.
-+	 * For new panels, if required, struct lcd_ctrl_cfg fields to be updated
-+	 * with additional/modified values. Those values would have to be then
-+	 * obtained from dt(requiring new dt bindings).
-+	 */
-+
-+	cfg->panel_shade = COLOR_ACTIVE;
-+
-+	return cfg;
-+}
-+
- static struct fb_videomode *da8xx_fb_get_videomode(struct platform_device *dev)
- {
- 	struct da8xx_lcdc_platform_data *fb_pdata = dev->dev.platform_data;
- 	struct fb_videomode *lcdc_info;
-+	struct device_node *np = dev->dev.of_node;
+diff --git a/drivers/video/omap2/omapfb/omapfb-main.c b/drivers/video/omap2/omapfb/omapfb-main.c
+index 8bfe973..961c5c2 100644
+--- a/drivers/video/omap2/omapfb/omapfb-main.c
++++ b/drivers/video/omap2/omapfb/omapfb-main.c
+@@ -2413,7 +2413,10 @@ omapfb_find_default_display(struct omapfb2_device *fbdev)
+ 	const char *def_name;
  	int i;
  
-+	if (np) {
-+		lcdc_info = devm_kzalloc(&dev->dev,
-+					 sizeof(struct fb_videomode),
-+					 GFP_KERNEL);
-+		if (!lcdc_info) {
-+			dev_err(&dev->dev, "memory allocation failed\n");
-+			return NULL;
-+		}
-+		if (of_get_fb_videomode(np, lcdc_info, OF_USE_NATIVE_MODE)) {
-+			dev_err(&dev->dev, "timings not available in DT\n");
-+			return NULL;
-+		}
-+		return lcdc_info;
+-	/* search with the display name from the user or the board file */
++	/*
++	 * Search with the display name from the user or the board file,
++	 * comparing to display names and aliases
++	 */
+ 
+ 	def_name = omapdss_get_default_display_name();
+ 
+@@ -2425,12 +2428,30 @@ omapfb_find_default_display(struct omapfb2_device *fbdev)
+ 
+ 			if (dssdev->name && strcmp(def_name, dssdev->name) == 0)
+ 				return dssdev;
++
++			if (strcmp(def_name, dssdev->alias) == 0)
++				return dssdev;
+ 		}
+ 
+ 		/* def_name given but not found */
+ 		return NULL;
+ 	}
+ 
++	/* then look for DT alias display0 */
++	for (i = 0; i < fbdev->num_displays; ++i) {
++		struct omap_dss_device *dssdev;
++		int id;
++
++		dssdev = fbdev->displays[i].dssdev;
++
++		if (dssdev->dev->of_node == NULL)
++			continue;
++
++		id = of_alias_get_id(dssdev->dev->of_node, "display");
++		if (id == 0)
++			return dssdev;
 +	}
 +
- 	for (i = 0, lcdc_info = known_lcd_panels;
- 		i < ARRAY_SIZE(known_lcd_panels); i++, lcdc_info++) {
- 		if (strcmp(fb_pdata->type, lcdc_info->name) == 0)
-@@ -1331,7 +1377,7 @@ static int fb_probe(struct platform_device *device)
- 	int ret;
- 	unsigned long ulcm;
- 
--	if (fb_pdata == NULL) {
-+	if (fb_pdata == NULL && !device->dev.of_node) {
- 		dev_err(&device->dev, "Can not get platform data\n");
- 		return -ENOENT;
- 	}
-@@ -1371,7 +1417,10 @@ static int fb_probe(struct platform_device *device)
- 		break;
- 	}
- 
--	lcd_cfg = (struct lcd_ctrl_config *)fb_pdata->controller_data;
-+	if (device->dev.of_node)
-+		lcd_cfg = da8xx_fb_create_cfg(device);
-+	else
-+		lcd_cfg = fb_pdata->controller_data;
- 
- 	if (!lcd_cfg) {
- 		ret = -EINVAL;
-@@ -1390,7 +1439,7 @@ static int fb_probe(struct platform_device *device)
- 	par->dev = &device->dev;
- 	par->lcdc_clk = tmp_lcdc_clk;
- 	par->lcdc_clk_rate = clk_get_rate(par->lcdc_clk);
--	if (fb_pdata->panel_power_ctrl) {
-+	if (fb_pdata && fb_pdata->panel_power_ctrl) {
- 		par->panel_power_ctrl = fb_pdata->panel_power_ctrl;
- 		par->panel_power_ctrl(1);
- 	}
-@@ -1638,6 +1687,17 @@ static int fb_resume(struct platform_device *dev)
- #define fb_resume NULL
- #endif
- 
-+static const struct of_device_id da8xx_fb_of_match[] = {
-+	/*
-+	 * this driver supports version 1 and version 2 of the
-+	 * Texas Instruments lcd controller (lcdc) hardware block
-+	 */
-+	{.compatible = "ti,da830-lcdc", },
-+	{.compatible = "ti,am3352-lcdc", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, da8xx_fb_of_match);
-+
- static struct platform_driver da8xx_fb_driver = {
- 	.probe = fb_probe,
- 	.remove = fb_remove,
-@@ -1646,6 +1706,7 @@ static struct platform_driver da8xx_fb_driver = {
- 	.driver = {
- 		   .name = DRIVER_NAME,
- 		   .owner = THIS_MODULE,
-+		   .of_match_table = of_match_ptr(da8xx_fb_of_match),
- 		   },
- };
- 
+ 	/* return the first display we have in the list */
+ 	return fbdev->displays[0].dssdev;
+ }
 -- 
-1.7.0.4
+1.8.1.2
 
