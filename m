@@ -1,51 +1,57 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56332 "EHLO mail.gnudd.com"
+Received: from ns.mm-sol.com ([212.124.72.66]:60874 "EHLO extserv.mm-sol.com"
 	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932491Ab3HGKYC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:24:02 -0400
-Date: Wed, 7 Aug 2013 12:17:25 +0200
-From: Davide Ciminaghi <ciminaghi@gnudd.com>
-Subject: [PATCH 06/26] x86 STA2X11: select devicetree related config items.
-Message-ID: <7db4ee60cebbe7e94353da2963bae4b2446e1215.1375867291.git.rubini@gnudd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+	id S965802Ab3HIJzN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Fri, 9 Aug 2013 05:55:13 -0400
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [RFC PATCH v2 0/3] DWC3 USB support for Qualcomm platform
+Date: Fri,  9 Aug 2013 12:53:44 +0300
+Message-Id: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: balbi@ti.com
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch selects some config items needed for adding device tree support
-to STA2X11 based machines. In particular:
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-* OF_DYNAMIC is needed to use of_detach_node() and avoid instantiating
-  the same node twice.
+Hi,
 
-* IRQ_DOMAIN is needed because irq_of_parse_and_map() needs
-  irq_create_of_mapping(), which is part of the irqdomain stuff.
+These patches add basic support for USB3.0 controllers found
+on MSM platforms. USB3.0 core is based on Synopsys DesignWare 
+SuperSpeed IP. 
 
-Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
----
- arch/x86/Kconfig |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+Changes since first version:
+* Split devicetree bindings description file to separate patch
+* Address comments for device bindings description
+* Fix typo in 'gdsc' requlator name.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 490b001..0a779eb 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -555,6 +555,10 @@ config STA2X11
- 	select MFD_STA2X11
- 	select ARCH_REQUIRE_GPIOLIB
- 	select ARM_AMBA
-+	select OF
-+	select OF_EARLY_FLATTREE
-+	select OF_DYNAMIC
-+	select IRQ_DOMAIN
- 	default n
- 	---help---
- 	  This adds support for boards based on the STA2X11 IO-Hub,
+With fake regulators and clocks support drivers could be successfully 
+loaded, but nothing more, of course.
+
+Generated on top of Felipe 'testing' branch.
+
+Regards,
+Ivan
+
+Ivan T. Ivanov (3):
+  usb: dwc3: msm: Add device tree binding information
+  usb: phy: Add Qualcomm SS-USB and HS-USB drivers for DWC3 core
+  usb: dwc3: Add Qualcomm DWC3 glue layer driver
+
+ .../devicetree/bindings/usb/msm-ssusb.txt          |  101 +++++
+ drivers/usb/dwc3/Kconfig                           |    8 +
+ drivers/usb/dwc3/Makefile                          |    1 +
+ drivers/usb/dwc3/dwc3-msm.c                        |  174 +++++++++
+ drivers/usb/phy/Kconfig                            |   11 +
+ drivers/usb/phy/Makefile                           |    2 +
+ drivers/usb/phy/phy-msm-dwc3-hs.c                  |  340 +++++++++++++++++
+ drivers/usb/phy/phy-msm-dwc3-ss.c                  |  387 ++++++++++++++++++++
+ 8 files changed, 1024 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/msm-ssusb.txt
+ create mode 100644 drivers/usb/dwc3/dwc3-msm.c
+ create mode 100644 drivers/usb/phy/phy-msm-dwc3-hs.c
+ create mode 100644 drivers/usb/phy/phy-msm-dwc3-ss.c
+
 -- 
-1.7.7.2
+1.7.9.5
+
