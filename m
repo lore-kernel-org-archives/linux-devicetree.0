@@ -1,17 +1,13 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 2/2] power: arm64: Add DTS entry for APM X-Gene reboot
- driver.
-Date: Fri, 9 Aug 2013 15:37:24 -0700
-Message-ID: <CAOesGMj-chSDsA7YT5GFAyoxPw43LOjbmnQUqo14nxJV_88GcA@mail.gmail.com>
-References: <1372797539-13111-1-git-send-email-lho@apm.com>
- <1372797539-13111-2-git-send-email-lho@apm.com>
- <1372797539-13111-3-git-send-email-lho@apm.com>
- <20130809213116.GE12638@lizard.sbx05730.santaca.wayport.net>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH] ASoC: imx-audmux: default configuration parser fixups
+Date: Sat, 10 Aug 2013 14:55:57 +0200
+Message-ID: <1376139357-21089-1-git-send-email-mpa@pengutronix.de>
+References: <20130809123712.GD13664@s25.your-server.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130809213116.GE12638@lizard.sbx05730.santaca.wayport.net>
+In-Reply-To: <20130809123712.GD13664@s25.your-server.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,48 +17,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anton Vorontsov <anton@enomsg.org>
-Cc: fkan@apm.com, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Loc Ho <lho@apm.com>, ksankaran@apm.com, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Timur Tabi <timur@tabi.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 9, 2013 at 2:31 PM, Anton Vorontsov <anton@enomsg.org> wrote:
-> On Tue, Jul 02, 2013 at 02:38:59PM -0600, Loc Ho wrote:
->> power: arm64: Add DTS entry for APM X-Gene reboot driver.
->>
->> Signed-off-by: Loc Ho <lho@apm.com>
->> Signed-off-by: Feng Kan <fkan@apm.com>
->> Signed-off-by: Kumar Sankaran <ksankaran@apm.com>
->> ---
->
-> I've applied patch 1/2 to battery-2.6.git tree. I need an ack from ARM
-> maintainers to grab this together with the first one.
->
->>  arch/arm64/boot/dts/apm-storm.dtsi |    6 ++++++
->>  1 files changed, 6 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
->> index d37d736..e686919 100644
->> --- a/arch/arm64/boot/dts/apm-storm.dtsi
->> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
->> @@ -178,6 +178,12 @@
->>                       };
->>               };
->>
->> +                reboot@0x17000014 {
->> +                        compatible = "apm,xgene-reboot";
->> +                        reg = <0x0 0x17000014 0x0 0x100>;
->> +                        mask = <0x1>;
->> +                };
->
-> There should be tabs instead of whitespaces.
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+---
+ sound/soc/fsl/imx-audmux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Binding is undocumented, as far as I can tell. Please add
-documentation of this under Documentation/devicetree/bindings.
-
-In particular, the 'mask' property is nonstandard and it needs to be
-documented what part of the reboot controller hardware it is
-describing.
-
-
-
--Olof
+diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
+index f37cd9c..b21b85f 100644
+--- a/sound/soc/fsl/imx-audmux.c
++++ b/sound/soc/fsl/imx-audmux.c
+@@ -270,7 +270,7 @@ static int imx_audmux_parse_dt_defaults(struct platform_device *pdev,
+ 		}
+ 
+ 		for (i = 0; (ret = of_property_read_u32_index(child,
+-					"fsl,port-config\n", i, &val)) == 0;
++					"fsl,port-config", i, &val)) == 0;
+ 				++i) {
+ 			if (audmux_type == IMX31_AUDMUX) {
+ 				if (i % 2)
+@@ -282,7 +282,7 @@ static int imx_audmux_parse_dt_defaults(struct platform_device *pdev,
+ 			}
+ 		}
+ 
+-		if (ret != -ENODATA) {
++		if (ret != -EOVERFLOW) {
+ 			dev_err(&pdev->dev, "Failed to read u32 at index %d of child %s\n",
+ 					i, child->full_name);
+ 			continue;
+-- 
+1.8.3.2
