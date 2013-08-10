@@ -1,155 +1,99 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pd0-f169.google.com ([209.85.192.169]:54723 "EHLO
-	mail-pd0-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S932190Ab3HGJEb (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 05:04:31 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v4 08/13] [media] exynos5-fimc-is: Add sensor interface
-Date: Wed,  7 Aug 2013 14:33:56 +0530
-Message-Id: <1375866242-18084-9-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1375866242-18084-1-git-send-email-arun.kk@samsung.com>
-References: <1375866242-18084-1-git-send-email-arun.kk@samsung.com>
+Received: from mail-qa0-f47.google.com ([209.85.216.47]:64451 "EHLO
+	mail-qa0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758758Ab3HJVcV (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sat, 10 Aug 2013 17:32:21 -0400
+Received: by mail-qa0-f47.google.com with SMTP id o19so430206qap.6
+        for <devicetree@vger.kernel.org>; Sat, 10 Aug 2013 14:32:20 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <CAD=FV=U+S__hkbtWDAb5Ezkw0jJ6-tJLFKQPx4KpbvqHfFJnAg@mail.gmail.com>
+References: <1374658699-3961-1-git-send-email-l.krishna@samsung.com>
+	<1374658699-3961-2-git-send-email-l.krishna@samsung.com>
+	<3356224.pISrcKET7X@amdc1227>
+	<CAD=FV=U+S__hkbtWDAb5Ezkw0jJ6-tJLFKQPx4KpbvqHfFJnAg@mail.gmail.com>
+Date: Sat, 10 Aug 2013 14:32:20 -0700
+Message-ID: <CAOesGMj0AeU8ZCGd-t7+hBFvF6u_Vga28eQza7C7jAiJF6zU0w@mail.gmail.com>
+Subject: Re: [PATCH 1/3] watchdog: s3c2410_wdt: parse watchdog dt node to read
+ PMU registers adresses
+From: Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: Doug Anderson <dianders@chromium.org>
+Cc: Tomasz Figa <t.figa@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Wim Van Sebroeck <wim@iguana.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Some sensors to be used with fimc-is are exclusively controlled
-by the fimc-is firmware. This minimal sensor driver provides
-the required info for the firmware to configure the sensors
-sitting on I2C bus.
+On Thu, Jul 25, 2013 at 5:32 PM, Doug Anderson <dianders@chromium.org> wrote:
+> Tomasz,
+>
+> On Thu, Jul 25, 2013 at 3:27 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+>> Hi Leela,
+>>
+>> On Wednesday 24 of July 2013 15:08:17 Leela Krishna Amudala wrote:
+>>> This patch parses the watchdog node to read pmu wdt sys registers
+>>> addresses and do mask/unmask enable/disable of WDT in probe and s2r
+>>> scenarios.
+>>>
+>>> Reviewed-by: Doug Anderson <dianders@chromium.org>
+>>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+>>> ---
+>>>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |   14 ++++-
+>>>  drivers/watchdog/s3c2410_wdt.c                     |   56
+>>> ++++++++++++++++++++ 2 files changed, 69 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>>> b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt index
+>>> 2aa486c..4c798e3 100644
+>>> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>>> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+>>> @@ -7,8 +7,20 @@ occurred.
+>>>  Required properties:
+>>>  - compatible : should be "samsung,s3c2410-wdt"
+>>>  - reg : base physical address of the controller and length of memory
+>>> mapped -      region.
+>>> +     region and the optional (addresses and length of memory mapped regions
+>>> +     of) PMU registers for masking/unmasking WDT.
+>>>  - interrupts : interrupt number to the cpu.
+>>
+>> I don't think PMU registers should be passed like this, even if USB PHY
+>> driver currently does it - it needs to be fixed. Every time you are mapping
+>> a single 4-byte register, you are creating new mapping for the whole page
+>> (4K) containing it. In addition, this makes the WDT driver map IO memory
+>> that does not belong to the IP block it handles, which is not nice.
+>>
+>> I would suggest looking into regmap helpers to implement a driver for the
+>> PMU that can share PMU registers with interested drivers.
+>
+> We've done this in some other drivers as well.  I remember someone
+> suggested that this was fine when I posted the change to the ADC
+> driver for something similar.
+>
+> Do you really think it's worth adding a level of abstraction here?
+> The argument I remember in the past was that it was fine as long as
+> the register itself was used only by this driver.
+>
+> If we want to do as you say, we'll have to figure out whether you want
+> to create a new generic interface for this or reuse an existing one.
+> You could kinda think of these bits as enabling power, so you could
+> use the regulator framework.  ...but that framework often gets abused.
+>
+> Olof: I think I got your advice when I did the ADC work.  Do you have
+> any advice here?
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
- drivers/media/platform/exynos5-is/fimc-is-sensor.c |   45 +++++++++++++
- drivers/media/platform/exynos5-is/fimc-is-sensor.h |   66 ++++++++++++++++++++
- 2 files changed, 111 insertions(+)
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.c
- create mode 100644 drivers/media/platform/exynos5-is/fimc-is-sensor.h
+These tradeoffs are always tricky since it's hard to decide what
+corners are OK to cut a bit off of, and when you have to be a stickler
+for really following hard strict rules and stick to abstraction
+models.
 
-diff --git a/drivers/media/platform/exynos5-is/fimc-is-sensor.c b/drivers/media/platform/exynos5-is/fimc-is-sensor.c
-new file mode 100644
-index 0000000..7df2b11
---- /dev/null
-+++ b/drivers/media/platform/exynos5-is/fimc-is-sensor.c
-@@ -0,0 +1,45 @@
-+/*
-+ * Samsung EXYNOS5250 FIMC-IS (Imaging Subsystem) driver
-+ *
-+ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-+ * Author: Arun Kumar K <arun.kk@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include "fimc-is-sensor.h"
-+
-+static const struct sensor_drv_data s5k6a3_drvdata = {
-+	.id		= FIMC_IS_SENSOR_ID_S5K6A3,
-+	.open_timeout	= S5K6A3_OPEN_TIMEOUT,
-+	.setfile_name	= "setfile_6a3.bin",
-+};
-+
-+static const struct sensor_drv_data s5k4e5_drvdata = {
-+	.id		= FIMC_IS_SENSOR_ID_S5K4E5,
-+	.open_timeout	= S5K4E5_OPEN_TIMEOUT,
-+	.setfile_name	= "setfile_4e5.bin",
-+};
-+
-+static const struct of_device_id fimc_is_sensor_of_ids[] = {
-+	{
-+		.compatible	= "samsung,s5k6a3",
-+		.data		= &s5k6a3_drvdata,
-+	},
-+	{
-+		.compatible	= "samsung,s5k4e5",
-+		.data		= &s5k4e5_drvdata,
-+	},
-+	{  }
-+};
-+
-+const struct sensor_drv_data *exynos5_is_sensor_get_drvdata(
-+			struct device_node *node)
-+{
-+	const struct of_device_id *of_id;
-+
-+	of_id = of_match_node(fimc_is_sensor_of_ids, node);
-+	return of_id ? of_id->data : NULL;
-+}
-diff --git a/drivers/media/platform/exynos5-is/fimc-is-sensor.h b/drivers/media/platform/exynos5-is/fimc-is-sensor.h
-new file mode 100644
-index 0000000..736ef16
---- /dev/null
-+++ b/drivers/media/platform/exynos5-is/fimc-is-sensor.h
-@@ -0,0 +1,66 @@
-+/*
-+ * Samsung EXYNOS4x12 FIMC-IS (Imaging Subsystem) driver
-+ *
-+ * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-+ *
-+ * Author: Arun Kumar K <arun.kk@samsung.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#ifndef FIMC_IS_SENSOR_H_
-+#define FIMC_IS_SENSOR_H_
-+
-+#include <linux/of.h>
-+#include <linux/types.h>
-+
-+#define S5K6A3_OPEN_TIMEOUT		2000 /* ms */
-+#define S5K6A3_SENSOR_WIDTH		1392
-+#define S5K6A3_SENSOR_HEIGHT		1392
-+
-+#define S5K4E5_OPEN_TIMEOUT		2000 /* ms */
-+#define S5K4E5_SENSOR_WIDTH		2560
-+#define S5K4E5_SENSOR_HEIGHT		1920
-+
-+#define SENSOR_WIDTH_PADDING		16
-+#define SENSOR_HEIGHT_PADDING		10
-+
-+enum fimc_is_sensor_id {
-+	FIMC_IS_SENSOR_ID_S5K3H2 = 1,
-+	FIMC_IS_SENSOR_ID_S5K6A3,
-+	FIMC_IS_SENSOR_ID_S5K4E5,
-+	FIMC_IS_SENSOR_ID_S5K3H7,
-+	FIMC_IS_SENSOR_ID_CUSTOM,
-+	FIMC_IS_SENSOR_ID_END
-+};
-+
-+struct sensor_drv_data {
-+	enum fimc_is_sensor_id id;
-+	/* sensor open timeout in ms */
-+	unsigned short open_timeout;
-+	char *setfile_name;
-+};
-+
-+/**
-+ * struct fimc_is_sensor - fimc-is sensor data structure
-+ * @drvdata: a pointer to the sensor's parameters data structure
-+ * @i2c_bus: ISP I2C bus index (0...1)
-+ * @width: sensor active width
-+ * @height: sensor active height
-+ * @pixel_width: sensor effective pixel width (width + padding)
-+ * @pixel_height: sensor effective pixel height (height + padding)
-+ */
-+struct fimc_is_sensor {
-+	const struct sensor_drv_data *drvdata;
-+	unsigned int i2c_bus;
-+	unsigned int width;
-+	unsigned int height;
-+	unsigned int pixel_width;
-+	unsigned int pixel_height;
-+};
-+
-+const struct sensor_drv_data *exynos5_is_sensor_get_drvdata(
-+			struct device_node *node);
-+
-+#endif /* FIMC_IS_SENSOR_H_ */
--- 
-1.7.9.5
+I think the more reasonable approach is the one you've taken here,
+Doug. I think we risk over-abstracting this otherwise, to little
+actual gain. The register is not shared so there's no conflict in that
+area. The argument that it wastes a 4K page isn't a big deal either,
+since we don't do this everywhere all the time.
 
+I'd rather have the register described in the reg range like this,
+than having the driver go out and find the PMU node and find a magic
+offset into that, with or without an abstraction layer for the PMU
+register access.
+
+
+-Olof
