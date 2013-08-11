@@ -1,48 +1,77 @@
-From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] GPIO DT support for da850
-Date: Sun, 11 Aug 2013 15:04:26 +0530
-Message-ID: <CA+V-a8sNPMbQjh8uxhQ=aOgo4ZfmaKXoOnRsuurzEeWzBKW8WA@mail.gmail.com>
-References: <1371203020-15092-1-git-send-email-avinashphilip@ti.com>
-	<518397C60809E147AF5323E0420B992E3EADAFCF@DBDE04.ent.ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: imx-audmux: default configuration parser fixups
+Date: Sun, 11 Aug 2013 11:59:55 +0100
+Message-ID: <20130811105955.GU6427@sirena.org.uk>
+References: <20130809123712.GD13664@s25.your-server.de>
+ <1376139357-21089-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <518397C60809E147AF5323E0420B992E3EADAFCF-yXqyApvAXouIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "vinashphilip-l0cyMroinI0@public.gmane.org" <vinashphilip-l0cyMroinI0@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "Philip,  Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============5935612877407137354=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1376139357-21089-1-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
 
-On Fri, Jun 14, 2013 at 3:50 PM, Philip, Avinash <avinashphilip-l0cyMroinI0@public.gmane.org> wrote:
-> On Fri, Jun 14, 2013 at 15:13:36, Philip, Avinash wrote:
->> With conversion of GPIO davinci driver to platform driver, gpio-davinci driver
->> can support DT boot.
->> This patch series
->> - adds dt binding support for gpio-davinci.
->> - da850 dt support goio.
->>
->> This patch series is based on Linux 3.10-rc4 and is availabel at [1].
->>
->> 1. https://github.com/avinashphilip/am335x_linux/tree/linux_davinci_v3.10_soc_gpio_v310-rc4
->
->
-> This patch series has dependency on [PATCH v2 0/7] Convert GPIO Davinci to platform driver
->
-> https://lkml.org/lkml/2013/6/14/120
->
-What is the status of this patch series is any one taking care of it or
-else I can take care of review comments and repost them.
+--===============5935612877407137354==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+Ccw6gpuJ1V99M/T"
+Content-Disposition: inline
 
-Regards,
---Prabhakar Lad
+
+--+Ccw6gpuJ1V99M/T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sat, Aug 10, 2013 at 02:55:57PM +0200, Markus Pargmann wrote:
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+
+Applied, thanks.  This is two changes so would've been better as two
+patches.
+
+--+Ccw6gpuJ1V99M/T
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSB26oAAoJELSic+t+oim9FqAP/j48bLTF+ulpdXauhGIrKYJi
+fIfqpxCt4d+4IkPC/AQxh3OvHG8vSloAj6TNngHdM9t/zb+0GaPn4vu4CGxBIrE5
+f6P4ueV91EVRJQMDF/v20zp5YsfN6bA+dpWOlLzwskJ3GLMXjORa7/HQS3z0yPGe
+YVzYadvVg4/XsuKaeR620IS43eUjqhGTwWzOLNeavBsmqQgD7g/RkgHTC9MGTVbh
+Iu28Kj6yA8JRhJKQXqmNV4DMvXLWVNZj/wLzW9Wvcwt+LE3dTpUW7LaTwbFeACGS
+tlaL1OQaMS1w/AsY2V43eNH4/4rVhqbNiFONochpPCqzVJ+SAokRSClWLZc/zUBU
+hopLs4pkRwLQd8jvVRK5VQzdC53X8/Qjrgk6pGRgfxOEwQkNILKcXA1RotQXsVF2
+6936Iend9cCwrci82elyBqE4+PkOZ6cH3EsTSOadTiq/NhjiPjddEew7P3yNYCwL
+hPmfFyHb+o0k3kc/LStDnI+uwPQ9zIMPTP3Qf8cxqYh54sTWM8hXZzR65W5ySPGN
+oJEh19JS1Q2/EFajX5+ebwXzoHU8BVqWkLf6UVX0zmWtCgbU4ZhXEnapJqCxI089
+K+bS48P2LC/VlVwDuwQR+izeu/FDuJfal9wdPWMXKDxCWVuiQnFxoUBrZfLt14I3
+/M6jZw35rJSsolA9tAuI
+=JHtH
+-----END PGP SIGNATURE-----
+
+--+Ccw6gpuJ1V99M/T--
+
+
+--===============5935612877407137354==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5935612877407137354==--
