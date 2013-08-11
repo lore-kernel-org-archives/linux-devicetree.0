@@ -1,36 +1,93 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:57272 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755995Ab3HLPqL (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 11:46:11 -0400
-Message-ID: <52090340.60204@wwwdotorg.org>
-Date: Mon, 12 Aug 2013 09:46:08 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] ASoC: dt: Move ALC5632 pin list from Tegra board
- binding to CODEC binding
-References: <1376244161-24206-1-git-send-email-broonie@kernel.org>
-In-Reply-To: <1376244161-24206-1-git-send-email-broonie@kernel.org>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:53136 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1754922Ab3HKSCs (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sun, 11 Aug 2013 14:02:48 -0400
+From: Mark Brown <broonie@kernel.org>
+Date: Sun, 11 Aug 2013 19:02:39 +0100
+Message-Id: <1376244161-24206-1-git-send-email-broonie@kernel.org>
+Subject: [PATCH 1/3] ASoC: dt: Move ALC5632 pin list from Tegra board binding to CODEC binding
 Sender: devicetree-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
+To: Stephen Warren <swarren@wwwdotorg.org>
 Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org, Mark Brown <broonie@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/11/2013 12:02 PM, Mark Brown wrote:
-> From: Mark Brown <broonie@linaro.org>
-> 
-> The pin list is the same for any board using the CODEC.
+From: Mark Brown <broonie@linaro.org>
 
-> diff --git a/Documentation/devicetree/bindings/sound/alc5632.txt b/Documentation/devicetree/bindings/sound/alc5632.txt
+The pin list is the same for any board using the CODEC.
 
-> +  * DMICDAT
-> +
-> +
->  Example:
+Signed-off-by: Mark Brown <broonie@linaro.org>
+---
+ .../devicetree/bindings/sound/alc5632.txt          | 20 ++++++++++++++++++
+ .../bindings/sound/nvidia,tegra-audio-alc5632.txt  | 24 ++--------------------
+ 2 files changed, 22 insertions(+), 22 deletions(-)
 
-There's an extra blank line there.
+diff --git a/Documentation/devicetree/bindings/sound/alc5632.txt b/Documentation/devicetree/bindings/sound/alc5632.txt
+index 8608f74..b913b74 100644
+--- a/Documentation/devicetree/bindings/sound/alc5632.txt
++++ b/Documentation/devicetree/bindings/sound/alc5632.txt
+@@ -13,6 +13,26 @@ Required properties:
+   - #gpio-cells : Should be two. The first cell is the pin number and the
+     second cell is used to specify optional parameters (currently unused).
+ 
++Pins on the device (for linking into audio routes):
++
++  * SPK_OUTP
++  * SPK_OUTN
++  * HP_OUT_L
++  * HP_OUT_R
++  * AUX_OUT_P
++  * AUX_OUT_N
++  * LINE_IN_L
++  * LINE_IN_R
++  * PHONE_P
++  * PHONE_N
++  * MIC1_P
++  * MIC1_N
++  * MIC2_P
++  * MIC2_N
++  * MICBIAS1
++  * DMICDAT
++
++
+ Example:
+ 
+ alc5632: alc5632@1e {
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
+index 05ffecb..8b8903e 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
+@@ -11,28 +11,8 @@ Required properties:
+ - nvidia,audio-routing : A list of the connections between audio components.
+   Each entry is a pair of strings, the first being the connection's sink,
+   the second being the connection's source. Valid names for sources and
+-  sinks are the ALC5632's pins:
+-
+-  ALC5632 pins:
+-
+-  * SPK_OUTP
+-  * SPK_OUTN
+-  * HP_OUT_L
+-  * HP_OUT_R
+-  * AUX_OUT_P
+-  * AUX_OUT_N
+-  * LINE_IN_L
+-  * LINE_IN_R
+-  * PHONE_P
+-  * PHONE_N
+-  * MIC1_P
+-  * MIC1_N
+-  * MIC2_P
+-  * MIC2_N
+-  * MICBIAS1
+-  * DMICDAT
+-
+-  Board connectors:
++  sinks are the ALC5632's pins as documented in the binding for the device
++  and:
+ 
+   * Headset Stereophone
+   * Int Spk
+-- 
+1.8.4.rc1
 
-The series,
-Acked-by: Stephen Warren <swarren@nvidia.com>
