@@ -1,13 +1,15 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: imx-audmux: default configuration parser fixups
-Date: Sun, 11 Aug 2013 11:59:55 +0100
-Message-ID: <20130811105955.GU6427@sirena.org.uk>
-References: <20130809123712.GD13664@s25.your-server.de>
- <1376139357-21089-1-git-send-email-mpa@pengutronix.de>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 1/2] ARM: dts: Change dw-apb-timer-osc and
+ dw-apb-timer-sp to just dw-apb-timer
+Date: Sun, 11 Aug 2013 14:45:09 -0700
+Message-ID: <20130811214509.GA26757@quad.lixom.net>
+References: <1374723797-22169-1-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5935612877407137354=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1376139357-21089-1-git-send-email-mpa@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <1374723797-22169-1-git-send-email-dinguyen@altera.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,61 +19,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: dinguyen@altera.com
+Cc: dinh.linux@gmail.com, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@denx.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Jamie Iles <jamie@jamieiles.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jul 24, 2013 at 10:43:16PM -0500, dinguyen@altera.com wrote:
+> From: Dinh Nguyen <dinguyen@altera.com>
+> 
+> "dw-apb-timer-osc" and "dw-apb-timer-sp" are the same implementation of the
+> DW APB timer, just fed by different clocks.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
+> CC: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> CC: Arnd Bergmann <arnd@arndb.de>
+> Cc: Olof Johansson <olof@lixom.net>
+> CC: Jamie Iles <jamie@jamieiles.com>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Pavel Machek <pavel@denx.de>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+>  Documentation/devicetree/bindings/rtc/dw-apb.txt |   21 +++----------------
+>  arch/arm/boot/dts/rk3066a.dtsi                   |    6 +++---
+>  arch/arm/boot/dts/socfpga.dtsi                   |   24 +++++++++++-----------
+>  arch/arm/boot/dts/socfpga_cyclone5.dts           |    8 ++++----
+>  arch/arm/boot/dts/socfpga_vt.dts                 |    8 ++++----
+>  5 files changed, 26 insertions(+), 41 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/dw-apb.txt b/Documentation/devicetree/bindings/rtc/dw-apb.txt
+> index eb2327b..0a1020e 100644
+> --- a/Documentation/devicetree/bindings/rtc/dw-apb.txt
+> +++ b/Documentation/devicetree/bindings/rtc/dw-apb.txt
+> @@ -1,7 +1,7 @@
+>  * Designware APB timer
+>  
+>  Required properties:
+> -- compatible: "snps,dw-apb-timer-sp" or "snps,dw-apb-timer-osc"
+> +- compatible: "snps,dw-apb-timer"
+>  - reg: physical base address of the controller and length of memory mapped
+>    region.
+>  - interrupts: IRQ line for the timer.
 
---===============5935612877407137354==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+Ccw6gpuJ1V99M/T"
-Content-Disposition: inline
+Here's a classic example of where we will eventually need to keep the ABI. You
+can add a comment that the preferred compatible value is the new one, but the
+old ones still need to be handled by the drivers, and shouldn't be removed.
+
+That is, of course, if people are happy with the current binding and want to
+keep it instead of revising it before declaring it locked in.
 
 
---+Ccw6gpuJ1V99M/T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sat, Aug 10, 2013 at 02:55:57PM +0200, Markus Pargmann wrote:
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-
-Applied, thanks.  This is two changes so would've been better as two
-patches.
-
---+Ccw6gpuJ1V99M/T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSB26oAAoJELSic+t+oim9FqAP/j48bLTF+ulpdXauhGIrKYJi
-fIfqpxCt4d+4IkPC/AQxh3OvHG8vSloAj6TNngHdM9t/zb+0GaPn4vu4CGxBIrE5
-f6P4ueV91EVRJQMDF/v20zp5YsfN6bA+dpWOlLzwskJ3GLMXjORa7/HQS3z0yPGe
-YVzYadvVg4/XsuKaeR620IS43eUjqhGTwWzOLNeavBsmqQgD7g/RkgHTC9MGTVbh
-Iu28Kj6yA8JRhJKQXqmNV4DMvXLWVNZj/wLzW9Wvcwt+LE3dTpUW7LaTwbFeACGS
-tlaL1OQaMS1w/AsY2V43eNH4/4rVhqbNiFONochpPCqzVJ+SAokRSClWLZc/zUBU
-hopLs4pkRwLQd8jvVRK5VQzdC53X8/Qjrgk6pGRgfxOEwQkNILKcXA1RotQXsVF2
-6936Iend9cCwrci82elyBqE4+PkOZ6cH3EsTSOadTiq/NhjiPjddEew7P3yNYCwL
-hPmfFyHb+o0k3kc/LStDnI+uwPQ9zIMPTP3Qf8cxqYh54sTWM8hXZzR65W5ySPGN
-oJEh19JS1Q2/EFajX5+ebwXzoHU8BVqWkLf6UVX0zmWtCgbU4ZhXEnapJqCxI089
-K+bS48P2LC/VlVwDuwQR+izeu/FDuJfal9wdPWMXKDxCWVuiQnFxoUBrZfLt14I3
-/M6jZw35rJSsolA9tAuI
-=JHtH
------END PGP SIGNATURE-----
-
---+Ccw6gpuJ1V99M/T--
-
-
---===============5935612877407137354==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5935612877407137354==--
+-Olof
