@@ -1,91 +1,100 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56339 "EHLO mail.gnudd.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932491Ab3HGKYN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:24:13 -0400
-Date: Wed, 7 Aug 2013 12:17:35 +0200
-From: Davide Ciminaghi <ciminaghi@gnudd.com>
-Subject: [PATCH 07/26] OF platform: export of_amba_device_create()
-Message-ID: <71fa88b1d6a6800037e8da193b5d2b5a76cf417e.1375867291.git.rubini@gnudd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:53148 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755004Ab3HKSDK (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Sun, 11 Aug 2013 14:03:10 -0400
+From: Mark Brown <broonie@kernel.org>
+Date: Sun, 11 Aug 2013 19:02:41 +0100
+Message-Id: <1376244161-24206-3-git-send-email-broonie@kernel.org>
+In-Reply-To: <1376244161-24206-1-git-send-email-broonie@kernel.org>
+References: <1376244161-24206-1-git-send-email-broonie@kernel.org>
+Subject: [PATCH 3/3] ASoC: dt: Move WM8753 pin list from Tegra board binding to CODEC binding
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org, Mark Brown <broonie@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This is needed because the pci-amba bus will create one or more amba devices
-for each probed pci device. We cannot create all the devices belonging to
-the same amba bus with just one call to of_platform_populate()
+From: Mark Brown <broonie@linaro.org>
 
-Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
+The pin list is the same for any board using the CODEC.
+
+Signed-off-by: Mark Brown <broonie@linaro.org>
 ---
- drivers/of/platform.c       |   17 +++++++++--------
- include/linux/of_platform.h |    6 +++++-
- 2 files changed, 14 insertions(+), 9 deletions(-)
+ .../bindings/sound/nvidia,tegra-audio-wm8753.txt   | 27 ++--------------------
+ Documentation/devicetree/bindings/sound/wm8753.txt | 22 ++++++++++++++++++
+ 2 files changed, 24 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index b0d1ff8..57c6bbe 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -249,10 +249,10 @@ struct platform_device *of_platform_device_create(struct device_node *np,
- EXPORT_SYMBOL(of_platform_device_create);
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
+index d145106..aab6ce0 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
+@@ -11,31 +11,8 @@ Required properties:
+ - nvidia,audio-routing : A list of the connections between audio components.
+   Each entry is a pair of strings, the first being the connection's sink,
+   the second being the connection's source. Valid names for sources and
+-  sinks are the WM8753's pins, and the jacks on the board:
+-
+-  WM8753 pins:
+-
+-  * LOUT1
+-  * LOUT2
+-  * ROUT1
+-  * ROUT2
+-  * MONO1
+-  * MONO2
+-  * OUT3
+-  * OUT4
+-  * LINE1
+-  * LINE2
+-  * RXP
+-  * RXN
+-  * ACIN
+-  * ACOP
+-  * MIC1N
+-  * MIC1
+-  * MIC2N
+-  * MIC2
+-  * Mic Bias
+-
+-  Board connectors:
++  sinks are the WM8753's pins as documented in the binding for the WM8753,
++  and the jacks on the board:
  
- #ifdef CONFIG_ARM_AMBA
--static struct amba_device *of_amba_device_create(struct device_node *node,
--						 const char *bus_id,
--						 void *platform_data,
--						 struct device *parent)
-+struct amba_device *of_amba_device_create(struct device_node *node,
-+					  const char *bus_id,
-+					  void *platform_data,
-+					  struct device *parent)
- {
- 	struct amba_device *dev;
- 	const void *prop;
-@@ -304,14 +304,15 @@ err_free:
- 	return NULL;
- }
- #else /* CONFIG_ARM_AMBA */
--static struct amba_device *of_amba_device_create(struct device_node *node,
--						 const char *bus_id,
--						 void *platform_data,
--						 struct device *parent)
-+struct amba_device *of_amba_device_create(struct device_node *node,
-+					  const char *bus_id,
-+					  void *platform_data,
-+					  struct device *parent)
- {
- 	return NULL;
- }
- #endif /* CONFIG_ARM_AMBA */
-+EXPORT_SYMBOL(of_amba_device_create);
+   * Headphone Jack
+   * Mic Jack
+diff --git a/Documentation/devicetree/bindings/sound/wm8753.txt b/Documentation/devicetree/bindings/sound/wm8753.txt
+index 5dbcde0..8eee612 100644
+--- a/Documentation/devicetree/bindings/sound/wm8753.txt
++++ b/Documentation/devicetree/bindings/sound/wm8753.txt
+@@ -10,6 +10,28 @@ Required properties:
+   - reg : the I2C address of the device for I2C, the chip select
+           number for SPI.
  
- /**
-  * of_devname_lookup() - Given a device node, lookup the preferred Linux name
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 05cb4a9..6cd5ac2 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -59,10 +59,14 @@ extern struct platform_device *of_device_alloc(struct device_node *np,
- 					 struct device *parent);
- extern struct platform_device *of_find_device_by_node(struct device_node *np);
++Pins on the device (for linking into audio routes):
++
++  * LOUT1
++  * LOUT2
++  * ROUT1
++  * ROUT2
++  * MONO1
++  * MONO2
++  * OUT3
++  * OUT4
++  * LINE1
++  * LINE2
++  * RXP
++  * RXN
++  * ACIN
++  * ACOP
++  * MIC1N
++  * MIC1
++  * MIC2N
++  * MIC2
++  * Mic Bias
++
+ Example:
  
--/* Platform devices and busses creation */
-+/* Platform and amba devices and busses creation */
- extern struct platform_device *of_platform_device_create(struct device_node *np,
- 						   const char *bus_id,
- 						   struct device *parent);
-+extern struct amba_device *of_amba_device_create(struct device_node *node,
-+						 const char *bus_id,
-+						 void *platform_data,
-+						 struct device *parent);
- 
- extern int of_platform_bus_probe(struct device_node *root,
- 				 const struct of_device_id *matches,
+ codec: wm8753@1a {
 -- 
-1.7.7.2
+1.8.4.rc1
+
