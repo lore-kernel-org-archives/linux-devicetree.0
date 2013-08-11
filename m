@@ -1,35 +1,46 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from violet.fr.zoreil.com ([92.243.8.30]:46049 "EHLO
-	violet.fr.zoreil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753982Ab3HMFUn (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 01:20:43 -0400
-Date: Tue, 13 Aug 2013 07:20:36 +0200
-From: Francois Romieu <romieu@fr.zoreil.com>
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:12044
+	"EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754129Ab3HKQMy (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Sun, 11 Aug 2013 12:12:54 -0400
+Date: Sun, 11 Aug 2013 18:12:50 +0200 (CEST)
+From: Julia Lawall <julia.lawall@lip6.fr>
 Subject: Re: question about netif_rx
-Message-ID: <20130813052036.GA11640@electric-eye.fr.zoreil.com>
-References: <alpine.DEB.2.02.1308111151210.2072@localhost6.localdomain6>
- <20130811155640.GA10070@electric-eye.fr.zoreil.com>
- <alpine.DEB.2.02.1308111811440.2072@localhost6.localdomain6>
+In-Reply-To: <20130811155640.GA10070@electric-eye.fr.zoreil.com>
+Message-ID: <alpine.DEB.2.02.1308111811440.2072@localhost6.localdomain6>
+References: <alpine.DEB.2.02.1308111151210.2072@localhost6.localdomain6> <20130811155640.GA10070@electric-eye.fr.zoreil.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.DEB.2.02.1308111811440.2072@localhost6.localdomain6>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
-To: Julia Lawall <julia.lawall@lip6.fr>
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Francois Romieu <romieu@fr.zoreil.com>
+Cc: Julia Lawall <julia.lawall@lip6.fr>, grant.likely@linaro.org, rob.herring@calxeda.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Julia Lawall <julia.lawall@lip6.fr> :
-> François Romieu <romieu@fr.zoreil.com> :
-[...]
-> > Can you send a netif_receive_skb replacement patch for it ?
+On Sun, 11 Aug 2013, Francois Romieu wrote:
+
+> Julia Lawall <julia.lawall@lip6.fr> :
+> > To my limited understanding, in a NAPI polling function, one should use 
+> > netif_receive_skb, rather than netif_rx.
 > 
-> Just to be sure, I just replace netif_rx by netif_receive_skb, nothing
-> else?
+> Nit: or napi_gro_receive (+ napi_gro_flush with __napi_complete) when the
+> device offers some checksum offloading features.
 
-Yes. It should imho be fine with a comment incluing your analysis and a
-few words about the current state of checksum offloading support.
+OK, thanks for the information.  I am just trying to understand these 
+functions...
 
--- 
-Ueimor
+> > However, the via-velocity driver defines the NAPI polling function
+> > velocity_poll, which is the only caller of velocity_rx_srv, which
+> > is the only caller of velocity_receive_frame, which calls netif_rx.
+> > The call to netif_rx seems to predate the introduction of NAPI in
+> > this driver.  Is this correct?
+> 
+> You are right. It's a leftover of the NAPI changes in this driver.
+> 
+> Can you send a netif_receive_skb replacement patch for it ?
+
+Just to be sure, I just replace netif_rx by netif_receive_skb, nothing
+else?
+
+thanks,
+julia
