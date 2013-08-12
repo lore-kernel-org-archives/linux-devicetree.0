@@ -1,35 +1,65 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from smtp131.dfw.emailsrvr.com ([67.192.241.131]:60694 "EHLO
-	smtp131.dfw.emailsrvr.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753045Ab3HBPYv (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 2 Aug 2013 11:24:51 -0400
-Message-ID: <51FBCF05.9090509@calxeda.com>
-Date: Fri, 02 Aug 2013 10:23:49 -0500
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Received: from mail-ee0-f45.google.com ([74.125.83.45]:43256 "EHLO
+	mail-ee0-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756166Ab3HLNwL (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 09:52:11 -0400
+Received: by mail-ee0-f45.google.com with SMTP id c50so3541910eek.4
+        for <devicetree@vger.kernel.org>; Mon, 12 Aug 2013 06:52:10 -0700 (PDT)
+Date: Mon, 12 Aug 2013 14:52:01 +0100
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH RESEND v2 1/1] mfd: palmas: Add power off control
+Message-ID: <20130812135201.GE13851@lee--X1>
+References: <1375962305-7438-1-git-send-email-bilhuang@nvidia.com>
+ <20130808123203.GD14515@lee--X1>
+ <1376053269.20259.34.camel@bilhuang-vm1>
+ <520500F2.2000200@ti.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/5] sata, highbank: fix ordering of SGPIO signals
-References: <1374851518-4802-1-git-send-email-mark.langsdorf@calxeda.com> <20130729165530.GG22605@mtj.dyndns.org>
-In-Reply-To: <20130729165530.GG22605@mtj.dyndns.org>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <520500F2.2000200@ti.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, Rob Herring <rob.herring@calxeda.com>
+To: Nishanth Menon <nm@ti.com>
+Cc: Bill Huang <bilhuang@nvidia.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "ian.campbell@citrix.com" <ian.campbell@citrix.com>, "rob@landley.net" <rob@landley.net>, "broonie@linaro.org" <broonie@linaro.org>, "j-keerthy@ti.com" <j-keerthy@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "ian@slimlogic.co.uk" <ian@slimlogic.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mallikarjun Kasoju <mkasoju@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 07/29/2013 11:55 AM, Tejun Heo wrote:
-> On Fri, Jul 26, 2013 at 10:11:54AM -0500, Mark Langsdorf wrote:
->> The ACTIVITY and ERROR signals were reversed in the original commit.
->> Fix that.
+On Fri, 09 Aug 2013, Nishanth Menon wrote:
+
+> On 08/09/2013 08:01 AM, Bill Huang wrote:
+> >On Thu, 2013-08-08 at 20:32 +0800, Lee Jones wrote:
+> >>On Thu, 08 Aug 2013, Bill Huang wrote:
+> >>
+> >>>Hook up "pm_power_off" to palmas power off routine if there is DT
+> >>>property "ti,system-power-controller" defined, so platform which is
+> >>>powered by this regulator can be powered off properly.
+> >>>
+> >>>Signed-off-by: Mallikarjun Kasoju <mkasoju@nvidia.com>
+> >>>Signed-off-by: Bill Huang <bilhuang@nvidia.com>
+> >>>---
+> >>>  .../devicetree/bindings/regulator/palmas-pmic.txt  |    5 +++
+> >>>  drivers/mfd/palmas.c                               |   33 ++++++++++++++++++--
+> >>>  include/linux/mfd/palmas.h                         |    1 +
+> >>>  3 files changed, 37 insertions(+), 2 deletions(-)
+> >>
+> >>Was a clear conclusion reached between Nishanth and yourself?
+> >>
+> >>As he has strong opinions on this I'd ideally like his Ack before
+> >>applying the patch.
+> >>
+> >Feel free to NACK if you are feeling this can't fit what you would like
+> >to add, then I'll pass the ball to you for implementing Palmas power off
+> >since you have already wrote part of the driver (with USB IRQ unmask?).
+> Apologies on the delay in review. As long as we are ok with not
+> having a drivers/power/reset driver, I can buy this as a step #1.
+> USB IRQ unmask could go on top of it.
 > 
-> And what's the implication of this change?  Does this change the
-> behavior of the driver?  If so, how?  If not, why not?  *Please* be
-> more descriptive in patch descriptions and explain *why* the changes
-> are being made.
+> Other than that,
+> Acked-by: Nishanth Menon <nm@ti.com>
 
-I didn't think I needed more of an explanation than "this is completely
-wrong per the spec" but I'll revise and resubmit.
+Applied with Nishanth's Ack, thanks.
 
---Mark Langsdorf
-Calxeda, Inc.
-
+-- 
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
