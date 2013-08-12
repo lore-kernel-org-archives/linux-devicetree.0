@@ -1,100 +1,44 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from devils.ext.ti.com ([198.47.26.153]:57768 "EHLO
-	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1030691Ab3HIIkL (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 9 Aug 2013 04:40:11 -0400
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [RFC 20/22] OMAPDSS: hdmi-connector: Add DT support
-Date: Fri, 9 Aug 2013 11:39:05 +0300
-Message-ID: <1376037547-10859-21-git-send-email-tomi.valkeinen@ti.com>
-In-Reply-To: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
-References: <1376037547-10859-1-git-send-email-tomi.valkeinen@ti.com>
+Received: from mail-bk0-f44.google.com ([209.85.214.44]:42568 "EHLO
+	mail-bk0-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755340Ab3HLNuy (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 09:50:54 -0400
+Received: by mail-bk0-f44.google.com with SMTP id mz10so2199311bkb.17
+        for <devicetree@vger.kernel.org>; Mon, 12 Aug 2013 06:50:53 -0700 (PDT)
+Received: from [192.168.3.130] ([194.9.67.191])
+        by mx.google.com with ESMTPSA id m6sm5563552bki.7.2013.08.12.06.50.51
+        for <devicetree@vger.kernel.org>
+        (version=TLSv1 cipher=ECDHE-RSA-RC4-SHA bits=128/128);
+        Mon, 12 Aug 2013 06:50:51 -0700 (PDT)
+Message-ID: <5208E839.3090509@statystyka.net>
+Date: Mon, 12 Aug 2013 15:50:49 +0200
+From: Adam Ryczkowski <adam.ryczkowski@statystyka.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: Is there any way I can use notebook's touchpad as a pressure-aware
+ poor-man tablet in a painting program?
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Archit Taneja <archit@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Nishanth Menon <nm@ti.com>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- drivers/video/omap2/displays-new/connector-hdmi.c | 36 +++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Apparently my touchpad supports pressure levels (in Xorg.0.log I have 
+line synaptics: ETPS/2 Elantech Touchpad: pressure range 0 - 255). It 
+would great, If I could use the pressure information in paint programs 
+and use it as a poor-man's tablet.
 
-diff --git a/drivers/video/omap2/displays-new/connector-hdmi.c b/drivers/video/omap2/displays-new/connector-hdmi.c
-index c582671..13f7a5e 100644
---- a/drivers/video/omap2/displays-new/connector-hdmi.c
-+++ b/drivers/video/omap2/displays-new/connector-hdmi.c
-@@ -12,6 +12,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- 
- #include <drm/drm_edid.h>
- 
-@@ -301,6 +302,29 @@ static int hdmic_probe_pdata(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int hdmic_probe_of(struct platform_device *pdev)
-+{
-+	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
-+	struct device_node *node = pdev->dev.of_node;
-+	struct omap_dss_device *in;
-+	struct device_node *src_node;
-+
-+	src_node = of_parse_phandle(node, "video-source", 0);
-+	if (!src_node) {
-+		dev_err(&pdev->dev, "failed to parse video source\n");
-+		return -ENODEV;
-+	}
-+
-+	in = omap_dss_find_output_by_node(src_node);
-+	if (in == NULL) {
-+		dev_err(&pdev->dev, "failed to find video source\n");
-+		return -EPROBE_DEFER;
-+	}
-+	ddata->in = in;
-+
-+	return 0;
-+}
-+
- static int hdmic_probe(struct platform_device *pdev)
- {
- 	struct panel_drv_data *ddata;
-@@ -318,6 +342,10 @@ static int hdmic_probe(struct platform_device *pdev)
- 		r = hdmic_probe_pdata(pdev);
- 		if (r)
- 			return r;
-+	} else if (pdev->dev.of_node) {
-+		r = hdmic_probe_of(pdev);
-+		if (r)
-+			return r;
- 	} else {
- 		return -ENODEV;
- 	}
-@@ -359,12 +387,20 @@ static int __exit hdmic_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id hdmic_of_match[] = {
-+	{ .compatible = "ti,hdmi_connector", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, hdmic_of_match);
-+
- static struct platform_driver hdmi_connector_driver = {
- 	.probe	= hdmic_probe,
- 	.remove	= __exit_p(hdmic_remove),
- 	.driver	= {
- 		.name	= "connector-hdmi",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = hdmic_of_match,
- 	},
- };
- 
--- 
-1.8.1.2
+Is it possible at all? If so, what hardware is supported? How can I test it?
+
+     *    *    *
+
+I'm not 100% sure I address the correct mailing list, but I can't find a 
+better one. Please advice me, if I'm wrong.
+This question is a cross post from 
+http://unix.stackexchange.com/questions/77180/is-there-any-way-i-can-use-notebooks-touchpad-as-a-pressure-aware-pointer-in-a 
+that I asked 3 months ago and still got no answers.
+
+
+Adam Ryczkowski
++48505919892
+Skype:sisteczko
 
