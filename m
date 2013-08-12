@@ -1,25 +1,53 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:3630 "EHLO
-	mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1752805Ab3HKJ4N (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Sun, 11 Aug 2013 05:56:13 -0400
-Date: Sun, 11 Aug 2013 11:56:09 +0200 (CEST)
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: question about netif_rx
-Message-ID: <alpine.DEB.2.02.1308111151210.2072@localhost6.localdomain6>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Received: from top.free-electrons.com ([176.31.233.9]:55288 "EHLO
+	mail.free-electrons.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1757243Ab3HLRPP (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 13:15:15 -0400
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v4 01/14] mtd: nand: pxa3xx: Remove unneeded ifdef CONFIG_OF
+Date: Mon, 12 Aug 2013 14:14:46 -0300
+Message-Id: <1376327699-7973-2-git-send-email-ezequiel.garcia@free-electrons.com>
+In-Reply-To: <1376327699-7973-1-git-send-email-ezequiel.garcia@free-electrons.com>
+References: <1376327699-7973-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Sender: devicetree-owner@vger.kernel.org
-To: romieu@fr.zoreil.com, grant.likely@linaro.org, rob.herring@calxeda.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-mtd@lists.infradead.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Artem Bityutskiy <dedekind1@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-To my limited understanding, in a NAPI polling function, one should use 
-netif_receive_skb, rather than netif_rx.  However, the via-velocity driver 
-defines the NAPI polling function velocity_poll, which is the only caller 
-of velocity_rx_srv, which is the only caller of velocity_receive_frame, 
-which calls netif_rx.  The call to netif_rx seems to predate the 
-introduction of NAPI in this driver.  Is this correct?
+There's no need to enclose this code within idef CONFIG_OF,
+because the OF framework provides no-op stubs if CONFIG_OF=n.
 
-thanks,
-julia
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+---
+ drivers/mtd/nand/pxa3xx_nand.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/drivers/mtd/nand/pxa3xx_nand.c b/drivers/mtd/nand/pxa3xx_nand.c
+index 501e380..02f214d 100644
+--- a/drivers/mtd/nand/pxa3xx_nand.c
++++ b/drivers/mtd/nand/pxa3xx_nand.c
+@@ -1190,7 +1190,6 @@ static int pxa3xx_nand_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_OF
+ static struct of_device_id pxa3xx_nand_dt_ids[] = {
+ 	{ .compatible = "marvell,pxa3xx-nand" },
+ 	{}
+@@ -1221,12 +1220,6 @@ static int pxa3xx_nand_probe_dt(struct platform_device *pdev)
+ 
+ 	return 0;
+ }
+-#else
+-static inline int pxa3xx_nand_probe_dt(struct platform_device *pdev)
+-{
+-	return 0;
+-}
+-#endif
+ 
+ static int pxa3xx_nand_probe(struct platform_device *pdev)
+ {
+-- 
+1.8.1.5
+
