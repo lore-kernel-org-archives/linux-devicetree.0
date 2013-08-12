@@ -1,43 +1,63 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from comal.ext.ti.com ([198.47.26.152]:36707 "EHLO comal.ext.ti.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1755762Ab3HWSVp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Fri, 23 Aug 2013 14:21:45 -0400
-From: Darren Etheridge <detheridge@ti.com>
-Subject: [PATCH v3 0/1] Adding DT support to video/da8xx-fb.c
-Date: Fri, 23 Aug 2013 13:17:01 -0500
-Message-ID: <1377281822-29659-1-git-send-email-detheridge@ti.com>
+Received: from mail-we0-f173.google.com ([74.125.82.173]:37873 "EHLO
+	mail-we0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752298Ab3HLLCB (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 07:02:01 -0400
+Message-ID: <5208C04A.5000303@gmail.com>
+Date: Mon, 12 Aug 2013 13:00:26 +0200
+From: Wladislav Wiebe <wladislav.kw@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Subject: [PATCH 1/1] of: fdt: fix memory initialization for expanded DT
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: prabhakar.csengg@gmail.com, devicetree@vger.kernel.org, tomi.valkeinen@ti.com, plagnioj@jcrosoft.com, linux-fbdev@vger.kernel.org, detheridge@ti.com
-Cc: afzal@ti.com
+To: grant.likely@linaro.org, rob.herring@calxeda.com, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is part of a larger series of patches to upgrade the da8xx-fb.c driver
-to support the Texas Instruments AM335x device.  As part of this upgrade
-we also want to add devicetree support for both the original da8xx and the
-am335x.  Tomi Valkeinen has reviewed the fbdev changes but he suggested
-that it was prudent to extract the dt pieces and run it through the
-devicetree mailing list for review.
+Already existing property flags are filled wrong for properties created from
+initial FDT. This could cause problems if this DYNAMIC device-tree functions
+are used later, i.e. properties are attached/detached/replaced. Simply dumping
+flags from the running system show, that some initial static (not allocated via
+kzmalloc()) nodes are marked as dynamic.
 
-v2: incorporates -
-	* review comment changes from Prabhakar Lad
-	* changes the .compatible naming to match that of the exiting drm 
-		driver for am335x devices.
-	* Renames the devicetree bindings documentation file to match the
-		actual driver filename
-v3: updated documentation to make clear which compatible to use for DA850 
-	SoC devices.
+I putted some debug extensions to property_proc_show(..) :
+..
++       if (OF_IS_DYNAMIC(pp))
++               pr_err("DEBUG: xxx : OF_IS_DYNAMIC\n");
++       if (OF_IS_DETACHED(pp))
++               pr_err("DEBUG: xxx : OF_IS_DETACHED\n");
 
-Thanks,
-Darren
+when you operate on the nodes (e.g.: ~$ cat /proc/device-tree/*some_node*) you
+will see that those flags are filled wrong, basically in most cases it will dump
+a DYNAMIC or DETACHED status, which is in not true.
+(BTW. this OF_IS_DETACHED is a own define for debug purposes which which just
+make a test_bit(OF_DETACHED, &x->_flags)
 
-Darren Etheridge (1):
-  video: da8xx-fb: adding dt support
+If nodes are dynamic kernel is allowed to kfree() them. But it will crash
+attempting to do so on the nodes from FDT -- they are not allocated via
+kzmalloc().
 
- .../devicetree/bindings/video/da8xx-fb.txt         |   42 ++++++++++++
- drivers/video/da8xx-fb.c                           |   66 +++++++++++++++++++-
- 2 files changed, 105 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/da8xx-fb.txt
+Signed-off-by: Wladislav Wiebe <wladislav.kw@gmail.com>
+---
+ drivers/of/fdt.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 6bb7cf2..b10ba00 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -392,6 +392,8 @@ static void __unflatten_device_tree(struct boot_param_header *blob,
+ 	mem = (unsigned long)
+ 		dt_alloc(size + 4, __alignof__(struct device_node));
+
++	memset((void *)mem, 0, size);
++
+ 	((__be32 *)mem)[size / 4] = cpu_to_be32(0xdeadbeef);
+
+ 	pr_debug("  unflattening %lx...\n", mem);
+-- 
+1.7.1
+
+
 
