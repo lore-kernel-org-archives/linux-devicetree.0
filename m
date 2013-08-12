@@ -1,16 +1,15 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH 1/2] ARM: dts: Change dw-apb-timer-osc and
- dw-apb-timer-sp to just dw-apb-timer
-Date: Mon, 12 Aug 2013 13:57:04 +0200
-Message-ID: <20130812115703.GA27616@amd.pavel.ucw.cz>
-References: <1374723797-22169-1-git-send-email-dinguyen@altera.com>
- <20130811214509.GA26757@quad.lixom.net>
+From: Christopher Covington <cov@codeaurora.org>
+Subject: Re: [PATCH 1/2] power: Add APM X-Gene system reboot driver
+Date: Mon, 12 Aug 2013 11:21:29 -0400
+Message-ID: <5208FD79.4070307@codeaurora.org>
+References: <1372797539-13111-1-git-send-email-lho@apm.com>
+ <1372797539-13111-2-git-send-email-lho@apm.com>
+ <20130809212849.GD12638@lizard.sbx05730.santaca.wayport.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130811214509.GA26757@quad.lixom.net>
+In-Reply-To: <20130809212849.GD12638@lizard.sbx05730.santaca.wayport.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,34 +19,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: dinh.linux@gmail.com, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, John Stultz <john.stultz@linaro.org>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Jamie Iles <jamie@jamieiles.com>, dinguyen@altera.com
+To: Anton Vorontsov <anton@enomsg.org>
+Cc: fkan@apm.com, Catalin.Marinas@arm.com, devicetree-discuss@lists.ozlabs.org, Loc Ho <lho@apm.com>, ksankaran@apm.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-> > index eb2327b..0a1020e 100644
-> > --- a/Documentation/devicetree/bindings/rtc/dw-apb.txt
-> > +++ b/Documentation/devicetree/bindings/rtc/dw-apb.txt
-> > @@ -1,7 +1,7 @@
-> >  * Designware APB timer
-> >  
-> >  Required properties:
-> > -- compatible: "snps,dw-apb-timer-sp" or "snps,dw-apb-timer-osc"
-> > +- compatible: "snps,dw-apb-timer"
-> >  - reg: physical base address of the controller and length of memory mapped
-> >    region.
-> >  - interrupts: IRQ line for the timer.
+On 08/09/2013 05:28 PM, Anton Vorontsov wrote:
+> On Tue, Jul 02, 2013 at 02:38:58PM -0600, Loc Ho wrote:
+>> power: Add APM X-Gene SoC system reboot driver. This driver handles only
+>> system reboot. System shutdown is board specific and can be handled by board
+>> driver or GPIO based shutdown driver.
+>>
+>> Signed-off-by: Loc Ho <lho@apm.com>
+>> Signed-off-by: Feng Kan <fkan@apm.com>
+>> Signed-off-by: Kumar Sankaran <ksankaran@apm.com>
+>> ---
 > 
-> Here's a classic example of where we will eventually need to keep the ABI. You
-> can add a comment that the preferred compatible value is the new one, but the
-> old ones still need to be handled by the drivers, and shouldn't be removed.
+> The patch looks great, thanks for it! Just a few minor issues I noticed...
 > 
-> That is, of course, if people are happy with the current binding and want to
-> keep it instead of revising it before declaring it locked in.
+>>  drivers/power/reset/Kconfig        |    7 +++
+>>  drivers/power/reset/Makefile       |    1 +
+>>  drivers/power/reset/xgene-reboot.c |  101 ++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 109 insertions(+), 0 deletions(-)
+>>  create mode 100755 drivers/power/reset/xgene-reboot.c
+>>
+>> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+>> index 349e9ae..c41a7de 100644
+>> --- a/drivers/power/reset/Kconfig
+>> +++ b/drivers/power/reset/Kconfig
+>> @@ -37,3 +37,10 @@ config POWER_RESET_VEXPRESS
+>>  	help
+>>  	  Power off and reset support for the ARM Ltd. Versatile
+>>  	  Express boards.
+>> +
+>> +config POWER_RESET_XGENE
+>> +        bool
+>> +	default y if ARM64
+> 
+> This is not good. You don't want to select the driver for all ARM64
+> builds. I changed it to 'depends on' and made the driver optionally
+> selectable.
 
-The first -sp / -osc separation was bad idea from the start. It would
-be better if we could get rid of it.
-									Pavel
+I thought the desired default was to have a single arm64 kernel binary that
+could run on all platforms.
+
+> 
+>> +        depends on POWER_RESET	
+>> +        help
+>> +          Reboot support for the APM SoC X-Gene Eval boards.
+
+[...]
+
+Thanks,
+Christopher
+
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by the Linux Foundation.
