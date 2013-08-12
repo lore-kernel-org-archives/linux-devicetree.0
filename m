@@ -1,73 +1,85 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 1/2] ARM: dts: Change dw-apb-timer-osc and
- dw-apb-timer-sp to just dw-apb-timer
-Date: Sun, 11 Aug 2013 14:45:09 -0700
-Message-ID: <20130811214509.GA26757@quad.lixom.net>
-References: <1374723797-22169-1-git-send-email-dinguyen@altera.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [RFC PATCH 1/3] of: provide a binding for the 'fixed-link'
+ property
+Date: Mon, 12 Aug 2013 08:38:06 +0200
+Message-ID: <20130812063806.GD2324@pengutronix.de>
+References: <1373902450-11857-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1374723797-22169-1-git-send-email-dinguyen@altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dinguyen@altera.com
-Cc: dinh.linux@gmail.com, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@denx.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Jamie Iles <jamie@jamieiles.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1373902450-11857-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <florian@openwrt.org>, Lior Amsalem <alior@marvell.com>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 24, 2013 at 10:43:16PM -0500, dinguyen@altera.com wrote:
-> From: Dinh Nguyen <dinguyen@altera.com>
+On Mon, Jul 15, 2013 at 05:34:08PM +0200, Thomas Petazzoni wrote:
+> Some Ethernet MACs have a "fixed link", and are not connected to a
+> normal MDIO-managed PHY device. For those situations, a Device Tree
+> binding allows to describe a "fixed link", as a "fixed-link" property
+> of the Ethernet device Device Tree node.
 > 
-> "dw-apb-timer-osc" and "dw-apb-timer-sp" are the same implementation of the
-> DW APB timer, just fed by different clocks.
+> This patch adds:
 > 
-> Signed-off-by: Dinh Nguyen <dinguyen@altera.com>
-> CC: Rob Herring <rob.herring@calxeda.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> CC: Arnd Bergmann <arnd@arndb.de>
-> Cc: Olof Johansson <olof@lixom.net>
-> CC: Jamie Iles <jamie@jamieiles.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Pavel Machek <pavel@denx.de>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->  Documentation/devicetree/bindings/rtc/dw-apb.txt |   21 +++----------------
->  arch/arm/boot/dts/rk3066a.dtsi                   |    6 +++---
->  arch/arm/boot/dts/socfpga.dtsi                   |   24 +++++++++++-----------
->  arch/arm/boot/dts/socfpga_cyclone5.dts           |    8 ++++----
->  arch/arm/boot/dts/socfpga_vt.dts                 |    8 ++++----
->  5 files changed, 26 insertions(+), 41 deletions(-)
+>  * A documentation for the Device Tree property "fixed-link".
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/dw-apb.txt b/Documentation/devicetree/bindings/rtc/dw-apb.txt
-> index eb2327b..0a1020e 100644
-> --- a/Documentation/devicetree/bindings/rtc/dw-apb.txt
-> +++ b/Documentation/devicetree/bindings/rtc/dw-apb.txt
-> @@ -1,7 +1,7 @@
->  * Designware APB timer
->  
->  Required properties:
-> -- compatible: "snps,dw-apb-timer-sp" or "snps,dw-apb-timer-osc"
-> +- compatible: "snps,dw-apb-timer"
->  - reg: physical base address of the controller and length of memory mapped
->    region.
->  - interrupts: IRQ line for the timer.
+>  * A of_phy_register_fixed_link() OF helper, which provided an OF node
+>    that contains a "fixed-link" property, registers the corresponding
+>    fixed PHY.
+> 
+>  * Removes the warning on the of_phy_connect_fixed_link() that says
+>    new drivers should not use it, since Grant Likely indicated that
+>    this "fixed-link" property is indeed the way to go.
+> 
 
-Here's a classic example of where we will eventually need to keep the ABI. You
-can add a comment that the preferred compatible value is the new one, but the
-old ones still need to be handled by the drivers, and shouldn't be removed.
+Any progress with this series?
 
-That is, of course, if people are happy with the current binding and want to
-keep it instead of revising it before declaring it locked in.
+We have more and more boards here with exactly the same problem as
+Thomas has. For reasons stated below I don't like this binding, but
+still it would solve my problem.
 
 
--Olof
+> +Fixed link Device Tree binding
+> +------------------------------
+> +
+> +Some Ethernet MACs have a "fixed link", and are not connected to a
+> +normal MDIO-managed PHY device. For those situations, a Device Tree
+> +binding allows to describe a "fixed link".
+> +
+> +Such a fixed link situation is described within an Ethernet device
+> +Device Tree node using a 'fixed-link' property, composed of 5
+> +elements:
+> +
+> + 1. A fake PHY ID, which must be unique accross all fixed-link PHYs in
+> +    the system.
+> + 2. The duplex (1 for full-duplex, 0 for half-duplex)
+> + 3. The speed (10, 100, 1000)
+> + 4. The pause setting (1 for enabled, 0 for disabled)
+> + 5. The asym pause setting (1 for enabled, 0 for disabled)
+> +
+> +Example:
+> +
+> +ethernet@0 {
+> +	...
+> +	fixed-link = <1 1 1000 0 0>;
+> +	...
+> +};
+
+I must say I don't like this binding at all for two reasons.
+
+First the positional arguments make it impossible to add optional
+arguments to the link.
+
+Second the other side of the link is most likely a switch. Once this
+switch has its own node in the devicetree it seems like having a phandle
+to the switch here would be better.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
