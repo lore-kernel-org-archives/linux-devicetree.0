@@ -1,13 +1,13 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from co9ehsobe002.messaging.microsoft.com ([207.46.163.25]:3085 "EHLO
-	co9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754530Ab3HLLyo (ORCPT
+Received: from co9ehsobe004.messaging.microsoft.com ([207.46.163.27]:43973
+	"EHLO co9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754079Ab3HLLvq (ORCPT
 	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 12 Aug 2013 07:54:44 -0400
+	Mon, 12 Aug 2013 07:51:46 -0400
 From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v4 resent 0/2] Add freescale S/PDIF CPU DAI and machine drivers
-Date: Mon, 12 Aug 2013 20:05:26 +0800
-Message-ID: <cover.1376309076.git.b42378@freescale.com>
+Subject: [PATCH v4 0/2] Add freescale S/PDIF CPU DAI and machine drivers
+Date: Mon, 12 Aug 2013 20:01:08 +0800
+Message-ID: <1376308870-14232-1-git-send-email-b42378@freescale.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
