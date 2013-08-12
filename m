@@ -1,12 +1,12 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:55613 "EHLO
+Received: from avon.wwwdotorg.org ([70.85.31.133]:50445 "EHLO
 	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1751676Ab3HLRgt (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 13:36:49 -0400
+	with ESMTP id S1750952Ab3HLRgn (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 13:36:43 -0400
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V5 6/6] gpio: implement gpio-ranges binding document fix
-Date: Mon, 12 Aug 2013 11:36:32 -0600
-Message-Id: <1376328992-3115-6-git-send-email-swarren@wwwdotorg.org>
+Subject: [PATCH V5 3/6] of: introduce of_parse_phandle_with_fixed_args
+Date: Mon, 12 Aug 2013 11:36:29 -0600
+Message-Id: <1376328992-3115-3-git-send-email-swarren@wwwdotorg.org>
 In-Reply-To: <1376328992-3115-1-git-send-email-swarren@wwwdotorg.org>
 References: <1376328992-3115-1-git-send-email-swarren@wwwdotorg.org>
 Sender: devicetree-owner@vger.kernel.org
@@ -16,30 +16,149 @@ List-ID: <devicetree@vger.kernel.org>
 
 From: Stephen Warren <swarren@nvidia.com>
 
-Use the new of_parse_phandle_with_fixed_args() to implement the
-corrected gpio-ranges DT property definition.
+This is identical to of_parse_phandle_with_args(), except that the
+number of argument cells is fixed, rather than being parsed out of the
+node referenced by each phandle.
 
 Signed-off-by: Stephen Warren <swarren@nvidia.com>
 Acked-by: Mark Rutland <mark.rutland@arm.com>
 ---
- drivers/gpio/gpiolib-of.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v3: s/cells_count/cell_count, add missing braces per coding style
+---
+ drivers/of/base.c  | 66 +++++++++++++++++++++++++++++++++++++++++++++++-------
+ include/linux/of.h | 10 +++++++++
+ 2 files changed, 68 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 665f953..48cda3c 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -194,8 +194,8 @@ static void of_gpiochip_add_pin_range(struct gpio_chip *chip)
- 		return;
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index b9e77ec..2f92522 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1082,7 +1082,8 @@ EXPORT_SYMBOL_GPL(of_property_count_strings);
  
- 	for (;; index++) {
--		ret = of_parse_phandle_with_args(np, "gpio-ranges",
--				"#gpio-range-cells", index, &pinspec);
-+		ret = of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3,
-+				index, &pinspec);
- 		if (ret)
- 			break;
+ static int __of_parse_phandle_with_args(const struct device_node *np,
+ 					const char *list_name,
+-					const char *cells_name, int index,
++					const char *cells_name,
++					int cell_count, int index,
+ 					struct of_phandle_args *out_args)
+ {
+ 	const __be32 *list, *list_end;
+@@ -1118,11 +1119,17 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
+ 					 np->full_name);
+ 				goto err;
+ 			}
+-			if (of_property_read_u32(node, cells_name, &count)) {
+-				pr_err("%s: could not get %s for %s\n",
+-					 np->full_name, cells_name,
+-					 node->full_name);
+-				goto err;
++
++			if (cells_name) {
++				if (of_property_read_u32(node, cells_name,
++							 &count)) {
++					pr_err("%s: could not get %s for %s\n",
++						np->full_name, cells_name,
++						node->full_name);
++					goto err;
++				}
++			} else {
++				count = cell_count;
+ 			}
  
+ 			/*
+@@ -1244,11 +1251,53 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
+ {
+ 	if (index < 0)
+ 		return -EINVAL;
+-	return __of_parse_phandle_with_args(np, list_name, cells_name, index, out_args);
++	return __of_parse_phandle_with_args(np, list_name, cells_name, 0,
++					    index, out_args);
+ }
+ EXPORT_SYMBOL(of_parse_phandle_with_args);
+ 
+ /**
++ * of_parse_phandle_with_fixed_args() - Find a node pointed by phandle in a list
++ * @np:		pointer to a device tree node containing a list
++ * @list_name:	property name that contains a list
++ * @cell_count: number of argument cells following the phandle
++ * @index:	index of a phandle to parse out
++ * @out_args:	optional pointer to output arguments structure (will be filled)
++ *
++ * This function is useful to parse lists of phandles and their arguments.
++ * Returns 0 on success and fills out_args, on error returns appropriate
++ * errno value.
++ *
++ * Caller is responsible to call of_node_put() on the returned out_args->node
++ * pointer.
++ *
++ * Example:
++ *
++ * phandle1: node1 {
++ * }
++ *
++ * phandle2: node2 {
++ * }
++ *
++ * node3 {
++ * 	list = <&phandle1 0 2 &phandle2 2 3>;
++ * }
++ *
++ * To get a device_node of the `node2' node you may call this:
++ * of_parse_phandle_with_fixed_args(node3, "list", 2, 1, &args);
++ */
++int of_parse_phandle_with_fixed_args(const struct device_node *np,
++				const char *list_name, int cell_count,
++				int index, struct of_phandle_args *out_args)
++{
++	if (index < 0)
++		return -EINVAL;
++	return __of_parse_phandle_with_args(np, list_name, NULL, cell_count,
++					   index, out_args);
++}
++EXPORT_SYMBOL(of_parse_phandle_with_fixed_args);
++
++/**
+  * of_count_phandle_with_args() - Find the number of phandles references in a property
+  * @np:		pointer to a device tree node containing a list
+  * @list_name:	property name that contains a list
+@@ -1266,7 +1315,8 @@ EXPORT_SYMBOL(of_parse_phandle_with_args);
+ int of_count_phandle_with_args(const struct device_node *np, const char *list_name,
+ 				const char *cells_name)
+ {
+-	return __of_parse_phandle_with_args(np, list_name, cells_name, -1, NULL);
++	return __of_parse_phandle_with_args(np, list_name, cells_name, 0, -1,
++					    NULL);
+ }
+ EXPORT_SYMBOL(of_count_phandle_with_args);
+ 
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 90a8811..87d0830 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -280,6 +280,9 @@ extern struct device_node *of_parse_phandle(const struct device_node *np,
+ extern int of_parse_phandle_with_args(const struct device_node *np,
+ 	const char *list_name, const char *cells_name, int index,
+ 	struct of_phandle_args *out_args);
++extern int of_parse_phandle_with_fixed_args(const struct device_node *np,
++	const char *list_name, int cells_count, int index,
++	struct of_phandle_args *out_args);
+ extern int of_count_phandle_with_args(const struct device_node *np,
+ 	const char *list_name, const char *cells_name);
+ 
+@@ -477,6 +480,13 @@ static inline int of_parse_phandle_with_args(struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
++static inline int of_parse_phandle_with_fixed_args(const struct device_node *np,
++	const char *list_name, int cells_count, int index,
++	struct of_phandle_args *out_args)
++{
++	return -ENOSYS;
++}
++
+ static inline int of_count_phandle_with_args(struct device_node *np,
+ 					     const char *list_name,
+ 					     const char *cells_name)
 -- 
 1.8.1.5
 
