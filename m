@@ -1,124 +1,100 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from service87.mimecast.com ([91.220.42.44]:54107 "EHLO
-	service87.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755350Ab3HFLOO convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 6 Aug 2013 07:14:14 -0400
-Message-ID: <1375787649.12043.34.camel@hornet>
-Subject: Re: RFC: device thermal limits represented in device tree nodes
-From: Pawel Moll <pawel.moll@arm.com>
-Date: Tue, 06 Aug 2013 12:14:09 +0100
-In-Reply-To: <51F2D443.6040909@ti.com>
-References: <51ED40E3.5020703@ti.com> <51EF3186.9060001@wwwdotorg.org>
-	 <1374664745.25700.118.camel@hornet> <51EFED19.5090900@ti.com>
-	 <1374768928.3213.31.camel@hornet> <51F15E42.1060409@ti.com>
-	 <1374773611.3213.44.camel@hornet> <51F2D443.6040909@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Received: from top.free-electrons.com ([176.31.233.9]:55296 "EHLO
+	mail.free-electrons.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+	with ESMTP id S1757499Ab3HLRPT (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 13:15:19 -0400
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: [PATCH v4 02/14] mtd: nand: pxa3xx: Introduce 'marvell,armada370-nand' compatible string
+Date: Mon, 12 Aug 2013 14:14:47 -0300
+Message-Id: <1376327699-7973-3-git-send-email-ezequiel.garcia@free-electrons.com>
+In-Reply-To: <1376327699-7973-1-git-send-email-ezequiel.garcia@free-electrons.com>
+References: <1376327699-7973-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Guenter Roeck <linux@roeck-us.net>, Durgadoss R <durgadoss.r@intel.com>, "Zhang, Rui" <rui.zhang@intel.com>, Wei Ni <wni@nvidia.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-mtd@lists.infradead.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Artem Bityutskiy <dedekind1@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Apologies about the delay, I was "otherwise engaged" for a week...
+This driver supports NFCv1 (as found in PXA SoC) and NFCv2 (as found in
+Armada 370/XP SoC). As both controller has a few differences, a way of
+distinguishing between the two is needed.
 
-I hope you haven't lost all motivation to work on this subject, as it's
-really worth the while!
+This commit introduces a new compatible string 'marvell,armada370-nand'
+and assigns a compatible data of type enum pxa3xx_nand_variant to allow
+such distinction.
 
-On Fri, 2013-07-26 at 20:55 +0100, Eduardo Valentin wrote:
-> On 25-07-2013 13:33, Pawel Moll wrote:
-> > On Thu, 2013-07-25 at 18:20 +0100, Eduardo Valentin wrote:
-> >>>> 	thermal_zone {
-> >>>> 		type = "CPU";
-> >>>
-> >>> So what does this exactly mean? What is so special about CPU? What other
-> >>> types you've got there? (Am I just lazy not looking at the numerous
-> >>> links you provided? ;-)
-> >>
-> >> Hehehe. OK. Type is supposed to describe what your zone is representing.
-> > 
-> > As in "a name"? So, for example "The board", "PSU"? What I meant to ask
-> > was: does the string carry any meaning?
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+---
+ drivers/mtd/nand/pxa3xx_nand.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-You haven't commended on this...
-
-> >>>> 		trips {
-> >>>> 			alert@100000{
-> >>>> 				temperature = <100000>; /* milliCelsius
-> >>>> 				hysteresis = <2000>; /* milliCelsius */
-> >>>> 				type = <THERMAL_TRIP_PASSIVE>;
-> >>>> 			};
-> >>>> 			crit@125000{
-> >>>> 				temperature = <125000>; /* milliCelsius
-> >>>> 				hysteresis = <2000>; /* milliCelsius */
-> >>>> 				type = <THERMAL_TRIP_CRITICAL>;
-> >>>> 			};
-> >>>> 		};
-> >>>> 		bind_params {
-> >>>> 			action@0{
-> >>>> 				cooling_device = "thermal-cpufreq";
-> >>>
-> >>> Why is it a string? It seems very Linux-y... (cpufreq) Is there any
-> >>> particular reason not to have phandles to the fans that have any impact
-> >>> on the zone? 
-> >>
-> >> Because fans are not the only way to cool your system, specially those
-> >> systems that don't feature fans. Managing the speed of your CPU is one
-> >> example of lowering temperature without fans. Managing the load on your
-> >> system is another way. These are obviously, virtual concepts. And
-> >> because we have physical ways and logical ways to cool the zone, then I
-> >> didnt put a phandle to a device there.
-> > 
-> > "virtual concepts"... This is where my problem lies... It's not hardware
-> > so it doesn't seem to belong in the tree at the first sight. Shouldn't
->
-> Yeah, in fact, this is exactly the point that creates most of the
-> disagreement. You may check Guenter's arguments against this proposal
-> (in my original RFC email, there is a link to it).
-> 
-> Well, if one don't want to see this as a 'virtual concept' it could say
-> the cooling device is the cpu itself:
-> 		cooling_device = <&cpu0>;
-
-Would this create any particular problem at the driver/framework side?
-
-> > it focus on "physical data" instead? As in: point at devices that have
-> > some impact on the conditions? For example, you can say "please, do the
-> > right thing to cool your environment down" to both CPU and fan, can't
-> > you? The "cooling driver" for the CPU would know that it has to slow
-> > down, while a driver for the fan would know that it has to speed up ;-)
-> > 
-> > What I'm trying to say is that in my opinion the tree should simply link
-> > the object, the sensor and the actuator. Nothing more, nothing less.
-> 
-> OK. I think it would be a little unfair to have only links, without
-> describing what this link is supposed to be or how it is supposed to be
-> used. In previous discussions, I have mentioned two similar examples
-> already existing in DT. Here are they: regulator bindings, one does not
-> describe only which device connects to which regulator, but also needs
-> to describe, voltage limits, current limits, offsets, and other
-> properties. And an existing 'virtual concept' would be predefined CPU
-> OPPs, that feed the opp layer. Those are configurations of the hardware
-> that define a 'virtual' concept of operating point.
-> 
-> So, saying we need to describe only physical connections or touchable
-> things would be a little unfair, IMO. Besides, thermal is still physical
-> :-).
-
-Believe me, I'm trying to be as fair as possible :-) and I see a lot of
-value in describing the thermal properties of the platforms in the tree.
-It's just that we really want to focus on describing the hardware, not
-policies. And as you have already spent so much time on the matter, you
-are in the best position to find the best set of *physical* properties
-that would allow to make the right decision in the code. Could you,
-please, try to make one step back and have another look at the problem?
-What input data (as in: numbers :-) would you need to get what you want?
-Are those numbers characteristic to the specific device (they probably
-should live in the driver than) or to the board/platform (tree without a
-doubt).
-
-Thanks!
-
-Pawel
-
+diff --git a/drivers/mtd/nand/pxa3xx_nand.c b/drivers/mtd/nand/pxa3xx_nand.c
+index 02f214d..55eb153 100644
+--- a/drivers/mtd/nand/pxa3xx_nand.c
++++ b/drivers/mtd/nand/pxa3xx_nand.c
+@@ -123,6 +123,11 @@ enum {
+ 	STATE_READY,
+ };
+ 
++enum pxa3xx_nand_variant {
++	PXA3XX_NAND_VARIANT_PXA,
++	PXA3XX_NAND_VARIANT_ARMADA370,
++};
++
+ struct pxa3xx_nand_host {
+ 	struct nand_chip	chip;
+ 	struct pxa3xx_nand_cmdset *cmdset;
+@@ -171,6 +176,12 @@ struct pxa3xx_nand_info {
+ 	struct pxa3xx_nand_host *host[NUM_CHIP_SELECT];
+ 	unsigned int		state;
+ 
++	/*
++	 * This driver supports NFCv1 (as found in PXA SoC)
++	 * and NFCv2 (as found in Armada 370/XP SoC).
++	 */
++	enum pxa3xx_nand_variant variant;
++
+ 	int			cs;
+ 	int			use_ecc;	/* use HW ECC ? */
+ 	int			use_dma;	/* use DMA ? */
+@@ -1191,11 +1202,28 @@ static int pxa3xx_nand_remove(struct platform_device *pdev)
+ }
+ 
+ static struct of_device_id pxa3xx_nand_dt_ids[] = {
+-	{ .compatible = "marvell,pxa3xx-nand" },
++	{
++		.compatible = "marvell,pxa3xx-nand",
++		.data       = (void *) PXA3XX_NAND_VARIANT_PXA,
++	},
++	{
++		.compatible = "marvell,armada370-nand",
++		.data       = (void *) PXA3XX_NAND_VARIANT_ARMADA370,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, pxa3xx_nand_dt_ids);
+ 
++static enum pxa3xx_nand_variant
++pxa3xx_nand_get_variant(struct platform_device *pdev)
++{
++	const struct of_device_id *of_id =
++			of_match_device(pxa3xx_nand_dt_ids, &pdev->dev);
++	if (!of_id)
++		return PXA3XX_NAND_VARIANT_PXA;
++	return (enum pxa3xx_nand_variant) of_id->data;
++}
++
+ static int pxa3xx_nand_probe_dt(struct platform_device *pdev)
+ {
+ 	struct pxa3xx_nand_platform_data *pdata;
+@@ -1245,6 +1273,7 @@ static int pxa3xx_nand_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	info = platform_get_drvdata(pdev);
++	info->variant = pxa3xx_nand_get_variant(pdev);
+ 	probe_success = 0;
+ 	for (cs = 0; cs < pdata->num_cs; cs++) {
+ 		info->cs = cs;
+-- 
+1.8.1.5
 
