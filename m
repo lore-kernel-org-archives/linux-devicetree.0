@@ -1,15 +1,15 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from tx2ehsobe001.messaging.microsoft.com ([65.55.88.11]:6671 "EHLO
-	tx2outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
-	by vger.kernel.org with ESMTP id S1754530Ab3HLLyu (ORCPT
+Received: from co9ehsobe003.messaging.microsoft.com ([207.46.163.26]:7789 "EHLO
+	co9outboundpool.messaging.microsoft.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1754530Ab3HLLup (ORCPT
 	<rfc822;devicetree@vger.kernel.org>);
-	Mon, 12 Aug 2013 07:54:50 -0400
+	Mon, 12 Aug 2013 07:50:45 -0400
 From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH v4 resent 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
-Date: Mon, 12 Aug 2013 20:05:27 +0800
-Message-ID: <51808310dd97d2a35a28766ed7309f269521cafd.1376309076.git.b42378@freescale.com>
-In-Reply-To: <cover.1376309076.git.b42378@freescale.com>
-References: <cover.1376309076.git.b42378@freescale.com>
+Subject: [PATCH v4 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
+Date: Mon, 12 Aug 2013 20:01:09 +0800
+Message-ID: <1376308870-14232-2-git-send-email-b42378@freescale.com>
+In-Reply-To: <1376308870-14232-1-git-send-email-b42378@freescale.com>
+References: <1376308870-14232-1-git-send-email-b42378@freescale.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
