@@ -1,40 +1,56 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from jdl.com ([208.123.74.7]:37280 "EHLO jdl.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1757837Ab3HHOQu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Thu, 8 Aug 2013 10:16:50 -0400
-Received: from jdl (helo=jdl.com)
-	by jdl.com with local-esmtp (Exim 4.72)
-	(envelope-from <jdl@jdl.com>)
-	id 1V7R1G-0005xF-8e
-	for devicetree@vger.kernel.org; Thu, 08 Aug 2013 09:16:50 -0500
-Message-Id: <E1V7R1G-0005xF-8e@jdl.com>
-Subject: The DTC, kernel.org, and You
-Date: Thu, 08 Aug 2013 09:16:50 -0500
-From: Jon Loeliger <jdl@jdl.com>
+Received: from mail-qa0-f51.google.com ([209.85.216.51]:41478 "EHLO
+	mail-qa0-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1750889Ab3HLRbd (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 13:31:33 -0400
+Received: by mail-qa0-f51.google.com with SMTP id f11so1159762qae.17
+        for <devicetree@vger.kernel.org>; Mon, 12 Aug 2013 10:31:32 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <000001ce9747$680a9800$381fc800$%jun@samsung.com>
+References: <1375846138-15839-1-git-send-email-dbasehore@chromium.org>
+	<000001ce9747$680a9800$381fc800$%jun@samsung.com>
+Date: Mon, 12 Aug 2013 10:31:32 -0700
+Message-ID: <CAD=FV=U69UONapHhy+LQ0cNe+G5SWmowvVnAWxcEP+CN_HOXkg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: dw_mmc: Don't disable vmmc if keeping power in suspend
+From: Doug Anderson <dianders@google.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>
+Cc: Derek Basehore <dbasehore@chromium.org>, Chris Ball <cjb@laptop.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+Seungwon and Derek,
 
-Folks,
+On Mon, Aug 12, 2013 at 3:33 AM, Seungwon Jeon <tgih.jun@samsung.com> wrote:
+> On Wed, August 07, 2013, Derek Basehore
+>> If we keep power for suspend on a host for dw_mmc, don't disable vmmc-supply
+>> regulator when suspending the host.
+>
+> I have a trivial comment.
+> It would be better to add some macro for checking MMC_PM_KEEP_POWER.
+> And I just wonder how the problem is silent. Origin code has stood up somewhat long.
+> Did you see?
+>
+> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+>
+> Thanks,
+> Seungwon Jeon
+>
+>>
+>> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+>> Reviewed-by: Doug Anderson <dianders@chromium.org>
+>> ---
+>>  drivers/mmc/host/dw_mmc.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-I am pleased to announce a new official location
-for the Linux Kernel Device Tree Compiler (dtc)!
+Though I reviewed this originally, I'd actually propose not landing it.
 
-I have pushed a clone of the dtc repository to git.kernel.org !
-While I forsee maintaining a clone copy on git.jdl.com, the
-new official location will move to git.kernel.org.
+I've spent more time with the regulator code in dw_mmc and currently
+believe that the regulators should be enabled / disabled in
+MMC_POWER_UP / MMC_POWER_OFF.  When we do that then the mmc core will
+handle MMC_PM_KEEP_POWER.  You can see my current thoughts on this in
+<https://gerrit.chromium.org/gerrit/#/c/65263/>.  I will try to post
+that upstream before too long, but feel free to let me know any
+comments.
 
-Right now, you can clone from kernel.org like this:
-
-    $ git clone git://git.kernel.org/pub/scm/linux/kernel/git/jdl/dtc.git
-
-Eventually there should also be a clone available here too:
-
-    $ git clone git://git.kernel.org/pub/scm/utils/dtc/dtc.git
-
-The latter is not available yet, so use the former.
-
-Enjoy,
-jdl
+-Doug
