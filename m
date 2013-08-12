@@ -1,86 +1,97 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mailout3.samsung.com ([203.254.224.33]:37657 "EHLO
-	mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752465Ab3HVFZ3 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 22 Aug 2013 01:25:29 -0400
-From: Jingoo Han <jg1.han@samsung.com>
-References: <000401ce9739$e0a65410$a1f2fc30$@samsung.com>
- <CAK9yfHwEPEfhMCWGbDWK2NQE2zAgmsQc6_Dn498pRP4UX6sYmQ@mail.gmail.com>
-In-reply-to: <CAK9yfHwEPEfhMCWGbDWK2NQE2zAgmsQc6_Dn498pRP4UX6sYmQ@mail.gmail.com>
+Received: from eu1sys200aog104.obsmtp.com ([207.126.144.117]:58050 "EHLO
+	eu1sys200aog104.obsmtp.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S1755478Ab3HLLrs (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Mon, 12 Aug 2013 07:47:48 -0400
+Date: Mon, 12 Aug 2013 17:17:22 +0530
+From: Pratyush Anand <pratyush.anand@st.com>
 Subject: Re: [PATCH] PCI: exynos: add support for MSI
-Date: Thu, 22 Aug 2013 14:25:26 +0900
-Message-id: <000101ce9ef8$024f1be0$06ed53a0$%han@samsung.com>
-MIME-version: 1.0
-Content-type: text/plain; charset=us-ascii
-Content-transfer-encoding: 7bit
-Content-language: ko
+Message-ID: <20130812114722.GA14050@pratyush-vbox>
+References: <000401ce9739$e0a65410$a1f2fc30$@samsung.com>
+ <20130812105638.GA12042@ulmo>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20130812105638.GA12042@ulmo>
 Sender: devicetree-owner@vger.kernel.org
-To: 'Sachin Kamat' <sachin.kamat@linaro.org>
-Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Mohit KUMAR' <Mohit.KUMAR@st.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Thierry Reding' <thierry.reding@gmail.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jingoo Han <jg1.han@samsung.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, Siva Reddy Kallam <siva.kallam@samsung.com>, 'SRIKANTH TUMKUR SHIVANAND' <ts.srikanth@samsung.com>, Arnd Bergmann <arnd@arndb.de>, 'Sean Cross' <xobs@kosagi.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Monday, August 12, 2013 6:13 PM, Sachin Kamat wrote:
-> On 12 August 2013 14:26, Jingoo Han <jg1.han@samsung.com> wrote:
-> > This patch adds support for Message Signaled Interrupt in the
-> > Exynops PCIe diver using Synopsys designware PCIe core IP.
+On Mon, Aug 12, 2013 at 06:56:40PM +0800, Thierry Reding wrote:
+> On Mon, Aug 12, 2013 at 05:56:47PM +0900, Jingoo Han wrote:
+> [...]
+> > diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+> > index 855d4a7..9ef1c95 100644
+> > --- a/arch/arm/mach-exynos/Kconfig
+> > +++ b/arch/arm/mach-exynos/Kconfig
+> > @@ -93,6 +93,7 @@ config SOC_EXYNOS5440
+> >  	default y
+> >  	depends on ARCH_EXYNOS5
+> >  	select ARCH_HAS_OPP
+> > +	select ARCH_SUPPORTS_MSI
 > 
-> s/Exynops PCIe diver/Exynos PCIe driver
-
-OK, I will fix this typo.
-
-> > Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-> > Signed-off-by: Srikanth T Shivanand <ts.srikanth@samsung.com>
-> > Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-> > Cc: Pratyush Anand <pratyush.anand@st.com>
-> > Cc: Mohit KUMAR <Mohit.KUMAR@st.com>
-> > ---
-> >  arch/arm/boot/dts/exynos5440.dtsi  |    2 +
-> >  arch/arm/mach-exynos/Kconfig       |    1 +
-> >  drivers/pci/host/pci-exynos.c      |   60 ++++++++++
-> >  drivers/pci/host/pcie-designware.c |  213 ++++++++++++++++++++++++++++++++++++
-> >  drivers/pci/host/pcie-designware.h |    8 ++
-> >  5 files changed, 284 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-> > index 586134e..3746835 100644
-> > --- a/arch/arm/boot/dts/exynos5440.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5440.dtsi
-> > @@ -249,6 +249,7 @@
-> >                 interrupt-map-mask = <0 0 0 0>;
-> >                 interrupt-map = <0x0 0 &gic 53>;
-> >                 num-lanes = <4>;
-> > +               msi-base = <200>;
+> This symbol goes away in Thomas Petazzoni's MSI patch series which is
+> targetted at 3.12, so I don't think you should add that here.
 > 
-> Please update the bindings documentation too.
-
-OK, I will updated the bindings documentation.
-
-[.....]
-
 > > +#ifdef CONFIG_PCI_MSI
 > > +static void exynos_pcie_clear_irq_level(struct pcie_port *pp)
 > > +{
-> > +       u32 val;
-> > +       struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
-> > +       void __iomem *elbi_base = exynos_pcie->elbi_base;
+> > +	u32 val;
+> > +	struct exynos_pcie *exynos_pcie = to_exynos_pcie(pp);
+> > +	void __iomem *elbi_base = exynos_pcie->elbi_base;
 > > +
-> > +       val = readl(elbi_base + PCIE_IRQ_LEVEL);
-> > +       writel(val, elbi_base + PCIE_IRQ_LEVEL);
+> > +	val = readl(elbi_base + PCIE_IRQ_LEVEL);
+> > +	writel(val, elbi_base + PCIE_IRQ_LEVEL);
+> > +	return;
+> > +}
 > 
-> Sorry, I did not get this. Writing the value read from the same
-> register without any operation.
+> I'm a little confused by this: the above code seems to access the PCIe
+> controller registers to clear an interrupt, but you pass in a PCIe
+> port...
+> 
 
-It was intended to clear the bits by writing 1 of each bit.
-But I will remove this function.
+One struct pcie_port is associated with one controller and it has been
+assumed that there is only one root port per controller. 
 
-My coworker, Srikanth T Shivanand found that this function is
-unnecessary. This is because PCIE_IRQ_LEVEL register is read-only
-register. Also, PCIE_IRQ_LEVEL register is already cleared before
-this function is called.
+[...]
 
-Thank you for your comment.
+> > +void dw_pcie_msi_init(struct pcie_port *pp)
+> > +{
+> > +	/* program the msi_data */
+> > +	dw_pcie_wr_own_conf(pp, PCIE_MSI_ADDR_LO, 4,
+> > +			__virt_to_phys((u32)(&msi_data)));
+> 
+> That's slightly odd. You convert the virtual address of a local variable
+> (local to the file) to a physical address and program that into a
+> register. I assume that it works since you've probably tested this, but
+> I wonder if it's safe to do this. Perhaps a better way would be to
+> allocate a single free page (__get_free_pages(GFP_KERNEL, 0)) and write
+> the physical address of that into the register instead.
+> 
 
-Best regards,
-Jingoo Han
+also msi_data must be different for different controller. Something
+like &msi_data[pp->port].
+
+[...]
+
+> > +void arch_teardown_msi_irq(unsigned int irq)
+> > +{
+> > +	clear_irq(irq);
+> > +}
+> 
+> And we've reworked this largely so that drivers no longer provide arch_*
+> functions because that prevents multi-platform support. So I think you
+> need to port this to the new msi_chip infrastructure that's being
+> introduced in 3.12.
+
+Yes, its needed.
+
+Regards
+Pratyush
+
+> 
+> Thierry
 
 
