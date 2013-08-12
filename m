@@ -1,13 +1,16 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH 0/2] Move comon DMA nodes to exynos5.dtsi and
-Date: Mon, 12 Aug 2013 15:48:41 +0530
-Message-ID: <CAAgF-BfjqF-1TcWbZ_nw9Kqrg-xr0H6uMu+u=9N=gaOoq_G2Yw@mail.gmail.com>
-References: <1373458449-19039-1-git-send-email-padma.v@samsung.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH 1/2] ARM: dts: Change dw-apb-timer-osc and
+ dw-apb-timer-sp to just dw-apb-timer
+Date: Mon, 12 Aug 2013 13:57:04 +0200
+Message-ID: <20130812115703.GA27616@amd.pavel.ucw.cz>
+References: <1374723797-22169-1-git-send-email-dinguyen@altera.com>
+ <20130811214509.GA26757@quad.lixom.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1373458449-19039-1-git-send-email-padma.v@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20130811214509.GA26757@quad.lixom.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,33 +20,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Sangbeom Kim <sbkim73@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Doug Anderson <dianders@chromium.org>, abrestic@chromium.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, Vinod Koul <vinod.koul@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Olof Johansson <olof@lixom.net>
+Cc: dinh.linux@gmail.com, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, John Stultz <john.stultz@linaro.org>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Jamie Iles <jamie@jamieiles.com>, dinguyen@altera.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
 
-Any comment on this patch set?
-If not can you take into your tree?
+> > index eb2327b..0a1020e 100644
+> > --- a/Documentation/devicetree/bindings/rtc/dw-apb.txt
+> > +++ b/Documentation/devicetree/bindings/rtc/dw-apb.txt
+> > @@ -1,7 +1,7 @@
+> >  * Designware APB timer
+> >  
+> >  Required properties:
+> > -- compatible: "snps,dw-apb-timer-sp" or "snps,dw-apb-timer-osc"
+> > +- compatible: "snps,dw-apb-timer"
+> >  - reg: physical base address of the controller and length of memory mapped
+> >    region.
+> >  - interrupts: IRQ line for the timer.
+> 
+> Here's a classic example of where we will eventually need to keep the ABI. You
+> can add a comment that the preferred compatible value is the new one, but the
+> old ones still need to be handled by the drivers, and shouldn't be removed.
+> 
+> That is, of course, if people are happy with the current binding and want to
+> keep it instead of revising it before declaring it locked in.
 
-Thanks
-Padma
-
-On Wed, Jul 10, 2013 at 5:44 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
-> Exynos5250 and Exynos5420 has 4 DMA controllers in common. So this patch
-> set moved the common nodes to exynos.dtsi keeping the clk info seperate
-> for both the platforms. Exynos5420 has a separate DMA controller for audio
-> IPs. So this patch set also adds the ADMA node on Exynos5420.
->
-> Padmavathi Venna (2):
->   ARM: dts: Move the common DMA controller nodes to exynos5.dtsi
->   ARM: dts: Add DMA controller node info on Exynos5420.
->
->  arch/arm/boot/dts/exynos5.dtsi    |   44 +++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5250.dtsi |   30 -------------------------
->  arch/arm/boot/dts/exynos5420.dtsi |   33 +++++++++++++++++++++++++++
->  3 files changed, 77 insertions(+), 30 deletions(-)
->
-> --
-> 1.7.4.4
->
+The first -sp / -osc separation was bad idea from the start. It would
+be better if we could get rid of it.
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
