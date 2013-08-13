@@ -1,49 +1,73 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from saturn.retrosnub.co.uk ([178.18.118.26]:56197 "EHLO
-	saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1752848Ab3HWWAo (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Fri, 23 Aug 2013 18:00:44 -0400
-Message-ID: <5217E999.7020408@kernel.org>
-Date: Sat, 24 Aug 2013 00:00:41 +0100
-From: Jonathan Cameron <jic23@kernel.org>
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50]:37936 "EHLO
+	cam-admin0.cambridge.arm.com" rhost-flags-OK-OK-OK-OK)
+	by vger.kernel.org with ESMTP id S932087Ab3HMNeV (ORCPT
+	<rfc822;devicetree@vger.kernel.org>);
+	Tue, 13 Aug 2013 09:34:21 -0400
+Date: Tue, 13 Aug 2013 14:34:10 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] usb: dwc3: core: clarify usb-phy array binding
+Message-ID: <20130813133410.GO27165@e106331-lin.cambridge.arm.com>
+References: <1376062832-23288-1-git-send-email-galak@codeaurora.org>
+ <20130809162848.GW27325@e106331-lin.cambridge.arm.com>
+ <1A03353A-9299-4D73-9786-4ECBC1DD4E05@codeaurora.org>
+ <20130812180553.GD27954@radagast>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/5] ARM: dts: add reference voltage property for MXS
- LRADC
-References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com>  <1374501843-19651-3-git-send-email-hector.palacios@digi.com>  <520AA3CD.1040008@kernel.org> <1376491467.18617.41.camel@hornet>  <52153B8E.7050309@free-electrons.com>  <df6d000d-c918-48ec-958c-c8529ae1b75f@email.android.com> <1377190299.2626.9.camel@hornet>
-In-Reply-To: <1377190299.2626.9.camel@hornet>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20130812180553.GD27954@radagast>
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Hector Palacios <hector.palacios@digi.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "fabio.estevam@freescale.com" <fabio.estevam@freescale.com>, "marex@denx.de" <marex@denx.de>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>
+To: Felipe Balbi <balbi@ti.com>
+Cc: Kumar Gala <galak@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/22/13 17:51, Pawel Moll wrote:
-> On Thu, 2013-08-22 at 07:17 +0100, Jonathan Cameron wrote:
->> I would favour option 2 though some of the discussions going on at the moment about
->> bindings might result in a generic description of this and any other bits of
->>  analog front end.
+On Mon, Aug 12, 2013 at 07:05:53PM +0100, Felipe Balbi wrote:
+> On Fri, Aug 09, 2013 at 01:42:15PM -0500, Kumar Gala wrote:
+> > 
+> > On Aug 9, 2013, at 11:28 AM, Mark Rutland wrote:
+> > 
+> > > On Fri, Aug 09, 2013 at 04:40:32PM +0100, Kumar Gala wrote:
+> > >> The binding spec wasn't clear that the order of the phandles in the
+> > >> usb-phy array has meaning.  Clarify this point in the binding that
+> > >> it should be <USB2-HS-PHY, USB3-SS-PHY>.
+> > >> 
+> > >> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+> > >> ---
+> > >> Documentation/devicetree/bindings/usb/dwc3.txt | 4 +++-
+> > >> 1 file changed, 3 insertions(+), 1 deletion(-)
+> > >> 
+> > >> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > >> index 7a95c65..8a9770b 100644
+> > >> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > >> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > >> @@ -6,7 +6,9 @@ Required properties:
+> > >>  - compatible: must be "synopsys,dwc3"
+> > >>  - reg : Address and length of the register set for the device
+> > >>  - interrupts: Interrupts used by the dwc3 controller.
+> > >> - - usb-phy : array of phandle for the PHY device
+> > >> + - usb-phy : array of phandle for the PHY device.  The first element
+> > >> +   in the array is expected to be a handle to the USB2/HS PHY and
+> > >> +   the second element is expected to be a handle to the USB3/SS PHY
+> > > 
+> > > Just to check - it's not valid to have a USB3 phy without a USB2 phy?
+> > 
+> > Don't know, hopefully Felipe will chime in on that.
 > 
-> Any link to this discussion? devicetree@vger.kernel.org doesn't seem to
-> be involved (of course I may have simply missed the thread ;-)
-Some cc's dropped off the discussion at some point that should have been there
-and the topic has 'wandered' somewhat from where it started.
+> that'd be a really non-standard implementation. Per-spec, USB3 is
+> *always* backwards compatible with USB2.
 
-https://lkml.org/lkml/2013/8/21/409
+I'm slightly confused here. From a quick look at the driver, it expects
+two separate phys to be present -- one handling only USB2, and one
+handling USB3 (with USB2 backwards compatibility).
 
-and the couple of messages after that are probably the most relevant.
+So it's not physically possible for someone to just wire up a single phy
+to the device, either USB2-only or USB3?
 
-Speaking of which the devicetree list on here was the old one, I've just switched
-to the vger list you suggest above.
+You can describe the USB2-only case in the dt by only listing the first
+phy (though the driver won't support it as it expects both to be
+present), but it's impossible to describe that you've wired up a single
+phy that's USB3 capable.
 
-
-> 
-> Paweł
-
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Thanks,
+Mark.
