@@ -1,58 +1,115 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:45199 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1758848Ab3HMT5e (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 15:57:34 -0400
-Message-ID: <520A8FA9.2080603@wwwdotorg.org>
-Date: Tue, 13 Aug 2013 13:57:29 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
-MIME-Version: 1.0
-Subject: Re: [RFC PATCH v2 1/3] usb: dwc3: msm: Add device tree binding information
-References: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com> <1376042027-9798-2-git-send-email-iivanov@mm-sol.com>
-In-Reply-To: <1376042027-9798-2-git-send-email-iivanov@mm-sol.com>
-Content-Type: text/plain; charset=ISO-8859-1
+Received: from ns.mm-sol.com ([212.124.72.66]:48641 "EHLO extserv.mm-sol.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1752390Ab3HMHdX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Tue, 13 Aug 2013 03:33:23 -0400
+Message-ID: <1376379128.2208.9.camel@iivanov-dev.int.mm-sol.com>
+Subject: Re: [RFC PATCH v2 1/3] usb: dwc3: msm: Add device tree binding
+ information
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Date: Tue, 13 Aug 2013 10:32:08 +0300
+In-Reply-To: <20130812180438.GC27954@radagast>
+References: <1376042027-9798-1-git-send-email-iivanov@mm-sol.com>
+	 <1376042027-9798-2-git-send-email-iivanov@mm-sol.com>
+	 <169628C9-00BA-4E58-BF65-7B180E6BE4ED@codeaurora.org>
+	 <20130812180438.GC27954@radagast>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: balbi@ti.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: balbi@ti.com
+Cc: Kumar Gala <galak@codeaurora.org>, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ian.campbell@citrix.com, rob@landley.net, gregkh@linuxfoundation.org, grant.likely@linaro.org, idos@codeaurora.org, mgautam@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/09/2013 03:53 AM, Ivan T. Ivanov wrote:
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+
+Hi, 
+
+On Mon, 2013-08-12 at 13:04 -0500, Felipe Balbi wrote: 
+> On Fri, Aug 09, 2013 at 10:31:58AM -0500, Kumar Gala wrote:
+> > 
+> > On Aug 9, 2013, at 4:53 AM, Ivan T. Ivanov wrote:
+> > 
+> > > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > > 
+> > > MSM USB3.0 core wrapper consist of USB3.0 IP (SNPS)
+> > 
+> > probably good to spell out Synopsys rather than SNPS
 > 
-> MSM USB3.0 core wrapper consist of USB3.0 IP (SNPS)
-> and HS, SS PHY's controll and configuration registers.
+> Synopsys (the company) has always used snps in their bindings though.
+> 
+> > > +Required properities :
+> > > +- compatible : sould be "qcom,dwc3-hsphy";
+> > > +- reg : offset and length of the register set in the memory map
+> > > +- clocks : phandles to clock instances of the device tree nodes
+> > > +- clock-names :
+> > > +	"xo" : External reference clock 19 MHz
+> > > +	"sleep_a_clk" : Sleep clock, used when USB3 core goes into low
+> > > +	power mode (U3).
+> > > +<supply-name>-supply : phandle to the regulator device tree node
+> > > +Required "supply-name" are:
+> > > +	"v1p8" : 1.8v supply for HSPHY
+> > > +	"v3p3" : 3.3v supply for HSPHY
+> > > +	"vbus" : vbus supply for host mode
+> > > +	"vddcx" : vdd supply for HS-PHY digital circuit operation
+> 
+> I believe these regulators belong to the PHY, not DWC3. Please write a
+> PHY driver.
+> 
 
-s/controll/control/
+There is already usb phy drivers for these?? 
 
-> It could operate in device mode (SS, HS, FS) and host
-> mode (SS, HS, FS, LS).
+[PATCH v2 2/3] usb: phy: Add Qualcomm SS-USB and HS-USB drivers for DWC3 core
 
-> diff --git a/Documentation/devicetree/bindings/usb/msm-ssusb.txt b/Documentation/devicetree/bindings/usb/msm-ssusb.txt
+> > > +Required properities :
+> > > +- compatible : sould be "qcom,dwc3-ssphy";
+> > > +- reg : offset and length of the register set in the memory map
+> > > +- clocks : phandles to clock instances of the device tree nodes
+> > > +- clock-names :
+> > > +	"xo" : External reference clock 19 MHz
+> > > +	"ref_clk" : Reference clock - used in host mode.
+> > > +<supply-name>-supply : phandle to the regulator device tree node
+> > > +Required "supply-name" are:
+> > > +	"v1p8" : 1.8v supply for SS-PHY
+> > > +	"vddcx" : vdd supply for SS-PHY digital circuit operation
+> 
+> likewise, these regulators should be moved to the PHY driver.
+> 
+> > > +Required properties :
+> > > +- compatible : should be "qcom,dwc3"
+> > > +- reg : offset and length of the register set in the memory map
+> > > +	offset and length of the TCSR register for routing USB
+> > > +	signals to either picoPHY0 or picoPHY1.
+> > > +- clocks : phandles to clock instances of the device tree nodes
+> > > +- clock-names :
+> > > +	"core_clk" : Master/Core clock, have to be >= 125 MHz for SS
+> > > +	operation and >= 60MHz for HS operation
+> > > +	"iface_clk" : System bus AXI clock
+> > > +	"sleep_clk" : Sleep clock, used when USB3 core goes into low
+> > > +	power mode (U3).
+> > > +	"utmi_clk" : Generated by HS-PHY. Used to clock the low power
+> > > +	parts of thr HS Link layer.
+> > > +
+> > > +Optional properties :
+> > > +- gdsc-supply : phandle to the globally distributed switch controller
+> > > +  regulator node to the USB controller.
+> > > +
+> > > +Sub nodes:
+> > > +- Sub node for "DWC3 USB3 controller".
+> > > +  This sub node is required property for device node. The properties
+> > > +  of this subnode are specified in dwc3.txt.
+> > 
+> > Is tx-fifo-resize required for qcom,dwc3? if so we should call that
+> > out in the binding.
+> 
+> AFAICT that's only needed for OMAP5 ES1.0. Unless Qualcomm also screwed
+> up default TX FIFO sizes :-p
 
-> +MSM SuperSpeed DWC3 USB SoC controller
-> +
-> +Required properities :
-> +- compatible : sould be "qcom,dwc3-hsphy";
-...
-> +Required properities :
-> +- compatible : sould be "qcom,dwc3-ssphy";
+Or it is intentional? :-) Look at [1] dwc3@f9200000
 
-I would expect different compatible values to be documented in different
-files.
+Ivan
 
-> +Optional properties :
-> +- gdsc-supply : phandle to the globally distributed switch controller
-> +  regulator node to the USB controller.
+[1] https://www.codeaurora.org/cgit/quic/la/kernel/msm/tree/arch/arm/boot/dts/apq8084.dtsi?h=msm-3.4
 
-Which of the 3 compatible values that were described above is that
-property optional for?
+> 
 
-> +Sub nodes:
-> +- Sub node for "DWC3 USB3 controller".
-> +  This sub node is required property for device node. The properties
-> +  of this subnode are specified in dwc3.txt.
 
-Why not represent the PHY and USB controller as separate top-level
-nodes? They can point at each-other with phandles if they need to know
-each-others' identity.
