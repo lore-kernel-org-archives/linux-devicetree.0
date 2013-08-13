@@ -1,45 +1,38 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pb0-f54.google.com ([209.85.160.54]:40711 "EHLO
-	mail-pb0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1759898Ab3HNLlm (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 07:41:42 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v3 4/4] ARM: dts: Add MFC node for exynos 5420
-Date: Wed, 14 Aug 2013 17:11:37 +0530
-Message-Id: <1376480497-17572-5-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1376480497-17572-1-git-send-email-arun.kk@samsung.com>
-References: <1376480497-17572-1-git-send-email-arun.kk@samsung.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:58947 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757824Ab3HMTOe (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 15:14:34 -0400
+Message-ID: <520A8596.5000608@wwwdotorg.org>
+Date: Tue, 13 Aug 2013 13:14:30 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH V2 1/3] regulator: palmas: Update the DT binding doc for
+ smps10 out1 and out2
+References: <1376380392-19723-1-git-send-email-ldewangan@nvidia.com> <1376380392-19723-2-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1376380392-19723-2-git-send-email-ldewangan@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, k.debski@samsung.com, s.nawrocki@samsung.com, sachin.kamat@linaro.org, arun.kk@samsung.com
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: broonie@kernel.org, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com
 List-ID: <devicetree@vger.kernel.org>
 
-The patch adds MFC nodes for exynos 5420.
+On 08/13/2013 01:53 AM, Laxman Dewangan wrote:
+> Palmas regulator SMPS10 is splitted into two regulators SMPS10-OUT1 and
+> SMPS10-OUT2 to match with hw behavior. With this regulator's name got
+> changed in driver.
+> 
+> Update the DT binding document to match with driver.
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
- arch/arm/boot/dts/exynos5420.dtsi |    8 ++++++++
- 1 file changed, 8 insertions(+)
+> diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 9e90d1e..bbf71e9 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -65,6 +65,14 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	codec@11000000 {
-+		compatible = "samsung,mfc-v7";
-+		reg = <0x11000000 0x10000>;
-+		interrupts = <0 96 0>;
-+		clocks = <&clock 401>;
-+		clock-names = "mfc";
-+	};
-+
- 	mct@101C0000 {
- 		compatible = "samsung,exynos4210-mct";
- 		reg = <0x101C0000 0x800>;
--- 
-1.7.9.5
+>  	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
+> -	       smps45, smps457, smps7 depending on variant, smps6, smps[8-10],
+> -	       ldo[1-9], ldoln, ldousb.
+> +	       smps45, smps457, smps7 depending on variant, smps6, smps[8-9],
+> +	       smps10_out2, smps10_out1, do[1-9], ldoln, ldousb.
+
+Oh sorry, I commented on V1 without noticing V2. You still need to
+s/do/ldo/ here I think...
 
