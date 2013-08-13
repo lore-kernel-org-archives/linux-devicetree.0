@@ -1,19 +1,19 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13100 "EHLO
-	hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1755862Ab3HMHiu (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 03:38:50 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19218 "EHLO
+	hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1756477Ab3HMHT0 (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 03:19:26 -0400
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 3/3] regulator: palmas: add support for external control of rails
-Date: Tue, 13 Aug 2013 13:23:12 +0530
-Message-ID: <1376380392-19723-4-git-send-email-ldewangan@nvidia.com>
-In-Reply-To: <1376380392-19723-1-git-send-email-ldewangan@nvidia.com>
-References: <1376380392-19723-1-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH 3/3] regulator: palmas: add support for external control of rails
+Date: Tue, 13 Aug 2013 13:03:45 +0530
+Message-ID: <1376379225-10604-4-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1376379225-10604-1-git-send-email-ldewangan@nvidia.com>
+References: <1376379225-10604-1-git-send-email-ldewangan@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 To: broonie@kernel.org, sameo@linux.intel.com
-Cc: swarren@wwwdotorg.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com, Laxman Dewangan <ldewangan@nvidia.com>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com, swarren@wwwdotorg.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
 Palmas rails like LDOs, SMPSs, REGENs, SYSENs can be enable and disable
@@ -29,15 +29,12 @@ DT binding document to details different value of the roof-floor.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
-Changes from V1:
-Fix typos: palams ->palmas
-
  .../devicetree/bindings/regulator/palmas-pmic.txt  |    8 +-
  drivers/regulator/palmas-regulator.c               |  139 +++++++++++++++++++-
  2 files changed, 139 insertions(+), 8 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-index a22e4c7..865c0e0 100644
+index 794d13d..845c776 100644
 --- a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
 +++ b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
 @@ -30,7 +30,11 @@ Optional nodes:
@@ -63,7 +60,7 @@ index a22e4c7..865c0e0 100644
  			ti,smps-range = <1>;
  		};
 diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
-index 488dfe7..3af4001 100644
+index 488dfe7..e57deee 100644
 --- a/drivers/regulator/palmas-regulator.c
 +++ b/drivers/regulator/palmas-regulator.c
 @@ -33,6 +33,7 @@ struct regs_info {
@@ -295,7 +292,7 @@ index 488dfe7..3af4001 100644
 +static struct regulator_ops palmas_ops_ext_control_extreg = {
 +};
 +
-+static int palmas_regulator_config_external(struct palmas *palmas, int id,
++static int palams_regulator_config_external(struct palmas *palmas, int id,
 +		struct palmas_reg_init *reg_init)
 +{
 +	int sleep_id = palmas_regs_info[id].sleep_id;
@@ -331,7 +328,7 @@ index 488dfe7..3af4001 100644
 +			if (ret < 0)
 +				return ret;
 +		}
-+		return palmas_regulator_config_external(palmas, id, reg_init);
++		return palams_regulator_config_external(palmas, id, reg_init);
 +	}
  	return 0;
  }
@@ -352,7 +349,7 @@ index 488dfe7..3af4001 100644
 +				addr, ret);
 +			return ret;
 +		}
-+		return palmas_regulator_config_external(palmas, id, reg_init);
++		return palams_regulator_config_external(palmas, id, reg_init);
 +	}
  	return 0;
  }
@@ -374,7 +371,7 @@ index 488dfe7..3af4001 100644
 +				addr, ret);
 +			return ret;
 +		}
-+		return palmas_regulator_config_external(palmas, id, reg_init);
++		return palams_regulator_config_external(palmas, id, reg_init);
 +	}
  	return 0;
  }
