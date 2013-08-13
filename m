@@ -1,160 +1,92 @@
-From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 2/5] ARM: tegra: add support for Trusted Foundations
-Date: Tue, 13 Aug 2013 11:29:49 +0900
-Message-ID: <1376360992-1508-3-git-send-email-acourbot@nvidia.com>
-References: <1376360992-1508-1-git-send-email-acourbot@nvidia.com>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v5] media: i2c: tvp7002: add OF support
+Date: Tue, 13 Aug 2013 08:16:31 +0530
+Message-ID: <CA+V-a8sJhe9AqXN2x3cZPcU4W7NfuqeKkZrr7SZ_wymb7JQCrQ@mail.gmail.com>
+References: <1376202321-25175-1-git-send-email-prabhakar.csengg@gmail.com> <BD586D1F-DC60-46A7-AB20-EEC959380CA6@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1376360992-1508-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BD586D1F-DC60-46A7-AB20-EEC959380CA6@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Register the firmware operations for Trusted Foundations if the device
-tree indicates it is active on the device.
+On Tue, Aug 13, 2013 at 6:30 AM, Kumar Gala <galak@codeaurora.org> wrote:
+>
+> On Aug 11, 2013, at 1:25 AM, Lad, Prabhakar wrote:
+>
+>> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+>>
+>> add OF support for the tvp7002 driver.
+>>
+>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>> ---
+>> This patch depends on https://patchwork.kernel.org/patch/2842680/
+>>
+>> Changes for v5:
+>> 1: Fixed review comments pointed by Hans.
+>>
+>> Changes for v4:
+>> 1: Improved descrition of end point properties.
+>>
+>> Changes for v3:
+>> 1: Fixed review comments pointed by Sylwester.
+>>
+>> .../devicetree/bindings/media/i2c/tvp7002.txt      |   53 ++++++++++++++++
+>> drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
+>> 2 files changed, 113 insertions(+), 7 deletions(-)
+>> create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+>> new file mode 100644
+>> index 0000000..5f28b5d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+>> @@ -0,0 +1,53 @@
+>> +* Texas Instruments TV7002 video decoder
+>> +
+>> +The TVP7002 device supports digitizing of video and graphics signal in RGB and
+>> +YPbPr color space.
+>> +
+>> +Required Properties :
+>> +- compatible : Must be "ti,tvp7002"
+>> +
+>> +Optional Properties:
+>
+>
+>> +- hsync-active: HSYNC Polarity configuration for the bus. Default value when
+>> +  this property is not specified is <0>.
+>> +
+>> +- vsync-active: VSYNC Polarity configuration for the bus. Default value when
+>> +  this property is not specified is <0>.
+>> +
+>> +- pclk-sample: Clock polarity of the bus. Default value when this property is
+>> +  not specified is <0>.
+>> +
+>> +- sync-on-green-active: Active state of Sync-on-green signal property of the
+>> +  endpoint.
+>> +  0 = Normal Operation (Active Low, Default)
+>> +  1 = Inverted operation
+>
+> These seems better than what you have in video-interfaces.txt
+>
+Well it sounds the same, I would keep it as is, let me know if you still
+want me to change.
 
-Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/tegra.txt |  5 +++
- arch/arm/mach-tegra/Kconfig                     |  1 +
- arch/arm/mach-tegra/Makefile                    |  1 +
- arch/arm/mach-tegra/common.c                    |  2 ++
- arch/arm/mach-tegra/firmware.c                  | 41 +++++++++++++++++++++++++
- arch/arm/mach-tegra/firmware.h                  | 19 ++++++++++++
- 6 files changed, 69 insertions(+)
- create mode 100644 arch/arm/mach-tegra/firmware.c
- create mode 100644 arch/arm/mach-tegra/firmware.h
+>> +
+>> +- field-even-active: Active-high Field ID output polarity control of the bus.
+>> +  Under normal operation, the field ID output is set to logic 1 for an odd field
+>> +  (field 1) and set to logic 0 for an even field (field 0).
+>> +  0 = Normal Operation (Active Low, Default)
+>> +  1 = FID output polarity inverted
+>> +
+>
+> Why the duplication if this is covered in video-interfaces.txt?
+>
+The explanation in  video-interfaces.txt is more kind of generic and
+the explanation
+here is specific to this device.
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
-index ed9c853..5423f51 100644
---- a/Documentation/devicetree/bindings/arm/tegra.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra.txt
-@@ -32,3 +32,8 @@ board-specific compatible values:
-   nvidia,whistler
-   toradex,colibri_t20-512
-   toradex,iris
-+
-+Trusted Foundations
-+-------------------------------------------
-+Tegra supports the Trusted Foundation secure monitor. See the
-+"tl,trusted-foundations" binding for more details.
-diff --git a/arch/arm/mach-tegra/Kconfig b/arch/arm/mach-tegra/Kconfig
-index ef3a8da..b6b7c44 100644
---- a/arch/arm/mach-tegra/Kconfig
-+++ b/arch/arm/mach-tegra/Kconfig
-@@ -2,6 +2,7 @@ config ARCH_TEGRA
- 	bool "NVIDIA Tegra" if ARCH_MULTI_V7
- 	select ARCH_HAS_CPUFREQ
- 	select ARCH_REQUIRE_GPIOLIB
-+	select ARCH_SUPPORTS_TRUSTED_FOUNDATIONS
- 	select CLKDEV_LOOKUP
- 	select CLKSRC_MMIO
- 	select CLKSRC_OF
-diff --git a/arch/arm/mach-tegra/Makefile b/arch/arm/mach-tegra/Makefile
-index 98b184e..5ae9afb 100644
---- a/arch/arm/mach-tegra/Makefile
-+++ b/arch/arm/mach-tegra/Makefile
-@@ -12,6 +12,7 @@ obj-y					+= pm.o
- obj-y					+= reset.o
- obj-y					+= reset-handler.o
- obj-y					+= sleep.o
-+obj-y					+= firmware.o
- obj-y					+= tegra.o
- obj-$(CONFIG_CPU_IDLE)			+= cpuidle.o
- obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= tegra20_speedo.o
-diff --git a/arch/arm/mach-tegra/common.c b/arch/arm/mach-tegra/common.c
-index 94a119a..6794536 100644
---- a/arch/arm/mach-tegra/common.c
-+++ b/arch/arm/mach-tegra/common.c
-@@ -39,6 +39,7 @@
- #include "sleep.h"
- #include "pm.h"
- #include "reset.h"
-+#include "firmware.h"
- 
- /*
-  * Storage for debug-macro.S's state.
-@@ -99,6 +100,7 @@ static void __init tegra_init_cache(void)
- 
- void __init tegra_init_early(void)
- {
-+	tegra_init_firmware();
- 	tegra_cpu_reset_handler_init();
- 	tegra_apb_io_init();
- 	tegra_init_fuse();
-diff --git a/arch/arm/mach-tegra/firmware.c b/arch/arm/mach-tegra/firmware.c
-new file mode 100644
-index 0000000..4ad9af6
---- /dev/null
-+++ b/arch/arm/mach-tegra/firmware.c
-@@ -0,0 +1,41 @@
-+/*
-+ * Firmware/Secure monitor support for Tegra CPUs
-+ *
-+ * Copyright (c) 2013, NVIDIA Corporation.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ */
-+
-+#include <linux/of.h>
-+#include <asm/trusted_foundations.h>
-+
-+void __init tegra_init_firmware(void)
-+{
-+	struct device_node *node;
-+
-+	if (!of_have_populated_dt())
-+		return;
-+
-+	node = of_find_compatible_node(NULL, NULL, "tl,trusted-foundations");
-+	if (node) {
-+		const char *tf_version;
-+		int err;
-+
-+		err = of_property_read_string(node, "version", &tf_version);
-+		if (err != 0) {
-+			pr_crit("Cannot read Trusted Foundation version: %d\n",
-+				err);
-+			BUG();
-+		} else {
-+			register_trusted_foundations(tf_version);
-+		}
-+	}
-+}
-diff --git a/arch/arm/mach-tegra/firmware.h b/arch/arm/mach-tegra/firmware.h
-new file mode 100644
-index 0000000..77c62fb
---- /dev/null
-+++ b/arch/arm/mach-tegra/firmware.h
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright (c) 2013, NVIDIA Corporation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ */
-+
-+#ifndef __TEGRA_FIRMWARE_H
-+#define __TEGRA_FIRMWARE_H
-+
-+void tegra_init_firmware(void);
-+
-+#endif
--- 
-1.8.3.4
+Regards,
+--Prabhakar Lad
