@@ -1,92 +1,62 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v5] media: i2c: tvp7002: add OF support
-Date: Tue, 13 Aug 2013 08:16:31 +0530
-Message-ID: <CA+V-a8sJhe9AqXN2x3cZPcU4W7NfuqeKkZrr7SZ_wymb7JQCrQ@mail.gmail.com>
-References: <1376202321-25175-1-git-send-email-prabhakar.csengg@gmail.com> <BD586D1F-DC60-46A7-AB20-EEC959380CA6@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/3] misc: Add crossbar driver
+Date: Tue, 13 Aug 2013 01:10:03 -0700
+Message-ID: <20130813081003.GU7656@atomide.com>
+References: <51E83A4F.5080904@ti.com>
+ <CACRpkdY3nQaWimTwB-Zt-8+Q_KZr8a0rpB1SUQq=AuoG4bAYnQ@mail.gmail.com>
+ <51ED2385.60108@ti.com>
+ <51ED5C66.1010407@ti.com>
+ <51EFFBE1.4090505@ti.com>
+ <51F0031B.1050307@ti.com>
+ <51F00530.9090703@ti.com>
+ <51F02069.3050207@ti.com>
+ <51F0223E.4050008@ti.com>
+ <51F0240F.3050507@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BD586D1F-DC60-46A7-AB20-EEC959380CA6@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <51F0240F.3050507@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, Sricharan R <r.sricharan@ti.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rajendra Nayak <rnayak@ti.com>, Felipe Balbi <balbi@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2013 at 6:30 AM, Kumar Gala <galak@codeaurora.org> wrote:
->
-> On Aug 11, 2013, at 1:25 AM, Lad, Prabhakar wrote:
->
->> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
->>
->> add OF support for the tvp7002 driver.
->>
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->> ---
->> This patch depends on https://patchwork.kernel.org/patch/2842680/
->>
->> Changes for v5:
->> 1: Fixed review comments pointed by Hans.
->>
->> Changes for v4:
->> 1: Improved descrition of end point properties.
->>
->> Changes for v3:
->> 1: Fixed review comments pointed by Sylwester.
->>
->> .../devicetree/bindings/media/i2c/tvp7002.txt      |   53 ++++++++++++++++
->> drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
->> 2 files changed, 113 insertions(+), 7 deletions(-)
->> create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->> new file mode 100644
->> index 0000000..5f28b5d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->> @@ -0,0 +1,53 @@
->> +* Texas Instruments TV7002 video decoder
->> +
->> +The TVP7002 device supports digitizing of video and graphics signal in RGB and
->> +YPbPr color space.
->> +
->> +Required Properties :
->> +- compatible : Must be "ti,tvp7002"
->> +
->> +Optional Properties:
->
->
->> +- hsync-active: HSYNC Polarity configuration for the bus. Default value when
->> +  this property is not specified is <0>.
->> +
->> +- vsync-active: VSYNC Polarity configuration for the bus. Default value when
->> +  this property is not specified is <0>.
->> +
->> +- pclk-sample: Clock polarity of the bus. Default value when this property is
->> +  not specified is <0>.
->> +
->> +- sync-on-green-active: Active state of Sync-on-green signal property of the
->> +  endpoint.
->> +  0 = Normal Operation (Active Low, Default)
->> +  1 = Inverted operation
->
-> These seems better than what you have in video-interfaces.txt
->
-Well it sounds the same, I would keep it as is, let me know if you still
-want me to change.
+* Santosh Shilimkar <santosh.shilimkar@ti.com> [130724 12:06]:
+> On Wednesday 24 July 2013 02:51 PM, Nishanth Menon wrote:
+> > On 07/24/2013 01:43 PM, Sricharan R wrote:
+> >> On Wednesday 24 July 2013 10:17 PM, Nishanth Menon wrote:
+> >>> On 07/24/2013 11:38 AM, Santosh Shilimkar wrote:
+> >>>> On Wednesday 24 July 2013 12:08 PM, Nishanth Menon wrote:
+> >>>>> That said, maybe a intermediate pinctrl approach might be more pragmatic and less theoretically flexible.
+> >>>>> an option might be to "statically allocate" default number of interrupts to a domain - example:
+> >>>>> * GIC IRQ 72->78 allotted to UARTs
+> >>>>> * pinctrl mapping provided for those but only 6 can be used (rest are marked status="disabled" as default) at any given time (choice of pinctrl option determines GIC interrupt line to use)
+> >>>>> * All modules will have a pinctrl definition to have a mapping - to avoid bootloader overriding default cross bar setting in ways un-expected by kernel.
+> >>>>>
+> >>>>> Does that sound fair trade off?
+> >>>> This sounds better. That way we can get all the devices in the DT at least.
+> >>>
+> >>> Fair enough - if Linus and Tony are still ok with this approach to the problem, seeing a patch series with the effect would be beneficial.
+> >>>
+> >>   Ok, i will use this idea of certain number interrupts to groups.
+> >> Yes on DRA7XX, we have about 160 gic lines and 320 irq crossbar device inputs contending for it.
+> >> 1:2 and fully arbitrary.  But will we be really exhausting them ?
+> >>
+> > Depends on how we allocate :). The default arbitary allocation can be made more logical in your series ofcourse :).
+> > 
+> I would just most logical peripherals rather than providing every single
+> IP connected to cross bar. Otherwise we will end up wth hwmod like
+> scenario where now started removing the unused stuff because of
+> maintenance and loc issues ;-)
 
->> +
->> +- field-even-active: Active-high Field ID output polarity control of the bus.
->> +  Under normal operation, the field ID output is set to logic 1 for an odd field
->> +  (field 1) and set to logic 0 for an even field (field 0).
->> +  0 = Normal Operation (Active Low, Default)
->> +  1 = FID output polarity inverted
->> +
->
-> Why the duplication if this is covered in video-interfaces.txt?
->
-The explanation in  video-interfaces.txt is more kind of generic and
-the explanation
-here is specific to this device.
+Sorry for the delay on this, I think the best way to set this up
+is as a separate drivers/irqchip controller. Then just map the
+configured interrupts for the board with interrupt-map and
+interrupt-map-mask binding. No need to stuff all the SoC specific
+maps to the .dts, just the ones used for the board.
 
 Regards,
---Prabhakar Lad
+
+Tony
+ 
