@@ -1,37 +1,34 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13086 "EHLO
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12481 "EHLO
 	hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1756389Ab3HMHip (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 03:38:45 -0400
+	with ESMTP id S1756477Ab3HMHTV (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 03:19:21 -0400
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 2/3] mfd: palmas: add support for external control configuration
-Date: Tue, 13 Aug 2013 13:23:11 +0530
-Message-ID: <1376380392-19723-3-git-send-email-ldewangan@nvidia.com>
-In-Reply-To: <1376380392-19723-1-git-send-email-ldewangan@nvidia.com>
-References: <1376380392-19723-1-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH 2/3] mfd: palmas: add support for external control configuration
+Date: Tue, 13 Aug 2013 13:03:44 +0530
+Message-ID: <1376379225-10604-3-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1376379225-10604-1-git-send-email-ldewangan@nvidia.com>
+References: <1376379225-10604-1-git-send-email-ldewangan@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 To: broonie@kernel.org, sameo@linux.intel.com
-Cc: swarren@wwwdotorg.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com, Laxman Dewangan <ldewangan@nvidia.com>
+Cc: rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com, swarren@wwwdotorg.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Some of Palmas resources like clock, SMPSs, LDOs etc can be controlled
+Some of Palmas resources like clock, SMPS, LDOs etc can be controlled
 by external pins ENABLE1, ENABLE2 or NSLEEP.
 
 Add support to configure these resources to externally controlled.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
-Changes from V1:
-Fix typos: palams ->palmas
-
  drivers/mfd/palmas.c       |   97 ++++++++++++++++++++++++++++++++++++++++++++
  include/linux/mfd/palmas.h |   49 ++++++++++++++++++++++
  2 files changed, 146 insertions(+), 0 deletions(-)
 
 diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
-index e4d1c70..e71fa28 100644
+index e4d1c70..8bf0e8a 100644
 --- a/drivers/mfd/palmas.c
 +++ b/drivers/mfd/palmas.c
 @@ -25,6 +25,52 @@
@@ -92,7 +89,7 @@ index e4d1c70..e71fa28 100644
  };
  
 +int palmas_ext_control_req_config(struct palmas *palmas,
-+	enum palmas_external_requestor_id id,  int ext_ctrl, bool enable)
++	enum palams_external_requestor_id id,  int ext_ctrl, bool enable)
 +{
 +	int preq_mask_bit = 0;
 +	int reg_add = 0;
@@ -146,7 +143,7 @@ index e4d1c70..e71fa28 100644
  		struct palmas_platform_data *pdata)
  {
 diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
-index e6090d8..dc99c3a 100644
+index e6090d8..23d5001 100644
 --- a/include/linux/mfd/palmas.h
 +++ b/include/linux/mfd/palmas.h
 @@ -184,6 +184,50 @@ enum palmas_regulators {
@@ -161,11 +158,11 @@ index e6090d8..dc99c3a 100644
 +};
 +
 +/*
-+ * Palmas device resources can be controlled externally for
++ * palams device resources can be controlled externally for
 + * enabling/disabling it rather than register write through i2c.
 + * Add the external controlled requestor ID for different resources.
 + */
-+enum palmas_external_requestor_id {
++enum palams_external_requestor_id {
 +	PALMAS_EXTERNAL_REQSTR_ID_REGEN1,
 +	PALMAS_EXTERNAL_REQSTR_ID_REGEN2,
 +	PALMAS_EXTERNAL_REQSTR_ID_SYSEN1,
@@ -206,7 +203,7 @@ index e6090d8..dc99c3a 100644
  
 +
 +int palmas_ext_control_req_config(struct palmas *palmas,
-+	enum palmas_external_requestor_id ext_control_req_id,
++	enum palams_external_requestor_id ext_control_req_id,
 +	int ext_ctrl, bool enable);
 +
  #endif /*  __LINUX_MFD_PALMAS_H */
