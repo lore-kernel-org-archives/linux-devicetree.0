@@ -1,40 +1,57 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:38796 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757724Ab3HMTIB (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 15:08:01 -0400
-Message-ID: <520A840B.6010107@wwwdotorg.org>
-Date: Tue, 13 Aug 2013 13:07:55 -0600
-From: Stephen Warren <swarren@wwwdotorg.org>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:50100 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1752756Ab3HMKRV (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 06:17:21 -0400
+Date: Tue, 13 Aug 2013 11:16:48 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130813101648.GQ6427@sirena.org.uk>
+References: <1376380392-19723-1-git-send-email-ldewangan@nvidia.com>
+ <1376380392-19723-2-git-send-email-ldewangan@nvidia.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] regulator: palmas: Update the DT binding doc for
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LOQ7DyX4IjkXnFQm"
+Content-Disposition: inline
+In-Reply-To: <1376380392-19723-2-git-send-email-ldewangan@nvidia.com>
+Subject: Re: [PATCH V2 1/3] regulator: palmas: Update the DT binding doc for
  smps10 out1 and out2
-References: <1376379225-10604-1-git-send-email-ldewangan@nvidia.com> <1376379225-10604-2-git-send-email-ldewangan@nvidia.com>
-In-Reply-To: <1376379225-10604-2-git-send-email-ldewangan@nvidia.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: broonie@kernel.org, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com
+Cc: sameo@linux.intel.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com
 List-ID: <devicetree@vger.kernel.org>
 
-On 08/13/2013 01:33 AM, Laxman Dewangan wrote:
-> Palams regulator SMPS10 is splitted into two regulator SMPS10-OUT1 and
-> SMPS10-OUT2 to match with hw behavior. With this regulator name got
+
+--LOQ7DyX4IjkXnFQm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Aug 13, 2013 at 01:23:10PM +0530, Laxman Dewangan wrote:
+> Palmas regulator SMPS10 is splitted into two regulators SMPS10-OUT1 and
+> SMPS10-OUT2 to match with hw behavior. With this regulator's name got
 > changed in driver.
-> 
-> Update the DT binding document to match with driver.
 
-Well, the driver should be derived from the binding document, not the
-other way around, but this change is probably still fine...
+Applied, thanks.
 
-> diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+--LOQ7DyX4IjkXnFQm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->  	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
-> -	       smps45, smps457, smps7 depending on variant, smps6, smps[8-10],
-> -	       ldo[1-9], ldoln, ldousb.
-> +	       smps45, smps457, smps7 depending on variant, smps6, smps[8-9],
-> +	       mps10_out2, smps10_out1, do[1-9], ldoln, ldousb.
-               ^^^                      ^^
-               s/mps/smp/               s/do/ldo/
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
+iQIcBAEBAgAGBQJSCgeMAAoJELSic+t+oim9DVYP/ie8UpA3ekp1bY4psslPQhtX
+vXCVv2kh5FxTb8kJPQYQ3ThVFoZPyQXb/jVOW/67d1wpN9BNII4v8N3ZU2TJnWrR
+yIF4sio2HOGRPK4OicRr4Fb9lSU4JDHEWvscGMmbz1sSbltVyqZsd1AJgOW877gY
+pLY7tQTX5KinJt/iHz2gSc/p9vQak7xtISmLEtMZedYio4pKElCWoLR6qLBy+IIY
+NGHw9pby9Va4D0VlOlCodZ0jgR9aZXZ6VkxhOJ/I3kUzhjv5iZKseVb7vXynEN59
+6f62bfqxKnOWIc8wKZRf0lRij8bES6lrDbPAsTaRVsZCRMRkwxl58d//T7+tYZGh
+/Sw6KaVREW+THuR+wYcghydTtcQUreYPTzHcQ2+Pls3nUiby1+K9k3Nkzo/kqYv+
+nQstHqS//9NueSM4luCHVY0JkWQakwg/khVo9ZM9YfaxJhgBY1+PzWpriKWAgJRY
+leLXWcEazstWB6xxyheb3UUZz3oMDJ/PHouElYTkjiYCCfy3ZV762KavauY5d+4Q
+faX9SToE1OaOwhJ3R9XsBmB5KcKICuXieMjPG0bngqWjGTLK1RLvgXCiXFGlGQIU
+swlf3GnwrpP1atThJd84wCZkCDegDkY4HXEPOsru+QNqNJkqFyF/j3D8XC8+XoDM
+HwvJyKZP61mISOdMd8jN
+=4mf0
+-----END PGP SIGNATURE-----
+
+--LOQ7DyX4IjkXnFQm--
