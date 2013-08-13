@@ -1,83 +1,126 @@
-From: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>
-Subject: [PATCH] ARM: sunxi: dt: Add device tree for Mele A1000
-Date: Tue, 13 Aug 2013 16:07:45 -0300
-Message-ID: <1376420865-4650-1-git-send-email-emilio@elopez.com.ar>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] ARM: dts: add reference voltage property for MXS
+ LRADC
+Date: Tue, 13 Aug 2013 22:23:25 +0100
+Message-ID: <520AA3CD.1040008@kernel.org>
+References: <1374501843-19651-1-git-send-email-hector.palacios@digi.com> <1374501843-19651-3-git-send-email-hector.palacios@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arokux@gmail.com, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1374501843-19651-3-git-send-email-hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGEgZGV2aWNlIHRyZWUgdXNhYmxlIG9uIE1lbGUgQTEwMDAgKGFuZCBBMjAwMCwg
-YXMgaXQKYXBwYXJlbnRseSBpcyB0aGUgc2FtZSBkZXZpY2UgZXhjZXB0IGZvciB0aGUgY2FzZSku
-IFRoaXMgZGV2aWNlIGZlYXR1cmVzCm9uZSBVQVJUIHBvcnQsIEV0aGVybmV0LCBhbiBBWFAyMDkg
-UE1VIG9uIGkyYzAgYW5kIHR3byB1c2VyIGNvbmZpZ3VyYWJsZQpMRURzLgoKU2lnbmVkLW9mZi1i
-eTogRW1pbGlvIEzDs3BleiA8ZW1pbGlvQGVsb3Blei5jb20uYXI+Ci0tLQoKVGhpcyBoYXMgYmVl
-biB0ZXN0ZWQgYnkgYXJva3V4IG9uICNsaW51eC1zdW54aSBpbiBGcmVlbm9kZSBhbmQgZm91bmQg
-dG8gCndvcmsgY29ycmVjdGx5LgoKIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAgICAgICAg
-ICAgfCAgIDEgKwogYXJjaC9hcm0vYm9vdC9kdHMvc3VuNGktYTEwLWExMDAwLmR0cyB8IDEwNiAr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDEwNyBp
-bnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvc3VuNGkt
-YTEwLWExMDAwLmR0cwoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKaW5kZXggNjQxYjNjOS4uM2ZkMzkxOSAxMDA2NDQK
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-TWFrZWZpbGUKQEAgLTIwNiw2ICsyMDYsNyBAQCBkdGItJChDT05GSUdfQVJDSF9TVEkpKz0gc3Rp
-aDQxNS1iMjAwMC5kdGIgXAogCXN0aWg0MTUtYjIwMjAuZHRiIFwKIAlzdGloNDE2LWIyMDIwLmR0
-YgogZHRiLSQoQ09ORklHX0FSQ0hfU1VOWEkpICs9IFwKKwlzdW40aS1hMTAtYTEwMDAuZHRiIFwK
-IAlzdW40aS1hMTAtY3ViaWVib2FyZC5kdGIgXAogCXN1bjRpLWExMC1taW5pLXhwbHVzLmR0YiBc
-CiAJc3VuNGktYTEwLWhhY2tiZXJyeS5kdGIgXApkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
-dHMvc3VuNGktYTEwLWExMDAwLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjRpLWExMC1hMTAw
-MC5kdHMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMzA0YTM4ZQotLS0gL2Rl
-di9udWxsCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjRpLWExMC1hMTAwMC5kdHMKQEAgLTAs
-MCArMSwxMDYgQEAKKy8qCisgKiBDb3B5cmlnaHQgMjAxMyBFbWlsaW8gTMOzcGV6CisgKgorICog
-RW1pbGlvIEzDs3BleiA8ZW1pbGlvQGVsb3Blei5jb20uYXI+CisgKgorICogVGhlIGNvZGUgY29u
-dGFpbmVkIGhlcmVpbiBpcyBsaWNlbnNlZCB1bmRlciB0aGUgR05VIEdlbmVyYWwgUHVibGljCisg
-KiBMaWNlbnNlLiBZb3UgbWF5IG9idGFpbiBhIGNvcHkgb2YgdGhlIEdOVSBHZW5lcmFsIFB1Ymxp
-YyBMaWNlbnNlCisgKiBWZXJzaW9uIDIgb3IgbGF0ZXIgYXQgdGhlIGZvbGxvd2luZyBsb2NhdGlv
-bnM6CisgKgorICogaHR0cDovL3d3dy5vcGVuc291cmNlLm9yZy9saWNlbnNlcy9ncGwtbGljZW5z
-ZS5odG1sCisgKiBodHRwOi8vd3d3LmdudS5vcmcvY29weWxlZnQvZ3BsLmh0bWwKKyAqLworCisv
-ZHRzLXYxLzsKKy9pbmNsdWRlLyAic3VuNGktYTEwLmR0c2kiCisKKy8geworCW1vZGVsID0gIk1l
-bGUgQTEwMDAiOworCWNvbXBhdGlibGUgPSAibWVsZSxhMTAwMCIsICJhbGx3aW5uZXIsc3VuNGkt
-YTEwIjsKKworCWFsaWFzZXMgeworCQlzZXJpYWwwID0gJnVhcnQwOworCX07CisKKwljaG9zZW4g
-eworCQlib290YXJncyA9ICJlYXJseXByaW50ayBjb25zb2xlPXR0eVMwLDExNTIwMCI7CisJfTsK
-KworCXNvY0AwMWMyMDAwMCB7CisJCWVtYWM6IGV0aGVybmV0QDAxYzBiMDAwIHsKKwkJCXBpbmN0
-cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJCQlwaW5jdHJsLTAgPSA8JmVtYWNfcGluc19hPjsKKwkJ
-CXBoeSA9IDwmcGh5MT47CisJCQlzdGF0dXMgPSAib2theSI7CisJCX07CisKKwkJbWRpb0AwMWMw
-YjA4MCB7CisJCQlwaHktc3VwcGx5ID0gPCZyZWdfZW1hY18zdjM+OworCQkJc3RhdHVzID0gIm9r
-YXkiOworCisJCQlwaHkxOiBldGhlcm5ldC1waHlAMSB7CisJCQkJcmVnID0gPDE+OworCQkJfTsK
-KwkJfTsKKworCQlwaW5jdHJsQDAxYzIwODAwIHsKKwkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7CisJCQlwaW5jdHJsLTAgPSA8JmExMDAwX2hvZ3M+OworCisJCQlhMTAwMF9ob2dzOiBob2dz
-QDAgeworCQkJCWFsbHdpbm5lcixwaW5zID0gIlBIMTUiOworCQkJCWFsbHdpbm5lcixmdW5jdGlv
-biA9ICJncGlvX291dCI7CisJCQkJYWxsd2lubmVyLGRyaXZlID0gPDA+OworCQkJCWFsbHdpbm5l
-cixwdWxsID0gPDA+OworCQkJfTsKKworCQkJbGVkX3BpbnNfYTEwMDA6IGxlZF9waW5zQDAgewor
-CQkJCWFsbHdpbm5lcixwaW5zID0gIlBIMTAiLCAiUEgyMCI7CisJCQkJYWxsd2lubmVyLGZ1bmN0
-aW9uID0gImdwaW9fb3V0IjsKKwkJCQlhbGx3aW5uZXIsZHJpdmUgPSA8MT47CisJCQkJYWxsd2lu
-bmVyLHB1bGwgPSA8MD47CisJCQl9OworCQl9OworCisJCXVhcnQwOiBzZXJpYWxAMDFjMjgwMDAg
-eworCQkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwkJCXBpbmN0cmwtMCA9IDwmdWFydDBf
-cGluc19hPjsKKwkJCXN0YXR1cyA9ICJva2F5IjsKKwkJfTsKKworCQlpMmMwOiBpMmNAMDFjMmFj
-MDAgeworCQkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwkJCXBpbmN0cmwtMCA9IDwmaTJj
-MF9waW5zX2E+OworCQkJc3RhdHVzID0gIm9rYXkiOworCQl9OworCX07CisKKwlsZWRzIHsKKwkJ
-Y29tcGF0aWJsZSA9ICJncGlvLWxlZHMiOworCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwor
-CQlwaW5jdHJsLTAgPSA8JmxlZF9waW5zX2ExMDAwPjsKKworCQlyZWQgeworCQkJbGFiZWwgPSAi
-YTEwMDA6cmVkOnVzciI7CisJCQlncGlvcyA9IDwmcGlvIDcgMTAgMD47CisJCX07CisKKwkJYmx1
-ZSB7CisJCQlsYWJlbCA9ICJhMTAwMDpibHVlOnVzciI7CisJCQlncGlvcyA9IDwmcGlvIDcgMjAg
-MD47CisJCX07CisJfTsKKworCXJlZ3VsYXRvcnMgeworCQljb21wYXRpYmxlID0gInNpbXBsZS1i
-dXMiOworCisJCXJlZ19lbWFjXzN2MzogZW1hYy0zdjMgeworCQkJY29tcGF0aWJsZSA9ICJyZWd1
-bGF0b3ItZml4ZWQiOworCQkJcmVndWxhdG9yLW5hbWUgPSAiZW1hYy0zdjMiOworCQkJcmVndWxh
-dG9yLW1pbi1taWNyb3ZvbHQgPSA8MzMwMDAwMD47CisJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9s
-dCA9IDwzMzAwMDAwPjsKKwkJCWVuYWJsZS1hY3RpdmUtaGlnaDsKKwkJCWdwaW8gPSA8JnBpbyA3
-IDE1IDA+OworCQl9OworCX07Cit9OwotLSAKMS44LjMuNAoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 07/22/13 15:04, Hector Palacios wrote:
+> Some LRADC channels have fixed pre-dividers so they can measure
+> different voltages at full scale. The reference voltage allows to
+> expose a scaling attribute through the IIO sysfs so that a user can
+> compute the real voltage out of a measured sample value.
+> 
+> Signed-off-by: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+> Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+CC'd the device tree maintainers to see if I can get a comment on this one.
+(done from this initial posting of the patch so that the code is still present).
+I've avoided the patch for a while because opinion was divided.
+
+Lars-Peter Clausen commented:
+
+I've said before that I'm not convinced that this is the right way to implement this. And considering what Thomas said
+here http://www.mail-archive.com/devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg36691.html I guess I'm not alone with that opinion.
+
+Marek replied:
+
+He's talking about different versions of the IP block, this is the same IP
+block, just connected to different inputs.
+
+Alexander added:
+
+I don't have any strong opinion on that and I'm certainly not an expert
+but thinking about that, I feel this is different from the discussion
+Thomas had. Those are reference voltages and describe how the IP block
+is connected whereas what Thomas was describing is supporting multiple
+versions of an IP block by describing heaps of registers in the DT. It
+may look ugly here because you have a lot of channels but I find that
+quite acceptable.
+
+Personally I'm falling slightly on the side of this being a bad idea as the
+fact they are specified in the processor device tree files and clearly lines
+up with the compatible strings suggests this is ought to be in the driver
+not the device tree.
+
+Anyhow, looking for more opinions / acks as appropriate.
+
+Incidentally I'm very glad that people have come forward to help with
+this stuff!
+
+Jonathan
+
+> ---
+>  Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt | 9 ++++++++-
+>  arch/arm/boot/dts/imx23.dtsi                                    | 4 ++++
+>  arch/arm/boot/dts/imx28.dtsi                                    | 4 ++++
+>  3 files changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> index 4688205..6ec485c 100644
+> --- a/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> +++ b/Documentation/devicetree/bindings/staging/iio/adc/mxs-lradc.txt
+> @@ -1,9 +1,12 @@
+>  * Freescale i.MX28 LRADC device driver
+>  
+>  Required properties:
+> -- compatible: Should be "fsl,imx28-lradc"
+> +- compatible: "fsl,imx28-lradc", "fsl,imx23-lradc"
+>  - reg: Address and length of the register set for the device
+>  - interrupts: Should contain the LRADC interrupts
+> +- fsl,vref: Reference voltage (in mV) for each LRADC channel. This is the
+> +	    maximum voltage that can be measured at full scale in each channel
+> +	    considering fixed pre-dividers.
+>  
+>  Optional properties:
+>  - fsl,lradc-touchscreen-wires: Number of wires used to connect the touchscreen
+> @@ -18,4 +21,8 @@ Examples:
+>  		reg = <0x80050000 0x2000>;
+>  		interrupts = <10 14 15 16 17 18 19
+>  				20 21 22 23 24 25>;
+> +		fsl,vref = <1850 1850 1850 1850
+> +			    1850 1850 1850 7400
+> +			    1850 1850 3700 1850
+> +			    3700 1850 1850 7400>
+>  	};
+> diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+> index 587ceef..e212902 100644
+> --- a/arch/arm/boot/dts/imx23.dtsi
+> +++ b/arch/arm/boot/dts/imx23.dtsi
+> @@ -430,6 +430,10 @@
+>  				compatible = "fsl,imx23-lradc";
+>  				reg = <0x80050000 0x2000>;
+>  				interrupts = <36 37 38 39 40 41 42 43 44>;
+> +				fsl,vref = <1850 1850 1850 1850
+> +					    1850 1850 3700 7400
+> +					    1850 1850 1850 1850
+> +					    1850 1850 1850 7400>;
+>  				status = "disabled";
+>  			};
+>  
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> index 6a8acb0..c1b3724 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -865,6 +865,10 @@
+>  				reg = <0x80050000 0x2000>;
+>  				interrupts = <10 14 15 16 17 18 19
+>  						20 21 22 23 24 25>;
+> +				fsl,vref = <1850 1850 1850 1850
+> +					    1850 1850 1850 7400
+> +					    1850 1850 3700 1850
+> +					    3700 1850 1850 7400>;
+>  				status = "disabled";
+>  			};
+>  
+> 
