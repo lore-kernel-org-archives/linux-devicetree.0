@@ -1,108 +1,465 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail.abilis.ch ([195.70.19.74]:18607 "EHLO mail.abilis.ch"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S1751182Ab3HELvn convert rfc822-to-8bit (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 5 Aug 2013 07:51:43 -0400
-Date: Mon, 5 Aug 2013 13:51:19 +0200
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH 2/4] pinmux: Add TB10x pinmux driver
-Message-ID: <20130805115118.GF20936@ab42.lan>
-References: <20130618092516.GC18663@ab42.lan>
- <1371547751-13873-2-git-send-email-christian.ruppert@abilis.com>
- <CACRpkdZvcF3agP=hK6J6hZn-Sx2Mw=P4dR2Mwzo+NoLxtMkbQg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <CACRpkdZvcF3agP=hK6J6hZn-Sx2Mw=P4dR2Mwzo+NoLxtMkbQg@mail.gmail.com>
+Received: from smtp.codeaurora.org ([198.145.11.231]:40243 "EHLO
+	smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1757441Ab3HMLAn (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 07:00:43 -0400
+From: Sujit Reddy Thumma <sthumma@codeaurora.org>
+Subject: [PATCH 2/3] scsi: ufs: Add regulator enable support
+Date: Tue, 13 Aug 2013 16:30:19 +0530
+Message-Id: <1376391620-13840-3-git-send-email-sthumma@codeaurora.org>
+In-Reply-To: <1376391620-13840-1-git-send-email-sthumma@codeaurora.org>
+References: <1376391620-13840-1-git-send-email-sthumma@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Vinayak Holikatti <vinholikatti@gmail.com>, Santosh Y <santoshsy@gmail.com>
+Cc: "James E.J. Bottomley" <JBottomley@parallels.com>, linux-scsi@vger.kernel.org, Sujit Reddy Thumma <sthumma@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jul 30, 2013 at 12:35:03AM +0200, Linus Walleij wrote:
-> Sorry for taking eternities to look into this.
-> 
-> On Tue, Jun 18, 2013 at 11:29 AM, Christian Ruppert
-> <christian.ruppert@abilis.com> wrote:
-> 
-> > The pinmux driver of the Abilis Systems TB10x platform based on ARC700 CPUs.
-> > Used to control the pinmux and is a prerequisite for the GPIO driver.
-> >
-> > Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-> > Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
-> (...)
-> > +The following pin groups are available:
-> > +  - GPIO ports: gpioa_pins, gpiob_pins, gpioc_pins, gpiod_pins, gpioe_pins,
-> > +                gpiof_pins, gpiog_pins, gpioh_pins, gpioi_pins, gpioj_pins,
-> > +                gpiok_pins, gpiol_pins, gpiom_pins, gpion_pins
-> 
-> I would not attempt to define groups for all GPIO pins.
-> 
-> (...)
-> > +gpioa: gpio@FF140000 {
-> > +       compatible = "abilis,tb10x-gpio";
-> > +       reg = <0xFF140000 0x1000>;
-> > +       gpio-controller;
-> > +       #gpio-cells = <2>;
-> > +       ngpio = <3>;
-> > +       gpio-ranges = <&iomux 0 0>;
-> > +       gpio-ranges-group-names = "gpioa_pins";
-> 
-> This uses that feature to define GPIO ranges from a group does
-> it not? I'm not certain about that feature.
+UFS devices are powered by at most three external power supplies -
+- VCC - The flash memory core power supply, 2.7V to 3.6V or 1.70V to 1.95V
+- VCCQ - The controller and I/O power supply, 1.1V to 1.3V
+- VCCQ2 - Secondary controller and/or I/O power supply, 1.65V to 1.95V
 
-It does. The idea is that the entire pin data base is defined inside the
-pin controller (or the pin controller device tree nodes) and the rest of
-the world just uses symbolic names. The possibility of non-contiguous
-ranges comes for free. What is the argument against this? In my
-understanding it was agreed that this was a desired feature, patch
-c8587eeef8fc219e806e868c6f0c7170c769efab is the first step in this
-direction?
+For some devices VCCQ or VCCQ2 are optional as they can be
+generated using internal LDO inside the UFS device.
 
-> I don't see any of the port concept creeping into the device tree
-> in this version and that is how I think it should be kept:
-> the "port" particulars is a thing for the driver and not the
-> device tree.
+Add DT bindings for voltage regulators that can be controlled
+from host driver.
 
-I'm not sure if everybody is aligned here (or if we even understand each
-other): In my terminology, a "port" is a set of pins controlled by the
-same register/bit field. An "interface" is a set of pins which form a
-functional unit, e.g. an SPI interface. One port can contain several
-interfaces which may or may not be mapped at the same time. Inversely
-(especially if every pin can be configured separately), mapping of an
-interface might require the configuration of more than one ports. The
-concept of interfaces is on a higher level of abstraction (in the sense
-"further away from physical pinmux configuration") than the concept of a
-port.
+Signed-off-by: Sujit Reddy Thumma <sthumma@codeaurora.org>
+---
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |   18 ++
+ drivers/scsi/ufs/ufs.h                             |   23 +++
+ drivers/scsi/ufs/ufshcd-pltfrm.c                   |   89 +++++++++
+ drivers/scsi/ufs/ufshcd.c                          |  194 +++++++++++++++++++-
+ drivers/scsi/ufs/ufshcd.h                          |    3 +
+ 5 files changed, 325 insertions(+), 2 deletions(-)
 
-In the driver under discussion, pin groups are defined for every
-"interface" to make sure that interfaces can be requested in an
-orthogonal way by different modules and modules don't have to be "aware"
-of which interfaces are grouped into which port (and which other modules
-request which other interfaces). A request either succeeds or fails.
-Resource management (which interfaces can be mapped simultaneously) is
-done inside the pinctrl driver.
-
-If I understand Stephen correctly, the traditional way of requesting pin
-configurations is at "port" level, e.g. a configuration is defined by a
-port and its mux setting. The TB10x driver works on a higher level of
-abstraction ("interface" level), where interfaces are requested and the
-driver internally decides which configuration(s) to apply to which
-port(s). Ports are not used in the device tree indeed, but interfaces
-are.
-
-Based on this, I don't quite understand your comment: You say you don't
-like ports starting to leak outside of the pinctrl driver but according
-to Stephen that's what is common practice today? Did you mean
-interfaces? The TB10x driver's configuration nodes are currently defined
-based on interfaces.
-
-Greetings,
-  Christian
-
+diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+index 20468b2..39ee11f 100644
+--- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
++++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+@@ -8,9 +8,27 @@ Required properties:
+ - interrupts        : <interrupt mapping for UFS host controller IRQ>
+ - reg               : <registers mapping>
+ 
++Optional properties:
++- vcc-supply            : phandle to VCC supply regulator node
++- vccq-supply           : phandle to VCCQ supply regulator node
++- vccq2-supply          : phandle to VCCQ2 supply regulator node
++- vcc-max-microamp      : specifies max. load that can be drawn from vcc supply
++- vccq-max-microamp     : specifies max. load that can be drawn from vccq supply
++- vccq2-max-microamp    : specifies max. load that can be drawn from vccq2 supply
++
++Note: If above properties are not defined it can be assumed that the supply
++regulators are always on.
++
+ Example:
+ 	ufshc@0xfc598000 {
+ 		compatible = "jedec,ufs-1.1";
+ 		reg = <0xfc598000 0x800>;
+ 		interrupts = <0 28 0>;
++
++		vcc-supply = <&xxx_reg1>;
++		vccq-supply = <&xxx_reg2>;
++		vccq2-supply = <&xxx_reg3>;
++		vcc-max-microamp = 500000;
++		vccq-max-microamp = 200000;
++		vccq2-max-microamp = 200000;
+ 	};
+diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+index bce09a6..f8e37bf 100644
+--- a/drivers/scsi/ufs/ufs.h
++++ b/drivers/scsi/ufs/ufs.h
+@@ -325,4 +325,27 @@ struct ufs_query_res {
+ 	struct utp_upiu_query upiu_res;
+ };
+ 
++#define UFS_VREG_VCC_MIN	2700000 /* uV */
++#define UFS_VREG_VCC_MAX	3600000 /* uV */
++#define UFS_VREG_VCCQ_MIN	1150000 /* uV */
++#define UFS_VREG_VCCQ_MAX	1300000 /* uV */
++#define UFS_VREG_VCCQ2_MIN	1700000 /* uV */
++#define UFS_VREG_VCCQ2_MAX	1950000 /* uV */
++
++struct ufs_vreg {
++	struct regulator *reg;
++	const char *name;
++	bool enabled;
++	int min_uV;
++	int max_uV;
++	int min_uA;
++	int max_uA;
++};
++
++struct ufs_vreg_info {
++	struct ufs_vreg *vcc;
++	struct ufs_vreg *vccq;
++	struct ufs_vreg *vccq2;
++};
++
+ #endif /* End of Header */
+diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+index 3e0a14f..1c5290d 100644
+--- a/drivers/scsi/ufs/ufshcd-pltfrm.c
++++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+@@ -51,6 +51,88 @@ static struct ufs_hba_variant_ops *get_variant_ops(struct device *dev)
+ 	return NULL;
+ }
+ 
++#define MAX_PROP_SIZE 32
++static int ufshcd_populate_vreg(struct device *dev, const char *name,
++		struct ufs_vreg **out_vreg)
++{
++	int ret = 0;
++	u32 temp = 0;
++	char prop_name[MAX_PROP_SIZE];
++	struct ufs_vreg *vreg = NULL;
++	struct device_node *np = dev->of_node;
++
++	if (!np) {
++		dev_err(dev, "%s: non DT initialization\n", __func__);
++		goto out;
++	}
++
++	snprintf(prop_name, MAX_PROP_SIZE, "%s-supply", name);
++	if (!of_parse_phandle(np, prop_name, 0)) {
++		dev_info(dev, "%s: Unable to find %s regulator, assuming enabled\n",
++				__func__, name);
++		goto out;
++	}
++
++	vreg = devm_kzalloc(dev, sizeof(*vreg), GFP_KERNEL);
++	if (!vreg) {
++		dev_err(dev, "No memory for %s regulator\n", name);
++		goto out;
++	}
++
++	vreg->name = kstrdup(name, GFP_KERNEL);
++
++	snprintf(prop_name, MAX_PROP_SIZE, "%s-max-microamp", name);
++	ret = of_property_read_u32_array(np, prop_name, &temp, 1);
++	if (!ret) {
++		vreg->max_uA = temp;
++	} else {
++		dev_err(dev, "%s: unable to find %s err %d\n",
++				__func__, prop_name, ret);
++		goto out_free;
++	}
++
++	vreg->min_uA = 0;
++	if (!strcmp(name, "vcc")) {
++		vreg->min_uV = UFS_VREG_VCC_MIN;
++		vreg->max_uV = UFS_VREG_VCC_MAX;
++	} else if (!strcmp(name, "vccq")) {
++		vreg->min_uV = UFS_VREG_VCCQ_MIN;
++		vreg->max_uV = UFS_VREG_VCCQ_MAX;
++	} else if (!strcmp(name, "vccq2")) {
++		vreg->min_uV = UFS_VREG_VCCQ2_MIN;
++		vreg->max_uV = UFS_VREG_VCCQ2_MAX;
++	}
++
++	goto out;
++
++out_free:
++	devm_kfree(dev, vreg);
++	vreg = NULL;
++out:
++	if (!ret)
++		*out_vreg = vreg;
++	return ret;
++}
++
++static int ufshcd_parse_regulator_info(struct ufs_hba *hba)
++{
++	int err;
++	struct device *dev = hba->dev;
++	struct ufs_vreg_info *info = &hba->vreg_info;
++
++	err = ufshcd_populate_vreg(dev, "vcc", &info->vcc);
++	if (err)
++		goto out;
++
++	err = ufshcd_populate_vreg(dev, "vccq", &info->vccq);
++	if (err)
++		goto out;
++
++	err = ufshcd_populate_vreg(dev, "vccq2", &info->vccq2);
++out:
++	return err;
++}
++
+ #ifdef CONFIG_PM
+ /**
+  * ufshcd_pltfrm_suspend - suspend power management function
+@@ -171,6 +253,13 @@ static int ufshcd_pltfrm_probe(struct platform_device *pdev)
+ 
+ 	hba->vops = get_variant_ops(&pdev->dev);
+ 
++	err = ufshcd_parse_regulator_info(hba);
++	if (err) {
++		dev_err(&pdev->dev, "%s: regulator init failed %d\n",
++				__func__, err);
++		goto out;
++	}
++
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index c539347..ab7b943 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -2826,6 +2826,166 @@ static struct scsi_host_template ufshcd_driver_template = {
+ 	.can_queue		= UFSHCD_CAN_QUEUE,
+ };
+ 
++static int ufshcd_config_vreg(struct device *dev,
++		struct ufs_vreg *vreg, bool on)
++{
++	int ret = 0;
++	struct regulator *reg = vreg->reg;
++	const char *name = vreg->name;
++	int min_uV, max_uV, uA_load;
++
++	BUG_ON(!vreg);
++
++	min_uV = vreg->min_uV;
++	max_uV = vreg->max_uV;
++
++	if (on)
++		uA_load = vreg->max_uA;
++	else
++		uA_load = 0;
++
++	if (regulator_count_voltages(reg) > 0) {
++		ret = regulator_set_voltage(reg, min_uV, max_uV);
++		if (ret) {
++			dev_err(dev, "%s: %s set voltage failed, err=%d\n",
++					__func__, name, ret);
++			goto out;
++		}
++
++		ret = regulator_set_optimum_mode(reg, uA_load);
++		if (ret < 0) {
++			dev_err(dev, "%s: %s set optimum mode(uA_load=%d) failed, err=%d\n",
++					__func__, name, uA_load, ret);
++			goto out;
++		} else {
++			/*
++			 * regulator_set_optimum_mode() can return non zero
++			 * value even for success case.
++			 */
++			ret = 0;
++		}
++	}
++out:
++	return ret;
++}
++
++static int ufshcd_enable_vreg(struct device *dev, struct ufs_vreg *vreg)
++{
++	int ret = 0;
++
++	if (!vreg || vreg->enabled)
++		goto out;
++
++	ret = ufshcd_config_vreg(dev, vreg, true);
++	if (!ret)
++		ret = regulator_enable(vreg->reg);
++
++	if (!ret)
++		vreg->enabled = true;
++	else
++		dev_err(dev, "%s: %s enable failed, err=%d\n",
++				__func__, vreg->name, ret);
++out:
++	return ret;
++}
++
++static int ufshcd_disable_vreg(struct device *dev, struct ufs_vreg *vreg)
++{
++	int ret = 0;
++
++	if (!vreg || !vreg->enabled)
++		goto out;
++
++	ret = regulator_disable(vreg->reg);
++
++	if (!ret) {
++		/* ignore errors on applying disable config */
++		ufshcd_config_vreg(dev, vreg, false);
++		vreg->enabled = false;
++	} else {
++		dev_err(dev, "%s: %s disable failed, err=%d\n",
++				__func__, vreg->name, ret);
++	}
++out:
++	return ret;
++}
++
++static int ufshcd_setup_vreg(struct ufs_hba *hba, bool on)
++{
++	int ret = 0;
++	struct device *dev = hba->dev;
++	struct ufs_vreg_info *info = &hba->vreg_info;
++
++	if (!info)
++		goto out;
++
++	if (on) {
++		ret = ufshcd_enable_vreg(dev, info->vcc);
++		if (ret)
++			goto out;
++
++		ret = ufshcd_enable_vreg(dev, info->vccq);
++		if (ret)
++			goto out_disable_vcc;
++
++		ret = ufshcd_enable_vreg(dev, info->vccq2);
++		if (ret)
++			goto out_disable_vccq;
++	} else {
++		ufshcd_disable_vreg(dev, info->vcc);
++		ufshcd_disable_vreg(dev, info->vccq);
++		ufshcd_disable_vreg(dev, info->vccq2);
++	}
++
++	goto out;
++
++out_disable_vccq:
++	ufshcd_disable_vreg(dev, info->vccq);
++out_disable_vcc:
++	ufshcd_disable_vreg(dev, info->vcc);
++out:
++	return ret;
++}
++
++static int ufshcd_get_vreg(struct device *dev, struct ufs_vreg *vreg)
++{
++	int ret = 0;
++
++	if (!vreg)
++		goto out;
++
++	vreg->reg = devm_regulator_get(dev, vreg->name);
++	if (IS_ERR(vreg->reg)) {
++		ret = PTR_ERR(vreg->reg);
++		dev_err(dev, "%s: %s get failed, err=%d\n",
++				__func__, vreg->name, ret);
++	}
++out:
++	return ret;
++}
++
++static int ufshcd_init_vreg(struct ufs_hba *hba)
++{
++	int ret = 0;
++	struct device *dev = hba->dev;
++	struct ufs_vreg_info *info = &hba->vreg_info;
++
++	if (!info)
++		goto out;
++
++	ret = ufshcd_get_vreg(dev, info->vcc);
++	if (ret)
++		goto out;
++
++	ret = ufshcd_get_vreg(dev, info->vccq);
++	if (ret)
++		goto out;
++
++	ret = ufshcd_get_vreg(dev, info->vccq2);
++out:
++	return ret;
++}
++
+ static int ufshcd_variant_hba_init(struct ufs_hba *hba)
+ {
+ 	int err = 0;
+@@ -2881,6 +3041,36 @@ static void ufshcd_variant_hba_exit(struct ufs_hba *hba)
+ 		hba->vops->exit(hba);
+ }
+ 
++static int ufs_hba_init(struct ufs_hba *hba)
++{
++	int err;
++
++	err = ufshcd_init_vreg(hba);
++	if (err)
++		goto out;
++
++	err = ufshcd_setup_vreg(hba, true);
++	if (err)
++		goto out;
++
++	err = ufshcd_variant_hba_init(hba);
++	if (err)
++		goto out_disable_vreg;
++
++	goto out;
++
++out_disable_vreg:
++	ufshcd_setup_vreg(hba, false);
++out:
++	return err;
++}
++
++static void ufs_hba_exit(struct ufs_hba *hba)
++{
++	ufshcd_variant_hba_exit(hba);
++	ufshcd_setup_vreg(hba, false);
++}
++
+ /**
+  * ufshcd_suspend - suspend power management function
+  * @hba: per adapter instance
+@@ -2966,7 +3156,7 @@ void ufshcd_remove(struct ufs_hba *hba)
+ 
+ 	scsi_host_put(hba->host);
+ 
+-	ufshcd_variant_hba_exit(hba);
++	ufs_hba_exit(hba);
+ }
+ EXPORT_SYMBOL_GPL(ufshcd_remove);
+ 
+@@ -3029,7 +3219,7 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 	hba->mmio_base = mmio_base;
+ 	hba->irq = irq;
+ 
+-	err = ufshcd_variant_hba_init(hba);
++	err = ufs_hba_init(hba);
+ 	if (err)
+ 		goto out_disable;
+ 
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 72acbc7..c137ca4 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -61,6 +61,7 @@
+ #include <scsi/scsi_tcq.h>
+ #include <scsi/scsi_dbg.h>
+ #include <scsi/scsi_eh.h>
++#include <linux/regulator/consumer.h>
+ 
+ #include "ufs.h"
+ #include "ufshci.h"
+@@ -218,6 +219,7 @@ struct ufs_hba_variant_ops {
+  * @saved_uic_err: sticky UIC error mask
+  * @dev_cmd: ufs device management command information
+  * @auto_bkops_enabled: to track whether bkops is enabled in device
++ * @vreg_info: UFS device voltage regulator information
+  */
+ struct ufs_hba {
+ 	void __iomem *mmio_base;
+@@ -276,6 +278,7 @@ struct ufs_hba {
+ 	struct ufs_dev_cmd dev_cmd;
+ 
+ 	bool auto_bkops_enabled;
++	struct ufs_vreg_info vreg_info;
+ };
+ 
+ #define ufshcd_writel(hba, val, reg)	\
 -- 
-  Christian Ruppert              ,          <christian.ruppert@abilis.com>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr�-Fleuri
-                             _// | bilis Systems   CH-1228 Plan-les-Ouates
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
