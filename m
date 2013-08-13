@@ -1,53 +1,34 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from top.free-electrons.com ([176.31.233.9]:55288 "EHLO
-	mail.free-electrons.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-	with ESMTP id S1757243Ab3HLRPP (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 13:15:15 -0400
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH v4 01/14] mtd: nand: pxa3xx: Remove unneeded ifdef CONFIG_OF
-Date: Mon, 12 Aug 2013 14:14:46 -0300
-Message-Id: <1376327699-7973-2-git-send-email-ezequiel.garcia@free-electrons.com>
-In-Reply-To: <1376327699-7973-1-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1376327699-7973-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:59806 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758627Ab3HMTPH (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 15:15:07 -0400
+Message-ID: <520A85B6.8060901@wwwdotorg.org>
+Date: Tue, 13 Aug 2013 13:15:02 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH V2 3/3] regulator: palmas: add support for external control
+ of rails
+References: <1376380392-19723-1-git-send-email-ldewangan@nvidia.com> <1376380392-19723-4-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1376380392-19723-4-git-send-email-ldewangan@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Artem Bityutskiy <dedekind1@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Willy Tarreau <w@1wt.eu>, Daniel Mack <zonque@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: broonie@kernel.org, sameo@linux.intel.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, rob@landley.net, lee.jones@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, gg@slimlogic.co.uk, kishon@ti.com, j-keerthy@ti.com, ian.campbell@citrix.com
 List-ID: <devicetree@vger.kernel.org>
 
-There's no need to enclose this code within idef CONFIG_OF,
-because the OF framework provides no-op stubs if CONFIG_OF=n.
+On 08/13/2013 01:53 AM, Laxman Dewangan wrote:
+> Palmas rails like LDOs, SMPSs, REGENs, SYSENs can be enable and disable
+> by register programming through I2C communication as well as it can be
+> enable/disable with the external control input ENABLE1, ENABLE2 and NSLEEP.
+> 
+> Add support for configuring these rails to be controlled by external control
+> inputs. This is require to configure the rail's control register as well as
+> configuration of resource register.
+> 
+> Provide the external input names through parameter "roof-floor". Updated the
+> DT binding document to details different value of the roof-floor.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
----
- drivers/mtd/nand/pxa3xx_nand.c | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/drivers/mtd/nand/pxa3xx_nand.c b/drivers/mtd/nand/pxa3xx_nand.c
-index 501e380..02f214d 100644
---- a/drivers/mtd/nand/pxa3xx_nand.c
-+++ b/drivers/mtd/nand/pxa3xx_nand.c
-@@ -1190,7 +1190,6 @@ static int pxa3xx_nand_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_OF
- static struct of_device_id pxa3xx_nand_dt_ids[] = {
- 	{ .compatible = "marvell,pxa3xx-nand" },
- 	{}
-@@ -1221,12 +1220,6 @@ static int pxa3xx_nand_probe_dt(struct platform_device *pdev)
- 
- 	return 0;
- }
--#else
--static inline int pxa3xx_nand_probe_dt(struct platform_device *pdev)
--{
--	return 0;
--}
--#endif
- 
- static int pxa3xx_nand_probe(struct platform_device *pdev)
- {
--- 
-1.8.1.5
-
+Please see my comments on V1; I think the binding modification should be
+backwards-compatible.
