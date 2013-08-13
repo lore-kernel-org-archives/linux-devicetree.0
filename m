@@ -1,78 +1,117 @@
-From: Christopher Covington <cov@codeaurora.org>
-Subject: Re: [PATCH 1/2] power: Add APM X-Gene system reboot driver
-Date: Mon, 12 Aug 2013 11:21:29 -0400
-Message-ID: <5208FD79.4070307@codeaurora.org>
-References: <1372797539-13111-1-git-send-email-lho@apm.com>
- <1372797539-13111-2-git-send-email-lho@apm.com>
- <20130809212849.GD12638@lizard.sbx05730.santaca.wayport.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130809212849.GD12638@lizard.sbx05730.santaca.wayport.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anton Vorontsov <anton@enomsg.org>
-Cc: fkan@apm.com, Catalin.Marinas@arm.com, devicetree-discuss@lists.ozlabs.org, Loc Ho <lho@apm.com>, ksankaran@apm.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v5] media: i2c: tvp7002: add OF support
+Date: Mon, 12 Aug 2013 20:00:55 -0500
+Message-ID: <BD586D1F-DC60-46A7-AB20-EEC959380CA6@codeaurora.org>
+References: <1376202321-25175-1-git-send-email-prabhakar.csengg@gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1283)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1376202321-25175-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2013 05:28 PM, Anton Vorontsov wrote:
-> On Tue, Jul 02, 2013 at 02:38:58PM -0600, Loc Ho wrote:
->> power: Add APM X-Gene SoC system reboot driver. This driver handles only
->> system reboot. System shutdown is board specific and can be handled by board
->> driver or GPIO based shutdown driver.
->>
->> Signed-off-by: Loc Ho <lho@apm.com>
->> Signed-off-by: Feng Kan <fkan@apm.com>
->> Signed-off-by: Kumar Sankaran <ksankaran@apm.com>
->> ---
+
+On Aug 11, 2013, at 1:25 AM, Lad, Prabhakar wrote:
+
+> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 > 
-> The patch looks great, thanks for it! Just a few minor issues I noticed...
+> add OF support for the tvp7002 driver.
 > 
->>  drivers/power/reset/Kconfig        |    7 +++
->>  drivers/power/reset/Makefile       |    1 +
->>  drivers/power/reset/xgene-reboot.c |  101 ++++++++++++++++++++++++++++++++++++
->>  3 files changed, 109 insertions(+), 0 deletions(-)
->>  create mode 100755 drivers/power/reset/xgene-reboot.c
->>
->> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
->> index 349e9ae..c41a7de 100644
->> --- a/drivers/power/reset/Kconfig
->> +++ b/drivers/power/reset/Kconfig
->> @@ -37,3 +37,10 @@ config POWER_RESET_VEXPRESS
->>  	help
->>  	  Power off and reset support for the ARM Ltd. Versatile
->>  	  Express boards.
->> +
->> +config POWER_RESET_XGENE
->> +        bool
->> +	default y if ARM64
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> ---
+> This patch depends on https://patchwork.kernel.org/patch/2842680/
 > 
-> This is not good. You don't want to select the driver for all ARM64
-> builds. I changed it to 'depends on' and made the driver optionally
-> selectable.
-
-I thought the desired default was to have a single arm64 kernel binary that
-could run on all platforms.
-
+> Changes for v5:
+> 1: Fixed review comments pointed by Hans.
 > 
->> +        depends on POWER_RESET	
->> +        help
->> +          Reboot support for the APM SoC X-Gene Eval boards.
+> Changes for v4:
+> 1: Improved descrition of end point properties.
+> 
+> Changes for v3:
+> 1: Fixed review comments pointed by Sylwester.
+> 
+> .../devicetree/bindings/media/i2c/tvp7002.txt      |   53 ++++++++++++++++
+> drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
+> 2 files changed, 113 insertions(+), 7 deletions(-)
+> create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> new file mode 100644
+> index 0000000..5f28b5d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> @@ -0,0 +1,53 @@
+> +* Texas Instruments TV7002 video decoder
+> +
+> +The TVP7002 device supports digitizing of video and graphics signal in RGB and
+> +YPbPr color space.
+> +
+> +Required Properties :
+> +- compatible : Must be "ti,tvp7002"
+> +
+> +Optional Properties:
 
-[...]
 
-Thanks,
-Christopher
+> +- hsync-active: HSYNC Polarity configuration for the bus. Default value when
+> +  this property is not specified is <0>.
+> +
+> +- vsync-active: VSYNC Polarity configuration for the bus. Default value when
+> +  this property is not specified is <0>.
+> +
+> +- pclk-sample: Clock polarity of the bus. Default value when this property is
+> +  not specified is <0>.
+> +
+> +- sync-on-green-active: Active state of Sync-on-green signal property of the
+> +  endpoint.
+> +  0 = Normal Operation (Active Low, Default)
+> +  1 = Inverted operation
 
--- 
+These seems better than what you have in video-interfaces.txt
+
+> +
+> +- field-even-active: Active-high Field ID output polarity control of the bus.
+> +  Under normal operation, the field ID output is set to logic 1 for an odd field
+> +  (field 1) and set to logic 0 for an even field (field 0).
+> +  0 = Normal Operation (Active Low, Default)
+> +  1 = FID output polarity inverted
+> +
+
+Why the duplication if this is covered in video-interfaces.txt?
+
+> +For further reading of port node refer Documentation/devicetree/bindings/media/
+> +video-interfaces.txt.
+> +
+> +Example:
+> +
+> +	i2c0@1c22000 {
+> +		...
+> +		...
+> +		tvp7002@5c {
+> +			compatible = "ti,tvp7002";
+> +			reg = <0x5c>;
+> +
+> +			port {
+> +				tvp7002_1: endpoint {
+> +					hsync-active = <1>;
+> +					vsync-active = <1>;
+> +					pclk-sample = <0>;
+> +					sync-on-green-active = <1>;
+> +					field-even-active = <0>;
+> +				};
+> +			};
+> +		};
+> +		...
+> +	};
+> 
+
+[ snip ]
+
+- k
+
+--
 Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by the Linux Foundation.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
