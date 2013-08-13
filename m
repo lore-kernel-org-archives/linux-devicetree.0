@@ -1,117 +1,64 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v5] media: i2c: tvp7002: add OF support
-Date: Mon, 12 Aug 2013 20:00:55 -0500
-Message-ID: <BD586D1F-DC60-46A7-AB20-EEC959380CA6@codeaurora.org>
-References: <1376202321-25175-1-git-send-email-prabhakar.csengg@gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1283)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1376202321-25175-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCH v3 0/5] ARM: tegra: support for Trusted Foundations
+Date: Tue, 13 Aug 2013 11:29:47 +0900
+Message-ID: <1376360992-1508-1-git-send-email-acourbot@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Tomasz Figa <tomasz.figa@gmail.com>, Dave Martin <Dave.Martin@arm.com>, Joseph Lo <josephl@nvidia.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: gnurou@gmail.com, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+This is the long-overdue third version of this series, hopefully addressing the 
+suggestions received in v2.
 
-On Aug 11, 2013, at 1:25 AM, Lad, Prabhakar wrote:
+Since I could confirm that the SMC interface used by Trusted Foundations is not 
+Tegra-specific, I have moved core TF support into arch/arm/firmware as a 
+proposal to consolidate all implementations of Tomasz Figa's firmware interface 
+into that directory.
 
-> From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-> 
-> add OF support for the tvp7002 driver.
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> ---
-> This patch depends on https://patchwork.kernel.org/patch/2842680/
-> 
-> Changes for v5:
-> 1: Fixed review comments pointed by Hans.
-> 
-> Changes for v4:
-> 1: Improved descrition of end point properties.
-> 
-> Changes for v3:
-> 1: Fixed review comments pointed by Sylwester.
-> 
-> .../devicetree/bindings/media/i2c/tvp7002.txt      |   53 ++++++++++++++++
-> drivers/media/i2c/tvp7002.c                        |   67 ++++++++++++++++++--
-> 2 files changed, 113 insertions(+), 7 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-> new file mode 100644
-> index 0000000..5f28b5d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
-> @@ -0,0 +1,53 @@
-> +* Texas Instruments TV7002 video decoder
-> +
-> +The TVP7002 device supports digitizing of video and graphics signal in RGB and
-> +YPbPr color space.
-> +
-> +Required Properties :
-> +- compatible : Must be "ti,tvp7002"
-> +
-> +Optional Properties:
+Changes from v2:
+- Moved core TF support into arch/arm/firmware
+- Added TF version number in DT bindings
+- Cleaned TF registration code
+- Tegra kernel now fails if TF is declared in the device tree but support
+  is not compiled in
+- Tegra kernel now fails if attempt to set CPU reset vector through secure
+  monitor returned an error
+- Moved update to tegra_defconfig into its own patch
 
+Alexandre Courbot (5):
+  ARM: add basic Trusted Foundations support
+  ARM: tegra: add support for Trusted Foundations
+  ARM: tegra: split setting of CPU reset handler
+  ARM: tegra: set CPU reset handler with firmware op
+  ARM: tegra: support Trusted Foundations by default
 
-> +- hsync-active: HSYNC Polarity configuration for the bus. Default value when
-> +  this property is not specified is <0>.
-> +
-> +- vsync-active: VSYNC Polarity configuration for the bus. Default value when
-> +  this property is not specified is <0>.
-> +
-> +- pclk-sample: Clock polarity of the bus. Default value when this property is
-> +  not specified is <0>.
-> +
-> +- sync-on-green-active: Active state of Sync-on-green signal property of the
-> +  endpoint.
-> +  0 = Normal Operation (Active Low, Default)
-> +  1 = Inverted operation
+ .../arm/firmware/tl,trusted-foundations.txt        | 16 ++++++
+ Documentation/devicetree/bindings/arm/tegra.txt    |  5 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/Kconfig                                   |  2 +
+ arch/arm/Makefile                                  |  1 +
+ arch/arm/configs/tegra_defconfig                   |  1 +
+ arch/arm/firmware/Kconfig                          | 22 ++++++++
+ arch/arm/firmware/Makefile                         |  1 +
+ arch/arm/firmware/trusted_foundations.c            | 58 ++++++++++++++++++++++
+ arch/arm/include/asm/trusted_foundations.h         | 36 ++++++++++++++
+ arch/arm/mach-tegra/Kconfig                        |  1 +
+ arch/arm/mach-tegra/Makefile                       |  1 +
+ arch/arm/mach-tegra/common.c                       |  2 +
+ arch/arm/mach-tegra/firmware.c                     | 41 +++++++++++++++
+ arch/arm/mach-tegra/firmware.h                     | 19 +++++++
+ arch/arm/mach-tegra/reset.c                        | 40 +++++++++++----
+ 16 files changed, 236 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/firmware/tl,trusted-foundations.txt
+ create mode 100644 arch/arm/firmware/Kconfig
+ create mode 100644 arch/arm/firmware/Makefile
+ create mode 100644 arch/arm/firmware/trusted_foundations.c
+ create mode 100644 arch/arm/include/asm/trusted_foundations.h
+ create mode 100644 arch/arm/mach-tegra/firmware.c
+ create mode 100644 arch/arm/mach-tegra/firmware.h
 
-These seems better than what you have in video-interfaces.txt
-
-> +
-> +- field-even-active: Active-high Field ID output polarity control of the bus.
-> +  Under normal operation, the field ID output is set to logic 1 for an odd field
-> +  (field 1) and set to logic 0 for an even field (field 0).
-> +  0 = Normal Operation (Active Low, Default)
-> +  1 = FID output polarity inverted
-> +
-
-Why the duplication if this is covered in video-interfaces.txt?
-
-> +For further reading of port node refer Documentation/devicetree/bindings/media/
-> +video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	i2c0@1c22000 {
-> +		...
-> +		...
-> +		tvp7002@5c {
-> +			compatible = "ti,tvp7002";
-> +			reg = <0x5c>;
-> +
-> +			port {
-> +				tvp7002_1: endpoint {
-> +					hsync-active = <1>;
-> +					vsync-active = <1>;
-> +					pclk-sample = <0>;
-> +					sync-on-green-active = <1>;
-> +					field-even-active = <0>;
-> +				};
-> +			};
-> +		};
-> +		...
-> +	};
-> 
-
-[ snip ]
-
-- k
-
---
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+-- 
+1.8.3.4
