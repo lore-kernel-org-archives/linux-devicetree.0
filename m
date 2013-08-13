@@ -1,124 +1,64 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56426 "EHLO mail.gnudd.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932701Ab3HGK1E (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:27:04 -0400
-Date: Wed, 7 Aug 2013 12:20:26 +0200
-From: Davide Ciminaghi <ciminaghi@gnudd.com>
-Subject: [PATCH 17/26] x86 STA2X11 platform: add sta2x11_instance_data
- helpers
-Message-ID: <1c8d5fd1f37f1df891e027d83b8713702ab1a998.1375867291.git.rubini@gnudd.com>
+Received: from mail-bk0-f47.google.com ([209.85.214.47]:55705 "EHLO
+	mail-bk0-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1755420Ab3HMHeX (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 03:34:23 -0400
+Date: Tue, 13 Aug 2013 09:34:16 +0200
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] pwm-backlight: add "max-brightness" property
+Message-ID: <20130813073415.GA9316@ulmo>
+References: <1376345057-29895-1-git-send-email-abrestic@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
 Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+In-Reply-To: <1376345057-29895-1-git-send-email-abrestic@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds functions to get a pointer to a sta2x11 instance data
-structure given a pointer to a connext device or device node.
-Such helpers will be used by the (now empty) common probe function,
-and maybe by the common clock framework.
 
-Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
----
- arch/x86/include/asm/sta2x11.h      |   13 ++++++++
- arch/x86/platform/sta2x11/sta2x11.c |   55 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 67 insertions(+), 1 deletions(-)
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/x86/include/asm/sta2x11.h b/arch/x86/include/asm/sta2x11.h
-index 30dd761..6df0c87 100644
---- a/arch/x86/include/asm/sta2x11.h
-+++ b/arch/x86/include/asm/sta2x11.h
-@@ -49,6 +49,19 @@ struct sta2x11_instance_data {
- 	struct list_head list;
- };
- 
-+/*
-+ * Helper functions: get the pointer to a sta2x11 instance given the pointer
-+ * to a device/device node belonging to a connext chip
-+ */
-+extern struct sta2x11_instance_data *
-+sta2x11_node_to_instance(struct device_node *);
-+
-+static inline
-+struct sta2x11_instance_data *sta2x11_dev_to_instance(struct device *dev)
-+{
-+	return sta2x11_node_to_instance(dev->of_node);
-+}
-+
- #define STA2X11_SCTL_NAME		"sta2x11-sctl"
- #define STA2X11_GPIO_NAME		"sta2x11-gpio"
- #define STA2X11_SCR_NAME		"sta2x11-scr"
-diff --git a/arch/x86/platform/sta2x11/sta2x11.c b/arch/x86/platform/sta2x11/sta2x11.c
-index 936a7ab..861d447 100644
---- a/arch/x86/platform/sta2x11/sta2x11.c
-+++ b/arch/x86/platform/sta2x11/sta2x11.c
-@@ -189,7 +189,60 @@ sta2x11_platform_regmap_configs[sta2x11_n_plat_devs] = {
- 	[sta2x11_scr] = &sta2x11_scr_regmap_config,
- };
- 
--/* Probe for the four platform devices */
-+static struct sta2x11_instance_data *find_instance(int id)
-+{
-+	struct sta2x11_instance_data *ptr;
-+	list_for_each_entry(ptr, &connext_instances, list)
-+		if (ptr->id == id)
-+			return ptr;
-+	return NULL;
-+}
-+
-+static struct sta2x11_instance_data
-+*connext_node_to_instance(struct device_node *n)
-+{
-+	struct resource r;
-+	if (of_pci_parse_bus_range(n, &r) < 0)
-+		return NULL;
-+	return find_instance(r.start + 1);
-+}
-+
-+struct sta2x11_instance_data *sta2x11_node_to_instance(struct device_node *n)
-+{
-+	struct device_node *amba_bus, *pci_amba_bridge, *connext_node = NULL,
-+		*parent;
-+
-+	if (!of_node_cmp(n->type, "pci")) {
-+		/* A pci node */
-+		for (parent = n->parent; parent; parent = parent->parent) {
-+			if (of_device_is_compatible(parent, "pci104a,cc17")) {
-+				connext_node = parent;
-+				break;
-+			}
-+		}
-+		if (!connext_node)
-+			return NULL;
-+		return connext_node_to_instance(connext_node);
-+	}
-+
-+	/* An amba or platform device (or even an amba bus node) */
-+	amba_bus = n;
-+	if (!of_device_is_compatible(n, "arm,amba-bus"))
-+		amba_bus = n->parent;
-+	if (!amba_bus || !of_device_is_compatible(amba_bus, "arm,amba-bus"))
-+		return NULL;
-+	pci_amba_bridge = amba_bus->parent;
-+	if (!pci_amba_bridge || !of_device_is_compatible(pci_amba_bridge,
-+							 "pci104a,cc18"))
-+		return NULL;
-+	connext_node = pci_amba_bridge->parent;
-+	if (!connext_node ||
-+	    !of_device_is_compatible(connext_node, "pci104a,cc17.0"))
-+		return NULL;
-+	return connext_node_to_instance(connext_node);
-+}
-+EXPORT_SYMBOL(sta2x11_node_to_instance);
-+
- 
- static int sta2x11_platform_probe(struct platform_device *dev,
- 				  enum sta2x11_plat_dev index)
--- 
-1.7.7.2
+On Mon, Aug 12, 2013 at 03:04:17PM -0700, Andrew Bresticker wrote:
+> Specifying each individual brightness value via the "brightness-levels"
+> property can be a pain if we want to use a large continuous range of
+> brightness values.  Add the property "max-brightness", which can be
+> given in place of "brightness-levels", that specifies that all values
+> between 0 and the given value can be used.
+
+This was actually part of my first attempt at a DT binding for this
+driver as well. Some discussion ensued and we ended up changing the
+binding to what it is now. And I think there was even an attempt already
+at adding the same thing you propose (albeit under a different name). So
+instead of repeating myself I'll just point you at the earlier thread:
+
+	https://groups.google.com/forum/#!topic/linux.kernel/UkXktWt6zI0
+
+Thierry
+
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSCeF3AAoJEN0jrNd/PrOhms0P/RUg93nY7tRIkL9NrmlRXX/H
+ZOCCwhwWQykCCzE8WPoFsoem43vL0uvZVHet/20U4bZLy9IM5uqOJiXcut4hJe+S
+X8jg+xkNzAJa+A5fiZiEWqLSRdnROYsLpjka8EQ+31/NJ38r6oJz6E/0IxRYOJ2W
+mY9DF9DauTIPSKuJ+7ODC+3/STa4VOwU1tjEDmSeG49I16Ol1iUhw0GQpPVl/uNn
+uAKzPiTN15T/lsb4WoDsrDBTaDXNZMyMxXf5MT8PMEdgtUiQBm1l7SrB8DqnLLjc
+vTZT/cIJISGwzimae1FiwqccVuD2j0CdCoF0YQm4q6BZmimPdvTlQ1bVPLLt3kTQ
+yy2XyWE7G7iQnrp6OFeuDI8wL8b6IHIE6KUr7I8x6Ic7BMKNA54uu87JFQpT21ym
+h3PykGuXnaZXwflGU541VMDJ9KXJ34KnX7aOjj+rWiZic3GZD9jnCF8BSj5bVtED
+fB/jPLwpIMOv15QhNfePB7rW3oyAh6Tj+dURTERG5+f5255wjA1b2Dauadu5fFB7
+a9gzp+9guvWh8vbTVRo9zSbOILaQIURPTeOvOlnWJn4Ae5CUruqd6Vw2GA3/yWCD
+lY8tFlMJ7YabcHZXCP2yfqp06Vn+5so7XZqbuNzTI1smd+idVP5uKsDfSleKQoCu
+jvzvVRetD/USCRigqzxu
+=ywAf
+-----END PGP SIGNATURE-----
+
+--zhXaljGHf11kAtnf--
