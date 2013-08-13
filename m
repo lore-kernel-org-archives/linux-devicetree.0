@@ -1,18 +1,11 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 1/3] misc: Add crossbar driver
-Date: Tue, 13 Aug 2013 09:29:17 -0400
-Message-ID: <520A34AD.3020806@ti.com>
-References: <51E83A4F.5080904@ti.com>
- <CACRpkdY3nQaWimTwB-Zt-8+Q_KZr8a0rpB1SUQq=AuoG4bAYnQ@mail.gmail.com>
- <51ED2385.60108@ti.com> <51ED5C66.1010407@ti.com> <51EFFBE1.4090505@ti.com>
- <51F0031B.1050307@ti.com> <51F00530.9090703@ti.com> <51F02069.3050207@ti.com>
- <51F0223E.4050008@ti.com> <51F0240F.3050507@ti.com>
- <20130813081003.GU7656@atomide.com> <520A02BA.4090805@ti.com>
+From: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>
+Subject: [PATCH] ARM: sunxi: dt: Add device tree for Mele A1000
+Date: Tue, 13 Aug 2013 16:07:45 -0300
+Message-ID: <1376420865-4650-1-git-send-email-emilio@elopez.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <520A02BA.4090805@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,56 +15,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, Rajendra Nayak <rnayak@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Thomas Gleixner <tglx@linutronix.de>, Linux-OMAP <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: arokux@gmail.com, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 13 August 2013 05:56 AM, Sricharan R wrote:
-> Hi Tony,
-> 
-> On Tuesday 13 August 2013 01:40 PM, Tony Lindgren wrote:
->> * Santosh Shilimkar <santosh.shilimkar@ti.com> [130724 12:06]:
->>> On Wednesday 24 July 2013 02:51 PM, Nishanth Menon wrote:
->>>> On 07/24/2013 01:43 PM, Sricharan R wrote:
->>>>> On Wednesday 24 July 2013 10:17 PM, Nishanth Menon wrote:
->>>>>> On 07/24/2013 11:38 AM, Santosh Shilimkar wrote:
->>>>>>> On Wednesday 24 July 2013 12:08 PM, Nishanth Menon wrote:
->>>>>>>> That said, maybe a intermediate pinctrl approach might be more pragmatic and less theoretically flexible.
->>>>>>>> an option might be to "statically allocate" default number of interrupts to a domain - example:
->>>>>>>> * GIC IRQ 72->78 allotted to UARTs
->>>>>>>> * pinctrl mapping provided for those but only 6 can be used (rest are marked status="disabled" as default) at any given time (choice of pinctrl option determines GIC interrupt line to use)
->>>>>>>> * All modules will have a pinctrl definition to have a mapping - to avoid bootloader overriding default cross bar setting in ways un-expected by kernel.
->>>>>>>>
->>>>>>>> Does that sound fair trade off?
->>>>>>> This sounds better. That way we can get all the devices in the DT at least.
->>>>>> Fair enough - if Linus and Tony are still ok with this approach to the problem, seeing a patch series with the effect would be beneficial.
->>>>>>
->>>>>   Ok, i will use this idea of certain number interrupts to groups.
->>>>> Yes on DRA7XX, we have about 160 gic lines and 320 irq crossbar device inputs contending for it.
->>>>> 1:2 and fully arbitrary.  But will we be really exhausting them ?
->>>>>
->>>> Depends on how we allocate :). The default arbitary allocation can be made more logical in your series ofcourse :).
->>>>
->>> I would just most logical peripherals rather than providing every single
->>> IP connected to cross bar. Otherwise we will end up wth hwmod like
->>> scenario where now started removing the unused stuff because of
->>> maintenance and loc issues ;-)
->> Sorry for the delay on this, I think the best way to set this up
->> is as a separate drivers/irqchip controller. Then just map the
->> configured interrupts for the board with interrupt-map and
->> interrupt-map-mask binding. No need to stuff all the SoC specific
->> maps to the .dts, just the ones used for the board.
->>
->> Regards,
->>
->> Tony
->>  
->  Initially irqchip was discussed, but we also have a DMA crossbar
->  to map the dma-requests. Since both irq/dma crossbars should be handled,
->  pinctrl was suggested as the appropriate place to handle this.
-> 
-I replied on other thread. I guess Tony's point is to setup only required
-events for a board rather than setting up every possible event.
-
-Regards,
-Santosh
+VGhpcyBhZGRzIGEgZGV2aWNlIHRyZWUgdXNhYmxlIG9uIE1lbGUgQTEwMDAgKGFuZCBBMjAwMCwg
+YXMgaXQKYXBwYXJlbnRseSBpcyB0aGUgc2FtZSBkZXZpY2UgZXhjZXB0IGZvciB0aGUgY2FzZSku
+IFRoaXMgZGV2aWNlIGZlYXR1cmVzCm9uZSBVQVJUIHBvcnQsIEV0aGVybmV0LCBhbiBBWFAyMDkg
+UE1VIG9uIGkyYzAgYW5kIHR3byB1c2VyIGNvbmZpZ3VyYWJsZQpMRURzLgoKU2lnbmVkLW9mZi1i
+eTogRW1pbGlvIEzDs3BleiA8ZW1pbGlvQGVsb3Blei5jb20uYXI+Ci0tLQoKVGhpcyBoYXMgYmVl
+biB0ZXN0ZWQgYnkgYXJva3V4IG9uICNsaW51eC1zdW54aSBpbiBGcmVlbm9kZSBhbmQgZm91bmQg
+dG8gCndvcmsgY29ycmVjdGx5LgoKIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAgICAgICAg
+ICAgfCAgIDEgKwogYXJjaC9hcm0vYm9vdC9kdHMvc3VuNGktYTEwLWExMDAwLmR0cyB8IDEwNiAr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDEwNyBp
+bnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvc3VuNGkt
+YTEwLWExMDAwLmR0cwoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIv
+YXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKaW5kZXggNjQxYjNjOS4uM2ZkMzkxOSAxMDA2NDQK
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+TWFrZWZpbGUKQEAgLTIwNiw2ICsyMDYsNyBAQCBkdGItJChDT05GSUdfQVJDSF9TVEkpKz0gc3Rp
+aDQxNS1iMjAwMC5kdGIgXAogCXN0aWg0MTUtYjIwMjAuZHRiIFwKIAlzdGloNDE2LWIyMDIwLmR0
+YgogZHRiLSQoQ09ORklHX0FSQ0hfU1VOWEkpICs9IFwKKwlzdW40aS1hMTAtYTEwMDAuZHRiIFwK
+IAlzdW40aS1hMTAtY3ViaWVib2FyZC5kdGIgXAogCXN1bjRpLWExMC1taW5pLXhwbHVzLmR0YiBc
+CiAJc3VuNGktYTEwLWhhY2tiZXJyeS5kdGIgXApkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
+dHMvc3VuNGktYTEwLWExMDAwLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjRpLWExMC1hMTAw
+MC5kdHMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMzA0YTM4ZQotLS0gL2Rl
+di9udWxsCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjRpLWExMC1hMTAwMC5kdHMKQEAgLTAs
+MCArMSwxMDYgQEAKKy8qCisgKiBDb3B5cmlnaHQgMjAxMyBFbWlsaW8gTMOzcGV6CisgKgorICog
+RW1pbGlvIEzDs3BleiA8ZW1pbGlvQGVsb3Blei5jb20uYXI+CisgKgorICogVGhlIGNvZGUgY29u
+dGFpbmVkIGhlcmVpbiBpcyBsaWNlbnNlZCB1bmRlciB0aGUgR05VIEdlbmVyYWwgUHVibGljCisg
+KiBMaWNlbnNlLiBZb3UgbWF5IG9idGFpbiBhIGNvcHkgb2YgdGhlIEdOVSBHZW5lcmFsIFB1Ymxp
+YyBMaWNlbnNlCisgKiBWZXJzaW9uIDIgb3IgbGF0ZXIgYXQgdGhlIGZvbGxvd2luZyBsb2NhdGlv
+bnM6CisgKgorICogaHR0cDovL3d3dy5vcGVuc291cmNlLm9yZy9saWNlbnNlcy9ncGwtbGljZW5z
+ZS5odG1sCisgKiBodHRwOi8vd3d3LmdudS5vcmcvY29weWxlZnQvZ3BsLmh0bWwKKyAqLworCisv
+ZHRzLXYxLzsKKy9pbmNsdWRlLyAic3VuNGktYTEwLmR0c2kiCisKKy8geworCW1vZGVsID0gIk1l
+bGUgQTEwMDAiOworCWNvbXBhdGlibGUgPSAibWVsZSxhMTAwMCIsICJhbGx3aW5uZXIsc3VuNGkt
+YTEwIjsKKworCWFsaWFzZXMgeworCQlzZXJpYWwwID0gJnVhcnQwOworCX07CisKKwljaG9zZW4g
+eworCQlib290YXJncyA9ICJlYXJseXByaW50ayBjb25zb2xlPXR0eVMwLDExNTIwMCI7CisJfTsK
+KworCXNvY0AwMWMyMDAwMCB7CisJCWVtYWM6IGV0aGVybmV0QDAxYzBiMDAwIHsKKwkJCXBpbmN0
+cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJCQlwaW5jdHJsLTAgPSA8JmVtYWNfcGluc19hPjsKKwkJ
+CXBoeSA9IDwmcGh5MT47CisJCQlzdGF0dXMgPSAib2theSI7CisJCX07CisKKwkJbWRpb0AwMWMw
+YjA4MCB7CisJCQlwaHktc3VwcGx5ID0gPCZyZWdfZW1hY18zdjM+OworCQkJc3RhdHVzID0gIm9r
+YXkiOworCisJCQlwaHkxOiBldGhlcm5ldC1waHlAMSB7CisJCQkJcmVnID0gPDE+OworCQkJfTsK
+KwkJfTsKKworCQlwaW5jdHJsQDAxYzIwODAwIHsKKwkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
+dCI7CisJCQlwaW5jdHJsLTAgPSA8JmExMDAwX2hvZ3M+OworCisJCQlhMTAwMF9ob2dzOiBob2dz
+QDAgeworCQkJCWFsbHdpbm5lcixwaW5zID0gIlBIMTUiOworCQkJCWFsbHdpbm5lcixmdW5jdGlv
+biA9ICJncGlvX291dCI7CisJCQkJYWxsd2lubmVyLGRyaXZlID0gPDA+OworCQkJCWFsbHdpbm5l
+cixwdWxsID0gPDA+OworCQkJfTsKKworCQkJbGVkX3BpbnNfYTEwMDA6IGxlZF9waW5zQDAgewor
+CQkJCWFsbHdpbm5lcixwaW5zID0gIlBIMTAiLCAiUEgyMCI7CisJCQkJYWxsd2lubmVyLGZ1bmN0
+aW9uID0gImdwaW9fb3V0IjsKKwkJCQlhbGx3aW5uZXIsZHJpdmUgPSA8MT47CisJCQkJYWxsd2lu
+bmVyLHB1bGwgPSA8MD47CisJCQl9OworCQl9OworCisJCXVhcnQwOiBzZXJpYWxAMDFjMjgwMDAg
+eworCQkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwkJCXBpbmN0cmwtMCA9IDwmdWFydDBf
+cGluc19hPjsKKwkJCXN0YXR1cyA9ICJva2F5IjsKKwkJfTsKKworCQlpMmMwOiBpMmNAMDFjMmFj
+MDAgeworCQkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwkJCXBpbmN0cmwtMCA9IDwmaTJj
+MF9waW5zX2E+OworCQkJc3RhdHVzID0gIm9rYXkiOworCQl9OworCX07CisKKwlsZWRzIHsKKwkJ
+Y29tcGF0aWJsZSA9ICJncGlvLWxlZHMiOworCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwor
+CQlwaW5jdHJsLTAgPSA8JmxlZF9waW5zX2ExMDAwPjsKKworCQlyZWQgeworCQkJbGFiZWwgPSAi
+YTEwMDA6cmVkOnVzciI7CisJCQlncGlvcyA9IDwmcGlvIDcgMTAgMD47CisJCX07CisKKwkJYmx1
+ZSB7CisJCQlsYWJlbCA9ICJhMTAwMDpibHVlOnVzciI7CisJCQlncGlvcyA9IDwmcGlvIDcgMjAg
+MD47CisJCX07CisJfTsKKworCXJlZ3VsYXRvcnMgeworCQljb21wYXRpYmxlID0gInNpbXBsZS1i
+dXMiOworCisJCXJlZ19lbWFjXzN2MzogZW1hYy0zdjMgeworCQkJY29tcGF0aWJsZSA9ICJyZWd1
+bGF0b3ItZml4ZWQiOworCQkJcmVndWxhdG9yLW5hbWUgPSAiZW1hYy0zdjMiOworCQkJcmVndWxh
+dG9yLW1pbi1taWNyb3ZvbHQgPSA8MzMwMDAwMD47CisJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9s
+dCA9IDwzMzAwMDAwPjsKKwkJCWVuYWJsZS1hY3RpdmUtaGlnaDsKKwkJCWdwaW8gPSA8JnBpbyA3
+IDE1IDA+OworCQl9OworCX07Cit9OwotLSAKMS44LjMuNAoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
