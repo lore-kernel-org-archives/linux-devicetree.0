@@ -1,240 +1,141 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH] ARM: sunxi: dt: Add device tree for Mele A1000
-Date: Tue, 13 Aug 2013 22:30:01 +0200
-Message-ID: <20130813203001.GC28819@lukather>
-References: <1376420865-4650-1-git-send-email-emilio@elopez.com.ar>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 01/15] drivers: phy: add generic PHY framework
+Date: Wed, 14 Aug 2013 00:19:28 +0200
+Message-ID: <520AB0F0.8010106@gmail.com>
+References: <20130720220006.GA7977@kroah.com> <20130731061538.GC13289@radagast> <520A0E1C.5000306@ti.com> <2034985.S0danJZqk4@amdc1227> <520A2100.6000709@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6638016807352857123=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1376420865-4650-1-git-send-email-emilio@elopez.com.ar>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, arokux@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <520A2100.6000709@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, Tomasz Figa <tomasz.figa@gmail.com>, s.nawrocki@samsung.com, kgene.kim@samsung.com, swarren@nvidia.com, jg1.han@samsung.com, Alan Stern <stern@rowland.harvard.edu>, grant.likely@linaro.org, linux-media@vger.kernel.org, george.cherian@ti.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, balajitk@ti.com, Greg KH <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, akpm@linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
+W dniu 2013-08-13 14:05, Kishon Vijay Abraham I pisze:
+> On Tuesday 13 August 2013 05:07 PM, Tomasz Figa wrote:
+>> On Tuesday 13 of August 2013 16:14:44 Kishon Vijay Abraham I wrote:
+>>> On Wednesday 31 July 2013 11:45 AM, Felipe Balbi wrote:
+>>>> On Wed, Jul 31, 2013 at 11:14:32AM +0530, Kishon Vijay Abraham I wrote:
+>>>>>>>>>> IMHO we need a lookup method for PHYs, just like for clocks,
+>>>>>>>>>> regulators, PWMs or even i2c busses because there are complex
+>>>>>>>>>> cases
+>>>>>>>>>> when passing just a name using platform data will not work. I
+>>>>>>>>>> would
+>>>>>>>>>> second what Stephen said [1] and define a structure doing things
+>>>>>>>>>> in a
+>>>>>>>>>> DT-like way.
+>>>>>>>>>>
+>>>>>>>>>> Example;
+>>>>>>>>>>
+>>>>>>>>>> [platform code]
+>>>>>>>>>>
+>>>>>>>>>> static const struct phy_lookup my_phy_lookup[] = {
+>>>>>>>>>>
+>>>>>>>>>> 	PHY_LOOKUP("s3c-hsotg.0", "otg", "samsung-usbphy.1", "phy.2"),
+>>>>>>>>>
+>>>>>>>>> The only problem here is that if *PLATFORM_DEVID_AUTO* is used
+>>>>>>>>> while
+>>>>>>>>> creating the device, the ids in the device name would change and
+>>>>>>>>> PHY_LOOKUP wont be useful.
+>>>>>>>>
+>>>>>>>> I don't think this is a problem. All the existing lookup methods
+>>>>>>>> already
+>>>>>>>> use ID to identify devices (see regulators, clkdev, PWMs, i2c,
+>>>>>>>> ...). You
+>>>>>>>> can simply add a requirement that the ID must be assigned manually,
+>>>>>>>> without using PLATFORM_DEVID_AUTO to use PHY lookup.
+>>>>>>>
+>>>>>>> And I'm saying that this idea, of using a specific name and id, is
+>>>>>>> frought with fragility and will break in the future in various ways
+>>>>>>> when
+>>>>>>> devices get added to systems, making these strings constantly have
+>>>>>>> to be
+>>>>>>> kept up to date with different board configurations.
+>>>>>>>
+>>>>>>> People, NEVER, hardcode something like an id.  The fact that this
+>>>>>>> happens today with the clock code, doesn't make it right, it makes
+>>>>>>> the
+>>>>>>> clock code wrong.  Others have already said that this is wrong there
+>>>>>>> as
+>>>>>>> well, as systems change and dynamic ids get used more and more.
+>>>>>>>
+>>>>>>> Let's not repeat the same mistakes of the past just because we
+>>>>>>> refuse to
+>>>>>>> learn from them...
+>>>>>>>
+>>>>>>> So again, the "find a phy by a string" functions should be removed,
+>>>>>>> the
+>>>>>>> device id should be automatically created by the phy core just to
+>>>>>>> make
+>>>>>>> things unique in sysfs, and no driver code should _ever_ be reliant
+>>>>>>> on
+>>>>>>> the number that is being created, and the pointer to the phy
+>>>>>>> structure
+>>>>>>> should be used everywhere instead.
+>>>>>>>
+>>>>>>> With those types of changes, I will consider merging this subsystem,
+>>>>>>> but
+>>>>>>> without them, sorry, I will not.
+>>>>>>
+>>>>>> I'll agree with Greg here, the very fact that we see people trying to
+>>>>>> add a requirement of *NOT* using PLATFORM_DEVID_AUTO already points
+>>>>>> to a big problem in the framework.
+>>>>>>
+>>>>>> The fact is that if we don't allow PLATFORM_DEVID_AUTO we will end up
+>>>>>> adding similar infrastructure to the driver themselves to make sure
+>>>>>> we
+>>>>>> don't end up with duplicate names in sysfs in case we have multiple
+>>>>>> instances of the same IP in the SoC (or several of the same PCIe
+>>>>>> card).
+>>>>>> I really don't want to go back to that.
+>>>>>
+>>>>> If we are using PLATFORM_DEVID_AUTO, then I dont see any way we can
+>>>>> give the correct binding information to the PHY framework. I think we
+>>>>> can drop having this non-dt support in PHY framework? I see only one
+>>>>> platform (OMAP3) going to be needing this non-dt support and we can
+>>>>> use the USB PHY library for it.>
+>>>> you shouldn't drop support for non-DT platform, in any case we lived
+>>>> without DT (and still do) for years. Gotta find a better way ;-)
+>>>
+>>> hmm..
+>>>
+>>> how about passing the device names of PHY in platform data of the
+>>> controller? It should be deterministic as the PHY framework assigns its
+>>> own id and we *don't* want to add any requirement that the ID must be
+>>> assigned manually without using PLATFORM_DEVID_AUTO. We can get rid of
+>>> *phy_init_data* in the v10 patch series.
 
---===============6638016807352857123==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="96YOpH+ONegL0A3E"
-Content-Disposition: inline
+OK, so the PHY device name would have a fixed part, passed as
+platform data of the controller and a variable part appended
+by the PHY core, depending on the number of registered PHYs ?
 
+Then same PHY names would be passed as the PHY provider driver's
+platform data ?
 
---96YOpH+ONegL0A3E
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Then if there are 2 instances of the above (same names in platform
+data) how would be determined which PHY controller is linked to
+which PHY supplier ?
 
-Hi Emilio,
+I guess you want each device instance to have different PHY device
+names already in platform data ? That might work. We probably will
+be focused mostly on DT anyway. It seem without DT we are trying
+to find some layer that would allow us to couple relevant devices
+and overcome driver core inconvenience that it provides to means
+to identify specific devices in advance. :) Your proposal sounds
+reasonable, however I might be missing some details or corner cases.
 
-On Tue, Aug 13, 2013 at 04:07:45PM -0300, Emilio L=F3pez wrote:
-> This adds a device tree usable on Mele A1000 (and A2000, as it
-> apparently is the same device except for the case). This device features
-> one UART port, Ethernet, an AXP209 PMU on i2c0 and two user configurable
-> LEDs.
->=20
-> Signed-off-by: Emilio L=F3pez <emilio@elopez.com.ar>
-> ---
->=20
-> This has been tested by arokux on #linux-sunxi in Freenode and found to=
-=20
-> work correctly.
->
->  arch/arm/boot/dts/Makefile            |   1 +
->  arch/arm/boot/dts/sun4i-a10-a1000.dts | 106 ++++++++++++++++++++++++++++=
-++++++
->  2 files changed, 107 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun4i-a10-a1000.dts
->=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 641b3c9..3fd3919 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -206,6 +206,7 @@ dtb-$(CONFIG_ARCH_STI)+=3D stih415-b2000.dtb \
->  	stih415-b2020.dtb \
->  	stih416-b2020.dtb
->  dtb-$(CONFIG_ARCH_SUNXI) +=3D \
-> +	sun4i-a10-a1000.dtb \
->  	sun4i-a10-cubieboard.dtb \
->  	sun4i-a10-mini-xplus.dtb \
->  	sun4i-a10-hackberry.dtb \
-> diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/su=
-n4i-a10-a1000.dts
-> new file mode 100644
-> index 0000000..304a38e
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-> @@ -0,0 +1,106 @@
-> +/*
-> + * Copyright 2013 Emilio L=F3pez
-> + *
-> + * Emilio L=F3pez <emilio@elopez.com.ar>
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +/dts-v1/;
-> +/include/ "sun4i-a10.dtsi"
-> +
-> +/ {
-> +	model =3D "Mele A1000";
-> +	compatible =3D "mele,a1000", "allwinner,sun4i-a10";
-> +
-> +	aliases {
-> +		serial0 =3D &uart0;
-> +	};
-> +
-> +	chosen {
-> +		bootargs =3D "earlyprintk console=3DttyS0,115200";
-> +	};
+>> What about slightly altering the concept of v9 to pass a pointer to struct
+>> device instead of device name inside phy_init_data?
 
-That's not quite useful anymore now that we have a DT-aware bootloader,
-I'd remove it.
+As Felipe said, we don't want to pass pointers in platform_data
+to/from random subsystems. We pass data, passing pointers would
+be a total mess IMHO.
 
-> +
-> +	soc@01c20000 {
-> +		emac: ethernet@01c0b000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&emac_pins_a>;
-> +			phy =3D <&phy1>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		mdio@01c0b080 {
-> +			phy-supply =3D <&reg_emac_3v3>;
-> +			status =3D "okay";
-> +
-> +			phy1: ethernet-phy@1 {
-> +				reg =3D <1>;
-> +			};
-> +		};
-> +
-> +		pinctrl@01c20800 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&a1000_hogs>;
-> +
-> +			a1000_hogs: hogs@0 {
-> +				allwinner,pins =3D "PH15";
-> +				allwinner,function =3D "gpio_out";
-> +				allwinner,drive =3D <0>;
-> +				allwinner,pull =3D <0>;
-> +			};
+> The problem is device might be created very late. (For example in omap4, usb2
+> phy device gets created when ocp2scp bus is probed). And we have to pass the
+> init data in board file.
 
-Why using the hog pins here? I don't think you require it anymore, just
-grab the pinctrl node from the regulator, it should work, right?
-
-> +
-> +			led_pins_a1000: led_pins@0 {
-> +				allwinner,pins =3D "PH10", "PH20";
-> +				allwinner,function =3D "gpio_out";
-> +				allwinner,drive =3D <1>;
-
-Do you really need the extra 10 mA here?
-
-> +				allwinner,pull =3D <0>;
-> +			};
-> +		};
-> +
-> +		uart0: serial@01c28000 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&uart0_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +
-> +		i2c0: i2c@01c2ac00 {
-> +			pinctrl-names =3D "default";
-> +			pinctrl-0 =3D <&i2c0_pins_a>;
-> +			status =3D "okay";
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&led_pins_a1000>;
-> +
-> +		red {
-> +			label =3D "a1000:red:usr";
-> +			gpios =3D <&pio 7 10 0>;
-> +		};
-> +
-> +		blue {
-> +			label =3D "a1000:blue:usr";
-> +			gpios =3D <&pio 7 20 0>;
-> +		};
-> +	};
-> +
-> +	regulators {
-> +		compatible =3D "simple-bus";
-> +
-> +		reg_emac_3v3: emac-3v3 {
-> +			compatible =3D "regulator-fixed";
-> +			regulator-name =3D "emac-3v3";
-> +			regulator-min-microvolt =3D <3300000>;
-> +			regulator-max-microvolt =3D <3300000>;
-> +			enable-active-high;
-> +			gpio =3D <&pio 7 15 0>;
-> +		};
-> +	};
-> +};
-> --=20
-> 1.8.3.4
->=20
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---96YOpH+ONegL0A3E
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSCpdJAAoJEBx+YmzsjxAg7LsQAIpmGWMLouuarS4X16x5Z5R5
-/GVepr+fS7GtCvpdt39L8pPB2A7Z+opsA6WhZeuC2+OzHcD6XNFltX2zuEejItmi
-J2TYZRIhUKjuTjQtIh80vQF7olVSamsPxrSxeuYDb024zvBhuTzTLMkWjiL1eKiO
-knBwKMwcWq8gA1qFcloJyFlh+tGlseMwMglJEl5Uka5rfl3SNYnEVvSwoDQyHtip
-EID58bOoMBQQ6kSCAVMbSg3YnLrUsnvxKjKxge76HK9BCOzkt0n+jJ5zdJn4PKf9
-IrqEwLq3dyj2ZZeQ0qTW8S0cg8SZsQ125ZV+La5ieMrzJpBwyXXRrsJ4qJ9ZxVaq
-+er2g12kWsEGoY6qouwyZkIY8/pTtan6Rz9itLJgwwEcSBmEkzv3fVFm61Kv6y7z
-g2Bm1NcNEMhl1nAptge9cGNcJ/z31pQhJsTDc55nMPCDRbpuJzawbdjyEqyr7PS1
-Qd9a7RIDPNfOc3KD8r5d/H78f3DJnlxE87KLD4eIp4Im8bmV+KZQdUt2UhA42wIl
-LLusCXxzDgkF+7ss0xxXGtHM9tc/DnpBxfbHk5js56dgDOC+KbSd8NKmaZLOGzJd
-1kMdfPuuMfYCZ30I11QwOPdaGkg7RglfTSgJAyF3ezAAbWX7Tum8oatl95Pf3UwY
-YxNHZUey+gxKCTA/D1gW
-=yOUI
------END PGP SIGNATURE-----
-
---96YOpH+ONegL0A3E--
-
-
---===============6638016807352857123==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6638016807352857123==--
+Regards,
+Sylwester
