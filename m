@@ -1,60 +1,64 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from [216.32.180.12] ([216.32.180.12]:37544 "EHLO
-	va3outboundpool.messaging.microsoft.com" rhost-flags-FAIL-FAIL-OK-OK)
-	by vger.kernel.org with ESMTP id S1758878Ab3HNCY5 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>);
-	Tue, 13 Aug 2013 22:24:57 -0400
-Date: Wed, 14 Aug 2013 10:09:12 +0800
-From: Nicolin Chen <b42378@freescale.com>
-Subject: Re: [alsa-devel] [PATCH v4 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
-Message-ID: <20130814020911.GA31651@MrMyself>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:52595 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1758121Ab3HMTDW (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2013 15:03:22 -0400
+Date: Tue, 13 Aug 2013 20:02:55 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130813190255.GF6427@sirena.org.uk>
 References: <1376308870-14232-1-git-send-email-b42378@freescale.com>
  <1376308870-14232-2-git-send-email-b42378@freescale.com>
  <CAOMZO5A7noEb98yuCPY6o2mf-FikFcMYiDLpg3huPKHMO7Fwdw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wjVsQm+Lgir5jV8i"
 Content-Disposition: inline
 In-Reply-To: <CAOMZO5A7noEb98yuCPY6o2mf-FikFcMYiDLpg3huPKHMO7Fwdw@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH v4 1/2] ASoC: fsl: Add S/PDIF CPU DAI driver
 Sender: devicetree-owner@vger.kernel.org
 To: Fabio Estevam <festevam@gmail.com>
-Cc: broonie@kernel.org, lars@metafoo.de, p.zabel@pengutronix.de, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, timur@tabi.org, rob.herring@calxeda.com, Shawn Guo <shawn.guo@linaro.org>
+Cc: Nicolin Chen <b42378@freescale.com>, lars@metafoo.de, p.zabel@pengutronix.de, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, timur@tabi.org, rob.herring@calxeda.com, Shawn Guo <shawn.guo@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Fabio,
 
-   Thank you for the comments.
+--wjVsQm+Lgir5jV8i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 On Tue, Aug 13, 2013 at 02:58:26PM -0300, Fabio Estevam wrote:
-> On Mon, Aug 12, 2013 at 9:01 AM, Nicolin Chen <b42378@freescale.com> wrote:
+> On Mon, Aug 12, 2013 at 9:01 AM, Nicolin Chen <b42378@freescale.com> wrot=
+e:
 > > +Required properties:
-> > +
-> > +  - compatible : Compatible list, contains "fsl,<chip>-spdif". Using general
-> 
+
+> > +  - compatible : Compatible list, contains "fsl,<chip>-spdif". Using g=
+eneral
+
 > Can't we just use "fsl,fsl-spdif" instead?
-> 
-> > +  "fsl,fsl-spdif" will get the default SoC type -- imx6q-spdif.
-> > +
-> 
-> I think this is not the usual approach we do with dt.
-> 
-> > +static const struct of_device_id fsl_spdif_dt_ids[] = {
-> > +       { .compatible = "fsl,fsl-spdif", },
-> 
-> Isn't only the first entry enough here?
 
-I just saw Mark's words as well. So I don't need to change this part right?
-But I'd like to add imx35 on it.
+It's better to list the specific chips in the DT so that we can quirk if
+we need to later. =20
 
+--wjVsQm+Lgir5jV8i
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> This MODULE_ALIAS name does not match the name you provided earlier:
-> 
-> .name = "fsl-spdif-dai"
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
-I'll fix it in v5.
+iQIcBAEBAgAGBQJSCoLbAAoJELSic+t+oim92QEQAJtgHlioikbwNtas7ayRGfgb
+rZQXCz6RCD/YbZ/BGScMsb8j/NyuxpNGeOu/icmId3IOQfu8CZw84Zw+1swL/hue
+LzVlUbrbd+miFgMAvK4PYSYLv1Pb8y6TMUxfncroYXqxtJJPRFd+8wFH9lEqdAYK
+QeKmxP426/W6dBzhTx/6fJxvsxNpCDahuUwi/GHPCUvEwkoFOl0UjqYNM22H9v6X
+lHzsk7mO3Z4Mo4iWbs9YZGZjNOD95tOL4891OQGk6Fq+brVK3ID8xMtwLqyg/K38
+gua4xLXbcnF0BXxNtvxFlXZu2gISQuopwj77oo/A5/HTtFh0Gn0cQKk+OU3mSN7X
+QIy+uLS61e1WWT8D6E6PKl5lcuFSnTDHS57Ep2eH9YWNnRYYCVwE8QGKMEeOQ9PI
+UcQOhz8THEN3eOTbB0L3of//hleDJ6c6bVeR+PH+j+QH2JhP7Y5SvcDGyz9sl9SX
+QJ9Ir/zxn+/895UKzDzi4MvebaqswIOiY2w/387MxAXH49HqVoZFtHb76w1bv9jT
+naiQk09BbhMcTNUDGyaslt94lXDWnzDHtJpzlSDV6+/0i3VM7mrpTplWOreIQKKT
+716mwhN8zMyXK8KjT+b/px4jt/RBFlzgMhAJ69UNyjKVdFkK0J1l7ap6smGmGyXS
+stdX2YGidR3c1+x3YekH
+=pf6Y
+-----END PGP SIGNATURE-----
 
-Best regards,
-Nicolin Chen
-
-
-
+--wjVsQm+Lgir5jV8i--
