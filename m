@@ -1,60 +1,54 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from cassiel.sirena.org.uk ([80.68.93.111]:34160 "EHLO
-	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1753673Ab3HOKJN (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Thu, 15 Aug 2013 06:09:13 -0400
-Date: Thu, 15 Aug 2013 11:08:44 +0100
-From: Mark Brown <broonie@kernel.org>
-Message-ID: <20130815100844.GW2401@sirena.org.uk>
-References: <1376511989-28187-1-git-send-email-swarren@wwwdotorg.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="W1uEbMXJ1Mj4g6TI"
-Content-Disposition: inline
-In-Reply-To: <1376511989-28187-1-git-send-email-swarren@wwwdotorg.org>
-Subject: Re: [PATCH] ASoC: tegra: support a Mic Jack in the Tegra+RT5640
- machine driver
+Received: from avon.wwwdotorg.org ([70.85.31.133]:51060 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S932987Ab3HNU0h (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 16:26:37 -0400
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH] ASoC: tegra: support a Mic Jack in the Tegra+RT5640 machine driver
+Date: Wed, 14 Aug 2013 14:26:29 -0600
+Message-Id: <1376511989-28187-1-git-send-email-swarren@wwwdotorg.org>
 Sender: devicetree-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ian.campbell@citrix.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
+From: Stephen Warren <swarren@nvidia.com>
 
---W1uEbMXJ1Mj4g6TI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add a Mic Jack widget to the Tegra+RT5640 machine driver, and document
+this in the DT binding. This enables the DT to include the Mic Jack in
+the audio routing table, and hence enables capture of audio, in addition
+to the previously-working playback.
 
-On Wed, Aug 14, 2013 at 02:26:29PM -0600, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
->=20
-> Add a Mic Jack widget to the Tegra+RT5640 machine driver, and document
-> this in the DT binding. This enables the DT to include the Mic Jack in
-> the audio routing table, and hence enables capture of audio, in addition
-> to the previously-working playback.
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+ Documentation/devicetree/bindings/sound/nvidia,tegra-audio-rt5640.txt | 1 +
+ sound/soc/tegra/tegra_rt5640.c                                        | 1 +
+ 2 files changed, 2 insertions(+)
 
-Applied, thanks.
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-rt5640.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-rt5640.txt
+index cba4f88..dc62249 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-rt5640.txt
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-rt5640.txt
+@@ -16,6 +16,7 @@ Required properties:
+ 
+   * Headphones
+   * Speakers
++  * Mic Jack
+ 
+ - nvidia,i2s-controller : The phandle of the Tegra I2S controller that's
+   connected to the CODEC.
+diff --git a/sound/soc/tegra/tegra_rt5640.c b/sound/soc/tegra/tegra_rt5640.c
+index 08794f9..4511c5a 100644
+--- a/sound/soc/tegra/tegra_rt5640.c
++++ b/sound/soc/tegra/tegra_rt5640.c
+@@ -99,6 +99,7 @@ static struct snd_soc_jack_gpio tegra_rt5640_hp_jack_gpio = {
+ static const struct snd_soc_dapm_widget tegra_rt5640_dapm_widgets[] = {
+ 	SND_SOC_DAPM_HP("Headphones", NULL),
+ 	SND_SOC_DAPM_SPK("Speakers", NULL),
++	SND_SOC_DAPM_MIC("Mic Jack", NULL),
+ };
+ 
+ static const struct snd_kcontrol_new tegra_rt5640_controls[] = {
+-- 
+1.8.1.5
 
---W1uEbMXJ1Mj4g6TI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJSDKipAAoJELSic+t+oim9GdwQAIEWQKsjWjiLLlorg06uhL4H
-r37wuL1pCosg3IrNe7BNZ3oKxRDEwK92XU8LWKpLt7KVdYs7mIoSNPadoJxJWsPB
-iGHDeXxKR4+kfE9D7SsVdhM7ZbYyJnkR08LjTLzVBqIhJzsZq7+JLRa68U0fIIJW
-QK66befmUlyHzqIFeU0f6KjYCSsUemm91a+hYwbEixtYJ4Azve8wf/dAifHKESzM
-oFayPGNj+YVj5bdq+o1i6IaD+PodL+u99nQcY2FcQlsOOUf7c9zcUuJ0DMJT4Dv1
-F/eYfP2KqQMGIhhclaTsLTXEiQWcSaeHGpnocDkzC4PWnmXkfY0w+RV6ERqRb88I
-doWBErxmMVsxiwvgA0la61jgTv2phL+IrtCF9X6SG2rKmE3WuJOPQ4wuelYRH6Fr
-0pJiGH1yKGrPYCKW+OqPWYN+9iKiq7h9Ej4OSzGLQTsvXdpow1w57OkHuOeoVUoE
-Du0oeDIEHs0EoUuSIhfN74FWL5bDOXsjSw2MUIx+bswEqmP8IoEwpLnPW+4iW0f6
-OH68zy0d75n6PKMNRWSbFQvd4BzkObATJJ+4fYAaTvjaI5HsYFscWR1NaNCiY7y9
-vok3qDVi4Ynij2U4ACJbVFIT//9psAJfZ6vW2p4rPvbvTjf10q5kBcoMajx0ZnYs
-uYbawE7xa+pMIofFDKnp
-=I1np
------END PGP SIGNATURE-----
-
---W1uEbMXJ1Mj4g6TI--
