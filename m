@@ -1,144 +1,33 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-qe0-f73.google.com ([209.85.128.73]:33672 "EHLO
-	mail-qe0-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1754866Ab3HLWE3 (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Mon, 12 Aug 2013 18:04:29 -0400
-Received: by mail-qe0-f73.google.com with SMTP id 1so747349qee.4
-        for <devicetree@vger.kernel.org>; Mon, 12 Aug 2013 15:04:28 -0700 (PDT)
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH] pwm-backlight: add "max-brightness" property
-Date: Mon, 12 Aug 2013 15:04:17 -0700
-Message-Id: <1376345057-29895-1-git-send-email-abrestic@chromium.org>
+Received: from avon.wwwdotorg.org ([70.85.31.133]:56674 "EHLO
+	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S933270Ab3HNVoU (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 17:44:20 -0400
+Message-ID: <520BFA31.1020508@wwwdotorg.org>
+Date: Wed, 14 Aug 2013 15:44:17 -0600
+From: Stephen Warren <swarren@wwwdotorg.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH 2/2] ARM: tegra: add Mic Jack to Cardhu device tree
+References: <1376512027-28245-1-git-send-email-swarren@wwwdotorg.org> <1376512027-28245-2-git-send-email-swarren@wwwdotorg.org> <20130814213700.GA21728@ulmo>
+In-Reply-To: <20130814213700.GA21728@ulmo>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Richard Purdie <rpurdie@rpsys.net>, Jingoo Han <jg1.han@samsung.com>
-Cc: Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Rob Landley <rob@landley.net>, Thierry Reding <thierry.reding@gmail.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Specifying each individual brightness value via the "brightness-levels"
-property can be a pain if we want to use a large continuous range of
-brightness values.  Add the property "max-brightness", which can be
-given in place of "brightness-levels", that specifies that all values
-between 0 and the given value can be used.
+On 08/14/2013 03:37 PM, Thierry Reding wrote:
+> On Wed, Aug 14, 2013 at 02:27:07PM -0600, Stephen Warren wrote:
+>> From: Stephen Warren <swarren@nvidia.com>
+>> 
+>> This enables the microphone input jack, and hence allows audio to
+>> be captured as well as played back.
+>> 
+>> Signed-off-by: Stephen Warren <swarren@nvidia.com> --- 
+>> arch/arm/boot/dts/tegra114-dalmore.dts | 4 +++-
+> 
+> The commit subject says Cardhu, but you modify the Dalmore DTS
+> here.
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
- .../bindings/video/backlight/pwm-backlight.txt     | 22 +++++++++---
- drivers/video/backlight/pwm_bl.c                   | 39 +++++++++++++---------
- 2 files changed, 42 insertions(+), 19 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-index 1e4fc72..856dfc9 100644
---- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-+++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-@@ -3,15 +3,21 @@ pwm-backlight bindings
- Required properties:
-   - compatible: "pwm-backlight"
-   - pwms: OF device-tree PWM specification (see PWM binding[0])
-+  - one of "brightness-levels" or "max-brightness", described below
-+  - default-brightness-level: the default brightness level (index into the array
-+      defined by the "brightness-levels" property or a value between 0 and
-+      "max-brightness")
-+
-+Optional properties:
-   - brightness-levels: Array of distinct brightness levels. Typically these
-       are in the range from 0 to 255, but any range starting at 0 will do.
-       The actual brightness level (PWM duty cycle) will be interpolated
-       from these values. 0 means a 0% duty cycle (darkest/off), while the
-       last value in the array represents a 100% duty cycle (brightest).
--  - default-brightness-level: the default brightness level (index into the
--      array defined by the "brightness-levels" property)
--
--Optional properties:
-+  - max-brightness: Instead of specifying a complete set of brightness
-+      levels, a single maximum brightness value may be given. This indicates
-+      that all integers between 0 and max-brightness are valid brightness
-+      values.
-   - pwm-names: a list of names for the PWM devices specified in the
-                "pwms" property (see PWM binding[0])
- 
-@@ -26,3 +32,11 @@ Example:
- 		brightness-levels = <0 4 8 16 32 64 128 255>;
- 		default-brightness-level = <6>;
- 	};
-+or:
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 1000000 0>;
-+
-+		max-brightness = <1024>;
-+		default-brightness-level = <700>;
-+	};
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 1fea627..92973b1 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -98,7 +98,6 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 				  struct platform_pwm_backlight_data *data)
- {
- 	struct device_node *node = dev->of_node;
--	struct property *prop;
- 	int length;
- 	u32 value;
- 	int ret;
-@@ -108,34 +107,44 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 
- 	memset(data, 0, sizeof(*data));
- 
--	/* determine the number of brightness levels */
--	prop = of_find_property(node, "brightness-levels", &length);
--	if (!prop)
--		return -EINVAL;
-+	if (of_find_property(node, "brightness-levels", &length)) {
-+		data->max_brightness = length / sizeof(u32);
- 
--	data->max_brightness = length / sizeof(u32);
-+		/* read brightness levels from DT property */
-+		if (data->max_brightness > 0) {
-+			size_t size = sizeof(*data->levels) *
-+					data->max_brightness;
- 
--	/* read brightness levels from DT property */
--	if (data->max_brightness > 0) {
--		size_t size = sizeof(*data->levels) * data->max_brightness;
--
--		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
--		if (!data->levels)
--			return -ENOMEM;
-+			data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
-+			if (!data->levels)
-+				return -ENOMEM;
- 
--		ret = of_property_read_u32_array(node, "brightness-levels",
-+			ret = of_property_read_u32_array(node,
-+						"brightness-levels",
- 						 data->levels,
- 						 data->max_brightness);
-+			if (ret < 0)
-+				return ret;
-+
-+			data->max_brightness--;
-+		}
-+	} else {
-+		ret = of_property_read_u32(node, "max-brightness",
-+					   &value);
- 		if (ret < 0)
- 			return ret;
- 
-+		/* brightness values are 0 to max-brightness */
-+		data->max_brightness = value;
-+	}
-+
-+	if (data->max_brightness > 0) {
- 		ret = of_property_read_u32(node, "default-brightness-level",
- 					   &value);
- 		if (ret < 0)
- 			return ret;
- 
- 		data->dft_brightness = value;
--		data->max_brightness--;
- 	}
- 
- 	/*
--- 
-1.8.3
-
+Yup. I'll fix that up when applying this.
