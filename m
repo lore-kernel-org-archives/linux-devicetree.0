@@ -1,62 +1,81 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from iolanthe.rowland.org ([192.131.102.54]:45611 "HELO
-	iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with SMTP id S1760367Ab3HNSfI (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 14:35:08 -0400
-Date: Wed, 14 Aug 2013 14:35:07 -0400 (EDT)
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: Non-enumerable devices on USB and other enumerable buses
-In-Reply-To: <20130814173028.GB2401@sirena.org.uk>
-Message-ID: <Pine.LNX.4.44L0.1308141410190.1701-100000@iolanthe.rowland.org>
+Received: from cassiel.sirena.org.uk ([80.68.93.111]:33057 "EHLO
+	cassiel.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759967Ab3HNRaq (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 13:30:46 -0400
+Date: Wed, 14 Aug 2013 18:30:28 +0100
+From: Mark Brown <broonie@kernel.org>
+Message-ID: <20130814173028.GB2401@sirena.org.uk>
+References: <20130814153906.GU6427@sirena.org.uk>
+ <Pine.LNX.4.44L0.1308141209410.1701-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vGgW1X5XWziG23Ko"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1308141209410.1701-100000@iolanthe.rowland.org>
+Subject: Re: Non-enumerable devices on USB and other enumerable buses
 Sender: devicetree-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
+To: Alan Stern <stern@rowland.harvard.edu>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ian.campbell@citrix.com>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 14 Aug 2013, Mark Brown wrote:
 
-> On Wed, Aug 14, 2013 at 12:14:06PM -0400, Alan Stern wrote:
-> > On Wed, 14 Aug 2013, Mark Brown wrote:
-> 
-> > > Yes, so you'd want callbacks when the device actually appears and
-> > > disappears.
-> 
-> > No, no -- this is exactly the point I was trying to make.  The on-board
-> > hub _won't_ appear on the USB bus until the GPIOs are set.  Therefore
-> > the callback to set the GPIOs needs to be at a different place, not
-> > when the device appears.
-> 
-> What I'm proposing is that we have a way of telling buses that devices
-> exist via a mechanism other than their actually being visible on the bus
-> at the current time.  If you're doing that the driver can be running
-> prior to the hardware being there, just like it does with all the
-> non-enumerable buses.
+--vGgW1X5XWziG23Ko
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This may work for other buses, but it isn't feasible for USB.  Not only
-do many of the drivers need to communicate with their device during
-their probe routine, the subsystem itself needs to communicate with the
-device before many of the important data structures can be constructed.  
-Without these structures, the device can't be bound to a driver.  We 
-wouldn't even know which driver to bind it to!
+On Wed, Aug 14, 2013 at 12:14:06PM -0400, Alan Stern wrote:
+> On Wed, 14 Aug 2013, Mark Brown wrote:
 
-My impression is that much of what you want could be handled by a
-platform callback invoked when a particular bus -- i.e., one whose
-upstream controller is a particular platform device -- is registered.  
-Is that correct?  For example, in the USB case, the on-board hub's
-GPIOs could be set when the USB bus is registered (or perhaps when the
-bus's root hub is registered).
+> > Yes, so you'd want callbacks when the device actually appears and
+> > disappears.
 
-> It means that there are situations where a driver wants to take the
-> hardware offline but still offer services to userspace which will
-> require the hardware to be brought on line again.  The fact that this is
-> a very generic thing is exactly why I'm raising this as a generic issue.
+> No, no -- this is exactly the point I was trying to make.  The on-board
+> hub _won't_ appear on the USB bus until the GPIOs are set.  Therefore
+> the callback to set the GPIOs needs to be at a different place, not
+> when the device appears.
 
-This is a separate issue, more or less independent of whether the
-platform needs to carry out special actions for the device in question.  
-If you're suggesting these off-line/on-line transitions are appropriate
-places for a platform hook, then yes, that makes sense.
+What I'm proposing is that we have a way of telling buses that devices
+exist via a mechanism other than their actually being visible on the bus
+at the current time.  If you're doing that the driver can be running
+prior to the hardware being there, just like it does with all the
+non-enumerable buses.
 
-Alan Stern
+> > > Perhaps the platform-level code would need to hook into the places
+> > > where the discoverable bus is registered and unregistered.
 
+> > We'd need some way to get information to the drivers still, and to
+> > handle drivers that want to stop and start things.
+
+> Um...  What exactly does this mean?  It's so generic, it could apply to
+> anything under drivers/.  After all, what driver doesn't want to stop
+> and start things?
+
+It means that there are situations where a driver wants to take the
+hardware offline but still offer services to userspace which will
+require the hardware to be brought on line again.  The fact that this is
+a very generic thing is exactly why I'm raising this as a generic issue.
+
+--vGgW1X5XWziG23Ko
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJSC76xAAoJELSic+t+oim9HQAP/0l6Vhxdy9jeDjPohHWTguIV
+f9MEnTlBPnEcvIIAQI/vUawEa44hyKw0Zrf/yEwQy5L8SBTFM4U+KEE5vNnc5h5N
+pAKjXLYtnWdRP3WfLrI87qiuWEpYhYc/xEDA6beSqNlj+qMaBqy5wa2oGE2cCtzn
+0i2C34PsUFzCmX+m1/+1/cjIK52muAtV1tzCvpIefODZ1RQfZp5fUHx2Lw4KlZac
+8nkjMOnm40TSzTDosvj159F53BLiS/Yi1JrCirBaAVZn70x6JyNswV4tsBlunNxO
+xu0K3mN40FfwCyTExw7l2gidb9H5+RFupImBIaIbZNttTgsLkW3K6MIrPn9MxSDn
+3hUbhmHM6w6G7MUYvQ/w8+XXM4GzsUP6pSeJpd5dzmqQANlrOvKqA1W8CRbCjZGr
+GwWVW9Va7JN8Ojvs2o5JGiru50xCOu2OetnNQ53dWpTz6VRcsyZ8ISzlnAz0FlRw
+VbyhEoPzeWK4yE+AsVXw2lrRxgSXjKsHAM3wDvg+/3BbONzQ59iYAJQxfRTiPg+I
+zoVBzle6G7Fsry6hIUI/reWD0yabhB+i+PyaTl/bXnO4ODGJM0vYnFS6aXzrA1pn
+gAEbrQyDcC+xJvWNOtK2wxntjEwHzArAMPV0xOGSkfLIUeHiV4e6uUq/wAQl0ixc
+tYTCsOt1DyFmIufOtD5j
+=2sdc
+-----END PGP SIGNATURE-----
+
+--vGgW1X5XWziG23Ko--
