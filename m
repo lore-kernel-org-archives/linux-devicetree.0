@@ -1,50 +1,66 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] ARM: davinci: da8xx: fix clock lookup for mdio
-	device
-Date: Wed, 14 Aug 2013 17:34:13 +0530
-Message-ID: <520B723D.5020400@ti.com>
-References: <1371999607-6483-1-git-send-email-prabhakar.csengg@gmail.com>
-	<1371999607-6483-2-git-send-email-prabhakar.csengg@gmail.com>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+Subject: Re: [PATCH v4 0/4] ARM: OMAP2+: AM33XX: VDD CORE OPP50 support
+Date: Wed, 14 Aug 2013 15:38:00 +0200
+Message-ID: <1376487480.3889.64.camel@coredoba.hi.pengutronix.de>
+References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1371999607-6483-2-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russ Dill <Russ.Dill@ti.com>
+Cc: Kevin Hilman <khilman@deeprootsystems.com>, devicetree@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar,
-
-On 6/23/2013 8:30 PM, Prabhakar Lad wrote:
-> From: "Lad, Prabhakar" <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tue, 2013-08-13 at 15:20 -0700, Russ Dill wrote:
+> The purpose and method of executing these sequences is left up to each
+> platform. In the case of the am33xx, the CM3 firmware writes out the
+> simple I2C sequences.
 > 
-> This patch removes the clock alias for mdio device and adds a entry
-> in clock lookup table, this entry can now be used by both DT and NON
-> DT case.
+> Each sequence is a series of I2C write commands. The first byte is the
+> length of the write, the second byte the I2C device to address, and
+> the following bytes are the message.
+
+>         /* Set OPP100 (1.10V) for VDD core */
+>         wake_sequence = /bits/ 8 <
+>                 0x02 0x2d 0x25 0x2b /* Set VDD2 to 1.1V */
+>         >;
 > 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>         tps: tps@2d {
+>                 reg = <0x2d>;
+>         };
 
-This patch looks good, except you can do the same thing on all DaVinci
-devices not just on DA8XX. Apart from this patches 1-5 in this series
-look good. If you can spin this fix in short time I can queue 1-5 for
-v3.12 while we wait for you to fix 6/6
+> In the above example, the sequence "0x25 0x1f" is written to the I2C
+> device at address 0x2d (the TPS65910 PMIC). The PMIC interprets that
+> as a write to a register at address 0x25.
 
-Thanks,
-Sekhar
+> I'd really like to get some feedback on the devicetree bindings. 
+
+Shouldn't the TPS driver know how to generate this sequence? It seems
+fragile to do voltage adjustments behind the back of the regulator
+framework and the TPS driver. The wake-sequence values should match the
+(in-memory) regulator configuration on resume (which may have been
+changed by DVFS).
+
+The CM3 driver needs to figure out where the core regulator is connected
+using using either DT or the regulator framework and ask the TPS (via a
+new interface) for register writes for sleep/wake sequences. Then those
+sequences will actually match the correct voltages configured using
+DT/DVFS.
+
+Regards,
+Jan
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
