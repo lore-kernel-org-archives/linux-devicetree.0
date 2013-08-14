@@ -1,116 +1,41 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from avon.wwwdotorg.org ([70.85.31.133]:49259 "EHLO
-	avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S933121Ab3HNV1T (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 17:27:19 -0400
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V6 1/5] of: move documentation of of_parse_phandle_with_args
-Date: Wed, 14 Aug 2013 15:27:08 -0600
-Message-Id: <1376515632-12594-1-git-send-email-swarren@wwwdotorg.org>
+Received: from mail-pb0-f46.google.com ([209.85.160.46]:57733 "EHLO
+	mail-pb0-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759911Ab3HNLlc (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 07:41:32 -0400
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v3 2/4] ARM: dts: Remove unsused MFC clock from exynos4
+Date: Wed, 14 Aug 2013 17:11:35 +0530
+Message-Id: <1376480497-17572-3-git-send-email-arun.kk@samsung.com>
+In-Reply-To: <1376480497-17572-1-git-send-email-arun.kk@samsung.com>
+References: <1376480497-17572-1-git-send-email-arun.kk@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ian.campbell@citrix.com>, Kumar Gala <galak@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@nvidia.com>
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, k.debski@samsung.com, s.nawrocki@samsung.com, sachin.kamat@linaro.org, arun.kk@samsung.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Stephen Warren <swarren@nvidia.com>
+Removes the unused sclk_mfc from exynos4 dtsi file.
 
-Commit bd69f73 "of: Create function for counting number of phandles in
-a property" renamed of_parse_phandle_with_args(), and created a wrapper
-function that implemented the original name. However, the documentation
-of the original function was not moved, leaving it apparently documenting
-the newly renamed function.
-
-Move the documentation so that it is adjacent to the function it
-documents.
-
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
 ---
- drivers/of/base.c | 64 +++++++++++++++++++++++++++----------------------------
- 1 file changed, 32 insertions(+), 32 deletions(-)
+ arch/arm/boot/dts/exynos4.dtsi |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 1c3c79c..e485489 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1105,38 +1105,6 @@ struct device_node *of_parse_phandle(const struct device_node *np,
- }
- EXPORT_SYMBOL(of_parse_phandle);
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 597cfcf..42aa0c9 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -248,8 +248,8 @@
+ 		reg = <0x13400000 0x10000>;
+ 		interrupts = <0 94 0>;
+ 		samsung,power-domain = <&pd_mfc>;
+-		clocks = <&clock 170>, <&clock 273>;
+-		clock-names = "sclk_mfc", "mfc";
++		clocks = <&clock 273>;
++		clock-names = "mfc";
+ 		status = "disabled";
+ 	};
  
--/**
-- * of_parse_phandle_with_args() - Find a node pointed by phandle in a list
-- * @np:		pointer to a device tree node containing a list
-- * @list_name:	property name that contains a list
-- * @cells_name:	property name that specifies phandles' arguments count
-- * @index:	index of a phandle to parse out
-- * @out_args:	optional pointer to output arguments structure (will be filled)
-- *
-- * This function is useful to parse lists of phandles and their arguments.
-- * Returns 0 on success and fills out_args, on error returns appropriate
-- * errno value.
-- *
-- * Caller is responsible to call of_node_put() on the returned out_args->node
-- * pointer.
-- *
-- * Example:
-- *
-- * phandle1: node1 {
-- * 	#list-cells = <2>;
-- * }
-- *
-- * phandle2: node2 {
-- * 	#list-cells = <1>;
-- * }
-- *
-- * node3 {
-- * 	list = <&phandle1 1 2 &phandle2 3>;
-- * }
-- *
-- * To get a device_node of the `node2' node you may call this:
-- * of_parse_phandle_with_args(node3, "list", "#list-cells", 1, &args);
-- */
- static int __of_parse_phandle_with_args(const struct device_node *np,
- 					const char *list_name,
- 					const char *cells_name, int index,
-@@ -1239,6 +1207,38 @@ static int __of_parse_phandle_with_args(const struct device_node *np,
- 	return rc;
- }
- 
-+/**
-+ * of_parse_phandle_with_args() - Find a node pointed by phandle in a list
-+ * @np:		pointer to a device tree node containing a list
-+ * @list_name:	property name that contains a list
-+ * @cells_name:	property name that specifies phandles' arguments count
-+ * @index:	index of a phandle to parse out
-+ * @out_args:	optional pointer to output arguments structure (will be filled)
-+ *
-+ * This function is useful to parse lists of phandles and their arguments.
-+ * Returns 0 on success and fills out_args, on error returns appropriate
-+ * errno value.
-+ *
-+ * Caller is responsible to call of_node_put() on the returned out_args->node
-+ * pointer.
-+ *
-+ * Example:
-+ *
-+ * phandle1: node1 {
-+ * 	#list-cells = <2>;
-+ * }
-+ *
-+ * phandle2: node2 {
-+ * 	#list-cells = <1>;
-+ * }
-+ *
-+ * node3 {
-+ * 	list = <&phandle1 1 2 &phandle2 3>;
-+ * }
-+ *
-+ * To get a device_node of the `node2' node you may call this:
-+ * of_parse_phandle_with_args(node3, "list", "#list-cells", 1, &args);
-+ */
- int of_parse_phandle_with_args(const struct device_node *np, const char *list_name,
- 				const char *cells_name, int index,
- 				struct of_phandle_args *out_args)
 -- 
-1.8.1.5
+1.7.9.5
 
