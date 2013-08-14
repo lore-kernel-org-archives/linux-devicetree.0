@@ -1,63 +1,85 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail2.gnudd.com ([213.203.150.91]:56442 "EHLO mail.gnudd.com"
-	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-	id S932662Ab3HGK1g (ORCPT <rfc822;devicetree@vger.kernel.org>);
-	Wed, 7 Aug 2013 06:27:36 -0400
-Date: Wed, 7 Aug 2013 12:20:58 +0200
-From: Davide Ciminaghi <ciminaghi@gnudd.com>
-Subject: [PATCH 20/26] x86 STA2X11 platform: remove useless pr_info()'s
-Message-ID: <714a6e4773977fb716ddde077b6f574e1ed7f8b6.1375867291.git.rubini@gnudd.com>
+Received: from devils.ext.ti.com ([198.47.26.153]:47914 "EHLO
+	devils.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+	with ESMTP id S1759510Ab3HNJEr (ORCPT
+	<rfc822;devicetree@vger.kernel.org>); Wed, 14 Aug 2013 05:04:47 -0400
+Message-ID: <520B482A.9060701@ti.com>
+Date: Wed, 14 Aug 2013 12:04:42 +0300
+From: Roger Quadros <rogerq@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-References: <cover.1375867291.git.rubini@gnudd.com>
-In-Reply-To: <cover.1375867291.git.rubini@gnudd.com>
+Subject: Re: [PATCH 6/7] ARM: dts: omap4: update omap-control-usb nodes
+References: <1375365915-21380-1-git-send-email-rogerq@ti.com> <1375365915-21380-7-git-send-email-rogerq@ti.com> <520B42B8.5080107@baylibre.com>
+In-Reply-To: <520B42B8.5080107@baylibre.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: rubini@gnudd.com, Giancarlo Asnaghi <giancarlo.asnaghi@st.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+To: Benoit Cousson <bcousson@baylibre.com>
+Cc: balbi@ti.com, tony@atomide.com, kishon@ti.com, george.cherian@ti.com, dmurphy@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Davide Ciminaghi <ciminaghi@gnudd.com>
-Acked-by: Giancarlo Asnaghi <giancarlo.asnaghi@st.com>
----
- arch/x86/platform/sta2x11/sta2x11.c |    4 ----
- 1 files changed, 0 insertions(+), 4 deletions(-)
+On 08/14/2013 11:41 AM, Benoit Cousson wrote:
+> Hi Roger,
+> 
+> On 01/08/2013 16:05, Roger Quadros wrote:
+>> Split otghs_ctrl and USB2 PHY power down into separate
+>> omap-control-usb nodes. Update ti,mode property.
+> 
+> Nit: I guess you mean ti,type?
 
-diff --git a/arch/x86/platform/sta2x11/sta2x11.c b/arch/x86/platform/sta2x11/sta2x11.c
-index 57ed10d..b3e9cec 100644
---- a/arch/x86/platform/sta2x11/sta2x11.c
-+++ b/arch/x86/platform/sta2x11/sta2x11.c
-@@ -374,7 +374,6 @@ static struct platform_driver sta2x11_sctl_platform_driver = {
- 
- static int __init sta2x11_sctl_init(void)
- {
--	pr_info("%s\n", __func__);
- 	return platform_driver_register(&sta2x11_sctl_platform_driver);
- }
- 
-@@ -394,7 +393,6 @@ static struct platform_driver sta2x11_apbreg_platform_driver = {
- 
- static int __init sta2x11_apbreg_init(void)
- {
--	pr_info("%s\n", __func__);
- 	return platform_driver_register(&sta2x11_apbreg_platform_driver);
- }
- 
-@@ -414,7 +412,6 @@ static struct platform_driver sta2x11_apb_soc_regs_platform_driver = {
- 
- static int __init sta2x11_apb_soc_regs_init(void)
- {
--	pr_info("%s\n", __func__);
- 	return platform_driver_register(&sta2x11_apb_soc_regs_platform_driver);
- }
- 
-@@ -434,7 +431,6 @@ static struct platform_driver sta2x11_scr_platform_driver = {
- 
- static int __init sta2x11_scr_init(void)
- {
--	pr_info("%s\n", __func__);
- 	return platform_driver_register(&sta2x11_scr_platform_driver);
- }
- 
--- 
-1.7.7.2
+Right :).
+
+> 
+>> CC: Benoit Cousson <benoit.cousson@linaro.org>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>   arch/arm/boot/dts/omap4.dtsi |   17 ++++++++++++-----
+>>   1 files changed, 12 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+>> index 22d9f2b..9a6fa27 100644
+>> --- a/arch/arm/boot/dts/omap4.dtsi
+>> +++ b/arch/arm/boot/dts/omap4.dtsi
+>> @@ -519,7 +519,7 @@
+>>   			usb2_phy: usb2phy@4a0ad080 {
+>>   				compatible = "ti,omap-usb2";
+>>   				reg = <0x4a0ad080 0x58>;
+>> -				ctrl-module = <&omap_control_usb>;
+>> +				ctrl-module = <&omap_control_usb2phy>;
+>>   			};
+>>   		};
+>>   
+>> @@ -643,11 +643,17 @@
+>>   			};
+>>   		};
+>>   
+>> -		omap_control_usb: omap-control-usb@4a002300 {
+>> +		omap_control_usb2phy: omap-control-usb@4a002300 {
+>>   			compatible = "ti,omap-control-usb";
+>> -			reg = <0x4a002300 0x4>,
+>> -			      <0x4a00233c 0x4>;
+>> -			reg-names = "control_dev_conf", "otghs_control";
+>> +			reg = <0x4a002300 0x4>;
+>> +			reg-names = "power";
+>> +			ti,type = <2>;
+> 
+> Now that we can use the C preprocessor, it will be nice to use a macro instead of the value.
+> 
+> TYPE1 - if it has otghs_control mailbox register (e.g. on OMAP4)
+> TYPE2 - if it has Power down bit in control_dev_conf register. e.g. USB2 PHY
+> TYPE3 - if it has DPLL and individual Rx & Tx power control. e.g. USB3 PHY or SATA PHY
+> TYPE4 - if it has both power down and power aux registers. e.g. USB2 PHY on DRA7
+> 
+> Well, assuming you can find macro names that can explain a little bit what the type is about :-)
+> 
+> That being said...
+> Do you really need to expose the type here? Maybe with just a set of different compatible string you can figure out in the driver what type we are talking about.
+> It is always better to minimize the amount of information we put in DT as soon as we can infer it from the compatible string.
+> 
+> So instead of using a generic "ti,omap-control-usb" string + "ti,type" you can potentially use several specific strings: ti,omap4-control-usb, ti,dra7-control-usb...
+> Since the DT gurus are recommending to use specific compatible string as much as possible, this is maybe a better approach.
+> 
+
+Good point. I'll get rid of the type altogether and use the compatible string instead.
+
+cheers,
+-roger
