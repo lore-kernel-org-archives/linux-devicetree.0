@@ -1,7 +1,7 @@
 From: Sean Paul <seanpaul@chromium.org>
-Subject: [PATCH v2 1/2] drm: Add drm_bridge
-Date: Wed, 14 Aug 2013 16:47:37 -0400
-Message-ID: <1376513258-25703-2-git-send-email-seanpaul@chromium.org>
+Subject: [PATCH v2 2/2] drm/bridge: Add PTN3460 bridge driver
+Date: Wed, 14 Aug 2013 16:47:38 -0400
+Message-ID: <1376513258-25703-3-git-send-email-seanpaul@chromium.org>
 References: <1376513258-25703-1-git-send-email-seanpaul@chromium.org>
 Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1376513258-25703-1-git-send-email-seanpaul@chromium.org>
@@ -10,436 +10,494 @@ To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, dri-devel@li
 Cc: Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the notion of a drm_bridge. A bridge is a chained
-device which hangs off an encoder. The drm driver using the bridge
-should provide the association between encoder and bridge. Once a
-bridge is associated with an encoder, it will participate in mode
-set, and dpms (via the enable/disable hooks).
+This patch adds a drm_bridge driver for the PTN3460 DisplayPort to LVDS
+bridge chip.
 
 Signed-off-by: Sean Paul <seanpaul@chromium.org>
 ---
- drivers/gpu/drm/drm_crtc.c        | 50 ++++++++++++++++++++++
- drivers/gpu/drm/drm_crtc_helper.c | 89 ++++++++++++++++++++++++++++++---------
- include/drm/drm_crtc.h            | 55 ++++++++++++++++++++++++
- 3 files changed, 175 insertions(+), 19 deletions(-)
+ .../devicetree/bindings/drm/bridge/ptn3460.txt     |  27 ++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/bridge/Kconfig                     |   5 +
+ drivers/gpu/drm/bridge/Makefile                    |   3 +
+ drivers/gpu/drm/bridge/ptn3460.c                   | 349 +++++++++++++++++++++
+ include/drm/bridge/ptn3460.h                       |  36 +++
+ 7 files changed, 423 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
+ create mode 100644 drivers/gpu/drm/bridge/Kconfig
+ create mode 100644 drivers/gpu/drm/bridge/Makefile
+ create mode 100644 drivers/gpu/drm/bridge/ptn3460.c
+ create mode 100644 include/drm/bridge/ptn3460.h
 
-diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
-index fc83bb9..0311e2b 100644
---- a/drivers/gpu/drm/drm_crtc.c
-+++ b/drivers/gpu/drm/drm_crtc.c
-@@ -781,6 +781,41 @@ void drm_connector_unplug_all(struct drm_device *dev)
- }
- EXPORT_SYMBOL(drm_connector_unplug_all);
+diff --git a/Documentation/devicetree/bindings/drm/bridge/ptn3460.txt b/Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
+new file mode 100644
+index 0000000..c1cd329
+--- /dev/null
++++ b/Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
+@@ -0,0 +1,27 @@
++ptn3460-bridge bindings
++
++Required properties:
++	- compatible: "nxp,ptn3460"
++	- reg: i2c address of the bridge
++	- powerdown-gpio: OF device-tree gpio specification
++	- reset-gpio: OF device-tree gpio specification
++	- edid-emulation: The EDID emulation entry to use
++		+-------+------------+------------------+
++		| Value | Resolution | Description      |
++		|   0   |  1024x768  | NXP Generic      |
++		|   1   |  1920x1080 | NXP Generic      |
++		|   2   |  1920x1080 | NXP Generic      |
++		|   3   |  1600x900  | Samsung LTM200KT |
++		|   4   |  1920x1080 | Samsung LTM230HT |
++		|   5   |  1366x768  | NXP Generic      |
++		|   6   |  1600x900  | ChiMei M215HGE   |
++		+-------+------------+------------------+
++
++Example:
++	ptn3460-bridge@20 {
++		compatible = "nxp,ptn3460";
++		reg = <0x20>;
++		powerdown-gpio = <&gpy2 5 1 0 0>;
++		reset-gpio = <&gpx1 5 1 0 0>;
++		edid-emulation = <5>;
++	};
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index a7c54c8..6105a34 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -223,3 +223,5 @@ source "drivers/gpu/drm/omapdrm/Kconfig"
+ source "drivers/gpu/drm/tilcdc/Kconfig"
  
-+int drm_bridge_init(struct drm_device *dev, struct drm_bridge *bridge,
-+		const struct drm_bridge_funcs *funcs)
+ source "drivers/gpu/drm/qxl/Kconfig"
++
++source "drivers/gpu/drm/bridge/Kconfig"
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index d943b94..c2ae293 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -55,3 +55,4 @@ obj-$(CONFIG_DRM_OMAP)	+= omapdrm/
+ obj-$(CONFIG_DRM_TILCDC)	+= tilcdc/
+ obj-$(CONFIG_DRM_QXL) += qxl/
+ obj-y			+= i2c/
++obj-y			+= bridge/
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+new file mode 100644
+index 0000000..27a83b5
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -0,0 +1,5 @@
++config DRM_PTN3460
++	tristate "PTN3460 DP/LVDS bridge"
++	depends on DRM && I2C
++	---help---
++	  Adds the driver for the NXP PTN3460 DP/LVDS bridge chip.
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+new file mode 100644
+index 0000000..b4733e1
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -0,0 +1,3 @@
++ccflags-y := -Iinclude/drm
++
++obj-$(CONFIG_DRM_PTN3460) += ptn3460.o
+diff --git a/drivers/gpu/drm/bridge/ptn3460.c b/drivers/gpu/drm/bridge/ptn3460.c
+new file mode 100644
+index 0000000..a9e5c1a
+--- /dev/null
++++ b/drivers/gpu/drm/bridge/ptn3460.c
+@@ -0,0 +1,349 @@
++/*
++ * NXP PTN3460 DP/LVDS bridge driver
++ *
++ * Copyright (C) 2013 Google, Inc.
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/i2c.h>
++#include <linux/gpio.h>
++#include <linux/delay.h>
++
++#include "drmP.h"
++#include "drm_edid.h"
++#include "drm_crtc.h"
++#include "drm_crtc_helper.h"
++
++#include "bridge/ptn3460.h"
++
++#define PTN3460_EDID_ADDR			0x0
++#define PTN3460_EDID_EMULATION_ADDR		0x84
++#define PTN3460_EDID_ENABLE_EMULATION		0
++#define PTN3460_EDID_EMULATION_SELECTION	1
++#define PTN3460_EDID_SRAM_LOAD_ADDR		0x85
++
++struct ptn3460_bridge {
++	struct drm_connector connector;
++	struct i2c_client *client;
++	struct drm_encoder *encoder;
++	struct drm_bridge *bridge;
++	struct edid *edid;
++	int gpio_pd_n;
++	int gpio_rst_n;
++	u32 edid_emulation;
++	bool enabled;
++};
++
++static int ptn3460_read_bytes(struct ptn3460_bridge *ptn_bridge, char addr,
++		u8 *buf, int len)
 +{
 +	int ret;
 +
-+	drm_modeset_lock_all(dev);
++	ret = i2c_master_send(ptn_bridge->client, &addr, 1);
++	if (ret <= 0) {
++		DRM_ERROR("Failed to send i2c command, ret=%d\n", ret);
++		return ret;
++	}
 +
-+	ret = drm_mode_object_get(dev, &bridge->base, DRM_MODE_OBJECT_BRIDGE);
++	ret = i2c_master_recv(ptn_bridge->client, buf, len);
++	if (ret <= 0) {
++		DRM_ERROR("Failed to recv i2c data, ret=%d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int ptn3460_write_byte(struct ptn3460_bridge *ptn_bridge, char addr,
++		char val)
++{
++	int ret;
++	char buf[2];
++
++	buf[0] = addr;
++	buf[1] = val;
++
++	ret = i2c_master_send(ptn_bridge->client, buf, ARRAY_SIZE(buf));
++	if (ret <= 0) {
++		DRM_ERROR("Failed to send i2c command, ret=%d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int ptn3460_select_edid(struct ptn3460_bridge *ptn_bridge)
++{
++	int ret;
++	char val;
++
++	/* Load the selected edid into SRAM (accessed at PTN3460_EDID_ADDR) */
++	ret = ptn3460_write_byte(ptn_bridge, PTN3460_EDID_SRAM_LOAD_ADDR,
++			ptn_bridge->edid_emulation);
++	if (ret) {
++		DRM_ERROR("Failed to transfer edid to sram, ret=%d\n", ret);
++		return ret;
++	}
++
++	/* Enable EDID emulation and select the desired EDID */
++	val = 1 << PTN3460_EDID_ENABLE_EMULATION |
++		ptn_bridge->edid_emulation << PTN3460_EDID_EMULATION_SELECTION;
++
++	ret = ptn3460_write_byte(ptn_bridge, PTN3460_EDID_EMULATION_ADDR, val);
++	if (ret) {
++		DRM_ERROR("Failed to write edid value, ret=%d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void ptn3460_pre_enable(struct drm_bridge *bridge)
++{
++	struct ptn3460_bridge *ptn_bridge = bridge->driver_private;
++	int ret;
++
++	if (ptn_bridge->enabled)
++		return;
++
++	if (gpio_is_valid(ptn_bridge->gpio_pd_n))
++		gpio_set_value(ptn_bridge->gpio_pd_n, 1);
++
++	if (gpio_is_valid(ptn_bridge->gpio_rst_n)) {
++		gpio_set_value(ptn_bridge->gpio_rst_n, 0);
++		udelay(10);
++		gpio_set_value(ptn_bridge->gpio_rst_n, 1);
++	}
++
++	/*
++	 * There's a bug in the PTN chip where it falsely asserts hotplug before
++	 * it is fully functional. We're forced to wait for the maximum start up
++	 * time specified in the chip's datasheet to make sure we're really up.
++	 */
++	msleep(90);
++
++	ret = ptn3460_select_edid(ptn_bridge);
 +	if (ret)
++		DRM_ERROR("Select edid failed ret=%d\n", ret);
++
++	ptn_bridge->enabled = true;
++}
++
++static void ptn3460_enable(struct drm_bridge *bridge)
++{
++}
++
++static void ptn3460_disable(struct drm_bridge *bridge)
++{
++	struct ptn3460_bridge *ptn_bridge = bridge->driver_private;
++
++	if (!ptn_bridge->enabled)
++		return;
++
++	ptn_bridge->enabled = false;
++
++	if (gpio_is_valid(ptn_bridge->gpio_rst_n))
++		gpio_set_value(ptn_bridge->gpio_rst_n, 1);
++
++	if (gpio_is_valid(ptn_bridge->gpio_pd_n))
++		gpio_set_value(ptn_bridge->gpio_pd_n, 0);
++}
++
++static void ptn3460_post_disable(struct drm_bridge *bridge)
++{
++}
++
++void ptn3460_bridge_destroy(struct drm_bridge *bridge)
++{
++	struct ptn3460_bridge *ptn_bridge = bridge->driver_private;
++
++	drm_bridge_cleanup(bridge);
++	if (gpio_is_valid(ptn_bridge->gpio_pd_n))
++		gpio_free(ptn_bridge->gpio_pd_n);
++	if (gpio_is_valid(ptn_bridge->gpio_rst_n))
++		gpio_free(ptn_bridge->gpio_rst_n);
++	/* Nothing else to free, we've got devm allocated memory */
++}
++
++struct drm_bridge_funcs ptn3460_bridge_funcs = {
++	.pre_enable = ptn3460_pre_enable,
++	.enable = ptn3460_enable,
++	.disable = ptn3460_disable,
++	.post_disable = ptn3460_post_disable,
++	.destroy = ptn3460_bridge_destroy,
++};
++
++int ptn3460_get_modes(struct drm_connector *connector)
++{
++	struct ptn3460_bridge *ptn_bridge;
++	u8 *edid;
++	int ret, num_modes;
++	bool power_off;
++
++	ptn_bridge = container_of(connector, struct ptn3460_bridge, connector);
++
++	if (ptn_bridge->edid)
++		return drm_add_edid_modes(connector, ptn_bridge->edid);
++
++	power_off = !ptn_bridge->enabled;
++	ptn3460_pre_enable(ptn_bridge->bridge);
++
++	edid = kmalloc(EDID_LENGTH, GFP_KERNEL);
++	if (!edid) {
++		DRM_ERROR("Failed to allocate edid\n");
++		return 0;
++	}
++
++	ret = ptn3460_read_bytes(ptn_bridge, PTN3460_EDID_ADDR, edid,
++			EDID_LENGTH);
++	if (ret) {
++		kfree(edid);
++		num_modes = 0;
 +		goto out;
++	}
 +
-+	bridge->dev = dev;
-+	bridge->funcs = funcs;
++	ptn_bridge->edid = (struct edid *)edid;
++	drm_mode_connector_update_edid_property(connector, ptn_bridge->edid);
 +
-+	list_add_tail(&bridge->head, &dev->mode_config.bridge_list);
-+	dev->mode_config.num_bridge++;
++	num_modes = drm_add_edid_modes(connector, ptn_bridge->edid);
 +
-+ out:
-+	drm_modeset_unlock_all(dev);
++out:
++	if (power_off)
++		ptn3460_disable(ptn_bridge->bridge);
++
++	return num_modes;
++}
++
++static int ptn3460_mode_valid(struct drm_connector *connector,
++		struct drm_display_mode *mode)
++{
++	return MODE_OK;
++}
++
++struct drm_encoder *ptn3460_best_encoder(struct drm_connector *connector)
++{
++	struct ptn3460_bridge *ptn_bridge;
++
++	ptn_bridge = container_of(connector, struct ptn3460_bridge, connector);
++
++	return ptn_bridge->encoder;
++}
++
++struct drm_connector_helper_funcs ptn3460_connector_helper_funcs = {
++	.get_modes = ptn3460_get_modes,
++	.mode_valid = ptn3460_mode_valid,
++	.best_encoder = ptn3460_best_encoder,
++};
++
++enum drm_connector_status ptn3460_detect(struct drm_connector *connector,
++		bool force)
++{
++	return connector_status_connected;
++}
++
++void ptn3460_connector_destroy(struct drm_connector *connector)
++{
++	drm_connector_cleanup(connector);
++}
++
++struct drm_connector_funcs ptn3460_connector_funcs = {
++	.dpms = drm_helper_connector_dpms,
++	.fill_modes = drm_helper_probe_single_connector_modes,
++	.detect = ptn3460_detect,
++	.destroy = ptn3460_connector_destroy,
++};
++
++int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
++		struct i2c_client *client, struct device_node *node)
++{
++	int ret;
++	struct drm_bridge *bridge;
++	struct ptn3460_bridge *ptn_bridge;
++
++	bridge = devm_kzalloc(dev->dev, sizeof(*bridge), GFP_KERNEL);
++	if (!bridge) {
++		DRM_ERROR("Failed to allocate drm bridge\n");
++		return -ENOMEM;
++	}
++
++	ptn_bridge = devm_kzalloc(dev->dev, sizeof(*ptn_bridge), GFP_KERNEL);
++	if (!ptn_bridge) {
++		DRM_ERROR("Failed to allocate ptn bridge\n");
++		return -ENOMEM;
++	}
++
++	ptn_bridge->client = client;
++	ptn_bridge->encoder = encoder;
++	ptn_bridge->bridge = bridge;
++	ptn_bridge->gpio_pd_n = of_get_named_gpio(node, "powerdown-gpio", 0);
++	if (gpio_is_valid(ptn_bridge->gpio_pd_n)) {
++		ret = gpio_request_one(ptn_bridge->gpio_pd_n,
++				GPIOF_OUT_INIT_HIGH, "PTN3460_PD_N");
++		if (ret) {
++			DRM_ERROR("Request powerdown-gpio failed (%d)\n", ret);
++			return ret;
++		}
++	}
++
++	ptn_bridge->gpio_rst_n = of_get_named_gpio(node, "reset-gpio", 0);
++	if (gpio_is_valid(ptn_bridge->gpio_rst_n)) {
++		/*
++		 * Request the reset pin low to avoid the bridge being
++		 * initialized prematurely
++		 */
++		ret = gpio_request_one(ptn_bridge->gpio_rst_n,
++				GPIOF_OUT_INIT_LOW, "PTN3460_RST_N");
++		if (ret) {
++			DRM_ERROR("Request reset-gpio failed (%d)\n", ret);
++			gpio_free(ptn_bridge->gpio_pd_n);
++			return ret;
++		}
++	}
++
++	ret = of_property_read_u32(node, "edid-emulation",
++			&ptn_bridge->edid_emulation);
++	if (ret) {
++		DRM_ERROR("Can't read edid emulation value\n");
++		goto err;
++	}
++
++	ret = drm_bridge_init(dev, bridge, &ptn3460_bridge_funcs);
++	if (ret) {
++		DRM_ERROR("Failed to initialize bridge with drm\n");
++		goto err;
++	}
++
++	bridge->driver_private = ptn_bridge;
++	encoder->bridge = bridge;
++
++	ret = drm_connector_init(dev, &ptn_bridge->connector,
++			&ptn3460_connector_funcs, DRM_MODE_CONNECTOR_LVDS);
++	if (ret) {
++		DRM_ERROR("Failed to initialize connector with drm\n");
++		goto err;
++	}
++	drm_connector_helper_add(&ptn_bridge->connector,
++			&ptn3460_connector_helper_funcs);
++	drm_sysfs_connector_add(&ptn_bridge->connector);
++	drm_mode_connector_attach_encoder(&ptn_bridge->connector, encoder);
++
++	return 0;
++
++err:
++	if (gpio_is_valid(ptn_bridge->gpio_pd_n))
++		gpio_free(ptn_bridge->gpio_pd_n);
++	if (gpio_is_valid(ptn_bridge->gpio_rst_n))
++		gpio_free(ptn_bridge->gpio_rst_n);
 +	return ret;
 +}
-+EXPORT_SYMBOL(drm_bridge_init);
+diff --git a/include/drm/bridge/ptn3460.h b/include/drm/bridge/ptn3460.h
+new file mode 100644
+index 0000000..157ffa1
+--- /dev/null
++++ b/include/drm/bridge/ptn3460.h
+@@ -0,0 +1,36 @@
++/*
++ * Copyright (C) 2013 Google, Inc.
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+void drm_bridge_cleanup(struct drm_bridge *bridge)
++#ifndef _DRM_BRIDGE_PTN3460_H_
++#define _DRM_BRIDGE_PTN3460_H_
++
++struct drm_device;
++struct drm_encoder;
++struct i2c_client;
++struct device_node;
++
++#ifdef CONFIG_DRM_PTN3460
++
++int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
++		struct i2c_client *client, struct device_node *node);
++#else
++
++int ptn3460_init(struct drm_device *dev, struct drm_encoder *encoder,
++		struct i2c_client *client, struct device_node *node)
 +{
-+	struct drm_device *dev = bridge->dev;
-+
-+	drm_modeset_lock_all(dev);
-+	drm_mode_object_put(dev, &bridge->base);
-+	list_del(&bridge->head);
-+	dev->mode_config.num_bridge--;
-+	drm_modeset_unlock_all(dev);
-+}
-+EXPORT_SYMBOL(drm_bridge_cleanup);
-+
- int drm_encoder_init(struct drm_device *dev,
- 		      struct drm_encoder *encoder,
- 		      const struct drm_encoder_funcs *funcs,
-@@ -1190,6 +1225,7 @@ static int drm_mode_group_init(struct drm_device *dev, struct drm_mode_group *gr
- 	total_objects += dev->mode_config.num_crtc;
- 	total_objects += dev->mode_config.num_connector;
- 	total_objects += dev->mode_config.num_encoder;
-+	total_objects += dev->mode_config.num_bridge;
- 
- 	group->id_list = kzalloc(total_objects * sizeof(uint32_t), GFP_KERNEL);
- 	if (!group->id_list)
-@@ -1198,6 +1234,7 @@ static int drm_mode_group_init(struct drm_device *dev, struct drm_mode_group *gr
- 	group->num_crtcs = 0;
- 	group->num_connectors = 0;
- 	group->num_encoders = 0;
-+	group->num_bridges = 0;
- 	return 0;
- }
- 
-@@ -1207,6 +1244,7 @@ int drm_mode_group_init_legacy_group(struct drm_device *dev,
- 	struct drm_crtc *crtc;
- 	struct drm_encoder *encoder;
- 	struct drm_connector *connector;
-+	struct drm_bridge *bridge;
- 	int ret;
- 
- 	if ((ret = drm_mode_group_init(dev, group)))
-@@ -1223,6 +1261,11 @@ int drm_mode_group_init_legacy_group(struct drm_device *dev,
- 		group->id_list[group->num_crtcs + group->num_encoders +
- 			       group->num_connectors++] = connector->base.id;
- 
-+	list_for_each_entry(bridge, &dev->mode_config.bridge_list, head)
-+		group->id_list[group->num_crtcs + group->num_encoders +
-+			       group->num_connectors + group->num_bridges++] =
-+					bridge->base.id;
-+
- 	return 0;
- }
- EXPORT_SYMBOL(drm_mode_group_init_legacy_group);
-@@ -3905,6 +3948,7 @@ void drm_mode_config_init(struct drm_device *dev)
- 	INIT_LIST_HEAD(&dev->mode_config.fb_list);
- 	INIT_LIST_HEAD(&dev->mode_config.crtc_list);
- 	INIT_LIST_HEAD(&dev->mode_config.connector_list);
-+	INIT_LIST_HEAD(&dev->mode_config.bridge_list);
- 	INIT_LIST_HEAD(&dev->mode_config.encoder_list);
- 	INIT_LIST_HEAD(&dev->mode_config.property_list);
- 	INIT_LIST_HEAD(&dev->mode_config.property_blob_list);
-@@ -3941,6 +3985,7 @@ void drm_mode_config_cleanup(struct drm_device *dev)
- 	struct drm_connector *connector, *ot;
- 	struct drm_crtc *crtc, *ct;
- 	struct drm_encoder *encoder, *enct;
-+	struct drm_bridge *bridge, *brt;
- 	struct drm_framebuffer *fb, *fbt;
- 	struct drm_property *property, *pt;
- 	struct drm_property_blob *blob, *bt;
-@@ -3951,6 +3996,11 @@ void drm_mode_config_cleanup(struct drm_device *dev)
- 		encoder->funcs->destroy(encoder);
- 	}
- 
-+	list_for_each_entry_safe(bridge, brt,
-+				 &dev->mode_config.bridge_list, head) {
-+		bridge->funcs->destroy(bridge);
-+	}
-+
- 	list_for_each_entry_safe(connector, ot,
- 				 &dev->mode_config.connector_list, head) {
- 		connector->funcs->destroy(connector);
-diff --git a/drivers/gpu/drm/drm_crtc_helper.c b/drivers/gpu/drm/drm_crtc_helper.c
-index 6a64749..c722c3b 100644
---- a/drivers/gpu/drm/drm_crtc_helper.c
-+++ b/drivers/gpu/drm/drm_crtc_helper.c
-@@ -257,10 +257,16 @@ drm_encoder_disable(struct drm_encoder *encoder)
- {
- 	struct drm_encoder_helper_funcs *encoder_funcs = encoder->helper_private;
- 
-+	if (encoder->bridge)
-+		encoder->bridge->funcs->disable(encoder->bridge);
-+
- 	if (encoder_funcs->disable)
- 		(*encoder_funcs->disable)(encoder);
- 	else
- 		(*encoder_funcs->dpms)(encoder, DRM_MODE_DPMS_OFF);
-+
-+	if (encoder->bridge)
-+		encoder->bridge->funcs->post_disable(encoder->bridge);
- }
- 
- /**
-@@ -424,6 +430,16 @@ bool drm_crtc_helper_set_mode(struct drm_crtc *crtc,
- 
- 		if (encoder->crtc != crtc)
- 			continue;
-+
-+		if (encoder->bridge && encoder->bridge->funcs->mode_fixup) {
-+			ret = encoder->bridge->funcs->mode_fixup(
-+					encoder->bridge, mode, adjusted_mode);
-+			if (!ret) {
-+				DRM_DEBUG_KMS("Bridge fixup failed\n");
-+				goto done;
-+			}
-+		}
-+
- 		encoder_funcs = encoder->helper_private;
- 		if (!(ret = encoder_funcs->mode_fixup(encoder, mode,
- 						      adjusted_mode))) {
-@@ -443,9 +459,16 @@ bool drm_crtc_helper_set_mode(struct drm_crtc *crtc,
- 
- 		if (encoder->crtc != crtc)
- 			continue;
-+
-+		if (encoder->bridge)
-+			encoder->bridge->funcs->disable(encoder->bridge);
-+
- 		encoder_funcs = encoder->helper_private;
- 		/* Disable the encoders as the first thing we do. */
- 		encoder_funcs->prepare(encoder);
-+
-+		if (encoder->bridge)
-+			encoder->bridge->funcs->post_disable(encoder->bridge);
- 	}
- 
- 	drm_crtc_prepare_encoders(dev);
-@@ -469,6 +492,10 @@ bool drm_crtc_helper_set_mode(struct drm_crtc *crtc,
- 			mode->base.id, mode->name);
- 		encoder_funcs = encoder->helper_private;
- 		encoder_funcs->mode_set(encoder, mode, adjusted_mode);
-+
-+		if (encoder->bridge && encoder->bridge->funcs->mode_set)
-+			encoder->bridge->funcs->mode_set(encoder->bridge, mode,
-+					adjusted_mode);
- 	}
- 
- 	/* Now enable the clocks, plane, pipe, and connectors that we set up. */
-@@ -479,9 +506,14 @@ bool drm_crtc_helper_set_mode(struct drm_crtc *crtc,
- 		if (encoder->crtc != crtc)
- 			continue;
- 
-+		if (encoder->bridge)
-+			encoder->bridge->funcs->pre_enable(encoder->bridge);
-+
- 		encoder_funcs = encoder->helper_private;
- 		encoder_funcs->commit(encoder);
- 
-+		if (encoder->bridge)
-+			encoder->bridge->funcs->enable(encoder->bridge);
- 	}
- 
- 	/* Store real post-adjustment hardware mode. */
-@@ -830,6 +862,31 @@ static int drm_helper_choose_encoder_dpms(struct drm_encoder *encoder)
- 	return dpms;
- }
- 
-+/* Helper which handles bridge ordering around encoder dpms */
-+static void drm_helper_encoder_dpms(struct drm_encoder *encoder, int mode)
-+{
-+	struct drm_bridge *bridge = encoder->bridge;
-+	struct drm_encoder_helper_funcs *encoder_funcs;
-+
-+	if (bridge) {
-+		if (mode == DRM_MODE_DPMS_ON)
-+			bridge->funcs->pre_enable(bridge);
-+		else
-+			bridge->funcs->disable(bridge);
-+	}
-+
-+	encoder_funcs = encoder->helper_private;
-+	if (encoder_funcs->dpms)
-+		encoder_funcs->dpms(encoder, mode);
-+
-+	if (bridge) {
-+		if (mode == DRM_MODE_DPMS_ON)
-+			bridge->funcs->enable(bridge);
-+		else
-+			bridge->funcs->post_disable(bridge);
-+	}
++	return 0;
 +}
 +
- static int drm_helper_choose_crtc_dpms(struct drm_crtc *crtc)
- {
- 	int dpms = DRM_MODE_DPMS_OFF;
-@@ -857,7 +914,7 @@ void drm_helper_connector_dpms(struct drm_connector *connector, int mode)
- {
- 	struct drm_encoder *encoder = connector->encoder;
- 	struct drm_crtc *crtc = encoder ? encoder->crtc : NULL;
--	int old_dpms;
-+	int old_dpms, encoder_dpms = DRM_MODE_DPMS_OFF;
- 
- 	if (mode == connector->dpms)
- 		return;
-@@ -865,6 +922,9 @@ void drm_helper_connector_dpms(struct drm_connector *connector, int mode)
- 	old_dpms = connector->dpms;
- 	connector->dpms = mode;
- 
-+	if (encoder)
-+		encoder_dpms = drm_helper_choose_encoder_dpms(encoder);
++#endif
 +
- 	/* from off to on, do crtc then encoder */
- 	if (mode < old_dpms) {
- 		if (crtc) {
-@@ -873,22 +933,14 @@ void drm_helper_connector_dpms(struct drm_connector *connector, int mode)
- 				(*crtc_funcs->dpms) (crtc,
- 						     drm_helper_choose_crtc_dpms(crtc));
- 		}
--		if (encoder) {
--			struct drm_encoder_helper_funcs *encoder_funcs = encoder->helper_private;
--			if (encoder_funcs->dpms)
--				(*encoder_funcs->dpms) (encoder,
--							drm_helper_choose_encoder_dpms(encoder));
--		}
-+		if (encoder)
-+			drm_helper_encoder_dpms(encoder, encoder_dpms);
- 	}
- 
- 	/* from on to off, do encoder then crtc */
- 	if (mode > old_dpms) {
--		if (encoder) {
--			struct drm_encoder_helper_funcs *encoder_funcs = encoder->helper_private;
--			if (encoder_funcs->dpms)
--				(*encoder_funcs->dpms) (encoder,
--							drm_helper_choose_encoder_dpms(encoder));
--		}
-+		if (encoder)
-+			drm_helper_encoder_dpms(encoder, encoder_dpms);
- 		if (crtc) {
- 			struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
- 			if (crtc_funcs->dpms)
-@@ -924,9 +976,8 @@ int drm_helper_resume_force_mode(struct drm_device *dev)
- {
- 	struct drm_crtc *crtc;
- 	struct drm_encoder *encoder;
--	struct drm_encoder_helper_funcs *encoder_funcs;
- 	struct drm_crtc_helper_funcs *crtc_funcs;
--	int ret;
-+	int ret, encoder_dpms;
- 
- 	list_for_each_entry(crtc, &dev->mode_config.crtc_list, head) {
- 
-@@ -946,10 +997,10 @@ int drm_helper_resume_force_mode(struct drm_device *dev)
- 				if(encoder->crtc != crtc)
- 					continue;
- 
--				encoder_funcs = encoder->helper_private;
--				if (encoder_funcs->dpms)
--					(*encoder_funcs->dpms) (encoder,
--								drm_helper_choose_encoder_dpms(encoder));
-+				encoder_dpms = drm_helper_choose_encoder_dpms(
-+							encoder);
-+
-+				drm_helper_encoder_dpms(encoder, encoder_dpms);
- 			}
- 
- 			crtc_funcs = crtc->helper_private;
-diff --git a/include/drm/drm_crtc.h b/include/drm/drm_crtc.h
-index fa12a2f..a26d3d9 100644
---- a/include/drm/drm_crtc.h
-+++ b/include/drm/drm_crtc.h
-@@ -49,6 +49,7 @@ struct drm_clip_rect;
- #define DRM_MODE_OBJECT_FB 0xfbfbfbfb
- #define DRM_MODE_OBJECT_BLOB 0xbbbbbbbb
- #define DRM_MODE_OBJECT_PLANE 0xeeeeeeee
-+#define DRM_MODE_OBJECT_BRIDGE 0xbdbdbdbd
- 
- struct drm_mode_object {
- 	uint32_t id;
-@@ -305,6 +306,7 @@ struct drm_connector;
- struct drm_encoder;
- struct drm_pending_vblank_event;
- struct drm_plane;
-+struct drm_bridge;
- 
- /**
-  * drm_crtc_funcs - control CRTCs for a given device
-@@ -507,6 +509,7 @@ struct drm_encoder_funcs {
-  * @possible_crtcs: bitmask of potential CRTC bindings
-  * @possible_clones: bitmask of potential sibling encoders for cloning
-  * @crtc: currently bound CRTC
-+ * @bridge: bridge associated to the encoder
-  * @funcs: control functions
-  * @helper_private: mid-layer private data
-  *
-@@ -523,6 +526,7 @@ struct drm_encoder {
- 	uint32_t possible_clones;
- 
- 	struct drm_crtc *crtc;
-+	struct drm_bridge *bridge;
- 	const struct drm_encoder_funcs *funcs;
- 	void *helper_private;
- };
-@@ -683,6 +687,48 @@ struct drm_plane {
- };
- 
- /**
-+ * drm_bridge_funcs - drm_bridge control functions
-+ * @mode_fixup: Try to fixup (or reject entirely) proposed mode for this bridge
-+ * @disable: Called right before encoder prepare, disables the bridge
-+ * @post_disable: Called right after encoder prepare, for lockstepped disable
-+ * @mode_set: Set this mode to the bridge
-+ * @pre_enable: Called right before encoder commit, for lockstepped commit
-+ * @enable: Called right after encoder commit, enables the bridge
-+ * @destroy: make object go away
-+ */
-+struct drm_bridge_funcs {
-+	bool (*mode_fixup)(struct drm_bridge *bridge,
-+			   const struct drm_display_mode *mode,
-+			   struct drm_display_mode *adjusted_mode);
-+	void (*disable)(struct drm_bridge *bridge);
-+	void (*post_disable)(struct drm_bridge *bridge);
-+	void (*mode_set)(struct drm_bridge *bridge,
-+			 struct drm_display_mode *mode,
-+			 struct drm_display_mode *adjusted_mode);
-+	void (*pre_enable)(struct drm_bridge *bridge);
-+	void (*enable)(struct drm_bridge *bridge);
-+	void (*destroy)(struct drm_bridge *bridge);
-+};
-+
-+/**
-+ * drm_bridge - central DRM bridge control structure
-+ * @dev: DRM device this bridge belongs to
-+ * @head: list management
-+ * @base: base mode object
-+ * @funcs: control functions
-+ * @driver_private: pointer to the bridge driver's internal context
-+ */
-+struct drm_bridge {
-+	struct drm_device *dev;
-+	struct list_head head;
-+
-+	struct drm_mode_object base;
-+
-+	const struct drm_bridge_funcs *funcs;
-+	void *driver_private;
-+};
-+
-+/**
-  * drm_mode_set - new values for a CRTC config change
-  * @head: list management
-  * @fb: framebuffer to use for new config
-@@ -742,6 +788,7 @@ struct drm_mode_group {
- 	uint32_t num_crtcs;
- 	uint32_t num_encoders;
- 	uint32_t num_connectors;
-+	uint32_t num_bridges;
- 
- 	/* list of object IDs for this group */
- 	uint32_t *id_list;
-@@ -756,6 +803,8 @@ struct drm_mode_group {
-  * @fb_list: list of framebuffers available
-  * @num_connector: number of connectors on this device
-  * @connector_list: list of connector objects
-+ * @num_bridge: number of bridges on this device
-+ * @bridge_list: list of bridge objects
-  * @num_encoder: number of encoders on this device
-  * @encoder_list: list of encoder objects
-  * @num_crtc: number of CRTCs on this device
-@@ -793,6 +842,8 @@ struct drm_mode_config {
- 
- 	int num_connector;
- 	struct list_head connector_list;
-+	int num_bridge;
-+	struct list_head bridge_list;
- 	int num_encoder;
- 	struct list_head encoder_list;
- 	int num_plane;
-@@ -878,6 +929,10 @@ extern void drm_connector_cleanup(struct drm_connector *connector);
- /* helper to unplug all connectors from sysfs for device */
- extern void drm_connector_unplug_all(struct drm_device *dev);
- 
-+extern int drm_bridge_init(struct drm_device *dev, struct drm_bridge *bridge,
-+			   const struct drm_bridge_funcs *funcs);
-+extern void drm_bridge_cleanup(struct drm_bridge *bridge);
-+
- extern int drm_encoder_init(struct drm_device *dev,
- 			    struct drm_encoder *encoder,
- 			    const struct drm_encoder_funcs *funcs,
++#endif
 -- 
 1.8.3
 
