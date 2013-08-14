@@ -1,67 +1,80 @@
 Return-Path: <devicetree-owner@vger.kernel.org>
-Received: from mail-pa0-f41.google.com ([209.85.220.41]:45167 "EHLO
-	mail-pa0-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-	with ESMTP id S1757324Ab3HGJEv (ORCPT
-	<rfc822;devicetree@vger.kernel.org>); Wed, 7 Aug 2013 05:04:51 -0400
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v4 12/13] V4L: s5k6a3: Change sensor min/max resolutions
-Date: Wed,  7 Aug 2013 14:34:00 +0530
-Message-Id: <1375866242-18084-13-git-send-email-arun.kk@samsung.com>
-In-Reply-To: <1375866242-18084-1-git-send-email-arun.kk@samsung.com>
-References: <1375866242-18084-1-git-send-email-arun.kk@samsung.com>
+Received: from bear.ext.ti.com ([192.94.94.41]:47184 "EHLO bear.ext.ti.com"
+	rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+	id S1759393Ab3HNHpz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+	Wed, 14 Aug 2013 03:45:55 -0400
+Message-ID: <520B35AD.7070607@ti.com>
+Date: Wed, 14 Aug 2013 10:45:49 +0300
+From: Roger Quadros <rogerq@ti.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 7/7] ARM: dts: omap5: update omap-control-usb node
+References: <1375365915-21380-1-git-send-email-rogerq@ti.com> <1375365915-21380-8-git-send-email-rogerq@ti.com>
+In-Reply-To: <1375365915-21380-8-git-send-email-rogerq@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: s.nawrocki@samsung.com, hverkuil@xs4all.nl, a.hajda@samsung.com, sachin.kamat@linaro.org, shaik.ameer@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+To: bcousson@baylibre.com
+Cc: Roger Quadros <rogerq@ti.com>, balbi@ti.com, tony@atomide.com, kishon@ti.com, george.cherian@ti.com, dmurphy@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-s5k6a3 sensor has actual pixel resolution of 1408x1402 against
-the active resolution 1392x1392. The real resolution is needed
-when raw sensor SRGB data is dumped to memory by fimc-lite.
++Benoit
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
- drivers/media/i2c/s5k6a3.c |   21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/media/i2c/s5k6a3.c b/drivers/media/i2c/s5k6a3.c
-index ccbb4fc..6dec2ec 100644
---- a/drivers/media/i2c/s5k6a3.c
-+++ b/drivers/media/i2c/s5k6a3.c
-@@ -25,10 +25,14 @@
- #include <media/v4l2-async.h>
- #include <media/v4l2-subdev.h>
- 
--#define S5K6A3_SENSOR_MAX_WIDTH		1392
--#define S5K6A3_SENSOR_MAX_HEIGHT	1392
--#define S5K6A3_SENSOR_MIN_WIDTH		32
--#define S5K6A3_SENSOR_MIN_HEIGHT	32
-+#define S5K6A3_SENSOR_MAX_WIDTH		1408
-+#define S5K6A3_SENSOR_MAX_HEIGHT	1408
-+
-+#define S5K6A3_SENSOR_ACTIVE_WIDTH	1392
-+#define S5K6A3_SENSOR_ACTIVE_HEIGHT	1392
-+
-+#define S5K6A3_SENSOR_MIN_WIDTH		(32 + 16)
-+#define S5K6A3_SENSOR_MIN_HEIGHT	(32 + 10)
- 
- #define S5K6A3_DEF_PIX_WIDTH		1296
- #define S5K6A3_DEF_PIX_HEIGHT		732
-@@ -107,10 +111,11 @@ static void s5k6a3_try_format(struct v4l2_mbus_framefmt *mf)
- 
- 	fmt = find_sensor_format(mf);
- 	mf->code = fmt->code;
--	v4l_bound_align_image(&mf->width, S5K6A3_SENSOR_MIN_WIDTH,
--			      S5K6A3_SENSOR_MAX_WIDTH, 0,
--			      &mf->height, S5K6A3_SENSOR_MIN_HEIGHT,
--			      S5K6A3_SENSOR_MAX_HEIGHT, 0, 0);
-+	v4l_bound_align_image(&mf->width,
-+			S5K6A3_SENSOR_MIN_WIDTH, S5K6A3_SENSOR_MAX_WIDTH, 0,
-+			&mf->height,
-+			S5K6A3_SENSOR_MIN_HEIGHT, S5K6A3_SENSOR_MAX_HEIGHT, 0,
-+			0);
- }
- 
- static struct v4l2_mbus_framefmt *__s5k6a3_get_format(
--- 
-1.7.9.5
+On 08/01/2013 05:05 PM, Roger Quadros wrote:
+> Split USB2 PHY and USB3 PHY into separate omap-control-usb
+> nodes. Update ti,mode property.
+> 
+> CC: Benoit Cousson <benoit.cousson@linaro.org>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  arch/arm/boot/dts/omap5.dtsi |   18 ++++++++++++------
+>  1 files changed, 12 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index 07be2cd..af8ef77 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -626,14 +626,20 @@
+>  			hw-caps-temp-alert;
+>  		};
+>  
+> -		omap_control_usb: omap-control-usb@4a002300 {
+> +		omap_control_usb2phy: omap-control-usb@4a002300 {
+>  			compatible = "ti,omap-control-usb";
+> -			reg = <0x4a002300 0x4>,
+> -			      <0x4a002370 0x4>;
+> -			reg-names = "control_dev_conf", "phy_power_usb";
+> +			reg = <0x4a002300 0x4>;
+> +			reg-names = "power";
+>  			ti,type = <2>;
+>  		};
+>  
+> +		omap_control_usb3phy: omap-control-usb@0x4a002370 {
+> +			compatible = "ti,omap-control-usb";
+> +			reg = <0x4a002370 0x4>;
+> +			reg-names = "power";
+> +			ti,type = <3>;
+> +		};
+> +
+>  		omap_dwc3@4a020000 {
+>  			compatible = "ti,dwc3";
+>  			ti,hwmods = "usb_otg_ss";
+> @@ -661,7 +667,7 @@
+>  			usb2_phy: usb2phy@4a084000 {
+>  				compatible = "ti,omap-usb2";
+>  				reg = <0x4a084000 0x7c>;
+> -				ctrl-module = <&omap_control_usb>;
+> +				ctrl-module = <&omap_control_usb2phy>;
+>  			};
+>  
+>  			usb3_phy: usb3phy@4a084400 {
+> @@ -670,7 +676,7 @@
+>  				      <0x4a084800 0x64>,
+>  				      <0x4a084c00 0x40>;
+>  				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
+> -				ctrl-module = <&omap_control_usb>;
+> +				ctrl-module = <&omap_control_usb3phy>;
+>  			};
+>  		};
+>  
+> 
 
