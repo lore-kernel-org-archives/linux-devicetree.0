@@ -1,82 +1,154 @@
-From: Gururaja Hebbar <gururaja.hebbar@ti.com>
-Subject: Re: [PATCH v4 2/4] ARM: dts: add AM33XX vdd core opp50 suspend for
- Beaglebone.
-Date: Wed, 14 Aug 2013 14:29:52 +0530
-Message-ID: <520B4708.3040108@ti.com>
-References: <1376432412-8509-1-git-send-email-Russ.Dill@ti.com>
- <1376432412-8509-3-git-send-email-Russ.Dill@ti.com>
+From: Kukjin Kim <kgene@kernel.org>
+Subject: RE: [PATCH 1/2] ARM: dts: Move the common DMA controller nodes to
+ exynos5.dtsi
+Date: Wed, 14 Aug 2013 18:44:08 +0900
+Message-ID: <110401ce98d2$d304e2f0$790ea8d0$@org>
+References: <1373458449-19039-1-git-send-email-padma.v@samsung.com>
+ <1373458449-19039-2-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1376432412-8509-3-git-send-email-Russ.Dill@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russ Dill <Russ.Dill@ti.com>
-Cc: Kevin Hilman <khilman@deeprootsystems.com>, devicetree@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1373458449-19039-2-git-send-email-padma.v@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Padmavathi Venna' <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@kernel.org, dianders@chromium.org, abrestic@chromium.org, vinod.koul@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 8/14/2013 3:50 AM, Russ Dill wrote:
-> Changes since v1:
-> * Rebased onto new am335x PM branch
+Padmavathi Venna wrote:
 > 
-> This adds a sleep and wake sequence to set the VDD core voltage to the
-> OPP50 level, 0.950V. This saves power during suspend. The sequences are
-> specific to the Beaglebone layout and PMIC, the TPS65217. The sequences
-> are written out by the Cortex-M3.
+> exynos5250 and exynos5420 has 4 DMA controllers in common. So this patch
+> moves these nodes to common file keeping the dma controllers clk info in
+> the exynos5250 dtsi file.
 > 
-> Signed-off-by: Russ Dill <Russ.Dill@ti.com>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
 > ---
->  arch/arm/boot/dts/am335x-bone.dts | 25 ++++++++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/exynos5.dtsi    |   44
+> +++++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5250.dtsi |   30 -------------------------
+>  2 files changed, 44 insertions(+), 30 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-> index 444b4ed..3f6528d 100644
-> --- a/arch/arm/boot/dts/am335x-bone.dts
-> +++ b/arch/arm/boot/dts/am335x-bone.dts
-> @@ -127,10 +127,33 @@
->  			status = "okay";
->  			clock-frequency = <400000>;
->  
-> +			/* Set OPP50 (0.95V) for VDD core */
-> +			sleep_sequence = /bits/ 8 <
-
-For user readability, can you mention the PMIC used here as a comment?
-
-> +				0x02 0x24 0x0b 0x6d /* Password unlock 1 */
-> +				0x02 0x24 0x10 0x02 /* Set DCDC3 to 0.95V */
-> +				0x02 0x24 0x0b 0x6d /* Password unlock 2 */
-> +				0x02 0x24 0x10 0x02 /* Set DCDC3 to 0.95V */
-> +				0x02 0x24 0x0b 0x6c /* Password unlock 1 */
-> +				0x02 0x24 0x11 0x86 /* Apply DCDC changes */
-> +				0x02 0x24 0x0b 0x6c /* Password unlock 2 */
-> +				0x02 0x24 0x11 0x86 /* Apply DCDC changes */
-> +			>;
+> diff --git a/arch/arm/boot/dts/exynos5.dtsi
+> b/arch/arm/boot/dts/exynos5.dtsi
+> index f65e124..cac35c8 100644
+> --- a/arch/arm/boot/dts/exynos5.dtsi
+> +++ b/arch/arm/boot/dts/exynos5.dtsi
+> @@ -50,6 +50,50 @@
+>  		interrupts = <1 9 0xf04>;
+>  	};
+> 
+> +	amba {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "arm,amba-bus";
+> +		interrupt-parent = <&gic>;
+> +		ranges;
 > +
-> +			/* Set OPP100 (1.10V) for VDD core */
-> +			wake_sequence = /bits/ 8 <
-> +				0x02 0x24 0x0b 0x6d /* Password unlock 1 */
-> +				0x02 0x24 0x10 0x08 /* Set DCDC3 to 1.1V */
-> +				0x02 0x24 0x0b 0x6d /* Password unlock 2 */
-> +				0x02 0x24 0x10 0x08 /* Set DCDC3 to 1.1V */
-> +				0x02 0x24 0x0b 0x6c /* Password unlock 1 */
-> +				0x02 0x24 0x11 0x86 /* Apply DCDC changes */
-> +				0x02 0x24 0x0b 0x6c /* Password unlock 2 */
-> +				0x02 0x24 0x11 0x86 /* Apply DCDC changes */
-> +			>;
+> +		pdma0: pdma@121A0000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x121A0000 0x1000>;
+> +			interrupts = <0 34 0>;
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +		};
 > +
->  			tps: tps@24 {
->  				reg = <0x24>;
->  			};
+> +		pdma1: pdma@121B0000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x121B0000 0x1000>;
+> +			interrupts = <0 35 0>;
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+> +		};
+> +
+> +		mdma0: mdma@10800000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x10800000 0x1000>;
+> +			interrupts = <0 33 0>;
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <1>;
+> +		};
+> +
+> +		mdma1: mdma@11C10000 {
+> +			compatible = "arm,pl330", "arm,primecell";
+> +			reg = <0x11C10000 0x1000>;
+> +			interrupts = <0 124 0>;
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <1>;
+> +		};
+> +	};
+> +
+>  	dwmmc_0: dwmmc0@12200000 {
+>  		compatible = "samsung,exynos5250-dw-mshc";
+>  		interrupts = <0 75 0>;
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> b/arch/arm/boot/dts/exynos5250.dtsi
+> index 41cd625..3a474c4 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -511,54 +511,24 @@
+>  	};
+> 
+>  	amba {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		compatible = "arm,amba-bus";
+> -		interrupt-parent = <&gic>;
+> -		ranges;
 > -
+>  		pdma0: pdma@121A0000 {
+> -			compatible = "arm,pl330", "arm,primecell";
+> -			reg = <0x121A0000 0x1000>;
+> -			interrupts = <0 34 0>;
+>  			clocks = <&clock 275>;
+>  			clock-names = "apb_pclk";
+> -			#dma-cells = <1>;
+> -			#dma-channels = <8>;
+> -			#dma-requests = <32>;
+>  		};
+> 
+>  		pdma1: pdma@121B0000 {
+> -			compatible = "arm,pl330", "arm,primecell";
+> -			reg = <0x121B0000 0x1000>;
+> -			interrupts = <0 35 0>;
+>  			clocks = <&clock 276>;
+>  			clock-names = "apb_pclk";
+> -			#dma-cells = <1>;
+> -			#dma-channels = <8>;
+> -			#dma-requests = <32>;
+>  		};
+> 
+>  		mdma0: mdma@10800000 {
+> -			compatible = "arm,pl330", "arm,primecell";
+> -			reg = <0x10800000 0x1000>;
+> -			interrupts = <0 33 0>;
+>  			clocks = <&clock 271>;
+>  			clock-names = "apb_pclk";
+> -			#dma-cells = <1>;
+> -			#dma-channels = <8>;
+> -			#dma-requests = <1>;
+>  		};
+> 
+>  		mdma1: mdma@11C10000 {
+> -			compatible = "arm,pl330", "arm,primecell";
+> -			reg = <0x11C10000 0x1000>;
+> -			interrupts = <0 124 0>;
+>  			clocks = <&clock 271>;
+>  			clock-names = "apb_pclk";
+> -			#dma-cells = <1>;
+> -			#dma-channels = <8>;
+> -			#dma-requests = <1>;
 >  		};
 >  	};
->  
 > 
+> --
+> 1.7.4.4
+
+NAK, because the dmac addresses are different on upcoming exynos5 and there
+are 2-mdma and only one pdma. So this change can make more complicated.
+
+- Kukjin
